@@ -32,26 +32,26 @@ namespace WorldTree
         {
             return self.Root.AddComponent<ColorTexture2DManager>().Get(new Color(color, color, color, alpha));
         }
+    }
 
-        /// <summary>
-        /// 颜色图片管理器
-        /// </summary>
-        public class ColorTexture2DManager : Entity
+    /// <summary>
+    /// 颜色图片管理器
+    /// </summary>
+    public class ColorTexture2DManager : Entity
+    {
+        UnitDictionary<Color, Texture2D> colors = new UnitDictionary<Color, Texture2D>();
+        public Texture2D Get(Color color)
         {
-            UnitDictionary<Color, Texture2D> colors = new UnitDictionary<Color, Texture2D>();
-            public Texture2D Get(Color color)
+            Texture2D texture = null;
+            if (!colors.TryGetValue(color, out texture))
             {
-                Texture2D texture = null;
-                if (!colors.TryGetValue(color, out texture))
-                {
-                    texture = new Texture2D(1, 1, Texture2D.grayTexture.format, true);
-                    texture.SetPixel(0, 0, color);
+                texture = new Texture2D(1, 1, Texture2D.grayTexture.format, true);
+                texture.SetPixel(0, 0, color);
 
-                    colors.Add(color, texture);
-                    texture.Apply();
-                }
-                return texture;
+                colors.Add(color, texture);
+                texture.Apply();
             }
+            return texture;
         }
     }
 }
