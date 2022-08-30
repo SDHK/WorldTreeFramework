@@ -1,2 +1,2 @@
 # WorldTreeFramework
-个人框架
+一个以ECS思路设计的框架
