@@ -16,6 +16,8 @@ namespace WorldTree
 
         public void Update()
         {
+            (update1, update2) = (update2, update1);
+
             while (update1.Count != 0 && IsActice)
             {
                 long firstKey = update1.Keys.First();
@@ -36,7 +38,6 @@ namespace WorldTree
                     update2.Add(firstKey, entity);
                 }
             }
-            (update1, update2) = (update2, update1);
         }
     }
     class UpdateManagerUpdateSystem : UpdateSystem<UpdateManager>

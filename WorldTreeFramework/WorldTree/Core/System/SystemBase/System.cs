@@ -29,7 +29,7 @@ namespace WorldTree
     /// </summary>
     public abstract class SystemBase<T,S> : ISystem
     {
-        public Type EntityType => typeof(T);
+        public virtual Type EntityType => typeof(T);
         public Type SystemType => typeof(S);
     }
 }

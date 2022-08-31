@@ -20,6 +20,11 @@
 * 日期： 2022/6/26 11:12
 
 * 描述： 修改为继承 Entity 并入ECS树
+* 
+* 本来是用于省略手动注册事件的，因此事件变成了解耦的扩展方法。
+* 
+* 但因为可以挂在树上任何位置，手动注册则拥有了，全局观察者，域观察者，父节点观察者的功能。
+* 
 
 */
 
@@ -140,14 +145,13 @@ namespace WorldTree
             events.Recycle();
             events = null;
         }
+    }
 
-        class EventDelegateRecycleSystem : RecycleSystem<EventDelegate>
+    class EventDelegateRecycleSystem : RecycleSystem<EventDelegate>
+    {
+        public override void OnRecycle(EventDelegate self)
         {
-            public override void OnRecycle(EventDelegate self)
-            {
-                self.Clear();
-            }
+            self.Clear();
         }
-
     }
 }

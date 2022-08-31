@@ -13,6 +13,16 @@ using System.Linq;
 namespace WorldTree
 {
 
+    public static class EntityP
+    {
+        public static Type P1<E, P>(this E e)
+            where E : class, P
+        {
+            return typeof(P);
+        }
+
+    }
+
     /// <summary>
     /// 实体基类
     /// </summary>
@@ -23,6 +33,7 @@ namespace WorldTree
         public bool IsRecycle { get; set; }
 
         public bool IsDisposed { get; set; }
+
 
 
         /// <summary>
@@ -36,9 +47,16 @@ namespace WorldTree
         public long id;
 
         /// <summary>
-        /// 实体类型
+        /// 实体类型(用于系统继承)
         /// </summary>
         public Type Type;
+
+
+        public void SystemTag<E, P>()
+           where E : class, P
+        {
+            Type = typeof(P);
+        }
 
         /// <summary>
         /// 根节点

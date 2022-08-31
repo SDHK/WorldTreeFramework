@@ -4,7 +4,7 @@
 * 作者： 闪电黑客
 * 日期： 2022/8/2 15:28
 
-* 描述： 事件管理器
+* 描述： 系统事件管理器
 * 
 * 启动后查询是否有事件系统类
 * 存在，则反射特性获取键值，
@@ -19,7 +19,7 @@ namespace WorldTree
 {
 
     /// <summary>
-    /// 事件管理器
+    /// 系统事件管理器
     /// </summary>
     public class EventManager : Entity
     {
