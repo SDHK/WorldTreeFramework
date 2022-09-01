@@ -20,11 +20,53 @@ namespace WorldTree
         Delegate GetDeleate();
     }
 
+
+    /// <summary>
+    /// 事件系统接口
+    /// </summary>
+    public interface IEventSystem1 : ISystem
+    {
+        void Execute(object self);
+    }
+    public interface IEventSystem1<T> : ISystem
+    {
+        void Execute(object self, T t);
+    }
+
+    public abstract class EventSend1System<T> : SystemBase<T, IEventSystem1>, IEventSystem1
+        where T : class
+    {
+        public void Execute(object self)
+        {
+            EventSend(self as T);
+        }
+        public abstract void EventSend(T self);
+    }
+
+    public abstract class EventSend1System<T, T1> : SystemBase<T, IEventSystem1<T1>>, IEventSystem1<T1>
+      where T : class
+    {
+        public void Execute(object self, T1 deltaTime)
+        {
+            EventSend(self as T);
+        }
+        public abstract void EventSend(T self);
+    }
+
+    public class Event1 : EventSend1System<Event1>
+    {
+        public override void EventSend(Event1 self)
+        {
+
+        }
+    }
+
+
+
     #region Action
 
     public abstract class EventSendSystem : SystemBase<Action, IEventSystem>, IEventSystem
     {
-        public override Type SystemType => typeof(EventSendSystem);
         public Delegate GetDeleate() => (Action)Event;
         public abstract void Event();
     }
