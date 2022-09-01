@@ -248,7 +248,7 @@ namespace WorldTree
             if (entity != null)
             {
                 PathNodeView(entity.Parent);
-                if (GUILayout.Button(entity.Type.Name, GUIDefault.StyleBlack3, GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(entity.GetType().Name, GUIDefault.StyleBlack3, GUILayout.ExpandWidth(false)))
                 {
                     currentNode = entity;
                 }
@@ -281,7 +281,7 @@ namespace WorldTree
 
             GUILayout.BeginHorizontal();
 
-            GUIDefault.Button(self.Type.Name, () =>
+            GUIDefault.Button(self.GetType().Name, () =>
             {
                 if (console.selectNode == self)
                 {
@@ -434,7 +434,7 @@ namespace WorldTree
 
             GUILayout.BeginHorizontal();
 
-            GUIDefault.Button(self.Type.Name, () =>
+            GUIDefault.Button(self.GetType().Name, () =>
             {
                 if (console.selectNode == self)
                 {

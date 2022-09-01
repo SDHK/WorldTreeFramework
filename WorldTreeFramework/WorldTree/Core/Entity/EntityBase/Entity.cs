@@ -13,16 +13,6 @@ using System.Linq;
 namespace WorldTree
 {
 
-    public static class EntityP
-    {
-        public static Type P1<E, P>(this E e)
-            where E : class, P
-        {
-            return typeof(P);
-        }
-
-    }
-
     /// <summary>
     /// 实体基类
     /// </summary>
@@ -240,7 +230,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return Type.ToString();
+            return GetType().ToString();
         }
 
         public UnitDictionary<long, Entity> Children
@@ -484,7 +474,7 @@ namespace WorldTree
         {
             if (component != null)
             {
-                Type type = component.Type;
+                Type type =  component.GetType();
                 if (Components.TryAdd(type, component))
                 {
                     component.Parent = this;
@@ -620,7 +610,7 @@ namespace WorldTree
                 component.Parent = null;
                 component.Domain = null;
 
-                components.Remove(component.Type);
+                components.Remove(component.GetType());
 
                 Root.ObjectPoolManager.Recycle(component);
 

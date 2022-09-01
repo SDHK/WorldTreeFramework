@@ -30,6 +30,6 @@ namespace WorldTree
     public abstract class SystemBase<T,S> : ISystem
     {
         public virtual Type EntityType => typeof(T);
-        public Type SystemType => typeof(S);
+        public virtual Type SystemType => typeof(S);
     }
 }

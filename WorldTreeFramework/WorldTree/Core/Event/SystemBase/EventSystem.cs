@@ -24,6 +24,7 @@ namespace WorldTree
 
     public abstract class EventSendSystem : SystemBase<Action, IEventSystem>, IEventSystem
     {
+        public override Type SystemType => typeof(EventSendSystem);
         public Delegate GetDeleate() => (Action)Event;
         public abstract void Event();
     }

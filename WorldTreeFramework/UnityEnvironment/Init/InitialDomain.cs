@@ -21,7 +21,7 @@ namespace WorldTree
 
        public InitialDomain()
         {
-            Type = typeof(新方案);//实体改标签为子类新方案
+            //Type = typeof(新方案);//实体改标签为子类新方案
 
             //Type = typeof(Entity);//实体改标签为父类可复用父类系统
         }
