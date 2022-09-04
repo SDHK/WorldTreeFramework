@@ -43,7 +43,7 @@ namespace WorldTree
     public class 新方案 : InitialDomain{ }
     class 新方案的加入系统 : AddSystem<InitialDomain>
     {
-        public override Type EntityType => typeof(新方案);
+        public override Type EntityType => typeof(新方案); 
         public override void OnAdd(InitialDomain self)
         {
 
