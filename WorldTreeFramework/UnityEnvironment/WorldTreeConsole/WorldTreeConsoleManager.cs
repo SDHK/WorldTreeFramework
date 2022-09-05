@@ -20,7 +20,7 @@ namespace WorldTree
     {
         public override void OnAdd(ConsoleTreeView self)
         {
-
+            
             self.beginVertical1 = self.AddChildren<GUIBeginVertical>();
             self.beginVertical1.Texture = self.GetColorTexture(new Color(0.1f, 0.1f, 0.1f, 1));
             self.beginVertical1.Padding = new RectOffset(5, 5, 5, 5);

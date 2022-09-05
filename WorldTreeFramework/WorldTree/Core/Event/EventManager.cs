@@ -45,7 +45,7 @@ namespace WorldTree
                         key = (attributes[0] as EventKeyAttribute)?.key;
                     }
                     //分组注册事件
-                    self.AddComponent(key).To<EventDelegate>().AddDelegate(system.GetDeleate());
+                    //self.AddComponent(key).To<EventDelegate>().AddDelegate(system.GetDeleate());
                 }
             }
         }

@@ -36,6 +36,8 @@ namespace WorldTree
 
             self.Domain = self;
             World.Log("初始域启动！");
+
+            self.AddComponent<Node>().SendSystem(0.1f);
         }
     }
 

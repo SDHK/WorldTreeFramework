@@ -36,7 +36,25 @@ namespace WorldTree
 
 
 
+    public abstract class SendSystem<E, T1, T2> : ISystem
+    where E : class
+    {
+        public virtual Type EntityType => typeof(E);
+        public virtual Type SystemType => GetType();
 
+        public void Invoke(object self, T1 arg1, T2 arg2) => Event(self as E, arg1, arg2);
+        public abstract void Event(E self, T1 arg1, T2 arg2);
+    }
+
+    public abstract class SendSystem<E, T1, T2, T3> : ISystem
+    where E : class
+    {
+        public virtual Type EntityType => typeof(E);
+        public virtual Type SystemType => GetType();
+
+        public void Invoke(object self, T1 arg1, T2 arg2, T3 arg3) => Event(self as E, arg1, arg2, arg3);
+        public abstract void Event(E self, T1 arg1, T2 arg2, T3 arg3);
+    }
 
 
 

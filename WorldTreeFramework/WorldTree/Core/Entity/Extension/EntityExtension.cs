@@ -1,4 +1,7 @@
-﻿namespace WorldTree
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+namespace WorldTree
 {
     public static class EntityExtension
     {
@@ -38,5 +41,62 @@
 
             return str;
         }
+
+
+        #region Send
+
+        public static void SendSystem(this Entity self)
+        {
+            var sendSystems = self.Root.SystemManager.GetSystems<ISendSystem>(self.GetType());
+
+            foreach (ISendSystem sendSystem in sendSystems)
+            {
+                sendSystem.Invoke(self);
+            }
+        }
+        public static void SendSystem<T1>(this Entity self, T1 arg1)
+        {
+            var sendSystems = self.Root.SystemManager.GetSystems<ISendSystem<T1>>(self.Type);
+
+            foreach (ISendSystem<T1> sendSystem in sendSystems)
+            {
+                sendSystem.Invoke(self, arg1);
+            }
+        }
+
+
+        #endregion
+
+        #region Call
+
+        public static OutT CallSystem<OutT>(this Entity self)
+        {
+            var sendSystems = self.Root.SystemManager.GetSystems<ICallSystem<OutT>>(self.Type);
+
+            OutT outT = default(OutT);
+            foreach (ICallSystem<OutT> sendSystem in sendSystems)
+            {
+                outT = sendSystem.Invoke(self);
+            }
+
+            return outT;
+        }
+
+        public static OutT CallSystem<T1, OutT>(this Entity self, T1 arg1)
+        {
+            var sendSystems = self.Root.SystemManager.GetSystems<ICallSystem<T1, OutT>>(self.Type);
+
+            OutT outT = default(OutT);
+            foreach (ICallSystem<T1, OutT> sendSystem in sendSystems)
+            {
+                outT = sendSystem.Invoke(self, arg1);
+            }
+
+            return outT;
+        }
+
+        #endregion
+
+
     }
 }
