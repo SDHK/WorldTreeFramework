@@ -68,6 +68,7 @@ namespace WorldTree
     {
         //接口类型，（实例类型，实例方法）
         private UnitDictionary<Type, SystemGroup> InterfaceSystems = new UnitDictionary<Type, SystemGroup>();
+        private UnitDictionary<Type, SystemGroup> TypeSystems = new UnitDictionary<Type, SystemGroup>();
 
         public SystemManager() : base()
         {
@@ -93,6 +94,13 @@ namespace WorldTree
                 }
 
                 systemGroup.GetSystems(EntityType).Add(system);
+
+                if (!TypeSystems.TryGetValue(SystemType, out SystemGroup typeSystemGroup))
+                {
+                    typeSystemGroup = new SystemGroup();
+                    TypeSystems.Add(EntityType, typeSystemGroup);
+                }
+                typeSystemGroup.GetSystems(SystemType).Add(system);
             }
         }
 
