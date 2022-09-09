@@ -28,6 +28,16 @@ namespace WorldTree
 
     }
 
+
+    class _InitialDomainNewSystem : NewSystem<InitialDomain>
+    {
+        public override void OnNew(InitialDomain self)
+        {
+            World.Log("初始域New！");
+        }
+    }
+
+
     //原系统
     class _InitialDomain : AddSystem<InitialDomain>
     {
@@ -37,7 +47,7 @@ namespace WorldTree
             self.Domain = self;
             World.Log("初始域启动！");
 
-            self.AddComponent<Node>().SendSystem(0.1f);
+            self.AddComponent<Node>();
         }
     }
 

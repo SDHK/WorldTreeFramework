@@ -28,7 +28,7 @@ namespace WorldTree
                     {
                         foreach (IUpdateSystem system in systemList)
                         {
-                            system.Execute(entity, deltaTime);
+                            system.Invoke(entity, deltaTime);
                         }
                     }
                 }
@@ -90,17 +90,20 @@ namespace WorldTree
         }
     }
 
-    class UpdateManagerEntitySystem : EntitySystem<UpdateManager>
+
+    class UpdateManagerEntityAddSystem : EntityAddSystem<UpdateManager>
     {
-        public override void OnAddEntity(UpdateManager self, Entity entity)
+        public override void OnEntityAdd(UpdateManager self, Entity entity)
         {
             if (self.systems.ContainsKey(entity.Type))
             {
                 self.update2.Add(entity.id, entity);
             }
         }
-
-        public override void OnRemoveEntity(UpdateManager self, Entity entity)
+    }
+    class UpdateManagerEntityRemoveSystem : EntityRemoveSystem<UpdateManager>
+    {
+        public override void OnEntityRemove(UpdateManager self, Entity entity)
         {
             if (self.systems.ContainsKey(entity.Type))
             {
@@ -109,8 +112,6 @@ namespace WorldTree
             }
         }
     }
-
-
 
 
 

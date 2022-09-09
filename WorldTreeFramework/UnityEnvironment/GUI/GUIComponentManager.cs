@@ -36,18 +36,23 @@ namespace WorldTree
     }
 
 
-    class GUIComponentManagerEntitySystem : EntitySystem<GUIComponentManager>
+    class GUIComponentManagerEntityAddSystem : EntityAddSystem<GUIComponentManager>
     {
-        public override void OnAddEntity(GUIComponentManager self, Entity entity)
-        {
-
-        }
-
-        public override void OnRemoveEntity(GUIComponentManager self, Entity entity)
+        public override void OnEntityAdd(GUIComponentManager self, Entity entity)
         {
 
         }
     }
+
+
+    class GUIComponentManagerEntityRemoveSystem : EntityRemoveSystem<GUIComponentManager>
+    {
+        public override void OnEntityRemove(GUIComponentManager self, Entity entity)
+        {
+
+        }
+    }
+
 
     class GUIComponentManagerOnGUISystem : OnGUISystem<GUIComponentManager>
     {

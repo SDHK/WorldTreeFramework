@@ -18,7 +18,7 @@ namespace WorldTree
     {
         public override void OnAdd(ObjectPool self)
         {
-            //注册生命周期系统
+            //生命周期系统
             self.newSystem = self.RootGetSystems<INewSystem>(self.ObjectType);
             self.getSystem = self.RootGetSystems<IGetSystem>(self.ObjectType);
             self.recycleSystem = self.RootGetSystems<IRecycleSystem>(self.ObjectType);
@@ -98,11 +98,11 @@ namespace WorldTree
         private void ObjectOnNew(object obj)
         {
             (obj as IUnitPoolItemEvent)?.OnNew();
-            if (newSystem != null)
+            if (newSystem != null&& obj is Entity)
             {
                 foreach (INewSystem item in newSystem)
                 {
-                    item.New(obj);
+                    item.Invoke(obj as Entity);
                 }
             }
         }
@@ -118,11 +118,11 @@ namespace WorldTree
 
 
 
-            if (getSystem != null)
+            if (getSystem != null && obj is Entity)
             {
                 foreach (IGetSystem item in getSystem)
                 {
-                    item.Get(obj);
+                    item.Invoke(obj as Entity);
                 }
             }
 
@@ -136,22 +136,22 @@ namespace WorldTree
             }
             (obj as IUnitPoolItemEvent)?.OnRecycle();
 
-            if (recycleSystem != null)
+            if (recycleSystem != null && obj is Entity)
             {
                 foreach (IRecycleSystem item in recycleSystem)
                 {
-                    item.Recycle(obj);
+                    item.Invoke(obj as Entity);
                 }
             }
         }
 
         private void ObjectOnDestroy(object obj)
         {
-            if (destroySystem != null)
+            if (destroySystem != null && obj is Entity)
             {
                 foreach (IDestroySystem item in destroySystem)
                 {
-                    item.Destroy(obj);
+                    item.Invoke(obj as Entity);
                 }
             }
         }

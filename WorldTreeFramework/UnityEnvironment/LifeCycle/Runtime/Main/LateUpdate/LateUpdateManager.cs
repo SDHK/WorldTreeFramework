@@ -27,7 +27,7 @@ namespace WorldTree
                     {
                         foreach (ILateUpdateSystem system in systemList)
                         {
-                            system.Execute(entity, deltaTime);
+                            system.Invoke(entity, deltaTime);
                         }
                     }
                 }
@@ -92,17 +92,19 @@ namespace WorldTree
         }
     }
 
-    class LateUpdateManagerEntitySystem : EntitySystem<LateUpdateManager>
+    class LateUpdateManagerEntityAddSystem : EntityAddSystem<LateUpdateManager>
     {
-        public override void OnAddEntity(LateUpdateManager self, Entity entity)
+        public override void OnEntityAdd(LateUpdateManager self, Entity entity)
         {
             if (self.systems.ContainsKey(entity.Type))
             {
                 self.update2.Add(entity.id, entity);
             }
         }
-
-        public override void OnRemoveEntity(LateUpdateManager self, Entity entity)
+    }
+    class LateUpdateManagerEntityRemoveSystem : EntityRemoveSystem<LateUpdateManager>
+    {
+        public override void OnEntityRemove(LateUpdateManager self, Entity entity)
         {
             if (self.systems.ContainsKey(entity.Type))
             {

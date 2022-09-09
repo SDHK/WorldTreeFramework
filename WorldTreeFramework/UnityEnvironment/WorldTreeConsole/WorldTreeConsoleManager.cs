@@ -79,15 +79,19 @@ namespace WorldTree
             self.childrenShowSwitchs.Recycle();
         }
     }
-    class ConsoleTreeViewEntitySystem : EntitySystem<ConsoleTreeView>
+
+
+    class ConsoleTreeViewEntityAddSystem : EntityAddSystem<ConsoleTreeView>
     {
-        public override void OnAddEntity(ConsoleTreeView self, Entity entity)
+        public override void OnEntityAdd(ConsoleTreeView self, Entity entity)
         {
             self.componentShowSwitchs.TryAdd(entity.id, true);
             self.childrenShowSwitchs.TryAdd(entity.id, true);
         }
-
-        public override void OnRemoveEntity(ConsoleTreeView self, Entity entity)
+    }
+    class ConsoleTreeViewEntityRemoveSystem : EntityRemoveSystem<ConsoleTreeView>
+    {
+        public override void OnEntityRemove(ConsoleTreeView self, Entity entity)
         {
             if (self.currentNode == entity)
             {
@@ -97,6 +101,9 @@ namespace WorldTree
             self.componentShowSwitchs.Remove(entity.id);
         }
     }
+
+
+
 
     class ConsoleTreeViewOnGUISystem : OnGUISystem<ConsoleTreeView>
     {

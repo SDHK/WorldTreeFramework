@@ -15,10 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 添加事件系统接口
     /// </summary>
-    public interface IAddSystem : ISystem
-    {
-        void Add(Entity self);
-    }
+    public interface IAddSystem : ISendSystem{ }
 
     /// <summary>
     /// 添加事件系统
@@ -26,7 +23,7 @@ namespace WorldTree
     public abstract class AddSystem<T> : SystemBase<T,IAddSystem>, IAddSystem
         where T : Entity
     {
-        public void Add(Entity self) => OnAdd(self as T);
+        public void Invoke(Entity self) => OnAdd(self as T);
         public abstract void OnAdd(T self);
 
     }

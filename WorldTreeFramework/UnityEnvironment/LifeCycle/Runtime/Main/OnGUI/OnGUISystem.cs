@@ -4,9 +4,9 @@
     /// <summary>
     /// OnGUI系统接口
     /// </summary>
-    public interface IOnGUISystem : ISystem
+    public interface IOnGUISystem : ISendSystem<float>
     {
-        void Execute(Entity self, float deltaTime);
+        void Invoke(Entity self, float deltaTime);
     }
 
     /// <summary>
@@ -15,7 +15,7 @@
     public abstract class OnGUISystem<T> : SystemBase<T, IOnGUISystem>, IOnGUISystem
        where T : Entity
     {
-        public void Execute(Entity self, float deltaTime) => OnGUI(self as T, deltaTime);
+        public void Invoke(Entity self, float deltaTime) => OnGUI(self as T, deltaTime);
         public abstract void OnGUI(T self, float deltaTime);
     }
 }

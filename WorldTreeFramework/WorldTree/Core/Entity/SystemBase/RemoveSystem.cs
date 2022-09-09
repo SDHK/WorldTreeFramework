@@ -15,9 +15,9 @@ namespace WorldTree
     /// <summary>
     /// 移除事件系统接口
     /// </summary>
-    public interface IRemoveSystem : ISystem
+    public interface IRemoveSystem : ISendSystem
     { 
-        void Remove(Entity self);
+        void Invoke(Entity self);
     }
     /// <summary>
     /// 移除事件系统
@@ -25,7 +25,7 @@ namespace WorldTree
     public abstract class RemoveSystem<T> : SystemBase<T, IRemoveSystem>, IRemoveSystem
         where T :Entity
     {
-        public void Remove(Entity self) => OnRemove(self as T);
+        public void Invoke(Entity self) => OnRemove(self as T);
         public abstract void OnRemove(T self);
     }
 }

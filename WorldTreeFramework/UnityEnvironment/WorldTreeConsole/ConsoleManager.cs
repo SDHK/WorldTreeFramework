@@ -35,20 +35,21 @@ namespace WorldTree
         }
     }
 
-
-
-    class ConsoleManagerEntitySystem : EntitySystem<ConsoleManager>
+    class ConsoleManagerEntityAddSystem : EntityAddSystem<ConsoleManager>
     {
-        public override void OnAddEntity(ConsoleManager self, Entity entity)
+        public override void OnEntityAdd(ConsoleManager self, Entity entity)
         {
             self.ViewShows.TryAdd(entity.id, false);
         }
-
-        public override void OnRemoveEntity(ConsoleManager self, Entity entity)
+    }
+    class ConsoleManagerEntityRemoveSystem : EntityRemoveSystem<ConsoleManager>
+    {
+        public override void OnEntityRemove(ConsoleManager self, Entity entity)
         {
             self.ViewShows.Remove(entity.id);
         }
     }
+
 
     //主控窗口Log消息：大小窗，FPS显示
 

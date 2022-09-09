@@ -2,22 +2,6 @@
 
 namespace WorldTree
 {
-    public static class SystemExtension
-    {
-        public static void Run<I>(this Entity self)
-            where I : ISystem
-        {
-            var Group = self.Root.SystemManager.GetSystemGroup<I>();
-            if (Group.TryGetValue(self.Type, out List<ISystem> systems))
-            {
-                foreach (ISendSystem system in systems)
-                {
-                    system.Invoke(self);
-                }
-            }
-        }
-
-    }
 
     public interface ISendSystem : ISystem
     {

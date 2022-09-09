@@ -24,7 +24,7 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
-  
+
 
     /// <summary>
     /// 实体管理器
@@ -36,7 +36,8 @@ namespace WorldTree
         //有监听器的实体
         public UnitDictionary<Type, Entity> listeners = new UnitDictionary<Type, Entity>();
 
-        private SystemGroup entitySystems;
+        private SystemGroup entityAddSystems;
+        private SystemGroup entityRemoveSystems;
         private SystemGroup singletonEagerSystems;
 
         private SystemGroup addSystems;
@@ -80,7 +81,8 @@ namespace WorldTree
             ObjectPoolManager.id = IdManager.GetId();
 
             //实体管理器系统事件获取
-            entitySystems = Root.SystemManager.GetSystemGroup<IEntitySystem>();
+            entityAddSystems = Root.SystemManager.GetSystemGroup<IEntityAddSystem>();
+            entityRemoveSystems = Root.SystemManager.GetSystemGroup<IEntityRemoveSystem>();
             addSystems = Root.SystemManager.GetSystemGroup<IAddSystem>();
             removeSystems = Root.SystemManager.GetSystemGroup<IRemoveSystem>();
             enableSystems = Root.SystemManager.GetSystemGroup<IEnableSystem>();
@@ -118,11 +120,11 @@ namespace WorldTree
 
             foreach (var manager in listeners)//广播给全部监听器
             {
-                if (entitySystems.TryGetValue(manager.Key, out List<ISystem> systems))
+                if (entityAddSystems.TryGetValue(manager.Key, out List<ISystem> systems))
                 {
-                    foreach (IEntitySystem system in systems)
+                    foreach (IEntityAddSystem system in systems)
                     {
-                        system.AddEntity(manager.Value, entity);
+                        system.Invoke(manager.Value, entity);
                     }
                 }
             }
@@ -132,11 +134,12 @@ namespace WorldTree
             {
                 foreach (IAddSystem system in addsystem)
                 {
-                    system.Add(entity);
+                    system.Invoke(entity);
                 }
             }
 
-            if (entitySystems.ContainsKey(typeKey))//检测到系统存在，则说明这是个监听器
+            //检测到系统存在，则说明这是个监听器
+            if (entityAddSystems.ContainsKey(typeKey) || entityRemoveSystems.ContainsKey(typeKey))
             {
                 listeners.TryAdd(typeKey, entity);
             }
@@ -148,7 +151,8 @@ namespace WorldTree
             Type typeKey = entity.Type;
 
             entity.SetActive(false);
-            if (entitySystems.ContainsKey(typeKey))//检测到系统存在，则说明这是个监听器
+            //检测到系统存在，则说明这是个监听器
+            if (entityAddSystems.ContainsKey(typeKey) || entityRemoveSystems.ContainsKey(typeKey))
             {
                 listeners.Remove(typeKey);
             }
@@ -158,18 +162,18 @@ namespace WorldTree
             {
                 foreach (IRemoveSystem system in removesystem)
                 {
-                    system.Remove(entity);
+                    system.Invoke(entity);
                 }
             }
             allEntities.Remove(entity.id);
 
             foreach (var manager in listeners)//广播给全部监听器
             {
-                if (entitySystems.TryGetValue(manager.Key, out List<ISystem> systems))
+                if (entityRemoveSystems.TryGetValue(manager.Key, out List<ISystem> systems))
                 {
-                    foreach (IEntitySystem system in systems)
+                    foreach (IEntityRemoveSystem system in systems)
                     {
-                        system.RemoveEntity(manager.Value, entity);
+                        system.Invoke(manager.Value, entity);
                     }
                 }
             }
@@ -181,7 +185,7 @@ namespace WorldTree
             {
                 foreach (IEnableSystem system in enableSystem)
                 {
-                    system.Enable(entity);
+                    system.Invoke(entity);
                 }
             }
         }
@@ -192,7 +196,7 @@ namespace WorldTree
             {
                 foreach (IDisableSystem system in disableSystem)
                 {
-                    system.Disable(entity);
+                    system.Invoke(entity);
                 }
             }
         }

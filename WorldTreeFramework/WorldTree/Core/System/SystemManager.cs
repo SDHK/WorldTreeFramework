@@ -68,7 +68,6 @@ namespace WorldTree
     {
         //接口类型，（实例类型，实例方法）
         private UnitDictionary<Type, SystemGroup> InterfaceSystems = new UnitDictionary<Type, SystemGroup>();
-        private UnitDictionary<Type, SystemGroup> TypeSystems = new UnitDictionary<Type, SystemGroup>();
 
         public SystemManager() : base()
         {
@@ -79,7 +78,7 @@ namespace WorldTree
         {
             var types = FindTypesIsInterface(typeof(ISystem));
             //将名字进行排序，规范触发顺序
-            types.Sort((item1, item2) =>item1.Name.CompareTo(item2.Name));
+            types.Sort((item1, item2) => item1.Name.CompareTo(item2.Name));
             foreach (var itemType in types)//遍历实现接口的类
             {
                 //实例化系统类
@@ -94,13 +93,6 @@ namespace WorldTree
                 }
 
                 systemGroup.GetSystems(EntityType).Add(system);
-
-                if (!TypeSystems.TryGetValue(SystemType, out SystemGroup typeSystemGroup))
-                {
-                    typeSystemGroup = new SystemGroup();
-                    TypeSystems.Add(EntityType, typeSystemGroup);
-                }
-                typeSystemGroup.GetSystems(SystemType).Add(system);
             }
         }
 
@@ -129,14 +121,20 @@ namespace WorldTree
         {
             if (InterfaceSystems.TryGetValue(typeof(T), out SystemGroup systemGroup))
             {
-                if (systemGroup.ContainsKey(type))
-                {
-                    return systemGroup[type];
-                }
+                return systemGroup.GetSystems(type);
             }
             return null;
         }
 
+        public bool TryGetSystems(Type EntityType, Type SystemType, out List<ISystem> systems)
+        {
+            if (InterfaceSystems.TryGetValue(SystemType, out SystemGroup systemGroup))
+            {
+                return systemGroup.TryGetValue(EntityType, out systems);
+            }
+            systems = null;
+            return false;
+        }
 
         public override void OnDispose()
         {

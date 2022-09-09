@@ -10,6 +10,11 @@
         OutT Invoke(Entity self, T1 arg1);
     }
 
+    public interface ICallSystem<T1, T2, OutT> : ISystem
+    {
+        OutT Invoke(Entity self, T1 arg1, T2 arg2);
+    }
+
     public abstract class CallSystem<T, OutT> : SystemBase<T, ICallSystem<OutT>>, ICallSystem<OutT>
      where T : class
     {
@@ -22,5 +27,12 @@
     {
         public OutT Invoke(Entity self, T1 arg1) => Event(self as T, arg1);
         public abstract OutT Event(T self, T1 arg1);
+    }
+
+    public abstract class CallSystem<T, T1, T2, OutT> : SystemBase<T, ICallSystem<T1, T2, OutT>>, ICallSystem<T1, T2, OutT>
+    where T : class
+    {
+        public OutT Invoke(Entity self, T1 arg1, T2 arg2) => Event(self as T, arg1, arg2);
+        public abstract OutT Event(T self, T1 arg1, T2 arg2);
     }
 }

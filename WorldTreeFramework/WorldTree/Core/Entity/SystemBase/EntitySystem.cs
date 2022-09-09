@@ -21,6 +21,30 @@
 namespace WorldTree
 {
 
+    public interface IEntityAddSystem : ISendSystem<Entity> { }
+    public interface IEntityRemoveSystem : ISendSystem<Entity> { }
+
+    /// <summary>
+    /// 实体添加时
+    /// </summary>
+    public abstract class EntityAddSystem<T> : SystemBase<T, IEntityAddSystem>, IEntityAddSystem
+        where T : Entity
+    {
+        public void Invoke(Entity self, Entity entity) => OnEntityAdd(self as T, entity);
+        public abstract void OnEntityAdd(T self, Entity entity);
+    }
+
+    /// <summary>
+    /// 实体移除时
+    /// </summary>
+    public abstract class EntityRemoveSystem<T> : SystemBase<T, IEntityRemoveSystem>, IEntityRemoveSystem
+        where T : Entity
+    {
+        public void Invoke(Entity self, Entity entity) => OnEntityRemove(self as T, entity);
+        public abstract void OnEntityRemove(T self, Entity entity);
+    }
+
+
 
 
     /// <summary>
@@ -35,8 +59,8 @@ namespace WorldTree
     /// <summary>
     /// 实体监听系统
     /// </summary>
-    public abstract class EntitySystem<T> : SystemBase<T,IEntitySystem>, IEntitySystem
-        where T :  Entity
+    public abstract class EntitySystem<T> : SystemBase<T, IEntitySystem>, IEntitySystem
+        where T : Entity
     {
         public void AddEntity(Entity self, Entity entity) => OnAddEntity(self as T, entity);
 
