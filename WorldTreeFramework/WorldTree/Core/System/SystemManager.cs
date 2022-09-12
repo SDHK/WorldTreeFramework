@@ -89,6 +89,7 @@ namespace WorldTree
                 if (!InterfaceSystems.TryGetValue(SystemType, out SystemGroup systemGroup))
                 {
                     systemGroup = new SystemGroup();
+                    systemGroup.systemType = SystemType;
                     InterfaceSystems.Add(SystemType, systemGroup);
                 }
 

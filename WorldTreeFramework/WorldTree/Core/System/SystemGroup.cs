@@ -21,6 +21,7 @@ namespace WorldTree
     /// </summary>
     public class SystemGroup : Dictionary<Type, List<ISystem>>
     {
+        public Type systemType;
         /// <summary>
         /// 获取系统类列表
         /// </summary>
