@@ -8,46 +8,149 @@ namespace WorldTree
 {
     public static class SystemAsyncExtension
     {
+        #region Send
+
         public static async AsyncTask<bool> TrySendAsyncSystem<S>(this Entity self)
-          where S : ICallSystem<AsyncTask>
+        where S : ICallSystem<AsyncTask>
         {
-
-         return await self.Root.SystemManager.GetSystemGroup<S>().TrySendAsyncSystem<S>(self);
-
-            bool bit = false;
-            if (self.Root.SystemManager.TryGetSystems(self.Type, typeof(S), out List<ISystem> sendSystems))
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                foreach (ICallSystem<AsyncTask<bool>> sendSystem in sendSystems)
-                {
-                    await sendSystem.Invoke(self);
-                }
-                bit = true;
+                return await group.TrySendAsyncSystem<S>(self);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncYield();
+                return false;
             }
-            return bit;
         }
 
-        public static async AsyncTask<bool> TrySendAsyncSystem<S>(this SystemGroup group, Entity self)
-        where  S: ICallSystem<AsyncTask>
+        public static async AsyncTask<bool> TrySendAsyncSystem<S, T1>(this Entity self, T1 arg1)
+        where S : ICallSystem<T1, AsyncTask>
         {
-            bool bit = false;
-
-            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                foreach (S system in systems)
-                {
-                   await system.Invoke(self);
-                }
+                return await group.TrySendAsyncSystem<S, T1>(self, arg1);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncYield();
+                return false;
             }
-            return bit;
         }
 
+        public static async AsyncTask<bool> TrySendAsyncSystem<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
+       where S : ICallSystem<T1, T2, AsyncTask>
+        {
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            {
+                return await group.TrySendAsyncSystem<S, T1, T2>(self, arg1, arg2);
+            }
+            else
+            {
+                await self.AsyncYield();
+                return false;
+            }
+        }
+        public static async AsyncTask<bool> TrySendAsyncSystem<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
+        where S : ICallSystem<T1, T2, T3, AsyncTask>
+        {
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            {
+                return await group.TrySendAsyncSystem<S, T1, T2, T3>(self, arg1, arg2, arg3);
+            }
+            else
+            {
+                await self.AsyncYield();
+                return false;
+            }
+        }
+
+        public static async void SendAsyncSystem<S>(this Entity self)
+        where S : ICallSystem<AsyncTask>
+        {
+            await self.TrySendAsyncSystem<S>();
+        }
+
+        public static async void SendAsyncSystem<S, T1>(this Entity self, T1 arg1)
+        where S : ICallSystem<T1, AsyncTask>
+        {
+            await self.TrySendAsyncSystem<S, T1>(arg1);
+        }
+
+        public static async void SendAsyncSystem<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
+         where S : ICallSystem<T1, T2, AsyncTask>
+        {
+            await self.TrySendAsyncSystem<S, T1, T2>(arg1, arg2);
+        }
+        public static async void SendAsyncSystem<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
+        where S : ICallSystem<T1, T2, T3, AsyncTask>
+        {
+            await self.TrySendAsyncSystem<S, T1, T2, T3>(arg1, arg2, arg3);
+        }
+        #endregion
+
+
+        #region Call
+        public static async AsyncTask<OutT> CallAsyncSystem<S, OutT>(this Entity self)
+        where S : ICallSystem<AsyncTask<OutT>>
+        {
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            {
+                return await group.CallAsyncSystem<S, OutT>(self);
+            }
+            else
+            {
+                await self.AsyncYield();
+                return default(OutT);
+            }
+        }
+
+        public static async AsyncTask<OutT> CallAsyncSystem<S, T1, OutT>(this Entity self, T1 arg1)
+        where S : ICallSystem<T1, AsyncTask<OutT>>
+        {
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            {
+                return await group.CallAsyncSystem<S, T1, OutT>(self, arg1);
+            }
+            else
+            {
+                await self.AsyncYield();
+                return default(OutT);
+            }
+        }
+
+        #endregion
+
+
+        #region Calls
+
+        public static async AsyncTask<UnitList<OutT>> CallsAsyncSystem<S, OutT>(this Entity self)
+        where S : ICallSystem<AsyncTask<OutT>>
+        {
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            {
+                return await group.CallsAsyncSystem<S, OutT>(self);
+            }
+            else
+            {
+                await self.AsyncYield();
+                return null;
+            }
+        }
+
+        public static async AsyncTask<UnitList<OutT>> CallsAsyncSystem<S, T1, OutT>(this Entity self, T1 arg1)
+        where S : ICallSystem<T1, AsyncTask<OutT>>
+        {
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            {
+                return await group.CallsAsyncSystem<S, T1, OutT>(self, arg1);
+            }
+            else
+            {
+                await self.AsyncYield();
+                return null;
+            }
+        }
+        #endregion
     }
 }

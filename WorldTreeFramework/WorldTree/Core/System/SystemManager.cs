@@ -34,14 +34,6 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取系统组
-        /// </summary>
-        public static SystemGroup RootGetSystemGroup(this Entity self, Type InterfaceType)
-        {
-            return self.Root.SystemManager.GetSystemGroup(InterfaceType);
-        }
-
-        /// <summary>
         /// 获取单类型系统列表
         /// </summary>
         public static List<ISystem> RootGetSystems<T>(this Entity self, Type type)
@@ -107,11 +99,25 @@ namespace WorldTree
         /// </summary>
         public SystemGroup GetSystemGroup(Type Interface)
         {
-            if (!InterfaceSystems.TryGetValue(Interface, out SystemGroup systemGroup))
-            {
-                systemGroup = new SystemGroup();
-            }
+            TryGetSystemGroup(Interface, out  SystemGroup systemGroup);
             return systemGroup;
+        }
+
+        /// <summary>
+        /// 获取系统组
+        /// </summary>
+        public bool TryGetSystemGroup<T>( out SystemGroup systemGroup)
+         where T : ISystem
+        {
+            return TryGetSystemGroup(typeof(T),out systemGroup);
+        }
+
+        /// <summary>
+        /// 获取系统组
+        /// </summary>
+        public bool TryGetSystemGroup(Type Interface, out SystemGroup systemGroup)
+        {
+            return InterfaceSystems.TryGetValue(Interface, out systemGroup);
         }
 
 

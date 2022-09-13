@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WorldTree
+﻿namespace WorldTree
 {
     public static class SystemExtension
     {
@@ -12,61 +6,52 @@ namespace WorldTree
         #region Send
 
         public static bool TrySendSystem<S>(this Entity self)
-          where S : ISendSystem
+        where S : ISendSystem
         {
-            bool bit = self.Root.SystemManager.TryGetSystems(self.Type, typeof(S), out List<ISystem> sendSystems);
-            if (bit)
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                foreach (ISendSystem sendSystem in sendSystems)
-                {
-                    sendSystem.Invoke(self);
-                    bit = true;
-                }
+                return group.TrySendSystem<S>(self);
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
         public static bool TrySendSystem<S, T1>(this Entity self, T1 arg1)
-          where S : ISendSystem<T1>
+        where S : ISendSystem<T1>
         {
-            bool bit = self.Root.SystemManager.TryGetSystems(self.Type, typeof(S), out List<ISystem> sendSystems);
-            if (bit)
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                foreach (ISendSystem<T1> sendSystem in sendSystems)
-                {
-                    sendSystem.Invoke(self, arg1);
-                    bit = true;
-                }
+                return group.TrySendSystem<S,T1>(self, arg1);
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
         public static bool TrySendSystem<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
-          where S : ISendSystem<T1, T2>
+        where S : ISendSystem<T1, T2>
         {
-            bool bit = self.Root.SystemManager.TryGetSystems(self.Type, typeof(S), out List<ISystem> sendSystems);
-            if (bit)
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                foreach (ISendSystem<T1, T2> sendSystem in sendSystems)
-                {
-                    sendSystem.Invoke(self, arg1, arg2);
-                    bit = true;
-                }
+                return group.TrySendSystem<S, T1, T2>(self, arg1, arg2);
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
-
 
         public static void SendSystem<S>(this Entity self)
             where S : ISendSystem
         {
             self.TrySendSystem<S>();
         }
-
         public static void SendSystem<S, T1>(this Entity self, T1 arg1)
            where S : ISendSystem<T1>
         {
             self.TrySendSystem<S, T1>(arg1);
         }
-
         public static void SendSystem<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
            where S : ISendSystem<T1, T2>
         {
@@ -77,50 +62,48 @@ namespace WorldTree
 
         #region Call
 
-
         public static bool TryCallSystem<S, OutT>(this Entity self, out OutT outT)
           where S : ICallSystem<OutT>
         {
-            bool bit = false;
-            if (self.Root.SystemManager.TryGetSystems(self.Type, typeof(S), out List<ISystem> sendSystems))
+
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                foreach (ICallSystem<OutT> sendSystem in sendSystems)
-                {
-                    outT = sendSystem.Invoke(self);
-                }
-                bit = true;
+                return group.TryCallSystem<S, OutT>(self, out  outT);
             }
-            outT = default(OutT);
-            return bit;
+            else
+            {
+                outT = default(OutT);
+                return false;
+            }
+
         }
         public static bool TryCallSystem<S, T1, OutT>(this Entity self, T1 arg1, out OutT outT)
           where S : ICallSystem<T1, OutT>
         {
-            bool bit = false;
-            if (self.Root.SystemManager.TryGetSystems(self.Type, typeof(S), out List<ISystem> sendSystems))
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                foreach (ICallSystem<T1, OutT> sendSystem in sendSystems)
-                {
-                    outT = sendSystem.Invoke(self, arg1);
-                }
-                bit = true;
+                return group.TryCallSystem<S, T1, OutT>(self, arg1, out outT);
             }
-            outT = default(OutT);
-            return bit;
+            else
+            {
+                outT = default(OutT);
+                return false;
+            }
         }
 
 
         public static OutT CallSystem<S, OutT>(this Entity self)
           where S : ICallSystem<OutT>
         {
-            return self.TryCallSystem<S, OutT>(out OutT outT) ? outT : default(OutT);
+            self.TryCallSystem<S, OutT>(out OutT outT);
+            return outT;
         }
         public static OutT CallSystem<S, T1, OutT>(this Entity self, T1 arg1)
           where S : ICallSystem<T1, OutT>
         {
-            return self.TryCallSystem<S, T1, OutT>(arg1, out OutT outT) ? outT : default(OutT);
+            self.TryCallSystem<S, T1, OutT>(arg1, out OutT outT);
+            return outT;
         }
-
 
 
         #endregion
@@ -130,34 +113,29 @@ namespace WorldTree
         public static bool TryCallsSystem<S, OutT>(this Entity self, out UnitList<OutT> values)
         where S : ICallSystem<OutT>
         {
-            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
-            bool bit = false;
-            if (self.Root.SystemManager.TryGetSystems(self.Type, typeof(S), out List<ISystem> sendSystems))
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                foreach (ICallSystem<OutT> sendSystem in sendSystems)
-                {
-                    values.Add(sendSystem.Invoke(self));
-                }
-                bit = true;
+                return group.TryCallsSystem<S, OutT>(self, out values);
             }
-            return bit;
+            else
+            {
+                values = null;
+                return false;
+            }
         }
         public static bool TryCallsSystem<S, T1, OutT>(this Entity self, T1 arg1, out UnitList<OutT> values)
         where S : ICallSystem<T1, OutT>
         {
-            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
-            bool bit = false;
-            if (self.Root.SystemManager.TryGetSystems(self.Type, typeof(S), out List<ISystem> sendSystems))
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                foreach (ICallSystem<T1, OutT> sendSystem in sendSystems)
-                {
-                    values.Add(sendSystem.Invoke(self, arg1));
-                }
-                bit = true;
+                return group.TryCallsSystem<S, T1, OutT>(self, arg1, out values);
             }
-            return bit;
+            else
+            {
+                values = null;
+                return false;
+            }
         }
-
 
         public static UnitList<OutT> CallsSystem<S, OutT>(this Entity self)
         where S : ICallSystem<OutT>
