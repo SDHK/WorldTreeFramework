@@ -41,7 +41,7 @@ namespace WorldTree
             self.AddChildren<Node>();
             self.AddChildren<Node>();
             self.AddChildren<Node>();
-            self.Root.SystemManager.Get<IAddSendSystem>()?.SendSystem<IAddSendSystem, float>(0.1f);
+            self.Root.SystemManager.Get<NodeAddSendSystem>()?.SendSystem<NodeAddSendSystem, float>(0.1f);
 
         }
     }

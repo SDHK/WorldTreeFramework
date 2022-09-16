@@ -20,19 +20,20 @@ public class NodeSendSystem : SendSystem<Node,ISendSystem<float>, float>
 
 
 
-public interface IAddSendSystem :ISendSystem<float>{ }
-public abstract class NodeAddSendSystem : SendSystem<Node, IAddSendSystem, float>
+//public interface IAddSendSystem :ISendSystem<float>{ }
+public  abstract class NodeAddSendSystem : SendSystem<Node, NodeAddSendSystem, float>{}
+public abstract class NodeAddSendSystem1<T> : NodeAddSendSystem
+    where T : Node
 {
-    //public override void Event(Node self, float arg1)
-    //{
-    //    World.Log($"测试事件：{arg1}");
-    //}
-   
+    public override void Event(Node self, float arg1) => Event1(self as T, arg1);
+    public abstract void Event1(Node self, float arg1);
 }
-public class NodeAddSendSystem1 : NodeAddSendSystem
+
+
+public class NodeAddSendSystem2 : NodeAddSendSystem1<Node>
 {
-    public override void Event(Node self, float arg1)
+    public override void Event1(Node self, float arg1)
     {
-        throw new NotImplementedException();
+
     }
 }
