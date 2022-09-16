@@ -10,7 +10,7 @@ public class Node : Entity
 }
 
 
-public class NodeSendSystem : SendSystem<Node, float>
+public class NodeSendSystem : SendSystem<Node,ISendSystem<float>, float>
 {
     public override void Event(Node self, float i)
     {
@@ -20,13 +20,19 @@ public class NodeSendSystem : SendSystem<Node, float>
 
 
 
-public interface IAddSendSystem : ISendSystem<float> { }
-
-public class NodeAddSendSystem : SendSystem<Node, float>, IAddSendSystem
+public interface IAddSendSystem :ISendSystem<float>{ }
+public abstract class NodeAddSendSystem : SendSystem<Node, IAddSendSystem, float>
 {
-    public override Type SystemType => typeof(IAddSendSystem);
+    //public override void Event(Node self, float arg1)
+    //{
+    //    World.Log($"测试事件：{arg1}");
+    //}
+   
+}
+public class NodeAddSendSystem1 : NodeAddSendSystem
+{
     public override void Event(Node self, float arg1)
     {
-        World.Log($"测试事件：{arg1}");
+        throw new NotImplementedException();
     }
 }

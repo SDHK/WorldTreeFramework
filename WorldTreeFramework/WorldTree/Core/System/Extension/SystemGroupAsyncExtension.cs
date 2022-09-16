@@ -15,7 +15,7 @@ namespace WorldTree
             {
                 if (group.TryGetValue(self.Type, out List<ISystem> systems))
                 {
-                    foreach (S system in systems)
+                    foreach (ICallSystem<AsyncTask> system in systems)
                     {
                         await system.Invoke(self);
                     }
@@ -37,7 +37,7 @@ namespace WorldTree
             {
                 if (group.TryGetValue(self.Type, out List<ISystem> systems))
                 {
-                    foreach (S system in systems)
+                    foreach (ICallSystem<T1, AsyncTask> system in systems)
                     {
                         await system.Invoke(self, arg1);
                     }
@@ -81,7 +81,7 @@ namespace WorldTree
             {
                 if (group.TryGetValue(self.Type, out List<ISystem> systems))
                 {
-                    foreach (S system in systems)
+                    foreach (ICallSystem<T1, T2, T3, AsyncTask> system in systems)
                     {
                         await system.Invoke(self, arg1, arg2, arg3);
                     }
@@ -131,7 +131,7 @@ namespace WorldTree
             {
                 if (group.TryGetValue(self.Type, out List<ISystem> systems))
                 {
-                    foreach (S system in systems)
+                    foreach (ICallSystem<AsyncTask<OutT>> system in systems)
                     {
                         outT = await system.Invoke(self);
                     }
@@ -155,7 +155,7 @@ namespace WorldTree
             {
                 if (group.TryGetValue(self.Type, out List<ISystem> systems))
                 {
-                    foreach (S system in systems)
+                    foreach (ICallSystem<T1, AsyncTask<OutT>> system in systems)
                     {
                         outT = await system.Invoke(self, arg1);
                     }
@@ -183,7 +183,7 @@ namespace WorldTree
             {
                 if (group.TryGetValue(self.Type, out List<ISystem> systems))
                 {
-                    foreach (S system in systems)
+                    foreach (ICallSystem<AsyncTask<OutT>> system in systems)
                     {
                         values.Add(await system.Invoke(self));
                     }
@@ -206,7 +206,7 @@ namespace WorldTree
             {
                 if (group.TryGetValue(self.Type, out List<ISystem> systems))
                 {
-                    foreach (S system in systems)
+                    foreach (ICallSystem<T1, AsyncTask<OutT>> system in systems)
                     {
                         values.Add(await system.Invoke(self,arg1));
                     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WorldTree
 {
-    public partial class  SystemRadio : Entity
+    public partial class SystemRadio : Entity
     {
         public SystemGroup systems;
 
@@ -57,7 +57,7 @@ namespace WorldTree
         }
     }
 
-    class SystemRadioSendSystem : SendSystem<SystemRadio, SystemGroup>
+    class SystemRadioSendSystem : SendSystem<SystemRadio, ISendSystem<SystemGroup>, SystemGroup>
     {
         public override void Event(SystemRadio self, SystemGroup arg1)
         {
