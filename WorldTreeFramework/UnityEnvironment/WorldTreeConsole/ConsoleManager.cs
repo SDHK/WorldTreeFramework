@@ -20,7 +20,7 @@ namespace WorldTree
         public override void OnAdd(ConsoleManager self)
         {
             self.ViewShows = self.Root.ObjectPoolManager.Get<UnitDictionary<long, bool>>();
-            foreach (var item in self.Root.allEntities)
+            foreach (var item in self.Root.allEntity)
             {
                 self.ViewShows.TryAdd(item.Key, true);
             }

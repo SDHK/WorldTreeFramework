@@ -31,7 +31,7 @@ namespace WorldTree
     /// </summary>
     public class EntityManager : Entity
     {
-        public UnitDictionary<long, Entity> allEntities = new UnitDictionary<long, Entity>();
+        public UnitDictionary<long, Entity> allEntity = new UnitDictionary<long, Entity>();
 
         //有监听器的实体
         public UnitDictionary<Type, Entity> listeners = new UnitDictionary<Type, Entity>();
@@ -97,13 +97,13 @@ namespace WorldTree
 
 
             //饿汉单例启动
-            foreach (UnitList<ISystem> singletonEagers in singletonEagerSystems.Values)
-            {
-                foreach (ISingletonEagerSystem singletonEager in singletonEagers)
-                {
-                    singletonEager.Singleton(this);
-                }
-            }
+            //foreach (UnitList<ISystem> singletonEagers in singletonEagerSystems.Values)
+            //{
+            //    foreach (ISingletonEagerSystem singletonEager in singletonEagers)
+            //    {
+            //        singletonEager.Singleton(this);
+            //    }
+            //}
         }
 
         public override void OnDispose()
@@ -128,15 +128,16 @@ namespace WorldTree
                     }
                 }
             }
-            allEntities.TryAdd(entity.id, entity);
+            allEntity.TryAdd(entity.id, entity);
             //这个实体的添加事件
-            if (addSystems.TryGetValue(entity.Type, out List<ISystem> addsystem))
-            {
-                foreach (IAddSystem system in addsystem)
+            if (addSystems != null)
+                if (addSystems.TryGetValue(entity.Type, out List<ISystem> addsystem))
                 {
-                    system.Invoke(entity);
+                    foreach (IAddSystem system in addsystem)
+                    {
+                        system.Invoke(entity);
+                    }
                 }
-            }
 
             //检测到系统存在，则说明这是个监听器
             if (entityAddSystems.ContainsKey(typeKey) || entityRemoveSystems.ContainsKey(typeKey))
@@ -165,7 +166,7 @@ namespace WorldTree
                     system.Invoke(entity);
                 }
             }
-            allEntities.Remove(entity.id);
+            allEntity.Remove(entity.id);
 
             foreach (var manager in listeners)//广播给全部监听器
             {
@@ -181,24 +182,26 @@ namespace WorldTree
 
         public void Enable(Entity entity)
         {
-            if (enableSystems.TryGetValue(entity.Type, out List<ISystem> enableSystem))
-            {
-                foreach (IEnableSystem system in enableSystem)
+            if (enableSystems != null)
+                if (enableSystems.TryGetValue(entity.Type, out List<ISystem> enableSystem))
                 {
-                    system.Invoke(entity);
+                    foreach (IEnableSystem system in enableSystem)
+                    {
+                        system.Invoke(entity);
+                    }
                 }
-            }
         }
 
         public void Disable(Entity entity)
         {
-            if (disableSystems.TryGetValue(entity.Type, out List<ISystem> disableSystem))
-            {
-                foreach (IDisableSystem system in disableSystem)
+            if (disableSystems != null)
+                if (disableSystems.TryGetValue(entity.Type, out List<ISystem> disableSystem))
                 {
-                    system.Invoke(entity);
+                    foreach (IDisableSystem system in disableSystem)
+                    {
+                        system.Invoke(entity);
+                    }
                 }
-            }
         }
 
     }

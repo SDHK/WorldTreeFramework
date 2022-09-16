@@ -59,7 +59,7 @@ namespace WorldTree
 
             self.componentShowSwitchs.TryAdd(self.Root.id, true);
             self.childrenShowSwitchs.TryAdd(self.Root.id, true);
-            foreach (var item in self.Root.allEntities)
+            foreach (var item in self.Root.allEntity)
             {
                 self.componentShowSwitchs.TryAdd(item.Value.id, true);
                 self.childrenShowSwitchs.TryAdd(item.Value.id, true);

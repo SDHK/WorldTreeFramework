@@ -319,6 +319,7 @@ namespace WorldTree
             return entity;
         }
 
+
         /// <summary>
         /// 添加新的子节点
         /// </summary>
@@ -474,7 +475,7 @@ namespace WorldTree
         {
             if (component != null)
             {
-                Type type =  component.GetType();
+                Type type = component.GetType();
                 if (Components.TryAdd(type, component))
                 {
                     component.Parent = this;

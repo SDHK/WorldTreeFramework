@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WorldTree
 {
-    public class SystemRadio : Entity
+    public partial class  SystemRadio : Entity
     {
         public SystemGroup systems;
 
@@ -53,6 +53,21 @@ namespace WorldTree
             {
                 self.update1.Remove(entity.id);
                 self.update2.Remove(entity.id);
+            }
+        }
+    }
+
+    class SystemRadioSendSystem : SendSystem<SystemRadio, SystemGroup>
+    {
+        public override void Event(SystemRadio self, SystemGroup arg1)
+        {
+            self.systems = arg1;
+            foreach (var entity in self.Root.allEntity.Values)
+            {
+                if (arg1.ContainsKey(entity.Type))
+                {
+                    self.update2.Add(entity.id, entity);
+                }
             }
         }
     }

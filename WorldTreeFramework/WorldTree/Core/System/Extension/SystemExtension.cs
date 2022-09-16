@@ -22,7 +22,7 @@
         {
             if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                return group.TrySendSystem<S,T1>(self, arg1);
+                return group.TrySendSystem<S, T1>(self, arg1);
             }
             else
             {
@@ -35,6 +35,19 @@
             if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
                 return group.TrySendSystem<S, T1, T2>(self, arg1, arg2);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool TrySendSystem<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
+      where S : ISendSystem<T1, T2, T3>
+        {
+            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            {
+                return group.TrySendSystem<S, T1, T2, T3>(self, arg1, arg2, arg3);
             }
             else
             {
@@ -57,6 +70,11 @@
         {
             self.TrySendSystem<S, T1, T2>(arg1, arg2);
         }
+        public static void SendSystem<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
+           where S : ISendSystem<T1, T2, T3>
+        {
+            self.TrySendSystem<S, T1, T2, T3>(arg1, arg2, arg3);
+        }
 
         #endregion
 
@@ -68,7 +86,7 @@
 
             if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
             {
-                return group.TryCallSystem<S, OutT>(self, out  outT);
+                return group.TryCallSystem<S, OutT>(self, out outT);
             }
             else
             {

@@ -31,21 +31,22 @@ namespace WorldTree
         public override void OnAdd(EventManager self)
         {
             //进行遍历分类
-            self.systemGroup = self.RootGetSystemGroup<IEventSystem>();
-
-            foreach (var systems in self.systemGroup.Values)
+            if (self.Root.SystemManager.TryGetSystemGroup<IEventSystem>(out self.systemGroup))
             {
-                foreach (IEventSystem system in systems)
+                foreach (var systems in self.systemGroup.Values)
                 {
-                    //反射属性获取键值
-                    Type key = typeof(EventDelegate);
-                    object[] attributes = system.GetType().GetCustomAttributes(typeof(EventKeyAttribute), true);
-                    if (attributes.Length != 0)
+                    foreach (IEventSystem system in systems)
                     {
-                        key = (attributes[0] as EventKeyAttribute)?.key;
+                        //反射属性获取键值
+                        Type key = typeof(EventDelegate);
+                        object[] attributes = system.GetType().GetCustomAttributes(typeof(EventKeyAttribute), true);
+                        if (attributes.Length != 0)
+                        {
+                            key = (attributes[0] as EventKeyAttribute)?.key;
+                        }
+                        //分组注册事件
+                        //self.AddComponent(key).To<EventDelegate>().AddDelegate(system.GetDeleate());
                     }
-                    //分组注册事件
-                    //self.AddComponent(key).To<EventDelegate>().AddDelegate(system.GetDeleate());
                 }
             }
         }

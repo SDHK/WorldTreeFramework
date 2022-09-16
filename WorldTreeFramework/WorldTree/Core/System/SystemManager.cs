@@ -61,6 +61,9 @@ namespace WorldTree
         //接口类型，（实例类型，实例方法）
         private UnitDictionary<Type, SystemGroup> InterfaceSystems = new UnitDictionary<Type, SystemGroup>();
 
+        private UnitDictionary<Type, SystemRadio> radios = new UnitDictionary<Type, SystemRadio>();
+
+
         public SystemManager() : base()
         {
             Initialize();
@@ -99,17 +102,17 @@ namespace WorldTree
         /// </summary>
         public SystemGroup GetSystemGroup(Type Interface)
         {
-            TryGetSystemGroup(Interface, out  SystemGroup systemGroup);
+            TryGetSystemGroup(Interface, out SystemGroup systemGroup);
             return systemGroup;
         }
 
         /// <summary>
         /// 获取系统组
         /// </summary>
-        public bool TryGetSystemGroup<T>( out SystemGroup systemGroup)
+        public bool TryGetSystemGroup<T>(out SystemGroup systemGroup)
          where T : ISystem
         {
-            return TryGetSystemGroup(typeof(T),out systemGroup);
+            return TryGetSystemGroup(typeof(T), out systemGroup);
         }
 
         /// <summary>
@@ -142,6 +145,38 @@ namespace WorldTree
             systems = null;
             return false;
         }
+
+        /// <summary>
+        /// 获取系统广播
+        /// </summary>
+        public SystemRadio Get<T>()
+        where T : ISystem
+        {
+            Type type = typeof(T);
+            return Get(type);
+        }
+
+        /// <summary>
+        /// 获取系统广播
+        /// </summary>
+        public SystemRadio Get(Type type)
+        {
+            if (!radios.TryGetValue(type, out SystemRadio radio))
+            {
+                if (TryGetSystemGroup(type, out SystemGroup group))
+                {
+                    radio = this.AddChildren<SystemRadio, SystemGroup>(group);
+                    radios.Add(type, radio);
+                }
+                else
+                {
+                    World.Log(type.Name + "不存在");
+                }
+            }
+            return radio;
+        }
+
+
 
         public override void OnDispose()
         {

@@ -42,6 +42,5 @@ namespace WorldTree
             return str;
         }
 
-
     }
 }

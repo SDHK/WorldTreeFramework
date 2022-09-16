@@ -66,6 +66,26 @@ namespace WorldTree
         }
 
 
+        public static bool TrySendSystem<S, T1, T2, T3>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
+        where S : ISendSystem<T1, T2, T3>
+        {
+            bool bit = false;
+            if (group.systemType == typeof(S))
+            {
+                if (group.TryGetValue(self.Type, out List<ISystem> systems))
+                {
+                    foreach (ISendSystem<T1, T2, T3> system in systems)
+                    {
+                        system.Invoke(self, arg1, arg2, arg3);
+                    }
+                    bit = true;
+                }
+            }
+            return bit;
+        }
+
+
+
         public static void SendSystem<S>(this SystemGroup group, Entity self)
           where S : ISendSystem
         {
@@ -83,6 +103,13 @@ namespace WorldTree
         {
             group.TrySendSystem<S, T1, T2>(self, arg1, arg2);
         }
+        public static void SendSystem<S, T1, T2, T3>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
+           where S : ISendSystem<T1, T2, T3>
+        {
+            group.TrySendSystem<S, T1, T2, T3>(self, arg1, arg2, arg3);
+        }
+
+
         #endregion
 
 
