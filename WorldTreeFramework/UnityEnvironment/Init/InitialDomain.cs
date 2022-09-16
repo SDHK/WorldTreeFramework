@@ -28,17 +28,6 @@ namespace WorldTree
 
     }
 
-
-    class _InitialDomainNewSystem : NewSystem<InitialDomain>
-    {
-        public override void OnNew(InitialDomain self)
-        {
-            World.Log("初始域New！");
-        }
-    }
-
-
-    //原系统
     class _InitialDomain : AddSystem<InitialDomain>
     {
         public override void OnAdd(InitialDomain self)
@@ -56,32 +45,5 @@ namespace WorldTree
 
         }
     }
-
-
-    public class 新方案 : InitialDomain{ }
-    class 新方案的加入系统 : AddSystem<InitialDomain>
-    {
-        public override Type EntityType => typeof(新方案); 
-        public override void OnAdd(InitialDomain self)
-        {
-
-            self.Domain = self;
-            World.Log("初始域启动 新方案！！！！！");
-        }
-    }
-
-
-
-    class 父类的加入系统 : AddSystem<Entity>
-    {
-   
-        public override void OnAdd(Entity self)
-        {
-
-            self.Domain = self;
-            World.Log("初始域启动 父类系统！！！！！");
-        }
-    }
-
 
 }
