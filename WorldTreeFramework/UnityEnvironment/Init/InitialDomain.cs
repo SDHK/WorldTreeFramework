@@ -17,9 +17,10 @@ namespace WorldTree
     /// <summary>
     /// 初始域
     /// </summary>
-    public class InitialDomain : Entity {
+    public class InitialDomain : Entity
+    {
 
-       public InitialDomain()
+        public InitialDomain()
         {
             //Type = typeof(新方案);//实体改标签为子类新方案
 
@@ -40,10 +41,9 @@ namespace WorldTree
             self.AddChildren<Node>();
             self.AddChildren<Node>();
             self.AddChildren<Node>();
-            self.AddChildren<Node>();
+            self.AddChildren<Node, int>(10);
 
-            self.GetSystemBroadcast<INodeAddSendSystem>()?.SendSystem();
-
+            self.GetSystemBroadcast<INodeAddSendSystem>()?.Send(2);
         }
     }
 

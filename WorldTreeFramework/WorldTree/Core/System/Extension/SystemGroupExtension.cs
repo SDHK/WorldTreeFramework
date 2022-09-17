@@ -69,6 +69,34 @@ namespace WorldTree
             return bit;
         }
 
+        public static bool TrySend<T1, T2, T3, T4>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        {
+            bool bit = false;
+
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ISendSystem<T1, T2, T3, T4> system in systems)
+                {
+                    system.Invoke(self, arg1, arg2, arg3, arg4);
+                }
+                bit = true;
+            }
+            return bit;
+        }
+        public static bool TrySend<T1, T2, T3, T4, T5>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        {
+            bool bit = false;
+
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ISendSystem<T1, T2, T3, T4, T5> system in systems)
+                {
+                    system.Invoke(self, arg1, arg2, arg3, arg4, arg5);
+                }
+                bit = true;
+            }
+            return bit;
+        }
 
 
         public static void Send(this SystemGroup group, Entity self)
@@ -89,8 +117,14 @@ namespace WorldTree
         {
             group.TrySend(self, arg1, arg2, arg3);
         }
-
-
+        public static void Send<T1, T2, T3, T4>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        {
+            group.TrySend(self, arg1, arg2, arg3, arg4);
+        }
+        public static void Send<T1, T2, T3, T4, T5>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        {
+            group.TrySend(self, arg1, arg2, arg3, arg4, arg5);
+        }
         #endregion
 
 
@@ -99,7 +133,6 @@ namespace WorldTree
         {
             bool bit = false;
             outT = default(OutT);
-
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<OutT> system in systems)
@@ -125,6 +158,64 @@ namespace WorldTree
             }
             return bit;
         }
+        public static bool TryCall<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, out OutT outT)
+        {
+            bool bit = false;
+            outT = default(OutT);
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ICallSystem<T1, T2, OutT> system in systems)
+                {
+                    outT = system.Invoke(self, arg1, arg2);
+                }
+                bit = true;
+            }
+            return bit;
+        }
+
+        public static bool TryCall<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
+        {
+            bool bit = false;
+            outT = default(OutT);
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ICallSystem<T1, T2, T3, OutT> system in systems)
+                {
+                    outT = system.Invoke(self, arg1, arg2, arg3);
+                }
+                bit = true;
+            }
+            return bit;
+        }
+        public static bool TryCall<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
+        {
+            bool bit = false;
+            outT = default(OutT);
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ICallSystem<T1, T2, T3, T4, OutT> system in systems)
+                {
+                    outT = system.Invoke(self, arg1, arg2, arg3, arg4);
+                }
+                bit = true;
+            }
+            return bit;
+        }
+
+        public static bool TryCall<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
+        {
+            bool bit = false;
+            outT = default(OutT);
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ICallSystem<T1, T2, T3, T4, T5, OutT> system in systems)
+                {
+                    outT = system.Invoke(self, arg1, arg2, arg3, arg4, arg5);
+                }
+                bit = true;
+            }
+            return bit;
+        }
 
 
 
@@ -139,6 +230,31 @@ namespace WorldTree
             group.TryCall(self, arg1, out OutT outT);
             return outT;
         }
+
+        public static OutT Call<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
+        {
+            group.TryCall(self, arg1, arg2, out OutT outT);
+            return outT;
+        }
+
+        public static OutT Call<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
+        {
+            group.TryCall(self, arg1, arg2, arg3, out OutT outT);
+            return outT;
+        }
+
+        public static OutT Call<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        {
+            group.TryCall(self, arg1, arg2, arg3, arg4, out OutT outT);
+            return outT;
+        }
+
+        public static OutT Call<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        {
+            group.TryCall(self, arg1, arg2, arg3, arg4, arg5, out OutT outT);
+            return outT;
+        }
+
         #endregion
 
 
@@ -173,6 +289,67 @@ namespace WorldTree
             }
             return bit;
         }
+        public static bool TryCalls<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, out UnitList<OutT> values)
+        {
+            bool bit = false;
+            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ICallSystem<T1, T2, OutT> system in systems)
+                {
+                    values.Add(system.Invoke(self, arg1, arg2));
+                }
+                bit = true;
+            }
+            return bit;
+        }
+
+        public static bool TryCalls<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
+        {
+            bool bit = false;
+            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ICallSystem<T1, T2, T3, OutT> system in systems)
+                {
+                    values.Add(system.Invoke(self, arg1, arg2, arg3));
+                }
+                bit = true;
+            }
+            return bit;
+        }
+        public static bool TryCalls<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
+        {
+            bool bit = false;
+            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ICallSystem<T1, T2, T3, T4, OutT> system in systems)
+                {
+                    values.Add(system.Invoke(self, arg1, arg2, arg3, arg4));
+                }
+                bit = true;
+            }
+            return bit;
+        }
+
+        public static bool TryCalls<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
+        {
+            bool bit = false;
+            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            if (group.TryGetValue(self.Type, out List<ISystem> systems))
+            {
+                foreach (ICallSystem<T1, T2, T3, T4, T5, OutT> system in systems)
+                {
+                    values.Add(system.Invoke(self, arg1, arg2, arg3, arg4, arg5));
+                }
+                bit = true;
+            }
+            return bit;
+        }
+
+
+
 
 
         public static UnitList<OutT> Calls<OutT>(this SystemGroup group, Entity self)
@@ -183,6 +360,29 @@ namespace WorldTree
         public static UnitList<OutT> Calls<T1, OutT>(this SystemGroup group, Entity self, T1 arg1)
         {
             group.TryCalls(self, arg1, out UnitList<OutT> outT);
+            return outT;
+        }
+        public static UnitList<OutT> Calls<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
+        {
+            group.TryCalls(self, arg1, arg2, out UnitList<OutT> outT);
+            return outT;
+        }
+
+        public static UnitList<OutT> Calls<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
+        {
+            group.TryCalls(self, arg1, arg2, arg3, out UnitList<OutT> outT);
+            return outT;
+        }
+
+        public static UnitList<OutT> Calls<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        {
+            group.TryCalls(self, arg1, arg2, arg3, arg4, out UnitList<OutT> outT);
+            return outT;
+        }
+
+        public static UnitList<OutT> Calls<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        {
+            group.TryCalls(self, arg1, arg2, arg3, arg4, arg5, out UnitList<OutT> outT);
             return outT;
         }
         #endregion

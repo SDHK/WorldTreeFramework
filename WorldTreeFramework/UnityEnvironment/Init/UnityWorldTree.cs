@@ -42,23 +42,23 @@ namespace WorldTree
 
         private void Update()
         {
-            update?.SendSystem(Time.deltaTime);
+            update?.Send(Time.deltaTime);
 
             if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(root.ToStringDrawTree());
         }
 
         private void LateUpdate()
         {
-            lateUpdate?.SendSystem(Time.deltaTime);
+            lateUpdate?.Send(Time.deltaTime);
         }
         private void FixedUpdate()
         {
-            fixedUpdate?.SendSystem(Time.fixedDeltaTime);
+            fixedUpdate?.Send(Time.fixedDeltaTime);
         }
 
         private void OnGUI()
         {
-            onGUI?.SendSystem(0.02f);
+            onGUI?.Send(0.02f);
         }
 
         private void OnDestroy()
