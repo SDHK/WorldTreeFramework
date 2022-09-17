@@ -13,9 +13,9 @@ namespace WorldTree
         public static async AsyncTask<bool> TrySendAsyncSystem<S>(this Entity self)
         where S : ICallSystem<AsyncTask>
         {
-            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
             {
-                return await group.TrySendAsyncSystem<S>(self);
+                return await group.TrySendAsyncSystem(self);
             }
             else
             {
@@ -27,9 +27,9 @@ namespace WorldTree
         public static async AsyncTask<bool> TrySendAsyncSystem<S, T1>(this Entity self, T1 arg1)
         where S : ICallSystem<T1, AsyncTask>
         {
-            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
             {
-                return await group.TrySendAsyncSystem<S, T1>(self, arg1);
+                return await group.TrySendAsyncSystem(self, arg1);
             }
             else
             {
@@ -39,11 +39,11 @@ namespace WorldTree
         }
 
         public static async AsyncTask<bool> TrySendAsyncSystem<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
-       where S : ICallSystem<T1, T2, AsyncTask>
+        where S : ICallSystem<T1, T2, AsyncTask>
         {
-            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
             {
-                return await group.TrySendAsyncSystem<S, T1, T2>(self, arg1, arg2);
+                return await group.TrySendAsyncSystem(self, arg1, arg2);
             }
             else
             {
@@ -54,9 +54,9 @@ namespace WorldTree
         public static async AsyncTask<bool> TrySendAsyncSystem<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
         where S : ICallSystem<T1, T2, T3, AsyncTask>
         {
-            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
             {
-                return await group.TrySendAsyncSystem<S, T1, T2, T3>(self, arg1, arg2, arg3);
+                return await group.TrySendAsyncSystem(self, arg1, arg2, arg3);
             }
             else
             {
@@ -94,9 +94,9 @@ namespace WorldTree
         public static async AsyncTask<OutT> CallAsyncSystem<S, OutT>(this Entity self)
         where S : ICallSystem<AsyncTask<OutT>>
         {
-            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
             {
-                return await group.CallAsyncSystem<S, OutT>(self);
+                return await group.CallAsyncSystem<OutT>(self);
             }
             else
             {
@@ -108,9 +108,9 @@ namespace WorldTree
         public static async AsyncTask<OutT> CallAsyncSystem<S, T1, OutT>(this Entity self, T1 arg1)
         where S : ICallSystem<T1, AsyncTask<OutT>>
         {
-            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
             {
-                return await group.CallAsyncSystem<S, T1, OutT>(self, arg1);
+                return await group.CallAsyncSystem<T1, OutT>(self, arg1);
             }
             else
             {
@@ -127,9 +127,9 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsyncSystem<S, OutT>(this Entity self)
         where S : ICallSystem<AsyncTask<OutT>>
         {
-            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
             {
-                return await group.CallsAsyncSystem<S, OutT>(self);
+                return await group.CallsAsyncSystem<OutT>(self);
             }
             else
             {
@@ -141,9 +141,9 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsyncSystem<S, T1, OutT>(this Entity self, T1 arg1)
         where S : ICallSystem<T1, AsyncTask<OutT>>
         {
-            if (self.Root.SystemManager.TryGetSystemGroup<S>(out SystemGroup group))
+            if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
             {
-                return await group.CallsAsyncSystem<S, T1, OutT>(self, arg1);
+                return await group.CallsAsyncSystem<T1, OutT>(self, arg1);
             }
             else
             {

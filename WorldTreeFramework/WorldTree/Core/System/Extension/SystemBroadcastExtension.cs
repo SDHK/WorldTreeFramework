@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/9/16 22:03
+
+* 描述： 
+
+*/
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WorldTree
 {
-    public partial class SystemRadio
+    public partial class SystemBroadcast
     {
-        public void SendSystem<S>()
-        where S : ISendSystem
+        public void SendSystem()
         {
             if (IsActice)
             {
@@ -20,7 +23,7 @@ namespace WorldTree
                     Entity entity = update1[firstKey];
                     if (entity.IsActice)
                     {
-                        systems.SendSystem<S>(entity);
+                        systems.Send(entity);
                     }
                     update1.Remove(firstKey);
                     if (!entity.IsRecycle)
@@ -32,8 +35,7 @@ namespace WorldTree
 
         }
 
-        public void SendSystem<S, T1>(T1 arg1)
-        where S : ISendSystem<T1>
+        public void SendSystem<T1>(T1 arg1)
         {
             if (IsActice)
             {
@@ -44,7 +46,7 @@ namespace WorldTree
                     Entity entity = update1[firstKey];
                     if (entity.IsActice)
                     {
-                        systems.SendSystem<S, T1>(entity, arg1);
+                        systems.Send(entity, arg1);
                     }
                     update1.Remove(firstKey);
                     if (!entity.IsRecycle)
@@ -56,8 +58,7 @@ namespace WorldTree
         }
 
 
-        public void SendSystem<S, T1, T2>(T1 arg1, T2 arg2)
-        where S : ISendSystem<T1, T2>
+        public void SendSystem<T1, T2>(T1 arg1, T2 arg2)
         {
             if (IsActice)
             {
@@ -68,7 +69,7 @@ namespace WorldTree
                     Entity entity = update1[firstKey];
                     if (entity.IsActice)
                     {
-                        systems.SendSystem<S, T1, T2>(entity, arg1, arg2);
+                        systems.Send(entity, arg1, arg2);
                     }
                     update1.Remove(firstKey);
                     if (!entity.IsRecycle)
@@ -78,8 +79,7 @@ namespace WorldTree
                 }
             }
         }
-        public void SendSystem<S, T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3)
-        where S : ISendSystem<T1, T2, T3>
+        public void SendSystem<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3)
         {
             if (IsActice)
             {
@@ -90,7 +90,7 @@ namespace WorldTree
                     Entity entity = update1[firstKey];
                     if (entity.IsActice)
                     {
-                        systems.SendSystem<S, T1, T2, T3>(entity, arg1, arg2, arg3);
+                        systems.Send(entity, arg1, arg2, arg3);
                     }
                     update1.Remove(firstKey);
                     if (!entity.IsRecycle)

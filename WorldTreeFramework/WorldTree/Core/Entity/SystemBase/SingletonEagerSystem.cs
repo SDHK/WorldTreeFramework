@@ -14,10 +14,8 @@ namespace WorldTree
     /// <summary>
     /// 实体饿汉单例系统接口
     /// </summary>
-    public interface ISingletonEagerSystem : ISystem
-    {
-        void Singleton(EntityManager domain);
-    }
+    public interface ISingletonEagerSystem : ISendSystem { }
+   
 
     /// <summary>
     /// 实体饿汉单例系统：生成组件挂在根节点下
@@ -25,9 +23,9 @@ namespace WorldTree
     public abstract class SingletonEagerSystem<T> : SystemBase<T, ISingletonEagerSystem>, ISingletonEagerSystem
         where T :Entity
     {
-        public void Singleton(EntityManager Root)
+        public void Invoke(Entity self)
         {
-            Root.AddComponent<T>();
+            self.AddComponent<T>();
         }
     }
 }

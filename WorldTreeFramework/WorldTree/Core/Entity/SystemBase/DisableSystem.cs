@@ -16,10 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 活跃禁用事件系统接口
     /// </summary>
-    public interface IDisableSystem : ISendSystem
-    {
-        void Invoke(Entity self);
-    }
+    public interface IDisableSystem : ISendSystem{ }
 
     /// <summary>
     /// 活跃禁用事件系统

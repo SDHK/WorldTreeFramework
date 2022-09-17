@@ -15,10 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 活跃启用事件系统接口
     /// </summary>
-    public interface IEnableSystem : ISendSystem
-    {
-        void Invoke(Entity self);
-    }
+    public interface IEnableSystem : ISendSystem  { }
 
     /// <summary>
     /// 活跃启用事件系统

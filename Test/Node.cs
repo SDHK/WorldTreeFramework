@@ -9,31 +9,33 @@ public class Node : Entity
 
 }
 
-
-public class NodeSendSystem : SendSystem<Node,ISendSystem<float>, float>
+class NodeUpdateSystem : UpdateSystem<Node>
 {
-    public override void Event(Node self, float i)
+    public override void Update(Node self, float deltaTime)
     {
-        Debug.Log("!!!" + i);
+        Debug.Log("Update");
     }
 }
 
 
 
+
 //public interface IAddSendSystem :ISendSystem<float>{ }
-public  abstract class NodeAddSendSystem : SendSystem<Node, NodeAddSendSystem, float>{}
-public abstract class NodeAddSendSystem1<T> : NodeAddSendSystem
-    where T : Node
+public interface  INodeAddSendSystem :ISendSystem{}
+
+public abstract class NodeAddSendSystem1<T> : SystemBase<T, INodeAddSendSystem>, INodeAddSendSystem
+    where T : Entity
 {
-    public override void Event(Node self, float arg1) => Event1(self as T, arg1);
-    public abstract void Event1(Node self, float arg1);
+    public   void Invoke(Entity self) => Event1(self as T);
+    public abstract void Event1(T self);
 }
 
 
 public class NodeAddSendSystem2 : NodeAddSendSystem1<Node>
 {
-    public override void Event1(Node self, float arg1)
-    {
 
+    public override void Event1(Node self)
+    {
+        Debug.Log("!!!!!!!!");
     }
 }

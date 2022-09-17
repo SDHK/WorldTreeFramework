@@ -8,6 +8,7 @@
 
 */
 
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace WorldTree
@@ -17,10 +18,11 @@ namespace WorldTree
     {
         public EntityManager root;
 
-        UpdateManager update;
-        LateUpdateManager lateUpdate;
-        FixedUpdateManager fixedUpdate;
-        OnGUIManager onGUI;
+        SystemBroadcast update;
+        SystemBroadcast lateUpdate;
+        SystemBroadcast fixedUpdate;
+        SystemBroadcast onGUI;
+
 
         private void Start()
         {
@@ -30,36 +32,33 @@ namespace WorldTree
 
             root = new EntityManager();
 
-            update = root.AddComponent<UpdateManager>();
-            lateUpdate = root.AddComponent<LateUpdateManager>();
-            fixedUpdate = root.AddComponent<FixedUpdateManager>();
-            onGUI = root.AddComponent<OnGUIManager>();
-            root.AddComponent<InitialDomain>();
+            update = root.GetSystemBroadcast<IUpdateSystem>();
+            lateUpdate = root.GetSystemBroadcast<ILateUpdateSystem>();
+            fixedUpdate = root.GetSystemBroadcast<IFixedUpdateSystem>();
+            onGUI = root.GetSystemBroadcast<IOnGUISystem>();
 
+            root.AddComponent<InitialDomain>();
         }
 
         private void Update()
         {
-            update.deltaTime = Time.deltaTime;
-            update.Update();
+            update?.SendSystem(Time.deltaTime);
 
             if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(root.ToStringDrawTree());
         }
 
         private void LateUpdate()
         {
-            lateUpdate.deltaTime = Time.deltaTime;
-            lateUpdate.Update();
+            lateUpdate?.SendSystem(Time.deltaTime);
         }
         private void FixedUpdate()
         {
-            fixedUpdate.deltaTime = Time.fixedDeltaTime;
-            fixedUpdate.Update();
+            fixedUpdate?.SendSystem(Time.fixedDeltaTime);
         }
 
         private void OnGUI()
         {
-            onGUI.Update();
+            onGUI?.SendSystem(0.02f);
         }
 
         private void OnDestroy()
@@ -67,6 +66,7 @@ namespace WorldTree
             update = null;
             lateUpdate = null;
             fixedUpdate = null;
+            onGUI = null;
             root.Dispose();
         }
 

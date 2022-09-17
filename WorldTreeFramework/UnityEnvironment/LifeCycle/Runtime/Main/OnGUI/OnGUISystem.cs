@@ -4,10 +4,7 @@
     /// <summary>
     /// OnGUI系统接口
     /// </summary>
-    public interface IOnGUISystem : ISendSystem<float>
-    {
-        void Invoke(Entity self, float deltaTime);
-    }
+    public interface IOnGUISystem : ISendSystem<float> { }
 
     /// <summary>
     /// OnGUI系统基类

@@ -13,7 +13,6 @@ namespace WorldTree
         public static PathAssetsFileEditorWindow windows;
 
         public EntityManager root;
-        public UpdateManager update;
 
 
         [MenuItem("SDHK/PathAssets")]
@@ -34,8 +33,6 @@ namespace WorldTree
 
             root = new EntityManager();
 
-            update = root.AddComponent<UpdateManager>();
-            update.deltaTime = 0.2f;
             root.AddComponent<InitialDomain>();
 
             World.Log(root.ToStringDrawTree());
@@ -54,14 +51,12 @@ namespace WorldTree
         }
         private void OnInspectorUpdate()
         {
-            update.Update();
         }
 
 
         private void OnDestroy()
         {
             root.Dispose();
-            update = null;
             World.Log(root.ToStringDrawTree());
 
         }

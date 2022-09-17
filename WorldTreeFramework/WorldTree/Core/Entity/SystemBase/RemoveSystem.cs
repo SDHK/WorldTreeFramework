@@ -15,10 +15,8 @@ namespace WorldTree
     /// <summary>
     /// 移除事件系统接口
     /// </summary>
-    public interface IRemoveSystem : ISendSystem
-    { 
-        void Invoke(Entity self);
-    }
+    public interface IRemoveSystem : ISendSystem { }
+  
     /// <summary>
     /// 移除事件系统
     /// </summary>

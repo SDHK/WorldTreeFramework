@@ -16,32 +16,6 @@ using System.Linq;
 
 namespace WorldTree
 {
-    public static class SystemManagerExtension
-    {
-
-        public static SystemManager SystemManager(this Entity self)
-        {
-            return self.Root.SystemManager;
-        }
-
-        /// <summary>
-        /// 获取系统组
-        /// </summary>
-        public static SystemGroup RootGetSystemGroup<T>(this Entity self)
-        where T : ISystem
-        {
-            return self.Root.SystemManager.GetSystemGroup<T>();
-        }
-
-        /// <summary>
-        /// 获取单类型系统列表
-        /// </summary>
-        public static List<ISystem> RootGetSystems<T>(this Entity self, Type type)
-        {
-            return self.Root.SystemManager.GetSystems<T>(type);
-        }
-
-    }
 
 
     class SystemManagerRemove : RemoveSystem<SystemManager>
@@ -61,7 +35,7 @@ namespace WorldTree
         //接口类型，（实例类型，实例方法）
         private UnitDictionary<Type, SystemGroup> InterfaceSystems = new UnitDictionary<Type, SystemGroup>();
 
-        private UnitDictionary<Type, SystemRadio> radios = new UnitDictionary<Type, SystemRadio>();
+        private UnitDictionary<Type, SystemBroadcast> broadcasts = new UnitDictionary<Type, SystemBroadcast>();
 
 
         public SystemManager() : base()
@@ -95,30 +69,30 @@ namespace WorldTree
         /// <summary>
         /// 获取系统组
         /// </summary>
-        public SystemGroup GetSystemGroup<T>() where T : ISystem => GetSystemGroup(typeof(T));
+        public SystemGroup GetGroup<T>() where T : ISystem => GetGroup(typeof(T));
 
         /// <summary>
         /// 获取系统组
         /// </summary>
-        public SystemGroup GetSystemGroup(Type Interface)
+        public SystemGroup GetGroup(Type Interface)
         {
-            TryGetSystemGroup(Interface, out SystemGroup systemGroup);
+            TryGetGroup(Interface, out SystemGroup systemGroup);
             return systemGroup;
         }
 
         /// <summary>
         /// 获取系统组
         /// </summary>
-        public bool TryGetSystemGroup<T>(out SystemGroup systemGroup)
+        public bool TryGetGroup<T>(out SystemGroup systemGroup)
          where T : ISystem
         {
-            return TryGetSystemGroup(typeof(T), out systemGroup);
+            return TryGetGroup(typeof(T), out systemGroup);
         }
 
         /// <summary>
         /// 获取系统组
         /// </summary>
-        public bool TryGetSystemGroup(Type Interface, out SystemGroup systemGroup)
+        public bool TryGetGroup(Type Interface, out SystemGroup systemGroup)
         {
             return InterfaceSystems.TryGetValue(Interface, out systemGroup);
         }
@@ -149,31 +123,26 @@ namespace WorldTree
         /// <summary>
         /// 获取系统广播
         /// </summary>
-        public SystemRadio Get<T>()
+        public SystemBroadcast GetBroadcast<T>()
         where T : ISystem
         {
-            Type type = typeof(T);
-            return Get(type);
+            return GetBroadcast(typeof(T));
         }
 
         /// <summary>
         /// 获取系统广播
         /// </summary>
-        public SystemRadio Get(Type type)
+        public SystemBroadcast GetBroadcast(Type type)
         {
-            if (!radios.TryGetValue(type, out SystemRadio radio))
+            if (!broadcasts.TryGetValue(type, out SystemBroadcast broadcast))
             {
-                if (TryGetSystemGroup(type, out SystemGroup group))
+                if (InterfaceSystems.TryGetValue(type, out SystemGroup group))
                 {
-                    radio = this.AddChildren<SystemRadio, SystemGroup>(group);
-                    radios.Add(type, radio);
-                }
-                else
-                {
-                    World.Log(type.Name + "不存在");
+                    broadcast = this.AddChildren<SystemBroadcast, SystemGroup>(group);
+                    broadcasts.Add(type, broadcast);
                 }
             }
-            return radio;
+            return broadcast;
         }
 
 

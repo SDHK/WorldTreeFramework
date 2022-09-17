@@ -8,7 +8,6 @@
         public T AddChildren<T, T1>(T1 arg1)
             where T : Entity
         {
-
             T entity = Root.ObjectPoolManager.Get<T>();
             if (Children.TryAdd(entity.id, entity))
             {

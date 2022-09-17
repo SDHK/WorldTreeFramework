@@ -13,15 +13,17 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-
-
-
     /// <summary>
     /// 系统集合组
     /// </summary>
     public class SystemGroup : Dictionary<Type, List<ISystem>>
     {
+
+        /// <summary>
+        /// 系统的类型
+        /// </summary>
         public Type systemType;
+
         /// <summary>
         /// 获取系统类列表
         /// </summary>

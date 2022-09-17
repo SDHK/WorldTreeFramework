@@ -52,7 +52,7 @@ namespace WorldTree
             self.title.FontAnchor = TextAnchor.MiddleLeft;
 
 
-            self.systems = self.RootGetSystemGroup<IConsoleTreeViewItemSystem>();
+            self.systems = self.GetSystemGroup<IConsoleTreeViewItemSystem>();
 
             self.componentShowSwitchs = self.Root.ObjectPoolManager.Get<UnitDictionary<long, bool>>();
             self.childrenShowSwitchs = self.Root.ObjectPoolManager.Get<UnitDictionary<long, bool>>();
