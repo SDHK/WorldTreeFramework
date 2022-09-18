@@ -19,7 +19,7 @@ namespace WorldTree
 
         public void Send()
         {
-            if (IsActice)
+            if (IsActive)
             {
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
@@ -34,7 +34,7 @@ namespace WorldTree
 
         public void Send<T1>(T1 arg1)
         {
-            if (IsActice)
+            if (IsActive)
             {
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
@@ -50,7 +50,7 @@ namespace WorldTree
 
         public void Send<T1, T2>(T1 arg1, T2 arg2)
         {
-            if (IsActice)
+            if (IsActive)
             {
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
@@ -64,7 +64,7 @@ namespace WorldTree
         }
         public void Send<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3)
         {
-            if (IsActice)
+            if (IsActive)
             {
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
@@ -78,7 +78,7 @@ namespace WorldTree
         }
         public void Send<T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
-            if (IsActice)
+            if (IsActive)
             {
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
@@ -92,7 +92,7 @@ namespace WorldTree
         }
         public void Send<T1, T2, T3, T4, T5>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
-            if (IsActice)
+            if (IsActive)
             {
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)

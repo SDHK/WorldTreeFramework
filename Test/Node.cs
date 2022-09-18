@@ -16,13 +16,13 @@ class NodeUpdateSystem : UpdateSystem<Node>
         Debug.Log("Update");
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            self.SetActive(!self.activeToggle);
+            self.SetActive(!self.ActiveToggle);
         }
 
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            self.AddComponent<Node1>().SetActive(!self.AddComponent<Node1>().activeToggle);
+            self.AddComponent<Node1>().SetActive(!self.AddComponent<Node1>().ActiveToggle);
         }
     }
 }

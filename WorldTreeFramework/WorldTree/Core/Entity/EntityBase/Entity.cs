@@ -103,12 +103,12 @@ namespace WorldTree
         /// <summary>
         /// 活跃开关
         /// </summary>
-        public bool activeToggle = false;
+        private bool activeToggle = false;
 
         /// <summary>
         /// 活跃状态
         /// </summary>
-        public bool active = false;
+        private bool active = false;
 
         /// <summary>
         /// 活跃事件标记
@@ -118,12 +118,12 @@ namespace WorldTree
         /// <summary>
         /// 活跃状态
         /// </summary>
-        public bool IsActice => active;
+        public bool IsActive => active;
 
         /// <summary>
         /// 活跃标记
         /// </summary>
-        public bool ActiveMark => activeToggle;
+        public bool ActiveToggle => activeToggle;
 
         /// <summary>
         /// 设置激活状态
