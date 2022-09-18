@@ -101,14 +101,20 @@ namespace WorldTree
         public Entity Parent;
 
         /// <summary>
-        /// 活跃标记
+        /// 活跃开关
         /// </summary>
-        private bool activeMark = false;
+        public bool activeToggle = false;
 
         /// <summary>
         /// 活跃状态
         /// </summary>
-        private bool active = false;
+        public bool active = false;
+
+        /// <summary>
+        /// 活跃事件标记
+        /// </summary>
+        public bool activeEventMark = false;
+
 
         /// <summary>
         /// 活跃状态
@@ -118,16 +124,16 @@ namespace WorldTree
         /// <summary>
         /// 活跃标记
         /// </summary>
-        public bool ActiveMark => activeMark;
+        public bool ActiveMark => activeEventMark;
 
         /// <summary>
         /// 设置激活状态
         /// </summary>
         public void SetActive(bool value)
         {
-            if (activeMark != value)
+            if (activeEventMark != value)
             {
-                activeMark = value;
+                activeEventMark = value;
                 RefreshActive();
             }
         }
@@ -138,7 +144,7 @@ namespace WorldTree
         private void RefreshActive()
         {
             var activeTag = active;
-            active = (Parent == null) ? activeMark : Parent.active && activeMark;
+            active = (Parent == null) ? activeEventMark : Parent.active && activeEventMark;
 
             if (activeTag != active)
             {
@@ -158,7 +164,7 @@ namespace WorldTree
                 {
                     foreach (var item in children.Values)
                     {
-                        if (item.activeMark == true)
+                        if (item.activeEventMark == true)
                         {
                             item.RefreshActive();    //递归属性
                         }
@@ -171,7 +177,7 @@ namespace WorldTree
                 {
                     foreach (var item in components.Values)
                     {
-                        if (item.activeMark == true)
+                        if (item.activeEventMark == true)
                         {
                             item.RefreshActive();   //递归属性
                         }

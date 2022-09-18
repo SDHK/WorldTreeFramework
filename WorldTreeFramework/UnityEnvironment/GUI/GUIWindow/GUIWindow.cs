@@ -11,15 +11,20 @@ using UnityEngine;
 
 //思考self.Log方法
 
+
+
+
 namespace WorldTree
 {
     public class GUIWindow : GUIBase
     {
         public Rect rect = new Rect(0, 0, 400, 300);
         public bool isDrag = true;
+        public SystemGroup group;
 
         public void Window(int id)
         {
+            group?.Send(Parent);
             if (isDrag)
             {
                 GUI.DragWindow();
@@ -27,6 +32,13 @@ namespace WorldTree
         }
     }
 
+    class GUIWindowNewSystem : NewSystem<GUIWindow>
+    {
+        public override void OnNew(GUIWindow self)
+        {
+            self.group = self.GetSystemGroup<IGUIWindowSystem>();
+        }
+    }
 
     class GUIWindowOnGUISystem : OnGUISystem<GUIWindow>
     {

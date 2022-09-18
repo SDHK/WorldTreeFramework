@@ -29,13 +29,14 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return Type +":"+ systems.systemType;
+            return Type + ":" + systems.systemType;
         }
     }
     class SystemBroadcastEntityAddSystem : EntityAddSystem<SystemBroadcast>
     {
         public override void OnEntityAdd(SystemBroadcast self, Entity entity)
         {
+
             if (self.systems.ContainsKey(entity.Type))
             {
                 self.update2.Add(entity.id, entity);

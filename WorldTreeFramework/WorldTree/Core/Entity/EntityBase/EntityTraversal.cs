@@ -72,7 +72,7 @@ namespace WorldTree
         /// <summary>
         /// 层序遍历
         /// </summary>
-        public static void TraversalLevel(Entity node, Action<Entity> action)
+        public static void TraversalLevel( Entity node, Action<Entity> action)
         {
             if (node == null) return;
 

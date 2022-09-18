@@ -24,7 +24,7 @@
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public T AddChildren<T, T1,T2>(T1 arg1,T2 arg2)
+        public T AddChildren<T, T1, T2>(T1 arg1, T2 arg2)
         where T : Entity
         {
 
@@ -43,7 +43,7 @@
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public T AddChildren<T, T1, T2,T3>(T1 arg1, T2 arg2, T3 arg3)
+        public T AddChildren<T, T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3)
         where T : Entity
         {
 
@@ -52,7 +52,7 @@
             {
                 entity.Parent = this;
                 entity.Domain = Domain;
-                entity.SendSystem<ISendSystem<T1, T2, T3>, T1, T2, T3>(arg1, arg2,arg3);
+                entity.SendSystem<ISendSystem<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
                 Root.Add(entity);
             }
 

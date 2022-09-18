@@ -12,7 +12,6 @@ using UnityEngine;
 
 namespace WorldTree
 {
-
     public abstract class GUIBase : Entity
     {
         /// <summary>

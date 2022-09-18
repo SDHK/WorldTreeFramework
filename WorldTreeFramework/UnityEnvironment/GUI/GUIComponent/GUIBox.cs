@@ -19,17 +19,9 @@ namespace WorldTree
 {
     public class GUIBox : GUIBase
     {
-        public  void Draw()
+        public void Draw()
         {
             GUILayout.Box(text, Style, options);
-        }
-    }
-
-
-    class GUIBoxNewSystem : NewSystem<GUIBox>
-    {
-        public override void OnNew(GUIBox self)
-        {
         }
     }
 
@@ -39,13 +31,6 @@ namespace WorldTree
         {
             self.Root.ObjectPoolManager.Recycle(self.style);
             self.style = null;
-        }
-    }
-
-    class GUIBoxDestroySystem : DestroySystem<GUIBox>
-    {
-        public override void OnDestroy(GUIBox self)
-        {
         }
     }
 }

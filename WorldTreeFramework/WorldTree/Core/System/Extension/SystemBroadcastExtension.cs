@@ -12,6 +12,24 @@ namespace WorldTree
 {
     public partial class SystemBroadcast
     {
+
+        public void RefreshActive(Entity self)
+        {
+            var activeTag = self.active;
+            self.active = (Parent == null) ? activeEventMark : Parent.active && activeEventMark;
+            if (activeTag != self.active)
+            {
+                if (self.active)
+                {
+                    Root.Enable(this);
+                }
+                else
+                {
+                    Root.Disable(this);
+                }
+            }
+        }
+
         public void Send()
         {
             if (IsActice)
