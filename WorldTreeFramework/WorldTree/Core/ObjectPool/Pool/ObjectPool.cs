@@ -114,7 +114,6 @@ namespace WorldTree
                 (obj as IUnitPoolItem).IsRecycle = false;
             }
             (obj as IUnitPoolItemEvent)?.OnGet();
-            (obj as Entity)?.SetActive(true);
 
 
 

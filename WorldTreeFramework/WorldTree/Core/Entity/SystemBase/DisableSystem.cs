@@ -26,12 +26,14 @@ namespace WorldTree
     {
         public void Invoke(Entity self)
         {
-            if (!self.IsActive && self.activeEventMark)
+            if (self.IsActive != self.activeEventMark)
             {
-                self.activeEventMark = false;
-                OnDisable(self as T);
+                if (!self.IsActive)
+                {
+                    OnDisable(self as T);
+                }
+                self.activeEventMark = self.IsActive;
             }
-
         }
         public abstract void OnDisable(T self);
     }
