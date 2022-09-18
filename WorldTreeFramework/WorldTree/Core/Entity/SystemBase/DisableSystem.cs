@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 活跃禁用事件系统接口
     /// </summary>
-    public interface IDisableSystem : ISendSystem{ }
+    public interface IDisableSystem : ISendSystem { }
 
     /// <summary>
     /// 活跃禁用事件系统
@@ -24,7 +24,15 @@ namespace WorldTree
     public abstract class DisableSystem<T> : SystemBase<T, IDisableSystem>, IDisableSystem
         where T : Entity
     {
-        public void Invoke(Entity self) => OnDisable(self as T);
+        public void Invoke(Entity self)
+        {
+            if (!self.active && self.activeEventMark)
+            {
+                self.activeEventMark = false;
+                OnDisable(self as T);
+            }
+
+        }
         public abstract void OnDisable(T self);
     }
 }

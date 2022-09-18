@@ -3,47 +3,42 @@
 * 作者： 闪电黑客
 * 日期： 2022/9/16 22:03
 
-* 描述： 系统广播器
+* 描述： 系统全局广播器
 * 
 * 用于全局广播拥有指定系统的实体
 
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WorldTree
 {
 
     /// <summary>
-    /// 系统广播
+    /// 系统全局广播
     /// </summary>
     public partial class SystemBroadcast : Entity
     {
+
         public SystemGroup systems;
 
         public UnitDictionary<long, Entity> update1 = new UnitDictionary<long, Entity>();
         public UnitDictionary<long, Entity> update2 = new UnitDictionary<long, Entity>();
-
         public override string ToString()
         {
             return Type + ":" + systems.systemType;
         }
     }
-    class SystemBroadcastEntityAddSystem : EntityAddSystem<SystemBroadcast>
+   
+    class SystemGlobalBroadcastEntityAddSystem : EntityAddSystem<SystemBroadcast>
     {
         public override void OnEntityAdd(SystemBroadcast self, Entity entity)
         {
-
             if (self.systems.ContainsKey(entity.Type))
             {
                 self.update2.Add(entity.id, entity);
             }
         }
     }
-    class SystemBroadcastEntityRemoveSystem : EntityRemoveSystem<SystemBroadcast>
+    class SystemGlobalBroadcastEntityRemoveSystem : EntityRemoveSystem<SystemBroadcast>
     {
         public override void OnEntityRemove(SystemBroadcast self, Entity entity)
         {

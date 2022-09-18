@@ -40,6 +40,7 @@ namespace WorldTree
         private SystemGroup entityRemoveSystems;
         private SystemGroup singletonEagerSystems;
 
+
         private SystemGroup addSystems;
         private SystemGroup removeSystems;
         private SystemGroup enableSystems;
@@ -122,6 +123,8 @@ namespace WorldTree
                 listeners.TryAdd(entity.id, entity);
             }
             entity.SetActive(true);
+            enableSystems?.Send(entity);//添加后调用激活事件
+
         }
 
         public void Remove(Entity entity)
@@ -129,6 +132,8 @@ namespace WorldTree
             Type typeKey = entity.Type;
 
             entity.SetActive(false);
+            disableSystems?.Send(entity);//移除前调用禁用事件
+
             //检测到系统存在，则说明这是个监听器
             if (entityAddSystems.ContainsKey(typeKey) || entityRemoveSystems.ContainsKey(typeKey))
             {
@@ -145,16 +150,5 @@ namespace WorldTree
                 entityRemoveSystems?.Send(manager.Value, entity);
             }
         }
-
-        public void Enable(Entity entity)
-        {
-            enableSystems?.Send(entity);
-        }
-
-        public void Disable(Entity entity)
-        {
-            disableSystems?.Send(entity);
-        }
-
     }
 }

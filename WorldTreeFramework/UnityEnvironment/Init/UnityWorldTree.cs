@@ -18,6 +18,8 @@ namespace WorldTree
     {
         public EntityManager root;
 
+        SystemBroadcast enable;
+        SystemBroadcast disable;
         SystemBroadcast update;
         SystemBroadcast lateUpdate;
         SystemBroadcast fixedUpdate;
@@ -32,7 +34,10 @@ namespace WorldTree
 
             root = new EntityManager();
 
+            enable = root.GetSystemBroadcast<IEnableSystem>();
             update = root.GetSystemBroadcast<IUpdateSystem>();
+            disable = root.GetSystemBroadcast<IDisableSystem>();
+
             lateUpdate = root.GetSystemBroadcast<ILateUpdateSystem>();
             fixedUpdate = root.GetSystemBroadcast<IFixedUpdateSystem>();
             onGUI = root.GetSystemBroadcast<IOnGUISystem>();
@@ -42,8 +47,9 @@ namespace WorldTree
 
         private void Update()
         {
+            enable?.Send();
             update?.Send(Time.deltaTime);
-
+            disable?.Send();
             if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(root.ToStringDrawTree());
         }
 
@@ -63,7 +69,9 @@ namespace WorldTree
 
         private void OnDestroy()
         {
+            enable = null;
             update = null;
+            disable = null;
             lateUpdate = null;
             fixedUpdate = null;
             onGUI = null;

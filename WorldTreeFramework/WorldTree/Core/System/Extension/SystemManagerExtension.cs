@@ -40,7 +40,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取系统广播
+        /// 获取系统全局广播
         /// </summary>
         public static SystemBroadcast GetSystemBroadcast<T>(this Entity self)
         where  T : ISystem
@@ -48,6 +48,21 @@ namespace WorldTree
             return self.Root.SystemManager.GetBroadcast<T>();
         }
 
+        /// <summary>
+        /// 获取系统执行器
+        /// </summary>
+        public static SystemActuator GetSystemActuator<T>(this Entity self)
+        where T : ISystem
+        {
+            if (self.Root.SystemManager.TryGetGroup<T>(out SystemGroup group))
+            {
+                return self.AddChildren<SystemActuator, SystemGroup>(group);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 
 }

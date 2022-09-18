@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 活跃启用事件系统接口
     /// </summary>
-    public interface IEnableSystem : ISendSystem  { }
+    public interface IEnableSystem : ISendSystem { }
 
     /// <summary>
     /// 活跃启用事件系统
@@ -23,7 +23,14 @@ namespace WorldTree
     public abstract class EnableSystem<T> : SystemBase<T, IEnableSystem>, IEnableSystem
         where T : Entity
     {
-        public void Invoke(Entity self) => OnEnable(self as T);
+        public void Invoke(Entity self)
+        {
+            if (self.active && !self.activeEventMark)
+            {
+                self.activeEventMark = true;
+                OnEnable(self as T);
+            }
+        }
         public abstract void OnEnable(T self);
     }
 }

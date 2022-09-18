@@ -34,13 +34,9 @@ namespace WorldTree
             self.Domain = self;
             World.Log("初始域启动！");
 
-            self.AddChildren<Node>();
-            self.AddChildren<Node>();
-            self.AddChildren<Node>();
-            self.AddChildren<Node>();
-            self.AddChildren<Node, int>(10);
+            self.AddComponent<Node>().AddComponent<Node1>().AddComponent<Node2>();
 
-            self.GetSystemBroadcast<INodeAddSendSystem>()?.Send(2);
+
         }
     }
 

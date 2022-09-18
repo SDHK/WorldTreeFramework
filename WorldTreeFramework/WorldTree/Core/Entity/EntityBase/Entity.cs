@@ -115,7 +115,6 @@ namespace WorldTree
         /// </summary>
         public bool activeEventMark = false;
 
-
         /// <summary>
         /// 活跃状态
         /// </summary>
@@ -124,68 +123,55 @@ namespace WorldTree
         /// <summary>
         /// 活跃标记
         /// </summary>
-        public bool ActiveMark => activeEventMark;
+        public bool ActiveMark => activeToggle;
 
         /// <summary>
         /// 设置激活状态
         /// </summary>
         public void SetActive(bool value)
         {
-            if (activeEventMark != value)
+            if (activeToggle != value)
             {
-                activeEventMark = value;
-                RefreshActive();
+                activeToggle = value;
+                if (active != ((Parent == null) ? activeToggle : Parent.active && activeToggle))
+                {
+                    RefreshActive();
+                }
             }
         }
 
         /// <summary>
-        /// 刷新激活状态：递归设置子节点并触发事件
+        /// 刷新激活状态：层序遍历设置子节点
         /// </summary>
         private void RefreshActive()
         {
-            var activeTag = active;
-            active = (Parent == null) ? activeEventMark : Parent.active && activeEventMark;
-
-            if (activeTag != active)
+            UnitQueue<Entity> queue = this.Root.ObjectPoolManager.Get<UnitQueue<Entity>>();
+            queue.Enqueue(this);
+            while (queue.Any())
             {
-                if (active)
+                var current = queue.Dequeue();
+                if (current.active != ((current.Parent == null) ? current.activeToggle : current.Parent.active && current.activeToggle))
                 {
-                    Root.Enable(this);
-                }
-                else
-                {
-                    Root.Disable(this);
-                }
-            }
+                    current.active = !current.active;
 
-            if (children != null)
-            {
-                if (children.Count > 0)
-                {
-                    foreach (var item in children.Values)
+                    if (current.components != null)
                     {
-                        if (item.activeEventMark == true)
+                        foreach (var item in current.components)
                         {
-                            item.RefreshActive();    //递归属性
+                            queue.Enqueue(item.Value);
+                        }
+                    }
+
+                    if (current.children != null)
+                    {
+                        foreach (var item in current.children)
+                        {
+                            queue.Enqueue(item.Value);
                         }
                     }
                 }
             }
-            if (components != null)
-            {
-                if (components.Count > 0)
-                {
-                    foreach (var item in components.Values)
-                    {
-                        if (item.activeEventMark == true)
-                        {
-                            item.RefreshActive();   //递归属性
-                        }
-                    }
-                }
-
-            }
-
+            queue.Recycle();
         }
 
 

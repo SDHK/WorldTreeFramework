@@ -1,17 +1,22 @@
 ﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2022/9/16 22:03
+* 日期： 2022/9/18 16:55
 
 * 描述： 
 
 */
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace WorldTree
 {
-    public partial class SystemBroadcast
+    public partial class SystemActuator
     {
+
         public void Send()
         {
             if (IsActice)
@@ -23,10 +28,6 @@ namespace WorldTree
                     Entity entity = update1[firstKey];
                     systems.Send(entity);
                     update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
-                    {
-                        update2.Add(firstKey, entity);
-                    }
                 }
             }
         }
@@ -42,10 +43,6 @@ namespace WorldTree
                     Entity entity = update1[firstKey];
                     systems.Send(entity, arg1);
                     update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
-                    {
-                        update2.Add(firstKey, entity);
-                    }
                 }
             }
         }
@@ -60,13 +57,8 @@ namespace WorldTree
                 {
                     long firstKey = update1.Keys.First();
                     Entity entity = update1[firstKey];
-
                     systems.Send(entity, arg1, arg2);
                     update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
-                    {
-                        update2.Add(firstKey, entity);
-                    }
                 }
             }
         }
@@ -81,10 +73,6 @@ namespace WorldTree
                     Entity entity = update1[firstKey];
                     systems.Send(entity, arg1, arg2, arg3);
                     update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
-                    {
-                        update2.Add(firstKey, entity);
-                    }
                 }
             }
         }
@@ -99,10 +87,6 @@ namespace WorldTree
                     Entity entity = update1[firstKey];
                     systems.Send(entity, arg1, arg2, arg3, arg4);
                     update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
-                    {
-                        update2.Add(firstKey, entity);
-                    }
                 }
             }
         }
@@ -117,12 +101,10 @@ namespace WorldTree
                     Entity entity = update1[firstKey];
                     systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
                     update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
-                    {
-                        update2.Add(firstKey, entity);
-                    }
                 }
             }
         }
+
+
     }
 }
