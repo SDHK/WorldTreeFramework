@@ -45,7 +45,7 @@ namespace WorldTree
         public static SystemBroadcast GetSystemBroadcast<T>(this Entity self)
         where  T : ISystem
         {
-            return self.Root.SystemManager.GetBroadcast<T>();
+            return self.Root.SystemManager.GetBroadcast(typeof(T));
         }
 
         /// <summary>

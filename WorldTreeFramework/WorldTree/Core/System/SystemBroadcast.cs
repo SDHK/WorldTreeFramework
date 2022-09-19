@@ -11,14 +11,6 @@
 
 namespace WorldTree
 {
-    public partial class SystemBroadcast<T> : SystemBroadcast
-    {
-        public SystemBroadcast()
-        {
-            Type = typeof(SystemBroadcast);
-            GenericType = typeof(T);
-        }
-    }
     /// <summary>
     /// 系统全局广播
     /// </summary>
