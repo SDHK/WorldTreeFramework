@@ -94,6 +94,9 @@ namespace WorldTree
 
             //饿汉单例启动
             singletonEagerSystems?.Send(this);
+
+            //激活自己
+            SetActive(true);
         }
 
         public override void OnDispose()
@@ -130,8 +133,8 @@ namespace WorldTree
         public void Remove(Entity entity)
         {
             Type typeKey = entity.Type;
-
             entity.SetActive(false);
+            entity.RemoveAll();
             disableSystems?.Send(entity);//移除前调用禁用事件
 
             //检测到系统存在，则说明这是个监听器

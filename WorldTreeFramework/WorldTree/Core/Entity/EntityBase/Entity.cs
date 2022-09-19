@@ -133,6 +133,7 @@ namespace WorldTree
             if (activeToggle != value)
             {
                 activeToggle = value;
+
                 if (active != ((Parent == null) ? activeToggle : Parent.active && activeToggle))
                 {
                     RefreshActive();
@@ -383,8 +384,6 @@ namespace WorldTree
         {
             if (entity != null)
             {
-                entity.RemoveAll();
-
                 Root.Remove(entity);
 
                 entity.Parent = null;
@@ -568,9 +567,7 @@ namespace WorldTree
             if (components.ContainsKey(type))
             {
                 Entity component = components[type];
-
-                component.RemoveAll();
-
+              
                 Root.Remove(component);
 
 
@@ -596,8 +593,6 @@ namespace WorldTree
         {
             if (components.ContainsValue(component))
             {
-                component.RemoveAll();
-
                 Root.Remove(component);
 
                 component.Parent = null;

@@ -33,6 +33,7 @@ namespace WorldTree
 
         public void Send<T1>(T1 arg1)
         {
+
             if (IsActive)
             {
                 (update1, update2) = (update2, update1);
