@@ -18,7 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -87,6 +86,10 @@ namespace WorldTree
             disableSystems = Root.SystemManager.GetGroup<IDisableSystem>();
             singletonEagerSystems = SystemManager.GetGroup<ISingletonEagerSystem>();
 
+
+            //激活自己
+            SetActive(true);
+
             //核心组件添加
             AddComponent(IdManager);
             AddComponent(SystemManager);
@@ -95,8 +98,7 @@ namespace WorldTree
             //饿汉单例启动
             singletonEagerSystems?.Send(this);
 
-            //激活自己
-            SetActive(true);
+         
         }
 
         public override void OnDispose()

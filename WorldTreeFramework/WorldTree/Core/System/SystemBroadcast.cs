@@ -11,7 +11,14 @@
 
 namespace WorldTree
 {
-
+    public partial class SystemBroadcast<T> : SystemBroadcast
+    {
+        public SystemBroadcast()
+        {
+            Type = typeof(SystemBroadcast);
+            GenericType = typeof(T);
+        }
+    }
     /// <summary>
     /// 系统全局广播
     /// </summary>
@@ -27,7 +34,7 @@ namespace WorldTree
             return Type + ":" + systems.systemType;
         }
     }
-   
+
     class SystemBroadcastEntityAddSystem : EntityAddSystem<SystemBroadcast>
     {
         public override void OnEntityAdd(SystemBroadcast self, Entity entity)

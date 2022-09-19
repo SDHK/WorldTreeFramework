@@ -2,12 +2,11 @@
 
 * 创 建 者：  闪电黑客
 * 创建时间：  2022/5/6 21:27
-* 描    述:
+* 描    述:   实体基类
 
 ****************************************/
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace WorldTree
@@ -37,16 +36,15 @@ namespace WorldTree
         public long id;
 
         /// <summary>
-        /// 实体类型(用于系统继承)
+        /// 实体类型
         /// </summary>
         public Type Type;
 
+        /// <summary>
+        /// 实体泛型
+        /// </summary>
+        public Type GenericType;
 
-        public void SystemTag<E, P>()
-           where E : class, P
-        {
-            Type = typeof(P);
-        }
 
         /// <summary>
         /// 根节点
