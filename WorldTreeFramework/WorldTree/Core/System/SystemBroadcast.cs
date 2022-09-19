@@ -28,7 +28,7 @@ namespace WorldTree
         }
     }
    
-    class SystemGlobalBroadcastEntityAddSystem : EntityAddSystem<SystemBroadcast>
+    class SystemBroadcastEntityAddSystem : EntityAddSystem<SystemBroadcast>
     {
         public override void OnEntityAdd(SystemBroadcast self, Entity entity)
         {
@@ -38,7 +38,7 @@ namespace WorldTree
             }
         }
     }
-    class SystemGlobalBroadcastEntityRemoveSystem : EntityRemoveSystem<SystemBroadcast>
+    class SystemBroadcastEntityRemoveSystem : EntityRemoveSystem<SystemBroadcast>
     {
         public override void OnEntityRemove(SystemBroadcast self, Entity entity)
         {

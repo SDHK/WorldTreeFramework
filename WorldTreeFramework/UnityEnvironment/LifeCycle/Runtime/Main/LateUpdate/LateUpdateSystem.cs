@@ -4,10 +4,7 @@
     /// <summary>
     /// LateUpdate系统接口
     /// </summary>
-    public interface ILateUpdateSystem : ISendSystem<float>
-    {
-        void Invoke(Entity self, float deltaTime);
-    }
+    public interface ILateUpdateSystem : ISendSystem<float>{}
     /// <summary>
     /// LateUpdate系统基类
     /// </summary>
