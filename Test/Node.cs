@@ -6,42 +6,74 @@ using WorldTree;
 
 public class Node : Entity
 {
-
 }
-
-class NodeUpdateSystem : UpdateSystem<Node>
+class NodeNewSystem : NewSystem<Node>
 {
-    public override void Update(Node self, float deltaTime)
+    public override void OnNew(Node self)
     {
-        Debug.Log("Update");
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            self.SetActive(!self.ActiveToggle);
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            self.AddComponent<Node1>().SetActive(!self.AddComponent<Node1>().ActiveToggle);
-        }
+        Debug.Log("OnNew!");
     }
 }
-
+class NodeGetSystem : GetSystem<Node>
+{
+    public override void OnGet(Node self)
+    {
+        Debug.Log("OnGet!");
+    }
+}
 class NodeEnableSystem : EnableSystem<Node>
 {
     public override void OnEnable(Node self)
     {
-        Debug.Log("OnEnable!!");
+        Debug.Log("OnEnable!");
     }
 }
-
+class NodeUpdateSystem : UpdateSystem<Node>
+{
+    public override void Update(Node self, float deltaTime)
+    {
+        Debug.Log("Update!");
+    }
+}
+class NodeLateUpdateSystem : LateUpdateSystem<Node>
+{
+    public override void LateUpdate(Node self, float deltaTime)
+    {
+        Debug.Log("LateUpdate!");
+    }
+}
+class NodeFixedUpdateSystem : FixedUpdateSystem<Node>
+{
+    public override void FixedUpdate(Node self, float deltaTime)
+    {
+        Debug.Log("FixedUpdate!");
+    }
+}
 class NodeDisableSystem : DisableSystem<Node>
 {
     public override void OnDisable(Node self)
     {
-        Debug.Log("OnDisable!!");
+        Debug.Log("OnDisable!");
     }
 }
+class NodeRemoveSystem : RemoveSystem<Node>
+{
+    public override void OnRemove(Node self)
+    {
+        Debug.Log("OnRemove!");
+    }
+}
+class NodeDestroySystem : DestroySystem<Node>
+{
+    public override void OnDestroy(Node self)
+    {
+        Debug.Log("OnDestroy!");
+    }
+}
+
+
+
+
 
 
 
