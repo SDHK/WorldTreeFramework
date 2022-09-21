@@ -35,11 +35,11 @@ namespace WorldTree
         }
     }
 
-    class GUIWindowNewSystem : NewSystem<GUIWindow>
+    class GUIWindowNewSystem : AddSystem<GUIWindow>
     {
-        public override void OnNew(GUIWindow self)
+        public override void OnAdd(GUIWindow self)
         {
-            self.group = self.GetSystemGroup<IGUIWindowSystem>();
+            self.group = self.GetSystemGroup<IGUIDrawSystem>();
         }
     }
 

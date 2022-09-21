@@ -14,10 +14,41 @@ namespace WorldTree
 
     public static class ObjectPoolManagerExtension
     {
-        public static ObjectPoolManager EntityPoolManager(this Entity self)
+        /// <summary>
+        /// 获取对象池管理器
+        /// </summary>
+        public static ObjectPoolManager PoolManager(this Entity self)
         {
             return self.Root.ObjectPoolManager;
         }
+
+        /// <summary>
+        /// 从池中获取对象
+        /// </summary>
+        public static T PoolGet<T>(this Entity self)
+        where T : class
+        {
+            return self.Root.ObjectPoolManager.Get<T>();
+        }
+
+
+        /// <summary>
+        /// 从池中获取对象
+        /// </summary>
+        public static object PoolGet(this Entity self,Type type)
+        {
+            return self.Root.ObjectPoolManager.Get(type);
+        }
+
+
+        /// <summary>
+        /// 回收对象
+        /// </summary>
+        public static void PoolRecycle(this Entity self ,object obj)
+        {
+             self.Root.ObjectPoolManager.Recycle(obj);
+        }
+
     }
 
     class ObjectPoolManagerRemove : RemoveSystem<ObjectPoolManager>
