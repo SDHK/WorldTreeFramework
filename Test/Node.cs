@@ -18,6 +18,13 @@ class NodeGetSystem : GetSystem<Node>
         Debug.Log("OnGet!");
     }
 }
+class NodeAddSystem : AddSystem<Node>
+{
+    public override void OnAdd(Node self)
+    {
+        Debug.Log("OnAdd!");
+    }
+}
 class NodeEnableSystem : EnableSystem<Node>
 {
     public override void OnEnable(Node self)
@@ -58,6 +65,13 @@ class NodeRemoveSystem : RemoveSystem<Node>
     public override void OnRemove(Node self)
     {
         Debug.Log("OnRemove!");
+    }
+}
+class NodeRecycleSystem : RecycleSystem<Node>
+{
+    public override void OnRecycle(Node self)
+    {
+        Debug.Log("OnRecycle!");
     }
 }
 class NodeDestroySystem : DestroySystem<Node>
