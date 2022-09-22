@@ -44,8 +44,8 @@ namespace WorldTree
     {
         public override void OnAdd(InitialDomain self)
         {
-            self.Root.AddChildren<ConsoleTreeView>();
-            self.Root.AddChildren<GUIWindow>();
+            //self.Root.AddChildren<ConsoleTreeView>();
+            //self.Root.AddChildren<GUIWindow>();
         }
     }
     class ConsoleTreeViewAddSystem : AddSystem<ConsoleTreeView>
