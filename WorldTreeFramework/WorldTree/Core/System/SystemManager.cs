@@ -35,9 +35,6 @@ namespace WorldTree
         //接口类型，（实例类型，实例方法）
         private UnitDictionary<Type, SystemGroup> InterfaceSystems = new UnitDictionary<Type, SystemGroup>();
 
-        private UnitDictionary<Type, SystemBroadcast> broadcasts = new UnitDictionary<Type, SystemBroadcast>();
-
-
         public SystemManager() : base()
         {
             Initialize();
@@ -119,33 +116,6 @@ namespace WorldTree
             systems = null;
             return false;
         }
-
-        /// <summary>
-        /// 获取系统广播
-        /// </summary>
-        public SystemBroadcast GetBroadcast<T>()
-        where T : ISystem
-        {
-            return GetBroadcast(typeof(T));
-        }
-
-        /// <summary>
-        /// 获取系统广播
-        /// </summary>
-        public SystemBroadcast GetBroadcast(Type type)
-        {
-            if (!broadcasts.TryGetValue(type, out SystemBroadcast broadcast))
-            {
-                if (InterfaceSystems.TryGetValue(type, out SystemGroup group))
-                {
-                    broadcast = this.AddChildren<SystemBroadcast, SystemGroup>(group);
-                    broadcasts.Add(type, broadcast);
-                }
-            }
-            return broadcast;
-        }
-
-
 
         public override void OnDispose()
         {

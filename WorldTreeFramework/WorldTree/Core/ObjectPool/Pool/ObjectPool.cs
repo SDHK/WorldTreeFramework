@@ -19,10 +19,10 @@ namespace WorldTree
         public override void OnAdd(ObjectPool self)
         {
             //生命周期系统
-            self.newSystem = self.GetSystems<INewSystem>(self.ObjectType);
-            self.getSystem = self.GetSystems<IGetSystem>(self.ObjectType);
-            self.recycleSystem = self.GetSystems<IRecycleSystem>(self.ObjectType);
-            self.destroySystem = self.GetSystems<IDestroySystem>(self.ObjectType);
+            self.newSystem = self.GetSystemGroup<INewSystem>();
+            self.getSystem = self.GetSystemGroup<IGetSystem>();
+            self.recycleSystem = self.GetSystemGroup<IRecycleSystem>();
+            self.destroySystem = self.GetSystemGroup<IDestroySystem>();
         }
     }
 
@@ -39,10 +39,10 @@ namespace WorldTree
     /// </summary>
     public class ObjectPool : GenericPool<object>
     {
-        public List<ISystem> newSystem;
-        public List<ISystem> getSystem;
-        public List<ISystem> recycleSystem;
-        public List<ISystem> destroySystem;
+        public SystemGroup newSystem;
+        public SystemGroup getSystem;
+        public SystemGroup recycleSystem;
+        public SystemGroup destroySystem;
 
         public ObjectPool(Type type) : base()
         {
@@ -100,10 +100,7 @@ namespace WorldTree
             (obj as IUnitPoolItemEvent)?.OnNew();
             if (newSystem != null&& obj is Entity)
             {
-                foreach (INewSystem item in newSystem)
-                {
-                    item.Invoke(obj as Entity);
-                }
+                newSystem.Send(obj as Entity);
             }
         }
 
@@ -119,10 +116,7 @@ namespace WorldTree
 
             if (getSystem != null && obj is Entity)
             {
-                foreach (IGetSystem item in getSystem)
-                {
-                    item.Invoke(obj as Entity);
-                }
+                getSystem.Send(obj as Entity);
             }
 
         }
@@ -137,10 +131,7 @@ namespace WorldTree
 
             if (recycleSystem != null && obj is Entity)
             {
-                foreach (IRecycleSystem item in recycleSystem)
-                {
-                    item.Invoke(obj as Entity);
-                }
+                recycleSystem.Send(obj as Entity);
             }
         }
 
@@ -148,10 +139,7 @@ namespace WorldTree
         {
             if (destroySystem != null && obj is Entity)
             {
-                foreach (IDestroySystem item in destroySystem)
-                {
-                    item.Invoke(obj as Entity);
-                }
+                destroySystem.Send(obj as Entity);
             }
         }
 

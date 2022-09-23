@@ -32,6 +32,14 @@ namespace WorldTree
         }
 
         /// <summary>
+        /// 获取系统组
+        /// </summary>
+        public static SystemGroup GetSystemGroup(this Entity self,Type type)
+        {
+            return self.Root.SystemManager.GetGroup(type);
+        }
+
+        /// <summary>
         /// 获取单类型系统列表
         /// </summary>
         public static List<ISystem> GetSystems<T>(this Entity self, Type type)
@@ -42,10 +50,10 @@ namespace WorldTree
         /// <summary>
         /// 获取系统全局广播
         /// </summary>
-        public static SystemBroadcast GetSystemBroadcast<T>(this Entity self)
+        public static SystemGlobalBroadcast<T> GetSystemBroadcast<T>(this Entity self)
         where  T : ISystem
         {
-            return self.Root.SystemManager.GetBroadcast(typeof(T));
+            return self.Root.SystemManager.AddComponent<SystemGlobalBroadcast<T>>();
         }
 
         /// <summary>
