@@ -19,7 +19,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return false;
             }
         }
@@ -33,7 +33,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return false;
             }
         }
@@ -47,7 +47,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return false;
             }
         }
@@ -60,7 +60,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return false;
             }
         }
@@ -74,7 +74,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return false;
             }
         }
@@ -87,7 +87,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return false;
             }
         }
@@ -140,7 +140,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return default(OutT);
             }
         }
@@ -154,7 +154,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return default(OutT);
             }
         }
@@ -168,7 +168,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return default(OutT);
             }
         }
@@ -181,7 +181,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return default(OutT);
             }
         }
@@ -194,7 +194,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return default(OutT);
             }
         }
@@ -207,7 +207,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return default(OutT);
             }
         }
@@ -226,7 +226,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return null;
             }
         }
@@ -240,7 +240,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return null;
             }
         }
@@ -254,7 +254,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return null;
             }
         }
@@ -267,7 +267,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return null;
             }
         }
@@ -280,7 +280,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return null;
             }
         }
@@ -293,7 +293,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
                 return null;
             }
         }

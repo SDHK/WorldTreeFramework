@@ -20,7 +20,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return bit;
         }
@@ -38,7 +38,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return bit;
         }
@@ -57,7 +57,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return bit;
         }
@@ -75,7 +75,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return bit;
         }
@@ -95,7 +95,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return bit;
         }
@@ -113,7 +113,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return bit;
         }
@@ -164,7 +164,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return outT;
         }
@@ -184,7 +184,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return outT;
         }
@@ -203,7 +203,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return outT;
         }
@@ -222,7 +222,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return outT;
         }
@@ -240,7 +240,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return outT;
         }
@@ -259,7 +259,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return outT;
         }
@@ -283,7 +283,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return values;
         }
@@ -302,7 +302,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return values;
         }
@@ -320,7 +320,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return values;
         }
@@ -339,7 +339,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return values;
         }
@@ -357,7 +357,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return values;
         }
@@ -376,7 +376,7 @@ namespace WorldTree
             }
             if (!bit)
             {
-                await self.AsyncYield();
+                await self.AsyncTaskCompleted();
             }
             return values;
         }
