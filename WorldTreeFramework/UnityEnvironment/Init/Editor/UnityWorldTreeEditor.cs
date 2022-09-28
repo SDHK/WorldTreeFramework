@@ -10,7 +10,7 @@ namespace WorldTree
     [CustomEditor(typeof(UnityWorldTree))] 
     public class UnityWorldTreeEditor : Editor
     {
-        private UnityWorldTree script;
+        private static UnityWorldTree script;
 
         public override void OnInspectorGUI()
         { 
