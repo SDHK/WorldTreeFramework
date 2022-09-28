@@ -24,7 +24,8 @@ namespace WorldTree
     {
         public override void OnAdd(EditorGUIWindow self)
         {
-            self.window = EditorWindow.GetWindow<MonoEditorGUIWindow>(false);//窗口是无法回收使用的对象
+            //测试发现 编辑器窗口 关闭后就无法开启了，所以不用对象池
+            self.window = EditorWindow.GetWindow<MonoEditorGUIWindow>(false);
             self.window.entity = self.Parent;
             self.window.Show();
         }

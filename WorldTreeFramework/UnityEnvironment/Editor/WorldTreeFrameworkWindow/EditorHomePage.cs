@@ -33,4 +33,12 @@ namespace WorldTree
             World.Log("!!!!!!!!!!OnGUI");
         }
     }
+
+    class EditorHomePageUpdateSystem : UpdateSystem<EditorHomePage>
+    {
+        public override void Update(EditorHomePage self, float deltaTime)
+        {
+            World.Log("!!!!!!!!!!Update");
+        }
+    }
 }
