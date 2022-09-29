@@ -77,7 +77,7 @@ namespace WorldTree
             if (isShow)
             {
                 isShow = false;
-                entity.RemoveSelf();
+                entity?.RemoveSelf();
             }
         }
     }

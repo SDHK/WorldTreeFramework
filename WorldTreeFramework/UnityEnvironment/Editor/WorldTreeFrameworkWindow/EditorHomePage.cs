@@ -7,15 +7,14 @@
 * 描述： 主页面
 
 */
-
-
-//WorldTreeFrameworkHome Page
+using UnityEditor;
+using UnityEngine;
 
 namespace WorldTree
 {
     public class EditorHomePage : Entity
     {
-
+        public Entity page;
     }
 
 
@@ -23,14 +22,43 @@ namespace WorldTree
     {
         public override void OnAdd(EditorHomePage self)
         {
-            World.Log("!!!!!!!!!!add");
         }
     }
     class EditorHomePageOnGUISystem : OnGUISystem<EditorHomePage>
     {
         public override void OnGUI(EditorHomePage self, float deltaTime)
         {
-            World.Log("!!!!!!!!!!OnGUI");
+            GUILayout.Space(20);
+
+            EditorGUILayout.BeginHorizontal();
+
+            EditorGUILayout.BeginVertical(GUILayout.Width(150));
+
+            foreach (var item in self.Children)
+            {
+                if (GUILayout.Button(item.Value.Type.Name))
+                {
+                    self.page = item.Value;
+                }
+            }
+
+            EditorGUILayout.EndVertical();
+
+            GUI.color = Color.black;
+            GUILayout.Box(default(string),GUILayout.Width(2),GUILayout.ExpandHeight(true));
+            GUI.color = Color.white;
+
+
+            //=====
+
+            EditorGUILayout.BeginVertical();
+
+            self.page?.SendSystem<IGUIDrawSystem>();
+
+            EditorGUILayout.EndVertical();
+
+
+            EditorGUILayout.EndHorizontal();
         }
     }
 
@@ -38,7 +66,6 @@ namespace WorldTree
     {
         public override void Update(EditorHomePage self, float deltaTime)
         {
-            World.Log("!!!!!!!!!!Update");
         }
     }
 }
