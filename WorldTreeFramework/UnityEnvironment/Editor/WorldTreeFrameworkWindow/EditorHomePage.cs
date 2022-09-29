@@ -18,6 +18,7 @@ namespace WorldTree
     }
 
 
+
     class EditorHomePageAddSystem : AddSystem<EditorHomePage>
     {
         public override void OnAdd(EditorHomePage self)
