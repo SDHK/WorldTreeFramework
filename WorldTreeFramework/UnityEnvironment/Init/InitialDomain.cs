@@ -31,7 +31,7 @@ namespace WorldTree
 
             await CheckHotfix();
 
-            GameObject.Instantiate(await AssetComponent.LoadAsync<GameObject>(BPath.Assets_AssetBundles_GameObject_Canvas__prefab));
+            GameObject.Instantiate(await AssetComponent.LoadAsync<GameObject>(BPath.Assets_AssetBundles_GameObject_M_Canvas__prefab));
 
             self.AddComponent<Node>().AddComponent<Node1>().AddComponent<Node2>();
 

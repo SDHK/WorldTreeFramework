@@ -6,8 +6,6 @@
 * 描述： 
 
 */
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 
@@ -18,7 +16,7 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    
+
     public class GUIWindow : GUIBase
     {
         public Rect rect = new Rect(0, 0, 400, 300);
