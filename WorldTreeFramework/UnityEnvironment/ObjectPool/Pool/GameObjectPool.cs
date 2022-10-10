@@ -27,6 +27,44 @@ namespace WorldTree
 {
 
     /// <summary>
+    /// 游戏物体组件
+    /// </summary>
+    public class GameObjectComponent : Entity
+    {
+        public GameObjectPool pool;
+
+        public GameObject gameObject;
+        public Transform transform;
+    }
+
+    class GameObjectComponentSendSystem : SendSystem<GameObjectComponent, GameObject>
+    {
+        public override void Event(GameObjectComponent self, GameObject prefab)
+        {
+            if (self.gameObject != null)
+            {
+                self.pool?.Recycle(self.gameObject);
+            }
+
+            self.pool = self.GamePoolManager().GetPool(prefab);
+            self.gameObject = self.pool.Get();
+            self.transform = self.gameObject.transform;
+        }
+    }
+
+    class GameObjectComponentRemoveSystem : RemoveSystem<GameObjectComponent>
+    {
+        public override void OnRemove(GameObjectComponent self)
+        {
+            self.pool?.Recycle(self.gameObject);
+            self.gameObject = null;
+            self.transform = null;
+            self.pool = null;
+
+        }
+    }
+
+    /// <summary>
     /// GameObject对象池
     /// </summary>
     public class GameObjectPool : GenericPool<GameObject>
@@ -102,11 +140,11 @@ namespace WorldTree
         }
         private void ObjectOnGet(GameObject gameObject)
         {
-            //gameObject.SetActive(true);
+            gameObject.SetActive(true);
         }
         private void ObjectOnRecycle(GameObject gameObject)
         {
-            //gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
 
