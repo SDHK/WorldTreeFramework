@@ -19,49 +19,31 @@
 
 
 
+using BM;
 using UnityEngine;
 
 
 namespace WorldTree
 {
+
     /// <summary>
     /// GameObject对象池
     /// </summary>
     public class GameObjectPool : GenericPool<GameObject>
     {
         /// <summary>
-        /// 池对象节点（不销毁）：用于储存回收的游戏对象
-        /// </summary>
-        public Transform poolTransform { get; private set; }
-
-        /// <summary>
         /// 预制体
         /// </summary>
-        public GameObject prefab { get; private set; }
+        public GameObject prefab { get; set; }
 
         //游戏对象名称
         private string objName;
 
-        /// <summary>
-        /// 对象池构造 (预制体)
-        /// </summary>
-        public GameObjectPool(GameObject prefabObj = null)
+        public GameObjectPool()
         {
-
             ObjectType = typeof(GameObject);
 
-            if (prefabObj != null)
-            {
-                prefab = prefabObj;
-                objName = prefabObj.name;
-            }
-            else
-            {
-                objName = "GameObject";
-            }
-
-            poolTransform = new GameObject(ToString()).transform;
-            GameObject.DontDestroyOnLoad(poolTransform);
+            objName = "GameObject";
 
             NewObject = ObjectNew;
             DestroyObject = ObjectDestroy;
@@ -69,7 +51,18 @@ namespace WorldTree
             objectOnNew += ObjectOnNew;
             objectOnGet += ObjectOnGet;
             objectOnRecycle += ObjectOnRecycle;
+        }
 
+        /// <summary>
+        /// 设置预制体
+        /// </summary>
+        public void SetPrefab(GameObject prefab)
+        {
+            if (prefab != null)
+            {
+                this.prefab = prefab;
+                objName = prefab.name;
+            }
         }
         public override string ToString()
         {
@@ -79,10 +72,6 @@ namespace WorldTree
         public override void OnDispose()
         {
             base.OnDispose();
-            if (poolTransform != null)
-            {
-                GameObject.Destroy(poolTransform.gameObject);
-            }
         }
 
         /// <summary>
@@ -109,31 +98,15 @@ namespace WorldTree
 
         private void ObjectOnNew(GameObject gameObject)
         {
-            if (poolTransform == null)
-            {
-                GameObject.DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                gameObject.transform.SetParent(poolTransform);
-            }
+
         }
         private void ObjectOnGet(GameObject gameObject)
         {
-            gameObject.SetActive(true);
+            //gameObject.SetActive(true);
         }
         private void ObjectOnRecycle(GameObject gameObject)
         {
-            gameObject.SetActive(false);
-            if (poolTransform == null)
-            {
-                GameObject.DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                gameObject.transform.SetParent(poolTransform);
-            }
-
+            //gameObject.SetActive(false);
         }
 
 

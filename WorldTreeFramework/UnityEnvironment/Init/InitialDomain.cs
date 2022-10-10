@@ -18,6 +18,7 @@ using UnityEngine;
 
 namespace WorldTree
 {
+
     /// <summary>
     /// 初始域
     /// </summary>
@@ -31,9 +32,17 @@ namespace WorldTree
 
             await CheckHotfix();
 
-            GameObject.Instantiate(await AssetComponent.LoadAsync<GameObject>(BPath.Assets_AssetBundles_GameObject_M_Canvas__prefab));
+            //从ab包拿到ScriptObject
+            var scriptObj = (await AssetComponent.LoadAsync<TestData>(BPath.Assets_AssetBundles_GameObject_TestData__asset));
 
-            self.AddComponent<Node>().AddComponent<Node1>().AddComponent<Node2>();
+            //通过预制体获取物体实例
+            GameObject gameObject = self.PoolGet(scriptObj.TestObject);
+            //通过预制体回收实例
+            self.PoolRecycle(scriptObj.TestObject, gameObject);
+
+
+            //self.AddComponent<Node>().AddComponent<Node1>().AddComponent<Node2>();
+            //self.Root.GetComponent<TestPool>().Get();
 
         }
 

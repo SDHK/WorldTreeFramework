@@ -135,6 +135,7 @@ namespace WorldTree
             Type type = typeof(T);
             if (pools.TryGetValue(type, out ObjectPool pool))
             {
+                pool.DisposeAll();
                 pools.Remove(type);
             }
         }
