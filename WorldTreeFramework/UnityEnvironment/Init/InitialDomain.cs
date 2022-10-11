@@ -36,16 +36,16 @@ namespace WorldTree
             var scriptObj = (await AssetComponent.LoadAsync<TestData>(BPath.Assets_AssetBundles_GameObject_TestData__asset));
 
 
-            //通过预制体获取物体实例
-            GameObject gameObject = self.PoolGet(scriptObj.TestObject);
-            //通过预制体回收实例
-            self.PoolRecycle(scriptObj.TestObject, gameObject);
+            ////通过预制体获取物体实例
+            //GameObject gameObject = self.PoolGet(scriptObj.TestObject);
+            ////通过预制体回收实例
+            //self.PoolRecycle(scriptObj.TestObject, gameObject);
 
 
-            //通过预制体获取物体组件
-            gameObject = self.AddComponent<GameObjectComponent, GameObject>(scriptObj.TestObject).gameObject;
-            //回收组件
-            self.RemoveComponent<GameObjectComponent>();
+            ////通过预制体获取物体组件
+            //gameObject = self.AddComponent<GameObjectComponent, GameObject>(scriptObj.TestObject).gameObject;
+            ////回收组件
+            //self.RemoveComponent<GameObjectComponent>();
 
 
             //self.AddComponent<Node>().AddComponent<Node1>().AddComponent<Node2>();
