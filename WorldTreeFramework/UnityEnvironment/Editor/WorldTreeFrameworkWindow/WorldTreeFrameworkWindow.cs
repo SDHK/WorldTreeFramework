@@ -4,7 +4,7 @@
 * 作者： 闪电黑客
 * 日期： 2022/9/28 11:46
 
-* 描述： 世界树框架编辑器窗口
+* 描述： 世界树框架编辑器驱动窗口
 
 */
 
@@ -14,7 +14,7 @@ using UnityEngine;
 namespace WorldTree
 {
     /// <summary>
-    /// 世界树框架编辑器窗口
+    /// 世界树框架编辑器驱动窗口
     /// </summary>
     public class WorldTreeFrameworkWindow : Entity
     {
@@ -46,10 +46,10 @@ namespace WorldTree
         public override void OnAdd(WorldTreeFrameworkWindow self)
         {
             self.AddComponent<EditorGUIWindow>();
-            self.enable = self.GetSystemBroadcast<IEnableSystem>();
-            self.update = self.GetSystemBroadcast<IUpdateSystem>();
-            self.disable = self.GetSystemBroadcast<IDisableSystem>();
-            self.onGUI = self.GetSystemBroadcast<IOnGUISystem>();
+            self.enable = self.GetSystemGlobalBroadcast<IEnableSystem>();
+            self.update = self.GetSystemGlobalBroadcast<IUpdateSystem>();
+            self.disable = self.GetSystemGlobalBroadcast<IDisableSystem>();
+            self.onGUI = self.GetSystemGlobalBroadcast<IOnGUISystem>();
             self.AddComponent<EditorHomePage>();
         }
     }

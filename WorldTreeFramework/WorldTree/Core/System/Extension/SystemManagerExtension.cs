@@ -50,7 +50,7 @@ namespace WorldTree
         /// <summary>
         /// 获取系统全局广播
         /// </summary>
-        public static SystemGlobalBroadcast<T> GetSystemBroadcast<T>(this Entity self)
+        public static SystemGlobalBroadcast<T> GetSystemGlobalBroadcast<T>(this Entity self)
         where  T : ISystem
         {
             return self.Root.SystemManager.AddComponent<SystemGlobalBroadcast<T>>();

@@ -34,13 +34,13 @@ namespace WorldTree
 
             root = new EntityManager();
 
-            enable = root.GetSystemBroadcast<IEnableSystem>();
-            update = root.GetSystemBroadcast<IUpdateSystem>();
-            disable = root.GetSystemBroadcast<IDisableSystem>();
+            enable = root.GetSystemGlobalBroadcast<IEnableSystem>();
+            update = root.GetSystemGlobalBroadcast<IUpdateSystem>();
+            disable = root.GetSystemGlobalBroadcast<IDisableSystem>();
 
-            lateUpdate = root.GetSystemBroadcast<ILateUpdateSystem>();
-            fixedUpdate = root.GetSystemBroadcast<IFixedUpdateSystem>();
-            onGUI = root.GetSystemBroadcast<IOnGUISystem>();
+            lateUpdate = root.GetSystemGlobalBroadcast<ILateUpdateSystem>();
+            fixedUpdate = root.GetSystemGlobalBroadcast<IFixedUpdateSystem>();
+            onGUI = root.GetSystemGlobalBroadcast<IOnGUISystem>();
 
             root.AddComponent<InitialDomain>();
         }
@@ -76,6 +76,7 @@ namespace WorldTree
             fixedUpdate = null;
             onGUI = null;
             root.Dispose();
+            root = null;
         }
 
     }
