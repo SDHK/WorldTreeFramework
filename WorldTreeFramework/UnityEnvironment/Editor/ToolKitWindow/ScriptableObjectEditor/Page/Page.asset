@@ -13,3 +13,30 @@ MonoBehaviour:
   m_Name: Page
   m_EditorClassIdentifier: 
   CreatePath: 
+  classes:
+  - ClassName: 
+    Comment: 
+    fields:
+    - FieldType: 4
+      FieldName: 
+      Comment: 
+    - FieldType: 5
+      FieldName: 
+      Comment: 
+    - FieldType: 10
+      FieldName: 
+      Comment: 
+    ClassFilePath: 
+  - ClassName: 
+    Comment: 
+    fields:
+    - FieldType: 6
+      FieldName: 
+      Comment: 
+    - FieldType: 4
+      FieldName: 
+      Comment: 
+    - FieldType: 8
+      FieldName: 
+      Comment: 
+    ClassFilePath: 

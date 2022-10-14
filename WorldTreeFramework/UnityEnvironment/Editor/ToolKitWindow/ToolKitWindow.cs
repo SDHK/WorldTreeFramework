@@ -31,7 +31,6 @@ namespace WorldTree
         public SystemGlobalBroadcast<IUpdateSystem> update;
         public SystemGlobalBroadcast<IOnGUISystem> onGUI;
 
-
         [MenuItem("WorldTree/ToolKit")]
         public static void OpenFrameEditor()
         {
@@ -42,7 +41,9 @@ namespace WorldTree
 
         protected override void Initialize()
         {
-            if (root == null) root = new EntityManager();
+            if (root != null) root.Dispose();
+
+            root = new EntityManager();
 
             World.Log = Debug.Log;
             World.LogWarning = Debug.LogWarning;
@@ -57,7 +58,7 @@ namespace WorldTree
         {
             var tree = new OdinMenuTree(true);
             tree.AddAssetAtPath("关于", rootPath + "GuidePage/Page/Page.asset").AddIcon(EditorIcons.Info);
-            tree.AddAssetAtPath("脚本对象编辑", rootPath + "ScriptableObjectEditor/Page/Page.asset");
+            tree.AddAssetAtPath("脚本对象编辑/编辑", rootPath + "ScriptableObjectEditor/Page/Page.asset");
             return tree;
         }
 
