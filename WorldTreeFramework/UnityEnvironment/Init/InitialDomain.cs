@@ -33,7 +33,7 @@ namespace WorldTree
             await CheckHotfix();
 
             //从ab包拿到ScriptObject
-            var scriptObj = (await AssetComponent.LoadAsync<TestData>(BPath.Assets_AssetBundles_GameObject_TestData__asset));
+            //var scriptObj = (await AssetComponent.LoadAsync<TestData>(BPath.Assets_AssetBundles_GameObject_TestData__asset));
 
 
             ////通过预制体获取物体实例
