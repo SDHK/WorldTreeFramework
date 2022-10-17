@@ -12,23 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 998a2b474e6e3774f8edc92db60b0266, type: 3}
   m_Name: Page
   m_EditorClassIdentifier: 
-  CreateFilePath: Assets/Scripts/ScriptObjects
-  CreateAssetPath: Assets/AssetsBundles/ScriptableObject
+  CreateFilePath: Assets/Scripts/ScriptableObjects
+  CreateAssetPath: Assets/AssetBundles/ScriptObjects
+  nameSpace: WorldTree
   ClassName: 
   classes:
-  - scriptableObjectEditor: {fileID: 11400000}
-    ClassName: TestClass1
-    Comment: "\u6D4B\u8BD5\u7C7B1"
-    monoScript: {fileID: 11500000, guid: 77f3d60306011064ebb84b650d443668, type: 3}
-    IsShow: 1
+  - IsShow: 1
+    scriptableObjectEditor: {fileID: 11400000}
+    ClassName: TestAsset
+    Comment: "\u6D4B\u8BD5\u8D44\u6E90"
+    IsList: 0
+    monoScript: {fileID: 11500000, guid: 1eb8f93b45958854dabb92b26e6b6231, type: 3}
+    monoListScript: {fileID: 11500000, guid: 921f25e7006de45429d767fd2f911f06, type: 3}
     fields:
     - FieldType: 0
       KeyType: 0
       ValueType: 0
       ItemType: 0
       TypeName: 
-      FieldName: name1
-      Comment: "\u540D\u5B57"
+      FieldName: roleName
+      Comment: "\u89D2\u8272\u540D\u79F0"
     - FieldType: 2
       KeyType: 0
       ValueType: 0
@@ -36,27 +39,48 @@ MonoBehaviour:
       TypeName: 
       FieldName: hp
       Comment: "\u8840\u91CF"
-    - FieldType: 6
+    - FieldType: 15
       KeyType: 0
       ValueType: 0
       ItemType: 0
       TypeName: 
-      FieldName: obj
-      Comment: "\u6A21\u578B"
-    - FieldType: 1
+      FieldName: v2
+      Comment: 
+    - FieldType: 14
       KeyType: 0
       ValueType: 0
       ItemType: 0
-      TypeName: TestClass2
-      FieldName: tc
-      Comment: "\u8D44\u6E90\u6570\u636E"
-    - FieldType: 4
+      TypeName: 
+      FieldName: v3
+      Comment: 
+    - FieldType: 18
       KeyType: 0
-      ValueType: 1
+      ValueType: 0
       ItemType: 0
       TypeName: 
-      FieldName: dict
-      Comment: "\u5B57\u5178"
+      FieldName: r
+      Comment: 
+    - FieldType: 21
+      KeyType: 0
+      ValueType: 0
+      ItemType: 0
+      TypeName: string
+      FieldName: ac
+      Comment: 
+    - FieldType: 20
+      KeyType: 0
+      ValueType: 0
+      ItemType: 0
+      TypeName: 
+      FieldName: c
+      Comment: 
+    - FieldType: 10
+      KeyType: 0
+      ValueType: 3
+      ItemType: 0
+      TypeName: 
+      FieldName: t
+      Comment: 
     AssetName: 
     Assets: []
-    ClassFilePath: 
+    listAsset: {fileID: 0}

@@ -91,13 +91,7 @@ namespace WorldTree
 
             SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
             {
-
-                if (selected.Name.Equals("业务事件"))
-                    if (SirenixEditorGUI.ToolbarButton(new GUIContent("新增模块")))
-                    {
-
-
-                    }
+              
             }
             SirenixEditorGUI.EndHorizontalToolbar();
 

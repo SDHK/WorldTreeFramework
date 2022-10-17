@@ -1,8 +1,22 @@
-﻿using Sirenix.OdinInspector;
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/10/17 10:25
+
+* 描述： 资源的字段编辑
+
+*/
+
+using Sirenix.OdinInspector;
 using System;
 
 namespace WorldTree
 {
+
+    /// <summary>
+    /// 编辑资源字段
+    /// </summary>
     [Serializable]
     public class EditorAssetField
     {
