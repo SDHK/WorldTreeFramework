@@ -37,9 +37,16 @@ namespace WorldTree
             //var scriptObj = (await AssetComponent.LoadAsync<TestAssets>(BPath.Assets_AssetBundles_ScriptObjects_TestAssets__asset));
 
             //Debug.Log(scriptObj.List.Count);
+            //var d = scriptObj.Dictionary;
+
             //foreach (var item in scriptObj.List)
+            //{ 
+            //    Debug.Log(item.name+"|"+item.roleName);
+            //}
+
+            //foreach (var item in d)
             //{
-            //    Debug.Log(item.str);
+            //    Debug.Log(item.Key+"|"+item.Value.roleName);
             //}
 
 

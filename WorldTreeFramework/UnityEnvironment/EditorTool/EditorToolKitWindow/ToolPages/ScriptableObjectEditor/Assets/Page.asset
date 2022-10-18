@@ -21,9 +21,9 @@ MonoBehaviour:
     scriptableObjectEditor: {fileID: 11400000}
     ClassName: TestAsset
     Comment: "\u6D4B\u8BD5\u8D44\u6E90"
-    IsList: 0
+    IsList: 1
     monoScript: {fileID: 11500000, guid: 1eb8f93b45958854dabb92b26e6b6231, type: 3}
-    monoListScript: {fileID: 11500000, guid: 921f25e7006de45429d767fd2f911f06, type: 3}
+    monoListScript: {fileID: 11500000, guid: 26752a6d72d43f44ebf77c7c0aa3bc5b, type: 3}
     fields:
     - FieldType: 0
       KeyType: 0
@@ -82,5 +82,7 @@ MonoBehaviour:
       FieldName: t
       Comment: 
     AssetName: 
-    Assets: []
-    listAsset: {fileID: 0}
+    Assets:
+    - {fileID: 11400000, guid: ef6b30f6483af8445ba80340a3ab1c42, type: 2}
+    - {fileID: 11400000, guid: 3354b880fe917f648aed533c07abc883, type: 2}
+    listAsset: {fileID: 11400000, guid: 91028dacddc905b429f60f39e0c3868f, type: 2}
