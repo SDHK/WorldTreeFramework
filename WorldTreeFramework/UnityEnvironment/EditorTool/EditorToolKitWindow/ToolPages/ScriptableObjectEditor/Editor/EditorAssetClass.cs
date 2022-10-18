@@ -98,7 +98,7 @@ namespace WorldTree
 
         [VerticalGroup("资源")]
         [Button("新建", ButtonSizes.Medium)]
-        [ShowIf("@this.IsCreateAsset()")]
+        [ShowIf("@this.IsCreateAssetButton()")]
         public void CreateAssetButton()
         {
             CreateDeleteListClassFile();
@@ -110,21 +110,18 @@ namespace WorldTree
                     CreateClassFile();
                 }
             }
-            else if (monoScript != null)
+            else
             {
-                if (!IsRepeatAssetName() && AssetName != "")
+                if (IsCreateAsset())
                 {
                     Assets.Add(CreateAsset());
                     AssetName = "";
 
-                    if (IsList && monoListScript != null)
+                    if (IsCreateListAsset())
                     {
-                        if (listAsset == null)
-                        {
-                            CreateListAsset();
-                        }
-                        RefreshListAsset();
+                        CreateListAsset();
                     }
+                    RefreshListAsset();
                 }
             }
         }
@@ -339,11 +336,19 @@ namespace WorldTree
             return Assets.Any((item) => item.name == AssetName);
         }
         /// <summary>
+        /// 判断是否可以显示新建资源的按钮
+        /// </summary>
+        public bool IsCreateAssetButton()
+        {
+            return IsShow && !(string.IsNullOrEmpty(AssetName) || string.IsNullOrEmpty(scriptableObjectEditor.CreateAssetPath) || IsRepeatAssetName());
+        }
+
+        /// <summary>
         /// 判断是否可以新建资源
         /// </summary>
         public bool IsCreateAsset()
         {
-            return IsShow && !(string.IsNullOrEmpty(AssetName) || string.IsNullOrEmpty(scriptableObjectEditor.CreateAssetPath) || IsRepeatAssetName());
+            return monoScript && !(string.IsNullOrEmpty(AssetName) || string.IsNullOrEmpty(scriptableObjectEditor.CreateAssetPath) || IsRepeatAssetName());
         }
 
         /// <summary>
@@ -351,14 +356,14 @@ namespace WorldTree
         /// </summary>
         public bool IsCreateListClass()
         {
-            return IsList && monoScript != null && monoListScript == null;
+            return IsList && monoScript && monoListScript == null;
         }
         /// <summary>
         /// 判断是否可以新建列表资源
         /// </summary>
         public bool IsCreateListAsset()
         {
-            return IsList && monoListScript != null && listAsset == null;
+            return IsList && monoListScript && listAsset == null;
         }
         #endregion
     }
