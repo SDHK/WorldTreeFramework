@@ -26,12 +26,17 @@ namespace WorldTree
     public class InitialDomain : Entity { }
     class _InitialDomain : AddSystem<InitialDomain>
     {
-        
+
         public override async void OnAdd(InitialDomain self)
         {
             self.Domain = self;
             World.Log("初始域启动！");
             await CheckHotfix();
+
+          
+
+
+
 
             //从ab包拿到ScriptObject
             //var scriptObj = (await AssetComponent.LoadAsync<TestAssets>(BPath.Assets_AssetBundles_ScriptObjects_TestAssets__asset));
@@ -68,6 +73,8 @@ namespace WorldTree
 
         }
 
+     
+
 
         private async ETTask CheckHotfix()
         {
@@ -96,6 +103,16 @@ namespace WorldTree
         {
             public override void Update(InitialDomain self, float deltaTime)
             {
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    self.AddComponent<Node>().Test().Coroutine();
+                }
+
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    self.AddComponent<Node>().RemoveComponent<Node>();
+                }
+
                 AssetComponent.Update();
             }
         }

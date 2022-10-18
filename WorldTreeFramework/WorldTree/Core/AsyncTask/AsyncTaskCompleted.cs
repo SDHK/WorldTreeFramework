@@ -6,6 +6,9 @@ namespace WorldTree
 {
     public static class AsyncTaskCompletedExtension
     {
+        /// <summary>
+        /// 立即完成，不可用于死循环
+        /// </summary>
         public static AsyncTaskCompleted AsyncTaskCompleted(this Entity self)
         {
             return self.AddChildren<AsyncTaskCompleted>();

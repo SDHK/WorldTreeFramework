@@ -3,6 +3,33 @@ using WorldTree;
 
 public class Node : Entity
 {
+
+    public static bool bit = true;
+    public async AsyncTask Test()
+    {
+        await this.AsyncDelay(1);
+        World.Log("1！");
+
+        await this.AsyncDelay(1);
+        World.Log("2！");
+        await this.AsyncDelay(1);
+        World.Log("3！");
+
+        if (bit)
+        {
+            await Test();
+        }
+
+        await this.AsyncDelay(1);
+
+        World.Log("4！");
+        await this.AsyncDelay(1);
+        World.Log("5！");
+        await this.AsyncDelay(1);
+        World.Log("6！");
+        await this.AsyncDelay(1);
+        World.Log("7！");
+    }
 }
 class NodeNewSystem : NewSystem<Node>
 {
@@ -22,7 +49,7 @@ class NodeAddSystem : AddSystem<Node>
 {
     public override void OnAdd(Node self)
     {
-        Debug.Log("OnAdd!");
+
     }
 }
 class NodeEnableSystem : EnableSystem<Node>
@@ -37,6 +64,10 @@ class NodeUpdateSystem : UpdateSystem<Node>
     public override void Update(Node self, float deltaTime)
     {
         Debug.Log("Update!");
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Node.bit = false;
+        }
     }
 }
 class NodeLateUpdateSystem : LateUpdateSystem<Node>
