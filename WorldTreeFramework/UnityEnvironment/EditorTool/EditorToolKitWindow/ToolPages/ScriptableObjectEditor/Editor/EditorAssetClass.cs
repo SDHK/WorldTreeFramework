@@ -134,10 +134,20 @@ namespace WorldTree
         [InlineEditor]
         [Searchable]
         //[TableList(IsReadOnly = true, ShowIndexLabels = true)]
-        [ListDrawerSettings(ShowPaging = true, HideAddButton = true,ShowIndexLabels =true, CustomRemoveElementFunction = "DeleteAsset", OnTitleBarGUI = "RefreshListAssetButton")]
+        [ListDrawerSettings(ShowPaging = true, HideAddButton = true, ShowIndexLabels = true, CustomRemoveElementFunction = "DeleteAssetButton", OnTitleBarGUI = "RefreshListAssetButton")]
         public List<ScriptableObject> Assets = new List<ScriptableObject>();
 
-      
+
+        public void DeleteAssetButton(ScriptableObject scriptableObject)
+        {
+            if (EditorUtility.DisplayDialog($"删除 {ClassName} 类的资源 {scriptableObject.name} ", $"确定要删除 {scriptableObject.name} 资源吗？", "✔", "❌"))
+            {
+                DeleteAsset(scriptableObject);
+            }
+        }
+
+
+
         [GUIColor(0, 1, 1)]
         [ShowIf("@IsCreateListAsset()")]
         [Button("创建列表资源")]
@@ -298,7 +308,7 @@ namespace WorldTree
                 AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(monoListScript));
             }
         }
-       
+
         #endregion
 
 

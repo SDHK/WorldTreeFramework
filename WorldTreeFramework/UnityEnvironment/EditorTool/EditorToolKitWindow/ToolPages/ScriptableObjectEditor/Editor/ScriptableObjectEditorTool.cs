@@ -11,6 +11,7 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace WorldTree
@@ -58,15 +59,18 @@ namespace WorldTree
 
         [LabelText("列表")]
         [Searchable]
-        [ListDrawerSettings(ShowPaging = true,Expanded = true, HideAddButton = true, CustomRemoveElementFunction = "RemoveClass")]
+        [ListDrawerSettings(ShowPaging = true,Expanded = true, HideAddButton = true, CustomRemoveElementFunction = "RemoveClassButton")]
         public List<EditorAssetClass> classes = new List<EditorAssetClass>();
 
 
-        public void RemoveClass(EditorAssetClass assetClass)
+        public void RemoveClassButton(EditorAssetClass assetClass)
         {
-            assetClass.DeleteListClass();
-            assetClass.DeleteClass();
-            classes.Remove(assetClass);
+            if (EditorUtility.DisplayDialog($"删除类型 {assetClass.ClassName} ", $"确定要删除 {assetClass.ClassName} 类吗？", "✔", "❌"))
+            {
+                assetClass.DeleteListClass();
+                assetClass.DeleteClass();
+                classes.Remove(assetClass);
+            }
         }
     }
 
