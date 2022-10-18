@@ -110,7 +110,7 @@ namespace WorldTree
 
                 if (Input.GetKeyDown(KeyCode.W))
                 {
-                    self.AddComponent<Node>().RemoveComponent<Node>();
+                    self.RemoveComponent<Node>();
                 }
 
                 AssetComponent.Update();
