@@ -17,7 +17,8 @@ public class Node : Entity
 
         if (bit)
         {
-            await Test();
+            //await Test();
+            await this.AddComponent<Node>().Test();
         }
 
         await this.AsyncDelay(1);
@@ -66,7 +67,7 @@ class NodeUpdateSystem : UpdateSystem<Node>
         Debug.Log("Update!");
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Node.bit = false;
+            Node.bit = !Node.bit;
         }
     }
 }
