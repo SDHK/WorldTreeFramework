@@ -27,13 +27,9 @@ namespace WorldTree
         [HideLabel, HorizontalGroup("类型")]
         public EditorFieldType KeyType;
 
-        [ShowIf("FieldType", Value = EditorFieldAllType.Dictionary)]
+        [ShowIf("@FieldType==EditorFieldAllType.List||FieldType==EditorFieldAllType.Array||FieldType==EditorFieldAllType.Dictionary")]
         [HideLabel, HorizontalGroup("类型")]
         public EditorFieldType ValueType;
-
-        [ShowIf("FieldType", Value = EditorFieldAllType.List)]
-        [HideLabel, HorizontalGroup("类型")]
-        public EditorFieldType ItemType;
 
         [HideLabel, HorizontalGroup("类型")]
         [ShowIf("FieldType", Value = EditorFieldAllType.其它)]

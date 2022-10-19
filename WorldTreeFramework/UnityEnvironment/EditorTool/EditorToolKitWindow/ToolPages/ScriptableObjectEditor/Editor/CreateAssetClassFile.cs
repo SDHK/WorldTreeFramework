@@ -9,8 +9,13 @@
 */
 
 using System.IO;
+using System;
 using System.Text;
+using Sirenix.OdinInspector;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.TextCore.Text;
 
 namespace WorldTree
 {
@@ -20,25 +25,54 @@ namespace WorldTree
     public enum EditorFieldAllType
     {
         String,
+
+        [LabelText("Byte    (0~255)")]
         Byte,
+        [LabelText("Short   (-32768~327677)")]
         Short,
+        [LabelText("Int     (+ -2147483647)")]
         Int,
+        [LabelText("Long    64位,19位数")]
         Long,
+        [LabelText("Float   32位,7位精度")]
         Float,
+        [LabelText("Double  64位,15位精度")]
         Double,
+        [LabelText("Decimal 128位,29位精度")]
+        Decimal,
+
+        [LabelText("Byte    (-128~127)")]
+        sByte,
+        [LabelText("uShot   (0~65536)")]
+        uShot,
+        [LabelText("uInt    (0~4294967295)")]
+        uInt,
+        [LabelText("uLong   无符号的20位数")]
+        uLong,
+
         Bool,
         Char,
 
         Dictionary,
         List,
+        Array,
 
         GameObject,
         Transform,
+
+        Texture2D,
+        AudioClip,
+        Sprite,
+        Material,
+        Shader,
+        ScriptableObject,
+        TextAsset,
 
         Vector3,
         Vector2,
         Vector3Int,
         Vector2Int,
+        Quaternion,
         Rect,
         RectInt,
         Color,
@@ -54,26 +88,55 @@ namespace WorldTree
     public enum EditorFieldType
     {
         String,
+
+        [LabelText("Byte    (0~255)")]
         Byte,
+        [LabelText("Short   (-32768~327677)")]
         Short,
+        [LabelText("Int     (+ -2147483647)")]
         Int,
+        [LabelText("Long    64位,19位数")]
         Long,
+        [LabelText("Float   32位,7位精度")]
         Float,
+        [LabelText("Double  64位,15位精度")]
         Double,
+        [LabelText("Decimal 128位,29位精度")]
+        Decimal,
+
+        [LabelText("Byte    (-128~127)")]
+        sByte,
+        [LabelText("uShot   (0~65536)")]
+        uShot,
+        [LabelText("uInt    (0~4294967295)")]
+        uInt,
+        [LabelText("uLong   无符号的20位数")]
+        uLong,
+
         Bool,
         Char,
 
         GameObject,
         Transform,
 
+        Texture2D,
+        AudioClip,
+        Sprite,
+        Material,
+        Shader,
+        ScriptableObject,
+        TextAsset,
+
         Vector3,
         Vector2,
         Vector3Int,
         Vector2Int,
+        Quaternion,
         Rect,
         RectInt,
         Color,
         AnimationCurve,
+      
     }
 
     public partial class EditorAssetClass
@@ -86,12 +149,20 @@ namespace WorldTree
             switch (value)
             {
                 case "String":
+
                 case "Byte":
                 case "Short":
                 case "Int":
                 case "Long":
                 case "Float":
                 case "Double":
+                case "Decimal":
+
+                case "sByte":
+                case "uShot":
+                case "uInt":
+                case "uLong":
+
                 case "Bool":
                 case "Char":
                     value = value.ToLower();
@@ -105,7 +176,6 @@ namespace WorldTree
         /// </summary>
         public void CreateClassFile()
         {
-
             StringBuilder builder = new StringBuilder();
 
             builder.AppendLine("using System;");
@@ -133,9 +203,11 @@ namespace WorldTree
                         break;
 
                     case EditorFieldAllType.List:
-                        builder.AppendLine($"        public List<{TypeNameToLower(field.ItemType.ToString())}> {field.FieldName};");
+                        builder.AppendLine($"        public List<{TypeNameToLower(field.ValueType.ToString())}> {field.FieldName};");
                         break;
-
+                    case EditorFieldAllType.Array:
+                        builder.AppendLine($"        public {TypeNameToLower(field.ValueType.ToString())}[] {field.FieldName};");
+                        break;
                     case EditorFieldAllType.其它:
                         if (string.IsNullOrEmpty(field.TypeName)) field.TypeName = "string";
                         builder.AppendLine($"        public {field.TypeName} {field.FieldName};");

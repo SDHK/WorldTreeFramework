@@ -62,7 +62,7 @@
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public T AddChildren<T, T1, T2, T3,T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public T AddChildren<T, T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         where T : Entity
         {
             T entity = Root.ObjectPoolManager.Get<T>();
@@ -70,7 +70,7 @@
             {
                 entity.Parent = this;
                 entity.Domain = Domain;
-                entity.SendSystem<ISendSystem<T1, T2, T3,T4>, T1, T2, T3,T4>(arg1, arg2, arg3,arg4);
+                entity.SendSystem<ISendSystem<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
                 Root.Add(entity);
             }
 

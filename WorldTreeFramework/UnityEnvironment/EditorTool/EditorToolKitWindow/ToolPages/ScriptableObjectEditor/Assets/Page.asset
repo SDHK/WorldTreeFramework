@@ -17,72 +17,65 @@ MonoBehaviour:
   nameSpace: WorldTree
   ClassName: 
   classes:
-  - IsShow: 1
+  - a: {fileID: 0}
+    a2: {fileID: 0}
+    IsShow: 1
     scriptableObjectEditor: {fileID: 11400000}
     ClassName: TestAsset
     Comment: "\u6D4B\u8BD5\u8D44\u6E90"
-    IsList: 1
-    monoScript: {fileID: 11500000, guid: 1eb8f93b45958854dabb92b26e6b6231, type: 3}
+    IsList: 0
+    monoScript: {fileID: 11500000, guid: 27a27ea2c2f329a46837f56f6a802758, type: 3}
     monoListScript: {fileID: 11500000, guid: 26752a6d72d43f44ebf77c7c0aa3bc5b, type: 3}
     fields:
-    - FieldType: 0
+    - FieldType: 3
       KeyType: 0
       ValueType: 0
-      ItemType: 0
       TypeName: 
       FieldName: roleName
       Comment: "\u89D2\u8272\u540D\u79F0"
-    - FieldType: 2
+    - FieldType: 0
       KeyType: 0
       ValueType: 0
-      ItemType: 0
       TypeName: 
       FieldName: hp
       Comment: "\u8840\u91CF"
     - FieldType: 15
       KeyType: 0
       ValueType: 0
-      ItemType: 0
       TypeName: 
       FieldName: v2
       Comment: 
     - FieldType: 14
       KeyType: 0
       ValueType: 0
-      ItemType: 0
       TypeName: 
       FieldName: v3
       Comment: 
     - FieldType: 18
       KeyType: 0
       ValueType: 0
-      ItemType: 0
       TypeName: 
       FieldName: r
       Comment: 
     - FieldType: 21
       KeyType: 0
       ValueType: 0
-      ItemType: 0
       TypeName: string
       FieldName: ac
       Comment: 
-    - FieldType: 20
+    - FieldType: 26
       KeyType: 0
       ValueType: 0
-      ItemType: 0
       TypeName: 
       FieldName: c
       Comment: 
-    - FieldType: 10
+    - FieldType: 19
       KeyType: 0
-      ValueType: 3
-      ItemType: 0
+      ValueType: 9
       TypeName: 
       FieldName: t
       Comment: 
     AssetName: 
     Assets:
-    - {fileID: 11400000, guid: ef6b30f6483af8445ba80340a3ab1c42, type: 2}
-    - {fileID: 11400000, guid: 3354b880fe917f648aed533c07abc883, type: 2}
-    listAsset: {fileID: 11400000, guid: 91028dacddc905b429f60f39e0c3868f, type: 2}
+    - {fileID: 11400000, guid: 640b63019dbeba0459fd5cccfa1967b9, type: 2}
+    listAsset: {fileID: 0}
