@@ -33,10 +33,6 @@ namespace WorldTree
             World.Log("初始域启动！");
             await CheckHotfix();
 
-          
-
-
-
 
             //从ab包拿到ScriptObject
             //var scriptObj = (await AssetComponent.LoadAsync<TestAssets>(BPath.Assets_AssetBundles_ScriptObjects_TestAssets__asset));
@@ -73,7 +69,7 @@ namespace WorldTree
 
         }
 
-     
+
 
 
         private async ETTask CheckHotfix()

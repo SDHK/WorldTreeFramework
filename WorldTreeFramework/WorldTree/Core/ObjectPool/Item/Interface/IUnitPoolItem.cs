@@ -34,15 +34,14 @@ namespace WorldTree
         bool IsRecycle { get; set; }
 
         /// <summary>
-        /// 对象回收
+        /// 回收对象
         /// </summary>
-        void Recycle();
-
+        new void Dispose();
     }
 
     public interface IUnitPoolItemEvent
     {
-       
+
 
         /// <summary>
         /// 对象新建时

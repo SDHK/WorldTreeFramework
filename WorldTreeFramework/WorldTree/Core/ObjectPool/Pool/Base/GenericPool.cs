@@ -218,7 +218,7 @@ namespace WorldTree
 
 
 
-        public override void OnDispose()
+        public override void Dispose()
         {
             DisposeAll();
             NewObject = null;

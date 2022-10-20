@@ -15,11 +15,11 @@ public class Node : Entity
         await this.AsyncDelay(1);
         World.Log("3！");
 
-        if (bit)
-        {
-            //await Test();
-            await this.AddComponent<Node>().Test();
-        }
+        //if (bit)
+        //{
+        //    //await Test();
+        //    await this.AddComponent<Node>().Test();
+        //}
 
         await this.AsyncDelay(1);
 

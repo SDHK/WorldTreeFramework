@@ -100,8 +100,10 @@ namespace WorldTree
 
          
         }
-
-        public override void OnDispose()
+        /// <summary>
+        /// 释放
+        /// </summary>
+        public override void Dispose()
         {
             RemoveAll();
             listeners.Clear();

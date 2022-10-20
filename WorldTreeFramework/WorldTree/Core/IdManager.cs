@@ -37,5 +37,9 @@ namespace WorldTree
             return Id++;
         }
 
+        public override void Dispose()
+        {
+        }
+
     }
 }

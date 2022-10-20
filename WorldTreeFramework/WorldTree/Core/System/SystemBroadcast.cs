@@ -79,8 +79,8 @@ namespace WorldTree
     {
         public override void OnRemove(SystemBroadcast self)
         {
-            self.update1.Recycle();
-            self.update2.Recycle();
+            self.update1.Dispose();
+            self.update2.Dispose();
         }
     }
 }

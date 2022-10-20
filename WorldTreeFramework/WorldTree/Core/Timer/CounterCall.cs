@@ -38,7 +38,7 @@ namespace WorldTree
             if (self.count >= self.countOut)
             {
                 self.callback?.Invoke();
-                self.RemoveSelf();
+                self.Dispose();
             }
         }
     }

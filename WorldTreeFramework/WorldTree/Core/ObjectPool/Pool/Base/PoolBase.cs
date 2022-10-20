@@ -119,6 +119,12 @@ namespace WorldTree
         public abstract void DisposeOne();
 
         public abstract void Preload();
+        public override void Dispose()
+        {
+            if (IsDisposed) return;
+            OnDispose();
+            IsDisposed = true;
+        }
 
 
     }

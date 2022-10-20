@@ -23,8 +23,10 @@ namespace WorldTree
 
         public bool IsRecycle { get; set; }
 
-
-        public void Recycle()
+        /// <summary>
+        /// 回收对象
+        /// </summary>
+        public override void Dispose()
         {
             if (thisPool!=null)
             {

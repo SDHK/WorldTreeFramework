@@ -74,11 +74,11 @@ namespace WorldTree
                 delegates.Remove(action);
                 if (delegates.Count == 0)
                 {
-                    delegates.Recycle();
+                    delegates.Dispose();
                     events.Remove(key);
                     if (events.Count == 0)
                     {
-                        events.Recycle();
+                        events.Dispose();
                         events = null;
                     }
                 }
@@ -93,11 +93,11 @@ namespace WorldTree
             if (events.ContainsKey(key))
             {
                 events[key].Clear();
-                events[key].Recycle();
+                events[key].Dispose();
                 events.Remove(key);
                 if (events.Count == 0)
                 {
-                    events.Recycle();
+                    events.Dispose();
                     events = null;
                 }
             }
@@ -134,10 +134,10 @@ namespace WorldTree
             {
                 var delegates = item.Value;
                 delegates.Clear();
-                delegates.Recycle();
+                delegates.Dispose();
             }
             events.Clear();
-            events.Recycle();
+            events.Dispose();
             events = null;
         }
     }

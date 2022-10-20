@@ -22,7 +22,7 @@ namespace WorldTree
         /// <summary>
         /// 直接释放：释放后IsDisposed标记为true
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (IsDisposed) return;
             OnDispose();

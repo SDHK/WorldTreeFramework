@@ -24,16 +24,6 @@ namespace WorldTree
         public bool IsDisposed { get; set; }
 
 
-        /// <summary>
-        /// 直接释放：释放后IsDisposed标记为true
-        /// </summary>
-        public void Dispose()
-        {
-            if (IsDisposed) return;
-            OnDispose();
-            IsDisposed = true;
-        }
-
         public virtual void OnDispose()
         {
         }
@@ -52,7 +42,7 @@ namespace WorldTree
         }
 
 
-        public void Recycle()
+        public void Dispose()
         {
             if (thisPool != null)
             {

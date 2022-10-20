@@ -67,7 +67,7 @@ namespace WorldTree
 
         UnitDictionary<Type, ObjectPool> pools = new UnitDictionary<Type, ObjectPool>();
 
-        public override void OnDispose()
+        public override void Dispose()
         {
             pools.Clear();
         }
@@ -135,7 +135,7 @@ namespace WorldTree
             Type type = typeof(T);
             if (pools.TryGetValue(type, out ObjectPool pool))
             {
-                pool.DisposeAll();
+                pool.Dispose();
                 pools.Remove(type);
             }
         }

@@ -63,8 +63,8 @@ namespace WorldTree
         {
             self.update1.Clear();
             self.update2.Clear();
-            self.update1.Recycle();
-            self.update2.Recycle();
+            self.update1.Dispose();
+            self.update2.Dispose();
         }
     }
 

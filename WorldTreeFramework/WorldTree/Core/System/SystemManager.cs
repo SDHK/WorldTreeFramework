@@ -30,7 +30,7 @@ namespace WorldTree
     /// <summary>
     /// 系统管理器
     /// </summary>
-    public class SystemManager : Entity, IUnit
+    public class SystemManager : Entity
     {
         //接口类型，（实例类型，实例方法）
         private UnitDictionary<Type, SystemGroup> InterfaceSystems = new UnitDictionary<Type, SystemGroup>();
@@ -117,7 +117,10 @@ namespace WorldTree
             return false;
         }
 
-        public override void OnDispose()
+        /// <summary>
+        /// 释放对象
+        /// </summary>
+        public override void Dispose()
         {
             InterfaceSystems.Clear();
         }

@@ -170,7 +170,7 @@ namespace WorldTree
                     }
                 }
             }
-            queue.Recycle();
+            queue.Dispose();
         }
 
 
@@ -180,29 +180,6 @@ namespace WorldTree
         }
 
 
-        /// <summary>
-        /// 面向对象的直接释放方法：释放后IsDisposed标记为true
-        /// </summary>
-        public void Dispose()
-        {
-            if (IsDisposed) return;
-            OnDispose();
-            IsDisposed = true;
-        }
-
-        public void Recycle()
-        {
-            if (thisPool != null)
-            {
-                if (!thisPool.IsDisposed)
-                {
-                    if (!IsRecycle)
-                    {
-                        thisPool.Recycle(this);
-                    }
-                }
-            }
-        }
 
 
         public virtual void OnDispose() { }
@@ -393,7 +370,7 @@ namespace WorldTree
 
                 if (children.Count == 0)
                 {
-                    children.Recycle();
+                    children.Dispose();
                     children = null;
                 }
             }
@@ -565,7 +542,7 @@ namespace WorldTree
             if (components.ContainsKey(type))
             {
                 Entity component = components[type];
-              
+
                 Root.Remove(component);
 
 
@@ -579,7 +556,7 @@ namespace WorldTree
 
                 if (components.Count == 0)
                 {
-                    components.Recycle();
+                    components.Dispose();
                     components = null;
                 }
             }
@@ -602,7 +579,7 @@ namespace WorldTree
 
                 if (components.Count == 0)
                 {
-                    components.Recycle();
+                    components.Dispose();
                     components = null;
                 }
             }
@@ -653,27 +630,29 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 移除自己
+        /// 回收实体
         /// </summary>
-        public void RemoveSelf()
+        public virtual void Dispose()
         {
-            if (Parent != null)
+            if (!IsRecycle)
             {
-                if (isComponent)
+                if (Parent != null)
                 {
-                    Parent.RemoveComponent(this);
+                    if (isComponent)
+                    {
+                        Parent.RemoveComponent(this);
+                    }
+                    else
+                    {
+                        Parent.RemoveChildren(this);
+                    }
                 }
-                else
+                else if (this == Domain)
                 {
-                    Parent.RemoveChildren(this);
+                    RemoveAll();
                 }
-            }
-            else if (this == Domain)
-            {
-                RemoveAll();
             }
         }
-
     }
 
 }

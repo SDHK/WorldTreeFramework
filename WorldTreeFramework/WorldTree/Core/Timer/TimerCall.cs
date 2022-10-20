@@ -31,7 +31,7 @@ namespace WorldTree
             if (self.time>= self.timeOutTime)
             {
                 self.callback?.Invoke();
-                self.RemoveSelf();
+                self.Dispose();
             }
         }
     }

@@ -81,7 +81,7 @@ namespace WorldTree
         public void SetResult()
         {
             continuation?.Invoke();
-            RemoveSelf();
+            Dispose();
         }
 
     }
@@ -128,7 +128,7 @@ namespace WorldTree
         {
             Result = result;
             continuation?.Invoke();
-            RemoveSelf();
+            Dispose();
         }
 
         public void SetException(Exception exception)

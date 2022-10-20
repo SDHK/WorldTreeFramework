@@ -30,7 +30,7 @@ namespace WorldTree
         [DebuggerHidden]
         public void GetResult()
         {
-            RemoveSelf();
+            Dispose();
         }
 
         [DebuggerHidden]

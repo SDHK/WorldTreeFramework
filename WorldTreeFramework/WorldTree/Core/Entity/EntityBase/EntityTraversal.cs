@@ -65,8 +65,8 @@ namespace WorldTree
                     }
                 }
             }
-            localStack.Recycle();
-            allStack.Recycle();
+            localStack.Dispose();
+            allStack.Dispose();
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace WorldTree
                 }
 
             }
-            queue.Recycle();
+            queue.Dispose();
         }
 
 

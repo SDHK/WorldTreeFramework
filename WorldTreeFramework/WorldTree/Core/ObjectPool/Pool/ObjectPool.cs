@@ -137,6 +137,12 @@ namespace WorldTree
 
         private void ObjectOnDestroy(object obj)
         {
+            if (obj is IUnitPoolItem)
+            {
+                (obj as IUnitPoolItem).IsDisposed = true;
+            }
+            (obj as IUnitPoolItem)?.OnDispose();
+
             if (destroySystem != null && obj is Entity)
             {
                 destroySystem.Send(obj as Entity);
