@@ -13,13 +13,11 @@ MonoBehaviour:
   m_Name: Page
   m_EditorClassIdentifier: 
   CreateFilePath: Assets/Scripts/ScriptableObjects
-  CreateAssetPath: Assets/AssetBundles/ScriptObjects
+  CreateAssetPath: Assets/AssetBundles/ScriptableObjects
   nameSpace: WorldTree
   ClassName: 
   classes:
-  - a: {fileID: 0}
-    a2: {fileID: 0}
-    IsShow: 1
+  - IsShow: 1
     scriptableObjectEditor: {fileID: 11400000}
     ClassName: TestAsset
     Comment: "\u6D4B\u8BD5\u8D44\u6E90"
@@ -76,6 +74,5 @@ MonoBehaviour:
       FieldName: t
       Comment: 
     AssetName: 
-    Assets:
-    - {fileID: 11400000, guid: 640b63019dbeba0459fd5cccfa1967b9, type: 2}
+    Assets: []
     listAsset: {fileID: 0}
