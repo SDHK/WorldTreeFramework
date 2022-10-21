@@ -37,7 +37,7 @@ namespace WorldTree
 
         private SystemGroup entityAddSystems;
         private SystemGroup entityRemoveSystems;
-        private SystemGroup singletonEagerSystems;
+        //private SystemGroup singletonEagerSystems;
 
 
         private SystemGroup addSystems;
@@ -84,7 +84,7 @@ namespace WorldTree
             removeSystems = Root.SystemManager.GetGroup<IRemoveSystem>();
             enableSystems = Root.SystemManager.GetGroup<IEnableSystem>();
             disableSystems = Root.SystemManager.GetGroup<IDisableSystem>();
-            singletonEagerSystems = SystemManager.GetGroup<ISingletonEagerSystem>();
+            //singletonEagerSystems = SystemManager.GetGroup<ISingletonEagerSystem>();
 
 
             //激活自己
@@ -96,7 +96,7 @@ namespace WorldTree
             AddComponent(ObjectPoolManager);
 
             //饿汉单例启动
-            singletonEagerSystems?.Send(this);
+            //singletonEagerSystems?.Send(this);
 
          
         }

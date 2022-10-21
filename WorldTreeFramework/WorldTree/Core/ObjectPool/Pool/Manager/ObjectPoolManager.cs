@@ -69,6 +69,10 @@ namespace WorldTree
 
         public override void Dispose()
         {
+            foreach (var pool in pools)
+            {
+                pool.Value.Dispose();
+            }
             pools.Clear();
         }
 
