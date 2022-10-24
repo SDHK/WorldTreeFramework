@@ -15,6 +15,8 @@ using UnityEngine;
 
 namespace WorldTree
 {
+    //组件窗，子窗，确定窗
+
 
     //思考Manager的全局广播和监听功能
     public class UIManager : Entity
