@@ -15,21 +15,25 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    //组件窗，子窗，确定窗
-
+    //动画？
 
     //思考Manager的全局广播和监听功能
     public class UIManager : Entity
     {
+        public UnitDictionary<Type, Entity> windows = new UnitDictionary<Type, Entity>();
+        public UnitList<Entity> windowList = new UnitList<Entity>();
 
-        public UnitDictionary<Type, Entity> pages = new UnitDictionary<Type, Entity>();
-
+        //栈顶
         public Entity topPage;
+        //栈底
         public Entity rootPage;
 
         public GameObjectComponent gameObject;
 
 
+        /// <summary>
+        /// 打开窗口
+        /// </summary>
         public void Show<T>()
             where T : Entity
         {
@@ -37,14 +41,29 @@ namespace WorldTree
 
         }
 
+        /// <summary>
+        /// 关闭窗口
+        /// </summary>
         public void Close<T>()
            where T : Entity
         {
 
 
         }
+      
 
-        public void Close()
+        /// <summary>
+        /// 关闭栈顶
+        /// </summary>
+        public void CloseTop()
+        {
+
+
+        }
+        /// <summary>
+        /// 关闭全部
+        /// </summary>
+        public void CloseAll()
         {
 
 
@@ -55,7 +74,23 @@ namespace WorldTree
     {
         public override void OnAdd(UIManager self)
         {
-            self.gameObject = self.AddComponent<GameObjectComponent,GameObject>(null);
+            self.gameObject = self.AddComponent<GameObjectComponent, GameObject>(null);
+        }
+    }
+
+    //???GamaObject组件完善树结构
+    class UIManagerEntityAddSystem : EntityAddSystem<UIManager>
+    {
+        public override void OnEntityAdd(UIManager self, Entity entity)
+        {
+
+        }
+    }
+    class UIManagerEntityRemoveSystem : EntityRemoveSystem<UIManager>
+    {
+        public override void OnEntityRemove(UIManager self, Entity entity)
+        {
+
         }
     }
 

@@ -17,7 +17,7 @@ MonoBehaviour:
   nameSpace: WorldTree
   ClassName: 
   classes:
-  - IsShow: 1
+  - IsShow: 0
     scriptableObjectEditor: {fileID: 11400000}
     ClassName: TestAsset
     Comment: "\u6D4B\u8BD5\u8D44\u6E90"
