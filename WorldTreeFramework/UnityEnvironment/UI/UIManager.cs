@@ -16,13 +16,19 @@ using UnityEngine;
 namespace WorldTree
 {
     //动画？
+    //焦点进入，焦点离开，焦点Update
+    //UI Update
+
+    //Update系统，思考时间参数的必要
 
     //思考Manager的全局广播和监听功能
     public class UIManager : Entity
     {
+        public UnitDictionary<Type, Entity> allWindows = new UnitDictionary<Type, Entity>();
+
         public UnitDictionary<Type, Entity> windows = new UnitDictionary<Type, Entity>();
         public UnitList<Entity> windowList = new UnitList<Entity>();
-
+        
         //栈顶
         public Entity topPage;
         //栈底
