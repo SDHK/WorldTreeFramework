@@ -68,9 +68,6 @@ namespace WorldTree
             SystemManager.Root = this;
             ObjectPoolManager.Root = this;
 
-            //域节点指向自己
-            Domain = this;
-
             //赋予id
             Root.id = IdManager.GetId();
             IdManager.id = IdManager.GetId();

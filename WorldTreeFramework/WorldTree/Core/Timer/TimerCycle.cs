@@ -26,7 +26,7 @@ namespace WorldTree
     {
         public override void Update(TimerCycle self, float deltaTime)
         {
-            self.time += deltaTime * self.Domain.AddComponent<TimeDomain>().timeScale;
+            self.time += deltaTime;
             if (self.time >= self.timeOutTime)
             {
                 self.time = 0;

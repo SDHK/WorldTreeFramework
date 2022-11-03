@@ -27,8 +27,8 @@ namespace WorldTree
     {
         public override void Update(TimerCall self, float deltaTime)
         {
-            self.time += deltaTime * self.Domain.AddComponent<TimeDomain>().timeScale;
-            if (self.time>= self.timeOutTime)
+            self.time += deltaTime;
+            if (self.time >= self.timeOutTime)
             {
                 self.callback?.Invoke();
                 self.Dispose();

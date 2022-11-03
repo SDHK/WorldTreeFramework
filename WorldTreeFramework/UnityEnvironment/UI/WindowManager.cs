@@ -22,7 +22,7 @@ namespace WorldTree
     //Update系统，思考时间参数的必要
 
     //思考Manager的全局广播和监听功能
-    public class UIManager : Entity
+    public class WindowManager : Entity
     {
         public UnitDictionary<Type, Entity> allWindows = new UnitDictionary<Type, Entity>();
 
@@ -76,25 +76,25 @@ namespace WorldTree
         }
     }
 
-    class UIManagerAddSystem : AddSystem<UIManager>
+    class WindowManagerAddSystem : AddSystem<WindowManager>
     {
-        public override void OnAdd(UIManager self)
+        public override void OnAdd(WindowManager self)
         {
             self.gameObject = self.AddComponent<GameObjectComponent, GameObject>(null);
         }
     }
 
     //???GamaObject组件完善树结构
-    class UIManagerEntityAddSystem : EntityAddSystem<UIManager>
+    class WindowManagerEntityAddSystem : EntityAddSystem<WindowManager>
     {
-        public override void OnEntityAdd(UIManager self, Entity entity)
+        public override void OnEntityAdd(WindowManager self, Entity entity)
         {
 
         }
     }
-    class UIManagerEntityRemoveSystem : EntityRemoveSystem<UIManager>
+    class WindowManagerEntityRemoveSystem : EntityRemoveSystem<WindowManager>
     {
-        public override void OnEntityRemove(UIManager self, Entity entity)
+        public override void OnEntityRemove(WindowManager self, Entity entity)
         {
 
         }

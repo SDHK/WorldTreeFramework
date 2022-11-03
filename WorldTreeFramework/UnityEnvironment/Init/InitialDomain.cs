@@ -29,7 +29,6 @@ namespace WorldTree
 
         public override async void OnAdd(InitialDomain self)
         {
-            self.Domain = self;
             World.Log("初始域启动！");
             await CheckHotfix();
 
