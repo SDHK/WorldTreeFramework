@@ -46,7 +46,7 @@ namespace WorldTree
         /// <summary>
         /// 对象池
         /// </summary>
-        private Queue<T> objetPool = new Queue<T>();
+        protected Queue<T> objetPool = new Queue<T>();
 
         /// <summary>
         /// 当前保留对象数量
@@ -111,20 +111,22 @@ namespace WorldTree
             {
                 T obj = null;
 
-                while (objetPool.Count > 0 && obj== null)
+                while (obj == null)
                 {
-                    obj = objetPool.Dequeue();
-                }
-
-                if (obj == null)
-                {
-                    if (NewObject != null)
+                    if (objetPool.Count != 0)
                     {
-                        obj = NewObject(this);
+                        obj = objetPool.Dequeue();
                     }
-                    objectOnNew?.Invoke(obj);
+                    else
+                    {
+                        if (NewObject != null)
+                        {
+                            obj = NewObject(this);
+                            objectOnNew?.Invoke(obj);
+                        }
+                        return obj;
+                    }
                 }
-
                 return obj;
             }
         }
@@ -142,18 +144,22 @@ namespace WorldTree
         }
 
 
-        /// <summary>
-        /// 回收对象
-        /// </summary>
-        public void Recycle(T obj)
+        public override object GetObject()
+        {
+            return Get();
+        }
+
+
+        public override void Recycle(object recycleObject)
         {
             lock (objetPool)
             {
-                if (obj != null)
+                if (recycleObject != null)
                 {
-
+                    T obj = recycleObject as T;
                     if (maxLimit == -1 || objetPool.Count < maxLimit)
                     {
+                        //对象没有回收的标记，所以只能由池自己判断，比较耗时
                         if (!objetPool.Contains(obj))
                         {
                             objectOnRecycle?.Invoke(obj);
@@ -168,15 +174,6 @@ namespace WorldTree
                     }
                 }
             }
-        }
-        public override object GetObject()
-        {
-            return Get();
-        }
-
-        public override void Recycle(object obj)
-        {
-            Recycle((T)obj);
         }
         public override void DisposeOne()
         {

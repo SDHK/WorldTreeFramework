@@ -89,7 +89,41 @@ namespace WorldTree
             }
             return obj;
         }
+        public override void Recycle(object obj)
+        {
+            lock (objetPool)
+            {
+                if (obj != null)
+                {
+                    if (maxLimit == -1 || objetPool.Count < maxLimit)
+                    {
+                        //假如是池管理的单位对象则可以判断是否回收了，节省时间
+                        if (obj is IUnitPoolItem)
+                        {
+                            if ((obj as IUnitPoolItem).IsRecycle)
+                            {
+                                return;
+                            }
+                        }
+                        else if (objetPool.Contains(obj)) //对象没有回收的标记，所以只能由池自己判断，比较耗时
+                        {
+                            return;
+                        }
 
+                        objectOnRecycle?.Invoke(obj);
+                        objetPool.Enqueue(obj);
+                    }
+                    else
+                    {
+                        objectOnRecycle?.Invoke(obj);
+                        objectOnDestroy?.Invoke(obj);
+                        DestroyObject?.Invoke(obj);
+                    }
+                }
+            }
+
+
+        }
         private void ObjectDestroy(object obj)
         {
             (obj as IDisposable)?.Dispose();
@@ -98,7 +132,7 @@ namespace WorldTree
         private void ObjectOnNew(object obj)
         {
             (obj as IUnitPoolItemEvent)?.OnNew();
-            if (newSystem != null&& obj is Entity)
+            if (newSystem != null && obj is Entity)
             {
                 newSystem.Send(obj as Entity);
             }
