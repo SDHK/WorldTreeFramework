@@ -48,7 +48,6 @@ namespace WorldTree
                 if (Children.TryAdd(entity.id, entity))
                 {
                     entity.Parent = this;
-                    //entity.Domain = Domain;
                     Root.Add(entity);
                 }
             }
@@ -64,7 +63,6 @@ namespace WorldTree
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
-                //entity.Domain = Domain;
                 Root.Add(entity);
             }
 
@@ -84,7 +82,6 @@ namespace WorldTree
                 if (Children.TryAdd(entity.id, entity))
                 {
                     entity.Parent = this;
-                    //entity.Domain = Domain;
 
                     Root.Add(entity);
                 }
@@ -171,7 +168,6 @@ namespace WorldTree
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
-                //entity.Domain = Domain;
                 entity.SendSystem<ISendSystem<T1>, T1>(arg1);
                 Root.Add(entity);
             }
@@ -191,7 +187,6 @@ namespace WorldTree
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
-                //entity.Domain = Domain;
                 entity.SendSystem<ISendSystem<T1, T2>, T1, T2>(arg1, arg2);
                 Root.Add(entity);
             }
@@ -210,7 +205,6 @@ namespace WorldTree
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
-                //entity.Domain = Domain;
                 entity.SendSystem<ISendSystem<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
                 Root.Add(entity);
             }
@@ -228,7 +222,6 @@ namespace WorldTree
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
-                //entity.Domain = Domain;
                 entity.SendSystem<ISendSystem<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
                 Root.Add(entity);
             }

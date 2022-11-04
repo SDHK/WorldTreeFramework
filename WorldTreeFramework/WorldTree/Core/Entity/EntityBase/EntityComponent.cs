@@ -56,7 +56,6 @@ namespace WorldTree
                 component = Root.ObjectPoolManager.Get<T>();
 
                 component.Parent = this;
-                //component.Domain = Domain;
 
                 component.isComponent = true;
 
@@ -84,7 +83,6 @@ namespace WorldTree
                     component = obj as Entity;
 
                     component.Parent = this;
-                    //component.Domain = Domain;
 
                     component.isComponent = true;
 
@@ -111,7 +109,6 @@ namespace WorldTree
                 if (Components.TryAdd(type, component))
                 {
                     component.Parent = this;
-                    //component.Domain = Domain;
                     component.isComponent = true;
                     Root.Add(component);
                 }
@@ -255,7 +252,6 @@ namespace WorldTree
                 component = Root.ObjectPoolManager.Get<T>();
 
                 component.Parent = this;
-                //component.Domain = Domain;
 
                 component.isComponent = true;
 
@@ -286,7 +282,6 @@ namespace WorldTree
                 component = Root.ObjectPoolManager.Get<T>();
 
                 component.Parent = this;
-                //component.Domain = Domain;
 
                 component.isComponent = true;
 
@@ -315,7 +310,6 @@ namespace WorldTree
                 component = Root.ObjectPoolManager.Get<T>();
 
                 component.Parent = this;
-                //component.Domain = Domain;
 
                 component.isComponent = true;
 
