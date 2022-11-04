@@ -40,37 +40,34 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 尝试找到上层域，并存入字典
+        /// 获取所有上层节点并存入字典
         /// </summary>
-        public bool TryFindDomain<T>(out T domain)
+        public bool TryGetDomain<T>(out T domain)
             where T : Entity
         {
-            if (!Domains.TryGetValue(typeof(T), out Entity entity))
+
+            if (Domains.TryGetValue(typeof(T), out Entity entity))
+            {
+                domain = entity as T;
+                return true;
+            }
+            else if (Domains.Count == 0)
             {
                 entity = Parent;
                 while (entity != null)
                 {
-                    if (entity is T)
-                    {
-                        Domains.Add(typeof(T), entity);
-                        domain = entity as T;
-                        return true;
-                    }
+                    Domains.TryAdd(entity.GetType(), entity);
                     entity = entity.Parent;
                 }
-                domain = null;
-                return false;
+                if (Domains.TryGetValue(typeof(T), out entity))
+                {
+                    domain = entity as T;
+                    return true;
+                }
             }
-            domain = entity as T;
-            return true;
-        }
 
-        /// <summary>
-        /// 移除域
-        /// </summary>
-        public void RemoveDomain<T>()
-        {
-            domains?.Remove(typeof(T));
+            domain = null;
+            return false;
         }
 
         /// <summary>
