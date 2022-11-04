@@ -52,7 +52,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 实体对象池管理器
+    /// 混合对象池管理器
     /// </summary>
     public class ObjectPoolManager : Entity
     {

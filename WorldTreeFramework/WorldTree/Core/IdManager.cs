@@ -37,6 +37,9 @@ namespace WorldTree
             return Id++;
         }
 
+        /// <summary>
+        /// 释放后
+        /// </summary>
         public override void OnDispose()
         {
             IsRecycle = true;

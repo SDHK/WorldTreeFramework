@@ -33,7 +33,8 @@ namespace WorldTree
         public UnitDictionary<long, Entity> allEntity = new UnitDictionary<long, Entity>();
 
         //有监听器系统的实体
-        public UnitDictionary<long, Entity> listeners = new UnitDictionary<long, Entity>();
+        public UnitDictionary<long, Entity> EntityAddListeners = new UnitDictionary<long, Entity>();
+        public UnitDictionary<long, Entity> EntityRemoveListeners = new UnitDictionary<long, Entity>();
 
         private SystemGroup entityAddSystems;
         private SystemGroup entityRemoveSystems;
@@ -103,7 +104,8 @@ namespace WorldTree
         public override void Dispose()
         {
             RemoveAll();
-            listeners.Clear();
+            EntityAddListeners.Clear();
+            EntityRemoveListeners.Clear();
         }
 
 
@@ -112,7 +114,7 @@ namespace WorldTree
             Type typeKey = entity.Type;
 
             //广播给全部监听器
-            foreach (var manager in listeners)
+            foreach (var manager in EntityAddListeners)
             {
                 entityAddSystems?.Send(manager.Value, entity);
             }
@@ -122,10 +124,15 @@ namespace WorldTree
             addSystems?.Send(entity);
 
             //检测到系统存在，则说明这是个监听器
-            if (entityAddSystems.ContainsKey(typeKey) || entityRemoveSystems.ContainsKey(typeKey))
+            if (entityAddSystems.ContainsKey(typeKey))
             {
-                listeners.TryAdd(entity.id, entity);
+                EntityAddListeners.TryAdd(entity.id, entity);
             }
+            if (entityRemoveSystems.ContainsKey(typeKey))
+            {
+                EntityRemoveListeners.TryAdd(entity.id, entity);
+            }
+
             entity.SetActive(true);
             enableSystems?.Send(entity);//添加后调用激活事件
 
@@ -139,17 +146,20 @@ namespace WorldTree
             disableSystems?.Send(entity);//移除前调用禁用事件
 
             //检测到系统存在，则说明这是个监听器
-            if (entityAddSystems.ContainsKey(typeKey) || entityRemoveSystems.ContainsKey(typeKey))
+            if (entityAddSystems.ContainsKey(typeKey))
             {
-                listeners.Remove(entity.id);
+                EntityAddListeners.Remove(entity.id);
             }
-
+            if (entityRemoveSystems.ContainsKey(typeKey))
+            {
+                EntityRemoveListeners.Remove(entity.id);
+            }
             //这个实体的移除事件
             removeSystems?.Send(entity);
 
             allEntity.Remove(entity.id);
 
-            foreach (var manager in listeners)//广播给全部监听器
+            foreach (var manager in EntityRemoveListeners)//广播给全部监听器
             {
                 entityRemoveSystems?.Send(manager.Value, entity);
             }
