@@ -35,7 +35,7 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取对象
         /// </summary>
-        public static object PoolGet(this Entity self,Type type)
+        public static object PoolGet(this Entity self, Type type)
         {
             return self.Root.ObjectPoolManager.Get(type);
         }
@@ -44,19 +44,11 @@ namespace WorldTree
         /// <summary>
         /// 回收对象
         /// </summary>
-        public static void PoolRecycle(this Entity self ,object obj)
+        public static void PoolRecycle(this Entity self, object obj)
         {
-             self.Root.ObjectPoolManager.Recycle(obj);
+            self.Root.ObjectPoolManager.Recycle(obj);
         }
 
-    }
-
-    class ObjectPoolManagerRemoveSystem : RemoveSystem<ObjectPoolManager>
-    {
-        public override void OnRemove(ObjectPoolManager self)
-        {
-            self.Dispose();//全部释放
-        }
     }
 
     /// <summary>
@@ -67,12 +59,13 @@ namespace WorldTree
 
         UnitDictionary<Type, ObjectPool> pools = new UnitDictionary<Type, ObjectPool>();
 
-        public override void Dispose()
+        /// <summary>
+        /// 释放后
+        /// </summary>
+        public override void OnDispose()
         {
-            foreach (var pool in pools)
-            {
-                pool.Value.Dispose();
-            }
+            IsRecycle = true;
+            IsDisposed = true;
             pools.Clear();
         }
 
@@ -102,7 +95,7 @@ namespace WorldTree
         {
             if (obj != this && !(obj is ObjectPool))//禁止回收自己和对象池
             {
-                GetPool( obj.GetType()).Recycle(obj);
+                GetPool(obj.GetType()).Recycle(obj);
             }
         }
 

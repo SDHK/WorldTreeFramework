@@ -213,9 +213,10 @@ namespace WorldTree
             }
         }
 
-
-
-        public override void Dispose()
+        /// <summary>
+        /// 释放后
+        /// </summary>
+        public override void OnDispose()
         {
             DisposeAll();
             NewObject = null;
@@ -224,6 +225,8 @@ namespace WorldTree
             objectOnGet = null;
             objectOnRecycle = null;
             objectOnDestroy = null;
+            IsRecycle = true;
+            IsDisposed = true;
         }
 
 

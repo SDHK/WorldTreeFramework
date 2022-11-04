@@ -17,16 +17,6 @@ using System.Linq;
 namespace WorldTree
 {
 
-
-    class SystemManagerRemove : RemoveSystem<SystemManager>
-    {
-        public override void OnRemove(SystemManager self)
-        {
-            self.Dispose();//全部释放
-        }
-    }
-
-
     /// <summary>
     /// 系统管理器
     /// </summary>
@@ -118,11 +108,13 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 释放对象
+        /// 释放后
         /// </summary>
-        public override void Dispose()
+        public override void OnDispose()
         {
             InterfaceSystems.Clear();
+            IsRecycle = true;
+            IsDisposed = true;
         }
 
         /// <summary>

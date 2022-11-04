@@ -207,24 +207,7 @@ namespace WorldTree
             Type type = typeof(T);
             if (components.ContainsKey(type))
             {
-                Entity component = components[type];
-
-                Root.Remove(component);
-
-
-                component.Parent = null;
-                component.DisposeDomain();
-
-                components.Remove(type);
-
-                Root.ObjectPoolManager.Recycle(component);
-
-
-                if (components.Count == 0)
-                {
-                    components.Dispose();
-                    components = null;
-                }
+                components[type]?.Dispose();
             }
         }
         /// <summary>
@@ -232,24 +215,7 @@ namespace WorldTree
         /// </summary>
         public void RemoveComponent(Entity component)
         {
-            if (components.ContainsValue(component))
-            {
-                Root.Remove(component);
-
-                component.Parent = null;
-                component.DisposeDomain();
-
-                components.Remove(component.GetType());
-
-                Root.ObjectPoolManager.Recycle(component);
-
-                if (components.Count == 0)
-                {
-                    components.Dispose();
-                    components = null;
-                }
-            }
-
+            component?.Dispose();
         }
 
 
@@ -258,16 +224,15 @@ namespace WorldTree
         /// </summary>
         public void RemoveAllComponent()
         {
-            while (components != null)
+            while (true)
             {
-                if (components.Count != 0)
-                {
-                    RemoveComponent(components.Last().Value);
-                }
-                else
-                {
-                    break;
-                }
+                if (components != null)
+                    if (components.Count != 0)
+                    {
+                        components.Last().Value?.Dispose();
+                        continue;
+                    }
+                break;
             }
         }
 

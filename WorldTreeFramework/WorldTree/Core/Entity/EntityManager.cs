@@ -95,7 +95,7 @@ namespace WorldTree
             //饿汉单例启动
             //singletonEagerSystems?.Send(this);
 
-         
+
         }
         /// <summary>
         /// 释放
@@ -134,8 +134,8 @@ namespace WorldTree
         public void Remove(Entity entity)
         {
             Type typeKey = entity.Type;
-            entity.SetActive(false);
-            entity.RemoveAll();
+            entity.SetActive(false);//激活标记变更
+            entity.RemoveAll();//移除所有子节点和组件
             disableSystems?.Send(entity);//移除前调用禁用事件
 
             //检测到系统存在，则说明这是个监听器
@@ -146,7 +146,7 @@ namespace WorldTree
 
             //这个实体的移除事件
             removeSystems?.Send(entity);
-           
+
             allEntity.Remove(entity.id);
 
             foreach (var manager in listeners)//广播给全部监听器

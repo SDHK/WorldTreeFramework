@@ -37,9 +37,10 @@ namespace WorldTree
             return Id++;
         }
 
-        public override void Dispose()
+        public override void OnDispose()
         {
+            IsRecycle = true;
+            IsDisposed = true;
         }
-
     }
 }

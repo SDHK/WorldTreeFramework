@@ -52,7 +52,7 @@ namespace WorldTree
         {
             Type = GetType();
         }
-     
+
         public override string ToString()
         {
             return GetType().ToString();
@@ -76,7 +76,6 @@ namespace WorldTree
             return Parent as T;
         }
 
-        public virtual void OnDispose() { }
 
 
         /// <summary>
@@ -93,22 +92,50 @@ namespace WorldTree
         /// </summary>
         public virtual void Dispose()
         {
-            if (!IsRecycle)
+            if (!IsRecycle)//是否已经回收
             {
-                if (Parent != null)
+                Root.Remove(this);//全局通知移除
+                RemoveInParent();//从父节点中移除
+                DisposeDomain();//清除域节点
+                Parent = null;//清除父节点
+
+                OnDispose();
+            }
+        }
+
+        /// <summary>
+        /// 释放后：回收到对象池
+        /// </summary>
+        public virtual void OnDispose()
+        {
+            if (!(this is IPool)) Root.ObjectPoolManager.Recycle(this);
+        }
+
+
+        /// <summary>
+        /// 从父节点中删除
+        /// </summary>
+        public void RemoveInParent()
+        {
+            if (Parent != null)
+            {
+                if (isComponent)
                 {
-                    if (isComponent)
+                    Parent.components.Remove(GetType());
+                    if (Parent.components.Count == 0)
                     {
-                        Parent.RemoveComponent(this);
-                    }
-                    else
-                    {
-                        Parent.RemoveChildren(this);
+                        Parent.components.Dispose();
+                        Parent.components = null;
                     }
                 }
-                else 
+                else
                 {
-                    RemoveAll();
+                    Parent.children.Remove(this.id);
+                    if (Parent.children.Count == 0)
+                    {
+                        Parent.children.Dispose();
+                        Parent.children = null;
+                    }
                 }
             }
         }

@@ -3,24 +3,24 @@
 * 作者： 闪电黑客
 * 日期： 2022/7/17 17:23
 
-* 描述： 混合对象池管理器。
+* 描述： 混合对象池
 *
 * 管理类型：
 * 
 * 1.Object
-*   可对 unity 或 C# 的原生对象进行缓存入池管理
+*   可对 unity 或 C# 的原生对象进行缓存入池管理，释放时会尝试调用 IDisposable 方法
 * 
 * 2.IUnitPoolItem 
-*   对继承该接口的类 管理回收和释放标记，以及给该对象挂上池的引用用于自我回收
+*   对继承该接口的类 管理 回收标记 和 释放标记，以及给该对象挂上池的引用用于自我回收
 *   
 * 3.IUnitPoolEventItem
-*   在 IUnitPoolItem 的基础上 多了生命周期事件方法，在 生成， 获取， 回收， 销毁， 时进行调用
+*   在 IUnitPoolItem 的基础上， 多了生命周期事件方法，在 生成， 获取， 回收， 销毁， 时进行调用
 *   
 * 4.Entity
-*   在 IUnitPoolItem 的基础上 调用与 IUnitPoolEventItem 不同的 ECS 生命周期系统，
+*   在 IUnitPoolItem 的基础上， 调用 ECS 生命周期系统，
+*   生成， 获取， 回收， 销毁，
 *   
-*   在 生成， 获取， 回收， 销毁， 时进行调用，
-*   同时对实体赋予根节点和Id分发。
+*   同时对 实体 赋予 根节点 和 Id 分发。
 *   
 * 
 */
@@ -41,13 +41,6 @@ namespace WorldTree
         }
     }
 
-    class ObjectPoolRemoveSystem : RemoveSystem<ObjectPool>
-    {
-        public override void OnRemove(ObjectPool self)
-        {
-            self.Dispose();//全部释放
-        }
-    }
 
     /// <summary>
     /// 混合类型对象池

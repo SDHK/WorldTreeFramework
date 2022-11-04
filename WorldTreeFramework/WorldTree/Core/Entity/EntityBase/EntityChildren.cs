@@ -28,7 +28,7 @@ namespace WorldTree
             {
                 if (children == null)
                 {
-                    children =this.PoolGet<UnitDictionary<long, Entity>>();
+                    children = this.PoolGet<UnitDictionary<long, Entity>>();
                 }
                 return children;
             }
@@ -141,43 +141,24 @@ namespace WorldTree
         /// </summary>
         public void RemoveChildren(Entity entity)
         {
-            if (entity != null)
-            {
-                Root.Remove(entity);
-
-                entity.Parent = null;
-                entity.DisposeDomain();
-
-                children.Remove(entity.id);
-
-                Root.ObjectPoolManager.Recycle(entity);
-
-                if (children.Count == 0)
-                {
-                    children.Dispose();
-                    children = null;
-                }
-            }
+            entity?.Dispose();
         }
         /// <summary>
         /// 移除全部子节点
         /// </summary>
         public void RemoveAllChildren()
         {
-            while (children != null)
+            while (true)
             {
-                if (children.Count != 0)
-                {
-                    RemoveChildren(children.Last().Value);
-                }
-                else
-                {
-                    break;
-                }
+                if (children != null)
+                    if (children.Count != 0)
+                    {
+                        children.Last().Value?.Dispose();
+                        continue;
+                    }
+                break;
             }
         }
-
-
 
 
         /// <summary>
