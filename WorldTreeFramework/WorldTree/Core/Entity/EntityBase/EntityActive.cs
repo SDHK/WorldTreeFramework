@@ -62,7 +62,7 @@ namespace WorldTree
         /// </summary>
         private void RefreshActive()
         {
-            UnitQueue<Entity> queue = this.Root.ObjectPoolManager.Get<UnitQueue<Entity>>();
+            UnitQueue<Entity> queue = Root.ObjectPoolManager.Get<UnitQueue<Entity>>();
             queue.Enqueue(this);
             while (queue.Any())
             {

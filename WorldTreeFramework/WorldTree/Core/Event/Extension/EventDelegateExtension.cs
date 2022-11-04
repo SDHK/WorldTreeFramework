@@ -437,7 +437,7 @@ namespace WorldTree
         public static bool TryCalls<OutT>(this EventDelegate e, out UnitList<OutT> values)
         {
             var events = e.Get<Func<OutT>>();
-            values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -459,7 +459,7 @@ namespace WorldTree
         public static bool TryCalls<T1, OutT>(this EventDelegate e, T1 arg1, out UnitList<OutT> values)
         {
             var events = e.Get<Func<T1, OutT>>();
-            values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -481,7 +481,7 @@ namespace WorldTree
         public static bool TryCalls<T1, T2, OutT>(this EventDelegate e, T1 arg1, T2 arg2, out UnitList<OutT> values)
         {
             var events = e.Get<Func<T1, T2, OutT>>();
-            values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -503,7 +503,7 @@ namespace WorldTree
         public static bool TryCalls<T1, T2, T3, OutT>(this EventDelegate e, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
         {
             var events = e.Get<Func<T1, T2, T3, OutT>>();
-            values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -525,7 +525,7 @@ namespace WorldTree
         public static bool TryCalls<T1, T2, T3, T4, OutT>(this EventDelegate e, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
         {
             var events = e.Get<Func<T1, T2, T3, T4, OutT>>();
-            values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -547,7 +547,7 @@ namespace WorldTree
         public static bool TryCalls<T1, T2, T3, T4, T5, OutT>(this EventDelegate e, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
         {
             var events = e.Get<Func<T1, T2, T3, T4, T5, OutT>>();
-            values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {

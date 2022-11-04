@@ -350,7 +350,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<OutT>(this EventDelegate e)
         {
             var events = e.Get<Func<AsyncTask<OutT>>>();
-            UnitList<OutT> values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -377,7 +377,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, OutT>(this EventDelegate e, T1 arg1)
         {
             var events = e.Get<Func<T1, AsyncTask<OutT>>>();
-            UnitList<OutT> values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -404,7 +404,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, OutT>(this EventDelegate e, T1 arg1, T2 arg2)
         {
             var events = e.Get<Func<T1, T2, AsyncTask<OutT>>>();
-            UnitList<OutT> values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -431,7 +431,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, OutT>(this EventDelegate e, T1 arg1, T2 arg2, T3 arg3)
         {
             var events = e.Get<Func<T1, T2, T3, AsyncTask<OutT>>>();
-            UnitList<OutT> values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -458,7 +458,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, OutT>(this EventDelegate e, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             var events = e.Get<Func<T1, T2, T3, T4, AsyncTask<OutT>>>();
-            UnitList<OutT> values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {
@@ -485,7 +485,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, T5, OutT>(this EventDelegate e, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             var events = e.Get<Func<T1, T2, T3, T4, T5, AsyncTask<OutT>>>();
-            UnitList<OutT> values = e.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = e.PoolGet<UnitList<OutT>>();
             int i = 0;
             if (events != null)
             {

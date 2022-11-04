@@ -17,7 +17,7 @@ namespace WorldTree
     /// <summary>
     /// 单位列表：可由对象池管理回收
     /// </summary>
-    public class UnitList<T> : List<T>, IUnitPoolItem, IUnitPoolItemEvent
+    public class UnitList<T> : List<T>, IUnitPoolEventItem
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }

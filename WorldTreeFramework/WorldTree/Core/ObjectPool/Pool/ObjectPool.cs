@@ -3,13 +3,28 @@
 * 作者： 闪电黑客
 * 日期： 2022/7/17 17:23
 
-* 描述： 实体对象池。
-* 掌管实体的生命周期
+* 描述： 混合对象池管理器。
 *
-
+* 管理类型：
+* 
+* 1.Object
+*   可对 unity 或 C# 的原生对象进行缓存入池管理
+* 
+* 2.IUnitPoolItem 
+*   对继承该接口的类 管理回收和释放标记，以及给该对象挂上池的引用用于自我回收
+*   
+* 3.IUnitPoolEventItem
+*   在 IUnitPoolItem 的基础上 多了生命周期事件方法，在 生成， 获取， 回收， 销毁， 时进行调用
+*   
+* 4.Entity
+*   在 IUnitPoolItem 的基础上 调用与 IUnitPoolEventItem 不同的 ECS 生命周期系统，
+*   
+*   在 生成， 获取， 回收， 销毁， 时进行调用，
+*   同时对实体赋予根节点和Id分发。
+*   
+* 
 */
 using System;
-using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -35,7 +50,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 实体类型对象池
+    /// 混合类型对象池
     /// </summary>
     public class ObjectPool : GenericPool<object>
     {
@@ -76,10 +91,7 @@ namespace WorldTree
         {
             object obj = Activator.CreateInstance(ObjectType, true);
 
-            if (obj is IUnitPoolItem)
-            {
-                (obj as IUnitPoolItem).thisPool = this;
-            }
+            if (obj is IUnitPoolItem) (obj as IUnitPoolItem).thisPool = this;
 
             if (obj is Entity)
             {
@@ -97,7 +109,7 @@ namespace WorldTree
                 {
                     if (maxLimit == -1 || objetPool.Count < maxLimit)
                     {
-                        //假如是池管理的单位对象则可以判断是否回收了，节省时间
+                        //假如是池管理的单位对象则可以判断回收标记，节省时间
                         if (obj is IUnitPoolItem)
                         {
                             if ((obj as IUnitPoolItem).IsRecycle)
@@ -105,7 +117,9 @@ namespace WorldTree
                                 return;
                             }
                         }
-                        else if (objetPool.Contains(obj)) //对象没有回收的标记，所以只能由池自己判断，比较耗时
+                        else
+                        //对象没有回收的标记，所以只能由池自己判断，比较耗时
+                        if (objetPool.Contains(obj))
                         {
                             return;
                         }
@@ -131,55 +145,44 @@ namespace WorldTree
 
         private void ObjectOnNew(object obj)
         {
-            (obj as IUnitPoolItemEvent)?.OnNew();
-            if (newSystem != null && obj is Entity)
+            (obj as IUnitPoolEventItem)?.OnNew();
+            if (obj is Entity)
             {
-                newSystem.Send(obj as Entity);
+                newSystem?.Send(obj as Entity);
             }
         }
 
         private void ObjectOnGet(object obj)
         {
-            if (obj is IUnitPoolItem)
+            if (obj is IUnitPoolItem) (obj as IUnitPoolItem).IsRecycle = false;
+            (obj as IUnitPoolEventItem)?.OnGet();
+
+            if (obj is Entity)
             {
-                (obj as IUnitPoolItem).IsRecycle = false;
-            }
-            (obj as IUnitPoolItemEvent)?.OnGet();
-
-
-
-            if (getSystem != null && obj is Entity)
-            {
-                getSystem.Send(obj as Entity);
+                getSystem?.Send(obj as Entity);
             }
 
         }
 
         private void ObjectOnRecycle(object obj)
         {
-            if (obj is IUnitPoolItem)
-            {
-                (obj as IUnitPoolItem).IsRecycle = true;
-            }
-            (obj as IUnitPoolItemEvent)?.OnRecycle();
+            if (obj is IUnitPoolItem) (obj as IUnitPoolItem).IsRecycle = true;
+            (obj as IUnitPoolEventItem)?.OnRecycle();
 
-            if (recycleSystem != null && obj is Entity)
+            if (obj is Entity)
             {
-                recycleSystem.Send(obj as Entity);
+                recycleSystem?.Send(obj as Entity);
             }
         }
 
         private void ObjectOnDestroy(object obj)
         {
-            if (obj is IUnitPoolItem)
-            {
-                (obj as IUnitPoolItem).IsDisposed = true;
-            }
+            if (obj is IUnitPoolItem) (obj as IUnitPoolItem).IsDisposed = true;
             (obj as IUnitPoolItem)?.OnDispose();
 
-            if (destroySystem != null && obj is Entity)
+            if (obj is Entity)
             {
-                destroySystem.Send(obj as Entity);
+                destroySystem?.Send(obj as Entity);
             }
         }
 

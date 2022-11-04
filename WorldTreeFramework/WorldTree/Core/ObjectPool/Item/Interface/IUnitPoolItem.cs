@@ -39,9 +39,11 @@ namespace WorldTree
         new void Dispose();
     }
 
-    public interface IUnitPoolItemEvent
+    /// <summary>
+    /// 单位池事件对象接口
+    /// </summary>
+    public interface IUnitPoolEventItem : IUnitPoolItem
     {
-
 
         /// <summary>
         /// 对象新建时

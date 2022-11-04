@@ -17,7 +17,7 @@ namespace WorldTree
     /// <summary>
     /// 池单位抽象基类：提供回收方法
     /// </summary>
-    public abstract class UnitPoolItem : Unit, IUnitPoolItem,IUnitPoolItemEvent
+    public abstract class UnitPoolItem : Unit,IUnitPoolEventItem
     {
         public IPool thisPool { get; set; }
 

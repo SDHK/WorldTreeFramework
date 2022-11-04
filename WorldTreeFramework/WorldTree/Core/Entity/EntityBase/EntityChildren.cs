@@ -28,7 +28,7 @@ namespace WorldTree
             {
                 if (children == null)
                 {
-                    children = Root.ObjectPoolManager.Get<UnitDictionary<long, Entity>>();
+                    children =this.PoolGet<UnitDictionary<long, Entity>>();
                 }
                 return children;
             }

@@ -2,7 +2,7 @@
 
 namespace WorldTree
 {
-    public class UnitStack<T> : Stack<T>, IUnitPoolItem, IUnitPoolItemEvent
+    public class UnitStack<T> : Stack<T>, IUnitPoolEventItem
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }

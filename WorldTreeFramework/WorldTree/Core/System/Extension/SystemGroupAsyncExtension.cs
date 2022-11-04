@@ -272,7 +272,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<OutT>(this SystemGroup group, Entity self)
         {
             bool bit = false;
-            UnitList<OutT> values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<AsyncTask<OutT>> system in systems)
@@ -291,7 +291,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, OutT>(this SystemGroup group, Entity self, T1 arg1)
         {
             bool bit = false;
-            UnitList<OutT> values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, AsyncTask<OutT>> system in systems)
@@ -309,7 +309,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
         {
             bool bit = false;
-            UnitList<OutT> values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, T2, AsyncTask<OutT>> system in systems)
@@ -328,7 +328,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
         {
             bool bit = false;
-            UnitList<OutT> values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, T2, T3, AsyncTask<OutT>> system in systems)
@@ -346,7 +346,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             bool bit = false;
-            UnitList<OutT> values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, T2, T3, T4, AsyncTask<OutT>> system in systems)
@@ -365,7 +365,7 @@ namespace WorldTree
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             bool bit = false;
-            UnitList<OutT> values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, T2, T3, T4, T5, AsyncTask<OutT>> system in systems)

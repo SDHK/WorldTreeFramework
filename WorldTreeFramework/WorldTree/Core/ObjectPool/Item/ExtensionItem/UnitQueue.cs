@@ -2,7 +2,7 @@
 
 namespace WorldTree
 {
-    public class UnitQueue<T> : Queue<T>, IUnitPoolItem, IUnitPoolItemEvent
+    public class UnitQueue<T> : Queue<T>, IUnitPoolEventItem
     {
 
         public IPool thisPool { get; set; }

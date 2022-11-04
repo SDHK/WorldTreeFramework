@@ -3,8 +3,8 @@
 * 作者： 闪电黑客
 * 日期： 2022/7/17 17:23
 
-* 描述： 实体对象池管理器。
-* 为所有实体对象池的管理器。
+* 描述： 混合类型对象池管理器。
+* 
 
 */
 using System;
@@ -51,7 +51,7 @@ namespace WorldTree
 
     }
 
-    class ObjectPoolManagerRemove : RemoveSystem<ObjectPoolManager>
+    class ObjectPoolManagerRemoveSystem : RemoveSystem<ObjectPoolManager>
     {
         public override void OnRemove(ObjectPoolManager self)
         {

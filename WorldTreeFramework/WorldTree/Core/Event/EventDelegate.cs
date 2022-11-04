@@ -44,7 +44,7 @@ namespace WorldTree
         {
             if (events == null)
             {
-                events = Root.ObjectPoolManager.Get<UnitDictionary<Type, UnitList<Delegate>>>();
+                events = Root.PoolGet<UnitDictionary<Type, UnitList<Delegate>>>();
             }
 
             Type key = action.GetType();
@@ -55,7 +55,7 @@ namespace WorldTree
             }
             else
             {
-                UnitList<Delegate> delegates = Root.ObjectPoolManager.Get<UnitList<Delegate>>();
+                UnitList<Delegate> delegates = Root.PoolGet<UnitList<Delegate>>();
                 delegates.Add(action);
                 events.Add(key, delegates);
             }

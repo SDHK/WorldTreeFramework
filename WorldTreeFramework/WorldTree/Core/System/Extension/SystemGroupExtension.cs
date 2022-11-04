@@ -264,7 +264,7 @@ namespace WorldTree
         public static bool TryCalls<OutT>(this SystemGroup group, Entity self, out UnitList<OutT> values)
         {
             bool bit = false;
-            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<OutT> system in systems)
@@ -278,7 +278,7 @@ namespace WorldTree
         public static bool TryCalls<T1, OutT>(this SystemGroup group, Entity self, T1 arg1, out UnitList<OutT> values)
         {
             bool bit = false;
-            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, OutT> system in systems)
@@ -292,7 +292,7 @@ namespace WorldTree
         public static bool TryCalls<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, out UnitList<OutT> values)
         {
             bool bit = false;
-            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, T2, OutT> system in systems)
@@ -307,7 +307,7 @@ namespace WorldTree
         public static bool TryCalls<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
         {
             bool bit = false;
-            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, T2, T3, OutT> system in systems)
@@ -321,7 +321,7 @@ namespace WorldTree
         public static bool TryCalls<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
         {
             bool bit = false;
-            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, T2, T3, T4, OutT> system in systems)
@@ -336,7 +336,7 @@ namespace WorldTree
         public static bool TryCalls<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
         {
             bool bit = false;
-            values = self.Root.ObjectPoolManager.Get<UnitList<OutT>>();
+            values = self.PoolGet<UnitList<OutT>>();
             if (group.TryGetValue(self.Type, out List<ISystem> systems))
             {
                 foreach (ICallSystem<T1, T2, T3, T4, T5, OutT> system in systems)

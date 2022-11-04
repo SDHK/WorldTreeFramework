@@ -53,8 +53,8 @@ namespace WorldTree
     {
         public override void OnAdd(SystemActuator self)
         {
-            self.update1 = self.Root.ObjectPoolManager.Get<UnitDictionary<long, Entity>>();
-            self.update2 = self.Root.ObjectPoolManager.Get<UnitDictionary<long, Entity>>();
+            self.update1 = self.PoolGet<UnitDictionary<long, Entity>>();
+            self.update2 = self.PoolGet<UnitDictionary<long, Entity>>();
         }
     }
     class SystemActuatorRemoveSystem : RemoveSystem<SystemActuator>
