@@ -108,7 +108,7 @@ namespace WorldTree
         /// </summary>
         public virtual void OnDispose()
         {
-            if (!(this is IPool)) Root.ObjectPoolManager.Recycle(this);
+            Root.ObjectPoolManager.Recycle(this);
         }
 
 

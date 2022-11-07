@@ -9,8 +9,6 @@
 */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace WorldTree
@@ -80,7 +78,7 @@ namespace WorldTree
     {
         public override void OnAdd(WindowManager self)
         {
-            self.gameObject = self.AddComponent<GameObjectComponent, GameObject>(null);
+            self.gameObject = self.AddComponent<GameObjectComponent>().Instantiate(null);
         }
     }
 

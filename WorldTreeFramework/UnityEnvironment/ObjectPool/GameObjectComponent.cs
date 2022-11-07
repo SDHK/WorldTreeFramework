@@ -24,20 +24,55 @@ namespace WorldTree
 
         public GameObject gameObject;
         public Transform transform;
-    }
 
-    class GameObjectComponentSendSystem : SendSystem<GameObjectComponent, GameObject>
-    {
-        public override void Event(GameObjectComponent self, GameObject prefab)
+        /// <summary>
+        /// 尝试实例化预制体
+        /// </summary>
+        public bool TryInstantiate(GameObject prefab,out GameObject obj)
         {
-            if (self.gameObject != null)
+            if (prefab)
             {
-                self.pool?.Recycle(self.gameObject);
-            }
+                if (gameObject != null) pool?.Recycle(gameObject);
 
-            self.pool = self.GamePoolManager().GetPool(prefab);
-            self.gameObject = self.pool.Get();
-            self.transform = self.gameObject.transform;
+                pool = this.GamePoolManager().GetPool(prefab);
+                gameObject = pool.Get();
+                transform = gameObject.transform;
+
+                obj = gameObject;
+                return true;
+            }
+            else
+            {
+                obj = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 实例化
+        /// </summary>
+        public GameObjectComponent Instantiate(GameObject prefab)
+        {
+            if (prefab)
+            {
+                if (gameObject != null) pool?.Recycle(gameObject);
+                pool = this.GamePoolManager().GetPool(prefab);
+                gameObject = pool.Get();
+                transform = gameObject.transform;
+            }
+            return this;
+        }
+        
+        /// <summary>
+        /// 实例化
+        /// </summary>
+        public GameObjectComponent Instantiate(GameObject prefab, Transform parent)
+        {
+            if (TryInstantiate(prefab,out GameObject gameObject))
+            {
+                gameObject.transform.SetParent(parent);
+            }
+            return this;
         }
     }
 
@@ -49,7 +84,6 @@ namespace WorldTree
             self.gameObject = null;
             self.transform = null;
             self.pool = null;
-
         }
     }
 }
