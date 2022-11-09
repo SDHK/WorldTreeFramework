@@ -33,9 +33,15 @@ namespace WorldTree
             await CheckHotfix();
 
 
-            //从ab包拿到ScriptObject
-            //var scriptObj = (await AssetComponent.LoadAsync<TestAssets>(BPath.Assets_AssetBundles_ScriptObjects_TestAssets__asset));
+            self.GetTraversalPostorderSystemBroadcast<IUpdateSystem>().Send();
+            self.GetTraversalPreorderSystemActuator<IUpdateSystem>().Send();
 
+
+
+            //从ab包拿到ScriptObject
+            //var scriptObj = (await AssetComponent.LoadAsync<Object>(BPath.Assets_AssetBundles_ScriptObjects_TestAssets__asset));
+            
+            
             //Debug.Log(scriptObj.List.Count);
             //var d = scriptObj.Dictionary;
 

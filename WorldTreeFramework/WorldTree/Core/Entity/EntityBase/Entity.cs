@@ -88,31 +88,6 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 回收实体
-        /// </summary>
-        public virtual void Dispose()
-        {
-            if (!IsRecycle)//是否已经回收
-            {
-                Root.Remove(this);//全局通知移除
-                RemoveInParent();//从父节点中移除
-                DisposeDomain();//清除域节点
-                Parent = null;//清除父节点
-
-                OnDispose();
-            }
-        }
-
-        /// <summary>
-        /// 释放后：回收到对象池
-        /// </summary>
-        public virtual void OnDispose()
-        {
-            Root.ObjectPoolManager.Recycle(this);
-        }
-
-
-        /// <summary>
         /// 从父节点中删除
         /// </summary>
         public void RemoveInParent()
@@ -139,6 +114,34 @@ namespace WorldTree
                 }
             }
         }
+
+
+        /// <summary>
+        /// 回收实体
+        /// </summary>
+        public virtual void Dispose()
+        {
+            if (!IsRecycle)//是否已经回收
+            {
+                Root.Remove(this);//全局通知移除
+                RemoveInParent();//从父节点中移除
+                DisposeDomain();//清除域节点
+                Parent = null;//清除父节点
+
+                OnDispose();
+            }
+        }
+
+        /// <summary>
+        /// 释放后：回收到对象池
+        /// </summary>
+        public virtual void OnDispose()
+        {
+            Root.ObjectPoolManager.Recycle(this);
+        }
+
+
+
     }
 
 }

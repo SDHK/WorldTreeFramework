@@ -30,7 +30,6 @@ namespace WorldTree
                 }
             }
         }
-
         public void Send<T1>(T1 arg1)
         {
             if (systems != null && IsActive)
@@ -50,8 +49,6 @@ namespace WorldTree
                 }
             }
         }
-
-
         public void Send<T1, T2>(T1 arg1, T2 arg2)
         {
             if (systems != null && IsActive)

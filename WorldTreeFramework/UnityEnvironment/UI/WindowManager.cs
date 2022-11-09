@@ -26,7 +26,7 @@ namespace WorldTree
 
         public UnitDictionary<Type, Entity> windows = new UnitDictionary<Type, Entity>();
         public UnitList<Entity> windowList = new UnitList<Entity>();
-        
+
         //栈顶
         public Entity topPage;
         //栈底
@@ -42,7 +42,6 @@ namespace WorldTree
             where T : Entity
         {
 
-
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace WorldTree
 
 
         }
-      
+
 
         /// <summary>
         /// 关闭栈顶
@@ -82,7 +81,6 @@ namespace WorldTree
         }
     }
 
-    //???GamaObject组件完善树结构
     class WindowManagerEntityAddSystem : EntityAddSystem<WindowManager>
     {
         public override void OnEntityAdd(WindowManager self, Entity entity)

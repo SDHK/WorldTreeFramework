@@ -6,11 +6,7 @@
 * 描述： 
 
 */
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WorldTree
 {
@@ -29,6 +25,7 @@ namespace WorldTree
                     systems.Send(entity);
                     update1.Remove(firstKey);
                 }
+                Dispose();
             }
         }
 
@@ -44,6 +41,7 @@ namespace WorldTree
                     systems.Send(entity, arg1);
                     update1.Remove(firstKey);
                 }
+                Dispose();
             }
         }
 
@@ -60,6 +58,7 @@ namespace WorldTree
                     systems.Send(entity, arg1, arg2);
                     update1.Remove(firstKey);
                 }
+                Dispose();
             }
         }
         public void Send<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3)
@@ -74,6 +73,7 @@ namespace WorldTree
                     systems.Send(entity, arg1, arg2, arg3);
                     update1.Remove(firstKey);
                 }
+                Dispose();
             }
         }
         public void Send<T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4)
@@ -88,6 +88,7 @@ namespace WorldTree
                     systems.Send(entity, arg1, arg2, arg3, arg4);
                     update1.Remove(firstKey);
                 }
+                Dispose();
             }
         }
         public void Send<T1, T2, T3, T4, T5>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
@@ -102,6 +103,7 @@ namespace WorldTree
                     systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
                     update1.Remove(firstKey);
                 }
+                Dispose();
             }
         }
 

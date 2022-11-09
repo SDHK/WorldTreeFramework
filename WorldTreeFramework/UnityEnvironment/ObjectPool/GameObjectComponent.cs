@@ -74,6 +74,18 @@ namespace WorldTree
             }
             return this;
         }
+
+        /// <summary>
+        /// 实例化
+        /// </summary>
+        public GameObjectComponent Instantiate(GameObject prefab, GameObjectComponent parent)
+        {
+            if (TryInstantiate(prefab, out GameObject gameObject))
+            {
+                gameObject.transform.SetParent(parent.transform);
+            }
+            return this;
+        }
     }
 
     class GameObjectComponentRemoveSystem : RemoveSystem<GameObjectComponent>

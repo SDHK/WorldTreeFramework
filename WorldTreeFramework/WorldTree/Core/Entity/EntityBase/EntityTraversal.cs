@@ -7,77 +7,73 @@ using System.Threading.Tasks;
 namespace WorldTree
 {
 
-    public abstract partial class Entity
+    public  static class EntityTraversalExtension
     {
         /// <summary>
-        /// 递归遍历
+        /// 递归遍历（少用）
         /// </summary>
-        public static void TraversalRecursive(Entity node, Action<Entity> action)
+        private static Entity TraversalRecursive(this Entity self, Action<Entity> action)
         {
-            action(node);
-            foreach (var item in node.components)
+            action(self);
+            foreach (var item in self.components)
             {
-                TraversalRecursive(item.Value, action);
+                item.Value.TraversalRecursive(action);
             }
-            foreach (var item in node.children)
+            foreach (var item in self.children)
             {
-                TraversalRecursive(item.Value, action);
+                item.Value.TraversalRecursive(action);
             }
+            return self;
         }
 
         /// <summary>
         /// 前序遍历
         /// </summary>
-        public static void Traversal(Entity node, Action<Entity> action)
+        public static Entity TraversalPreorder(this Entity self, Action<Entity> action)
         {
-            if (node == null) return;
-
-            UnitStack<Entity> allStack = node.Root.ObjectPoolManager.Get<UnitStack<Entity>>();
-            UnitStack<Entity> localStack = node.Root.ObjectPoolManager.Get<UnitStack<Entity>>();
-            allStack.Push(node);
-            while (allStack.Count != 0)
+            Entity current;
+            UnitStack<Entity> stack = self.PoolGet<UnitStack<Entity>>();
+            UnitStack<Entity> localStack = self.PoolGet<UnitStack<Entity>>();
+            stack.Push(self);
+            while (stack.Count != 0)
             {
-                Entity current = allStack.Pop();
+                current = stack.Pop();
                 action(current);
-
                 if (current.children != null)
                 {
                     foreach (var item in current.children)
                     {
                         localStack.Push(item.Value);
                     }
-                    while (localStack.Count != 0)
+                    while (localStack.Any())
                     {
-                        allStack.Push(localStack.Pop());
+                        stack.Push(localStack.Pop());
                     }
-                    node.Root.ObjectPoolManager.Recycle(localStack);
                 }
-
                 if (current.components != null)
                 {
                     foreach (var item in current.components)
                     {
                         localStack.Push(item.Value);
                     }
-                    while (localStack.Count != 0)
+                    while (localStack.Any())
                     {
-                        allStack.Push(localStack.Pop());
+                        stack.Push(localStack.Pop());
                     }
                 }
             }
             localStack.Dispose();
-            allStack.Dispose();
+            stack.Dispose();
+            return self;
         }
 
         /// <summary>
         /// 层序遍历
         /// </summary>
-        public static void TraversalLevel( Entity node, Action<Entity> action)
+        public static Entity TraversalLevel(this Entity self, Action<Entity> action)
         {
-            if (node == null) return;
-
-            UnitQueue<Entity> queue = node.Root.ObjectPoolManager.Get<UnitQueue<Entity>>();
-            queue.Enqueue(node);
+            UnitQueue<Entity> queue = self.PoolGet<UnitQueue<Entity>>();
+            queue.Enqueue(self);
 
             while (queue.Any())
             {
@@ -92,7 +88,6 @@ namespace WorldTree
                         queue.Enqueue(item.Value);
                     }
                 }
-
                 if (current.children != null)
                 {
                     foreach (var item in current.children)
@@ -100,12 +95,115 @@ namespace WorldTree
                         queue.Enqueue(item.Value);
                     }
                 }
-
             }
             queue.Dispose();
+            return self;
+        }
+
+        /// <summary>
+        /// 后序遍历
+        /// </summary>
+        public static Entity TraversalPostorder(this Entity self, Action<Entity> action)
+        {
+            Entity current;
+            UnitStack<Entity> stack = self.PoolGet<UnitStack<Entity>>();
+            UnitStack<Entity> allStack = self.PoolGet<UnitStack<Entity>>();
+            stack.Push(self);
+            while (stack.Any())
+            {
+                current = stack.Pop();
+                allStack.Push(current);
+                if (current.children != null)
+                {
+                    foreach (var item in current.children)
+                    {
+                        stack.Push(item.Value);
+                    }
+                }
+                if (current.components != null)
+                {
+                    foreach (var item in current.components)
+                    {
+                        stack.Push(item.Value);
+                    }
+                }
+            }
+            stack.Dispose();
+            while (allStack.Any())
+            {
+                action(allStack.Pop());
+            }
+            allStack.Dispose();
+            return self;
+        }
+
+
+        /// <summary>
+        /// 前序遍历广播
+        /// </summary>
+        public static SystemBroadcast<T> GetTraversalPreorderSystemBroadcast<T>(this Entity self)
+           where T : ISystem
+        {
+            SystemBroadcast<T> systemBroadcast = self.AddComponent<SystemBroadcast<T>>();
+            self.TraversalPostorder(systemBroadcast.AddEntity);
+            return systemBroadcast;
+        }
+
+        /// <summary>
+        /// 层序遍历广播
+        /// </summary>
+        public static SystemBroadcast<T> GetTraversalLevelSystemBroadcast<T>(this Entity self)
+          where T : ISystem
+        {
+            SystemBroadcast<T> systemBroadcast = self.AddComponent<SystemBroadcast<T>>();
+            self.TraversalLevel(systemBroadcast.AddEntity);
+            return systemBroadcast;
+        }
+        /// <summary>
+        /// 后序遍历广播
+        /// </summary>
+        public static SystemBroadcast<T> GetTraversalPostorderSystemBroadcast<T>(this Entity self)
+         where T : ISystem
+        {
+            SystemBroadcast<T> systemBroadcast = self.AddComponent<SystemBroadcast<T>>();
+            self.TraversalPostorder(systemBroadcast.AddEntity);
+            return systemBroadcast;
         }
 
 
 
+
+        /// <summary>
+        /// 前序遍历执行
+        /// </summary>
+        public static SystemActuator<T> GetTraversalPreorderSystemActuator<T>(this Entity self)
+           where T : ISystem
+        {
+            SystemActuator<T> systemActuator = self.AddComponent<SystemActuator<T>>();
+            self.TraversalPostorder(systemActuator.AddEntity);
+            return systemActuator;
+        }
+
+        /// <summary>
+        /// 层序遍历执行
+        /// </summary>
+        public static SystemActuator<T> GetTraversalLevelSystemActuator<T>(this Entity self)
+          where T : ISystem
+        {
+            SystemActuator<T> systemActuator = self.AddComponent<SystemActuator<T>>();
+            self.TraversalLevel(systemActuator.AddEntity);
+            return systemActuator;
+        }
+
+        /// <summary>
+        /// 后序遍历执行
+        /// </summary>
+        public static SystemActuator<T> GetTraversalPostorderSystemActuator<T>(this Entity self)
+         where T : ISystem
+        {
+            SystemActuator<T> systemActuator = self.AddComponent<SystemActuator<T>>();
+            self.TraversalPostorder(systemActuator.AddEntity);
+            return systemActuator;
+        }
     }
 }

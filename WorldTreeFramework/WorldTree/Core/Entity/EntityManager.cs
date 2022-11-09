@@ -23,7 +23,7 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
-
+    //思考监听器注入到对象池
 
     /// <summary>
     /// 实体管理器
@@ -143,7 +143,7 @@ namespace WorldTree
             Type typeKey = entity.Type;
             entity.SetActive(false);//激活标记变更
             entity.RemoveAll();//移除所有子节点和组件
-            disableSystems?.Send(entity);//移除前调用禁用事件
+            disableSystems?.Send(entity);//调用禁用事件
 
             //检测到系统存在，则说明这是个监听器
             if (entityAddSystems.ContainsKey(typeKey))
