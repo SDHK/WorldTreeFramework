@@ -33,7 +33,7 @@ namespace WorldTree
             {
                 if (components == null)
                 {
-                    components = Root.ObjectPoolManager.Get<UnitDictionary<Type, Entity>>();
+                    components = Root.PoolGet<UnitDictionary<Type, Entity>>();
                 }
                 return components;
             }
@@ -53,7 +53,7 @@ namespace WorldTree
             T component = null;
             if (!Components.TryGetValue(type, out Entity entity))
             {
-                component = Root.ObjectPoolManager.Get<T>();
+                component = Root.EntityPoolManager.Get<T>();
 
                 component.Parent = this;
 
@@ -77,23 +77,11 @@ namespace WorldTree
         {
             if (!Components.TryGetValue(type, out Entity component))
             {
-                object obj = Root.ObjectPoolManager.Get(type);
-                if (obj is Entity)
-                {
-                    component = obj as Entity;
-
-                    component.Parent = this;
-
-                    component.isComponent = true;
-
-                    components.Add(type, component);
-                    Root.Add(component);
-                }
-                else
-                {
-                    Root.ObjectPoolManager.Recycle(obj);
-                    return null;
-                }
+                component = Root.PoolGet(type);
+                component.Parent = this;
+                component.isComponent = true;
+                components.Add(type, component);
+                Root.Add(component);
             }
             return component;
         }
@@ -249,7 +237,7 @@ namespace WorldTree
             T component = null;
             if (!Components.TryGetValue(type, out Entity entity))
             {
-                component = Root.ObjectPoolManager.Get<T>();
+                component = Root.EntityPoolManager.Get<T>();
 
                 component.Parent = this;
 
@@ -279,7 +267,7 @@ namespace WorldTree
             T component = null;
             if (!Components.TryGetValue(type, out Entity entity))
             {
-                component = Root.ObjectPoolManager.Get<T>();
+                component = Root.EntityPoolManager.Get<T>();
 
                 component.Parent = this;
 
@@ -307,7 +295,7 @@ namespace WorldTree
             T component = null;
             if (!Components.TryGetValue(type, out Entity entity))
             {
-                component = Root.ObjectPoolManager.Get<T>();
+                component = Root.EntityPoolManager.Get<T>();
 
                 component.Parent = this;
 

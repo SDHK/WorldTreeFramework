@@ -59,7 +59,7 @@ namespace WorldTree
             where T : Entity
         {
 
-            T entity = Root.ObjectPoolManager.Get<T>();
+            T entity = Root.EntityPoolManager.Get<T>();
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
@@ -75,23 +75,14 @@ namespace WorldTree
         /// </summary>
         public Entity AddChildren(Type type)
         {
-            object obj = Root.ObjectPoolManager.Get(type);
-            if (obj is Entity)
+            Entity entity = Root.PoolGet(type);
+            if (Children.TryAdd(entity.id, entity))
             {
-                Entity entity = obj as Entity;
-                if (Children.TryAdd(entity.id, entity))
-                {
-                    entity.Parent = this;
+                entity.Parent = this;
 
-                    Root.Add(entity);
-                }
-                return entity;
+                Root.Add(entity);
             }
-            else
-            {
-                Root.ObjectPoolManager.Recycle(obj);
-                return null;
-            }
+            return entity;
         }
 
         /// <summary>
@@ -164,7 +155,7 @@ namespace WorldTree
         public T AddChildren<T, T1>(T1 arg1)
             where T : Entity
         {
-            T entity = Root.ObjectPoolManager.Get<T>();
+            T entity = Root.EntityPoolManager.Get<T>();
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
@@ -183,7 +174,7 @@ namespace WorldTree
         where T : Entity
         {
 
-            T entity = Root.ObjectPoolManager.Get<T>();
+            T entity = Root.EntityPoolManager.Get<T>();
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
@@ -201,7 +192,7 @@ namespace WorldTree
         where T : Entity
         {
 
-            T entity = Root.ObjectPoolManager.Get<T>();
+            T entity = Root.EntityPoolManager.Get<T>();
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
@@ -218,7 +209,7 @@ namespace WorldTree
         public T AddChildren<T, T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         where T : Entity
         {
-            T entity = Root.ObjectPoolManager.Get<T>();
+            T entity = Root.EntityPoolManager.Get<T>();
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;

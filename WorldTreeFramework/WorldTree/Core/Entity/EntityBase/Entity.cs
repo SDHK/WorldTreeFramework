@@ -137,7 +137,7 @@ namespace WorldTree
         /// </summary>
         public virtual void OnDispose()
         {
-            Root.ObjectPoolManager.Recycle(this);
+            Root.EntityPoolManager.Recycle(this);
         }
 
 

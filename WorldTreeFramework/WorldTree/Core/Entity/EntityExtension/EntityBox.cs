@@ -35,7 +35,7 @@ namespace WorldTree
     {
         public override void OnRemove(EntityBox self)
         {
-            self.PoolRecycle(self.value);
+            //self.PoolRecycle(self.value);
             self.value = null;
         }
     }

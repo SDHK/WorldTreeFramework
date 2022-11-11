@@ -19,13 +19,12 @@ namespace WorldTree
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
                 {
-                    long firstKey = update1.Keys.First();
-                    Entity entity = update1[firstKey];
-                    systems.Send(entity);
-                    update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
+                    var first = update1.First();
+                    systems.Send(first.Value);
+                    update1.Remove(first.Key);
+                    if (!first.Value.IsRecycle)
                     {
-                        update2.Add(firstKey, entity);
+                        update2.Add(first.Value.id, first.Value);
                     }
                 }
             }
@@ -34,17 +33,15 @@ namespace WorldTree
         {
             if (systems != null && IsActive)
             {
-
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
                 {
-                    long firstKey = update1.Keys.First();
-                    Entity entity = update1[firstKey];
-                    systems.Send(entity, arg1);
-                    update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
+                    var first = update1.First();
+                    systems.Send(first.Value, arg1);
+                    update1.Remove(first.Key);
+                    if (!first.Value.IsRecycle)
                     {
-                        update2.Add(firstKey, entity);
+                        update2.Add(first.Value.id, first.Value);
                     }
                 }
             }
@@ -56,14 +53,12 @@ namespace WorldTree
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
                 {
-                    long firstKey = update1.Keys.First();
-                    Entity entity = update1[firstKey];
-
-                    systems.Send(entity, arg1, arg2);
-                    update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
+                    var first = update1.First();
+                    systems.Send(first.Value, arg1, arg2);
+                    update1.Remove(first.Key);
+                    if (!first.Value.IsRecycle)
                     {
-                        update2.Add(firstKey, entity);
+                        update2.Add(first.Value.id, first.Value);
                     }
                 }
             }
@@ -75,13 +70,12 @@ namespace WorldTree
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
                 {
-                    long firstKey = update1.Keys.First();
-                    Entity entity = update1[firstKey];
-                    systems.Send(entity, arg1, arg2, arg3);
-                    update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
+                    var first = update1.First();
+                    systems.Send(first.Value, arg1, arg2, arg3);
+                    update1.Remove(first.Key);
+                    if (!first.Value.IsRecycle)
                     {
-                        update2.Add(firstKey, entity);
+                        update2.Add(first.Value.id, first.Value);
                     }
                 }
             }
@@ -93,13 +87,12 @@ namespace WorldTree
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
                 {
-                    long firstKey = update1.Keys.First();
-                    Entity entity = update1[firstKey];
-                    systems.Send(entity, arg1, arg2, arg3, arg4);
-                    update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
+                    var first = update1.First();
+                    systems.Send(first.Value, arg1, arg2, arg3, arg4);
+                    update1.Remove(first.Key);
+                    if (!first.Value.IsRecycle)
                     {
-                        update2.Add(firstKey, entity);
+                        update2.Add(first.Value.id, first.Value);
                     }
                 }
             }
@@ -111,13 +104,12 @@ namespace WorldTree
                 (update1, update2) = (update2, update1);
                 while (update1.Count != 0)
                 {
-                    long firstKey = update1.Keys.First();
-                    Entity entity = update1[firstKey];
-                    systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
-                    update1.Remove(firstKey);
-                    if (!entity.IsRecycle)
+                    var first = update1.First();
+                    systems.Send(first.Value, arg1, arg2, arg3, arg4, arg5);
+                    update1.Remove(first.Key);
+                    if (!first.Value.IsRecycle)
                     {
-                        update2.Add(firstKey, entity);
+                        update2.Add(first.Value.id, first.Value);
                     }
                 }
             }

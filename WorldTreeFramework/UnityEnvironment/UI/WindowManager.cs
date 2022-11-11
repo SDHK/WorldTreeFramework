@@ -9,6 +9,7 @@
 */
 
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace WorldTree
@@ -35,41 +36,90 @@ namespace WorldTree
         public GameObjectComponent gameObject;
 
 
+        private void PushWindow(Entity entity)
+        {
+            if (!windows.ContainsKey(entity.GetType()))
+            {
+                windows.Add(entity.GetType(), entity);
+                windowList.Add(entity);
+
+                topPage?.SendSystem<IWindowLostFocusSystem>();
+                topPage = entity;//栈顶切换
+                topPage?.SendSystem<IWindowFocusSystem>();
+            }
+        }
+
+        private Entity PopWindow()
+        {
+            Entity entity = null;
+            if (windowList.Count != 0)
+            {
+                if (topPage != null)
+                {
+                    topPage?.SendSystem<IWindowLostFocusSystem>();
+                    windowList.Remove(topPage);
+                    windows.Remove(topPage.GetType());
+                    entity = topPage;
+                    topPage = windowList[windowList.Count - 1];//栈顶切换
+                    topPage?.SendSystem<IWindowFocusSystem>();
+                }
+            }
+            return entity;
+        }
+
+
         /// <summary>
         /// 打开窗口
         /// </summary>
-        public void Show<T>()
+        public T Show<T>()
             where T : Entity
         {
-
+            if (windows.TryGetValue(typeof(T), out Entity entity))
+            {
+                while (entity.id != windowList[windowList.Count - 1].id)
+                {
+                    PopWindow().Dispose();
+                }
+            }
+            else
+            {
+                entity = AddComponent<T>();
+                PushWindow(entity);
+            }
+            return entity as T;
         }
 
-        /// <summary>
-        /// 关闭窗口
-        /// </summary>
-        public void Close<T>()
-           where T : Entity
-        {
-
-
-        }
-
+        ///// <summary>
+        ///// 关闭窗口
+        ///// </summary>
+        //public void Close<T>()
+        //   where T : Entity
+        //{
+        //    if (windows.TryGetValue(typeof(T), out Entity entity))
+        //    {
+        //        while (entity.id != windowList[windowList.Count - 1].id)
+        //        {
+        //            PopWindow();
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 关闭栈顶
         /// </summary>
         public void CloseTop()
         {
-
-
+            PopWindow();
         }
         /// <summary>
         /// 关闭全部
         /// </summary>
         public void CloseAll()
         {
-
-
+            while (windowList.Count != 0)
+            {
+                PopWindow();
+            }
         }
     }
 
@@ -80,6 +130,16 @@ namespace WorldTree
             self.gameObject = self.AddComponent<GameObjectComponent>().Instantiate(null);
         }
     }
+
+
+    class WindowManagerUpdateSystem : UpdateSystem<WindowManager>
+    {
+        public override void Update(WindowManager self, float deltaTime)
+        {
+            //self.topPage?.SendSystem<IWindowFocusUpdateSystem, float>(deltaTime);
+        }
+    }
+
 
     class WindowManagerEntityAddSystem : EntityAddSystem<WindowManager>
     {

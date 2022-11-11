@@ -35,7 +35,8 @@ namespace WorldTree
             {
                 if (style == null)
                 {
-                    style = this.PoolGet<GUIStyle>();
+                    //style = this.PoolGet<GUIStyle>();
+                    style = new GUIStyle();
                 }
                 return style;
             }

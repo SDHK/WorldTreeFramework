@@ -14,7 +14,6 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    //UnitStack
     /// <summary>
     /// 单位字典：可由对象池管理回收
     /// </summary>

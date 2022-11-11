@@ -53,7 +53,7 @@ namespace WorldTree
     {
         public override void OnRecycle(GUIWindow self)
         {
-            self.PoolRecycle(self.style);
+            //self.PoolRecycle(self.style);
             self.style = null;
         }
     }

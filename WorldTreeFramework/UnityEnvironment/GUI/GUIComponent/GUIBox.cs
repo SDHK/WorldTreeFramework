@@ -29,7 +29,7 @@ namespace WorldTree
     {
         public override void OnRecycle(GUIBox self)
         {
-            self.PoolRecycle(self.style);
+            //self.PoolRecycle(self.style);
             self.style = null;
         }
     }

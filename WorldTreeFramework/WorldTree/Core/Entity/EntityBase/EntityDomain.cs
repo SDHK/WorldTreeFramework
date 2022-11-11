@@ -33,7 +33,7 @@ namespace WorldTree
             {
                 if (domains == null)
                 {
-                    domains = Root.ObjectPoolManager.Get<UnitDictionary<Type, Entity>>();
+                    domains = Root.PoolGet<UnitDictionary<Type, Entity>>();
                 }
                 return domains;
             }

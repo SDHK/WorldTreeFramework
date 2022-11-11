@@ -31,7 +31,7 @@ namespace WorldTree
     {
         public override void OnRecycle(GUIBeginScrollView self)
         {
-            self.PoolRecycle(self.style);
+            //self.PoolRecycle(self.style);
             self.style = null;
         }
     }

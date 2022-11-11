@@ -19,7 +19,7 @@ namespace WorldTree
     {
         public override void OnRecycle(GUIBeginHorizontal self)
         {
-            self.PoolRecycle(self.style);
+            //self.PoolRecycle(self.style);
             self.style = null;
         }
     }

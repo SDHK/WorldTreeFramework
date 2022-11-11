@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -49,7 +50,8 @@ namespace WorldTree
 
         public IdManager IdManager;
         public SystemManager SystemManager;
-        public ObjectPoolManager ObjectPoolManager;
+        public UnitPoolManager UnitPoolManager;
+        public EntityPoolManager EntityPoolManager;
 
 
         public EntityManager() : base()
@@ -61,19 +63,22 @@ namespace WorldTree
             //框架运转的核心组件
             IdManager = new IdManager();
             SystemManager = new SystemManager();
-            ObjectPoolManager = new ObjectPoolManager();
+            UnitPoolManager = new UnitPoolManager();
+            EntityPoolManager = new EntityPoolManager();
 
             //赋予根节点
             Root = this;
             IdManager.Root = this;
             SystemManager.Root = this;
-            ObjectPoolManager.Root = this;
+            UnitPoolManager.Root = this;
+            EntityPoolManager.Root = this;
 
             //赋予id
             Root.id = IdManager.GetId();
             IdManager.id = IdManager.GetId();
             SystemManager.id = IdManager.GetId();
-            ObjectPoolManager.id = IdManager.GetId();
+            UnitPoolManager.id = IdManager.GetId();
+            EntityPoolManager.id = IdManager.GetId();
 
             //实体管理器系统事件获取
             entityAddSystems = Root.SystemManager.GetGroup<IEntityAddSystem>();
@@ -91,7 +96,8 @@ namespace WorldTree
             //核心组件添加
             AddComponent(IdManager);
             AddComponent(SystemManager);
-            AddComponent(ObjectPoolManager);
+            AddComponent(UnitPoolManager);
+            AddComponent(EntityPoolManager);
 
             //饿汉单例启动
             //singletonEagerSystems?.Send(this);
@@ -113,7 +119,7 @@ namespace WorldTree
         {
             Type typeKey = entity.Type;
 
-            //广播给全部监听器
+            //广播给全部监听器。 改进：思考是否直接将监听器绑定到对象池
             foreach (var manager in EntityAddListeners)
             {
                 entityAddSystems?.Send(manager.Value, entity);
@@ -123,15 +129,22 @@ namespace WorldTree
 
             addSystems?.Send(entity);
 
-            //检测到系统存在，则说明这是个监听器
-            if (entityAddSystems.ContainsKey(typeKey))
+            //!==
+
+            List<ISystem> systems;
+
+
+            //检测到监听系统存在，则说明这是个监听器
+            if (entityAddSystems.TryGetValue(typeKey, out systems))
             {
-                EntityAddListeners.TryAdd(entity.id, entity);
+                RegisterEntityAddSystems(entity, systems);
             }
-            if (entityRemoveSystems.ContainsKey(typeKey))
+            if (entityRemoveSystems.TryGetValue(typeKey, out systems))
             {
-                EntityRemoveListeners.TryAdd(entity.id, entity);
+                RegisterEntityRemoveSystems(entity, systems);
             }
+
+            //!==
 
             entity.SetActive(true);
             enableSystems?.Send(entity);//添加后调用激活事件
@@ -164,5 +177,111 @@ namespace WorldTree
                 entityRemoveSystems?.Send(manager.Value, entity);
             }
         }
+
+        /// <summary>
+        /// 注册实体添加系统
+        /// </summary>
+        private void RegisterEntityAddSystems(Entity entity, List<ISystem> systems)
+        {
+            EntityAddListeners.TryAdd(entity.id, entity);
+
+            foreach (IEntityAddSystem system in systems)//遍历所有监听系统
+            {
+                //不指定系统
+                if (system.ListenerSystemType == typeof(ISystem))
+                {
+                    //不指定系统，不指定实体
+                    if (system.ListenerEntityType == typeof(Entity))
+                    {
+                        foreach (var pool in EntityPoolManager.pools)//注册到全部实体对象池
+                        {
+                            pool.Value.AddListeners.TryAdd(entity.id, entity);
+                        }
+                    }
+                    //不指定系统，指定实体
+                    else if (EntityPoolManager.pools.TryGetValue(system.ListenerEntityType, out EntityPool pool))
+                    {
+                        pool.AddListeners.TryAdd(entity.id, entity);//注册到对象池
+                    }
+                }
+                //指定了系统
+                else if (SystemManager.TryGetGroup(system.ListenerSystemType, out SystemGroup systemGroup))
+                {
+                    //指定系统，不指定实体
+                    if (system.ListenerEntityType == typeof(Entity))//判断系统是否监听全局实体
+                    {
+                        foreach (var systemItem in systemGroup)
+                        {
+                            if (EntityPoolManager.pools.TryGetValue(systemItem.Key, out EntityPool pool))
+                            {
+                                pool.AddListeners.TryAdd(entity.id, entity);//注册到指定对象池
+                            }
+                        }
+                    }
+                    //指定系统，指定实体
+                    else if (EntityPoolManager.pools.TryGetValue(system.ListenerEntityType, out EntityPool pool))
+                    {
+                        if (systemGroup.ContainsKey(system.ListenerEntityType))
+                        {
+                            pool.AddListeners.TryAdd(entity.id, entity);//注册到指定对象池
+                        }
+                    }
+                }
+            }
+        }
+
+        private void RegisterEntityRemoveSystems(Entity entity, List<ISystem> systems)
+        {
+            EntityRemoveListeners.TryAdd(entity.id, entity);
+
+            foreach (IEntityRemoveSystem system in systems)//遍历所有监听系统
+            {
+                //不指定系统
+                if (system.ListenerSystemType == typeof(ISystem))
+                {
+                    //不指定系统，不指定实体
+                    if (system.ListenerEntityType == typeof(Entity))
+                    {
+                        foreach (var pool in EntityPoolManager.pools)//注册到全部实体对象池
+                        {
+                            pool.Value.RemoveListeners.TryAdd(entity.id, entity);
+                        }
+                    }
+                    //不指定系统，指定实体
+                    else if (EntityPoolManager.pools.TryGetValue(system.ListenerEntityType, out EntityPool pool))
+                    {
+                        pool.RemoveListeners.TryAdd(entity.id, entity);//注册到对象池
+                    }
+                }
+                //指定了系统
+                else if (SystemManager.TryGetGroup(system.ListenerSystemType, out SystemGroup systemGroup))
+                {
+                    //指定系统，不指定实体
+                    if (system.ListenerEntityType == typeof(Entity))//判断系统是否监听全局实体
+                    {
+                        foreach (var systemItem in systemGroup)
+                        {
+                            if (EntityPoolManager.pools.TryGetValue(systemItem.Key, out EntityPool pool))
+                            {
+                                pool.RemoveListeners.TryAdd(entity.id, entity);//注册到指定对象池
+                            }
+                        }
+                    }
+                    //指定系统，指定实体
+                    else if (EntityPoolManager.pools.TryGetValue(system.ListenerEntityType, out EntityPool pool))
+                    {
+                        if (systemGroup.ContainsKey(system.ListenerEntityType))
+                        {
+                            pool.RemoveListeners.TryAdd(entity.id, entity);//注册到指定对象池
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+
     }
 }

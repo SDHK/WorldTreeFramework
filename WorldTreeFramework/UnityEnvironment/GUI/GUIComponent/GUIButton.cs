@@ -34,7 +34,7 @@ namespace WorldTree
     {
         public override void OnRecycle(GUIButton self)
         {
-            self.PoolRecycle(self.style);
+            //self.PoolRecycle(self.style);
             self.style = null;
         }
     }

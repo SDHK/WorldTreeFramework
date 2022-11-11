@@ -33,8 +33,8 @@ namespace WorldTree
             await CheckHotfix();
 
 
-            self.GetTraversalPostorderSystemBroadcast<IUpdateSystem>().Send();
-            self.GetTraversalPreorderSystemActuator<IUpdateSystem>().Send();
+            //self.GetTraversalPostorderSystemBroadcast<IUpdateSystem>().Send();
+            //self.GetTraversalPreorderSystemActuator<IUpdateSystem>().Send();
 
 
 
