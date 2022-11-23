@@ -12,9 +12,7 @@
 */
 using BM;
 using ET;
-using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace WorldTree
@@ -27,34 +25,13 @@ namespace WorldTree
     class _InitialDomain : AddSystem<InitialDomain>
     {
 
-        public override async void OnAdd(InitialDomain self)
+        public override void OnAdd(InitialDomain self)
         {
             World.Log("初始域启动！");
-            await CheckHotfix();
-
-
-            //self.GetTraversalPostorderSystemBroadcast<IUpdateSystem>().Send();
-            //self.GetTraversalPreorderSystemActuator<IUpdateSystem>().Send();
-
-
+            //await CheckHotfix();
 
             //从ab包拿到ScriptObject
             //var scriptObj = (await AssetComponent.LoadAsync<Object>(BPath.Assets_AssetBundles_ScriptObjects_TestAssets__asset));
-
-
-            //Debug.Log(scriptObj.List.Count);
-            //var d = scriptObj.Dictionary;
-
-            //foreach (var item in scriptObj.List)
-            //{ 
-            //    Debug.Log(item.name+"|"+item.roleName);
-            //}
-
-            //foreach (var item in d)
-            //{
-            //    Debug.Log(item.Key+"|"+item.Value.roleName);
-            //}
-
 
 
             ////通过预制体获取物体实例
@@ -68,13 +45,7 @@ namespace WorldTree
             ////回收组件
             //self.RemoveComponent<GameObjectComponent>();
 
-
-            //self.AddComponent<Node>().AddComponent<Node1>().AddComponent<Node2>();
-            //self.Root.GetComponent<TestPool>().Get();
-
         }
-
-
 
 
         private async ETTask CheckHotfix()
@@ -99,58 +70,25 @@ namespace WorldTree
             await AssetComponent.Initialize(AssetComponentConfig.DefaultBundlePackageName, "SDHK");
             World.Log("初始化完成");
         }
+    }
 
-        class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>
+    class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>
+    {
+        public override void Update(InitialDomain self, float deltaTime)
         {
-            public override void Update(InitialDomain self, float deltaTime)
+
+            if (Input.GetKeyDown(KeyCode.Q))
             {
-
-                if (Input.GetKeyDown(KeyCode.Q))
-                {
-                    self.AddComponent<Node>().Test().Coroutine();
-                }
-
-                if (Input.GetKeyDown(KeyCode.W))
-                {
-                    self.RemoveComponent<Node>();
-                }
-
-                AssetComponent.Update();
+                self.AddComponent<Node>().Test().Coroutine();
             }
-        }
 
-
-
-        //监听全局 Node类型 实体生成 (指定类型)
-        class InitEntityAddSystem1 : EntityAddSystem<InitialDomain, Node, ISystem>
-        {
-            public override void OnEntityAdd(InitialDomain self, Node entity)
+            if (Input.GetKeyDown(KeyCode.W))
             {
-                World.Log("InitEntityAddSystem1 : " + entity.id);
+                self.RemoveComponent<Node>();
             }
+
+            AssetComponent.Update();
         }
-
-
-        //监听全局 拥有 IAddSystem 的 实体 生成 （不指定类型，指定系统）
-        class InitEntityAddSystem3 : EntityAddSystem<InitialDomain, Entity, IAddSystem>
-        {
-            public override void OnEntityAdd(InitialDomain self, Entity entity)
-            {
-                World.Log("InitEntityAddSystem3 : " + entity.id);
-
-            }
-        }
-
-        //监听全局 每一个实体的生成 （不指定类型，不指定系统）
-        class InitEntityAddSystem4 : EntityAddSystem<InitialDomain, Entity, ISystem>
-        {
-            public override void OnEntityAdd(InitialDomain self, Entity entity)
-            {
-                World.Log("InitEntityAddSystem4 : " + entity.id);
-
-            }
-        }
-
     }
 
 }

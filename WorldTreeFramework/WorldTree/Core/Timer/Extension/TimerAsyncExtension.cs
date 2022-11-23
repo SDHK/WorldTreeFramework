@@ -10,7 +10,7 @@
 
 namespace WorldTree
 {
-    public static class TimerExtension
+    public static class TimerAsyncExtension
     {
         /// <summary>
         /// 异步延迟帧
