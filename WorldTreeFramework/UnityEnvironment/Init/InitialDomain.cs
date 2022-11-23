@@ -10,8 +10,6 @@
 * 可用于初始化启动需要的功能组件
 
 */
-using BM;
-using ET;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,30 +44,6 @@ namespace WorldTree
             //self.RemoveComponent<GameObjectComponent>();
 
         }
-
-
-        private async ETTask CheckHotfix()
-        {
-#if UNITY_EDITOR
-            //重新配置热更路径(开发方便用, 打包移动端需要注释注释)
-            //AssetComponentConfig.HotfixPath = Application.dataPath + "/../HotfixBundles/";
-#endif
-            //默认的分包名字就是Main分包
-            AssetComponentConfig.DefaultBundlePackageName = "Main";
-            Dictionary<string, bool> updatePackageBundle = new Dictionary<string, bool>()
-            {
-                {AssetComponentConfig.DefaultBundlePackageName, false},
-            };
-            UpdateBundleDataInfo updateBundleDataInfo = await AssetComponent.CheckAllBundlePackageUpdate(updatePackageBundle);
-            if (updateBundleDataInfo.NeedUpdate)
-            {
-                World.LogError("需要更新, 大小: " + updateBundleDataInfo.NeedUpdateSize);
-                await AssetComponent.DownLoadUpdate(updateBundleDataInfo);
-            }
-            //TODO  使用密钥要在这里添加密钥
-            await AssetComponent.Initialize(AssetComponentConfig.DefaultBundlePackageName, "SDHK");
-            World.Log("初始化完成");
-        }
     }
 
     class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>
@@ -87,8 +61,6 @@ namespace WorldTree
                 self.RemoveComponent<Node>();
             }
 
-            AssetComponent.Update();
         }
     }
-
 }
