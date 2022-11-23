@@ -26,22 +26,6 @@ namespace WorldTree
         public override void OnAdd(InitialDomain self)
         {
             World.Log("初始域启动！");
-            //await CheckHotfix();
-
-            //从ab包拿到ScriptObject
-            //var scriptObj = (await AssetComponent.LoadAsync<Object>(BPath.Assets_AssetBundles_ScriptObjects_TestAssets__asset));
-
-
-            ////通过预制体获取物体实例
-            //GameObject gameObject = self.PoolGet(scriptObj.TestObject);
-            ////通过预制体回收实例
-            //self.PoolRecycle(scriptObj.TestObject, gameObject);
-
-
-            ////通过预制体获取物体组件
-            //gameObject = self.AddComponent<GameObjectComponent, GameObject>(scriptObj.TestObject).gameObject;
-            ////回收组件
-            //self.RemoveComponent<GameObjectComponent>();
 
         }
     }
