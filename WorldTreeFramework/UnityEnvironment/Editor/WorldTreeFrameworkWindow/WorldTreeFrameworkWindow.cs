@@ -33,10 +33,10 @@ namespace WorldTree
             root.AddComponent<WorldTreeFrameworkWindow>();
         }
 
-        public SystemGlobalBroadcast<IEnableSystem> enable;
-        public SystemGlobalBroadcast<IDisableSystem> disable;
-        public SystemGlobalBroadcast<IUpdateSystem> update;
-        public SystemGlobalBroadcast<IOnGUISystem> onGUI;
+        public SystemGlobalBroadcast enable;
+        public SystemGlobalBroadcast disable;
+        public SystemGlobalBroadcast update;
+        public SystemGlobalBroadcast onGUI;
 
         public EditorHomePage HomePage;
     }

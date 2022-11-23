@@ -9,22 +9,10 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
-    /// <summary>
-    /// 系统广播
-    /// </summary>
-    public partial class SystemBroadcast<T> : SystemBroadcast
-        where T : ISystem
-    {
-        SystemBroadcast()
-        {
-            Type = typeof(SystemBroadcast);
-            GenericType = typeof(T);
-        }
-    }
-
-
     /// <summary>
     /// 系统广播
     /// </summary>
@@ -55,6 +43,14 @@ namespace WorldTree
                 }
         }
 
+    }
+
+    class SystemBroadcastAwakeSystem : AwakeSystem<SystemBroadcast,Type>
+    {
+        public override void OnAwake(SystemBroadcast self,Type type)
+        {
+            self.Root.SystemManager.TryGetGroup(type, out self.systems);
+        }
     }
 
     class SystemBroadcastEntityRemoveSystem : EntityRemoveSystem<SystemBroadcast>

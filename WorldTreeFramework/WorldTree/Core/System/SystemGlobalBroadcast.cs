@@ -10,36 +10,25 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
-    /// <summary>
-    /// 系统全局广播
-    /// </summary>
-    public partial class SystemGlobalBroadcast<T> : SystemGlobalBroadcast
-    where T : ISystem
-    {
-        SystemGlobalBroadcast()
-        {
-            Type = typeof(SystemGlobalBroadcast);
-            GenericType = typeof(T);
-        }
-    }
 
     /// <summary>
     /// 系统全局广播
     /// </summary>
-    public class SystemGlobalBroadcast : SystemBroadcast
-    {
-    }
+    public class SystemGlobalBroadcast : SystemBroadcast{ }
 
-    class SystemGlobalBroadcastNewSystem : NewSystem<SystemGlobalBroadcast>
+    class SystemGlobalBroadcastNewSystem : AwakeSystem<SystemGlobalBroadcast, Type>
     {
-        public override void OnNew(SystemGlobalBroadcast self)
+        public override void OnAwake(SystemGlobalBroadcast self, Type type)
         {
-            if (self.Root.SystemManager.TryGetGroup(self.GenericType, out self.systems))
+            if (self.Root.SystemManager.TryGetGroup(type, out self.systems))
             {
                 foreach (var entity in self.Root.allEntity.Values)
                 {
+
                     self.AddEntity(entity);
                 }
             }

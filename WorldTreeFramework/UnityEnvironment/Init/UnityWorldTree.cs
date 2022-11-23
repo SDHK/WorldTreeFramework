@@ -18,12 +18,12 @@ namespace WorldTree
     {
         public EntityManager root;
 
-        SystemGlobalBroadcast<IEnableSystem> enable;
-        SystemGlobalBroadcast<IDisableSystem> disable;
-        SystemGlobalBroadcast<IUpdateSystem> update;
-        SystemGlobalBroadcast<ILateUpdateSystem> lateUpdate;
-        SystemGlobalBroadcast<IFixedUpdateSystem> fixedUpdate;
-        SystemGlobalBroadcast<IOnGUISystem> onGUI;
+        SystemGlobalBroadcast enable;
+        SystemGlobalBroadcast disable;
+        SystemGlobalBroadcast update;
+        SystemGlobalBroadcast lateUpdate;
+        SystemGlobalBroadcast fixedUpdate;
+        SystemGlobalBroadcast onGUI;
 
 
         private void Start()

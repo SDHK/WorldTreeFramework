@@ -9,21 +9,10 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
-
-    /// <summary>
-    /// 系统执行器
-    /// </summary>
-    public partial class SystemActuator<T> : SystemActuator
-        where T : ISystem
-    {
-        SystemActuator()
-        {
-            Type = typeof(SystemActuator);
-            GenericType = typeof(T);
-        }
-    }
 
     /// <summary>
     /// 系统执行器
@@ -57,6 +46,14 @@ namespace WorldTree
         public override string ToString()
         {
             return Type + ":" + systems.systemType;
+        }
+    }
+
+    class SystemActuatorAwakeSystem : AwakeSystem<SystemActuator,Type>
+    {
+        public override void OnAwake(SystemActuator self,Type type)
+        {
+            self.Root.SystemManager.TryGetGroup(type, out self.systems);
         }
     }
 

@@ -31,6 +31,7 @@ namespace WorldTree
             return self.Root.SystemManager.GetGroup<T>();
         }
 
+
         /// <summary>
         /// 获取系统组
         /// </summary>
@@ -48,29 +49,22 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取系统全局广播
+        /// 获取单类型监听系统列表
         /// </summary>
-        public static SystemGlobalBroadcast<T> GetSystemGlobalBroadcast<T>(this Entity self)
-        where  T : ISystem
+        public static List<ISystem> GetListenerSystems<T>(this Entity self, Type type)
         {
-            return self.Root.SystemManager.AddComponent<SystemGlobalBroadcast<T>>();
+            return self.Root.SystemManager.GetListenerSystems<T>(type);
         }
 
         /// <summary>
-        /// 获取系统执行器
+        /// 获取系统全局广播
         /// </summary>
-        public static SystemActuator GetSystemActuator<T>(this Entity self)
-        where T : ISystem
+        public static SystemGlobalBroadcast GetSystemGlobalBroadcast<T>(this Entity self)
+        where  T : ISystem
         {
-            if (self.Root.SystemManager.TryGetGroup<T>(out SystemGroup group))
-            {
-                return self.AddChildren<SystemActuator, SystemGroup>(group);
-            }
-            else
-            {
-                return null;
-            }
+            return self.Root.SystemManager.AddChildren<SystemGlobalBroadcast,Type>(typeof(T));
         }
+       
     }
 
 }

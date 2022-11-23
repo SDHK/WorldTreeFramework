@@ -23,10 +23,14 @@ namespace WorldTree
         public override void OnAdd(EntityPool self)
         {
             //生命周期系统
-            self.newSystem = self.GetSystemGroup<INewSystem>();
-            self.getSystem = self.GetSystemGroup<IGetSystem>();
-            self.recycleSystem = self.GetSystemGroup<IRecycleSystem>();
-            self.destroySystem = self.GetSystemGroup<IDestroySystem>();
+            self.newSystem = self.GetSystems<INewSystem>(self.ObjectType);
+            self.getSystem = self.GetSystems<IGetSystem>(self.ObjectType);
+            self.recycleSystem = self.GetSystems<IRecycleSystem>(self.ObjectType);
+            self.destroySystem = self.GetSystems<IDestroySystem>(self.ObjectType);
+
+            //self.AddListeners = self.GetListenerSystems<IEntityAddSystem>(self.ObjectType);
+            //self.RemoveListeners = self.GetListenerSystems<IEntityRemoveSystem>(self.ObjectType);
+
         }
     }
 
@@ -39,22 +43,21 @@ namespace WorldTree
         //特化监听器列表
         //管理器列表
 
-        /// <summary>
-        /// 实体添加监听器
-        /// </summary>
-        public Dictionary<long, Entity> AddListeners = new Dictionary<long, Entity>();
-        
-        /// <summary>
-        /// 实体移除监听器
-        /// </summary>
-        public Dictionary<long, Entity> RemoveListeners = new Dictionary<long, Entity>();
+        ///// <summary>
+        ///// 实体添加监听器
+        ///// </summary>
+        //public List<ISystem> AddListeners = new List<ISystem>();
 
-        //去根节点遍历管理器
+        ///// <summary>
+        ///// 实体移除监听器
+        ///// </summary>
+        //public List<ISystem> RemoveListeners = new List<ISystem>();
 
-        public SystemGroup newSystem;
-        public SystemGroup getSystem;
-        public SystemGroup recycleSystem;
-        public SystemGroup destroySystem;
+
+        public List<ISystem> newSystem;
+        public List<ISystem> getSystem;
+        public List<ISystem> recycleSystem;
+        public List<ISystem> destroySystem;
 
         public EntityPool(Type type) : base()
         {

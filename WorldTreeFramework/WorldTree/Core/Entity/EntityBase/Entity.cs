@@ -33,11 +33,6 @@ namespace WorldTree
         public Type Type;
 
         /// <summary>
-        /// 实体泛型
-        /// </summary>
-        public Type GenericType;
-
-        /// <summary>
         /// 根节点
         /// </summary>
         public EntityManager Root;

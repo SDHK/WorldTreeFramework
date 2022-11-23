@@ -244,7 +244,7 @@ namespace WorldTree
                 component.isComponent = true;
 
                 components.Add(type, component);
-                component.SendSystem<ISendSystem<T1>, T1>(arg1);
+                component.SendSystem<IAwakeSystem<T1>, T1>(arg1);
                 Root.Add(component);
             }
             else
@@ -274,7 +274,7 @@ namespace WorldTree
                 component.isComponent = true;
 
                 components.Add(type, component);
-                component.SendSystem<ISendSystem<T1, T2>, T1, T2>(arg1, arg2);
+                component.SendSystem<IAwakeSystem<T1, T2>, T1, T2>(arg1, arg2);
                 Root.Add(component);
             }
             else
@@ -302,7 +302,7 @@ namespace WorldTree
                 component.isComponent = true;
 
                 components.Add(type, component);
-                component.SendSystem<ISendSystem<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
+                component.SendSystem<IAwakeSystem<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
                 Root.Add(component);
             }
             else

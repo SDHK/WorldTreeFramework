@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 解三角静态工具
     /// </summary>
-    public static class TriangleTool
+    public static class MathTriangle
     {
         //=[三角形求值]=================================================
 

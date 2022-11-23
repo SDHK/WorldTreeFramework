@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace WorldTree
 {
 
-    public  static class EntityTraversalExtension
+    public static class EntityTraversalExtension
     {
         /// <summary>
         /// 递归遍历（少用）
@@ -141,10 +141,10 @@ namespace WorldTree
         /// <summary>
         /// 前序遍历广播
         /// </summary>
-        public static SystemBroadcast<T> GetTraversalPreorderSystemBroadcast<T>(this Entity self)
+        public static SystemBroadcast GetTraversalPreorderSystemBroadcast<T>(this Entity self)
            where T : ISystem
         {
-            SystemBroadcast<T> systemBroadcast = self.AddComponent<SystemBroadcast<T>>();
+            SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(T));
             self.TraversalPostorder(systemBroadcast.AddEntity);
             return systemBroadcast;
         }
@@ -152,20 +152,20 @@ namespace WorldTree
         /// <summary>
         /// 层序遍历广播
         /// </summary>
-        public static SystemBroadcast<T> GetTraversalLevelSystemBroadcast<T>(this Entity self)
+        public static SystemBroadcast GetTraversalLevelSystemBroadcast<T>(this Entity self)
           where T : ISystem
         {
-            SystemBroadcast<T> systemBroadcast = self.AddComponent<SystemBroadcast<T>>();
+            SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(T));
             self.TraversalLevel(systemBroadcast.AddEntity);
             return systemBroadcast;
         }
         /// <summary>
         /// 后序遍历广播
         /// </summary>
-        public static SystemBroadcast<T> GetTraversalPostorderSystemBroadcast<T>(this Entity self)
+        public static SystemBroadcast GetTraversalPostorderSystemBroadcast<T>(this Entity self)
          where T : ISystem
         {
-            SystemBroadcast<T> systemBroadcast = self.AddComponent<SystemBroadcast<T>>();
+            SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(T));
             self.TraversalPostorder(systemBroadcast.AddEntity);
             return systemBroadcast;
         }
@@ -176,10 +176,10 @@ namespace WorldTree
         /// <summary>
         /// 前序遍历执行
         /// </summary>
-        public static SystemActuator<T> GetTraversalPreorderSystemActuator<T>(this Entity self)
+        public static SystemActuator GetTraversalPreorderSystemActuator<T>(this Entity self)
            where T : ISystem
         {
-            SystemActuator<T> systemActuator = self.AddComponent<SystemActuator<T>>();
+            SystemActuator systemActuator = self.AddChildren<SystemActuator, Type>(typeof(T));
             self.TraversalPostorder(systemActuator.AddEntity);
             return systemActuator;
         }
@@ -187,10 +187,10 @@ namespace WorldTree
         /// <summary>
         /// 层序遍历执行
         /// </summary>
-        public static SystemActuator<T> GetTraversalLevelSystemActuator<T>(this Entity self)
+        public static SystemActuator GetTraversalLevelSystemActuator<T>(this Entity self)
           where T : ISystem
         {
-            SystemActuator<T> systemActuator = self.AddComponent<SystemActuator<T>>();
+            SystemActuator systemActuator = self.AddChildren<SystemActuator, Type>(typeof(T));
             self.TraversalLevel(systemActuator.AddEntity);
             return systemActuator;
         }
@@ -198,10 +198,10 @@ namespace WorldTree
         /// <summary>
         /// 后序遍历执行
         /// </summary>
-        public static SystemActuator<T> GetTraversalPostorderSystemActuator<T>(this Entity self)
+        public static SystemActuator GetTraversalPostorderSystemActuator<T>(this Entity self)
          where T : ISystem
         {
-            SystemActuator<T> systemActuator = self.AddComponent<SystemActuator<T>>();
+            SystemActuator systemActuator = self.AddChildren<SystemActuator, Type>(typeof(T));
             self.TraversalPostorder(systemActuator.AddEntity);
             return systemActuator;
         }

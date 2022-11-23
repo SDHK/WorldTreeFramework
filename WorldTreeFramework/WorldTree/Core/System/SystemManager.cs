@@ -22,7 +22,13 @@ namespace WorldTree
     /// </summary>
     public class SystemManager : Entity
     {
-        //接口类型，（实例类型，实例方法）
+        public UnitDictionary<Type, HashSet<Type>> ListenerTypes = new UnitDictionary<Type, HashSet<Type>>();
+
+        //接口类型，（实例类型，系统）
+        private UnitDictionary<Type, SystemGroup> ListenerSystems = new UnitDictionary<Type, SystemGroup>();
+
+
+        //接口类型，（实例类型，系统）
         private UnitDictionary<Type, SystemGroup> InterfaceSystems = new UnitDictionary<Type, SystemGroup>();
 
         public SystemManager() : base()
@@ -40,17 +46,94 @@ namespace WorldTree
                 //实例化系统类
                 ISystem system = Activator.CreateInstance(itemType, true) as ISystem;
 
-                Type SystemType = system.SystemType;
-                Type EntityType = system.EntityType;
-                if (!InterfaceSystems.TryGetValue(SystemType, out SystemGroup systemGroup))
+                if (system is IListenerSystem)
                 {
-                    systemGroup = new SystemGroup();
-                    systemGroup.systemType = SystemType;
-                    InterfaceSystems.Add(SystemType, systemGroup);
-                }
+                    Type SystemType = system.SystemType;
+                    Type EntityType = system.EntityType;
 
-                systemGroup.GetSystems(EntityType).Add(system);
+                    if (!ListenerSystems.TryGetValue(SystemType, out SystemGroup systemGroup))
+                    {
+                        systemGroup = new SystemGroup();
+                        systemGroup.systemType = SystemType;
+                        ListenerSystems.Add(SystemType, systemGroup);
+                    }
+
+
+                    if (!systemGroup.TryGetValue(EntityType, out List<ISystem> systems))
+                    {
+                        systems = new List<ISystem>();
+                        systemGroup.Add(EntityType, systems);
+                    }
+                    systems.Add(system);
+
+
+                    if (!ListenerTypes.TryGetValue(SystemType, out HashSet<Type> HashTypes))
+                    {
+                        HashTypes = new HashSet<Type>();
+                        ListenerTypes.Add(SystemType, HashTypes);
+                    }
+                    var listenerSystem = system as IListenerSystem;
+
+                    if (!HashTypes.Contains(listenerSystem.ListenerType))
+                    {
+                        HashTypes.Add(listenerSystem.ListenerType);
+                    }
+                }
+                else
+                {
+
+                    Type SystemType = system.SystemType;
+                    Type EntityType = system.EntityType;
+                    if (!InterfaceSystems.TryGetValue(SystemType, out SystemGroup systemGroup))
+                    {
+                        systemGroup = new SystemGroup();
+                        systemGroup.systemType = SystemType;
+                        InterfaceSystems.Add(SystemType, systemGroup);
+                    }
+
+
+                    if (!systemGroup.TryGetValue(EntityType, out List<ISystem> systems))
+                    {
+                        systems = new List<ISystem>();
+                        systemGroup.Add(EntityType, systems);
+                    }
+
+                    systems.Add(system);
+                }
             }
+        }
+
+     
+
+        /// <summary>
+        /// 获取系统组
+        /// </summary>
+        public SystemGroup GetListenerGroup<T>() where T : ISystem => GetListenerGroup(typeof(T));
+
+        /// <summary>
+        /// 获取系统组
+        /// </summary>
+        public SystemGroup GetListenerGroup(Type Interface)
+        {
+            if (ListenerSystems.TryGetValue(Interface, out SystemGroup systemGroup))
+            {
+                return systemGroup;
+            }
+            return null;
+        }
+        /// <summary>
+        /// 获取监听系统
+        /// </summary>
+        public List<ISystem> GetListenerSystems<T>(Type type)
+        {
+            if (ListenerSystems.TryGetValue(typeof(T), out SystemGroup systemGroup))
+            {
+                if (systemGroup.TryGetValue(type, out List<ISystem> systems))
+                {
+                    return systems;
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -92,7 +175,10 @@ namespace WorldTree
         {
             if (InterfaceSystems.TryGetValue(typeof(T), out SystemGroup systemGroup))
             {
-                return systemGroup.GetSystems(type);
+                if (systemGroup.TryGetValue(type, out List<ISystem> systems))
+                {
+                    return systems;
+                }
             }
             return null;
         }

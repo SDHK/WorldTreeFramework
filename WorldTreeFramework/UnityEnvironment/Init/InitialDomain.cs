@@ -40,8 +40,8 @@ namespace WorldTree
 
             //从ab包拿到ScriptObject
             //var scriptObj = (await AssetComponent.LoadAsync<Object>(BPath.Assets_AssetBundles_ScriptObjects_TestAssets__asset));
-            
-            
+
+
             //Debug.Log(scriptObj.List.Count);
             //var d = scriptObj.Dictionary;
 
@@ -104,6 +104,7 @@ namespace WorldTree
         {
             public override void Update(InitialDomain self, float deltaTime)
             {
+
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     self.AddComponent<Node>().Test().Coroutine();
@@ -115,6 +116,38 @@ namespace WorldTree
                 }
 
                 AssetComponent.Update();
+            }
+        }
+
+
+
+        //监听全局 Node类型 实体生成 (指定类型)
+        class InitEntityAddSystem1 : EntityAddSystem<InitialDomain, Node, ISystem>
+        {
+            public override void OnEntityAdd(InitialDomain self, Node entity)
+            {
+                World.Log("InitEntityAddSystem1 : " + entity.id);
+            }
+        }
+
+
+        //监听全局 拥有 IAddSystem 的 实体 生成 （不指定类型，指定系统）
+        class InitEntityAddSystem3 : EntityAddSystem<InitialDomain, Entity, IAddSystem>
+        {
+            public override void OnEntityAdd(InitialDomain self, Entity entity)
+            {
+                World.Log("InitEntityAddSystem3 : " + entity.id);
+
+            }
+        }
+
+        //监听全局 每一个实体的生成 （不指定类型，不指定系统）
+        class InitEntityAddSystem4 : EntityAddSystem<InitialDomain, Entity, ISystem>
+        {
+            public override void OnEntityAdd(InitialDomain self, Entity entity)
+            {
+                World.Log("InitEntityAddSystem4 : " + entity.id);
+
             }
         }
 

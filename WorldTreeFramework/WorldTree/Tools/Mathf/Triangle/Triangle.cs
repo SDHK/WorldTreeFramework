@@ -68,9 +68,9 @@ namespace WorldTree
             this.edgeA = edgeA;
             this.edgeB = edgeB;
             this.edgeC = edgeC;
-            angleA = TriangleTool.GetAngleFromEdge(edgeA, edgeB, edgeC);
-            angleB = TriangleTool.GetAngleFromEdge(edgeB, edgeA, edgeC);
-            angleC = TriangleTool.GetAngleFromEdge(edgeC, edgeA, edgeB);
+            angleA = MathTriangle.GetAngleFromEdge(edgeA, edgeB, edgeC);
+            angleB = MathTriangle.GetAngleFromEdge(edgeB, edgeA, edgeC);
+            angleC = MathTriangle.GetAngleFromEdge(edgeC, edgeA, edgeB);
 
             return this;
         }
@@ -86,19 +86,19 @@ namespace WorldTree
         {
             this.angleA = angleA;
             this.edgeA = edgeA;
-            diameter = TriangleTool.GetDiameter(angleA, edgeA);
+            diameter = MathTriangle.GetDiameter(angleA, edgeA);
 
-            angleB = TriangleTool.GetAngleFromDiameter(edgeB, diameter);//获得<=90的角
-            angleC = 90 - TriangleTool.GetAngleFromAngle(90 - angleA, angleB);//绕一圈获得c角
-            edgeC = TriangleTool.GetEdgeFromDiameter(angleC, diameter);//通过角获得边
+            angleB = MathTriangle.GetAngleFromDiameter(edgeB, diameter);//获得<=90的角
+            angleC = 90 - MathTriangle.GetAngleFromAngle(90 - angleA, angleB);//绕一圈获得c角
+            edgeC = MathTriangle.GetEdgeFromDiameter(angleC, diameter);//通过角获得边
             if (angleA <= 90 && obtuseAngleB)//b为钝角优先解
             {
-                angleB = TriangleTool.GetAngleFromAngle(angleA, angleC);//角b为钝角重计算
+                angleB = MathTriangle.GetAngleFromAngle(angleA, angleC);//角b为钝角重计算
             }
             else
             {
-                angleC = TriangleTool.GetAngleFromAngle(angleA, angleB);//c为钝角优先解
-                edgeC = TriangleTool.GetEdgeFromDiameter(angleC, diameter);//通过角获得边
+                angleC = MathTriangle.GetAngleFromAngle(angleA, angleB);//c为钝角优先解
+                edgeC = MathTriangle.GetEdgeFromDiameter(angleC, diameter);//通过角获得边
             }
             return this;
         }
@@ -114,9 +114,9 @@ namespace WorldTree
             this.edgeA = edgeA;
             this.angleB = angleB;
             this.edgeC = edgeC;
-            edgeB = TriangleTool.GetEdgeFormAngle(angleB, edgeA, edgeC);
-            angleA = TriangleTool.GetAngleFromEdge(edgeA, edgeC, edgeB);
-            angleC = TriangleTool.GetAngleFromEdge(edgeC, edgeA, edgeB);
+            edgeB = MathTriangle.GetEdgeFormAngle(angleB, edgeA, edgeC);
+            angleA = MathTriangle.GetAngleFromEdge(edgeA, edgeC, edgeB);
+            angleC = MathTriangle.GetAngleFromEdge(edgeC, edgeA, edgeB);
 
             return this;
         }
@@ -132,10 +132,10 @@ namespace WorldTree
             this.angleA = angleA;
             this.edgeB = edgeB;
             this.angleC = angleC;
-            angleB = TriangleTool.GetAngleFromAngle(angleA, angleC);//暂时求出不定角
-            diameter = TriangleTool.GetDiameter(angleB, edgeB);//获取外接直径
-            edgeA = TriangleTool.GetEdgeFromDiameter(angleA, diameter);//通过角获得边
-            edgeC = TriangleTool.GetEdgeFromDiameter(angleC, diameter);//通过角获得边
+            angleB = MathTriangle.GetAngleFromAngle(angleA, angleC);//暂时求出不定角
+            diameter = MathTriangle.GetDiameter(angleB, edgeB);//获取外接直径
+            edgeA = MathTriangle.GetEdgeFromDiameter(angleA, diameter);//通过角获得边
+            edgeC = MathTriangle.GetEdgeFromDiameter(angleC, diameter);//通过角获得边
 
             return this;
         }

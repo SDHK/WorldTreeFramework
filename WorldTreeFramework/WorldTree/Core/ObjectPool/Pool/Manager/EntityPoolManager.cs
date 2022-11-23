@@ -51,7 +51,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 混合对象池管理器
+    /// 实体对象池管理器
     /// </summary>
     public class EntityPoolManager : Entity
     {
@@ -102,6 +102,7 @@ namespace WorldTree
         /// 获取池
         /// </summary>
         public EntityPool GetPool<T>()
+            where T: Entity
         {
             Type type = typeof(T);
             return GetPool(type);
