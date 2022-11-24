@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 998a2b474e6e3774f8edc92db60b0266, type: 3}
+  m_Script: {fileID: 11500000, guid: b9628f55077c7bb4d833b3c2f53366d3, type: 3}
   m_Name: Page
   m_EditorClassIdentifier: 
-  CreateFilePath: Assets/Scripts/ScriptableObjects
-  CreateAssetPath: Assets/AssetBundles/ScriptableObjects
-  nameSpace: WorldTree
-  ClassName: AssetUI
-  classes: []
+  CreateFilePath: 
+  groups:
+  - gameObject: {fileID: 0}
+    components:
+    - {fileID: 0}

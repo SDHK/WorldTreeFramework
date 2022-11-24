@@ -59,7 +59,9 @@ namespace WorldTree
             var tree = new OdinMenuTree(true);
             tree.AddAssetAtPath("关于", rootPath + "GuidePage/Assets/Page.asset").AddIcon(EditorIcons.Info);
             tree.AddAssetAtPath("脚本对象编辑", rootPath + "ScriptableObjectEditor/Assets/Page.asset");
-            
+            //tree.Add("资源编辑", null);
+            tree.AddAssetAtPath("Mono绑定实体", rootPath + "MonoBindEntity/Assets/Page.asset");
+
             return tree;
         }
 
@@ -91,7 +93,7 @@ namespace WorldTree
 
             SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
             {
-              
+
             }
             SirenixEditorGUI.EndHorizontalToolbar();
 

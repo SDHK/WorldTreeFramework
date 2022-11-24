@@ -60,6 +60,7 @@ namespace WorldTree
                 component.isComponent = true;
 
                 components.Add(type, component);
+                component.SendSystem<IAwakeSystem>();
                 Root.Add(component);
             }
             else
@@ -81,6 +82,7 @@ namespace WorldTree
                 component.Parent = this;
                 component.isComponent = true;
                 components.Add(type, component);
+                component.SendSystem<IAwakeSystem>();
                 Root.Add(component);
             }
             return component;
@@ -98,6 +100,7 @@ namespace WorldTree
                 {
                     component.Parent = this;
                     component.isComponent = true;
+                    component.SendSystem<IAwakeSystem>();
                     Root.Add(component);
                 }
             }

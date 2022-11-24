@@ -47,6 +47,7 @@ namespace WorldTree
                 if (Children.TryAdd(entity.id, entity))
                 {
                     entity.Parent = this;
+                    entity.SendSystem<IAwakeSystem>();
                     Root.Add(entity);
                 }
             }
@@ -62,6 +63,7 @@ namespace WorldTree
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
+                entity.SendSystem<IAwakeSystem>();
                 Root.Add(entity);
             }
 
@@ -78,7 +80,7 @@ namespace WorldTree
             if (Children.TryAdd(entity.id, entity))
             {
                 entity.Parent = this;
-
+                entity.SendSystem<IAwakeSystem>();
                 Root.Add(entity);
             }
             return entity;
