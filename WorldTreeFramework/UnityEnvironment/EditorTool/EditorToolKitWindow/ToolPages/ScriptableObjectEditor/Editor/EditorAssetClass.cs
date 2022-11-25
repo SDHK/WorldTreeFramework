@@ -157,7 +157,7 @@ namespace WorldTree
             RefreshListAsset();
         }
 
-        [ShowIf("@IsList&&monoListScript!=null&&listAsset!=null")]
+        [ShowIf("@IsShow&&IsList&&monoListScript!=null&&listAsset!=null")]
         [LabelText("列表资源"), LabelWidth(100)]
         [InlineEditor]
         public ListAssetBase listAsset;

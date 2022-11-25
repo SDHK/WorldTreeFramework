@@ -15,5 +15,5 @@ MonoBehaviour:
   CreateFilePath: Assets/Scripts/ScriptableObjects
   CreateAssetPath: Assets/AssetBundles/ScriptableObjects
   nameSpace: WorldTree
-  ClassName: AssetUI
+  ClassName: 
   classes: []

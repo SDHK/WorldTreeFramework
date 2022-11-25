@@ -125,14 +125,14 @@ namespace WorldTree
 
     class WindowManagerAddSystem : AddSystem<WindowManager>
     {
-        public override async void OnAdd(WindowManager self)
+        public override void OnAdd(WindowManager self)
         {
 
             // 通过构造系统实现 (await 未实现)
             self.gameObject = self.AddComponent<GameObjectComponent>();
 
             //通过扩展方法实现
-            self.gameObject = await self.InstantiateAsync();
+            //self.gameObject = await self.InstantiateAsync();
 
         }
     }
