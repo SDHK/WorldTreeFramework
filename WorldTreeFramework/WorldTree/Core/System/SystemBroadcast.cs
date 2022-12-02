@@ -24,12 +24,17 @@ namespace WorldTree
         public UnitDictionary<long, Entity> update1;
         public UnitDictionary<long, Entity> update2;
 
+        public override string ToString()
+        {
+            return $"SystemBroadcast : {systems?.systemType}";
+        }
+
         public void AddEntity(Entity entity)
         {
             if (systems != null)
                 if (systems.ContainsKey(entity.Type))
                 {
-                    update2.Add(entity.id, entity);
+                    update2.TryAdd(entity.id, entity);
                 }
         }
 
@@ -38,7 +43,7 @@ namespace WorldTree
             if (systems != null)
                 if (systems.ContainsKey(entity.Type))
                 {
-                    update1.Remove(entity.id);
+                    //update1.Remove(entity.id);
                     update2.Remove(entity.id);
                 }
         }

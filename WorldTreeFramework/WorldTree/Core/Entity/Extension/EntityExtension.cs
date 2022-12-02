@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-namespace WorldTree
+﻿namespace WorldTree
 {
-    public static class EntityExtension
+    public  static partial class EntityExtension
     {
         /// <summary>
         /// 返回用字符串绘制的树

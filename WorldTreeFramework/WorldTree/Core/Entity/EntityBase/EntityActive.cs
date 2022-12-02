@@ -10,8 +10,6 @@
 
 */
 
-using System.Linq;
-
 namespace WorldTree
 {
     public abstract partial class Entity
@@ -64,7 +62,7 @@ namespace WorldTree
         {
             UnitQueue<Entity> queue = (Root.EntityPoolManager.IsDisposed) ? new UnitQueue<Entity>() : Root.PoolGet<UnitQueue<Entity>>();
             queue.Enqueue(this);
-            while (queue.Any())
+            while (queue.Count != 0)
             {
                 var current = queue.Dequeue();
                 if (current.active != ((current.Parent == null) ? current.activeToggle : current.Parent.active && current.activeToggle))

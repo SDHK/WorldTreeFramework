@@ -51,7 +51,6 @@ class NodeAddSystem : AddSystem<Node>
 {
     public override void OnAdd(Node self)
     {
-
     }
 }
 class NodeEnableSystem : EnableSystem<Node>

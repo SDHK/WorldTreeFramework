@@ -89,22 +89,34 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 添加组件
+        /// 添加野组件或替换父节点  （替换：从原父节点移除，移除替换同类型的组件，不调用事件）
         /// </summary>
         public void AddComponent(Entity component)
         {
             if (component != null)
             {
                 Type type = component.GetType();
-                if (Components.TryAdd(type, component))
+
+                RemoveComponent(type);
+
+                if (component.Parent != null)//如果父节点存在从原父节点中移除加入到当前，不调用任何事件
                 {
+                    component.RemoveInParent();
+
+                    Components.Add(type, component);
                     component.Parent = this;
                     component.isComponent = true;
+                }
+                else //野组件添加
+                {
+                    Components.Add(type, component);
+                    component.Parent = this;
+                    component.isComponent = true;
+
                     component.SendSystem<IAwakeSystem>();
                     Root.Add(component);
                 }
             }
-
         }
 
         /// <summary>
@@ -193,11 +205,20 @@ namespace WorldTree
             where T : Entity
         {
             Type type = typeof(T);
-            if (components.ContainsKey(type))
+            RemoveComponent(type);
+        }
+
+        /// <summary>
+        /// 移除组件
+        /// </summary>
+        public void RemoveComponent(Type type)
+        {
+            if (components.TryGetValue(type, out Entity component))
             {
-                components[type]?.Dispose();
+                component?.Dispose();
             }
         }
+
         /// <summary>
         /// 移除组件
         /// </summary>
@@ -217,15 +238,13 @@ namespace WorldTree
                 if (components != null)
                     if (components.Count != 0)
                     {
+                        //components.Values.GetEnumerator().Current.Dispose();
                         components.Last().Value?.Dispose();
                         continue;
                     }
                 break;
             }
         }
-
-
-
 
 
 

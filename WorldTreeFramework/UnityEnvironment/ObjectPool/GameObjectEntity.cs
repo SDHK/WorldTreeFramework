@@ -4,10 +4,10 @@
 * 作者： 闪电黑客
 * 日期： 2022/10/11 10:06
 
-* 描述： 游戏物体组件
+* 描述： 游戏物体实体
 * 
-* 将GameObject包装为组件
-* 可随着父节点一起回收
+* 将GameObject包装为实体
+* 可随着父节点一起回收到对象池
 
 */
 
@@ -16,9 +16,9 @@ using UnityEngine;
 namespace WorldTree
 {
     /// <summary>
-    /// 游戏物体组件
+    /// 游戏物体实体
     /// </summary>
-    public class GameObjectComponent : Entity
+    public class GameObjectEntity : Entity
     {
         public GameObjectPool pool;
 
@@ -51,7 +51,7 @@ namespace WorldTree
         /// <summary>
         /// 实例化
         /// </summary>
-        public GameObjectComponent Instantiate(GameObject prefab)
+        public GameObjectEntity Instantiate(GameObject prefab)
         {
             if (prefab)
             {
@@ -66,7 +66,7 @@ namespace WorldTree
         /// <summary>
         /// 实例化
         /// </summary>
-        public GameObjectComponent Instantiate(GameObject prefab, Transform parent)
+        public GameObjectEntity Instantiate(GameObject prefab, Transform parent)
         {
             if (TryInstantiate(prefab,out GameObject gameObject))
             {
@@ -78,7 +78,7 @@ namespace WorldTree
         /// <summary>
         /// 实例化
         /// </summary>
-        public GameObjectComponent Instantiate(GameObject prefab, GameObjectComponent parent)
+        public GameObjectEntity Instantiate(GameObject prefab, GameObjectEntity parent)
         {
             if (TryInstantiate(prefab, out GameObject gameObject))
             {
@@ -88,9 +88,9 @@ namespace WorldTree
         }
     }
 
-    class GameObjectComponentRemoveSystem : RemoveSystem<GameObjectComponent>
+    class GameObjectEntityRemoveSystem : RemoveSystem<GameObjectEntity>
     {
-        public override void OnRemove(GameObjectComponent self)
+        public override void OnRemove(GameObjectEntity self)
         {
             self.pool?.Recycle(self.gameObject);
             self.gameObject = null;

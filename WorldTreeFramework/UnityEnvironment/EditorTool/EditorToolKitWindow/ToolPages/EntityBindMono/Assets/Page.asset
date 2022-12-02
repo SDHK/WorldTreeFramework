@@ -1,0 +1,591 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9628f55077c7bb4d833b3c2f53366d3, type: 3}
+  m_Name: Page
+  m_EditorClassIdentifier: 
+  CreateFilePath: Assets/Scripts/EntityBindMono
+  groups:
+  - monoBindEntityTool: {fileID: 11400000}
+    IsShow: 0
+    groupName: UI
+    addMonoObjects: []
+    objects:
+    - objectBindGroup:
+        monoBindEntityTool: {fileID: 11400000}
+        IsShow: 1
+        groupName: UI
+        addMonoObjects: []
+        objects:
+        - objectBindGroup:
+            monoBindEntityTool: {fileID: 11400000}
+            IsShow: 1
+            groupName: UI
+            addMonoObjects: []
+            objects:
+            - objectBindGroup:
+                monoBindEntityTool: {fileID: 11400000}
+                IsShow: 1
+                groupName: UI
+                addMonoObjects: []
+                objects:
+                - objectBindGroup:
+                    monoBindEntityTool: {fileID: 11400000}
+                    IsShow: 1
+                    groupName: UI
+                    addMonoObjects: []
+                    objects:
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                      entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                      components:
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 0}
+                      entityScript: {fileID: 0}
+                      components: []
+                  IsShow: 1
+                  IsRefresh: 0
+                  monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                  entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                  components:
+                  - IsShow: 1
+                    component: {fileID: 5146550757591215562, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 4867891646362886399, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 2226963101782092841, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 7081776547042937507, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnClick
+                      bit: 1
+                  - IsShow: 1
+                    component: {fileID: 3284395098715412288, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnClick
+                      bit: 1
+                  - IsShow: 1
+                    component: {fileID: 2464387963059023361, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnValueChanged
+                      bit: 1
+                    - eventName: OnSubmit
+                      bit: 1
+                    - eventName: OnEndEdit
+                      bit: 1
+                - objectBindGroup:
+                    monoBindEntityTool: {fileID: 11400000}
+                    IsShow: 1
+                    groupName: UI
+                    addMonoObjects: []
+                    objects:
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                      entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                      components:
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 0}
+                      entityScript: {fileID: 0}
+                      components: []
+                  IsShow: 1
+                  IsRefresh: 0
+                  monoObject: {fileID: 0}
+                  entityScript: {fileID: 0}
+                  components: []
+              IsShow: 1
+              IsRefresh: 0
+              monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+              entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+              components:
+              - IsShow: 1
+                component: {fileID: 5146550757591215562, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags: []
+              - IsShow: 1
+                component: {fileID: 4867891646362886399, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags: []
+              - IsShow: 1
+                component: {fileID: 2226963101782092841, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags: []
+              - IsShow: 1
+                component: {fileID: 7081776547042937507, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags:
+                - eventName: OnClick
+                  bit: 1
+              - IsShow: 1
+                component: {fileID: 3284395098715412288, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags:
+                - eventName: OnClick
+                  bit: 1
+              - IsShow: 1
+                component: {fileID: 2464387963059023361, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags:
+                - eventName: OnValueChanged
+                  bit: 1
+                - eventName: OnSubmit
+                  bit: 1
+                - eventName: OnEndEdit
+                  bit: 1
+            - objectBindGroup:
+                monoBindEntityTool: {fileID: 11400000}
+                IsShow: 1
+                groupName: UI
+                addMonoObjects: []
+                objects:
+                - objectBindGroup:
+                    monoBindEntityTool: {fileID: 11400000}
+                    IsShow: 1
+                    groupName: UI
+                    addMonoObjects: []
+                    objects:
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                      entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                      components:
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 0}
+                      entityScript: {fileID: 0}
+                      components: []
+                  IsShow: 1
+                  IsRefresh: 0
+                  monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                  entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                  components:
+                  - IsShow: 1
+                    component: {fileID: 5146550757591215562, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 4867891646362886399, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 2226963101782092841, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 7081776547042937507, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnClick
+                      bit: 1
+                  - IsShow: 1
+                    component: {fileID: 3284395098715412288, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnClick
+                      bit: 1
+                  - IsShow: 1
+                    component: {fileID: 2464387963059023361, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnValueChanged
+                      bit: 1
+                    - eventName: OnSubmit
+                      bit: 1
+                    - eventName: OnEndEdit
+                      bit: 1
+                - objectBindGroup:
+                    monoBindEntityTool: {fileID: 11400000}
+                    IsShow: 1
+                    groupName: UI
+                    addMonoObjects: []
+                    objects:
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                      entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                      components:
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 0}
+                      entityScript: {fileID: 0}
+                      components: []
+                  IsShow: 1
+                  IsRefresh: 0
+                  monoObject: {fileID: 0}
+                  entityScript: {fileID: 0}
+                  components: []
+              IsShow: 1
+              IsRefresh: 0
+              monoObject: {fileID: 0}
+              entityScript: {fileID: 0}
+              components: []
+          IsShow: 1
+          IsRefresh: 0
+          monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+          entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+          components:
+          - IsShow: 1
+            component: {fileID: 5146550757591215562, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+            eventTags: []
+          - IsShow: 1
+            component: {fileID: 4867891646362886399, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+            eventTags: []
+          - IsShow: 1
+            component: {fileID: 2226963101782092841, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+            eventTags: []
+          - IsShow: 1
+            component: {fileID: 7081776547042937507, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+            eventTags:
+            - eventName: OnClick
+              bit: 1
+          - IsShow: 1
+            component: {fileID: 3284395098715412288, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+            eventTags:
+            - eventName: OnClick
+              bit: 1
+          - IsShow: 1
+            component: {fileID: 2464387963059023361, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+            eventTags:
+            - eventName: OnValueChanged
+              bit: 1
+            - eventName: OnSubmit
+              bit: 1
+            - eventName: OnEndEdit
+              bit: 1
+        - objectBindGroup:
+            monoBindEntityTool: {fileID: 11400000}
+            IsShow: 1
+            groupName: UI
+            addMonoObjects: []
+            objects:
+            - objectBindGroup:
+                monoBindEntityTool: {fileID: 11400000}
+                IsShow: 1
+                groupName: UI
+                addMonoObjects: []
+                objects:
+                - objectBindGroup:
+                    monoBindEntityTool: {fileID: 11400000}
+                    IsShow: 1
+                    groupName: UI
+                    addMonoObjects: []
+                    objects:
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                      entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                      components:
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 0}
+                      entityScript: {fileID: 0}
+                      components: []
+                  IsShow: 1
+                  IsRefresh: 0
+                  monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                  entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                  components:
+                  - IsShow: 1
+                    component: {fileID: 5146550757591215562, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 4867891646362886399, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 2226963101782092841, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 7081776547042937507, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnClick
+                      bit: 1
+                  - IsShow: 1
+                    component: {fileID: 3284395098715412288, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnClick
+                      bit: 1
+                  - IsShow: 1
+                    component: {fileID: 2464387963059023361, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnValueChanged
+                      bit: 1
+                    - eventName: OnSubmit
+                      bit: 1
+                    - eventName: OnEndEdit
+                      bit: 1
+                - objectBindGroup:
+                    monoBindEntityTool: {fileID: 11400000}
+                    IsShow: 1
+                    groupName: UI
+                    addMonoObjects: []
+                    objects:
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                      entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                      components:
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 0}
+                      entityScript: {fileID: 0}
+                      components: []
+                  IsShow: 1
+                  IsRefresh: 0
+                  monoObject: {fileID: 0}
+                  entityScript: {fileID: 0}
+                  components: []
+              IsShow: 1
+              IsRefresh: 0
+              monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+              entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+              components:
+              - IsShow: 1
+                component: {fileID: 5146550757591215562, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags: []
+              - IsShow: 1
+                component: {fileID: 4867891646362886399, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags: []
+              - IsShow: 1
+                component: {fileID: 2226963101782092841, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags: []
+              - IsShow: 1
+                component: {fileID: 7081776547042937507, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags:
+                - eventName: OnClick
+                  bit: 1
+              - IsShow: 1
+                component: {fileID: 3284395098715412288, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags:
+                - eventName: OnClick
+                  bit: 1
+              - IsShow: 1
+                component: {fileID: 2464387963059023361, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                eventTags:
+                - eventName: OnValueChanged
+                  bit: 1
+                - eventName: OnSubmit
+                  bit: 1
+                - eventName: OnEndEdit
+                  bit: 1
+            - objectBindGroup:
+                monoBindEntityTool: {fileID: 11400000}
+                IsShow: 1
+                groupName: UI
+                addMonoObjects: []
+                objects:
+                - objectBindGroup:
+                    monoBindEntityTool: {fileID: 11400000}
+                    IsShow: 1
+                    groupName: UI
+                    addMonoObjects: []
+                    objects:
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                      entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                      components:
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 0}
+                      entityScript: {fileID: 0}
+                      components: []
+                  IsShow: 1
+                  IsRefresh: 0
+                  monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                  entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                  components:
+                  - IsShow: 1
+                    component: {fileID: 5146550757591215562, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 4867891646362886399, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 2226963101782092841, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags: []
+                  - IsShow: 1
+                    component: {fileID: 7081776547042937507, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnClick
+                      bit: 1
+                  - IsShow: 1
+                    component: {fileID: 3284395098715412288, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnClick
+                      bit: 1
+                  - IsShow: 1
+                    component: {fileID: 2464387963059023361, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                    eventTags:
+                    - eventName: OnValueChanged
+                      bit: 1
+                    - eventName: OnSubmit
+                      bit: 1
+                    - eventName: OnEndEdit
+                      bit: 1
+                - objectBindGroup:
+                    monoBindEntityTool: {fileID: 11400000}
+                    IsShow: 1
+                    groupName: UI
+                    addMonoObjects: []
+                    objects:
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+                      entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+                      components:
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                      - IsShow: 1
+                    - objectBindGroup:
+                        IsShow: 1
+                        groupName: UI
+                      IsShow: 1
+                      IsRefresh: 0
+                      monoObject: {fileID: 0}
+                      entityScript: {fileID: 0}
+                      components: []
+                  IsShow: 1
+                  IsRefresh: 0
+                  monoObject: {fileID: 0}
+                  entityScript: {fileID: 0}
+                  components: []
+              IsShow: 1
+              IsRefresh: 0
+              monoObject: {fileID: 0}
+              entityScript: {fileID: 0}
+              components: []
+          IsShow: 1
+          IsRefresh: 0
+          monoObject: {fileID: 0}
+          entityScript: {fileID: 0}
+          components: []
+      IsShow: 0
+      IsRefresh: 0
+      monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+      entityScript: {fileID: 11500000, guid: d03d514b95be1f44682eb7ebd8cf28ac, type: 3}
+      components:
+      - IsShow: 1
+        component: {fileID: 7081776547042937507, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+        eventTags:
+        - eventName: OnClick
+          bit: 1
+      - IsShow: 1
+        component: {fileID: 5146550757591215562, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+        eventTags: []
+      - IsShow: 1
+        component: {fileID: 4867891646362886399, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+        eventTags: []
+      - IsShow: 1
+        component: {fileID: 2226963101782092841, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+        eventTags: []
+      - IsShow: 1
+        component: {fileID: 3284395098715412288, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+        eventTags:
+        - eventName: OnClick
+          bit: 1
+      - IsShow: 1
+        component: {fileID: 2464387963059023361, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
+        eventTags:
+        - eventName: OnValueChanged
+          bit: 1
+        - eventName: OnSubmit
+          bit: 1
+        - eventName: OnEndEdit
+          bit: 1
+  - monoBindEntityTool: {fileID: 11400000}
+    IsShow: 1
+    groupName: TestGroup
+    addMonoObjects: []
+    objects: []

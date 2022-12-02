@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WorldTree
 {
@@ -45,7 +41,7 @@ namespace WorldTree
                     {
                         localStack.Push(item.Value);
                     }
-                    while (localStack.Any())
+                    while (localStack.Count != 0)
                     {
                         stack.Push(localStack.Pop());
                     }
@@ -56,7 +52,7 @@ namespace WorldTree
                     {
                         localStack.Push(item.Value);
                     }
-                    while (localStack.Any())
+                    while (localStack.Count != 0)
                     {
                         stack.Push(localStack.Pop());
                     }
@@ -75,7 +71,7 @@ namespace WorldTree
             UnitQueue<Entity> queue = self.PoolGet<UnitQueue<Entity>>();
             queue.Enqueue(self);
 
-            while (queue.Any())
+            while (queue.Count != 0)
             {
                 var current = queue.Dequeue();
 
@@ -109,7 +105,7 @@ namespace WorldTree
             UnitStack<Entity> stack = self.PoolGet<UnitStack<Entity>>();
             UnitStack<Entity> allStack = self.PoolGet<UnitStack<Entity>>();
             stack.Push(self);
-            while (stack.Any())
+            while (stack.Count != 0)
             {
                 current = stack.Pop();
                 allStack.Push(current);
@@ -129,7 +125,7 @@ namespace WorldTree
                 }
             }
             stack.Dispose();
-            while (allStack.Any())
+            while (allStack.Count != 0)
             {
                 action(allStack.Pop());
             }

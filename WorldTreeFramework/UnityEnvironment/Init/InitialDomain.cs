@@ -23,9 +23,13 @@ namespace WorldTree
     class _InitialDomain : AddSystem<InitialDomain>
     {
 
-        public override void OnAdd(InitialDomain self)
+        public override async void OnAdd(InitialDomain self)
         {
             World.Log("初始域启动！");
+
+            //GameObject gameObject = await self.AddressablesInstantiateAsync("MainWindow");
+
+            //World.Log(gameObject.name);
 
         }
     }

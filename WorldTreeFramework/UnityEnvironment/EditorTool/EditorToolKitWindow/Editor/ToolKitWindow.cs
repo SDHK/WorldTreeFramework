@@ -11,8 +11,6 @@
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -59,8 +57,7 @@ namespace WorldTree
             var tree = new OdinMenuTree(true);
             tree.AddAssetAtPath("关于", rootPath + "GuidePage/Assets/Page.asset").AddIcon(EditorIcons.Info);
             tree.AddAssetAtPath("脚本对象编辑", rootPath + "ScriptableObjectEditor/Assets/Page.asset");
-            //tree.Add("资源编辑", null);
-            tree.AddAssetAtPath("Mono绑定实体", rootPath + "MonoBindEntity/Assets/Page.asset");
+            tree.AddAssetAtPath("实体绑定Mono", rootPath + "EntityBindMono/Assets/Page.asset");
 
             return tree;
         }

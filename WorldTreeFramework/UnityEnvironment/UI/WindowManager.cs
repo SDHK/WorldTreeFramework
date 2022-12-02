@@ -14,6 +14,16 @@ using UnityEngine;
 
 namespace WorldTree
 {
+
+    class InitialDomain1 : AddSystem<InitialDomain>
+    {
+        public override void OnAdd(InitialDomain self)
+        {
+            self.Root.AddComponent<WindowManager>();
+        }
+    }
+
+
     //动画？
     //焦点进入，焦点离开，焦点Update
     //UI Update
@@ -33,7 +43,7 @@ namespace WorldTree
         //栈底
         public Entity rootPage;
 
-        public GameObjectComponent gameObject;
+        public GameObjectEntity gameObject;
 
 
         private void PushWindow(Entity entity)
@@ -123,16 +133,12 @@ namespace WorldTree
         }
     }
 
+
     class WindowManagerAddSystem : AddSystem<WindowManager>
     {
         public override void OnAdd(WindowManager self)
         {
-
-            // 通过构造系统实现 (await 未实现)
-            self.gameObject = self.AddComponent<GameObjectComponent>();
-
-            //通过扩展方法实现
-            //self.gameObject = await self.InstantiateAsync();
+            World.Log("WindowManager启动!!!");
 
         }
     }

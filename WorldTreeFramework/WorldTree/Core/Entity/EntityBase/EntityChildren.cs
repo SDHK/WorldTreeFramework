@@ -35,10 +35,8 @@ namespace WorldTree
         }
 
 
-
-
         /// <summary>
-        /// 添加子节点
+        /// 添加野节点或替换父节点 （替换：从原父节点移除，不调用事件）
         /// </summary>
         public void AddChildren(Entity entity)
         {
@@ -46,12 +44,23 @@ namespace WorldTree
             {
                 if (Children.TryAdd(entity.id, entity))
                 {
-                    entity.Parent = this;
-                    entity.SendSystem<IAwakeSystem>();
-                    Root.Add(entity);
+                    if (entity != null)
+                    {
+                        entity.RemoveInParent();
+                        entity.Parent = this;
+                        entity.isComponent = false;
+                    }
+                    else //野节点添加
+                    {
+                        entity.Parent = this;
+                        entity.isComponent = false;
+                        entity.SendSystem<IAwakeSystem>();
+                        Root.Add(entity);
+                    }
                 }
             }
         }
+
         /// <summary>
         /// 添加新的子节点
         /// </summary>
@@ -142,6 +151,7 @@ namespace WorldTree
                 if (children != null)
                     if (children.Count != 0)
                     {
+                        //children.Values.GetEnumerator().Current.Dispose();
                         children.Last().Value?.Dispose();
                         continue;
                     }

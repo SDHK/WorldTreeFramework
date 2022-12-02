@@ -38,7 +38,7 @@ namespace WorldTree
             if (systems != null)
                 if (systems.ContainsKey(entity.Type))
                 {
-                    update1.Remove(entity.id);
+                    //update1.Remove(entity.id);
                     update2.Remove(entity.id);
                 }
         }

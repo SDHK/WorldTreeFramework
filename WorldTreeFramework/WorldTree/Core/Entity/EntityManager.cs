@@ -24,7 +24,6 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
-    //思考监听器注入到对象池
 
     /// <summary>
     /// 实体管理器

@@ -64,10 +64,12 @@ namespace WorldTree
             maxY = node1.y > node2.y ? node1.y : node2.y;
             minY = node1.y > node2.y ? node2.y : node1.y;
 
-            Vector2 Vector1_P = point - node1;
-            Vector2 Vector1_2 = node2 - node1;
+            Vector2 Vector1_P = (point - node1).normalized;
+            Vector2 Vector2_P = (point - node2).normalized;
+            Vector2 Vector1_2 = (node2 - node1).normalized;
 
-            return Vector2.Dot(Vector1_P, Vector1_2) - Vector2.Dot(Vector1_2, Vector1_P) == 0 &&
+            return Vector1_P == Vector1_2 && Vector2_P == -Vector1_2 &&
+
                     (point.x >= minX && point.x <= maxX) &&
                     (point.y >= minY && point.y <= maxY);
         }
@@ -104,6 +106,7 @@ namespace WorldTree
                 float v1 = Cross(ca, cd);
                 float v2 = Cross(cd, ab);
                 float ratio = (v1 * v2) / (v2 * v2);//获得比值
+
                 intersectPosition = a + ab * ratio;
                 return true;
             }

@@ -19,19 +19,19 @@ namespace WorldTree
 
     public static class AddressablesAsyncExtension
     {
-        public async static AsyncTask<AsyncOperationHandle<T>> AddressablesLoadAssetAsync<T>(this Entity self, string key)
+        public async static AsyncTask<T> AddressablesLoadAssetAsync<T>(this Entity self, string key)
         {
-            return await self.GetAwaiter(Addressables.LoadAssetAsync<T>(key));
+            return (await self.GetAwaiter(Addressables.LoadAssetAsync<T>(key))).Result;
         }
 
-        public async static AsyncTask<AsyncOperationHandle<IList<T>>> AddressablesLoadAssetsAsync<T>(this Entity self, string key, Action<T> CallBack = null)
+        public async static AsyncTask<IList<T>> AddressablesLoadAssetsAsync<T>(this Entity self, string key, Action<T> CallBack = null)
         {
-            return await self.GetAwaiter(Addressables.LoadAssetsAsync<T>(key, CallBack));
+            return (await self.GetAwaiter(Addressables.LoadAssetsAsync<T>(key, CallBack))).Result;
         }
 
-        public async static AsyncTask<AsyncOperationHandle<GameObject>> AddressablesInstantiateAsync(this Entity self, string key)
+        public async static AsyncTask<GameObject> AddressablesInstantiateAsync(this Entity self, string key)
         {
-            return await self.GetAwaiter(Addressables.InstantiateAsync(key));
+            return (await self.GetAwaiter(Addressables.InstantiateAsync(key))).Result;
         }
     }
 }

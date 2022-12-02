@@ -13,7 +13,7 @@ namespace WorldTree
         private static UnityWorldTree script;
 
         public override void OnInspectorGUI()
-        { 
+        {
             base.OnInspectorGUI();
             if (!Application.isPlaying) return;
 

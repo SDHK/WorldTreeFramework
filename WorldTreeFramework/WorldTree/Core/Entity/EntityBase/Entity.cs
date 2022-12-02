@@ -83,6 +83,26 @@ namespace WorldTree
         }
 
         /// <summary>
+        /// 尝试向上查找父物体
+        /// </summary>
+        public bool TryGetParent<T>(out T parent)
+        where T : Entity
+        {
+            parent = null;
+            Entity entity = Parent;
+            while (entity != null)
+            {
+                if (entity.Type == typeof(T))
+                {
+                    parent = entity as T;
+                    break;
+                }
+                entity = entity.Parent;
+            }
+            return parent != null;
+        }
+
+        /// <summary>
         /// 从父节点中删除
         /// </summary>
         public void RemoveInParent()
@@ -120,7 +140,7 @@ namespace WorldTree
             {
                 Root.Remove(this);//全局通知移除
                 RemoveInParent();//从父节点中移除
-                DisposeDomain();//清除域节点
+                //DisposeDomain();//清除域节点
                 Parent = null;//清除父节点
 
                 OnDispose();
@@ -134,9 +154,6 @@ namespace WorldTree
         {
             Root.EntityPoolManager.Recycle(this);
         }
-
-
-
     }
 
 }
