@@ -9,7 +9,6 @@
 */
 
 using System;
-using System.Linq;
 
 namespace WorldTree
 {
@@ -238,8 +237,14 @@ namespace WorldTree
                 if (components != null)
                     if (components.Count != 0)
                     {
-                        //components.Values.GetEnumerator().Current.Dispose();
-                        components.Last().Value?.Dispose();
+                        var enumerator = components.Values.GetEnumerator();
+                        enumerator.MoveNext();
+                        Entity entity = enumerator.Current;
+                        enumerator.Dispose();
+                        entity.Dispose();
+
+
+                        //components.Last().Value?.Dispose();
                         continue;
                     }
                 break;

@@ -6,6 +6,7 @@
 * 描述： 
 
 */
+
 namespace WorldTree
 {
     public partial class SystemBroadcast
@@ -15,25 +16,22 @@ namespace WorldTree
             if (systems != null && IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity);
-                        update2.Add(entity.id, entity);
+                        if (!entity.IsRecycle)
+                        {
+                            updateQueue.Enqueue(id);
+                            update2.Add(entity.id, entity);
+                        }
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    var first = update1.First();
-                //    systems.Send(first.Value);
-                //    update1.Remove(first.Key);
-                //    if (!first.Value.IsRecycle)
-                //    {
-                //        update2.Add(first.Value.id, first.Value);
-                //    }
-                //}
             }
         }
         public void Send<T1>(T1 arg1)
@@ -41,25 +39,22 @@ namespace WorldTree
             if (systems != null && IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity, arg1);
-                        update2.Add(entity.id, entity);
+                        if (!entity.IsRecycle)
+                        {
+                            updateQueue.Enqueue(id);
+                            update2.Add(entity.id, entity);
+                        }
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    var first = update1.First();
-                //    systems.Send(first.Value, arg1);
-                //    update1.Remove(first.Key);
-                //    if (!first.Value.IsRecycle)
-                //    {
-                //        update2.Add(first.Value.id, first.Value);
-                //    }
-                //}
             }
         }
         public void Send<T1, T2>(T1 arg1, T2 arg2)
@@ -67,25 +62,21 @@ namespace WorldTree
             if (systems != null && IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2);
-                        update2.Add(entity.id, entity);
+                        if (!entity.IsRecycle)
+                        {
+                            updateQueue.Enqueue(id);
+                            update2.Add(entity.id, entity);
+                        }
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    var first = update1.First();
-                //    systems.Send(first.Value, arg1, arg2);
-                //    update1.Remove(first.Key);
-                //    if (!first.Value.IsRecycle)
-                //    {
-                //        update2.Add(first.Value.id, first.Value);
-                //    }
-                //}
             }
         }
         public void Send<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3)
@@ -93,25 +84,21 @@ namespace WorldTree
             if (systems != null && IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2, arg3);
-                        update2.Add(entity.id, entity);
+                        if (!entity.IsRecycle)
+                        {
+                            updateQueue.Enqueue(id);
+                            update2.Add(entity.id, entity);
+                        }
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    var first = update1.First();
-                //    systems.Send(first.Value, arg1, arg2, arg3);
-                //    update1.Remove(first.Key);
-                //    if (!first.Value.IsRecycle)
-                //    {
-                //        update2.Add(first.Value.id, first.Value);
-                //    }
-                //}
             }
         }
         public void Send<T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4)
@@ -119,25 +106,22 @@ namespace WorldTree
             if (systems != null && IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2, arg3, arg4);
-                        update2.Add(entity.id, entity);
+
+                        if (!entity.IsRecycle)
+                        {
+                            updateQueue.Enqueue(id);
+                            update2.Add(entity.id, entity);
+                        }
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    var first = update1.First();
-                //    systems.Send(first.Value, arg1, arg2, arg3, arg4);
-                //    update1.Remove(first.Key);
-                //    if (!first.Value.IsRecycle)
-                //    {
-                //        update2.Add(first.Value.id, first.Value);
-                //    }
-                //}
             }
         }
         public void Send<T1, T2, T3, T4, T5>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
@@ -145,25 +129,21 @@ namespace WorldTree
             if (systems != null && IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
-                        update2.Add(entity.id, entity);
+                        if (!entity.IsRecycle)
+                        {
+                            updateQueue.Enqueue(id);
+                            update2.Add(entity.id, entity);
+                        }
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    var first = update1.First();
-                //    systems.Send(first.Value, arg1, arg2, arg3, arg4, arg5);
-                //    update1.Remove(first.Key);
-                //    if (!first.Value.IsRecycle)
-                //    {
-                //        update2.Add(first.Value.id, first.Value);
-                //    }
-                //}
             }
         }
     }

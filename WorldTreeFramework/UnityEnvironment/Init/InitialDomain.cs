@@ -41,7 +41,9 @@ namespace WorldTree
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                self.AddComponent<Node>().Test().Coroutine();
+                self.AddComponent<Node>()
+                    .Test().Coroutine()
+                    ;
             }
 
             if (Input.GetKeyDown(KeyCode.W))

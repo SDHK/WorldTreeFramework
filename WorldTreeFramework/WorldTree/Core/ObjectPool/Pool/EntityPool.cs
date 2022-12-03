@@ -27,10 +27,6 @@ namespace WorldTree
             self.getSystem = self.GetSystems<IGetSystem>(self.ObjectType);
             self.recycleSystem = self.GetSystems<IRecycleSystem>(self.ObjectType);
             self.destroySystem = self.GetSystems<IDestroySystem>(self.ObjectType);
-
-            //self.AddListeners = self.GetListenerSystems<IEntityAddSystem>(self.ObjectType);
-            //self.RemoveListeners = self.GetListenerSystems<IEntityRemoveSystem>(self.ObjectType);
-
         }
     }
 
@@ -40,20 +36,6 @@ namespace WorldTree
     /// </summary>
     public class EntityPool : GenericPool<Entity>
     {
-        //特化监听器列表
-        //管理器列表
-
-        ///// <summary>
-        ///// 实体添加监听器
-        ///// </summary>
-        //public List<ISystem> AddListeners = new List<ISystem>();
-
-        ///// <summary>
-        ///// 实体移除监听器
-        ///// </summary>
-        //public List<ISystem> RemoveListeners = new List<ISystem>();
-
-
         public List<ISystem> newSystem;
         public List<ISystem> getSystem;
         public List<ISystem> recycleSystem;

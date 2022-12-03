@@ -9,7 +9,7 @@
 */
 
 using System;
-using System.Linq;
+
 
 namespace WorldTree
 {
@@ -44,7 +44,7 @@ namespace WorldTree
             {
                 if (Children.TryAdd(entity.id, entity))
                 {
-                    if (entity != null)
+                    if (entity.Parent != null)
                     {
                         entity.RemoveInParent();
                         entity.Parent = this;
@@ -151,8 +151,13 @@ namespace WorldTree
                 if (children != null)
                     if (children.Count != 0)
                     {
+                        var enumerator = children.Values.GetEnumerator();
+                        enumerator.MoveNext();
+                        Entity entity = enumerator.Current;
+                        enumerator.Dispose();
+                        entity.Dispose();
                         //children.Values.GetEnumerator().Current.Dispose();
-                        children.Last().Value?.Dispose();
+                        //children.Last().Value?.Dispose();
                         continue;
                     }
                 break;

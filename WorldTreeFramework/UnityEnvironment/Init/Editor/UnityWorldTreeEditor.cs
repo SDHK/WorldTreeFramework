@@ -12,15 +12,15 @@ namespace WorldTree
     {
         private static UnityWorldTree script;
 
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-            if (!Application.isPlaying) return;
+        //public override void OnInspectorGUI()
+        //{
+        //    base.OnInspectorGUI();
+        //    if (!Application.isPlaying) return;
 
-            script = target as UnityWorldTree;
+        //    script = target as UnityWorldTree;
 
-            GUILayout.Label(script.root.ToStringDrawTree());
-        }
+        //    GUILayout.Label(script.root.ToStringDrawTree());
+        //}
 
 
     }

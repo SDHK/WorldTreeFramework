@@ -28,7 +28,6 @@ namespace WorldTree
             {
                 foreach (var entity in self.Root.allEntity.Values)
                 {
-
                     self.AddEntity(entity);
                 }
             }
@@ -54,6 +53,7 @@ namespace WorldTree
     {
         public override void OnAdd(SystemGlobalBroadcast self)
         {
+            self.updateQueue = self.PoolGet<UnitQueue<long>>();
             self.update1 = self.PoolGet<UnitDictionary<long, Entity>>();
             self.update2 = self.PoolGet<UnitDictionary<long, Entity>>();
         }
@@ -63,6 +63,7 @@ namespace WorldTree
     {
         public override void OnRemove(SystemGlobalBroadcast self)
         {
+            self.updateQueue.Dispose();
             self.update1.Dispose();
             self.update2.Dispose();
         }

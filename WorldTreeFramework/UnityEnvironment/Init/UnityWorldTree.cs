@@ -10,6 +10,7 @@
 
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace WorldTree
 {
@@ -47,9 +48,15 @@ namespace WorldTree
 
         private void Update()
         {
+
+            Profiler.BeginSample("SDHK");
+
             enable.Send();
             update.Send(Time.deltaTime);
             disable.Send();
+
+            Profiler.EndSample();
+
             if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(root.ToStringDrawTree());
         }
 
@@ -62,10 +69,10 @@ namespace WorldTree
             fixedUpdate.Send(Time.fixedDeltaTime);
         }
 
-        private void OnGUI()
-        {
-            onGUI.Send(0.02f);
-        }
+        //private void OnGUI()
+        //{
+        //    onGUI.Send(0.02f);
+        //}
 
         private void OnDestroy()
         {

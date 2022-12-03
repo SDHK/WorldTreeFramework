@@ -17,21 +17,16 @@ namespace WorldTree
             if (IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var item in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!item.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
-                        systems.Send(item);
+                        update1.Remove(entity.id);
+                        systems.Send(entity);
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    long firstKey = update1.Keys.First();
-                //    Entity entity = update1[firstKey];
-                //    systems.Send(entity);
-                //    update1.Remove(firstKey);
-                //}
                 Dispose();
             }
         }
@@ -41,21 +36,16 @@ namespace WorldTree
             if (IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var item in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!item.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
-                        systems.Send(item, arg1);
+                        update1.Remove(entity.id);
+                        systems.Send(entity, arg1);
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    long firstKey = update1.Keys.First();
-                //    Entity entity = update1[firstKey];
-                //    systems.Send(entity, arg1);
-                //    update1.Remove(firstKey);
-                //}
                 Dispose();
             }
         }
@@ -66,21 +56,16 @@ namespace WorldTree
             if (IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2);
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    long firstKey = update1.Keys.First();
-                //    Entity entity = update1[firstKey];
-                //    systems.Send(entity, arg1, arg2);
-                //    update1.Remove(firstKey);
-                //}
                 Dispose();
             }
         }
@@ -89,21 +74,16 @@ namespace WorldTree
             if (IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2, arg3);
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    long firstKey = update1.Keys.First();
-                //    Entity entity = update1[firstKey];
-                //    systems.Send(entity, arg1, arg2, arg3);
-                //    update1.Remove(firstKey);
-                //}
                 Dispose();
             }
         }
@@ -112,21 +92,16 @@ namespace WorldTree
             if (IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2, arg3, arg4);
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    long firstKey = update1.Keys.First();
-                //    Entity entity = update1[firstKey];
-                //    systems.Send(entity, arg1, arg2, arg3, arg4);
-                //    update1.Remove(firstKey);
-                //}
                 Dispose();
             }
         }
@@ -135,21 +110,16 @@ namespace WorldTree
             if (IsActive)
             {
                 (update1, update2) = (update2, update1);
-                foreach (var entity in update1.Values)
+                int length = updateQueue.Count;
+                for (int i = 0; i < length; i++)
                 {
-                    if (!entity.IsRecycle)
+                    long id = updateQueue.Dequeue();
+                    if (update1.TryGetValue(id, out Entity entity))
                     {
+                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
                     }
                 }
-                update1.Clear();
-                //while (update1.Count != 0)
-                //{
-                //    long firstKey = update1.Keys.First();
-                //    Entity entity = update1[firstKey];
-                //    systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
-                //    update1.Remove(firstKey);
-                //}
                 Dispose();
             }
         }

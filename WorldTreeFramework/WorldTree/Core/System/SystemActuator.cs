@@ -21,6 +21,7 @@ namespace WorldTree
     {
         public SystemGroup systems;
 
+        public UnitQueue<long> updateQueue;
         public UnitDictionary<long, Entity> update1;
         public UnitDictionary<long, Entity> update2;
 
@@ -29,6 +30,7 @@ namespace WorldTree
             if (systems != null)
                 if (systems.ContainsKey(entity.Type))
                 {
+                    updateQueue.Enqueue(entity.id);
                     update2.Add(entity.id, entity);
                 }
         }
@@ -38,7 +40,7 @@ namespace WorldTree
             if (systems != null)
                 if (systems.ContainsKey(entity.Type))
                 {
-                    //update1.Remove(entity.id);
+                    update1.Remove(entity.id);
                     update2.Remove(entity.id);
                 }
         }
@@ -68,6 +70,7 @@ namespace WorldTree
     {
         public override void OnAdd(SystemActuator self)
         {
+            self.updateQueue = self.PoolGet<UnitQueue<long>>();
             self.update1 = self.PoolGet<UnitDictionary<long, Entity>>();
             self.update2 = self.PoolGet<UnitDictionary<long, Entity>>();
         }
@@ -76,6 +79,7 @@ namespace WorldTree
     {
         public override void OnRemove(SystemActuator self)
         {
+            self.updateQueue.Dispose();
             self.update1.Dispose();
             self.update2.Dispose();
         }
