@@ -105,6 +105,7 @@ namespace WorldTree
                     Components.Add(type, component);
                     component.Parent = this;
                     component.isComponent = true;
+                    component.RefreshActive();
                 }
                 else //野组件添加
                 {

@@ -60,17 +60,24 @@ class NodeEnableSystem : EnableSystem<Node>
         Debug.Log("OnEnable!");
     }
 }
+
+class NodeDisableSystem : DisableSystem<Node>
+{
+    public override void OnDisable(Node self)
+    {
+        Debug.Log("OnDisable!");
+    }
+}
+
 class NodeUpdateSystem : UpdateSystem<Node>
 {
     public override void Update(Node self, float deltaTime)
     {
         Debug.Log("Update!");
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Node.bit = !Node.bit;
-        }
     }
 }
+
+
 class NodeLateUpdateSystem : LateUpdateSystem<Node>
 {
     public override void LateUpdate(Node self, float deltaTime)
@@ -85,13 +92,7 @@ class NodeFixedUpdateSystem : FixedUpdateSystem<Node>
         Debug.Log("FixedUpdate!");
     }
 }
-class NodeDisableSystem : DisableSystem<Node>
-{
-    public override void OnDisable(Node self)
-    {
-        Debug.Log("OnDisable!");
-    }
-}
+
 class NodeRemoveSystem : RemoveSystem<Node>
 {
     public override void OnRemove(Node self)

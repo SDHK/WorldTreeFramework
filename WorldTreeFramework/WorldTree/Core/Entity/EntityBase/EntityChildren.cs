@@ -49,6 +49,7 @@ namespace WorldTree
                         entity.RemoveInParent();
                         entity.Parent = this;
                         entity.isComponent = false;
+                        entity.RefreshActive();
                     }
                     else //野节点添加
                     {

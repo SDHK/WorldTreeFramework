@@ -15,7 +15,7 @@ MonoBehaviour:
   CreateFilePath: Assets/Scripts/EntityBindMono
   groups:
   - monoBindEntityTool: {fileID: 11400000}
-    IsShow: 0
+    IsShow: 1
     groupName: UI
     addMonoObjects: []
     objects:

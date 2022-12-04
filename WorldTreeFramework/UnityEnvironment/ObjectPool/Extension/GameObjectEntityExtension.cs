@@ -2,7 +2,7 @@
 
 namespace WorldTree
 {
-    public static partial class GameObjectEntityExtension
+    public static class GameObjectEntityExtension
     {
 
         /// <summary>

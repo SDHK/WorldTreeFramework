@@ -25,6 +25,11 @@ namespace WorldTree
         public GameObject gameObject;
         public Transform transform;
 
+        public override string ToString()
+        {
+            return gameObject? "GameObjectEntity : " + gameObject.name: "GameObjectEntity : ";
+        }
+
         /// <summary>
         /// 回收或删除游戏物体
         /// </summary>
@@ -58,7 +63,7 @@ namespace WorldTree
         /// <summary>
         /// 用类名实例化一个空物体
         /// </summary>
-        public GameObjectEntity Instantiate(string name,Transform parent)
+        public GameObjectEntity Instantiate(string name, Transform parent)
         {
             Instantiate(name);
             transform.SetParent(parent);
@@ -67,7 +72,7 @@ namespace WorldTree
         /// <summary>
         /// 用类名实例化一个空物体
         /// </summary>
-        public GameObjectEntity Instantiate(string name,GameObjectEntity parent)
+        public GameObjectEntity Instantiate(string name, GameObjectEntity parent)
         {
             Instantiate(name);
             transform.SetParent(parent.transform);
@@ -84,7 +89,7 @@ namespace WorldTree
         /// 用类名实例化一个空物体
         /// </summary>
         public GameObjectEntity Instantiate<T>(Transform parent) where T : class => Instantiate(typeof(T).Name, parent);
-       
+
         /// <summary>
         /// 用类名实例化一个空物体
         /// </summary>

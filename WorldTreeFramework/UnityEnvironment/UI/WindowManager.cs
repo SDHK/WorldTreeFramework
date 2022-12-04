@@ -136,13 +136,18 @@ namespace WorldTree
 
     class WindowManagerAddSystem : AddSystem<WindowManager>
     {
-        public override void OnAdd(WindowManager self)
+        public override async void OnAdd(WindowManager self)
         {
             World.Log("WindowManager启动!!!");
-            self.gameObject = self.AddComponent<GameObjectEntity>().Instantiate<WindowManager>();
+
+          
+            //预制体测试
+            await self.AddGameObjectEntity<MainWindow>();
         }
     }
 
+    //空节点测试
+    //self.gameObject = self.AddComponent<GameObjectEntity>().Instantiate<WindowManager>();
 
     class WindowManagerUpdateSystem : UpdateSystem<WindowManager>
     {
@@ -151,7 +156,6 @@ namespace WorldTree
             //self.topPage?.SendSystem<IWindowFocusUpdateSystem, float>(deltaTime);
         }
     }
-
 
     class WindowManagerEntityAddSystem : EntityAddSystem<WindowManager>
     {
