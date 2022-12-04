@@ -139,7 +139,7 @@ namespace WorldTree
         public override void OnAdd(WindowManager self)
         {
             World.Log("WindowManager启动!!!");
-
+            self.gameObject = self.AddComponent<GameObjectEntity>().Instantiate<WindowManager>();
         }
     }
 

@@ -26,14 +26,79 @@ namespace WorldTree
         public Transform transform;
 
         /// <summary>
+        /// 回收或删除游戏物体
+        /// </summary>
+        public void DestroyGameObject()
+        {
+            if (gameObject != null)
+            {
+                if (pool != null)
+                {
+                    pool.Recycle(gameObject);
+                }
+                else
+                {
+                    GameObject.Destroy(gameObject);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 用类名实例化一个空物体
+        /// </summary>
+        public GameObjectEntity Instantiate(string name)
+        {
+            DestroyGameObject();
+            gameObject = new GameObject(name);
+            transform = gameObject.transform;
+            transform.Default();
+            return this;
+        }
+
+        /// <summary>
+        /// 用类名实例化一个空物体
+        /// </summary>
+        public GameObjectEntity Instantiate(string name,Transform parent)
+        {
+            Instantiate(name);
+            transform.SetParent(parent);
+            return this;
+        }
+        /// <summary>
+        /// 用类名实例化一个空物体
+        /// </summary>
+        public GameObjectEntity Instantiate(string name,GameObjectEntity parent)
+        {
+            Instantiate(name);
+            transform.SetParent(parent.transform);
+            return this;
+        }
+
+
+        /// <summary>
+        /// 用类名实例化一个空物体
+        /// </summary>
+        public GameObjectEntity Instantiate<T>() where T : class => Instantiate(typeof(T).Name);
+
+        /// <summary>
+        /// 用类名实例化一个空物体
+        /// </summary>
+        public GameObjectEntity Instantiate<T>(Transform parent) where T : class => Instantiate(typeof(T).Name, parent);
+       
+        /// <summary>
+        /// 用类名实例化一个空物体
+        /// </summary>
+        public GameObjectEntity Instantiate<T>(GameObjectEntity parent) where T : class => Instantiate(typeof(T).Name, parent);
+
+
+        /// <summary>
         /// 尝试实例化预制体
         /// </summary>
-        public bool TryInstantiate(GameObject prefab,out GameObject obj)
+        public bool TryInstantiate(GameObject prefab, out GameObject obj)
         {
             if (prefab)
             {
-                if (gameObject != null) pool?.Recycle(gameObject);
-
+                DestroyGameObject();
                 pool = this.GamePoolManager().GetPool(prefab);
                 gameObject = pool.Get();
                 transform = gameObject.transform;
@@ -48,6 +113,8 @@ namespace WorldTree
             }
         }
 
+
+
         /// <summary>
         /// 实例化
         /// </summary>
@@ -55,20 +122,20 @@ namespace WorldTree
         {
             if (prefab)
             {
-                if (gameObject != null) pool?.Recycle(gameObject);
+                DestroyGameObject();
                 pool = this.GamePoolManager().GetPool(prefab);
                 gameObject = pool.Get();
                 transform = gameObject.transform;
             }
             return this;
         }
-        
+
         /// <summary>
         /// 实例化
         /// </summary>
         public GameObjectEntity Instantiate(GameObject prefab, Transform parent)
         {
-            if (TryInstantiate(prefab,out GameObject gameObject))
+            if (TryInstantiate(prefab, out GameObject gameObject))
             {
                 gameObject.transform.SetParent(parent);
             }
@@ -92,7 +159,7 @@ namespace WorldTree
     {
         public override void OnRemove(GameObjectEntity self)
         {
-            self.pool?.Recycle(self.gameObject);
+            self.DestroyGameObject();
             self.gameObject = null;
             self.transform = null;
             self.pool = null;

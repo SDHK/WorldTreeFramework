@@ -6,7 +6,7 @@ namespace WorldTree
     {
 
         /// <summary>
-        /// 添加游戏对象实体
+        /// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
         /// </summary>
         public static async AsyncTask<T> AddGameObjectEntity<T>(this Entity self)
         where T : Entity
