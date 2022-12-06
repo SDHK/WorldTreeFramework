@@ -12,7 +12,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WorldTree
+namespace EditorTool
 {
     /// <summary>
     /// 实体绑定Mono工具

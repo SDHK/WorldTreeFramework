@@ -17,7 +17,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.TextCore.Text;
 
-namespace WorldTree
+namespace EditorTool
 {
     /// <summary>
     /// 编辑字段的所有类型枚举

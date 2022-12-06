@@ -11,7 +11,7 @@
 using Sirenix.OdinInspector;
 using System;
 
-namespace WorldTree
+namespace EditorTool
 {
 
     /// <summary>

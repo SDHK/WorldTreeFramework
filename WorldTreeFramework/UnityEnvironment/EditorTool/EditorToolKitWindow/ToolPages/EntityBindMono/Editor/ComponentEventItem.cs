@@ -10,8 +10,9 @@
 
 using Sirenix.OdinInspector;
 using System;
+using UnityEngine;
 
-namespace WorldTree
+namespace EditorTool
 {
     [Serializable]
     public class ComponentEventItem

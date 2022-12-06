@@ -10,8 +10,9 @@
 
 using UnityEditor;
 using UnityEngine;
+using WorldTree;
 
-namespace WorldTree
+namespace EditorTool
 {
     /// <summary>
     /// 世界树框架编辑器驱动窗口

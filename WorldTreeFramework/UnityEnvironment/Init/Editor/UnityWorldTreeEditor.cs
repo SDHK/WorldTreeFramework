@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using WorldTree;
 
-
-namespace WorldTree
+namespace EditorTool
 {
 
     [CustomEditor(typeof(UnityWorldTree))] 

@@ -9,8 +9,9 @@
 */
 
 using UnityEditor;
+using WorldTree;
 
-namespace WorldTree
+namespace EditorTool
 {
 
     /// <summary>

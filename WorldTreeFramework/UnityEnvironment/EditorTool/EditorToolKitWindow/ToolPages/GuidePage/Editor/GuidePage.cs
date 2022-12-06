@@ -11,8 +11,9 @@
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEngine;
+using WorldTree;
 
-namespace WorldTree
+namespace EditorTool
 {
     public class OdinMenuEditorItem : Entity
     {

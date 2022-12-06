@@ -9,8 +9,9 @@
 */
 using UnityEditor;
 using UnityEngine;
+using WorldTree;
 
-namespace WorldTree
+namespace EditorTool
 {
     public class EditorHomePage : Entity
     {

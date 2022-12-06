@@ -16,8 +16,9 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using WorldTree;
 
-namespace WorldTree
+namespace EditorTool
 {
 
     /// <summary>

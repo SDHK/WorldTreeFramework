@@ -12,8 +12,9 @@
 */
 
 using UnityEditor;
+using WorldTree;
 
-namespace WorldTree
+namespace EditorTool
 {
     /// <summary>
     /// 继承Mono的编辑器窗体

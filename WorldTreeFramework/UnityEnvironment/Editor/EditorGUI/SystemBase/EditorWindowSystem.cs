@@ -11,8 +11,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WorldTree;
 
-namespace WorldTree
+namespace EditorTool
 {
     public interface IEditorWindowEnableSystem : ISendSystem { }
 

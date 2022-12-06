@@ -23,7 +23,7 @@ namespace WorldTree
     class _InitialDomain : AddSystem<InitialDomain>
     {
 
-        public override async void OnAdd(InitialDomain self)
+        public override  void OnAdd(InitialDomain self)
         {
             World.Log("初始域启动！");
 

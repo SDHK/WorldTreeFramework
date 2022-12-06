@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WorldTree
+namespace EditorTool
 {
     [Serializable]
     public class ComponentBindItem
@@ -55,18 +55,15 @@ namespace WorldTree
         public void Refresh()
         {
             eventTags.Clear();
-            foreach (var name in GetEventName(component))
+
+            if (Script.EventNames.TryGetValue(component.GetType(), out string[] names))
             {
-                eventTags.Add(new ComponentEventItem() { eventName = name });
+                foreach (var name in names)
+                {
+                    eventTags.Add(new ComponentEventItem() { eventName = name });
+                }
             }
         }
-
-        public List<string> GetEventName(Component component) => component.GetType().Name switch
-        {
-            "Button" => new List<string>() { "OnClick" },
-            "InputField" => new List<string>() { "OnValueChanged", "OnSubmit", "OnEndEdit" },
-            _ => new List<string>()
-        };
     }
 
 }

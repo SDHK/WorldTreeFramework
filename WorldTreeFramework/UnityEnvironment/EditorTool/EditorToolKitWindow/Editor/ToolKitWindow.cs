@@ -16,7 +16,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-namespace WorldTree
+namespace EditorTool
 {
     public class ToolKitWindow : OdinMenuEditorWindow
     {

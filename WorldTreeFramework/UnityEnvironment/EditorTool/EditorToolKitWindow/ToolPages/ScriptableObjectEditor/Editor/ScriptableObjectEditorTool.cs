@@ -14,7 +14,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace WorldTree
+namespace EditorTool
 {
     /// <summary>
     /// ScriptableObject编辑器工具

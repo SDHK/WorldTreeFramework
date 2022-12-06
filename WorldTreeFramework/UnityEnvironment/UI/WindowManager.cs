@@ -139,15 +139,12 @@ namespace WorldTree
         public override async void OnAdd(WindowManager self)
         {
             World.Log("WindowManager启动!!!");
+            self.gameObject = self.AddComponent<GameObjectEntity>().Instantiate<WindowManager>();
 
-          
             //预制体测试
-            await self.AddGameObjectEntity<MainWindow>();
+            await self.AddGameObjectEntity<MainWindow>(self.gameObject);
         }
     }
-
-    //空节点测试
-    //self.gameObject = self.AddComponent<GameObjectEntity>().Instantiate<WindowManager>();
 
     class WindowManagerUpdateSystem : UpdateSystem<WindowManager>
     {
