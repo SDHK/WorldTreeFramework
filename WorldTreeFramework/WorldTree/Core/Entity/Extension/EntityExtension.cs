@@ -12,6 +12,18 @@
 
             str += t1 + $"[{entity.id}] " + entity.ToString() + "\n";
 
+            if (entity.components != null)
+            {
+                if (entity.components.Count > 0)
+                {
+                    str += t1 + "   Components:\n";
+                    foreach (var item in entity.Components.Values)
+                    {
+                        str += item.ToStringDrawTree(t1);
+                    }
+                }
+            }
+
             if (entity.children != null)
             {
                 if (entity.children.Count > 0)
@@ -24,17 +36,7 @@
                 }
             }
 
-            if (entity.components != null)
-            {
-                if (entity.components.Count > 0)
-                {
-                    str += t1 + "   Components:\n";
-                    foreach (var item in entity.Components.Values)
-                    {
-                        str += item.ToStringDrawTree(t1);
-                    }
-                }
-            }
+          
 
             return str;
         }

@@ -371,20 +371,6 @@ namespace EditorTool
 
         };
 
-        public static string GetFieldName(Component component)
-        {
-            return component.name + component.GetType().Name;
-        }
-
-        public static string GetField(Component component)
-        {
-            return $"public {component.GetType().Name} {GetFieldName(component)};";
-        }
-        public static string GetFieldBind(Component component, int index)
-        {
-            return $"self.{component.name}{component.GetType().Name} = self.monoObject.components[{index}] as {component.GetType().Name};";
-        }
-
         public static Dictionary<Type, string[]> EventNames = new Dictionary<Type, string[]>()
         {
             [typeof(InputField)] = new string[] { "OnValueChanged", "OnSubmit", "OnEndEdit" },
@@ -405,6 +391,21 @@ namespace EditorTool
             [typeof(Toggle)] = new string[] { ".onValueChanged.AddListener({0})" },
             [typeof(Button)] = new string[] { ".onClick.AddListener({0})" },
         };
+
+
+        public static string GetFieldName(Component component)
+        {
+            return component.name + component.GetType().Name;
+        }
+
+        public static string GetField(Component component)
+        {
+            return $"public {component.GetType().Name} {GetFieldName(component)};";
+        }
+        public static string GetFieldBind(Component component, int index)
+        {
+            return $"self.{component.name}{component.GetType().Name} = self.monoObject.components[{index}] as {component.GetType().Name};";
+        }
     }
 
 }

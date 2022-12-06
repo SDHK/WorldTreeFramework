@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
 
 namespace EditorTool
@@ -94,11 +96,12 @@ namespace EditorTool
                 {
                     if (!monoBindEntityTool.groups.Any(item => item.objects.Any((item) => item.monoObject == monoObject || item.monoObject.name == monoObject.name)))
                     {
+                        AddressableAssetSettingsDefaultObject.Settings.CreateOrMoveEntry(AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(monoObject.gameObject)).ToString(),AddressableAssetSettingsDefaultObject.Settings.DefaultGroup).SetAddress(monoObject.gameObject.name);
                         objects.Add(new ObjectBindItem() { monoObject = monoObject, objectBindGroup = this });
                     }
                     else
                     {
-                        Debug.Log($"{monoObject.name} 已存在");
+                        Debug.Log($"{monoObject.gameObject.name} 已存在");
                     }
                 }
                 addMonoObjects.Clear();
