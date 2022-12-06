@@ -12,6 +12,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace EditorTool
@@ -43,7 +44,7 @@ namespace EditorTool
         {
             IsShow = true;
         }
-        [GUIColor(1, 0, 0)]
+        [GUIColor(1, 1, 0)]
         [ShowIf("@objects.Count > 0&&IsShow")]
         [HorizontalGroup("A", width: 100)]
         [Button("对象列表", ButtonSizes.Medium)]
@@ -56,7 +57,7 @@ namespace EditorTool
         [ShowIf("@objects.Count > 0&&IsShow")]
         [LabelText("对象列表")]
         [Searchable]
-        [ListDrawerSettings(Expanded = true, HideAddButton = true)]
+        [ListDrawerSettings(Expanded = true, HideAddButton = true, CustomRemoveElementFunction = "RemoveButton")]
         public List<ObjectBindItem> objects = new List<ObjectBindItem>();
 
 
@@ -93,7 +94,7 @@ namespace EditorTool
                 {
                     if (!monoBindEntityTool.groups.Any(item => item.objects.Any((item) => item.monoObject == monoObject || item.monoObject.name == monoObject.name)))
                     {
-                        objects.Add(new ObjectBindItem() { monoObject = monoObject,objectBindGroup =this });
+                        objects.Add(new ObjectBindItem() { monoObject = monoObject, objectBindGroup = this });
                     }
                     else
                     {
@@ -102,6 +103,29 @@ namespace EditorTool
                 }
                 addMonoObjects.Clear();
             }
+        }
+
+        public bool RemoveButton(ObjectBindItem objectBindItem)
+        {
+            if (EditorUtility.DisplayDialog($"删除类型 {objectBindItem.monoObject.gameObject.name} ", $"确定要删除 {objectBindItem.monoObject.gameObject.name} 类吗？", "✔", "❌"))
+            {
+                objects.Remove(objectBindItem);
+                objectBindItem.DeleteBindScript();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void RemoveGroup()
+        {
+            foreach (var item in objects)
+            {
+                item.DeleteBindScript();
+            }
+            objects.Clear();
         }
 
     }

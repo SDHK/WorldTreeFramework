@@ -142,7 +142,7 @@ namespace WorldTree
             self.gameObject = self.AddComponent<GameObjectEntity>().Instantiate<WindowManager>();
 
             //预制体测试
-            await self.AddGameObjectEntity<MainWindow>(self.gameObject);
+            //await self.AddGameObjectEntity<MainWindow>(self.gameObject);
         }
     }
 

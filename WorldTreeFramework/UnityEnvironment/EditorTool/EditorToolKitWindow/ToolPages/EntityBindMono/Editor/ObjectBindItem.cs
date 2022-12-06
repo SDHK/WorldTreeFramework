@@ -53,21 +53,15 @@ namespace EditorTool
             CreateBindViewScript();
         }
 
-        public void DeleteScript()
-        {
 
-        }
 
         [ReadOnly]
         [HideLabel]
         [HorizontalGroup("A/B")]
         public UnityEngine.Object entityScript;
 
-        [ReadOnly]
-        [HideLabel]
-        [HorizontalGroup("A/B")]
+        [HideInInspector]
         public UnityEngine.Object entityViewScript;
-
         [HideInInspector]
         public UnityEngine.Object entityEventScript;
 
@@ -79,7 +73,7 @@ namespace EditorTool
         {
             IsShow = true;
         }
-        [GUIColor(1, 0, 0)]
+        [GUIColor(1, 1, 0)]
         [ShowIf("@IsShow&&components.Count>0")]
         [HorizontalGroup("A", width: 150)]
         [Button("组件列表", ButtonSizes.Medium)]
@@ -134,6 +128,16 @@ namespace EditorTool
                 components = newComponents;
             }
         }
+
+        public void DeleteBindScript()
+        {
+            string path = objectBindGroup.monoBindEntityTool.CreateFilePath + $"/{monoObject.gameObject.name}";
+            if (Directory.Exists(path))
+            {
+                AssetDatabase.DeleteAsset(path);
+            }
+        }
+
 
         public void CreateBindScript()
         {
@@ -210,7 +214,7 @@ namespace EditorTool
             return keyValues;
         }
 
-       
+
 
 
         public void CreateBindEventScript()
@@ -348,7 +352,6 @@ namespace EditorTool
 
     public static class Script
     {
-
         public static Dictionary<string, HashSet<Type>> usings = new Dictionary<string, HashSet<Type>>()
         {
             ["using UnityEngine.UI;"] = new HashSet<Type> {
@@ -381,26 +384,6 @@ namespace EditorTool
         {
             return $"self.{component.name}{component.GetType().Name} = self.monoObject.components[{index}] as {component.GetType().Name};";
         }
-
-        //public static string GetEventMethodString(ComponentBindItem component)
-        //{
-        //    foreach (var component in components)
-
-        //        StringBuilder builder = new StringBuilder();
-        //    if (Script.EventStrings.TryGetValue(component.component.GetType(), out string[] EventStrings))
-        //    {
-        //        for (int i = 0; i < EventStrings.Length; i++)
-        //        {
-        //            if (component.eventTags[i].bit)
-        //            {
-        //                builder.AppendLine($"        public void {GetFieldName(component.component)}{EventStrings[i]}");
-        //                builder.AppendLine("        {\n");
-        //                builder.AppendLine("        }");
-        //            }
-        //        }
-        //    }
-        //    return builder.ToString();
-        //}
 
         public static Dictionary<Type, string[]> EventNames = new Dictionary<Type, string[]>()
         {

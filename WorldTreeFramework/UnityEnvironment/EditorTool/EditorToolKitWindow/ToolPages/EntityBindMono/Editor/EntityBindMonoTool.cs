@@ -10,6 +10,7 @@
 
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace EditorTool
@@ -30,12 +31,25 @@ namespace EditorTool
         [ShowIf("@Update()")]
         [LabelText("分组")]
         [Searchable]
-        [ListDrawerSettings(Expanded = true, CustomAddFunction = "AddButton")]
+        [ListDrawerSettings(Expanded = true, CustomAddFunction = "AddButton",CustomRemoveElementFunction ="RemoveButton")]
         public List<ObjectBindGroup> groups = new List<ObjectBindGroup>();
 
         public ObjectBindGroup AddButton()
         {
             return new ObjectBindGroup() { monoBindEntityTool = this };
+        }
+        public bool RemoveButton(ObjectBindGroup objectBindGroup)
+        {
+            if (EditorUtility.DisplayDialog($"删除组 {objectBindGroup.groupName} ", $"确定要删除 {objectBindGroup.groupName} 组吗？", "✔", "❌"))
+            {
+                objectBindGroup.RemoveGroup();
+                groups.Remove(objectBindGroup);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private bool Update()

@@ -38,7 +38,7 @@ namespace EditorTool
         {
             IsShow = true;
         }
-        [GUIColor(1, 0, 0)]
+        [GUIColor(1, 1, 0)]
         [ShowIf("@IsShow&&eventTags.Count>0")]
         [HorizontalGroup("A", width: 150)]
         [Button("事件绑定", ButtonSizes.Medium)]
