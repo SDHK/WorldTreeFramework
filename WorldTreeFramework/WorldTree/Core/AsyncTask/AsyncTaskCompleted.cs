@@ -19,10 +19,7 @@ namespace WorldTree
     public class AsyncTaskCompleted : Entity, ICriticalNotifyCompletion
     {
         [DebuggerHidden]
-        public AsyncTaskCompleted GetAwaiter()
-        {
-            return this;
-        }
+        public AsyncTaskCompleted GetAwaiter() => this;
 
         [DebuggerHidden]
         public bool IsCompleted => true;

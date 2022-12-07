@@ -29,7 +29,8 @@ namespace WorldTree
 
             //GameObject gameObject = await self.AddressablesInstantiateAsync("MainWindow");
 
-            //World.Log(gameObject.name);
+
+            self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
 
         }
     }

@@ -248,6 +248,13 @@ namespace EditorTool
             }
             builder.AppendLine("\t\t}");
             builder.AppendLine("\t}");
+            //builder.AppendLine($"\tclass {monoObject.gameObject.name}_RemoveEventSystem : RemoveSystem<{monoObject.gameObject.name}>");
+            //builder.AppendLine("\t{");
+            //builder.AppendLine($"\t\tpublic override void OnRemove({monoObject.gameObject.name} self)");
+            //builder.AppendLine("\t\t{");
+            //builder.AppendLine($"\t\t\tself.Parent.Dispose();");
+            //builder.AppendLine("\t\t}");
+            //builder.AppendLine("\t}");
             builder.AppendLine("}");
 
             string path = objectBindGroup.monoBindEntityTool.CreateFilePath + $"/{monoObject.gameObject.name}/" + $"{monoObject.gameObject.name}_AddEventSystem.cs";
@@ -354,6 +361,9 @@ namespace EditorTool
     {
         public static Dictionary<string, HashSet<Type>> usings = new Dictionary<string, HashSet<Type>>()
         {
+            ["using UnityEngine;"] = new HashSet<Type>{
+                typeof(CanvasGroup),
+            },
             ["using UnityEngine.UI;"] = new HashSet<Type> {
                 typeof(Image),
                 typeof(RawImage),
@@ -366,7 +376,6 @@ namespace EditorTool
 
                 typeof(ScrollRect),
 
-                typeof(CanvasGroup),
             },
 
         };

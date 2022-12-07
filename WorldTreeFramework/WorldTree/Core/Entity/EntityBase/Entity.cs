@@ -82,10 +82,17 @@ namespace WorldTree
             RemoveAllComponent();
         }
 
+        public T FindParent<T>()
+        where T : Entity
+        {
+            TryFindParent(out T parent);
+            return parent;
+        }
+
         /// <summary>
         /// 尝试向上查找父物体
         /// </summary>
-        public bool TryGetParent<T>(out T parent)
+        public bool TryFindParent<T>(out T parent)
         where T : Entity
         {
             parent = null;
@@ -138,8 +145,8 @@ namespace WorldTree
         {
             if (!IsRecycle)//是否已经回收
             {
-                Root.Remove(this);//全局通知移除
                 RemoveInParent();//从父节点中移除
+                Root.Remove(this);//全局通知移除
                 //DisposeDomain();//清除域节点
                 Parent = null;//清除父节点
 

@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace WorldTree
@@ -33,46 +34,37 @@ namespace WorldTree
     //思考Manager的全局广播和监听功能
     public class WindowManager : Entity
     {
-        public UnitDictionary<Type, Entity> allWindows = new UnitDictionary<Type, Entity>();
+        //public UnitDictionary<Type, Entity> windows = new UnitDictionary<Type, Entity>();
 
         public UnitDictionary<Type, Entity> windows = new UnitDictionary<Type, Entity>();
-        public UnitList<Entity> windowList = new UnitList<Entity>();
-
-        //栈顶
-        public Entity topPage;
-        //栈底
-        public Entity rootPage;
+        public Stack<Entity> windowStack = new Stack<Entity>();
 
         public GameObjectEntity gameObject;
 
-
         private void PushWindow(Entity entity)
         {
-            if (!windows.ContainsKey(entity.GetType()))
-            {
-                windows.Add(entity.GetType(), entity);
-                windowList.Add(entity);
 
-                topPage?.SendSystem<IWindowLostFocusSystem>();
-                topPage = entity;//栈顶切换
-                topPage?.SendSystem<IWindowFocusSystem>();
+            if (!windows.ContainsKey(entity.Type))
+            {
+                windows.Add(entity.Type, entity);
+
+                if (windowStack.Count != 0) windowStack.Peek()?.SendSystem<IWindowLostFocusSystem>();
+
+                windowStack.Push(entity);
+
+                entity?.SendSystem<IWindowFocusSystem>();
             }
         }
 
         private Entity PopWindow()
         {
             Entity entity = null;
-            if (windowList.Count != 0)
+            if (windowStack.Count != 0)
             {
-                if (topPage != null)
-                {
-                    topPage?.SendSystem<IWindowLostFocusSystem>();
-                    windowList.Remove(topPage);
-                    windows.Remove(topPage.GetType());
-                    entity = topPage;
-                    topPage = windowList[windowList.Count - 1];//栈顶切换
-                    topPage?.SendSystem<IWindowFocusSystem>();
-                }
+                entity = windowStack.Pop();
+                windows.Remove(entity.Type);
+                entity?.SendSystem<IWindowLostFocusSystem>();
+                if (windowStack.Count != 0) windowStack.Peek()?.SendSystem<IWindowFocusSystem>();
             }
             return entity;
         }
@@ -81,54 +73,56 @@ namespace WorldTree
         /// <summary>
         /// 打开窗口
         /// </summary>
-        public T Show<T>()
+        public async AsyncTask<T> Show<T>()
             where T : Entity
         {
             if (windows.TryGetValue(typeof(T), out Entity entity))
             {
-                while (entity.id != windowList[windowList.Count - 1].id)
+                while (windowStack.Count != 0 ? windowStack.Peek().id != entity.id : false)
                 {
-                    PopWindow().Dispose();
+                    PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
                 }
+                await this.AsyncYield();
             }
             else
             {
-                entity = AddComponent<T>();
+                entity = await this.AddGameObjectEntity<T>(gameObject);
                 PushWindow(entity);
             }
             return entity as T;
         }
 
-        ///// <summary>
-        ///// 关闭窗口
-        ///// </summary>
-        //public void Close<T>()
-        //   where T : Entity
-        //{
-        //    if (windows.TryGetValue(typeof(T), out Entity entity))
-        //    {
-        //        while (entity.id != windowList[windowList.Count - 1].id)
-        //        {
-        //            PopWindow();
-        //        }
-        //    }
-        //}
+        /// <summary>
+        /// 关闭窗口
+        /// </summary>
+        public void Dispose<T>()
+           where T : Entity
+        {
+            if (windows.TryGetValue(typeof(T), out Entity entity))
+            {
+                while (windowStack.Count != 0 ? windowStack.Peek().id != entity.id : false)
+                {
+                    PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
+                }
+                PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
+            }
+        }
 
         /// <summary>
         /// 关闭栈顶
         /// </summary>
         public void CloseTop()
         {
-            PopWindow();
+            PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
         }
         /// <summary>
         /// 关闭全部
         /// </summary>
         public void CloseAll()
         {
-            while (windowList.Count != 0)
+            while (windowStack.Count != 0)
             {
-                PopWindow();
+                PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
             }
         }
     }
@@ -136,13 +130,10 @@ namespace WorldTree
 
     class WindowManagerAddSystem : AddSystem<WindowManager>
     {
-        public override async void OnAdd(WindowManager self)
+        public override void OnAdd(WindowManager self)
         {
             World.Log("WindowManager启动!!!");
             self.gameObject = self.AddComponent<GameObjectEntity>().Instantiate<WindowManager>();
-
-            //预制体测试
-            //await self.AddGameObjectEntity<MainWindow>(self.gameObject);
         }
     }
 
@@ -150,7 +141,7 @@ namespace WorldTree
     {
         public override void Update(WindowManager self, float deltaTime)
         {
-            //self.topPage?.SendSystem<IWindowFocusUpdateSystem, float>(deltaTime);
+
         }
     }
 
