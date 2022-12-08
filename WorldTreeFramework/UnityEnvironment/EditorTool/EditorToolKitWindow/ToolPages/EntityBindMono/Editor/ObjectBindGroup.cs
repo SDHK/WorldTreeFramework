@@ -22,10 +22,6 @@ namespace EditorTool
     [Serializable]
     public class ObjectBindGroup
     {
-
-        [HideInInspector]
-        public EntityBindMonoTool monoBindEntityTool = null;
-
         [HideInInspector]
         public bool IsShow = true;
 
@@ -67,7 +63,6 @@ namespace EditorTool
         public void UpdateRefresh()
         {
             DeleteNull();
-            AddList();
         }
 
         //检测删除Null组件，同时提供Update刷新
@@ -84,27 +79,6 @@ namespace EditorTool
                 {
                     objects.RemoveAt(i);
                 }
-            }
-        }
-
-        //检测添加组件
-        private void AddList()
-        {
-            if (addMonoObjects.Count > 0)
-            {
-                foreach (var monoObject in addMonoObjects)
-                {
-                    if (!monoBindEntityTool.groups.Any(item => item.objects.Any((item) => item.monoObject == monoObject || item.monoObject.name == monoObject.name)))
-                    {
-                        AddressableAssetSettingsDefaultObject.Settings.CreateOrMoveEntry(AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(monoObject.gameObject)).ToString(),AddressableAssetSettingsDefaultObject.Settings.DefaultGroup).SetAddress(monoObject.gameObject.name);
-                        objects.Add(new ObjectBindItem() { monoObject = monoObject, objectBindGroup = this });
-                    }
-                    else
-                    {
-                        Debug.Log($"{monoObject.gameObject.name} 已存在");
-                    }
-                }
-                addMonoObjects.Clear();
             }
         }
 

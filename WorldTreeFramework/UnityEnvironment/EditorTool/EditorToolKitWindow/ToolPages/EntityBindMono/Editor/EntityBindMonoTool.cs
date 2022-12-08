@@ -10,7 +10,9 @@
 
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
+using UnityEditor.AddressableAssets;
 using UnityEngine;
 
 namespace EditorTool
@@ -27,16 +29,20 @@ namespace EditorTool
         [LabelText("生成脚本路径"), LabelWidth(100)]
         public string CreateFilePath;
 
+        /// <summary>
+        /// 路径
+        /// </summary>
+        public static string FilePath;
 
         [ShowIf("@Update()")]
         [LabelText("分组")]
         [Searchable]
-        [ListDrawerSettings(Expanded = true, CustomAddFunction = "AddButton",CustomRemoveElementFunction ="RemoveButton")]
+        [ListDrawerSettings(Expanded = true, CustomAddFunction = "AddButton", CustomRemoveElementFunction = "RemoveButton")]
         public List<ObjectBindGroup> groups = new List<ObjectBindGroup>();
 
         public ObjectBindGroup AddButton()
         {
-            return new ObjectBindGroup() { monoBindEntityTool = this };
+            return new ObjectBindGroup();
         }
         public bool RemoveButton(ObjectBindGroup objectBindGroup)
         {
@@ -54,11 +60,34 @@ namespace EditorTool
 
         private bool Update()
         {
+            FilePath = CreateFilePath;
             foreach (var item in groups)
             {
                 item.UpdateRefresh();
+                AddList(item);
             }
             return true;
+        }
+
+        private void AddList(ObjectBindGroup group)
+        {
+
+            if (group.addMonoObjects.Count > 0)
+            {
+                foreach (var monoObject in group.addMonoObjects)
+                {
+                    if (!groups.Any(item => item.objects.Any((item) => item.monoObject == monoObject || item.monoObject.name == monoObject.name)))
+                    {
+                        AddressableAssetSettingsDefaultObject.Settings.CreateOrMoveEntry(AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(monoObject.gameObject)).ToString(), AddressableAssetSettingsDefaultObject.Settings.DefaultGroup).SetAddress(monoObject.gameObject.name);
+                        group.objects.Add(new ObjectBindItem() { monoObject = monoObject});
+                    }
+                    else
+                    {
+                        Debug.Log($"{monoObject.gameObject.name} 已存在");
+                    }
+                }
+                group.addMonoObjects.Clear();
+            }
         }
     }
 
