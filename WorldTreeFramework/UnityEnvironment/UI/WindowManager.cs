@@ -9,9 +9,7 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace WorldTree
 {
@@ -25,50 +23,12 @@ namespace WorldTree
     }
 
 
-    //动画？
-    //焦点进入，焦点离开，焦点Update
-    //UI Update
-
-    //Update系统，思考时间参数的必要
-
-    //思考Manager的全局广播和监听功能
     public class WindowManager : Entity
     {
-        //public UnitDictionary<Type, Entity> windows = new UnitDictionary<Type, Entity>();
-
         public UnitDictionary<Type, Entity> windows = new UnitDictionary<Type, Entity>();
         public Stack<Entity> windowStack = new Stack<Entity>();
 
         public GameObjectEntity gameObject;
-
-        private void PushWindow(Entity entity)
-        {
-
-            if (!windows.ContainsKey(entity.Type))
-            {
-                windows.Add(entity.Type, entity);
-
-                if (windowStack.Count != 0) windowStack.Peek()?.SendSystem<IWindowLostFocusSystem>();
-
-                windowStack.Push(entity);
-
-                entity?.SendSystem<IWindowFocusSystem>();
-            }
-        }
-
-        private Entity PopWindow()
-        {
-            Entity entity = null;
-            if (windowStack.Count != 0)
-            {
-                entity = windowStack.Pop();
-                windows.Remove(entity.Type);
-                entity?.SendSystem<IWindowLostFocusSystem>();
-                if (windowStack.Count != 0) windowStack.Peek()?.SendSystem<IWindowFocusSystem>();
-            }
-            return entity;
-        }
-
 
         /// <summary>
         /// 打开窗口
@@ -78,19 +38,37 @@ namespace WorldTree
         {
             if (windows.TryGetValue(typeof(T), out Entity entity))
             {
+                if (windowStack.TryPeek(out Entity outEntity))
+                {
+                    outEntity?.SendSystem<IWindowLostFocusSystem>();
+                }
                 while (windowStack.Count != 0 ? windowStack.Peek().id != entity.id : false)
                 {
-                    PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
+                    outEntity = windowStack.Pop();
+                    windows.Remove(outEntity.Type);
+                    outEntity.ParentTo<GameObjectEntity>()?.Dispose();
                 }
+                entity?.SendSystem<IWindowFocusSystem>();
+
                 await this.AsyncYield();
             }
             else
             {
                 entity = await this.AddGameObjectEntity<T>(gameObject);
-                PushWindow(entity);
+
+                windows.Add(entity.Type, entity);
+
+                if (windowStack.TryPeek(out Entity topEntity))
+                {
+                    topEntity?.SendSystem<IWindowLostFocusSystem>();
+                }
+                windowStack.Push(entity);
+
+                entity?.SendSystem<IWindowFocusSystem>();
             }
             return entity as T;
         }
+
 
         /// <summary>
         /// 关闭窗口
@@ -98,14 +76,67 @@ namespace WorldTree
         public void Dispose<T>()
            where T : Entity
         {
-            if (windows.TryGetValue(typeof(T), out Entity entity))
+            if (windows.TryGetValue(typeof(T), out Entity targetEntity))
             {
-                while (windowStack.Count != 0 ? windowStack.Peek().id != entity.id : false)
+                if (windowStack.TryPeek(out Entity topEntity))
                 {
-                    PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
+                    topEntity?.SendSystem<IWindowLostFocusSystem>();
                 }
-                PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
+                while (windowStack.TryPop(out topEntity))
+                {
+                    if (topEntity.id == targetEntity.id)
+                    {
+                        windows.Remove(topEntity.Type);
+                        topEntity.ParentTo<GameObjectEntity>()?.Dispose();
+                        break;
+                    }
+                }
+                if (windowStack.TryPeek(out  topEntity))
+                {
+                    topEntity?.SendSystem<IWindowFocusSystem>();
+                }
             }
+        }
+
+        /// <summary>
+        /// 关闭栈顶
+        /// </summary>
+        public void DisposeTop()
+        {
+            if (windowStack.TryPop(out Entity outEntity))
+            {
+                windows.Remove(outEntity.Type);
+                outEntity?.SendSystem<IWindowLostFocusSystem>();
+                if (windowStack.TryPeek(out Entity topEntity))
+                {
+                    topEntity?.SendSystem<IWindowFocusSystem>();
+                }
+                outEntity.ParentTo<GameObjectEntity>()?.Dispose();
+            }
+        }
+        /// <summary>
+        /// 关闭全部
+        /// </summary>
+        public void DisposeAll()
+        {
+            if (windowStack.TryPeek(out Entity topEntity))
+            {
+                topEntity?.SendSystem<IWindowFocusSystem>();
+            }
+            while (windowStack.TryPop(out topEntity))
+            {
+                topEntity.ParentTo<GameObjectEntity>()?.Dispose();
+            }
+        }
+
+
+        /// <summary>
+        /// 关闭窗口
+        /// </summary>
+        public void Close<T>()
+           where T : Entity
+        {
+
         }
 
         /// <summary>
@@ -113,17 +144,6 @@ namespace WorldTree
         /// </summary>
         public void CloseTop()
         {
-            PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
-        }
-        /// <summary>
-        /// 关闭全部
-        /// </summary>
-        public void CloseAll()
-        {
-            while (windowStack.Count != 0)
-            {
-                PopWindow().ParentTo<GameObjectEntity>()?.Dispose();
-            }
         }
     }
 
@@ -141,7 +161,13 @@ namespace WorldTree
     {
         public override void Update(WindowManager self, float deltaTime)
         {
-
+            if (self.windowStack.Count != 0)
+            {
+                if (self.windowStack.TryPeek(out Entity entity))
+                {
+                    entity?.SendSystem<IWindowFocusUpdateSystem, float>(deltaTime);
+                }
+            }
         }
     }
 
