@@ -12,76 +12,75 @@
 * 从父节点开始反向向上查询实体是否存在。
 * 存在则存入字典。
 * 
-* 
-* 暂时无用！！！！！
-*
 */
 
 using System;
 
 namespace WorldTree
 {
-    //public abstract partial class Entity
-    //{
-    //    /// <summary>
-    //    /// 域节点
-    //    /// </summary>
-    //    public UnitDictionary<Type, Entity> domains;
+    public abstract partial class Entity
+    {
+        /// <summary>
+        /// 域节点:归0时回收，并设为null
+        /// </summary>
+        public UnitDictionary<Type, Entity> domains;
 
-    //    public UnitDictionary<Type, Entity> Domains
-    //    {
-    //        get
-    //        {
-    //            if (domains == null)
-    //            {
-    //                domains = Root.PoolGet<UnitDictionary<Type, Entity>>();
-    //            }
-    //            return domains;
-    //        }
-    //        set { domains = value; }
-    //    }
+        /// <summary>
+        /// 域节点:为null时从池里获取
+        /// </summary>
+        public UnitDictionary<Type, Entity> Domains
+        {
+            get
+            {
+                if (domains == null)
+                {
+                    domains = this.PoolGet<UnitDictionary<Type, Entity>>();
+                }
+                return domains;
+            }
+            set { domains = value; }
+        }
 
+        /// <summary>
+        /// 获取所有上层节点并存入字典
+        /// </summary>
+        public T GetDomain<T>()
+            where T : Entity
+        {
+            TryGetDomain(out T domain);
+            return domain;
+        }
 
+        /// <summary>
+        /// 获取所有上层节点并存入字典
+        /// </summary>
+        public bool TryGetDomain<T>(out T domain)
+            where T : Entity
+        {
 
-    //    /// <summary>
-    //    /// 获取所有上层节点并存入字典
-    //    /// </summary>
-    //    public bool TryGetDomain<T>(out T domain)
-    //        where T : Entity
-    //    {
+            if (Domains.TryGetValue(typeof(T), out Entity entity))
+            {
+                domain = entity as T;
+                return true;
+            }
+            else if (Domains.Count == 0)
+            {
+                entity = Parent;
+                while (entity != null)
+                {
+                    Domains.TryAdd(entity.GetType(), entity);
+                    entity = entity.Parent;
+                }
+                if (Domains.TryGetValue(typeof(T), out entity))
+                {
+                    domain = entity as T;
+                    return true;
+                }
+            }
 
-    //        if (Domains.TryGetValue(typeof(T), out Entity entity))
-    //        {
-    //            domain = entity as T;
-    //            return true;
-    //        }
-    //        else if (Domains.Count == 0)
-    //        {
-    //            entity = Parent;
-    //            while (entity != null)
-    //            {
-    //                Domains.TryAdd(entity.GetType(), entity);
-    //                entity = entity.Parent;
-    //            }
-    //            if (Domains.TryGetValue(typeof(T), out entity))
-    //            {
-    //                domain = entity as T;
-    //                return true;
-    //            }
-    //        }
+            domain = null;
+            return false;
+        }
 
-    //        domain = null;
-    //        return false;
-    //    }
-
-    //    /// <summary>
-    //    /// 清除并释放域字典
-    //    /// </summary>
-    //    public void DisposeDomain()
-    //    {
-    //        domains?.Clear();
-    //        domains?.Dispose();
-    //        domains = null;
-    //    }
-    //}
+    }
 }

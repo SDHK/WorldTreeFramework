@@ -101,6 +101,7 @@ namespace WorldTree
         /// 获取池
         /// </summary>
         public UnitPool GetPool<T>()
+        where T : class, IUnitPoolEventItem
         {
             Type type = typeof(T);
             return GetPool(type);
@@ -126,6 +127,7 @@ namespace WorldTree
         /// 释放池
         /// </summary>
         public void DisposePool<T>()
+        where T : class, IUnitPoolEventItem
         {
             Type type = typeof(T);
             if (pools.TryGetValue(type, out UnitPool pool))

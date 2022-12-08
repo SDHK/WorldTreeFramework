@@ -17,10 +17,13 @@ namespace WorldTree
     {
 
         /// <summary>
-        /// 子节点
+        /// 子节点:归0时回收，并设为null
         /// </summary>
         public UnitDictionary<long, Entity> children;
 
+        /// <summary>
+        /// 子节点:为null时从池里获取
+        /// </summary>
         public UnitDictionary<long, Entity> Children
         {
             get
@@ -46,6 +49,7 @@ namespace WorldTree
                 {
                     if (entity.Parent != null)
                     {
+                        entity.TraversalLevel(EntityExtension.DisposeDomain);
                         entity.RemoveInParent();
                         entity.Parent = this;
                         entity.isComponent = false;
@@ -134,7 +138,6 @@ namespace WorldTree
         }
 
 
-
         /// <summary>
         /// 移除子节点
         /// </summary>
@@ -142,26 +145,19 @@ namespace WorldTree
         {
             entity?.Dispose();
         }
+
         /// <summary>
         /// 移除全部子节点
         /// </summary>
         public void RemoveAllChildren()
         {
-            while (true)
+            while (children!=null? children.Count!=0:false)
             {
-                if (children != null)
-                    if (children.Count != 0)
-                    {
-                        var enumerator = children.Values.GetEnumerator();
-                        enumerator.MoveNext();
-                        Entity entity = enumerator.Current;
-                        enumerator.Dispose();
-                        entity.Dispose();
-                        //children.Values.GetEnumerator().Current.Dispose();
-                        //children.Last().Value?.Dispose();
-                        continue;
-                    }
-                break;
+                var enumerator = children.Values.GetEnumerator();
+                enumerator.MoveNext();
+                Entity entity = enumerator.Current;
+                enumerator.Dispose();
+                entity.Dispose();
             }
         }
 
@@ -179,7 +175,6 @@ namespace WorldTree
                 entity.SendSystem<IAwakeSystem<T1>, T1>(arg1);
                 Root.Add(entity);
             }
-
             return entity;
         }
 
@@ -190,7 +185,6 @@ namespace WorldTree
         public T AddChildren<T, T1, T2>(T1 arg1, T2 arg2)
         where T : Entity
         {
-
             T entity = Root.EntityPoolManager.Get<T>();
             if (Children.TryAdd(entity.id, entity))
             {
@@ -198,7 +192,6 @@ namespace WorldTree
                 entity.SendSystem<IAwakeSystem<T1, T2>, T1, T2>(arg1, arg2);
                 Root.Add(entity);
             }
-
             return entity;
         }
 
@@ -208,7 +201,6 @@ namespace WorldTree
         public T AddChildren<T, T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3)
         where T : Entity
         {
-
             T entity = Root.EntityPoolManager.Get<T>();
             if (Children.TryAdd(entity.id, entity))
             {
@@ -216,7 +208,6 @@ namespace WorldTree
                 entity.SendSystem<IAwakeSystem<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
                 Root.Add(entity);
             }
-
             return entity;
         }
 

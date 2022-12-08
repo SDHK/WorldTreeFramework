@@ -147,7 +147,7 @@ namespace WorldTree
             {
                 RemoveInParent();//从父节点中移除
                 Root.Remove(this);//全局通知移除
-                //DisposeDomain();//清除域节点
+                this.DisposeDomain();//清除域节点
                 Parent = null;//清除父节点
 
                 OnDispose();

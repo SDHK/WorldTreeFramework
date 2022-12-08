@@ -76,14 +76,15 @@ namespace WorldTree
 
         private void OnDestroy()
         {
+            root.Dispose();
+            root = null;
+
             enable = null;
             update = null;
             disable = null;
             lateUpdate = null;
             fixedUpdate = null;
             onGUI = null;
-            root.Dispose();
-            root = null;
         }
         
     }

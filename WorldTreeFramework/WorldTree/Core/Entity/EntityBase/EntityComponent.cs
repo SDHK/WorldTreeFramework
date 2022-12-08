@@ -21,11 +21,14 @@ namespace WorldTree
         public bool isComponent;
 
         /// <summary>
-        /// 组件节点
+        /// 组件节点:归0时回收，并设为null
         /// </summary>
         public UnitDictionary<Type, Entity> components;
 
 
+        /// <summary>
+        /// 子节点:为null时从池里获取
+        /// </summary>
         public UnitDictionary<Type, Entity> Components
         {
             get
@@ -53,11 +56,8 @@ namespace WorldTree
             if (!Components.TryGetValue(type, out Entity entity))
             {
                 component = Root.EntityPoolManager.Get<T>();
-
                 component.Parent = this;
-
                 component.isComponent = true;
-
                 components.Add(type, component);
                 component.SendSystem<IAwakeSystem>();
                 Root.Add(component);
@@ -87,6 +87,7 @@ namespace WorldTree
             return component;
         }
 
+
         /// <summary>
         /// 添加野组件或替换父节点  （替换：从原父节点移除，移除替换同类型的组件，不调用事件）
         /// </summary>
@@ -100,8 +101,8 @@ namespace WorldTree
 
                 if (component.Parent != null)//如果父节点存在从原父节点中移除加入到当前，不调用任何事件
                 {
+                    component.TraversalLevel(EntityExtension.DisposeDomain);
                     component.RemoveInParent();
-
                     Components.Add(type, component);
                     component.Parent = this;
                     component.isComponent = true;
@@ -164,8 +165,7 @@ namespace WorldTree
             else
             {
                 Type type = typeof(T);
-                Entity entity = null;
-                components.TryGetValue(type, out entity);
+                components.TryGetValue(type, out Entity entity);
                 return entity as T;
             }
         }
@@ -184,8 +184,7 @@ namespace WorldTree
             else
             {
                 Type type = typeof(T);
-                Entity entity = null;
-                if (components.TryGetValue(type, out entity))
+                if (components.TryGetValue(type, out Entity entity))
                 {
                     component = entity as T;
                     return true;
@@ -233,22 +232,13 @@ namespace WorldTree
         /// </summary>
         public void RemoveAllComponent()
         {
-            while (true)
+            while (components != null ? components.Count != 0 : false)
             {
-                if (components != null)
-                    if (components.Count != 0)
-                    {
-                        var enumerator = components.Values.GetEnumerator();
-                        enumerator.MoveNext();
-                        Entity entity = enumerator.Current;
-                        enumerator.Dispose();
-                        entity.Dispose();
-
-
-                        //components.Last().Value?.Dispose();
-                        continue;
-                    }
-                break;
+                var enumerator = components.Values.GetEnumerator();
+                enumerator.MoveNext();
+                Entity entity = enumerator.Current;
+                enumerator.Dispose();
+                entity.Dispose();
             }
         }
 
@@ -266,11 +256,8 @@ namespace WorldTree
             if (!Components.TryGetValue(type, out Entity entity))
             {
                 component = Root.EntityPoolManager.Get<T>();
-
                 component.Parent = this;
-
                 component.isComponent = true;
-
                 components.Add(type, component);
                 component.SendSystem<IAwakeSystem<T1>, T1>(arg1);
                 Root.Add(component);
@@ -279,7 +266,6 @@ namespace WorldTree
             {
                 component = entity as T;
             }
-
             return component;
         }
 
@@ -296,11 +282,8 @@ namespace WorldTree
             if (!Components.TryGetValue(type, out Entity entity))
             {
                 component = Root.EntityPoolManager.Get<T>();
-
                 component.Parent = this;
-
                 component.isComponent = true;
-
                 components.Add(type, component);
                 component.SendSystem<IAwakeSystem<T1, T2>, T1, T2>(arg1, arg2);
                 Root.Add(component);
@@ -309,7 +292,6 @@ namespace WorldTree
             {
                 component = entity as T;
             }
-
             return component;
         }
         /// <summary>
@@ -324,11 +306,8 @@ namespace WorldTree
             if (!Components.TryGetValue(type, out Entity entity))
             {
                 component = Root.EntityPoolManager.Get<T>();
-
                 component.Parent = this;
-
                 component.isComponent = true;
-
                 components.Add(type, component);
                 component.SendSystem<IAwakeSystem<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
                 Root.Add(component);
@@ -337,7 +316,6 @@ namespace WorldTree
             {
                 component = entity as T;
             }
-
             return component;
         }
 

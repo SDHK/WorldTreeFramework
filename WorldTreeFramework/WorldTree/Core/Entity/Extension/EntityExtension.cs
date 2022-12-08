@@ -1,7 +1,17 @@
 ﻿namespace WorldTree
 {
-    public  static partial class EntityExtension
+    public static partial class EntityExtension
     {
+        /// <summary>
+        /// 释放域
+        /// </summary>
+        public static void DisposeDomain(this Entity entity)
+        {
+            entity.domains?.Clear();
+            entity.domains?.Dispose();
+            entity.domains = null;
+        }
+
         /// <summary>
         /// 返回用字符串绘制的树
         /// </summary>
@@ -36,7 +46,7 @@
                 }
             }
 
-          
+
 
             return str;
         }
