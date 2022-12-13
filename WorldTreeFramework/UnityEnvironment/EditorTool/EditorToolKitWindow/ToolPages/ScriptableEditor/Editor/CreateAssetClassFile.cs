@@ -182,7 +182,7 @@ namespace EditorTool
             builder.AppendLine("using System.Collections.Generic;");
             builder.AppendLine("using UnityEngine;");
 
-            builder.AppendLine($"namespace {scriptableObjectEditor.nameSpace}");
+            builder.AppendLine($"namespace {ScriptableEditor.Inst.nameSpace}");
             builder.AppendLine("{");
             builder.AppendLine("    /// <summary>");
             builder.AppendLine($"    /// {Comment}");
@@ -223,7 +223,7 @@ namespace EditorTool
             builder.AppendLine("    }");
             builder.AppendLine("}");
 
-            string path = scriptableObjectEditor.CreateFilePath + $"/{ClassName}.cs";
+            string path = ScriptableEditor.Inst.CreateFilePath + $"/{ClassName}.cs";
             File.WriteAllText(path, builder.ToString());
             AssetDatabase.Refresh();
             monoScript = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
@@ -237,7 +237,7 @@ namespace EditorTool
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.AppendLine($"namespace {scriptableObjectEditor.nameSpace}");
+            builder.AppendLine($"namespace {ScriptableEditor.Inst.nameSpace}");
             builder.AppendLine("{");
             builder.AppendLine("    /// <summary>");
             builder.AppendLine($"    /// {ClassName}集合类");
@@ -245,7 +245,7 @@ namespace EditorTool
             builder.AppendLine($"   public partial class {ClassName}s:ListAssetBase<{ClassName}>" + "{}");
             builder.AppendLine("}");
 
-            string path = scriptableObjectEditor.CreateFilePath + $"/{ClassName}s.cs";
+            string path = ScriptableEditor.Inst.CreateFilePath + $"/{ClassName}s.cs";
             File.WriteAllText(path, builder.ToString());
             AssetDatabase.Refresh();
             monoListScript = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);

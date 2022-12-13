@@ -19,16 +19,17 @@ namespace WorldTree
     /// <summary>
     /// 初始域
     /// </summary>
-    public class InitialDomain : Entity { }
-    class _InitialDomain : AddSystem<InitialDomain>
+    public class InitialDomain : Entity
     {
 
-        public override  void OnAdd(InitialDomain self)
+    }
+    class _InitialDomain : AddSystem<InitialDomain>
+    {
+        public override void OnAdd(InitialDomain self)
         {
             World.Log("初始域启动！");
 
             //GameObject gameObject = await self.AddressablesInstantiateAsync("MainWindow");
-
 
             self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
 

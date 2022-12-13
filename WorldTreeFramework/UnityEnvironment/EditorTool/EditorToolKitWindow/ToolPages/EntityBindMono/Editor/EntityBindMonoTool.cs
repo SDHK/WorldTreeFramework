@@ -20,19 +20,15 @@ namespace EditorTool
     /// <summary>
     /// 实体绑定Mono工具
     /// </summary>
-    [CreateAssetMenu]
-    public class EntityBindMonoTool : ScriptableObject
+    [FilePath("Assets/SDHK/WorldTreeFramework/UnityEnvironment/EditorTool/EditorToolKitWindow/ToolPages/EntityBindMono/Assets/EntityBindMonoTool.asset")]
+
+    public class EntityBindMonoTool :ScriptableSingleton<EntityBindMonoTool>
     {
 
         [BoxGroup("路径")]
         [FolderPath(RequireExistingPath = true)]
         [LabelText("生成脚本路径"), LabelWidth(100)]
         public string CreateFilePath;
-
-        /// <summary>
-        /// 路径
-        /// </summary>
-        public static string FilePath;
 
         [ShowIf("@Update()")]
         [LabelText("分组")]
@@ -60,7 +56,6 @@ namespace EditorTool
 
         private bool Update()
         {
-            FilePath = CreateFilePath;
             foreach (var item in groups)
             {
                 item.UpdateRefresh();
@@ -71,7 +66,6 @@ namespace EditorTool
 
         private void AddList(ObjectBindGroup group)
         {
-
             if (group.addMonoObjects.Count > 0)
             {
                 foreach (var monoObject in group.addMonoObjects)

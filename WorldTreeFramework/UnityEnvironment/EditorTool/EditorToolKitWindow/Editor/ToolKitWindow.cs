@@ -8,6 +8,7 @@
 
 */
 
+
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -55,9 +56,10 @@ namespace EditorTool
         protected override OdinMenuTree BuildMenuTree()
         {
             var tree = new OdinMenuTree(true);
-            tree.AddAssetAtPath("关于", rootPath + "GuidePage/Assets/Page.asset").AddIcon(EditorIcons.Info);
-            tree.AddAssetAtPath("脚本对象编辑", rootPath + "ScriptableObjectEditor/Assets/Page.asset");
-            tree.AddAssetAtPath("实体绑定Mono", rootPath + "EntityBindMono/Assets/Page.asset");
+            tree.AddAssetAtPath("关于", GuidePage.Inst.FilePath).AddIcon(EditorIcons.Info);
+            tree.AddAssetAtPath("脚本工具", ScriptInitSetting.Inst.FilePath).AddIcon(EditorIcons.SingleUser);
+            tree.AddAssetAtPath("资源编辑器", ScriptableEditor.Inst.FilePath);
+            tree.AddAssetAtPath("实体绑定Mono", EntityBindMonoTool.Inst.FilePath);
 
             return tree;
         }
@@ -88,11 +90,11 @@ namespace EditorTool
             var toolbarHeight = MenuTree.Config.SearchToolbarHeight;
 
 
-            SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
-            {
+            //SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
+            //{
 
-            }
-            SirenixEditorGUI.EndHorizontalToolbar();
+            //}
+            //SirenixEditorGUI.EndHorizontalToolbar();
 
         }
 

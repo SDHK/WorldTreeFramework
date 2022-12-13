@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9628f55077c7bb4d833b3c2f53366d3, type: 3}
-  m_Name: Page
+  m_Name: EntityBindMonoTool
   m_EditorClassIdentifier: 
   CreateFilePath: Assets/Scripts/EntityBindMono
   groups:

@@ -128,7 +128,7 @@ namespace EditorTool
 
         public void DeleteBindScript()
         {
-            string path = EntityBindMonoTool.FilePath + $"/{monoObject.gameObject.name}";
+            string path = EntityBindMonoTool.Inst.CreateFilePath + $"/{monoObject.gameObject.name}";
             if (Directory.Exists(path))
             {
                 AssetDatabase.DeleteAsset(path);
@@ -138,7 +138,7 @@ namespace EditorTool
 
         public void CreateBindScript()
         {
-            string path = EntityBindMonoTool.FilePath + $"/{monoObject.gameObject.name}/" + monoObject.gameObject.name + ".cs";
+            string path = EntityBindMonoTool.Inst.CreateFilePath + $"/{monoObject.gameObject.name}/" + monoObject.gameObject.name + ".cs";
 
             if (!entityScript)
             {
@@ -254,7 +254,7 @@ namespace EditorTool
             //builder.AppendLine("\t}");
             builder.AppendLine("}");
 
-            string path = EntityBindMonoTool.FilePath + $"/{monoObject.gameObject.name}/" + $"{monoObject.gameObject.name}_AddEventSystem.cs";
+            string path = EntityBindMonoTool.Inst.CreateFilePath + $"/{monoObject.gameObject.name}/" + $"{monoObject.gameObject.name}_AddEventSystem.cs";
             Directory.CreateDirectory(Path.GetDirectoryName(path));//如果文件夹不存在就创建它
             File.WriteAllText(path, builder.ToString());
             AssetDatabase.Refresh();
@@ -316,7 +316,7 @@ namespace EditorTool
 
             builder.AppendLine("}");
 
-            string path = EntityBindMonoTool.FilePath + $"/{monoObject.gameObject.name}/" + monoObject.gameObject.name + "View.cs";
+            string path = EntityBindMonoTool.Inst.CreateFilePath + $"/{monoObject.gameObject.name}/" + monoObject.gameObject.name + "View.cs";
             Directory.CreateDirectory(Path.GetDirectoryName(path));//如果文件夹不存在就创建它
             File.WriteAllText(path, builder.ToString());
             AssetDatabase.Refresh();

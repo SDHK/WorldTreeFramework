@@ -9,27 +9,13 @@
 */
 
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using UnityEngine;
-using WorldTree;
 
 namespace EditorTool
 {
-    public class OdinMenuEditorItem : Entity
-    {
-        public OdinMenuTree tree;
-    }
-
-    class ItemAddSystem : AddSystem<OdinMenuEditorItem>
-    {
-        public override void OnAdd(OdinMenuEditorItem self)
-        {
-            self.tree.AddAssetAtPath("","");
-        }
-    }
-
     //[CreateAssetMenu]
-    public class GuidePage : ScriptableObject
+    [FilePath("Assets/SDHK/WorldTreeFramework/UnityEnvironment/EditorTool/EditorToolKitWindow/ToolPages/GuidePage/Assets/GuidePage.asset")]
+    public class GuidePage : ScriptableSingleton<GuidePage>
     {
 
         [BoxGroup("关于")]

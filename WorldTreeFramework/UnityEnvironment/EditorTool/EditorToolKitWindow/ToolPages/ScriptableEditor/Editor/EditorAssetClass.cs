@@ -29,8 +29,6 @@ namespace EditorTool
     {
         [HideInInspector]
         public bool IsShow = false;
-        [HideInInspector]
-        public ScriptableObjectEditorTool scriptableObjectEditor;
 
         [HorizontalGroup("A")]
         [HorizontalGroup("A/A")]
@@ -222,7 +220,7 @@ namespace EditorTool
         public ScriptableObject CreateAsset()
         {
             ScriptableObject Asset = ScriptableObject.CreateInstance(ClassName);
-            string Folder = scriptableObjectEditor.CreateAssetPath + $"/{ClassName}/";
+            string Folder = ScriptableEditor.Inst.CreateAssetPath + $"/{ClassName}/";
             Directory.CreateDirectory(Folder);//如果文件夹不存在就创建它
             AssetDatabase.CreateAsset(Asset, Folder + $"{AssetName}.asset");
             return Asset;
@@ -234,7 +232,7 @@ namespace EditorTool
         public ListAssetBase CreateListAsset()
         {
             listAsset = ScriptableObject.CreateInstance(monoListScript.name) as ListAssetBase;
-            string Folder = scriptableObjectEditor.CreateAssetPath;
+            string Folder = ScriptableEditor.Inst.CreateAssetPath;
             Directory.CreateDirectory(Folder);//如果文件夹不存在就创建它
             AssetDatabase.CreateAsset(listAsset, Folder + $"/{monoListScript.name}.asset");
             return listAsset;
@@ -326,7 +324,7 @@ namespace EditorTool
         /// </summary>
         public bool IsCreateClass()
         {
-            return !(string.IsNullOrEmpty(ClassName) || IsRepeatFieldName() || string.IsNullOrEmpty(scriptableObjectEditor.CreateFilePath));
+            return !(string.IsNullOrEmpty(ClassName) || IsRepeatFieldName() || string.IsNullOrEmpty(ScriptableEditor.Inst.CreateFilePath));
         }
 
         /// <summary>
@@ -341,7 +339,7 @@ namespace EditorTool
         /// </summary>
         public bool IsCreateAssetButton()
         {
-            return IsShow && !(string.IsNullOrEmpty(AssetName) || string.IsNullOrEmpty(scriptableObjectEditor.CreateAssetPath) || IsRepeatAssetName());
+            return IsShow && !(string.IsNullOrEmpty(AssetName) || string.IsNullOrEmpty(ScriptableEditor.Inst.CreateAssetPath) || IsRepeatAssetName());
         }
 
         /// <summary>
@@ -349,7 +347,7 @@ namespace EditorTool
         /// </summary>
         public bool IsCreateAsset()
         {
-            return monoScript && !(string.IsNullOrEmpty(AssetName) || string.IsNullOrEmpty(scriptableObjectEditor.CreateAssetPath) || IsRepeatAssetName());
+            return monoScript && !(string.IsNullOrEmpty(AssetName) || string.IsNullOrEmpty(ScriptableEditor.Inst.CreateAssetPath) || IsRepeatAssetName());
         }
 
         /// <summary>

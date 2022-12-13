@@ -12,15 +12,15 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 
 namespace EditorTool
 {
     /// <summary>
     /// ScriptableObject编辑器工具
     /// </summary>
-    [CreateAssetMenu]
-    public class ScriptableObjectEditorTool : ScriptableObject
+
+    [FilePath("Assets/SDHK/WorldTreeFramework/UnityEnvironment/EditorTool/EditorToolKitWindow/ToolPages/ScriptableEditor/Assets/ScriptableEditor.asset")]
+    public class ScriptableEditor : ScriptableSingleton<ScriptableEditor>
     {
         [BoxGroup("路径")]
         [FolderPath(RequireExistingPath = true)]
@@ -47,7 +47,7 @@ namespace EditorTool
         {
             if (!IsRepeatClassName() && ClassName != "")
             {
-                classes.Add(new EditorAssetClass() { ClassName = ClassName, scriptableObjectEditor = this });
+                classes.Add(new EditorAssetClass() { ClassName = ClassName});
                 ClassName = "";
             }
         }
