@@ -21,7 +21,7 @@ namespace WorldTree
     /// </summary>
     public class InitialDomain : Entity
     {
-
+        public int index = 0;
     }
     class _InitialDomain : AddSystem<InitialDomain>
     {

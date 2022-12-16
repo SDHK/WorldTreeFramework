@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 998a2b474e6e3774f8edc92db60b0266, type: 3}
   m_Name: ScriptableEditor
   m_EditorClassIdentifier: 
-  CreateFilePath: 
-  CreateAssetPath: 
+  CreateFilePath: Assets/Scripts/ScriptableObjects
+  CreateAssetPath: Assets/AssetBundles/ScriptableObjects
   nameSpace: WorldTree
   ClassName: 
   classes: []
