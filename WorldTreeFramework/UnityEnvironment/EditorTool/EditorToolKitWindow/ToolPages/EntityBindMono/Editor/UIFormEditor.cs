@@ -87,7 +87,7 @@ namespace EditorTool
         /// <returns></returns>
         public int GetInsertIndex(string content, string tag)
         {
-            //找到 UI事件管理 下面的第一个 public 所在的位置 进行插入
+            //找到 回调事件 下面的第一个 public 所在的位置 进行插入
             Regex regex = new Regex(tag);
             Match match = regex.Match(content);
 

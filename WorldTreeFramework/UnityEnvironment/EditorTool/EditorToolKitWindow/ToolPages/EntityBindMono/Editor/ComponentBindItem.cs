@@ -22,17 +22,20 @@ namespace EditorTool
         [HideInInspector]
         public bool IsShow = true;
 
-        [HorizontalGroup("A")]
+        [HorizontalGroup("A", width: 300)]
 
         [GUIColor(1, 1, 0)]
         [HideLabel]
         [ReadOnly]
         public Component component;
 
+        [HorizontalGroup("A")]
+        [HideLabel]
+        public string comment;
 
         [GUIColor(0, 1, 0)]
         [ShowIf("@!IsShow&&eventTags.Count>0")]
-        [HorizontalGroup("A", width: 150)]
+        [HorizontalGroup("A", width: 100)]
         [Button("事件绑定", ButtonSizes.Medium)]
         public void FoldShow()
         {
@@ -40,7 +43,7 @@ namespace EditorTool
         }
         [GUIColor(1, 1, 0)]
         [ShowIf("@IsShow&&eventTags.Count>0")]
-        [HorizontalGroup("A", width: 150)]
+        [HorizontalGroup("A", width: 100)]
         [Button("事件绑定", ButtonSizes.Medium)]
         public void FoldHide()
         {

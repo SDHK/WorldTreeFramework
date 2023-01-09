@@ -1,4 +1,14 @@
-﻿using UnityEditor;
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/12/6 16:51
+
+* 描述： 用于Addressables 编辑器工具
+
+*/
+
+using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 
@@ -9,10 +19,10 @@ namespace EditorTool
     /// </summary>
     public static class AddressablesEditorTool
     {
-        public static AddressableAssetSettings Settings
-        {
-            get { return AddressableAssetSettingsDefaultObject.Settings; }
-        }
+        /// <summary>
+        /// 默认主设置
+        /// </summary>
+        public static AddressableAssetSettings Settings => AddressableAssetSettingsDefaultObject.Settings;
 
         /// <summary>
         /// 给某分组添加资源

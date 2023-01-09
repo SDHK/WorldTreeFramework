@@ -35,13 +35,17 @@ namespace EditorTool
         [GUIColor(0, 1, 1)]
         [ReadOnly]
         [HideLabel]
-        [HorizontalGroup("A", width: 400)]
-        [HorizontalGroup("A/A", width: 300)]
+        [HorizontalGroup("A")]
+        [HorizontalGroup("A/A",MinWidth = 250)]
         public MonoObject monoObject;
+
+        [HideLabel]
+        [HorizontalGroup("A/A" )]
+        public string comment;
 
 
         [GUIColor(0, 1, 0)]
-        [HorizontalGroup("A/A", width: 100)]
+        [HorizontalGroup("A/A", width: 60)]
         [Button("生成脚本", ButtonSizes.Medium)]
         public void CreateScript()
         {
@@ -64,7 +68,7 @@ namespace EditorTool
 
         [GUIColor(0, 1, 0)]
         [ShowIf("@!IsShow&&components.Count>0")]
-        [HorizontalGroup("A", width: 150)]
+        [HorizontalGroup("A", width: 100)]
         [Button("组件列表", ButtonSizes.Medium)]
         public void FoldShow()
         {
@@ -72,7 +76,7 @@ namespace EditorTool
         }
         [GUIColor(1, 1, 0)]
         [ShowIf("@IsShow&&components.Count>0")]
-        [HorizontalGroup("A", width: 150)]
+        [HorizontalGroup("A", width: 100)]
         [Button("组件列表", ButtonSizes.Medium)]
         public void FoldHide()
         {
@@ -277,11 +281,20 @@ namespace EditorTool
             builder.AppendLine("namespace WorldTree");
             builder.AppendLine("{");
 
+            builder.AppendLine($"\t/// <summary>");
+            builder.AppendLine($"\t/// {comment}");
+            builder.AppendLine($"\t/// </summary>");
             builder.AppendLine($"\tpublic class {monoObject.gameObject.name}View : Entity");
             builder.AppendLine("\t{");
+            builder.AppendLine($"\t\t/// <summary>");
+            builder.AppendLine($"\t\t/// Mono组件");
+            builder.AppendLine($"\t\t/// </summary>");
             builder.AppendLine("\t\tpublic MonoObject monoObject;");
             foreach (var component in components)
             {
+                builder.AppendLine($"\t\t/// <summary>");
+                builder.AppendLine($"\t\t/// {component.comment}");
+                builder.AppendLine($"\t\t/// </summary>");
                 builder.AppendLine($"\t\t{Script.GetField(component.component)}");
             }
             builder.AppendLine("\t}");

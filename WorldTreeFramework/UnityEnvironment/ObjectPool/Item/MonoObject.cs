@@ -1,14 +1,24 @@
-﻿using System.Collections;
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/11/28 14:51
+
+* 描述： 用于实体与Mono组件的绑定
+
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-//对象池回收，封装组件事件回调,
 
-//实体脚本引用MonoObject
-
+/// <summary>
+/// 实体绑定Mono组件
+/// </summary>
 public class MonoObject : MonoBehaviour
 {
     /// <summary>
