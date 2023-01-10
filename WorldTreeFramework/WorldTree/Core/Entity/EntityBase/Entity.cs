@@ -70,6 +70,15 @@ namespace WorldTree
         {
             return Parent as T;
         }
+        /// <summary>
+        /// 尝试获取父节点
+        /// </summary>
+        public bool TryGetParent<T>(out T entity)
+        where T : Entity
+        {
+            entity = Parent as T;
+            return entity != null;
+        }
 
 
 

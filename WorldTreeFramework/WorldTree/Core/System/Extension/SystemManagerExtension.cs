@@ -32,7 +32,7 @@ namespace WorldTree
         /// <summary>
         /// 获取系统组
         /// </summary>
-        public static SystemGroup GetSystemGroup(this Entity self,Type type)
+        public static SystemGroup GetSystemGroup(this Entity self, Type type)
         {
             return self.Root.SystemManager.GetGroup(type);
         }
@@ -56,12 +56,14 @@ namespace WorldTree
         /// <summary>
         /// 获取系统全局广播
         /// </summary>
-        public static SystemGlobalBroadcast GetSystemGlobalBroadcast<T>(this Entity self)
-        where  T : ISystem
+        public static SystemBroadcast GetSystemGlobalBroadcast<T>(this Entity self)
+        where T : ISystem
         {
-            return self.Root.SystemManager.AddChildren<SystemGlobalBroadcast,Type>(typeof(T));
+            var systemBroadcast = self.Root.SystemManager.AddChildren<SystemBroadcast, Type>(typeof(T));
+            systemBroadcast.AddComponent<SystemBroadcastGlobalListener>();
+            return systemBroadcast;
         }
-       
+
     }
 
 }

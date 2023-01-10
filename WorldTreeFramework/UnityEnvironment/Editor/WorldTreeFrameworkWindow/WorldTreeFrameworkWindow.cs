@@ -34,10 +34,10 @@ namespace EditorTool
             root.AddComponent<WorldTreeFrameworkWindow>();
         }
 
-        public SystemGlobalBroadcast enable;
-        public SystemGlobalBroadcast disable;
-        public SystemGlobalBroadcast update;
-        public SystemGlobalBroadcast onGUI;
+        public SystemBroadcast enable;
+        public SystemBroadcast disable;
+        public SystemBroadcast update;
+        public SystemBroadcast onGUI;
 
         public EditorHomePage HomePage;
     }
