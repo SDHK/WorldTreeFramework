@@ -74,9 +74,9 @@ namespace WorldTree
                     }
                     var listenerSystem = system as IListenerSystem;
 
-                    if (!HashTypes.Contains(listenerSystem.ListenerType))
+                    if (!HashTypes.Contains(listenerSystem.ListenerEntityType))
                     {
-                        HashTypes.Add(listenerSystem.ListenerType);
+                        HashTypes.Add(listenerSystem.ListenerEntityType);
                     }
                 }
                 else

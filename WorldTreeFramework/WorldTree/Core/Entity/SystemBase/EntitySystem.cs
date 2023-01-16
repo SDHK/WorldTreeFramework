@@ -30,11 +30,11 @@ namespace WorldTree
     public interface IListenerSystem : ISendSystem<Entity>
     {
         /// <summary>
-        /// 监听器类型
+        /// 监听器实体类型
         /// </summary>
-        Type ListenerType { get; }
+        Type ListenerEntityType { get; }
         /// <summary>
-        /// 指定的实体系统
+        /// 指定实体应有的系统
         /// </summary>
         Type ListenerSystemType { get; }
     }
@@ -46,7 +46,7 @@ namespace WorldTree
     /// </summary>
     public abstract class ListenerSystemBase<LE, S, T, LS> : SystemBase<T, S>
     {
-        public virtual Type ListenerType => typeof(LE);
+        public virtual Type ListenerEntityType => typeof(LE);
         public virtual Type ListenerSystemType => typeof(LS);
     }
 

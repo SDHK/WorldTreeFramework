@@ -10,6 +10,7 @@
 * 可用于初始化启动需要的功能组件
 
 */
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,8 +26,10 @@ namespace WorldTree
     }
     class _InitialDomain : AddSystem<InitialDomain>
     {
-        public override  void OnAdd(InitialDomain self)
+        public override void OnAdd(InitialDomain self)
         {
+
+
             //World.Log("初始域启动！");
 
             //GameObject gameObject = await self.AddressablesInstantiateAsync("MainWindow");
@@ -34,6 +37,8 @@ namespace WorldTree
             //self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
 
         }
+
+
     }
 
     class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>

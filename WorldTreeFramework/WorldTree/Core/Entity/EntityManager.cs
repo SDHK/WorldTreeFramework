@@ -41,10 +41,23 @@ namespace WorldTree
         /// </summary>
         public UnitDictionary<Type, UnitDictionary<long, Entity>> EntityRemoveListeners = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
 
-        private SystemGroup entityAddSystems;
-        private SystemGroup entityRemoveSystems;
-        private HashSet<Type> AddListenerTypes;
-        private HashSet<Type> RemoveListenerTypes;
+        /// <summary>
+        /// 实体添加监听系统组
+        /// </summary>
+        public SystemGroup entityAddSystems;
+        /// <summary>
+        /// 实体移除监听系统组
+        /// </summary>
+        public SystemGroup entityRemoveSystems;
+
+        /// <summary>
+        /// 添加监听器实体类型
+        /// </summary>
+        public HashSet<Type> AddListenerTypes;
+        /// <summary>
+        /// 移除监听器实体类型
+        /// </summary>
+        public HashSet<Type> RemoveListenerTypes;
 
         //private SystemGroup singletonEagerSystems;
 
@@ -137,7 +150,7 @@ namespace WorldTree
                 {
                     foreach (IEntityAddSystem listenerSystem in Listeners)
                     {
-                        if (EntityAddListeners.TryGetValue(listenerSystem.ListenerType, out UnitDictionary<long, Entity> listeners))
+                        if (EntityAddListeners.TryGetValue(listenerSystem.ListenerEntityType, out UnitDictionary<long, Entity> listeners))
                         {
                             foreach (var listener in listeners)
                             {
@@ -152,7 +165,7 @@ namespace WorldTree
                     {
                         //不指定实体，不指定系统      ,不指定实体，指定系统
                         if (listenerSystem.ListenerSystemType == typeof(ISystem) ? true : SystemManager.TryGetSystems(entity.Type, listenerSystem.ListenerSystemType, out _))
-                            if (EntityAddListeners.TryGetValue(listenerSystem.ListenerType, out UnitDictionary<long, Entity> listeners))
+                            if (EntityAddListeners.TryGetValue(listenerSystem.ListenerEntityType, out UnitDictionary<long, Entity> listeners))
                             {
                                 foreach (var listener in listeners)
                                 {
@@ -221,7 +234,7 @@ namespace WorldTree
                 {
                     foreach (IEntityRemoveSystem listenerSystem in Listeners)
                     {
-                        if (EntityRemoveListeners.TryGetValue(listenerSystem.ListenerType, out UnitDictionary<long, Entity> listeners))
+                        if (EntityRemoveListeners.TryGetValue(listenerSystem.ListenerEntityType, out UnitDictionary<long, Entity> listeners))
                         {
                             foreach (var listener in listeners)
                             {
@@ -236,7 +249,7 @@ namespace WorldTree
                     {
                         //不指定实体，不指定系统      ,不指定实体，指定系统
                         if (listenerSystem.ListenerSystemType == typeof(ISystem) ? true : SystemManager.TryGetSystems(entity.Type, listenerSystem.ListenerSystemType, out _))
-                            if (EntityRemoveListeners.TryGetValue(listenerSystem.ListenerType, out UnitDictionary<long, Entity> listeners))
+                            if (EntityRemoveListeners.TryGetValue(listenerSystem.ListenerEntityType, out UnitDictionary<long, Entity> listeners))
                             {
                                 foreach (var listener in listeners)
                                 {
