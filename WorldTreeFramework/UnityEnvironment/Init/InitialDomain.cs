@@ -29,6 +29,9 @@ namespace WorldTree
         public override void OnAdd(InitialDomain self)
         {
 
+            //Dictionary<string,int> dic = self.AddComponent<EntityDictionary<string,int>>().Value;
+
+
 
             //World.Log("初始域启动！");
 

@@ -13,6 +13,7 @@
 *   
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using static UnityEngine.EventSystems.EventTrigger;
 
@@ -134,28 +135,57 @@ namespace WorldTree
 
     //=====================
 
+    ////实体字典基类
+    //public class EntityDictionary : Entity { public IDictionary value; } //箱基类
+    ////实体字典泛型类
+    //public class EntityDictionary<K, V> : EntityDictionary  //泛型箱
+    //{
+    //    public EntityDictionary()
+    //    {
+    //        Type = typeof(EntityDictionary); //将这个泛型类的 匹配标签 改为基类
+    //        value = new Dictionary<K, V>(); //初始化赋值
+    //    }
+    //    public Dictionary<K, V> Value => value as Dictionary<K, V>; //强转获取
+
+    //}
+    ////回收系统匹配到基类
+    //class EntityDictionaryRemoveystem : RemoveSystem<EntityDictionary>
+    //{
+    //    public override void OnRemove(EntityDictionary self)
+    //    {
+    //        self.value.Clear();//统一清理
+    //    }
+    //}
+
+
+
+
     public class EntityListenerSystems : UnitPoolItem
     {
         public Entity listenerEntity;
 
         public UnitDictionary<Type, IListenerSystem> listenerSystems;
+
+        public override void OnRecycle()
+        {
+            listenerSystems.Dispose();
+            listenerSystems = null;
+        }
     }
 
     public class EntityPoolSystemGlobalBroadcast : Entity
     {
         public EntityPool pool;
 
-        public Dictionary<long, EntityListenerSystems> addListenerSystems;
+        public UnitDictionary<long, EntityListenerSystems> addListenerSystems;
 
-        public Dictionary<long, EntityListenerSystems> removeListenerSystems;
+        public UnitDictionary<long, EntityListenerSystems> removeListenerSystems;
 
     }
-
-
-    public class EntityPoolSystemGlobalBroadcastAddSystem : AddSystem<EntityPoolSystemGlobalBroadcast>
+    class EntityPoolSystemGlobalBroadcastAddSystem : AddSystem<EntityPoolSystemGlobalBroadcast>
     {
         //注册监听器到池
-        private void RegisterListener(EntityPoolSystemGlobalBroadcast self, Dictionary<long, EntityListenerSystems> registerListenerSystems, IEntityAddSystem listenerSystem)
+        private static void RegisterListener(EntityPoolSystemGlobalBroadcast self, Dictionary<long, EntityListenerSystems> registerListenerSystems, IEntityAddSystem listenerSystem)
         {
             if (self.Root.EntityAddListeners.TryGetValue(listenerSystem.ListenerEntityType, out UnitDictionary<long, Entity> listeners))
             {
@@ -182,8 +212,12 @@ namespace WorldTree
 
         public override void OnAdd(EntityPoolSystemGlobalBroadcast self)
         {
+
             if (self.TryGetParent(out self.pool))
             {
+                self.addListenerSystems ??= self.PoolGet<UnitDictionary<long, EntityListenerSystems>>();
+                self.removeListenerSystems ??= self.PoolGet<UnitDictionary<long, EntityListenerSystems>>();
+
                 //实体添加系统
                 if (self.Root.entityAddSystems.TryGetValue(self.pool.ObjectType, out List<ISystem> addEntitySystems))//指定实体，不指定系统
                 {
@@ -229,25 +263,21 @@ namespace WorldTree
         {
             if (self.TryGetParent(out self.pool))
             {
-
-                //实体添加系统
-                if (self.Root.entityAddSystems.TryGetValue(self.pool.ObjectType, out List<ISystem> addEntitySystems))//指定实体，不指定系统
+                foreach (var item in self.addListenerSystems)
                 {
-                    foreach (IEntityAddSystem listenerSystem in addEntitySystems)//遍历 实体添加监听系统 列表
-                    {
-                        //RegisterListener(self, self.addListenerSystems, listenerSystem);
-                    }
-                }
-                if (self.Root.entityAddSystems.TryGetValue(typeof(Entity), out addEntitySystems))
-                {
-                    foreach (IEntityAddSystem listenerSystem in addEntitySystems)
-                    {
-                        //不指定实体，不指定系统      ,不指定实体，指定系统
-                        if (listenerSystem.ListenerSystemType == typeof(ISystem) ? true : self.Root.SystemManager.TryGetSystems(self.pool.ObjectType, listenerSystem.ListenerSystemType, out _))
-                            //RegisterListener(self, self.addListenerSystems, listenerSystem);
-                    }
+                    item.Value.Dispose();
                 }
 
+                foreach (var item in self.removeListenerSystems)
+                {
+                    item.Value.Dispose();
+                }
+
+                self.addListenerSystems.Dispose();
+                self.removeListenerSystems.Dispose();
+
+                self.addListenerSystems = null;
+                self.removeListenerSystems = null;
             }
 
 
