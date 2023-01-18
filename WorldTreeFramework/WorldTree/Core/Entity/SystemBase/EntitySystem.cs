@@ -20,6 +20,7 @@
 */
 
 using System;
+using Unity.VisualScripting;
 
 namespace WorldTree
 {
@@ -30,13 +31,13 @@ namespace WorldTree
     public interface IListenerSystem : ISendSystem<Entity>
     {
         /// <summary>
-        /// 监听器实体类型
+        /// 监听：目标实体类型
         /// </summary>
-        Type ListenerEntityType { get; }
+        Type TargetEntityType { get; }
         /// <summary>
-        /// 指定实体应有的系统
+        /// 监听：目标实体系统
         /// </summary>
-        Type ListenerSystemType { get; }
+        Type TargetSystemType { get; }
     }
     public interface IEntityAddSystem : IListenerSystem { }
     public interface IEntityRemoveSystem : IListenerSystem { }
@@ -44,34 +45,34 @@ namespace WorldTree
     /// <summary>
     /// 监听系统抽象基类
     /// </summary>
-    public abstract class ListenerSystemBase<LE, S, T, LS> : SystemBase<T, S>
+    public abstract class ListenerSystemBase<LE, LS, TE, TS> : SystemBase<LE, LS>
     {
-        public virtual Type ListenerEntityType => typeof(LE);
-        public virtual Type ListenerSystemType => typeof(LS);
+        public virtual Type TargetEntityType => typeof(TE);
+        public virtual Type TargetSystemType => typeof(TS);
     }
 
     /// <summary>
     /// 实体添加时
     /// </summary>
-    public abstract class EntityAddSystem<LE, T, LS> : ListenerSystemBase<LE, IEntityAddSystem, T, LS>, IEntityAddSystem
-        where T : Entity
+    public abstract class EntityAddSystem<LE, TE, TS> : ListenerSystemBase<LE, IEntityAddSystem, TE, TS>, IEntityAddSystem
+        where TE : Entity
         where LE : Entity
-        where LS : ISystem
+        where TS : ISystem
     {
-        public void Invoke(Entity self, Entity entity) => OnEntityAdd(self as LE, entity as T);
-        public abstract void OnEntityAdd(LE self, T entity);
+        public void Invoke(Entity self, Entity entity) => OnEntityAdd(self as LE, entity as TE);
+        public abstract void OnEntityAdd(LE self, TE entity);
     }
 
     /// <summary>
     /// 实体移除时
     /// </summary>
-    public abstract class EntityRemoveSystem<LE, T, LS> : ListenerSystemBase<LE, IEntityAddSystem, T, LS>, IEntityRemoveSystem
-        where T : Entity
+    public abstract class EntityRemoveSystem<LE, TE, TS> : ListenerSystemBase<LE, IEntityRemoveSystem, TE, TS>, IEntityRemoveSystem
+        where TE : Entity
         where LE : Entity
-        where LS : ISystem
+        where TS : ISystem
     {
-        public void Invoke(Entity self, Entity entity) => OnEntityRemove(self as LE, entity as T);
-        public abstract void OnEntityRemove(LE self, T entity);
+        public void Invoke(Entity self, Entity entity) => OnEntityRemove(self as LE, entity as TE);
+        public abstract void OnEntityRemove(LE self, TE entity);
     }
 
 

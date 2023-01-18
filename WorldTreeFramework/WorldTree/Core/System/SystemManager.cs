@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using UnityEngine.Rendering.VirtualTexturing;
 
 namespace WorldTree
 {
@@ -22,10 +23,18 @@ namespace WorldTree
     /// </summary>
     public class SystemManager : Entity
     {
-        public UnitDictionary<Type, HashSet<Type>> ListenerTypes = new UnitDictionary<Type, HashSet<Type>>();
+        public UnitDictionary<Type, HashSet<Type>> ListenerTypes = new UnitDictionary<Type, HashSet<Type>>();//?
 
         //接口类型，（实例类型，系统）
         private UnitDictionary<Type, SystemGroup> ListenerSystems = new UnitDictionary<Type, SystemGroup>();
+        private UnitDictionary<Type, SystemGroup> TargetSystems = new UnitDictionary<Type, SystemGroup>();
+
+
+        /// <summary>
+        /// 目标，接口类型，(监听类,系统)
+        /// </summary>
+        private UnitDictionary<Type, Dictionary<Type, SystemGroup>> ListenerSystems_1 = new UnitDictionary<Type, Dictionary<Type, SystemGroup>>();
+
 
 
         //接口类型，（实例类型，系统）
@@ -41,6 +50,9 @@ namespace WorldTree
             var types = FindTypesIsInterface(typeof(ISystem));
             //将名字进行排序，规范触发顺序
             types.Sort((item1, item2) => item1.Name.CompareTo(item2.Name));
+
+            List<IListenerSystem> EntitySystems = new List<IListenerSystem>();//只指定了系统的监听器系统
+
             foreach (var itemType in types)//遍历实现接口的类
             {
                 //实例化系统类
@@ -48,94 +60,116 @@ namespace WorldTree
 
                 if (system is IListenerSystem)
                 {
-                    Type SystemType = system.SystemType;
-                    Type EntityType = system.EntityType;
+                    var LSystem = system as IListenerSystem;//转换为监听系统
 
-                    if (!ListenerSystems.TryGetValue(SystemType, out SystemGroup systemGroup))
+                    ListenerSystems.GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
+
+                    //?
+                    if (LSystem.TargetEntityType == typeof(Entity) && LSystem.TargetSystemType != typeof(ISystem))
                     {
-                        systemGroup = new SystemGroup();
-                        systemGroup.systemType = SystemType;
-                        ListenerSystems.Add(SystemType, systemGroup);
+                        EntitySystems.Add(LSystem);
+                    }
+                    else
+                    {
+                        ListenerSystems_1.GetOrNewValue(LSystem.TargetEntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
+
+                        //TargetSystems.GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.TargetEntityType).Add(LSystem);
                     }
 
-
-                    if (!systemGroup.TryGetValue(EntityType, out List<ISystem> systems))
+                    HashSet<Type> HashTypes = ListenerTypes.GetOrNewValue(LSystem.SystemType);
+                    if (!HashTypes.Contains(LSystem.EntityType))
                     {
-                        systems = new List<ISystem>();
-                        systemGroup.Add(EntityType, systems);
-                    }
-                    systems.Add(system);
-
-
-                    if (!ListenerTypes.TryGetValue(SystemType, out HashSet<Type> HashTypes))
-                    {
-                        HashTypes = new HashSet<Type>();
-                        ListenerTypes.Add(SystemType, HashTypes);
-                    }
-                    var listenerSystem = system as IListenerSystem;
-
-                    if (!HashTypes.Contains(listenerSystem.ListenerEntityType))
-                    {
-                        HashTypes.Add(listenerSystem.ListenerEntityType);
+                        HashTypes.Add(LSystem.EntityType);
                     }
                 }
                 else
                 {
 
-                    Type SystemType = system.SystemType;
-                    Type EntityType = system.EntityType;
-                    if (!InterfaceSystems.TryGetValue(SystemType, out SystemGroup systemGroup))
-                    {
-                        systemGroup = new SystemGroup();
-                        systemGroup.systemType = SystemType;
-                        InterfaceSystems.Add(SystemType, systemGroup);
-                    }
-
-
-                    if (!systemGroup.TryGetValue(EntityType, out List<ISystem> systems))
-                    {
-                        systems = new List<ISystem>();
-                        systemGroup.Add(EntityType, systems);
-                    }
-
-                    systems.Add(system);
+                    InterfaceSystems.GetOrNewValue(system.SystemType).GetOrNewValue(system.EntityType).Add(system);
                 }
             }
-        }
 
-     
 
-        /// <summary>
-        /// 获取系统组
-        /// </summary>
-        public SystemGroup GetListenerGroup<T>() where T : ISystem => GetListenerGroup(typeof(T));
-
-        /// <summary>
-        /// 获取系统组
-        /// </summary>
-        public SystemGroup GetListenerGroup(Type Interface)
-        {
-            if (ListenerSystems.TryGetValue(Interface, out SystemGroup systemGroup))
+            foreach (IListenerSystem LSystem in EntitySystems)//? 
             {
-                return systemGroup;
+                if (InterfaceSystems.TryGetValue(LSystem.TargetSystemType, out SystemGroup group))
+                {
+                    foreach (var systemList in group)
+                    {
+                        foreach (var system in systemList.Value)
+                        {
+                            ListenerSystems_1.GetOrNewValue(LSystem.TargetEntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
+
+                            //TargetSystems.GetOrNewValue(LSystem.SystemType).GetOrNewValue(system.EntityType).Add(LSystem);
+                        }
+                    }
+                }
             }
-            return null;
+
+
         }
+
+        #region 监听目标系统组
+
+        /// <summary>
+        /// 获取监听目标系统组
+        /// </summary>
+        public bool TryGetListenerTargetGroup<T>(out SystemGroup systemGroup) where T : ISystem => TryGetListenerTargetGroup(typeof(T), out systemGroup);
+
+        /// <summary>
+        /// 获取监听目标系统组
+        /// </summary>
+        public bool TryGetListenerTargetGroup(Type Interface, out SystemGroup systemGroup) => TargetSystems.TryGetValue(Interface, out systemGroup);
+
+        /// <summary>
+        /// 获取监听目标系统列表
+        /// </summary>
+        public bool TryGetListenerTargetSystems<T>(Type type, out List<ISystem> systems)
+        {
+            if (TargetSystems.TryGetValue(typeof(T), out SystemGroup systemGroup))
+            {
+                return systemGroup.TryGetValue(type, out systems);
+            }
+            else
+            {
+                systems = null;
+                return false;
+            }
+        }
+        #endregion
+
+        #region  监听系统组
+
+        /// <summary>
+        /// 获取监听系统组
+        /// </summary>
+        public bool TryGetListenerGroup<T>(out SystemGroup systemGroup) where T : ISystem => TryGetListenerGroup(typeof(T), out systemGroup);
+
+        /// <summary>
+        /// 获取监听系统组
+        /// </summary>
+        public bool TryGetListenerGroup(Type Interface, out SystemGroup systemGroup) => ListenerSystems.TryGetValue(Interface, out systemGroup);
         /// <summary>
         /// 获取监听系统
         /// </summary>
-        public List<ISystem> GetListenerSystems<T>(Type type)
+        public bool TryGetListenerSystems<T>(Type type, out List<ISystem> systems)
         {
             if (ListenerSystems.TryGetValue(typeof(T), out SystemGroup systemGroup))
             {
-                if (systemGroup.TryGetValue(type, out List<ISystem> systems))
-                {
-                    return systems;
-                }
+                return systemGroup.TryGetValue(type, out systems);
             }
-            return null;
+            else
+            {
+                systems = null;
+                return false;
+            }
         }
+        #endregion
 
+
+
+
+        #region  系统组
         /// <summary>
         /// 获取系统组
         /// </summary>
@@ -167,6 +201,9 @@ namespace WorldTree
             return InterfaceSystems.TryGetValue(Interface, out systemGroup);
         }
 
+        #endregion
+
+        #region  系统列表
 
         /// <summary>
         /// 获取单类型系统列表
@@ -183,15 +220,22 @@ namespace WorldTree
             return null;
         }
 
+        /// <summary>
+        /// 获取单类型系统列表
+        /// </summary>
         public bool TryGetSystems(Type EntityType, Type SystemType, out List<ISystem> systems)
         {
             if (InterfaceSystems.TryGetValue(SystemType, out SystemGroup systemGroup))
             {
                 return systemGroup.TryGetValue(EntityType, out systems);
             }
-            systems = null;
-            return false;
+            else
+            {
+                systems = null;
+                return false;
+            }
         }
+        #endregion
 
         /// <summary>
         /// 释放后
@@ -199,6 +243,8 @@ namespace WorldTree
         public override void OnDispose()
         {
             InterfaceSystems.Clear();
+            ListenerSystems.Clear();
+            TargetSystems.Clear();
             IsRecycle = true;
             IsDisposed = true;
         }

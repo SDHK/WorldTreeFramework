@@ -44,13 +44,25 @@ namespace WorldTree
         {
             return self.Root.SystemManager.GetSystems<T>(type);
         }
+        /// <summary>
+        /// 获取单类型系统列表
+        /// </summary>
+        public static bool TryGetSystems(this Entity self, Type entityType, Type systemType, out List<ISystem> systems) => self.Root.SystemManager.TryGetSystems(entityType, systemType, out systems);
 
         /// <summary>
         /// 获取单类型监听系统列表
         /// </summary>
-        public static List<ISystem> GetListenerSystems<T>(this Entity self, Type type)
+        public static bool TryGetListenerSystems<T>(this Entity self, Type type, out List<ISystem> systems)
         {
-            return self.Root.SystemManager.GetListenerSystems<T>(type);
+            return self.Root.SystemManager.TryGetListenerSystems<T>(type, out systems);
+        }
+
+        /// <summary>
+        /// 获取单类型监听目标系统列表
+        /// </summary>
+        public static bool TryGetListenerTargetSystems<T>(this Entity self, Type type, out List<ISystem> systems)
+        {
+            return self.Root.SystemManager.TryGetListenerTargetSystems<T>(type, out systems);
         }
 
         /// <summary>

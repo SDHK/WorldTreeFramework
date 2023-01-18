@@ -173,42 +173,101 @@ namespace WorldTree
         }
     }
 
-    public class EntityPoolSystemGlobalBroadcast : Entity
+
+
+    public class EntityPoolSystemGlobalBroadcast : Entity//需要组件化，注册到对象池发送
     {
         public EntityPool pool;
 
+        public UnitQueue<long> addQueue;
         public UnitDictionary<long, EntityListenerSystems> addListenerSystems;
 
+        public UnitQueue<long> removeQueue;
         public UnitDictionary<long, EntityListenerSystems> removeListenerSystems;
+
+        public void BroadcastEntityAdd(Entity entity)
+        {
+            int length = addQueue.Count;
+            for (int i = 0; i < length; i++)
+            { 
+                long id = addQueue.Dequeue();
+                if (addListenerSystems.TryGetValue(id, out EntityListenerSystems entityListenerSystems))
+                {
+                    foreach (var listenerSystem in entityListenerSystems.listenerSystems)
+                    {
+                        listenerSystem.Value.Invoke(entityListenerSystems.listenerEntity, entity);
+                    }
+                    addQueue.Enqueue(id);
+                }
+            }
+
+        }
+
+        public void BroadcastEntityRemove(Entity entity)
+        {
+
+
+        }
+
+        public void AddAddListener(Entity listener, IListenerSystem listenerSystem)
+        {
+            if (!addListenerSystems.TryGetValue(listener.id, out EntityListenerSystems entityListener))
+            {
+                entityListener = this.PoolGet<EntityListenerSystems>();
+                entityListener.listenerEntity = listener;
+                entityListener.listenerSystems = this.PoolGet<UnitDictionary<Type, IListenerSystem>>();
+                entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
+                addListenerSystems.Add(listener.id, entityListener);
+                addQueue.Enqueue(listener.id);
+            }
+            else //监听器已经注册
+            {
+                if (!entityListener.listenerSystems.ContainsKey(listenerSystem.SystemType))
+                {
+                    entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
+                }
+            }
+        }
+
+        public void AddRemoveListener(Entity listener, IListenerSystem listenerSystem)
+        {
+            if (!removeListenerSystems.TryGetValue(listener.id, out EntityListenerSystems entityListener))
+            {
+                entityListener = this.PoolGet<EntityListenerSystems>();
+                entityListener.listenerEntity = listener;
+                entityListener.listenerSystems = this.PoolGet<UnitDictionary<Type, IListenerSystem>>();
+                entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
+                removeListenerSystems.Add(listener.id, entityListener);
+                removeQueue.Enqueue(listener.id);
+            }
+            else //监听器已经注册
+            {
+                if (!entityListener.listenerSystems.ContainsKey(listenerSystem.SystemType))
+                {
+                    entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
+                }
+            }
+        }
+
+        public void RemoveAddListener(long id)
+        {
+            if (addListenerSystems.ContainsKey(id))
+            {
+                addListenerSystems.Remove(id);
+
+            }
+        }
+        public void RemoveRemoveListener(long id)
+        {
+            removeListenerSystems.Remove(id);
+        }
+
 
     }
     class EntityPoolSystemGlobalBroadcastAddSystem : AddSystem<EntityPoolSystemGlobalBroadcast>
     {
-        //注册监听器到池
-        private static void RegisterListener(EntityPoolSystemGlobalBroadcast self, Dictionary<long, EntityListenerSystems> registerListenerSystems, IEntityAddSystem listenerSystem)
-        {
-            if (self.Root.EntityAddListeners.TryGetValue(listenerSystem.ListenerEntityType, out UnitDictionary<long, Entity> listeners))
-            {
-                foreach (var listener in listeners)
-                {
-                    if (!registerListenerSystems.TryGetValue(listener.Key, out EntityListenerSystems entityListener))
-                    {
-                        entityListener = self.PoolGet<EntityListenerSystems>();
-                        entityListener.listenerEntity = listener.Value;
-                        entityListener.listenerSystems = self.PoolGet<UnitDictionary<Type, IListenerSystem>>();
-                        entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
-                        registerListenerSystems.Add(listener.Key, entityListener);
-                    }
-                    else //监听器已经存在
-                    {
-                        if (!entityListener.listenerSystems.ContainsKey(listenerSystem.SystemType))
-                        {
-                            entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
-                        }
-                    }
-                }
-            }
-        }
+
+
 
         public override void OnAdd(EntityPoolSystemGlobalBroadcast self)
         {
@@ -219,38 +278,62 @@ namespace WorldTree
                 self.removeListenerSystems ??= self.PoolGet<UnitDictionary<long, EntityListenerSystems>>();
 
                 //实体添加系统
-                if (self.Root.entityAddSystems.TryGetValue(self.pool.ObjectType, out List<ISystem> addEntitySystems))//指定实体，不指定系统
+                if (self.TryGetListenerTargetSystems<IEntityAddSystem>(self.pool.ObjectType, out List<ISystem> addEntitySystems))
                 {
                     foreach (IEntityAddSystem listenerSystem in addEntitySystems)//遍历 实体添加监听系统 列表
                     {
-                        RegisterListener(self, self.addListenerSystems, listenerSystem);
+                        if (self.Root.EntityAddListeners.TryGetValue(listenerSystem.EntityType, out UnitDictionary<long, Entity> listeners))
+                        {
+                            foreach (var listener in listeners)
+                            {
+                                self.AddAddListener(listener.Value, listenerSystem);
+                            }
+                        }
                     }
                 }
-                if (self.Root.entityAddSystems.TryGetValue(typeof(Entity), out addEntitySystems))
+                if (self.TryGetListenerTargetSystems<IEntityRemoveSystem>(typeof(Entity), out addEntitySystems))
                 {
                     foreach (IEntityAddSystem listenerSystem in addEntitySystems)
                     {
                         //不指定实体，不指定系统      ,不指定实体，指定系统
-                        if (listenerSystem.ListenerSystemType == typeof(ISystem) ? true : self.Root.SystemManager.TryGetSystems(self.pool.ObjectType, listenerSystem.ListenerSystemType, out _))
-                            RegisterListener(self, self.addListenerSystems, listenerSystem);
+                        if (listenerSystem.TargetSystemType == typeof(ISystem) ? true : self.TryGetSystems(self.pool.ObjectType, listenerSystem.TargetSystemType, out _))
+                            if (self.Root.EntityAddListeners.TryGetValue(listenerSystem.EntityType, out UnitDictionary<long, Entity> listeners))
+                            {
+                                foreach (var listener in listeners)
+                                {
+                                    self.AddAddListener(listener.Value, listenerSystem);
+                                }
+                            }
                     }
                 }
 
                 //实体移除系统
-                if (self.Root.entityRemoveSystems.TryGetValue(self.pool.ObjectType, out List<ISystem> removeEntityListenerSystems))//指定实体，不指定系统
+                if (self.TryGetListenerTargetSystems<IEntityRemoveSystem>(self.pool.ObjectType, out List<ISystem> removeEntityListenerSystems))//指定实体，不指定系统
                 {
-                    foreach (IEntityAddSystem listenerSystem in removeEntityListenerSystems)//遍历 实体添加监听系统 列表
+                    foreach (IEntityRemoveSystem listenerSystem in removeEntityListenerSystems)//遍历 实体添加监听系统 列表
                     {
-                        RegisterListener(self, self.removeListenerSystems, listenerSystem);
+                        if (self.Root.EntityRemoveListeners.TryGetValue(listenerSystem.EntityType, out UnitDictionary<long, Entity> listeners))
+                        {
+                            foreach (var listener in listeners)
+                            {
+                                self.AddRemoveListener(listener.Value, listenerSystem);
+                            }
+                        }
                     }
                 }
-                if (self.Root.entityRemoveSystems.TryGetValue(typeof(Entity), out removeEntityListenerSystems))
+                if (self.TryGetListenerTargetSystems<IEntityRemoveSystem>(typeof(Entity), out removeEntityListenerSystems))
                 {
-                    foreach (IEntityAddSystem listenerSystem in removeEntityListenerSystems)
+                    foreach (IEntityRemoveSystem listenerSystem in removeEntityListenerSystems)
                     {
                         //不指定实体，不指定系统      ,不指定实体，指定系统
-                        if (listenerSystem.ListenerSystemType == typeof(ISystem) ? true : self.Root.SystemManager.TryGetSystems(self.pool.ObjectType, listenerSystem.ListenerSystemType, out _))
-                            RegisterListener(self, self.removeListenerSystems, listenerSystem);
+                        if (listenerSystem.TargetSystemType == typeof(ISystem) ? true : self.TryGetSystems(self.pool.ObjectType, listenerSystem.TargetSystemType, out _))
+                            if (self.Root.EntityRemoveListeners.TryGetValue(listenerSystem.EntityType, out UnitDictionary<long, Entity> listeners))
+                            {
+                                foreach (var listener in listeners)
+                                {
+                                    self.AddRemoveListener(listener.Value, listenerSystem);
+                                }
+                            }
                     }
                 }
 
