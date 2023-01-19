@@ -41,6 +41,20 @@ namespace WorldTree
         /// </summary>
         public UnitDictionary<Type, UnitDictionary<long, Entity>> EntityRemoveListeners = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
 
+
+        /// <summary>
+        /// 监听器类型 ，监听器组合     （静态）
+        /// </summary>
+        public UnitDictionary<Type, UnitDictionary<long, Entity>> EntityListeners = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
+
+
+        //系统类型,目标，监听列表
+
+        //动态
+        UnitDictionary< long, Type> ListenerBindPool = new UnitDictionary<long, Type>();
+        UnitDictionary<Type, List<long>> PoolBindListener = new UnitDictionary<Type, List<long>>();
+
+
         /// <summary>
         /// 实体添加监听系统组
         /// </summary>
@@ -50,14 +64,6 @@ namespace WorldTree
         /// </summary>
         public SystemGroup entityRemoveSystems;
 
-        /// <summary>
-        /// 添加监听器实体类型
-        /// </summary>
-        public HashSet<Type> AddListenerTypes;
-        /// <summary>
-        /// 移除监听器实体类型
-        /// </summary>
-        public HashSet<Type> RemoveListenerTypes;
 
         //private SystemGroup singletonEagerSystems;
 
@@ -106,11 +112,11 @@ namespace WorldTree
             enableSystems = Root.SystemManager.GetGroup<IEnableSystem>();
             disableSystems = Root.SystemManager.GetGroup<IDisableSystem>();
 
-            Root.SystemManager.TryGetListenerGroup<IEntityAddSystem>(out entityAddSystems);
-            Root.SystemManager.TryGetListenerGroup<IEntityRemoveSystem>(out entityRemoveSystems);
+            //Root.SystemManager.TryGetListenerGroup<IEntityAddSystem>(out entityAddSystems);
+            //Root.SystemManager.TryGetListenerGroup<IEntityRemoveSystem>(out entityRemoveSystems);
 
-            Root.SystemManager.ListenerTypes.TryGetValue(typeof(IEntityAddSystem), out AddListenerTypes);
-            Root.SystemManager.ListenerTypes.TryGetValue(typeof(IEntityRemoveSystem), out RemoveListenerTypes);
+            //Root.SystemManager.ListenerTypes.TryGetValue(typeof(IEntityAddSystem), out AddListenerTypes);
+            //Root.SystemManager.ListenerTypes.TryGetValue(typeof(IEntityRemoveSystem), out RemoveListenerTypes);
             //singletonEagerSystems = SystemManager.GetGroup<ISingletonEagerSystem>();
 
 
@@ -142,7 +148,7 @@ namespace WorldTree
 
         public void Add(Entity entity)
         {
-            Type typeKey = entity.Type;
+            Type entityType = entity.Type;
 
             //广播给全部监听器
             if (entityAddSystems != null)
@@ -185,27 +191,20 @@ namespace WorldTree
 
             //====
 
-            //if (this.TryGetListenerTargetSystems<IEntityAddSystem>(typeKey, out List<ISystem> systems))
-            //{
-            //    EntityAddListeners.GetOrNewValue(typeKey).TryAdd(entity.id, entity);
-
-
-            //}
 
             //检测到监听系统存在，则说明这是个监听器
-            if (AddListenerTypes != null)
-                if (AddListenerTypes.Contains(typeKey))
-                {
-                    EntityAddListeners.GetOrNewValue(typeKey).TryAdd(entity.id, entity);
 
-                   
-                }
-            if (RemoveListenerTypes != null)
-                if (RemoveListenerTypes.Contains(typeKey))
+            if (SystemManager.ListenerSystems.TryGetValue(entityType, out var systemGroups))
+            {
+                foreach (var systemGroup in systemGroups)
                 {
-                    EntityRemoveListeners.GetOrNewValue(typeKey).TryAdd(entity.id, entity);
+                    if (!EntityListeners.TryGetValue(entityType, out var listeners))
+                    {
+                        listeners = UnitPoolManager.Get<UnitDictionary<long, Entity>>();
+                    }
+                    listeners.TryAdd(entity.id, entity);
                 }
-
+            }
 
             entity.SetActive(true);
             enableSystems?.Send(entity);//添加后调用激活事件
@@ -217,23 +216,29 @@ namespace WorldTree
 
         public void Remove(Entity entity)
         {
-            Type typeKey = entity.Type;
+            Type entityType = entity.Type;
             entity.SetActive(false);//激活标记变更
             entity.RemoveAll();//移除所有子节点和组件
             disableSystems?.Send(entity);//调用禁用事件
 
             //检测到监听系统存在，则说明这是个监听器
 
-            if (AddListenerTypes != null)
-                if (AddListenerTypes.Contains(typeKey))
+            if (SystemManager.ListenerSystems.TryGetValue(entityType, out var systemGroups))
+            {
+                foreach (var systemGroup in systemGroups)
                 {
-                    EntityAddListeners.GetOrNewValue(typeKey).Remove(entity.id);
+                    if (EntityListeners.TryGetValue(entityType, out var listeners))
+                    {
+                        listeners.Remove(entity.id);
+                        if (listeners.Count == 0)
+                        {
+                            listeners.Dispose();
+                            EntityListeners.Remove(systemGroup.Key);
+                        }
+                    }
                 }
-            if (RemoveListenerTypes != null)
-                if (RemoveListenerTypes.Contains(typeKey))
-                {
-                    EntityRemoveListeners.GetOrNewValue(typeKey).Remove(entity.id);
-                }
+            }
+
 
             //这个实体的移除事件
             removeSystems?.Send(entity);

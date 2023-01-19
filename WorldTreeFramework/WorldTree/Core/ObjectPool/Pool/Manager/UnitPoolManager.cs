@@ -27,9 +27,15 @@ namespace WorldTree
         /// 从池中获取对象
         /// </summary>
         public static T PoolGet<T>(this Entity self)
-        where T :class,IUnitPoolEventItem
+        where T : class, IUnitPoolEventItem
         {
             return self.Root.UnitPoolManager.Get<T>();
+        }
+
+        public static T PoolGet<T>(this Entity self, out T unit)
+       where T : class, IUnitPoolEventItem
+        {
+            return unit = self.Root.UnitPoolManager.Get<T>();
         }
 
 

@@ -62,7 +62,14 @@ namespace EditorTool
         {
             return Settings.FindGroup(groupName) ?? Settings.CreateGroup(groupName, false, false, false, Settings.DefaultGroup.Schemas);
         }
-
+        /// <summary>
+        /// 删除分组
+        /// </summary>
+        /// <param name="groupName">组名</param>
+        public static void RemoveGroup(string groupName)
+        {
+            Settings.RemoveGroup(Settings.FindGroup(groupName));
+        }
         /// <summary>
         /// 获取或创建分组添加资源
         /// </summary>

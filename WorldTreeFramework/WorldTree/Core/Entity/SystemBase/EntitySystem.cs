@@ -28,7 +28,7 @@ namespace WorldTree
     /// <summary>
     /// 监听系统接口
     /// </summary>
-    public interface IListenerSystem : ISendSystem<Entity>
+    public interface IListenerSystem : ISendSystem< Entity>
     {
         /// <summary>
         /// 监听：目标实体类型

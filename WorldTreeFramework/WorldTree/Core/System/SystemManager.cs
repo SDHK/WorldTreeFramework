@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using UnityEngine.Rendering.VirtualTexturing;
 
 namespace WorldTree
 {
@@ -23,18 +22,17 @@ namespace WorldTree
     /// </summary>
     public class SystemManager : Entity
     {
-        public UnitDictionary<Type, HashSet<Type>> ListenerTypes = new UnitDictionary<Type, HashSet<Type>>();//?
-
-        //接口类型，（实例类型，系统）
-        private UnitDictionary<Type, SystemGroup> ListenerSystems = new UnitDictionary<Type, SystemGroup>();
-        private UnitDictionary<Type, SystemGroup> TargetSystems = new UnitDictionary<Type, SystemGroup>();
 
 
         /// <summary>
-        /// 目标，接口类型，(监听类,系统)
+        /// 目标， 接口类型 ，(监听类,系统)    动态目标是Entity
         /// </summary>
-        private UnitDictionary<Type, Dictionary<Type, SystemGroup>> ListenerSystems_1 = new UnitDictionary<Type, Dictionary<Type, SystemGroup>>();
+        public UnitDictionary<Type, Dictionary<Type, SystemGroup>> TargetSystems = new UnitDictionary<Type, Dictionary<Type, SystemGroup>>();
 
+        /// <summary>
+        /// 监听类 ，接口类型，（目标，系统） 动态目标是Entity
+        /// </summary>
+        public UnitDictionary<Type, Dictionary<Type, SystemGroup>> ListenerSystems = new UnitDictionary<Type, Dictionary<Type, SystemGroup>>();
 
 
         //接口类型，（实例类型，系统）
@@ -62,35 +60,26 @@ namespace WorldTree
                 {
                     var LSystem = system as IListenerSystem;//转换为监听系统
 
-                    ListenerSystems.GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
-
-                    //?
                     if (LSystem.TargetEntityType == typeof(Entity) && LSystem.TargetSystemType != typeof(ISystem))
                     {
-                        EntitySystems.Add(LSystem);
+                        EntitySystems.Add(LSystem); //约束了系统
                     }
                     else
                     {
-                        ListenerSystems_1.GetOrNewValue(LSystem.TargetEntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
+                        //指定了实体，或 动态指定实体
 
-                        //TargetSystems.GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.TargetEntityType).Add(LSystem);
-                    }
-
-                    HashSet<Type> HashTypes = ListenerTypes.GetOrNewValue(LSystem.SystemType);
-                    if (!HashTypes.Contains(LSystem.EntityType))
-                    {
-                        HashTypes.Add(LSystem.EntityType);
+                        ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.TargetEntityType).Add(LSystem);
+                        TargetSystems.GetOrNewValue(LSystem.TargetEntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
                     }
                 }
                 else
                 {
-
                     InterfaceSystems.GetOrNewValue(system.SystemType).GetOrNewValue(system.EntityType).Add(system);
                 }
             }
 
 
-            foreach (IListenerSystem LSystem in EntitySystems)//? 
+            foreach (IListenerSystem LSystem in EntitySystems)//查询系统对应实体 
             {
                 if (InterfaceSystems.TryGetValue(LSystem.TargetSystemType, out SystemGroup group))
                 {
@@ -98,10 +87,10 @@ namespace WorldTree
                     {
                         foreach (var system in systemList.Value)
                         {
-                            ListenerSystems_1.GetOrNewValue(LSystem.TargetEntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
-
-                            //TargetSystems.GetOrNewValue(LSystem.SystemType).GetOrNewValue(system.EntityType).Add(LSystem);
+                            ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(system.EntityType).Add(LSystem);
+                            TargetSystems.GetOrNewValue(system.EntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
                         }
+
                     }
                 }
             }
@@ -114,27 +103,30 @@ namespace WorldTree
         /// <summary>
         /// 获取监听目标系统组
         /// </summary>
-        public bool TryGetListenerTargetGroup<T>(out SystemGroup systemGroup) where T : ISystem => TryGetListenerTargetGroup(typeof(T), out systemGroup);
-
-        /// <summary>
-        /// 获取监听目标系统组
-        /// </summary>
-        public bool TryGetListenerTargetGroup(Type Interface, out SystemGroup systemGroup) => TargetSystems.TryGetValue(Interface, out systemGroup);
+        public bool TryGetTargetSystemGroup<T>(Type targetType, out SystemGroup systemGroup)
+        {
+            if (TargetSystems.TryGetValue(targetType, out var systemGroups))
+            {
+                return systemGroups.TryGetValue(typeof(T), out systemGroup);
+            }
+            systemGroup = null;
+            return false;
+        }
 
         /// <summary>
         /// 获取监听目标系统列表
         /// </summary>
-        public bool TryGetListenerTargetSystems<T>(Type type, out List<ISystem> systems)
+        public bool TryGetTargetSystems<T>(Type targetType, Type listenerType, out List<ISystem> systems)
         {
-            if (TargetSystems.TryGetValue(typeof(T), out SystemGroup systemGroup))
+            if (TargetSystems.TryGetValue(targetType, out var systemGroups))
             {
-                return systemGroup.TryGetValue(type, out systems);
+                if (systemGroups.TryGetValue(typeof(T), out var systemGroup))
+                {
+                    return systemGroup.TryGetValue(listenerType, out systems);
+                }
             }
-            else
-            {
-                systems = null;
-                return false;
-            }
+            systems = null;
+            return false;
         }
         #endregion
 
@@ -143,26 +135,30 @@ namespace WorldTree
         /// <summary>
         /// 获取监听系统组
         /// </summary>
-        public bool TryGetListenerGroup<T>(out SystemGroup systemGroup) where T : ISystem => TryGetListenerGroup(typeof(T), out systemGroup);
+        public bool TryGetListenerSystemGroup<T>(Type listenerType, out SystemGroup systemGroup)
+        {
+            if (ListenerSystems.TryGetValue(listenerType, out var systemGroups))
+            {
+                return systemGroups.TryGetValue(typeof(T), out systemGroup);
+            }
+            systemGroup = null;
+            return false;
+        }
 
-        /// <summary>
-        /// 获取监听系统组
-        /// </summary>
-        public bool TryGetListenerGroup(Type Interface, out SystemGroup systemGroup) => ListenerSystems.TryGetValue(Interface, out systemGroup);
         /// <summary>
         /// 获取监听系统
         /// </summary>
-        public bool TryGetListenerSystems<T>(Type type, out List<ISystem> systems)
+        public bool TryGetListenerSystems<T>(Type listenerType, Type targetType, out List<ISystem> systems)
         {
-            if (ListenerSystems.TryGetValue(typeof(T), out SystemGroup systemGroup))
+            if (ListenerSystems.TryGetValue(listenerType, out var systemGroups))
             {
-                return systemGroup.TryGetValue(type, out systems);
+                if (systemGroups.TryGetValue(typeof(T), out var systemGroup))
+                {
+                    return systemGroup.TryGetValue(targetType, out systems);
+                }
             }
-            else
-            {
-                systems = null;
-                return false;
-            }
+            systems = null;
+            return false;
         }
         #endregion
 
@@ -243,7 +239,7 @@ namespace WorldTree
         public override void OnDispose()
         {
             InterfaceSystems.Clear();
-            ListenerSystems.Clear();
+            //ListenerSystems.Clear();
             TargetSystems.Clear();
             IsRecycle = true;
             IsDisposed = true;

@@ -162,8 +162,14 @@ namespace WorldTree
 
     public class EntityListenerSystems : UnitPoolItem
     {
+        /// <summary>
+        /// 监听器实体
+        /// </summary>
         public Entity listenerEntity;
 
+        /// <summary>
+        /// 监听器系统
+        /// </summary>
         public UnitDictionary<Type, IListenerSystem> listenerSystems;
 
         public override void OnRecycle()
@@ -174,170 +180,139 @@ namespace WorldTree
     }
 
 
-
-    public class EntityPoolSystemGlobalBroadcast : Entity//需要组件化，注册到对象池发送
+    /// <summary>
+    /// 实体池监听系统全局广播组件
+    /// </summary>
+    public class EntityPoolSystemGlobalBroadcast : Entity
     {
         public EntityPool pool;
 
-        public UnitQueue<long> addQueue;
-        public UnitDictionary<long, EntityListenerSystems> addListenerSystems;
+        /// <summary>
+        /// 监听器注册表  （系统类型（监听器，系统集合））
+        /// </summary>
+        public UnitDictionary<Type, UnitDictionary<long, EntityListenerSystems>> ListenerSystems;
 
-        public UnitQueue<long> removeQueue;
-        public UnitDictionary<long, EntityListenerSystems> removeListenerSystems;
+        /// <summary>
+        /// 用于遍历的 ID队列 （系统类型，实体ID）
+        /// </summary>
+        public UnitDictionary<Type, UnitQueue<long>> IdQueue;
 
-        public void BroadcastEntityAdd(Entity entity)
+        /// <summary>
+        /// 用于删除的  监听器实体系统类型（监听器实体，系统类型）
+        /// </summary>
+        public UnitDictionary<long, UnitHashSet<Type>> ListenerSystemTypes;
+
+
+        /// <summary>
+        /// 广播
+        /// </summary>
+        public void Broadcast<T>(Entity entity)
+            where T : IListenerSystem
         {
-            int length = addQueue.Count;
-            for (int i = 0; i < length; i++)
-            { 
-                long id = addQueue.Dequeue();
-                if (addListenerSystems.TryGetValue(id, out EntityListenerSystems entityListenerSystems))
+            if (IdQueue.TryGetValue(typeof(T), out var ids))
+            {
+                if (ListenerSystems.TryGetValue(typeof(T), out var entityListenerSystems))
                 {
-                    foreach (var listenerSystem in entityListenerSystems.listenerSystems)
+                    int length = ids.Count;
+                    for (int i = 0; i < length; i++)
                     {
-                        listenerSystem.Value.Invoke(entityListenerSystems.listenerEntity, entity);
+                        long id = ids.Dequeue();
+
+                        if (entityListenerSystems.TryGetValue(id, out var listenerSystems))
+                        {
+                            ids.Enqueue(id);
+                            foreach (var listenerSystem in listenerSystems.listenerSystems)
+                            {
+                                listenerSystem.Value.Invoke(listenerSystems.listenerEntity, entity);
+                            }
+                        }
                     }
-                    addQueue.Enqueue(id);
                 }
             }
-
         }
 
-        public void BroadcastEntityRemove(Entity entity)
-        {
 
-
+        /// <summary>
+        /// 添加监听器
+        /// </summary>
+        public void AddListener(Entity listener)
+        { 
+        
         }
-
-        public void AddAddListener(Entity listener, IListenerSystem listenerSystem)
+        /// <summary>
+        /// 移除监听器
+        /// </summary>
+        public void RemoveListener(long id)
         {
-            if (!addListenerSystems.TryGetValue(listener.id, out EntityListenerSystems entityListener))
+            if (ListenerSystemTypes.TryGetValue(id, out var types))
             {
-                entityListener = this.PoolGet<EntityListenerSystems>();
-                entityListener.listenerEntity = listener;
-                entityListener.listenerSystems = this.PoolGet<UnitDictionary<Type, IListenerSystem>>();
-                entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
-                addListenerSystems.Add(listener.id, entityListener);
-                addQueue.Enqueue(listener.id);
-            }
-            else //监听器已经注册
-            {
-                if (!entityListener.listenerSystems.ContainsKey(listenerSystem.SystemType))
+                foreach (var type in types)
                 {
-                    entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
+                    if (ListenerSystems.TryGetValue(type, out var Listeners))
+                    {
+                        foreach (var Listener in Listeners)
+                        {
+                            Listener.Value.Dispose();
+                        }
+                        Listeners.Dispose();
+                        ListenerSystems.Remove(type);
+                    }
+                    if (IdQueue.TryGetValue(type, out var ids))
+                    {
+                        ids.Dequeue();
+                        IdQueue.Remove(type);
+                    }
                 }
+                ListenerSystemTypes.Remove(id);
             }
-        }
-
-        public void AddRemoveListener(Entity listener, IListenerSystem listenerSystem)
-        {
-            if (!removeListenerSystems.TryGetValue(listener.id, out EntityListenerSystems entityListener))
-            {
-                entityListener = this.PoolGet<EntityListenerSystems>();
-                entityListener.listenerEntity = listener;
-                entityListener.listenerSystems = this.PoolGet<UnitDictionary<Type, IListenerSystem>>();
-                entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
-                removeListenerSystems.Add(listener.id, entityListener);
-                removeQueue.Enqueue(listener.id);
-            }
-            else //监听器已经注册
-            {
-                if (!entityListener.listenerSystems.ContainsKey(listenerSystem.SystemType))
-                {
-                    entityListener.listenerSystems.Add(listenerSystem.SystemType, listenerSystem);
-                }
-            }
-        }
-
-        public void RemoveAddListener(long id)
-        {
-            if (addListenerSystems.ContainsKey(id))
-            {
-                addListenerSystems.Remove(id);
-
-            }
-        }
-        public void RemoveRemoveListener(long id)
-        {
-            removeListenerSystems.Remove(id);
         }
 
 
     }
     class EntityPoolSystemGlobalBroadcastAddSystem : AddSystem<EntityPoolSystemGlobalBroadcast>
     {
-
-
-
         public override void OnAdd(EntityPoolSystemGlobalBroadcast self)
         {
-
             if (self.TryGetParent(out self.pool))
             {
-                self.addListenerSystems ??= self.PoolGet<UnitDictionary<long, EntityListenerSystems>>();
-                self.removeListenerSystems ??= self.PoolGet<UnitDictionary<long, EntityListenerSystems>>();
+                if (self.ListenerSystems is null) self.PoolGet(out self.ListenerSystems);
+                if (self.ListenerSystemTypes is null) self.PoolGet(out self.ListenerSystemTypes);
+                if (self.IdQueue is null) self.PoolGet(out self.IdQueue);
 
-                //实体添加系统
-                if (self.TryGetListenerTargetSystems<IEntityAddSystem>(self.pool.ObjectType, out List<ISystem> addEntitySystems))
+                if (self.Root.SystemManager.TargetSystems.TryGetValue(self.pool.ObjectType, out var systemGroups))
                 {
-                    foreach (IEntityAddSystem listenerSystem in addEntitySystems)//遍历 实体添加监听系统 列表
+                    foreach (var systemGroup in systemGroups)//系统类型
                     {
-                        if (self.Root.EntityAddListeners.TryGetValue(listenerSystem.EntityType, out UnitDictionary<long, Entity> listeners))
+                        foreach (var listenerSystems in systemGroup.Value)//监听类型
                         {
-                            foreach (var listener in listeners)
+                            if (self.Root.EntityListeners.TryGetValue(listenerSystems.Key, out var listeners))//拿到对应类型的监听器实体集合
                             {
-                                self.AddAddListener(listener.Value, listenerSystem);
+                                if (!self.ListenerSystems.TryGetValue(systemGroup.Key, out var entityListener)) self.PoolGet(out entityListener);
+                                if (!self.IdQueue.TryGetValue(systemGroup.Key, out var ids)) self.PoolGet(out ids);
+
+                                foreach (var listener in listeners)//遍历监听器实体进行注册
+                                {
+                                    if (!entityListener.TryGetValue(listener.Key, out var entityListenerSystems))
+                                    {
+                                        ids.Enqueue(listener.Key);
+                                        self.PoolGet(out entityListenerSystems);
+                                        entityListenerSystems.listenerEntity = listener.Value;
+                                    }
+
+                                    foreach (IListenerSystem listenerSystem in listenerSystems.Value)//遍历监听器系统进行注册
+                                    {
+                                        if (!self.ListenerSystemTypes.TryGetValue(listener.Key, out var systemTypes)) self.PoolGet(out systemTypes);
+                                        if (systemTypes.Contains(listenerSystem.SystemType)) { systemTypes.Add(listenerSystem.SystemType); }
+
+                                        entityListenerSystems.listenerSystems.TryAdd(listenerSystem.GetType(), listenerSystem);
+                                    }
+                                }
                             }
                         }
                     }
                 }
-                if (self.TryGetListenerTargetSystems<IEntityRemoveSystem>(typeof(Entity), out addEntitySystems))
-                {
-                    foreach (IEntityAddSystem listenerSystem in addEntitySystems)
-                    {
-                        //不指定实体，不指定系统      ,不指定实体，指定系统
-                        if (listenerSystem.TargetSystemType == typeof(ISystem) ? true : self.TryGetSystems(self.pool.ObjectType, listenerSystem.TargetSystemType, out _))
-                            if (self.Root.EntityAddListeners.TryGetValue(listenerSystem.EntityType, out UnitDictionary<long, Entity> listeners))
-                            {
-                                foreach (var listener in listeners)
-                                {
-                                    self.AddAddListener(listener.Value, listenerSystem);
-                                }
-                            }
-                    }
-                }
-
-                //实体移除系统
-                if (self.TryGetListenerTargetSystems<IEntityRemoveSystem>(self.pool.ObjectType, out List<ISystem> removeEntityListenerSystems))//指定实体，不指定系统
-                {
-                    foreach (IEntityRemoveSystem listenerSystem in removeEntityListenerSystems)//遍历 实体添加监听系统 列表
-                    {
-                        if (self.Root.EntityRemoveListeners.TryGetValue(listenerSystem.EntityType, out UnitDictionary<long, Entity> listeners))
-                        {
-                            foreach (var listener in listeners)
-                            {
-                                self.AddRemoveListener(listener.Value, listenerSystem);
-                            }
-                        }
-                    }
-                }
-                if (self.TryGetListenerTargetSystems<IEntityRemoveSystem>(typeof(Entity), out removeEntityListenerSystems))
-                {
-                    foreach (IEntityRemoveSystem listenerSystem in removeEntityListenerSystems)
-                    {
-                        //不指定实体，不指定系统      ,不指定实体，指定系统
-                        if (listenerSystem.TargetSystemType == typeof(ISystem) ? true : self.TryGetSystems(self.pool.ObjectType, listenerSystem.TargetSystemType, out _))
-                            if (self.Root.EntityRemoveListeners.TryGetValue(listenerSystem.EntityType, out UnitDictionary<long, Entity> listeners))
-                            {
-                                foreach (var listener in listeners)
-                                {
-                                    self.AddRemoveListener(listener.Value, listenerSystem);
-                                }
-                            }
-                    }
-                }
-
             }
+
         }
     }
     public class EntityPoolSystemGlobalBroadcastRemoveSystem : RemoveSystem<EntityPoolSystemGlobalBroadcast>
@@ -346,24 +321,33 @@ namespace WorldTree
         {
             if (self.TryGetParent(out self.pool))
             {
-                foreach (var item in self.addListenerSystems)
+                foreach (var Listeners in self.ListenerSystems)
                 {
-                    item.Value.Dispose();
+                    foreach (var Listener in Listeners.Value)
+                    {
+                        Listener.Value.Dispose();
+                    }
+                    Listeners.Value.Dispose();
                 }
+                self.ListenerSystems.Dispose();
+                self.ListenerSystems = null;
 
-                foreach (var item in self.removeListenerSystems)
+
+                foreach (var types in self.ListenerSystemTypes)
                 {
-                    item.Value.Dispose();
+                    types.Value.Dispose();
                 }
+                self.ListenerSystemTypes.Dispose();
+                self.ListenerSystemTypes = null;
 
-                self.addListenerSystems.Dispose();
-                self.removeListenerSystems.Dispose();
 
-                self.addListenerSystems = null;
-                self.removeListenerSystems = null;
+                foreach (var ids in self.IdQueue)
+                {
+                    ids.Value.Dispose();
+                }
+                self.IdQueue.Dispose();
+                self.IdQueue = null;
             }
-
-
         }
     }
 
