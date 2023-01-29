@@ -33,23 +33,12 @@ namespace WorldTree
         public UnitDictionary<long, Entity> allEntity = new UnitDictionary<long, Entity>();
 
         /// <summary>
-        /// 添加监听器
-        /// </summary>
-        public UnitDictionary<Type, UnitDictionary<long, Entity>> EntityAddListeners = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
-        /// <summary>
-        /// 移除监听器
-        /// </summary>
-        public UnitDictionary<Type, UnitDictionary<long, Entity>> EntityRemoveListeners = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
-
-
-        /// <summary>
-        /// 监听器类型 ，监听器组合     （静态）
+        /// 监听器类型 ，监听器组合（静态）
         /// </summary>
         public UnitDictionary<Type, UnitDictionary<long, Entity>> EntityListeners = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
 
 
         //系统类型,目标，监听列表
-
         //动态
         UnitDictionary< long, Type> ListenerBindPool = new UnitDictionary<long, Type>();
         UnitDictionary<Type, List<long>> PoolBindListener = new UnitDictionary<Type, List<long>>();
@@ -140,8 +129,7 @@ namespace WorldTree
         public override void Dispose()
         {
             RemoveAll();
-            EntityAddListeners.Clear();
-            EntityRemoveListeners.Clear();
+            EntityListeners.Clear();
         }
 
 
@@ -151,38 +139,8 @@ namespace WorldTree
             Type entityType = entity.Type;
 
             //广播给全部监听器
-            if (entityAddSystems != null)
-            {
-                if (entityAddSystems.TryGetValue(entity.Type, out List<ISystem> Listeners))//指定实体，不指定系统
-                {
-                    foreach (IEntityAddSystem listenerSystem in Listeners)
-                    {
-                        if (EntityAddListeners.TryGetValue(listenerSystem.TargetEntityType, out UnitDictionary<long, Entity> listeners))
-                        {
-                            foreach (var listener in listeners)
-                            {
-                                listenerSystem.Invoke(listener.Value, entity);
-                            }
-                        }
-                    }
-                }
-                if (entityAddSystems.TryGetValue(typeof(Entity), out Listeners))
-                {
-                    foreach (IEntityAddSystem listenerSystem in Listeners)
-                    {
-                        //不指定实体，不指定系统      ,不指定实体，指定系统
-                        if (listenerSystem.TargetSystemType == typeof(ISystem) ? true : SystemManager.TryGetSystems(entity.Type, listenerSystem.TargetSystemType, out _))
-                            if (EntityAddListeners.TryGetValue(listenerSystem.TargetEntityType, out UnitDictionary<long, Entity> listeners))
-                            {
-                                foreach (var listener in listeners)
-                                {
-                                    listenerSystem.Invoke(listener.Value, entity);
-                                }
-                            }
-                    }
-                }
-            }
-
+            //!!!!!!
+          
             allEntity.TryAdd(entity.id, entity);
             //这个实体的添加事件
 
@@ -246,38 +204,7 @@ namespace WorldTree
             allEntity.Remove(entity.id);
 
             //广播给全部监听器
-            if (entityRemoveSystems != null)
-            {
-                if (entityRemoveSystems.TryGetValue(entity.Type, out List<ISystem> Listeners))
-                {
-                    foreach (IEntityRemoveSystem listenerSystem in Listeners)
-                    {
-                        if (EntityRemoveListeners.TryGetValue(listenerSystem.TargetEntityType, out UnitDictionary<long, Entity> listeners))
-                        {
-                            foreach (var listener in listeners)
-                            {
-                                listenerSystem.Invoke(listener.Value, entity);
-                            }
-                        }
-                    }
-                }
-                if (entityRemoveSystems.TryGetValue(typeof(Entity), out Listeners))
-                {
-                    foreach (IEntityRemoveSystem listenerSystem in Listeners)
-                    {
-                        //不指定实体，不指定系统      ,不指定实体，指定系统
-                        if (listenerSystem.TargetSystemType == typeof(ISystem) ? true : SystemManager.TryGetSystems(entity.Type, listenerSystem.TargetSystemType, out _))
-                            if (EntityRemoveListeners.TryGetValue(listenerSystem.TargetEntityType, out UnitDictionary<long, Entity> listeners))
-                            {
-                                foreach (var listener in listeners)
-                                {
-                                    listenerSystem.Invoke(listener.Value, entity);
-                                }
-                            }
-                    }
-                }
-            }
-
+            //!!!!!!
         }
     }
 }
