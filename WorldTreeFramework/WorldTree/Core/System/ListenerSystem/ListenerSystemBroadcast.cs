@@ -54,6 +54,7 @@ namespace WorldTree
         public ListenerSystemBroadcast(Type type)
         {
             entityType = type;
+            //self.GetListener<Iupdate,Node>().send(entity);
         }
 
 

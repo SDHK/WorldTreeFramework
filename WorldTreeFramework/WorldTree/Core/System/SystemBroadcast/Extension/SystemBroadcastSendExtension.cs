@@ -1,13 +1,4 @@
-﻿/****************************************
-
-* 作者： 闪电黑客
-* 日期： 2022/9/16 22:03
-
-* 描述： 
-
-*/
-
-namespace WorldTree
+﻿namespace WorldTree
 {
     public partial class SystemBroadcast
     {
@@ -147,4 +138,5 @@ namespace WorldTree
             }
         }
     }
+
 }

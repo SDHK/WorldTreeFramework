@@ -9,8 +9,6 @@
 
 */
 
-using System;
-
 namespace WorldTree
 {
     /// <summary>
@@ -18,7 +16,9 @@ namespace WorldTree
     /// </summary>
     public partial class SystemBroadcast : Entity
     {
-
+        /// <summary>
+        /// 系统组
+        /// </summary>
         public SystemGroup systems;
 
         public UnitQueue<long> updateQueue;
@@ -30,44 +30,36 @@ namespace WorldTree
             return $"SystemBroadcast : {systems?.systemType}";
         }
 
+        /// <summary>
+        /// 添加实体
+        /// </summary>
         public void AddEntity(Entity entity)
         {
-            if (systems != null)
-                if (systems.ContainsKey(entity.Type))
-                {
-                    updateQueue.Enqueue(entity.id);
-                    update2.Add(entity.id, entity);
-                }
+            if (update1.ContainsKey(entity.id) || update2.ContainsKey(entity.id)) return;
+
+            updateQueue.Enqueue(entity.id);
+            update2.Add(entity.id, entity);
+
         }
 
+        /// <summary>
+        /// 移除实体
+        /// </summary>
         public void RemoveEntity(Entity entity)
         {
-            if (systems != null)
-                if (systems.ContainsKey(entity.Type))
-                {
-                    update1.Remove(entity.id);
-                    update2.Remove(entity.id);
-                }
+            update1.Remove(entity.id);
+            update2.Remove(entity.id);
         }
-
-    }
-
-    class SystemBroadcastAwakeSystem : AwakeSystem<SystemBroadcast, Type>
-    {
-        public override void OnAwake(SystemBroadcast self, Type type)
+        /// <summary>
+        /// 清除
+        /// </summary>
+        public void Clear()
         {
-            self.Root.SystemManager.TryGetGroup(type, out self.systems);
+            update1.Clear();
+            update2.Clear();
+            updateQueue.Clear();
         }
     }
-
-    class SystemBroadcastEntityRemoveSystem : EntityRemoveSystem<SystemBroadcast>
-    {
-        public override void OnEntityRemove(SystemBroadcast self, Entity entity)
-        {
-            self.RemoveEntity(entity);
-        }
-    }
-
 
     class SystemBroadcastAddSystem : AddSystem<SystemBroadcast>
     {

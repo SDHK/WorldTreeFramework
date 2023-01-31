@@ -38,8 +38,8 @@ namespace WorldTree
         /// </summary>
         Type TargetSystemType { get; }
     }
-    public interface IEntityAddSystem : IListenerSystem { }
-    public interface IEntityRemoveSystem : IListenerSystem { }
+    public interface IListenerAddSystem : IListenerSystem { }
+    public interface IListenerRemoveSystem : IListenerSystem { }
 
     /// <summary>
     /// 监听系统抽象基类
@@ -53,46 +53,46 @@ namespace WorldTree
     /// <summary>
     /// 实体添加时
     /// </summary>
-    public abstract class EntityAddSystem<LE, TE, TS> : ListenerSystemBase<LE, IEntityAddSystem, TE, TS>, IEntityAddSystem
+    public abstract class ListenerAddSystem<LE, TE, TS> : ListenerSystemBase<LE, IListenerAddSystem, TE, TS>, IListenerAddSystem
         where TE : Entity
         where LE : Entity
         where TS : ISystem
     {
-        public void Invoke(Entity self, Entity entity) => OnEntityAdd(self as LE, entity as TE);
-        public abstract void OnEntityAdd(LE self, TE entity);
+        public void Invoke(Entity self, Entity entity) => OnAdd(self as LE, entity as TE);
+        public abstract void OnAdd(LE self, TE entity);
     }
 
     /// <summary>
     /// 实体移除时
     /// </summary>
-    public abstract class EntityRemoveSystem<LE, TE, TS> : ListenerSystemBase<LE, IEntityRemoveSystem, TE, TS>, IEntityRemoveSystem
+    public abstract class ListenerRemoveSystem<LE, TE, TS> : ListenerSystemBase<LE, IListenerRemoveSystem, TE, TS>, IListenerRemoveSystem
         where TE : Entity
         where LE : Entity
         where TS : ISystem
     {
-        public void Invoke(Entity self, Entity entity) => OnEntityRemove(self as LE, entity as TE);
-        public abstract void OnEntityRemove(LE self, TE entity);
+        public void Invoke(Entity self, Entity entity) => OnRemove(self as LE, entity as TE);
+        public abstract void OnRemove(LE self, TE entity);
     }
 
 
     /// <summary>
     /// 实体添加时
     /// </summary>
-    public abstract class EntityAddSystem<LE> : ListenerSystemBase<LE, IEntityAddSystem, Entity, ISystem>, IEntityAddSystem
+    public abstract class ListenerAddSystem<LE> : ListenerSystemBase<LE, IListenerAddSystem, Entity, ISystem>, IListenerAddSystem
         where LE : Entity
     {
-        public void Invoke(Entity self, Entity entity) => OnEntityAdd(self as LE, entity);
-        public abstract void OnEntityAdd(LE self, Entity entity);
+        public void Invoke(Entity self, Entity entity) => OnAdd(self as LE, entity);
+        public abstract void OnAdd(LE self, Entity entity);
     }
 
 
     /// <summary>
     /// 实体移除时
     /// </summary>
-    public abstract class EntityRemoveSystem<LE> : ListenerSystemBase<LE, IEntityRemoveSystem, Entity, ISystem>, IEntityRemoveSystem
+    public abstract class ListenerRemoveSystem<LE> : ListenerSystemBase<LE, IListenerRemoveSystem, Entity, ISystem>, IListenerRemoveSystem
         where LE : Entity
     {
-        public void Invoke(Entity self, Entity entity) => OnEntityRemove(self as LE, entity);
-        public abstract void OnEntityRemove(LE self, Entity entity);
+        public void Invoke(Entity self, Entity entity) => OnRemove(self as LE, entity);
+        public abstract void OnRemove(LE self, Entity entity);
     }
 }

@@ -101,11 +101,11 @@ namespace WorldTree
             enableSystems = Root.SystemManager.GetGroup<IEnableSystem>();
             disableSystems = Root.SystemManager.GetGroup<IDisableSystem>();
 
-            //Root.SystemManager.TryGetListenerGroup<IEntityAddSystem>(out entityAddSystems);
-            //Root.SystemManager.TryGetListenerGroup<IEntityRemoveSystem>(out entityRemoveSystems);
+            //Root.SystemManager.TryGetListenerGroup<IListenerAddSystem>(out entityAddSystems);
+            //Root.SystemManager.TryGetListenerGroup<IListenerRemoveSystem>(out entityRemoveSystems);
 
-            //Root.SystemManager.ListenerTypes.TryGetValue(typeof(IEntityAddSystem), out AddListenerTypes);
-            //Root.SystemManager.ListenerTypes.TryGetValue(typeof(IEntityRemoveSystem), out RemoveListenerTypes);
+            //Root.SystemManager.ListenerTypes.TryGetValue(typeof(IListenerAddSystem), out AddListenerTypes);
+            //Root.SystemManager.ListenerTypes.TryGetValue(typeof(IListenerRemoveSystem), out RemoveListenerTypes);
             //singletonEagerSystems = SystemManager.GetGroup<ISingletonEagerSystem>();
 
 

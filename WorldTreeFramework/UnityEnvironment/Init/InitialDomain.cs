@@ -28,8 +28,9 @@ namespace WorldTree
     {
         public override void OnAdd(InitialDomain self)
         {
-            self.SendSystem<IAddSystem>();
-            self.SendSystem<IRemoveSystem>();
+            self.TrySendSystem<IAddSystem>();
+            self.TrySendSystem<IRemoveSystem>();
+
 
             //Dictionary<string,int> dic = self.AddComponent<EntityDictionary<string,int>>().Value;
 

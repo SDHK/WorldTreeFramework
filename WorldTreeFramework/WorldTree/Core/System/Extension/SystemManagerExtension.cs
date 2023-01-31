@@ -49,19 +49,6 @@ namespace WorldTree
         /// </summary>
         public static bool TryGetSystems(this Entity self, Type entityType, Type systemType, out List<ISystem> systems) => self.Root.SystemManager.TryGetSystems(entityType, systemType, out systems);
 
-
-
-        /// <summary>
-        /// 获取系统全局广播
-        /// </summary>
-        public static SystemBroadcast GetSystemGlobalBroadcast<T>(this Entity self)
-        where T : ISystem
-        {
-            var systemBroadcast = self.Root.SystemManager.AddChildren<SystemBroadcast, Type>(typeof(T));
-            systemBroadcast.AddComponent<SystemBroadcastGlobalListener>();
-            return systemBroadcast;
-        }
-
     }
 
 }

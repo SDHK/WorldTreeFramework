@@ -124,6 +124,11 @@ namespace WorldTree
             return pool;
         }
 
+        public bool TryGetPool(Type type,out EntityPool pool)
+        {
+            return pools.TryGetValue(type, out pool);
+        }
+
         /// <summary>
         /// 释放池
         /// </summary>

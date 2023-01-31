@@ -48,7 +48,6 @@ namespace WorldTree
 
         private void Update()
         {
-
             Profiler.BeginSample("SDHK");
 
             enable.Send();

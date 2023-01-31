@@ -104,10 +104,19 @@ namespace WorldTree
         /// 获取监听目标系统组
         /// </summary>
         public bool TryGetTargetSystemGroup<T>(Type targetType, out SystemGroup systemGroup)
+            where T : IListenerSystem
+        {
+            return TryGetTargetSystemGroup(typeof(T), targetType, out systemGroup);
+        }
+
+        /// <summary>
+        /// 获取监听目标系统组
+        /// </summary>
+        public bool TryGetTargetSystemGroup(Type systemType,  Type targetType, out SystemGroup systemGroup)
         {
             if (TargetSystems.TryGetValue(targetType, out var systemGroups))
             {
-                return systemGroups.TryGetValue(typeof(T), out systemGroup);
+                return systemGroups.TryGetValue(systemType, out systemGroup);
             }
             systemGroup = null;
             return false;

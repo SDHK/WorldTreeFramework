@@ -171,16 +171,16 @@ namespace WorldTree
         }
     }
 
-    class WindowManagerEntityAddSystem : EntityAddSystem<WindowManager>
+    class WindowManagerEntityAddSystem : ListenerAddSystem<WindowManager>
     {
-        public override void OnEntityAdd(WindowManager self, Entity entity)
+        public override void OnAdd(WindowManager self, Entity entity)
         {
 
         }
     }
-    class WindowManagerEntityRemoveSystem : EntityRemoveSystem<WindowManager>
+    class WindowManagerEntityRemoveSystem : ListenerRemoveSystem<WindowManager>
     {
-        public override void OnEntityRemove(WindowManager self, Entity entity)
+        public override void OnRemove(WindowManager self, Entity entity)
         {
 
         }
