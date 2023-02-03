@@ -39,9 +39,9 @@ namespace WorldTree
             update = root.GetSystemGlobalBroadcast<IUpdateSystem>();
             disable = root.GetSystemGlobalBroadcast<IDisableSystem>();
 
-            lateUpdate = root.GetSystemGlobalBroadcast<ILateUpdateSystem>();
-            fixedUpdate = root.GetSystemGlobalBroadcast<IFixedUpdateSystem>();
-            onGUI = root.GetSystemGlobalBroadcast<IOnGUISystem>();
+            //lateUpdate = root.GetSystemGlobalBroadcast<ILateUpdateSystem>();
+            //fixedUpdate = root.GetSystemGlobalBroadcast<IFixedUpdateSystem>();
+            //onGUI = root.GetSystemGlobalBroadcast<IOnGUISystem>();
 
             root.AddComponent<InitialDomain>();
         }
@@ -50,9 +50,9 @@ namespace WorldTree
         {
             Profiler.BeginSample("SDHK");
 
-            enable.Send();
-            update.Send(Time.deltaTime);
-            disable.Send();
+            //enable.Send();
+            //update.Send(Time.deltaTime);
+            //disable.Send();
 
             Profiler.EndSample();
 
@@ -61,11 +61,11 @@ namespace WorldTree
 
         private void LateUpdate()
         {
-            lateUpdate?.Send(Time.deltaTime);
+            //lateUpdate?.Send(Time.deltaTime);
         }
         private void FixedUpdate()
         {
-            fixedUpdate.Send(Time.fixedDeltaTime);
+            //fixedUpdate.Send(Time.fixedDeltaTime);
         }
 
         //private void OnGUI()

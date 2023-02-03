@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace WorldTree
 {
@@ -24,19 +25,21 @@ namespace WorldTree
     {
         public int index = 0;
     }
+    //内联函数，缩短函数调用时间
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     class _InitialDomain : AddSystem<InitialDomain>
     {
-        public override void OnAdd(InitialDomain self)
+        public override async void OnAdd(InitialDomain self)
         {
             self.TrySendSystem<IAddSystem>();
             self.TrySendSystem<IRemoveSystem>();
-
 
             //Dictionary<string,int> dic = self.AddComponent<EntityDictionary<string,int>>().Value;
 
 
 
             //World.Log("初始域启动！");
+            GameObject gameObject = await Addressables.InstantiateAsync("MainWindow").Task;
 
             //GameObject gameObject = await self.AddressablesInstantiateAsync("MainWindow");
 

@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using UnityEngine.Rendering.VirtualTexturing;
 
 namespace WorldTree
 {
@@ -23,6 +24,10 @@ namespace WorldTree
     public class SystemManager : Entity
     {
 
+        /// <summary>
+        /// 动态监听器类型标记
+        /// </summary>
+        public UnitHashSet<Type> DynamicListenerTypes = new UnitHashSet<Type>();
 
         /// <summary>
         /// 目标， 接口类型 ，(监听类,系统)    动态目标是Entity
@@ -68,13 +73,27 @@ namespace WorldTree
                     {
                         //指定了实体，或 动态指定实体
 
-                        ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.TargetEntityType).Add(LSystem);
-                        TargetSystems.GetOrNewValue(LSystem.TargetEntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
+                        var ListenerGroup = ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType);
+                        ListenerGroup.GetOrNewValue(LSystem.TargetEntityType).Add(LSystem);
+                        ListenerGroup.systemType = system.SystemType;
+
+                        var TargetGroup = TargetSystems.GetOrNewValue(LSystem.TargetEntityType).GetOrNewValue(LSystem.SystemType);
+                        TargetGroup.GetOrNewValue(LSystem.EntityType).Add(LSystem);
+                        TargetGroup.systemType = system.SystemType;
+
+                        //动态监听器判断
+                        if (LSystem.TargetEntityType == typeof(Entity) && LSystem.TargetSystemType == typeof(ISystem))
+                        {
+                            if (!DynamicListenerTypes.Contains(LSystem.EntityType)) DynamicListenerTypes.Add(LSystem.EntityType);
+                        }
+
                     }
                 }
                 else
                 {
-                    InterfaceSystems.GetOrNewValue(system.SystemType).GetOrNewValue(system.EntityType).Add(system);
+                    var group = InterfaceSystems.GetOrNewValue(system.SystemType);
+                    group.GetOrNewValue(system.EntityType).Add(system);
+                    group.systemType = system.SystemType;
                 }
             }
 
@@ -87,8 +106,13 @@ namespace WorldTree
                     {
                         foreach (var system in systemList.Value)
                         {
-                            ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(system.EntityType).Add(LSystem);
-                            TargetSystems.GetOrNewValue(system.EntityType).GetOrNewValue(LSystem.SystemType).GetOrNewValue(LSystem.EntityType).Add(LSystem);
+                            var ListenerGroup = ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType);
+                            ListenerGroup.GetOrNewValue(system.EntityType).Add(LSystem);
+                            ListenerGroup.systemType = system.SystemType;
+
+                            var TargetGroup = TargetSystems.GetOrNewValue(system.EntityType).GetOrNewValue(LSystem.SystemType);
+                            TargetGroup.GetOrNewValue(LSystem.EntityType).Add(LSystem);
+                            TargetGroup.systemType = system.SystemType;
                         }
 
                     }
@@ -112,7 +136,7 @@ namespace WorldTree
         /// <summary>
         /// 获取监听目标系统组
         /// </summary>
-        public bool TryGetTargetSystemGroup(Type systemType,  Type targetType, out SystemGroup systemGroup)
+        public bool TryGetTargetSystemGroup(Type systemType, Type targetType, out SystemGroup systemGroup)
         {
             if (TargetSystems.TryGetValue(targetType, out var systemGroups))
             {

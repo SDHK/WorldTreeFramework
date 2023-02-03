@@ -20,7 +20,7 @@ namespace WorldTree
     public interface IAsyncTask : ICriticalNotifyCompletion
     {
         bool IsCompleted { get; set; }
-        IAsyncTask GetResult();
+        void GetResult();
         void SetResult();
         void SetException(Exception exception);
     }
@@ -74,9 +74,8 @@ namespace WorldTree
             this.Exception = exception;
         }
 
-        public IAsyncTask GetResult()
+        public void GetResult()
         {
-            return this;
         }
         public void SetResult()
         {

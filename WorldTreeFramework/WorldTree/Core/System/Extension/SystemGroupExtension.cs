@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
@@ -94,7 +95,7 @@ namespace WorldTree
             return bit;
         }
 
-
+        
         public static void Send(this SystemGroup group, Entity self)
         {
             group.TrySend(self);
