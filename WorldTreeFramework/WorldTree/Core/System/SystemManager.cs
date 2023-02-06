@@ -75,11 +75,11 @@ namespace WorldTree
 
                         var ListenerGroup = ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType);
                         ListenerGroup.GetOrNewValue(LSystem.TargetEntityType).Add(LSystem);
-                        ListenerGroup.systemType = system.SystemType;
+                        ListenerGroup.systemType = LSystem.SystemType;
 
                         var TargetGroup = TargetSystems.GetOrNewValue(LSystem.TargetEntityType).GetOrNewValue(LSystem.SystemType);
                         TargetGroup.GetOrNewValue(LSystem.EntityType).Add(LSystem);
-                        TargetGroup.systemType = system.SystemType;
+                        TargetGroup.systemType = LSystem.SystemType;
 
                         //动态监听器判断
                         if (LSystem.TargetEntityType == typeof(Entity) && LSystem.TargetSystemType == typeof(ISystem))
@@ -108,11 +108,11 @@ namespace WorldTree
                         {
                             var ListenerGroup = ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType);
                             ListenerGroup.GetOrNewValue(system.EntityType).Add(LSystem);
-                            ListenerGroup.systemType = system.SystemType;
+                            ListenerGroup.systemType = LSystem.SystemType;
 
                             var TargetGroup = TargetSystems.GetOrNewValue(system.EntityType).GetOrNewValue(LSystem.SystemType);
                             TargetGroup.GetOrNewValue(LSystem.EntityType).Add(LSystem);
-                            TargetGroup.systemType = system.SystemType;
+                            TargetGroup.systemType = LSystem.SystemType;
                         }
 
                     }

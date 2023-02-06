@@ -126,6 +126,14 @@ public class Node1 : Entity
 {
 
 }
+
+class Node1AddSystem : AddSystem<Node1>
+{
+    public override void OnAdd(Node1 self)
+    {
+        Debug.Log("Node1 OnAdd!!");
+    }
+}
 class Node1EnableSystem : EnableSystem<Node1>
 {
     public override void OnEnable(Node1 self)

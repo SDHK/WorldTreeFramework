@@ -151,13 +151,17 @@ namespace WorldTree
         /// </summary>
         public void RemoveAllChildren()
         {
-            while (children!=null? children.Count!=0:false)
+            if (children != null ? children.Count != 0 : false)
             {
-                var enumerator = children.Values.GetEnumerator();
-                enumerator.MoveNext();
-                Entity entity = enumerator.Current;
-                enumerator.Dispose();
-                entity.Dispose();
+                var entitys = Root.PoolGet<UnitStack<Entity>>();
+                foreach (var item in children) entitys.Push(item.Value);
+
+                int length = entitys.Count;
+                for (int i = 0; i < length; i++)
+                {
+                    entitys.Pop().Dispose();
+                }
+                entitys.Dispose();
             }
         }
 

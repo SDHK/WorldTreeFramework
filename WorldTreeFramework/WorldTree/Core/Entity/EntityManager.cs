@@ -63,6 +63,7 @@ namespace WorldTree
         public SystemManager SystemManager;
         public UnitPoolManager UnitPoolManager;
         public EntityPoolManager EntityPoolManager;
+        public StaticListenerBroadcastManager StaticListenerBroadcastManager;
 
 
         public EntityManager() : base()
@@ -76,6 +77,7 @@ namespace WorldTree
             SystemManager = new SystemManager();
             UnitPoolManager = new UnitPoolManager();
             EntityPoolManager = new EntityPoolManager();
+            StaticListenerBroadcastManager = new StaticListenerBroadcastManager();
 
             //赋予根节点
             Root = this;
@@ -83,6 +85,7 @@ namespace WorldTree
             SystemManager.Root = this;
             UnitPoolManager.Root = this;
             EntityPoolManager.Root = this;
+            StaticListenerBroadcastManager.Root = this;
 
             //赋予id
             Root.id = IdManager.GetId();
@@ -90,6 +93,7 @@ namespace WorldTree
             SystemManager.id = IdManager.GetId();
             UnitPoolManager.id = IdManager.GetId();
             EntityPoolManager.id = IdManager.GetId();
+            StaticListenerBroadcastManager.id = IdManager.GetId();
 
             //实体管理器系统事件获取
             addSystems = Root.SystemManager.GetGroup<IAddSystem>();
@@ -113,6 +117,7 @@ namespace WorldTree
             AddComponent(SystemManager);
             AddComponent(UnitPoolManager);
             AddComponent(EntityPoolManager);
+            AddComponent(StaticListenerBroadcastManager);
 
             //饿汉单例启动
             //singletonEagerSystems?.Send(this);
@@ -134,7 +139,11 @@ namespace WorldTree
         {
             //广播给全部监听器!!!!
             //entity.GetStaticListenerSystemGlobalBroadcast<IListenerAddSystem>()?.Send();
-            entity.GetDynamicListenerSystemGlobalBroadcast<IListenerAddSystem>()?.Send();
+            //entity.GetDynamicListenerSystemGlobalBroadcast<IListenerAddSystem>()?.Send();
+
+            entity.TrySendListener<IListenerAddSystem>();
+
+
 
             allEntity.TryAdd(entity.id, entity);
 
@@ -146,16 +155,18 @@ namespace WorldTree
 
             //检测添加静态监听
             //StaticListenerAdd(entity);
+            StaticListenerBroadcastManager.TryAddListener(entity);
+
 
             //检测添加动态监听
-            if (entity.ListenerSwitchesTarget(typeof(Entity), ListenerState.Entity))
-            {
-                if (!DynamicListenerPool.TryGetValue(entity.listenerTarget, out var listeners))
-                {
-                    listeners = new UnitDictionary<long, Entity>();
-                }
-                listeners.TryAdd(entity.id, entity);
-            }
+            //if (entity.ListenerSwitchesTarget(typeof(Entity), ListenerState.Entity))
+            //{
+            //    if (!DynamicListenerPool.TryGetValue(entity.listenerTarget, out var listeners))
+            //    {
+            //        listeners = new UnitDictionary<long, Entity>();
+            //    }
+            //    listeners.TryAdd(entity.id, entity);
+            //}
 
 
 
@@ -175,6 +186,8 @@ namespace WorldTree
 
             ////检测移除静态监听
             //StaticListenerRemove(entity);
+            StaticListenerBroadcastManager.RemoveListener(entity);
+
 
             ////检测移除动态监听
             //if (SystemManager.DynamicListenerTypes.Contains(Type))
@@ -191,6 +204,9 @@ namespace WorldTree
             allEntity.Remove(entity.id);
 
             //广播给全部监听器!!!!
+
+            entity.TrySendListener<IListenerRemoveSystem>();
+
             //entity.GetStaticListenerSystemGlobalBroadcast<IListenerRemoveSystem>()?.Send();
             //entity.GetDynamicListenerSystemGlobalBroadcast<IListenerRemoveSystem>()?.Send();
         }
@@ -205,7 +221,7 @@ namespace WorldTree
         private void StaticListenerAdd(Entity listener)
         {
             //判断是否为监听器
-            if (Root.SystemManager.ListenerSystems.TryGetValue(Type, out var systemGroups))
+            if (Root.SystemManager.ListenerSystems.TryGetValue(listener.Type, out var systemGroups))
             {
                 foreach (var systemGroup in systemGroups)//遍历系统组集合获取系统类型
                 {
@@ -226,7 +242,7 @@ namespace WorldTree
         private void StaticListenerRemove(Entity listener)
         {
             //判断是否为监听器
-            if (Root.SystemManager.ListenerSystems.TryGetValue(Type, out var systemGroups))
+            if (Root.SystemManager.ListenerSystems.TryGetValue(listener.Type, out var systemGroups))
             {
                 foreach (var systemGroup in systemGroups)//遍历系统组集合获取系统类型
                 {

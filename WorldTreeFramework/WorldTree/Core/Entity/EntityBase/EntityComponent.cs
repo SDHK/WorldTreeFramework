@@ -212,10 +212,11 @@ namespace WorldTree
         /// </summary>
         public void RemoveComponent(Type type)
         {
-            if (components.TryGetValue(type, out Entity component))
-            {
-                component?.Dispose();
-            }
+            if (components != null)
+                if (components.TryGetValue(type, out Entity component))
+                {
+                    component?.Dispose();
+                }
         }
 
         /// <summary>
@@ -232,13 +233,17 @@ namespace WorldTree
         /// </summary>
         public void RemoveAllComponent()
         {
-            while (components != null ? components.Count != 0 : false)
+            if (components != null ? components.Count != 0 : false)
             {
-                var enumerator = components.Values.GetEnumerator();
-                enumerator.MoveNext();
-                Entity entity = enumerator.Current;
-                enumerator.Dispose();
-                entity.Dispose();
+                var entitys = Root.PoolGet<UnitStack<Entity>>();
+                foreach (var item in components) entitys.Push(item.Value);
+
+                int length = entitys.Count;
+                for (int i = 0; i < length; i++)
+                {
+                    entitys.Pop().Dispose();
+                }
+                entitys.Dispose();
             }
         }
 

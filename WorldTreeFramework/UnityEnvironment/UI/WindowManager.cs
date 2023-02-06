@@ -14,13 +14,13 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-    class InitialDomain1 : AddSystem<InitialDomain>
-    {
-        public override void OnAdd(InitialDomain self)
-        {
-            self.Root.AddComponent<WindowManager>();
-        }
-    }
+    //class InitialDomain1 : AddSystem<InitialDomain>
+    //{
+    //    public override void OnAdd(InitialDomain self)
+    //    {
+    //        self.Root.AddComponent<WindowManager>();
+    //    }
+    //}
 
 
     public class WindowManager : Entity

@@ -122,7 +122,7 @@ namespace WorldTree
         where T : ISystem
         {
             var systemBroadcast = self.Root.AddComponent<SystemBroadcastGroup>().GetBroadcast<T>();
-            systemBroadcast.AddComponent<SystemBroadcastGlobalAddListener>().ListenerSwitchesTarget(typeof(T),ListenerState.System);
+            systemBroadcast.AddComponent<SystemBroadcastGlobalAddListener>().ListenerSwitchesTarget(typeof(T), ListenerState.System);
             systemBroadcast.AddComponent<SystemBroadcastGlobalRemoveListener>().ListenerSwitchesTarget(typeof(T), ListenerState.System);
             return systemBroadcast;
         }
@@ -133,7 +133,11 @@ namespace WorldTree
         public static SystemBroadcast GetStaticListenerSystemGlobalBroadcast<T>(this Entity self)
         where T : ISystem
         {
-            return (self.thisPool as EntityPool)?.AddComponent<ListenerSystemBroadcastGroup>()?.GetBroadcast<T>();
+            var group = new ListenerSystemBroadcastGroup();
+            group.Root = self.Root;
+            group.id = self.IdManager().GetId();
+            (self.thisPool as EntityPool)?.AddComponent(group);
+            return group?.GetBroadcast<T>();
         }
 
         /// <summary>
@@ -142,7 +146,12 @@ namespace WorldTree
         public static SystemBroadcast GetDynamicListenerSystemGlobalBroadcast<T>(this Entity self)
         where T : ISystem
         {
-            return (self.thisPool as EntityPool)?.AddComponent<ListenerSystemBroadcastGroup>()?.GetDynamicBroadcast<T>();
+            var group = new ListenerSystemBroadcastGroup();
+            group.Root = self.Root;
+            group.id = self.IdManager().GetId();
+            (self.thisPool as EntityPool)?.AddComponent(group);
+            return group?.GetDynamicBroadcast<T>();
+            //return (self.thisPool as EntityPool)?.AddComponent<ListenerSystemBroadcastGroup>()?.GetDynamicBroadcast<T>();
         }
     }
 
