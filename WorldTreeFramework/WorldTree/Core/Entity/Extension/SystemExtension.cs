@@ -1,4 +1,14 @@
-﻿namespace WorldTree
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/11/10 10:12
+
+* 描述： 实体系统事件发送
+
+*/
+
+namespace WorldTree
 {
     public static class SystemExtension
     {

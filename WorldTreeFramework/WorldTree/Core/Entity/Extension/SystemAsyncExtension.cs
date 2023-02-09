@@ -1,4 +1,13 @@
-﻿namespace WorldTree
+﻿/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/11/10 10:12
+
+* 描述： 实体系统事件异步发送
+
+*/
+
+namespace WorldTree
 {
     public static class SystemAsyncExtension
     {
@@ -85,8 +94,6 @@
                 return false;
             }
         }
-
-
 
 
         public static async void SendAsyncSystem<S>(this Entity self)

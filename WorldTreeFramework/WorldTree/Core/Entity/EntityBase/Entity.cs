@@ -170,6 +170,44 @@ namespace WorldTree
         {
             thisPool?.Recycle(this);
         }
+
+        //===============================================
+
+        /// <summary>
+        /// 返回用字符串绘制的树
+        /// </summary>
+        public string ToStringDrawTree(string t = "\t")
+        {
+            string t1 = "\t" + t;
+            string str = "";
+
+            str += t1 + $"[{this.id:0}] " + this.ToString() + "\n";
+
+            if (this.components != null)
+            {
+                if (this.components.Count > 0)
+                {
+                    str += t1 + "   Components:\n";
+                    foreach (var item in this.Components.Values)
+                    {
+                        str += item.ToStringDrawTree(t1);
+                    }
+                }
+            }
+
+            if (this.children != null)
+            {
+                if (this.children.Count > 0)
+                {
+                    str += t1 + "   Children:\n";
+                    foreach (var item in this.Children.Values)
+                    {
+                        str += item.ToStringDrawTree(t1);
+                    }
+                }
+            }
+            return str;
+        }
     }
 
 }

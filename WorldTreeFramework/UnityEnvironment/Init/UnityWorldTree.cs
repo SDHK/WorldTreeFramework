@@ -44,8 +44,6 @@ namespace WorldTree
             //onGUI = root.GetSystemGlobalBroadcast<IOnGUISystem>();
 
             root.AddComponent<InitialDomain>();
-            //root.AddChildren<Node>();
-
         }
 
         private void Update()
@@ -63,11 +61,11 @@ namespace WorldTree
 
         private void LateUpdate()
         {
-            //lateUpdate?.Send(Time.deltaTime);
+            lateUpdate.Send(Time.deltaTime);
         }
         private void FixedUpdate()
         {
-            //fixedUpdate.Send(Time.fixedDeltaTime);
+            fixedUpdate.Send(Time.fixedDeltaTime);
         }
 
         //private void OnGUI()

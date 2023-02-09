@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using UnityEngine.Rendering.VirtualTexturing;
 
 namespace WorldTree
 {
@@ -272,7 +271,7 @@ namespace WorldTree
         public override void OnDispose()
         {
             InterfaceSystems.Clear();
-            //ListenerSystems.Clear();
+            ListenerSystems.Clear();
             TargetSystems.Clear();
             IsRecycle = true;
             IsDisposed = true;

@@ -40,11 +40,6 @@ namespace WorldTree
             return broadcast;
         }
 
-        //=====================================
-
-
-
-
         /// <summary>
         /// 获取对应系统的全局广播
         /// </summary>
@@ -52,8 +47,8 @@ namespace WorldTree
         where T : ISystem
         {
             var systemBroadcast = self.Root.AddComponent<SystemBroadcastGroup>().GetBroadcast<T>();
-            systemBroadcast.AddComponent<SystemBroadcastGlobalAddListener>().ListenerSwitchesTarget(typeof(T), ListenerState.System);
-            systemBroadcast.AddComponent<SystemBroadcastGlobalRemoveListener>().ListenerSwitchesTarget(typeof(T), ListenerState.System);
+            systemBroadcast.AddComponent<GlobalEntityAddListener>().ListenerSwitchesTarget(typeof(T), ListenerState.System);
+            systemBroadcast.AddComponent<GlobalEntityRemoveListener>().ListenerSwitchesTarget(typeof(T), ListenerState.System);
             return systemBroadcast;
         }
     }

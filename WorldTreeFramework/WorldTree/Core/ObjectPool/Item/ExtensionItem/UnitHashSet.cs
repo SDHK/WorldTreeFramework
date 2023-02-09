@@ -1,4 +1,16 @@
-﻿using System.Collections.Generic;
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2023/1/18 19:23
+
+* 描述： 单位HashSet，可由对象池管理生成和回收
+* 
+* 其余和普通的HashSet一样使用
+
+*/
+
+using System.Collections.Generic;
 
 namespace WorldTree
 {

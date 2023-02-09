@@ -70,6 +70,23 @@ namespace WorldTree
         }
 
         /// <summary>
+        /// 动态监听器切换实体目标
+        /// </summary>
+        public bool ListenerSwitchesEntity<T>()
+            where T : Entity
+        {
+            return ListenerSwitchesTarget(typeof(T), ListenerState.Entity);
+        }
+        /// <summary>
+        /// 动态监听器切换系统目标
+        /// </summary>
+        public bool ListenerSwitchesSystem<T>()
+            where T : ISystem
+        {
+            return ListenerSwitchesTarget(typeof(T), ListenerState.System);
+        }
+
+        /// <summary>
         /// 动态监听器清除目标
         /// </summary>
         public void ListenerClearTarget()
@@ -78,9 +95,6 @@ namespace WorldTree
             listenerTarget = null;
             listenerState = ListenerState.Not;
         }
-
-
-
 
         #region 私有
 
@@ -157,7 +171,15 @@ namespace WorldTree
         {
             if (Root.DynamicListenerBroadcastManager.TryGetGroup(type, out var broadcastGroup))
             {
-                AddDynamicListener(broadcastGroup);
+                //获取 Entity 动态目标 系统组集合
+                if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Entity), out var systemGroups))
+                {
+                    //遍历获取动态系统组，并添加自己
+                    foreach (var systemGroup in systemGroups)
+                    {
+                        broadcastGroup.GetBroadcast(systemGroup.Key).AddEntity(this);
+                    }
+                }
             }
         }
 
@@ -237,48 +259,18 @@ namespace WorldTree
         {
             if (Root.DynamicListenerBroadcastManager.TryGetGroup(type, out var broadcastGroup))
             {
-                RemoveDynamicListener(broadcastGroup);
-            }
-        }
-        #endregion
-
-        #region 基础方法
-
-        #region 动态
-
-        /// <summary>
-        /// 目标池添加动态监听器
-        /// </summary>
-        private void AddDynamicListener(ListenerBroadcastGroup broadcastGroup)
-        {
-            //获取 Entity 动态目标 系统组集合
-            if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Entity), out var systemGroups))
-            {
-                //遍历获取动态系统组，并添加自己
-                foreach (var systemGroup in systemGroups)
+                //获取 Entity 动态目标 系统组集合
+                if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Entity), out var systemGroups))
                 {
-                    broadcastGroup.GetBroadcast(systemGroup.Key).AddEntity(this);
-                }
-            }
-        }
-        /// <summary>
-        /// 目标池移除动态监听器
-        /// </summary>
-        private void RemoveDynamicListener(ListenerBroadcastGroup broadcastGroup)
-        {
-            //获取 Entity 动态目标 系统组集合
-            if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Entity), out var systemGroups))
-            {
-                //遍历获取动态系统组，并移除自己
-                foreach (var systemGroup in systemGroups)
-                {
-                    broadcastGroup.GetBroadcast(systemGroup.Key).RemoveEntity(this);
+                    //遍历获取动态系统组，并移除自己
+                    foreach (var systemGroup in systemGroups)
+                    {
+                        broadcastGroup.GetBroadcast(systemGroup.Key).RemoveEntity(this);
+                    }
                 }
             }
         }
         #endregion
-        #endregion
-
         #endregion
 
     }

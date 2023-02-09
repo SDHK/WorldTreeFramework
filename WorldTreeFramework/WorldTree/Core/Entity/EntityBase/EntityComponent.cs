@@ -5,6 +5,8 @@
 * 日期： 2022/9/16 11:37
 
 * 描述： 组件节点
+* 
+* 用实体类型作为键值，因此同种类型的组件只能一个
 
 */
 
@@ -21,13 +23,12 @@ namespace WorldTree
         public bool isComponent;
 
         /// <summary>
-        /// 组件节点:归0时回收，并设为null
+        /// 组件节点
         /// </summary>
-        public UnitDictionary<Type, Entity> components;
-
+        private UnitDictionary<Type, Entity> components;
 
         /// <summary>
-        /// 子节点:为null时从池里获取
+        /// 组件节点
         /// </summary>
         public UnitDictionary<Type, Entity> Components
         {
@@ -43,82 +44,8 @@ namespace WorldTree
             set { components = value; }
         }
 
+        #region 获取
 
-        /// <summary>
-        /// 添加组件
-        /// </summary>
-        public T AddComponent<T>()
-            where T : Entity
-        {
-            Type type = typeof(T);
-
-            T component = null;
-            if (!Components.TryGetValue(type, out Entity entity))
-            {
-                component = Root.EntityPoolManager.Get<T>();
-                component.Parent = this;
-                component.isComponent = true;
-                components.Add(type, component);
-                component.SendSystem<IAwakeSystem>();
-                Root.Add(component);
-            }
-            else
-            {
-                component = entity as T;
-            }
-
-            return component;
-        }
-
-        /// <summary>
-        /// 添加组件
-        /// </summary>
-        public Entity AddComponent(Type type)
-        {
-            if (!Components.TryGetValue(type, out Entity component))
-            {
-                component = Root.PoolGet(type);
-                component.Parent = this;
-                component.isComponent = true;
-                components.Add(type, component);
-                component.SendSystem<IAwakeSystem>();
-                Root.Add(component);
-            }
-            return component;
-        }
-
-
-        /// <summary>
-        /// 添加野组件或替换父节点  （替换：从原父节点移除，移除替换同类型的组件，不调用事件）
-        /// </summary>
-        public void AddComponent(Entity component)
-        {
-            if (component != null)
-            {
-                Type type = component.GetType();
-
-                RemoveComponent(type);
-
-                if (component.Parent != null)//如果父节点存在从原父节点中移除加入到当前，不调用任何事件
-                {
-                    component.TraversalLevel(EntityExtension.DisposeDomain);
-                    component.RemoveInParent();
-                    Components.Add(type, component);
-                    component.Parent = this;
-                    component.isComponent = true;
-                    component.RefreshActive();
-                }
-                else //野组件添加
-                {
-                    Components.Add(type, component);
-                    component.Parent = this;
-                    component.isComponent = true;
-
-                    component.SendSystem<IAwakeSystem>();
-                    Root.Add(component);
-                }
-            }
-        }
 
         /// <summary>
         /// 获取组件
@@ -196,6 +123,9 @@ namespace WorldTree
                 }
             }
         }
+        #endregion
+
+        #region 移除
 
         /// <summary>
         /// 移除组件
@@ -247,8 +177,92 @@ namespace WorldTree
             }
         }
 
+        #endregion
+
+        #region 添加
+        #region 替换或添加
 
 
+
+        /// <summary>
+        /// 添加野组件或替换父节点  （替换：从原父节点移除，移除替换同类型的组件，不调用事件）
+        /// </summary>
+        public void AddComponent(Entity component)
+        {
+            if (component != null)
+            {
+                Type type = component.GetType();
+
+                RemoveComponent(type);
+
+                if (component.Parent != null)//如果父节点存在从原父节点中移除加入到当前，不调用任何事件
+                {
+                    component.TraversalLevelDisposeDomain();
+                    component.RemoveInParent();
+                    Components.Add(type, component);
+                    component.Parent = this;
+                    component.isComponent = true;
+                    component.RefreshActive();
+                }
+                else //野组件添加
+                {
+                    Components.Add(type, component);
+                    component.Parent = this;
+                    component.isComponent = true;
+
+                    component.SendSystem<IAwakeSystem>();
+                    Root.Add(component);
+                }
+            }
+        }
+        #endregion
+        #region 类型添加
+
+        /// <summary>
+        /// 添加组件
+        /// </summary>
+        public Entity AddComponent(Type type)
+        {
+            if (!Components.TryGetValue(type, out Entity component))
+            {
+                component = Root.PoolGet(type);
+                component.Parent = this;
+                component.isComponent = true;
+                components.Add(type, component);
+                component.SendSystem<IAwakeSystem>();
+                Root.Add(component);
+            }
+            return component;
+        }
+        #endregion
+        #region 泛型添加
+
+
+        /// <summary>
+        /// 添加组件
+        /// </summary>
+        public T AddComponent<T>()
+            where T : Entity
+        {
+            Type type = typeof(T);
+
+            T component = null;
+            if (!Components.TryGetValue(type, out Entity entity))
+            {
+                component = Root.EntityPoolManager.Get<T>();
+                component.Parent = this;
+                component.isComponent = true;
+                components.Add(type, component);
+                component.SendSystem<IAwakeSystem>();
+                Root.Add(component);
+            }
+            else
+            {
+                component = entity as T;
+            }
+
+            return component;
+        }
         /// <summary>
         /// 添加组件
         /// </summary>
@@ -324,5 +338,56 @@ namespace WorldTree
             return component;
         }
 
+        /// <summary>
+        /// 添加组件
+        /// </summary>
+        public T AddComponent<T, T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            where T : Entity
+        {
+            Type type = typeof(T);
+
+            T component = null;
+            if (!Components.TryGetValue(type, out Entity entity))
+            {
+                component = Root.EntityPoolManager.Get<T>();
+                component.Parent = this;
+                component.isComponent = true;
+                components.Add(type, component);
+                component.SendSystem<IAwakeSystem<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
+                Root.Add(component);
+            }
+            else
+            {
+                component = entity as T;
+            }
+            return component;
+        }
+
+        /// <summary>
+        /// 添加组件
+        /// </summary>
+        public T AddComponent<T, T1, T2, T3, T4, T5>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            where T : Entity
+        {
+            Type type = typeof(T);
+
+            T component = null;
+            if (!Components.TryGetValue(type, out Entity entity))
+            {
+                component = Root.EntityPoolManager.Get<T>();
+                component.Parent = this;
+                component.isComponent = true;
+                components.Add(type, component);
+                component.SendSystem<IAwakeSystem<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+                Root.Add(component);
+            }
+            else
+            {
+                component = entity as T;
+            }
+            return component;
+        }
+        #endregion
+        #endregion
     }
 }

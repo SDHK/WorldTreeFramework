@@ -1,36 +1,29 @@
-﻿using System;
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/11/10 10:12
+
+* 描述： 实体树遍历
+
+*/
+
+using System;
 
 namespace WorldTree
 {
 
-    public static class EntityTraversalExtension
+    public abstract partial class Entity
     {
-        /// <summary>
-        /// 递归遍历（少用）
-        /// </summary>
-        private static Entity TraversalRecursive(this Entity self, Action<Entity> action)
-        {
-            action(self);
-            foreach (var item in self.components)
-            {
-                item.Value.TraversalRecursive(action);
-            }
-            foreach (var item in self.children)
-            {
-                item.Value.TraversalRecursive(action);
-            }
-            return self;
-        }
-
         /// <summary>
         /// 前序遍历
         /// </summary>
-        public static Entity TraversalPreorder(this Entity self, Action<Entity> action)
+        public Entity TraversalPreorder(Action<Entity> action)
         {
             Entity current;
-            UnitStack<Entity> stack = self.PoolGet<UnitStack<Entity>>();
-            UnitStack<Entity> localStack = self.PoolGet<UnitStack<Entity>>();
-            stack.Push(self);
+            UnitStack<Entity> stack = this.PoolGet<UnitStack<Entity>>();
+            UnitStack<Entity> localStack = this.PoolGet<UnitStack<Entity>>();
+            stack.Push(this);
             while (stack.Count != 0)
             {
                 current = stack.Pop();
@@ -60,16 +53,16 @@ namespace WorldTree
             }
             localStack.Dispose();
             stack.Dispose();
-            return self;
+            return this;
         }
 
         /// <summary>
         /// 层序遍历
         /// </summary>
-        public static Entity TraversalLevel(this Entity self, Action<Entity> action)
+        public Entity TraversalLevel(Action<Entity> action)
         {
-            UnitQueue<Entity> queue = self.PoolGet<UnitQueue<Entity>>();
-            queue.Enqueue(self);
+            UnitQueue<Entity> queue = this.PoolGet<UnitQueue<Entity>>();
+            queue.Enqueue(this);
 
             while (queue.Count != 0)
             {
@@ -93,18 +86,18 @@ namespace WorldTree
                 }
             }
             queue.Dispose();
-            return self;
+            return this;
         }
 
         /// <summary>
         /// 后序遍历
         /// </summary>
-        public static Entity TraversalPostorder(this Entity self, Action<Entity> action)
+        public Entity TraversalPostorder(Action<Entity> action)
         {
             Entity current;
-            UnitStack<Entity> stack = self.PoolGet<UnitStack<Entity>>();
-            UnitStack<Entity> allStack = self.PoolGet<UnitStack<Entity>>();
-            stack.Push(self);
+            UnitStack<Entity> stack = this.PoolGet<UnitStack<Entity>>();
+            UnitStack<Entity> allStack = this.PoolGet<UnitStack<Entity>>();
+            stack.Push(this);
             while (stack.Count != 0)
             {
                 current = stack.Pop();
@@ -130,76 +123,76 @@ namespace WorldTree
                 action(allStack.Pop());
             }
             allStack.Dispose();
-            return self;
+            return this;
         }
 
 
-        /// <summary>
-        /// 前序遍历广播
-        /// </summary>
-        public static SystemBroadcast GetTraversalPreorderSystemBroadcast<T>(this Entity self)
-           where T : ISystem
-        {
-            SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(T));
-            self.TraversalPostorder(systemBroadcast.AddEntity);
-            return systemBroadcast;
-        }
+        ///// <summary>
+        ///// 前序遍历广播
+        ///// </summary>
+        //public static SystemBroadcast GetTraversalPreorderSystemBroadcast<T>(this Entity self)
+        //   where T : ISystem
+        //{
+        //    SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(T));
+        //    self.TraversalPostorder(systemBroadcast.AddEntity);
+        //    return systemBroadcast;
+        //}
 
-        /// <summary>
-        /// 层序遍历广播
-        /// </summary>
-        public static SystemBroadcast GetTraversalLevelSystemBroadcast<T>(this Entity self)
-          where T : ISystem
-        {
-            SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(T));
-            self.TraversalLevel(systemBroadcast.AddEntity);
-            return systemBroadcast;
-        }
-        /// <summary>
-        /// 后序遍历广播
-        /// </summary>
-        public static SystemBroadcast GetTraversalPostorderSystemBroadcast<T>(this Entity self)
-         where T : ISystem
-        {
-            SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(T));
-            self.TraversalPostorder(systemBroadcast.AddEntity);
-            return systemBroadcast;
-        }
-
-
+        ///// <summary>
+        ///// 层序遍历广播
+        ///// </summary>
+        //public static SystemBroadcast GetTraversalLevelSystemBroadcast<T>(this Entity self)
+        //  where T : ISystem
+        //{
+        //    SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(T));
+        //    self.TraversalLevel(systemBroadcast.AddEntity);
+        //    return systemBroadcast;
+        //}
+        ///// <summary>
+        ///// 后序遍历广播
+        ///// </summary>
+        //public static SystemBroadcast GetTraversalPostorderSystemBroadcast<T>(this Entity self)
+        // where T : ISystem
+        //{
+        //    SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(T));
+        //    self.TraversalPostorder(systemBroadcast.AddEntity);
+        //    return systemBroadcast;
+        //}
 
 
-        /// <summary>
-        /// 前序遍历执行
-        /// </summary>
-        public static SystemBroadcast GetTraversalPreorderSystemActuator<T>(this Entity self)
-           where T : ISystem
-        {
-            SystemBroadcast systemActuator = self.AddChildren<SystemBroadcast, Type>(typeof(T));
-            self.TraversalPostorder(systemActuator.AddEntity);
-            return systemActuator;
-        }
 
-        /// <summary>
-        /// 层序遍历执行
-        /// </summary>
-        public static SystemBroadcast GetTraversalLevelSystemActuator<T>(this Entity self)
-          where T : ISystem
-        {
-            SystemBroadcast systemActuator = self.AddChildren<SystemBroadcast, Type>(typeof(T));
-            self.TraversalLevel(systemActuator.AddEntity);
-            return systemActuator;
-        }
 
-        /// <summary>
-        /// 后序遍历执行
-        /// </summary>
-        public static SystemBroadcast GetTraversalPostorderSystemActuator<T>(this Entity self)
-         where T : ISystem
-        {
-            SystemBroadcast systemActuator = self.AddChildren<SystemBroadcast, Type>(typeof(T));
-            self.TraversalPostorder(systemActuator.AddEntity);
-            return systemActuator;
-        }
+        ///// <summary>
+        ///// 前序遍历执行
+        ///// </summary>
+        //public static SystemBroadcast GetTraversalPreorderSystemActuator<T>(this Entity self)
+        //   where T : ISystem
+        //{
+        //    SystemBroadcast systemActuator = self.AddChildren<SystemBroadcast, Type>(typeof(T));
+        //    self.TraversalPostorder(systemActuator.AddEntity);
+        //    return systemActuator;
+        //}
+
+        ///// <summary>
+        ///// 层序遍历执行
+        ///// </summary>
+        //public static SystemBroadcast GetTraversalLevelSystemActuator<T>(this Entity self)
+        //  where T : ISystem
+        //{
+        //    SystemBroadcast systemActuator = self.AddChildren<SystemBroadcast, Type>(typeof(T));
+        //    self.TraversalLevel(systemActuator.AddEntity);
+        //    return systemActuator;
+        //}
+
+        ///// <summary>
+        ///// 后序遍历执行
+        ///// </summary>
+        //public static SystemBroadcast GetTraversalPostorderSystemActuator<T>(this Entity self)
+        // where T : ISystem
+        //{
+        //    SystemBroadcast systemActuator = self.AddChildren<SystemBroadcast, Type>(typeof(T));
+        //    self.TraversalPostorder(systemActuator.AddEntity);
+        //    return systemActuator;
+        //}
     }
 }

@@ -4,38 +4,21 @@
 * 作者： 闪电黑客
 * 日期： 2022/6/27 9:47
 
-* 描述：异步任务
+* 描述： 异步任务
 * 
 */
 
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-
-
+using WorldTree.Internal;
 
 namespace WorldTree
 {
-
-    public interface IAsyncTask : ICriticalNotifyCompletion
-    {
-        bool IsCompleted { get; set; }
-        void GetResult();
-        void SetResult();
-        void SetException(Exception exception);
-    }
-
-
-    public interface IAsyncTask<T> : ICriticalNotifyCompletion
-    {
-        bool IsCompleted { get; set; }
-        void SetResult(T result);
-        T GetResult();
-        void SetException(Exception exception);
-
-    }
-
-    [AsyncMethodBuilder(typeof(AsyncTaskMethodBuilder))]
+    /// <summary>
+    /// 异步任务
+    /// </summary>
+    [AsyncMethodBuilder(typeof(Internal.AsyncTaskMethodBuilder))]
     public class AsyncTask : Entity, IAsyncTask
     {
         public AsyncTask GetAwaiter() => this;
@@ -85,8 +68,10 @@ namespace WorldTree
 
     }
 
-
-    [AsyncMethodBuilder(typeof(AsyncTaskMethodBuilder<>))]
+    /// <summary>
+    /// 泛型异步任务
+    /// </summary>
+    [AsyncMethodBuilder(typeof(Internal.AsyncTaskMethodBuilder<>))]
     public class AsyncTask<T> : Entity, IAsyncTask<T>
     {
         public AsyncTask<T> GetAwaiter() => this;
@@ -95,13 +80,15 @@ namespace WorldTree
 
         public T Result;
 
-
         [DebuggerHidden]
         private async AsyncTaskVoid InnerCoroutine()
         {
             await this;
         }
 
+        /// <summary>
+        /// 协程启动
+        /// </summary>
         [DebuggerHidden]
         public void Coroutine()
         {

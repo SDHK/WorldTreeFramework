@@ -44,10 +44,6 @@ namespace WorldTree
         /// </summary>
         public SystemGroup entityRemoveSystems;
 
-
-        //private SystemGroup singletonEagerSystems;
-
-
         private SystemGroup addSystems;
         private SystemGroup removeSystems;
         private SystemGroup enableSystems;
@@ -99,14 +95,6 @@ namespace WorldTree
             enableSystems = Root.SystemManager.GetGroup<IEnableSystem>();
             disableSystems = Root.SystemManager.GetGroup<IDisableSystem>();
 
-            //Root.SystemManager.TryGetListenerGroup<IListenerAddSystem>(out entityAddSystems);
-            //Root.SystemManager.TryGetListenerGroup<IListenerRemoveSystem>(out entityRemoveSystems);
-
-            //Root.SystemManager.ListenerTypes.TryGetValue(typeof(IListenerAddSystem), out AddListenerTypes);
-            //Root.SystemManager.ListenerTypes.TryGetValue(typeof(IListenerRemoveSystem), out RemoveListenerTypes);
-            //singletonEagerSystems = SystemManager.GetGroup<ISingletonEagerSystem>();
-
-
             //激活自己
             SetActive(true);
 
@@ -118,10 +106,6 @@ namespace WorldTree
             AddComponent(StaticListenerBroadcastManager);
             AddComponent(DynamicListenerBroadcastManager);
 
-            //饿汉单例启动
-            //singletonEagerSystems?.Send(this);
-
-
         }
         /// <summary>
         /// 释放
@@ -129,7 +113,7 @@ namespace WorldTree
         public override void Dispose()
         {
             RemoveAll();
-            //EntityListeners.Clear();
+            allEntity.Clear();
         }
 
 
@@ -140,19 +124,14 @@ namespace WorldTree
             entity.TrySendStaticListener<IListenerAddSystem>();
             entity.TrySendDynamicListener<IListenerAddSystem>();
 
-
             allEntity.TryAdd(entity.id, entity);
 
             //这个实体的添加事件
             addSystems?.Send(entity);
 
-
-            //====
-
             //检测添加静态监听
             StaticListenerBroadcastManager.TryAddListener(entity);
             //检测添加动态监听
-            //DynamicListenerBroadcastManager.TryAddListener(entity);
             entity.ListenerSwitchesTarget(typeof(Entity), ListenerState.Entity);
 
 
@@ -162,11 +141,10 @@ namespace WorldTree
         }
 
 
-
-
         public void Remove(Entity entity)
         {
             entity.SetActive(false);//激活标记变更
+
             entity.RemoveAll();//移除所有子节点和组件
             disableSystems?.Send(entity);//调用禁用事件
 
@@ -174,8 +152,6 @@ namespace WorldTree
             StaticListenerBroadcastManager.RemoveListener(entity);
             //检测移除动态监听
             entity.ListenerClearTarget();
-            //DynamicListenerBroadcastManager.RemoveListener(entity);
-
 
             //这个实体的移除事件
             removeSystems?.Send(entity);
@@ -187,7 +163,5 @@ namespace WorldTree
             entity.TrySendDynamicListener<IListenerRemoveSystem>();
 
         }
-
-
     }
 }

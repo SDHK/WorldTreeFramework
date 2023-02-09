@@ -41,6 +41,9 @@ namespace WorldTree
         public List<ISystem> recycleSystem;
         public List<ISystem> destroySystem;
 
+        /// <summary>
+        /// 引用池
+        /// </summary>
         public Dictionary<long, Entity> Entitys;
 
         public EntityPool(Type type) : base()

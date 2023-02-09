@@ -4,13 +4,15 @@
 * 作者： 闪电黑客
 * 日期： 2022/8/1 9:47
 
-* 描述： 对象池的事件系统
+* 描述： 实体对象池的事件系统
 
 */
 
 namespace WorldTree
 {
-
+    /// <summary>
+    /// 新建事件系统接口
+    /// </summary>
     public interface INewSystem : ISendSystem{ }
 
     /// <summary>
@@ -23,7 +25,9 @@ namespace WorldTree
 
         public abstract void OnNew(T self);
     }
-
+    /// <summary>
+    /// 获取事件系统接口
+    /// </summary>
     public interface IGetSystem : ISendSystem { }
 
     /// <summary>

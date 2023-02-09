@@ -32,6 +32,9 @@ namespace WorldTree
             return self.Root.UnitPoolManager.Get<T>();
         }
 
+        /// <summary>
+        /// 从池中获取对象
+        /// </summary>
         public static T PoolGet<T>(this Entity self, out T unit)
        where T : class, IUnitPoolEventItem
         {

@@ -21,12 +21,12 @@ namespace WorldTree
     public abstract partial class Entity
     {
         /// <summary>
-        /// 域节点:归0时回收，并设为null
+        /// 域节点
         /// </summary>
-        public UnitDictionary<Type, Entity> domains;
+        private UnitDictionary<Type, Entity> domains;
 
         /// <summary>
-        /// 域节点:为null时从池里获取
+        /// 域节点
         /// </summary>
         public UnitDictionary<Type, Entity> Domains
         {
@@ -80,6 +80,52 @@ namespace WorldTree
 
             domain = null;
             return false;
+        }
+
+        /// <summary>
+        /// 释放域
+        /// </summary>
+        public void DisposeDomain()
+        {
+            if (domains != null)
+            {
+                domains.Clear();
+                domains.Dispose();
+                domains = null;
+            }
+        }
+
+        /// <summary>
+        /// 层序遍历释放域
+        /// </summary>
+        public Entity TraversalLevelDisposeDomain()
+        {
+            UnitQueue<Entity> queue = this.PoolGet<UnitQueue<Entity>>();
+            queue.Enqueue(this);
+
+            while (queue.Count != 0)
+            {
+                var current = queue.Dequeue();
+
+                current.DisposeDomain();
+
+                if (current.components != null)
+                {
+                    foreach (var item in current.components)
+                    {
+                        queue.Enqueue(item.Value);
+                    }
+                }
+                if (current.children != null)
+                {
+                    foreach (var item in current.children)
+                    {
+                        queue.Enqueue(item.Value);
+                    }
+                }
+            }
+            queue.Dispose();
+            return this;
         }
 
     }

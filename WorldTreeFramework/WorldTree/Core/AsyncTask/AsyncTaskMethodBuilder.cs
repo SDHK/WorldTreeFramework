@@ -1,11 +1,24 @@
-﻿using System;
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/11/10 10:12
+
+* 描述： 异步任务构建器
+
+*/
+
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security;
 
 
-namespace WorldTree
+namespace WorldTree.Internal
 {
+    /// <summary>
+    /// 异步任务构建器
+    /// </summary>
     public struct AsyncTaskMethodBuilder
     {
         private AsyncTask task;
@@ -46,8 +59,12 @@ namespace WorldTree
         // 5. AwaitOnCompleted
         [DebuggerHidden]
 
-        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : INotifyCompletion where TStateMachine : IAsyncStateMachine
+        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : Entity, INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
+            if (task == null)
+            {
+                task = awaiter.Parent.AddChildren<AsyncTask>();
+            }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
 

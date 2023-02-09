@@ -1,43 +1,34 @@
-﻿using System;
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/11/10 10:12
+
+* 描述： 异步任务完成类
+
+*/
+
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace WorldTree
+namespace WorldTree.Internal
 {
-    public static class AsyncTaskCompletedExtension
-    {
-        /// <summary>
-        /// 立即完成，不可用于死循环
-        /// </summary>
-        public static AsyncTaskCompleted AsyncTaskCompleted(this Entity self)
-        {
-            return self.AddChildren<AsyncTaskCompleted>();
-        }
-    }
-
+    /// <summary>
+    /// 异步任务完成类
+    /// </summary>
     [AsyncMethodBuilder(typeof(AsyncTaskCompletedMethodBuilder))]
-    public class AsyncTaskCompleted : Entity, ICriticalNotifyCompletion
+    public class AsyncTaskCompleted : Entity,ICriticalNotifyCompletion
     {
         [DebuggerHidden]
         public AsyncTaskCompleted GetAwaiter() => this;
-
         [DebuggerHidden]
         public bool IsCompleted => true;
-
         [DebuggerHidden]
-        public void GetResult()
-        {
-            Dispose();
-        }
-
+        public void GetResult() {  Dispose();  }
         [DebuggerHidden]
-        public void OnCompleted(Action continuation)
-        {
-        }
-
+        public void OnCompleted(Action continuation) { }
         [DebuggerHidden]
-        public void UnsafeOnCompleted(Action continuation)
-        {
-        }
+        public void UnsafeOnCompleted(Action continuation) { }
     }
 }

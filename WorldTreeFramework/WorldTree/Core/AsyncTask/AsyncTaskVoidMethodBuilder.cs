@@ -1,10 +1,23 @@
-﻿using System;
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/11/10 10:12
+
+* 描述： 空异步任务构建器
+
+*/
+
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security;
 
-namespace WorldTree
+namespace WorldTree.Internal
 {
+    /// <summary>
+    /// 空异步任务构建器
+    /// </summary>
     public struct AsyncTaskVoidMethodBuilder
     {
         // 1. Static Create method.

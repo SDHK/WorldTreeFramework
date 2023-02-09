@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2022/12/5 9:41
+
+* 描述： Transform组件扩展方法
+
+*/
+
 using UnityEngine;
 
 namespace WorldTree
 {
+    /// <summary>
+    /// Transform组件扩展方法
+    /// </summary>
     public static class TransformExtension
     {
         /// <summary>
