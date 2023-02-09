@@ -21,6 +21,20 @@ namespace WorldTree
     {
         public SystemBroadcast systemBroadcast;
     }
+    class SystemBroadcastGlobalAddListenerAddSystem : AddSystem<SystemBroadcastGlobalAddListener>
+    {
+        public override void OnAdd(SystemBroadcastGlobalAddListener self)
+        {
+            self.TryGetParent(out self.systemBroadcast);
+        }
+    }
+    class SystemBroadcastGlobalAddListenerRemoveSystem : RemoveSystem<SystemBroadcastGlobalAddListener>
+    {
+        public override void OnRemove(SystemBroadcastGlobalAddListener self)
+        {
+            self.systemBroadcast = null;
+        }
+    }
     class SystemBroadcastGlobalListenerEntityAddSystem : ListenerAddSystem<SystemBroadcastGlobalAddListener>
     {
         public override void OnAdd(SystemBroadcastGlobalAddListener self, Entity entity)

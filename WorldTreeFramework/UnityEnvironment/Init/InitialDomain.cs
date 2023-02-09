@@ -12,6 +12,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
@@ -85,12 +86,37 @@ namespace WorldTree
             //Dictionary<string,int> dic = self.AddComponent<EntityDictionary<string,int>>().Value;
 
             World.Log("初始域启动！");
+
             //GameObject gameObject = await Addressables.InstantiateAsync("MainWindow").Task;
 
             //GameObject gameObject = await self.AddressablesInstantiateAsync("MainWindow");
 
             //self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
 
+
+            //GetGroundPoint(Vector3(1,1), )
+
+        }
+
+
+        /// <summary>
+        /// 获取地面的点
+        /// </summary>
+        /// <param name="origin">射线点</param>
+        /// <param name="vector">向量</param>
+        /// <param name="groundY">地面Y轴坐标</param>
+        public Vector3 GetGroundPoint(Vector3 origin, Vector3 vector, float groundY = 0)
+        {
+            Vector3 point = origin + vector;
+
+            if (point.y != groundY)
+            {
+                Vector3 pointA = new Vector3(point.x, groundY, point.z);
+                float angle = Mathf.Asin(Mathf.Abs(vector.y) / vector.magnitude) * Mathf.Rad2Deg;
+                float edge = (point - pointA).magnitude / Mathf.Sin(angle * Mathf.Deg2Rad);
+                point = ((vector.magnitude + ((point.y < groundY) ? -edge : edge)) * vector) + origin;
+            }
+            return point;
         }
 
 
@@ -120,7 +146,7 @@ namespace WorldTree
     {
         public override void OnAdd(InitialDomain self, Entity entity)
         {
-            Debug.Log($"Add Entity:{entity.id}");
+            Debug.Log($"Add Entity:{entity.id}{entity}");
         }
     }
 
@@ -151,6 +177,17 @@ namespace WorldTree
             {
                 self.RemoveComponent<Node>();
             }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                self.ListenerSwitchesTarget(typeof(Node), ListenerState.Entity);
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                self.ListenerSwitchesTarget(typeof(IUpdateSystem), ListenerState.System);
+            }
+
 
         }
     }

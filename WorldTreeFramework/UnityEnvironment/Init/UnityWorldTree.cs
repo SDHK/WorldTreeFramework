@@ -35,20 +35,16 @@ namespace WorldTree
 
             root = new EntityManager();
 
-            //enable = root.GetSystemGlobalBroadcast<IEnableSystem>();
-            //update = root.GetSystemGlobalBroadcast<IUpdateSystem>();
-            //disable = root.GetSystemGlobalBroadcast<IDisableSystem>();
+            enable = root.GetSystemGlobalBroadcast<IEnableSystem>();
+            update = root.GetSystemGlobalBroadcast<IUpdateSystem>();
+            disable = root.GetSystemGlobalBroadcast<IDisableSystem>();
 
-            //lateUpdate = root.GetSystemGlobalBroadcast<ILateUpdateSystem>();
-            //fixedUpdate = root.GetSystemGlobalBroadcast<IFixedUpdateSystem>();
+            lateUpdate = root.GetSystemGlobalBroadcast<ILateUpdateSystem>();
+            fixedUpdate = root.GetSystemGlobalBroadcast<IFixedUpdateSystem>();
             //onGUI = root.GetSystemGlobalBroadcast<IOnGUISystem>();
 
-            root.AddChildren<Node1>();
-            root.AddChildren<Node2>();
-            root.AddChildren<InitialDomain>();
-            root.AddChildren<Node1>();
-            root.AddChildren<Node2>();
-            root.AddChildren<Node2>();
+            root.AddComponent<InitialDomain>();
+            //root.AddChildren<Node>();
 
         }
 
@@ -56,9 +52,9 @@ namespace WorldTree
         {
             Profiler.BeginSample("SDHK");
 
-            //enable.Send();
-            //update.Send(Time.deltaTime);
-            //disable.Send();
+            enable.Send();
+            update.Send(Time.deltaTime);
+            disable.Send();
 
             Profiler.EndSample();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static UnityEngine.GraphicsBuffer;
 
 namespace WorldTree
 {
@@ -14,10 +15,10 @@ namespace WorldTree
         public Dictionary<Type, ListenerBroadcastGroup> BroadcastGroups = new Dictionary<Type, ListenerBroadcastGroup>();
 
 
-        /// <summary>
-        /// 监听器类型，监听器实体集合
-        /// </summary>
-        public UnitDictionary<Type, UnitDictionary<long, Entity>> DynamicListenerPool = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
+        ///// <summary>
+        ///// 监听器类型，监听器实体集合
+        ///// </summary>
+        //public UnitDictionary<Type, UnitDictionary<long, Entity>> DynamicListenerPool = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
 
 
         /// <summary>
@@ -30,6 +31,26 @@ namespace WorldTree
             BroadcastGroups.Clear();
         }
 
+        #region 判断监听器
+
+        /// <summary>
+        /// 检测添加动态监听器
+        /// </summary>
+        public void TryAddListener(Entity listener)
+        {
+           
+        }
+
+        /// <summary>
+        /// 检测移除静态监听器
+        /// </summary>
+        public void RemoveListener(Entity listener)
+        {
+
+        }
+
+        #endregion
+
 
         #region 获取广播
 
@@ -38,16 +59,71 @@ namespace WorldTree
         /// </summary>
         public bool TryAddBroadcast(Type Target, Type System, out SystemBroadcast broadcast)
         {
-            //则判断这个系统类型是否有动态类型监听系统组
-            if (Root.SystemManager.TryGetTargetSystemGroup(System, typeof(Entity), out var systemGroup))
+            //判断是否有组
+            if (TryGetGroup(Target, out var group))
             {
+                //判断是否有广播
+                if (group.TryGetBroadcast(System, out broadcast)) { return true; }
 
+                //没有广播 则判断这个系统类型是否有动态类型监听系统组
+                else if (Root.SystemManager.TryGetTargetSystemGroup(System, typeof(Entity), out var systemGroup))
+                {
+                    //新建广播
+                    broadcast = group.GetBroadcast(System);
+                    broadcast.systems = systemGroup;
+                    SystemBroadcastAddListener(broadcast, Target);
+                    return true;
+                }
+            }
+            else if (Root.SystemManager.TryGetTargetSystemGroup(System, typeof(Entity), out var systemGroup))
+            {
+                //新建组和广播
+                broadcast = GetGroup(Target).GetBroadcast(System);
+                broadcast.systems = systemGroup;
+                SystemBroadcastAddListener(broadcast, Target);
+                return true;
             }
             broadcast = null;
             return false;
         }
 
-
+        /// <summary>
+        /// 广播填装监听器
+        /// </summary>
+        private void SystemBroadcastAddListener(SystemBroadcast broadcast, Type Target)
+        {
+            foreach (var listenerType in broadcast.systems)//遍历监听类型
+            {
+                //获取监听器对象池
+                if (Root.EntityPoolManager.pools.TryGetValue(listenerType.Key, out EntityPool listenerPool))
+                {
+                    //遍历已存在的监听器
+                    foreach (var listener in listenerPool.Entitys)
+                    {
+                        //判断目标是否被该监听器监听
+                        if (listener.Value.listenerTarget != null)
+                        {
+                            if (listener.Value.listenerState == ListenerState.Entity)
+                            {
+                                //判断是否全局监听 或 是指定的目标类型
+                                if (listener.Value.listenerTarget == typeof(Entity) || listener.Value.listenerTarget == Target)
+                                {
+                                    broadcast.AddEntity(listener.Value);
+                                }
+                            }
+                            else if (listener.Value.listenerState == ListenerState.System)
+                            {
+                                //判断的实体类型是否拥有目标系统
+                                if (Root.SystemManager.TryGetSystems(Target, listener.Value.listenerTarget, out _))
+                                {
+                                    broadcast.AddEntity(listener.Value);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         /// <summary>
         /// 尝试获取动态广播
         /// </summary>

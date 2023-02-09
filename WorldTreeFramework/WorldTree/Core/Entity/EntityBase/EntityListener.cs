@@ -119,13 +119,16 @@ namespace WorldTree
             //获取 Entity 动态目标 系统组集合
             if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Entity), out var systemGroups))
             {
-                //遍历现有全部池
-                foreach (var pool in Root.EntityPoolManager.pools)
+                //遍历现有广播
+                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.BroadcastGroups)
                 {
                     //遍历获取动态系统组，并添加自己
                     foreach (var systemGroup in systemGroups)
                     {
-                        pool.Value.AddComponent<ListenerSystemBroadcastGroup>().GetDynamicBroadcast(systemGroup.Key).AddEntity(this);
+                        if (BroadcastGroup.Value.TryGetBroadcast(systemGroup.Key, out var broadcast))
+                        {
+                            broadcast.AddEntity(this);
+                        }
                     }
                 }
             }
@@ -152,9 +155,9 @@ namespace WorldTree
         /// </summary>
         private void DynamicListenerAddTarget(Type type)
         {
-            if (Root.EntityPoolManager.TryGetPool(type, out var pool))
+            if (Root.DynamicListenerBroadcastManager.TryGetGroup(type, out var broadcastGroup))
             {
-                PoolAddDynamicListener(pool);
+                AddDynamicListener(broadcastGroup);
             }
         }
 
@@ -198,12 +201,15 @@ namespace WorldTree
             if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Entity), out var systemGroups))
             {
                 //遍历现有全部池
-                foreach (var pool in Root.EntityPoolManager.pools)
+                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.BroadcastGroups)
                 {
                     //遍历获取动态系统组，并移除自己
                     foreach (var systemGroup in systemGroups)
                     {
-                        pool.Value.AddComponent<ListenerSystemBroadcastGroup>().GetDynamicBroadcast(systemGroup.Key).RemoveEntity(this);
+                        if (BroadcastGroup.Value.TryGetBroadcast(systemGroup.Key, out var broadcast))
+                        {
+                            broadcast.RemoveEntity(this);
+                        }
                     }
                 }
             }
@@ -229,9 +235,9 @@ namespace WorldTree
         /// </summary>
         private void DynamicListenerRemoveTarget(Type type)
         {
-            if (Root.EntityPoolManager.TryGetPool(type, out var pool))
+            if (Root.DynamicListenerBroadcastManager.TryGetGroup(type, out var broadcastGroup))
             {
-                PoolRemoveDynamicListener(pool);
+                RemoveDynamicListener(broadcastGroup);
             }
         }
         #endregion
@@ -243,8 +249,7 @@ namespace WorldTree
         /// <summary>
         /// 目标池添加动态监听器
         /// </summary>
-        /// <param name="pool"></param>
-        private void PoolAddDynamicListener(EntityPool pool)
+        private void AddDynamicListener(ListenerBroadcastGroup broadcastGroup)
         {
             //获取 Entity 动态目标 系统组集合
             if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Entity), out var systemGroups))
@@ -252,15 +257,14 @@ namespace WorldTree
                 //遍历获取动态系统组，并添加自己
                 foreach (var systemGroup in systemGroups)
                 {
-                    pool.AddComponent<ListenerSystemBroadcastGroup>().GetDynamicBroadcast(systemGroup.Key).AddEntity(this);
+                    broadcastGroup.GetBroadcast(systemGroup.Key).AddEntity(this);
                 }
             }
         }
         /// <summary>
         /// 目标池移除动态监听器
         /// </summary>
-        /// <param name="pool"></param>
-        private void PoolRemoveDynamicListener(EntityPool pool)
+        private void RemoveDynamicListener(ListenerBroadcastGroup broadcastGroup)
         {
             //获取 Entity 动态目标 系统组集合
             if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Entity), out var systemGroups))
@@ -268,7 +272,7 @@ namespace WorldTree
                 //遍历获取动态系统组，并移除自己
                 foreach (var systemGroup in systemGroups)
                 {
-                    pool.AddComponent<ListenerSystemBroadcastGroup>().GetDynamicBroadcast(systemGroup.Key).RemoveEntity(this);
+                    broadcastGroup.GetBroadcast(systemGroup.Key).RemoveEntity(this);
                 }
             }
         }

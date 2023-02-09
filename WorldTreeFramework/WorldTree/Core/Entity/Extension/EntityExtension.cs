@@ -20,7 +20,7 @@
             string t1 = "\t" + t;
             string str = "";
 
-            str += t1 + $"[{entity.id}] " + entity.ToString() + "\n";
+            str += t1 + $"[{entity.id:0}] " + entity.ToString() + "\n";
 
             if (entity.components != null)
             {

@@ -36,11 +36,6 @@ namespace WorldTree
 
 
         /// <summary>
-        /// 监听器类型，监听器实体集合
-        /// </summary>
-        public UnitDictionary<Type, UnitDictionary<long, Entity>> DynamicListenerPool = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
-
-        /// <summary>
         /// 实体添加监听系统组
         /// </summary>
         public SystemGroup entityAddSystems;
@@ -64,7 +59,7 @@ namespace WorldTree
         public UnitPoolManager UnitPoolManager;
         public EntityPoolManager EntityPoolManager;
         public StaticListenerBroadcastManager StaticListenerBroadcastManager;
-
+        public DynamicListenerBroadcastManager DynamicListenerBroadcastManager;
 
         public EntityManager() : base()
         {
@@ -78,6 +73,7 @@ namespace WorldTree
             UnitPoolManager = new UnitPoolManager();
             EntityPoolManager = new EntityPoolManager();
             StaticListenerBroadcastManager = new StaticListenerBroadcastManager();
+            DynamicListenerBroadcastManager = new DynamicListenerBroadcastManager();
 
             //赋予根节点
             Root = this;
@@ -86,6 +82,7 @@ namespace WorldTree
             UnitPoolManager.Root = this;
             EntityPoolManager.Root = this;
             StaticListenerBroadcastManager.Root = this;
+            DynamicListenerBroadcastManager.Root = this;
 
             //赋予id
             Root.id = IdManager.GetId();
@@ -94,6 +91,7 @@ namespace WorldTree
             UnitPoolManager.id = IdManager.GetId();
             EntityPoolManager.id = IdManager.GetId();
             StaticListenerBroadcastManager.id = IdManager.GetId();
+            DynamicListenerBroadcastManager.id = IdManager.GetId();
 
             //实体管理器系统事件获取
             addSystems = Root.SystemManager.GetGroup<IAddSystem>();
@@ -118,6 +116,7 @@ namespace WorldTree
             AddComponent(UnitPoolManager);
             AddComponent(EntityPoolManager);
             AddComponent(StaticListenerBroadcastManager);
+            AddComponent(DynamicListenerBroadcastManager);
 
             //饿汉单例启动
             //singletonEagerSystems?.Send(this);
@@ -138,11 +137,8 @@ namespace WorldTree
         public void Add(Entity entity)
         {
             //广播给全部监听器!!!!
-            //entity.GetStaticListenerSystemGlobalBroadcast<IListenerAddSystem>()?.Send();
-            //entity.GetDynamicListenerSystemGlobalBroadcast<IListenerAddSystem>()?.Send();
-
-            entity.TrySendListener<IListenerAddSystem>();
-
+            entity.TrySendStaticListener<IListenerAddSystem>();
+            entity.TrySendDynamicListener<IListenerAddSystem>();
 
 
             allEntity.TryAdd(entity.id, entity);
@@ -154,20 +150,10 @@ namespace WorldTree
             //====
 
             //检测添加静态监听
-            //StaticListenerAdd(entity);
             StaticListenerBroadcastManager.TryAddListener(entity);
-
-
             //检测添加动态监听
-            //if (entity.ListenerSwitchesTarget(typeof(Entity), ListenerState.Entity))
-            //{
-            //    if (!DynamicListenerPool.TryGetValue(entity.listenerTarget, out var listeners))
-            //    {
-            //        listeners = new UnitDictionary<long, Entity>();
-            //    }
-            //    listeners.TryAdd(entity.id, entity);
-            //}
-
+            //DynamicListenerBroadcastManager.TryAddListener(entity);
+            entity.ListenerSwitchesTarget(typeof(Entity), ListenerState.Entity);
 
 
             entity.SetActive(true);
@@ -184,19 +170,12 @@ namespace WorldTree
             entity.RemoveAll();//移除所有子节点和组件
             disableSystems?.Send(entity);//调用禁用事件
 
-            ////检测移除静态监听
-            //StaticListenerRemove(entity);
+            //检测移除静态监听
             StaticListenerBroadcastManager.RemoveListener(entity);
+            //检测移除动态监听
+            entity.ListenerClearTarget();
+            //DynamicListenerBroadcastManager.RemoveListener(entity);
 
-
-            ////检测移除动态监听
-            //if (SystemManager.DynamicListenerTypes.Contains(Type))
-            //{
-            //    if (DynamicListenerPool.TryGetValue(entity.listenerTarget, out var listeners))
-            //    {
-            //        listeners.Remove(entity.id);
-            //    }
-            //}
 
             //这个实体的移除事件
             removeSystems?.Send(entity);
@@ -204,58 +183,11 @@ namespace WorldTree
             allEntity.Remove(entity.id);
 
             //广播给全部监听器!!!!
+            entity.TrySendStaticListener<IListenerRemoveSystem>();
+            entity.TrySendDynamicListener<IListenerRemoveSystem>();
 
-            entity.TrySendListener<IListenerRemoveSystem>();
-
-            //entity.GetStaticListenerSystemGlobalBroadcast<IListenerRemoveSystem>()?.Send();
-            //entity.GetDynamicListenerSystemGlobalBroadcast<IListenerRemoveSystem>()?.Send();
         }
 
-
-        //静态填装
-
-
-        /// <summary>
-        /// 检测添加静态监听器
-        /// </summary>
-        private void StaticListenerAdd(Entity listener)
-        {
-            //判断是否为监听器
-            if (Root.SystemManager.ListenerSystems.TryGetValue(listener.Type, out var systemGroups))
-            {
-                foreach (var systemGroup in systemGroups)//遍历系统组集合获取系统类型
-                {
-                    foreach (var systems in systemGroup.Value)//遍历系统组获取目标类型
-                    {
-                        if (EntityPoolManager.TryGetPool(systems.Key, out EntityPool pool))//尝试获取目标对象池
-                        {
-                            pool.AddComponent<ListenerSystemBroadcastGroup>().GetBroadcast(systemGroup.Key).AddEntity(listener);
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 检测移除静态监听器
-        /// </summary>
-        private void StaticListenerRemove(Entity listener)
-        {
-            //判断是否为监听器
-            if (Root.SystemManager.ListenerSystems.TryGetValue(listener.Type, out var systemGroups))
-            {
-                foreach (var systemGroup in systemGroups)//遍历系统组集合获取系统类型
-                {
-                    foreach (var systems in systemGroup.Value)//遍历系统组获取目标类型
-                    {
-                        if (EntityPoolManager.TryGetPool(systems.Key, out EntityPool pool))//尝试获取目标对象池
-                        {
-                            pool.AddComponent<ListenerSystemBroadcastGroup>().GetBroadcast(systemGroup.Key).RemoveEntity(listener);
-                        }
-                    }
-                }
-            }
-        }
 
     }
 }
