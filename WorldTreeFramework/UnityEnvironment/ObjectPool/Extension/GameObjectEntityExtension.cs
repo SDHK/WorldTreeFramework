@@ -11,7 +11,7 @@ namespace WorldTree
         public static async AsyncTask<T> AddGameObjectEntity<T>(this Entity self)
         where T : Entity
         {
-            GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject>(typeof(T).Name);
+            GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
             return self.AddChildren<GameObjectEntity>().Instantiate(prefab).AddComponent<T>();
         }
 
@@ -21,7 +21,7 @@ namespace WorldTree
         public static async AsyncTask<T> AddGameObjectEntity<T>(this Entity self, Transform parent)
         where T : Entity
         {
-            GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject>(typeof(T).Name);
+            GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
             return self.AddChildren<GameObjectEntity>().Instantiate(prefab, parent).AddComponent<T>();
         }
 
@@ -31,7 +31,7 @@ namespace WorldTree
         public static async AsyncTask<T> AddGameObjectEntity<T>(this Entity self, GameObjectEntity parent)
         where T : Entity
         {
-            GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject>(typeof(T).Name);
+            GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
             return self.AddChildren<GameObjectEntity>().Instantiate(prefab, parent).AddComponent<T>();
         }
     }

@@ -25,7 +25,7 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public bool IsCompleted => true;
         [DebuggerHidden]
-        public void GetResult() {  Dispose();  }
+        public void GetResult() { Dispose(); }
         [DebuggerHidden]
         public void OnCompleted(Action continuation) { }
         [DebuggerHidden]

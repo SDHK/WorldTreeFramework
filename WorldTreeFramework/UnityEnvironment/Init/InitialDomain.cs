@@ -35,11 +35,8 @@ namespace WorldTree
 
             World.Log("初始域启动！");
 
-            //GameObject gameObject = await Addressables.InstantiateAsync("MainWindow").Task;
 
-            //GameObject gameObject = await self.AddressablesInstantiateAsync("MainWindow");
-
-            //self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
+            self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
 
             //GetGroundPoint(Vector3(1,1), )
         }

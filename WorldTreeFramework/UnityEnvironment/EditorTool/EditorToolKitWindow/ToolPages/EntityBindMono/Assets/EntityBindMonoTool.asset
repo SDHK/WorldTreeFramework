@@ -18,7 +18,7 @@ MonoBehaviour:
     groupName: UI
     addMonoObjects: []
     objects:
-    - IsShow: 0
+    - IsShow: 1
       IsRefresh: 0
       monoObject: {fileID: 7582038616427321029, guid: b734efd44fc2c1445b21992e396bcf25, type: 3}
       comment: "\u4E3B\u754C\u9762\u7A97\u53E3"

@@ -110,7 +110,7 @@ namespace WorldTree
         }
         private void ObjectDestroy(Entity obj)
         {
-            obj.Dispose();
+            Root.IdManager.Recycle(obj.id);
         }
 
         private void ObjectOnNew(Entity obj)
@@ -139,39 +139,4 @@ namespace WorldTree
         }
 
     }
-
-
-    //=====================
-
-    ////实体字典基类
-    //public class EntityDictionary : Entity { public IDictionary value; } //箱基类
-    ////实体字典泛型类
-    //public class EntityDictionary<K, V> : EntityDictionary  //泛型箱
-    //{
-    //    public EntityDictionary()
-    //    {
-    //        Type = typeof(EntityDictionary); //将这个泛型类的 匹配标签 改为基类
-    //        value = new Dictionary<K, V>(); //初始化赋值
-    //    }
-    //    public Dictionary<K, V> Value => value as Dictionary<K, V>; //强转获取
-
-    //}
-    ////回收系统匹配到基类
-    //class EntityDictionaryRemoveystem : RemoveSystem<EntityDictionary>
-    //{
-    //    public override void OnRemove(EntityDictionary self)
-    //    {
-    //        self.value.Clear();//统一清理
-    //    }
-    //}
-
-
-
-
-
-
-
-
-
-
 }

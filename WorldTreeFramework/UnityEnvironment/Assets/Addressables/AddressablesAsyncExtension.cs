@@ -24,25 +24,11 @@ namespace WorldTree
         /// <summary>
         /// Addressables加载资源
         /// </summary>
-        public async static AsyncTask<T> AddressablesLoadAssetAsync<T>(this Entity self, string key)
+        public async static AsyncTask<T> AddressablesLoadAssetAsync<T, E>(this Entity self)
+            where T : class
+            where E : Entity
         {
-            return (await self.GetAwaiter(Addressables.LoadAssetAsync<T>(key))).Result;
-        }
-
-        /// <summary>
-        /// Addressables加载资源列表
-        /// </summary>
-        public async static AsyncTask<IList<T>> AddressablesLoadAssetsAsync<T>(this Entity self, string key, Action<T> CallBack = null)
-        {
-            return (await self.GetAwaiter(Addressables.LoadAssetsAsync<T>(key, CallBack))).Result;
-        }
-
-        /// <summary>
-        /// Addressables加载并实例化预制体
-        /// </summary>
-        public async static AsyncTask<GameObject> AddressablesInstantiateAsync(this Entity self, string key)
-        {
-            return (await self.GetAwaiter(Addressables.InstantiateAsync(key))).Result;
+            return await self.Root.AddComponent<AddressablesManager>().LoadAssetAsync<T,E>();
         }
     }
 }

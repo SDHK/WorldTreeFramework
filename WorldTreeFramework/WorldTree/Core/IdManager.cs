@@ -4,8 +4,9 @@
 * 日期： 2022/7/18 9:35
 
 * 描述： 一个编号分发的管理器
-* 思考编号池
 */
+
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -23,6 +24,11 @@ namespace WorldTree
     /// </summary>
     public class IdManager : Entity
     {
+        /// <summary>
+        /// id池
+        /// </summary>
+        public Queue<long> idPool = new Queue<long>();
+
 
         /// <summary>
         /// 当前递增的id值
@@ -34,14 +40,31 @@ namespace WorldTree
         /// </summary>
         public long GetId()
         {
-            return Id++;
+            if (!idPool.TryDequeue(out id))
+            {
+                id = Id++;
+            }
+            return id;
         }
+
+        /// <summary>
+        /// 回收id
+        /// </summary>
+        public void Recycle(long id)
+        {
+            if (!idPool.Contains(id))
+            {
+                idPool.Enqueue(id);
+            }
+        }
+
 
         /// <summary>
         /// 释放后
         /// </summary>
         public override void OnDispose()
         {
+            idPool.Clear();
             IsRecycle = true;
             IsDisposed = true;
         }

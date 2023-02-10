@@ -91,7 +91,7 @@ namespace WorldTree
                         break;
                     }
                 }
-                if (windowStack.TryPeek(out  topEntity))
+                if (windowStack.TryPeek(out topEntity))
                 {
                     topEntity?.SendSystem<IWindowFocusSystem>();
                 }
