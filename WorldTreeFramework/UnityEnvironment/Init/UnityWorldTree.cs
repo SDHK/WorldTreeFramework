@@ -24,7 +24,7 @@ namespace WorldTree
         SystemBroadcast update;
         SystemBroadcast lateUpdate;
         SystemBroadcast fixedUpdate;
-        SystemBroadcast onGUI;
+        //SystemBroadcast onGUI;
 
 
         private void Start()
@@ -83,7 +83,7 @@ namespace WorldTree
             disable = null;
             lateUpdate = null;
             fixedUpdate = null;
-            onGUI = null;
+            //onGUI = null;
         }
         
     }

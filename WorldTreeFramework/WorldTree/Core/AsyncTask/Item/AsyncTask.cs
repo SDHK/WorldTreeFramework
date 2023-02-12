@@ -28,6 +28,20 @@ namespace WorldTree
 
         public bool IsCompleted { get; set; }
 
+        public Action SetResult { get; set; }
+
+        public AsyncTask():base()
+        {
+            SetResult = SetResultMethod;
+        }
+
+        public void GetResult() {  }
+        private void SetResultMethod()
+        {
+            continuation?.Invoke();
+            Dispose();
+        }
+
         [DebuggerHidden]
         private async AsyncTaskVoid InnerCoroutine()
         {
@@ -57,14 +71,7 @@ namespace WorldTree
             this.Exception = exception;
         }
 
-        public void GetResult()
-        {
-        }
-        public void SetResult()
-        {
-            continuation?.Invoke();
-            Dispose();
-        }
+      
 
     }
 
@@ -77,8 +84,14 @@ namespace WorldTree
         public AsyncTask<T> GetAwaiter() => this;
         public Action continuation;
         public bool IsCompleted { get; set; }
+        public Action<T> SetResult { get; set; }
 
         public T Result;
+
+        public AsyncTask()
+        {
+            SetResult = SetResultFunc;
+        }
 
         [DebuggerHidden]
         private async AsyncTaskVoid InnerCoroutine()
@@ -110,7 +123,8 @@ namespace WorldTree
         {
             this.continuation = continuation;
         }
-        public void SetResult(T result)
+
+        private void SetResultFunc(T result)
         {
             Result = result;
             continuation?.Invoke();

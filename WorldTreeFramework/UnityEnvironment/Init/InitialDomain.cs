@@ -16,6 +16,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
+using WorldTree.Internal;
 
 namespace WorldTree
 {
@@ -30,20 +31,25 @@ namespace WorldTree
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     class _InitialDomain : AddSystem<InitialDomain>
     {
-        public override void OnAdd(InitialDomain self)
+        public override  void OnAdd(InitialDomain self)
         {
 
             World.Log("初始域启动！");
 
+            //self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
 
-            self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
+
 
             //GetGroundPoint(Vector3(1,1), )
         }
+
     }
 
     class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>
     {
+
+        public Action action1;
+
         public override void Update(InitialDomain self, float deltaTime)
         {
 
@@ -61,12 +67,11 @@ namespace WorldTree
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                self.ListenerSwitchesTarget(typeof(Node), ListenerState.Entity);
+
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                self.ListenerSwitchesTarget(typeof(IUpdateSystem), ListenerState.System);
             }
 
 

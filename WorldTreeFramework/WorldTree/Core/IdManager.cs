@@ -33,18 +33,18 @@ namespace WorldTree
         /// <summary>
         /// 当前递增的id值
         /// </summary>
-        public long Id = 0;
+        public long currentId = 0;
 
         /// <summary>
         /// 获取id后递增
         /// </summary>
         public long GetId()
         {
-            if (!idPool.TryDequeue(out id))
+            if (!idPool.TryDequeue(out var value))
             {
-                id = Id++;
+                value = currentId++;
             }
-            return id;
+            return value;
         }
 
         /// <summary>

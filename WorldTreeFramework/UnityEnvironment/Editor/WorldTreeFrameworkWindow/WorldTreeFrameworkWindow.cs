@@ -24,14 +24,14 @@ namespace EditorTool
         [MenuItem("WorldTree/Window")]
         static void ShowWindow()
         {
-            if (root == null)
-            {
-                root = new EntityManager();
-                World.Log = Debug.Log;
-                World.LogWarning = Debug.LogWarning;
-                World.LogError = Debug.LogError;
-            }
-            root.AddComponent<WorldTreeFrameworkWindow>();
+            //if (root == null)
+            //{
+            //    root = new EntityManager();
+            //    World.Log = Debug.Log;
+            //    World.LogWarning = Debug.LogWarning;
+            //    World.LogError = Debug.LogError;
+            //}
+            //root.AddComponent<WorldTreeFrameworkWindow>();
         }
 
         public SystemBroadcast enable;

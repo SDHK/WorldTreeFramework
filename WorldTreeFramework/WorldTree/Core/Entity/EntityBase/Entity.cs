@@ -23,7 +23,7 @@ namespace WorldTree
         public bool IsDisposed { get; set; }
 
         /// <summary>
-        /// Id
+        /// currentId
         /// </summary>
         public long id;
 

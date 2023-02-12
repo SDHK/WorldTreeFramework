@@ -35,7 +35,8 @@ namespace WorldTree
             }
             else
             {
-                await this.AsyncYield();
+                await this.AsyncTaskCompleted();
+                //await this.AsyncYield();
             }
             return asset as T;
         }

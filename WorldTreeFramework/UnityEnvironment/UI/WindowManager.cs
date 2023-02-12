@@ -50,7 +50,7 @@ namespace WorldTree
                 }
                 entity?.SendSystem<IWindowFocusSystem>();
 
-                await this.AsyncYield();
+                await this.AsyncTaskCompleted();
             }
             else
             {

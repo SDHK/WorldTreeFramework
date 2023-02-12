@@ -83,7 +83,6 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
-
             stateMachine.MoveNext();
         }
 
@@ -91,7 +90,6 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetStateMachine(IAsyncStateMachine stateMachine)
         {
-
         }
     }
 
@@ -137,8 +135,12 @@ namespace WorldTree.Internal
         // 5. AwaitOnCompleted
         [DebuggerHidden]
 
-        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : INotifyCompletion where TStateMachine : IAsyncStateMachine
+        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : Entity, INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
+            if (task == null)
+            {
+                task = awaiter.Parent.AddChildren<AsyncTask<T>>();
+            }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
 

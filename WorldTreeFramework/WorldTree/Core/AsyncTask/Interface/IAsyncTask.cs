@@ -26,10 +26,13 @@ namespace WorldTree
         /// 获取结果
         /// </summary>
         void GetResult();
+
         /// <summary>
         /// 设置结果
         /// </summary>
-        void SetResult();
+        //void SetResult();
+        public Action SetResult { get; set; }
+
         /// <summary>
         /// 设置异常
         /// </summary>
@@ -53,7 +56,9 @@ namespace WorldTree
         /// <summary>
         /// 设置结果
         /// </summary>
-        void SetResult(T result);
+        //void SetResult(T result);
+
+        public Action<T> SetResult { get; set; }
         /// <summary>
         /// 设置异常
         /// </summary>
