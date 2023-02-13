@@ -21,43 +21,44 @@ namespace WorldTree.Internal
     /// 异步任务完成类
     /// </summary>
     [AsyncMethodBuilder(typeof(AsyncTaskCompletedMethodBuilder))]
-    public class AsyncTaskCompleted : Entity, IAsyncTask
+    public class AsyncTaskCompleted : AsyncTaskBase
     {
         public AsyncTaskCompleted GetAwaiter() => this;
-        public Action continuation;
-        public Exception Exception { get; private set; }
-        public bool IsCompleted { get; set; }
+        public override bool IsCompleted { get; set; }
         public Action SetResult { get; set; }
 
-        public AsyncTaskCompleted():base()
+        public AsyncTaskCompleted() : base()
         {
-            SetResult = SetResultMethod;
+            Type = typeof(AsyncTaskCompleted);
+            SetResult = SetCompleted;
         }
         public void GetResult() { }
-        private void SetResultMethod()
-        {
-            continuation?.Invoke();
-            Dispose();
-        }
-        public void OnCompleted(Action continuation)
-        {
-            UnsafeOnCompleted(continuation);
-        }
-        public void UnsafeOnCompleted(Action continuation)
-        {
-            this.continuation = continuation;
-        }
-        public void SetException(Exception exception)
-        {
-            this.Exception = exception;
-        }
     }
+
+
 
     class AsyncTaskCompletedUpdateSystem : UpdateSystem<AsyncTaskCompleted>
     {
         public override void Update(AsyncTaskCompleted self, float deltaTime)
         {
             self.SetResult();
+        }
+    }
+
+    class AsyncTaskCompletedEnableSystem : EnableSystem<AsyncTaskCompleted>
+    {
+        public override void OnEnable(AsyncTaskCompleted self)
+        {
+            self.Continue();
+        }
+    }
+
+    class AsyncTaskCompletedRemoveSystem : RemoveSystem<AsyncTaskCompleted>
+    {
+        public override void OnRemove(AsyncTaskCompleted self)
+        {
+            self.IsCompleted = false;
+            self.continuation = null;
         }
     }
 }

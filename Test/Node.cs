@@ -10,41 +10,34 @@ public class Node : Entity
     public async AsyncTask Test()
     {
 
-        await this.AsyncTaskCompleted();
         World.Log("1！");
+
+        await this.AsyncDelay(3);
 
         await T2();
 
-        World.Log("1！2!");
-
-        //await this.AsyncDelay(1);
-
-        //await this.AsyncDelay(1);
         //World.Log("2！");
-        //await this.AsyncDelay(1);
+        //await this.AsyncDelay(3);
         //World.Log("3！");
 
-        ////if (bit)
-        ////{
-        ////    //await Test();
-        ////    await this.AddComponent<Node>().Test();
-        ////}
-
-        //await this.AsyncDelay(1);
+        //await this.AsyncDelay(3);
 
         //World.Log("4！");
-        //await this.AsyncDelay(1);
+        //await this.AsyncDelay(3);
         //World.Log("5！");
-        //await this.AsyncDelay(1);
+        //await this.AsyncDelay(3);
         //World.Log("6！");
-        //await this.AsyncDelay(1);
+        //await this.AsyncDelay(3);
         //World.Log("7！");
     }
 
     public async AsyncTask T2()
     {
-        await this.AsyncDelay(1);
+        World.Log("T2 1！");
 
+        await this.AsyncDelay(3);
+
+        World.Log("T2 2！");
 
         await this.AsyncTaskCompleted();
 
@@ -56,7 +49,11 @@ public class Node : Entity
     }
     public async AsyncTask T3()
     {
-        await this.AsyncDelay(1);
+        World.Log("T3 1！");
+
+        await this.AsyncDelay(3);
+
+        World.Log("T3 2！");
 
         await this.AsyncTaskCompleted();
 
@@ -66,8 +63,10 @@ public class Node : Entity
 
     public async AsyncTask<int> T4()
     {
+        World.Log("T4 1！");
 
-        await this.AsyncDelay(1);
+        await this.AsyncDelay(3);
+        World.Log("T4 2！");
 
         await this.AsyncTaskCompleted();
 

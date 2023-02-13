@@ -39,8 +39,9 @@ namespace WorldTree.Internal
         }
         // 设置异常
         [DebuggerHidden]
-        public void SetException(Exception e)
+        public void SetException(Exception exception)
         {
+            task.SetException(exception);
         }
 
         // 设置结果
@@ -52,7 +53,7 @@ namespace WorldTree.Internal
 
         // 5. 等待完成
         [DebuggerHidden]
-        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : Entity, INotifyCompletion where TStateMachine : IAsyncStateMachine
+        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : AsyncTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
             if (task == null)
             {
@@ -64,7 +65,7 @@ namespace WorldTree.Internal
         // 6. 等待不安全完成
         [DebuggerHidden]
         [SecuritySafeCritical]
-        public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : Entity, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
+        public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : AsyncTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
         {
             if (task == null)
             {

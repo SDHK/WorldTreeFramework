@@ -19,28 +19,20 @@ namespace WorldTree
     /// 异步任务
     /// </summary>
     [AsyncMethodBuilder(typeof(Internal.AsyncTaskMethodBuilder))]
-    public class AsyncTask : Entity, IAsyncTask
+    public class AsyncTask : AsyncTaskBase
     {
         public AsyncTask GetAwaiter() => this;
-
-        public Action continuation;
-        public Exception Exception { get; private set; }
-
-        public bool IsCompleted { get; set; }
+        public override bool IsCompleted { get; set; }
 
         public Action SetResult { get; set; }
 
-        public AsyncTask():base()
+
+        public AsyncTask() : base()
         {
-            SetResult = SetResultMethod;
+            SetResult = SetCompleted;
         }
 
-        public void GetResult() {  }
-        private void SetResultMethod()
-        {
-            continuation?.Invoke();
-            Dispose();
-        }
+        public void GetResult() { }
 
         [DebuggerHidden]
         private async AsyncTaskVoid InnerCoroutine()
@@ -51,96 +43,59 @@ namespace WorldTree
         /// <summary>
         /// 协程启动
         /// </summary>
-        [DebuggerHidden]
-        public void Coroutine()
+        public AsyncTask Coroutine()
         {
             InnerCoroutine().Coroutine();
+            return this;
         }
-
-        public void OnCompleted(Action continuation)
-        {
-            UnsafeOnCompleted(continuation);
-        }
-
-        public void UnsafeOnCompleted(Action continuation)
-        {
-            this.continuation = continuation;
-        }
-        public void SetException(Exception exception)
-        {
-            this.Exception = exception;
-        }
-
-      
-
     }
+
+  
 
     /// <summary>
     /// 泛型异步任务
     /// </summary>
     [AsyncMethodBuilder(typeof(Internal.AsyncTaskMethodBuilder<>))]
-    public class AsyncTask<T> : Entity, IAsyncTask<T>
+    public class AsyncTask<T> : AsyncTaskBase
     {
         public AsyncTask<T> GetAwaiter() => this;
-        public Action continuation;
-        public bool IsCompleted { get; set; }
+        public override bool IsCompleted { get; set; }
         public Action<T> SetResult { get; set; }
 
         public T Result;
 
-        public AsyncTask()
+        public AsyncTask():base()
         {
             SetResult = SetResultFunc;
         }
-
-        [DebuggerHidden]
-        private async AsyncTaskVoid InnerCoroutine()
-        {
-            await this;
-        }
-
-        /// <summary>
-        /// 协程启动
-        /// </summary>
-        [DebuggerHidden]
-        public void Coroutine()
-        {
-            InnerCoroutine().Coroutine();
-        }
-
 
         public T GetResult()
         {
             return Result;
         }
 
-        public void OnCompleted(Action continuation)
-        {
-            UnsafeOnCompleted(continuation);
-
-        }
-        public void UnsafeOnCompleted(Action continuation)
-        {
-            this.continuation = continuation;
-        }
-
         private void SetResultFunc(T result)
         {
             Result = result;
-            continuation?.Invoke();
-            Dispose();
+            SetCompleted();
         }
 
-        public void SetException(Exception exception)
+
+
+        [DebuggerHidden]
+        private async AsyncTaskVoid InnerCoroutine()
         {
+            await this;
         }
 
-
+        /// <summary>
+        /// 协程启动
+        /// </summary>
+        public AsyncTask<T> Coroutine()
+        {
+            InnerCoroutine().Coroutine();
+            return this;
+        }
     }
-
-
-
-
-
 
 }

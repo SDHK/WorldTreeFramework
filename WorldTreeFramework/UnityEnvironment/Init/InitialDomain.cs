@@ -31,7 +31,7 @@ namespace WorldTree
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     class _InitialDomain : AddSystem<InitialDomain>
     {
-        public override  void OnAdd(InitialDomain self)
+        public override void OnAdd(InitialDomain self)
         {
 
             World.Log("初始域启动！");
@@ -48,30 +48,28 @@ namespace WorldTree
     class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>
     {
 
-        public Action action1;
 
         public override void Update(InitialDomain self, float deltaTime)
         {
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                self.AddComponent<Node>()
-                    .Test().Coroutine()
-                    ;
+                self.AddComponent<Node>().Test().Coroutine();
             }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
-                self.RemoveComponent<Node>();
+                self.AddComponent<Node>().SetActive(false);
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-
+                self.AddComponent<Node>().SetActive(true);
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             {
+                self.RemoveComponent<Node>();
             }
 
 

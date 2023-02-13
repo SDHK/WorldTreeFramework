@@ -59,7 +59,7 @@ namespace WorldTree.Internal
         // 5. AwaitOnCompleted
         [DebuggerHidden]
 
-        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : Entity, INotifyCompletion where TStateMachine : IAsyncStateMachine
+        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : AsyncTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
             if (task == null)
             {
@@ -70,7 +70,7 @@ namespace WorldTree.Internal
 
         // 6. AwaitUnsafeOnCompleted
         [SecuritySafeCritical]
-        public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : Entity, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
+        public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : AsyncTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
         {
             if (task == null)
             {
@@ -135,7 +135,7 @@ namespace WorldTree.Internal
         // 5. AwaitOnCompleted
         [DebuggerHidden]
 
-        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : Entity, INotifyCompletion where TStateMachine : IAsyncStateMachine
+        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : AsyncTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
             if (task == null)
             {
@@ -146,7 +146,7 @@ namespace WorldTree.Internal
 
         // 6. AwaitUnsafeOnCompleted
         [SecuritySafeCritical]
-        public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : Entity, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
+        public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : AsyncTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
         {
             if (task == null)
             {
