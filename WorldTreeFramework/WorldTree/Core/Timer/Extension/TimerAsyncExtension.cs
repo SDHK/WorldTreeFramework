@@ -17,8 +17,9 @@ namespace WorldTree
         /// </summary>
         public static AsyncTask AsyncYield(this Entity self, int count = 0)
         {
-            var counter = self.AddChildren<CounterCall>();
-            AsyncTask asyncTask = counter.AddChildren<AsyncTask>();
+            AsyncTask asyncTask = self.AddChildren<AsyncTask>();
+            var counter = asyncTask.AddComponent<CounterCall>();
+
             counter.countOut = count;
             counter.callback = asyncTask.SetResult;
             return asyncTask;
@@ -30,8 +31,8 @@ namespace WorldTree
         /// </summary>
         public static AsyncTask AsyncDelay(this Entity self, float time)
         {
-            var timer = self.AddChildren<TimerCall>();
-            AsyncTask asyncTask = timer.AddChildren<AsyncTask>();
+            AsyncTask asyncTask = self.AddChildren<AsyncTask>();
+            var timer = asyncTask.AddComponent<TimerCall>();
             timer.timeOutTime = time;
             timer.callback = asyncTask.SetResult;
             return asyncTask;
