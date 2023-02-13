@@ -4,7 +4,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/2/9 14:34
 
-* 描述： 异步任务接口
+* 描述： 异步任务基类
 
 */
 
@@ -50,6 +50,10 @@ namespace WorldTree
                 continuation?.Invoke();
                 Dispose();
             }
+            else
+            {
+                AddComponent<AsyncTaskContinue>();
+            }
         }
 
         /// <summary>
@@ -85,15 +89,6 @@ namespace WorldTree
                 continuation?.Invoke();
                 Dispose();
             }
-        }
-    }
-
-
-    class AsyncTaskBaseEnableSystem : EnableSystem<AsyncTaskBase>
-    {
-        public override void OnEnable(AsyncTaskBase self)
-        {
-            self.Continue();
         }
     }
 

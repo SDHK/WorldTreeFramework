@@ -35,21 +35,11 @@ namespace WorldTree.Internal
         public void GetResult() { }
     }
 
-
-
     class AsyncTaskCompletedUpdateSystem : UpdateSystem<AsyncTaskCompleted>
     {
         public override void Update(AsyncTaskCompleted self, float deltaTime)
         {
             self.SetResult();
-        }
-    }
-
-    class AsyncTaskCompletedEnableSystem : EnableSystem<AsyncTaskCompleted>
-    {
-        public override void OnEnable(AsyncTaskCompleted self)
-        {
-            self.Continue();
         }
     }
 

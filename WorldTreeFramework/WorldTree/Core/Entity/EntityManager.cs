@@ -34,16 +34,6 @@ namespace WorldTree
     {
         public UnitDictionary<long, Entity> allEntity = new UnitDictionary<long, Entity>();
 
-
-        /// <summary>
-        /// 实体添加监听系统组
-        /// </summary>
-        public SystemGroup entityAddSystems;
-        /// <summary>
-        /// 实体移除监听系统组
-        /// </summary>
-        public SystemGroup entityRemoveSystems;
-
         private SystemGroup addSystems;
         private SystemGroup removeSystems;
         private SystemGroup enableSystems;

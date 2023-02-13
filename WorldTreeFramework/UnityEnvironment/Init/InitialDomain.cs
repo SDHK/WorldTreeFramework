@@ -48,7 +48,6 @@ namespace WorldTree
     class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>
     {
 
-
         public override void Update(InitialDomain self, float deltaTime)
         {
 
@@ -71,8 +70,6 @@ namespace WorldTree
             {
                 self.RemoveComponent<Node>();
             }
-
-
         }
     }
 }

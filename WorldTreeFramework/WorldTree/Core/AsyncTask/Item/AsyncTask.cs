@@ -43,10 +43,9 @@ namespace WorldTree
         /// <summary>
         /// 协程启动
         /// </summary>
-        public AsyncTask Coroutine()
+        public void Coroutine()
         {
             InnerCoroutine().Coroutine();
-            return this;
         }
     }
 
@@ -66,7 +65,7 @@ namespace WorldTree
 
         public AsyncTask():base()
         {
-            SetResult = SetResultFunc;
+            SetResult = SetResultMethod;
         }
 
         public T GetResult()
@@ -74,7 +73,7 @@ namespace WorldTree
             return Result;
         }
 
-        private void SetResultFunc(T result)
+        private void SetResultMethod(T result)
         {
             Result = result;
             SetCompleted();
@@ -91,10 +90,9 @@ namespace WorldTree
         /// <summary>
         /// 协程启动
         /// </summary>
-        public AsyncTask<T> Coroutine()
+        public void Coroutine()
         {
             InnerCoroutine().Coroutine();
-            return this;
         }
     }
 
