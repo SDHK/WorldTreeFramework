@@ -14,13 +14,16 @@ namespace WorldTree
     /// <summary>
     /// 异步任务继续执行器
     /// </summary>
-    public class AsyncTaskContinue:Entity { }
+    public class AsyncTaskContinue : Entity { }
 
     class AsyncTaskContinueEnableSystem : EnableSystem<AsyncTaskContinue>
     {
         public override void OnEnable(AsyncTaskContinue self)
         {
-            self.ParentTo<AsyncTaskBase>().Continue();
+            if (self.TryGetParent(out AsyncTaskBase Parent))
+            {
+                Parent.Continue();
+            }
         }
     }
 
