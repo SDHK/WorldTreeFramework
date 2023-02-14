@@ -4,7 +4,9 @@
 * 作者： 闪电黑客
 * 日期： 2022/10/19 10:24
 
-* 描述： UI管理器
+* 描述： UI 窗口栈管理器
+* 
+* 缺少非栈窗口的管理方法
 
 */
 
@@ -22,16 +24,27 @@ namespace WorldTree
     //    }
     //}
 
-
+    /// <summary>
+    /// UI 栈窗口管理器
+    /// </summary>
     public class WindowManager : Entity
     {
+        /// <summary>
+        /// 全部窗口
+        /// </summary>
         public UnitDictionary<Type, Entity> windows = new UnitDictionary<Type, Entity>();
+        /// <summary>
+        /// 栈窗口
+        /// </summary>
         public Stack<Entity> windowStack = new Stack<Entity>();
 
+        /// <summary>
+        /// 根节点
+        /// </summary>
         public GameObjectEntity gameObject;
 
         /// <summary>
-        /// 打开窗口
+        /// 打开窗口入栈
         /// </summary>
         public async AsyncTask<T> Show<T>()
             where T : Entity
@@ -71,7 +84,7 @@ namespace WorldTree
 
 
         /// <summary>
-        /// 关闭窗口
+        /// 关闭栈窗口
         /// </summary>
         public void Dispose<T>()
            where T : Entity
@@ -131,7 +144,7 @@ namespace WorldTree
 
 
         /// <summary>
-        /// 关闭窗口
+        /// 关闭动画栈窗口
         /// </summary>
         public void Close<T>()
            where T : Entity
@@ -140,7 +153,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 关闭栈顶
+        /// 关闭动画栈顶窗口
         /// </summary>
         public void CloseTop()
         {

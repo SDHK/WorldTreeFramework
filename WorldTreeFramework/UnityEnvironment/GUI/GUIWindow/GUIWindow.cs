@@ -41,9 +41,9 @@ namespace WorldTree
         }
     }
 
-    class GUIWindowOnGUISystem : OnGUISystem<GUIWindow>
+    class GUIWindowOnGUISystem : GuiUpdateSystem<GUIWindow>
     {
-        public override void OnGUI(GUIWindow self, float deltaTime)
+        public override void OnGuiUpdate(GUIWindow self, float deltaTime)
         {
             self.rect = GUILayout.Window(self.GetHashCode(), self.rect, self.Window, default(string), self.Style);
         }

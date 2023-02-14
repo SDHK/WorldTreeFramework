@@ -8,7 +8,6 @@
 
 */
 
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -41,7 +40,7 @@ namespace WorldTree
 
             lateUpdate = root.GetSystemGlobalBroadcast<ILateUpdateSystem>();
             fixedUpdate = root.GetSystemGlobalBroadcast<IFixedUpdateSystem>();
-            //onGUI = root.GetSystemGlobalBroadcast<IOnGUISystem>();
+            //onGUI = root.GetSystemGlobalBroadcast<IGuiUpdateSystem>();
 
             root.AddComponent<InitialDomain>();
         }
@@ -68,7 +67,7 @@ namespace WorldTree
             fixedUpdate.Send(Time.fixedDeltaTime);
         }
 
-        //private void OnGUI()
+        //private void OnGuiUpdate()
         //{
         //    onGUI.Send(0.02f);
         //}

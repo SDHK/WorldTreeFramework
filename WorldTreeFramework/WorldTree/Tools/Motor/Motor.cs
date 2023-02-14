@@ -23,7 +23,6 @@ namespace WorldTree
             SetValue = set;
             Condition = condition;
         }
-
     }
 
     public static class MoveTool

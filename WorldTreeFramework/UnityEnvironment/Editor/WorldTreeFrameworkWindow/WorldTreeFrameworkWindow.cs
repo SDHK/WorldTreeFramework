@@ -50,7 +50,7 @@ namespace EditorTool
             self.enable = self.GetSystemGlobalBroadcast<IEnableSystem>();
             self.update = self.GetSystemGlobalBroadcast<IUpdateSystem>();
             self.disable = self.GetSystemGlobalBroadcast<IDisableSystem>();
-            self.onGUI = self.GetSystemGlobalBroadcast<IOnGUISystem>();
+            self.onGUI = self.GetSystemGlobalBroadcast<IGuiUpdateSystem>();
             self.AddComponent<EditorHomePage>();
         }
     }

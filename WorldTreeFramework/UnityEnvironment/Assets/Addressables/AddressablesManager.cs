@@ -4,7 +4,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/2/10 10:33
 
-* 描述： 
+* 描述： Addressables 资源加载管理器
 
 */
 
@@ -13,6 +13,9 @@ using UnityEngine.AddressableAssets;
 
 namespace WorldTree
 {
+    /// <summary>
+    /// Addressables 资源加载管理器
+    /// </summary>
     public class AddressablesManager : Entity
     {
         public EntityDictionary<Type, Object> assets;
@@ -22,7 +25,6 @@ namespace WorldTree
         /// </summary>
         /// <typeparam name="T">资源类型</typeparam>
         /// <typeparam name="E">实体类型</typeparam>
-        /// <returns></returns>
         public async AsyncTask<T> LoadAssetAsync<T,E>()
             where T : class
             where E : Entity
@@ -36,7 +38,6 @@ namespace WorldTree
             else
             {
                 await this.AsyncTaskCompleted();
-                //await this.AsyncYield();
             }
             return asset as T;
         }

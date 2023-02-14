@@ -11,7 +11,7 @@
     public abstract class FixedUpdateSystem<T> : SystemBase<T, IFixedUpdateSystem>, IFixedUpdateSystem
        where T : Entity
     {
-        public void Invoke(Entity self, float deltaTime) => FixedUpdate(self as T, deltaTime);
-        public abstract void FixedUpdate(T self, float deltaTime);
+        public void Invoke(Entity self, float deltaTime) => OnFixedUpdate(self as T, deltaTime);
+        public abstract void OnFixedUpdate(T self, float deltaTime);
     }
 }

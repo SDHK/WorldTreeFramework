@@ -120,16 +120,16 @@ public class Node : Entity
 
 //class NodeLateUpdateSystem : LateUpdateSystem<Node>
 //{
-//    public override void LateUpdate(Node self, float deltaTime)
+//    public override void OnLateUpdate(Node self, float deltaTime)
 //    {
-//        Debug.Log("LateUpdate!");
+//        Debug.Log("OnLateUpdate!");
 //    }
 //}
 //class NodeFixedUpdateSystem : FixedUpdateSystem<Node>
 //{
-//    public override void FixedUpdate(Node self, float deltaTime)
+//    public override void OnFixedUpdate(Node self, float deltaTime)
 //    {
-//        Debug.Log("FixedUpdate!");
+//        Debug.Log("OnFixedUpdate!");
 //    }
 //}
 

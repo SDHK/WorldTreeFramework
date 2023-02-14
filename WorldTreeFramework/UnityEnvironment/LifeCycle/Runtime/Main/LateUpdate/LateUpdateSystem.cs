@@ -11,7 +11,7 @@
     public abstract class LateUpdateSystem<T> : SystemBase<T, ILateUpdateSystem>, ILateUpdateSystem
         where T : Entity
     {
-        public void Invoke(Entity self, float deltaTime) => LateUpdate(self as T, deltaTime);
-        public abstract void LateUpdate(T self, float deltaTime);
+        public void Invoke(Entity self, float deltaTime) => OnLateUpdate(self as T, deltaTime);
+        public abstract void OnLateUpdate(T self, float deltaTime);
     }
 }
