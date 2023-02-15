@@ -8,22 +8,51 @@ using UnityEngine.UIElements;
 
 namespace WorldTree
 {
+    /// <summary>
+    /// 电机
+    /// </summary>
     public class Motor : Entity
     {
-        public float value;//?
-
+        /// <summary>
+        /// 获取
+        /// </summary>
         public Func<float> GetValue;
+        /// <summary>
+        /// 设置
+        /// </summary>
         public Action<float> SetValue;
-        public Func<bool> Condition;
-        public Action CallBack;
+        /// <summary>
+        /// 条件
+        /// </summary>
+        public Func<Motor, bool> Condition;
+        /// <summary>
+        /// 完成
+        /// </summary>
+        public Action OnComplete;
 
-        public void Set(Func<float> get, Action<float> set, Func<bool> condition)
+        /// <summary>
+        /// 设置
+        /// </summary>
+        public void Set(Func<float> get, Action<float> set, Func<Motor, bool> condition)
         {
             GetValue = get;
             SetValue = set;
             Condition = condition;
         }
+
+        /// <summary>
+        /// 运行
+        /// </summary>
+        public void Update()
+        {
+            if (Condition(this))
+            {
+                OnComplete();
+            }
+        }
     }
+
+
 
     public static class MoveTool
     {
