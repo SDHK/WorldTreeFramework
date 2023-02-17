@@ -18,8 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace WorldTree
 {

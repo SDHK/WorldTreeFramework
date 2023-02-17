@@ -26,6 +26,11 @@ namespace WorldTree
     public class InitialDomain : Entity
     {
         public int index = 0;
+
+        public float f = 0;
+
+        public BinderFloat binderFloat;
+
     }
     //内联函数，缩短函数调用时间
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -35,6 +40,11 @@ namespace WorldTree
         {
 
             World.Log("初始域启动！");
+
+            self.binderFloat = self.AddChildren<BinderFloat>();
+            self.binderFloat.GetValue = () => self.f;
+            self.binderFloat.SetValue = (value) => self.f = value;
+
 
             //self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
 

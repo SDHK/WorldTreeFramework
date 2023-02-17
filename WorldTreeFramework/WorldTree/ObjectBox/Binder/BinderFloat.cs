@@ -4,7 +4,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/2/15 15:08
 
-* 描述： 浮点数实体
+* 描述： 浮点绑定器
 * 
 * 用于数值监听
 
@@ -16,9 +16,9 @@ namespace WorldTree
 {
 
     /// <summary>
-    /// 浮点数实体
+    /// 浮点绑定器
     /// </summary>
-    public class EntityFloat
+    public class BinderFloat : Entity
     {
         /// <summary>
         /// 绑定获取
@@ -29,5 +29,11 @@ namespace WorldTree
         /// </summary>
         public Action<float> SetValue;
 
+        /// <summary>
+        /// 绑定数值的属性
+        /// </summary>
+        public float Value { get => GetValue(); set => SetValue(value); }
     }
+
+
 }
