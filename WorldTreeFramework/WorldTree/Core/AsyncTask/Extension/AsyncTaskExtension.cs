@@ -8,8 +8,6 @@
 
 */
 
-using UnityEngine;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using WorldTree.Internal;
 
 namespace WorldTree
@@ -19,26 +17,6 @@ namespace WorldTree
     /// </summary>
     public static class AsyncTaskExtension
     {
-        /// <summary>
-        /// 获取异步等待
-        /// </summary>
-        public static AsyncTask<AsyncOperation> GetAwaiter(this Entity self, AsyncOperation asyncOperation)
-        {
-            AsyncTask<AsyncOperation> asyncTask = self.AddChildren<AsyncTask<AsyncOperation>>();
-            asyncOperation.completed += asyncTask.SetResult;
-            return asyncTask;
-        }
-
-        /// <summary>
-        /// 获取异步等待
-        /// </summary>
-        public static AsyncTask<AsyncOperationHandle<T>> GetAwaiter<T>(this Entity self, AsyncOperationHandle<T> handle)
-        {
-            AsyncTask<AsyncOperationHandle<T>> asyncTask = self.AddChildren<AsyncTask<AsyncOperationHandle<T>>>();
-            handle.Completed += asyncTask.SetResult;
-            return asyncTask;
-        }
-
         /// <summary>
         /// 延迟一帧
         /// </summary>
