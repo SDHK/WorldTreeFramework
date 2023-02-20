@@ -18,7 +18,7 @@ namespace WorldTree
     /// </summary>
     public class AddressablesManager : Entity
     {
-        public EntityDictionary<Type, Object> assets;
+        public EntityDictionary<string, Object> assets;
 
         /// <summary>
         /// 根据实体类型步加载资源
@@ -30,10 +30,10 @@ namespace WorldTree
             where E : Entity
         {
             var key = typeof(E);
-            if (!assets.Value.TryGetValue(key, out var asset))
+            if (!assets.Value.TryGetValue(key.Name, out var asset))
             {
                 asset = (await this.GetAwaiter(Addressables.LoadAssetAsync<T>(key.Name))).Result;
-                assets.Value.Add(key, asset);
+                assets.Value.Add(key.Name, asset);
             }
             else
             {
@@ -49,7 +49,7 @@ namespace WorldTree
     {
         public override void OnAdd(AddressablesManager self)
         {
-            self.assets = self.AddChildren<EntityDictionary<Type, Object>>();
+            self.assets = self.AddChildren<EntityDictionary<string, Object>>();
         }
     }
 

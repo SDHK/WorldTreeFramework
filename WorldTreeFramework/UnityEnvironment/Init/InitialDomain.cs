@@ -25,11 +25,10 @@ namespace WorldTree
     /// </summary>
     public class InitialDomain : Entity
     {
-        public int index = 0;
 
         public float f = 0;
 
-        public BinderFloat binderFloat;
+        public ValueBinder<float> valueBinder;
 
     }
     //内联函数，缩短函数调用时间
@@ -39,11 +38,15 @@ namespace WorldTree
         public override void OnAdd(InitialDomain self)
         {
 
-            World.Log("初始域启动！");
+            World.Log("初始域启动！！!!");
+            
+            self.valueBinder = self.AddChildren<ValueBinder<float>>();
 
-            self.binderFloat = self.AddChildren<BinderFloat>();
-            self.binderFloat.GetValue = () => self.f;
-            self.binderFloat.SetValue = (value) => self.f = value;
+            self.valueBinder.bindObject = self;
+            self.valueBinder.SetValue = (e, t) => (e as InitialDomain).f = t;
+            self.valueBinder.GetValue = e => (e as InitialDomain).f;
+
+
 
 
             //self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
@@ -60,6 +63,9 @@ namespace WorldTree
 
         public override void Update(InitialDomain self, float deltaTime)
         {
+
+            //self.valueBinder.Value = deltaTime;
+
 
             if (Input.GetKeyDown(KeyCode.Q))
             {

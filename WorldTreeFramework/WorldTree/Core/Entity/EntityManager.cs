@@ -23,7 +23,6 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
-    //Address异步获取对象有问题，GameObjectPoolManager键值不能用预制体
 
     /// <summary>
     /// 实体管理器

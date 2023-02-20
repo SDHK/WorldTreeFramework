@@ -8,8 +8,13 @@
 
 */
 
+using System;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
+using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace EditorTool
 {
@@ -49,5 +54,41 @@ namespace EditorTool
         [HideLabel]
         [DisplayAsString(false)]
         public string ScriptTableObjectText = "ScriptTableObject节点套娃";
+
+
+        [LabelText("是否编译后重启运行")]
+        public bool isReloadedRun = false;
+
+        [DidReloadScripts]
+        private static async void OnScriptsReloaded()
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (GuidePage.Inst.isReloadedRun)
+                {
+                    Debug.Log("重启运行!!!");
+
+                    EditorApplication.isPlaying = false;//Unity停止运行
+
+                    while (Time.frameCount > 1)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(0.1f));//未停止时等待
+
+                        if (Time.frameCount <= 1)
+                        {
+                            EditorApplication.isPlaying = true;//Unity运行
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.Log("停止运行!!!");
+
+                    EditorApplication.isPlaying = false;
+                }
+            }
+
+        }
     }
 }

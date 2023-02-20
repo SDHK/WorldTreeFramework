@@ -16,24 +16,28 @@ namespace WorldTree
 {
 
     /// <summary>
-    /// 浮点绑定器
+    /// 值绑定器
     /// </summary>
-    public class BinderFloat : Entity
+    public class ValueBinder<T> : Entity
     {
+        /// <summary>
+        /// 绑定对象
+        /// </summary>
+        public object bindObject;
+
         /// <summary>
         /// 绑定获取
         /// </summary>
-        public Func<float> GetValue;
+        public Func<object, T> GetValue;
+
         /// <summary>
         /// 绑定设置
         /// </summary>
-        public Action<float> SetValue;
+        public Action<object, T> SetValue;
 
         /// <summary>
         /// 绑定数值的属性
         /// </summary>
-        public float Value { get => GetValue(); set => SetValue(value); }
+        public T Value { get { return GetValue(bindObject); } set { SetValue(bindObject, value); } }
     }
-
-
 }

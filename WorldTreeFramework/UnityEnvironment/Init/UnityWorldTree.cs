@@ -49,9 +49,9 @@ namespace WorldTree
         {
             Profiler.BeginSample("SDHK");
 
-            enable.Send();
-            update.Send(Time.deltaTime);
-            disable.Send();
+            enable?.Send();
+            update?.Send(Time.deltaTime);
+            disable?.Send();
 
             Profiler.EndSample();
 
@@ -60,11 +60,11 @@ namespace WorldTree
 
         private void LateUpdate()
         {
-            lateUpdate.Send(Time.deltaTime);
+            lateUpdate?.Send(Time.deltaTime);
         }
         private void FixedUpdate()
         {
-            fixedUpdate.Send(Time.fixedDeltaTime);
+            fixedUpdate?.Send(Time.fixedDeltaTime);
         }
 
         //private void OnGuiUpdate()
@@ -74,7 +74,7 @@ namespace WorldTree
 
         private void OnDestroy()
         {
-            root.Dispose();
+            root?.Dispose();
             root = null;
 
             enable = null;
