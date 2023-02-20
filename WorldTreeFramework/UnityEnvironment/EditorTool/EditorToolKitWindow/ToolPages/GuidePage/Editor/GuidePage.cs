@@ -66,7 +66,7 @@ namespace EditorTool
             {
                 if (GuidePage.Inst.isReloadedRun)
                 {
-                    Debug.Log("重启运行!!!");
+                    Debug.Log("运行时编译：重启运行!!!");
 
                     EditorApplication.isPlaying = false;//Unity停止运行
 
@@ -83,7 +83,7 @@ namespace EditorTool
                 }
                 else
                 {
-                    Debug.Log("停止运行!!!");
+                    Debug.Log("运行时编译：停止运行!!!");
 
                     EditorApplication.isPlaying = false;
                 }
