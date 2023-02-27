@@ -23,7 +23,7 @@ namespace EditorTool
     }
     class EditorGUIWindowAddSystem : AddSystem<EditorGUIWindow>
     {
-        public override void OnAdd(EditorGUIWindow self)
+        public override void OnEvent(EditorGUIWindow self)
         {
             //测试发现 编辑器窗口 关闭后就无法开启了，所以不用对象池
             self.window = EditorWindow.GetWindow<MonoEditorGUIWindow>(false);
@@ -34,7 +34,7 @@ namespace EditorTool
 
     class EditorGUIWindowRemoveSystem : RemoveSystem<EditorGUIWindow>
     {
-        public override void OnRemove(EditorGUIWindow self)
+        public override void OnEvent(EditorGUIWindow self)
         {
             if (self.window.isShow)
             {

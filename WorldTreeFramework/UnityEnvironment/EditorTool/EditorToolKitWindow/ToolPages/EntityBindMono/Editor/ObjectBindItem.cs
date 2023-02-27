@@ -226,7 +226,7 @@ namespace EditorTool
             builder.AppendLine("{");
             builder.AppendLine($"\tclass {monoObject.gameObject.name}_AddEventSystem : AddSystem<{monoObject.gameObject.name}>");
             builder.AppendLine("\t{");
-            builder.AppendLine($"\t\tpublic override void OnAdd({monoObject.gameObject.name} self)");
+            builder.AppendLine($"\t\tpublic override void OnEvent({monoObject.gameObject.name} self)");
             builder.AppendLine("\t\t{");
             builder.AppendLine($"\t\t\tself.view = self.Parent.AddComponent<{monoObject.gameObject.name}View>();");
 
@@ -252,7 +252,7 @@ namespace EditorTool
             builder.AppendLine("\t}");
             //builder.AppendLine($"\tclass {monoObject.gameObject.name}_RemoveEventSystem : RemoveSystem<{monoObject.gameObject.name}>");
             //builder.AppendLine("\t{");
-            //builder.AppendLine($"\t\tpublic override void OnRemove({monoObject.gameObject.name} self)");
+            //builder.AppendLine($"\t\tpublic override void OnEvent({monoObject.gameObject.name} self)");
             //builder.AppendLine("\t\t{");
             //builder.AppendLine($"\t\t\tself.Parent.Dispose();");
             //builder.AppendLine("\t\t}");
@@ -302,7 +302,7 @@ namespace EditorTool
 
             builder.AppendLine($"\tclass {monoObject.gameObject.name}ViewAddSystem : AddSystem<{monoObject.gameObject.name}View>");
             builder.AppendLine("\t{");
-            builder.AppendLine($"\t\tpublic override void OnAdd({monoObject.gameObject.name}View self)");
+            builder.AppendLine($"\t\tpublic override void OnEvent({monoObject.gameObject.name}View self)");
             builder.AppendLine("\t\t{");
             builder.AppendLine("\t\t\tif (self.ParentTo<GameObjectEntity>().gameObject.TryGetComponent(out self.monoObject))");
             builder.AppendLine("\t\t\t{");
@@ -316,7 +316,7 @@ namespace EditorTool
 
             builder.AppendLine($"\tclass {monoObject.gameObject.name}ViewRemoveSystem : RemoveSystem<{monoObject.gameObject.name}View>");
             builder.AppendLine("\t{");
-            builder.AppendLine($"\t\tpublic override void OnRemove({monoObject.gameObject.name}View self)");
+            builder.AppendLine($"\t\tpublic override void OnEvent({monoObject.gameObject.name}View self)");
             builder.AppendLine("\t\t{");
             builder.AppendLine("\t\t\tself.monoObject?.RemoveAllEvent();");
             builder.AppendLine("\t\t\tself.monoObject = null;");

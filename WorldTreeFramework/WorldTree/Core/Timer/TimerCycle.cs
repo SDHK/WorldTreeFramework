@@ -24,7 +24,7 @@ namespace WorldTree
 
     class TimerCycleUpdateSystem : UpdateSystem<TimerCycle>
     {
-        public override void Update(TimerCycle self, float deltaTime)
+        public override void OnEvent(TimerCycle self, float deltaTime)
         {
             self.time += deltaTime;
             if (self.time >= self.timeOutTime)
@@ -37,7 +37,7 @@ namespace WorldTree
 
     class TimerCycleGetSystem : GetSystem<TimerCycle>
     {
-        public override void OnGet(TimerCycle self)
+        public override void OnEvent(TimerCycle self)
         {
             self.time = 0;
         }

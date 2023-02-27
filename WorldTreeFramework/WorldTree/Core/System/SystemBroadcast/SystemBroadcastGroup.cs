@@ -34,7 +34,7 @@ namespace WorldTree
 
     class SystemBroadcastGroupAddSystem : AddSystem<SystemBroadcastGroup>
     {
-        public override void OnAdd(SystemBroadcastGroup self)
+        public override void OnEvent(SystemBroadcastGroup self)
         {
             self.PoolGet(out self.broadcasts);
         }
@@ -42,7 +42,7 @@ namespace WorldTree
 
     class SystemBroadcastGroupRemoveSystem : RemoveSystem<SystemBroadcastGroup>
     {
-        public override void OnRemove(SystemBroadcastGroup self)
+        public override void OnEvent(SystemBroadcastGroup self)
         {
             self.broadcasts.Dispose();
         }

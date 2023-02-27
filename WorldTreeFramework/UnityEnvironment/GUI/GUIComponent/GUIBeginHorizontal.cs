@@ -12,7 +12,7 @@ namespace WorldTree
 
     class GUIBeginHorizontalRecycleSystem : RecycleSystem<GUIBeginHorizontal>
     {
-        public override void OnRecycle(GUIBeginHorizontal self)
+        public override void OnEvent(GUIBeginHorizontal self)
         {
             //self.PoolRecycle(self.style);
             self.style = null;

@@ -17,10 +17,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口更新系统
     /// </summary>
-    public abstract class WIndowUpdateSystem<T> : SystemBase<T, IWindowUpdateSystem>, IWindowUpdateSystem
-        where T : Entity
-    {
-        public void Invoke(Entity self, float deltaTime) => OnUpdate(self as T, deltaTime);
-        public abstract void OnUpdate(T self, float deltaTime);
-    }
+    public abstract class WIndowUpdateSystem<E> : SendSystemBase<IWindowUpdateSystem, E, float> where E : Entity { }
 }

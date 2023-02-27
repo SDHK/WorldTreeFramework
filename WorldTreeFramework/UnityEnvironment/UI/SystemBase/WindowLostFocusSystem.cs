@@ -19,10 +19,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口失焦系统
     /// </summary>
-    public abstract class WindowLostFocusSystem<T> : SystemBase<T, IWindowLostFocusSystem>, IWindowLostFocusSystem
-    where T : Entity
-    {
-        public void Invoke(Entity self) => OnLostFocus(self as T);
-        public abstract void OnLostFocus(T self);
-    }
+    public abstract class WindowLostFocusSystem<E> : SendSystemBase<IWindowLostFocusSystem, E> where E : Entity { }
 }

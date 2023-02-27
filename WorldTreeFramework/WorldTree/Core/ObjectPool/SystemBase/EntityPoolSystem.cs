@@ -13,18 +13,13 @@ namespace WorldTree
     /// <summary>
     /// 新建事件系统接口
     /// </summary>
-    public interface INewSystem : ISendSystem{ }
+    public interface INewSystem : ISendSystem { }
 
     /// <summary>
     /// 新建事件系统
     /// </summary>
-    public abstract class NewSystem<T> : SystemBase<T, INewSystem>, INewSystem
-        where T : Entity
-    {
-        public void Invoke(Entity self) => OnNew(self as T);
+    public abstract class NewSystem<E> : SendSystemBase<INewSystem, E> where E : Entity { }
 
-        public abstract void OnNew(T self);
-    }
     /// <summary>
     /// 获取事件系统接口
     /// </summary>
@@ -33,13 +28,7 @@ namespace WorldTree
     /// <summary>
     /// 获取事件系统
     /// </summary>
-    public abstract class GetSystem<T> : SystemBase<T, IGetSystem>, IGetSystem
-        where T : Entity
-    {
-        public void Invoke(Entity self) => OnGet(self as T);
-
-        public abstract void OnGet(T self);
-    }
+    public abstract class GetSystem<E> : SendSystemBase<IGetSystem, E> where E : Entity { }
 
     /// <summary>
     /// 回收事件系统接口
@@ -49,13 +38,7 @@ namespace WorldTree
     /// <summary>
     /// 回收事件系统
     /// </summary>
-    public abstract class RecycleSystem<T> : SystemBase<T, IRecycleSystem>, IRecycleSystem
-        where T : Entity
-    {
-        public void Invoke(Entity self) => OnRecycle(self as T);
-
-        public abstract void OnRecycle(T self);
-    }
+    public abstract class RecycleSystem<E> : SendSystemBase<IRecycleSystem, E> where E : Entity { }
 
     /// <summary>
     /// 释放事件系统接口
@@ -64,12 +47,5 @@ namespace WorldTree
     /// <summary>
     /// 释放事件系统
     /// </summary>
-    public abstract class DestroySystem<T> : SystemBase<T, IDestroySystem>, IDestroySystem
-        where T : Entity
-    {
-        public void Invoke(Entity self) => OnDestroy(self as T);
-
-        public abstract void OnDestroy(T self);
-
-    }
+    public abstract class DestroySystem<E> : SendSystemBase<IDestroySystem, E> where E : Entity { }
 }

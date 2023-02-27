@@ -25,7 +25,7 @@ namespace WorldTree
 
     class GUIGeneralWindowAddSystem : AddSystem<GUIGeneralWindow>
     {
-        public override void OnAdd(GUIGeneralWindow self)
+        public override void OnEvent(GUIGeneralWindow self)
         {
             self.group = self.GetSystemGroup<IGUIDrawSystem>();
             self.AddComponent<GUIWindow>();

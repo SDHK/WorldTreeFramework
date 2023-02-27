@@ -22,21 +22,21 @@ namespace WorldTree
 
     class GlobalEntityRemoveListenerAddSystem : AddSystem<GlobalEntityRemoveListener>
     {
-        public override void OnAdd(GlobalEntityRemoveListener self)
+        public override void OnEvent(GlobalEntityRemoveListener self)
         {
             self.TryGetParent(out self.systemBroadcast);
         }
     }
     class GlobalEntityRemoveListenerRemoveSystem : RemoveSystem<GlobalEntityRemoveListener>
     {
-        public override void OnRemove(GlobalEntityRemoveListener self)
+        public override void OnEvent(GlobalEntityRemoveListener self)
         {
             self.systemBroadcast = null;
         }
     }
     class GlobalEntityRemoveListenerListenerRemoveSystem : ListenerRemoveSystem<GlobalEntityRemoveListener>
     {
-        public override void OnRemove(GlobalEntityRemoveListener self, Entity entity)
+        public override void OnEvent(GlobalEntityRemoveListener self, Entity entity)
         {
             self.systemBroadcast?.RemoveEntity(entity);
         }

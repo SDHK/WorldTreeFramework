@@ -18,10 +18,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口焦点系统
     /// </summary>
-    public abstract class WindowFocusSystem<T> : SystemBase<T, IWindowFocusSystem>, IWindowFocusSystem
-    where T : Entity
-    {
-        public void Invoke(Entity self) => OnFocus(self as T);
-        public abstract void OnFocus(T self);
-    }
+    public abstract class WindowFocusSystem<E> : SendSystemBase<IWindowFocusSystem, E> where E : Entity { }
 }

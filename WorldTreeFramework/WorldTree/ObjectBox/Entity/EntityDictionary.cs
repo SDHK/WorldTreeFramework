@@ -36,7 +36,7 @@ namespace WorldTree
 
     class EntityDictionaryRemoveSystem : RemoveSystem<EntityDictionary>
     {
-        public override void OnRemove(EntityDictionary self)
+        public override void OnEvent(EntityDictionary self)
         {
             self.m_Value.Clear();
         }

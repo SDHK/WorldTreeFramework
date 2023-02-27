@@ -24,7 +24,7 @@ namespace WorldTree
 
     class CounterCallGetSystem : GetSystem<CounterCall>
     {
-        public override void OnGet(CounterCall self)
+        public override void OnEvent(CounterCall self)
         {
             self.count = 0;
         }
@@ -32,7 +32,7 @@ namespace WorldTree
 
     class CounterCallUpdateSystem : UpdateSystem<CounterCall>
     {
-        public override void Update(CounterCall self, float deltaTime)
+        public override void OnEvent(CounterCall self, float deltaTime)
         {
             self.count++;
             if (self.count >= self.countOut)

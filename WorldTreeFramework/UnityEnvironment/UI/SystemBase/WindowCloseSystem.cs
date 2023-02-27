@@ -16,10 +16,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口关闭系统
     /// </summary>
-    public abstract class WindowCloseSystem<T> : SystemBase<T, IWindowCloseSystem>, IWindowCloseSystem
-    where T : Entity
-    {
-        public void Invoke(Entity self) => OnClose(self as T);
-        public abstract void OnClose(T self);
-    }
+    public abstract class WindowCloseSystem<E> : SendSystemBase<IWindowCloseSystem, E> where E : Entity { }
 }

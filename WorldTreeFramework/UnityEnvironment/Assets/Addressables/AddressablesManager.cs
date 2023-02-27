@@ -47,7 +47,7 @@ namespace WorldTree
 
     class AddressablesManagerAddSystem : AddSystem<AddressablesManager>
     {
-        public override void OnAdd(AddressablesManager self)
+        public override void OnEvent(AddressablesManager self)
         {
             self.assets = self.AddChildren<EntityDictionary<string, Object>>();
         }

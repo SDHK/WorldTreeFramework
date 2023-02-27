@@ -28,55 +28,27 @@ namespace WorldTree
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public abstract class AwakeSystem<T> : SystemBase<T, IAwakeSystem>, IAwakeSystem
-      where T : Entity
-    {
-        public void Invoke(Entity self) => OnAwake(self as T);
-        public abstract void OnAwake(T self);
-    }
+    public abstract class AwakeSystem<E> : SendSystemBase<IAwakeSystem, E> where E : Entity { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public abstract class AwakeSystem<T, T1> : SystemBase<T, IAwakeSystem<T1>>, IAwakeSystem<T1>
-       where T : Entity
-    {
-        public void Invoke(Entity self, T1 arg1) => OnAwake(self as T, arg1);
-        public abstract void OnAwake(T self, T1 arg1);
-    }
+    public abstract class AwakeSystem<E, T1> : SendSystemBase<IAwakeSystem<T1>, E, T1> where E : Entity { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public abstract class AwakeSystem<T, T1, T2> : SystemBase<T, IAwakeSystem<T1, T2>>, IAwakeSystem<T1, T2>
-       where T : Entity
-    {
-        public void Invoke(Entity self, T1 arg1, T2 arg2) => OnAwake(self as T, arg1, arg2);
-        public abstract void OnAwake(T self, T1 arg1, T2 arg2);
-    }
+    public abstract class AwakeSystem<E, T1, T2> : SendSystemBase<IAwakeSystem<T1, T2>, E, T1, T2> where E : Entity { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public abstract class AwakeSystem<T, T1, T2, T3> : SystemBase<T, IAwakeSystem<T1, T2, T3>>, IAwakeSystem<T1, T2, T3>
-      where T : Entity
-    {
-        public void Invoke(Entity self, T1 arg1, T2 arg2, T3 arg3) => OnAwake(self as T, arg1, arg2, arg3);
-        public abstract void OnAwake(T self, T1 arg1, T2 arg2, T3 arg3);
-    }
+    public abstract class AwakeSystem<E, T1, T2, T3> : SendSystemBase<IAwakeSystem<T1, T2, T3>, E, T1, T2, T3> where E : Entity { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public abstract class AwakeSystem<T, T1, T2, T3, T4> : SystemBase<T, IAwakeSystem<T1, T2, T3, T4>>, IAwakeSystem<T1, T2, T3, T4>
-     where T : Entity
-    {
-        public void Invoke(Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnAwake(self as T, arg1, arg2, arg3, arg4);
-        public abstract void OnAwake(T self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
-    }
+    public abstract class AwakeSystem<E, T1, T2, T3, T4> : SendSystemBase<IAwakeSystem<T1, T2, T3, T4>, E, T1, T2, T3, T4> where E : Entity { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public abstract class AwakeSystem<T, T1, T2, T3, T4, T5> : SystemBase<T, IAwakeSystem<T1, T2, T3, T4, T5>>, IAwakeSystem<T1, T2, T3, T4, T5>
-    where T : Entity
-    {
-        public void Invoke(Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnAwake(self as T, arg1, arg2, arg3, arg4, arg5);
-        public abstract void OnAwake(T self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
-    }
+    public abstract class AwakeSystem<E, T1, T2, T3, T4, T5> : SendSystemBase<IAwakeSystem<T1, T2, T3, T4, T5>, E, T1, T2, T3, T4, T5> where E : Entity { }
+
+
 }

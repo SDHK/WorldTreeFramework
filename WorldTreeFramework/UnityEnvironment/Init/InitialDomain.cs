@@ -33,35 +33,38 @@ namespace WorldTree
     }
     //内联函数，缩短函数调用时间
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+
     class _InitialDomain : AddSystem<InitialDomain>
     {
-        public override void OnAdd(InitialDomain self)
+        public override void OnEvent(InitialDomain self)
         {
 
             World.Log("初始域启动！！!!");
-            
-            self.valueBinder = self.AddChildren<ValueBinder<float>>();
 
-            self.valueBinder.bindObject = self;
-            self.valueBinder.SetValue = (e, t) => (e as InitialDomain).f = t;
-            self.valueBinder.GetValue = e => (e as InitialDomain).f;
+            //self.valueBinder = self.AddChildren<ValueBinder<float>>();
 
-
-
+            //self.valueBinder.bindObject = self;
+            //self.valueBinder.SetValue = (e, t) => (e as InitialDomain).f = t;
+            //self.valueBinder.GetValue = e => (e as InitialDomain).f;
 
             //self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
 
 
 
             //GetGroundPoint(Vector3(1,1), )
+
+
+
+
+
+
         }
 
     }
-
     class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>
     {
 
-        public override void Update(InitialDomain self, float deltaTime)
+        public override void OnEvent(InitialDomain self, float deltaTime)
         {
 
             //self.valueBinder.Value = deltaTime;

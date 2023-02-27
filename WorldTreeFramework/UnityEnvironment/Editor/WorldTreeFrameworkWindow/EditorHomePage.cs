@@ -22,7 +22,7 @@ namespace EditorTool
 
     class EditorHomePageAddSystem : AddSystem<EditorHomePage>
     {
-        public override void OnAdd(EditorHomePage self)
+        public override void OnEvent(EditorHomePage self)
         {
         }
     }
@@ -66,7 +66,7 @@ namespace EditorTool
 
     class EditorHomePageUpdateSystem : UpdateSystem<EditorHomePage>
     {
-        public override void Update(EditorHomePage self, float deltaTime)
+        public override void OnEvent(EditorHomePage self, float deltaTime)
         {
         }
     }

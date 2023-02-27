@@ -15,17 +15,17 @@ namespace WorldTree
     /// 实体饿汉单例系统接口
     /// </summary>
     public interface ISingletonEagerSystem : ISendSystem { }
-   
+
 
     /// <summary>
     /// 实体饿汉单例系统：生成组件挂在根节点下
     /// </summary>
-    public abstract class SingletonEagerSystem<T> : SystemBase<T, ISingletonEagerSystem>, ISingletonEagerSystem
-        where T :Entity
+    public abstract class SingletonEagerSystem<E> : SendSystemBase<ISingletonEagerSystem, E>, ISingletonEagerSystem
+        where E : Entity
     {
-        public void Invoke(Entity self)
+        public override void Invoke(Entity self)
         {
-            self.AddComponent<T>();
+            self.AddComponent<E>();
         }
     }
 }

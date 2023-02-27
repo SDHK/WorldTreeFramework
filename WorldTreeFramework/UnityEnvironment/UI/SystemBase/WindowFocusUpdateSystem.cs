@@ -17,10 +17,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口焦点更新系统
     /// </summary>
-    public abstract class WindowFocusUpdateSystem<T> : SystemBase<T, IWindowFocusUpdateSystem>, IWindowFocusUpdateSystem
-        where T : Entity
-    {
-        public void Invoke(Entity self,float deltaTime) => OnFocusUpdate(self as T, deltaTime);
-        public abstract void OnFocusUpdate(T self, float deltaTime);
-    }
+    public abstract class WindowFocusUpdateSystem<E> : SendSystemBase<IWindowFocusUpdateSystem, E, float> where E : Entity { }
 }

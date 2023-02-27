@@ -18,7 +18,7 @@ namespace WorldTree
 
     class AsyncTaskContinueEnableSystem : EnableSystem<AsyncTaskContinue>
     {
-        public override void OnEnable(AsyncTaskContinue self)
+        public override void OnEvent(AsyncTaskContinue self)
         {
             if (self.TryGetParent(out AsyncTaskBase Parent))
             {

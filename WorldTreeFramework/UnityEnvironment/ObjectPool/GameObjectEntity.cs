@@ -162,7 +162,7 @@ namespace WorldTree
 
     class GameObjectEntityRemoveSystem : RemoveSystem<GameObjectEntity>
     {
-        public override void OnRemove(GameObjectEntity self)
+        public override void OnEvent(GameObjectEntity self)
         {
             self.DestroyGameObject();
             self.gameObject = null;

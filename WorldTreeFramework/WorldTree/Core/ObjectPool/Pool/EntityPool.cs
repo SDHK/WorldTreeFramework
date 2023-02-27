@@ -20,7 +20,7 @@ namespace WorldTree
 
     class EntityPoolAddSystem : AddSystem<EntityPool>
     {
-        public override void OnAdd(EntityPool self)
+        public override void OnEvent(EntityPool self)
         {
             //生命周期系统
             self.newSystem = self.GetSystems<INewSystem>(self.ObjectType);

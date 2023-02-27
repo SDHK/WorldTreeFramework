@@ -18,7 +18,7 @@ namespace WorldTree
 
     //class InitialDomain1 : AddSystem<InitialDomain>
     //{
-    //    public override void OnAdd(InitialDomain self)
+    //    public override void OnEvent(InitialDomain self)
     //    {
     //        self.Root.AddComponent<WindowManager>();
     //    }
@@ -163,7 +163,7 @@ namespace WorldTree
 
     class WindowManagerAddSystem : AddSystem<WindowManager>
     {
-        public override void OnAdd(WindowManager self)
+        public override void OnEvent(WindowManager self)
         {
             World.Log("WindowManager启动!!!");
             self.gameObject = self.AddComponent<GameObjectEntity>().Instantiate<WindowManager>();
@@ -172,7 +172,7 @@ namespace WorldTree
 
     class WindowManagerUpdateSystem : UpdateSystem<WindowManager>
     {
-        public override void Update(WindowManager self, float deltaTime)
+        public override void OnEvent(WindowManager self, float deltaTime)
         {
             if (self.windowStack.Count != 0)
             {
@@ -186,14 +186,14 @@ namespace WorldTree
 
     class WindowManagerEntityAddSystem : ListenerAddSystem<WindowManager>
     {
-        public override void OnAdd(WindowManager self, Entity entity)
+        public override void OnEvent(WindowManager self, Entity entity)
         {
 
         }
     }
     class WindowManagerEntityRemoveSystem : ListenerRemoveSystem<WindowManager>
     {
-        public override void OnRemove(WindowManager self, Entity entity)
+        public override void OnEvent(WindowManager self, Entity entity)
         {
 
         }

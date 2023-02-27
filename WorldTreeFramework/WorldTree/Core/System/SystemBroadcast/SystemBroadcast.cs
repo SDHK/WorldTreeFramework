@@ -63,7 +63,7 @@ namespace WorldTree
 
     class SystemBroadcastAddSystem : AddSystem<SystemBroadcast>
     {
-        public override void OnAdd(SystemBroadcast self)
+        public override void OnEvent(SystemBroadcast self)
         {
             self.updateQueue = self.PoolGet<UnitQueue<long>>();
             self.update1 = self.PoolGet<UnitDictionary<long, Entity>>();
@@ -73,7 +73,7 @@ namespace WorldTree
 
     class SystemBroadcastRemoveSystem : RemoveSystem<SystemBroadcast>
     {
-        public override void OnRemove(SystemBroadcast self)
+        public override void OnEvent(SystemBroadcast self)
         {
             self.updateQueue.Dispose();
             self.update1.Dispose();

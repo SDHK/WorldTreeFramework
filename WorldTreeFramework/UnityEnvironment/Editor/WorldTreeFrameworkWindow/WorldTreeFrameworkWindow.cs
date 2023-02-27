@@ -44,7 +44,7 @@ namespace EditorTool
 
     class WorldTreeFrameworkWindowAddSystem : AddSystem<WorldTreeFrameworkWindow>
     {
-        public override void OnAdd(WorldTreeFrameworkWindow self)
+        public override void OnEvent(WorldTreeFrameworkWindow self)
         {
             self.AddComponent<EditorGUIWindow>();
             self.enable = self.GetSystemGlobalBroadcast<IEnableSystem>();

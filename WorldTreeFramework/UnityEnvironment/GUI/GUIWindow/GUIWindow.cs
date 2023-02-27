@@ -35,7 +35,7 @@ namespace WorldTree
 
     class GUIWindowNewSystem : AddSystem<GUIWindow>
     {
-        public override void OnAdd(GUIWindow self)
+        public override void OnEvent(GUIWindow self)
         {
             self.group = self.GetSystemGroup<IGUIDrawSystem>();
         }
@@ -51,7 +51,7 @@ namespace WorldTree
 
     class GUIWindowRecycleSystem : RecycleSystem<GUIWindow>
     {
-        public override void OnRecycle(GUIWindow self)
+        public override void OnEvent(GUIWindow self)
         {
             //self.PoolRecycle(self.style);
             self.style = null;

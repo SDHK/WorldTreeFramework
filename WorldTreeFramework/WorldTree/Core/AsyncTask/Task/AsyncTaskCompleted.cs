@@ -8,7 +8,7 @@
 * 
 * 因为没有使用单例对象池，所以必须让构建器执行6号步骤。
 * 
-* 因此没法进行跳过处理，只能通过 Update 调用，延迟到下一帧执行。
+* 因此没法进行跳过处理，只能通过 OnEvent 调用，延迟到下一帧执行。
 
 */
 
@@ -37,7 +37,7 @@ namespace WorldTree.Internal
 
     class AsyncTaskCompletedUpdateSystem : UpdateSystem<AsyncTaskCompleted>
     {
-        public override void Update(AsyncTaskCompleted self, float deltaTime)
+        public override void OnEvent(AsyncTaskCompleted self, float deltaTime)
         {
             self.SetResult();
         }
@@ -45,7 +45,7 @@ namespace WorldTree.Internal
 
     class AsyncTaskCompletedRemoveSystem : RemoveSystem<AsyncTaskCompleted>
     {
-        public override void OnRemove(AsyncTaskCompleted self)
+        public override void OnEvent(AsyncTaskCompleted self)
         {
             self.IsCompleted = false;
             self.continuation = null;

@@ -94,7 +94,7 @@ namespace WorldTree
 
     class AsyncTaskBaseRemoveSystem : RemoveSystem<AsyncTaskBase>
     {
-        public override void OnRemove(AsyncTaskBase self)
+        public override void OnEvent(AsyncTaskBase self)
         {
             self.IsCompleted = false;
             self.continuation = null;
