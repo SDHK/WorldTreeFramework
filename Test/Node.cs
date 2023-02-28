@@ -3,6 +3,10 @@ using UnityEngine.EventSystems;
 using WorldTree;
 using WorldTree.Internal;
 
+
+
+
+
 public class Node : Entity
 {
 
@@ -73,87 +77,88 @@ public class Node : Entity
         return 10021;
     }
 }
-//class NodeNewSystem : NewSystem<Node>
-//{
-//    public override void OnEvent(Node self)
-//    {
-//        Debug.Log("OnEvent!");
-//    }
-//}
-//class NodeGetSystem : GetSystem<Node>
-//{
-//    public override void OnEvent(Node self)
-//    {
-//        Debug.Log("OnEvent!");
-//    }
-//}
-//class NodeAddSystem : AddSystem<Node>
-//{
-//    public override void OnEvent(Node self)
-//    {
-//    }
-//}
-//class NodeEnableSystem : EnableSystem<Node>
-//{
-//    public override void OnEvent(Node self)
-//    {
-//        Debug.Log("OnEvent!");
-//    }
-//}
+class NodeNewSystem : NewSystem<Node>
+{
+    public override void OnEvent(Node self)
+    {
+        Debug.Log("NewSystem!");
+    }
+}
+class NodeGetSystem : GetSystem<Node>
+{
+    public override void OnEvent(Node self)
+    {
+        Debug.Log("GetSystem!");
+    }
+}
+class NodeAddSystem : AddSystem<Node>
+{
+    public override void OnEvent(Node self)
+    {
+        Debug.Log("AddSystem!");
+    }
+}
+class NodeEnableSystem : EnableSystem<Node>
+{
+    public override void OnEvent(Node self)
+    {
+        Debug.Log("EnableSystem!");
+    }
+}
 
-//class NodeDisableSystem : DisableSystem<Node>
-//{
-//    public override void OnEvent(Node self)
-//    {
-//        Debug.Log("OnEvent!");
-//    }
-//}
+class NodeDisableSystem : DisableSystem<Node>
+{
+    public override void OnEvent(Node self)
+    {
+        Debug.Log("DisableSystem!");
+    }
+}
 
-//class NodeUpdateSystem : UpdateSystem<Node>
-//{
-//    public override void OnEvent(Node self, float deltaTime)
-//    {
-//        Debug.Log("OnEvent!");
-//    }
-//}
+class NodeUpdateSystem : UpdateSystem<Node>
+{
+    public override void OnEvent(Node self, float deltaTime)
+    {
+        Debug.Log("UpdateSystem!");
+    }
+}
 
 
-//class NodeLateUpdateSystem : LateUpdateSystem<Node>
-//{
-//    public override void OnLateUpdate(Node self, float deltaTime)
-//    {
-//        Debug.Log("OnLateUpdate!");
-//    }
-//}
-//class NodeFixedUpdateSystem : FixedUpdateSystem<Node>
-//{
-//    public override void OnFixedUpdate(Node self, float deltaTime)
-//    {
-//        Debug.Log("OnFixedUpdate!");
-//    }
-//}
+class NodeLateUpdateSystem : LateUpdateSystem<Node>
+{
+    public override void OnLateUpdate(Node self, float deltaTime)
+    {
+        Debug.Log("LateUpdateSystem!");
+    }
+}
+class NodeFixedUpdateSystem : FixedUpdateSystem<Node>
+{
+    public override void OnFixedUpdate(Node self, float deltaTime)
+    {
+        Debug.Log("FixedUpdateSystem!");
+    }
+}
 
-//class NodeRemoveSystem : RemoveSystem<Node>
-//{
-//    public override void OnEvent(Node self)
-//    {
-//        Debug.Log("OnEvent!");
-//    }
-//}
-//class NodeRecycleSystem : RecycleSystem<Node>
-//{
-//    public override void OnEvent(Node self)
-//    {
-//        Debug.Log("OnEvent!");
-//    }
-//}
-//class NodeDestroySystem : DestroySystem<Node>
-//{
-//    public override void OnEvent(Node self)
-//    {
-//        Debug.Log("OnEvent!");
-//    }
-//}
+class NodeRemoveSystem : RemoveSystem<Node>
+{
+    public override void OnEvent(Node self)
+    {
+        Debug.Log("RemoveSystem!");
+    }
+}
+class NodeRecycleSystem : RecycleSystem<Node>
+{
+    public override void OnEvent(Node self)
+    {
+        Debug.Log("RecycleSystem!");
+    }
+}
+class NodeDestroySystem : DestroySystem<Node>
+{
+    public override void OnEvent(Node self)
+    {
+        Debug.Log("DestroySystem!");
+    }
+}
 
 
 

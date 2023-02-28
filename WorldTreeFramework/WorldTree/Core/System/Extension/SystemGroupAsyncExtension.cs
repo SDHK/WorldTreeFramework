@@ -24,7 +24,6 @@ namespace WorldTree
             }
             return bit;
         }
-
         public static async AsyncTask<bool> TrySendAsync<T1>(this SystemGroup group, Entity self, T1 arg1)
         {
             bool bit = false;
@@ -42,7 +41,6 @@ namespace WorldTree
             }
             return bit;
         }
-
         public static async AsyncTask<bool> TrySendAsync<T1, T2>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
         {
             bool bit = false;
@@ -61,7 +59,6 @@ namespace WorldTree
             }
             return bit;
         }
-
         public static async AsyncTask<bool> TrySendAsync<T1, T2, T3>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
         {
             bool bit = false;
@@ -79,8 +76,6 @@ namespace WorldTree
             }
             return bit;
         }
-
-
         public static async AsyncTask<bool> TrySendAsync<T1, T2, T3, T4>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             bool bit = false;
@@ -128,7 +123,6 @@ namespace WorldTree
         {
             await group.TrySendAsync(self, arg1);
         }
-
         public static async void SendAsync<T1, T2>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
         {
             await group.TrySendAsync(self, arg1, arg2);
@@ -287,7 +281,6 @@ namespace WorldTree
             }
             return values;
         }
-
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, OutT>(this SystemGroup group, Entity self, T1 arg1)
         {
             bool bit = false;
@@ -324,7 +317,6 @@ namespace WorldTree
             }
             return values;
         }
-
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
         {
             bool bit = false;
@@ -361,7 +353,6 @@ namespace WorldTree
             }
             return values;
         }
-
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             bool bit = false;

@@ -38,7 +38,6 @@ namespace WorldTree
     {
         public override void OnEvent(InitialDomain self)
         {
-
             World.Log("初始域启动！！!!");
 
             //self.valueBinder = self.AddChildren<ValueBinder<float>>();
@@ -54,8 +53,14 @@ namespace WorldTree
             //GetGroundPoint(Vector3(1,1), )
 
 
+            //self.SendSystem<IUpdateSystem, float>(1f);
 
 
+            Node node = self.AddChildren<Node,float>(1);
+
+
+
+            //node.Send(1f, 2, 3L);//通用ISendSystem
 
 
         }
@@ -63,7 +68,6 @@ namespace WorldTree
     }
     class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>
     {
-
         public override void OnEvent(InitialDomain self, float deltaTime)
         {
 
@@ -90,5 +94,6 @@ namespace WorldTree
                 self.RemoveComponent<Node>();
             }
         }
+
     }
 }

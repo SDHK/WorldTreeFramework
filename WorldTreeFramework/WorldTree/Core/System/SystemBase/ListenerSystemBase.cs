@@ -16,11 +16,9 @@
 * 添加和移除时 不会监听到自己。
 * 
 * 监听系统属于实体，由对象池使用，通过监听泛型去取管理器参数
-* 思考：监听系统组
 */
 
 using System;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace WorldTree
 {
@@ -56,28 +54,4 @@ namespace WorldTree
         public virtual void Invoke(Entity self, Entity entity) => OnEvent(self as LE, entity as TE);
         public abstract void OnEvent(LE self, TE entity);
     }
-
-
-    public interface IListenerAddSystem : IListenerSystem { }
-    public interface IListenerRemoveSystem : IListenerSystem { }
-    /// <summary>
-    /// 实体添加时
-    /// </summary>
-    public abstract class ListenerAddSystem<LE, TE, TS> : ListenerSystemBase<LE, IListenerAddSystem, TE, TS> where TE : Entity where LE : Entity where TS : ISystem { }
-
-    /// <summary>
-    /// 实体移除时
-    /// </summary>
-    public abstract class ListenerRemoveSystem<LE, TE, TS> : ListenerSystemBase<LE, IListenerRemoveSystem, TE, TS> where TE : Entity where LE : Entity where TS : ISystem { }
-
-
-    /// <summary>
-    /// 实体添加时
-    /// </summary>
-    public abstract class ListenerAddSystem<LE> : ListenerSystemBase<LE, IListenerAddSystem, Entity, ISystem> where LE : Entity { }
-
-    /// <summary>
-    /// 实体移除时
-    /// </summary>
-    public abstract class ListenerRemoveSystem<LE> : ListenerSystemBase<LE, IListenerRemoveSystem, Entity, ISystem> where LE : Entity { }
 }
