@@ -125,14 +125,14 @@ class NodeUpdateSystem : UpdateSystem<Node>
 
 class NodeLateUpdateSystem : LateUpdateSystem<Node>
 {
-    public override void OnLateUpdate(Node self, float deltaTime)
+    public override void OnEvent(Node self, float deltaTime)
     {
         Debug.Log("LateUpdateSystem!");
     }
 }
 class NodeFixedUpdateSystem : FixedUpdateSystem<Node>
 {
-    public override void OnFixedUpdate(Node self, float deltaTime)
+    public override void OnEvent(Node self, float deltaTime)
     {
         Debug.Log("FixedUpdateSystem!");
     }

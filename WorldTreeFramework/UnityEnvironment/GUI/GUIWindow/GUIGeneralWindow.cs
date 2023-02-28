@@ -34,7 +34,7 @@ namespace WorldTree
 
     class GUIGeneralWindowOnGUISystem : GUIDrawSystem<GUIGeneralWindow>
     {
-        public override void DrawGUI(GUIGeneralWindow self)
+        public override void OnEvent(GUIGeneralWindow self)
         {
             self .VerticalBox.Draw();
 

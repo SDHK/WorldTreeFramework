@@ -28,7 +28,7 @@ namespace EditorTool
     }
     class EditorHomePageOnGUISystem : GuiUpdateSystem<EditorHomePage>
     {
-        public override void OnGuiUpdate(EditorHomePage self, float deltaTime)
+        public override void OnEvent(EditorHomePage self, float deltaTime)
         {
             GUILayout.Space(20);
 

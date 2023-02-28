@@ -56,7 +56,7 @@ namespace EditorTool
     }
     class WorldTreeFrameworkWindowGUIDrawSystem : GUIDrawSystem<WorldTreeFrameworkWindow>
     {
-        public override void DrawGUI(WorldTreeFrameworkWindow self)
+        public override void OnEvent(WorldTreeFrameworkWindow self)
         {
             self.onGUI.Send(0.02f);
         }

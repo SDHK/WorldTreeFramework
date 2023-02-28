@@ -43,7 +43,7 @@ namespace WorldTree
 
     class GUIWindowOnGUISystem : GuiUpdateSystem<GUIWindow>
     {
-        public override void OnGuiUpdate(GUIWindow self, float deltaTime)
+        public override void OnEvent(GUIWindow self, float deltaTime)
         {
             self.rect = GUILayout.Window(self.GetHashCode(), self.rect, self.Window, default(string), self.Style);
         }

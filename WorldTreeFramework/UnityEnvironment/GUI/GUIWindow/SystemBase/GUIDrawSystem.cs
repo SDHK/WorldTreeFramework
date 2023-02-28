@@ -9,18 +9,13 @@
 
 namespace WorldTree
 {
-
+    /// <summary>
+    /// GUI绘制
+    /// </summary>
     public interface IGUIDrawSystem : ISendSystem { }
 
     /// <summary>
-    /// GUI绘制系统
+    /// GUI绘制系统事件
     /// </summary>
-    public abstract class GUIDrawSystem<T> : SystemBase<T, IGUIDrawSystem>, IGUIDrawSystem
-       where T : Entity
-    {
-        public void Invoke(Entity self) => DrawGUI(self as T);
-
-        public abstract void DrawGUI(T self);
-
-    }
+    public abstract class GUIDrawSystem<T> : SendSystemBase<IGUIDrawSystem, T> where T : Entity { }
 }
