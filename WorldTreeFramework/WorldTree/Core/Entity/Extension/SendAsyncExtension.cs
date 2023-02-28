@@ -19,12 +19,12 @@ namespace WorldTree
         public static async AsyncTask<bool> TrySendAsync<T1, T2, T3, T4, T5>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => await self.TrySendAsyncSystem<ICallSystem<T1, T2, T3, T4, T5, AsyncTask>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
 
 
-        public static async void SendAsync(this Entity self) => await self.TrySendAsync();
-        public static async void SendAsync<T1>(this Entity self, T1 arg1) => await self.TrySendAsync(arg1);
-        public static async void SendAsync<T1, T2>(this Entity self, T1 arg1, T2 arg2) => await self.TrySendAsync(arg1, arg2);
-        public static async void SendAsync<T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3) => await self.TrySendAsync(arg1, arg2, arg3);
-        public static async void SendAsync<T1, T2, T3, T4>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => await self.TrySendAsync(arg1, arg2, arg3, arg4);
-        public static async void SendAsync<T1, T2, T3, T4, T5>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => await self.TrySendAsync(arg1, arg2, arg3, arg4, arg5);
+        public static async AsyncTask SendAsync(this Entity self) => await self.TrySendAsync();
+        public static async AsyncTask SendAsync<T1>(this Entity self, T1 arg1) => await self.TrySendAsync(arg1);
+        public static async AsyncTask SendAsync<T1, T2>(this Entity self, T1 arg1, T2 arg2) => await self.TrySendAsync(arg1, arg2);
+        public static async AsyncTask SendAsync<T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3) => await self.TrySendAsync(arg1, arg2, arg3);
+        public static async AsyncTask SendAsync<T1, T2, T3, T4>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => await self.TrySendAsync(arg1, arg2, arg3, arg4);
+        public static async AsyncTask SendAsync<T1, T2, T3, T4, T5>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => await self.TrySendAsync(arg1, arg2, arg3, arg4, arg5);
 
     }
 }

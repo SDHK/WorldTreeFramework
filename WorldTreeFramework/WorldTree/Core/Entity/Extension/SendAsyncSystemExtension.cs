@@ -96,34 +96,34 @@ namespace WorldTree
         }
 
 
-        public static async void SendAsyncSystem<S>(this Entity self)
+        public static async AsyncTask SendAsyncSystem<S>(this Entity self)
         where S : ICallSystem<AsyncTask>
         {
             await self.TrySendAsyncSystem<S>();
         }
 
-        public static async void SendAsyncSystem<S, T1>(this Entity self, T1 arg1)
+        public static async AsyncTask SendAsyncSystem<S, T1>(this Entity self, T1 arg1)
         where S : ICallSystem<T1, AsyncTask>
         {
             await self.TrySendAsyncSystem<S, T1>(arg1);
         }
 
-        public static async void SendAsyncSystem<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
+        public static async AsyncTask SendAsyncSystem<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
          where S : ICallSystem<T1, T2, AsyncTask>
         {
             await self.TrySendAsyncSystem<S, T1, T2>(arg1, arg2);
         }
-        public static async void SendAsyncSystem<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
+        public static async AsyncTask SendAsyncSystem<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
         where S : ICallSystem<T1, T2, T3, AsyncTask>
         {
             await self.TrySendAsyncSystem<S, T1, T2, T3>(arg1, arg2, arg3);
         }
-        public static async void SendAsyncSystem<S, T1, T2, T3, T4>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async AsyncTask SendAsyncSystem<S, T1, T2, T3, T4>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
          where S : ICallSystem<T1, T2, T3, T4, AsyncTask>
         {
             await self.TrySendAsyncSystem<S, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
         }
-        public static async void SendAsyncSystem<S, T1, T2, T3, T4, T5>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async AsyncTask SendAsyncSystem<S, T1, T2, T3, T4, T5>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
          where S : ICallSystem<T1, T2, T3, T4, T5, AsyncTask>
         {
             await self.TrySendAsyncSystem<S, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
