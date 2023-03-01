@@ -20,7 +20,6 @@ namespace WorldTree
         public static OutT Call<OutT>(this List<IEntitySystem> systems, Entity self)
         {
             OutT outT = default(OutT);
-
             foreach (ICallSystem<OutT> system in systems)
             {
                 outT = system.Invoke(self);

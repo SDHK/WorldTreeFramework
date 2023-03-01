@@ -31,6 +31,16 @@ namespace WorldTree
         public ValueBinder<float> valueBinder;
 
     }
+
+    class _InitialDomainSendSystemAsyncBase : SendSystemAsync<InitialDomain>
+    {
+        public override async AsyncTask OnEvent(InitialDomain self)
+        {
+            await self.SendAsync(1);
+        }
+    }
+
+
     //内联函数，缩短函数调用时间
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
 

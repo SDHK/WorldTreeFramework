@@ -19,17 +19,12 @@ namespace WorldTree
 
         public static async AsyncTask<OutT> CallAsync<OutT>(this SystemGroup group, Entity self)
         {
-            bool bit = false;
             OutT outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<AsyncTask<OutT>> system in systems)
-                {
-                    outT = await system.Invoke(self);
-                }
-                bit = true;
+                outT = await systems.CallAsync<OutT>(self);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -39,17 +34,12 @@ namespace WorldTree
 
         public static async AsyncTask<OutT> CallAsync<T1, OutT>(this SystemGroup group, Entity self, T1 arg1)
         {
-            bool bit = false;
             OutT outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, AsyncTask<OutT>> system in systems)
-                {
-                    outT = await system.Invoke(self, arg1);
-                }
-                bit = true;
+                outT = await systems.CallAsync<T1, OutT>(self, arg1);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -58,17 +48,12 @@ namespace WorldTree
 
         public static async AsyncTask<OutT> CallAsync<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
         {
-            bool bit = false;
             OutT outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, AsyncTask<OutT>> system in systems)
-                {
-                    outT = await system.Invoke(self, arg1, arg2);
-                }
-                bit = true;
+                outT = await systems.CallAsync<T1, T2, OutT>(self, arg1, arg2);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -77,17 +62,12 @@ namespace WorldTree
 
         public static async AsyncTask<OutT> CallAsync<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
         {
-            bool bit = false;
             OutT outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, AsyncTask<OutT>> system in systems)
-                {
-                    outT = await system.Invoke(self, arg1, arg2, arg3);
-                }
-                bit = true;
+                outT = await systems.CallAsync<T1, T2, T3, OutT>(self, arg1, arg2, arg3);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -95,17 +75,12 @@ namespace WorldTree
         }
         public static async AsyncTask<OutT> CallAsync<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
-            bool bit = false;
             OutT outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, T4, AsyncTask<OutT>> system in systems)
-                {
-                    outT = await system.Invoke(self, arg1, arg2, arg3, arg4);
-                }
-                bit = true;
+                outT = await systems.CallAsync<T1, T2, T3, T4, OutT>(self, arg1, arg2, arg3, arg4);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -114,17 +89,12 @@ namespace WorldTree
 
         public static async AsyncTask<OutT> CallAsync<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
-            bool bit = false;
             OutT outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, T4, T5, AsyncTask<OutT>> system in systems)
-                {
-                    outT = await system.Invoke(self, arg1, arg2, arg3, arg4, arg5);
-                }
-                bit = true;
+                outT = await systems.CallAsync<T1, T2, T3, T4, T5, OutT>(self, arg1, arg2, arg3, arg4, arg5);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -138,17 +108,15 @@ namespace WorldTree
 
         public static async AsyncTask<UnitList<OutT>> CallsAsync<OutT>(this SystemGroup group, Entity self)
         {
-            bool bit = false;
-            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
+            UnitList<OutT> values = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<AsyncTask<OutT>> system in systems)
+                foreach (ICallSystemAsync<OutT> system in systems)
                 {
                     values.Add(await system.Invoke(self));
                 }
-                bit = true;
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -156,17 +124,12 @@ namespace WorldTree
         }
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, OutT>(this SystemGroup group, Entity self, T1 arg1)
         {
-            bool bit = false;
-            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
+            UnitList<OutT> values = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, AsyncTask<OutT>> system in systems)
-                {
-                    values.Add(await system.Invoke(self, arg1));
-                }
-                bit = true;
+                values = await systems.CallsAsync<T1, OutT>(self, arg1);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -174,17 +137,12 @@ namespace WorldTree
         }
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
         {
-            bool bit = false;
-            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
+            UnitList<OutT> values = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, AsyncTask<OutT>> system in systems)
-                {
-                    values.Add(await system.Invoke(self, arg1, arg2));
-                }
-                bit = true;
+                values = await systems.CallsAsync<T1, T2, OutT>(self, arg1, arg2);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -192,17 +150,12 @@ namespace WorldTree
         }
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
         {
-            bool bit = false;
-            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
+            UnitList<OutT> values = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, AsyncTask<OutT>> system in systems)
-                {
-                    values.Add(await system.Invoke(self, arg1, arg2, arg3));
-                }
-                bit = true;
+                values = await systems.CallsAsync<T1, T2, T3, OutT>(self, arg1, arg2, arg3);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -210,17 +163,12 @@ namespace WorldTree
         }
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
-            bool bit = false;
-            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
+            UnitList<OutT> values = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, T4, AsyncTask<OutT>> system in systems)
-                {
-                    values.Add(await system.Invoke(self, arg1, arg2, arg3, arg4));
-                }
-                bit = true;
+                values = await systems.CallsAsync<T1, T2, T3, T4, OutT>(self, arg1, arg2, arg3, arg4);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }
@@ -228,17 +176,12 @@ namespace WorldTree
         }
         public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
-            bool bit = false;
-            UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
+            UnitList<OutT> values = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, T4, T5, AsyncTask<OutT>> system in systems)
-                {
-                    values.Add(await system.Invoke(self, arg1, arg2, arg3, arg4, arg5));
-                }
-                bit = true;
+                values = await systems.CallsAsync<T1, T2, T3, T4, T5, OutT>(self, arg1, arg2, arg3, arg4, arg5);
             }
-            if (!bit)
+            else
             {
                 await self.AsyncTaskCompleted();
             }

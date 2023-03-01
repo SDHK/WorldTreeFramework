@@ -9,6 +9,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WorldTree
 {
@@ -17,90 +18,84 @@ namespace WorldTree
         #region Call
         public static bool TryCall<OutT>(this SystemGroup group, Entity self, out OutT outT)
         {
-            bool bit = false;
             outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<OutT> system in systems)
-                {
-                    outT = system.Invoke(self);
-                }
-                bit = true;
+                outT = systems.Call<OutT>(self);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
         public static bool TryCall<T1, OutT>(this SystemGroup group, Entity self, T1 arg1, out OutT outT)
         {
-            bool bit = false;
             outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, OutT> system in systems)
-                {
-                    outT = system.Invoke(self, arg1);
-                }
-                bit = true;
+                outT = systems.Call<T1, OutT>(self, arg1);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
         public static bool TryCall<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, out OutT outT)
         {
-            bool bit = false;
             outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, OutT> system in systems)
-                {
-                    outT = system.Invoke(self, arg1, arg2);
-                }
-                bit = true;
+                outT = systems.Call<T1, T2, OutT>(self, arg1, arg2);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
         public static bool TryCall<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
         {
-            bool bit = false;
             outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, OutT> system in systems)
-                {
-                    outT = system.Invoke(self, arg1, arg2, arg3);
-                }
-                bit = true;
+                outT = systems.Call<T1, T2, T3, OutT>(self, arg1, arg2, arg3);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
         public static bool TryCall<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
         {
-            bool bit = false;
             outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, T4, OutT> system in systems)
-                {
-                    outT = system.Invoke(self, arg1, arg2, arg3, arg4);
-                }
-                bit = true;
+                outT = systems.Call<T1, T2, T3, T4, OutT>(self, arg1, arg2, arg3, arg4);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
         public static bool TryCall<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
         {
-            bool bit = false;
             outT = default(OutT);
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, T4, T5, OutT> system in systems)
-                {
-                    outT = system.Invoke(self, arg1, arg2, arg3, arg4, arg5);
-                }
-                bit = true;
+                outT = systems.Call<T1, T2, T3, T4, T5, OutT>(self, arg1, arg2, arg3, arg4, arg5);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
 
@@ -149,89 +144,83 @@ namespace WorldTree
 
         public static bool TryCalls<OutT>(this SystemGroup group, Entity self, out UnitList<OutT> outT)
         {
-            bool bit = false;
-            outT = self.PoolGet<UnitList<OutT>>();
+            outT = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<OutT> system in systems)
-                {
-                    outT.Add(system.Invoke(self));
-                }
-                bit = true;
+                outT = systems.Calls<OutT>(self);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
         public static bool TryCalls<T1, OutT>(this SystemGroup group, Entity self, T1 arg1, out UnitList<OutT> outT)
         {
-            bool bit = false;
-            outT = self.PoolGet<UnitList<OutT>>();
+            outT = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, OutT> system in systems)
-                {
-                    outT.Add(system.Invoke(self, arg1));
-                }
-                bit = true;
+                outT = systems.Calls<T1, OutT>(self, arg1);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
         public static bool TryCalls<T1, T2, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, out UnitList<OutT> outT)
         {
-            bool bit = false;
-            outT = self.PoolGet<UnitList<OutT>>();
+            outT = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, OutT> system in systems)
-                {
-                    outT.Add(system.Invoke(self, arg1, arg2));
-                }
-                bit = true;
+                outT = systems.Calls<T1, T2, OutT>(self, arg1, arg2);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
         public static bool TryCalls<T1, T2, T3, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> outT)
         {
-            bool bit = false;
-            outT = self.PoolGet<UnitList<OutT>>();
+            outT = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, OutT> system in systems)
-                {
-                    outT.Add(system.Invoke(self, arg1, arg2, arg3));
-                }
-                bit = true;
+                outT = systems.Calls<T1, T2, T3, OutT>(self, arg1, arg2, arg3);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
         public static bool TryCalls<T1, T2, T3, T4, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> outT)
         {
-            bool bit = false;
-            outT = self.PoolGet<UnitList<OutT>>();
+            outT = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, T4, OutT> system in systems)
-                {
-                    outT.Add(system.Invoke(self, arg1, arg2, arg3, arg4));
-                }
-                bit = true;
+                outT = systems.Calls<T1, T2, T3, T4, OutT>(self, arg1, arg2, arg3, arg4);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
         public static bool TryCalls<T1, T2, T3, T4, T5, OutT>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> outT)
         {
-            bool bit = false;
-            outT = self.PoolGet<UnitList<OutT>>();
+            outT = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystem<T1, T2, T3, T4, T5, OutT> system in systems)
-                {
-                    outT.Add(system.Invoke(self, arg1, arg2, arg3, arg4, arg5));
-                }
-                bit = true;
+                outT = systems.Calls<T1, T2, T3, T4, T5, OutT>(self, arg1, arg2, arg3, arg4, arg5);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
 

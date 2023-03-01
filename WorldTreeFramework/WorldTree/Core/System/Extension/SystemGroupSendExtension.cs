@@ -19,92 +19,83 @@ namespace WorldTree
 
         public static bool TrySend(this SystemGroup group, Entity self)
         {
-            bool bit = false;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ISendSystem system in systems)
-                {
-                    system.Invoke(self);
-                }
-                bit = true;
+                systems.Send(self);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
         public static bool TrySend<T1>(this SystemGroup group, Entity self, T1 arg1)
         {
-            bool bit = false;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ISendSystem<T1> system in systems)
-                {
-                    system.Invoke(self, arg1);
-                }
-                bit = true;
+                systems.Send(self, arg1);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
         public static bool TrySend<T1, T2>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
         {
-            bool bit = false;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ISendSystem<T1, T2> system in systems)
-                {
-                    system.Invoke(self, arg1, arg2);
-                }
-                bit = true;
+                systems.Send(self, arg1, arg2);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
 
         public static bool TrySend<T1, T2, T3>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
         {
-            bool bit = false;
-
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ISendSystem<T1, T2, T3> system in systems)
-                {
-                    system.Invoke(self, arg1, arg2, arg3);
-                }
-                bit = true;
+                systems.Send(self, arg1, arg2, arg3);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
         public static bool TrySend<T1, T2, T3, T4>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
-            bool bit = false;
-
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ISendSystem<T1, T2, T3, T4> system in systems)
-                {
-                    system.Invoke(self, arg1, arg2, arg3, arg4);
-                }
-                bit = true;
+                systems.Send(self, arg1, arg2, arg3, arg4);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
         public static bool TrySend<T1, T2, T3, T4, T5>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
-            bool bit = false;
-
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ISendSystem<T1, T2, T3, T4, T5> system in systems)
-                {
-                    system.Invoke(self, arg1, arg2, arg3, arg4, arg5);
-                }
-                bit = true;
+                systems.Send(self, arg1, arg2, arg3, arg4, arg5);
+                return true;
             }
-            return bit;
+            else
+            {
+                return false;
+            }
         }
 
-        
+
         public static void Send(this SystemGroup group, Entity self)
         {
             group.TrySend(self);
