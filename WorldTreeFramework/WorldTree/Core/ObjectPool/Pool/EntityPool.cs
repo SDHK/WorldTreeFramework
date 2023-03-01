@@ -36,10 +36,10 @@ namespace WorldTree
     /// </summary>
     public class EntityPool : GenericPool<Entity>
     {
-        public List<ISystem> newSystem;
-        public List<ISystem> getSystem;
-        public List<ISystem> recycleSystem;
-        public List<ISystem> destroySystem;
+        public List<IEntitySystem> newSystem;
+        public List<IEntitySystem> getSystem;
+        public List<IEntitySystem> recycleSystem;
+        public List<IEntitySystem> destroySystem;
 
         /// <summary>
         /// 引用池

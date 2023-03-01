@@ -17,10 +17,10 @@ namespace WorldTree
     /// <summary>
     /// 监听实体移除系统事件
     /// </summary>
-    public abstract class ListenerRemoveSystem<LE, TE, TS> : ListenerSystemBase<LE, IListenerRemoveSystem, TE, TS> where TE : Entity where LE : Entity where TS : ISystem { }
+    public abstract class ListenerRemoveSystem<LE, TE, TS> : ListenerSystemBase<LE, IListenerRemoveSystem, TE, TS> where TE : Entity where LE : Entity where TS : IEntitySystem { }
 
     /// <summary>
     /// 【动态】监听实体移除系统事件
     /// </summary>
-    public abstract class ListenerRemoveSystem<LE> : ListenerSystemBase<LE, IListenerRemoveSystem, Entity, ISystem> where LE : Entity { }
+    public abstract class ListenerRemoveSystem<LE> : ListenerSystemBase<LE, IListenerRemoveSystem, Entity, IEntitySystem> where LE : Entity { }
 }

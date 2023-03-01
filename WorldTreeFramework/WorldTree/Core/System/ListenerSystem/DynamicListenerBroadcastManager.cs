@@ -14,13 +14,6 @@ namespace WorldTree
         /// </summary>
         public Dictionary<Type, ListenerBroadcastGroup> BroadcastGroups = new Dictionary<Type, ListenerBroadcastGroup>();
 
-
-        ///// <summary>
-        ///// 监听器类型，监听器实体集合
-        ///// </summary>
-        //public UnitDictionary<Type, UnitDictionary<long, Entity>> DynamicListenerPool = new UnitDictionary<Type, UnitDictionary<long, Entity>>();
-
-
         /// <summary>
         /// 释放后
         /// </summary>
@@ -33,21 +26,7 @@ namespace WorldTree
 
         #region 判断监听器
 
-        /// <summary>
-        /// 检测添加动态监听器
-        /// </summary>
-        public void TryAddListener(Entity listener)
-        {
-           
-        }
 
-        /// <summary>
-        /// 检测移除静态监听器
-        /// </summary>
-        public void RemoveListener(Entity listener)
-        {
-
-        }
 
         #endregion
 

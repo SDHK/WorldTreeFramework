@@ -9,11 +9,11 @@
 
 namespace WorldTree
 {
-    public static class SendAsyncSystemExtension
+    public static class SendSystemAsyncExtension
     {
         #region Send
 
-        public static async AsyncTask<bool> TrySendAsyncSystem<S>(this Entity self)
+        public static async AsyncTask<bool> TrySendSystemAsync<S>(this Entity self)
         where S : ICallSystem<AsyncTask>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -27,7 +27,7 @@ namespace WorldTree
             }
         }
 
-        public static async AsyncTask<bool> TrySendAsyncSystem<S, T1>(this Entity self, T1 arg1)
+        public static async AsyncTask<bool> TrySendSystemAsync<S, T1>(this Entity self, T1 arg1)
         where S : ICallSystem<T1, AsyncTask>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -41,7 +41,7 @@ namespace WorldTree
             }
         }
 
-        public static async AsyncTask<bool> TrySendAsyncSystem<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
+        public static async AsyncTask<bool> TrySendSystemAsync<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
         where S : ICallSystem<T1, T2, AsyncTask>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -54,7 +54,7 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async AsyncTask<bool> TrySendAsyncSystem<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
+        public static async AsyncTask<bool> TrySendSystemAsync<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
         where S : ICallSystem<T1, T2, T3, AsyncTask>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -68,7 +68,7 @@ namespace WorldTree
             }
         }
 
-        public static async AsyncTask<bool> TrySendAsyncSystem<S, T1, T2, T3, T4>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async AsyncTask<bool> TrySendSystemAsync<S, T1, T2, T3, T4>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         where S : ICallSystem<T1, T2, T3, T4, AsyncTask>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -81,7 +81,7 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async AsyncTask<bool> TrySendAsyncSystem<S, T1, T2, T3, T4, T5>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async AsyncTask<bool> TrySendSystemAsync<S, T1, T2, T3, T4, T5>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         where S : ICallSystem<T1, T2, T3, T4, T5, AsyncTask>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -99,34 +99,34 @@ namespace WorldTree
         public static async AsyncTask SendAsyncSystem<S>(this Entity self)
         where S : ICallSystem<AsyncTask>
         {
-            await self.TrySendAsyncSystem<S>();
+            await self.TrySendSystemAsync<S>();
         }
 
         public static async AsyncTask SendAsyncSystem<S, T1>(this Entity self, T1 arg1)
         where S : ICallSystem<T1, AsyncTask>
         {
-            await self.TrySendAsyncSystem<S, T1>(arg1);
+            await self.TrySendSystemAsync<S, T1>(arg1);
         }
 
         public static async AsyncTask SendAsyncSystem<S, T1, T2>(this Entity self, T1 arg1, T2 arg2)
          where S : ICallSystem<T1, T2, AsyncTask>
         {
-            await self.TrySendAsyncSystem<S, T1, T2>(arg1, arg2);
+            await self.TrySendSystemAsync<S, T1, T2>(arg1, arg2);
         }
         public static async AsyncTask SendAsyncSystem<S, T1, T2, T3>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
         where S : ICallSystem<T1, T2, T3, AsyncTask>
         {
-            await self.TrySendAsyncSystem<S, T1, T2, T3>(arg1, arg2, arg3);
+            await self.TrySendSystemAsync<S, T1, T2, T3>(arg1, arg2, arg3);
         }
         public static async AsyncTask SendAsyncSystem<S, T1, T2, T3, T4>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
          where S : ICallSystem<T1, T2, T3, T4, AsyncTask>
         {
-            await self.TrySendAsyncSystem<S, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
+            await self.TrySendSystemAsync<S, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
         }
         public static async AsyncTask SendAsyncSystem<S, T1, T2, T3, T4, T5>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
          where S : ICallSystem<T1, T2, T3, T4, T5, AsyncTask>
         {
-            await self.TrySendAsyncSystem<S, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+            await self.TrySendSystemAsync<S, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
         }
         #endregion
 

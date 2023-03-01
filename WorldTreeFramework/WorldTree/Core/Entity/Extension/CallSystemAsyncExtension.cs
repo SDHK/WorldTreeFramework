@@ -9,10 +9,10 @@
 
 namespace WorldTree
 {
-    public static class CallAsyncSystemExtension
+    public static class CallSystemAsyncExtension
     {
         #region Call
-        public static async AsyncTask<OutT> CallAsyncSystem<S, OutT>(this Entity self)
+        public static async AsyncTask<OutT> CallSystemAsync<S, OutT>(this Entity self)
         where S : ICallSystem<AsyncTask<OutT>>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -25,7 +25,7 @@ namespace WorldTree
                 return default(OutT);
             }
         }
-        public static async AsyncTask<OutT> CallAsyncSystem<S, T1, OutT>(this Entity self, T1 arg1)
+        public static async AsyncTask<OutT> CallSystemAsync<S, T1, OutT>(this Entity self, T1 arg1)
         where S : ICallSystem<T1, AsyncTask<OutT>>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -38,7 +38,7 @@ namespace WorldTree
                 return default(OutT);
             }
         }
-        public static async AsyncTask<OutT> CallAsyncSystem<S, T1, T2, OutT>(this Entity self, T1 arg1, T2 arg2)
+        public static async AsyncTask<OutT> CallSystemAsync<S, T1, T2, OutT>(this Entity self, T1 arg1, T2 arg2)
         where S : ICallSystem<T1, T2, AsyncTask<OutT>>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -51,7 +51,7 @@ namespace WorldTree
                 return default(OutT);
             }
         }
-        public static async AsyncTask<OutT> CallAsyncSystem<S, T1, T2, T3, OutT>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
+        public static async AsyncTask<OutT> CallSystemAsync<S, T1, T2, T3, OutT>(this Entity self, T1 arg1, T2 arg2, T3 arg3)
         where S : ICallSystem<T1, T2, T3, AsyncTask<OutT>>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -64,7 +64,7 @@ namespace WorldTree
                 return default(OutT);
             }
         }
-        public static async AsyncTask<OutT> CallAsyncSystem<S, T1, T2, T3, T4, OutT>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async AsyncTask<OutT> CallSystemAsync<S, T1, T2, T3, T4, OutT>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         where S : ICallSystem<T1, T2, T3, T4, AsyncTask<OutT>>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))
@@ -77,7 +77,7 @@ namespace WorldTree
                 return default(OutT);
             }
         }
-        public static async AsyncTask<OutT> CallAsyncSystem<S, T1, T2, T3, T4, T5, OutT>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async AsyncTask<OutT> CallSystemAsync<S, T1, T2, T3, T4, T5, OutT>(this Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         where S : ICallSystem<T1, T2, T3, T4, T5, AsyncTask<OutT>>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out SystemGroup group))

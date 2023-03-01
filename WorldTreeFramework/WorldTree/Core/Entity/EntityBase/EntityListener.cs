@@ -81,7 +81,7 @@ namespace WorldTree
         /// 动态监听器切换系统目标
         /// </summary>
         public bool ListenerSwitchesSystem<T>()
-            where T : ISystem
+            where T : IEntitySystem
         {
             return ListenerSwitchesTarget(typeof(T), ListenerState.System);
         }

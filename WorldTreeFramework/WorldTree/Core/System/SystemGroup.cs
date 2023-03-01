@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 系统集合组
     /// </summary>
-    public class SystemGroup : Dictionary<Type, List<ISystem>>
+    public class SystemGroup : Dictionary<Type, List<IEntitySystem>>
     {
         /// <summary>
         /// 系统的类型

@@ -49,7 +49,7 @@ namespace WorldTree
 
         private void Initialize()
         {
-            var types = FindTypesIsInterface(typeof(ISystem));
+            var types = FindTypesIsInterface(typeof(IEntitySystem));
             //将名字进行排序，规范触发顺序
             types.Sort((item1, item2) => item1.Name.CompareTo(item2.Name));
 
@@ -58,13 +58,13 @@ namespace WorldTree
             foreach (var itemType in types)//遍历实现接口的类
             {
                 //实例化系统类
-                ISystem system = Activator.CreateInstance(itemType, true) as ISystem;
+                IEntitySystem system = Activator.CreateInstance(itemType, true) as IEntitySystem;
 
                 if (system is IListenerSystem)
                 {
                     var LSystem = system as IListenerSystem;//转换为监听系统
 
-                    if (LSystem.TargetEntityType == typeof(Entity) && LSystem.TargetSystemType != typeof(ISystem))
+                    if (LSystem.TargetEntityType == typeof(Entity) && LSystem.TargetSystemType != typeof(IEntitySystem))
                     {
                         EntitySystems.Add(LSystem); //约束了系统
                     }
@@ -81,7 +81,7 @@ namespace WorldTree
                         TargetGroup.systemType = LSystem.SystemType;
 
                         //动态监听器判断
-                        if (LSystem.TargetEntityType == typeof(Entity) && LSystem.TargetSystemType == typeof(ISystem))
+                        if (LSystem.TargetEntityType == typeof(Entity) && LSystem.TargetSystemType == typeof(IEntitySystem))
                         {
                             if (!DynamicListenerTypes.Contains(LSystem.EntityType)) DynamicListenerTypes.Add(LSystem.EntityType);
                         }
@@ -148,7 +148,7 @@ namespace WorldTree
         /// <summary>
         /// 获取监听目标系统列表
         /// </summary>
-        public bool TryGetTargetSystems<T>(Type targetType, Type listenerType, out List<ISystem> systems)
+        public bool TryGetTargetSystems<T>(Type targetType, Type listenerType, out List<IEntitySystem> systems)
         {
             if (TargetSystems.TryGetValue(targetType, out var systemGroups))
             {
@@ -180,7 +180,7 @@ namespace WorldTree
         /// <summary>
         /// 获取监听系统
         /// </summary>
-        public bool TryGetListenerSystems<T>(Type listenerType, Type targetType, out List<ISystem> systems)
+        public bool TryGetListenerSystems<T>(Type listenerType, Type targetType, out List<IEntitySystem> systems)
         {
             if (ListenerSystems.TryGetValue(listenerType, out var systemGroups))
             {
@@ -201,7 +201,7 @@ namespace WorldTree
         /// <summary>
         /// 获取系统组
         /// </summary>
-        public SystemGroup GetGroup<T>() where T : ISystem => GetGroup(typeof(T));
+        public SystemGroup GetGroup<T>() where T : IEntitySystem => GetGroup(typeof(T));
 
         /// <summary>
         /// 获取系统组
@@ -216,7 +216,7 @@ namespace WorldTree
         /// 获取系统组
         /// </summary>
         public bool TryGetGroup<T>(out SystemGroup systemGroup)
-         where T : ISystem
+         where T : IEntitySystem
         {
             return TryGetGroup(typeof(T), out systemGroup);
         }
@@ -236,11 +236,11 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型系统列表
         /// </summary>
-        public List<ISystem> GetSystems<T>(Type type)
+        public List<IEntitySystem> GetSystems<T>(Type type)
         {
             if (InterfaceSystems.TryGetValue(typeof(T), out SystemGroup systemGroup))
             {
-                if (systemGroup.TryGetValue(type, out List<ISystem> systems))
+                if (systemGroup.TryGetValue(type, out List<IEntitySystem> systems))
                 {
                     return systems;
                 }
@@ -251,7 +251,7 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型系统列表
         /// </summary>
-        public bool TryGetSystems(Type EntityType, Type SystemType, out List<ISystem> systems)
+        public bool TryGetSystems(Type EntityType, Type SystemType, out List<IEntitySystem> systems)
         {
             if (InterfaceSystems.TryGetValue(SystemType, out SystemGroup systemGroup))
             {

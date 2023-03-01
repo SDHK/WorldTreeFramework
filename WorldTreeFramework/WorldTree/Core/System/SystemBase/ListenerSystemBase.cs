@@ -3,19 +3,29 @@
 * 作者： 闪电黑客
 * 日期： 2022/7/18 9:35
 
-* 描述： 实体监听系统
+* 描述： 实体监听系统事件基类
 * 
-* 思路为给管理器用的实体添加事件的监听
+* 主要作用： 给管理器用的实体添加和移除时的事件监听
 * 
-* 这样就不需要每增加一个管理器，
-* 就得去注册管理器的监听。
+* 这样就不需要手动将实体添加到管理器，
+* 在而是在添加或移除实体的时候，
+* 管理器就能监听到指定实体类型的添加移除事件，并且拿到实例。
 * 
-* 在而是在添加任意实体的时候，判断有实现系统的实体
-* 就能监听全局的实体添加移除事件
+* 而且监听移除事件，也能防止实体被移除后，管理器忘记手动移除的情况。
 * 
-* 添加和移除时 不会监听到自己。
+* 设定：
+* 1.静态指定实体类型。 
+*   泛型填写目标实体类型，实体指定后，指定系统是无效的。
+*   
+* 2.静态指定系统类型。 
+*   泛型填写目标实体必须为Entity，才生效
 * 
-* 监听系统属于实体，由对象池使用，通过监听泛型去取管理器参数
+* 3.动态指定。 
+*   实体必须指定为Entity，系统必须指定为 IEntitySystem
+*   可在运行时随意切换指定目标
+*   
+*   
+* 
 */
 
 using System;
@@ -24,7 +34,7 @@ namespace WorldTree
 {
 
     /// <summary>
-    /// 监听系统接口
+    /// 实体监听系统接口
     /// </summary>
     public interface IListenerSystem : ISendSystem<Entity>
     {
@@ -40,13 +50,13 @@ namespace WorldTree
 
 
     /// <summary>
-    /// 监听系统抽象基类
+    /// 实体监听系统抽象基类
     /// </summary>
     public abstract class ListenerSystemBase<LE, LS, TE, TS> : SystemBase<LE, LS>, IListenerSystem
-    where TE : Entity
     where LE : Entity
-    where TS : ISystem
+    where TE : Entity
     where LS : IListenerSystem
+    where TS : IEntitySystem
     {
         public virtual Type TargetEntityType => typeof(TE);
         public virtual Type TargetSystemType => typeof(TS);
