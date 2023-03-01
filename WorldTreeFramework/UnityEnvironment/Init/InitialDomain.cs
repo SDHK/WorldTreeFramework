@@ -32,11 +32,15 @@ namespace WorldTree
 
     }
 
-    class _InitialDomainSendSystemAsyncBase : SendSystemAsync<InitialDomain>
+    class _InitialDomainSendSystemAsyncBase : CallSystemAsync<InitialDomain, float>
     {
-        public override async AsyncTask OnEvent(InitialDomain self)
+        public override async AsyncTask<float> OnEvent(InitialDomain self)
         {
-            await self.SendAsync(1);
+            World.Log("延迟！1");
+            await self.AsyncDelay(3);
+            World.Log("延迟！2");
+
+            return 10f;
         }
     }
 
@@ -49,6 +53,10 @@ namespace WorldTree
         public override async void OnEvent(InitialDomain self)
         {
             World.Log("初始域启动！！!!");
+            var a = await self.CallAsync<float>();
+            World.Log(a);
+
+            World.Log("初始域启动！！!!??");
 
             //self.valueBinder = self.AddChildren<ValueBinder<float>>();
 

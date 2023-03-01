@@ -18,7 +18,6 @@ namespace WorldTree
     /// </summary>
     public abstract class AsyncTaskBase : Entity, ICriticalNotifyCompletion
     {
-
         public AsyncTaskBase()
         {
             Type = typeof(AsyncTaskBase);
@@ -37,7 +36,7 @@ namespace WorldTree
         /// <summary>
         /// 延续
         /// </summary>
-        public Action continuation;
+        private Action continuation;
 
         /// <summary>
         /// 设置完成
@@ -90,14 +89,13 @@ namespace WorldTree
                 Dispose();
             }
         }
-    }
 
-    class AsyncTaskBaseRemoveSystem : RemoveSystem<AsyncTaskBase>
-    {
-        public override void OnEvent(AsyncTaskBase self)
+        public override void OnDispose()
         {
-            self.IsCompleted = false;
-            self.continuation = null;
+            IsCompleted = false;
+            continuation = null;
+
+            base.OnDispose();
         }
     }
 }

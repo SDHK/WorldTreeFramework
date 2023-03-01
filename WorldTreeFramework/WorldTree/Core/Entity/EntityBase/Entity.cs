@@ -54,7 +54,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 类型转换
+        /// 类型转换为
         /// </summary>
         public T To<T>()
         where T : Entity
@@ -63,7 +63,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 父节点
+        /// 父节点转换为
         /// </summary>
         public T ParentTo<T>()
         where T : Entity
@@ -71,9 +71,9 @@ namespace WorldTree
             return Parent as T;
         }
         /// <summary>
-        /// 尝试获取父节点
+        /// 尝试转换父节点
         /// </summary>
-        public bool TryGetParent<T>(out T entity)
+        public bool TryParentTo<T>(out T entity)
         where T : Entity
         {
             entity = Parent as T;
@@ -91,6 +91,9 @@ namespace WorldTree
             RemoveAllComponent();
         }
 
+        /// <summary>
+        /// 向上查找父物体
+        /// </summary>
         public T FindParent<T>()
         where T : Entity
         {

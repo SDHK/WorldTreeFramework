@@ -24,7 +24,7 @@ namespace WorldTree
     {
         public override void OnEvent(GlobalEntityRemoveListener self)
         {
-            self.TryGetParent(out self.systemBroadcast);
+            self.TryParentTo(out self.systemBroadcast);
         }
     }
     class GlobalEntityRemoveListenerRemoveSystem : RemoveSystem<GlobalEntityRemoveListener>

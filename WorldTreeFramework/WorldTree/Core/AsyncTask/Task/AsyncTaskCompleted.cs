@@ -42,13 +42,4 @@ namespace WorldTree.Internal
             self.SetResult();
         }
     }
-
-    class AsyncTaskCompletedRemoveSystem : RemoveSystem<AsyncTaskCompleted>
-    {
-        public override void OnEvent(AsyncTaskCompleted self)
-        {
-            self.IsCompleted = false;
-            self.continuation = null;
-        }
-    }
 }

@@ -111,10 +111,7 @@ namespace WorldTree
             UnitList<OutT> values = null;
             if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
             {
-                foreach (ICallSystemAsync<OutT> system in systems)
-                {
-                    values.Add(await system.Invoke(self));
-                }
+                values = await systems.CallsAsync<OutT>(self);
             }
             else
             {

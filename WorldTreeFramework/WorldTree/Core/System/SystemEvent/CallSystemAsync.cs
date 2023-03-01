@@ -12,7 +12,7 @@ namespace WorldTree
     /// <summary>
     /// 异步通用调用系统事件
     /// </summary>
-    public abstract class CallSystemAsyncAsync<E, OutT> : CallSystemAsyncBase<ICallSystemAsync<OutT>, E, OutT> where E : Entity { }
+    public abstract class CallSystemAsync<E, OutT> : CallSystemAsyncBase<ICallSystemAsync<OutT>, E, OutT> where E : Entity { }
     /// <summary>
     /// 异步通用调用系统事件
     /// </summary>

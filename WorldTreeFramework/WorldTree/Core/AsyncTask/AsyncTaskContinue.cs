@@ -20,7 +20,7 @@ namespace WorldTree
     {
         public override void OnEvent(AsyncTaskContinue self)
         {
-            if (self.TryGetParent(out AsyncTaskBase Parent))
+            if (self.TryParentTo(out AsyncTaskBase Parent))
             {
                 Parent.Continue();
             }
