@@ -9,9 +9,12 @@
 */
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEditor;
+using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.Build.Pipeline.Utilities;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -90,5 +93,24 @@ namespace EditorTool
             }
 
         }
+
+
+
+        [Button("Addressable打包")]
+        public void Button()
+        {
+            AddressableAssetSettings.BuildPlayerContent();
+        }
+
+
+        [InitializeOnLoadMethod]
+
+        private static void InitializeOnLoadAttribute()
+        {
+            //Debug.Log("程序集重新编译前2");
+        }
+
     }
+
+
 }

@@ -40,6 +40,10 @@ namespace WorldTree
             await self.AsyncDelay(3);
             World.Log("延迟！2");
 
+
+
+
+
             return 10f;
         }
     }
@@ -57,6 +61,7 @@ namespace WorldTree
             World.Log(a);
 
             World.Log("初始域启动！！!!??");
+
 
             //self.valueBinder = self.AddChildren<ValueBinder<float>>();
 
