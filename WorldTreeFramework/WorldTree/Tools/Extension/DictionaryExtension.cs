@@ -15,9 +15,10 @@ namespace WorldTree
     public static class DictionaryExtension
     {
         /// <summary>
-        /// 获取或新建值（未通过对象池）
+        /// 获取或新建值
         /// </summary>
-        public static V GetOrNewValue<K, V>(this Dictionary<K, V> self, K key)
+        /// <remarks>值为对象，但未通过对象池创建</remarks>
+        public static V GetValue<K, V>(this Dictionary<K, V> self, K key)
             where V : class, new()
         {
 

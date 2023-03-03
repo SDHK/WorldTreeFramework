@@ -38,7 +38,7 @@ namespace WorldTree
     {
         public override void OnEvent(GlobalEntityRemoveListener self, Entity entity)
         {
-            self.systemBroadcast?.RemoveEntity(entity);
+            self.systemBroadcast?.Remove(entity);
         }
     }
 }

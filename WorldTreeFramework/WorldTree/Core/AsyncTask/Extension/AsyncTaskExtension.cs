@@ -25,5 +25,11 @@ namespace WorldTree
             return self.AddChildren<AsyncTaskCompleted>();
 
         }
+
+        public static AsyncTask AsyncTaskQueue(this Entity self)
+        {
+
+            return self.AddChildren<AsyncTask>();
+        }
     }
 }

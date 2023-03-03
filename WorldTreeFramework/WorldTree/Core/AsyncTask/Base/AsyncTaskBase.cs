@@ -36,7 +36,7 @@ namespace WorldTree
         /// <summary>
         /// 延续
         /// </summary>
-        private Action continuation;
+        public Action continuation;
 
         /// <summary>
         /// 设置完成

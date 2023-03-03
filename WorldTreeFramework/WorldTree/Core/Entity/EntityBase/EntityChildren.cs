@@ -166,6 +166,31 @@ namespace WorldTree
         /// <summary>
         /// 添加新的子节点
         /// </summary>
+        public T AddChildren<T>(out T entity) where T : Entity => entity = AddChildren<T>();
+        /// <summary>
+        /// 添加新的子节点
+        /// </summary>
+        public T AddChildren<T, T1>(out T entity, T1 arg1) where T : Entity => entity = AddChildren<T, T1>(arg1);
+        /// <summary>
+        /// 添加新的子节点
+        /// </summary>
+        public T AddChildren<T, T1, T2>(out T entity, T1 arg1, T2 arg2) where T : Entity => entity = AddChildren<T, T1, T2>(arg1, arg2);
+        /// <summary>
+        /// 添加新的子节点
+        /// </summary>
+        public T AddChildren<T, T1, T2, T3>(out T entity, T1 arg1, T2 arg2, T3 arg3) where T : Entity => entity = AddChildren<T, T1, T2, T3>(arg1, arg2, arg3);
+        /// <summary>
+        /// 添加新的子节点
+        /// </summary>
+        public T AddChildren<T, T1, T2, T3, T4>(out T entity, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where T : Entity => entity = AddChildren<T, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
+        /// <summary>
+        /// 添加新的子节点
+        /// </summary>
+        public T AddChildren<T, T1, T2, T3, T4, T5>(out T entity, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where T : Entity => entity = AddChildren<T, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+      
+        /// <summary>
+        /// 添加新的子节点
+        /// </summary>
         public T AddChildren<T>()
             where T : Entity
         {

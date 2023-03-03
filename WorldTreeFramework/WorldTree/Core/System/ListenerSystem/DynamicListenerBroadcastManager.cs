@@ -87,7 +87,7 @@ namespace WorldTree
                                 //判断是否全局监听 或 是指定的目标类型
                                 if (listener.Value.listenerTarget == typeof(Entity) || listener.Value.listenerTarget == Target)
                                 {
-                                    broadcast.AddEntity(listener.Value);
+                                    broadcast.Enqueue(listener.Value);
                                 }
                             }
                             else if (listener.Value.listenerState == ListenerState.System)
@@ -95,7 +95,7 @@ namespace WorldTree
                                 //判断的实体类型是否拥有目标系统
                                 if (Root.SystemManager.TryGetSystems(Target, listener.Value.listenerTarget, out _))
                                 {
-                                    broadcast.AddEntity(listener.Value);
+                                    broadcast.Enqueue(listener.Value);
                                 }
                             }
                         }

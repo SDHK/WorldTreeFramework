@@ -39,7 +39,7 @@ namespace WorldTree
     {
         public override void OnEvent(GlobalEntityAddListener self, Entity entity)
         {
-            self.systemBroadcast?.AddEntity(entity);
+            self.systemBroadcast?.Enqueue(entity);
         }
     }
 }

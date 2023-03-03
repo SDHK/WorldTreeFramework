@@ -141,7 +141,7 @@ namespace WorldTree
                     {
                         if (BroadcastGroup.Value.TryGetBroadcast(systemGroup.Key, out var broadcast))
                         {
-                            broadcast.AddEntity(this);
+                            broadcast.Enqueue(this);
                         }
                     }
                 }
@@ -177,7 +177,7 @@ namespace WorldTree
                     //遍历获取动态系统组，并添加自己
                     foreach (var systemGroup in systemGroups)
                     {
-                        broadcastGroup.GetBroadcast(systemGroup.Key).AddEntity(this);
+                        broadcastGroup.GetBroadcast(systemGroup.Key).Enqueue(this);
                     }
                 }
             }
@@ -230,7 +230,7 @@ namespace WorldTree
                     {
                         if (BroadcastGroup.Value.TryGetBroadcast(systemGroup.Key, out var broadcast))
                         {
-                            broadcast.RemoveEntity(this);
+                            broadcast.Remove(this);
                         }
                     }
                 }
@@ -265,7 +265,7 @@ namespace WorldTree
                     //遍历获取动态系统组，并移除自己
                     foreach (var systemGroup in systemGroups)
                     {
-                        broadcastGroup.GetBroadcast(systemGroup.Key).RemoveEntity(this);
+                        broadcastGroup.GetBroadcast(systemGroup.Key).Remove(this);
                     }
                 }
             }

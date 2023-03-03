@@ -32,7 +32,7 @@ namespace WorldTree
                     {
                         foreach (var entity in pool.Entitys)
                         {
-                            broadcast.AddEntity(entity.Value);
+                            broadcast.Enqueue(entity.Value);
                         }
                     }
                 }

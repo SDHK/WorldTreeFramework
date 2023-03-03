@@ -77,7 +77,7 @@ namespace WorldTree
                     {
                         if (TryGetBroadcast(systems.Key, systemGroup.Key, out var broadcast))
                         {
-                            broadcast.AddEntity(listener);
+                            broadcast.Enqueue(listener);
                         }
                     }
                 }
@@ -98,7 +98,7 @@ namespace WorldTree
                     {
                         if (TryGetBroadcast(systems.Key, systemGroup.Key, out var broadcast))
                         {
-                            broadcast.RemoveEntity(listener);
+                            broadcast.Remove(listener);
                         }
                     }
                 }
@@ -156,7 +156,7 @@ namespace WorldTree
                     //全部注入到广播器
                     foreach (var listener in listenerPool.Entitys)
                     {
-                        broadcast.AddEntity(listener.Value);
+                        broadcast.Enqueue(listener.Value);
                     }
                 }
             }

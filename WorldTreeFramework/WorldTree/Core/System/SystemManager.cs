@@ -72,12 +72,12 @@ namespace WorldTree
                     {
                         //指定了实体，或 动态指定实体
 
-                        var ListenerGroup = ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType);
-                        ListenerGroup.GetOrNewValue(LSystem.TargetEntityType).Add(LSystem);
+                        var ListenerGroup = ListenerSystems.GetValue(LSystem.EntityType).GetValue(LSystem.SystemType);
+                        ListenerGroup.GetValue(LSystem.TargetEntityType).Add(LSystem);
                         ListenerGroup.systemType = LSystem.SystemType;
 
-                        var TargetGroup = TargetSystems.GetOrNewValue(LSystem.TargetEntityType).GetOrNewValue(LSystem.SystemType);
-                        TargetGroup.GetOrNewValue(LSystem.EntityType).Add(LSystem);
+                        var TargetGroup = TargetSystems.GetValue(LSystem.TargetEntityType).GetValue(LSystem.SystemType);
+                        TargetGroup.GetValue(LSystem.EntityType).Add(LSystem);
                         TargetGroup.systemType = LSystem.SystemType;
 
                         //动态监听器判断
@@ -90,8 +90,8 @@ namespace WorldTree
                 }
                 else
                 {
-                    var group = InterfaceSystems.GetOrNewValue(system.SystemType);
-                    group.GetOrNewValue(system.EntityType).Add(system);
+                    var group = InterfaceSystems.GetValue(system.SystemType);
+                    group.GetValue(system.EntityType).Add(system);
                     group.systemType = system.SystemType;
                 }
             }
@@ -105,12 +105,12 @@ namespace WorldTree
                     {
                         foreach (var system in systemList.Value)
                         {
-                            var ListenerGroup = ListenerSystems.GetOrNewValue(LSystem.EntityType).GetOrNewValue(LSystem.SystemType);
-                            ListenerGroup.GetOrNewValue(system.EntityType).Add(LSystem);
+                            var ListenerGroup = ListenerSystems.GetValue(LSystem.EntityType).GetValue(LSystem.SystemType);
+                            ListenerGroup.GetValue(system.EntityType).Add(LSystem);
                             ListenerGroup.systemType = LSystem.SystemType;
 
-                            var TargetGroup = TargetSystems.GetOrNewValue(system.EntityType).GetOrNewValue(LSystem.SystemType);
-                            TargetGroup.GetOrNewValue(LSystem.EntityType).Add(LSystem);
+                            var TargetGroup = TargetSystems.GetValue(system.EntityType).GetValue(LSystem.SystemType);
+                            TargetGroup.GetValue(LSystem.EntityType).Add(LSystem);
                             TargetGroup.systemType = LSystem.SystemType;
                         }
 
