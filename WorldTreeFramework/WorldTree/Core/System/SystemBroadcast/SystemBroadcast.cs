@@ -21,6 +21,9 @@ namespace WorldTree
         /// </summary>
         public SystemGroup systems;
 
+        public DynamicEntityQueue entityQueue;
+
+
         public UnitQueue<long> updateQueue;
         public UnitDictionary<long, Entity> update1;
         public UnitDictionary<long, Entity> update2;

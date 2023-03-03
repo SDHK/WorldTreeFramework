@@ -4,8 +4,6 @@
 * 日期： 2023/3/3 16:21
 
 * 描述： 动态实体队列
-* 
-* 
 
 */
 
@@ -22,9 +20,9 @@ namespace WorldTree
         public UnitQueue<long> idQueue;
 
         /// <summary>
-        /// 实体id被回收的次数
+        /// 实体id被移除的次数
         /// </summary>
-        public UnitDictionary<long, int> recycleId;
+        public UnitDictionary<long, int> removeId;
 
         /// <summary>
         /// 实体名单
@@ -56,13 +54,15 @@ namespace WorldTree
             if (entitys.ContainsKey(entity.id))
             {
                 entitys.Remove(entity.id);
-                if (!recycleId.ContainsKey(entity.id))
+
+                //累计强制移除的实体id
+                if (removeId.TryGetValue(entity.id, out var count))
                 {
-                    recycleId.Add(entity.id, 0);
+                    removeId[entity.id] = count + 1;
                 }
                 else
                 {
-                    recycleId[entity.id] = recycleId[entity.id] + 1;
+                    removeId.Add(entity.id, 1);
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace WorldTree
         public void Clear()
         {
             entitys.Clear();
-            recycleId.Clear();
+            removeId.Clear();
             idQueue.Clear();
         }
 
@@ -99,16 +99,16 @@ namespace WorldTree
         public bool TryDequeue(out Entity entity)
         {
             //尝试获取一个id
-            if (idQueue.TryDequeue(out long id))//假如队列不为0
+            if (idQueue.TryDequeue(out long id))
             {
                 //假如id被回收了
-                while (recycleId.TryGetValue(id, out int count))
+                while (removeId.TryGetValue(id, out int count))
                 {
                     //回收次数抵消
-                    recycleId[id] = --count;
+                    removeId[id] = --count;
 
                     //次数为0时删除id
-                    if (count == 0) recycleId.Remove(id);
+                    if (count == 0) removeId.Remove(id);
 
                     //获取下一个id
                     id = idQueue.Dequeue();
@@ -131,7 +131,7 @@ namespace WorldTree
         public override void OnEvent(DynamicEntityQueue self)
         {
             self.PoolGet(out self.idQueue);
-            self.PoolGet(out self.recycleId);
+            self.PoolGet(out self.removeId);
             self.PoolGet(out self.entitys);
         }
     }
@@ -141,7 +141,7 @@ namespace WorldTree
         public override void OnEvent(DynamicEntityQueue self)
         {
             self.idQueue.Dispose();
-            self.recycleId.Dispose();
+            self.removeId.Dispose();
             self.entitys.Dispose();
         }
     }
