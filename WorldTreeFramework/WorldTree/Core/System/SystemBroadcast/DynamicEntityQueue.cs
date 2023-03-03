@@ -1,8 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2023/3/3 16:21
+
+* 描述： 动态实体队列
+* 
+* 
+
+*/
 
 namespace WorldTree
 {
@@ -11,7 +16,6 @@ namespace WorldTree
     /// </summary>
     public class DynamicEntityQueue : Entity
     {
-
         /// <summary>
         /// 实体id队列
         /// </summary>
@@ -110,8 +114,6 @@ namespace WorldTree
                     id = idQueue.Dequeue();
                 }
                 //此时的id是正常id
-
-                //如果队列为空则换队列
                 if (entitys.TryGetValue(id, out entity))
                 {
                     entitys.Remove(entity.id);
@@ -121,6 +123,26 @@ namespace WorldTree
 
             entity = null;
             return false;
+        }
+    }
+
+    class DynamicEntityQueueAddSystem : AddSystem<DynamicEntityQueue>
+    {
+        public override void OnEvent(DynamicEntityQueue self)
+        {
+            self.PoolGet(out self.idQueue);
+            self.PoolGet(out self.recycleId);
+            self.PoolGet(out self.entitys);
+        }
+    }
+
+    class DynamicEntityQueueRemoveSystem : RemoveSystem<DynamicEntityQueue>
+    {
+        public override void OnEvent(DynamicEntityQueue self)
+        {
+            self.idQueue.Dispose();
+            self.recycleId.Dispose();
+            self.entitys.Dispose();
         }
     }
 }
