@@ -14,13 +14,13 @@ namespace WorldTree
     /// <summary>
     /// 实体饿汉单例系统接口
     /// </summary>
-    public interface ISingletonEagerSystem : ISendSystem { }
+    public interface ISingletonEagerSystem : ISendRule { }
 
 
     /// <summary>
     /// 实体饿汉单例系统：生成组件挂在根节点下
     /// </summary>
-    public abstract class SingletonEagerSystem<E> : SendSystemBase<ISingletonEagerSystem, E>, ISingletonEagerSystem
+    public abstract class SingletonEagerSystem<E> : SendRuleBase<ISingletonEagerSystem, E>, ISingletonEagerSystem
         where E : Node
     {
         public override void Invoke(Node self)

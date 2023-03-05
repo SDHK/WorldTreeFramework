@@ -13,11 +13,11 @@ namespace WorldTree
     /// <summary>
     /// UI窗口失焦系统接口
     /// </summary>
-    public interface IWindowLostFocusSystem : ISendSystem { }
+    public interface IWindowLostFocusSystem : ISendRule { }
 
 
     /// <summary>
     /// UI窗口失焦系统
     /// </summary>
-    public abstract class WindowLostFocusSystem<E> : SendSystemBase<IWindowLostFocusSystem, E> where E : Node { }
+    public abstract class WindowLostFocusSystem<E> : SendRuleBase<IWindowLostFocusSystem, E> where E : Node { }
 }

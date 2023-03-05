@@ -15,7 +15,7 @@ using WorldTree;
 
 namespace EditorTool
 {
-    public interface IEditorWindowEnableSystem : ISendSystem { }
+    public interface IEditorWindowEnableSystem : ISendRule { }
 
     /// <summary>
     /// 窗体启用系统
@@ -27,7 +27,7 @@ namespace EditorTool
         public abstract void OnEnable(T self);
     }
 
-    public interface IEditorWindowFocusSystem : ISendSystem { }
+    public interface IEditorWindowFocusSystem : ISendRule { }
     /// <summary>
     /// 窗体获得焦点时调用
     /// </summary>
@@ -37,7 +37,7 @@ namespace EditorTool
         public void Invoke(Node self) => OnFocus(self as T);
         public abstract void OnFocus(T self);
     }
-    public interface IEditorWindowInspectorUpdateSystem : ISendSystem { }
+    public interface IEditorWindowInspectorUpdateSystem : ISendRule { }
     /// <summary>
     /// 窗体Update
     /// </summary>
@@ -48,7 +48,7 @@ namespace EditorTool
         public abstract void OnInspectorUpdate(T self);
     }
 
-    public interface IEditorWindowProjectChangeSystem : ISendSystem { }
+    public interface IEditorWindowProjectChangeSystem : ISendRule { }
     /// <summary>
     /// 窗体在项目发生更改时调用
     /// </summary>
@@ -58,7 +58,7 @@ namespace EditorTool
         public void Invoke(Node self) => OnProjectChange(self as T);
         public abstract void OnProjectChange(T self);
     }
-    public interface IEditorWindowSelectionChangeSystem : ISendSystem { }
+    public interface IEditorWindowSelectionChangeSystem : ISendRule { }
     /// <summary>
     /// 窗体在选择发生更改时调用
     /// </summary>
@@ -69,7 +69,7 @@ namespace EditorTool
         public abstract void OnSelectionChange(T self);
     }
 
-    public interface IEditorWindowHierarchyChangeSystem : ISendSystem { }
+    public interface IEditorWindowHierarchyChangeSystem : ISendRule { }
     /// <summary>
     /// 窗体在场景结构发生层次更改时调用
     /// </summary>
@@ -79,7 +79,7 @@ namespace EditorTool
         public void Invoke(Node self) => OnHierarchyChange(self as T);
         public abstract void OnHierarchyChange(T self);
     }
-    public interface IEditorWindowLostFocusSystem : ISendSystem { }
+    public interface IEditorWindowLostFocusSystem : ISendRule { }
     /// <summary>
     /// 窗体在丢失焦点时调用
     /// </summary>
@@ -89,7 +89,7 @@ namespace EditorTool
         public void Invoke(Node self) => OnLostFocus(self as T);
         public abstract void OnLostFocus(T self);
     }
-    public interface IEditorWindowDisableSystem : ISendSystem { }
+    public interface IEditorWindowDisableSystem : ISendRule { }
 
     /// <summary>
     /// 窗体禁用系统
@@ -100,7 +100,7 @@ namespace EditorTool
         public void Invoke(Node self) => OnDisable(self as T);
         public abstract void OnDisable(T self);
     }
-    public interface IEditorWindowDestroySystem : ISendSystem { }
+    public interface IEditorWindowDestroySystem : ISendRule { }
     /// <summary>
     /// 窗体在关闭时调用
     /// </summary>

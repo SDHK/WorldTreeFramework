@@ -16,12 +16,12 @@ namespace WorldTree
     /// <summary>
     /// 活跃禁用事件系统接口
     /// </summary>
-    public interface IDisableSystem : ISendSystem { }
+    public interface IDisableSystem : ISendRule { }
 
     /// <summary>
     /// 活跃禁用事件系统
     /// </summary>
-    public abstract class DisableSystem<T> : SendSystemBase<IDisableSystem, T>
+    public abstract class DisableSystem<T> : SendRuleBase<IDisableSystem, T>
         where T : Node
     {
         public override void Invoke(Node self)

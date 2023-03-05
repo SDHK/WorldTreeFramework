@@ -15,7 +15,7 @@ namespace WorldTree
         #region Send
 
         public static bool TrySendSystem<S>(this Node self)
-        where S : ISendSystem
+        where S : ISendRule
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -27,7 +27,7 @@ namespace WorldTree
             }
         }
         public static bool TrySendSystem<S, T1>(this Node self, T1 arg1)
-        where S : ISendSystem<T1>
+        where S : ISendRule<T1>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -39,7 +39,7 @@ namespace WorldTree
             }
         }
         public static bool TrySendSystem<S, T1, T2>(this Node self, T1 arg1, T2 arg2)
-        where S : ISendSystem<T1, T2>
+        where S : ISendRule<T1, T2>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -51,7 +51,7 @@ namespace WorldTree
             }
         }
         public static bool TrySendSystem<S, T1, T2, T3>(this Node self, T1 arg1, T2 arg2, T3 arg3)
-        where S : ISendSystem<T1, T2, T3>
+        where S : ISendRule<T1, T2, T3>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -63,7 +63,7 @@ namespace WorldTree
             }
         }
         public static bool TrySendSystem<S, T1, T2, T3, T4>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where S : ISendSystem<T1, T2, T3, T4>
+        where S : ISendRule<T1, T2, T3, T4>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -75,7 +75,7 @@ namespace WorldTree
             }
         }
         public static bool TrySendSystem<S, T1, T2, T3, T4, T5>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where S : ISendSystem<T1, T2, T3, T4, T5>
+        where S : ISendRule<T1, T2, T3, T4, T5>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -89,32 +89,32 @@ namespace WorldTree
 
 
         public static void SendSystem<S>(this Node self)
-            where S : ISendSystem
+            where S : ISendRule
         {
             self.TrySendSystem<S>();
         }
         public static void SendSystem<S, T1>(this Node self, T1 arg1)
-           where S : ISendSystem<T1>
+           where S : ISendRule<T1>
         {
             self.TrySendSystem<S, T1>(arg1);
         }
         public static void SendSystem<S, T1, T2>(this Node self, T1 arg1, T2 arg2)
-           where S : ISendSystem<T1, T2>
+           where S : ISendRule<T1, T2>
         {
             self.TrySendSystem<S, T1, T2>(arg1, arg2);
         }
         public static void SendSystem<S, T1, T2, T3>(this Node self, T1 arg1, T2 arg2, T3 arg3)
-           where S : ISendSystem<T1, T2, T3>
+           where S : ISendRule<T1, T2, T3>
         {
             self.TrySendSystem<S, T1, T2, T3>(arg1, arg2, arg3);
         }
         public static void SendSystem<S, T1, T2, T3, T4>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-         where S : ISendSystem<T1, T2, T3, T4>
+         where S : ISendRule<T1, T2, T3, T4>
         {
             self.TrySendSystem<S, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
         }
         public static void SendSystem<S, T1, T2, T3, T4, T5>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-         where S : ISendSystem<T1, T2, T3, T4, T5>
+         where S : ISendRule<T1, T2, T3, T4, T5>
         {
             self.TrySendSystem<S, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
         }

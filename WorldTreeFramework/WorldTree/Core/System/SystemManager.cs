@@ -53,18 +53,18 @@ namespace WorldTree
             //将名字进行排序，规范触发顺序
             types.Sort((item1, item2) => item1.Name.CompareTo(item2.Name));
 
-            List<IListenerSystem> EntitySystems = new List<IListenerSystem>();//只指定了法则的监听器法则
+            List<IListenerRule> EntitySystems = new List<IListenerRule>();//只指定了法则的监听器法则
 
             foreach (var itemType in types)//遍历实现接口的类
             {
                 //实例化法则类
                 IRule system = Activator.CreateInstance(itemType, true) as IRule;
 
-                if (system is IListenerSystem)
+                if (system is IListenerRule)
                 {
-                    var LSystem = system as IListenerSystem;//转换为监听法则
+                    var LSystem = system as IListenerRule;//转换为监听法则
 
-                    if (LSystem.TargetEntityType == typeof(Node) && LSystem.TargetSystemType != typeof(IRule))
+                    if (LSystem.TargetNodeType == typeof(Node) && LSystem.TargetRuleType != typeof(IRule))
                     {
                         EntitySystems.Add(LSystem); //约束了法则
                     }
@@ -73,15 +73,15 @@ namespace WorldTree
                         //指定了实体，或 动态指定实体
 
                         var ListenerGroup = ListenerSystems.GetValue(LSystem.EntityType).GetValue(LSystem.RuleType);
-                        ListenerGroup.GetValue(LSystem.TargetEntityType).Add(LSystem);
+                        ListenerGroup.GetValue(LSystem.TargetNodeType).Add(LSystem);
                         ListenerGroup.RuleType = LSystem.RuleType;
 
-                        var TargetGroup = TargetSystems.GetValue(LSystem.TargetEntityType).GetValue(LSystem.RuleType);
+                        var TargetGroup = TargetSystems.GetValue(LSystem.TargetNodeType).GetValue(LSystem.RuleType);
                         TargetGroup.GetValue(LSystem.EntityType).Add(LSystem);
                         TargetGroup.RuleType = LSystem.RuleType;
 
                         //动态监听器判断
-                        if (LSystem.TargetEntityType == typeof(Node) && LSystem.TargetSystemType == typeof(IRule))
+                        if (LSystem.TargetNodeType == typeof(Node) && LSystem.TargetRuleType == typeof(IRule))
                         {
                             if (!DynamicListenerTypes.Contains(LSystem.EntityType)) DynamicListenerTypes.Add(LSystem.EntityType);
                         }
@@ -97,9 +97,9 @@ namespace WorldTree
             }
 
 
-            foreach (IListenerSystem LSystem in EntitySystems)//查询法则对应实体 
+            foreach (IListenerRule LSystem in EntitySystems)//查询法则对应实体 
             {
-                if (InterfaceSystems.TryGetValue(LSystem.TargetSystemType, out RuleGroup group))
+                if (InterfaceSystems.TryGetValue(LSystem.TargetRuleType, out RuleGroup group))
                 {
                     foreach (var systemList in group)
                     {
@@ -127,7 +127,7 @@ namespace WorldTree
         /// 获取监听目标法则组
         /// </summary>
         public bool TryGetTargetSystemGroup<T>(Type targetType, out RuleGroup systemGroup)
-            where T : IListenerSystem
+            where T : IListenerRule
         {
             return TryGetTargetSystemGroup(typeof(T), targetType, out systemGroup);
         }

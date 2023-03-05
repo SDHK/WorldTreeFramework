@@ -10,7 +10,7 @@ namespace WorldTree
         /// 获取以实体类型为目标的 监听系统广播
         /// </summary>
         public static bool TrySendStaticListener<T>(this Node entity)
-            where T : IListenerSystem
+            where T : IListenerRule
         {
             if (entity.Root.StaticListenerBroadcastManager.TryAddBroadcast(entity.Type, typeof(T), out var broadcast))
             {
@@ -27,7 +27,7 @@ namespace WorldTree
         /// 获取以实体类型为目标的 监听系统广播
         /// </summary>
         public static bool TrySendDynamicListener<T>(this Node entity)
-            where T : IListenerSystem
+            where T : IListenerRule
         {
             if (entity.Root.DynamicListenerBroadcastManager.TryAddBroadcast(entity.Type, typeof(T), out var broadcast))
             {

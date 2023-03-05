@@ -15,10 +15,10 @@ namespace WorldTree
     /// <summary>
     /// 移除事件系统接口
     /// </summary>
-    public interface IRemoveSystem : ISendSystem { }
+    public interface IRemoveSystem : ISendRule { }
 
     /// <summary>
     /// 移除事件系统
     /// </summary>
-    public abstract class RemoveSystem<E> : SendSystemBase<IRemoveSystem, E> where E : Node { }
+    public abstract class RemoveSystem<E> : SendRuleBase<IRemoveSystem, E> where E : Node { }
 }

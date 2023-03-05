@@ -12,10 +12,10 @@ namespace WorldTree
     /// <summary>
     /// GUI绘制
     /// </summary>
-    public interface IGUIDrawSystem : ISendSystem { }
+    public interface IGUIDrawSystem : ISendRule { }
 
     /// <summary>
     /// GUI绘制系统事件
     /// </summary>
-    public abstract class GUIDrawSystem<T> : SendSystemBase<IGUIDrawSystem, T> where T : Node { }
+    public abstract class GUIDrawSystem<T> : SendRuleBase<IGUIDrawSystem, T> where T : Node { }
 }

@@ -13,7 +13,7 @@ namespace WorldTree
     {
         #region Call
         public static async TreeTask<OutT> CallSystemAsync<S, OutT>(this Node self)
-        where S : ICallSystemAsync<OutT>
+        where S : ICallRuleAsync<OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -26,7 +26,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<OutT> CallSystemAsync<S, T1, OutT>(this Node self, T1 arg1)
-        where S : ICallSystemAsync<T1,OutT>
+        where S : ICallRuleAsync<T1,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -39,7 +39,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<OutT> CallSystemAsync<S, T1, T2, OutT>(this Node self, T1 arg1, T2 arg2)
-        where S : ICallSystemAsync<T1, T2,OutT>
+        where S : ICallRuleAsync<T1, T2,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -52,7 +52,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<OutT> CallSystemAsync<S, T1, T2, T3, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3)
-        where S : ICallSystemAsync<T1, T2, T3,OutT>
+        where S : ICallRuleAsync<T1, T2, T3,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -65,7 +65,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<OutT> CallSystemAsync<S, T1, T2, T3, T4, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where S : ICallSystemAsync<T1, T2, T3, T4,OutT>
+        where S : ICallRuleAsync<T1, T2, T3, T4,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -78,7 +78,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<OutT> CallSystemAsync<S, T1, T2, T3, T4, T5, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where S : ICallSystemAsync<T1, T2, T3, T4, T5,OutT>
+        where S : ICallRuleAsync<T1, T2, T3, T4, T5,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -97,7 +97,7 @@ namespace WorldTree
         #region Calls
 
         public static async TreeTask<UnitList<OutT>> CallsSystemAsync<S, OutT>(this Node self)
-        where S : ICallSystemAsync<OutT>
+        where S : ICallRuleAsync<OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -110,7 +110,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<UnitList<OutT>> CallsSystemAsync<S, T1, OutT>(this Node self, T1 arg1)
-        where S : ICallSystemAsync<T1,OutT>
+        where S : ICallRuleAsync<T1,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -123,7 +123,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<UnitList<OutT>> CallsSystemAsync<S, T1, T2, OutT>(this Node self, T1 arg1, T2 arg2)
-        where S : ICallSystemAsync<T1, T2,OutT>
+        where S : ICallRuleAsync<T1, T2,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -136,7 +136,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<UnitList<OutT>> CallsSystemAsync<S, T1, T2, T3, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3)
-        where S : ICallSystemAsync<T1, T2, T3,OutT>
+        where S : ICallRuleAsync<T1, T2, T3,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -149,7 +149,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<UnitList<OutT>> CallsSystemAsync<S, T1, T2, T3, T4, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where S : ICallSystemAsync<T1, T2, T3, T4,OutT>
+        where S : ICallRuleAsync<T1, T2, T3, T4,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -162,7 +162,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<UnitList<OutT>> CallsSystemAsync<S, T1, T2, T3, T4, T5, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where S : ICallSystemAsync<T1, T2, T3, T4, T5,OutT>
+        where S : ICallRuleAsync<T1, T2, T3, T4, T5,OutT>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {

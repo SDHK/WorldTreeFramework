@@ -15,12 +15,12 @@ namespace WorldTree
     /// <summary>
     /// 活跃启用事件系统接口
     /// </summary>
-    public interface IEnableSystem : ISendSystem { }
+    public interface IEnableSystem : ISendRule { }
 
     /// <summary>
     /// 活跃启用事件系统
     /// </summary>
-    public abstract class EnableSystem<T> : SendSystemBase<IEnableSystem, T>
+    public abstract class EnableSystem<T> : SendRuleBase<IEnableSystem, T>
     where T : Node
     {
         public override void Invoke(Node self)

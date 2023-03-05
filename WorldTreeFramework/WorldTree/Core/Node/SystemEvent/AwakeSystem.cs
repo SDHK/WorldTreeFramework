@@ -16,53 +16,53 @@ namespace WorldTree
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public interface IAwakeSystem : ISendSystem { }
+    public interface IAwakeSystem : ISendRule { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public interface IAwakeSystem<T1> : ISendSystem<T1> { }
+    public interface IAwakeSystem<T1> : ISendRule<T1> { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public interface IAwakeSystem<T1, T2> : ISendSystem<T1, T2> { }
+    public interface IAwakeSystem<T1, T2> : ISendRule<T1, T2> { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public interface IAwakeSystem<T1, T2, T3> : ISendSystem<T1, T2, T3> { }
+    public interface IAwakeSystem<T1, T2, T3> : ISendRule<T1, T2, T3> { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public interface IAwakeSystem<T1, T2, T3, T4> : ISendSystem<T1, T2, T3, T4> { }
+    public interface IAwakeSystem<T1, T2, T3, T4> : ISendRule<T1, T2, T3, T4> { }
     /// <summary>
     /// 初始化系统
     /// </summary>
-    public interface IAwakeSystem<T1, T2, T3, T4, T5> : ISendSystem<T1, T2, T3, T4, T5> { }
+    public interface IAwakeSystem<T1, T2, T3, T4, T5> : ISendRule<T1, T2, T3, T4, T5> { }
 
 
     /// <summary>
     /// 初始化系统事件
     /// </summary>
-    public abstract class AwakeSystem<E> : SendSystemBase<IAwakeSystem, E> where E : Node { }
+    public abstract class AwakeSystem<E> : SendRuleBase<IAwakeSystem, E> where E : Node { }
     /// <summary>
     /// 初始化系统事件
     /// </summary>
-    public abstract class AwakeSystem<E, T1> : SendSystemBase<IAwakeSystem<T1>, E, T1> where E : Node { }
+    public abstract class AwakeSystem<E, T1> : SendRuleBase<IAwakeSystem<T1>, E, T1> where E : Node { }
     /// <summary>
     /// 初始化系统事件
     /// </summary>
-    public abstract class AwakeSystem<E, T1, T2> : SendSystemBase<IAwakeSystem<T1, T2>, E, T1, T2> where E : Node { }
+    public abstract class AwakeSystem<E, T1, T2> : SendRuleBase<IAwakeSystem<T1, T2>, E, T1, T2> where E : Node { }
     /// <summary>
     /// 初始化系统事件
     /// </summary>
-    public abstract class AwakeSystem<E, T1, T2, T3> : SendSystemBase<IAwakeSystem<T1, T2, T3>, E, T1, T2, T3> where E : Node { }
+    public abstract class AwakeSystem<E, T1, T2, T3> : SendRuleBase<IAwakeSystem<T1, T2, T3>, E, T1, T2, T3> where E : Node { }
     /// <summary>
     /// 初始化系统事件
     /// </summary>
-    public abstract class AwakeSystem<E, T1, T2, T3, T4> : SendSystemBase<IAwakeSystem<T1, T2, T3, T4>, E, T1, T2, T3, T4> where E : Node { }
+    public abstract class AwakeSystem<E, T1, T2, T3, T4> : SendRuleBase<IAwakeSystem<T1, T2, T3, T4>, E, T1, T2, T3, T4> where E : Node { }
     /// <summary>
     /// 初始化系统事件
     /// </summary>
-    public abstract class AwakeSystem<E, T1, T2, T3, T4, T5> : SendSystemBase<IAwakeSystem<T1, T2, T3, T4, T5>, E, T1, T2, T3, T4, T5> where E : Node { }
+    public abstract class AwakeSystem<E, T1, T2, T3, T4, T5> : SendRuleBase<IAwakeSystem<T1, T2, T3, T4, T5>, E, T1, T2, T3, T4, T5> where E : Node { }
 
 
 }

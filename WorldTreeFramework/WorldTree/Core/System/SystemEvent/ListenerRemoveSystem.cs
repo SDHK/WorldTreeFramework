@@ -12,15 +12,15 @@ namespace WorldTree
     /// <summary>
     /// 监听实体移除
     /// </summary>
-    public interface IListenerRemoveSystem : IListenerSystem { }
+    public interface IListenerRemoveSystem : IListenerRule { }
 
     /// <summary>
     /// 监听实体移除系统事件
     /// </summary>
-    public abstract class ListenerRemoveSystem<LE, TE, TS> : ListenerSystemBase<LE, IListenerRemoveSystem, TE, TS> where TE : Node where LE : Node where TS : IRule { }
+    public abstract class ListenerRemoveSystem<LE, TE, TS> : ListenerRuleBase<LE, IListenerRemoveSystem, TE, TS> where TE : Node where LE : Node where TS : IRule { }
 
     /// <summary>
     /// 【动态】监听实体移除系统事件
     /// </summary>
-    public abstract class ListenerRemoveSystem<LE> : ListenerSystemBase<LE, IListenerRemoveSystem, Node, IRule> where LE : Node { }
+    public abstract class ListenerRemoveSystem<LE> : ListenerRuleBase<LE, IListenerRemoveSystem, Node, IRule> where LE : Node { }
 }

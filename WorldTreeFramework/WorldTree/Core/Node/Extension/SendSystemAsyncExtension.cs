@@ -14,7 +14,7 @@ namespace WorldTree
         #region Send
 
         public static async TreeTask<bool> TrySendSystemAsync<S>(this Node self)
-        where S : ISendSystemAsync
+        where S : ISendRuleAsync
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -28,7 +28,7 @@ namespace WorldTree
         }
 
         public static async TreeTask<bool> TrySendSystemAsync<S, T1>(this Node self, T1 arg1)
-        where S : ISendSystemAsync<T1>
+        where S : ISendRuleAsync<T1>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -42,7 +42,7 @@ namespace WorldTree
         }
 
         public static async TreeTask<bool> TrySendSystemAsync<S, T1, T2>(this Node self, T1 arg1, T2 arg2)
-        where S : ISendSystemAsync<T1, T2>
+        where S : ISendRuleAsync<T1, T2>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -55,7 +55,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<bool> TrySendSystemAsync<S, T1, T2, T3>(this Node self, T1 arg1, T2 arg2, T3 arg3)
-        where S : ISendSystemAsync<T1, T2, T3>
+        where S : ISendRuleAsync<T1, T2, T3>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -69,7 +69,7 @@ namespace WorldTree
         }
 
         public static async TreeTask<bool> TrySendSystemAsync<S, T1, T2, T3, T4>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where S : ISendSystemAsync<T1, T2, T3, T4>
+        where S : ISendRuleAsync<T1, T2, T3, T4>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -82,7 +82,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<bool> TrySendSystemAsync<S, T1, T2, T3, T4, T5>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where S : ISendSystemAsync<T1, T2, T3, T4, T5>
+        where S : ISendRuleAsync<T1, T2, T3, T4, T5>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -97,7 +97,7 @@ namespace WorldTree
 
 
         public static async TreeTask SendSystemAsync<S>(this Node self)
-        where S : ISendSystemAsync
+        where S : ISendRuleAsync
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -110,7 +110,7 @@ namespace WorldTree
         }
 
         public static async TreeTask SendSystemAsync<S, T1>(this Node self, T1 arg1)
-        where S : ISendSystemAsync<T1>
+        where S : ISendRuleAsync<T1>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -123,7 +123,7 @@ namespace WorldTree
         }
 
         public static async TreeTask SendSystemAsync<S, T1, T2>(this Node self, T1 arg1, T2 arg2)
-         where S : ISendSystemAsync<T1, T2>
+         where S : ISendRuleAsync<T1, T2>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -135,7 +135,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask SendSystemAsync<S, T1, T2, T3>(this Node self, T1 arg1, T2 arg2, T3 arg3)
-        where S : ISendSystemAsync<T1, T2, T3>
+        where S : ISendRuleAsync<T1, T2, T3>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -147,7 +147,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask SendSystemAsync<S, T1, T2, T3, T4>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-         where S : ISendSystemAsync<T1, T2, T3, T4>
+         where S : ISendRuleAsync<T1, T2, T3, T4>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {
@@ -159,7 +159,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask SendSystemAsync<S, T1, T2, T3, T4, T5>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-         where S : ISendSystemAsync<T1, T2, T3, T4, T5>
+         where S : ISendRuleAsync<T1, T2, T3, T4, T5>
         {
             if (self.Root.SystemManager.TryGetGroup<S>(out RuleGroup group))
             {

@@ -13,10 +13,10 @@ namespace WorldTree
     /// <summary>
     /// UI窗口焦点系统接口
     /// </summary>
-    public interface IWindowFocusSystem : ISendSystem { }
+    public interface IWindowFocusSystem : ISendRule { }
 
     /// <summary>
     /// UI窗口焦点系统
     /// </summary>
-    public abstract class WindowFocusSystem<E> : SendSystemBase<IWindowFocusSystem, E> where E : Node { }
+    public abstract class WindowFocusSystem<E> : SendRuleBase<IWindowFocusSystem, E> where E : Node { }
 }
