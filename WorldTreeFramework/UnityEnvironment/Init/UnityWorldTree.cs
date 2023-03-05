@@ -16,7 +16,7 @@ namespace WorldTree
 
     public class UnityWorldTree : MonoBehaviour
     {
-        public EntityManager root;
+        public WorldTreeRoot root;
 
         SystemBroadcast enable;
         SystemBroadcast disable;
@@ -32,7 +32,7 @@ namespace WorldTree
             World.LogWarning = Debug.LogWarning;
             World.LogError = Debug.LogError;
 
-            root = new EntityManager();
+            root = new WorldTreeRoot();
 
             enable = root.GetSystemGlobalBroadcast<IEnableSystem>();
             update = root.GetSystemGlobalBroadcast<IUpdateSystem>();

@@ -39,6 +39,11 @@ namespace WorldTree
             if (!Broadcasts.TryGetValue(system, out var broadcast))
             {
                 broadcast = new SystemBroadcast();
+                broadcast.entityQueue = new DynamicEntityQueue();
+                broadcast.entityQueue.idQueue = new UnitQueue<long>();
+                broadcast.entityQueue.removeId = new UnitDictionary<long, int>();
+                broadcast.entityQueue.entitys = new UnitDictionary<long, Entity>();
+
                 broadcast.id = Root.IdManager.GetId();
                 broadcast.Root = Root;
                 Broadcasts.Add(system, broadcast);

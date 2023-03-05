@@ -35,7 +35,7 @@ namespace WorldTree
         /// <summary>
         /// 根节点
         /// </summary>
-        public EntityManager Root;
+        public WorldTreeRoot Root;
 
         /// <summary>
         /// 父节点

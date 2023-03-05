@@ -23,7 +23,7 @@ namespace EditorTool
     {
         public static string rootPath = "Assets/SDHK/WorldTreeFramework/UnityEnvironment/EditorTool/EditorToolKitWindow/ToolPages/";
 
-        //public EntityManager root;
+        //public WorldTreeRoot root;
 
         //public SystemGlobalBroadcast<IEnableSystem> enable;
         //public SystemGlobalBroadcast<IDisableSystem> disable;
@@ -42,7 +42,7 @@ namespace EditorTool
         {
             //if (root != null) root.Dispose();
 
-            //root = new EntityManager();
+            //root = new WorldTreeRoot();
 
             //World.Log = Debug.Log;
             //World.LogWarning = Debug.LogWarning;

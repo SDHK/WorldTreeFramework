@@ -33,7 +33,7 @@ namespace WorldTree
         /// <summary>
         /// 当前队列数量
         /// </summary>
-        public int Conunt => idQueue.Count;
+        public int Count => idQueue.Count;
 
         /// <summary>
         /// 实体入列
@@ -111,7 +111,12 @@ namespace WorldTree
                     if (count == 0) removeId.Remove(id);
 
                     //获取下一个id
-                    id = idQueue.Dequeue();
+                    if (!idQueue.TryDequeue(out id))
+                    {
+                        //假如队列空了,则直接返回退出
+                        entity = null;
+                        return false;
+                    }
                 }
                 //此时的id是正常id
                 if (entitys.TryGetValue(id, out entity))

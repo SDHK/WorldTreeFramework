@@ -16,14 +16,11 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                (update1, update2) = (update2, update1);
-                int length = updateQueue.Count;
+                int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    long id = updateQueue.Dequeue();
-                    if (update1.TryGetValue(id, out Entity entity))
+                    if (entityQueue.TryDequeue(out Entity entity))
                     {
-                        update1.Remove(entity.id);
                         systems.Send(entity);
                     }
                 }
@@ -35,14 +32,11 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                (update1, update2) = (update2, update1);
-                int length = updateQueue.Count;
+                int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    long id = updateQueue.Dequeue();
-                    if (update1.TryGetValue(id, out Entity entity))
+                    if (entityQueue.TryDequeue(out Entity entity))
                     {
-                        update1.Remove(entity.id);
                         systems.Send(entity, arg1);
                     }
                 }
@@ -55,14 +49,11 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                (update1, update2) = (update2, update1);
-                int length = updateQueue.Count;
+                int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    long id = updateQueue.Dequeue();
-                    if (update1.TryGetValue(id, out Entity entity))
+                    if (entityQueue.TryDequeue(out Entity entity))
                     {
-                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2);
                     }
                 }
@@ -73,14 +64,11 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                (update1, update2) = (update2, update1);
-                int length = updateQueue.Count;
+                int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    long id = updateQueue.Dequeue();
-                    if (update1.TryGetValue(id, out Entity entity))
+                    if (entityQueue.TryDequeue(out Entity entity))
                     {
-                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2, arg3);
                     }
                 }
@@ -91,14 +79,11 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                (update1, update2) = (update2, update1);
-                int length = updateQueue.Count;
+                int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    long id = updateQueue.Dequeue();
-                    if (update1.TryGetValue(id, out Entity entity))
+                    if (entityQueue.TryDequeue(out Entity entity))
                     {
-                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2, arg3, arg4);
                     }
                 }
@@ -109,14 +94,11 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                (update1, update2) = (update2, update1);
-                int length = updateQueue.Count;
+                int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    long id = updateQueue.Dequeue();
-                    if (update1.TryGetValue(id, out Entity entity))
+                    if (entityQueue.TryDequeue(out Entity entity))
                     {
-                        update1.Remove(entity.id);
                         systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
                     }
                 }

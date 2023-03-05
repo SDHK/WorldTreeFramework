@@ -27,7 +27,7 @@ namespace WorldTree
     /// <summary>
     /// 实体管理器
     /// </summary>
-    public class EntityManager : Entity
+    public class WorldTreeRoot : Entity
     {
         public UnitDictionary<long, Entity> allEntity = new UnitDictionary<long, Entity>();
 
@@ -44,7 +44,7 @@ namespace WorldTree
         public StaticListenerBroadcastManager StaticListenerBroadcastManager;
         public DynamicListenerBroadcastManager DynamicListenerBroadcastManager;
 
-        public EntityManager() : base()
+        public WorldTreeRoot() : base()
         {
             //此时没有对象池，直接新建容器
             Children = new UnitDictionary<long, Entity>();

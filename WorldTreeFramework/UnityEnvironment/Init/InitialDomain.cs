@@ -41,8 +41,7 @@ namespace WorldTree
             World.Log("延迟！2");
 
 
-
-
+            self.SendSystem<IAddSystem>();
 
             return 10f;
         }
@@ -76,7 +75,7 @@ namespace WorldTree
             //GetGroundPoint(Vector3(1,1), )
 
 
-
+            self.SendSystem<IAddSystem>();
 
 
 
@@ -90,7 +89,7 @@ namespace WorldTree
 
             //self.valueBinder.Value = deltaTime;
 
-
+            
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 self.AddComponent<Node>().Test().Coroutine();

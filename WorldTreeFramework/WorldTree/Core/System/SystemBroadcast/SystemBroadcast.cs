@@ -23,11 +23,6 @@ namespace WorldTree
 
         public DynamicEntityQueue entityQueue;
 
-
-        public UnitQueue<long> updateQueue;
-        public UnitDictionary<long, Entity> update1;
-        public UnitDictionary<long, Entity> update2;
-
         public override string ToString()
         {
             return $"SystemBroadcast : {systems?.systemType}";
@@ -36,18 +31,14 @@ namespace WorldTree
         /// <summary>
         /// 当前数量
         /// </summary>
-        public int Conunt => updateQueue.Count;
+        public int Count => entityQueue.Count;
 
         /// <summary>
         /// 添加实体
         /// </summary>
         public void Enqueue(Entity entity)
         {
-            if (update1.ContainsKey(entity.id) || update2.ContainsKey(entity.id)) return;
-
-            updateQueue.Enqueue(entity.id);
-            update2.Add(entity.id, entity);
-
+            entityQueue.Enqueue(entity);
         }
 
         /// <summary>
@@ -55,17 +46,14 @@ namespace WorldTree
         /// </summary>
         public void Remove(Entity entity)
         {
-            update1.Remove(entity.id);
-            update2.Remove(entity.id);
+            entityQueue.Remove(entity);
         }
         /// <summary>
         /// 清除
         /// </summary>
         public void Clear()
         {
-            update1.Clear();
-            update2.Clear();
-            updateQueue.Clear();
+            entityQueue.Clear();
         }
 
         /// <summary>
@@ -73,14 +61,7 @@ namespace WorldTree
         /// </summary>
         public Entity Dequeue()
         {
-            if (TryDequeue(out Entity entity))
-            {
-                return entity;
-            }
-            else
-            {
-                return null;
-            }
+            return entityQueue.Dequeue();
         }
 
         /// <summary>
@@ -88,24 +69,7 @@ namespace WorldTree
         /// </summary>
         public bool TryDequeue(out Entity entity)
         {
-            if (updateQueue.TryDequeue(out long id))
-            {
-                if (update1.Count == 0)
-                {
-                    (update1, update2) = (update2, update1);
-                }
-
-                if (update1.TryGetValue(id, out entity))
-                {
-                    update1.Remove(entity.id);
-                }
-                return true;
-            }
-            else
-            {
-                entity = null;
-                return false;
-            }
+            return entityQueue.TryDequeue(out entity);
         }
 
 
@@ -115,9 +79,11 @@ namespace WorldTree
     {
         public override void OnEvent(SystemBroadcast self)
         {
-            self.updateQueue = self.PoolGet<UnitQueue<long>>();
-            self.update1 = self.PoolGet<UnitDictionary<long, Entity>>();
-            self.update2 = self.PoolGet<UnitDictionary<long, Entity>>();
+            if (self.thisPool != null)
+            {
+                self.AddComponent(out self.entityQueue);
+            }
+
         }
     }
 
@@ -125,9 +91,7 @@ namespace WorldTree
     {
         public override void OnEvent(SystemBroadcast self)
         {
-            self.updateQueue.Dispose();
-            self.update1.Dispose();
-            self.update2.Dispose();
+
         }
     }
 }

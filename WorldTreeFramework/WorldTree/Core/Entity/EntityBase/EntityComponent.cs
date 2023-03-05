@@ -275,7 +275,7 @@ namespace WorldTree
             T component = null;
             if (!Components.TryGetValue(type, out Entity entity))
             {
-                component = Root.EntityPoolManager.Get<T>();
+                component = Root.EntityPoolManager?.Get<T>();
                 component.Parent = this;
                 component.isComponent = true;
                 components.Add(type, component);
@@ -300,7 +300,7 @@ namespace WorldTree
             T component = null;
             if (!Components.TryGetValue(type, out Entity entity))
             {
-                component = Root.EntityPoolManager.Get<T>();
+                component = Root.EntityPoolManager?.Get<T>();
                 component.Parent = this;
                 component.isComponent = true;
                 components.Add(type, component);
