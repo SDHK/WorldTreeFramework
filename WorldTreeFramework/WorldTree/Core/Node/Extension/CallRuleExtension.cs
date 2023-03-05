@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/2/28 10:31
 
-* 描述： 节点法则调用扩展
+* 描述： 节点法则调用执行
 
 */
 
@@ -17,7 +17,7 @@ namespace WorldTree
         where R : ICallRule<OutT>
         {
 
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCall(self, out outT);
             }
@@ -31,7 +31,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, OutT>(this Node self, T1 arg1, out OutT outT)
         where R : ICallRule<T1, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCall(self, arg1, out outT);
             }
@@ -44,7 +44,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, T2, OutT>(this Node self, T1 arg1, T2 arg2, out OutT outT)
         where R : ICallRule<T1, T2, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCall(self, arg1, arg2, out outT);
             }
@@ -57,7 +57,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, T2, T3, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
         where R : ICallRule<T1, T2, T3, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCall(self, arg1, arg2, arg3, out outT);
             }
@@ -70,7 +70,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, T2, T3, T4, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
         where R : ICallRule<T1, T2, T3, T4, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCall(self, arg1, arg2, arg3, arg4, out outT);
             }
@@ -83,7 +83,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, T2, T3, T4, T5, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
         where R : ICallRule<T1, T2, T3, T4, T5, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCall(self, arg1, arg2, arg3, arg4, arg5, out outT);
             }
@@ -139,7 +139,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, OutT>(this Node self, out UnitList<OutT> values)
         where R : ICallRule<OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCalls(self, out values);
             }
@@ -152,7 +152,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, OutT>(this Node self, T1 arg1, out UnitList<OutT> values)
         where R : ICallRule<T1, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCalls(self, arg1, out values);
             }
@@ -165,7 +165,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, T2, OutT>(this Node self, T1 arg1, T2 arg2, out UnitList<OutT> values)
         where R : ICallRule<T1, T2, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCalls(self, arg1, arg2, out values);
             }
@@ -178,7 +178,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, T2, T3, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
         where R : ICallRule<T1, T2, T3, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCalls(self, arg1, arg2, arg3, out values);
             }
@@ -191,7 +191,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, T2, T3, T4, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
         where R : ICallRule<T1, T2, T3, T4, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCalls(self, arg1, arg2, arg3, arg4, out values);
             }
@@ -204,7 +204,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, T2, T3, T4, T5, OutT>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
         where R : ICallRule<T1, T2, T3, T4, T5, OutT>
         {
-            if (self.Root.SystemManager.TryGetGroup<R>(out RuleGroup group))
+            if (self.Root.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
             {
                 return group.TryCalls(self, arg1, arg2, arg3, arg4, arg5, out values);
             }

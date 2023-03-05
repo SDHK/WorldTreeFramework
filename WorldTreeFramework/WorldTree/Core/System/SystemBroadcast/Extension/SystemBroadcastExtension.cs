@@ -23,7 +23,7 @@ namespace WorldTree
         /// </summary>
         public static SystemBroadcast Load(this SystemBroadcast broadcast, Type systemType)
         {
-            if (broadcast.Root.SystemManager.TryGetGroup(systemType, out broadcast.systems))
+            if (broadcast.Root.RuleManager.TryGetRuleGroup(systemType, out broadcast.systems))
             {
                 broadcast.Clear();
                 foreach (var item in broadcast.systems)

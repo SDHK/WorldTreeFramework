@@ -45,7 +45,7 @@ namespace WorldTree
                 if (group.TryGetBroadcast(System, out broadcast)) { return true; }
 
                 //没有广播 则判断这个系统类型是否有动态类型监听系统组
-                else if (Root.SystemManager.TryGetTargetSystemGroup(System, typeof(Node), out var systemGroup))
+                else if (Root.RuleManager.TryGetTargetRuleGroup(System, typeof(Node), out var systemGroup))
                 {
                     //新建广播
                     broadcast = group.GetBroadcast(System);
@@ -54,7 +54,7 @@ namespace WorldTree
                     return true;
                 }
             }
-            else if (Root.SystemManager.TryGetTargetSystemGroup(System, typeof(Node), out var systemGroup))
+            else if (Root.RuleManager.TryGetTargetRuleGroup(System, typeof(Node), out var systemGroup))
             {
                 //新建组和广播
                 broadcast = GetGroup(Target).GetBroadcast(System);
@@ -93,7 +93,7 @@ namespace WorldTree
                             else if (listener.Value.listenerState == ListenerState.Rule)
                             {
                                 //判断的实体类型是否拥有目标系统
-                                if (Root.SystemManager.TryGetSystems(Target, listener.Value.listenerTarget, out _))
+                                if (Root.RuleManager.TryGetRuleList(Target, listener.Value.listenerTarget, out _))
                                 {
                                     broadcast.Enqueue(listener.Value);
                                 }

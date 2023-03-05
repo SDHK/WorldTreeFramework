@@ -27,7 +27,7 @@ namespace WorldTree
     {
         public override void OnEvent(GUIGeneralWindow self)
         {
-            self.group = self.GetSystemGroup<IGUIDrawSystem>();
+            self.group = self.GetRuleGroup<IGUIDrawSystem>();
             self.AddComponent<GUIWindow>();
         }
     }

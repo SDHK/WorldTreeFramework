@@ -11,7 +11,7 @@
 
  * 描述:  
 
-    游戏物体对象池: 继承 GenericPool<T>
+    游戏物体对象池: 继承 GenericPool<LR>
 
     作用于 GameObject 类型
 

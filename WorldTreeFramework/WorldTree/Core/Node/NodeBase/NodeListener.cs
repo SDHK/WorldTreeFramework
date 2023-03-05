@@ -53,7 +53,7 @@ namespace WorldTree
             if (listenerTarget != targetType)
             {
                 //判断是否为监听器
-                if (Root.SystemManager.DynamicListenerTypes.Contains(Type))
+                if (Root.RuleManager.DynamicListenerTypeHash.Contains(Type))
                 {
                     DynamicListenerRemove();
                     listenerTarget = targetType;
@@ -131,7 +131,7 @@ namespace WorldTree
         private void DynamicListenerAddAll()
         {
             //获取 Node 动态目标 系统组集合
-            if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Node), out var systemGroups))
+            if (Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(Node), out var systemGroups))
             {
                 //遍历现有广播
                 foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.BroadcastGroups)
@@ -154,7 +154,7 @@ namespace WorldTree
         private void DynamicListenerAddSystem(Type type)
         {
             //获取系统组
-            if (Root.SystemManager.TryGetGroup(type, out var targetSystemGroup))
+            if (Root.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
             {
                 //遍历系统组
                 foreach (var targetSystems in targetSystemGroup)
@@ -172,7 +172,7 @@ namespace WorldTree
             if (Root.DynamicListenerBroadcastManager.TryGetGroup(type, out var broadcastGroup))
             {
                 //获取 Node 动态目标 系统组集合
-                if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Node), out var systemGroups))
+                if (Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(Node), out var systemGroups))
                 {
                     //遍历获取动态系统组，并添加自己
                     foreach (var systemGroup in systemGroups)
@@ -220,7 +220,7 @@ namespace WorldTree
         private void DynamicListenerRemoveAll()
         {
             //获取 Node 动态目标 系统组集合
-            if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Node), out var systemGroups))
+            if (Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(Node), out var systemGroups))
             {
                 //遍历现有全部池
                 foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.BroadcastGroups)
@@ -242,7 +242,7 @@ namespace WorldTree
         private void DynamicListenerRemoveSystem(Type type)
         {
             //获取系统组
-            if (Root.SystemManager.TryGetGroup(type, out var targetSystemGroup))
+            if (Root.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
             {
                 //遍历系统组
                 foreach (var targetSystems in targetSystemGroup)
@@ -260,7 +260,7 @@ namespace WorldTree
             if (Root.DynamicListenerBroadcastManager.TryGetGroup(type, out var broadcastGroup))
             {
                 //获取 Node 动态目标 系统组集合
-                if (Root.SystemManager.TargetSystems.TryGetValue(typeof(Node), out var systemGroups))
+                if (Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(Node), out var systemGroups))
                 {
                     //遍历获取动态系统组，并移除自己
                     foreach (var systemGroup in systemGroups)

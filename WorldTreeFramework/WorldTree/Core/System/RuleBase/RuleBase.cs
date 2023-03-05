@@ -3,9 +3,9 @@
 * 创 建 者：  闪电黑客
 * 创建时间：  2022/5/6 21:31
 * 
-* 描    述: 规则基类
+* 描    述: 法则基类
 * 
-* 是全部规则的基类
+* 是全部法则的基类
 
 */
 
@@ -24,9 +24,9 @@ namespace WorldTree
     public interface IRule
     {
         /// <summary>
-        /// 实体类型标记
+        /// 节点类型标记
         /// </summary>
-        Type EntityType { get; }
+        Type NodeType { get; }
         /// <summary>
         /// 法则类型标记
         /// </summary>
@@ -40,11 +40,11 @@ namespace WorldTree
     /// <para>法则的最底层基类</para>
     /// <para>主要作用是通过泛型给标记赋值</para>         
     /// </remarks>
-    public abstract class RuleBase<E, R> : IRule
-        where E : Node
+    public abstract class RuleBase<N, R> : IRule
+        where N : Node
         where R : IRule
     {
-        public virtual Type EntityType => typeof(E);
+        public virtual Type NodeType => typeof(N);
         public virtual Type RuleType => typeof(R);
     }
 }

@@ -21,6 +21,7 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
+    //对Node底层再抽一层接口
 
     /// <summary>
     /// 世界树根
@@ -36,7 +37,7 @@ namespace WorldTree
 
 
         public IdManager IdManager;
-        public RuleManager SystemManager;
+        public RuleManager RuleManager;
         public UnitPoolManager UnitPoolManager;
         public EntityPoolManager EntityPoolManager;
         public StaticListenerBroadcastManager StaticListenerBroadcastManager;
@@ -50,7 +51,7 @@ namespace WorldTree
 
             //框架运转的核心组件
             IdManager = new IdManager();
-            SystemManager = new RuleManager();
+            RuleManager = new RuleManager();
             UnitPoolManager = new UnitPoolManager();
             EntityPoolManager = new EntityPoolManager();
             StaticListenerBroadcastManager = new StaticListenerBroadcastManager();
@@ -59,7 +60,7 @@ namespace WorldTree
             //赋予根节点
             Root = this;
             IdManager.Root = this;
-            SystemManager.Root = this;
+            RuleManager.Root = this;
             UnitPoolManager.Root = this;
             EntityPoolManager.Root = this;
             StaticListenerBroadcastManager.Root = this;
@@ -68,24 +69,24 @@ namespace WorldTree
             //赋予id
             Root.id = IdManager.GetId();
             IdManager.id = IdManager.GetId();
-            SystemManager.id = IdManager.GetId();
+            RuleManager.id = IdManager.GetId();
             UnitPoolManager.id = IdManager.GetId();
             EntityPoolManager.id = IdManager.GetId();
             StaticListenerBroadcastManager.id = IdManager.GetId();
             DynamicListenerBroadcastManager.id = IdManager.GetId();
 
             //实体管理器系统事件获取
-            addSystems = Root.SystemManager.GetGroup<IAddRule>();
-            removeSystems = Root.SystemManager.GetGroup<IRemoveRule>();
-            enableSystems = Root.SystemManager.GetGroup<IEnableRule>();
-            disableSystems = Root.SystemManager.GetGroup<IDisableRule>();
+            addSystems = Root.RuleManager.GetRuleGroup<IAddRule>();
+            removeSystems = Root.RuleManager.GetRuleGroup<IRemoveRule>();
+            enableSystems = Root.RuleManager.GetRuleGroup<IEnableRule>();
+            disableSystems = Root.RuleManager.GetRuleGroup<IDisableRule>();
 
             //激活自己
             SetActive(true);
 
             //核心组件添加
             AddComponent(IdManager);
-            AddComponent(SystemManager);
+            AddComponent(RuleManager);
             AddComponent(UnitPoolManager);
             AddComponent(EntityPoolManager);
             AddComponent(StaticListenerBroadcastManager);

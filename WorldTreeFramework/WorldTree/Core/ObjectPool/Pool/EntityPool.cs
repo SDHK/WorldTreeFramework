@@ -23,10 +23,10 @@ namespace WorldTree
         public override void OnEvent(EntityPool self)
         {
             //生命周期系统
-            self.newSystem = self.GetSystems<INewSystem>(self.ObjectType);
-            self.getSystem = self.GetSystems<IGetSystem>(self.ObjectType);
-            self.recycleSystem = self.GetSystems<IRecycleSystem>(self.ObjectType);
-            self.destroySystem = self.GetSystems<IDestroySystem>(self.ObjectType);
+            self.newSystem = self.GetRuleList<INewSystem>(self.ObjectType);
+            self.getSystem = self.GetRuleList<IGetSystem>(self.ObjectType);
+            self.recycleSystem = self.GetRuleList<IRecycleSystem>(self.ObjectType);
+            self.destroySystem = self.GetRuleList<IDestroySystem>(self.ObjectType);
         }
     }
 

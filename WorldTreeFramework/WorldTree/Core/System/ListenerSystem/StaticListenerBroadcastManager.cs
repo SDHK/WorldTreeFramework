@@ -69,7 +69,7 @@ namespace WorldTree
         public void TryAddListener(Node listener)
         {
             //判断是否为监听器
-            if (Root.SystemManager.ListenerSystems.TryGetValue(listener.Type, out var systemGroups))
+            if (Root.RuleManager.ListenerRuleDictionary.TryGetValue(listener.Type, out var systemGroups))
             {
                 foreach (var systemGroup in systemGroups)//遍历系统组集合获取系统类型
                 {
@@ -90,7 +90,7 @@ namespace WorldTree
         public void RemoveListener(Node listener)
         {
             //判断是否为监听器
-            if (Root.SystemManager.ListenerSystems.TryGetValue(listener.Type, out var systemGroups))
+            if (Root.RuleManager.ListenerRuleDictionary.TryGetValue(listener.Type, out var systemGroups))
             {
                 foreach (var systemGroup in systemGroups)//遍历系统组集合获取系统类型
                 {
@@ -121,7 +121,7 @@ namespace WorldTree
                 if (group.TryGetBroadcast(System, out broadcast)) { return true; }
 
                 //没有广播 则判断这个目标类型是是否有监听系统组
-                else if (Root.SystemManager.TryGetTargetSystemGroup(System, Target, out var systemGroup))
+                else if (Root.RuleManager.TryGetTargetRuleGroup(System, Target, out var systemGroup))
                 {
                     //新建广播
                     broadcast = group.GetBroadcast(System);
@@ -131,7 +131,7 @@ namespace WorldTree
                 }
             }
             //没有组则判断这个目标类型是否有监听系统组
-            else if (Root.SystemManager.TryGetTargetSystemGroup(System, Target, out var systemGroup))
+            else if (Root.RuleManager.TryGetTargetRuleGroup(System, Target, out var systemGroup))
             {
                 //新建组和广播
                 broadcast = GetGroup(Target).GetBroadcast(System);
