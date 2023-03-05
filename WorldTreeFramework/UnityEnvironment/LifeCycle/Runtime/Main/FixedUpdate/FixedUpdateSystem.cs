@@ -8,5 +8,5 @@
     /// <summary>
     /// FixedUpdate系统事件
     /// </summary>
-    public abstract class FixedUpdateSystem<T> : SendSystemBase<IFixedUpdateSystem, T, float> where T : Entity { }
+    public abstract class FixedUpdateSystem<T> : SendSystemBase<IFixedUpdateSystem, T, float> where T : Node { }
 }

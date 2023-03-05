@@ -7,7 +7,7 @@ namespace WorldTree
     /// <summary>
     /// 动态监听器广播管理器
     /// </summary>
-    public class DynamicListenerBroadcastManager : Entity
+    public class DynamicListenerBroadcastManager : Node
     {
         /// <summary>
         /// 目标，系统，广播
@@ -45,7 +45,7 @@ namespace WorldTree
                 if (group.TryGetBroadcast(System, out broadcast)) { return true; }
 
                 //没有广播 则判断这个系统类型是否有动态类型监听系统组
-                else if (Root.SystemManager.TryGetTargetSystemGroup(System, typeof(Entity), out var systemGroup))
+                else if (Root.SystemManager.TryGetTargetSystemGroup(System, typeof(Node), out var systemGroup))
                 {
                     //新建广播
                     broadcast = group.GetBroadcast(System);
@@ -54,7 +54,7 @@ namespace WorldTree
                     return true;
                 }
             }
-            else if (Root.SystemManager.TryGetTargetSystemGroup(System, typeof(Entity), out var systemGroup))
+            else if (Root.SystemManager.TryGetTargetSystemGroup(System, typeof(Node), out var systemGroup))
             {
                 //新建组和广播
                 broadcast = GetGroup(Target).GetBroadcast(System);
@@ -82,15 +82,15 @@ namespace WorldTree
                         //判断目标是否被该监听器监听
                         if (listener.Value.listenerTarget != null)
                         {
-                            if (listener.Value.listenerState == ListenerState.Entity)
+                            if (listener.Value.listenerState == ListenerState.Node)
                             {
                                 //判断是否全局监听 或 是指定的目标类型
-                                if (listener.Value.listenerTarget == typeof(Entity) || listener.Value.listenerTarget == Target)
+                                if (listener.Value.listenerTarget == typeof(Node) || listener.Value.listenerTarget == Target)
                                 {
                                     broadcast.Enqueue(listener.Value);
                                 }
                             }
-                            else if (listener.Value.listenerState == ListenerState.System)
+                            else if (listener.Value.listenerState == ListenerState.Rule)
                             {
                                 //判断的实体类型是否拥有目标系统
                                 if (Root.SystemManager.TryGetSystems(Target, listener.Value.listenerTarget, out _))

@@ -5,7 +5,7 @@
 
 * 描述： 实体对象池
 *
-* 管理类型： Entity
+* 管理类型： Node
 *   
 *   调用 ECS 生命周期系统， 生成， 获取， 回收， 销毁，
 *   
@@ -34,24 +34,24 @@ namespace WorldTree
     /// <summary>
     /// 实体对象池
     /// </summary>
-    public class EntityPool : GenericPool<Entity>
+    public class EntityPool : GenericPool<Node>
     {
-        public List<IEntitySystem> newSystem;
-        public List<IEntitySystem> getSystem;
-        public List<IEntitySystem> recycleSystem;
-        public List<IEntitySystem> destroySystem;
+        public List<IRule> newSystem;
+        public List<IRule> getSystem;
+        public List<IRule> recycleSystem;
+        public List<IRule> destroySystem;
 
         /// <summary>
         /// 引用池
         /// </summary>
-        public Dictionary<long, Entity> Entitys;
+        public Dictionary<long, Node> Entitys;
 
         public EntityPool(Type type) : base()
         {
 
             ObjectType = type;
 
-            Entitys = new Dictionary<long, Entity>();
+            Entitys = new Dictionary<long, Node>();
 
             NewObject = ObjectNew;
             DestroyObject = ObjectDestroy;
@@ -77,16 +77,16 @@ namespace WorldTree
             return $"[EntityPool<{ObjectType}>] : {Count} ";
         }
 
-        private Entity ObjectNew(IPool pool)
+        private Node ObjectNew(IPool pool)
         {
-            Entity obj = Activator.CreateInstance(ObjectType, true) as Entity;
+            Node obj = Activator.CreateInstance(ObjectType, true) as Node;
             obj.thisPool = this;
             obj.id = Root.IdManager.GetId();
             obj.Root = Root;
             return obj;
         }
-        public override void Recycle(object obj) => Recycle(obj as Entity);
-        public void Recycle(Entity obj)
+        public override void Recycle(object obj) => Recycle(obj as Node);
+        public void Recycle(Node obj)
         {
             lock (objetPool)
             {
@@ -108,31 +108,31 @@ namespace WorldTree
                 }
             }
         }
-        private void ObjectDestroy(Entity obj)
+        private void ObjectDestroy(Node obj)
         {
             Root.IdManager.Recycle(obj.id);
         }
 
-        private void ObjectOnNew(Entity obj)
+        private void ObjectOnNew(Node obj)
         {
             newSystem?.Send(obj);
         }
 
-        private void ObjectOnGet(Entity obj)
+        private void ObjectOnGet(Node obj)
         {
             obj.IsRecycle = false;
             Entitys.TryAdd(obj.id, obj);
             getSystem?.Send(obj);
         }
 
-        private void ObjectOnRecycle(Entity obj)
+        private void ObjectOnRecycle(Node obj)
         {
             obj.IsRecycle = true;
             recycleSystem?.Send(obj);
             Entitys.Remove(obj.id);
         }
 
-        private void ObjectOnDestroy(Entity obj)
+        private void ObjectOnDestroy(Node obj)
         {
             obj.IsDisposed = true;
             destroySystem?.Send(obj);

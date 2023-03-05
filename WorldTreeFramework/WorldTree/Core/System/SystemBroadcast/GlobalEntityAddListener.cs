@@ -17,7 +17,7 @@ namespace WorldTree
     /// <summary>
     /// 全局实体添加事件动态监听器
     /// </summary>
-    public class GlobalEntityAddListener : Entity
+    public class GlobalEntityAddListener : Node
     {
         public SystemBroadcast systemBroadcast;
     }
@@ -37,7 +37,7 @@ namespace WorldTree
     }
     class GlobalEntityAddListenerListenerAddSystem : ListenerAddSystem<GlobalEntityAddListener>
     {
-        public override void OnEvent(GlobalEntityAddListener self, Entity entity)
+        public override void OnEvent(GlobalEntityAddListener self, Node entity)
         {
             self.systemBroadcast?.Enqueue(entity);
         }

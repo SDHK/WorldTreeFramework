@@ -21,7 +21,7 @@ namespace EditorTool
     /// </summary>
     public class MonoEditorGUIWindow : EditorWindow
     {
-        public Entity entity;
+        public Node entity;
 
         public bool isShow = false;
 

@@ -9,5 +9,5 @@
     /// <summary>
     /// OnGUI系统事件
     /// </summary>
-    public abstract class GuiUpdateSystem<T> : SendSystemBase<IGuiUpdateSystem, T, float> where T : Entity { }
+    public abstract class GuiUpdateSystem<T> : SendSystemBase<IGuiUpdateSystem, T, float> where T : Node { }
 }

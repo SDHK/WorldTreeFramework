@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 系统广播组
     /// </summary>
-    public class SystemBroadcastGroup : Entity
+    public class SystemBroadcastGroup : Node
     {
         public UnitDictionary<Type, SystemBroadcast> broadcasts;
 

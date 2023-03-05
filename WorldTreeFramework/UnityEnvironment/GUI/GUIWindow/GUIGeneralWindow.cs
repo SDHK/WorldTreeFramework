@@ -12,9 +12,9 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    public class GUIGeneralWindow : Entity
+    public class GUIGeneralWindow : Node
     {
-        public SystemGroup group;
+        public RuleGroup group;
 
         public GUIBeginVertical VerticalBox;
 

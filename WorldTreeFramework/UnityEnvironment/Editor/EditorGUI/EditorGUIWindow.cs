@@ -17,7 +17,7 @@ namespace EditorTool
     /// <summary>
     /// 编辑器窗体组件
     /// </summary>
-    public class EditorGUIWindow : Entity
+    public class EditorGUIWindow : Node
     {
         public MonoEditorGUIWindow window;
     }

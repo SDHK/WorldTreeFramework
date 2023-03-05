@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 全局实体移除事件动态监听器
     /// </summary>
-    public class GlobalEntityRemoveListener : Entity
+    public class GlobalEntityRemoveListener : Node
     {
         public SystemBroadcast systemBroadcast;
     }
@@ -36,7 +36,7 @@ namespace WorldTree
     }
     class GlobalEntityRemoveListenerListenerRemoveSystem : ListenerRemoveSystem<GlobalEntityRemoveListener>
     {
-        public override void OnEvent(GlobalEntityRemoveListener self, Entity entity)
+        public override void OnEvent(GlobalEntityRemoveListener self, Node entity)
         {
             self.systemBroadcast?.Remove(entity);
         }

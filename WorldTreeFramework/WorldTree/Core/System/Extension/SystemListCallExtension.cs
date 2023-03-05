@@ -17,7 +17,7 @@ namespace WorldTree
 
         #region Call
 
-        public static OutT Call<OutT>(this List<IEntitySystem> systems, Entity self)
+        public static OutT Call<OutT>(this List<IRule> systems, Node self)
         {
             OutT outT = default(OutT);
             foreach (ICallSystem<OutT> system in systems)
@@ -27,7 +27,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static OutT Call<T1, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1)
+        public static OutT Call<T1, OutT>(this List<IRule> systems, Node self, T1 arg1)
         {
             OutT outT = default(OutT);
             foreach (ICallSystem<T1, OutT> system in systems)
@@ -37,7 +37,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static OutT Call<T1, T2, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2)
+        public static OutT Call<T1, T2, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2)
         {
             OutT outT = default(OutT);
             foreach (ICallSystem<T1, T2, OutT> system in systems)
@@ -47,7 +47,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static OutT Call<T1, T2, T3, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3)
+        public static OutT Call<T1, T2, T3, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3)
         {
             OutT outT = default(OutT);
             foreach (ICallSystem<T1, T2, T3, OutT> system in systems)
@@ -57,7 +57,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static OutT Call<T1, T2, T3, T4, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static OutT Call<T1, T2, T3, T4, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             OutT outT = default(OutT);
             foreach (ICallSystem<T1, T2, T3, T4, OutT> system in systems)
@@ -67,7 +67,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static OutT Call<T1, T2, T3, T4, T5, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static OutT Call<T1, T2, T3, T4, T5, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             OutT outT = default(OutT);
             foreach (ICallSystem<T1, T2, T3, T4, T5, OutT> system in systems)
@@ -82,7 +82,7 @@ namespace WorldTree
 
         #region Calls
 
-        public static UnitList<OutT> Calls<OutT>(this List<IEntitySystem> systems, Entity self)
+        public static UnitList<OutT> Calls<OutT>(this List<IRule> systems, Node self)
         {
             UnitList<OutT> outT = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystem<OutT> system in systems)
@@ -93,7 +93,7 @@ namespace WorldTree
         }
 
 
-        public static UnitList<OutT> Calls<T1, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1)
+        public static UnitList<OutT> Calls<T1, OutT>(this List<IRule> systems, Node self, T1 arg1)
         {
             UnitList<OutT> outT = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystem<T1, OutT> system in systems)
@@ -102,7 +102,7 @@ namespace WorldTree
             }
             return outT;
         }
-        public static UnitList<OutT> Calls<T1, T2, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2)
+        public static UnitList<OutT> Calls<T1, T2, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2)
         {
             UnitList<OutT> outT = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystem<T1, T2, OutT> system in systems)
@@ -112,7 +112,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static UnitList<OutT> Calls<T1, T2, T3, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3)
+        public static UnitList<OutT> Calls<T1, T2, T3, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3)
         {
             UnitList<OutT> outT = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystem<T1, T2, T3, OutT> system in systems)
@@ -122,7 +122,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static UnitList<OutT> Calls<T1, T2, T3, T4, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static UnitList<OutT> Calls<T1, T2, T3, T4, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             UnitList<OutT> outT = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystem<T1, T2, T3, T4, OutT> system in systems)
@@ -132,7 +132,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static UnitList<OutT> Calls<T1, T2, T3, T4, T5, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static UnitList<OutT> Calls<T1, T2, T3, T4, T5, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             UnitList<OutT> outT = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystem<T1, T2, T3, T4, T5, OutT> system in systems)

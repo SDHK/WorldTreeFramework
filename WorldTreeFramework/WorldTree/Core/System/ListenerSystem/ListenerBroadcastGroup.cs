@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 监听器广播组
     /// </summary>
-    public class ListenerBroadcastGroup : Entity
+    public class ListenerBroadcastGroup : Node
     {
         /// <summary>
         /// 目标类型
@@ -42,7 +42,7 @@ namespace WorldTree
                 broadcast.entityQueue = new DynamicEntityQueue();
                 broadcast.entityQueue.idQueue = new UnitQueue<long>();
                 broadcast.entityQueue.removeId = new UnitDictionary<long, int>();
-                broadcast.entityQueue.entitys = new UnitDictionary<long, Entity>();
+                broadcast.entityQueue.entitys = new UnitDictionary<long, Node>();
 
                 broadcast.id = Root.IdManager.GetId();
                 broadcast.Root = Root;

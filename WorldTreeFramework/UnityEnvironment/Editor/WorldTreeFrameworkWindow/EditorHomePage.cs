@@ -13,9 +13,9 @@ using WorldTree;
 
 namespace EditorTool
 {
-    public class EditorHomePage : Entity
+    public class EditorHomePage : Node
     {
-        public Entity page;
+        public Node page;
     }
 
 

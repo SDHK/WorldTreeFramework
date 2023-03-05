@@ -17,5 +17,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口更新系统
     /// </summary>
-    public abstract class WIndowUpdateSystem<E> : SendSystemBase<IWindowUpdateSystem, E, float> where E : Entity { }
+    public abstract class WIndowUpdateSystem<E> : SendSystemBase<IWindowUpdateSystem, E, float> where E : Node { }
 }

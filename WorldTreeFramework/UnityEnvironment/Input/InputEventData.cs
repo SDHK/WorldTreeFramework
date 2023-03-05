@@ -12,7 +12,7 @@ namespace WorldTree
     /// <summary>
     /// 输入事件数据
     /// </summary>
-    public class InputEventData : Entity
+    public class InputEventData : Node
     {
         public bool isTouch;
 

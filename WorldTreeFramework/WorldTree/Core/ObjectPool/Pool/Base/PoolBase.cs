@@ -92,7 +92,7 @@ namespace WorldTree
     /// <summary>
     /// 对象池抽象基类
     /// </summary>
-    public abstract class PoolBase : Entity, IPool
+    public abstract class PoolBase : Node, IPool
     {
 
         public Type ObjectType { get; set; }

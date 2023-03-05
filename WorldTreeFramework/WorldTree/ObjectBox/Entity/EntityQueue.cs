@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 实体泛型队列
     /// </summary>
-    public class EntityQueue<T> : Entity
+    public class EntityQueue<T> : Node
     {
         public Queue<T> Value;
         public EntityQueue() : base()

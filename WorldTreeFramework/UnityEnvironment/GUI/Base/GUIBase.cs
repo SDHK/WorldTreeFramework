@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    public abstract class GUIBase : Entity
+    public abstract class GUIBase : Node
     {
         /// <summary>
         /// 文本内容

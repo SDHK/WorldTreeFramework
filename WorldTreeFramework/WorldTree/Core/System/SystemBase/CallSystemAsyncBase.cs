@@ -13,104 +13,104 @@ namespace WorldTree
     /// <summary>
     /// 异步调用系统接口
     /// </summary>
-    public interface ICallSystemAsync<OutT> : IEntitySystem
+    public interface ICallSystemAsync<OutT> : IRule
     {
-        AsyncTask<OutT> Invoke(Entity self);
+        TreeTask<OutT> Invoke(Node self);
     }
     /// <summary>
     /// 异步调用系统接口
     /// </summary>
-    public interface ICallSystemAsync<T1, OutT> : IEntitySystem
+    public interface ICallSystemAsync<T1, OutT> : IRule
     {
-        AsyncTask<OutT> Invoke(Entity self, T1 arg1);
+        TreeTask<OutT> Invoke(Node self, T1 arg1);
     }
     /// <summary>
     /// 异步调用系统接口
     /// </summary>
-    public interface ICallSystemAsync<T1, T2, OutT> : IEntitySystem
+    public interface ICallSystemAsync<T1, T2, OutT> : IRule
     {
-        AsyncTask<OutT> Invoke(Entity self, T1 arg1, T2 arg2);
+        TreeTask<OutT> Invoke(Node self, T1 arg1, T2 arg2);
     }
     /// <summary>
     /// 异步调用系统接口
     /// </summary>
-    public interface ICallSystemAsync<T1, T2, T3, OutT> : IEntitySystem
+    public interface ICallSystemAsync<T1, T2, T3, OutT> : IRule
     {
-        AsyncTask<OutT> Invoke(Entity self, T1 arg1, T2 arg2, T3 arg3);
+        TreeTask<OutT> Invoke(Node self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
     /// 异步调用系统接口
     /// </summary>
-    public interface ICallSystemAsync<T1, T2, T3, T4, OutT> : IEntitySystem
+    public interface ICallSystemAsync<T1, T2, T3, T4, OutT> : IRule
     {
-        AsyncTask<OutT> Invoke(Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+        TreeTask<OutT> Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
     /// 异步调用系统接口
     /// </summary>
-    public interface ICallSystemAsync<T1, T2, T3, T4, T5, OutT> : IEntitySystem
+    public interface ICallSystemAsync<T1, T2, T3, T4, T5, OutT> : IRule
     {
-        AsyncTask<OutT> Invoke(Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+        TreeTask<OutT> Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 
     /// <summary>
     /// 异步调用系统抽象基类
     /// </summary>
-    public abstract class CallSystemAsyncBase<S, E, OutT> : SystemBase<E, S>, ICallSystemAsync<OutT>
-    where E : Entity
+    public abstract class CallSystemAsyncBase<S, E, OutT> : RuleBase<E, S>, ICallSystemAsync<OutT>
+    where E : Node
     where S : ICallSystemAsync<OutT>
     {
-        public virtual AsyncTask<OutT> Invoke(Entity self) => OnEvent(self as E);
-        public abstract AsyncTask<OutT> OnEvent(E self);
+        public virtual TreeTask<OutT> Invoke(Node self) => OnEvent(self as E);
+        public abstract TreeTask<OutT> OnEvent(E self);
     }
     /// <summary>
     /// 异步调用系统抽象基类
     /// </summary>
-    public abstract class CallSystemAsyncBase<S, E, T1, OutT> : SystemBase<E, S>, ICallSystemAsync<T1, OutT>
-    where E : Entity
+    public abstract class CallSystemAsyncBase<S, E, T1, OutT> : RuleBase<E, S>, ICallSystemAsync<T1, OutT>
+    where E : Node
     where S : ICallSystemAsync<T1, OutT>
     {
-        public virtual AsyncTask<OutT> Invoke(Entity self, T1 arg1) => OnEvent(self as E, arg1);
-        public abstract AsyncTask<OutT> OnEvent(E self, T1 arg1);
+        public virtual TreeTask<OutT> Invoke(Node self, T1 arg1) => OnEvent(self as E, arg1);
+        public abstract TreeTask<OutT> OnEvent(E self, T1 arg1);
     }
     /// <summary>
     /// 异步调用系统抽象基类
     /// </summary>
-    public abstract class CallSystemAsyncBase<S, E, T1, T2, OutT> : SystemBase<E, S>, ICallSystemAsync<T1, T2, OutT>
-    where E : Entity
+    public abstract class CallSystemAsyncBase<S, E, T1, T2, OutT> : RuleBase<E, S>, ICallSystemAsync<T1, T2, OutT>
+    where E : Node
     where S : ICallSystemAsync<T1, T2, OutT>
     {
-        public virtual AsyncTask<OutT> Invoke(Entity self, T1 arg1, T2 arg2) => OnEvent(self as E, arg1, arg2);
-        public abstract AsyncTask<OutT> OnEvent(E self, T1 arg1, T2 arg2);
+        public virtual TreeTask<OutT> Invoke(Node self, T1 arg1, T2 arg2) => OnEvent(self as E, arg1, arg2);
+        public abstract TreeTask<OutT> OnEvent(E self, T1 arg1, T2 arg2);
     }
     /// <summary>
     /// 异步调用系统抽象基类
     /// </summary>
-    public abstract class CallSystemAsyncBase<S, E, T1, T2, T3, OutT> : SystemBase<E, S>, ICallSystemAsync<T1, T2, T3, OutT>
-    where E : Entity
+    public abstract class CallSystemAsyncBase<S, E, T1, T2, T3, OutT> : RuleBase<E, S>, ICallSystemAsync<T1, T2, T3, OutT>
+    where E : Node
     where S : ICallSystemAsync<T1, T2, T3, OutT>
     {
-        public virtual AsyncTask<OutT> Invoke(Entity self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as E, arg1, arg2, arg3);
-        public abstract AsyncTask<OutT> OnEvent(E self, T1 arg1, T2 arg2, T3 arg3);
+        public virtual TreeTask<OutT> Invoke(Node self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as E, arg1, arg2, arg3);
+        public abstract TreeTask<OutT> OnEvent(E self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
     /// 异步调用系统抽象基类
     /// </summary>
-    public abstract class CallSystemAsyncBase<S, E, T1, T2, T3, T4, OutT> : SystemBase<E, S>, ICallSystemAsync<T1, T2, T3, T4, OutT>
-    where E : Entity
+    public abstract class CallSystemAsyncBase<S, E, T1, T2, T3, T4, OutT> : RuleBase<E, S>, ICallSystemAsync<T1, T2, T3, T4, OutT>
+    where E : Node
     where S : ICallSystemAsync<T1, T2, T3, T4, OutT>
     {
-        public virtual AsyncTask<OutT> Invoke(Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as E, arg1, arg2, arg3, arg4);
-        public abstract AsyncTask<OutT> OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+        public virtual TreeTask<OutT> Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as E, arg1, arg2, arg3, arg4);
+        public abstract TreeTask<OutT> OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
     /// 异步调用系统抽象基类
     /// </summary>
-    public abstract class CallSystemAsyncBase<S, E, T1, T2, T3, T4, T5, OutT> : SystemBase<E, S>, ICallSystemAsync<T1, T2, T3, T4, T5, OutT>
-    where E : Entity
+    public abstract class CallSystemAsyncBase<S, E, T1, T2, T3, T4, T5, OutT> : RuleBase<E, S>, ICallSystemAsync<T1, T2, T3, T4, T5, OutT>
+    where E : Node
     where S : ICallSystemAsync<T1, T2, T3, T4, T5, OutT>
     {
-        public virtual AsyncTask<OutT> Invoke(Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as E, arg1, arg2, arg3, arg4, arg5);
-        public abstract AsyncTask<OutT> OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+        public virtual TreeTask<OutT> Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as E, arg1, arg2, arg3, arg4, arg5);
+        public abstract TreeTask<OutT> OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 }

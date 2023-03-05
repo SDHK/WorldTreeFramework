@@ -21,7 +21,7 @@
 *   泛型填写目标实体必须为Entity，才生效
 * 
 * 3.动态指定。 
-*   实体必须指定为Entity，系统必须指定为 IEntitySystem
+*   实体必须指定为Entity，系统必须指定为 IRule
 *   可在运行时随意切换指定目标
 *   
 *   
@@ -36,7 +36,7 @@ namespace WorldTree
     /// <summary>
     /// 实体监听系统接口
     /// </summary>
-    public interface IListenerSystem : ISendSystem<Entity>
+    public interface IListenerSystem : ISendSystem<Node>
     {
         /// <summary>
         /// 监听：目标实体类型
@@ -52,16 +52,16 @@ namespace WorldTree
     /// <summary>
     /// 实体监听系统抽象基类
     /// </summary>
-    public abstract class ListenerSystemBase<LE, LS, TE, TS> : SystemBase<LE, LS>, IListenerSystem
-    where LE : Entity
-    where TE : Entity
+    public abstract class ListenerSystemBase<LE, LS, TE, TS> : RuleBase<LE, LS>, IListenerSystem
+    where LE : Node
+    where TE : Node
     where LS : IListenerSystem
-    where TS : IEntitySystem
+    where TS : IRule
     {
         public virtual Type TargetEntityType => typeof(TE);
         public virtual Type TargetSystemType => typeof(TS);
 
-        public virtual void Invoke(Entity self, Entity entity) => OnEvent(self as LE, entity as TE);
+        public virtual void Invoke(Node self, Node entity) => OnEvent(self as LE, entity as TE);
         public abstract void OnEvent(LE self, TE entity);
     }
 }

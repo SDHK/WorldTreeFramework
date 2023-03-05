@@ -16,5 +16,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口关闭系统
     /// </summary>
-    public abstract class WindowCloseSystem<E> : SendSystemBase<IWindowCloseSystem, E> where E : Entity { }
+    public abstract class WindowCloseSystem<E> : SendSystemBase<IWindowCloseSystem, E> where E : Node { }
 }

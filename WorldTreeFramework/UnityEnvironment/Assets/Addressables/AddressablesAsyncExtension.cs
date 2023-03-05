@@ -17,9 +17,9 @@ namespace WorldTree
         /// <summary>
         /// Addressables加载资源
         /// </summary>
-        public async static AsyncTask<T> AddressablesLoadAssetAsync<T, E>(this Entity self)
+        public async static TreeTask<T> AddressablesLoadAssetAsync<T, E>(this Node self)
             where T : class
-            where E : Entity
+            where E : Node
         {
             return await self.Root.AddComponent<AddressablesManager>().LoadAssetAsync<T,E>();
         }

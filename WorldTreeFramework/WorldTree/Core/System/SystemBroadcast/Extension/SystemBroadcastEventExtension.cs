@@ -9,7 +9,7 @@
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity);
                         if(!entity.IsRecycle) entityQueue.Enqueue(entity);
@@ -25,7 +25,7 @@
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1);
                         if (!entity.IsRecycle) entityQueue.Enqueue(entity);
@@ -40,7 +40,7 @@
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1, arg2);
 
@@ -56,7 +56,7 @@
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1, arg2, arg3);
                         if (!entity.IsRecycle) entityQueue.Enqueue(entity);
@@ -71,7 +71,7 @@
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1, arg2, arg3, arg4);
                         if (!entity.IsRecycle) entityQueue.Enqueue(entity);
@@ -86,7 +86,7 @@
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
                         if (!entity.IsRecycle) entityQueue.Enqueue(entity);

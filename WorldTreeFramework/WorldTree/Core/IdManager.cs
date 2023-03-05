@@ -13,7 +13,7 @@ namespace WorldTree
 
     public static class IdManagerExtension
     {
-        public static IdManager IdManager(this Entity self)
+        public static IdManager IdManager(this Node self)
         {
             return self.Root.IdManager;
         }
@@ -22,7 +22,7 @@ namespace WorldTree
     /// <summary>
     /// id管理器
     /// </summary>
-    public class IdManager : Entity
+    public class IdManager : Node
     {
         /// <summary>
         /// id池

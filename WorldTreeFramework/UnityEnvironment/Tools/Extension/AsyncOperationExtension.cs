@@ -21,9 +21,9 @@ namespace WorldTree
         /// <summary>
         /// 获取异步等待
         /// </summary>
-        public static AsyncTask<AsyncOperation> GetAwaiter(this Entity self, AsyncOperation asyncOperation)
+        public static TreeTask<AsyncOperation> GetAwaiter(this Node self, AsyncOperation asyncOperation)
         {
-            AsyncTask<AsyncOperation> asyncTask = self.AddChildren<AsyncTask<AsyncOperation>>();
+            TreeTask<AsyncOperation> asyncTask = self.AddChildren<TreeTask<AsyncOperation>>();
             asyncOperation.completed += asyncTask.SetResult;
             return asyncTask;
         }
@@ -31,9 +31,9 @@ namespace WorldTree
         /// <summary>
         /// 获取异步等待
         /// </summary>
-        public static AsyncTask<AsyncOperationHandle<T>> GetAwaiter<T>(this Entity self, AsyncOperationHandle<T> handle)
+        public static TreeTask<AsyncOperationHandle<T>> GetAwaiter<T>(this Node self, AsyncOperationHandle<T> handle)
         {
-            AsyncTask<AsyncOperationHandle<T>> asyncTask = self.AddChildren<AsyncTask<AsyncOperationHandle<T>>>();
+            TreeTask<AsyncOperationHandle<T>> asyncTask = self.AddChildren<TreeTask<AsyncOperationHandle<T>>>();
             handle.Completed += asyncTask.SetResult;
             return asyncTask;
         }

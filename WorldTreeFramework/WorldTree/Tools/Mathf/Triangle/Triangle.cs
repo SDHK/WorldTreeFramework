@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 全解三角形 :需要用静态扩展分成ECS模式
     /// </summary>
-    public class Triangle : Entity
+    public class Triangle : Node
     {
         private float angleA = 0;//角
         private float angleB = 0;

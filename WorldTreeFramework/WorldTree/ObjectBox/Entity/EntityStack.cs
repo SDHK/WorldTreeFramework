@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 实体泛型栈
     /// </summary>
-    public class EntityStack<T> : Entity
+    public class EntityStack<T> : Node
     {
         public Stack<T> Value;
         public EntityStack() : base()

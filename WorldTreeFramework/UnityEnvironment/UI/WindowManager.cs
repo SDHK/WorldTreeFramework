@@ -27,16 +27,16 @@ namespace WorldTree
     /// <summary>
     /// UI 栈窗口管理器
     /// </summary>
-    public class WindowManager : Entity
+    public class WindowManager : Node
     {
         /// <summary>
         /// 全部窗口
         /// </summary>
-        public UnitDictionary<Type, Entity> windows = new UnitDictionary<Type, Entity>();
+        public UnitDictionary<Type, Node> windows = new UnitDictionary<Type, Node>();
         /// <summary>
         /// 栈窗口
         /// </summary>
-        public Stack<Entity> windowStack = new Stack<Entity>();
+        public Stack<Node> windowStack = new Stack<Node>();
 
         /// <summary>
         /// 根节点
@@ -46,12 +46,12 @@ namespace WorldTree
         /// <summary>
         /// 打开窗口入栈
         /// </summary>
-        public async AsyncTask<T> Show<T>()
-            where T : Entity
+        public async TreeTask<T> Show<T>()
+            where T : Node
         {
-            if (windows.TryGetValue(typeof(T), out Entity entity))
+            if (windows.TryGetValue(typeof(T), out Node entity))
             {
-                if (windowStack.TryPeek(out Entity outEntity))
+                if (windowStack.TryPeek(out Node outEntity))
                 {
                     outEntity?.SendSystem<IWindowLostFocusSystem>();
                 }
@@ -71,7 +71,7 @@ namespace WorldTree
 
                 windows.Add(entity.Type, entity);
 
-                if (windowStack.TryPeek(out Entity topEntity))
+                if (windowStack.TryPeek(out Node topEntity))
                 {
                     topEntity?.SendSystem<IWindowLostFocusSystem>();
                 }
@@ -87,11 +87,11 @@ namespace WorldTree
         /// 关闭栈窗口
         /// </summary>
         public void Dispose<T>()
-           where T : Entity
+           where T : Node
         {
-            if (windows.TryGetValue(typeof(T), out Entity targetEntity))
+            if (windows.TryGetValue(typeof(T), out Node targetEntity))
             {
-                if (windowStack.TryPeek(out Entity topEntity))
+                if (windowStack.TryPeek(out Node topEntity))
                 {
                     topEntity?.SendSystem<IWindowLostFocusSystem>();
                 }
@@ -116,11 +116,11 @@ namespace WorldTree
         /// </summary>
         public void DisposeTop()
         {
-            if (windowStack.TryPop(out Entity outEntity))
+            if (windowStack.TryPop(out Node outEntity))
             {
                 windows.Remove(outEntity.Type);
                 outEntity?.SendSystem<IWindowLostFocusSystem>();
-                if (windowStack.TryPeek(out Entity topEntity))
+                if (windowStack.TryPeek(out Node topEntity))
                 {
                     topEntity?.SendSystem<IWindowFocusSystem>();
                 }
@@ -132,7 +132,7 @@ namespace WorldTree
         /// </summary>
         public void DisposeAll()
         {
-            if (windowStack.TryPeek(out Entity topEntity))
+            if (windowStack.TryPeek(out Node topEntity))
             {
                 topEntity?.SendSystem<IWindowFocusSystem>();
             }
@@ -147,7 +147,7 @@ namespace WorldTree
         /// 关闭动画栈窗口
         /// </summary>
         public void Close<T>()
-           where T : Entity
+           where T : Node
         {
 
         }
@@ -176,7 +176,7 @@ namespace WorldTree
         {
             if (self.windowStack.Count != 0)
             {
-                if (self.windowStack.TryPeek(out Entity entity))
+                if (self.windowStack.TryPeek(out Node entity))
                 {
                     entity?.SendSystem<IWindowFocusUpdateSystem, float>(deltaTime);
                 }
@@ -186,14 +186,14 @@ namespace WorldTree
 
     class WindowManagerEntityAddSystem : ListenerAddSystem<WindowManager>
     {
-        public override void OnEvent(WindowManager self, Entity entity)
+        public override void OnEvent(WindowManager self, Node entity)
         {
 
         }
     }
     class WindowManagerEntityRemoveSystem : ListenerRemoveSystem<WindowManager>
     {
-        public override void OnEvent(WindowManager self, Entity entity)
+        public override void OnEvent(WindowManager self, Node entity)
         {
 
         }

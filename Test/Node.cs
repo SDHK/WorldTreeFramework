@@ -7,11 +7,11 @@ using WorldTree.Internal;
 
 
 
-public class Node : Entity
+public class TreeNode : Node
 {
 
     public static bool bit = true;
-    public async AsyncTask Test()
+    public async TreeTask Test()
     {
 
         World.Log("1！");
@@ -35,7 +35,7 @@ public class Node : Entity
         //World.Log("7！");
     }
 
-    public async AsyncTask T2()
+    public async TreeTask T2()
     {
         World.Log("T2 1！");
 
@@ -51,7 +51,7 @@ public class Node : Entity
 
 
     }
-    public async AsyncTask T3()
+    public async TreeTask T3()
     {
         World.Log("T3 1！");
 
@@ -65,7 +65,7 @@ public class Node : Entity
 
     }
 
-    public async AsyncTask<int> T4()
+    public async TreeTask<int> T4()
     {
         World.Log("T4 1！");
 
@@ -77,84 +77,84 @@ public class Node : Entity
         return 10021;
     }
 }
-class NodeNewSystem : NewSystem<Node>
+class NodeNewSystem : NewSystem<TreeNode>
 {
-    public override void OnEvent(Node self)
+    public override void OnEvent(TreeNode self)
     {
         Debug.Log("NewSystem!");
     }
 }
-class NodeGetSystem : GetSystem<Node>
+class NodeGetSystem : GetSystem<TreeNode>
 {
-    public override void OnEvent(Node self)
+    public override void OnEvent(TreeNode self)
     {
         Debug.Log("GetSystem!");
     }
 }
-class NodeAddSystem : AddSystem<Node>
+class NodeAddSystem : AddSystem<TreeNode>
 {
-    public override void OnEvent(Node self)
+    public override void OnEvent(TreeNode self)
     {
         Debug.Log("AddSystem!");
     }
 }
-class NodeEnableSystem : EnableSystem<Node>
+class NodeEnableSystem : EnableSystem<TreeNode>
 {
-    public override void OnEvent(Node self)
+    public override void OnEvent(TreeNode self)
     {
         Debug.Log("EnableSystem!");
     }
 }
 
-class NodeDisableSystem : DisableSystem<Node>
+class NodeDisableSystem : DisableSystem<TreeNode>
 {
-    public override void OnEvent(Node self)
+    public override void OnEvent(TreeNode self)
     {
         Debug.Log("DisableSystem!");
     }
 }
 
-class NodeUpdateSystem : UpdateSystem<Node>
+class NodeUpdateSystem : UpdateSystem<TreeNode>
 {
-    public override void OnEvent(Node self, float deltaTime)
+    public override void OnEvent(TreeNode self, float deltaTime)
     {
         Debug.Log("UpdateSystem!");
     }
 }
 
 
-class NodeLateUpdateSystem : LateUpdateSystem<Node>
+class NodeLateUpdateSystem : LateUpdateSystem<TreeNode>
 {
-    public override void OnEvent(Node self, float deltaTime)
+    public override void OnEvent(TreeNode self, float deltaTime)
     {
         Debug.Log("LateUpdateSystem!");
     }
 }
-class NodeFixedUpdateSystem : FixedUpdateSystem<Node>
+class NodeFixedUpdateSystem : FixedUpdateSystem<TreeNode>
 {
-    public override void OnEvent(Node self, float deltaTime)
+    public override void OnEvent(TreeNode self, float deltaTime)
     {
         Debug.Log("FixedUpdateSystem!");
     }
 }
 
-class NodeRemoveSystem : RemoveSystem<Node>
+class NodeRemoveSystem : RemoveSystem<TreeNode>
 {
-    public override void OnEvent(Node self)
+    public override void OnEvent(TreeNode self)
     {
         Debug.Log("RemoveSystem!");
     }
 }
-class NodeRecycleSystem : RecycleSystem<Node>
+class NodeRecycleSystem : RecycleSystem<TreeNode>
 {
-    public override void OnEvent(Node self)
+    public override void OnEvent(TreeNode self)
     {
         Debug.Log("RecycleSystem!");
     }
 }
-class NodeDestroySystem : DestroySystem<Node>
+class NodeDestroySystem : DestroySystem<TreeNode>
 {
-    public override void OnEvent(Node self)
+    public override void OnEvent(TreeNode self)
     {
         Debug.Log("DestroySystem!");
     }
@@ -167,7 +167,7 @@ class NodeDestroySystem : DestroySystem<Node>
 
 
 
-public class Node1 : Entity
+public class Node1 : Node
 {
 
 }
@@ -196,7 +196,7 @@ class Node1DisableSystem : DisableSystem<Node1>
 }
 
 
-public class Node2 : Entity
+public class Node2 : Node
 {
 
 }

@@ -15,9 +15,9 @@ namespace WorldTree
         /// <summary>
         /// 异步延迟帧
         /// </summary>
-        public static AsyncTask AsyncYield(this Entity self, int count = 0)
+        public static TreeTask AsyncYield(this Node self, int count = 0)
         {
-            AsyncTask asyncTask = self.AddChildren<AsyncTask>();
+            TreeTask asyncTask = self.AddChildren<TreeTask>();
             var counter = asyncTask.AddComponent<CounterCall>();
 
             counter.countOut = count;
@@ -29,9 +29,9 @@ namespace WorldTree
         /// <summary>
         /// 异步延迟秒
         /// </summary>
-        public static AsyncTask AsyncDelay(this Entity self, float time)
+        public static TreeTask AsyncDelay(this Node self, float time)
         {
-            AsyncTask asyncTask = self.AddChildren<AsyncTask>();
+            TreeTask asyncTask = self.AddChildren<TreeTask>();
             var timer = asyncTask.AddComponent<TimerCall>();
             timer.timeOutTime = time;
             timer.callback = asyncTask.SetResult;

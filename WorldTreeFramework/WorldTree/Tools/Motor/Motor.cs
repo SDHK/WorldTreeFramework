@@ -11,7 +11,7 @@ namespace WorldTree
     /// <summary>
     /// 电机
     /// </summary>
-    public class Motor : Entity
+    public class Motor : Node
     {
         /// <summary>
         /// 获取

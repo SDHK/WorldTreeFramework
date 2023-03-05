@@ -16,7 +16,7 @@ namespace WorldTree
         /// <summary>
         /// 获取对象池管理器
         /// </summary>
-        public static EntityPoolManager PoolManager(this Entity self)
+        public static EntityPoolManager PoolManager(this Node self)
         {
             return self.Root.EntityPoolManager;
         }
@@ -24,8 +24,8 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取对象
         /// </summary>
-        public static T PoolGet<T>(this Entity self)
-        where T : Entity
+        public static T PoolGet<T>(this Node self)
+        where T : Node
         {
             return self.Root.EntityPoolManager.Get<T>();
         }
@@ -34,16 +34,16 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取对象
         /// </summary>
-        public static Entity PoolGet(this Entity self, Type type)
+        public static Node PoolGet(this Node self, Type type)
         {
-            return self.Root.EntityPoolManager.Get(type) as Entity;
+            return self.Root.EntityPoolManager.Get(type) as Node;
         }
 
 
         /// <summary>
         /// 回收对象
         /// </summary>
-        public static void PoolRecycle(this Entity self, Entity obj)
+        public static void PoolRecycle(this Node self, Node obj)
         {
             self.Root.EntityPoolManager.Recycle(obj);
         }
@@ -53,7 +53,7 @@ namespace WorldTree
     /// <summary>
     /// 实体对象池管理器
     /// </summary>
-    public class EntityPoolManager : Entity
+    public class EntityPoolManager : Node
     {
 
        public UnitDictionary<Type, EntityPool> pools = new UnitDictionary<Type, EntityPool>();
@@ -72,7 +72,7 @@ namespace WorldTree
         /// 获取实体
         /// </summary>
         public T Get<T>()
-        where T : Entity
+        where T : Node
         {
             Type type = typeof(T);
             return GetPool(type).Get<T>();
@@ -90,7 +90,7 @@ namespace WorldTree
         /// <summary>
         /// 回收对象
         /// </summary>
-        public void Recycle(Entity obj)
+        public void Recycle(Node obj)
         {
             if (obj != this && !(obj is EntityPool))//禁止回收自己和对象池
             {
@@ -102,7 +102,7 @@ namespace WorldTree
         /// 获取池
         /// </summary>
         public EntityPool GetPool<T>()
-            where T: Entity
+            where T: Node
         {
             Type type = typeof(T);
             return GetPool(type);

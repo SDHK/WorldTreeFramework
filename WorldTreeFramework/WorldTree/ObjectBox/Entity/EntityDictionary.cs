@@ -19,7 +19,7 @@ namespace WorldTree
     /// </summary>
     /// <typeparam name="K">键</typeparam>
     /// <typeparam name="V">值</typeparam>
-    public class EntityDictionary<K, V> : Entity
+    public class EntityDictionary<K, V> : Node
     {
         public Dictionary<K, V> Value;
         public EntityDictionary() : base()
@@ -40,7 +40,7 @@ namespace WorldTree
         /// </summary>
         /// <remarks>值为实体，则挂为实体字典子节点</remarks>
         public static V GetValueEntity<K, V>(this EntityDictionary<K, V> self, K key)
-            where V : Entity
+            where V : Node
         {
             if (!self.Value.TryGetValue(key, out V value))
             {

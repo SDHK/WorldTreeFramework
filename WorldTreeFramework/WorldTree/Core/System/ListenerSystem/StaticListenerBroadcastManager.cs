@@ -9,7 +9,7 @@ namespace WorldTree
         /// <summary>
         /// 获取以实体类型为目标的 监听系统广播
         /// </summary>
-        public static bool TrySendStaticListener<T>(this Entity entity)
+        public static bool TrySendStaticListener<T>(this Node entity)
             where T : IListenerSystem
         {
             if (entity.Root.StaticListenerBroadcastManager.TryAddBroadcast(entity.Type, typeof(T), out var broadcast))
@@ -26,7 +26,7 @@ namespace WorldTree
         /// <summary>
         /// 获取以实体类型为目标的 监听系统广播
         /// </summary>
-        public static bool TrySendDynamicListener<T>(this Entity entity)
+        public static bool TrySendDynamicListener<T>(this Node entity)
             where T : IListenerSystem
         {
             if (entity.Root.DynamicListenerBroadcastManager.TryAddBroadcast(entity.Type, typeof(T), out var broadcast))
@@ -44,7 +44,7 @@ namespace WorldTree
     /// <summary>
     /// 静态监听器广播管理器
     /// </summary>
-    public class StaticListenerBroadcastManager : Entity
+    public class StaticListenerBroadcastManager : Node
     {
         /// <summary>
         /// 目标，系统，广播
@@ -66,7 +66,7 @@ namespace WorldTree
         /// <summary>
         /// 检测添加静态监听器
         /// </summary>
-        public void TryAddListener(Entity listener)
+        public void TryAddListener(Node listener)
         {
             //判断是否为监听器
             if (Root.SystemManager.ListenerSystems.TryGetValue(listener.Type, out var systemGroups))
@@ -87,7 +87,7 @@ namespace WorldTree
         /// <summary>
         /// 检测移除静态监听器
         /// </summary>
-        public void RemoveListener(Entity listener)
+        public void RemoveListener(Node listener)
         {
             //判断是否为监听器
             if (Root.SystemManager.ListenerSystems.TryGetValue(listener.Type, out var systemGroups))

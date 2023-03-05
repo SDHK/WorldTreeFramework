@@ -18,7 +18,7 @@ namespace WorldTree
         /// <summary>
         /// 获取对象池管理器
         /// </summary>
-        public static UnitPoolManager UnitPoolManager(this Entity self)
+        public static UnitPoolManager UnitPoolManager(this Node self)
         {
             return self.Root.UnitPoolManager;
         }
@@ -26,7 +26,7 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取对象
         /// </summary>
-        public static T PoolGet<T>(this Entity self)
+        public static T PoolGet<T>(this Node self)
         where T : class, IUnitPoolEventItem
         {
             return self.Root.UnitPoolManager.Get<T>();
@@ -35,7 +35,7 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取对象
         /// </summary>
-        public static T PoolGet<T>(this Entity self, out T unit)
+        public static T PoolGet<T>(this Node self, out T unit)
        where T : class, IUnitPoolEventItem
         {
             return unit = self.Root.UnitPoolManager.Get<T>();
@@ -45,7 +45,7 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取对象
         /// </summary>
-        public static object PoolGetUnit(this Entity self, Type type)
+        public static object PoolGetUnit(this Node self, Type type)
         {
             return self.Root.UnitPoolManager.Get(type);
         }
@@ -54,7 +54,7 @@ namespace WorldTree
         /// <summary>
         /// 回收对象
         /// </summary>
-        public static void PoolRecycle(this Entity self, IUnitPoolEventItem obj)
+        public static void PoolRecycle(this Node self, IUnitPoolEventItem obj)
         {
             self.Root.UnitPoolManager.Recycle(obj);
         }
@@ -64,7 +64,7 @@ namespace WorldTree
     /// <summary>
     /// 单位对象池管理器
     /// </summary>
-    public class UnitPoolManager : Entity
+    public class UnitPoolManager : Node
     {
         UnitDictionary<Type, UnitPool> pools = new UnitDictionary<Type, UnitPool>();
         /// <summary>

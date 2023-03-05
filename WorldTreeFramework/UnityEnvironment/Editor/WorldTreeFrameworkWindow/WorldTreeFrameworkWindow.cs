@@ -17,7 +17,7 @@ namespace EditorTool
     /// <summary>
     /// 世界树框架编辑器驱动窗口
     /// </summary>
-    public class WorldTreeFrameworkWindow : Entity
+    public class WorldTreeFrameworkWindow : Node
     {
         public static WorldTreeRoot root;
 

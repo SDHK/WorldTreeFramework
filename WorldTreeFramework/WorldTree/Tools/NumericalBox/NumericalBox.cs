@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WorldTree
 {
-    public class NumericalBox : Entity
+    public class NumericalBox : Node
     {
         public long value;
 

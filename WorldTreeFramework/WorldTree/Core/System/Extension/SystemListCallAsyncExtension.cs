@@ -16,7 +16,7 @@ namespace WorldTree
 
         #region Call
 
-        public static async AsyncTask<OutT> CallAsync<OutT>(this List<IEntitySystem> systems, Entity self)
+        public static async TreeTask<OutT> CallAsync<OutT>(this List<IRule> systems, Node self)
         {
             OutT outT = default(OutT);
             foreach (ICallSystemAsync<OutT> system in systems)
@@ -25,7 +25,7 @@ namespace WorldTree
             }
             return outT;
         }
-        public static async AsyncTask<OutT> CallAsync<T1, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1)
+        public static async TreeTask<OutT> CallAsync<T1, OutT>(this List<IRule> systems, Node self, T1 arg1)
         {
             OutT outT = default(OutT);
             foreach (ICallSystemAsync<T1, OutT> system in systems)
@@ -35,7 +35,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static async AsyncTask<OutT> CallAsync<T1, T2, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2)
+        public static async TreeTask<OutT> CallAsync<T1, T2, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2)
         {
             OutT outT = default(OutT);
             foreach (ICallSystemAsync<T1, T2, OutT> system in systems)
@@ -45,7 +45,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static async AsyncTask<OutT> CallAsync<T1, T2, T3, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3)
+        public static async TreeTask<OutT> CallAsync<T1, T2, T3, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3)
         {
             OutT outT = default(OutT);
             foreach (ICallSystemAsync<T1, T2, T3, OutT> system in systems)
@@ -54,7 +54,7 @@ namespace WorldTree
             }
             return outT;
         }
-        public static async AsyncTask<OutT> CallAsync<T1, T2, T3, T4, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async TreeTask<OutT> CallAsync<T1, T2, T3, T4, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             OutT outT = default(OutT);
             foreach (ICallSystemAsync<T1, T2, T3, T4, OutT> system in systems)
@@ -64,7 +64,7 @@ namespace WorldTree
             return outT;
         }
 
-        public static async AsyncTask<OutT> CallAsync<T1, T2, T3, T4, T5, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async TreeTask<OutT> CallAsync<T1, T2, T3, T4, T5, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             OutT outT = default(OutT);
             foreach (ICallSystemAsync<T1, T2, T3, T4, T5, OutT> system in systems)
@@ -79,7 +79,7 @@ namespace WorldTree
 
         #region Calls
 
-        public static async AsyncTask<UnitList<OutT>> CallsAsync<OutT>(this List<IEntitySystem> systems, Entity self)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<OutT>(this List<IRule> systems, Node self)
         {
             UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystemAsync<OutT> system in systems)
@@ -89,7 +89,7 @@ namespace WorldTree
             return values;
         }
 
-        public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<T1, OutT>(this List<IRule> systems, Node self, T1 arg1)
         {
             UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystemAsync<T1, OutT> system in systems)
@@ -98,7 +98,7 @@ namespace WorldTree
             }
             return values;
         }
-        public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<T1, T2, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2)
         {
             UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystemAsync<T1, T2, OutT> system in systems)
@@ -108,7 +108,7 @@ namespace WorldTree
             return values;
         }
 
-        public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<T1, T2, T3, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3)
         {
             UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystemAsync<T1, T2, T3, OutT> system in systems)
@@ -117,7 +117,7 @@ namespace WorldTree
             }
             return values;
         }
-        public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystemAsync<T1, T2, T3, T4, OutT> system in systems)
@@ -127,7 +127,7 @@ namespace WorldTree
             return values;
         }
 
-        public static async AsyncTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, T5, OutT>(this List<IEntitySystem> systems, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<T1, T2, T3, T4, T5, OutT>(this List<IRule> systems, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             UnitList<OutT> values = self.PoolGet<UnitList<OutT>>();
             foreach (ICallSystemAsync<T1, T2, T3, T4, T5, OutT> system in systems)

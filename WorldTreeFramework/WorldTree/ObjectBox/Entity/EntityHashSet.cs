@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 实体泛型HashSet
     /// </summary>
-    public class EntityHashSet<T> : Entity
+    public class EntityHashSet<T> : Node
     {
         public HashSet<T> Value;
         public EntityHashSet() : base()

@@ -17,7 +17,7 @@ namespace WorldTree
         /// <summary>
         /// 广播初始化填装实体
         /// </summary>
-        public static SystemBroadcast Load<T>(this SystemBroadcast broadcast) where T : IEntitySystem => Load(broadcast, typeof(T));
+        public static SystemBroadcast Load<T>(this SystemBroadcast broadcast) where T : IRule => Load(broadcast, typeof(T));
         /// <summary>
         /// 广播初始化填装实体
         /// </summary>
@@ -43,12 +43,12 @@ namespace WorldTree
         /// <summary>
         /// 获取对应系统的全局广播
         /// </summary>
-        public static SystemBroadcast GetSystemGlobalBroadcast<T>(this Entity self)
-        where T : IEntitySystem
+        public static SystemBroadcast GetSystemGlobalBroadcast<T>(this Node self)
+        where T : IRule
         {
             var systemBroadcast = self.Root.AddComponent<SystemBroadcastGroup>().GetBroadcast<T>();
-            systemBroadcast.AddComponent<GlobalEntityAddListener>().ListenerSwitchesTarget(typeof(T), ListenerState.System);
-            systemBroadcast.AddComponent<GlobalEntityRemoveListener>().ListenerSwitchesTarget(typeof(T), ListenerState.System);
+            systemBroadcast.AddComponent<GlobalEntityAddListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
+            systemBroadcast.AddComponent<GlobalEntityRemoveListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
             return systemBroadcast;
         }
     }

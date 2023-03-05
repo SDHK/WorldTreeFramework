@@ -14,18 +14,18 @@ namespace WorldTree
     /// <summary>
     /// 系统广播
     /// </summary>
-    public partial class SystemBroadcast : Entity
+    public partial class SystemBroadcast : Node
     {
         /// <summary>
         /// 系统组
         /// </summary>
-        public SystemGroup systems;
+        public RuleGroup systems;
 
         public DynamicEntityQueue entityQueue;
 
         public override string ToString()
         {
-            return $"SystemBroadcast : {systems?.systemType}";
+            return $"SystemBroadcast : {systems?.RuleType}";
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace WorldTree
         /// <summary>
         /// 添加实体
         /// </summary>
-        public void Enqueue(Entity entity)
+        public void Enqueue(Node entity)
         {
             entityQueue.Enqueue(entity);
         }
@@ -44,7 +44,7 @@ namespace WorldTree
         /// <summary>
         /// 移除实体
         /// </summary>
-        public void Remove(Entity entity)
+        public void Remove(Node entity)
         {
             entityQueue.Remove(entity);
         }
@@ -59,7 +59,7 @@ namespace WorldTree
         /// <summary>
         /// 出列
         /// </summary>
-        public Entity Dequeue()
+        public Node Dequeue()
         {
             return entityQueue.Dequeue();
         }
@@ -67,7 +67,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试出列
         /// </summary>
-        public bool TryDequeue(out Entity entity)
+        public bool TryDequeue(out Node entity)
         {
             return entityQueue.TryDequeue(out entity);
         }

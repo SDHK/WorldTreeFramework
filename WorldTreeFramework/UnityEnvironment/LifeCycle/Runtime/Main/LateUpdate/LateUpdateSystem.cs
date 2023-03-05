@@ -8,5 +8,5 @@
     /// <summary>
     /// LateUpdate系统事件
     /// </summary>
-    public abstract class LateUpdateSystem<T> : SendSystemBase<ILateUpdateSystem, T, float> where T : Entity { }
+    public abstract class LateUpdateSystem<T> : SendSystemBase<ILateUpdateSystem, T, float> where T : Node { }
 }

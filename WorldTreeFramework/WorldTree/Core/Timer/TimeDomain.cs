@@ -13,7 +13,7 @@ namespace WorldTree
     /// <summary>
     /// 时域
     /// </summary>
-    public class TimeDomain : Entity
+    public class TimeDomain : Node
     {
         public float timeScale = 1;
     }

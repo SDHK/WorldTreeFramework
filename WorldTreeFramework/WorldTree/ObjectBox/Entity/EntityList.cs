@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 实体泛型列表
     /// </summary>
-    public class EntityList<T> : Entity
+    public class EntityList<T> : Node
     {
         public List<T> Value;
         public EntityList() : base()

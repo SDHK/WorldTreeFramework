@@ -27,7 +27,7 @@ namespace WorldTree
         /// <summary>
         /// 绑定的实体
         /// </summary>
-        public Entity entity;
+        public Node entity;
 
         /// <summary>
         /// 清除所有组件注册的事件

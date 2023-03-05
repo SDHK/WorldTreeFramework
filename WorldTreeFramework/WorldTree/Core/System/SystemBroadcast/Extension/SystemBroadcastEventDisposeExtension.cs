@@ -19,7 +19,7 @@ namespace WorldTree
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity);
                     }
@@ -35,7 +35,7 @@ namespace WorldTree
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1);
                     }
@@ -52,7 +52,7 @@ namespace WorldTree
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1, arg2);
                     }
@@ -67,7 +67,7 @@ namespace WorldTree
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1, arg2, arg3);
                     }
@@ -82,7 +82,7 @@ namespace WorldTree
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1, arg2, arg3, arg4);
                     }
@@ -97,7 +97,7 @@ namespace WorldTree
                 int length = entityQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Entity entity))
+                    if (entityQueue.TryDequeue(out Node entity))
                     {
                         systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
                     }

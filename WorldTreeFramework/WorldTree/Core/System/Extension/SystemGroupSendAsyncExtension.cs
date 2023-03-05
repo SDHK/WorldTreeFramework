@@ -17,9 +17,9 @@ namespace WorldTree
 
         #region Send
 
-        public static async AsyncTask<bool> TrySendAsync(this SystemGroup group, Entity self)
+        public static async TreeTask<bool> TrySendAsync(this RuleGroup group, Node self)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self);
                 return true;
@@ -30,9 +30,9 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async AsyncTask<bool> TrySendAsync<T1>(this SystemGroup group, Entity self, T1 arg1)
+        public static async TreeTask<bool> TrySendAsync<T1>(this RuleGroup group, Node self, T1 arg1)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1);
                 return true;
@@ -43,9 +43,9 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async AsyncTask<bool> TrySendAsync<T1, T2>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
+        public static async TreeTask<bool> TrySendAsync<T1, T2>(this RuleGroup group, Node self, T1 arg1, T2 arg2)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1, arg2);
                 return true;
@@ -56,9 +56,9 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async AsyncTask<bool> TrySendAsync<T1, T2, T3>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
+        public static async TreeTask<bool> TrySendAsync<T1, T2, T3>(this RuleGroup group, Node self, T1 arg1, T2 arg2, T3 arg3)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1, arg2, arg3);
                 return true;
@@ -69,9 +69,9 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async AsyncTask<bool> TrySendAsync<T1, T2, T3, T4>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async TreeTask<bool> TrySendAsync<T1, T2, T3, T4>(this RuleGroup group, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1, arg2, arg3, arg4);
                 return true;
@@ -82,9 +82,9 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async AsyncTask<bool> TrySendAsync<T1, T2, T3, T4, T5>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async TreeTask<bool> TrySendAsync<T1, T2, T3, T4, T5>(this RuleGroup group, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1, arg2, arg3, arg4, arg5);
                 return true;
@@ -98,9 +98,9 @@ namespace WorldTree
 
 
 
-        public static async AsyncTask SendAsync(this SystemGroup group, Entity self)
+        public static async TreeTask SendAsync(this RuleGroup group, Node self)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self);
             }
@@ -109,9 +109,9 @@ namespace WorldTree
                 await self.AsyncTaskCompleted();
             }
         }
-        public static async AsyncTask SendAsync<T1>(this SystemGroup group, Entity self, T1 arg1)
+        public static async TreeTask SendAsync<T1>(this RuleGroup group, Node self, T1 arg1)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1);
             }
@@ -120,9 +120,9 @@ namespace WorldTree
                 await self.AsyncTaskCompleted();
             }
         }
-        public static async AsyncTask SendAsync<T1, T2>(this SystemGroup group, Entity self, T1 arg1, T2 arg2)
+        public static async TreeTask SendAsync<T1, T2>(this RuleGroup group, Node self, T1 arg1, T2 arg2)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1, arg2);
             }
@@ -131,9 +131,9 @@ namespace WorldTree
                 await self.AsyncTaskCompleted();
             }
         }
-        public static async AsyncTask SendAsync<T1, T2, T3>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3)
+        public static async TreeTask SendAsync<T1, T2, T3>(this RuleGroup group, Node self, T1 arg1, T2 arg2, T3 arg3)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1, arg2, arg3);
             }
@@ -142,9 +142,9 @@ namespace WorldTree
                 await self.AsyncTaskCompleted();
             }
         }
-        public static async AsyncTask SendAsync<T1, T2, T3, T4>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async TreeTask SendAsync<T1, T2, T3, T4>(this RuleGroup group, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1, arg2, arg3, arg4);
             }
@@ -153,9 +153,9 @@ namespace WorldTree
                 await self.AsyncTaskCompleted();
             }
         }
-        public static async AsyncTask SendAsync<T1, T2, T3, T4, T5>(this SystemGroup group, Entity self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async TreeTask SendAsync<T1, T2, T3, T4, T5>(this RuleGroup group, Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
-            if (group.TryGetValue(self.Type, out List<IEntitySystem> systems))
+            if (group.TryGetValue(self.Type, out List<IRule> systems))
             {
                 await systems.SendAsync(self, arg1, arg2, arg3, arg4, arg5);
             }

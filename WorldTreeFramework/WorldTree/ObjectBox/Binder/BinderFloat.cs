@@ -18,7 +18,7 @@ namespace WorldTree
     /// <summary>
     /// 值绑定器
     /// </summary>
-    public class ValueBinder<T> : Entity
+    public class ValueBinder<T> : Node
     {
         /// <summary>
         /// 绑定对象

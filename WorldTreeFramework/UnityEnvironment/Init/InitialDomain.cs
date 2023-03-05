@@ -23,7 +23,7 @@ namespace WorldTree
     /// <summary>
     /// 初始域
     /// </summary>
-    public class InitialDomain : Entity
+    public class InitialDomain : Node
     {
 
         public float f = 0;
@@ -34,7 +34,7 @@ namespace WorldTree
 
     class _InitialDomainSendSystemAsyncBase : CallSystemAsync<InitialDomain, float>
     {
-        public override async AsyncTask<float> OnEvent(InitialDomain self)
+        public override async TreeTask<float> OnEvent(InitialDomain self)
         {
             World.Log("延迟！1");
             await self.AsyncDelay(3);
@@ -92,22 +92,22 @@ namespace WorldTree
             
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                self.AddComponent<Node>().Test().Coroutine();
+                self.AddComponent<TreeNode>().Test().Coroutine();
             }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
-                self.AddComponent<Node>().SetActive(false);
+                self.AddComponent<TreeNode>().SetActive(false);
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                self.AddComponent<Node>().SetActive(true);
+                self.AddComponent<TreeNode>().SetActive(true);
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                self.RemoveComponent<Node>();
+                self.RemoveComponent<TreeNode>();
             }
         }
 

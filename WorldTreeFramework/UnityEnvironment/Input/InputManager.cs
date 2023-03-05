@@ -12,7 +12,7 @@ namespace WorldTree
     /// <summary>
     /// 输入管理器
     /// </summary>
-    public class InputManager:Entity
+    public class InputManager:Node
     {
 
 
