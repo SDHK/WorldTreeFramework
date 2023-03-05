@@ -14,7 +14,7 @@ using System.Collections.Generic;
 namespace WorldTree
 {
     /// <summary>
-    /// 监听器广播组
+    /// 监听器广播集合
     /// </summary>
     public class ListenerBroadcastGroup : Node
     {
@@ -23,7 +23,10 @@ namespace WorldTree
         /// </summary>
         public Type Target;
 
-        //系统，广播
+        /// <summary>
+        /// 法则广播器字典
+        /// </summary>
+        /// <remarks>法则类型,广播器</remarks>
         public Dictionary<Type, SystemBroadcast> Broadcasts = new Dictionary<Type, SystemBroadcast>();
 
         public override string ToString()

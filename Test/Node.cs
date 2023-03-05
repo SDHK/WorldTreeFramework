@@ -43,11 +43,11 @@ public class TreeNode : Node
 
         World.Log("T2 2！");
 
-        await this.AsyncTaskCompleted();
+        await this.TreeTaskCompleted();
 
         await T3();
 
-        await this.AsyncTaskCompleted();
+        await this.TreeTaskCompleted();
 
 
     }
@@ -59,7 +59,7 @@ public class TreeNode : Node
 
         World.Log("T3 2！");
 
-        await this.AsyncTaskCompleted();
+        await this.TreeTaskCompleted();
 
         World.Log(await T4());
 
@@ -72,7 +72,7 @@ public class TreeNode : Node
         await this.AsyncDelay(3);
         World.Log("T4 2！");
 
-        await this.AsyncTaskCompleted();
+        await this.TreeTaskCompleted();
 
         return 10021;
     }

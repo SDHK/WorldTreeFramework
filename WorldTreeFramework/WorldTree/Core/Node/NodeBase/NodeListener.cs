@@ -134,7 +134,7 @@ namespace WorldTree
             if (Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(Node), out var systemGroups))
             {
                 //遍历现有广播
-                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.BroadcastGroups)
+                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.ListenerBroadcastGroupDictionary)
                 {
                     //遍历获取动态系统组，并添加自己
                     foreach (var systemGroup in systemGroups)
@@ -223,7 +223,7 @@ namespace WorldTree
             if (Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(Node), out var systemGroups))
             {
                 //遍历现有全部池
-                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.BroadcastGroups)
+                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.ListenerBroadcastGroupDictionary)
                 {
                     //遍历获取动态系统组，并移除自己
                     foreach (var systemGroup in systemGroups)

@@ -22,7 +22,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
                 return false;
             }
         }
@@ -36,7 +36,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
                 return false;
             }
         }
@@ -50,7 +50,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
                 return false;
             }
         }
@@ -63,7 +63,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
                 return false;
             }
         }
@@ -77,7 +77,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
                 return false;
             }
         }
@@ -90,7 +90,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
                 return false;
             }
         }
@@ -105,7 +105,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
             }
         }
 
@@ -118,7 +118,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
             }
         }
 
@@ -131,7 +131,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
             }
         }
         public static async TreeTask SendRuleAsync<R, T1, T2, T3>(this Node self, T1 arg1, T2 arg2, T3 arg3)
@@ -143,7 +143,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
             }
         }
         public static async TreeTask SendRuleAsync<R, T1, T2, T3, T4>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
@@ -155,7 +155,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
             }
         }
         public static async TreeTask SendRuleAsync<R, T1, T2, T3, T4, T5>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
@@ -167,7 +167,7 @@ namespace WorldTree
             }
             else
             {
-                await self.AsyncTaskCompleted();
+                await self.TreeTaskCompleted();
             }
         }
         #endregion

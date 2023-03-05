@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using static UnityEngine.GraphicsBuffer;
 
 namespace WorldTree
 {
@@ -10,9 +9,10 @@ namespace WorldTree
     public class DynamicListenerBroadcastManager : Node
     {
         /// <summary>
-        /// 目标，系统，广播
+        /// 目标类型 监听器广播字典
         /// </summary>
-        public Dictionary<Type, ListenerBroadcastGroup> BroadcastGroups = new Dictionary<Type, ListenerBroadcastGroup>();
+        /// <remarks>目标类型《系统，广播》</remarks>
+        public Dictionary<Type, ListenerBroadcastGroup> ListenerBroadcastGroupDictionary = new Dictionary<Type, ListenerBroadcastGroup>();
 
         /// <summary>
         /// 释放后
@@ -21,7 +21,7 @@ namespace WorldTree
         {
             IsRecycle = true;
             IsDisposed = true;
-            BroadcastGroups.Clear();
+            ListenerBroadcastGroupDictionary.Clear();
         }
 
         #region 判断监听器
@@ -36,28 +36,28 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加动态广播
         /// </summary>
-        public bool TryAddBroadcast(Type Target, Type System, out SystemBroadcast broadcast)
+        public bool TryAddBroadcast(Type Target, Type RuleType, out SystemBroadcast broadcast)
         {
             //判断是否有组
             if (TryGetGroup(Target, out var group))
             {
                 //判断是否有广播
-                if (group.TryGetBroadcast(System, out broadcast)) { return true; }
+                if (group.TryGetBroadcast(RuleType, out broadcast)) { return true; }
 
                 //没有广播 则判断这个系统类型是否有动态类型监听系统组
-                else if (Root.RuleManager.TryGetTargetRuleGroup(System, typeof(Node), out var systemGroup))
+                else if (Root.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(Node), out var systemGroup))
                 {
                     //新建广播
-                    broadcast = group.GetBroadcast(System);
+                    broadcast = group.GetBroadcast(RuleType);
                     broadcast.systems = systemGroup;
                     SystemBroadcastAddListener(broadcast, Target);
                     return true;
                 }
             }
-            else if (Root.RuleManager.TryGetTargetRuleGroup(System, typeof(Node), out var systemGroup))
+            else if (Root.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(Node), out var systemGroup))
             {
                 //新建组和广播
-                broadcast = GetGroup(Target).GetBroadcast(System);
+                broadcast = GetGroup(Target).GetBroadcast(RuleType);
                 broadcast.systems = systemGroup;
                 SystemBroadcastAddListener(broadcast, Target);
                 return true;
@@ -106,11 +106,11 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取动态广播
         /// </summary>
-        public bool TryGetBroadcast(Type Target, Type System, out SystemBroadcast broadcast)
+        public bool TryGetBroadcast(Type Target, Type RuleType, out SystemBroadcast broadcast)
         {
-            if (BroadcastGroups.TryGetValue(Target, out var group))
+            if (ListenerBroadcastGroupDictionary.TryGetValue(Target, out var group))
             {
-                return group.TryGetBroadcast(System, out broadcast);
+                return group.TryGetBroadcast(RuleType, out broadcast);
             }
             else
             {
@@ -127,13 +127,13 @@ namespace WorldTree
         /// </summary>
         public ListenerBroadcastGroup GetGroup(Type Target)
         {
-            if (!BroadcastGroups.TryGetValue(Target, out var group))
+            if (!ListenerBroadcastGroupDictionary.TryGetValue(Target, out var group))
             {
                 group = new ListenerBroadcastGroup();
                 group.Target = Target;
                 group.id = Root.IdManager.GetId();
                 group.Root = Root;
-                BroadcastGroups.Add(Target, group);
+                ListenerBroadcastGroupDictionary.Add(Target, group);
                 AddChildren(group);
             }
             return group;
@@ -144,7 +144,7 @@ namespace WorldTree
         /// </summary>
         public bool TryGetGroup(Type target, out ListenerBroadcastGroup group)
         {
-            return BroadcastGroups.TryGetValue(target, out group);
+            return ListenerBroadcastGroupDictionary.TryGetValue(target, out group);
         }
 
         #endregion

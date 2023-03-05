@@ -63,7 +63,7 @@ namespace WorldTree
                 }
                 entity?.SendRule<IWindowFocusSystem>();
 
-                await this.AsyncTaskCompleted();
+                await this.TreeTaskCompleted();
             }
             else
             {
