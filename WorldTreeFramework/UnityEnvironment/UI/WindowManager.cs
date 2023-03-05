@@ -16,7 +16,7 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-    //class InitialDomain1 : AddSystem<InitialDomain>
+    //class InitialDomain1 : AddRule<InitialDomain>
     //{
     //    public override void OnEvent(InitialDomain self)
     //    {
@@ -53,7 +53,7 @@ namespace WorldTree
             {
                 if (windowStack.TryPeek(out Node outEntity))
                 {
-                    outEntity?.SendSystem<IWindowLostFocusSystem>();
+                    outEntity?.SendRule<IWindowLostFocusSystem>();
                 }
                 while (windowStack.Count != 0 ? windowStack.Peek().id != entity.id : false)
                 {
@@ -61,7 +61,7 @@ namespace WorldTree
                     windows.Remove(outEntity.Type);
                     outEntity.ParentTo<GameObjectEntity>()?.Dispose();
                 }
-                entity?.SendSystem<IWindowFocusSystem>();
+                entity?.SendRule<IWindowFocusSystem>();
 
                 await this.AsyncTaskCompleted();
             }
@@ -73,11 +73,11 @@ namespace WorldTree
 
                 if (windowStack.TryPeek(out Node topEntity))
                 {
-                    topEntity?.SendSystem<IWindowLostFocusSystem>();
+                    topEntity?.SendRule<IWindowLostFocusSystem>();
                 }
                 windowStack.Push(entity);
 
-                entity?.SendSystem<IWindowFocusSystem>();
+                entity?.SendRule<IWindowFocusSystem>();
             }
             return entity as T;
         }
@@ -93,7 +93,7 @@ namespace WorldTree
             {
                 if (windowStack.TryPeek(out Node topEntity))
                 {
-                    topEntity?.SendSystem<IWindowLostFocusSystem>();
+                    topEntity?.SendRule<IWindowLostFocusSystem>();
                 }
                 while (windowStack.TryPop(out topEntity))
                 {
@@ -106,7 +106,7 @@ namespace WorldTree
                 }
                 if (windowStack.TryPeek(out topEntity))
                 {
-                    topEntity?.SendSystem<IWindowFocusSystem>();
+                    topEntity?.SendRule<IWindowFocusSystem>();
                 }
             }
         }
@@ -119,10 +119,10 @@ namespace WorldTree
             if (windowStack.TryPop(out Node outEntity))
             {
                 windows.Remove(outEntity.Type);
-                outEntity?.SendSystem<IWindowLostFocusSystem>();
+                outEntity?.SendRule<IWindowLostFocusSystem>();
                 if (windowStack.TryPeek(out Node topEntity))
                 {
-                    topEntity?.SendSystem<IWindowFocusSystem>();
+                    topEntity?.SendRule<IWindowFocusSystem>();
                 }
                 outEntity.ParentTo<GameObjectEntity>()?.Dispose();
             }
@@ -134,7 +134,7 @@ namespace WorldTree
         {
             if (windowStack.TryPeek(out Node topEntity))
             {
-                topEntity?.SendSystem<IWindowFocusSystem>();
+                topEntity?.SendRule<IWindowFocusSystem>();
             }
             while (windowStack.TryPop(out topEntity))
             {
@@ -161,7 +161,7 @@ namespace WorldTree
     }
 
 
-    class WindowManagerAddSystem : AddSystem<WindowManager>
+    class WindowManagerAddSystem : AddRule<WindowManager>
     {
         public override void OnEvent(WindowManager self)
         {
@@ -170,7 +170,7 @@ namespace WorldTree
         }
     }
 
-    class WindowManagerUpdateSystem : UpdateSystem<WindowManager>
+    class WindowManagerUpdateSystem : UpdateRule<WindowManager>
     {
         public override void OnEvent(WindowManager self, float deltaTime)
         {
@@ -178,7 +178,7 @@ namespace WorldTree
             {
                 if (self.windowStack.TryPeek(out Node entity))
                 {
-                    entity?.SendSystem<IWindowFocusUpdateSystem, float>(deltaTime);
+                    entity?.SendRule<IWindowFocusUpdateSystem, float>(deltaTime);
                 }
             }
         }

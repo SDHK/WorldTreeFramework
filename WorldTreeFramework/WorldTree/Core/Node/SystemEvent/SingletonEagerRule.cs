@@ -3,7 +3,8 @@
 * 作者： 闪电黑客
 * 日期： 2022/7/18 9:35
 
-* 描述： ECS模式的单例系统
+* 描述： 单例法则
+* 
 * 实现思路为给根节点挂组件
 * 
 
@@ -12,15 +13,15 @@
 namespace WorldTree
 {
     /// <summary>
-    /// 实体饿汉单例系统接口
+    /// 饿汉单例法则接口
     /// </summary>
-    public interface ISingletonEagerSystem : ISendRule { }
+    public interface ISingletonEagerRule : ISendRule { }
 
 
     /// <summary>
-    /// 实体饿汉单例系统：生成组件挂在根节点下
+    /// 饿汉单例法则：生成组件挂在根节点下
     /// </summary>
-    public abstract class SingletonEagerSystem<E> : SendRuleBase<ISingletonEagerSystem, E>, ISingletonEagerSystem
+    public abstract class SingletonEagerRule<E> : SendRuleBase<ISingletonEagerRule, E>, ISingletonEagerRule
         where E : Node
     {
         public override void Invoke(Node self)

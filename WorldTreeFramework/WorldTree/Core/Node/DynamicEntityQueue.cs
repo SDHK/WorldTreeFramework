@@ -131,7 +131,7 @@ namespace WorldTree
         }
     }
 
-    class DynamicEntityQueueAddSystem : AddSystem<DynamicEntityQueue>
+    class DynamicEntityQueueAddSystem : AddRule<DynamicEntityQueue>
     {
         public override void OnEvent(DynamicEntityQueue self)
         {
@@ -141,7 +141,7 @@ namespace WorldTree
         }
     }
 
-    class DynamicEntityQueueRemoveSystem : RemoveSystem<DynamicEntityQueue>
+    class DynamicEntityQueueRemoveSystem : RemoveRule<DynamicEntityQueue>
     {
         public override void OnEvent(DynamicEntityQueue self)
         {

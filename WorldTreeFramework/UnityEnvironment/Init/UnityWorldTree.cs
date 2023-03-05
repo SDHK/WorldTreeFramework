@@ -34,9 +34,9 @@ namespace WorldTree
 
             root = new WorldTreeRoot();
 
-            enable = root.GetSystemGlobalBroadcast<IEnableSystem>();
-            update = root.GetSystemGlobalBroadcast<IUpdateSystem>();
-            disable = root.GetSystemGlobalBroadcast<IDisableSystem>();
+            enable = root.GetSystemGlobalBroadcast<IEnableRule>();
+            update = root.GetSystemGlobalBroadcast<IUpdateRule>();
+            disable = root.GetSystemGlobalBroadcast<IDisableRule>();
 
             lateUpdate = root.GetSystemGlobalBroadcast<ILateUpdateSystem>();
             fixedUpdate = root.GetSystemGlobalBroadcast<IFixedUpdateSystem>();

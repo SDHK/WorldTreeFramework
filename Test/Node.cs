@@ -91,14 +91,14 @@ class NodeGetSystem : GetSystem<TreeNode>
         Debug.Log("GetSystem!");
     }
 }
-class NodeAddSystem : AddSystem<TreeNode>
+class NodeAddSystem : AddRule<TreeNode>
 {
     public override void OnEvent(TreeNode self)
     {
         Debug.Log("AddSystem!");
     }
 }
-class NodeEnableSystem : EnableSystem<TreeNode>
+class NodeEnableSystem : EnableRule<TreeNode>
 {
     public override void OnEvent(TreeNode self)
     {
@@ -106,7 +106,7 @@ class NodeEnableSystem : EnableSystem<TreeNode>
     }
 }
 
-class NodeDisableSystem : DisableSystem<TreeNode>
+class NodeDisableSystem : DisableRule<TreeNode>
 {
     public override void OnEvent(TreeNode self)
     {
@@ -114,7 +114,7 @@ class NodeDisableSystem : DisableSystem<TreeNode>
     }
 }
 
-class NodeUpdateSystem : UpdateSystem<TreeNode>
+class NodeUpdateSystem : UpdateRule<TreeNode>
 {
     public override void OnEvent(TreeNode self, float deltaTime)
     {
@@ -138,7 +138,7 @@ class NodeFixedUpdateSystem : FixedUpdateSystem<TreeNode>
     }
 }
 
-class NodeRemoveSystem : RemoveSystem<TreeNode>
+class NodeRemoveSystem : RemoveRule<TreeNode>
 {
     public override void OnEvent(TreeNode self)
     {
@@ -172,14 +172,14 @@ public class Node1 : Node
 
 }
 
-class Node1AddSystem : AddSystem<Node1>
+class Node1AddSystem : AddRule<Node1>
 {
     public override void OnEvent(Node1 self)
     {
         Debug.Log("Node1 OnAdd!!");
     }
 }
-class Node1EnableSystem : EnableSystem<Node1>
+class Node1EnableSystem : EnableRule<Node1>
 {
     public override void OnEvent(Node1 self)
     {
@@ -187,7 +187,7 @@ class Node1EnableSystem : EnableSystem<Node1>
     }
 }
 
-class Node1DisableSystem : DisableSystem<Node1>
+class Node1DisableSystem : DisableRule<Node1>
 {
     public override void OnEvent(Node1 self)
     {
@@ -200,7 +200,7 @@ public class Node2 : Node
 {
 
 }
-class Node2EnableSystem : EnableSystem<Node2>
+class Node2EnableSystem : EnableRule<Node2>
 {
     public override void OnEvent(Node2 self)
     {
@@ -208,7 +208,7 @@ class Node2EnableSystem : EnableSystem<Node2>
     }
 }
 
-class Node2DisableSystem : DisableSystem<Node2>
+class Node2DisableSystem : DisableRule<Node2>
 {
     public override void OnEvent(Node2 self)
     {

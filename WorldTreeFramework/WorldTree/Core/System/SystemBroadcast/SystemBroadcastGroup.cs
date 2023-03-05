@@ -32,7 +32,7 @@ namespace WorldTree
         }
     }
 
-    class SystemBroadcastGroupAddSystem : AddSystem<SystemBroadcastGroup>
+    class SystemBroadcastGroupAddSystem : AddRule<SystemBroadcastGroup>
     {
         public override void OnEvent(SystemBroadcastGroup self)
         {
@@ -40,7 +40,7 @@ namespace WorldTree
         }
     }
 
-    class SystemBroadcastGroupRemoveSystem : RemoveSystem<SystemBroadcastGroup>
+    class SystemBroadcastGroupRemoveSystem : RemoveRule<SystemBroadcastGroup>
     {
         public override void OnEvent(SystemBroadcastGroup self)
         {

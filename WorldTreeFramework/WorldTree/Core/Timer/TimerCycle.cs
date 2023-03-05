@@ -22,7 +22,7 @@ namespace WorldTree
         public Action callback;
     }
 
-    class TimerCycleUpdateSystem : UpdateSystem<TimerCycle>
+    class TimerCycleUpdateSystem : UpdateRule<TimerCycle>
     {
         public override void OnEvent(TimerCycle self, float deltaTime)
         {

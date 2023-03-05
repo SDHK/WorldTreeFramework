@@ -20,14 +20,14 @@ namespace WorldTree
         public SystemBroadcast systemBroadcast;
     }
 
-    class GlobalEntityRemoveListenerAddSystem : AddSystem<GlobalEntityRemoveListener>
+    class GlobalEntityRemoveListenerAddSystem : AddRule<GlobalEntityRemoveListener>
     {
         public override void OnEvent(GlobalEntityRemoveListener self)
         {
             self.TryParentTo(out self.systemBroadcast);
         }
     }
-    class GlobalEntityRemoveListenerRemoveSystem : RemoveSystem<GlobalEntityRemoveListener>
+    class GlobalEntityRemoveListenerRemoveSystem : RemoveRule<GlobalEntityRemoveListener>
     {
         public override void OnEvent(GlobalEntityRemoveListener self)
         {

@@ -20,7 +20,7 @@ namespace EditorTool
 
 
 
-    class EditorHomePageAddSystem : AddSystem<EditorHomePage>
+    class EditorHomePageAddSystem : AddRule<EditorHomePage>
     {
         public override void OnEvent(EditorHomePage self)
         {
@@ -55,7 +55,7 @@ namespace EditorTool
 
             EditorGUILayout.BeginVertical();
 
-            self.page?.SendSystem<IGUIDrawSystem>();
+            self.page?.SendRule<IGUIDrawSystem>();
 
             EditorGUILayout.EndVertical();
 
@@ -64,7 +64,7 @@ namespace EditorTool
         }
     }
 
-    class EditorHomePageUpdateSystem : UpdateSystem<EditorHomePage>
+    class EditorHomePageUpdateSystem : UpdateRule<EditorHomePage>
     {
         public override void OnEvent(EditorHomePage self, float deltaTime)
         {

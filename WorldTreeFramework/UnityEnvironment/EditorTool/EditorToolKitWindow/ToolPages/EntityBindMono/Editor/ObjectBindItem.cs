@@ -250,7 +250,7 @@ namespace EditorTool
             }
             builder.AppendLine("\t\t}");
             builder.AppendLine("\t}");
-            //builder.AppendLine($"\tclass {monoObject.gameObject.name}_RemoveEventSystem : RemoveSystem<{monoObject.gameObject.name}>");
+            //builder.AppendLine($"\tclass {monoObject.gameObject.name}_RemoveEventSystem : RemoveRule<{monoObject.gameObject.name}>");
             //builder.AppendLine("\t{");
             //builder.AppendLine($"\t\tpublic override void OnEvent({monoObject.gameObject.name} self)");
             //builder.AppendLine("\t\t{");

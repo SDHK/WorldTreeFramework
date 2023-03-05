@@ -33,7 +33,7 @@ namespace WorldTree
         }
     }
 
-    class GUIWindowNewSystem : AddSystem<GUIWindow>
+    class GUIWindowNewSystem : AddRule<GUIWindow>
     {
         public override void OnEvent(GUIWindow self)
         {

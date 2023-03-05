@@ -75,7 +75,7 @@ namespace WorldTree
 
     }
 
-    class SystemBroadcastAddSystem : AddSystem<SystemBroadcast>
+    class SystemBroadcastAddSystem : AddRule<SystemBroadcast>
     {
         public override void OnEvent(SystemBroadcast self)
         {
@@ -87,7 +87,7 @@ namespace WorldTree
         }
     }
 
-    class SystemBroadcastRemoveSystem : RemoveSystem<SystemBroadcast>
+    class SystemBroadcastRemoveSystem : RemoveRule<SystemBroadcast>
     {
         public override void OnEvent(SystemBroadcast self)
         {

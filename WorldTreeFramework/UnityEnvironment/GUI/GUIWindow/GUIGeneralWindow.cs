@@ -23,7 +23,7 @@ namespace WorldTree
 
     }
 
-    class GUIGeneralWindowAddSystem : AddSystem<GUIGeneralWindow>
+    class GUIGeneralWindowAddSystem : AddRule<GUIGeneralWindow>
     {
         public override void OnEvent(GUIGeneralWindow self)
         {

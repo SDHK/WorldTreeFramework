@@ -42,14 +42,14 @@ namespace EditorTool
         public EditorHomePage HomePage;
     }
 
-    class WorldTreeFrameworkWindowAddSystem : AddSystem<WorldTreeFrameworkWindow>
+    class WorldTreeFrameworkWindowAddSystem : AddRule<WorldTreeFrameworkWindow>
     {
         public override void OnEvent(WorldTreeFrameworkWindow self)
         {
             self.AddComponent<EditorGUIWindow>();
-            self.enable = self.GetSystemGlobalBroadcast<IEnableSystem>();
-            self.update = self.GetSystemGlobalBroadcast<IUpdateSystem>();
-            self.disable = self.GetSystemGlobalBroadcast<IDisableSystem>();
+            self.enable = self.GetSystemGlobalBroadcast<IEnableRule>();
+            self.update = self.GetSystemGlobalBroadcast<IUpdateRule>();
+            self.disable = self.GetSystemGlobalBroadcast<IDisableRule>();
             self.onGUI = self.GetSystemGlobalBroadcast<IGuiUpdateSystem>();
             self.AddComponent<EditorHomePage>();
         }

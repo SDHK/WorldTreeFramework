@@ -41,7 +41,7 @@ namespace WorldTree
             World.Log("延迟！2");
 
 
-            self.SendSystem<IAddSystem>();
+            self.SendRule<IAddRule>();
 
             return 10f;
         }
@@ -51,7 +51,7 @@ namespace WorldTree
     //内联函数，缩短函数调用时间
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
 
-    class _InitialDomain : AddSystem<InitialDomain>
+    class _InitialDomain : AddRule<InitialDomain>
     {
         public override async void OnEvent(InitialDomain self)
         {
@@ -75,14 +75,14 @@ namespace WorldTree
             //GetGroundPoint(Vector3(1,1), )
 
 
-            self.SendSystem<IAddSystem>();
+            self.SendRule<IAddRule>();
 
 
 
         }
 
     }
-    class InitialDomainUpdateSystem : UpdateSystem<InitialDomain>
+    class InitialDomainUpdateSystem : UpdateRule<InitialDomain>
     {
         public override void OnEvent(InitialDomain self, float deltaTime)
         {

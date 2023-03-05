@@ -25,9 +25,9 @@ namespace EditorTool
 
         //public WorldTreeRoot root;
 
-        //public SystemGlobalBroadcast<IEnableSystem> enable;
-        //public SystemGlobalBroadcast<IDisableSystem> disable;
-        //public SystemGlobalBroadcast<IUpdateSystem> update;
+        //public SystemGlobalBroadcast<IEnableRule> enable;
+        //public SystemGlobalBroadcast<IDisableRule> disable;
+        //public SystemGlobalBroadcast<IUpdateRule> update;
         //public SystemGlobalBroadcast<IGuiUpdateSystem> onGUI;
 
         [MenuItem("WorldTree/ToolKit")]
@@ -47,9 +47,9 @@ namespace EditorTool
             //World.Log = Debug.Log;
             //World.LogWarning = Debug.LogWarning;
             //World.LogError = Debug.LogError;
-            //enable = root.GetSystemGlobalBroadcast<IEnableSystem>();
-            //update = root.GetSystemGlobalBroadcast<IUpdateSystem>();
-            //disable = root.GetSystemGlobalBroadcast<IDisableSystem>();
+            //enable = root.GetSystemGlobalBroadcast<IEnableRule>();
+            //update = root.GetSystemGlobalBroadcast<IUpdateRule>();
+            //disable = root.GetSystemGlobalBroadcast<IDisableRule>();
             //onGUI = root.GetSystemGlobalBroadcast<IGuiUpdateSystem>();
         }
 

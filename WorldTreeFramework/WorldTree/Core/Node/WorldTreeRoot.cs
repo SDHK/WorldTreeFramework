@@ -75,10 +75,10 @@ namespace WorldTree
             DynamicListenerBroadcastManager.id = IdManager.GetId();
 
             //实体管理器系统事件获取
-            addSystems = Root.SystemManager.GetGroup<IAddSystem>();
-            removeSystems = Root.SystemManager.GetGroup<IRemoveSystem>();
-            enableSystems = Root.SystemManager.GetGroup<IEnableSystem>();
-            disableSystems = Root.SystemManager.GetGroup<IDisableSystem>();
+            addSystems = Root.SystemManager.GetGroup<IAddRule>();
+            removeSystems = Root.SystemManager.GetGroup<IRemoveRule>();
+            enableSystems = Root.SystemManager.GetGroup<IEnableRule>();
+            disableSystems = Root.SystemManager.GetGroup<IDisableRule>();
 
             //激活自己
             SetActive(true);

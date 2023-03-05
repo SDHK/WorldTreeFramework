@@ -45,7 +45,7 @@ namespace WorldTree
     }
 
 
-    class AddressablesManagerAddSystem : AddSystem<AddressablesManager>
+    class AddressablesManagerAddSystem : AddRule<AddressablesManager>
     {
         public override void OnEvent(AddressablesManager self)
         {

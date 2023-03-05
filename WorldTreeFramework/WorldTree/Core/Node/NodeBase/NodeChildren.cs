@@ -135,7 +135,7 @@ namespace WorldTree
                     {
                         node.Parent = this;
                         node.isComponent = false;
-                        node.SendSystem<IAwakeSystem>();
+                        node.SendRule<IAwakeRule>();
                         Root.Add(node);
                     }
                 }
@@ -154,7 +154,7 @@ namespace WorldTree
             if (Children.TryAdd(node.id, node))
             {
                 node.Parent = this;
-                node.SendSystem<IAwakeSystem>();
+                node.SendRule<IAwakeRule>();
                 Root.Add(node);
             }
             return node;
@@ -199,7 +199,7 @@ namespace WorldTree
             if (Children.TryAdd(node.id, node))
             {
                 node.Parent = this;
-                node.SendSystem<IAwakeSystem>();
+                node.SendRule<IAwakeRule>();
                 Root.Add(node);
             }
 
@@ -217,7 +217,7 @@ namespace WorldTree
             if (Children.TryAdd(node.id, node))
             {
                 node.Parent = this;
-                node.SendSystem<IAwakeSystem<T1>, T1>(arg1);
+                node.SendRule<IAwakeRule<T1>, T1>(arg1);
                 Root.Add(node);
             }
             return node;
@@ -234,7 +234,7 @@ namespace WorldTree
             if (Children.TryAdd(node.id, node))
             {
                 node.Parent = this;
-                node.SendSystem<IAwakeSystem<T1, T2>, T1, T2>(arg1, arg2);
+                node.SendRule<IAwakeRule<T1, T2>, T1, T2>(arg1, arg2);
                 Root.Add(node);
             }
             return node;
@@ -250,7 +250,7 @@ namespace WorldTree
             if (Children.TryAdd(node.id, node))
             {
                 node.Parent = this;
-                node.SendSystem<IAwakeSystem<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
+                node.SendRule<IAwakeRule<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
                 Root.Add(node);
             }
             return node;
@@ -266,7 +266,7 @@ namespace WorldTree
             if (Children.TryAdd(node.id, node))
             {
                 node.Parent = this;
-                node.SendSystem<IAwakeSystem<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
+                node.SendRule<IAwakeRule<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
                 Root.Add(node);
             }
 
@@ -283,7 +283,7 @@ namespace WorldTree
             if (Children.TryAdd(node.id, node))
             {
                 node.Parent = this;
-                node.SendSystem<IAwakeSystem<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+                node.SendRule<IAwakeRule<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
                 Root.Add(node);
             }
 

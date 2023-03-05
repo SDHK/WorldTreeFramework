@@ -42,7 +42,7 @@ namespace WorldTree
 
     }
 
-    class AsyncTaskQueueAddSystem : AddSystem<TreeTaskQueue>
+    class AsyncTaskQueueAddSystem : AddRule<TreeTaskQueue>
     {
         public override void OnEvent(TreeTaskQueue self)
         {

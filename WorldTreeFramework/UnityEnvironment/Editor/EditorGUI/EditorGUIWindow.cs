@@ -21,7 +21,7 @@ namespace EditorTool
     {
         public MonoEditorGUIWindow window;
     }
-    class EditorGUIWindowAddSystem : AddSystem<EditorGUIWindow>
+    class EditorGUIWindowAddSystem : AddRule<EditorGUIWindow>
     {
         public override void OnEvent(EditorGUIWindow self)
         {
@@ -32,7 +32,7 @@ namespace EditorTool
         }
     }
 
-    class EditorGUIWindowRemoveSystem : RemoveSystem<EditorGUIWindow>
+    class EditorGUIWindowRemoveSystem : RemoveRule<EditorGUIWindow>
     {
         public override void OnEvent(EditorGUIWindow self)
         {

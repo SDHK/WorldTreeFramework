@@ -30,7 +30,7 @@ namespace WorldTree
         }
     }
 
-    class CounterCallUpdateSystem : UpdateSystem<CounterCall>
+    class CounterCallUpdateSystem : UpdateRule<CounterCall>
     {
         public override void OnEvent(CounterCall self, float deltaTime)
         {

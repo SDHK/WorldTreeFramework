@@ -18,7 +18,7 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-    class EntityPoolAddSystem : AddSystem<EntityPool>
+    class EntityPoolAddSystem : AddRule<EntityPool>
     {
         public override void OnEvent(EntityPool self)
         {

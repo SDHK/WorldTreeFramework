@@ -10,7 +10,7 @@ namespace WorldTree
         }
     }
 
-    class GUIBeginVerticalAddSystem : AddSystem<GUIBeginVertical>
+    class GUIBeginVerticalAddSystem : AddRule<GUIBeginVertical>
     {
         public override void OnEvent(GUIBeginVertical self)
         {
