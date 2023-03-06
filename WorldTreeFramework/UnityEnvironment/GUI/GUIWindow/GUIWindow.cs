@@ -49,7 +49,7 @@ namespace WorldTree
         }
     }
 
-    class GUIWindowRecycleSystem : RecycleSystem<GUIWindow>
+    class GUIWindowRecycleSystem : RecycleRule<GUIWindow>
     {
         public override void OnEvent(GUIWindow self)
         {

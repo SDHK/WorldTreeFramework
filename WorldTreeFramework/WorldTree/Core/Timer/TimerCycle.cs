@@ -35,7 +35,7 @@ namespace WorldTree
         }
     }
 
-    class TimerCycleGetSystem : GetSystem<TimerCycle>
+    class TimerCycleGetSystem : GetRule<TimerCycle>
     {
         public override void OnEvent(TimerCycle self)
         {

@@ -20,7 +20,7 @@ namespace WorldTree
         }
     }
 
-    class GUIBeginVerticalRecycleSystem : RecycleSystem<GUIBeginVertical>
+    class GUIBeginVerticalRecycleSystem : RecycleRule<GUIBeginVertical>
     {
         public override void OnEvent(GUIBeginVertical self)
         {

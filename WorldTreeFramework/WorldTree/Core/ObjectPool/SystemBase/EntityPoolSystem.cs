@@ -4,48 +4,48 @@
 * 作者： 闪电黑客
 * 日期： 2022/8/1 9:47
 
-* 描述： 实体对象池的事件系统
+* 描述： 实体对象池的法则
 
 */
 
 namespace WorldTree
 {
     /// <summary>
-    /// 新建事件系统接口
+    /// 新建法则接口
     /// </summary>
-    public interface INewSystem : ISendRule { }
+    public interface INewRule : ISendRule { }
 
     /// <summary>
-    /// 新建事件系统
+    /// 新建法则
     /// </summary>
-    public abstract class NewSystem<E> : SendRuleBase<INewSystem, E> where E : Node { }
+    public abstract class NewRule<E> : SendRuleBase<INewRule, E> where E : Node { }
 
     /// <summary>
-    /// 获取事件系统接口
+    /// 获取法则接口
     /// </summary>
-    public interface IGetSystem : ISendRule { }
+    public interface IGetRule : ISendRule { }
 
     /// <summary>
-    /// 获取事件系统
+    /// 获取法则
     /// </summary>
-    public abstract class GetSystem<E> : SendRuleBase<IGetSystem, E> where E : Node { }
+    public abstract class GetRule<E> : SendRuleBase<IGetRule, E> where E : Node { }
 
     /// <summary>
-    /// 回收事件系统接口
+    /// 回收法则接口
     /// </summary>
-    public interface IRecycleSystem : ISendRule { }
+    public interface IRecycleRule : ISendRule { }
 
     /// <summary>
-    /// 回收事件系统
+    /// 回收法则
     /// </summary>
-    public abstract class RecycleSystem<E> : SendRuleBase<IRecycleSystem, E> where E : Node { }
+    public abstract class RecycleRule<E> : SendRuleBase<IRecycleRule, E> where E : Node { }
 
     /// <summary>
-    /// 释放事件系统接口
+    /// 释放法则接口
     /// </summary>
-    public interface IDestroySystem : ISendRule { }
+    public interface IDestroyRule : ISendRule { }
     /// <summary>
-    /// 释放事件系统
+    /// 释放法则
     /// </summary>
-    public abstract class DestroySystem<E> : SendRuleBase<IDestroySystem, E> where E : Node { }
+    public abstract class DestroySystem<E> : SendRuleBase<IDestroyRule, E> where E : Node { }
 }

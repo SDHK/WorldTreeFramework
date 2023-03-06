@@ -10,7 +10,7 @@ namespace WorldTree
         }
     }
 
-    class GUIBeginHorizontalRecycleSystem : RecycleSystem<GUIBeginHorizontal>
+    class GUIBeginHorizontalRecycleSystem : RecycleRule<GUIBeginHorizontal>
     {
         public override void OnEvent(GUIBeginHorizontal self)
         {

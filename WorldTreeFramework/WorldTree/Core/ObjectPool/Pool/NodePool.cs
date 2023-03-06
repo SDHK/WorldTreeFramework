@@ -23,10 +23,10 @@ namespace WorldTree
         public override void OnEvent(NodePool self)
         {
             //生命周期法则
-            self.newRule = self.GetRuleList<INewSystem>(self.ObjectType);
-            self.getRule = self.GetRuleList<IGetSystem>(self.ObjectType);
-            self.recycleRule = self.GetRuleList<IRecycleSystem>(self.ObjectType);
-            self.destroyRule = self.GetRuleList<IDestroySystem>(self.ObjectType);
+            self.newRule = self.GetRuleList<INewRule>(self.ObjectType);
+            self.getRule = self.GetRuleList<IGetRule>(self.ObjectType);
+            self.recycleRule = self.GetRuleList<IRecycleRule>(self.ObjectType);
+            self.destroyRule = self.GetRuleList<IDestroyRule>(self.ObjectType);
         }
     }
 

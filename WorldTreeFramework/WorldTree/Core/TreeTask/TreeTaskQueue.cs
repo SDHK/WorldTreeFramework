@@ -22,25 +22,39 @@ namespace WorldTree
     /// </summary>
     public class TreeTaskQueue : Node
     {
-        public EntityDictionary<long, DynamicNodeQueue> taskDictitonary;
+        public EntityDictionary<long, DynamicNodeQueue> nodeQueueDictitonary;
 
         public async TreeTask<TreeTaskQueueLock> Add(Node entity, long key)
         {
-            TreeTask<TreeTaskQueueLock> asyncTask = entity.AddChildren<TreeTask<TreeTaskQueueLock>>();
-            asyncTask.AddChildren<TreeTaskQueueLock, long>(key);
+            TreeTask<TreeTaskQueueLock> treeTask = entity.AddChildren<TreeTask<TreeTaskQueueLock>>();
+            treeTask.AddChildren<TreeTaskQueueLock, long>(key);
 
+            //给任务挂上队列锁
+            TreeTaskQueueLock taskQueueLock = treeTask.AddChildren<TreeTaskQueueLock>();
 
-            if (!taskDictitonary.Value.TryGetValue(key, out var TaskQueue))
+            //判断如果没有这个键值
+            if (!nodeQueueDictitonary.Value.TryGetValue(key, out DynamicNodeQueue TaskQueue))
             {
-                var nodeQueue = taskDictitonary.AddChildren<DynamicNodeQueue>();
-                taskDictitonary.Value.Add(key, nodeQueue);
+                //新建动态节点队列
+                TaskQueue = nodeQueueDictitonary.AddChildren<DynamicNodeQueue>();
 
-                var taskQueueLock = asyncTask.AddChildren<TreeTaskQueueLock, long>(key);
-                nodeQueue.Enqueue(asyncTask);
+                //动态节点队列添加进字典
+                nodeQueueDictitonary.Value.Add(key, TaskQueue);
+
+                TaskQueue.Enqueue(treeTask);
+                taskQueueLock.nodeQueue = TaskQueue;
+
+                await entity.TreeTaskCompleted();
+
                 return taskQueueLock;
             }
-            taskDictitonary.GetValueEntity(key).Enqueue(asyncTask);
-            return await asyncTask;//返回一个锁
+            else
+            {
+                TaskQueue.Enqueue(treeTask);
+                taskQueueLock.nodeQueue = TaskQueue;
+            }
+
+            return await treeTask;//返回一个锁任务
         }
 
     }
@@ -49,7 +63,7 @@ namespace WorldTree
     {
         public override void OnEvent(TreeTaskQueue self)
         {
-            self.AddChildren(out self.taskDictitonary);
+            self.AddChildren(out self.nodeQueueDictitonary);
 
         }
     }

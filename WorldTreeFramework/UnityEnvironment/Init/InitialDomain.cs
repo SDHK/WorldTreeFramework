@@ -36,36 +36,35 @@ namespace WorldTree
 
     class _InitialDomain : AddRule<InitialDomain>
     {
-        public override  void OnEvent(InitialDomain self)
+
+        public override async void OnEvent(InitialDomain self)
         {
-            World.Log("初始域启动！！!!");
+            World.Log("初始域启动！！");
 
-            World.Log("初始域启动！！!!??");
-
-
-            //self.valueBinder = self.AddChildren<ValueBinder<float>>();
-
-            //self.valueBinder.bindObject = self;
-            //self.valueBinder.SetValue = (e, t) => (e as InitialDomain).f = t;
-            //self.valueBinder.GetValue = e => (e as InitialDomain).f;
-
-            //self.Root.AddComponent<WindowManager>().Show<MainWindow>().Coroutine();
-
-
-
-            //GetGroundPoint(Vector3(1,1), )
+            using (await self.Root.AddComponent<TreeTaskQueue>().Add(self, 0))
+            {
+                await self.AsyncDelay(3);
+                self.f++;
+                World.Log($"初始域!:{self.f}");
+            }
 
         }
 
     }
     class InitialDomainUpdateSystem : UpdateRule<InitialDomain>
     {
-        public override void OnEvent(InitialDomain self, float deltaTime)
+        public override async void OnEvent(InitialDomain self, float deltaTime)
         {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                using (await self.Root.AddComponent<TreeTaskQueue>().Add(self, 0))
+                {
+                    await self.AsyncDelay(3);
+                    self.f++;
+                    World.Log($"初始域:{self.f}");
+                }
+            }
 
-            //self.valueBinder.Value = deltaTime;
-
-            
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 self.AddComponent<TreeNode>().Test().Coroutine();

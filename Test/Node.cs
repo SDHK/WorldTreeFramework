@@ -77,14 +77,14 @@ public class TreeNode : Node
         return 10021;
     }
 }
-class NodeNewSystem : NewSystem<TreeNode>
+class NodeNewSystem : NewRule<TreeNode>
 {
     public override void OnEvent(TreeNode self)
     {
         Debug.Log("NewSystem!");
     }
 }
-class NodeGetSystem : GetSystem<TreeNode>
+class NodeGetSystem : GetRule<TreeNode>
 {
     public override void OnEvent(TreeNode self)
     {
@@ -145,7 +145,7 @@ class NodeRemoveSystem : RemoveRule<TreeNode>
         Debug.Log("RemoveSystem!");
     }
 }
-class NodeRecycleSystem : RecycleSystem<TreeNode>
+class NodeRecycleSystem : RecycleRule<TreeNode>
 {
     public override void OnEvent(TreeNode self)
     {

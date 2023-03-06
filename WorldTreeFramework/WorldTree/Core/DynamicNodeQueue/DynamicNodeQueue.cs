@@ -41,7 +41,6 @@ namespace WorldTree
         public void Enqueue(Node node)
         {
             if (nodeDictionary.ContainsKey(node.id)) return;
-
             idQueue.Enqueue(node.id);
             nodeDictionary.Add(node.id, node);
         }
@@ -77,6 +76,54 @@ namespace WorldTree
             idQueue.Clear();
         }
 
+
+        /// <summary>
+        /// 获取队顶
+        /// </summary>
+        public Node Peek()
+        {
+            if (TryPeek(out Node node))
+            {
+                return node;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        /// <summary>
+        /// 尝试获取队顶
+        /// </summary>
+        public bool TryPeek(out Node node)
+        {
+            do
+            {
+                //尝试获取一个id
+                if (idQueue.TryPeek(out long id))
+                {
+                    //假如id被回收了
+                    if (removeIdDictionary.TryGetValue(id, out int count))
+                    {
+                        //回收次数抵消
+                        removeIdDictionary[id] = --count;
+                        //次数为0时删除id
+                        if (count == 0) removeIdDictionary.Remove(id);
+                        //移除这个id
+                        idQueue.Dequeue();
+                    }
+                    else
+                    {
+                        return nodeDictionary.TryGetValue(id, out node);
+                    }
+                }
+                else
+                {
+                    node = null;
+                    return false;
+                }
+
+            } while (true);
+        }
 
         /// <summary>
         /// 节点出列

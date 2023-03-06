@@ -37,7 +37,7 @@ namespace WorldTree
             return isFoldout;
         }
     }
-    class GUIFoldoutButtonRecycleSystem : RecycleSystem<GUIFoldoutButton>
+    class GUIFoldoutButtonRecycleSystem : RecycleRule<GUIFoldoutButton>
     {
         public override void OnEvent(GUIFoldoutButton self)
         {

@@ -20,7 +20,7 @@ namespace WorldTree
         }
     }
 
-    class GUIBoxRecycleSystem : RecycleSystem<GUIBox>
+    class GUIBoxRecycleSystem : RecycleRule<GUIBox>
     {
         public override void OnEvent(GUIBox self)
         {

@@ -36,7 +36,7 @@ namespace WorldTree
         }
     }
 
-    class TimerCallGetSystem : GetSystem<TimerCall>
+    class TimerCallGetSystem : GetRule<TimerCall>
     {
         public override void OnEvent(TimerCall self)
         {
