@@ -21,7 +21,6 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
-    //对Node底层再抽一层接口
 
     /// <summary>
     /// 世界树根
@@ -30,10 +29,10 @@ namespace WorldTree
     {
         public UnitDictionary<long, Node> allEntity = new UnitDictionary<long, Node>();
 
-        private RuleGroup addSystems;
-        private RuleGroup removeSystems;
-        private RuleGroup enableSystems;
-        private RuleGroup disableSystems;
+        private RuleGroup AddRuleGroup;
+        private RuleGroup RemoveRuleGroup;
+        private RuleGroup EnableRuleGroup;
+        private RuleGroup DisableRuleGroup;
 
 
         public IdManager IdManager;
@@ -75,22 +74,22 @@ namespace WorldTree
             StaticListenerRuleActuatorManager.id = IdManager.GetId();
             DynamicListenerRuleActuatorManager.id = IdManager.GetId();
 
-            //实体管理器系统事件获取
-            addSystems = Root.RuleManager.GetRuleGroup<IAddRule>();
-            removeSystems = Root.RuleManager.GetRuleGroup<IRemoveRule>();
-            enableSystems = Root.RuleManager.GetRuleGroup<IEnableRule>();
-            disableSystems = Root.RuleManager.GetRuleGroup<IDisableRule>();
+            //法则集合获取
+            AddRuleGroup = Root.RuleManager.GetRuleGroup<IAddRule>();
+            RemoveRuleGroup = Root.RuleManager.GetRuleGroup<IRemoveRule>();
+            EnableRuleGroup = Root.RuleManager.GetRuleGroup<IEnableRule>();
+            DisableRuleGroup = Root.RuleManager.GetRuleGroup<IDisableRule>();
 
             //激活自己
-            SetActive(true);
+            this.SetActive(true);
 
             //核心组件添加
-            AddComponent(IdManager);
-            AddComponent(RuleManager);
-            AddComponent(UnitPoolManager);
-            AddComponent(NodePoolManager);
-            AddComponent(StaticListenerRuleActuatorManager);
-            AddComponent(DynamicListenerRuleActuatorManager);
+            this.AddComponent(IdManager);
+            this.AddComponent(RuleManager);
+            this.AddComponent(UnitPoolManager);
+            this.AddComponent(NodePoolManager);
+            this.AddComponent(StaticListenerRuleActuatorManager);
+            this.AddComponent(DynamicListenerRuleActuatorManager);
 
         }
         /// <summary>
@@ -112,8 +111,8 @@ namespace WorldTree
 
             allEntity.TryAdd(entity.id, entity);
 
-            //这个实体的添加事件
-            addSystems?.Send(entity);
+            //这个节点的添加事件
+            AddRuleGroup?.Send(entity);
 
             //检测添加静态监听
             StaticListenerRuleActuatorManager.TryAddListener(entity);
@@ -122,7 +121,7 @@ namespace WorldTree
 
 
             entity.SetActive(true);
-            enableSystems?.Send(entity);//添加后调用激活事件
+            EnableRuleGroup?.Send(entity);//添加后调用激活事件
 
         }
 
@@ -132,15 +131,15 @@ namespace WorldTree
             entity.SetActive(false);//激活标记变更
 
             entity.RemoveAll();//移除所有子节点和组件
-            disableSystems?.Send(entity);//调用禁用事件
+            DisableRuleGroup?.Send(entity);//调用禁用事件
 
             //检测移除静态监听
             StaticListenerRuleActuatorManager.RemoveListener(entity);
             //检测移除动态监听
             entity.ListenerClearTarget();
 
-            //这个实体的移除事件
-            removeSystems?.Send(entity);
+            //这个节点的移除事件
+            RemoveRuleGroup?.Send(entity);
 
             allEntity.Remove(entity.id);
 

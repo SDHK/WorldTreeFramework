@@ -17,34 +17,34 @@ namespace WorldTree
     /// </summary>
     public class RuleActuatorGroup : Node
     {
-        public UnitDictionary<Type, RuleActuator> broadcasts;
+        public UnitDictionary<Type, RuleActuator> ruleActuatorDictionary;
 
         public RuleActuator GetBroadcast<T>() => GetBroadcast(typeof(T));
 
         public RuleActuator GetBroadcast(Type type)
         {
-            if (!broadcasts.TryGetValue(type, out var broadcast))
+            if (!ruleActuatorDictionary.TryGetValue(type, out var ruleActuator))
             {
-                broadcast = this.AddChildren<RuleActuator>().Load(type);
-                broadcasts.Add(type, broadcast);
+                ruleActuator = this.AddChildren<RuleActuator>().Load(type);
+                ruleActuatorDictionary.Add(type, ruleActuator);
             }
-            return broadcast;
+            return ruleActuator;
         }
     }
 
-    class RuleActuatorGroupAddSystem : AddRule<RuleActuatorGroup>
+    class RuleActuatorGroupAddRule : AddRule<RuleActuatorGroup>
     {
         public override void OnEvent(RuleActuatorGroup self)
         {
-            self.PoolGet(out self.broadcasts);
+            self.PoolGet(out self.ruleActuatorDictionary);
         }
     }
 
-    class RuleActuatorGroupRemoveSystem : RemoveRule<RuleActuatorGroup>
+    class RuleActuatorGroupRemoveRule : RemoveRule<RuleActuatorGroup>
     {
         public override void OnEvent(RuleActuatorGroup self)
         {
-            self.broadcasts.Dispose();
+            self.ruleActuatorDictionary.Dispose();
         }
     }
 

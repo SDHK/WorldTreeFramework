@@ -118,7 +118,7 @@ namespace WorldTree
                 pool.id = Root.IdManager.GetId();
                 pool.Root = Root;
                 pools.Add(type, pool);
-                AddChildren(pool);
+                this.AddChildren(pool);
             }
 
             return pool;

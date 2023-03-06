@@ -17,28 +17,28 @@ namespace WorldTree
     /// </summary>
     public class GlobalNodeRemoveListener : Node
     {
-        public RuleActuator systemBroadcast;
+        public DynamicNodeQueue nodeQueue;
     }
 
     class GlobalNodeRemoveListenerAddSystem : AddRule<GlobalNodeRemoveListener>
     {
         public override void OnEvent(GlobalNodeRemoveListener self)
         {
-            self.TryParentTo(out self.systemBroadcast);
+            self.TryParentTo(out self.nodeQueue);
         }
     }
     class GlobalNodeRemoveListenerRemoveSystem : RemoveRule<GlobalNodeRemoveListener>
     {
         public override void OnEvent(GlobalNodeRemoveListener self)
         {
-            self.systemBroadcast = null;
+            self.nodeQueue = null;
         }
     }
     class GlobalNodeRemoveListenerListenerRemoveSystem : ListenerRemoveRule<GlobalNodeRemoveListener>
     {
         public override void OnEvent(GlobalNodeRemoveListener self, Node node)
         {
-            self.systemBroadcast?.Remove(node);
+            self.nodeQueue?.Remove(node);
         }
     }
 }

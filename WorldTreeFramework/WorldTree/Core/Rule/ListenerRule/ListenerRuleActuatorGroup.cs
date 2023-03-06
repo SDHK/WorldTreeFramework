@@ -50,7 +50,7 @@ namespace WorldTree
                 actuator.id = Root.IdManager.GetId();
                 actuator.Root = Root;
                 actuatorDictionary.Add(listenerRuleType, actuator);
-                AddChildren(actuator);
+                this.AddChildren(actuator);
             }
             return actuator;
         }

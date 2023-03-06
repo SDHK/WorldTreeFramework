@@ -17,10 +17,13 @@ namespace WorldTree
     public partial class RuleActuator : Node
     {
         /// <summary>
-        /// 系统组
+        /// 法则集合
         /// </summary>
         public RuleGroup ruleGroup;
 
+        /// <summary>
+        /// 动态节点队列
+        /// </summary>
         public DynamicNodeQueue nodeQueue;
 
         public override string ToString()
@@ -36,17 +39,17 @@ namespace WorldTree
         /// <summary>
         /// 添加实体
         /// </summary>
-        public void Enqueue(Node entity)
+        public void Enqueue(Node node)
         {
-            nodeQueue.Enqueue(entity);
+            nodeQueue.Enqueue(node);
         }
 
         /// <summary>
-        /// 移除实体
+        /// 移除节点
         /// </summary>
-        public void Remove(Node entity)
+        public void Remove(Node node)
         {
-            nodeQueue.Remove(entity);
+            nodeQueue.Remove(node);
         }
         /// <summary>
         /// 清除
@@ -67,9 +70,9 @@ namespace WorldTree
         /// <summary>
         /// 尝试出列
         /// </summary>
-        public bool TryDequeue(out Node entity)
+        public bool TryDequeue(out Node node)
         {
-            return nodeQueue.TryDequeue(out entity);
+            return nodeQueue.TryDequeue(out node);
         }
 
 

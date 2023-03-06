@@ -21,7 +21,6 @@
         {
             if (ruleGroup != null && IsActive)
             {
-
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {

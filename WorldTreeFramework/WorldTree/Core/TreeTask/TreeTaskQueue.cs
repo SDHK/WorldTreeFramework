@@ -22,10 +22,8 @@ namespace WorldTree
     /// </summary>
     public class TreeTaskQueue : Node
     {
-        public EntityDictionary<long, EntityQueue<TreeTask<TreeTaskQueueLock>>> taskDictitonary;
+        public EntityDictionary<long, DynamicNodeQueue> taskDictitonary;
 
-
-        //self.AddChildren<TreeTask>()
         public async TreeTask<TreeTaskQueueLock> Add(Node entity, long key)
         {
             TreeTask<TreeTaskQueueLock> asyncTask = entity.AddChildren<TreeTask<TreeTaskQueueLock>>();
@@ -34,15 +32,20 @@ namespace WorldTree
 
             if (!taskDictitonary.Value.TryGetValue(key, out var TaskQueue))
             {
-                return asyncTask.AddChildren<TreeTaskQueueLock, long>(key);
+                var nodeQueue = taskDictitonary.AddChildren<DynamicNodeQueue>();
+                taskDictitonary.Value.Add(key, nodeQueue);
+
+                var taskQueueLock = asyncTask.AddChildren<TreeTaskQueueLock, long>(key);
+                nodeQueue.Enqueue(asyncTask);
+                return taskQueueLock;
             }
-            taskDictitonary.GetValueEntity(key).Value.Enqueue(asyncTask);
+            taskDictitonary.GetValueEntity(key).Enqueue(asyncTask);
             return await asyncTask;//返回一个锁
         }
 
     }
 
-    class AsyncTaskQueueAddSystem : AddRule<TreeTaskQueue>
+    class AsyncTaskQueueAddRule : AddRule<TreeTaskQueue>
     {
         public override void OnEvent(TreeTaskQueue self)
         {

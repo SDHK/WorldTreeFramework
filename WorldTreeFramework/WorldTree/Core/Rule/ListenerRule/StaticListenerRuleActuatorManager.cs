@@ -206,7 +206,7 @@ namespace WorldTree
                 group.id = Root.IdManager.GetId();
                 group.Root = Root;
                 ListenerActuatorGroupDictionary.Add(Target, group);
-                AddChildren(group);
+                this.AddChildren(group);
             }
             return group;
         }

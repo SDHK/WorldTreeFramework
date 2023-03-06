@@ -19,27 +19,27 @@ namespace WorldTree
     /// </summary>
     public class GlobalNodeAddListener : Node
     {
-        public RuleActuator systemBroadcast;
+        public DynamicNodeQueue nodeQueue;
     }
     class GlobalNodeAddListenerAddSystem : AddRule<GlobalNodeAddListener>
     {
         public override void OnEvent(GlobalNodeAddListener self)
         {
-            self.TryParentTo(out self.systemBroadcast);
+            self.TryParentTo(out self.nodeQueue);
         }
     }
     class GlobalNodeAddListenerRemoveSystem : RemoveRule<GlobalNodeAddListener>
     {
         public override void OnEvent(GlobalNodeAddListener self)
         {
-            self.systemBroadcast = null;
+            self.nodeQueue = null;
         }
     }
     class GlobalNodeAddListenerListenerAddSystem : ListenerAddRule<GlobalNodeAddListener>
     {
         public override void OnEvent(GlobalNodeAddListener self, Node node)
         {
-            self.systemBroadcast?.Enqueue(node);
+            self.nodeQueue?.Enqueue(node);
         }
     }
 }
