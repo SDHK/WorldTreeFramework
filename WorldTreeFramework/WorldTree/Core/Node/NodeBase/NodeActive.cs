@@ -17,77 +17,26 @@ namespace WorldTree
         /// <summary>
         /// 活跃开关
         /// </summary>
-        private bool activeToggle = false;
+        public bool m_ActiveToggle = false;
 
         /// <summary>
         /// 活跃状态
         /// </summary>
-        private bool active = false;
+        public bool m_Active = false;
 
         /// <summary>
         /// 活跃事件标记
         /// </summary>
-        public bool activeEventMark = false;
+        public bool m_ActiveEventMark = false;
 
         /// <summary>
         /// 活跃状态
         /// </summary>
-        public bool IsActive => active;
+        public bool IsActive => m_Active;
 
         /// <summary>
         /// 活跃标记
         /// </summary>
-        public bool ActiveToggle => activeToggle;
-
-        /// <summary>
-        /// 设置激活状态
-        /// </summary>
-        public void SetActive(bool value)
-        {
-            if (activeToggle != value)
-            {
-                activeToggle = value;
-
-                if (active != ((Parent == null) ? activeToggle : Parent.active && activeToggle))
-                {
-                    RefreshActive();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 刷新激活状态：层序遍历设置子节点
-        /// </summary>
-        private void RefreshActive()
-        {
-            UnitQueue<Node> queue = (Root.EntityPoolManager.IsDisposed) ? new UnitQueue<Node>() : Root.PoolGet<UnitQueue<Node>>();
-            queue.Enqueue(this);
-            while (queue.Count != 0)
-            {
-                var current = queue.Dequeue();
-                if (current.active != ((current.Parent == null) ? current.activeToggle : current.Parent.active && current.activeToggle))
-                {
-                    current.active = !current.active;
-
-                    if (current.components != null)
-                    {
-                        foreach (var item in current.components)
-                        {
-                            queue.Enqueue(item.Value);
-                        }
-                    }
-
-                    if (current.children != null)
-                    {
-                        foreach (var item in current.children)
-                        {
-                            queue.Enqueue(item.Value);
-                        }
-                    }
-                }
-            }
-            queue.Dispose();
-        }
-
+        public bool ActiveToggle => m_ActiveToggle;
     }
 }

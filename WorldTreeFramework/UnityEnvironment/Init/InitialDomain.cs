@@ -31,33 +31,14 @@ namespace WorldTree
         public ValueBinder<float> valueBinder;
 
     }
-
-    class _InitialDomainSendSystemAsyncBase : CallRuleAsync<InitialDomain, float>
-    {
-        public override async TreeTask<float> OnEvent(InitialDomain self)
-        {
-            World.Log("延迟！1");
-            await self.AsyncDelay(3);
-            World.Log("延迟！2");
-
-
-            self.SendRule<IAddRule>();
-
-            return 10f;
-        }
-    }
-
-
     //内联函数，缩短函数调用时间
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
 
     class _InitialDomain : AddRule<InitialDomain>
     {
-        public override async void OnEvent(InitialDomain self)
+        public override  void OnEvent(InitialDomain self)
         {
             World.Log("初始域启动！！!!");
-            var a = await self.CallAsync<float>();
-            World.Log(a);
 
             World.Log("初始域启动！！!!??");
 
@@ -73,11 +54,6 @@ namespace WorldTree
 
 
             //GetGroundPoint(Vector3(1,1), )
-
-
-            self.SendRule<IAddRule>();
-
-
 
         }
 

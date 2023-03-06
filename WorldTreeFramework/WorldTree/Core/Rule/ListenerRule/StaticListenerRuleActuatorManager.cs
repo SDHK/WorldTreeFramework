@@ -21,7 +21,7 @@ namespace WorldTree
         public static bool TrySendStaticListener<T>(this Node entity)
             where T : IListenerRule
         {
-            if (entity.Root.StaticListenerBroadcastManager.TryAddRuleActuator(entity.Type, typeof(T), out var actuator))
+            if (entity.Root.StaticListenerRuleActuatorManager.TryAddRuleActuator(entity.Type, typeof(T), out var actuator))
             {
                 actuator.Send(entity);
                 return true;
@@ -38,7 +38,7 @@ namespace WorldTree
         public static bool TrySendDynamicListener<T>(this Node entity)
             where T : IListenerRule
         {
-            if (entity.Root.DynamicListenerBroadcastManager.TryAddRuleActuator(entity.Type, typeof(T), out var actuator))
+            if (entity.Root.DynamicListenerRuleActuatorManager.TryAddRuleActuator(entity.Type, typeof(T), out var actuator))
             {
                 actuator.Send(entity);
                 return true;
@@ -161,10 +161,10 @@ namespace WorldTree
             foreach (var listenerType in actuator.ruleGroup)//遍历法则集合获取监听器类型
             {
                 //从池里拿到已存在的监听器
-                if (Root.EntityPoolManager.pools.TryGetValue(listenerType.Key, out EntityPool listenerPool))
+                if (Root.NodePoolManager.pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
                 {
                     //全部注入到执行器
-                    foreach (var listener in listenerPool.Entitys)
+                    foreach (var listener in listenerPool.Nodes)
                     {
                         actuator.Enqueue(listener.Value);
                     }

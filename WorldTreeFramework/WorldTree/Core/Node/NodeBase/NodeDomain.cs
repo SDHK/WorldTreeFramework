@@ -23,7 +23,7 @@ namespace WorldTree
         /// <summary>
         /// 域节点
         /// </summary>
-        private UnitDictionary<Type, Node> domains;
+        public UnitDictionary<Type, Node> m_Domains;
 
         /// <summary>
         /// 域节点
@@ -32,101 +32,16 @@ namespace WorldTree
         {
             get
             {
-                if (domains == null)
+                if (m_Domains == null)
                 {
-                    domains = this.PoolGet<UnitDictionary<Type, Node>>();
+                    m_Domains = this.PoolGet<UnitDictionary<Type, Node>>();
                 }
-                return domains;
+                return m_Domains;
             }
-            set { domains = value; }
+            set { m_Domains = value; }
         }
 
-        /// <summary>
-        /// 获取所有上层节点并存入字典
-        /// </summary>
-        public T GetDomain<T>()
-            where T : Node
-        {
-            TryGetDomain(out T domain);
-            return domain;
-        }
 
-        /// <summary>
-        /// 获取所有上层节点并存入字典
-        /// </summary>
-        public bool TryGetDomain<T>(out T domain)
-            where T : Node
-        {
-
-            if (Domains.TryGetValue(typeof(T), out Node node))
-            {
-                domain = node as T;
-                return true;
-            }
-            else if (Domains.Count == 0)
-            {
-                node = Parent;
-                while (node != null)
-                {
-                    Domains.TryAdd(node.GetType(), node);
-                    node = node.Parent;
-                }
-                if (Domains.TryGetValue(typeof(T), out node))
-                {
-                    domain = node as T;
-                    return true;
-                }
-            }
-
-            domain = null;
-            return false;
-        }
-
-        /// <summary>
-        /// 释放域
-        /// </summary>
-        public void DisposeDomain()
-        {
-            if (domains != null)
-            {
-                domains.Clear();
-                domains.Dispose();
-                domains = null;
-            }
-        }
-
-        /// <summary>
-        /// 层序遍历释放域
-        /// </summary>
-        public Node TraversalLevelDisposeDomain()
-        {
-            UnitQueue<Node> queue = this.PoolGet<UnitQueue<Node>>();
-            queue.Enqueue(this);
-
-            while (queue.Count != 0)
-            {
-                var current = queue.Dequeue();
-
-                current.DisposeDomain();
-
-                if (current.components != null)
-                {
-                    foreach (var item in current.components)
-                    {
-                        queue.Enqueue(item.Value);
-                    }
-                }
-                if (current.children != null)
-                {
-                    foreach (var item in current.children)
-                    {
-                        queue.Enqueue(item.Value);
-                    }
-                }
-            }
-            queue.Dispose();
-            return this;
-        }
 
     }
 }

@@ -21,18 +21,18 @@ namespace WorldTree
     /// <summary>
     /// 活跃禁用法则
     /// </summary>
-    public abstract class DisableRule<T> : SendRuleBase<IDisableRule, T>
-        where T : Node
+    public abstract class DisableRule<N> : SendRuleBase<IDisableRule, N>
+        where N : Node
     {
         public override void Invoke(Node self)
         {
-            if (self.IsActive != self.activeEventMark)
+            if (self.IsActive != self.m_ActiveEventMark)
             {
                 if (!self.IsActive)
                 {
-                    OnEvent(self as T);
+                    OnEvent(self as N);
                 }
-                self.activeEventMark = self.IsActive;
+                self.m_ActiveEventMark = self.IsActive;
             }
         }
     }

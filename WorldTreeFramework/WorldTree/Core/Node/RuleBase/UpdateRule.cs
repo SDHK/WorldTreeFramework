@@ -16,5 +16,5 @@ namespace WorldTree
     /// <summary>
     /// 刷新法则
     /// </summary>
-    public abstract class UpdateRule<E> : SendRuleBase<IUpdateRule, E, float> where E : Node { }
+    public abstract class UpdateRule<N> : SendRuleBase<IUpdateRule, N, float> where N : Node { }
 }

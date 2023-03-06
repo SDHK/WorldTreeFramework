@@ -3,13 +3,13 @@
 * 作者： 闪电黑客
 * 日期： 2022/7/17 17:23
 
-* 描述： 实体对象池
+* 描述： 树节点对象池
 *
 * 管理类型： Node
 *   
-*   调用 ECS 生命周期系统， 生成， 获取， 回收， 销毁，
+*   调用 节点 生命周期法则， 生成， 获取， 回收， 销毁，
 *   
-*   同时对 实体 赋予 根节点 和 currentId 分发。
+*   同时对 节点 赋予 根节点 和 Id 分发。
 *   
 */
 using System;
@@ -18,15 +18,15 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-    class EntityPoolAddSystem : AddRule<EntityPool>
+    class NodePoolAddRule : AddRule<NodePool>
     {
-        public override void OnEvent(EntityPool self)
+        public override void OnEvent(NodePool self)
         {
-            //生命周期系统
-            self.newSystem = self.GetRuleList<INewSystem>(self.ObjectType);
-            self.getSystem = self.GetRuleList<IGetSystem>(self.ObjectType);
-            self.recycleSystem = self.GetRuleList<IRecycleSystem>(self.ObjectType);
-            self.destroySystem = self.GetRuleList<IDestroySystem>(self.ObjectType);
+            //生命周期法则
+            self.newRule = self.GetRuleList<INewSystem>(self.ObjectType);
+            self.getRule = self.GetRuleList<IGetSystem>(self.ObjectType);
+            self.recycleRule = self.GetRuleList<IRecycleSystem>(self.ObjectType);
+            self.destroyRule = self.GetRuleList<IDestroySystem>(self.ObjectType);
         }
     }
 
@@ -34,24 +34,24 @@ namespace WorldTree
     /// <summary>
     /// 实体对象池
     /// </summary>
-    public class EntityPool : GenericPool<Node>
+    public class NodePool : GenericPool<Node>
     {
-        public List<IRule> newSystem;
-        public List<IRule> getSystem;
-        public List<IRule> recycleSystem;
-        public List<IRule> destroySystem;
+        public List<IRule> newRule;
+        public List<IRule> getRule;
+        public List<IRule> recycleRule;
+        public List<IRule> destroyRule;
 
         /// <summary>
         /// 引用池
         /// </summary>
-        public Dictionary<long, Node> Entitys;
+        public Dictionary<long, Node> Nodes;
 
-        public EntityPool(Type type) : base()
+        public NodePool(Type type) : base()
         {
 
             ObjectType = type;
 
-            Entitys = new Dictionary<long, Node>();
+            Nodes = new Dictionary<long, Node>();
 
             NewObject = ObjectNew;
             DestroyObject = ObjectDestroy;
@@ -74,7 +74,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return $"[EntityPool<{ObjectType}>] : {Count} ";
+            return $"[NodePool<{ObjectType}>] : {Count} ";
         }
 
         private Node ObjectNew(IPool pool)
@@ -115,27 +115,27 @@ namespace WorldTree
 
         private void ObjectOnNew(Node obj)
         {
-            newSystem?.Send(obj);
+            newRule?.Send(obj);
         }
 
         private void ObjectOnGet(Node obj)
         {
             obj.IsRecycle = false;
-            Entitys.TryAdd(obj.id, obj);
-            getSystem?.Send(obj);
+            Nodes.TryAdd(obj.id, obj);
+            getRule?.Send(obj);
         }
 
         private void ObjectOnRecycle(Node obj)
         {
             obj.IsRecycle = true;
-            recycleSystem?.Send(obj);
-            Entitys.Remove(obj.id);
+            recycleRule?.Send(obj);
+            Nodes.Remove(obj.id);
         }
 
         private void ObjectOnDestroy(Node obj)
         {
             obj.IsDisposed = true;
-            destroySystem?.Send(obj);
+            destroyRule?.Send(obj);
         }
 
     }

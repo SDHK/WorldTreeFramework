@@ -13,24 +13,24 @@ using System;
 namespace WorldTree
 {
 
-    public abstract partial class Node
+    public static class NodeTraversalStaticRule
     {
         /// <summary>
         /// 前序遍历
         /// </summary>
-        public Node TraversalPreorder(Action<Node> action)
+        public static Node TraversalPreorder(this Node self, Action<Node> action)
         {
             Node current;
-            UnitStack<Node> stack = this.PoolGet<UnitStack<Node>>();
-            UnitStack<Node> localStack = this.PoolGet<UnitStack<Node>>();
-            stack.Push(this);
+            UnitStack<Node> stack = self.PoolGet<UnitStack<Node>>();
+            UnitStack<Node> localStack = self.PoolGet<UnitStack<Node>>();
+            stack.Push(self);
             while (stack.Count != 0)
             {
                 current = stack.Pop();
                 action(current);
-                if (current.children != null)
+                if (current.m_Children != null)
                 {
-                    foreach (var item in current.children)
+                    foreach (var item in current.m_Children)
                     {
                         localStack.Push(item.Value);
                     }
@@ -39,9 +39,9 @@ namespace WorldTree
                         stack.Push(localStack.Pop());
                     }
                 }
-                if (current.components != null)
+                if (current.m_Components != null)
                 {
-                    foreach (var item in current.components)
+                    foreach (var item in current.m_Components)
                     {
                         localStack.Push(item.Value);
                     }
@@ -53,16 +53,16 @@ namespace WorldTree
             }
             localStack.Dispose();
             stack.Dispose();
-            return this;
+            return self;
         }
 
         /// <summary>
         /// 层序遍历
         /// </summary>
-        public Node TraversalLevel(Action<Node> action)
+        public static Node TraversalLevel(this Node self, Action<Node> action)
         {
-            UnitQueue<Node> queue = this.PoolGet<UnitQueue<Node>>();
-            queue.Enqueue(this);
+            UnitQueue<Node> queue = self.PoolGet<UnitQueue<Node>>();
+            queue.Enqueue(self);
 
             while (queue.Count != 0)
             {
@@ -70,48 +70,48 @@ namespace WorldTree
 
                 action(current);
 
-                if (current.components != null)
+                if (current.m_Components != null)
                 {
-                    foreach (var item in current.components)
+                    foreach (var item in current.m_Components)
                     {
                         queue.Enqueue(item.Value);
                     }
                 }
-                if (current.children != null)
+                if (current.m_Children != null)
                 {
-                    foreach (var item in current.children)
+                    foreach (var item in current.m_Children)
                     {
                         queue.Enqueue(item.Value);
                     }
                 }
             }
             queue.Dispose();
-            return this;
+            return self;
         }
 
         /// <summary>
         /// 后序遍历
         /// </summary>
-        public Node TraversalPostorder(Action<Node> action)
+        public static Node TraversalPostorder(this Node self, Action<Node> action)
         {
             Node current;
-            UnitStack<Node> stack = this.PoolGet<UnitStack<Node>>();
-            UnitStack<Node> allStack = this.PoolGet<UnitStack<Node>>();
-            stack.Push(this);
+            UnitStack<Node> stack = self.PoolGet<UnitStack<Node>>();
+            UnitStack<Node> allStack = self.PoolGet<UnitStack<Node>>();
+            stack.Push(self);
             while (stack.Count != 0)
             {
                 current = stack.Pop();
                 allStack.Push(current);
-                if (current.children != null)
+                if (current.m_Children != null)
                 {
-                    foreach (var item in current.children)
+                    foreach (var item in current.m_Children)
                     {
                         stack.Push(item.Value);
                     }
                 }
-                if (current.components != null)
+                if (current.m_Components != null)
                 {
-                    foreach (var item in current.components)
+                    foreach (var item in current.m_Components)
                     {
                         stack.Push(item.Value);
                     }
@@ -123,7 +123,7 @@ namespace WorldTree
                 action(allStack.Pop());
             }
             allStack.Dispose();
-            return this;
+            return self;
         }
 
 

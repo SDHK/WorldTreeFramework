@@ -20,7 +20,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取系统组
+        /// 获取法则集合
         /// </summary>
         public static RuleGroup GetRuleGroup<T>(this Node self)
         where T : IRule
@@ -30,7 +30,7 @@ namespace WorldTree
 
 
         /// <summary>
-        /// 获取系统组
+        /// 获取法则集合
         /// </summary>
         public static RuleGroup GetRuleGroup(this Node self, Type type)
         {
@@ -38,7 +38,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取单类型系统列表
+        /// 获取单类型法则列表
         /// </summary>
         public static List<IRule> GetRuleList<R>(this Node self, Type type)
         where R : IRule

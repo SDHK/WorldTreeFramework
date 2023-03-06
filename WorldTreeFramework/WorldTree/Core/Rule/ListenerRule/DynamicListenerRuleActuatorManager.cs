@@ -84,10 +84,10 @@ namespace WorldTree
             foreach (var listenerType in actuator.ruleGroup)//遍历监听类型
             {
                 //获取监听器对象池
-                if (Root.EntityPoolManager.pools.TryGetValue(listenerType.Key, out EntityPool listenerPool))
+                if (Root.NodePoolManager.pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
                 {
                     //遍历已存在的监听器
-                    foreach (var listener in listenerPool.Entitys)
+                    foreach (var listener in listenerPool.Nodes)
                     {
                         //判断目标是否被该监听器监听
                         if (listener.Value.listenerTarget != null)

@@ -28,9 +28,9 @@ namespace WorldTree
                 ruleActuator.Clear();
                 foreach (var item in ruleActuator.ruleGroup)
                 {
-                    if (ruleActuator.Root.EntityPoolManager.pools.TryGetValue(item.Key, out EntityPool pool))
+                    if (ruleActuator.Root.NodePoolManager.pools.TryGetValue(item.Key, out NodePool pool))
                     {
-                        foreach (var node in pool.Entitys)
+                        foreach (var node in pool.Nodes)
                         {
                             ruleActuator.Enqueue(node.Value);
                         }

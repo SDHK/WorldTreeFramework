@@ -20,18 +20,18 @@ namespace WorldTree
     /// <summary>
     /// 活跃启用法则
     /// </summary>
-    public abstract class EnableRule<T> : SendRuleBase<IEnableRule, T>
-    where T : Node
+    public abstract class EnableRule<N> : SendRuleBase<IEnableRule, N>
+    where N : Node
     {
         public override void Invoke(Node self)
         {
-            if (self.IsActive != self.activeEventMark)
+            if (self.IsActive != self.m_ActiveEventMark)
             {
                 if (self.IsActive)
                 {
-                    OnEvent(self as T);
+                    OnEvent(self as N);
                 }
-                self.activeEventMark = self.IsActive;
+                self.m_ActiveEventMark = self.IsActive;
             }
         }
     }

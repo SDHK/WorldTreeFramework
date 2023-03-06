@@ -39,9 +39,9 @@ namespace WorldTree
         public IdManager IdManager;
         public RuleManager RuleManager;
         public UnitPoolManager UnitPoolManager;
-        public EntityPoolManager EntityPoolManager;
-        public StaticListenerRuleActuatorManager StaticListenerBroadcastManager;
-        public DynamicListenerRuleActuatorManager DynamicListenerBroadcastManager;
+        public NodePoolManager NodePoolManager;
+        public StaticListenerRuleActuatorManager StaticListenerRuleActuatorManager;
+        public DynamicListenerRuleActuatorManager DynamicListenerRuleActuatorManager;
 
         public WorldTreeRoot() : base()
         {
@@ -53,27 +53,27 @@ namespace WorldTree
             IdManager = new IdManager();
             RuleManager = new RuleManager();
             UnitPoolManager = new UnitPoolManager();
-            EntityPoolManager = new EntityPoolManager();
-            StaticListenerBroadcastManager = new StaticListenerRuleActuatorManager();
-            DynamicListenerBroadcastManager = new DynamicListenerRuleActuatorManager();
+            NodePoolManager = new NodePoolManager();
+            StaticListenerRuleActuatorManager = new StaticListenerRuleActuatorManager();
+            DynamicListenerRuleActuatorManager = new DynamicListenerRuleActuatorManager();
 
             //赋予根节点
             Root = this;
             IdManager.Root = this;
             RuleManager.Root = this;
             UnitPoolManager.Root = this;
-            EntityPoolManager.Root = this;
-            StaticListenerBroadcastManager.Root = this;
-            DynamicListenerBroadcastManager.Root = this;
+            NodePoolManager.Root = this;
+            StaticListenerRuleActuatorManager.Root = this;
+            DynamicListenerRuleActuatorManager.Root = this;
 
             //赋予id
             Root.id = IdManager.GetId();
             IdManager.id = IdManager.GetId();
             RuleManager.id = IdManager.GetId();
             UnitPoolManager.id = IdManager.GetId();
-            EntityPoolManager.id = IdManager.GetId();
-            StaticListenerBroadcastManager.id = IdManager.GetId();
-            DynamicListenerBroadcastManager.id = IdManager.GetId();
+            NodePoolManager.id = IdManager.GetId();
+            StaticListenerRuleActuatorManager.id = IdManager.GetId();
+            DynamicListenerRuleActuatorManager.id = IdManager.GetId();
 
             //实体管理器系统事件获取
             addSystems = Root.RuleManager.GetRuleGroup<IAddRule>();
@@ -88,9 +88,9 @@ namespace WorldTree
             AddComponent(IdManager);
             AddComponent(RuleManager);
             AddComponent(UnitPoolManager);
-            AddComponent(EntityPoolManager);
-            AddComponent(StaticListenerBroadcastManager);
-            AddComponent(DynamicListenerBroadcastManager);
+            AddComponent(NodePoolManager);
+            AddComponent(StaticListenerRuleActuatorManager);
+            AddComponent(DynamicListenerRuleActuatorManager);
 
         }
         /// <summary>
@@ -98,7 +98,7 @@ namespace WorldTree
         /// </summary>
         public override void Dispose()
         {
-            RemoveAll();
+            this.RemoveAll();
             allEntity.Clear();
         }
 
@@ -116,7 +116,7 @@ namespace WorldTree
             addSystems?.Send(entity);
 
             //检测添加静态监听
-            StaticListenerBroadcastManager.TryAddListener(entity);
+            StaticListenerRuleActuatorManager.TryAddListener(entity);
             //检测添加动态监听
             entity.ListenerSwitchesTarget(typeof(Node), ListenerState.Node);
 
@@ -135,7 +135,7 @@ namespace WorldTree
             disableSystems?.Send(entity);//调用禁用事件
 
             //检测移除静态监听
-            StaticListenerBroadcastManager.RemoveListener(entity);
+            StaticListenerRuleActuatorManager.RemoveListener(entity);
             //检测移除动态监听
             entity.ListenerClearTarget();
 
