@@ -25,15 +25,18 @@ namespace WorldTree
             //当前任务完成，此时锁正在被移除
             var task = self.ParentTo<TreeTask<TreeTaskQueueLock>>();
 
-           
+
 
             //设置任务完成，返回下一个任务的锁
-            World.Log("nodeQueue:"+self.nodeQueue.Count);
-            task.SetResult(self.nodeQueue.Peek().GetComponent<TreeTaskQueueLock>());
 
             //节点队列移除任务
             self.nodeQueue.Remove(task);
 
+            World.Log("nodeQueue:" + self.nodeQueue.Count);
+
+            task.SetResult(self.nodeQueue.Peek().AddComponent<TreeTaskQueueLock>());
+
+          
             self.nodeQueue = null;
         }
     }

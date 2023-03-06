@@ -26,11 +26,12 @@ namespace WorldTree
 
         public async TreeTask<TreeTaskQueueLock> Add(Node entity, long key)
         {
-            TreeTask<TreeTaskQueueLock> treeTask = entity.AddChildren<TreeTask<TreeTaskQueueLock>>();
-            treeTask.AddChildren<TreeTaskQueueLock, long>(key);
+            //锁挂node下
+            //任务挂锁下
+            //队列存node
 
             //给任务挂上队列锁
-            TreeTaskQueueLock taskQueueLock = treeTask.AddChildren<TreeTaskQueueLock>();
+            //TreeTaskQueueLock taskQueueLock = treeTask.AddChildren<TreeTaskQueueLock>();
 
             //判断如果没有这个键值
             if (!nodeQueueDictitonary.Value.TryGetValue(key, out DynamicNodeQueue TaskQueue))
@@ -41,18 +42,19 @@ namespace WorldTree
                 //动态节点队列添加进字典
                 nodeQueueDictitonary.Value.Add(key, TaskQueue);
 
-                TaskQueue.Enqueue(treeTask);
+                TreeTaskQueueLock taskQueueLock = entity.AddChildren<TreeTaskQueueLock>();
+
                 taskQueueLock.nodeQueue = TaskQueue;
 
                 await entity.TreeTaskCompleted();
 
                 return taskQueueLock;
             }
-            else
-            {
-                TaskQueue.Enqueue(treeTask);
-                taskQueueLock.nodeQueue = TaskQueue;
-            }
+
+            TreeTask<TreeTaskQueueLock> treeTask = entity.AddChildren<TreeTask<TreeTaskQueueLock>>();
+
+            TaskQueue.Enqueue(treeTask);
+            //taskQueueLock.nodeQueue = TaskQueue;
 
             return await treeTask;//返回一个锁任务
         }

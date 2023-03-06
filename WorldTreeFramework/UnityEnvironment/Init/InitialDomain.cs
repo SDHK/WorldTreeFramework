@@ -55,15 +55,15 @@ namespace WorldTree
     {
         public override async void OnEvent(InitialDomain self, float deltaTime)
         {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                using (await self.Root.AddComponent<TreeTaskQueue>().Add(self, 0))
-                {
-                    await self.AsyncDelay(3);
-                    self.f++;
-                    World.Log($"初始域:{self.f}");
-                }
-            }
+            //if (Input.GetKeyDown(KeyCode.A))
+            //{
+            //    using (await self.Root.AddComponent<TreeTaskQueue>().Add(self, 0))
+            //    {
+            //        await self.AsyncDelay(3);
+            //        self.f++;
+            //        World.Log($"初始域:{self.f}");
+            //    }
+            //}
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
