@@ -34,10 +34,10 @@ namespace EditorTool
             //root.AddComponent<WorldTreeFrameworkWindow>();
         }
 
-        public SystemBroadcast enable;
-        public SystemBroadcast disable;
-        public SystemBroadcast update;
-        public SystemBroadcast onGUI;
+        public RuleActuator enable;
+        public RuleActuator disable;
+        public RuleActuator update;
+        public RuleActuator onGUI;
 
         public EditorHomePage HomePage;
     }
@@ -47,10 +47,10 @@ namespace EditorTool
         public override void OnEvent(WorldTreeFrameworkWindow self)
         {
             self.AddComponent<EditorGUIWindow>();
-            self.enable = self.GetSystemGlobalBroadcast<IEnableRule>();
-            self.update = self.GetSystemGlobalBroadcast<IUpdateRule>();
-            self.disable = self.GetSystemGlobalBroadcast<IDisableRule>();
-            self.onGUI = self.GetSystemGlobalBroadcast<IGuiUpdateSystem>();
+            self.enable = self.GetGlobalNodeRuleActuator<IEnableRule>();
+            self.update = self.GetGlobalNodeRuleActuator<IUpdateRule>();
+            self.disable = self.GetGlobalNodeRuleActuator<IDisableRule>();
+            self.onGUI = self.GetGlobalNodeRuleActuator<IGuiUpdateSystem>();
             self.AddComponent<EditorHomePage>();
         }
     }

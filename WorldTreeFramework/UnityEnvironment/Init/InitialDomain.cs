@@ -32,7 +32,7 @@ namespace WorldTree
 
     }
 
-    class _InitialDomainSendSystemAsyncBase : CallSystemAsync<InitialDomain, float>
+    class _InitialDomainSendSystemAsyncBase : CallRuleAsync<InitialDomain, float>
     {
         public override async TreeTask<float> OnEvent(InitialDomain self)
         {

@@ -18,12 +18,12 @@ namespace WorldTree
     {
         public WorldTreeRoot root;
 
-        SystemBroadcast enable;
-        SystemBroadcast disable;
-        SystemBroadcast update;
-        SystemBroadcast lateUpdate;
-        SystemBroadcast fixedUpdate;
-        //SystemBroadcast onGUI;
+        RuleActuator enable;
+        RuleActuator disable;
+        RuleActuator update;
+        RuleActuator lateUpdate;
+        RuleActuator fixedUpdate;
+        //RuleActuator onGUI;
 
 
         private void Start()
@@ -34,13 +34,13 @@ namespace WorldTree
 
             root = new WorldTreeRoot();
 
-            enable = root.GetSystemGlobalBroadcast<IEnableRule>();
-            update = root.GetSystemGlobalBroadcast<IUpdateRule>();
-            disable = root.GetSystemGlobalBroadcast<IDisableRule>();
+            enable = root.GetGlobalNodeRuleActuator<IEnableRule>();
+            update = root.GetGlobalNodeRuleActuator<IUpdateRule>();
+            disable = root.GetGlobalNodeRuleActuator<IDisableRule>();
 
-            lateUpdate = root.GetSystemGlobalBroadcast<ILateUpdateSystem>();
-            fixedUpdate = root.GetSystemGlobalBroadcast<IFixedUpdateSystem>();
-            //onGUI = root.GetSystemGlobalBroadcast<IGuiUpdateSystem>();
+            lateUpdate = root.GetGlobalNodeRuleActuator<ILateUpdateSystem>();
+            fixedUpdate = root.GetGlobalNodeRuleActuator<IFixedUpdateSystem>();
+            //onGUI = root.GetGlobalNodeRuleActuator<IGuiUpdateSystem>();
 
             root.AddComponent<InitialDomain>();
         }

@@ -47,10 +47,10 @@ namespace EditorTool
             //World.Log = Debug.Log;
             //World.LogWarning = Debug.LogWarning;
             //World.LogError = Debug.LogError;
-            //enable = root.GetSystemGlobalBroadcast<IEnableRule>();
-            //update = root.GetSystemGlobalBroadcast<IUpdateRule>();
-            //disable = root.GetSystemGlobalBroadcast<IDisableRule>();
-            //onGUI = root.GetSystemGlobalBroadcast<IGuiUpdateSystem>();
+            //enable = root.GetGlobalNodeRuleActuator<IEnableRule>();
+            //update = root.GetGlobalNodeRuleActuator<IUpdateRule>();
+            //disable = root.GetGlobalNodeRuleActuator<IDisableRule>();
+            //onGUI = root.GetGlobalNodeRuleActuator<IGuiUpdateSystem>();
         }
 
         protected override OdinMenuTree BuildMenuTree()

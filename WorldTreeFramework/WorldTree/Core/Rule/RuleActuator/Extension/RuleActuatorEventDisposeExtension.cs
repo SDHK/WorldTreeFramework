@@ -9,19 +9,19 @@
 
 namespace WorldTree
 {
-    public partial class SystemBroadcast
+    public partial class RuleActuator
     {
 
         public void SendDispose()
         {
             if (IsActive)
             {
-                int length = entityQueue.Count;
+                int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Node entity))
+                    if (nodeQueue.TryDequeue(out Node node))
                     {
-                        systems.Send(entity);
+                        ruleGroup.Send(node);
                     }
                 }
                 Dispose();
@@ -32,12 +32,12 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                int length = entityQueue.Count;
+                int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Node entity))
+                    if (nodeQueue.TryDequeue(out Node node))
                     {
-                        systems.Send(entity, arg1);
+                        ruleGroup.Send(node, arg1);
                     }
                 }
                 Dispose();
@@ -49,12 +49,12 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                int length = entityQueue.Count;
+                int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Node entity))
+                    if (nodeQueue.TryDequeue(out Node node))
                     {
-                        systems.Send(entity, arg1, arg2);
+                        ruleGroup.Send(node, arg1, arg2);
                     }
                 }
                 Dispose();
@@ -64,12 +64,12 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                int length = entityQueue.Count;
+                int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Node entity))
+                    if (nodeQueue.TryDequeue(out Node node))
                     {
-                        systems.Send(entity, arg1, arg2, arg3);
+                        ruleGroup.Send(node, arg1, arg2, arg3);
                     }
                 }
                 Dispose();
@@ -79,12 +79,12 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                int length = entityQueue.Count;
+                int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Node entity))
+                    if (nodeQueue.TryDequeue(out Node node))
                     {
-                        systems.Send(entity, arg1, arg2, arg3, arg4);
+                        ruleGroup.Send(node, arg1, arg2, arg3, arg4);
                     }
                 }
                 Dispose();
@@ -94,12 +94,12 @@ namespace WorldTree
         {
             if (IsActive)
             {
-                int length = entityQueue.Count;
+                int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (entityQueue.TryDequeue(out Node entity))
+                    if (nodeQueue.TryDequeue(out Node node))
                     {
-                        systems.Send(entity, arg1, arg2, arg3, arg4, arg5);
+                        ruleGroup.Send(node, arg1, arg2, arg3, arg4, arg5);
                     }
                 }
                 Dispose();

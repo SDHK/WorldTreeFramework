@@ -40,8 +40,8 @@ namespace WorldTree
         public RuleManager RuleManager;
         public UnitPoolManager UnitPoolManager;
         public EntityPoolManager EntityPoolManager;
-        public StaticListenerBroadcastManager StaticListenerBroadcastManager;
-        public DynamicListenerBroadcastManager DynamicListenerBroadcastManager;
+        public StaticListenerRuleActuatorManager StaticListenerBroadcastManager;
+        public DynamicListenerRuleActuatorManager DynamicListenerBroadcastManager;
 
         public WorldTreeRoot() : base()
         {
@@ -54,8 +54,8 @@ namespace WorldTree
             RuleManager = new RuleManager();
             UnitPoolManager = new UnitPoolManager();
             EntityPoolManager = new EntityPoolManager();
-            StaticListenerBroadcastManager = new StaticListenerBroadcastManager();
-            DynamicListenerBroadcastManager = new DynamicListenerBroadcastManager();
+            StaticListenerBroadcastManager = new StaticListenerRuleActuatorManager();
+            DynamicListenerBroadcastManager = new DynamicListenerRuleActuatorManager();
 
             //赋予根节点
             Root = this;
@@ -107,8 +107,8 @@ namespace WorldTree
         public void Add(Node entity)
         {
             //广播给全部监听器!!!!
-            entity.TrySendStaticListener<IListenerAddSystem>();
-            entity.TrySendDynamicListener<IListenerAddSystem>();
+            entity.TrySendStaticListener<IListenerAddRule>();
+            entity.TrySendDynamicListener<IListenerAddRule>();
 
             allEntity.TryAdd(entity.id, entity);
 
@@ -145,8 +145,8 @@ namespace WorldTree
             allEntity.Remove(entity.id);
 
             //广播给全部监听器!!!!
-            entity.TrySendStaticListener<IListenerRemoveSystem>();
-            entity.TrySendDynamicListener<IListenerRemoveSystem>();
+            entity.TrySendStaticListener<IListenerRemoveRule>();
+            entity.TrySendDynamicListener<IListenerRemoveRule>();
 
         }
     }

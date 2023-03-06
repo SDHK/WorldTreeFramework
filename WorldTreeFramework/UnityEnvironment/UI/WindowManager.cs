@@ -184,14 +184,14 @@ namespace WorldTree
         }
     }
 
-    class WindowManagerEntityAddSystem : ListenerAddSystem<WindowManager>
+    class WindowManagerEntityAddSystem : ListenerAddRule<WindowManager>
     {
         public override void OnEvent(WindowManager self, Node entity)
         {
 
         }
     }
-    class WindowManagerEntityRemoveSystem : ListenerRemoveSystem<WindowManager>
+    class WindowManagerEntityRemoveSystem : ListenerRemoveRule<WindowManager>
     {
         public override void OnEvent(WindowManager self, Node entity)
         {

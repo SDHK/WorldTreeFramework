@@ -134,12 +134,12 @@ namespace WorldTree
             if (Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(Node), out var systemGroups))
             {
                 //遍历现有广播
-                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.ListenerBroadcastGroupDictionary)
+                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.ListenerActuatorGroupDictionary)
                 {
                     //遍历获取动态系统组，并添加自己
                     foreach (var systemGroup in systemGroups)
                     {
-                        if (BroadcastGroup.Value.TryGetBroadcast(systemGroup.Key, out var broadcast))
+                        if (BroadcastGroup.Value.TryGetRuleActuator(systemGroup.Key, out var broadcast))
                         {
                             broadcast.Enqueue(this);
                         }
@@ -177,7 +177,7 @@ namespace WorldTree
                     //遍历获取动态系统组，并添加自己
                     foreach (var systemGroup in systemGroups)
                     {
-                        broadcastGroup.GetBroadcast(systemGroup.Key).Enqueue(this);
+                        broadcastGroup.GetRuleActuator(systemGroup.Key).Enqueue(this);
                     }
                 }
             }
@@ -223,12 +223,12 @@ namespace WorldTree
             if (Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(Node), out var systemGroups))
             {
                 //遍历现有全部池
-                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.ListenerBroadcastGroupDictionary)
+                foreach (var BroadcastGroup in Root.DynamicListenerBroadcastManager.ListenerActuatorGroupDictionary)
                 {
                     //遍历获取动态系统组，并移除自己
                     foreach (var systemGroup in systemGroups)
                     {
-                        if (BroadcastGroup.Value.TryGetBroadcast(systemGroup.Key, out var broadcast))
+                        if (BroadcastGroup.Value.TryGetRuleActuator(systemGroup.Key, out var broadcast))
                         {
                             broadcast.Remove(this);
                         }
@@ -265,7 +265,7 @@ namespace WorldTree
                     //遍历获取动态系统组，并移除自己
                     foreach (var systemGroup in systemGroups)
                     {
-                        broadcastGroup.GetBroadcast(systemGroup.Key).Remove(this);
+                        broadcastGroup.GetRuleActuator(systemGroup.Key).Remove(this);
                     }
                 }
             }

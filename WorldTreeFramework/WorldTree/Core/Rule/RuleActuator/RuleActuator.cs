@@ -3,42 +3,42 @@
 * 作者： 闪电黑客
 * 日期： 2022/9/16 22:03
 
-* 描述： 系统广播器
+* 描述： 法则执行器
 * 
-* 用于广播拥有指定系统的实体
+* 用于执行拥有指定法则的节点
 
 */
 
 namespace WorldTree
 {
     /// <summary>
-    /// 系统广播
+    /// 法则执行器
     /// </summary>
-    public partial class SystemBroadcast : Node
+    public partial class RuleActuator : Node
     {
         /// <summary>
         /// 系统组
         /// </summary>
-        public RuleGroup systems;
+        public RuleGroup ruleGroup;
 
-        public DynamicEntityQueue entityQueue;
+        public DynamicNodeQueue nodeQueue;
 
         public override string ToString()
         {
-            return $"SystemBroadcast : {systems?.RuleType}";
+            return $"RuleActuator : {ruleGroup?.RuleType}";
         }
 
         /// <summary>
         /// 当前数量
         /// </summary>
-        public int Count => entityQueue.Count;
+        public int Count => nodeQueue.Count;
 
         /// <summary>
         /// 添加实体
         /// </summary>
         public void Enqueue(Node entity)
         {
-            entityQueue.Enqueue(entity);
+            nodeQueue.Enqueue(entity);
         }
 
         /// <summary>
@@ -46,14 +46,14 @@ namespace WorldTree
         /// </summary>
         public void Remove(Node entity)
         {
-            entityQueue.Remove(entity);
+            nodeQueue.Remove(entity);
         }
         /// <summary>
         /// 清除
         /// </summary>
         public void Clear()
         {
-            entityQueue.Clear();
+            nodeQueue.Clear();
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace WorldTree
         /// </summary>
         public Node Dequeue()
         {
-            return entityQueue.Dequeue();
+            return nodeQueue.Dequeue();
         }
 
         /// <summary>
@@ -69,28 +69,20 @@ namespace WorldTree
         /// </summary>
         public bool TryDequeue(out Node entity)
         {
-            return entityQueue.TryDequeue(out entity);
+            return nodeQueue.TryDequeue(out entity);
         }
 
 
     }
 
-    class SystemBroadcastAddSystem : AddRule<SystemBroadcast>
+    class RuleActuatorAddSystem : AddRule<RuleActuator>
     {
-        public override void OnEvent(SystemBroadcast self)
+        public override void OnEvent(RuleActuator self)
         {
             if (self.thisPool != null)
             {
-                self.AddComponent(out self.entityQueue);
+                self.AddComponent(out self.nodeQueue);
             }
-
-        }
-    }
-
-    class SystemBroadcastRemoveSystem : RemoveRule<SystemBroadcast>
-    {
-        public override void OnEvent(SystemBroadcast self)
-        {
 
         }
     }

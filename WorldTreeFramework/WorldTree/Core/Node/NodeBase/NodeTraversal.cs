@@ -130,10 +130,10 @@ namespace WorldTree
         ///// <summary>
         ///// 前序遍历广播
         ///// </summary>
-        //public static SystemBroadcast GetTraversalPreorderSystemBroadcast<LR>(this Node self)
+        //public static RuleActuator GetTraversalPreorderSystemBroadcast<LR>(this Node self)
         //   where LR : ISystem
         //{
-        //    SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(LR));
+        //    RuleActuator systemBroadcast = self.AddChildren<RuleActuator, Type>(typeof(LR));
         //    self.TraversalPostorder(systemBroadcast.AddEntity);
         //    return systemBroadcast;
         //}
@@ -141,20 +141,20 @@ namespace WorldTree
         ///// <summary>
         ///// 层序遍历广播
         ///// </summary>
-        //public static SystemBroadcast GetTraversalLevelSystemBroadcast<LR>(this Node self)
+        //public static RuleActuator GetTraversalLevelSystemBroadcast<LR>(this Node self)
         //  where LR : ISystem
         //{
-        //    SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(LR));
+        //    RuleActuator systemBroadcast = self.AddChildren<RuleActuator, Type>(typeof(LR));
         //    self.TraversalLevel(systemBroadcast.AddEntity);
         //    return systemBroadcast;
         //}
         ///// <summary>
         ///// 后序遍历广播
         ///// </summary>
-        //public static SystemBroadcast GetTraversalPostorderSystemBroadcast<LR>(this Node self)
+        //public static RuleActuator GetTraversalPostorderSystemBroadcast<LR>(this Node self)
         // where LR : ISystem
         //{
-        //    SystemBroadcast systemBroadcast = self.AddChildren<SystemBroadcast, Type>(typeof(LR));
+        //    RuleActuator systemBroadcast = self.AddChildren<RuleActuator, Type>(typeof(LR));
         //    self.TraversalPostorder(systemBroadcast.AddEntity);
         //    return systemBroadcast;
         //}
@@ -165,10 +165,10 @@ namespace WorldTree
         ///// <summary>
         ///// 前序遍历执行
         ///// </summary>
-        //public static SystemBroadcast GetTraversalPreorderSystemActuator<LR>(this Node self)
+        //public static RuleActuator GetTraversalPreorderSystemActuator<LR>(this Node self)
         //   where LR : ISystem
         //{
-        //    SystemBroadcast systemActuator = self.AddChildren<SystemBroadcast, Type>(typeof(LR));
+        //    RuleActuator systemActuator = self.AddChildren<RuleActuator, Type>(typeof(LR));
         //    self.TraversalPostorder(systemActuator.AddEntity);
         //    return systemActuator;
         //}
@@ -176,10 +176,10 @@ namespace WorldTree
         ///// <summary>
         ///// 层序遍历执行
         ///// </summary>
-        //public static SystemBroadcast GetTraversalLevelSystemActuator<LR>(this Node self)
+        //public static RuleActuator GetTraversalLevelSystemActuator<LR>(this Node self)
         //  where LR : ISystem
         //{
-        //    SystemBroadcast systemActuator = self.AddChildren<SystemBroadcast, Type>(typeof(LR));
+        //    RuleActuator systemActuator = self.AddChildren<RuleActuator, Type>(typeof(LR));
         //    self.TraversalLevel(systemActuator.AddEntity);
         //    return systemActuator;
         //}
@@ -187,10 +187,10 @@ namespace WorldTree
         ///// <summary>
         ///// 后序遍历执行
         ///// </summary>
-        //public static SystemBroadcast GetTraversalPostorderSystemActuator<LR>(this Node self)
+        //public static RuleActuator GetTraversalPostorderSystemActuator<LR>(this Node self)
         // where LR : ISystem
         //{
-        //    SystemBroadcast systemActuator = self.AddChildren<SystemBroadcast, Type>(typeof(LR));
+        //    RuleActuator systemActuator = self.AddChildren<RuleActuator, Type>(typeof(LR));
         //    self.TraversalPostorder(systemActuator.AddEntity);
         //    return systemActuator;
         //}
