@@ -31,9 +31,7 @@ namespace WorldTree
         public ValueBinder<float> valueBinder;
 
     }
-    //内联函数，缩短函数调用时间
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-
+  
     class _InitialDomain : AddRule<InitialDomain>
     {
 
@@ -41,12 +39,12 @@ namespace WorldTree
         {
             World.Log("初始域启动！！");
 
-            using (await self.AsyncQueueLock(0))
+            using (await self.AsyncSingleLock(0))
             {
-                await self.AsyncDelay(1);
+                await self.AsyncDelay(3);
                 self.f++;
-                World.Log($"初始域!:{self.f}");
             }
+            World.Log($"初始域!:{self.f}");
 
         }
 
@@ -57,12 +55,13 @@ namespace WorldTree
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                using (await self.AsyncQueueLock(0))
+                using (await self.AsyncSingleLock(0))
                 {
-                    await self.AsyncDelay(1);
+                    await self.AsyncDelay(3);
                     self.f++;
-                    World.Log($"初始域:{self.f}");
                 }
+                World.Log($"初始域:{self.f}");
+
             }
 
             if (Input.GetKeyDown(KeyCode.Q))

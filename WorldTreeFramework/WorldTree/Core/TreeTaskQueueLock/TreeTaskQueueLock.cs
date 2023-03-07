@@ -15,7 +15,8 @@ namespace WorldTree
         /// <summary>
         /// 异步队列锁
         /// </summary>
-        public static TreeTask<TreeTaskQueueCompleter> AsyncQueueLock(this Node self, long key)
+        /// <remarks>按照队列顺序执行异步任务</remarks>
+        public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this Node self, long key)
         {
             return self.Root.AddComponent<TreeTaskQueueLock>().Lock(self, key);
         }
@@ -31,7 +32,7 @@ namespace WorldTree
         /// <summary>
         /// 队列任务锁
         /// </summary>
-        public async TreeTask<TreeTaskQueueCompleter> Lock(Node entity, long key)
+        public async TreeTask<TreeTaskQueueCompleter> Lock(Node node, long key)
         {
             //判断如果没有这个键值
             if (!nodeQueueDictitonary.Value.TryGetValue(key, out DynamicNodeQueue TaskQueue))
@@ -46,21 +47,21 @@ namespace WorldTree
                 nodeQueueDictitonary.Value.Add(key, TaskQueue);
 
                 //节点添加解锁器
-                TreeTaskQueueCompleter taskQueueCompleter = entity.AddChildren<TreeTaskQueueCompleter>();
+                TreeTaskQueueCompleter taskQueueCompleter = node.AddChildren<TreeTaskQueueCompleter>();
 
                 //解锁器配上队列
-                taskQueueCompleter.treeTaskQueue = this;
+                taskQueueCompleter.queueLock = this;
                 taskQueueCompleter.key = key;
 
                 //防止异常
-                await entity.TreeTaskCompleted();
+                await node.TreeTaskCompleted();
 
                 //返回解锁器
                 return taskQueueCompleter;
             }
 
             //节点添加任务锁
-            TreeTask<TreeTaskQueueCompleter> treeTask = entity.AddChildren<TreeTask<TreeTaskQueueCompleter>>();
+            TreeTask<TreeTaskQueueCompleter> treeTask = node.AddChildren<TreeTask<TreeTaskQueueCompleter>>();
             TaskQueue.Enqueue(treeTask);
 
             //返回一个任务锁
@@ -89,7 +90,7 @@ namespace WorldTree
                         taskQueueCompleter = task.Parent.AddChildren<TreeTaskQueueCompleter>();
                     }
                     //解锁器参数传递
-                    taskQueueCompleter.treeTaskQueue = this;
+                    taskQueueCompleter.queueLock = this;
                     taskQueueCompleter.key = key;
 
                     //启动下一个任务，塞入任务解锁器
