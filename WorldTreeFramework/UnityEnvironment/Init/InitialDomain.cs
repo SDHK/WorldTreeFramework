@@ -53,14 +53,15 @@ namespace WorldTree
     {
         public override async void OnEvent(InitialDomain self, float deltaTime)
         {
+
             if (Input.GetKeyDown(KeyCode.A))
             {
-                using (await self.AsyncLock(0))
+                using (await self.AsyncLock(self.id))
                 {
                     await self.AsyncDelay(3);
                     self.f++;
+                    World.Log($"初始域:{self.f}");
                 }
-                World.Log($"初始域:{self.f}");
 
             }
 
