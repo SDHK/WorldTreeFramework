@@ -18,11 +18,6 @@ namespace WorldTree
     /// </summary>
     public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion
     {
-        public TreeTaskBase()
-        {
-            Type = typeof(TreeTaskBase);
-        }
-
         /// <summary>
         /// 是否完成
         /// </summary>

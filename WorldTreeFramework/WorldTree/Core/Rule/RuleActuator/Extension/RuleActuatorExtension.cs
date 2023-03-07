@@ -47,8 +47,8 @@ namespace WorldTree
         where T : IRule
         {
             RuleActuator ruleActuator = self.Root.AddComponent<RuleActuatorGroup>().GetBroadcast<T>();
-            ruleActuator.nodeQueue.AddComponent<GlobalNodeAddListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
-            ruleActuator.nodeQueue.AddComponent<GlobalNodeRemoveListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
+            ruleActuator.nodeQueue.AddComponent<NodeAddGlobalListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
+            ruleActuator.nodeQueue.AddComponent<NodeRemoveGlobalListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
             return ruleActuator;
         }
     }

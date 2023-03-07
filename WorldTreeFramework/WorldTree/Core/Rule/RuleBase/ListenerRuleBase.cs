@@ -61,7 +61,7 @@ namespace WorldTree
         public virtual Type TargetNodeType => typeof(TN);
         public virtual Type TargetRuleType => typeof(TR);
 
-        public virtual void Invoke(Node self, Node entity) => OnEvent(self as LN, entity as TN);
-        public abstract void OnEvent(LN self, TN entity);
+        public virtual void Invoke(Node self, Node node) => OnEvent(self as LN, node as TN);
+        public abstract void OnEvent(LN self, TN node);
     }
 }
