@@ -39,7 +39,7 @@ namespace WorldTree
         {
             World.Log("初始域启动！！");
 
-            using (await self.AsyncSingleLock(0))
+            using (await self.AsyncLock(0))
             {
                 await self.AsyncDelay(3);
                 self.f++;
@@ -55,7 +55,7 @@ namespace WorldTree
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                using (await self.AsyncSingleLock(0))
+                using (await self.AsyncLock(0))
                 {
                     await self.AsyncDelay(3);
                     self.f++;
