@@ -16,7 +16,7 @@ namespace WorldTree
     /// </summary>
     public class TreeTaskContinue : Node { }
 
-    class TreeTaskContinueEnableSystem : EnableRule<TreeTaskContinue>
+    class TreeTaskContinueEnableRule : EnableRule<TreeTaskContinue>
     {
         public override void OnEvent(TreeTaskContinue self)
         {

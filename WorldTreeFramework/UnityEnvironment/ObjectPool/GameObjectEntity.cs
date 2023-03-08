@@ -18,7 +18,7 @@ namespace WorldTree
     /// <summary>
     /// 游戏物体实体
     /// </summary>
-    public class GameObjectEntity : Node
+    public class GameObjectNode : Node
     {
         public GameObjectPool pool;
 
@@ -27,7 +27,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return gameObject? "GameObjectEntity : " + gameObject.name: "GameObjectEntity : ";
+            return gameObject? "GameObjectNode : " + gameObject.name: "GameObjectNode : ";
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace WorldTree
         /// <summary>
         /// 用类名实例化一个空物体
         /// </summary>
-        public GameObjectEntity Instantiate(string name)
+        public GameObjectNode Instantiate(string name)
         {
             DestroyGameObject();
             gameObject = new GameObject(name);
@@ -63,7 +63,7 @@ namespace WorldTree
         /// <summary>
         /// 用类名实例化一个空物体
         /// </summary>
-        public GameObjectEntity Instantiate(string name, Transform parent)
+        public GameObjectNode Instantiate(string name, Transform parent)
         {
             Instantiate(name);
             transform.SetParent(parent);
@@ -72,7 +72,7 @@ namespace WorldTree
         /// <summary>
         /// 用类名实例化一个空物体
         /// </summary>
-        public GameObjectEntity Instantiate(string name, GameObjectEntity parent)
+        public GameObjectNode Instantiate(string name, GameObjectNode parent)
         {
             Instantiate(name);
             transform.SetParent(parent.transform);
@@ -83,17 +83,17 @@ namespace WorldTree
         /// <summary>
         /// 用类名实例化一个空物体
         /// </summary>
-        public GameObjectEntity Instantiate<T>() where T : class => Instantiate(typeof(T).Name);
+        public GameObjectNode Instantiate<T>() where T : class => Instantiate(typeof(T).Name);
 
         /// <summary>
         /// 用类名实例化一个空物体
         /// </summary>
-        public GameObjectEntity Instantiate<T>(Transform parent) where T : class => Instantiate(typeof(T).Name, parent);
+        public GameObjectNode Instantiate<T>(Transform parent) where T : class => Instantiate(typeof(T).Name, parent);
 
         /// <summary>
         /// 用类名实例化一个空物体
         /// </summary>
-        public GameObjectEntity Instantiate<T>(GameObjectEntity parent) where T : class => Instantiate(typeof(T).Name, parent);
+        public GameObjectNode Instantiate<T>(GameObjectNode parent) where T : class => Instantiate(typeof(T).Name, parent);
 
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace WorldTree
         /// <summary>
         /// 实例化
         /// </summary>
-        public GameObjectEntity Instantiate(GameObject prefab)
+        public GameObjectNode Instantiate(GameObject prefab)
         {
             if (prefab)
             {
@@ -138,7 +138,7 @@ namespace WorldTree
         /// <summary>
         /// 实例化
         /// </summary>
-        public GameObjectEntity Instantiate(GameObject prefab, Transform parent)
+        public GameObjectNode Instantiate(GameObject prefab, Transform parent)
         {
             if (TryInstantiate(prefab, out GameObject gameObject))
             {
@@ -150,7 +150,7 @@ namespace WorldTree
         /// <summary>
         /// 实例化
         /// </summary>
-        public GameObjectEntity Instantiate(GameObject prefab, GameObjectEntity parent)
+        public GameObjectNode Instantiate(GameObject prefab, GameObjectNode parent)
         {
             if (TryInstantiate(prefab, out GameObject gameObject))
             {
@@ -160,9 +160,9 @@ namespace WorldTree
         }
     }
 
-    class GameObjectEntityRemoveSystem : RemoveRule<GameObjectEntity>
+    class GameObjectEntityRemoveRule : RemoveRule<GameObjectNode>
     {
-        public override void OnEvent(GameObjectEntity self)
+        public override void OnEvent(GameObjectNode self)
         {
             self.DestroyGameObject();
             self.gameObject = null;

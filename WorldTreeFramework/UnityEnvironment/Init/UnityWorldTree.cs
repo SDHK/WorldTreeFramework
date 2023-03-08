@@ -38,9 +38,9 @@ namespace WorldTree
             update = root.GetGlobalNodeRuleActuator<IUpdateRule>();
             disable = root.GetGlobalNodeRuleActuator<IDisableRule>();
 
-            lateUpdate = root.GetGlobalNodeRuleActuator<ILateUpdateSystem>();
-            fixedUpdate = root.GetGlobalNodeRuleActuator<IFixedUpdateSystem>();
-            //onGUI = root.GetGlobalNodeRuleActuator<IGuiUpdateSystem>();
+            lateUpdate = root.GetGlobalNodeRuleActuator<ILateUpdateRule>();
+            fixedUpdate = root.GetGlobalNodeRuleActuator<IFixedUpdateRule>();
+            //onGUI = root.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
 
             root.AddComponent<InitialDomain>();
         }

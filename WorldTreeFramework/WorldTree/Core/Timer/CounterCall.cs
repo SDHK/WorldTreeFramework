@@ -22,7 +22,7 @@ namespace WorldTree
         public Action callback;
     }
 
-    class CounterCallGetSystem : GetRule<CounterCall>
+    class CounterCallGetRule : GetRule<CounterCall>
     {
         public override void OnEvent(CounterCall self)
         {
@@ -30,7 +30,7 @@ namespace WorldTree
         }
     }
 
-    class CounterCallUpdateSystem : UpdateRule<CounterCall>
+    class CounterCallUpdateRule : UpdateRule<CounterCall>
     {
         public override void OnEvent(CounterCall self, float deltaTime)
         {

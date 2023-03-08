@@ -12,10 +12,10 @@ namespace WorldTree
     /// <summary>
     /// UI窗口更新系统接口
     /// </summary>
-    public interface IWindowUpdateSystem : ISendRule<float> { }
+    public interface IWindowUpdateRule : ISendRule<float> { }
 
     /// <summary>
     /// UI窗口更新系统
     /// </summary>
-    public abstract class WIndowUpdateSystem<E> : SendRuleBase<IWindowUpdateSystem, E, float> where E : Node { }
+    public abstract class WIndowUpdateRule<E> : SendRuleBase<IWindowUpdateRule, E, float> where E : Node { }
 }

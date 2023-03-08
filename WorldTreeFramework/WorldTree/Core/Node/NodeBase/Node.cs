@@ -10,11 +10,16 @@ using System;
 
 namespace WorldTree
 {
+    public interface INode : IUnitPoolItem
+    { 
+    
+    
+    }
 
     /// <summary>
     /// 世界树节点基类
     /// </summary>
-    public abstract partial class Node : IUnitPoolItem
+    public abstract partial class Node : INode
     {
         public IPool thisPool { get; set; }
 
@@ -25,6 +30,7 @@ namespace WorldTree
         /// <summary>
         /// 节点ID
         /// </summary>
+        /// <remarks>在框架内唯一</remarks>
         public long id;
 
         /// <summary>

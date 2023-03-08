@@ -49,7 +49,7 @@ namespace WorldTree
         }
 
     }
-    class InitialDomainUpdateSystem : UpdateRule<InitialDomain>
+    class InitialDomainUpdateRule : UpdateRule<InitialDomain>
     {
         public override async void OnEvent(InitialDomain self, float deltaTime)
         {

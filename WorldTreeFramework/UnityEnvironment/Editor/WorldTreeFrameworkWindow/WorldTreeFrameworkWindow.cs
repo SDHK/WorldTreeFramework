@@ -50,7 +50,7 @@ namespace EditorTool
             self.enable = self.GetGlobalNodeRuleActuator<IEnableRule>();
             self.update = self.GetGlobalNodeRuleActuator<IUpdateRule>();
             self.disable = self.GetGlobalNodeRuleActuator<IDisableRule>();
-            self.onGUI = self.GetGlobalNodeRuleActuator<IGuiUpdateSystem>();
+            self.onGUI = self.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
             self.AddComponent<EditorHomePage>();
         }
     }

@@ -31,7 +31,7 @@ namespace WorldTree
         }
     }
 
-    public static class EntityDictionarySystem
+    public static class EntityDictionaryStaticRule
     {
         /// <summary>
         /// 获取或新建值

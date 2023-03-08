@@ -178,7 +178,7 @@ namespace WorldTree
         }
     }
 
-    class DynamicNodeQueueAddSystem : AddRule<DynamicNodeQueue>
+    class DynamicNodeQueueAddRule : AddRule<DynamicNodeQueue>
     {
         public override void OnEvent(DynamicNodeQueue self)
         {
@@ -188,7 +188,7 @@ namespace WorldTree
         }
     }
 
-    class DynamicNodeQueueRemoveSystem : RemoveRule<DynamicNodeQueue>
+    class DynamicNodeQueueRemoveRule : RemoveRule<DynamicNodeQueue>
     {
         public override void OnEvent(DynamicNodeQueue self)
         {

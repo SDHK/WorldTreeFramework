@@ -48,7 +48,7 @@ namespace WorldTree
         /// <summary>
         /// 动态监听器切换系统目标
         /// </summary>
-        public static bool ListenerSwitchesSystem<T>(this Node self)
+        public static bool ListenerSwitchesRule<T>(this Node self)
             where T : IRule
         {
             return self.ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
@@ -88,7 +88,7 @@ namespace WorldTree
                 }
                 else if (self.listenerState == ListenerState.Rule)
                 {
-                    self.DynamicListenerAddSystem(self.listenerTarget);
+                    self.DynamicListenerAddRule(self.listenerTarget);
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 系统目标
         /// </summary>
-        private static void DynamicListenerAddSystem(this Node self, Type type)
+        private static void DynamicListenerAddRule(this Node self, Type type)
         {
             //获取法则集合
             if (self.Root.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
@@ -177,7 +177,7 @@ namespace WorldTree
                 }
                 else if (self.listenerState == ListenerState.Rule)
                 {
-                    self.DynamicListenerRemoveSystem(self.listenerTarget);
+                    self.DynamicListenerRemoveRule(self.listenerTarget);
                 }
             }
         }
@@ -207,7 +207,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器移除 系统目标
         /// </summary>
-        private static void DynamicListenerRemoveSystem(this Node self, Type type)
+        private static void DynamicListenerRemoveRule(this Node self, Type type)
         {
             //获取法则集合
             if (self.Root.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))

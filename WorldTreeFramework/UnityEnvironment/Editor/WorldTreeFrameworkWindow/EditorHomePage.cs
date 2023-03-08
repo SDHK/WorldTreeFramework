@@ -26,7 +26,7 @@ namespace EditorTool
         {
         }
     }
-    class EditorHomePageOnGUISystem : GuiUpdateSystem<EditorHomePage>
+    class EditorHomePageOnGUISystem : GuiUpdateRule<EditorHomePage>
     {
         public override void OnEvent(EditorHomePage self, float deltaTime)
         {

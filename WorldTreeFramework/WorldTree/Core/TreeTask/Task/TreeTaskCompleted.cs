@@ -35,7 +35,7 @@ namespace WorldTree.Internal
         public void GetResult() { }
     }
 
-    class AsyncTaskCompletedUpdateSystem : UpdateRule<TreeTaskCompleted>
+    class AsyncTaskCompletedUpdateRule : UpdateRule<TreeTaskCompleted>
     {
         public override void OnEvent(TreeTaskCompleted self, float deltaTime)
         {

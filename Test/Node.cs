@@ -123,14 +123,14 @@ class NodeUpdateSystem : UpdateRule<TreeNode>
 }
 
 
-class NodeLateUpdateSystem : LateUpdateSystem<TreeNode>
+class NodeLateUpdateSystem : LateUpdateRule<TreeNode>
 {
     public override void OnEvent(TreeNode self, float deltaTime)
     {
         Debug.Log("LateUpdateSystem!");
     }
 }
-class NodeFixedUpdateSystem : FixedUpdateSystem<TreeNode>
+class NodeFixedUpdateSystem : FixedUpdateRule<TreeNode>
 {
     public override void OnEvent(TreeNode self, float deltaTime)
     {
@@ -152,7 +152,7 @@ class NodeRecycleSystem : RecycleRule<TreeNode>
         Debug.Log("RecycleSystem!");
     }
 }
-class NodeDestroySystem : DestroySystem<TreeNode>
+class NodeDestroySystem : DestroyRule<TreeNode>
 {
     public override void OnEvent(TreeNode self)
     {

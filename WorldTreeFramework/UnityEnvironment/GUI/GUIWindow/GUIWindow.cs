@@ -41,7 +41,7 @@ namespace WorldTree
         }
     }
 
-    class GUIWindowOnGUISystem : GuiUpdateSystem<GUIWindow>
+    class GUIWindowOnGUISystem : GuiUpdateRule<GUIWindow>
     {
         public override void OnEvent(GUIWindow self, float deltaTime)
         {

@@ -47,5 +47,5 @@ namespace WorldTree
     /// <summary>
     /// 释放法则
     /// </summary>
-    public abstract class DestroySystem<E> : SendRuleBase<IDestroyRule, E> where E : Node { }
+    public abstract class DestroyRule<E> : SendRuleBase<IDestroyRule, E> where E : Node { }
 }

@@ -78,7 +78,7 @@ namespace WorldTree
 
     }
 
-    class RuleActuatorAddSystem : AddRule<RuleActuator>
+    class RuleActuatorAddRule : AddRule<RuleActuator>
     {
         public override void OnEvent(RuleActuator self)
         {

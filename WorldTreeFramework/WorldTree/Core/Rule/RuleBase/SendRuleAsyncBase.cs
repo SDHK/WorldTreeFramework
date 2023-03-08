@@ -3,14 +3,14 @@
 * 作者： 闪电黑客
 * 日期： 2023/3/1 17:29
 
-* 描述： 异步发送法则基类
+* 描述： 异步通知法则基类
 
 */
 
 namespace WorldTree
 {
     /// <summary>
-    /// 异步发送法则接口
+    /// 异步通知法则接口
     /// </summary>
     public interface ISendRuleAsync : IRule
     {
@@ -18,7 +18,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 异步发送法则接口
+    /// 异步通知法则接口
     /// </summary>
     public interface ISendRuleAsync<T1> : IRule
     {
@@ -26,7 +26,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 异步发送系统接口
+    /// 异步通知系统接口
     /// </summary>
     public interface ISendRuleAsync<T1, T2> : IRule
     {
@@ -34,7 +34,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 异步发送系统接口
+    /// 异步通知系统接口
     /// </summary>
     public interface ISendRuleAsync<T1, T2, T3> : IRule
     {
@@ -42,7 +42,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 异步发送系统接口
+    /// 异步通知系统接口
     /// </summary>
     public interface ISendRuleAsync<T1, T2, T3, T4> : IRule
     {
@@ -50,7 +50,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 异步发送系统接口
+    /// 异步通知系统接口
     /// </summary>
     public interface ISendRuleAsync<T1, T2, T3, T4, T5> : IRule
     {
@@ -60,7 +60,7 @@ namespace WorldTree
 
 
     /// <summary>
-    /// 异步发送法则抽象基类
+    /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<S, E> : RuleBase<E, S>, ISendRuleAsync
     where E : Node
@@ -70,7 +70,7 @@ namespace WorldTree
         public abstract TreeTask OnEvent(E self);
     }
     /// <summary>
-    /// 异步发送法则抽象基类
+    /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<S, E, T1> : RuleBase<E, S>, ISendRuleAsync<T1>
     where E : Node
@@ -80,7 +80,7 @@ namespace WorldTree
         public abstract TreeTask OnEvent(E self, T1 arg1);
     }
     /// <summary>
-    /// 异步发送法则抽象基类
+    /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<S, E, T1, T2> : RuleBase<E, S>, ISendRuleAsync<T1, T2>
     where E : Node
@@ -90,7 +90,7 @@ namespace WorldTree
         public abstract TreeTask OnEvent(E self, T1 arg1, T2 arg2);
     }
     /// <summary>
-    /// 异步发送法则抽象基类
+    /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<S, E, T1, T2, T3> : RuleBase<E, S>, ISendRuleAsync<T1, T2, T3>
     where E : Node
@@ -100,7 +100,7 @@ namespace WorldTree
         public abstract TreeTask OnEvent(E self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
-    /// 异步发送法则抽象基类
+    /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<S, E, T1, T2, T3, T4> : RuleBase<E, S>, ISendRuleAsync<T1, T2, T3, T4>
     where E : Node
@@ -110,7 +110,7 @@ namespace WorldTree
         public abstract TreeTask OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
-    /// 异步发送法则抽象基类
+    /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<S, E, T1, T2, T3, T4, T5> : RuleBase<E, S>, ISendRuleAsync<T1, T2, T3, T4, T5>
     where E : Node

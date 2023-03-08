@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2022/11/10 10:12
 
-* 描述： 发送法则基类
+* 描述： 通知法则基类
 * 
 * 可以理解为Entity的无返回值扩展方法
 * 
@@ -25,7 +25,7 @@ namespace WorldTree
 {
 
     /// <summary>
-    /// 发送法则接口
+    /// 通知法则接口
     /// </summary>
     public interface ISendRule : IRule
     {
@@ -33,7 +33,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 发送法则接口
+    /// 通知法则接口
     /// </summary>
     public interface ISendRule<T1> : IRule
     {
@@ -41,7 +41,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 发送法则接口
+    /// 通知法则接口
     /// </summary>
     public interface ISendRule<T1, T2> : IRule
     {
@@ -49,7 +49,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 发送法则接口
+    /// 通知法则接口
     /// </summary>
     public interface ISendRule<T1, T2, T3> : IRule
     {
@@ -57,7 +57,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 发送法则接口
+    /// 通知法则接口
     /// </summary>
     public interface ISendRule<T1, T2, T3, T4> : IRule
     {
@@ -65,7 +65,7 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 发送法则接口
+    /// 通知法则接口
     /// </summary>
     public interface ISendRule<T1, T2, T3, T4, T5> : IRule
     {
@@ -74,7 +74,7 @@ namespace WorldTree
 
 
     /// <summary>
-    /// 发送法则抽象基类
+    /// 通知法则抽象基类
     /// </summary>
     public abstract class SendRuleBase<S, E> : RuleBase<E, S>, ISendRule
     where E : Node
@@ -84,7 +84,7 @@ namespace WorldTree
         public abstract void OnEvent(E self);
     }
     /// <summary>
-    /// 发送法则抽象基类
+    /// 通知法则抽象基类
     /// </summary>
     public abstract class SendRuleBase<S, E, T1> : RuleBase<E, S>, ISendRule<T1>
     where E : Node
@@ -94,7 +94,7 @@ namespace WorldTree
         public abstract void OnEvent(E self, T1 arg1);
     }
     /// <summary>
-    /// 发送法则抽象基类
+    /// 通知法则抽象基类
     /// </summary>
     public abstract class SendRuleBase<S, E, T1, T2> : RuleBase<E, S>, ISendRule<T1, T2>
     where E : Node
@@ -104,7 +104,7 @@ namespace WorldTree
         public abstract void OnEvent(E self, T1 arg1, T2 arg2);
     }
     /// <summary>
-    /// 发送法则抽象基类
+    /// 通知法则抽象基类
     /// </summary>
     public abstract class SendRuleBase<S, E, T1, T2, T3> : RuleBase<E, S>, ISendRule<T1, T2, T3>
     where E : Node
@@ -114,7 +114,7 @@ namespace WorldTree
         public abstract void OnEvent(E self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
-    /// 发送法则抽象基类
+    /// 通知法则抽象基类
     /// </summary>
     public abstract class SendRuleBase<S, E, T1, T2, T3, T4> : RuleBase<E, S>, ISendRule<T1, T2, T3, T4>
     where E : Node
@@ -124,7 +124,7 @@ namespace WorldTree
         public abstract void OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
-    /// 发送法则抽象基类
+    /// 通知法则抽象基类
     /// </summary>
     public abstract class SendRuleBase<S, E, T1, T2, T3, T4, T5> : RuleBase<E, S>, ISendRule<T1, T2, T3, T4, T5>
     where E : Node

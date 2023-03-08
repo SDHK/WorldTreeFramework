@@ -28,7 +28,7 @@ namespace EditorTool
         //public SystemGlobalBroadcast<IEnableRule> enable;
         //public SystemGlobalBroadcast<IDisableRule> disable;
         //public SystemGlobalBroadcast<IUpdateRule> update;
-        //public SystemGlobalBroadcast<IGuiUpdateSystem> onGUI;
+        //public SystemGlobalBroadcast<IGuiUpdateRule> onGUI;
 
         [MenuItem("WorldTree/ToolKit")]
         public static void OpenFrameEditor()
@@ -50,7 +50,7 @@ namespace EditorTool
             //enable = root.GetGlobalNodeRuleActuator<IEnableRule>();
             //update = root.GetGlobalNodeRuleActuator<IUpdateRule>();
             //disable = root.GetGlobalNodeRuleActuator<IDisableRule>();
-            //onGUI = root.GetGlobalNodeRuleActuator<IGuiUpdateSystem>();
+            //onGUI = root.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
         }
 
         protected override OdinMenuTree BuildMenuTree()
