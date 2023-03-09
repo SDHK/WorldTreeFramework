@@ -40,9 +40,9 @@ namespace WorldTree
         /// </summary>
         public void Enqueue(Node node)
         {
-            if (nodeDictionary.ContainsKey(node.id)) return;
-            idQueue.Enqueue(node.id);
-            nodeDictionary.Add(node.id, node);
+            if (nodeDictionary.ContainsKey(node.Id)) return;
+            idQueue.Enqueue(node.Id);
+            nodeDictionary.Add(node.Id, node);
         }
 
         /// <summary>
@@ -50,18 +50,18 @@ namespace WorldTree
         /// </summary>
         public void Remove(Node node)
         {
-            if (nodeDictionary.ContainsKey(node.id))
+            if (nodeDictionary.ContainsKey(node.Id))
             {
-                nodeDictionary.Remove(node.id);
+                nodeDictionary.Remove(node.Id);
 
                 //累计强制移除的节点id
-                if (removeIdDictionary.TryGetValue(node.id, out var count))
+                if (removeIdDictionary.TryGetValue(node.Id, out var count))
                 {
-                    removeIdDictionary[node.id] = count + 1;
+                    removeIdDictionary[node.Id] = count + 1;
                 }
                 else
                 {
-                    removeIdDictionary.Add(node.id, 1);
+                    removeIdDictionary.Add(node.Id, 1);
                 }
             }
         }
@@ -168,7 +168,7 @@ namespace WorldTree
                 //此时的id是正常id
                 if (nodeDictionary.TryGetValue(id, out node))
                 {
-                    nodeDictionary.Remove(node.id);
+                    nodeDictionary.Remove(node.Id);
                     return true;
                 }
             }

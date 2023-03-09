@@ -34,7 +34,7 @@ namespace WorldTree
         /// </summary>
         public static void RefreshActive(this Node self)
         {
-            UnitQueue<Node> queue = (self.Root.NodePoolManager.IsDisposed) ? new UnitQueue<Node>() : self.Root.PoolGet<UnitQueue<Node>>();
+            self.PoolGet(out UnitQueue<Node> queue);
             queue.Enqueue(self);
             while (queue.Count != 0)
             {

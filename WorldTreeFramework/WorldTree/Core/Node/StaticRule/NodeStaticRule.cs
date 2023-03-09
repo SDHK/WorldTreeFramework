@@ -95,7 +95,7 @@ namespace WorldTree
                 }
                 else
                 {
-                    self.Parent.m_Children.Remove(self.id);
+                    self.Parent.m_Children.Remove(self.Id);
                     if (self.Parent.m_Children.Count == 0)
                     {
                         self.Parent.m_Children.Dispose();
@@ -113,7 +113,7 @@ namespace WorldTree
             string t1 = "\t" + t;
             string str = "";
 
-            str += t1 + $"[{self.id:0}] " + self.ToString() + "\n";
+            str += t1 + $"[{self.Id:0}] " + self.ToString() + "\n";
 
             if (self.m_Components != null)
             {

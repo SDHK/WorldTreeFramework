@@ -34,6 +34,10 @@ namespace WorldTree
         private RuleGroup EnableRuleGroup;
         private RuleGroup DisableRuleGroup;
 
+        private RuleGroup NewRuleGroup;
+        private RuleGroup GetRuleGroup;
+        private RuleGroup RecycleRuleGroup;
+        private RuleGroup DestroyRuleGroup;
 
         public IdManager IdManager;
         public RuleManager RuleManager;
@@ -44,10 +48,6 @@ namespace WorldTree
 
         public WorldTreeRoot() : base()
         {
-            //此时没有对象池，直接新建容器
-            Children = new UnitDictionary<long, Node>();
-            Components = new UnitDictionary<Type, Node>();
-
             //框架运转的核心组件
             IdManager = new IdManager();
             RuleManager = new RuleManager();
@@ -66,19 +66,25 @@ namespace WorldTree
             DynamicListenerRuleActuatorManager.Root = this;
 
             //赋予id
-            Root.id = IdManager.GetId();
-            IdManager.id = IdManager.GetId();
-            RuleManager.id = IdManager.GetId();
-            UnitPoolManager.id = IdManager.GetId();
-            NodePoolManager.id = IdManager.GetId();
-            StaticListenerRuleActuatorManager.id = IdManager.GetId();
-            DynamicListenerRuleActuatorManager.id = IdManager.GetId();
+            Root.Id = IdManager.GetId();
+            IdManager.Id = IdManager.GetId();
+            RuleManager.Id = IdManager.GetId();
+            UnitPoolManager.Id = IdManager.GetId();
+            NodePoolManager.Id = IdManager.GetId();
+            StaticListenerRuleActuatorManager.Id = IdManager.GetId();
+            DynamicListenerRuleActuatorManager.Id = IdManager.GetId();
+
 
             //法则集合获取
             AddRuleGroup = Root.RuleManager.GetRuleGroup<IAddRule>();
             RemoveRuleGroup = Root.RuleManager.GetRuleGroup<IRemoveRule>();
             EnableRuleGroup = Root.RuleManager.GetRuleGroup<IEnableRule>();
             DisableRuleGroup = Root.RuleManager.GetRuleGroup<IDisableRule>();
+
+            NewRuleGroup = Root.RuleManager.GetRuleGroup<INewRule>();
+            GetRuleGroup = Root.RuleManager.GetRuleGroup<IGetRule>();
+            RecycleRuleGroup = Root.RuleManager.GetRuleGroup<IRecycleRule>();
+            DestroyRuleGroup = Root.RuleManager.GetRuleGroup<IDestroyRule>();
 
             //激活自己
             this.SetActive(true);
@@ -103,7 +109,7 @@ namespace WorldTree
 
 
         /// <summary>
-        /// 从池中获取对象
+        /// 从池中获取单位对象
         /// </summary>
         public T GetUnit<T>()
         where T : class, IUnitPoolEventItem
@@ -111,7 +117,10 @@ namespace WorldTree
             Type type = typeof(T);
             if (UnitPoolManager is null)
             {
-                return Activator.CreateInstance(type, true) as T;
+                T obj = Activator.CreateInstance(type, true) as T;
+                obj.OnNew();
+                obj.OnGet();
+                return obj;
             }
             else
             {
@@ -119,25 +128,36 @@ namespace WorldTree
             }
         }
         /// <summary>
-        /// 从池中获取对象
+        /// 从池中获取节点对象
         /// </summary>
-        public T GetNode<T>()
-        where T : Node
+        public T GetNode<T>() where T : Node => GetNode(typeof(T)) as T;
+
+        /// <summary>
+        /// 从池中获取节点对象
+        /// </summary>
+        public Node GetNode(Type type)
         {
-            Type type = typeof(T);
             if (NodePoolManager is null)
             {
-                return Activator.CreateInstance(type, true) as T;
+                Node obj = Activator.CreateInstance(type, true) as Node;
+                obj.Id = IdManager.GetId();
+                obj.Root = this;
+                NewRuleGroup?.Send(obj);
+                GetRuleGroup?.Send(obj);
+                return obj;
             }
             else
             {
-                return NodePoolManager.Get(type) as T;
+                return NodePoolManager.Get(type) as Node;
             }
         }
 
+        /// <summary>
+        /// 回收单位
+        /// </summary>
         public void Recycle(IUnitPoolEventItem obj)
         {
-            if (UnitPoolManager is  null)
+            if (UnitPoolManager is null)
             {
                 obj.IsRecycle = true;
                 obj.OnRecycle();
@@ -148,17 +168,28 @@ namespace WorldTree
             {
                 UnitPoolManager.Recycle(obj);
             }
-        
+
         }
 
+        /// <summary>
+        /// 回收节点
+        /// </summary>
         public void Recycle(Node obj)
         {
-            if (true)
+            if (NodePoolManager is null)
             {
-
+                obj.IsRecycle = true;
+                RecycleRuleGroup?.Send(obj);
+                obj.IsDisposed = true;
+                DestroyRuleGroup?.Send(obj);
             }
-        
+            else
+            {
+                NodePoolManager.Recycle(obj);
+            }
         }
+
+
 
         public void Add(Node entity)
         {
@@ -166,7 +197,7 @@ namespace WorldTree
             entity.TrySendStaticListener<IListenerAddRule>();
             entity.TrySendDynamicListener<IListenerAddRule>();
 
-            allEntity.TryAdd(entity.id, entity);
+            allEntity.TryAdd(entity.Id, entity);
 
             //这个节点的添加事件
             AddRuleGroup?.Send(entity);
@@ -198,7 +229,7 @@ namespace WorldTree
             //这个节点的移除事件
             RemoveRuleGroup?.Send(entity);
 
-            allEntity.Remove(entity.id);
+            allEntity.Remove(entity.Id);
 
             //广播给全部监听器!!!!
             entity.TrySendStaticListener<IListenerRemoveRule>();

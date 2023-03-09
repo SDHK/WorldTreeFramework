@@ -77,7 +77,7 @@ namespace WorldTree
         {
             if (self.m_Children != null ? self.m_Children.Count != 0 : false)
             {
-                var entitys = self.Root.PoolGet<UnitStack<Node>>();
+                var entitys = self.PoolGet<UnitStack<Node>>();
                 foreach (var item in self.m_Children) entitys.Push(item.Value);
 
                 int length = entitys.Count;
@@ -100,7 +100,7 @@ namespace WorldTree
         {
             if (node != null)
             {
-                if (self.Children.TryAdd(node.id, node))
+                if (self.Children.TryAdd(node.Id, node))
                 {
                     if (node.Parent != null)
                     {
@@ -129,8 +129,8 @@ namespace WorldTree
         /// </summary>
         public static Node AddChildren(this Node self, Type type)
         {
-            Node node = self.Root.PoolGet(type);
-            if (self.Children.TryAdd(node.id, node))
+            Node node = self.PoolGet(type);
+            if (self.Children.TryAdd(node.Id, node))
             {
                 node.Parent = self;
                 node.SendRule<IAwakeRule>();
@@ -174,8 +174,8 @@ namespace WorldTree
             where T : Node
         {
 
-            T node = self.Root.NodePoolManager.Get<T>();
-            if (self.Children.TryAdd(node.id, node))
+            T node = self.PoolGet<T>();
+            if (self.Children.TryAdd(node.Id, node))
             {
                 node.Parent = self;
                 node.SendRule<IAwakeRule>();
@@ -192,8 +192,8 @@ namespace WorldTree
         public static T AddChildren<T, T1>(this Node self, T1 arg1)
             where T : Node
         {
-            T node = self.Root.NodePoolManager.Get<T>();
-            if (self.Children.TryAdd(node.id, node))
+            T node = self.PoolGet<T>();
+            if (self.Children.TryAdd(node.Id, node))
             {
                 node.Parent = self;
                 node.SendRule<IAwakeRule<T1>, T1>(arg1);
@@ -209,8 +209,8 @@ namespace WorldTree
         public static T AddChildren<T, T1, T2>(this Node self, T1 arg1, T2 arg2)
         where T : Node
         {
-            T node = self.Root.NodePoolManager.Get<T>();
-            if (self.Children.TryAdd(node.id, node))
+            T node = self.PoolGet<T>();
+            if (self.Children.TryAdd(node.Id, node))
             {
                 node.Parent = self;
                 node.SendRule<IAwakeRule<T1, T2>, T1, T2>(arg1, arg2);
@@ -225,8 +225,8 @@ namespace WorldTree
         public static T AddChildren<T, T1, T2, T3>(this Node self, T1 arg1, T2 arg2, T3 arg3)
         where T : Node
         {
-            T node = self.Root.NodePoolManager.Get<T>();
-            if (self.Children.TryAdd(node.id, node))
+            T node = self.PoolGet<T>();
+            if (self.Children.TryAdd(node.Id, node))
             {
                 node.Parent = self;
                 node.SendRule<IAwakeRule<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
@@ -241,8 +241,8 @@ namespace WorldTree
         public static T AddChildren<T, T1, T2, T3, T4>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         where T : Node
         {
-            T node = self.Root.NodePoolManager.Get<T>();
-            if (self.Children.TryAdd(node.id, node))
+            T node = self.PoolGet<T>();
+            if (self.Children.TryAdd(node.Id, node))
             {
                 node.Parent = self;
                 node.SendRule<IAwakeRule<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
@@ -258,8 +258,8 @@ namespace WorldTree
         public static T AddChildren<T, T1, T2, T3, T4, T5>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         where T : Node
         {
-            T node = self.Root.NodePoolManager.Get<T>();
-            if (self.Children.TryAdd(node.id, node))
+            T node = self.PoolGet<T>();
+            if (self.Children.TryAdd(node.Id, node))
             {
                 node.Parent = self;
                 node.SendRule<IAwakeRule<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);

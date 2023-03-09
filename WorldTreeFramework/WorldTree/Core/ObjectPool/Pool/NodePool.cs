@@ -81,7 +81,7 @@ namespace WorldTree
         {
             Node obj = Activator.CreateInstance(ObjectType, true) as Node;
             obj.thisPool = this;
-            obj.id = Root.IdManager.GetId();
+            obj.Id = Root.IdManager.GetId();
             obj.Root = Root;
             return obj;
         }
@@ -110,7 +110,7 @@ namespace WorldTree
         }
         private void ObjectDestroy(Node obj)
         {
-            Root.IdManager.Recycle(obj.id);
+            Root.IdManager.Recycle(obj.Id);
         }
 
         private void ObjectOnNew(Node obj)
@@ -121,7 +121,7 @@ namespace WorldTree
         private void ObjectOnGet(Node obj)
         {
             obj.IsRecycle = false;
-            Nodes.TryAdd(obj.id, obj);
+            Nodes.TryAdd(obj.Id, obj);
             getRule?.Send(obj);
         }
 
@@ -129,7 +129,7 @@ namespace WorldTree
         {
             obj.IsRecycle = true;
             recycleRule?.Send(obj);
-            Nodes.Remove(obj.id);
+            Nodes.Remove(obj.Id);
         }
 
         private void ObjectOnDestroy(Node obj)

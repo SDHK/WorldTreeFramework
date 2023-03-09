@@ -25,7 +25,7 @@ namespace WorldTree
         /// 节点ID
         /// </summary>
         /// <remarks>在框架内唯一</remarks>
-        public long id;
+        public long Id;
 
         /// <summary>
         /// 节点类型

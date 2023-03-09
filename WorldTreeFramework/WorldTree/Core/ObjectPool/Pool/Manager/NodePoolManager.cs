@@ -14,20 +14,12 @@ namespace WorldTree
     public static class NodePoolManagerExtension
     {
         /// <summary>
-        /// 获取对象池管理器
-        /// </summary>
-        public static NodePoolManager PoolManager(this Node self)
-        {
-            return self.Root.NodePoolManager;
-        }
-
-        /// <summary>
         /// 从池中获取对象
         /// </summary>
         public static T PoolGet<T>(this Node self)
         where T : Node
         {
-            return self.Root.NodePoolManager.Get<T>();
+            return self.Root.GetNode<T>();
         }
 
 
@@ -36,16 +28,15 @@ namespace WorldTree
         /// </summary>
         public static Node PoolGet(this Node self, Type type)
         {
-            return self.Root.NodePoolManager.Get(type) as Node;
+            return self.Root.GetNode(type);
         }
-
 
         /// <summary>
         /// 回收对象
         /// </summary>
         public static void PoolRecycle(this Node self, Node obj)
         {
-            self.Root.NodePoolManager.Recycle(obj);
+            self.Root.Recycle(obj);
         }
 
     }
@@ -56,7 +47,7 @@ namespace WorldTree
     public class NodePoolManager : Node
     {
 
-       public UnitDictionary<Type, NodePool> pools = new UnitDictionary<Type, NodePool>();
+        public UnitDictionary<Type, NodePool> pools = new UnitDictionary<Type, NodePool>();
 
         /// <summary>
         /// 释放后
@@ -102,7 +93,7 @@ namespace WorldTree
         /// 获取池
         /// </summary>
         public NodePool GetPool<T>()
-            where T: Node
+            where T : Node
         {
             Type type = typeof(T);
             return GetPool(type);
@@ -115,7 +106,7 @@ namespace WorldTree
             if (!pools.TryGetValue(type, out NodePool pool))
             {
                 pool = new NodePool(type);
-                pool.id = Root.IdManager.GetId();
+                pool.Id = Root.IdManager.GetId();
                 pool.Root = Root;
                 pools.Add(type, pool);
                 this.AddChildren(pool);
@@ -127,7 +118,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取池
         /// </summary>
-        public bool TryGetPool(Type type,out NodePool pool)
+        public bool TryGetPool(Type type, out NodePool pool)
         {
             return pools.TryGetValue(type, out pool);
         }

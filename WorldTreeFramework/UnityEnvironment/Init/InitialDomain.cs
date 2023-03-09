@@ -21,6 +21,10 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
+
+
+
+
     /// <summary>
     /// 初始域
     /// </summary>
@@ -72,7 +76,7 @@ namespace WorldTree
 
             if (Input.GetKeyDown(KeyCode.A))
             {
-                using (await self.AsyncLock(self.id))
+                using (await self.AsyncLock(self.Id))
                 {
                     await self.AsyncDelay(3);
                     self.f++;

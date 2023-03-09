@@ -126,7 +126,7 @@ namespace WorldTree
         {
             if (self.m_Components != null ? self.m_Components.Count != 0 : false)
             {
-                var nodes = self.Root.PoolGet<UnitStack<Node>>();
+                var nodes = self.PoolGet<UnitStack<Node>>();
                 foreach (var item in self.m_Components) nodes.Push(item.Value);
 
                 int length = nodes.Count;
@@ -186,7 +186,7 @@ namespace WorldTree
         {
             if (!self.Components.TryGetValue(type, out Node component))
             {
-                component = self.Root.PoolGet(type);
+                component = self.PoolGet(type);
                 component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
@@ -236,7 +236,7 @@ namespace WorldTree
             T component = null;
             if (!self.Components.TryGetValue(type, out Node node))
             {
-                component = self.Root.NodePoolManager?.Get<T>();
+                component = self.PoolGet<T>();
                 component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
@@ -261,7 +261,7 @@ namespace WorldTree
             T component = null;
             if (!self.Components.TryGetValue(type, out Node node))
             {
-                component = self.Root.NodePoolManager?.Get<T>();
+                component = self.PoolGet<T>();
                 component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
@@ -287,7 +287,7 @@ namespace WorldTree
             T component = null;
             if (!self.Components.TryGetValue(type, out Node node))
             {
-                component = self.Root.NodePoolManager.Get<T>();
+                component = self.PoolGet<T>();
                 component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
@@ -311,7 +311,7 @@ namespace WorldTree
             T component = null;
             if (!self.Components.TryGetValue(type, out Node node))
             {
-                component = self.Root.NodePoolManager.Get<T>();
+                component = self.PoolGet<T>();
                 component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
@@ -336,7 +336,7 @@ namespace WorldTree
             T component = null;
             if (!self.Components.TryGetValue(type, out Node node))
             {
-                component = self.Root.NodePoolManager.Get<T>();
+                component = self.PoolGet<T>();
                 component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
@@ -361,7 +361,7 @@ namespace WorldTree
             T component = null;
             if (!self.Components.TryGetValue(type, out Node node))
             {
-                component = self.Root.NodePoolManager.Get<T>();
+                component = self.PoolGet<T>();
                 component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);

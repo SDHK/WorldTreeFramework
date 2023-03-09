@@ -141,7 +141,7 @@ namespace WorldTree
             {
                 group = new ListenerRuleActuatorGroup();
                 group.Target = Target;
-                group.id = Root.IdManager.GetId();
+                group.Id = Root.IdManager.GetId();
                 group.Root = Root;
                 ListenerActuatorGroupDictionary.Add(Target, group);
                 this.AddChildren(group);

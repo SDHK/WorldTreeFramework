@@ -55,7 +55,7 @@ namespace WorldTree
                 {
                     outNode?.SendRule<IWindowLostFocusRule>();
                 }
-                while (windowStack.Count != 0 ? windowStack.Peek().id != node.id : false)
+                while (windowStack.Count != 0 ? windowStack.Peek().Id != node.Id : false)
                 {
                     outNode = windowStack.Pop();
                     windows.Remove(outNode.Type);
@@ -97,7 +97,7 @@ namespace WorldTree
                 }
                 while (windowStack.TryPop(out topNode))
                 {
-                    if (topNode.id == targetNode.id)
+                    if (topNode.Id == targetNode.Id)
                     {
                         windows.Remove(topNode.Type);
                         topNode.ParentTo<GameObjectNode>()?.Dispose();

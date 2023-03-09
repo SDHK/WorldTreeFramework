@@ -15,13 +15,6 @@ namespace WorldTree
 
     public static class UnitPoolManagerExtension
     {
-        /// <summary>
-        /// 获取对象池管理器
-        /// </summary>
-        public static UnitPoolManager UnitPoolManager(this Node self)
-        {
-            return self.Root.UnitPoolManager;
-        }
 
         /// <summary>
         /// 从池中获取对象
@@ -29,7 +22,7 @@ namespace WorldTree
         public static T PoolGet<T>(this Node self)
         where T : class, IUnitPoolEventItem
         {
-            return self.Root.UnitPoolManager.Get<T>();
+            return self.Root.GetUnit<T>();
         }
 
         /// <summary>
@@ -38,25 +31,15 @@ namespace WorldTree
         public static T PoolGet<T>(this Node self, out T unit)
        where T : class, IUnitPoolEventItem
         {
-            return unit = self.Root.UnitPoolManager.Get<T>();
+            return unit = self.Root.GetUnit<T>();
         }
-
-
-        /// <summary>
-        /// 从池中获取对象
-        /// </summary>
-        public static object PoolGetUnit(this Node self, Type type)
-        {
-            return self.Root.UnitPoolManager.Get(type);
-        }
-
 
         /// <summary>
         /// 回收对象
         /// </summary>
         public static void PoolRecycle(this Node self, IUnitPoolEventItem obj)
         {
-            self.Root.UnitPoolManager.Recycle(obj);
+            self.Root.Recycle(obj);
         }
 
     }
@@ -123,7 +106,7 @@ namespace WorldTree
             if (!pools.TryGetValue(type, out UnitPool pool))
             {
                 pool = new UnitPool(type);
-                pool.id = Root.IdManager.GetId();
+                pool.Id = Root.IdManager.GetId();
                 pool.Root = Root;
                 pools.Add(type, pool);
                 this.AddChildren(pool);
