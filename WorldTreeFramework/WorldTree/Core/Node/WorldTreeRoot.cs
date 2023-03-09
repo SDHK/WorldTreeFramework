@@ -102,6 +102,63 @@ namespace WorldTree
         }
 
 
+        /// <summary>
+        /// 从池中获取对象
+        /// </summary>
+        public T GetUnit<T>()
+        where T : class, IUnitPoolEventItem
+        {
+            Type type = typeof(T);
+            if (UnitPoolManager is null)
+            {
+                return Activator.CreateInstance(type, true) as T;
+            }
+            else
+            {
+                return UnitPoolManager.Get(type) as T;
+            }
+        }
+        /// <summary>
+        /// 从池中获取对象
+        /// </summary>
+        public T GetNode<T>()
+        where T : Node
+        {
+            Type type = typeof(T);
+            if (NodePoolManager is null)
+            {
+                return Activator.CreateInstance(type, true) as T;
+            }
+            else
+            {
+                return NodePoolManager.Get(type) as T;
+            }
+        }
+
+        public void Recycle(IUnitPoolEventItem obj)
+        {
+            if (UnitPoolManager is  null)
+            {
+                obj.IsRecycle = true;
+                obj.OnRecycle();
+                obj.IsDisposed = true;
+                obj.OnDispose();
+            }
+            else
+            {
+                UnitPoolManager.Recycle(obj);
+            }
+        
+        }
+
+        public void Recycle(Node obj)
+        {
+            if (true)
+            {
+
+            }
+        
+        }
 
         public void Add(Node entity)
         {

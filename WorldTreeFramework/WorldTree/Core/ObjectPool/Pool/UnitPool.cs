@@ -76,7 +76,7 @@ namespace WorldTree
 
         private void ObjectDestroy(IUnitPoolEventItem obj)
         {
-            (obj as IDisposable).Dispose();
+            //(obj as IDisposable).Dispose();
         }
 
         private void ObjectOnNew(IUnitPoolEventItem obj)

@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
@@ -31,13 +32,28 @@ namespace WorldTree
         public ValueBinder<float> valueBinder;
 
     }
-  
+
     class _InitialDomain : AddRule<InitialDomain>
     {
 
         public override async void OnEvent(InitialDomain self)
         {
             World.Log("初始域启动！！");
+
+
+            Type type = self.Type;
+            var baseTypes = new List<Type>();
+            while (type.BaseType != null)
+            {
+                baseTypes.Add(type.BaseType);
+                type = type.BaseType;
+            }
+
+            foreach (var baseType in baseTypes)
+            {
+                Debug.Log(baseType.Name);
+            }
+
 
             using (await self.AsyncLock(0))
             {
