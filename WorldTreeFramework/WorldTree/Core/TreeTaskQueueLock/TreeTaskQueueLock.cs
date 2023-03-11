@@ -16,7 +16,7 @@ namespace WorldTree
         /// 异步队列锁
         /// </summary>
         /// <remarks>按照队列顺序执行异步任务</remarks>
-        public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this Node self, long key)
+        public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this INode self, long key)
         {
             return self.Root.AddComponent<TreeTaskQueueLock>().Lock(self, key);
         }
@@ -27,15 +27,15 @@ namespace WorldTree
     /// </summary>
     public class TreeTaskQueueLock : Node
     {
-        public EntityDictionary<long, DynamicNodeQueue> nodeQueueDictitonary;
+        public TreeDictionary<long, DynamicNodeQueue> nodeQueueDictitonary;
 
         /// <summary>
         /// 队列任务锁
         /// </summary>
-        public async TreeTask<TreeTaskQueueCompleter> Lock(Node node, long key)
+        public async TreeTask<TreeTaskQueueCompleter> Lock(INode node, long key)
         {
             //判断如果没有这个键值
-            if (!nodeQueueDictitonary.Value.TryGetValue(key, out DynamicNodeQueue TaskQueue))
+            if (!nodeQueueDictitonary.TryGetValue(key, out DynamicNodeQueue TaskQueue))
             {
                 //新建动态节点队列
                 TaskQueue = nodeQueueDictitonary.AddChildren<DynamicNodeQueue>();
@@ -44,7 +44,7 @@ namespace WorldTree
                 TaskQueue.AddComponent<TreeTaskQueueLockRemoveGlobalListener>();
 
                 //动态节点队列添加进字典
-                nodeQueueDictitonary.Value.Add(key, TaskQueue);
+                nodeQueueDictitonary.Add(key, TaskQueue);
 
                 //节点添加解锁器
                 TreeTaskQueueCompleter taskQueueCompleter = node.AddChildren<TreeTaskQueueCompleter>();
@@ -73,7 +73,7 @@ namespace WorldTree
         /// </summary>
         public void RunNext(long key)
         {
-            if (nodeQueueDictitonary.Value.TryGetValue(key, out DynamicNodeQueue nodeQueue))
+            if (nodeQueueDictitonary.TryGetValue(key, out DynamicNodeQueue nodeQueue))
             {
                 //获取第一个任务
                 if (nodeQueue.TryDequeue(out var task))
@@ -99,7 +99,7 @@ namespace WorldTree
                 //队列空了则删掉键值
                 if (nodeQueue.Count == 0)
                 {
-                    nodeQueueDictitonary.Value.Remove(key);
+                    nodeQueueDictitonary.Remove(key);
                     nodeQueue.Dispose();
                 }
             }

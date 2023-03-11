@@ -10,9 +10,14 @@
 namespace WorldTree
 {
     /// <summary>
+    /// 组件约束
+    /// </summary>
+    public interface ComponentTo<T>  { }
+
+    /// <summary>
     /// 动态节点队列
     /// </summary>
-    public class DynamicNodeQueue : Node
+    public class DynamicNodeQueue : Node, ComponentTo<RuleActuator>
     {
         /// <summary>
         /// 节点id队列
@@ -27,7 +32,7 @@ namespace WorldTree
         /// <summary>
         /// 节点名单
         /// </summary>
-        public UnitDictionary<long, Node> nodeDictionary;
+        public UnitDictionary<long, INode> nodeDictionary;
 
 
         /// <summary>
@@ -36,9 +41,9 @@ namespace WorldTree
         public int Count => idQueue.Count;
 
         /// <summary>
-        /// 节点入列实体
+        /// 节点入列
         /// </summary>
-        public void Enqueue(Node node)
+        public void Enqueue(INode node)
         {
             if (nodeDictionary.ContainsKey(node.Id)) return;
             idQueue.Enqueue(node.Id);
@@ -48,7 +53,7 @@ namespace WorldTree
         /// <summary>
         /// 节点移除
         /// </summary>
-        public void Remove(Node node)
+        public void Remove(INode node)
         {
             if (nodeDictionary.ContainsKey(node.Id))
             {
@@ -80,9 +85,9 @@ namespace WorldTree
         /// <summary>
         /// 获取队顶
         /// </summary>
-        public Node Peek()
+        public INode Peek()
         {
-            if (TryPeek(out Node node))
+            if (TryPeek(out INode node))
             {
                 return node;
             }
@@ -94,7 +99,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取队顶
         /// </summary>
-        public bool TryPeek(out Node node)
+        public bool TryPeek(out INode node)
         {
             do
             {
@@ -128,9 +133,9 @@ namespace WorldTree
         /// <summary>
         /// 节点出列
         /// </summary>
-        public Node Dequeue()
+        public INode Dequeue()
         {
-            if (TryDequeue(out Node node))
+            if (TryDequeue(out INode node))
             {
                 return node;
             }
@@ -143,7 +148,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试出列
         /// </summary>
-        public bool TryDequeue(out Node node)
+        public bool TryDequeue(out INode node)
         {
             //尝试获取一个id
             if (idQueue.TryDequeue(out long id))

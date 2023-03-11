@@ -36,7 +36,7 @@ namespace WorldTree
     }
     class NodeRemoveGlobalListenerListenerRemoveRule : ListenerRemoveRule<NodeRemoveGlobalListener>
     {
-        public override void OnEvent(NodeRemoveGlobalListener self, Node node)
+        public override void OnEvent(NodeRemoveGlobalListener self, INode node)
         {
             self.nodeQueue?.Remove(node);
         }

@@ -41,12 +41,12 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取全局节点法制执行器
+        /// 获取全局节点法则执行器
         /// </summary>
-        public static RuleActuator GetGlobalNodeRuleActuator<T>(this Node self)
+        public static RuleActuator GetGlobalNodeRuleActuator<T>(this INode self)
         where T : IRule
         {
-            RuleActuator ruleActuator = self.Root.AddComponent<RuleActuatorGroup>().GetBroadcast<T>();
+            RuleActuator ruleActuator = self.Root.AddComponent<RuleActuatorGroup>().GetActuator<T>();
             ruleActuator.nodeQueue.AddComponent<NodeAddGlobalListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
             ruleActuator.nodeQueue.AddComponent<NodeRemoveGlobalListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
             return ruleActuator;

@@ -21,9 +21,9 @@ namespace WorldTree
     /// 活跃启用法则
     /// </summary>
     public abstract class EnableRule<N> : SendRuleBase<IEnableRule, N>
-    where N : Node
+    where N : class,INode
     {
-        public override void Invoke(Node self)
+        public override void Invoke(INode self)
         {
             if (self.IsActive != self.m_ActiveEventMark)
             {

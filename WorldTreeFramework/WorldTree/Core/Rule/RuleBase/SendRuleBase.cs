@@ -9,7 +9,7 @@
 * 
 * 
 * ISendRule 继承 IRule
-* 主要作用：统一 调用方法 Invoke(Node self,T1 ar1, ...);
+* 主要作用：统一 调用方法 Invoke(INode self,T1 ar1, ...);
 * 
 * 
 * SendRuleBase 则继承 RuleBase 
@@ -29,7 +29,7 @@ namespace WorldTree
     /// </summary>
     public interface ISendRule : IRule
     {
-        void Invoke(Node self);
+        void Invoke(INode self);
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ namespace WorldTree
     /// </summary>
     public interface ISendRule<T1> : IRule
     {
-        void Invoke(Node self, T1 arg1);
+        void Invoke(INode self, T1 arg1);
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ namespace WorldTree
     /// </summary>
     public interface ISendRule<T1, T2> : IRule
     {
-        void Invoke(Node self, T1 arg1, T2 arg2);
+        void Invoke(INode self, T1 arg1, T2 arg2);
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ namespace WorldTree
     /// </summary>
     public interface ISendRule<T1, T2, T3> : IRule
     {
-        void Invoke(Node self, T1 arg1, T2 arg2, T3 arg3);
+        void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3);
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ namespace WorldTree
     /// </summary>
     public interface ISendRule<T1, T2, T3, T4> : IRule
     {
-        void Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+        void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
 
     /// <summary>
@@ -69,68 +69,68 @@ namespace WorldTree
     /// </summary>
     public interface ISendRule<T1, T2, T3, T4, T5> : IRule
     {
-        void Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+        void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 
 
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<S, E> : RuleBase<E, S>, ISendRule
-    where E : Node
-    where S : ISendRule
+    public abstract class SendRuleBase<R, N> : RuleBase<N, R>, ISendRule
+    where N : class,INode
+    where R : ISendRule
     {
-        public virtual void Invoke(Node self) => OnEvent(self as E);
-        public abstract void OnEvent(E self);
+        public virtual void Invoke(INode self) => OnEvent(self as N);
+        public abstract void OnEvent(N self);
     }
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<S, E, T1> : RuleBase<E, S>, ISendRule<T1>
-    where E : Node
-    where S : ISendRule<T1>
+    public abstract class SendRuleBase<R, N, T1> : RuleBase<N, R>, ISendRule<T1>
+    where N : class,INode
+    where R : ISendRule<T1>
     {
-        public virtual void Invoke(Node self, T1 arg1) => OnEvent(self as E, arg1);
-        public abstract void OnEvent(E self, T1 arg1);
+        public virtual void Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
+        public abstract void OnEvent(N self, T1 arg1);
     }
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<S, E, T1, T2> : RuleBase<E, S>, ISendRule<T1, T2>
-    where E : Node
-    where S : ISendRule<T1, T2>
+    public abstract class SendRuleBase<R, N, T1, T2> : RuleBase<N, R>, ISendRule<T1, T2>
+    where N : class,INode
+    where R : ISendRule<T1, T2>
     {
-        public virtual void Invoke(Node self, T1 arg1, T2 arg2) => OnEvent(self as E, arg1, arg2);
-        public abstract void OnEvent(E self, T1 arg1, T2 arg2);
+        public virtual void Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
+        public abstract void OnEvent(N self, T1 arg1, T2 arg2);
     }
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<S, E, T1, T2, T3> : RuleBase<E, S>, ISendRule<T1, T2, T3>
-    where E : Node
-    where S : ISendRule<T1, T2, T3>
+    public abstract class SendRuleBase<R, N, T1, T2, T3> : RuleBase<N, R>, ISendRule<T1, T2, T3>
+    where N : class,INode
+    where R : ISendRule<T1, T2, T3>
     {
-        public virtual void Invoke(Node self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as E, arg1, arg2, arg3);
-        public abstract void OnEvent(E self, T1 arg1, T2 arg2, T3 arg3);
+        public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
+        public abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<S, E, T1, T2, T3, T4> : RuleBase<E, S>, ISendRule<T1, T2, T3, T4>
-    where E : Node
-    where S : ISendRule<T1, T2, T3, T4>
+    public abstract class SendRuleBase<R, N, T1, T2, T3, T4> : RuleBase<N, R>, ISendRule<T1, T2, T3, T4>
+    where N : class,INode
+    where R : ISendRule<T1, T2, T3, T4>
     {
-        public virtual void Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as E, arg1, arg2, arg3, arg4);
-        public abstract void OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+        public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
+        public abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<S, E, T1, T2, T3, T4, T5> : RuleBase<E, S>, ISendRule<T1, T2, T3, T4, T5>
-    where E : Node
-    where S : ISendRule<T1, T2, T3, T4, T5>
+    public abstract class SendRuleBase<R, N, T1, T2, T3, T4, T5> : RuleBase<N, R>, ISendRule<T1, T2, T3, T4, T5>
+    where N : class,INode
+    where R : ISendRule<T1, T2, T3, T4, T5>
     {
-        public virtual void Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as E, arg1, arg2, arg3, arg4, arg5);
-        public abstract void OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+        public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);
+        public abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 }

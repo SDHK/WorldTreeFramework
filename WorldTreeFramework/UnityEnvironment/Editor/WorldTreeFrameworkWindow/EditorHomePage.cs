@@ -15,10 +15,8 @@ namespace EditorTool
 {
     public class EditorHomePage : Node
     {
-        public Node page;
+        public INode page;
     }
-
-
 
     class EditorHomePageAddSystem : AddRule<EditorHomePage>
     {
@@ -36,7 +34,7 @@ namespace EditorTool
 
             EditorGUILayout.BeginVertical(GUILayout.Width(150));
 
-            foreach (var item in self.Children)
+            foreach (var item in self.ChildrenDictionary())
             {
                 if (GUILayout.Button(item.Value.Type.Name))
                 {

@@ -45,7 +45,7 @@ namespace WorldTree
                 actuator.nodeQueue = new DynamicNodeQueue();
                 actuator.nodeQueue.idQueue = new UnitQueue<long>();
                 actuator.nodeQueue.removeIdDictionary = new UnitDictionary<long, int>();
-                actuator.nodeQueue.nodeDictionary = new UnitDictionary<long, Node>();
+                actuator.nodeQueue.nodeDictionary = new UnitDictionary<long, INode>();
 
                 actuator.Id = Root.IdManager.GetId();
                 actuator.Root = Root;

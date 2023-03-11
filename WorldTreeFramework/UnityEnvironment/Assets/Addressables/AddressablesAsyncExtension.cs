@@ -17,11 +17,11 @@ namespace WorldTree
         /// <summary>
         /// Addressables加载资源
         /// </summary>
-        public async static TreeTask<T> AddressablesLoadAssetAsync<T, E>(this Node self)
+        public async static TreeTask<T> AddressablesLoadAssetAsync<T, N>(this INode self)
             where T : class
-            where E : Node
+            where N : class,INode
         {
-            return await self.Root.AddComponent<AddressablesManager>().LoadAssetAsync<T,E>();
+            return await self.Root.AddComponent<AddressablesManager>().LoadAssetAsync<T,N>();
         }
     }
 }

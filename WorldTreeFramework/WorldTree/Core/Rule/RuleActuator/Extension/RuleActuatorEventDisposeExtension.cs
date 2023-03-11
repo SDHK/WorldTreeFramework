@@ -19,7 +19,7 @@ namespace WorldTree
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node);
                     }
@@ -35,7 +35,7 @@ namespace WorldTree
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1);
                     }
@@ -52,7 +52,7 @@ namespace WorldTree
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1, arg2);
                     }
@@ -67,7 +67,7 @@ namespace WorldTree
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1, arg2, arg3);
                     }
@@ -82,7 +82,7 @@ namespace WorldTree
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1, arg2, arg3, arg4);
                     }
@@ -97,7 +97,7 @@ namespace WorldTree
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1, arg2, arg3, arg4, arg5);
                     }

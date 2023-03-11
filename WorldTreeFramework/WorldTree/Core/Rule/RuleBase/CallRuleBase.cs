@@ -10,7 +10,7 @@
 * 
 * 
 * ICallRule 继承 IRule
-* 主要作用：统一 调用方法  OutT Invoke(Node self,T1 ar1, ...);
+* 主要作用：统一 调用方法  OutT Invoke(INode self,T1 ar1, ...);
 * 
 * 
 * CallRuleBase 则继承 RuleBase 
@@ -28,103 +28,103 @@ namespace WorldTree
     /// </summary>
     public interface ICallRule<OutT> : IRule
     {
-        OutT Invoke(Node self);
+        OutT Invoke(INode self);
     }
     /// <summary>
     /// 调用法则接口
     /// </summary>
     public interface ICallRule<T1, OutT> : IRule
     {
-        OutT Invoke(Node self, T1 arg1);
+        OutT Invoke(INode self, T1 arg1);
     }
     /// <summary>
     /// 调用法则接口
     /// </summary>
     public interface ICallRule<T1, T2, OutT> : IRule
     {
-        OutT Invoke(Node self, T1 arg1, T2 arg2);
+        OutT Invoke(INode self, T1 arg1, T2 arg2);
     }
     /// <summary>
     /// 调用法则接口
     /// </summary>
     public interface ICallRule<T1, T2, T3, OutT> : IRule
     {
-        OutT Invoke(Node self, T1 arg1, T2 arg2, T3 arg3);
+        OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
     /// 调用法则接口
     /// </summary>
     public interface ICallRule<T1, T2, T3, T4, OutT> : IRule
     {
-        OutT Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+        OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
     /// 调用法则接口
     /// </summary>
     public interface ICallRule<T1, T2, T3, T4, T5, OutT> : IRule
     {
-        OutT Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+        OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 
 
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<S, E, OutT> : RuleBase<E, S>, ICallRule<OutT>
-    where E : Node
-    where S : ICallRule<OutT>
+    public abstract class CallRuleBase<R, N, OutT> : RuleBase<N, R>, ICallRule<OutT>
+    where N : class,INode
+    where R : ICallRule<OutT>
     {
-        public virtual OutT Invoke(Node self) => OnEvent(self as E);
-        public abstract OutT OnEvent(E self);
+        public virtual OutT Invoke(INode self) => OnEvent(self as N);
+        public abstract OutT OnEvent(N self);
     }
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<S, E, T1, OutT> : RuleBase<E, S>, ICallRule<T1, OutT>
-    where E : Node
-    where S : ICallRule<T1, OutT>
+    public abstract class CallRuleBase<R, N, T1, OutT> : RuleBase<N, R>, ICallRule<T1, OutT>
+    where N : class,INode
+    where R : ICallRule<T1, OutT>
     {
-        public virtual OutT Invoke(Node self, T1 arg1) => OnEvent(self as E, arg1);
-        public abstract OutT OnEvent(E self, T1 arg1);
+        public virtual OutT Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
+        public abstract OutT OnEvent(N self, T1 arg1);
     }
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<S, E, T1, T2, OutT> : RuleBase<E, S>, ICallRule<T1, T2, OutT>
-    where E : Node
-    where S : ICallRule<T1, T2, OutT>
+    public abstract class CallRuleBase<R, N, T1, T2, OutT> : RuleBase<N, R>, ICallRule<T1, T2, OutT>
+    where N : class,INode
+    where R : ICallRule<T1, T2, OutT>
     {
-        public virtual OutT Invoke(Node self, T1 arg1, T2 arg2) => OnEvent(self as E, arg1, arg2);
-        public abstract OutT OnEvent(E self, T1 arg1, T2 arg2);
+        public virtual OutT Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
+        public abstract OutT OnEvent(N self, T1 arg1, T2 arg2);
     }
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<S, E, T1, T2, T3, OutT> : RuleBase<E, S>, ICallRule<T1, T2, T3, OutT>
-    where E : Node
-    where S : ICallRule<T1, T2, T3, OutT>
+    public abstract class CallRuleBase<R, N, T1, T2, T3, OutT> : RuleBase<N, R>, ICallRule<T1, T2, T3, OutT>
+    where N : class,INode
+    where R : ICallRule<T1, T2, T3, OutT>
     {
-        public virtual OutT Invoke(Node self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as E, arg1, arg2, arg3);
-        public abstract OutT OnEvent(E self, T1 arg1, T2 arg2, T3 arg3);
+        public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
+        public abstract OutT OnEvent(N self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<S, E, T1, T2, T3, T4, OutT> : RuleBase<E, S>, ICallRule<T1, T2, T3, T4, OutT>
-    where E : Node
-    where S : ICallRule<T1, T2, T3, T4, OutT>
+    public abstract class CallRuleBase<R, N, T1, T2, T3, T4, OutT> : RuleBase<N, R>, ICallRule<T1, T2, T3, T4, OutT>
+    where N : class,INode
+    where R : ICallRule<T1, T2, T3, T4, OutT>
     {
-        public virtual OutT Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as E, arg1, arg2, arg3, arg4);
-        public abstract OutT OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+        public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
+        public abstract OutT OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<S, E, T1, T2, T3, T4, T5, OutT> : RuleBase<E, S>, ICallRule<T1, T2, T3, T4, T5, OutT>
-    where E : Node
-    where S : ICallRule<T1, T2, T3, T4, T5, OutT>
+    public abstract class CallRuleBase<R, N, T1, T2, T3, T4, T5, OutT> : RuleBase<N, R>, ICallRule<T1, T2, T3, T4, T5, OutT>
+    where N : class,INode
+    where R : ICallRule<T1, T2, T3, T4, T5, OutT>
     {
-        public virtual OutT Invoke(Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as E, arg1, arg2, arg3, arg4, arg5);
-        public abstract OutT OnEvent(E self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+        public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);
+        public abstract OutT OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 }

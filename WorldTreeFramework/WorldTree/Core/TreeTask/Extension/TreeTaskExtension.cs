@@ -20,13 +20,13 @@ namespace WorldTree
         /// <summary>
         /// 延迟一帧
         /// </summary>
-        public static TreeTaskCompleted TreeTaskCompleted(this Node self)
+        public static TreeTaskCompleted TreeTaskCompleted(this INode self)
         {
             return self.AddChildren<TreeTaskCompleted>();
 
         }
 
-        public static TreeTask AsyncTaskQueue(this Node self)
+        public static TreeTask AsyncTaskQueue(this INode self)
         {
 
             return self.AddChildren<TreeTask>();

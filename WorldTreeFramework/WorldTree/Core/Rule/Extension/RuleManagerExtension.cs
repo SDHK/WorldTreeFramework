@@ -14,7 +14,7 @@ namespace WorldTree
     public static class RuleManagerExtension
     {
 
-        public static RuleManager RuleManager(this Node self)
+        public static RuleManager RuleManager(this INode self)
         {
             return self.Root.RuleManager;
         }
@@ -22,7 +22,7 @@ namespace WorldTree
         /// <summary>
         /// 获取法则集合
         /// </summary>
-        public static RuleGroup GetRuleGroup<T>(this Node self)
+        public static RuleGroup GetRuleGroup<T>(this INode self)
         where T : IRule
         {
             return self.Root.RuleManager.GetRuleGroup<T>();
@@ -32,7 +32,7 @@ namespace WorldTree
         /// <summary>
         /// 获取法则集合
         /// </summary>
-        public static RuleGroup GetRuleGroup(this Node self, Type type)
+        public static RuleGroup GetRuleGroup(this INode self, Type type)
         {
             return self.Root.RuleManager.GetRuleGroup(type);
         }
@@ -40,7 +40,7 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public static List<IRule> GetRuleList<R>(this Node self, Type type)
+        public static List<IRule> GetRuleList<R>(this INode self, Type type)
         where R : IRule
         {
             return self.Root.RuleManager.GetRuleList<R>(type);

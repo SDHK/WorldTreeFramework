@@ -3,8 +3,10 @@
 * 作者： 闪电黑客
 * 日期： 2023/3/6 14:41
 
-* 描述： 
-
+* 描述： 组件节点
+* 
+* 用节点类型作为键值，因此同种类型的组件只能一个
+* 
 */
 
 using System;
@@ -13,13 +15,27 @@ namespace WorldTree
 {
     public static class NodeComponentStaticRule
     {
+
+
+        /// <summary>
+        /// 组件节点
+        /// </summary>
+        public static UnitDictionary<Type, INode> ComponentsDictionary(this INode self)
+        {
+            if (self.m_Components == null)
+            {
+                self.m_Components = self.PoolGet<UnitDictionary<Type, INode>>();
+            }
+            return self.m_Components;
+        }
+
         #region 获取
 
 
         /// <summary>
         /// 获取组件
         /// </summary>
-        public static Node GetComponent(this Node self, Type type)
+        public static INode GetComponent(this INode self, Type type)
         {
             if (self.m_Components == null)
             {
@@ -27,7 +43,7 @@ namespace WorldTree
             }
             else
             {
-                self.m_Components.TryGetValue(type, out Node component);
+                self.m_Components.TryGetValue(type, out INode component);
                 return component;
             }
         }
@@ -35,7 +51,7 @@ namespace WorldTree
         /// <summary>
         /// 获取组件
         /// </summary>
-        public static bool TryGetComponent(this Node self, Type type, out Node component)
+        public static bool TryGetComponent(this INode self, Type type, out INode component)
         {
             if (self.m_Components == null)
             {
@@ -51,8 +67,8 @@ namespace WorldTree
         /// <summary>
         /// 获取组件
         /// </summary>
-        public static T GetComponent<T>(this Node self)
-            where T : Node
+        public static T GetComponent<T>(this INode self)
+            where T : class,INode
         {
             if (self.m_Components == null)
             {
@@ -61,7 +77,7 @@ namespace WorldTree
             else
             {
                 Type type = typeof(T);
-                self.m_Components.TryGetValue(type, out Node node);
+                self.m_Components.TryGetValue(type, out INode node);
                 return node as T;
             }
         }
@@ -69,8 +85,8 @@ namespace WorldTree
         /// <summary>
         /// 获取组件
         /// </summary>
-        public static bool TryGetComponent<T>(this Node self, out T component)
-            where T : Node
+        public static bool TryGetComponent<T>(this INode self, out T component)
+            where T : class,INode
         {
             if (self.m_Components == null)
             {
@@ -80,7 +96,7 @@ namespace WorldTree
             else
             {
                 Type type = typeof(T);
-                if (self.m_Components.TryGetValue(type, out Node node))
+                if (self.m_Components.TryGetValue(type, out INode node))
                 {
                     component = node as T;
                     return true;
@@ -100,8 +116,8 @@ namespace WorldTree
         /// <summary>
         /// 移除组件
         /// </summary>
-        public static void RemoveComponent<T>(this Node self)
-            where T : Node
+        public static void RemoveComponent<T>(this INode self)
+            where T : class,INode
         {
             Type type = typeof(T);
             self.RemoveComponent(type);
@@ -110,10 +126,10 @@ namespace WorldTree
         /// <summary>
         /// 移除组件
         /// </summary>
-        public static void RemoveComponent(this Node self, Type type)
+        public static void RemoveComponent(this INode self, Type type)
         {
             if (self.m_Components != null)
-                if (self.m_Components.TryGetValue(type, out Node component))
+                if (self.m_Components.TryGetValue(type, out INode component))
                 {
                     component?.Dispose();
                 }
@@ -122,11 +138,11 @@ namespace WorldTree
         /// <summary>
         /// 移除全部组件
         /// </summary>
-        public static void RemoveAllComponent(this Node self)
+        public static void RemoveAllComponent(this INode self)
         {
             if (self.m_Components != null ? self.m_Components.Count != 0 : false)
             {
-                var nodes = self.PoolGet<UnitStack<Node>>();
+                var nodes = self.PoolGet<UnitStack<INode>>();
                 foreach (var item in self.m_Components) nodes.Push(item.Value);
 
                 int length = nodes.Count;
@@ -148,7 +164,7 @@ namespace WorldTree
         /// <summary>
         /// 添加野组件或替换父节点  （替换：从原父节点移除，移除替换同类型的组件，不调用事件）
         /// </summary>
-        public static void AddComponent(this Node self, Node component)
+        public static void AddComponent(this INode self, INode component)
         {
             if (component != null)
             {
@@ -160,14 +176,14 @@ namespace WorldTree
                 {
                     component.TraversalLevelDisposeDomain();
                     component.RemoveInParent();
-                    self.Components.Add(type, component);
+                    self.ComponentsDictionary().Add(type, component);
                     component.Parent = self;
                     component.isComponent = true;
                     component.RefreshActive();
                 }
                 else //野组件添加
                 {
-                    self.Components.Add(type, component);
+                    self.ComponentsDictionary().Add(type, component);
                     component.Parent = self;
                     component.isComponent = true;
 
@@ -182,9 +198,9 @@ namespace WorldTree
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static Node AddComponent(this Node self, Type type)
+        public static INode AddComponent(this INode self, Type type)
         {
-            if (!self.Components.TryGetValue(type, out Node component))
+            if (!self.ComponentsDictionary().TryGetValue(type, out INode component))
             {
                 component = self.PoolGet(type);
                 component.Parent = self;
@@ -199,42 +215,54 @@ namespace WorldTree
         #region 泛型添加
 
 
+
+        ///// <summary>
+        ///// 添加组件
+        ///// </summary>
+        //public static T AddComponent<N, T>(this N self, out T node)
+        //    where N : class,INode
+        //    where T : class,INode, ComponentTo<N>
+        //{
+        //    return node = self.AddComponent<T>();
+        //}
+
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T>(this Node self, out T node) where T : Node => node = self.AddComponent<T>();
+        public static T AddComponent< T>(this INode self, out T node)  where T : class,INode =>  node = self.AddComponent<T>();
+
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1>(this Node self, out T node, T1 arg1) where T : Node => node = self.AddComponent<T, T1>(arg1);
+        public static T AddComponent<T, T1>(this INode self, out T node, T1 arg1) where T : class,INode => node = self.AddComponent<T, T1>(arg1);
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2>(this Node self, out T node, T1 arg1, T2 arg2) where T : Node => node = self.AddComponent<T, T1, T2>(arg1, arg2);
+        public static T AddComponent<T, T1, T2>(this INode self, out T node, T1 arg1, T2 arg2) where T : class,INode => node = self.AddComponent<T, T1, T2>(arg1, arg2);
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2, T3>(this Node self, out T node, T1 arg1, T2 arg2, T3 arg3) where T : Node => node = self.AddComponent<T, T1, T2, T3>(arg1, arg2, arg3);
+        public static T AddComponent<T, T1, T2, T3>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3) where T : class,INode => node = self.AddComponent<T, T1, T2, T3>(arg1, arg2, arg3);
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2, T3, T4>(this Node self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where T : Node => node = self.AddComponent<T, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
+        public static T AddComponent<T, T1, T2, T3, T4>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where T : class,INode => node = self.AddComponent<T, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2, T3, T4, T5>(this Node self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where T : Node => node = self.AddComponent<T, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+        public static T AddComponent<T, T1, T2, T3, T4, T5>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where T : class,INode => node = self.AddComponent<T, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
 
 
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T>(this Node self)
-            where T : Node
+        public static T AddComponent<T>(this INode self)
+            where T : class,INode
         {
             Type type = typeof(T);
 
             T component = null;
-            if (!self.Components.TryGetValue(type, out Node node))
+            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
             {
                 component = self.PoolGet<T>();
                 component.Parent = self;
@@ -250,16 +278,17 @@ namespace WorldTree
 
             return component;
         }
+        
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1>(this Node self, T1 arg1)
-            where T : Node
+        public static T AddComponent<T, T1>(this INode self, T1 arg1)
+            where T : class,INode
         {
             Type type = typeof(T);
 
             T component = null;
-            if (!self.Components.TryGetValue(type, out Node node))
+            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
             {
                 component = self.PoolGet<T>();
                 component.Parent = self;
@@ -279,13 +308,13 @@ namespace WorldTree
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2>(this Node self, T1 arg1, T2 arg2)
-            where T : Node
+        public static T AddComponent<T, T1, T2>(this INode self, T1 arg1, T2 arg2)
+            where T : class,INode
         {
             Type type = typeof(T);
 
             T component = null;
-            if (!self.Components.TryGetValue(type, out Node node))
+            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
             {
                 component = self.PoolGet<T>();
                 component.Parent = self;
@@ -303,13 +332,13 @@ namespace WorldTree
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2, T3>(this Node self, T1 arg1, T2 arg2, T3 arg3)
-            where T : Node
+        public static T AddComponent<T, T1, T2, T3>(this INode self, T1 arg1, T2 arg2, T3 arg3)
+            where T : class,INode
         {
             Type type = typeof(T);
 
             T component = null;
-            if (!self.Components.TryGetValue(type, out Node node))
+            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
             {
                 component = self.PoolGet<T>();
                 component.Parent = self;
@@ -328,13 +357,13 @@ namespace WorldTree
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2, T3, T4>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-            where T : Node
+        public static T AddComponent<T, T1, T2, T3, T4>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            where T : class,INode
         {
             Type type = typeof(T);
 
             T component = null;
-            if (!self.Components.TryGetValue(type, out Node node))
+            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
             {
                 component = self.PoolGet<T>();
                 component.Parent = self;
@@ -353,13 +382,13 @@ namespace WorldTree
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2, T3, T4, T5>(this Node self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-            where T : Node
+        public static T AddComponent<T, T1, T2, T3, T4, T5>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            where T : class,INode
         {
             Type type = typeof(T);
 
             T component = null;
-            if (!self.Components.TryGetValue(type, out Node node))
+            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
             {
                 component = self.PoolGet<T>();
                 component.Parent = self;

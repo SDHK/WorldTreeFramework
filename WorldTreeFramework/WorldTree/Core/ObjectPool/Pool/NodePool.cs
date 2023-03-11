@@ -5,7 +5,7 @@
 
 * 描述： 树节点对象池
 *
-* 管理类型： Node
+* 管理类型： INode
 *   
 *   调用 节点 生命周期法则， 生成， 获取， 回收， 销毁，
 *   
@@ -34,7 +34,7 @@ namespace WorldTree
     /// <summary>
     /// 实体对象池
     /// </summary>
-    public class NodePool : GenericPool<Node>
+    public class NodePool : GenericPool<INode>
     {
         public List<IRule> newRule;
         public List<IRule> getRule;
@@ -44,14 +44,14 @@ namespace WorldTree
         /// <summary>
         /// 引用池
         /// </summary>
-        public Dictionary<long, Node> Nodes;
+        public Dictionary<long, INode> Nodes;
 
         public NodePool(Type type) : base()
         {
 
             ObjectType = type;
 
-            Nodes = new Dictionary<long, Node>();
+            Nodes = new Dictionary<long, INode>();
 
             NewObject = ObjectNew;
             DestroyObject = ObjectDestroy;
@@ -77,16 +77,16 @@ namespace WorldTree
             return $"[NodePool<{ObjectType}>] : {Count} ";
         }
 
-        private Node ObjectNew(IPool pool)
+        private INode ObjectNew(IPool pool)
         {
-            Node obj = Activator.CreateInstance(ObjectType, true) as Node;
+            INode obj = Activator.CreateInstance(ObjectType, true) as INode;
             obj.thisPool = this;
             obj.Id = Root.IdManager.GetId();
             obj.Root = Root;
             return obj;
         }
-        public override void Recycle(object obj) => Recycle(obj as Node);
-        public void Recycle(Node obj)
+        public override void Recycle(object obj) => Recycle(obj as INode);
+        public void Recycle(INode obj)
         {
             lock (objetPool)
             {
@@ -108,31 +108,31 @@ namespace WorldTree
                 }
             }
         }
-        private void ObjectDestroy(Node obj)
+        private void ObjectDestroy(INode obj)
         {
             Root.IdManager.Recycle(obj.Id);
         }
 
-        private void ObjectOnNew(Node obj)
+        private void ObjectOnNew(INode obj)
         {
             newRule?.Send(obj);
         }
 
-        private void ObjectOnGet(Node obj)
+        private void ObjectOnGet(INode obj)
         {
             obj.IsRecycle = false;
             Nodes.TryAdd(obj.Id, obj);
             getRule?.Send(obj);
         }
 
-        private void ObjectOnRecycle(Node obj)
+        private void ObjectOnRecycle(INode obj)
         {
             obj.IsRecycle = true;
             recycleRule?.Send(obj);
             Nodes.Remove(obj.Id);
         }
 
-        private void ObjectOnDestroy(Node obj)
+        private void ObjectOnDestroy(INode obj)
         {
             obj.IsDisposed = true;
             destroyRule?.Send(obj);

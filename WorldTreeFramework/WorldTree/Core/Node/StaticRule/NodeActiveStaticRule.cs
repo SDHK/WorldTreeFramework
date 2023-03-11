@@ -4,8 +4,10 @@
 * 作者： 闪电黑客
 * 日期： 2023/3/6 14:16
 
-* 描述： 
-
+* 描述： 节点活跃
+* 
+* 模仿 Unity GameObject树 的 活跃功能
+* 
 */
 
 namespace WorldTree
@@ -16,13 +18,13 @@ namespace WorldTree
         /// <summary>
         /// 设置激活状态
         /// </summary>
-        public static void SetActive(this Node self, bool value)
+        public static void SetActive(this INode self, bool value)
         {
-            if (self.m_ActiveToggle != value)
+            if (self.ActiveToggle != value)
             {
-                self.m_ActiveToggle = value;
+                self.ActiveToggle = value;
 
-                if (self.m_Active != ((self.Parent == null) ? self.m_ActiveToggle : self.Parent.m_Active && self.m_ActiveToggle))
+                if (self.IsActive != ((self.Parent == null) ? self.ActiveToggle : self.Parent.IsActive && self.ActiveToggle))
                 {
                     self.RefreshActive();
                 }
@@ -32,16 +34,16 @@ namespace WorldTree
         /// <summary>
         /// 刷新激活状态：层序遍历设置子节点
         /// </summary>
-        public static void RefreshActive(this Node self)
+        public static void RefreshActive(this INode self)
         {
-            self.PoolGet(out UnitQueue<Node> queue);
+            self.PoolGet(out UnitQueue<INode> queue);
             queue.Enqueue(self);
             while (queue.Count != 0)
             {
                 var current = queue.Dequeue();
-                if (current.m_Active != ((current.Parent == null) ? current.m_ActiveToggle : current.Parent.m_Active && current.m_ActiveToggle))
+                if (current.IsActive != ((current.Parent == null) ? current.ActiveToggle : current.Parent.IsActive && current.ActiveToggle))
                 {
-                    current.m_Active = !current.m_Active;
+                    current.IsActive = !current.IsActive;
 
                     if (current.m_Components != null)
                     {

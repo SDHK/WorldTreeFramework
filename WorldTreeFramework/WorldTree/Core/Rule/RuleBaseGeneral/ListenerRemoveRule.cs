@@ -17,10 +17,10 @@ namespace WorldTree
     /// <summary>
     /// 监听节点移除法则
     /// </summary>
-    public abstract class ListenerRemoveRule<LN, TN, TR> : ListenerRuleBase<LN, IListenerRemoveRule, TN, TR> where TN : Node where LN : Node where TR : IRule { }
+    public abstract class ListenerRemoveRule<LN, TN, TR> : ListenerRuleBase<LN, IListenerRemoveRule, TN, TR> where TN : class,INode where LN : class,INode where TR : IRule { }
 
     /// <summary>
     /// 【动态】监听节点移除法则
     /// </summary>
-    public abstract class ListenerRemoveRule<LN> : ListenerRuleBase<LN, IListenerRemoveRule, Node, IRule> where LN : Node { }
+    public abstract class ListenerRemoveRule<LN> : ListenerRuleBase<LN, IListenerRemoveRule, INode, IRule> where LN : class,INode { }
 }

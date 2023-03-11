@@ -22,9 +22,9 @@ namespace WorldTree
     /// 活跃禁用法则
     /// </summary>
     public abstract class DisableRule<N> : SendRuleBase<IDisableRule, N>
-        where N : Node
+        where N : class,INode
     {
-        public override void Invoke(Node self)
+        public override void Invoke(INode self)
         {
             if (self.IsActive != self.m_ActiveEventMark)
             {

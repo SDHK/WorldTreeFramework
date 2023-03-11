@@ -17,7 +17,7 @@ namespace WorldTree
 
         #region Send
 
-        public static bool TrySend(this RuleGroup group, Node node)
+        public static bool TrySend(this RuleGroup group, INode node)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -30,7 +30,7 @@ namespace WorldTree
             }
         }
 
-        public static bool TrySend<T1>(this RuleGroup group, Node node, T1 arg1)
+        public static bool TrySend<T1>(this RuleGroup group, INode node, T1 arg1)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -43,7 +43,7 @@ namespace WorldTree
             }
         }
 
-        public static bool TrySend<T1, T2>(this RuleGroup group, Node node, T1 arg1, T2 arg2)
+        public static bool TrySend<T1, T2>(this RuleGroup group, INode node, T1 arg1, T2 arg2)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -57,7 +57,7 @@ namespace WorldTree
         }
 
 
-        public static bool TrySend<T1, T2, T3>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3)
+        public static bool TrySend<T1, T2, T3>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -70,7 +70,7 @@ namespace WorldTree
             }
         }
 
-        public static bool TrySend<T1, T2, T3, T4>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static bool TrySend<T1, T2, T3, T4>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -82,7 +82,7 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TrySend<T1, T2, T3, T4, T5>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static bool TrySend<T1, T2, T3, T4, T5>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -96,29 +96,29 @@ namespace WorldTree
         }
 
 
-        public static void Send(this RuleGroup group, Node node)
+        public static void Send(this RuleGroup group, INode node)
         {
             group.TrySend(node);
         }
 
-        public static void Send<T1>(this RuleGroup group, Node node, T1 arg1)
+        public static void Send<T1>(this RuleGroup group, INode node, T1 arg1)
         {
             group.TrySend(node, arg1);
         }
 
-        public static void Send<T1, T2>(this RuleGroup group, Node node, T1 arg1, T2 arg2)
+        public static void Send<T1, T2>(this RuleGroup group, INode node, T1 arg1, T2 arg2)
         {
             group.TrySend(node, arg1, arg2);
         }
-        public static void Send<T1, T2, T3>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3)
+        public static void Send<T1, T2, T3>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3)
         {
             group.TrySend(node, arg1, arg2, arg3);
         }
-        public static void Send<T1, T2, T3, T4>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static void Send<T1, T2, T3, T4>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             group.TrySend(node, arg1, arg2, arg3, arg4);
         }
-        public static void Send<T1, T2, T3, T4, T5>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static void Send<T1, T2, T3, T4, T5>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             group.TrySend(node, arg1, arg2, arg3, arg4, arg5);
         }

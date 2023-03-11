@@ -18,5 +18,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口焦点系统
     /// </summary>
-    public abstract class WindowFocusRule<E> : SendRuleBase<IWindowFocusRule, E> where E : Node { }
+    public abstract class WindowFocusRule<N> : SendRuleBase<IWindowFocusRule, N> where N : class,INode { }
 }

@@ -39,7 +39,7 @@ namespace WorldTree
         /// <summary>
         /// 添加实体
         /// </summary>
-        public void Enqueue(Node node)
+        public void Enqueue(INode node)
         {
             nodeQueue.Enqueue(node);
         }
@@ -47,7 +47,7 @@ namespace WorldTree
         /// <summary>
         /// 移除节点
         /// </summary>
-        public void Remove(Node node)
+        public void Remove(INode node)
         {
             nodeQueue.Remove(node);
         }
@@ -62,7 +62,7 @@ namespace WorldTree
         /// <summary>
         /// 出列
         /// </summary>
-        public Node Dequeue()
+        public INode Dequeue()
         {
             return nodeQueue.Dequeue();
         }
@@ -70,7 +70,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试出列
         /// </summary>
-        public bool TryDequeue(out Node node)
+        public bool TryDequeue(out INode node)
         {
             return nodeQueue.TryDequeue(out node);
         }
@@ -84,7 +84,12 @@ namespace WorldTree
         {
             if (self.thisPool != null)
             {
+                //self.AddComponent<DynamicNodeQueue>();
+
+                //self.AddComponent(out DynamicNodeQueue _,100f,"str");
+
                 self.AddComponent(out self.nodeQueue);
+
             }
 
         }

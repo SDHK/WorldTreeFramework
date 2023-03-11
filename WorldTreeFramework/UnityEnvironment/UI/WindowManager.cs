@@ -32,11 +32,11 @@ namespace WorldTree
         /// <summary>
         /// 全部窗口
         /// </summary>
-        public UnitDictionary<Type, Node> windows = new UnitDictionary<Type, Node>();
+        public UnitDictionary<Type, INode> windows = new UnitDictionary<Type, INode>();
         /// <summary>
         /// 栈窗口
         /// </summary>
-        public Stack<Node> windowStack = new Stack<Node>();
+        public Stack<INode> windowStack = new Stack<INode>();
 
         /// <summary>
         /// 根节点
@@ -47,11 +47,11 @@ namespace WorldTree
         /// 打开窗口入栈
         /// </summary>
         public async TreeTask<T> Show<T>()
-            where T : Node
+            where T : class,INode
         {
-            if (windows.TryGetValue(typeof(T), out Node node))
+            if (windows.TryGetValue(typeof(T), out INode node))
             {
-                if (windowStack.TryPeek(out Node outNode))
+                if (windowStack.TryPeek(out INode outNode))
                 {
                     outNode?.SendRule<IWindowLostFocusRule>();
                 }
@@ -71,7 +71,7 @@ namespace WorldTree
 
                 windows.Add(node.Type, node);
 
-                if (windowStack.TryPeek(out Node topNode))
+                if (windowStack.TryPeek(out INode topNode))
                 {
                     topNode?.SendRule<IWindowLostFocusRule>();
                 }
@@ -87,11 +87,11 @@ namespace WorldTree
         /// 关闭栈窗口
         /// </summary>
         public void Dispose<T>()
-           where T : Node
+           where T : class,INode
         {
-            if (windows.TryGetValue(typeof(T), out Node targetNode))
+            if (windows.TryGetValue(typeof(T), out INode targetNode))
             {
-                if (windowStack.TryPeek(out Node topNode))
+                if (windowStack.TryPeek(out INode topNode))
                 {
                     topNode?.SendRule<IWindowLostFocusRule>();
                 }
@@ -116,11 +116,11 @@ namespace WorldTree
         /// </summary>
         public void DisposeTop()
         {
-            if (windowStack.TryPop(out Node outNode))
+            if (windowStack.TryPop(out INode outNode))
             {
                 windows.Remove(outNode.Type);
                 outNode?.SendRule<IWindowLostFocusRule>();
-                if (windowStack.TryPeek(out Node topNode))
+                if (windowStack.TryPeek(out INode topNode))
                 {
                     topNode?.SendRule<IWindowFocusRule>();
                 }
@@ -132,7 +132,7 @@ namespace WorldTree
         /// </summary>
         public void DisposeAll()
         {
-            if (windowStack.TryPeek(out Node topNode))
+            if (windowStack.TryPeek(out INode topNode))
             {
                 topNode?.SendRule<IWindowFocusRule>();
             }
@@ -147,7 +147,7 @@ namespace WorldTree
         /// 关闭动画栈窗口
         /// </summary>
         public void Close<T>()
-           where T : Node
+           where T : class,INode
         {
 
         }
@@ -176,7 +176,7 @@ namespace WorldTree
         {
             if (self.windowStack.Count != 0)
             {
-                if (self.windowStack.TryPeek(out Node node))
+                if (self.windowStack.TryPeek(out INode node))
                 {
                     node?.SendRule<IWindowFocusUpdateRule, float>(deltaTime);
                 }
@@ -186,14 +186,14 @@ namespace WorldTree
 
     class WindowManagerNodeAddRule : ListenerAddRule<WindowManager>
     {
-        public override void OnEvent(WindowManager self, Node node)
+        public override void OnEvent(WindowManager self, INode node)
         {
 
         }
     }
     class WindowManagerNodeRemoveRule : ListenerRemoveRule<WindowManager>
     {
-        public override void OnEvent(WindowManager self, Node node)
+        public override void OnEvent(WindowManager self, INode node)
         {
 
         }

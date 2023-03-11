@@ -17,5 +17,5 @@ namespace WorldTree
     /// <summary>
     /// GUI绘制系统事件
     /// </summary>
-    public abstract class GUIDrawSystem<T> : SendRuleBase<IGUIDrawSystem, T> where T : Node { }
+    public abstract class GUIDrawSystem<T> : SendRuleBase<IGUIDrawSystem, T> where T : class,INode { }
 }

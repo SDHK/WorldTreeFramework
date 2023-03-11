@@ -17,5 +17,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口更新系统
     /// </summary>
-    public abstract class WIndowUpdateRule<E> : SendRuleBase<IWindowUpdateRule, E, float> where E : Node { }
+    public abstract class WIndowUpdateRule<N> : SendRuleBase<IWindowUpdateRule, N, float> where N : class,INode { }
 }

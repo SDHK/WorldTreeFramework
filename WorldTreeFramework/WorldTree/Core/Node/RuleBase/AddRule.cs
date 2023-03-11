@@ -20,5 +20,5 @@ namespace WorldTree
     /// <summary>
     /// 添加法则
     /// </summary>
-    public abstract class AddRule<N> : SendRuleBase<IAddRule, N> where N : Node { }
+    public abstract class AddRule<N> : SendRuleBase<IAddRule, N> where N : class,INode { }
 }

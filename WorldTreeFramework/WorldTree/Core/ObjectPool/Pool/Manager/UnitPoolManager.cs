@@ -19,7 +19,7 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取对象
         /// </summary>
-        public static T PoolGet<T>(this Node self)
+        public static T PoolGet<T>(this INode self)
         where T : class, IUnitPoolEventItem
         {
             return self.Root.GetUnit<T>();
@@ -28,7 +28,7 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取对象
         /// </summary>
-        public static T PoolGet<T>(this Node self, out T unit)
+        public static T PoolGet<T>(this INode self, out T unit)
        where T : class, IUnitPoolEventItem
         {
             return unit = self.Root.GetUnit<T>();
@@ -37,7 +37,7 @@ namespace WorldTree
         /// <summary>
         /// 回收对象
         /// </summary>
-        public static void PoolRecycle(this Node self, IUnitPoolEventItem obj)
+        public static void PoolRecycle(this INode self, IUnitPoolEventItem obj)
         {
             self.Root.Recycle(obj);
         }

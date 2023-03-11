@@ -17,7 +17,7 @@ namespace WorldTree
 
         #region Send
 
-        public static async TreeTask<bool> TrySendAsync(this RuleGroup group, Node node)
+        public static async TreeTask<bool> TrySendAsync(this RuleGroup group, INode node)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -30,7 +30,7 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async TreeTask<bool> TrySendAsync<T1>(this RuleGroup group, Node node, T1 arg1)
+        public static async TreeTask<bool> TrySendAsync<T1>(this RuleGroup group, INode node, T1 arg1)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -43,7 +43,7 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async TreeTask<bool> TrySendAsync<T1, T2>(this RuleGroup group, Node node, T1 arg1, T2 arg2)
+        public static async TreeTask<bool> TrySendAsync<T1, T2>(this RuleGroup group, INode node, T1 arg1, T2 arg2)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -56,7 +56,7 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async TreeTask<bool> TrySendAsync<T1, T2, T3>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3)
+        public static async TreeTask<bool> TrySendAsync<T1, T2, T3>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -69,7 +69,7 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async TreeTask<bool> TrySendAsync<T1, T2, T3, T4>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async TreeTask<bool> TrySendAsync<T1, T2, T3, T4>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -82,7 +82,7 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async TreeTask<bool> TrySendAsync<T1, T2, T3, T4, T5>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async TreeTask<bool> TrySendAsync<T1, T2, T3, T4, T5>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -98,7 +98,7 @@ namespace WorldTree
 
 
 
-        public static async TreeTask SendAsync(this RuleGroup group, Node node)
+        public static async TreeTask SendAsync(this RuleGroup group, INode node)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -109,7 +109,7 @@ namespace WorldTree
                 await node.TreeTaskCompleted();
             }
         }
-        public static async TreeTask SendAsync<T1>(this RuleGroup group, Node node, T1 arg1)
+        public static async TreeTask SendAsync<T1>(this RuleGroup group, INode node, T1 arg1)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -120,7 +120,7 @@ namespace WorldTree
                 await node.TreeTaskCompleted();
             }
         }
-        public static async TreeTask SendAsync<T1, T2>(this RuleGroup group, Node node, T1 arg1, T2 arg2)
+        public static async TreeTask SendAsync<T1, T2>(this RuleGroup group, INode node, T1 arg1, T2 arg2)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -131,7 +131,7 @@ namespace WorldTree
                 await node.TreeTaskCompleted();
             }
         }
-        public static async TreeTask SendAsync<T1, T2, T3>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3)
+        public static async TreeTask SendAsync<T1, T2, T3>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -142,7 +142,7 @@ namespace WorldTree
                 await node.TreeTaskCompleted();
             }
         }
-        public static async TreeTask SendAsync<T1, T2, T3, T4>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async TreeTask SendAsync<T1, T2, T3, T4>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {
@@ -153,7 +153,7 @@ namespace WorldTree
                 await node.TreeTaskCompleted();
             }
         }
-        public static async TreeTask SendAsync<T1, T2, T3, T4, T5>(this RuleGroup group, Node node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async TreeTask SendAsync<T1, T2, T3, T4, T5>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))
             {

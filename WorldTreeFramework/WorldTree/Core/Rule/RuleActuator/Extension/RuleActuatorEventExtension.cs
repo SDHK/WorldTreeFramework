@@ -9,7 +9,7 @@
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node);
                         if(!node.IsRecycle) nodeQueue.Enqueue(node);
@@ -24,7 +24,7 @@
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1);
                         if (!node.IsRecycle) nodeQueue.Enqueue(node);
@@ -39,7 +39,7 @@
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1, arg2);
 
@@ -55,7 +55,7 @@
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1, arg2, arg3);
                         if (!node.IsRecycle) nodeQueue.Enqueue(node);
@@ -70,7 +70,7 @@
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1, arg2, arg3, arg4);
                         if (!node.IsRecycle) nodeQueue.Enqueue(node);
@@ -85,7 +85,7 @@
                 int length = nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out Node node))
+                    if (nodeQueue.TryDequeue(out INode node))
                     {
                         ruleGroup.Send(node, arg1, arg2, arg3, arg4, arg5);
                         if (!node.IsRecycle) nodeQueue.Enqueue(node);

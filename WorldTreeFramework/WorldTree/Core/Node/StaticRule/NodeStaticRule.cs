@@ -12,10 +12,26 @@ namespace WorldTree
     public static partial class NodeStaticRule
     {
         /// <summary>
+        /// 回收自己
+        /// </summary>
+        public static void DisposeSelf(this INode self)
+        {
+            if (!self.IsRecycle)//是否已经回收
+            {
+                self.RemoveInParent();//从父节点中移除
+                self.Root.Remove(self);//全局通知移除
+                self.DisposeDomain();//清除域节点
+                self.Parent = null;//清除父节点
+
+                self.OnDispose();
+            }
+        }
+
+        /// <summary>
         /// 类型转换为
         /// </summary>
-        public static T To<T>(this Node self)
-        where T : Node
+        public static T To<T>(this INode self)
+        where T : class, INode
         {
             return self as T;
         }
@@ -23,16 +39,16 @@ namespace WorldTree
         /// <summary>
         /// 父节点转换为
         /// </summary>
-        public static T ParentTo<T>(this Node self)
-        where T : Node
+        public static T ParentTo<T>(this INode self)
+        where T : class, INode
         {
             return self.Parent as T;
         }
         /// <summary>
         /// 尝试转换父节点
         /// </summary>
-        public static bool TryParentTo<T>(this Node self, out T node)
-        where T : Node
+        public static bool TryParentTo<T>(this INode self, out T node)
+        where T : class, INode
         {
             node = self.Parent as T;
             return node != null;
@@ -41,8 +57,8 @@ namespace WorldTree
         /// <summary>
         /// 向上查找父物体
         /// </summary>
-        public static T FindParent<T>(this Node self)
-        where T : Node
+        public static T FindParent<T>(this INode self)
+        where T : class, INode
         {
             self.TryFindParent(out T parent);
             return parent;
@@ -51,11 +67,11 @@ namespace WorldTree
         /// <summary>
         /// 尝试向上查找父物体
         /// </summary>
-        public static bool TryFindParent<T>(this Node self, out T parent)
-        where T : Node
+        public static bool TryFindParent<T>(this INode self, out T parent)
+        where T : class, INode
         {
             parent = null;
-            Node node = self.Parent;
+            INode node = self.Parent;
             while (node != null)
             {
                 if (node.Type == typeof(T))
@@ -71,7 +87,7 @@ namespace WorldTree
         /// <summary>
         /// 移除全部组件和子节点
         /// </summary>
-        public static void RemoveAll(this Node self)
+        public static void RemoveAll(this INode self)
         {
             self.RemoveAllChildren();
             self.RemoveAllComponent();
@@ -80,7 +96,7 @@ namespace WorldTree
         /// <summary>
         /// 从父节点中删除
         /// </summary>
-        public static void RemoveInParent(this Node self)
+        public static void RemoveInParent(this INode self)
         {
             if (self.Parent != null)
             {
@@ -108,7 +124,7 @@ namespace WorldTree
         /// <summary>
         /// 返回用字符串绘制的树
         /// </summary>
-        public static string ToStringDrawTree(this Node self, string t = "\t")
+        public static string ToStringDrawTree(this INode self, string t = "\t")
         {
             string t1 = "\t" + t;
             string str = "";
@@ -120,7 +136,7 @@ namespace WorldTree
                 if (self.m_Components.Count > 0)
                 {
                     str += t1 + "   Components:\n";
-                    foreach (var item in self.Components.Values)
+                    foreach (var item in self.ComponentsDictionary().Values)
                     {
                         str += item.ToStringDrawTree(t1);
                     }
@@ -132,7 +148,7 @@ namespace WorldTree
                 if (self.m_Children.Count > 0)
                 {
                     str += t1 + "   Children:\n";
-                    foreach (var item in self.Children.Values)
+                    foreach (var item in self.ChildrenDictionary().Values)
                     {
                         str += item.ToStringDrawTree(t1);
                     }

@@ -27,7 +27,7 @@ namespace WorldTree
     /// </summary>
     public class WorldTreeRoot : Node
     {
-        public UnitDictionary<long, Node> allEntity = new UnitDictionary<long, Node>();
+        public UnitDictionary<long, INode> allEntity = new UnitDictionary<long, INode>();
 
         private RuleGroup AddRuleGroup;
         private RuleGroup RemoveRuleGroup;
@@ -130,16 +130,16 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取节点对象
         /// </summary>
-        public T GetNode<T>() where T : Node => GetNode(typeof(T)) as T;
+        public T GetNode<T>() where T : class,INode => GetNode(typeof(T)) as T;
 
         /// <summary>
         /// 从池中获取节点对象
         /// </summary>
-        public Node GetNode(Type type)
+        public INode GetNode(Type type)
         {
             if (NodePoolManager is null)
             {
-                Node obj = Activator.CreateInstance(type, true) as Node;
+                INode obj = Activator.CreateInstance(type, true) as INode;
                 obj.Id = IdManager.GetId();
                 obj.Root = this;
                 NewRuleGroup?.Send(obj);
@@ -148,7 +148,7 @@ namespace WorldTree
             }
             else
             {
-                return NodePoolManager.Get(type) as Node;
+                return NodePoolManager.Get(type) as INode;
             }
         }
 
@@ -174,7 +174,7 @@ namespace WorldTree
         /// <summary>
         /// 回收节点
         /// </summary>
-        public void Recycle(Node obj)
+        public void Recycle(INode obj)
         {
             if (NodePoolManager is null)
             {
@@ -191,7 +191,7 @@ namespace WorldTree
 
 
 
-        public void Add(Node entity)
+        public void Add(INode entity)
         {
             //广播给全部监听器!!!!
             entity.TrySendStaticListener<IListenerAddRule>();
@@ -205,7 +205,7 @@ namespace WorldTree
             //检测添加静态监听
             StaticListenerRuleActuatorManager.TryAddListener(entity);
             //检测添加动态监听
-            entity.ListenerSwitchesTarget(typeof(Node), ListenerState.Node);
+            entity.ListenerSwitchesTarget(typeof(INode), ListenerState.Node);
 
 
             entity.SetActive(true);
@@ -214,7 +214,7 @@ namespace WorldTree
         }
 
 
-        public void Remove(Node entity)
+        public void Remove(INode entity)
         {
             entity.SetActive(false);//激活标记变更
 

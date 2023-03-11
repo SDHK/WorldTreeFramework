@@ -19,9 +19,9 @@ namespace WorldTree
     {
         public UnitDictionary<Type, RuleActuator> ruleActuatorDictionary;
 
-        public RuleActuator GetBroadcast<T>() => GetBroadcast(typeof(T));
+        public RuleActuator GetActuator<T>() => GetActuator(typeof(T));
 
-        public RuleActuator GetBroadcast(Type type)
+        public RuleActuator GetActuator(Type type)
         {
             if (!ruleActuatorDictionary.TryGetValue(type, out var ruleActuator))
             {

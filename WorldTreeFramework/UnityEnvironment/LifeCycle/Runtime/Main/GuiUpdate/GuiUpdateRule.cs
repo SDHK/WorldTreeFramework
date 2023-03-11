@@ -9,5 +9,5 @@
     /// <summary>
     /// OnGUI法则
     /// </summary>
-    public abstract class GuiUpdateRule<T> : SendRuleBase<IGuiUpdateRule, T, float> where T : Node { }
+    public abstract class GuiUpdateRule<T> : SendRuleBase<IGuiUpdateRule, T, float> where T : class,INode { }
 }

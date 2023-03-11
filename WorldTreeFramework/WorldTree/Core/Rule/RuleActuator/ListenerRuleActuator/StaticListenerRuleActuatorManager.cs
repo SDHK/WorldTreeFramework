@@ -18,7 +18,7 @@ namespace WorldTree
         /// <summary>
         /// 获取以实体类型为目标的 监听系统执行器
         /// </summary>
-        public static bool TrySendStaticListener<T>(this Node entity)
+        public static bool TrySendStaticListener<T>(this INode entity)
             where T : IListenerRule
         {
             if (entity.Root.StaticListenerRuleActuatorManager.TryAddRuleActuator(entity.Type, typeof(T), out var actuator))
@@ -35,7 +35,7 @@ namespace WorldTree
         /// <summary>
         /// 获取以实体类型为目标的 监听系统执行器
         /// </summary>
-        public static bool TrySendDynamicListener<T>(this Node entity)
+        public static bool TrySendDynamicListener<T>(this INode entity)
             where T : IListenerRule
         {
             if (entity.Root.DynamicListenerRuleActuatorManager.TryAddRuleActuator(entity.Type, typeof(T), out var actuator))
@@ -76,7 +76,7 @@ namespace WorldTree
         /// <summary>
         /// 检测添加静态监听器
         /// </summary>
-        public void TryAddListener(Node listener)
+        public void TryAddListener(INode listener)
         {
             //判断是否为监听器
             if (Root.RuleManager.ListenerRuleDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
@@ -97,7 +97,7 @@ namespace WorldTree
         /// <summary>
         /// 检测移除静态监听器
         /// </summary>
-        public void RemoveListener(Node listener)
+        public void RemoveListener(INode listener)
         {
             //判断是否为监听器
             if (Root.RuleManager.ListenerRuleDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))

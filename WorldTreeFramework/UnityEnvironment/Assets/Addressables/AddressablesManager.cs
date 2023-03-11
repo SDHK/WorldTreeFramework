@@ -18,22 +18,22 @@ namespace WorldTree
     /// </summary>
     public class AddressablesManager : Node
     {
-        public EntityDictionary<string, Object> assets;
+        public TreeDictionary<string, Object> assets;
 
         /// <summary>
-        /// 根据实体类型步加载资源
+        /// 根据节点类型步加载资源
         /// </summary>
         /// <typeparam name="T">资源类型</typeparam>
-        /// <typeparam name="E">实体类型</typeparam>
-        public async TreeTask<T> LoadAssetAsync<T,E>()
+        /// <typeparam name="N">节点类型</typeparam>
+        public async TreeTask<T> LoadAssetAsync<T,N>()
             where T : class
-            where E : Node
+            where N : class,INode
         {
-            var key = typeof(E);
-            if (!assets.Value.TryGetValue(key.Name, out var asset))
+            var key = typeof(N);
+            if (!assets.TryGetValue(key.Name, out var asset))
             {
                 asset = (await this.GetAwaiter(Addressables.LoadAssetAsync<T>(key.Name))).Result;
-                assets.Value.Add(key.Name, asset);
+                assets.Add(key.Name, asset);
             }
             else
             {
@@ -49,7 +49,7 @@ namespace WorldTree
     {
         public override void OnEvent(AddressablesManager self)
         {
-            self.assets = self.AddChildren<EntityDictionary<string, Object>>();
+            self.assets = self.AddChildren<TreeDictionary<string, Object>>();
         }
     }
 

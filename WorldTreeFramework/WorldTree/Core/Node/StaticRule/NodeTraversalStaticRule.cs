@@ -18,11 +18,11 @@ namespace WorldTree
         /// <summary>
         /// 前序遍历
         /// </summary>
-        public static Node TraversalPreorder(this Node self, Action<Node> action)
+        public static INode TraversalPreorder(this INode self, Action<INode> action)
         {
-            Node current;
-            UnitStack<Node> stack = self.PoolGet<UnitStack<Node>>();
-            UnitStack<Node> localStack = self.PoolGet<UnitStack<Node>>();
+            INode current;
+            UnitStack<INode> stack = self.PoolGet<UnitStack<INode>>();
+            UnitStack<INode> localStack = self.PoolGet<UnitStack<INode>>();
             stack.Push(self);
             while (stack.Count != 0)
             {
@@ -59,9 +59,9 @@ namespace WorldTree
         /// <summary>
         /// 层序遍历
         /// </summary>
-        public static Node TraversalLevel(this Node self, Action<Node> action)
+        public static INode TraversalLevel(this INode self, Action<INode> action)
         {
-            UnitQueue<Node> queue = self.PoolGet<UnitQueue<Node>>();
+            UnitQueue<INode> queue = self.PoolGet<UnitQueue<INode>>();
             queue.Enqueue(self);
 
             while (queue.Count != 0)
@@ -92,11 +92,11 @@ namespace WorldTree
         /// <summary>
         /// 后序遍历
         /// </summary>
-        public static Node TraversalPostorder(this Node self, Action<Node> action)
+        public static INode TraversalPostorder(this INode self, Action<INode> action)
         {
-            Node current;
-            UnitStack<Node> stack = self.PoolGet<UnitStack<Node>>();
-            UnitStack<Node> allStack = self.PoolGet<UnitStack<Node>>();
+            INode current;
+            UnitStack<INode> stack = self.PoolGet<UnitStack<INode>>();
+            UnitStack<INode> allStack = self.PoolGet<UnitStack<INode>>();
             stack.Push(self);
             while (stack.Count != 0)
             {
@@ -130,7 +130,7 @@ namespace WorldTree
         ///// <summary>
         ///// 前序遍历广播
         ///// </summary>
-        //public static RuleActuator GetTraversalPreorderSystemBroadcast<LR>(this Node self)
+        //public static RuleActuator GetTraversalPreorderSystemBroadcast<LR>(this INode self)
         //   where LR : ISystem
         //{
         //    RuleActuator nodeQueue = self.AddChildren<RuleActuator, Type>(typeof(LR));
@@ -141,7 +141,7 @@ namespace WorldTree
         ///// <summary>
         ///// 层序遍历广播
         ///// </summary>
-        //public static RuleActuator GetTraversalLevelSystemBroadcast<LR>(this Node self)
+        //public static RuleActuator GetTraversalLevelSystemBroadcast<LR>(this INode self)
         //  where LR : ISystem
         //{
         //    RuleActuator nodeQueue = self.AddChildren<RuleActuator, Type>(typeof(LR));
@@ -151,7 +151,7 @@ namespace WorldTree
         ///// <summary>
         ///// 后序遍历广播
         ///// </summary>
-        //public static RuleActuator GetTraversalPostorderSystemBroadcast<LR>(this Node self)
+        //public static RuleActuator GetTraversalPostorderSystemBroadcast<LR>(this INode self)
         // where LR : ISystem
         //{
         //    RuleActuator nodeQueue = self.AddChildren<RuleActuator, Type>(typeof(LR));
@@ -165,7 +165,7 @@ namespace WorldTree
         ///// <summary>
         ///// 前序遍历执行
         ///// </summary>
-        //public static RuleActuator GetTraversalPreorderSystemActuator<LR>(this Node self)
+        //public static RuleActuator GetTraversalPreorderSystemActuator<LR>(this INode self)
         //   where LR : ISystem
         //{
         //    RuleActuator systemActuator = self.AddChildren<RuleActuator, Type>(typeof(LR));
@@ -176,7 +176,7 @@ namespace WorldTree
         ///// <summary>
         ///// 层序遍历执行
         ///// </summary>
-        //public static RuleActuator GetTraversalLevelSystemActuator<LR>(this Node self)
+        //public static RuleActuator GetTraversalLevelSystemActuator<LR>(this INode self)
         //  where LR : ISystem
         //{
         //    RuleActuator systemActuator = self.AddChildren<RuleActuator, Type>(typeof(LR));
@@ -187,7 +187,7 @@ namespace WorldTree
         ///// <summary>
         ///// 后序遍历执行
         ///// </summary>
-        //public static RuleActuator GetTraversalPostorderSystemActuator<LR>(this Node self)
+        //public static RuleActuator GetTraversalPostorderSystemActuator<LR>(this INode self)
         // where LR : ISystem
         //{
         //    RuleActuator systemActuator = self.AddChildren<RuleActuator, Type>(typeof(LR));

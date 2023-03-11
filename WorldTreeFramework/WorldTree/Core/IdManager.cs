@@ -13,7 +13,7 @@ namespace WorldTree
 
     public static class IdManagerExtension
     {
-        public static IdManager IdManager(this Node self)
+        public static IdManager IdManager(this INode self)
         {
             return self.Root.IdManager;
         }

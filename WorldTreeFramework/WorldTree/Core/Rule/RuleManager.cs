@@ -69,7 +69,7 @@ namespace WorldTree
                 {
                     var listenerRule = rule as IListenerRule;//转换为监听法则
 
-                    if (listenerRule.TargetNodeType == typeof(Node) && listenerRule.TargetRuleType != typeof(IRule))
+                    if (listenerRule.TargetNodeType == typeof(INode) && listenerRule.TargetRuleType != typeof(IRule))
                     {
                         ListenerRuleList.Add(listenerRule); //约束了法则
                     }
@@ -86,7 +86,7 @@ namespace WorldTree
                         TargetRuleGroup.RuleType = listenerRule.RuleType;
 
                         //动态监听器判断
-                        if (listenerRule.TargetNodeType == typeof(Node) && listenerRule.TargetRuleType == typeof(IRule))
+                        if (listenerRule.TargetNodeType == typeof(INode) && listenerRule.TargetRuleType == typeof(IRule))
                         {
                             if (!DynamicListenerTypeHash.Contains(listenerRule.NodeType)) DynamicListenerTypeHash.Add(listenerRule.NodeType);
                         }

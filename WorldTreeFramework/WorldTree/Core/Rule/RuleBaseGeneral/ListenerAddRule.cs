@@ -17,11 +17,11 @@ namespace WorldTree
     /// <summary>
     /// 监听节点添加法则
     /// </summary>
-    public abstract class ListenerAddRule<LN, TN, TR> : ListenerRuleBase<LN, IListenerAddRule, TN, TR> where TN : Node where LN : Node where TR : IRule { }
+    public abstract class ListenerAddRule<LN, TN, TR> : ListenerRuleBase<LN, IListenerAddRule, TN, TR> where TN : class,INode where LN : class,INode where TR : IRule { }
 
     /// <summary>
     /// 【动态】监听节点添加法则
     /// </summary>
-    public abstract class ListenerAddRule<LN> : ListenerRuleBase<LN, IListenerAddRule, Node, IRule> where LN : Node { }
+    public abstract class ListenerAddRule<LN> : ListenerRuleBase<LN, IListenerAddRule, INode, IRule> where LN : class,INode { }
 
 }

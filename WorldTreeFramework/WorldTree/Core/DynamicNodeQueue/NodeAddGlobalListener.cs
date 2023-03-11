@@ -36,7 +36,7 @@ namespace WorldTree
     }
     class NodeAddGlobalListenerListenerAddRule : ListenerAddRule<NodeAddGlobalListener>
     {
-        public override void OnEvent(NodeAddGlobalListener self, Node node)
+        public override void OnEvent(NodeAddGlobalListener self, INode node)
         {
             self.nodeQueue?.Enqueue(node);
         }

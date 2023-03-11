@@ -18,10 +18,10 @@
 *   泛型填写目标节点类型，节点指定后，指定法则是无效的。
 *   
 * 2.静态指定法则类型。 
-*   泛型填写目标节点必须为 Node，才生效
+*   泛型填写目标节点必须为 INode，才生效
 * 
 * 3.动态指定。 
-*   节点必须指定为 Node，法则必须指定为 IRule
+*   节点必须指定为 INode，法则必须指定为 IRule
 *   可在运行时随意切换指定目标
 *   
 *   
@@ -36,7 +36,7 @@ namespace WorldTree
     /// <summary>
     /// 节点监听法则接口
     /// </summary>
-    public interface IListenerRule : ISendRule<Node>
+    public interface IListenerRule : ISendRule<INode>
     {
         /// <summary>
         /// 监听：目标节点类型
@@ -53,15 +53,15 @@ namespace WorldTree
     /// 节点监听法则抽象基类
     /// </summary>
     public abstract class ListenerRuleBase<LN, LR, TN, TR> : RuleBase<LN, LR>, IListenerRule
-    where LN : Node
-    where TN : Node
+    where LN : class, INode
+    where TN : class, INode
     where LR : IListenerRule
     where TR : IRule
     {
         public virtual Type TargetNodeType => typeof(TN);
         public virtual Type TargetRuleType => typeof(TR);
 
-        public virtual void Invoke(Node self, Node node) => OnEvent(self as LN, node as TN);
+        public virtual void Invoke(INode self, INode node) => OnEvent(self as LN, node as TN);
         public abstract void OnEvent(LN self, TN node);
     }
 }

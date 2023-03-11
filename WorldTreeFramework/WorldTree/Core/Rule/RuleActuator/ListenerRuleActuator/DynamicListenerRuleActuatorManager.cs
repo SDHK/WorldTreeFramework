@@ -55,7 +55,7 @@ namespace WorldTree
                 if (group.TryGetRuleActuator(RuleType, out actuator)) { return true; }
 
                 //没有执行器 则判断这个系统类型是否有动态类型监听法则集合
-                else if (Root.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(Node), out var ruleGroup))
+                else if (Root.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
                 {
                     //新建执行器
                     actuator = group.GetRuleActuator(RuleType);
@@ -64,7 +64,7 @@ namespace WorldTree
                     return true;
                 }
             }
-            else if (Root.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(Node), out var ruleGroup))
+            else if (Root.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
             {
                 //新建组和执行器
                 actuator = GetGroup(Target).GetRuleActuator(RuleType);
@@ -95,7 +95,7 @@ namespace WorldTree
                             if (listener.Value.listenerState == ListenerState.Node)
                             {
                                 //判断是否全局监听 或 是指定的目标类型
-                                if (listener.Value.listenerTarget == typeof(Node) || listener.Value.listenerTarget == Target)
+                                if (listener.Value.listenerTarget == typeof(INode) || listener.Value.listenerTarget == Target)
                                 {
                                     actuator.Enqueue(listener.Value);
                                 }
