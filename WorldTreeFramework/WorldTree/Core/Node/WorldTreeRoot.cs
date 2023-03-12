@@ -21,6 +21,8 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
+    //父类多态支持！
+    //限制器
 
     /// <summary>
     /// 世界树根

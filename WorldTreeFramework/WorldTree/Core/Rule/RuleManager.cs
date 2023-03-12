@@ -22,7 +22,6 @@ namespace WorldTree
     /// </summary>
     public class RuleManager : Node
     {
-
         /// <summary>
         /// 动态监听器节点类型哈希名单
         /// </summary>
@@ -31,13 +30,19 @@ namespace WorldTree
         /// <summary>
         /// 监听法则字典 目标节点类型
         /// </summary>
-        /// <remarks> 目标节点类型 法则类型 《监听类型,监听法则》</remarks>
+        /// <remarks>
+        /// <para>目标节点类型 法则类型 《监听类型,监听法则》</para> 
+        /// <para>这个是真正可以被使用的</para> 
+        /// </remarks>
         public UnitDictionary<Type, Dictionary<Type, RuleGroup>> TargetRuleDictionary = new UnitDictionary<Type, Dictionary<Type, RuleGroup>>();
 
         /// <summary>
         ///监听法则字典 监听器类型
         /// </summary>
-        /// <remarks> 监听类型 法则类型 《目标节点类型,监听法则》</remarks>
+        /// <remarks> 
+        /// <para>监听类型 法则类型 《目标节点类型,监听法则》</para> 
+        /// <para>这个是用来查询关系的</para> 
+        /// </remarks>
         public UnitDictionary<Type, Dictionary<Type, RuleGroup>> ListenerRuleDictionary = new UnitDictionary<Type, Dictionary<Type, RuleGroup>>();
 
         /// <summary>
@@ -125,6 +130,48 @@ namespace WorldTree
 
 
         }
+
+
+        #region 多态
+        private void SetPolymorphicListenerRule(Type NodeType)
+        {
+            foreach (var RuleGroupDictionary in ListenerRuleDictionary)
+            {
+
+            }
+        
+        }
+
+
+        /// <summary>
+        /// 补齐多态法则
+        /// </summary>
+        private void SetPolymorphicRule(Type NodeType)
+        {
+            foreach (var ruleGroup in RuleDictionary.Values)//遍历法则字典
+            {
+                if (!ruleGroup.TryGetValue(NodeType, out List<IRule> ruleList))
+                {
+                    Type typeKey = NodeType;
+                    bool isRule = false;
+                    while (!isRule && typeKey != null && typeKey != typeof(object))
+                    {
+                        //判断类型是否有法则列表
+                        isRule = ruleGroup.TryGetValue(typeKey, out ruleList);
+                        if (!isRule)//不存在则向上找父类
+                        {
+                            typeKey = typeKey.BaseType;
+                        }
+                    }
+                    if (isRule)
+                    {
+                        ruleGroup.Add(NodeType, ruleList);
+                    }
+                }
+            }
+        }
+
+        #endregion
 
         #region 监听目标法则组
 

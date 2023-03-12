@@ -36,6 +36,181 @@ namespace WorldTree
 
         #region 判断监听器
 
+        #region 添加
+
+        /// <summary>
+        /// 监听器根据标记添加目标
+        /// </summary>
+        public void ListenerAdd(INode node)
+        {
+            if (node.listenerTarget != null)
+            {
+                if (node.listenerState == ListenerState.Node)
+                {
+                    if (node.listenerTarget == typeof(INode))
+                    {
+                        AddAllTarget(node);
+                    }
+                    else
+                    {
+                        AddNodeTarget(node, node.listenerTarget);
+                    }
+                }
+                else if (node.listenerState == ListenerState.Rule)
+                {
+                    AddRuleTarget(node, node.listenerTarget);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 监听器添加 所有节点
+        /// </summary>
+        private void AddAllTarget(INode node)
+        {
+            //获取 INode 动态目标 法则集合集合
+            if (node.Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+            {
+                //遍历现有执行器
+                foreach (var BroadcastGroup in ListenerActuatorGroupDictionary)
+                {
+                    //遍历获取动态法则集合，并添加自己
+                    foreach (var ruleGroup in ruleGroupDictionary)
+                    {
+                        if (BroadcastGroup.Value.TryGetRuleActuator(ruleGroup.Key, out var broadcast))
+                        {
+                            broadcast.Enqueue(node);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 监听器添加 系统目标
+        /// </summary>
+        private void AddRuleTarget(INode node, Type type)
+        {
+            //获取法则集合
+            if (node.Root.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
+            {
+                //遍历法则集合
+                foreach (var targetSystems in targetSystemGroup)
+                {
+                    AddNodeTarget(node, targetSystems.Key);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 监听器添加 节点目标
+        /// </summary>
+        private void AddNodeTarget(INode node, Type type)
+        {
+            if (TryGetGroup(type, out var broadcastGroup))
+            {
+                //获取 INode 动态目标 法则集合集合
+                if (node.Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+                {
+                    //遍历获取动态法则集合，并添加自己
+                    foreach (var ruleGroup in ruleGroupDictionary)
+                    {
+                        broadcastGroup.GetRuleActuator(ruleGroup.Key).Enqueue(node);
+                    }
+                }
+            }
+        }
+        #endregion
+
+
+
+        #region 移除
+
+        /// <summary>
+        /// 监听器根据标记移除目标
+        /// </summary>
+        public void ListenerRemove(INode node)
+        {
+            if (node.listenerTarget != null)
+            {
+                if (node.listenerState == ListenerState.Node)
+                {
+                    if (node.listenerTarget == typeof(INode))
+                    {
+                        RemoveAllTarget(node);
+                    }
+                    else
+                    {
+                        RemoveNodeTarget(node, node.listenerTarget);
+                    }
+                }
+                else if (node.listenerState == ListenerState.Rule)
+                {
+                    RemoveRuleTarget(node, node.listenerTarget);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 监听器移除 所有节点
+        /// </summary>
+        private void RemoveAllTarget(INode node)
+        {
+            //获取 INode 动态目标 法则集合集合
+            if (node.Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+            {
+                //遍历现有全部池
+                foreach (var BroadcastGroup in ListenerActuatorGroupDictionary)
+                {
+                    //遍历获取动态法则集合，并移除自己
+                    foreach (var ruleGroup in ruleGroupDictionary)
+                    {
+                        if (BroadcastGroup.Value.TryGetRuleActuator(ruleGroup.Key, out var broadcast))
+                        {
+                            broadcast.Remove(node);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 监听器移除 系统目标
+        /// </summary>
+        private void RemoveRuleTarget(INode node, Type type)
+        {
+            //获取法则集合
+            if (node.Root.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
+            {
+                //遍历法则集合
+                foreach (var targetSystems in targetSystemGroup)
+                {
+                    RemoveNodeTarget(node, targetSystems.Key);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 监听器移除 节点目标
+        /// </summary>
+        private void RemoveNodeTarget(INode node, Type type)
+        {
+            if (TryGetGroup(type, out var broadcastGroup))
+            {
+                //获取 INode 动态目标 法则集合集合
+                if (node.Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+                {
+                    //遍历获取动态法则集合，并移除自己
+                    foreach (var ruleGroup in ruleGroupDictionary)
+                    {
+                        broadcastGroup.GetRuleActuator(ruleGroup.Key).Remove(node);
+                    }
+                }
+            }
+        }
+        #endregion
 
 
         #endregion

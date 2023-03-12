@@ -32,12 +32,17 @@ namespace WorldTree
     }
 
     /// <summary>
+    /// 不被监听的类型
+    /// </summary>
+    public interface INotListenedNode { }
+
+    /// <summary>
     /// 世界树节点接口
     /// </summary>
     /// <remarks>
     /// <para>世界树节点最底层接口</para> 
     /// </remarks>
-    public partial interface INode : IUnitPoolItem
+    public  interface INode : IUnitPoolItem
     {
 
         /// <summary>
