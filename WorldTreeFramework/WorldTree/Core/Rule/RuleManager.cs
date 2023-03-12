@@ -147,29 +147,29 @@ namespace WorldTree
             //判断如果没有这样的监听器
             if (!ListenerRuleTargetGroupDictionary.ContainsKey(listenerNodeType))
             {
-                //监听器类型键值
-                Type listenerTypeKey = listenerNodeType;
-                //法则查询标记
-                bool isRule = false;
+                //监听器父类类型键值
+                Type listenerBaseTypeKey = listenerNodeType.BaseType;
+                //父类法则查询标记
+                bool isBaseRule = false;
 
                 //法则类型 《目标节点类型,监听法则》
                 Dictionary<Type, RuleGroup> RuleType_TargerGroupDictionary = null;
 
                 //在没有找到法则的时候向上查找父类法则
-                while (!isRule && listenerTypeKey != null && listenerTypeKey != typeof(object))
+                while (!isBaseRule && listenerBaseTypeKey != null && listenerBaseTypeKey != typeof(object))
                 {
                     //判断类型是否有法则列表
-                    isRule = ListenerRuleTargetGroupDictionary.TryGetValue(listenerTypeKey, out RuleType_TargerGroupDictionary);
-                    if (!isRule)//不存在则向上找父类
+                    isBaseRule = ListenerRuleTargetGroupDictionary.TryGetValue(listenerBaseTypeKey, out RuleType_TargerGroupDictionary);
+                    if (!isBaseRule)//不存在则向上找父类
                     {
-                        listenerTypeKey = listenerTypeKey.BaseType;
+                        listenerBaseTypeKey = listenerBaseTypeKey.BaseType;
                     }
                 }
 
-                if (isRule)//如果找到了法则
+                if (isBaseRule)//如果找到了法则
                 {
                     //动态监听法则多态
-                    if (DynamicListenerTypeHash.Contains(listenerTypeKey))
+                    if (DynamicListenerTypeHash.Contains(listenerBaseTypeKey))
                     {
                         DynamicListenerTypeHash.Add(listenerNodeType);
                     }
@@ -192,7 +192,7 @@ namespace WorldTree
                                 if (RuleType_ListenerGroupDictionary.TryGetValue(RuleType_TargetGroupKV.Key, out var ListenerGroup))
                                 {
                                     //监听器存在的父类型 查找 法则列表
-                                    if (ListenerGroup.TryGetValue(listenerTypeKey, out var ruleList))
+                                    if (ListenerGroup.TryGetValue(listenerBaseTypeKey, out var ruleList))
                                     {
                                         //将父类的 法则列表，添加进 没有法则的 监听器类型。
                                         ListenerGroup.TryAdd(listenerNodeType, ruleList);
@@ -213,22 +213,28 @@ namespace WorldTree
         /// <remarks>这个功能设定为只在对象池建立时执行一次</remarks>
         public void SetPolymorphicRule(Type NodeType)
         {
-            foreach (var ruleGroup in RuleGroupDictionary.Values)//遍历法则字典
+            //遍历法则字典
+            foreach (var ruleGroup in RuleGroupDictionary.Values)
             {
                 if (!ruleGroup.TryGetValue(NodeType, out List<IRule> ruleList))
                 {
-                    Type typeKey = NodeType;
-                    bool isRule = false;
-                    while (!isRule && typeKey != null && typeKey != typeof(object))
+                    //父类法则查询标记
+                    Type BaseTypeKey = NodeType.BaseType;
+                    //父类法则查询标记
+                    bool isBaseRule = false;
+
+                    //在没有找到法则的时候向上查找父类法则
+                    while (!isBaseRule && BaseTypeKey != null && BaseTypeKey != typeof(object))
                     {
                         //判断类型是否有法则列表
-                        isRule = ruleGroup.TryGetValue(typeKey, out ruleList);
-                        if (!isRule)//不存在则向上找父类
+                        isBaseRule = ruleGroup.TryGetValue(BaseTypeKey, out ruleList);
+                        if (!isBaseRule)
                         {
-                            typeKey = typeKey.BaseType;
+                            //不存在则向上找父类
+                            BaseTypeKey = BaseTypeKey.BaseType;
                         }
                     }
-                    if (isRule)
+                    if (isBaseRule)
                     {
                         //将父类的 法则列表，添加进 没有法则的 节点类型。
                         ruleGroup.TryAdd(NodeType, ruleList);
