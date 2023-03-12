@@ -230,6 +230,7 @@ namespace WorldTree
                     }
                     if (isRule)
                     {
+                        //将父类的 法则列表，添加进 没有法则的 节点类型。
                         ruleGroup.TryAdd(NodeType, ruleList);
                     }
                 }
