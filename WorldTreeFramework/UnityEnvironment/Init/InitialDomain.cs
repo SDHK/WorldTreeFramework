@@ -21,9 +21,34 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
+    //多态测试
+    public class NodeAddRule : AddRule<Node>
+    {
+        public override void OnEvent(Node self)
+        {
+            World.Log($"NodeAdd: {self.Id} _  {self.Type} ");
+        }
+    }
 
+    public class NodeListenerAddRule : ListenerAddRule<Node>
+    {
+        public override void OnEvent(Node self, INode node)
+        {
+            World.Log($"NodeListenerAdd: {self.Id} _  {self.Type} ");
 
+        }
+    }
 
+    public class NodeListenerInitialDomainAddRule : ListenerAddRule<Node, InitialDomain,IRule>
+    {
+
+        public override void OnEvent(Node self, InitialDomain node)
+        {
+            World.Log($"NodeListenerInitialDomainAdd: {self.Id} _  {self.Type} ");
+
+        }
+    }
+    //
 
     /// <summary>
     /// 初始域

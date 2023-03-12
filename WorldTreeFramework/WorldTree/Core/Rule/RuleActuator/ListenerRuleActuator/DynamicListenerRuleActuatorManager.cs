@@ -69,7 +69,7 @@ namespace WorldTree
         private void AddAllTarget(INode node)
         {
             //获取 INode 动态目标 法则集合集合
-            if (node.Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+            if (node.Root.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
             {
                 //遍历现有执行器
                 foreach (var BroadcastGroup in ListenerActuatorGroupDictionary)
@@ -110,7 +110,7 @@ namespace WorldTree
             if (TryGetGroup(type, out var broadcastGroup))
             {
                 //获取 INode 动态目标 法则集合集合
-                if (node.Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+                if (node.Root.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
                 {
                     //遍历获取动态法则集合，并添加自己
                     foreach (var ruleGroup in ruleGroupDictionary)
@@ -157,7 +157,7 @@ namespace WorldTree
         private void RemoveAllTarget(INode node)
         {
             //获取 INode 动态目标 法则集合集合
-            if (node.Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+            if (node.Root.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
             {
                 //遍历现有全部池
                 foreach (var BroadcastGroup in ListenerActuatorGroupDictionary)
@@ -200,7 +200,7 @@ namespace WorldTree
             if (TryGetGroup(type, out var broadcastGroup))
             {
                 //获取 INode 动态目标 法则集合集合
-                if (node.Root.RuleManager.TargetRuleDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+                if (node.Root.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
                 {
                     //遍历获取动态法则集合，并移除自己
                     foreach (var ruleGroup in ruleGroupDictionary)

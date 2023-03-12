@@ -76,7 +76,7 @@ namespace WorldTree
         public void TryAddListener(INode listener)
         {
             //判断是否为监听器
-            if (Root.RuleManager.ListenerRuleDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+            if (Root.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
             {
                 foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
                 {
@@ -97,7 +97,7 @@ namespace WorldTree
         public void RemoveListener(INode listener)
         {
             //判断是否为监听器
-            if (Root.RuleManager.ListenerRuleDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+            if (Root.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
             {
                 foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
                 {
