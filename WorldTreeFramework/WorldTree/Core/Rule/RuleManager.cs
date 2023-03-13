@@ -51,6 +51,12 @@ namespace WorldTree
         /// <remarks> 法则类型《节点类型,法则》</remarks>
         private UnitDictionary<Type, RuleGroup> RuleGroupDictionary = new UnitDictionary<Type, RuleGroup>();
 
+        /// <summary>
+        /// 节点法则字典
+        /// </summary>
+        /// <remarks>记录节点拥有的法则类型</remarks>
+        private Dictionary<Type, HashSet<Type>> NodeTypeRulesDictionary = new Dictionary<Type, HashSet<Type>>();
+
         public RuleManager() : base()
         {
             Initialize();
@@ -103,6 +109,8 @@ namespace WorldTree
                     var group = RuleGroupDictionary.GetValue(rule.RuleType);
                     group.GetValue(rule.NodeType).Add(rule);
                     group.RuleType = rule.RuleType;
+
+                    NodeTypeRulesDictionary.GetValue(rule.NodeType).Add(rule.RuleType);
                 }
             }
 
@@ -213,33 +221,37 @@ namespace WorldTree
         /// <remarks>这个功能设定为只在对象池建立时执行一次</remarks>
         public void SetPolymorphicRule(Type NodeType)
         {
-            //遍历法则字典
-            foreach (var ruleGroup in RuleGroupDictionary.Values)
-            {
-                if (!ruleGroup.TryGetValue(NodeType, out List<IRule> ruleList))
-                {
-                    //父类法则查询标记
-                    Type BaseTypeKey = NodeType.BaseType;
-                    //父类法则查询标记
-                    bool isBaseRule = false;
+            //拿到节点类型的法则哈希表
+            HashSet<Type> ruleTypeHash = NodeTypeRulesDictionary.GetValue(NodeType);
 
-                    //在没有找到法则的时候向上查找父类法则
-                    while (!isBaseRule && BaseTypeKey != null && BaseTypeKey != typeof(object))
+            //开始遍历查询父类型法则
+            Type BaseTypeKey = NodeType.BaseType;
+            while (BaseTypeKey != null && BaseTypeKey != typeof(object))
+            {
+                //尝试获取父类型法则
+                if (NodeTypeRulesDictionary.TryGetValue(BaseTypeKey, out var BaseRuleHash))
+                {
+                    //遍历父类型法则
+                    foreach (var ruleType in BaseRuleHash)
                     {
-                        //判断类型是否有法则列表
-                        isBaseRule = ruleGroup.TryGetValue(BaseTypeKey, out ruleList);
-                        if (!isBaseRule)
+                        //法则不存在，则添加到节点的哈希表里
+                        if (!ruleTypeHash.Contains(ruleType))
                         {
-                            //不存在则向上找父类
-                            BaseTypeKey = BaseTypeKey.BaseType;
+                            ruleTypeHash.Add(ruleType);
+                            //法则字典的补充
+                            if (RuleGroupDictionary.TryGetValue(ruleType, out var RuleGroup))
+                            {
+                                //获取父类型法则列表
+                                if (RuleGroup.TryGetValue(BaseTypeKey, out var ruleList))
+                                {
+                                    //法则列表添加进节点类型
+                                    RuleGroup.TryAdd(NodeType, ruleList);
+                                }
+                            }
                         }
                     }
-                    if (isBaseRule)
-                    {
-                        //将父类的 法则列表，添加进 没有法则的 节点类型。
-                        ruleGroup.TryAdd(NodeType, ruleList);
-                    }
                 }
+                BaseTypeKey = BaseTypeKey.BaseType;
             }
         }
 
