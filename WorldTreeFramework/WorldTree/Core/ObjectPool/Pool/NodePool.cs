@@ -87,6 +87,7 @@ namespace WorldTree
             obj.thisPool = this;
             obj.Id = Root.IdManager.GetId();
             obj.Root = Root;
+            obj.Type = ObjectType;
             return obj;
         }
         public override void Recycle(object obj) => Recycle(obj as INode);

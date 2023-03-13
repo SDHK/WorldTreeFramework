@@ -27,7 +27,7 @@ namespace WorldTree.Internal
         public override bool IsCompleted { get; set; }
         public Action SetResult { get; set; }
 
-        public TreeTaskCompleted() :base()
+        public TreeTaskCompleted()
         {
             SetResult = SetCompleted;
         }

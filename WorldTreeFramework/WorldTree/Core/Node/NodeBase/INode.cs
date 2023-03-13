@@ -42,7 +42,7 @@ namespace WorldTree
     /// <remarks>
     /// <para>世界树节点最底层接口</para> 
     /// </remarks>
-    public  interface INode : IUnitPoolItem
+    public interface INode : IUnitPoolItem
     {
 
         /// <summary>
@@ -108,6 +108,11 @@ namespace WorldTree
 
 
         #region Domains
+
+        /// <summary>
+        /// 域节点
+        /// </summary>
+        public INode Domain { get; set; }
 
         /// <summary>
         /// 域节点

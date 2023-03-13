@@ -25,6 +25,7 @@ namespace WorldTree
         public Type Type { get; set; }
         public WorldTreeRoot Root { get; set; }
         public INode Parent { get; set; }
+        public INode Domain { get; set; }
 
         #region Active
         public bool ActiveToggle { get; set; }
@@ -42,6 +43,7 @@ namespace WorldTree
         #endregion
 
         #region Domains
+
         public UnitDictionary<Type, INode> m_Domains { get; set; }
         #endregion
 
@@ -51,10 +53,6 @@ namespace WorldTree
         #endregion
 
 
-        public TreeQueue() 
-        {
-            Type = GetType();
-        }
         public void Dispose()
         {
             this.DisposeSelf();

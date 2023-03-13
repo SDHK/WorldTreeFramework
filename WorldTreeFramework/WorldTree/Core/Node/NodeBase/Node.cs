@@ -28,6 +28,7 @@ namespace WorldTree
         public WorldTreeRoot Root { get; set; }
 
         public INode Parent { get; set; }
+        public INode Domain { get; set; }
 
         #region Active
 
@@ -51,6 +52,8 @@ namespace WorldTree
         #endregion
 
         #region Domains
+
+
         public UnitDictionary<Type, INode> m_Domains { get; set; }
         #endregion
 
@@ -62,11 +65,6 @@ namespace WorldTree
 
         #endregion
 
-
-        public Node()
-        {
-            Type = GetType();
-        }
 
         public override string ToString()
         {

@@ -30,24 +30,24 @@ namespace WorldTree
         }
     }
 
-    public class NodeListenerAddRule : ListenerAddRule<Node>
-    {
-        public override void OnEvent(Node self, INode node)
-        {
-            World.Log($"NodeListenerAdd: {self.Id} _  {self.Type} ");
+    //public class NodeListenerAddRule : ListenerAddRule<Node>
+    //{
+    //    public override void OnEvent(Node self, INode node)
+    //    {
+    //        World.Log($"NodeListenerAdd: {self.Id} _  {self.Type} ");
 
-        }
-    }
+    //    }
+    //}
 
-    public class NodeListenerInitialDomainAddRule : ListenerAddRule<Node, InitialDomain,IRule>
-    {
+    //public class NodeListenerInitialDomainAddRule : ListenerAddRule<Node, InitialDomain,IRule>
+    //{
 
-        public override void OnEvent(Node self, InitialDomain node)
-        {
-            World.Log($"NodeListenerInitialDomainAdd: {self.Id} _  {self.Type} ");
+    //    public override void OnEvent(Node self, InitialDomain node)
+    //    {
+    //        World.Log($"NodeListenerInitialDomainAdd: {self.Id} _  {self.Type} ");
 
-        }
-    }
+    //    }
+    //}
     //
 
     /// <summary>

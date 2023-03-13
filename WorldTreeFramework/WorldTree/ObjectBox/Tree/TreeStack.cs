@@ -25,6 +25,7 @@ namespace WorldTree
         public Type Type { get; set; }
         public WorldTreeRoot Root { get; set; }
         public INode Parent { get; set; }
+        public INode Domain { get; set; }
 
         #region Active
         public bool ActiveToggle { get; set; }
@@ -50,10 +51,6 @@ namespace WorldTree
         public Type listenerTarget { get; set; }
         #endregion
 
-        public TreeStack() : base()
-        {
-            Type = GetType();
-        }
         public void Dispose()
         {
             this.DisposeSelf();

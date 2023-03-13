@@ -198,12 +198,17 @@ namespace WorldTree
         {
             if (!ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
             {
-                group = new ListenerRuleActuatorGroup();
-                group.Target = Target;
-                group.Id = Root.IdManager.GetId();
-                group.Root = Root;
+                group = this.AddChildren<ListenerRuleActuatorGroup>();
                 ListenerActuatorGroupDictionary.Add(Target, group);
-                this.AddChildren(group);
+
+
+                //group = new ListenerRuleActuatorGroup();
+                //group.Target = Target;
+                //group.Id = Root.IdManager.GetId();
+                //group.Root = Root;
+                //group.Type = typeof(ListenerRuleActuatorGroup);
+                //ListenerActuatorGroupDictionary.Add(Target, group);
+                //this.AddChildren(group);
             }
             return group;
         }

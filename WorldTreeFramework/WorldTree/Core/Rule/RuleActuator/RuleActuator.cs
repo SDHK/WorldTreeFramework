@@ -82,15 +82,13 @@ namespace WorldTree
     {
         public override void OnEvent(RuleActuator self)
         {
-            if (self.thisPool != null)
-            {
-                //self.AddComponent<DynamicNodeQueue>();
 
-                //self.AddComponent(out DynamicNodeQueue _,100f,"str");
+            self.AddComponent(out self.nodeQueue);
 
-                self.AddComponent(out self.nodeQueue);
-
-            }
+            //if (self.thisPool != null)
+            //{
+            //    self.AddComponent(out self.nodeQueue);
+            //}
 
         }
     }

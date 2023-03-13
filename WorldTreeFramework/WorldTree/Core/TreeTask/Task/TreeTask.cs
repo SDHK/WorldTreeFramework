@@ -28,7 +28,7 @@ namespace WorldTree
         public Action SetResult { get; set; }
 
 
-        public TreeTask() : base()
+        public TreeTask()
         {
             SetResult = SetCompleted;
         }

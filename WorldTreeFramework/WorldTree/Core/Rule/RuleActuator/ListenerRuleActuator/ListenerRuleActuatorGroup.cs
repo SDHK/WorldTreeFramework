@@ -31,7 +31,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return $"{Type.Name} : {Target}" ; 
+            return $"{Type.Name} : {Target}";
         }
 
         /// <summary>
@@ -41,16 +41,20 @@ namespace WorldTree
         {
             if (!actuatorDictionary.TryGetValue(listenerRuleType, out var actuator))
             {
-                actuator = new RuleActuator();
-                actuator.nodeQueue = new DynamicNodeQueue();
-                actuator.nodeQueue.idQueue = new UnitQueue<long>();
-                actuator.nodeQueue.removeIdDictionary = new UnitDictionary<long, int>();
-                actuator.nodeQueue.nodeDictionary = new UnitDictionary<long, INode>();
 
-                actuator.Id = Root.IdManager.GetId();
-                actuator.Root = Root;
+                actuator = this.AddChildren<RuleActuator>();
                 actuatorDictionary.Add(listenerRuleType, actuator);
-                this.AddChildren(actuator);
+
+                //actuator = new RuleActuator();
+                //actuator.nodeQueue = new DynamicNodeQueue();
+                //actuator.nodeQueue.idQueue = new UnitQueue<long>();
+                //actuator.nodeQueue.removeIdDictionary = new UnitDictionary<long, int>();
+                //actuator.nodeQueue.nodeDictionary = new UnitDictionary<long, INode>();
+
+                //actuator.Id = Root.IdManager.GetId();
+                //actuator.Root = Root;
+                //actuatorDictionary.Add(listenerRuleType, actuator);
+                //this.AddChildren(actuator);
             }
             return actuator;
         }

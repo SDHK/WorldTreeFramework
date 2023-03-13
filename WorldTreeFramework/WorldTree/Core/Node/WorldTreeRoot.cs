@@ -21,7 +21,6 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
-    //父类多态支持！
     //限制器
 
     /// <summary>
@@ -66,6 +65,16 @@ namespace WorldTree
             NodePoolManager.Root = this;
             StaticListenerRuleActuatorManager.Root = this;
             DynamicListenerRuleActuatorManager.Root = this;
+            
+            //赋予类型身份证
+            this.Type = GetType();
+            IdManager.Type = IdManager.GetType();
+            RuleManager.Type = RuleManager.GetType();
+            UnitPoolManager.Type = UnitPoolManager.GetType();
+            NodePoolManager.Type = NodePoolManager.GetType();
+            StaticListenerRuleActuatorManager.Type = StaticListenerRuleActuatorManager.GetType();
+            DynamicListenerRuleActuatorManager.Type = DynamicListenerRuleActuatorManager.GetType();
+
 
             //赋予id
             Root.Id = IdManager.GetId();
@@ -88,8 +97,7 @@ namespace WorldTree
             RecycleRuleGroup = Root.RuleManager.GetRuleGroup<IRecycleRule>();
             DestroyRuleGroup = Root.RuleManager.GetRuleGroup<IDestroyRule>();
 
-            //激活自己
-            this.SetActive(true);
+        
 
             //核心组件添加
             this.AddComponent(IdManager);
@@ -98,6 +106,9 @@ namespace WorldTree
             this.AddComponent(NodePoolManager);
             this.AddComponent(StaticListenerRuleActuatorManager);
             this.AddComponent(DynamicListenerRuleActuatorManager);
+
+            //激活自己
+            this.SetActive(true);
 
         }
         /// <summary>
@@ -132,7 +143,7 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取节点对象
         /// </summary>
-        public T GetNode<T>() where T : class,INode => GetNode(typeof(T)) as T;
+        public T GetNode<T>() where T : class, INode => GetNode(typeof(T)) as T;
 
         /// <summary>
         /// 从池中获取节点对象
@@ -144,6 +155,8 @@ namespace WorldTree
                 INode obj = Activator.CreateInstance(type, true) as INode;
                 obj.Id = IdManager.GetId();
                 obj.Root = this;
+                obj.Type = type;
+
                 NewRuleGroup?.Send(obj);
                 GetRuleGroup?.Send(obj);
                 return obj;
@@ -195,19 +208,28 @@ namespace WorldTree
 
         public void Add(INode entity)
         {
-            //广播给全部监听器!!!!
-            entity.TrySendStaticListener<IListenerAddRule>();
-            entity.TrySendDynamicListener<IListenerAddRule>();
+            if (this.IsActive && !(entity is StaticListenerRuleActuatorManager || entity is DynamicListenerRuleActuatorManager || entity is ListenerRuleActuatorGroup || entity is RuleActuator))
+            {
+                //广播给全部监听器!!!!
+                entity.TrySendStaticListener<IListenerAddRule>();
+                entity.TrySendDynamicListener<IListenerAddRule>();
+            }
+
 
             allEntity.TryAdd(entity.Id, entity);
 
             //这个节点的添加事件
             AddRuleGroup?.Send(entity);
 
-            //检测添加静态监听
-            StaticListenerRuleActuatorManager.TryAddListener(entity);
-            //检测添加动态监听
-            entity.ListenerSwitchesTarget(typeof(INode), ListenerState.Node);
+            if (this.IsActive && !(entity is StaticListenerRuleActuatorManager || entity is DynamicListenerRuleActuatorManager || entity is ListenerRuleActuatorGroup || entity is RuleActuator))
+
+            {
+
+                //检测添加静态监听
+                StaticListenerRuleActuatorManager.TryAddListener(entity);
+                //检测添加动态监听
+                entity.ListenerSwitchesTarget(typeof(INode), ListenerState.Node);
+            }
 
 
             entity.SetActive(true);
@@ -223,19 +245,28 @@ namespace WorldTree
             entity.RemoveAll();//移除所有子节点和组件
             DisableRuleGroup?.Send(entity);//调用禁用事件
 
-            //检测移除静态监听
-            StaticListenerRuleActuatorManager.RemoveListener(entity);
-            //检测移除动态监听
-            entity.ListenerClearTarget();
+            if (this.IsActive && !(entity is StaticListenerRuleActuatorManager || entity is DynamicListenerRuleActuatorManager || entity is ListenerRuleActuatorGroup || entity is RuleActuator))
+
+            {
+                //检测移除静态监听
+                StaticListenerRuleActuatorManager.RemoveListener(entity);
+                //检测移除动态监听
+                entity.ListenerClearTarget();
+            }
+
 
             //这个节点的移除事件
             RemoveRuleGroup?.Send(entity);
 
             allEntity.Remove(entity.Id);
 
-            //广播给全部监听器!!!!
-            entity.TrySendStaticListener<IListenerRemoveRule>();
-            entity.TrySendDynamicListener<IListenerRemoveRule>();
+            if (this.IsActive && !(entity is StaticListenerRuleActuatorManager || entity is DynamicListenerRuleActuatorManager|| entity is ListenerRuleActuatorGroup || entity is RuleActuator))
+            {
+                //广播给全部监听器!!!!
+                entity.TrySendStaticListener<IListenerRemoveRule>();
+                entity.TrySendDynamicListener<IListenerRemoveRule>();
+            }
+
 
         }
     }

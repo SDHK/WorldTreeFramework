@@ -108,6 +108,7 @@ namespace WorldTree
                 pool = new NodePool(type);
                 pool.Id = Root.IdManager.GetId();
                 pool.Root = Root;
+                pool.Type = pool.GetType();
                 pools.Add(type, pool);
                 this.AddChildren(pool);
             }
