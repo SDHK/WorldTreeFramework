@@ -19,14 +19,14 @@ namespace EditorTool
     /// </summary>
     public class WorldTreeFrameworkWindow : Node
     {
-        public static WorldTreeRoot root;
+        public static WorldTreeCore root;
 
         [MenuItem("WorldTree/Window")]
         static void ShowWindow()
         {
             //if (root == null)
             //{
-            //    root = new WorldTreeRoot();
+            //    root = new WorldTreeCore();
             //    World.Log = Debug.Log;
             //    World.LogWarning = Debug.LogWarning;
             //    World.LogError = Debug.LogError;

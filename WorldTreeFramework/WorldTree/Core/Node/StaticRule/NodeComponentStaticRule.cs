@@ -68,7 +68,7 @@ namespace WorldTree
         /// 获取组件
         /// </summary>
         public static T GetComponent<T>(this INode self)
-            where T : class,INode
+            where T : class, INode
         {
             if (self.m_Components == null)
             {
@@ -86,7 +86,7 @@ namespace WorldTree
         /// 获取组件
         /// </summary>
         public static bool TryGetComponent<T>(this INode self, out T component)
-            where T : class,INode
+            where T : class, INode
         {
             if (self.m_Components == null)
             {
@@ -117,7 +117,7 @@ namespace WorldTree
         /// 移除组件
         /// </summary>
         public static void RemoveComponent<T>(this INode self)
-            where T : class,INode
+            where T : class, INode
         {
             Type type = typeof(T);
             self.RemoveComponent(type);
@@ -178,6 +178,7 @@ namespace WorldTree
                     component.RemoveInParent();
                     self.ComponentsDictionary().Add(type, component);
                     component.Parent = self;
+                    component.Branch = self.Branch;
                     component.isComponent = true;
                     component.RefreshActive();
                 }
@@ -185,10 +186,11 @@ namespace WorldTree
                 {
                     self.ComponentsDictionary().Add(type, component);
                     component.Parent = self;
+                    component.Branch = self.Branch;
                     component.isComponent = true;
 
                     component.SendRule<IAwakeRule>();
-                    self.Root.Add(component);
+                    self.Core.Add(component);
                 }
             }
         }
@@ -204,10 +206,11 @@ namespace WorldTree
             {
                 component = self.PoolGet(type);
                 component.Parent = self;
+                component.Branch = self.Branch;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
                 component.SendRule<IAwakeRule>();
-                self.Root.Add(component);
+                self.Core.Add(component);
             }
             return component;
         }
@@ -215,93 +218,86 @@ namespace WorldTree
         #region 泛型添加
 
 
-
-        ///// <summary>
-        ///// 添加组件
-        ///// </summary>
-        //public static T AddComponent<N, T>(this N self, out T node)
-        //    where N : class,INode
-        //    where T : class,INode, ComponentTo<N>
-        //{
-        //    return node = self.AddComponent<T>();
-        //}
+        /// <summary>
+        /// 添加组件
+        /// </summary>
+        public static T AddComponent<T>(this INode self, out T node) where T : class, INode => node = self.AddComponent<T>();
 
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent< T>(this INode self, out T node)  where T : class,INode =>  node = self.AddComponent<T>();
-
+        public static T AddComponent<T, T1>(this INode self, out T node, T1 arg1) where T : class, INode => node = self.AddComponent<T, T1>(arg1);
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1>(this INode self, out T node, T1 arg1) where T : class,INode => node = self.AddComponent<T, T1>(arg1);
+        public static T AddComponent<T, T1, T2>(this INode self, out T node, T1 arg1, T2 arg2) where T : class, INode => node = self.AddComponent<T, T1, T2>(arg1, arg2);
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2>(this INode self, out T node, T1 arg1, T2 arg2) where T : class,INode => node = self.AddComponent<T, T1, T2>(arg1, arg2);
+        public static T AddComponent<T, T1, T2, T3>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3) where T : class, INode => node = self.AddComponent<T, T1, T2, T3>(arg1, arg2, arg3);
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2, T3>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3) where T : class,INode => node = self.AddComponent<T, T1, T2, T3>(arg1, arg2, arg3);
+        public static T AddComponent<T, T1, T2, T3, T4>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where T : class, INode => node = self.AddComponent<T, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
         /// <summary>
         /// 添加组件
         /// </summary>
-        public static T AddComponent<T, T1, T2, T3, T4>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where T : class,INode => node = self.AddComponent<T, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
-        /// <summary>
-        /// 添加组件
-        /// </summary>
-        public static T AddComponent<T, T1, T2, T3, T4, T5>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where T : class,INode => node = self.AddComponent<T, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+        public static T AddComponent<T, T1, T2, T3, T4, T5>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where T : class, INode => node = self.AddComponent<T, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
 
 
+        /// <summary>
+        /// 尝试添加新组件
+        /// </summary>
+        public static bool TryAddNewComponent(this INode self, Type type, out INode component)
+        {
+            if (!self.ComponentsDictionary().TryGetValue(type, out component))
+            {
+                component = self.PoolGet(type);
+                component.Parent = self;
+                component.Branch = self.Branch;
+                component.isComponent = true;
+                self.m_Components.Add(type, component);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 尝试添加新组件
+        /// </summary>
+        public static bool TryAddNewComponent<T>(this INode self, out INode component) => self.TryAddNewComponent(typeof(T), out component);
+
+
+        #region 方法1
         /// <summary>
         /// 添加组件
         /// </summary>
         public static T AddComponent<T>(this INode self)
-            where T : class,INode
+            where T : class, INode
         {
-            Type type = typeof(T);
-
-            T component = null;
-            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
+            if (self.TryAddNewComponent<T>(out INode component))
             {
-                component = self.PoolGet<T>();
-                component.Parent = self;
-                component.isComponent = true;
-                self.m_Components.Add(type, component);
                 component.SendRule<IAwakeRule>();
-                self.Root.Add(component);
+                self.Core.Add(component);
             }
-            else
-            {
-                component = node as T;
-            }
-
-            return component;
+            return component as T;
         }
-        
+
         /// <summary>
         /// 添加组件
         /// </summary>
         public static T AddComponent<T, T1>(this INode self, T1 arg1)
-            where T : class,INode
+            where T : class, INode
         {
-            Type type = typeof(T);
-
-            T component = null;
-            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
+            if (self.TryAddNewComponent<T>(out INode component))
             {
-                component = self.PoolGet<T>();
-                component.Parent = self;
-                component.isComponent = true;
-                self.m_Components.Add(type, component);
                 component.SendRule<IAwakeRule<T1>, T1>(arg1);
-                self.Root.Add(component);
+                self.Core.Add(component);
             }
-            else
-            {
-                component = node as T;
-            }
-            return component;
+            return component as T;
         }
 
 
@@ -309,100 +305,61 @@ namespace WorldTree
         /// 添加组件
         /// </summary>
         public static T AddComponent<T, T1, T2>(this INode self, T1 arg1, T2 arg2)
-            where T : class,INode
+            where T : class, INode
         {
-            Type type = typeof(T);
-
-            T component = null;
-            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
+            if (self.TryAddNewComponent<T>(out INode component))
             {
-                component = self.PoolGet<T>();
-                component.Parent = self;
-                component.isComponent = true;
-                self.m_Components.Add(type, component);
                 component.SendRule<IAwakeRule<T1, T2>, T1, T2>(arg1, arg2);
-                self.Root.Add(component);
+                self.Core.Add(component);
             }
-            else
-            {
-                component = node as T;
-            }
-            return component;
+            return component as T;
         }
         /// <summary>
         /// 添加组件
         /// </summary>
         public static T AddComponent<T, T1, T2, T3>(this INode self, T1 arg1, T2 arg2, T3 arg3)
-            where T : class,INode
+            where T : class, INode
         {
-            Type type = typeof(T);
-
-            T component = null;
-            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
+            if (self.TryAddNewComponent<T>(out INode component))
             {
-                component = self.PoolGet<T>();
-                component.Parent = self;
-                component.isComponent = true;
-                self.m_Components.Add(type, component);
                 component.SendRule<IAwakeRule<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
-                self.Root.Add(component);
+                self.Core.Add(component);
             }
-            else
-            {
-                component = node as T;
-            }
-            return component;
+            return component as T;
         }
 
         /// <summary>
         /// 添加组件
         /// </summary>
         public static T AddComponent<T, T1, T2, T3, T4>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-            where T : class,INode
+            where T : class, INode
         {
-            Type type = typeof(T);
-
-            T component = null;
-            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
+            if (self.TryAddNewComponent<T>(out INode component))
             {
-                component = self.PoolGet<T>();
-                component.Parent = self;
-                component.isComponent = true;
-                self.m_Components.Add(type, component);
                 component.SendRule<IAwakeRule<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
-                self.Root.Add(component);
+                self.Core.Add(component);
             }
-            else
-            {
-                component = node as T;
-            }
-            return component;
+            return component as T;
         }
 
         /// <summary>
         /// 添加组件
         /// </summary>
         public static T AddComponent<T, T1, T2, T3, T4, T5>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-            where T : class,INode
+            where T : class, INode
         {
-            Type type = typeof(T);
-
-            T component = null;
-            if (!self.ComponentsDictionary().TryGetValue(type, out INode node))
+            if (self.TryAddNewComponent<T>(out INode component))
             {
-                component = self.PoolGet<T>();
-                component.Parent = self;
-                component.isComponent = true;
-                self.m_Components.Add(type, component);
                 component.SendRule<IAwakeRule<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
-                self.Root.Add(component);
+                self.Core.Add(component);
             }
-            else
-            {
-                component = node as T;
-            }
-            return component;
+            return component as T;
         }
+        #endregion
+
+
+
+
         #endregion
         #endregion
 

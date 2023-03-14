@@ -23,8 +23,8 @@ namespace WorldTree
         public override void OnEvent(NodePool self)
         {
 
-            self.Root.RuleManager.SetPolymorphicListenerRule(self.ObjectType);
-            self.Root.RuleManager.SetPolymorphicRule(self.ObjectType);
+            self.Core.RuleManager.SetPolymorphicListenerRule(self.ObjectType);
+            self.Core.RuleManager.SetPolymorphicRule(self.ObjectType);
 
             //生命周期法则
             self.newRule = self.GetRuleList<INewRule>(self.ObjectType);
@@ -85,8 +85,8 @@ namespace WorldTree
         {
             INode obj = Activator.CreateInstance(ObjectType, true) as INode;
             obj.thisPool = this;
-            obj.Id = Root.IdManager.GetId();
-            obj.Root = Root;
+            obj.Id = Core.IdManager.GetId();
+            obj.Core = Core;
             obj.Type = ObjectType;
             return obj;
         }
@@ -115,7 +115,7 @@ namespace WorldTree
         }
         private void ObjectDestroy(INode obj)
         {
-            Root.IdManager.Recycle(obj.Id);
+            Core.IdManager.Recycle(obj.Id);
         }
 
         private void ObjectOnNew(INode obj)

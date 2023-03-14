@@ -9,30 +9,27 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 组件约束
-    /// </summary>
-    public interface ComponentTo<T>  { }
+
 
     /// <summary>
     /// 动态节点队列
     /// </summary>
-    public class DynamicNodeQueue : Node, ComponentTo<RuleActuator>
+    public class DynamicNodeQueue : Node
     {
         /// <summary>
         /// 节点id队列
         /// </summary>
-        public UnitQueue<long> idQueue;
+        public TreeQueue<long> idQueue;
 
         /// <summary>
         /// 节点id被移除的次数
         /// </summary>
-        public UnitDictionary<long, int> removeIdDictionary;
+        public TreeDictionary<long, int> removeIdDictionary;
 
         /// <summary>
         /// 节点名单
         /// </summary>
-        public UnitDictionary<long, INode> nodeDictionary;
+        public TreeDictionary<long, INode> nodeDictionary;
 
 
         /// <summary>
@@ -187,9 +184,12 @@ namespace WorldTree
     {
         public override void OnEvent(DynamicNodeQueue self)
         {
-            self.PoolGet(out self.idQueue);
-            self.PoolGet(out self.removeIdDictionary);
-            self.PoolGet(out self.nodeDictionary);
+            self.AddChildren(out self.idQueue);
+            self.AddChildren(out self.removeIdDictionary);
+            self.AddChildren(out self.nodeDictionary);
+            //self.PoolGet(out self.idQueue);
+            //self.PoolGet(out self.removeIdDictionary);
+            //self.PoolGet(out self.nodeDictionary);
         }
     }
 

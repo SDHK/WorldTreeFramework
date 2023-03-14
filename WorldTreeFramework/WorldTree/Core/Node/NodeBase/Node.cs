@@ -25,10 +25,10 @@ namespace WorldTree
 
         public Type Type { get; set; }
 
+        public WorldTreeCore Core { get; set; }
         public WorldTreeRoot Root { get; set; }
-
+        public INode Branch { get; set; }
         public INode Parent { get; set; }
-        public INode Domain { get; set; }
 
         #region Active
 

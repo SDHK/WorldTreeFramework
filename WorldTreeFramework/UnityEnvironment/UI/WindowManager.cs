@@ -20,7 +20,7 @@ namespace WorldTree
     //{
     //    public override void OnEvent(InitialDomain self)
     //    {
-    //        self.Root.AddComponent<WindowManager>();
+    //        self.Core.AddComponent<WindowManager>();
     //    }
     //}
 

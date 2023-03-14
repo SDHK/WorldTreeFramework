@@ -16,7 +16,7 @@ namespace WorldTree
 
         public static RuleManager RuleManager(this INode self)
         {
-            return self.Root.RuleManager;
+            return self.Core.RuleManager;
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace WorldTree
         public static RuleGroup GetRuleGroup<T>(this INode self)
         where T : IRule
         {
-            return self.Root.RuleManager.GetRuleGroup<T>();
+            return self.Core.RuleManager.GetRuleGroup<T>();
         }
 
 
@@ -34,7 +34,7 @@ namespace WorldTree
         /// </summary>
         public static RuleGroup GetRuleGroup(this INode self, Type type)
         {
-            return self.Root.RuleManager.GetRuleGroup(type);
+            return self.Core.RuleManager.GetRuleGroup(type);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace WorldTree
         public static List<IRule> GetRuleList<R>(this INode self, Type type)
         where R : IRule
         {
-            return self.Root.RuleManager.GetRuleList<R>(type);
+            return self.Core.RuleManager.GetRuleList<R>(type);
         }
     }
 

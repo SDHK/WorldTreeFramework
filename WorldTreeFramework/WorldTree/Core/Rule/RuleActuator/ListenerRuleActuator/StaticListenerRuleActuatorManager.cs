@@ -21,8 +21,8 @@ namespace WorldTree
         public static bool TrySendStaticListener<T>(this INode node)
             where T : IListenerRule
         {
-            if (node.Root.StaticListenerRuleActuatorManager != null)
-                if (node.Root.StaticListenerRuleActuatorManager.TryAddRuleActuator(node.Type, typeof(T), out var actuator))
+            if (node.Core.StaticListenerRuleActuatorManager != null)
+                if (node.Core.StaticListenerRuleActuatorManager.TryAddRuleActuator(node.Type, typeof(T), out var actuator))
                 {
                     actuator.Send(node);
                     return true;
@@ -37,8 +37,8 @@ namespace WorldTree
         public static bool TrySendDynamicListener<T>(this INode node)
             where T : IListenerRule
         {
-            if (node.Root.DynamicListenerRuleActuatorManager != null)
-                if (node.Root.DynamicListenerRuleActuatorManager.TryAddRuleActuator(node.Type, typeof(T), out var actuator))
+            if (node.Core.DynamicListenerRuleActuatorManager != null)
+                if (node.Core.DynamicListenerRuleActuatorManager.TryAddRuleActuator(node.Type, typeof(T), out var actuator))
                 {
                     actuator.Send(node);
                     return true;
@@ -76,7 +76,7 @@ namespace WorldTree
         public void TryAddListener(INode listener)
         {
             //判断是否为监听器
-            if (Root.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+            if (Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
             {
                 foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
                 {
@@ -97,7 +97,7 @@ namespace WorldTree
         public void RemoveListener(INode listener)
         {
             //判断是否为监听器
-            if (Root.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+            if (Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
             {
                 foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
                 {
@@ -128,7 +128,7 @@ namespace WorldTree
                 if (group.TryGetRuleActuator(ruleType, out actuator)) { return true; }
 
                 //没有执行器 则判断这个目标类型是是否有监听法则集合
-                else if (Root.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
+                else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
                 {
                     //新建执行器
                     actuator = group.GetRuleActuator(ruleType);
@@ -138,7 +138,7 @@ namespace WorldTree
                 }
             }
             //没有组则判断这个目标类型是否有监听法则集合
-            else if (Root.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
+            else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
             {
                 //新建组和执行器
                 actuator = GetGroup(Target).GetRuleActuator(ruleType);
@@ -158,7 +158,7 @@ namespace WorldTree
             foreach (var listenerType in actuator.ruleGroup)//遍历法则集合获取监听器类型
             {
                 //从池里拿到已存在的监听器
-                if (Root.NodePoolManager.pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
+                if (Core.NodePoolManager.pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
                 {
                     //全部注入到执行器
                     foreach (var listener in listenerPool.Nodes)
@@ -204,8 +204,8 @@ namespace WorldTree
 
                 //group = new ListenerRuleActuatorGroup();
                 //group.Target = Target;
-                //group.Id = Root.IdManager.GetId();
-                //group.Root = Root;
+                //group.Id = Core.IdManager.GetId();
+                //group.Core = Core;
                 //group.Type = typeof(ListenerRuleActuatorGroup);
                 //ListenerActuatorGroupDictionary.Add(Target, group);
                 //this.AddChildren(group);

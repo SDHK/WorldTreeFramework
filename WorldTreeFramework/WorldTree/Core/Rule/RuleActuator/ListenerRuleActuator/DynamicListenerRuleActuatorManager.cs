@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
+
     /// <summary>
     /// 动态监听法则执行器管理器
     /// </summary>
@@ -69,7 +70,7 @@ namespace WorldTree
         private void AddAllTarget(INode node)
         {
             //获取 INode 动态目标 法则集合集合
-            if (node.Root.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+            if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
             {
                 //遍历现有执行器
                 foreach (var BroadcastGroup in ListenerActuatorGroupDictionary)
@@ -92,7 +93,7 @@ namespace WorldTree
         private void AddRuleTarget(INode node, Type type)
         {
             //获取法则集合
-            if (node.Root.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
+            if (node.Core.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
             {
                 //遍历法则集合
                 foreach (var targetSystems in targetSystemGroup)
@@ -110,7 +111,7 @@ namespace WorldTree
             if (TryGetGroup(type, out var broadcastGroup))
             {
                 //获取 INode 动态目标 法则集合集合
-                if (node.Root.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+                if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
                 {
                     //遍历获取动态法则集合，并添加自己
                     foreach (var ruleGroup in ruleGroupDictionary)
@@ -157,7 +158,7 @@ namespace WorldTree
         private void RemoveAllTarget(INode node)
         {
             //获取 INode 动态目标 法则集合集合
-            if (node.Root.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+            if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
             {
                 //遍历现有全部池
                 foreach (var BroadcastGroup in ListenerActuatorGroupDictionary)
@@ -181,7 +182,7 @@ namespace WorldTree
         private void RemoveRuleTarget(INode node, Type type)
         {
             //获取法则集合
-            if (node.Root.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
+            if (node.Core.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
             {
                 //遍历法则集合
                 foreach (var targetSystems in targetSystemGroup)
@@ -200,7 +201,7 @@ namespace WorldTree
             if (TryGetGroup(type, out var broadcastGroup))
             {
                 //获取 INode 动态目标 法则集合集合
-                if (node.Root.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
+                if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
                 {
                     //遍历获取动态法则集合，并移除自己
                     foreach (var ruleGroup in ruleGroupDictionary)
@@ -230,7 +231,7 @@ namespace WorldTree
                 if (group.TryGetRuleActuator(RuleType, out actuator)) { return true; }
 
                 //没有执行器 则判断这个系统类型是否有动态类型监听法则集合
-                else if (Root.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
+                else if (Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
                 {
                     //新建执行器
                     actuator = group.GetRuleActuator(RuleType);
@@ -239,7 +240,7 @@ namespace WorldTree
                     return true;
                 }
             }
-            else if (Root.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
+            else if (Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
             {
                 //新建组和执行器
                 actuator = GetGroup(Target).GetRuleActuator(RuleType);
@@ -259,7 +260,7 @@ namespace WorldTree
             foreach (var listenerType in actuator.ruleGroup)//遍历监听类型
             {
                 //获取监听器对象池
-                if (Root.NodePoolManager.pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
+                if (Core.NodePoolManager.pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
                 {
                     //遍历已存在的监听器
                     foreach (var listener in listenerPool.Nodes)
@@ -278,7 +279,7 @@ namespace WorldTree
                             else if (listener.Value.listenerState == ListenerState.Rule)
                             {
                                 //判断的实体类型是否拥有目标系统
-                                if (Root.RuleManager.TryGetRuleList(Target, listener.Value.listenerTarget, out _))
+                                if (Core.RuleManager.TryGetRuleList(Target, listener.Value.listenerTarget, out _))
                                 {
                                     actuator.Enqueue(listener.Value);
                                 }
@@ -319,8 +320,8 @@ namespace WorldTree
 
                 //group = new ListenerRuleActuatorGroup();
                 //group.Target = Target;
-                //group.Id = Root.IdManager.GetId();
-                //group.Root = Root;
+                //group.Id = Core.IdManager.GetId();
+                //group.Core = Core;
                 //ListenerActuatorGroupDictionary.Add(Target, group);
                 //this.AddChildren(group);
             }

@@ -23,12 +23,12 @@ namespace WorldTree
         /// </summary>
         public static RuleActuator Load(this RuleActuator ruleActuator, Type ruleType)
         {
-            if (ruleActuator.Root.RuleManager.TryGetRuleGroup(ruleType, out ruleActuator.ruleGroup))
+            if (ruleActuator.Core.RuleManager.TryGetRuleGroup(ruleType, out ruleActuator.ruleGroup))
             {
                 ruleActuator.Clear();
                 foreach (var item in ruleActuator.ruleGroup)
                 {
-                    if (ruleActuator.Root.NodePoolManager.pools.TryGetValue(item.Key, out NodePool pool))
+                    if (ruleActuator.Core.NodePoolManager.pools.TryGetValue(item.Key, out NodePool pool))
                     {
                         foreach (var node in pool.Nodes)
                         {
@@ -46,7 +46,7 @@ namespace WorldTree
         public static RuleActuator GetGlobalNodeRuleActuator<T>(this INode self)
         where T : IRule
         {
-            RuleActuator ruleActuator = self.Root.AddComponent<RuleActuatorGroup>().GetActuator<T>();
+            RuleActuator ruleActuator = self.Core.AddComponent<RuleActuatorGroup>().GetActuator<T>();
             ruleActuator.nodeQueue.AddComponent<NodeAddGlobalListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
             ruleActuator.nodeQueue.AddComponent<NodeRemoveGlobalListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
             return ruleActuator;

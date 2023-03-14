@@ -21,7 +21,7 @@ namespace WorldTree
             where T : class
             where N : class,INode
         {
-            return await self.Root.AddComponent<AddressablesManager>().LoadAssetAsync<T,N>();
+            return await self.Core.AddComponent<AddressablesManager>().LoadAssetAsync<T,N>();
         }
     }
 }

@@ -55,10 +55,24 @@ namespace WorldTree
         /// 节点类型
         /// </summary>
         public Type Type { get; set; }
+
         /// <summary>
-        /// 根节点
+        /// 树心节点
         /// </summary>
+        /// <remarks>挂载框架的启动核心组件</remarks>
+        public WorldTreeCore Core { get; set; }
+
+        /// <summary>
+        /// 树根节点
+        /// </summary>
+        /// <remarks>挂载核心启动后的管理器组件</remarks>
         public WorldTreeRoot Root { get; set; }
+
+        /// <summary>
+        /// 树枝节点
+        /// </summary>
+        /// <remarks>用于划分作用域</remarks>
+        public INode Branch { get; set; }
 
         /// <summary>
         /// 父节点
@@ -109,10 +123,7 @@ namespace WorldTree
 
         #region Domains
 
-        /// <summary>
-        /// 域节点
-        /// </summary>
-        public INode Domain { get; set; }
+     
 
         /// <summary>
         /// 域节点

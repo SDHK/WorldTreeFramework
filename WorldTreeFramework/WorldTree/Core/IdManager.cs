@@ -15,7 +15,7 @@ namespace WorldTree
     {
         public static IdManager IdManager(this INode self)
         {
-            return self.Root.IdManager;
+            return self.Core.IdManager;
         }
     }
 

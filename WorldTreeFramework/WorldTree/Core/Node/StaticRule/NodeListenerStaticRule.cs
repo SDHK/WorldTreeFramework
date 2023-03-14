@@ -22,12 +22,12 @@ namespace WorldTree
             if (self.listenerTarget != targetType)
             {
                 //判断是否为监听器
-                if (self.Root.RuleManager.DynamicListenerTypeHash.Contains(self.Type))
+                if (self.Core.RuleManager.DynamicListenerTypeHash.Contains(self.Type))
                 {
-                    self.Root.DynamicListenerRuleActuatorManager.ListenerRemove(self);
+                    self.Core.DynamicListenerRuleActuatorManager.ListenerRemove(self);
                     self.listenerTarget = targetType;
                     self.listenerState = state;
-                    self.Root.DynamicListenerRuleActuatorManager.ListenerAdd(self);
+                    self.Core.DynamicListenerRuleActuatorManager.ListenerAdd(self);
                     return true;
                 }
             }
@@ -60,7 +60,7 @@ namespace WorldTree
         /// </summary>
         public static void ListenerClearTarget(this INode self)
         {
-            self.Root.DynamicListenerRuleActuatorManager.ListenerRemove(self); 
+            self.Core.DynamicListenerRuleActuatorManager.ListenerRemove(self); 
             self.listenerTarget = null;
             self.listenerState = ListenerState.Not;
         }

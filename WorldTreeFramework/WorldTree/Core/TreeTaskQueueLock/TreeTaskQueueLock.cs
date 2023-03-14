@@ -18,7 +18,7 @@ namespace WorldTree
         /// <remarks>按照队列顺序执行异步任务</remarks>
         public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this INode self, long key)
         {
-            return self.Root.AddComponent<TreeTaskQueueLock>().Lock(self, key);
+            return self.Core.AddComponent<TreeTaskQueueLock>().Lock(self, key);
         }
     }
 

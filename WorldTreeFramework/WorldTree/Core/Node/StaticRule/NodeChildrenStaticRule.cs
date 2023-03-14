@@ -17,7 +17,7 @@ namespace WorldTree
         /// <summary>
         /// 子节点
         /// </summary>
-        public static UnitDictionary<long, INode> ChildrenDictionary(this INode self )
+        public static UnitDictionary<long, INode> ChildrenDictionary(this INode self)
         {
             if (self.m_Children == null)
             {
@@ -119,15 +119,17 @@ namespace WorldTree
                         node.TraversalLevelDisposeDomain();
                         node.RemoveInParent();
                         node.Parent = self;
+                        node.Branch = self.Branch;
                         node.isComponent = false;
                         node.RefreshActive();
                     }
                     else //野节点添加
                     {
                         node.Parent = self;
+                        node.Branch = self.Branch;
                         node.isComponent = false;
                         node.SendRule<IAwakeRule>();
-                        self.Root.Add(node);
+                        self.Core.Add(node);
                     }
                 }
             }
@@ -145,8 +147,9 @@ namespace WorldTree
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
             {
                 node.Parent = self;
+                node.Branch = self.Branch;
                 node.SendRule<IAwakeRule>();
-                self.Root.Add(node);
+                self.Core.Add(node);
             }
             return node;
         }
@@ -154,47 +157,69 @@ namespace WorldTree
 
         #region 泛型添加
 
+
+
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public static T AddChildren<T>(this INode self, out T node) where T : class,INode => node = self.AddChildren<T>();
+        public static T AddChildren<T>(this INode self, out T node) where T : class, INode => node = self.AddChildren<T>();
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public static T AddChildren<T, T1>(this INode self, out T node, T1 arg1) where T : class,INode => node = self.AddChildren<T, T1>(arg1);
+        public static T AddChildren<T, T1>(this INode self, out T node, T1 arg1) where T : class, INode => node = self.AddChildren<T, T1>(arg1);
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public static T AddChildren<T, T1, T2>(this INode self, out T node, T1 arg1, T2 arg2) where T : class,INode => node = self.AddChildren<T, T1, T2>(arg1, arg2);
+        public static T AddChildren<T, T1, T2>(this INode self, out T node, T1 arg1, T2 arg2) where T : class, INode => node = self.AddChildren<T, T1, T2>(arg1, arg2);
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public static T AddChildren<T, T1, T2, T3>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3) where T : class,INode => node = self.AddChildren<T, T1, T2, T3>(arg1, arg2, arg3);
+        public static T AddChildren<T, T1, T2, T3>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3) where T : class, INode => node = self.AddChildren<T, T1, T2, T3>(arg1, arg2, arg3);
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public static T AddChildren<T, T1, T2, T3, T4>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where T : class,INode => node = self.AddChildren<T, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
+        public static T AddChildren<T, T1, T2, T3, T4>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where T : class, INode => node = self.AddChildren<T, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public static T AddChildren<T, T1, T2, T3, T4, T5>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where T : class,INode => node = self.AddChildren<T, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+        public static T AddChildren<T, T1, T2, T3, T4, T5>(this INode self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where T : class, INode => node = self.AddChildren<T, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+
+        /// <summary>
+        /// 尝试添加子节点
+        /// </summary>
+        public static bool TryAddNewChildren(this INode self, Type type, out INode node)
+        {
+            node = self.PoolGet(type);
+            if (self.ChildrenDictionary().TryAdd(node.Id, node))
+            {
+                node.Parent = self;
+                node.Branch = self.Branch;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 尝试添加子节点
+        /// </summary>
+        public static bool TryAddNewChildren<T>(this INode self, out INode node) => self.TryAddNewChildren(typeof(T), out node);
+
 
         /// <summary>
         /// 添加新的子节点
         /// </summary>
         public static T AddChildren<T>(this INode self)
-            where T : class,INode
+            where T : class, INode
         {
-
-            T node = self.PoolGet<T>();
-            if (self.ChildrenDictionary().TryAdd(node.Id, node))
+            if (self.TryAddNewChildren<T>(out INode node))
             {
-                node.Parent = self;
                 node.SendRule<IAwakeRule>();
-                self.Root.Add(node);
+                self.Core.Add(node);
             }
-
-            return node;
+            return node as T;
         }
 
 
@@ -202,16 +227,15 @@ namespace WorldTree
         /// 添加新的子节点
         /// </summary>
         public static T AddChildren<T, T1>(this INode self, T1 arg1)
-            where T : class,INode
+            where T : class, INode
         {
-            T node = self.PoolGet<T>();
-            if (self.ChildrenDictionary().TryAdd(node.Id, node))
+            if (self.TryAddNewChildren<T>(out INode node))
             {
-                node.Parent = self;
                 node.SendRule<IAwakeRule<T1>, T1>(arg1);
-                self.Root.Add(node);
+
+                self.Core.Add(node);
             }
-            return node;
+            return node as T;
         }
 
 
@@ -219,66 +243,57 @@ namespace WorldTree
         /// 添加新的子节点
         /// </summary>
         public static T AddChildren<T, T1, T2>(this INode self, T1 arg1, T2 arg2)
-        where T : class,INode
+        where T : class, INode
         {
-            T node = self.PoolGet<T>();
-            if (self.ChildrenDictionary().TryAdd(node.Id, node))
+            if (self.TryAddNewChildren<T>(out INode node))
             {
-                node.Parent = self;
                 node.SendRule<IAwakeRule<T1, T2>, T1, T2>(arg1, arg2);
-                self.Root.Add(node);
+
+                self.Core.Add(node);
             }
-            return node;
+            return node as T;
         }
 
         /// <summary>
         /// 添加新的子节点
         /// </summary>
         public static T AddChildren<T, T1, T2, T3>(this INode self, T1 arg1, T2 arg2, T3 arg3)
-        where T : class,INode
+        where T : class, INode
         {
-            T node = self.PoolGet<T>();
-            if (self.ChildrenDictionary().TryAdd(node.Id, node))
+            if (self.TryAddNewChildren<T>(out INode node))
             {
-                node.Parent = self;
                 node.SendRule<IAwakeRule<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
-                self.Root.Add(node);
+                self.Core.Add(node);
             }
-            return node;
+            return node as T;
         }
 
         /// <summary>
         /// 添加新的子节点
         /// </summary>
         public static T AddChildren<T, T1, T2, T3, T4>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where T : class,INode
+        where T : class, INode
         {
-            T node = self.PoolGet<T>();
-            if (self.ChildrenDictionary().TryAdd(node.Id, node))
+            if (self.TryAddNewChildren<T>(out INode node))
             {
-                node.Parent = self;
                 node.SendRule<IAwakeRule<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
-                self.Root.Add(node);
+                self.Core.Add(node);
             }
-
-            return node;
+            return node as T;
         }
 
         /// <summary>
         /// 添加新的子节点
         /// </summary>
         public static T AddChildren<T, T1, T2, T3, T4, T5>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where T : class,INode
+        where T : class, INode
         {
-            T node = self.PoolGet<T>();
-            if (self.ChildrenDictionary().TryAdd(node.Id, node))
+            if (self.TryAddNewChildren<T>(out INode node))
             {
-                node.Parent = self;
                 node.SendRule<IAwakeRule<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
-                self.Root.Add(node);
+                self.Core.Add(node);
             }
-
-            return node;
+            return node as T;
         }
         #endregion
         #endregion

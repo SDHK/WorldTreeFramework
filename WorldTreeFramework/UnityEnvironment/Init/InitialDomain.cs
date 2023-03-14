@@ -21,11 +21,27 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
+
+    ///// <summary>
+    ///// 组件约束
+    ///// </summary>
+    //public interface ComponentTo<T> { }
+    //public interface ComponentTo { }
+
+
+    //public class TastNode : Node, ComponentTo<InitialDomain>
+    //{
+
+
+    //}
+
+
     //多态测试
     public class NodeAddRule : AddRule<Node>
     {
         public override void OnEvent(Node self)
         {
+
             World.Log($"NodeAdd: {self.Id} _  {self.Type} ");
         }
     }
@@ -67,8 +83,9 @@ namespace WorldTree
 
         public override async void OnEvent(InitialDomain self)
         {
-            World.Log("初始域启动！！");
+            self.Branch = self;
 
+            World.Log("初始域启动！！");
 
             Type type = self.Type;
             var baseTypes = new List<Type>();
@@ -98,6 +115,7 @@ namespace WorldTree
     {
         public override async void OnEvent(InitialDomain self, float deltaTime)
         {
+            World.Log($"初始域:!!!!!");
 
             if (Input.GetKeyDown(KeyCode.A))
             {

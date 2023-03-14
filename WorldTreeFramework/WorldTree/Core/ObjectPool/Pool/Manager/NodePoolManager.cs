@@ -19,8 +19,9 @@ namespace WorldTree
         public static T PoolGet<T>(this INode self)
         where T : class,INode
         {
-            return self.Root.GetNode<T>();
+            return self.Core.GetNode<T>();
         }
+
 
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace WorldTree
         /// </summary>
         public static INode PoolGet(this INode self, Type type)
         {
-            return self.Root.GetNode(type);
+            return self.Core.GetNode(type);
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace WorldTree
         /// </summary>
         public static void PoolRecycle(this INode self, INode obj)
         {
-            self.Root.Recycle(obj);
+            self.Core.Recycle(obj);
         }
 
     }
@@ -106,11 +107,13 @@ namespace WorldTree
             if (!pools.TryGetValue(type, out NodePool pool))
             {
                 pool = new NodePool(type);
-                pool.Id = Root.IdManager.GetId();
-                pool.Root = Root;
+                pool.Id = Core.IdManager.GetId();
+                pool.Core = Core;
+                pool.Branch = Branch;
                 pool.Type = pool.GetType();
                 pools.Add(type, pool);
-                this.AddChildren(pool);
+                this.AddChildren( pool);
+
             }
 
             return pool;

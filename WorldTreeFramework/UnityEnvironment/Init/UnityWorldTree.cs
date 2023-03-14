@@ -16,7 +16,7 @@ namespace WorldTree
 
     public class UnityWorldTree : MonoBehaviour
     {
-        public WorldTreeRoot root;
+        public WorldTreeCore root;
 
         RuleActuator enable;
         RuleActuator disable;
@@ -32,7 +32,7 @@ namespace WorldTree
             World.LogWarning = Debug.LogWarning;
             World.LogError = Debug.LogError;
 
-            root = new WorldTreeRoot();
+            root = new WorldTreeCore();
 
             enable = root.GetGlobalNodeRuleActuator<IEnableRule>();
             update = root.GetGlobalNodeRuleActuator<IUpdateRule>();
