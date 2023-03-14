@@ -16,7 +16,7 @@ namespace WorldTree
 
     public class UnityWorldTree : MonoBehaviour
     {
-        public WorldTreeCore root;
+        public WorldTreeCore core;
 
         RuleActuator enable;
         RuleActuator disable;
@@ -32,17 +32,17 @@ namespace WorldTree
             World.LogWarning = Debug.LogWarning;
             World.LogError = Debug.LogError;
 
-            root = new WorldTreeCore();
+            core = new WorldTreeCore();
 
-            enable = root.GetGlobalNodeRuleActuator<IEnableRule>();
-            update = root.GetGlobalNodeRuleActuator<IUpdateRule>();
-            disable = root.GetGlobalNodeRuleActuator<IDisableRule>();
+            enable = core.GetGlobalNodeRuleActuator<IEnableRule>();
+            update = core.GetGlobalNodeRuleActuator<IUpdateRule>();
+            disable = core.GetGlobalNodeRuleActuator<IDisableRule>();
 
-            lateUpdate = root.GetGlobalNodeRuleActuator<ILateUpdateRule>();
-            fixedUpdate = root.GetGlobalNodeRuleActuator<IFixedUpdateRule>();
-            //onGUI = root.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
+            lateUpdate = core.GetGlobalNodeRuleActuator<ILateUpdateRule>();
+            fixedUpdate = core.GetGlobalNodeRuleActuator<IFixedUpdateRule>();
+            //onGUI = core.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
 
-            root.AddComponent<InitialDomain>();
+            core.AddComponent<InitialDomain>();
         }
 
         private void Update()
@@ -55,7 +55,7 @@ namespace WorldTree
 
             Profiler.EndSample();
 
-            if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(root.ToStringDrawTree());
+            if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(core.ToStringDrawTree());
         }
 
         private void LateUpdate()
@@ -74,8 +74,8 @@ namespace WorldTree
 
         private void OnDestroy()
         {
-            root?.Dispose();
-            root = null;
+            core?.Dispose();
+            core = null;
 
             enable = null;
             update = null;

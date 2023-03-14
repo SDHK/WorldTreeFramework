@@ -23,7 +23,7 @@ namespace EditorTool
     {
         public static string rootPath = "Assets/SDHK/WorldTreeFramework/UnityEnvironment/EditorTool/EditorToolKitWindow/ToolPages/";
 
-        //public WorldTreeCore root;
+        //public WorldTreeCore core;
 
         //public SystemGlobalBroadcast<IEnableRule> enable;
         //public SystemGlobalBroadcast<IDisableRule> disable;
@@ -40,17 +40,17 @@ namespace EditorTool
 
         protected override void Initialize()
         {
-            //if (root != null) root.Dispose();
+            //if (core != null) core.Dispose();
 
-            //root = new WorldTreeCore();
+            //core = new WorldTreeCore();
 
             //World.Log = Debug.Log;
             //World.LogWarning = Debug.LogWarning;
             //World.LogError = Debug.LogError;
-            //enable = root.GetGlobalNodeRuleActuator<IEnableRule>();
-            //update = root.GetGlobalNodeRuleActuator<IUpdateRule>();
-            //disable = root.GetGlobalNodeRuleActuator<IDisableRule>();
-            //onGUI = root.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
+            //enable = core.GetGlobalNodeRuleActuator<IEnableRule>();
+            //update = core.GetGlobalNodeRuleActuator<IUpdateRule>();
+            //disable = core.GetGlobalNodeRuleActuator<IDisableRule>();
+            //onGUI = core.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
         }
 
         protected override OdinMenuTree BuildMenuTree()
@@ -79,8 +79,8 @@ namespace EditorTool
             //update = null;
             //disable = null;
             //onGUI = null;
-            //root.Dispose();
-            //root = null;
+            //core.Dispose();
+            //core = null;
         }
         protected override void OnBeginDrawEditors()
         {

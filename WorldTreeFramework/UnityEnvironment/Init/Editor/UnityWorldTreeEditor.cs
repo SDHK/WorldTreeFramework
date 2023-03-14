@@ -19,7 +19,7 @@ namespace EditorTool
 
             script = target as UnityWorldTree;
 
-            GUILayout.Label(script.root.ToStringDrawTree());
+            GUILayout.Label(script.core.ToStringDrawTree());
         }
 
 
