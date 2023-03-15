@@ -177,16 +177,16 @@ namespace WorldTree
                     component.TraversalLevelDisposeDomain();
                     component.RemoveInParent();
                     self.ComponentsDictionary().Add(type, component);
+                    if (component.Branch != component) component.Branch = self.Branch;
                     component.Parent = self;
-                    component.Branch = self.Branch;
                     component.isComponent = true;
                     component.RefreshActive();
                 }
                 else //野组件添加
                 {
                     self.ComponentsDictionary().Add(type, component);
+                    if (component.Branch != component) component.Branch = self.Branch;
                     component.Parent = self;
-                    component.Branch = self.Branch;
                     component.isComponent = true;
 
                     component.SendRule<IAwakeRule>();
@@ -205,8 +205,8 @@ namespace WorldTree
             if (!self.ComponentsDictionary().TryGetValue(type, out INode component))
             {
                 component = self.PoolGet(type);
-                component.Parent = self;
                 component.Branch = self.Branch;
+                component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
                 component.SendRule<IAwakeRule>();
@@ -253,8 +253,8 @@ namespace WorldTree
             if (!self.ComponentsDictionary().TryGetValue(type, out component))
             {
                 component = self.PoolGet(type);
-                component.Parent = self;
                 component.Branch = self.Branch;
+                component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
                 return true;

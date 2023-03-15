@@ -16,6 +16,9 @@ namespace WorldTree
     /// </summary>
     public class WorldTreeRoot : Node
     {
-
+        public WorldTreeRoot()
+        {
+            Branch = this;
+        }
     }
 }

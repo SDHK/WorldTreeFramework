@@ -22,7 +22,7 @@ namespace WorldTree
         /// </summary>
         public static Texture2D GetColorTexture(this INode self, Color color)
         {
-            return self.Core.AddComponent<ColorTexture2DManager>().Get(color);
+            return self.Root.AddComponent<ColorTexture2DManager>().Get(color);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace WorldTree
         /// </summary>
         public static Texture2D GetColorTexture(this INode self, float color, float alpha = 1)
         {
-            return self.Core.AddComponent<ColorTexture2DManager>().Get(new Color(color, color, color, alpha));
+            return self.Root.AddComponent<ColorTexture2DManager>().Get(new Color(color, color, color, alpha));
         }
     }
 

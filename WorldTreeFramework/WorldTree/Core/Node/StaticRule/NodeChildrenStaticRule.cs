@@ -118,15 +118,15 @@ namespace WorldTree
                     {
                         node.TraversalLevelDisposeDomain();
                         node.RemoveInParent();
+                        if (node.Branch != node) node.Branch = self.Branch;
                         node.Parent = self;
-                        node.Branch = self.Branch;
                         node.isComponent = false;
                         node.RefreshActive();
                     }
                     else //野节点添加
                     {
+                        if (node.Branch != node) node.Branch = self.Branch;
                         node.Parent = self;
-                        node.Branch = self.Branch;
                         node.isComponent = false;
                         node.SendRule<IAwakeRule>();
                         self.Core.Add(node);
@@ -192,8 +192,8 @@ namespace WorldTree
             node = self.PoolGet(type);
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
             {
-                node.Parent = self;
                 node.Branch = self.Branch;
+                node.Parent = self;
                 return true;
             }
             else

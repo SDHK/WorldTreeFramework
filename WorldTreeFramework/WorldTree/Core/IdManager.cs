@@ -24,6 +24,11 @@ namespace WorldTree
     /// </summary>
     public class IdManager : Node
     {
+        public IdManager()
+        {
+            Type = GetType();
+        }
+
         /// <summary>
         /// id池
         /// </summary>

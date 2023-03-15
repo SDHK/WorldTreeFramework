@@ -57,8 +57,9 @@ namespace WorldTree
         /// <remarks>记录节点拥有的法则类型</remarks>
         private Dictionary<Type, HashSet<Type>> NodeTypeRulesDictionary = new Dictionary<Type, HashSet<Type>>();
 
-        public RuleManager() : base()
+        public RuleManager()
         {
+            Type = GetType();
             Initialize();
         }
 

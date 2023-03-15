@@ -17,7 +17,7 @@ namespace WorldTree
         /// 从池中获取对象
         /// </summary>
         public static T PoolGet<T>(this INode self)
-        where T : class,INode
+        where T : class, INode
         {
             return self.Core.GetNode<T>();
         }
@@ -39,6 +39,11 @@ namespace WorldTree
         {
             self.Core.Recycle(obj);
         }
+
+    }
+
+    public static class NodePoolManagerStaticRule
+    {
 
     }
 
@@ -64,7 +69,7 @@ namespace WorldTree
         /// 获取节点
         /// </summary>
         public T Get<T>()
-        where T : class,INode
+        where T : class, INode
         {
             Type type = typeof(T);
             return GetPool(type).Get<T>();
@@ -94,7 +99,7 @@ namespace WorldTree
         /// 获取池
         /// </summary>
         public NodePool GetPool<T>()
-            where T : class,INode
+            where T : class, INode
         {
             Type type = typeof(T);
             return GetPool(type);
@@ -109,13 +114,12 @@ namespace WorldTree
                 pool = new NodePool(type);
                 pool.Id = Core.IdManager.GetId();
                 pool.Core = Core;
+                pool.Root = Root;
                 pool.Branch = Branch;
                 pool.Type = pool.GetType();
                 pools.Add(type, pool);
-                this.AddChildren( pool);
-
+                this.AddChildren(pool);
             }
-
             return pool;
         }
 

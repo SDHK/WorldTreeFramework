@@ -87,6 +87,7 @@ namespace WorldTree
             obj.thisPool = this;
             obj.Id = Core.IdManager.GetId();
             obj.Core = Core;
+            obj.Root = Core.Root;
             obj.Type = ObjectType;
             return obj;
         }
