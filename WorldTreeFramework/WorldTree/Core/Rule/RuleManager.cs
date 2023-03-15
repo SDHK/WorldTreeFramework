@@ -37,7 +37,7 @@ namespace WorldTree
         public UnitDictionary<Type, Dictionary<Type, RuleGroup>> TargetRuleListenerGroupDictionary = new UnitDictionary<Type, Dictionary<Type, RuleGroup>>();
 
         /// <summary>
-        ///监听法则字典 监听器类型
+        /// 监听法则字典 监听器类型
         /// </summary>
         /// <remarks> 
         /// <para>监听类型 法则类型 《目标节点类型,监听法则》</para> 

@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 法则执行器集合
     /// </summary>
-    public class RuleActuatorGroup : Node
+    public class RuleActuatorGroup : Node, ComponentOf<WorldTreeRoot>
     {
         public UnitDictionary<Type, RuleActuator> ruleActuatorDictionary;
 
@@ -25,7 +25,7 @@ namespace WorldTree
         {
             if (!ruleActuatorDictionary.TryGetValue(type, out var ruleActuator))
             {
-                ruleActuator = this.AddChildren<RuleActuator>().Load(type);
+                this.AddChildren(out ruleActuator).Load(type);
                 ruleActuatorDictionary.Add(type, ruleActuator);
             }
             return ruleActuator;

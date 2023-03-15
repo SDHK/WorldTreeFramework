@@ -13,7 +13,7 @@ using WorldTree;
 
 namespace EditorTool
 {
-    public class EditorHomePage : Node
+    public class EditorHomePage : Node, ComponentOfNode
     {
         public INode page;
     }
@@ -45,7 +45,7 @@ namespace EditorTool
             EditorGUILayout.EndVertical();
 
             GUI.color = Color.black;
-            GUILayout.Box(default(string),GUILayout.Width(2),GUILayout.ExpandHeight(true));
+            GUILayout.Box(default(string), GUILayout.Width(2), GUILayout.ExpandHeight(true));
             GUI.color = Color.white;
 
 

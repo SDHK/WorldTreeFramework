@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// Addressables 资源加载管理器
     /// </summary>
-    public class AddressablesManager : Node
+    public class AddressablesManager : Node, ComponentOf<WorldTreeRoot>
     {
         public TreeDictionary<string, Object> assets;
 
@@ -25,9 +25,9 @@ namespace WorldTree
         /// </summary>
         /// <typeparam name="T">资源类型</typeparam>
         /// <typeparam name="N">节点类型</typeparam>
-        public async TreeTask<T> LoadAssetAsync<T,N>()
+        public async TreeTask<T> LoadAssetAsync<T, N>()
             where T : class
-            where N : class,INode
+            where N : class, INode
         {
             var key = typeof(N);
             if (!assets.TryGetValue(key.Name, out var asset))

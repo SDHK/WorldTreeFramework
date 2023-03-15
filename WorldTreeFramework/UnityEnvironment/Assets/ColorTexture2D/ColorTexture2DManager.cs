@@ -22,7 +22,7 @@ namespace WorldTree
         /// </summary>
         public static Texture2D GetColorTexture(this INode self, Color color)
         {
-            return self.Root.AddComponent<ColorTexture2DManager>().Get(color);
+            return self.Root.AddComponent(out ColorTexture2DManager _).Get(color);
         }
 
         /// <summary>
@@ -30,14 +30,14 @@ namespace WorldTree
         /// </summary>
         public static Texture2D GetColorTexture(this INode self, float color, float alpha = 1)
         {
-            return self.Root.AddComponent<ColorTexture2DManager>().Get(new Color(color, color, color, alpha));
+            return self.Root.AddComponent(out ColorTexture2DManager _).Get(new Color(color, color, color, alpha));
         }
     }
 
     /// <summary>
     /// 颜色图片管理器
     /// </summary>
-    public class ColorTexture2DManager : Node
+    public class ColorTexture2DManager : Node, ComponentOf<WorldTreeRoot>
     {
         UnitDictionary<Color, Texture2D> colors = new UnitDictionary<Color, Texture2D>();
         public Texture2D Get(Color color)

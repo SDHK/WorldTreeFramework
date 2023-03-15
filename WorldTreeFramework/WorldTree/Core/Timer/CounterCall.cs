@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 计数器
     /// </summary>
-    public class CounterCall : Node
+    public class CounterCall : Node, ComponentOfNode
     {
         public int count = 0;
         public int countOut = 0;

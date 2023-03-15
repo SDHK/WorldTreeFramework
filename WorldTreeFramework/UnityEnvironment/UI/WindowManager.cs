@@ -47,7 +47,7 @@ namespace WorldTree
         /// 打开窗口入栈
         /// </summary>
         public async TreeTask<T> Show<T>()
-            where T : class,INode
+            where T : class, INode, ComponentOfNode
         {
             if (windows.TryGetValue(typeof(T), out INode node))
             {
@@ -87,7 +87,7 @@ namespace WorldTree
         /// 关闭栈窗口
         /// </summary>
         public void Dispose<T>()
-           where T : class,INode
+           where T : class, INode
         {
             if (windows.TryGetValue(typeof(T), out INode targetNode))
             {
@@ -147,7 +147,7 @@ namespace WorldTree
         /// 关闭动画栈窗口
         /// </summary>
         public void Close<T>()
-           where T : class,INode
+           where T : class, INode
         {
 
         }
@@ -166,7 +166,7 @@ namespace WorldTree
         public override void OnEvent(WindowManager self)
         {
             World.Log("WindowManager启动!!!");
-            self.gameObject = self.AddComponent<GameObjectNode>().Instantiate<WindowManager>();
+            self.gameObject = self.AddComponent(out GameObjectNode _).Instantiate<WindowManager>();
         }
     }
 

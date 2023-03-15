@@ -47,7 +47,7 @@ namespace WorldTree
     /// <summary>
     /// 单位对象池管理器
     /// </summary>
-    public class UnitPoolManager : Node
+    public class UnitPoolManager : Node, ComponentOf<WorldTreeCore>
     {
         UnitDictionary<Type, UnitPool> pools = new UnitDictionary<Type, UnitPool>();
         /// <summary>
@@ -111,7 +111,7 @@ namespace WorldTree
                 pool.Branch = Branch;
                 pool.Type = pool.GetType();
                 pools.Add(type, pool);
-                this.AddChildren( pool);
+                this.AddChildren(pool);
             }
 
             return pool;

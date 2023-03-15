@@ -13,6 +13,27 @@ using System;
 namespace WorldTree
 {
     /// <summary>
+    /// 组件：无限制
+    /// </summary>
+    public interface ComponentOfNode { }
+    /// <summary>
+    /// 组件：父节点限制
+    /// </summary>
+    /// <typeparam name="T">父节点类型</typeparam>
+    public interface ComponentOf<T> { }
+
+    /// <summary>
+    /// 节点：无限制
+    /// </summary>
+    public interface ChildOfNode { }
+    /// <summary>
+    /// 节点：父节点限制
+    /// </summary>
+    /// <typeparam name="T">父节点类型</typeparam>
+    public interface ChildOf<T> { }
+
+
+    /// <summary>
     /// 监听器状态
     /// </summary>
     public enum ListenerState

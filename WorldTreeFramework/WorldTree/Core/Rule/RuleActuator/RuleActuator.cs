@@ -74,22 +74,13 @@ namespace WorldTree
         {
             return nodeQueue.TryDequeue(out node);
         }
-
-
     }
 
     class RuleActuatorAddRule : AddRule<RuleActuator>
     {
         public override void OnEvent(RuleActuator self)
         {
-
             self.AddComponent(out self.nodeQueue);
-
-            //if (self.thisPool != null)
-            //{
-            //    self.AddComponent(out self.nodeQueue);
-            //}
-
         }
     }
 }

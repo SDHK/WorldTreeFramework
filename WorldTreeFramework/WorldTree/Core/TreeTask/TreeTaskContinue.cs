@@ -14,7 +14,8 @@ namespace WorldTree
     /// <summary>
     /// 异步任务继续执行器
     /// </summary>
-    public class TreeTaskContinue : Node { }
+    public class TreeTaskContinue : Node, ComponentOf<TreeTaskBase>
+    { }
 
     class TreeTaskContinueEnableRule : EnableRule<TreeTaskContinue>
     {

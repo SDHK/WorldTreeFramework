@@ -219,7 +219,6 @@ namespace WorldTree
 
         }
 
-
         public void Remove(INode entity)
         {
             entity.SetActive(false);//激活标记变更

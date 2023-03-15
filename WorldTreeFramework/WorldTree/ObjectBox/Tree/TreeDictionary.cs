@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 树字典泛型类
     /// </summary>
-    public class TreeDictionary<K, V> : Dictionary<K, V>, INode
+    public class TreeDictionary<K, V> : Dictionary<K, V>, INode, ComponentOfNode
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }
@@ -72,7 +72,7 @@ namespace WorldTree
         /// </summary>
         /// <remarks>值为实体，则挂为实体字典子节点</remarks>
         public static V GetValueEntity<K, V>(this TreeDictionary<K, V> self, K key)
-            where V : class,INode
+            where V : class, INode
         {
             if (!self.TryGetValue(key, out V value))
             {

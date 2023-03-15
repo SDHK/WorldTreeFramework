@@ -20,7 +20,7 @@ namespace WorldTree
         /// </summary>
         public static GameObjectPoolManager GamePoolManager(this INode self)
         {
-            return self.Root.AddComponent<GameObjectPoolManager>();
+            return self.Root.AddComponent(out GameObjectPoolManager _);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace WorldTree
         /// </summary>
         public static GameObject PoolGet(this INode self, GameObject prefab)
         {
-            return self.Root.AddComponent<GameObjectPoolManager>().Get(prefab);
+            return self.Root.AddComponent(out GameObjectPoolManager _).Get(prefab);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace WorldTree
         /// </summary>
         public static void PoolRecycle(this INode self, GameObject prefab, GameObject obj)
         {
-            self.Root.AddComponent<GameObjectPoolManager>().Recycle(prefab, obj);
+            self.Root.AddComponent(out GameObjectPoolManager _).Recycle(prefab, obj);
         }
     }
 
@@ -44,7 +44,7 @@ namespace WorldTree
     /// <summary>
     /// 游戏对象池管理器
     /// </summary>
-    public class GameObjectPoolManager : Node
+    public class GameObjectPoolManager : Node, ComponentOf<WorldTreeRoot>
     {
         UnitDictionary<GameObject, GameObjectPool> pools = new UnitDictionary<GameObject, GameObjectPool>();
 

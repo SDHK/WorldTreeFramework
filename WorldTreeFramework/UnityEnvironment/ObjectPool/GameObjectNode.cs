@@ -18,7 +18,7 @@ namespace WorldTree
     /// <summary>
     /// 游戏物体实体
     /// </summary>
-    public class GameObjectNode : Node
+    public class GameObjectNode : Node, ComponentOfNode
     {
         public GameObjectPool pool;
 
@@ -27,7 +27,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return gameObject? "GameObjectNode : " + gameObject.name: "GameObjectNode : ";
+            return gameObject ? "GameObjectNode : " + gameObject.name : "GameObjectNode : ";
         }
 
         /// <summary>

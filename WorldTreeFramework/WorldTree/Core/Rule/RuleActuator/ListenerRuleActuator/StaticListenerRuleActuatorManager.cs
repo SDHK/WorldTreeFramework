@@ -50,7 +50,7 @@ namespace WorldTree
     /// <summary>
     /// 静态监听器执行器管理器
     /// </summary>
-    public class StaticListenerRuleActuatorManager : Node
+    public class StaticListenerRuleActuatorManager : Node, ComponentOf<WorldTreeCore>
     {
         /// <summary>
         /// 目标类型 法则执行器字典

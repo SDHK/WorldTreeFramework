@@ -9,30 +9,30 @@ namespace WorldTree
         /// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
         /// </summary>
         public static async TreeTask<T> AddGameObjectNode<T>(this INode self)
-        where T : class,INode
+        where T : class, INode, ComponentOfNode
         {
             GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
-            return self.AddChildren<GameObjectNode>().Instantiate(prefab).AddComponent<T>();
+            return self.AddChildren(out GameObjectNode _).Instantiate(prefab).AddComponent(out T _);
         }
 
         /// <summary>
         /// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
         /// </summary>
         public static async TreeTask<T> AddGameObjectNode<T>(this INode self, Transform parent)
-        where T : class,INode
+        where T : class, INode, ComponentOfNode
         {
             GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
-            return self.AddChildren<GameObjectNode>().Instantiate(prefab, parent).AddComponent<T>();
+            return self.AddChildren(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
         }
 
         /// <summary>
         /// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
         /// </summary>
         public static async TreeTask<T> AddGameObjectNode<T>(this INode self, GameObjectNode parent)
-        where T : class,INode
+        where T : class, INode, ComponentOfNode
         {
             GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
-            return self.AddChildren<GameObjectNode>().Instantiate(prefab, parent).AddComponent<T>();
+            return self.AddChildren(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
         }
     }
 }

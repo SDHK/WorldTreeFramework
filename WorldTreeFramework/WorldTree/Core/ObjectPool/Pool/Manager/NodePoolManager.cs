@@ -50,7 +50,7 @@ namespace WorldTree
     /// <summary>
     /// 节点对象池管理器
     /// </summary>
-    public class NodePoolManager : Node
+    public class NodePoolManager : Node, ComponentOf<WorldTreeCore>
     {
 
         public UnitDictionary<Type, NodePool> pools = new UnitDictionary<Type, NodePool>();

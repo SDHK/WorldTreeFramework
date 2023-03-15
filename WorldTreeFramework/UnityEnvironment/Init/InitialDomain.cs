@@ -37,6 +37,8 @@ namespace WorldTree
 
 
     //多态测试
+
+
     public class NodeAddRule : AddRule<Node>
     {
         public override void OnEvent(Node self)
@@ -69,7 +71,7 @@ namespace WorldTree
     /// <summary>
     /// 初始域
     /// </summary>
-    public class InitialDomain : Node
+    public class InitialDomain : Node, ComponentOfNode
     {
 
         public float f = 0;
@@ -100,7 +102,6 @@ namespace WorldTree
                 Debug.Log(baseType.Name);
             }
 
-
             using (await self.AsyncLock(0))
             {
                 await self.AsyncDelay(3);
@@ -130,17 +131,17 @@ namespace WorldTree
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                self.AddComponent<TreeNode>().Test().Coroutine();
+                self.AddComponent(out TreeNode _).Test().Coroutine();
             }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
-                self.AddComponent<TreeNode>().SetActive(false);
+                self.AddComponent(out TreeNode _).SetActive(false);
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                self.AddComponent<TreeNode>().SetActive(true);
+                self.AddComponent(out TreeNode _).SetActive(true);
             }
 
             if (Input.GetKeyDown(KeyCode.R))

@@ -46,9 +46,9 @@ namespace WorldTree
         public static RuleActuator GetGlobalNodeRuleActuator<T>(this INode self)
         where T : IRule
         {
-            RuleActuator ruleActuator = self.Root.AddComponent<RuleActuatorGroup>().GetActuator<T>();
-            ruleActuator.nodeQueue.AddComponent<NodeAddGlobalListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
-            ruleActuator.nodeQueue.AddComponent<NodeRemoveGlobalListener>().ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
+            var ruleActuator = self.Root.AddComponent(out RuleActuatorGroup _).GetActuator<T>();
+            ruleActuator.nodeQueue.AddComponent(out NodeAddGlobalListener _).ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
+            ruleActuator.nodeQueue.AddComponent(out NodeRemoveGlobalListener _).ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
             return ruleActuator;
         }
     }

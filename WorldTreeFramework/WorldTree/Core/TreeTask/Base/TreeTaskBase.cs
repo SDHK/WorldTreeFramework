@@ -46,7 +46,7 @@ namespace WorldTree
             }
             else
             {
-                this.AddComponent<TreeTaskContinue>();
+                this.AddComponent(out TreeTaskContinue _);
             }
         }
 

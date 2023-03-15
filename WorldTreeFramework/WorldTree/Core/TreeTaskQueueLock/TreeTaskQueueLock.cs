@@ -18,14 +18,14 @@ namespace WorldTree
         /// <remarks>按照队列顺序执行异步任务</remarks>
         public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this INode self, long key)
         {
-            return self.Root.AddComponent<TreeTaskQueueLock>().Lock(self, key);
+            return self.Root.AddComponent(out TreeTaskQueueLock _).Lock(self, key);
         }
     }
 
     /// <summary>
     /// 异步任务队列锁
     /// </summary>
-    public class TreeTaskQueueLock : Node
+    public class TreeTaskQueueLock : Node ,ComponentOf<WorldTreeRoot>
     {
         public TreeDictionary<long, DynamicNodeQueue> nodeQueueDictitonary;
 
@@ -41,7 +41,7 @@ namespace WorldTree
                 TaskQueue = nodeQueueDictitonary.AddChildren<DynamicNodeQueue>();
 
                 //添加 任务队列锁 任务移除 的 全局监听器。
-                TaskQueue.AddComponent<TreeTaskQueueLockRemoveGlobalListener>();
+                TaskQueue.AddComponent(out TreeTaskQueueLockRemoveGlobalListener _);
 
                 //动态节点队列添加进字典
                 nodeQueueDictitonary.Add(key, TaskQueue);

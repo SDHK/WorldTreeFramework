@@ -42,7 +42,7 @@ namespace WorldTree
             fixedUpdate = core.GetGlobalNodeRuleActuator<IFixedUpdateRule>();
             //onGUI = core.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
 
-            core.Root.AddComponent<InitialDomain>();
+            core.Root.AddComponent(out InitialDomain _);
         }
 
         private void Update()

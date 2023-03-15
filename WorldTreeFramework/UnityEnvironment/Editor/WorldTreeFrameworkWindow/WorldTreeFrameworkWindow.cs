@@ -46,12 +46,12 @@ namespace EditorTool
     {
         public override void OnEvent(WorldTreeFrameworkWindow self)
         {
-            self.AddComponent<EditorGUIWindow>();
+            self.AddComponent(out EditorGUIWindow _);
             self.enable = self.GetGlobalNodeRuleActuator<IEnableRule>();
             self.update = self.GetGlobalNodeRuleActuator<IUpdateRule>();
             self.disable = self.GetGlobalNodeRuleActuator<IDisableRule>();
             self.onGUI = self.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
-            self.AddComponent<EditorHomePage>();
+            self.AddComponent(out EditorHomePage _);
         }
     }
     class WorldTreeFrameworkWindowGUIDrawSystem : GUIDrawSystem<WorldTreeFrameworkWindow>

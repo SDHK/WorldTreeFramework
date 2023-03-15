@@ -7,7 +7,7 @@ using WorldTree.Internal;
 
 
 
-public class TreeNode : Node
+public class TreeNode : Node, ComponentOfNode
 {
 
     public static bool bit = true;
