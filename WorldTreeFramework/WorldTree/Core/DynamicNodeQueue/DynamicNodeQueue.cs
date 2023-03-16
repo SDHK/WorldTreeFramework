@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 动态节点队列
     /// </summary>
-    public class DynamicNodeQueue : Node, ComponentOfNode
+    public class DynamicNodeQueue : Node, ComponentOfNode,ChildOfNode
     {
         /// <summary>
         /// 节点id队列
@@ -184,9 +184,9 @@ namespace WorldTree
     {
         public override void OnEvent(DynamicNodeQueue self)
         {
-            self.AddChildren(out self.idQueue);
-            self.AddChildren(out self.removeIdDictionary);
-            self.AddChildren(out self.nodeDictionary);
+            self.AddChild(out self.idQueue);
+            self.AddChild(out self.removeIdDictionary);
+            self.AddChild(out self.nodeDictionary);
             //self.PoolGet(out self.idQueue);
             //self.PoolGet(out self.removeIdDictionary);
             //self.PoolGet(out self.nodeDictionary);

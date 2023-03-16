@@ -12,7 +12,7 @@ namespace WorldTree
         where T : class, INode, ComponentOfNode
         {
             GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
-            return self.AddChildren(out GameObjectNode _).Instantiate(prefab).AddComponent(out T _);
+            return self.AddChild(out GameObjectNode _).Instantiate(prefab).AddComponent(out T _);
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace WorldTree
         where T : class, INode, ComponentOfNode
         {
             GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
-            return self.AddChildren(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
+            return self.AddChild(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace WorldTree
         where T : class, INode, ComponentOfNode
         {
             GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
-            return self.AddChildren(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
+            return self.AddChild(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace WorldTree
     /// <summary>
     /// 单位对象池
     /// </summary>
-    public class UnitPool : GenericPool<IUnitPoolEventItem>
+    public class UnitPool : GenericPool<IUnitPoolEventItem>, ChildOf<UnitPoolManager>
     {
         public UnitPool(Type type) : base()
         {

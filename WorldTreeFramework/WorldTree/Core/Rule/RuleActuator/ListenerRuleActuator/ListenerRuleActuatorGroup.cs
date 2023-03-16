@@ -17,6 +17,8 @@ namespace WorldTree
     /// 监听法则执行器集合
     /// </summary>
     public class ListenerRuleActuatorGroup : Node
+        , ChildOf<DynamicListenerRuleActuatorManager>
+        , ChildOf<StaticListenerRuleActuatorManager>
     {
         /// <summary>
         /// 目标类型
@@ -41,20 +43,7 @@ namespace WorldTree
         {
             if (!actuatorDictionary.TryGetValue(listenerRuleType, out var actuator))
             {
-                World.Log(listenerRuleType);
-                actuator = this.AddChildren<RuleActuator>();
-                actuatorDictionary.Add(listenerRuleType, actuator);
-
-                //actuator = new RuleActuator();
-                //actuator.nodeQueue = new DynamicNodeQueue();
-                //actuator.nodeQueue.idQueue = new UnitQueue<long>();
-                //actuator.nodeQueue.removeIdDictionary = new UnitDictionary<long, int>();
-                //actuator.nodeQueue.nodeDictionary = new UnitDictionary<long, INode>();
-
-                //actuator.Id = Core.IdManager.GetId();
-                //actuator.Core = Core;
-                //actuatorDictionary.Add(listenerRuleType, actuator);
-                //this.AddChildren(actuator);
+                actuatorDictionary.Add(listenerRuleType, this.AddChild(out actuator));
             }
             return actuator;
         }

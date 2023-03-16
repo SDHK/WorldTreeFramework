@@ -1,10 +1,9 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/3/3 10:55
+* 日期： 2023/3/3 10:58
 
-* 描述： 树泛型栈
+* 描述： 树泛型HashSet
 
 */
 
@@ -14,9 +13,9 @@ using System.Collections.Generic;
 namespace WorldTree
 {
     /// <summary>
-    /// 实体泛型栈
+    /// 树泛型HashSet
     /// </summary>
-    public class TreeStack<T> : Stack<T>, INode
+    public class TreeHashSet<T> : HashSet<T>,INode, ChildOfNode
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }
@@ -56,6 +55,7 @@ namespace WorldTree
         {
             this.DisposeSelf();
         }
+
         public virtual void OnDispose()
         {
             Clear();

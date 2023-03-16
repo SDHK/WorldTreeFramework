@@ -49,7 +49,7 @@ namespace WorldTree
     {
         public override void OnEvent(AddressablesManager self)
         {
-            self.assets = self.AddChildren<TreeDictionary<string, Object>>();
+           self.AddChild(out self.assets);
         }
     }
 

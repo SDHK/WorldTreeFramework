@@ -133,7 +133,7 @@ namespace WorldTree
         //public static RuleActuator GetTraversalPreorderSystemBroadcast<LR>(this INode self)
         //   where LR : ISystem
         //{
-        //    RuleActuator nodeQueue = self.AddChildren<RuleActuator, Type>(typeof(LR));
+        //    RuleActuator nodeQueue = self.AddChild<RuleActuator, Type>(typeof(LR));
         //    self.TraversalPostorder(nodeQueue.AddEntity);
         //    return nodeQueue;
         //}
@@ -144,7 +144,7 @@ namespace WorldTree
         //public static RuleActuator GetTraversalLevelSystemBroadcast<LR>(this INode self)
         //  where LR : ISystem
         //{
-        //    RuleActuator nodeQueue = self.AddChildren<RuleActuator, Type>(typeof(LR));
+        //    RuleActuator nodeQueue = self.AddChild<RuleActuator, Type>(typeof(LR));
         //    self.TraversalLevel(nodeQueue.AddEntity);
         //    return nodeQueue;
         //}
@@ -154,7 +154,7 @@ namespace WorldTree
         //public static RuleActuator GetTraversalPostorderSystemBroadcast<LR>(this INode self)
         // where LR : ISystem
         //{
-        //    RuleActuator nodeQueue = self.AddChildren<RuleActuator, Type>(typeof(LR));
+        //    RuleActuator nodeQueue = self.AddChild<RuleActuator, Type>(typeof(LR));
         //    self.TraversalPostorder(nodeQueue.AddEntity);
         //    return nodeQueue;
         //}
@@ -168,7 +168,7 @@ namespace WorldTree
         //public static RuleActuator GetTraversalPreorderSystemActuator<LR>(this INode self)
         //   where LR : ISystem
         //{
-        //    RuleActuator systemActuator = self.AddChildren<RuleActuator, Type>(typeof(LR));
+        //    RuleActuator systemActuator = self.AddChild<RuleActuator, Type>(typeof(LR));
         //    self.TraversalPostorder(systemActuator.AddEntity);
         //    return systemActuator;
         //}
@@ -179,7 +179,7 @@ namespace WorldTree
         //public static RuleActuator GetTraversalLevelSystemActuator<LR>(this INode self)
         //  where LR : ISystem
         //{
-        //    RuleActuator systemActuator = self.AddChildren<RuleActuator, Type>(typeof(LR));
+        //    RuleActuator systemActuator = self.AddChild<RuleActuator, Type>(typeof(LR));
         //    self.TraversalLevel(systemActuator.AddEntity);
         //    return systemActuator;
         //}
@@ -190,7 +190,7 @@ namespace WorldTree
         //public static RuleActuator GetTraversalPostorderSystemActuator<LR>(this INode self)
         // where LR : ISystem
         //{
-        //    RuleActuator systemActuator = self.AddChildren<RuleActuator, Type>(typeof(LR));
+        //    RuleActuator systemActuator = self.AddChild<RuleActuator, Type>(typeof(LR));
         //    self.TraversalPostorder(systemActuator.AddEntity);
         //    return systemActuator;
         //}

@@ -71,7 +71,7 @@ namespace WorldTree
         {
             if (!pools.TryGetValue(prefab, out GameObjectPool pool))
             {
-                pool = this.AddChildren<GameObjectPool>();
+                this.AddChild(out pool);
                 pool.SetPrefab(prefab);
                 pools.Add(prefab, pool);
             }

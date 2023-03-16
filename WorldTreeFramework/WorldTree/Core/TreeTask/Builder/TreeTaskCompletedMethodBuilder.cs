@@ -57,7 +57,7 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                task = awaiter.Parent.AddChildren<TreeTaskCompleted>();
+                 awaiter.Parent.AddChild(out task);
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
@@ -69,7 +69,7 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                task = awaiter.Parent.AddChildren<TreeTaskCompleted>();
+                task = awaiter.Parent.AddChild(out task);
             }
             awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
         }

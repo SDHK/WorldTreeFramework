@@ -118,7 +118,7 @@ namespace WorldTree
                 pool.Branch = Branch;
                 pool.Type = pool.GetType();
                 pools.Add(type, pool);
-                this.AddChildren(pool);
+                this.AddChild(pool);
             }
             return pool;
         }

@@ -17,9 +17,7 @@ namespace WorldTree
         /// </summary>
         public static TreeTask AsyncYield(this INode self, int count = 0)
         {
-            TreeTask asyncTask = self.AddChildren<TreeTask>();
-            var counter = asyncTask.AddComponent(out CounterCall _);
-
+            self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter);
             counter.countOut = count;
             counter.callback = asyncTask.SetResult;
             return asyncTask;
@@ -31,8 +29,7 @@ namespace WorldTree
         /// </summary>
         public static TreeTask AsyncDelay(this INode self, float time)
         {
-            TreeTask asyncTask = self.AddChildren<TreeTask>();
-            var timer = asyncTask.AddComponent(out TimerCall _);
+            self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall timer);
             timer.timeOutTime = time;
             timer.callback = asyncTask.SetResult;
             return asyncTask;

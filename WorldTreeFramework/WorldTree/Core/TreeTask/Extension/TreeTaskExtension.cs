@@ -22,14 +22,8 @@ namespace WorldTree
         /// </summary>
         public static TreeTaskCompleted TreeTaskCompleted(this INode self)
         {
-            return self.AddChildren<TreeTaskCompleted>();
+            return self.AddChild(out TreeTaskCompleted _);
 
-        }
-
-        public static TreeTask AsyncTaskQueue(this INode self)
-        {
-
-            return self.AddChildren<TreeTask>();
         }
     }
 }

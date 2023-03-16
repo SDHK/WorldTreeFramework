@@ -20,7 +20,7 @@ namespace WorldTree
     /// <summary>
     /// 世界法则管理器
     /// </summary>
-    public class RuleManager : Node
+    public class RuleManager : Node, ComponentOf<WorldTreeCore>
     {
         /// <summary>
         /// 动态监听器节点类型哈希名单

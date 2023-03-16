@@ -63,7 +63,7 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                task = awaiter.Parent.AddChildren<TreeTask>();
+                awaiter.Parent.AddChild(out task);
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
@@ -74,7 +74,7 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                task = awaiter.Parent.AddChildren<TreeTask>();
+                awaiter.Parent.AddChild(out task);
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
@@ -139,7 +139,7 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                task = awaiter.Parent.AddChildren<TreeTask<T>>();
+                awaiter.Parent.AddChild(out task);
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
@@ -150,7 +150,7 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                task = awaiter.Parent.AddChildren<TreeTask<T>>();
+                awaiter.Parent.AddChild(out task);
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }

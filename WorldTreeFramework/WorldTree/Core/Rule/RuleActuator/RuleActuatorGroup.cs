@@ -25,7 +25,7 @@ namespace WorldTree
         {
             if (!ruleActuatorDictionary.TryGetValue(type, out var ruleActuator))
             {
-                this.AddChildren(out ruleActuator).Load(type);
+                this.AddChild(out ruleActuator).Load(type);
                 ruleActuatorDictionary.Add(type, ruleActuator);
             }
             return ruleActuator;

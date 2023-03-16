@@ -38,7 +38,7 @@ namespace WorldTree
     /// <summary>
     /// 实体对象池
     /// </summary>
-    public class NodePool : GenericPool<INode>
+    public class NodePool : GenericPool<INode>, ChildOf<NodePoolManager>
     {
         public List<IRule> newRule;
         public List<IRule> getRule;

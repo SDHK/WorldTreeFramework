@@ -2,9 +2,9 @@
 /****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/3/3 10:53
+* 日期： 2023/2/10 12:00
 
-* 描述： 树泛型列表
+* 描述： 树字典
 
 */
 
@@ -14,9 +14,9 @@ using System.Collections.Generic;
 namespace WorldTree
 {
     /// <summary>
-    /// 树泛型列表
+    /// 树字典泛型类
     /// </summary>
-    public class TreeList<T> : List<T>, INode
+    public class TreeDictionary<K, V> : Dictionary<K, V>, INode, ComponentOfNode, ChildOfNode
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }
@@ -52,16 +52,16 @@ namespace WorldTree
         public Type listenerTarget { get; set; }
         #endregion
 
+
         public void Dispose()
         {
             this.DisposeSelf();
         }
+
         public virtual void OnDispose()
         {
             Clear();
             thisPool?.Recycle(this);
         }
     }
-
-
 }

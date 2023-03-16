@@ -2,9 +2,9 @@
 /****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/2/10 12:00
+* 日期： 2023/3/3 10:55
 
-* 描述： 树字典
+* 描述： 树泛型栈
 
 */
 
@@ -14,9 +14,9 @@ using System.Collections.Generic;
 namespace WorldTree
 {
     /// <summary>
-    /// 树字典泛型类
+    /// 实体泛型栈
     /// </summary>
-    public class TreeDictionary<K, V> : Dictionary<K, V>, INode, ComponentOfNode
+    public class TreeStack<T> : Stack<T>, INode, ChildOfNode
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }
@@ -52,39 +52,14 @@ namespace WorldTree
         public Type listenerTarget { get; set; }
         #endregion
 
-
         public void Dispose()
         {
             this.DisposeSelf();
         }
-
         public virtual void OnDispose()
         {
             Clear();
             thisPool?.Recycle(this);
         }
     }
-
-    public static class EntityDictionaryStaticRule
-    {
-        /// <summary>
-        /// 获取或新建值
-        /// </summary>
-        /// <remarks>值为实体，则挂为实体字典子节点</remarks>
-        public static V GetValueEntity<K, V>(this TreeDictionary<K, V> self, K key)
-            where V : class, INode
-        {
-            if (!self.TryGetValue(key, out V value))
-            {
-                value = self.AddChildren<V>();
-                self.Add(key, value);
-            }
-            return value;
-        }
-    }
-
-
-
-
-
 }

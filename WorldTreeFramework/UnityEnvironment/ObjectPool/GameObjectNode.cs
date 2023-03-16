@@ -18,7 +18,7 @@ namespace WorldTree
     /// <summary>
     /// 游戏物体实体
     /// </summary>
-    public class GameObjectNode : Node, ComponentOfNode
+    public class GameObjectNode : Node, ComponentOfNode,ChildOfNode
     {
         public GameObjectPool pool;
 

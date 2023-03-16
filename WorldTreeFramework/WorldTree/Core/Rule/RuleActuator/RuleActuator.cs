@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 法则执行器
     /// </summary>
-    public partial class RuleActuator : Node
+    public partial class RuleActuator : Node,ChildOfNode
     {
         /// <summary>
         /// 法则集合

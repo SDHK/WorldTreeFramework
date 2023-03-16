@@ -73,11 +73,7 @@ namespace WorldTree
     /// </summary>
     public class InitialDomain : Node, ComponentOfNode
     {
-
         public float f = 0;
-
-        public ValueBinder<float> valueBinder;
-
     }
 
     class _InitialDomain : AddRule<InitialDomain>
