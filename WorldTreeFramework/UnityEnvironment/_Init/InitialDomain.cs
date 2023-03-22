@@ -73,7 +73,7 @@ namespace WorldTree
     /// </summary>
     public class InitialDomain : Node, ComponentOfNode
     {
-        public float f = 0;
+        public TreeInt a;
     }
 
     class _InitialDomain : AddRule<InitialDomain>
@@ -82,6 +82,9 @@ namespace WorldTree
         public override async void OnEvent(InitialDomain self)
         {
             self.Branch = self;
+
+            self.AddChild(out self.a);
+
 
             World.Log("初始域启动！！");
 
@@ -101,9 +104,9 @@ namespace WorldTree
             using (await self.AsyncLock(0))
             {
                 await self.AsyncDelay(3);
-                self.f++;
+                self.a.Value++;
             }
-            World.Log($"初始域!:{self.f}");
+            World.Log($"初始域!:{self.a.Value}");
 
         }
 
@@ -119,8 +122,8 @@ namespace WorldTree
                 using (await self.AsyncLock(self.Id))
                 {
                     await self.AsyncDelay(3);
-                    self.f++;
-                    World.Log($"初始域:{self.f}");
+                    self.a.Value++;
+                    World.Log($"初始域:{self.a.Value}");
                 }
 
             }
