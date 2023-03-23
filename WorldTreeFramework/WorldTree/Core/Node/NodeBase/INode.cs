@@ -17,14 +17,14 @@ namespace WorldTree
     /// 组件：父节点限制
     /// </summary>
     /// <typeparam name="T">父节点类型</typeparam>
-    public interface ComponentOf<in T> { }
+    public interface ComponentOf<in T> where T : class, INode { }
 
 
     /// <summary>
     /// 节点：父节点限制
     /// </summary>
     /// <typeparam name="T">父节点类型</typeparam>
-    public interface ChildOf<in T> { }
+    public interface ChildOf<in T> where T : class, INode { }
 
 
     /// <summary>
