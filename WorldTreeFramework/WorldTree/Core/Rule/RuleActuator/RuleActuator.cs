@@ -6,6 +6,7 @@
 * 描述： 法则执行器
 * 
 * 用于执行拥有指定法则的节点
+* 可用于代替委托事件
 
 */
 
@@ -37,7 +38,7 @@ namespace WorldTree
         public int Count => nodeQueue.Count;
 
         /// <summary>
-        /// 添加实体
+        /// 添加节点
         /// </summary>
         public void Enqueue(INode node)
         {

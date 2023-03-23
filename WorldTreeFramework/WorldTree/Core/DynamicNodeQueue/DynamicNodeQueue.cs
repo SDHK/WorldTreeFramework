@@ -4,8 +4,12 @@
 * 日期： 2023/3/3 16:21
 
 * 描述： 动态节点队列
+* 
+* 主要为了可以按照顺序遍历的同时可随机移除内容
 
 */
+
+using System.Collections;
 
 namespace WorldTree
 {
@@ -27,6 +31,11 @@ namespace WorldTree
         public TreeDictionary<long, int> removeIdDictionary;
 
         /// <summary>
+        /// 总移除次数
+        /// </summary>
+        public int removeIdCount;
+
+        /// <summary>
         /// 节点名单
         /// </summary>
         public TreeDictionary<long, INode> nodeDictionary;
@@ -35,7 +44,9 @@ namespace WorldTree
         /// <summary>
         /// 当前队列数量
         /// </summary>
-        public int Count => idQueue.Count;
+        public int Count => idQueue.Count - removeIdCount;
+
+     
 
         /// <summary>
         /// 节点入列
@@ -60,6 +71,7 @@ namespace WorldTree
                 if (removeIdDictionary.TryGetValue(node.Id, out var count))
                 {
                     removeIdDictionary[node.Id] = count + 1;
+                    removeIdCount++;
                 }
                 else
                 {
@@ -76,6 +88,7 @@ namespace WorldTree
             nodeDictionary.Clear();
             removeIdDictionary.Clear();
             idQueue.Clear();
+            removeIdCount = 0;
         }
 
 
@@ -108,6 +121,7 @@ namespace WorldTree
                     {
                         //回收次数抵消
                         removeIdDictionary[id] = --count;
+                        removeIdCount--;
                         //次数为0时删除id
                         if (count == 0) removeIdDictionary.Remove(id);
                         //移除这个id
@@ -155,6 +169,7 @@ namespace WorldTree
                 {
                     //回收次数抵消
                     removeIdDictionary[id] = --count;
+                    removeIdCount--;
 
                     //次数为0时删除id
                     if (count == 0) removeIdDictionary.Remove(id);
@@ -187,9 +202,6 @@ namespace WorldTree
             self.AddChild(out self.idQueue);
             self.AddChild(out self.removeIdDictionary);
             self.AddChild(out self.nodeDictionary);
-            //self.PoolGet(out self.idQueue);
-            //self.PoolGet(out self.removeIdDictionary);
-            //self.PoolGet(out self.nodeDictionary);
         }
     }
 
@@ -200,6 +212,7 @@ namespace WorldTree
             self.idQueue.Dispose();
             self.removeIdDictionary.Dispose();
             self.nodeDictionary.Dispose();
+            self.removeIdCount = 0;
         }
     }
 }

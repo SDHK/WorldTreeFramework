@@ -17,8 +17,8 @@ namespace WorldTree
     /// 法则集合
     /// </summary>
     /// <remarks>
-    /// <para>Key是分支类型，Value是分支的法则列表</para>
-    /// <para>法则集合储存了 不同分支 对应的 同种法则</para>
+    /// <para>Key是类型，Value是类型的法则列表</para>
+    /// <para>法则集合储存了 不同类型 对应的 同种法则</para>
     /// </remarks>
     public class RuleGroup : Dictionary<Type, List<IRule>>
     {
