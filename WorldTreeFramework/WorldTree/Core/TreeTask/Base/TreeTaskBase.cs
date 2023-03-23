@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 树异步任务基类
     /// </summary>
-    public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion
+    public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion, ChildOf<INode>
     {
         /// <summary>
         /// 是否完成

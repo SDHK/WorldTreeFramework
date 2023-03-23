@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 树字典泛型类
     /// </summary>
-    public class TreeDictionary<K, V> : Dictionary<K, V>, INode, ComponentOfNode, ChildOfNode
+    public class TreeDictionary<K, V> : Dictionary<K, V>, INode, ComponentOf<INode>, ChildOf<INode>
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }

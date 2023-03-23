@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/6/27 9:47
@@ -20,7 +19,7 @@ namespace WorldTree
     /// </summary>
     /// <remarks>因为继承Node所以可以挂在树上</remarks>
     [AsyncMethodBuilder(typeof(Internal.TreeTaskMethodBuilder))]
-    public class TreeTask : TreeTaskBase, ChildOfNode
+    public class TreeTask : TreeTaskBase
     {
         public TreeTask GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
@@ -33,7 +32,9 @@ namespace WorldTree
             SetResult = SetCompleted;
         }
 
-        public void GetResult() { }
+        public void GetResult()
+        {
+        }
 
         [DebuggerHidden]
         private async TreeTaskVoid InnerCoroutine()
@@ -51,12 +52,11 @@ namespace WorldTree
     }
 
 
-
     /// <summary>
     /// 泛型异步任务
     /// </summary>
     [AsyncMethodBuilder(typeof(Internal.AsyncTaskMethodBuilder<>))]
-    public class TreeTask<T> : TreeTaskBase, ChildOfNode
+    public class TreeTask<T> : TreeTaskBase
     {
         public TreeTask<T> GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
@@ -81,7 +81,6 @@ namespace WorldTree
         }
 
 
-
         [DebuggerHidden]
         private async TreeTaskVoid InnerCoroutine()
         {
@@ -96,5 +95,4 @@ namespace WorldTree
             InnerCoroutine().Coroutine();
         }
     }
-
 }

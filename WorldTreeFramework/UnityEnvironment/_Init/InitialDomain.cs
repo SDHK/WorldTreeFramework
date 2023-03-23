@@ -71,7 +71,7 @@ namespace WorldTree
     /// <summary>
     /// 初始域
     /// </summary>
-    public class InitialDomain : Node, ComponentOfNode
+    public class InitialDomain : Node, ComponentOf<INode>
     {
         public TreeInt a;
     }

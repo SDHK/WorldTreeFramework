@@ -21,7 +21,7 @@ namespace WorldTree.Internal
     /// 异步任务完成类
     /// </summary>
     [AsyncMethodBuilder(typeof(TreeTaskCompletedMethodBuilder))]
-    public class TreeTaskCompleted : TreeTaskBase, ChildOfNode
+    public class TreeTaskCompleted : TreeTaskBase, ChildOf<INode>
     {
         public TreeTaskCompleted GetAwaiter() => this;
         public override bool IsCompleted { get; set; }

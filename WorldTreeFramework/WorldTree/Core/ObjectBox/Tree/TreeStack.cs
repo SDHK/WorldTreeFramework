@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 实体泛型栈
     /// </summary>
-    public class TreeStack<T> : Stack<T>, INode, ChildOfNode
+    public class TreeStack<T> : Stack<T>, INode, ChildOf<INode>
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }

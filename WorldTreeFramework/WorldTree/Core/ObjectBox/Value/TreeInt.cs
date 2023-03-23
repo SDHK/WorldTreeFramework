@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 树节点值类型基类
     /// </summary>
-    public abstract class TreeValue : Node, ChildOfNode
+    public abstract class TreeValue : Node, ChildOf<INode>
     {
 
     }

@@ -12,25 +12,19 @@ using System;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 组件：无限制
-    /// </summary>
-    public interface ComponentOfNode { }
+
     /// <summary>
     /// 组件：父节点限制
     /// </summary>
     /// <typeparam name="T">父节点类型</typeparam>
-    public interface ComponentOf<T> { }
+    public interface ComponentOf<in T> { }
 
-    /// <summary>
-    /// 节点：无限制
-    /// </summary>
-    public interface ChildOfNode { }
+
     /// <summary>
     /// 节点：父节点限制
     /// </summary>
     /// <typeparam name="T">父节点类型</typeparam>
-    public interface ChildOf<T> { }
+    public interface ChildOf<in T> { }
 
 
     /// <summary>
@@ -144,7 +138,7 @@ namespace WorldTree
 
         #region Domains
 
-     
+
 
         /// <summary>
         /// 域节点

@@ -13,7 +13,7 @@ namespace WorldTree
     /// <summary>
     /// 树节点float类型
     /// </summary>
-    public class TreeFloat : Node, ChildOfNode
+    public class TreeFloat : Node, ChildOf<INode>
     {
         /// <summary>
         /// 值
