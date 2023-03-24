@@ -11,15 +11,15 @@ using System;
 
 namespace WorldTree
 {
-    public static class RuleActuatorExtension
+    public static class RuleActuatorRule
     {
 
         /// <summary>
-        /// 执行器初始化填装节点
+        /// 执行器初始化全局填装节点
         /// </summary>
         public static RuleActuator Load<T>(this RuleActuator ruleActuator) where T : IRule => Load(ruleActuator, typeof(T));
         /// <summary>
-        /// 执行器初始化填装节点
+        /// 执行器初始化全局填装节点
         /// </summary>
         public static RuleActuator Load(this RuleActuator ruleActuator, Type ruleType)
         {

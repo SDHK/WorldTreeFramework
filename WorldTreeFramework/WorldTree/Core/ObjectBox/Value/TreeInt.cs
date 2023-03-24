@@ -11,13 +11,16 @@ using System;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 树节点值类型基类
-    /// </summary>
-    public abstract class TreeValue : Node, ChildOf<INode>
-    {
 
-    }
+    /// <summary>
+    /// 树节点Int类型变化绑定规则接口
+    /// </summary>
+    public interface ITreeIntChangeBindRule : ISendRule<int> { }
+
+    /// <summary>
+    /// 树节点Int类型变化绑定规则
+    /// </summary>
+    public abstract class TreeIntChangeBindRule<N> : SendRuleBase<ITreeIntChangeBindRule, N, int> where N : class, INode { }
 
     /// <summary>
     /// 树节点int类型
@@ -29,16 +32,6 @@ namespace WorldTree
         /// </summary>
         private int value;
 
-        /// <summary>
-        /// 法则执行器
-        /// </summary>
-        public RuleActuator ruleActuator;
-
-        /// <summary>
-        /// 全局法则类型
-        /// </summary>
-        public Type RuleType;
-
 
         public int Value
         {
@@ -46,10 +39,10 @@ namespace WorldTree
 
             set
             {
-
                 if (this.value != value)
                 {
                     this.value = value;
+                    ruleActuator.SendRule<ITreeIntChangeBindRule, int>(value);
                 }
             }
         }
@@ -57,10 +50,23 @@ namespace WorldTree
 
     public static class TreeIntStaticRule
     {
+        class TreeIntTreeIntChangeBindRule : TreeIntChangeBindRule<TreeInt>
+        {
+            public override void OnEvent(TreeInt self, int arg1)
+            {
+                self.Value = arg1;
+            }
+        }
+
+
         //public static void SetRule(this TreeInt self)
         //{
 
         //}
+
+
+
+
     }
 
 
