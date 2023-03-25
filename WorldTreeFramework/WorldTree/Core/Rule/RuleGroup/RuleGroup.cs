@@ -13,6 +13,23 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
+
+    /// <summary>
+    /// 法则集合 接口基类
+    /// </summary>
+    public interface IRuleGroup { }
+
+    /// <summary>
+    /// 法则集合 逆变泛型接口
+    /// </summary>
+    /// <typeparam name="T">法则类型</typeparam>
+    /// <remarks>
+    /// <para>主要通过法则类型逆变提示可填写参数</para>
+    /// <para> RuleGroup 是没有泛型反射实例的，所以执行参数可能填错</para>
+    /// </remarks>
+    public interface IRuleGroup<in T> : IRuleGroup where T : IRule { }
+
+
     /// <summary>
     /// 法则集合
     /// </summary>
@@ -20,12 +37,18 @@ namespace WorldTree
     /// <para>Key是类型，Value是类型的法则列表</para>
     /// <para>法则集合储存了 不同类型 对应的 同种法则</para>
     /// </remarks>
-    public class RuleGroup : Dictionary<Type, List<IRule>>
+    public class RuleGroup : Dictionary<Type, List<IRule>>, IRuleGroup<IRule>
     {
         /// <summary>
         /// 法则的类型
         /// </summary>
         public Type RuleType;
     }
+
+
+    public interface IRuleList { }
+    public interface IRuleList<in T> : IRuleList where T : IRule { }
+
+    public class RuleList : List<IRule>, IRuleList<IRule> { }
 
 }

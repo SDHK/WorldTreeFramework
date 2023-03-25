@@ -65,6 +65,26 @@ namespace WorldTree
 
         private void Initialize()
         {
+
+
+            IRuleList<IUpdateRule> a = new RuleList();
+            a.Send1(this, 1f);
+
+            IRuleGroup<IUpdateRule> test = new RuleGroup();
+            test.TrySendTest(this, 1f);
+
+
+            //1.传统填泛型
+            this.TrySendRule<ISendRule<int, float, string>, int, float, string>(1, 2f, "3");
+
+            //2.泛型用参数确定，参数为null
+            this.TrySendRule(default(ISendRule<int, float, string>), 1, 2f, "3");
+
+
+
+            //RuleGroup<IAddRule> a = new RuleGroup();
+            //a.TrySend1(this);
+
             var RuleTypeList = FindTypesIsInterface(typeof(IRule));
             //将按照法则类名进行排序，规范执行顺序
 
@@ -381,7 +401,7 @@ namespace WorldTree
         {
             if (RuleGroupDictionary.TryGetValue(typeof(R), out RuleGroup ruleGroup))
             {
-                if (ruleGroup.TryGetValue(type, out List<IRule> ruleList))
+                if (ruleGroup.TryGetValue(type, out RuleList ruleList))
                 {
                     return ruleList;
                 }
@@ -392,7 +412,7 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public bool TryGetRuleList(Type nodeType, Type ruleType, out List<IRule> ruleList)
+        public bool TryGetRuleList(Type nodeType, Type ruleType, out RuleList ruleList)
         {
             if (RuleGroupDictionary.TryGetValue(ruleType, out RuleGroup ruleGroup))
             {

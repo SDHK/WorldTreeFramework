@@ -14,6 +14,12 @@ namespace WorldTree
     {
         #region Send
 
+        public static bool TrySendRule<R, T1, T2, T3>(this INode self, R r, T1 arg1, T2 arg2, T3 arg3)
+        {
+            return false;
+        }
+
+
         public static bool TrySendRule<R>(this INode self)
         where R : ISendRule
         {

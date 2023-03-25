@@ -17,6 +17,13 @@ namespace WorldTree
 
         #region Send
 
+        public static  bool TrySendTest<T, T1>(this IRuleGroup<T> group, INode node, T1 t1)
+        where T : ISendRule<T1>
+        {
+            return (group as RuleGroup).TrySend(node, t1);
+        }
+
+
         public static bool TrySend(this RuleGroup group, INode node)
         {
             if (group.TryGetValue(node.Type, out List<IRule> ruleList))

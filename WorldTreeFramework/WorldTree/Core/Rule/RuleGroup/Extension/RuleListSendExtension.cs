@@ -16,6 +16,15 @@ namespace WorldTree
     {
         #region Send
 
+
+        public static void Send1<T,T1>(this IRuleList<T> ruleList, INode node,T1 t1)
+            where T : ISendRule<T1>
+        { 
+        
+        
+        }
+
+
         public static void Send(this List<IRule> ruleList, INode node)
         {
             foreach (ISendRule rule in ruleList)
