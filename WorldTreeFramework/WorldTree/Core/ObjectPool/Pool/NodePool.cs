@@ -40,10 +40,10 @@ namespace WorldTree
     /// </summary>
     public class NodePool : GenericPool<INode>, ChildOf<NodePoolManager>
     {
-        public List<IRule> newRule;
-        public List<IRule> getRule;
-        public List<IRule> recycleRule;
-        public List<IRule> destroyRule;
+        public IRuleList<INewRule> newRule;
+        public IRuleList<IGetRule> getRule;
+        public IRuleList<IRecycleRule> recycleRule;
+        public IRuleList<IDestroyRule> destroyRule;
 
         /// <summary>
         /// 引用池

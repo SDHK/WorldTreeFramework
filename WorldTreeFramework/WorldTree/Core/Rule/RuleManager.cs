@@ -305,14 +305,17 @@ namespace WorldTree
         /// <summary>
         /// 获取监听目标法则列表
         /// </summary>
-        public bool TryGetTargetRuleList<LR>(Type targetType, Type listenerType, out List<IRule> ruleList)
+        public bool TryGetTargetRuleList<LR>(Type targetType, Type listenerType, out IRuleList<LR> ruleList)
             where LR : IListenerRule
         {
             if (TargetRuleListenerGroupDictionary.TryGetValue(targetType, out var ruleGroupDictionary))
             {
                 if (ruleGroupDictionary.TryGetValue(typeof(LR), out var ruleGroup))
                 {
-                    return ruleGroup.TryGetValue(listenerType, out ruleList);
+                    if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
+                    {
+                        ruleList = RuleList as IRuleList<LR>;
+                    }
                 }
             }
             ruleList = null;
@@ -339,17 +342,21 @@ namespace WorldTree
         /// <summary>
         /// 获取监听法则
         /// </summary>
-        public bool TryGetListenerRuleList<LR>(Type listenerType, Type targetType, out List<IRule> ruleList)
+        public bool TryGetListenerRuleList<LR>(Type listenerType, Type targetType, out IRuleList<LR> ruleList)
             where LR : IListenerRule
         {
             if (ListenerRuleTargetGroupDictionary.TryGetValue(listenerType, out var ruleGroupDictionary))
             {
                 if (ruleGroupDictionary.TryGetValue(typeof(LR), out var ruleGroup))
                 {
-                    return ruleGroup.TryGetValue(targetType, out ruleList);
+                    if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
+                    {
+                        ruleList = RuleList as IRuleList<LR>;
+                        return true;
+                    }
                 }
             }
-            ruleList = null;
+            ruleList = default;
             return false;
         }
         #endregion
@@ -396,14 +403,14 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public List<IRule> GetRuleList<R>(Type type)
+        public IRuleList<R> GetRuleList<R>(Type type)
          where R : IRule
         {
             if (RuleGroupDictionary.TryGetValue(typeof(R), out RuleGroup ruleGroup))
             {
                 if (ruleGroup.TryGetValue(type, out RuleList ruleList))
                 {
-                    return ruleList;
+                    return ruleList as IRuleList<R>;
                 }
             }
             return null;

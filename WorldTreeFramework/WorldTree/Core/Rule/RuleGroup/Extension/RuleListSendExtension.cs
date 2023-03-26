@@ -17,13 +17,11 @@ namespace WorldTree
         #region Send
 
 
-        public static void Send1<T,T1>(this IRuleList<T> ruleList, INode node,T1 t1)
+        public static void Send1<T, T1>(this IRuleList<T> ruleList, INode node, T1 arg1)
             where T : ISendRule<T1>
-        { 
-        
-        
-        }
+        => (ruleList as RuleList).Send(node, arg1);
 
+        //====
 
         public static void Send(this List<IRule> ruleList, INode node)
         {

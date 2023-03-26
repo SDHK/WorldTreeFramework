@@ -17,7 +17,7 @@ namespace WorldTree
         #region Call
         public static bool TryCall<OutT>(this RuleGroup group, INode node, out OutT outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Call<OutT>(node);
                 return true;
@@ -31,7 +31,7 @@ namespace WorldTree
 
         public static bool TryCall<T1, OutT>(this RuleGroup group, INode node, T1 arg1, out OutT outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Call<T1, OutT>(node, arg1);
                 return true;
@@ -44,7 +44,7 @@ namespace WorldTree
         }
         public static bool TryCall<T1, T2, OutT>(this RuleGroup group, INode node, T1 arg1, T2 arg2, out OutT outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Call<T1, T2, OutT>(node, arg1, arg2);
                 return true;
@@ -58,7 +58,7 @@ namespace WorldTree
 
         public static bool TryCall<T1, T2, T3, OutT>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Call<T1, T2, T3, OutT>(node, arg1, arg2, arg3);
                 return true;
@@ -71,7 +71,7 @@ namespace WorldTree
         }
         public static bool TryCall<T1, T2, T3, T4, OutT>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Call<T1, T2, T3, T4, OutT>(node, arg1, arg2, arg3, arg4);
                 return true;
@@ -85,7 +85,7 @@ namespace WorldTree
 
         public static bool TryCall<T1, T2, T3, T4, T5, OutT>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Call<T1, T2, T3, T4, T5, OutT>(node, arg1, arg2, arg3, arg4, arg5);
                 return true;
@@ -143,7 +143,7 @@ namespace WorldTree
 
         public static bool TryCalls<OutT>(this RuleGroup group, INode node, out UnitList<OutT> outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Calls<OutT>(node);
                 return true;
@@ -156,7 +156,7 @@ namespace WorldTree
         }
         public static bool TryCalls<T1, OutT>(this RuleGroup group, INode node, T1 arg1, out UnitList<OutT> outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Calls<T1, OutT>(node, arg1);
                 return true;
@@ -169,7 +169,7 @@ namespace WorldTree
         }
         public static bool TryCalls<T1, T2, OutT>(this RuleGroup group, INode node, T1 arg1, T2 arg2, out UnitList<OutT> outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Calls<T1, T2, OutT>(node, arg1, arg2);
                 return true;
@@ -183,7 +183,7 @@ namespace WorldTree
 
         public static bool TryCalls<T1, T2, T3, OutT>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Calls<T1, T2, T3, OutT>(node, arg1, arg2, arg3);
                 return true;
@@ -196,7 +196,7 @@ namespace WorldTree
         }
         public static bool TryCalls<T1, T2, T3, T4, OutT>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Calls<T1, T2, T3, T4, OutT>(node, arg1, arg2, arg3, arg4);
                 return true;
@@ -210,7 +210,7 @@ namespace WorldTree
 
         public static bool TryCalls<T1, T2, T3, T4, T5, OutT>(this RuleGroup group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> outT)
         {
-            if (group.TryGetValue(node.Type, out List<IRule> ruleList))
+            if (group.TryGetValue(node.Type, out RuleList ruleList))
             {
                 outT = ruleList.Calls<T1, T2, T3, T4, T5, OutT>(node, arg1, arg2, arg3, arg4, arg5);
                 return true;

@@ -11,13 +11,21 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
+    public interface ICallRuleTest : ICallRule<float> { }
+
     public static class RuleListCallExtension
     {
 
-
         #region Call
 
-        public static OutT Call<OutT>(this List<IRule> ruleList, INode node)
+
+        public static OutT Call<R, OutT>(this IRuleList<R> ruleList, INode node, OutT a)
+            where R : ICallRule<OutT>
+         => (ruleList as RuleList).Call<OutT>(node);
+
+        //=========
+
+        public static OutT Call<OutT>(this RuleList ruleList, INode node)
         {
             OutT outT = default(OutT);
             foreach (ICallRule<OutT> rule in ruleList)

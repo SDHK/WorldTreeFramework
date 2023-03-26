@@ -40,7 +40,7 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public static List<IRule> GetRuleList<R>(this INode self, Type type)
+        public static IRuleList<R> GetRuleList<R>(this INode self, Type type)
         where R : IRule
         {
             return self.Core.RuleManager.GetRuleList<R>(type);
