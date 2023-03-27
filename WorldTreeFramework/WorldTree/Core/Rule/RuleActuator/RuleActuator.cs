@@ -23,7 +23,7 @@ namespace WorldTree
     /// <typeparam name="T">法则类型</typeparam>
     /// <remarks>
     /// <para>主要通过法则类型逆变提示可填写参数</para>
-    /// <para> RuleGroup 是没有泛型反射实例的，所以执行参数可能填错</para>
+    /// <para> RuleActuator 是没有泛型的实例，所以执行参数可能填错</para>
     /// </remarks>
     public interface IRuleActuator<in T> : IRuleActuator where T : IRule { }
 
