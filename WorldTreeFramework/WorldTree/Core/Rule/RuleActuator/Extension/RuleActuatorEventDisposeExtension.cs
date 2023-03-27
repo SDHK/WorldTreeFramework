@@ -9,100 +9,112 @@
 
 namespace WorldTree
 {
-    public partial class RuleActuator
+    public static class RuleActuatorSendDisposeRule
     {
 
-        public void SendDispose()
+        public static void SendDispose<R>(this IRuleActuator<R> Self)
+            where R : ISendRule
         {
-            if (IsActive)
+            RuleActuator self = (RuleActuator)Self;
+            if (self.ruleGroup != null && self.IsActive)
             {
-                int length = nodeQueue.Count;
+                int length = self.nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out INode node))
+                    if (self.nodeQueue.TryDequeue(out INode node))
                     {
-                        ruleGroup.Send(node);
+                        ((IRuleGroup<R>)self.ruleGroup).Send(node);
                     }
                 }
-                Dispose();
+                self.Dispose();
             }
         }
 
-        public void SendDispose<T1>(T1 arg1)
+        public static void SendDispose<R, T1>(this IRuleActuator<R> Self,T1 arg1)
+            where R : ISendRule<T1>
         {
-            if (IsActive)
+            RuleActuator self = (RuleActuator)Self;
+            if (self.ruleGroup != null && self.IsActive)
             {
-                int length = nodeQueue.Count;
+                int length = self.nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out INode node))
+                    if (self.nodeQueue.TryDequeue(out INode node))
                     {
-                        ruleGroup.Send(node, arg1);
+                        ((IRuleGroup<R>)self.ruleGroup).Send(node, arg1);
                     }
                 }
-                Dispose();
+                self.Dispose();
             }
         }
 
 
-        public void SendDispose<T1, T2>(T1 arg1, T2 arg2)
+        public static void SendDispose<R, T1, T2>(this IRuleActuator<R> Self, T1 arg1, T2 arg2)
+            where R : ISendRule<T1, T2>
         {
-            if (IsActive)
+            RuleActuator self = (RuleActuator)Self;
+            if (self.ruleGroup != null && self.IsActive)
             {
-                int length = nodeQueue.Count;
+                int length = self.nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out INode node))
+                    if (self.nodeQueue.TryDequeue(out INode node))
                     {
-                        ruleGroup.Send(node, arg1, arg2);
+                        ((IRuleGroup<R>)self.ruleGroup).Send(node, arg1, arg2);
                     }
                 }
-                Dispose();
+                self.Dispose();
             }
         }
-        public void SendDispose<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3)
+        public static void SendDispose<R, T1, T2, T3>(this IRuleActuator<R> Self, T1 arg1, T2 arg2, T3 arg3)
+            where R : ISendRule<T1, T2, T3>
         {
-            if (IsActive)
+            RuleActuator self = (RuleActuator)Self;
+            if (self.ruleGroup != null && self.IsActive)
             {
-                int length = nodeQueue.Count;
+                int length = self.nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out INode node))
+                    if (self.nodeQueue.TryDequeue(out INode node))
                     {
-                        ruleGroup.Send(node, arg1, arg2, arg3);
+                        ((IRuleGroup<R>)self.ruleGroup).Send(node, arg1, arg2, arg3);
                     }
                 }
-                Dispose();
+                self.Dispose();
             }
         }
-        public void SendDispose<T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static void SendDispose<R, T1, T2, T3, T4>(this IRuleActuator<R> Self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            where R : ISendRule<T1, T2, T3, T4>
         {
-            if (IsActive)
+            RuleActuator self = (RuleActuator)Self;
+            if (self.ruleGroup != null && self.IsActive)
             {
-                int length = nodeQueue.Count;
+                int length = self.nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out INode node))
+                    if (self.nodeQueue.TryDequeue(out INode node))
                     {
-                        ruleGroup.Send(node, arg1, arg2, arg3, arg4);
+                        ((IRuleGroup<R>)self.ruleGroup).Send(node, arg1, arg2, arg3, arg4);
                     }
                 }
-                Dispose();
+                self.Dispose();
             }
         }
-        public void SendDispose<T1, T2, T3, T4, T5>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static void SendDispose<R, T1, T2, T3, T4, T5>(this IRuleActuator<R> Self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            where R : ISendRule<T1, T2, T3, T4, T5>
         {
-            if (IsActive)
+            RuleActuator self = (RuleActuator)Self;
+            if (self.ruleGroup != null && self.IsActive)
             {
-                int length = nodeQueue.Count;
+                int length = self.nodeQueue.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    if (nodeQueue.TryDequeue(out INode node))
+                    if (self.nodeQueue.TryDequeue(out INode node))
                     {
-                        ruleGroup.Send(node, arg1, arg2, arg3, arg4, arg5);
+                        ((IRuleGroup<R>)self.ruleGroup).Send(node, arg1, arg2, arg3, arg4, arg5);
                     }
                 }
-                Dispose();
+                self.Dispose();
             }
         }
 

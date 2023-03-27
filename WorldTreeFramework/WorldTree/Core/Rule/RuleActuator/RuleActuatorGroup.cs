@@ -19,16 +19,17 @@ namespace WorldTree
     {
         public UnitDictionary<Type, RuleActuator> ruleActuatorDictionary;
 
-        public RuleActuator GetActuator<T>() => GetActuator(typeof(T));
-
-        public RuleActuator GetActuator(Type type)
+        public IRuleActuator<R> GetActuator<R>()
+            where R : IRule
         {
-            if (!ruleActuatorDictionary.TryGetValue(type, out var ruleActuator))
+
+            var ruleType = typeof(R);
+            if (!ruleActuatorDictionary.TryGetValue(ruleType, out var ruleActuator))
             {
-                this.AddChild(out ruleActuator).Load(type);
-                ruleActuatorDictionary.Add(type, ruleActuator);
+                this.AddChild(out ruleActuator).Load<R>();
+                ruleActuatorDictionary.Add(ruleType, ruleActuator);
             }
-            return ruleActuator;
+            return (IRuleActuator<R>)ruleActuator;
         }
     }
 

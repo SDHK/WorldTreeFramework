@@ -18,11 +18,11 @@ namespace WorldTree
     {
         public WorldTreeCore core;
 
-        RuleActuator enable;
-        RuleActuator disable;
-        RuleActuator update;
-        RuleActuator lateUpdate;
-        RuleActuator fixedUpdate;
+        IRuleActuator<IEnableRule> enable;
+        IRuleActuator<IDisableRule> disable;
+        IRuleActuator<IUpdateRule> update;
+        IRuleActuator<ILateUpdateRule> lateUpdate;
+        IRuleActuator<IFixedUpdateRule> fixedUpdate;
         //RuleActuator onGUI;
 
 
@@ -41,6 +41,7 @@ namespace WorldTree
             lateUpdate = core.GetGlobalNodeRuleActuator<ILateUpdateRule>();
             fixedUpdate = core.GetGlobalNodeRuleActuator<IFixedUpdateRule>();
             //onGUI = core.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
+            
 
             core.Root.AddComponent(out InitialDomain _);
         }

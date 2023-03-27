@@ -30,15 +30,15 @@ namespace WorldTree
     {
         public UnitDictionary<long, INode> allEntity = new UnitDictionary<long, INode>();
 
-        private RuleGroup AddRuleGroup;
-        private RuleGroup RemoveRuleGroup;
-        private RuleGroup EnableRuleGroup;
-        private RuleGroup DisableRuleGroup;
+        private IRuleGroup<IAddRule> AddRuleGroup;
+        private IRuleGroup<IRemoveRule> RemoveRuleGroup;
+        private IRuleGroup<IEnableRule> EnableRuleGroup;
+        private IRuleGroup<IDisableRule> DisableRuleGroup;
 
-        private RuleGroup NewRuleGroup;
-        private RuleGroup GetRuleGroup;
-        private RuleGroup RecycleRuleGroup;
-        private RuleGroup DestroyRuleGroup;
+        private IRuleGroup<INewRule> NewRuleGroup;
+        private IRuleGroup<IGetRule> GetRuleGroup;
+        private IRuleGroup<IRecycleRule> RecycleRuleGroup;
+        private IRuleGroup<IDestroyRule> DestroyRuleGroup;
 
         public IdManager IdManager;
         public RuleManager RuleManager;

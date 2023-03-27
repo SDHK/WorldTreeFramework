@@ -249,7 +249,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule<IAwakeRule<T1>, T1>(arg1);
+                Component.SendRule(default(IAwakeRule<T1>), arg1);
                 self.Core.Add(Component);
             }
             return Component;
@@ -260,7 +260,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule<IAwakeRule<T1, T2>, T1, T2>(arg1, arg2);
+                Component.SendRule(default(IAwakeRule<T1, T2>), arg1, arg2);
                 self.Core.Add(Component);
             }
             return Component;
@@ -272,7 +272,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule<IAwakeRule<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
+                Component.SendRule(default(IAwakeRule<T1, T2, T3>), arg1, arg2, arg3);
                 self.Core.Add(Component);
             }
             return Component;
@@ -284,7 +284,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule<IAwakeRule<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
+                Component.SendRule(default(IAwakeRule<T1, T2, T3, T4>), arg1, arg2, arg3, arg4);
                 self.Core.Add(Component);
             }
             return Component;
@@ -295,7 +295,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule<IAwakeRule<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+                Component.SendRule(default(IAwakeRule<T1, T2, T3, T4, T5>),arg1, arg2, arg3, arg4, arg5);
                 self.Core.Add(Component);
             }
             return Component;
@@ -305,89 +305,89 @@ namespace WorldTree
 
 
         #region 泛型添加
-        /// <summary>
-        /// 添加组件
-        /// </summary>
-        private static T AddComponent<T>(this INode self)
-            where T : class, INode
-        {
-            if (self.TryAddNewComponent(out T component))
-            {
-                component.SendRule<IAwakeRule>();
-                self.Core.Add(component);
-            }
-            return component;
-        }
+        ///// <summary>
+        ///// 添加组件
+        ///// </summary>
+        //private static T AddComponent<T>(this INode self)
+        //    where T : class, INode
+        //{
+        //    if (self.TryAddNewComponent(out T component))
+        //    {
+        //        component.SendRule<IAwakeRule>();
+        //        self.Core.Add(component);
+        //    }
+        //    return component;
+        //}
 
-        /// <summary>
-        /// 添加组件
-        /// </summary>
-        private static T AddComponent<T, T1>(this INode self, T1 arg1)
-            where T : class, INode
-        {
-            if (self.TryAddNewComponent(out T component))
-            {
-                component.SendRule<IAwakeRule<T1>, T1>(arg1);
-                self.Core.Add(component);
-            }
-            return component;
-        }
+        ///// <summary>
+        ///// 添加组件
+        ///// </summary>
+        //private static T AddComponent<T, T1>(this INode self, T1 arg1)
+        //    where T : class, INode
+        //{
+        //    if (self.TryAddNewComponent(out T component))
+        //    {
+        //        component.SendRule<IAwakeRule<T1>, T1>(arg1);
+        //        self.Core.Add(component);
+        //    }
+        //    return component;
+        //}
 
 
-        /// <summary>
-        /// 添加组件
-        /// </summary>
-        private static T AddComponent<T, T1, T2>(this INode self, T1 arg1, T2 arg2)
-            where T : class, INode
-        {
-            if (self.TryAddNewComponent(out T component))
-            {
-                component.SendRule<IAwakeRule<T1, T2>, T1, T2>(arg1, arg2);
-                self.Core.Add(component);
-            }
-            return component;
-        }
-        /// <summary>
-        /// 添加组件
-        /// </summary>
-        private static T AddComponent<T, T1, T2, T3>(this INode self, T1 arg1, T2 arg2, T3 arg3)
-            where T : class, INode
-        {
-            if (self.TryAddNewComponent(out T component))
-            {
-                component.SendRule<IAwakeRule<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
-                self.Core.Add(component);
-            }
-            return component;
-        }
+        ///// <summary>
+        ///// 添加组件
+        ///// </summary>
+        //private static T AddComponent<T, T1, T2>(this INode self, T1 arg1, T2 arg2)
+        //    where T : class, INode
+        //{
+        //    if (self.TryAddNewComponent(out T component))
+        //    {
+        //        component.SendRule<IAwakeRule<T1, T2>, T1, T2>(arg1, arg2);
+        //        self.Core.Add(component);
+        //    }
+        //    return component;
+        //}
+        ///// <summary>
+        ///// 添加组件
+        ///// </summary>
+        //private static T AddComponent<T, T1, T2, T3>(this INode self, T1 arg1, T2 arg2, T3 arg3)
+        //    where T : class, INode
+        //{
+        //    if (self.TryAddNewComponent(out T component))
+        //    {
+        //        component.SendRule<IAwakeRule<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
+        //        self.Core.Add(component);
+        //    }
+        //    return component;
+        //}
 
-        /// <summary>
-        /// 添加组件
-        /// </summary>
-        private static T AddComponent<T, T1, T2, T3, T4>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-            where T : class, INode
-        {
-            if (self.TryAddNewComponent(out T component))
-            {
-                component.SendRule<IAwakeRule<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
-                self.Core.Add(component);
-            }
-            return component;
-        }
+        ///// <summary>
+        ///// 添加组件
+        ///// </summary>
+        //private static T AddComponent<T, T1, T2, T3, T4>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        //    where T : class, INode
+        //{
+        //    if (self.TryAddNewComponent(out T component))
+        //    {
+        //        component.SendRule<IAwakeRule<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
+        //        self.Core.Add(component);
+        //    }
+        //    return component;
+        //}
 
-        /// <summary>
-        /// 添加组件
-        /// </summary>
-        private static T AddComponent<T, T1, T2, T3, T4, T5>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-            where T : class, INode
-        {
-            if (self.TryAddNewComponent(out T component))
-            {
-                component.SendRule<IAwakeRule<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
-                self.Core.Add(component);
-            }
-            return component;
-        }
+        ///// <summary>
+        ///// 添加组件
+        ///// </summary>
+        //private static T AddComponent<T, T1, T2, T3, T4, T5>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        //    where T : class, INode
+        //{
+        //    if (self.TryAddNewComponent(out T component))
+        //    {
+        //        component.SendRule<IAwakeRule<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
+        //        self.Core.Add(component);
+        //    }
+        //    return component;
+        //}
         #endregion
 
 

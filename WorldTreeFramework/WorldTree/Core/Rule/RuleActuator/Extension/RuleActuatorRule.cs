@@ -17,12 +17,11 @@ namespace WorldTree
         /// <summary>
         /// 执行器初始化全局填装节点
         /// </summary>
-        public static RuleActuator Load<T>(this RuleActuator ruleActuator) where T : IRule => Load(ruleActuator, typeof(T));
-        /// <summary>
-        /// 执行器初始化全局填装节点
-        /// </summary>
-        public static RuleActuator Load(this RuleActuator ruleActuator, Type ruleType)
+        public static RuleActuator Load<R>(this RuleActuator ruleActuator)
+        where R : IRule
         {
+            var ruleType = typeof(R);
+
             if (ruleActuator.Core.RuleManager.TryGetRuleGroup(ruleType, out ruleActuator.ruleGroup))
             {
                 ruleActuator.Clear();
@@ -40,15 +39,16 @@ namespace WorldTree
             return ruleActuator;
         }
 
+
         /// <summary>
         /// 获取全局节点法则执行器
         /// </summary>
-        public static RuleActuator GetGlobalNodeRuleActuator<T>(this INode self)
-        where T : IRule
+        public static IRuleActuator<R> GetGlobalNodeRuleActuator<R>(this INode self)
+        where R : IRule
         {
-            var ruleActuator = self.Root.AddComponent(out RuleActuatorGroup _).GetActuator<T>();
-            ruleActuator.nodeQueue.AddComponent(out NodeAddGlobalListener _).ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
-            ruleActuator.nodeQueue.AddComponent(out NodeRemoveGlobalListener _).ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
+            var ruleActuator = self.Root.AddComponent(out RuleActuatorGroup _).GetActuator<R>();
+            ((RuleActuator)ruleActuator).nodeQueue.AddComponent(out NodeAddGlobalListener _).ListenerSwitchesTarget(typeof(R), ListenerState.Rule);
+            ((RuleActuator)ruleActuator).nodeQueue.AddComponent(out NodeRemoveGlobalListener _).ListenerSwitchesTarget(typeof(R), ListenerState.Rule);
             return ruleActuator;
         }
     }

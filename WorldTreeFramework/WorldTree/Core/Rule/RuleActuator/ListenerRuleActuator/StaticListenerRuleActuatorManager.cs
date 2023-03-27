@@ -18,13 +18,13 @@ namespace WorldTree
         /// <summary>
         /// 获取以实体类型为目标的 监听系统执行器
         /// </summary>
-        public static bool TrySendStaticListener<T>(this INode node)
-            where T : IListenerRule
+        public static bool TrySendStaticListener<R>(this INode node)
+            where R : IListenerRule
         {
             if (node.Core.StaticListenerRuleActuatorManager != null)
-                if (node.Core.StaticListenerRuleActuatorManager.TryAddRuleActuator(node.Type, typeof(T), out var actuator))
+                if (node.Core.StaticListenerRuleActuatorManager.TryAddRuleActuator<R>(node.Type, out var actuator))
                 {
-                    actuator.Send(node);
+                    ((IRuleActuator<R>)actuator).Send(node);
                     return true;
                 }
 
@@ -34,13 +34,13 @@ namespace WorldTree
         /// <summary>
         /// 获取以实体类型为目标的 监听系统执行器
         /// </summary>
-        public static bool TrySendDynamicListener<T>(this INode node)
-            where T : IListenerRule
+        public static bool TrySendDynamicListener<R>(this INode node)
+            where R : IListenerRule
         {
             if (node.Core.DynamicListenerRuleActuatorManager != null)
-                if (node.Core.DynamicListenerRuleActuatorManager.TryAddRuleActuator(node.Type, typeof(T), out var actuator))
+                if (node.Core.DynamicListenerRuleActuatorManager.TryAddRuleActuator<R>(node.Type, out var actuator))
                 {
-                    actuator.Send(node);
+                    ((IRuleActuator<R>)actuator).Send(node);
                     return true;
                 }
             return false;
@@ -119,16 +119,19 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加静态执行器
         /// </summary>
-        public bool TryAddRuleActuator(Type Target, Type ruleType, out RuleActuator actuator)
+        public bool TryAddRuleActuator<R>(Type Target, out RuleActuator actuator)
+            where R : IListenerRule
         {
+            Type ruleType = typeof(R);
+
             //判断是否有组
             if (TryGetGroup(Target, out var group))
             {
                 //判断是否有执行器
-                if (group.TryGetRuleActuator(ruleType, out actuator)) { return true; }
+                if (group.TryGetRuleActuator(ruleType,out actuator)) { return true; }
 
                 //没有执行器 则判断这个目标类型是是否有监听法则集合
-                else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
+                else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType,Target, out var ruleGroup))
                 {
                     //新建执行器
                     actuator = group.GetRuleActuator(ruleType);
@@ -138,7 +141,7 @@ namespace WorldTree
                 }
             }
             //没有组则判断这个目标类型是否有监听法则集合
-            else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
+            else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType,Target, out var ruleGroup))
             {
                 //新建组和执行器
                 actuator = GetGroup(Target).GetRuleActuator(ruleType);

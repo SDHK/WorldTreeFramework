@@ -98,6 +98,7 @@ namespace WorldTree
                 //遍历法则集合
                 foreach (var targetSystems in targetSystemGroup)
                 {
+
                     AddNodeTarget(node, targetSystems.Key);
                 }
             }
@@ -116,9 +117,12 @@ namespace WorldTree
                     //遍历获取动态法则集合，并添加自己
                     foreach (var ruleGroup in ruleGroupDictionary)
                     {
+
                         broadcastGroup.GetRuleActuator(ruleGroup.Key).Enqueue(node);
                     }
                 }
+               
+
             }
         }
         #endregion
@@ -222,8 +226,12 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加动态执行器
         /// </summary>
-        public bool TryAddRuleActuator(Type Target, Type RuleType, out RuleActuator actuator)
+        public bool TryAddRuleActuator<R>(Type Target, out RuleActuator actuator)
+        where R : IListenerRule
         {
+            Type RuleType = typeof(R);
+
+
             //判断是否有组
             if (TryGetGroup(Target, out var group))
             {
@@ -242,9 +250,11 @@ namespace WorldTree
             }
             else if (Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
             {
+
                 //新建组和执行器
                 actuator = GetGroup(Target).GetRuleActuator(RuleType);
                 actuator.ruleGroup = ruleGroup;
+
                 RuleActuatorAddListener(actuator, Target);
                 return true;
             }
@@ -281,6 +291,7 @@ namespace WorldTree
                                 //判断的实体类型是否拥有目标系统
                                 if (Core.RuleManager.TryGetRuleList(Target, listener.Value.listenerTarget, out _))
                                 {
+
                                     actuator.Enqueue(listener.Value);
                                 }
                             }

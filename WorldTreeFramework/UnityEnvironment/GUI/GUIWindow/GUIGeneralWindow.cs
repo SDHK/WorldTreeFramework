@@ -14,7 +14,7 @@ namespace WorldTree
 {
     public class GUIGeneralWindow : Node
     {
-        public RuleGroup group;
+        public IRuleGroup<IGUIDrawSystem> group;
 
         public GUIBeginVertical VerticalBox;
 

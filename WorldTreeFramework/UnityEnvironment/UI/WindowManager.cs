@@ -53,7 +53,7 @@ namespace WorldTree
             {
                 if (windowStack.TryPeek(out INode outNode))
                 {
-                    outNode?.SendRule<IWindowLostFocusRule>();
+                    outNode?.SendRule(default(IWindowLostFocusRule));
                 }
                 while (windowStack.Count != 0 ? windowStack.Peek().Id != node.Id : false)
                 {
@@ -61,7 +61,7 @@ namespace WorldTree
                     windows.Remove(outNode.Type);
                     outNode.ParentTo<GameObjectNode>()?.Dispose();
                 }
-                node?.SendRule<IWindowFocusRule>();
+                node?.SendRule(default(IWindowFocusRule));
 
                 await this.TreeTaskCompleted();
             }
@@ -73,11 +73,11 @@ namespace WorldTree
 
                 if (windowStack.TryPeek(out INode topNode))
                 {
-                    topNode?.SendRule<IWindowLostFocusRule>();
+                    topNode?.SendRule(default(IWindowLostFocusRule));
                 }
                 windowStack.Push(node);
 
-                node?.SendRule<IWindowFocusRule>();
+                node?.SendRule(default(IWindowFocusRule));
             }
             return node as T;
         }
@@ -93,7 +93,7 @@ namespace WorldTree
             {
                 if (windowStack.TryPeek(out INode topNode))
                 {
-                    topNode?.SendRule<IWindowLostFocusRule>();
+                    topNode?.SendRule(default(IWindowLostFocusRule));
                 }
                 while (windowStack.TryPop(out topNode))
                 {
@@ -106,7 +106,7 @@ namespace WorldTree
                 }
                 if (windowStack.TryPeek(out topNode))
                 {
-                    topNode?.SendRule<IWindowFocusRule>();
+                    topNode?.SendRule(default(IWindowFocusRule));
                 }
             }
         }
@@ -119,10 +119,10 @@ namespace WorldTree
             if (windowStack.TryPop(out INode outNode))
             {
                 windows.Remove(outNode.Type);
-                outNode?.SendRule<IWindowLostFocusRule>();
+                outNode?.SendRule(default(IWindowLostFocusRule));
                 if (windowStack.TryPeek(out INode topNode))
                 {
-                    topNode?.SendRule<IWindowFocusRule>();
+                    topNode?.SendRule(default(IWindowFocusRule));
                 }
                 outNode.ParentTo<GameObjectNode>()?.Dispose();
             }
@@ -134,7 +134,7 @@ namespace WorldTree
         {
             if (windowStack.TryPeek(out INode topNode))
             {
-                topNode?.SendRule<IWindowFocusRule>();
+                topNode?.SendRule(default(IWindowFocusRule));
             }
             while (windowStack.TryPop(out topNode))
             {
@@ -178,7 +178,7 @@ namespace WorldTree
             {
                 if (self.windowStack.TryPeek(out INode node))
                 {
-                    node?.SendRule<IWindowFocusUpdateRule, float>(deltaTime);
+                    node?.SendRule(default(IWindowFocusUpdateRule), deltaTime);
                 }
             }
         }

@@ -34,10 +34,10 @@ namespace EditorTool
             //core.AddComponent<WorldTreeFrameworkWindow>();
         }
 
-        public RuleActuator enable;
-        public RuleActuator disable;
-        public RuleActuator update;
-        public RuleActuator onGUI;
+        public IRuleActuator<IEnableRule> enable;
+        public IRuleActuator<IDisableRule> disable;
+        public IRuleActuator<IUpdateRule> update;
+        public IRuleActuator<IGuiUpdateRule> onGUI;
 
         public EditorHomePage HomePage;
     }

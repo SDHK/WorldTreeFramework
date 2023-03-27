@@ -13,11 +13,11 @@ namespace WorldTree
     {
         #region Call
 
-        public static bool TryCallRule<R, OutT>(this INode self, out OutT outT)
+        public static bool TryCallRule<R, OutT>(this INode self, R defaultRule, out OutT outT)
         where R : ICallRule<OutT>
         {
 
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCall(self, out outT);
             }
@@ -28,10 +28,10 @@ namespace WorldTree
             }
 
         }
-        public static bool TryCallRule<R, T1, OutT>(this INode self, T1 arg1, out OutT outT)
+        public static bool TryCallRule<R, T1, OutT>(this INode self, R defaultRule, T1 arg1, out OutT outT)
         where R : ICallRule<T1, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCall(self, arg1, out outT);
             }
@@ -41,10 +41,10 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallRule<R, T1, T2, OutT>(this INode self, T1 arg1, T2 arg2, out OutT outT)
+        public static bool TryCallRule<R, T1, T2, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, out OutT outT)
         where R : ICallRule<T1, T2, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCall(self, arg1, arg2, out outT);
             }
@@ -54,10 +54,10 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallRule<R, T1, T2, T3, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
+        public static bool TryCallRule<R, T1, T2, T3, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
         where R : ICallRule<T1, T2, T3, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCall(self, arg1, arg2, arg3, out outT);
             }
@@ -67,10 +67,10 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallRule<R, T1, T2, T3, T4, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
+        public static bool TryCallRule<R, T1, T2, T3, T4, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
         where R : ICallRule<T1, T2, T3, T4, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCall(self, arg1, arg2, arg3, arg4, out outT);
             }
@@ -80,10 +80,10 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
+        public static bool TryCallRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
         where R : ICallRule<T1, T2, T3, T4, T5, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCall(self, arg1, arg2, arg3, arg4, arg5, out outT);
             }
@@ -96,50 +96,50 @@ namespace WorldTree
 
 
 
-        public static OutT CallRule<R, OutT>(this INode self)
+        public static OutT CallRule<R, OutT>(this INode self, R defaultRule)
         where R : ICallRule<OutT>
         {
-            self.TryCallRule<R, OutT>(out OutT outT);
+            self.TryCallRule(defaultRule, out OutT outT);
             return outT;
         }
-        public static OutT CallRule<R, T1, OutT>(this INode self, T1 arg1)
+        public static OutT CallRule<R, T1, OutT>(this INode self, R defaultRule, T1 arg1)
         where R : ICallRule<T1, OutT>
         {
-            self.TryCallRule<R, T1, OutT>(arg1, out OutT outT);
+            self.TryCallRule(defaultRule,arg1, out OutT outT);
             return outT;
         }
-        public static OutT CallRule<R, T1, T2, OutT>(this INode self, T1 arg1, T2 arg2)
+        public static OutT CallRule<R, T1, T2, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2)
         where R : ICallRule<T1, T2, OutT>
         {
-            self.TryCallRule<R, T1, T2, OutT>(arg1, arg2, out OutT outT);
+            self.TryCallRule(defaultRule, arg1, arg2, out OutT outT);
             return outT;
         }
-        public static OutT CallRule<R, T1, T2, T3, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3)
+        public static OutT CallRule<R, T1, T2, T3, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3)
         where R : ICallRule<T1, T2, T3, OutT>
         {
-            self.TryCallRule<R, T1, T2, T3, OutT>(arg1, arg2, arg3, out OutT outT);
+            self.TryCallRule(defaultRule, arg1, arg2, arg3, out OutT outT);
             return outT;
         }
-        public static OutT CallRule<R, T1, T2, T3, T4, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static OutT CallRule<R, T1, T2, T3, T4, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         where R : ICallRule<T1, T2, T3, T4, OutT>
         {
-            self.TryCallRule<R, T1, T2, T3, T4, OutT>(arg1, arg2, arg3, arg4, out OutT outT);
+            self.TryCallRule(defaultRule, arg1, arg2, arg3, arg4, out OutT outT);
             return outT;
         }
-        public static OutT CallRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static OutT CallRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         where R : ICallRule<T1, T2, T3, T4, T5, OutT>
         {
-            self.TryCallRule<R, T1, T2, T3, T4, T5, OutT>(arg1, arg2, arg3, arg4, arg5, out OutT outT);
+            self.TryCallRule(defaultRule, arg1, arg2, arg3, arg4, arg5, out OutT outT);
             return outT;
         }
         #endregion
 
 
         #region Calls
-        public static bool TryCallsRule<R, OutT>(this INode self, out UnitList<OutT> values)
+        public static bool TryCallsRule<R, OutT>(this INode self, R defaultRule, out UnitList<OutT> values)
         where R : ICallRule<OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCalls(self, out values);
             }
@@ -149,10 +149,10 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, OutT>(this INode self, T1 arg1, out UnitList<OutT> values)
+        public static bool TryCallsRule<R, T1, OutT>(this INode self, R defaultRule, T1 arg1, out UnitList<OutT> values)
         where R : ICallRule<T1, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCalls(self, arg1, out values);
             }
@@ -162,10 +162,10 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, T2, OutT>(this INode self, T1 arg1, T2 arg2, out UnitList<OutT> values)
+        public static bool TryCallsRule<R, T1, T2, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, out UnitList<OutT> values)
         where R : ICallRule<T1, T2, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCalls(self, arg1, arg2, out values);
             }
@@ -175,10 +175,10 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, T2, T3, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
+        public static bool TryCallsRule<R, T1, T2, T3, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
         where R : ICallRule<T1, T2, T3, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCalls(self, arg1, arg2, arg3, out values);
             }
@@ -188,10 +188,10 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, T2, T3, T4, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
+        public static bool TryCallsRule<R, T1, T2, T3, T4, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
         where R : ICallRule<T1, T2, T3, T4, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCalls(self, arg1, arg2, arg3, arg4, out values);
             }
@@ -201,10 +201,10 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
+        public static bool TryCallsRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
         where R : ICallRule<T1, T2, T3, T4, T5, OutT>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup group))
+            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
             {
                 return group.TryCalls(self, arg1, arg2, arg3, arg4, arg5, out values);
             }
@@ -217,40 +217,40 @@ namespace WorldTree
 
 
 
-        public static UnitList<OutT> CallsRule<R, OutT>(this INode self)
+        public static UnitList<OutT> CallsRule<R, OutT>(this INode self, R defaultRule)
         where R : ICallRule<OutT>
         {
-            self.TryCallsRule<R, OutT>(out UnitList<OutT> outT);
+            self.TryCallsRule(defaultRule, out UnitList<OutT> outT);
             return outT;
         }
-        public static UnitList<OutT> CallsRule<R, T1, OutT>(this INode self, T1 arg1)
+        public static UnitList<OutT> CallsRule<R, T1, OutT>(this INode self, R defaultRule, T1 arg1)
         where R : ICallRule<T1, OutT>
         {
-            self.TryCallsRule<R, T1, OutT>(arg1, out UnitList<OutT> outT);
+            self.TryCallsRule(defaultRule, arg1, out UnitList<OutT> outT);
             return outT;
         }
-        public static UnitList<OutT> CallsRule<R, T1, T2, OutT>(this INode self, T1 arg1, T2 arg2)
+        public static UnitList<OutT> CallsRule<R, T1, T2, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2)
         where R : ICallRule<T1, T2, OutT>
         {
-            self.TryCallsRule<R, T1, T2, OutT>(arg1, arg2, out UnitList<OutT> outT);
+            self.TryCallsRule(defaultRule, arg1, arg2, out UnitList<OutT> outT);
             return outT;
         }
-        public static UnitList<OutT> CallsRule<R, T1, T2, T3, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3)
+        public static UnitList<OutT> CallsRule<R, T1, T2, T3, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3)
         where R : ICallRule<T1, T2, T3, OutT>
         {
-            self.TryCallsRule<R, T1, T2, T3, OutT>(arg1, arg2, arg3, out UnitList<OutT> outT);
+            self.TryCallsRule(defaultRule, arg1, arg2, arg3, out UnitList<OutT> outT);
             return outT;
         }
-        public static UnitList<OutT> CallsRule<R, T1, T2, T3, T4, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static UnitList<OutT> CallsRule<R, T1, T2, T3, T4, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         where R : ICallRule<T1, T2, T3, T4, OutT>
         {
-            self.TryCallsRule<R, T1, T2, T3, T4, OutT>(arg1, arg2, arg3, arg4, out UnitList<OutT> outT);
+            self.TryCallsRule(defaultRule, arg1, arg2, arg3, arg4, out UnitList<OutT> outT);
             return outT;
         }
-        public static UnitList<OutT> CallsRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static UnitList<OutT> CallsRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         where R : ICallRule<T1, T2, T3, T4, T5, OutT>
         {
-            self.TryCallsRule<R, T1, T2, T3, T4, T5, OutT>(arg1, arg2, arg3, arg4, arg5, out UnitList<OutT> outT);
+            self.TryCallsRule(defaultRule, arg1, arg2, arg3, arg4, arg5, out UnitList<OutT> outT);
             return outT;
         }
         #endregion

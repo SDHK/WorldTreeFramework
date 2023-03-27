@@ -19,136 +19,274 @@ namespace WorldTree
         #region Call
 
 
-        public static OutT Call<R, OutT>(this IRuleList<R> ruleList, INode node, OutT a)
+        public static OutT Call<R, OutT>(this IRuleList<R> ruleList, INode node, out OutT outT)
             where R : ICallRule<OutT>
-         => (ruleList as RuleList).Call<OutT>(node);
-
-        //=========
-
-        public static OutT Call<OutT>(this RuleList ruleList, INode node)
         {
-            OutT outT = default(OutT);
-            foreach (ICallRule<OutT> rule in ruleList)
+            outT = default(OutT);
+            foreach (ICallRule<OutT> rule in ruleList as RuleList)
             {
                 outT = rule.Invoke(node);
             }
             return outT;
         }
 
-        public static OutT Call<T1, OutT>(this List<IRule> ruleList, INode node, T1 arg1)
+        public static OutT Call<R, T1, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, out OutT outT)
+            where R : ICallRule<T1, OutT>
         {
-            OutT outT = default(OutT);
-            foreach (ICallRule<T1, OutT> rule in ruleList)
+            outT = default(OutT);
+            foreach (ICallRule<T1, OutT> rule in ruleList as RuleList)
             {
                 outT = rule.Invoke(node, arg1);
             }
             return outT;
         }
 
-        public static OutT Call<T1, T2, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2)
+        public static OutT Call<R, T1, T2, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, out OutT outT)
+            where R : ICallRule<T1, T2, OutT>
         {
-            OutT outT = default(OutT);
-            foreach (ICallRule<T1, T2, OutT> rule in ruleList)
+            outT = default(OutT);
+            foreach (ICallRule<T1, T2, OutT> rule in ruleList as RuleList)
             {
                 outT = rule.Invoke(node, arg1, arg2);
             }
             return outT;
         }
 
-        public static OutT Call<T1, T2, T3, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3)
+        public static OutT Call<R, T1, T2, T3, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
+            where R : ICallRule<T1, T2, T3, OutT>
         {
-            OutT outT = default(OutT);
-            foreach (ICallRule<T1, T2, T3, OutT> rule in ruleList)
+            outT = default(OutT);
+            foreach (ICallRule<T1, T2, T3, OutT> rule in ruleList as RuleList)
             {
                 outT = rule.Invoke(node, arg1, arg2, arg3);
             }
             return outT;
         }
 
-        public static OutT Call<T1, T2, T3, T4, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static OutT Call<R, T1, T2, T3, T4, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
+            where R : ICallRule<T1, T2, T3, T4, OutT>
         {
-            OutT outT = default(OutT);
-            foreach (ICallRule<T1, T2, T3, T4, OutT> rule in ruleList)
+            outT = default(OutT);
+            foreach (ICallRule<T1, T2, T3, T4, OutT> rule in ruleList as RuleList)
             {
                 outT = rule.Invoke(node, arg1, arg2, arg3, arg4);
             }
             return outT;
         }
 
-        public static OutT Call<T1, T2, T3, T4, T5, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static OutT Call<R, T1, T2, T3, T4, T5, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
+            where R : ICallRule<T1, T2, T3, T4, T5, OutT>
         {
-            OutT outT = default(OutT);
-            foreach (ICallRule<T1, T2, T3, T4, T5, OutT> rule in ruleList)
+            outT = default(OutT);
+            foreach (ICallRule<T1, T2, T3, T4, T5, OutT> rule in ruleList as RuleList)
             {
                 outT = rule.Invoke(node, arg1, arg2, arg3, arg4, arg5);
             }
             return outT;
         }
 
+
+
+
+        //=========
+
+
+
+        //public static OutT Call<OutT>(this RuleList ruleList, INode node)
+        //{
+        //    OutT outT = default(OutT);
+        //    foreach (ICallRule<OutT> rule in ruleList)
+        //    {
+        //        outT = rule.Invoke(node);
+        //    }
+        //    return outT;
+        //}
+
+        //public static OutT Call<T1, OutT>(this List<IRule> ruleList, INode node, T1 arg1)
+        //{
+        //    OutT outT = default(OutT);
+        //    foreach (ICallRule<T1, OutT> rule in ruleList)
+        //    {
+        //        outT = rule.Invoke(node, arg1);
+        //    }
+        //    return outT;
+        //}
+
+        //public static OutT Call<T1, T2, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2)
+        //{
+        //    OutT outT = default(OutT);
+        //    foreach (ICallRule<T1, T2, OutT> rule in ruleList)
+        //    {
+        //        outT = rule.Invoke(node, arg1, arg2);
+        //    }
+        //    return outT;
+        //}
+
+        //public static OutT Call<T1, T2, T3, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3)
+        //{
+        //    OutT outT = default(OutT);
+        //    foreach (ICallRule<T1, T2, T3, OutT> rule in ruleList)
+        //    {
+        //        outT = rule.Invoke(node, arg1, arg2, arg3);
+        //    }
+        //    return outT;
+        //}
+
+        //public static OutT Call<T1, T2, T3, T4, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        //{
+        //    OutT outT = default(OutT);
+        //    foreach (ICallRule<T1, T2, T3, T4, OutT> rule in ruleList)
+        //    {
+        //        outT = rule.Invoke(node, arg1, arg2, arg3, arg4);
+        //    }
+        //    return outT;
+        //}
+
+        //public static OutT Call<T1, T2, T3, T4, T5, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        //{
+        //    OutT outT = default(OutT);
+        //    foreach (ICallRule<T1, T2, T3, T4, T5, OutT> rule in ruleList)
+        //    {
+        //        outT = rule.Invoke(node, arg1, arg2, arg3, arg4, arg5);
+        //    }
+        //    return outT;
+        //}
+
         #endregion
 
 
         #region Calls
 
-        public static UnitList<OutT> Calls<OutT>(this List<IRule> ruleList, INode node)
+
+        public static UnitList<OutT> Calls<R, OutT>(this IRuleList<R> ruleList, INode node, out UnitList<OutT> outT)
+         where R : ICallRule<OutT>
         {
-            UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
-            foreach (ICallRule<OutT> rule in ruleList)
+            outT = node.PoolGet<UnitList<OutT>>();
+            foreach (ICallRule<OutT> rule in ruleList as RuleList)
             {
                 outT.Add(rule.Invoke(node));
             }
             return outT;
         }
 
-
-        public static UnitList<OutT> Calls<T1, OutT>(this List<IRule> ruleList, INode node, T1 arg1)
+        public static UnitList<OutT> Calls<R, T1, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, out UnitList<OutT> outT)
+         where R : ICallRule<T1, OutT>
         {
-            UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
-            foreach (ICallRule<T1, OutT> rule in ruleList)
+            outT = node.PoolGet<UnitList<OutT>>();
+            foreach (ICallRule<T1, OutT> rule in ruleList as RuleList)
             {
                 outT.Add(rule.Invoke(node, arg1));
             }
             return outT;
         }
-        public static UnitList<OutT> Calls<T1, T2, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2)
+        public static UnitList<OutT> Calls<R, T1, T2, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, out UnitList<OutT> outT)
+         where R : ICallRule<T1, T2, OutT>
         {
-            UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
-            foreach (ICallRule<T1, T2, OutT> rule in ruleList)
+            outT = node.PoolGet<UnitList<OutT>>();
+            foreach (ICallRule<T1, T2, OutT> rule in ruleList as RuleList)
             {
                 outT.Add(rule.Invoke(node, arg1, arg2));
             }
             return outT;
         }
 
-        public static UnitList<OutT> Calls<T1, T2, T3, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3)
+        public static UnitList<OutT> Calls<R, T1, T2, T3, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> outT)
+         where R : ICallRule<T1, T2, T3, OutT>
         {
-            UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
-            foreach (ICallRule<T1, T2, T3, OutT> rule in ruleList)
+            outT = node.PoolGet<UnitList<OutT>>();
+            foreach (ICallRule<T1, T2, T3, OutT> rule in ruleList as RuleList)
             {
                 outT.Add(rule.Invoke(node, arg1, arg2, arg3));
             }
             return outT;
         }
 
-        public static UnitList<OutT> Calls<T1, T2, T3, T4, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static UnitList<OutT> Calls<R, T1, T2, T3, T4, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> outT)
+         where R : ICallRule<T1, T2, T3, T4, OutT>
         {
-            UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
-            foreach (ICallRule<T1, T2, T3, T4, OutT> rule in ruleList)
+            outT = node.PoolGet<UnitList<OutT>>();
+            foreach (ICallRule<T1, T2, T3, T4, OutT> rule in ruleList as RuleList)
             {
                 outT.Add(rule.Invoke(node, arg1, arg2, arg3, arg4));
             }
             return outT;
         }
 
-        public static UnitList<OutT> Calls<T1, T2, T3, T4, T5, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static UnitList<OutT> Calls<R, T1, T2, T3, T4, T5, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> outT)
+         where R : ICallRule<T1, T2, T3, T4, T5, OutT>
         {
-            UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
-            foreach (ICallRule<T1, T2, T3, T4, T5, OutT> rule in ruleList)
+            outT = node.PoolGet<UnitList<OutT>>();
+            foreach (ICallRule<T1, T2, T3, T4, T5, OutT> rule in ruleList as RuleList)
             {
                 outT.Add(rule.Invoke(node, arg1, arg2, arg3, arg4, arg5));
             }
             return outT;
         }
+
+
+
+
+        //======
+
+        //public static UnitList<OutT> Calls<OutT>(this List<IRule> ruleList, INode node)
+        //{
+        //    UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
+        //    foreach (ICallRule<OutT> rule in ruleList)
+        //    {
+        //        outT.Add(rule.Invoke(node));
+        //    }
+        //    return outT;
+        //}
+
+
+        //public static UnitList<OutT> Calls<T1, OutT>(this List<IRule> ruleList, INode node, T1 arg1)
+        //{
+        //    UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
+        //    foreach (ICallRule<T1, OutT> rule in ruleList)
+        //    {
+        //        outT.Add(rule.Invoke(node, arg1));
+        //    }
+        //    return outT;
+        //}
+        //public static UnitList<OutT> Calls<T1, T2, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2)
+        //{
+        //    UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
+        //    foreach (ICallRule<T1, T2, OutT> rule in ruleList)
+        //    {
+        //        outT.Add(rule.Invoke(node, arg1, arg2));
+        //    }
+        //    return outT;
+        //}
+
+        //public static UnitList<OutT> Calls<T1, T2, T3, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3)
+        //{
+        //    UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
+        //    foreach (ICallRule<T1, T2, T3, OutT> rule in ruleList)
+        //    {
+        //        outT.Add(rule.Invoke(node, arg1, arg2, arg3));
+        //    }
+        //    return outT;
+        //}
+
+        //public static UnitList<OutT> Calls<T1, T2, T3, T4, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        //{
+        //    UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
+        //    foreach (ICallRule<T1, T2, T3, T4, OutT> rule in ruleList)
+        //    {
+        //        outT.Add(rule.Invoke(node, arg1, arg2, arg3, arg4));
+        //    }
+        //    return outT;
+        //}
+
+        //public static UnitList<OutT> Calls<T1, T2, T3, T4, T5, OutT>(this List<IRule> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        //{
+        //    UnitList<OutT> outT = node.PoolGet<UnitList<OutT>>();
+        //    foreach (ICallRule<T1, T2, T3, T4, T5, OutT> rule in ruleList)
+        //    {
+        //        outT.Add(rule.Invoke(node, arg1, arg2, arg3, arg4, arg5));
+        //    }
+        //    return outT;
+        //}
 
         #endregion
 

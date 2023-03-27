@@ -65,26 +65,6 @@ namespace WorldTree
 
         private void Initialize()
         {
-
-
-            IRuleList<IUpdateRule> a = new RuleList();
-            a.Send1(this, 1f);
-
-            IRuleGroup<IUpdateRule> test = new RuleGroup();
-            test.TrySendTest(this, 1f);
-
-
-            //1.传统填泛型
-            this.TrySendRule<ISendRule<int, float, string>, int, float, string>(1, 2f, "3");
-
-            //2.泛型用参数确定，参数为null
-            this.TrySendRule(default(ISendRule<int, float, string>), 1, 2f, "3");
-
-
-
-            //RuleGroup<IAddRule> a = new RuleGroup();
-            //a.TrySend1(this);
-
             var RuleTypeList = FindTypesIsInterface(typeof(IRule));
             //将按照法则类名进行排序，规范执行顺序
 
@@ -283,10 +263,16 @@ namespace WorldTree
         /// <summary>
         /// 获取监听目标法则组
         /// </summary>
-        public bool TryGetTargetRuleGroup<LR>(Type targetType, out RuleGroup ruleGroup)
+        public bool TryGetTargetRuleGroup<LR>(Type targetType, out IRuleGroup<LR> ruleGroup)
             where LR : IListenerRule
         {
-            return TryGetTargetRuleGroup(typeof(LR), targetType, out ruleGroup);
+            if (TryGetTargetRuleGroup(typeof(LR), targetType, out var RuleGroup))
+            {
+                ruleGroup = RuleGroup as IRuleGroup<LR>;
+                return true;
+            }
+            ruleGroup = default;
+            return false;
         }
 
         /// <summary>
@@ -328,12 +314,16 @@ namespace WorldTree
         /// <summary>
         /// 获取监听法则组
         /// </summary>
-        public bool TryGetListenerRuleGroup<LR>(Type listenerType, out RuleGroup ruleGroup)
+        public bool TryGetListenerRuleGroup<LR>(Type listenerType, out IRuleGroup<LR> ruleGroup)
             where LR : IListenerRule
         {
             if (ListenerRuleTargetGroupDictionary.TryGetValue(listenerType, out var ruleGroupDictionary))
             {
-                return ruleGroupDictionary.TryGetValue(typeof(LR), out ruleGroup);
+                if (ruleGroupDictionary.TryGetValue(typeof(LR), out var RuleGroup))
+                {
+                    ruleGroup = RuleGroup as IRuleGroup<LR>;
+                    return true;
+                }
             }
             ruleGroup = null;
             return false;
@@ -368,7 +358,7 @@ namespace WorldTree
         /// <summary>
         /// 获取法则组
         /// </summary>
-        public RuleGroup GetRuleGroup<R>() where R : IRule => GetRuleGroup(typeof(R));
+        public IRuleGroup<R> GetRuleGroup<R>() where R : IRule => GetRuleGroup(typeof(R)) as IRuleGroup<R>;
 
         /// <summary>
         /// 获取法则组
@@ -382,10 +372,16 @@ namespace WorldTree
         /// <summary>
         /// 获取法则组
         /// </summary>
-        public bool TryGetRuleGroup<R>(out RuleGroup ruleGroup)
+        public bool TryGetRuleGroup<R>(out IRuleGroup<R> ruleGroup)
          where R : IRule
         {
-            return TryGetRuleGroup(typeof(R), out ruleGroup);
+            if (TryGetRuleGroup(typeof(R), out var RuleGroup))
+            {
+                ruleGroup = RuleGroup as IRuleGroup<R>;
+                return true;
+            }
+            ruleGroup = default;
+            return false;
         }
 
         /// <summary>

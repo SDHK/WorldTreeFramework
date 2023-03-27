@@ -44,7 +44,7 @@ namespace WorldTree
         public override void OnEvent(Node self)
         {
 
-            World.Log($"NodeAdd: {self.Id} _  {self.Type} ");
+            // World.Log($"NodeAdd: {self.Id} _  {self.Type} ");
         }
     }
 

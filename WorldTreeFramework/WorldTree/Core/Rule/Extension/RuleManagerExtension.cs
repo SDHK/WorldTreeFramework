@@ -22,7 +22,7 @@ namespace WorldTree
         /// <summary>
         /// 获取法则集合
         /// </summary>
-        public static RuleGroup GetRuleGroup<T>(this INode self)
+        public static IRuleGroup<T> GetRuleGroup<T>(this INode self)
         where T : IRule
         {
             return self.Core.RuleManager.GetRuleGroup<T>();

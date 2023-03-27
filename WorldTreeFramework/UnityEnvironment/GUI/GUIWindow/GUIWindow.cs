@@ -21,7 +21,7 @@ namespace WorldTree
     {
         public Rect rect = new Rect(0, 0, 400, 300);
         public bool isDrag = true;
-        public RuleGroup group;
+        public IRuleGroup<IGUIDrawSystem> group;
 
         public void Window(int id)
         {

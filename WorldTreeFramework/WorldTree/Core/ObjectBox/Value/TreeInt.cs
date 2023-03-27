@@ -42,7 +42,7 @@ namespace WorldTree
                 if (this.value != value)
                 {
                     this.value = value;
-                    ruleActuator.SendRule<ITreeIntChangeBindRule, int>(value);
+                    ruleActuator.SendRule(default(ITreeIntChangeBindRule), value);
                 }
             }
         }
