@@ -18,6 +18,10 @@ namespace WorldTree
         /// <summary>
         /// 获取以实体类型为目标的 监听系统执行器
         /// </summary>
+        /// <remarks>
+        /// <para>可能监听器早已存在，所以会主动新建监听执行器，并查询节点引用池判断添加监听器</para>
+        /// <para>只会在执行器新建时填装，后续获取不会再填装了，只返回执行器</para>
+        /// </remarks>
         public static bool TrySendStaticListener<R>(this INode node)
             where R : IListenerRule
         {
@@ -34,6 +38,8 @@ namespace WorldTree
         /// <summary>
         /// 获取以实体类型为目标的 监听系统执行器
         /// </summary>
+        /// <para>可能监听器早已存在，所以会主动新建监听执行器，并查询节点引用池判断添加监听器</para>
+        /// <para>只会在执行器新建时填装，后续获取不会再填装了，只返回执行器</para>
         public static bool TrySendDynamicListener<R>(this INode node)
             where R : IListenerRule
         {
