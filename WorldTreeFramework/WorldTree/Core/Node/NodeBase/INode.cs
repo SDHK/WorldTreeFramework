@@ -138,14 +138,28 @@ namespace WorldTree
 
         #region Domains
 
-
-
         /// <summary>
         /// 域节点
         /// </summary>
         public UnitDictionary<Type, INode> m_Domains { get; set; }
 
         #endregion
+
+
+        #region Referenceds
+
+        /// <summary>
+        /// 引用我的
+        /// </summary>
+        public UnitDictionary<long, INode> m_Referenceds { get; set; }
+
+        /// <summary>
+        /// 我引用的
+        /// </summary>
+        public UnitDictionary<long, INode> m_ReferencedsBy { get; set; }
+
+        #endregion
+
 
         #region Listener
         /// <summary>

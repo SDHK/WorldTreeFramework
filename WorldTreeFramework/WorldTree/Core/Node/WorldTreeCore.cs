@@ -21,14 +21,16 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
-    //限制器
 
     /// <summary>
     /// 世界树核心
     /// </summary>
     public class WorldTreeCore : Node
     {
-        public UnitDictionary<long, INode> allEntity = new UnitDictionary<long, INode>();
+        /// <summary>
+        /// 全部节点
+        /// </summary>
+        public UnitDictionary<long, INode> AllNode = new UnitDictionary<long, INode>();
 
         private IRuleGroup<IAddRule> AddRuleGroup;
         private IRuleGroup<IRemoveRule> RemoveRuleGroup;
@@ -40,11 +42,29 @@ namespace WorldTree
         private IRuleGroup<IRecycleRule> RecycleRuleGroup;
         private IRuleGroup<IDestroyRule> DestroyRuleGroup;
 
+        /// <summary>
+        /// Id管理器
+        /// </summary>
         public IdManager IdManager;
+        /// <summary>
+        /// 法则管理器
+        /// </summary>
         public RuleManager RuleManager;
+        /// <summary>
+        /// 单位对象池管理器
+        /// </summary>
         public UnitPoolManager UnitPoolManager;
+        /// <summary>
+        /// 节点池管理器
+        /// </summary>
         public NodePoolManager NodePoolManager;
+        /// <summary>
+        /// 静态监听器法则执行器管理器
+        /// </summary>
         public StaticListenerRuleActuatorManager StaticListenerRuleActuatorManager;
+        /// <summary>
+        /// 动态监听器法则执行器管理器
+        /// </summary>
         public DynamicListenerRuleActuatorManager DynamicListenerRuleActuatorManager;
 
         public WorldTreeCore() : base()
@@ -64,7 +84,6 @@ namespace WorldTree
             RuleManager.Id = IdManager.GetId();
 
             //核心
-            Core = this;
             IdManager.Core = this;
             RuleManager.Core = this;
 
@@ -101,9 +120,11 @@ namespace WorldTree
         public override void Dispose()
         {
             this.RemoveAll();
-            allEntity.Clear();
+            AllNode.Clear();
         }
 
+
+        #region Unit
 
         /// <summary>
         /// 从池中获取单位对象
@@ -124,6 +145,31 @@ namespace WorldTree
                 return UnitPoolManager.Get(type) as T;
             }
         }
+
+        /// <summary>
+        /// 回收单位
+        /// </summary>
+        public void Recycle(IUnitPoolEventItem obj)
+        {
+            if (UnitPoolManager is null)
+            {
+                obj.IsRecycle = true;
+                obj.OnRecycle();
+                obj.IsDisposed = true;
+                obj.OnDispose();
+            }
+            else
+            {
+                UnitPoolManager.Recycle(obj);
+            }
+
+        }
+
+        #endregion
+
+
+        #region Node
+
         /// <summary>
         /// 从池中获取节点对象
         /// </summary>
@@ -151,26 +197,7 @@ namespace WorldTree
                 return NodePoolManager.Get(type) as INode;
             }
         }
-
-        /// <summary>
-        /// 回收单位
-        /// </summary>
-        public void Recycle(IUnitPoolEventItem obj)
-        {
-            if (UnitPoolManager is null)
-            {
-                obj.IsRecycle = true;
-                obj.OnRecycle();
-                obj.IsDisposed = true;
-                obj.OnDispose();
-            }
-            else
-            {
-                UnitPoolManager.Recycle(obj);
-            }
-
-        }
-
+      
         /// <summary>
         /// 回收节点
         /// </summary>
@@ -189,6 +216,7 @@ namespace WorldTree
             }
         }
 
+        #endregion
 
 
         public void Add(INode entity)
@@ -200,7 +228,7 @@ namespace WorldTree
                 entity.TrySendDynamicListener<IListenerAddRule>();
             }
 
-            allEntity.TryAdd(entity.Id, entity);
+            AllNode.TryAdd(entity.Id, entity);
 
             //这个节点的添加事件
             AddRuleGroup?.Send(entity);
@@ -237,7 +265,7 @@ namespace WorldTree
             //这个节点的移除事件
             RemoveRuleGroup?.Send(entity);
 
-            allEntity.Remove(entity.Id);
+            AllNode.Remove(entity.Id);
 
 
             //广播给全部监听器!!!!

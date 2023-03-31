@@ -21,24 +21,6 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
-
-    ///// <summary>
-    ///// 组件约束
-    ///// </summary>
-    //public interface ComponentTo<T> { }
-    //public interface ComponentTo { }
-
-
-    //public class TastNode : Node, ComponentTo<InitialDomain>
-    //{
-
-
-    //}
-
-
-    //多态测试
-
-
     public class NodeAddRule : AddRule<Node>
     {
         public override void OnEvent(Node self)
@@ -73,60 +55,59 @@ namespace WorldTree
     /// </summary>
     public class InitialDomain : Node, ComponentOf<INode>
     {
-        public TreeInt a;
+        public TreeValue<float> A;
+        public TreeValue<float> B;
     }
 
     class _InitialDomain : AddRule<InitialDomain>
     {
 
-        public override async void OnEvent(InitialDomain self)
+        public override void OnEvent(InitialDomain self)
         {
             self.Branch = self;
 
-            self.AddChild(out self.a);
+            self.AddChild(out self.A);//获取
+            self.AddChild(out self.B);
+
+
+            self.A.Bind(self.B);//单绑
+            self.A.BindTwoWay(self.B);//双绑
+
+
 
 
             World.Log("初始域启动！！");
 
-            Type type = self.Type;
-            var baseTypes = new List<Type>();
-            while (type.BaseType != null)
-            {
-                baseTypes.Add(type.BaseType);
-                type = type.BaseType;
-            }
 
-            foreach (var baseType in baseTypes)
-            {
-                Debug.Log(baseType.Name);
-            }
+            //using (await self.AsyncLock(0))
+            //{
+            //    await self.AsyncDelay(3);
+            //    self.a.Value++;
+            //}
 
-            using (await self.AsyncLock(0))
-            {
-                await self.AsyncDelay(3);
-                self.a.Value++;
-            }
-            World.Log($"初始域!:{self.a.Value}");
+
 
         }
 
     }
     class InitialDomainUpdateRule : UpdateRule<InitialDomain>
     {
-        public override async void OnEvent(InitialDomain self, float deltaTime)
+        public override void OnEvent(InitialDomain self, float deltaTime)
         {
-            World.Log($"初始域:!!!!!");
 
             if (Input.GetKeyDown(KeyCode.A))
             {
-                using (await self.AsyncLock(self.Id))
-                {
-                    await self.AsyncDelay(3);
-                    self.a.Value++;
-                    World.Log($"初始域:{self.a.Value}");
-                }
+                self.A.Value += 1;
+                World.Log($"A  A:{self.A.Value}  B:{self.B.Value}");
 
             }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                self.B.Value += 1;
+                World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
+
+            }
+          
 
             if (Input.GetKeyDown(KeyCode.Q))
             {

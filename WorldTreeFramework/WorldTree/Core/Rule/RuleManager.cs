@@ -301,6 +301,7 @@ namespace WorldTree
                     if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
                     {
                         ruleList = RuleList as IRuleList<LR>;
+                        return true;
                     }
                 }
             }

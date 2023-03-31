@@ -24,14 +24,14 @@ namespace EditorTool
         [MenuItem("WorldTree/Window")]
         static void ShowWindow()
         {
-            //if (core == null)
+            //if (Core == null)
             //{
-            //    core = new WorldTreeCore();
+            //    Core = new WorldTreeCore();
             //    World.Log = Debug.Log;
             //    World.LogWarning = Debug.LogWarning;
             //    World.LogError = Debug.LogError;
             //}
-            //core.AddComponent<WorldTreeFrameworkWindow>();
+            //Core.AddComponent<WorldTreeFrameworkWindow>();
         }
 
         public IRuleActuator<IEnableRule> enable;

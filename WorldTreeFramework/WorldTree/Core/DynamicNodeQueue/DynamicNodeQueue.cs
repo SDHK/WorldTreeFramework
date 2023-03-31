@@ -31,11 +31,6 @@ namespace WorldTree
         public TreeDictionary<long, int> removeIdDictionary;
 
         /// <summary>
-        /// 总移除次数
-        /// </summary>
-        public int removeIdCount;
-
-        /// <summary>
         /// 节点名单
         /// </summary>
         public TreeDictionary<long, INode> nodeDictionary;
@@ -44,7 +39,7 @@ namespace WorldTree
         /// <summary>
         /// 当前队列数量
         /// </summary>
-        public int Count => idQueue.Count - removeIdCount;
+        public int Count => nodeDictionary.Count;
 
      
 
@@ -71,7 +66,6 @@ namespace WorldTree
                 if (removeIdDictionary.TryGetValue(node.Id, out var count))
                 {
                     removeIdDictionary[node.Id] = count + 1;
-                    removeIdCount++;
                 }
                 else
                 {
@@ -88,7 +82,6 @@ namespace WorldTree
             nodeDictionary.Clear();
             removeIdDictionary.Clear();
             idQueue.Clear();
-            removeIdCount = 0;
         }
 
 
@@ -121,7 +114,6 @@ namespace WorldTree
                     {
                         //回收次数抵消
                         removeIdDictionary[id] = --count;
-                        removeIdCount--;
                         //次数为0时删除id
                         if (count == 0) removeIdDictionary.Remove(id);
                         //移除这个id
@@ -169,7 +161,6 @@ namespace WorldTree
                 {
                     //回收次数抵消
                     removeIdDictionary[id] = --count;
-                    removeIdCount--;
 
                     //次数为0时删除id
                     if (count == 0) removeIdDictionary.Remove(id);
@@ -212,7 +203,6 @@ namespace WorldTree
             self.idQueue.Dispose();
             self.removeIdDictionary.Dispose();
             self.nodeDictionary.Dispose();
-            self.removeIdCount = 0;
         }
     }
 }

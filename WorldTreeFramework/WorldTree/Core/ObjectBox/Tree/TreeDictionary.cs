@@ -47,6 +47,14 @@ namespace WorldTree
         public UnitDictionary<Type, INode> m_Domains { get; set; }
         #endregion
 
+        #region Referenceds
+
+        public UnitDictionary<long, INode> m_Referenceds { get; set; }
+
+        public UnitDictionary<long, INode> m_ReferencedsBy { get; set; }
+
+        #endregion
+
         #region Listener
         public ListenerState listenerState { get; set; } = ListenerState.Not;
         public Type listenerTarget { get; set; }

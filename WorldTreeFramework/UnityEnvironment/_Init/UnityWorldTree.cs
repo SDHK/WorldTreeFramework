@@ -16,7 +16,7 @@ namespace WorldTree
 
     public class UnityWorldTree : MonoBehaviour
     {
-        public WorldTreeCore core;
+        public WorldTreeCore Core;
 
         IRuleActuator<IEnableRule> enable;
         IRuleActuator<IDisableRule> disable;
@@ -32,18 +32,18 @@ namespace WorldTree
             World.LogWarning = Debug.LogWarning;
             World.LogError = Debug.LogError;
 
-            core = new WorldTreeCore();
+            Core = new WorldTreeCore();
 
-            enable = core.GetGlobalNodeRuleActuator<IEnableRule>();
-            update = core.GetGlobalNodeRuleActuator<IUpdateRule>();
-            disable = core.GetGlobalNodeRuleActuator<IDisableRule>();
+            enable = Core.GetGlobalNodeRuleActuator<IEnableRule>();
+            update = Core.GetGlobalNodeRuleActuator<IUpdateRule>();
+            disable = Core.GetGlobalNodeRuleActuator<IDisableRule>();
 
-            lateUpdate = core.GetGlobalNodeRuleActuator<ILateUpdateRule>();
-            fixedUpdate = core.GetGlobalNodeRuleActuator<IFixedUpdateRule>();
-            //onGUI = core.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
+            lateUpdate = Core.GetGlobalNodeRuleActuator<ILateUpdateRule>();
+            fixedUpdate = Core.GetGlobalNodeRuleActuator<IFixedUpdateRule>();
+            //onGUI = Core.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
             
 
-            core.Root.AddComponent(out InitialDomain _);
+            Core.Root.AddComponent(out InitialDomain _);
         }
 
         private void Update()
@@ -56,7 +56,7 @@ namespace WorldTree
 
             Profiler.EndSample();
 
-            if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(core.ToStringDrawTree());
+            if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(Core.ToStringDrawTree());
         }
 
         private void LateUpdate()
@@ -75,8 +75,8 @@ namespace WorldTree
 
         private void OnDestroy()
         {
-            core?.Dispose();
-            core = null;
+            Core?.Dispose();
+            Core = null;
 
             enable = null;
             update = null;
