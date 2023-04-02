@@ -61,9 +61,10 @@ namespace WorldTree
 
     class _InitialDomain : AddRule<InitialDomain>
     {
-
+      
         public override void OnEvent(InitialDomain self)
         {
+            var a= typeof( List<>) ;
             self.Branch = self;
 
             self.AddChild(out self.A);//获取

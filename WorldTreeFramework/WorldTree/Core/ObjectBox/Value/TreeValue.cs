@@ -17,6 +17,8 @@ namespace WorldTree
     {
         private T value;
 
+        public IRuleActuator<ISendRule<T>> actuator;
+
         /// <summary>
         /// 值
         /// </summary>
@@ -30,8 +32,8 @@ namespace WorldTree
                 {
                     this.value = value;
 
-                    if (m_ListenerDictionary != null)
-                        foreach (var node in m_ListenerDictionary)
+                    if (m_ReferencedsBy != null)
+                        foreach (var node in m_ReferencedsBy)
                         {
                             ((TreeValue<T>)node.Value).Value = value;
                         }

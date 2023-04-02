@@ -37,6 +37,9 @@ namespace WorldTree
         private IRuleGroup<IEnableRule> EnableRuleGroup;
         private IRuleGroup<IDisableRule> DisableRuleGroup;
 
+        private IRuleGroup<IReferencedRemoveRule> ReferencedRemoveRuleGroup;
+
+
         private IRuleGroup<INewRule> NewRuleGroup;
         private IRuleGroup<IGetRule> GetRuleGroup;
         private IRuleGroup<IRecycleRule> RecycleRuleGroup;
@@ -92,6 +95,8 @@ namespace WorldTree
             GetRuleGroup = RuleManager.GetRuleGroup<IGetRule>();
             RecycleRuleGroup = RuleManager.GetRuleGroup<IRecycleRule>();
             DestroyRuleGroup = RuleManager.GetRuleGroup<IDestroyRule>();
+
+            ReferencedRemoveRuleGroup = RuleManager.GetRuleGroup<IReferencedRemoveRule>();
 
             AddRuleGroup = RuleManager.GetRuleGroup<IAddRule>();
             RemoveRuleGroup = RuleManager.GetRuleGroup<IRemoveRule>();
@@ -265,7 +270,15 @@ namespace WorldTree
             //这个节点的移除事件
             RemoveRuleGroup?.Send(entity);
 
-            AllNode.Remove(entity.Id);
+
+            //引用关系移除通知
+            if (entity.m_Referenceds!=null)
+            {
+                foreach (var item in entity.m_Referenceds)
+                {
+                    ReferencedRemoveRuleGroup?.Send(entity, item.Value);
+                }
+            }
 
 
             //广播给全部监听器!!!!
@@ -277,6 +290,8 @@ namespace WorldTree
                 //检测移除动态监听
                 entity.TrySendDynamicListener<IListenerRemoveRule>();
             }
+
+            AllNode.Remove(entity.Id);
 
         }
     }
