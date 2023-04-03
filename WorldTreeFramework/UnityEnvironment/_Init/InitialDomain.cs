@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using TreeEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
@@ -50,6 +51,34 @@ namespace WorldTree
     //}
     //
 
+    public class TreeNode2<T> : Node, ChildOf<INode>
+    {
+        public T Value;
+    }
+
+    public class TreeNode2AddRule<T> : AddRule<TreeNode2<T>>
+    {
+        public override void OnEvent(TreeNode2<T> self)
+        {
+            World.Log($"泛型添加: {typeof(T)}");
+        }
+    }
+
+
+    public class TreeNode2Child<T> : TreeNode2<T>, ChildOf<INode>
+    {
+
+    }
+
+    public class TreeNode2ChildAddRule<T> : AddRule<TreeNode2Child<T>>
+    {
+        public override void OnEvent(TreeNode2Child<T> self)
+        {
+            World.Log($"泛型子类添加: {typeof(T)}");
+        }
+    }
+
+
     /// <summary>
     /// 初始域
     /// </summary>
@@ -61,10 +90,9 @@ namespace WorldTree
 
     class _InitialDomain : AddRule<InitialDomain>
     {
-      
+
         public override void OnEvent(InitialDomain self)
         {
-            var a= typeof( List<>) ;
             self.Branch = self;
 
             self.AddChild(out self.A);//获取
@@ -78,6 +106,9 @@ namespace WorldTree
 
 
             World.Log("初始域启动！！");
+
+            self.AddChild(out TreeNode2<float> _);
+            self.AddChild(out TreeNode2Child<int> _);
 
 
             //using (await self.AsyncLock(0))
@@ -108,7 +139,7 @@ namespace WorldTree
                 World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
 
             }
-          
+
 
             if (Input.GetKeyDown(KeyCode.Q))
             {

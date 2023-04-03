@@ -22,9 +22,7 @@ namespace WorldTree
     {
         public override void OnEvent(NodePool self)
         {
-
-            self.Core.RuleManager.SetPolymorphicListenerRule(self.ObjectType);
-            self.Core.RuleManager.SetPolymorphicRule(self.ObjectType);
+            self.Core.RuleManager.SupportNodeRule(self.ObjectType);
 
             //生命周期法则
             self.newRule = self.GetRuleList<INewRule>(self.ObjectType);

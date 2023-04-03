@@ -16,7 +16,7 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-    //class InitialDomain1 : AddRule<InitialDomain>
+    //class InitialDomain1 : AddNodeRule<InitialDomain>
     //{
     //    public override void OnEvent(InitialDomain self)
     //    {
