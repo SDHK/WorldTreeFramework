@@ -23,7 +23,7 @@ namespace WorldTree
     /// <summary>
     /// 泛型树值类型
     /// </summary>
-    public class TreeValue<T> : TreeValue
+    public class TreeValue<T> : ITreeValue
         where T : struct
     {
         private T value;
