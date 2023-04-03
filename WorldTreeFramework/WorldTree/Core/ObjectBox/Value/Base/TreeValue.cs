@@ -12,20 +12,19 @@ namespace WorldTree
     /// <summary>
     /// 树节点值类型基类
     /// </summary>
-    public abstract class TreeValue : Node, ChildOf<INode>
+    public interface  ITreeValue : INode, ChildOf<INode>
     {
-        ///// <summary>
-        ///// 全局法则类型 暂不考虑
-        ///// </summary>
-        //public Type RuleType;
-     
-
-        public RuleActuator m_RuleActuator;
 
     }
 
 
+    /// <summary>
+    /// 树节点值类型基类
+    /// </summary>
+    public interface ITreeValue<T> : ITreeValue
+    {
 
+    }
 
     public static class TreeValueRule
     {
@@ -34,7 +33,7 @@ namespace WorldTree
         /// 单向绑定
         /// </summary>
         public static void Bind<TV, TV1>(this TV self, TV1 treeValue)
-            where TV : TreeValue
+            where TV : ITreeValue
             where TV1 : TV
         {
             self.Referenced(treeValue);
@@ -45,7 +44,7 @@ namespace WorldTree
         /// 双向绑定
         /// </summary>
         public static void BindTwoWay<TV, TV1>(this TV self, TV1 treeValue)
-            where TV : TreeValue
+            where TV : ITreeValue
             where TV1 : TV
         {
 

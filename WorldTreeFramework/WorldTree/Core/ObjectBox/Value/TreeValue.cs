@@ -9,6 +9,17 @@
 
 namespace WorldTree
 {
+
+    /// <summary>
+    /// 数值监听法则接口
+    /// </summary>
+    public interface ITreeValueRule<T1> : ISendRule<T1> { }
+    /// <summary>
+    /// 数值监听法则
+    /// </summary>
+    public abstract class TreeValueRule<N, T1> : SendRuleBase<ITreeValueRule<T1>, N, T1> where N : class, INode { }
+
+
     /// <summary>
     /// 泛型树值类型
     /// </summary>
@@ -39,6 +50,15 @@ namespace WorldTree
                         }
                 }
             }
+        }
+    }
+
+    class TreeValueTreeValueRule<T> : TreeValueRule<TreeValue<T>, T>
+        where T : struct
+    {
+        public override void OnEvent(TreeValue<T> self, T arg1)
+        {
+
         }
     }
 }
