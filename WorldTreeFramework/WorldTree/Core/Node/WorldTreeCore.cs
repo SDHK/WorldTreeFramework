@@ -21,6 +21,7 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
+    //数值组件接口发布事件
 
     /// <summary>
     /// 世界树核心
@@ -262,8 +263,8 @@ namespace WorldTree
                 foreach (var item in entity.m_Referenceds)
                 {
                     ReferencedRemoveRuleGroup?.Send(entity, item.Value);
-                    entity.DeReferenced(item.Value);
                 }
+                entity.DeReferencedAll();
             }
 
             entity.RemoveAll();//移除所有子节点和组件

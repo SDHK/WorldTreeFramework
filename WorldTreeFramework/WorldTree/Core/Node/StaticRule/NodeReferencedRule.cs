@@ -12,6 +12,7 @@ namespace WorldTree
 {
     public static class NodeReferencedRule
     {
+
         /// <summary>
         /// 建立引用关系
         /// </summary>
@@ -21,33 +22,43 @@ namespace WorldTree
             if (node.m_Referenceds is null) node.m_Referenceds = node.PoolGet<UnitDictionary<long, INode>>();
 
             self.m_ReferencedsBy.TryAdd(node.Id, node);
-            node.m_Referenceds.TryAdd(self.Id, node);
+            node.m_Referenceds.TryAdd(self.Id, self);
         }
-
+      
         /// <summary>
         /// 解除引用关系
         /// </summary>
-        public static void DeReferenced(this INode self, INode node)
+        public static void DeReferencedAll(this INode self)
         {
-            if (self.m_ReferencedsBy != null)//移除子级
+            if (self.m_Referenceds != null)//移除父级
             {
-                self.m_ReferencedsBy.Remove(node.Id);
-                if (self.m_ReferencedsBy.Count == 0)
+
+                foreach (var item in self.m_Referenceds)
                 {
-                    self.m_ReferencedsBy.Dispose();
-                    self.m_ReferencedsBy = null;
+                    item.Value.m_ReferencedsBy.Remove(self.Id);
+                    if (item.Value.m_ReferencedsBy.Count == 0)
+                    {
+                        item.Value.m_ReferencedsBy.Dispose();
+                        item.Value.m_ReferencedsBy = null;
+                    }
                 }
             }
 
-            if (node.m_Referenceds != null)//移除父级
+            if (self.m_ReferencedsBy != null)//移除子级
             {
-                node.m_Referenceds.Remove(self.Id);
-                if (node.m_Referenceds.Count == 0)
+                foreach (var item in self.m_ReferencedsBy)
                 {
-                    node.m_Referenceds.Dispose();
-                    node.m_Referenceds = null;
+                    item.Value.m_Referenceds.Remove(self.Id);
+                    if (item.Value.m_Referenceds.Count == 0)
+                    {
+                        item.Value.m_Referenceds.Dispose();
+                        item.Value.m_Referenceds = null;
+                    }
                 }
+
             }
+
+
         }
     }
 }
