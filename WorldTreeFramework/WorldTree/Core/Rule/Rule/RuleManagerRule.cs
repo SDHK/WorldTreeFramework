@@ -11,14 +11,8 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    public static class RuleManagerExtension
+    public static class RuleManagerRule
     {
-
-        public static RuleManager RuleManager(this INode self)
-        {
-            return self.Core.RuleManager;
-        }
-
         /// <summary>
         /// 获取法则集合
         /// </summary>

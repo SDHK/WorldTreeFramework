@@ -7,32 +7,53 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
 
     /// <summary>
-    /// 数值监听法则接口
+    /// 树节点值类型基类
     /// </summary>
-    public interface ITreeValueRule<T1> : ISendRule<T1> { }
+    public interface ITreeValue : INode
+    {
+        /// <summary>
+        /// 全局广播法则类型
+        /// </summary>
+        public Type type { get; set; }
+    }
+
+
     /// <summary>
-    /// 数值监听法则
+    /// 树节点值类型基类
     /// </summary>
-    public abstract class TreeValueRule<N, T1> : SendRuleBase<ITreeValueRule<T1>, N, T1> where N : class, INode { }
+    public interface ITreeValue<T> : ITreeValue
+    {
+        /// <summary>
+        /// 法则执行器
+        /// </summary>
+        public IRuleActuator<IValueChangeRule<T>> RuleActuator { get; set; }
+
+        /// <summary>
+        /// 值
+        /// </summary>
+        public T Value { get; set; }
+    }
+
 
 
     /// <summary>
     /// 泛型树值类型
     /// </summary>
-    public class TreeValue<T> : ITreeValue
+    public class TreeValue<T> : Node, ITreeValue<T>, ChildOf<INode>
         where T : struct
     {
+        public Type type { get; set; }
+
+        public IRuleActuator<IValueChangeRule<T>> RuleActuator { get; set; }
+
         private T value;
 
-        public IRuleActuator<ISendRule<T>> actuator;
-
-        /// <summary>
-        /// 值
-        /// </summary>
         public virtual T Value
         {
             get => value;
@@ -42,23 +63,9 @@ namespace WorldTree
                 if (!this.value.Equals(value))
                 {
                     this.value = value;
-
-                    if (m_ReferencedsBy != null)
-                        foreach (var node in m_ReferencedsBy)
-                        {
-                            ((TreeValue<T>)node.Value).Value = value;
-                        }
+                    RuleActuator?.Send(value);
                 }
             }
-        }
-    }
-
-    class TreeValueTreeValueRule<T> : TreeValueRule<TreeValue<T>, T>
-        where T : struct
-    {
-        public override void OnEvent(TreeValue<T> self, T arg1)
-        {
-
         }
     }
 }

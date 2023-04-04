@@ -20,7 +20,6 @@ namespace WorldTree
             {
                 self.RemoveInParent();//从父节点中移除
                 self.Core.Remove(self);//全局通知移除
-                self.DeReferenced();//解除引用关系
                 self.DisposeDomain();//清除域节点
                 self.Parent = null;//清除父节点
 

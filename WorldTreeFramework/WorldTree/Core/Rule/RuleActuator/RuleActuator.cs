@@ -8,8 +8,6 @@
 * 用于执行拥有指定法则的节点
 * 可用于代替委托事件
 * 
-* ！！！！RuleGroup 应该在每次使用时去RuleManager查询获取
-* 为了方便切换
 
 */
 
@@ -45,65 +43,13 @@ namespace WorldTree
         /// </summary>
         public DynamicNodeQueue nodeQueue;
 
-        /// <summary>
-        /// 当前数量
-        /// </summary>
-        public int Count => nodeQueue.Count;
+
+        public int Count => nodeQueue is null ? 0 : nodeQueue.Count;
 
 
         public override string ToString()
         {
             return $"RuleActuator : {ruleGroup.RuleType}";
-        }
-
-
-        /// <summary>
-        /// 添加节点
-        /// </summary>
-        public void Enqueue(INode node)
-        {
-            nodeQueue.Enqueue(node);
-        }
-
-        /// <summary>
-        /// 移除节点
-        /// </summary>
-        public void Remove(INode node)
-        {
-            nodeQueue.Remove(node);
-        }
-        /// <summary>
-        /// 清除
-        /// </summary>
-        public void Clear()
-        {
-            nodeQueue.Clear();
-        }
-
-        /// <summary>
-        /// 出列
-        /// </summary>
-        public INode Dequeue()
-        {
-            return nodeQueue.Dequeue();
-        }
-
-        /// <summary>
-        /// 尝试出列
-        /// </summary>
-        public bool TryDequeue(out INode node)
-        {
-            return nodeQueue.TryDequeue(out node);
-        }
-    }
-
-    class RuleActuatorAddRule : AddRule<RuleActuator>
-    {
-        public override void OnEvent(RuleActuator self)
-        {
-
-            self.AddComponent(out self.nodeQueue);
-
         }
     }
 }

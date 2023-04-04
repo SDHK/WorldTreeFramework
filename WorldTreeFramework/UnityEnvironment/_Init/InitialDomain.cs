@@ -99,17 +99,13 @@ namespace WorldTree
             self.AddChild(out self.B);
 
 
-            self.A.Bind(self.B);//单绑
+            //self.A.Bind(self.B);//单绑
             self.A.BindTwoWay(self.B);//双绑
 
 
 
 
             World.Log("初始域启动！！");
-
-            self.AddChild(out TreeNode2<float> _);
-            self.AddChild(out TreeNode2Child<int> _);
-
 
             //using (await self.AsyncLock(0))
             //{

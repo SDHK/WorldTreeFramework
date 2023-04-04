@@ -27,31 +27,25 @@ namespace WorldTree
         /// <summary>
         /// 解除引用关系
         /// </summary>
-        public static void DeReferenced(this INode self)
+        public static void DeReferenced(this INode self, INode node)
         {
-            if (self.m_ReferencedsBy != null)//从绑定子级移除自己
+            if (self.m_ReferencedsBy != null)//移除子级
             {
-                foreach (var nodeKV in self.m_ReferencedsBy)
+                self.m_ReferencedsBy.Remove(node.Id);
+                if (self.m_ReferencedsBy.Count == 0)
                 {
-                    nodeKV.Value.m_Referenceds?.Remove(self.Id);
-                    if (nodeKV.Value.m_Referenceds.Count == 0)
-                    {
-                        nodeKV.Value.m_Referenceds.Dispose();
-                        nodeKV.Value.m_Referenceds = null;
-                    }
+                    self.m_ReferencedsBy.Dispose();
+                    self.m_ReferencedsBy = null;
                 }
             }
 
-            if (self.m_Referenceds != null)//从绑定父级移除自己
+            if (node.m_Referenceds != null)//移除父级
             {
-                foreach (var nodeKV in self.m_Referenceds)
+                node.m_Referenceds.Remove(self.Id);
+                if (node.m_Referenceds.Count == 0)
                 {
-                    nodeKV.Value.m_ReferencedsBy?.Remove(self.Id);
-                    if (nodeKV.Value.m_ReferencedsBy.Count == 0)
-                    {
-                        nodeKV.Value.m_ReferencedsBy.Dispose();
-                        nodeKV.Value.m_ReferencedsBy = null;
-                    }
+                    node.m_Referenceds.Dispose();
+                    node.m_Referenceds = null;
                 }
             }
         }

@@ -507,7 +507,7 @@ namespace WorldTree
         {
             if (TryGetRuleGroup(typeof(R), out var RuleGroup))
             {
-                ruleGroup = RuleGroup as IRuleGroup<R>;
+                ruleGroup = (IRuleGroup<R>)RuleGroup;
                 return true;
             }
             ruleGroup = default;

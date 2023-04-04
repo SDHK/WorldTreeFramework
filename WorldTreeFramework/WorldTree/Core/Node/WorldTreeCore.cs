@@ -202,7 +202,7 @@ namespace WorldTree
                 return NodePoolManager.Get(type) as INode;
             }
         }
-      
+
         /// <summary>
         /// 回收节点
         /// </summary>
@@ -256,6 +256,16 @@ namespace WorldTree
         {
             entity.SetActive(false);//激活标记变更
 
+            //引用关系移除通知
+            if (entity.m_Referenceds != null)
+            {
+                foreach (var item in entity.m_Referenceds)
+                {
+                    ReferencedRemoveRuleGroup?.Send(entity, item.Value);
+                    entity.DeReferenced(item.Value);
+                }
+            }
+
             entity.RemoveAll();//移除所有子节点和组件
             DisableRuleGroup?.Send(entity);//调用禁用事件
 
@@ -269,16 +279,6 @@ namespace WorldTree
 
             //这个节点的移除事件
             RemoveRuleGroup?.Send(entity);
-
-
-            //引用关系移除通知
-            if (entity.m_Referenceds!=null)
-            {
-                foreach (var item in entity.m_Referenceds)
-                {
-                    ReferencedRemoveRuleGroup?.Send(entity, item.Value);
-                }
-            }
 
 
             //广播给全部监听器!!!!

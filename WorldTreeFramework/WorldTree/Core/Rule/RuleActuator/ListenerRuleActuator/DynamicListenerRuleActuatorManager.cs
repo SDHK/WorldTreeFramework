@@ -73,14 +73,14 @@ namespace WorldTree
             if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
             {
                 //遍历现有执行器
-                foreach (var BroadcastGroup in ListenerActuatorGroupDictionary)
+                foreach (var ActuatorGroup in ListenerActuatorGroupDictionary)
                 {
                     //遍历获取动态法则集合，并添加自己
                     foreach (var ruleGroup in ruleGroupDictionary)
                     {
-                        if (BroadcastGroup.Value.TryGetRuleActuator(ruleGroup.Key, out var broadcast))
+                        if (ActuatorGroup.Value.TryGetRuleActuator(ruleGroup.Key, out var ruleActuator))
                         {
-                            broadcast.Enqueue(node);
+                            ruleActuator.Enqueue(node);
                         }
                     }
                 }
@@ -109,7 +109,7 @@ namespace WorldTree
         /// </summary>
         private void AddNodeTarget(INode node, Type type)
         {
-            if (TryGetGroup(type, out var broadcastGroup))
+            if (TryGetGroup(type, out var ActuatorGroup))
             {
                 //获取 INode 动态目标 法则集合集合
                 if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
@@ -117,8 +117,7 @@ namespace WorldTree
                     //遍历获取动态法则集合，并添加自己
                     foreach (var ruleGroup in ruleGroupDictionary)
                     {
-
-                        broadcastGroup.GetRuleActuator(ruleGroup.Key).Enqueue(node);
+                        ActuatorGroup.GetRuleActuator(ruleGroup.Key).Enqueue(node);
                     }
                 }
                
