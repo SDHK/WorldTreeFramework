@@ -15,46 +15,39 @@ namespace WorldTree
     /// <summary>
     /// 树节点值类型基类
     /// </summary>
-    public interface ITreeValue : INode
+    public abstract class TreeValueBase : Node
     {
         /// <summary>
         /// 全局广播法则类型
         /// </summary>
-        public Type type { get; set; }
+        public Type GlobalRuleType;
     }
 
 
     /// <summary>
     /// 树节点值类型基类
     /// </summary>
-    public interface ITreeValue<T> : ITreeValue
+    public abstract class TreeValueBase<T> : TreeValueBase
     {
         /// <summary>
         /// 法则执行器
         /// </summary>
-        public IRuleActuator<IValueChangeRule<T>> RuleActuator { get; set; }
+        public IRuleActuator<IValueChangeRule<T>> RuleActuator;
 
         /// <summary>
         /// 值
         /// </summary>
-        public T Value { get; set; }
+        public virtual T Value { get; set; }
     }
-
-
 
     /// <summary>
     /// 泛型树值类型
     /// </summary>
-    public class TreeValue<T> : Node, ITreeValue<T>, ChildOf<INode>
+    public class TreeValue<T> : TreeValueBase<T>, ChildOf<INode>
         where T : struct
     {
-        public Type type { get; set; }
-
-        public IRuleActuator<IValueChangeRule<T>> RuleActuator { get; set; }
-
         private T value;
-
-        public virtual T Value
+        public override T Value
         {
             get => value;
 

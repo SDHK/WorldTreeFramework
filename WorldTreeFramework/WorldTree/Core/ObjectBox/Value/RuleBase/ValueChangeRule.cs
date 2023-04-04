@@ -18,7 +18,7 @@ namespace WorldTree
     /// 数值变化监听法则
     /// </summary>
     public abstract class ValueChangeRule<N, T1> : SendRuleBase<IValueChangeRule<T1>, N, T1>
-        where N : class, ITreeValue<T1>, INode
+        where N : TreeValueBase<T1>
     { }
 
 }

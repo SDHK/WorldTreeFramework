@@ -238,7 +238,7 @@ namespace WorldTree
         public void SupportGenericNodeRule(Type NodeType)
         {
             Type Type = NodeType;
-            while (Type != null && Type != typeof(IUnitPoolItem))
+            while (Type != null && Type != typeof(IUnitPoolItem) && Type != typeof(object))
             {
                 //判断节点是否为泛型
                 if (Type.IsGenericType)
