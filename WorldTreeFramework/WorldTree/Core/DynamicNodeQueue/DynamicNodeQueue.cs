@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 动态节点队列
     /// </summary>
-    public class DynamicNodeQueue : Node, ComponentOf<INode>, ChildOf<INode>
+    public class DynamicNodeQueue : Node, IAwake, ComponentOf<INode>, ChildOf<INode>
     {
         /// <summary>
         /// 节点id队列

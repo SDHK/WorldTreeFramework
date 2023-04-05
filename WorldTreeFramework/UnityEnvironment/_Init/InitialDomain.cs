@@ -82,7 +82,7 @@ namespace WorldTree
     /// <summary>
     /// 初始域
     /// </summary>
-    public class InitialDomain : Node, ComponentOf<INode>
+    public class InitialDomain : Node, IAwake, ComponentOf<INode>
     {
         public TreeValue<float> A;
         public TreeValue<float> B;

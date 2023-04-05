@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 全局法则执行器集合
     /// </summary>
-    public class GlobalRuleActuatorGroup : Node, ComponentOf<WorldTreeRoot>
+    public class GlobalRuleActuatorGroup : Node, IAwake, ComponentOf<WorldTreeRoot>
     {
         public UnitDictionary<Type, RuleActuator> ruleActuatorDictionary;
 

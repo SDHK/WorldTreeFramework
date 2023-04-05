@@ -28,6 +28,7 @@ namespace WorldTree
     /// 树节点值类型基类
     /// </summary>
     public abstract class TreeValueBase<T> : TreeValueBase
+        where T : struct
     {
         /// <summary>
         /// 法则执行器
@@ -43,7 +44,7 @@ namespace WorldTree
     /// <summary>
     /// 泛型树值类型
     /// </summary>
-    public class TreeValue<T> : TreeValueBase<T>, ChildOf<INode>
+    public class TreeValue<T> : TreeValueBase<T>, IAwake, ChildOf<INode>
         where T : struct
     {
         private T value;

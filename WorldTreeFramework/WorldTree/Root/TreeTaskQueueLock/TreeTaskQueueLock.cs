@@ -25,7 +25,7 @@ namespace WorldTree
     /// <summary>
     /// 异步任务队列锁
     /// </summary>
-    public class TreeTaskQueueLock : Node, ComponentOf<WorldTreeRoot>
+    public class TreeTaskQueueLock : Node, IAwake, ComponentOf<WorldTreeRoot>
     {
         public TreeDictionary<long, DynamicNodeQueue> nodeQueueDictitonary;
 

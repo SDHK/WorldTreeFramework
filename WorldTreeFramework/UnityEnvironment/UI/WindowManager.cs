@@ -47,7 +47,7 @@ namespace WorldTree
         /// 打开窗口入栈
         /// </summary>
         public async TreeTask<T> Show<T>()
-            where T : class, INode, ComponentOf<INode>
+            where T : class, INode, IAwake, ComponentOf<INode>
         {
             if (windows.TryGetValue(typeof(T), out INode node))
             {

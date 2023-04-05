@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 树泛型列表
     /// </summary>
-    public class TreeList<T> : List<T>, INode, ChildOf<INode>
+    public class TreeList<T> : List<T>, INode, IAwake, ChildOf<INode>
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }

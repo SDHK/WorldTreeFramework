@@ -13,7 +13,7 @@ namespace WorldTree
     /// <summary>
     /// 任务队列锁 任务移除 的 全局静态监听器
     /// </summary>
-    public class TreeTaskQueueLockRemoveGlobalListener : Node, ComponentOf<DynamicNodeQueue>
+    public class TreeTaskQueueLockRemoveGlobalListener : Node, IAwake, ComponentOf<DynamicNodeQueue>
     {
         public DynamicNodeQueue nodeQueue;
 

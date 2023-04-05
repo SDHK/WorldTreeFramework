@@ -28,7 +28,7 @@ namespace WorldTree
     /// <summary>
     /// GameObject对象池
     /// </summary>
-    public class GameObjectPool : GenericPool<GameObject>, ChildOf<GameObjectPoolManager>
+    public class GameObjectPool : GenericPool<GameObject>, IAwake, ChildOf<GameObjectPoolManager>
     {
         /// <summary>
         /// 预制体

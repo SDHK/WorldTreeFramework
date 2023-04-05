@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 节点移除 动态全局监听器
     /// </summary>
-    public class NodeRemoveGlobalListener : Node, ComponentOf<DynamicNodeQueue>
+    public class NodeRemoveGlobalListener : Node, IAwake, ComponentOf<DynamicNodeQueue>
     {
         public DynamicNodeQueue nodeQueue;
     }

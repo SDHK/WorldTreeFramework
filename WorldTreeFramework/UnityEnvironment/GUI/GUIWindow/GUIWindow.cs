@@ -17,7 +17,7 @@ using UnityEngine;
 namespace WorldTree
 {
 
-    public class GUIWindow : GUIBase, ComponentOf<GUIGeneralWindow>
+    public class GUIWindow : GUIBase, IAwake, ComponentOf<GUIGeneralWindow>
     {
         public Rect rect = new Rect(0, 0, 400, 300);
         public bool isDrag = true;

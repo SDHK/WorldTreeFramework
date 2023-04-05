@@ -17,6 +17,7 @@ namespace WorldTree
     /// 监听法则执行器集合
     /// </summary>
     public class ListenerRuleActuatorGroup : Node
+        , IAwake
         , ChildOf<DynamicListenerRuleActuatorManager>
         , ChildOf<StaticListenerRuleActuatorManager>
     {

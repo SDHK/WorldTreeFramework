@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 计时器：循环调用
     /// </summary>
-    public class TimerCycle : Node
+    public class TimerCycle : Node, IAwake
     {
         public float time = 0;
         public float timeOutTime = 0;

@@ -13,7 +13,7 @@ using WorldTree;
 
 namespace EditorTool
 {
-    public class EditorHomePage : Node, ComponentOf<INode>
+    public class EditorHomePage : Node, IAwake, ComponentOf<INode>
     {
         public INode page;
     }

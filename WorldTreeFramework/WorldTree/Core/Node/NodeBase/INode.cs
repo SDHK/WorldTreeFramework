@@ -46,10 +46,6 @@ namespace WorldTree
         Rule
     }
 
-    /// <summary>
-    /// 不被监听的类型
-    /// </summary>
-    public interface INotListenedNode { }
 
     /// <summary>
     /// 世界树节点接口

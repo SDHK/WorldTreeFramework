@@ -124,7 +124,7 @@ namespace WorldTree
         #region 添加
         #region 替换或添加
 
-     
+
         /// <summary>
         /// 添加野组件或替换父节点  （替换：从原父节点移除，移除替换同类型的组件，不调用事件）
         /// </summary>
@@ -233,7 +233,7 @@ namespace WorldTree
 
         public static T AddComponent<N, T>(this N self, out T Component)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>
+        where T : class, INode, ComponentOf<N>, IAwake
         {
             if (self.TryAddNewComponent(out Component))
             {
@@ -245,7 +245,7 @@ namespace WorldTree
 
         public static T AddComponent<N, T, T1>(this N self, out T Component, T1 arg1)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>
+        where T : class, INode, ComponentOf<N>, IAwake<T1>
         {
             if (self.TryAddNewComponent(out Component))
             {
@@ -256,7 +256,7 @@ namespace WorldTree
         }
         public static T AddComponent<N, T, T1, T2>(this N self, out T Component, T1 arg1, T2 arg2)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>
+        where T : class, INode, ComponentOf<N>, IAwake<T1, T2>
         {
             if (self.TryAddNewComponent(out Component))
             {
@@ -268,7 +268,7 @@ namespace WorldTree
 
         public static T AddComponent<N, T, T1, T2, T3>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>
+        where T : class, INode, ComponentOf<N>, IAwake<T1, T2, T3>
         {
             if (self.TryAddNewComponent(out Component))
             {
@@ -280,7 +280,7 @@ namespace WorldTree
 
         public static T AddComponent<N, T, T1, T2, T3, T4>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>
+        where T : class, INode, ComponentOf<N>, IAwake<T1, T2, T3, T4>
         {
             if (self.TryAddNewComponent(out Component))
             {
@@ -291,11 +291,11 @@ namespace WorldTree
         }
         public static T AddComponent<N, T, T1, T2, T3, T4, T5>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>
+        where T : class, INode, ComponentOf<N>, IAwake<T1, T2, T3, T4, T5>
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule(default(IAwakeRule<T1, T2, T3, T4, T5>),arg1, arg2, arg3, arg4, arg5);
+                Component.SendRule(default(IAwakeRule<T1, T2, T3, T4, T5>), arg1, arg2, arg3, arg4, arg5);
                 self.Core.Add(Component);
             }
             return Component;

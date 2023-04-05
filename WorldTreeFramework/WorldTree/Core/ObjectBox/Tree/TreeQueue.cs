@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 树泛型队列
     /// </summary>
-    public class TreeQueue<T> : Queue<T>, INode, ChildOf<INode>
+    public class TreeQueue<T> : Queue<T>, INode, IAwake, ChildOf<INode>
     {
         public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }

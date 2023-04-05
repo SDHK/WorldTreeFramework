@@ -22,7 +22,7 @@ namespace WorldTree
     /// 饿汉单例法则：生成组件挂在根节点下
     /// </summary>
     public abstract class SingletonEagerRule<N> : SendRuleBase<ISingletonEagerRule, N>, ISingletonEagerRule
-        where N : class, INode, ComponentOf<INode>
+        where N : class, INode, IAwake, ComponentOf<INode>
     {
         public override void Invoke(INode self)
         {

@@ -42,27 +42,51 @@ namespace WorldTree
     /// <summary>
     /// 初始化法则
     /// </summary>
-    public abstract class AwakeRule<N> : SendRuleBase<IAwakeRule, N> where N : class,INode { }
+    public abstract class AwakeRule<N> : SendRuleBase<IAwakeRule, N> where N : class, INode { }
     /// <summary>
     /// 初始化法则
     /// </summary>
-    public abstract class AwakeRule<N, T1> : SendRuleBase<IAwakeRule<T1>, N, T1> where N : class,INode { }
+    public abstract class AwakeRule<N, T1> : SendRuleBase<IAwakeRule<T1>, N, T1> where N : class, INode { }
     /// <summary>
     /// 初始化法则
     /// </summary>
-    public abstract class AwakeRule<N, T1, T2> : SendRuleBase<IAwakeRule<T1, T2>, N, T1, T2> where N : class,INode { }
+    public abstract class AwakeRule<N, T1, T2> : SendRuleBase<IAwakeRule<T1, T2>, N, T1, T2> where N : class, INode { }
     /// <summary>
     /// 初始化法则
     /// </summary>
-    public abstract class AwakeRule<N, T1, T2, T3> : SendRuleBase<IAwakeRule<T1, T2, T3>, N, T1, T2, T3> where N : class,INode { }
+    public abstract class AwakeRule<N, T1, T2, T3> : SendRuleBase<IAwakeRule<T1, T2, T3>, N, T1, T2, T3> where N : class, INode { }
     /// <summary>
     /// 初始化法则
     /// </summary>
-    public abstract class AwakeRule<N, T1, T2, T3, T4> : SendRuleBase<IAwakeRule<T1, T2, T3, T4>, N, T1, T2, T3, T4> where N : class,INode { }
+    public abstract class AwakeRule<N, T1, T2, T3, T4> : SendRuleBase<IAwakeRule<T1, T2, T3, T4>, N, T1, T2, T3, T4> where N : class, INode { }
     /// <summary>
     /// 初始化法则
     /// </summary>
-    public abstract class AwakeRule<N, T1, T2, T3, T4, T5> : SendRuleBase<IAwakeRule<T1, T2, T3, T4, T5>, N, T1, T2, T3, T4, T5> where N : class,INode { }
+    public abstract class AwakeRule<N, T1, T2, T3, T4, T5> : SendRuleBase<IAwakeRule<T1, T2, T3, T4, T5>, N, T1, T2, T3, T4, T5> where N : class, INode { }
 
 
+    /// <summary>
+    /// 初始化参数限制
+    /// </summary>
+    public interface IAwake { }
+    /// <summary>
+    /// 初始化参数限制
+    /// </summary>
+    public interface IAwake<T1> { }
+    /// <summary>
+    /// 初始化参数限制
+    /// </summary>
+    public interface IAwake<T1, T2> { }
+    /// <summary>
+    /// 初始化参数限制
+    /// </summary>
+    public interface IAwake<T1, T2, T3> { }
+    /// <summary>
+    /// 初始化参数限制
+    /// </summary>
+    public interface IAwake<T1, T2, T3, T4> { }
+    /// <summary>
+    /// 初始化参数限制
+    /// </summary>
+    public interface IAwake<T1, T2, T3, T4, T5> { }
 }

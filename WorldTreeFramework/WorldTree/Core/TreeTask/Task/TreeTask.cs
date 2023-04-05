@@ -19,7 +19,7 @@ namespace WorldTree
     /// </summary>
     /// <remarks>因为继承Node所以可以挂在树上</remarks>
     [AsyncMethodBuilder(typeof(Internal.TreeTaskMethodBuilder))]
-    public class TreeTask : TreeTaskBase
+    public class TreeTask : TreeTaskBase, IAwake
     {
         public TreeTask GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
@@ -56,7 +56,7 @@ namespace WorldTree
     /// 泛型异步任务
     /// </summary>
     [AsyncMethodBuilder(typeof(Internal.AsyncTaskMethodBuilder<>))]
-    public class TreeTask<T> : TreeTaskBase
+    public class TreeTask<T> : TreeTaskBase, IAwake
     {
         public TreeTask<T> GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
