@@ -31,9 +31,13 @@ namespace WorldTree
         where T : struct
     {
         /// <summary>
+        /// 全局法则执行器
+        /// </summary>
+        public IRuleActuator<IValueChangeRule<T>> m_GlobalRuleActuator;
+        /// <summary>
         /// 法则执行器
         /// </summary>
-        public IRuleActuator<IValueChangeRule<T>> RuleActuator;
+        public IRuleActuator<IValueChangeRule<T>> m_RuleActuator;
 
         /// <summary>
         /// 值
@@ -57,7 +61,7 @@ namespace WorldTree
                 if (!this.value.Equals(value))
                 {
                     this.value = value;
-                    RuleActuator?.Send(value);
+                    m_RuleActuator?.Send(value);
                 }
             }
         }

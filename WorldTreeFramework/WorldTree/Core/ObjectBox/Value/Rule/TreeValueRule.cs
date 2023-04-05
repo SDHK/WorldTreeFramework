@@ -26,7 +26,7 @@ namespace WorldTree
     {
         public override void OnEvent(TreeValueBase<T> self)
         {
-            self.RuleActuator = default;
+            self.m_RuleActuator = default;
             self.Value = default;
             self.GlobalRuleType = default;
         }
@@ -40,8 +40,8 @@ namespace WorldTree
         public static void Bind<T>(this TreeValueBase<T> self, TreeValueBase<T> treeValue)
             where T : struct
         {
-            if (self.RuleActuator is null) self.TryGetRuleActuator(out self.RuleActuator);
-            self.RuleActuator?.EnqueueReferenced(treeValue);
+            if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
+            self.m_RuleActuator?.EnqueueReferenced(treeValue);
         }
 
         /// <summary>
@@ -50,10 +50,10 @@ namespace WorldTree
         public static void BindTwoWay<T>(this TreeValueBase<T> self, TreeValueBase<T> treeValue)
             where T : struct
         {
-            if (self.RuleActuator is null) self.TryGetRuleActuator(out self.RuleActuator);
-            if (treeValue.RuleActuator is null) treeValue.TryGetRuleActuator(out treeValue.RuleActuator);
-            self.RuleActuator?.EnqueueReferenced(treeValue);
-            treeValue.RuleActuator?.EnqueueReferenced(self);
+            if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
+            if (treeValue.m_RuleActuator is null) treeValue.TryGetRuleActuator(out treeValue.m_RuleActuator);
+            self.m_RuleActuator?.EnqueueReferenced(treeValue);
+            treeValue.m_RuleActuator?.EnqueueReferenced(self);
         }
     }
 
