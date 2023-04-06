@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/4/6 10:59
 
-* 描述： 委托式泛型树值类型
+* 描述： 绑定委托式泛型树值类型
 
 */
 
@@ -12,7 +12,7 @@ using System;
 namespace WorldTree
 {
     /// <summary>
-    /// 委托式泛型树值类型
+    /// 绑定委托式泛型树值类型
     /// </summary>
     public class TreeValueDelegate<T> : TreeValueBase<T>
         , IAwake<object, Func<object, T>, Action<object, T>>
