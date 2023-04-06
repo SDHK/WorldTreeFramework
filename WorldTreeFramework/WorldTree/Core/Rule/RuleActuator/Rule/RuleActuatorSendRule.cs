@@ -9,8 +9,8 @@
 
             if (self.ruleGroup != null && self.IsActive)
             {
-                int length = self.nodeQueue.Count;
-                for (int i = 0; i < length; i++)
+                self.nodeQueue.RefreshTraversalCount();
+                for (int i = 0; i < self.nodeQueue.traversalCount; i++)
                 {
                     if (self.nodeQueue.TryDequeue(out INode node))
                     {
@@ -27,8 +27,8 @@
 
             if (self.ruleGroup != null && self.IsActive)
             {
-                int length = self.nodeQueue.Count;
-                for (int i = 0; i < length; i++)
+                self.nodeQueue.RefreshTraversalCount();
+                for (int i = 0; i < self.nodeQueue.traversalCount; i++)
                 {
                     if (self.nodeQueue.TryDequeue(out INode node))
                     {
@@ -44,8 +44,8 @@
             RuleActuator self = (RuleActuator)Self;
             if (self.ruleGroup != null && self.IsActive)
             {
-                int length = self.nodeQueue.Count;
-                for (int i = 0; i < length; i++)
+                self.nodeQueue.RefreshTraversalCount();
+                for (int i = 0; i < self.nodeQueue.traversalCount; i++)
                 {
                     if (self.nodeQueue.TryDequeue(out INode node))
                     {
@@ -62,8 +62,8 @@
             RuleActuator self = (RuleActuator)Self;
             if (self.ruleGroup != null && self.IsActive)
             {
-                int length = self.nodeQueue.Count;
-                for (int i = 0; i < length; i++)
+                self.nodeQueue.RefreshTraversalCount();
+                for (int i = 0; i < self.nodeQueue.traversalCount; i++)
                 {
                     if (self.nodeQueue.TryDequeue(out INode node))
                     {
@@ -79,8 +79,8 @@
             RuleActuator self = (RuleActuator)Self;
             if (self.ruleGroup != null && self.IsActive)
             {
-                int length = self.nodeQueue.Count;
-                for (int i = 0; i < length; i++)
+                self.nodeQueue.RefreshTraversalCount();
+                for (int i = 0; i < self.nodeQueue.traversalCount; i++)
                 {
                     if (self.nodeQueue.TryDequeue(out INode node))
                     {
@@ -96,8 +96,8 @@
             RuleActuator self = (RuleActuator)Self;
             if (self.ruleGroup != null && self.IsActive)
             {
-                int length = self.nodeQueue.Count;
-                for (int i = 0; i < length; i++)
+                self.nodeQueue.RefreshTraversalCount();
+                for (int i = 0; i < self.nodeQueue.traversalCount; i++)
                 {
                     if (self.nodeQueue.TryDequeue(out INode node))
                     {

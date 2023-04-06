@@ -106,6 +106,16 @@ namespace WorldTree
             }
         }
 
+
+        /// <summary>
+        /// 刷新动态遍历数量
+        /// </summary>
+        public static void RefreshTraversalCount(this DynamicNodeQueue self)
+        {
+            self.traversalCount = self.idQueue.Count;
+        }
+
+
         /// <summary>
         /// 尝试获取队顶
         /// </summary>
@@ -121,6 +131,8 @@ namespace WorldTree
                     {
                         //回收次数抵消
                         self.removeIdDictionary[id] = --count;
+                        if (self.traversalCount > 0) self.traversalCount--;
+
                         //次数为0时删除id
                         if (count == 0) self.removeIdDictionary.Remove(id);
                         //移除这个id
@@ -170,6 +182,7 @@ namespace WorldTree
                 {
                     //回收次数抵消
                     self.removeIdDictionary[id] = --count;
+                    if (self.traversalCount > 0) self.traversalCount--;
 
                     //次数为0时删除id
                     if (count == 0) self.removeIdDictionary.Remove(id);

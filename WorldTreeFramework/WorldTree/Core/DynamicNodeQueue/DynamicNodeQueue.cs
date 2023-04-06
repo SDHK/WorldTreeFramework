@@ -35,5 +35,11 @@ namespace WorldTree
         /// 当前队列数量
         /// </summary>
         public int Count => nodeDictionary is null ? 0 : nodeDictionary.Count;
+
+        /// <summary>
+        /// 动态的遍历数量
+        /// </summary>
+        /// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
+        public int traversalCount;
     }
 }
