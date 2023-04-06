@@ -17,10 +17,6 @@ namespace WorldTree
     /// </summary>
     public abstract class TreeValueBase : Node
     {
-        /// <summary>
-        /// 全局广播法则类型
-        /// </summary>
-        public Type GlobalRuleType;
     }
 
 
@@ -28,7 +24,7 @@ namespace WorldTree
     /// 树节点值类型基类
     /// </summary>
     public abstract class TreeValueBase<T> : TreeValueBase
-        where T : struct
+        where T : struct, IEquatable<T>
     {
         /// <summary>
         /// 全局法则执行器

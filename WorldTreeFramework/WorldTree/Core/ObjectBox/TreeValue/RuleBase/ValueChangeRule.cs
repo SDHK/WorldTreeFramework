@@ -8,6 +8,8 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
     /// <summary>
@@ -19,7 +21,7 @@ namespace WorldTree
     /// </summary>
     public abstract class ValueChangeRule<N, T1> : SendRuleBase<IValueChangeRule<T1>, N, T1>
         where N : TreeValueBase<T1>
-        where T1 : struct
+        where T1 : struct, IEquatable<T1>
     { }
 
 }
