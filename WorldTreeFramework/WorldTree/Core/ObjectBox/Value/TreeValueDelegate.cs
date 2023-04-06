@@ -1,9 +1,9 @@
 ﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/3/21 20:42
+* 日期： 2023/4/6 10:59
 
-* 描述： 泛型树值类型
+* 描述： 委托式泛型树值类型
 
 */
 
@@ -12,25 +12,26 @@ using System;
 namespace WorldTree
 {
     /// <summary>
-    /// 泛型树值类型
+    /// 委托式泛型树值类型
     /// </summary>
-    public class TreeValue<T> : TreeValueBase<T>
-        , IAwake
-        , IAwake<T>
+    public class TreeValueDelegate<T> : TreeValueBase<T>
+        , IAwake<Func<T>, Action<T>>
+
         , ChildOf<INode>
 
     where T : struct, IEquatable<T>
     {
-        public T m_Value;
+        public Func<T> Get;
+        public Action<T> Set;
         public override T Value
         {
-            get => m_Value;
+            get => Get();
 
             set
             {
-                if (this.m_Value.Equals(value))
+                if (Get().Equals(value))
                 {
-                    this.m_Value = value;
+                    this.Set(value);
                     m_RuleActuator?.Send(value);
                     m_GlobalRuleActuator?.Send(value);
                 }

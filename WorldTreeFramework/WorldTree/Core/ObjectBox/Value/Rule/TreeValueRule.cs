@@ -7,8 +7,6 @@
 
 */
 
-using System;
-
 namespace WorldTree
 {
 
@@ -26,6 +24,7 @@ namespace WorldTree
     {
         public override void OnEvent(TreeValueBase<T> self)
         {
+            self.m_GlobalRuleActuator = default;
             self.m_RuleActuator = default;
             self.Value = default;
             self.GlobalRuleType = default;
@@ -34,6 +33,17 @@ namespace WorldTree
 
     public static class TreeValueRule
     {
+
+        /// <summary>
+        /// 设置一个全局法则执行器
+        /// </summary>
+        public static void SetGlobalRuleActuator<T, R>(this TreeValueBase<T> self, R defaultRule = default)
+            where T : struct
+            where R : IValueChangeRule<T>
+        {
+            self.m_GlobalRuleActuator = (IRuleActuator<IValueChangeRule<T>>)self.GetGlobalNodeRuleActuator<R>();
+        }
+
         /// <summary>
         /// 单向绑定
         /// </summary>
