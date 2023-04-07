@@ -39,7 +39,7 @@ namespace WorldTree
 
             set
             {
-                if (m_Get(m_BindObject).Equals(value))
+                if (!m_Get(m_BindObject).Equals(value))
                 {
                     m_Set(m_BindObject, value);
                     m_RuleActuator?.Send(value);

@@ -28,7 +28,7 @@ namespace WorldTree
 
             set
             {
-                if (this.m_Value.Equals(value))
+                if (!this.m_Value.Equals(value))
                 {
                     this.m_Value = value;
                     m_RuleActuator?.Send(value);
