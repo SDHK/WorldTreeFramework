@@ -31,24 +31,24 @@ namespace WorldTree
         }
     }
 
-    public class NodeListenerAddRule : ListenerAddRule<Node>
-    {
-        public override void OnEvent(Node self, INode node)
-        {
-            World.Log($"NodeListenerAdd: {self.Id} _  {self.Type} ");
+    //public class NodeListenerAddRule : ListenerAddRule<Node>
+    //{
+    //    public override void OnEvent(Node self, INode node)
+    //    {
+    //        World.Log($"NodeListenerAdd: {self.Id} _  {self.Type} ");
 
-        }
-    }
+    //    }
+    //}
 
-    public class NodeListenerInitialDomainAddRule : ListenerAddRule<Node, InitialDomain, IRule>
-    {
+    //public class NodeListenerInitialDomainAddRule : ListenerAddRule<Node, InitialDomain, IRule>
+    //{
 
-        public override void OnEvent(Node self, InitialDomain node)
-        {
-            World.Log($"NodeListenerInitialDomainAdd: {self.Id} _  {self.Type} ");
+    //    public override void OnEvent(Node self, InitialDomain node)
+    //    {
+    //        World.Log($"NodeListenerInitialDomainAdd: {self.Id} _  {self.Type} ");
 
-        }
-    }
+    //    }
+    //}
 
 
     public class TreeNode2<T> : Node, ChildOf<INode>
@@ -91,7 +91,7 @@ namespace WorldTree
     class _InitialDomain : AddRule<InitialDomain>
     {
 
-        public override void OnEvent(InitialDomain self)
+        public override async void OnEvent(InitialDomain self)
         {
             self.Branch = self;
 
@@ -107,11 +107,11 @@ namespace WorldTree
 
             World.Log("初始域启动！！");
 
-            //using (await self.AsyncLock(0))
-            //{
-            //    await self.AsyncDelay(3);
-            //    self.a.Value++;
-            //}
+            using (await self.AsyncLock(0))
+            {
+                await self.AsyncDelay(3);
+                self.A.Value++;
+            }
 
 
 
@@ -120,12 +120,16 @@ namespace WorldTree
     }
     class InitialDomainUpdateRule : UpdateRule<InitialDomain>
     {
-        public override void OnEvent(InitialDomain self, float deltaTime)
+        public override async void OnEvent(InitialDomain self, float deltaTime)
         {
 
             if (Input.GetKeyDown(KeyCode.A))
             {
-                self.A.Value += 1;
+                using (await self.AsyncLock(0))
+                {
+                    await self.AsyncDelay(3);
+                    self.A.Value++;
+                }
                 World.Log($"A  A:{self.A.Value}  B:{self.B.Value}");
 
             }

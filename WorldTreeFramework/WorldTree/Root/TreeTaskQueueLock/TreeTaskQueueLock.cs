@@ -40,18 +40,14 @@ namespace WorldTree
                 //新建动态节点队列
                 nodeQueueDictitonary.AddChild(out TaskQueue);
 
-                //添加 任务队列锁 任务移除 的 全局监听器。
-                TaskQueue.AddComponent(out TreeTaskQueueLockRemoveGlobalListener _);
+                ////添加 任务队列锁 任务移除 的 全局监听器。
+                //TaskQueue.AddComponent(out TreeTaskQueueLockRemoveGlobalListener _);
 
                 //动态节点队列添加进字典
                 nodeQueueDictitonary.Add(key, TaskQueue);
 
                 //节点添加解锁器
-                node.AddChild(out TreeTaskQueueCompleter taskQueueCompleter);
-
-                //解锁器配上队列
-                taskQueueCompleter.queueLock = this;
-                taskQueueCompleter.key = key;
+                node.AddChild(out TreeTaskQueueCompleter taskQueueCompleter, key, this);
 
                 //防止异常
                 await node.TreeTaskCompleted();
@@ -62,7 +58,7 @@ namespace WorldTree
 
             //节点添加任务锁
             _ = node.AddChild(out TreeTask<TreeTaskQueueCompleter> treeTask);
-            TaskQueue.Enqueue(treeTask);
+            TaskQueue.EnqueueReferenced(treeTask);
 
             //返回一个任务锁
             return await treeTask;
@@ -73,6 +69,7 @@ namespace WorldTree
         /// </summary>
         public void RunNext(long key)
         {
+            if(nodeQueueDictitonary != null)
             if (nodeQueueDictitonary.TryGetValue(key, out DynamicNodeQueue nodeQueue))
             {
                 //获取第一个任务
@@ -82,16 +79,13 @@ namespace WorldTree
                     if (nodeQueue.TryPeek(out var nextTask))
                     {
                         //给下一个任务父节点挂上任务解锁器
-                        nextTask.Parent.AddChild(out taskQueueCompleter);
+                        nextTask.Parent.AddChild(out taskQueueCompleter, key, this);
                     }
                     else
                     {
                         //下一个任务不存在，意味着已是最后一个，解锁器挂最后节点身上
-                        task.Parent.AddChild(out taskQueueCompleter);
+                        task.Parent.AddChild(out taskQueueCompleter, key, this);
                     }
-                    //解锁器参数传递
-                    taskQueueCompleter.queueLock = this;
-                    taskQueueCompleter.key = key;
 
                     //启动下一个任务，塞入任务解锁器
                     task.To<TreeTask<TreeTaskQueueCompleter>>().SetResult(taskQueueCompleter);

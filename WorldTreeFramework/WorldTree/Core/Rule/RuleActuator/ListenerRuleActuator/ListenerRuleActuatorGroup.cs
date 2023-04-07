@@ -30,7 +30,7 @@ namespace WorldTree
         /// 法则执行器字典
         /// </summary>
         /// <remarks>法则类型,执行器</remarks>
-        public Dictionary<Type, RuleActuator> actuatorDictionary = new Dictionary<Type, RuleActuator>();
+        public TreeDictionary<Type, RuleActuator> actuatorDictionary;
 
         public override string ToString()
         {
@@ -60,5 +60,21 @@ namespace WorldTree
 
 
 
+    }
+
+    class ListenerRuleActuatorGroupAddRule : AddRule<ListenerRuleActuatorGroup>
+    {
+        public override void OnEvent(ListenerRuleActuatorGroup self)
+        {
+            self.AddChild(out self.actuatorDictionary);
+        }
+    }
+
+    class ListenerRuleActuatorGroupRemoveRule : RemoveRule<ListenerRuleActuatorGroup>
+    {
+        public override void OnEvent(ListenerRuleActuatorGroup self)
+        {
+            self.actuatorDictionary = null;
+        }
     }
 }
