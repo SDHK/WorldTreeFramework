@@ -92,7 +92,7 @@ namespace WorldTree
         /// </summary>
         public virtual void OnDispose()
         {
-            thisPool?.Recycle(this);
+            Core?.Recycle(this);
         }
 
     }
