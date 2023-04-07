@@ -21,7 +21,6 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
-    //数值组件接口发布事件
 
     /// <summary>
     /// 世界树核心
@@ -38,13 +37,12 @@ namespace WorldTree
         private IRuleGroup<IEnableRule> EnableRuleGroup;
         private IRuleGroup<IDisableRule> DisableRuleGroup;
 
-        private IRuleGroup<IReferencedRemoveRule> ReferencedRemoveRuleGroup;
-
-
         private IRuleGroup<INewRule> NewRuleGroup;
         private IRuleGroup<IGetRule> GetRuleGroup;
         private IRuleGroup<IRecycleRule> RecycleRuleGroup;
         private IRuleGroup<IDestroyRule> DestroyRuleGroup;
+
+        private IRuleGroup<IReferencedRemoveRule> ReferencedRemoveRuleGroup;
 
         /// <summary>
         /// Id管理器
@@ -97,12 +95,12 @@ namespace WorldTree
             RecycleRuleGroup = RuleManager.GetRuleGroup<IRecycleRule>();
             DestroyRuleGroup = RuleManager.GetRuleGroup<IDestroyRule>();
 
-            ReferencedRemoveRuleGroup = RuleManager.GetRuleGroup<IReferencedRemoveRule>();
-
             AddRuleGroup = RuleManager.GetRuleGroup<IAddRule>();
             RemoveRuleGroup = RuleManager.GetRuleGroup<IRemoveRule>();
             EnableRuleGroup = RuleManager.GetRuleGroup<IEnableRule>();
             DisableRuleGroup = RuleManager.GetRuleGroup<IDisableRule>();
+
+            ReferencedRemoveRuleGroup = RuleManager.GetRuleGroup<IReferencedRemoveRule>();
 
             //核心组件添加到核心
             this.AddComponent(IdManager);

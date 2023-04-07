@@ -9,7 +9,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -64,7 +63,7 @@ namespace WorldTree
         /// 目标类型 法则执行器字典
         /// </summary>
         /// <remarks>目标类型《系统，法则执行器》</remarks>
-        public Dictionary<Type, ListenerRuleActuatorGroup> ListenerActuatorGroupDictionary = new Dictionary<Type, ListenerRuleActuatorGroup>();
+        public TreeDictionary<Type, ListenerRuleActuatorGroup> ListenerActuatorGroupDictionary;
 
         /// <summary>
         /// 释放后
@@ -73,7 +72,6 @@ namespace WorldTree
         {
             IsRecycle = true;
             IsDisposed = true;
-            ListenerActuatorGroupDictionary.Clear();
         }
 
         #region 判断监听器
@@ -136,10 +134,10 @@ namespace WorldTree
             if (TryGetGroup(Target, out var group))
             {
                 //判断是否有执行器
-                if (group.TryGetRuleActuator(ruleType,out actuator)) { return true; }
+                if (group.TryGetRuleActuator(ruleType, out actuator)) { return true; }
 
                 //没有执行器 则判断这个目标类型是是否有监听法则集合
-                else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType,Target, out var ruleGroup))
+                else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
                 {
                     //新建执行器
                     actuator = group.GetRuleActuator(ruleType);
@@ -149,7 +147,7 @@ namespace WorldTree
                 }
             }
             //没有组则判断这个目标类型是否有监听法则集合
-            else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType,Target, out var ruleGroup))
+            else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
             {
                 //新建组和执行器
                 actuator = GetGroup(Target).GetRuleActuator(ruleType);
@@ -226,4 +224,20 @@ namespace WorldTree
         #endregion
 
     }
+
+    class StaticListenerRuleActuatorManagerAddRule : AddRule<StaticListenerRuleActuatorManager>
+    {
+        public override void OnEvent(StaticListenerRuleActuatorManager self)
+        {
+            self.AddChild(out self.ListenerActuatorGroupDictionary);
+        }
+    }
+    class StaticListenerRuleActuatorManagerRemoveRule : RemoveRule<StaticListenerRuleActuatorManager>
+    {
+        public override void OnEvent(StaticListenerRuleActuatorManager self)
+        {
+            self.ListenerActuatorGroupDictionary = null;
+        }
+    }
+
 }

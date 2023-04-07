@@ -16,7 +16,6 @@ namespace WorldTree
     /// </summary>
     public class TreeValue<T> : TreeValueBase<T>
         , IAwake
-        , IAwake<T>
         , ChildOf<INode>
 
     where T : struct, IEquatable<T>

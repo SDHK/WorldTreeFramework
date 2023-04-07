@@ -23,7 +23,7 @@ namespace WorldTree
         /// 目标类型 法则执行器字典
         /// </summary>
         /// <remarks>目标类型《系统，法则执行器》</remarks>
-        public Dictionary<Type, ListenerRuleActuatorGroup> ListenerActuatorGroupDictionary = new Dictionary<Type, ListenerRuleActuatorGroup>();
+        public TreeDictionary<Type, ListenerRuleActuatorGroup> ListenerActuatorGroupDictionary;
 
         /// <summary>
         /// 释放后
@@ -32,7 +32,6 @@ namespace WorldTree
         {
             IsRecycle = true;
             IsDisposed = true;
-            ListenerActuatorGroupDictionary.Clear();
         }
 
         #region 判断监听器
@@ -340,5 +339,21 @@ namespace WorldTree
         }
 
         #endregion
+    }
+
+    public class DynamicListenerRuleActuatorManagerAddRule : AddRule<DynamicListenerRuleActuatorManager>
+    {
+        public override void OnEvent(DynamicListenerRuleActuatorManager self)
+        {
+            self.AddChild(out self.ListenerActuatorGroupDictionary);
+        }
+    }
+
+    class DynamicListenerRuleActuatorManagerRemoveRule : RemoveRule<DynamicListenerRuleActuatorManager>
+    {
+        public override void OnEvent(DynamicListenerRuleActuatorManager self)
+        {
+            self.ListenerActuatorGroupDictionary = null;
+        }
     }
 }
