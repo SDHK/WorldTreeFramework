@@ -4,6 +4,8 @@
 * 日期： 2022/7/18 9:35
 
 * 描述： 一个编号分发的管理器
+* 
+* 后续需要改为根据时间生成
 */
 
 using System.Collections.Generic;

@@ -84,6 +84,7 @@ namespace WorldTree
 
             DynamicListenerTypeHash.Clear();
             GenericRuleTypeHashDictionary.Clear();
+            TargetRuleListenerRuleHashDictionary.Clear();
 
             TargetRuleListenerGroupDictionary.Clear();
             ListenerRuleTargetGroupDictionary.Clear();
