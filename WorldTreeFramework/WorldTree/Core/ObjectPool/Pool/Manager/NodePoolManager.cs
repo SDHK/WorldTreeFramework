@@ -52,18 +52,7 @@ namespace WorldTree
     /// </summary>
     public class NodePoolManager : Node, IAwake, ComponentOf<WorldTreeCore>
     {
-
-        public UnitDictionary<Type, NodePool> pools = new UnitDictionary<Type, NodePool>();
-
-        /// <summary>
-        /// 释放后
-        /// </summary>
-        public override void OnDispose()
-        {
-            IsRecycle = true;
-            IsDisposed = true;
-            pools.Clear();
-        }
+        public TreeDictionary<Type, NodePool> m_Pools;
 
         /// <summary>
         /// 获取节点
@@ -85,14 +74,18 @@ namespace WorldTree
 
 
         /// <summary>
-        /// 回收对象
+        /// 尝试回收对象
         /// </summary>
-        public void Recycle(INode obj)
+        public bool TryRecycle(INode obj)
         {
-            if (obj != this && !(obj is NodePool))//禁止回收自己和对象池
+            if (m_Pools != null)
+            if (m_Pools.TryGetValue(obj.GetType(), out NodePool nodePool))
             {
-                GetPool(obj.GetType()).Recycle(obj);
+                nodePool.Recycle(obj);
+                return true;
+
             }
+            return false;
         }
 
         /// <summary>
@@ -109,7 +102,7 @@ namespace WorldTree
         /// </summary>
         public NodePool GetPool(Type type)
         {
-            if (!pools.TryGetValue(type, out NodePool pool))
+            if (!m_Pools.TryGetValue(type, out NodePool pool))
             {
                 pool = new NodePool(type);
                 pool.Id = Core.IdManager.GetId();
@@ -117,7 +110,7 @@ namespace WorldTree
                 pool.Root = Root;
                 pool.Branch = Branch;
                 pool.Type = pool.GetType();
-                pools.Add(type, pool);
+                m_Pools.Add(type, pool);
                 this.AddChild(pool);
             }
             return pool;
@@ -128,7 +121,7 @@ namespace WorldTree
         /// </summary>
         public bool TryGetPool(Type type, out NodePool pool)
         {
-            return pools.TryGetValue(type, out pool);
+            return m_Pools.TryGetValue(type, out pool);
         }
 
         /// <summary>
@@ -137,11 +130,35 @@ namespace WorldTree
         public void DisposePool<T>()
         {
             Type type = typeof(T);
-            if (pools.TryGetValue(type, out NodePool pool))
+            DisposePool(type);
+        }
+
+        /// <summary>
+        /// 释放池
+        /// </summary>
+        public void DisposePool(Type type)
+        {
+            if (m_Pools.TryGetValue(type, out NodePool pool))
             {
+                m_Pools.Remove(type);
                 pool.Dispose();
-                pools.Remove(type);
             }
+        }
+    }
+
+    class NodePoolManagerAddRule : AddRule<NodePoolManager>
+    {
+        public override void OnEvent(NodePoolManager self)
+        {
+            self.AddChild(out self.m_Pools);
+        }
+    }
+
+    class NodePoolManagerRemoveRule : RemoveRule<NodePoolManager>
+    {
+        public override void OnEvent(NodePoolManager self)
+        {
+            self.m_Pools = null;
         }
     }
 }

@@ -18,25 +18,10 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-    class NodePoolAddRule : AddRule<NodePool>
-    {
-        public override void OnEvent(NodePool self)
-        {
-            self.Core.RuleManager.SupportNodeRule(self.ObjectType);
-
-            //生命周期法则
-            self.newRule = self.GetRuleList<INewRule>(self.ObjectType);
-            self.getRule = self.GetRuleList<IGetRule>(self.ObjectType);
-            self.recycleRule = self.GetRuleList<IRecycleRule>(self.ObjectType);
-            self.destroyRule = self.GetRuleList<IDestroyRule>(self.ObjectType);
-        }
-    }
-
-
     /// <summary>
     /// 实体对象池
     /// </summary>
-    public class NodePool : GenericPool<INode>, ChildOf<NodePoolManager>
+    public class NodePool : GenericPool<INode>, IAwake<Type>, ChildOf<NodePoolManager>
     {
         public IRuleList<INewRule> newRule;
         public IRuleList<IGetRule> getRule;
@@ -47,13 +32,10 @@ namespace WorldTree
         /// 引用池
         /// </summary>
         public Dictionary<long, INode> Nodes;
-
         public NodePool(Type type) : base()
         {
 
             ObjectType = type;
-
-            Nodes = new Dictionary<long, INode>();
 
             NewObject = ObjectNew;
             DestroyObject = ObjectDestroy;
@@ -62,7 +44,8 @@ namespace WorldTree
             objectOnGet = ObjectOnGet;
             objectOnRecycle = ObjectOnRecycle;
             objectOnDestroy = ObjectOnDestroy;
-
+            
+            Nodes = new Dictionary<long, INode>();
         }
 
         /// <summary>
@@ -79,10 +62,9 @@ namespace WorldTree
             return $"[NodePool<{ObjectType}>] : {Count} ";
         }
 
-        private INode ObjectNew(IPool pool)
+        public INode ObjectNew(IPool pool)
         {
             INode obj = Activator.CreateInstance(ObjectType, true) as INode;
-            obj.thisPool = this;
             obj.Id = Core.IdManager.GetId();
             obj.Core = Core;
             obj.Root = Core.Root;
@@ -112,35 +94,71 @@ namespace WorldTree
                 }
             }
         }
-        private void ObjectDestroy(INode obj)
+        public void ObjectDestroy(INode obj)
         {
             Core.IdManager.Recycle(obj.Id);
         }
 
-        private void ObjectOnNew(INode obj)
+        public void ObjectOnNew(INode obj)
         {
             newRule?.Send(obj);
         }
 
-        private void ObjectOnGet(INode obj)
+        public void ObjectOnGet(INode obj)
         {
             obj.IsRecycle = false;
             Nodes.TryAdd(obj.Id, obj);
             getRule?.Send(obj);
         }
 
-        private void ObjectOnRecycle(INode obj)
+        public void ObjectOnRecycle(INode obj)
         {
             obj.IsRecycle = true;
             recycleRule?.Send(obj);
             Nodes.Remove(obj.Id);
         }
 
-        private void ObjectOnDestroy(INode obj)
+        public void ObjectOnDestroy(INode obj)
         {
             obj.IsDisposed = true;
             destroyRule?.Send(obj);
         }
 
+    }
+
+
+    class NodePoolAddRule : AddRule<NodePool>
+    {
+        public override void OnEvent(NodePool self)
+        {
+            self.Core.RuleManager.SupportNodeRule(self.ObjectType);
+
+            //生命周期法则
+            self.newRule = self.GetRuleList<INewRule>(self.ObjectType);
+            self.getRule = self.GetRuleList<IGetRule>(self.ObjectType);
+            self.recycleRule = self.GetRuleList<IRecycleRule>(self.ObjectType);
+            self.destroyRule = self.GetRuleList<IDestroyRule>(self.ObjectType);
+        }
+    }
+
+    class NodePoolRemoveRule : RemoveRule<NodePool>
+    {
+        public override void OnEvent(NodePool self)
+        {
+            self.DisposeAll();
+            self.NewObject = null;
+            self.DestroyObject = null;
+            self.objectOnNew = null;
+            self.objectOnGet = null;
+            self.objectOnRecycle = null;
+            self.objectOnDestroy = null;
+
+            self.newRule = default;
+            self.getRule = default;
+            self.recycleRule = default;
+            self.destroyRule = default;
+
+            self.Nodes = default;
+        }
     }
 }

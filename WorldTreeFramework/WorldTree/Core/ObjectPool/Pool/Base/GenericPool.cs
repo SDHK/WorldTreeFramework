@@ -212,23 +212,20 @@ namespace WorldTree
                 }
             }
         }
+    }
 
-        /// <summary>
-        /// 释放后
-        /// </summary>
-        public override void OnDispose()
+    class GenericPoolRemoveRule<T> : RemoveRule<GenericPool<T>>
+        where T : class
+    {
+        public override void OnEvent(GenericPool<T> self)
         {
-            DisposeAll();
-            NewObject = null;
-            DestroyObject = null;
-            objectOnNew = null;
-            objectOnGet = null;
-            objectOnRecycle = null;
-            objectOnDestroy = null;
-            IsRecycle = true;
-            IsDisposed = true;
+            self.DisposeAll();
+            self.NewObject = null;
+            self.DestroyObject = null;
+            self.objectOnNew = null;
+            self.objectOnGet = null;
+            self.objectOnRecycle = null;
+            self.objectOnDestroy = null;
         }
-
-
     }
 }

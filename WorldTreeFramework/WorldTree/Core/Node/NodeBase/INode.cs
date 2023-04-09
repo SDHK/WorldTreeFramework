@@ -68,12 +68,6 @@ namespace WorldTree
         public Type Type { get; set; }
 
         /// <summary>
-        /// 树心节点
-        /// </summary>
-        /// <remarks>挂载框架的启动核心组件</remarks>
-        public WorldTreeCore Core { get; set; }
-
-        /// <summary>
         /// 树根节点
         /// </summary>
         /// <remarks>挂载核心启动后的管理器组件</remarks>

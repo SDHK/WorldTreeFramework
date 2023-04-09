@@ -42,7 +42,7 @@ namespace WorldTree
                 ruleActuator.Clear();
                 foreach (var item in ruleActuator.ruleGroup)
                 {
-                    if (ruleActuator.Core.NodePoolManager.pools.TryGetValue(item.Key, out NodePool pool))
+                    if (ruleActuator.Core.NodePoolManager.m_Pools.TryGetValue(item.Key, out NodePool pool))
                     {
                         foreach (var node in pool.Nodes)
                         {

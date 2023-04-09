@@ -167,7 +167,7 @@ namespace WorldTree
             foreach (var listenerType in actuator.ruleGroup)//遍历法则集合获取监听器类型
             {
                 //从池里拿到已存在的监听器
-                if (Core.NodePoolManager.pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
+                if (Core.NodePoolManager.m_Pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
                 {
                     //全部注入到执行器
                     foreach (var listener in listenerPool.Nodes)

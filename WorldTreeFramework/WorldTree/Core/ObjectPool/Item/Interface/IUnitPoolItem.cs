@@ -24,9 +24,10 @@ namespace WorldTree
     public interface IUnitPoolItem : IUnit
     {
         /// <summary>
-        /// 产生此类的对象池：由对象池自动赋值，用于实例的自我回收
+        /// 世界树核心
         /// </summary>
-        IPool thisPool { get; set; }
+        /// <remarks>框架的核心</remarks>
+        public WorldTreeCore Core { get; set; }
 
         /// <summary>
         /// 回收标记

@@ -14,9 +14,9 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    public class UnitHashSet<T>:HashSet<T>, IUnitPoolEventItem
+    public class UnitHashSet<T> : HashSet<T>, IUnitPoolEventItem
     {
-        public IPool thisPool { get; set; }
+        public WorldTreeCore Core { get; set; }
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }
 
@@ -41,16 +41,7 @@ namespace WorldTree
 
         public void Dispose()
         {
-            if (thisPool != null)
-            {
-                if (!thisPool.IsDisposed)
-                {
-                    if (!IsRecycle)
-                    {
-                        thisPool.Recycle(this);
-                    }
-                }
-            }
+            Core?.Recycle(this);
         }
     }
 }

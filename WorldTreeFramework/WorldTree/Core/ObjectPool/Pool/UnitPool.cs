@@ -19,8 +19,9 @@ namespace WorldTree
     /// <summary>
     /// 单位对象池
     /// </summary>
-    public class UnitPool : GenericPool<IUnitPoolEventItem>, ChildOf<UnitPoolManager>
+    public class UnitPool : GenericPool<IUnitPoolEventItem>, IAwake<Type>, ChildOf<UnitPoolManager>
     {
+        public UnitPool() : base() { }
         public UnitPool(Type type) : base()
         {
             ObjectType = type;
@@ -40,10 +41,10 @@ namespace WorldTree
             return $"[UnitPool<{ObjectType}>] : {Count} ";
         }
 
-        private IUnitPoolEventItem ObjectNew(IPool pool)
+        public IUnitPoolEventItem ObjectNew(IPool pool)
         {
             IUnitPoolEventItem obj = Activator.CreateInstance(ObjectType, true) as IUnitPoolEventItem;
-            obj.thisPool = this;
+            obj.Core = Core;
             return obj;
         }
         public override void Recycle(object obj) => Recycle(obj as IUnitPoolEventItem);
@@ -74,33 +75,47 @@ namespace WorldTree
             }
         }
 
-        private void ObjectDestroy(IUnitPoolEventItem obj)
+        public void ObjectDestroy(IUnitPoolEventItem obj)
         {
-            //(obj as IDisposable).Dispose();
         }
 
-        private void ObjectOnNew(IUnitPoolEventItem obj)
+        public void ObjectOnNew(IUnitPoolEventItem obj)
         {
             obj.OnNew();
         }
-        private void ObjectOnGet(IUnitPoolEventItem obj)
+        public void ObjectOnGet(IUnitPoolEventItem obj)
         {
             obj.IsRecycle = false;
             obj.OnGet();
         }
 
-        private void ObjectOnRecycle(IUnitPoolEventItem obj)
+        public void ObjectOnRecycle(IUnitPoolEventItem obj)
         {
             obj.IsRecycle = true;
             obj.OnRecycle();
         }
 
-        private void ObjectOnDestroy(IUnitPoolEventItem obj)
+        public void ObjectOnDestroy(IUnitPoolEventItem obj)
         {
             obj.IsDisposed = true;
             obj.OnDispose();
         }
+    }
 
 
+    class UnitPoolAddRule : AwakeRule<UnitPool, Type>
+    {
+        public override void OnEvent(UnitPool self, Type type)
+        {
+            self.ObjectType = type;
+
+            self.NewObject = self.ObjectNew;
+            self.DestroyObject = self.ObjectDestroy;
+
+            self.objectOnNew = self.ObjectOnNew;
+            self.objectOnGet = self.ObjectOnGet;
+            self.objectOnRecycle = self.ObjectOnRecycle;
+            self.objectOnDestroy = self.ObjectOnDestroy;
+        }
     }
 }

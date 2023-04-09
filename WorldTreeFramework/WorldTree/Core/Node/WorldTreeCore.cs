@@ -102,13 +102,15 @@ namespace WorldTree
 
             ReferencedRemoveRuleGroup = RuleManager.GetRuleGroup<IReferencedRemoveRule>();
 
-            //核心组件添加到核心
+            //核心组件 id与法则
             this.AddComponent(IdManager);
             this.AddComponent(RuleManager);
 
-            //框架运转核心组件
-            this.AddComponent(out UnitPoolManager);
-            this.AddComponent(out NodePoolManager);
+            //对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
+            UnitPoolManager = this.AddComponent(out UnitPoolManager _);
+            NodePoolManager = this.AddComponent(out NodePoolManager _);
+
+            //监听器组件
             this.AddComponent(out StaticListenerRuleActuatorManager);
             this.AddComponent(out DynamicListenerRuleActuatorManager);
 
@@ -137,17 +139,18 @@ namespace WorldTree
         where T : class, IUnitPoolEventItem
         {
             Type type = typeof(T);
-            if (UnitPoolManager is null)
+            if (UnitPoolManager != null)
             {
-                T obj = Activator.CreateInstance(type, true) as T;
-                obj.OnNew();
-                obj.OnGet();
-                return obj;
+                if (!UnitPoolManager.IsRecycle)
+                {
+                    return UnitPoolManager.Get(type) as T;
+                }
             }
-            else
-            {
-                return UnitPoolManager.Get(type) as T;
-            }
+
+            T obj = Activator.CreateInstance(type, true) as T;
+            obj.OnNew();
+            obj.OnGet();
+            return obj;
         }
 
         /// <summary>
@@ -155,18 +158,14 @@ namespace WorldTree
         /// </summary>
         public void Recycle(IUnitPoolEventItem obj)
         {
-            if (UnitPoolManager is null)
+            if (UnitPoolManager != null)
             {
-                obj.IsRecycle = true;
-                obj.OnRecycle();
-                obj.IsDisposed = true;
-                obj.OnDispose();
+                if (UnitPoolManager.TryRecycle(obj)) return;
             }
-            else
-            {
-                UnitPoolManager.Recycle(obj);
-            }
-
+            obj.IsRecycle = true;
+            obj.OnRecycle();
+            obj.IsDisposed = true;
+            obj.OnDispose();
         }
 
         #endregion
@@ -184,22 +183,23 @@ namespace WorldTree
         /// </summary>
         public INode GetNode(Type type)
         {
-            if (NodePoolManager is null)
+            if (NodePoolManager != null)
             {
-                INode obj = Activator.CreateInstance(type, true) as INode;
-                obj.Id = IdManager.GetId();
-                obj.Core = this;
-                obj.Root = Root;
-                obj.Type = type;
+                if (!NodePoolManager.IsRecycle)
+                {
+                    return NodePoolManager.Get(type) as INode;
+                }
+            }
 
-                NewRuleGroup?.Send(obj);
-                GetRuleGroup?.Send(obj);
-                return obj;
-            }
-            else
-            {
-                return NodePoolManager.Get(type) as INode;
-            }
+            INode obj = Activator.CreateInstance(type, true) as INode;
+            obj.Id = IdManager.GetId();
+            obj.Core = this;
+            obj.Root = Root;
+            obj.Type = type;
+
+            NewRuleGroup?.Send(obj);
+            GetRuleGroup?.Send(obj);
+            return obj;
         }
 
         /// <summary>
@@ -207,17 +207,14 @@ namespace WorldTree
         /// </summary>
         public void Recycle(INode obj)
         {
-            if (NodePoolManager is null)
+            if (NodePoolManager != null)
             {
-                obj.IsRecycle = true;
-                RecycleRuleGroup?.Send(obj);
-                obj.IsDisposed = true;
-                DestroyRuleGroup?.Send(obj);
+                if (NodePoolManager.TryRecycle(obj)) return;
             }
-            else
-            {
-                NodePoolManager.Recycle(obj);
-            }
+            obj.IsRecycle = true;
+            RecycleRuleGroup?.Send(obj);
+            obj.IsDisposed = true;
+            DestroyRuleGroup?.Send(obj);
         }
 
         #endregion
