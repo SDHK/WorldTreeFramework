@@ -32,17 +32,17 @@ namespace WorldTree
         /// </summary>
         public UnitDictionary<long, INode> AllNode = new UnitDictionary<long, INode>();
 
-        private IRuleGroup<IAddRule> AddRuleGroup;
-        private IRuleGroup<IRemoveRule> RemoveRuleGroup;
-        private IRuleGroup<IEnableRule> EnableRuleGroup;
-        private IRuleGroup<IDisableRule> DisableRuleGroup;
+        public IRuleGroup<IAddRule> AddRuleGroup;
+        public IRuleGroup<IRemoveRule> RemoveRuleGroup;
+        public IRuleGroup<IEnableRule> EnableRuleGroup;
+        public IRuleGroup<IDisableRule> DisableRuleGroup;
 
-        private IRuleGroup<INewRule> NewRuleGroup;
-        private IRuleGroup<IGetRule> GetRuleGroup;
-        private IRuleGroup<IRecycleRule> RecycleRuleGroup;
-        private IRuleGroup<IDestroyRule> DestroyRuleGroup;
+        public IRuleGroup<INewRule> NewRuleGroup;
+        public IRuleGroup<IGetRule> GetRuleGroup;
+        public IRuleGroup<IRecycleRule> RecycleRuleGroup;
+        public IRuleGroup<IDestroyRule> DestroyRuleGroup;
 
-        private IRuleGroup<IReferencedRemoveRule> ReferencedRemoveRuleGroup;
+        public IRuleGroup<IReferencedRemoveRule> ReferencedRemoveRuleGroup;
 
         /// <summary>
         /// Id管理器
@@ -69,81 +69,177 @@ namespace WorldTree
         /// </summary>
         public DynamicListenerRuleActuatorManager DynamicListenerRuleActuatorManager;
 
-        public WorldTreeCore() : base()
+        public WorldTreeCore()
         {
-            //根节点初始化
-            Type = GetType();
-            Core = this;
-            Branch = this;
-
-            //框架核心启动组件新建
-            IdManager = new IdManager();
-            RuleManager = new RuleManager();
-
-            //Id
-            Core.Id = IdManager.GetId();
-            IdManager.Id = IdManager.GetId();
-            RuleManager.Id = IdManager.GetId();
-
-            //核心
-            IdManager.Core = this;
-            RuleManager.Core = this;
-
-            //生命周期法则
-            NewRuleGroup = RuleManager.GetRuleGroup<INewRule>();
-            GetRuleGroup = RuleManager.GetRuleGroup<IGetRule>();
-            RecycleRuleGroup = RuleManager.GetRuleGroup<IRecycleRule>();
-            DestroyRuleGroup = RuleManager.GetRuleGroup<IDestroyRule>();
-
-            AddRuleGroup = RuleManager.GetRuleGroup<IAddRule>();
-            RemoveRuleGroup = RuleManager.GetRuleGroup<IRemoveRule>();
-            EnableRuleGroup = RuleManager.GetRuleGroup<IEnableRule>();
-            DisableRuleGroup = RuleManager.GetRuleGroup<IDisableRule>();
-
-            ReferencedRemoveRuleGroup = RuleManager.GetRuleGroup<IReferencedRemoveRule>();
-
-            //核心组件 id与法则
-            this.AddComponent(IdManager);
-            this.AddComponent(RuleManager);
-
-            //对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
-            UnitPoolManager = this.AddComponent(out UnitPoolManager _);
-            NodePoolManager = this.AddComponent(out NodePoolManager _);
-
-            //监听器组件
-            this.AddComponent(out StaticListenerRuleActuatorManager);
-            this.AddComponent(out DynamicListenerRuleActuatorManager);
-
-            //树根节点
-            this.AddComponent(Root = this.PoolGet<WorldTreeRoot>());
-
-            //核心激活
-            this.SetActive(true);
+            this.Awake();
         }
+
         /// <summary>
         /// 释放
         /// </summary>
         public override void Dispose()
         {
-            this.RemoveAll();
-            AllNode.Clear();
+            this.Destroy();
+        }
+    }
+
+
+    public static class WorldTreeCoreRule
+    {
+
+        #region 框架启动与销毁
+
+        /// <summary>
+        /// 框架启动
+        /// </summary>
+        public static void Awake(this WorldTreeCore self)
+        {
+            //根节点初始化
+            self.Type = self.GetType();
+            self.Core = self;
+            self.Branch = self;
+
+            //框架核心启动组件新建
+            self.IdManager = new IdManager();
+            self.RuleManager = new RuleManager();
+
+            //Id
+            self.Core.Id = self.IdManager.GetId();
+            self.IdManager.Id = self.IdManager.GetId();
+            self.RuleManager.Id = self.IdManager.GetId();
+
+            //核心
+            self.IdManager.Core = self;
+            self.RuleManager.Core = self;
+
+            //生命周期法则
+            self.NewRuleGroup = self.RuleManager.GetRuleGroup<INewRule>();
+            self.GetRuleGroup = self.RuleManager.GetRuleGroup<IGetRule>();
+            self.RecycleRuleGroup = self.RuleManager.GetRuleGroup<IRecycleRule>();
+            self.DestroyRuleGroup = self.RuleManager.GetRuleGroup<IDestroyRule>();
+
+            self.AddRuleGroup = self.RuleManager.GetRuleGroup<IAddRule>();
+            self.RemoveRuleGroup = self.RuleManager.GetRuleGroup<IRemoveRule>();
+            self.EnableRuleGroup = self.RuleManager.GetRuleGroup<IEnableRule>();
+            self.DisableRuleGroup = self.RuleManager.GetRuleGroup<IDisableRule>();
+
+            self.ReferencedRemoveRuleGroup = self.RuleManager.GetRuleGroup<IReferencedRemoveRule>();
+
+            //核心组件 id与法则
+            self.AddComponent(self.IdManager);
+            self.AddComponent(self.RuleManager);
+
+            //对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
+            self.UnitPoolManager = self.AddComponent(out UnitPoolManager _);
+            self.NodePoolManager = self.AddComponent(out NodePoolManager _);
+
+            //监听器组件
+            self.AddComponent(out self.StaticListenerRuleActuatorManager);
+            self.AddComponent(out self.DynamicListenerRuleActuatorManager);
+
+            //树根节点
+            self.AddComponent(self.Root = self.PoolGet<WorldTreeRoot>());
+
+            //核心激活
+            self.SetActive(true);
         }
 
+        /// <summary>
+        /// 框架销毁
+        /// </summary>
+        public static void Destroy(this WorldTreeCore self)
+        {
+            self.RemoveAll();
+            self.AllNode.Clear();
+            self.AllNode = default;
+
+            self.NewRuleGroup = default;
+            self.GetRuleGroup = default;
+            self.RecycleRuleGroup = default;
+            self.DestroyRuleGroup = default;
+
+            self.AddRuleGroup = default;
+            self.RemoveRuleGroup = default;
+            self.EnableRuleGroup = default;
+            self.DisableRuleGroup = default;
+
+            self.ReferencedRemoveRuleGroup = default;
+
+            self.IdManager = default;
+            self.RuleManager = default;
+            self.UnitPoolManager = default;
+            self.NodePoolManager = default;
+            self.StaticListenerRuleActuatorManager = default;
+            self.DynamicListenerRuleActuatorManager = default;
+
+        }
+        #endregion
+
+        #region 对象获取与回收
+
+        #region Node
+
+        /// <summary>
+        /// 从池中获取节点对象
+        /// </summary>
+        public static T GetNode<T>(this WorldTreeCore self) where T : class, INode => self.GetNode(typeof(T)) as T;
+
+        /// <summary>
+        /// 从池中获取节点对象
+        /// </summary>
+        public static INode GetNode(this WorldTreeCore self, Type type)
+        {
+            if (self.NodePoolManager != null)
+            {
+                if (!self.NodePoolManager.IsRecycle)
+                {
+                    return self.NodePoolManager.Get(type) as INode;
+                }
+            }
+
+            INode obj = Activator.CreateInstance(type, true) as INode;
+            obj.Id = self.IdManager.GetId();
+            obj.Core = self;
+            obj.Root = self.Root;
+            obj.Type = type;
+
+            self.NewRuleGroup?.Send(obj);
+            self.GetRuleGroup?.Send(obj);
+            return obj;
+        }
+
+        /// <summary>
+        /// 回收节点
+        /// </summary>
+        public static void Recycle(this WorldTreeCore self, INode obj)
+        {
+            if (self.NodePoolManager != null)
+            {
+                if (self.NodePoolManager.TryRecycle(obj)) return;
+            }
+            obj.IsRecycle = true;
+            self.RecycleRuleGroup?.Send(obj);
+            obj.IsDisposed = true;
+            self.DestroyRuleGroup?.Send(obj);
+        }
+
+
+        #endregion
 
         #region Unit
 
         /// <summary>
         /// 从池中获取单位对象
         /// </summary>
-        public T GetUnit<T>()
+        public static T GetUnit<T>(this WorldTreeCore self)
         where T : class, IUnitPoolEventItem
         {
             Type type = typeof(T);
-            if (UnitPoolManager != null)
+            if (self.UnitPoolManager != null)
             {
-                if (!UnitPoolManager.IsRecycle)
+                if (!self.UnitPoolManager.IsRecycle)
                 {
-                    return UnitPoolManager.Get(type) as T;
+                    return self.UnitPoolManager.Get(type) as T;
                 }
             }
 
@@ -156,11 +252,11 @@ namespace WorldTree
         /// <summary>
         /// 回收单位
         /// </summary>
-        public void Recycle(IUnitPoolEventItem obj)
+        public static void Recycle(this WorldTreeCore self, IUnitPoolEventItem obj)
         {
-            if (UnitPoolManager != null)
+            if (self.UnitPoolManager != null)
             {
-                if (UnitPoolManager.TryRecycle(obj)) return;
+                if (self.UnitPoolManager.TryRecycle(obj)) return;
             }
             obj.IsRecycle = true;
             obj.OnRecycle();
@@ -168,127 +264,86 @@ namespace WorldTree
             obj.OnDispose();
         }
 
-        #endregion
-
-
-        #region Node
-
-        /// <summary>
-        /// 从池中获取节点对象
-        /// </summary>
-        public T GetNode<T>() where T : class, INode => GetNode(typeof(T)) as T;
-
-        /// <summary>
-        /// 从池中获取节点对象
-        /// </summary>
-        public INode GetNode(Type type)
-        {
-            if (NodePoolManager != null)
-            {
-                if (!NodePoolManager.IsRecycle)
-                {
-                    return NodePoolManager.Get(type) as INode;
-                }
-            }
-
-            INode obj = Activator.CreateInstance(type, true) as INode;
-            obj.Id = IdManager.GetId();
-            obj.Core = this;
-            obj.Root = Root;
-            obj.Type = type;
-
-            NewRuleGroup?.Send(obj);
-            GetRuleGroup?.Send(obj);
-            return obj;
-        }
-
-        /// <summary>
-        /// 回收节点
-        /// </summary>
-        public void Recycle(INode obj)
-        {
-            if (NodePoolManager != null)
-            {
-                if (NodePoolManager.TryRecycle(obj)) return;
-            }
-            obj.IsRecycle = true;
-            RecycleRuleGroup?.Send(obj);
-            obj.IsDisposed = true;
-            DestroyRuleGroup?.Send(obj);
-        }
 
         #endregion
 
+        #endregion
 
-        public void Add(INode entity)
+        #region 节点添加与移除
+        /// <summary>
+        /// 核心添加一个节点
+        /// </summary>
+        public static void AddNode(this WorldTreeCore self, INode node)
         {
             //广播给全部监听器!!!!
-            if (entity.Branch.Id != Id)
+            if (node.Branch.Id != self.Id)
             {
-                entity.TrySendStaticListener<IListenerAddRule>();
-                entity.TrySendDynamicListener<IListenerAddRule>();
+                node.TrySendStaticListener<IListenerAddRule>();
+                node.TrySendDynamicListener<IListenerAddRule>();
             }
 
-            AllNode.TryAdd(entity.Id, entity);
+            self.AllNode.TryAdd(node.Id, node);
 
             //这个节点的添加事件
-            AddRuleGroup?.Send(entity);
+            self.AddRuleGroup?.Send(node);
 
 
-            if (entity.Branch.Id != Id)
+            if (node.Branch.Id != self.Id)
             {
                 //检测添加静态监听
-                StaticListenerRuleActuatorManager.TryAddListener(entity);
+                self.StaticListenerRuleActuatorManager.TryAddListener(node);
                 //检测添加动态监听
-                entity.ListenerSwitchesTarget(typeof(INode), ListenerState.Node);
+                node.ListenerSwitchesTarget(typeof(INode), ListenerState.Node);
             }
 
-            entity.SetActive(true);
-            EnableRuleGroup?.Send(entity);//添加后调用激活事件
-
+            node.SetActive(true);
+            self.EnableRuleGroup?.Send(node);//添加后调用激活事件
         }
 
-        public void Remove(INode entity)
+        /// <summary>
+        /// 核心移除一个节点
+        /// </summary>
+        public static void RemoveNode(this WorldTreeCore self, INode node)
         {
-            entity.SetActive(false);//激活标记变更
+            node.SetActive(false);//激活标记变更
 
             //引用关系移除通知
-            if (entity.m_Referenceds != null)
+            if (node.m_Referenceds != null)
             {
-                foreach (var item in entity.m_Referenceds)
+                foreach (var item in node.m_Referenceds)
                 {
-                    ReferencedRemoveRuleGroup?.Send(entity, item.Value);
+                    self.ReferencedRemoveRuleGroup?.Send(node, item.Value);
                 }
-                entity.DeReferencedAll();
+                node.DeReferencedAll();
             }
 
-            entity.RemoveAll();//移除所有子节点和组件
-            DisableRuleGroup?.Send(entity);//调用禁用事件
+            node.RemoveAll();//移除所有子节点和组件
+            self.DisableRuleGroup?.Send(node);//调用禁用事件
 
-            if (entity.Branch.Id != Id)
+            if (node.Branch.Id != self.Id)
             {
                 //检测移除静态监听
-                StaticListenerRuleActuatorManager.RemoveListener(entity);
+                self.StaticListenerRuleActuatorManager.RemoveListener(node);
                 //检测移除动态监听
-                entity.ListenerClearTarget();
+                node.ListenerClearTarget();
             }
 
             //这个节点的移除事件
-            RemoveRuleGroup?.Send(entity);
+            self.RemoveRuleGroup?.Send(node);
 
 
             //广播给全部监听器!!!!
-            if (entity.Branch.Id != Id)
+            if (node.Branch.Id != self.Id)
             {
                 //检测移除静态监听
-                entity.TrySendStaticListener<IListenerRemoveRule>();
+                node.TrySendStaticListener<IListenerRemoveRule>();
 
                 //检测移除动态监听
-                entity.TrySendDynamicListener<IListenerRemoveRule>();
+                node.TrySendDynamicListener<IListenerRemoveRule>();
             }
 
-            AllNode.Remove(entity.Id);
-
+            self.AllNode.Remove(node.Id);
         }
+        #endregion
     }
 }

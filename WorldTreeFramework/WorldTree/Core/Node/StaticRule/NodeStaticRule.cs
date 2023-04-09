@@ -19,7 +19,7 @@ namespace WorldTree
             if (!self.IsRecycle)//是否已经回收
             {
                 self.RemoveInParent();//从父节点中移除
-                self.Core.Remove(self);//全局通知移除
+                self.Core.RemoveNode(self);//全局通知移除
                 self.DisposeDomain();//清除域节点
                 self.Parent = null;//清除父节点
 
