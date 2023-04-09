@@ -96,7 +96,7 @@ namespace WorldTree
         }
         public void ObjectDestroy(INode obj)
         {
-            Core.IdManager.Recycle(obj.Id);
+            Core.IdManager.RecycleId(obj.Id);
         }
 
         public void ObjectOnNew(INode obj)

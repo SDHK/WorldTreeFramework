@@ -13,14 +13,6 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-    public static class IdManagerExtension
-    {
-        public static IdManager IdManager(this INode self)
-        {
-            return self.Core.IdManager;
-        }
-    }
-
     /// <summary>
     /// id管理器
     /// </summary>
@@ -36,20 +28,38 @@ namespace WorldTree
         /// </summary>
         public Queue<long> idPool = new Queue<long>();
 
-
         /// <summary>
         /// 当前递增的id值
         /// </summary>
         public long currentId = 0;
 
         /// <summary>
+        /// 释放后
+        /// </summary>
+        public override void OnDispose()
+        {
+            this.Destroy();
+        }
+    }
+
+    public static class IdManagerRule
+    {
+        public static void Destroy(this IdManager self)
+        {
+            self.idPool.Clear();
+            self.idPool = default;
+            self.IsRecycle = true;
+            self.IsDisposed = true;
+        }
+
+        /// <summary>
         /// 获取id后递增
         /// </summary>
-        public long GetId()
+        public static long GetId(this IdManager self)
         {
-            if (!idPool.TryDequeue(out var value))
+            if (!self.idPool.TryDequeue(out var value))
             {
-                value = currentId++;
+                value = self.currentId++;
             }
             return value;
         }
@@ -57,23 +67,13 @@ namespace WorldTree
         /// <summary>
         /// 回收id
         /// </summary>
-        public void Recycle(long id)
+        public static void RecycleId(this IdManager self, long id)
         {
-            if (!idPool.Contains(id))
+            if (!self.idPool.Contains(id))
             {
-                idPool.Enqueue(id);
+                self.idPool.Enqueue(id);
             }
         }
 
-
-        /// <summary>
-        /// 释放后
-        /// </summary>
-        public override void OnDispose()
-        {
-            idPool.Clear();
-            IsRecycle = true;
-            IsDisposed = true;
-        }
     }
 }
