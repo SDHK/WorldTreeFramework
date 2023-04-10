@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer.Internal;
 
 namespace WorldTree
 {
@@ -24,15 +25,26 @@ namespace WorldTree
         /// </summary>
         /// <remarks>目标类型《系统，法则执行器》</remarks>
         public TreeDictionary<Type, ListenerRuleActuatorGroup> ListenerActuatorGroupDictionary;
+    }
 
-        /// <summary>
-        /// 释放后
-        /// </summary>
-        public override void OnDispose()
+    public class DynamicListenerRuleActuatorManagerAddRule : AddRule<DynamicListenerRuleActuatorManager>
+    {
+        public override void OnEvent(DynamicListenerRuleActuatorManager self)
         {
-            IsRecycle = true;
-            IsDisposed = true;
+            self.AddChild(out self.ListenerActuatorGroupDictionary);
         }
+    }
+
+    class DynamicListenerRuleActuatorManagerRemoveRule : RemoveRule<DynamicListenerRuleActuatorManager>
+    {
+        public override void OnEvent(DynamicListenerRuleActuatorManager self)
+        {
+            self.ListenerActuatorGroupDictionary = null;
+        }
+    }
+
+    public static class DynamicListenerRuleActuatorManagerRule
+    {
 
         #region 判断监听器
 
@@ -41,7 +53,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器根据标记添加目标
         /// </summary>
-        public void ListenerAdd(INode node)
+        public static void ListenerAdd(this DynamicListenerRuleActuatorManager self, INode node)
         {
             if (node.listenerTarget != null)
             {
@@ -49,16 +61,16 @@ namespace WorldTree
                 {
                     if (node.listenerTarget == typeof(INode))
                     {
-                        AddAllTarget(node);
+                        self.AddAllTarget(node);
                     }
                     else
                     {
-                        AddNodeTarget(node, node.listenerTarget);
+                        self.AddNodeTarget(node, node.listenerTarget);
                     }
                 }
                 else if (node.listenerState == ListenerState.Rule)
                 {
-                    AddRuleTarget(node, node.listenerTarget);
+                    self.AddRuleTarget(node, node.listenerTarget);
                 }
             }
         }
@@ -66,13 +78,13 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 所有节点
         /// </summary>
-        private void AddAllTarget(INode node)
+        private static void AddAllTarget(this DynamicListenerRuleActuatorManager self, INode node)
         {
             //获取 INode 动态目标 法则集合集合
             if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
             {
                 //遍历现有执行器
-                foreach (var ActuatorGroup in ListenerActuatorGroupDictionary)
+                foreach (var ActuatorGroup in self.ListenerActuatorGroupDictionary)
                 {
                     //遍历获取动态法则集合，并添加自己
                     foreach (var ruleGroup in ruleGroupDictionary)
@@ -89,7 +101,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 系统目标
         /// </summary>
-        private void AddRuleTarget(INode node, Type type)
+        private static void AddRuleTarget(this DynamicListenerRuleActuatorManager self, INode node, Type type)
         {
             //获取法则集合
             if (node.Core.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
@@ -98,7 +110,7 @@ namespace WorldTree
                 foreach (var targetSystems in targetSystemGroup)
                 {
 
-                    AddNodeTarget(node, targetSystems.Key);
+                    self.AddNodeTarget(node, targetSystems.Key);
                 }
             }
         }
@@ -106,9 +118,9 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 节点目标
         /// </summary>
-        private void AddNodeTarget(INode node, Type type)
+        private static void AddNodeTarget(this DynamicListenerRuleActuatorManager self, INode node, Type type)
         {
-            if (TryGetGroup(type, out var ActuatorGroup))
+            if (self.TryGetGroup(type, out var ActuatorGroup))
             {
                 //获取 INode 动态目标 法则集合集合
                 if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
@@ -119,7 +131,7 @@ namespace WorldTree
                         ActuatorGroup.GetRuleActuator(ruleGroup.Key).Enqueue(node);
                     }
                 }
-               
+
 
             }
         }
@@ -132,7 +144,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器根据标记移除目标
         /// </summary>
-        public void ListenerRemove(INode node)
+        public static void ListenerRemove(this DynamicListenerRuleActuatorManager self, INode node)
         {
             if (node.listenerTarget != null)
             {
@@ -140,16 +152,16 @@ namespace WorldTree
                 {
                     if (node.listenerTarget == typeof(INode))
                     {
-                        RemoveAllTarget(node);
+                        self.RemoveAllTarget(node);
                     }
                     else
                     {
-                        RemoveNodeTarget(node, node.listenerTarget);
+                        self.RemoveNodeTarget(node, node.listenerTarget);
                     }
                 }
                 else if (node.listenerState == ListenerState.Rule)
                 {
-                    RemoveRuleTarget(node, node.listenerTarget);
+                    self.RemoveRuleTarget(node, node.listenerTarget);
                 }
             }
         }
@@ -157,13 +169,13 @@ namespace WorldTree
         /// <summary>
         /// 监听器移除 所有节点
         /// </summary>
-        private void RemoveAllTarget(INode node)
+        private static void RemoveAllTarget(this DynamicListenerRuleActuatorManager self, INode node)
         {
             //获取 INode 动态目标 法则集合集合
             if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
             {
                 //遍历现有全部池
-                foreach (var BroadcastGroup in ListenerActuatorGroupDictionary)
+                foreach (var BroadcastGroup in self.ListenerActuatorGroupDictionary)
                 {
                     //遍历获取动态法则集合，并移除自己
                     foreach (var ruleGroup in ruleGroupDictionary)
@@ -181,7 +193,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器移除 系统目标
         /// </summary>
-        private void RemoveRuleTarget(INode node, Type type)
+        private static void RemoveRuleTarget(this DynamicListenerRuleActuatorManager self, INode node, Type type)
         {
             //获取法则集合
             if (node.Core.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
@@ -189,7 +201,7 @@ namespace WorldTree
                 //遍历法则集合
                 foreach (var targetSystems in targetSystemGroup)
                 {
-                    RemoveNodeTarget(node, targetSystems.Key);
+                    self.RemoveNodeTarget(node, targetSystems.Key);
                 }
             }
         }
@@ -198,9 +210,9 @@ namespace WorldTree
         /// <summary>
         /// 监听器移除 节点目标
         /// </summary>
-        private void RemoveNodeTarget(INode node, Type type)
+        private static void RemoveNodeTarget(this DynamicListenerRuleActuatorManager self, INode node, Type type)
         {
-            if (TryGetGroup(type, out var broadcastGroup))
+            if (self.TryGetGroup(type, out var actuatorGroup))
             {
                 //获取 INode 动态目标 法则集合集合
                 if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
@@ -208,7 +220,7 @@ namespace WorldTree
                     //遍历获取动态法则集合，并移除自己
                     foreach (var ruleGroup in ruleGroupDictionary)
                     {
-                        broadcastGroup.GetRuleActuator(ruleGroup.Key).Remove(node);
+                        actuatorGroup.GetRuleActuator(ruleGroup.Key).Remove(node);
                     }
                 }
             }
@@ -224,36 +236,36 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加动态执行器
         /// </summary>
-        public bool TryAddRuleActuator<R>(Type Target, out RuleActuator actuator)
+        public static bool TryAddRuleActuator<R>(this DynamicListenerRuleActuatorManager self, Type Target, out RuleActuator actuator)
         where R : IListenerRule
         {
             Type RuleType = typeof(R);
 
 
             //判断是否有组
-            if (TryGetGroup(Target, out var group))
+            if (self.TryGetGroup(Target, out var group))
             {
                 //判断是否有执行器
                 if (group.TryGetRuleActuator(RuleType, out actuator)) { return true; }
 
                 //没有执行器 则判断这个系统类型是否有动态类型监听法则集合
-                else if (Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
+                else if (self.Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
                 {
                     //新建执行器
                     actuator = group.GetRuleActuator(RuleType);
                     actuator.ruleGroup = ruleGroup;
-                    RuleActuatorAddListener(actuator, Target);
+                    self.RuleActuatorAddListener(actuator, Target);
                     return true;
                 }
             }
-            else if (Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
+            else if (self.Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
             {
 
                 //新建组和执行器
-                actuator = GetGroup(Target).GetRuleActuator(RuleType);
+                actuator = self.GetGroup(Target).GetRuleActuator(RuleType);
                 actuator.ruleGroup = ruleGroup;
 
-                RuleActuatorAddListener(actuator, Target);
+                self.RuleActuatorAddListener(actuator, Target);
                 return true;
             }
             actuator = null;
@@ -263,12 +275,12 @@ namespace WorldTree
         /// <summary>
         /// 执行器填装监听器
         /// </summary>
-        private void RuleActuatorAddListener(RuleActuator actuator, Type Target)
+        private static void RuleActuatorAddListener(this DynamicListenerRuleActuatorManager self, RuleActuator actuator, Type Target)
         {
             foreach (var listenerType in actuator.ruleGroup)//遍历监听类型
             {
                 //获取监听器对象池
-                if (Core.NodePoolManager.m_Pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
+                if (self.Core.NodePoolManager.m_Pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
                 {
                     //遍历已存在的监听器
                     foreach (var listener in listenerPool.Nodes)
@@ -287,7 +299,7 @@ namespace WorldTree
                             else if (listener.Value.listenerState == ListenerState.Rule)
                             {
                                 //判断的实体类型是否拥有目标系统
-                                if (Core.RuleManager.TryGetRuleList(Target, listener.Value.listenerTarget, out _))
+                                if (self.Core.RuleManager.TryGetRuleList(Target, listener.Value.listenerTarget, out _))
                                 {
 
                                     actuator.Enqueue(listener.Value);
@@ -301,9 +313,9 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取动态执行器
         /// </summary>
-        public bool TryGetRuleActuator(Type Target, Type RuleType, out RuleActuator actuator)
+        public static bool TryGetRuleActuator(this DynamicListenerRuleActuatorManager self, Type Target, Type RuleType, out RuleActuator actuator)
         {
-            if (ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
+            if (self.ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
             {
                 return group.TryGetRuleActuator(RuleType, out actuator);
             }
@@ -320,11 +332,11 @@ namespace WorldTree
         /// <summary>
         /// 获取执行器集合
         /// </summary>
-        public ListenerRuleActuatorGroup GetGroup(Type Target)
+        private static ListenerRuleActuatorGroup GetGroup(this DynamicListenerRuleActuatorManager self, Type Target)
         {
-            if (!ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
+            if (!self.ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
             {
-                ListenerActuatorGroupDictionary.Add(Target, this.AddChild(out group));
+                self.ListenerActuatorGroupDictionary.Add(Target, self.AddChild(out group));
                 group.Target = Target;
             }
             return group;
@@ -333,27 +345,12 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取执行器集合
         /// </summary>
-        public bool TryGetGroup(Type target, out ListenerRuleActuatorGroup group)
+        private static bool TryGetGroup(this DynamicListenerRuleActuatorManager self, Type target, out ListenerRuleActuatorGroup group)
         {
-            return ListenerActuatorGroupDictionary.TryGetValue(target, out group);
+            return self.ListenerActuatorGroupDictionary.TryGetValue(target, out group);
         }
 
         #endregion
-    }
 
-    public class DynamicListenerRuleActuatorManagerAddRule : AddRule<DynamicListenerRuleActuatorManager>
-    {
-        public override void OnEvent(DynamicListenerRuleActuatorManager self)
-        {
-            self.AddChild(out self.ListenerActuatorGroupDictionary);
-        }
-    }
-
-    class DynamicListenerRuleActuatorManagerRemoveRule : RemoveRule<DynamicListenerRuleActuatorManager>
-    {
-        public override void OnEvent(DynamicListenerRuleActuatorManager self)
-        {
-            self.ListenerActuatorGroupDictionary = null;
-        }
     }
 }

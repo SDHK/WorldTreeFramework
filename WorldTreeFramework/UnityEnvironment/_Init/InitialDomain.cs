@@ -50,7 +50,6 @@ namespace WorldTree
     //    }
     //}
 
-
     public class TreeNode2<T> : Node, ChildOf<INode>
     {
         public T Value;

@@ -37,29 +37,6 @@ namespace WorldTree
             return $"{Type.Name} : {Target}";
         }
 
-        /// <summary>
-        /// 获取执行器
-        /// </summary>
-        public RuleActuator GetRuleActuator(Type listenerRuleType)
-        {
-            if (!actuatorDictionary.TryGetValue(listenerRuleType, out var actuator))
-            {
-
-                actuatorDictionary.Add(listenerRuleType, this.AddChild(out actuator));
-            }
-            return actuator;
-        }
-
-        /// <summary>
-        /// 尝试获取执行器
-        /// </summary>
-        public bool TryGetRuleActuator(Type listenerRuleType, out RuleActuator ruleActuator)
-        {
-            return actuatorDictionary.TryGetValue(listenerRuleType, out ruleActuator);
-        }
-
-
-
     }
 
     class ListenerRuleActuatorGroupAddRule : AddRule<ListenerRuleActuatorGroup>
@@ -75,6 +52,31 @@ namespace WorldTree
         public override void OnEvent(ListenerRuleActuatorGroup self)
         {
             self.actuatorDictionary = null;
+        }
+    }
+
+
+    public static class ListenerRuleActuatorGroupRule
+    {
+        /// <summary>
+        /// 获取执行器
+        /// </summary>
+        public static RuleActuator GetRuleActuator(this ListenerRuleActuatorGroup self, Type listenerRuleType)
+        {
+            if (!self.actuatorDictionary.TryGetValue(listenerRuleType, out var actuator))
+            {
+
+                self.actuatorDictionary.Add(listenerRuleType, self.AddChild(out actuator));
+            }
+            return actuator;
+        }
+
+        /// <summary>
+        /// 尝试获取执行器
+        /// </summary>
+        public static bool TryGetRuleActuator(this ListenerRuleActuatorGroup self, Type listenerRuleType, out RuleActuator ruleActuator)
+        {
+            return self.actuatorDictionary.TryGetValue(listenerRuleType, out ruleActuator);
         }
     }
 }

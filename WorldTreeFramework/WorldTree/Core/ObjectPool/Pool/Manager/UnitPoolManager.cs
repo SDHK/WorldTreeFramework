@@ -16,7 +16,7 @@ namespace WorldTree
     public static class NodeUnitRule
     {
         /// <summary>
-        /// 从池中获取对象
+        /// 从池中获取单位对象
         /// </summary>
         public static T PoolGet<T>(this INode self)
         where T : class, IUnitPoolEventItem
@@ -25,7 +25,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 从池中获取对象
+        /// 从池中获取单位对象
         /// </summary>
         public static T PoolGet<T>(this INode self, out T unit)
         where T : class, IUnitPoolEventItem

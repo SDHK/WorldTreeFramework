@@ -12,7 +12,7 @@ using System;
 
 namespace WorldTree
 {
-    public static class StaticListenerRuleActuatorManagerExtension
+    public static partial class NodeRule
     {
         /// <summary>
         /// 获取以实体类型为目标的 监听系统执行器
@@ -64,31 +64,41 @@ namespace WorldTree
         /// </summary>
         /// <remarks>目标类型《系统，法则执行器》</remarks>
         public TreeDictionary<Type, ListenerRuleActuatorGroup> ListenerActuatorGroupDictionary;
+    }
 
-        /// <summary>
-        /// 释放后
-        /// </summary>
-        public override void OnDispose()
+    class StaticListenerRuleActuatorManagerAddRule : AddRule<StaticListenerRuleActuatorManager>
+    {
+        public override void OnEvent(StaticListenerRuleActuatorManager self)
         {
-            IsRecycle = true;
-            IsDisposed = true;
+            self.AddChild(out self.ListenerActuatorGroupDictionary);
         }
+    }
+    class StaticListenerRuleActuatorManagerRemoveRule : RemoveRule<StaticListenerRuleActuatorManager>
+    {
+        public override void OnEvent(StaticListenerRuleActuatorManager self)
+        {
+            self.ListenerActuatorGroupDictionary = null;
+        }
+    }
+
+    public static class StaticListenerRuleActuatorManagerRule
+    {
 
         #region 判断监听器
 
         /// <summary>
         /// 检测添加静态监听器
         /// </summary>
-        public void TryAddListener(INode listener)
+        public static void TryAddListener(this StaticListenerRuleActuatorManager self, INode listener)
         {
             //判断是否为监听器
-            if (Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+            if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
             {
                 foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
                 {
                     foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
                     {
-                        if (TryGetRuleActuator(ruleList.Key, ruleGroup.Key, out var actuator))
+                        if (self.TryGetRuleActuator(ruleList.Key, ruleGroup.Key, out var actuator))
                         {
                             actuator.Enqueue(listener);
                         }
@@ -100,16 +110,16 @@ namespace WorldTree
         /// <summary>
         /// 检测移除静态监听器
         /// </summary>
-        public void RemoveListener(INode listener)
+        public static void RemoveListener(this StaticListenerRuleActuatorManager self, INode listener)
         {
             //判断是否为监听器
-            if (Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+            if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
             {
                 foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
                 {
                     foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
                     {
-                        if (TryGetRuleActuator(ruleList.Key, ruleGroup.Key, out var actuator))
+                        if (self.TryGetRuleActuator(ruleList.Key, ruleGroup.Key, out var actuator))
                         {
                             actuator.Remove(listener);
                         }
@@ -125,34 +135,34 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加静态执行器
         /// </summary>
-        public bool TryAddRuleActuator<R>(Type Target, out RuleActuator actuator)
+        public static bool TryAddRuleActuator<R>(this StaticListenerRuleActuatorManager self, Type Target, out RuleActuator actuator)
             where R : IListenerRule
         {
             Type ruleType = typeof(R);
 
             //判断是否有组
-            if (TryGetGroup(Target, out var group))
+            if (self.TryGetGroup(Target, out var group))
             {
                 //判断是否有执行器
                 if (group.TryGetRuleActuator(ruleType, out actuator)) { return true; }
 
                 //没有执行器 则判断这个目标类型是是否有监听法则集合
-                else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
+                else if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
                 {
                     //新建执行器
                     actuator = group.GetRuleActuator(ruleType);
                     actuator.ruleGroup = ruleGroup;
-                    RuleActuatorAddListener(actuator);
+                    self.RuleActuatorAddListener(actuator);
                     return true;
                 }
             }
             //没有组则判断这个目标类型是否有监听法则集合
-            else if (Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
+            else if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
             {
                 //新建组和执行器
-                actuator = GetGroup(Target).GetRuleActuator(ruleType);
+                actuator = self.GetGroup(Target).GetRuleActuator(ruleType);
                 actuator.ruleGroup = ruleGroup;
-                RuleActuatorAddListener(actuator);
+                self.RuleActuatorAddListener(actuator);
                 return true;
             }
             actuator = null;
@@ -162,12 +172,12 @@ namespace WorldTree
         /// <summary>
         /// 执行器填装监听器
         /// </summary>
-        private void RuleActuatorAddListener(RuleActuator actuator)
+        private static void RuleActuatorAddListener(this StaticListenerRuleActuatorManager self, RuleActuator actuator)
         {
             foreach (var listenerType in actuator.ruleGroup)//遍历法则集合获取监听器类型
             {
                 //从池里拿到已存在的监听器
-                if (Core.NodePoolManager.m_Pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
+                if (self.Core.NodePoolManager.m_Pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
                 {
                     //全部注入到执行器
                     foreach (var listener in listenerPool.Nodes)
@@ -183,9 +193,9 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取静态执行器
         /// </summary>
-        public bool TryGetRuleActuator(Type Target, Type RuleType, out RuleActuator actuator)
+        public static bool TryGetRuleActuator(this StaticListenerRuleActuatorManager self, Type Target, Type RuleType, out RuleActuator actuator)
         {
-            if (ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
+            if (self.ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
             {
                 return group.TryGetRuleActuator(RuleType, out actuator);
             }
@@ -203,11 +213,11 @@ namespace WorldTree
         /// <summary>
         /// 获取执行器集合
         /// </summary>
-        public ListenerRuleActuatorGroup GetGroup(Type Target)
+        public static ListenerRuleActuatorGroup GetGroup(this StaticListenerRuleActuatorManager self, Type Target)
         {
-            if (!ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
+            if (!self.ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
             {
-                ListenerActuatorGroupDictionary.Add(Target, this.AddChild(out group));
+                self.ListenerActuatorGroupDictionary.Add(Target, self.AddChild(out group));
                 group.Target = Target;
             }
             return group;
@@ -216,28 +226,13 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取执行器集合
         /// </summary>
-        public bool TryGetGroup(Type target, out ListenerRuleActuatorGroup group)
+        public static bool TryGetGroup(this StaticListenerRuleActuatorManager self, Type target, out ListenerRuleActuatorGroup group)
         {
-            return ListenerActuatorGroupDictionary.TryGetValue(target, out group);
+            return self.ListenerActuatorGroupDictionary.TryGetValue(target, out group);
         }
 
         #endregion
 
-    }
-
-    class StaticListenerRuleActuatorManagerAddRule : AddRule<StaticListenerRuleActuatorManager>
-    {
-        public override void OnEvent(StaticListenerRuleActuatorManager self)
-        {
-            self.AddChild(out self.ListenerActuatorGroupDictionary);
-        }
-    }
-    class StaticListenerRuleActuatorManagerRemoveRule : RemoveRule<StaticListenerRuleActuatorManager>
-    {
-        public override void OnEvent(StaticListenerRuleActuatorManager self)
-        {
-            self.ListenerActuatorGroupDictionary = null;
-        }
     }
 
 }

@@ -14,7 +14,7 @@ namespace WorldTree
     public static partial class NodeRule
     {
         /// <summary>
-        /// 从池中获取对象
+        /// 从池中获取节点对象
         /// </summary>
         public static T PoolGet<T>(this INode self)
         where T : class, INode
@@ -23,7 +23,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 从池中获取对象
+        /// 从池中获取节点对象
         /// </summary>
         public static INode PoolGet(this INode self, Type type)
         {
