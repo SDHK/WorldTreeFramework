@@ -119,24 +119,17 @@ namespace WorldTree
     }
     class InitialDomainUpdateRule : UpdateRule<InitialDomain>
     {
-        public override async void OnEvent(InitialDomain self, float deltaTime)
+        public override void OnEvent(InitialDomain self, float deltaTime)
         {
 
             if (Input.GetKeyDown(KeyCode.A))
             {
-                using (await self.AsyncLock(0))
-                {
-                    await self.AsyncDelay(3);
-                    self.A.Value++;
-                }
-                World.Log($"A  A:{self.A.Value}  B:{self.B.Value}");
-
+                Test(self).Coroutine();
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
                 self.B.Value += 1;
                 World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
-
             }
 
 
@@ -158,6 +151,16 @@ namespace WorldTree
             if (Input.GetKeyDown(KeyCode.R))
             {
                 self.RemoveComponent<TreeNode>();
+            }
+        }
+
+        public async TreeTask Test(InitialDomain self)
+        {
+            using (await self.AsyncLock(0))
+            {
+                await self.AsyncDelay(3);
+                self.A.Value++;
+                World.Log($"A  A:{self.A.Value}  B:{self.B.Value}");
             }
         }
 

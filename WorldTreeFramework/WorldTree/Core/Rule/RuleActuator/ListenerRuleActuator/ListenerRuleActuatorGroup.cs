@@ -9,7 +9,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -65,7 +64,6 @@ namespace WorldTree
         {
             if (!self.actuatorDictionary.TryGetValue(listenerRuleType, out var actuator))
             {
-
                 self.actuatorDictionary.Add(listenerRuleType, self.AddChild(out actuator));
             }
             return actuator;

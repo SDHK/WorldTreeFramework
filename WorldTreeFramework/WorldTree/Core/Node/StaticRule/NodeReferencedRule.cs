@@ -24,7 +24,7 @@ namespace WorldTree
             self.m_ReferencedsBy.TryAdd(node.Id, node);
             node.m_Referenceds.TryAdd(self.Id, self);
         }
-      
+
         /// <summary>
         /// 解除引用关系
         /// </summary>
@@ -32,7 +32,6 @@ namespace WorldTree
         {
             if (self.m_Referenceds != null)//移除父级
             {
-
                 foreach (var item in self.m_Referenceds)
                 {
                     item.Value.m_ReferencedsBy.Remove(self.Id);
@@ -42,6 +41,8 @@ namespace WorldTree
                         item.Value.m_ReferencedsBy = null;
                     }
                 }
+                self.m_Referenceds.Dispose();
+                self.m_Referenceds = null;
             }
 
             if (self.m_ReferencedsBy != null)//移除子级
@@ -55,10 +56,9 @@ namespace WorldTree
                         item.Value.m_Referenceds = null;
                     }
                 }
-
+                self.m_ReferencedsBy.Dispose();
+                self.m_ReferencedsBy = null;
             }
-
-
         }
     }
 }
