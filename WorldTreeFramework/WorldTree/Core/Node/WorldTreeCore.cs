@@ -308,9 +308,9 @@ namespace WorldTree
             node.SetActive(false);//激活标记变更
 
             //引用关系移除通知
-            if (node.m_Referenceds != null)
+            if (node.m_ReferencedParents != null)
             {
-                foreach (var item in node.m_Referenceds)
+                foreach (var item in node.m_ReferencedParents)
                 {
                     self.ReferencedRemoveRuleGroup?.Send(node, item.Value);
                 }

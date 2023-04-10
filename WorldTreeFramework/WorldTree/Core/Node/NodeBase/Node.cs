@@ -59,9 +59,9 @@ namespace WorldTree
 
         #region Referenceds
 
-        public UnitDictionary<long, INode> m_Referenceds { get; set; }
+        public UnitDictionary<long, INode> m_ReferencedParents { get; set; }
 
-        public UnitDictionary<long, INode> m_ReferencedsBy { get; set; }
+        public UnitDictionary<long, INode> m_ReferencedChilden { get; set; }
 
         #endregion
 
