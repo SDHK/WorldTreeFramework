@@ -44,8 +44,13 @@ namespace WorldTree
             objectOnGet = ObjectOnGet;
             objectOnRecycle = ObjectOnRecycle;
             objectOnDestroy = ObjectOnDestroy;
-            
+
             Nodes = new Dictionary<long, INode>();
+        }
+
+        public override string ToString()
+        {
+            return $"[NodePool<{ObjectType}>] : {Count} ";
         }
 
         /// <summary>
@@ -57,20 +62,6 @@ namespace WorldTree
             return Get() as T;
         }
 
-        public override string ToString()
-        {
-            return $"[NodePool<{ObjectType}>] : {Count} ";
-        }
-
-        public INode ObjectNew(IPool pool)
-        {
-            INode obj = Activator.CreateInstance(ObjectType, true) as INode;
-            obj.Id = Core.IdManager.GetId();
-            obj.Core = Core;
-            obj.Root = Core.Root;
-            obj.Type = ObjectType;
-            return obj;
-        }
         public override void Recycle(object obj) => Recycle(obj as INode);
         public void Recycle(INode obj)
         {
@@ -94,17 +85,27 @@ namespace WorldTree
                 }
             }
         }
-        public void ObjectDestroy(INode obj)
+
+        private INode ObjectNew(IPool pool)
+        {
+            INode obj = Activator.CreateInstance(ObjectType, true) as INode;
+            obj.Id = Core.IdManager.GetId();
+            obj.Core = Core;
+            obj.Root = Core.Root;
+            obj.Type = ObjectType;
+            return obj;
+        }
+        private void ObjectDestroy(INode obj)
         {
             Core.IdManager.RecycleId(obj.Id);
         }
 
-        public void ObjectOnNew(INode obj)
+        private void ObjectOnNew(INode obj)
         {
             newRule?.Send(obj);
         }
 
-        public void ObjectOnGet(INode obj)
+        private void ObjectOnGet(INode obj)
         {
             obj.IsRecycle = false;
             Nodes.TryAdd(obj.Id, obj);
@@ -118,7 +119,7 @@ namespace WorldTree
             Nodes.Remove(obj.Id);
         }
 
-        public void ObjectOnDestroy(INode obj)
+        private void ObjectOnDestroy(INode obj)
         {
             obj.IsDisposed = true;
             destroyRule?.Send(obj);

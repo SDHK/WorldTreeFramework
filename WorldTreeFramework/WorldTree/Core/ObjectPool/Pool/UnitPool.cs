@@ -21,32 +21,11 @@ namespace WorldTree
     /// </summary>
     public class UnitPool : GenericPool<IUnitPoolEventItem>, IAwake<Type>, ChildOf<UnitPoolManager>
     {
-        public UnitPool() : base() { }
-        public UnitPool(Type type) : base()
-        {
-            ObjectType = type;
-
-            NewObject = ObjectNew;
-            DestroyObject = ObjectDestroy;
-
-            objectOnNew = ObjectOnNew;
-            objectOnGet = ObjectOnGet;
-            objectOnRecycle = ObjectOnRecycle;
-            objectOnDestroy = ObjectOnDestroy;
-        }
-
-
         public override string ToString()
         {
             return $"[UnitPool<{ObjectType}>] : {Count} ";
         }
 
-        public IUnitPoolEventItem ObjectNew(IPool pool)
-        {
-            IUnitPoolEventItem obj = Activator.CreateInstance(ObjectType, true) as IUnitPoolEventItem;
-            obj.Core = Core;
-            return obj;
-        }
         public override void Recycle(object obj) => Recycle(obj as IUnitPoolEventItem);
 
         /// <summary>
@@ -75,8 +54,11 @@ namespace WorldTree
             }
         }
 
-        public void ObjectDestroy(IUnitPoolEventItem obj)
+        public IUnitPoolEventItem ObjectNew(IPool pool)
         {
+            IUnitPoolEventItem obj = Activator.CreateInstance(ObjectType, true) as IUnitPoolEventItem;
+            obj.Core = Core;
+            return obj;
         }
 
         public void ObjectOnNew(IUnitPoolEventItem obj)
@@ -110,7 +92,6 @@ namespace WorldTree
             self.ObjectType = type;
 
             self.NewObject = self.ObjectNew;
-            self.DestroyObject = self.ObjectDestroy;
 
             self.objectOnNew = self.ObjectOnNew;
             self.objectOnGet = self.ObjectOnGet;
