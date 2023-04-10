@@ -18,7 +18,6 @@ namespace WorldTree
     /// </summary>
     public class TreeList<T> : List<T>, INode, IAwake, ChildOf<INode>
     {
-        public IPool thisPool { get; set; }
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }
         public long Id { get; set; }
@@ -67,7 +66,7 @@ namespace WorldTree
         public virtual void OnDispose()
         {
             Clear();
-            thisPool?.Recycle(this);
+            Core?.Recycle(this);
         }
     }
 

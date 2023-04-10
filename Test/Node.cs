@@ -197,22 +197,7 @@ class Node1DisableSystem : DisableRule<Node1>
 }
 
 
-public class Node2 : Node, IAwake
+public class Node2 : Node, IAwake,ChildOf<INode>
 {
 
-}
-class Node2EnableSystem : EnableRule<Node2>
-{
-    public override void OnEvent(Node2 self)
-    {
-        Debug.Log("Node2 OnEvent!!");
-    }
-}
-
-class Node2DisableSystem : DisableRule<Node2>
-{
-    public override void OnEvent(Node2 self)
-    {
-        Debug.Log("Node2 OnEvent!!");
-    }
 }

@@ -102,8 +102,6 @@ namespace WorldTree
             self.A.BindTwoWay(self.B);//双绑
 
 
-
-
             World.Log("初始域启动！！");
 
             using (await self.AsyncLock(0))
@@ -112,7 +110,16 @@ namespace WorldTree
                 self.A.Value++;
             }
 
+            int[][] a = null;
 
+           var a1 = a[1];
+
+            Get<int[][]>();
+
+        }
+
+        public void Get<T>()
+        {
 
         }
 
@@ -121,6 +128,10 @@ namespace WorldTree
     {
         public override void OnEvent(InitialDomain self, float deltaTime)
         {
+
+            self.AddChild(out TreeList<int> a);
+            self.RemoveChildren(a.Id);
+
 
             if (Input.GetKeyDown(KeyCode.A))
             {
