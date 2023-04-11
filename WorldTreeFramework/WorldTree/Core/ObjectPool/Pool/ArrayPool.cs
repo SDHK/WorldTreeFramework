@@ -18,32 +18,29 @@ namespace WorldTree
     /// <summary>
     /// 数组对象池
     /// </summary>
-    public class ArrayPool<T> : GenericPool<T[]>, IAwake, ChildOf<INode>
-    where T : struct
+    public class ArrayPool : GenericPool<Array>, IAwake<Type>, ChildOf<INode>
     {
         public override string ToString()
         {
             return $"[ArrayPool<{ObjectType}>] : {Count} ";
         }
 
-        public T[] ObjectNew(IPool pool)
+        public Array ObjectNew(IPool pool)
         {
-            T[] obj = Activator.CreateInstance(ObjectType, true) as T[];
-            return obj;
+            return Activator.CreateInstance(ObjectType, true) as Array;
         }
 
-        public void ObjectOnRecycle(T[] obj)
+        public void ObjectOnRecycle(Array obj)
         {
             Array.Clear(obj, 0, obj.Length);
         }
     }
 
-    class ArrayPoolAwakeRule<T> : AwakeRule<ArrayPool<T>>
-    where T : struct
+    class ArrayPoolAwakeRule : AwakeRule<ArrayPool, Type>
     {
-        public override void OnEvent(ArrayPool<T> self)
+        public override void OnEvent(ArrayPool self, Type type)
         {
-            self.ObjectType = typeof(T[]);
+            self.ObjectType = type;
             self.NewObject = self.ObjectNew;
             self.objectOnRecycle = self.ObjectOnRecycle;
         }
