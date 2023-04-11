@@ -85,7 +85,7 @@ namespace WorldTree
     }
 
 
-    class UnitPoolAddRule : AwakeRule<UnitPool, Type>
+    class UnitPoolAwakeRule : AwakeRule<UnitPool, Type>
     {
         public override void OnEvent(UnitPool self, Type type)
         {
