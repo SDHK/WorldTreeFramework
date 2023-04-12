@@ -6,7 +6,6 @@
 
 * 描述： 数组对象池
 * 
-*  
 
 */
 
@@ -18,8 +17,13 @@ namespace WorldTree
     /// <summary>
     /// 数组对象池
     /// </summary>
-    public class ArrayPool : GenericPool<Array>, IAwake<Type>, ChildOf<INode>
+    public class ArrayPool : GenericPool<Array>, IAwake<Type, int>, ChildOf<INode>
     {
+        /// <summary>
+        /// 数组长度
+        /// </summary>
+        public int Length;
+
         public override string ToString()
         {
             return $"[ArrayPool<{ObjectType}>] : {Count} ";
@@ -27,7 +31,7 @@ namespace WorldTree
 
         public Array ObjectNew(IPool pool)
         {
-            return Activator.CreateInstance(ObjectType, true) as Array;
+            return Array.CreateInstance(ObjectType, Length);
         }
 
         public void ObjectOnRecycle(Array obj)
@@ -36,11 +40,12 @@ namespace WorldTree
         }
     }
 
-    class ArrayPoolAwakeRule : AwakeRule<ArrayPool, Type>
+    class ArrayPoolAwakeRule : AwakeRule<ArrayPool, Type, int>
     {
-        public override void OnEvent(ArrayPool self, Type type)
+        public override void OnEvent(ArrayPool self, Type type, int length)
         {
             self.ObjectType = type;
+            self.Length = length;
             self.NewObject = self.ObjectNew;
             self.objectOnRecycle = self.ObjectOnRecycle;
         }

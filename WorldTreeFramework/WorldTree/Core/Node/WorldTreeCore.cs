@@ -6,9 +6,7 @@
 
 * 描述： 世界树核心
 * 
-* 框架的启动入口
-* 
-* 同时启动法则管理器和对象池管理器
+* 框架的启动入口，根节点
 * 
 * 管理分发全局的节点与组件的生命周期
 * 
@@ -57,9 +55,13 @@ namespace WorldTree
         /// </summary>
         public UnitPoolManager UnitPoolManager;
         /// <summary>
-        /// 节点池管理器
+        /// 节点对象池管理器
         /// </summary>
         public NodePoolManager NodePoolManager;
+        /// <summary>
+        /// 数组对象池管理器
+        /// </summary>
+        public ArrayPoolManager ArrayPoolManager;
         /// <summary>
         /// 静态监听器法则执行器管理器
         /// </summary>
@@ -132,16 +134,20 @@ namespace WorldTree
             //对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
             self.UnitPoolManager = self.AddComponent(out UnitPoolManager _);
             self.NodePoolManager = self.AddComponent(out NodePoolManager _);
+            self.AddComponent(out self.ArrayPoolManager);
 
             //监听器组件
             self.AddComponent(out self.StaticListenerRuleActuatorManager);
             self.AddComponent(out self.DynamicListenerRuleActuatorManager);
+
 
             //树根节点
             self.AddComponent(self.Root = self.PoolGet<WorldTreeRoot>());
 
             //核心激活
             self.SetActive(true);
+
+
         }
 
         /// <summary>
@@ -169,6 +175,7 @@ namespace WorldTree
             self.RuleManager = default;
             self.UnitPoolManager = default;
             self.NodePoolManager = default;
+            self.ArrayPoolManager = default;
             self.StaticListenerRuleActuatorManager = default;
             self.DynamicListenerRuleActuatorManager = default;
 

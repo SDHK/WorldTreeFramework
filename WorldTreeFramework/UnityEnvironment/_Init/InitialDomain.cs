@@ -22,14 +22,14 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
-    public class NodeAddRule : AddRule<Node>
-    {
-        public override void OnEvent(Node self)
-        {
+    //public class NodeAddRule : AddRule<Node>
+    //{
+    //    public override void OnEvent(Node self)
+    //    {
 
-            // World.Log($"NodeAdd: {self.Id} _  {self.Type} ");
-        }
-    }
+    //        // World.Log($"NodeAdd: {self.Id} _  {self.Type} ");
+    //    }
+    //}
 
     //public class NodeListenerAddRule : ListenerAddRule<Node>
     //{
@@ -94,6 +94,11 @@ namespace WorldTree
         {
             self.Branch = self;
 
+            int[] ints = self.Core.ArrayPoolManager.Get<int>(5);
+            World.Log("!!!!!!!!!!!!!" + ints.Length);
+
+            self.Core.ArrayPoolManager.Recycle(ints);
+
             self.AddChild(out self.A);//获取
             self.AddChild(out self.B);
 
@@ -110,28 +115,14 @@ namespace WorldTree
                 self.A.Value++;
             }
 
-            int[][] a = null;
-
-           var a1 = a[1];
-
-            Get<int[][]>();
+          
 
         }
-
-        public void Get<T>()
-        {
-
-        }
-
     }
     class InitialDomainUpdateRule : UpdateRule<InitialDomain>
     {
         public override void OnEvent(InitialDomain self, float deltaTime)
         {
-
-            self.AddChild(out TreeList<int> a);
-            self.RemoveChildren(a.Id);
-
 
             if (Input.GetKeyDown(KeyCode.A))
             {

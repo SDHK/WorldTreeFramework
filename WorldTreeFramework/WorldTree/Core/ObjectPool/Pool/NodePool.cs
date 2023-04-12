@@ -21,7 +21,7 @@ namespace WorldTree
     /// <summary>
     /// 实体对象池
     /// </summary>
-    public class NodePool : GenericPool<INode>, IAwake<Type>, ChildOf<NodePoolManager>
+    public class NodePool : GenericPool<INode>, IAwake, ChildOf<NodePoolManager>
     {
         public IRuleList<INewRule> newRule;
         public IRuleList<IGetRule> getRule;
