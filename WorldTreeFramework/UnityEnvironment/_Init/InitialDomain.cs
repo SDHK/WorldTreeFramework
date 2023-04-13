@@ -94,10 +94,9 @@ namespace WorldTree
         {
             self.Branch = self;
 
-            int[] ints = self.Core.ArrayPoolManager.Get<int>(5);
-            World.Log("!!!!!!!!!!!!!" + ints.Length);
-
-            self.Core.ArrayPoolManager.Recycle(ints);
+            var a2 = self.AddChild(out TreeArray<TreeArray<int>> _, 10);
+            var m2 = self.AddChild(out TreeMatrix2<int> _, 10, 10);
+            
 
             self.AddChild(out self.A);//获取
             self.AddChild(out self.B);
@@ -115,7 +114,7 @@ namespace WorldTree
                 self.A.Value++;
             }
 
-          
+
 
         }
     }

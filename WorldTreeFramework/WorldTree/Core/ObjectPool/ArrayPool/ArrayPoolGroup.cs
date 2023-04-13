@@ -16,15 +16,18 @@ namespace WorldTree
     /// </summary>
     public class ArrayPoolGroup : Node, IAwake<Type>, ChildOf<ArrayPoolManager>
     {
-        public Type objectType;
-        public TreeDictionary<int, ArrayPool> Pools = new TreeDictionary<int, ArrayPool>();
+        /// <summary>
+        /// 数组类型
+        /// </summary>
+        public Type ArrayType;
+        public TreeDictionary<int, ArrayPool> Pools;
     }
 
     class ArrayPoolGroupAwakeRule : AwakeRule<ArrayPoolGroup, Type>
     {
         public override void OnEvent(ArrayPoolGroup self, Type type)
         {
-            self.objectType = type;
+            self.ArrayType = type;
         }
     }
 
@@ -55,7 +58,7 @@ namespace WorldTree
         {
             if (!self.Pools.TryGetValue(Length, out ArrayPool arrayPool))
             {
-                self.AddChild(out arrayPool, self.objectType, Length);
+                self.AddChild(out arrayPool, self.ArrayType, Length);
                 self.Pools.Add(Length, arrayPool);
             }
             return arrayPool;

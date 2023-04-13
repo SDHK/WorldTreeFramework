@@ -19,6 +19,8 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
+    //多维数组
+    //TreeTask设计问题
 
     /// <summary>
     /// 世界树核心
