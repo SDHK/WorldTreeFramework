@@ -23,7 +23,7 @@ namespace WorldTree
         /// </summary>
         public int yLength;
 
-        public TreeArray<object> m_Array;
+        public TreeArray<INode> m_Array;
 
 
 
