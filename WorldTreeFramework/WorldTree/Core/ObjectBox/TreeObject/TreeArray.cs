@@ -7,6 +7,8 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
     /// <summary>
@@ -17,11 +19,22 @@ namespace WorldTree
         , ChildOf<INode>
     {
         public T[] array;
+        public int Length { get { return array.Length; } }
 
         public T this[int index]
         {
             get { return array[index]; }
             set { array[index] = value; }
+        }
+
+
+        public static implicit operator Array(TreeArray<T> rValue)
+        {
+            return rValue.array;
+        }
+        public static implicit operator T[](TreeArray<T> rValue)
+        {
+            return rValue.array;
         }
     }
 
