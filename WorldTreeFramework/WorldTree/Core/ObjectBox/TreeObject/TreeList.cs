@@ -44,7 +44,7 @@ namespace WorldTree
         /// <summary>
         /// 数组
         /// </summary>
-        public TreeArray<T> _items;
+        public T[] _items;
 
         /// <summary>
         /// 是否发生改变
@@ -107,16 +107,16 @@ namespace WorldTree
                 if (value == this._items.Length) return;
                 if (value > 0)
                 {
-                    this.AddChild(out TreeArray<T> destinationArray, value);
+                    var destinationArray = this.Core.ArrayPoolManager.Get<T>(value);
                     if (this._size > 0)
-                        Array.Copy(this._items, 0, destinationArray.array, 0, this._size);
-                    this._items.Dispose();
+                        Array.Copy(this._items, 0, destinationArray, 0, this._size);
+                    this.Core.ArrayPoolManager.Recycle(destinationArray);
                     this._items = destinationArray;
                 }
                 else
                 {
                     //初始化
-                    this.AddChild(out this._items, this._defaultCapacity);
+                    this._items = this.Core.ArrayPoolManager.Get<T>(_defaultCapacity);
                 }
             }
         }
@@ -135,8 +135,7 @@ namespace WorldTree
 
 
         #region 读取设置
-        object IList.this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        T IList<T>.this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        object IList.this[int index] { get => (object)this[index]; set => this[index] = (T)value; }
 
         public T this[int index]
         {
@@ -170,7 +169,7 @@ namespace WorldTree
             if (this._size - index < count)
                 World.LogError("无效参数");
             TreeList<T> range = this.Parent.AddChild(out TreeList<T> _, count);
-            Array.Copy(_items, index, (Array)range._items, 0, count);
+            Array.Copy(_items, index, range._items, 0, count);
             range._size = count;
             return range;
         }
@@ -695,7 +694,7 @@ namespace WorldTree
         /// <remarks>新数组将会挂在当前列表父节点上</remarks>
         public TreeArray<T> ToTreeArray()
         {
-            TreeArray<T> destinationArray = this.AddChild(out TreeArray<T> _, this._size);
+            TreeArray<T> destinationArray = this.Parent.AddChild(out TreeArray<T> _, this._size);
             Array.Copy(_items, 0, destinationArray, 0, this._size);
             return destinationArray;
         }
@@ -857,7 +856,7 @@ namespace WorldTree
     {
         public override void OnEvent(TreeList<T> self)
         {
-            self.AddChild(out self._items, self._defaultCapacity);
+            self._items = self.Core.ArrayPoolManager.Get<T>(self._defaultCapacity);
         }
     }
 
@@ -870,7 +869,7 @@ namespace WorldTree
             if (capacity == 0)
                 World.LogError("容量为0");
             else
-                self.AddChild(out self._items, capacity);
+                self._items = self.Core.ArrayPoolManager.Get<T>(capacity);
         }
     }
 
@@ -885,11 +884,11 @@ namespace WorldTree
                 int count = objs.Count;
                 if (count == 0)
                 {
-                    self.AddChild(out self._items, self._defaultCapacity);
+                    self._items = self.Core.ArrayPoolManager.Get<T>(self._defaultCapacity);
                 }
                 else
                 {
-                    self.AddChild(out self._items, count);
+                    self._items = self.Core.ArrayPoolManager.Get<T>(count);
                     objs.CopyTo(self._items, 0);
                     self._size = count;
                 }
@@ -897,7 +896,7 @@ namespace WorldTree
             else
             {
                 self._size = self._defaultCapacity;
-                self.AddChild(out self._items, self._defaultCapacity);
+                self._items = self.Core.ArrayPoolManager.Get<T>(self._defaultCapacity);
                 foreach (T obj in collection)
                     self.Add(obj);
             }
@@ -909,7 +908,7 @@ namespace WorldTree
         public override void OnEvent(TreeList<T> self)
         {
             self.Clear();
-            self._items.Dispose();
+            self.Core.ArrayPoolManager.Recycle(self._items);
             self._items = null;
         }
     }
