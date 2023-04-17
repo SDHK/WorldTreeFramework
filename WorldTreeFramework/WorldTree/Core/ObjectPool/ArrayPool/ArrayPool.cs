@@ -26,7 +26,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return $"[ArrayPool<{ObjectType}>] : {Count} ";
+            return $"[ArrayPool<{ObjectType}>] [{Length}] : {Count} ";
         }
 
         public Array ObjectNew(IPool pool)
