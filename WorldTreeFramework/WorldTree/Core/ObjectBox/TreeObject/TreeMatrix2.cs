@@ -7,6 +7,9 @@
 
 */
 
+using System;
+using static UnityEngine.Rendering.DebugUI;
+
 namespace WorldTree
 {
     /// <summary>
@@ -76,8 +79,196 @@ namespace WorldTree
         }
     }
 
-    public class TreeMatrix2Rule
+    public static class TreeMatrix2Rule
     {
+        /// <summary>
+        /// 点积计算
+        /// </summary>
+        public static TreeMatrix2<double> Dot(this TreeMatrix2<double> matrixA, TreeMatrix2<double> matrixB)
+        {
+            int aRows = matrixA.xLength;//行数
+            int aCols = matrixA.yLength;//列数
+
+            int bRows = matrixB.xLength;//行数
+            int bCols = matrixB.yLength;//列数
+
+            if (aCols != bRows)
+                throw new Exception("不能做矩阵乘法。不正确的尺寸。");
+
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, aRows, bCols);
+
+            for (int i = 0; i < aRows; i++)
+                for (int j = 0; j < bCols; j++)
+                    for (int k = 0; k < aCols; k++)
+                        result[i, j] += (matrixA[i, k] * matrixB[k, j]);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 乘法
+        /// </summary>
+        public static TreeMatrix2<double> Multiplication(this TreeMatrix2<double> matrixA, TreeMatrix2<double> matrixB)
+        {
+            if (matrixA.xLength != matrixB.xLength || matrixA.yLength != matrixB.yLength)
+            {
+                World.LogError("矩阵大小不相等");
+                return null;
+            }
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[i, j] = matrixA[i, j] * matrixB[i, j];
+            return result;
+        }
+
+        /// <summary>
+        /// 指数运算
+        /// </summary>
+        public static TreeMatrix2<double> Exp(this TreeMatrix2<double> matrixA, double value)
+        {
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[i, j] = (double)Math.Pow(matrixA[i, j], value);
+            return result;
+        }
+
+
+        /// <summary>
+        /// 加法
+        /// </summary>
+        public static TreeMatrix2<double> Additive(this TreeMatrix2<double> matrixA, double value)
+        {
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[i, j] = matrixA[i, j] + value;
+            return result;
+        }
+        /// <summary>
+        /// 加法
+        /// </summary>
+        public static void Additive1(this TreeMatrix2<double> matrixA, TreeMatrix2<double> matrixB)
+        {
+            if (matrixA.xLength != matrixB.xLength || matrixA.yLength != matrixB.yLength)
+            {
+                World.LogError("矩阵大小不相等");
+            }
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    matrixA[i, j] += matrixB[i, j];
+        }
+
+
+        /// <summary>
+        /// 减法
+        /// </summary>
+        public static TreeMatrix2<double> Subtraction(this TreeMatrix2<double> matrixA, TreeMatrix2<double> matrixB)
+        {
+            if (matrixA.xLength != matrixB.xLength || matrixA.yLength != matrixB.yLength)
+            {
+                World.LogError("矩阵大小不相等");
+                return null;
+            }
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[i, j] = matrixA[i, j] - matrixB[i, j];
+            return result;
+        }
+
+
+        /// <summary>
+        /// 减法
+        /// </summary>
+        public static TreeMatrix2<double> Subtraction_(this double value, TreeMatrix2<double> matrixA)
+        {
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[i, j] = value - matrixA[i, j];
+            return result;
+        }
+
+        /// <summary>
+        /// 除法运算
+        /// </summary>
+        public static TreeMatrix2<double> Division(this TreeMatrix2<double> matrixA, double value)
+        {
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[i, j] = matrixA[i, j] / value;
+            return result;
+        }
+
+
+        /// <summary>
+        /// 除法运算
+        /// </summary>
+        public static TreeMatrix2<double> Division(this double value, TreeMatrix2<double> matrixA)
+        {
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[i, j] = value / matrixA[i, j];
+            return result;
+        }
+
+        /// <summary>
+        /// 指数次幂
+        /// </summary>
+        public static TreeMatrix2<double> Exp(this TreeMatrix2<double> matrixA)
+        {
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[i, j] = (double)Math.Exp(matrixA[i, j]);
+            return result;
+        }
+
+        /// <summary>
+        /// 指数次幂 负
+        /// </summary>
+        public static TreeMatrix2<double> Exp_(this TreeMatrix2<double> matrixA)
+        {
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[i, j] = Math.Exp(-matrixA[i, j]);
+            return result;
+        }
+
+        /// <summary>
+        /// 扭转
+        /// </summary>
+        public static TreeMatrix2<double> Turn(this TreeMatrix2<double> matrixA)
+        {
+            matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.yLength, matrixA.xLength);
+            for (int i = 0; i < matrixA.xLength; i++)
+                for (int j = 0; j < matrixA.yLength; j++)
+                    result[j, i] = matrixA[i, j];
+            return result;
+        }
+
+
+        /// <summary>
+        /// 打印
+        /// </summary>
+        public static void Print(this TreeMatrix2<double> matrix)
+        {
+            string t = "";
+            for (int i = 0; i < matrix.xLength; i++)
+            {
+                for (int i1 = 0; i1 < matrix.yLength; i1++)
+                {
+                    t += matrix[i, i1] + "\t";
+                }
+                t += " \n";
+            }
+            World.Log(t);
+        }
 
 
     }

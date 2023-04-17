@@ -85,18 +85,19 @@ namespace WorldTree
     {
         public TreeValue<float> A;
         public TreeValue<float> B;
+        public Perceptron perceptron;
     }
 
     class _InitialDomain : AddRule<InitialDomain>
     {
 
-        public override async void OnEvent(InitialDomain self)
+        public override void OnEvent(InitialDomain self)
         {
             self.Branch = self;
 
             var a2 = self.AddChild(out TreeArray<TreeArray<int>> _, 10);
             var m2 = self.AddChild(out TreeMatrix2<int> _, 10, 10);
-            
+
 
             self.AddChild(out self.A);//获取
             self.AddChild(out self.B);
@@ -108,11 +109,14 @@ namespace WorldTree
 
             World.Log("初始域启动！！");
 
-            using (await self.AsyncLock(0))
-            {
-                await self.AsyncDelay(3);
-                self.A.Value++;
-            }
+            self.AddChild(out self.perceptron);
+            self.perceptron.Test();
+
+            //using (await self.AsyncLock(0))
+            //{
+            //    await self.AsyncDelay(3);
+            //    self.A.Value++;
+            //}
 
 
 
@@ -125,12 +129,15 @@ namespace WorldTree
 
             if (Input.GetKeyDown(KeyCode.A))
             {
-                Test(self).Coroutine();
+                self.perceptron.Train();
+                //Test(self).Coroutine();
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
-                self.B.Value += 1;
-                World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
+                self.perceptron.DY();
+
+                //self.B.Value += 1;
+                //World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
             }
 
 
