@@ -61,7 +61,7 @@ namespace WorldTree
             return result;
         }
 
-        public static TreeList_<TreeList_<float>> Dot(TreeList_<TreeList_<float>> matrixA, TreeList_<TreeList_<float>> matrixB)
+        public static TreeList<TreeList<float>> Dot(TreeList<TreeList<float>> matrixA, TreeList<TreeList<float>> matrixB)
         {
             int aRows = matrixA[0].Count;//行数
             int aCols = matrixA[1].Count;//列数

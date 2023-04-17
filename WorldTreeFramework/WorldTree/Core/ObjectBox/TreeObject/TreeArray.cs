@@ -17,6 +17,7 @@ namespace WorldTree
     public class TreeArray<T> : Node
         , IAwake<int>
         , ChildOf<INode>
+        , ComponentOf<INode>
     {
         public T[] array;
         public int Length { get { return array.Length; } }
@@ -28,13 +29,13 @@ namespace WorldTree
         }
 
 
-        public static implicit operator Array(TreeArray<T> rValue)
+        public static implicit operator Array(TreeArray<T> treeArray)
         {
-            return rValue.array;
+            return treeArray.array;
         }
-        public static implicit operator T[](TreeArray<T> rValue)
+        public static implicit operator T[](TreeArray<T> treeArray)
         {
-            return rValue.array;
+            return treeArray.array;
         }
     }
 

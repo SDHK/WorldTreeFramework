@@ -5,6 +5,8 @@
 * 日期： 2023/3/16 20:02
 
 * 描述： 树泛型列表
+* 
+* 大部分功能复制List源码，内部数组则优化为池获取
 
 */
 
@@ -18,6 +20,7 @@ namespace WorldTree
     /// <summary>
     /// 树泛型列表
     /// </summary>
+    /// <remarks>默认初始容量为2</remarks>
     public class TreeList<T> : Node,
         IList<T>,
         ICollection<T>,
@@ -28,8 +31,16 @@ namespace WorldTree
         IReadOnlyList<T>,
         IReadOnlyCollection<T>,
         IAwake,
+        IAwake<int>,
+        IAwake<IEnumerable<T>>,
         ChildOf<INode>
     {
+        /// <summary>
+        /// 默认容量
+        /// </summary>
+        public int _defaultCapacity = 2;
+
+
         /// <summary>
         /// 数组
         /// </summary>
@@ -105,7 +116,7 @@ namespace WorldTree
                 else
                 {
                     //初始化
-                    this.AddChild(out this._items, 0);
+                    this.AddChild(out this._items, this._defaultCapacity);
                 }
             }
         }
@@ -143,11 +154,37 @@ namespace WorldTree
             }
 
         }
+
+
+
+        /// <summary>
+        /// 范围获取
+        /// </summary>
+        /// <remarks>返回的列表会挂载这个列表的父节点下</remarks>
+        public TreeList<T> GetRange(int index, int count)
+        {
+            if (index < 0)
+                World.LogError("下标小于0");
+            if (count < 0)
+                World.LogError("数量小于0");
+            if (this._size - index < count)
+                World.LogError("无效参数");
+            TreeList<T> range = this.Parent.AddChild(out TreeList<T> _, count);
+            Array.Copy(_items, index, (Array)range._items, 0, count);
+            range._size = count;
+            return range;
+        }
+
+
+
         #endregion
 
 
 
         #region 查询
+
+
+        #region 判断
 
         /// <summary>
         /// 判断包含
@@ -190,6 +227,63 @@ namespace WorldTree
         }
 
         /// <summary>
+        /// 条件判断是否存在
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
+        public bool Exists(Predicate<T> match) => this.FindIndex(match) != -1;
+
+        /// <summary>
+        /// 条件判断是否全部通过
+        /// </summary>
+        public bool TrueForAll(Predicate<T> match)
+        {
+            if (match == null)
+                World.LogError("条件为空");
+            for (int index = 0; index < this._size; ++index)
+            {
+                if (!match(this._items[index]))
+                    return false;
+            }
+            return true;
+        }
+
+        #endregion
+
+        #region 二分查询
+
+        /// <summary>
+        /// 二分查找
+        /// </summary>
+        /// <param name="index">起始下标</param>
+        /// <param name="count">查询数量</param>
+        /// <param name="item">查询目标</param>
+        /// <param name="comparer">比较器</param>
+        /// <returns>下标</returns>
+        public int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+        {
+            if (index < 0)
+                World.LogError("下标溢出");
+            if (count < 0)
+                World.LogError("数量为负");
+            if (this._size - index < count)
+                World.LogError("参数无效");
+            return Array.BinarySearch<T>(this._items, index, count, item, comparer);
+        }
+        /// <summary>
+        /// 二分查找
+        /// </summary>
+        public int BinarySearch(T item) => this.BinarySearch(0, this.Count, item, (IComparer<T>)null);
+        /// <summary>
+        /// 二分查找
+        /// </summary>
+        public int BinarySearch(T item, IComparer<T> comparer) => this.BinarySearch(0, this.Count, item, comparer);
+
+        #endregion
+
+        #region 指定查询
+
+        /// <summary>
         /// 搜索第一次出现的下标
         /// </summary>
         public int IndexOf(T item)
@@ -203,6 +297,136 @@ namespace WorldTree
         {
             return IsCompatibleObject(value) ? this.IndexOf((T)value) : -1;
         }
+        /// <summary>
+        /// 搜索第一次出现的下标
+        /// </summary>
+        public int IndexOf(T item, int index)
+        {
+            if (index > this._size)
+                World.LogError("下标超过大小");
+            return Array.IndexOf<T>(this._items, item, index, this._size - index);
+        }
+        /// <summary>
+        /// 搜索第一次出现的下标
+        /// </summary>
+        public int IndexOf(T item, int index, int count)
+        {
+            if (index > this._size)
+                World.LogError("下标超过大小");
+            if (count < 0 || index > this._size - count)
+                World.LogError("查询数量为负或超过大小");
+            return Array.IndexOf<T>(this._items, item, index, count);
+        }
+
+
+        public int LastIndexOf(T item) => this._size == 0 ? -1 : this.LastIndexOf(item, this._size - 1, this._size);
+
+        public int LastIndexOf(T item, int index)
+        {
+            if (index >= this._size)
+                World.LogError("下标超过大小");
+            return this.LastIndexOf(item, index, index + 1);
+        }
+        public int LastIndexOf(T item, int index, int count)
+        {
+            if (this.Count != 0 && index < 0)
+                World.LogError("下标为0");
+            if (this.Count != 0 && count < 0)
+                World.LogError("数量为0");
+            if (this._size == 0)
+                return -1;
+            if (index >= this._size)
+                World.LogError("下标超过大小");
+            if (count > index + 1)
+                World.LogError("数量小于下标+1");
+            return Array.LastIndexOf<T>(this._items, item, index, count);
+        }
+        #endregion
+
+        /// <summary>
+        /// 条件查找元素的下标
+        /// </summary>
+        /// <param name="startIndex">起始下标</param>
+        /// <param name="count">查询数量</param>
+        /// <param name="match">查询委托</param>
+        public int FindIndex(int startIndex, int count, Predicate<T> match)
+        {
+            if ((uint)startIndex > (uint)this._size)
+                World.LogError("起始下标超过大小");
+            if (count < 0 || startIndex > this._size - count)
+                World.LogError("查询数量为负或超过大小");
+            if (match == null)
+                World.LogError("查询委托为空");
+            int num = startIndex + count;
+            for (int index = startIndex; index < num; ++index)
+            {
+                if (match(this._items[index]))
+                    return index;
+            }
+            return -1;
+        }
+        #region 条件查询
+
+        /// <summary>
+        /// 条件查找元素的下标
+        /// </summary>
+        public int FindIndex(int startIndex, Predicate<T> match) => this.FindIndex(startIndex, this._size - startIndex, match);
+        /// <summary>
+        /// 条件查找元素的下标
+        /// </summary>
+        public int FindIndex(Predicate<T> match) => this.FindIndex(0, this._size, match);
+
+        /// <summary>
+        /// 从后往前条件查找
+        /// </summary>
+        /// <param name="match">查询委托</param>
+        public T FindLast(Predicate<T> match)
+        {
+            if (match == null)
+                World.LogError("查询委托为空");
+            for (int index = this._size - 1; index >= 0; --index)
+            {
+                if (match(this._items[index]))
+                    return this._items[index];
+            }
+            return default(T);
+        }
+        /// <summary>
+        /// 从后往前条件查找元素的下标
+        /// </summary>
+        public int FindLastIndex(Predicate<T> match) => this.FindLastIndex(this._size - 1, this._size, match);
+        /// <summary>
+        /// 从后往前条件查找元素的下标
+        /// </summary>
+        public int FindLastIndex(int startIndex, Predicate<T> match) => this.FindLastIndex(startIndex, startIndex + 1, match);
+        /// <summary>
+        /// 从后往前条件查找元素的下标
+        /// </summary>
+        public int FindLastIndex(int startIndex, int count, Predicate<T> match)
+        {
+            if (match == null)
+                World.LogError("查询委托为空");
+
+            if (this._size == 0)
+            {
+                if (startIndex != -1)
+                    World.LogError("起始下标超过大小");
+            }
+            else if ((uint)startIndex >= (uint)this._size)
+                World.LogError("起始下标超过大小");
+            if (count < 0 || startIndex - count + 1 < 0)
+                World.LogError("查询数量为负或超过大小");
+            int num = startIndex - count;
+            for (int lastIndex = startIndex; lastIndex > num; --lastIndex)
+            {
+                if (match(this._items[lastIndex]))
+                    return lastIndex;
+            }
+            return -1;
+        }
+
+        #endregion
+
 
 
         #endregion
@@ -227,6 +451,13 @@ namespace WorldTree
             this.Add((T)value);
             return this.Count - 1;
         }
+
+        /// <summary>
+        /// 添加元素范围
+        /// </summary>
+        /// <param name="collection"></param>
+        public void AddRange(IEnumerable<T> collection) => this.InsertRange(this._size, collection);
+
 
         #endregion
 
@@ -278,7 +509,7 @@ namespace WorldTree
                     {
                         T[] array = new T[count];
                         objs.CopyTo(array, 0);
-                        array.CopyTo((Array)this._items, index);
+                        array.CopyTo(_items, index);
                     }
                     this._size += count;
                 }
@@ -329,7 +560,57 @@ namespace WorldTree
             this._items[this._size] = default(T);
             ++this._version;
         }
+        /// <summary>
+        /// 条件判断移除全部
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
+        public int RemoveAll(Predicate<T> match)
+        {
+            if (match == null)
+                World.LogError("比较器为空");
+            int index1 = 0;
+            while (index1 < this._size && !match(this._items[index1]))
+                ++index1;
+            if (index1 >= this._size)
+                return 0;
+            int index2 = index1 + 1;
+            while (index2 < this._size)
+            {
+                while (index2 < this._size && match(this._items[index2]))
+                    ++index2;
+                if (index2 < this._size)
+                    this._items[index1++] = this._items[index2++];
+            }
+            Array.Clear(_items, index1, this._size - index1);
+            int num = this._size - index1;
+            this._size = index1;
+            ++this._version;
+            return num;
+        }
 
+        /// <summary>
+        /// 范围移除
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="count"></param>
+        public void RemoveRange(int index, int count)
+        {
+            if (index < 0)
+                World.LogError("下标小于0");
+            if (count < 0)
+                World.LogError("数量小于0");
+            if (this._size - index < count)
+                World.LogError("查询数量超过大小");
+            if (count <= 0)
+                return;
+            int size = this._size;
+            this._size -= count;
+            if (index < this._size)
+                Array.Copy(_items, index + count, _items, index, this._size - index);
+            Array.Clear(_items, this._size, count);
+            ++this._version;
+        }
 
         #endregion
 
@@ -341,7 +622,7 @@ namespace WorldTree
         {
             if (this._size > 0)
             {
-                Array.Clear((Array)this._items, 0, this._size);
+                Array.Clear(_items, 0, this._size);
                 this._size = 0;
             }
             ++this._version;
@@ -365,31 +646,269 @@ namespace WorldTree
             Array.Copy(this._items, 0, array, index, this._size);
         }
 
+        /// <summary>
+        /// 拷贝
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
+        /// <param name="count"></param>
+        public void CopyTo(int index, T[] array, int arrayIndex, int count)
+        {
+            if (this._size - index < count)
+                World.LogError("无效参数");
+            Array.Copy(_items, index, array, arrayIndex, count);
+        }
+
+
+        /// <summary>
+        /// 转换所有
+        /// </summary>
+        /// <typeparam name="TOutput">转换类型</typeparam>
+        /// <param name="converter">转换器</param>
+        /// <returns>新列表将挂在这个列表的父物体上</returns>
+        public TreeList<TOutput> ConvertAll<TOutput>(Converter<T, TOutput> converter)
+        {
+            if (converter == null)
+                World.LogError("转换器为空");
+            TreeList<TOutput> outputList = this.Parent.AddChild(out TreeList<TOutput> _, this._size);
+            for (int index = 0; index < this._size; ++index)
+                outputList._items[index] = converter(this._items[index]);
+            outputList._size = this._size;
+            return outputList;
+        }
+
+        /// <summary>
+        /// 转换到数组
+        /// </summary>
+        /// <remarks>会创建一个真实大小新数组</remarks>
+        public T[] ToArray()
+        {
+            T[] destinationArray = new T[this._size];
+            Array.Copy(_items, 0, destinationArray, 0, this._size);
+            return destinationArray;
+        }
+
+        /// <summary>
+        /// 转换到树数组
+        /// </summary>
+        /// <remarks>新数组将会挂在当前列表父节点上</remarks>
+        public TreeArray<T> ToTreeArray()
+        {
+            TreeArray<T> destinationArray = this.AddChild(out TreeArray<T> _, this._size);
+            Array.Copy(_items, 0, destinationArray, 0, this._size);
+            return destinationArray;
+        }
+
+
+        /// <summary>
+        /// 裁剪掉多余空间
+        /// </summary>
+        public void TrimExcess()
+        {
+            if (this._size >= (int)((double)this._items.Length * 0.9))
+                return;
+            this.Capacity = this._size;
+        }
+
         #endregion
 
 
+
+
+
+        #region 排序
+        /// <summary>
+        /// 反向排序
+        /// </summary>
+        public void Reverse() => this.Reverse(0, this.Count);
+
+        /// <summary>
+        /// 反向排序
+        /// </summary>
+        public void Reverse(int index, int count)
+        {
+            if (index < 0)
+                World.LogError("下标小于0");
+            if (count < 0)
+                World.LogError("数量小于0");
+            if (this._size - index < count)
+                World.LogError("数量超过大小");
+            Array.Reverse(_items, index, count);
+            ++this._version;
+        }
+
+        /// <summary>
+        /// 快速排序
+        /// </summary>
+        public void Sort() => this.Sort(0, this.Count, (IComparer<T>)null);
+
+        /// <summary>
+        /// 快速排序
+        /// </summary>
+        public void Sort(IComparer<T> comparer) => this.Sort(0, this.Count, comparer);
+        /// <summary>
+        /// 快速排序
+        /// </summary>
+        public void Sort(int index, int count, IComparer<T> comparer)
+        {
+            if (index < 0)
+                World.LogError("下标小于0");
+            if (count < 0)
+                World.LogError("数量小于0");
+            if (this._size - index < count)
+                World.LogError("数量超过大小");
+            Array.Sort<T>(this._items, index, count, comparer);
+            ++this._version;
+        }
+
+
+        #endregion
+
         #region 遍历
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        public Enumerator GetEnumerator() => new Enumerator(this);
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return new Enumerator(this);
         }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return new Enumerator(this);
+        }
+
+
+        /// <summary>
+        /// 遍历器
+        /// </summary>
+        [Serializable]
+        public struct Enumerator : IEnumerator<T>, IDisposable, IEnumerator
+        {
+            private TreeList<T> list;
+            private int index;
+            private int version;
+            private T current;
+
+            internal Enumerator(TreeList<T> list)
+            {
+                this.list = list;
+                this.index = 0;
+                this.version = list._version;
+                this.current = default(T);
+            }
+
+            public void Dispose()
+            {
+            }
+
+            public bool MoveNext()
+            {
+                TreeList<T> list = this.list;
+                if (this.version != list._version || (uint)this.index >= (uint)list._size)
+                    return this.MoveNextRare();
+                this.current = list._items[this.index];
+                ++this.index;
+                return true;
+            }
+
+            private bool MoveNextRare()
+            {
+                if (this.version != this.list._version)
+                    World.LogError("失败的版本号");
+                this.index = this.list._size + 1;
+                this.current = default(T);
+                return false;
+            }
+
+            public T Current
+            {
+                get => this.current;
+            }
+
+            object IEnumerator.Current
+            {
+                get
+                {
+                    if (this.index == 0 || this.index == this.list._size + 1)
+                        World.LogError("不可遍历");
+                    return (object)this.Current;
+                }
+            }
+
+            void IEnumerator.Reset()
+            {
+                if (this.version != this.list._version)
+                    World.LogError("失败的版本号");
+                this.index = 0;
+                this.current = default(T);
+            }
+        }
+
+
 
         #endregion
 
 
     }
 
+    class TreeListAwakeRule<T> : AwakeRule<TreeList<T>>
+    {
+        public override void OnEvent(TreeList<T> self)
+        {
+            self.AddChild(out self._items, self._defaultCapacity);
+        }
+    }
+
+    class TreeListAwakeRuleCapacity<T> : AwakeRule<TreeList<T>, int>
+    {
+        public override void OnEvent(TreeList<T> self, int capacity)
+        {
+            if (capacity < 0)
+                World.LogError("容量为负");
+            if (capacity == 0)
+                World.LogError("容量为0");
+            else
+                self.AddChild(out self._items, capacity);
+        }
+    }
+
+    class TreeListAwakeRuleCollection<T> : AwakeRule<TreeList<T>, IEnumerable<T>>
+    {
+        public override void OnEvent(TreeList<T> self, IEnumerable<T> collection)
+        {
+            if (collection == null)
+                World.LogError("集合为空");
+            if (collection is ICollection<T> objs)
+            {
+                int count = objs.Count;
+                if (count == 0)
+                {
+                    self.AddChild(out self._items, self._defaultCapacity);
+                }
+                else
+                {
+                    self.AddChild(out self._items, count);
+                    objs.CopyTo(self._items, 0);
+                    self._size = count;
+                }
+            }
+            else
+            {
+                self._size = self._defaultCapacity;
+                self.AddChild(out self._items, self._defaultCapacity);
+                foreach (T obj in collection)
+                    self.Add(obj);
+            }
+        }
+    }
 
     class TreeListRemoveRule<T> : RemoveRule<TreeList<T>>
     {
         public override void OnEvent(TreeList<T> self)
         {
+            self.Clear();
             self._items.Dispose();
             self._items = null;
         }
