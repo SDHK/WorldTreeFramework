@@ -44,7 +44,7 @@ namespace WorldTree
 
         public TreeMatrix2<double> BP(TreeMatrix2<double> y, TreeMatrix2<double> output)
         {
-            var Division = 1d.Division(output);
+            var Division = 1d.Subtraction_(output);
             //斜率
             var slope = output.Multiplication(Division);
             Division.Dispose();
@@ -64,9 +64,9 @@ namespace WorldTree
         {
             Inputs = this.AddChild(out TreeMatrix2<double> _, 4, 3);
             Inputs[0, 0] = 0; Inputs[0, 1] = 0; Inputs[0, 2] = 1;
-            Inputs[1, 0] = 1; Inputs[1, 1] = 1; Inputs[1, 2] = 1;
+            Inputs[1, 0] = 0; Inputs[1, 1] = 1; Inputs[1, 2] = 1;
             Inputs[2, 0] = 1; Inputs[2, 1] = 0; Inputs[2, 2] = 1;
-            Inputs[3, 0] = 0; Inputs[3, 1] = 1; Inputs[3, 2] = 1;
+            Inputs[3, 0] = 1; Inputs[3, 1] = 1; Inputs[3, 2] = 1;
 
             Inputs.Print();
             Inputs.Turn().Print();
@@ -103,7 +103,7 @@ namespace WorldTree
         public void DY()
         {
             this.AddChild(out TreeMatrix2<double> Inputs1, 1, 3);
-            Inputs1[0, 0] = 1; Inputs[0, 1] = 1; Inputs[0, 2] = 0;
+            Inputs1[0, 0] = 0; Inputs1[0, 1] = 0; Inputs1[0, 2] = 1;
 
             var outputR = FP(Inputs1);
 

@@ -125,7 +125,7 @@ namespace WorldTree
         /// <summary>
         /// 指数运算
         /// </summary>
-        public static TreeMatrix2<double> Exp(this TreeMatrix2<double> matrixA, double value)
+        public static TreeMatrix2<double> Pow(this TreeMatrix2<double> matrixA, double value)
         {
             matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
             for (int i = 0; i < matrixA.xLength; i++)

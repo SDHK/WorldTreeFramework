@@ -85,7 +85,7 @@ namespace WorldTree
     {
         public TreeValue<float> A;
         public TreeValue<float> B;
-        public Perceptron perceptron;
+        public Perceptron1 perceptron;
     }
 
     class _InitialDomain : AddRule<InitialDomain>
