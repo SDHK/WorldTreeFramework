@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using System;
 
 namespace WorldTree
 {
@@ -26,9 +27,6 @@ namespace WorldTree
         public void FP(TreeMatrix2<double> input, out TreeMatrix2<double> L1, out TreeMatrix2<double> L2)
         {
             var Dot = input.Dot(weight0);
-            //weight0.Print();
-            //Dot.Print();
-
             var Exp = Dot.Exp_();
             Dot.Dispose();
             var Add = Exp.Additive(1);
@@ -36,7 +34,7 @@ namespace WorldTree
             L1 = 1d.Division(Add);
             Add.Dispose();
 
-            //L1.Print();
+            //==========================================
 
             var Dot1 = L1.Dot(weight1);
             var Exp1 = Dot1.Exp_();
@@ -46,7 +44,6 @@ namespace WorldTree
             L2 = 1d.Division(Add1);
             Add1.Dispose();
 
-            //L2.Print();
         }
 
         public void BP(TreeMatrix2<double> l1, TreeMatrix2<double> l2, TreeMatrix2<double> y, out TreeMatrix2<double> L0delta, out TreeMatrix2<double> L1delta)
@@ -66,16 +63,21 @@ namespace WorldTree
             error.Dispose();
             slope.Dispose();
 
+            //==========================================
 
-
-            Subtraction = 1d.Subtraction_(l1);
-            var l0slope = l1.Multiplication(Subtraction);
-            Subtraction.Dispose();
-
+            //误差
             var Turn = weight1.Turn();
             var l0error = L1delta.Dot(Turn);
             Turn.Dispose();
+
+            Subtraction = 1d.Subtraction_(l1);
+            //斜率
+            var l0slope = l1.Multiplication(Subtraction);
+            Subtraction.Dispose();
+
+            //增量
             L0delta = l0slope.Multiplication(l0error);
+
             l0error.Dispose();
             l0slope.Dispose();
         }
@@ -105,12 +107,15 @@ namespace WorldTree
             output[6, 0] = 1;
             output[7, 0] = 0;
 
+
+            Random rand = new Random();
+
             weight0 = this.AddChild(out TreeMatrix2<double> _, 3, 4);
             for (int x = 0; x < weight0.xLength; x++)
             {
                 for (int y = 0; y < weight0.yLength; y++)
                 {
-                    weight0[x, y] = Random.Range(-1f, 1f);
+                    weight0[x, y] = rand.NextDouble() * 2.0 - 1.0;
                 }
             }
 
@@ -120,7 +125,7 @@ namespace WorldTree
             {
                 for (int y = 0; y < weight0.yLength; y++)
                 {
-                    weight0[x, y] = Random.Range(-1f, 1f);
+                    weight0[x, y] = rand.NextDouble() * 2.0 - 1.0;
                 }
             }
 
@@ -129,7 +134,7 @@ namespace WorldTree
 
         public void Train()
         {
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 FP(Inputs, out var l1, out var l2);
 
@@ -150,8 +155,11 @@ namespace WorldTree
                 weight1.Additive1(dot1);
                 dot1.Dispose();
 
+                //==========================================
+
 
                 var Turn0 = Inputs.Turn();
+
                 var dot0 = Turn0.Dot(L0delta);
                 L0delta.Dispose();
                 Turn0.Dispose();

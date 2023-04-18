@@ -89,6 +89,7 @@ namespace WorldTree
             {
                 var output_ = FP(Inputs);
                 var delta = BP(output, output_);
+              
                 output_.Dispose();
                 var Turn = Inputs.Turn();
                 var Dot1 = Turn.Dot(delta);
