@@ -43,7 +43,7 @@ namespace WorldTree
     {
         public override void OnEvent(TreeArray<T> self, int length)
         {
-            self.array = self.Core.ArrayPoolManager.Get<T>(length);
+            self.array = self.Core.GetArray<T>(length);
         }
     }
 
@@ -52,7 +52,7 @@ namespace WorldTree
     {
         public override void OnEvent(TreeArray<T> self)
         {
-            self.Core.ArrayPoolManager.Recycle(self.array);
+            self.Core.Recycle(self.array);
             self.array = null;
         }
     }

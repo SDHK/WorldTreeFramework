@@ -21,14 +21,16 @@ namespace WorldTree
         public TreeMatrix2<double> Inputs;
 
         /// <summary>
+        /// 权重
+        /// </summary>
+        public TreeMatrix2<double> weight;
+
+        /// <summary>
         /// 训练输出
         /// </summary>
         public TreeMatrix2<double> output;
 
-        /// <summary>
-        /// 权重
-        /// </summary>
-        public TreeMatrix2<double> weight;
+       
 
         public TreeMatrix2<double> FP(TreeMatrix2<double> input)
         {

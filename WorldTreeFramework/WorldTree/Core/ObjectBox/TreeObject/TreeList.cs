@@ -107,16 +107,16 @@ namespace WorldTree
                 if (value == this._items.Length) return;
                 if (value > 0)
                 {
-                    var destinationArray = this.Core.ArrayPoolManager.Get<T>(value);
+                    var destinationArray = this.Core.GetArray<T>(value);
                     if (this._size > 0)
                         Array.Copy(this._items, 0, destinationArray, 0, this._size);
-                    this.Core.ArrayPoolManager.Recycle(destinationArray);
+                    this.Core.Recycle(destinationArray);
                     this._items = destinationArray;
                 }
                 else
                 {
                     //初始化
-                    this._items = this.Core.ArrayPoolManager.Get<T>(_defaultCapacity);
+                    this._items = this.Core.GetArray<T>(_defaultCapacity);
                 }
             }
         }
@@ -856,7 +856,7 @@ namespace WorldTree
     {
         public override void OnEvent(TreeList<T> self)
         {
-            self._items = self.Core.ArrayPoolManager.Get<T>(self._defaultCapacity);
+            self._items = self.Core.GetArray<T>(self._defaultCapacity);
         }
     }
 
@@ -869,7 +869,7 @@ namespace WorldTree
             if (capacity == 0)
                 World.LogError("容量为0");
             else
-                self._items = self.Core.ArrayPoolManager.Get<T>(capacity);
+                self._items = self.Core.GetArray<T>(capacity);
         }
     }
 
@@ -884,11 +884,11 @@ namespace WorldTree
                 int count = objs.Count;
                 if (count == 0)
                 {
-                    self._items = self.Core.ArrayPoolManager.Get<T>(self._defaultCapacity);
+                    self._items = self.Core.GetArray<T>(self._defaultCapacity);
                 }
                 else
                 {
-                    self._items = self.Core.ArrayPoolManager.Get<T>(count);
+                    self._items = self.Core.GetArray<T>(count);
                     objs.CopyTo(self._items, 0);
                     self._size = count;
                 }
@@ -896,7 +896,7 @@ namespace WorldTree
             else
             {
                 self._size = self._defaultCapacity;
-                self._items = self.Core.ArrayPoolManager.Get<T>(self._defaultCapacity);
+                self._items = self.Core.GetArray<T>(self._defaultCapacity);
                 foreach (T obj in collection)
                     self.Add(obj);
             }
@@ -908,7 +908,7 @@ namespace WorldTree
         public override void OnEvent(TreeList<T> self)
         {
             self.Clear();
-            self.Core.ArrayPoolManager.Recycle(self._items);
+            self.Core.Recycle(self._items);
             self._items = null;
         }
     }

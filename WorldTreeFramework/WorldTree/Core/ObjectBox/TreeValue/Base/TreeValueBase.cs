@@ -40,5 +40,10 @@ namespace WorldTree
         /// </summary>
         public virtual T Value { get; set; }
 
+
+        public static implicit operator T(TreeValueBase<T> treeValueBase)
+        {
+            return treeValueBase.Value;
+        }
     }
 }

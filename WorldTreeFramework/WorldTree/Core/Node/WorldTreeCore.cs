@@ -276,6 +276,57 @@ namespace WorldTree
 
         #endregion
 
+        #region Array
+
+        /// <summary>
+        /// 获取数组对象
+        /// </summary>
+        public static T[] GetArray<T>(this WorldTreeCore self, out T[] outT, int Length)
+        {
+            Type type = typeof(T);
+            if (self.ArrayPoolManager != null)
+            {
+                outT = self.ArrayPoolManager.Get(type, Length) as T[];
+            }
+            else
+            {
+                outT = Array.CreateInstance(type, Length) as T[];
+            }
+            return outT;
+        }
+
+        /// <summary>
+        /// 获取数组对象
+        /// </summary>
+        public static T[] GetArray<T>(this WorldTreeCore self, int Length)
+        {
+            Type type = typeof(T);
+            if (self.ArrayPoolManager != null)
+            {
+                return self.ArrayPoolManager.Get(type, Length) as T[];
+            }
+            return Array.CreateInstance(type, Length) as T[];
+        }
+
+        /// <summary>
+        /// 回收数组
+        /// </summary>
+        public static void Recycle(this WorldTreeCore self, Array obj)
+        {
+            if (self.ArrayPoolManager != null)
+            {
+                self.ArrayPoolManager.Recycle(obj);
+            }
+            else
+            {
+                Array.Clear(obj, 0, obj.Length);
+            }
+        }
+
+
+        #endregion
+
+
         #endregion
 
         #region 节点添加与移除

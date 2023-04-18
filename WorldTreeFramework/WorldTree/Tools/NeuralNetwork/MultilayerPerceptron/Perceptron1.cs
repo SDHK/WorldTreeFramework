@@ -26,12 +26,12 @@ namespace WorldTree
 
         public void FP(TreeMatrix2<double> input, out TreeMatrix2<double> L1, out TreeMatrix2<double> L2)
         {
-            var Dot = input.Dot(weight0);
-            var Exp = Dot.Exp_();
+            var Dot = input.Dot(weight0);//矩阵相乘
+            var Exp = Dot.Exp_();//指数幂  遍历 =Math.Exp(x）
             Dot.Dispose();
-            var Add = Exp.Additive(1);
+            var Add = Exp.Additive(1);//遍历+1
             Exp.Dispose();
-            L1 = 1d.Division(Add);
+            L1 = 1d.Division(Add);//遍历被1除
             Add.Dispose();
 
             //==========================================
@@ -50,15 +50,15 @@ namespace WorldTree
         {
 
             //误差
-            var error = y.Subtraction(l2);
+            var error = y.Subtraction(l2); //遍历减法
 
-            var Subtraction = 1d.Subtraction_(l2);
+            var Subtraction = 1d.Subtraction_(l2); //遍历 被1减
             //斜率
-            var slope = l2.Multiplication(Subtraction);
+            var slope = l2.Multiplication(Subtraction);// 单纯的遍历 相乘
             Subtraction.Dispose();
 
             //增量
-            L1delta = error.Multiplication(slope);
+            L1delta = error.Multiplication(slope); // 单纯的遍历 相乘
 
             error.Dispose();
             slope.Dispose();
@@ -66,17 +66,17 @@ namespace WorldTree
             //==========================================
 
             //误差
-            var Turn = weight1.Turn();
-            var l0error = L1delta.Dot(Turn);
+            var Turn = weight1.Turn();  //xy遍历扭转 也就是 x，y = y，x
+            var l0error = L1delta.Dot(Turn); //矩阵 相乘
             Turn.Dispose();
 
-            Subtraction = 1d.Subtraction_(l1);
+            Subtraction = 1d.Subtraction_(l1); //遍历 被1减
             //斜率
-            var l0slope = l1.Multiplication(Subtraction);
+            var l0slope = l1.Multiplication(Subtraction); // 单纯的遍历 相乘
             Subtraction.Dispose();
 
             //增量
-            L0delta = l0slope.Multiplication(l0error);
+            L0delta = l0slope.Multiplication(l0error); // 单纯的遍历 相乘
 
             l0error.Dispose();
             l0slope.Dispose();
@@ -136,14 +136,17 @@ namespace WorldTree
         {
             for (int i = 0; i < 1000; i++)
             {
-                FP(Inputs, out var l1, out var l2);
+                FP(Inputs, out var l1, out var l2);//正向传播，拿到结果
 
-                BP(l1, l2, output, out var L0delta, out var L1delta);
+                BP(l1, l2, output, out var L0delta, out var L1delta);//训练用的输出算出和结果，反向传播算出权重差值
 
                 l2.Dispose();
 
                 //L0delta.Print();
                 //L1delta.Print();
+
+
+                //根据权重差值改变权重
 
                 var Turn1 = l1.Turn();
                 l1.Dispose();
@@ -175,7 +178,7 @@ namespace WorldTree
             this.AddChild(out TreeMatrix2<double> Inputs1, 1, 3);
             Inputs1[0, 0] = 0; Inputs1[0, 1] = 1; Inputs1[0, 2] = 1;
 
-            FP(Inputs1, out var l1, out var l2);
+            FP(Inputs1, out var l1, out var l2);//使用时就是只塞输入，的正向传播，l2就是结果。
 
             l1.Print();
             l2.Print();
