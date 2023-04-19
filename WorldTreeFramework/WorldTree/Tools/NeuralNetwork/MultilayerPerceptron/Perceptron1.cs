@@ -36,8 +36,8 @@ namespace WorldTree
 
             //==========================================
 
-            var Dot1 = L1.Dot(weight1);
-            var Exp1 = Dot1.Exp_();
+            var Dot1 = L1.Dot(weight1);//矩阵相乘
+            var Exp1 = Dot1.Exp_(); ;//指数幂  遍历 =Math.Exp(x）
             Dot1.Dispose();
             var Add1 = Exp1.Additive(1);
             Exp1.Dispose();
@@ -53,6 +53,7 @@ namespace WorldTree
             var error = y.Subtraction(l2); //遍历减法
 
             var Subtraction = 1d.Subtraction_(l2); //遍历 被1减
+
             //斜率
             var slope = l2.Multiplication(Subtraction);// 单纯的遍历 相乘
             Subtraction.Dispose();
@@ -71,6 +72,7 @@ namespace WorldTree
             Turn.Dispose();
 
             Subtraction = 1d.Subtraction_(l1); //遍历 被1减
+
             //斜率
             var l0slope = l1.Multiplication(Subtraction); // 单纯的遍历 相乘
             Subtraction.Dispose();
