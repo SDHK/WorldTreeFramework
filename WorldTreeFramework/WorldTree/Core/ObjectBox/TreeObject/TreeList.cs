@@ -33,12 +33,13 @@ namespace WorldTree
         IAwake,
         IAwake<int>,
         IAwake<IEnumerable<T>>,
-        ChildOf<INode>
+        ChildOf<INode>,
+        ComponentOf<INode>
     {
         /// <summary>
         /// 默认容量
         /// </summary>
-        public int _defaultCapacity = 2;
+        public int _defaultCapacity = 1;
 
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace WorldTree
         /// <summary>
         /// 是否发生改变
         /// </summary>
-        private int _version;
+        public int _version;
 
         /// <summary>
         /// 同步根
@@ -60,7 +61,7 @@ namespace WorldTree
         /// <summary>
         /// 真实大小
         /// </summary>
-        public int _size;
+        public int _size = 0;
 
         /// <summary>
         /// 数量
@@ -110,7 +111,7 @@ namespace WorldTree
                     var destinationArray = this.Core.GetArray<T>(value);
                     if (this._size > 0)
                         Array.Copy(this._items, 0, destinationArray, 0, this._size);
-                    this.Core.Recycle(destinationArray);
+                    this.Core.Recycle(this._items);
                     this._items = destinationArray;
                 }
                 else
@@ -910,6 +911,8 @@ namespace WorldTree
             self.Clear();
             self.Core.Recycle(self._items);
             self._items = null;
+            self._size = 0;
+            self._version = 0;
         }
     }
 
