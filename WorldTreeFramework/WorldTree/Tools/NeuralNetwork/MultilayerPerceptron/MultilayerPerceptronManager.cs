@@ -129,19 +129,6 @@ namespace WorldTree
                     self.layers[x].nodes[y].BackPropagation();
                 }
             }
-
-            for (int x = self.layers.Count - 2; x >= 0; x--)
-            {
-                var layers = self.layers[x];
-                for (int y = 0; y < layers.nodes.Count; y++)
-                {
-                    var node = layers.nodes[y];
-                    for (int z = 0; z < node.List2.Count; z++)
-                    {
-                        node.List2[z].BackPropagationWeight();
-                    }
-                }
-            }
         }
     }
 }

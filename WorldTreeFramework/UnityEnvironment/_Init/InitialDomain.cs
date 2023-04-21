@@ -126,6 +126,7 @@ namespace WorldTree
 
             self.multilayerPerceptronManager.AddLayer(3);
             self.multilayerPerceptronManager.AddLayer(4);
+            self.multilayerPerceptronManager.AddLayer(4);
             self.multilayerPerceptronManager.AddLayer(1);
         }
     }

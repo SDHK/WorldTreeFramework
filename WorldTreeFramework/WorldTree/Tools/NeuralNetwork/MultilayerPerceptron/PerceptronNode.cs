@@ -76,7 +76,7 @@ namespace WorldTree
                 {
                     //误差 += 下级节点的 误差增量 * 权重 
                     error += List2[i].node2.delta * List2[i].weight;
-                    //List2[i].BackPropagationWeight();
+                    List2[i].BackPropagationWeight();
                 }
                 SetError(error);
             }
