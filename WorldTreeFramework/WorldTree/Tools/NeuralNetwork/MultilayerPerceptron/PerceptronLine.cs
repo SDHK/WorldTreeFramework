@@ -39,9 +39,6 @@ namespace WorldTree
             return $"{this.GetType().Name}\tweight:[{weight}]";
         }
 
-
-
-
         /// <summary>
         /// 权重变更
         /// </summary>

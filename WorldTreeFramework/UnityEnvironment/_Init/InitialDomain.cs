@@ -110,10 +110,10 @@ namespace WorldTree
 
             World.Log("初始域启动！！");
 
-            self.AddChild(out self.perceptron);
-            self.perceptron.Test();
+            //self.AddChild(out self.perceptron);
+            //self.perceptron.Test();
 
-            self.perceptron.Train();
+            //self.perceptron.Train();
 
             //using (await self.AsyncLock(0))
             //{
@@ -165,22 +165,6 @@ namespace WorldTree
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-
-                self.perceptron.Train();
-
-                //Test(self).Coroutine();
-            }
-
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-
-                self.perceptron.DY();
-
-                //Test(self).Coroutine();
-            }
-
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 //self.perceptron.DY();
@@ -209,6 +193,27 @@ namespace WorldTree
                 self.multilayerPerceptronManager.SetInputs(0, 0, 1);
                 World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
             }
+
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                self.multilayerPerceptronManager.SetInputs(0, 0, 0);
+                World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+                self.multilayerPerceptronManager.SetInputs(0, 1, 0);
+                World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+                self.multilayerPerceptronManager.SetInputs(1, 0, 0);
+                World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+                self.multilayerPerceptronManager.SetInputs(1, 1, 0);
+                World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+                self.multilayerPerceptronManager.SetInputs(0, 0, 1);
+                World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+                self.multilayerPerceptronManager.SetInputs(0, 1, 1);
+                World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+                self.multilayerPerceptronManager.SetInputs(1, 0, 1);
+                World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+                self.multilayerPerceptronManager.SetInputs(1, 1, 1);
+                World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+            }
+
 
 
             if (Input.GetKeyDown(KeyCode.Q))
