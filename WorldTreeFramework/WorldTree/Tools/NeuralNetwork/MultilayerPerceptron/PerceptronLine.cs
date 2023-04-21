@@ -40,7 +40,6 @@ namespace WorldTree
         }
 
 
-        //权重+=上连接的结果*下连接的误差增量
 
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace WorldTree
         {
             if (node1 is null || node2 is null) return;
 
-            //需要偏置值！！！  注意：反向传播被权重影响，需要单独算
+            //权重+=上连接的结果*下连接的误差增量
             weight += node1.result * node2.delta;
         }
     }

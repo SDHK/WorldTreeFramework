@@ -44,6 +44,9 @@ namespace WorldTree
             return $"{this.GetType().Name}\tdelta:[{delta}] \tresult:[{result}]";
         }
 
+        /// <summary>
+        /// 正向传播计算
+        /// </summary>
         public void ForwardPropagation()
         {
             if (List1 != null)
@@ -58,13 +61,18 @@ namespace WorldTree
             }
         }
 
+        /// <summary>
+        /// 反向传播计算
+        /// </summary>
         public void BackPropagation()
         {
+            //需要偏置项！！！  
             if (List2 != null)
             {
                 double error = 0;
                 for (int i = 0; i < List2.Count; i++)
                 {
+                    //误差 += 下级节点的 误差增量 * 权重 
                     error += List2[i].node2.delta * List2[i].weight;
                     //List2[i].BackPropagationWeight();
                 }
@@ -72,6 +80,9 @@ namespace WorldTree
             }
         }
 
+        /// <summary>
+        /// 设置误差
+        /// </summary>
         public void SetError(double error)
         {
             //误差增量 = 斜率 * 误差。 斜率就是向谷底接近的速度
