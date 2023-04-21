@@ -28,20 +28,23 @@ namespace WorldTree
         public TreeList<PerceptronLine> List2;
 
         /// <summary>
-        /// 结果
-        /// </summary>
-        public double result = 0;
-
-
-        /// <summary>
         /// 误差增量
         /// </summary>
         public double delta = 0;
 
+        /// <summary>
+        /// 偏置项
+        /// </summary>
+        public double Bias = 0;
+
+        /// <summary>
+        /// 结果
+        /// </summary>
+        public double result = 0;
 
         public override string ToString()
         {
-            return $"{this.GetType().Name}\tdelta:[{delta}] \tresult:[{result}]";
+            return $"{this.GetType().Name}\tdelta:[{delta}] \tBias:[{Bias}] \tresult:[{result}]";
         }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace WorldTree
         {
             if (List1 != null)
             {
-                double ThresholdResults = 0;
+                double ThresholdResults = Bias;
                 for (int i = 0; i < List1.Count; i++)
                 {
                     ThresholdResults = (List1[i].node1.result * List1[i].weight) + ThresholdResults;
@@ -66,7 +69,6 @@ namespace WorldTree
         /// </summary>
         public void BackPropagation()
         {
-            //需要偏置项！！！  
             if (List2 != null)
             {
                 double error = 0;
@@ -87,6 +89,7 @@ namespace WorldTree
         {
             //误差增量 = 斜率 * 误差。 斜率就是向谷底接近的速度
             delta = (result * (1d - result)) * error;
+            Bias += delta;
         }
     }
 
