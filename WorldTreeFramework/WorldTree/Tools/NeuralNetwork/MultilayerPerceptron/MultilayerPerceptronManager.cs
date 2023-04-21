@@ -1,24 +1,21 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/4/20 10:26
 
-* 描述： 多层感知机管理器
+* 描述： 多层感知器管理器
 
 */
-
 
 namespace WorldTree
 {
     /// <summary>
-    /// 多层感知机管理器
+    /// 多层感知器管理器
     /// </summary>
     public class MultilayerPerceptronManager : Node, IAwake, ChildOf<INode>, ComponentOf<INode>
     {
         public TreeList<PerceptronLayer> layers;
     }
-
 
     class MultilayerPerceptronManagerAddRule : AddRule<MultilayerPerceptronManager>
     {
@@ -47,16 +44,15 @@ namespace WorldTree
             self.layers.Add(self.AddChild(out PerceptronLayer currentLayer, count));
             if (self.layers.Count > 1)
             {
-                var childNodes = currentLayer.nodes;
                 var parentNodes = self.layers[self.layers.Count - 2].nodes;
+                var childNodes = currentLayer.nodes;
 
-                foreach (var item in parentNodes)
+                foreach (var parentNode in parentNodes)
                 {
-                    item.List2 = childNodes;
-                }
-                foreach (var item in childNodes)
-                {
-                    item.List1 = parentNodes;
+                    foreach (var childNode in childNodes)
+                    {
+                        parentNode.Link(childNode);
+                    }
                 }
             }
         }
@@ -99,7 +95,8 @@ namespace WorldTree
 
             for (int i = 0; i < values.Length; i++)
             {
-                self.layers[self.layers.Count - 1].nodes[i].weight = values[i];
+                var node = self.layers[self.layers.Count - 1].nodes[i];
+                node.SetError(values[i] - node.result);
             }
 
             self.BackPropagation();
@@ -110,7 +107,7 @@ namespace WorldTree
         /// </summary>
         public static void ForwardPropagation(this MultilayerPerceptronManager self)
         {
-            for (int x = 0; x < self.layers.Count; x++)
+            for (int x = 1; x < self.layers.Count; x++)
             {
                 for (int y = 0; y < self.layers[x].nodes.Count; y++)
                 {
@@ -124,7 +121,7 @@ namespace WorldTree
         /// </summary>
         public static void BackPropagation(this MultilayerPerceptronManager self)
         {
-            for (int x = self.layers.Count - 1; x >= 0; x--)
+            for (int x = self.layers.Count - 2; x >= 0; x--)
             {
                 for (int y = 0; y < self.layers[x].nodes.Count; y++)
                 {
@@ -132,11 +129,16 @@ namespace WorldTree
                 }
             }
 
-            for (int x = self.layers.Count - 1; x >= 0; x--)
+            for (int x = self.layers.Count - 2; x >= 0; x--)
             {
-                for (int y = 0; y < self.layers[x].nodes.Count; y++)
+                var layers = self.layers[x];
+                for (int y = 0; y < layers.nodes.Count; y++)
                 {
-                    self.layers[x].nodes[y].BackPropagationWeight();
+                    var node = layers.nodes[y];
+                    for (int z = 0; z < node.List2.Count; z++)
+                    {
+                        node.List2[z].BackPropagationWeight();
+                    }
                 }
             }
         }

@@ -165,6 +165,22 @@ namespace WorldTree
                 }
             }
 
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+
+                self.perceptron.Train();
+
+                //Test(self).Coroutine();
+            }
+
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+
+                self.perceptron.DY();
+
+                //Test(self).Coroutine();
+            }
+
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 //self.perceptron.DY();
@@ -218,6 +234,20 @@ namespace WorldTree
 
         public void Test(InitialDomain self)
         {
+
+            self.multilayerPerceptronManager.SetInputs(0, 0, 0);
+            self.multilayerPerceptronManager.SetOutputs(0);
+
+            self.multilayerPerceptronManager.SetInputs(0, 1, 0);
+            self.multilayerPerceptronManager.SetOutputs(1);
+
+            self.multilayerPerceptronManager.SetInputs(1, 0, 0);
+            self.multilayerPerceptronManager.SetOutputs(1);
+
+            self.multilayerPerceptronManager.SetInputs(1, 1, 0);
+            self.multilayerPerceptronManager.SetOutputs(0);
+
+
             self.multilayerPerceptronManager.SetInputs(0, 0, 1);
             self.multilayerPerceptronManager.SetOutputs(0);
 
@@ -232,17 +262,7 @@ namespace WorldTree
             self.multilayerPerceptronManager.SetInputs(1, 1, 1);
             self.multilayerPerceptronManager.SetOutputs(0);
 
-            self.multilayerPerceptronManager.SetInputs(0, 0, 0);
-            self.multilayerPerceptronManager.SetOutputs(0);
 
-            self.multilayerPerceptronManager.SetInputs(0, 1, 0);
-            self.multilayerPerceptronManager.SetOutputs(1);
-
-            self.multilayerPerceptronManager.SetInputs(1, 0, 0);
-            self.multilayerPerceptronManager.SetOutputs(1);
-
-            self.multilayerPerceptronManager.SetInputs(1, 1, 0);
-            self.multilayerPerceptronManager.SetOutputs(0);
         }
 
     }

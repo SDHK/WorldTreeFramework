@@ -61,8 +61,8 @@ namespace WorldTree
             //增量 1
             L1delta = error.Multiplication(slope); // 单纯的遍历 相乘
 
-            World.Log("l1error 差值");
-            error.Print();
+            //World.Log("l1error 差值");
+            //error.Print();
             error.Dispose();
             slope.Dispose();
 
@@ -83,35 +83,35 @@ namespace WorldTree
             //增量 4
             L0delta = l0slope.Multiplication(l0error); // 单纯的遍历 相乘
 
-            World.Log("l0error 差值");
-            l0error.Print();
+            //World.Log("l0error 差值");
+            //l0error.Print();
             l0error.Dispose();
             l0slope.Dispose();
         }
 
         public void Test()
         {
-            Inputs = this.AddChild(out TreeMatrix2<double> _, 1, 3);
+            Inputs = this.AddChild(out TreeMatrix2<double> _, 8, 3);
             Inputs[0, 0] = 0; Inputs[0, 1] = 0; Inputs[0, 2] = 1;
-            //Inputs[1, 0] = 0; Inputs[1, 1] = 1; Inputs[1, 2] = 1;
-            //Inputs[2, 0] = 1; Inputs[2, 1] = 0; Inputs[2, 2] = 1;
-            //Inputs[3, 0] = 1; Inputs[3, 1] = 1; Inputs[3, 2] = 1;
-            //Inputs[4, 0] = 0; Inputs[4, 1] = 0; Inputs[4, 2] = 0;
-            //Inputs[5, 0] = 0; Inputs[5, 1] = 1; Inputs[5, 2] = 0;
-            //Inputs[6, 0] = 1; Inputs[6, 1] = 0; Inputs[6, 2] = 0;
-            //Inputs[7, 0] = 1; Inputs[7, 1] = 1; Inputs[7, 2] = 0;
+            Inputs[1, 0] = 0; Inputs[1, 1] = 1; Inputs[1, 2] = 1;
+            Inputs[2, 0] = 1; Inputs[2, 1] = 0; Inputs[2, 2] = 1;
+            Inputs[3, 0] = 1; Inputs[3, 1] = 1; Inputs[3, 2] = 1;
+            Inputs[4, 0] = 0; Inputs[4, 1] = 0; Inputs[4, 2] = 0;
+            Inputs[5, 0] = 0; Inputs[5, 1] = 1; Inputs[5, 2] = 0;
+            Inputs[6, 0] = 1; Inputs[6, 1] = 0; Inputs[6, 2] = 0;
+            Inputs[7, 0] = 1; Inputs[7, 1] = 1; Inputs[7, 2] = 0;
 
-            Inputs.Print();
+            //Inputs.Print();
 
-            output = this.AddChild(out TreeMatrix2<double> _, 1, 1);
+            output = this.AddChild(out TreeMatrix2<double> _, 8, 1);
             output[0, 0] = 0;
-            //output[1, 0] = 1;
-            //output[2, 0] = 1;
-            //output[3, 0] = 0;
-            //output[4, 0] = 0;
-            //output[5, 0] = 1;
-            //output[6, 0] = 1;
-            //output[7, 0] = 0;
+            output[1, 0] = 1;
+            output[2, 0] = 1;
+            output[3, 0] = 0;
+            output[4, 0] = 0;
+            output[5, 0] = 1;
+            output[6, 0] = 1;
+            output[7, 0] = 0;
 
 
             Random rand = new Random();
@@ -140,7 +140,7 @@ namespace WorldTree
 
         public void Train()
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 FP(Inputs, out var l1, out var l2);//正向传播，拿到结果
 
@@ -156,46 +156,45 @@ namespace WorldTree
                 //根据权重差值改变权重
 
                 var Turn1 = l1.Turn();
-                World.Log("l1 结果");
-                l1.Print();
+                //World.Log("l1 结果");
+                //l1.Print();
 
                 l1.Dispose();
 
 
                 var dot1 = Turn1.Dot(L1delta);
-                World.Log("L1delta 差值增量");
-                L1delta.Print();
+                //World.Log("L1delta 差值增量");
+                //L1delta.Print();
 
                 L1delta.Dispose();
                 Turn1.Dispose();
 
-                World.Log("Dot1");
-
-                dot1.Print();
+                //World.Log("Dot1");
+                //dot1.Print();
                 weight1.Additive1(dot1);
                 dot1.Dispose();
 
-                World.Log("权重1");
-                weight1.Print();
+                //World.Log("权重1");
+                //weight1.Print();
                 //==========================================
 
 
                 var Turn0 = Inputs.Turn();
-                World.Log("Inputs 结果");
+                //World.Log("Inputs 结果");
                 var dot0 = Turn0.Dot(L0delta);
-                World.Log("L0delta 差值增量");
-                L0delta.Print();
+                //World.Log("L0delta 差值增量");
+                //L0delta.Print();
                 L0delta.Dispose();
                 Turn0.Dispose();
 
-                World.Log("Dot0");
-                dot0.Print();
+                //World.Log("Dot0");
+                //dot0.Print();
 
                 weight0.Additive1(dot0);
                 dot0.Dispose();
 
-                World.Log("权重0");
-                weight0.Print();
+                //World.Log("权重0");
+                //weight0.Print();
 
             }
         }

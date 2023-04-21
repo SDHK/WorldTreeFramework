@@ -116,7 +116,10 @@ namespace WorldTree
                 }
                 else
                 {
-                    //初始化
+                    if (this._items != null)
+                    {
+                        this.Core.Recycle(this._items);
+                    }
                     this._items = this.Core.GetArray<T>(_defaultCapacity);
                 }
             }
