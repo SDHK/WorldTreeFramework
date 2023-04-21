@@ -20,12 +20,12 @@ namespace WorldTree
         /// <summary>
         /// 上连接
         /// </summary>
-        public TreeList<PerceptronLine> List1;
+        public TreeList<PerceptronLine> Links1;
 
         /// <summary>
         /// 下连接
         /// </summary>
-        public TreeList<PerceptronLine> List2;
+        public TreeList<PerceptronLine> Links2;
 
         /// <summary>
         /// 误差增量
@@ -35,7 +35,7 @@ namespace WorldTree
         /// <summary>
         /// 偏置项
         /// </summary>
-        public double Bias = 0;
+        public double bias = 0;
 
         /// <summary>
         /// 结果
@@ -44,7 +44,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return $"{this.GetType().Name}\tDelta:[{delta}]\tBias:[{Bias}]\tResult:[{result}]";
+            return $"{this.GetType().Name}\tDelta:[{delta}]\tBias:[{bias}]\tResult:[{result}]";
         }
 
         /// <summary>
@@ -52,12 +52,12 @@ namespace WorldTree
         /// </summary>
         public void ForwardPropagation()
         {
-            if (List1 != null)
+            if (Links1 != null)
             {
-                double ThresholdResults = Bias;
-                for (int i = 0; i < List1.Count; i++)
+                double ThresholdResults = bias;
+                for (int i = 0; i < Links1.Count; i++)
                 {
-                    ThresholdResults = (List1[i].node1.result * List1[i].weight) + ThresholdResults;
+                    ThresholdResults = (Links1[i].node1.result * Links1[i].weight) + ThresholdResults;
                 }
                 //通过 激活函数 拿到 0 到 1 的数值
                 result = 1d / (Math.Exp(-ThresholdResults) + 1);
@@ -69,14 +69,14 @@ namespace WorldTree
         /// </summary>
         public void BackPropagation()
         {
-            if (List2 != null)
+            if (Links2 != null)
             {
                 double error = 0;
-                for (int i = 0; i < List2.Count; i++)
+                for (int i = 0; i < Links2.Count; i++)
                 {
                     //误差 += 下级节点的 误差增量 * 权重 
-                    error += List2[i].node2.delta * List2[i].weight;
-                    List2[i].BackPropagationWeight();
+                    error += Links2[i].node2.delta * Links2[i].weight;
+                    Links2[i].BackPropagationWeight();
                 }
                 SetError(error);
             }
@@ -89,7 +89,7 @@ namespace WorldTree
         {
             //误差增量 = 斜率 * 误差。 斜率就是向谷底接近的速度
             delta = (result * (1d - result)) * error;
-            Bias += delta;
+            bias += delta;
         }
     }
 
@@ -99,8 +99,8 @@ namespace WorldTree
         {
             self.result = 0;
             self.delta = 0;
-            self.List1 = null;
-            self.List2 = null;
+            self.Links1 = null;
+            self.Links2 = null;
         }
     }
 
@@ -111,13 +111,13 @@ namespace WorldTree
         /// </summary>
         public static void Link(this PerceptronNode self, PerceptronNode node)
         {
-            _ = self.List2 ?? self.AddChild(out self.List2);
-            _ = node.List1 ?? node.AddChild(out node.List1);
+            _ = self.Links2 ?? self.AddChild(out self.Links2);
+            _ = node.Links1 ?? node.AddChild(out node.Links1);
 
             self.AddChild(out PerceptronLine perceptronLine, self, node);
 
-            self.List2.Add(perceptronLine);
-            node.List1.Add(perceptronLine);
+            self.Links2.Add(perceptronLine);
+            node.Links1.Add(perceptronLine);
         }
     }
 }
