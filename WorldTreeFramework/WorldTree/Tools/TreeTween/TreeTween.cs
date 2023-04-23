@@ -1,60 +1,57 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace WorldTree
 {
+
     /// <summary>
-    /// 电机
+    /// 值渐变
     /// </summary>
-    public class Motor : Node
+    public class TreeTween : Node,IAwake,ComponentOf<TreeValueBase>
     {
         /// <summary>
-        /// 获取
+        /// 开始
         /// </summary>
-        public Func<float> GetValue;
-        /// <summary>
-        /// 设置
-        /// </summary>
-        public Action<float> SetValue;
-        /// <summary>
-        /// 条件
-        /// </summary>
-        public Func<Motor, bool> Condition;
-        /// <summary>
-        /// 完成
-        /// </summary>
-        public Action OnComplete;
+        public TreeValueBase<float> start;
 
         /// <summary>
-        /// 设置
+        /// 结束
         /// </summary>
-        public void Set(Func<float> get, Action<float> set, Func<Motor, bool> condition)
-        {
-            GetValue = get;
-            SetValue = set;
-            Condition = condition;
-        }
+        public TreeValueBase<float> end;
 
         /// <summary>
-        /// 运行
+        /// 值
         /// </summary>
-        public void Update()
+        public TreeValueBase<float> value;
+
+    }
+
+
+    public static class TreeValueBaseRule
+    {
+        public static void Lerp(this TreeValueBase<float> self, float target, float timeScale)
         {
-            if (Condition(this))
-            {
-                OnComplete();
-            }
+            self.AddComponent(out TreeTween treeTween);
+            
+            treeTween.start.Value = self.Value;
+            treeTween.end.Value = target;
+            treeTween.value = self;
+
         }
+
+    }
+
+    public static class TreeTweenRule
+    {
+        public static void Tween(this TreeTween self, float target, float timeScale)
+        {
+
+        }
+
     }
 
 
 
-    public static class MoveTool
+    public static class TweenTool
     {
         /// <summary>
         /// 移动到目标
