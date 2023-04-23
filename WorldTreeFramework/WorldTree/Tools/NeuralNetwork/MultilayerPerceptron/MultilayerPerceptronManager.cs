@@ -5,7 +5,6 @@
 
 * 描述： 多层感知器管理器
 * 
-* 偏置项
 */
 
 namespace WorldTree
@@ -61,7 +60,7 @@ namespace WorldTree
         /// <summary>
         /// 输入并正向传播
         /// </summary>
-        public static void SetInputs(this MultilayerPerceptronManager self, params double[] values)
+        public static MultilayerPerceptronManager SetInputs(this MultilayerPerceptronManager self, params double[] values)
         {
             if (self.layers.Count < 2)
             {
@@ -78,6 +77,7 @@ namespace WorldTree
             }
 
             self.ForwardPropagation();
+            return self;
         }
 
         /// <summary>
@@ -101,6 +101,20 @@ namespace WorldTree
             }
 
             self.BackPropagation();
+        }
+
+        /// <summary>
+        /// 获取最终输出
+        /// </summary>
+        public static double[] GetOutputs(this MultilayerPerceptronManager self)
+        {
+            var nodes = self.layers[self.layers.Count - 1].nodes;
+            double[] outputs = new double[nodes.Count];
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                outputs[i] = nodes[i].result;
+            }
+            return outputs;
         }
 
         /// <summary>

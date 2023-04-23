@@ -85,7 +85,7 @@ namespace WorldTree
     {
         public TreeValue<float> A;
         public TreeValue<float> B;
-        public Perceptron1 perceptron;
+        public PerceptronTest perceptron;
         public MultilayerPerceptronManager multilayerPerceptronManager;
     }
 
@@ -125,8 +125,7 @@ namespace WorldTree
             self.AddComponent(out self.multilayerPerceptronManager);
 
             self.multilayerPerceptronManager.AddLayer(3);
-            self.multilayerPerceptronManager.AddLayer(4);
-            self.multilayerPerceptronManager.AddLayer(4);
+            self.multilayerPerceptronManager.AddLayer(3);
             self.multilayerPerceptronManager.AddLayer(1);
         }
     }

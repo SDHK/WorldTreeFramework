@@ -3,7 +3,7 @@ using System;
 
 namespace WorldTree
 {
-    public class Perceptron1 : Node, ChildOf<INode>, IAwake
+    public class PerceptronTest : Node, ChildOf<INode>, IAwake
     {
         /// <summary>
         /// 训练输入

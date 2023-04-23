@@ -1,7 +1,8 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
-namespace   WorldTree 
+namespace WorldTree
 {
     /// <summary>
     /// 法则列表 接口基类
@@ -22,5 +23,24 @@ namespace   WorldTree
     /// 法则列表
     /// </summary>
     /// <remarks>储存相同节点类型，法则类型，的法则</remarks>
-    public class RuleList : List<IRule>, IRuleList<IRule> { }
+    public class RuleList : List<IRule>, IRuleList<IRule>
+    {
+        HashSet<Type> ruleTypes = new HashSet<Type>();
+
+        /// <summary>
+        /// 通过HashSet判断法则类真实类型，禁止重复添加
+        /// </summary>
+        public bool TryAdd(IRule rule)
+        {
+            if (!ruleTypes.Contains(rule.GetType()))
+            {
+                base.Add(rule);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }

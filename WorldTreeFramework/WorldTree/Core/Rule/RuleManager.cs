@@ -237,7 +237,9 @@ namespace WorldTree
         private static void AddNodeRule(this RuleManager self, IRule rule)
         {
             var group = self.RuleGroupDictionary.GetValue(rule.RuleType);
-            group.GetValue(rule.NodeType).Add(rule);
+            var ruleList = group.GetValue(rule.NodeType);
+            if (!ruleList.TryAdd(rule)) return;
+
             group.RuleType = rule.RuleType;
 
             self.NodeTypeRulesDictionary.GetValue(rule.NodeType).Add(rule.RuleType);
@@ -258,11 +260,11 @@ namespace WorldTree
         private static void DictionaryAddNodeRule(this RuleManager self, Type NodeType, IListenerRule listenerRule)
         {
             var ListenerRuleGroup = self.ListenerRuleTargetGroupDictionary.GetValue(listenerRule.NodeType).GetValue(listenerRule.RuleType);
-            ListenerRuleGroup.GetValue(NodeType).Add(listenerRule);
+            ListenerRuleGroup.GetValue(NodeType).TryAdd(listenerRule);
             ListenerRuleGroup.RuleType = listenerRule.RuleType;
 
             var TargetRuleGroup = self.TargetRuleListenerGroupDictionary.GetValue(NodeType).GetValue(listenerRule.RuleType);
-            TargetRuleGroup.GetValue(listenerRule.NodeType).Add(listenerRule);
+            TargetRuleGroup.GetValue(listenerRule.NodeType).TryAdd(listenerRule);
             TargetRuleGroup.RuleType = listenerRule.RuleType;
         }
 
@@ -295,26 +297,23 @@ namespace WorldTree
         public static void SupportGenericNodeRule(this RuleManager self, Type NodeType)
         {
             Type Type = NodeType;
-            while (Type != null && Type != typeof(IUnitPoolItem) && Type != typeof(object))
+            while (Type != null && Type != typeof(IUnitPoolItem) && Type != typeof(object) && Type.IsGenericType)
             {
-                //判断节点是否为泛型
-                if (Type.IsGenericType)
-                {
-                    //获取泛型本体类型
-                    Type GenericNodeType = Type.GetGenericTypeDefinition();
-                    //获取泛型参数数组
-                    Type[] GenericTypes = Type.GetGenericArguments();
+                //获取泛型本体类型
+                Type GenericNodeType = Type.GetGenericTypeDefinition();
+                //获取泛型参数数组
+                Type[] GenericTypes = Type.GetGenericArguments();
 
-                    if (self.GenericRuleTypeHashDictionary.TryGetValue(GenericNodeType, out var RuleTypeHash))
+                if (self.GenericRuleTypeHashDictionary.TryGetValue(GenericNodeType, out var RuleTypeHash))
+                {
+                    foreach (var RuleType in RuleTypeHash)
                     {
-                        foreach (var RuleType in RuleTypeHash)
-                        {
-                            //填入对应的泛型参数，实例化泛型监听系统
-                            IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(GenericTypes));
-                            self.AddRule(rule);
-                        }
+                        //填入对应的泛型参数，实例化泛型监听系统
+                        IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(GenericTypes));
+                        self.AddRule(rule);
                     }
                 }
+
                 Type = Type.BaseType;
             }
         }

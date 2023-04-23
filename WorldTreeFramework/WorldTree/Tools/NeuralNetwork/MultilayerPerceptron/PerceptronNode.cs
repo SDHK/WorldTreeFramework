@@ -46,51 +46,6 @@ namespace WorldTree
         {
             return $"{this.GetType().Name}\tDelta:[{delta}]\tBias:[{bias}]\tResult:[{result}]";
         }
-
-        /// <summary>
-        /// 正向传播计算
-        /// </summary>
-        public void ForwardPropagation()
-        {
-            if (Links1 != null)
-            {
-                double ThresholdResults = bias;
-                for (int i = 0; i < Links1.Count; i++)
-                {
-                    ThresholdResults = (Links1[i].node1.result * Links1[i].weight) + ThresholdResults;
-                }
-                //通过 激活函数 拿到 0 到 1 的数值
-                result = 1d / (Math.Exp(-ThresholdResults) + 1);
-            }
-        }
-
-        /// <summary>
-        /// 反向传播计算
-        /// </summary>
-        public void BackPropagation()
-        {
-            if (Links2 != null)
-            {
-                double error = 0;
-                for (int i = 0; i < Links2.Count; i++)
-                {
-                    //误差 += 下级节点的 误差增量 * 权重 
-                    error += Links2[i].node2.delta * Links2[i].weight;
-                    Links2[i].BackPropagationWeight();
-                }
-                SetError(error);
-            }
-        }
-
-        /// <summary>
-        /// 设置误差
-        /// </summary>
-        public void SetError(double error)
-        {
-            //误差增量 = 斜率 * 误差。 斜率就是向谷底接近的速度
-            delta = (result * (1d - result)) * error;
-            bias += delta;
-        }
     }
 
     class PerceptronNodeRemoveRule : RemoveRule<PerceptronNode>
@@ -119,5 +74,52 @@ namespace WorldTree
             self.Links2.Add(perceptronLine);
             node.Links1.Add(perceptronLine);
         }
+
+
+        /// <summary>
+        /// 正向传播计算
+        /// </summary>
+        public static void ForwardPropagation(this PerceptronNode self)
+        {
+            if (self.Links1 != null)
+            {
+                double ThresholdResults = self.bias;
+                for (int i = 0; i < self.Links1.Count; i++)
+                {
+                    ThresholdResults = (self.Links1[i].node1.result * self.Links1[i].weight) + ThresholdResults;
+                }
+                //通过 激活函数 拿到 0 到 1 的数值
+                self.result = 1d / (Math.Exp(-ThresholdResults) + 1);
+            }
+        }
+
+        /// <summary>
+        /// 反向传播计算
+        /// </summary>
+        public static void BackPropagation(this PerceptronNode self)
+        {
+            if (self.Links2 != null)
+            {
+                double error = 0;
+                for (int i = 0; i < self.Links2.Count; i++)
+                {
+                    //误差 += 下级节点的 误差增量 * 权重 
+                    error += self.Links2[i].node2.delta * self.Links2[i].weight;
+                    self.Links2[i].BackPropagationWeight();
+                }
+                self.SetError(error);
+            }
+        }
+
+        /// <summary>
+        /// 设置误差
+        /// </summary>
+        public static void SetError(this PerceptronNode self, double error)
+        {
+            //误差增量 = 斜率 * 误差。 斜率就是向谷底接近的速度
+            self.delta = (self.result * (1d - self.result)) * error;
+            self.bias += self.delta;
+        }
+
     }
 }
