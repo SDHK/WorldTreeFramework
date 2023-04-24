@@ -19,7 +19,7 @@ namespace WorldTree
 
         , ChildOf<INode>
 
-    where T : struct, IEquatable<T>
+    where T :  IEquatable<T>
     {
         /// <summary>
         /// 绑定的对象

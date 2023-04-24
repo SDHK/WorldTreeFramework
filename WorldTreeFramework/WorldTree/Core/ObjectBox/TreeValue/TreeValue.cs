@@ -18,7 +18,7 @@ namespace WorldTree
         , IAwake
         , ChildOf<INode>
 
-    where T : struct, IEquatable<T>
+    where T : IEquatable<T>
     {
         public T m_Value;
         public override T Value

@@ -6,35 +6,46 @@ namespace WorldTree
     /// <summary>
     /// 值渐变
     /// </summary>
-    public class TreeTween : Node,IAwake,ComponentOf<TreeValueBase>
+    public class TreeTween<T1,T2> : Node,IAwake,ComponentOf<TreeValueBase>
+        where T1 :  IEquatable<T1>
+        where T2 :  IEquatable<T2>
     {
+        /// <summary>
+        /// 值
+        /// </summary>
+        public TreeValueBase<T1> changeValue;
+
         /// <summary>
         /// 开始
         /// </summary>
-        public TreeValueBase<float> start;
+        public TreeValueBase<T2> startValue;
 
         /// <summary>
         /// 结束
         /// </summary>
-        public TreeValueBase<float> end;
+        public TreeValueBase<T2> endValue;
 
-        /// <summary>
-        /// 值
-        /// </summary>
-        public TreeValueBase<float> value;
+     
 
+
+        //执行方式
+
+        //曲线？
+
+        //下一个Tween?
     }
 
 
     public static class TreeValueBaseRule
     {
-        public static void Lerp(this TreeValueBase<float> self, float target, float timeScale)
+        public static void Lerp<T>(this TreeValueBase<T> self, T target, T timeScale)
+        where T : struct, IEquatable<T>
         {
-            self.AddComponent(out TreeTween treeTween);
+            //self.AddComponent(out TreeTween<T> treeTween);
             
-            treeTween.start.Value = self.Value;
-            treeTween.end.Value = target;
-            treeTween.value = self;
+            //treeTween.startValue.Value = self.Value;
+            //treeTween.endValue.Value = target;
+            //treeTween.changeValue = self;
 
         }
 
@@ -42,10 +53,10 @@ namespace WorldTree
 
     public static class TreeTweenRule
     {
-        public static void Tween(this TreeTween self, float target, float timeScale)
-        {
-
-        }
+        //public static void Tween<T>(this TreeTween<T> self, float target, float timeScale)
+        //where T : struct, IEquatable<T>
+        //{
+        //}
 
     }
 

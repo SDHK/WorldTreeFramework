@@ -22,18 +22,12 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
-    public struct TestPoint1 { 
-    
-    
-    
-    }
-
-    public struct TestPoint<T> 
+    public struct P<T> 
     where T : class
     {
         public WorldTreeCore Core;
         public long NodeId;
-        public static implicit operator T(TestPoint<T> testPoint)
+        public static implicit operator T(P<T> testPoint)
         {
             return testPoint.Value;
         }
@@ -43,7 +37,7 @@ namespace WorldTree
 
     public static class TestPointRule
     {
-        public static void Test<T>(this TestPoint<T> self)
+        public static void Test<T>(this P<T> self)
          where T : class
         {
             self.Core = null;
@@ -114,7 +108,8 @@ namespace WorldTree
     /// </summary>
     public class InitialDomain : Node, IAwake, ComponentOf<INode>
     {
-        public TestPoint<TreeNode> node;
+        public P<TreeNode> node;
+        public P<TreeValue<float>> value;
     }
 
     class _InitialDomain : AddRule<InitialDomain>
