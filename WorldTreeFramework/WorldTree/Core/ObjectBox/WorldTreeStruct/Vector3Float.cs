@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 浮点三维向量
     /// </summary>
-    public struct Vector3Float : IEquatable<Vector3Float>
+    public partial struct Vector3Float : IEquatable<Vector3Float>
     {
         public const float kEpsilon = 1E-05f;//?
         public const float kEpsilonNormalSqrt = 1E-15f;//?
