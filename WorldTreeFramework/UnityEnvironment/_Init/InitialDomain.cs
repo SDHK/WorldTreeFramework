@@ -102,7 +102,7 @@ namespace WorldTree
             self.AddChild(out self.valueF);
             self.AddChild(out self.valueI);
 
-            self.valueF.BindTwoWayChange(self.valueI);
+            self.valueF.BindTwoWay(self.valueI);
         }
     }
     class InitialDomainUpdateRule : UpdateRule<InitialDomain>

@@ -38,31 +38,9 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 单向绑定
-        /// </summary>
-        public static void Bind<T>(this TreeValueBase<T> self, TreeValueBase<T> treeValue)
-            where T : IEquatable<T>
-        {
-            if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
-            self.m_RuleActuator.EnqueueReferenced(treeValue);
-        }
-
-        /// <summary>
-        /// 双向绑定
-        /// </summary>
-        public static void BindTwoWay<T>(this TreeValueBase<T> self, TreeValueBase<T> treeValue)
-            where T : IEquatable<T>
-        {
-            if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
-            if (treeValue.m_RuleActuator is null) treeValue.TryGetRuleActuator(out treeValue.m_RuleActuator);
-            self.m_RuleActuator.EnqueueReferenced(treeValue);
-            treeValue.m_RuleActuator.EnqueueReferenced(self);
-        }
-
-        /// <summary>
         /// 单向绑定(类型转换)
         /// </summary>
-        public static void BindChange<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
+        public static void Bind<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
             where T1 : IEquatable<T1>
             where T2 : IEquatable<T2>
         {
@@ -72,7 +50,7 @@ namespace WorldTree
         /// <summary>
         /// 双向绑定(类型转换)
         /// </summary>
-        public static void BindTwoWayChange<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
+        public static void BindTwoWay<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
             where T1 : IEquatable<T1>
             where T2 : IEquatable<T2>
         {
