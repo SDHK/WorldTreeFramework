@@ -79,24 +79,6 @@ namespace WorldTree
         }
     }
 
-    class TreeValueIntChangeFloatRule : ValueChangeRule<TreeValueBase<float>, float, int>
-    {
-        public override void OnEvent(TreeValueBase<float> self, int arg1)
-        {
-            World.Log("IF不同类型转换！！！");
-            self.Value = arg1;
-        }
-    }
-
-    //class TreeValueChangeFloatIntRule : ValueChangeRule<TreeValueBase<int>, int, float>
-    //{
-    //    public override void OnEvent(TreeValueBase<int> self, float arg1)
-    //    {
-    //        World.Log("FI不同类型转换！！！");
-    //        self.Value = (int)arg1;
-    //    }
-    //}
-
 
     /// <summary>
     /// 初始域
