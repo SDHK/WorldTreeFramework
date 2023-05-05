@@ -22,30 +22,7 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
-    public struct P<T> 
-    where T : class
-    {
-        public WorldTreeCore Core;
-        public long NodeId;
-        public static implicit operator T(P<T> testPoint)
-        {
-            return testPoint.Value;
-        }
 
-        public T Value => Core.AllNode[NodeId] as T;
-    }
-
-    public static class TestPointRule
-    {
-        public static void Test<T>(this P<T> self)
-         where T : class
-        {
-            self.Core = null;
-
-            self.NodeId = 1;
-        }
-
-    }
 
     //public class NodeAddRule : AddRule<Node>
     //{
@@ -102,14 +79,33 @@ namespace WorldTree
         }
     }
 
+    class TreeValueIntChangeFloatRule : ValueChangeRule<TreeValueBase<float>, float, int>
+    {
+        public override void OnEvent(TreeValueBase<float> self, int arg1)
+        {
+            World.Log("IF不同类型转换！！！");
+            self.Value = arg1;
+        }
+    }
+
+    //class TreeValueChangeFloatIntRule : ValueChangeRule<TreeValueBase<int>, int, float>
+    //{
+    //    public override void OnEvent(TreeValueBase<int> self, float arg1)
+    //    {
+    //        World.Log("FI不同类型转换！！！");
+    //        self.Value = (int)arg1;
+    //    }
+    //}
+
 
     /// <summary>
     /// 初始域
     /// </summary>
     public class InitialDomain : Node, IAwake, ComponentOf<INode>
     {
-        public P<TreeNode> node;
-        public P<TreeValue<float>> value;
+        public TreeNode node;
+        public TreeValue<float> valueF;
+        public TreeValue<int> valueI;
     }
 
     class _InitialDomain : AddRule<InitialDomain>
@@ -121,13 +117,27 @@ namespace WorldTree
 
             World.Log("初始域启动！！");
 
+            self.AddChild(out self.valueF);
+            self.AddChild(out self.valueI);
 
+            self.valueF.BindTwoWay(self.valueI);
         }
     }
     class InitialDomainUpdateRule : UpdateRule<InitialDomain>
     {
         public override void OnEvent(InitialDomain self, float deltaTime)
         {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                self.valueF.Value += 1.5f;
+                World.Log($"A {self.valueF.Value} : {self.valueI.Value}");
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                self.valueI.Value += 1;
+                World.Log($"S {self.valueF.Value} : {self.valueI.Value}");
+
+            }
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 self.AddComponent(out TreeNode _).Test().Coroutine();

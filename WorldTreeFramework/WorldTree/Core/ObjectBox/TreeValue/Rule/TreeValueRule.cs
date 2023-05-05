@@ -21,6 +21,9 @@ namespace WorldTree
         }
     }
 
+
+
+
     class TreeValueRemoveRule<T> : RemoveRule<TreeValueBase<T>>
     where T : IEquatable<T>
     {
@@ -31,6 +34,7 @@ namespace WorldTree
             self.Value = default;
         }
     }
+
 
     public static class TreeValueRule
     {
@@ -52,7 +56,7 @@ namespace WorldTree
             where T : IEquatable<T>
         {
             if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
-            self.m_RuleActuator?.EnqueueReferenced(treeValue);
+            self.m_RuleActuator.EnqueueReferenced(treeValue);
         }
 
         /// <summary>
@@ -63,8 +67,31 @@ namespace WorldTree
         {
             if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
             if (treeValue.m_RuleActuator is null) treeValue.TryGetRuleActuator(out treeValue.m_RuleActuator);
-            self.m_RuleActuator?.EnqueueReferenced(treeValue);
-            treeValue.m_RuleActuator?.EnqueueReferenced(self);
+            self.m_RuleActuator.EnqueueReferenced(treeValue);
+            treeValue.m_RuleActuator.EnqueueReferenced(self);
+        }
+
+        /// <summary>
+        /// 单向绑定(类型转换)
+        /// </summary>
+        public static void Bind<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
+            where T1 : IEquatable<T1>
+            where T2 : IEquatable<T2>
+        {
+            if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
+            self.m_RuleActuator.EnqueueReferenced(treeValue);
+        }
+        /// <summary>
+        /// 双向绑定(类型转换)
+        /// </summary>
+        public static void BindTwoWay<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
+            where T1 : IEquatable<T1>
+            where T2 : IEquatable<T2>
+        {
+            if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
+            if (treeValue.m_RuleActuator is null) treeValue.TryGetRuleActuator(out treeValue.m_RuleActuator);
+            self.m_RuleActuator.EnqueueReferenced(treeValue);
+            treeValue.m_RuleActuator.EnqueueReferenced(self);
         }
     }
 

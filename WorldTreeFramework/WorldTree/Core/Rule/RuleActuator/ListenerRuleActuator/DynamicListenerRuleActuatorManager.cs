@@ -81,15 +81,20 @@ namespace WorldTree
             //获取 INode 动态目标 法则集合集合
             if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
             {
-                //遍历现有执行器
-                foreach (var ActuatorGroup in self.ListenerActuatorGroupDictionary)
+                //遍历获取动态法则集合
+                foreach (var ruleGroup in ruleGroupDictionary)
                 {
-                    //遍历获取动态法则集合，并添加自己
-                    foreach (var ruleGroup in ruleGroupDictionary)
+                    //判断监听法则集合 是否有这个 监听器节点类型
+                    if (ruleGroup.Value.ContainsKey(node.Type))
                     {
-                        if (ActuatorGroup.Value.TryGetRuleActuator(ruleGroup.Key, out var ruleActuator))
+                        //遍历现有执行器
+                        foreach (var ActuatorGroup in self.ListenerActuatorGroupDictionary)
                         {
-                            ruleActuator.Enqueue(node);
+                            //从执行器集合 提取这个 监听法则类型 的执行器，进行添加
+                            if (ActuatorGroup.Value.TryGetRuleActuator(ruleGroup.Key, out var ruleActuator))
+                            {
+                                ruleActuator.Enqueue(node);
+                            }
                         }
                     }
                 }
@@ -107,7 +112,6 @@ namespace WorldTree
                 //遍历法则集合
                 foreach (var targetSystems in targetSystemGroup)
                 {
-
                     self.AddNodeTarget(node, targetSystems.Key);
                 }
             }
@@ -116,9 +120,9 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 节点目标
         /// </summary>
-        private static void AddNodeTarget(this DynamicListenerRuleActuatorManager self, INode node, Type type)
+        private static void AddNodeTarget(this DynamicListenerRuleActuatorManager self, INode node, Type listenerTarget)
         {
-            if (self.TryGetGroup(type, out var ActuatorGroup))
+            if (self.TryGetGroup(listenerTarget, out var ActuatorGroup))
             {
                 //获取 INode 动态目标 法则集合集合
                 if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
@@ -126,11 +130,13 @@ namespace WorldTree
                     //遍历获取动态法则集合，并添加自己
                     foreach (var ruleGroup in ruleGroupDictionary)
                     {
-                        ActuatorGroup.GetRuleActuator(ruleGroup.Key).Enqueue(node);
+                        //判断监听法则集合 是否有这个 监听器节点类型
+                        if (ruleGroup.Value.ContainsKey(node.Type))
+                        {
+                            ActuatorGroup.GetRuleActuator(ruleGroup.Key).Enqueue(node);
+                        }
                     }
                 }
-
-
             }
         }
         #endregion

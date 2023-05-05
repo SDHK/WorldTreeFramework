@@ -9,6 +9,7 @@
 */
 
 using System;
+using UnityEditor.Experimental.GraphView;
 
 namespace WorldTree
 {
@@ -96,13 +97,18 @@ namespace WorldTree
             {
                 foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
                 {
-                    foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
+                    //判断监听法则集合 是否有这个 监听器节点类型
+                    if (ruleGroup.Value.ContainsKey(listener.Type))
                     {
-                        if (self.TryGetRuleActuator(ruleList.Key, ruleGroup.Key, out var actuator))
+                        foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
                         {
-                            actuator.Enqueue(listener);
+                            if (self.TryGetRuleActuator(ruleList.Key, ruleGroup.Key, out var actuator))
+                            {
+                                actuator.Enqueue(listener);
+                            }
                         }
                     }
+
                 }
             }
         }

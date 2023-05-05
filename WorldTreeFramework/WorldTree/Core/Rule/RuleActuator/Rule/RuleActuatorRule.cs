@@ -60,7 +60,14 @@ namespace WorldTree
 
         public static void EnqueueReferenced(this RuleActuator self, INode node)
         {
-            self.nodeQueue.EnqueueReferenced(node);
+            if (self.ruleGroup.ContainsKey(node.Type))
+            {
+                self.nodeQueue.EnqueueReferenced(node);
+            }
+            else
+            {
+                throw new RuleActuatorException($"节点 {node.Type} 未实现 {self.ruleGroup.RuleType} 法则，无法添加");
+            }
         }
 
         /// <summary>
@@ -68,8 +75,16 @@ namespace WorldTree
         /// </summary>
         public static void Enqueue(this RuleActuator self, INode node)
         {
-            self.nodeQueue.Enqueue(node);
+            if (self.ruleGroup.ContainsKey(node.Type))
+            {
+                self.nodeQueue.Enqueue(node);
+            }
+            else
+            {
+                throw new RuleActuatorException($"节点 {node.Type} 未实现 {self.ruleGroup.RuleType} 法则，无法添加");
+            }
         }
+
 
         /// <summary>
         /// 移除节点
@@ -97,7 +112,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试出列
         /// </summary>
-        public static bool TryDequeue(this RuleActuator self,out INode node)
+        public static bool TryDequeue(this RuleActuator self, out INode node)
         {
             return self.nodeQueue.TryDequeue(out node);
         }
@@ -110,7 +125,7 @@ namespace WorldTree
         /// </summary>
         public static void EnqueueReferenced(this IRuleActuator self, INode node)
         {
-            ((RuleActuator)self).nodeQueue.EnqueueReferenced(node);
+            ((RuleActuator)self).EnqueueReferenced(node);
         }
 
         /// <summary>
@@ -118,7 +133,7 @@ namespace WorldTree
         /// </summary>
         public static void Enqueue(this IRuleActuator self, INode node)
         {
-            ((RuleActuator)self).nodeQueue.Enqueue(node);
+            ((RuleActuator)self).Enqueue(node);
         }
 
         /// <summary>

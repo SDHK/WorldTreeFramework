@@ -10,7 +10,7 @@
 
 using System;
 
-namespace WorldTree 
+namespace WorldTree
 {
     /// <summary>
     /// 树节点值类型基类
@@ -21,7 +21,7 @@ namespace WorldTree
 
 
     /// <summary>
-    /// 树节点值类型基类
+    /// 树节点值类型泛型基类
     /// </summary>
     public abstract class TreeValueBase<T> : TreeValueBase
         where T : IEquatable<T>
@@ -46,4 +46,6 @@ namespace WorldTree
             return treeValueBase.Value;
         }
     }
+
+
 }
