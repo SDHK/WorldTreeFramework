@@ -62,7 +62,7 @@ namespace WorldTree
         /// <summary>
         /// 单向绑定(类型转换)
         /// </summary>
-        public static void Bind<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
+        public static void BindChange<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
             where T1 : IEquatable<T1>
             where T2 : IEquatable<T2>
         {
@@ -72,7 +72,7 @@ namespace WorldTree
         /// <summary>
         /// 双向绑定(类型转换)
         /// </summary>
-        public static void BindTwoWay<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
+        public static void BindTwoWayChange<T1, T2>(this TreeValueBase<T1> self, TreeValueBase<T2> treeValue)
             where T1 : IEquatable<T1>
             where T2 : IEquatable<T2>
         {
