@@ -21,8 +21,6 @@ namespace WorldTree
         public const float kEpsilonNormalSqrt = 1E-15f;//?
 
 
-
-
         public float x;
         public float y;
         public float z;
@@ -114,7 +112,7 @@ namespace WorldTree
                     case 2:
                         return this.z;
                     default:
-                        throw new IndexOutOfRangeException("无效的 Vector3Float index!");
+                        throw new IndexOutOfRangeException("Invalid Vector3Float index!");
                 }
             }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -132,7 +130,7 @@ namespace WorldTree
                         this.z = value;
                         break;
                     default:
-                        throw new IndexOutOfRangeException("无效的 Vector3Float index!");
+                        throw new IndexOutOfRangeException("Invalid Vector3Float index!");
                 }
             }
         }
@@ -221,6 +219,7 @@ namespace WorldTree
         /// </summary>
         public Vector3Float normalized
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 float num = this.magnitude;
@@ -252,6 +251,16 @@ namespace WorldTree
             self.x *= scale.x;
             self.y *= scale.y;
             self.z *= scale.z;
+        }
+
+        /// <summary>
+        /// 使这个向量的大小为1。
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector3Float Normalize(Vector3Float a)
+        {
+            float num = a.magnitude;
+            return (double)num > 9.999999747378752E-06 ? a / num : Vector3Float.Zero;
         }
 
         /// <summary>

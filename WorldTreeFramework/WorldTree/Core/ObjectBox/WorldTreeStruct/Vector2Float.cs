@@ -89,7 +89,7 @@ namespace WorldTree
                     case 1:
                         return this.y;
                     default:
-                        throw new IndexOutOfRangeException("无效的 Vector2Float index!");
+                        throw new IndexOutOfRangeException("Invalid Vector2Float index!");
                 }
             }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -104,7 +104,7 @@ namespace WorldTree
                         this.y = value;
                         break;
                     default:
-                        throw new IndexOutOfRangeException("无效的 Vector2Float index!");
+                        throw new IndexOutOfRangeException("Invalid Vector2Float index!");
                 }
             }
         }
