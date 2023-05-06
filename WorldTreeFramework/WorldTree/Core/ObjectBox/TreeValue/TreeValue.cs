@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 泛型树值类型
     /// </summary>
-    public class TreeValue<T> : TreeValueBase<T>
+    public partial class TreeValue<T> : TreeValueBase<T>
         , IAwake
         , ChildOf<INode>
 

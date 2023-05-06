@@ -103,6 +103,12 @@ namespace WorldTree
             self.AddChild(out self.valueI);
 
             self.valueF.BindTwoWay(self.valueI);
+
+            Vector3 a = Vector3.zero;
+            Vector3Float b = Vector3Float.One;
+
+            var c = a == b;
+          
         }
     }
     class InitialDomainUpdateRule : UpdateRule<InitialDomain>

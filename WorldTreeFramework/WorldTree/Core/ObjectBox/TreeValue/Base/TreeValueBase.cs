@@ -23,7 +23,7 @@ namespace WorldTree
     /// <summary>
     /// 树节点值类型泛型基类
     /// </summary>
-    public abstract class TreeValueBase<T> : TreeValueBase
+    public abstract partial class TreeValueBase<T> : TreeValueBase
         where T : IEquatable<T>
     {
         /// <summary>

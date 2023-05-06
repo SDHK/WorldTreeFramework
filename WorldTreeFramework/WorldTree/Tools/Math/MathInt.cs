@@ -12,7 +12,7 @@ using System;
 
 namespace WorldTree
 {
-    public static class MathfInt
+    public static class MathInt
     {
         /// <summary>
         /// 循环的正整数                                        
