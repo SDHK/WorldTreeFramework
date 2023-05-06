@@ -73,7 +73,6 @@ namespace WorldTree
         /// <summary>
         /// (float.PositiveInfinity)
         /// </summary>
-
         public static Vector3Float PositiveInfinity => positiveInfinityVector;
         /// <summary>
         /// (float.NegativeInfinity)
@@ -196,10 +195,7 @@ namespace WorldTree
         /// 完全相等判断
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(Vector3Float other)
-        {
-            return (double)this.x == (double)other.x && (double)this.y == (double)other.y && (double)this.z == (double)other.z;
-        }
+        public bool Equals(Vector3Float other) => (double)this.x == (double)other.x && (double)this.y == (double)other.y && (double)this.z == (double)other.z;
 
 
 
@@ -211,9 +207,17 @@ namespace WorldTree
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => (float)Math.Sqrt((double)this.x * (double)this.x + (double)this.y * (double)this.y + (double)this.z * (double)this.z);
         }
+        /// <summary>
+        /// 返回该向量的平方长度(只读)。
+        /// </summary>
+        public float sqrMagnitude
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => (float)((double)this.x * (double)this.x + (double)this.y * (double)this.y + (double)this.z * (double)this.z);
+        }
 
         /// <summary>
-        /// 使这个向量的大小为1</para>
+        /// 返回大小为1的向量(只读)。
         /// </summary>
         public Vector3Float normalized
         {
@@ -223,19 +227,14 @@ namespace WorldTree
                 return (double)num > 9.999999747378752E-06 ? this / num : Zero;
             }
         }
-        /// <summary>
-        /// 返回该向量的平方长度(只读)。</para>
-        /// </summary>
-        public float sqrMagnitude
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (float)((double)this.x * (double)this.x + (double)this.y * (double)this.y + (double)this.z * (double)this.z);
-        }
+       
     }
 
     public static partial class Vector3FloatRule
     {
-
+        /// <summary>
+        /// 设置
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Set(this Vector3Float self, float newX, float newY, float newZ)
         {
@@ -243,10 +242,6 @@ namespace WorldTree
             self.y = newY;
             self.z = newZ;
         }
-
-
-
-
 
         /// <summary>
         /// 轴 乘等于
@@ -260,114 +255,9 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 返回最小值
-        /// </summary>
-        public static Vector3Float Min(this Vector3Float lhs, Vector3Float rhs) => new Vector3Float(Math.Min(lhs.x, rhs.x), Math.Min(lhs.y, rhs.y), Math.Min(lhs.z, rhs.z));
-
-        /// <summary>
-        /// 返回最大值
-        /// </summary>
-        public static Vector3Float Max(this Vector3Float lhs, Vector3Float rhs) => new Vector3Float(Math.Max(lhs.x, rhs.x), Math.Max(lhs.y, rhs.y), Math.Max(lhs.z, rhs.z));
-
-
-        /// <summary>
-        /// 返回a和b之间的距离。</para>
+        /// 2d向量转3d向量 对应到XZ
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Distance(this Vector3Float a, Vector3Float b)
-        {
-            float num1 = a.x - b.x;
-            float num2 = a.y - b.y;
-            float num3 = a.z - b.z;
-            return (float)Math.Sqrt((double)num1 * (double)num1 + (double)num2 * (double)num2 + (double)num3 * (double)num3);
-        }
-
-        /// <summary>
-        /// 返回vector的副本，其大小限制为maxLength。</para>
-        /// </summary>
-        /// <param name="vector"></param>
-        /// <param name="maxLength"></param>
-        [MethodImpl((MethodImplOptions)256)]
-        public static Vector3Float ClampMagnitude(this Vector3Float vector, float maxLength)
-        {
-            float sqrMagnitude = vector.sqrMagnitude;
-            if ((double)sqrMagnitude <= (double)maxLength * (double)maxLength)
-                return vector;
-            float num1 = (float)Math.Sqrt((double)sqrMagnitude);
-            float num2 = vector.x / num1;
-            float num3 = vector.y / num1;
-            float num4 = vector.z / num1;
-            return new Vector3Float(num2 * maxLength, num3 * maxLength, num4 * maxLength);
-        }
-
-        /// <summary>
-        /// 将向量反射出由法线定义的平面。
-        /// </summary>
-        /// <param name="inDirection">入射向量</param>
-        /// <param name="inNormal">平面法线向量</param>
-        /// <returns>反射向量</returns>
-        public static Vector3Float Reflect(this Vector3Float inDirection, Vector3Float inNormal)
-        {
-            float num = -2f * inNormal.Dot(inDirection);
-            return new Vector3Float(num * inNormal.x + inDirection.x, num * inNormal.y + inDirection.y, num * inNormal.z + inDirection.z);
-        }
-
-        /// <summary>
-        /// 两个向量的点积。
-        /// </summary>
-        public static float Dot(this Vector3Float lhs, Vector3Float rhs) => (float)((double)lhs.x * (double)rhs.x + (double)lhs.y * (double)rhs.y + (double)lhs.z * (double)rhs.z);
-
-        /// <summary>
-        /// 将一个向量投影到另一个向量上。
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3Float Project(this Vector3Float vector, Vector3Float onNormal)
-        {
-            float num1 = onNormal.Dot(onNormal);
-            if (num1 < Vector3Float.kEpsilon)
-                return Vector3Float.Zero;
-            float num2 = vector.Dot(onNormal);
-            return new Vector3Float(onNormal.x * num2 / num1, onNormal.y * num2 / num1, onNormal.z * num2 / num1);
-        }
-
-        /// <summary>
-        /// 将一个向量投影到一个平面上，这个平面由一个正交于平面的法线定义。
-        /// </summary>
-        /// <param name="vector">向量在平面上的位置。</param>
-        /// <param name="planeNormal">向量指向平面的方向</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3Float ProjectOnPlane(this Vector3Float vector, Vector3Float planeNormal)
-        {
-            float num1 = planeNormal.Dot(planeNormal);
-            if (num1 < MathFloat.Epsilon)
-                return vector;
-            float num2 = vector.Dot(planeNormal);
-            return new Vector3Float(vector.x - planeNormal.x * num2 / num1, vector.y - planeNormal.y * num2 / num1, vector.z - planeNormal.z * num2 / num1);
-        }
-
-        /// <summary>
-        /// 计算和向量之间的夹角。
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Angle(this Vector3Float from, Vector3Float to)
-        {
-            float num = (float)Math.Sqrt((double)from.sqrMagnitude * (double)to.sqrMagnitude);
-            return (double)num < 1.0000000036274937E-15 ? 0.0f : (float)Math.Acos((double)Math.Clamp(from.Dot(to) / num, -1f, 1f)) * 57.29578f;
-        }
-
-        /// <summary>
-        /// 计算向量from和to之间相对于轴的带符号角度。
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float SignedAngle(this Vector3Float from, Vector3Float to, Vector3Float axis)
-        {
-            float num1 = from.Angle(to);
-            float num2 = (float)((double)from.y * (double)to.z - (double)from.z * (double)to.y);
-            float num3 = (float)((double)from.z * (double)to.x - (double)from.x * (double)to.z);
-            float num4 = (float)((double)from.x * (double)to.y - (double)from.y * (double)to.x);
-            float num5 = Math.Sign((float)((double)axis.x * (double)num2 + (double)axis.y * (double)num3 + (double)axis.z * (double)num4));
-            return num1 * num5;
-        }
-
+        public static Vector3Float ToVector2FloatXZ(this Vector2Float vector) => new Vector3Float(vector.x, 0, vector.y);
     }
 }
