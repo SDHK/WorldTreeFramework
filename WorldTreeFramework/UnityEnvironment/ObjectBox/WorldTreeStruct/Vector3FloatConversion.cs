@@ -9,6 +9,7 @@
 */
 
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace WorldTree
@@ -73,6 +74,11 @@ namespace WorldTree
         public static bool operator !=(Vector3 lhs, Vector3Float rhs) => !(lhs == rhs);
 
 
+    }
 
+    public static partial class Vector3FloatRule
+    {
+        public static Vector3 ToVector3(this Vector3Float self) => self;
+        public static Vector3Float ToVector3Float(this Vector3 self) => self;
     }
 }

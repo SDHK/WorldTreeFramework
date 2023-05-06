@@ -233,7 +233,7 @@ namespace WorldTree
         }
     }
 
-    public static class Vector3FloatRule
+    public static partial class Vector3FloatRule
     {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
