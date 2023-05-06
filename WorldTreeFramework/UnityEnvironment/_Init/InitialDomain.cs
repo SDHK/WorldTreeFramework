@@ -86,8 +86,8 @@ namespace WorldTree
     public class InitialDomain : Node, IAwake, ComponentOf<INode>
     {
         public TreeNode node;
-        public TreeValue<float> valueF;
-        public TreeValue<int> valueI;
+        public TreeValue<float> valueFloat;
+        public TreeValue<int> valueInt;
     }
 
     class _InitialDomain : AddRule<InitialDomain>
@@ -95,19 +95,15 @@ namespace WorldTree
 
         public override void OnEvent(InitialDomain self)
         {
-            self.Branch = self;
 
             World.Log("初始域启动！！");
 
-            self.AddChild(out self.valueF);
-            self.AddChild(out self.valueI);
+            self.AddChild(out self.valueFloat);
+            self.AddChild(out self.valueInt);
 
-            self.valueF.BindTwoWay(self.valueI);
+            self.valueFloat.BindTwoWay(self.valueInt);
 
-            Vector3 a = Vector3.zero;
-            Vector3Float b = Vector3Float.One;
-
-            var c = a == b;
+      
           
         }
     }
@@ -117,13 +113,13 @@ namespace WorldTree
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                self.valueF.Value += 1.5f;
-                World.Log($"A {self.valueF.Value} : {self.valueI.Value}");
+                self.valueFloat.Value += 1.5f;
+                World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
-                self.valueI.Value += 1;
-                World.Log($"S {self.valueF.Value} : {self.valueI.Value}");
+                self.valueInt.Value += 1;
+                World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value}");
 
             }
             if (Input.GetKeyDown(KeyCode.Q))
