@@ -208,7 +208,7 @@ namespace WorldTree
         public static Vector3Float Lerp(this Vector3Float a, Vector3Float b, float t)
         {
             t = Math.Clamp(t, 0, 1);
-            return new Vector3(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
+            return new Vector3Float(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
         }
 
         /// <summary>
