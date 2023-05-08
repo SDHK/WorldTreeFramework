@@ -4,18 +4,20 @@
 * 作者： 闪电黑客
 * 日期： 2022/7/20 11:26
 
-* 描述： 全解三角形
+* 描述： 三角形
 
 */
 
 
+using System;
+using System.Runtime.CompilerServices;
+
 namespace WorldTree
 {
-
     /// <summary>
-    /// 全解三角形 :需要用静态扩展分成ECS模式
+    /// 三角形
     /// </summary>
-    public partial struct Triangle
+    public partial struct Triangle : IEquatable<Triangle>
     {
         private float angleA;//角
         private float angleB;
@@ -55,15 +57,62 @@ namespace WorldTree
         /// </summary>
         public float Diameter { get { return diameter; } }
 
-        //=[三角形全解]=================================================
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(Triangle lhs, Triangle rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(Triangle lhs, Triangle rhs) => !(lhs == rhs);
+
         /// <summary>
-        /// 边边边 :
-        /// 提供 : 三角形的三个边 , 全解三角形
+        /// 创建三角形
         /// </summary>
         /// <param name="edgeA">角A的对边</param>
         /// <param name="edgeB">角B的对边</param>
         /// <param name="edgeC">角C的对边</param>
-        public Triangle SolutionsFromEEE(float edgeA, float edgeB, float edgeC)
+        /// <remarks> 提供 : 三角形的三个边 , 全解三角形</remarks>
+        public static Triangle CreateEEE(float edgeA, float edgeB, float edgeC) => new Triangle().SetEEE(edgeA, edgeB, edgeC);
+
+        /// <summary>
+        /// 创建三角形
+        /// </summary>
+        /// <param name="angleA">角A</param>
+        /// <param name="edgeA">角A的对边</param>
+        /// <param name="edgeB">角B的对边</param>
+        /// <param name="obtuseAngleB">角B优先解为钝角,一般为false</param>
+        /// <remarks>提供 : 一个角和两个边 , 全解三角形</remarks>
+        public static Triangle CreateAEE(float angleA, float edgeB, float edgeC, bool obtuseAngleB = false) => new Triangle().SetAEE(angleA, edgeB, edgeC, obtuseAngleB);
+
+        /// <summary>
+        /// 创建三角形
+        /// </summary>
+        /// <param name="edgeA">角A的对边</param>
+        /// <param name="angleB">夹角B</param>
+        /// <param name="edgeC">角C的对边</param>
+        /// <remarks>提供 : 两个边和一个夹角 , 全解三角形</remarks>
+        public static Triangle CreateEAE(float edgeA, float angleB, float edgeC) => new Triangle().SetEAE(edgeA, angleB, edgeC);
+
+        /// <summary>
+        /// 创建三角形
+        /// </summary>
+        /// <param name="angleA">角A</param>
+        /// <param name="edgeB">角B的对边</param>
+        /// <param name="angleC">角C</param>
+        /// <remarks>提供 : 两个角夹和一个边 , 全解三角形</remarks>
+        public static Triangle CreateAEA(float angleA, float edgeB, float angleC) => new Triangle().SetAEA(angleA, edgeB, angleC);
+
+
+        //=[三角形设置]=================================================
+        /// <summary>
+        /// 边边边
+        /// </summary>
+        /// <param name="edgeA">角A的对边</param>
+        /// <param name="edgeB">角B的对边</param>
+        /// <param name="edgeC">角C的对边</param>
+        /// <remarks> 提供 : 三角形的三个边 , 全解三角形</remarks>
+        public Triangle SetEEE(float edgeA, float edgeB, float edgeC)
         {
             this.edgeA = edgeA;
             this.edgeB = edgeB;
@@ -75,14 +124,14 @@ namespace WorldTree
             return this;
         }
         /// <summary>
-        /// 角边边 :
-        /// 提供 : 一个角和两个边 , 全解三角形
+        /// 角边边 
         /// </summary>
         /// <param name="angleA">角A</param>
         /// <param name="edgeA">角A的对边</param>
         /// <param name="edgeB">角B的对边</param>
         /// <param name="obtuseAngleB">角B优先解为钝角,一般为false</param>
-        public Triangle SolutionsFromAEE(float angleA, float edgeA, float edgeB, bool obtuseAngleB = false)//1角2边解三角，钝角锐角都可解，obtuseAngleB钝角优先解
+        /// <remarks>提供 : 一个角和两个边 , 全解三角形</remarks>
+        public Triangle SetAEE(float angleA, float edgeA, float edgeB, bool obtuseAngleB = false)//1角2边解三角，钝角锐角都可解，obtuseAngleB钝角优先解
         {
             this.angleA = angleA;
             this.edgeA = edgeA;
@@ -103,13 +152,13 @@ namespace WorldTree
             return this;
         }
         /// <summary>
-        /// 边角边 :
-        /// 提供 : 两个边和一个夹角 , 全解三角形
+        /// 边角边 
         /// </summary>
         /// <param name="edgeA">角A的对边</param>
         /// <param name="angleB">夹角B</param>
         /// <param name="edgeC">角C的对边</param>
-        public Triangle SolutionsFromEAE(float edgeA, float angleB, float edgeC)
+        /// <remarks>提供 : 两个边和一个夹角 , 全解三角形</remarks>
+        public Triangle SetEAE(float edgeA, float angleB, float edgeC)
         {
             this.edgeA = edgeA;
             this.angleB = angleB;
@@ -121,13 +170,13 @@ namespace WorldTree
             return this;
         }
         /// <summary>
-        /// 角边角 :
-        /// 提供 : 两个角夹和一个边 , 全解三角形
+        /// 角边角
         /// </summary>
         /// <param name="angleA">角A</param>
         /// <param name="edgeB">角B的对边</param>
         /// <param name="angleC">角C</param>
-        public Triangle SolutionsFromAEA(float angleA, float edgeB, float angleC)
+        /// <remarks>提供 : 两个角夹和一个边 , 全解三角形</remarks>
+        public Triangle SetAEA(float angleA, float edgeB, float angleC)
         {
             this.angleA = angleA;
             this.edgeB = edgeB;
@@ -140,6 +189,22 @@ namespace WorldTree
             return this;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override int GetHashCode() => HashCode.Combine(angleA, angleB, angleC, edgeA, edgeB, edgeC, diameter);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object other) => other is Triangle other1 && this.Equals(other1);
+
+        public bool Equals(Triangle other)
+        {
+            return this.edgeA == other.edgeA &&
+                this.edgeB == other.edgeB &&
+                this.edgeC == other.edgeC &&
+                this.angleA == other.angleA &&
+                this.angleB == other.angleB &&
+                this.angleC == other.angleC &&
+                this.diameter == other.diameter;
+        }
     }
 
 

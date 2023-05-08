@@ -42,11 +42,9 @@ namespace WorldTree
         public static void SetCellSize(Vector2 CellSize)
         {
             cellSize = CellSize;
-            if (triangle == null)
-            {
-                triangle = new Triangle();
-            }
-            triangle.SolutionsFromEAE(CellSize.x, 90, CellSize.y);
+            if (triangle == null) triangle = Triangle.CreateEAE(CellSize.x, 90, CellSize.y);
+
+            triangle.SetEAE(CellSize.x, 90, CellSize.y);
             cellEdge = triangle.EdgeB * 0.5f;
         }
 
