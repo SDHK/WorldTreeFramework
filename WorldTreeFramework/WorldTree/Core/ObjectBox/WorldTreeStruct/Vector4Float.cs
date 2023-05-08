@@ -99,6 +99,48 @@ namespace WorldTree
             this.z = value4;
             this.w = value4;
         }
+        public float this[int index]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                switch (index)
+                {
+                    case 0:
+                        return this.x;
+                    case 1:
+                        return this.y;
+                    case 2:
+                        return this.z;
+                    case 3:
+                        return this.w;
+                    default:
+                        throw new IndexOutOfRangeException("Invalid Vector4Float index!");
+                }
+            }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set
+            {
+                switch (index)
+                {
+                    case 0:
+                        this.x = value;
+                        break;
+                    case 1:
+                        this.y = value;
+                        break;
+                    case 2:
+                        this.z = value;
+                        break;
+                    case 3:
+                        this.w = value;
+                        break;
+                    default:
+                        throw new IndexOutOfRangeException("Invalid Vector4Float index!");
+                }
+            }
+        }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4Float operator +(Vector4Float a, Vector4Float b) => new Vector4Float(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
@@ -196,42 +238,36 @@ namespace WorldTree
                 return (double)num > 9.999999747378752E-06 ? this / num : Zero;
             }
         }
-    }
 
-    public static partial class Vector4FloatRule
-    {
+
+        #region 方法
+
         /// <summary>
         /// 设置
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Set(this Vector4Float self, float newX, float newY, float newZ, float newW)
+        public  void Set( float newX, float newY, float newZ, float newW)
         {
-            self.x = newX;
-            self.y = newY;
-            self.z = newZ;
-            self.w = newW;
+            this.x = newX;
+            this.y = newY;
+            this.z = newZ;
+            this.w = newW;
         }
 
         /// <summary>
         /// 轴 乘等于
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Scale(this Vector4Float self, Vector4Float scale)
+        public  void Scale( Vector4Float scale)
         {
-            self.x *= scale.x;
-            self.y *= scale.y;
-            self.z *= scale.z;
-            self.w *= scale.w;
+            this.x *= scale.x;
+            this.y *= scale.y;
+            this.z *= scale.z;
+            this.w *= scale.w;
         }
 
-        /// <summary>
-        /// 使这个向量的大小为1。
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4Float Normalize(Vector4Float a)
-        {
-            float num = a.magnitude;
-            return (double)num > 9.999999747378752E-06 ? a / num : Vector4Float.Zero;
-        }
+        #endregion
     }
+
+
 }

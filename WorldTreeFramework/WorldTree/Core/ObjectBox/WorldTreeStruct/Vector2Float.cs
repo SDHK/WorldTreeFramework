@@ -197,12 +197,4 @@ namespace WorldTree
         }
 
     }
-
-    public static partial class Vector2FloatRule
-    {
-
-        
-
-    }
-
 }

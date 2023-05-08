@@ -12,14 +12,11 @@
 
 namespace WorldTree
 {
-
     /// <summary>
     /// 解三角静态工具
     /// </summary>
     public static class MathTriangle
     {
-        //=[三角形求值]=================================================
-
         /// <summary>
         /// 解三角形 : 获得角A : 角A=180-(角B+角C) 同理
         /// </summary>

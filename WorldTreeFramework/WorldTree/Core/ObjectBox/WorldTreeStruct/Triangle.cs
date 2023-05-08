@@ -15,14 +15,14 @@ namespace WorldTree
     /// <summary>
     /// 全解三角形 :需要用静态扩展分成ECS模式
     /// </summary>
-    public class Triangle : Node
+    public partial struct Triangle
     {
-        private float angleA = 0;//角
-        private float angleB = 0;
-        private float angleC = 0;
-        private float edgeA = 0;//边
-        private float edgeB = 0;
-        private float edgeC = 0;
+        private float angleA;//角
+        private float angleB;
+        private float angleC;
+        private float edgeA;//边
+        private float edgeB;
+        private float edgeC;
         private float diameter;//外接圆直径
         //=================================================
         /// <summary>
@@ -82,7 +82,7 @@ namespace WorldTree
         /// <param name="edgeA">角A的对边</param>
         /// <param name="edgeB">角B的对边</param>
         /// <param name="obtuseAngleB">角B优先解为钝角,一般为false</param>
-        public Triangle SolutionsFromAEE(float angleA, float edgeA, float edgeB, bool obtuseAngleB=false)//1角2边解三角，钝角锐角都可解，obtuseAngleB钝角优先解
+        public Triangle SolutionsFromAEE(float angleA, float edgeA, float edgeB, bool obtuseAngleB = false)//1角2边解三角，钝角锐角都可解，obtuseAngleB钝角优先解
         {
             this.angleA = angleA;
             this.edgeA = edgeA;

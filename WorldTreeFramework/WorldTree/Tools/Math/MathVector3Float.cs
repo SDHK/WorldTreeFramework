@@ -10,7 +10,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 
 namespace WorldTree
 {
@@ -35,13 +34,8 @@ namespace WorldTree
         /// 返回a和b之间的距离。</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Distance(this Vector3Float a, Vector3Float b)
-        {
-            float num1 = a.x - b.x;
-            float num2 = a.y - b.y;
-            float num3 = a.z - b.z;
-            return (float)Math.Sqrt((double)num1 * (double)num1 + (double)num2 * (double)num2 + (double)num3 * (double)num3);
-        }
+        public static float Distance(this Vector3Float a, Vector3Float b) => (a - b).magnitude;
+
 
         /// <summary>
         /// 返回vector的副本，其大小限制为maxLength。</para>
@@ -205,6 +199,9 @@ namespace WorldTree
             return false;
         }
 
+        /// <summary>
+        /// 在两个向量之间进行线性插值。
+        /// </summary>
         public static Vector3Float Lerp(this Vector3Float a, Vector3Float b, float t)
         {
             t = Math.Clamp(t, 0, 1);
@@ -247,7 +244,6 @@ namespace WorldTree
             return Center / points.Count;
         }
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         /// <summary>
         /// 获取向量绕某轴旋转x度后的位置（三维）
@@ -259,7 +255,7 @@ namespace WorldTree
         /// <returns>旋转后的位置</returns>
         public static Vector3Float RotateRound(Vector3Float vector, Vector3Float center, Vector3Float axis, float angle)
         {
-            Vector3Float point = Quaternion.AngleAxis(angle, axis) * vector; //算出旋转后的向量
+            Vector3Float point = QuaternionFloat.AngleAxis(angle, axis) * vector; //算出旋转后的向量
             Vector3Float resultVec3 = center + point;        //加上旋转中心位置得到旋转后的位置
             return resultVec3;
         }
@@ -269,9 +265,9 @@ namespace WorldTree
         /// </summary>
         /// <param name="vector">指向向量</param>
         /// <returns>return : 欧拉角(360度)</returns>
-        public static Vector3 ToEulerAngle(this Vector3 vector)
+        public static Vector3Float ToEulerAngle(this Vector3Float vector)
         {
-            return Quaternion.LookRotation(vector).eulerAngles;
+            return QuaternionFloat.LookRotation(vector).eulerAngles;
         }
 
         /// <summary>
@@ -279,88 +275,13 @@ namespace WorldTree
         /// </summary>
         /// <param name="eulerAngles">欧拉角</param>
         /// <returns>转换的三维向量</returns>
-        public static Vector3 ToVector3(this Vector3 eulerAngles)
+        public static Vector3Float ToVector3(this Vector3Float eulerAngles)
         {
-            Vector3 vector = new Vector3(0, 0, 1);
-            vector = Quaternion.AngleAxis(eulerAngles.x, -Vector3.left) * vector; //算出旋转后的向量
-            vector = Quaternion.AngleAxis(eulerAngles.y, Vector3.up) * vector; //算出旋转后的向量
+            Vector3Float vector = new Vector3Float(0, 0, 1);
+            vector = QuaternionFloat.AngleAxis(eulerAngles.x, -Vector3Float.Left) * vector; //算出旋转后的向量
+            vector = QuaternionFloat.AngleAxis(eulerAngles.y, Vector3Float.Up) * vector; //算出旋转后的向量
 
             return vector;
-        }
-
-
-
-
-        //四元数计算源码？
-        public static Quaternion LookRotation(Vector3 forward, Vector3 upwards)
-        {
-            //如果forward和upwards相同，则返回单位四元数
-            if (forward == upwards || forward == -upwards)
-            {
-                return Quaternion.identity;
-            }
-
-            //计算向量间的旋转
-            Vector3 right = Vector3.Cross(upwards, forward);
-            upwards = Vector3.Cross(forward, right);
-            forward.Normalize();
-            upwards.Normalize();
-            right.Normalize();
-
-            //根据向量构造四元数
-            float m00 = right.x;
-            float m01 = upwards.x;
-            float m02 = forward.x;
-            float m10 = right.y;
-            float m11 = upwards.y;
-            float m12 = forward.y;
-            float m20 = right.z;
-            float m21 = upwards.z;
-            float m22 = forward.z;
-
-            float num8 = (m00 + m11) + m22;
-            Quaternion quaternion = new Quaternion();
-
-            if (num8 > 0f)
-            {
-                float num = Mathf.Sqrt(num8 + 1f);
-                quaternion.w = num * 0.5f;
-                num = 0.5f / num;
-                quaternion.x = (m12 - m21) * num;
-                quaternion.y = (m20 - m02) * num;
-                quaternion.z = (m01 - m10) * num;
-                return quaternion;
-            }
-
-            if ((m00 >= m11) && (m00 >= m22))
-            {
-                float num7 = Mathf.Sqrt(((1f + m00) - m11) - m22);
-                float num4 = 0.5f / num7;
-                quaternion.x = 0.5f * num7;
-                quaternion.y = (m01 + m10) * num4;
-                quaternion.z = (m02 + m20) * num4;
-                quaternion.w = (m12 - m21) * num4;
-                return quaternion;
-            }
-
-            if (m11 > m22)
-            {
-                float num6 = Mathf.Sqrt(((1f + m11) - m00) - m22);
-                float num3 = 0.5f / num6;
-                quaternion.x = (m10 + m01) * num3;
-                quaternion.y = 0.5f * num6;
-                quaternion.z = (m21 + m12) * num3;
-                quaternion.w = (m20 - m02) * num3;
-                return quaternion;
-            }
-
-            float num5 = Mathf.Sqrt(((1f + m22) - m00) - m11);
-            float num2 = 0.5f / num5;
-            quaternion.x = (m20 + m02) * num2;
-            quaternion.y = (m21 + m12) * num2;
-            quaternion.z = 0.5f * num5;
-            quaternion.w = (m01 - m10) * num2;
-            return quaternion;
         }
     }
 }

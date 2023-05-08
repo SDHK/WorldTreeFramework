@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 
 namespace WorldTree
 {
@@ -226,47 +227,53 @@ namespace WorldTree
                 return (double)num > 9.999999747378752E-06 ? this / num : Zero;
             }
         }
-       
-    }
 
-    public static partial class Vector3FloatRule
-    {
+
+        #region 方法
+
+        /// <summary>
+        /// 使这个向量的大小为1。
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Normalize()
+        {
+            float num = this.magnitude;
+            if ((double)num > 9.999999747378752E-06)
+                this = this / num;
+            else
+                this = Vector3Float.Zero;
+        }
+
         /// <summary>
         /// 设置
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Set(this Vector3Float self, float newX, float newY, float newZ)
+        public void Set(float newX, float newY, float newZ)
         {
-            self.x = newX;
-            self.y = newY;
-            self.z = newZ;
+            this.x = newX;
+            this.y = newY;
+            this.z = newZ;
         }
 
         /// <summary>
         /// 轴 乘等于
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Scale(this Vector3Float self, Vector3Float scale)
+        public  void Scale( Vector3Float scale)
         {
-            self.x *= scale.x;
-            self.y *= scale.y;
-            self.z *= scale.z;
-        }
-
-        /// <summary>
-        /// 使这个向量的大小为1。
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3Float Normalize(Vector3Float a)
-        {
-            float num = a.magnitude;
-            return (double)num > 9.999999747378752E-06 ? a / num : Vector3Float.Zero;
+            this.x *= scale.x;
+            this.y *= scale.y;
+            this.z *= scale.z;
         }
 
         /// <summary>
         /// 2d向量转3d向量 对应到XZ
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3Float ToVector2FloatXZ(this Vector2Float vector) => new Vector3Float(vector.x, 0, vector.y);
+        public  Vector3Float ToVector2FloatXZ() => new Vector3Float(this.x, 0, this.y);
+     
+        #endregion
     }
+
+
 }

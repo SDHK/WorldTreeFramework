@@ -114,7 +114,7 @@ namespace WorldTree
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object other) => other is QuaternionFloat other1 && this.Equals(other1);
-       
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(QuaternionFloat other) => this.x.Equals(other.x) && this.y.Equals(other.y) && this.z.Equals(other.z) && this.w.Equals(other.w);
 
@@ -188,9 +188,12 @@ namespace WorldTree
             }
         }
 
-
-        //四元数计算源码？
-        public static QuaternionFloat AngleAxis(float angle, Vector3 axis)
+        /// <summary>
+        /// 创建一个旋转
+        /// </summary>
+        /// <param name="angle">角度</param>
+        /// <param name="axis">轴</param>
+        public static QuaternionFloat AngleAxis(float angle, Vector3Float axis)
         {
             //将角度转换为弧度
             float rad = MathFloat.Deg2Rad * angle;
@@ -206,16 +209,89 @@ namespace WorldTree
             float cos = MathFloat.Cos(halfAngle);
 
             //将向量与sin值相乘并乘以四元数的W分量
-            Vector3 scaledAxis = axis * sin;
+            Vector3Float scaledAxis = axis * sin;
             return new QuaternionFloat(scaledAxis.x, scaledAxis.y, scaledAxis.z, cos);
         }
 
-    }
+        /// <summary>
+        /// 创建一个旋转
+        /// </summary>
+        public static Quaternion LookRotation(Vector3Float forward) => LookRotation(forward, Vector3Float.Up);
 
-    public static partial class QuaternionFloatRule
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Dot(this QuaternionFloat a, QuaternionFloat b) => (float)((double)a.x * (double)b.x + (double)a.y * (double)b.y + (double)a.z * (double)b.z + (double)a.w * (double)b.w);
+        /// <summary>
+        /// 创建一个旋转
+        /// </summary>
+        public static Quaternion LookRotation(Vector3Float forward, Vector3Float upwards)
+        {
+            //如果forward和upwards相同，则返回单位四元数
+            if (forward == upwards || forward == -upwards)
+            {
+                return Quaternion.identity;
+            }
+
+            //计算向量间的旋转
+            Vector3 right = Vector3.Cross(upwards, forward);
+            upwards = Vector3.Cross(forward, right);
+            forward.Normalize();
+            upwards.Normalize();
+            right.Normalize();
+
+            //根据向量构造四元数
+            float m00 = right.x;
+            float m01 = upwards.x;
+            float m02 = forward.x;
+            float m10 = right.y;
+            float m11 = upwards.y;
+            float m12 = forward.y;
+            float m20 = right.z;
+            float m21 = upwards.z;
+            float m22 = forward.z;
+
+            float num8 = (m00 + m11) + m22;
+            Quaternion quaternion = new Quaternion();
+
+            if (num8 > 0f)
+            {
+                float num = Mathf.Sqrt(num8 + 1f);
+                quaternion.w = num * 0.5f;
+                num = 0.5f / num;
+                quaternion.x = (m12 - m21) * num;
+                quaternion.y = (m20 - m02) * num;
+                quaternion.z = (m01 - m10) * num;
+                return quaternion;
+            }
+
+            if ((m00 >= m11) && (m00 >= m22))
+            {
+                float num7 = Mathf.Sqrt(((1f + m00) - m11) - m22);
+                float num4 = 0.5f / num7;
+                quaternion.x = 0.5f * num7;
+                quaternion.y = (m01 + m10) * num4;
+                quaternion.z = (m02 + m20) * num4;
+                quaternion.w = (m12 - m21) * num4;
+                return quaternion;
+            }
+
+            if (m11 > m22)
+            {
+                float num6 = Mathf.Sqrt(((1f + m11) - m00) - m22);
+                float num3 = 0.5f / num6;
+                quaternion.x = (m10 + m01) * num3;
+                quaternion.y = 0.5f * num6;
+                quaternion.z = (m21 + m12) * num3;
+                quaternion.w = (m20 - m02) * num3;
+                return quaternion;
+            }
+
+            float num5 = Mathf.Sqrt(((1f + m22) - m00) - m11);
+            float num2 = 0.5f / num5;
+            quaternion.x = (m20 + m02) * num2;
+            quaternion.y = (m21 + m12) * num2;
+            quaternion.z = 0.5f * num5;
+            quaternion.w = (m01 - m10) * num2;
+            return quaternion;
+        }
+
 
     }
 }
