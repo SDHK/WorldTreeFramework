@@ -8,33 +8,30 @@
 */
 
 using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using Unity.VisualScripting;
+using static Unity.Mathematics.math;
 
 namespace WorldTree
 {
     public partial struct Matrix4x4Float : IEquatable<Matrix4x4Float>
     {
+        // memory layout:
+        //
+        //                row no (=vertical)
+        //               |  0   1   2   3
+        //            ---+----------------
+        //            0  | m00 m10 m20 m30
+        // column no  1  | m01 m11 m21 m31
+        // (=horiz)   2  | m02 m12 m22 m32
+        //            3  | m03 m13 m23 m33
 
-        public float m00;
-        public float m10;
-        public float m20;
-        public float m30;
-
-        public float m01;
-        public float m11;
-        public float m21;
-        public float m31;
-
-        public float m02;
-        public float m12;
-        public float m22;
-        public float m32;
-
-        public float m03;
-        public float m13;
-        public float m23;
-        public float m33;
+        public float m00, m10, m20, m30;
+        public float m01, m11, m21, m31;
+        public float m02, m12, m22, m32;
+        public float m03, m13, m23, m33;
 
 
         private static readonly Matrix4x4Float zeroMatrix = new Matrix4x4Float(new Vector4Float(0.0f, 0.0f, 0.0f, 0.0f), new Vector4Float(0.0f, 0.0f, 0.0f, 0.0f), new Vector4Float(0.0f, 0.0f, 0.0f, 0.0f), new Vector4Float(0.0f, 0.0f, 0.0f, 0.0f));
@@ -221,99 +218,117 @@ namespace WorldTree
 
         public static bool operator !=(Matrix4x4Float lhs, Matrix4x4Float rhs) => !(lhs == rhs);
 
-
-
-
-        ///// <summary>
-        ///// 返回在空间中变换的平面。
-        ///// </summary>
-        //public PlaneFloat TransformPlane(PlaneFloat plane)
-        //{
-        //    Matrix4x4Float inverse = this.inverse;
-        //    float x = plane.normal.x;
-        //    float y = plane.normal.y;
-        //    float z = plane.normal.z;
-        //    float distance = plane.distance;
-        //    return new PlaneFloat(new Vector3Float((float)((double)inverse.m00 * (double)x + (double)inverse.m10 * (double)y + (double)inverse.m20 * (double)z + (double)inverse.m30 * (double)distance), (float)((double)inverse.m01 * (double)x + (double)inverse.m11 * (double)y + (double)inverse.m21 * (double)z + (double)inverse.m31 * (double)distance), (float)((double)inverse.m02 * (double)x + (double)inverse.m12 * (double)y + (double)inverse.m22 * (double)z + (double)inverse.m32 * (double)distance)), (float)((double)inverse.m03 * (double)x + (double)inverse.m13 * (double)y + (double)inverse.m23 * (double)z + (double)inverse.m33 * (double)distance));
-        //}
-
-
         public bool Equals(Matrix4x4Float other)
         {
             throw new NotImplementedException();
         }
-    }
-    public static partial class Matrix4x4FloatRule
-    {
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override string ToString()
+        {
+            return ToString(null, null);
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
+        public string ToString(string format)
+        {
+            return ToString(format, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            if (string.IsNullOrEmpty(format))
+                format = "F5";
+            if (formatProvider == null)
+                formatProvider = CultureInfo.InvariantCulture.NumberFormat;
+            return string.Format("{0}\t{1}\t{2}\t{3}\n{4}\t{5}\t{6}\t{7}\n{8}\t{9}\t{10}\t{11}\n{12}\t{13}\t{14}\t{15}\n",
+                m00.ToString(format, formatProvider), m01.ToString(format, formatProvider), m02.ToString(format, formatProvider), m03.ToString(format, formatProvider),
+                m10.ToString(format, formatProvider), m11.ToString(format, formatProvider), m12.ToString(format, formatProvider), m13.ToString(format, formatProvider),
+                m20.ToString(format, formatProvider), m21.ToString(format, formatProvider), m22.ToString(format, formatProvider), m23.ToString(format, formatProvider),
+                m30.ToString(format, formatProvider), m31.ToString(format, formatProvider), m32.ToString(format, formatProvider), m33.ToString(format, formatProvider));
+        }
 
         /// <summary>
-        ///   <para>Get a column of the matrix.</para>
+        /// 这个矩阵的逆。(只读)
         /// </summary>
-        public static Vector4Float GetColumn(this Matrix4x4Float self, int index)
+        public Matrix4x4Float inverse => Matrix4x4Float.Inverse(this);
+
+        public Vector4Float Column0 => new(this.m00, this.m10, this.m20, this.m30);
+        public Vector4Float Column1 => new(this.m01, this.m11, this.m21, this.m31);
+        public Vector4Float Column2 => new(this.m02, this.m12, this.m22, this.m32);
+        public Vector4Float Column3 => new(this.m03, this.m13, this.m23, this.m33);
+
+        public Vector4Float Row0 => new(this.m00, this.m01, this.m02, this.m03);
+        public Vector4Float Row1 => new(this.m10, this.m11, this.m12, this.m13);
+        public Vector4Float Row2 => new(this.m20, this.m21, this.m22, this.m23);
+        public Vector4Float Row3 => new(this.m30, this.m31, this.m32, this.m33);
+
+        #region 方法
+
+
+        /// <summary>
+        /// 得到矩阵的一列。
+        /// </summary>
+        public Vector4Float GetColumn(int index)
         {
             switch (index)
             {
                 case 0:
-                    return new Vector4Float(self.m00, self.m10, self.m20, self.m30);
+                    return Column0;
                 case 1:
-                    return new Vector4Float(self.m01, self.m11, self.m21, self.m31);
+                    return Column1;
                 case 2:
-                    return new Vector4Float(self.m02, self.m12, self.m22, self.m32);
+                    return Column2;
                 case 3:
-                    return new Vector4Float(self.m03, self.m13, self.m23, self.m33);
+                    return Column3;
                 default:
                     throw new IndexOutOfRangeException("Invalid column index!");
             }
         }
 
         /// <summary>
-        ///   <para>Returns a row of the matrix.</para>
+        /// 返回矩阵的一行。
         /// </summary>
-        public static Vector4Float GetRow(this Matrix4x4Float self, int index)
+        public Vector4Float GetRow(int index)
         {
             switch (index)
             {
                 case 0:
-                    return new Vector4Float(self.m00, self.m01, self.m02, self.m03);
+                    return Row0;
                 case 1:
-                    return new Vector4Float(self.m10, self.m11, self.m12, self.m13);
+                    return Row1;
                 case 2:
-                    return new Vector4Float(self.m20, self.m21, self.m22, self.m23);
+                    return Row2;
                 case 3:
-                    return new Vector4Float(self.m30, self.m31, self.m32, self.m33);
+                    return Row3;
                 default:
                     throw new IndexOutOfRangeException("Invalid row index!");
             }
         }
 
         /// <summary>
-        ///   <para>Sets a column of the matrix.</para>
+        /// 设置矩阵的一列。
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="column"></param>
-        public static void SetColumn(this Matrix4x4Float self, int index, Vector4Float column)
+        public void SetColumn(int index, Vector4Float column)
         {
-            self[0, index] = column.x;
-            self[1, index] = column.y;
-            self[2, index] = column.z;
-            self[3, index] = column.w;
+            this[0, index] = column.x;
+            this[1, index] = column.y;
+            this[2, index] = column.z;
+            this[3, index] = column.w;
         }
 
         /// <summary>
-        ///   <para>Sets a row of the matrix.</para>
+        /// 设置矩阵的一行。
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="row"></param>
-        public static void SetRow(this Matrix4x4Float self, int index, Vector4Float row)
+        public void SetRow(int index, Vector4Float row)
         {
-            self[index, 0] = row.x;
-            self[index, 1] = row.y;
-            self[index, 2] = row.z;
-            self[index, 3] = row.w;
+            this[index, 0] = row.x;
+            this[index, 1] = row.y;
+            this[index, 2] = row.z;
+            this[index, 3] = row.w;
         }
-
-
-
 
         /// <summary>
         /// 创建缩放矩阵。
@@ -456,7 +471,91 @@ namespace WorldTree
             return matrix;
         }
 
+        /// <summary>
+        /// 逆矩阵
+        /// </summary>
+        public static Matrix4x4Float Inverse(Matrix4x4Float m)
+        {
+            Vector4Float c0 = m.GetColumn(0);
+            Vector4Float c1 = m.GetColumn(1);
+            Vector4Float c2 = m.GetColumn(2);
+            Vector4Float c3 = m.GetColumn(3);
 
+            Vector4Float r0y_r1y_r0x_r1x = new(c1.x, c1.y, c0.x, c0.y);
+            Vector4Float r0z_r1z_r0w_r1w = new(c2.x, c2.y, c3.x, c3.y);
+            Vector4Float r2y_r3y_r2x_r3x = new(c0.x, c0.y, c1.x, c1.y);
+            Vector4Float r2z_r3z_r2w_r3w = new(c3.x, c3.y, c2.x, c2.y);
+
+            Vector4Float r1y_r2y_r1x_r2x = new(c1.y, c1.z, c0.y, c0.z);
+            Vector4Float r1z_r2z_r1w_r2w = new(c2.y, c2.z, c3.y, c3.z);
+            Vector4Float r3y_r0y_r3x_r0x = new(c1.w, c1.x, c0.w, c0.x);
+            Vector4Float r3z_r0z_r3w_r0w = new(c2.w, c2.x, c3.w, c3.x);
+
+            Vector4Float r0_wzyx = new(r0z_r1z_r0w_r1w.z, r0z_r1z_r0w_r1w.x, r0y_r1y_r0x_r1x.x, r0y_r1y_r0x_r1x.z);
+            Vector4Float r1_wzyx = new(r0z_r1z_r0w_r1w.w, r0z_r1z_r0w_r1w.y, r0y_r1y_r0x_r1x.y, r0y_r1y_r0x_r1x.w);
+            Vector4Float r2_wzyx = new(r2z_r3z_r2w_r3w.z, r2z_r3z_r2w_r3w.x, r2y_r3y_r2x_r3x.x, r2y_r3y_r2x_r3x.z);
+            Vector4Float r3_wzyx = new(r2z_r3z_r2w_r3w.w, r2z_r3z_r2w_r3w.y, r2y_r3y_r2x_r3x.y, r2y_r3y_r2x_r3x.w);
+            Vector4Float r0_xyzw = new(r0y_r1y_r0x_r1x.z, r0y_r1y_r0x_r1x.x, r0z_r1z_r0w_r1w.x, r0z_r1z_r0w_r1w.z);
+
+            // Calculate remaining inner term pairs. inner terms have zw=-xy, so we only have to calculate xy and can pack two pairs per vector.
+            // 计算剩余的内部项对。内项有zw=-xy，所以我们只需要计算xy每个向量可以包含两对向量。
+            Vector4Float inner12_23 = r1y_r2y_r1x_r2x * r2z_r3z_r2w_r3w - r1z_r2z_r1w_r2w * r2y_r3y_r2x_r3x;
+            Vector4Float inner02_13 = r0y_r1y_r0x_r1x * r2z_r3z_r2w_r3w - r0z_r1z_r0w_r1w * r2y_r3y_r2x_r3x;
+            Vector4Float inner30_01 = r3z_r0z_r3w_r0w * r0y_r1y_r0x_r1x - r3y_r0y_r3x_r0x * r0z_r1z_r0w_r1w;
+
+            // Expand inner terms back to 4 components. zw signs still need to be flipped
+            // 将内部项展开回4个分量。Zw标志仍然需要被翻转
+            Vector4Float inner12 = new(inner12_23.x, inner12_23.z, inner12_23.z, inner12_23.x);
+            Vector4Float inner23 = new(inner12_23.y, inner12_23.w, inner12_23.w, inner12_23.y);
+
+            Vector4Float inner02 = new(inner02_13.x, inner02_13.z, inner02_13.z, inner02_13.x);
+            Vector4Float inner13 = new(inner02_13.y, inner02_13.w, inner02_13.w, inner02_13.y);
+
+            // Calculate minors
+            Vector4Float minors0 = r3_wzyx * inner12 - r2_wzyx * inner13 + r1_wzyx * inner23;
+
+            Vector4Float denom = r0_xyzw * minors0;
+
+            // Horizontal sum of denominator. Free sign flip of z and w compensates for missing flip in inner terms.
+            // 分母的水平和。z和w的自由符号翻转弥补了内部项中缺失的翻转。
+            denom += new Vector4Float(denom.y, denom.x, denom.w, denom.z);   // x+y        x+y            z+w            z+w
+            denom -= new Vector4Float(denom.z, denom.z, denom.x, denom.x);   // x+y-z-w  x+y-z-w        z+w-x-y        z+w-x-y
+
+            Vector4Float rcp_denom_ppnn = Vector4Float.One / denom;
+            Matrix4x4Float res = new();
+            res.SetColumn(0, minors0 * rcp_denom_ppnn);
+
+            Vector4Float inner30 = new(inner30_01.x, inner30_01.z, inner30_01.z, inner30_01.x);
+            Vector4Float inner01 = new(inner30_01.y, inner30_01.w, inner30_01.w, inner30_01.y);
+
+            Vector4Float minors1 = r2_wzyx * inner30 - r0_wzyx * inner23 - r3_wzyx * inner02;
+            res.SetColumn(1, minors1 * rcp_denom_ppnn);
+
+            Vector4Float minors2 = r0_wzyx * inner13 - r1_wzyx * inner30 - r3_wzyx * inner01;
+            res.SetColumn(2, minors2 * rcp_denom_ppnn);
+
+            Vector4Float minors3 = r1_wzyx * inner02 - r0_wzyx * inner12 + r2_wzyx * inner01;
+            res.SetColumn(2, minors3 * rcp_denom_ppnn);
+
+            return res;
+        }
+
+        //!!!!
+
+        /// <summary>
+        /// 返回在空间中变换的平面。
+        /// </summary>
+        public PlaneFloat TransformPlane(PlaneFloat plane)
+        {
+            Matrix4x4Float inverse = this.inverse;
+            float x = plane.normal.x;
+            float y = plane.normal.y;
+            float z = plane.normal.z;
+            float distance = plane.distance;
+            return new PlaneFloat(new Vector3Float((float)((double)inverse.m00 * (double)x + (double)inverse.m10 * (double)y + (double)inverse.m20 * (double)z + (double)inverse.m30 * (double)distance), (float)((double)inverse.m01 * (double)x + (double)inverse.m11 * (double)y + (double)inverse.m21 * (double)z + (double)inverse.m31 * (double)distance), (float)((double)inverse.m02 * (double)x + (double)inverse.m12 * (double)y + (double)inverse.m22 * (double)z + (double)inverse.m32 * (double)distance)), (float)((double)inverse.m03 * (double)x + (double)inverse.m13 * (double)y + (double)inverse.m23 * (double)z + (double)inverse.m33 * (double)distance));
+        }
+
+        #endregion
 
 
     }

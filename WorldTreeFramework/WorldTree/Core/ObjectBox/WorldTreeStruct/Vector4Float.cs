@@ -149,6 +149,12 @@ namespace WorldTree
         public static Vector4Float operator -(Vector4Float a, Vector4Float b) => new(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector4Float operator *(Vector4Float a, Vector4Float b) => new Vector4Float(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector4Float operator /(Vector4Float a, Vector4Float b) => new Vector4Float(a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4Float operator -(Vector4Float a) => new Vector4Float(-a.x, -a.y, -a.z, -a.w);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -246,7 +252,7 @@ namespace WorldTree
         /// 设置
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public  void Set( float newX, float newY, float newZ, float newW)
+        public void Set(float newX, float newY, float newZ, float newW)
         {
             this.x = newX;
             this.y = newY;
@@ -258,7 +264,7 @@ namespace WorldTree
         /// 轴 乘等于
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public  void Scale( Vector4Float scale)
+        public void Scale(Vector4Float scale)
         {
             this.x *= scale.x;
             this.y *= scale.y;

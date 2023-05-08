@@ -142,7 +142,7 @@ namespace WorldTree
             get
             {
                 //将四元数转换为旋转矩阵
-                Matrix4x4Float m = Matrix4x4FloatRule.TRS(Vector3Float.Zero, this, Vector3Float.One);
+                Matrix4x4Float m = Matrix4x4Float.TRS(Vector3Float.Zero, this, Vector3Float.One);
 
                 //从旋转矩阵中提取欧拉角
                 Vector3Float euler = default;
