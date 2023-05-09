@@ -10,9 +10,6 @@
 using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using static Unity.Mathematics.math;
 
 namespace WorldTree
 {
@@ -218,9 +215,35 @@ namespace WorldTree
 
         public static bool operator !=(Matrix4x4Float lhs, Matrix4x4Float rhs) => !(lhs == rhs);
 
+
+        public override int GetHashCode()
+        {
+            Vector4Float column = this.GetColumn(0);
+            int hashCode = column.GetHashCode();
+            column = this.GetColumn(1);
+            int num1 = column.GetHashCode() << 2;
+            int num2 = hashCode ^ num1;
+            column = this.GetColumn(2);
+            int num3 = column.GetHashCode() >> 2;
+            int num4 = num2 ^ num3;
+            column = this.GetColumn(3);
+            int num5 = column.GetHashCode() >> 1;
+            return num4 ^ num5;
+        }
+        public override bool Equals(object other) => other is Matrix4x4Float other1 && this.Equals(other1);
+
         public bool Equals(Matrix4x4Float other)
         {
-            throw new NotImplementedException();
+            bool isEquals = true;
+            for (int i = 0; i < 16; i++)
+            {
+                if (this[i] != other[i])
+                {
+                    isEquals = false;
+                    break;
+                }
+            }
+            return isEquals;
         }
 
 
@@ -331,6 +354,262 @@ namespace WorldTree
         }
 
         /// <summary>
+        /// 创建一个正交投影矩阵。
+        /// </summary>
+        /// <param name="width">宽</param>
+        /// <param name="height">高</param>
+        /// <param name="zNearPlane">近平面</param>
+        /// <param name="zFarPlane">远平面</param>
+        public static Matrix4x4Float CreateOrthographic(
+          float width,
+          float height,
+          float zNearPlane,
+          float zFarPlane)
+        {
+            Matrix4x4Float orthographic;
+            orthographic.m00 = 2f / width;
+            orthographic.m01 = orthographic.m02 = orthographic.m03 = 0.0f;
+            orthographic.m11 = 2f / height;
+            orthographic.m10 = orthographic.m12 = orthographic.m13 = 0.0f;
+            orthographic.m22 = (float)(1.0 / ((double)zNearPlane - (double)zFarPlane));
+            orthographic.m20 = orthographic.m21 = orthographic.m23 = 0.0f;
+            orthographic.m30 = orthographic.m31 = 0.0f;
+            orthographic.m32 = zNearPlane / (zNearPlane - zFarPlane);
+            orthographic.m33 = 1f;
+            return orthographic;
+        }
+        /// <summary>
+        /// 创建一个正交投影矩阵。
+        /// </summary>
+        /// <param name="left">左</param>
+        /// <param name="right">右</param>
+        /// <param name="bottom">底</param>
+        /// <param name="top">顶</param>
+        /// <param name="zNearPlane">近平面</param>
+        /// <param name="zFarPlane">远平面</param>
+        public static Matrix4x4Float CreateOrthographicOffCenter(
+             float left,
+             float right,
+             float bottom,
+             float top,
+             float zNearPlane,
+             float zFarPlane)
+        {
+            Matrix4x4Float orthographicOffCenter;
+            orthographicOffCenter.m00 = (float)(2.0 / ((double)right - (double)left));
+            orthographicOffCenter.m01 = orthographicOffCenter.m02 = orthographicOffCenter.m03 = 0.0f;
+            orthographicOffCenter.m11 = (float)(2.0 / ((double)top - (double)bottom));
+            orthographicOffCenter.m10 = orthographicOffCenter.m12 = orthographicOffCenter.m13 = 0.0f;
+            orthographicOffCenter.m22 = (float)(1.0 / ((double)zNearPlane - (double)zFarPlane));
+            orthographicOffCenter.m20 = orthographicOffCenter.m21 = orthographicOffCenter.m23 = 0.0f;
+            orthographicOffCenter.m30 = (float)(((double)left + (double)right) / ((double)left - (double)right));
+            orthographicOffCenter.m31 = (float)(((double)top + (double)bottom) / ((double)bottom - (double)top));
+            orthographicOffCenter.m32 = zNearPlane / (zNearPlane - zFarPlane);
+            orthographicOffCenter.m33 = 1f;
+            return orthographicOffCenter;
+        }
+
+        /// <summary>
+        /// 创建一个透视投影矩阵。
+        /// </summary>
+        /// <param name="width">宽</param>
+        /// <param name="height">高</param>
+        /// <param name="nearPlaneDistance">近平面</param>
+        /// <param name="farPlaneDistance">原平面</param>
+        public static Matrix4x4Float CreatePerspective(
+          float width,
+          float height,
+          float nearPlaneDistance,
+          float farPlaneDistance)
+        {
+            if ((double)nearPlaneDistance <= 0.0)
+                throw new ArgumentOutOfRangeException(nameof(nearPlaneDistance));
+            if ((double)farPlaneDistance <= 0.0)
+                throw new ArgumentOutOfRangeException(nameof(farPlaneDistance));
+            if ((double)nearPlaneDistance >= (double)farPlaneDistance)
+                throw new ArgumentOutOfRangeException(nameof(nearPlaneDistance));
+            Matrix4x4Float perspective;
+            perspective.m00 = 2f * nearPlaneDistance / width;
+            perspective.m01 = perspective.m02 = perspective.m03 = 0.0f;
+            perspective.m11 = 2f * nearPlaneDistance / height;
+            perspective.m10 = perspective.m12 = perspective.m13 = 0.0f;
+            perspective.m22 = farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+            perspective.m20 = perspective.m21 = 0.0f;
+            perspective.m23 = -1f;
+            perspective.m30 = perspective.m31 = perspective.m33 = 0.0f;
+            perspective.m32 = (float)((double)nearPlaneDistance * (double)farPlaneDistance / ((double)nearPlaneDistance - (double)farPlaneDistance));
+            return perspective;
+        }
+
+        /// <summary>
+        /// 创建一个透视投影矩阵
+        /// </summary>
+        /// <param name="left">左</param>
+        /// <param name="right">右</param>
+        /// <param name="bottom">底</param>
+        /// <param name="top">顶</param>
+        /// <param name="nearPlaneDistance">近平面</param>
+        /// <param name="farPlaneDistance">原平面</param>
+        public static Matrix4x4Float CreatePerspectiveOffCenter(
+          float left,
+          float right,
+          float bottom,
+          float top,
+          float nearPlaneDistance,
+          float farPlaneDistance)
+        {
+            if ((double)nearPlaneDistance <= 0.0)
+                throw new ArgumentOutOfRangeException(nameof(nearPlaneDistance));
+            if ((double)farPlaneDistance <= 0.0)
+                throw new ArgumentOutOfRangeException(nameof(farPlaneDistance));
+            if ((double)nearPlaneDistance >= (double)farPlaneDistance)
+                throw new ArgumentOutOfRangeException(nameof(nearPlaneDistance));
+            Matrix4x4Float perspectiveOffCenter;
+            perspectiveOffCenter.m00 = (float)(2.0 * (double)nearPlaneDistance / ((double)right - (double)left));
+            perspectiveOffCenter.m01 = perspectiveOffCenter.m02 = perspectiveOffCenter.m03 = 0.0f;
+            perspectiveOffCenter.m11 = (float)(2.0 * (double)nearPlaneDistance / ((double)top - (double)bottom));
+            perspectiveOffCenter.m10 = perspectiveOffCenter.m12 = perspectiveOffCenter.m13 = 0.0f;
+            perspectiveOffCenter.m20 = (float)(((double)left + (double)right) / ((double)right - (double)left));
+            perspectiveOffCenter.m21 = (float)(((double)top + (double)bottom) / ((double)top - (double)bottom));
+            perspectiveOffCenter.m22 = farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+            perspectiveOffCenter.m23 = -1f;
+            perspectiveOffCenter.m32 = (float)((double)nearPlaneDistance * (double)farPlaneDistance / ((double)nearPlaneDistance - (double)farPlaneDistance));
+            perspectiveOffCenter.m30 = perspectiveOffCenter.m31 = perspectiveOffCenter.m33 = 0.0f;
+            return perspectiveOffCenter;
+        }
+
+        /// <summary>
+        /// 创建观察矩阵
+        /// </summary>
+        /// <param name="cameraPosition">观察位置</param>
+        /// <param name="cameraTarget">观察目标</param>
+        /// <param name="cameraUpVector">观察者上方向量</param>
+        public static Matrix4x4Float CreateLookAt(
+          Vector3Float cameraPosition,
+          Vector3Float cameraTarget,
+          Vector3Float cameraUpVector)
+        {
+            Vector3Float vector3_1 = (cameraPosition - cameraTarget).normalized;
+            Vector3Float vector3_2 = (cameraUpVector.Cross(vector3_1)).normalized;
+            Vector3Float vector1 = vector3_1.Cross(vector3_2);
+            Matrix4x4Float lookAt;
+            lookAt.m00 = vector3_2.x;
+            lookAt.m01 = vector1.x;
+            lookAt.m02 = vector3_1.x;
+            lookAt.m03 = 0.0f;
+            lookAt.m10 = vector3_2.y;
+            lookAt.m11 = vector1.y;
+            lookAt.m12 = vector3_1.y;
+            lookAt.m13 = 0.0f;
+            lookAt.m20 = vector3_2.z;
+            lookAt.m21 = vector1.z;
+            lookAt.m22 = vector3_1.z;
+            lookAt.m23 = 0.0f;
+            lookAt.m30 = -(vector3_2.Dot(cameraPosition));
+            lookAt.m31 = -(vector1.Dot(cameraPosition));
+            lookAt.m32 = -(vector3_1.Dot(cameraPosition));
+            lookAt.m33 = 1f;
+            return lookAt;
+        }
+
+        /// <summary>
+        /// 创建一个坐标系的变换矩阵
+        /// </summary>
+        /// <param name="position">位置</param>
+        /// <param name="forward">前方</param>
+        /// <param name="up">上方</param>
+        public static Matrix4x4Float CreateWorld(Vector3Float position, Vector3Float forward, Vector3Float up)
+        {
+            Vector3Float vector3_1 = -forward.normalized;
+            Vector3Float vector2 = (up.Cross(vector3_1)).normalized;
+            Vector3Float vector3_2 = vector3_1.Cross(vector2);
+            Matrix4x4Float world;
+            world.m00 = vector2.x;
+            world.m01 = vector2.y;
+            world.m02 = vector2.z;
+            world.m03 = 0.0f;
+            world.m10 = vector3_2.x;
+            world.m11 = vector3_2.y;
+            world.m12 = vector3_2.z;
+            world.m13 = 0.0f;
+            world.m20 = vector3_1.x;
+            world.m21 = vector3_1.y;
+            world.m22 = vector3_1.z;
+            world.m23 = 0.0f;
+            world.m30 = position.x;
+            world.m31 = position.y;
+            world.m32 = position.z;
+            world.m33 = 1f;
+            return world;
+        }
+
+        /// <summary>
+        /// 创建阴影矩阵
+        /// </summary>
+        /// <param name="lightDirection">光照向量</param>
+        /// <param name="plane">平面</param>
+        public static Matrix4x4Float CreateShadow(Vector3Float lightDirection, PlaneFloat plane)
+        {
+            PlaneFloat plane1 = plane.normalized;
+            float num1 = (float)((double)plane1.normal.x * (double)lightDirection.x + (double)plane1.normal.y * (double)lightDirection.y + (double)plane1.normal.z * (double)lightDirection.z);
+            float num2 = -plane1.normal.x;
+            float num3 = -plane1.normal.y;
+            float num4 = -plane1.normal.z;
+            float num5 = -plane1.distance;
+            Matrix4x4Float shadow;
+            shadow.m00 = num2 * lightDirection.x + num1;
+            shadow.m10 = num3 * lightDirection.x;
+            shadow.m20 = num4 * lightDirection.x;
+            shadow.m30 = num5 * lightDirection.x;
+            shadow.m01 = num2 * lightDirection.y;
+            shadow.m11 = num3 * lightDirection.y + num1;
+            shadow.m21 = num4 * lightDirection.y;
+            shadow.m31 = num5 * lightDirection.y;
+            shadow.m02 = num2 * lightDirection.z;
+            shadow.m12 = num3 * lightDirection.z;
+            shadow.m22 = num4 * lightDirection.z + num1;
+            shadow.m32 = num5 * lightDirection.z;
+            shadow.m03 = 0.0f;
+            shadow.m13 = 0.0f;
+            shadow.m23 = 0.0f;
+            shadow.m33 = num1;
+            return shadow;
+        }
+
+        /// <summary>
+        /// 创建反射矩阵
+        /// </summary>
+        /// <param name="value">反射平面</param>
+        public static Matrix4x4Float CreateReflection(PlaneFloat value)
+        {
+            value = value.Normalize();
+            float x = value.normal.x;
+            float y = value.normal.y;
+            float z = value.normal.z;
+            float num1 = -2f * x;
+            float num2 = -2f * y;
+            float num3 = -2f * z;
+            Matrix4x4Float reflection;
+            reflection.m00 = (float)((double)num1 * (double)x + 1.0);
+            reflection.m01 = num2 * x;
+            reflection.m02 = num3 * x;
+            reflection.m03 = 0.0f;
+            reflection.m10 = num1 * y;
+            reflection.m11 = (float)((double)num2 * (double)y + 1.0);
+            reflection.m12 = num3 * y;
+            reflection.m13 = 0.0f;
+            reflection.m20 = num1 * z;
+            reflection.m21 = num2 * z;
+            reflection.m22 = (float)((double)num3 * (double)z + 1.0);
+            reflection.m23 = 0.0f;
+            reflection.m30 = num1 * value.distance;
+            reflection.m31 = num2 * value.distance;
+            reflection.m32 = num3 * value.distance;
+            reflection.m33 = 1f;
+            return reflection;
+        }
+
+        /// <summary>
         /// 创建缩放矩阵。
         /// </summary>
         public static Matrix4x4Float Scale(Vector3Float vector)
@@ -419,7 +698,7 @@ namespace WorldTree
 
 
         /// <summary>
-        /// 创建一个新的矩阵
+        /// 创建一个转换矩阵
         /// </summary>
         /// <param name="pos">位置</param>
         /// <param name="q">旋转</param>
@@ -540,7 +819,6 @@ namespace WorldTree
             return res;
         }
 
-        //!!!!
 
         /// <summary>
         /// 返回在空间中变换的平面。

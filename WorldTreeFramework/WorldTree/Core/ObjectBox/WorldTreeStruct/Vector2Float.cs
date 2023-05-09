@@ -22,14 +22,14 @@ namespace WorldTree
         public float y;
 
 
-        private static readonly Vector2Float zeroVector = new Vector2Float(0.0f, 0.0f);
-        private static readonly Vector2Float oneVector = new Vector2Float(1f, 1f);
-        private static readonly Vector2Float upVector = new Vector2Float(0.0f, 1f);
-        private static readonly Vector2Float downVector = new Vector2Float(0.0f, -1f);
-        private static readonly Vector2Float leftVector = new Vector2Float(-1f, 0.0f);
-        private static readonly Vector2Float rightVector = new Vector2Float(1f, 0.0f);
-        private static readonly Vector2Float positiveInfinityVector = new Vector2Float(float.PositiveInfinity, float.PositiveInfinity);
-        private static readonly Vector2Float negativeInfinityVector = new Vector2Float(float.NegativeInfinity, float.NegativeInfinity);
+        private static readonly Vector2Float zeroVector = new(0.0f, 0.0f);
+        private static readonly Vector2Float oneVector = new(1f, 1f);
+        private static readonly Vector2Float upVector = new(0.0f, 1f);
+        private static readonly Vector2Float downVector = new(0.0f, -1f);
+        private static readonly Vector2Float leftVector = new(-1f, 0.0f);
+        private static readonly Vector2Float rightVector = new(1f, 0.0f);
+        private static readonly Vector2Float positiveInfinityVector = new(float.PositiveInfinity, float.PositiveInfinity);
+        private static readonly Vector2Float negativeInfinityVector = new(float.NegativeInfinity, float.NegativeInfinity);
 
 
         /// <summary>
@@ -110,28 +110,28 @@ namespace WorldTree
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2Float operator +(Vector2Float a, Vector2Float b) => new Vector2Float(a.x + b.x, a.y + b.y);
+        public static Vector2Float operator +(Vector2Float a, Vector2Float b) => new(a.x + b.x, a.y + b.y);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2Float operator -(Vector2Float a, Vector2Float b) => new Vector2Float(a.x - b.x, a.y - b.y);
+        public static Vector2Float operator -(Vector2Float a, Vector2Float b) => new(a.x - b.x, a.y - b.y);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2Float operator *(Vector2Float a, Vector2Float b) => new Vector2Float(a.x * b.x, a.y * b.y);
+        public static Vector2Float operator *(Vector2Float a, Vector2Float b) => new(a.x * b.x, a.y * b.y);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2Float operator /(Vector2Float a, Vector2Float b) => new Vector2Float(a.x / b.x, a.y / b.y);
+        public static Vector2Float operator /(Vector2Float a, Vector2Float b) => new(a.x / b.x, a.y / b.y);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2Float operator -(Vector2Float a) => new Vector2Float(-a.x, -a.y);
+        public static Vector2Float operator -(Vector2Float a) => new(-a.x, -a.y);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2Float operator *(Vector2Float a, float d) => new Vector2Float(a.x * d, a.y * d);
+        public static Vector2Float operator *(Vector2Float a, float d) => new(a.x * d, a.y * d);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2Float operator *(float d, Vector2Float a) => new Vector2Float(a.x * d, a.y * d);
+        public static Vector2Float operator *(float d, Vector2Float a) => new(a.x * d, a.y * d);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2Float operator /(Vector2Float a, float d) => new Vector2Float(a.x / d, a.y / d);
+        public static Vector2Float operator /(Vector2Float a, float d) => new(a.x / d, a.y / d);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Vector2Float lhs, Vector2Float rhs)
@@ -145,10 +145,10 @@ namespace WorldTree
         public static bool operator !=(Vector2Float lhs, Vector2Float rhs) => !(lhs == rhs);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Vector2Float(Vector3Float v) => new Vector2Float(v.x, v.y);
+        public static implicit operator Vector2Float(Vector3Float v) => new(v.x, v.y);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Vector3Float(Vector2Float v) => new Vector3Float(v.x, v.y, 0.0f);
+        public static implicit operator Vector3Float(Vector2Float v) => new(v.x, v.y, 0.0f);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

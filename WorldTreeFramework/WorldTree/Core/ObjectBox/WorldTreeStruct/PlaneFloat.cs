@@ -7,8 +7,14 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
+
+    /// <summary>
+    /// 三维平面
+    /// </summary>
     public partial struct PlaneFloat
     {
         internal const int size = 16;
@@ -66,9 +72,33 @@ namespace WorldTree
             this.m_Distance = -(this.m_Normal.Dot(a));
         }
 
-
+        /// <summary>
+        /// 标准化平面
+        /// </summary>
+        public PlaneFloat normalized
+        {
+            get
+            {
+                return new PlaneFloat(this.normal, this.distance).Normalize();
+            }
+        }
 
         #region 方法
+
+        /// <summary>
+        /// 设置为标准化平面
+        /// </summary>
+        public PlaneFloat Normalize()
+        {
+            var sqrMagnitude = this.normal.sqrMagnitude;
+            if ((double)Math.Abs(sqrMagnitude - 1f) < 1.1920928955078125E-07)
+                return this;
+            float magnitude = (float)Math.Sqrt((double)sqrMagnitude);
+            this.normal /= magnitude;
+            this.distance /= magnitude;
+            return this;
+        }
+
 
         /// <summary>
         /// 使用平面内的点和法线来设置平面的方向。
@@ -97,7 +127,7 @@ namespace WorldTree
             this.m_Normal = -this.m_Normal;
             this.m_Distance = -this.m_Distance;
         }
-     
+
         #endregion
     }
 

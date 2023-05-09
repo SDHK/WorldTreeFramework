@@ -9,7 +9,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 
 namespace WorldTree
 {
@@ -216,22 +215,22 @@ namespace WorldTree
         /// <summary>
         /// 创建一个旋转
         /// </summary>
-        public static Quaternion LookRotation(Vector3Float forward) => LookRotation(forward, Vector3Float.Up);
+        public static QuaternionFloat LookRotation(Vector3Float forward) => LookRotation(forward, Vector3Float.Up);
 
         /// <summary>
         /// 创建一个旋转
         /// </summary>
-        public static Quaternion LookRotation(Vector3Float forward, Vector3Float upwards)
+        public static QuaternionFloat LookRotation(Vector3Float forward, Vector3Float upwards)
         {
             //如果forward和upwards相同，则返回单位四元数
             if (forward == upwards || forward == -upwards)
             {
-                return Quaternion.identity;
+                return QuaternionFloat.identity;
             }
 
             //计算向量间的旋转
-            Vector3 right = Vector3.Cross(upwards, forward);
-            upwards = Vector3.Cross(forward, right);
+            Vector3Float right = upwards.Cross(forward);
+            upwards = forward.Cross(right);
             forward.Normalize();
             upwards.Normalize();
             right.Normalize();
@@ -248,11 +247,11 @@ namespace WorldTree
             float m22 = forward.z;
 
             float num8 = (m00 + m11) + m22;
-            Quaternion quaternion = new Quaternion();
+            QuaternionFloat quaternion = new();
 
             if (num8 > 0f)
             {
-                float num = Mathf.Sqrt(num8 + 1f);
+                float num = (float)Math.Sqrt(num8 + 1f);
                 quaternion.w = num * 0.5f;
                 num = 0.5f / num;
                 quaternion.x = (m12 - m21) * num;
@@ -263,7 +262,7 @@ namespace WorldTree
 
             if ((m00 >= m11) && (m00 >= m22))
             {
-                float num7 = Mathf.Sqrt(((1f + m00) - m11) - m22);
+                float num7 = (float)Math.Sqrt(((1f + m00) - m11) - m22);
                 float num4 = 0.5f / num7;
                 quaternion.x = 0.5f * num7;
                 quaternion.y = (m01 + m10) * num4;
@@ -274,7 +273,7 @@ namespace WorldTree
 
             if (m11 > m22)
             {
-                float num6 = Mathf.Sqrt(((1f + m11) - m00) - m22);
+                float num6 = (float)Math.Sqrt(((1f + m11) - m00) - m22);
                 float num3 = 0.5f / num6;
                 quaternion.x = (m10 + m01) * num3;
                 quaternion.y = 0.5f * num6;
@@ -283,7 +282,7 @@ namespace WorldTree
                 return quaternion;
             }
 
-            float num5 = Mathf.Sqrt(((1f + m22) - m00) - m11);
+            float num5 = (float)Math.Sqrt(((1f + m22) - m00) - m11);
             float num2 = 0.5f / num5;
             quaternion.x = (m20 + m02) * num2;
             quaternion.y = (m21 + m12) * num2;
