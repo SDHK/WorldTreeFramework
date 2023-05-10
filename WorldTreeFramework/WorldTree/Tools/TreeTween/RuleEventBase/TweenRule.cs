@@ -19,6 +19,6 @@ namespace WorldTree
     /// <summary>
     /// 渐变法则
     /// </summary>
-    public abstract class TweenRule<T> : SendRuleBase<ITweenRule<T>, TreeTween<T>> where T : IEquatable<T> { }
+    public abstract class TweenRule<T> : SendRuleBase<TreeTween<T>, ITweenRule<T>> where T : IEquatable<T> { }
 
 }

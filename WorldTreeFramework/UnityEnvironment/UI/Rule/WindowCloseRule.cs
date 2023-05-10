@@ -16,5 +16,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口关闭系统
     /// </summary>
-    public abstract class WindowCloseRule<N> : SendRuleBase<IWindowCloseRule, N> where N : class,INode { }
+    public abstract class WindowCloseRule<N> : SendRuleBase<N, IWindowCloseRule> where N : class, INode { }
 }

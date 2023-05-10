@@ -169,9 +169,16 @@ namespace WorldTree
         {
             if (RuleType.IsGenericType) //判断法则类型是泛型
             {
-                //拿到法则父类第一个泛型就是节点类型
-                var GenericArguments =  RuleType.BaseType.GetGenericArguments();
-                self.GenericRuleTypeHashDictionary.GetValue(GenericArguments[0].GetGenericTypeDefinition()).Add(RuleType);
+                //遍历获取：法则父类第一个泛型就是节点类型
+                var BaseType = RuleType.BaseType;
+                var GenericArguments = BaseType.GetGenericArguments()[0];
+
+                while (BaseType != typeof(object) ? !GenericArguments.GetInterfaces().Contains(typeof(INode)) : false)
+                {
+                    BaseType = BaseType.BaseType;
+                    GenericArguments = BaseType.GetGenericArguments()[0];
+                }
+                self.GenericRuleTypeHashDictionary.GetValue(GenericArguments.GetGenericTypeDefinition()).Add(RuleType);
             }
             else
             {

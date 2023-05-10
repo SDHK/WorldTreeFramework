@@ -97,14 +97,18 @@ namespace WorldTree
         {
             World.Log("初始域启动！！");
 
-            //self.AddChild(out self.valueFloat);
-            //self.AddChild(out self.valueInt);
+            self.AddChild(out self.valueFloat);
+            self.AddChild(out self.valueInt);
 
-            //self.valueFloat.BindTwoWay(self.valueInt);
+            self.valueFloat.BindTwoWay(self.valueInt);
 
             //self.SendRule(default(EventAddRule), 1.01f);
+
+
             self.AddChild(out Test<float> test);
-            //test.SendRule(default(IGuiUpdateRule), 1.02f);
+
+
+            test.SendRule(default(EventTest<INode>), 1.02f);
 
         }
     }
@@ -168,12 +172,14 @@ namespace WorldTree
         }
     }
 
+    public interface IEventTest : ISendRule<float> { }
 
-    //class EventTest<T> : SendRuleBase<IGuiUpdateRule, Test<T>, float>
-    //{
-    //    public override void OnEvent(Test<T> self, float arg1)
-    //    {
-    //        World.Log("EventTest诡异尝试！！" + arg1);
-    //    }
-    //}
+    class EventTest<T> : SendRuleBase<Test<T>, IEventTest, float>
+    {
+        public override void OnEvent(Test<T> self, float arg1)
+        {
+            World.Log("EventTest诡异尝试！！" + arg1);
+        }
+    }
+  
 }

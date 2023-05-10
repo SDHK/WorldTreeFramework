@@ -20,5 +20,5 @@ namespace WorldTree
     /// <summary>
     /// 移除法则
     /// </summary>
-    public abstract class RemoveRule<N> : SendRuleBase<IRemoveRule, N> where N : class,INode { }
+    public abstract class RemoveRule<N> : SendRuleBase<N, IRemoveRule> where N : class, INode { }
 }

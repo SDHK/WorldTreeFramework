@@ -8,5 +8,5 @@
     /// <summary>
     /// LateUpdate法则
     /// </summary>
-    public abstract class LateUpdateRule<T> : SendRuleBase<ILateUpdateRule, T, float> where T : class, INode { }
+    public abstract class LateUpdateRule<T> : SendRuleBase<T, ILateUpdateRule, float> where T : class, INode { }
 }

@@ -19,5 +19,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口失焦系统
     /// </summary>
-    public abstract class WindowLostFocusRule<N> : SendRuleBase<IWindowLostFocusRule, N> where N : class,INode { }
+    public abstract class WindowLostFocusRule<N> : SendRuleBase<N, IWindowLostFocusRule> where N : class, INode { }
 }

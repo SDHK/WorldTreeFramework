@@ -19,6 +19,6 @@ namespace WorldTree
     /// <summary>
     /// 引用解除法则
     /// </summary>
-    public abstract class ReferencedRemoveRule<N> : SendRuleBase<IReferencedRemoveRule, N, INode> where N : class, INode { }
+    public abstract class ReferencedRemoveRule<N> : SendRuleBase<N, IReferencedRemoveRule, INode> where N : class, INode { }
 
 }

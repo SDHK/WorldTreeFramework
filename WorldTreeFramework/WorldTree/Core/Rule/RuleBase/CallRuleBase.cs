@@ -70,8 +70,8 @@ namespace WorldTree
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<R, N, OutT> : RuleBase<N, R>, ICallRule<OutT>
-    where N : class,INode
+    public abstract class CallRuleBase<N, R, OutT> : RuleBase<N, R>, ICallRule<OutT>
+    where N : class, INode
     where R : ICallRule<OutT>
     {
         public virtual OutT Invoke(INode self) => OnEvent(self as N);
@@ -80,8 +80,8 @@ namespace WorldTree
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<R, N, T1, OutT> : RuleBase<N, R>, ICallRule<T1, OutT>
-    where N : class,INode
+    public abstract class CallRuleBase<N, R, T1, OutT> : RuleBase<N, R>, ICallRule<T1, OutT>
+    where N : class, INode
     where R : ICallRule<T1, OutT>
     {
         public virtual OutT Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
@@ -90,8 +90,8 @@ namespace WorldTree
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<R, N, T1, T2, OutT> : RuleBase<N, R>, ICallRule<T1, T2, OutT>
-    where N : class,INode
+    public abstract class CallRuleBase<N, R, T1, T2, OutT> : RuleBase<N, R>, ICallRule<T1, T2, OutT>
+    where N : class, INode
     where R : ICallRule<T1, T2, OutT>
     {
         public virtual OutT Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
@@ -100,8 +100,8 @@ namespace WorldTree
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<R, N, T1, T2, T3, OutT> : RuleBase<N, R>, ICallRule<T1, T2, T3, OutT>
-    where N : class,INode
+    public abstract class CallRuleBase<N, R, T1, T2, T3, OutT> : RuleBase<N, R>, ICallRule<T1, T2, T3, OutT>
+    where N : class, INode
     where R : ICallRule<T1, T2, T3, OutT>
     {
         public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
@@ -110,8 +110,8 @@ namespace WorldTree
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<R, N, T1, T2, T3, T4, OutT> : RuleBase<N, R>, ICallRule<T1, T2, T3, T4, OutT>
-    where N : class,INode
+    public abstract class CallRuleBase<N, R, T1, T2, T3, T4, OutT> : RuleBase<N, R>, ICallRule<T1, T2, T3, T4, OutT>
+    where N : class, INode
     where R : ICallRule<T1, T2, T3, T4, OutT>
     {
         public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
@@ -120,8 +120,8 @@ namespace WorldTree
     /// <summary>
     /// 调用法则抽象基类
     /// </summary>
-    public abstract class CallRuleBase<R, N, T1, T2, T3, T4, T5, OutT> : RuleBase<N, R>, ICallRule<T1, T2, T3, T4, T5, OutT>
-    where N : class,INode
+    public abstract class CallRuleBase<N, R, T1, T2, T3, T4, T5, OutT> : RuleBase<N, R>, ICallRule<T1, T2, T3, T4, T5, OutT>
+    where N : class, INode
     where R : ICallRule<T1, T2, T3, T4, T5, OutT>
     {
         public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);

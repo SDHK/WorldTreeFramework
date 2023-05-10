@@ -19,14 +19,14 @@ namespace WorldTree
     /// <summary>
     /// 数值变化监听法则(同类型转换)
     /// </summary>
-    public abstract class ValueChangeRule<T1> : SendRuleBase<IValueChangeRule<T1>, TreeValueBase<T1>, T1>
+    public abstract class ValueChangeRule<T1> : SendRuleBase<TreeValueBase<T1>, IValueChangeRule<T1>, T1>
         where T1 : IEquatable<T1>
     { }
 
     /// <summary>
     /// 数值变化监听法则(不同类型转换)
     /// </summary>
-    public abstract class ValueChangeRule<T1, T2> : SendRuleBase<IValueChangeRule<T2>, TreeValueBase<T1>, T2>
+    public abstract class ValueChangeRule<T1, T2> : SendRuleBase<TreeValueBase<T1>, IValueChangeRule<T2>, T2>
         where T1 : IEquatable<T1>
         where T2 : IEquatable<T2>
     { }

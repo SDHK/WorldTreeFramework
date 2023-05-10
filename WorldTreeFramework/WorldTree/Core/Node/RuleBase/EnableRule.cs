@@ -20,8 +20,8 @@ namespace WorldTree
     /// <summary>
     /// 活跃启用法则
     /// </summary>
-    public abstract class EnableRule<N> : SendRuleBase<IEnableRule, N>
-    where N : class,INode
+    public abstract class EnableRule<N> : SendRuleBase<N, IEnableRule>
+    where N : class, INode
     {
         public override void Invoke(INode self)
         {

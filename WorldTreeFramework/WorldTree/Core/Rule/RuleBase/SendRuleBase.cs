@@ -76,8 +76,8 @@ namespace WorldTree
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<R, N> : RuleBase<N, R>, ISendRule
-    where N : class,INode
+    public abstract class SendRuleBase<N, R> : RuleBase<N, R>, ISendRule
+    where N : class, INode
     where R : ISendRule
     {
         public virtual void Invoke(INode self) => OnEvent(self as N);
@@ -86,8 +86,8 @@ namespace WorldTree
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<R, N, T1> : RuleBase<N, R>, ISendRule<T1>
-    where N : class,INode
+    public abstract class SendRuleBase<N, R, T1> : RuleBase<N, R>, ISendRule<T1>
+    where N : class, INode
     where R : ISendRule<T1>
     {
         public virtual void Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
@@ -96,8 +96,8 @@ namespace WorldTree
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<R, N, T1, T2> : RuleBase<N, R>, ISendRule<T1, T2>
-    where N : class,INode
+    public abstract class SendRuleBase<N, R, T1, T2> : RuleBase<N, R>, ISendRule<T1, T2>
+    where N : class, INode
     where R : ISendRule<T1, T2>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
@@ -106,8 +106,8 @@ namespace WorldTree
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<R, N, T1, T2, T3> : RuleBase<N, R>, ISendRule<T1, T2, T3>
-    where N : class,INode
+    public abstract class SendRuleBase<N, R, T1, T2, T3> : RuleBase<N, R>, ISendRule<T1, T2, T3>
+    where N : class, INode
     where R : ISendRule<T1, T2, T3>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
@@ -116,8 +116,8 @@ namespace WorldTree
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<R, N, T1, T2, T3, T4> : RuleBase<N, R>, ISendRule<T1, T2, T3, T4>
-    where N : class,INode
+    public abstract class SendRuleBase<N, R, T1, T2, T3, T4> : RuleBase<N, R>, ISendRule<T1, T2, T3, T4>
+    where N : class, INode
     where R : ISendRule<T1, T2, T3, T4>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
@@ -126,8 +126,8 @@ namespace WorldTree
     /// <summary>
     /// 通知法则抽象基类
     /// </summary>
-    public abstract class SendRuleBase<R, N, T1, T2, T3, T4, T5> : RuleBase<N, R>, ISendRule<T1, T2, T3, T4, T5>
-    where N : class,INode
+    public abstract class SendRuleBase<N, R, T1, T2, T3, T4, T5> : RuleBase<N, R>, ISendRule<T1, T2, T3, T4, T5>
+    where N : class, INode
     where R : ISendRule<T1, T2, T3, T4, T5>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);

@@ -17,5 +17,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口焦点更新系统
     /// </summary>
-    public abstract class WindowFocusUpdateRule<N> : SendRuleBase<IWindowFocusUpdateRule, N, float> where N : class,INode { }
+    public abstract class WindowFocusUpdateRule<N> : SendRuleBase<N, IWindowFocusUpdateRule, float> where N : class, INode { }
 }

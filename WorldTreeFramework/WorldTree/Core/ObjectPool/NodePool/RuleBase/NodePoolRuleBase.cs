@@ -18,7 +18,7 @@ namespace WorldTree
     /// <summary>
     /// 新建法则
     /// </summary>
-    public abstract class NewRule<N> : SendRuleBase<INewRule, N> where N : class,INode { }
+    public abstract class NewRule<N> : SendRuleBase<N, INewRule> where N : class, INode { }
 
     /// <summary>
     /// 获取法则接口
@@ -28,7 +28,7 @@ namespace WorldTree
     /// <summary>
     /// 获取法则
     /// </summary>
-    public abstract class GetRule<N> : SendRuleBase<IGetRule, N> where N : class,INode { }
+    public abstract class GetRule<N> : SendRuleBase<N, IGetRule> where N : class, INode { }
 
     /// <summary>
     /// 回收法则接口
@@ -38,7 +38,7 @@ namespace WorldTree
     /// <summary>
     /// 回收法则
     /// </summary>
-    public abstract class RecycleRule<N> : SendRuleBase<IRecycleRule, N> where N : class,INode { }
+    public abstract class RecycleRule<N> : SendRuleBase<N, IRecycleRule> where N : class, INode { }
 
     /// <summary>
     /// 释放法则接口
@@ -47,5 +47,5 @@ namespace WorldTree
     /// <summary>
     /// 释放法则
     /// </summary>
-    public abstract class DestroyRule<N> : SendRuleBase<IDestroyRule, N> where N : class,INode { }
+    public abstract class DestroyRule<N> : SendRuleBase<N, IDestroyRule> where N : class, INode { }
 }

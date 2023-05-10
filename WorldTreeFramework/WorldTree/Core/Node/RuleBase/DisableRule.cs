@@ -21,8 +21,8 @@ namespace WorldTree
     /// <summary>
     /// 活跃禁用法则
     /// </summary>
-    public abstract class DisableRule<N> : SendRuleBase<IDisableRule, N>
-        where N : class,INode
+    public abstract class DisableRule<N> : SendRuleBase<N, IDisableRule>
+        where N : class, INode
     {
         public override void Invoke(INode self)
         {
