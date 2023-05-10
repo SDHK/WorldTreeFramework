@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/7/20 11:26
@@ -8,7 +6,6 @@
 * 描述： 解三角的静态方法
 
 */
-
 
 namespace WorldTree
 {
@@ -36,7 +33,7 @@ namespace WorldTree
         /// <returns> 外接圆直径</returns>
         public static float GetDiameter(float angle, float edge)//获取外接圆直径
         {
-            return edge / Mathf.Sin(angle * Mathf.Deg2Rad);//获取外接直径
+            return edge / MathFloat.Sin(angle * MathFloat.Deg2Rad);//获取外接直径
         }
 
         /// <summary>
@@ -47,7 +44,7 @@ namespace WorldTree
         /// <returns> 角的对边</returns>
         public static float GetEdgeFromDiameter(float angle, float diameter)//通过外接圆直径获得边
         {
-            return Mathf.Sin(angle * Mathf.Deg2Rad) * diameter;//通过直径获得边
+            return MathFloat.Sin(angle * MathFloat.Deg2Rad) * diameter;//通过直径获得边
         }
 
         /// <summary>
@@ -58,7 +55,7 @@ namespace WorldTree
         /// <returns> 小于等于90度的对角</returns>
         public static float GetAngleFromDiameter(float edge, float diameter)//通过外接圆直径获得<=90的角
         {
-            return Mathf.Asin(edge / diameter) * Mathf.Rad2Deg;//获得<=90的角
+            return MathFloat.Asin(edge / diameter) * MathFloat.Rad2Deg;//获得<=90的角
         }
 
 
@@ -71,7 +68,7 @@ namespace WorldTree
         /// <returns> 角A</returns>
         public static float GetAngleFromEdge(float edgeA, float edgeB, float edgeC)
         {
-            return Mathf.Acos((edgeB * edgeB + edgeC * edgeC - edgeA * edgeA) / (2 * (edgeB * edgeC))) * Mathf.Rad2Deg;
+            return MathFloat.Acos((edgeB * edgeB + edgeC * edgeC - edgeA * edgeA) / (2 * (edgeB * edgeC))) * MathFloat.Rad2Deg;
         }
 
         /// <summary>
@@ -84,7 +81,7 @@ namespace WorldTree
         public static float GetEdgeFormAngle(float angleA, float edgeB, float edgeC)
         {
 
-            return Mathf.Sqrt(edgeB * edgeB + edgeC * edgeC - 2 * edgeB * edgeC * Mathf.Cos(angleA * Mathf.Deg2Rad));
+            return MathFloat.Sqrt(edgeB * edgeB + edgeC * edgeC - 2 * edgeB * edgeC * MathFloat.Cos(angleA * MathFloat.Deg2Rad));
         }
 
     }

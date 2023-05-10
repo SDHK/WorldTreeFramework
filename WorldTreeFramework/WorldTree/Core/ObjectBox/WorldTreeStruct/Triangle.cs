@@ -83,7 +83,7 @@ namespace WorldTree
         /// <param name="edgeB">角B的对边</param>
         /// <param name="obtuseAngleB">角B优先解为钝角,一般为false</param>
         /// <remarks>提供 : 一个角和两个边 , 全解三角形</remarks>
-        public static Triangle CreateAEE(float angleA, float edgeB, float edgeC, bool obtuseAngleB = false) => new Triangle().SetAEE(angleA, edgeB, edgeC, obtuseAngleB);
+        public static Triangle CreateAEE(float angleA, float edgeA, float edgeB, bool obtuseAngleB = false) => new Triangle().SetAEE(angleA, edgeA, edgeB, obtuseAngleB);
 
         /// <summary>
         /// 创建三角形

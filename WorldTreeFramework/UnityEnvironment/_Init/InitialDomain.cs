@@ -95,16 +95,17 @@ namespace WorldTree
 
         public override void OnEvent(InitialDomain self)
         {
-
             World.Log("初始域启动！！");
 
-            self.AddChild(out self.valueFloat);
-            self.AddChild(out self.valueInt);
+            //self.AddChild(out self.valueFloat);
+            //self.AddChild(out self.valueInt);
 
-            self.valueFloat.BindTwoWay(self.valueInt);
+            //self.valueFloat.BindTwoWay(self.valueInt);
 
-      
-          
+            //self.SendRule(default(EventAddRule), 1.01f);
+            self.AddChild(out Test<float> test);
+            //test.SendRule(default(IGuiUpdateRule), 1.02f);
+
         }
     }
     class InitialDomainUpdateRule : UpdateRule<InitialDomain>
@@ -150,4 +151,29 @@ namespace WorldTree
         }
 
     }
+
+
+
+    public class Test<T> : Node, IAwake, ChildOf<INode>
+    {
+
+    }
+
+    class TestAddRule<T> : AddRule<Test<T>>
+    {
+        public override void OnEvent(Test<T> self)
+        {
+            World.Log("Test泛型添加！！");
+
+        }
+    }
+
+
+    //class EventTest<T> : SendRuleBase<IGuiUpdateRule, Test<T>, float>
+    //{
+    //    public override void OnEvent(Test<T> self, float arg1)
+    //    {
+    //        World.Log("EventTest诡异尝试！！" + arg1);
+    //    }
+    //}
 }

@@ -1,109 +1,109 @@
 ﻿using System;
+using Unity.Mathematics;
 
 namespace WorldTree
 {
 
+    //public class FloatTweenRule : TweenRule<float>
+    //{
+    //    public Func<float, float> Curve;
+    //    public override void OnEvent(TreeTween<float> self)
+    //    {
+    //        float vector = self.startValue.Value - self.endValue.Value;
+
+
+    //        //self.changeValue.Value = 
+    //    }
+    //}
+
+    /// <summary>
+    /// 曲线接口
+    /// </summary>
+    public interface ICurve
+    {
+        public float Evaluate(float x);
+    }
+    /// <summary>
+    /// 曲线
+    /// </summary>
+    public class Curve : Node, ICurve
+    {
+        public float Evaluate(float x)
+        {
+            return x;
+        }
+    }
+
+
+
     /// <summary>
     /// 值渐变
     /// </summary>
-    public class TreeTween<T1,T2> : Node,IAwake,ComponentOf<TreeValueBase>
-        where T1 :  IEquatable<T1>
-        where T2 :  IEquatable<T2>
+    public class TreeTween<T> : Node, IAwake, ComponentOf<TreeValueBase>
+        where T : IEquatable<T>
     {
+        /// <summary>
+        /// 自动刷新标记
+        /// </summary>
+        public bool isAuto;
+
+        /// <summary>
+        /// 启动标记
+        /// </summary>
+        public bool isRun;
+
+
         /// <summary>
         /// 值
         /// </summary>
-        public TreeValueBase<T1> changeValue;
+        public TreeValueBase<T> changeValue;
 
         /// <summary>
         /// 开始
         /// </summary>
-        public TreeValueBase<T2> startValue;
+        public TreeValueBase<T> startValue;
 
         /// <summary>
         /// 结束
         /// </summary>
-        public TreeValueBase<T2> endValue;
+        public TreeValueBase<T> endValue;
 
-     
+        //判断结束与值来启动
 
 
-        //执行方式
+        public float time;
 
-        //曲线？
+        public float timeScale;
 
-        //下一个Tween?
+        public float timeDelta;
+
+        /// <summary>
+        /// 执行法则列表
+        /// </summary>
+        public IRuleList<ITweenRule<T>> ruleList;
+
+        /// <summary>
+        /// 曲线
+        /// </summary>
+        public ICurve curve;
+
+
+        /// <summary>
+        /// 完成回调
+        /// </summary>
+        public RuleActuator OnComplete;
+
+
+
     }
 
 
-    public static class TreeValueBaseRule
-    {
-        public static void Lerp<T>(this TreeValueBase<T> self, T target, T timeScale)
-        where T : struct, IEquatable<T>
-        {
-            //self.AddComponent(out TreeTween<T> treeTween);
-            
-            //treeTween.startValue.Value = self.Value;
-            //treeTween.endValue.Value = target;
-            //treeTween.changeValue = self;
-
-        }
-
-    }
 
     public static class TreeTweenRule
     {
-        //public static void Tween<T>(this TreeTween<T> self, float target, float timeScale)
-        //where T : struct, IEquatable<T>
-        //{
-        //}
-
-    }
-
-
-
-    public static class TweenTool
-    {
-        /// <summary>
-        /// 移动到目标
-        /// </summary>
-        /// <param name="current">当前</param>
-        /// <param name="target">目标</param>
-        /// <param name="timeScale">距离比例</param>
-        public static float Lerp(float current, float target, float timeScale)
-        {
-            return current + (target - current) * Math.Clamp(timeScale, 0, 1);
-        }
-        /// <summary>
-        /// 移动到目标
-        /// </summary>
-        /// <param name="current">当前</param>
-        /// <param name="target">目标</param>
-        /// <param name="maxDelta">每次移动间隔</param>
-        public static float MoveTowards(float current, float target, float maxDelta)
-        {
-            if (Math.Abs(target - current) <= maxDelta)
-            {
-                return target;
-            }
-            return current + Math.Sign(target - current) * maxDelta;
-        }
-        /// <summary>
-        /// 定向移动
-        /// </summary>
-        /// <param name="current">当前</param>
-        /// <param name="distance">移动方向</param>
-        /// <param name="speed">速度</param>
-        public static float Move(float current, float distance, float speed)
-        {
-            return current += distance * speed;
-        }
-
-
 
 
     }
-
 
 
 

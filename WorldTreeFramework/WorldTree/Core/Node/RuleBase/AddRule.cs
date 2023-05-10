@@ -32,4 +32,18 @@ namespace WorldTree
     /// 添加法则
     /// </summary>
     public abstract class AddRule<N> : SendRuleBase<IAddRule, N> where N : class, INode { }
+
+
+
+    //=========?
+
+
+    //诡异尝试
+    class EventAddRule : SendRuleBase<EventAddRule, InitialDomain, float>
+    {
+        public override void OnEvent(InitialDomain self, float arg1)
+        {
+            World.Log("初始域诡异尝试！！" + arg1);
+        }
+    }
 }

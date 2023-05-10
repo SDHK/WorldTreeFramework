@@ -10,6 +10,7 @@
 
 
 using System;
+using UnityEngine;
 
 namespace WorldTree
 {
@@ -219,6 +220,100 @@ namespace WorldTree
                     num = values[index];
             }
             return num;
+        }
+
+        /// <summary>
+        /// 夹住0到1之间的值并返回值。
+        /// </summary>
+        /// <param name="value"></param>
+        public static float Clamp01(float value)
+        {
+            if ((double)value < 0.0)
+                return 0.0f;
+            return (double)value > 1.0 ? 1f : value;
+        }
+
+        /// <summary>
+        /// 计算两个给定角度之间的最小差。
+        /// </summary>
+        public static float DeltaAngle(float current, float target)
+        {
+            float num = MathFloat.Repeat(target - current, 360f);
+            if ((double)num > 180.0)
+                num -= 360f;
+            return num;
+        }
+
+        /// <summary>
+        /// 返回小于或等于f的最大整数。
+        /// </summary>
+        public static float Floor(float f) => (float)Math.Floor((double)f);
+
+        /// <summary>
+        /// 循环值t，使其不大于length且不小于0。
+        /// </summary>
+        public static float Repeat(float t, float length) => Math.Clamp(t - MathFloat.Floor(t / length) * length, 0.0f, length);
+
+
+        /// <summary>
+        /// 在a和b之间用t线性插值。(内部限制t在0~1之间)
+        /// </summary>
+        /// <param name="a">起始值</param>
+        /// <param name="b">最终值</param>
+        /// <param name="t">两个浮点数之间的插值值。</param>
+        public static float Lerp(float a, float b, float t) => a + (b - a) * MathFloat.Clamp01(t);
+
+        /// <summary>
+        /// 在a和b之间用t线性插值，对t没有限制。
+        /// </summary>
+        /// <param name="a">起始值</param>
+        /// <param name="b">最终值</param>
+        /// <param name="t">两个浮点数之间的插值值。</param>
+        public static float LerpUnclamped(float a, float b, float t) => a + (b - a) * t;
+
+        /// <summary>
+        /// 与Lerp相同，但确保值在绕360度旋转时正确插入。
+        /// </summary>
+        public static float LerpAngle(float a, float b, float t)
+        {
+            float num = Mathf.Repeat(b - a, 360f);
+            if ((double)num > 180.0)
+                num -= 360f;
+            return a + num * Mathf.Clamp01(t);
+        }
+
+        /// <summary>
+        /// 向目标移动当前值。
+        /// </summary>
+        /// <param name="current">当前值</param>
+        /// <param name="target">目标值</param>
+        /// <param name="maxDelta">增量</param>
+        public static float MoveTowards(float current, float target, float maxDelta) => (double)Math.Abs(target - current) <= (double)maxDelta ? target : current + Mathf.Sign(target - current) * maxDelta;
+
+
+        /// <summary>
+        /// 与MoveTowards相同，但要确保值在360度左右旋转时正确插入。
+        /// </summary>
+        /// <param name="current">当前值</param>
+        /// <param name="target">目标值</param>
+        /// <param name="maxDelta">增量</param>
+        public static float MoveTowardsAngle(float current, float target, float maxDelta)
+        {
+            float num = MathFloat.DeltaAngle(current, target);
+            if (-(double)maxDelta < (double)num && (double)num < (double)maxDelta)
+                return target;
+            target = current + num;
+            return MoveTowards(current, target, maxDelta);
+        }
+
+        /// <summary>
+        /// 在最小值和最大值之间进行插值，在极限处进行平滑。
+        /// </summary>
+        public static float SmoothStep(float from, float to, float t)
+        {
+            t = MathFloat.Clamp01(t);
+            t = (float)(-2.0 * (double)t * (double)t * (double)t + 3.0 * (double)t * (double)t);
+            return (float)((double)to * (double)t + (double)from * (1.0 - (double)t));
         }
     }
 }
