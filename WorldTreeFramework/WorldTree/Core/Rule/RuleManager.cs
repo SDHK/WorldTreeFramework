@@ -171,14 +171,15 @@ namespace WorldTree
             {
                 //遍历获取：法则父类第一个泛型就是节点类型
                 var BaseType = RuleType.BaseType;
-                var GenericArguments = BaseType.GetGenericArguments()[0];
+                var GenericArguments = BaseType.GetGenericArguments();
 
-                while (BaseType != typeof(object) ? !GenericArguments.GetInterfaces().Contains(typeof(INode)) : false)
+                //假如类型不为object,获取的泛型数量为0时继续，不为0时获取第一个泛型判断是否为节点
+                while (BaseType != typeof(object) ? GenericArguments.Length != 0 ? !GenericArguments[0].GetInterfaces().Contains(typeof(INode)) : true : false)
                 {
                     BaseType = BaseType.BaseType;
-                    GenericArguments = BaseType.GetGenericArguments()[0];
+                    GenericArguments = BaseType.GetGenericArguments();
                 }
-                self.GenericRuleTypeHashDictionary.GetValue(GenericArguments.GetGenericTypeDefinition()).Add(RuleType);
+                self.GenericRuleTypeHashDictionary.GetValue(GenericArguments[0].GetGenericTypeDefinition()).Add(RuleType);
             }
             else
             {

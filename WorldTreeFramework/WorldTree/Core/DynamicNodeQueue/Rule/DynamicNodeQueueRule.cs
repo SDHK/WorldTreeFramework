@@ -19,7 +19,7 @@ namespace WorldTree
             self.AddChild(out self.nodeDictionary);
         }
     }
-    class DynamicNodeQueueReferencedRemoveRule : ReferencedRemoveRule<DynamicNodeQueue>
+    class DynamicNodeQueueReferencedChildRemoveRule : ReferencedChildRemoveRule<DynamicNodeQueue>
     {
         public override void OnEvent(DynamicNodeQueue self, INode node)
         {
@@ -68,6 +68,7 @@ namespace WorldTree
             if (self.nodeDictionary.ContainsKey(node.Id))
             {
                 self.nodeDictionary.Remove(node.Id);
+                self.DeReferenced(node);//套娃了，但好像没问题
 
                 //累计强制移除的节点id
                 if (self.removeIdDictionary.TryGetValue(node.Id, out var count))
@@ -86,6 +87,11 @@ namespace WorldTree
         /// </summary>
         public static void Clear(this DynamicNodeQueue self)
         {
+            foreach (var node in self.nodeDictionary)
+            {
+                self.DeReferenced(node.Value);
+            }
+
             self.nodeDictionary.Clear();
             self.removeIdDictionary.Clear();
             self.idQueue.Clear();
@@ -199,6 +205,7 @@ namespace WorldTree
                 if (self.nodeDictionary.TryGetValue(id, out node))
                 {
                     self.nodeDictionary.Remove(node.Id);
+                    self.DeReferenced(node);
                     return true;
                 }
             }

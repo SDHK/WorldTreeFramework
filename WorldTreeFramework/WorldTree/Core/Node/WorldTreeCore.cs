@@ -42,8 +42,6 @@ namespace WorldTree
         public IRuleGroup<IRecycleRule> RecycleRuleGroup;
         public IRuleGroup<IDestroyRule> DestroyRuleGroup;
 
-        public IRuleGroup<IReferencedRemoveRule> ReferencedRemoveRuleGroup;
-
         /// <summary>
         /// Id管理器
         /// </summary>
@@ -127,8 +125,6 @@ namespace WorldTree
             self.EnableRuleGroup = self.RuleManager.GetRuleGroup<IEnableRule>();
             self.DisableRuleGroup = self.RuleManager.GetRuleGroup<IDisableRule>();
 
-            self.ReferencedRemoveRuleGroup = self.RuleManager.GetRuleGroup<IReferencedRemoveRule>();
-
             //核心组件 id与法则
             self.AddComponent(self.IdManager);
             self.AddComponent(self.RuleManager);
@@ -170,8 +166,6 @@ namespace WorldTree
             self.RemoveRuleGroup = default;
             self.EnableRuleGroup = default;
             self.DisableRuleGroup = default;
-
-            self.ReferencedRemoveRuleGroup = default;
 
             self.IdManager = default;
             self.RuleManager = default;
@@ -368,14 +362,7 @@ namespace WorldTree
             node.SetActive(false);//激活标记变更
 
             //引用关系移除通知
-            if (node.m_ReferencedParents != null)
-            {
-                foreach (var item in node.m_ReferencedParents)
-                {
-                    self.ReferencedRemoveRuleGroup?.Send(node, item.Value);
-                }
-                node.DeReferencedAll();
-            }
+            node.DeReferencedAll();
 
             node.RemoveAll();//移除所有子节点和组件
             self.DisableRuleGroup?.Send(node);//调用禁用事件

@@ -15,8 +15,6 @@ namespace WorldTree
     /// </summary>
     public abstract partial class Node : INode
     {
-        public IPool thisPool { get; set; }
-
         public bool IsRecycle { get; set; }
 
         public bool IsDisposed { get; set; }
@@ -65,7 +63,7 @@ namespace WorldTree
 
         #endregion
 
-        #region Listener
+        #region Listener 
 
         public ListenerState listenerState { get; set; } = ListenerState.Not;
 

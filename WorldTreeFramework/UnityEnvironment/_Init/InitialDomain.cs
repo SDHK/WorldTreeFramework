@@ -108,7 +108,8 @@ namespace WorldTree
             self.AddChild(out Test<float> test);
 
 
-            test.SendRule(default(EventTest<INode>), 1.02f);
+            //事件调用
+            test.AddComponent(out NodeEvent<float> _).Send(1.02f);
 
         }
     }
@@ -157,29 +158,45 @@ namespace WorldTree
     }
 
 
-
+    //主要测试类型
     public class Test<T> : Node, IAwake, ChildOf<INode>
     {
-
     }
-
+    //测试类型添加生命周期
     class TestAddRule<T> : AddRule<Test<T>>
     {
         public override void OnEvent(Test<T> self)
         {
             World.Log("Test泛型添加！！");
 
+            //Test<T>以组件形式挂载事件
+            self.AddComponent(out NodeEvent<T> _);
+
         }
     }
 
-    public interface IEventTest : ISendRule<float> { }
+    //声明一个事件节点，指定服务于 Test<T>
+    public class NodeEvent<T> : EventNode<Test<T>> { }
 
-    class EventTest<T> : SendRuleBase<Test<T>, IEventTest, float>
+    //实现事件节点的通用事件类型
+    class EventTestRule<T> : SendRule<NodeEvent<T>, float>
     {
-        public override void OnEvent(Test<T> self, float arg1)
+        public override void OnEvent(NodeEvent<T> self, float arg1)
         {
-            World.Log("EventTest诡异尝试！！" + arg1);
+            
+            World.Log("！！" + arg1);
         }
     }
-  
+
+
+    //实现事件节点的通用事件类型
+    class EventTestRule1<T> : SendRuleBase<NodeEvent<T>, EventTestRule1<T>, float>
+    {
+        public override void OnEvent(NodeEvent<T> self, float arg1)
+        {
+
+            World.Log("！！" + arg1);
+        }
+    }
+
 }

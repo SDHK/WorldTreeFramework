@@ -12,13 +12,25 @@
 namespace WorldTree
 {
     /// <summary>
-    /// 引用解除法则接口
+    /// 引用子关系解除法则接口
     /// </summary>
-    public interface IReferencedRemoveRule : ISendRule<INode> { }
+    public interface IReferencedChildRemoveRule : ISendRule<INode> { }
 
     /// <summary>
-    /// 引用解除法则
+    /// 引用子关系解除法则
     /// </summary>
-    public abstract class ReferencedRemoveRule<N> : SendRuleBase<N, IReferencedRemoveRule, INode> where N : class, INode { }
+    public abstract class ReferencedChildRemoveRule<N> : SendRuleBase<N, IReferencedChildRemoveRule, INode> where N : class, INode { }
+
+
+    /// <summary>
+    /// 引用父关系解除法则接口
+    /// </summary>
+    public interface IReferencedParentRemoveRule : ISendRule<INode> { }
+
+    /// <summary>
+    /// 引用父关系解除法则
+    /// </summary>
+    public abstract class ReferencedParentRemoveRule<N> : SendRuleBase<N, IReferencedParentRemoveRule, INode> where N : class, INode { }
+
 
 }

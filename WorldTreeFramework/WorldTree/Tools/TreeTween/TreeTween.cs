@@ -43,7 +43,7 @@ namespace WorldTree
         where T : IEquatable<T>
     {
         /// <summary>
-        /// 自动刷新标记
+        /// 自动刷新标记 :判断结束与值来启动
         /// </summary>
         public bool isAuto;
 
@@ -67,15 +67,7 @@ namespace WorldTree
         /// 结束
         /// </summary>
         public TreeValueBase<T> endValue;
-
-        //判断结束与值来启动
-
-
-        public float time;
-
-        public float timeScale;
-
-        public float timeDelta;
+      
 
         /// <summary>
         /// 执行法则列表
@@ -87,14 +79,34 @@ namespace WorldTree
         /// </summary>
         public ICurve curve;
 
-
         /// <summary>
         /// 完成回调
         /// </summary>
-        public RuleActuator OnComplete;
+        public IRuleActuator<ISendRule> OnCompleted;
 
+        /// <summary>
+        /// 计时
+        /// </summary>
+        public float time;
 
+        /// <summary>
+        /// 定时
+        /// </summary>
+        public float clock;
 
+        /// <summary>
+        /// 时间尺度
+        /// </summary>
+        public float timeScale;
+    }
+
+    class TreeTweenUpdateRule<T> : UpdateRule<TreeTween<T>>
+        where T : IEquatable<T>
+    {
+        public override void OnEvent(TreeTween<T> self, float arg1)
+        {
+
+        }
     }
 
 
