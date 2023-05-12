@@ -25,7 +25,7 @@ namespace WorldTree
     {
         public override void OnEvent(EventNode<N> self, INode referencedParent)
         {
-            if (self.m_ReferencedParents.Count == 0)
+            if (self.m_ReferencedParents is null)
             {
                 self.Dispose();
             }
