@@ -68,7 +68,7 @@ namespace WorldTree
             if (self.nodeDictionary.ContainsKey(node.Id))
             {
                 self.nodeDictionary.Remove(node.Id);
-                self.DeReferenced(node);//套娃了，但好像没问题
+                self.DeReferenced(node);
 
                 //累计强制移除的节点id
                 if (self.removeIdDictionary.TryGetValue(node.Id, out var count))
