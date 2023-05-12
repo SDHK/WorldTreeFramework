@@ -17,8 +17,8 @@ namespace WorldTree
         /// </summary>
         public static void Referenced(this INode self, INode node)
         {
-            if (self.m_ReferencedChilden is null) self.m_ReferencedChilden = self.PoolGet<UnitDictionary<long, INode>>();
-            if (node.m_ReferencedParents is null) node.m_ReferencedParents = node.PoolGet<UnitDictionary<long, INode>>();
+            self.m_ReferencedChilden ??= self.PoolGet<UnitDictionary<long, INode>>();
+            node.m_ReferencedParents ??= node.PoolGet<UnitDictionary<long, INode>>();
 
             self.m_ReferencedChilden.TryAdd(node.Id, node);
             node.m_ReferencedParents.TryAdd(self.Id, self);
