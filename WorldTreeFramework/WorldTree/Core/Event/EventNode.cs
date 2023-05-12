@@ -20,10 +20,10 @@ namespace WorldTree
     }
 
     //假如没有被引用则回收
-    class EventNodeReferencedRemoveRule<N> : ReferencedChildRemoveRule<EventNode<N>>
+    class EventNodeReferencedRemoveRule<N> : DeReferencedParentRule<EventNode<N>>
         where N : class, INode
     {
-        public override void OnEvent(EventNode<N> self, INode arg1)
+        public override void OnEvent(EventNode<N> self, INode referencedParent)
         {
             if (self.m_ReferencedParents.Count == 0)
             {

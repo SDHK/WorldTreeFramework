@@ -8,13 +8,10 @@
 
 */
 
-using static UnityEditor.Progress;
-
 namespace WorldTree
 {
     public static class NodeReferencedRule
     {
-
         /// <summary>
         /// 建立引用关系
         /// </summary>
@@ -32,25 +29,32 @@ namespace WorldTree
         /// </summary>
         public static void DeReferenced(this INode self, INode node)
         {
-            if (self.m_ReferencedChilden != null && node.m_ReferencedParents != null)
+            if (self.m_ReferencedChilden != null)
             {
                 if (self.m_ReferencedChilden.ContainsKey(node.Id))
                 {
                     self.m_ReferencedChilden.Remove(node.Id);
-                    node.m_ReferencedParents.Remove(self.Id);
 
                     if (self.m_ReferencedChilden.Count == 0)
                     {
                         self.m_ReferencedChilden.Dispose();
                         self.m_ReferencedChilden = null;
                     }
+                    self.SendRule(default(IDeReferencedChildRule), node);
+                }
+            }
+
+            if (node.m_ReferencedParents != null)
+            {
+                if (node.m_ReferencedParents.ContainsKey(node.Id))
+                {
+                    node.m_ReferencedParents.Remove(self.Id);
                     if (node.m_ReferencedParents.Count == 0)
                     {
                         node.m_ReferencedParents.Dispose();
                         node.m_ReferencedParents = null;
                     }
-                    self.SendRule(default(IReferencedChildRemoveRule), node);
-                    node.SendRule(default(IReferencedParentRemoveRule), self);
+                    node.SendRule(default(IDeReferencedParentRule), self);
                 }
             }
         }
@@ -90,37 +94,47 @@ namespace WorldTree
                     }
                 }
             }
+        }
 
+        /// <summary>
+        /// 解除所有引用关系, 并通知自己的移除生命周期事件
+        /// </summary>
+        public static void SendAllReferencedNodeRemove(this INode self)
+        {
+            if (self.m_ReferencedParents != null)//移除父级
+            {
+                using (self.PoolGet(out UnitQueue<INode> nodeIdQueue))
+                {
+                    foreach (var item in self.m_ReferencedParents)
+                    {
+                        nodeIdQueue.Enqueue(item.Value);
+                    }
 
-            //if (self.m_ReferencedParents != null)//移除父级
-            //{
-            //    foreach (var item in self.m_ReferencedParents)
-            //    {
-            //        item.Value.m_ReferencedChilden.Remove(self.Id);
-            //        if (item.Value.m_ReferencedChilden.Count == 0)
-            //        {
-            //            item.Value.m_ReferencedChilden.Dispose();
-            //            item.Value.m_ReferencedChilden = null;
-            //        }
-            //    }
-            //    self.m_ReferencedParents.Dispose();
-            //    self.m_ReferencedParents = null;
-            //}
+                    while (nodeIdQueue.Count != 0)
+                    {
+                        var node = nodeIdQueue.Dequeue();
+                        node.DeReferenced(self);
+                        node.SendRule(default(IReferencedChildRemoveRule), self);
+                    }
+                }
+            }
 
-            //if (self.m_ReferencedChilden != null)//移除子级
-            //{
-            //    foreach (var item in self.m_ReferencedChilden)
-            //    {
-            //        item.Value.m_ReferencedParents.Remove(self.Id);
-            //        if (item.Value.m_ReferencedParents.Count == 0)
-            //        {
-            //            item.Value.m_ReferencedParents.Dispose();
-            //            item.Value.m_ReferencedParents = null;
-            //        }
-            //    }
-            //    self.m_ReferencedChilden.Dispose();
-            //    self.m_ReferencedChilden = null;
-            //}
+            if (self.m_ReferencedChilden != null)//移除子级
+            {
+                using (self.PoolGet(out UnitQueue<INode> nodeIdQueue))
+                {
+                    foreach (var item in self.m_ReferencedChilden)
+                    {
+                        nodeIdQueue.Enqueue(item.Value);
+                    }
+                    while (nodeIdQueue.Count != 0)
+                    {
+                        var node = nodeIdQueue.Dequeue();
+                        self.DeReferenced(node);
+                        node.SendRule(default(IReferencedParentRemoveRule), self);
+                    }
+                }
+            }
         }
     }
 }

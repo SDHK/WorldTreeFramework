@@ -362,7 +362,7 @@ namespace WorldTree
             node.SetActive(false);//激活标记变更
 
             //引用关系移除通知
-            node.DeReferencedAll();
+            node.SendAllReferencedNodeRemove();
 
             node.RemoveAll();//移除所有子节点和组件
             self.DisableRuleGroup?.Send(node);//调用禁用事件
