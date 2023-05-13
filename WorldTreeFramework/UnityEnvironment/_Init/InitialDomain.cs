@@ -88,6 +88,8 @@ namespace WorldTree
         public TreeNode node;
         public TreeValue<float> valueFloat;
         public TreeValue<int> valueInt;
+
+        public IRuleActuator<ISendRule<float>> ruleActuator;
     }
 
     class _InitialDomain : AddRule<InitialDomain>
@@ -95,21 +97,33 @@ namespace WorldTree
 
         public override void OnEvent(InitialDomain self)
         {
+
             World.Log("初始域启动！！");
 
             self.AddChild(out self.valueFloat);
             self.AddChild(out self.valueInt);
 
-            self.valueFloat.BindTwoWay(self.valueInt);
+            //self.valueFloat.BindTwoWay(self.valueInt);
 
             //self.SendRule(default(EventAddRule), 1.01f);
-
 
             self.AddChild(out Test<float> test);
 
 
+            //委托申请赋值
+            self.TryGetRuleActuator(out self.ruleActuator);
+
+            //委托添加
+            self.ruleActuator.EnqueueReferenced(test.AddComponent(out NodeEvent<float> _));
+            
+            //执行
+            self.ruleActuator.Send(2.5f);
+            //self.ruleActuator.Dispose();
+            test.Dispose();
+            self.ruleActuator.Send(2.7f);
+
             //事件调用
-            test.AddComponent(out NodeEvent<float> _).Send(1.02f);
+            //test.AddComponent(out NodeEvent<float> _).Send(1.02f);
 
         }
     }
@@ -119,8 +133,9 @@ namespace WorldTree
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                self.valueFloat.Value += 1.5f;
-                World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
+
+                //self.valueFloat.Value += 1.5f;
+                //World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
@@ -168,8 +183,6 @@ namespace WorldTree
         public override void OnEvent(Test<T> self)
         {
             World.Log("Test泛型添加！！");
-
-            //Test<T>以组件形式挂载事件
             self.AddComponent(out NodeEvent<T> _);
 
         }
@@ -180,17 +193,6 @@ namespace WorldTree
 
     //实现事件节点的通用事件类型
     class EventTestRule<T> : SendRule<NodeEvent<T>, float>
-    {
-        public override void OnEvent(NodeEvent<T> self, float arg1)
-        {
-            
-            World.Log("！！" + arg1);
-        }
-    }
-
-
-    //实现事件节点的通用事件类型
-    class EventTestRule1<T> : SendRuleBase<NodeEvent<T>, EventTestRule1<T>, float>
     {
         public override void OnEvent(NodeEvent<T> self, float arg1)
         {

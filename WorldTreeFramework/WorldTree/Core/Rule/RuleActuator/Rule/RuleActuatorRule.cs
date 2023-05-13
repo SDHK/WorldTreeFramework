@@ -26,6 +26,17 @@ namespace WorldTree
         }
     }
 
+
+    class RuleActuatorReferencedChildRemoveRule : ReferencedChildRemoveRule<RuleActuator>
+    {
+        public override void OnEvent(RuleActuator self, INode node)
+        {
+            self.nodeQueue.Remove(node);
+
+            //self.Remove(node);
+        }
+    }
+
     public static class RuleActuatorRule
     {
 
@@ -62,7 +73,8 @@ namespace WorldTree
         {
             if (self.ruleGroup.ContainsKey(node.Type))
             {
-                self.nodeQueue.EnqueueReferenced(node);
+                self.Referenced(node);
+                self.nodeQueue.Enqueue(node);
             }
             else
             {
@@ -91,6 +103,7 @@ namespace WorldTree
         /// </summary>
         public static void Remove(this RuleActuator self, INode node)
         {
+            self.DeReferenced(node);
             self.nodeQueue.Remove(node);
         }
 
@@ -99,6 +112,7 @@ namespace WorldTree
         /// </summary>
         public static void Clear(this RuleActuator self)
         {
+            self.DeReferencedAll();
             self.nodeQueue.Clear();
         }
 
@@ -107,17 +121,25 @@ namespace WorldTree
         /// </summary>
         public static INode Dequeue(this RuleActuator self)
         {
-            return self.nodeQueue.Dequeue();
+            var node = self.nodeQueue.Dequeue();
+            if (node != null)
+            {
+                self.DeReferenced(node);
+            }
+            return node;
         }
         /// <summary>
         /// 尝试出列
         /// </summary>
         public static bool TryDequeue(this RuleActuator self, out INode node)
         {
-            return self.nodeQueue.TryDequeue(out node);
+            if (self.nodeQueue.TryDequeue(out node))
+            {
+                self.DeReferenced(node);
+                return true;
+            }
+            return false;
         }
-
-
 
 
         /// <summary>

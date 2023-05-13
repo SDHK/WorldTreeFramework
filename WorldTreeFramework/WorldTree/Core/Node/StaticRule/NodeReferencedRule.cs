@@ -46,7 +46,7 @@ namespace WorldTree
 
             if (node.m_ReferencedParents != null)
             {
-                if (node.m_ReferencedParents.ContainsKey(node.Id))
+                if (node.m_ReferencedParents.ContainsKey(self.Id))
                 {
                     node.m_ReferencedParents.Remove(self.Id);
                     if (node.m_ReferencedParents.Count == 0)
@@ -97,7 +97,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 解除所有引用关系, 并通知自己的移除生命周期事件
+        /// 解除所有引用关系, 通知自己的移除生命周期事件
         /// </summary>
         public static void SendAllReferencedNodeRemove(this INode self)
         {
@@ -113,7 +113,29 @@ namespace WorldTree
                     while (nodeIdQueue.Count != 0)
                     {
                         var node = nodeIdQueue.Dequeue();
-                        node.DeReferenced(self);
+                        //node.DeReferenced(self);
+
+                        if (node.m_ReferencedChilden != null)
+                        {
+                            if (node.m_ReferencedChilden.ContainsKey(self.Id))
+                            {
+                                node.m_ReferencedChilden.Remove(self.Id);
+
+                                if (node.m_ReferencedChilden.Count == 0)
+                                {
+                                    node.m_ReferencedChilden.Dispose();
+                                    node.m_ReferencedChilden = null;
+                                }
+                            }
+                        }
+
+                        self.m_ReferencedParents.Remove(node.Id);
+                        if (self.m_ReferencedParents.Count == 0)
+                        {
+                            self.m_ReferencedParents.Dispose();
+                            self.m_ReferencedParents = null;
+                        }
+
                         node.SendRule(default(IReferencedChildRemoveRule), self);
                     }
                 }
@@ -127,10 +149,31 @@ namespace WorldTree
                     {
                         nodeIdQueue.Enqueue(item.Value);
                     }
+
                     while (nodeIdQueue.Count != 0)
                     {
                         var node = nodeIdQueue.Dequeue();
-                        self.DeReferenced(node);
+                        //self.DeReferenced(node);
+
+                        self.m_ReferencedChilden.Remove(node.Id);
+                        if (self.m_ReferencedChilden.Count == 0)
+                        {
+                            self.m_ReferencedChilden.Dispose();
+                            self.m_ReferencedChilden = null;
+                        }
+
+                        if (node.m_ReferencedParents != null)
+                        {
+                            if (node.m_ReferencedParents.ContainsKey(self.Id))
+                            {
+                                node.m_ReferencedParents.Remove(self.Id);
+                                if (node.m_ReferencedParents.Count == 0)
+                                {
+                                    node.m_ReferencedParents.Dispose();
+                                    node.m_ReferencedParents = null;
+                                }
+                            }
+                        }
                         node.SendRule(default(IReferencedParentRemoveRule), self);
                     }
                 }

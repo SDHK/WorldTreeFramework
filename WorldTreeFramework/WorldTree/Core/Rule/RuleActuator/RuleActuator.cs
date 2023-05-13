@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 法则执行器 接口基类
     /// </summary>
-    public interface IRuleActuator { }
+    public interface IRuleActuator:INode { }
 
     /// <summary>
     /// 法则执行器 逆变泛型接口

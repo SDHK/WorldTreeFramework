@@ -329,6 +329,9 @@ namespace WorldTree
         /// </summary>
         public static void AddNode(this WorldTreeCore self, INode node)
         {
+            node.SetActive(true);
+            self.EnableRuleGroup?.Send(node);//添加后调用激活事件
+
             //广播给全部监听器!!!!
             if (node.Branch.Id != self.Id)
             {
@@ -350,8 +353,7 @@ namespace WorldTree
                 node.ListenerSwitchesTarget(typeof(INode), ListenerState.Node);
             }
 
-            node.SetActive(true);
-            self.EnableRuleGroup?.Send(node);//添加后调用激活事件
+          
         }
 
         /// <summary>
@@ -359,10 +361,11 @@ namespace WorldTree
         /// </summary>
         public static void RemoveNode(this WorldTreeCore self, INode node)
         {
-            node.SetActive(false);//激活标记变更
 
             //引用关系移除通知
             node.SendAllReferencedNodeRemove();
+
+            node.SetActive(false);//激活标记变更
 
             node.RemoveAll();//移除所有子节点和组件
             self.DisableRuleGroup?.Send(node);//调用禁用事件

@@ -9,6 +9,9 @@
 
 namespace WorldTree
 {
+
+
+
     /// <summary>
     /// 事件组件基类
     /// </summary>
@@ -17,12 +20,28 @@ namespace WorldTree
         where N : class, INode
     {
         public N Node => this.Parent as N;
+
+    }
+
+
+    //假如没有被引用则回收
+    class EventNodeDeReferencedParentRule<N> : DeReferencedParentRule<EventNode<N>>
+        where N : class, INode
+    {
+        public override void OnEvent(EventNode<N> self, INode referencedParent)
+        {
+            if (self.m_ReferencedParents is null)
+            {
+                self.Dispose();
+            }
+        }
     }
 
     //假如没有被引用则回收
-    class EventNodeReferencedRemoveRule<N> : DeReferencedParentRule<EventNode<N>>
+    class EventNodeReferencedRemoveRule<N> : ReferencedParentRemoveRule<EventNode<N>>
         where N : class, INode
     {
+
         public override void OnEvent(EventNode<N> self, INode referencedParent)
         {
             if (self.m_ReferencedParents is null)

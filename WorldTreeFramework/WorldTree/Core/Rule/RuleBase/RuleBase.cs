@@ -41,7 +41,7 @@ namespace WorldTree
     /// <para>主要作用是通过泛型给标记赋值</para>         
     /// </remarks>
     public abstract class RuleBase<N, R> : IRule
-        where N : class,INode
+        where N : class, INode
         where R : IRule
     {
         public virtual Type NodeType => typeof(N);

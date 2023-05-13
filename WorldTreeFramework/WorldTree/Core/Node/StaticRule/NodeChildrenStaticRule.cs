@@ -194,7 +194,7 @@ namespace WorldTree
 
         public static T AddChild<N, T, T1>(this N self, out T node, T1 arg1)
         where N : class, INode
-        where T : class, INode, ChildOf<N>, IAwake<T1>
+        where T : class, INode, ChildOf<N>, RuleOf<IAwakeRule<T1>>
         {
             if (self.TryAddNewChild(out node))
             {
