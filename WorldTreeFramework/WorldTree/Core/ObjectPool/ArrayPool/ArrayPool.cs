@@ -17,7 +17,7 @@ namespace WorldTree
     /// <summary>
     /// 数组对象池
     /// </summary>
-    public class ArrayPool : GenericPool<Array>, IAwake<Type, int>, ChildOf<ArrayPoolGroup>
+    public class ArrayPool : GenericPool<Array>, AsRule<IAwakeRule<Type, int>>, ChildOf<ArrayPoolGroup>
     {
         /// <summary>
         /// 数组长度

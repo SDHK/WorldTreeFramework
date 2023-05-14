@@ -53,7 +53,7 @@ namespace WorldTree
     /// 节点监听法则抽象基类
     /// </summary>
     public abstract class ListenerRuleBase<LN, LR, TN, TR> : RuleBase<LN, LR>, IListenerRule
-    where LN : class, INode
+    where LN : class, INode, AsRule<LR>
     where TN : class, INode
     where LR : IListenerRule
     where TR : IRule

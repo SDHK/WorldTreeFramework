@@ -141,11 +141,12 @@ namespace WorldTree
             return false;
         }
 
-
         /// <summary>
         /// 节点入列并建立引用关系
         /// </summary>
-        public static void EnqueueReferenced(this IRuleActuator self, INode node)
+        public static void EnqueueReferenced<R, N>(this IRuleActuator<R> self, N node)
+            where R : IRule
+            where N : class, INode, AsRule<R>
         {
             ((RuleActuator)self).EnqueueReferenced(node);
         }
@@ -153,15 +154,20 @@ namespace WorldTree
         /// <summary>
         /// 节点入列
         /// </summary>
-        public static void Enqueue(this IRuleActuator self, INode node)
+        public static void Enqueue<R, N>(this IRuleActuator<R> self, N node)
+            where R : IRule
+            where N : class, INode, AsRule<R>
         {
             ((RuleActuator)self).Enqueue(node);
         }
 
+
         /// <summary>
         /// 移除节点
         /// </summary>
-        public static void Remove(this IRuleActuator self, INode node)
+        public static void Remove<R, N>(this IRuleActuator<R> self, N node)
+            where R : IRule
+            where N : class, INode, AsRule<R>
         {
             ((RuleActuator)self).nodeQueue.Remove(node);
         }

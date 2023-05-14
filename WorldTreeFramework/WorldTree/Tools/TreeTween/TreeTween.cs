@@ -39,7 +39,10 @@ namespace WorldTree
     /// <summary>
     /// 值渐变
     /// </summary>
-    public class TreeTween<T> : Node, IAwake, ComponentOf<TreeValueBase>
+    public class TreeTween<T> : Node, ComponentOf<TreeValueBase>
+        , AsRule<IAwakeRule>
+        , AsRule<IUpdateRule>
+        , AsRule<ITweenRule<T>>
         where T : IEquatable<T>
     {
         /// <summary>
@@ -67,7 +70,7 @@ namespace WorldTree
         /// 结束
         /// </summary>
         public TreeValueBase<T> endValue;
-      
+
 
         /// <summary>
         /// 执行法则列表

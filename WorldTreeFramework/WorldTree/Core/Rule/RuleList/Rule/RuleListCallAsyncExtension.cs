@@ -84,7 +84,7 @@ namespace WorldTree
 
         #region Calls
 
-        public static async TreeTask<UnitList<OutT>> CallsAsync<R, OutT>(this IRuleList<R> ruleList, INode node, UnitList<OutT> defaultOutT)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<R, OutT>(this IRuleList<R> ruleList, INode node, OutT defaultOutT)
          where R : ICallRuleAsync<OutT>
         {
             UnitList<OutT> values = node.PoolGet<UnitList<OutT>>();
@@ -95,7 +95,7 @@ namespace WorldTree
             return values;
         }
 
-        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, UnitList<OutT> defaultOutT)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, OutT defaultOutT)
          where R : ICallRuleAsync<T1, OutT>
         {
             UnitList<OutT> values = node.PoolGet<UnitList<OutT>>();
@@ -105,7 +105,7 @@ namespace WorldTree
             }
             return values;
         }
-        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, UnitList<OutT> defaultOutT)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, OutT defaultOutT)
          where R : ICallRuleAsync<T1, T2, OutT>
         {
             UnitList<OutT> values = node.PoolGet<UnitList<OutT>>();
@@ -116,7 +116,7 @@ namespace WorldTree
             return values;
         }
 
-        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, T3, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, UnitList<OutT> defaultOutT)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, T3, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
          where R : ICallRuleAsync<T1, T2, T3, OutT>
         {
             UnitList<OutT> values = node.PoolGet<UnitList<OutT>>();
@@ -126,7 +126,7 @@ namespace WorldTree
             }
             return values;
         }
-        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, T3, T4, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, UnitList<OutT> defaultOutT)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, T3, T4, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
          where R : ICallRuleAsync<T1, T2, T3, T4, OutT>
         {
             UnitList<OutT> values = node.PoolGet<UnitList<OutT>>();
@@ -137,7 +137,7 @@ namespace WorldTree
             return values;
         }
 
-        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, T3, T4, T5, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, UnitList<OutT> defaultOutT)
+        public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, T3, T4, T5, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
          where R : ICallRuleAsync<T1, T2, T3, T4, T5, OutT>
         {
             UnitList<OutT> values = node.PoolGet<UnitList<OutT>>();

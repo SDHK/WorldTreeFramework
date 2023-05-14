@@ -16,7 +16,10 @@ namespace WorldTree
     /// <summary>
     /// 计时器：单次调用
     /// </summary>
-    public class TimerCall : Node, IAwake, ComponentOf<INode>
+    public class TimerCall : Node, ComponentOf<INode>
+        , AsRule<IAwakeRule>
+        , AsRule<IGetRule>
+        , AsRule<IUpdateRule>
     {
         public float time = 0;
         public float timeOutTime = 0;

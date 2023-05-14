@@ -12,7 +12,9 @@ namespace WorldTree
     /// <summary>
     /// 感知器层级
     /// </summary>
-    public class PerceptronLayer : Node, IAwake<int>, ChildOf<INode>
+    public class PerceptronLayer : Node, ChildOf<INode>
+        , AsRule<IAwakeRule<int>>
+        , AsRule<IRemoveRule>
     {
         public TreeList<PerceptronNode> nodes;
     }

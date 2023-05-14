@@ -30,11 +30,12 @@ namespace WorldTree
         ICollection,
         IReadOnlyList<T>,
         IReadOnlyCollection<T>,
-        IAwake,
-        IAwake<int>,
-        IAwake<IEnumerable<T>>,
         ChildOf<INode>,
-        ComponentOf<INode>
+        ComponentOf<INode>,
+        AsRule<IAwakeRule>,
+        AsRule<IAwakeRule<int>>,
+        AsRule<IAwakeRule<IEnumerable<T>>>,
+        AsRule<IRemoveRule>
     {
         /// <summary>
         /// 默认容量

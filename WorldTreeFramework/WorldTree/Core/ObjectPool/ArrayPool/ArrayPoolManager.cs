@@ -15,7 +15,10 @@ namespace WorldTree
     /// <summary>
     /// 数组对象池管理器
     /// </summary>
-    public class ArrayPoolManager : Node, IAwake, ComponentOf<WorldTreeCore>
+    public class ArrayPoolManager : Node, ComponentOf<WorldTreeCore>
+        , AsRule<IAwakeRule>
+        , AsRule<IAddRule>
+        , AsRule<IRemoveRule>
     {
         public TreeDictionary<Type, ArrayPoolGroup> PoolGroups;
     }
@@ -42,7 +45,7 @@ namespace WorldTree
         /// <summary>
         /// 获取数组
         /// </summary>
-        public static T[] Get<T>(this ArrayPoolManager self,  int Length)
+        public static T[] Get<T>(this ArrayPoolManager self, int Length)
         {
             return self.GetGroup(typeof(T)).GetPool(Length).Get() as T[];
         }

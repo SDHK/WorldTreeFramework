@@ -15,9 +15,10 @@ namespace WorldTree
     /// 一维数组
     /// </summary>
     public class TreeArray<T> : Node
-        , IAwake<int>
         , ChildOf<INode>
         , ComponentOf<INode>
+        , AsRule<IAwakeRule<int>>
+        , AsRule<IRemoveRule>
     {
         public T[] array;
         public int Length { get { return array.Length; } }
@@ -57,5 +58,5 @@ namespace WorldTree
         }
     }
 
-  
+
 }

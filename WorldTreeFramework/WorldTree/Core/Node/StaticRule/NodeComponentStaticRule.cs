@@ -154,7 +154,7 @@ namespace WorldTree
                     if (component.Branch != component) component.Branch = self.Branch;
                     component.Parent = self;
                     component.isComponent = true;
-                    component.SendRule<IAwakeRule>();
+                    component.TrySendRule<IAwakeRule>();
                     self.Core.AddNode(component);
                 }
             }
@@ -175,7 +175,7 @@ namespace WorldTree
                 component.Parent = self;
                 component.isComponent = true;
                 self.m_Components.Add(type, component);
-                component.SendRule<IAwakeRule>();
+                component.TrySendRule<IAwakeRule>();
                 self.Core.AddNode(component);
             }
             return component;
@@ -233,11 +233,11 @@ namespace WorldTree
 
         public static T AddComponent<N, T>(this N self, out T Component)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>, IAwake
+        where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule>
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule<IAwakeRule>();
+                Component.SendRule(default(IAwakeRule));
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -245,7 +245,7 @@ namespace WorldTree
 
         public static T AddComponent<N, T, T1>(this N self, out T Component, T1 arg1)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>, IAwake<T1>
+        where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1>>
         {
             if (self.TryAddNewComponent(out Component))
             {
@@ -256,7 +256,7 @@ namespace WorldTree
         }
         public static T AddComponent<N, T, T1, T2>(this N self, out T Component, T1 arg1, T2 arg2)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>, IAwake<T1, T2>
+        where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1, T2>>
         {
             if (self.TryAddNewComponent(out Component))
             {
@@ -268,7 +268,7 @@ namespace WorldTree
 
         public static T AddComponent<N, T, T1, T2, T3>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>, IAwake<T1, T2, T3>
+        where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1, T2, T3>>
         {
             if (self.TryAddNewComponent(out Component))
             {
@@ -280,7 +280,7 @@ namespace WorldTree
 
         public static T AddComponent<N, T, T1, T2, T3, T4>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>, IAwake<T1, T2, T3, T4>
+        where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4>>
         {
             if (self.TryAddNewComponent(out Component))
             {
@@ -291,7 +291,7 @@ namespace WorldTree
         }
         public static T AddComponent<N, T, T1, T2, T3, T4, T5>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         where N : class, INode
-        where T : class, INode, ComponentOf<N>, IAwake<T1, T2, T3, T4, T5>
+        where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
         {
             if (self.TryAddNewComponent(out Component))
             {

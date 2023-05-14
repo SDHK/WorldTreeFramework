@@ -24,7 +24,9 @@ namespace WorldTree
     /// 树节点值类型泛型基类
     /// </summary>
     public abstract partial class TreeValueBase<T> : TreeValueBase
+        ,AsRule<IRule>
         where T : IEquatable<T>
+        
     {
         /// <summary>
         /// 全局法则执行器

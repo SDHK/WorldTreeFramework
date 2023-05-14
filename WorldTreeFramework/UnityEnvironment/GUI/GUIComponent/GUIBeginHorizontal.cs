@@ -3,8 +3,9 @@
 namespace WorldTree
 {
     public class GUIBeginHorizontal : GUIBase
+        , AsRule<IRecycleRule>
     {
-        public  void Draw()
+        public void Draw()
         {
             GUILayout.BeginHorizontal(Style, options);
         }

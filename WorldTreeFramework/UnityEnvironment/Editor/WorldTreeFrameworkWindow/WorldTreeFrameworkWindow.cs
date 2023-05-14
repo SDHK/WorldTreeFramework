@@ -18,6 +18,11 @@ namespace EditorTool
     /// 世界树框架编辑器驱动窗口
     /// </summary>
     public class WorldTreeFrameworkWindow : Node
+        , AsRule<IAwakeRule>
+        , AsRule<IAddRule>
+        , AsRule<IGUIDrawSystem>
+        , AsRule<IEditorWindowInspectorUpdateSystem>
+
     {
         public static WorldTreeCore root;
 
@@ -64,7 +69,7 @@ namespace EditorTool
 
     class WorldTreeFrameworkWindowEditorWindowInspectorUpdateSystem : EditorWindowInspectorUpdateSystem<WorldTreeFrameworkWindow>
     {
-        public override void OnInspectorUpdate(WorldTreeFrameworkWindow self)
+        public override void OnEvent(WorldTreeFrameworkWindow self)
         {
             self.enable.Send();
             self.update.Send(0.02f);

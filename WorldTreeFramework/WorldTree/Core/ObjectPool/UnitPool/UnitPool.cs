@@ -19,7 +19,7 @@ namespace WorldTree
     /// <summary>
     /// 单位对象池
     /// </summary>
-    public class UnitPool : GenericPool<IUnitPoolEventItem>, IAwake<Type>, ChildOf<UnitPoolManager>
+    public class UnitPool : GenericPool<IUnitPoolEventItem>, AsRule<IAwakeRule<Type>>, ChildOf<UnitPoolManager>
     {
         public override string ToString()
         {

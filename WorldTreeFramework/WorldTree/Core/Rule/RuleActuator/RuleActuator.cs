@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 法则执行器 接口基类
     /// </summary>
-    public interface IRuleActuator:INode { }
+    public interface IRuleActuator : INode { }
 
     /// <summary>
     /// 法则执行器 逆变泛型接口
@@ -31,7 +31,11 @@ namespace WorldTree
     /// <summary>
     /// 法则执行器
     /// </summary>
-    public partial class RuleActuator : Node, IAwake, ChildOf<INode>, IRuleActuator<IRule>
+    public partial class RuleActuator : Node, ChildOf<INode>, IRuleActuator<IRule>
+        , AsRule<IAwakeRule>
+        , AsRule<IAddRule>
+        , AsRule<IRemoveRule>
+        , AsRule<IReferencedChildRemoveRule>
     {
         /// <summary>
         /// 法则集合

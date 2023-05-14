@@ -16,7 +16,11 @@ namespace WorldTree
     /// <summary>
     ///节点添加 全局动态监听器
     /// </summary>
-    public class NodeAddGlobalListener : Node, IAwake, ComponentOf<DynamicNodeQueue>
+    public class NodeAddGlobalListener : Node, ComponentOf<DynamicNodeQueue>
+        , AsRule<IAwakeRule>
+        , AsRule<IAddRule>
+        , AsRule<IRemoveRule>
+        , AsRule<IListenerAddRule>
     {
         public DynamicNodeQueue nodeQueue;
     }

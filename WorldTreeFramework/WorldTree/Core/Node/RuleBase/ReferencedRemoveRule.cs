@@ -19,7 +19,7 @@ namespace WorldTree
     /// <summary>
     /// 引用子关系解除法则
     /// </summary>
-    public abstract class DeReferencedChildRule<N> : SendRuleBase<N, IDeReferencedChildRule, INode> where N : class, INode { }
+    public abstract class DeReferencedChildRule<N> : SendRuleBase<N, IDeReferencedChildRule, INode> where N : class, INode, AsRule<IDeReferencedChildRule> { }
 
 
     /// <summary>
@@ -30,7 +30,7 @@ namespace WorldTree
     /// <summary>
     /// 引用父关系解除法则
     /// </summary>
-    public abstract class DeReferencedParentRule<N> : SendRuleBase<N, IDeReferencedParentRule, INode> where N : class, INode { }
+    public abstract class DeReferencedParentRule<N> : SendRuleBase<N, IDeReferencedParentRule, INode> where N : class, INode, AsRule<IDeReferencedParentRule> { }
 
 
 
@@ -41,7 +41,7 @@ namespace WorldTree
     /// <summary>
     /// 引用子关系移除法则
     /// </summary>
-    public abstract class ReferencedChildRemoveRule<N> : SendRuleBase<N, IReferencedChildRemoveRule, INode> where N : class, INode { }
+    public abstract class ReferencedChildRemoveRule<N> : SendRuleBase<N, IReferencedChildRemoveRule, INode> where N : class, INode, AsRule<IReferencedChildRemoveRule> { }
 
 
     /// <summary>
@@ -52,7 +52,7 @@ namespace WorldTree
     /// <summary>
     /// 引用父关系移除法则
     /// </summary>
-    public abstract class ReferencedParentRemoveRule<N> : SendRuleBase<N, IReferencedParentRemoveRule, INode> where N : class, INode { }
+    public abstract class ReferencedParentRemoveRule<N> : SendRuleBase<N, IReferencedParentRemoveRule, INode> where N : class, INode, AsRule<IReferencedParentRemoveRule> { }
 
 
 }

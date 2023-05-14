@@ -13,7 +13,11 @@ using WorldTree;
 
 namespace EditorTool
 {
-    public class EditorHomePage : Node, IAwake, ComponentOf<INode>
+    public class EditorHomePage : Node, ComponentOf<INode>
+        , AsRule<IAwakeRule>
+        , AsRule<IAddRule>
+        , AsRule<IGuiUpdateRule>
+        , AsRule<IUpdateRule>
     {
         public INode page;
     }
@@ -53,7 +57,7 @@ namespace EditorTool
 
             EditorGUILayout.BeginVertical();
 
-            self.page?.SendRule<IGUIDrawSystem>();
+            self.page?.TrySendRule<IGUIDrawSystem>();
 
             EditorGUILayout.EndVertical();
 

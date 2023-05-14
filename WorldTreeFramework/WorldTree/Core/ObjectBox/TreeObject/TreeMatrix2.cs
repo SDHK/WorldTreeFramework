@@ -14,7 +14,9 @@ namespace WorldTree
     /// <summary>
     /// 二维矩阵
     /// </summary>
-    public class TreeMatrix2<T> : Node, IAwake<int, int>, ChildOf<INode>
+    public class TreeMatrix2<T> : Node, ChildOf<INode>
+        , AsRule<IAwakeRule<int, int>>
+        , AsRule<IRemoveRule>
     {
         /// <summary>
         /// x轴长度

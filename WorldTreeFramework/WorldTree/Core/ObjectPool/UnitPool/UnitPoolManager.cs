@@ -37,7 +37,10 @@ namespace WorldTree
     /// <summary>
     /// 单位对象池管理器
     /// </summary>
-    public class UnitPoolManager : Node, IAwake, ComponentOf<WorldTreeCore>
+    public class UnitPoolManager : Node, ComponentOf<WorldTreeCore>
+        , AsRule<IAwakeRule>
+        , AsRule<IAddRule>
+        , AsRule<IRemoveRule>
     {
         public TreeDictionary<Type, UnitPool> m_Pools;
 

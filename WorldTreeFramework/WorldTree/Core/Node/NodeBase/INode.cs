@@ -26,11 +26,12 @@ namespace WorldTree
     /// <typeparam name="T">父节点类型</typeparam>
     public interface ChildOf<in T> where T : class, INode { }
 
+
     /// <summary>
-    /// 节点：法则限制
+    /// 节点：法则标记
     /// </summary>
     /// <typeparam name="R">法则类型</typeparam>
-    public interface RuleOf<in R> where R : IRule { }
+    public interface AsRule<in R> where R : IRule { }
 
 
     /// <summary>

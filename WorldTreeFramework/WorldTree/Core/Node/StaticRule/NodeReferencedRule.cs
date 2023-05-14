@@ -40,7 +40,7 @@ namespace WorldTree
                         self.m_ReferencedChilden.Dispose();
                         self.m_ReferencedChilden = null;
                     }
-                    self.SendRule(default(IDeReferencedChildRule), node);
+                    self.TrySendRule(default(IDeReferencedChildRule), node);
                 }
             }
 
@@ -54,7 +54,7 @@ namespace WorldTree
                         node.m_ReferencedParents.Dispose();
                         node.m_ReferencedParents = null;
                     }
-                    node.SendRule(default(IDeReferencedParentRule), self);
+                    node.TrySendRule(default(IDeReferencedParentRule), self);
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace WorldTree
                             self.m_ReferencedParents = null;
                         }
 
-                        node.SendRule(default(IReferencedChildRemoveRule), self);
+                        node.TrySendRule(default(IReferencedChildRemoveRule), self);
                     }
                 }
             }
@@ -174,7 +174,7 @@ namespace WorldTree
                                 }
                             }
                         }
-                        node.SendRule(default(IReferencedParentRemoveRule), self);
+                        node.TrySendRule(default(IReferencedParentRemoveRule), self);
                     }
                 }
             }

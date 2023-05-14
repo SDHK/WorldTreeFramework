@@ -8,5 +8,5 @@
     /// <summary>
     /// FixedUpdate法则
     /// </summary>
-    public abstract class FixedUpdateRule<T> : SendRuleBase<T, IFixedUpdateRule, float> where T : class, INode { }
+    public abstract class FixedUpdateRule<T> : SendRuleBase<T, IFixedUpdateRule, float> where T : class, INode, AsRule<IFixedUpdateRule> { }
 }

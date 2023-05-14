@@ -32,49 +32,49 @@ namespace EditorTool
             {
                 isShow = true;
             }
-            entity?.SendRule<IEditorWindowEnableSystem>();
+            entity?.TrySendRule<IEditorWindowEnableSystem>();
         }
 
         private void OnFocus()
         {
-            entity?.SendRule<IEditorWindowFocusSystem>();
+            entity?.TrySendRule<IEditorWindowFocusSystem>();
         }
 
         private void OnInspectorUpdate()
         {
-            entity?.SendRule<IEditorWindowInspectorUpdateSystem>();
+            entity?.TrySendRule<IEditorWindowInspectorUpdateSystem>();
         }
 
         public void OnProjectChange()
         {
-            entity?.SendRule<IEditorWindowProjectChangeSystem>();
+            entity?.TrySendRule<IEditorWindowProjectChangeSystem>();
         }
 
         private void OnSelectionChange()
         {
-            entity?.SendRule<IEditorWindowSelectionChangeSystem>();
+            entity?.TrySendRule<IEditorWindowSelectionChangeSystem>();
         }
 
         public void OnHierarchyChange()
         {
-            entity?.SendRule<IEditorWindowHierarchyChangeSystem>();
+            entity?.TrySendRule<IEditorWindowHierarchyChangeSystem>();
         }
         private void OnGUI()
         {
-            entity?.SendRule<IGUIDrawSystem>();
+            entity?.TrySendRule<IGUIDrawSystem>();
         }
 
         private void OnLostFocus()
         {
-            entity?.SendRule<IEditorWindowLostFocusSystem>();
+            entity?.TrySendRule<IEditorWindowLostFocusSystem>();
         }
         private void OnDisable()
         {
-            entity?.SendRule<IEditorWindowDisableSystem>();
+            entity?.TrySendRule<IEditorWindowDisableSystem>();
         }
         private void OnDestroy()
         {
-            entity?.SendRule<IEditorWindowDestroySystem>();
+            entity?.TrySendRule<IEditorWindowDestroySystem>();
             if (isShow)
             {
                 isShow = false;

@@ -15,7 +15,9 @@ namespace WorldTree
     /// <summary>
     /// 感知器单元节点
     /// </summary>
-    public class PerceptronNode : Node, IAwake, ChildOf<INode>
+    public class PerceptronNode : Node, ChildOf<INode>
+        , AsRule<IAwakeRule>
+        , AsRule<IRemoveRule>
     {
         /// <summary>
         /// 上连接

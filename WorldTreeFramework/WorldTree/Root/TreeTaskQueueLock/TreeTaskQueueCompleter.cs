@@ -12,7 +12,9 @@ namespace WorldTree
     /// <summary>
     /// 异步任务队列锁的解锁器
     /// </summary>
-    public class TreeTaskQueueCompleter : Node, IAwake<long, TreeTaskQueueLock>, ChildOf<INode>
+    public class TreeTaskQueueCompleter : Node, ChildOf<INode>
+        , AsRule<IAwakeRule<long, TreeTaskQueueLock>>
+        , AsRule<IRemoveRule>
     {
         public TreeTaskQueueLock m_QueueLock;
         public long key;

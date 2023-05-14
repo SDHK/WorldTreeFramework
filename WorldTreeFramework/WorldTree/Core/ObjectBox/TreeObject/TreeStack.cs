@@ -16,7 +16,8 @@ namespace WorldTree
     /// <summary>
     /// 实体泛型栈
     /// </summary>
-    public class TreeStack<T> : Stack<T>, INode, IAwake, ChildOf<INode>
+    public class TreeStack<T> : Stack<T>, INode, ChildOf<INode>
+        , AsRule<IAwakeRule>
     {
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }

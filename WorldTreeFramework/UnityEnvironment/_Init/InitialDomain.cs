@@ -53,6 +53,7 @@ namespace WorldTree
     //}
 
     public class TreeNode2<T> : Node, ChildOf<INode>
+        , AsRule<IAddRule>
     {
         public T Value;
     }
@@ -83,7 +84,10 @@ namespace WorldTree
     /// <summary>
     /// 初始域
     /// </summary>
-    public class InitialDomain : Node, IAwake, ComponentOf<INode>
+    public class InitialDomain : Node, ComponentOf<INode>
+        , AsRule<IAwakeRule>
+        , AsRule<IAddRule>
+        , AsRule<IUpdateRule>
     {
         public TreeNode node;
         public TreeValue<float> valueFloat;
@@ -103,7 +107,7 @@ namespace WorldTree
             self.AddChild(out self.valueFloat);
             self.AddChild(out self.valueInt);
 
-            //self.valueFloat.BindTwoWay(self.valueInt);
+            self.valueFloat.BindTwoWay(self.valueInt);
 
             //self.SendRule(default(EventAddRule), 1.01f);
 
@@ -115,7 +119,7 @@ namespace WorldTree
 
             //委托添加
             self.ruleActuator.EnqueueReferenced(test.AddComponent(out NodeEvent<float> _));
-            
+
             //执行
             self.ruleActuator.Send(2.5f);
             //self.ruleActuator.Dispose();
@@ -123,7 +127,7 @@ namespace WorldTree
             self.ruleActuator.Send(2.7f);
 
             //事件调用
-            //test.AddComponent(out NodeEvent<float> _).Send(1.02f);
+            test.AddComponent(out NodeEvent<float> _).Send(1.02f);
 
         }
     }
@@ -133,9 +137,8 @@ namespace WorldTree
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-
-                //self.valueFloat.Value += 1.5f;
-                //World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
+                self.valueFloat.Value += 1.5f;
+                World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
@@ -174,7 +177,9 @@ namespace WorldTree
 
 
     //主要测试类型
-    public class Test<T> : Node, IAwake, ChildOf<INode>
+    public class Test<T> : Node, ChildOf<INode>
+        , AsRule<IAwakeRule>
+        , AsRule<IAddRule>
     {
     }
     //测试类型添加生命周期
@@ -189,10 +194,12 @@ namespace WorldTree
     }
 
     //声明一个事件节点，指定服务于 Test<T>
-    public class NodeEvent<T> : EventNode<Test<T>> { }
+    public class NodeEvent<T> : EventNode<Test<T>>
+        , AsRule<ISendRule<float>> 
+    { }
 
     //实现事件节点的通用事件类型
-    class EventTestRule<T> : SendRule<NodeEvent<T>, float>
+    class NodeEventSendRule<T> : SendRule<NodeEvent<T>, float>
     {
         public override void OnEvent(NodeEvent<T> self, float arg1)
         {

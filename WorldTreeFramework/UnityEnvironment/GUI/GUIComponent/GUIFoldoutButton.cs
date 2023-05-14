@@ -12,6 +12,7 @@ using UnityEngine;
 namespace WorldTree
 {
     public class GUIFoldoutButton : GUIBase
+        , AsRule<IRecycleRule>
     {
         public Action action;
         public bool isFoldout;

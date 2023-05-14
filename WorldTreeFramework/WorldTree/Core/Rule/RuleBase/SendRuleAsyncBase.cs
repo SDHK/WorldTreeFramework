@@ -63,7 +63,7 @@ namespace WorldTree
     /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<N, R> : RuleBase<N, R>, ISendRuleAsync
-    where N : class, INode
+    where N : class, INode, AsRule<R>
     where R : ISendRuleAsync
     {
         public virtual TreeTask Invoke(INode self) => OnEvent(self as N);
@@ -73,7 +73,7 @@ namespace WorldTree
     /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<N, R, T1> : RuleBase<N, R>, ISendRuleAsync<T1>
-    where N : class, INode
+    where N : class, INode, AsRule<R>
     where R : ISendRuleAsync<T1>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
@@ -83,7 +83,7 @@ namespace WorldTree
     /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<N, R, T1, T2> : RuleBase<N, R>, ISendRuleAsync<T1, T2>
-    where N : class, INode
+    where N : class, INode, AsRule<R>
     where R : ISendRuleAsync<T1, T2>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
@@ -93,7 +93,7 @@ namespace WorldTree
     /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<N, R, T1, T2, T3> : RuleBase<N, R>, ISendRuleAsync<T1, T2, T3>
-    where N : class, INode
+    where N : class, INode, AsRule<R>
     where R : ISendRuleAsync<T1, T2, T3>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
@@ -103,7 +103,7 @@ namespace WorldTree
     /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<N, R, T1, T2, T3, T4> : RuleBase<N, R>, ISendRuleAsync<T1, T2, T3, T4>
-    where N : class, INode
+    where N : class, INode, AsRule<R>
     where R : ISendRuleAsync<T1, T2, T3, T4>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
@@ -113,7 +113,7 @@ namespace WorldTree
     /// 异步通知法则抽象基类
     /// </summary>
     public abstract class SendRuleAsyncBase<N, R, T1, T2, T3, T4, T5> : RuleBase<N, R>, ISendRuleAsync<T1, T2, T3, T4, T5>
-    where N : class, INode
+    where N : class, INode, AsRule<R>
     where R : ISendRuleAsync<T1, T2, T3, T4, T5>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);

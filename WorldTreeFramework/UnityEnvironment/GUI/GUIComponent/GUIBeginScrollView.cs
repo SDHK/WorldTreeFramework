@@ -11,6 +11,7 @@ using UnityEngine;
 namespace WorldTree
 {
     public class GUIBeginScrollView : GUIBase
+        ,AsRule<IRecycleRule>
     {
         /// <summary>
         /// 滚动位置

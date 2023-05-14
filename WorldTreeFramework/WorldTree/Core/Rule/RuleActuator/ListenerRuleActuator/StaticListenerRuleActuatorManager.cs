@@ -58,7 +58,10 @@ namespace WorldTree
     /// <summary>
     /// 静态监听器执行器管理器
     /// </summary>
-    public class StaticListenerRuleActuatorManager : Node, IAwake, ComponentOf<WorldTreeCore>
+    public class StaticListenerRuleActuatorManager : Node, ComponentOf<WorldTreeCore>
+        , AsRule<IAwakeRule>
+        , AsRule<IAddRule>
+        , AsRule<IRemoveRule>
     {
         /// <summary>
         /// 目标类型 法则执行器字典

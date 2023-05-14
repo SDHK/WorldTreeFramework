@@ -19,21 +19,30 @@ namespace WorldTree
     /// <summary>
     /// 数值变化监听法则(同类型转换)
     /// </summary>
-    public abstract class ValueChangeRule<T1> : SendRuleBase<TreeValueBase<T1>, IValueChangeRule<T1>, T1>
+    public abstract class ValueChangeRuleBase<N, T1> : SendRuleBase<N, IValueChangeRule<T1>, T1>
+        where N : class, INode, AsRule<IValueChangeRule<T1>>
         where T1 : IEquatable<T1>
     { }
+    /// <summary>
+    /// 数值变化监听法则(同类型转换)
+    /// </summary>
+    public abstract class ValueChangeRule<T1> : ValueChangeRuleBase<TreeValueBase<T1>, T1>
+        where T1 : IEquatable<T1>
+    { }
+
+
 
     /// <summary>
     /// 数值变化监听法则(不同类型转换)
     /// </summary>
-    public abstract class ValueChangeRule<T1, T2> : SendRuleBase<TreeValueBase<T1>, IValueChangeRule<T2>, T2>
+    public abstract class ValueChangeRule<T1, T2> : ValueChangeRuleBase<TreeValueBase<T1>, T2>
         where T1 : IEquatable<T1>
         where T2 : IEquatable<T2>
     { }
 
 
 
-    class TreeValueValueChangeRule<T> : ValueChangeRule<T, T>
+    class TreeValueValueChangeRule<T> : ValueChangeRule<T>
     where T : IEquatable<T>
     {
         public override void OnEvent(TreeValueBase<T> self, T arg1)

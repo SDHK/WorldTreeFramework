@@ -14,7 +14,10 @@ namespace WorldTree
     /// <summary>
     /// 数组对象池集合
     /// </summary>
-    public class ArrayPoolGroup : Node, IAwake<Type>, ChildOf<ArrayPoolManager>
+    public class ArrayPoolGroup : Node, ChildOf<ArrayPoolManager>
+        , AsRule<IAwakeRule<Type>>
+        , AsRule<IAddRule>
+        , AsRule<IRemoveRule>
     {
         /// <summary>
         /// 数组类型
@@ -67,7 +70,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取数组对象池
         /// </summary>
-        public static bool TryGetPool(this ArrayPoolGroup self, int Length,out ArrayPool arrayPool)
+        public static bool TryGetPool(this ArrayPoolGroup self, int Length, out ArrayPool arrayPool)
         {
             return self.Pools.TryGetValue(Length, out arrayPool);
         }
