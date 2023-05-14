@@ -18,9 +18,6 @@ namespace WorldTree
     public class ListenerRuleActuatorGroup : Node
         , ChildOf<DynamicListenerRuleActuatorManager>
         , ChildOf<StaticListenerRuleActuatorManager>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
-        , AsRule<IRemoveRule>
     {
         /// <summary>
         /// 目标类型

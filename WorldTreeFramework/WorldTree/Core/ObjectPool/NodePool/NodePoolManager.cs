@@ -36,9 +36,6 @@ namespace WorldTree
     /// 节点对象池管理器
     /// </summary>
     public class NodePoolManager : Node, ComponentOf<WorldTreeCore>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
-        , AsRule<IRemoveRule>
     {
         public TreeDictionary<Type, NodePool> m_Pools;
     }

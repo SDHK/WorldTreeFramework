@@ -16,9 +16,6 @@ namespace WorldTree
     /// 计时器：循环调用
     /// </summary>
     public class TimerCycle : Node
-        , AsRule<IGetRule>
-        , AsRule<IAwakeRule>
-        , AsRule<IUpdateRule>
     {
         public float time = 0;
         public float timeOutTime = 0;

@@ -9,20 +9,8 @@ using WorldTree.Internal;
 
 public class TreeNode : Node
     , ComponentOf<INode>
-    , AsRule<INewRule>
-    , AsRule<IGetRule>
-    , AsRule<IAwakeRule>
-    , AsRule<IEnableRule>
-    , AsRule<IAddRule>
     , AsRule<IFixedUpdateRule>
     , AsRule<ILateUpdateRule>
-    , AsRule<IUpdateRule>
-    , AsRule<IDisableRule>
-    , AsRule<IRemoveRule>
-    , AsRule<IRecycleRule>
-    , AsRule<IDestroyRule>
-
-
 {
 
     public static bool bit = true;
@@ -184,10 +172,6 @@ class NodeDestroySystem : DestroyRule<TreeNode>
 
 
 public class Node1 : Node
-    , AsRule<IAwakeRule>
-    , AsRule<IEnableRule>
-    , AsRule<IAddRule>
-    , AsRule<IDisableRule>
 {
 
 }
@@ -217,7 +201,6 @@ class Node1DisableSystem : DisableRule<Node1>
 
 
 public class Node2 : Node, ChildOf<INode>
-    , AsRule<IAwakeRule>
 {
 
 }

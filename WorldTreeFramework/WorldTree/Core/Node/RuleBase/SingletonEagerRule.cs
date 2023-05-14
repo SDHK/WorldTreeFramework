@@ -23,7 +23,7 @@ namespace WorldTree
     /// </summary>
     public abstract class SingletonEagerRule<N> : SendRuleBase<N, ISingletonEagerRule>, ISingletonEagerRule
         where N : class, INode, ComponentOf<INode>
-        , AsRule<IAwakeRule>
+        
         , AsRule<ISingletonEagerRule>
     {
         public override void Invoke(INode self)

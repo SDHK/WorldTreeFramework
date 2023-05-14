@@ -14,7 +14,6 @@ namespace WorldTree
     /// </summary>
     public class PerceptronLayer : Node, ChildOf<INode>
         , AsRule<IAwakeRule<int>>
-        , AsRule<IRemoveRule>
     {
         public TreeList<PerceptronNode> nodes;
     }

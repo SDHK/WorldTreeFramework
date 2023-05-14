@@ -18,8 +18,8 @@ namespace EditorTool
     /// 世界树框架编辑器驱动窗口
     /// </summary>
     public class WorldTreeFrameworkWindow : Node
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
+        
+       
         , AsRule<IGUIDrawSystem>
         , AsRule<IEditorWindowInspectorUpdateSystem>
 

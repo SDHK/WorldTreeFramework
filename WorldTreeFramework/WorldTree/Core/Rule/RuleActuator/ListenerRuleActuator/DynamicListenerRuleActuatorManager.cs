@@ -17,9 +17,6 @@ namespace WorldTree
     /// 动态监听法则执行器管理器
     /// </summary>
     public class DynamicListenerRuleActuatorManager : Node, ComponentOf<WorldTreeCore>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
-        , AsRule<IRemoveRule>
     {
         /// <summary>
         /// 目标类型 法则执行器字典

@@ -18,9 +18,9 @@ namespace EditorTool
     /// 编辑器窗体组件
     /// </summary>
     public class EditorGUIWindow : Node, ComponentOf<INode>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
-        , AsRule<IRemoveRule>
+        
+       
+      
     {
         public MonoEditorGUIWindow window;
     }

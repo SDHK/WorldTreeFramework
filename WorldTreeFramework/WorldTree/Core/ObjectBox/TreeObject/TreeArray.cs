@@ -18,7 +18,6 @@ namespace WorldTree
         , ChildOf<INode>
         , ComponentOf<INode>
         , AsRule<IAwakeRule<int>>
-        , AsRule<IRemoveRule>
     {
         public T[] array;
         public int Length { get { return array.Length; } }

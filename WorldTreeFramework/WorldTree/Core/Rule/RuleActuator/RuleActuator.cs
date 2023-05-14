@@ -32,10 +32,6 @@ namespace WorldTree
     /// 法则执行器
     /// </summary>
     public partial class RuleActuator : Node, ChildOf<INode>, IRuleActuator<IRule>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
-        , AsRule<IRemoveRule>
-        , AsRule<IReferencedChildRemoveRule>
     {
         /// <summary>
         /// 法则集合

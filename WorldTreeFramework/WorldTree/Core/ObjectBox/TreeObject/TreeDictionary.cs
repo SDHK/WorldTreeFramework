@@ -17,7 +17,6 @@ namespace WorldTree
     /// 树字典泛型类
     /// </summary>
     public class TreeDictionary<K, V> : Dictionary<K, V>, INode, ComponentOf<INode>, ChildOf<INode>
-        , AsRule<IAwakeRule>
     {
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }

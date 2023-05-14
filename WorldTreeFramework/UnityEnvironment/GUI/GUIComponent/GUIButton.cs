@@ -14,7 +14,6 @@ using UnityEngine;
 namespace WorldTree
 {
     public class GUIButton : GUIBase
-        ,AsRule<IRecycleRule>
     {
         public Action action;
 

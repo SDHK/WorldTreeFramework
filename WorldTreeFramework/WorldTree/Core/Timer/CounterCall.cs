@@ -16,9 +16,6 @@ namespace WorldTree
     /// 计数器
     /// </summary>
     public class CounterCall : Node, ComponentOf<INode>
-        , AsRule<IAwakeRule>
-        , AsRule<IGetRule>
-        , AsRule<IUpdateRule>
     {
         public int count = 0;
         public int countOut = 0;

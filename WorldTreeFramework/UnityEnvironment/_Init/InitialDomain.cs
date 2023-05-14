@@ -53,7 +53,6 @@ namespace WorldTree
     //}
 
     public class TreeNode2<T> : Node, ChildOf<INode>
-        , AsRule<IAddRule>
     {
         public T Value;
     }
@@ -85,9 +84,6 @@ namespace WorldTree
     /// 初始域
     /// </summary>
     public class InitialDomain : Node, ComponentOf<INode>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
-        , AsRule<IUpdateRule>
     {
         public TreeNode node;
         public TreeValue<float> valueFloat;
@@ -178,8 +174,6 @@ namespace WorldTree
 
     //主要测试类型
     public class Test<T> : Node, ChildOf<INode>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
     {
     }
     //测试类型添加生命周期

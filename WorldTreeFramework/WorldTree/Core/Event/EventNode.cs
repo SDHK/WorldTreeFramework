@@ -17,9 +17,6 @@ namespace WorldTree
     /// </summary>
     /// <typeparam name="N">事件挂载到节点下</typeparam>
     public abstract class EventNode<N> : Node, ComponentOf<N>
-        , AsRule<IAwakeRule>
-        , AsRule<IReferencedParentRemoveRule>
-        , AsRule<IDeReferencedParentRule>
         where N : class, INode
     {
         public N Node => this.Parent as N;

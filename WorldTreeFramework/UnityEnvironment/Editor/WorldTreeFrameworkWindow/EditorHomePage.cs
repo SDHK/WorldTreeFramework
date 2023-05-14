@@ -14,10 +14,10 @@ using WorldTree;
 namespace EditorTool
 {
     public class EditorHomePage : Node, ComponentOf<INode>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
+        
+       
         , AsRule<IGuiUpdateRule>
-        , AsRule<IUpdateRule>
+       
     {
         public INode page;
     }

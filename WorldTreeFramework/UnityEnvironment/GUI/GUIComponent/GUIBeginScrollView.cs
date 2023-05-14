@@ -11,13 +11,12 @@ using UnityEngine;
 namespace WorldTree
 {
     public class GUIBeginScrollView : GUIBase
-        ,AsRule<IRecycleRule>
     {
         /// <summary>
         /// 滚动位置
         /// </summary>
         public Vector2 scrollPosition;
-        public  void Draw()
+        public void Draw()
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, Style, options);
         }

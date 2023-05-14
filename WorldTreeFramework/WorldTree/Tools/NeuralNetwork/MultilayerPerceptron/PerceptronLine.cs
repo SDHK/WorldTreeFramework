@@ -17,7 +17,6 @@ namespace WorldTree
     /// </summary>
     public class PerceptronLine : Node, ChildOf<PerceptronNode>
         , AsRule<IAwakeRule<PerceptronNode, PerceptronNode>>
-        , AsRule<IRemoveRule>
     {
         public static Random rand = new Random();
 

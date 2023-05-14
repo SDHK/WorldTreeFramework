@@ -41,8 +41,6 @@ namespace WorldTree
     /// 泛型通用对象池
     /// </summary>
     public class GenericPool<T> : PoolBase
-        , AsRule<IRemoveRule>
-
         where T : class
     {
         /// <summary>

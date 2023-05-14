@@ -13,8 +13,6 @@ using UnityEngine;
 namespace WorldTree
 {
     public class GUIBox : GUIBase
-        , AsRule<IAwakeRule>
-        , AsRule<IRecycleRule>
     {
         public void Draw()
         {

@@ -19,8 +19,6 @@ namespace WorldTree
     /// 游戏物体实体
     /// </summary>
     public class GameObjectNode : Node, ComponentOf<INode>, ChildOf<INode>
-        ,AsRule<IAwakeRule>
-        ,AsRule<IRemoveRule>
     {
         public GameObjectPool pool;
 

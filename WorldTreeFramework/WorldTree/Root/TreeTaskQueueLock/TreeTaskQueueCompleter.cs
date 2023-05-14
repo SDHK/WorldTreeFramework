@@ -14,7 +14,6 @@ namespace WorldTree
     /// </summary>
     public class TreeTaskQueueCompleter : Node, ChildOf<INode>
         , AsRule<IAwakeRule<long, TreeTaskQueueLock>>
-        , AsRule<IRemoveRule>
     {
         public TreeTaskQueueLock m_QueueLock;
         public long key;

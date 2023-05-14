@@ -3,10 +3,6 @@
 namespace WorldTree
 {
     public class GUIBeginVertical : GUIBase
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
-        , AsRule<IRecycleRule>
-
     {
         public void Draw()
         {

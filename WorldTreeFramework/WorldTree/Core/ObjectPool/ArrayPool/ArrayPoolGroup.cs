@@ -16,8 +16,6 @@ namespace WorldTree
     /// </summary>
     public class ArrayPoolGroup : Node, ChildOf<ArrayPoolManager>
         , AsRule<IAwakeRule<Type>>
-        , AsRule<IAddRule>
-        , AsRule<IRemoveRule>
     {
         /// <summary>
         /// 数组类型

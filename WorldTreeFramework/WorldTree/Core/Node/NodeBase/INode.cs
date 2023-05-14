@@ -61,6 +61,29 @@ namespace WorldTree
     /// <para>世界树节点最底层接口</para> 
     /// </remarks>
     public interface INode : IUnitPoolItem
+
+        , AsRule<INewRule>
+        , AsRule<IGetRule>
+        , AsRule<IRecycleRule>
+        , AsRule<IDestroyRule>
+
+        , AsRule<IAwakeRule>
+        , AsRule<IEnableRule>
+        , AsRule<IDisableRule>
+
+        , AsRule<IAddRule>
+        , AsRule<IUpdateRule>
+        , AsRule<IRemoveRule>
+
+        , AsRule<IListenerAddRule>
+        , AsRule<IListenerRemoveRule>
+
+        , AsRule<IDeReferencedChildRule>
+        , AsRule<IDeReferencedParentRule>
+
+        , AsRule<IReferencedChildRemoveRule>
+        , AsRule<IReferencedParentRemoveRule>
+
     {
 
         /// <summary>

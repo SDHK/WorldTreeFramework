@@ -4,7 +4,6 @@ using System;
 namespace WorldTree
 {
     public class PerceptronTest : Node, ChildOf<INode>
-        , AsRule<IAwakeRule>
     {
         /// <summary>
         /// 训练输入

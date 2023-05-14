@@ -40,8 +40,6 @@ namespace WorldTree
     /// 值渐变
     /// </summary>
     public class TreeTween<T> : Node, ComponentOf<TreeValueBase>
-        , AsRule<IAwakeRule>
-        , AsRule<IUpdateRule>
         , AsRule<ITweenRule<T>>
         where T : IEquatable<T>
     {

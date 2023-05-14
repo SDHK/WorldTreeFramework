@@ -13,9 +13,6 @@ namespace WorldTree
     /// 多层感知器管理器
     /// </summary>
     public class MultilayerPerceptronManager : Node, ChildOf<INode>, ComponentOf<INode>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
-        , AsRule<IRemoveRule>
     {
         public TreeList<PerceptronLayer> layers;
     }

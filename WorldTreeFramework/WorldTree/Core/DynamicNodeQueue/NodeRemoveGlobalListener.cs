@@ -16,10 +16,6 @@ namespace WorldTree
     /// 节点移除 动态全局监听器
     /// </summary>
     public class NodeRemoveGlobalListener : Node, ComponentOf<DynamicNodeQueue>
-        ,AsRule<IAwakeRule>
-        ,AsRule<IAddRule>
-        ,AsRule<IRemoveRule>
-        ,AsRule<IListenerRemoveRule>
     {
         public DynamicNodeQueue nodeQueue;
     }

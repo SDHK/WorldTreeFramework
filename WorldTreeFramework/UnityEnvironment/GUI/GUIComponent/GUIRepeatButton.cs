@@ -4,7 +4,6 @@ using UnityEngine;
 namespace WorldTree
 {
     public class GUIRepeatButton : GUIBase
-        , AsRule<IRecycleRule>
     {
         public Action action;
 

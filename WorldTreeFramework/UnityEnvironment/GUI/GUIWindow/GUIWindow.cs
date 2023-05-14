@@ -18,10 +18,7 @@ namespace WorldTree
 {
 
     public class GUIWindow : GUIBase, ComponentOf<GUIGeneralWindow>
-        , AsRule<IAwakeRule>
-        , AsRule<IAddRule>
         , AsRule<IGuiUpdateRule>
-        , AsRule<IRecycleRule>
     {
         public Rect rect = new Rect(0, 0, 400, 300);
         public bool isDrag = true;

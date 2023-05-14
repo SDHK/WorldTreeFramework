@@ -32,10 +32,8 @@ namespace WorldTree
         IReadOnlyCollection<T>,
         ChildOf<INode>,
         ComponentOf<INode>,
-        AsRule<IAwakeRule>,
         AsRule<IAwakeRule<int>>,
-        AsRule<IAwakeRule<IEnumerable<T>>>,
-        AsRule<IRemoveRule>
+        AsRule<IAwakeRule<IEnumerable<T>>>
     {
         /// <summary>
         /// 默认容量
