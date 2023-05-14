@@ -28,7 +28,7 @@ namespace WorldTree
 
 
     /// <summary>
-    /// 节点：法则标记
+    /// 节点：可用法则
     /// </summary>
     /// <typeparam name="R">法则类型</typeparam>
     public interface AsRule<in R> where R : IRule { }
