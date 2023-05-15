@@ -27,7 +27,7 @@ namespace WorldTree
     /// <summary>
     /// UI 栈窗口管理器
     /// </summary>
-    public class WindowManager : Node
+    public class WindowManager : NodeListener
     {
         /// <summary>
         /// 全部窗口

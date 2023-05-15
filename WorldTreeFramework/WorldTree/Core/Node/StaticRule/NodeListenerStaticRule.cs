@@ -17,7 +17,7 @@ namespace WorldTree
         /// <summary>
         /// 动态监听器切换目标
         /// </summary>
-        public static bool ListenerSwitchesTarget(this INode self, Type targetType, ListenerState state)
+        public static bool ListenerSwitchesTarget(this INodeListener self, Type targetType, ListenerState state)
         {
             if (self.listenerTarget != targetType)
             {
@@ -41,7 +41,7 @@ namespace WorldTree
         /// <summary>
         /// 动态监听器切换节点目标
         /// </summary>
-        public static bool ListenerSwitchesEntity<T>(this INode self)
+        public static bool ListenerSwitchesEntity<T>(this INodeListener self)
             where T : class,INode
         {
             return self.ListenerSwitchesTarget(typeof(T), ListenerState.Node);
@@ -49,7 +49,7 @@ namespace WorldTree
         /// <summary>
         /// 动态监听器切换系统目标
         /// </summary>
-        public static bool ListenerSwitchesRule<T>(this INode self)
+        public static bool ListenerSwitchesRule<T>(this INodeListener self)
             where T : IRule
         {
             return self.ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
@@ -58,7 +58,7 @@ namespace WorldTree
         /// <summary>
         /// 动态监听器清除目标
         /// </summary>
-        public static void ListenerClearTarget(this INode self)
+        public static void ListenerClearTarget(this INodeListener self)
         {
             self.Core.DynamicListenerRuleActuatorManager.ListenerRemove(self); 
             self.listenerTarget = null;

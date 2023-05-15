@@ -345,15 +345,16 @@ namespace WorldTree
             self.AddRuleGroup?.Send(node);
 
 
-            if (node.Branch.Id != self.Id)
+            if (node is INodeListener && node.Branch.Id != self.Id)
             {
+                INodeListener nodeListener = (node as INodeListener);
                 //检测添加静态监听
-                self.StaticListenerRuleActuatorManager.TryAddListener(node);
+                self.StaticListenerRuleActuatorManager.TryAddListener(nodeListener);
                 //检测添加动态监听
-                node.ListenerSwitchesTarget(typeof(INode), ListenerState.Node);
+                nodeListener.ListenerSwitchesTarget(typeof(INode), ListenerState.Node);
             }
 
-          
+
         }
 
         /// <summary>
@@ -370,12 +371,14 @@ namespace WorldTree
             node.RemoveAll();//移除所有子节点和组件
             self.DisableRuleGroup?.Send(node);//调用禁用事件
 
-            if (node.Branch.Id != self.Id)
+            if (node is INodeListener && node.Branch.Id != self.Id)
             {
+                INodeListener nodeListener = (node as INodeListener);
+
                 //检测移除静态监听
-                self.StaticListenerRuleActuatorManager.RemoveListener(node);
+                self.StaticListenerRuleActuatorManager.RemoveListener(nodeListener);
                 //检测移除动态监听
-                node.ListenerClearTarget();
+                nodeListener.ListenerClearTarget();
             }
 
             //这个节点的移除事件

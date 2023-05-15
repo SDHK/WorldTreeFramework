@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/3/11 16:39
 
-* 描述： 世界树节点最底层接口
+* 描述： 树节点最底层接口
 * 
 * 抽出这个接口是为了用于扩展原生类型
 
@@ -34,25 +34,6 @@ namespace WorldTree
     public interface AsRule<in R> where R : IRule { }
 
 
-    /// <summary>
-    /// 监听器状态
-    /// </summary>
-    public enum ListenerState
-    {
-        /// <summary>
-        /// 不是监听器
-        /// </summary>
-        Not,
-        /// <summary>
-        /// 监听目标是节点
-        /// </summary>
-        Node,
-        /// <summary>
-        /// 监听目标是法则
-        /// </summary>
-        Rule
-    }
-
 
     /// <summary>
     /// 世界树节点接口
@@ -74,9 +55,6 @@ namespace WorldTree
         , AsRule<IAddRule>
         , AsRule<IUpdateRule>
         , AsRule<IRemoveRule>
-
-        , AsRule<IListenerAddRule>
-        , AsRule<IListenerRemoveRule>
 
         , AsRule<IDeReferencedChildRule>
         , AsRule<IDeReferencedParentRule>
@@ -179,19 +157,5 @@ namespace WorldTree
         public UnitDictionary<long, INode> m_ReferencedChilden { get; set; }
 
         #endregion
-
-
-        #region Listener
-        /// <summary>
-        /// 动态监听器状态
-        /// </summary>
-        public ListenerState listenerState { get; set; }
-
-        /// <summary>
-        /// 动态监听目标类型
-        /// </summary>
-        public Type listenerTarget { get; set; }
-        #endregion
-
     }
 }

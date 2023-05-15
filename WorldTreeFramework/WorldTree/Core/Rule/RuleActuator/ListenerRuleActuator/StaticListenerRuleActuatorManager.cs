@@ -90,7 +90,7 @@ namespace WorldTree
         /// <summary>
         /// 检测添加静态监听器
         /// </summary>
-        public static void TryAddListener(this StaticListenerRuleActuatorManager self, INode listener)
+        public static void TryAddListener(this StaticListenerRuleActuatorManager self, INodeListener listener)
         {
             //判断是否为监听器
             if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
@@ -116,7 +116,7 @@ namespace WorldTree
         /// <summary>
         /// 检测移除静态监听器
         /// </summary>
-        public static void RemoveListener(this StaticListenerRuleActuatorManager self, INode listener)
+        public static void RemoveListener(this StaticListenerRuleActuatorManager self, INodeListener listener)
         {
             //判断是否为监听器
             if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))

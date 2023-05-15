@@ -63,14 +63,6 @@ namespace WorldTree
 
         #endregion
 
-        #region Listener 
-
-        public ListenerState listenerState { get; set; } = ListenerState.Not;
-
-        public Type listenerTarget { get; set; }
-
-        #endregion
-
 
         public override string ToString()
         {

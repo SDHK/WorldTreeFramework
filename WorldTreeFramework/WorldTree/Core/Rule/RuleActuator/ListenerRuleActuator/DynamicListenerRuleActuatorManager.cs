@@ -51,7 +51,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器根据标记添加目标
         /// </summary>
-        public static void ListenerAdd(this DynamicListenerRuleActuatorManager self, INode node)
+        public static void ListenerAdd(this DynamicListenerRuleActuatorManager self, INodeListener node)
         {
             if (node.listenerTarget != null)
             {
@@ -76,7 +76,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 所有节点
         /// </summary>
-        private static void AddAllTarget(this DynamicListenerRuleActuatorManager self, INode node)
+        private static void AddAllTarget(this DynamicListenerRuleActuatorManager self, INodeListener node)
         {
             //获取 INode 动态目标 法则集合集合
             if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
@@ -104,7 +104,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 系统目标
         /// </summary>
-        private static void AddRuleTarget(this DynamicListenerRuleActuatorManager self, INode node, Type type)
+        private static void AddRuleTarget(this DynamicListenerRuleActuatorManager self, INodeListener node, Type type)
         {
             //获取法则集合
             if (node.Core.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
@@ -120,7 +120,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 节点目标
         /// </summary>
-        private static void AddNodeTarget(this DynamicListenerRuleActuatorManager self, INode node, Type listenerTarget)
+        private static void AddNodeTarget(this DynamicListenerRuleActuatorManager self, INodeListener node, Type listenerTarget)
         {
             if (self.TryGetGroup(listenerTarget, out var ActuatorGroup))
             {
@@ -148,7 +148,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器根据标记移除目标
         /// </summary>
-        public static void ListenerRemove(this DynamicListenerRuleActuatorManager self, INode node)
+        public static void ListenerRemove(this DynamicListenerRuleActuatorManager self, INodeListener node)
         {
             if (node.listenerTarget != null)
             {
@@ -173,7 +173,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器移除 所有节点
         /// </summary>
-        private static void RemoveAllTarget(this DynamicListenerRuleActuatorManager self, INode node)
+        private static void RemoveAllTarget(this DynamicListenerRuleActuatorManager self, INodeListener node)
         {
             //获取 INode 动态目标 法则集合集合
             if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
@@ -197,7 +197,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器移除 系统目标
         /// </summary>
-        private static void RemoveRuleTarget(this DynamicListenerRuleActuatorManager self, INode node, Type type)
+        private static void RemoveRuleTarget(this DynamicListenerRuleActuatorManager self, INodeListener node, Type type)
         {
             //获取法则集合
             if (node.Core.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
@@ -214,7 +214,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器移除 节点目标
         /// </summary>
-        private static void RemoveNodeTarget(this DynamicListenerRuleActuatorManager self, INode node, Type type)
+        private static void RemoveNodeTarget(this DynamicListenerRuleActuatorManager self, INodeListener node, Type type)
         {
             if (self.TryGetGroup(type, out var actuatorGroup))
             {
@@ -289,24 +289,26 @@ namespace WorldTree
                     //遍历已存在的监听器
                     foreach (var listener in listenerPool.Nodes)
                     {
+                        INodeListener nodeListener = (listener.Value as INodeListener);
+
                         //判断目标是否被该监听器监听
-                        if (listener.Value.listenerTarget != null)
+                        if (nodeListener.listenerTarget != null)
                         {
-                            if (listener.Value.listenerState == ListenerState.Node)
+                            if (nodeListener.listenerState == ListenerState.Node)
                             {
                                 //判断是否全局监听 或 是指定的目标类型
-                                if (listener.Value.listenerTarget == typeof(INode) || listener.Value.listenerTarget == Target)
+                                if (nodeListener.listenerTarget == typeof(INode) || nodeListener.listenerTarget == Target)
                                 {
-                                    actuator.Enqueue(listener.Value);
+                                    actuator.Enqueue(nodeListener);
                                 }
                             }
-                            else if (listener.Value.listenerState == ListenerState.Rule)
+                            else if (nodeListener.listenerState == ListenerState.Rule)
                             {
                                 //判断的实体类型是否拥有目标系统
-                                if (self.Core.RuleManager.TryGetRuleList(Target, listener.Value.listenerTarget, out _))
+                                if (self.Core.RuleManager.TryGetRuleList(Target, nodeListener.listenerTarget, out _))
                                 {
 
-                                    actuator.Enqueue(listener.Value);
+                                    actuator.Enqueue(nodeListener);
                                 }
                             }
                         }

@@ -1,21 +1,9 @@
 ﻿using System;
-using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 namespace WorldTree
 {
-
-    //public class FloatTweenRule : TweenRule<float>
-    //{
-    //    public Func<float, float> Curve;
-    //    public override void OnEvent(TreeTween<float> self)
-    //    {
-    //        float vector = self.startValue.Value - self.endValue.Value;
-
-
-    //        //self.changeValue.Value = 
-    //    }
-    //}
-
     /// <summary>
     /// 曲线接口
     /// </summary>
@@ -26,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 曲线
     /// </summary>
-    public class Curve : Node, ICurve
+    public class Curve : Node, ICurve, ComponentOf<TreeTweenBase>
     {
         public float Evaluate(float x)
         {
@@ -34,19 +22,22 @@ namespace WorldTree
         }
     }
 
-
+    /// <summary>
+    /// 值渐变基类
+    /// </summary>
+    public class TreeTweenBase : Node { }
 
     /// <summary>
     /// 值渐变
     /// </summary>
-    public class TreeTween<T> : Node, ComponentOf<TreeValueBase>
-        , AsRule<ITweenRule<T>>
-        where T : IEquatable<T>
+    public class TreeTween<T1, T2> : TreeTweenBase, ComponentOf<TreeValueBase<T1>>
+        where T1 : IEquatable<T1>
+        where T2 : IEquatable<T2>
     {
         /// <summary>
         /// 自动刷新标记 :判断结束与值来启动
         /// </summary>
-        public bool isAuto;
+        public bool isAuto;//??
 
         /// <summary>
         /// 启动标记
@@ -57,23 +48,17 @@ namespace WorldTree
         /// <summary>
         /// 值
         /// </summary>
-        public TreeValueBase<T> changeValue;
+        public TreeValueBase<T1> changeValue;
 
         /// <summary>
         /// 开始
         /// </summary>
-        public TreeValueBase<T> startValue;
+        public TreeValueBase<T1> startValue;
 
         /// <summary>
         /// 结束
         /// </summary>
-        public TreeValueBase<T> endValue;
-
-
-        /// <summary>
-        /// 执行法则列表
-        /// </summary>
-        public IRuleList<ITweenRule<T>> ruleList;
+        public TreeValueBase<T2> endValue;
 
         /// <summary>
         /// 曲线
@@ -83,7 +68,7 @@ namespace WorldTree
         /// <summary>
         /// 完成回调
         /// </summary>
-        public IRuleActuator<ISendRule> OnCompleted;
+        public IRuleActuator<ITweenRule> OnCompleted;
 
         /// <summary>
         /// 计时
@@ -101,14 +86,21 @@ namespace WorldTree
         public float timeScale;
     }
 
-    class TreeTweenUpdateRule<T> : UpdateRule<TreeTween<T>>
-        where T : IEquatable<T>
-    {
-        public override void OnEvent(TreeTween<T> self, float arg1)
-        {
 
+    class TreeTweenUpdateRule : UpdateRule<TreeTween<float, float>>
+    {
+        public override void OnEvent(TreeTween<float, float> self, float timeDelta)
+        {
+            if (self.time < self.clock && self.isRun)
+            {
+                float vector = self.startValue.Value - self.endValue.Value;
+                self.time += timeDelta;
+                self.timeScale = self.time / self.clock;
+                self.changeValue.Value = self.startValue + vector * self.curve.Evaluate(self.timeScale);
+            }
         }
     }
+
 
 
 
