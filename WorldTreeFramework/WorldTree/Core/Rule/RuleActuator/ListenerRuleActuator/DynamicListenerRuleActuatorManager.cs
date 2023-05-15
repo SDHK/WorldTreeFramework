@@ -104,15 +104,15 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 系统目标
         /// </summary>
-        private static void AddRuleTarget(this DynamicListenerRuleActuatorManager self, INodeListener node, Type type)
+        private static void AddRuleTarget(this DynamicListenerRuleActuatorManager self, INodeListener node, Type targetRuleType)
         {
             //获取法则集合
-            if (node.Core.RuleManager.TryGetRuleGroup(type, out var targetSystemGroup))
+            if (node.Core.RuleManager.TryGetRuleGroup(targetRuleType, out var targetRuleGroup))
             {
                 //遍历法则集合
-                foreach (var targetSystems in targetSystemGroup)
+                foreach (var targetNode_RuleList in targetRuleGroup)
                 {
-                    self.AddNodeTarget(node, targetSystems.Key);
+                    self.AddNodeTarget(node, targetNode_RuleList.Key);
                 }
             }
         }
@@ -133,7 +133,10 @@ namespace WorldTree
                         //判断监听法则集合 是否有这个 监听器节点类型
                         if (ruleGroup.Value.ContainsKey(node.Type))
                         {
-                            ActuatorGroup.GetRuleActuator(ruleGroup.Key).Enqueue(node);
+                            if (ActuatorGroup.TryGetRuleActuator(ruleGroup.Key, out RuleActuator ruleActuator))
+                            {
+                                ruleActuator.Enqueue(node);
+                            }
                         }
                     }
                 }
@@ -224,7 +227,10 @@ namespace WorldTree
                     //遍历获取动态法则集合，并移除自己
                     foreach (var ruleGroup in ruleGroupDictionary)
                     {
-                        actuatorGroup.GetRuleActuator(ruleGroup.Key).Remove(node);
+                        if (actuatorGroup.TryGetRuleActuator(ruleGroup.Key, out RuleActuator ruleActuator))
+                        {
+                            ruleActuator.Remove(node);
+                        }
                     }
                 }
             }

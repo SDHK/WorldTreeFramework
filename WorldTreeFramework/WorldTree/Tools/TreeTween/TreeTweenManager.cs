@@ -12,17 +12,9 @@
 
 namespace WorldTree
 {
-    class TreeTweenManagerRootAddRule : NodeAddRule<InitialDomain, TreeTweenManager> { }
+    class TreeTweenManagerRootAddRule : RootAddRule<TreeTweenManager> { }
 
-
-    //class TreeTweenManagerRootAddRule1 : AddRule<InitialDomain>
-    //{
-    //    public override void OnEvent(InitialDomain self)
-    //    {
-    //        self.AddComponent(out TreeTweenManager _);
-    //    }
-    //}
-    public class TreeTweenManager : Node, ComponentOf<InitialDomain>
+    public class TreeTweenManager : Node, ComponentOf<WorldTreeRoot>
     {
         public IRuleActuator<ITweenUpdateRule> ruleActuator;
     }
