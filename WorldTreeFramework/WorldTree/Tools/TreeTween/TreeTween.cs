@@ -31,14 +31,10 @@ namespace WorldTree
     /// 值渐变
     /// </summary>
     public class TreeTween<T1, T2> : TreeTweenBase, ComponentOf<TreeValueBase<T1>>
+        , AsRule<ITweenUpdateRule>
         where T1 : IEquatable<T1>
         where T2 : IEquatable<T2>
     {
-        /// <summary>
-        /// 自动刷新标记 :判断结束与值来启动
-        /// </summary>
-        public bool isAuto;//??
-
         /// <summary>
         /// 启动标记
         /// </summary>
@@ -68,7 +64,7 @@ namespace WorldTree
         /// <summary>
         /// 完成回调
         /// </summary>
-        public IRuleActuator<ITweenRule> OnCompleted;
+        public IRuleActuator<ITweenUpdateRule> OnCompleted;
 
         /// <summary>
         /// 计时
@@ -87,14 +83,14 @@ namespace WorldTree
     }
 
 
-    class TreeTweenUpdateRule : UpdateRule<TreeTween<float, float>>
+    class TreeTweenTweenRule : TweenUpdateRule<TreeTween<float, float>>
     {
-        public override void OnEvent(TreeTween<float, float> self, float timeDelta)
+        public override void OnEvent(TreeTween<float, float> self, float deltaTime)
         {
             if (self.time < self.clock && self.isRun)
             {
                 float vector = self.startValue.Value - self.endValue.Value;
-                self.time += timeDelta;
+                self.time += deltaTime;
                 self.timeScale = self.time / self.clock;
                 self.changeValue.Value = self.startValue + vector * self.curve.Evaluate(self.timeScale);
             }

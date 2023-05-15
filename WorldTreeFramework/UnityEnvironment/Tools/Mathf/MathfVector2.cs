@@ -178,19 +178,19 @@ namespace WorldTree
         /// 获取椭圆上的点
         /// </summary>
         /// <param name="ptCenter">原点</param>
-        /// <param name="a">长轴</param>
-        /// <param name="b">短轴</param>
+        /// <param name="yShaft">Y轴</param>
+        /// <param name="xShaft">X轴</param>
         /// <param name="radian">点与椭圆夹角</param>
         /// <param name="dChangZhouAngle">椭圆偏转角度</param>
-        public static Vector2 GetPointOnEllipse(Vector2 ptCenter, float a, float b, float radian, float dChangZhouAngle)
+        public static Vector2 GetPointOnEllipse(Vector2 ptCenter,  float xShaft, float yShaft, float radian, float dChangZhouAngle)
         {
             radian -= dChangZhouAngle;
             dChangZhouAngle *= Mathf.Deg2Rad;
             radian *= Mathf.Deg2Rad;
-            float dLiXin = Mathf.Atan2(a * Mathf.Sin(radian), b * Mathf.Cos(radian));//离心角
-            float x = a * Mathf.Cos(dLiXin) * Mathf.Cos(dChangZhouAngle) - b * Mathf.Sin(dLiXin) * Mathf.Sin(dChangZhouAngle) + ptCenter.x;
-            float y = a * Mathf.Cos(dLiXin) * Mathf.Sin(dChangZhouAngle) + b * Mathf.Sin(dLiXin) * Mathf.Cos(dChangZhouAngle) + ptCenter.y;
-            return new Vector2(y, x);
+            float dLiXin = Mathf.Atan2(yShaft * Mathf.Sin(radian), xShaft * Mathf.Cos(radian));//离心角
+            float x = yShaft * Mathf.Cos(dLiXin) * Mathf.Sin(dChangZhouAngle) + xShaft * Mathf.Sin(dLiXin) * Mathf.Cos(dChangZhouAngle) + ptCenter.x;
+            float y = yShaft * Mathf.Cos(dLiXin) * Mathf.Cos(dChangZhouAngle) - xShaft * Mathf.Sin(dLiXin) * Mathf.Sin(dChangZhouAngle) + ptCenter.y;
+            return new Vector2(x, y);
         }
 
     }
