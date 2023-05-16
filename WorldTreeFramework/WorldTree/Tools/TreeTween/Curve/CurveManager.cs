@@ -9,6 +9,9 @@
 
 namespace WorldTree
 {
+
+    class CurveManagerRootAddRule : RootAddRule<CurveManager> { }
+
     /// <summary>
     /// 曲线管理器
     /// </summary>

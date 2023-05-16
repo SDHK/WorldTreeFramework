@@ -94,7 +94,6 @@ namespace WorldTree
 
     class _InitialDomain : AddRule<InitialDomain>
     {
-
         public override void OnEvent(InitialDomain self)
         {
 
