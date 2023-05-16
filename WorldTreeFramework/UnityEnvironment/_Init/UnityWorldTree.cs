@@ -8,6 +8,7 @@
 
 */
 
+using System;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -16,6 +17,8 @@ namespace WorldTree
 
     public class UnityWorldTree : MonoBehaviour
     {
+        public System.Diagnostics. Stopwatch sw = new System.Diagnostics.Stopwatch();
+
         public WorldTreeCore Core;
 
         IRuleActuator<IEnableRule> enable;
@@ -48,11 +51,17 @@ namespace WorldTree
 
         private void Update()
         {
+
+            /* 代码执行过程 */
+       
             Profiler.BeginSample("SDHK");
 
+            //sw.Restart();
             enable?.Send();
             update?.Send(Time.deltaTime);
             disable?.Send();
+            //sw.Stop();
+            //World.Log($"毫秒: {sw.ElapsedMilliseconds}");
 
             Profiler.EndSample();
 

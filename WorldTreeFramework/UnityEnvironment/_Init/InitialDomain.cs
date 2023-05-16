@@ -104,25 +104,26 @@ namespace WorldTree
 
             self.valueFloat.BindTwoWay(self.valueInt);
 
+            self.valueFloat.GetTween(15f, 5f).SetCurve<CurveBase>().Run();
+
             //self.SendRule(default(EventAddRule), 1.01f);
 
-            self.AddChild(out Test<float> test);
+            //self.AddChild(out Test<float> test);
 
+            ////委托申请赋值
+            //self.TryGetRuleActuator(out self.ruleActuator);
 
-            //委托申请赋值
-            self.TryGetRuleActuator(out self.ruleActuator);
+            ////委托添加
+            //self.ruleActuator.EnqueueReferenced(test.AddComponent(out NodeEvent<float> _));
 
-            //委托添加
-            self.ruleActuator.EnqueueReferenced(test.AddComponent(out NodeEvent<float> _));
+            ////执行
+            //self.ruleActuator.Send(2.5f);
+            ////self.ruleActuator.Dispose();
+            //test.Dispose();
+            //self.ruleActuator.Send(2.7f);
 
-            //执行
-            self.ruleActuator.Send(2.5f);
-            //self.ruleActuator.Dispose();
-            test.Dispose();
-            self.ruleActuator.Send(2.7f);
-
-            //事件调用
-            test.AddComponent(out NodeEvent<float> _).Send(1.02f);
+            ////事件调用
+            //test.AddComponent(out NodeEvent<float> _).Send(1.02f);
 
         }
     }

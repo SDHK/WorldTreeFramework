@@ -34,10 +34,10 @@ namespace WorldTree
         /// </summary>
         public IRuleList<ICurveEvaluateRule> m_RuleList;
 
-        /// <summary>
-        /// 完成回调
-        /// </summary>
-        public IRuleActuator<ITweenUpdateRule> OnCompleted;
+        ///// <summary>
+        ///// 完成回调
+        ///// </summary>
+        //public IRuleActuator<> OnCompleted;
         /// <summary>
         /// 计时
         /// </summary>
@@ -95,11 +95,12 @@ namespace WorldTree
         /// <summary>
         /// 设置曲线 
         /// </summary>
-        public static void SetCurve<C>(this TreeTweenBase self)
+        public static TreeTweenBase SetCurve<C>(this TreeTweenBase self)
             where C : CurveBase
         {
             self.m_RuleList = self.GetRuleList<ICurveEvaluateRule>(typeof(C));
             self.m_Curve = self.Root.AddComponent(out CurveManager _).AddComponent(out C _);
+            return self;
         }
 
         /// <summary>
@@ -148,16 +149,18 @@ namespace WorldTree
             {
                 if (self.time < self.clock)
                 {
-                    float vector = self.startValue.Value - self.endValue.Value;
+                    float vector = self.endValue.Value - self.startValue.Value ;
                     self.time += deltaTime;
                     self.timeScale = self.time / self.clock;
 
                     self.timeScale = MathFloat.Clamp01(self.timeScale);
                     self.changeValue.Value = self.startValue + vector * self.GetCurveEvaluate();
+                    World.Log($"时间 {self.timeScale} 渐变： {self.changeValue.Value}");
                 }
                 else
                 {
                     self.isRun = false;
+                    World.Log("渐变结束：" + self.changeValue.Value);
                 }
             }
         }

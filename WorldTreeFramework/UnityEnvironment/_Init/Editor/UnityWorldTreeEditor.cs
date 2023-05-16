@@ -18,7 +18,6 @@ namespace EditorTool
             if (!Application.isPlaying) return;
 
             script = target as UnityWorldTree;
-
             GUILayout.Label(script.Core.ToStringDrawTree());
         }
 
