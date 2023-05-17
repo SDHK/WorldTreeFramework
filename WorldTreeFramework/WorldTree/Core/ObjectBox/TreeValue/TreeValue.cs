@@ -28,8 +28,8 @@ namespace WorldTree
                 if (!this.m_Value.Equals(value))
                 {
                     this.m_Value = value;
-                    m_RuleActuator?.Send(value);
-                    m_GlobalRuleActuator?.Send(value);
+                    m_ValueChange?.Send(value);
+                    m_GlobalValueChange?.Send(value);
                 }
             }
         }

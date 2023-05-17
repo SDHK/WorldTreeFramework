@@ -17,8 +17,8 @@ namespace WorldTree
     {
         public override void OnEvent(TreeValueBase<T> self)
         {
-            self.m_GlobalRuleActuator = default;
-            self.m_RuleActuator = default;
+            self.m_GlobalValueChange = default;
+            self.m_ValueChange = default;
             self.Value = default;
         }
     }
@@ -34,7 +34,18 @@ namespace WorldTree
             where T : IEquatable<T>
             where R : IValueChangeRule<T>
         {
-            self.m_GlobalRuleActuator = (IRuleActuator<IValueChangeRule<T>>)self.GetGlobalNodeRuleActuator<R>();
+            self.m_GlobalValueChange = (IRuleActuator<IValueChangeRule<T>>)self.GetGlobalNodeRuleActuator<R>();
+        }
+
+        /// <summary>
+        /// 单向绑定 数值监听
+        /// </summary>
+        public static void AddListenerValueChange<T1, N>(this TreeValueBase<T1> self, N eventNode)
+            where T1 : IEquatable<T1>
+            where N : class, INode, AsRule<ISendRule<T1>>
+        {
+            if (self.m_ValueChange is null) self.TryGetRuleActuator(out self.m_ValueChange);
+            self.m_ValueChange.EnqueueReferenced(eventNode);
         }
 
         /// <summary>
@@ -44,9 +55,12 @@ namespace WorldTree
             where T1 : IEquatable<T1>
             where T2 : IEquatable<T2>
         {
-            if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
-            self.m_RuleActuator.EnqueueReferenced(treeValue);
+            if (self.m_ValueChange is null) self.TryGetRuleActuator(out self.m_ValueChange);
+            self.m_ValueChange.EnqueueReferenced(treeValue);
         }
+
+       
+
         /// <summary>
         /// 双向绑定(类型转换)
         /// </summary>
@@ -54,10 +68,10 @@ namespace WorldTree
             where T1 : IEquatable<T1>
             where T2 : IEquatable<T2>
         {
-            if (self.m_RuleActuator is null) self.TryGetRuleActuator(out self.m_RuleActuator);
-            if (treeValue.m_RuleActuator is null) treeValue.TryGetRuleActuator(out treeValue.m_RuleActuator);
-            self.m_RuleActuator.EnqueueReferenced(treeValue);
-            treeValue.m_RuleActuator.EnqueueReferenced(self);
+            if (self.m_ValueChange is null) self.TryGetRuleActuator(out self.m_ValueChange);
+            if (treeValue.m_ValueChange is null) treeValue.TryGetRuleActuator(out treeValue.m_ValueChange);
+            self.m_ValueChange.EnqueueReferenced(treeValue);
+            treeValue.m_ValueChange.EnqueueReferenced(self);
         }
     }
 

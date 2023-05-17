@@ -7,7 +7,7 @@
         {
             RuleActuator self = (RuleActuator)Self;
 
-            if (self.ruleGroup != null && self.IsActive)
+            if (self.ruleGroup != null && self.nodeQueue != null && self.IsActive)
             {
                 self.nodeQueue.RefreshTraversalCount();
                 for (int i = 0; i < self.nodeQueue.traversalCount; i++)
@@ -20,12 +20,12 @@
                 }
             }
         }
-        public static void Send<R,T1>(this IRuleActuator<R> Self,T1 arg1)
+        public static void Send<R, T1>(this IRuleActuator<R> Self, T1 arg1)
             where R : ISendRule<T1>
         {
             RuleActuator self = (RuleActuator)Self;
 
-            if (self.ruleGroup != null && self.IsActive)
+            if (self.ruleGroup != null && self.nodeQueue != null && self.IsActive)
             {
                 self.nodeQueue.RefreshTraversalCount();
                 for (int i = 0; i < self.nodeQueue.traversalCount; i++)
@@ -42,7 +42,7 @@
             where R : ISendRule<T1, T2>
         {
             RuleActuator self = (RuleActuator)Self;
-            if (self.ruleGroup != null && self.IsActive)
+            if (self.ruleGroup != null && self.nodeQueue != null && self.IsActive)
             {
                 self.nodeQueue.RefreshTraversalCount();
                 for (int i = 0; i < self.nodeQueue.traversalCount; i++)
@@ -60,7 +60,7 @@
             where R : ISendRule<T1, T2, T3>
         {
             RuleActuator self = (RuleActuator)Self;
-            if (self.ruleGroup != null && self.IsActive)
+            if (self.ruleGroup != null && self.nodeQueue != null && self.IsActive)
             {
                 self.nodeQueue.RefreshTraversalCount();
                 for (int i = 0; i < self.nodeQueue.traversalCount; i++)
@@ -77,7 +77,7 @@
             where R : ISendRule<T1, T2, T3, T4>
         {
             RuleActuator self = (RuleActuator)Self;
-            if (self.ruleGroup != null && self.IsActive)
+            if (self.ruleGroup != null && self.nodeQueue != null && self.IsActive)
             {
                 self.nodeQueue.RefreshTraversalCount();
                 for (int i = 0; i < self.nodeQueue.traversalCount; i++)
@@ -94,7 +94,7 @@
             where R : ISendRule<T1, T2, T3, T4, T5>
         {
             RuleActuator self = (RuleActuator)Self;
-            if (self.ruleGroup != null && self.IsActive)
+            if (self.ruleGroup != null && self.nodeQueue != null && self.IsActive)
             {
                 self.nodeQueue.RefreshTraversalCount();
                 for (int i = 0; i < self.nodeQueue.traversalCount; i++)

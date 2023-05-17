@@ -9,14 +9,6 @@
 
 namespace WorldTree
 {
-    class RuleActuatorAddRule : AddRule<RuleActuator>
-    {
-        public override void OnEvent(RuleActuator self)
-        {
-            self.AddComponent(out self.nodeQueue);
-        }
-    }
-
     class RuleActuatorRemoveRule : RemoveRule<RuleActuator>
     {
         public override void OnEvent(RuleActuator self)
@@ -31,9 +23,12 @@ namespace WorldTree
     {
         public override void OnEvent(RuleActuator self, INode node)
         {
-            self.nodeQueue.Remove(node);
-
-            //self.Remove(node);
+            self.nodeQueue?.Remove(node);
+            if (self.nodeQueue != null && self.nodeQueue.Count == 0)
+            {
+                self.nodeQueue.Dispose();
+                self.nodeQueue = null;
+            }
         }
     }
 
@@ -74,6 +69,7 @@ namespace WorldTree
             if (self.ruleGroup.ContainsKey(node.Type))
             {
                 self.Referenced(node);
+                self.nodeQueue ??= self.AddComponent(out self.nodeQueue);
                 self.nodeQueue.Enqueue(node);
             }
             else
@@ -89,6 +85,7 @@ namespace WorldTree
         {
             if (self.ruleGroup.ContainsKey(node.Type))
             {
+                self.nodeQueue ??= self.AddComponent(out self.nodeQueue);
                 self.nodeQueue.Enqueue(node);
             }
             else
@@ -104,7 +101,12 @@ namespace WorldTree
         public static void Remove(this RuleActuator self, INode node)
         {
             self.DeReferenced(node);
-            self.nodeQueue.Remove(node);
+            self.nodeQueue?.Remove(node);
+            if (self.nodeQueue != null && self.nodeQueue.Count == 0)
+            {
+                self.nodeQueue.Dispose();
+                self.nodeQueue = null;
+            }
         }
 
         /// <summary>
@@ -113,33 +115,11 @@ namespace WorldTree
         public static void Clear(this RuleActuator self)
         {
             self.DeReferencedAll();
-            self.nodeQueue.Clear();
+            self.nodeQueue?.Clear();
+            self.nodeQueue?.Dispose();
+            self.nodeQueue = null;
         }
 
-        /// <summary>
-        /// 出列
-        /// </summary>
-        public static INode Dequeue(this RuleActuator self)
-        {
-            var node = self.nodeQueue.Dequeue();
-            if (node != null)
-            {
-                self.DeReferenced(node);
-            }
-            return node;
-        }
-        /// <summary>
-        /// 尝试出列
-        /// </summary>
-        public static bool TryDequeue(this RuleActuator self, out INode node)
-        {
-            if (self.nodeQueue.TryDequeue(out node))
-            {
-                self.DeReferenced(node);
-                return true;
-            }
-            return false;
-        }
 
         /// <summary>
         /// 节点入列并建立引用关系
@@ -169,7 +149,7 @@ namespace WorldTree
             where R : IRule
             where N : class, INode, AsRule<R>
         {
-            ((RuleActuator)self).nodeQueue.Remove(node);
+            ((RuleActuator)self).Remove(node);
         }
 
         /// <summary>
@@ -177,27 +157,8 @@ namespace WorldTree
         /// </summary>
         public static void Clear(this IRuleActuator self)
         {
-            ((RuleActuator)self).nodeQueue.Clear();
+            ((RuleActuator)self).Clear();
         }
-
-        /// <summary>
-        /// 出列
-        /// </summary>
-        public static INode Dequeue(this IRuleActuator self)
-        {
-            return ((RuleActuator)self).nodeQueue.Dequeue();
-        }
-        /// <summary>
-        /// 尝试出列
-        /// </summary>
-        public static bool TryDequeue(this IRuleActuator self, out INode node)
-        {
-            return ((RuleActuator)self).nodeQueue.TryDequeue(out node);
-        }
-
-
-
-
     }
 
 }

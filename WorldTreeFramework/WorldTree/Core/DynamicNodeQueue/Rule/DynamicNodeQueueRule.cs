@@ -19,7 +19,7 @@ namespace WorldTree
             self.AddChild(out self.nodeDictionary);
         }
     }
-    
+
 
     class DynamicNodeQueueRemoveRule : RemoveRule<DynamicNodeQueue>
     {
@@ -116,7 +116,7 @@ namespace WorldTree
         /// </summary>
         public static void RefreshTraversalCount(this DynamicNodeQueue self)
         {
-            self.traversalCount = self.idQueue.Count;
+            self.traversalCount = self.idQueue is null ? 0 : self.idQueue.Count;
         }
 
 

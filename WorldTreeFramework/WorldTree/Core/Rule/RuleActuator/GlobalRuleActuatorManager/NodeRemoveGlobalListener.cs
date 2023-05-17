@@ -15,30 +15,30 @@ namespace WorldTree
     /// <summary>
     /// 节点移除 动态全局监听器
     /// </summary>
-    public class NodeRemoveGlobalListener : NodeListener, ComponentOf<DynamicNodeQueue>
+    public class NodeRemoveGlobalListener : NodeListener, ComponentOf<RuleActuator>
     {
-        public DynamicNodeQueue nodeQueue;
+        public RuleActuator ruleActuator;
     }
 
     class NodeRemoveGlobalListenerAddRule : AddRule<NodeRemoveGlobalListener>
     {
         public override void OnEvent(NodeRemoveGlobalListener self)
         {
-            self.TryParentTo(out self.nodeQueue);
+            self.TryParentTo(out self.ruleActuator);
         }
     }
     class NodeRemoveGlobalListenerRemoveRule : RemoveRule<NodeRemoveGlobalListener>
     {
         public override void OnEvent(NodeRemoveGlobalListener self)
         {
-            self.nodeQueue = null;
+            self.ruleActuator = null;
         }
     }
     class NodeRemoveGlobalListenerListenerRemoveRule : ListenerRemoveRule<NodeRemoveGlobalListener>
     {
         public override void OnEvent(NodeRemoveGlobalListener self, INode node)
         {
-            self.nodeQueue?.Remove(node);
+            self.ruleActuator?.Remove(node);
         }
     }
 }

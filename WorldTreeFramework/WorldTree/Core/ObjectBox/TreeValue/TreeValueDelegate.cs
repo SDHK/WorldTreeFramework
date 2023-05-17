@@ -40,8 +40,8 @@ namespace WorldTree
                 if (!m_Get(m_BindObject).Equals(value))
                 {
                     m_Set(m_BindObject, value);
-                    m_RuleActuator?.Send(value);
-                    m_GlobalRuleActuator?.Send(value);
+                    m_ValueChange?.Send(value);
+                    m_GlobalValueChange?.Send(value);
                 }
             }
         }

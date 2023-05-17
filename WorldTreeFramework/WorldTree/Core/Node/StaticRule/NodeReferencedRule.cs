@@ -113,7 +113,6 @@ namespace WorldTree
                     while (nodeIdQueue.Count != 0)
                     {
                         var node = nodeIdQueue.Dequeue();
-                        //node.DeReferenced(self);
 
                         if (node.m_ReferencedChilden != null)
                         {

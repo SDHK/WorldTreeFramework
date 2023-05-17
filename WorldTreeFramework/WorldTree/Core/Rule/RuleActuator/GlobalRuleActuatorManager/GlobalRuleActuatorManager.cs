@@ -42,8 +42,8 @@ namespace WorldTree
                 this.AddChild(out ruleActuator).LoadGlobalNode<R>();
                 ruleActuatorDictionary.Add(ruleType, ruleActuator);
 
-                ruleActuator.nodeQueue.AddComponent(out NodeAddGlobalListener _).ListenerSwitchesTarget(typeof(R), ListenerState.Rule);
-                ruleActuator.nodeQueue.AddComponent(out NodeRemoveGlobalListener _).ListenerSwitchesTarget(typeof(R), ListenerState.Rule);
+                ruleActuator.AddComponent(out NodeAddGlobalListener _).ListenerSwitchesTarget(typeof(R), ListenerState.Rule);
+                ruleActuator.AddComponent(out NodeRemoveGlobalListener _).ListenerSwitchesTarget(typeof(R), ListenerState.Rule);
             }
             return (IRuleActuator<R>)ruleActuator;
         }

@@ -94,7 +94,7 @@ namespace WorldTree
 
     class _InitialDomain : AddRule<InitialDomain>
     {
-        public override void OnEvent(InitialDomain self)
+        public override async void OnEvent(InitialDomain self)
         {
 
             World.Log("初始域启动！！");
@@ -104,17 +104,18 @@ namespace WorldTree
 
             self.valueFloat.BindTwoWay(self.valueInt);
 
-            self.valueFloat.GetTween(15f, 5f).SetCurve<CurveBase>().Run();
+            self.valueFloat.GetTween(15f, 5f).SetCurve<CurveBase>().Run().Completed(self.AddComponent(out InitialDomainEvent.OnCompleted _));
+            self.valueFloat.AddListenerValueChange(self.AddComponent(out InitialDomainEvent.Value _));
 
-            //self.SendRule(default(EventAddRule), 1.01f);
+            await self.AsyncDelay(1);
+            self.valueFloat.Dispose();
 
-            //self.AddChild(out Test<float> test);
 
             ////委托申请赋值
             //self.TryGetRuleActuator(out self.ruleActuator);
 
             ////委托添加
-            //self.ruleActuator.EnqueueReferenced(test.AddComponent(out NodeEvent<float> _));
+            //self.ruleActuator.EnqueueReferenced(self.AddComponent(out InitialDomainEvent.Value _));
 
             ////执行
             //self.ruleActuator.Send(2.5f);
@@ -172,34 +173,32 @@ namespace WorldTree
     }
 
 
-    //主要测试类型
-    public class Test<T> : Node, ChildOf<INode>
-    {
-    }
-    //测试类型添加生命周期
-    class TestAddRule<T> : AddRule<Test<T>>
-    {
-        public override void OnEvent(Test<T> self)
-        {
-            World.Log("Test泛型添加！！");
-            self.AddComponent(out NodeEvent<T> _);
 
+    public static class InitialDomainEvent
+    {
+        public class Value : EventNode<InitialDomain>, AsRule<ISendRule<float>> { }
+        public class OnCompleted : EventNode<InitialDomain>, AsRule<ISendRule> { }
+    }
+
+
+    public static class InitialDomainEventRule
+    {
+        class ValueSendRule : SendRule<InitialDomainEvent.Value, float>
+        {
+            public override void OnEvent(InitialDomainEvent.Value self, float value)
+            {
+                World.Log($"数值变化： {value}");
+            }
+        }
+
+        class OnCompletedSendRule : SendRule<InitialDomainEvent.OnCompleted>
+        {
+            public override void OnEvent(InitialDomainEvent.OnCompleted self)
+            {
+                World.Log("渐变结束：!!!!");
+            }
         }
     }
 
-    //声明一个事件节点，指定服务于 Test<T>
-    public class NodeEvent<T> : EventNode<Test<T>>
-        , AsRule<ISendRule<float>> 
-    { }
-
-    //实现事件节点的通用事件类型
-    class NodeEventSendRule<T> : SendRule<NodeEvent<T>, float>
-    {
-        public override void OnEvent(NodeEvent<T> self, float arg1)
-        {
-
-            World.Log("！！" + arg1);
-        }
-    }
 
 }

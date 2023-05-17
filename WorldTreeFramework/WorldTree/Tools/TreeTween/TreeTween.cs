@@ -9,7 +9,6 @@
 */
 
 using System;
-using UnityEngine.UIElements;
 
 namespace WorldTree
 {
@@ -19,7 +18,6 @@ namespace WorldTree
     /// </summary>
     public class TreeTweenBase : Node
     {
-
         /// <summary>
         /// 启动标记
         /// </summary>
@@ -34,10 +32,6 @@ namespace WorldTree
         /// </summary>
         public IRuleList<ICurveEvaluateRule> m_RuleList;
 
-        ///// <summary>
-        ///// 完成回调
-        ///// </summary>
-        //public IRuleActuator<> OnCompleted;
         /// <summary>
         /// 计时
         /// </summary>
@@ -46,22 +40,26 @@ namespace WorldTree
         /// <summary>
         /// 定时
         /// </summary>
-        public float clock;
+        public TreeValueBase<float> clock;
 
         /// <summary>
         /// 时间尺度
         /// </summary>
         public float timeScale;
+
+        /// <summary>
+        /// 完成回调
+        /// </summary>
+        public IRuleActuator<ISendRule> OnCompleted;
     }
 
     /// <summary>
     /// 值渐变
     /// </summary>
-    public class TreeTween<T1, T2> : TreeTweenBase, ComponentOf<TreeValueBase<T1>>
-        , AsRule<IAwakeRule<T2, float>>
+    public class TreeTween<T1> : TreeTweenBase, ComponentOf<TreeValueBase<T1>>
+        , AsRule<IAwakeRule<T1, float>>
         , AsRule<ITweenUpdateRule>
         where T1 : IEquatable<T1>
-        where T2 : IEquatable<T2>
     {
         /// <summary>
         /// 值
@@ -76,7 +74,7 @@ namespace WorldTree
         /// <summary>
         /// 结束
         /// </summary>
-        public TreeValueBase<T2> endValue;
+        public TreeValueBase<T1> endValue;
     }
 
 
@@ -85,11 +83,10 @@ namespace WorldTree
         /// <summary>
         /// 获取渐变
         /// </summary>
-        public static TreeTween<T1, T2> GetTween<T1, T2>(this TreeValueBase<T1> changeValue, T2 endValue, float timeClock)
+        public static TreeTween<T1> GetTween<T1>(this TreeValueBase<T1> changeValue, T1 endValue, float timeClock)
             where T1 : IEquatable<T1>
-            where T2 : IEquatable<T2>
         {
-            return changeValue.AddComponent(out TreeTween<T1, T2> _, endValue, timeClock);
+            return changeValue.AddComponent(out TreeTween<T1> _, endValue, timeClock);
         }
 
         /// <summary>
@@ -106,10 +103,21 @@ namespace WorldTree
         /// <summary>
         /// 启动
         /// </summary>
-        public static void Run(this TreeTweenBase self)
+        public static TreeTweenBase Run(this TreeTweenBase self)
         {
             self.time = 0;
             self.isRun = true;
+            return self;
+        }
+
+        /// <summary>
+        /// 完成回调
+        /// </summary>
+        public static TreeTweenBase Completed<N>(this TreeTweenBase self, N eventNode)
+            where N : class, INode, AsRule<ISendRule>
+        {
+            self.OnCompleted.EnqueueReferenced(eventNode);
+            return self;
         }
 
         /// <summary>
@@ -122,47 +130,25 @@ namespace WorldTree
     }
 
 
-    class TreeTweenAwakeTweenRule<T1, T2> : AwakeRule<TreeTween<T1, T2>, T2, float>
+
+
+    class TreeTweenAwakeTweenRule<T1> : AwakeRule<TreeTween<T1>, T1, float>
             where T1 : IEquatable<T1>
-            where T2 : IEquatable<T2>
     {
-        public override void OnEvent(TreeTween<T1, T2> self, T2 arg1, float arg2)
+        public override void OnEvent(TreeTween<T1> self, T1 endValue, float clock)
         {
             self.TryParentTo(out self.changeValue);
             self.startValue = self.AddChild(out TreeValue<T1> _);
-            self.endValue = self.AddChild(out TreeValue<T2> _);
+            self.endValue = self.AddChild(out TreeValue<T1> _);
+            self.clock = self.AddChild(out TreeValue<float> _);
+
+            self.TryGetRuleActuator(out self.OnCompleted);
 
             self.startValue.Value = self.changeValue;
-            self.endValue.Value = arg1;
-            self.clock = arg2;
+            self.endValue.Value = endValue;
+            self.clock.Value = clock;
             self.time = 0;
         }
     }
 
-
-    //匹配
-    class TreeTweenTweenUpdateRule : TweenUpdateRule<TreeTween<float, float>>
-    {
-        public override void OnEvent(TreeTween<float, float> self, float deltaTime)
-        {
-            if (self.isRun)
-            {
-                if (self.time < self.clock)
-                {
-                    float vector = self.endValue.Value - self.startValue.Value ;
-                    self.time += deltaTime;
-                    self.timeScale = self.time / self.clock;
-
-                    self.timeScale = MathFloat.Clamp01(self.timeScale);
-                    self.changeValue.Value = self.startValue + vector * self.GetCurveEvaluate();
-                    World.Log($"时间 {self.timeScale} 渐变： {self.changeValue.Value}");
-                }
-                else
-                {
-                    self.isRun = false;
-                    World.Log("渐变结束：" + self.changeValue.Value);
-                }
-            }
-        }
-    }
 }

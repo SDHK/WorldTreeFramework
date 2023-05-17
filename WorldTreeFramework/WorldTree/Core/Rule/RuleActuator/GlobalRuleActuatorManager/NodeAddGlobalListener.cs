@@ -16,29 +16,29 @@ namespace WorldTree
     /// <summary>
     ///节点添加 全局动态监听器
     /// </summary>
-    public class NodeAddGlobalListener : NodeListener, ComponentOf<DynamicNodeQueue>
+    public class NodeAddGlobalListener : NodeListener, ComponentOf<RuleActuator>
     {
-        public DynamicNodeQueue nodeQueue;
+        public RuleActuator ruleActuator;
     }
     class NodeAddGlobalListenerAddRule : AddRule<NodeAddGlobalListener>
     {
         public override void OnEvent(NodeAddGlobalListener self)
         {
-            self.TryParentTo(out self.nodeQueue);
+            self.TryParentTo(out self.ruleActuator);
         }
     }
     class NodeAddGlobalListenerRemoveRule : RemoveRule<NodeAddGlobalListener>
     {
         public override void OnEvent(NodeAddGlobalListener self)
         {
-            self.nodeQueue = null;
+            self.ruleActuator = null;
         }
     }
     class NodeAddGlobalListenerListenerAddRule : ListenerAddRule<NodeAddGlobalListener>
     {
         public override void OnEvent(NodeAddGlobalListener self, INode node)
         {
-            self.nodeQueue?.Enqueue(node);
+            self.ruleActuator?.Enqueue(node);
         }
     }
 }

@@ -16,8 +16,8 @@ namespace WorldTree
     /// <summary>
     /// 树泛型队列
     /// </summary>
-    public class TreeQueue<T> : Queue<T>, INode, ChildOf<INode>
-        ,AsRule<IAwakeRule>
+    public class TreeQueue<T> : Queue<T>, INode, ChildOf<INode>, ComponentOf<INode>
+        , AsRule<IAwakeRule>
     {
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }

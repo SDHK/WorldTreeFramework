@@ -23,13 +23,12 @@ namespace WorldTree
 
     }
 
-
-    //假如没有被引用则回收
     class EventNodeDeReferencedParentRule<N> : DeReferencedParentRule<EventNode<N>>
         where N : class, INode
     {
         public override void OnEvent(EventNode<N> self, INode referencedParent)
         {
+            World.Log("DeReferencedParentRule");
             if (self.m_ReferencedParents is null)
             {
                 self.Dispose();
@@ -37,13 +36,12 @@ namespace WorldTree
         }
     }
 
-    //假如没有被引用则回收
     class EventNodeReferencedRemoveRule<N> : ReferencedParentRemoveRule<EventNode<N>>
         where N : class, INode
     {
-
         public override void OnEvent(EventNode<N> self, INode referencedParent)
         {
+            World.Log("ReferencedParentRemoveRule");
             if (self.m_ReferencedParents is null)
             {
                 self.Dispose();
