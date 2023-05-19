@@ -90,7 +90,11 @@ namespace WorldTree
         public TreeValue<int> valueInt;
 
         public IRuleActuator<ISendRule<float>> ruleActuator;
+
+        public class Value : RuleNode<InitialDomain>, AsRule<ISendRule<float>> { }
+        public class OnCompleted : RuleNode<InitialDomain>, AsRule<ISendRule> { }
     }
+
 
     class _InitialDomain : AddRule<InitialDomain>
     {
@@ -104,27 +108,11 @@ namespace WorldTree
 
             self.valueFloat.BindTwoWay(self.valueInt);
 
-            self.valueFloat.GetTween(15f, 5f).SetCurve<CurveBase>().Run().Completed(self.AddComponent(out InitialDomainRuleNode.OnCompleted _));
-            self.valueFloat.AddListenerValueChange(self.AddComponent(out InitialDomainRuleNode.Value _));
+            self.valueFloat.GetTween(15f, 5f).SetCurve<CurveBase>().Run().Completed(self.AddComponent(out InitialDomain.OnCompleted _));
+            self.valueFloat.AddListenerValueChange(self.AddComponent(out InitialDomain.Value _));
 
             await self.AsyncDelay(1);
             self.valueFloat.Dispose();
-
-
-            ////委托申请赋值
-            //self.TryGetRuleActuator(out self.ruleActuator);
-
-            ////委托添加
-            //self.ruleActuator.EnqueueReferenced(self.AddComponent(out InitialDomainEvent.Value _));
-
-            ////执行
-            //self.ruleActuator.Send(2.5f);
-            ////self.ruleActuator.Dispose();
-            //test.Dispose();
-            //self.ruleActuator.Send(2.7f);
-
-            ////事件调用
-            //test.AddComponent(out NodeEvent<float> _).Send(1.02f);
 
         }
     }
@@ -170,30 +158,23 @@ namespace WorldTree
 
         }
 
-    }
 
-
-
-    public static class InitialDomainRuleNode
-    {
-        public class Value : RuleNode<InitialDomain>, AsRule<ISendRule<float>> { }
-        public class OnCompleted : RuleNode<InitialDomain>, AsRule<ISendRule> { }
     }
 
 
     public static class InitialDomainRuleNodeRule
     {
-        class ValueSendRule : SendRule<InitialDomainRuleNode.Value, float>
+        class ValueSendRule : SendRule<InitialDomain.Value, float>
         {
-            public override void OnEvent(InitialDomainRuleNode.Value self, float value)
+            public override void OnEvent(InitialDomain.Value self, float value)
             {
                 World.Log($"数值变化： {value}");
             }
         }
 
-        class OnCompletedSendRule : SendRule<InitialDomainRuleNode.OnCompleted>
+        class OnCompletedSendRule : SendRule<InitialDomain.OnCompleted>
         {
-            public override void OnEvent(InitialDomainRuleNode.OnCompleted self)
+            public override void OnEvent(InitialDomain.OnCompleted self)
             {
                 World.Log("渐变结束：!!!!");
             }
