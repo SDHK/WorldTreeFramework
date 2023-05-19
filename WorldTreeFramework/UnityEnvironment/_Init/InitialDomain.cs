@@ -104,8 +104,8 @@ namespace WorldTree
 
             self.valueFloat.BindTwoWay(self.valueInt);
 
-            self.valueFloat.GetTween(15f, 5f).SetCurve<CurveBase>().Run().Completed(self.AddComponent(out InitialDomainEvent.OnCompleted _));
-            self.valueFloat.AddListenerValueChange(self.AddComponent(out InitialDomainEvent.Value _));
+            self.valueFloat.GetTween(15f, 5f).SetCurve<CurveBase>().Run().Completed(self.AddComponent(out InitialDomainRuleNode.OnCompleted _));
+            self.valueFloat.AddListenerValueChange(self.AddComponent(out InitialDomainRuleNode.Value _));
 
             await self.AsyncDelay(1);
             self.valueFloat.Dispose();
@@ -174,26 +174,26 @@ namespace WorldTree
 
 
 
-    public static class InitialDomainEvent
+    public static class InitialDomainRuleNode
     {
-        public class Value : EventNode<InitialDomain>, AsRule<ISendRule<float>> { }
-        public class OnCompleted : EventNode<InitialDomain>, AsRule<ISendRule> { }
+        public class Value : RuleNode<InitialDomain>, AsRule<ISendRule<float>> { }
+        public class OnCompleted : RuleNode<InitialDomain>, AsRule<ISendRule> { }
     }
 
 
-    public static class InitialDomainEventRule
+    public static class InitialDomainRuleNodeRule
     {
-        class ValueSendRule : SendRule<InitialDomainEvent.Value, float>
+        class ValueSendRule : SendRule<InitialDomainRuleNode.Value, float>
         {
-            public override void OnEvent(InitialDomainEvent.Value self, float value)
+            public override void OnEvent(InitialDomainRuleNode.Value self, float value)
             {
                 World.Log($"数值变化： {value}");
             }
         }
 
-        class OnCompletedSendRule : SendRule<InitialDomainEvent.OnCompleted>
+        class OnCompletedSendRule : SendRule<InitialDomainRuleNode.OnCompleted>
         {
-            public override void OnEvent(InitialDomainEvent.OnCompleted self)
+            public override void OnEvent(InitialDomainRuleNode.OnCompleted self)
             {
                 World.Log("渐变结束：!!!!");
             }
