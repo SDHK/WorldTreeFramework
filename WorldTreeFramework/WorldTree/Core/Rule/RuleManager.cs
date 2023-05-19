@@ -169,16 +169,15 @@ namespace WorldTree
         {
             if (RuleType.IsGenericType) //判断法则类型是泛型
             {
-                //遍历获取：法则父类第一个泛型就是节点类型
                 var BaseType = RuleType.BaseType;
 
-                //一路查到最底层RuleBase
+                //遍历获取一路查到最底层RuleBase<N,R>
                 while (BaseType.GetGenericTypeDefinition() != typeof(RuleBase<,>))
                 {
                     BaseType = BaseType.BaseType;
                 }
                 var GenericArguments = BaseType.GetGenericArguments();
-                //RuleBase第一个泛型参数就是服务的节点
+                //RuleBase<N,R> 第一个泛型参数就是法则负责的目标节点
                 self.GenericRuleTypeHashDictionary.GetValue(GenericArguments[0].GetGenericTypeDefinition()).Add(RuleType);
             }
             else
@@ -345,12 +344,9 @@ namespace WorldTree
         /// </remarks>
         public static void SupportPolymorphicListenerRule(this RuleManager self, Type listenerNodeType)
         {
-
-
             //判断如果没有这样的监听器
             if (!self.ListenerRuleTargetGroupDictionary.ContainsKey(listenerNodeType))
             {
-
                 //监听器父类类型键值
                 Type listenerBaseTypeKey = listenerNodeType.BaseType;
 
