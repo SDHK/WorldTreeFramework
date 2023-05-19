@@ -152,7 +152,6 @@ namespace WorldTree
                     while (nodeIdQueue.Count != 0)
                     {
                         var node = nodeIdQueue.Dequeue();
-                        //self.DeReferenced(node);
 
                         self.m_ReferencedChilden.Remove(node.Id);
                         if (self.m_ReferencedChilden.Count == 0)

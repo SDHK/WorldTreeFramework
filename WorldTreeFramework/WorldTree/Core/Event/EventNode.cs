@@ -28,7 +28,6 @@ namespace WorldTree
     {
         public override void OnEvent(EventNode<N> self, INode referencedParent)
         {
-            World.Log("DeReferencedParentRule");
             if (self.m_ReferencedParents is null)
             {
                 self.Dispose();
@@ -36,12 +35,11 @@ namespace WorldTree
         }
     }
 
-    class EventNodeReferencedRemoveRule<N> : ReferencedParentRemoveRule<EventNode<N>>
+    class EventNodeReferencedParentRemoveRule<N> : ReferencedParentRemoveRule<EventNode<N>>
         where N : class, INode
     {
         public override void OnEvent(EventNode<N> self, INode referencedParent)
         {
-            World.Log("ReferencedParentRemoveRule");
             if (self.m_ReferencedParents is null)
             {
                 self.Dispose();

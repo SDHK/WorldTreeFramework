@@ -171,14 +171,14 @@ namespace WorldTree
             {
                 //遍历获取：法则父类第一个泛型就是节点类型
                 var BaseType = RuleType.BaseType;
-                var GenericArguments = BaseType.GetGenericArguments();
 
-                //假如类型不为object,获取的泛型数量为0时继续，不为0时获取第一个泛型判断是否为节点
-                while (BaseType != typeof(object) ? GenericArguments.Length != 0 ? !GenericArguments[0].GetInterfaces().Contains(typeof(INode)) : true : false)
+                //一路查到最底层RuleBase
+                while (BaseType.GetGenericTypeDefinition() != typeof(RuleBase<,>))
                 {
                     BaseType = BaseType.BaseType;
-                    GenericArguments = BaseType.GetGenericArguments();
                 }
+                var GenericArguments = BaseType.GetGenericArguments();
+                //RuleBase第一个泛型参数就是服务的节点
                 self.GenericRuleTypeHashDictionary.GetValue(GenericArguments[0].GetGenericTypeDefinition()).Add(RuleType);
             }
             else
@@ -307,23 +307,26 @@ namespace WorldTree
         public static void SupportGenericNodeRule(this RuleManager self, Type NodeType)
         {
             Type Type = NodeType;
-            while (Type != null && Type != typeof(IUnitPoolItem) && Type != typeof(object) && Type.IsGenericType)
+            while (Type != null && Type != typeof(IUnitPoolItem) && Type != typeof(object))
             {
-                //获取泛型本体类型
-                Type GenericNodeType = Type.GetGenericTypeDefinition();
-                //获取泛型参数数组
-                Type[] GenericTypes = Type.GetGenericArguments();
-
-                if (self.GenericRuleTypeHashDictionary.TryGetValue(GenericNodeType, out var RuleTypeHash))
+                //节点可能会是非泛型，但父类则有泛型的情况，需要多态化所有父类泛型法则
+                if (Type.IsGenericType)
                 {
-                    foreach (var RuleType in RuleTypeHash)
+                    //获取泛型本体类型
+                    Type GenericNodeType = Type.GetGenericTypeDefinition();
+                    //获取泛型参数数组
+                    Type[] GenericTypes = Type.GetGenericArguments();
+
+                    if (self.GenericRuleTypeHashDictionary.TryGetValue(GenericNodeType, out var RuleTypeHash))
                     {
-                        //填入对应的泛型参数，实例化泛型监听系统
-                        IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(GenericTypes));
-                        self.AddRule(rule);
+                        foreach (var RuleType in RuleTypeHash)
+                        {
+                            //填入对应的泛型参数，实例化泛型监听系统
+                            IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(GenericTypes));
+                            self.AddRule(rule);
+                        }
                     }
                 }
-
                 Type = Type.BaseType;
             }
         }
