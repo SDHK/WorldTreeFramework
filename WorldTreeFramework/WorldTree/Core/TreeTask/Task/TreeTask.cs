@@ -24,13 +24,7 @@ namespace WorldTree
         public TreeTask GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
 
-        public Action SetResult { get; set; }
-
-
-        public TreeTask()
-        {
-            SetResult = SetCompleted;
-        }
+        public class SetResult : RuleNode<TreeTask>, AsRule<ISendRule> { }
 
         public void GetResult()
         {
@@ -52,35 +46,44 @@ namespace WorldTree
     }
 
 
+    public static class TreeTaskRule
+    {
+        class SetResultSendRule : SendRule<TreeTask.SetResult>
+        {
+            public override void OnEvent(TreeTask.SetResult self)
+            {
+                self.Node.SetCompleted();
+            }
+        }
+
+        class SetResultSendRule<T> : SendRule<TreeTask<T>.SetResult, T>
+        {
+            public override void OnEvent(TreeTask<T>.SetResult self, T result)
+            {
+                self.Node.Result = result;
+                self.Node.SetCompleted();
+            }
+        }
+    }
+
     /// <summary>
     /// 泛型异步任务
     /// </summary>
     [AsyncMethodBuilder(typeof(Internal.AsyncTaskMethodBuilder<>))]
     public class TreeTask<T> : TreeTaskBase
-        ,AsRule<IAwakeRule>
+        , AsRule<IAwakeRule>
     {
         public TreeTask<T> GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
-        public Action<T> SetResult { get; set; }
+
+        public class SetResult : RuleNode<TreeTask<T>>, AsRule<ISendRule<T>> { }
 
         public T Result;
-
-        public TreeTask() : base()
-        {
-            SetResult = SetResultMethod;
-        }
 
         public T GetResult()
         {
             return Result;
         }
-
-        private void SetResultMethod(T result)
-        {
-            Result = result;
-            SetCompleted();
-        }
-
 
         [DebuggerHidden]
         private async TreeTaskVoid InnerCoroutine()

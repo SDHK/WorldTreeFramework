@@ -159,6 +159,18 @@ namespace WorldTree
         {
             ((RuleActuator)self).Clear();
         }
+
+        /// <summary>
+        /// 添加法则节点并建立引用关系
+        /// </summary>
+        public static void Add<N, R, RN>(this IRuleActuator<R> self, N node, out RN ruleNode)
+            where N : class, INode
+            where R : IRule
+            where RN : class, INode, ComponentOf<N>, AsRule<R>
+        {
+            ((RuleActuator)self).EnqueueReferenced(node.AddComponent(out ruleNode));
+        }
+
     }
 
 }

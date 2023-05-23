@@ -36,7 +36,7 @@ namespace WorldTree
         /// <summary>
         /// 设置完成
         /// </summary>
-        protected void SetCompleted()
+        public void SetCompleted()
         {
             IsCompleted = true;
             if (IsActive)

@@ -8,7 +8,6 @@
 
 */
 
-using System;
 
 namespace WorldTree
 {
@@ -19,27 +18,44 @@ namespace WorldTree
     {
         public int count = 0;
         public int countOut = 0;
-        public Action callback;
+        //public Action callback;
+
+        public IRuleActuator<ISendRule> callback;
     }
 
-    class CounterCallGetRule : GetRule<CounterCall>
+    public static class CounterCallRule
     {
-        public override void OnEvent(CounterCall self)
+        class AddRule : AddRule<CounterCall>
         {
-            self.count = 0;
-        }
-    }
-
-    class CounterCallUpdateRule : UpdateRule<CounterCall>
-    {
-        public override void OnEvent(CounterCall self, float deltaTime)
-        {
-            self.count++;
-            if (self.count >= self.countOut)
+            public override void OnEvent(CounterCall self)
             {
-                self.callback?.Invoke();
-                self.Dispose();
+                self.count = 0;
+                self.TryGetRuleActuator(out self.callback);
+            }
+        }
+
+        class RemoveRule : RemoveRule<CounterCall>
+        {
+            public override void OnEvent(CounterCall self)
+            {
+                self.callback = null;
+            }
+        }
+
+
+        class UpdateRule : UpdateRule<CounterCall>
+        {
+            public override void OnEvent(CounterCall self, float deltaTime)
+            {
+                self.count++;
+                if (self.count >= self.countOut)
+                {
+                    self.callback?.Send();
+                    self.Dispose();
+                }
             }
         }
     }
+
+
 }

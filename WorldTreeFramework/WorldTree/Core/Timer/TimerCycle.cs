@@ -19,7 +19,9 @@ namespace WorldTree
     {
         public float time = 0;
         public float timeOutTime = 0;
-        public Action callback;
+        //public Action callback;
+        public IRuleActuator<ISendRule> callback;
+             
     }
 
     class TimerCycleUpdateRule : UpdateRule<TimerCycle>
@@ -30,7 +32,7 @@ namespace WorldTree
             if (self.time >= self.timeOutTime)
             {
                 self.time = 0;
-                self.callback?.Invoke();
+                self.callback?.Send();
             }
         }
     }

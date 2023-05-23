@@ -20,7 +20,8 @@ namespace WorldTree
     {
         public float time = 0;
         public float timeOutTime = 0;
-        public Action callback;
+        //public Action callback;
+        public IRuleActuator<ISendRule> callback;
     }
 
     class TimerCallUpdateRule : UpdateRule<TimerCall>
@@ -30,7 +31,7 @@ namespace WorldTree
             self.time += deltaTime;
             if (self.time >= self.timeOutTime)
             {
-                self.callback?.Invoke();
+                self.callback?.Send();
                 self.Dispose();
             }
         }

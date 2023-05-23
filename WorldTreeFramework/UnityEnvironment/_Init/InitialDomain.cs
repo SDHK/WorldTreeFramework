@@ -23,6 +23,14 @@ using WorldTree.Internal;
 namespace WorldTree
 {
 
+    public struct Pointer<N>
+    where N : class, INode
+    {
+        public WorldTreeCore core;
+        public long id;
+        public INode node;
+    }
+
 
     //public class NodeAddRule : AddRule<Node>
     //{
@@ -96,74 +104,57 @@ namespace WorldTree
     }
 
 
-    class _InitialDomain : AddRule<InitialDomain>
+
+    public static class InitialDomainRule
     {
-        public override async void OnEvent(InitialDomain self)
+        class AddRule : AddRule<InitialDomain>
         {
-
-            World.Log("初始域启动！！");
-
-            self.AddChild(out self.valueFloat);
-            self.AddChild(out self.valueInt);
-
-            self.valueFloat.BindTwoWay(self.valueInt);
-
-            self.valueFloat.GetTween(15f, 5f).SetCurve<CurveBase>().Run().Completed(self.AddComponent(out InitialDomain.OnCompleted _));
-            self.valueFloat.AddListenerValueChange(self.AddComponent(out InitialDomain.Value _));
-
-            await self.AsyncDelay(1);
-            self.valueFloat.Dispose();
-
-        }
-    }
-    class InitialDomainUpdateRule : UpdateRule<InitialDomain>
-    {
-        public override void OnEvent(InitialDomain self, float deltaTime)
-        {
-            if (Input.GetKeyDown(KeyCode.A))
+            public override void OnEvent(InitialDomain self)
             {
-                self.valueFloat.Value += 1.5f;
-                World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                self.valueInt.Value += 1;
-                World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value}");
-
-            }
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                self.AddComponent(out TreeNode _).Test().Coroutine();
-            }
-
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                self.AddComponent(out TreeNode _).SetActive(false);
-            }
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                self.AddComponent(out TreeNode _).SetActive(true);
-            }
-
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                self.RemoveComponent<TreeNode>();
+                World.Log("初始域启动！！");
             }
         }
 
-        public void Test(InitialDomain self)
+        class UpdateRule : UpdateRule<InitialDomain>
         {
+            public override void OnEvent(InitialDomain self, float deltaTime)
+            {
+                if (Input.GetKeyDown(KeyCode.A))
+                {
+                    self.valueFloat.Value += 1.5f;
+                    World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
+                }
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    self.valueInt.Value += 1;
+                    World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value}");
+
+                }
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    self.AddComponent(out TreeNode _).Test().Coroutine();
+                }
+
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    self.AddComponent(out TreeNode _).SetActive(false);
+                }
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    self.AddComponent(out TreeNode _).SetActive(true);
+                }
+
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    self.RemoveComponent<TreeNode>();
+                }
+            }
 
 
         }
 
 
-    }
-
-
-    public static class InitialDomainRuleNodeRule
-    {
         class ValueSendRule : SendRule<InitialDomain.Value, float>
         {
             public override void OnEvent(InitialDomain.Value self, float value)
@@ -179,7 +170,14 @@ namespace WorldTree
                 World.Log("渐变结束：!!!!");
             }
         }
-    }
 
+
+        public static void Test(this InitialDomain self)
+        {
+
+
+        }
+
+    }
 
 }

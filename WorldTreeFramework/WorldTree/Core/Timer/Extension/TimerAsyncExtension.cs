@@ -8,6 +8,7 @@
 
 */
 
+
 namespace WorldTree
 {
     public static class TimerAsyncExtension
@@ -19,7 +20,7 @@ namespace WorldTree
         {
             self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter);
             counter.countOut = count;
-            counter.callback = asyncTask.SetResult;
+            counter.callback.Add(asyncTask, out TreeTask.SetResult _);
             return asyncTask;
         }
 
@@ -31,7 +32,7 @@ namespace WorldTree
         {
             self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall timer);
             timer.timeOutTime = time;
-            timer.callback = asyncTask.SetResult;
+            timer.callback.Add(asyncTask, out TreeTask.SetResult _);
             return asyncTask;
         }
     }
