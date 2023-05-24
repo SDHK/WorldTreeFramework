@@ -12,6 +12,33 @@
 namespace WorldTree
 {
     /// <summary>
+    /// 异步通用通知法则接口
+    /// </summary>
+    public interface ISendRuleAsync : ISendRuleAsyncBase { }
+    /// <summary>
+    /// 异步通用通知法则接口
+    /// </summary>
+    public interface ISendRuleAsync<T1> : ISendRuleAsyncBase<T1> { }
+    /// <summary>
+    /// 异步通用通知法则接口
+    /// </summary>
+    public interface ISendRuleAsync<T1, T2> : ISendRuleAsyncBase<T1, T2> { }
+    /// <summary>
+    /// 异步通用通知法则接口
+    /// </summary>
+    public interface ISendRuleAsync<T1, T2, T3> : ISendRuleAsyncBase<T1, T2, T3> { }
+    /// <summary>
+    /// 异步通用通知法则接口
+    /// </summary>
+    public interface ISendRuleAsync<T1, T2, T3, T4> : ISendRuleAsyncBase<T1, T2, T3, T4> { }
+    /// <summary>
+    /// 异步通用通知法则接口
+    /// </summary>
+    public interface ISendRuleAsync<T1, T2, T3, T4, T5> : ISendRuleAsyncBase<T1, T2, T3, T4, T5> { }
+
+
+
+    /// <summary>
     /// 异步通用通知法则
     /// </summary>
     public abstract class SendRuleAsync<N> : SendRuleAsyncBase<N, ISendRuleAsync> where N : class, INode, AsRule<ISendRuleAsync> { }

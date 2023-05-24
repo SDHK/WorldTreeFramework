@@ -87,6 +87,24 @@ namespace WorldTree
         }
     }
 
+    //执行节点
+    public abstract class ActuatorNodeRule<P, N> : SendRule<N>
+        where N : RuleNode<P>, INode, AsRule<ISendRule>
+        where P : class, INode
+    {
+        public override void OnEvent(N self) => OnEvent(self.Node);
+        public abstract void OnEvent(P self);
+    }
+
+
+    class SetResultSendRule : ActuatorNodeRule<TreeTask, TreeTask.SetResultRuleNode>
+    {
+        public override void OnEvent(TreeTask self)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
     /// <summary>
     /// 初始域
@@ -97,10 +115,10 @@ namespace WorldTree
         public TreeValue<float> valueFloat;
         public TreeValue<int> valueInt;
 
-        public IRuleActuator<ISendRule<float>> ruleActuator;
+        public IRuleActuator<ISendRuleBase<float>> ruleActuator;
 
-        public class Value : RuleNode<InitialDomain>, AsRule<ISendRule<float>> { }
-        public class OnCompleted : RuleNode<InitialDomain>, AsRule<ISendRule> { }
+        public class Value : RuleNode<InitialDomain>, AsRule<ISendRuleBase<float>> { }
+        public class OnCompleted : RuleNode<InitialDomain>, AsRule<ISendRuleBase> { }
     }
 
 

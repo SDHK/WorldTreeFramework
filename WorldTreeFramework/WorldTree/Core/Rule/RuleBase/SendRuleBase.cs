@@ -25,110 +25,110 @@ namespace WorldTree
 {
 
     /// <summary>
-    /// 通知法则接口
+    /// 通知法则基类接口
     /// </summary>
-    public interface ISendRule : IRule
+    public interface ISendRuleBase : IRule
     {
         void Invoke(INode self);
     }
 
     /// <summary>
-    /// 通知法则接口
+    /// 通知法则基类接口
     /// </summary>
-    public interface ISendRule<T1> : IRule
+    public interface ISendRuleBase<T1> : IRule
     {
         void Invoke(INode self, T1 arg1);
     }
 
     /// <summary>
-    /// 通知法则接口
+    /// 通知法则基类接口
     /// </summary>
-    public interface ISendRule<T1, T2> : IRule
+    public interface ISendRuleBase<T1, T2> : IRule
     {
         void Invoke(INode self, T1 arg1, T2 arg2);
     }
 
     /// <summary>
-    /// 通知法则接口
+    /// 通知法则基类接口
     /// </summary>
-    public interface ISendRule<T1, T2, T3> : IRule
+    public interface ISendRuleBase<T1, T2, T3> : IRule
     {
         void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3);
     }
 
     /// <summary>
-    /// 通知法则接口
+    /// 通知法则基类接口
     /// </summary>
-    public interface ISendRule<T1, T2, T3, T4> : IRule
+    public interface ISendRuleBase<T1, T2, T3, T4> : IRule
     {
         void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
 
     /// <summary>
-    /// 通知法则接口
+    /// 通知法则基类接口
     /// </summary>
-    public interface ISendRule<T1, T2, T3, T4, T5> : IRule
+    public interface ISendRuleBase<T1, T2, T3, T4, T5> : IRule
     {
         void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 
 
     /// <summary>
-    /// 通知法则抽象基类
+    /// 通知法则基类
     /// </summary>
-    public abstract class SendRuleBase<N, R> : RuleBase<N, R>, ISendRule
+    public abstract class SendRuleBase<N, R> : RuleBase<N, R>, ISendRuleBase
     where N : class, INode, AsRule<R>
-    where R : ISendRule
+    where R : ISendRuleBase
     {
         public virtual void Invoke(INode self) => OnEvent(self as N);
         public abstract void OnEvent(N self);
     }
     /// <summary>
-    /// 通知法则抽象基类
+    /// 通知法则基类
     /// </summary>
-    public abstract class SendRuleBase<N, R, T1> : RuleBase<N, R>, ISendRule<T1>
+    public abstract class SendRuleBase<N, R, T1> : RuleBase<N, R>, ISendRuleBase<T1>
     where N : class, INode, AsRule<R>
-    where R : ISendRule<T1>
+    where R : ISendRuleBase<T1>
     {
         public virtual void Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
         public abstract void OnEvent(N self, T1 arg1);
     }
     /// <summary>
-    /// 通知法则抽象基类
+    /// 通知法则基类
     /// </summary>
-    public abstract class SendRuleBase<N, R, T1, T2> : RuleBase<N, R>, ISendRule<T1, T2>
+    public abstract class SendRuleBase<N, R, T1, T2> : RuleBase<N, R>, ISendRuleBase<T1, T2>
     where N : class, INode, AsRule<R>
-    where R : ISendRule<T1, T2>
+    where R : ISendRuleBase<T1, T2>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
         public abstract void OnEvent(N self, T1 arg1, T2 arg2);
     }
     /// <summary>
-    /// 通知法则抽象基类
+    /// 通知法则基类
     /// </summary>
-    public abstract class SendRuleBase<N, R, T1, T2, T3> : RuleBase<N, R>, ISendRule<T1, T2, T3>
+    public abstract class SendRuleBase<N, R, T1, T2, T3> : RuleBase<N, R>, ISendRuleBase<T1, T2, T3>
     where N : class, INode, AsRule<R>
-    where R : ISendRule<T1, T2, T3>
+    where R : ISendRuleBase<T1, T2, T3>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
         public abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
-    /// 通知法则抽象基类
+    /// 通知法则基类
     /// </summary>
-    public abstract class SendRuleBase<N, R, T1, T2, T3, T4> : RuleBase<N, R>, ISendRule<T1, T2, T3, T4>
+    public abstract class SendRuleBase<N, R, T1, T2, T3, T4> : RuleBase<N, R>, ISendRuleBase<T1, T2, T3, T4>
     where N : class, INode, AsRule<R>
-    where R : ISendRule<T1, T2, T3, T4>
+    where R : ISendRuleBase<T1, T2, T3, T4>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
         public abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
-    /// 通知法则抽象基类
+    /// 通知法则基类
     /// </summary>
-    public abstract class SendRuleBase<N, R, T1, T2, T3, T4, T5> : RuleBase<N, R>, ISendRule<T1, T2, T3, T4, T5>
+    public abstract class SendRuleBase<N, R, T1, T2, T3, T4, T5> : RuleBase<N, R>, ISendRuleBase<T1, T2, T3, T4, T5>
     where N : class, INode, AsRule<R>
-    where R : ISendRule<T1, T2, T3, T4, T5>
+    where R : ISendRuleBase<T1, T2, T3, T4, T5>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);
         public abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);

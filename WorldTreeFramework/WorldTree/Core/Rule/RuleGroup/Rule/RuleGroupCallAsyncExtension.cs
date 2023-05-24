@@ -16,7 +16,7 @@ namespace WorldTree
         #region Call
 
         public static async TreeTask<OutT> CallAsync<R, OutT>(this IRuleGroup<R> group, INode self, OutT defaultOutT)
-        where R : ICallRuleAsync<OutT>
+        where R : ICallRuleAsyncBase<OutT>
         {
             OutT outT = default(OutT);
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -32,7 +32,7 @@ namespace WorldTree
 
 
         public static async TreeTask<OutT> CallAsync<R, T1, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, OutT>
+        where R : ICallRuleAsyncBase<T1, OutT>
         {
             OutT outT = default(OutT);
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -47,7 +47,7 @@ namespace WorldTree
         }
 
         public static async TreeTask<OutT> CallAsync<R, T1, T2, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, T2 arg2, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, T2, OutT>
+        where R : ICallRuleAsyncBase<T1, T2, OutT>
         {
             OutT outT = default(OutT);
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -62,7 +62,7 @@ namespace WorldTree
         }
 
         public static async TreeTask<OutT> CallAsync<R, T1, T2, T3, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, T2, T3, OutT>
+        where R : ICallRuleAsyncBase<T1, T2, T3, OutT>
         {
             OutT outT = default(OutT);
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -76,7 +76,7 @@ namespace WorldTree
             return outT;
         }
         public static async TreeTask<OutT> CallAsync<R, T1, T2, T3, T4, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, T2, T3, T4, OutT>
+        where R : ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
         {
             OutT outT = default(OutT);
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -91,7 +91,7 @@ namespace WorldTree
         }
 
         public static async TreeTask<OutT> CallAsync<R, T1, T2, T3, T4, T5, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, T2, T3, T4, T5, OutT>
+        where R : ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
         {
             OutT outT = default(OutT);
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -112,7 +112,7 @@ namespace WorldTree
 
 
         public static async TreeTask<UnitList<OutT>> CallsAsync<R, OutT>(this IRuleGroup<R> group, INode self, OutT defaultOutT)
-        where R : ICallRuleAsync<OutT>
+        where R : ICallRuleAsyncBase<OutT>
         {
             UnitList<OutT> values = null;
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -126,7 +126,7 @@ namespace WorldTree
             return values;
         }
         public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, OutT>
+        where R : ICallRuleAsyncBase<T1, OutT>
         {
             UnitList<OutT> values = null;
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -140,7 +140,7 @@ namespace WorldTree
             return values;
         }
         public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, T2 arg2, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, T2, OutT>
+        where R : ICallRuleAsyncBase<T1, T2, OutT>
         {
             UnitList<OutT> values = null;
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -154,7 +154,7 @@ namespace WorldTree
             return values;
         }
         public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, T3, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, T2, T3, OutT>
+        where R : ICallRuleAsyncBase<T1, T2, T3, OutT>
         {
             UnitList<OutT> values = null;
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -168,7 +168,7 @@ namespace WorldTree
             return values;
         }
         public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, T3, T4, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, T2, T3, T4, OutT>
+        where R : ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
         {
             UnitList<OutT> values = null;
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))
@@ -182,7 +182,7 @@ namespace WorldTree
             return values;
         }
         public static async TreeTask<UnitList<OutT>> CallsAsync<R, T1, T2, T3, T4, T5, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
-        where R : ICallRuleAsync<T1, T2, T3, T4, T5, OutT>
+        where R : ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
         {
             UnitList<OutT> values = null;
             if ((group as RuleGroup).TryGetValue(self.Type, out RuleList ruleList))

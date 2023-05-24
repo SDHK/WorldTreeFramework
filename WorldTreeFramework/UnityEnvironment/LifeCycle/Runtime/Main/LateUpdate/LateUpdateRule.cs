@@ -4,7 +4,7 @@
     /// <summary>
     /// LateUpdate法则接口
     /// </summary>
-    public interface ILateUpdateRule : ISendRule<float> { }
+    public interface ILateUpdateRule : ISendRuleBase<float> { }
     /// <summary>
     /// LateUpdate法则
     /// </summary>

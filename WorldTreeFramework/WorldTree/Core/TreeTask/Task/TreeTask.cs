@@ -24,7 +24,7 @@ namespace WorldTree
         public TreeTask GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
 
-        public class SetResult : RuleNode<TreeTask>, AsRule<ISendRule> { }
+        public class SetResultRuleNode : RuleNode<TreeTask>, AsRule<ISendRuleBase> { }
 
         public void GetResult()
         {
@@ -46,25 +46,7 @@ namespace WorldTree
     }
 
 
-    public static class TreeTaskRule
-    {
-        class SetResultSendRule : SendRule<TreeTask.SetResult>
-        {
-            public override void OnEvent(TreeTask.SetResult self)
-            {
-                self.Node.SetCompleted();
-            }
-        }
 
-        class SetResultSendRule<T> : SendRule<TreeTask<T>.SetResult, T>
-        {
-            public override void OnEvent(TreeTask<T>.SetResult self, T result)
-            {
-                self.Node.Result = result;
-                self.Node.SetCompleted();
-            }
-        }
-    }
 
     /// <summary>
     /// 泛型异步任务
@@ -76,7 +58,7 @@ namespace WorldTree
         public TreeTask<T> GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
 
-        public class SetResult : RuleNode<TreeTask<T>>, AsRule<ISendRule<T>> { }
+        public class SetResultRuleNode : RuleNode<TreeTask<T>>, AsRule<ISendRuleBase<T>> { }
 
         public T Result;
 
@@ -99,4 +81,34 @@ namespace WorldTree
             InnerCoroutine().Coroutine();
         }
     }
+    public static class TreeTaskRule
+    {
+        class SetResultSendRule : SendRule<TreeTask.SetResultRuleNode>
+        {
+            public override void OnEvent(TreeTask.SetResultRuleNode self)
+            {
+                self.Node.SetResult();
+            }
+        }
+
+        class SetResultSendRule<T> : SendRule<TreeTask<T>.SetResultRuleNode, T>
+        {
+            public override void OnEvent(TreeTask<T>.SetResultRuleNode self, T result)
+            {
+                self.Node.SetResult(result);
+            }
+        }
+
+        public static void SetResult(this TreeTask self)
+        {
+            self.SetCompleted();
+        }
+        public static void SetResult<T>(this TreeTask<T> self, T result)
+        {
+            self.Result = result;
+            self.SetCompleted();
+        }
+
+    }
+
 }

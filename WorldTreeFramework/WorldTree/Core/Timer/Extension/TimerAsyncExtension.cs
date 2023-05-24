@@ -20,7 +20,7 @@ namespace WorldTree
         {
             self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter);
             counter.countOut = count;
-            counter.callback.Add(asyncTask, out TreeTask.SetResult _);
+            counter.callback.Add(asyncTask, out TreeTask.SetResultRuleNode _);
             return asyncTask;
         }
 
@@ -32,7 +32,7 @@ namespace WorldTree
         {
             self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall timer);
             timer.timeOutTime = time;
-            timer.callback.Add(asyncTask, out TreeTask.SetResult _);
+            timer.callback.Add(asyncTask, out TreeTask.SetResultRuleNode _);
             return asyncTask;
         }
     }

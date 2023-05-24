@@ -13,7 +13,7 @@ namespace WorldTree
     /// <summary>
     /// 新建法则接口
     /// </summary>
-    public interface INewRule : ISendRule { }
+    public interface INewRule : ISendRuleBase { }
 
     /// <summary>
     /// 新建法则
@@ -23,7 +23,7 @@ namespace WorldTree
     /// <summary>
     /// 获取法则接口
     /// </summary>
-    public interface IGetRule : ISendRule { }
+    public interface IGetRule : ISendRuleBase { }
 
     /// <summary>
     /// 获取法则
@@ -33,7 +33,7 @@ namespace WorldTree
     /// <summary>
     /// 回收法则接口
     /// </summary>
-    public interface IRecycleRule : ISendRule { }
+    public interface IRecycleRule : ISendRuleBase { }
 
     /// <summary>
     /// 回收法则
@@ -43,7 +43,7 @@ namespace WorldTree
     /// <summary>
     /// 释放法则接口
     /// </summary>
-    public interface IDestroyRule : ISendRule { }
+    public interface IDestroyRule : ISendRuleBase { }
     /// <summary>
     /// 释放法则
     /// </summary>

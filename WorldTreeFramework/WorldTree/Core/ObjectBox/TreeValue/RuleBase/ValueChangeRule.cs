@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 全局数值变化监听法则接口
     /// </summary>
-    public interface IValueChangeRule<T1> : ISendRule<T1> { }
+    public interface IValueChangeRule<T1> : ISendRuleBase<T1> { }
     /// <summary>
     /// 全局数值变化监听法则(同类型转换)
     /// </summary>

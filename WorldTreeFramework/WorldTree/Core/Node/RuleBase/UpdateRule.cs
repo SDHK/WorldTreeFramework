@@ -11,7 +11,7 @@ namespace WorldTree
     /// <summary>
     /// 刷新法则接口
     /// </summary>
-    public interface IUpdateRule : ISendRule<float> { }
+    public interface IUpdateRule : ISendRuleBase<float> { }
 
     /// <summary>
     /// 刷新法则

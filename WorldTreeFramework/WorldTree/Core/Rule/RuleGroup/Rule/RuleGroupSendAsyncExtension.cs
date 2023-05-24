@@ -18,7 +18,7 @@ namespace WorldTree
 
 
         public static async TreeTask<bool> TrySendAsync<R>(this IRuleGroup<R> group, INode node)
-        where R : ISendRuleAsync
+        where R : ISendRuleAsyncBase
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -32,7 +32,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<bool> TrySendAsync<R, T1>(this IRuleGroup<R> group, INode node, T1 arg1)
-        where R : ISendRuleAsync<T1>
+        where R : ISendRuleAsyncBase<T1>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -46,7 +46,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<bool> TrySendAsync<R, T1, T2>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2)
-        where R : ISendRuleAsync<T1, T2>
+        where R : ISendRuleAsyncBase<T1, T2>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -60,7 +60,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<bool> TrySendAsync<R, T1, T2, T3>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3)
-        where R : ISendRuleAsync<T1, T2, T3>
+        where R : ISendRuleAsyncBase<T1, T2, T3>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -74,7 +74,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<bool> TrySendAsync<R, T1, T2, T3, T4>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where R : ISendRuleAsync<T1, T2, T3, T4>
+        where R : ISendRuleAsyncBase<T1, T2, T3, T4>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -88,7 +88,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask<bool> TrySendAsync<R, T1, T2, T3, T4, T5>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where R : ISendRuleAsync<T1, T2, T3, T4, T5>
+        where R : ISendRuleAsyncBase<T1, T2, T3, T4, T5>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -111,7 +111,7 @@ namespace WorldTree
 
 
         public static async TreeTask SendAsync<R>(this IRuleGroup<R> group, INode node)
-        where R : ISendRuleAsync
+        where R : ISendRuleAsyncBase
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -123,7 +123,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask SendAsync<R,T1>(this IRuleGroup<R> group, INode node, T1 arg1)
-        where R : ISendRuleAsync<T1>
+        where R : ISendRuleAsyncBase<T1>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -135,7 +135,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask SendAsync<R, T1, T2>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2)
-        where R : ISendRuleAsync<T1, T2>
+        where R : ISendRuleAsyncBase<T1, T2>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -147,7 +147,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask SendAsync<R, T1, T2, T3>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3)
-        where R : ISendRuleAsync<T1, T2, T3>
+        where R : ISendRuleAsyncBase<T1, T2, T3>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -159,7 +159,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask SendAsync<R, T1, T2, T3, T4>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where R : ISendRuleAsync<T1, T2, T3, T4>
+        where R : ISendRuleAsyncBase<T1, T2, T3, T4>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -171,7 +171,7 @@ namespace WorldTree
             }
         }
         public static async TreeTask SendAsync<R, T1, T2, T3, T4, T5>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where R : ISendRuleAsync<T1, T2, T3, T4, T5>
+        where R : ISendRuleAsyncBase<T1, T2, T3, T4, T5>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {

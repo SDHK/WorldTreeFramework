@@ -36,7 +36,7 @@ namespace WorldTree
     /// <summary>
     /// 节点监听法则接口
     /// </summary>
-    public interface IListenerRule : ISendRule<INode>
+    public interface IListenerRule : ISendRuleBase<INode>
     {
         /// <summary>
         /// 监听：目标节点类型

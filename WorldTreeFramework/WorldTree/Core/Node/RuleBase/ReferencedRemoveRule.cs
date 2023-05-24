@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 引用子关系解除法则接口
     /// </summary>
-    public interface IDeReferencedChildRule : ISendRule<INode> { }
+    public interface IDeReferencedChildRule : ISendRuleBase<INode> { }
 
     /// <summary>
     /// 引用子关系解除法则
@@ -25,7 +25,7 @@ namespace WorldTree
     /// <summary>
     /// 引用父关系解除法则接口
     /// </summary>
-    public interface IDeReferencedParentRule : ISendRule<INode> { }
+    public interface IDeReferencedParentRule : ISendRuleBase<INode> { }
 
     /// <summary>
     /// 引用父关系解除法则
@@ -37,7 +37,7 @@ namespace WorldTree
     /// <summary>
     /// 引用子关系移除法则接口
     /// </summary>
-    public interface IReferencedChildRemoveRule : ISendRule<INode> { }
+    public interface IReferencedChildRemoveRule : ISendRuleBase<INode> { }
     /// <summary>
     /// 引用子关系移除法则
     /// </summary>
@@ -47,7 +47,7 @@ namespace WorldTree
     /// <summary>
     /// 引用父关系移除法则接口
     /// </summary>
-    public interface IReferencedParentRemoveRule : ISendRule<INode> { }
+    public interface IReferencedParentRemoveRule : ISendRuleBase<INode> { }
 
     /// <summary>
     /// 引用父关系移除法则

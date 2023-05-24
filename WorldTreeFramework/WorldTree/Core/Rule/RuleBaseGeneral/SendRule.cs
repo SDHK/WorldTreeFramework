@@ -10,6 +10,32 @@
 
 namespace WorldTree
 {
+
+    /// <summary>
+    /// 通用通知法则接口
+    /// </summary>
+    public interface ISendRule : ISendRuleBase { }
+    /// <summary>
+    /// 通用通知法则接口
+    /// </summary>
+    public interface ISendRule<T1> : ISendRuleBase<T1> { }
+    /// <summary>
+    /// 通用通知法则接口
+    /// </summary>
+    public interface ISendRule<T1, T2> : ISendRuleBase<T1, T2> { }
+    /// <summary>
+    /// 通用通知法则接口
+    /// </summary>
+    public interface ISendRule<T1, T2, T3> : ISendRuleBase<T1, T2, T3> { }
+    /// <summary>
+    /// 通用通知法则接口
+    /// </summary>
+    public interface ISendRule<T1, T2, T3, T4> : ISendRuleBase<T1, T2, T3, T4> { }
+    /// <summary>
+    /// 通用通知法则接口
+    /// </summary>
+    public interface ISendRule<T1, T2, T3, T4, T5> : ISendRuleBase<T1, T2, T3, T4, T5> { }
+
     /// <summary>
     /// 通用通知法则
     /// </summary>

@@ -13,7 +13,7 @@ namespace WorldTree
     /// <summary>
     /// 曲线执行法则接口
     /// </summary>
-    public interface ICurveEvaluateRule : ICallRule<float, float> { }
+    public interface ICurveEvaluateRule : ICallRuleBase<float, float> { }
 
     /// <summary>
     /// 曲线执行法则

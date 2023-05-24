@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// 活跃禁用法则接口
     /// </summary>
-    public interface IDisableRule : ISendRule { }
+    public interface IDisableRule : ISendRuleBase { }
 
     /// <summary>
     /// 活跃禁用法则

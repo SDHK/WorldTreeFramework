@@ -50,7 +50,7 @@ namespace WorldTree
         /// <summary>
         /// 完成回调
         /// </summary>
-        public IRuleActuator<ISendRule> OnCompleted;
+        public IRuleActuator<ISendRuleBase> OnCompleted;
     }
 
     /// <summary>
@@ -114,7 +114,7 @@ namespace WorldTree
         /// 完成回调
         /// </summary>
         public static TreeTweenBase Completed<N>(this TreeTweenBase self, N eventNode)
-            where N : class, INode, AsRule<ISendRule>
+            where N : class, INode, AsRule<ISendRuleBase>
         {
             self.OnCompleted.EnqueueReferenced(eventNode);
             return self;

@@ -26,7 +26,7 @@ namespace WorldTree
     /// <summary>
     /// 添加法则接口
     /// </summary>
-    public interface IAddRule : ISendRule { }
+    public interface IAddRule : ISendRuleBase { }
 
     /// <summary>
     /// 添加法则

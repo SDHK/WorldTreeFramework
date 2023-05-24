@@ -12,7 +12,7 @@ namespace WorldTree
     /// <summary>
     /// GUI绘制
     /// </summary>
-    public interface IGUIDrawSystem : ISendRule { }
+    public interface IGUIDrawSystem : ISendRuleBase { }
 
     /// <summary>
     /// GUI绘制系统事件

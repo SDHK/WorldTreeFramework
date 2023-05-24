@@ -36,7 +36,7 @@ namespace WorldTree
         /// <summary>
         /// 法则执行器
         /// </summary>
-        public IRuleActuator<ISendRule<T>> m_ValueChange;
+        public IRuleActuator<ISendRuleBase<T>> m_ValueChange;
 
         /// <summary>
         /// 值

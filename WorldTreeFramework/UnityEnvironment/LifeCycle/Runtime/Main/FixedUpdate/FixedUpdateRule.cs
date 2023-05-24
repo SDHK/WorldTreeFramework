@@ -3,7 +3,7 @@
     /// <summary>
     /// FixedUpdate法则接口
     /// </summary>
-    public interface IFixedUpdateRule : ISendRule<float> { }
+    public interface IFixedUpdateRule : ISendRuleBase<float> { }
 
     /// <summary>
     /// FixedUpdate法则

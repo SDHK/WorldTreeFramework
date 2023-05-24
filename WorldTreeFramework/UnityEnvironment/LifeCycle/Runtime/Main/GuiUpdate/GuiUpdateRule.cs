@@ -4,7 +4,7 @@
     /// <summary>
     /// OnGUI法则接口
     /// </summary>
-    public interface IGuiUpdateRule : ISendRule<float> { }
+    public interface IGuiUpdateRule : ISendRuleBase<float> { }
 
     /// <summary>
     /// OnGUI法则

@@ -21,7 +21,7 @@ namespace WorldTree
         public float time = 0;
         public float timeOutTime = 0;
         //public Action callback;
-        public IRuleActuator<ISendRule> callback;
+        public IRuleActuator<ISendRuleBase> callback;
     }
 
     class TimerCallUpdateRule : UpdateRule<TimerCall>

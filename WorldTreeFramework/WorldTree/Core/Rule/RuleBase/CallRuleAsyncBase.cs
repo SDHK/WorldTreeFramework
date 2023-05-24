@@ -11,104 +11,104 @@
 namespace WorldTree
 {
     /// <summary>
-    /// 异步调用法则接口
+    /// 异步调用法则基类接口
     /// </summary>
-    public interface ICallRuleAsync<OutT> : IRule
+    public interface ICallRuleAsyncBase<OutT> : IRule
     {
         TreeTask<OutT> Invoke(INode self);
     }
     /// <summary>
-    /// 异步调用法则接口
+    /// 异步调用法则基类接口
     /// </summary>
-    public interface ICallRuleAsync<T1, OutT> : IRule
+    public interface ICallRuleAsyncBase<T1, OutT> : IRule
     {
         TreeTask<OutT> Invoke(INode self, T1 arg1);
     }
     /// <summary>
-    /// 异步调用法则接口
+    /// 异步调用法则基类接口
     /// </summary>
-    public interface ICallRuleAsync<T1, T2, OutT> : IRule
+    public interface ICallRuleAsyncBase<T1, T2, OutT> : IRule
     {
         TreeTask<OutT> Invoke(INode self, T1 arg1, T2 arg2);
     }
     /// <summary>
-    /// 异步调用法则接口
+    /// 异步调用法则基类接口
     /// </summary>
-    public interface ICallRuleAsync<T1, T2, T3, OutT> : IRule
+    public interface ICallRuleAsyncBase<T1, T2, T3, OutT> : IRule
     {
         TreeTask<OutT> Invoke(INode self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
-    /// 异步调用法则接口
+    /// 异步调用法则基类接口
     /// </summary>
-    public interface ICallRuleAsync<T1, T2, T3, T4, OutT> : IRule
+    public interface ICallRuleAsyncBase<T1, T2, T3, T4, OutT> : IRule
     {
         TreeTask<OutT> Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
-    /// 异步调用法则接口
+    /// 异步调用法则基类接口
     /// </summary>
-    public interface ICallRuleAsync<T1, T2, T3, T4, T5, OutT> : IRule
+    public interface ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT> : IRule
     {
         TreeTask<OutT> Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 
     /// <summary>
-    /// 异步调用法则抽象基类
+    /// 异步调用法则基类
     /// </summary>
-    public abstract class CallRuleAsyncBase<N, R, OutT> : RuleBase<N, R>, ICallRuleAsync<OutT>
+    public abstract class CallRuleAsyncBase<N, R, OutT> : RuleBase<N, R>, ICallRuleAsyncBase<OutT>
     where N : class, INode, AsRule<R>
-    where R : ICallRuleAsync<OutT>
+    where R : ICallRuleAsyncBase<OutT>
     {
         public virtual TreeTask<OutT> Invoke(INode self) => OnEvent(self as N);
         public abstract TreeTask<OutT> OnEvent(N self);
     }
     /// <summary>
-    /// 异步调用法则抽象基类
+    /// 异步调用法则基类
     /// </summary>
-    public abstract class CallRuleAsyncBase<N, R, T1, OutT> : RuleBase<N, R>, ICallRuleAsync<T1, OutT>
+    public abstract class CallRuleAsyncBase<N, R, T1, OutT> : RuleBase<N, R>, ICallRuleAsyncBase<T1, OutT>
     where N : class, INode, AsRule<R>
-    where R : ICallRuleAsync<T1, OutT>
+    where R : ICallRuleAsyncBase<T1, OutT>
     {
         public virtual TreeTask<OutT> Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
         public abstract TreeTask<OutT> OnEvent(N self, T1 arg1);
     }
     /// <summary>
-    /// 异步调用法则抽象基类
+    /// 异步调用法则基类
     /// </summary>
-    public abstract class CallRuleAsyncBase<N, R, T1, T2, OutT> : RuleBase<N, R>, ICallRuleAsync<T1, T2, OutT>
+    public abstract class CallRuleAsyncBase<N, R, T1, T2, OutT> : RuleBase<N, R>, ICallRuleAsyncBase<T1, T2, OutT>
     where N : class, INode, AsRule<R>
-    where R : ICallRuleAsync<T1, T2, OutT>
+    where R : ICallRuleAsyncBase<T1, T2, OutT>
     {
         public virtual TreeTask<OutT> Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
         public abstract TreeTask<OutT> OnEvent(N self, T1 arg1, T2 arg2);
     }
     /// <summary>
-    /// 异步调用法则抽象基类
+    /// 异步调用法则基类
     /// </summary>
-    public abstract class CallRuleAsyncBase<N, R, T1, T2, T3, OutT> : RuleBase<N, R>, ICallRuleAsync<T1, T2, T3, OutT>
+    public abstract class CallRuleAsyncBase<N, R, T1, T2, T3, OutT> : RuleBase<N, R>, ICallRuleAsyncBase<T1, T2, T3, OutT>
     where N : class, INode, AsRule<R>
-    where R : ICallRuleAsync<T1, T2, T3, OutT>
+    where R : ICallRuleAsyncBase<T1, T2, T3, OutT>
     {
         public virtual TreeTask<OutT> Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
         public abstract TreeTask<OutT> OnEvent(N self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
-    /// 异步调用法则抽象基类
+    /// 异步调用法则基类
     /// </summary>
-    public abstract class CallRuleAsyncBase<N, R, T1, T2, T3, T4, OutT> : RuleBase<N, R>, ICallRuleAsync<T1, T2, T3, T4, OutT>
+    public abstract class CallRuleAsyncBase<N, R, T1, T2, T3, T4, OutT> : RuleBase<N, R>, ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
     where N : class, INode, AsRule<R>
-    where R : ICallRuleAsync<T1, T2, T3, T4, OutT>
+    where R : ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
     {
         public virtual TreeTask<OutT> Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
         public abstract TreeTask<OutT> OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
-    /// 异步调用法则抽象基类
+    /// 异步调用法则基类
     /// </summary>
-    public abstract class CallRuleAsyncBase<N, R, T1, T2, T3, T4, T5, OutT> : RuleBase<N, R>, ICallRuleAsync<T1, T2, T3, T4, T5, OutT>
+    public abstract class CallRuleAsyncBase<N, R, T1, T2, T3, T4, T5, OutT> : RuleBase<N, R>, ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
     where N : class, INode, AsRule<R>
-    where R : ICallRuleAsync<T1, T2, T3, T4, T5, OutT>
+    where R : ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
     {
         public virtual TreeTask<OutT> Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);
         public abstract TreeTask<OutT> OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);

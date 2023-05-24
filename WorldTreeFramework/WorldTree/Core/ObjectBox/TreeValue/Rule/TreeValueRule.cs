@@ -42,7 +42,7 @@ namespace WorldTree
         /// </summary>
         public static void AddListenerValueChange<T1, N>(this TreeValueBase<T1> self, N eventNode)
             where T1 : IEquatable<T1>
-            where N : class, INode, AsRule<ISendRule<T1>>
+            where N : class, INode, AsRule<ISendRuleBase<T1>>
         {
             if (self.m_ValueChange is null) self.TryGetRuleActuator(out self.m_ValueChange);
             self.m_ValueChange.EnqueueReferenced(eventNode);

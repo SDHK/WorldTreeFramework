@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 渐变法则接口
     /// </summary>
-    public interface ITweenUpdateRule : ISendRule<float> { }
+    public interface ITweenUpdateRule : ISendRuleBase<float> { }
 
     /// <summary>
     /// 渐变法则

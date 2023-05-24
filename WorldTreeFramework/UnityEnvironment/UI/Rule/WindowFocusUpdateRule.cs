@@ -12,7 +12,7 @@ namespace WorldTree
     /// <summary>
     /// UI窗口焦点更新系统接口
     /// </summary>
-    public interface IWindowFocusUpdateRule : ISendRule<float> { }
+    public interface IWindowFocusUpdateRule : ISendRuleBase<float> { }
 
     /// <summary>
     /// UI窗口焦点更新系统

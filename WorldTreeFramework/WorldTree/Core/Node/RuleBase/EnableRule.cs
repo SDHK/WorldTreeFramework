@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 活跃启用法则接口
     /// </summary>
-    public interface IEnableRule : ISendRule { }
+    public interface IEnableRule : ISendRuleBase { }
 
     /// <summary>
     /// 活跃启用法则

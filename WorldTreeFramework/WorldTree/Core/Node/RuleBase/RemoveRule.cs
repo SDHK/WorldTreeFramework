@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 移除法则接口
     /// </summary>
-    public interface IRemoveRule : ISendRule { }
+    public interface IRemoveRule : ISendRuleBase { }
 
     /// <summary>
     /// 移除法则

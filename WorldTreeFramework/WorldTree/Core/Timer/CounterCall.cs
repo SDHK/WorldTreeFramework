@@ -20,7 +20,7 @@ namespace WorldTree
         public int countOut = 0;
         //public Action callback;
 
-        public IRuleActuator<ISendRule> callback;
+        public IRuleActuator<ISendRuleBase> callback;
     }
 
     public static class CounterCallRule
