@@ -28,28 +28,131 @@ namespace WorldTree
     /// </remarks>
     public interface IRuleActuator<in T> : IRuleActuator where T : IRule { }
 
+
     /// <summary>
-    /// 法则执行器
+    /// 法则执行器基类
     /// </summary>
-    public partial class RuleActuator : Node, ChildOf<INode>, IRuleActuator<IRule>
+    public abstract class RuleActuatorBase : DynamicNodeQueue, ChildOf<INode>, IRuleActuator<IRule>
+    {
+        /// <summary>
+        /// 尝试获得法则集合
+        /// </summary>
+        public abstract bool TryGetNodeRuleGroup(INode node, out RuleGroup ruleGroup);
+    }
+
+
+    /// <summary>
+    /// 单法则执行器
+    /// </summary>
+    public partial class RuleActuator : RuleActuatorBase
     {
         /// <summary>
         /// 法则集合
         /// </summary>
         public RuleGroup ruleGroup;
-
-        /// <summary>
-        /// 动态节点队列
-        /// </summary>
-        public DynamicNodeQueue nodeQueue;
-
-
-        public int Count => nodeQueue is null ? 0 : nodeQueue.Count;
-
-
         public override string ToString()
         {
             return $"RuleActuator : {ruleGroup.RuleType}";
         }
+
+        public override bool TryGetNodeRuleGroup(INode node, out RuleGroup ruleGroup)
+        {
+            ruleGroup = this.ruleGroup;
+            return this.ruleGroup != null;
+        }
+    }
+
+
+    /// <summary>
+    /// 单法则执行器
+    /// </summary>
+    public class RuleActuator<R> : RuleActuator
+      where R : IRule
+    {
+
+    }
+
+
+
+    class RuleActuatorRemoveRule : RemoveRule<RuleActuator>
+    {
+        public override void OnEvent(RuleActuator self)
+        {
+            self.ruleGroup = null;
+        }
+    }
+
+
+    public static class RuleActuatorRule
+    {
+        /// <summary>
+        /// 执行器初始化全局填装节点
+        /// </summary>
+        public static RuleActuator LoadGlobalNode<R>(this RuleActuator ruleActuator)
+        where R : IRule
+        {
+            var ruleType = typeof(R);
+
+            if (ruleActuator.Core.RuleManager.TryGetRuleGroup(ruleType, out ruleActuator.ruleGroup))
+            {
+                ruleActuator.Clear();
+                foreach (var item in ruleActuator.ruleGroup)
+                {
+                    if (ruleActuator.Core.NodePoolManager.m_Pools.TryGetValue(item.Key, out NodePool pool))
+                    {
+                        foreach (var node in pool.Nodes)
+                        {
+                            ruleActuator.Enqueue(node.Value);
+                        }
+                    }
+                }
+            }
+            return ruleActuator;
+        }
+
+        /// <summary>
+        /// 节点入列并建立引用关系
+        /// </summary>
+        public static void EnqueueReferenced<R, N>(this IRuleActuator<R> self, N node)
+            where R : IRule
+            where N : class, INode, AsRule<R>
+        {
+            ((RuleActuator)self).EnqueueReferenced(node);
+        }
+
+        /// <summary>
+        /// 节点入列
+        /// </summary>
+        public static void Enqueue<R, N>(this IRuleActuator<R> self, N node)
+            where R : IRule
+            where N : class, INode, AsRule<R>
+        {
+            ((RuleActuator)self).Enqueue(node);
+        }
+
+
+        /// <summary>
+        /// 移除节点
+        /// </summary>
+        public static void Remove<R, N>(this IRuleActuator<R> self, N node)
+            where R : IRule
+            where N : class, INode, AsRule<R>
+        {
+            ((RuleActuator)self).Remove(node);
+        }
+
+
+
+        /// <summary>
+        /// 添加法则节点并建立引用关系
+        /// </summary>
+        public static void Add<N, R, RN>(this IRuleActuator<R> self, N node, out RN ruleNode)
+            where N : class, INode
+            where R : IRule
+            where RN : class, INode, ComponentOf<N>, AsRule<R>
+        {
+            ((RuleActuator)self).EnqueueReferenced(node.AddComponent(out ruleNode));
+        }
+
     }
 }
