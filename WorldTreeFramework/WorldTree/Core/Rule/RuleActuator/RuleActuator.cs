@@ -44,7 +44,7 @@ namespace WorldTree
     {
         public abstract bool TryGetNodeRuleGroup(INode node, out RuleGroup ruleGroup);
 
-       
+
     }
 
 
@@ -54,9 +54,31 @@ namespace WorldTree
     public partial class RuleActuator : RuleActuatorBase, IRuleActuator<IRule>
     {
         /// <summary>
-        /// 法则集合
+        /// 默认法则集合
         /// </summary>
         public RuleGroup ruleGroup;
+
+        /// <summary>
+        /// 节点id队列
+        /// </summary>
+        public TreeQueue<long> idQueue;
+
+        /// <summary>
+        /// 节点id被移除的次数
+        /// </summary>
+        public TreeDictionary<long, int> removeIdDictionary;
+
+        /// <summary>
+        /// 节点字典
+        /// </summary>
+        public TreeDictionary<long, INode> nodeDictionary;
+
+        /// <summary>
+        /// 法则集合字典
+        /// </summary>
+        public TreeDictionary<long, RuleGroup> ruleGroupDictionary;
+
+
         public override string ToString()
         {
             return $"RuleActuator : {ruleGroup.RuleType}";
@@ -64,13 +86,20 @@ namespace WorldTree
 
         public override bool TryGetNodeRuleGroup(INode node, out RuleGroup ruleGroup)
         {
-            ruleGroup = this.ruleGroup;
-            return this.ruleGroup != null;
+            if (ruleGroupDictionary != null && ruleGroupDictionary.TryGetValue(node.Id, out ruleGroup))
+            {
+                return true;
+            }
+            else
+            {
+                ruleGroup = this.ruleGroup;
+                return this.ruleGroup != null;
+            }
         }
     }
 
 
-   
+
 
 
     /// <summary>
