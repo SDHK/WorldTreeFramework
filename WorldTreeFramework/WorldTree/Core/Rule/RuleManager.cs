@@ -591,6 +591,15 @@ namespace WorldTree
         /// <summary>
         /// 获取法则组
         /// </summary>
+        public static bool TryGetRuleGroup<R>(this RuleManager self, out RuleGroup ruleGroup)
+         where R : IRule
+        {
+            return self.TryGetRuleGroup(typeof(R), out ruleGroup);
+        }
+
+        /// <summary>
+        /// 获取法则组
+        /// </summary>
         public static bool TryGetRuleGroup(this RuleManager self, Type Interface, out RuleGroup ruleGroup)
         {
             return self.RuleGroupDictionary.TryGetValue(Interface, out ruleGroup);

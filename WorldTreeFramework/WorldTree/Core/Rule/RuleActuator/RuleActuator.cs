@@ -16,7 +16,15 @@ namespace WorldTree
     /// <summary>
     /// 法则执行器 接口基类
     /// </summary>
-    public interface IRuleActuator : INode { }
+    public interface IRuleActuator : INode
+    {
+        /// <summary>
+        /// 尝试获得法则集合
+        /// </summary>
+        public bool TryGetNodeRuleGroup(INode node, out RuleGroup ruleGroup);
+
+    }
+
 
     /// <summary>
     /// 法则执行器 逆变泛型接口
@@ -32,19 +40,18 @@ namespace WorldTree
     /// <summary>
     /// 法则执行器基类
     /// </summary>
-    public abstract class RuleActuatorBase : DynamicNodeQueue, ChildOf<INode>, IRuleActuator<IRule>
+    public abstract class RuleActuatorBase : DynamicNodeQueue, ChildOf<INode>, IRuleActuator
     {
-        /// <summary>
-        /// 尝试获得法则集合
-        /// </summary>
         public abstract bool TryGetNodeRuleGroup(INode node, out RuleGroup ruleGroup);
+
+       
     }
 
 
     /// <summary>
     /// 单法则执行器
     /// </summary>
-    public partial class RuleActuator : RuleActuatorBase
+    public partial class RuleActuator : RuleActuatorBase, IRuleActuator<IRule>
     {
         /// <summary>
         /// 法则集合
@@ -63,6 +70,9 @@ namespace WorldTree
     }
 
 
+   
+
+
     /// <summary>
     /// 单法则执行器
     /// </summary>
@@ -71,6 +81,7 @@ namespace WorldTree
     {
 
     }
+
 
 
 

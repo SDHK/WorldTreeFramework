@@ -39,10 +39,10 @@ namespace EditorTool
             //Core.AddComponent<WorldTreeFrameworkWindow>();
         }
 
-        public IRuleActuator<IEnableRule> enable;
-        public IRuleActuator<IDisableRule> disable;
-        public IRuleActuator<IUpdateRule> update;
-        public IRuleActuator<IGuiUpdateRule> onGUI;
+        public GlobalRuleActuator<IEnableRule> enable;
+        public GlobalRuleActuator<IDisableRule> disable;
+        public GlobalRuleActuator<IUpdateRule> update;
+        public GlobalRuleActuator<IGuiUpdateRule> onGUI;
 
         public EditorHomePage HomePage;
     }
@@ -52,10 +52,10 @@ namespace EditorTool
         public override void OnEvent(WorldTreeFrameworkWindow self)
         {
             self.AddComponent(out EditorGUIWindow _);
-            self.enable = self.GetGlobalNodeRuleActuator<IEnableRule>();
-            self.update = self.GetGlobalNodeRuleActuator<IUpdateRule>();
-            self.disable = self.GetGlobalNodeRuleActuator<IDisableRule>();
-            self.onGUI = self.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
+            self.enable = self.GetGlobalRuleActuator<IEnableRule>();
+            self.update = self.GetGlobalRuleActuator<IUpdateRule>();
+            self.disable = self.GetGlobalRuleActuator<IDisableRule>();
+            self.onGUI = self.GetGlobalRuleActuator<IGuiUpdateRule>();
             self.AddComponent(out EditorHomePage _);
         }
     }

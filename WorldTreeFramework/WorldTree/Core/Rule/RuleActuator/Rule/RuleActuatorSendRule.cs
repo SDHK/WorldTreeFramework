@@ -14,7 +14,7 @@
                 {
                     if (self.TryDequeue(out INode node))
                     {
-                        if (self.TryGetNodeRuleGroup(node, out RuleGroup ruleGroup))
+                        if (Self.TryGetNodeRuleGroup(node, out RuleGroup ruleGroup))
                         {
                             ((IRuleGroup<R>)ruleGroup).Send(node);
                             if (!node.IsRecycle) self.Enqueue(node);

@@ -17,10 +17,10 @@ namespace WorldTree
         public static bool TryGetRuleActuator<R>(this INode self, out IRuleActuator<R> ruleActuator)
             where R : IRule
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out var ruleGroup))
+            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup ruleGroup))
             {
                 self.AddChild(out RuleActuator RuleActuator);
-                RuleActuator.ruleGroup = (RuleGroup)ruleGroup;
+                RuleActuator.ruleGroup = ruleGroup;
                 ruleActuator = (IRuleActuator<R>)RuleActuator;
                 return true;
             }

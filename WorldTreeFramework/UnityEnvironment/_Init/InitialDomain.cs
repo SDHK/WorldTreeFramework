@@ -129,6 +129,10 @@ namespace WorldTree
         {
             public override void OnEvent(InitialDomain self)
             {
+                GlobalRuleActuator<IUpdateRule> a = new();
+                IRuleActuator<IUpdateRule> b = a;
+                a.Send(1f);
+
                 World.Log("初始域启动！！");
             }
         }
@@ -137,6 +141,8 @@ namespace WorldTree
         {
             public override void OnEvent(InitialDomain self, float deltaTime)
             {
+                World.Log("初始域UpdateRule！！");
+
                 if (Input.GetKeyDown(KeyCode.A))
                 {
                     self.valueFloat.Value += 1.5f;
@@ -150,7 +156,8 @@ namespace WorldTree
                 }
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    self.AddComponent(out TreeNode _).Test().Coroutine();
+                    self.AddComponent(out TreeNode _);
+                    //self.AddComponent(out TreeNode _).Test().Coroutine();
                 }
 
                 if (Input.GetKeyDown(KeyCode.W))

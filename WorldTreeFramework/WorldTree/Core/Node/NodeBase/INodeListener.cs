@@ -33,6 +33,9 @@ namespace WorldTree
         Rule
     }
 
+    /// <summary>
+    /// 动态监听器接口
+    /// </summary>
     public interface INodeListener : INode
       , AsRule<IListenerAddRule>
       , AsRule<IListenerRemoveRule>

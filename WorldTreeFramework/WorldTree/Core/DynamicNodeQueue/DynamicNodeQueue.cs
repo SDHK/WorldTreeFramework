@@ -123,10 +123,16 @@ namespace WorldTree
         /// </summary>
         public static void Clear(this DynamicNodeQueue self)
         {
-            self.DeReferencedAll();
-            self.nodeDictionary.Clear();
-            self.removeIdDictionary.Clear();
-            self.idQueue.Clear();
+            if (self.nodeDictionary != null)
+            {
+                foreach (var item in self.nodeDictionary)
+                {
+                    self.DeReferenced(item.Value);
+                }
+                self.nodeDictionary?.Clear();
+            }
+            self.removeIdDictionary?.Clear();
+            self.idQueue?.Clear();
         }
 
         /// <summary>

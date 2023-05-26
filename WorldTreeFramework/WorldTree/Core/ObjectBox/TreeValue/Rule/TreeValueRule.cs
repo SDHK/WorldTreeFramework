@@ -34,7 +34,7 @@ namespace WorldTree
             where T : IEquatable<T>
             where R : IValueChangeRule<T>
         {
-            self.m_GlobalValueChange = (IRuleActuator<IValueChangeRule<T>>)self.GetGlobalNodeRuleActuator<R>();
+            self.m_GlobalValueChange = (IRuleActuator<IValueChangeRule<T>>)self.GetGlobalRuleActuator<R>();
         }
 
         /// <summary>

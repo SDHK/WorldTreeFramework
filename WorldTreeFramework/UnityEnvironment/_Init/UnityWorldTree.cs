@@ -21,11 +21,11 @@ namespace WorldTree
 
         public WorldTreeCore Core;
 
-        IRuleActuator<IEnableRule> enable;
-        IRuleActuator<IDisableRule> disable;
-        IRuleActuator<IUpdateRule> update;
-        IRuleActuator<ILateUpdateRule> lateUpdate;
-        IRuleActuator<IFixedUpdateRule> fixedUpdate;
+        GlobalRuleActuator<IEnableRule> enable;
+        GlobalRuleActuator<IDisableRule> disable;
+        GlobalRuleActuator<IUpdateRule> update;
+        GlobalRuleActuator<ILateUpdateRule> lateUpdate;
+        GlobalRuleActuator<IFixedUpdateRule> fixedUpdate;
         //RuleActuator onGUI;
 
 
@@ -37,12 +37,12 @@ namespace WorldTree
 
             Core = new WorldTreeCore();
 
-            enable = Core.GetGlobalNodeRuleActuator<IEnableRule>();
-            update = Core.GetGlobalNodeRuleActuator<IUpdateRule>();
-            disable = Core.GetGlobalNodeRuleActuator<IDisableRule>();
+            enable = Core.GetGlobalRuleActuator<IEnableRule>();
+            update = Core.GetGlobalRuleActuator<IUpdateRule>();
+            disable = Core.GetGlobalRuleActuator<IDisableRule>();
 
-            lateUpdate = Core.GetGlobalNodeRuleActuator<ILateUpdateRule>();
-            fixedUpdate = Core.GetGlobalNodeRuleActuator<IFixedUpdateRule>();
+            lateUpdate = Core.GetGlobalRuleActuator<ILateUpdateRule>();
+            fixedUpdate = Core.GetGlobalRuleActuator<IFixedUpdateRule>();
             //onGUI = Core.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
             
 
@@ -62,6 +62,7 @@ namespace WorldTree
             disable?.Send();
             //sw.Stop();
             //World.Log($"毫秒: {sw.ElapsedMilliseconds}");
+            World.Log($"Unity Update");
 
             Profiler.EndSample();
 
