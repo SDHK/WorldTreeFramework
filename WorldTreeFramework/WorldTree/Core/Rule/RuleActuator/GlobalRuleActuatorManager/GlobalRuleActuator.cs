@@ -22,10 +22,6 @@ namespace WorldTree
         public ListenerState listenerState { get; set; }
         public Type listenerTarget { get; set; }
 
-        /// <summary>
-        /// 法则集合
-        /// </summary>
-        public RuleGroup ruleGroup;
     }
 
 
@@ -35,11 +31,7 @@ namespace WorldTree
     public class GlobalRuleActuator<R> : GlobalRuleActuatorBase, IRuleActuator<R>, ComponentOf<GlobalRuleActuatorManager>
      where R : IRule
     {
-        public override bool TryGetNodeRuleGroup(INode node, out RuleGroup ruleGroup)
-        {
-            ruleGroup = this.ruleGroup;
-            return this.ruleGroup != null;
-        }
+      
     }
 
     public static class GlobalRuleActuatorBaseRule
@@ -58,7 +50,7 @@ namespace WorldTree
                     {
                         foreach (var node in pool.Nodes)
                         {
-                            self.Enqueue(node.Value);
+                            self.Add(node.Value);
                         }
                     }
                 }
@@ -71,7 +63,7 @@ namespace WorldTree
             public override void OnEvent(GlobalRuleActuatorBase self, INode node)
             {
               
-                self.Enqueue(node);
+                self.Add(node);
             }
         }
 
@@ -94,7 +86,7 @@ namespace WorldTree
                 self.AddChild(out self.idQueue);
                 self.AddChild(out self.removeIdDictionary);
                 self.AddChild(out self.nodeDictionary);
-                self.LoadGlobalNode<R>();
+                self.LoadGlobalNode<R>();//不可填装，在Add后设置会被Core覆盖
             }
         }
 
