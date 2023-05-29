@@ -50,7 +50,7 @@ namespace WorldTree
                     {
                         foreach (var node in pool.Nodes)
                         {
-                            self.Add(node.Value);
+                            self.TryAdd(node.Value);
                         }
                     }
                 }
@@ -63,7 +63,7 @@ namespace WorldTree
             public override void OnEvent(GlobalRuleActuatorBase self, INode node)
             {
               
-                self.Add(node);
+                self.TryAdd(node);
             }
         }
 

@@ -21,12 +21,9 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node))
+                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
                     {
-                        if (self.TryGetNodeRuleGroup(node, out RuleGroup ruleGroup))
-                        {
-                            ((IRuleGroup<R>)ruleGroup).Send(node);
-                        }
+                        ((IRuleGroup<R>)ruleGroup).Send(node);
                     }
                 }
                 self.Dispose();
@@ -42,12 +39,9 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node))
+                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
                     {
-                        if (self.TryGetNodeRuleGroup(node, out RuleGroup ruleGroup))
-                        {
-                            ((IRuleGroup<R>)ruleGroup).Send(node, arg1);
-                        }
+                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1);
                     }
                 }
                 self.Dispose();
@@ -64,12 +58,9 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node))
+                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
                     {
-                        if (self.TryGetNodeRuleGroup(node, out RuleGroup ruleGroup))
-                        {
-                            ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2);
-                        }
+                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2);
                     }
                 }
                 self.Dispose();
@@ -84,12 +75,9 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node))
+                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
                     {
-                        if (self.TryGetNodeRuleGroup(node, out RuleGroup ruleGroup))
-                        {
-                            ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3);
-                        }
+                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3);
                     }
                 }
                 self.Dispose();
@@ -104,12 +92,9 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node))
+                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
                     {
-                        if (self.TryGetNodeRuleGroup(node, out RuleGroup ruleGroup))
-                        {
-                            ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4);
-                        }
+                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4);
                     }
                 }
                 self.Dispose();
@@ -124,12 +109,9 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node))
+                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
                     {
-                        if (self.TryGetNodeRuleGroup(node, out RuleGroup ruleGroup))
-                        {
-                            ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4, arg5);
-                        }
+                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4, arg5);
                     }
                 }
                 self.Dispose();

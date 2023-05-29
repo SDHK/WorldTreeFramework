@@ -11,6 +11,8 @@
 
 */
 
+using UnityEditor.Experimental.GraphView;
+
 namespace WorldTree
 {
     /// <summary>
@@ -78,23 +80,32 @@ namespace WorldTree
         /// <summary>
         /// 刷新动态遍历数量
         /// </summary>
-        public  void RefreshTraversalCount()
+        public void RefreshTraversalCount()
         {
             traversalCount = idQueue is null ? 0 : idQueue.Count;
         }
 
+        /// <summary>
+        /// 入列
+        /// </summary>
         public void Enqueue(long id)
         {
-            if (nodeDictionary.ContainsKey(id)) return;
-            idQueue.Enqueue(id);
+            if (nodeDictionary != null && nodeDictionary.ContainsKey(id))
+            {
+                idQueue.Enqueue(id);
+            }
         }
+
+        /// <summary>
+        /// 尝试出列
+        /// </summary>
         public bool TryDequeue(out INode node, out RuleGroup ruleGroup)
         {
             //尝试获取一个id
-            if (idQueue.TryDequeue(out long id))
+            if (idQueue != null && idQueue.TryDequeue(out long id))
             {
                 //假如id被回收了
-                while (removeIdDictionary.TryGetValue(id, out int count))
+                while (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
                 {
                     //回收次数抵消
                     removeIdDictionary[id] = --count;
@@ -102,6 +113,11 @@ namespace WorldTree
 
                     //次数为0时删除id
                     if (count == 0) removeIdDictionary.Remove(id);
+                    if (removeIdDictionary.Count == 0)
+                    {
+                        removeIdDictionary.Dispose();
+                        removeIdDictionary = null;
+                    }
 
                     //获取下一个id
                     if (!idQueue.TryDequeue(out id))
@@ -125,78 +141,150 @@ namespace WorldTree
             return false;
         }
 
+        #region 添加
 
-        public void AddReferenced(INode node)
+        /// <summary>
+        /// 尝试添加节点
+        /// </summary>
+        public bool TryAdd(INode node)
         {
-            if (nodeDictionary.ContainsKey(node.Id)) return;
-            this.Referenced(node);
+            nodeDictionary ??= this.AddChild(out nodeDictionary);
+            if (nodeDictionary.ContainsKey(node.Id)) return false;
+
+            idQueue ??= this.AddChild(out idQueue);
+            nodeDictionary ??= this.AddChild(out nodeDictionary);
+
             idQueue.Enqueue(node.Id);
             nodeDictionary.Add(node.Id, node);
-        }
-        public void Add(INode node)
-        {
-            if (nodeDictionary.ContainsKey(node.Id)) return;
-            idQueue.Enqueue(node.Id);
-            nodeDictionary.Add(node.Id, node);
+            return true;
         }
 
-        public void AddReferenced(INode node,RuleGroup ruleGroup)
+        /// <summary>
+        /// 尝试添加节点，并建立引用关系
+        /// </summary>
+        public bool TryAddReferenced(INode node)
         {
-            if (nodeDictionary.ContainsKey(node.Id)) return;
-            this.Referenced(node);
-            idQueue.Enqueue(node.Id);
-            nodeDictionary.Add(node.Id, node);
-            ruleGroupDictionary.Add(node.Id, ruleGroup);
-        }
-
-        public void Add(INode node, RuleGroup ruleGroup)
-        {
-            if (nodeDictionary.ContainsKey(node.Id)) return;
-            idQueue.Enqueue(node.Id);
-            nodeDictionary.Add(node.Id, node);
-            ruleGroupDictionary.Add(node.Id, ruleGroup);
-        }
-
-
-
-        public void Remove(INode node)
-        {
-
-            if (nodeDictionary.ContainsKey(node.Id))
+            if (TryAdd(node))
             {
-                nodeDictionary.Remove(node.Id);
-                ruleGroupDictionary.Remove(node.Id);
+                this.Referenced(node);
+                return true;
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// 尝试添加节点与对应法则
+        /// </summary>
+        public bool TryAdd(INode node, RuleGroup ruleGroup)
+        {
+            if (TryAdd(node))
+            {
+                ruleGroupDictionary ??= this.AddChild(out ruleGroupDictionary);
+
+                ruleGroupDictionary.Add(node.Id, ruleGroup);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 尝试添加节点与对应法则，并建立引用关系
+        /// </summary>
+        public bool TryAddReferenced(INode node, RuleGroup ruleGroup)
+        {
+            if (TryAddReferenced(node, ruleGroup))
+            {
+                this.Referenced(node);
+                return true;
+            }
+            return false;
+        }
+
+
+
+        #endregion
+
+        #region 移除
+
+        /// <summary>
+        /// 移除节点
+        /// </summary>
+        public void Remove(long id)
+        {
+            if (nodeDictionary.TryGetValue(id, out INode node))
+            {
+                nodeDictionary.Remove(id);
+                ruleGroupDictionary.Remove(id);
                 this.DeReferenced(node);
                 //累计强制移除的节点id
-                if (removeIdDictionary.TryGetValue(node.Id, out var count))
+                removeIdDictionary ??= this.AddChild(out removeIdDictionary);
+                if (removeIdDictionary.TryGetValue(id, out var count))
                 {
-                    removeIdDictionary[node.Id] = count + 1;
+                    removeIdDictionary[id] = count + 1;
                 }
                 else
                 {
-                    removeIdDictionary.Add(node.Id, 1);
+                    removeIdDictionary.Add(id, 1);
+                }
+
+                if (nodeDictionary.Count == 0)
+                {
+                    Clear();
                 }
             }
+
         }
+
+        /// <summary>
+        /// 移除节点
+        /// </summary>
+        public void Remove(INode node)
+        {
+            Remove(node.Id);
+        }
+
+        /// <summary>
+        /// 清除
+        /// </summary>
         public void Clear()
         {
-            idQueue.Clear();
-            ruleGroupDictionary.Clear();
-            nodeDictionary.Clear();
-            removeIdDictionary.Clear();
+            if (nodeDictionary != null && nodeDictionary.Count != 0)
+            {
+                foreach (INode node in nodeDictionary.Values)
+                {
+                    this.DeReferenced(node);
+                }
+                nodeDictionary.Dispose();
+                nodeDictionary = null;
+            }
+
+            idQueue?.Dispose();
+            ruleGroupDictionary?.Dispose();
+            removeIdDictionary?.Dispose();
+
+            idQueue = null;
+            ruleGroupDictionary = null;
+            removeIdDictionary = null;
+
+            traversalCount = 0;
         }
+
+        #endregion
+
+
     }
 
 
     /// <summary>
-    /// 单法则执行器
+    /// 法则执行器
     /// </summary>
     public partial class RuleActuator : RuleActuatorBase, IRuleActuator<IRule>
     {
-       
 
 
-      
+
+
     }
 
 
@@ -204,7 +292,7 @@ namespace WorldTree
 
 
     /// <summary>
-    /// 单法则执行器
+    /// 法则执行器
     /// </summary>
     public class RuleActuator<R> : RuleActuator
       where R : IRule
@@ -243,7 +331,7 @@ namespace WorldTree
                     {
                         foreach (var node in pool.Nodes)
                         {
-                            ruleActuator.Add(node.Value);
+                            ruleActuator.TryAdd(node.Value);
                         }
                     }
                 }
@@ -258,7 +346,7 @@ namespace WorldTree
             where R : IRule
             where N : class, INode, AsRule<R>
         {
-            ((RuleActuator)self).AddReferenced(node);
+            ((RuleActuator)self).TryAddReferenced(node);
         }
 
         /// <summary>
@@ -268,7 +356,7 @@ namespace WorldTree
             where R : IRule
             where N : class, INode, AsRule<R>
         {
-            ((RuleActuator)self).Add(node);
+            ((RuleActuator)self).TryAdd(node);
         }
 
 
@@ -292,7 +380,7 @@ namespace WorldTree
             where R : IRule
             where RN : class, INode, ComponentOf<N>, AsRule<R>
         {
-            ((RuleActuator)self).AddReferenced(node.AddComponent(out ruleNode));
+            ((RuleActuator)self).TryAddReferenced(node.AddComponent(out ruleNode));
         }
 
     }
