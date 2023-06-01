@@ -93,7 +93,7 @@ namespace WorldTree
                             //从执行器集合 提取这个 监听法则类型 的执行器，进行添加
                             if (ActuatorGroup.Value.TryGetRuleActuator(ruleGroup.Key, out var ruleActuator))
                             {
-                                ruleActuator.Enqueue(node);
+                                ruleActuator.TryAdd(node);
                             }
                         }
                     }
@@ -133,9 +133,9 @@ namespace WorldTree
                         //判断监听法则集合 是否有这个 监听器节点类型
                         if (ruleGroup.Value.ContainsKey(node.Type))
                         {
-                            if (ActuatorGroup.TryGetRuleActuator(ruleGroup.Key, out RuleActuator ruleActuator))
+                            if (ActuatorGroup.TryGetRuleActuator(ruleGroup.Key, out ListenerRuleActuator ruleActuator))
                             {
-                                ruleActuator.Enqueue(node);
+                                ruleActuator.TryAdd(node);
                             }
                         }
                     }
@@ -227,7 +227,7 @@ namespace WorldTree
                     //遍历获取动态法则集合，并移除自己
                     foreach (var ruleGroup in ruleGroupDictionary)
                     {
-                        if (actuatorGroup.TryGetRuleActuator(ruleGroup.Key, out RuleActuator ruleActuator))
+                        if (actuatorGroup.TryGetRuleActuator(ruleGroup.Key, out ListenerRuleActuator ruleActuator))
                         {
                             ruleActuator.Remove(node);
                         }
@@ -246,7 +246,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加动态执行器
         /// </summary>
-        public static bool TryAddRuleActuator<R>(this DynamicListenerRuleActuatorManager self, Type Target, out RuleActuator actuator)
+        public static bool TryAddRuleActuator<R>(this DynamicListenerRuleActuatorManager self, Type Target, out ListenerRuleActuator actuator)
         where R : IListenerRule
         {
             Type RuleType = typeof(R);
@@ -285,7 +285,7 @@ namespace WorldTree
         /// <summary>
         /// 执行器填装监听器
         /// </summary>
-        private static void RuleActuatorAddListener(this DynamicListenerRuleActuatorManager self, RuleActuator actuator, Type Target)
+        private static void RuleActuatorAddListener(this DynamicListenerRuleActuatorManager self, GlobalRuleActuatorBase actuator, Type Target)
         {
             foreach (var listenerType in actuator.ruleGroup)//遍历监听类型
             {
@@ -305,7 +305,7 @@ namespace WorldTree
                                 //判断是否全局监听 或 是指定的目标类型
                                 if (nodeListener.listenerTarget == typeof(INode) || nodeListener.listenerTarget == Target)
                                 {
-                                    actuator.Enqueue(nodeListener);
+                                    actuator.TryAdd(nodeListener);
                                 }
                             }
                             else if (nodeListener.listenerState == ListenerState.Rule)
@@ -314,7 +314,7 @@ namespace WorldTree
                                 if (self.Core.RuleManager.TryGetRuleList(Target, nodeListener.listenerTarget, out _))
                                 {
 
-                                    actuator.Enqueue(nodeListener);
+                                    actuator.TryAdd(nodeListener);
                                 }
                             }
                         }
@@ -325,7 +325,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取动态执行器
         /// </summary>
-        public static bool TryGetRuleActuator(this DynamicListenerRuleActuatorManager self, Type Target, Type RuleType, out RuleActuator actuator)
+        public static bool TryGetRuleActuator(this DynamicListenerRuleActuatorManager self, Type Target, Type RuleType, out ListenerRuleActuator actuator)
         {
             if (self.ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
             {

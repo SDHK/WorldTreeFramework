@@ -35,18 +35,29 @@ namespace WorldTree
         /// <summary>
         /// 获取法则集合
         /// </summary>
-        public static RuleGroup GetRuleGroup(this INode self, Type type)
+        public static RuleGroup GetRuleGroup(this INode self, Type ruleType)
         {
-            return self.Core.RuleManager.GetRuleGroup(type);
+            return self.Core.RuleManager.GetRuleGroup(ruleType);
         }
 
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public static IRuleList<R> GetRuleList<R>(this INode self, Type type)
+        public static IRuleList<R> GetRuleList<R>(this INode self, Type nodeType)
         where R : IRule
         {
-            return self.Core.RuleManager.GetRuleList<R>(type);
+            return self.Core.RuleManager.GetRuleList<R>(nodeType);
+        }
+
+        /// <summary>
+        /// 获取单类型法则列表
+        /// </summary>
+        public static IRuleList<R> GetRuleList<N, R, B>(this N self, B defaultBaseNode, R defaultRule)
+            where R : IRule
+            where N : B
+            where B : INode
+        {
+            return self.Core.RuleManager.GetRuleList<R>(typeof(B));
         }
     }
 
@@ -612,12 +623,17 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public static IRuleList<R> GetRuleList<R>(this RuleManager self, Type type)
+        public static IRuleList<R> GetRuleList<R, N>(this RuleManager self) where R : IRule where N : class, INode => self.GetRuleList<R>(typeof(N));
+
+        /// <summary>
+        /// 获取单类型法则列表
+        /// </summary>
+        public static IRuleList<R> GetRuleList<R>(this RuleManager self, Type nodeType)
          where R : IRule
         {
             if (self.RuleGroupDictionary.TryGetValue(typeof(R), out RuleGroup ruleGroup))
             {
-                if (ruleGroup.TryGetValue(type, out RuleList ruleList))
+                if (ruleGroup.TryGetValue(nodeType, out RuleList ruleList))
                 {
                     return ruleList as IRuleList<R>;
                 }

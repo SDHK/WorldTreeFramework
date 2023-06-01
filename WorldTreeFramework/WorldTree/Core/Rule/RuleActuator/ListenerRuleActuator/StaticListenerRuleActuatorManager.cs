@@ -104,7 +104,7 @@ namespace WorldTree
                         {
                             if (self.TryGetRuleActuator(ruleList.Key, ruleGroup.Key, out var actuator))
                             {
-                                actuator.Enqueue(listener);
+                                actuator.TryAdd(listener);
                             }
                         }
                     }
@@ -141,7 +141,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加静态执行器
         /// </summary>
-        public static bool TryAddRuleActuator<R>(this StaticListenerRuleActuatorManager self, Type Target, out RuleActuator actuator)
+        public static bool TryAddRuleActuator<R>(this StaticListenerRuleActuatorManager self, Type Target, out ListenerRuleActuator actuator)
             where R : IListenerRule
         {
             Type ruleType = typeof(R);
@@ -178,7 +178,7 @@ namespace WorldTree
         /// <summary>
         /// 执行器填装监听器
         /// </summary>
-        private static void RuleActuatorAddListener(this StaticListenerRuleActuatorManager self, RuleActuator actuator)
+        private static void RuleActuatorAddListener(this StaticListenerRuleActuatorManager self, GlobalRuleActuatorBase actuator)
         {
             foreach (var listenerType in actuator.ruleGroup)//遍历法则集合获取监听器类型
             {
@@ -188,7 +188,7 @@ namespace WorldTree
                     //全部注入到执行器
                     foreach (var listener in listenerPool.Nodes)
                     {
-                        actuator.Enqueue(listener.Value);
+                        actuator.TryAdd(listener.Value);
                     }
                 }
             }
@@ -199,7 +199,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取静态执行器
         /// </summary>
-        public static bool TryGetRuleActuator(this StaticListenerRuleActuatorManager self, Type Target, Type RuleType, out RuleActuator actuator)
+        public static bool TryGetRuleActuator(this StaticListenerRuleActuatorManager self, Type Target, Type RuleType, out ListenerRuleActuator actuator)
         {
             if (self.ListenerActuatorGroupDictionary.TryGetValue(Target, out var group))
             {

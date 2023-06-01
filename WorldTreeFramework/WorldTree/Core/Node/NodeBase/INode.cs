@@ -33,6 +33,13 @@ namespace WorldTree
     /// <typeparam name="R">法则类型</typeparam>
     public interface AsRule<in R> where R : IRule { }
 
+    /// <summary>
+    /// 节点：父类法则关联
+    /// </summary>
+    /// <typeparam name="N">当前节点类型</typeparam>
+    /// <typeparam name="B">父类型</typeparam>
+    /// <remarks>用于子类调用父类法则</remarks>
+    public interface AsBaseRule<N, B>: INode where N : class, B, INode where B : class, INode { }
 
 
     /// <summary>

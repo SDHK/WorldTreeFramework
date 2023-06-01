@@ -12,6 +12,19 @@ namespace WorldTree
     public static partial class NodeStaticRule
     {
         /// <summary>
+        /// 获取父类型法则列表
+        /// </summary>
+        public static IRuleList<R> BaseRule<N, R, B>(this AsBaseRule<N, B> self, R defaultRule)
+            where R : IRule
+            where N : class, B, INode
+            where B : class, INode
+        {
+            return self.Core.RuleManager.GetRuleList<R, B>();
+        }
+
+
+
+        /// <summary>
         /// 回收自己
         /// </summary>
         public static void DisposeSelf(this INode self)

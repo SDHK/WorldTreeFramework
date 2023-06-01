@@ -28,7 +28,7 @@ namespace WorldTree
         /// 法则执行器字典
         /// </summary>
         /// <remarks>法则类型,执行器</remarks>
-        public TreeDictionary<Type, RuleActuator> actuatorDictionary;
+        public TreeDictionary<Type, ListenerRuleActuator> actuatorDictionary;
 
         public override string ToString()
         {
@@ -59,7 +59,7 @@ namespace WorldTree
         /// <summary>
         /// 获取执行器
         /// </summary>
-        public static RuleActuator GetRuleActuator(this ListenerRuleActuatorGroup self, Type listenerRuleType)
+        public static ListenerRuleActuator GetRuleActuator(this ListenerRuleActuatorGroup self, Type listenerRuleType)
         {
             if (!self.actuatorDictionary.TryGetValue(listenerRuleType, out var actuator))
             {
@@ -71,7 +71,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取执行器
         /// </summary>
-        public static bool TryGetRuleActuator(this ListenerRuleActuatorGroup self, Type listenerRuleType, out RuleActuator ruleActuator)
+        public static bool TryGetRuleActuator(this ListenerRuleActuatorGroup self, Type listenerRuleType, out ListenerRuleActuator ruleActuator)
         {
             return self.actuatorDictionary.TryGetValue(listenerRuleType, out ruleActuator);
         }

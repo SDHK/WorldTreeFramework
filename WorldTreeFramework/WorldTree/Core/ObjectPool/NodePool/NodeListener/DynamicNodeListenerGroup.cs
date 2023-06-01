@@ -9,7 +9,6 @@
 */
 
 using System;
-using Unity.VisualScripting;
 
 namespace WorldTree
 {
@@ -18,7 +17,7 @@ namespace WorldTree
     /// </summary>
     public class DynamicNodeListenerGroup : Node, ComponentOf<NodePool>
     {
-        public TreeDictionary<Type, RuleActuator> actuatorDictionary;
+        public TreeDictionary<Type, RuleActuatorBase> actuatorDictionary;
 
 
     }
@@ -32,9 +31,7 @@ namespace WorldTree
                 if (node.Core.NodePoolManager.TryGetPool(node.Type, out NodePool nodePool))
                 {
                     nodePool.AddComponent(out DynamicNodeListenerGroup dynamicNodeListenerGroup);
-
                 }
-
         }
     }
 }

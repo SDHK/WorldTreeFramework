@@ -17,7 +17,7 @@ namespace WorldTree
     /// </summary>
     public class StaticNodeListenerGroup : Node, ComponentOf<NodePool>
     {
-        public TreeDictionary<Type, RuleActuator> actuatorDictionary;
+        public TreeDictionary<Type, RuleActuatorBase> actuatorDictionary;
 
     }
 
@@ -43,7 +43,7 @@ namespace WorldTree
             Type ruleType = typeof(R);
 
 
-            if (self.actuatorDictionary.TryGetValue(ruleType, out RuleActuator ruleActuator))
+            if (self.actuatorDictionary.TryGetValue(ruleType, out RuleActuatorBase ruleActuator))
             {
                 actuator = ruleActuator as IRuleActuator<R>; return true;
             }

@@ -352,11 +352,7 @@ namespace WorldTree
                 INodeListener nodeListener = (node as INodeListener);
                 //检测添加静态监听
                 self.StaticListenerRuleActuatorManager.TryAddListener(nodeListener);
-                //检测添加动态监听
-                nodeListener.ListenerSwitchesTarget(typeof(INode), ListenerState.Node);
             }
-
-
         }
 
         /// <summary>
