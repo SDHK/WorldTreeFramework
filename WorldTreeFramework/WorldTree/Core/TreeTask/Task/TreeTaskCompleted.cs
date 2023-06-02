@@ -25,12 +25,6 @@ namespace WorldTree.Internal
     {
         public TreeTaskCompleted GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
-        public Action SetResult { get; set; }
-
-        public TreeTaskCompleted()
-        {
-            SetResult = SetCompleted;
-        }
         public void GetResult() { }
     }
 
@@ -38,7 +32,7 @@ namespace WorldTree.Internal
     {
         public override void OnEvent(TreeTaskCompleted self, float deltaTime)
         {
-            self.SetResult();
+            self.SetCompleted();
         }
     }
 }

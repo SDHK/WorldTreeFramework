@@ -9,6 +9,9 @@
 */
 
 
+using Unity.VisualScripting;
+using WorldTreeFramework;
+
 namespace WorldTree
 {
     public static class TimerAsyncExtension
@@ -20,7 +23,8 @@ namespace WorldTree
         {
             self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter);
             counter.countOut = count;
-            counter.callback.Add(asyncTask, out TreeTask.SetResultRuleNode _);
+            counter.callback ??= counter.AddChild(out counter.callback);
+            counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
             return asyncTask;
         }
 
@@ -30,9 +34,9 @@ namespace WorldTree
         /// </summary>
         public static TreeTask AsyncDelay(this INode self, float time)
         {
-            self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall timer);
-            timer.timeOutTime = time;
-            timer.callback.Add(asyncTask, out TreeTask.SetResultRuleNode _);
+            self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall timer, time);
+            timer.callback ??= timer.AddChild(out timer.callback);
+            timer.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
             return asyncTask;
         }
     }

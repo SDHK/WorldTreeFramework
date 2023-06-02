@@ -32,9 +32,9 @@ namespace WorldTree
         /// </summary>
         public static void SetGlobalRuleActuator<T, R>(this TreeValueBase<T> self, R defaultRule = default)
             where T : IEquatable<T>
-            where R : IValueChangeRule<T>
+            where R : ISendRuleBase<T>
         {
-            self.m_GlobalValueChange = (IRuleActuator<IValueChangeRule<T>>)self.GetGlobalRuleActuator<R>();
+            self.m_GlobalValueChange = (IRuleActuator<ISendRuleBase<T>>)self.GetGlobalRuleActuator<R>();
         }
 
         /// <summary>
@@ -44,8 +44,8 @@ namespace WorldTree
             where T1 : IEquatable<T1>
             where N : class, INode, AsRule<ISendRuleBase<T1>>
         {
-            if (self.m_ValueChange is null) self.TryGetRuleActuator(out self.m_ValueChange);
-            self.m_ValueChange.EnqueueReferenced(eventNode);
+            if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
+            self.m_ValueChange.Add(eventNode, default(IValueChangeRule<T1>));
         }
 
         /// <summary>
@@ -55,11 +55,11 @@ namespace WorldTree
             where T1 : IEquatable<T1>
             where T2 : IEquatable<T2>
         {
-            if (self.m_ValueChange is null) self.TryGetRuleActuator(out self.m_ValueChange);
-            self.m_ValueChange.EnqueueReferenced(treeValue);
+            if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
+            self.m_ValueChange.Add(treeValue, default(IValueChangeRule<T1>));
         }
 
-       
+
 
         /// <summary>
         /// 双向绑定(类型转换)
@@ -68,10 +68,10 @@ namespace WorldTree
             where T1 : IEquatable<T1>
             where T2 : IEquatable<T2>
         {
-            if (self.m_ValueChange is null) self.TryGetRuleActuator(out self.m_ValueChange);
-            if (treeValue.m_ValueChange is null) treeValue.TryGetRuleActuator(out treeValue.m_ValueChange);
-            self.m_ValueChange.EnqueueReferenced(treeValue);
-            treeValue.m_ValueChange.EnqueueReferenced(self);
+            if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
+            if (treeValue.m_ValueChange is null) treeValue.AddChild(out treeValue.m_ValueChange);
+            self.m_ValueChange.Add(treeValue, default(IValueChangeRule<T1>));
+            treeValue.m_ValueChange.Add(self, default(IValueChangeRule<T2>));
         }
     }
 

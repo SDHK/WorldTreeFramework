@@ -31,8 +31,15 @@
                 {
                     if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
                     {
+                        self.Enqueue(node.Id);
+
+                        if (self.ruleGroup != null && self.ruleGroup.RuleType == typeof(IUpdateRule))
+                        {
+                            World.Log($"Send ({self.nodeDictionary.Count})({self.idQueue.Count}) : [{self.Id}] [{node.Id}] [{node.Type}]");
+                        }
+
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1);
-                        if (!node.IsRecycle) self.Enqueue(node.Id);
+                        //if (!node.IsRecycle) self.Enqueue(node.Id);
                     }
                 }
             }

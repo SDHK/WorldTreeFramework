@@ -29,7 +29,7 @@ namespace WorldTree
                 else
                 {
                     self.isRun = false;
-                    self.OnCompleted?.Send();
+                    self.OnCompleted.Send();
                     //World.Log("渐变结束：" + self.changeValue.Value);
                 }
             }

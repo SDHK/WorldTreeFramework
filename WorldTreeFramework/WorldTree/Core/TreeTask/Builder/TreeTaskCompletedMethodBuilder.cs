@@ -48,7 +48,7 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetResult()
         {
-            task.SetResult();
+            task.SetCompleted();
         }
 
         // 5. 等待完成

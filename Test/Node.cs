@@ -80,127 +80,89 @@ public class TreeNode : Node
 
         return 10021;
     }
-}
-class NodeNewSystem : NewRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self)
-    {
-        Debug.Log("NewSystem!");
-    }
-}
-class NodeGetSystem : GetRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self)
-    {
-        Debug.Log("GetSystem!");
-    }
-}
-class NodeAddSystem : AddRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self)
-    {
-        Debug.Log("AddSystem!");
-    }
-}
-class NodeEnableSystem : EnableRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self)
-    {
-        Debug.Log("EnableSystem!");
-    }
-}
+    //}
+    //class NodeNewSystem : NewRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self)
+    //    {
+    //        Debug.Log("NewSystem!");
+    //    }
+    //}
+    //class NodeGetSystem : GetRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self)
+    //    {
+    //        Debug.Log("GetSystem!");
+    //    }
+    //}
+    //class NodeAddSystem : AddRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self)
+    //    {
+    //        Debug.Log("AddSystem!");
+    //    }
+    //}
+    //class NodeEnableSystem : EnableRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self)
+    //    {
+    //        Debug.Log("EnableSystem!");
+    //    }
+    //}
 
-class NodeDisableSystem : DisableRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self)
-    {
-        Debug.Log("DisableSystem!");
-    }
-}
+    //class NodeDisableSystem : DisableRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self)
+    //    {
+    //        Debug.Log("DisableSystem!");
+    //    }
+    //}
 
-class NodeUpdateSystem : UpdateRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self, float deltaTime)
-    {
-        Debug.Log("UpdateSystem!");
-    }
-}
-
-
-class NodeLateUpdateSystem : LateUpdateRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self, float deltaTime)
-    {
-        Debug.Log("LateUpdateSystem!");
-    }
-}
-class NodeFixedUpdateSystem : FixedUpdateRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self, float deltaTime)
-    {
-        Debug.Log("FixedUpdateSystem!");
-    }
-}
-
-class NodeRemoveSystem : RemoveRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self)
-    {
-        Debug.Log("RemoveSystem!");
-    }
-}
-class NodeRecycleSystem : RecycleRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self)
-    {
-        Debug.Log("RecycleSystem!");
-    }
-}
-class NodeDestroySystem : DestroyRule<TreeNode>
-{
-    public override void OnEvent(TreeNode self)
-    {
-        Debug.Log("DestroySystem!");
-    }
-}
+    //class NodeUpdateSystem : UpdateRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self, float deltaTime)
+    //    {
+    //        Debug.Log("UpdateSystem!");
+    //    }
+    //}
 
 
+    //class NodeLateUpdateSystem : LateUpdateRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self, float deltaTime)
+    //    {
+    //        Debug.Log("LateUpdateSystem!");
+    //    }
+    //}
+    //class NodeFixedUpdateSystem : FixedUpdateRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self, float deltaTime)
+    //    {
+    //        Debug.Log("FixedUpdateSystem!");
+    //    }
+    //}
 
+    //class NodeRemoveSystem : RemoveRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self)
+    //    {
+    //        Debug.Log("RemoveSystem!");
+    //    }
+    //}
+    //class NodeRecycleSystem : RecycleRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self)
+    //    {
+    //        Debug.Log("RecycleSystem!");
+    //    }
+    //}
+    //class NodeDestroySystem : DestroyRule<TreeNode>
+    //{
+    //    public override void OnEvent(TreeNode self)
+    //    {
+    //        Debug.Log("DestroySystem!");
+    //    }
+    //}
 
-
-
-
-
-public class Node1 : Node
-{
-
-}
-
-class Node1AddSystem : AddRule<Node1>
-{
-    public override void OnEvent(Node1 self)
-    {
-        Debug.Log("Node1 OnAdd!!");
-    }
-}
-class Node1EnableSystem : EnableRule<Node1>
-{
-    public override void OnEvent(Node1 self)
-    {
-        Debug.Log("Node1 OnEnable!!");
-    }
-}
-
-class Node1DisableSystem : DisableRule<Node1>
-{
-    public override void OnEvent(Node1 self)
-    {
-        Debug.Log("Node1 OnDisable!!");
-    }
-}
-
-
-public class Node2 : Node, ChildOf<INode>
-{
 
 }

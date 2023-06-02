@@ -12,12 +12,23 @@ using System;
 
 namespace WorldTree
 {
+  
+
     /// <summary>
-    /// 全局数值变化监听法则接口
+    /// 数值变化监听法则接口基类
     /// </summary>
-    public interface IValueChangeRule<T1> : ISendRuleBase<T1> { }
+    public interface IValueChangeRuleBase<T1> : ISendRuleBase<T1> { }
+
+
+
+
     /// <summary>
-    /// 全局数值变化监听法则(同类型转换)
+    /// 数值变化监听法则接口
+    /// </summary>
+    public interface IValueChangeRule<T1> : IValueChangeRuleBase<T1> { }
+
+    /// <summary>
+    /// 数值变化监听法则(同类型转换)
     /// </summary>
     public abstract class ValueChangeRuleBase<N, T1> : SendRuleBase<N, IValueChangeRule<T1>, T1>
         where N : class, INode, AsRule<IValueChangeRule<T1>>
@@ -29,7 +40,7 @@ namespace WorldTree
     /// <summary>
     /// 数值变化监听法则(同类型转换)
     /// </summary>
-    public abstract class ValueChangeRule<T1> : SendRule<TreeValueBase<T1>, T1>
+    public abstract class ValueChangeRule<T1> : ValueChangeRuleBase<TreeValueBase<T1>, T1>
         where T1 : IEquatable<T1>
     { }
 
@@ -38,7 +49,7 @@ namespace WorldTree
     /// <summary>
     /// 数值变化监听法则(不同类型转换)
     /// </summary>
-    public abstract class ValueChangeRule<T1, T2> : SendRule<TreeValueBase<T1>, T2>
+    public abstract class ValueChangeRule<T1, T2> : ValueChangeRuleBase<TreeValueBase<T1>, T2>
         where T1 : IEquatable<T1>
         where T2 : IEquatable<T2>
     { }

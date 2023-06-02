@@ -18,9 +18,8 @@ namespace WorldTree
     {
         public int count = 0;
         public int countOut = 0;
-        //public Action callback;
 
-        public IRuleActuator<ISendRuleBase> callback;
+        public RuleActuator<ISendRuleBase> callback;
     }
 
     public static class CounterCallRule
@@ -30,7 +29,20 @@ namespace WorldTree
             public override void OnEvent(CounterCall self)
             {
                 self.count = 0;
-                self.TryGetRuleActuator(out self.callback);
+                self.AddChild(out self.callback);
+            }
+        }
+
+        class UpdateRule : UpdateRule<CounterCall>
+        {
+            public override void OnEvent(CounterCall self, float deltaTime)
+            {
+                self.count++;
+                if (self.count >= self.countOut)
+                {
+                    self.callback.Send();
+                    self.Dispose();
+                }
             }
         }
 
@@ -42,19 +54,6 @@ namespace WorldTree
             }
         }
 
-
-        class UpdateRule : UpdateRule<CounterCall>
-        {
-            public override void OnEvent(CounterCall self, float deltaTime)
-            {
-                self.count++;
-                if (self.count >= self.countOut)
-                {
-                    self.callback?.Send();
-                    self.Dispose();
-                }
-            }
-        }
     }
 
 

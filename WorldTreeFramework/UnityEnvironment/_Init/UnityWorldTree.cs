@@ -62,7 +62,6 @@ namespace WorldTree
             disable?.Send();
             //sw.Stop();
             //World.Log($"毫秒: {sw.ElapsedMilliseconds}");
-            World.Log($"Unity Update");
 
             Profiler.EndSample();
 

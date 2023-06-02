@@ -33,7 +33,10 @@ namespace WorldTree
         public static bool TrySend<R, T1>(this IRuleGroup<R> group, INode node, T1 t1)
         where R : ISendRuleBase<T1>
         {
-            if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
+            if (node == null) World.Log("节点为空！！！！！！！");
+            if (node.Type == null) World.Log("节点类型为空！！！！！！！");
+            if (group == null) World.Log("法则为空！！！！！！！");
+            if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
             {
                 ((IRuleList<R>)ruleList).Send(node, t1);
                 return true;

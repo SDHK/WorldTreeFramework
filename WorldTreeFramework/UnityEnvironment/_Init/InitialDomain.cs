@@ -23,13 +23,6 @@ using WorldTree.Internal;
 namespace WorldTree
 {
 
-    public struct Pointer<N>
-    where N : class, INode
-    {
-        public WorldTreeCore core;
-        public long id;
-        public INode node;
-    }
 
 
     //public class NodeAddRule : AddRule<Node>
@@ -87,23 +80,6 @@ namespace WorldTree
         }
     }
 
-    //执行节点
-    public abstract class ActuatorNodeRule<P, N> : SendRule<N>
-        where N : RuleNode<P>, INode, AsRule<ISendRule>
-        where P : class, INode
-    {
-        public override void OnEvent(N self) => OnEvent(self.Node);
-        public abstract void OnEvent(P self);
-    }
-
-
-    class SetResultSendRule : ActuatorNodeRule<TreeTask, TreeTask.SetResultRuleNode>
-    {
-        public override void OnEvent(TreeTask self)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
 
     /// <summary>
@@ -114,14 +90,7 @@ namespace WorldTree
         public TreeNode node;
         public TreeValue<float> valueFloat;
         public TreeValue<int> valueInt;
-
-        public IRuleActuator<ISendRuleBase<float>> ruleActuator;
-
-        public class Value : RuleNode<InitialDomain>, AsRule<ISendRuleBase<float>> { }
-        public class OnCompleted : RuleNode<InitialDomain>, AsRule<ISendRuleBase> { }
     }
-
-
 
     public static class InitialDomainRule
     {
@@ -129,11 +98,12 @@ namespace WorldTree
         {
             public override void OnEvent(InitialDomain self)
             {
-                GlobalRuleActuator<IUpdateRule> a = new();
-                IRuleActuator<IUpdateRule> b = a;
-                a.Send(1f);
 
                 World.Log("初始域启动！！");
+
+                self.AddChild(out self.valueFloat);
+                self.AddChild(out self.valueInt);
+                self.valueFloat.Bind(self.valueInt);
             }
         }
 
@@ -141,8 +111,6 @@ namespace WorldTree
         {
             public override void OnEvent(InitialDomain self, float deltaTime)
             {
-                World.Log("初始域UpdateRule！！");
-
                 if (Input.GetKeyDown(KeyCode.A))
                 {
                     self.valueFloat.Value += 1.5f;
@@ -156,8 +124,8 @@ namespace WorldTree
                 }
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    self.AddComponent(out TreeNode _);
-                    //self.AddComponent(out TreeNode _).Test().Coroutine();
+                    //self.AddComponent(out TreeNode _);
+                    self.AddComponent(out TreeNode _).Test().Coroutine();
                 }
 
                 if (Input.GetKeyDown(KeyCode.W))
@@ -178,31 +146,6 @@ namespace WorldTree
 
 
         }
-
-
-        class ValueSendRule : SendRule<InitialDomain.Value, float>
-        {
-            public override void OnEvent(InitialDomain.Value self, float value)
-            {
-                World.Log($"数值变化： {value}");
-            }
-        }
-
-        class OnCompletedSendRule : SendRule<InitialDomain.OnCompleted>
-        {
-            public override void OnEvent(InitialDomain.OnCompleted self)
-            {
-                World.Log("渐变结束：!!!!");
-            }
-        }
-
-
-        public static void Test(this InitialDomain self)
-        {
-
-
-        }
-
     }
 
 }

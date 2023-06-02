@@ -53,7 +53,7 @@ namespace WorldTree.Internal
 
         public void SetResult()
         {
-            task.AddComponent(out TreeTask.SetResultRuleNode _).Send();
+            task.SetResult();
         }
 
         // 5. AwaitOnCompleted
@@ -129,7 +129,7 @@ namespace WorldTree.Internal
 
         public void SetResult(T ret)
         {
-            task.AddComponent(out TreeTask<T>.SetResultRuleNode _).Send(ret);
+            task.SetResult(ret);
         }
 
         // 5. AwaitOnCompleted

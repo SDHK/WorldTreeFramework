@@ -50,7 +50,7 @@ namespace WorldTree
         /// <summary>
         /// 完成回调
         /// </summary>
-        public IRuleActuator<ISendRuleBase> OnCompleted;
+        public RuleActuator<ISendRuleBase> OnCompleted;
     }
 
     /// <summary>
@@ -110,15 +110,7 @@ namespace WorldTree
             return self;
         }
 
-        /// <summary>
-        /// 完成回调
-        /// </summary>
-        public static TreeTweenBase Completed<N>(this TreeTweenBase self, N eventNode)
-            where N : class, INode, AsRule<ISendRuleBase>
-        {
-            self.OnCompleted.EnqueueReferenced(eventNode);
-            return self;
-        }
+       
 
         /// <summary>
         /// 曲线计算
@@ -142,7 +134,7 @@ namespace WorldTree
             self.endValue = self.AddChild(out TreeValue<T1> _);
             self.clock = self.AddChild(out TreeValue<float> _);
 
-            self.TryGetRuleActuator(out self.OnCompleted);
+            self.AddChild(out self.OnCompleted);
 
             self.startValue.Value = self.changeValue;
             self.endValue.Value = endValue;

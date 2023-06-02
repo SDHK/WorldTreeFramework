@@ -611,9 +611,9 @@ namespace WorldTree
         /// <summary>
         /// 获取法则组
         /// </summary>
-        public static bool TryGetRuleGroup(this RuleManager self, Type Interface, out RuleGroup ruleGroup)
+        public static bool TryGetRuleGroup(this RuleManager self, Type ruleType, out RuleGroup ruleGroup)
         {
-            return self.RuleGroupDictionary.TryGetValue(Interface, out ruleGroup);
+            return self.RuleGroupDictionary.TryGetValue(ruleType, out ruleGroup);
         }
 
         #endregion
