@@ -21,7 +21,7 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
                     {
                         ((IRuleGroup<R>)ruleGroup).Send(node);
                     }
@@ -39,7 +39,7 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
                     {
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1);
                     }
@@ -58,7 +58,7 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
                     {
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2);
                     }
@@ -75,7 +75,7 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
                     {
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3);
                     }
@@ -92,7 +92,7 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
                     {
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4);
                     }
@@ -109,7 +109,7 @@ namespace WorldTree
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
                     {
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4, arg5);
                     }

@@ -59,11 +59,11 @@ namespace WorldTree
         /// <summary>
         /// 获取执行器
         /// </summary>
-        public static ListenerRuleActuator GetRuleActuator(this ListenerRuleActuatorGroup self, Type listenerRuleType)
+        public static ListenerRuleActuator GetRuleActuator(this ListenerRuleActuatorGroup self, Type listenerRuleType, RuleGroup ruleGroup)
         {
             if (!self.actuatorDictionary.TryGetValue(listenerRuleType, out var actuator))
             {
-                self.actuatorDictionary.Add(listenerRuleType, self.AddChild(out actuator));
+                self.actuatorDictionary.Add(listenerRuleType, self.AddChild(out actuator, ruleGroup));
             }
             return actuator;
         }

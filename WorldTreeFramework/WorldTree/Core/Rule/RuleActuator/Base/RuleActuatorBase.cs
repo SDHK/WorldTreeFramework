@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/6/1 19:44
@@ -10,10 +9,6 @@
 * 用于代替委托事件
 
  */
-
-
-
-using static UnityEditor.Progress;
 
 namespace WorldTree
 {
@@ -68,7 +63,7 @@ namespace WorldTree
         /// <summary>
         /// 动态的遍历数量
         /// </summary>
-        /// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
+        /// <remarks>当遍历时移除后，减少数量</remarks>
         public int traversalCount;
 
         public override string ToString()
@@ -79,15 +74,15 @@ namespace WorldTree
         /// <summary>
         /// 刷新动态遍历数量
         /// </summary>
-        public void RefreshTraversalCount()
+        public int RefreshTraversalCount()
         {
-            traversalCount = nodeDictionary is null ? 0 : nodeDictionary.Count;
+            return traversalCount = nodeDictionary is null ? 0 : nodeDictionary.Count;
         }
 
         /// <summary>
         /// 尝试出列
         /// </summary>
-        public bool TryNext(out INode node, out RuleGroup ruleGroup)
+        public bool TryGetNext(out INode node, out RuleGroup ruleGroup)
         {
             //尝试获取一个id
             if (idQueue != null && idQueue.TryDequeue(out long id))
@@ -97,7 +92,6 @@ namespace WorldTree
                 {
                     //回收次数抵消
                     removeIdDictionary[id] = --count;
-                    if (traversalCount != 0) traversalCount--;
 
                     //次数为0时删除id
                     if (count == 0) removeIdDictionary.Remove(id);
@@ -219,6 +213,8 @@ namespace WorldTree
             {
                 nodeDictionary.Remove(id);
                 ruleGroupDictionary?.Remove(id);
+                if (traversalCount != 0) traversalCount--;
+
                 this.DeReferenced(node);
                 //累计强制移除的节点id
                 removeIdDictionary ??= this.AddChild(out removeIdDictionary);
@@ -273,7 +269,11 @@ namespace WorldTree
             traversalCount = 0;
         }
 
+
+
+
         #endregion
+
     }
 
     public static class RuleActuatorBaseRule

@@ -803,6 +803,8 @@ namespace WorldTree
 
             public void Dispose()
             {
+                list = null;
+                current = default;
             }
 
             public bool MoveNext()

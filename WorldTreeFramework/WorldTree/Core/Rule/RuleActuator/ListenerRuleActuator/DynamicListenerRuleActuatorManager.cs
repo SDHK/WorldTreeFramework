@@ -262,8 +262,7 @@ namespace WorldTree
                 else if (self.Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
                 {
                     //新建执行器
-                    actuator = group.GetRuleActuator(RuleType);
-                    actuator.ruleGroup = ruleGroup;
+                    actuator = group.GetRuleActuator(RuleType, ruleGroup);
                     self.RuleActuatorAddListener(actuator, Target);
                     return true;
                 }
@@ -272,9 +271,7 @@ namespace WorldTree
             {
 
                 //新建组和执行器
-                actuator = self.GetGroup(Target).GetRuleActuator(RuleType);
-                actuator.ruleGroup = ruleGroup;
-
+                actuator = self.GetGroup(Target).GetRuleActuator(RuleType, ruleGroup);
                 self.RuleActuatorAddListener(actuator, Target);
                 return true;
             }
