@@ -118,13 +118,13 @@ public class TreeNode : Node
     //    }
     //}
 
-    //class NodeUpdateSystem : UpdateRule<TreeNode>
-    //{
-    //    public override void OnEvent(TreeNode self, float deltaTime)
-    //    {
-    //        Debug.Log("UpdateSystem!");
-    //    }
-    //}
+    class NodeUpdateSystem : UpdateRule<TreeNode>
+    {
+        public override void OnEvent(TreeNode self, float deltaTime)
+        {
+            Debug.Log("UpdateSystem!");
+        }
+    }
 
 
     //class NodeLateUpdateSystem : LateUpdateRule<TreeNode>

@@ -34,7 +34,10 @@ namespace WorldTree
             where T : IEquatable<T>
             where R : ISendRuleBase<T>
         {
-            self.m_GlobalValueChange = (IRuleActuator<ISendRuleBase<T>>)self.GetGlobalRuleActuator<R>();
+            if (self.TryGetGlobalRuleActuator<R>(out var globalRuleActuator))
+            {
+                self.m_GlobalValueChange = (IRuleActuator<ISendRuleBase<T>>)globalRuleActuator;
+            }
         }
 
         /// <summary>

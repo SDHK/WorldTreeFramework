@@ -153,19 +153,8 @@ namespace WorldTree
             idQueue ??= this.AddChild(out idQueue);
             nodeDictionary ??= this.AddChild(out nodeDictionary);
 
-            if (node.Type == typeof(TimerCall)) World.Log($"[{this.Id}] [{node.Id}]TimerCallnode，添加1{nodeDictionary.Count}");
-
             idQueue.Enqueue(node.Id);
             nodeDictionary.Add(node.Id, node);
-            if (node.Type == typeof(TimerCall))
-            {
-                World.Log($"[{this.Id}] [{node.Id}]TimerCallnode，添加2{nodeDictionary.Count}");
-                foreach (var item in nodeDictionary.Values)
-                {
-                    World.Log($"[{item.Id}] [{item.Type}]");
-                }
-                World.Log($"+=============!");
-            }
 
             return true;
         }
@@ -237,8 +226,6 @@ namespace WorldTree
 
             if (nodeDictionary.TryGetValue(id, out INode node))
             {
-                if (node.Type == typeof(TimerCall)) World.Log($"[{this.Id}] [{node.Id}] TimerCallnode，移除1");
-                if (ruleGroup != null && ruleGroup.RuleType == typeof(IUpdateRule)) World.Log($"[{this.Id}] [{node.Id}] [{node.Type}] 移除2");
                 nodeDictionary.Remove(id);
                 ruleGroupDictionary?.Remove(id);
                 this.DeReferenced(node);

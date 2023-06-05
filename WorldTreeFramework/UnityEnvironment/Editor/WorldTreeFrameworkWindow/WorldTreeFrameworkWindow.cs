@@ -18,8 +18,8 @@ namespace EditorTool
     /// 世界树框架编辑器驱动窗口
     /// </summary>
     public class WorldTreeFrameworkWindow : Node
-        
-       
+
+
         , AsRule<IGUIDrawSystem>
         , AsRule<IEditorWindowInspectorUpdateSystem>
 
@@ -52,10 +52,10 @@ namespace EditorTool
         public override void OnEvent(WorldTreeFrameworkWindow self)
         {
             self.AddComponent(out EditorGUIWindow _);
-            self.enable = self.GetGlobalRuleActuator<IEnableRule>();
-            self.update = self.GetGlobalRuleActuator<IUpdateRule>();
-            self.disable = self.GetGlobalRuleActuator<IDisableRule>();
-            self.onGUI = self.GetGlobalRuleActuator<IGuiUpdateRule>();
+            self.TryGetGlobalRuleActuator(out self.enable);
+            self.TryGetGlobalRuleActuator(out self.update);
+            self.TryGetGlobalRuleActuator(out self.disable);
+            self.TryGetGlobalRuleActuator(out self.onGUI);
             self.AddComponent(out EditorHomePage _);
         }
     }

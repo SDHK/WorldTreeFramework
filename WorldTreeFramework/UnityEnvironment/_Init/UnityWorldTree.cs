@@ -17,7 +17,7 @@ namespace WorldTree
 
     public class UnityWorldTree : MonoBehaviour
     {
-        public System.Diagnostics. Stopwatch sw = new System.Diagnostics.Stopwatch();
+        public System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
         public WorldTreeCore Core;
 
@@ -26,7 +26,7 @@ namespace WorldTree
         GlobalRuleActuator<IUpdateRule> update;
         GlobalRuleActuator<ILateUpdateRule> lateUpdate;
         GlobalRuleActuator<IFixedUpdateRule> fixedUpdate;
-        //RuleActuator onGUI;
+        //GlobalRuleActuator<IGuiUpdateRule> onGUI;
 
 
         private void Start()
@@ -37,14 +37,14 @@ namespace WorldTree
 
             Core = new WorldTreeCore();
 
-            enable = Core.GetGlobalRuleActuator<IEnableRule>();
-            update = Core.GetGlobalRuleActuator<IUpdateRule>();
-            disable = Core.GetGlobalRuleActuator<IDisableRule>();
+            Core.TryGetGlobalRuleActuator(out enable);
+            Core.TryGetGlobalRuleActuator(out update);
+            Core.TryGetGlobalRuleActuator(out disable);
 
-            lateUpdate = Core.GetGlobalRuleActuator<ILateUpdateRule>();
-            fixedUpdate = Core.GetGlobalRuleActuator<IFixedUpdateRule>();
-            //onGUI = Core.GetGlobalNodeRuleActuator<IGuiUpdateRule>();
-            
+            Core.TryGetGlobalRuleActuator(out lateUpdate);
+            Core.TryGetGlobalRuleActuator(out fixedUpdate);
+            //Core.TryGetGlobalRuleActuator(out onGUI);
+
 
             Core.Root.AddComponent(out InitialDomain _);
         }
@@ -53,7 +53,7 @@ namespace WorldTree
         {
 
             /* 代码执行过程 */
-       
+
             Profiler.BeginSample("SDHK");
 
             //sw.Restart();
@@ -94,6 +94,6 @@ namespace WorldTree
             fixedUpdate = null;
             //onGUI = null;
         }
-        
+
     }
 }

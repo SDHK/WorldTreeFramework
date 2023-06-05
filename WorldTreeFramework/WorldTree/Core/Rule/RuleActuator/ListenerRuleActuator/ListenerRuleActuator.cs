@@ -16,7 +16,10 @@ namespace WorldTree
     public class ListenerRuleActuator : GlobalRuleActuatorBase, IRuleActuator<IRule>, ComponentOf<GlobalRuleActuatorManager>
         , AsRule<IAwakeRule<RuleGroup>>
     {
-
+        public override string ToString()
+        {
+            return $"ListenerRuleActuator : {ruleGroup?.RuleType}";
+        }
     }
 
 }

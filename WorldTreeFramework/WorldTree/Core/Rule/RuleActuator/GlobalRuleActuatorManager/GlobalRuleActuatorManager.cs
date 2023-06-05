@@ -18,10 +18,20 @@ namespace WorldTree
         /// <summary>
         /// 获取全局节点法则执行器
         /// </summary>
-        public static GlobalRuleActuator<R> GetGlobalRuleActuator<R>(this INode self)
+        public static bool TryGetGlobalRuleActuator<R>(this INode self, out GlobalRuleActuator<R> globalRuleActuator)
         where R : IRule
         {
-            return self.Root.AddComponent(out GlobalRuleActuatorManager _).AddComponent(out GlobalRuleActuator<R> _);
+            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup _))
+            {
+                self.Root.AddComponent(out GlobalRuleActuatorManager _).AddComponent(out globalRuleActuator);
+                return true;
+
+            }
+            else
+            {
+                globalRuleActuator = null;
+                return false;
+            }
         }
     }
 

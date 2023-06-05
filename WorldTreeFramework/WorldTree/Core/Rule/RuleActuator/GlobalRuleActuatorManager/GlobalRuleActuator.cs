@@ -16,6 +16,10 @@ namespace WorldTree
     public class GlobalRuleActuator<R> : GlobalRuleActuatorBase, IRuleActuator<R>, ComponentOf<GlobalRuleActuatorManager>
      where R : IRule
     {
+        public override string ToString()
+        {
+            return $"GlobalRuleActuator : {ruleGroup?.RuleType}";
+        }
     }
 
 

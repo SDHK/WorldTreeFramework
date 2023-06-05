@@ -8,8 +8,6 @@
 
 */
 
-using UnityEngine;
-
 namespace WorldTree
 {
 
@@ -25,7 +23,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return $"TimerCall : {IsActive} , {time} , {timeOutTime}";
+            return $"TimerCall : {time} , {timeOutTime}";
         }
     }
 
@@ -35,8 +33,6 @@ namespace WorldTree
         {
             self.timeOutTime = timeOutTime;
             self.time = 0;
-            World.Log($"[{self.Id}]添加:" + self);
-
         }
     }
 
@@ -47,7 +43,6 @@ namespace WorldTree
             self.time += deltaTime;
             if (self.time >= self.timeOutTime)
             {
-                World.Log($"[{self.Id}]计时结束:" + self);
                 self.callback.Send();
                 self.Dispose();
             }
@@ -58,7 +53,6 @@ namespace WorldTree
     {
         public override void OnEvent(TimerCall self)
         {
-            World.Log($"[{self.Id}]移除:" + self);
             self.callback = null;
         }
     }

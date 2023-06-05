@@ -16,14 +16,14 @@ namespace WorldTree
 
     public class TreeTweenManager : Node, ComponentOf<WorldTreeRoot>
     {
-        public IRuleActuator<ITweenUpdateRule> ruleActuator;
+        public GlobalRuleActuator<ITweenUpdateRule> ruleActuator;
     }
 
     class TreeTweenManagerAddRule : AddRule<TreeTweenManager>
     {
         public override void OnEvent(TreeTweenManager self)
         {
-            self.ruleActuator = self.GetGlobalRuleActuator<ITweenUpdateRule>();
+            self.TryGetGlobalRuleActuator(out self.ruleActuator);
         }
     }
 
