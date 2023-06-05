@@ -10,6 +10,8 @@
 
  */
 
+using System;
+
 namespace WorldTree
 {
     /// <summary>
@@ -23,9 +25,10 @@ namespace WorldTree
     /// <typeparam name="T">法则类型</typeparam>
     /// <remarks>
     /// <para>主要通过法则类型逆变提示可填写参数</para>
-    /// <para> RuleActuator 是没有泛型的实例，所以执行参数可能填错</para>
     /// </remarks>
     public interface IRuleActuator<in T> : IRuleActuator where T : IRule { }
+
+
 
 
     /// <summary>
@@ -34,9 +37,10 @@ namespace WorldTree
     public abstract class RuleActuatorBase : Node, ChildOf<INode>, IRuleActuator
     {
         /// <summary>
-        /// 默认法则集合
+        /// 单法则集合
         /// </summary>
         public RuleGroup ruleGroup;
+
 
         /// <summary>
         /// 节点id队列
@@ -44,21 +48,19 @@ namespace WorldTree
         public TreeQueue<long> idQueue;
 
         /// <summary>
-        /// 节点id被移除的次数
-        /// </summary>
-        public TreeDictionary<long, int> removeIdDictionary;
-
-        /// <summary>
         /// 节点字典
         /// </summary>
         public TreeDictionary<long, INode> nodeDictionary;
 
         /// <summary>
+        /// 节点id被移除的次数
+        /// </summary>
+        public TreeDictionary<long, int> removeIdDictionary;
+
+        /// <summary>
         /// 法则集合字典
         /// </summary>
         public TreeDictionary<long, RuleGroup> ruleGroupDictionary;
-
-
 
         /// <summary>
         /// 动态的遍历数量
@@ -133,7 +135,11 @@ namespace WorldTree
         public bool TryAdd(INode node)
         {
             nodeDictionary ??= this.AddChild(out nodeDictionary);
-            if (nodeDictionary.ContainsKey(node.Id)) return false;
+            if (nodeDictionary.ContainsKey(node.Id))
+            {
+                World.LogError("节点已存在");
+                return false;
+            }
 
             idQueue ??= this.AddChild(out idQueue);
             nodeDictionary ??= this.AddChild(out nodeDictionary);
@@ -288,4 +294,46 @@ namespace WorldTree
         }
     }
 
+
+
+
+
+
+    #region 多播方案？
+
+    ///// <summary>
+    ///// 单法则集合
+    ///// </summary>
+    //public RuleGroup ruleGroup;
+
+    ////====
+
+    ///// <summary>
+    ///// 节点id队列
+    ///// </summary>
+    //public TreeQueue<long> idQueue;//
+
+    ///// <summary>
+    ///// 法则类型队列
+    ///// </summary>
+    //public TreeQueue<Type> ruleTypeQueue;
+    ////====
+
+    ///// <summary>
+    ///// 节点字典
+    ///// </summary>
+    //public TreeDictionary<long, INode> nodeDictionary;//
+
+    ///// <summary>
+    ///// 节点法则集合字典
+    ///// </summary>
+    //public TreeDictionary<long, TreeDictionary<Type, RuleGroup>> ruleGroupsDictionary;
+    ////===
+
+    ///// <summary>
+    ///// 节点法则移除计数字典
+    ///// </summary>
+    //public TreeDictionary<long, TreeDictionary<Type, int>> removeRuleGroupsDictionary;
+
+    #endregion
 }

@@ -86,10 +86,15 @@ namespace WorldTree
     /// 初始域
     /// </summary>
     public class InitialDomain : Node, ComponentOf<INode>
+        ,AsRule<IFixedUpdateRule>
+        ,AsRule<ILateUpdateRule>
     {
         public TreeNode node;
         public TreeValue<float> valueFloat;
         public TreeValue<int> valueInt;
+
+
+        
     }
 
     public static class InitialDomainRule
@@ -104,6 +109,38 @@ namespace WorldTree
                 self.AddChild(out self.valueFloat);
                 self.AddChild(out self.valueInt);
                 self.valueFloat.Bind(self.valueInt);
+
+
+                //委托获取
+                self.AddChild(out RuleActuator<ISendRuleBase<float>> testRule);
+                
+
+
+
+                //委托添加
+                testRule.Add(self, default(IUpdateRule));//添加成功
+
+                testRule.Add(self, default(ILateUpdateRule));//相同实例，不可添加
+                testRule.Add(self, default(IFixedUpdateRule));//相同实例，不可添加
+
+                //委托调用
+                testRule.Send(0.5f);
+            }
+        }
+
+        class UpdateRule1 : UpdateRule<InitialDomain>
+        {
+            public override void OnEvent(InitialDomain self, float arg1)
+            {
+                //多播Update1
+            }
+        }
+
+        class UpdateRule2: UpdateRule<InitialDomain>
+        {
+            public override void OnEvent(InitialDomain self, float arg1)
+            {
+                //多播Update2
             }
         }
 
