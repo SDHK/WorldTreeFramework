@@ -49,8 +49,6 @@ namespace WorldTree.Internal
         }
 
         // 4. SetResult
-        [DebuggerHidden]
-
         public void SetResult()
         {
             task.SetResult();

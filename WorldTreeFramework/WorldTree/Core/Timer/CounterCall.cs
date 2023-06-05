@@ -37,11 +37,14 @@ namespace WorldTree
         {
             public override void OnEvent(CounterCall self, float deltaTime)
             {
-                self.count++;
-                if (self.count >= self.countOut)
+                if (self.IsActive)
                 {
-                    self.callback.Send();
-                    self.Dispose();
+                    self.count++;
+                    if (self.count >= self.countOut)
+                    {
+                        self.callback.Send();
+                        self.Dispose();
+                    }
                 }
             }
         }

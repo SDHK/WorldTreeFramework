@@ -40,12 +40,16 @@ namespace WorldTree
     {
         public override void OnEvent(TimerCall self, float deltaTime)
         {
-            self.time += deltaTime;
-            if (self.time >= self.timeOutTime)
+            if (self.IsActive)
             {
-                self.callback.Send();
-                self.Dispose();
+                self.time += deltaTime;
+                if (self.time >= self.timeOutTime)
+                {
+                    self.callback.Send();
+                    self.Dispose();
+                }
             }
+           
         }
     }
 

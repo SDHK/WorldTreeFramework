@@ -85,20 +85,9 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 入列
-        /// </summary>
-        public void Enqueue(long id)
-        {
-            if (nodeDictionary != null && nodeDictionary.ContainsKey(id))
-            {
-                idQueue.Enqueue(id);
-            }
-        }
-
-        /// <summary>
         /// 尝试出列
         /// </summary>
-        public bool TryDequeue(out INode node, out RuleGroup ruleGroup)
+        public bool TryNext(out INode node, out RuleGroup ruleGroup)
         {
             //尝试获取一个id
             if (idQueue != null && idQueue.TryDequeue(out long id))
@@ -133,6 +122,8 @@ namespace WorldTree
                 {
                     ruleGroup = this.ruleGroup;
                 }
+                //id压回队列
+                idQueue.Enqueue(id);
                 return nodeDictionary.TryGetValue(id, out node);
             }
             ruleGroup = this.ruleGroup;

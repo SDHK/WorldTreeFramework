@@ -12,9 +12,8 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
                     {
-                        self.Enqueue(node.Id);
                         ((IRuleGroup<R>)ruleGroup).Send(node);
                     }
                 }
@@ -29,9 +28,8 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
                     {
-                        self.Enqueue(node.Id);
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1);
                     }
                 }
@@ -46,9 +44,8 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
                     {
-                        self.Enqueue(node.Id);
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2);
                     }
                 }
@@ -63,9 +60,8 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
                     {
-                        self.Enqueue(node.Id);
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3);
                     }
                 }
@@ -80,9 +76,8 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
                     {
-                        self.Enqueue(node.Id);
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4);
                     }
                 }
@@ -97,9 +92,8 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryDequeue(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryNext(out INode node, out RuleGroup ruleGroup))
                     {
-                        self.Enqueue(node.Id);
                         ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4, arg5);
                     }
                 }

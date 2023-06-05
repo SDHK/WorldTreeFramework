@@ -45,7 +45,6 @@ namespace WorldTree.Internal
         }
 
         // 设置结果
-        [DebuggerHidden]
         public void SetResult()
         {
             task.SetCompleted();

@@ -38,6 +38,8 @@ namespace WorldTree
         /// </summary>
         public void SetCompleted()
         {
+            World.Log($"任务完成 : {IsActive}");
+
             IsCompleted = true;
             if (IsActive)
             {

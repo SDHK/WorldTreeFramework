@@ -20,19 +20,23 @@ namespace WorldTree
         public float time = 0;
         public float timeOutTime = 0;
         public RuleActuator<ISendRuleBase> callback;
-             
+
     }
 
     class TimerCycleUpdateRule : UpdateRule<TimerCycle>
     {
         public override void OnEvent(TimerCycle self, float deltaTime)
         {
-            self.time += deltaTime;
-            if (self.time >= self.timeOutTime)
+            if (self.IsActive)
             {
-                self.time = 0;
-                self.callback?.Send();
+                self.time += deltaTime;
+                if (self.time >= self.timeOutTime)
+                {
+                    self.time = 0;
+                    self.callback?.Send();
+                }
             }
+
         }
     }
 
