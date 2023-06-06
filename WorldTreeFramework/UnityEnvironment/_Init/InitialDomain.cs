@@ -53,33 +53,6 @@ namespace WorldTree
     //    }
     //}
 
-    public class TreeNode2<T> : Node, ChildOf<INode>
-    {
-        public T Value;
-    }
-
-    public class TreeNode2AddRule<T> : AddRule<TreeNode2<T>>
-    {
-        public override void OnEvent(TreeNode2<T> self)
-        {
-            World.Log($"泛型添加: {typeof(T)}");
-        }
-    }
-
-
-    public class TreeNode2Child<T> : TreeNode2<T>, ChildOf<INode>
-    {
-
-    }
-
-    public class TreeNode2ChildAddRule<T> : AddRule<TreeNode2Child<T>>
-    {
-        public override void OnEvent(TreeNode2Child<T> self)
-        {
-            World.Log($"泛型子类添加: {typeof(T)}");
-        }
-    }
-
 
 
     /// <summary>
@@ -92,8 +65,6 @@ namespace WorldTree
         public TreeNode node;
         public TreeValue<float> valueFloat;
         public TreeValue<int> valueInt;
-
-
         
     }
 
@@ -106,9 +77,10 @@ namespace WorldTree
 
                 World.Log("初始域启动！！");
 
-                self.AddChild(out self.valueFloat);
-                self.AddChild(out self.valueInt);
-                self.valueFloat.Bind(self.valueInt);
+                //self.AddChild(out self.valueFloat);
+                //self.AddChild(out self.valueInt);
+                //self.valueFloat.Bind(self.valueInt);
+                self.AddComponent(out TreeNode _).Test().Coroutine();
 
             }
         }

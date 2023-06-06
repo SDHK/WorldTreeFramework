@@ -89,7 +89,7 @@ namespace WorldTree
         private INode ObjectNew(IPool pool)
         {
             INode obj = Activator.CreateInstance(ObjectType, true) as INode;
-            obj.Id = Core.IdManager.GetId();
+            //obj.Id = Core.IdManager.GetId();
             obj.Core = Core;
             obj.Root = Core.Root;
             obj.Type = ObjectType;
@@ -107,6 +107,8 @@ namespace WorldTree
 
         private void ObjectOnGet(INode obj)
         {
+            obj.Id = Core.IdManager.GetId();
+
             obj.IsRecycle = false;
             Nodes.TryAdd(obj.Id, obj);
             getRule?.Send(obj);

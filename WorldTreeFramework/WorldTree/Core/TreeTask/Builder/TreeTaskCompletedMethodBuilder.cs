@@ -27,6 +27,7 @@ namespace WorldTree.Internal
         public static TreeTaskCompletedMethodBuilder Create()
         {
             TreeTaskCompletedMethodBuilder builder = new TreeTaskCompletedMethodBuilder();
+            World.Log($"Completed ！！！！！！静态构建方法！！！！！！！");
             return builder;
         }
 
@@ -34,6 +35,7 @@ namespace WorldTree.Internal
         {
             get
             {
+                World.Log($"Completed 获取Task");
                 return task;
             }
         }
@@ -41,12 +43,14 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetException(Exception exception)
         {
+            World.Log($"[{task.Id}]Completed 设置异常");
             task.SetException(exception);
         }
 
         // 设置结果
         public void SetResult()
         {
+            World.Log($"[{task.Id}]Completed 设置结果");
             task.SetCompleted();
         }
 
@@ -56,7 +60,7 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                 awaiter.Parent.AddChild(out task);
+                awaiter.Parent.AddChild(out task);
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
@@ -69,21 +73,32 @@ namespace WorldTree.Internal
             if (task == null)
             {
                 task = awaiter.Parent.AddChild(out task);
+                World.Log($"（{awaiter.Parent}）（{stateMachine.GetType()}） 新建 Completed [{task.Id}] => awaiter [{awaiter.Id}] 6. 等待不安全完成");
+            }
+            else
+            {
+                World.Log($"（{awaiter.Parent}）（{stateMachine.GetType()}） 已经存在 Completed [{task.Id}] => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
             }
             awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+            World.Log($"Completed 6. 等待不安全完成2");
+
         }
 
         // 7. 开始
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
+            World.Log($"Completed 7. 开始");
             stateMachine.MoveNext();
+            World.Log($"Completed 7. 开始2");
+
         }
 
         // 8. 设置状态机
         [DebuggerHidden]
         public void SetStateMachine(IAsyncStateMachine stateMachine)
         {
+            World.Log($"Completed 8. 设置状态机");
         }
     }
 }

@@ -22,4 +22,12 @@ namespace WorldTree
         }
     }
 
+    class ListenerRuleActuatorAwakeRule : AwakeRule<ListenerRuleActuator, RuleGroup>
+    {
+        public override void OnEvent(ListenerRuleActuator self, RuleGroup arg1)
+        {
+            self.ruleGroup = arg1;
+        }
+    }
+
 }

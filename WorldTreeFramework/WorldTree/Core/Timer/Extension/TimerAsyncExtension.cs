@@ -25,6 +25,7 @@ namespace WorldTree
             counter.countOut = count;
             counter.callback ??= counter.AddChild(out counter.callback);
             counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
+
             return asyncTask;
         }
 

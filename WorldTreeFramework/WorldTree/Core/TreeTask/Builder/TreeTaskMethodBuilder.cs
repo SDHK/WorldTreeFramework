@@ -28,6 +28,7 @@ namespace WorldTree.Internal
         public static TreeTaskMethodBuilder Create()
         {
             TreeTaskMethodBuilder builder = new TreeTaskMethodBuilder();
+            World.Log($"Task ！！！！！！静态构建方法！！！！！！！");
             return builder;
         }
 
@@ -37,6 +38,7 @@ namespace WorldTree.Internal
         {
             get
             {
+                World.Log($"Task 获取Task");
                 return task;
             }
         }
@@ -45,12 +47,14 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetException(Exception exception)
         {
+            World.Log($"[{task.Id}]Task 设置异常");
             task.SetException(exception);
         }
 
         // 4. SetResult
         public void SetResult()
         {
+            World.Log($"[{task.Id}]Task 设置结果");
             task.SetResult();
         }
 
@@ -63,6 +67,7 @@ namespace WorldTree.Internal
             {
                 awaiter.Parent.AddChild(out task);
             }
+          
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
 
@@ -73,21 +78,30 @@ namespace WorldTree.Internal
             if (task == null)
             {
                 awaiter.Parent.AddChild(out task);
+                World.Log($"（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] =>  新建 Task [{task.Id}] 6. 等待不安全完成");
+            }
+            else
+            {
+                World.Log($"（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
+            World.Log($"Task 6. 等待不安全完成后");
         }
 
         // 7. Start
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
+            World.Log($"Task 7. 开始前");
             stateMachine.MoveNext();
+            World.Log($"Task 7. 开始后");
         }
 
         // 8. SetStateMachine
         [DebuggerHidden]
         public void SetStateMachine(IAsyncStateMachine stateMachine)
         {
+            World.Log($"Task 8. 设置状态机");
         }
     }
 
@@ -102,6 +116,7 @@ namespace WorldTree.Internal
         public static AsyncTaskMethodBuilder<T> Create()
         {
             AsyncTaskMethodBuilder<T> builder = new AsyncTaskMethodBuilder<T>();
+            World.Log($"Task<{typeof(T)}> ！！！！！！静态构建方法！！！！！！！");
             return builder;
         }
 
@@ -111,6 +126,7 @@ namespace WorldTree.Internal
         {
             get
             {
+                World.Log($"Task<{typeof(T)}> 获取Task");
                 return task;
             }
         }
@@ -119,6 +135,7 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetException(Exception exception)
         {
+            World.Log($"[{task.Id}]Task<{typeof(T)}> 设置异常");
             task.SetException(exception);
         }
 
@@ -127,6 +144,7 @@ namespace WorldTree.Internal
 
         public void SetResult(T ret)
         {
+            World.Log($"[{task.Id}]Task<{typeof(T)}> 设置结果");
             task.SetResult(ret);
         }
 
@@ -149,22 +167,31 @@ namespace WorldTree.Internal
             if (task == null)
             {
                 awaiter.Parent.AddChild(out task);
+                World.Log($"（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] => 新建 Task<{typeof(T)}> [{task.Id}]  6. 等待不安全完成");
+
+            }
+            else
+            {
+                World.Log($"（{stateMachine.GetType()}）已经存在 Task<{typeof(T)}> [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
+            World.Log($"Task<{typeof(T)}> 6. 等待不安全完成2");
         }
 
         // 7. Start
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
+            World.Log($"Task<{typeof(T)}> 7. 开始前");
             stateMachine.MoveNext();
+            World.Log($"Task<{typeof(T)}> 7. 开始后");
         }
 
         // 8. SetStateMachine
         [DebuggerHidden]
         public void SetStateMachine(IAsyncStateMachine stateMachine)
         {
-
+            World.Log($"Task<{typeof(T)}> 8. 设置状态机");
         }
     }
 

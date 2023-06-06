@@ -9,6 +9,8 @@
 */
 
 
+using UnityEngine;
+
 namespace WorldTree
 {
     /// <summary>
@@ -19,7 +21,15 @@ namespace WorldTree
         public int count = 0;
         public int countOut = 0;
 
+        /// <summary>
+        /// 计数结束回调
+        /// </summary>
         public RuleActuator<ISendRuleBase> callback;
+
+        public override string ToString()
+        {
+            return $"CounterCall : {count} , {countOut}";
+        }
     }
 
     public static class CounterCallRule

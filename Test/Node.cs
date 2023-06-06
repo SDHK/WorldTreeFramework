@@ -19,7 +19,7 @@ public class TreeNode : Node
 
         World.Log("1！");
 
-        await this.AsyncDelay(3);
+        await this.AsyncYield(3);
 
 
         await T2();
@@ -43,9 +43,17 @@ public class TreeNode : Node
     {
         World.Log("T2 1！");
 
-        await this.AsyncDelay(3);
+        await this.AsyncYield(3);
 
         World.Log("T2 2！");
+
+        await this.AsyncYield(3);
+
+        World.Log("T2 3！");
+
+        await this.AsyncYield(3);
+
+        World.Log("T2 4！");
 
         await this.TreeTaskCompleted();
 
@@ -59,7 +67,7 @@ public class TreeNode : Node
     {
         World.Log("T3 1！");
 
-        await this.AsyncDelay(3);
+        await this.AsyncYield(3);
 
         World.Log("T3 2！");
 
@@ -73,7 +81,7 @@ public class TreeNode : Node
     {
         World.Log("T4 1！");
 
-        await this.AsyncDelay(3);
+        await this.AsyncYield(3);
         World.Log("T4 2！");
 
         await this.TreeTaskCompleted();
@@ -122,7 +130,7 @@ public class TreeNode : Node
     {
         public override void OnEvent(TreeNode self, float deltaTime)
         {
-            Debug.Log("UpdateSystem!");
+            //Debug.Log("UpdateSystem!");
         }
     }
 
