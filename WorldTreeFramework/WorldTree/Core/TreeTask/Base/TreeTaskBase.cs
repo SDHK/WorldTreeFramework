@@ -19,6 +19,11 @@ namespace WorldTree
     public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion, ChildOf<INode>
     {
         /// <summary>
+        /// 树任务控制器
+        /// </summary>
+        public TreeTaskController treeTaskController;
+
+        /// <summary>
         /// 是否完成
         /// </summary>
         public abstract bool IsCompleted { get; set; }

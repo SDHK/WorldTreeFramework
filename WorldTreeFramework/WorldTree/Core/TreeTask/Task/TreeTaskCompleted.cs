@@ -32,6 +32,7 @@ namespace WorldTree.Internal
     {
         public override void OnEvent(TreeTaskCompleted self, float deltaTime)
         {
+            World.Log($"[{self.Id}] 异步任务完成类SetCompleted!!!");
             self.SetCompleted();
         }
     }
