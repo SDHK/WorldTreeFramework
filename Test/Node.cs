@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using WorldTree;
-using WorldTree.Internal;
 
 
 
@@ -75,6 +75,8 @@ public class TreeNode : Node
 
         World.Log(await T4());
 
+         T5().Coroutine();
+
     }
 
     public async TreeTask<int> T4()
@@ -88,6 +90,13 @@ public class TreeNode : Node
 
         return 10021;
     }
+
+    public async TreeTaskVoid T5()
+    {
+        await this.TreeTaskCompleted();
+    }
+
+
     //}
     //class NodeNewSystem : NewRule<TreeNode>
     //{

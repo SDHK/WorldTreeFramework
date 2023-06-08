@@ -47,7 +47,7 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetException(Exception exception)
         {
-            World.Log($"[{task.Id}]Task 设置异常");
+            World.Log($"[{task.Id}]Task 设置异常 {exception}");
             task.SetException(exception);
         }
 

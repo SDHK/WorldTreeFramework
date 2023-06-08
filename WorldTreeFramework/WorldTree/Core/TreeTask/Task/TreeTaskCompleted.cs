@@ -6,9 +6,9 @@
 
 * 描述： 异步任务完成类
 * 
-* 因为没有使用单例对象池，所以必须让构建器执行6号步骤。
+* 因为没有使用单例，所以必须让构建器执行6号步骤创建Task。
 * 
-* 因此没法进行跳过处理，只能通过 OnEvent 调用，延迟到下一帧执行。
+* 因此没法进行跳过处理，只能通过 OnEvent 调用，延迟到下一帧执行，无解。
 
 */
 
@@ -32,7 +32,6 @@ namespace WorldTree.Internal
     {
         public override void OnEvent(TreeTaskCompleted self, float deltaTime)
         {
-            World.Log($"[{self.Id}] 异步任务完成类SetCompleted!!!");
             self.SetCompleted();
         }
     }

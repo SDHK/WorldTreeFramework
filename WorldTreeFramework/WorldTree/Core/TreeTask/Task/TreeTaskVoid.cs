@@ -6,15 +6,21 @@
 
 * 描述： 空异步任务
 *  
-* 用于启动异步方法
+* 用于代替异步方法返回的 void
+* 并且告诉调用者，这是个不可等待的 "协程"。
+* 
+* 如果直接使用 void 会导致程序调用C#原生的Task。
+* 
+* 
 
 */
 
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using WorldTree.Internal;
 
-namespace WorldTree.Internal
+namespace WorldTree
 {
     /// <summary>
     /// 空异步任务
