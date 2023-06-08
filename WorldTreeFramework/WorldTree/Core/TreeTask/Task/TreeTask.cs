@@ -7,11 +7,9 @@
 * 
 */
 
-using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using WorldTree.Internal;
-using WorldTreeFramework;
 
 namespace WorldTree
 {

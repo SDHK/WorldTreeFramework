@@ -60,6 +60,7 @@ namespace WorldTree
             enable?.Send();
             update?.Send(Time.deltaTime);
             disable?.Send();
+
             //sw.Stop();
             //World.Log($"毫秒: {sw.ElapsedMilliseconds}");
 

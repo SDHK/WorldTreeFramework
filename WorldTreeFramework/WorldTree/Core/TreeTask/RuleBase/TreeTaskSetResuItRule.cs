@@ -1,7 +1,8 @@
 ﻿using WorldTree;
 
-namespace WorldTreeFramework
+namespace WorldTree
 {
+   
     /// <summary>
     /// 树任务设置结果法则接口
     /// </summary>

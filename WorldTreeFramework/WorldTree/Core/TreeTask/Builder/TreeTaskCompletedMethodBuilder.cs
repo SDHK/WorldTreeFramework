@@ -74,10 +74,12 @@ namespace WorldTree.Internal
             {
                 task = awaiter.Parent.AddChild(out task);
                 World.Log($"（{awaiter.Parent}）（{stateMachine.GetType()}） 新建 Completed [{task.Id}] => awaiter [{awaiter.Id}] 6. 等待不安全完成");
+                task.treeTaskController = awaiter.treeTaskController;
             }
             else
             {
                 World.Log($"（{awaiter.Parent}）（{stateMachine.GetType()}） 已经存在 Completed [{task.Id}] => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
+                awaiter.treeTaskController = task.treeTaskController;
             }
             awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
             World.Log($"Completed 6. 等待不安全完成2");

@@ -67,7 +67,7 @@ namespace WorldTree.Internal
             {
                 awaiter.Parent.AddChild(out task);
             }
-          
+
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
 
@@ -79,10 +79,13 @@ namespace WorldTree.Internal
             {
                 awaiter.Parent.AddChild(out task);
                 World.Log($"（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] =>  新建 Task [{task.Id}] 6. 等待不安全完成");
+                task.treeTaskController = awaiter.treeTaskController;
             }
             else
             {
                 World.Log($"（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
+                awaiter.treeTaskController = task.treeTaskController;
+
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
             World.Log($"Task 6. 等待不安全完成后");
@@ -168,11 +171,12 @@ namespace WorldTree.Internal
             {
                 awaiter.Parent.AddChild(out task);
                 World.Log($"（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] => 新建 Task<{typeof(T)}> [{task.Id}]  6. 等待不安全完成");
-
+                task.treeTaskController = awaiter.treeTaskController;
             }
             else
             {
                 World.Log($"（{stateMachine.GetType()}）已经存在 Task<{typeof(T)}> [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
+                awaiter.treeTaskController = task.treeTaskController;
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
             World.Log($"Task<{typeof(T)}> 6. 等待不安全完成2");

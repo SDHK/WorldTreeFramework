@@ -46,14 +46,26 @@ namespace WorldTree
             World.Log($"[{Id}] 任务完成 : {IsActive}");
 
             IsCompleted = true;
-            if (IsActive)
+            if (treeTaskController is null)
             {
                 continuation?.Invoke();
                 Dispose();
             }
             else
             {
-                this.AddComponent(out TreeTaskContinue _);
+                switch (treeTaskController.State)
+                {
+                    case TaskState.Running:
+                        continuation?.Invoke();
+                        Dispose();
+                        break;
+                    case TaskState.Stop:
+                        treeTaskController.stopTask = this;
+                        break;
+                    case TaskState.Cancel:
+                        Dispose();
+                        break;
+                }
             }
         }
 

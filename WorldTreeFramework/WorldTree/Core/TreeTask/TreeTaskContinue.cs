@@ -20,12 +20,12 @@ namespace WorldTree
     {
         public override void OnEvent(TreeTaskContinue self)
         {
-            if (self.TryParentTo(out TreeTaskBase Parent))
-            {
-                World.Log($"任务继续 ");
+            //if (self.TryParentTo(out TreeTaskBase Parent))
+            //{
+            //    World.Log($"任务继续 ");
 
-                Parent.Continue();
-            }
+                //Parent.Continue();
+            //}
         }
     }
 

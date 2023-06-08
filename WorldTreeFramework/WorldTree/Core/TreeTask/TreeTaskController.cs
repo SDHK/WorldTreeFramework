@@ -33,12 +33,50 @@ namespace WorldTree
     /// </summary>
     public class TreeTaskController : Node, ChildOf<INode>, ComponentOf<INode>
     {
-        public TreeTaskBase treeTaskBase;
+        /// <summary>
+        /// 任务状态
+        /// </summary>
+        private TaskState taskState;
+
+        /// <summary>
+        /// 暂停的任务
+        /// </summary>
+        public TreeTaskBase stopTask;
 
         /// <summary>
         /// 任务状态
         /// </summary>
-        public TaskState taskState;
+        public TaskState State { get => taskState; }
+
+        public override string ToString()
+        {
+            return $"TreeTaskController({stopTask?.Id})";
+        }
+
+
+        /// <summary>
+        /// 继续执行
+        /// </summary>
+        public void Continue()
+        {
+            taskState = TaskState.Running;
+            stopTask?.Continue();
+        }
+        /// <summary>
+        /// 暂停
+        /// </summary>
+        public void Stop()
+        {
+            taskState = TaskState.Stop;
+        }
+
+        /// <summary>
+        /// 取消
+        /// </summary>
+        public void Cancel()
+        {
+            taskState = TaskState.Cancel;
+        }
 
     }
 }
