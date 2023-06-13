@@ -75,20 +75,33 @@ namespace WorldTree.Internal
         [SecuritySafeCritical]
         public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
         {
+
             if (task == null)
             {
                 awaiter.Parent.AddChild(out task);
-                World.Log($"（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] =>  新建 Task [{task.Id}] 6. 等待不安全完成");
-                task.treeTaskController = awaiter.treeTaskController;
+                World.Log($"({awaiter.treeTaskToken != null})（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] =>  新建 Task [{task.Id}] 6. 等待不安全完成");
+
+                if (awaiter.treeTaskToken is null)
+                {
+                    awaiter.relevanceTask = task;
+                }
+                else
+                {
+                    task.treeTaskToken = awaiter.treeTaskToken;
+                }
             }
             else
             {
-                World.Log($"（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
-                awaiter.treeTaskController = task.treeTaskController;
+                World.Log($"({task.treeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => ({awaiter.treeTaskToken != null}) awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
+                awaiter.treeTaskToken = task.treeTaskToken;
 
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
+
+            
+
             World.Log($"Task 6. 等待不安全完成后");
+
         }
 
         // 7. Start
@@ -110,15 +123,15 @@ namespace WorldTree.Internal
 
 
 
-    public struct AsyncTaskMethodBuilder<T>
+    public struct TreeTaskMethodBuilder<T>
     {
         private TreeTask<T> task;
         // 1. Static Create method.
 
         [DebuggerHidden]
-        public static AsyncTaskMethodBuilder<T> Create()
+        public static TreeTaskMethodBuilder<T> Create()
         {
-            AsyncTaskMethodBuilder<T> builder = new AsyncTaskMethodBuilder<T>();
+            TreeTaskMethodBuilder<T> builder = new TreeTaskMethodBuilder<T>();
             World.Log($"Task<{typeof(T)}> ！！！！！！静态构建方法！！！！！！！");
             return builder;
         }
@@ -170,13 +183,20 @@ namespace WorldTree.Internal
             if (task == null)
             {
                 awaiter.Parent.AddChild(out task);
-                World.Log($"（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] => 新建 Task<{typeof(T)}> [{task.Id}]  6. 等待不安全完成");
-                task.treeTaskController = awaiter.treeTaskController;
+                World.Log($"({awaiter.treeTaskToken != null})（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] => 新建 Task<{typeof(T)}> [{task.Id}]  6. 等待不安全完成");
+                if (awaiter.treeTaskToken is null)
+                {
+                    awaiter.relevanceTask = task;
+                }
+                else
+                {
+                    task.treeTaskToken = awaiter.treeTaskToken;
+                }
             }
             else
             {
-                World.Log($"（{stateMachine.GetType()}）已经存在 Task<{typeof(T)}> [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
-                awaiter.treeTaskController = task.treeTaskController;
+                World.Log($"({task.treeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task<{typeof(T)}> [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
+                awaiter.treeTaskToken = task.treeTaskToken;
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
             World.Log($"Task<{typeof(T)}> 6. 等待不安全完成2");

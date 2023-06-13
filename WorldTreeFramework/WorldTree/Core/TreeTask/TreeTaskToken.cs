@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/6/5 16:01
 
-* 描述： 树任务控制器
+* 描述： 树任务令牌
 
 */
 
@@ -29,9 +29,9 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 树任务控制器
+    /// 树任务令牌
     /// </summary>
-    public class TreeTaskController : Node, ChildOf<INode>, ComponentOf<INode>
+    public class TreeTaskToken : Node, ChildOf<INode>, ComponentOf<INode>
     {
         /// <summary>
         /// 任务状态
@@ -44,6 +44,12 @@ namespace WorldTree
         public TreeTaskBase stopTask;
 
         /// <summary>
+        /// 任务的取消委托
+        /// </summary>
+        public RuleActuator<ISendRuleBase> cancels;
+
+
+        /// <summary>
         /// 任务状态
         /// </summary>
         public TaskState State { get => taskState; }
@@ -53,7 +59,6 @@ namespace WorldTree
             return $"TreeTaskController({stopTask?.Id})";
         }
 
-
         /// <summary>
         /// 继续执行
         /// </summary>
@@ -62,6 +67,7 @@ namespace WorldTree
             taskState = TaskState.Running;
             stopTask?.Continue();
         }
+
         /// <summary>
         /// 暂停
         /// </summary>
@@ -76,6 +82,7 @@ namespace WorldTree
         public void Cancel()
         {
             taskState = TaskState.Cancel;
+            cancels?.Send();
         }
 
     }

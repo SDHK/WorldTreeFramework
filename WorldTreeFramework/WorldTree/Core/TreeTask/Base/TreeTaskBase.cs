@@ -19,9 +19,16 @@ namespace WorldTree
     public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion, ChildOf<INode>
     {
         /// <summary>
-        /// 树任务控制器
+        /// 树任务令牌
         /// </summary>
-        public TreeTaskController treeTaskController;
+        public TreeTaskToken treeTaskToken;
+
+        /// <summary>
+        /// 关联令牌的任务
+        /// </summary>
+        public TreeTaskBase relevanceTask;
+
+
 
         /// <summary>
         /// 是否完成
@@ -46,21 +53,21 @@ namespace WorldTree
             World.Log($"[{Id}] 任务完成 : {IsActive}");
 
             IsCompleted = true;
-            if (treeTaskController is null)
+            if (treeTaskToken is null)
             {
                 continuation?.Invoke();
                 Dispose();
             }
             else
             {
-                switch (treeTaskController.State)
+                switch (treeTaskToken.State)
                 {
                     case TaskState.Running:
                         continuation?.Invoke();
                         Dispose();
                         break;
                     case TaskState.Stop:
-                        treeTaskController.stopTask = this;
+                        treeTaskToken.stopTask = this;
                         break;
                     case TaskState.Cancel:
                         Dispose();

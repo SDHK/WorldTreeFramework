@@ -80,7 +80,11 @@ namespace WorldTree
                 //self.AddChild(out self.valueFloat);
                 //self.AddChild(out self.valueInt);
                 //self.valueFloat.Bind(self.valueInt);
-                self.AddComponent(out TreeNode _).Test().Coroutine();
+
+
+
+
+                self.AddComponent(out TreeNode _).Test().Coroutine(new TreeTaskToken());
 
             }
         }

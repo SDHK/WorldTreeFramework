@@ -16,31 +16,35 @@ public class TreeNode : Node
     public static bool bit = true;
     public async TreeTask Test()
     {
+        TreeTaskToken token = await this.AddChild(out TreeTaskTokenCatch _);
+
+        switch (token.State)
+        {
+            case TaskState.Running:
+                break;
+            case TaskState.Stop:
+                break;
+            case TaskState.Cancel:
+                break;
+        }
+
+        World.Log($"Token1 ！{token != null}");
+
 
         World.Log("1！");
 
         await this.AsyncYield(3);
 
-
         await T2();
 
-        //World.Log("2！");
-        //await this.AsyncDelay(3);
-        //World.Log("3！");
-
-        //await this.AsyncDelay(3);
-
-        //World.Log("4！");
-        //await this.AsyncDelay(3);
-        //World.Log("5！");
-        //await this.AsyncDelay(3);
-        //World.Log("6！");
-        //await this.AsyncDelay(3);
-        //World.Log("7！");
     }
 
     public async TreeTask T2()
     {
+        TreeTaskToken token = await this.AddChild(out TreeTaskTokenCatch _);
+
+        World.Log($"Token2 ！{token != null}");
+
         World.Log("T2 1！");
 
         await this.AsyncYield(3);
@@ -75,7 +79,7 @@ public class TreeNode : Node
 
         World.Log(await T4());
 
-         T5().Coroutine();
+        await T5();
 
     }
 
@@ -91,7 +95,7 @@ public class TreeNode : Node
         return 10021;
     }
 
-    public async TreeTaskVoid T5()
+    public async TreeTask T5()
     {
         await this.TreeTaskCompleted();
     }

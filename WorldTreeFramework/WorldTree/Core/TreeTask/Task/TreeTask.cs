@@ -41,6 +41,15 @@ namespace WorldTree
         {
             InnerCoroutine().Coroutine();
         }
+        /// <summary>
+        /// 协程启动
+        /// </summary>
+        public void Coroutine(TreeTaskToken treeTaskToken)
+        {
+            this.treeTaskToken = treeTaskToken;
+            World.Log($"启动 id 【{this.Id}】");
+            InnerCoroutine().Coroutine();
+        }
     }
 
 
@@ -49,7 +58,7 @@ namespace WorldTree
     /// <summary>
     /// 泛型异步任务
     /// </summary>
-    [AsyncMethodBuilder(typeof(Internal.AsyncTaskMethodBuilder<>))]
+    [AsyncMethodBuilder(typeof(Internal.TreeTaskMethodBuilder<>))]
     public class TreeTask<T> : TreeTaskBase
         , AsRule<IAwakeRule>
         , AsRule<ITreeTaskSetResuItRule<T>>

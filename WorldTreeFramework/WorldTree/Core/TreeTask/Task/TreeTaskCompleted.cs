@@ -12,7 +12,6 @@
 
 */
 
-using System;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree.Internal
@@ -28,10 +27,12 @@ namespace WorldTree.Internal
         public void GetResult() { }
     }
 
-    class AsyncTaskCompletedUpdateRule : UpdateRule<TreeTaskCompleted>
+    class TreeTaskCompletedUpdateRule : UpdateRule<TreeTaskCompleted>
     {
         public override void OnEvent(TreeTaskCompleted self, float deltaTime)
         {
+            World.Log($"Completed [{self.Id}] 结束");
+
             self.SetCompleted();
         }
     }
