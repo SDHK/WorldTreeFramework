@@ -47,6 +47,7 @@ namespace WorldTree
         public void Coroutine(TreeTaskToken treeTaskToken)
         {
             this.treeTaskToken = treeTaskToken;
+            if (this.relevanceTask != null) this.relevanceTask.treeTaskToken = treeTaskToken;
             World.Log($"启动 id 【{this.Id}】");
             InnerCoroutine().Coroutine();
         }

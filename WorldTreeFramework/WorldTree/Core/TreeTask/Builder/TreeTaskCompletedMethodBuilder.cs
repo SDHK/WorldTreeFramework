@@ -73,21 +73,31 @@ namespace WorldTree.Internal
             if (task == null)
             {
                 task = awaiter.Parent.AddChild(out task);
-                World.Log($"({awaiter.treeTaskToken != null})（{awaiter.Parent}）（{stateMachine.GetType()}） 新建 Completed [{task.Id}] => awaiter [{awaiter.Id}] 6. 等待不安全完成");
 
                 if (awaiter.treeTaskToken is null)
                 {
-                    awaiter.relevanceTask = task;
+                    task.relevanceTask = awaiter;
                 }
                 else
                 {
                     task.treeTaskToken = awaiter.treeTaskToken;
                 }
+                World.Log($"({awaiter.treeTaskToken != null})（{awaiter.Parent}）（{stateMachine.GetType()}） 新建 Completed [{task.Id}] => awaiter [{awaiter.Id}] 6. 等待不安全完成");
             }
             else
             {
+                if (task.treeTaskToken != null)
+                {
+                    if (awaiter.treeTaskToken is null)
+                    {
+                        awaiter.treeTaskToken = task.treeTaskToken;
+                        if (awaiter.relevanceTask != null && awaiter.relevanceTask.treeTaskToken is null)
+                        {
+                            awaiter.relevanceTask.treeTaskToken = task.treeTaskToken;
+                        }
+                    }
+                }
                 World.Log($"({task.treeTaskToken != null})（{awaiter.Parent}）（{stateMachine.GetType()}） 已经存在 Completed [{task.Id}] => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
-                awaiter.treeTaskToken = task.treeTaskToken;
             }
             awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
             World.Log($"Completed 6. 等待不安全完成2");

@@ -8,6 +8,7 @@
 
 */
 
+using System.Runtime.CompilerServices;
 using WorldTree.Internal;
 
 namespace WorldTree
@@ -15,11 +16,12 @@ namespace WorldTree
     /// <summary>
     /// 树任务令牌捕获
     /// </summary>
+    [AsyncMethodBuilder(typeof(TreeTaskTokenCatchMethodBuilder))]
     public class TreeTaskTokenCatch : TreeTaskBase
     {
         public TreeTaskTokenCatch GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
-        public TreeTaskToken GetResult() { return treeTaskToken ?? relevanceTask.treeTaskToken; }
+        public TreeTaskToken GetResult() { return treeTaskToken; }
 
     }
 
