@@ -9,15 +9,15 @@
 */
 
 
-using UnityEngine;
-
 namespace WorldTree
 {
     /// <summary>
     /// 计数器
     /// </summary>
     public class CounterCall : Node, ComponentOf<INode>
+        , AsRule<ITreeTaskTokenEventRule>
     {
+        public bool isRun = false;
         public int count = 0;
         public int countOut = 0;
 
@@ -38,6 +38,7 @@ namespace WorldTree
         {
             public override void OnEvent(CounterCall self)
             {
+                self.isRun = true;
                 self.count = 0;
                 self.AddChild(out self.callback);
             }
@@ -47,7 +48,7 @@ namespace WorldTree
         {
             public override void OnEvent(CounterCall self, float deltaTime)
             {
-                if (self.IsActive)
+                if (self.IsActive && self.isRun)
                 {
                     self.count++;
                     if (self.count >= self.countOut)
@@ -63,7 +64,28 @@ namespace WorldTree
         {
             public override void OnEvent(CounterCall self)
             {
+                self.isRun = false;
                 self.callback = null;
+            }
+        }
+
+        class TreeTaskTokenEventRule : TreeTaskTokenEventRule<CounterCall, TaskState>
+        {
+            public override void OnEvent(CounterCall self, TaskState state)
+            {
+                switch (state)
+                {
+                    case TaskState.Running:
+                        self.isRun = true;
+                        break;
+                    case TaskState.Stop:
+                        self.isRun = false;
+                        break;
+                    case TaskState.Cancel:
+                        self.callback?.Send();
+                        self.Dispose();
+                        break;
+                }
             }
         }
 

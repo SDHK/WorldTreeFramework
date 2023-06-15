@@ -83,8 +83,8 @@ namespace WorldTree
 
 
 
-
-                self.AddComponent(out TreeNode _).Test().Coroutine(new TreeTaskToken());
+                self.AddChild(out TreeTaskToken treeTaskToken);
+                self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
             }
         }

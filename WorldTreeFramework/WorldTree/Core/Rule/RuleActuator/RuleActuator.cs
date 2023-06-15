@@ -18,13 +18,22 @@ namespace WorldTree
     {
         public override string ToString()
         {
-            return $"RuleActuator<{typeof(R)}>";
+            return $"RuleActuator<{typeof(R)}>:[{nodeDictionary?.Count}]";
         }
     }
 
 
     public static class RuleActuatorRule
     {
+        class RuleActuatorReferencedChildRemoveRule<R> : ReferencedChildRemoveRule<RuleActuator<R>>
+            where R : IRule
+        {
+            public override void OnEvent(RuleActuator<R> self, INode node)
+            {
+                self.Remove(node);
+            }
+        }
+
         /// <summary>
         /// 添加节点法则并建立引用关系
         /// </summary>

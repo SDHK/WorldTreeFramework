@@ -11,40 +11,40 @@ namespace WorldTree
 {
     public static class TimerAsyncExtension
     {
+        ///// <summary>
+        ///// 异步延迟帧
+        ///// </summary>
+        //public static TreeTask AsyncYield(this INode self, int count = 0)
+        //{
+        //    self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter);
+        //    counter.countOut = count;
+        //    counter.callback ??= counter.AddChild(out counter.callback);
+        //    counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
+
+        //    return asyncTask;
+        //}
+
         /// <summary>
         /// 异步延迟帧
         /// </summary>
-        public static TreeTask AsyncYield(this INode self, int count = 0)
-        {
-            self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter);
-            counter.countOut = count;
-            counter.callback ??= counter.AddChild(out counter.callback);
-            counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
-
-            return asyncTask;
-        }
-
-        /// <summary>
-        /// 异步延迟帧
-        /// </summary>
-        public static async TreeTask AsyncYield2Test(this INode self, int count = 0)
+        public static async TreeTask<bool> AsyncYield(this INode self, int count = 0)
         {
             //拿到令牌
-            TreeTaskToken token = await self.AddChild(out TreeTaskTokenCatch _);
-
+            TreeTaskToken token = await self.TreeTaskTokenCatch();
 
             self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter);
             counter.countOut = count;
             counter.callback ??= counter.AddChild(out counter.callback);
 
+            //组件的令牌事件
+            token.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
 
-            //比组件更块一步调用任务完成注册
-            token.cancels.Add(asyncTask, default(ITreeTaskSetResuItRule) );
-       
             //组件的任务完成回调注册
             counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
 
             await asyncTask;
+
+            return token.State == TaskState.Running;
         }
 
 

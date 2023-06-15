@@ -16,7 +16,7 @@ public class TreeNode : Node
     public static bool bit = true;
     public async TreeTask Test()
     {
-        TreeTaskToken token = await this.AddChild(out TreeTaskTokenCatch _);
+        TreeTaskToken token = await this.TreeTaskTokenCatch();
 
         switch (token.State)
         {
@@ -41,7 +41,7 @@ public class TreeNode : Node
 
     public async TreeTask T2()
     {
-        TreeTaskToken token = await this.AddChild(out TreeTaskTokenCatch _);
+        TreeTaskToken token = await this.TreeTaskTokenCatch();
 
         World.Log($"Token2 ！{token != null}");
 

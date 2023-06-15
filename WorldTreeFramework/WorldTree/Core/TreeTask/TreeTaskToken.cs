@@ -36,7 +36,7 @@ namespace WorldTree
         /// <summary>
         /// 任务状态
         /// </summary>
-        private TaskState taskState;
+        public TaskState taskState = TaskState.Running;
 
         /// <summary>
         /// 暂停的任务
@@ -44,9 +44,9 @@ namespace WorldTree
         public TreeTaskBase stopTask;
 
         /// <summary>
-        /// 任务的取消委托
+        /// 任务令牌事件
         /// </summary>
-        public RuleActuator<ISendRuleBase> cancels;
+        public RuleActuator<ITreeTaskTokenEventRule> tokenEvent;
 
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return $"TreeTaskController({stopTask?.Id})";
+            return $"TreeTaskToken({stopTask?.Id})";
         }
 
         /// <summary>
@@ -65,6 +65,7 @@ namespace WorldTree
         public void Continue()
         {
             taskState = TaskState.Running;
+            tokenEvent?.Send(taskState);
             stopTask?.Continue();
         }
 
@@ -74,6 +75,7 @@ namespace WorldTree
         public void Stop()
         {
             taskState = TaskState.Stop;
+            tokenEvent?.Send(taskState);
         }
 
         /// <summary>
@@ -82,8 +84,29 @@ namespace WorldTree
         public void Cancel()
         {
             taskState = TaskState.Cancel;
-            cancels?.Send();
+            tokenEvent?.Send(taskState);
         }
 
+    }
+
+    public static class TreeTaskTokenRule
+    {
+        class AddRule : AddRule<TreeTaskToken>
+        {
+            public override void OnEvent(TreeTaskToken self)
+            {
+                self.taskState = TaskState.Running;
+                self.AddChild(out self.tokenEvent);
+            }
+        }
+
+        class RemoveRule : RemoveRule<TreeTaskToken>
+        {
+            public override void OnEvent(TreeTaskToken self)
+            {
+                self.stopTask = null;
+                self.tokenEvent = null;
+            }
+        }
     }
 }
