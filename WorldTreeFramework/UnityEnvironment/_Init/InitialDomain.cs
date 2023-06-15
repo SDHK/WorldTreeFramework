@@ -83,8 +83,8 @@ namespace WorldTree
 
 
 
-                self.AddChild(out TreeTaskToken treeTaskToken);
-                self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
+                //self.AddComponent(out TreeTaskToken treeTaskToken);
+                //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
             }
         }
@@ -107,22 +107,26 @@ namespace WorldTree
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     //self.AddComponent(out TreeNode _);
-                    self.AddComponent(out TreeNode _).Test().Coroutine();
+                    self.AddComponent(out TreeTaskToken treeTaskToken);
+                    self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
                 }
 
                 if (Input.GetKeyDown(KeyCode.W))
                 {
-                    self.AddComponent(out TreeNode _).SetActive(false);
+                    self.AddComponent(out TreeTaskToken treeTaskToken).Stop();
+                    //self.AddComponent(out TreeNode _).SetActive(false);
                 }
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    self.AddComponent(out TreeNode _).SetActive(true);
+                    self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+                    //self.AddComponent(out TreeNode _).SetActive(true);
                 }
 
                 if (Input.GetKeyDown(KeyCode.R))
                 {
-                    self.RemoveComponent<TreeNode>();
+                    self.AddComponent(out TreeTaskToken treeTaskToken).Cancel();
+                    //self.RemoveComponent<TreeNode>();
                 }
             }
 

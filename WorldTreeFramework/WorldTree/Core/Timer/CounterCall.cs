@@ -15,7 +15,9 @@ namespace WorldTree
     /// 计数器
     /// </summary>
     public class CounterCall : Node, ComponentOf<INode>
+        , AsRule<IAwakeRule<int>>
         , AsRule<ITreeTaskTokenEventRule>
+
     {
         public bool isRun = false;
         public int count = 0;
@@ -34,16 +36,17 @@ namespace WorldTree
 
     public static class CounterCallRule
     {
-        class AddRule : AddRule<CounterCall>
+        class AwakeRule : AwakeRule<CounterCall, int>
         {
-            public override void OnEvent(CounterCall self)
+            public override void OnEvent(CounterCall self, int count)
             {
+                self.count = count;
+                self.countOut = count;
                 self.isRun = true;
-                self.count = 0;
                 self.AddChild(out self.callback);
             }
         }
-
+      
         class UpdateRule : UpdateRule<CounterCall>
         {
             public override void OnEvent(CounterCall self, float deltaTime)
@@ -69,7 +72,7 @@ namespace WorldTree
             }
         }
 
-        class TreeTaskTokenEventRule : TreeTaskTokenEventRule<CounterCall, TaskState>
+        class CounterCallTreeTaskTokenEventRule : TreeTaskTokenEventRule<CounterCall, TaskState>
         {
             public override void OnEvent(CounterCall self, TaskState state)
             {
