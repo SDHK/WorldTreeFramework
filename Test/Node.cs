@@ -47,15 +47,15 @@ public class TreeNode : Node
 
         World.Log("T2 1！");
 
-        await this.AsyncDelay(3);
+        if (await this.AsyncDelay(3)) return;
 
         World.Log("T2 2！");
 
-        await this.AsyncDelay(3);
+        if (await this.AsyncDelay(3)) return;
 
         World.Log("T2 3！");
 
-        await this.AsyncDelay(3);
+        if (await this.AsyncDelay(3)) return;
 
         World.Log("T2 4！");
 

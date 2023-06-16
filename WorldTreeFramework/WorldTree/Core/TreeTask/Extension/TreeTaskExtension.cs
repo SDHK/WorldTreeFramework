@@ -20,18 +20,17 @@ namespace WorldTree
         /// <summary>
         /// 延迟一帧
         /// </summary>
-        public static async TreeTaskCompleted TreeTaskCompleted(this INode self)
+        public static TreeTaskCompleted TreeTaskCompleted(this INode self)
         {
-            await self.AddChild(out TreeTaskCompleted _);
-
+            return self.AddChild(out TreeTaskCompleted _);
         }
 
         /// <summary>
-        /// 延迟一帧
+        /// 延迟一帧捕获令牌
         /// </summary>
-        public static async TreeTaskTokenCatch TreeTaskTokenCatch(this INode self)
+        public static TreeTaskTokenCatch TreeTaskTokenCatch(this INode self)
         {
-            await self.AddChild(out TreeTaskTokenCatch _);
+            return self.AddChild(out TreeTaskTokenCatch _);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace WorldTree
 
             await asyncTask;
 
-            return token.State == TaskState.Running;
+            return token.State == TaskState.Cancel;
         }
     }
 }

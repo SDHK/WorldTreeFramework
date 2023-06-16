@@ -59,13 +59,13 @@ namespace WorldTree
     /// 初始域
     /// </summary>
     public class InitialDomain : Node, ComponentOf<INode>
-        ,AsRule<IFixedUpdateRule>
-        ,AsRule<ILateUpdateRule>
+        , AsRule<IFixedUpdateRule>
+        , AsRule<ILateUpdateRule>
     {
         public TreeNode node;
         public TreeValue<float> valueFloat;
         public TreeValue<int> valueInt;
-        
+
     }
 
     public static class InitialDomainRule
@@ -77,6 +77,14 @@ namespace WorldTree
 
                 World.Log("初始域启动！！");
 
+                using (self.PoolGet(out UnitQueue<int> queue))
+                {
+
+                    World.Log("balabal！！");
+                }
+
+
+
                 //self.AddChild(out self.valueFloat);
                 //self.AddChild(out self.valueInt);
                 //self.valueFloat.Bind(self.valueInt);
@@ -87,6 +95,8 @@ namespace WorldTree
                 //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
             }
+
+      
         }
 
         class UpdateRule : UpdateRule<InitialDomain>
