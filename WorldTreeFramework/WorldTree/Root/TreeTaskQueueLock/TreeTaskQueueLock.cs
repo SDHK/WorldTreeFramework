@@ -22,6 +22,9 @@ namespace WorldTree
         }
     }
 
+
+    public class TreeTaskQueueLockRootAddRule : RootAddRule<TreeTaskQueueLock> { }
+
     /// <summary>
     /// 异步任务队列锁
     /// </summary>

@@ -21,12 +21,12 @@ namespace WorldTree
         /// <summary>
         /// 树任务令牌
         /// </summary>
-        public TreeTaskToken treeTaskToken;
+        public TreeTaskToken m_TreeTaskToken;
 
         /// <summary>
         /// 关联令牌的任务
         /// </summary>
-        public TreeTaskBase relevanceTask;
+        public TreeTaskBase m_RelevanceTask;
 
 
 
@@ -43,7 +43,7 @@ namespace WorldTree
         /// <summary>
         /// 延续
         /// </summary>
-        public Action continuation;
+        public Action m_Continuation;
 
         /// <summary>
         /// 设置完成
@@ -53,21 +53,21 @@ namespace WorldTree
             World.Log($"[{Id}] 任务完成 : {IsActive}");
 
             IsCompleted = true;
-            if (treeTaskToken is null)
+            if (m_TreeTaskToken is null)
             {
-                continuation?.Invoke();
+                m_Continuation?.Invoke();
                 Dispose();
             }
             else
             {
-                switch (treeTaskToken.State)
+                switch (m_TreeTaskToken.State)
                 {
                     case TaskState.Running:
-                        continuation?.Invoke();
+                        m_Continuation?.Invoke();
                         Dispose();
                         break;
                     case TaskState.Stop:
-                        treeTaskToken.stopTask = this;
+                        m_TreeTaskToken.stopTask = this;
                         break;
                     case TaskState.Cancel:
                         Dispose();
@@ -89,7 +89,7 @@ namespace WorldTree
         /// </summary>
         public void UnsafeOnCompleted(Action continuation)
         {
-            this.continuation = continuation;
+            this.m_Continuation = continuation;
         }
         /// <summary>
         /// 完成时
@@ -106,7 +106,7 @@ namespace WorldTree
         {
             if (IsCompleted)
             {
-                continuation?.Invoke();
+                m_Continuation?.Invoke();
                 Dispose();
             }
         }
@@ -117,10 +117,10 @@ namespace WorldTree
         public TreeTaskBase SetToken(TreeTaskToken treeTaskToken)
         {
             TreeTaskBase NowAwaiter = this;
-            while (NowAwaiter is not null && NowAwaiter.treeTaskToken is null)
+            while (NowAwaiter is not null && NowAwaiter.m_TreeTaskToken is null)
             {
-                NowAwaiter.treeTaskToken = treeTaskToken;
-                NowAwaiter = NowAwaiter.relevanceTask;
+                NowAwaiter.m_TreeTaskToken = treeTaskToken;
+                NowAwaiter = NowAwaiter.m_RelevanceTask;
             }
             return this;
         }
@@ -128,7 +128,7 @@ namespace WorldTree
         public override void OnDispose()
         {
             IsCompleted = false;
-            continuation = null;
+            m_Continuation = null;
 
             base.OnDispose();
         }
