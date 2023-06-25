@@ -7,8 +7,6 @@
 
 */
 
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
-
 namespace WorldTree
 {
     public static class TimerAsyncExtension
@@ -23,7 +21,7 @@ namespace WorldTree
 
             self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter, count);
 
-            if (token != null)
+            if (token != null)//令牌是否为空
             {
                 //组件的令牌事件
                 token.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
@@ -51,7 +49,7 @@ namespace WorldTree
             //组件的任务完成回调注册
             counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
 
-            if (token != null)
+            if (token != null)//令牌是否为空
             {
                 //组件的令牌事件
                 token.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
