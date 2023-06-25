@@ -9,6 +9,7 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using SharpCompress.Writers;
 using WorldTree.Internal;
 
 namespace WorldTree
@@ -46,9 +47,10 @@ namespace WorldTree
         /// </summary>
         public void Coroutine(TreeTaskToken treeTaskToken)
         {
-            this.treeTaskToken = treeTaskToken;
-            if (this.relevanceTask != null) this.relevanceTask.treeTaskToken = treeTaskToken;
+            this.SetToken(treeTaskToken);
+          
             World.Log($"启动 id 【{this.Id}】");
+
             InnerCoroutine().Coroutine();
         }
     }

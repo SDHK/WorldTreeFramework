@@ -111,6 +111,20 @@ namespace WorldTree
             }
         }
 
+        /// <summary>
+        /// 设置并传递令牌
+        /// </summary>
+        public TreeTaskBase SetToken(TreeTaskToken treeTaskToken)
+        {
+            TreeTaskBase NowAwaiter = this;
+            while (NowAwaiter is not null && NowAwaiter.treeTaskToken is null)
+            {
+                NowAwaiter.treeTaskToken = treeTaskToken;
+                NowAwaiter = NowAwaiter.relevanceTask;
+            }
+            return this;
+        }
+
         public override void OnDispose()
         {
             IsCompleted = false;

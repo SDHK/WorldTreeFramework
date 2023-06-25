@@ -7,23 +7,12 @@
 
 */
 
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+
 namespace WorldTree
 {
     public static class TimerAsyncExtension
     {
-        ///// <summary>
-        ///// 异步延迟帧
-        ///// </summary>
-        //public static TreeTask AsyncYield(this INode self, int count = 0)
-        //{
-        //    self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter);
-        //    counter.countOut = count;
-        //    counter.callback ??= counter.AddChild(out counter.callback);
-        //    counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
-
-        //    return asyncTask;
-        //}
-
         /// <summary>
         /// 异步延迟帧
         /// </summary>
@@ -34,29 +23,19 @@ namespace WorldTree
 
             self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter, count);
 
-            //组件的令牌事件
-            token.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
-
-            //组件的任务完成回调注册
-            counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
-
-            await asyncTask;
-
-            return token.State == TaskState.Running;
+            if (token != null)
+            {
+                //组件的令牌事件
+                token.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
+                await asyncTask;
+                return token.State == TaskState.Cancel;
+            }
+            else
+            {
+                await asyncTask;
+                return false;
+            }
         }
-
-
-
-        ///// <summary>
-        ///// 异步延迟秒
-        ///// </summary>
-        //public static TreeTask AsyncDelay(this INode self, float time)
-        //{
-        //    self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall timer, time);
-        //    timer.callback ??= timer.AddChild(out timer.callback);
-        //    timer.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
-        //    return asyncTask;
-        //}
 
 
         /// <summary>
@@ -64,20 +43,26 @@ namespace WorldTree
         /// </summary>
         public static async TreeTask<bool> AsyncDelay(this INode self, float time)
         {
+
             //拿到令牌
             TreeTaskToken token = await self.TreeTaskTokenCatch();
 
             self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall counter, time);
-
-            //组件的令牌事件
-            token.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
-
             //组件的任务完成回调注册
             counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
 
-            await asyncTask;
-
-            return token.State == TaskState.Cancel;
+            if (token != null)
+            {
+                //组件的令牌事件
+                token.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
+                await asyncTask;
+                return token.State == TaskState.Cancel;
+            }
+            else
+            {
+                await asyncTask;
+                return false;
+            }
         }
     }
 }

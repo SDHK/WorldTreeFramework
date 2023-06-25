@@ -9,13 +9,9 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WorldTree.Internal
 {
@@ -93,14 +89,7 @@ namespace WorldTree.Internal
             {
                 if (task.treeTaskToken != null)
                 {
-                    if (awaiter.treeTaskToken is null)
-                    {
-                        awaiter.treeTaskToken = task.treeTaskToken;
-                        if (awaiter.relevanceTask != null && awaiter.relevanceTask.treeTaskToken is null)
-                        {
-                            awaiter.relevanceTask.treeTaskToken = task.treeTaskToken;
-                        }
-                    }
+                    awaiter.SetToken(task.treeTaskToken);
                 }
                 World.Log($"({task.treeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => ({awaiter.treeTaskToken != null}) awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
             }

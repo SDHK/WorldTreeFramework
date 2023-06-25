@@ -65,6 +65,7 @@ namespace WorldTree
         public TreeNode node;
         public TreeValue<float> valueFloat;
         public TreeValue<int> valueInt;
+        public int int1;
 
     }
 
@@ -72,17 +73,10 @@ namespace WorldTree
     {
         class AddRule : AddRule<InitialDomain>
         {
-            public override void OnEvent(InitialDomain self)
+            public override async void OnEvent(InitialDomain self)
             {
 
                 World.Log("初始域启动！！");
-
-                using (self.PoolGet(out UnitQueue<int> queue))
-                {
-
-                    World.Log("balabal！！");
-                }
-
 
 
                 //self.AddChild(out self.valueFloat);
@@ -94,9 +88,13 @@ namespace WorldTree
                 //self.AddComponent(out TreeTaskToken treeTaskToken);
                 //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
+
+
+
+
             }
 
-      
+
         }
 
         class UpdateRule : UpdateRule<InitialDomain>
@@ -105,8 +103,9 @@ namespace WorldTree
             {
                 if (Input.GetKeyDown(KeyCode.A))
                 {
-                    self.valueFloat.Value += 1.5f;
-                    World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
+                    self.Test().Coroutine();
+                    //self.valueFloat.Value += 1.5f;
+                    //World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
                 }
                 if (Input.GetKeyDown(KeyCode.S))
                 {
@@ -116,7 +115,6 @@ namespace WorldTree
                 }
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    //self.AddComponent(out TreeNode _);
                     self.AddComponent(out TreeTaskToken treeTaskToken);
                     self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
                 }
@@ -124,24 +122,31 @@ namespace WorldTree
                 if (Input.GetKeyDown(KeyCode.W))
                 {
                     self.AddComponent(out TreeTaskToken treeTaskToken).Stop();
-                    //self.AddComponent(out TreeNode _).SetActive(false);
                 }
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-                    //self.AddComponent(out TreeNode _).SetActive(true);
                 }
 
                 if (Input.GetKeyDown(KeyCode.R))
                 {
                     self.AddComponent(out TreeTaskToken treeTaskToken).Cancel();
-                    //self.RemoveComponent<TreeNode>();
                 }
             }
 
-
         }
     }
-
+    public static class ITest
+    {
+        public static async TreeTask Test(this InitialDomain self)
+        {
+            using (await self.AsyncLock(self.Id))
+            {
+                await self.AsyncDelay(10);
+                self.int1 += 1;
+                World.Log($"C {self.int1} ");
+            }
+        }
+    }
 }

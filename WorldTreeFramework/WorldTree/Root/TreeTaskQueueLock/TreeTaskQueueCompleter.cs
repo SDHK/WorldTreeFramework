@@ -21,10 +21,10 @@ namespace WorldTree
 
     public class TreeTaskQueueCompleterAwakeRule : AwakeRule<TreeTaskQueueCompleter, long, TreeTaskQueueLock>
     {
-        public override void OnEvent(TreeTaskQueueCompleter self, long arg1, TreeTaskQueueLock arg2)
+        public override void OnEvent(TreeTaskQueueCompleter self, long key, TreeTaskQueueLock queueLock)
         {
-            self.key = arg1;
-            self.m_QueueLock = arg2;
+            self.key = key;
+            self.m_QueueLock = queueLock;
         }
     }
 

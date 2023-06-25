@@ -12,7 +12,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security;
-
+using Unity.VisualScripting;
 
 namespace WorldTree.Internal
 {
@@ -95,14 +95,7 @@ namespace WorldTree.Internal
 
                 if (task.treeTaskToken != null)
                 {
-                    if (awaiter.treeTaskToken is null)
-                    {
-                        awaiter.treeTaskToken = task.treeTaskToken;
-                        if (awaiter.relevanceTask != null && awaiter.relevanceTask.treeTaskToken is null)
-                        {
-                            awaiter.relevanceTask.treeTaskToken = task.treeTaskToken;
-                        }
-                    }
+                    awaiter.SetToken(task.treeTaskToken);
                 }
                 World.Log($"({task.treeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => ({awaiter.treeTaskToken != null}) awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
 
@@ -208,14 +201,7 @@ namespace WorldTree.Internal
             {
                 if (task.treeTaskToken != null)
                 {
-                    if (awaiter.treeTaskToken is null)
-                    {
-                        awaiter.treeTaskToken = task.treeTaskToken;
-                        if (awaiter.relevanceTask != null && awaiter.relevanceTask.treeTaskToken is null)
-                        {
-                            awaiter.relevanceTask.treeTaskToken = task.treeTaskToken;
-                        }
-                    }
+                    awaiter.SetToken(task.treeTaskToken);
                 }
                 World.Log($"({task.treeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task<{typeof(T)}> [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
             }
