@@ -17,7 +17,7 @@ namespace WorldTree
     /// </summary>
     public class DynamicNodeListenerGroup : Node, ComponentOf<NodePool>
     {
-        public TreeDictionary<Type, RuleActuatorBase> actuatorDictionary;
+        public TreeDictionary<Type, ListenerRuleActuator> actuatorDictionary;
 
 
     }
