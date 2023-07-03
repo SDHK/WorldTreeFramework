@@ -144,7 +144,7 @@ namespace WorldTree
         }
     }
 
-    class NodePoolRemoveRule : RemoveRule<NodePool>
+    class NodePoolDestroyRule : DestroyRule<NodePool>
     {
         public override void OnEvent(NodePool self)
         {

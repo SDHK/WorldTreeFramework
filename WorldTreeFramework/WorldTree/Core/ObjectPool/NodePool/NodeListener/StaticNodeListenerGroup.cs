@@ -17,46 +17,172 @@ namespace WorldTree
     /// </summary>
     public class StaticNodeListenerGroup : Node, ComponentOf<NodePool>
     {
-        public TreeDictionary<Type, RuleActuatorBase> actuatorDictionary;
+        /// <summary>
+        /// 监听器执行器字典集合
+        /// </summary>
+        public TreeDictionary<Type, ListenerRuleActuator> actuatorDictionary;
 
     }
 
 
     public static class StaticNodeListenerGroupRule
     {
-        public static void TrySendStaticNodeListener(this INode node)
+
+        class AddRule : AddRule<StaticNodeListenerGroup>
+        {
+            public override void OnEvent(StaticNodeListenerGroup self)
+            {
+                self.AddComponent(out self.actuatorDictionary);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 获取以实体类型为目标的 监听系统执行器
+        /// </summary>
+        public static void SendStaticNodeListener<R>(this INode node)
+            where R : IListenerRule
         {
             if (node.Core.NodePoolManager != null)
                 if (node.Core.NodePoolManager.TryGetPool(node.Type, out NodePool nodePool))
                 {
-                    nodePool.AddComponent(out StaticNodeListenerGroup staticNodeListenerGroup);
-                    //staticNodeListenerGroup
-
+                    if (nodePool.AddComponent(out StaticNodeListenerGroup _).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
+                    {
+                        actuator.Send(node);
+                    }
                 }
-
         }
 
 
-        public static bool TryAddRuleActuator<R>(this StaticNodeListenerGroup self, Type Target, out IRuleActuator<R> actuator)
+        #region 判断添加监听执行器
+
+
+
+        /// <summary>
+        /// 添加静态监听执行器,并自动填装监听器
+        /// </summary>
+        public static bool TryAddRuleActuator<R>(this StaticNodeListenerGroup self, Type target, out IRuleActuator<R> actuator)
             where R : IListenerRule
         {
             Type ruleType = typeof(R);
 
-
-            if (self.actuatorDictionary.TryGetValue(ruleType, out RuleActuatorBase ruleActuator))
+            //执行器已存在，直接返回
+            if (self.actuatorDictionary.TryGetValue(ruleType, out ListenerRuleActuator ruleActuator))
             {
                 actuator = ruleActuator as IRuleActuator<R>; return true;
             }
-            else if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, Target, out var ruleGroup))
+            //执行器不存在，检测获取目标法则集合，并新建执行器
+            else if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, target, out var ruleGroup))
             {
-
+                self.actuatorDictionary.Add(ruleType, self.AddChild(out ruleActuator, ruleGroup));
+                self.RuleActuatorAddListener(ruleActuator);
+                actuator = ruleActuator as IRuleActuator<R>;
+                return true;
             }
 
-
-
+            //监听目标法则不存在
             actuator = default;
             return false;
         }
+
+        /// <summary>
+        /// 执行器填装监听器
+        /// </summary>
+        private static void RuleActuatorAddListener(this StaticNodeListenerGroup self, ListenerRuleActuator actuator)
+        {
+            //遍历法则集合获取监听器类型
+            foreach (var listenerType in actuator.ruleGroup)
+            {
+                //从池里拿到已存在的监听器
+                if (self.Core.NodePoolManager.m_Pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
+                {
+                    //全部注入到执行器
+                    foreach (var listener in listenerPool.Nodes)
+                    {
+                        actuator.TryAdd(listener.Value);
+                    }
+                }
+            }
+        }
+        #endregion
+
+
+        #region 判断添加监听器
+
+        /// <summary>
+        /// 尝试添加监听器监听目标池
+        /// </summary>
+        /// <remarks>只在目标池存在时有效</remarks>
+        public static void TryAddStaticListener(this NodePoolManager self, INodeListener listener)
+        {
+            //判断是否为监听器
+            if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+            {
+                foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
+                {
+                    //判断监听法则集合 是否有这个 监听器节点类型
+                    if (ruleGroup.Value.ContainsKey(listener.Type))
+                    {
+                        foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
+                        {
+                            //是否有这个目标池
+                            if (self.TryGetPool(ruleList.Key, out NodePool nodePool))
+                            {
+                                //是否有静态监听器组件
+                                if (nodePool.TryGetComponent(out StaticNodeListenerGroup staticNodeListenerGroup))
+                                {
+                                    //是否有这个监听类型的执行器
+                                    if (staticNodeListenerGroup.actuatorDictionary.TryGetValue(ruleGroup.Key, out var listenerRuleActuator))
+                                    {
+                                        listenerRuleActuator.TryAdd(listener);//监听器添加到执行器
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 移除这个监听器
+        /// </summary>
+        /// <remarks>只在目标池存在时有效</remarks>
+        public static void RemoveStaticListener(this NodePoolManager self, INodeListener listener)
+        {
+            //判断是否为监听器
+            if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+            {
+                foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
+                {
+                    //判断监听法则集合 是否有这个 监听器节点类型
+                    if (ruleGroup.Value.ContainsKey(listener.Type))
+                    {
+                        foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
+                        {
+                            //是否有这个目标池
+                            if (self.TryGetPool(ruleList.Key, out NodePool nodePool))
+                            {
+                                //是否有静态监听器组件
+                                if (nodePool.TryGetComponent(out StaticNodeListenerGroup staticNodeListenerGroup))
+                                {
+                                    //是否有这个监听类型的执行器
+                                    if (staticNodeListenerGroup.actuatorDictionary.TryGetValue(ruleGroup.Key, out var listenerRuleActuator))
+                                    {
+                                        listenerRuleActuator.Remove(listener);//执行器移除监听器
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        #endregion
+
 
 
 

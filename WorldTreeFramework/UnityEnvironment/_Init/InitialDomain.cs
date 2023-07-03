@@ -34,22 +34,19 @@ namespace WorldTree
     //    }
     //}
 
-    //public class NodeListenerAddRule : ListenerAddRule<Node>
+    public class NodeListenerAddRule : ListenerAddRule<InitialDomain>
+    {
+        public override void OnEvent(InitialDomain self, INode node)
+        {
+            World.Log($"NodeListenerAdd: {node.Id} _  {node.Type} ");
+        }
+    }
+
+    //public class NodeListenerInitialDomainAddRule : ListenerAddRule<InitialDomain, TreeNode, IRule>
     //{
-    //    public override void OnEvent(Node self, INode node)
+    //    public override void OnEvent(InitialDomain self, TreeNode node)
     //    {
-    //        World.Log($"NodeListenerAdd: {self.Id} _  {self.Type} ");
-
-    //    }
-    //}
-
-    //public class NodeListenerInitialDomainAddRule : ListenerAddRule<Node, InitialDomain, IRule>
-    //{
-
-    //    public override void OnEvent(Node self, InitialDomain node)
-    //    {
-    //        World.Log($"NodeListenerInitialDomainAdd: {self.Id} _  {self.Type} ");
-
+    //        World.Log($"NodeListener InitialDomain Add: {self.Id} _  {self.Type} ");
     //    }
     //}
 
@@ -58,7 +55,7 @@ namespace WorldTree
     /// <summary>
     /// 初始域
     /// </summary>
-    public class InitialDomain : Node, ComponentOf<INode>
+    public class InitialDomain : NodeListener, ComponentOf<INode>
         , AsRule<IFixedUpdateRule>
         , AsRule<ILateUpdateRule>
     {
@@ -73,11 +70,11 @@ namespace WorldTree
     {
         class AddRule : AddRule<InitialDomain>
         {
-            public override async void OnEvent(InitialDomain self)
+            public override  void OnEvent(InitialDomain self)
             {
 
                 World.Log("初始域启动！！");
-
+                self.ListenerSwitchesEntity<INode>();
 
                 //self.AddChild(out self.valueFloat);
                 //self.AddChild(out self.valueInt);
@@ -89,6 +86,7 @@ namespace WorldTree
                 //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
 
+                self.AddComponent(out TreeNode _);
 
 
 

@@ -20,7 +20,7 @@ namespace WorldTree
     //剩余
     //异常处理？
     //TreeTween
-    //TreeTask设计问题
+    //引用池,必须和对象池分开
 
     /// <summary>
     /// 世界树核心
@@ -62,14 +62,14 @@ namespace WorldTree
         /// 数组对象池管理器
         /// </summary>
         public ArrayPoolManager ArrayPoolManager;
-        /// <summary>
-        /// 静态监听器法则执行器管理器
-        /// </summary>
-        public StaticListenerRuleActuatorManager StaticListenerRuleActuatorManager;
-        /// <summary>
-        /// 动态监听器法则执行器管理器
-        /// </summary>
-        public DynamicListenerRuleActuatorManager DynamicListenerRuleActuatorManager;
+        ///// <summary>
+        ///// 静态监听器法则执行器管理器
+        ///// </summary>
+        //public StaticListenerRuleActuatorManager StaticListenerRuleActuatorManager;
+        ///// <summary>
+        ///// 动态监听器法则执行器管理器
+        ///// </summary>
+        //public DynamicListenerRuleActuatorManager DynamicListenerRuleActuatorManager;
 
         public WorldTreeCore()
         {
@@ -134,9 +134,9 @@ namespace WorldTree
             self.NodePoolManager = self.AddComponent(out NodePoolManager _);
             self.AddComponent(out self.ArrayPoolManager);
 
-            //监听器组件
-            self.AddComponent(out self.StaticListenerRuleActuatorManager);
-            self.AddComponent(out self.DynamicListenerRuleActuatorManager);
+            ////监听器组件
+            //self.AddComponent(out self.StaticListenerRuleActuatorManager);
+            //self.AddComponent(out self.DynamicListenerRuleActuatorManager);
 
 
             //树根节点
@@ -172,8 +172,8 @@ namespace WorldTree
             self.UnitPoolManager = default;
             self.NodePoolManager = default;
             self.ArrayPoolManager = default;
-            self.StaticListenerRuleActuatorManager = default;
-            self.DynamicListenerRuleActuatorManager = default;
+            //self.StaticListenerRuleActuatorManager = default;
+            //self.DynamicListenerRuleActuatorManager = default;
 
         }
         #endregion
@@ -335,8 +335,8 @@ namespace WorldTree
             //广播给全部监听器!!!!
             if (node.Branch.Id != self.Id)
             {
-                node.TrySendStaticListener<IListenerAddRule>();
-                node.TrySendDynamicListener<IListenerAddRule>();
+                node.SendStaticNodeListener<IListenerAddRule>();
+                node.SendDynamicNodeListener<IListenerAddRule>();
             }
 
             self.AllNode.TryAdd(node.Id, node);
@@ -349,7 +349,8 @@ namespace WorldTree
             {
                 INodeListener nodeListener = (node as INodeListener);
                 //检测添加静态监听
-                self.StaticListenerRuleActuatorManager.TryAddListener(nodeListener);
+                //self.StaticListenerRuleActuatorManager.TryAddListener(nodeListener);
+                self.NodePoolManager.TryAddStaticListener(nodeListener);
             }
         }
 
@@ -372,9 +373,14 @@ namespace WorldTree
                 INodeListener nodeListener = (node as INodeListener);
 
                 //检测移除静态监听
-                self.StaticListenerRuleActuatorManager.RemoveListener(nodeListener);
+                self.NodePoolManager.RemoveStaticListener(nodeListener);
                 //检测移除动态监听
-                nodeListener.ListenerClearTarget();
+                self.NodePoolManager.RemoveDynamicListener(nodeListener);
+
+                ////检测移除静态监听
+                //self.StaticListenerRuleActuatorManager.RemoveListener(nodeListener);
+                //检测移除动态监听
+                //nodeListener.ListenerClearTarget();
             }
 
             //这个节点的移除事件
@@ -385,10 +391,9 @@ namespace WorldTree
             if (node.Branch.Id != self.Id)
             {
                 //检测移除静态监听
-                node.TrySendStaticListener<IListenerRemoveRule>();
-
+                node.SendStaticNodeListener<IListenerRemoveRule>();
                 //检测移除动态监听
-                node.TrySendDynamicListener<IListenerRemoveRule>();
+                node.SendDynamicNodeListener<IListenerRemoveRule>();
             }
 
             self.AllNode.Remove(node.Id);

@@ -249,29 +249,29 @@ namespace WorldTree
         public static bool TryAddRuleActuator<R>(this DynamicListenerRuleActuatorManager self, Type Target, out ListenerRuleActuator actuator)
         where R : IListenerRule
         {
-            Type RuleType = typeof(R);
+            Type ruleType = typeof(R);
 
 
             //判断是否有组
             if (self.TryGetGroup(Target, out var group))
             {
                 //判断是否有执行器
-                if (group.TryGetRuleActuator(RuleType, out actuator)) { return true; }
+                if (group.TryGetRuleActuator(ruleType, out actuator)) { return true; }
 
                 //没有执行器 则判断这个系统类型是否有动态类型监听法则集合
-                else if (self.Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
+                else if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, typeof(INode), out var ruleGroup))
                 {
                     //新建执行器
-                    actuator = group.GetRuleActuator(RuleType, ruleGroup);
+                    actuator = group.GetRuleActuator(ruleType, ruleGroup);
                     self.RuleActuatorAddListener(actuator, Target);
                     return true;
                 }
             }
-            else if (self.Core.RuleManager.TryGetTargetRuleGroup(RuleType, typeof(INode), out var ruleGroup))
+            else if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, typeof(INode), out var ruleGroup))
             {
 
                 //新建组和执行器
-                actuator = self.GetGroup(Target).GetRuleActuator(RuleType, ruleGroup);
+                actuator = self.GetGroup(Target).GetRuleActuator(ruleType, ruleGroup);
                 self.RuleActuatorAddListener(actuator, Target);
                 return true;
             }

@@ -9,7 +9,6 @@
 */
 
 using System;
-using UnityEditor.Experimental.GraphView;
 
 namespace WorldTree
 {
@@ -25,12 +24,12 @@ namespace WorldTree
         public static bool TrySendStaticListener<R>(this INode node)
             where R : IListenerRule
         {
-            if (node.Core.StaticListenerRuleActuatorManager != null)
-                if (node.Core.StaticListenerRuleActuatorManager.TryAddRuleActuator<R>(node.Type, out var actuator))
-                {
-                    ((IRuleActuator<R>)actuator).Send(node);
-                    return true;
-                }
+            //if (node.Core.StaticListenerRuleActuatorManager != null)
+            //    if (node.Core.StaticListenerRuleActuatorManager.TryAddRuleActuator<R>(node.Type, out var actuator))
+            //    {
+            //        ((IRuleActuator<R>)actuator).Send(node);
+            //        return true;
+            //    }
 
             return false;
         }
@@ -45,12 +44,12 @@ namespace WorldTree
         public static bool TrySendDynamicListener<R>(this INode node)
             where R : IListenerRule
         {
-            if (node.Core.DynamicListenerRuleActuatorManager != null)
-                if (node.Core.DynamicListenerRuleActuatorManager.TryAddRuleActuator<R>(node.Type, out var actuator))
-                {
-                    ((IRuleActuator<R>)actuator).Send(node);
-                    return true;
-                }
+            //if (node.Core.DynamicListenerRuleActuatorManager != null)
+            //    if (node.Core.DynamicListenerRuleActuatorManager.TryAddRuleActuator<R>(node.Type, out var actuator))
+            //    {
+            //        ((IRuleActuator<R>)actuator).Send(node);
+            //        return true;
+            //    }
             return false;
         }
     }

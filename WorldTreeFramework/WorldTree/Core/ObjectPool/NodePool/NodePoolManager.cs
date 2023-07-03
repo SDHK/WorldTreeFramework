@@ -90,6 +90,11 @@ namespace WorldTree
                     return true;
 
                 }
+                else if (obj is NodePool pool)
+                {
+                    self.m_Pools.Remove(pool.ObjectType);
+                    return false;
+                }
             return false;
         }
 
