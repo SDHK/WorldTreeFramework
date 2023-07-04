@@ -36,9 +36,9 @@ namespace WorldTree
             {
                 foreach (var item in self.ruleGroup)
                 {
-                    if (self.Core.NodePoolManager.m_Pools.TryGetValue(item.Key, out NodePool pool))
+                    if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
                     {
-                        foreach (var node in pool.Nodes)
+                        foreach (var node in pool)
                         {
                             self.TryAdd(node.Value);
                         }

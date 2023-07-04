@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 静态节点监听器集合
     /// </summary>
-    public class StaticNodeListenerGroup : Node, ComponentOf<NodePool>
+    public class StaticNodeListenerGroup : Node, ComponentOf<ReferencedPool>
     {
         /// <summary>
         /// 监听器执行器字典集合
@@ -44,8 +44,8 @@ namespace WorldTree
         public static void SendStaticNodeListener<R>(this INode node)
             where R : IListenerRule
         {
-            if (node.Core.NodePoolManager != null)
-                if (node.Core.NodePoolManager.TryGetPool(node.Type, out NodePool nodePool))
+            if (node.Core.ReferencedPoolManager != null)
+                if (node.Core.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool))
                 {
                     if (nodePool.AddComponent(out StaticNodeListenerGroup _).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
                     {
@@ -95,10 +95,10 @@ namespace WorldTree
             foreach (var listenerType in actuator.ruleGroup)
             {
                 //从池里拿到已存在的监听器
-                if (self.Core.NodePoolManager.m_Pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
+                if (self.Core.ReferencedPoolManager.TryGetPool(listenerType.Key, out ReferencedPool listenerPool))
                 {
                     //全部注入到执行器
-                    foreach (var listener in listenerPool.Nodes)
+                    foreach (var listener in listenerPool)
                     {
                         actuator.TryAdd(listener.Value);
                     }
@@ -114,7 +114,7 @@ namespace WorldTree
         /// 尝试添加监听器监听目标池
         /// </summary>
         /// <remarks>只在目标池存在时有效</remarks>
-        public static void TryAddStaticListener(this NodePoolManager self, INodeListener listener)
+        public static void TryAddStaticListener(this ReferencedPoolManager self, INodeListener listener)
         {
             //判断是否为监听器
             if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
@@ -127,7 +127,7 @@ namespace WorldTree
                         foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
                         {
                             //是否有这个目标池
-                            if (self.TryGetPool(ruleList.Key, out NodePool nodePool))
+                            if (self.TryGetPool(ruleList.Key, out ReferencedPool nodePool))
                             {
                                 //是否有静态监听器组件
                                 if (nodePool.TryGetComponent(out StaticNodeListenerGroup staticNodeListenerGroup))
@@ -149,7 +149,7 @@ namespace WorldTree
         /// 移除这个监听器
         /// </summary>
         /// <remarks>只在目标池存在时有效</remarks>
-        public static void RemoveStaticListener(this NodePoolManager self, INodeListener listener)
+        public static void RemoveStaticListener(this ReferencedPoolManager self, INodeListener listener)
         {
             //判断是否为监听器
             if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
@@ -162,7 +162,7 @@ namespace WorldTree
                         foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
                         {
                             //是否有这个目标池
-                            if (self.TryGetPool(ruleList.Key, out NodePool nodePool))
+                            if (self.TryGetPool(ruleList.Key, out ReferencedPool nodePool))
                             {
                                 //是否有静态监听器组件
                                 if (nodePool.TryGetComponent(out StaticNodeListenerGroup staticNodeListenerGroup))

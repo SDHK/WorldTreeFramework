@@ -25,11 +25,11 @@ namespace WorldTree
                 if (self.Core.RuleManager.DynamicListenerTypeHash.Contains(self.Type))
                 {
                     //self.Core.DynamicListenerRuleActuatorManager.ListenerRemove(self);
-                    self.Core.NodePoolManager.RemoveDynamicListener(self);
+                    self.Core.ReferencedPoolManager.RemoveDynamicListener(self);
                     self.listenerTarget = targetType;
                     self.listenerState = state;
                     //self.Core.DynamicListenerRuleActuatorManager.ListenerAdd(self);
-                    self.Core.NodePoolManager.TryAddDynamicListener(self);
+                    self.Core.ReferencedPoolManager.TryAddDynamicListener(self);
                     return true;
                 }
             }
@@ -63,7 +63,7 @@ namespace WorldTree
         public static void ListenerClearTarget(this INodeListener self)
         {
             //self.Core.DynamicListenerRuleActuatorManager.ListenerRemove(self); 
-            self.Core.NodePoolManager.RemoveDynamicListener(self);
+            self.Core.ReferencedPoolManager.RemoveDynamicListener(self);
             //self.listenerTarget = null;
             //self.listenerState = ListenerState.Not;
         }

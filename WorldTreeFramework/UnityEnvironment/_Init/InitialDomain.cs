@@ -130,6 +130,7 @@ namespace WorldTree
                 if (Input.GetKeyDown(KeyCode.R))
                 {
                     self.AddComponent(out TreeTaskToken treeTaskToken).Cancel();
+                    treeTaskToken.Dispose();
                 }
             }
 

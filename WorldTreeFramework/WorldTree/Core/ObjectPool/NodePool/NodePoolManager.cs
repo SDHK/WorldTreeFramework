@@ -115,11 +115,11 @@ namespace WorldTree
             if (!self.m_Pools.TryGetValue(type, out NodePool pool))
             {
                 pool = new NodePool(type);
+                pool.Type = pool.GetType();
                 pool.Id = self.Core.IdManager.GetId();
                 pool.Core = self.Core;
                 pool.Root = self.Root;
                 pool.Branch = self.Branch;
-                pool.Type = pool.GetType();
                 self.m_Pools.Add(type, pool);
                 self.AddChild(pool);
             }

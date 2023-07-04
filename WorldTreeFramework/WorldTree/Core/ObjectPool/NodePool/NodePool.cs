@@ -28,10 +28,7 @@ namespace WorldTree
         public IRuleList<IRecycleRule> recycleRule;
         public IRuleList<IDestroyRule> destroyRule;
 
-        /// <summary>
-        /// 引用池
-        /// </summary>
-        public Dictionary<long, INode> Nodes;
+    
         public NodePool(Type type) : base()
         {
 
@@ -45,7 +42,6 @@ namespace WorldTree
             objectOnRecycle = ObjectOnRecycle;
             objectOnDestroy = ObjectOnDestroy;
 
-            Nodes = new Dictionary<long, INode>();
         }
 
         public override string ToString()
@@ -110,7 +106,6 @@ namespace WorldTree
             obj.Id = Core.IdManager.GetId();
 
             obj.IsRecycle = false;
-            Nodes.TryAdd(obj.Id, obj);
             getRule?.Send(obj);
         }
 
@@ -118,7 +113,6 @@ namespace WorldTree
         {
             obj.IsRecycle = true;
             recycleRule?.Send(obj);
-            Nodes.Remove(obj.Id);
         }
 
         private void ObjectOnDestroy(INode obj)
@@ -160,8 +154,6 @@ namespace WorldTree
             self.getRule = default;
             self.recycleRule = default;
             self.destroyRule = default;
-
-            self.Nodes = default;
         }
     }
 }

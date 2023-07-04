@@ -214,8 +214,7 @@ namespace WorldTree
         /// </summary>
         public void Remove(long id)
         {
-
-            if (nodeDictionary.TryGetValue(id, out INode node))
+            if (nodeDictionary != null && nodeDictionary.TryGetValue(id, out INode node))
             {
                 nodeDictionary.Remove(id);
                 ruleGroupDictionary?.Remove(id);

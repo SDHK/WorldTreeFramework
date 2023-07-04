@@ -27,11 +27,6 @@ namespace WorldTree
     /// </summary>
     public class WorldTreeCore : Node
     {
-        /// <summary>
-        /// 全部节点
-        /// </summary>
-        public UnitDictionary<long, INode> AllNode = new UnitDictionary<long, INode>();
-
         public IRuleGroup<IAddRule> AddRuleGroup;
         public IRuleGroup<IRemoveRule> RemoveRuleGroup;
         public IRuleGroup<IEnableRule> EnableRuleGroup;
@@ -59,17 +54,14 @@ namespace WorldTree
         /// </summary>
         public NodePoolManager NodePoolManager;
         /// <summary>
+        /// 节点引用池管理器
+        /// </summary>
+        public ReferencedPoolManager ReferencedPoolManager;
+        /// <summary>
         /// 数组对象池管理器
         /// </summary>
         public ArrayPoolManager ArrayPoolManager;
-        ///// <summary>
-        ///// 静态监听器法则执行器管理器
-        ///// </summary>
-        //public StaticListenerRuleActuatorManager StaticListenerRuleActuatorManager;
-        ///// <summary>
-        ///// 动态监听器法则执行器管理器
-        ///// </summary>
-        //public DynamicListenerRuleActuatorManager DynamicListenerRuleActuatorManager;
+      
 
         public WorldTreeCore()
         {
@@ -104,15 +96,22 @@ namespace WorldTree
             //框架核心启动组件新建
             self.IdManager = new IdManager();
             self.RuleManager = new RuleManager();
+            self.ReferencedPoolManager = new ReferencedPoolManager();
+
+            self.IdManager.Type = self.IdManager.GetType();
+            self.RuleManager.Type = self.IdManager.GetType();
+            self.ReferencedPoolManager.Type = self.ReferencedPoolManager.GetType();
 
             //Id
             self.Core.Id = self.IdManager.GetId();
             self.IdManager.Id = self.IdManager.GetId();
             self.RuleManager.Id = self.IdManager.GetId();
+            self.ReferencedPoolManager.Id = self.IdManager.GetId();
 
             //核心
             self.IdManager.Core = self;
             self.RuleManager.Core = self;
+            self.ReferencedPoolManager.Core = self;
 
             //生命周期法则
             self.NewRuleGroup = self.RuleManager.GetRuleGroup<INewRule>();
@@ -125,7 +124,11 @@ namespace WorldTree
             self.EnableRuleGroup = self.RuleManager.GetRuleGroup<IEnableRule>();
             self.DisableRuleGroup = self.RuleManager.GetRuleGroup<IDisableRule>();
 
+            self.AddComponent(self.ReferencedPoolManager);
+
+
             //核心组件 id与法则
+
             self.AddComponent(self.IdManager);
             self.AddComponent(self.RuleManager);
 
@@ -154,8 +157,7 @@ namespace WorldTree
         public static void Destroy(this WorldTreeCore self)
         {
             self.RemoveAll();
-            self.AllNode.Clear();
-            self.AllNode = default;
+          
 
             self.NewRuleGroup = default;
             self.GetRuleGroup = default;
@@ -172,6 +174,8 @@ namespace WorldTree
             self.UnitPoolManager = default;
             self.NodePoolManager = default;
             self.ArrayPoolManager = default;
+            self.ReferencedPoolManager = default;
+
             //self.StaticListenerRuleActuatorManager = default;
             //self.DynamicListenerRuleActuatorManager = default;
 
@@ -329,6 +333,8 @@ namespace WorldTree
         /// </summary>
         public static void AddNode(this WorldTreeCore self, INode node)
         {
+            self.ReferencedPoolManager.TryAdd(node);
+
             node.SetActive(true);
             self.EnableRuleGroup?.Send(node);//添加后调用激活事件
 
@@ -339,7 +345,6 @@ namespace WorldTree
                 node.SendDynamicNodeListener<IListenerAddRule>();
             }
 
-            self.AllNode.TryAdd(node.Id, node);
 
             //这个节点的添加事件
             self.AddRuleGroup?.Send(node);
@@ -350,7 +355,7 @@ namespace WorldTree
                 INodeListener nodeListener = (node as INodeListener);
                 //检测添加静态监听
                 //self.StaticListenerRuleActuatorManager.TryAddListener(nodeListener);
-                self.NodePoolManager.TryAddStaticListener(nodeListener);
+                self.ReferencedPoolManager.TryAddStaticListener(nodeListener);
             }
         }
 
@@ -373,9 +378,9 @@ namespace WorldTree
                 INodeListener nodeListener = (node as INodeListener);
 
                 //检测移除静态监听
-                self.NodePoolManager.RemoveStaticListener(nodeListener);
+                self.ReferencedPoolManager.RemoveStaticListener(nodeListener);
                 //检测移除动态监听
-                self.NodePoolManager.RemoveDynamicListener(nodeListener);
+                self.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
 
                 ////检测移除静态监听
                 //self.StaticListenerRuleActuatorManager.RemoveListener(nodeListener);
@@ -396,7 +401,7 @@ namespace WorldTree
                 node.SendDynamicNodeListener<IListenerRemoveRule>();
             }
 
-            self.AllNode.Remove(node.Id);
+            self.ReferencedPoolManager.Remove(node);
         }
         #endregion
     }

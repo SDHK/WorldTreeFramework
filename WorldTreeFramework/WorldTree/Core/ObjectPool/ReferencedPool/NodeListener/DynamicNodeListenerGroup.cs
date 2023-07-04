@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 动态节点监听器集合
     /// </summary>
-    public class DynamicNodeListenerGroup : Node, ComponentOf<NodePool>
+    public class DynamicNodeListenerGroup : Node, ComponentOf<ReferencedPool>
     {
         /// <summary>
         /// 监听器执行器字典集合
@@ -39,8 +39,8 @@ namespace WorldTree
         public static void SendDynamicNodeListener<R>(this INode node)
             where R : IListenerRule
         {
-            if (node.Core.NodePoolManager != null)
-                if (node.Core.NodePoolManager.TryGetPool(node.Type, out NodePool nodePool))
+            if (node.Core.ReferencedPoolManager != null)
+                if (node.Core.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool))
                 {
                     if (nodePool.AddComponent(out DynamicNodeListenerGroup _).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
                     {
@@ -88,10 +88,10 @@ namespace WorldTree
             foreach (var listenerType in actuator.ruleGroup)
             {
                 //从池里拿到已存在的监听器
-                if (self.Core.NodePoolManager.m_Pools.TryGetValue(listenerType.Key, out NodePool listenerPool))
+                if (self.Core.ReferencedPoolManager.TryGetPool(listenerType.Key, out ReferencedPool listenerPool))
                 {
                     //全部注入到执行器
-                    foreach (var listenerPair in listenerPool.Nodes)
+                    foreach (var listenerPair in listenerPool)
                     {
                         INodeListener nodeListener = (listenerPair.Value as INodeListener);
 
@@ -129,7 +129,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器根据标记添加目标
         /// </summary>
-        public static void TryAddDynamicListener(this NodePoolManager self, INodeListener node)
+        public static void TryAddDynamicListener(this ReferencedPoolManager self, INodeListener node)
         {
             if (node.listenerTarget != null)
             {
@@ -154,7 +154,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 所有节点
         /// </summary>
-        private static void AddAllTarget(this NodePoolManager self, INodeListener node)
+        private static void AddAllTarget(this ReferencedPoolManager self, INodeListener node)
         {
             //获取 INode 动态目标 法则集合集合
             if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
@@ -166,7 +166,7 @@ namespace WorldTree
                     if (ruleGroup.Value.ContainsKey(node.Type))
                     {
                         //遍历现有池
-                        foreach (var poolPair in self.m_Pools)
+                        foreach (var poolPair in self.pools)
                         {
                             //尝试获取动态执行器集合组件
                             if (poolPair.Value.TryGetComponent(out DynamicNodeListenerGroup dynamicNodeListenerGroup))
@@ -187,7 +187,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 系统目标
         /// </summary>
-        private static void AddRuleTarget(this NodePoolManager self, INodeListener node, Type targetRuleType)
+        private static void AddRuleTarget(this ReferencedPoolManager self, INodeListener node, Type targetRuleType)
         {
             //获取法则集合
             if (node.Core.RuleManager.TryGetRuleGroup(targetRuleType, out var targetRuleGroup))
@@ -203,9 +203,9 @@ namespace WorldTree
         /// <summary>
         /// 监听器添加 节点目标
         /// </summary>
-        private static void AddNodeTarget(this NodePoolManager self, INodeListener node, Type listenerTarget)
+        private static void AddNodeTarget(this ReferencedPoolManager self, INodeListener node, Type listenerTarget)
         {
-            if (self.Core.NodePoolManager.m_Pools.TryGetValue(listenerTarget, out NodePool listenerPool))
+            if (self.Core.NodePoolManager.TryGetPool(listenerTarget, out NodePool listenerPool))
             {
                 if (listenerPool.TryGetComponent(out DynamicNodeListenerGroup dynamicNodeListenerGroup))
                 {
@@ -238,7 +238,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器根据标记移除目标
         /// </summary>
-        public static void RemoveDynamicListener(this NodePoolManager self, INodeListener node)
+        public static void RemoveDynamicListener(this ReferencedPoolManager self, INodeListener node)
         {
             if (node.listenerTarget != null)
             {
@@ -266,7 +266,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器移除 所有节点
         /// </summary>
-        private static void RemoveAllTarget(this NodePoolManager self, INodeListener node)
+        private static void RemoveAllTarget(this ReferencedPoolManager self, INodeListener node)
         {
             //获取 INode 动态目标 法则集合集合
             if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(typeof(INode), out var ruleGroupDictionary))
@@ -278,7 +278,7 @@ namespace WorldTree
                     if (ruleGroupPair.Value.ContainsKey(node.Type))
                     {
                         //遍历现有池
-                        foreach (var poolPair in self.m_Pools)
+                        foreach (var poolPair in self.pools)
                         {
                             //尝试获取动态执行器集合组件
                             if (poolPair.Value.TryGetComponent(out DynamicNodeListenerGroup dynamicNodeListenerGroup))
@@ -296,9 +296,9 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 监听器添加 系统目标
+        /// 监听器移除 系统目标
         /// </summary>
-        private static void RemoveRuleTarget(this NodePoolManager self, INodeListener node, Type targetRuleType)
+        private static void RemoveRuleTarget(this ReferencedPoolManager self, INodeListener node, Type targetRuleType)
         {
             //获取法则集合
             if (node.Core.RuleManager.TryGetRuleGroup(targetRuleType, out var targetRuleGroup))
@@ -313,11 +313,11 @@ namespace WorldTree
 
 
         /// <summary>
-        /// 监听器添加 节点目标
+        /// 监听器移除 节点目标
         /// </summary>
-        private static void RemoveNodeTarget(this NodePoolManager self, INodeListener node, Type listenerTarget)
+        private static void RemoveNodeTarget(this ReferencedPoolManager self, INodeListener node, Type listenerTarget)
         {
-            if (self.Core.NodePoolManager.m_Pools.TryGetValue(listenerTarget, out NodePool listenerPool))
+            if (self.Core.ReferencedPoolManager.TryGetPool(listenerTarget, out ReferencedPool listenerPool))
             {
                 if (listenerPool.TryGetComponent(out DynamicNodeListenerGroup dynamicNodeListenerGroup))
                 {
