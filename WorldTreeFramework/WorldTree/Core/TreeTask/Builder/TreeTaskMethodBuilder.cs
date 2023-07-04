@@ -83,6 +83,7 @@ namespace WorldTree.Internal
                 if (awaiter.m_TreeTaskToken is null)
                 {
                     task.m_RelevanceTask = awaiter;
+                    World.Log($"task【{task.Id}】关联 awaiter [{awaiter.Id}]");
                 }
                 else
                 {
@@ -97,6 +98,11 @@ namespace WorldTree.Internal
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
                 }
+                if (task.Id == 213 && awaiter.Id == 246)
+                {
+                    World.Log($"awaiterid {awaiter.m_RelevanceTask.Id} TK {awaiter.m_RelevanceTask.m_TreeTaskToken ==null}");
+                }
+
                 World.Log($"({task.m_TreeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => ({awaiter.m_TreeTaskToken != null}) awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
 
             }
@@ -190,12 +196,13 @@ namespace WorldTree.Internal
                 if (awaiter.m_TreeTaskToken is null)
                 {
                     task.m_RelevanceTask = awaiter;
+                    World.Log($"task【{task.Id}】关联 awaiter [{awaiter.Id}]");
                 }
                 else
                 {
                     task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
                 }
-                World.Log($"({awaiter.m_TreeTaskToken != null})（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] => 新建 Task<{typeof(T)}> [{task.Id}]  6. 等待不安全完成");
+                World.Log($"({awaiter.m_TreeTaskToken != null})（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] => 新建 Task1<{typeof(T)}> [{task.Id}]  6. 等待不安全完成");
             }
             else
             {
@@ -203,7 +210,11 @@ namespace WorldTree.Internal
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
                 }
-                World.Log($"({task.m_TreeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task<{typeof(T)}> [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
+                if (task.Id == 213 && awaiter.Id == 246)
+                {
+                    World.Log($"awaiterid {awaiter.m_RelevanceTask.Id} TK {awaiter.m_RelevanceTask.m_TreeTaskToken == null}");
+                }
+                World.Log($"({task.m_TreeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task1<{typeof(T)}> [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
             World.Log($"Task<{typeof(T)}> 6. 等待不安全完成2");

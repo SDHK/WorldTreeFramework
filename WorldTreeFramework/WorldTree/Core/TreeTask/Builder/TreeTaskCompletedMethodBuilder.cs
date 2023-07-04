@@ -60,7 +60,26 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                awaiter.Parent.AddChild(out task);
+                task = awaiter.Parent.AddChild(out task);
+
+                if (awaiter.m_TreeTaskToken is null)
+                {
+                    task.m_RelevanceTask = awaiter;
+                    World.Log($"task【{task.Id}】关联 awaiter [{awaiter.Id}]");
+                }
+                else
+                {
+                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
+                }
+                World.Log($"?({awaiter.m_TreeTaskToken != null})（{awaiter.Parent}）（{stateMachine.GetType()}） 新建 Completed [{task.Id}] => awaiter [{awaiter.Id}] 6. 等待不安全完成");
+            }
+            else
+            {
+                if (task.m_TreeTaskToken != null)
+                {
+                    awaiter.SetToken(task.m_TreeTaskToken);
+                }
+                World.Log($"?({task.m_TreeTaskToken != null})（{awaiter.Parent}）（{stateMachine.GetType()}） 已经存在 Completed [{task.Id}] => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }

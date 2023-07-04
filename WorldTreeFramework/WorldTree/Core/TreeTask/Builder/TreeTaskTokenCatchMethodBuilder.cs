@@ -61,8 +61,26 @@ namespace WorldTree.Internal
             if (task == null)
             {
                 awaiter.Parent.AddChild(out task);
-            }
 
+                if (awaiter.m_TreeTaskToken is null)
+                {
+                    task.m_RelevanceTask = awaiter;
+                    World.Log($"task【{task.Id}】关联 awaiter [{awaiter.Id}]");
+                }
+                else
+                {
+                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
+                }
+                World.Log($"?({awaiter.m_TreeTaskToken != null})（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] =>  新建 Task [{task.Id}] 6. 等待不安全完成");
+            }
+            else
+            {
+                if (task.m_TreeTaskToken != null)
+                {
+                    awaiter.SetToken(task.m_TreeTaskToken);
+                }
+                World.Log($"?({task.m_TreeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => ({awaiter.m_TreeTaskToken != null}) awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
+            }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
 
@@ -93,9 +111,7 @@ namespace WorldTree.Internal
                 }
                 World.Log($"({task.m_TreeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => ({awaiter.m_TreeTaskToken != null}) awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
             }
-            awaiter.OnCompleted(stateMachine.MoveNext);
-
-
+            awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
 
             World.Log($"TreeTaskTokenCatch 6. 等待不安全完成后");
 

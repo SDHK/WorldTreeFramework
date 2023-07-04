@@ -70,6 +70,7 @@ namespace WorldTree
                         m_TreeTaskToken.stopTask = this;
                         break;
                     case TaskState.Cancel:
+                        m_Continuation?.Invoke();
                         Dispose();
                         break;
                 }
@@ -117,7 +118,7 @@ namespace WorldTree
         public TreeTaskBase SetToken(TreeTaskToken treeTaskToken)
         {
             TreeTaskBase NowAwaiter = this;
-            while (NowAwaiter is not null && NowAwaiter.m_TreeTaskToken is null)
+            while (NowAwaiter != null)
             {
                 NowAwaiter.m_TreeTaskToken = treeTaskToken;
                 NowAwaiter = NowAwaiter.m_RelevanceTask;

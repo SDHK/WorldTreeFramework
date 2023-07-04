@@ -34,13 +34,13 @@ namespace WorldTree
     //    }
     //}
 
-    public class NodeListenerAddRule : ListenerAddRule<InitialDomain>
-    {
-        public override void OnEvent(InitialDomain self, INode node)
-        {
-            World.Log($"NodeListenerAdd: {node.Id} _  {node.Type} ");
-        }
-    }
+    //public class NodeListenerAddRule : ListenerAddRule<InitialDomain>
+    //{
+    //    public override void OnEvent(InitialDomain self, INode node)
+    //    {
+    //        World.Log($"NodeListenerAdd: {node.Id} _  {node.Type} ");
+    //    }
+    //}
 
     //public class NodeListenerInitialDomainAddRule : ListenerAddRule<InitialDomain, TreeNode, IRule>
     //{
@@ -130,7 +130,7 @@ namespace WorldTree
                 if (Input.GetKeyDown(KeyCode.R))
                 {
                     self.AddComponent(out TreeTaskToken treeTaskToken).Cancel();
-                    treeTaskToken.Dispose();
+                    //treeTaskToken.Dispose();
                 }
             }
 

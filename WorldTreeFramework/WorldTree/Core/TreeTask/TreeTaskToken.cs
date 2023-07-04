@@ -67,6 +67,7 @@ namespace WorldTree
             taskState = TaskState.Running;
             tokenEvent?.Send(taskState);
             stopTask?.Continue();
+            stopTask = null;
         }
 
         /// <summary>
@@ -85,6 +86,7 @@ namespace WorldTree
         {
             taskState = TaskState.Cancel;
             tokenEvent?.Send(taskState);
+            stopTask = null;
         }
 
     }
