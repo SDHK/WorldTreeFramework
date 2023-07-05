@@ -82,11 +82,11 @@ namespace WorldTree
 
                 self.AddChild(out self.valueFloat);
                 self.AddChild(out self.valueInt);
-                self.AddChild(out self.valueString, "");
+                self.AddChild(out self.valueString, "Hello world! 你好世界！");
                 self.valueFloat.Bind(self.valueInt);
 
 
-                self.valueString.AddComponent(out self.treeTween, "Hello world! 你好世界！", 10f).SetCurve<CurveBase>().Run();
+                self.valueString.AddComponent(out self.treeTween, "Hello", 10f).SetCurve<CurveBase>().Run();
 
 
 
