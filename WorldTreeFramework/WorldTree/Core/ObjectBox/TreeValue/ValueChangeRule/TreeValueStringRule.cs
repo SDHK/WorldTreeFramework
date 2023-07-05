@@ -11,9 +11,25 @@ using System;
 
 namespace WorldTree
 {
+    class TreeValueStringAwakeRule : AwakeRule<TreeValueBase<string>>
+    {
+        public override void OnEvent(TreeValueBase<string> self)
+        {
 
-    public class TreeValueStringValueChangeRule<T> : ValueChangeRule<string, T>
-        where T : IEquatable<T>
+            self.Value = "";
+        }
+    }
+
+    class TreeValueStringValueAwakeRule : AwakeRule<TreeValueBase<string>, string>
+    {
+        public override void OnEvent(TreeValueBase<string> self, string value)
+        {
+            self.Value = value;
+        }
+    }
+
+    class TreeValueStringValueChangeRule<T> : ValueChangeRule<string, T>
+       where T : IEquatable<T>
     {
         public override void OnEvent(TreeValueBase<string> self, T arg1)
         {
@@ -21,10 +37,10 @@ namespace WorldTree
         }
     }
 
-    public class TreeValueStringIntChangeRule : TreeValueStringValueChangeRule<int> { }
-    public class TreeValueStringShortChangeRule : TreeValueStringValueChangeRule<short> { }
-    public class TreeValueStringLongChangeRule : TreeValueStringValueChangeRule<long> { }
-    public class TreeValueStringFloatChangeRule : TreeValueStringValueChangeRule<float> { }
-    public class TreeValueStringDoubleChangeRule : TreeValueStringValueChangeRule<double> { }
+    class TreeValueStringIntChangeRule : TreeValueStringValueChangeRule<int> { }
+    class TreeValueStringShortChangeRule : TreeValueStringValueChangeRule<short> { }
+    class TreeValueStringLongChangeRule : TreeValueStringValueChangeRule<long> { }
+    class TreeValueStringFloatChangeRule : TreeValueStringValueChangeRule<float> { }
+    class TreeValueStringDoubleChangeRule : TreeValueStringValueChangeRule<double> { }
 
 }

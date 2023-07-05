@@ -38,7 +38,7 @@ namespace WorldTree
     }
 
 
-    public static class TreeTweenRule
+    public static partial class TreeTweenRule
     {
         class TreeTweenAwakeTweenRule<T1> : AwakeRule<TreeTween<T1>, T1, float>
            where T1 : IEquatable<T1>
@@ -93,10 +93,21 @@ namespace WorldTree
         /// <summary>
         /// 曲线计算
         /// </summary>
-        public static float GetCurveEvaluate(this TreeTweenBase self)
+        public static float GetCurveEvaluate(this TreeTweenBase self, float deltaTime)
         {
-            return self.m_Curve.CallRule(default(ICurveEvaluateRule), self.timeScale, out float _);
+            return self.m_Curve.CallRule(default(ICurveEvaluateRule), self.GetTimeScale(deltaTime), out float _);
             //return self.m_RuleList.Call(self.m_Curve, self.timeScale, out float _);
+        }
+
+        /// <summary>
+        /// 时间尺度计算
+        /// </summary>
+        public static float GetTimeScale(this TreeTweenBase self, float deltaTime)
+        {
+            self.time += deltaTime;
+            self.timeScale = self.time / self.clock;
+            self.timeScale = MathFloat.Clamp01(self.timeScale);
+            return self.timeScale;
         }
     }
 

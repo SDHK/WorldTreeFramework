@@ -62,7 +62,10 @@ namespace WorldTree
         public TreeNode node;
         public TreeValue<float> valueFloat;
         public TreeValue<int> valueInt;
-        public TreeTween<float> treeTween;
+
+        public TreeValue<string> valueString;
+        public TreeTween<string> treeTween;
+
         public int int1;
 
     }
@@ -79,10 +82,11 @@ namespace WorldTree
 
                 self.AddChild(out self.valueFloat);
                 self.AddChild(out self.valueInt);
+                self.AddChild(out self.valueString, "");
                 self.valueFloat.Bind(self.valueInt);
 
 
-                self.valueFloat.AddComponent(out self.treeTween, 10f, 10f).SetCurve<CurveBase>().Run();
+                self.valueString.AddComponent(out self.treeTween, "Hello world! 你好世界！", 10f).SetCurve<CurveBase>().Run();
 
 
 
@@ -111,7 +115,7 @@ namespace WorldTree
                 if (Input.GetKeyDown(KeyCode.S))
                 {
                     //self.valueInt.Value += 1;
-                    World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value}");
+                    World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value} :{self.valueString.Value}");
 
                 }
                 if (Input.GetKeyDown(KeyCode.Q))

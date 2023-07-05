@@ -25,7 +25,11 @@ namespace WorldTree
 
             set
             {
-                if (!this.m_Value.Equals(value))
+                if (this.m_Value is null)
+                {
+                    this.m_Value = value;
+                }
+                else  if (!this.m_Value.Equals(value))
                 {
                     this.m_Value = value;
                     m_ValueChange?.Send(value);

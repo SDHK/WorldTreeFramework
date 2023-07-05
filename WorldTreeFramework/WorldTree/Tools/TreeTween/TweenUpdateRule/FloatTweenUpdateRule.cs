@@ -10,25 +10,23 @@
 
 namespace WorldTree
 {
-    class FloatTweenUpdateRule : TweenUpdateRule<TreeTween<float>>
+    public static partial class TreeTweenRule
     {
-        public override void OnEvent(TreeTween<float> self, float deltaTime)
+        class FloatTweenUpdateRule : TweenUpdateRule<TreeTween<float>>
         {
-            if (self.isRun)
+            public override void OnEvent(TreeTween<float> self, float deltaTime)
             {
-                if (self.time < self.clock)
+                if (self.isRun)
                 {
-                    float vector = self.endValue.Value - self.startValue.Value;
-                    self.time += deltaTime;
-                    self.timeScale = self.time / self.clock;
-
-                    self.timeScale = MathFloat.Clamp01(self.timeScale);
-                    self.changeValue.Value = self.startValue + vector * self.GetCurveEvaluate();
-                }
-                else
-                {
-                    self.isRun = false;
-                    self.OnCompleted.Send();
+                    if (self.time < self.clock)
+                    {
+                        self.changeValue.Value = (self.endValue.Value - self.startValue.Value) * self.GetCurveEvaluate(deltaTime) + self.startValue;
+                    }
+                    else
+                    {
+                        self.isRun = false;
+                        self.OnCompleted.Send();
+                    }
                 }
             }
         }
