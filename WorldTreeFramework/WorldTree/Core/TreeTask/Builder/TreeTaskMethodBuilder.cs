@@ -28,7 +28,6 @@ namespace WorldTree.Internal
         public static TreeTaskMethodBuilder Create()
         {
             TreeTaskMethodBuilder builder = new TreeTaskMethodBuilder();
-            World.Log($"Task ！！！！！！静态构建方法！！！！！！！");
             return builder;
         }
 
@@ -38,7 +37,6 @@ namespace WorldTree.Internal
         {
             get
             {
-                World.Log($"Task 获取Task");
                 return task;
             }
         }
@@ -47,14 +45,12 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetException(Exception exception)
         {
-            World.Log($"[{task.Id}]Task 设置异常 {exception}");
             task.SetException(exception);
         }
 
         // 4. SetResult
         public void SetResult()
         {
-            World.Log($"[{task.Id}]Task 设置结果");
             task.SetResult();
         }
 
@@ -66,8 +62,25 @@ namespace WorldTree.Internal
             if (task == null)
             {
                 awaiter.Parent.AddChild(out task);
-            }
 
+                if (awaiter.m_TreeTaskToken is null)
+                {
+                    task.m_RelevanceTask = awaiter;
+                }
+                else
+                {
+                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
+                    task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
+
+                }
+            }
+            else
+            {
+                if (task.m_TreeTaskToken != null)
+                {
+                    awaiter.SetToken(task.m_TreeTaskToken);
+                }
+            }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
 
@@ -75,7 +88,6 @@ namespace WorldTree.Internal
         [SecuritySafeCritical]
         public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
         {
-
             if (task == null)
             {
                 awaiter.Parent.AddChild(out task);
@@ -83,51 +95,35 @@ namespace WorldTree.Internal
                 if (awaiter.m_TreeTaskToken is null)
                 {
                     task.m_RelevanceTask = awaiter;
-                    World.Log($"task【{task.Id}】关联 awaiter [{awaiter.Id}]");
                 }
                 else
                 {
                     task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
+                    task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
+
                 }
-                World.Log($"({awaiter.m_TreeTaskToken != null})（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] =>  新建 Task [{task.Id}] 6. 等待不安全完成");
             }
             else
             {
-
                 if (task.m_TreeTaskToken != null)
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
                 }
-                if (task.Id == 213 && awaiter.Id == 246)
-                {
-                    World.Log($"awaiterid {awaiter.m_RelevanceTask.Id} TK {awaiter.m_RelevanceTask.m_TreeTaskToken ==null}");
-                }
-
-                World.Log($"({task.m_TreeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task [{task.Id}] 移动到 => ({awaiter.m_TreeTaskToken != null}) awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
-
             }
-            awaiter.OnCompleted(stateMachine.MoveNext);
-
-
-
-            World.Log($"Task 6. 等待不安全完成后");
-
+            awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
         }
 
         // 7. Start
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
-            World.Log($"Task 7. 开始前");
             stateMachine.MoveNext();
-            World.Log($"Task 7. 开始后");
         }
 
         // 8. SetStateMachine
         [DebuggerHidden]
         public void SetStateMachine(IAsyncStateMachine stateMachine)
         {
-            World.Log($"Task 8. 设置状态机");
         }
     }
 
@@ -142,7 +138,6 @@ namespace WorldTree.Internal
         public static TreeTaskMethodBuilder<T> Create()
         {
             TreeTaskMethodBuilder<T> builder = new TreeTaskMethodBuilder<T>();
-            World.Log($"Task<{typeof(T)}> ！！！！！！静态构建方法！！！！！！！");
             return builder;
         }
 
@@ -152,7 +147,6 @@ namespace WorldTree.Internal
         {
             get
             {
-                World.Log($"Task<{typeof(T)}> 获取Task");
                 return task;
             }
         }
@@ -161,7 +155,6 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetException(Exception exception)
         {
-            World.Log($"[{task.Id}]Task<{typeof(T)}> 设置异常");
             task.SetException(exception);
         }
 
@@ -170,7 +163,6 @@ namespace WorldTree.Internal
 
         public void SetResult(T ret)
         {
-            World.Log($"[{task.Id}]Task<{typeof(T)}> 设置结果");
             task.SetResult(ret);
         }
 
@@ -182,6 +174,23 @@ namespace WorldTree.Internal
             if (task == null)
             {
                 awaiter.Parent.AddChild(out task);
+                if (awaiter.m_TreeTaskToken is null)
+                {
+                    task.m_RelevanceTask = awaiter;
+                }
+                else
+                {
+                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
+                    task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
+
+                }
+            }
+            else
+            {
+                if (task.m_TreeTaskToken != null)
+                {
+                    awaiter.SetToken(task.m_TreeTaskToken);
+                }
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
         }
@@ -196,13 +205,12 @@ namespace WorldTree.Internal
                 if (awaiter.m_TreeTaskToken is null)
                 {
                     task.m_RelevanceTask = awaiter;
-                    World.Log($"task【{task.Id}】关联 awaiter [{awaiter.Id}]");
                 }
                 else
                 {
                     task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
+                    task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
                 }
-                World.Log($"({awaiter.m_TreeTaskToken != null})（{stateMachine.GetType()}）传入 awaiter [{awaiter.Id}] => 新建 Task1<{typeof(T)}> [{task.Id}]  6. 等待不安全完成");
             }
             else
             {
@@ -210,30 +218,21 @@ namespace WorldTree.Internal
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
                 }
-                if (task.Id == 213 && awaiter.Id == 246)
-                {
-                    World.Log($"awaiterid {awaiter.m_RelevanceTask.Id} TK {awaiter.m_RelevanceTask.m_TreeTaskToken == null}");
-                }
-                World.Log($"({task.m_TreeTaskToken != null})（{stateMachine.GetType()}）已经存在 Task1<{typeof(T)}> [{task.Id}] 移动到 => awaiter [{awaiter.Id}] 6. 等待不安全完成！！！！");
             }
-            awaiter.OnCompleted(stateMachine.MoveNext);
-            World.Log($"Task<{typeof(T)}> 6. 等待不安全完成2");
+            awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
         }
 
         // 7. Start
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
-            World.Log($"Task<{typeof(T)}> 7. 开始前");
             stateMachine.MoveNext();
-            World.Log($"Task<{typeof(T)}> 7. 开始后");
         }
 
         // 8. SetStateMachine
         [DebuggerHidden]
         public void SetStateMachine(IAsyncStateMachine stateMachine)
         {
-            World.Log($"Task<{typeof(T)}> 8. 设置状态机");
         }
     }
 

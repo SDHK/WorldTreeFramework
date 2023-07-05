@@ -78,7 +78,7 @@ namespace WorldTree
         /// </summary>
         public int RefreshTraversalCount()
         {
-            return traversalCount = nodeDictionary is null ? 0 : nodeDictionary.Count;
+            return traversalCount = idQueue is null ? 0 : idQueue.Count;
         }
 
         /// <summary>
@@ -94,6 +94,8 @@ namespace WorldTree
                 {
                     //回收次数抵消
                     removeIdDictionary[id] = --count;
+                    //遍历数抵消
+                    if (traversalCount != 0) traversalCount--;
 
                     //次数为0时删除id
                     if (count == 0) removeIdDictionary.Remove(id);
@@ -218,7 +220,6 @@ namespace WorldTree
             {
                 nodeDictionary.Remove(id);
                 ruleGroupDictionary?.Remove(id);
-                if (traversalCount != 0) traversalCount--;
 
                 this.DeReferenced(node);
                 //累计强制移除的节点id

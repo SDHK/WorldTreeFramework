@@ -9,7 +9,6 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using SharpCompress.Writers;
 using WorldTree.Internal;
 
 namespace WorldTree
@@ -18,7 +17,7 @@ namespace WorldTree
     /// 异步任务
     /// </summary>
     /// <remarks>因为继承Node所以可以挂在树上</remarks>
-    [AsyncMethodBuilder(typeof(Internal.TreeTaskMethodBuilder))]
+    [AsyncMethodBuilder(typeof(TreeTaskMethodBuilder))]
     public class TreeTask : TreeTaskBase
         , AsRule<ITreeTaskSetResuItRule>
     {
@@ -48,9 +47,6 @@ namespace WorldTree
         public void Coroutine(TreeTaskToken treeTaskToken)
         {
             this.SetToken(treeTaskToken);
-          
-            World.Log($"启动 id 【{this.Id}】");
-
             InnerCoroutine().Coroutine();
         }
     }
@@ -61,7 +57,7 @@ namespace WorldTree
     /// <summary>
     /// 泛型异步任务
     /// </summary>
-    [AsyncMethodBuilder(typeof(Internal.TreeTaskMethodBuilder<>))]
+    [AsyncMethodBuilder(typeof(TreeTaskMethodBuilder<>))]
     public class TreeTask<T> : TreeTaskBase
         , AsRule<IAwakeRule>
         , AsRule<ITreeTaskSetResuItRule<T>>

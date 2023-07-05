@@ -17,6 +17,7 @@ namespace WorldTree
     /// 树异步任务基类
     /// </summary>
     public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion, ChildOf<INode>
+        , AsRule<ITreeTaskTokenEventRule>
     {
         /// <summary>
         /// 树任务令牌
@@ -50,8 +51,6 @@ namespace WorldTree
         /// </summary>
         public void SetCompleted()
         {
-            World.Log($"[{Id}] 任务完成 : {IsActive}");
-
             IsCompleted = true;
             if (m_TreeTaskToken is null)
             {
@@ -70,7 +69,6 @@ namespace WorldTree
                         m_TreeTaskToken.stopTask = this;
                         break;
                     case TaskState.Cancel:
-                        m_Continuation?.Invoke();
                         Dispose();
                         break;
                 }
@@ -121,6 +119,7 @@ namespace WorldTree
             while (NowAwaiter != null)
             {
                 NowAwaiter.m_TreeTaskToken = treeTaskToken;
+                treeTaskToken.tokenEvent.Add(NowAwaiter, default(ITreeTaskTokenEventRule));
                 NowAwaiter = NowAwaiter.m_RelevanceTask;
             }
             return this;
@@ -129,9 +128,22 @@ namespace WorldTree
         public override void OnDispose()
         {
             IsCompleted = false;
+            m_TreeTaskToken = null;
+            m_RelevanceTask = null;
             m_Continuation = null;
 
             base.OnDispose();
+        }
+    }
+
+    class TreeTaskBaseTaskTokenEventRule : TreeTaskTokenEventRule<TreeTaskBase, TaskState>
+    {
+        public override void OnEvent(TreeTaskBase self, TaskState state)
+        {
+            if (state == TaskState.Cancel)
+            {
+                self.Dispose();
+            }
         }
     }
 }

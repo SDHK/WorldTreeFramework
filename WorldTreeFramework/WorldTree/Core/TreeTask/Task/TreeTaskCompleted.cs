@@ -31,8 +31,6 @@ namespace WorldTree.Internal
     {
         public override void OnEvent(TreeTaskCompleted self, float deltaTime)
         {
-            World.Log($"Completed [{self.Id}] 结束");
-
             self.SetCompleted();
         }
     }

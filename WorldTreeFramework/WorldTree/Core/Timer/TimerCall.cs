@@ -83,7 +83,6 @@ namespace WorldTree
                     self.isRun = false;
                     break;
                 case TaskState.Cancel:
-                    self.callback?.Send();
                     self.Dispose();
                     break;
             }

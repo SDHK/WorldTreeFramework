@@ -28,7 +28,6 @@ namespace WorldTree
     {
         public override void OnEvent(TreeTaskTokenCatch self, float deltaTime)
         {
-            World.Log($"!!!!【TreeTaskTokenCatch】 [{self.Id}] 结束 {(self.m_TreeTaskToken != null ? self.m_TreeTaskToken.taskState : false)}");
             self.SetCompleted();
         }
     }

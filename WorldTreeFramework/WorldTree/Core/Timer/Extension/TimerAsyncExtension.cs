@@ -59,7 +59,6 @@ namespace WorldTree
             //令牌是否为空
             if (token == null)
             {
-                World.Log("令牌为空");
                 self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall counter, time);
                 //组件的任务完成回调注册
                 counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
@@ -81,7 +80,6 @@ namespace WorldTree
             }
             else
             {
-                //await self.TreeTaskCompleted();
                 return true;
             }
 
