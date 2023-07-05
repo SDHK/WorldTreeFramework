@@ -24,13 +24,11 @@ namespace WorldTree
 
                     self.timeScale = MathFloat.Clamp01(self.timeScale);
                     self.changeValue.Value = self.startValue + vector * self.GetCurveEvaluate();
-                    //World.Log($"时间 {self.timeScale} 渐变： {self.changeValue.Value}");
                 }
                 else
                 {
                     self.isRun = false;
                     self.OnCompleted.Send();
-                    //World.Log("渐变结束：" + self.changeValue.Value);
                 }
             }
         }

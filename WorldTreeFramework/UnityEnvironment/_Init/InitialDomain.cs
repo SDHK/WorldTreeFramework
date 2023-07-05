@@ -62,6 +62,7 @@ namespace WorldTree
         public TreeNode node;
         public TreeValue<float> valueFloat;
         public TreeValue<int> valueInt;
+        public TreeTween<float> treeTween;
         public int int1;
 
     }
@@ -70,15 +71,18 @@ namespace WorldTree
     {
         class AddRule : AddRule<InitialDomain>
         {
-            public override  void OnEvent(InitialDomain self)
+            public override void OnEvent(InitialDomain self)
             {
 
                 World.Log("初始域启动！！");
                 self.ListenerSwitchesEntity<INode>();
 
-                //self.AddChild(out self.valueFloat);
-                //self.AddChild(out self.valueInt);
-                //self.valueFloat.Bind(self.valueInt);
+                self.AddChild(out self.valueFloat);
+                self.AddChild(out self.valueInt);
+                self.valueFloat.Bind(self.valueInt);
+
+
+                self.valueFloat.AddComponent(out self.treeTween, 10f, 10f).SetCurve<CurveBase>().Run();
 
 
 
@@ -86,7 +90,7 @@ namespace WorldTree
                 //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
 
-                self.AddComponent(out TreeNode _);
+                //self.AddComponent(out TreeNode _);
 
 
 
@@ -101,13 +105,12 @@ namespace WorldTree
             {
                 if (Input.GetKeyDown(KeyCode.A))
                 {
-                    self.Test().Coroutine();
-                    //self.valueFloat.Value += 1.5f;
-                    //World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
+                    self.valueFloat.Value += 1.5f;
+                    World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
                 }
                 if (Input.GetKeyDown(KeyCode.S))
                 {
-                    self.valueInt.Value += 1;
+                    //self.valueInt.Value += 1;
                     World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value}");
 
                 }

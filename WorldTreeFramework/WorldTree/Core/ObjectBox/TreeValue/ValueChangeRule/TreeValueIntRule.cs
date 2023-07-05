@@ -46,12 +46,6 @@ namespace WorldTree
         }
     }
 
-    public class TreeValueFloatIntChangeRule : ValueChangeRule<float, int>
-    {
-        public override void OnEvent(TreeValueBase<float> self, int value)
-        {
-            self.Value = value;
-        }
-    }
+
 
 }
