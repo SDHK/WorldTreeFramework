@@ -24,7 +24,7 @@ namespace WorldTree
     }
 
 
-    public static class TreeValueRule
+    public static partial class TreeValueRule
     {
 
         /// <summary>

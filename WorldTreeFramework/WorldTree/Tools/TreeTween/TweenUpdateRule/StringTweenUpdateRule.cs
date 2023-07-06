@@ -23,20 +23,14 @@ namespace WorldTree
                         var longValue = self.startValue.Value.Length > self.endValue.Value.Length ? self.startValue.Value : self.endValue.Value;
                         var shortValue = self.startValue.Value.Length > self.endValue.Value.Length ? self.endValue.Value : self.startValue.Value;
 
-
                         //判断长包含短，否则清空开始值
                         if (self.time == 0 && self.startValue.Value.Length != 0 && longValue.Length != 0 && !longValue.StartsWith(shortValue))
                         {
                             self.startValue.Value = string.Empty;
                         }
 
-
-                        //字符串的开始值和最终值的长度差值
-                        int Length = (self.endValue.Value.Length - self.startValue.Value.Length);
-
                         //通过曲线获取长度变化
-                        int nowLength = (int)(Length * self.GetCurveEvaluate(deltaTime) + self.startValue.Value.Length);
-
+                        int nowLength = (int)((self.endValue.Value.Length - self.startValue.Value.Length) * self.GetCurveEvaluate(deltaTime) + self.startValue.Value.Length);
 
                         //当前长度不等于变化的长度时，进行拷贝赋值
                         if (self.changeValue.Value.Length != nowLength)

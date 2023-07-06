@@ -19,6 +19,12 @@ namespace WorldTree
         /// 启动标记
         /// </summary>
         public bool isRun = false;
+
+        /// <summary>
+        /// 反向标记
+        /// </summary>
+        public bool isReverse = false;
+
         /// <summary>
         /// 曲线
         /// </summary>

@@ -84,6 +84,7 @@ namespace WorldTree
         /// </summary>
         public static TreeTweenBase Run(this TreeTweenBase self)
         {
+            if (self.m_Curve == null) self.Root.AddComponent(out CurveManager _).AddComponent(out self.m_Curve);
             self.time = 0;
             self.isRun = true;
             return self;
