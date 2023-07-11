@@ -285,7 +285,7 @@ namespace EditorTool
             builder.AppendLine($"\t/// <summary>");
             builder.AppendLine($"\t/// {comment}");
             builder.AppendLine($"\t/// </summary>");
-            builder.AppendLine($"\tpublic class {monoObject.gameObject.name}View : Entity");
+            builder.AppendLine($"\tpublic class {monoObject.gameObject.name}View : Node");
             builder.AppendLine("\t{");
             builder.AppendLine($"\t\t/// <summary>");
             builder.AppendLine($"\t\t/// Mono组件");
@@ -300,11 +300,11 @@ namespace EditorTool
             }
             builder.AppendLine("\t}");
 
-            builder.AppendLine($"\tclass {monoObject.gameObject.name}ViewAddSystem : AddSystem<{monoObject.gameObject.name}View>");
+            builder.AppendLine($"\tclass {monoObject.gameObject.name}ViewAddRule : AddRule<{monoObject.gameObject.name}View>");
             builder.AppendLine("\t{");
             builder.AppendLine($"\t\tpublic override void OnEvent({monoObject.gameObject.name}View self)");
             builder.AppendLine("\t\t{");
-            builder.AppendLine("\t\t\tif (self.ParentTo<GameObjectEntity>().gameObject.TryGetComponent(out self.monoObject))");
+            builder.AppendLine("\t\t\tif (self.ParentTo<GameObjectNode>().gameObject.TryGetComponent(out self.monoObject))");
             builder.AppendLine("\t\t\t{");
             for (int i = 0; i < components.Count; i++)
             {
@@ -314,7 +314,7 @@ namespace EditorTool
             builder.AppendLine("\t\t}");
             builder.AppendLine("\t}");
 
-            builder.AppendLine($"\tclass {monoObject.gameObject.name}ViewRemoveSystem : RemoveSystem<{monoObject.gameObject.name}View>");
+            builder.AppendLine($"\tclass {monoObject.gameObject.name}ViewRemoveRule : RemoveRule<{monoObject.gameObject.name}View>");
             builder.AppendLine("\t{");
             builder.AppendLine($"\t\tpublic override void OnEvent({monoObject.gameObject.name}View self)");
             builder.AppendLine("\t\t{");

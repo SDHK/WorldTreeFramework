@@ -86,6 +86,7 @@ namespace WorldTree
         {
             taskState = TaskState.Cancel;
             tokenEvent?.Send(taskState);
+            tokenEvent.Clear();
             stopTask = null;
         }
 

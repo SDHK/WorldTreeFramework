@@ -36,17 +36,20 @@ namespace WorldTree
                         if (self.changeValue.Value.Length != nowLength)
                         {
                             self.changeValue.Value = longValue[..nowLength];
+                            World.Log(self.changeValue.Value);
                         }
                         //当前长度 等于 结果长度，但是对象不同，直接进行引用赋值
                         else if (self.changeValue.Value.Length == self.endValue.Value.Length && self.endValue.Value != self.changeValue.Value)
                         {
                             self.changeValue.Value = self.endValue.Value;
+                            World.Log(self.changeValue.Value);
                         }
                         //当前长度 等于 当前裁剪长度时，但内容不同，进行拷贝赋值
-                        else if (!self.endValue.Value.StartsWith(self.changeValue.Value))
+                        else if (!longValue.StartsWith(shortValue))
                         {
                             //可省去节省时间
                             self.changeValue.Value = longValue[..nowLength];
+                            World.Log(self.changeValue.Value);
                         }
                     }
                     else

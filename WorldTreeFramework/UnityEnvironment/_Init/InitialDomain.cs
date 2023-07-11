@@ -80,12 +80,16 @@ namespace WorldTree
                 World.Log("初始域启动！！");
                 self.ListenerSwitchesEntity<INode>();
 
-                self.AddChild(out self.valueFloat);
-                self.AddChild(out self.valueInt);
+                //self.AddChild(out self.valueFloat);
+                //self.AddChild(out self.valueInt);
+                //self.valueFloat.Bind(self.valueInt);
+
+
+
+
                 self.AddChild(out self.valueString, "Hello world! 你好世界！");
-                self.valueFloat.Bind(self.valueInt);
-               
-                self.valueString.DoTween("Hello", 10f);
+                self.treeTween = self.valueString.GetTween("Hello", 10f);
+
 
 
                 //self.AddComponent(out TreeTaskToken treeTaskToken);
@@ -118,8 +122,9 @@ namespace WorldTree
                 }
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    self.AddComponent(out TreeTaskToken treeTaskToken);
-                    self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
+                    self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+                    self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
+                    //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
                 }
 
                 if (Input.GetKeyDown(KeyCode.W))

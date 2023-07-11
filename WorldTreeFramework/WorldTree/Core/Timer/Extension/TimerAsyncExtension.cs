@@ -14,75 +14,36 @@ namespace WorldTree
         /// <summary>
         /// 异步延迟帧
         /// </summary>
-        public static async TreeTask<bool> AsyncYield(this INode self, int count = 0)
+        public static async TreeTask AsyncYield(this INode self, int count = 0)
         {
-            //拿到令牌
-            TreeTaskToken token = await self.TreeTaskTokenCatch();
+            self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter, count);
 
-            //令牌是否为空
-            if (token == null)
-            {
-                self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter, count);
-                //组件的任务完成回调注册
-                counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
+            //令牌是否为空,不为空则将组件挂入令牌
+            (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
 
-                await asyncTask;
-                return false;
+            //组件的任务完成回调注册
+            counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
 
-            }
-            else if (token.taskState != TaskState.Cancel)
-            {
-                self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter, count);
-                //组件的任务完成回调注册
-                counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
-
-                //组件的令牌事件
-                token.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
-                await asyncTask;
-                return token.State == TaskState.Cancel;
-            }
-            else
-            {
-                return true;
-            }
+            //等待异步执行
+            await asyncTask;
         }
 
 
         /// <summary>
         /// 异步延迟秒
         /// </summary>
-        public static async TreeTask<bool> AsyncDelay(this INode self, float time)
+        public static async TreeTask AsyncDelay(this INode self, float time)
         {
-            //拿到令牌
-            TreeTaskToken token = await self.TreeTaskTokenCatch();
+            self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall counter, time);
 
-            //令牌是否为空
-            if (token == null)
-            {
-                self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall counter, time);
-                //组件的任务完成回调注册
-                counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
+            //令牌是否为空,不为空则将组件挂入令牌
+            (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
 
-                await asyncTask;
-                return false;
-            }
-            else if (token.taskState != TaskState.Cancel)
-            {
-                self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall counter, time);
-                //组件的任务完成回调注册
-                counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
+            //组件的任务完成回调注册
+            counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
 
-
-                //组件的令牌事件
-                token.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
-                await asyncTask;
-                return token.State == TaskState.Cancel;
-            }
-            else
-            {
-                return true;
-            }
-
+            //等待异步执行
+            await asyncTask;
         }
     }
 }

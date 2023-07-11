@@ -18,9 +18,7 @@ namespace WorldTree
     /// </summary>
     public class CurveBase : Node, ComponentOf<CurveManager>
         , AsRule<ICurveEvaluateRule>
-    {
-
-    }
+    { }
 
 
     class CurveBaseCurveEvaluateRule : CurveEvaluateRule<CurveBase>
@@ -30,4 +28,7 @@ namespace WorldTree
             return arg1;
         }
     }
+
+
+
 }

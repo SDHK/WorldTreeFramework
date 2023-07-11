@@ -139,7 +139,6 @@ namespace WorldTree
             nodeDictionary ??= this.AddChild(out nodeDictionary);
             if (nodeDictionary.ContainsKey(node.Id))
             {
-                World.LogError("节点已存在");
                 return false;
             }
 
@@ -182,6 +181,10 @@ namespace WorldTree
                 }
                 else
                 {
+                    if (ruleGroupDictionary.TryGetValue(node.Id, out RuleGroup OldRuleGroup))
+                    {
+                        if (OldRuleGroup.RuleType != ruleGroup.RuleType) World.LogError("执行器中已存在这个节点，但注册的法则不同。");
+                    }
                     return false;
                 }
             }
@@ -295,45 +298,4 @@ namespace WorldTree
     }
 
 
-
-
-
-
-    #region 多播方案？
-
-    ///// <summary>
-    ///// 单法则集合
-    ///// </summary>
-    //public RuleGroup ruleGroup;
-
-    ////====
-
-    ///// <summary>
-    ///// 节点id队列
-    ///// </summary>
-    //public TreeQueue<long> idQueue;//
-
-    ///// <summary>
-    ///// 法则类型队列
-    ///// </summary>
-    //public TreeQueue<Type> ruleTypeQueue;
-    ////====
-
-    ///// <summary>
-    ///// 节点字典
-    ///// </summary>
-    //public TreeDictionary<long, INode> nodeDictionary;//
-
-    ///// <summary>
-    ///// 节点法则集合字典
-    ///// </summary>
-    //public TreeDictionary<long, TreeDictionary<Type, RuleGroup>> ruleGroupsDictionary;
-    ////===
-
-    ///// <summary>
-    ///// 节点法则移除计数字典
-    ///// </summary>
-    //public TreeDictionary<long, TreeDictionary<Type, int>> removeRuleGroupsDictionary;
-
-    #endregion
 }

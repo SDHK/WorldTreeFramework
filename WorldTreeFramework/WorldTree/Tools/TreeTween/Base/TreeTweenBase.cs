@@ -14,6 +14,7 @@ namespace WorldTree
     /// 树渐变基类
     /// </summary>
     public class TreeTweenBase : Node
+        , AsRule<ITreeTaskTokenEventRule>
     {
         /// <summary>
         /// 启动标记
@@ -29,11 +30,6 @@ namespace WorldTree
         /// 曲线
         /// </summary>
         public CurveBase m_Curve;
-
-        ///// <summary>
-        ///// 曲线执行法则列表
-        ///// </summary>
-        //public IRuleList<ICurveEvaluateRule> m_RuleList;
 
         /// <summary>
         /// 计时
