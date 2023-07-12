@@ -14,10 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using TreeEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using WorldTree.Internal;
+using YooAsset;
 
 namespace WorldTree
 {
@@ -73,12 +73,29 @@ namespace WorldTree
     {
         class AddRule : AddRule<InitialDomain>
         {
-            public override void OnEvent(InitialDomain self)
+            public override async void OnEvent(InitialDomain self)
             {
 
                 World.Log("初始域启动！！");
                 self.ListenerSwitchesEntity<INode>();
 
+                // 初始化资源系统
+                YooAssets.Initialize();
+                //// 创建默认的资源包
+                var package = YooAssets.CreatePackage("DefaultPackage");
+                YooAssets.SetDefaultPackage(package);
+
+                await self.AsyncDelay(1);
+
+                var initParameters = new OfflinePlayModeParameters();
+                var res = await self.GetAwaiter(package.InitializeAsync(initParameters));
+
+                await self.AsyncDelay(1);
+
+                package = YooAssets.GetPackage("DefaultPackage");
+                AssetOperationHandle handle = await self.GetAwaiter(package.LoadAssetAsync<GameObject>("MainWindow"));
+
+                GameObject go = handle.InstantiateSync();
                 //self.AddChild(out self.valueFloat);
                 //self.AddChild(out self.valueInt);
                 //self.valueFloat.Bind(self.valueInt);

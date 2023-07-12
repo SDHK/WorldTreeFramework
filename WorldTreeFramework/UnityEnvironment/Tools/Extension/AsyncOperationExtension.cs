@@ -10,6 +10,7 @@
 
 using UnityEngine;
 //using UnityEngine.ResourceManagement.AsyncOperations;
+using YooAsset;
 
 namespace WorldTree
 {
@@ -37,5 +38,25 @@ namespace WorldTree
         //    handle.Completed += asyncTask.SetResult;
         //    return asyncTask;
         //}
+
+        /// <summary>
+        /// 获取异步等待
+        /// </summary>
+        public static TreeTask<AssetOperationHandle> GetAwaiter(this INode self, AssetOperationHandle handle)
+        {
+            self.AddChild(out TreeTask<AssetOperationHandle> asyncTask);
+            handle.Completed += asyncTask.SetResult;
+            return asyncTask;
+        }
+
+        /// <summary>
+        /// 获取异步等待
+        /// </summary>
+        public static TreeTask<AsyncOperationBase> GetAwaiter(this INode self, AsyncOperationBase handle)
+        {
+            self.AddChild(out TreeTask<AsyncOperationBase> asyncTask);
+            handle.Completed += asyncTask.SetResult;
+            return asyncTask;
+        }
     }
 }
