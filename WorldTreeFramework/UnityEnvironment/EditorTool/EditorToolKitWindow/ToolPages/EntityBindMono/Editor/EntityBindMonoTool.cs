@@ -12,11 +12,12 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.AddressableAssets;
+//using UnityEditor.AddressableAssets;
 using UnityEngine;
 
 namespace EditorTool
 {
+    //[CreateAssetMenu]
     /// <summary>
     /// 实体绑定Mono工具
     /// </summary>
@@ -31,7 +32,7 @@ namespace EditorTool
         public string CreateFilePath;
 
         [ShowIf("@Update()")]
-        [LabelText("分组")]
+        [LabelText("分组列表")]
         [Searchable]
         [ListDrawerSettings(Expanded = true, CustomAddFunction = "AddButton", CustomRemoveElementFunction = "RemoveButton")]
         public List<ObjectBindGroup> groups = new List<ObjectBindGroup>();
@@ -72,7 +73,10 @@ namespace EditorTool
                 {
                     if (!groups.Any(item => item.objects.Any((item) => item.monoObject == monoObject || item.monoObject.name == monoObject.name)))
                     {
-                        AddressableAssetSettingsDefaultObject.Settings.CreateOrMoveEntry(AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(monoObject.gameObject)).ToString(), AddressableAssetSettingsDefaultObject.Settings.DefaultGroup).SetAddress(monoObject.gameObject.name);
+                        //AddressableAssetSettingsDefaultObject.Settings.CreateOrMoveEntry(
+                        //    AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(monoObject.gameObject)).ToString()
+                        //    , AddressableAssetSettingsDefaultObject.Settings.DefaultGroup).SetAddress(monoObject.gameObject.name);
+
                         group.objects.Add(new ObjectBindItem() { monoObject = monoObject});
                     }
                     else

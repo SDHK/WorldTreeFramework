@@ -16,8 +16,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
-using UnityEditor.AddressableAssets.Settings;
-using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEngine;
 using UnityEngine.UI;
 using WorldTree;
@@ -37,12 +35,20 @@ namespace EditorTool
         [ReadOnly]
         [HideLabel]
         [HorizontalGroup("A")]
-        [HorizontalGroup("A/A",MinWidth = 250)]
+        [HorizontalGroup("A/A", MinWidth = 250)]
         public MonoObject monoObject;
 
+        [GUIColor(0, 1, 1)]
+        [LabelText("拖拽添加组件")]
+        [HorizontalGroup("A/A")]
+        [ListDrawerSettings(Expanded = false, HideAddButton = true, ShowItemCount = false)]
+        public List<Component> addComponent = new List<Component>();
+
         [HideLabel]
-        [HorizontalGroup("A/A" )]
+        [HorizontalGroup("A/A")]
         public string comment;
+
+
 
 
         [GUIColor(0, 1, 0)]
@@ -133,10 +139,13 @@ namespace EditorTool
 
         public void DeleteBindScript()
         {
-            string path = EntityBindMonoTool.Inst.CreateFilePath + $"/{monoObject.gameObject.name}";
-            if (Directory.Exists(path))
+            if (monoObject != null)
             {
-                AssetDatabase.DeleteAsset(path);
+                string path = EntityBindMonoTool.Inst.CreateFilePath + $"/{monoObject.gameObject.name}";
+                if (Directory.Exists(path))
+                {
+                    AssetDatabase.DeleteAsset(path);
+                }
             }
         }
 

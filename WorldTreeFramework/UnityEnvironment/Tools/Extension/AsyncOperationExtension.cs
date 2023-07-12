@@ -9,7 +9,7 @@
 */
 
 using UnityEngine;
-using UnityEngine.ResourceManagement.AsyncOperations;
+//using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace WorldTree
 {
@@ -28,14 +28,14 @@ namespace WorldTree
             return asyncTask;
         }
 
-        /// <summary>
-        /// 获取异步等待
-        /// </summary>
-        public static TreeTask<AsyncOperationHandle<T>> GetAwaiter<T>(this INode self, AsyncOperationHandle<T> handle)
-        {
-            self.AddChild(out TreeTask<AsyncOperationHandle<T>> asyncTask);
-            handle.Completed += asyncTask.SetResult;
-            return asyncTask;
-        }
+        ///// <summary>
+        ///// 获取异步等待
+        ///// </summary>
+        //public static TreeTask<AsyncOperationHandle<T>> GetAwaiter<T>(this INode self, AsyncOperationHandle<T> handle)
+        //{
+        //    self.AddChild(out TreeTask<AsyncOperationHandle<T>> asyncTask);
+        //    handle.Completed += asyncTask.SetResult;
+        //    return asyncTask;
+        //}
     }
 }

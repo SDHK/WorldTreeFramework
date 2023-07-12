@@ -8,13 +8,10 @@
 
 */
 
-using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEditor;
-using UnityEditor.AddressableAssets;
-using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
 using WorldTree;
 
@@ -63,12 +60,7 @@ namespace EditorTool
 
         public void UpdateRefresh()
         {
-            DeleteNull();
-        }
-
-        //检测删除Null组件，同时提供Update刷新
-        private void DeleteNull()
-        {
+            //检测删除Null组件，同时提供Update刷新
             for (int i = 0; i < objects.Count;)
             {
                 if (objects[i].monoObject != null)

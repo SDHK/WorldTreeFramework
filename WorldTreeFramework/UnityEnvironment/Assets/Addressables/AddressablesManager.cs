@@ -9,7 +9,7 @@
 */
 
 using System;
-using UnityEngine.AddressableAssets;
+//using UnityEngine.AddressableAssets;
 
 namespace WorldTree
 {
@@ -34,7 +34,7 @@ namespace WorldTree
             var key = typeof(N);
             if (!assets.TryGetValue(key.Name, out var asset))
             {
-                asset = (await this.GetAwaiter(Addressables.LoadAssetAsync<T>(key.Name))).Result;
+                //asset = (await this.GetAwaiter(Addressables.LoadAssetAsync<T>(key.Name))).Result;
                 assets.Add(key.Name, asset);
             }
             else

@@ -13,7 +13,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEditor;
-using UnityEditor.AddressableAssets.Settings;
+//using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.Build.Pipeline.Utilities;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -99,7 +99,7 @@ namespace EditorTool
         [Button("Addressable打包")]
         public void Button()
         {
-            AddressableAssetSettings.BuildPlayerContent();
+            //AddressableAssetSettings.BuildPlayerContent();
         }
 
 
