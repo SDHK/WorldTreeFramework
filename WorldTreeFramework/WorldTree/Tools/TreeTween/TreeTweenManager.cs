@@ -23,7 +23,7 @@ namespace WorldTree
     {
         public override void OnEvent(TreeTweenManager self)
         {
-            self.TryGetGlobalRuleActuator(out self.ruleActuator);
+            self.GetOrNewGlobalRuleActuator(out self.ruleActuator);
         }
     }
 

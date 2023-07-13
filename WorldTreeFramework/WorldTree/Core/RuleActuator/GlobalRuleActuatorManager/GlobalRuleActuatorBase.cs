@@ -26,26 +26,7 @@ namespace WorldTree
 
     public static class GlobalRuleActuatorBaseRule
     {
-        /// <summary>
-        /// 填装全局节点,并设置监听目标法则
-        /// </summary>
-        public static void LoadGlobalNode<R>(this GlobalRuleActuatorBase self)
-         where R : IRule
-        {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out self.ruleGroup))
-            {
-                foreach (var item in self.ruleGroup)
-                {
-                    if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
-                    {
-                        foreach (var node in pool)
-                        {
-                            self.TryAdd(node.Value);
-                        }
-                    }
-                }
-            }
-        }
+
 
         class ListenerAddRule : ListenerAddRule<GlobalRuleActuatorBase>
         {

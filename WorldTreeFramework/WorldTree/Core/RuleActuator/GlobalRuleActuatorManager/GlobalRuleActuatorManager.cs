@@ -16,22 +16,12 @@ namespace WorldTree
     public static partial class NodeRule
     {
         /// <summary>
-        /// 获取全局节点法则执行器
+        /// 强制获取全局节点法则执行器
         /// </summary>
-        public static bool TryGetGlobalRuleActuator<R>(this INode self, out GlobalRuleActuator<R> globalRuleActuator)
+        public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this INode self, out GlobalRuleActuator<R> globalRuleActuator)
         where R : IRule
         {
-            if (self.Core.RuleManager.TryGetRuleGroup<R>(out RuleGroup _))
-            {
-                self.Root.AddComponent(out GlobalRuleActuatorManager _).AddComponent(out globalRuleActuator);
-                return true;
-
-            }
-            else
-            {
-                globalRuleActuator = null;
-                return false;
-            }
+           return self.Root.AddComponent(out GlobalRuleActuatorManager _).AddComponent(out globalRuleActuator);
         }
     }
 

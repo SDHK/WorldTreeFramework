@@ -37,12 +37,12 @@ namespace WorldTree
 
             Core = new WorldTreeCore();
 
-            Core.TryGetGlobalRuleActuator(out enable);
-            Core.TryGetGlobalRuleActuator(out update);
-            Core.TryGetGlobalRuleActuator(out disable);
+            Core.GetOrNewGlobalRuleActuator(out enable);
+            Core.GetOrNewGlobalRuleActuator(out update);
+            Core.GetOrNewGlobalRuleActuator(out disable);
 
-            Core.TryGetGlobalRuleActuator(out lateUpdate);
-            Core.TryGetGlobalRuleActuator(out fixedUpdate);
+            Core.GetOrNewGlobalRuleActuator(out lateUpdate);
+            Core.GetOrNewGlobalRuleActuator(out fixedUpdate);
             //Core.TryGetGlobalRuleActuator(out onGUI);
 
 

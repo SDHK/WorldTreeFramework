@@ -52,10 +52,10 @@ namespace EditorTool
         public override void OnEvent(WorldTreeFrameworkWindow self)
         {
             self.AddComponent(out EditorGUIWindow _);
-            self.TryGetGlobalRuleActuator(out self.enable);
-            self.TryGetGlobalRuleActuator(out self.update);
-            self.TryGetGlobalRuleActuator(out self.disable);
-            self.TryGetGlobalRuleActuator(out self.onGUI);
+            self.GetOrNewGlobalRuleActuator(out self.enable);
+            self.GetOrNewGlobalRuleActuator(out self.update);
+            self.GetOrNewGlobalRuleActuator(out self.disable);
+            self.GetOrNewGlobalRuleActuator(out self.onGUI);
             self.AddComponent(out EditorHomePage _);
         }
     }

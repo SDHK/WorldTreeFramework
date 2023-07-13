@@ -137,11 +137,6 @@ namespace WorldTree
             self.NodePoolManager = self.AddComponent(out NodePoolManager _);
             self.AddComponent(out self.ArrayPoolManager);
 
-            ////监听器组件
-            //self.AddComponent(out self.StaticListenerRuleActuatorManager);
-            //self.AddComponent(out self.DynamicListenerRuleActuatorManager);
-
-
             //树根节点
             self.AddComponent(self.Root = self.PoolGet<WorldTreeRoot>());
 
@@ -175,10 +170,6 @@ namespace WorldTree
             self.NodePoolManager = default;
             self.ArrayPoolManager = default;
             self.ReferencedPoolManager = default;
-
-            //self.StaticListenerRuleActuatorManager = default;
-            //self.DynamicListenerRuleActuatorManager = default;
-
         }
         #endregion
 

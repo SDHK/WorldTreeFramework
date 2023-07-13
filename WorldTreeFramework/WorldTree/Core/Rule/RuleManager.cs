@@ -599,6 +599,26 @@ namespace WorldTree
             return false;
         }
 
+
+        /// <summary>
+        /// 强制获取占位法则组
+        /// </summary>
+        public static RuleGroup GetOrNewRuleGroup<R>(this RuleManager self)
+         where R : IRule
+        {
+            return self.GetOrNewRuleGroup(typeof(R));
+        }
+
+        /// <summary>
+        /// 强制获取占位法则组
+        /// </summary>
+        public static RuleGroup GetOrNewRuleGroup(this RuleManager self, Type ruleType)
+        {
+            var group = self.RuleGroupDictionary.GetValue(ruleType);
+            group.RuleType = ruleType;
+            return group;
+        }
+
         /// <summary>
         /// 获取法则组
         /// </summary>

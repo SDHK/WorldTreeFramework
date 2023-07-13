@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using WorldTree;
@@ -7,7 +8,7 @@ using WorldTree;
 namespace EditorTool
 {
 
-    [CustomEditor(typeof(UnityWorldTree))] 
+    [CustomEditor(typeof(UnityWorldTree))]
     public class UnityWorldTreeEditor : Editor
     {
         private static UnityWorldTree script;
@@ -22,5 +23,28 @@ namespace EditorTool
         }
 
 
+
+
+
+    }
+
+    [InitializeOnLoad]
+    public static class MyAATest
+    {
+        static MyAATest()
+        {
+            //重点！！！
+            Editor.finishedDefaultHeaderGUI += OnPostHeaderGUI;
+        }
+
+        static bool markable = false;
+        static void OnPostHeaderGUI(Editor editor)
+        {
+            if (!editor.target.IsPrefabDefinition()) return;
+            markable = GUILayout.Toggle(markable, new GUIContent("MyAA", "tips"));
+            GUILayout.Label(editor.target.name);
+            if (!markable) return;
+            EditorGUILayout.DropdownButton(new GUIContent("MyAA", "tips"), FocusType.Keyboard);
+        }
     }
 }
