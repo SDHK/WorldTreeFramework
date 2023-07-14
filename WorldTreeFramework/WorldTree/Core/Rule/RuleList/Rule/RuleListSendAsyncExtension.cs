@@ -9,6 +9,8 @@
 */
 
 
+using System.Data;
+
 namespace WorldTree
 {
     public static class RuleListSendAsyncExtension
@@ -21,7 +23,9 @@ namespace WorldTree
         {
             foreach (ISendRuleAsyncBase rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 await rule.Invoke(node);
+                if (!rule.IsMulticast) return;
             }
         }
 
@@ -30,7 +34,9 @@ namespace WorldTree
         {
             foreach (ISendRuleAsyncBase<T1> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 await rule.Invoke(node, arg1);
+                if (!rule.IsMulticast) return;
             }
         }
 
@@ -39,7 +45,9 @@ namespace WorldTree
         {
             foreach (ISendRuleAsyncBase<T1, T2> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 await rule.Invoke(node, arg1, arg2);
+                if (!rule.IsMulticast) return;
             }
         }
         public static async TreeTask SendAsync<R, T1, T2, T3>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3)
@@ -47,7 +55,9 @@ namespace WorldTree
         {
             foreach (ISendRuleAsyncBase<T1, T2, T3> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 await rule.Invoke(node, arg1, arg2, arg3);
+                if (!rule.IsMulticast) return;
             }
         }
         public static async TreeTask SendAsync<R, T1, T2, T3, T4>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
@@ -55,7 +65,9 @@ namespace WorldTree
         {
             foreach (ISendRuleAsyncBase<T1, T2, T3, T4> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 await rule.Invoke(node, arg1, arg2, arg3, arg4);
+                if (!rule.IsMulticast) return;
             }
         }
         public static async TreeTask SendAsync<R, T1, T2, T3, T4, T5>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
@@ -63,7 +75,9 @@ namespace WorldTree
         {
             foreach (ISendRuleAsyncBase<T1, T2, T3, T4, T5> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 await rule.Invoke(node, arg1, arg2, arg3, arg4, arg5);
+                if (!rule.IsMulticast) return;
             }
         }
 

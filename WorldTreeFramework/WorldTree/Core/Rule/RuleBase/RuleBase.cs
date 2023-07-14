@@ -24,6 +24,10 @@ namespace WorldTree
     public interface IRule
     {
         /// <summary>
+        /// 多播标记
+        /// </summary>
+        bool IsMulticast { get; set; } 
+        /// <summary>
         /// 节点类型标记
         /// </summary>
         Type NodeType { get; }
@@ -44,6 +48,7 @@ namespace WorldTree
         where N : class, INode, AsRule<R>
         where R : IRule
     {
+        public bool IsMulticast { get; set; } = true;
         public virtual Type NodeType => typeof(N);
         public virtual Type RuleType => typeof(R);
     }

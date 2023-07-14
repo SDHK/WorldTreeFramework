@@ -17,8 +17,6 @@ namespace WorldTree
     /// Addressables 资源加载管理器
     /// </summary>
     public class AddressablesManager : Node, ComponentOf<WorldTreeRoot>
-        ,AsRule<IAwakeRule>
-        ,AsRule<IAddRule>
     {
         public TreeDictionary<string, Object> assets;
 

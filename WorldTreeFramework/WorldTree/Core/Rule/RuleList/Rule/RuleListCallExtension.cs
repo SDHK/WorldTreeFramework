@@ -24,7 +24,9 @@ namespace WorldTree
             outT = default(OutT);
             foreach (ICallRuleBase<OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT = rule.Invoke(node);
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -35,7 +37,9 @@ namespace WorldTree
             outT = default(OutT);
             foreach (ICallRuleBase<T1, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1);
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -46,7 +50,9 @@ namespace WorldTree
             outT = default(OutT);
             foreach (ICallRuleBase<T1, T2, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1, arg2);
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -57,7 +63,9 @@ namespace WorldTree
             outT = default(OutT);
             foreach (ICallRuleBase<T1, T2, T3, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1, arg2, arg3);
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -68,7 +76,9 @@ namespace WorldTree
             outT = default(OutT);
             foreach (ICallRuleBase<T1, T2, T3, T4, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1, arg2, arg3, arg4);
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -79,7 +89,9 @@ namespace WorldTree
             outT = default(OutT);
             foreach (ICallRuleBase<T1, T2, T3, T4, T5, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1, arg2, arg3, arg4, arg5);
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -98,7 +110,9 @@ namespace WorldTree
             outT = node.PoolGet<UnitList<OutT>>();
             foreach (ICallRuleBase<OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT.Add(rule.Invoke(node));
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -109,7 +123,9 @@ namespace WorldTree
             outT = node.PoolGet<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT.Add(rule.Invoke(node, arg1));
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -119,7 +135,9 @@ namespace WorldTree
             outT = node.PoolGet<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, T2, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT.Add(rule.Invoke(node, arg1, arg2));
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -130,7 +148,9 @@ namespace WorldTree
             outT = node.PoolGet<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, T2, T3, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT.Add(rule.Invoke(node, arg1, arg2, arg3));
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -141,7 +161,9 @@ namespace WorldTree
             outT = node.PoolGet<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, T2, T3, T4, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT.Add(rule.Invoke(node, arg1, arg2, arg3, arg4));
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }
@@ -152,7 +174,9 @@ namespace WorldTree
             outT = node.PoolGet<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, T2, T3, T4, T5, OutT> rule in ruleList as RuleList)
             {
+                rule.IsMulticast = true;
                 outT.Add(rule.Invoke(node, arg1, arg2, arg3, arg4, arg5));
+                if (!rule.IsMulticast) return outT;
             }
             return outT;
         }

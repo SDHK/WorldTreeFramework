@@ -74,81 +74,61 @@ namespace WorldTree
 
     public static class InitialDomainRule
     {
-        class AddRule : AddRule<InitialDomain>
+
+        class _AddRule : AddRule<InitialDomain>
         {
-            public override void OnEvent(InitialDomain self)
+            public override async void OnEvent(InitialDomain self)
             {
+                World.Log("资源加载！！！");
 
-                World.Log("初始域启动！！");
-                //self.ListenerSwitchesEntity<INode>();
+                // 初始化资源系统
+                YooAssets.Initialize();
 
-                //self.AddChild(out self.valueFloat);
-                //self.AddChild(out self.valueInt);
-                //self.valueFloat.Bind(self.valueInt);
+                // 创建默认的资源包
+                var package = YooAssets.CreatePackage("DefaultPackage");
+                YooAssets.SetDefaultPackage(package);
 
-                self.AddChild(out self.valueString, "Hello world! 你好世界！");
-                self.treeTween = self.valueString.GetTween("Hello", 10f);
+#if UNITY_EDITOR //编辑器模式
+                var initParameters = new EditorSimulateModeParameters();
+                initParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild("DefaultPackage");
+#else //非编辑器模式
+                //var initParameters = new OfflinePlayModeParameters();
+#endif
+                var res = await self.GetAwaiter(package.InitializeAsync(initParameters));
 
-                //self.AddComponent(out TreeTaskToken treeTaskToken);
-                //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
-                //self.AddComponent(out TreeNode _);
+                package = YooAssets.GetPackage("DefaultPackage");
+                AssetOperationHandle handle = await self.GetAwaiter(package.LoadAssetAsync<GameObject>("MainWindow"));
 
+                GameObject go = handle.InstantiateSync();
             }
         }
 
-        class AddRule1 : AddRule<InitialDomain>
-        {
-            public override void OnEvent(InitialDomain self)
-            {
-                World.Log("初始域启动1！！");
 
-                return;
+        class _AddRule1 : AddRule<InitialDomain>
+        {
+
+            public override  void OnEvent(InitialDomain self)
+            {
+                //World.Log("初始域启动2！！");
+
                 //// 初始化资源系统
                 //YooAssets.Initialize();
                 //// 创建默认的资源包
-                //var package = YooAssets.CreatePackage("DefaultPackage");
+                //ResourcePackage package = YooAssets.CreatePackage("DefaultPackage");
                 //YooAssets.SetDefaultPackage(package);
 
                 //await self.AsyncDelay(1);
 
-                //var initParameters = new OfflinePlayModeParameters();
-                //var res = await self.GetAwaiter(package.InitializeAsync(initParameters));
+                //await NetInitializeYooAsset(self, package);
 
-                //await self.AsyncDelay(1);
+                //await UpdatePack(self, package);
 
-                //package = YooAssets.GetPackage("DefaultPackage");
-                //AssetOperationHandle handle = await self.GetAwaiter(package.LoadAssetAsync<GameObject>("MainWindow"));
-
-                //GameObject go = handle.InstantiateSync();
-            }
-        }
+                //await UpdatePack1(self, package);
 
 
-        class AddRule2 : AddRule<InitialDomain>
-        {
-
-            public override async void OnEvent(InitialDomain self)
-            {
-                World.Log("初始域启动2！！");
-
-                // 初始化资源系统
-                YooAssets.Initialize();
-                // 创建默认的资源包
-                ResourcePackage package = YooAssets.CreatePackage("DefaultPackage");
-                YooAssets.SetDefaultPackage(package);
-
-                await self.AsyncDelay(1);
-
-                await NetInitializeYooAsset(self, package);
-
-                await UpdatePack(self, package);
-
-                await UpdatePack1(self, package);
-
-
-                await Download(self);
-                World.Log("初始域启动2完成！！");
+                //await Download(self);
+                //World.Log("初始域启动2完成！！");
 
             }
 
@@ -261,6 +241,32 @@ namespace WorldTree
 
 
         }
+
+
+        class AddRule : AddRule<InitialDomain>
+        {
+            public override void OnEvent(InitialDomain self)
+            {
+
+                World.Log("初始域启动！！");
+                //self.ListenerSwitchesEntity<INode>();
+
+                //self.AddChild(out self.valueFloat);
+                //self.AddChild(out self.valueInt);
+                //self.valueFloat.Bind(self.valueInt);
+
+
+                self.AddChild(out self.valueString, "Hello world! 你好世界！");
+                self.treeTween = self.valueString.GetTween("Hello", 10f);
+
+                //self.AddComponent(out TreeTaskToken treeTaskToken);
+                //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
+
+                //self.AddComponent(out TreeNode _);
+
+            }
+        }
+
 
         class UpdateRule : UpdateRule<InitialDomain>
         {
