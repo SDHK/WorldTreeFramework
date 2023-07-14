@@ -32,6 +32,7 @@ namespace WorldTree.Internal
         {
             get
             {
+                World.Log($"[{task.Id}]TreeTaskTokenCatch Get");
                 return task;
             }
         }
@@ -46,6 +47,7 @@ namespace WorldTree.Internal
         // 4. SetResult
         public void SetResult()
         {
+            World.Log($"[{task.Id}]TreeTaskTokenCatch SetResult");
             task.SetCompleted();
         }
 
@@ -106,12 +108,25 @@ namespace WorldTree.Internal
                 }
             }
             awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+            if (awaiter is TreeTaskCompleted)
+            {
+                //awaiter.SetCompleted();
+            }
+            World.Log($"[{task.Id}]TreeTaskToKenCatch 等待 awaiter[{awaiter.Id}]{awaiter.Type}");
         }
 
         // 7. Start
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
+            if (task == null)
+            {
+                World.Log($"TreeTaskToKenCatch stateMachine.MoveNext");
+            }
+            else
+            {
+                World.Log($"[{task.Id}]TreeTaskToKenCatch stateMachine.MoveNext");
+            }
             stateMachine.MoveNext();
         }
 

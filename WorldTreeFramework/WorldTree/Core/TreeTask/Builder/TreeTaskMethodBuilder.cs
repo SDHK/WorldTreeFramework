@@ -12,6 +12,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security;
+using SharpCompress.Writers;
 using Unity.VisualScripting;
 
 namespace WorldTree.Internal
@@ -37,6 +38,7 @@ namespace WorldTree.Internal
         {
             get
             {
+                World.Log($"[{task.Id}]TreeTask Get");
                 return task;
             }
         }
@@ -51,6 +53,7 @@ namespace WorldTree.Internal
         // 4. SetResult
         public void SetResult()
         {
+            World.Log($"[{task.Id}]TreeTask SetResult");
             task.SetResult();
         }
 
@@ -94,29 +97,56 @@ namespace WorldTree.Internal
 
                 if (awaiter.m_TreeTaskToken is null)
                 {
-                    task.m_RelevanceTask = awaiter;
+                    task.m_RelevanceTask = awaiter; 
+                    World.Log($"[{task.Id}]TreeTask 等待 1 null [{awaiter.Id}]{awaiter.Type}");
+
                 }
                 else
                 {
                     task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
                     task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
+                    World.Log($"[{task.Id}]TreeTask 等待2 awaiter[{awaiter.Id}]{awaiter.Type}");
 
                 }
+                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+                World.Log($"[{task.Id}]TreeTask 等待!! awaiter[{awaiter.Id}]{awaiter.Type}");
+
             }
             else
             {
                 if (task.m_TreeTaskToken != null)
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
+                    World.Log($"[{task.Id}]TreeTask 等待3 awaiter[{awaiter.Id}]{awaiter.Type}");
+
+                    awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+                    World.Log($"[{task.Id}]TreeTask 等待!! awaiter[{awaiter.Id}]{awaiter.Type}");
+
+                    if (awaiter is TreeTaskCompleted)
+                    {
+                        awaiter.SetCompleted();
+                    }
+                    else if (awaiter.m_RelevanceTask is TreeTaskCompleted)
+                    { 
+                        awaiter.m_RelevanceTask.SetCompleted();
+                    }
                 }
             }
-            awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+          
         }
 
         // 7. Start
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
+            if (task == null)
+            {
+                World.Log($"TreeTask stateMachine.MoveNext");
+            }
+            else
+            {
+                World.Log($"[{task.Id}]TreeTask stateMachine.MoveNext");
+            }
             stateMachine.MoveNext();
         }
 
@@ -147,6 +177,7 @@ namespace WorldTree.Internal
         {
             get
             {
+                World.Log($"[{task.Id}]TreeTask<{typeof(T)}> Get");
                 return task;
             }
         }
@@ -163,6 +194,8 @@ namespace WorldTree.Internal
 
         public void SetResult(T ret)
         {
+            World.Log($"[{task.Id}]TreeTask<{typeof(T)}> SetResult");
+
             task.SetResult(ret);
         }
 
@@ -220,12 +253,26 @@ namespace WorldTree.Internal
                 }
             }
             awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+            if (awaiter is TreeTaskCompleted)
+            {
+                //awaiter.SetCompleted();
+            }
+            World.Log($"[{task.Id}]TreeTask<{typeof(T)}> 等待 awaiter[{awaiter.Id}]{awaiter.Type}");
         }
 
         // 7. Start
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
+            if (task == null)
+            {
+                World.Log($"TreeTask<{typeof(T)}> stateMachine.MoveNext");
+            }
+            else
+            {
+                World.Log($"[{task.Id}]TreeTask<{typeof(T)}> stateMachine.MoveNext");
+            }
+
             stateMachine.MoveNext();
         }
 

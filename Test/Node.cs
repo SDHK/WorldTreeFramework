@@ -16,37 +16,30 @@ public class TreeNode : Node
     public static bool bit = true;
     public async TreeTask Test()
     {
+        await this.AsyncDelay(2);
+
         World.Log("1！");
+        await this.TreeTaskCompleted();
+        World.Log("2！");
 
-        await this.AsyncDelay(10);
+        await this.TreeTaskCompleted();
+        World.Log("3！");
 
+        await this.TreeTaskCompleted();
+        World.Log("4！");
+
+        await this.TreeTaskCompleted();
+        World.Log("5！");
+
+        await this.TreeTaskCompleted();
         await T2();
-
     }
 
     public async TreeTask T2()
     {
+        await this.TreeTaskCompleted();
         World.Log("T2 1！");
-
-        await this.AsyncDelay(10);
-
-        World.Log("T2 2！");
-
-        await this.AsyncDelay(3);
-
-        World.Log("T2 3！");
-
-        await this.AsyncDelay(3);
-
-        World.Log("T2 4！");
-
         await this.TreeTaskCompleted();
-
-        await T3();
-
-        await this.TreeTaskCompleted();
-
-
     }
     public async TreeTask T3()
     {

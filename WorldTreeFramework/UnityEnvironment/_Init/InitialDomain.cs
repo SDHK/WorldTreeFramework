@@ -256,8 +256,8 @@ namespace WorldTree
                 //self.valueFloat.Bind(self.valueInt);
 
 
-                self.AddChild(out self.valueString, "Hello world! 你好世界！");
-                self.treeTween = self.valueString.GetTween("Hello", 10f);
+                //self.AddChild(out self.valueString, "Hello world! 你好世界！");
+                //self.treeTween = self.valueString.GetTween("Hello", 10f);
 
                 //self.AddComponent(out TreeTaskToken treeTaskToken);
                 //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
@@ -286,8 +286,8 @@ namespace WorldTree
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-                    self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
-                    //self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
+                    //self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
+                    self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
                 }
 
                 if (Input.GetKeyDown(KeyCode.W))

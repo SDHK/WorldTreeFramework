@@ -14,6 +14,11 @@ using System.Runtime.CompilerServices;
 namespace WorldTree
 {
     /// <summary>
+    /// 同步任务接口
+    /// </summary>
+    public interface ISyncTask { }
+
+    /// <summary>
     /// 树异步任务基类
     /// </summary>
     public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion, ChildOf<INode>

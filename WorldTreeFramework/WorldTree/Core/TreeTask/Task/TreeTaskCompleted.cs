@@ -27,11 +27,12 @@ namespace WorldTree.Internal
         public void GetResult() { }
     }
 
-    class TreeTaskCompletedUpdateRule : UpdateRule<TreeTaskCompleted>
-    {
-        public override void OnEvent(TreeTaskCompleted self, float deltaTime)
-        {
-            self.SetCompleted();
-        }
-    }
+    //class TreeTaskCompletedUpdateRule : UpdateRule<TreeTaskCompleted>
+    //{
+    //    public override void OnEvent(TreeTaskCompleted self, float deltaTime)
+    //    {
+    //        World.Log($"[{self.Id}]TreeTaskCompleted 完成");
+    //        self.SetCompleted();
+    //    }
+    //}
 }

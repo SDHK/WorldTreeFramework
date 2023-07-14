@@ -13,6 +13,7 @@ using System;
 namespace WorldTree
 {
     public class AssetManager : Node, ComponentOf<WorldTreeRoot>
+        , AsRule<ILoadAssetAsyncRule>
     {
         public TreeDictionary<string, Object> assets;
 
@@ -23,7 +24,7 @@ namespace WorldTree
             var key = typeof(N);
             if (!assets.TryGetValue(key.Name, out var asset))
             {
-
+                asset = await this.CallRuleAsync(default(ILoadAssetAsyncRule), key.Name, default(Object));
                 assets.Add(key.Name, asset);
             }
             else
@@ -32,7 +33,15 @@ namespace WorldTree
             }
             return asset as T;
         }
-
-
     }
+
+    /// <summary>
+    /// 异步加载资源法则接口
+    /// </summary>
+    public interface ILoadAssetAsyncRule : ICallRuleAsync<string, Object> { }
+    /// <summary>
+    /// 异步加载资源法则
+    /// </summary>
+    public abstract class LoadAssetAsyncRule<N> : CallRuleAsyncBase<N, ILoadAssetAsyncRule, string, Object> where N : class, INode, AsRule<ILoadAssetAsyncRule> { }
+
 }

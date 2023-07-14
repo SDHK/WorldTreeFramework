@@ -34,6 +34,7 @@ namespace WorldTree.Internal
         {
             get
             {
+                World.Log($"[{task.Id}]TreeTaskCompleted Get");
                 return task;
             }
         }
@@ -47,6 +48,7 @@ namespace WorldTree.Internal
         // 设置结果
         public void SetResult()
         {
+            World.Log($"[{task.Id}]TreeTaskCompleted SetResult");
             task.SetCompleted();
         }
 
@@ -76,6 +78,7 @@ namespace WorldTree.Internal
                 }
             }
             awaiter.OnCompleted(stateMachine.MoveNext);
+
         }
 
         // 6. 等待不安全完成
@@ -105,13 +108,25 @@ namespace WorldTree.Internal
                 }
             }
             awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
-
+            if (awaiter is TreeTaskCompleted)
+            {
+                //awaiter.SetCompleted();
+            }
+            World.Log($"[{task.Id}]TreeTaskCompleted 等待 awaiter[{awaiter.Id}]{awaiter.Type}");
         }
 
         // 7. 开始
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
+            if (task == null)
+            {
+                World.Log($"TreeTaskCompleted stateMachine.MoveNext");
+            }
+            else
+            {
+                World.Log($"[{task.Id}]TreeTaskCompleted stateMachine.MoveNext");
+            }
             stateMachine.MoveNext();
 
         }
