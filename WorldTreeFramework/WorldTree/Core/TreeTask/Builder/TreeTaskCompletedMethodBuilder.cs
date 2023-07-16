@@ -34,7 +34,6 @@ namespace WorldTree.Internal
         {
             get
             {
-                World.Log($"[{task.Id}]TreeTaskCompleted Get");
                 return task;
             }
         }
@@ -48,7 +47,6 @@ namespace WorldTree.Internal
         // 设置结果
         public void SetResult()
         {
-            World.Log($"[{task.Id}]TreeTaskCompleted SetResult");
             task.SetCompleted();
         }
 
@@ -56,29 +54,6 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
-            if (task == null)
-            {
-                task = awaiter.Parent.AddChild(out task);
-
-                if (awaiter.m_TreeTaskToken is null)
-                {
-                    task.m_RelevanceTask = awaiter;
-                }
-                else
-                {
-                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
-                    task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
-                }
-            }
-            else
-            {
-                if (task.m_TreeTaskToken != null)
-                {
-                    awaiter.SetToken(task.m_TreeTaskToken);
-                }
-            }
-            awaiter.OnCompleted(stateMachine.MoveNext);
-
         }
 
         // 6. 等待不安全完成
@@ -99,6 +74,7 @@ namespace WorldTree.Internal
                     task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
                     task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
                 }
+                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
             }
             else
             {
@@ -106,26 +82,16 @@ namespace WorldTree.Internal
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
                 }
+                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
             }
-            awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
 
-            World.Log($"[{task.Id}]TreeTaskCompleted 等待 awaiter[{awaiter.Id}]{awaiter.Type}");
         }
 
         // 7. 开始
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
-            if (task == null)
-            {
-                World.Log($"TreeTaskCompleted stateMachine.MoveNext");
-            }
-            else
-            {
-                World.Log($"[{task.Id}]TreeTaskCompleted stateMachine.MoveNext");
-            }
             stateMachine.MoveNext();
-
         }
 
         // 8. 设置状态机

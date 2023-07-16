@@ -32,7 +32,6 @@ namespace WorldTree.Internal
         {
             get
             {
-                World.Log($"[{task.Id}]TreeTaskTokenCatch Get");
                 return task;
             }
         }
@@ -47,7 +46,6 @@ namespace WorldTree.Internal
         // 4. SetResult
         public void SetResult()
         {
-            World.Log($"[{task.Id}]TreeTaskTokenCatch SetResult");
             task.SetCompleted();
         }
 
@@ -56,28 +54,6 @@ namespace WorldTree.Internal
 
         public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
-            if (task == null)
-            {
-                awaiter.Parent.AddChild(out task);
-
-                if (awaiter.m_TreeTaskToken is null)
-                {
-                    task.m_RelevanceTask = awaiter;
-                }
-                else
-                {
-                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
-                    task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
-                }
-            }
-            else
-            {
-                if (task.m_TreeTaskToken != null)
-                {
-                    awaiter.SetToken(task.m_TreeTaskToken);
-                }
-            }
-            awaiter.OnCompleted(stateMachine.MoveNext);
         }
 
         // 6. AwaitUnsafeOnCompleted
@@ -97,8 +73,8 @@ namespace WorldTree.Internal
                 {
                     task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
                     task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
-
                 }
+                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
             }
             else
             {
@@ -106,24 +82,14 @@ namespace WorldTree.Internal
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
                 }
+                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
             }
-            awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
-           
-            World.Log($"[{task.Id}]TreeTaskToKenCatch 等待 awaiter[{awaiter.Id}]{awaiter.Type}");
         }
 
         // 7. Start
         [DebuggerHidden]
         public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
         {
-            if (task == null)
-            {
-                World.Log($"TreeTaskToKenCatch stateMachine.MoveNext");
-            }
-            else
-            {
-                World.Log($"[{task.Id}]TreeTaskToKenCatch stateMachine.MoveNext");
-            }
             stateMachine.MoveNext();
         }
 

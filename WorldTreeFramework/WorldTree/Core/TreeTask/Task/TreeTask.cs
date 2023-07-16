@@ -24,16 +24,11 @@ namespace WorldTree
         public TreeTask GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
 
-        public void GetResult()
-        {
-            World.Log($"[{Id}]TreeTask !!!GetResult");
-        }
+        public void GetResult() { }
 
         [DebuggerHidden]
         private async TreeTaskVoid InnerCoroutine()
         {
-            World.Log($"[{Id}]TreeTask !!!!!TreeTaskVoid");
-
             await this;
         }
 

@@ -25,6 +25,6 @@ namespace WorldTree.Internal
     {
         public TreeTaskCompleted GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
-        public void GetResult() { World.Log($"[{Id}]TreeTaskCompleted !!!GetResult"); }
+        public void GetResult() { }
     }
 }
