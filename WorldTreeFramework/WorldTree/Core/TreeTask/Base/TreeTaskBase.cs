@@ -60,7 +60,6 @@ namespace WorldTree
             IsCompleted = true;
             if (m_TreeTaskToken is null)
             {
-                World.Log($" {Id} 继续");
                 m_Continuation?.Invoke();
                 Dispose();
             }
@@ -69,7 +68,6 @@ namespace WorldTree
                 switch (m_TreeTaskToken.State)
                 {
                     case TaskState.Running:
-                        World.Log($" {Id} 继续");
                         m_Continuation?.Invoke();
                         Dispose();
                         break;
@@ -138,8 +136,6 @@ namespace WorldTree
         /// </summary>
         public void TrySyncTaskSetCompleted()
         {
-            World.Log($"[{this.Id}]{this.Type} TrySyncTaskSetCompleted");
-
             TreeTaskBase NowAwaiter = this;
             while (NowAwaiter != null)
             {
