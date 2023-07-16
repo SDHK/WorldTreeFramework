@@ -26,11 +26,14 @@ namespace WorldTree
 
         public void GetResult()
         {
+            World.Log($"[{Id}]TreeTask !!!GetResult");
         }
 
         [DebuggerHidden]
         private async TreeTaskVoid InnerCoroutine()
         {
+            World.Log($"[{Id}]TreeTask !!!!!TreeTaskVoid");
+
             await this;
         }
 
@@ -48,6 +51,8 @@ namespace WorldTree
         {
             this.SetToken(treeTaskToken);
             InnerCoroutine().Coroutine();
+            this.TrySyncTaskSetCompleted();
+
         }
     }
 

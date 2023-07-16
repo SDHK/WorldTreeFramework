@@ -18,18 +18,10 @@ namespace WorldTree
     /// </summary>
     [AsyncMethodBuilder(typeof(TreeTaskTokenCatchMethodBuilder))]
     public class TreeTaskTokenCatch : TreeTaskBase
+    , ISyncTask
     {
         public TreeTaskTokenCatch GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
         public TreeTaskToken GetResult() { return m_TreeTaskToken; }
-    }
-
-    class TreeTaskTokenCatchUpdateRule : UpdateRule<TreeTaskTokenCatch>
-    {
-        public override void OnEvent(TreeTaskTokenCatch self, float deltaTime)
-        {
-            World.Log($"[{self.Id}]TreeTaskTokenCatch 完成");
-            self.SetCompleted();
-        }
     }
 }

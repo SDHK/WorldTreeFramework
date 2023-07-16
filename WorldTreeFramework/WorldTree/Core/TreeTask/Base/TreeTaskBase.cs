@@ -14,8 +14,9 @@ using System.Runtime.CompilerServices;
 namespace WorldTree
 {
     /// <summary>
-    /// 同步任务接口
+    /// 同步任务标记接口
     /// </summary>
+    /// <remarks>任务将会在构建器中以同步形式直接执行</remarks>
     public interface ISyncTask { }
 
     /// <summary>
@@ -59,6 +60,7 @@ namespace WorldTree
             IsCompleted = true;
             if (m_TreeTaskToken is null)
             {
+                World.Log($" {Id} 继续");
                 m_Continuation?.Invoke();
                 Dispose();
             }
@@ -67,6 +69,7 @@ namespace WorldTree
                 switch (m_TreeTaskToken.State)
                 {
                     case TaskState.Running:
+                        World.Log($" {Id} 继续");
                         m_Continuation?.Invoke();
                         Dispose();
                         break;
@@ -128,6 +131,25 @@ namespace WorldTree
                 NowAwaiter = NowAwaiter.m_RelevanceTask;
             }
             return this;
+        }
+
+        /// <summary>
+        /// 同步任务完成
+        /// </summary>
+        public void TrySyncTaskSetCompleted()
+        {
+            World.Log($"[{this.Id}]{this.Type} TrySyncTaskSetCompleted");
+
+            TreeTaskBase NowAwaiter = this;
+            while (NowAwaiter != null)
+            {
+                if (NowAwaiter is ISyncTask)
+                {
+                    NowAwaiter.SetCompleted();
+                }
+                NowAwaiter = NowAwaiter.m_RelevanceTask;
+            }
+
         }
 
         public override void OnDispose()

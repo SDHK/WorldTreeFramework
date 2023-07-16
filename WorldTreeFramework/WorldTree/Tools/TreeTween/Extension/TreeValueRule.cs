@@ -35,7 +35,7 @@ namespace WorldTree
             TreeTask asyncTask = self.AddChild(out TreeTask _);
 
             //令牌是否为空,不为空则将组件挂入令牌
-            (await self.TreeTaskTokenCatch())?.tokenEvent.Add(self, default(ITreeTaskTokenEventRule));
+            //(await self.TreeTaskTokenCatch())?.tokenEvent.Add(self, default(ITreeTaskTokenEventRule));
 
             //组件的任务完成回调注册
             self.OnCompleted.Add(asyncTask, default(ITreeTaskSetResuItRule));

@@ -28,7 +28,10 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public static TreeTaskMethodBuilder Create()
         {
+
             TreeTaskMethodBuilder builder = new TreeTaskMethodBuilder();
+            World.Log($"TreeTaskMethodBuilder {builder.GetHashCode()}");
+
             return builder;
         }
 
@@ -38,7 +41,23 @@ namespace WorldTree.Internal
         {
             get
             {
-                World.Log($"[{task.Id}]TreeTask Get");
+                if (task != null)
+                {
+
+                    World.Log($"[{task.Id}]TreeTask Get");
+
+                }
+                else
+                {
+                    World.Log($"nullTreeTask Get");
+                }
+                //if (task.m_RelevanceTask is TreeTaskTokenCatch)
+                //{
+                //    World.Log($"{task.m_RelevanceTask.m_Continuation is null} awaiter[{task.m_RelevanceTask.Id}]{task.m_RelevanceTask.Type} SetCompleted");
+
+
+                //    task.m_RelevanceTask.SetCompleted();
+                //}
                 return task;
             }
         }
@@ -47,7 +66,9 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetException(Exception exception)
         {
-            task.SetException(exception);
+            World.Log($"{exception}");
+
+            //task.SetException(exception);
         }
 
         // 4. SetResult
@@ -62,29 +83,7 @@ namespace WorldTree.Internal
 
         public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
-            if (task == null)
-            {
-                awaiter.Parent.AddChild(out task);
 
-                if (awaiter.m_TreeTaskToken is null)
-                {
-                    task.m_RelevanceTask = awaiter;
-                }
-                else
-                {
-                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
-                    task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
-
-                }
-            }
-            else
-            {
-                if (task.m_TreeTaskToken != null)
-                {
-                    awaiter.SetToken(task.m_TreeTaskToken);
-                }
-            }
-            awaiter.OnCompleted(stateMachine.MoveNext);
         }
 
         // 6. AwaitUnsafeOnCompleted
@@ -97,8 +96,10 @@ namespace WorldTree.Internal
 
                 if (awaiter.m_TreeTaskToken is null)
                 {
-                    task.m_RelevanceTask = awaiter; 
-                    World.Log($"[{task.Id}]TreeTask 等待 1 null [{awaiter.Id}]{awaiter.Type}");
+                    task.m_RelevanceTask = awaiter;
+                    World.Log($"[{task.Id}]TreeTask 等待 1 null [{awaiter.Id}]{awaiter.Type} {stateMachine} ? {this.GetHashCode()} {awaiter.m_TreeTaskToken != null}");
+                    awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+                   
 
                 }
                 else
@@ -106,11 +107,8 @@ namespace WorldTree.Internal
                     task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
                     task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
                     World.Log($"[{task.Id}]TreeTask 等待2 awaiter[{awaiter.Id}]{awaiter.Type}");
-
+                    awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
                 }
-                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
-                World.Log($"[{task.Id}]TreeTask 等待!! awaiter[{awaiter.Id}]{awaiter.Type}");
-
             }
             else
             {
@@ -118,21 +116,14 @@ namespace WorldTree.Internal
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
                     World.Log($"[{task.Id}]TreeTask 等待3 awaiter[{awaiter.Id}]{awaiter.Type}");
-
-                    awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
-                    World.Log($"[{task.Id}]TreeTask 等待!! awaiter[{awaiter.Id}]{awaiter.Type}");
-
-                    if (awaiter is TreeTaskCompleted)
-                    {
-                        awaiter.SetCompleted();
-                    }
-                    else if (awaiter.m_RelevanceTask is TreeTaskCompleted)
-                    { 
-                        awaiter.m_RelevanceTask.SetCompleted();
-                    }
                 }
+                World.Log($"[{task.Id}]TreeTask 等待!!! awaiter[{awaiter.Id}]{awaiter.Type}");
+
+                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+
+                awaiter.TrySyncTaskSetCompleted();
             }
-          
+
         }
 
         // 7. Start
@@ -141,11 +132,11 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                World.Log($"TreeTask stateMachine.MoveNext");
+                World.Log($"TreeTask stateMachine.MoveNext {stateMachine} ? {this.GetHashCode()}");
             }
             else
             {
-                World.Log($"[{task.Id}]TreeTask stateMachine.MoveNext");
+                World.Log($"[{task.Id}]TreeTask stateMachine.MoveNext {stateMachine} ? {this.GetHashCode()}");
             }
             stateMachine.MoveNext();
         }
@@ -204,28 +195,7 @@ namespace WorldTree.Internal
 
         public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
-            if (task == null)
-            {
-                awaiter.Parent.AddChild(out task);
-                if (awaiter.m_TreeTaskToken is null)
-                {
-                    task.m_RelevanceTask = awaiter;
-                }
-                else
-                {
-                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
-                    task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
 
-                }
-            }
-            else
-            {
-                if (task.m_TreeTaskToken != null)
-                {
-                    awaiter.SetToken(task.m_TreeTaskToken);
-                }
-            }
-            awaiter.OnCompleted(stateMachine.MoveNext);
         }
 
         // 6. AwaitUnsafeOnCompleted
@@ -244,20 +214,20 @@ namespace WorldTree.Internal
                     task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
                     task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
                 }
+                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+
             }
             else
             {
                 if (task.m_TreeTaskToken != null)
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
+
                 }
+                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+                World.Log($"[{task.Id}]TreeTask<{typeof(T)}> 等待 awaiter[{awaiter.Id}]{awaiter.Type}");
+                //awaiter.TrySyncTaskSetCompleted();
             }
-            awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
-            if (awaiter is TreeTaskCompleted)
-            {
-                //awaiter.SetCompleted();
-            }
-            World.Log($"[{task.Id}]TreeTask<{typeof(T)}> 等待 awaiter[{awaiter.Id}]{awaiter.Type}");
         }
 
         // 7. Start
@@ -266,11 +236,11 @@ namespace WorldTree.Internal
         {
             if (task == null)
             {
-                World.Log($"TreeTask<{typeof(T)}> stateMachine.MoveNext");
+                World.Log($"TreeTask<{typeof(T)}> stateMachine.MoveNext{stateMachine}");
             }
             else
             {
-                World.Log($"[{task.Id}]TreeTask<{typeof(T)}> stateMachine.MoveNext");
+                World.Log($"[{task.Id}]TreeTask<{typeof(T)}> stateMachine.MoveNext{stateMachine}");
             }
 
             stateMachine.MoveNext();

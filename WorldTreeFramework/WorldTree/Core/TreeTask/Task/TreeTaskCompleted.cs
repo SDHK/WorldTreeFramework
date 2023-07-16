@@ -21,18 +21,10 @@ namespace WorldTree.Internal
     /// </summary>
     [AsyncMethodBuilder(typeof(TreeTaskCompletedMethodBuilder))]
     public class TreeTaskCompleted : TreeTaskBase
+        , ISyncTask
     {
         public TreeTaskCompleted GetAwaiter() => this;
         public override bool IsCompleted { get; set; }
-        public void GetResult() { }
+        public void GetResult() { World.Log($"[{Id}]TreeTaskCompleted !!!GetResult"); }
     }
-
-    //class TreeTaskCompletedUpdateRule : UpdateRule<TreeTaskCompleted>
-    //{
-    //    public override void OnEvent(TreeTaskCompleted self, float deltaTime)
-    //    {
-    //        World.Log($"[{self.Id}]TreeTaskCompleted 完成");
-    //        self.SetCompleted();
-    //    }
-    //}
 }

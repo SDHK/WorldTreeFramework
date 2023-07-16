@@ -81,26 +81,26 @@ namespace WorldTree
             {
                 World.Log("资源加载！！！");
 
-                // 初始化资源系统
-                YooAssets.Initialize();
+//                // 初始化资源系统
+//                YooAssets.Initialize();
 
-                // 创建默认的资源包
-                var package = YooAssets.CreatePackage("DefaultPackage");
-                YooAssets.SetDefaultPackage(package);
+//                // 创建默认的资源包
+//                var package = YooAssets.CreatePackage("DefaultPackage");
+//                YooAssets.SetDefaultPackage(package);
 
-#if UNITY_EDITOR //编辑器模式
-                var initParameters = new EditorSimulateModeParameters();
-                initParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild("DefaultPackage");
-#else //非编辑器模式
-                //var initParameters = new OfflinePlayModeParameters();
-#endif
-                var res = await self.GetAwaiter(package.InitializeAsync(initParameters));
+//#if UNITY_EDITOR //编辑器模式
+//                var initParameters = new EditorSimulateModeParameters();
+//                initParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild("DefaultPackage");
+//#else //非编辑器模式
+//                //var initParameters = new OfflinePlayModeParameters();
+//#endif
+//                var res = await self.GetAwaiter(package.InitializeAsync(initParameters));
 
 
-                package = YooAssets.GetPackage("DefaultPackage");
-                AssetOperationHandle handle = await self.GetAwaiter(package.LoadAssetAsync<GameObject>("MainWindow"));
+//                package = YooAssets.GetPackage("DefaultPackage");
+//                AssetOperationHandle handle = await self.GetAwaiter(package.LoadAssetAsync<GameObject>("MainWindow"));
 
-                GameObject go = handle.InstantiateSync();
+//                GameObject go = handle.InstantiateSync();
             }
         }
 

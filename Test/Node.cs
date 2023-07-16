@@ -16,7 +16,12 @@ public class TreeNode : Node
     public static bool bit = true;
     public async TreeTask Test()
     {
-        await this.AsyncDelay(2);
+        await this.AsyncDelay(1);
+
+        World.Log("0！");
+
+        await T2();
+
 
         World.Log("1！");
         await this.TreeTaskCompleted();
@@ -27,42 +32,40 @@ public class TreeNode : Node
 
         await this.TreeTaskCompleted();
         World.Log("4！");
-
+        //await this.AsyncDelay(10);
+        await T5();
         await this.TreeTaskCompleted();
         World.Log("5！");
 
         await this.TreeTaskCompleted();
-        await T2();
     }
 
     public async TreeTask T2()
     {
-        await this.TreeTaskCompleted();
+        //await this.AsyncDelay(5);
+
         World.Log("T2 1！");
-        await this.TreeTaskCompleted();
+
+        await T3();
+        //await this.TreeTaskCompleted();
     }
     public async TreeTask T3()
     {
         World.Log("T3 1！");
 
-        await this.AsyncDelay(3);
+        //await this.TreeTaskCompleted();
+        var tk = await this.TreeTaskTokenCatch();
+        World.Log($"TK!!!!!!!{tk.Id}");
 
-        World.Log("T3 2！");
+        //World.Log(await T4());
 
-        await this.TreeTaskCompleted();
-
-        World.Log(await T4());
-
-        await T5();
+        //await T5();
 
     }
 
     public async TreeTask<int> T4()
     {
         World.Log("T4 1！");
-
-        await this.AsyncDelay(3);
-        World.Log("T4 2！");
 
         await this.TreeTaskCompleted();
 
@@ -71,10 +74,25 @@ public class TreeNode : Node
 
     public async TreeTask T5()
     {
+        World.Log("T5 1！");
+        await T6();
         await this.TreeTaskCompleted();
     }
+    public async TreeTask T6()
+    {
+        World.Log("T6 1！");
+        await T7();
 
+        await this.TreeTaskCompleted();
+    }
+    public async TreeTask T7()
+    {
+        World.Log("T7 1！");
+        var tk = await this.TreeTaskTokenCatch();
+        World.Log($"TK!!!!!!!{tk.Id}");
 
+        await this.TreeTaskCompleted();
+    }
     //}
     //class NodeNewSystem : NewRule<TreeNode>
     //{

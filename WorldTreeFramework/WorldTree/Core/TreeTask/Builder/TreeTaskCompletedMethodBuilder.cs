@@ -108,10 +108,7 @@ namespace WorldTree.Internal
                 }
             }
             awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
-            if (awaiter is TreeTaskCompleted)
-            {
-                //awaiter.SetCompleted();
-            }
+
             World.Log($"[{task.Id}]TreeTaskCompleted 等待 awaiter[{awaiter.Id}]{awaiter.Type}");
         }
 
