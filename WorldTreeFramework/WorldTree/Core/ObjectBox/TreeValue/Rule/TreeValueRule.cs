@@ -12,16 +12,7 @@ using System;
 namespace WorldTree
 {
 
-    class TreeValueRemoveRule<T> : RemoveRule<TreeValueBase<T>>
-    where T : IEquatable<T>
-    {
-        public override void OnEvent(TreeValueBase<T> self)
-        {
-            self.m_GlobalValueChange = default;
-            self.m_ValueChange = default;
-            self.Value = default;
-        }
-    }
+
 
 
     public static partial class TreeValueRule
