@@ -2,9 +2,9 @@
 /****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/4/12 19:00
+* 日期： 2023/7/17 12:15
 
-* 描述： 数组对象池管理器
+* 描述： 
 
 */
 
@@ -12,31 +12,7 @@ using System;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 数组对象池管理器
-    /// </summary>
-    public class ArrayPoolManager : Node, ComponentOf<WorldTreeCore>
-    {
-        public TreeDictionary<Type, ArrayPoolGroup> PoolGroups;
-    }
-
-    class ArrayPoolManagerAddRule : AddRule<ArrayPoolManager>
-    {
-        public override void OnEvent(ArrayPoolManager self)
-        {
-            self.AddChild(out self.PoolGroups);
-        }
-    }
-
-    class ArrayPoolManagerRemoveRule : RemoveRule<ArrayPoolManager>
-    {
-        public override void OnEvent(ArrayPoolManager self)
-        {
-            self.PoolGroups = null;
-        }
-    }
-
-    public static class ArrayPoolManagerRule
+    public static partial class ArrayPoolManagerRule
     {
 
         /// <summary>
@@ -102,6 +78,5 @@ namespace WorldTree
                 arrayPoolGroup.Dispose();
             }
         }
-
     }
 }
