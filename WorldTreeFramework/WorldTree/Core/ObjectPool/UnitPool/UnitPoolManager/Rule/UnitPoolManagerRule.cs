@@ -2,9 +2,9 @@
 /****************************************
 
 * 作者： 闪电黑客
-* 日期： 2022/11/11 11:05
+* 日期： 2023/7/17 14:55
 
-* 描述： 单位对象池管理器
+* 描述： 
 
 */
 
@@ -13,7 +13,7 @@ using System;
 namespace WorldTree
 {
 
-    public static class NodeUnitRule
+    public static partial class NodeUnitRule
     {
         /// <summary>
         /// 从池中获取单位对象
@@ -34,33 +34,7 @@ namespace WorldTree
         }
     }
 
-    /// <summary>
-    /// 单位对象池管理器
-    /// </summary>
-    public class UnitPoolManager : Node, ComponentOf<WorldTreeCore>
-    {
-        public TreeDictionary<Type, UnitPool> m_Pools;
-
-    }
-
-
-    class UnitPoolManagerAddRule : AddRule<UnitPoolManager>
-    {
-        public override void OnEvent(UnitPoolManager self)
-        {
-            self.AddChild(out self.m_Pools);
-        }
-    }
-
-    class UnitPoolManagerRemoveRule : RemoveRule<UnitPoolManager>
-    {
-        public override void OnEvent(UnitPoolManager self)
-        {
-            self.m_Pools = null;
-        }
-    }
-
-    public static class UnitPoolManagerRule
+    public static partial class UnitPoolManagerRule
     {
         /// <summary>
         /// 获取单位
@@ -147,4 +121,6 @@ namespace WorldTree
             }
         }
     }
+
+
 }
