@@ -12,7 +12,7 @@
 
 namespace WorldTree
 {
-    public static class NodeActiveStaticRule
+    public static class NodeActiveRule
     {
 
         /// <summary>

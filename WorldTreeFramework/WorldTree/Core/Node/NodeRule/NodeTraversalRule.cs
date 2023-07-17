@@ -13,7 +13,7 @@ using System;
 namespace WorldTree
 {
 
-    public static class NodeTraversalStaticRule
+    public static class NodeTraversalRule
     {
         /// <summary>
         /// 前序遍历

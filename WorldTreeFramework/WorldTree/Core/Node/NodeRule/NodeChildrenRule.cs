@@ -12,7 +12,7 @@ using System;
 
 namespace WorldTree
 {
-    public static class NodeChildrenStaticRule
+    public static class NodeChildrenRule
     {
         /// <summary>
         /// 子节点

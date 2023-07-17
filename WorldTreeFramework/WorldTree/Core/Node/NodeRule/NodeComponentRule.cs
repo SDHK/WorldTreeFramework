@@ -13,7 +13,7 @@ using System;
 
 namespace WorldTree
 {
-    public static class NodeComponentStaticRule
+    public static class NodeComponentRule
     {
 
 

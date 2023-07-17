@@ -9,7 +9,7 @@
 
 namespace WorldTree
 {
-    public static partial class NodeStaticRule
+    public static partial class NodeRule
     {
         /// <summary>
         /// 获取父类型法则列表

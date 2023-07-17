@@ -12,7 +12,7 @@ using System;
 
 namespace WorldTree
 {
-    public static class NodeListenerStaticRule
+    public static class NodeListenerRule
     {
         /// <summary>
         /// 动态监听器切换目标

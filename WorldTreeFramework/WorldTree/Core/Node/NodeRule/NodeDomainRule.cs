@@ -16,7 +16,7 @@ using System;
 
 namespace WorldTree
 {
-    public static class NodeDomainStaticRule
+    public static class NodeDomainRule
     {
         /// <summary>
         /// 域节点
