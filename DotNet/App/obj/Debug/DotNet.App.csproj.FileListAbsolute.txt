@@ -1,0 +1,16 @@
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\DotNet.App.csproj.AssemblyReference.cache
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\DotNet.App.GeneratedMSBuildEditorConfig.editorconfig
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\DotNet.App.AssemblyInfoInputs.cache
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\DotNet.App.AssemblyInfo.cs
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\DotNet.App.csproj.CoreCompileInputs.cache
+D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\App.exe
+D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\App.deps.json
+D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\App.runtimeconfig.json
+D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\App.dll
+D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\App.pdb
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\DotNet.App.csproj.CopyComplete
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\App.dll
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\refint\App.dll
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\App.pdb
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\DotNet.App.genruntimeconfig.cache
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\obj\Debug\ref\App.dll

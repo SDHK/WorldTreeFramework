@@ -1,0 +1,8 @@
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\bin\Debug\net6.0\DotNet.Core.deps.json
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\bin\Debug\net6.0\DotNet.Core.dll
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\bin\Debug\net6.0\DotNet.Core.pdb
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\net6.0\DotNet.Core.csproj.AssemblyReference.cache
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\net6.0\DotNet.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\net6.0\DotNet.Core.AssemblyInfoInputs.cache
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\net6.0\DotNet.Core.AssemblyInfo.cs
+D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\net6.0\DotNet.Core.csproj.CoreCompileInputs.cache
