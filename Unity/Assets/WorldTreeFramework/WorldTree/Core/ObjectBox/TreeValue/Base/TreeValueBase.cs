@@ -15,28 +15,25 @@ namespace WorldTree
     /// <summary>
     /// 树节点值类型基类
     /// </summary>
-    public abstract class TreeValueBase : Node
-    {
-    }
-
+    public abstract class TreeValueBase : Node { }
 
     /// <summary>
     /// 树节点值类型泛型基类
     /// </summary>
     public abstract partial class TreeValueBase<T> : TreeValueBase
-        ,ChildOf<INode>
-        ,AsRule<IRule>
+        , ChildOf<INode>
+        , AsRule<IRule>
         where T : IEquatable<T>
-        
+
     {
         /// <summary>
         /// 全局法则执行器
         /// </summary>
-        public IRuleActuator<IValueChangeRuleBase<T>> m_GlobalValueChange;
+        public IRuleActuator<IValueChangeRuleEvent<T>> m_GlobalValueChange;
         /// <summary>
         /// 法则执行器
         /// </summary>
-        public RuleActuator<IValueChangeRuleBase<T>> m_ValueChange;
+        public RuleActuator<IValueChangeRuleEvent<T>> m_ValueChange;
 
         /// <summary>
         /// 值

@@ -40,8 +40,5 @@
     </Compile>
   </ItemGroup>
 
-  <!--<ItemGroup>
-    <Compile Include="**\*.meta" Exclude="obj\**\*.meta" Visible="false" />
-  </ItemGroup>-->
 
 </Project>

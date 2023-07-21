@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SerializableModel xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tasks>
+    <tasks>
+      <Task>
+        <blocks />
+        <tabs>
+          <DocumentTab>
+            <name>Program.cs</name>
+            <path>App\Program.cs</path>
+            <absolutePath>D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\Program.cs</absolutePath>
+            <position>
+              <line>17</line>
+              <column>54</column>
+              <lineHash>+sI7qProXgQPLzf/6u43xhNDz+Vn1C0SpP16DHhl+Ps=</lineHash>
+            </position>
+          </DocumentTab>
+          <DocumentTab>
+            <name>DotNetTestNode.cs</name>
+            <path>App\DotNetTestNode.cs</path>
+            <absolutePath>D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\DotNetTestNode.cs</absolutePath>
+            <position>
+              <line>22</line>
+              <column>1</column>
+              <lineHash>ECtRuXZaVqPomffPDuOOUlH5xQOzV7MwpJGD63sVVgQ=</lineHash>
+            </position>
+          </DocumentTab>
+          <DocumentTab>
+            <name>DotNet.Core.csproj</name>
+            <path>Core\DotNet.Core.csproj</path>
+            <absolutePath>D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\DotNet.Core.csproj</absolutePath>
+          </DocumentTab>
+          <DocumentTab>
+            <name>DotNet.App.csproj</name>
+            <path>App\DotNet.App.csproj</path>
+            <absolutePath>D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\App\DotNet.App.csproj</absolutePath>
+          </DocumentTab>
+        </tabs>
+        <name>Misc</name>
+        <selectedBlock>-1</selectedBlock>
+        <selectedTab>-1</selectedTab>
+        <startupProjectsInitialized>false</startupProjectsInitialized>
+      </Task>
+    </tasks>
+    <selectedTask>0</selectedTask>
+  </tasks>
+</SerializableModel>

@@ -56,7 +56,7 @@
     <Analyzer Include="D:\SDHK\Program\Work\VisualStudio\2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\_Init\Editor\UnityWorldTreeEditor.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityWorldTreeEditor.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\EntityBindMonoTool.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\Editor\ScriptableSingleton.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\EditorAssetField.cs" />
@@ -1010,6 +1010,14 @@
     <ProjectReference Include="Sirenix.OdinInspector.CompatibilityLayer.csproj">
       <Project>{E387569F-725F-F5C8-517B-584709B7D5D8}</Project>
       <Name>Sirenix.OdinInspector.CompatibilityLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.Core.csproj">
+      <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
+      <Name>WorldTree.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.UnityCore.csproj">
+      <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>
+      <Name>WorldTree.UnityCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

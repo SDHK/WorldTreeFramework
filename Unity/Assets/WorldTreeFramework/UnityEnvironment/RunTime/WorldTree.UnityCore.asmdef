@@ -1,0 +1,18 @@
+{
+    "name": "WorldTree.UnityCore",
+    "rootNamespace": "WorldTree",
+    "references": [
+        "GUID:e34a5702dd353724aa315fb8011f08c3",
+        "GUID:104971acd352de048964cb7f7b53027b",
+        "GUID:c92fa0834b185554e92f6ec707250895"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

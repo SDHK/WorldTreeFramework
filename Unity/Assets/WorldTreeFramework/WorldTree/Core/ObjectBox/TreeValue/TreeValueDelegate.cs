@@ -51,15 +51,21 @@ namespace WorldTree
         }
     }
 
-    class TreeValueDelegateAwakeRule<T> : AwakeRule<TreeValueDelegate<T>, object, Func<object, T>, Action<object, T>>
-    where T : struct, IEquatable<T>
+
+    public static class TreeValueDelegateRule
     {
-        public override void OnEvent(TreeValueDelegate<T> self, object arg1, Func<object, T> arg2, Action<object, T> arg3)
+        class AwakeRuleGenerics<T> : AwakeRule<TreeValueDelegate<T>, object, Func<object, T>, Action<object, T>>
+            where T : struct, IEquatable<T>
         {
-            self.m_BindObject = arg1;
-            self.m_Get = arg2;
-            self.m_Set = arg3;
+            public override void OnEvent(TreeValueDelegate<T> self, object arg1, Func<object, T> arg2, Action<object, T> arg3)
+            {
+                self.m_BindObject = arg1;
+                self.m_Get = arg2;
+                self.m_Set = arg3;
+            }
         }
     }
+
+
 
 }

@@ -9,7 +9,7 @@
 
 namespace WorldTree
 {
-    public static partial class TreeValueRule
+    public static partial class TreeValueBaseRule
     {
         class TreeValueStringAwakeRule : AwakeRule<TreeValueBase<string>>
         {

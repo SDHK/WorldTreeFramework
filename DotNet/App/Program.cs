@@ -26,6 +26,7 @@ namespace WorldTree
 
             Core.Root.AddComponent(out DotNetTestNode _);
 
+
             while (true)
             {
                 Thread.Sleep(100);

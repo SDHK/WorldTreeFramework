@@ -17,9 +17,14 @@ namespace WorldTree
         {
             public override void OnEvent(DotNetTestNode self)
             {
-                World.Log("DotNetTestNode 启动！！！");
+                World.Log(" 初始化！！！");
+
+
             }
         }
 
     }
+
+
+  
 }
