@@ -1,17 +1,25 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/7/17 14:35
+* 日期： 2022/7/17 17:23
 
-* 描述： 
-
+* 描述： 节点对象池管理器。
+* 
 */
-
 using System;
 
 namespace WorldTree
 {
+    /// <summary>
+    /// 节点对象池管理器
+    /// </summary>
+    public class NodePoolManager : Node, ComponentOf<WorldTreeCore>
+        , AsRule<IAwakeRule>
+    {
+        public TreeDictionary<Type, NodePool> m_Pools;
+    }
+
+
     public static partial class NodeRule
     {
         /// <summary>
@@ -34,6 +42,23 @@ namespace WorldTree
 
     public static partial class NodePoolManagerRule
     {
+
+        class AddRule : AddRule<NodePoolManager>
+        {
+            public override void OnEvent(NodePoolManager self)
+            {
+                self.AddChild(out self.m_Pools);
+            }
+        }
+
+        class RemoveRule : RemoveRule<NodePoolManager>
+        {
+            public override void OnEvent(NodePoolManager self)
+            {
+                self.m_Pools = null;
+            }
+        }
+
         /// <summary>
         /// 获取节点
         /// </summary>
@@ -130,5 +155,4 @@ namespace WorldTree
             }
         }
     }
-
 }

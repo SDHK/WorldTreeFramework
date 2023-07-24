@@ -36,33 +36,33 @@ namespace WorldTree
         /// </summary>
         public static void RefreshActive(this INode self)
         {
-            self.PoolGet(out UnitQueue<INode> queue);
-            queue.Enqueue(self);
-            while (queue.Count != 0)
+            using (self.PoolGet(out UnitQueue<INode> queue))
             {
-                var current = queue.Dequeue();
-                if (current.IsActive != ((current.Parent == null) ? current.ActiveToggle : current.Parent.IsActive && current.ActiveToggle))
+                queue.Enqueue(self);
+                while (queue.Count != 0)
                 {
-                    current.IsActive = !current.IsActive;
-
-                    if (current.m_Components != null)
+                    var current = queue.Dequeue();
+                    if (current.IsActive != ((current.Parent == null) ? current.ActiveToggle : current.Parent.IsActive && current.ActiveToggle))
                     {
-                        foreach (var item in current.m_Components)
+                        current.IsActive = !current.IsActive;
+                        if (current.m_Components != null)
                         {
-                            queue.Enqueue(item.Value);
+                            foreach (var item in current.m_Components)
+                            {
+                                queue.Enqueue(item.Value);
+                            }
                         }
-                    }
 
-                    if (current.m_Children != null)
-                    {
-                        foreach (var item in current.m_Children)
+                        if (current.m_Children != null)
                         {
-                            queue.Enqueue(item.Value);
+                            foreach (var item in current.m_Children)
+                            {
+                                queue.Enqueue(item.Value);
+                            }
                         }
                     }
                 }
             }
-            queue.Dispose();
         }
 
     }

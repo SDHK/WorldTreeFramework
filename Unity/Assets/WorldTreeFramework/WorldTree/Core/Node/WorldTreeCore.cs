@@ -64,7 +64,7 @@ namespace WorldTree
         /// 数组对象池管理器
         /// </summary>
         public ArrayPoolManager ArrayPoolManager;
-      
+
 
         public WorldTreeCore()
         {
@@ -155,7 +155,7 @@ namespace WorldTree
         public static void Destroy(this WorldTreeCore self)
         {
             self.RemoveAll();
-          
+
 
             self.NewRuleGroup = default;
             self.GetRuleGroup = default;
@@ -348,7 +348,6 @@ namespace WorldTree
             {
                 INodeListener nodeListener = (node as INodeListener);
                 //检测添加静态监听
-                //self.StaticListenerRuleActuatorManager.TryAddListener(nodeListener);
                 self.ReferencedPoolManager.TryAddStaticListener(nodeListener);
             }
         }
@@ -376,10 +375,6 @@ namespace WorldTree
                 //检测移除动态监听
                 self.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
 
-                ////检测移除静态监听
-                //self.StaticListenerRuleActuatorManager.RemoveListener(nodeListener);
-                //检测移除动态监听
-                //nodeListener.ListenerClearTarget();
             }
 
             //这个节点的移除事件

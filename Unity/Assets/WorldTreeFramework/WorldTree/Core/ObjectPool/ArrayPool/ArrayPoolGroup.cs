@@ -1,16 +1,56 @@
 ﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/7/17 12:13
+* 日期： 2023/4/12 10:37
 
-* 描述： 
+* 描述： 数组对象池集合
 
 */
 
+using System;
+
 namespace WorldTree
 {
+    /// <summary>
+    /// 数组对象池集合
+    /// </summary>
+    public class ArrayPoolGroup : Node, ChildOf<ArrayPoolManager>
+        , AsRule<IAwakeRule<Type>>
+    {
+        /// <summary>
+        /// 数组类型
+        /// </summary>
+        public Type ArrayType;
+        public TreeDictionary<int, ArrayPool> Pools;
+    }
+
     public static partial class ArrayPoolGroupRule
     {
+        class AwakeRule : AwakeRule<ArrayPoolGroup, Type>
+        {
+            public override void OnEvent(ArrayPoolGroup self, Type type)
+            {
+                self.ArrayType = type;
+            }
+        }
+
+        class AddRule : AddRule<ArrayPoolGroup>
+        {
+            public override void OnEvent(ArrayPoolGroup self)
+            {
+                self.AddChild(out self.Pools);
+            }
+        }
+
+        class RemoveRule : RemoveRule<ArrayPoolGroup>
+        {
+            public override void OnEvent(ArrayPoolGroup self)
+            {
+                self.Pools = null;
+            }
+        }
+
+
         /// <summary>
         /// 获取数组对象池
         /// </summary>
