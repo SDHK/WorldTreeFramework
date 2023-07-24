@@ -1,5 +1,8 @@
 /Unity/Library
-/Unity/.vs/
+/Unity/.vs
+/Unity/Logs
+/Unity/Temp
+*/Temp/
 /.vs
 Bin/
 bin/
