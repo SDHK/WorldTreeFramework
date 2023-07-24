@@ -16,7 +16,7 @@ namespace WorldTree
     /// </summary>
     public class TreeMatrix2<T> : Node, ChildOf<INode>
         , AsRule<IAwakeRule<int, int>>
-      
+
     {
         /// <summary>
         /// x轴长度

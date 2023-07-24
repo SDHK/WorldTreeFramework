@@ -14,7 +14,8 @@ namespace WorldTree
     /// 全局法则执行器
     /// </summary>
     public class GlobalRuleActuator<R> : GlobalRuleActuatorBase, IRuleActuator<R>, ComponentOf<GlobalRuleActuatorManager>
-     where R : IRule
+        , AsRule<IAwakeRule>
+        where R : IRule
     {
         public override string ToString()
         {

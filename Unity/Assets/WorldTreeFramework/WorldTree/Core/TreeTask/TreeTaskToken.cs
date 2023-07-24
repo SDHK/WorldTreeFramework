@@ -32,6 +32,7 @@ namespace WorldTree
     /// 树任务令牌
     /// </summary>
     public class TreeTaskToken : Node, ChildOf<INode>, ComponentOf<INode>
+        , AsRule<IAwakeRule>
     {
         /// <summary>
         /// 任务状态

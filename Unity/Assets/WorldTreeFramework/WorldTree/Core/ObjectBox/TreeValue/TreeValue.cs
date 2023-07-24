@@ -15,6 +15,7 @@ namespace WorldTree
     /// 泛型树值类型
     /// </summary>
     public partial class TreeValue<T> : TreeValueBase<T>
+        , AsRule<IAwakeRule>
         , ChildOf<INode>
         where T : IEquatable<T>
     {
@@ -29,7 +30,7 @@ namespace WorldTree
                 {
                     this.m_Value = value;
                 }
-                else  if (!this.m_Value.Equals(value))
+                else if (!this.m_Value.Equals(value))
                 {
                     this.m_Value = value;
                     m_ValueChange?.Send(value);

@@ -16,6 +16,7 @@ namespace WorldTree
     /// 树泛型HashSet
     /// </summary>
     public class TreeHashSet<T> : HashSet<T>, INode, ChildOf<INode>
+        , AsRule<IAwakeRule>
     {
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }

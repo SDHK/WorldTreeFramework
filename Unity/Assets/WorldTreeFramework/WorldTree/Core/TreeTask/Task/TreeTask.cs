@@ -19,6 +19,7 @@ namespace WorldTree
     /// <remarks>因为继承Node所以可以挂在树上</remarks>
     [AsyncMethodBuilder(typeof(TreeTaskMethodBuilder))]
     public class TreeTask : TreeTaskBase
+        , AsRule<IAwakeRule>
         , AsRule<ITreeTaskSetResuItRule>
     {
         public TreeTask GetAwaiter() => this;

@@ -28,6 +28,7 @@ namespace WorldTree
     /// UI 栈窗口管理器
     /// </summary>
     public class WindowManager : NodeListener
+        , AsRule<IAwakeRule>
     {
         /// <summary>
         /// 全部窗口
@@ -47,8 +48,8 @@ namespace WorldTree
         /// 打开窗口入栈
         /// </summary>
         public async TreeTask<T> Show<T>()
-            where T : class, INode, ComponentOf<INode>
-            
+            where T : class, INode, ComponentOf<INode>, AsRule<IAwakeRule>
+
         {
             if (windows.TryGetValue(typeof(T), out INode node))
             {

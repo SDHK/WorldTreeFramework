@@ -7,6 +7,7 @@
 ****************************************/
 
 using System;
+using Codice.CM.Common.Tree;
 
 namespace WorldTree
 {

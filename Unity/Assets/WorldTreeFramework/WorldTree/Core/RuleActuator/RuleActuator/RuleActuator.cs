@@ -14,7 +14,10 @@ namespace WorldTree
     /// <summary>
     /// 泛型法则执行器
     /// </summary>
-    public class RuleActuator<R> : RuleActuatorBase, IRuleActuator<R> where R : IRule
+    public class RuleActuator<R> : RuleActuatorBase, IRuleActuator<R>
+         , AsRule<IAwakeRule>
+        where R : IRule
+
     {
         public override string ToString()
         {

@@ -16,6 +16,7 @@ namespace WorldTree
     /// 动态节点监听器集合
     /// </summary>
     public class DynamicNodeListenerGroup : Node, ComponentOf<ReferencedPool>
+        , AsRule<IAwakeRule>
     {
         /// <summary>
         /// 监听器执行器字典集合

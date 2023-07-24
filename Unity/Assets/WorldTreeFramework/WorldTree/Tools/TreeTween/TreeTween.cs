@@ -16,6 +16,7 @@ namespace WorldTree
     /// 值渐变
     /// </summary>
     public class TreeTween<T1> : TreeTweenBase, ComponentOf<TreeValueBase<T1>>
+        , AsRule<IAwakeRule>
         , AsRule<ITweenUpdateRule>
         where T1 : IEquatable<T1>
     {

@@ -12,12 +12,12 @@ namespace WorldTree
     public static partial class NodeRule
     {
         /// <summary>
-        /// 获取父类型法则列表
+        /// 获取指定父类型法则列表
         /// </summary>
-        public static IRuleList<R> BaseRule<N, R, B>(this AsBaseRule<N, B> self, R defaultRule)
+        public static IRuleList<R> GetBaseRule<N, B, R>(this N self)
             where R : IRule
             where N : class, B, INode
-            where B : class, INode
+            where B : class, INode, AsRule<R>
         {
             return self.Core.RuleManager.GetRuleList<R, B>();
         }

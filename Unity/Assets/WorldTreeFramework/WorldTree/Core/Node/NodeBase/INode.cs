@@ -17,13 +17,14 @@ namespace WorldTree
     /// 组件：父节点限制
     /// </summary>
     /// <typeparam name="T">父节点类型</typeparam>
+    /// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
     public interface ComponentOf<in T> where T : class, INode { }
-
 
     /// <summary>
     /// 节点：父节点限制
     /// </summary>
     /// <typeparam name="T">父节点类型</typeparam>
+    /// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
     public interface ChildOf<in T> where T : class, INode { }
 
 
@@ -31,16 +32,8 @@ namespace WorldTree
     /// 节点：可用法则限制
     /// </summary>
     /// <typeparam name="R">法则类型</typeparam>
+    /// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
     public interface AsRule<in R> where R : IRule { }
-
-    /// <summary>
-    /// 节点：父类法则关联
-    /// </summary>
-    /// <typeparam name="N">当前节点类型</typeparam>
-    /// <typeparam name="B">父类型</typeparam>
-    /// <remarks>用于子类调用父类法则</remarks>
-    public interface AsBaseRule<N, B>: INode where N : class, B, INode where B : class, INode { }
-
 
     /// <summary>
     /// 世界树节点接口
@@ -55,7 +48,6 @@ namespace WorldTree
         , AsRule<IRecycleRule>
         , AsRule<IDestroyRule>
 
-        , AsRule<IAwakeRule>
         , AsRule<IEnableRule>
         , AsRule<IDisableRule>
 

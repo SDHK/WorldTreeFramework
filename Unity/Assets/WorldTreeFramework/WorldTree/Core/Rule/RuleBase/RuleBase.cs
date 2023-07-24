@@ -26,7 +26,7 @@ namespace WorldTree
         /// <summary>
         /// 多播标记
         /// </summary>
-        bool IsMulticast { get; set; } 
+        bool IsMulticast { get; set; }
         /// <summary>
         /// 节点类型标记
         /// </summary>

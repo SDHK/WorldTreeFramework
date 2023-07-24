@@ -45,7 +45,7 @@ namespace WorldTree
     /// 游戏对象池管理器
     /// </summary>
     public class GameObjectPoolManager : Node, ComponentOf<WorldTreeRoot>
-        
+        , AsRule<IAwakeRule>
     {
         UnitDictionary<GameObject, GameObjectPool> pools = new UnitDictionary<GameObject, GameObjectPool>();
 

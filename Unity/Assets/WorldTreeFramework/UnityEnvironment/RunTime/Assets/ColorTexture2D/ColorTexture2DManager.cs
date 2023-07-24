@@ -38,7 +38,7 @@ namespace WorldTree
     /// 颜色图片管理器
     /// </summary>
     public class ColorTexture2DManager : Node, ComponentOf<WorldTreeRoot>
-        
+        , AsRule<IAwakeRule>
     {
         UnitDictionary<Color, Texture2D> colors = new UnitDictionary<Color, Texture2D>();
         public Texture2D Get(Color color)

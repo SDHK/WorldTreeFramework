@@ -16,6 +16,7 @@ namespace WorldTree
     /// 静态节点监听器集合
     /// </summary>
     public class StaticNodeListenerGroup : Node, ComponentOf<ReferencedPool>
+        , AsRule<IAwakeRule>
     {
         /// <summary>
         /// 监听器执行器字典集合

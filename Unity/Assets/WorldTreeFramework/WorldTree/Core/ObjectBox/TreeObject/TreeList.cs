@@ -32,6 +32,7 @@ namespace WorldTree
         IReadOnlyCollection<T>,
         ChildOf<INode>,
         ComponentOf<INode>,
+        AsRule<IAwakeRule>,
         AsRule<IAwakeRule<int>>,
         AsRule<IAwakeRule<IEnumerable<T>>>
     {

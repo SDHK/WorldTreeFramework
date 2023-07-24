@@ -18,6 +18,7 @@ namespace WorldTree
 {
 
     public class GUIWindow : GUIBase, ComponentOf<GUIGeneralWindow>
+        , AsRule<IAwakeRule>
         , AsRule<IGuiUpdateRule>
     {
         public Rect rect = new Rect(0, 0, 400, 300);

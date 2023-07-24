@@ -18,7 +18,8 @@ namespace WorldTree
     /// </summary>
     [AsyncMethodBuilder(typeof(TreeTaskTokenCatchMethodBuilder))]
     public class TreeTaskTokenCatch : TreeTaskBase
-    , ISyncTask
+        , AsRule<IAwakeRule>
+        , ISyncTask
     {
         public TreeTaskTokenCatch GetAwaiter() => this;
         public override bool IsCompleted { get; set; }

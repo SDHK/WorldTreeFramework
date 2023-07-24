@@ -46,7 +46,7 @@ namespace WorldTree
                 self.AddChild(out self.callback);
             }
         }
-      
+
         class UpdateRule : UpdateRule<CounterCall>
         {
             public override void OnEvent(CounterCall self, float deltaTime)

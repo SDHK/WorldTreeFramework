@@ -17,6 +17,7 @@ namespace WorldTree
     /// Addressables 资源加载管理器
     /// </summary>
     public class AddressablesManager : Node, ComponentOf<WorldTreeRoot>
+        , AsRule<IAwakeRule>
     {
         public TreeDictionary<string, Object> assets;
 
@@ -49,7 +50,7 @@ namespace WorldTree
     {
         public override void OnEvent(AddressablesManager self)
         {
-           self.AddChild(out self.assets);
+            self.AddChild(out self.assets);
         }
     }
 
