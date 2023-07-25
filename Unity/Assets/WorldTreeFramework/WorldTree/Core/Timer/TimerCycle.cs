@@ -23,28 +23,32 @@ namespace WorldTree
 
     }
 
-    class TimerCycleUpdateRule : UpdateRule<TimerCycle>
+
+    public static partial class TimerCycleRule
     {
-        public override void OnEvent(TimerCycle self, float deltaTime)
+        class UpdateRule : UpdateRule<TimerCycle>
         {
-            if (self.IsActive)
+            public override void OnEvent(TimerCycle self, float deltaTime)
             {
-                self.time += deltaTime;
-                if (self.time >= self.timeOutTime)
+                if (self.IsActive)
                 {
-                    self.time = 0;
-                    self.callback?.Send();
+                    self.time += deltaTime;
+                    if (self.time >= self.timeOutTime)
+                    {
+                        self.time = 0;
+                        self.callback?.Send();
+                    }
                 }
             }
-
         }
-    }
 
-    class TimerCycleGetRule : GetRule<TimerCycle>
-    {
-        public override void OnEvent(TimerCycle self)
+        class GetRule : GetRule<TimerCycle>
         {
-            self.time = 0;
+            public override void OnEvent(TimerCycle self)
+            {
+                self.time = 0;
+            }
         }
     }
+
 }

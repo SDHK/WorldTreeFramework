@@ -19,23 +19,27 @@ namespace WorldTree
         public long key;
     }
 
-    public class TreeTaskQueueCompleterAwakeRule : AwakeRule<TreeTaskQueueCompleter, long, TreeTaskQueueLock>
+    public static partial class TreeTaskQueueCompleterRule
     {
-        public override void OnEvent(TreeTaskQueueCompleter self, long key, TreeTaskQueueLock queueLock)
+        class AwakeRule : AwakeRule<TreeTaskQueueCompleter, long, TreeTaskQueueLock>
         {
-            self.key = key;
-            self.m_QueueLock = queueLock;
+            public override void OnEvent(TreeTaskQueueCompleter self, long key, TreeTaskQueueLock queueLock)
+            {
+                self.key = key;
+                self.m_QueueLock = queueLock;
+            }
+        }
+
+        class RemoveRule : RemoveRule<TreeTaskQueueCompleter>
+        {
+            public override void OnEvent(TreeTaskQueueCompleter self)
+            {
+                self.m_QueueLock.RunNext(self.key);
+                self.m_QueueLock = default;
+                self.key = default;
+            }
         }
     }
 
-    class TreeTaskQueueCompleterRemoveRule : RemoveRule<TreeTaskQueueCompleter>
-    {
-        public override void OnEvent(TreeTaskQueueCompleter self)
-        {
-            self.m_QueueLock.RunNext(self.key);
-            self.m_QueueLock = default;
-            self.key = default;
-        }
-    }
 
 }

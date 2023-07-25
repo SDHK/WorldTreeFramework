@@ -10,20 +10,7 @@
 
 namespace WorldTree
 {
-    public static partial class NodeStaticRule
-    {
-        /// <summary>
-        /// 异步队列锁
-        /// </summary>
-        /// <remarks>按照队列顺序执行异步任务</remarks>
-        public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this INode self, long key)
-        {
-            return self.Root.AddComponent(out TreeTaskQueueLock _).Lock(self, key);
-        }
-    }
 
-
-    public class TreeTaskQueueLockRootAddRule : RootAddRule<TreeTaskQueueLock> { }
 
     /// <summary>
     /// 异步任务队列锁
@@ -102,19 +89,37 @@ namespace WorldTree
 
     }
 
-    class TreeTaskQueueLockAddRule : AddRule<TreeTaskQueueLock>
+    public static partial class NodeStaticRule
     {
-        public override void OnEvent(TreeTaskQueueLock self)
+        /// <summary>
+        /// 异步队列锁
+        /// </summary>
+        /// <remarks>按照队列顺序执行异步任务</remarks>
+        public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this INode self, long key)
         {
-            self.AddComponent(out self.nodeQueueDictitonary);
+            return self.Root.AddComponent(out TreeTaskQueueLock _).Lock(self, key);
         }
     }
 
-    class TreeTaskQueueLockRemoveRule : RemoveRule<TreeTaskQueueLock>
+    public static partial class TreeTaskQueueLockRule
     {
-        public override void OnEvent(TreeTaskQueueLock self)
+        class RootAddRule : RootAddRule<TreeTaskQueueLock> { }
+
+
+        class AddRule : AddRule<TreeTaskQueueLock>
         {
-            self.nodeQueueDictitonary = null;
+            public override void OnEvent(TreeTaskQueueLock self)
+            {
+                self.AddComponent(out self.nodeQueueDictitonary);
+            }
+        }
+
+        class RemoveRule : RemoveRule<TreeTaskQueueLock>
+        {
+            public override void OnEvent(TreeTaskQueueLock self)
+            {
+                self.nodeQueueDictitonary = null;
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace WorldTree
         }
     }
 
-    public static class CounterCallRule
+    public static partial class CounterCallRule
     {
         class AwakeRule : AwakeRule<CounterCall, int>
         {

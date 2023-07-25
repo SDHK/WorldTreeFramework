@@ -15,7 +15,7 @@ using UnityEngine;
 namespace WorldTree
 {
 
-    public static class ColorTexture2DManagerExtension
+    public static partial class NodeRule
     {
         /// <summary>
         /// 获取颜色图片

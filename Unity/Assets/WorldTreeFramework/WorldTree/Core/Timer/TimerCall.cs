@@ -33,59 +33,64 @@ namespace WorldTree
         }
     }
 
-    class TimerCallAwakeRule : AwakeRule<TimerCall, float>
-    {
-        public override void OnEvent(TimerCall self, float timeOutTime)
-        {
-            self.timeOutTime = timeOutTime;
-            self.time = 0;
-            self.isRun = true;
-            self.AddChild(out self.callback);
-        }
-    }
 
-    class TimerCallUpdateRule : UpdateRule<TimerCall>
+    public static partial class TimerCallRule
     {
-        public override void OnEvent(TimerCall self, float deltaTime)
+        class AwakeRule : AwakeRule<TimerCall, float>
         {
-            if (self.IsActive && self.isRun)
+            public override void OnEvent(TimerCall self, float timeOutTime)
             {
-                self.time += deltaTime;
-                if (self.time >= self.timeOutTime)
+                self.timeOutTime = timeOutTime;
+                self.time = 0;
+                self.isRun = true;
+                self.AddChild(out self.callback);
+            }
+        }
+
+        class UpdateRule : UpdateRule<TimerCall>
+        {
+            public override void OnEvent(TimerCall self, float deltaTime)
+            {
+                if (self.IsActive && self.isRun)
                 {
-                    self.callback.Send();
-                    self.Dispose();
+                    self.time += deltaTime;
+                    if (self.time >= self.timeOutTime)
+                    {
+                        self.callback.Send();
+                        self.Dispose();
+                    }
+                }
+
+            }
+        }
+
+        class RemoveRule : RemoveRule<TimerCall>
+        {
+            public override void OnEvent(TimerCall self)
+            {
+                self.isRun = false;
+                self.callback = null;
+            }
+        }
+
+        class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TimerCall, TaskState>
+        {
+            public override void OnEvent(TimerCall self, TaskState state)
+            {
+                switch (state)
+                {
+                    case TaskState.Running:
+                        self.isRun = true;
+                        break;
+                    case TaskState.Stop:
+                        self.isRun = false;
+                        break;
+                    case TaskState.Cancel:
+                        self.Dispose();
+                        break;
                 }
             }
-
         }
     }
 
-    class TimerCallRemoveRule : RemoveRule<TimerCall>
-    {
-        public override void OnEvent(TimerCall self)
-        {
-            self.isRun = false;
-            self.callback = null;
-        }
-    }
-
-    class TimerCallTreeTaskTokenEventRule : TreeTaskTokenEventRule<TimerCall, TaskState>
-    {
-        public override void OnEvent(TimerCall self, TaskState state)
-        {
-            switch (state)
-            {
-                case TaskState.Running:
-                    self.isRun = true;
-                    break;
-                case TaskState.Stop:
-                    self.isRun = false;
-                    break;
-                case TaskState.Cancel:
-                    self.Dispose();
-                    break;
-            }
-        }
-    }
 }
