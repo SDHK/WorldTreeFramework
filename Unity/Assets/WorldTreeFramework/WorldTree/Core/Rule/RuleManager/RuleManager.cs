@@ -22,7 +22,7 @@ namespace WorldTree
     /// <summary>
     /// 世界法则管理器
     /// </summary>
-    public class RuleManager : Node, ComponentOf<WorldTreeCore>
+    public class RuleManager : CoreNode, ComponentOf<WorldTreeCore>
     {
         /// <summary>
         /// 动态监听器节点类型哈希名单
@@ -68,7 +68,7 @@ namespace WorldTree
         /// 节点法则字典
         /// </summary>
         /// <remarks>记录节点拥有的法则类型，用于法则多态化的查询</remarks>
-        public Dictionary<Type, HashSet<Type>> NodeTypeRulesDictionary = new Dictionary<Type, HashSet<Type>>();
+        public UnitDictionary<Type, HashSet<Type>> NodeTypeRulesDictionary = new UnitDictionary<Type, HashSet<Type>>();
 
         public RuleManager()
         {

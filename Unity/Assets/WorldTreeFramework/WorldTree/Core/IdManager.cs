@@ -16,7 +16,7 @@ namespace WorldTree
     /// <summary>
     /// id管理器
     /// </summary>
-    public class IdManager : Node, ComponentOf<WorldTreeCore>
+    public class IdManager : CoreNode, ComponentOf<WorldTreeCore>
     {
         public IdManager()
         {

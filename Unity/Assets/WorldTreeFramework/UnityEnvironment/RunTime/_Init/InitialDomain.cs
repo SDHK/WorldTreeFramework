@@ -290,8 +290,6 @@ namespace WorldTree
                     self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
                     //self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
                     self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
-
-                    self.AddComponent(out TreeNodeSub _, "");
                 }
 
                 if (Input.GetKeyDown(KeyCode.W))

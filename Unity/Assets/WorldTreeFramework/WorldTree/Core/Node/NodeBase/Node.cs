@@ -7,10 +7,14 @@
 ****************************************/
 
 using System;
-using Codice.CM.Common.Tree;
 
 namespace WorldTree
 {
+    /// <summary>
+    /// 世界树核心节点基类
+    /// </summary>
+    public abstract partial class CoreNode : Node, ICoreNode { }
+
     /// <summary>
     /// 世界树节点基类
     /// </summary>

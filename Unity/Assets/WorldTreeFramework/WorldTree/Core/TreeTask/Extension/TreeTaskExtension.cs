@@ -18,7 +18,7 @@ namespace WorldTree
     public static class TreeTaskExtension
     {
         /// <summary>
-        /// 延迟一帧
+        /// 同步完成
         /// </summary>
         public static TreeTaskCompleted TreeTaskCompleted(this INode self)
         {
@@ -26,7 +26,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 延迟一帧捕获令牌
+        /// 同步捕获令牌
         /// </summary>
         public static TreeTaskTokenCatch TreeTaskTokenCatch(this INode self)
         {

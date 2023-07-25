@@ -15,13 +15,13 @@ namespace WorldTree
     /// <summary>
     /// 动态节点监听器集合
     /// </summary>
-    public class DynamicNodeListenerGroup : Node, ComponentOf<ReferencedPool>
+    public class DynamicNodeListenerGroup : CoreNode, ComponentOf<ReferencedPool>
         , AsRule<IAwakeRule>
     {
         /// <summary>
         /// 监听器执行器字典集合
         /// </summary>
-        public TreeDictionary<Type, ListenerRuleActuator> actuatorDictionary;
+        public UnitDictionary<Type, ListenerRuleActuator> actuatorDictionary = new UnitDictionary<Type, ListenerRuleActuator>();
     }
 
     public static class DynamicNodeListenerGroupRule
@@ -30,7 +30,7 @@ namespace WorldTree
         {
             public override void OnEvent(DynamicNodeListenerGroup self)
             {
-                self.AddComponent(out self.actuatorDictionary);
+                //self.PoolGet(out self.actuatorDictionary);
             }
         }
 

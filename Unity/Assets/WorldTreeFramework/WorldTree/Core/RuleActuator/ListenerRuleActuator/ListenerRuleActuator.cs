@@ -13,7 +13,7 @@ namespace WorldTree
     /// <summary>
     /// 全局监听器法则执行器
     /// </summary>
-    public class ListenerRuleActuator : GlobalRuleActuatorBase, IRuleActuator<IRule>, ComponentOf<GlobalRuleActuatorManager>
+    public class ListenerRuleActuator : GlobalRuleActuatorBase, ICoreNode, IRuleActuator<IRule>, ComponentOf<GlobalRuleActuatorManager>
         , AsRule<IAwakeRule<RuleGroup>>
     {
         public override string ToString()

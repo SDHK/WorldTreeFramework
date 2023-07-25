@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 数组对象池管理器
     /// </summary>
-    public class ArrayPoolManager : Node, ComponentOf<WorldTreeCore>
+    public class ArrayPoolManager : CoreNode, ComponentOf<WorldTreeCore>
         , AsRule<IAwakeRule>
     {
         public TreeDictionary<Type, ArrayPoolGroup> PoolGroups;

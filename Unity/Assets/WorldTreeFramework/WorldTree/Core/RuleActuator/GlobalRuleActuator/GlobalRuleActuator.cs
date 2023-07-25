@@ -7,6 +7,8 @@
 
 */
 
+using System.Linq;
+
 namespace WorldTree
 {
 
@@ -45,11 +47,14 @@ namespace WorldTree
             self.ruleGroup = self.Core.RuleManager.GetOrNewRuleGroup<R>();
             foreach (var item in self.ruleGroup)
             {
-                if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
+                if (!item.Key.GetInterfaces().Contains(typeof(ICoreNode)))
                 {
-                    foreach (var node in pool)
+                    if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
                     {
-                        self.TryAdd(node.Value);
+                        foreach (var node in pool)
+                        {
+                            self.TryAdd(node.Value);
+                        }
                     }
                 }
             }

@@ -48,7 +48,7 @@ namespace WorldTree
     /// <summary>
     /// 对象池接口
     /// </summary>
-    public interface IPool:IUnit
+    public interface IPool : ICoreNode, IUnit
     {
         /// <summary>
         /// 对象类型
@@ -59,7 +59,7 @@ namespace WorldTree
         /// 当前保留对象数量
         /// </summary>
         public int Count { get; }
-        
+
         /// <summary>
         /// 获取对象
         /// </summary>
@@ -92,7 +92,7 @@ namespace WorldTree
     /// <summary>
     /// 对象池抽象基类
     /// </summary>
-    public abstract class PoolBase : Node, IPool
+    public abstract class PoolBase : CoreNode, IPool
     {
 
         public Type ObjectType { get; set; }

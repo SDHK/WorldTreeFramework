@@ -28,7 +28,7 @@ namespace WorldTree
     /// <summary>
     /// 世界树核心
     /// </summary>
-    public class WorldTreeCore : Node
+    public class WorldTreeCore : CoreNode
     {
         public IRuleGroup<IAddRule> AddRuleGroup;
         public IRuleGroup<IRemoveRule> RemoveRuleGroup;
@@ -240,7 +240,7 @@ namespace WorldTree
             {
                 if (!self.UnitPoolManager.IsRecycle)
                 {
-                    return self.UnitPoolManager.Get(type) as T;
+                    return self.UnitPoolManager.Get<T>();
                 }
             }
 
@@ -333,7 +333,7 @@ namespace WorldTree
             self.EnableRuleGroup?.Send(node);//添加后调用激活事件
 
             //广播给全部监听器!!!!
-            if (node.Branch.Id != self.Id)
+            if (node is not ICoreNode)
             {
                 node.SendStaticNodeListener<IListenerAddRule>();
                 node.SendDynamicNodeListener<IListenerAddRule>();
@@ -344,9 +344,8 @@ namespace WorldTree
             self.AddRuleGroup?.Send(node);
 
 
-            if (node is INodeListener && node.Branch.Id != self.Id)
+            if (node is INodeListener nodeListener && node is not ICoreNode)
             {
-                INodeListener nodeListener = (node as INodeListener);
                 //检测添加静态监听
                 self.ReferencedPoolManager.TryAddStaticListener(nodeListener);
             }
@@ -366,7 +365,7 @@ namespace WorldTree
             node.RemoveAll();//移除所有子节点和组件
             self.DisableRuleGroup?.Send(node);//调用禁用事件
 
-            if (node is INodeListener && node.Branch.Id != self.Id)
+            if (node is INodeListener && node is not ICoreNode)
             {
                 INodeListener nodeListener = (node as INodeListener);
 
@@ -382,7 +381,7 @@ namespace WorldTree
 
 
             //广播给全部监听器!!!!
-            if (node.Branch.Id != self.Id)
+            if (node is not ICoreNode)
             {
                 //检测移除静态监听
                 node.SendStaticNodeListener<IListenerRemoveRule>();

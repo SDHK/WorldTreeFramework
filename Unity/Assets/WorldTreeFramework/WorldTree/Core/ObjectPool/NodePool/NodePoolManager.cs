@@ -13,10 +13,17 @@ namespace WorldTree
     /// <summary>
     /// 节点对象池管理器
     /// </summary>
-    public class NodePoolManager : Node, ComponentOf<WorldTreeCore>
+    public class NodePoolManager : CoreNode, ComponentOf<WorldTreeCore>
         , AsRule<IAwakeRule>
     {
         public TreeDictionary<Type, NodePool> m_Pools;
+
+        public override void Dispose()
+        {
+            this.IsRecycle = true;
+            this.IsDisposed = true;
+            base.Dispose();
+        }
     }
 
 

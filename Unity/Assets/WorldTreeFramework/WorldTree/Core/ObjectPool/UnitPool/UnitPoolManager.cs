@@ -15,10 +15,17 @@ namespace WorldTree
     /// <summary>
     /// 单位对象池管理器
     /// </summary>
-    public class UnitPoolManager : Node, ComponentOf<WorldTreeCore>
+    public class UnitPoolManager : CoreNode, ComponentOf<WorldTreeCore>
         , AsRule<IAwakeRule>
     {
         public TreeDictionary<Type, UnitPool> m_Pools;
+
+        public override void Dispose()
+        {
+            this.IsRecycle = true;
+            this.IsDisposed = true;
+            base.Dispose();
+        }
 
     }
 

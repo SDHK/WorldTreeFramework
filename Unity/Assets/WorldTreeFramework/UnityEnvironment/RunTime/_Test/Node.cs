@@ -3,20 +3,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using WorldTree;
 
-
-
-public class TreeNodeSub : TreeNode
-    , AsRule<IAwakeRule<string>>
-{
-
-    public void Test1()
-    {
-        this.GetBaseRule<TreeNodeSub, TreeNode, IAwakeRule>().Send(this);
-    }
-
-}
-
-
 public class TreeNode : Node
     , ComponentOf<INode>
     , AsRule<IFixedUpdateRule>

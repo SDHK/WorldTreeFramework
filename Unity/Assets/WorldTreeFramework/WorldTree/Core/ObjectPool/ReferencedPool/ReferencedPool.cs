@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 引用池
     /// </summary>
-    public class ReferencedPool : TreeDictionary<long, INode>, ChildOf<ReferencedPoolManager>
+    public class ReferencedPool : TreeDictionary<long, INode>, ICoreNode, ChildOf<ReferencedPoolManager>
     {
         /// <summary>
         /// 引用池类型

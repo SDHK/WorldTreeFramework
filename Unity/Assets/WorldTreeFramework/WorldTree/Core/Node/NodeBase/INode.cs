@@ -35,6 +35,13 @@ namespace WorldTree
     /// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
     public interface AsRule<in R> where R : IRule { }
 
+
+    /// <summary>
+    /// 核心节点标记
+    /// </summary>
+    /// <remarks>将节点标记为核心组件，避免核心启动时处理自己出现死循环</remarks>
+    public interface ICoreNode { }
+
     /// <summary>
     /// 世界树节点接口
     /// </summary>

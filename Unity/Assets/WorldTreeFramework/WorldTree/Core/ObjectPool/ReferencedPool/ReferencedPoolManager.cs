@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 引用池管理器
     /// </summary>
-    public class ReferencedPoolManager : Node
+    public class ReferencedPoolManager : CoreNode
         , ComponentOf<WorldTreeCore>
     {
         /// <summary>
