@@ -71,7 +71,6 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIWindow\GUIWindow.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListDictionary.cs" />
     <Compile Include="Assets\Scripts\_Test\TestMonogo.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime2\_Init\InirialDomainSystem.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIBeginHorizontal.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIButton.cs" />
   </ItemGroup>

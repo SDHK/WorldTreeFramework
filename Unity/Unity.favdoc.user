@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Favorites xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <folders />
+  <favorites>
+    <Favorite>
+      <name>MultilayerPerceptronManager.cs</name>
+      <path>Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs</path>
+      <absolutePath>D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs</absolutePath>
+      <position>
+        <line>20</line>
+        <column>1</column>
+        <lineHash>ECtRuXZaVqPomffPDuOOUlH5xQOzV7MwpJGD63sVVgQ=</lineHash>
+      </position>
+    </Favorite>
+    <Favorite>
+      <name>MultilayerPerceptronManagerRule.cs</name>
+      <path>Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs</path>
+      <absolutePath>D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs</absolutePath>
+      <position>
+        <line>92</line>
+        <column>23</column>
+        <lineHash>WZFtFgpvBP7ovU3nEm+ycOGgWpjIAVrxPD94/1+jI4g=</lineHash>
+      </position>
+    </Favorite>
+  </favorites>
+</Favorites>
