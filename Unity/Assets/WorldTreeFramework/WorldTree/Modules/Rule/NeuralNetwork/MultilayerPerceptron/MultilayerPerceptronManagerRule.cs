@@ -1,41 +1,25 @@
-﻿/****************************************
-
-* 作者： 闪电黑客
-* 日期： 2023/4/20 10:26
-
-* 描述： 多层感知器管理器
-* 
-*/
-
-namespace WorldTree
+﻿namespace WorldTree
 {
-    /// <summary>
-    /// 多层感知器管理器
-    /// </summary>
-    public class MultilayerPerceptronManager : Node, ChildOf<INode>, ComponentOf<INode>
-    {
-        public TreeList<PerceptronLayer> layers;
-    }
 
-    class MultilayerPerceptronManagerAddRule : AddRule<MultilayerPerceptronManager>
+    public static partial class MultilayerPerceptronManagerRule
     {
-        public override void OnEvent(MultilayerPerceptronManager self)
+        class AddRule : AddRule<MultilayerPerceptronManager>
         {
-            self.AddComponent(out self.layers);
+            public override void OnEvent(MultilayerPerceptronManager self)
+            {
+                self.AddComponent(out self.layers);
+            }
         }
-    }
 
-    class MultilayerPerceptronManagerRemoveRule : RemoveRule<MultilayerPerceptronManager>
-    {
-        public override void OnEvent(MultilayerPerceptronManager self)
+        class RemoveRule : RemoveRule<MultilayerPerceptronManager>
         {
-            self.layers = null;
+            public override void OnEvent(MultilayerPerceptronManager self)
+            {
+                self.layers = null;
+            }
         }
-    }
 
 
-    public static class MultilayerPerceptronManagerRule
-    {
         /// <summary>
         /// 添加一层
         /// </summary>
@@ -44,7 +28,7 @@ namespace WorldTree
             self.layers.Add(self.AddChild(out PerceptronLayer currentLayer, count));
             if (self.layers.Count > 1)
             {
-                var parentNodes = self.layers[self.layers.Count - 2].nodes;
+                var parentNodes = self.layers[^2].nodes;
                 var childNodes = currentLayer.nodes;
 
                 foreach (var parentNode in parentNodes)
@@ -89,14 +73,14 @@ namespace WorldTree
             {
                 World.LogError("网络层数小于2");
             }
-            if (self.layers[self.layers.Count - 1].nodes.Count != values.Length)
+            if (self.layers[^1].nodes.Count != values.Length)
             {
                 World.LogError("参数数量与输出层节点数不等");
             }
 
             for (int i = 0; i < values.Length; i++)
             {
-                var node = self.layers[self.layers.Count - 1].nodes[i];
+                var node = self.layers[^1].nodes[i];
                 node.SetError(values[i] - node.result);
             }
 
@@ -108,7 +92,7 @@ namespace WorldTree
         /// </summary>
         public static double[] GetOutputs(this MultilayerPerceptronManager self)
         {
-            var nodes = self.layers[self.layers.Count - 1].nodes;
+            var nodes = self.layers[^1].nodes;
             double[] outputs = new double[nodes.Count];
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -145,4 +129,5 @@ namespace WorldTree
             }
         }
     }
+
 }

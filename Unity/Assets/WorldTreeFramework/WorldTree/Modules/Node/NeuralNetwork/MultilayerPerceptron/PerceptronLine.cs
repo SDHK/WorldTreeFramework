@@ -51,23 +51,5 @@ namespace WorldTree
             weight += node1.result * node2.delta;
         }
     }
-    class PerceptronLineAwakeRule : AwakeRule<PerceptronLine, PerceptronNode, PerceptronNode>
-    {
-        public override void OnEvent(PerceptronLine self, PerceptronNode node1, PerceptronNode node2)
-        {
-            self.node1 = node1;
-            self.node2 = node2;
-            self.weight = PerceptronLine.rand.NextDouble() * 2.0 - 1.0;
-        }
 
-    }
-    class PerceptronLineRemoveRule : RemoveRule<PerceptronLine>
-    {
-        public override void OnEvent(PerceptronLine self)
-        {
-            self.weight = 0;
-            self.node1 = null;
-            self.node2 = null;
-        }
-    }
 }

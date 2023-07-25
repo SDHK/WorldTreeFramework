@@ -1,26 +1,14 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/3/3 10:21
+* 日期： 2023/7/25 21:09
 
-* 描述： 异步任务队列锁
-* 
+* 描述： 
+
 */
 
 namespace WorldTree
 {
-
-
-    /// <summary>
-    /// 异步任务队列锁
-    /// </summary>
-    public class TreeTaskQueueLock : Node, ComponentOf<WorldTreeRoot>
-        , AsRule<IAwakeRule>
-    {
-        public TreeDictionary<long, DynamicNodeQueue> nodeQueueDictitonary;
-    }
-
     public static partial class NodeRule
     {
         /// <summary>
@@ -29,26 +17,26 @@ namespace WorldTree
         /// <remarks>按照队列顺序执行异步任务</remarks>
         public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this INode self, long key)
         {
-            return self.Root.AddComponent(out TreeTaskQueueLock _).Lock(self, key);
+            return self.Root.AddComponent(out TreeTaskQueueLockManager _).Lock(self, key);
         }
     }
 
-    public static partial class TreeTaskQueueLockRule
+    public static partial class TreeTaskQueueLockManagerRule
     {
-        class RootAddRule : RootAddRule<TreeTaskQueueLock> { }
+        class RootAddRule : RootAddRule<TreeTaskQueueLockManager> { }
 
 
-        class AddRule : AddRule<TreeTaskQueueLock>
+        class AddRule : AddRule<TreeTaskQueueLockManager>
         {
-            public override void OnEvent(TreeTaskQueueLock self)
+            public override void OnEvent(TreeTaskQueueLockManager self)
             {
                 self.AddComponent(out self.nodeQueueDictitonary);
             }
         }
 
-        class RemoveRule : RemoveRule<TreeTaskQueueLock>
+        class RemoveRule : RemoveRule<TreeTaskQueueLockManager>
         {
-            public override void OnEvent(TreeTaskQueueLock self)
+            public override void OnEvent(TreeTaskQueueLockManager self)
             {
                 self.nodeQueueDictitonary = null;
             }
@@ -59,7 +47,7 @@ namespace WorldTree
         /// <summary>
         /// 队列任务锁
         /// </summary>
-        public static async TreeTask<TreeTaskQueueCompleter> Lock(this TreeTaskQueueLock self, INode node, long key)
+        public static async TreeTask<TreeTaskQueueCompleter> Lock(this TreeTaskQueueLockManager self, INode node, long key)
         {
             //判断如果没有这个键值
             if (!self.nodeQueueDictitonary.TryGetValue(key, out DynamicNodeQueue TaskQueue))
@@ -91,7 +79,7 @@ namespace WorldTree
         /// <summary>
         /// 启动下一个队列任务
         /// </summary>
-        public static void RunNext(this TreeTaskQueueLock self, long key)
+        public static void RunNext(this TreeTaskQueueLockManager self, long key)
         {
             if (self.nodeQueueDictitonary != null)
                 if (self.nodeQueueDictitonary.TryGetValue(key, out DynamicNodeQueue nodeQueue))

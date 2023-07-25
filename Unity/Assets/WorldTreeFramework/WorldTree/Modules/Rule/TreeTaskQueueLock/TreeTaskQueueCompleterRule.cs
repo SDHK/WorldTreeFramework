@@ -1,29 +1,19 @@
 ﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/3/3 14:06
+* 日期： 2023/7/25 21:08
 
-* 描述： 异步任务队列锁的解锁器
+* 描述： 
 
 */
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 异步任务队列锁的解锁器
-    /// </summary>
-    public class TreeTaskQueueCompleter : Node, ChildOf<INode>
-        , AsRule<IAwakeRule<long, TreeTaskQueueLock>>
-    {
-        public TreeTaskQueueLock m_QueueLock;
-        public long key;
-    }
-
     public static partial class TreeTaskQueueCompleterRule
     {
-        class AwakeRule : AwakeRule<TreeTaskQueueCompleter, long, TreeTaskQueueLock>
+        class AwakeRule : AwakeRule<TreeTaskQueueCompleter, long, TreeTaskQueueLockManager>
         {
-            public override void OnEvent(TreeTaskQueueCompleter self, long key, TreeTaskQueueLock queueLock)
+            public override void OnEvent(TreeTaskQueueCompleter self, long key, TreeTaskQueueLockManager queueLock)
             {
                 self.key = key;
                 self.m_QueueLock = queueLock;
@@ -40,6 +30,4 @@ namespace WorldTree
             }
         }
     }
-
-
 }
