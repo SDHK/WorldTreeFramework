@@ -30,5 +30,17 @@ namespace WorldTree
                 self.node2 = null;
             }
         }
+
+
+        /// <summary>
+        /// 权重变更
+        /// </summary>
+        public static void BackPropagationWeight(this PerceptronLine self)
+        {
+            if (self.node1 is null || self.node2 is null) return;
+
+            //权重+=上连接的结果*下连接的误差增量
+            self.weight += self.node1.result * self.node2.delta;
+        }
     }
 }

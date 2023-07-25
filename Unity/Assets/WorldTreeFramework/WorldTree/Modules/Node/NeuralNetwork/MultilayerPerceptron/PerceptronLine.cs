@@ -39,17 +39,6 @@ namespace WorldTree
         {
             return $"{this.GetType().Name}\tweight:[{weight}]";
         }
-
-        /// <summary>
-        /// 权重变更
-        /// </summary>
-        public void BackPropagationWeight()
-        {
-            if (node1 is null || node2 is null) return;
-
-            //权重+=上连接的结果*下连接的误差增量
-            weight += node1.result * node2.delta;
-        }
     }
 
 }
