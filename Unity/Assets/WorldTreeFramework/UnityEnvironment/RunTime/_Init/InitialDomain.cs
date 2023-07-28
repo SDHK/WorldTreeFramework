@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Ionic.Crc;
+using MongoDB.Bson;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -249,8 +251,9 @@ namespace WorldTree
         {
             public override void OnEvent(InitialDomain self)
             {
+                //CRC32 a = new CRC32();
 
-                World.Log("初始域启动！！");
+                World.Log($"初始域启动！！");
                 //self.ListenerSwitchesEntity<INode>();
 
                 //self.AddChild(out self.valueFloat);

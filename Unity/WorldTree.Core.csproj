@@ -222,6 +222,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathFloat.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeTraversalRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\RuleGroup.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Serialized\Serialized.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />
