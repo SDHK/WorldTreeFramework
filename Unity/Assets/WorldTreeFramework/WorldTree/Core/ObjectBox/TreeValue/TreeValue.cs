@@ -16,6 +16,7 @@ namespace WorldTree
     /// </summary>
     public partial class TreeValue<T> : TreeValueBase<T>
         , AsRule<IAwakeRule>
+        , AsRule<IAwakeRule<T>>
         , ChildOf<INode>
         where T : IEquatable<T>
     {

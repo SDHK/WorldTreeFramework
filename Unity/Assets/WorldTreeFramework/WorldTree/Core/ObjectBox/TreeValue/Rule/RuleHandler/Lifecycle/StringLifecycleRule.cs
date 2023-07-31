@@ -11,16 +11,16 @@ namespace WorldTree
 {
     public static partial class TreeValueBaseRule
     {
-        class TreeValueStringAwakeRule : AwakeRule<TreeValueBase<string>>
+        class TreeValueStringAwakeRule : AwakeRule<TreeValue<string>>
         {
-            public override void OnEvent(TreeValueBase<string> self)
+            public override void OnEvent(TreeValue<string> self)
             {
                 self.Value = "";
             }
         }
-        class TreeValueStringValueAwakeRule : AwakeRule<TreeValueBase<string>, string>
+        class TreeValueStringValueAwakeRule : AwakeRule<TreeValue<string>, string>
         {
-            public override void OnEvent(TreeValueBase<string> self, string value)
+            public override void OnEvent(TreeValue<string> self, string value)
             {
                 self.Value = value;
             }

@@ -13,9 +13,14 @@ using System;
 namespace WorldTree
 {
     /// <summary>
+    /// 泛型数值监听接口，用于解除AsRule的法则限制
+    /// </summary>
+    public interface IValueChangeRuleEvent : IRule { }
+
+    /// <summary>
     /// 数值变化监听事件法则接口
     /// </summary>
-    public interface IValueChangeRuleEvent<T1> : ISendRuleBase<T1> { }
+    public interface IValueChangeRuleEvent<T1> : ISendRuleBase<T1>, IValueChangeRuleEvent { }
 
     /// <summary>
     /// 数值变化监听事件法则(同类型转换)
@@ -24,8 +29,6 @@ namespace WorldTree
         where N : class, INode, AsRule<IValueChangeRuleEvent<T1>>
         where T1 : IEquatable<T1>
     { }
-
-
 
     /// <summary>
     /// 数值变化监听事件法则(同类型转换)

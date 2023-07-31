@@ -22,7 +22,7 @@ namespace WorldTree
     /// </summary>
     public abstract partial class TreeValueBase<T> : TreeValueBase
         , ChildOf<INode>
-        , AsRule<IRule>
+        , AsRule<IValueChangeRuleEvent>
         where T : IEquatable<T>
 
     {

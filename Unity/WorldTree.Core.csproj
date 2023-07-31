@@ -95,6 +95,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListCallExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\RuleBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeDictionary.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Time\TimeManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskCompleted.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\SendRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\NodeBase\NodeListener.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\RuleActuatorBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListCallAsyncExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\GlobalRuleActuator\GlobalRuleActuatorManager.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Serialized\Serialized.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\SendRuleAsync.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskCompletedMethodBuilder.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTaskQueueLock\TreeTaskQueueCompleter.cs" />
@@ -222,7 +224,6 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathFloat.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeTraversalRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\RuleGroup.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Serialized\Serialized.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />
