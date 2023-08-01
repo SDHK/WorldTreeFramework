@@ -109,6 +109,16 @@ namespace WorldTree
             return self.timeZoneDateTime1970.AddTicks(timeStamp * TimeManager.MilliTick);
         }
 
+        #region 计算时间跨度
+
+        /// <summary>
+        /// 获取两个时间戳的跨度
+        /// </summary>
+        public static TimeSpan GetTimeSpan(long startTimer, long endTimer)
+        {
+            return new TimeSpan(endTimer).Subtract(new TimeSpan(startTimer)).Duration();
+        }
+
         /// <summary>
         /// 获取两个时间戳跨度多少秒
         /// </summary>
@@ -118,11 +128,41 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取两个时间跨度多少天
+        /// 获取两个时间跨度多少秒
         /// </summary>
         public static int GetTimeSpanSeconds(DateTime startTimer, DateTime endTimer)
         {
             return (int)GetTimeSpan(startTimer.Ticks, endTimer.Ticks).TotalSeconds;
+        }
+
+        /// <summary>
+        /// 获取两个时间戳跨度多少分钟
+        /// </summary>
+        public static int GetTimeSpanMinutes(long startTimer, long endTimer)
+        {
+            return (int)GetTimeSpan(startTimer, endTimer).TotalMinutes;
+        }
+        /// <summary>
+        /// 获取两个时间跨度多少分钟
+        /// </summary>
+        public static int GetTimeSpanMinutes(DateTime startTimer, DateTime endTimer)
+        {
+            return (int)GetTimeSpan(startTimer.Ticks, endTimer.Ticks).TotalMinutes;
+        }
+
+        /// <summary>
+        /// 获取两个时间戳跨度多少小时
+        /// </summary>
+        public static int GetTimeSpanHours(long startTimer, long endTimer)
+        {
+            return (int)GetTimeSpan(startTimer, endTimer).TotalHours;
+        }
+        /// <summary>
+        /// 获取两个时间跨度多少小时
+        /// </summary>
+        public static int GetTimeSpanHours(DateTime startTimer, DateTime endTimer)
+        {
+            return (int)GetTimeSpan(startTimer.Ticks, endTimer.Ticks).TotalHours;
         }
 
         /// <summary>
@@ -134,12 +174,16 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取两个时间戳跨度
+        /// 获取两个时间跨度多少天
         /// </summary>
-        public static TimeSpan GetTimeSpan(long startTimer, long endTimer)
+        public static int GetTimeSpanDays(DateTime startTimer, DateTime endTimer)
         {
-            return new TimeSpan(endTimer).Subtract(new TimeSpan(startTimer)).Duration();
+            return (int)GetTimeSpan(startTimer.Ticks, endTimer.Ticks).TotalDays;
         }
+
+        #endregion
+
+        #region 时间超时检测
 
         /// <summary>
         /// 检查是否超时
@@ -152,10 +196,69 @@ namespace WorldTree
         /// <summary>
         /// 检测是否超时：秒
         /// </summary>
-        public static bool CheckTimeoutBySeconds(long start, int Seconds)
+        public static bool CheckTimeoutBySeconds(long start, int seconds)
         {
-            return GetTimeSpanSeconds(start, DateTime.Now.Ticks) > Seconds;
+            return GetTimeSpanSeconds(start, DateTime.Now.Ticks) > seconds;
         }
+
+        /// <summary>
+        /// 检测是否超时：分钟
+        /// </summary>
+        public static bool CheckTimeoutByMinutes(long start, int minutes)
+        {
+            return GetTimeSpanMinutes(start, DateTime.Now.Ticks) > minutes;
+        }
+
+        /// <summary>
+        /// 检测是否超时：分钟
+        /// </summary>
+        public static bool CheckTimeoutByHours(long start, int hours)
+        {
+            return GetTimeSpanHours(start, DateTime.Now.Ticks) > hours;
+        }
+
+        /// <summary>
+        /// 检测是否超时：天
+        /// </summary>
+        public static bool CheckTimeoutByDays(long start, int days)
+        {
+            return GetTimeSpanDays(start, DateTime.Now.Ticks) > days;
+        }
+
+
+        #endregion
+
+        #region 时间单位转换
+
+        /// <summary>
+        /// 秒转分
+        /// </summary>
+        public static float ConvertSecondsToMinute(int seconds) => seconds / 60;
+        /// <summary>
+        /// 分转秒
+        /// </summary>
+        public static float ConvertMinuteToSeconds(int minute) => minute * 60;
+
+        /// <summary>
+        /// 分转时
+        /// </summary>
+        public static float ConvertMinuteToHour(int minute) => minute / 60;
+        /// <summary>
+        /// 时转分
+        /// </summary>
+        public static float ConvertHourToMinute(int hour) => hour * 60;
+
+        /// <summary>
+        /// 时转天
+        /// </summary>
+        public static float ConvertHourToDay(int hour) => hour / 24;
+
+        /// <summary>
+        /// 天转时
+        /// </summary>
+        public static float ConvertDayToHour(int day) => day / 24;
+
+        #endregion
 
     }
 }

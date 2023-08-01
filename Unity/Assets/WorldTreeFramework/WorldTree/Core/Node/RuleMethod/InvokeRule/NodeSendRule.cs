@@ -59,9 +59,10 @@ namespace WorldTree
         public static bool TrySendRule<R>(this INode self, R defaultRule = default)
             where R : ISendRuleBase
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                return group.TrySend(self);
+                ruleList.Send(self);
+                return true;
             }
             else
             {
@@ -71,9 +72,10 @@ namespace WorldTree
         public static bool TrySendRule<R, T1>(this INode self, R defaultRule, T1 arg1)
             where R : ISendRuleBase<T1>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                return group.TrySend(self, arg1);
+                ruleList.Send(self, arg1);
+                return true;
             }
             else
             {
@@ -83,9 +85,10 @@ namespace WorldTree
         public static bool TrySendRule<R, T1, T2>(this INode self, R defaultRule, T1 arg1, T2 arg2)
             where R : ISendRuleBase<T1, T2>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                return group.TrySend(self, arg1, arg2);
+                ruleList.Send(self, arg1, arg2);
+                return true;
             }
             else
             {
@@ -95,9 +98,10 @@ namespace WorldTree
         public static bool TrySendRule<R, T1, T2, T3>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3)
             where R : ISendRuleBase<T1, T2, T3>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                return group.TrySend(self, arg1, arg2, arg3);
+                ruleList.Send(self, arg1, arg2, arg3);
+                return true;
             }
             else
             {
@@ -107,9 +111,10 @@ namespace WorldTree
         public static bool TrySendRule<R, T1, T2, T3, T4>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             where R : ISendRuleBase<T1, T2, T3, T4>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                return group.TrySend(self, arg1, arg2, arg3, arg4);
+                ruleList.Send(self, arg1, arg2, arg3, arg4);
+                return true;
             }
             else
             {
@@ -120,9 +125,10 @@ namespace WorldTree
             where R : ISendRuleBase<T1, T2, T3, T4, T5>
         {
 
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                return group.TrySend(self, arg1, arg2, arg3, arg4, arg5);
+                ruleList.Send(self, arg1, arg2, arg3, arg4, arg5);
+                return true;
             }
             else
             {

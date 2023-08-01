@@ -19,10 +19,17 @@ namespace WorldTree
 {
     //剩余
     //异常处理？
+
     //池增管理加屏蔽字典
+
     //对法则执行器进行更加详细的划分，生命周期，全局事件，回调事件
+
     //Update不带时间参数
     //新增TimeUpdate通过返回时间确定间隔
+
+    //INode添加法则字典，加速法则执行，空间换时间
+
+    //对象池需要一个启动标记
 
 
     /// <summary>
@@ -175,6 +182,14 @@ namespace WorldTree
             self.ReferencedPoolManager = default;
         }
         #endregion
+
+        /// <summary>
+        /// 框架刷新
+        /// </summary>
+        public static void Update()
+        {
+
+        }
 
         #region 对象获取与回收
 

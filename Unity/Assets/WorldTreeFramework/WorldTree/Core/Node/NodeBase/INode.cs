@@ -77,6 +77,12 @@ namespace WorldTree
         public long Id { get; set; }
 
         /// <summary>
+        /// 数据节点ID
+        /// </summary>
+        /// <remarks>保证数据唯一</remarks>
+        public long DataId { get; set; }
+
+        /// <summary>
         /// 节点类型
         /// </summary>
         public Type Type { get; set; }
@@ -163,5 +169,14 @@ namespace WorldTree
         public UnitDictionary<long, INode> m_ReferencedChilden { get; set; }
 
         #endregion
+
+
+        #region Rule
+        /// <summary>
+        /// 法则列表字典
+        /// </summary>
+        public UnitDictionary<Type, IRuleList> m_RuleListDictionary { get; set; }
+        #endregion
+
     }
 }

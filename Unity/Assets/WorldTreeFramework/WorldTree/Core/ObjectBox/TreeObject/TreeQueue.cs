@@ -22,6 +22,8 @@ namespace WorldTree
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }
         public long Id { get; set; }
+        public long DataId { get; set; }
+
         public Type Type { get; set; }
         public WorldTreeCore Core { get; set; }
         public WorldTreeRoot Root { get; set; }
@@ -54,6 +56,13 @@ namespace WorldTree
 
         public UnitDictionary<long, INode> m_ReferencedChilden { get; set; }
 
+        #endregion
+
+        #region Rule
+        /// <summary>
+        /// 法则列表字典
+        /// </summary>
+        public UnitDictionary<Type, IRuleList> m_RuleListDictionary { get; set; }
         #endregion
 
         #region Listener

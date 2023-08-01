@@ -7,6 +7,8 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
     public static partial class NodeRule
@@ -35,6 +37,13 @@ namespace WorldTree
                 self.Core.RemoveNode(self);//全局通知移除
                 self.DisposeDomain();//清除域节点
                 self.Parent = null;//清除父节点
+
+                //回收法则字典
+                if (self.m_RuleListDictionary != null)
+                {
+                    self.m_RuleListDictionary.Dispose();
+                    self.m_RuleListDictionary = null;
+                }
 
                 self.OnDispose();
             }
@@ -133,6 +142,40 @@ namespace WorldTree
                 }
             }
         }
+
+        /// <summary>
+        /// 尝试获取法则
+        /// </summary>
+        /// <remarks>获取成功后会添加进实例的法则字典里</remarks>
+        public static bool TryGetRuleList<R>(this INode self, out IRuleList<R> ruleList)
+            where R : IRule
+        {
+            Type ruleType = typeof(R);
+            if (self.m_RuleListDictionary != null)
+            {
+                if (self.m_RuleListDictionary.TryGetValue(ruleType, out IRuleList ruleList_))
+                {
+                    ruleList = (IRuleList<R>)ruleList_;
+                    return ruleList != null;
+                }
+                else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
+                {
+                    self.m_RuleListDictionary.Add(ruleType, ruleList);
+                    return true;
+                }
+            }
+            else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
+            {
+                self.m_RuleListDictionary = self.PoolGet<UnitDictionary<Type, IRuleList>>();
+                //self.m_RuleListDictionary = new UnitDictionary<Type, IRuleList>();
+                self.m_RuleListDictionary.Add(ruleType, ruleList);
+                return true;
+            }
+            return false;
+        }
+
+
+
 
         /// <summary>
         /// 返回用字符串绘制的树

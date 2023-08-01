@@ -672,6 +672,26 @@ namespace WorldTree
                 return false;
             }
         }
+
+        /// <summary>
+        /// 获取单类型法则列表
+        /// </summary>
+        public static bool TryGetRuleList<R>(this RuleManager self, Type nodeType, out IRuleList<R> ruleList)
+         where R : IRule
+        {
+
+            if (self.RuleGroupDictionary.TryGetValue(typeof(R), out RuleGroup ruleGroup))
+            {
+                ruleGroup.TryGetValue(nodeType, out RuleList rules);
+                ruleList = rules as IRuleList<R>;
+                return ruleList != null;
+            }
+            else
+            {
+                ruleList = null;
+                return false;
+            }
+        }
         #endregion
 
 

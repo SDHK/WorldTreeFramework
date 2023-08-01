@@ -20,8 +20,19 @@ namespace WorldTree
     /// 单位对象池
     /// </summary>
     public class UnitPool : GenericPool<IUnitPoolEventItem>, ChildOf<UnitPoolManager>
-        , AsRule<IAwakeRule<Type>>
     {
+        public UnitPool(Type type) : base()
+        {
+            ObjectType = type;
+
+            NewObject = ObjectNew;
+
+            objectOnNew = ObjectOnNew;
+            objectOnGet = ObjectOnGet;
+            objectOnRecycle = ObjectOnRecycle;
+            objectOnDestroy = ObjectOnDestroy;
+        }
+
         public override string ToString()
         {
             return $"[UnitPool<{ObjectType}>] : {Count} ";
@@ -82,22 +93,6 @@ namespace WorldTree
         {
             obj.IsDisposed = true;
             obj.OnDispose();
-        }
-    }
-
-
-    class UnitPoolAwakeRule : AwakeRule<UnitPool, Type>
-    {
-        public override void OnEvent(UnitPool self, Type type)
-        {
-            self.ObjectType = type;
-
-            self.NewObject = self.ObjectNew;
-
-            self.objectOnNew = self.ObjectOnNew;
-            self.objectOnGet = self.ObjectOnGet;
-            self.objectOnRecycle = self.ObjectOnRecycle;
-            self.objectOnDestroy = self.ObjectOnDestroy;
         }
     }
 }

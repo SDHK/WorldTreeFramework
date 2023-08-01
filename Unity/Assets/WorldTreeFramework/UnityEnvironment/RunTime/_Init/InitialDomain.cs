@@ -254,26 +254,28 @@ namespace WorldTree
                 //CRC32 a = new CRC32();
 
                 World.Log($"初始域启动！！");
+
                 //self.ListenerSwitchesEntity<INode>();
 
                 //self.AddChild(out self.valueFloat);
                 //self.AddChild(out self.valueInt);
                 //self.valueFloat.Bind(self.valueInt);
 
-                //获取一个 字符串数值组件 写入初始值"Hello world! 你好世界！"
-                self.AddChild(out self.valueString, "Hello world! 你好世界！");
-                //对 字符串数值组件 启动一个渐变动画，从 "Hello world! 你好世界！" 变成 "Hello" 动画时间为10秒
-                self.valueString.GetTween("Hello", 10f);
+
+                ////获取一个 字符串数值组件 写入初始值"Hello world! 你好世界！"
+                //self.AddChild(out self.valueString, "Hello world! 你好世界！");
+                ////对 字符串数值组件 启动一个渐变动画，从 "Hello world! 你好世界！" 变成 "Hello" 动画时间为10秒
+                //self.valueString.GetTween("Hello", 10f);
 
 
-                //获取一个 Float数值组件 写入初始值 1f
-                self.AddChild(out self.valueFloat, 1f);
+                ////获取一个 Float数值组件 写入初始值 1f
+                //self.AddChild(out self.valueFloat, 1f);
 
-                //数值组件Float 单向绑定 数值组件String ,当float值发生变化时，会通知 valueString 并转为字符串
-                self.valueFloat.Bind(self.valueString);
+                ////数值组件Float 单向绑定 数值组件String ,当float值发生变化时，会通知 valueString 并转为字符串
+                //self.valueFloat.Bind(self.valueString);
 
-                //对 Float数值组件 启动一个渐变动画，从 1f 变成 10f 动画时间为 3 秒
-                self.valueFloat.GetTween(10f, 3f);
+                ////对 Float数值组件 启动一个渐变动画，从 1f 变成 10f 动画时间为 3 秒
+                //self.valueFloat.GetTween(10f, 3f);
 
 
                 //self.AddComponent(out TreeTaskToken treeTaskToken);

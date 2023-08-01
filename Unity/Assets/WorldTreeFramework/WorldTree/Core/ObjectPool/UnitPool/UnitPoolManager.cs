@@ -118,8 +118,14 @@ namespace WorldTree
         {
             if (!self.m_Pools.TryGetValue(type, out UnitPool pool))
             {
-                self.AddChild(out pool, type);
+                pool = new UnitPool(type);
+                pool.Type = pool.GetType();
+                pool.Id = self.Core.IdManager.GetId();
+                pool.Core = self.Core;
+                pool.Root = self.Root;
+                pool.Branch = self.Branch;
                 self.m_Pools.Add(type, pool);
+                self.AddChild(pool);
             }
 
             return pool;
