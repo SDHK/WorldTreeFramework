@@ -262,7 +262,7 @@ namespace WorldTree
                 //self.valueFloat.Bind(self.valueInt);
 
 
-                ////获取一个 字符串数值组件 写入初始值"Hello world! 你好世界！"
+                //获取一个 字符串数值组件 写入初始值"Hello world! 你好世界！"
                 //self.AddChild(out self.valueString, "Hello world! 你好世界！");
                 ////对 字符串数值组件 启动一个渐变动画，从 "Hello world! 你好世界！" 变成 "Hello" 动画时间为10秒
                 //self.valueString.GetTween("Hello", 10f);

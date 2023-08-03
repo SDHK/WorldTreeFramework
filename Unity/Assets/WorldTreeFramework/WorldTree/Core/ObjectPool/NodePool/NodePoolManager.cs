@@ -10,22 +10,6 @@ using System;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 节点对象池管理器
-    /// </summary>
-    public class NodePoolManager : CoreNode, ComponentOf<WorldTreeCore>
-        , AsRule<IAwakeRule>
-    {
-        public TreeDictionary<Type, NodePool> m_Pools;
-
-        public override void Dispose()
-        {
-            this.IsRecycle = true;
-            this.IsDisposed = true;
-            base.Dispose();
-        }
-    }
-
 
     public static partial class NodeRule
     {
@@ -47,118 +31,27 @@ namespace WorldTree
         }
     }
 
-    public static partial class NodePoolManagerRule
+
+    /// <summary>
+    /// 节点对象池管理器
+    /// </summary>
+    public class NodePoolManager : PoolManagerBase<NodePool>
+        , ComponentOf<WorldTreeCore>
     {
-
-        class AddRule : AddRule<NodePoolManager>
+        /// <summary>
+        /// 尝试获取节点
+        /// </summary>
+        public bool TryGet(Type type, out INode node)
         {
-            public override void OnEvent(NodePoolManager self)
+            if (TryGet(type, out object obj))
             {
-                self.AddChild(out self.m_Pools);
+                node = obj as INode;
+                return true;
             }
-        }
-
-        class RemoveRule : RemoveRule<NodePoolManager>
-        {
-            public override void OnEvent(NodePoolManager self)
+            else
             {
-                self.m_Pools = null;
-            }
-        }
-
-        /// <summary>
-        /// 获取节点
-        /// </summary>
-        public static T Get<T>(this NodePoolManager self)
-        where T : class, INode
-        {
-            Type type = typeof(T);
-            return self.GetPool(type).Get<T>();
-        }
-
-        /// <summary>
-        /// 获取节点
-        /// </summary>
-        public static object Get(this NodePoolManager self, Type type)
-        {
-            return self.GetPool(type).Get();
-        }
-
-
-        /// <summary>
-        /// 尝试回收对象
-        /// </summary>
-        public static bool TryRecycle(this NodePoolManager self, INode obj)
-        {
-            if (self.m_Pools != null)
-                if (self.m_Pools.TryGetValue(obj.GetType(), out NodePool nodePool))
-                {
-                    nodePool.Recycle(obj);
-                    return true;
-
-                }
-                else if (obj is NodePool pool)
-                {
-                    self.m_Pools.Remove(pool.ObjectType);
-                    return false;
-                }
-            return false;
-        }
-
-        /// <summary>
-        /// 获取池
-        /// </summary>
-        public static NodePool GetPool<T>(this NodePoolManager self)
-            where T : class, INode
-        {
-            Type type = typeof(T);
-            return self.GetPool(type);
-        }
-        /// <summary>
-        /// 获取池
-        /// </summary>
-        public static NodePool GetPool(this NodePoolManager self, Type type)
-        {
-            if (!self.m_Pools.TryGetValue(type, out NodePool pool))
-            {
-                pool = new NodePool(type);
-                pool.Type = pool.GetType();
-                pool.Id = self.Core.IdManager.GetId();
-                pool.Core = self.Core;
-                pool.Root = self.Root;
-                pool.Branch = self.Branch;
-                self.m_Pools.Add(type, pool);
-                self.AddChild(pool);
-            }
-            return pool;
-        }
-
-        /// <summary>
-        /// 尝试获取池
-        /// </summary>
-        public static bool TryGetPool(this NodePoolManager self, Type type, out NodePool pool)
-        {
-            return self.m_Pools.TryGetValue(type, out pool);
-        }
-
-        /// <summary>
-        /// 释放池
-        /// </summary>
-        public static void DisposePool<T>(this NodePoolManager self)
-        {
-            Type type = typeof(T);
-            self.DisposePool(type);
-        }
-
-        /// <summary>
-        /// 释放池
-        /// </summary>
-        public static void DisposePool(this NodePoolManager self, Type type)
-        {
-            if (self.m_Pools.TryGetValue(type, out NodePool pool))
-            {
-                self.m_Pools.Remove(type);
-                pool.Dispose();
+                node = null;
+                return false;
             }
         }
     }

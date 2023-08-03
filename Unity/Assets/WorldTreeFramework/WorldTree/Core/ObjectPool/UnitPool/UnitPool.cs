@@ -19,14 +19,12 @@ namespace WorldTree
     /// <summary>
     /// 单位对象池
     /// </summary>
-    public class UnitPool : GenericPool<IUnitPoolEventItem>, ChildOf<UnitPoolManager>
+    public class UnitPool : GenericPool<IUnitPoolEventItem>
+        , ChildOf<PoolManagerBase<UnitPool>>
     {
-        public UnitPool(Type type) : base()
+        public UnitPool() : base()
         {
-            ObjectType = type;
-
             NewObject = ObjectNew;
-
             objectOnNew = ObjectOnNew;
             objectOnGet = ObjectOnGet;
             objectOnRecycle = ObjectOnRecycle;

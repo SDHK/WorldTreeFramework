@@ -167,7 +167,6 @@ namespace WorldTree
             else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
             {
                 self.m_RuleListDictionary = self.PoolGet<UnitDictionary<Type, IRuleList>>();
-                //self.m_RuleListDictionary = new UnitDictionary<Type, IRuleList>();
                 self.m_RuleListDictionary.Add(ruleType, ruleList);
                 return true;
             }

@@ -36,15 +36,20 @@ namespace WorldTree
             //类型
             //值类型
 
-            //id
 
-            //id ， TypeCore:Length  = int:1|TypeCore:id     (Class)
 
-            //id ， object[]:Length  = TypeCore:id|TypeCore:id|int:1 (Array)
+            //数据id ， CRC64类型码，数据长度 = 类型码,数据长度：数据byte | 类型码,数据长度：数据id指针 | ....
 
-            //id ， <string,obj>:Length  =  string:id|int:1      (Dict)
+            //序列化类型标记3
 
-            //id ， TypeCore:Length  = int:2|TypeCore:id     (Sturt)
+            //根节点数据DateId
+
+            //DateId ， TypeCore:Length  = int,4:1|TypeCore,Length:DateId     (对象情况)
+
+            //DateId ， object[]:Length  = TypeCore,Length:DateId|TypeCore,Length:DateId|int,4:1 (数组情况)
+
+            //DateId ， <string,obj>:Length  =  string,Length:DateId|int,4:1      (字典情况)
+
 
 
             /*

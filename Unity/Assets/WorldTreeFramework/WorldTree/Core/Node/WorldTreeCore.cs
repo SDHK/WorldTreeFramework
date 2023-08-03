@@ -93,6 +93,8 @@ namespace WorldTree
 
         #region 框架启动与销毁
 
+
+
         /// <summary>
         /// 框架启动
         /// </summary>
@@ -103,56 +105,43 @@ namespace WorldTree
             self.Core = self;
             self.Branch = self;
 
-            //框架核心启动组件新建
-            self.IdManager = new IdManager();
-            self.RuleManager = new RuleManager();
-            self.ReferencedPoolManager = new ReferencedPoolManager();
+            //框架核心启动组件新建初始化
 
-            self.IdManager.Type = self.IdManager.GetType();
-            self.RuleManager.Type = self.IdManager.GetType();
-            self.ReferencedPoolManager.Type = self.ReferencedPoolManager.GetType();
+            //Id管理器初始化
+            self.NewNode(out self.IdManager);
+            self.Id = self.IdManager.GetId();
 
-            //Id
-            self.Core.Id = self.IdManager.GetId();
-            self.IdManager.Id = self.IdManager.GetId();
-            self.RuleManager.Id = self.IdManager.GetId();
-            self.ReferencedPoolManager.Id = self.IdManager.GetId();
+            //法则管理器初始化
+            self.NewNode(out self.RuleManager);
 
-            //核心
-            self.IdManager.Core = self;
-            self.RuleManager.Core = self;
-            self.ReferencedPoolManager.Core = self;
+            self.NewRuleGroup = self.RuleManager.GetOrNewRuleGroup<INewRule>();
+            self.GetRuleGroup = self.RuleManager.GetOrNewRuleGroup<IGetRule>();
+            self.RecycleRuleGroup = self.RuleManager.GetOrNewRuleGroup<IRecycleRule>();
+            self.DestroyRuleGroup = self.RuleManager.GetOrNewRuleGroup<IDestroyRule>();
 
-            //生命周期法则
-            self.NewRuleGroup = self.RuleManager.GetRuleGroup<INewRule>();
-            self.GetRuleGroup = self.RuleManager.GetRuleGroup<IGetRule>();
-            self.RecycleRuleGroup = self.RuleManager.GetRuleGroup<IRecycleRule>();
-            self.DestroyRuleGroup = self.RuleManager.GetRuleGroup<IDestroyRule>();
+            self.AddRuleGroup = self.RuleManager.GetOrNewRuleGroup<IAddRule>();
+            self.RemoveRuleGroup = self.RuleManager.GetOrNewRuleGroup<IRemoveRule>();
+            self.EnableRuleGroup = self.RuleManager.GetOrNewRuleGroup<IEnableRule>();
+            self.DisableRuleGroup = self.RuleManager.GetOrNewRuleGroup<IDisableRule>();
 
-            self.AddRuleGroup = self.RuleManager.GetRuleGroup<IAddRule>();
-            self.RemoveRuleGroup = self.RuleManager.GetRuleGroup<IRemoveRule>();
-            self.EnableRuleGroup = self.RuleManager.GetRuleGroup<IEnableRule>();
-            self.DisableRuleGroup = self.RuleManager.GetRuleGroup<IDisableRule>();
+            //引用池管理器初始化
+            self.NewNodeLifecycle(out self.ReferencedPoolManager);
 
+            //组件添加到树
             self.AddComponent(self.ReferencedPoolManager);
-
-
-            //核心组件 id与法则
-
             self.AddComponent(self.IdManager);
             self.AddComponent(self.RuleManager);
 
             //对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
             self.UnitPoolManager = self.AddComponent(out UnitPoolManager _);
             self.NodePoolManager = self.AddComponent(out NodePoolManager _);
-            self.AddComponent(out self.ArrayPoolManager);
+            self.ArrayPoolManager = self.AddComponent(out ArrayPoolManager _);
 
             //树根节点
             self.AddComponent(self.Root = self.PoolGet<WorldTreeRoot>());
 
             //核心激活
             self.SetActive(true);
-
 
         }
 
@@ -188,12 +177,55 @@ namespace WorldTree
         /// </summary>
         public static void Update()
         {
-
         }
 
         #region 对象获取与回收
 
         #region Node
+
+        /// <summary>
+        /// 新建节点对象
+        /// </summary>
+        private static T NewNode<T>(this INode self, out T node) where T : class, INode
+        {
+            Type type = typeof(T);
+            node = Activator.CreateInstance(type, true) as T;
+            node.Type = type;
+            node.Core = self.Core;
+            node.Root = self.Root;
+            node.Id = self.Core.IdManager.GetId();
+            return node;
+        }
+
+        /// <summary>
+        /// 新建节点对象
+        /// </summary>
+        private static INode NewNode(this INode self, Type type)
+        {
+            INode node = Activator.CreateInstance(type, true) as INode;
+            node.Type = type;
+            node.Core = self.Core;
+            node.Root = self.Root;
+            node.Id = self.Core.IdManager.GetId();
+            return node;
+        }
+
+        /// <summary>
+        /// 新建节点对象并调用生命周期
+        /// </summary>
+        public static T NewNodeLifecycle<T>(this WorldTreeCore self, out T node) where T : class, INode => node = self.NewNodeLifecycle(typeof(T)) as T;
+
+        /// <summary>
+        /// 新建节点对象并调用生命周期
+        /// </summary>
+        public static INode NewNodeLifecycle(this WorldTreeCore self, Type type)
+        {
+            INode node = self.NewNode(type);
+            self.NewRuleGroup?.Send(node);
+            self.GetRuleGroup?.Send(node);
+            return node;
+        }
+
 
         /// <summary>
         /// 从池中获取节点对象
@@ -205,23 +237,15 @@ namespace WorldTree
         /// </summary>
         public static INode GetNode(this WorldTreeCore self, Type type)
         {
-            if (self.NodePoolManager != null)
+            if (self.NodePoolManager != null && !self.NodePoolManager.IsRecycle)
             {
-                if (!self.NodePoolManager.IsRecycle)
+                if (self.NodePoolManager.TryGet(type, out INode node))
                 {
-                    return self.NodePoolManager.Get(type) as INode;
+                    node.Id = self.IdManager.GetId();
+                    return node;
                 }
             }
-
-            INode obj = Activator.CreateInstance(type, true) as INode;
-            obj.Id = self.IdManager.GetId();
-            obj.Core = self;
-            obj.Root = self.Root;
-            obj.Type = type;
-
-            self.NewRuleGroup?.Send(obj);
-            self.GetRuleGroup?.Send(obj);
-            return obj;
+            return self.NewNodeLifecycle(type);
         }
 
         /// <summary>
@@ -251,14 +275,13 @@ namespace WorldTree
         where T : class, IUnitPoolEventItem
         {
             Type type = typeof(T);
-            if (self.UnitPoolManager != null)
+            if (self.UnitPoolManager != null && !self.UnitPoolManager.IsRecycle)
             {
-                if (!self.UnitPoolManager.IsRecycle)
+                if (self.UnitPoolManager.TryGet(type, out IUnit unit))
                 {
-                    return self.UnitPoolManager.Get<T>();
+                    return unit as T;
                 }
             }
-
             T obj = Activator.CreateInstance(type, true) as T;
             obj.OnNew();
             obj.OnGet();

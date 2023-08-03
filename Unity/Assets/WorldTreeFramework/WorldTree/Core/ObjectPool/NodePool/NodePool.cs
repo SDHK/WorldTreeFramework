@@ -20,7 +20,8 @@ namespace WorldTree
     /// <summary>
     /// 实体对象池
     /// </summary>
-    public class NodePool : GenericPool<INode>, ChildOf<NodePoolManager>
+    public class NodePool : GenericPool<INode>
+        , ChildOf<PoolManagerBase<NodePool>>
     {
         public IRuleList<INewRule> newRule;
         public IRuleList<IGetRule> getRule;
@@ -28,11 +29,8 @@ namespace WorldTree
         public IRuleList<IDestroyRule> destroyRule;
 
 
-        public NodePool(Type type) : base()
+        public NodePool() : base()
         {
-
-            ObjectType = type;
-
             NewObject = ObjectNew;
             DestroyObject = ObjectDestroy;
 
@@ -40,7 +38,6 @@ namespace WorldTree
             objectOnGet = ObjectOnGet;
             objectOnRecycle = ObjectOnRecycle;
             objectOnDestroy = ObjectOnDestroy;
-
         }
 
         public override string ToString()
@@ -84,7 +81,6 @@ namespace WorldTree
         private INode ObjectNew(IPool pool)
         {
             INode obj = Activator.CreateInstance(ObjectType, true) as INode;
-            //obj.Id = Core.IdManager.GetId();
             obj.Core = Core;
             obj.Root = Core.Root;
             obj.Type = ObjectType;
@@ -92,7 +88,6 @@ namespace WorldTree
         }
         private void ObjectDestroy(INode obj)
         {
-            Core.IdManager.RecycleId(obj.Id);
         }
 
         private void ObjectOnNew(INode obj)
@@ -102,8 +97,6 @@ namespace WorldTree
 
         private void ObjectOnGet(INode obj)
         {
-            obj.Id = Core.IdManager.GetId();
-
             obj.IsRecycle = false;
             getRule?.Send(obj);
         }

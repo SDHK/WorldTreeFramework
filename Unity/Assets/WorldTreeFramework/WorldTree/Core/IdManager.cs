@@ -8,8 +8,6 @@
 * 后续需要改为根据时间生成
 */
 
-using System.Collections.Generic;
-
 namespace WorldTree
 {
 
@@ -22,11 +20,6 @@ namespace WorldTree
         {
             Type = GetType();
         }
-
-        /// <summary>
-        /// id池
-        /// </summary>
-        public Queue<long> idPool = new Queue<long>();
 
         /// <summary>
         /// 当前递增的id值
@@ -46,8 +39,6 @@ namespace WorldTree
     {
         public static void Destroy(this IdManager self)
         {
-            self.idPool.Clear();
-            self.idPool = default;
             self.IsRecycle = true;
             self.IsDisposed = true;
         }
@@ -57,23 +48,7 @@ namespace WorldTree
         /// </summary>
         public static long GetId(this IdManager self)
         {
-            if (!self.idPool.TryDequeue(out var value))
-            {
-                value = self.currentId++;
-            }
-            return value;
+            return self.currentId++;
         }
-
-        /// <summary>
-        /// 回收id
-        /// </summary>
-        public static void RecycleId(this IdManager self, long id)
-        {
-            if (!self.idPool.Contains(id))
-            {
-                self.idPool.Enqueue(id);
-            }
-        }
-
     }
 }

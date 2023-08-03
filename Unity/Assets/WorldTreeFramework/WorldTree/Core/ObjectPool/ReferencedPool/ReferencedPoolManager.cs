@@ -67,12 +67,7 @@ namespace WorldTree
         {
             if (!self.pools.TryGetValue(type, out ReferencedPool pool))
             {
-                pool = new ReferencedPool();
-                pool.Type = pool.GetType();
-                pool.Id = self.Core.IdManager.GetId();
-                pool.Core = self.Core;
-                pool.Root = self.Root;
-                pool.Branch = self.Branch;
+                self.Core.NewNodeLifecycle(out pool);
                 pool.ReferencedType = type;
                 self.pools.Add(type, pool);
                 self.AddChild(pool);

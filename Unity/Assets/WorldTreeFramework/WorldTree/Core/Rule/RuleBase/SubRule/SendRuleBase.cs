@@ -5,7 +5,7 @@
 
 * 描述： 通知法则基类
 * 
-* 可以理解为Entity的无返回值扩展方法
+* 可以理解为Node的无返回值扩展方法
 * 
 * 
 * ISendRule 继承 IRule
@@ -15,7 +15,7 @@
 * SendRuleBase 则继承 RuleBase 
 * 同时还继承了 ISendRule 可以转换为 ISendRule 进行统一调用。
 * 
-* 主要作用：确定Entity的类型并转换，并统一 Invoke 中转调用 OnEvent 的过程。
+* 主要作用：确定Node的类型并转换，并统一 Invoke 中转调用 OnEvent 的过程。
 * 其中 Invoke 设定为虚方法方便子类写特殊的中转调用。
 * 
 

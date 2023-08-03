@@ -35,6 +35,8 @@ namespace WorldTree
     /// </summary>
     /// <typeparam name="C">根节点组件</typeparam>
     /// <remarks>用于根节点的饿汉单例</remarks>
-    public abstract class RootAddRule<C> : NodeAddRule<WorldTreeRoot, C> where C : class, INode, ComponentOf<WorldTreeRoot>, AsRule<IAwakeRule> { }
+    public abstract class RootAddRule<C> : NodeAddRule<WorldTreeRoot, C>
+        where C : class, INode, ComponentOf<WorldTreeRoot>, AsRule<IAwakeRule>
+    { }
 
 }
