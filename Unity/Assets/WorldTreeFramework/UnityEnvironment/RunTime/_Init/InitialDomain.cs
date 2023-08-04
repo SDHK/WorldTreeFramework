@@ -28,7 +28,6 @@ namespace WorldTree
 {
 
 
-
     //public class NodeAddRule : AddRule<Node>
     //{
     //    public override void OnEvent(Node self)

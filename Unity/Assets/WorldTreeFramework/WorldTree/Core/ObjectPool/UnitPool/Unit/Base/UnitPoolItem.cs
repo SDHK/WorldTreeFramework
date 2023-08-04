@@ -17,19 +17,15 @@ namespace WorldTree
     /// <summary>
     /// 池单位抽象基类：提供回收方法
     /// </summary>
-    public abstract class UnitPoolItem : Unit, IUnitPoolEventItem
+    public abstract class UnitPoolItem : IUnitPoolEventItem
     {
+        public bool IsDisposed { get; set; }
+
         public WorldTreeCore Core { get; set; }
 
         public bool IsRecycle { get; set; }
 
-        /// <summary>
-        /// 回收对象
-        /// </summary>
-        public override void Dispose()
-        {
-            Core?.Recycle(this);
-        }
+
 
         public virtual void OnGet()
         {
@@ -42,6 +38,19 @@ namespace WorldTree
         public virtual void OnRecycle()
         {
         }
+
+
+        /// <summary>
+        /// 回收对象
+        /// </summary>
+        public virtual void Dispose()
+        {
+            if (IsDisposed) return;
+            OnDispose();
+            IsDisposed = true;
+        }
+
+        public virtual void OnDispose() { }
 
     }
 }

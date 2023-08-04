@@ -55,4 +55,14 @@ namespace WorldTree
             }
         }
     }
+
+    class NodePoolManagerAddRule : AddRule<NodePoolManager>
+    {
+        public override void OnEvent(NodePoolManager self)
+        {
+            self.m_IgnoreTypeHashSet.Add(typeof(ListenerRuleActuator));
+            self.m_IgnoreTypeHashSet.Add(typeof(DynamicNodeListenerGroup));
+            self.m_IgnoreTypeHashSet.Add(typeof(StaticNodeListenerGroup));
+        }
+    }
 }

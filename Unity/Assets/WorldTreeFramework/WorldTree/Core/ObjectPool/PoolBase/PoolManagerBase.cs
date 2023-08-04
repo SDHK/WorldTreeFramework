@@ -39,6 +39,26 @@ namespace WorldTree
         /// </summary>
         public TreeDictionary<Type, T> m_Pools = new TreeDictionary<Type, T>();
 
+
+        /// <summary>
+        /// 尝试新建或获取对象池
+        /// </summary>
+        public virtual bool TryNewOrGetPool(Type type, out T pool)
+        {
+            //忽略类型表检测
+            if (!m_IgnoreTypeHashSet.Contains(type))
+            {
+                //不存在则新建
+                if (!m_Pools.TryGetValue(type, out pool))
+                {
+                    pool = NewPool(type);
+                }
+                return true;
+            }
+            pool = null;
+            return false;
+        }
+
         /// <summary>
         /// 新建池
         /// </summary>
@@ -85,24 +105,7 @@ namespace WorldTree
             return false;
         }
 
-        /// <summary>
-        /// 尝试新建或获取对象池
-        /// </summary>
-        public virtual bool TryNewOrGetPool(Type type, out T pool)
-        {
-            //忽略类型表检测
-            if (!m_IgnoreTypeHashSet.Contains(type))
-            {
-                //不存在则新建
-                if (!m_Pools.TryGetValue(type, out pool))
-                {
-                    pool = NewPool(type);
-                }
-                return true;
-            }
-            pool = null;
-            return false;
-        }
+
 
         /// <summary>
         /// 尝试获取对象池

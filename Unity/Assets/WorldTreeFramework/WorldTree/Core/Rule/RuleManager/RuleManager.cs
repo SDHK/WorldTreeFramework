@@ -7,8 +7,9 @@
 * 
 * 通过反射获取全局继承了IRule的接口的法则类
 * 
+* 支持多播：法则可以实现多个，将通过名称顺序执行，同时附带责任链模式。
 * 支持多态：设计目的是可通过继承复用代码，不提倡设计复杂的多重继承，能拆分写的功能就拆分写。
-* 支持泛型：设计目的是更进一步复用代码。
+* 支持泛型：设计目的是更进一步复用代码，同时附带了策略模式。
 * 
 
 */
@@ -24,6 +25,11 @@ namespace WorldTree
     /// </summary>
     public class RuleManager : CoreNode, ComponentOf<WorldTreeCore>
     {
+        /// <summary>
+        /// 已支持的类型哈希名单
+        /// </summary>
+        public UnitHashSet<Type> SupportTypeHash = new UnitHashSet<Type>();
+
         /// <summary>
         /// 动态监听器节点类型哈希名单
         /// </summary>
@@ -291,14 +297,15 @@ namespace WorldTree
         /// <summary>
         /// 补充节点法则功能
         /// </summary>
-        /// <remarks>
-        /// <para>这个功能设定为只在对象池建立时执行一次</para>
-        /// </remarks>
         public static void SupportNodeRule(this RuleManager self, Type NodeType)
         {
-            self.SupportGenericNodeRule(NodeType);
-            self.SupportPolymorphicListenerRule(NodeType);
-            self.SupportPolymorphicRule(NodeType);
+            if (!self.SupportTypeHash.Contains(NodeType))
+            {
+                self.SupportGenericNodeRule(NodeType);
+                self.SupportPolymorphicListenerRule(NodeType);
+                self.SupportPolymorphicRule(NodeType);
+                self.SupportTypeHash.Add(NodeType);
+            }
         }
 
         #region 法则泛型
@@ -307,7 +314,6 @@ namespace WorldTree
         /// 支持泛型节点法则
         /// </summary>
         /// <remarks>
-        /// <para>这个功能设定为只在对象池建立时执行一次</para>
         /// <para>将会通过反射查询自身及所有父类是否有泛型</para>
         /// </remarks>
         public static void SupportGenericNodeRule(this RuleManager self, Type NodeType)
@@ -345,10 +351,6 @@ namespace WorldTree
         /// <summary>
         /// 支持监听器的多态法则
         /// </summary>
-        /// <remarks>
-        /// <para>这个功能设定为只在对象池建立时执行一次</para>
-        /// <para>只多态监听器，不会多态监听目标 </para>
-        /// </remarks>
         public static void SupportPolymorphicListenerRule(this RuleManager self, Type listenerNodeType)
         {
             //判断如果没有这样的监听器
@@ -418,7 +420,6 @@ namespace WorldTree
         /// <summary>
         /// 支持节点多态法则
         /// </summary>
-        /// <remarks>这个功能设定为只在对象池建立时执行一次</remarks>
         public static void SupportPolymorphicRule(this RuleManager self, Type NodeType)
         {
 

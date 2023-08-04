@@ -32,6 +32,17 @@ namespace WorldTree
     //对象池需要一个启动标记
 
 
+    /*
+        New
+        Get
+        Awake
+        Enable
+        Add
+
+
+        AddUnPool?
+        
+    */
     /// <summary>
     /// 世界树核心
     /// </summary>
@@ -51,6 +62,12 @@ namespace WorldTree
         /// Id管理器
         /// </summary>
         public IdManager IdManager;
+
+        /// <summary>
+        /// 机器时间管理器
+        /// </summary>
+        public TimeManager TimeManager;
+
         /// <summary>
         /// 法则管理器
         /// </summary>
@@ -111,6 +128,9 @@ namespace WorldTree
             self.NewNode(out self.IdManager);
             self.Id = self.IdManager.GetId();
 
+            //时间管理器初始化
+            self.NewNode(out self.TimeManager);
+
             //法则管理器初始化
             self.NewNode(out self.RuleManager);
 
@@ -150,8 +170,10 @@ namespace WorldTree
         /// </summary>
         public static void Destroy(this WorldTreeCore self)
         {
-            self.RemoveAll();
 
+            self.SetActive(false);
+
+            self.RemoveAll();
 
             self.NewRuleGroup = default;
             self.GetRuleGroup = default;
@@ -221,6 +243,7 @@ namespace WorldTree
         public static INode NewNodeLifecycle(this WorldTreeCore self, Type type)
         {
             INode node = self.NewNode(type);
+            self.RuleManager.SupportNodeRule(type);
             self.NewRuleGroup?.Send(node);
             self.GetRuleGroup?.Send(node);
             return node;
@@ -237,7 +260,7 @@ namespace WorldTree
         /// </summary>
         public static INode GetNode(this WorldTreeCore self, Type type)
         {
-            if (self.NodePoolManager != null && !self.NodePoolManager.IsRecycle)
+            if (self.IsActive)
             {
                 if (self.NodePoolManager.TryGet(type, out INode node))
                 {
@@ -253,7 +276,7 @@ namespace WorldTree
         /// </summary>
         public static void Recycle(this WorldTreeCore self, INode obj)
         {
-            if (self.NodePoolManager != null)
+            if (self.IsActive)
             {
                 if (self.NodePoolManager.TryRecycle(obj)) return;
             }
@@ -275,9 +298,9 @@ namespace WorldTree
         where T : class, IUnitPoolEventItem
         {
             Type type = typeof(T);
-            if (self.UnitPoolManager != null && !self.UnitPoolManager.IsRecycle)
+            if (self.IsActive)
             {
-                if (self.UnitPoolManager.TryGet(type, out IUnit unit))
+                if (self.UnitPoolManager.TryGet(type, out IUnitPoolEventItem unit))
                 {
                     return unit as T;
                 }
@@ -293,7 +316,7 @@ namespace WorldTree
         /// </summary>
         public static void Recycle(this WorldTreeCore self, IUnitPoolEventItem obj)
         {
-            if (self.UnitPoolManager != null)
+            if (self.IsActive)
             {
                 if (self.UnitPoolManager.TryRecycle(obj)) return;
             }

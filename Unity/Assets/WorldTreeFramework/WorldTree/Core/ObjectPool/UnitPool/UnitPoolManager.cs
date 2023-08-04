@@ -43,11 +43,11 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取单位
         /// </summary>
-        public bool TryGet(Type type, out IUnit unit)
+        public bool TryGet(Type type, out IUnitPoolEventItem unit)
         {
             if (TryGet(type, out object obj))
             {
-                unit = obj as IUnit;
+                unit = obj as IUnitPoolEventItem;
                 return true;
             }
             else

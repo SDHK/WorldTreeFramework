@@ -141,7 +141,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加子节点
         /// </summary>
-        private static bool TryAddNewChild(this INode self, Type type, out INode node)
+        private static bool TryAddChild(this INode self, Type type, out INode node)
         {
             node = self.PoolGet(type);
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
@@ -158,7 +158,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加子节点
         /// </summary>
-        private static bool TryAddNewChild<T>(this INode self, out T Node)
+        private static bool TryAddChild<T>(this INode self, out T Node)
             where T : class, INode
         {
             var type = typeof(T);
@@ -177,12 +177,34 @@ namespace WorldTree
             }
         }
 
+        /// <summary>
+        /// 尝试添加子节点
+        /// </summary>
+        private static bool TryAddNewChild<T>(this INode self, out T Node)
+            where T : class, INode
+        {
+            var type = typeof(T);
+            INode node = self.Core.NewNodeLifecycle(type);
+            if (self.ChildrenDictionary().TryAdd(node.Id, node))
+            {
+                node.Branch = self.Branch;
+                node.Parent = self;
+                Node = node as T;
+                return true;
+            }
+            else
+            {
+                Node = node as T;
+                return false;
+            }
+        }
+
 
         #region ChildOf
 
-        public static T AddChild<N, T>(this N self, out T node)
-        where N : class, INode
-        where T : class, INode, ChildOf<N>, AsRule<IAwakeRule>
+        public static T AddNewChild<N, T>(this N self, out T node)
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule>
         {
             if (self.TryAddNewChild(out node))
             {
@@ -192,11 +214,26 @@ namespace WorldTree
             return node;
         }
 
-        public static T AddChild<N, T, T1>(this N self, out T node, T1 arg1)
-        where N : class, INode
-        where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1>>
+
+        //====================
+
+        public static T AddChild<N, T>(this N self, out T node)
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule>
         {
-            if (self.TryAddNewChild(out node))
+            if (self.TryAddChild(out node))
+            {
+                node.SendRule(default(IAwakeRule));
+                self.Core.AddNode(node);
+            }
+            return node;
+        }
+
+        public static T AddChild<N, T, T1>(this N self, out T node, T1 arg1)
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1>>
+        {
+            if (self.TryAddChild(out node))
             {
                 node.SendRule(default(IAwakeRule<T1>), arg1);
                 self.Core.AddNode(node);
@@ -204,10 +241,10 @@ namespace WorldTree
             return node;
         }
         public static T AddChild<N, T, T1, T2>(this N self, out T node, T1 arg1, T2 arg2)
-        where N : class, INode
-        where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2>>
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2>>
         {
-            if (self.TryAddNewChild(out node))
+            if (self.TryAddChild(out node))
             {
                 node.SendRule(default(IAwakeRule<T1, T2>), arg1, arg2);
                 self.Core.AddNode(node);
@@ -216,10 +253,10 @@ namespace WorldTree
         }
 
         public static T AddChild<N, T, T1, T2, T3>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3)
-        where N : class, INode
-        where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3>>
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3>>
         {
-            if (self.TryAddNewChild(out node))
+            if (self.TryAddChild(out node))
             {
                 node.SendRule(default(IAwakeRule<T1, T2, T3>), arg1, arg2, arg3);
                 self.Core.AddNode(node);
@@ -228,10 +265,10 @@ namespace WorldTree
         }
 
         public static T AddChild<N, T, T1, T2, T3, T4>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where N : class, INode
-        where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4>>
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4>>
         {
-            if (self.TryAddNewChild(out node))
+            if (self.TryAddChild(out node))
             {
                 node.SendRule(default(IAwakeRule<T1, T2, T3, T4>), arg1, arg2, arg3, arg4);
                 self.Core.AddNode(node);
@@ -239,10 +276,10 @@ namespace WorldTree
             return node;
         }
         public static T AddChild<N, T, T1, T2, T3, T4, T5>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where N : class, INode
-        where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
         {
-            if (self.TryAddNewChild(out node))
+            if (self.TryAddChild(out node))
             {
                 node.SendRule(default(IAwakeRule<T1, T2, T3, T4, T5>), arg1, arg2, arg3, arg4, arg5);
                 self.Core.AddNode(node);
@@ -250,99 +287,6 @@ namespace WorldTree
             return node;
         }
 
-        #endregion
-
-        #region 泛型添加
-
-
-
-        ///// <summary>
-        ///// 添加新的子节点
-        ///// </summary>
-        //private static T AddChild<T>(this INode self)
-        //    where T : class, INode
-        //{
-        //    if (self.TryAddNewChild(out T node))
-        //    {
-        //        node.SendRule<IAwakeRule>();
-        //        self.Core.Add(node);
-        //    }
-        //    return node;
-        //}
-
-
-        ///// <summary>
-        ///// 添加新的子节点
-        ///// </summary>
-        //private static T AddChild<T, T1>(this INode self, T1 arg1)
-        //    where T : class, INode
-        //{
-        //    if (self.TryAddNewChild(out T node))
-        //    {
-        //        node.SendRule<IAwakeRule<T1>, T1>(arg1);
-
-        //        self.Core.Add(node);
-        //    }
-        //    return node;
-        //}
-
-
-        ///// <summary>
-        ///// 添加新的子节点
-        ///// </summary>
-        //private static T AddChild<T, T1, T2>(this INode self, T1 arg1, T2 arg2)
-        //where T : class, INode
-        //{
-        //    if (self.TryAddNewChild(out T node))
-        //    {
-        //        node.SendRule<IAwakeRule<T1, T2>, T1, T2>(arg1, arg2);
-
-        //        self.Core.Add(node);
-        //    }
-        //    return node;
-        //}
-
-        ///// <summary>
-        ///// 添加新的子节点
-        ///// </summary>
-        //private static T AddChild<T, T1, T2, T3>(this INode self, T1 arg1, T2 arg2, T3 arg3)
-        //where T : class, INode
-        //{
-        //    if (self.TryAddNewChild(out T node))
-        //    {
-        //        node.SendRule<IAwakeRule<T1, T2, T3>, T1, T2, T3>(arg1, arg2, arg3);
-        //        self.Core.Add(node);
-        //    }
-        //    return node;
-        //}
-
-        ///// <summary>
-        ///// 添加新的子节点
-        ///// </summary>
-        //private static T AddChild<T, T1, T2, T3, T4>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        //where T : class, INode
-        //{
-        //    if (self.TryAddNewChild(out T node))
-        //    {
-        //        node.SendRule<IAwakeRule<T1, T2, T3, T4>, T1, T2, T3, T4>(arg1, arg2, arg3, arg4);
-        //        self.Core.Add(node);
-        //    }
-        //    return node;
-        //}
-
-        ///// <summary>
-        ///// 添加新的子节点
-        ///// </summary>
-        //private static T AddChild<T, T1, T2, T3, T4, T5>(this INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        //where T : class, INode
-        //{
-        //    if (self.TryAddNewChild(out T node))
-        //    {
-        //        node.SendRule<IAwakeRule<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5>(arg1, arg2, arg3, arg4, arg5);
-        //        self.Core.Add(node);
-        //    }
-        //    return node;
-        //}
         #endregion
 
         #endregion
