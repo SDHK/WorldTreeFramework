@@ -20,6 +20,7 @@ namespace WorldTree
     public class UnitList<T> : List<T>, IUnitPoolEventItem
     {
         public WorldTreeCore Core { get; set; }
+        public bool IsFromPool { get; set; }
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }
 

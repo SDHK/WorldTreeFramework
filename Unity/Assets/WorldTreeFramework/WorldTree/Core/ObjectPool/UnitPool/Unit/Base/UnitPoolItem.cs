@@ -23,6 +23,8 @@ namespace WorldTree
 
         public WorldTreeCore Core { get; set; }
 
+        public bool IsFromPool { get; set; }
+
         public bool IsRecycle { get; set; }
 
 

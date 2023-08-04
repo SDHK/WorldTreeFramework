@@ -20,6 +20,7 @@ namespace WorldTree
     /// </summary>
     public abstract partial class Node : INode
     {
+        public bool IsFromPool { get; set; }
         public bool IsRecycle { get; set; }
 
         public bool IsDisposed { get; set; }

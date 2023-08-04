@@ -19,6 +19,7 @@ namespace WorldTree
     public class TreeQueue<T> : Queue<T>, INode, ChildOf<INode>, ComponentOf<INode>
         , AsRule<IAwakeRule>
     {
+        public bool IsFromPool { get; set; }
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }
         public long Id { get; set; }

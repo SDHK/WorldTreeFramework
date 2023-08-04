@@ -29,10 +29,10 @@ namespace WorldTree
         /// <remarks>框架的核心</remarks>
         public WorldTreeCore Core { get; set; }
 
-        ///// <summary>
-        ///// 是否从池获取
-        ///// </summary>
-        //public bool IsFromPool { get; set; }
+        /// <summary>
+        /// 是否从池获取
+        /// </summary>
+        public bool IsFromPool { get; set; }
 
         /// <summary>
         /// 回收标记

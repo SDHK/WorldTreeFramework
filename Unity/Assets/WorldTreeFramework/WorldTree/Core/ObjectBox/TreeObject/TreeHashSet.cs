@@ -18,6 +18,7 @@ namespace WorldTree
     public class TreeHashSet<T> : HashSet<T>, INode, ChildOf<INode>
         , AsRule<IAwakeRule>
     {
+        public bool IsFromPool { get; set; }
         public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }
         public long Id { get; set; }

@@ -112,7 +112,7 @@ namespace WorldTree
         public bool ActiveToggle { get; set; }
 
         /// <summary>
-        /// 活跃状态
+        /// 活跃状态(设定为只读，禁止修改)
         /// </summary>
         public bool IsActive { get; set; }
 
