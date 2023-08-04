@@ -67,6 +67,7 @@ namespace WorldTree
         public IUnitPoolEventItem ObjectNew(IPool pool)
         {
             IUnitPoolEventItem obj = Activator.CreateInstance(ObjectType, true) as IUnitPoolEventItem;
+            obj.IsFromPool = true;
             obj.Core = Core;
             return obj;
         }

@@ -81,6 +81,7 @@ namespace WorldTree
         private INode ObjectNew(IPool pool)
         {
             INode obj = Activator.CreateInstance(ObjectType, true) as INode;
+            obj.IsFromPool = true;
             obj.Core = Core;
             obj.Root = Core.Root;
             obj.Type = ObjectType;

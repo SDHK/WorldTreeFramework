@@ -153,9 +153,9 @@ namespace WorldTree
             self.AddComponent(self.RuleManager);
 
             //对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
-            self.UnitPoolManager = self.AddComponent(out UnitPoolManager _);
-            self.NodePoolManager = self.AddComponent(out NodePoolManager _);
-            self.ArrayPoolManager = self.AddComponent(out ArrayPoolManager _);
+            self.UnitPoolManager = self.AddNewComponent(out UnitPoolManager _);
+            self.NodePoolManager = self.AddNewComponent(out NodePoolManager _);
+            self.ArrayPoolManager = self.AddNewComponent(out ArrayPoolManager _);
 
             //树根节点
             self.AddComponent(self.Root = self.PoolGet<WorldTreeRoot>());
@@ -276,7 +276,7 @@ namespace WorldTree
         /// </summary>
         public static void Recycle(this WorldTreeCore self, INode obj)
         {
-            if (self.IsActive)
+            if (self.IsActive && obj.IsFromPool)
             {
                 if (self.NodePoolManager.TryRecycle(obj)) return;
             }
@@ -316,7 +316,7 @@ namespace WorldTree
         /// </summary>
         public static void Recycle(this WorldTreeCore self, IUnitPoolEventItem obj)
         {
-            if (self.IsActive)
+            if (self.IsActive && obj.IsFromPool)
             {
                 if (self.UnitPoolManager.TryRecycle(obj)) return;
             }
@@ -400,16 +400,17 @@ namespace WorldTree
                 node.SendDynamicNodeListener<IListenerAddRule>();
             }
 
-
-            //这个节点的添加事件
-            self.AddRuleGroup?.Send(node);
-
-
             if (node is INodeListener nodeListener && node is not ICoreNode)
             {
                 //检测添加静态监听
                 self.ReferencedPoolManager.TryAddStaticListener(nodeListener);
             }
+
+            //这个节点的添加事件
+            self.AddRuleGroup?.Send(node);
+
+
+
         }
 
         /// <summary>

@@ -26,6 +26,9 @@ namespace WorldTree
     }
 
 
+
+
+
     public static class GlobalRuleActuatorRule
     {
         class GlobalRuleActuatorAddRule<R> : AddRule<GlobalRuleActuator<R>>
@@ -33,8 +36,8 @@ namespace WorldTree
         {
             public override void OnEvent(GlobalRuleActuator<R> self)
             {
+                self.ListenerSwitchesRule<R>();//池无法获取Update的问题在这,上下颠倒就不行
                 self.LoadGlobalNode();
-                self.ListenerSwitchesRule<R>();
             }
         }
 

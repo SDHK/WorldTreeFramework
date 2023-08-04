@@ -257,25 +257,6 @@ namespace WorldTree
 
         #region ComponentOf
 
-
-        #region 非池
-
-        public static T AddNewComponent<N, T>(this N self, out T Component)
-           where N : class, INode
-           where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule>
-        {
-            if (self.TryAddNewComponent(out Component))
-            {
-                Component.SendRule(default(IAwakeRule));
-                self.Core.AddNode(Component);
-            }
-            return Component;
-        }
-
-        #endregion
-
-
-
         #region 池
 
         public static T AddComponent<N, T>(this N self, out T Component)
@@ -347,6 +328,82 @@ namespace WorldTree
             }
             return Component;
         }
+        #endregion
+
+
+
+        #region 非池
+
+        public static T AddNewComponent<N, T>(this N self, out T Component)
+           where N : class, INode
+           where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule>
+        {
+            if (self.TryAddNewComponent(out Component))
+            {
+                Component.SendRule(default(IAwakeRule));
+                self.Core.AddNode(Component);
+            }
+            return Component;
+        }
+
+        public static T AddNewComponent<N, T, T1>(this N self, out T Component, T1 arg1)
+         where N : class, INode
+         where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1>>
+        {
+            if (self.TryAddNewComponent(out Component))
+            {
+                Component.SendRule(default(IAwakeRule<T1>), arg1);
+                self.Core.AddNode(Component);
+            }
+            return Component;
+        }
+        public static T AddNewComponent<N, T, T1, T2>(this N self, out T Component, T1 arg1, T2 arg2)
+            where N : class, INode
+            where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1, T2>>
+        {
+            if (self.TryAddNewComponent(out Component))
+            {
+                Component.SendRule(default(IAwakeRule<T1, T2>), arg1, arg2);
+                self.Core.AddNode(Component);
+            }
+            return Component;
+        }
+
+        public static T AddNewComponent<N, T, T1, T2, T3>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3)
+            where N : class, INode
+            where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1, T2, T3>>
+        {
+            if (self.TryAddNewComponent(out Component))
+            {
+                Component.SendRule(default(IAwakeRule<T1, T2, T3>), arg1, arg2, arg3);
+                self.Core.AddNode(Component);
+            }
+            return Component;
+        }
+
+        public static T AddNewComponent<N, T, T1, T2, T3, T4>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            where N : class, INode
+            where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4>>
+        {
+            if (self.TryAddNewComponent(out Component))
+            {
+                Component.SendRule(default(IAwakeRule<T1, T2, T3, T4>), arg1, arg2, arg3, arg4);
+                self.Core.AddNode(Component);
+            }
+            return Component;
+        }
+        public static T AddNewComponent<N, T, T1, T2, T3, T4, T5>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            where N : class, INode
+            where T : class, INode, ComponentOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
+        {
+            if (self.TryAddNewComponent(out Component))
+            {
+                Component.SendRule(default(IAwakeRule<T1, T2, T3, T4, T5>), arg1, arg2, arg3, arg4, arg5);
+                self.Core.AddNode(Component);
+            }
+            return Component;
+        }
+
         #endregion
 
         #endregion

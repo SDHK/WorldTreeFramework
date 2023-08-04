@@ -48,7 +48,7 @@ namespace WorldTree
             if (node.Core.ReferencedPoolManager != null)
                 if (node.Core.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool))
                 {
-                    if (nodePool.AddComponent(out StaticNodeListenerGroup _).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
+                    if (nodePool.AddNewComponent(out StaticNodeListenerGroup _).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
                     {
                         actuator.Send(node);
                     }
@@ -76,7 +76,7 @@ namespace WorldTree
             //执行器不存在，检测获取目标法则集合，并新建执行器
             else if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, target, out var ruleGroup))
             {
-                self.actuatorDictionary.Add(ruleType, self.AddChild(out ruleActuator, ruleGroup));
+                self.actuatorDictionary.Add(ruleType, self.AddNewChild(out ruleActuator, ruleGroup));
                 self.RuleActuatorAddListener(ruleActuator);
                 actuator = ruleActuator as IRuleActuator<R>;
                 return true;

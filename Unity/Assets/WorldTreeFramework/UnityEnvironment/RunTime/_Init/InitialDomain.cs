@@ -27,6 +27,15 @@ using YooAsset;
 namespace WorldTree
 {
 
+    //public class TestPoolNodeAdd : AddRule<TestPoolNode>
+    //{
+    //    public override void OnEvent(TestPoolNode self)
+    //    {
+    //        World.Log($"TestPoolNode!!!!?????+{self.Parent}");
+    //    }
+    //}
+   
+
 
     //public class NodeAddRule : AddRule<Node>
     //{

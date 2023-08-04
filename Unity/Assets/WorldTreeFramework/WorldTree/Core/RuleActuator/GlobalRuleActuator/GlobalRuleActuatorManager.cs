@@ -21,7 +21,7 @@ namespace WorldTree
         public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this INode self, out GlobalRuleActuator<R> globalRuleActuator)
         where R : IRule
         {
-            return self.Root.AddComponent(out GlobalRuleActuatorManager _).AddComponent(out globalRuleActuator);
+            return self.Root.AddNewComponent(out GlobalRuleActuatorManager _).AddNewComponent(out globalRuleActuator);
         }
     }
 

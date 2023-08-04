@@ -202,20 +202,8 @@ namespace WorldTree
 
         #region ChildOf
 
-        public static T AddNewChild<N, T>(this N self, out T node)
-            where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule>
-        {
-            if (self.TryAddNewChild(out node))
-            {
-                node.SendRule(default(IAwakeRule));
-                self.Core.AddNode(node);
-            }
-            return node;
-        }
+        #region 池
 
-
-        //====================
 
         public static T AddChild<N, T>(this N self, out T node)
             where N : class, INode
@@ -286,6 +274,84 @@ namespace WorldTree
             }
             return node;
         }
+
+        #endregion
+
+
+        #region 非池
+        public static T AddNewChild<N, T>(this N self, out T node)
+         where N : class, INode
+         where T : class, INode, ChildOf<N>, AsRule<IAwakeRule>
+        {
+            if (self.TryAddNewChild(out node))
+            {
+                node.SendRule(default(IAwakeRule));
+                self.Core.AddNode(node);
+            }
+            return node;
+        }
+
+        public static T AddNewChild<N, T, T1>(this N self, out T node, T1 arg1)
+         where N : class, INode
+         where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1>>
+        {
+            if (self.TryAddNewChild(out node))
+            {
+                node.SendRule(default(IAwakeRule<T1>), arg1);
+                self.Core.AddNode(node);
+            }
+            return node;
+        }
+        public static T AddNewChild<N, T, T1, T2>(this N self, out T node, T1 arg1, T2 arg2)
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2>>
+        {
+            if (self.TryAddNewChild(out node))
+            {
+                node.SendRule(default(IAwakeRule<T1, T2>), arg1, arg2);
+                self.Core.AddNode(node);
+            }
+            return node;
+        }
+
+        public static T AddNewChild<N, T, T1, T2, T3>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3)
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3>>
+        {
+            if (self.TryAddNewChild(out node))
+            {
+                node.SendRule(default(IAwakeRule<T1, T2, T3>), arg1, arg2, arg3);
+                self.Core.AddNode(node);
+            }
+            return node;
+        }
+
+        public static T AddNewChild<N, T, T1, T2, T3, T4>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4>>
+        {
+            if (self.TryAddNewChild(out node))
+            {
+                node.SendRule(default(IAwakeRule<T1, T2, T3, T4>), arg1, arg2, arg3, arg4);
+                self.Core.AddNode(node);
+            }
+            return node;
+        }
+        public static T AddNewChild<N, T, T1, T2, T3, T4, T5>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            where N : class, INode
+            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
+        {
+            if (self.TryAddNewChild(out node))
+            {
+                node.SendRule(default(IAwakeRule<T1, T2, T3, T4, T5>), arg1, arg2, arg3, arg4, arg5);
+                self.Core.AddNode(node);
+            }
+            return node;
+        }
+
+
+        #endregion
+
 
         #endregion
 
