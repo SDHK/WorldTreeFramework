@@ -272,7 +272,6 @@ namespace WorldTree
 
                 World.Log($"初始域启动！！");
 
-
                 //self.ListenerSwitchesEntity<INode>();
 
                 //self.AddChild(out self.valueFloat);
