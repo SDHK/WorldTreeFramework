@@ -148,7 +148,7 @@ namespace WorldTree
         /// </summary>
         /// <remarks>获取成功后会添加进实例的法则字典里</remarks>
         public static bool TryGetRuleList<R>(this INode self, out IRuleList<R> ruleList)
-            where R : IRule
+            where R : class, IRule
         {
             Type ruleType = typeof(R);
             if (self.m_RuleListDictionary != null)

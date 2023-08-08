@@ -9,7 +9,6 @@
 */
 
 using System;
-using Codice.Client.Common.TreeGrouper;
 
 namespace WorldTree
 {
@@ -25,37 +24,9 @@ namespace WorldTree
         public UnitDictionary<Type, ListenerRuleActuator> actuatorDictionary = new UnitDictionary<Type, ListenerRuleActuator>();
     }
 
-    public class TestPoolNodeUpdate : UpdateRule<TestPoolNode>
-    {
-        public override void OnEvent(TestPoolNode self, float arg1)
-        {
-            World.Log($"TestPoolNode!!!!+{self.Parent.Id}");
-        }
-    }
-
-
-    class TestPoolNodeAdd1 : NodeAddRule<NodePool, TestPoolNode> { }
-
-
-    public class TestPoolNode : Node
-        , ComponentOf<NodePool>
-        , AsRule<IAwakeRule>
-        , AsRule<IUpdateRule>
-    {
-
-
-    }
 
     public static class DynamicNodeListenerGroupRule
     {
-        class AddRule : AddRule<DynamicNodeListenerGroup>
-        {
-            public override void OnEvent(DynamicNodeListenerGroup self)
-            {
-                //self.PoolGet(out self.actuatorDictionary);
-            }
-        }
-
         /// <summary>
         /// 获取以实体类型为目标的 监听系统执行器
         /// </summary>
@@ -95,10 +66,6 @@ namespace WorldTree
 
                 self.RuleActuatorAddListener(ruleActuator, target);
 
-                //if (target == typeof(TestPoolNode))
-                //{
-                //    World.Log($" is TestPoolNode!!!!!!! {ruleActuator.nodeDictionary.Count} ");
-                //}
                 actuator = ruleActuator as IRuleActuator<R>;
                 return true;
             }
@@ -120,19 +87,10 @@ namespace WorldTree
                 //从池里拿到已存在的监听器
                 if (self.Core.ReferencedPoolManager.TryGetPool(listenerType.Key, out ReferencedPool listenerPool))
                 {
-                    if (target == typeof(TestPoolNode))
-                    {
-                        World.Log($" PoolNode!!!!!!! {listenerPool} ");
-                    }
                     //全部注入到执行器
                     foreach (var listenerPair in listenerPool)
                     {
                         INodeListener nodeListener = (listenerPair.Value as INodeListener);
-
-                        if (target == typeof(TestPoolNode))
-                        {
-                            World.Log($"获取全局执行者  {listenerPool} + {nodeListener} = {nodeListener.listenerTarget} ");
-                        }
 
                         //判断目标是否被该监听器监听
                         if (nodeListener.listenerTarget != null)

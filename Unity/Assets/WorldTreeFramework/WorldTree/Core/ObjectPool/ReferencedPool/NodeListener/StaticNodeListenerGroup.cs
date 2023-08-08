@@ -29,16 +29,6 @@ namespace WorldTree
     public static class StaticNodeListenerGroupRule
     {
 
-        class AddRule : AddRule<StaticNodeListenerGroup>
-        {
-            public override void OnEvent(StaticNodeListenerGroup self)
-            {
-                //self.PoolGet(out self.actuatorDictionary);
-            }
-        }
-
-
-
         /// <summary>
         /// 获取以实体类型为目标的 监听系统执行器
         /// </summary>

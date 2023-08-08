@@ -12,35 +12,35 @@ namespace WorldTree
     public static class NodeCallRuleAsync
     {
         #region Call
-        public static async TreeTask<OutT> CallRuleAsync<N, R, OutT>(this N self, R defaultRule, OutT defaultOutT)
+        public static async TreeTask<OutT> CallRuleAsync<N, R, OutT>(this N self, R nullRule, OutT defaultOutT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleAsyncBase<OutT>
-            => await self.TryCallRuleAsync(defaultRule, defaultOutT);
-        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, OutT>(this N self, R defaultRule, T1 arg1, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<OutT>
+        => await self.TryCallRuleAsync(nullRule, defaultOutT);
+        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, OutT>(this N self, R nullRule, T1 arg1, OutT defaultOutT)
            where N : class, INode, AsRule<R>
-           where R : ICallRuleAsyncBase<T1, OutT>
-           => await self.TryCallRuleAsync(defaultRule, arg1, defaultOutT);
-        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, T2, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, OutT defaultOutT)
+           where R : class, ICallRuleAsyncBase<T1, OutT>
+        => await self.TryCallRuleAsync(nullRule, arg1, defaultOutT);
+        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, T2, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, OutT defaultOutT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleAsyncBase<T1, T2, OutT>
-           => await self.TryCallRuleAsync(defaultRule, arg1, arg2, defaultOutT);
-        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, T2, T3, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, OutT>
+        => await self.TryCallRuleAsync(nullRule, arg1, arg2, defaultOutT);
+        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, T2, T3, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleAsyncBase<T1, T2, T3, OutT>
-          => await self.TryCallRuleAsync(defaultRule, arg1, arg2, arg3, defaultOutT);
-        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, T2, T3, T4, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, OutT>
+        => await self.TryCallRuleAsync(nullRule, arg1, arg2, arg3, defaultOutT);
+        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, T2, T3, T4, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
-           => await self.TryCallRuleAsync(defaultRule, arg1, arg2, arg3, arg4, defaultOutT);
-        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, T2, T3, T4, T5, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
+        => await self.TryCallRuleAsync(nullRule, arg1, arg2, arg3, arg4, defaultOutT);
+        public static async TreeTask<OutT> CallRuleAsync<N, R, T1, T2, T3, T4, T5, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
-            => await self.TryCallRuleAsync(defaultRule, arg1, arg2, arg3, arg4, arg5, defaultOutT);
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
+        => await self.TryCallRuleAsync(nullRule, arg1, arg2, arg3, arg4, arg5, defaultOutT);
 
 
 
-        public static async TreeTask<OutT> TryCallRuleAsync<R, OutT>(this INode self, R defaultRule, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<OutT>
+        public static async TreeTask<OutT> TryCallRuleAsync<R, OutT>(this INode self, R nullRule, OutT defaultOutT)
+        where R : class, ICallRuleAsyncBase<OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -49,12 +49,12 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return default;
+                return DefaultType<OutT>.Default;
             }
         }
 
-        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, OutT>(this INode self, R defaultRule, T1 arg1, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, OutT>
+        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, OutT>(this INode self, R nullRule, T1 arg1, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -63,11 +63,11 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return default(OutT);
+                return DefaultType<OutT>.Default;
             }
         }
-        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, T2, OutT>
+        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -76,11 +76,11 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return default(OutT);
+                return DefaultType<OutT>.Default;
             }
         }
-        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, T2, T3, OutT>
+        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -89,11 +89,11 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return default(OutT);
+                return DefaultType<OutT>.Default;
             }
         }
-        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, T4, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
+        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, T4, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -102,11 +102,11 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return default(OutT);
+                return DefaultType<OutT>.Default;
             }
         }
-        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, T4, T5, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
+        public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, T4, T5, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -115,7 +115,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return default(OutT);
+                return DefaultType<OutT>.Default;
             }
         }
 
@@ -127,34 +127,34 @@ namespace WorldTree
 
         #region Calls
 
-        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, OutT>(this N self, R defaultRule, OutT defaultOutT)
-         where N : class, INode, AsRule<R>
-         where R : ICallRuleAsyncBase<OutT>
-         => await self.TryCallsRuleAsync(defaultRule, defaultOutT);
+        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, OutT>(this N self, R nullRule, OutT defaultOutT)
+            where N : class, INode, AsRule<R>
+            where R : class, ICallRuleAsyncBase<OutT>
+        => await self.TryCallsRuleAsync(nullRule, defaultOutT);
 
-        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, OutT>(this N self, R defaultRule, T1 arg1, OutT defaultOutT)
+        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, OutT>(this N self, R nullRule, T1 arg1, OutT defaultOutT)
            where N : class, INode, AsRule<R>
-           where R : ICallRuleAsyncBase<T1, OutT>
-           => await self.TryCallsRuleAsync(defaultRule, arg1, defaultOutT);
-        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, T2, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, OutT defaultOutT)
+           where R : class, ICallRuleAsyncBase<T1, OutT>
+        => await self.TryCallsRuleAsync(nullRule, arg1, defaultOutT);
+        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, T2, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, OutT defaultOutT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleAsyncBase<T1, T2, OutT>
-           => await self.TryCallsRuleAsync(defaultRule, arg1, arg2, defaultOutT);
-        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, T2, T3, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, OutT>
+        => await self.TryCallsRuleAsync(nullRule, arg1, arg2, defaultOutT);
+        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, T2, T3, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleAsyncBase<T1, T2, T3, OutT>
-          => await self.TryCallsRuleAsync(defaultRule, arg1, arg2, arg3, defaultOutT);
-        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, T2, T3, T4, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, OutT>
+        => await self.TryCallsRuleAsync(nullRule, arg1, arg2, arg3, defaultOutT);
+        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, T2, T3, T4, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
-           => await self.TryCallsRuleAsync(defaultRule, arg1, arg2, arg3, arg4, defaultOutT);
-        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, T2, T3, T4, T5, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
+        => await self.TryCallsRuleAsync(nullRule, arg1, arg2, arg3, arg4, defaultOutT);
+        public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R, T1, T2, T3, T4, T5, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
-            => await self.TryCallsRuleAsync(defaultRule, arg1, arg2, arg3, arg4, arg5, defaultOutT);
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
+        => await self.TryCallsRuleAsync(nullRule, arg1, arg2, arg3, arg4, arg5, defaultOutT);
 
-        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, OutT>(this INode self, R defaultRule, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<OutT>
+        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, OutT>(this INode self, R nullRule, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -166,8 +166,8 @@ namespace WorldTree
                 return null;
             }
         }
-        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, OutT>(this INode self, R defaultRule, T1 arg1, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, OutT>
+        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, OutT>(this INode self, R nullRule, T1 arg1, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -179,8 +179,8 @@ namespace WorldTree
                 return null;
             }
         }
-        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, T2, OutT>
+        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -192,8 +192,8 @@ namespace WorldTree
                 return null;
             }
         }
-        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, T3, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, T2, T3, OutT>
+        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, T3, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -205,8 +205,8 @@ namespace WorldTree
                 return null;
             }
         }
-        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, T3, T4, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
+        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, T3, T4, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -218,8 +218,8 @@ namespace WorldTree
                 return null;
             }
         }
-        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, T3, T4, T5, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
-        where R : ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
+        public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, T3, T4, T5, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
+            where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {

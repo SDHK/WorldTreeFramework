@@ -31,6 +31,10 @@ namespace WorldTree
 
     //对象池需要一个启动标记
 
+    //Component Type改long hash码
+
+
+
 
     /*
         New

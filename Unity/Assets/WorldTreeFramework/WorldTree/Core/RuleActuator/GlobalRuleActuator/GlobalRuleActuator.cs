@@ -26,28 +26,25 @@ namespace WorldTree
     }
 
 
-
-
-
     public static class GlobalRuleActuatorRule
     {
         class GlobalRuleActuatorAddRule<R> : AddRule<GlobalRuleActuator<R>>
-        where R : IRule
+            where R : IRule
         {
             public override void OnEvent(GlobalRuleActuator<R> self)
             {
-                self.ListenerSwitchesRule<R>();//池无法获取Update的问题在这,上下颠倒就不行
+                self.ruleGroup = self.Core.RuleManager.GetOrNewRuleGroup<R>();
+                self.ListenerSwitchesRule<R>();
                 self.LoadGlobalNode();
             }
         }
 
         /// <summary>
-        /// 填装全局节点,并设置监听目标法则
+        /// 填装全局节点
         /// </summary>
         public static void LoadGlobalNode<R>(this GlobalRuleActuator<R> self)
-         where R : IRule
+            where R : IRule
         {
-            self.ruleGroup = self.Core.RuleManager.GetOrNewRuleGroup<R>();
             foreach (var item in self.ruleGroup)
             {
                 if (!item.Key.GetInterfaces().Contains(typeof(ICoreNode)))

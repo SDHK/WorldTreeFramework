@@ -27,15 +27,24 @@ using YooAsset;
 namespace WorldTree
 {
 
-    //public class TestPoolNodeAdd : AddRule<TestPoolNode>
-    //{
-    //    public override void OnEvent(TestPoolNode self)
-    //    {
-    //        World.Log($"TestPoolNode!!!!?????+{self.Parent}");
-    //    }
-    //}
-   
+    public class TestPoolNodeUpdate : UpdateRule<TestPoolNode>
+    {
+        public override void OnEvent(TestPoolNode self, float arg1)
+        {
+            World.Log($"TestPoolNode!!!!+{self.Parent.Id}");
+        }
+    }
 
+
+    class TestPoolNodeAdd1 : NodeAddRule<NodePool, TestPoolNode> { }
+    public class TestPoolNode : Node
+        , ComponentOf<NodePool>
+        , AsRule<IAwakeRule>
+        , AsRule<IUpdateRule>
+    {
+
+
+    }
 
     //public class NodeAddRule : AddRule<Node>
     //{
@@ -262,6 +271,7 @@ namespace WorldTree
                 //CRC32 a = new CRC32();
 
                 World.Log($"初始域启动！！");
+
 
                 //self.ListenerSwitchesEntity<INode>();
 

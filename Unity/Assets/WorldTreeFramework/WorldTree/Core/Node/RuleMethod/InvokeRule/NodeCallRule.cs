@@ -13,8 +13,8 @@ namespace WorldTree
     {
         #region Call
 
-        public static bool TryCallRule<R, OutT>(this INode self, R defaultRule, out OutT outT)
-        where R : ICallRuleBase<OutT>
+        public static bool TryCallRule<R, OutT>(this INode self, R nullRule, out OutT outT)
+            where R : class, ICallRuleBase<OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -28,8 +28,8 @@ namespace WorldTree
             }
 
         }
-        public static bool TryCallRule<R, T1, OutT>(this INode self, R defaultRule, T1 arg1, out OutT outT)
-        where R : ICallRuleBase<T1, OutT>
+        public static bool TryCallRule<R, T1, OutT>(this INode self, R nullRule, T1 arg1, out OutT outT)
+            where R : class, ICallRuleBase<T1, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -42,8 +42,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallRule<R, T1, T2, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, out OutT outT)
-        where R : ICallRuleBase<T1, T2, OutT>
+        public static bool TryCallRule<R, T1, T2, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, out OutT outT)
+            where R : class, ICallRuleBase<T1, T2, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -56,8 +56,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallRule<R, T1, T2, T3, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
-        where R : ICallRuleBase<T1, T2, T3, OutT>
+        public static bool TryCallRule<R, T1, T2, T3, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
+            where R : class, ICallRuleBase<T1, T2, T3, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -70,8 +70,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallRule<R, T1, T2, T3, T4, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
-        where R : ICallRuleBase<T1, T2, T3, T4, OutT>
+        public static bool TryCallRule<R, T1, T2, T3, T4, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
+            where R : class, ICallRuleBase<T1, T2, T3, T4, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -84,8 +84,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
-        where R : ICallRuleBase<T1, T2, T3, T4, T5, OutT>
+        public static bool TryCallRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
+            where R : class, ICallRuleBase<T1, T2, T3, T4, T5, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -101,54 +101,54 @@ namespace WorldTree
 
 
 
-        public static OutT CallRule<N, R, OutT>(this N self, R defaultRule, out OutT outT)
+        public static OutT CallRule<N, R, OutT>(this N self, R nullRule, out OutT outT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<OutT>
+            where R : class, ICallRuleBase<OutT>
         {
-            self.TryCallRule(defaultRule, out outT);
+            self.TryCallRule(nullRule, out outT);
             return outT;
         }
-        public static OutT CallRule<N, R, T1, OutT>(this N self, R defaultRule, T1 arg1, out OutT outT)
+        public static OutT CallRule<N, R, T1, OutT>(this N self, R nullRule, T1 arg1, out OutT outT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, OutT>
+            where R : class, ICallRuleBase<T1, OutT>
         {
-            self.TryCallRule(defaultRule, arg1, out outT);
+            self.TryCallRule(nullRule, arg1, out outT);
             return outT;
         }
-        public static OutT CallRule<N, R, T1, T2, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, out OutT outT)
+        public static OutT CallRule<N, R, T1, T2, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, out OutT outT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, T2, OutT>
+            where R : class, ICallRuleBase<T1, T2, OutT>
         {
-            self.TryCallRule(defaultRule, arg1, arg2, out outT);
+            self.TryCallRule(nullRule, arg1, arg2, out outT);
             return outT;
         }
-        public static OutT CallRule<N, R, T1, T2, T3, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
+        public static OutT CallRule<N, R, T1, T2, T3, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, T2, T3, OutT>
+            where R : class, ICallRuleBase<T1, T2, T3, OutT>
         {
-            self.TryCallRule(defaultRule, arg1, arg2, arg3, out outT);
+            self.TryCallRule(nullRule, arg1, arg2, arg3, out outT);
             return outT;
         }
-        public static OutT CallRule<N, R, T1, T2, T3, T4, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
+        public static OutT CallRule<N, R, T1, T2, T3, T4, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, T2, T3, T4, OutT>
+            where R : class, ICallRuleBase<T1, T2, T3, T4, OutT>
         {
-            self.TryCallRule(defaultRule, arg1, arg2, arg3, arg4, out outT);
+            self.TryCallRule(nullRule, arg1, arg2, arg3, arg4, out outT);
             return outT;
         }
-        public static OutT CallRule<N, R, T1, T2, T3, T4, T5, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
+        public static OutT CallRule<N, R, T1, T2, T3, T4, T5, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, T2, T3, T4, T5, OutT>
+            where R : class, ICallRuleBase<T1, T2, T3, T4, T5, OutT>
         {
-            self.TryCallRule(defaultRule, arg1, arg2, arg3, arg4, arg5, out outT);
+            self.TryCallRule(nullRule, arg1, arg2, arg3, arg4, arg5, out outT);
             return outT;
         }
         #endregion
 
 
         #region Calls
-        public static bool TryCallsRule<R, OutT>(this INode self, R defaultRule, out UnitList<OutT> values)
-        where R : ICallRuleBase<OutT>
+        public static bool TryCallsRule<R, OutT>(this INode self, R nullRule, out UnitList<OutT> values)
+            where R : class, ICallRuleBase<OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -161,8 +161,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, OutT>(this INode self, R defaultRule, T1 arg1, out UnitList<OutT> values)
-        where R : ICallRuleBase<T1, OutT>
+        public static bool TryCallsRule<R, T1, OutT>(this INode self, R nullRule, T1 arg1, out UnitList<OutT> values)
+            where R : class, ICallRuleBase<T1, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -175,8 +175,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, T2, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, out UnitList<OutT> values)
-        where R : ICallRuleBase<T1, T2, OutT>
+        public static bool TryCallsRule<R, T1, T2, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, out UnitList<OutT> values)
+            where R : class, ICallRuleBase<T1, T2, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -189,8 +189,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, T2, T3, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
-        where R : ICallRuleBase<T1, T2, T3, OutT>
+        public static bool TryCallsRule<R, T1, T2, T3, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
+            where R : class, ICallRuleBase<T1, T2, T3, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -203,8 +203,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, T2, T3, T4, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
-        where R : ICallRuleBase<T1, T2, T3, T4, OutT>
+        public static bool TryCallsRule<R, T1, T2, T3, T4, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
+            where R : class, ICallRuleBase<T1, T2, T3, T4, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -217,8 +217,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static bool TryCallsRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
-        where R : ICallRuleBase<T1, T2, T3, T4, T5, OutT>
+        public static bool TryCallsRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
+            where R : class, ICallRuleBase<T1, T2, T3, T4, T5, OutT>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -234,46 +234,46 @@ namespace WorldTree
 
 
 
-        public static UnitList<OutT> CallsRule<N, R, OutT>(this N self, R defaultRule, out UnitList<OutT> values)
+        public static UnitList<OutT> CallsRule<N, R, OutT>(this N self, R nullRule, out UnitList<OutT> values)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<OutT>
+            where R : class, ICallRuleBase<OutT>
         {
-            self.TryCallsRule(defaultRule, out values);
+            self.TryCallsRule(nullRule, out values);
             return values;
         }
-        public static UnitList<OutT> CallsRule<N, R, T1, OutT>(this N self, R defaultRule, T1 arg1, out UnitList<OutT> values)
+        public static UnitList<OutT> CallsRule<N, R, T1, OutT>(this N self, R nullRule, T1 arg1, out UnitList<OutT> values)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, OutT>
+            where R : class, ICallRuleBase<T1, OutT>
         {
-            self.TryCallsRule(defaultRule, arg1, out values);
+            self.TryCallsRule(nullRule, arg1, out values);
             return values;
         }
-        public static UnitList<OutT> CallsRule<N, R, T1, T2, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, out UnitList<OutT> values)
+        public static UnitList<OutT> CallsRule<N, R, T1, T2, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, out UnitList<OutT> values)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, T2, OutT>
+            where R : class, ICallRuleBase<T1, T2, OutT>
         {
-            self.TryCallsRule(defaultRule, arg1, arg2, out values);
+            self.TryCallsRule(nullRule, arg1, arg2, out values);
             return values;
         }
-        public static UnitList<OutT> CallsRule<N, R, T1, T2, T3, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
+        public static UnitList<OutT> CallsRule<N, R, T1, T2, T3, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, T2, T3, OutT>
+            where R : class, ICallRuleBase<T1, T2, T3, OutT>
         {
-            self.TryCallsRule(defaultRule, arg1, arg2, arg3, out values);
+            self.TryCallsRule(nullRule, arg1, arg2, arg3, out values);
             return values;
         }
-        public static UnitList<OutT> CallsRule<N, R, T1, T2, T3, T4, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
+        public static UnitList<OutT> CallsRule<N, R, T1, T2, T3, T4, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, T2, T3, T4, OutT>
+            where R : class, ICallRuleBase<T1, T2, T3, T4, OutT>
         {
-            self.TryCallsRule(defaultRule, arg1, arg2, arg3, arg4, out values);
+            self.TryCallsRule(nullRule, arg1, arg2, arg3, arg4, out values);
             return values;
         }
-        public static UnitList<OutT> CallsRule<N, R, T1, T2, T3, T4, T5, OutT>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
+        public static UnitList<OutT> CallsRule<N, R, T1, T2, T3, T4, T5, OutT>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
             where N : class, INode, AsRule<R>
-            where R : ICallRuleBase<T1, T2, T3, T4, T5, OutT>
+            where R : class, ICallRuleBase<T1, T2, T3, T4, T5, OutT>
         {
-            self.TryCallsRule(defaultRule, arg1, arg2, arg3, arg4, arg5, out values);
+            self.TryCallsRule(nullRule, arg1, arg2, arg3, arg4, arg5, out values);
             return values;
         }
         #endregion

@@ -91,7 +91,7 @@ namespace WorldTree
         /// </summary>
         public static float GetCurveEvaluate(this TreeTweenBase self, float deltaTime)
         {
-            return self.m_Curve.CallRule(default(ICurveEvaluateRule), self.GetTimeScale(deltaTime), out float _);
+            return self.m_Curve.CallRule((ICurveEvaluateRule)null, self.GetTimeScale(deltaTime), out float _);
         }
 
         /// <summary>

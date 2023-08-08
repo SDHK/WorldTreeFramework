@@ -13,8 +13,8 @@ namespace WorldTree
     {
         #region Send
 
-        public static async TreeTask<bool> TrySendRuleAsync<R>(this INode self, R defaultRule)
-        where R : ISendRuleAsyncBase
+        public static async TreeTask<bool> TrySendRuleAsync<R>(this INode self, R nullRule = null)
+            where R : class, ISendRuleAsyncBase
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -28,8 +28,8 @@ namespace WorldTree
             }
         }
 
-        public static async TreeTask<bool> TrySendRuleAsync<R, T1>(this INode self, R defaultRule, T1 arg1)
-        where R : ISendRuleAsyncBase<T1>
+        public static async TreeTask<bool> TrySendRuleAsync<R, T1>(this INode self, R nullRule, T1 arg1)
+            where R : class, ISendRuleAsyncBase<T1>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -43,8 +43,8 @@ namespace WorldTree
             }
         }
 
-        public static async TreeTask<bool> TrySendRuleAsync<R, T1, T2>(this INode self, R defaultRule, T1 arg1, T2 arg2)
-        where R : ISendRuleAsyncBase<T1, T2>
+        public static async TreeTask<bool> TrySendRuleAsync<R, T1, T2>(this INode self, R nullRule, T1 arg1, T2 arg2)
+            where R : class, ISendRuleAsyncBase<T1, T2>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -57,8 +57,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async TreeTask<bool> TrySendRuleAsync<R, T1, T2, T3>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3)
-        where R : ISendRuleAsyncBase<T1, T2, T3>
+        public static async TreeTask<bool> TrySendRuleAsync<R, T1, T2, T3>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3)
+            where R : class, ISendRuleAsyncBase<T1, T2, T3>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -72,8 +72,8 @@ namespace WorldTree
             }
         }
 
-        public static async TreeTask<bool> TrySendRuleAsync<R, T1, T2, T3, T4>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where R : ISendRuleAsyncBase<T1, T2, T3, T4>
+        public static async TreeTask<bool> TrySendRuleAsync<R, T1, T2, T3, T4>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            where R : class, ISendRuleAsyncBase<T1, T2, T3, T4>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -86,8 +86,8 @@ namespace WorldTree
                 return false;
             }
         }
-        public static async TreeTask<bool> TrySendRuleAsync<R, T1, T2, T3, T4, T5>(this INode self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where R : ISendRuleAsyncBase<T1, T2, T3, T4, T5>
+        public static async TreeTask<bool> TrySendRuleAsync<R, T1, T2, T3, T4, T5>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            where R : class, ISendRuleAsyncBase<T1, T2, T3, T4, T5>
         {
             if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
@@ -105,13 +105,13 @@ namespace WorldTree
 
 
 
-        public static async TreeTask SendRuleAsync<N, R>(this N self, R defaultRule)
+        public static async TreeTask SendRuleAsync<N, R>(this N self, R nullRule)
             where N : class, INode, AsRule<R>
-            where R : ISendRuleAsyncBase
+            where R : class, ISendRuleAsyncBase
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                await group.SendAsync(self);
+                await ruleList.SendAsync(self);
             }
             else
             {
@@ -119,13 +119,13 @@ namespace WorldTree
             }
         }
 
-        public static async TreeTask SendRuleAsync<N, R, T1>(this N self, R defaultRule, T1 arg1)
+        public static async TreeTask SendRuleAsync<N, R, T1>(this N self, R nullRule, T1 arg1)
             where N : class, INode, AsRule<R>
-            where R : ISendRuleAsyncBase<T1>
+            where R : class, ISendRuleAsyncBase<T1>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                await group.SendAsync(self, arg1);
+                await ruleList.SendAsync(self, arg1);
             }
             else
             {
@@ -133,52 +133,52 @@ namespace WorldTree
             }
         }
 
-        public static async TreeTask SendRuleAsync<N, R, T1, T2>(this N self, R defaultRule, T1 arg1, T2 arg2)
+        public static async TreeTask SendRuleAsync<N, R, T1, T2>(this N self, R nullRule, T1 arg1, T2 arg2)
             where N : class, INode, AsRule<R>
-            where R : ISendRuleAsyncBase<T1, T2>
+            where R : class, ISendRuleAsyncBase<T1, T2>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                await group.TrySendAsync(self, arg1, arg2);
+                await ruleList.SendAsync(self, arg1, arg2);
             }
             else
             {
                 await self.TreeTaskCompleted();
             }
         }
-        public static async TreeTask SendRuleAsync<N, R, T1, T2, T3>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3)
+        public static async TreeTask SendRuleAsync<N, R, T1, T2, T3>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3)
             where N : class, INode, AsRule<R>
-            where R : ISendRuleAsyncBase<T1, T2, T3>
+            where R : class, ISendRuleAsyncBase<T1, T2, T3>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                await group.TrySendAsync(self, arg1, arg2, arg3);
+                await ruleList.SendAsync(self, arg1, arg2, arg3);
             }
             else
             {
                 await self.TreeTaskCompleted();
             }
         }
-        public static async TreeTask SendRuleAsync<N, R, T1, T2, T3, T4>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static async TreeTask SendRuleAsync<N, R, T1, T2, T3, T4>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             where N : class, INode, AsRule<R>
-            where R : ISendRuleAsyncBase<T1, T2, T3, T4>
+            where R : class, ISendRuleAsyncBase<T1, T2, T3, T4>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                await group.TrySendAsync(self, arg1, arg2, arg3, arg4);
+                await ruleList.SendAsync(self, arg1, arg2, arg3, arg4);
             }
             else
             {
                 await self.TreeTaskCompleted();
             }
         }
-        public static async TreeTask SendRuleAsync<N, R, T1, T2, T3, T4, T5>(this N self, R defaultRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static async TreeTask SendRuleAsync<N, R, T1, T2, T3, T4, T5>(this N self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             where N : class, INode, AsRule<R>
-            where R : ISendRuleAsyncBase<T1, T2, T3, T4, T5>
+            where R : class, ISendRuleAsyncBase<T1, T2, T3, T4, T5>
         {
-            if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<R> group))
+            if (self.TryGetRuleList(out IRuleList<R> ruleList))
             {
-                await group.TrySendAsync(self, arg1, arg2, arg3, arg4, arg5);
+                await ruleList.SendAsync(self, arg1, arg2, arg3, arg4, arg5);
             }
             else
             {

@@ -12,6 +12,27 @@ using System;
 
 namespace WorldTree
 {
+    /// <summary>
+    /// 默认类型，在泛型无法使用null时使用
+    /// </summary>
+    /// <remarks>直接使用default会造成反射创建和产生GC，所以存起来使用</remarks>
+    public static class DefaultType<T>
+    {
+        /// <summary>
+        /// 默认值
+        /// </summary>
+        public static readonly T Default = default;
+    }
+
+    /// <summary>
+    /// 类型信息
+    /// </summary>
+    public static class TypeInfo<T>
+    {
+        public static readonly Type Type = typeof(T);
+        public static readonly int HashCode = typeof(T).GetHashCode();
+        public static readonly string TypeName = typeof(T).Name;
+    }
 
     /// <summary>
     /// 组件：父节点限制

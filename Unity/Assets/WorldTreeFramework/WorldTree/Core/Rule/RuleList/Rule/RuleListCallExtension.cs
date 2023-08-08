@@ -21,79 +21,73 @@ namespace WorldTree
         public static OutT Call<R, OutT>(this IRuleList<R> ruleList, INode node, out OutT outT)
             where R : ICallRuleBase<OutT>
         {
-            outT = default(OutT);
             foreach (ICallRuleBase<OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
                 outT = rule.Invoke(node);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT;
+            return outT = DefaultType<OutT>.Default;
         }
 
         public static OutT Call<R, T1, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, out OutT outT)
             where R : ICallRuleBase<T1, OutT>
         {
-            outT = default(OutT);
             foreach (ICallRuleBase<T1, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT;
+            return outT = DefaultType<OutT>.Default;
         }
 
         public static OutT Call<R, T1, T2, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, out OutT outT)
             where R : ICallRuleBase<T1, T2, OutT>
         {
-            outT = default(OutT);
             foreach (ICallRuleBase<T1, T2, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1, arg2);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT;
+            return outT = DefaultType<OutT>.Default;
         }
 
         public static OutT Call<R, T1, T2, T3, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
             where R : ICallRuleBase<T1, T2, T3, OutT>
         {
-            outT = default(OutT);
             foreach (ICallRuleBase<T1, T2, T3, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1, arg2, arg3);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT;
+            return outT = DefaultType<OutT>.Default;
         }
 
         public static OutT Call<R, T1, T2, T3, T4, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
             where R : ICallRuleBase<T1, T2, T3, T4, OutT>
         {
-            outT = default(OutT);
             foreach (ICallRuleBase<T1, T2, T3, T4, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1, arg2, arg3, arg4);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT;
+            return outT = DefaultType<OutT>.Default;
         }
 
         public static OutT Call<R, T1, T2, T3, T4, T5, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
             where R : ICallRuleBase<T1, T2, T3, T4, T5, OutT>
         {
-            outT = default(OutT);
             foreach (ICallRuleBase<T1, T2, T3, T4, T5, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
                 outT = rule.Invoke(node, arg1, arg2, arg3, arg4, arg5);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT;
+            return outT = DefaultType<OutT>.Default;
         }
 
 

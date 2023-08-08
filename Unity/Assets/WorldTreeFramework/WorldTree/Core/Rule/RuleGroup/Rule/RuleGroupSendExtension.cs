@@ -17,7 +17,7 @@ namespace WorldTree
         #region TrySend
 
         public static bool TrySend<R>(this IRuleGroup<R> group, INode node)
-        where R : ISendRuleBase
+            where R : ISendRuleBase
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -31,7 +31,7 @@ namespace WorldTree
         }
 
         public static bool TrySend<R, T1>(this IRuleGroup<R> group, INode node, T1 t1)
-        where R : ISendRuleBase<T1>
+            where R : ISendRuleBase<T1>
         {
             if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -46,7 +46,7 @@ namespace WorldTree
 
 
         public static bool TrySend<R, T1, T2>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2)
-        where R : ISendRuleBase<T1, T2>
+            where R : ISendRuleBase<T1, T2>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -61,7 +61,7 @@ namespace WorldTree
 
 
         public static bool TrySend<R, T1, T2, T3>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3)
-        where R : ISendRuleBase<T1, T2, T3>
+            where R : ISendRuleBase<T1, T2, T3>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -75,7 +75,7 @@ namespace WorldTree
         }
 
         public static bool TrySend<R, T1, T2, T3, T4>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where R : ISendRuleBase<T1, T2, T3, T4>
+            where R : ISendRuleBase<T1, T2, T3, T4>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -88,7 +88,7 @@ namespace WorldTree
             }
         }
         public static bool TrySend<R, T1, T2, T3, T4, T5>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where R : ISendRuleBase<T1, T2, T3, T4, T5>
+            where R : ISendRuleBase<T1, T2, T3, T4, T5>
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
@@ -108,39 +108,35 @@ namespace WorldTree
         #region Send
 
 
-
-
-
-
         public static void Send<R>(this IRuleGroup<R> group, INode node)
-        where R : ISendRuleBase
+            where R : ISendRuleBase
         {
             group.TrySend(node);
         }
 
         public static void Send<R, T1>(this IRuleGroup<R> group, INode node, T1 arg1)
-        where R : ISendRuleBase<T1>
+            where R : ISendRuleBase<T1>
         {
             group.TrySend(node, arg1);
         }
 
         public static void Send<R, T1, T2>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2)
-        where R : ISendRuleBase<T1, T2>
+            where R : ISendRuleBase<T1, T2>
         {
             group.TrySend(node, arg1, arg2);
         }
         public static void Send<R, T1, T2, T3>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3)
-        where R : ISendRuleBase<T1, T2, T3>
+            where R : ISendRuleBase<T1, T2, T3>
         {
             group.TrySend(node, arg1, arg2, arg3);
         }
         public static void Send<R, T1, T2, T3, T4>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        where R : ISendRuleBase<T1, T2, T3, T4>
+            where R : ISendRuleBase<T1, T2, T3, T4>
         {
             group.TrySend(node, arg1, arg2, arg3, arg4);
         }
         public static void Send<R, T1, T2, T3, T4, T5>(this IRuleGroup<R> group, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-        where R : ISendRuleBase<T1, T2, T3, T4, T5>
+            where R : ISendRuleBase<T1, T2, T3, T4, T5>
         {
             group.TrySend(node, arg1, arg2, arg3, arg4, arg5);
         }
