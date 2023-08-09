@@ -18,12 +18,12 @@ namespace WorldTree
     /// </summary>
     public static class TypeTable
     {
-        private static readonly ConcurrentDictionary<Type, int> TypeHashCode = new ConcurrentDictionary<Type, int>();
-        private static readonly ConcurrentDictionary<int, Type> HashCodeType = new ConcurrentDictionary<int, Type>();
+        private static readonly ConcurrentDictionary<Type, int> TypeHashCode = new();
+        private static readonly ConcurrentDictionary<int, Type> HashCodeType = new();
 
 
-        private static readonly ConcurrentDictionary<Type, long> TypeRCR64 = new ConcurrentDictionary<Type, long>();
-        private static readonly ConcurrentDictionary<long, Type> RCR64Type = new ConcurrentDictionary<long, Type>();
+        private static readonly ConcurrentDictionary<Type, long> TypeRCR64 = new();
+        private static readonly ConcurrentDictionary<long, Type> RCR64Type = new();
 
         /// <summary>
         /// 类型注册到信息表
