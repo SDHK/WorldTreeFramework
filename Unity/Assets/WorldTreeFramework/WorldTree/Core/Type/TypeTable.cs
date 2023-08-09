@@ -22,19 +22,19 @@ namespace WorldTree
         private static readonly ConcurrentDictionary<int, Type> HashCodeType = new();
 
 
-        private static readonly ConcurrentDictionary<Type, long> TypeRCR64 = new();
-        private static readonly ConcurrentDictionary<long, Type> RCR64Type = new();
+        private static readonly ConcurrentDictionary<Type, long> TypeHash64 = new();
+        private static readonly ConcurrentDictionary<long, Type> Hash64Type = new();
 
         /// <summary>
         /// 类型注册到信息表
         /// </summary>
         public static Type Add(this Type type)
         {
-            if (!TypeRCR64.ContainsKey(type))
+            if (!TypeHash64.ContainsKey(type))
             {
-                long rcr = type.FullName.GetCRC64();
-                TypeRCR64.GetOrAdd(type, rcr);
-                RCR64Type.GetOrAdd(rcr, type);
+                long hash64 = type.FullName.GetHash64();
+                TypeHash64.GetOrAdd(type, hash64);
+                Hash64Type.GetOrAdd(hash64, type);
 
                 int hash = type.GetHashCode();
                 TypeHashCode.GetOrAdd(type, hash);
@@ -44,16 +44,16 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 类型获取RCR64码
+        /// 类型获取64位哈希码
         /// </summary>
-        public static long GetTableRCR64(this Type type)
+        public static long GetTableHash64(this Type type)
         {
-            if (!TypeRCR64.TryGetValue(type, out long rcr))
+            if (!TypeHash64.TryGetValue(type, out long hash64))
             {
-                TypeRCR64.GetOrAdd(type, rcr = type.FullName.GetCRC64());
-                RCR64Type.GetOrAdd(rcr, type);
+                TypeHash64.GetOrAdd(type, hash64 = type.FullName.GetHash64());
+                Hash64Type.GetOrAdd(hash64, type);
             }
-            return rcr;
+            return hash64;
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// RCR64码获取类型
+        /// 哈希码64码获取类型
         /// </summary>
-        public static bool TryGetTypeRCR64(this long rcr, out Type type) => RCR64Type.TryGetValue(rcr, out type);
+        public static bool TryGetTypeHash64(this long rcr, out Type type) => Hash64Type.TryGetValue(rcr, out type);
         /// <summary>
         /// 哈希码获取类型
         /// </summary>

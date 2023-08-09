@@ -5,14 +5,6 @@
 * 日期： 2023/8/9 16:34
 
 * 描述： long类型CRC64，(正常的CRC64应为ulong类型)
-*        起始设计目的是用于long代替Type在字典中的键值
-*        
-* CRC64结果范围是2^64,大约是1.8 x 10^19 个可能值。
-* 假设字典存储.NET类型,数量级大约在2^16,即65536个类型左右。
-* 根据生日悖论公式,冲突概率约等于 n^2/2m,这里n是键数量级,m是哈希值范围。
-* 即冲突概率约等于 (2^16) ^ 2 / 2^64,即 2^32 / 2^64,约等于 1 / 2^32。
-* 1/2^32换算到概率就是大约等于 1 / 4294967295,约等于 43 亿分之一。
-* 
 * 
 */
 
@@ -41,6 +33,7 @@ namespace WorldTree
         /// </summary>
         private static long[] GenerateCRC64Table()
         {
+
             long[] table = new long[256];
             for (int i = 0; i < 256; i++)
             {
@@ -85,5 +78,10 @@ namespace WorldTree
             }
             return crc;
         }
+
+        /// <summary>
+        /// 验证
+        /// </summary>
+        public static bool VerifyCRC64(string originalData, long crc) => GetCRC64(originalData) == crc;
     }
 }
