@@ -20,11 +20,11 @@ namespace WorldTree
         /// <summary>
         /// 组件节点
         /// </summary>
-        public static UnitDictionary<Type, INode> ComponentsDictionary(this INode self)
+        public static UnitSortedDictionary<long, INode> ComponentsDictionary(this INode self)
         {
             if (self.m_Components == null)
             {
-                self.m_Components = self.PoolGet<UnitDictionary<Type, INode>>();
+                self.m_Components = self.PoolGet<UnitSortedDictionary<long, INode>>();
             }
             return self.m_Components;
         }
@@ -45,7 +45,7 @@ namespace WorldTree
             }
             else
             {
-                return self.m_Components.TryGetValue(type, out component);
+                return self.m_Components.TryGetValue(type.GetTableHash64(), out component);
             }
         }
 
@@ -63,7 +63,7 @@ namespace WorldTree
             else
             {
                 Type type = typeof(T);
-                if (self.m_Components.TryGetValue(type, out INode node))
+                if (self.m_Components.TryGetValue(TypeInfo<T>.HashCode64, out INode node))
                 {
                     component = node as T;
                     return true;
@@ -86,8 +86,11 @@ namespace WorldTree
         public static void RemoveComponent<T>(this INode self)
             where T : class, INode
         {
-            Type type = typeof(T);
-            self.RemoveComponent(type);
+            if (self.m_Components != null)
+                if (self.m_Components.TryGetValue(TypeInfo<T>.HashCode64, out INode component))
+                {
+                    component?.Dispose();
+                }
         }
 
         /// <summary>
@@ -96,7 +99,7 @@ namespace WorldTree
         public static void RemoveComponent(this INode self, Type type)
         {
             if (self.m_Components != null)
-                if (self.m_Components.TryGetValue(type, out INode component))
+                if (self.m_Components.TryGetValue(type.GetTableHash64(), out INode component))
                 {
                     component?.Dispose();
                 }
@@ -138,13 +141,13 @@ namespace WorldTree
             {
                 Type type = component.GetType();
 
-                self.RemoveComponent(type);
+                self.RemoveComponent<T>();
 
                 if (component.Parent != null)//如果父节点存在从原父节点中移除加入到当前，不调用任何事件
                 {
                     component.TraversalLevelDisposeDomain();
                     component.RemoveInParent();
-                    self.ComponentsDictionary().Add(type, component);
+                    self.ComponentsDictionary().Add(TypeInfo<T>.HashCode64, component);
                     if (component.Branch != component) component.Branch = self.Branch;
                     component.Parent = self;
                     component.isComponent = true;
@@ -152,7 +155,7 @@ namespace WorldTree
                 }
                 else //野组件添加
                 {
-                    self.ComponentsDictionary().Add(type, component);
+                    self.ComponentsDictionary().Add(TypeInfo<T>.HashCode64, component);
                     if (component.Branch != component) component.Branch = self.Branch;
                     component.Parent = self;
                     component.isComponent = true;
@@ -170,13 +173,13 @@ namespace WorldTree
         /// </summary>
         public static INode AddComponent(this INode self, Type type)
         {
-            if (!self.ComponentsDictionary().TryGetValue(type, out INode component))
+            if (!self.ComponentsDictionary().TryGetValue(type.GetTableHash64(), out INode component))
             {
                 component = self.PoolGet(type);
                 component.Branch = self.Branch;
                 component.Parent = self;
                 component.isComponent = true;
-                self.m_Components.Add(type, component);
+                self.m_Components.Add(type.GetTableHash64(), component);
                 component.TrySendRule<IAwakeRule>();
                 self.Core.AddNode(component);
             }
@@ -190,13 +193,13 @@ namespace WorldTree
         /// </summary>
         private static bool TryAddComponent(this INode self, Type type, out INode component)
         {
-            if (!self.ComponentsDictionary().TryGetValue(type, out component))
+            if (!self.ComponentsDictionary().TryGetValue(type.GetTableHash64(), out component))
             {
                 component = self.PoolGet(type);
                 component.Branch = self.Branch;
                 component.Parent = self;
                 component.isComponent = true;
-                self.m_Components.Add(type, component);
+                self.m_Components.Add(type.GetTableHash64(), component);
                 return true;
             }
             else
@@ -212,13 +215,13 @@ namespace WorldTree
             where T : class, INode
         {
             var type = typeof(T);
-            if (!self.ComponentsDictionary().TryGetValue(type, out INode component))
+            if (!self.ComponentsDictionary().TryGetValue(TypeInfo<T>.HashCode64, out INode component))
             {
                 component = self.PoolGet(type);
                 component.Branch = self.Branch;
                 component.Parent = self;
                 component.isComponent = true;
-                self.m_Components.Add(type, component);
+                self.m_Components.Add(TypeInfo<T>.HashCode64, component);
                 Component = component as T;
                 return true;
             }
@@ -237,13 +240,13 @@ namespace WorldTree
             where T : class, INode
         {
             var type = typeof(T);
-            if (!self.ComponentsDictionary().TryGetValue(type, out INode component))
+            if (!self.ComponentsDictionary().TryGetValue(TypeInfo<T>.HashCode64, out INode component))
             {
                 component = self.Core.NewNodeLifecycle(type);
                 component.Branch = self.Branch;
                 component.Parent = self;
                 component.isComponent = true;
-                self.m_Components.Add(type, component);
+                self.m_Components.Add(TypeInfo<T>.HashCode64, component);
                 Component = component as T;
                 return true;
             }

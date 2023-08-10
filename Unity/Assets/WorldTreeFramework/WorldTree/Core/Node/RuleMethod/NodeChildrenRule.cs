@@ -9,6 +9,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -17,11 +18,11 @@ namespace WorldTree
         /// <summary>
         /// 子节点
         /// </summary>
-        public static UnitDictionary<long, INode> ChildrenDictionary(this INode self)
+        public static UnitSortedDictionary<long, INode> ChildrenDictionary(this INode self)
         {
             if (self.m_Children == null)
             {
-                self.m_Children = self.PoolGet<UnitDictionary<long, INode>>();
+                self.m_Children = self.PoolGet<UnitSortedDictionary<long, INode>>();
             }
             return self.m_Children;
         }

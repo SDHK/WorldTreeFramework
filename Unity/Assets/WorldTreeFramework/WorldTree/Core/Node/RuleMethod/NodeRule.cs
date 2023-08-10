@@ -29,7 +29,8 @@ namespace WorldTree
         /// <summary>
         /// 回收自己
         /// </summary>
-        public static void DisposeSelf(this INode self)
+        public static void DisposeSelf<T>(this T self)
+            where T : INode
         {
             if (!self.IsRecycle)//是否已经回收
             {
@@ -118,13 +119,14 @@ namespace WorldTree
         /// <summary>
         /// 从父节点中删除
         /// </summary>
-        public static void RemoveInParent(this INode self)
+        public static void RemoveInParent<T>(this T self)
+            where T : INode
         {
             if (self.Parent != null)
             {
                 if (self.isComponent)
                 {
-                    self.Parent.m_Components.Remove(self.GetType());
+                    self.Parent.m_Components.Remove(TypeInfo<T>.HashCode64);
                     if (self.Parent.m_Components.Count == 0)
                     {
                         self.Parent.m_Components.Dispose();

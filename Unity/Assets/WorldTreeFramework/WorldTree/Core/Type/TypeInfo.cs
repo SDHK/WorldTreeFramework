@@ -29,7 +29,7 @@ namespace WorldTree
         public static readonly int HashCode = typeof(T).GetHashCode();
 
         /// <summary>
-        /// 类型FullName 的 RCR64码
+        /// 类型FullName 的 64位哈希码
         /// </summary>
         public static readonly long HashCode64 = HashCore.GetHash64(typeof(T).FullName);
         /// <summary>
