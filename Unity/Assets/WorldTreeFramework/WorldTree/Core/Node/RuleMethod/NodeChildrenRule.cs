@@ -124,7 +124,7 @@ namespace WorldTree
         /// <summary>
         /// 添加新的子节点
         /// </summary>
-        public static INode AddChild(this INode self, Type type)
+        public static INode AddChild(this INode self, long type)
         {
             INode node = self.PoolGet(type);
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
@@ -142,7 +142,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加子节点
         /// </summary>
-        private static bool TryAddChild(this INode self, Type type, out INode node)
+        private static bool TryAddChild(this INode self, long type, out INode node)
         {
             node = self.PoolGet(type);
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
@@ -162,8 +162,7 @@ namespace WorldTree
         private static bool TryAddChild<T>(this INode self, out T Node)
             where T : class, INode
         {
-            var type = typeof(T);
-            INode node = self.PoolGet(type);
+            INode node = self.PoolGet(TypeInfo<T>.HashCode64);
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
             {
                 node.Branch = self.Branch;
@@ -184,8 +183,7 @@ namespace WorldTree
         private static bool TryAddNewChild<T>(this INode self, out T Node)
             where T : class, INode
         {
-            var type = typeof(T);
-            INode node = self.Core.NewNodeLifecycle(type);
+            INode node = self.Core.NewNodeLifecycle(TypeInfo<T>.HashCode64);
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
             {
                 node.Branch = self.Branch;
@@ -212,7 +210,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule(default(IAwakeRule));
+                node.SendRule((IAwakeRule)null);
                 self.Core.AddNode(node);
             }
             return node;
@@ -224,7 +222,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1>), arg1);
+                node.SendRule((IAwakeRule<T1>)null, arg1);
                 self.Core.AddNode(node);
             }
             return node;
@@ -235,7 +233,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1, T2>), arg1, arg2);
+                node.SendRule((IAwakeRule<T1, T2>)null, arg1, arg2);
                 self.Core.AddNode(node);
             }
             return node;
@@ -247,7 +245,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1, T2, T3>), arg1, arg2, arg3);
+                node.SendRule((IAwakeRule<T1, T2, T3>)null, arg1, arg2, arg3);
                 self.Core.AddNode(node);
             }
             return node;
@@ -259,7 +257,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1, T2, T3, T4>), arg1, arg2, arg3, arg4);
+                node.SendRule((IAwakeRule<T1, T2, T3, T4>)null, arg1, arg2, arg3, arg4);
                 self.Core.AddNode(node);
             }
             return node;
@@ -270,7 +268,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1, T2, T3, T4, T5>), arg1, arg2, arg3, arg4, arg5);
+                node.SendRule((IAwakeRule<T1, T2, T3, T4, T5>)null, arg1, arg2, arg3, arg4, arg5);
                 self.Core.AddNode(node);
             }
             return node;
@@ -286,7 +284,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule(default(IAwakeRule));
+                node.SendRule((IAwakeRule)null);
                 self.Core.AddNode(node);
             }
             return node;
@@ -298,7 +296,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1>), arg1);
+                node.SendRule((IAwakeRule<T1>)null, arg1);
                 self.Core.AddNode(node);
             }
             return node;
@@ -309,7 +307,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1, T2>), arg1, arg2);
+                node.SendRule((IAwakeRule<T1, T2>)null, arg1, arg2);
                 self.Core.AddNode(node);
             }
             return node;
@@ -321,7 +319,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1, T2, T3>), arg1, arg2, arg3);
+                node.SendRule((IAwakeRule<T1, T2, T3>)null, arg1, arg2, arg3);
                 self.Core.AddNode(node);
             }
             return node;
@@ -333,7 +331,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1, T2, T3, T4>), arg1, arg2, arg3, arg4);
+                node.SendRule((IAwakeRule<T1, T2, T3, T4>)null, arg1, arg2, arg3, arg4);
                 self.Core.AddNode(node);
             }
             return node;
@@ -344,7 +342,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule(default(IAwakeRule<T1, T2, T3, T4, T5>), arg1, arg2, arg3, arg4, arg5);
+                node.SendRule((IAwakeRule<T1, T2, T3, T4, T5>)null, arg1, arg2, arg3, arg4, arg5);
                 self.Core.AddNode(node);
             }
             return node;

@@ -21,7 +21,7 @@ namespace WorldTree
     {
         public override string ToString()
         {
-            return $"GlobalRuleActuator : {ruleGroup?.RuleType}";
+            return $"GlobalRuleActuator : {ruleGroup?.RuleType.HashCore64ToType()}";
         }
     }
 
@@ -47,7 +47,7 @@ namespace WorldTree
         {
             foreach (var item in self.ruleGroup)
             {
-                if (!item.Key.GetInterfaces().Contains(typeof(ICoreNode)))
+                if (!item.Key.HashCore64ToType().GetInterfaces().Contains(typeof(ICoreNode)))
                 {
                     if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
                     {

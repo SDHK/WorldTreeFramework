@@ -25,21 +25,25 @@ namespace WorldTree
     /// <remarks>储存相同节点类型，法则类型，的法则</remarks>
     public class RuleList : List<IRule>, IRuleList<IRule>
     {
-        HashSet<Type> ruleTypes = new HashSet<Type>();
+        /// <summary>
+        /// 法则的类型
+        /// </summary>
+        public long RuleType;
 
         /// <summary>
-        /// 通过HashSet判断法则类真实类型，禁止重复添加
+        /// 重复添加则覆盖
         /// </summary>
-        public bool TryAdd(IRule rule)
+        public void AddRule(IRule rule)
         {
-            if (!ruleTypes.Contains(rule.GetType()))
+            int index = FindIndex((old) => old.GetType() == rule.GetType());
+            if (index == -1)
             {
-                base.Add(rule);
-                return true;
+                Add(rule);
             }
-            else
+            else //重复则覆盖
             {
-                return false;
+                RemoveAt(index);
+                IndexOf(rule, index);
             }
         }
     }

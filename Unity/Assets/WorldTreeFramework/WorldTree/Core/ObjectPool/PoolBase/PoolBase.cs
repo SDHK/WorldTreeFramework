@@ -96,6 +96,7 @@ namespace WorldTree
     {
 
         public Type ObjectType { get; set; }
+        public long ObjectTypeCore { get; set; }
 
         public abstract int Count { get; }
 

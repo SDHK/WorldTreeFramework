@@ -13,6 +13,7 @@
 *   
 */
 using System;
+using Mono.Cecil.Cil;
 
 namespace WorldTree
 {
@@ -84,7 +85,7 @@ namespace WorldTree
             obj.IsFromPool = true;
             obj.Core = Core;
             obj.Root = Core.Root;
-            obj.Type = ObjectType;
+            obj.Type = ObjectTypeCore;
             return obj;
         }
         private void ObjectDestroy(INode obj)
@@ -123,13 +124,13 @@ namespace WorldTree
         {
             public override void OnEvent(NodePool self)
             {
-                self.Core.RuleManager.SupportNodeRule(self.ObjectType);
+                self.Core.RuleManager.SupportNodeRule(self.ObjectTypeCore);
 
                 //生命周期法则
-                self.newRule = self.GetRuleList<INewRule>(self.ObjectType);
-                self.getRule = self.GetRuleList<IGetRule>(self.ObjectType);
-                self.recycleRule = self.GetRuleList<IRecycleRule>(self.ObjectType);
-                self.destroyRule = self.GetRuleList<IDestroyRule>(self.ObjectType);
+                self.newRule = self.Core.RuleManager.GetRuleList<INewRule>(self.ObjectTypeCore);
+                self.getRule = self.Core.RuleManager.GetRuleList<IGetRule>(self.ObjectTypeCore);
+                self.recycleRule = self.Core.RuleManager.GetRuleList<IRecycleRule>(self.ObjectTypeCore);
+                self.destroyRule = self.Core.RuleManager.GetRuleList<IDestroyRule>(self.ObjectTypeCore);
             }
         }
         class DestroyRule : DestroyRule<NodePool>

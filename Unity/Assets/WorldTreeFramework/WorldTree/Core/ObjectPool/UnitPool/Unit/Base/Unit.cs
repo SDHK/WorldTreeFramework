@@ -16,8 +16,8 @@ namespace WorldTree
     /// </summary>
     public abstract class Unit : IUnit
     {
+        public long Type { get; set; }
         public bool IsDisposed { get; set; }
-
 
         /// <summary>
         /// 直接释放：释放后IsDisposed标记为true

@@ -22,11 +22,7 @@ namespace WorldTree
         /// <summary>
         /// 类型
         /// </summary>
-        public static readonly Type Type = typeof(T);
-        /// <summary>
-        /// 类型哈希码
-        /// </summary>
-        public static readonly int HashCode = typeof(T).GetHashCode();
+        public static readonly Type Type = Init();
 
         /// <summary>
         /// 类型FullName 的 64位哈希码
@@ -36,6 +32,11 @@ namespace WorldTree
         /// 类型名称
         /// </summary>
         public static readonly string TypeName = typeof(T).Name;
+
+        private static Type Init()
+        {
+            return TypeTable.Add(typeof(T));
+        }
     }
 
 }

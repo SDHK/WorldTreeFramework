@@ -41,11 +41,11 @@ namespace WorldTree
         /// <summary>
         /// 监听：目标节点类型
         /// </summary>
-        Type TargetNodeType { get; }
+        long TargetNodeType { get; }
         /// <summary>
         /// 监听：目标节点法则
         /// </summary>
-        Type TargetRuleType { get; }
+        long TargetRuleType { get; }
     }
 
 
@@ -58,8 +58,8 @@ namespace WorldTree
     where LR : IListenerRule
     where TR : IRule
     {
-        public virtual Type TargetNodeType => typeof(TN);
-        public virtual Type TargetRuleType => typeof(TR);
+        public virtual long TargetNodeType => TypeInfo<TN>.HashCode64;
+        public virtual long TargetRuleType => TypeInfo<TR>.HashCode64;
 
         public virtual void Invoke(INode self, INode node) => OnEvent(self as LN, node as TN);
         public abstract void OnEvent(LN self, TN node);

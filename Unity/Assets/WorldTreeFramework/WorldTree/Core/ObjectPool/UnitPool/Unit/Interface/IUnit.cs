@@ -15,8 +15,12 @@ namespace WorldTree
     /// <summary>
     /// 单位接口
     /// </summary>
-    public interface IUnit: IDisposable
+    public interface IUnit : IDisposable
     {
+        /// <summary>
+        /// 类型码
+        /// </summary>
+        public long Type { get; set; }
         /// <summary>
         /// 释放标记
         /// </summary>

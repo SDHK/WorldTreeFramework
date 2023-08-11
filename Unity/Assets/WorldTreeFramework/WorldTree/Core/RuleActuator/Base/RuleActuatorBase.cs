@@ -41,7 +41,6 @@ namespace WorldTree
         /// </summary>
         public RuleGroup ruleGroup;
 
-
         /// <summary>
         /// 节点id队列
         /// </summary>
@@ -60,7 +59,7 @@ namespace WorldTree
         /// <summary>
         /// 法则集合字典
         /// </summary>
-        public TreeDictionary<long, RuleGroup> ruleGroupDictionary;
+        public TreeDictionary<long, RuleList> ruleGroupDictionary;
 
         /// <summary>
         /// 动态的遍历数量
@@ -70,7 +69,7 @@ namespace WorldTree
 
         public override string ToString()
         {
-            return $"RuleActuator : {ruleGroup?.RuleType}";
+            return $"RuleActuator : {ruleGroup?.RuleType.HashCore64ToType()}";
         }
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试出列
         /// </summary>
-        public bool TryGetNext(out INode node, out RuleGroup ruleGroup)
+        public bool TryGetNext(out INode node, out RuleList ruleList)
         {
             //尝试获取一个id
             if (idQueue != null && idQueue.TryDequeue(out long id))
@@ -109,22 +108,25 @@ namespace WorldTree
                     if (!idQueue.TryDequeue(out id))
                     {
                         //假如队列空了,则直接返回退出
-                        ruleGroup = this.ruleGroup;
+                        ruleList = null;
                         node = null;
                         return false;
                     }
                 }
 
-                //此时的id是正常id
-                if (ruleGroupDictionary == null || !ruleGroupDictionary.TryGetValue(id, out ruleGroup))
+                //此时的id是正常id，查找节点是否存在
+                if (nodeDictionary.TryGetValue(id, out node))
                 {
-                    ruleGroup = this.ruleGroup;
+                    if (ruleGroupDictionary == null || !ruleGroupDictionary.TryGetValue(id, out ruleList))
+                    {
+                        this.ruleGroup.TryGetValue(node.Type, out ruleList);
+                    }
+                    //id压回队列
+                    idQueue.Enqueue(id);
+                    return true;
                 }
-                //id压回队列
-                idQueue.Enqueue(id);
-                return nodeDictionary.TryGetValue(id, out node);
             }
-            ruleGroup = this.ruleGroup;
+            ruleList = null;
             node = null;
             return false;
         }
@@ -168,22 +170,22 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加节点与对应法则
         /// </summary>
-        public bool TryAdd(INode node, RuleGroup ruleGroup)
+        public bool TryAdd(INode node, RuleList ruleList)
         {
 
-            if (ruleGroup != null)
+            if (ruleList != null)
             {
                 if (TryAdd(node))
                 {
                     ruleGroupDictionary ??= this.AddChild(out ruleGroupDictionary);
-                    ruleGroupDictionary.Add(node.Id, ruleGroup);
+                    ruleGroupDictionary.Add(node.Id, ruleList);
                     return true;
                 }
                 else
                 {
-                    if (ruleGroupDictionary.TryGetValue(node.Id, out RuleGroup OldRuleGroup))
+                    if (ruleGroupDictionary.TryGetValue(node.Id, out RuleList OldRuleGroup))
                     {
-                        if (OldRuleGroup.RuleType != ruleGroup.RuleType) World.LogError("执行器中已存在这个节点，但注册的法则不同。");
+                        if (OldRuleGroup.RuleType != ruleList.RuleType) World.LogError("执行器中已存在这个节点，但注册的法则不同。");
                     }
                     return false;
                 }
@@ -198,9 +200,9 @@ namespace WorldTree
         /// <summary>
         /// 尝试添加节点与对应法则，并建立引用关系
         /// </summary>
-        public bool TryAddReferenced(INode node, RuleGroup ruleGroup)
+        public bool TryAddReferenced(INode node, RuleList ruleList)
         {
-            if (TryAdd(node, ruleGroup))
+            if (TryAdd(node, ruleList))
             {
                 this.Referenced(node);
                 return true;

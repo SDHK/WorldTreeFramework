@@ -21,7 +21,7 @@ namespace WorldTree
         /// <summary>
         /// 监听器执行器字典集合
         /// </summary>
-        public UnitDictionary<Type, ListenerRuleActuator> actuatorDictionary = new UnitDictionary<Type, ListenerRuleActuator>();
+        public UnitDictionary<long, ListenerRuleActuator> actuatorDictionary = new UnitDictionary<long, ListenerRuleActuator>();
 
     }
 
@@ -53,10 +53,10 @@ namespace WorldTree
         /// <summary>
         /// 添加静态监听执行器,并自动填装监听器
         /// </summary>
-        public static bool TryAddRuleActuator<R>(this StaticNodeListenerGroup self, Type target, out IRuleActuator<R> actuator)
+        public static bool TryAddRuleActuator<R>(this StaticNodeListenerGroup self, long target, out IRuleActuator<R> actuator)
             where R : IListenerRule
         {
-            Type ruleType = typeof(R);
+            long ruleType = TypeInfo<R>.HashCode64;
 
             //执行器已存在，直接返回
             if (self.actuatorDictionary.TryGetValue(ruleType, out ListenerRuleActuator ruleActuator))

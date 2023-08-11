@@ -57,6 +57,7 @@ namespace WorldTree
                     if (self.time >= self.timeOutTime)
                     {
                         self.callback.Send();
+                        World.Log("计时器回收");
                         self.Dispose();
                     }
                 }

@@ -21,7 +21,7 @@ namespace WorldTree
 
         public ListenerState listenerState { get; set; } = ListenerState.Not;
 
-        public Type listenerTarget { get; set; }
+        public long listenerTarget { get; set; }
 
         #endregion
     }

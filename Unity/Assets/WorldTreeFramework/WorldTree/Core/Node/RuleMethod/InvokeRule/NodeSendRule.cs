@@ -59,7 +59,7 @@ namespace WorldTree
         public static bool TrySendRule<R>(this INode self, R nullRule = null)
             where R : class, ISendRuleBase
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 ruleList.Send(self);
                 return true;
@@ -72,7 +72,7 @@ namespace WorldTree
         public static bool TrySendRule<R, T1>(this INode self, R nullRule, T1 arg1)
             where R : class, ISendRuleBase<T1>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 ruleList.Send(self, arg1);
                 return true;
@@ -85,7 +85,7 @@ namespace WorldTree
         public static bool TrySendRule<R, T1, T2>(this INode self, R nullRule, T1 arg1, T2 arg2)
             where R : class, ISendRuleBase<T1, T2>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 ruleList.Send(self, arg1, arg2);
                 return true;
@@ -98,7 +98,7 @@ namespace WorldTree
         public static bool TrySendRule<R, T1, T2, T3>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3)
             where R : class, ISendRuleBase<T1, T2, T3>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 ruleList.Send(self, arg1, arg2, arg3);
                 return true;
@@ -111,7 +111,7 @@ namespace WorldTree
         public static bool TrySendRule<R, T1, T2, T3, T4>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             where R : class, ISendRuleBase<T1, T2, T3, T4>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 ruleList.Send(self, arg1, arg2, arg3, arg4);
                 return true;
@@ -125,7 +125,7 @@ namespace WorldTree
             where R : class, ISendRuleBase<T1, T2, T3, T4, T5>
         {
 
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 ruleList.Send(self, arg1, arg2, arg3, arg4, arg5);
                 return true;

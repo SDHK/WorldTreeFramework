@@ -18,7 +18,7 @@ namespace WorldTree
     {
         public IdManager()
         {
-            Type = GetType();
+            Type = TypeInfo<IdManager>.HashCode64;
         }
 
         /// <summary>

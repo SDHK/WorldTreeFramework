@@ -17,18 +17,41 @@ namespace WorldTree
         /// <summary>
         /// 动态监听器切换目标
         /// </summary>
-        public static bool ListenerSwitchesTarget(this INodeListener self, Type targetType, ListenerState state)
+        public static bool ListenerSwitchesTarget<T>(this INodeListener self, ListenerState state)
+        {
+            if (self.listenerTarget != TypeInfo<T>.HashCode64)
+            {
+                //判断是否为监听器
+                if (self.Core.RuleManager.DynamicListenerTypeHash.Contains(self.Type))
+                {
+                    self.Core.ReferencedPoolManager.RemoveDynamicListener(self);
+                    self.listenerTarget = TypeInfo<T>.HashCode64;
+                    self.listenerState = state;
+                    self.Core.ReferencedPoolManager.TryAddDynamicListener(self);
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// 动态监听器切换目标
+        /// </summary>
+        public static bool ListenerSwitchesTarget(this INodeListener self, long targetType, ListenerState state)
         {
             if (self.listenerTarget != targetType)
             {
                 //判断是否为监听器
                 if (self.Core.RuleManager.DynamicListenerTypeHash.Contains(self.Type))
                 {
-                    //self.Core.DynamicListenerRuleActuatorManager.ListenerRemove(self);
                     self.Core.ReferencedPoolManager.RemoveDynamicListener(self);
                     self.listenerTarget = targetType;
                     self.listenerState = state;
-                    //self.Core.DynamicListenerRuleActuatorManager.ListenerAdd(self);
                     self.Core.ReferencedPoolManager.TryAddDynamicListener(self);
                     return true;
                 }
@@ -46,7 +69,7 @@ namespace WorldTree
         public static bool ListenerSwitchesEntity<T>(this INodeListener self)
             where T : class, INode
         {
-            return self.ListenerSwitchesTarget(typeof(T), ListenerState.Node);
+            return self.ListenerSwitchesTarget<T>(ListenerState.Node);
         }
         /// <summary>
         /// 动态监听器切换系统目标
@@ -54,7 +77,7 @@ namespace WorldTree
         public static bool ListenerSwitchesRule<T>(this INodeListener self)
             where T : IRule
         {
-            return self.ListenerSwitchesTarget(typeof(T), ListenerState.Rule);
+            return self.ListenerSwitchesTarget<T>(ListenerState.Rule);
         }
 
         /// <summary>

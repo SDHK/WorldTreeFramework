@@ -33,7 +33,7 @@ namespace WorldTree
         /// <summary>
         /// 全部窗口
         /// </summary>
-        public UnitDictionary<Type, INode> windows = new UnitDictionary<Type, INode>();
+        public UnitDictionary<long, INode> windows = new UnitDictionary<long, INode>();
         /// <summary>
         /// 栈窗口
         /// </summary>
@@ -51,7 +51,7 @@ namespace WorldTree
             where T : class, INode, ComponentOf<INode>, AsRule<IAwakeRule>
 
         {
-            if (windows.TryGetValue(typeof(T), out INode node))
+            if (windows.TryGetValue(TypeInfo<T>.HashCode64, out INode node))
             {
                 if (windowStack.TryPeek(out INode outNode))
                 {
@@ -91,7 +91,7 @@ namespace WorldTree
         public void Dispose<T>()
            where T : class, INode
         {
-            if (windows.TryGetValue(typeof(T), out INode targetNode))
+            if (windows.TryGetValue(TypeInfo<T>.HashCode64, out INode targetNode))
             {
                 if (windowStack.TryPeek(out INode topNode))
                 {

@@ -22,7 +22,7 @@ namespace WorldTree
     /// <summary>
     /// 树异步任务基类
     /// </summary>
-    public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion, ChildOf<INode>
+    public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion, ChildOf<INode>, ComponentOf<INode>
         , AsRule<ITreeTaskTokenEventRule>
     {
         /// <summary>

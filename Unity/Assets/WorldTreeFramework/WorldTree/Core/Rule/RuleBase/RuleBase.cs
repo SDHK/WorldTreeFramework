@@ -30,11 +30,11 @@ namespace WorldTree
         /// <summary>
         /// 节点类型标记
         /// </summary>
-        Type NodeType { get; }
+        long NodeType { get; }
         /// <summary>
         /// 法则类型标记
         /// </summary>
-        Type RuleType { get; }
+        long RuleType { get; }
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ namespace WorldTree
         where R : IRule
     {
         public bool IsMulticast { get; set; } = true;
-        public virtual Type NodeType => typeof(N);
-        public virtual Type RuleType => typeof(R);
+        public virtual long NodeType => TypeInfo<N>.HashCode64;
+        public virtual long RuleType => TypeInfo<R>.HashCode64;
     }
 }

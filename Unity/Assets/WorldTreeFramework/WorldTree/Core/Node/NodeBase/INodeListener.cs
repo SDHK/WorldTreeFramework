@@ -49,7 +49,7 @@ namespace WorldTree
         /// <summary>
         /// 动态监听目标类型
         /// </summary>
-        public Type listenerTarget { get; set; }
+        public long listenerTarget { get; set; }
         #endregion
     }
 }

@@ -20,7 +20,7 @@ namespace WorldTree
     public abstract class GlobalRuleActuatorBase : RuleActuatorBase, INodeListener, IRuleActuator
     {
         public ListenerState listenerState { get; set; }
-        public Type listenerTarget { get; set; }
+        public long listenerTarget { get; set; }
 
     }
 

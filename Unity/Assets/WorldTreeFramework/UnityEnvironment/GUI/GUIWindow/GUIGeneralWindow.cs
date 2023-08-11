@@ -13,7 +13,7 @@ using UnityEngine;
 namespace WorldTree
 {
     public class GUIGeneralWindow : Node
-        ,AsRule<IGUIDrawSystem>
+        , AsRule<IGUIDrawSystem>
     {
         public IRuleGroup<IGUIDrawSystem> group;
 
@@ -28,7 +28,7 @@ namespace WorldTree
     {
         public override void OnEvent(GUIGeneralWindow self)
         {
-            self.group = self.GetRuleGroup<IGUIDrawSystem>();
+            self.group = self.Core.RuleManager.GetRuleGroup<IGUIDrawSystem>();
             self.AddComponent(out GUIWindow _);
         }
     }
@@ -37,7 +37,7 @@ namespace WorldTree
     {
         public override void OnEvent(GUIGeneralWindow self)
         {
-            self .VerticalBox.Draw();
+            self.VerticalBox.Draw();
 
             self.group?.Send(self.Parent);
 

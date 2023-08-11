@@ -13,7 +13,7 @@ public class TreeNode : Node
     public static bool bit = true;
     public async TreeTask Test()
     {
-        await this.AsyncDelay(1);
+        await this.AsyncDelay(3);
 
         World.Log("0！");
 

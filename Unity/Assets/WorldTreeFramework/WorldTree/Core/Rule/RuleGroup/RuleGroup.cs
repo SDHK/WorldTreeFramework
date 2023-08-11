@@ -37,12 +37,12 @@ namespace WorldTree
     /// <para>Key是节点类型，Value是类型的法则列表</para>
     /// <para>法则集合储存了 不同节点类型 对应的 同种法则</para>
     /// </remarks>
-    public class RuleGroup : Dictionary<Type, RuleList>, IRuleGroup<IRule>
+    public class RuleGroup : Dictionary<long, RuleList>, IRuleGroup<IRule>
     {
         /// <summary>
         /// 法则的类型
         /// </summary>
-        public Type RuleType;
+        public long RuleType;
     }
 
 }

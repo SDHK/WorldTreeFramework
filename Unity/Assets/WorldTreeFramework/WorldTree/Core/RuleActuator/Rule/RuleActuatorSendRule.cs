@@ -11,9 +11,9 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
-                        ((IRuleGroup<R>)ruleGroup).Send(node);
+                        ((IRuleList<R>)ruleList).Send(node);
                     }
                 }
             }
@@ -27,9 +27,9 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
-                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1);
+                        ((IRuleList<R>)ruleList).Send(node, arg1);
                     }
                 }
             }
@@ -43,9 +43,9 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
-                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2);
+                        ((IRuleList<R>)ruleList).Send(node, arg1, arg2);
                     }
                 }
             }
@@ -59,9 +59,9 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
-                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3);
+                        ((IRuleList<R>)ruleList).Send(node, arg1, arg2, arg3);
                     }
                 }
             }
@@ -75,9 +75,9 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
-                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4);
+                        ((IRuleList<R>)ruleList).Send(node, arg1, arg2, arg3, arg4);
                     }
                 }
             }
@@ -91,9 +91,9 @@
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.traversalCount; i++)
                 {
-                    if (self.TryGetNext(out INode node, out RuleGroup ruleGroup))
+                    if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
-                        ((IRuleGroup<R>)ruleGroup).Send(node, arg1, arg2, arg3, arg4, arg5);
+                        ((IRuleList<R>)ruleList).Send(node, arg1, arg2, arg3, arg4, arg5);
                     }
                 }
             }

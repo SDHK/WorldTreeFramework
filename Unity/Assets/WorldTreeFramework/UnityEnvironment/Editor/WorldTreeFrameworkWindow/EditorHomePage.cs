@@ -38,7 +38,7 @@ namespace EditorTool
 
             foreach (var item in self.ChildrenDictionary())
             {
-                if (GUILayout.Button(item.Value.Type.Name))
+                if (GUILayout.Button(item.Value.Type.HashCore64ToType().Name))
                 {
                     self.page = item.Value;
                 }

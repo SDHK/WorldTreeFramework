@@ -17,7 +17,7 @@ namespace WorldTree
         /// <summary>
         /// 忽略类型名单
         /// </summary>
-        public TreeHashSet<Type> m_IgnoreTypeHashSet = new TreeHashSet<Type>();
+        public TreeHashSet<long> m_IgnoreTypeHashSet = new TreeHashSet<long>();
 
         public override void Dispose()
         {
@@ -37,13 +37,13 @@ namespace WorldTree
         /// <summary>
         /// 池集合字典
         /// </summary>
-        public TreeDictionary<Type, T> m_Pools = new TreeDictionary<Type, T>();
+        public TreeDictionary<long, T> m_Pools = new TreeDictionary<long, T>();
 
 
         /// <summary>
         /// 尝试新建或获取对象池
         /// </summary>
-        public virtual bool TryNewOrGetPool(Type type, out T pool)
+        public virtual bool TryNewOrGetPool(long type, out T pool)
         {
             //忽略类型表检测
             if (!m_IgnoreTypeHashSet.Contains(type))
@@ -62,11 +62,12 @@ namespace WorldTree
         /// <summary>
         /// 新建池
         /// </summary>
-        private T NewPool(Type type)
+        private T NewPool(long type)
         {
             this.Core.NewNodeLifecycle(out T pool);
-            pool.ObjectType = type;
-            this.m_Pools.Add(type, pool);
+            pool.ObjectType = type.HashCore64ToType();
+            pool.ObjectTypeCore = type;
+            this.m_Pools.Add(pool.ObjectTypeCore, pool);
             this.AddChild(pool);
             return pool;
         }
@@ -74,7 +75,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取对象
         /// </summary>
-        public bool TryGet(Type type, out object obj)
+        public bool TryGet(long type, out object obj)
         {
             if (TryNewOrGetPool(type, out T pool))
             {
@@ -91,16 +92,16 @@ namespace WorldTree
         /// <summary>
         /// 尝试回收对象
         /// </summary>
-        public bool TryRecycle(object obj)
+        public bool TryRecycle(IUnit obj)
         {
-            if (TryNewOrGetPool(obj.GetType(), out T pool))
+            if (TryNewOrGetPool(obj.Type, out T pool))
             {
                 pool.Recycle(obj);
                 return true;
             }
             else if (obj is T Tpool)
             {
-                m_Pools.Remove(Tpool.ObjectType);
+                m_Pools.Remove(Tpool.ObjectTypeCore);
             }
             return false;
         }
@@ -110,7 +111,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取对象池
         /// </summary>
-        public virtual bool TryGetPool(Type type, out T pool)
+        public virtual bool TryGetPool(long type, out T pool)
         {
             return m_Pools.TryGetValue(type, out pool);
         }
@@ -118,7 +119,7 @@ namespace WorldTree
         /// <summary>
         /// 释放池
         /// </summary>
-        public virtual void DisposePool(Type type)
+        public virtual void DisposePool(long type)
         {
             if (m_Pools.TryGetValue(type, out T pool))
             {

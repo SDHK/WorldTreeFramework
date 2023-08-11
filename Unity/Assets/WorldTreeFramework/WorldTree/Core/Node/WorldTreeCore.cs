@@ -14,6 +14,7 @@
 */
 
 using System;
+using System.Reflection;
 
 namespace WorldTree
 {
@@ -122,7 +123,7 @@ namespace WorldTree
         public static void Awake(this WorldTreeCore self)
         {
             //根节点初始化
-            self.Type = self.GetType();
+            self.Type = TypeInfo<WorldTreeCore>.HashCode64;
             self.Core = self;
             self.Branch = self;
 
@@ -216,7 +217,7 @@ namespace WorldTree
         {
             Type type = typeof(T);
             node = Activator.CreateInstance(type, true) as T;
-            node.Type = type;
+            node.Type = TypeInfo<T>.HashCode64;
             node.Core = self.Core;
             node.Root = self.Root;
             node.Id = self.Core.IdManager.GetId();
@@ -226,9 +227,9 @@ namespace WorldTree
         /// <summary>
         /// 新建节点对象
         /// </summary>
-        private static INode NewNode(this INode self, Type type)
+        private static INode NewNode(this INode self, long type)
         {
-            INode node = Activator.CreateInstance(type, true) as INode;
+            INode node = Activator.CreateInstance(type.HashCore64ToType(), true) as INode;
             node.Type = type;
             node.Core = self.Core;
             node.Root = self.Root;
@@ -239,15 +240,22 @@ namespace WorldTree
         /// <summary>
         /// 新建节点对象并调用生命周期
         /// </summary>
-        public static T NewNodeLifecycle<T>(this WorldTreeCore self, out T node) where T : class, INode => node = self.NewNodeLifecycle(typeof(T)) as T;
+        public static T NewNodeLifecycle<T>(this WorldTreeCore self, out T node) where T : class, INode
+        {
+            self.NewNode(out node);
+            self.RuleManager.SupportNodeRule(node.Type);
+            self.NewRuleGroup?.Send(node);
+            self.GetRuleGroup?.Send(node);
+            return node;
+        }
 
         /// <summary>
         /// 新建节点对象并调用生命周期
         /// </summary>
-        public static INode NewNodeLifecycle(this WorldTreeCore self, Type type)
+        public static INode NewNodeLifecycle(this WorldTreeCore self, long type)
         {
             INode node = self.NewNode(type);
-            self.RuleManager.SupportNodeRule(type);
+            self.RuleManager.SupportNodeRule(node.Type);
             self.NewRuleGroup?.Send(node);
             self.GetRuleGroup?.Send(node);
             return node;
@@ -257,12 +265,24 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取节点对象
         /// </summary>
-        public static T GetNode<T>(this WorldTreeCore self) where T : class, INode => self.GetNode(typeof(T)) as T;
+        public static T GetNode<T>(this WorldTreeCore self) where T : class, INode
+        {
+
+            if (self.IsActive)
+            {
+                if (self.NodePoolManager.TryGet(TypeInfo<T>.HashCode64, out INode node))
+                {
+                    node.Id = self.IdManager.GetId();
+                    return node as T;
+                }
+            }
+            return self.NewNodeLifecycle<T>(out _);
+        }
 
         /// <summary>
         /// 从池中获取节点对象
         /// </summary>
-        public static INode GetNode(this WorldTreeCore self, Type type)
+        public static INode GetNode(this WorldTreeCore self, long type)
         {
             if (self.IsActive)
             {
@@ -304,12 +324,13 @@ namespace WorldTree
             Type type = typeof(T);
             if (self.IsActive)
             {
-                if (self.UnitPoolManager.TryGet(type, out IUnitPoolEventItem unit))
+                if (self.UnitPoolManager.TryGet(TypeInfo<T>.HashCode64, out IUnitPoolEventItem unit))
                 {
                     return unit as T;
                 }
             }
             T obj = Activator.CreateInstance(type, true) as T;
+            obj.Type = TypeInfo<T>.HashCode64;
             obj.OnNew();
             obj.OnGet();
             return obj;

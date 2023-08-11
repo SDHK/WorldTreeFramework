@@ -82,11 +82,6 @@ namespace WorldTree
         public long DataId { get; set; }
 
         /// <summary>
-        /// 节点类型
-        /// </summary>
-        public Type Type { get; set; }
-
-        /// <summary>
         /// 树根节点
         /// </summary>
         /// <remarks>挂载核心启动后的管理器组件</remarks>

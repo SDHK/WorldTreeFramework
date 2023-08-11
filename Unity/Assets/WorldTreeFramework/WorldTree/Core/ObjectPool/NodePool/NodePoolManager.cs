@@ -25,7 +25,7 @@ namespace WorldTree
         /// <summary>
         /// 从池中获取节点对象
         /// </summary>
-        public static INode PoolGet(this INode self, Type type)
+        public static INode PoolGet(this INode self, long type)
         {
             return self.Core.GetNode(type);
         }
@@ -41,7 +41,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取节点
         /// </summary>
-        public bool TryGet(Type type, out INode node)
+        public bool TryGet(long type, out INode node)
         {
             if (TryGet(type, out object obj))
             {
@@ -60,9 +60,9 @@ namespace WorldTree
     {
         public override void OnEvent(NodePoolManager self)
         {
-            self.m_IgnoreTypeHashSet.Add(typeof(ListenerRuleActuator));
-            self.m_IgnoreTypeHashSet.Add(typeof(DynamicNodeListenerGroup));
-            self.m_IgnoreTypeHashSet.Add(typeof(StaticNodeListenerGroup));
+            self.m_IgnoreTypeHashSet.Add(TypeInfo<ListenerRuleActuator>.HashCode64);
+            self.m_IgnoreTypeHashSet.Add(TypeInfo<DynamicNodeListenerGroup>.HashCode64);
+            self.m_IgnoreTypeHashSet.Add(TypeInfo<StaticNodeListenerGroup>.HashCode64);
         }
     }
 }

@@ -29,8 +29,7 @@ namespace WorldTree
         /// <summary>
         /// 回收自己
         /// </summary>
-        public static void DisposeSelf<T>(this T self)
-            where T : INode
+        public static void DisposeSelf(this INode self)
         {
             if (!self.IsRecycle)//是否已经回收
             {
@@ -97,7 +96,7 @@ namespace WorldTree
             INode node = self.Parent;
             while (node != null)
             {
-                if (node.Type == typeof(T))
+                if (node.Type == TypeInfo<T>.HashCode64)
                 {
                     parent = node as T;
                     break;
@@ -119,14 +118,13 @@ namespace WorldTree
         /// <summary>
         /// 从父节点中删除
         /// </summary>
-        public static void RemoveInParent<T>(this T self)
-            where T : INode
+        public static void RemoveInParent(this INode self)
         {
             if (self.Parent != null)
             {
                 if (self.isComponent)
                 {
-                    self.Parent.m_Components.Remove(TypeInfo<T>.HashCode64);
+                    self.Parent.m_Components.Remove(self.Type);
                     if (self.Parent.m_Components.Count == 0)
                     {
                         self.Parent.m_Components.Dispose();
@@ -149,7 +147,7 @@ namespace WorldTree
         /// 尝试获取法则
         /// </summary>
         /// <remarks>获取成功后会添加进实例的法则字典里</remarks>
-        public static bool TryGetRuleList<R>(this INode self, out IRuleList<R> ruleList)
+        public static bool SelfTryGetRuleList<R>(this INode self, out IRuleList<R> ruleList)
             where R : class, IRule
         {
             Type ruleType = typeof(R);

@@ -24,7 +24,7 @@ namespace WorldTree
         /// <summary>
         /// 分类节点
         /// </summary>
-        public UnitDictionary<Type, ReferencedPool> pools = new UnitDictionary<Type, ReferencedPool>();
+        public UnitDictionary<long, ReferencedPool> pools = new UnitDictionary<long, ReferencedPool>();
 
         public override void OnDispose()
         {
@@ -63,12 +63,12 @@ namespace WorldTree
         /// <summary>
         /// 获取池
         /// </summary>
-        public static ReferencedPool GetPool(this ReferencedPoolManager self, Type type)
+        public static ReferencedPool GetPool(this ReferencedPoolManager self, long type)
         {
             if (!self.pools.TryGetValue(type, out ReferencedPool pool))
             {
                 self.Core.NewNodeLifecycle(out pool);
-                pool.ReferencedType = type;
+                pool.ReferencedType = type.HashCore64ToType();
                 self.pools.Add(type, pool);
                 self.AddChild(pool);
             }
@@ -77,7 +77,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取池
         /// </summary>
-        public static bool TryGetPool(this ReferencedPoolManager self, Type type, out ReferencedPool pool)
+        public static bool TryGetPool(this ReferencedPoolManager self, long type, out ReferencedPool pool)
         {
             return self.pools.TryGetValue(type, out pool);
         }

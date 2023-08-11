@@ -18,10 +18,6 @@ namespace WorldTree
     /// </summary>
     public static class TypeTable
     {
-        private static readonly ConcurrentDictionary<Type, int> TypeHashCode = new();
-        private static readonly ConcurrentDictionary<int, Type> HashCodeType = new();
-
-
         private static readonly ConcurrentDictionary<Type, long> TypeHash64 = new();
         private static readonly ConcurrentDictionary<long, Type> Hash64Type = new();
 
@@ -32,51 +28,39 @@ namespace WorldTree
         {
             if (!TypeHash64.ContainsKey(type))
             {
+                type.GetHashCode();
                 long hash64 = type.FullName.GetHash64();
-                TypeHash64.GetOrAdd(type, hash64);
-                Hash64Type.GetOrAdd(hash64, type);
 
-                int hash = type.GetHashCode();
-                TypeHashCode.GetOrAdd(type, hash);
-                HashCodeType.GetOrAdd(hash, type);
+                if (Hash64Type.TryGetValue(hash64, out Type oldType))
+                {
+                    World.LogError($"64位哈希码冲突 {type} 与 {oldType}");
+                }
+                else
+                {
+                    Hash64Type.GetOrAdd(hash64, type);
+                    TypeHash64.GetOrAdd(type, hash64);
+                }
             }
             return type;
         }
 
         /// <summary>
-        /// 类型获取64位哈希码
+        /// 类型转64位哈希码
         /// </summary>
-        public static long GetTableHash64(this Type type)
+        public static long TypeToHashCore64(this Type type)
         {
             if (!TypeHash64.TryGetValue(type, out long hash64))
             {
-                TypeHash64.GetOrAdd(type, hash64 = type.FullName.GetHash64());
-                Hash64Type.GetOrAdd(hash64, type);
+                Add(type);
+                TypeHash64.TryGetValue(type, out hash64);
             }
             return hash64;
         }
 
         /// <summary>
-        /// 类型获取哈希码
+        /// 哈希码64转类型
         /// </summary>
-        public static int GetTableHashCode(this Type type)
-        {
-            if (!TypeHashCode.TryGetValue(type, out int hash))
-            {
-                TypeHashCode.GetOrAdd(type, hash = type.GetHashCode());
-                HashCodeType.GetOrAdd(hash, type);
-            }
-            return hash;
-        }
-
-        /// <summary>
-        /// 哈希码64码获取类型
-        /// </summary>
-        public static bool TryGetTypeHash64(this long rcr, out Type type) => Hash64Type.TryGetValue(rcr, out type);
-        /// <summary>
-        /// 哈希码获取类型
-        /// </summary>
-        public static bool TryGetTypeHashCore(this int hash, out Type type) => HashCodeType.TryGetValue(hash, out type);
+        public static Type HashCore64ToType(this long rcr) => Hash64Type[rcr];
     }
 
 }

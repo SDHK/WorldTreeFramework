@@ -43,7 +43,7 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取单位
         /// </summary>
-        public bool TryGet(Type type, out IUnitPoolEventItem unit)
+        public bool TryGet(long type, out IUnitPoolEventItem unit)
         {
             if (TryGet(type, out object obj))
             {

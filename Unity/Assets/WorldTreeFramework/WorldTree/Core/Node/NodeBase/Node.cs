@@ -28,7 +28,7 @@ namespace WorldTree
         public long Id { get; set; }
         public long DataId { get; set; }
 
-        public Type Type { get; set; }
+        public long Type { get; set; }
 
         public WorldTreeCore Core { get; set; }
         public WorldTreeRoot Root { get; set; }

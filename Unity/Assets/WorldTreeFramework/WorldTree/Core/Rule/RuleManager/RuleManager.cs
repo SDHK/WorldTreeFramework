@@ -28,23 +28,23 @@ namespace WorldTree
         /// <summary>
         /// 已支持的类型哈希名单
         /// </summary>
-        public UnitHashSet<Type> SupportTypeHash = new UnitHashSet<Type>();
+        public UnitHashSet<long> SupportTypeHash = new();
 
         /// <summary>
         /// 动态监听器节点类型哈希名单
         /// </summary>
-        public UnitHashSet<Type> DynamicListenerTypeHash = new UnitHashSet<Type>();
+        public UnitHashSet<long> DynamicListenerTypeHash = new();
 
         /// <summary>
         /// 指定法则的 监听器法则哈希表 字典
         /// </summary>
-        public UnitDictionary<Type, UnitHashSet<IListenerRule>> TargetRuleListenerRuleHashDictionary = new UnitDictionary<Type, UnitHashSet<IListenerRule>>();
+        public UnitDictionary<long, UnitHashSet<IListenerRule>> TargetRuleListenerRuleHashDictionary = new();
 
         /// <summary>
         /// 泛型节点泛型法则哈希表字典
         /// </summary>
         /// <remarks>泛型节点类型，泛型法则类型哈希表</remarks>
-        public UnitDictionary<Type, UnitHashSet<Type>> GenericRuleTypeHashDictionary = new UnitDictionary<Type, UnitHashSet<Type>>();
+        public UnitDictionary<Type, UnitHashSet<Type>> GenericRuleTypeHashDictionary = new();
 
         /// <summary>
         /// 监听法则字典 目标节点类型
@@ -53,7 +53,7 @@ namespace WorldTree
         /// <para>目标节点类型 法则类型 《监听类型,监听法则》</para> 
         /// <para>这个是真正可以被使用的</para> 
         /// </remarks>
-        public UnitDictionary<Type, Dictionary<Type, RuleGroup>> TargetRuleListenerGroupDictionary = new UnitDictionary<Type, Dictionary<Type, RuleGroup>>();
+        public UnitDictionary<long, Dictionary<long, RuleGroup>> TargetRuleListenerGroupDictionary = new();
 
         /// <summary>
         /// 监听法则字典 监听器类型
@@ -62,19 +62,19 @@ namespace WorldTree
         /// <para>监听类型 法则类型 《目标节点类型,监听法则》</para> 
         /// <para>这个是用来查询关系的</para> 
         /// </remarks>
-        public UnitDictionary<Type, Dictionary<Type, RuleGroup>> ListenerRuleTargetGroupDictionary = new UnitDictionary<Type, Dictionary<Type, RuleGroup>>();
+        public UnitDictionary<long, Dictionary<long, RuleGroup>> ListenerRuleTargetGroupDictionary = new();
 
         /// <summary>
         /// 法则字典
         /// </summary>
         /// <remarks> 法则类型《节点类型,法则》</remarks>
-        public UnitDictionary<Type, RuleGroup> RuleGroupDictionary = new UnitDictionary<Type, RuleGroup>();
+        public UnitDictionary<long, RuleGroup> RuleGroupDictionary = new();
 
         /// <summary>
         /// 节点法则字典
         /// </summary>
         /// <remarks>记录节点拥有的法则类型，用于法则多态化的查询</remarks>
-        public UnitDictionary<Type, HashSet<Type>> NodeTypeRulesDictionary = new UnitDictionary<Type, HashSet<Type>>();
+        public UnitDictionary<long, HashSet<long>> NodeTypeRulesDictionary = new();
 
         public RuleManager()
         {
@@ -89,52 +89,13 @@ namespace WorldTree
             this.Destroy();
         }
     }
-    public static partial class NodeRule
-    {
-        /// <summary>
-        /// 获取法则集合
-        /// </summary>
-        public static IRuleGroup<T> GetRuleGroup<T>(this INode self)
-        where T : IRule
-        {
-            return self.Core.RuleManager.GetRuleGroup<T>();
-        }
 
-
-        /// <summary>
-        /// 获取法则集合
-        /// </summary>
-        public static RuleGroup GetRuleGroup(this INode self, Type ruleType)
-        {
-            return self.Core.RuleManager.GetRuleGroup(ruleType);
-        }
-
-        /// <summary>
-        /// 获取单类型法则列表
-        /// </summary>
-        public static IRuleList<R> GetRuleList<R>(this INode self, Type nodeType)
-        where R : IRule
-        {
-            return self.Core.RuleManager.GetRuleList<R>(nodeType);
-        }
-
-        /// <summary>
-        /// 获取单类型法则列表
-        /// </summary>
-        public static IRuleList<R> GetRuleList<N, R, B>(this N self, B defaultBaseNode, R defaultRule)
-            where R : IRule
-            where N : B
-            where B : INode
-        {
-            return self.Core.RuleManager.GetRuleList<R>(typeof(B));
-        }
-    }
 
     public static class RuleManagerRule
     {
         public static void Awake(this RuleManager self)
         {
-            self.Type = self.GetType();
+            self.Type = TypeInfo<RuleManager>.HashCode64;
 
             //反射获取全局继承IRule的法则类型列表
             var RuleTypeList = self.FindTypesIsInterface(typeof(IRule));
@@ -222,7 +183,7 @@ namespace WorldTree
         /// </summary>
         private static void AddListenerRule(this RuleManager self, IListenerRule listenerRule)
         {
-            if (listenerRule.TargetNodeType == typeof(INode) && listenerRule.TargetRuleType != typeof(IRule))
+            if (listenerRule.TargetNodeType == TypeInfo<INode>.HashCode64 && listenerRule.TargetRuleType != TypeInfo<IRule>.HashCode64)
             {
                 //只约束了法则
                 self.TargetRuleListenerRuleHashDictionary.GetValue(listenerRule.TargetRuleType).Add(listenerRule);
@@ -245,7 +206,7 @@ namespace WorldTree
                 self.DictionaryAddNodeRule(listenerRule.TargetNodeType, listenerRule);
 
                 //动态监听器判断
-                if (listenerRule.TargetNodeType == typeof(INode) && listenerRule.TargetRuleType == typeof(IRule))
+                if (listenerRule.TargetNodeType == TypeInfo<INode>.HashCode64 && listenerRule.TargetRuleType == TypeInfo<IRule>.HashCode64)
                 {
                     if (!self.DynamicListenerTypeHash.Contains(listenerRule.NodeType)) self.DynamicListenerTypeHash.Add(listenerRule.NodeType);
                 }
@@ -260,9 +221,10 @@ namespace WorldTree
         {
             var group = self.RuleGroupDictionary.GetValue(rule.RuleType);
             var ruleList = group.GetValue(rule.NodeType);
-            if (!ruleList.TryAdd(rule)) return;
-
+            ruleList.RuleType = rule.RuleType;
             group.RuleType = rule.RuleType;
+            ruleList.AddRule(rule);
+
 
             self.NodeTypeRulesDictionary.GetValue(rule.NodeType).Add(rule.RuleType);
 
@@ -279,14 +241,18 @@ namespace WorldTree
         /// <summary>
         /// 字典分组添加监听器法则
         /// </summary>
-        private static void DictionaryAddNodeRule(this RuleManager self, Type NodeType, IListenerRule listenerRule)
+        private static void DictionaryAddNodeRule(this RuleManager self, long NodeType, IListenerRule listenerRule)
         {
             var ListenerRuleGroup = self.ListenerRuleTargetGroupDictionary.GetValue(listenerRule.NodeType).GetValue(listenerRule.RuleType);
-            ListenerRuleGroup.GetValue(NodeType).TryAdd(listenerRule);
+            var ListenerRuleList = ListenerRuleGroup.GetValue(NodeType);
+            ListenerRuleList.AddRule(listenerRule);
+            ListenerRuleList.RuleType = listenerRule.RuleType;
             ListenerRuleGroup.RuleType = listenerRule.RuleType;
 
             var TargetRuleGroup = self.TargetRuleListenerGroupDictionary.GetValue(NodeType).GetValue(listenerRule.RuleType);
-            TargetRuleGroup.GetValue(listenerRule.NodeType).TryAdd(listenerRule);
+            var TargetRuleList = TargetRuleGroup.GetValue(listenerRule.NodeType);
+            TargetRuleList.AddRule(listenerRule);
+            TargetRuleList.RuleType = listenerRule.RuleType;
             TargetRuleGroup.RuleType = listenerRule.RuleType;
         }
 
@@ -297,7 +263,7 @@ namespace WorldTree
         /// <summary>
         /// 补充节点法则功能
         /// </summary>
-        public static void SupportNodeRule(this RuleManager self, Type NodeType)
+        public static void SupportNodeRule(this RuleManager self, long NodeType)
         {
             if (!self.SupportTypeHash.Contains(NodeType))
             {
@@ -316,9 +282,9 @@ namespace WorldTree
         /// <remarks>
         /// <para>将会通过反射查询自身及所有父类是否有泛型</para>
         /// </remarks>
-        public static void SupportGenericNodeRule(this RuleManager self, Type NodeType)
+        public static void SupportGenericNodeRule(this RuleManager self, long NodeType)
         {
-            Type Type = NodeType;
+            Type Type = NodeType.HashCore64ToType();
             while (Type != null && Type != typeof(IUnitPoolItem) && Type != typeof(object))
             {
                 //节点可能会是非泛型，但父类则有泛型的情况，需要多态化所有父类泛型法则
@@ -351,25 +317,27 @@ namespace WorldTree
         /// <summary>
         /// 支持监听器的多态法则
         /// </summary>
-        public static void SupportPolymorphicListenerRule(this RuleManager self, Type listenerNodeType)
+        public static void SupportPolymorphicListenerRule(this RuleManager self, long listenerNodeType)
         {
             //判断如果没有这样的监听器
             if (!self.ListenerRuleTargetGroupDictionary.ContainsKey(listenerNodeType))
             {
                 //监听器父类类型键值
-                Type listenerBaseTypeKey = listenerNodeType.BaseType;
+                Type listenerBaseTypeKey = listenerNodeType.HashCore64ToType().BaseType;
+                //类型哈希码
+                long listenerBaseTypeCoreKey = listenerBaseTypeKey.TypeToHashCore64();
 
                 //父类法则查询标记
                 bool isBaseRule = false;
 
                 //法则类型 《目标节点类型,监听法则》
-                Dictionary<Type, RuleGroup> RuleType_TargerGroupDictionary = null;
+                Dictionary<long, RuleGroup> RuleType_TargerGroupDictionary = null;
 
                 //在没有找到法则的时候向上查找父类法则
                 while (!isBaseRule && listenerBaseTypeKey != null && listenerBaseTypeKey != typeof(object))
                 {
                     //判断类型是否有法则列表
-                    isBaseRule = self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerBaseTypeKey, out RuleType_TargerGroupDictionary);
+                    isBaseRule = self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerBaseTypeCoreKey, out RuleType_TargerGroupDictionary);
                     if (!isBaseRule)//不存在则向上找父类
                     {
                         listenerBaseTypeKey = listenerBaseTypeKey.BaseType;
@@ -379,7 +347,7 @@ namespace WorldTree
                 if (isBaseRule)//如果找到了法则
                 {
                     //动态监听法则多态
-                    if (self.DynamicListenerTypeHash.Contains(listenerBaseTypeKey))
+                    if (self.DynamicListenerTypeHash.Contains(listenerBaseTypeCoreKey))
                     {
                         self.DynamicListenerTypeHash.Add(listenerNodeType);
                     }
@@ -402,7 +370,7 @@ namespace WorldTree
                                 if (RuleType_ListenerGroupDictionary.TryGetValue(RuleType_TargetGroupKV.Key, out var ListenerGroup))
                                 {
                                     //监听器存在的父类型 查找 法则列表
-                                    if (ListenerGroup.TryGetValue(listenerBaseTypeKey, out var ruleList))
+                                    if (ListenerGroup.TryGetValue(listenerBaseTypeCoreKey, out var ruleList))
                                     {
                                         //将父类的 法则列表，添加进 没有法则的 监听器类型。
                                         ListenerGroup.TryAdd(listenerNodeType, ruleList);
@@ -420,19 +388,21 @@ namespace WorldTree
         /// <summary>
         /// 支持节点多态法则
         /// </summary>
-        public static void SupportPolymorphicRule(this RuleManager self, Type NodeType)
+        public static void SupportPolymorphicRule(this RuleManager self, long NodeType)
         {
 
             //拿到节点类型的法则哈希表
-            HashSet<Type> ruleTypeHash = self.NodeTypeRulesDictionary.GetValue(NodeType);
+            HashSet<long> ruleTypeHash = self.NodeTypeRulesDictionary.GetValue(NodeType);
 
             //开始遍历查询父类型法则
-            Type BaseTypeKey = NodeType.BaseType;
+            Type BaseTypeKey = NodeType.HashCore64ToType().BaseType;
+            //父类型哈希码
+            long BaseTypeCoreKey = BaseTypeKey.TypeToHashCore64();
 
             while (BaseTypeKey != null && BaseTypeKey != typeof(IUnitPoolItem))
             {
                 //尝试获取父类型法则
-                if (self.NodeTypeRulesDictionary.TryGetValue(BaseTypeKey, out var BaseRuleHash))
+                if (self.NodeTypeRulesDictionary.TryGetValue(BaseTypeCoreKey, out var BaseRuleHash))
                 {
                     //遍历父类型法则
                     foreach (var ruleType in BaseRuleHash)
@@ -445,7 +415,7 @@ namespace WorldTree
                             if (self.RuleGroupDictionary.TryGetValue(ruleType, out var RuleGroup))
                             {
                                 //获取父类型法则列表
-                                if (RuleGroup.TryGetValue(BaseTypeKey, out var ruleList))
+                                if (RuleGroup.TryGetValue(BaseTypeCoreKey, out var ruleList))
                                 {
                                     //法则列表添加进节点类型
                                     RuleGroup.TryAdd(NodeType, ruleList);
@@ -474,10 +444,10 @@ namespace WorldTree
         /// <summary>
         /// 获取监听目标法则组
         /// </summary>
-        public static bool TryGetTargetRuleGroup<LR>(this RuleManager self, Type targetType, out IRuleGroup<LR> ruleGroup)
+        public static bool TryGetTargetRuleGroup<LR>(this RuleManager self, long targetType, out IRuleGroup<LR> ruleGroup)
             where LR : IListenerRule
         {
-            if (self.TryGetTargetRuleGroup(typeof(LR), targetType, out var RuleGroup))
+            if (self.TryGetTargetRuleGroup(TypeInfo<LR>.HashCode64, targetType, out var RuleGroup))
             {
                 ruleGroup = RuleGroup as IRuleGroup<LR>;
                 return true;
@@ -489,7 +459,7 @@ namespace WorldTree
         /// <summary>
         /// 获取监听目标法则组
         /// </summary>
-        public static bool TryGetTargetRuleGroup(this RuleManager self, Type ruleType, Type targetType, out RuleGroup ruleGroup)
+        public static bool TryGetTargetRuleGroup(this RuleManager self, long ruleType, long targetType, out RuleGroup ruleGroup)
         {
             if (self.TargetRuleListenerGroupDictionary.TryGetValue(targetType, out var ruleGroupDictionary))
             {
@@ -502,12 +472,12 @@ namespace WorldTree
         /// <summary>
         /// 获取监听目标法则列表
         /// </summary>
-        public static bool TryGetTargetRuleList<LR>(this RuleManager self, Type targetType, Type listenerType, out IRuleList<LR> ruleList)
+        public static bool TryGetTargetRuleList<LR>(this RuleManager self, long targetType, out IRuleList<LR> ruleList)
             where LR : IListenerRule
         {
             if (self.TargetRuleListenerGroupDictionary.TryGetValue(targetType, out var ruleGroupDictionary))
             {
-                if (ruleGroupDictionary.TryGetValue(typeof(LR), out var ruleGroup))
+                if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.HashCode64, out var ruleGroup))
                 {
                     if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
                     {
@@ -526,12 +496,12 @@ namespace WorldTree
         /// <summary>
         /// 获取监听法则组
         /// </summary>
-        public static bool TryGetListenerRuleGroup<LR>(this RuleManager self, Type listenerType, out IRuleGroup<LR> ruleGroup)
+        public static bool TryGetListenerRuleGroup<LR>(this RuleManager self, long listenerType, out IRuleGroup<LR> ruleGroup)
             where LR : IListenerRule
         {
             if (self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerType, out var ruleGroupDictionary))
             {
-                if (ruleGroupDictionary.TryGetValue(typeof(LR), out var RuleGroup))
+                if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.HashCode64, out var RuleGroup))
                 {
                     ruleGroup = RuleGroup as IRuleGroup<LR>;
                     return true;
@@ -544,12 +514,12 @@ namespace WorldTree
         /// <summary>
         /// 获取监听法则
         /// </summary>
-        public static bool TryGetListenerRuleList<LR>(this RuleManager self, Type listenerType, Type targetType, out IRuleList<LR> ruleList)
+        public static bool TryGetListenerRuleList<LR>(this RuleManager self, long listenerType, long targetType, out IRuleList<LR> ruleList)
             where LR : IListenerRule
         {
             if (self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerType, out var ruleGroupDictionary))
             {
-                if (ruleGroupDictionary.TryGetValue(typeof(LR), out var ruleGroup))
+                if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.HashCode64, out var ruleGroup))
                 {
                     if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
                     {
@@ -570,12 +540,12 @@ namespace WorldTree
         /// <summary>
         /// 获取法则组
         /// </summary>
-        public static IRuleGroup<R> GetRuleGroup<R>(this RuleManager self) where R : IRule { return self.GetRuleGroup(typeof(R)) as IRuleGroup<R>; }
+        public static IRuleGroup<R> GetRuleGroup<R>(this RuleManager self) where R : IRule { return self.GetRuleGroup(TypeInfo<R>.HashCode64) as IRuleGroup<R>; }
 
         /// <summary>
         /// 获取法则组
         /// </summary>
-        public static RuleGroup GetRuleGroup(this RuleManager self, Type ruleType)
+        public static RuleGroup GetRuleGroup(this RuleManager self, long ruleType)
         {
             self.TryGetRuleGroup(ruleType, out RuleGroup ruleGroup);
             return ruleGroup;
@@ -587,7 +557,7 @@ namespace WorldTree
         public static bool TryGetRuleGroup<R>(this RuleManager self, out IRuleGroup<R> ruleGroup)
          where R : IRule
         {
-            if (self.TryGetRuleGroup(typeof(R), out var RuleGroup))
+            if (self.TryGetRuleGroup(TypeInfo<R>.HashCode64, out var RuleGroup))
             {
                 ruleGroup = (IRuleGroup<R>)RuleGroup;
                 return true;
@@ -596,6 +566,22 @@ namespace WorldTree
             return false;
         }
 
+        /// <summary>
+        /// 获取法则组
+        /// </summary>
+        public static bool TryGetRuleGroup<R>(this RuleManager self, out RuleGroup ruleGroup)
+         where R : IRule
+        {
+            return self.TryGetRuleGroup(TypeInfo<R>.HashCode64, out ruleGroup);
+        }
+
+        /// <summary>
+        /// 获取法则组
+        /// </summary>
+        public static bool TryGetRuleGroup(this RuleManager self, long ruleType, out RuleGroup ruleGroup)
+        {
+            return self.RuleGroupDictionary.TryGetValue(ruleType, out ruleGroup);
+        }
 
         /// <summary>
         /// 强制获取占位法则组
@@ -603,35 +589,20 @@ namespace WorldTree
         public static RuleGroup GetOrNewRuleGroup<R>(this RuleManager self)
          where R : IRule
         {
-            return self.GetOrNewRuleGroup(typeof(R));
+            return self.GetOrNewRuleGroup(TypeInfo<R>.HashCode64);
         }
 
         /// <summary>
         /// 强制获取占位法则组
         /// </summary>
-        public static RuleGroup GetOrNewRuleGroup(this RuleManager self, Type ruleType)
+        public static RuleGroup GetOrNewRuleGroup(this RuleManager self, long ruleType)
         {
             var group = self.RuleGroupDictionary.GetValue(ruleType);
             group.RuleType = ruleType;
             return group;
         }
 
-        /// <summary>
-        /// 获取法则组
-        /// </summary>
-        public static bool TryGetRuleGroup<R>(this RuleManager self, out RuleGroup ruleGroup)
-         where R : IRule
-        {
-            return self.TryGetRuleGroup(typeof(R), out ruleGroup);
-        }
 
-        /// <summary>
-        /// 获取法则组
-        /// </summary>
-        public static bool TryGetRuleGroup(this RuleManager self, Type ruleType, out RuleGroup ruleGroup)
-        {
-            return self.RuleGroupDictionary.TryGetValue(ruleType, out ruleGroup);
-        }
 
         #endregion
 
@@ -640,15 +611,15 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public static IRuleList<R> GetRuleList<R, N>(this RuleManager self) where R : IRule where N : class, INode => self.GetRuleList<R>(typeof(N));
+        public static IRuleList<R> GetRuleList<R, N>(this RuleManager self) where R : IRule where N : class, INode => self.GetRuleList<R>(TypeInfo<N>.HashCode64);
 
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public static IRuleList<R> GetRuleList<R>(this RuleManager self, Type nodeType)
+        public static IRuleList<R> GetRuleList<R>(this RuleManager self, long nodeType)
          where R : IRule
         {
-            if (self.RuleGroupDictionary.TryGetValue(typeof(R), out RuleGroup ruleGroup))
+            if (self.RuleGroupDictionary.TryGetValue(TypeInfo<R>.HashCode64, out RuleGroup ruleGroup))
             {
                 if (ruleGroup.TryGetValue(nodeType, out RuleList ruleList))
                 {
@@ -661,7 +632,7 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public static bool TryGetRuleList(this RuleManager self, Type nodeType, Type ruleType, out RuleList ruleList)
+        public static bool TryGetRuleList(this RuleManager self, long nodeType, long ruleType, out RuleList ruleList)
         {
             if (self.RuleGroupDictionary.TryGetValue(ruleType, out RuleGroup ruleGroup))
             {
@@ -677,13 +648,31 @@ namespace WorldTree
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public static bool TryGetRuleList<R>(this RuleManager self, Type nodeType, out IRuleList<R> ruleList)
+        public static bool TryGetRuleList<R>(this RuleManager self, long nodeType, out RuleList ruleList)
          where R : IRule
         {
 
-            if (self.RuleGroupDictionary.TryGetValue(typeof(R), out RuleGroup ruleGroup))
+            if (self.RuleGroupDictionary.TryGetValue(TypeInfo<R>.HashCode64, out RuleGroup ruleGroup))
             {
                 ruleGroup.TryGetValue(nodeType, out RuleList rules);
+                ruleList = rules;
+                return ruleList != null;
+            }
+            else
+            {
+                ruleList = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 获取单类型法则列表
+        /// </summary>
+        public static bool TryGetRuleList<R>(this RuleManager self, long nodeType, out IRuleList<R> ruleList)
+         where R : IRule
+        {
+            if (self.TryGetRuleList<R>(nodeType, out RuleList rules))
+            {
                 ruleList = rules as IRuleList<R>;
                 return ruleList != null;
             }

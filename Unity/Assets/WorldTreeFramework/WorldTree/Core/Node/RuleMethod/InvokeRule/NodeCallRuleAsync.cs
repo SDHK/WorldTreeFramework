@@ -42,7 +42,7 @@ namespace WorldTree
         public static async TreeTask<OutT> TryCallRuleAsync<R, OutT>(this INode self, R nullRule, OutT defaultOutT)
         where R : class, ICallRuleAsyncBase<OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallAsync(self, defaultOutT);
             }
@@ -56,7 +56,7 @@ namespace WorldTree
         public static async TreeTask<OutT> TryCallRuleAsync<R, T1, OutT>(this INode self, R nullRule, T1 arg1, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallAsync(self, arg1, defaultOutT);
             }
@@ -69,7 +69,7 @@ namespace WorldTree
         public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, T2, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallAsync(self, arg1, arg2, defaultOutT);
             }
@@ -82,7 +82,7 @@ namespace WorldTree
         public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, T2, T3, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallAsync(self, arg1, arg2, arg3, defaultOutT);
             }
@@ -95,7 +95,7 @@ namespace WorldTree
         public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, T4, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallAsync(self, arg1, arg2, arg3, arg4, defaultOutT);
             }
@@ -108,7 +108,7 @@ namespace WorldTree
         public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, T4, T5, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallAsync(self, arg1, arg2, arg3, arg4, arg5, defaultOutT);
             }
@@ -156,7 +156,7 @@ namespace WorldTree
         public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, OutT>(this INode self, R nullRule, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallsAsync(self, defaultOutT);
             }
@@ -169,7 +169,7 @@ namespace WorldTree
         public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, OutT>(this INode self, R nullRule, T1 arg1, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallsAsync(self, arg1, defaultOutT);
             }
@@ -182,7 +182,7 @@ namespace WorldTree
         public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, T2, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallsAsync(self, arg1, arg2, defaultOutT);
             }
@@ -195,7 +195,7 @@ namespace WorldTree
         public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, T3, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, T2, T3, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallsAsync(self, arg1, arg2, arg3, defaultOutT);
             }
@@ -208,7 +208,7 @@ namespace WorldTree
         public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, T3, T4, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallsAsync(self, arg1, arg2, arg3, arg4, defaultOutT);
             }
@@ -221,7 +221,7 @@ namespace WorldTree
         public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R, T1, T2, T3, T4, T5, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
             where R : class, ICallRuleAsyncBase<T1, T2, T3, T4, T5, OutT>
         {
-            if (self.TryGetRuleList(out IRuleList<R> ruleList))
+            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
             {
                 return await ruleList.CallsAsync(self, arg1, arg2, arg3, arg4, arg5, defaultOutT);
             }

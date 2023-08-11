@@ -45,8 +45,14 @@ namespace WorldTree
             where N : class, INode, AsRule<NR>
             where NR : R
         {
-            if (self.GetRuleGroup(typeof(NR)) == null) { World.Log($"空法则{typeof(NR)}"); }
-            self.TryAddReferenced(node, self.GetRuleGroup(typeof(NR)));
+            if (self.Core.RuleManager.TryGetRuleList<NR>(node.Type, out RuleList ruleList))
+            {
+                self.TryAddReferenced(node, ruleList);
+            }
+            else
+            {
+                World.Log($"空法则{typeof(NR)}");
+            }
         }
     }
 }
