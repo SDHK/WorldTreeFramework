@@ -117,6 +117,7 @@ namespace WorldTree
                 //此时的id是正常id，查找节点是否存在
                 if (nodeDictionary.TryGetValue(id, out node))
                 {
+                    //存在则获取列表
                     if (ruleGroupDictionary == null || !ruleGroupDictionary.TryGetValue(id, out ruleList))
                     {
                         this.ruleGroup.TryGetValue(node.Type, out ruleList);
@@ -124,6 +125,10 @@ namespace WorldTree
                     //id压回队列
                     idQueue.Enqueue(id);
                     return true;
+                }
+                else
+                {
+                    idQueue.Enqueue(id);
                 }
             }
             ruleList = null;

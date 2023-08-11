@@ -14,7 +14,6 @@
 */
 
 using System;
-using System.Reflection;
 
 namespace WorldTree
 {
@@ -117,6 +116,7 @@ namespace WorldTree
 
 
 
+
         /// <summary>
         /// 框架启动
         /// </summary>
@@ -177,6 +177,14 @@ namespace WorldTree
         {
 
             self.SetActive(false);
+
+            self.RemoveComponent<WorldTreeRoot>();
+            self.RemoveComponent<ArrayPoolManager>();
+            self.RemoveComponent<NodePoolManager>();
+            self.RemoveComponent<UnitPoolManager>();
+            self.RemoveComponent<RuleManager>();
+            self.RemoveComponent<IdManager>();
+            self.RemoveComponent<ReferencedPoolManager>();
 
             self.RemoveAll();
 
@@ -321,7 +329,6 @@ namespace WorldTree
         public static T GetUnit<T>(this WorldTreeCore self)
         where T : class, IUnitPoolEventItem
         {
-            Type type = typeof(T);
             if (self.IsActive)
             {
                 if (self.UnitPoolManager.TryGet(TypeInfo<T>.HashCode64, out IUnitPoolEventItem unit))
@@ -329,7 +336,7 @@ namespace WorldTree
                     return unit as T;
                 }
             }
-            T obj = Activator.CreateInstance(type, true) as T;
+            T obj = Activator.CreateInstance(typeof(T), true) as T;
             obj.Type = TypeInfo<T>.HashCode64;
             obj.OnNew();
             obj.OnGet();
