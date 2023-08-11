@@ -34,8 +34,7 @@ namespace WorldTree
         /// </summary>
         public static async TreeTask AsyncDelay(this INode self, float time)
         {
-            self.AddComponent(out TreeTask asyncTask).AddComponent(out TimerCall counter, time);
-            World.Log($"任务{asyncTask.Id} 延时{time}");
+            self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall counter, time);
 
             //令牌是否为空,不为空则将组件挂入令牌
             (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
