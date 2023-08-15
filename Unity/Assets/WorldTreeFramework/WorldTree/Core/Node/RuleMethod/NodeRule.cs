@@ -150,7 +150,7 @@ namespace WorldTree
         public static bool SelfTryGetRuleList<R>(this INode self, out IRuleList<R> ruleList)
             where R : class, IRule
         {
-            Type ruleType = typeof(R);
+            long ruleType = TypeInfo<R>.HashCode64;
             if (self.m_RuleListDictionary != null)
             {
                 if (self.m_RuleListDictionary.TryGetValue(ruleType, out IRuleList ruleList_))
@@ -166,7 +166,7 @@ namespace WorldTree
             }
             else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
             {
-                self.m_RuleListDictionary = self.PoolGet<UnitDictionary<Type, IRuleList>>();
+                self.m_RuleListDictionary = self.PoolGet<UnitDictionary<long, IRuleList>>();
                 self.m_RuleListDictionary.Add(ruleType, ruleList);
                 return true;
             }

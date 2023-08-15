@@ -73,7 +73,7 @@ namespace WorldTree
         /// <summary>
         /// 法则列表字典
         /// </summary>
-        public UnitDictionary<Type, IRuleList> m_RuleListDictionary { get; set; }
+        public UnitDictionary<long, IRuleList> m_RuleListDictionary { get; set; }
         #endregion
 
 

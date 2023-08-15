@@ -183,6 +183,7 @@ namespace WorldTree
             self.RemoveComponent<NodePoolManager>();
             self.RemoveComponent<UnitPoolManager>();
             self.RemoveComponent<RuleManager>();
+            self.RemoveComponent<TimeManager>();
             self.RemoveComponent<IdManager>();
             self.RemoveComponent<ReferencedPoolManager>();
 
