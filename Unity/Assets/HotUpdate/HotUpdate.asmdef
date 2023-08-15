@@ -1,10 +1,7 @@
 {
-    "name": "WorldTree.UnityCore",
+    "name": "HotUpdate",
     "rootNamespace": "WorldTree",
-    "references": [
-        "GUID:e34a5702dd353724aa315fb8011f08c3",
-        "GUID:104971acd352de048964cb7f7b53027b"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

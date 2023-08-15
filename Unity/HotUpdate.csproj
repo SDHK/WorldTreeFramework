@@ -8,11 +8,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
-    <ProjectGuid>{E387569F-725F-F5C8-517B-584709B7D5D8}</ProjectGuid>
+    <RootNamespace>WorldTree</RootNamespace>
+    <ProjectGuid>{E08E16CA-3A74-25C0-DA34-103051062683}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Sirenix.OdinInspector.CompatibilityLayer</AssemblyName>
+    <AssemblyName>HotUpdate</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -56,11 +56,10 @@
     <Analyzer Include="D:\SDHK\Program\Work\VisualStudio\2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Tools\Sirenix\Odin Inspector\Scripts\SerializedNetworkBehaviour.cs" />
-    <Compile Include="Assets\Tools\Sirenix\Odin Inspector\Scripts\VectorIntFormatters.cs" />
+    <Compile Include="Assets\HotUpdate\Hello.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Tools\Sirenix\Odin Inspector\Scripts\Sirenix.OdinInspector.CompatibilityLayer.asmdef" />
+    <None Include="Assets\HotUpdate\HotUpdate.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
