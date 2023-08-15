@@ -117,7 +117,7 @@ namespace WorldTree
                     {
                         foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
                         {
-                            //是否有这个目标池
+                            //是否有这个目标缓存池
                             if (self.TryGetPool(ruleList.Key, out ReferencedPool nodePool))
                             {
                                 //是否有静态监听器组件

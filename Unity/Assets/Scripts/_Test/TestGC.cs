@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
 using WorldTree;
-using static UnityEngine.Rendering.DebugUI;
 
 public class TestGC : MonoBehaviour
 {
     public int y;
     public int dataY;
     public int byteIndex;
-    
+
     public int notRemainderY;
 
     // Start is called before the first frame update

@@ -189,22 +189,24 @@ namespace WorldTree
 
             self.RemoveAll();
 
-            self.NewRuleGroup = default;
-            self.GetRuleGroup = default;
-            self.RecycleRuleGroup = default;
-            self.DestroyRuleGroup = default;
+            self.NewRuleGroup = null;
+            self.GetRuleGroup = null;
+            self.RecycleRuleGroup = null;
+            self.DestroyRuleGroup = null;
 
-            self.AddRuleGroup = default;
-            self.RemoveRuleGroup = default;
-            self.EnableRuleGroup = default;
-            self.DisableRuleGroup = default;
+            self.AddRuleGroup = null;
+            self.RemoveRuleGroup = null;
+            self.EnableRuleGroup = null;
+            self.DisableRuleGroup = null;
 
-            self.IdManager = default;
-            self.RuleManager = default;
-            self.UnitPoolManager = default;
-            self.NodePoolManager = default;
-            self.ArrayPoolManager = default;
-            self.ReferencedPoolManager = default;
+            self.ReferencedPoolManager = null;
+            self.IdManager = null;
+            self.TimeManager = null;
+            self.RuleManager = null;
+            self.UnitPoolManager = null;
+            self.NodePoolManager = null;
+            self.ArrayPoolManager = null;
+            self.Root = null;
         }
         #endregion
 
@@ -222,6 +224,7 @@ namespace WorldTree
         /// <summary>
         /// 新建节点对象
         /// </summary>
+        /// <remarks>不执行法则生命周期</remarks>
         private static T NewNode<T>(this INode self, out T node) where T : class, INode
         {
             Type type = typeof(T);
@@ -236,6 +239,7 @@ namespace WorldTree
         /// <summary>
         /// 新建节点对象
         /// </summary>
+        /// <remarks>不执行法则生命周期</remarks>
         private static INode NewNode(this INode self, long type)
         {
             INode node = Activator.CreateInstance(type.HashCore64ToType(), true) as INode;
@@ -249,6 +253,7 @@ namespace WorldTree
         /// <summary>
         /// 新建节点对象并调用生命周期
         /// </summary>
+        /// <remarks>执行法则生命周期</remarks>
         public static T NewNodeLifecycle<T>(this WorldTreeCore self, out T node) where T : class, INode
         {
             self.NewNode(out node);
@@ -261,6 +266,7 @@ namespace WorldTree
         /// <summary>
         /// 新建节点对象并调用生命周期
         /// </summary>
+        /// <remarks>执行法则生命周期</remarks>
         public static INode NewNodeLifecycle(this WorldTreeCore self, long type)
         {
             INode node = self.NewNode(type);
@@ -337,7 +343,7 @@ namespace WorldTree
                     return unit as T;
                 }
             }
-            T obj = Activator.CreateInstance(typeof(T), true) as T;
+            T obj = Activator.CreateInstance(TypeInfo<T>.Type, true) as T;
             obj.Type = TypeInfo<T>.HashCode64;
             obj.OnNew();
             obj.OnGet();
@@ -478,9 +484,9 @@ namespace WorldTree
             //广播给全部监听器!!!!
             if (node is not ICoreNode)
             {
-                //检测移除静态监听
+                //静态监听
                 node.SendStaticNodeListener<IListenerRemoveRule>();
-                //检测移除动态监听
+                //动态监听
                 node.SendDynamicNodeListener<IListenerRemoveRule>();
             }
 

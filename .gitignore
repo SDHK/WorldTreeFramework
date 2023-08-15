@@ -3,7 +3,10 @@
 /Unity/Logs
 /Unity/Temp
 /Unity/obj
+obj/
 */Temp/
+/Temp
 /.vs
 Bin/
 bin/
+/Unity/HybridCLRData
