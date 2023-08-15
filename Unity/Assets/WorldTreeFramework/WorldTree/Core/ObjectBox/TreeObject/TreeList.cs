@@ -860,7 +860,7 @@ namespace WorldTree
 
     class TreeListAwakeRule<T> : AwakeRule<TreeList<T>>
     {
-        public override void OnEvent(TreeList<T> self)
+        protected override void OnEvent(TreeList<T> self)
         {
             self._items = self.Core.GetArray<T>(self._defaultCapacity);
         }
@@ -868,7 +868,7 @@ namespace WorldTree
 
     class TreeListAwakeRuleCapacity<T> : AwakeRule<TreeList<T>, int>
     {
-        public override void OnEvent(TreeList<T> self, int capacity)
+        protected override void OnEvent(TreeList<T> self, int capacity)
         {
             if (capacity < 0)
                 World.LogError("容量为负");
@@ -881,7 +881,7 @@ namespace WorldTree
 
     class TreeListAwakeRuleCollection<T> : AwakeRule<TreeList<T>, IEnumerable<T>>
     {
-        public override void OnEvent(TreeList<T> self, IEnumerable<T> collection)
+        protected override void OnEvent(TreeList<T> self, IEnumerable<T> collection)
         {
             if (collection == null)
                 World.LogError("集合为空");
@@ -911,7 +911,7 @@ namespace WorldTree
 
     class TreeListRemoveRule<T> : RemoveRule<TreeList<T>>
     {
-        public override void OnEvent(TreeList<T> self)
+        protected override void OnEvent(TreeList<T> self)
         {
             self.Clear();
             self.Core.Recycle(self._items);

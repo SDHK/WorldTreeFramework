@@ -16,7 +16,7 @@ namespace WorldTree
     {
         class RemoveRule : RemoveRule<PerceptronNode>
         {
-            public override void OnEvent(PerceptronNode self)
+            protected override void OnEvent(PerceptronNode self)
             {
                 self.result = 0;
                 self.delta = 0;

@@ -37,7 +37,7 @@ namespace WorldTree
 
     class GUIWindowAddSystem : AddRule<GUIWindow>
     {
-        public override void OnEvent(GUIWindow self)
+        protected override void OnEvent(GUIWindow self)
         {
             self.group = self.Core.RuleManager.GetRuleGroup<IGUIDrawSystem>();
         }
@@ -45,7 +45,7 @@ namespace WorldTree
 
     class GUIWindowOnGUISystem : GuiUpdateRule<GUIWindow>
     {
-        public override void OnEvent(GUIWindow self, float deltaTime)
+        protected override void OnEvent(GUIWindow self, float deltaTime)
         {
             self.rect = GUILayout.Window(self.GetHashCode(), self.rect, self.Window, default(string), self.Style);
         }
@@ -53,7 +53,7 @@ namespace WorldTree
 
     class GUIWindowRecycleSystem : RecycleRule<GUIWindow>
     {
-        public override void OnEvent(GUIWindow self)
+        protected override void OnEvent(GUIWindow self)
         {
             //self.PoolRecycle(self.style);
             self.style = null;

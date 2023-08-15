@@ -13,7 +13,7 @@ namespace WorldTree
     {
         class AwakeRule : AwakeRule<PerceptronLine, PerceptronNode, PerceptronNode>
         {
-            public override void OnEvent(PerceptronLine self, PerceptronNode node1, PerceptronNode node2)
+            protected override void OnEvent(PerceptronLine self, PerceptronNode node1, PerceptronNode node2)
             {
                 self.node1 = node1;
                 self.node2 = node2;
@@ -23,7 +23,7 @@ namespace WorldTree
         }
         class RemoveRule : RemoveRule<PerceptronLine>
         {
-            public override void OnEvent(PerceptronLine self)
+            protected override void OnEvent(PerceptronLine self)
             {
                 self.weight = 0;
                 self.node1 = null;

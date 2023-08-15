@@ -22,7 +22,7 @@ namespace WorldTree
 
     class GUIBoxRecycleSystem : RecycleRule<GUIBox>
     {
-        public override void OnEvent(GUIBox self)
+        protected override void OnEvent(GUIBox self)
         {
             //self.PoolRecycle(self.style);
             self.style = null;

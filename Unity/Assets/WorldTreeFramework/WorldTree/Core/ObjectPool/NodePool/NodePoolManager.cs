@@ -58,7 +58,7 @@ namespace WorldTree
 
     class NodePoolManagerAddRule : AddRule<NodePoolManager>
     {
-        public override void OnEvent(NodePoolManager self)
+        protected override void OnEvent(NodePoolManager self)
         {
             self.m_IgnoreTypeHashSet.Add(TypeInfo<ListenerRuleActuator>.HashCode64);
             self.m_IgnoreTypeHashSet.Add(TypeInfo<DynamicNodeListenerGroup>.HashCode64);

@@ -130,7 +130,7 @@ namespace WorldTree
 
     //class AddRule : AddRule<NodePoolManager>
     //{
-    //    public override void OnEvent(NodePoolManager self)
+    //    protected override void OnEvent(NodePoolManager self)
     //    {
     //        self.AddChild(out self.m_Pools);
     //    }
@@ -138,7 +138,7 @@ namespace WorldTree
 
     //class RemoveRule : RemoveRule<NodePoolManager>
     //{
-    //    public override void OnEvent(NodePoolManager self)
+    //    protected override void OnEvent(NodePoolManager self)
     //    {
     //        self.m_Pools = null;
     //    }

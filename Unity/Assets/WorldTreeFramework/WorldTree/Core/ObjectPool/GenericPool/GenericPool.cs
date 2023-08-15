@@ -217,7 +217,7 @@ namespace WorldTree
     class GenericPoolRemoveRule<T> : RemoveRule<GenericPool<T>>
         where T : class
     {
-        public override void OnEvent(GenericPool<T> self)
+        protected override void OnEvent(GenericPool<T> self)
         {
             self.DisposeAll();
             self.NewObject = null;

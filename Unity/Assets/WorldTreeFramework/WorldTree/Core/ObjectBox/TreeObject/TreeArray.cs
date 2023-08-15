@@ -41,7 +41,7 @@ namespace WorldTree
 
     class TreeArrayAwakeRule<T> : AwakeRule<TreeArray<T>, int>
     {
-        public override void OnEvent(TreeArray<T> self, int length)
+        protected override void OnEvent(TreeArray<T> self, int length)
         {
             self.array = self.Core.GetArray<T>(length);
         }
@@ -50,7 +50,7 @@ namespace WorldTree
 
     class TreeArrayRemoveRule<T> : RemoveRule<TreeArray<T>>
     {
-        public override void OnEvent(TreeArray<T> self)
+        protected override void OnEvent(TreeArray<T> self)
         {
             self.Core.Recycle(self.array);
             self.array = null;

@@ -96,7 +96,7 @@ namespace WorldTree
         }
         class SetResultSendRule : TreeTaskSetResuItRule<TreeTask>
         {
-            public override void OnEvent(TreeTask self)
+            protected override void OnEvent(TreeTask self)
             {
                 self.SetResult();
             }
@@ -109,7 +109,7 @@ namespace WorldTree
         }
         class SetResultSendRule<T> : TreeTaskSetResuItRule<TreeTask<T>, T>
         {
-            public override void OnEvent(TreeTask<T> self, T result)
+            protected override void OnEvent(TreeTask<T> self, T result)
             {
                 self.SetResult(result);
             }

@@ -13,7 +13,7 @@ namespace WorldTree
     {
         class StringTweenUpdateRule : TweenUpdateRule<TreeTween<string>>
         {
-            public override void OnEvent(TreeTween<string> self, float deltaTime)
+            protected override void OnEvent(TreeTween<string> self, float deltaTime)
             {
                 if (self.isRun)
                 {

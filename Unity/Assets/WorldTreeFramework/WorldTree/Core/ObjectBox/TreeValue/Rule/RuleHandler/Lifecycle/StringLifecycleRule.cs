@@ -13,14 +13,14 @@ namespace WorldTree
     {
         class TreeValueStringAwakeRule : AwakeRule<TreeValue<string>>
         {
-            public override void OnEvent(TreeValue<string> self)
+            protected override void OnEvent(TreeValue<string> self)
             {
                 self.Value = "";
             }
         }
         class TreeValueStringValueAwakeRule : AwakeRule<TreeValue<string>, string>
         {
-            public override void OnEvent(TreeValue<string> self, string value)
+            protected override void OnEvent(TreeValue<string> self, string value)
             {
                 self.Value = value;
             }

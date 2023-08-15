@@ -28,7 +28,7 @@ namespace WorldTree
 
         class AddRule : AddRule<TreeTaskQueueLockManager>
         {
-            public override void OnEvent(TreeTaskQueueLockManager self)
+            protected override void OnEvent(TreeTaskQueueLockManager self)
             {
                 self.AddComponent(out self.nodeQueueDictitonary);
             }
@@ -36,7 +36,7 @@ namespace WorldTree
 
         class RemoveRule : RemoveRule<TreeTaskQueueLockManager>
         {
-            public override void OnEvent(TreeTaskQueueLockManager self)
+            protected override void OnEvent(TreeTaskQueueLockManager self)
             {
                 self.nodeQueueDictitonary = null;
             }

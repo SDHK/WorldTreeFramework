@@ -161,7 +161,7 @@ namespace WorldTree
 
     class TreeTaskBaseTaskTokenEventRule : TreeTaskTokenEventRule<TreeTaskBase, TaskState>
     {
-        public override void OnEvent(TreeTaskBase self, TaskState state)
+        protected override void OnEvent(TreeTaskBase self, TaskState state)
         {
             if (state == TaskState.Cancel)
             {

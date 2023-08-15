@@ -24,7 +24,7 @@ namespace WorldTree
         where N : class, INode
         where C : class, INode, ComponentOf<N>, AsRule<IAwakeRule>
     {
-        public override void OnEvent(N self)
+        protected override void OnEvent(N self)
         {
             self.AddComponent(out C _);
         }

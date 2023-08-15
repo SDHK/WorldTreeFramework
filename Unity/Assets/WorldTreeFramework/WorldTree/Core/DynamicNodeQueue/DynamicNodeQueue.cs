@@ -48,7 +48,7 @@ namespace WorldTree
     {
         class AddRule : AddRule<DynamicNodeQueue>
         {
-            public override void OnEvent(DynamicNodeQueue self)
+            protected override void OnEvent(DynamicNodeQueue self)
             {
                 self.AddChild(out self.idQueue);
                 self.AddChild(out self.removeIdDictionary);
@@ -59,7 +59,7 @@ namespace WorldTree
 
         class RemoveRule : RemoveRule<DynamicNodeQueue>
         {
-            public override void OnEvent(DynamicNodeQueue self)
+            protected override void OnEvent(DynamicNodeQueue self)
             {
                 self.idQueue = default;
                 self.removeIdDictionary = default;
@@ -69,7 +69,7 @@ namespace WorldTree
 
         class ReferencedChildRemoveRule : ReferencedChildRemoveRule<DynamicNodeQueue>
         {
-            public override void OnEvent(DynamicNodeQueue self, INode node)
+            protected override void OnEvent(DynamicNodeQueue self, INode node)
             {
                 self.Remove(node);
             }

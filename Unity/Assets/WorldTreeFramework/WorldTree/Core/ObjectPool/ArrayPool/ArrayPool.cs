@@ -35,7 +35,7 @@ namespace WorldTree
     {
         class AwakeRule : AwakeRule<ArrayPool, Type, int>
         {
-            public override void OnEvent(ArrayPool self, Type type, int length)
+            protected override void OnEvent(ArrayPool self, Type type, int length)
             {
                 self.ObjectType = type;
                 self.Length = length;

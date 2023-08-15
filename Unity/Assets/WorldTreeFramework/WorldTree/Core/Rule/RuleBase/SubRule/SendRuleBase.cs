@@ -81,7 +81,7 @@ namespace WorldTree
     where R : ISendRuleBase
     {
         public virtual void Invoke(INode self) => OnEvent(self as N);
-        public abstract void OnEvent(N self);
+        protected abstract void OnEvent(N self);
     }
     /// <summary>
     /// 通知法则基类
@@ -91,7 +91,7 @@ namespace WorldTree
     where R : ISendRuleBase<T1>
     {
         public virtual void Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
-        public abstract void OnEvent(N self, T1 arg1);
+        protected abstract void OnEvent(N self, T1 arg1);
     }
     /// <summary>
     /// 通知法则基类
@@ -101,7 +101,7 @@ namespace WorldTree
     where R : ISendRuleBase<T1, T2>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
-        public abstract void OnEvent(N self, T1 arg1, T2 arg2);
+        protected abstract void OnEvent(N self, T1 arg1, T2 arg2);
     }
     /// <summary>
     /// 通知法则基类
@@ -111,7 +111,7 @@ namespace WorldTree
     where R : ISendRuleBase<T1, T2, T3>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
-        public abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3);
+        protected abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
     /// 通知法则基类
@@ -121,7 +121,7 @@ namespace WorldTree
     where R : ISendRuleBase<T1, T2, T3, T4>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
-        public abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+        protected abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
     /// 通知法则基类
@@ -131,6 +131,6 @@ namespace WorldTree
     where R : ISendRuleBase<T1, T2, T3, T4, T5>
     {
         public virtual void Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);
-        public abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+        protected abstract void OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 }

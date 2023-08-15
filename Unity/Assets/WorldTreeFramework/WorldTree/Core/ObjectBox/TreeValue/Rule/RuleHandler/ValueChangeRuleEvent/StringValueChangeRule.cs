@@ -16,7 +16,7 @@ namespace WorldTree
         class StringValueChangeRuleEvent<T> : TreeValueGenericsChangeRuleEvent<string, T>
            where T : IEquatable<T>
         {
-            public override void OnEvent(TreeValueBase<string> self, T arg1)
+            protected override void OnEvent(TreeValueBase<string> self, T arg1)
             {
                 self.Value = arg1.ToString();
             }

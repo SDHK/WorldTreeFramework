@@ -48,7 +48,7 @@ namespace WorldTree
 
     class AddressablesManagerAddRule : AddRule<AddressablesManager>
     {
-        public override void OnEvent(AddressablesManager self)
+        protected override void OnEvent(AddressablesManager self)
         {
             self.AddChild(out self.assets);
         }

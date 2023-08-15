@@ -22,13 +22,13 @@ namespace EditorTool
 
     class EditorHomePageAddSystem : AddRule<EditorHomePage>
     {
-        public override void OnEvent(EditorHomePage self)
+        protected override void OnEvent(EditorHomePage self)
         {
         }
     }
     class EditorHomePageOnGUISystem : GuiUpdateRule<EditorHomePage>
     {
-        public override void OnEvent(EditorHomePage self, float deltaTime)
+        protected override void OnEvent(EditorHomePage self, float deltaTime)
         {
             GUILayout.Space(20);
 
@@ -66,7 +66,7 @@ namespace EditorTool
 
     class EditorHomePageUpdateSystem : UpdateRule<EditorHomePage>
     {
-        public override void OnEvent(EditorHomePage self, float deltaTime)
+        protected override void OnEvent(EditorHomePage self, float deltaTime)
         {
         }
     }

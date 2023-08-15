@@ -67,7 +67,7 @@ namespace WorldTree
     where R : ISendRuleAsyncBase
     {
         public virtual TreeTask Invoke(INode self) => OnEvent(self as N);
-        public abstract TreeTask OnEvent(N self);
+        protected abstract TreeTask OnEvent(N self);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -77,7 +77,7 @@ namespace WorldTree
     where R : ISendRuleAsyncBase<T1>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
-        public abstract TreeTask OnEvent(N self, T1 arg1);
+        protected abstract TreeTask OnEvent(N self, T1 arg1);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -87,7 +87,7 @@ namespace WorldTree
     where R : ISendRuleAsyncBase<T1, T2>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
-        public abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2);
+        protected abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -97,7 +97,7 @@ namespace WorldTree
     where R : ISendRuleAsyncBase<T1, T2, T3>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
-        public abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2, T3 arg3);
+        protected abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -107,7 +107,7 @@ namespace WorldTree
     where R : ISendRuleAsyncBase<T1, T2, T3, T4>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
-        public abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+        protected abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -117,6 +117,6 @@ namespace WorldTree
     where R : ISendRuleAsyncBase<T1, T2, T3, T4, T5>
     {
         public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);
-        public abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+        protected abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 }

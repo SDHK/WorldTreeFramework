@@ -121,7 +121,7 @@ namespace WorldTree
     {
         class AddRule : AddRule<NodePool>
         {
-            public override void OnEvent(NodePool self)
+            protected override void OnEvent(NodePool self)
             {
                 self.Core.RuleManager.SupportNodeRule(self.ObjectTypeCore);
 
@@ -134,7 +134,7 @@ namespace WorldTree
         }
         class DestroyRule : DestroyRule<NodePool>
         {
-            public override void OnEvent(NodePool self)
+            protected override void OnEvent(NodePool self)
             {
                 self.DisposeAll();
                 self.NewObject = null;

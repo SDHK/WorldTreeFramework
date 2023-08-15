@@ -62,6 +62,6 @@ namespace WorldTree
         public virtual long TargetRuleType => TypeInfo<TR>.HashCode64;
 
         public virtual void Invoke(INode self, INode node) => OnEvent(self as LN, node as TN);
-        public abstract void OnEvent(LN self, TN node);
+        protected abstract void OnEvent(LN self, TN node);
     }
 }

@@ -38,7 +38,7 @@ namespace WorldTree
     {
         class AwakeRule : AwakeRule<CounterCall, int>
         {
-            public override void OnEvent(CounterCall self, int count)
+            protected override void OnEvent(CounterCall self, int count)
             {
                 self.count = count;
                 self.countOut = count;
@@ -49,7 +49,7 @@ namespace WorldTree
 
         class UpdateRule : UpdateRule<CounterCall>
         {
-            public override void OnEvent(CounterCall self, float deltaTime)
+            protected override void OnEvent(CounterCall self, float deltaTime)
             {
                 if (self.IsActive && self.isRun)
                 {
@@ -65,7 +65,7 @@ namespace WorldTree
 
         class RemoveRule : RemoveRule<CounterCall>
         {
-            public override void OnEvent(CounterCall self)
+            protected override void OnEvent(CounterCall self)
             {
                 self.isRun = false;
                 self.callback = null;
@@ -74,7 +74,7 @@ namespace WorldTree
 
         class CounterCallTreeTaskTokenEventRule : TreeTaskTokenEventRule<CounterCall, TaskState>
         {
-            public override void OnEvent(CounterCall self, TaskState state)
+            protected override void OnEvent(CounterCall self, TaskState state)
             {
                 switch (state)
                 {

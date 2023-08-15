@@ -13,7 +13,7 @@ namespace WorldTree
     {
         class PerceptronLayerAwakeRule : AwakeRule<PerceptronLayer, int>
         {
-            public override void OnEvent(PerceptronLayer self, int count)
+            protected override void OnEvent(PerceptronLayer self, int count)
             {
                 self.AddComponent(out self.nodes);
 
@@ -26,7 +26,7 @@ namespace WorldTree
 
         class PerceptronLayerRemoveRule : RemoveRule<PerceptronLayer>
         {
-            public override void OnEvent(PerceptronLayer self)
+            protected override void OnEvent(PerceptronLayer self)
             {
                 self.nodes = null;
             }

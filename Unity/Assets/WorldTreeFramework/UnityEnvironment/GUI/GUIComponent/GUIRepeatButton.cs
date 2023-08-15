@@ -18,7 +18,7 @@ namespace WorldTree
 
     class GUIRepeatButtonRecycleSystem : RecycleRule<GUIRepeatButton>
     {
-        public override void OnEvent(GUIRepeatButton self)
+        protected override void OnEvent(GUIRepeatButton self)
         {
             //self.PoolRecycle(self.style);
             self.style = null;

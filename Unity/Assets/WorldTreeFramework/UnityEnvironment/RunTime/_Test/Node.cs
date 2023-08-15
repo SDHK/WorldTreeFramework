@@ -93,28 +93,28 @@ public class TreeNode : Node
     //}
     //class NodeNewSystem : NewRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self)
+    //    protected override void OnEvent(TreeNode self)
     //    {
     //        Debug.Log("NewSystem!");
     //    }
     //}
     //class NodeGetSystem : GetRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self)
+    //    protected override void OnEvent(TreeNode self)
     //    {
     //        Debug.Log("GetSystem!");
     //    }
     //}
     //class NodeAddSystem : AddRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self)
+    //    protected override void OnEvent(TreeNode self)
     //    {
     //        Debug.Log("AddSystem!");
     //    }
     //}
     //class NodeEnableSystem : EnableRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self)
+    //    protected override void OnEvent(TreeNode self)
     //    {
     //        Debug.Log("EnableSystem!");
     //    }
@@ -122,7 +122,7 @@ public class TreeNode : Node
 
     //class NodeDisableSystem : DisableRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self)
+    //    protected override void OnEvent(TreeNode self)
     //    {
     //        Debug.Log("DisableSystem!");
     //    }
@@ -130,7 +130,7 @@ public class TreeNode : Node
 
     class NodeUpdateSystem : UpdateRule<TreeNode>
     {
-        public override void OnEvent(TreeNode self, float deltaTime)
+        protected override void OnEvent(TreeNode self, float deltaTime)
         {
             //Debug.Log("UpdateSystem!");
         }
@@ -139,14 +139,14 @@ public class TreeNode : Node
 
     //class NodeLateUpdateSystem : LateUpdateRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self, float deltaTime)
+    //    protected override void OnEvent(TreeNode self, float deltaTime)
     //    {
     //        Debug.Log("LateUpdateSystem!");
     //    }
     //}
     //class NodeFixedUpdateSystem : FixedUpdateRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self, float deltaTime)
+    //    protected override void OnEvent(TreeNode self, float deltaTime)
     //    {
     //        Debug.Log("FixedUpdateSystem!");
     //    }
@@ -154,21 +154,21 @@ public class TreeNode : Node
 
     //class NodeRemoveSystem : RemoveRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self)
+    //    protected override void OnEvent(TreeNode self)
     //    {
     //        Debug.Log("RemoveSystem!");
     //    }
     //}
     //class NodeRecycleSystem : RecycleRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self)
+    //    protected override void OnEvent(TreeNode self)
     //    {
     //        Debug.Log("RecycleSystem!");
     //    }
     //}
     //class NodeDestroySystem : DestroyRule<TreeNode>
     //{
-    //    public override void OnEvent(TreeNode self)
+    //    protected override void OnEvent(TreeNode self)
     //    {
     //        Debug.Log("DestroySystem!");
     //    }

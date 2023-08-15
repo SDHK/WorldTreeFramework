@@ -16,7 +16,7 @@ namespace WorldTree
     {
         class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TreeTweenBase, TaskState>
         {
-            public override void OnEvent(TreeTweenBase self, TaskState state)
+            protected override void OnEvent(TreeTweenBase self, TaskState state)
             {
                 switch (state)
                 {

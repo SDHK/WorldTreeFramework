@@ -31,7 +31,7 @@ namespace WorldTree
         class GlobalRuleActuatorAddRule<R> : AddRule<GlobalRuleActuator<R>>
             where R : IRule
         {
-            public override void OnEvent(GlobalRuleActuator<R> self)
+            protected override void OnEvent(GlobalRuleActuator<R> self)
             {
                 self.ruleGroup = self.Core.RuleManager.GetOrNewRuleGroup<R>();
                 self.ListenerSwitchesRule<R>();

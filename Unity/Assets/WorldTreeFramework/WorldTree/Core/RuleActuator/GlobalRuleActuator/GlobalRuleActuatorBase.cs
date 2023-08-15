@@ -30,7 +30,7 @@ namespace WorldTree
 
         class ListenerAddRule : ListenerAddRule<GlobalRuleActuatorBase>
         {
-            public override void OnEvent(GlobalRuleActuatorBase self, INode node)
+            protected override void OnEvent(GlobalRuleActuatorBase self, INode node)
             {
                 self.TryAdd(node);
             }
@@ -38,7 +38,7 @@ namespace WorldTree
 
         class ListenerRemoveRule : ListenerRemoveRule<GlobalRuleActuatorBase>
         {
-            public override void OnEvent(GlobalRuleActuatorBase self, INode node)
+            protected override void OnEvent(GlobalRuleActuatorBase self, INode node)
             {
                 self.Remove(node);
             }

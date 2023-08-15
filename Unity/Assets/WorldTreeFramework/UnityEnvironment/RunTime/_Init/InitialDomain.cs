@@ -19,7 +19,7 @@ namespace WorldTree
 
     //public class TestPoolNodeUpdate : UpdateRule<TestPoolNode>
     //{
-    //    public override void OnEvent(TestPoolNode self, float arg1)
+    //    protected override void OnEvent(TestPoolNode self, float arg1)
     //    {
     //        World.Log($"TestPoolNode!!!!+{self.Parent.Id}");
     //    }
@@ -38,7 +38,7 @@ namespace WorldTree
 
     //public class NodeAddRule : AddRule<Node>
     //{
-    //    public override void OnEvent(Node self)
+    //    protected override void OnEvent(Node self)
     //    {
 
     //        // World.Log($"NodeAdd: {self.Id} _  {self.Type} ");
@@ -47,7 +47,7 @@ namespace WorldTree
 
     //public class NodeListenerAddRule : ListenerAddRule<InitialDomain>
     //{
-    //    public override void OnEvent(InitialDomain self, INode node)
+    //    protected override void OnEvent(InitialDomain self, INode node)
     //    {
     //        World.Log($"NodeListenerAdd: {node.Id} _  {node.Type} ");
     //    }
@@ -55,7 +55,7 @@ namespace WorldTree
 
     //public class NodeListenerInitialDomainAddRule : ListenerAddRule<InitialDomain, TreeNode, IRule>
     //{
-    //    public override void OnEvent(InitialDomain self, TreeNode node)
+    //    protected override void OnEvent(InitialDomain self, TreeNode node)
     //    {
     //        World.Log($"NodeListener InitialDomain Add: {self.Id} _  {self.Type} ");
     //    }
@@ -87,7 +87,7 @@ namespace WorldTree
 
         class _AddRule : AddRule<InitialDomain>
         {
-            public override async void OnEvent(InitialDomain self)
+            protected override async void OnEvent(InitialDomain self)
             {
                 Vector3Float a = Vector3Float.Zero;
                 World.Log("资源加载！！！");
@@ -119,7 +119,7 @@ namespace WorldTree
         class _AddRule1 : AddRule<InitialDomain>
         {
 
-            public override void OnEvent(InitialDomain self)
+            protected override void OnEvent(InitialDomain self)
             {
                 //World.Log("初始域启动2！！");
 
@@ -256,7 +256,7 @@ namespace WorldTree
 
         class AddRule : AddRule<InitialDomain>
         {
-            public override void OnEvent(InitialDomain self)
+            protected override void OnEvent(InitialDomain self)
             {
                 //CRC32 a = new CRC32();
 
@@ -296,7 +296,7 @@ namespace WorldTree
 
         class UpdateRule : UpdateRule<InitialDomain>
         {
-            public override void OnEvent(InitialDomain self, float deltaTime)
+            protected override void OnEvent(InitialDomain self, float deltaTime)
             {
                 if (Input.GetKeyDown(KeyCode.A))
                 {

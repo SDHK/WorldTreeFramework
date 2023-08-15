@@ -31,7 +31,7 @@ namespace WorldTree
         class RuleActuatorReferencedChildRemoveRule<R> : ReferencedChildRemoveRule<RuleActuator<R>>
             where R : IRule
         {
-            public override void OnEvent(RuleActuator<R> self, INode node)
+            protected override void OnEvent(RuleActuator<R> self, INode node)
             {
                 self.Remove(node);
             }
