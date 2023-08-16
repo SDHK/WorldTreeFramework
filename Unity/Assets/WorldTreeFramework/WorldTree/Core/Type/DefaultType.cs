@@ -10,9 +10,9 @@
 namespace WorldTree
 {
     /// <summary>
-    /// 默认类型，在泛型无法使用null时使用
+    /// 默认类型缓存，在泛型无法使用null时使用
     /// </summary>
-    /// <remarks>直接使用default会造成反射创建和产生GC，所以存起来使用</remarks>
+    /// <remarks>直接使用default会造成反射创建和产生GC，所以存起来使用，会占用的内存大小与泛型类型有关</remarks>
     public static class DefaultType<T>
     {
         /// <summary>
@@ -20,4 +20,7 @@ namespace WorldTree
         /// </summary>
         public static readonly T Default = default;
     }
+
+
+
 }

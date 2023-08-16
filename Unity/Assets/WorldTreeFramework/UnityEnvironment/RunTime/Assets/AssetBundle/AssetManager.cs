@@ -24,7 +24,7 @@ namespace WorldTree
             var key = typeof(N);
             if (!assets.TryGetValue(key.Name, out var asset))
             {
-                asset = await this.CallRuleAsync((ILoadAssetAsyncRule)null, key.Name, (Object)null);
+                asset = await this.CallRuleAsync(NullType<ILoadAssetAsyncRule>.Null, key.Name, NullType<Object>.Null);
                 assets.Add(key.Name, asset);
             }
             else

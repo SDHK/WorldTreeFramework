@@ -29,8 +29,6 @@ namespace WorldTree
     //Update不带时间参数
     //新增TimeUpdate通过返回时间确定间隔
 
-    //MP不能实例化属性，需要全改字段
-
 
 
 

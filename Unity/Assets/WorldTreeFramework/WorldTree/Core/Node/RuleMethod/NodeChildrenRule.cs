@@ -210,7 +210,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule((IAwakeRule)null);
+                node.SendRule(NullType<IAwakeRule>.Null);
                 self.Core.AddNode(node);
             }
             return node;
@@ -222,7 +222,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule((IAwakeRule<T1>)null, arg1);
+                node.SendRule(NullType<IAwakeRule<T1>>.Null, arg1);
                 self.Core.AddNode(node);
             }
             return node;
@@ -233,7 +233,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule((IAwakeRule<T1, T2>)null, arg1, arg2);
+                node.SendRule(NullType<IAwakeRule<T1, T2>>.Null, arg1, arg2);
                 self.Core.AddNode(node);
             }
             return node;
@@ -245,7 +245,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule((IAwakeRule<T1, T2, T3>)null, arg1, arg2, arg3);
+                node.SendRule(NullType<IAwakeRule<T1, T2, T3>>.Null, arg1, arg2, arg3);
                 self.Core.AddNode(node);
             }
             return node;
@@ -257,7 +257,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule((IAwakeRule<T1, T2, T3, T4>)null, arg1, arg2, arg3, arg4);
+                node.SendRule(NullType<IAwakeRule<T1, T2, T3, T4>>.Null, arg1, arg2, arg3, arg4);
                 self.Core.AddNode(node);
             }
             return node;
@@ -268,7 +268,7 @@ namespace WorldTree
         {
             if (self.TryAddChild(out node))
             {
-                node.SendRule((IAwakeRule<T1, T2, T3, T4, T5>)null, arg1, arg2, arg3, arg4, arg5);
+                node.SendRule(NullType<IAwakeRule<T1, T2, T3, T4, T5>>.Null, arg1, arg2, arg3, arg4, arg5);
                 self.Core.AddNode(node);
             }
             return node;
@@ -284,7 +284,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule((IAwakeRule)null);
+                node.SendRule(NullType<IAwakeRule>.Null);
                 self.Core.AddNode(node);
             }
             return node;
@@ -296,7 +296,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule((IAwakeRule<T1>)null, arg1);
+                node.SendRule(NullType<IAwakeRule<T1>>.Null, arg1);
                 self.Core.AddNode(node);
             }
             return node;
@@ -307,7 +307,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule((IAwakeRule<T1, T2>)null, arg1, arg2);
+                node.SendRule(NullType<IAwakeRule<T1, T2>>.Null, arg1, arg2);
                 self.Core.AddNode(node);
             }
             return node;
@@ -319,7 +319,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule((IAwakeRule<T1, T2, T3>)null, arg1, arg2, arg3);
+                node.SendRule(NullType<IAwakeRule<T1, T2, T3>>.Null, arg1, arg2, arg3);
                 self.Core.AddNode(node);
             }
             return node;
@@ -331,7 +331,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule((IAwakeRule<T1, T2, T3, T4>)null, arg1, arg2, arg3, arg4);
+                node.SendRule(NullType<IAwakeRule<T1, T2, T3, T4>>.Null, arg1, arg2, arg3, arg4);
                 self.Core.AddNode(node);
             }
             return node;
@@ -342,7 +342,7 @@ namespace WorldTree
         {
             if (self.TryAddNewChild(out node))
             {
-                node.SendRule((IAwakeRule<T1, T2, T3, T4, T5>)null, arg1, arg2, arg3, arg4, arg5);
+                node.SendRule(NullType<IAwakeRule<T1, T2, T3, T4, T5>>.Null, arg1, arg2, arg3, arg4, arg5);
                 self.Core.AddNode(node);
             }
             return node;

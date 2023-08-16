@@ -90,7 +90,7 @@ namespace WorldTree
             get
             {
                 if (this._syncRoot == null)
-                    Interlocked.CompareExchange<object>(ref this._syncRoot, new object(), (object)null);
+                    Interlocked.CompareExchange<object>(ref this._syncRoot, new object(), null);
                 return this._syncRoot;
             }
         }
@@ -276,7 +276,7 @@ namespace WorldTree
         /// <summary>
         /// 二分查找
         /// </summary>
-        public int BinarySearch(T item) => this.BinarySearch(0, this.Count, item, (IComparer<T>)null);
+        public int BinarySearch(T item) => this.BinarySearch(0, this.Count, item, null);
         /// <summary>
         /// 二分查找
         /// </summary>
@@ -744,7 +744,7 @@ namespace WorldTree
         /// <summary>
         /// 快速排序
         /// </summary>
-        public void Sort() => this.Sort(0, this.Count, (IComparer<T>)null);
+        public void Sort() => this.Sort(0, this.Count, null);
 
         /// <summary>
         /// 快速排序
