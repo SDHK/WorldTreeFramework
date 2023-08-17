@@ -261,7 +261,7 @@ namespace WorldTree
         {
             if (self.TryAddComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule>.Null);
+                Component.SendRule(DefaultType<IAwakeRule>.Default);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -273,7 +273,7 @@ namespace WorldTree
         {
             if (self.TryAddComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1>>.Null, arg1);
+                Component.SendRule(DefaultType<IAwakeRule<T1>>.Default, arg1);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -284,7 +284,7 @@ namespace WorldTree
         {
             if (self.TryAddComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1, T2>>.Null, arg1, arg2);
+                Component.SendRule(DefaultType<IAwakeRule<T1, T2>>.Default, arg1, arg2);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -296,7 +296,7 @@ namespace WorldTree
         {
             if (self.TryAddComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1, T2, T3>>.Null, arg1, arg2, arg3);
+                Component.SendRule(DefaultType<IAwakeRule<T1, T2, T3>>.Default, arg1, arg2, arg3);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -308,7 +308,7 @@ namespace WorldTree
         {
             if (self.TryAddComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1, T2, T3, T4>>.Null, arg1, arg2, arg3, arg4);
+                Component.SendRule(DefaultType<IAwakeRule<T1, T2, T3, T4>>.Default, arg1, arg2, arg3, arg4);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -319,7 +319,7 @@ namespace WorldTree
         {
             if (self.TryAddComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1, T2, T3, T4, T5>>.Null, arg1, arg2, arg3, arg4, arg5);
+                Component.SendRule(DefaultType<IAwakeRule<T1, T2, T3, T4, T5>>.Default, arg1, arg2, arg3, arg4, arg5);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -336,7 +336,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule>.Null);
+                Component.SendRule(DefaultType<IAwakeRule>.Default);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -348,7 +348,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1>>.Null, arg1);
+                Component.SendRule(DefaultType<IAwakeRule<T1>>.Default, arg1);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -359,7 +359,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1, T2>>.Null, arg1, arg2);
+                Component.SendRule(DefaultType<IAwakeRule<T1, T2>>.Default, arg1, arg2);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -371,7 +371,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1, T2, T3>>.Null, arg1, arg2, arg3);
+                Component.SendRule(DefaultType<IAwakeRule<T1, T2, T3>>.Default, arg1, arg2, arg3);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -383,7 +383,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1, T2, T3, T4>>.Null, arg1, arg2, arg3, arg4);
+                Component.SendRule(DefaultType<IAwakeRule<T1, T2, T3, T4>>.Default, arg1, arg2, arg3, arg4);
                 self.Core.AddNode(Component);
             }
             return Component;
@@ -394,7 +394,7 @@ namespace WorldTree
         {
             if (self.TryAddNewComponent(out Component))
             {
-                Component.SendRule(NullType<IAwakeRule<T1, T2, T3, T4, T5>>.Null, arg1, arg2, arg3, arg4, arg5);
+                Component.SendRule(DefaultType<IAwakeRule<T1, T2, T3, T4, T5>>.Default, arg1, arg2, arg3, arg4, arg5);
                 self.Core.AddNode(Component);
             }
             return Component;
