@@ -16,7 +16,7 @@ namespace WorldTree
         public static bool TryCallRule<R, OutT>(this INode self, R nullRule, out OutT outT)
             where R : class, ICallRuleBase<OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Call(self, out outT);
                 return true;
@@ -31,7 +31,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, OutT>(this INode self, R nullRule, T1 arg1, out OutT outT)
             where R : class, ICallRuleBase<T1, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Call(self, arg1, out outT);
                 return true;
@@ -45,7 +45,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, T2, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, out OutT outT)
             where R : class, ICallRuleBase<T1, T2, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Call(self, arg1, arg2, out outT);
                 return true;
@@ -59,7 +59,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, T2, T3, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
             where R : class, ICallRuleBase<T1, T2, T3, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Call(self, arg1, arg2, arg3, out outT);
                 return true;
@@ -73,7 +73,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, T2, T3, T4, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
             where R : class, ICallRuleBase<T1, T2, T3, T4, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Call(self, arg1, arg2, arg3, arg4, out outT);
                 return true;
@@ -87,7 +87,7 @@ namespace WorldTree
         public static bool TryCallRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
             where R : class, ICallRuleBase<T1, T2, T3, T4, T5, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Call(self, arg1, arg2, arg3, arg4, arg5, out outT);
                 return true;
@@ -150,7 +150,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, OutT>(this INode self, R nullRule, out UnitList<OutT> values)
             where R : class, ICallRuleBase<OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Calls(self, out values);
                 return true;
@@ -164,7 +164,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, OutT>(this INode self, R nullRule, T1 arg1, out UnitList<OutT> values)
             where R : class, ICallRuleBase<T1, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Calls(self, arg1, out values);
                 return true;
@@ -178,7 +178,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, T2, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, out UnitList<OutT> values)
             where R : class, ICallRuleBase<T1, T2, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Calls(self, arg1, arg2, out values);
                 return true;
@@ -192,7 +192,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, T2, T3, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> values)
             where R : class, ICallRuleBase<T1, T2, T3, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Calls(self, arg1, arg2, arg3, out values);
                 return true;
@@ -206,7 +206,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, T2, T3, T4, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> values)
             where R : class, ICallRuleBase<T1, T2, T3, T4, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Calls(self, arg1, arg2, arg3, arg4, out values);
                 return true;
@@ -220,7 +220,7 @@ namespace WorldTree
         public static bool TryCallsRule<R, T1, T2, T3, T4, T5, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> values)
             where R : class, ICallRuleBase<T1, T2, T3, T4, T5, OutT>
         {
-            if (self.SelfTryGetRuleList(out IRuleList<R> ruleList))
+            if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
             {
                 ruleList.Calls(self, arg1, arg2, arg3, arg4, arg5, out values);
                 return true;

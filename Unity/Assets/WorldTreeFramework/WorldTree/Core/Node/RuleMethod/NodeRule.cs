@@ -137,38 +137,6 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 尝试获取法则
-        /// </summary>
-        public static bool SelfTryGetRuleList<R>(this INode self, out IRuleList<R> ruleList)
-            where R : class, IRule
-        {
-            return self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList);
-            //long ruleType = TypeInfo<R>.HashCode64;
-            //if (self.m_RuleListDictionary != null)
-            //{
-            //    if (self.m_RuleListDictionary.TryGetValue(ruleType, out IRuleList ruleList_))
-            //    {
-            //        ruleList = (IRuleList<R>)ruleList_;
-            //        return ruleList != null;
-            //    }
-            //    else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
-            //    {
-            //        self.m_RuleListDictionary.Add(ruleType, ruleList);
-            //        return true;
-            //    }
-            //}
-            //else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
-            //{
-            //    self.m_RuleListDictionary = self.PoolGet<UnitDictionary<long, IRuleList>>();
-            //    self.m_RuleListDictionary.Add(ruleType, ruleList);
-            //    return true;
-            //}
-        }
-
-
-
-
-        /// <summary>
         /// 返回用字符串绘制的树
         /// </summary>
         public static string ToStringDrawTree(this INode self, string t = "\t")
