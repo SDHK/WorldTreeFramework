@@ -8,12 +8,12 @@
 * 可以理解为Node的无返回值扩展方法
 * 
 * 
-* ISendRule 继承 IRule
+* ISendRuleBase 继承 IRule
 * 主要作用：统一 调用方法 Invoke(INode self,T1 ar1, ...);
 * 
 * 
 * SendRuleBase 则继承 RuleBase 
-* 同时还继承了 ISendRule 可以转换为 ISendRule 进行统一调用。
+* 同时还继承了 ISendRuleBase 可以转换为 ISendRuleBase 进行统一调用。
 * 
 * 主要作用：确定Node的类型并转换，并统一 Invoke 中转调用 OnEvent 的过程。
 * 其中 Invoke 设定为虚方法方便子类写特殊的中转调用。

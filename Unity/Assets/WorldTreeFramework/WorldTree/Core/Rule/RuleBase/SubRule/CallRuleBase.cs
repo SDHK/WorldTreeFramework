@@ -6,17 +6,17 @@
 
 * 描述： 调用法则基类
 * 
-* 可以理解为Entity的有返回值扩展方法
+* 可以理解为Node的有返回值扩展方法
 * 
 * 
-* ICallRule 继承 IRule
+* ICallRuleBase 继承 IRule
 * 主要作用：统一 调用方法  OutT Invoke(INode self,T1 ar1, ...);
 * 
 * 
 * CallRuleBase 则继承 RuleBase 
-* 同时还继承了 ICallRule 可以转换为 ICallRule 进行统一调用。
+* 同时还继承了 ICallRuleBase 可以转换为 ICallRuleBase 进行统一调用。
 * 
-* 主要作用：确定Entity的类型并转换，并统一 Invoke 中转调用 OnEvent 的过程。
+* 主要作用：确定Node的类型并转换，并统一 Invoke 中转调用 OnEvent 的过程。
 * 其中 Invoke 设定为虚方法方便子类写特殊的中转调用。
 * 
 */

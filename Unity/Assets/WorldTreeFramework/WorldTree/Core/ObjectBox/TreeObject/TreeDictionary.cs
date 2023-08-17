@@ -57,13 +57,6 @@ namespace WorldTree
 
         #endregion
 
-        #region Rule
-        /// <summary>
-        /// 法则列表字典
-        /// </summary>
-        public UnitDictionary<long, IRuleList> m_RuleListDictionary { get; set; }
-        #endregion
-
         #region Listener
         public ListenerState listenerState { get; set; } = ListenerState.Not;
         public Type listenerTarget { get; set; }

@@ -69,12 +69,6 @@ namespace WorldTree
         public UnitDictionary<long, INode> m_ReferencedChilden { get; set; }
 
         #endregion
-        #region Rule
-        /// <summary>
-        /// 法则列表字典
-        /// </summary>
-        public UnitDictionary<long, IRuleList> m_RuleListDictionary { get; set; }
-        #endregion
 
 
         public override string ToString()

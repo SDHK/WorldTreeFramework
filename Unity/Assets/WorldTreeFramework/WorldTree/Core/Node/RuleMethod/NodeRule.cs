@@ -38,13 +38,6 @@ namespace WorldTree
                 self.DisposeDomain();//清除域节点
                 self.Parent = null;//清除父节点
 
-                //回收法则字典
-                if (self.m_RuleListDictionary != null)
-                {
-                    self.m_RuleListDictionary.Dispose();
-                    self.m_RuleListDictionary = null;
-                }
-
                 self.OnDispose();
             }
         }
@@ -146,31 +139,30 @@ namespace WorldTree
         /// <summary>
         /// 尝试获取法则
         /// </summary>
-        /// <remarks>获取成功后会添加进实例的法则字典里</remarks>
         public static bool SelfTryGetRuleList<R>(this INode self, out IRuleList<R> ruleList)
             where R : class, IRule
         {
-            long ruleType = TypeInfo<R>.HashCode64;
-            if (self.m_RuleListDictionary != null)
-            {
-                if (self.m_RuleListDictionary.TryGetValue(ruleType, out IRuleList ruleList_))
-                {
-                    ruleList = (IRuleList<R>)ruleList_;
-                    return ruleList != null;
-                }
-                else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
-                {
-                    self.m_RuleListDictionary.Add(ruleType, ruleList);
-                    return true;
-                }
-            }
-            else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
-            {
-                self.m_RuleListDictionary = self.PoolGet<UnitDictionary<long, IRuleList>>();
-                self.m_RuleListDictionary.Add(ruleType, ruleList);
-                return true;
-            }
-            return false;
+            return self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList);
+            //long ruleType = TypeInfo<R>.HashCode64;
+            //if (self.m_RuleListDictionary != null)
+            //{
+            //    if (self.m_RuleListDictionary.TryGetValue(ruleType, out IRuleList ruleList_))
+            //    {
+            //        ruleList = (IRuleList<R>)ruleList_;
+            //        return ruleList != null;
+            //    }
+            //    else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
+            //    {
+            //        self.m_RuleListDictionary.Add(ruleType, ruleList);
+            //        return true;
+            //    }
+            //}
+            //else if (self.Core.RuleManager.TryGetRuleList(self.Type, out ruleList))
+            //{
+            //    self.m_RuleListDictionary = self.PoolGet<UnitDictionary<long, IRuleList>>();
+            //    self.m_RuleListDictionary.Add(ruleType, ruleList);
+            //    return true;
+            //}
         }
 
 
