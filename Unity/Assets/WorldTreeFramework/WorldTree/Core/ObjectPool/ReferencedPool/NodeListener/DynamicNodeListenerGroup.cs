@@ -202,7 +202,7 @@ namespace WorldTree
         /// </summary>
         private static void AddNodeTarget(this ReferencedPoolManager self, INodeListener node, long listenerTarget)
         {
-            if (self.Core.NodePoolManager.TryGetPool(listenerTarget, out NodePool listenerPool))
+            if (self.TryGetPool(listenerTarget, out ReferencedPool listenerPool))
             {
                 if (listenerPool.TryGetComponent(out DynamicNodeListenerGroup dynamicNodeListenerGroup))
                 {
@@ -314,7 +314,7 @@ namespace WorldTree
         /// </summary>
         private static void RemoveNodeTarget(this ReferencedPoolManager self, INodeListener node, long listenerTarget)
         {
-            if (self.Core.ReferencedPoolManager.TryGetPool(listenerTarget, out ReferencedPool listenerPool))
+            if (self.TryGetPool(listenerTarget, out ReferencedPool listenerPool))
             {
                 if (listenerPool.TryGetComponent(out DynamicNodeListenerGroup dynamicNodeListenerGroup))
                 {
