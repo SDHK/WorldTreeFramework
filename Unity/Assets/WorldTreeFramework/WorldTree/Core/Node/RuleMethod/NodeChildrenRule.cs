@@ -68,17 +68,17 @@ namespace WorldTree
         /// </summary>
         public static void RemoveAllChildren(this INode self)
         {
-            if (self.m_Children != null ? self.m_Children.Count != 0 : false)
+            if (self.m_Children != null && self.m_Children.Count != 0)
             {
-                var entitys = self.PoolGet<UnitStack<INode>>();
-                foreach (var item in self.m_Children) entitys.Push(item.Value);
+                var nodes = self.PoolGet<UnitStack<INode>>();
+                foreach (var item in self.m_Children) nodes.Push(item.Value);
 
-                int length = entitys.Count;
+                int length = nodes.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    entitys.Pop().Dispose();
+                    nodes.Pop().Dispose();
                 }
-                entitys.Dispose();
+                nodes.Dispose();
             }
         }
         #endregion

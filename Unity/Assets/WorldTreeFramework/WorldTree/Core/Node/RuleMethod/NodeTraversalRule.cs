@@ -9,12 +9,15 @@
 */
 
 using System;
+using Codice.CM.Common.Tree;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
 
     public static class NodeTraversalRule
     {
+
         /// <summary>
         /// 前序遍历
         /// </summary>
@@ -22,7 +25,6 @@ namespace WorldTree
         {
             INode current;
             UnitStack<INode> stack = self.PoolGet<UnitStack<INode>>();
-            UnitStack<INode> localStack = self.PoolGet<UnitStack<INode>>();
             stack.Push(self);
             while (stack.Count != 0)
             {
@@ -32,26 +34,17 @@ namespace WorldTree
                 {
                     foreach (var item in current.m_Children)
                     {
-                        localStack.Push(item.Value);
-                    }
-                    while (localStack.Count != 0)
-                    {
-                        stack.Push(localStack.Pop());
+                        stack.Push(item.Value);
                     }
                 }
                 if (current.m_Components != null)
                 {
                     foreach (var item in current.m_Components)
                     {
-                        localStack.Push(item.Value);
-                    }
-                    while (localStack.Count != 0)
-                    {
-                        stack.Push(localStack.Pop());
+                        stack.Push(item.Value);
                     }
                 }
             }
-            localStack.Dispose();
             stack.Dispose();
             return self;
         }

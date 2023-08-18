@@ -15,10 +15,12 @@ namespace WorldTree
     /// <summary>
     /// 移除法则接口
     /// </summary>
+    /// <remarks>移除时，按照后序遍历通知</remarks>
     public interface IRemoveRule : ISendRuleBase { }
 
     /// <summary>
     /// 移除法则
     /// </summary>
+    /// <remarks>移除时，按照后序遍历通知</remarks>
     public abstract class RemoveRule<N> : SendRuleBase<N, IRemoveRule> where N : class, INode, AsRule<IRemoveRule> { }
 }

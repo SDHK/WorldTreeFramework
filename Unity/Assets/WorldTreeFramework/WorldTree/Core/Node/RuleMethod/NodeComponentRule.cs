@@ -105,7 +105,7 @@ namespace WorldTree
         /// </summary>
         public static void RemoveAllComponent(this INode self)
         {
-            if (self.m_Components != null ? self.m_Components.Count != 0 : false)
+            if (self.m_Components != null && self.m_Components.Count != 0)
             {
                 var nodes = self.PoolGet<UnitStack<INode>>();
                 foreach (var item in self.m_Components) nodes.Push(item.Value);

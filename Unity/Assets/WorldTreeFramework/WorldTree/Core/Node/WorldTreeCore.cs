@@ -31,12 +31,12 @@ namespace WorldTree
 
     //机器时间和游戏时间
 
-    //将Add综合到核心
+    //将Add综合到核心?
 
-    //回收改为非递归的遍历列表回收
+    //RemoveAll回收改为非递归的遍历列表回收
 
 
-
+    //生命周期整理
 
     /*
         New
@@ -55,6 +55,7 @@ namespace WorldTree
     public class WorldTreeCore : CoreNode
     {
         public IRuleGroup<IAddRule> AddRuleGroup;
+        public IRuleGroup<IBeforeRemoveRule> BeforeRemoveRuleGroup;
         public IRuleGroup<IRemoveRule> RemoveRuleGroup;
         public IRuleGroup<IEnableRule> EnableRuleGroup;
         public IRuleGroup<IDisableRule> DisableRuleGroup;
@@ -143,6 +144,7 @@ namespace WorldTree
 
             self.NewRuleGroup = self.RuleManager.GetOrNewRuleGroup<INewRule>();
             self.GetRuleGroup = self.RuleManager.GetOrNewRuleGroup<IGetRule>();
+            self.BeforeRemoveRuleGroup = self.RuleManager.GetOrNewRuleGroup<IBeforeRemoveRule>();
             self.RecycleRuleGroup = self.RuleManager.GetOrNewRuleGroup<IRecycleRule>();
             self.DestroyRuleGroup = self.RuleManager.GetOrNewRuleGroup<IDestroyRule>();
 
@@ -459,13 +461,14 @@ namespace WorldTree
         /// </summary>
         public static void RemoveNode(this WorldTreeCore self, INode node)
         {
-
+            //从父节点中移除
+            node.RemoveInParent();
             //引用关系移除通知
             node.SendAllReferencedNodeRemove();
 
             node.SetActive(false);//激活标记变更
 
-            node.RemoveAll();//移除所有子节点和组件
+            //node.RemoveAll();//移除所有子节点和组件
             self.DisableRuleGroup?.Send(node);//调用禁用事件
 
             if (node is INodeListener && node is not ICoreNode)
@@ -493,6 +496,9 @@ namespace WorldTree
             }
 
             self.ReferencedPoolManager.Remove(node);
+
+            node.DisposeDomain();//清除域节点
+            node.Parent = null;//清除父节点
         }
         #endregion
     }
