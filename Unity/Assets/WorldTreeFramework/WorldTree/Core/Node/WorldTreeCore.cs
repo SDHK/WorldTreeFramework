@@ -25,6 +25,8 @@ namespace WorldTree
 
     //对象池需要一个启动标记？
 
+    //Log改为 Self.Log
+
 
     //Update不带时间参数
     //新增TimeUpdate通过返回时间确定间隔
@@ -32,9 +34,6 @@ namespace WorldTree
     //机器时间和游戏时间
 
     //将Add综合到核心?
-
-    //RemoveAll回收改为非递归的遍历列表回收
-
 
     //生命周期整理
 
@@ -436,7 +435,7 @@ namespace WorldTree
             node.SetActive(true);
             self.EnableRuleGroup?.Send(node);//添加后调用激活事件
 
-            //广播给全部监听器!!!!
+            //广播给全部监听器!!!
             if (node is not ICoreNode)
             {
                 node.SendStaticNodeListener<IListenerAddRule>();
@@ -451,9 +450,6 @@ namespace WorldTree
 
             //这个节点的添加事件
             self.AddRuleGroup?.Send(node);
-
-
-
         }
 
         /// <summary>
@@ -468,7 +464,6 @@ namespace WorldTree
 
             node.SetActive(false);//激活标记变更
 
-            //node.RemoveAll();//移除所有子节点和组件
             self.DisableRuleGroup?.Send(node);//调用禁用事件
 
             if (node is INodeListener && node is not ICoreNode)
@@ -486,7 +481,7 @@ namespace WorldTree
             self.RemoveRuleGroup?.Send(node);
 
 
-            //广播给全部监听器!!!!
+            //广播给全部监听器!!!
             if (node is not ICoreNode)
             {
                 //静态监听

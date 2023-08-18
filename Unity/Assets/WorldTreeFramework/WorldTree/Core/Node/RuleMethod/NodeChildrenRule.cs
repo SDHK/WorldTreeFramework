@@ -20,10 +20,7 @@ namespace WorldTree
         /// </summary>
         public static UnitSortedDictionary<long, INode> ChildrenDictionary(this INode self)
         {
-            if (self.m_Children == null)
-            {
-                self.m_Children = self.PoolGet<UnitSortedDictionary<long, INode>>();
-            }
+            self.m_Children ??= self.PoolGet<UnitSortedDictionary<long, INode>>();
             return self.m_Children;
         }
 

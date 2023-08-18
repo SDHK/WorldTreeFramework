@@ -15,21 +15,14 @@ namespace WorldTree
 {
     public static class NodeComponentRule
     {
-
-
         /// <summary>
         /// 组件节点
         /// </summary>
         public static UnitSortedDictionary<long, INode> ComponentsDictionary(this INode self)
         {
-            if (self.m_Components == null)
-            {
-                self.m_Components = self.PoolGet<UnitSortedDictionary<long, INode>>();
-            }
+            self.m_Components ??= self.PoolGet<UnitSortedDictionary<long, INode>>();
             return self.m_Components;
         }
-
-
 
         #region 获取
 
