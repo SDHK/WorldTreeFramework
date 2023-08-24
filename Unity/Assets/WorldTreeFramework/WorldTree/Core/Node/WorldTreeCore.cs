@@ -37,6 +37,9 @@ namespace WorldTree
 
     //生命周期整理
 
+    //监听器广播改为动静合一
+
+
     /*
         New
         Get
@@ -438,8 +441,8 @@ namespace WorldTree
             //广播给全部监听器!!!
             if (node is not ICoreNode)
             {
-                node.SendStaticNodeListener<IListenerAddRule>();
-                node.SendDynamicNodeListener<IListenerAddRule>();
+                node.GetStaticNodeListenerActuator<IListenerAddRule>()?.Send(node);
+                node.GetDynamicNodeListenerActuator<IListenerAddRule>()?.Send(node);
             }
 
             if (node is INodeListener nodeListener && node is not ICoreNode)
@@ -484,10 +487,8 @@ namespace WorldTree
             //广播给全部监听器!!!
             if (node is not ICoreNode)
             {
-                //静态监听
-                node.SendStaticNodeListener<IListenerRemoveRule>();
-                //动态监听
-                node.SendDynamicNodeListener<IListenerRemoveRule>();
+                node.GetStaticNodeListenerActuator<IListenerRemoveRule>()?.Send(node);
+                node.GetDynamicNodeListenerActuator<IListenerRemoveRule>()?.Send(node);
             }
 
             self.ReferencedPoolManager.Remove(node);

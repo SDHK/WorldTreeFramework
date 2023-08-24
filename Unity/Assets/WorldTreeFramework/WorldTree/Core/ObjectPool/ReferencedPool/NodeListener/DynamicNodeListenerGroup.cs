@@ -28,20 +28,22 @@ namespace WorldTree
     public static class DynamicNodeListenerGroupRule
     {
         /// <summary>
-        /// 获取以实体类型为目标的 监听系统执行器
+        /// 获取动态节点监听执行器
         /// </summary>
-        public static void SendDynamicNodeListener<R>(this INode node)
-            where R : IListenerRule
+        public static   IRuleActuator<R> GetDynamicNodeListenerActuator<R>(this INode node)
+           where R : IListenerRule
         {
             if (node.Core.ReferencedPoolManager != null)
+            {
                 if (node.Core.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool))
                 {
                     if (nodePool.AddNewComponent(out DynamicNodeListenerGroup _).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
-                    {
-
-                        actuator.Send(node);
+                    { 
+                        return actuator;
                     }
                 }
+            }
+            return null;
         }
 
         #region 判断添加监听执行器
@@ -49,7 +51,7 @@ namespace WorldTree
         /// <summary>
         /// 添加静态监听执行器,并自动填装监听器
         /// </summary>
-        public static bool TryAddRuleActuator<R>(this DynamicNodeListenerGroup self, long target, out IRuleActuator<R> actuator)
+        public static bool TryAddRuleActuator<R>(this DynamicNodeListenerGroup self, long nodeType, out IRuleActuator<R> actuator)
             where R : IListenerRule
         {
             long ruleType = TypeInfo<R>.HashCode64;
@@ -64,7 +66,7 @@ namespace WorldTree
             {
                 self.actuatorDictionary.Add(ruleType, self.AddNewChild(out ruleActuator, ruleGroup));
 
-                self.RuleActuatorAddListener(ruleActuator, target);
+                self.RuleActuatorAddListener(ruleActuator, nodeType);
 
                 actuator = ruleActuator as IRuleActuator<R>;
                 return true;
@@ -79,7 +81,7 @@ namespace WorldTree
         /// <summary>
         /// 执行器填装监听器
         /// </summary>
-        private static void RuleActuatorAddListener(this DynamicNodeListenerGroup self, ListenerRuleActuator actuator, long target)
+        private static void RuleActuatorAddListener(this DynamicNodeListenerGroup self, ListenerRuleActuator actuator, long nodeType)
         {
             //遍历法则集合获取监听器类型
             foreach (var listenerType in actuator.ruleGroup)
@@ -98,7 +100,7 @@ namespace WorldTree
                             if (nodeListener.listenerState == ListenerState.Node)
                             {
                                 //判断是否全局监听 或 是指定的目标类型
-                                if (nodeListener.listenerTarget == TypeInfo<INode>.HashCode64 || nodeListener.listenerTarget == target)
+                                if (nodeListener.listenerTarget == TypeInfo<INode>.HashCode64 || nodeListener.listenerTarget == nodeType)
                                 {
                                     actuator.TryAdd(nodeListener);
                                 }
@@ -106,7 +108,7 @@ namespace WorldTree
                             else if (nodeListener.listenerState == ListenerState.Rule)
                             {
                                 //判断的实体类型是否拥有目标系统
-                                if (self.Core.RuleManager.TryGetRuleList(target, nodeListener.listenerTarget, out _))
+                                if (self.Core.RuleManager.TryGetRuleList(nodeType, nodeListener.listenerTarget, out _))
                                 {
                                     actuator.TryAdd(nodeListener);
                                 }

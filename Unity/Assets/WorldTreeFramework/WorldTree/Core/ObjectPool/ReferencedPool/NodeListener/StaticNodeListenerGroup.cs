@@ -28,23 +28,24 @@ namespace WorldTree
 
     public static class StaticNodeListenerGroupRule
     {
-
         /// <summary>
-        /// 获取以实体类型为目标的 监听系统执行器
+        /// 获取静态节点监听执行器
         /// </summary>
-        public static void SendStaticNodeListener<R>(this INode node)
-            where R : IListenerRule
+        public static IRuleActuator<R> GetStaticNodeListenerActuator<R>(this INode node)
+           where R : IListenerRule
         {
             if (node.Core.ReferencedPoolManager != null)
+            {
                 if (node.Core.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool))
                 {
                     if (nodePool.AddNewComponent(out StaticNodeListenerGroup _).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
                     {
-                        actuator.Send(node);
+                        return actuator;
                     }
                 }
+            }
+            return null;
         }
-
 
         #region 判断添加监听执行器
 
@@ -53,7 +54,7 @@ namespace WorldTree
         /// <summary>
         /// 添加静态监听执行器,并自动填装监听器
         /// </summary>
-        public static bool TryAddRuleActuator<R>(this StaticNodeListenerGroup self, long target, out IRuleActuator<R> actuator)
+        public static bool TryAddRuleActuator<R>(this StaticNodeListenerGroup self, long nodeType, out IRuleActuator<R> actuator)
             where R : IListenerRule
         {
             long ruleType = TypeInfo<R>.HashCode64;
@@ -64,7 +65,7 @@ namespace WorldTree
                 actuator = ruleActuator as IRuleActuator<R>; return true;
             }
             //执行器不存在，检测获取目标法则集合，并新建执行器
-            else if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, target, out var ruleGroup))
+            else if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, nodeType, out var ruleGroup))
             {
                 self.actuatorDictionary.Add(ruleType, self.AddNewChild(out ruleActuator, ruleGroup));
                 self.RuleActuatorAddListener(ruleActuator);
