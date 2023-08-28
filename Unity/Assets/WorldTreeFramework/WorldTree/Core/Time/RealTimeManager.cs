@@ -4,7 +4,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/7/31 11:30
 
-* 描述： 机器时间管理器
+* 描述： 真实时间管理器，将根据机器时间计时
 
 */
 
@@ -13,9 +13,9 @@ using System;
 namespace WorldTree
 {
     /// <summary>
-    /// 机器时间管理器
+    /// 真实时间管理器
     /// </summary>
-    public class TimeManager : Node
+    public class RealTimeManager : Node
     {
         /// <summary>
         /// 一毫秒，10000Tick
@@ -76,7 +76,7 @@ namespace WorldTree
         public long FrameTime;
 
 
-        public TimeManager()
+        public RealTimeManager()
         {
             this.Awake();
         }
@@ -84,7 +84,7 @@ namespace WorldTree
 
     public static partial class TimeManagerRule
     {
-        public static void Awake(this TimeManager self)
+        public static void Awake(this RealTimeManager self)
         {
             self.dateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             self.timeZoneDateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -95,18 +95,18 @@ namespace WorldTree
         /// <summary>
         /// 获取毫秒，从1970年到当前的总毫秒数
         /// </summary>
-        public static long ClientNow(this TimeManager self)
+        public static long ClientNow(this RealTimeManager self)
         {
             //每一万Tick就是一毫秒
-            return (DateTime.UtcNow.Ticks - self.dateTime1970.Ticks) / TimeManager.MilliTick;
+            return (DateTime.UtcNow.Ticks - self.dateTime1970.Ticks) / RealTimeManager.MilliTick;
         }
 
         /// <summary> 
         /// 毫秒转为时间 
         /// </summary>  
-        public static DateTime ToDateTime(this TimeManager self, long timeStamp)
+        public static DateTime ToDateTime(this RealTimeManager self, long timeStamp)
         {
-            return self.timeZoneDateTime1970.AddTicks(timeStamp * TimeManager.MilliTick);
+            return self.timeZoneDateTime1970.AddTicks(timeStamp * RealTimeManager.MilliTick);
         }
 
         #region 计算时间跨度

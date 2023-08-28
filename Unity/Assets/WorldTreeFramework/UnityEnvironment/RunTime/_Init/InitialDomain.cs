@@ -10,6 +10,7 @@
 * 可用于初始化启动需要的功能组件
 
 */
+using System;
 using System.IO;
 using UnityEngine;
 using YooAsset;

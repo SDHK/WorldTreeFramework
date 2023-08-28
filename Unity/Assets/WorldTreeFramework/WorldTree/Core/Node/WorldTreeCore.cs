@@ -28,17 +28,17 @@ namespace WorldTree
     //Log改为 Self.Log
 
 
-    //Update不带时间参数
-    //新增TimeUpdate通过返回时间确定间隔
+    //Update带和不带时间参数双法则
 
-    //机器时间和游戏时间
+    //新增TimeUpdate,特化的双方法法则
+    //真实与游戏时间双法则
 
-    //将Add综合到核心?
+
+    //真实时间和游戏时间
+
+    //将Add综合到核心??
 
     //生命周期整理
-
-    //监听器广播改为动静合一
-
 
     /*
         New
@@ -46,10 +46,6 @@ namespace WorldTree
         Awake
         Enable
         Add
-
-
-        AddUnPool?
-        
     */
     /// <summary>
     /// 世界树核心
@@ -73,9 +69,14 @@ namespace WorldTree
         public IdManager IdManager;
 
         /// <summary>
-        /// 机器时间管理器
+        /// 真实时间管理器
         /// </summary>
-        public TimeManager TimeManager;
+        public RealTimeManager RealTimeManager;
+
+        /// <summary>
+        /// 游戏时间管理器
+        /// </summary>
+        public GameTimeManager GameTimeManager;
 
         /// <summary>
         /// 法则管理器
@@ -139,7 +140,7 @@ namespace WorldTree
             self.Id = self.IdManager.GetId();
 
             //时间管理器初始化
-            self.NewNode(out self.TimeManager);
+            self.NewNode(out self.RealTimeManager);
 
             //法则管理器初始化
             self.NewNode(out self.RuleManager);
@@ -189,7 +190,7 @@ namespace WorldTree
             self.RemoveComponent<NodePoolManager>();
             self.RemoveComponent<UnitPoolManager>();
             self.RemoveComponent<RuleManager>();
-            self.RemoveComponent<TimeManager>();
+            self.RemoveComponent<RealTimeManager>();
             self.RemoveComponent<IdManager>();
             self.RemoveComponent<ReferencedPoolManager>();
 
@@ -207,7 +208,7 @@ namespace WorldTree
 
             self.ReferencedPoolManager = null;
             self.IdManager = null;
-            self.TimeManager = null;
+            self.RealTimeManager = null;
             self.RuleManager = null;
             self.UnitPoolManager = null;
             self.NodePoolManager = null;
