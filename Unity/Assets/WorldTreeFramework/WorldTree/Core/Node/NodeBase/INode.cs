@@ -59,6 +59,7 @@ namespace WorldTree
 
         , AsRule<IAddRule>
         , AsRule<IUpdateRule>
+        , AsRule<IUpdateTimeRule>
         , AsRule<IBeforeRemoveRule>
         , AsRule<IRemoveRule>
 

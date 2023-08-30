@@ -27,16 +27,13 @@ namespace WorldTree
 
     //Log改为 Self.Log
 
+    //将Add综合到核心??
 
-    //Update带和不带时间参数双法则
 
     //新增TimeUpdate,特化的双方法法则
     //真实与游戏时间双法则
 
-
     //真实时间和游戏时间
-
-    //将Add综合到核心??
 
     //生命周期整理
 

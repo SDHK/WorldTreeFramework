@@ -24,8 +24,11 @@ namespace WorldTree
         GlobalRuleActuator<IEnableRule> enable;
         GlobalRuleActuator<IDisableRule> disable;
         GlobalRuleActuator<IUpdateRule> update;
+        GlobalRuleActuator<IUpdateTimeRule> updateTime;
         GlobalRuleActuator<ILateUpdateRule> lateUpdate;
+        GlobalRuleActuator<ILateUpdateTimeRule> lateUpdateTime;
         GlobalRuleActuator<IFixedUpdateRule> fixedUpdate;
+        GlobalRuleActuator<IFixedUpdateTimeRule> fixedUpdateTime;
         //GlobalRuleActuator<IGuiUpdateRule> onGUI;
 
 
@@ -39,10 +42,13 @@ namespace WorldTree
 
             Core.GetOrNewGlobalRuleActuator(out enable);
             Core.GetOrNewGlobalRuleActuator(out update);
+            Core.GetOrNewGlobalRuleActuator(out updateTime);
             Core.GetOrNewGlobalRuleActuator(out disable);
 
             Core.GetOrNewGlobalRuleActuator(out lateUpdate);
+            Core.GetOrNewGlobalRuleActuator(out lateUpdateTime);
             Core.GetOrNewGlobalRuleActuator(out fixedUpdate);
+            Core.GetOrNewGlobalRuleActuator(out fixedUpdateTime);
             //Core.TryGetGlobalRuleActuator(out onGUI);
 
 
@@ -58,7 +64,8 @@ namespace WorldTree
 
             //sw.Restart();
             enable?.Send();
-            update?.Send(Time.deltaTime);
+            update?.Send();
+            updateTime?.Send(Time.deltaTime);
             disable?.Send();
 
             //sw.Stop();
@@ -71,11 +78,13 @@ namespace WorldTree
 
         private void LateUpdate()
         {
-            lateUpdate?.Send(Time.deltaTime);
+            lateUpdate?.Send();
+            lateUpdateTime?.Send(Time.deltaTime);
         }
         private void FixedUpdate()
         {
-            fixedUpdate?.Send(Time.fixedDeltaTime);
+            fixedUpdate?.Send();
+            fixedUpdateTime?.Send(Time.fixedDeltaTime);
         }
 
         //private void OnGuiUpdate()
@@ -90,9 +99,12 @@ namespace WorldTree
 
             enable = null;
             update = null;
+            updateTime = null;
             disable = null;
             lateUpdate = null;
+            lateUpdateTime = null;
             fixedUpdate = null;
+            fixedUpdateTime = null;
             //onGUI = null;
         }
 

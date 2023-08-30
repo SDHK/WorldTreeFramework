@@ -69,8 +69,8 @@ namespace WorldTree
     /// </summary>
     public class InitialDomain : NodeListener, ComponentOf<INode>
         , AsRule<IAwakeRule>
-        , AsRule<IFixedUpdateRule>
-        , AsRule<ILateUpdateRule>
+        , AsRule<IFixedUpdateTimeRule>
+        , AsRule<ILateUpdateTimeRule>
     {
         public TreeNode node;
         public TreeValue<float> valueFloat;
@@ -343,7 +343,7 @@ namespace WorldTree
             //    }
             //}
 
-            protected override void OnEvent(InitialDomain self, float deltaTime)
+            protected override void OnEvent(InitialDomain self)
             {
                 if (Input.GetKeyDown(KeyCode.A))
                 {

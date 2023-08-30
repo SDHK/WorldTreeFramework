@@ -172,7 +172,7 @@ namespace WorldTree
         }
     }
 
-    class WindowManagerUpdateRule : UpdateRule<WindowManager>
+    class WindowManagerUpdateRule : UpdateTimeRule<WindowManager>
     {
         protected override void OnEvent(WindowManager self, float deltaTime)
         {

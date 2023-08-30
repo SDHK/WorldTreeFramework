@@ -28,7 +28,7 @@ namespace WorldTree
         }
     }
 
-    class TreeTweenManagerUpdateRule : UpdateRule<TreeTweenManager>
+    class TreeTweenManagerUpdateRule : UpdateTimeRule<TreeTweenManager>
     {
         protected override void OnEvent(TreeTweenManager self, float deltaTime)
         {

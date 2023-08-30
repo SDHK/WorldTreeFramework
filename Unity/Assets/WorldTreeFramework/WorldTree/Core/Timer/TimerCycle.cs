@@ -26,7 +26,7 @@ namespace WorldTree
 
     public static partial class TimerCycleRule
     {
-        class UpdateRule : UpdateRule<TimerCycle>
+        class UpdateRule : UpdateTimeRule<TimerCycle>
         {
             protected override void OnEvent(TimerCycle self, float deltaTime)
             {

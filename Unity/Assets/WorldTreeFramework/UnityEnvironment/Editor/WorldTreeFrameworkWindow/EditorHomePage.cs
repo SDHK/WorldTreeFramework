@@ -64,7 +64,7 @@ namespace EditorTool
         }
     }
 
-    class EditorHomePageUpdateSystem : UpdateRule<EditorHomePage>
+    class EditorHomePageUpdateSystem : UpdateTimeRule<EditorHomePage>
     {
         protected override void OnEvent(EditorHomePage self, float deltaTime)
         {

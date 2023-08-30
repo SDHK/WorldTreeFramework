@@ -5,8 +5,8 @@ using WorldTree;
 
 public class TreeNode : Node
     , ComponentOf<INode>
-    , AsRule<IFixedUpdateRule>
-    , AsRule<ILateUpdateRule>
+    , AsRule<IFixedUpdateTimeRule>
+    , AsRule<ILateUpdateTimeRule>
     , AsRule<IAwakeRule>
 {
 
@@ -128,7 +128,7 @@ public class TreeNode : Node
     //    }
     //}
 
-    class NodeUpdateSystem : UpdateRule<TreeNode>
+    class NodeUpdateSystem : UpdateTimeRule<TreeNode>
     {
         protected override void OnEvent(TreeNode self, float deltaTime)
         {

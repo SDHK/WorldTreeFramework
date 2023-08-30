@@ -47,7 +47,7 @@ namespace WorldTree
             }
         }
 
-        class UpdateRule : UpdateRule<CounterCall>
+        class UpdateRule : UpdateTimeRule<CounterCall>
         {
             protected override void OnEvent(CounterCall self, float deltaTime)
             {

@@ -47,7 +47,7 @@ namespace WorldTree
             }
         }
 
-        class UpdateRule : UpdateRule<TimerCall>
+        class UpdateRule : UpdateTimeRule<TimerCall>
         {
             protected override void OnEvent(TimerCall self, float deltaTime)
             {

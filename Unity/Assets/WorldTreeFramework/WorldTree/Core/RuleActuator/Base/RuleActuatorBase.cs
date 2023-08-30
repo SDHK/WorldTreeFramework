@@ -10,27 +10,8 @@
 
  */
 
-using System;
-
 namespace WorldTree
 {
-    /// <summary>
-    /// 法则执行器 接口基类
-    /// </summary>
-    public interface IRuleActuator : INode { }
-
-    /// <summary>
-    /// 法则执行器 逆变泛型接口
-    /// </summary>
-    /// <typeparam name="T">法则类型</typeparam>
-    /// <remarks>
-    /// <para>主要通过法则类型逆变提示可填写参数</para>
-    /// </remarks>
-    public interface IRuleActuator<in T> : IRuleActuator where T : IRule { }
-
-
-
-
     /// <summary>
     /// 法则执行器基类
     /// </summary>

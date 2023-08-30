@@ -41,7 +41,7 @@ namespace EditorTool
 
         public GlobalRuleActuator<IEnableRule> enable;
         public GlobalRuleActuator<IDisableRule> disable;
-        public GlobalRuleActuator<IUpdateRule> update;
+        public GlobalRuleActuator<IUpdateTimeRule> update;
         public GlobalRuleActuator<IGuiUpdateRule> onGUI;
 
         public EditorHomePage HomePage;
