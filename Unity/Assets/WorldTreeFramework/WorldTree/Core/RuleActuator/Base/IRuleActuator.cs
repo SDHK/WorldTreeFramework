@@ -9,11 +9,22 @@
 
 namespace WorldTree
 {
+
     /// <summary>
-    /// 法则执行器 接口基类
+    /// 法则执行器接口基类
     /// </summary>
-    public interface IRuleActuator : INode
+    public interface IRuleActuatorBase : INode { }
+
+    /// <summary>
+    /// 法则执行器遍历接口
+    /// </summary>
+    public interface IRuleActuatorTraversal : IRuleActuatorBase
     {
+        /// <summary>
+        /// 动态的遍历数量
+        /// </summary>
+        /// <remarks>当遍历时移除后，减少数量</remarks>
+        public int TraversalCount { get; }
 
         /// <summary>
         /// 刷新动态遍历数量
@@ -24,7 +35,15 @@ namespace WorldTree
         /// 尝试出列
         /// </summary>
         bool TryGetNext(out INode node, out RuleList ruleList);
+    }
 
+ 
+
+    /// <summary>
+    /// 法则执行器添加接口
+    /// </summary>
+    public interface IRuleActuator : IRuleActuatorBase
+    {
         /// <summary>
         /// 尝试添加节点
         /// </summary>
@@ -67,7 +86,7 @@ namespace WorldTree
     /// <remarks>
     /// <para>主要通过法则类型逆变提示可填写参数</para>
     /// </remarks>
-    public interface IRuleActuator<in T> : IRuleActuator where T : IRule { }
+    public interface IRuleActuator<in T> : IRuleActuatorBase where T : IRule { }
 
 
 }

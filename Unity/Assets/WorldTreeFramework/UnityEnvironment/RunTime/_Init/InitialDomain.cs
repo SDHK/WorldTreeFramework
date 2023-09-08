@@ -306,139 +306,139 @@ namespace WorldTree
 
         class UpdateRule : UpdateRule<InitialDomain>
         {
-            //protected override void OnEvent(InitialDomain self, float deltaTime)
-            //{
-            //    if (Input.GetKeyDown(KeyCode.A))
-            //    {
-            //        self.valueFloat.Value += 1.5f;
-            //        World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
-            //    }
-            //    if (Input.GetKeyDown(KeyCode.S))
-            //    {
-            //        //self.valueInt.Value += 1;
-            //        World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value} :{self.valueString.Value}");
-
-            //    }
-            //    if (Input.GetKeyDown(KeyCode.Q))
-            //    {
-            //        self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-            //        //self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
-            //        self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
-            //    }
-
-            //    if (Input.GetKeyDown(KeyCode.W))
-            //    {
-            //        self.AddComponent(out TreeTaskToken treeTaskToken).Stop();
-            //    }
-
-            //    if (Input.GetKeyDown(KeyCode.E))
-            //    {
-            //        self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-            //    }
-
-            //    if (Input.GetKeyDown(KeyCode.R))
-            //    {
-            //        self.AddComponent(out TreeTaskToken treeTaskToken).Cancel();
-            //        //treeTaskToken.Dispose();
-            //    }
-            //}
-
             protected override void OnEvent(InitialDomain self)
             {
                 if (Input.GetKeyDown(KeyCode.A))
                 {
-                    for (int i = 0; i < 1; i++)
-                    {
-                        Test(self);
-                    }
-                    //self.perceptron.Train();
-                    //Test(self).Coroutine();
+                    self.valueFloat.Value += 1.5f;
+                    World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
                 }
                 if (Input.GetKeyDown(KeyCode.S))
                 {
-                    for (int i = 0; i < 10; i++)
-                    {
-                        Test(self);
-                    }
+                    //self.valueInt.Value += 1;
+                    World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value} :{self.valueString.Value}");
+
+                }
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+                    //self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
+                    self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
                 }
 
-                if (Input.GetKeyDown(KeyCode.D))
+                if (Input.GetKeyDown(KeyCode.W))
                 {
-                    for (int i = 0; i < 100; i++)
-                    {
-                        Test(self);
-                    }
-                }
-                if (Input.GetKeyDown(KeyCode.F))
-                {
-                    for (int i = 0; i < 1000; i++)
-                    {
-                        Test(self);
-                    }
+                    self.AddComponent(out TreeTaskToken treeTaskToken).Stop();
                 }
 
-                if (Input.GetKeyDown(KeyCode.Z))
+                if (Input.GetKeyDown(KeyCode.E))
                 {
-                    //self.perceptron.DY();
-                    self.multilayerPerceptronManager.SetInputs(1, 1, 1);
-
-                    World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
-
-                    //self.B.Value += 1;
-                    //World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
+                    self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
                 }
 
-                if (Input.GetKeyDown(KeyCode.X))
+                if (Input.GetKeyDown(KeyCode.R))
                 {
-                    self.multilayerPerceptronManager.SetInputs(1, 0, 1);
-                    World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
-                }
-
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    self.multilayerPerceptronManager.SetInputs(0, 1, 1);
-                    World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
-                }
-
-                if (Input.GetKeyDown(KeyCode.V))
-                {
-                    self.multilayerPerceptronManager.SetInputs(0, 0, 1);
-                    World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+                    self.AddComponent(out TreeTaskToken treeTaskToken).Cancel();
+                    //treeTaskToken.Dispose();
                 }
             }
 
-            public void Test(InitialDomain self)
-            {
+            //protected override void OnEvent(InitialDomain self)
+            //{
+            //    if (Input.GetKeyDown(KeyCode.A))
+            //    {
+            //        for (int i = 0; i < 1; i++)
+            //        {
+            //            Test(self);
+            //        }
+            //        //self.perceptron.Train();
+            //        //Test(self).Coroutine();
+            //    }
+            //    if (Input.GetKeyDown(KeyCode.S))
+            //    {
+            //        for (int i = 0; i < 10; i++)
+            //        {
+            //            Test(self);
+            //        }
+            //    }
 
-                self.multilayerPerceptronManager.SetInputs(0, 0, 0);
-                self.multilayerPerceptronManager.SetOutputs(0);
+            //    if (Input.GetKeyDown(KeyCode.D))
+            //    {
+            //        for (int i = 0; i < 100; i++)
+            //        {
+            //            Test(self);
+            //        }
+            //    }
+            //    if (Input.GetKeyDown(KeyCode.F))
+            //    {
+            //        for (int i = 0; i < 1000; i++)
+            //        {
+            //            Test(self);
+            //        }
+            //    }
 
-                self.multilayerPerceptronManager.SetInputs(0, 1, 0);
-                self.multilayerPerceptronManager.SetOutputs(1);
+            //    if (Input.GetKeyDown(KeyCode.Z))
+            //    {
+            //        //self.perceptron.DY();
+            //        self.multilayerPerceptronManager.SetInputs(1, 1, 1);
 
-                self.multilayerPerceptronManager.SetInputs(1, 0, 0);
-                self.multilayerPerceptronManager.SetOutputs(1);
+            //        World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
 
-                self.multilayerPerceptronManager.SetInputs(1, 1, 0);
-                self.multilayerPerceptronManager.SetOutputs(0);
+            //        //self.B.Value += 1;
+            //        //World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
+            //    }
+
+            //    if (Input.GetKeyDown(KeyCode.X))
+            //    {
+            //        self.multilayerPerceptronManager.SetInputs(1, 0, 1);
+            //        World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+            //    }
+
+            //    if (Input.GetKeyDown(KeyCode.C))
+            //    {
+            //        self.multilayerPerceptronManager.SetInputs(0, 1, 1);
+            //        World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+            //    }
+
+            //    if (Input.GetKeyDown(KeyCode.V))
+            //    {
+            //        self.multilayerPerceptronManager.SetInputs(0, 0, 1);
+            //        World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+            //    }
+            //}
+
+            //public void Test(InitialDomain self)
+            //{
+
+            //    self.multilayerPerceptronManager.SetInputs(0, 0, 0);
+            //    self.multilayerPerceptronManager.SetOutputs(0);
+
+            //    self.multilayerPerceptronManager.SetInputs(0, 1, 0);
+            //    self.multilayerPerceptronManager.SetOutputs(1);
+
+            //    self.multilayerPerceptronManager.SetInputs(1, 0, 0);
+            //    self.multilayerPerceptronManager.SetOutputs(1);
+
+            //    self.multilayerPerceptronManager.SetInputs(1, 1, 0);
+            //    self.multilayerPerceptronManager.SetOutputs(0);
 
 
-                self.multilayerPerceptronManager.SetInputs(0, 0, 1);
-                self.multilayerPerceptronManager.SetOutputs(0);
+            //    self.multilayerPerceptronManager.SetInputs(0, 0, 1);
+            //    self.multilayerPerceptronManager.SetOutputs(0);
 
-                self.multilayerPerceptronManager.SetInputs(0, 1, 1);
-                self.multilayerPerceptronManager.SetOutputs(1);
-
-
-                self.multilayerPerceptronManager.SetInputs(1, 0, 1);
-                self.multilayerPerceptronManager.SetOutputs(1);
+            //    self.multilayerPerceptronManager.SetInputs(0, 1, 1);
+            //    self.multilayerPerceptronManager.SetOutputs(1);
 
 
-                self.multilayerPerceptronManager.SetInputs(1, 1, 1);
-                self.multilayerPerceptronManager.SetOutputs(0);
+            //    self.multilayerPerceptronManager.SetInputs(1, 0, 1);
+            //    self.multilayerPerceptronManager.SetOutputs(1);
 
 
-            }
+            //    self.multilayerPerceptronManager.SetInputs(1, 1, 1);
+            //    self.multilayerPerceptronManager.SetOutputs(0);
+
+
+            //}
 
         }
     }

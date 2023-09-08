@@ -7,9 +7,9 @@
         {
             if (Self.IsActive)
             {
-                RuleActuatorBase self = (RuleActuatorBase)Self;
+                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -23,9 +23,9 @@
         {
             if (Self.IsActive)
             {
-                RuleActuatorBase self = (RuleActuatorBase)Self;
+                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -39,9 +39,9 @@
         {
             if (Self.IsActive)
             {
-                RuleActuatorBase self = (RuleActuatorBase)Self;
+                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -55,9 +55,9 @@
         {
             if (Self.IsActive)
             {
-                RuleActuatorBase self = (RuleActuatorBase)Self;
+                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -71,9 +71,9 @@
         {
             if (Self.IsActive)
             {
-                RuleActuatorBase self = (RuleActuatorBase)Self;
+                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -87,9 +87,9 @@
         {
             if (Self.IsActive)
             {
-                RuleActuatorBase self = (RuleActuatorBase)Self;
+                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {

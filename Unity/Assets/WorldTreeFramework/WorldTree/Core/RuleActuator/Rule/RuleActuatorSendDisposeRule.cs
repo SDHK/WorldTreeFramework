@@ -15,11 +15,11 @@ namespace WorldTree
         public static void SendDispose<R>(this IRuleActuator<R> Self)
             where R : ISendRuleBase
         {
-            RuleActuatorBase self = (RuleActuatorBase)Self;
+            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -33,11 +33,11 @@ namespace WorldTree
         public static void SendDispose<R, T1>(this IRuleActuator<R> Self, T1 arg1)
             where R : ISendRuleBase<T1>
         {
-            RuleActuatorBase self = (RuleActuatorBase)Self;
+            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -52,11 +52,11 @@ namespace WorldTree
         public static void SendDispose<R, T1, T2>(this IRuleActuator<R> Self, T1 arg1, T2 arg2)
             where R : ISendRuleBase<T1, T2>
         {
-            RuleActuatorBase self = (RuleActuatorBase)Self;
+            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -69,11 +69,11 @@ namespace WorldTree
         public static void SendDispose<R, T1, T2, T3>(this IRuleActuator<R> Self, T1 arg1, T2 arg2, T3 arg3)
             where R : ISendRuleBase<T1, T2, T3>
         {
-            RuleActuatorBase self = (RuleActuatorBase)Self;
+            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -86,11 +86,11 @@ namespace WorldTree
         public static void SendDispose<R, T1, T2, T3, T4>(this IRuleActuator<R> Self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             where R : ISendRuleBase<T1, T2, T3, T4>
         {
-            RuleActuatorBase self = (RuleActuatorBase)Self;
+            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {
@@ -103,11 +103,11 @@ namespace WorldTree
         public static void SendDispose<R, T1, T2, T3, T4, T5>(this IRuleActuator<R> Self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             where R : ISendRuleBase<T1, T2, T3, T4, T5>
         {
-            RuleActuatorBase self = (RuleActuatorBase)Self;
+            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
-                for (int i = 0; i < self.traversalCount; i++)
+                for (int i = 0; i < self.TraversalCount; i++)
                 {
                     if (self.TryGetNext(out INode node, out RuleList ruleList))
                     {

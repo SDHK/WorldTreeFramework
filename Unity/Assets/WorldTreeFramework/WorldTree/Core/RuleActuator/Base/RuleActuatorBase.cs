@@ -15,7 +15,7 @@ namespace WorldTree
     /// <summary>
     /// 法则执行器基类
     /// </summary>
-    public abstract class RuleActuatorBase : Node, ChildOf<INode>, IRuleActuator
+    public abstract class RuleActuatorBase : Node, IRuleActuator, IRuleActuatorTraversal
     {
         /// <summary>
         /// 单法则集合
@@ -42,11 +42,9 @@ namespace WorldTree
         /// </summary>
         public TreeDictionary<long, RuleList> ruleGroupDictionary;
 
-        /// <summary>
-        /// 动态的遍历数量
-        /// </summary>
-        /// <remarks>当遍历时移除后，减少数量</remarks>
-        public int traversalCount;
+
+        public int TraversalCount { get => traversalCount; }
+        private int traversalCount;
 
         public override string ToString()
         {
@@ -75,7 +73,7 @@ namespace WorldTree
                     //回收次数抵消
                     removeIdDictionary[id] = --count;
                     //遍历数抵消
-                    if (traversalCount != 0) traversalCount--;
+                    if (TraversalCount != 0) traversalCount--;
 
                     //次数为0时删除id
                     if (count == 0) removeIdDictionary.Remove(id);

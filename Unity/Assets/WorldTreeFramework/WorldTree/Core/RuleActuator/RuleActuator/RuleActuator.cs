@@ -14,8 +14,9 @@ namespace WorldTree
     /// <summary>
     /// 泛型法则执行器
     /// </summary>
-    public class RuleActuator<R> : RuleActuatorBase, IRuleActuator<R>
-         , AsRule<IAwakeRule>
+    public class RuleActuator<R> : RuleActuatorBase, ChildOf<INode>, IRuleActuator<R>
+
+        , AsRule<IAwakeRule>
         where R : IRule
 
     {

@@ -21,7 +21,8 @@ namespace WorldTree
             where N : class, B, INode
             where B : class, INode, AsRule<R>
         {
-            return self.Core.RuleManager.GetRuleList<R, B>();
+            self.Core.RuleManager.TryGetRuleList(TypeInfo<N>.HashCode64,out IRuleList<R> rulelist);
+            return rulelist;
         }
 
 

@@ -51,7 +51,7 @@ namespace WorldTree
         /// </summary>
         /// <remarks>
         /// <para>目标节点类型 法则类型 《监听类型,监听法则》</para> 
-        /// <para>这个是真正可以被使用的</para> 
+        /// <para>这个是真正被使用的</para> 
         /// </remarks>
         public UnitDictionary<long, Dictionary<long, RuleGroup>> TargetRuleListenerGroupDictionary = new();
 
@@ -439,7 +439,7 @@ namespace WorldTree
 
 
 
-        #region 监听目标法则组
+        #region 获取监听目标法则组
 
         /// <summary>
         /// 获取监听目标法则组
@@ -459,6 +459,15 @@ namespace WorldTree
         /// <summary>
         /// 获取监听目标法则组
         /// </summary>
+        public static bool TryGetTargetRuleGroup<LR>(this RuleManager self, long targetType, out RuleGroup ruleGroup)
+            where LR : IListenerRule
+        {
+               return self.TryGetTargetRuleGroup(TypeInfo<LR>.HashCode64, targetType, out ruleGroup);
+        }
+
+        /// <summary>
+        /// 获取监听目标法则组
+        /// </summary>
         public static bool TryGetTargetRuleGroup(this RuleManager self, long ruleType, long targetType, out RuleGroup ruleGroup)
         {
             if (self.TargetRuleListenerGroupDictionary.TryGetValue(targetType, out var ruleGroupDictionary))
@@ -468,6 +477,46 @@ namespace WorldTree
             ruleGroup = null;
             return false;
         }
+
+        /// <summary>
+        /// 强制获取占位目标法则组
+        /// </summary>
+        public static RuleGroup GetOrNewTargetRuleGroup<LR>(this RuleManager self, long targetType)
+            where LR : IListenerRule
+        {
+            return self.GetOrNewTargetRuleGroup(TypeInfo<LR>.HashCode64, targetType);
+        }
+
+        /// <summary>
+        /// 强制获取占位目标法则组
+        /// </summary>
+        public static RuleGroup GetOrNewTargetRuleGroup(this RuleManager self, long ruleType, long targetType)
+        {
+            if (self.TargetRuleListenerGroupDictionary.TryGetValue(targetType, out var ruleGroupDictionary))
+            {
+                if (ruleGroupDictionary.TryGetValue(ruleType, out var ruleGroup))
+                {
+                    return ruleGroup;
+                }
+                else
+                {
+                    ruleGroup = ruleGroupDictionary.GetValue(ruleType);
+                    ruleGroup.RuleType = ruleType;
+                    return ruleGroup;
+                }
+            }
+            else
+            {
+                ruleGroupDictionary = self.TargetRuleListenerGroupDictionary.GetValue(targetType);
+                RuleGroup ruleGroup = ruleGroupDictionary.GetValue(ruleType);
+                ruleGroup.RuleType = ruleType;
+                return ruleGroup;
+            }
+        }
+
+        #endregion
+
+        #region 获取监听目标法则列表
 
         /// <summary>
         /// 获取监听目标法则列表
@@ -489,9 +538,13 @@ namespace WorldTree
             ruleList = null;
             return false;
         }
+
         #endregion
 
-        #region  监听法则组
+
+
+
+        #region  获取监听法则组
 
         /// <summary>
         /// 获取监听法则组
@@ -536,23 +589,10 @@ namespace WorldTree
 
 
 
-        #region  法则组
-        /// <summary>
-        /// 获取法则组
-        /// </summary>
-        public static IRuleGroup<R> GetRuleGroup<R>(this RuleManager self) where R : IRule { return self.GetRuleGroup(TypeInfo<R>.HashCode64) as IRuleGroup<R>; }
+        #region  获取法则组
 
         /// <summary>
-        /// 获取法则组
-        /// </summary>
-        public static RuleGroup GetRuleGroup(this RuleManager self, long ruleType)
-        {
-            self.TryGetRuleGroup(ruleType, out RuleGroup ruleGroup);
-            return ruleGroup;
-        }
-
-        /// <summary>
-        /// 获取法则组
+        /// 获取逆变法则组
         /// </summary>
         public static bool TryGetRuleGroup<R>(this RuleManager self, out IRuleGroup<R> ruleGroup)
          where R : IRule
@@ -567,7 +607,7 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取法则组
+        /// 尝试获取法则组
         /// </summary>
         public static bool TryGetRuleGroup<R>(this RuleManager self, out RuleGroup ruleGroup)
          where R : IRule
@@ -576,12 +616,13 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取法则组
+        /// 尝试获取法则组
         /// </summary>
         public static bool TryGetRuleGroup(this RuleManager self, long ruleType, out RuleGroup ruleGroup)
         {
             return self.RuleGroupDictionary.TryGetValue(ruleType, out ruleGroup);
         }
+
 
         /// <summary>
         /// 强制获取占位法则组
@@ -606,27 +647,24 @@ namespace WorldTree
 
         #endregion
 
-        #region  法则列表
+        #region  获取法则列表
 
         /// <summary>
         /// 获取单类型法则列表
         /// </summary>
-        public static IRuleList<R> GetRuleList<R, N>(this RuleManager self) where R : IRule where N : class, INode => self.GetRuleList<R>(TypeInfo<N>.HashCode64);
-
-        /// <summary>
-        /// 获取单类型法则列表
-        /// </summary>
-        public static IRuleList<R> GetRuleList<R>(this RuleManager self, long nodeType)
+        public static bool TryGetRuleList<R>(this RuleManager self, long nodeType, out IRuleList<R> ruleList)
          where R : IRule
         {
-            if (self.RuleGroupDictionary.TryGetValue(TypeInfo<R>.HashCode64, out RuleGroup ruleGroup))
+            if (self.TryGetRuleList<R>(nodeType, out RuleList rules))
             {
-                if (ruleGroup.TryGetValue(nodeType, out RuleList ruleList))
-                {
-                    return ruleList as IRuleList<R>;
-                }
+                ruleList = rules as IRuleList<R>;
+                return ruleList != null;
             }
-            return null;
+            else
+            {
+                ruleList = null;
+                return false;
+            }
         }
 
         /// <summary>
@@ -654,9 +692,7 @@ namespace WorldTree
 
             if (self.RuleGroupDictionary.TryGetValue(TypeInfo<R>.HashCode64, out RuleGroup ruleGroup))
             {
-                ruleGroup.TryGetValue(nodeType, out RuleList rules);
-                ruleList = rules;
-                return ruleList != null;
+                return ruleGroup.TryGetValue(nodeType, out ruleList);
             }
             else
             {
@@ -666,22 +702,42 @@ namespace WorldTree
         }
 
         /// <summary>
-        /// 获取单类型法则列表
+        /// 强制获取占位法则列表
         /// </summary>
-        public static bool TryGetRuleList<R>(this RuleManager self, long nodeType, out IRuleList<R> ruleList)
+        public static RuleList GetOrNewRuleList<R>(this RuleManager self, long nodeType)
          where R : IRule
         {
-            if (self.TryGetRuleList<R>(nodeType, out RuleList rules))
+            return self.GetOrNewRuleList(nodeType, TypeInfo<R>.HashCode64);
+        }
+
+        /// <summary>
+        /// 强制获取占位法则列表
+        /// </summary>
+        public static RuleList GetOrNewRuleList(this RuleManager self, long nodeType, long ruleType)
+        {
+            if (self.RuleGroupDictionary.TryGetValue(ruleType, out RuleGroup ruleGroup))
             {
-                ruleList = rules as IRuleList<R>;
-                return ruleList != null;
+                if (ruleGroup.TryGetValue(nodeType, out RuleList ruleList))
+                {
+                    return ruleList;
+                }
+                else
+                {
+                    ruleList = ruleGroup.GetValue(nodeType);
+                    ruleList.RuleType = ruleType;
+                    return ruleList;
+                }
             }
             else
             {
-                ruleList = null;
-                return false;
+                ruleGroup = self.RuleGroupDictionary.GetValue(ruleType);
+                ruleGroup.RuleType = ruleType;
+                var ruleList = ruleGroup.GetValue(nodeType);
+                ruleList.RuleType = ruleType;
+                return ruleList;
             }
         }
+
         #endregion
 
 

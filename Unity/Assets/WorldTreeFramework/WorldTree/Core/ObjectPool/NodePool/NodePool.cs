@@ -126,10 +126,10 @@ namespace WorldTree
                 self.Core.RuleManager.SupportNodeRule(self.ObjectTypeCore);
 
                 //生命周期法则
-                self.newRule = self.Core.RuleManager.GetRuleList<INewRule>(self.ObjectTypeCore);
-                self.getRule = self.Core.RuleManager.GetRuleList<IGetRule>(self.ObjectTypeCore);
-                self.recycleRule = self.Core.RuleManager.GetRuleList<IRecycleRule>(self.ObjectTypeCore);
-                self.destroyRule = self.Core.RuleManager.GetRuleList<IDestroyRule>(self.ObjectTypeCore);
+                self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCore, out self.newRule);
+                self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCore, out self.getRule);
+                self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCore, out self.recycleRule);
+                self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCore, out self.destroyRule);
             }
         }
         class DestroyRule : DestroyRule<NodePool>
