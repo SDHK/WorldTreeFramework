@@ -8,8 +8,6 @@
 * 用于节点动态监听全局任意节点事件
 */
 
-using System;
-
 namespace WorldTree
 {
     public static class NodeListenerRule

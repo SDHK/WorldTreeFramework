@@ -439,8 +439,7 @@ namespace WorldTree
             //广播给全部监听器!!!
             if (node is not ICoreNode)
             {
-                node.GetStaticNodeListenerActuator<IListenerAddRule>()?.Send(node);
-                node.GetDynamicNodeListenerActuator<IListenerAddRule>()?.Send(node);
+                node.GetListenerActuator<IListenerAddRule>()?.Send(node);
             }
 
             if (node is INodeListener nodeListener && node is not ICoreNode)
@@ -475,18 +474,15 @@ namespace WorldTree
                 self.ReferencedPoolManager.RemoveStaticListener(nodeListener);
                 //检测移除动态监听
                 self.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
-
             }
 
             //这个节点的移除事件
             self.RemoveRuleGroup?.Send(node);
 
-
             //广播给全部监听器!!!
             if (node is not ICoreNode)
             {
-                node.GetStaticNodeListenerActuator<IListenerRemoveRule>()?.Send(node);
-                node.GetDynamicNodeListenerActuator<IListenerRemoveRule>()?.Send(node);
+                node.GetListenerActuator<IListenerRemoveRule>()?.Send(node);
             }
 
             self.ReferencedPoolManager.Remove(node);

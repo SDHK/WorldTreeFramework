@@ -22,10 +22,6 @@ namespace WorldTree
         public DynamicListenerRuleActuator dynamicListenerRuleActuator;
 
         public int TraversalCount => staticListenerRuleActuator?.TraversalCount ?? 0 + dynamicListenerRuleActuator?.TraversalCount ?? 0;
-        public override string ToString()
-        {
-            return $"ListenerRuleActuator Static:{staticListenerRuleActuator} Dynamic:{dynamicListenerRuleActuator}";
-        }
 
         public int RefreshTraversalCount()
         {

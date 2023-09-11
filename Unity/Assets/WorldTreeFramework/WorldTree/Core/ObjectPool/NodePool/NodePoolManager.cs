@@ -60,9 +60,7 @@ namespace WorldTree
     {
         protected override void OnEvent(NodePoolManager self)
         {
-            self.m_IgnoreTypeHashSet.Add(TypeInfo<ListenerRuleActuator>.HashCode64);
-            self.m_IgnoreTypeHashSet.Add(TypeInfo<DynamicNodeListenerGroup>.HashCode64);
-            self.m_IgnoreTypeHashSet.Add(TypeInfo<StaticNodeListenerGroup>.HashCode64);
+            
         }
     }
 }
