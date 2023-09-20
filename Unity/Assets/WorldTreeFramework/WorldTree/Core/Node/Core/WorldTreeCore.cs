@@ -37,13 +37,10 @@ namespace WorldTree
 
     //生命周期整理
 
-    /*
-        New
-        Get
-        Awake
-        Enable
-        Add
-    */
+    //执行器整理，改为用结构体指针
+
+    //时域与时间轮
+
     /// <summary>
     /// 世界树核心
     /// </summary>
@@ -112,13 +109,10 @@ namespace WorldTree
     }
 
 
-    public static class WorldTreeCoreRule
+    public static partial class WorldTreeCoreRule
     {
 
         #region 框架启动与销毁
-
-
-
 
         /// <summary>
         /// 框架启动
@@ -169,6 +163,9 @@ namespace WorldTree
             //树根节点
             self.AddComponent(self.Root = self.PoolGet<WorldTreeRoot>());
 
+            //游戏时间管理器
+            self.AddComponent(out self.GameTimeManager);
+
             //核心激活
             self.SetActive(true);
 
@@ -183,6 +180,7 @@ namespace WorldTree
             self.SetActive(false);
 
             self.RemoveComponent<WorldTreeRoot>();
+            self.RemoveComponent<GameTimeManager>();
             self.RemoveComponent<ArrayPoolManager>();
             self.RemoveComponent<NodePoolManager>();
             self.RemoveComponent<UnitPoolManager>();
@@ -220,210 +218,6 @@ namespace WorldTree
         public static void Update()
         {
         }
-
-        #region 对象获取与回收
-
-        #region Node
-
-        /// <summary>
-        /// 新建节点对象
-        /// </summary>
-        /// <remarks>不执行法则生命周期</remarks>
-        private static T NewNode<T>(this INode self, out T node) where T : class, INode
-        {
-            Type type = typeof(T);
-            node = Activator.CreateInstance(type, true) as T;
-            node.Type = TypeInfo<T>.HashCode64;
-            node.Core = self.Core;
-            node.Root = self.Root;
-            node.Id = self.Core.IdManager.GetId();
-            return node;
-        }
-
-        /// <summary>
-        /// 新建节点对象
-        /// </summary>
-        /// <remarks>不执行法则生命周期</remarks>
-        private static INode NewNode(this INode self, long type)
-        {
-            INode node = Activator.CreateInstance(type.HashCore64ToType(), true) as INode;
-            node.Type = type;
-            node.Core = self.Core;
-            node.Root = self.Root;
-            node.Id = self.Core.IdManager.GetId();
-            return node;
-        }
-
-        /// <summary>
-        /// 新建节点对象并调用生命周期
-        /// </summary>
-        /// <remarks>执行法则生命周期</remarks>
-        public static T NewNodeLifecycle<T>(this WorldTreeCore self, out T node) where T : class, INode
-        {
-            self.NewNode(out node);
-            self.RuleManager.SupportNodeRule(node.Type);
-            self.NewRuleGroup?.Send(node);
-            self.GetRuleGroup?.Send(node);
-            return node;
-        }
-
-        /// <summary>
-        /// 新建节点对象并调用生命周期
-        /// </summary>
-        /// <remarks>执行法则生命周期</remarks>
-        public static INode NewNodeLifecycle(this WorldTreeCore self, long type)
-        {
-            INode node = self.NewNode(type);
-            self.RuleManager.SupportNodeRule(node.Type);
-            self.NewRuleGroup?.Send(node);
-            self.GetRuleGroup?.Send(node);
-            return node;
-        }
-
-
-        /// <summary>
-        /// 从池中获取节点对象
-        /// </summary>
-        public static T GetNode<T>(this WorldTreeCore self) where T : class, INode
-        {
-
-            if (self.IsActive)
-            {
-                if (self.NodePoolManager.TryGet(TypeInfo<T>.HashCode64, out INode node))
-                {
-                    node.Id = self.IdManager.GetId();
-                    return node as T;
-                }
-            }
-            return self.NewNodeLifecycle<T>(out _);
-        }
-
-        /// <summary>
-        /// 从池中获取节点对象
-        /// </summary>
-        public static INode GetNode(this WorldTreeCore self, long type)
-        {
-            if (self.IsActive)
-            {
-                if (self.NodePoolManager.TryGet(type, out INode node))
-                {
-                    node.Id = self.IdManager.GetId();
-                    return node;
-                }
-            }
-            return self.NewNodeLifecycle(type);
-        }
-
-        /// <summary>
-        /// 回收节点
-        /// </summary>
-        public static void Recycle(this WorldTreeCore self, INode obj)
-        {
-            if (self.IsActive && obj.IsFromPool)
-            {
-                if (self.NodePoolManager.TryRecycle(obj)) return;
-            }
-            obj.IsRecycle = true;
-            self.RecycleRuleGroup?.Send(obj);
-            obj.IsDisposed = true;
-            self.DestroyRuleGroup?.Send(obj);
-        }
-
-
-        #endregion
-
-        #region Unit
-
-        /// <summary>
-        /// 从池中获取单位对象
-        /// </summary>
-        public static T GetUnit<T>(this WorldTreeCore self)
-        where T : class, IUnitPoolEventItem
-        {
-            if (self.IsActive)
-            {
-                if (self.UnitPoolManager.TryGet(TypeInfo<T>.HashCode64, out IUnitPoolEventItem unit))
-                {
-                    return unit as T;
-                }
-            }
-            T obj = Activator.CreateInstance(TypeInfo<T>.Type, true) as T;
-            obj.Type = TypeInfo<T>.HashCode64;
-            obj.OnNew();
-            obj.OnGet();
-            return obj;
-        }
-
-        /// <summary>
-        /// 回收单位
-        /// </summary>
-        public static void Recycle(this WorldTreeCore self, IUnitPoolEventItem obj)
-        {
-            if (self.IsActive && obj.IsFromPool)
-            {
-                if (self.UnitPoolManager.TryRecycle(obj)) return;
-            }
-            obj.IsRecycle = true;
-            obj.OnRecycle();
-            obj.IsDisposed = true;
-            obj.OnDispose();
-        }
-
-
-        #endregion
-
-        #region Array
-
-        /// <summary>
-        /// 获取数组对象
-        /// </summary>
-        public static T[] GetArray<T>(this WorldTreeCore self, out T[] outT, int Length)
-        {
-            Type type = typeof(T);
-            if (self.ArrayPoolManager != null)
-            {
-                outT = self.ArrayPoolManager.Get(type, Length) as T[];
-            }
-            else
-            {
-                outT = Array.CreateInstance(type, Length) as T[];
-            }
-            return outT;
-        }
-
-        /// <summary>
-        /// 获取数组对象
-        /// </summary>
-        public static T[] GetArray<T>(this WorldTreeCore self, int Length)
-        {
-            Type type = typeof(T);
-            if (self.ArrayPoolManager != null)
-            {
-                return self.ArrayPoolManager.Get(type, Length) as T[];
-            }
-            return Array.CreateInstance(type, Length) as T[];
-        }
-
-        /// <summary>
-        /// 回收数组
-        /// </summary>
-        public static void Recycle(this WorldTreeCore self, Array obj)
-        {
-            if (self.ArrayPoolManager != null)
-            {
-                self.ArrayPoolManager.Recycle(obj);
-            }
-            else
-            {
-                Array.Clear(obj, 0, obj.Length);
-            }
-        }
-
-
-        #endregion
-
-
-        #endregion
 
         #region 节点添加与移除
         /// <summary>

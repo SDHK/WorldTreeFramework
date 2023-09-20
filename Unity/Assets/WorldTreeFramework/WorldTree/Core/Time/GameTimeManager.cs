@@ -12,9 +12,13 @@ namespace WorldTree
     /// <summary>
     /// 游戏时间管理器
     /// </summary>
-    public class GameTimeManager : Node
+    public class GameTimeManager : Node, ComponentOf<WorldTreeCore>
         , AsRule<IAwakeRule>
     {
+
+        /// <summary>
+        /// 帧时间
+        /// </summary>
         public float FrameTime;
 
     }

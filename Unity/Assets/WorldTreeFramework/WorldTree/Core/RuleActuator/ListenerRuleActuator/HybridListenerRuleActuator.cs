@@ -18,7 +18,13 @@ namespace WorldTree
         , ComponentOf<HybridListenerRuleActuatorGroup>
         , AsRule<IAwakeRule>
     {
+        /// <summary>
+        /// 静态监听器法则执行器
+        /// </summary>
         public StaticListenerRuleActuator staticListenerRuleActuator;
+        /// <summary>
+        /// 动态监听器法则执行器
+        /// </summary>
         public DynamicListenerRuleActuator dynamicListenerRuleActuator;
 
         public int TraversalCount => staticListenerRuleActuator?.TraversalCount ?? 0 + dynamicListenerRuleActuator?.TraversalCount ?? 0;

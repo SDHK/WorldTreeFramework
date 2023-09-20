@@ -9,6 +9,9 @@
 
 namespace WorldTree
 {
+    /// <summary>
+    /// 动态监听器法则执行器
+    /// </summary>
     public class DynamicListenerRuleActuator : RuleActuatorBase, ICoreNode, IRuleActuator<IRule>
         , ComponentOf<HybridListenerRuleActuator>
         , AsRule<IAwakeRule<RuleGroup>>

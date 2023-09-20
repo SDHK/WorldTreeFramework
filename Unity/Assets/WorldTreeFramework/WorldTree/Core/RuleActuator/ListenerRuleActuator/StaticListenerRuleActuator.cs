@@ -11,6 +11,9 @@ using System;
 
 namespace WorldTree
 {
+    /// <summary>
+    /// 静态监听器法则执行器
+    /// </summary>
     public class StaticListenerRuleActuator : RuleActuatorBase, ICoreNode, IRuleActuator<IRule>
         , ComponentOf<HybridListenerRuleActuator>
         , AsRule<IAwakeRule<RuleGroup>>

@@ -15,7 +15,8 @@ namespace WorldTree
     /// <summary>
     /// 真实时间管理器
     /// </summary>
-    public class RealTimeManager : Node
+    public class RealTimeManager : Node,ComponentOf<WorldTreeCore>
+        , AsRule<IAwakeRule>
     {
         /// <summary>
         /// 一毫秒，10000Tick
@@ -106,7 +107,7 @@ namespace WorldTree
         /// </summary>  
         public static DateTime ToDateTime(this RealTimeManager self, long timeStamp)
         {
-            return self.timeZoneDateTime1970.AddTicks(timeStamp * RealTimeManager.MilliTick);
+            return self.dateTime1970.AddTicks(timeStamp * RealTimeManager.MilliTick);
         }
 
         #region 计算时间跨度
@@ -257,6 +258,10 @@ namespace WorldTree
         /// 天转时
         /// </summary>
         public static float ConvertDayToHour(int day) => day / 24;
+
+
+
+
 
         #endregion
 
