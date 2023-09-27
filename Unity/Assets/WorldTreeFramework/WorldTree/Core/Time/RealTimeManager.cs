@@ -5,6 +5,8 @@
 * 日期： 2023/7/31 11:30
 
 * 描述： 真实时间管理器，将根据机器时间计时
+* 
+* 以本地时间为主，时区时间为辅
 
 */
 
@@ -89,21 +91,21 @@ namespace WorldTree
         {
             self.dateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             self.timeZoneDateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            self.FrameTime = self.ClientNow();
+            self.FrameTime = self.NowTime();
         }
 
 
         /// <summary>
         /// 获取毫秒，从1970年到当前的总毫秒数
         /// </summary>
-        public static long ClientNow(this RealTimeManager self)
+        public static long NowTime(this RealTimeManager self)
         {
             //每一万Tick就是一毫秒
             return (DateTime.UtcNow.Ticks - self.dateTime1970.Ticks) / RealTimeManager.MilliTick;
         }
 
         /// <summary> 
-        /// 毫秒转为时间 
+        /// 时间戳转为时间 
         /// </summary>  
         public static DateTime ToDateTime(this RealTimeManager self, long timeStamp)
         {
