@@ -124,7 +124,7 @@ namespace WorldTree
         /// <summary>
         /// 子节点
         /// </summary>
-        public UnitSortedDictionary<long, INode> m_Children { get; set; }
+        public UnitDictionary<long, INode> m_Children { get; set; }
 
         #endregion
 
@@ -138,7 +138,7 @@ namespace WorldTree
         /// <summary>
         /// 组件节点
         /// </summary>
-        public UnitSortedDictionary<long, INode> m_Components { get; set; }
+        public UnitDictionary<long, INode> m_Components { get; set; }
         #endregion
 
 

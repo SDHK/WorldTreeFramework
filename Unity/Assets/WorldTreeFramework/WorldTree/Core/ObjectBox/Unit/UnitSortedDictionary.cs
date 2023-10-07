@@ -14,10 +14,10 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 单位排序字典：可由对象池管理回收
-    /// </summary>
-    public class UnitSortedDictionary<TKey, TValue> : SortedDictionary<TKey, TValue>, IUnitPoolEventItem
+	/// <summary>
+	/// 单位排序字典：可由对象池管理回收: SortedDictionary在Add的时候会产生56B的GC
+	/// </summary>
+	public class UnitSortedDictionary<TKey, TValue> : SortedDictionary<TKey, TValue>, IUnitPoolEventItem
     {
         public WorldTreeCore Core { get; set; }
         public long Type { get; set; }

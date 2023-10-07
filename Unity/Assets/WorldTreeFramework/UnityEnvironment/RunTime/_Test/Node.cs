@@ -11,7 +11,14 @@ public class TreeNode : Node
 {
 
     public static bool bit = true;
-    public async TreeTask Test()
+
+    public async TreeTask Test1()
+    { 
+        await this.TreeTaskCompleted();
+	}
+
+
+	public async TreeTask Test()
     {
         await this.AsyncDelay(3);
 

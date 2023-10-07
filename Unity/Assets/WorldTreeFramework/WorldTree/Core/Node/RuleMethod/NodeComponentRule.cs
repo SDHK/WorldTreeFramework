@@ -18,9 +18,9 @@ namespace WorldTree
         /// <summary>
         /// 组件节点
         /// </summary>
-        public static UnitSortedDictionary<long, INode> ComponentsDictionary(this INode self)
+        public static UnitDictionary<long, INode> ComponentsDictionary(this INode self)
         {
-            self.m_Components ??= self.PoolGet<UnitSortedDictionary<long, INode>>();
+            self.m_Components ??= self.PoolGet<UnitDictionary<long, INode>>();
             return self.m_Components;
         }
 

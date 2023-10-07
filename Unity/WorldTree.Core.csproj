@@ -66,6 +66,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Base\TreeTaskBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRule\NodeSendRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeListenerRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\HybridListenerRuleActuator.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ReferencedPool\ReferencedPool.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitHashSet.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLineRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\NodePool.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\TreeTaskQueueLock\TreeTaskQueueCompleterRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\BeforeRemoveRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\IntTweenUpdateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Extension\TreeValueRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Extension\DictionaryExtension.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\TimerCycle.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\ListenerRuleBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Rule\TreeTweenRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\IRuleActuator.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\NodeBase\INodeListener.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\RuleList.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
@@ -98,7 +101,8 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListCallExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\RuleBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeDictionary.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Time\TimeManager.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Time\RealTimeManager.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\StaticListenerRuleActuator.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskCompleted.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\SendRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\NodeBase\NodeListener.cs" />
@@ -127,6 +131,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\StringValueChangeRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\FloatTweenUpdateRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldTreeCoreGetUnit.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\FloatValueChangeRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Interface\IUnitPoolItem.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Extension\TreeTaskExtension.cs" />
@@ -153,7 +158,9 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRuleGeneral\NodeCallRuleGeneral.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleManager\RuleManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\RuleActuatorBase.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\HybridListenerRuleActuatorGroup.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListCallAsyncExtension.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldTreeCoreGetArray.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\GlobalRuleActuator\GlobalRuleActuatorManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Serialized\Serialized.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\SendRuleAsync.cs" />
@@ -162,7 +169,6 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\GetRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTask.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValueDelegate.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\ListenerRuleActuator.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\TimeDomain.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRuleGeneral\NodeSendRuleGeneral.cs" />
@@ -172,7 +178,6 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\CallRuleBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\GenericPool\GenericPool.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ReferencedPool\NodeListener\DynamicNodeListenerGroup.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListSendAsyncExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\QuaternionFloat.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\Extension\TimerAsyncExtension.cs" />
@@ -185,6 +190,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRuleGeneral\NodeSendAsyncRuleGeneral.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\SendRuleAsyncBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathTriangle.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldTreeCoreGetNode.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\Rule\RuleGroupCallExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\RecycleRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\Rule\RuleGroupCallAsyncExtension.cs" />
@@ -204,9 +210,8 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Base\TreeTweenBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Vector4Float.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleMethod\TreeValueBaseRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ReferencedPool\NodeListener\StaticNodeListenerGroup.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\Lifecycle\StringLifecycleRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\WorldTreeCore.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldTreeCore.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathInt.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\PoolBase\PoolBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Type\TypeInfo.cs" />
@@ -225,12 +230,14 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Type\DefaultType.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\CallRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\GlobalRuleActuator\GlobalRuleActuatorBase.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\DynamicListenerRuleActuator.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Base\Unit.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Matrix4x4Float.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\NodeAddRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathFloat.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeTraversalRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\RuleGroup.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Time\GameTimeManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />

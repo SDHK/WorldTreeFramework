@@ -39,11 +39,12 @@ namespace WorldTree
         public void Coroutine()
         {
             InnerCoroutine().Coroutine();
-        }
-        /// <summary>
-        /// 协程启动
-        /// </summary>
-        public void Coroutine(TreeTaskToken treeTaskToken)
+			this.TrySyncTaskSetCompleted();
+		}
+		/// <summary>
+		/// 协程启动
+		/// </summary>
+		public void Coroutine(TreeTaskToken treeTaskToken)
         {
             this.SetToken(treeTaskToken);
             InnerCoroutine().Coroutine();

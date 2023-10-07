@@ -18,9 +18,9 @@ namespace WorldTree
         /// <summary>
         /// 子节点
         /// </summary>
-        public static UnitSortedDictionary<long, INode> ChildrenDictionary(this INode self)
+        public static UnitDictionary<long, INode> ChildrenDictionary(this INode self)
         {
-            self.m_Children ??= self.PoolGet<UnitSortedDictionary<long, INode>>();
+            self.m_Children ??= self.PoolGet<UnitDictionary<long, INode>>();
             return self.m_Children;
         }
 

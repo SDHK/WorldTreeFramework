@@ -17,7 +17,7 @@ namespace WorldTree
     /// <summary>
     /// 真实时间管理器
     /// </summary>
-    public class RealTimeManager : Node,ComponentOf<WorldTreeCore>
+    public class RealTimeManager : Node, ComponentOf<WorldTreeCore>
         , AsRule<IAwakeRule>
     {
         /// <summary>
@@ -100,8 +100,7 @@ namespace WorldTree
         /// </summary>
         public static long NowTime(this RealTimeManager self)
         {
-            //每一万Tick就是一毫秒
-            return (DateTime.UtcNow.Ticks - self.dateTime1970.Ticks) / RealTimeManager.MilliTick;
+            return (long)(DateTime.UtcNow - self.dateTime1970).TotalMilliseconds;
         }
 
         /// <summary> 
@@ -119,7 +118,7 @@ namespace WorldTree
         /// </summary>
         public static TimeSpan GetTimeSpan(long startTimer, long endTimer)
         {
-            return new TimeSpan(endTimer).Subtract(new TimeSpan(startTimer)).Duration();
+            return new TimeSpan(endTimer).Subtract(new TimeSpan(startTimer));
         }
 
         /// <summary>
@@ -127,7 +126,7 @@ namespace WorldTree
         /// </summary>
         public static int GetTimeSpanSeconds(long startTimer, long endTimer)
         {
-            return (int)GetTimeSpan(startTimer, endTimer).TotalSeconds;
+            return (int)(TimeSpan.FromTicks(endTimer) - TimeSpan.FromTicks(startTimer)).TotalSeconds;
         }
 
         /// <summary>
@@ -135,7 +134,7 @@ namespace WorldTree
         /// </summary>
         public static int GetTimeSpanSeconds(DateTime startTimer, DateTime endTimer)
         {
-            return (int)GetTimeSpan(startTimer.Ticks, endTimer.Ticks).TotalSeconds;
+            return (int)(endTimer - startTimer).TotalSeconds;
         }
 
         /// <summary>
@@ -143,14 +142,14 @@ namespace WorldTree
         /// </summary>
         public static int GetTimeSpanMinutes(long startTimer, long endTimer)
         {
-            return (int)GetTimeSpan(startTimer, endTimer).TotalMinutes;
+            return (int)(TimeSpan.FromTicks(endTimer) - TimeSpan.FromTicks(startTimer)).TotalMinutes;
         }
         /// <summary>
         /// 获取两个时间跨度多少分钟
         /// </summary>
         public static int GetTimeSpanMinutes(DateTime startTimer, DateTime endTimer)
         {
-            return (int)GetTimeSpan(startTimer.Ticks, endTimer.Ticks).TotalMinutes;
+            return (int)(endTimer - startTimer).TotalMinutes;
         }
 
         /// <summary>
@@ -158,14 +157,14 @@ namespace WorldTree
         /// </summary>
         public static int GetTimeSpanHours(long startTimer, long endTimer)
         {
-            return (int)GetTimeSpan(startTimer, endTimer).TotalHours;
+            return (int)(TimeSpan.FromTicks(endTimer) - TimeSpan.FromTicks(startTimer)).TotalHours;
         }
         /// <summary>
         /// 获取两个时间跨度多少小时
         /// </summary>
         public static int GetTimeSpanHours(DateTime startTimer, DateTime endTimer)
         {
-            return (int)GetTimeSpan(startTimer.Ticks, endTimer.Ticks).TotalHours;
+            return (int)(endTimer - startTimer).TotalHours;
         }
 
         /// <summary>
@@ -173,7 +172,7 @@ namespace WorldTree
         /// </summary>
         public static int GetTimeSpanDays(long startTimer, long endTimer)
         {
-            return (int)GetTimeSpan(startTimer, endTimer).TotalDays;
+            return (int)(TimeSpan.FromTicks(endTimer) - TimeSpan.FromTicks(startTimer)).TotalDays;
         }
 
         /// <summary>
@@ -181,7 +180,7 @@ namespace WorldTree
         /// </summary>
         public static int GetTimeSpanDays(DateTime startTimer, DateTime endTimer)
         {
-            return (int)GetTimeSpan(startTimer.Ticks, endTimer.Ticks).TotalDays;
+            return (int)(endTimer - startTimer).TotalDays;
         }
 
         #endregion
