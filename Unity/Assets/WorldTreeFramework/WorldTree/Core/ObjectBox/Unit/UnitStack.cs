@@ -14,7 +14,10 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    public class UnitStack<T> : Stack<T>, IUnitPoolEventItem
+	/// <summary>
+	/// 单位栈:这个栈可由对象池管理生成和回收
+	/// </summary>
+	public class UnitStack<T> : Stack<T>, IUnitPoolEventItem
     {
         public WorldTreeCore Core { get; set; }
         public long Type { get; set; }

@@ -20,7 +20,9 @@ namespace WorldTree.Internal
     /// </summary>
     public struct TreeTaskCompletedMethodBuilder
     {
-        private TreeTaskCompleted task;
+		private ITreeTaskStateMachine treeTaskStateMachine;
+
+		private TreeTaskCompleted task;
 
         // 静态构建方法
         [DebuggerHidden]
@@ -48,7 +50,13 @@ namespace WorldTree.Internal
         public void SetResult()
         {
             task.SetCompleted();
-        }
+			if (this.treeTaskStateMachine != null)
+			{
+				this.treeTaskStateMachine.Dispose();
+				this.treeTaskStateMachine = null;
+			}
+
+		}
 
         // 5. 等待完成
         [DebuggerHidden]
@@ -61,7 +69,12 @@ namespace WorldTree.Internal
         [SecuritySafeCritical]
         public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
         {
-            if (task == null)
+			if (treeTaskStateMachine == null)
+			{
+				this.treeTaskStateMachine = awaiter.PoolGet(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
+				taskStateMachine.SetStateMachine(ref stateMachine);
+			}
+			if (task == null)
             {
                 task = awaiter.Parent.AddChild(out task);
 
@@ -74,7 +87,7 @@ namespace WorldTree.Internal
                     task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
                     task.m_TreeTaskToken.tokenEvent.Add(task, DefaultType<ITreeTaskTokenEventRule>.Default);
                 }
-                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+                awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
             }
             else
             {
@@ -82,7 +95,7 @@ namespace WorldTree.Internal
                 {
                     awaiter.SetToken(task.m_TreeTaskToken);
                 }
-                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+                awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
             }
 
         }

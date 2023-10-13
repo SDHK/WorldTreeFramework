@@ -88,7 +88,7 @@ namespace WorldTree
         /// </summary>
         public static void AddChild<N, T>(this N self, T node)
             where N : class, INode
-            where T : class, INode, ChildOf<N>
+			where T : class, INode, ChildOf<N>
         {
             if (node != null)
             {
@@ -98,14 +98,14 @@ namespace WorldTree
                     {
                         node.TraversalLevelDisposeDomain();
                         node.RemoveInParent();
-                        if (node.Branch != node) node.Branch = self.Branch;
+                        if (node.Domain != node) node.Domain = self.Domain;
                         node.Parent = self;
                         node.isComponent = false;
                         node.RefreshActive();
                     }
                     else //野节点添加
                     {
-                        if (node.Branch != node) node.Branch = self.Branch;
+                        if (node.Domain != node) node.Domain = self.Domain;
                         node.Parent = self;
                         node.isComponent = false;
                         node.TrySendRule<IAwakeRule>();
@@ -127,7 +127,7 @@ namespace WorldTree
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
             {
                 node.Parent = self;
-                node.Branch = self.Branch;
+                node.Domain = self.Domain;
                 node.TrySendRule<IAwakeRule>();
                 self.Core.AddNode(node);
             }
@@ -144,7 +144,7 @@ namespace WorldTree
             node = self.PoolGet(type);
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
             {
-                node.Branch = self.Branch;
+                node.Domain = self.Domain;
                 node.Parent = self;
                 return true;
             }
@@ -162,7 +162,7 @@ namespace WorldTree
             INode node = self.PoolGet(TypeInfo<T>.HashCode64);
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
             {
-                node.Branch = self.Branch;
+                node.Domain = self.Domain;
                 node.Parent = self;
                 Node = node as T;
                 return true;
@@ -183,7 +183,7 @@ namespace WorldTree
             INode node = self.Core.NewNodeLifecycle(TypeInfo<T>.HashCode64);
             if (self.ChildrenDictionary().TryAdd(node.Id, node))
             {
-                node.Branch = self.Branch;
+                node.Domain = self.Domain;
                 node.Parent = self;
                 Node = node as T;
                 return true;
@@ -203,7 +203,7 @@ namespace WorldTree
 
         public static T AddChild<N, T>(this N self, out T node)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule>
         {
             if (self.TryAddChild(out node))
             {
@@ -215,7 +215,7 @@ namespace WorldTree
 
         public static T AddChild<N, T, T1>(this N self, out T node, T1 arg1)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1>>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1>>
         {
             if (self.TryAddChild(out node))
             {
@@ -226,7 +226,7 @@ namespace WorldTree
         }
         public static T AddChild<N, T, T1, T2>(this N self, out T node, T1 arg1, T2 arg2)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2>>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2>>
         {
             if (self.TryAddChild(out node))
             {
@@ -238,7 +238,7 @@ namespace WorldTree
 
         public static T AddChild<N, T, T1, T2, T3>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3>>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3>>
         {
             if (self.TryAddChild(out node))
             {
@@ -250,7 +250,7 @@ namespace WorldTree
 
         public static T AddChild<N, T, T1, T2, T3, T4>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4>>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4>>
         {
             if (self.TryAddChild(out node))
             {
@@ -261,7 +261,7 @@ namespace WorldTree
         }
         public static T AddChild<N, T, T1, T2, T3, T4, T5>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
         {
             if (self.TryAddChild(out node))
             {
@@ -277,7 +277,7 @@ namespace WorldTree
         #region 非池
         public static T AddNewChild<N, T>(this N self, out T node)
          where N : class, INode
-         where T : class, INode, ChildOf<N>, AsRule<IAwakeRule>
+		 where T : class, INode, ChildOf<N>, AsRule<IAwakeRule>
         {
             if (self.TryAddNewChild(out node))
             {
@@ -289,7 +289,7 @@ namespace WorldTree
 
         public static T AddNewChild<N, T, T1>(this N self, out T node, T1 arg1)
          where N : class, INode
-         where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1>>
+		 where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1>>
         {
             if (self.TryAddNewChild(out node))
             {
@@ -300,7 +300,7 @@ namespace WorldTree
         }
         public static T AddNewChild<N, T, T1, T2>(this N self, out T node, T1 arg1, T2 arg2)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2>>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2>>
         {
             if (self.TryAddNewChild(out node))
             {
@@ -312,7 +312,7 @@ namespace WorldTree
 
         public static T AddNewChild<N, T, T1, T2, T3>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3>>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3>>
         {
             if (self.TryAddNewChild(out node))
             {
@@ -324,7 +324,7 @@ namespace WorldTree
 
         public static T AddNewChild<N, T, T1, T2, T3, T4>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4>>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4>>
         {
             if (self.TryAddNewChild(out node))
             {
@@ -335,7 +335,7 @@ namespace WorldTree
         }
         public static T AddNewChild<N, T, T1, T2, T3, T4, T5>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             where N : class, INode
-            where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
+			where T : class, INode, ChildOf<N>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
         {
             if (self.TryAddNewChild(out node))
             {

@@ -320,10 +320,12 @@ namespace WorldTree
 				if (Input.GetKeyDown(KeyCode.Q))
 				{
 					self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+					//self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
+
 					//self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
 					for (int i = 0; i < 1000; i++)
 					{
-						self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
+						self.AddComponent(out TreeNode _).Test1().Coroutine();
 					}
 				}
 

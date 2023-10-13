@@ -13,10 +13,10 @@ using System.Collections.Concurrent;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 类型信息表，用于不明确时类型的信息查表
-    /// </summary>
-    public static class TypeTable
+	/// <summary>
+	/// 类型信息表，用于不明确时，类型的信息查表
+	/// </summary>
+	public static class TypeTable
     {
         private static readonly ConcurrentDictionary<Type, long> TypeHash64 = new();
         private static readonly ConcurrentDictionary<long, Type> Hash64Type = new();

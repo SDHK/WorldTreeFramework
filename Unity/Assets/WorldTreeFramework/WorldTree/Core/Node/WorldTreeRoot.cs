@@ -18,7 +18,7 @@ namespace WorldTree
     {
         public WorldTreeRoot()
         {
-            Branch = this;
+            Domain = this;
         }
     }
 }

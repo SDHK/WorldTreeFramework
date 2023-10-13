@@ -15,188 +15,210 @@ using System.Security;
 
 namespace WorldTree.Internal
 {
-    /// <summary>
-    /// 异步任务构建器
-    /// </summary>
-    public struct TreeTaskMethodBuilder
-    {
-        private TreeTask task;
-        // 1. Static Create method.
+	/// <summary>
+	/// 异步任务构建器
+	/// </summary>
+	public struct TreeTaskMethodBuilder
+	{
+		private ITreeTaskStateMachine treeTaskStateMachine;
+		private TreeTask task;
+		// 1. Static Create method.
 
-        [DebuggerHidden]
-        public static TreeTaskMethodBuilder Create()
-        {
+		[DebuggerHidden]
+		public static TreeTaskMethodBuilder Create()
+		{
 
-            TreeTaskMethodBuilder builder = new TreeTaskMethodBuilder();
-            return builder;
-        }
+			TreeTaskMethodBuilder builder = new TreeTaskMethodBuilder();
+			return builder;
+		}
 
-        // 2. TaskLike Task property.
-        [DebuggerHidden]
-        public TreeTask Task
-        {
-            get
-            {
-                return task;
-            }
-        }
+		// 2. TaskLike Task property.
+		[DebuggerHidden]
+		public TreeTask Task
+		{
+			get
+			{
+				return task;
+			}
+		}
 
-        // 3. SetException
-        [DebuggerHidden]
-        public void SetException(Exception exception)
-        {
-            task.SetException(exception);
-        }
+		// 3. SetException
+		[DebuggerHidden]
+		public void SetException(Exception exception)
+		{
+			task.SetException(exception);
+		}
 
-        // 4. SetResult
-        public void SetResult()
-        {
-            task.SetResult();
-        }
+		// 4. SetResult
+		public void SetResult()
+		{
+			task.SetResult();
+			if (this.treeTaskStateMachine != null)
+			{
+				this.treeTaskStateMachine.Dispose();
+				this.treeTaskStateMachine = null;
+			}
+		}
 
-        // 5. AwaitOnCompleted
-        [DebuggerHidden]
+		// 5. AwaitOnCompleted
+		[DebuggerHidden]
 
-        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
-        {
+		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
+		{
 
-        }
+		}
 
-        // 6. AwaitUnsafeOnCompleted
-        [SecuritySafeCritical]
-        public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
-        {
-            if (task == null)
-            {
-                awaiter.Parent.AddChild(out task);
+		// 6. AwaitUnsafeOnCompleted
+		[SecuritySafeCritical]
+		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
+		{
+			if (treeTaskStateMachine == null)
+			{
+				this.treeTaskStateMachine = awaiter.PoolGet(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
+				taskStateMachine.SetStateMachine(ref stateMachine);
+			}
+			if (task == null)
+			{
 
-                if (awaiter.m_TreeTaskToken is null)
-                {
-                    task.m_RelevanceTask = awaiter;
-                }
-                else
-                {
-                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
-                    task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
-                }
-                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
-            }
-            else
-            {
-                if (task.m_TreeTaskToken != null)
-                {
-                    awaiter.SetToken(task.m_TreeTaskToken);
-                }
-                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
-                awaiter.TrySyncTaskSetCompleted();
-            }
-        }
+				awaiter.Parent.AddChild(out task);
 
-        // 7. Start
-        [DebuggerHidden]
-        public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
-        {
-            stateMachine.MoveNext();
-        }
+				if (awaiter.m_TreeTaskToken is null)
+				{
+					task.m_RelevanceTask = awaiter;
+				}
+				else
+				{
+					task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
+					task.m_TreeTaskToken.tokenEvent.Add(task, default(ITreeTaskTokenEventRule));
+				}
+				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
+			}
+			else
+			{
+				if (task.m_TreeTaskToken != null)
+				{
+					awaiter.SetToken(task.m_TreeTaskToken);
+				}
+				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
+				awaiter.TrySyncTaskSetCompleted();
+			}
+			
+		}
 
-        // 8. SetStateMachine
-        [DebuggerHidden]
-        public void SetStateMachine(IAsyncStateMachine stateMachine)
-        {
-        }
-    }
+		// 7. Start
+		[DebuggerHidden]
+		public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
+		{
+			stateMachine.MoveNext();
+		}
+
+		// 8. SetStateMachine
+		[DebuggerHidden]
+		public void SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+		}
+	}
 
 
 
-    public struct TreeTaskMethodBuilder<T>
-    {
-        private TreeTask<T> task;
-        // 1. Static Create method.
+	public struct TreeTaskMethodBuilder<T>
+	{
+		private ITreeTaskStateMachine treeTaskStateMachine;
 
-        [DebuggerHidden]
-        public static TreeTaskMethodBuilder<T> Create()
-        {
-            TreeTaskMethodBuilder<T> builder = new TreeTaskMethodBuilder<T>();
-            return builder;
-        }
+		private TreeTask<T> task;
+		// 1. Static Create method.
 
-        // 2. TaskLike Task property.
-        [DebuggerHidden]
-        public TreeTask<T> Task
-        {
-            get
-            {
-                return task;
-            }
-        }
+		[DebuggerHidden]
+		public static TreeTaskMethodBuilder<T> Create()
+		{
+			TreeTaskMethodBuilder<T> builder = new TreeTaskMethodBuilder<T>();
+			return builder;
+		}
 
-        // 3. SetException
-        [DebuggerHidden]
-        public void SetException(Exception exception)
-        {
-            task.SetException(exception);
-        }
+		// 2. TaskLike Task property.
+		[DebuggerHidden]
+		public TreeTask<T> Task
+		{
+			get
+			{
+				return task;
+			}
+		}
 
-        // 4. SetResult
-        [DebuggerHidden]
+		// 3. SetException
+		[DebuggerHidden]
+		public void SetException(Exception exception)
+		{
+			task.SetException(exception);
+		}
 
-        public void SetResult(T ret)
-        {
+		// 4. SetResult
+		[DebuggerHidden]
 
-            task.SetResult(ret);
-        }
+		public void SetResult(T ret)
+		{
 
-        // 5. AwaitOnCompleted
-        [DebuggerHidden]
+			task.SetResult(ret);
+			
+		}
 
-        public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
-        {
+		// 5. AwaitOnCompleted
+		[DebuggerHidden]
 
-        }
+		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
+		{
 
-        // 6. AwaitUnsafeOnCompleted
-        [SecuritySafeCritical]
-        public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
-        {
-            if (task == null)
-            {
-                awaiter.Parent.AddChild(out task);
-                if (awaiter.m_TreeTaskToken is null)
-                {
-                    task.m_RelevanceTask = awaiter;
-                }
-                else
-                {
-                    task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
-                    task.m_TreeTaskToken.tokenEvent.Add(task, DefaultType<ITreeTaskTokenEventRule>.Default);
-                }
-                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+		}
 
-            }
-            else
-            {
-                if (task.m_TreeTaskToken != null)
-                {
-                    awaiter.SetToken(task.m_TreeTaskToken);
-                }
-                awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
-                awaiter.TrySyncTaskSetCompleted();
-            }
-        }
+		// 6. AwaitUnsafeOnCompleted
+		[SecuritySafeCritical]
+		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
+		{
+			if (treeTaskStateMachine == null)
+			{
+				this.treeTaskStateMachine = awaiter.PoolGet(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
+				taskStateMachine.SetStateMachine(ref stateMachine);
+			}
+			if (task == null)
+			{
+				awaiter.Parent.AddChild(out task);
+				if (awaiter.m_TreeTaskToken is null)
+				{
+					task.m_RelevanceTask = awaiter;
+				}
+				else
+				{
+					task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
+					task.m_TreeTaskToken.tokenEvent.Add(task, DefaultType<ITreeTaskTokenEventRule>.Default);
+				}
+				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 
-        // 7. Start
-        [DebuggerHidden]
-        public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
-        {
-            stateMachine.MoveNext();
-        }
+			}
+			else
+			{
+				if (task.m_TreeTaskToken != null)
+				{
+					awaiter.SetToken(task.m_TreeTaskToken);
+				}
+				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
+				awaiter.TrySyncTaskSetCompleted();
+			}
+			
+		}
 
-        // 8. SetStateMachine
-        [DebuggerHidden]
-        public void SetStateMachine(IAsyncStateMachine stateMachine)
-        {
-        }
-    }
+		// 7. Start
+		[DebuggerHidden]
+		public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
+		{
+			stateMachine.MoveNext();
+		}
+
+		// 8. SetStateMachine
+		[DebuggerHidden]
+		public void SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+		}
+	}
 
 
 }

@@ -170,12 +170,118 @@ namespace WorldTree
         }
 
 
+		//添加
+		//获取事件通知
+		//添加父节点
+		//添加域节点
+		//添加到父分支
+		//初始化事件通知
+		//添加到引用池
+		//激活变更
+		//激活事件通知
+		//广播给全部监听器
+		//是否为监听器注册
+		//节点添加事件通知
+
+		//倒序遍历
+
+		//即将移除事件通知 X?
+		//从父节点分支移除
+		//_判断移除引用关系 X
+		//激活变更
+		//禁用事件通知 X
+		//是否为监听器注册
+		//移除事件通知
+		//广播给全部监听器通知 X
+		//引用池移除 ?
+		//清除域节点
+		//清除父节点
+		//回到对象池，回收事件通知 X
+
+		/// <summary>
+		/// 在节点添加时的处理
+		/// </summary>
+		public static void OnNodeAdd(this INode self)
+		{
+			self.Core.ReferencedPoolManager.TryAdd(self);//添加到引用池
+			self.SetActive(true);//激活变更
+			self.Core.EnableRuleGroup?.Send(self);//激活事件通知
+			if (self is not ICoreNode)//广播给全部监听器
+			{
+				self.GetListenerActuator<IListenerAddRule>()?.Send(self);
+			}
+			if (self is INodeListener nodeListener && self is not ICoreNode)
+			{
+				//检测添加静态监听
+				self.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
+			}
+			self.Core.AddRuleGroup?.Send(self);//节点添加事件通知
+		}
+
+		/// <summary>
+		/// 在节点移除时的处理
+		/// </summary>
+		public static void OnNodeRemove(this INode self)
+		{
+			if (self.IsRecycle) return; //是否已经回收
+
+			WorldTreeCore core = self.Core;
+			INode current;
+			UnitStack<INode> stack = self.PoolGet<UnitStack<INode>>();
+			UnitStack<INode> allStack = self.PoolGet<UnitStack<INode>>();
+			stack.Push(self);
+			//前序遍历通知
+			while (stack.Count != 0)
+			{
+				current = stack.Pop();
+				core.BeforeRemoveRuleGroup?.Send(current);
+				allStack.Push(current);
+				if (current.m_Branchs != null)
+				{
+					foreach (var branchs in current.m_Branchs)
+					{
+						foreach (INode node in branchs.Value)
+						{
+							stack.Push(node);
+						}
+					}
+				}
+			}
+			stack.Dispose();
+
+			//后序遍历回收
+			while (allStack.Count != 0)
+			{
+				current = allStack.Pop();
+				current.RemoveInParentBranch();//从父节点分支移除
+				current.SendAllReferencedNodeRemove();//_判断移除引用关系 X
+				current.SetActive(false);//激活变更
+				core.DisableRuleGroup?.Send(current); //禁用事件通知 X
+				if (current is INodeListener nodeListener && current is not ICoreNode)
+				{
+					//检测移除静态监听
+					core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
+					//检测移除动态监听
+					core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
+				}
+				core.RemoveRuleGroup?.Send(current);//移除事件通知
+				if (current is not ICoreNode)//广播给全部监听器通知 X
+				{
+					current.GetListenerActuator<IListenerRemoveRule>()?.Send(current);
+				}
+				core.ReferencedPoolManager.Remove(current);//引用池移除 ?
+				current.DisposeDomain(); //清除域节点
+				current.Parent = null;//清除父节点
+				current.OnDispose();//回收到池
+			}
+			allStack.Dispose();
+		}
 
 
-        /// <summary>
-        /// 返回用字符串绘制的树
-        /// </summary>
-        public static string ToStringDrawTree(this INode self, string t = "\t")
+		/// <summary>
+		/// 返回用字符串绘制的树
+		/// </summary>
+		public static string ToStringDrawTree(this INode self, string t = "\t")
         {
             string t1 = "\t" + t;
             string str = "";

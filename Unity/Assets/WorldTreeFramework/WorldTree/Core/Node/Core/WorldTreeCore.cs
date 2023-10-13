@@ -14,37 +14,40 @@
 */
 
 using System;
+using System.ComponentModel;
 
 namespace WorldTree
 {
-    //剩余
-    //异常处理？
+	//剩余
+	//异常处理？
 
 
-    //对法则执行器进行更加详细的划分，生命周期，全局事件，回调事件？
+	//对法则执行器进行更加详细的划分，生命周期，全局事件，回调事件？
 
-    //对象池需要一个启动标记？
+	//对象池需要一个启动标记？
 
-    //Log改为 Self.Log
-
-    //将Add综合到核心??
+	//Log改为 Self.Log
 
 
-    //新增TimeUpdate,特化的双方法法则
-    //真实与游戏时间双法则
 
-    //真实时间和游戏时间
+	//新增TimeUpdate,特化的双方法法则
+	//真实与游戏时间双法则
 
-    //生命周期整理
+	//真实时间和游戏时间
 
-    //执行器整理，改为用结构体指针
+	//生命周期整理
 
-    //时域与时间轮
+	//执行器整理，改为用结构体指针
 
-    /// <summary>
-    /// 世界树核心
-    /// </summary>
-    public class WorldTreeCore : CoreNode
+	//时域与时间轮
+
+	//将Add综合到核心
+
+
+	/// <summary>
+	/// 世界树核心
+	/// </summary>
+	public class WorldTreeCore : CoreNode
     {
         public IRuleGroup<IAddRule> AddRuleGroup;
         public IRuleGroup<IBeforeRemoveRule> BeforeRemoveRuleGroup;
@@ -122,7 +125,7 @@ namespace WorldTree
             //根节点初始化
             self.Type = TypeInfo<WorldTreeCore>.HashCode64;
             self.Core = self;
-            self.Branch = self;
+            self.Domain = self;
 
             //框架核心启动组件新建初始化
 
@@ -219,13 +222,14 @@ namespace WorldTree
         {
         }
 
-        #region 节点添加与移除
-        /// <summary>
-        /// 核心添加一个节点
-        /// </summary>
-        public static void AddNode(this WorldTreeCore self, INode node)
+		#region 节点添加与移除
+
+		/// <summary>
+		/// 核心添加一个节点
+		/// </summary>
+		public static void AddNode(this WorldTreeCore self, INode node)
         {
-            self.ReferencedPoolManager.TryAdd(node);
+			self.ReferencedPoolManager.TryAdd(node);
 
             node.SetActive(true);
             self.EnableRuleGroup?.Send(node);//添加后调用激活事件

@@ -28,7 +28,7 @@ namespace WorldTree
         public long Type { get; set; }
         public WorldTreeCore Core { get; set; }
         public WorldTreeRoot Root { get; set; }
-        public INode Branch { get; set; }
+        public INode Domain { get; set; }
         public INode Parent { get; set; }
 
         #region Active
@@ -61,9 +61,23 @@ namespace WorldTree
         #region Listener
         public ListenerState listenerState { get; set; } = ListenerState.Not;
         public Type listenerTarget { get; set; }
-        #endregion
+		#endregion
 
-        public void Dispose()
+		#region Branch
+
+		/// <summary>
+		/// 分支类型
+		/// </summary>
+		public long BranchType { get; set; }
+
+		/// <summary>
+		/// 树分支
+		/// </summary>
+		public UnitDictionary<long, IBranch> m_Branchs { get; set; }
+
+
+		#endregion
+		public void Dispose()
         {
             this.DisposeSelf();
         }

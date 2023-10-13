@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using ET;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -12,24 +13,32 @@ public class TestGC : MonoBehaviour
 
 	public int notRemainderY;
 
+
 	// Start is called before the first frame update
 	void Start()
 	{
 	}
 
 	// Update is called once per frame
-	async void Update()
+	void Update()
 	{
 
 		if (Input.GetKeyDown(KeyCode.A))
 		{
 
 			Profiler.BeginSample("SDHK");
-
+			for (int i = 0; i < 1000; i++)
+			{
+			}
 			Profiler.EndSample();
 			UnityEditor.EditorApplication.isPaused = true;
 		}
 
+
+	}
+
+	public void Test()
+	{
 	}
 
 

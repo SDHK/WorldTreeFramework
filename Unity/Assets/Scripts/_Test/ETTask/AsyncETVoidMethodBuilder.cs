@@ -1,54 +1,55 @@
-﻿
-/****************************************
-
-* 作者： 闪电黑客
-* 日期： 2022/11/10 10:12
-
-* 描述： 空异步任务构建器
-
-*/
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security;
 
-namespace WorldTree.Internal
+namespace ET
 {
-    /// <summary>
-    /// 空异步任务构建器
-    /// </summary>
-    public struct TreeTaskVoidMethodBuilder
+    internal struct AsyncETVoidMethodBuilder
     {
-		// 1. Static Create method.
-		[DebuggerHidden]
-        public static TreeTaskVoidMethodBuilder Create()
+        private IStateMachineWrap iStateMachineWarp;
+
+        // 1. Static Create method.
+        [DebuggerHidden]
+        public static AsyncETVoidMethodBuilder Create()
         {
-            TreeTaskVoidMethodBuilder builder = new TreeTaskVoidMethodBuilder();
+            AsyncETVoidMethodBuilder builder = new();
             return builder;
         }
 
         // 2. TaskLike Task property(void)
         [DebuggerHidden]
-        public TreeTaskVoid Task => default;
+        public ETVoid Task => default;
 
         // 3. SetException
         [DebuggerHidden]
         public void SetException(Exception e)
         {
+            if (this.iStateMachineWarp != null)
+            {
+                this.iStateMachineWarp.Recycle();
+                this.iStateMachineWarp = null;
+            }
+            ETTask.ExceptionHandler.Invoke(e);
         }
 
         // 4. SetResult
+        [DebuggerHidden]
         public void SetResult()
         {
-            // do nothing
+            if (this.iStateMachineWarp != null)
+            {
+                this.iStateMachineWarp.Recycle();
+                this.iStateMachineWarp = null;
+            }
         }
 
         // 5. AwaitOnCompleted
         [DebuggerHidden]
         public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : INotifyCompletion where TStateMachine : IAsyncStateMachine
         {
-            awaiter.OnCompleted(stateMachine.MoveNext);
+            this.iStateMachineWarp ??= StateMachineWrap<TStateMachine>.Fetch(ref stateMachine);
+            awaiter.OnCompleted(this.iStateMachineWarp.MoveNext);
         }
 
         // 6. AwaitUnsafeOnCompleted
@@ -56,7 +57,8 @@ namespace WorldTree.Internal
         [SecuritySafeCritical]
         public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
         {
-            awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
+            this.iStateMachineWarp ??= StateMachineWrap<TStateMachine>.Fetch(ref stateMachine);
+            awaiter.UnsafeOnCompleted(this.iStateMachineWarp.MoveNext);
         }
 
         // 7. Start
@@ -71,7 +73,5 @@ namespace WorldTree.Internal
         public void SetStateMachine(IAsyncStateMachine stateMachine)
         {
         }
-
-
     }
 }
