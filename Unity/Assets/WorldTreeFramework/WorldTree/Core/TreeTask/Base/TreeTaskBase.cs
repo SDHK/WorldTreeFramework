@@ -26,9 +26,14 @@ namespace WorldTree
         , AsRule<ITreeTaskTokenEventRule>
     {
         /// <summary>
-        /// 树任务令牌
+        /// 异常处理委托
         /// </summary>
-        public TreeTaskToken m_TreeTaskToken;
+		public static Action<Exception> ExceptionHandler;
+
+		/// <summary>
+		/// 树任务令牌
+		/// </summary>
+		public TreeTaskToken m_TreeTaskToken;
 
         /// <summary>
         /// 关联令牌的任务
@@ -41,11 +46,6 @@ namespace WorldTree
         /// 是否完成
         /// </summary>
         public abstract bool IsCompleted { get; set; }
-
-        /// <summary>
-        /// 异常
-        /// </summary>
-        public Exception Exception { get; private set; }
 
         /// <summary>
         /// 延续
@@ -80,15 +80,7 @@ namespace WorldTree
                 }
             }
         }
-
-        /// <summary>
-        /// 设置异常
-        /// </summary>
-        public void SetException(Exception exception)
-        {
-            this.Exception = exception;
-        }
-
+      
         /// <summary>
         /// 不安全完成时
         /// </summary>

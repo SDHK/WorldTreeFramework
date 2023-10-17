@@ -19,11 +19,27 @@ public class TreeNode : Node
 
 	public static bool bit = true;
 
-	public async TreeTask Test1()
+	public async TreeTask Test1(bool b = false)
 	{
-		await this.TreeTaskCompleted();
+		World.Log("1！");
+		await Test2();
+		World.Log("1结束！");
+
 	}
 
+	public async TreeTask Test2(bool b = false)
+	{
+		World.Log("2！");
+		await Test3();
+		World.Log("2结束！");
+	}
+
+	public async TreeTask Test3(bool b = false)
+	{
+		World.Log("3！");
+		if (b) await this.TreeTaskCompleted();
+		World.Log("3结束！");
+	}
 
 	public async TreeTask Test()
 	{

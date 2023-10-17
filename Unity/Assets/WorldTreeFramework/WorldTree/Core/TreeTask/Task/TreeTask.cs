@@ -80,14 +80,25 @@ namespace WorldTree
             await this;
         }
 
-        /// <summary>
-        /// 协程启动
-        /// </summary>
-        public void Coroutine()
-        {
-            InnerCoroutine().Coroutine();
-        }
-    }
+		/// <summary>
+		/// 协程启动
+		/// </summary>
+		public void Coroutine()
+		{
+			InnerCoroutine().Coroutine();
+			this.TrySyncTaskSetCompleted();
+		}
+		/// <summary>
+		/// 协程启动
+		/// </summary>
+		public void Coroutine(TreeTaskToken treeTaskToken)
+		{
+			this.SetToken(treeTaskToken);
+			InnerCoroutine().Coroutine();
+			this.TrySyncTaskSetCompleted();
+
+		}
+	}
 
     public static class TreeTaskRule
     {

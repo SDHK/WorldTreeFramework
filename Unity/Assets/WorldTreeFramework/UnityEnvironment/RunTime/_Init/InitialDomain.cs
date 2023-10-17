@@ -262,7 +262,7 @@ namespace WorldTree
 				//CRC32 a = new CRC32();
 
 				World.Log($"初始域启动！！");
-
+				TreeTaskBase.ExceptionHandler = World.LogError;
 
 				//self.AddComponent(out self.multilayerPerceptronManager);
 
@@ -317,16 +317,19 @@ namespace WorldTree
 				//	World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value} :{self.valueString.Value}");
 
 				//}
+				
 				if (Input.GetKeyDown(KeyCode.Q))
 				{
-					self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+					//self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
 					//self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
 					//self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
-					for (int i = 0; i < 1000; i++)
-					{
-						self.AddComponent(out TreeNode _).Test1().Coroutine();
-					}
+					self.AddComponent(out TreeNode _).Test1().Coroutine();
+
+					//for (int i = 0; i < 1000; i++)
+					//{
+					//	self.AddComponent(out TreeNode _).Test1().Coroutine();
+					//}
 				}
 
 				//if (Input.GetKeyDown(KeyCode.W))

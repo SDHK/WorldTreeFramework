@@ -43,7 +43,7 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetException(Exception exception)
         {
-            task.SetException(exception);
+			TreeTaskBase.ExceptionHandler?.Invoke(exception);
         }
 
         // 设置结果

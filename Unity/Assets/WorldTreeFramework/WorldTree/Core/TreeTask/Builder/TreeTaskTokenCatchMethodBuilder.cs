@@ -42,8 +42,8 @@ namespace WorldTree.Internal
         [DebuggerHidden]
         public void SetException(Exception exception)
         {
-            task.SetException(exception);
-        }
+			TreeTaskBase.ExceptionHandler?.Invoke(exception);
+		}
 
         // 4. SetResult
         public void SetResult()
