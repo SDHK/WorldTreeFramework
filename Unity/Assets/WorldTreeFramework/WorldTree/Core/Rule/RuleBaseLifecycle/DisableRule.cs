@@ -30,10 +30,10 @@ namespace WorldTree
             {
                 if (!self.IsActive)
                 {
-                    OnEvent(self as N);
-                }
-                self.m_ActiveEventMark = self.IsActive;
-            }
+					self.m_ActiveEventMark = self.IsActive;
+					OnEvent(self as N);
+				}
+			}
         }
     }
 }
