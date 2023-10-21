@@ -27,9 +27,7 @@ public class TestGC : MonoBehaviour
 		{
 
 			Profiler.BeginSample("SDHK");
-			for (int i = 0; i < 1000; i++)
-			{
-			}
+			Test1().Coroutine();
 			Profiler.EndSample();
 			UnityEditor.EditorApplication.isPaused = true;
 		}
@@ -37,8 +35,28 @@ public class TestGC : MonoBehaviour
 
 	}
 
-	public void Test()
+	public async ETTask Test1(bool b = false)
 	{
+		Debug.Log("1！");
+		await ETTask.CompletedTask;
+		await Test2();
+		Debug.Log("1结束！");
+
+	}
+
+	public async ETTask Test2(bool b = false)
+	{
+		Debug.Log("2！");
+		await ETTask.CompletedTask;
+		await Test3();
+		Debug.Log("2结束！");
+	}
+
+	public async ETTask Test3(bool b = false)
+	{
+		Debug.Log("3！");
+		if (b) await ETTask.CompletedTask;
+		Debug.Log("3结束！");
 	}
 
 

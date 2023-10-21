@@ -31,18 +31,13 @@ namespace WorldTree
         /// </summary>
         public override void OnDispose()
         {
-            this.Destroy();
-        }
+			this.IsRecycle = true;
+			this.IsDisposed = true;
+		}
     }
 
     public static class IdManagerRule
     {
-        public static void Destroy(this IdManager self)
-        {
-            self.IsRecycle = true;
-            self.IsDisposed = true;
-        }
-
         /// <summary>
         /// 获取id后递增
         /// </summary>

@@ -42,7 +42,6 @@ namespace WorldTree
 				node = isPool ? Self.Core.GetNode(type) : Self.Core.NewNodeLifecycle(type);
 				node.BranchType = TypeInfo<ComponentBranch>.HashCode64;
 				node.Parent = Self;
-				node.Domain = Self.Domain;
 				this.Add(type, node);
 			}
 			Node = node as T;
@@ -50,25 +49,19 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 尝试添加外部组件
+		/// 尝试添加外部组件，未完
 		/// </summary>
-		public bool TryAddNode(long key, INode value)
+		public bool TryAddNode(long key, INode node)
 		{
-			if (this.TryAdd(key, value))
+			if (this.TryAdd(key, node))
 			{
-				value.BranchType = TypeInfo<ComponentBranch>.HashCode64;
-				value.Parent = Self;
-				if (value.Domain != value) value.Domain = Self.Domain;
-				//value.OnNodeAdd();//添加入核心
+				node.BranchType = TypeInfo<ComponentBranch>.HashCode64;
+				node.Parent = Self;
+				node.TreeAddSelf();
 				return true;
 			}
 			return false;
 		}
-
-
-
-
-
 
 
 		public void RemoveNode(long key)
@@ -91,8 +84,9 @@ namespace WorldTree
 		{
 			if (self.AddBranch<ComponentBranch>().TryAddNode(out Component))
 			{
+				Component.SetActive(true);
 				Component.SendRule(DefaultType<IAwakeRule>.Default);
-				Component.OnNodeAdd();
+				Component.TreeAddSelf();
 			}
 			return Component;
 		}

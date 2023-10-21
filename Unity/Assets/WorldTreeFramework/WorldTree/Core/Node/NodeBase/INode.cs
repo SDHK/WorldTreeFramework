@@ -187,5 +187,15 @@ namespace WorldTree
 
 		#endregion
 
+		/// <summary>
+		/// 树结构添加自己
+		/// </summary>
+		public void TreeAddSelf();
+
+
+		/// <summary>
+		/// 树结构移除自己
+		/// </summary>
+		public void TreeRemoveSelf();
 	}
 }
