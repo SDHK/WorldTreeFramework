@@ -48,179 +48,178 @@ namespace WorldTree
 	/// 世界树核心
 	/// </summary>
 	public class WorldTreeCore : CoreNode
-    {
-        public IRuleGroup<IAddRule> AddRuleGroup;
-        public IRuleGroup<IBeforeRemoveRule> BeforeRemoveRuleGroup;
-        public IRuleGroup<IRemoveRule> RemoveRuleGroup;
-        public IRuleGroup<IEnableRule> EnableRuleGroup;
-        public IRuleGroup<IDisableRule> DisableRuleGroup;
+	{
+		public IRuleGroup<IAddRule> AddRuleGroup;
+		public IRuleGroup<IBeforeRemoveRule> BeforeRemoveRuleGroup;
+		public IRuleGroup<IRemoveRule> RemoveRuleGroup;
+		public IRuleGroup<IEnableRule> EnableRuleGroup;
+		public IRuleGroup<IDisableRule> DisableRuleGroup;
 
-        public IRuleGroup<INewRule> NewRuleGroup;
-        public IRuleGroup<IGetRule> GetRuleGroup;
-        public IRuleGroup<IRecycleRule> RecycleRuleGroup;
-        public IRuleGroup<IDestroyRule> DestroyRuleGroup;
+		public IRuleGroup<INewRule> NewRuleGroup;
+		public IRuleGroup<IGetRule> GetRuleGroup;
+		public IRuleGroup<IRecycleRule> RecycleRuleGroup;
+		public IRuleGroup<IDestroyRule> DestroyRuleGroup;
 
-        /// <summary>
-        /// Id管理器
-        /// </summary>
-        public IdManager IdManager;
+		/// <summary>
+		/// Id管理器
+		/// </summary>
+		public IdManager IdManager;
 
-        /// <summary>
-        /// 真实时间管理器
-        /// </summary>
-        public RealTimeManager RealTimeManager;
+		/// <summary>
+		/// 真实时间管理器
+		/// </summary>
+		public RealTimeManager RealTimeManager;
 
-        /// <summary>
-        /// 游戏时间管理器
-        /// </summary>
-        public GameTimeManager GameTimeManager;
+		/// <summary>
+		/// 游戏时间管理器
+		/// </summary>
+		public GameTimeManager GameTimeManager;
 
-        /// <summary>
-        /// 法则管理器
-        /// </summary>
-        public RuleManager RuleManager;
-        /// <summary>
-        /// 单位对象池管理器
-        /// </summary>
-        public UnitPoolManager UnitPoolManager;
-        /// <summary>
-        /// 节点对象池管理器
-        /// </summary>
-        public NodePoolManager NodePoolManager;
-        /// <summary>
-        /// 节点引用池管理器
-        /// </summary>
-        public ReferencedPoolManager ReferencedPoolManager;
-        /// <summary>
-        /// 数组对象池管理器
-        /// </summary>
-        public ArrayPoolManager ArrayPoolManager;
-
-
-        public WorldTreeCore()
-        {
-            this.Awake();
-        }
-
-        /// <summary>
-        /// 释放
-        /// </summary>
-        public override void Dispose()
-        {
-            this.Destroy();
-        }
-    }
+		/// <summary>
+		/// 法则管理器
+		/// </summary>
+		public RuleManager RuleManager;
+		/// <summary>
+		/// 单位对象池管理器
+		/// </summary>
+		public UnitPoolManager UnitPoolManager;
+		/// <summary>
+		/// 节点对象池管理器
+		/// </summary>
+		public NodePoolManager NodePoolManager;
+		/// <summary>
+		/// 节点引用池管理器
+		/// </summary>
+		public ReferencedPoolManager ReferencedPoolManager;
+		/// <summary>
+		/// 数组对象池管理器
+		/// </summary>
+		public ArrayPoolManager ArrayPoolManager;
 
 
-    public static partial class WorldTreeCoreRule
-    {
+		public WorldTreeCore()
+		{
+			this.Awake();
+		}
 
-        #region 框架启动与销毁
+		/// <summary>
+		/// 释放
+		/// </summary>
+		public override void Dispose()
+		{
+			this.Destroy();
+		}
+	}
 
-        /// <summary>
-        /// 框架启动
-        /// </summary>
-        public static void Awake(this WorldTreeCore self)
-        {
-            //根节点初始化
-            self.Type = TypeInfo<WorldTreeCore>.HashCode64;
-            self.Core = self;
-            self.Domain = self;
 
-            //框架核心启动组件新建初始化
+	public static partial class WorldTreeCoreRule
+	{
 
-            //Id管理器初始化
-            self.NewNode(out self.IdManager);
-            self.Id = self.IdManager.GetId();
+		#region 框架启动与销毁
 
-            //时间管理器初始化
-            self.NewNode(out self.RealTimeManager);
+		/// <summary>
+		/// 框架启动
+		/// </summary>
+		public static void Awake(this WorldTreeCore self)
+		{
+			//根节点初始化
+			self.Type = TypeInfo<WorldTreeCore>.HashCode64;
+			self.Core = self;
+			self.Domain = self;
 
-            //法则管理器初始化
-            self.NewNode(out self.RuleManager);
+			//框架核心启动组件新建初始化
 
-            self.NewRuleGroup = self.RuleManager.GetOrNewRuleGroup<INewRule>();
-            self.GetRuleGroup = self.RuleManager.GetOrNewRuleGroup<IGetRule>();
-            self.BeforeRemoveRuleGroup = self.RuleManager.GetOrNewRuleGroup<IBeforeRemoveRule>();
-            self.RecycleRuleGroup = self.RuleManager.GetOrNewRuleGroup<IRecycleRule>();
-            self.DestroyRuleGroup = self.RuleManager.GetOrNewRuleGroup<IDestroyRule>();
+			//Id管理器初始化
+			self.NewNode(out self.IdManager);
+			self.Id = self.IdManager.GetId();
 
-            self.AddRuleGroup = self.RuleManager.GetOrNewRuleGroup<IAddRule>();
-            self.RemoveRuleGroup = self.RuleManager.GetOrNewRuleGroup<IRemoveRule>();
-            self.EnableRuleGroup = self.RuleManager.GetOrNewRuleGroup<IEnableRule>();
-            self.DisableRuleGroup = self.RuleManager.GetOrNewRuleGroup<IDisableRule>();
+			//时间管理器初始化
+			self.NewNode(out self.RealTimeManager);
 
-            //引用池管理器初始化
-            self.NewNodeLifecycle(out self.ReferencedPoolManager);
+			//法则管理器初始化
+			self.NewNode(out self.RuleManager);
 
-            //组件添加到树
-            self.AddComponent(self.ReferencedPoolManager);
-            self.AddComponent(self.IdManager);
-            self.AddComponent(self.RuleManager);
+			self.NewRuleGroup = self.RuleManager.GetOrNewRuleGroup<INewRule>();
+			self.GetRuleGroup = self.RuleManager.GetOrNewRuleGroup<IGetRule>();
+			self.BeforeRemoveRuleGroup = self.RuleManager.GetOrNewRuleGroup<IBeforeRemoveRule>();
+			self.RecycleRuleGroup = self.RuleManager.GetOrNewRuleGroup<IRecycleRule>();
+			self.DestroyRuleGroup = self.RuleManager.GetOrNewRuleGroup<IDestroyRule>();
 
-            //对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
-            self.UnitPoolManager = self.AddNewComponent(out UnitPoolManager _);
-            self.NodePoolManager = self.AddNewComponent(out NodePoolManager _);
-            self.ArrayPoolManager = self.AddNewComponent(out ArrayPoolManager _);
+			self.AddRuleGroup = self.RuleManager.GetOrNewRuleGroup<IAddRule>();
+			self.RemoveRuleGroup = self.RuleManager.GetOrNewRuleGroup<IRemoveRule>();
+			self.EnableRuleGroup = self.RuleManager.GetOrNewRuleGroup<IEnableRule>();
+			self.DisableRuleGroup = self.RuleManager.GetOrNewRuleGroup<IDisableRule>();
 
-            //树根节点
-            self.AddComponent(self.Root = self.PoolGet<WorldTreeRoot>());
+			//引用池管理器初始化
+			self.NewNodeLifecycle(out self.ReferencedPoolManager);
 
-            //游戏时间管理器
-            self.AddComponent(out self.GameTimeManager);
+			//组件添加到树
+			self.GraftComponent(self.ReferencedPoolManager);
+			self.GraftComponent(self.IdManager);
+			self.GraftComponent(self.RuleManager);
 
-            //核心激活
-            self.SetActive(true);
+			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
+			self.UnitPoolManager = self.AddNewComponent(out UnitPoolManager _);
+			self.NodePoolManager = self.AddNewComponent(out NodePoolManager _);
+			self.ArrayPoolManager = self.AddNewComponent(out ArrayPoolManager _);
 
-        }
+			//树根节点
+			self.GraftComponent(self.Root = self.PoolGet<WorldTreeRoot>());
 
-        /// <summary>
-        /// 框架销毁
-        /// </summary>
-        public static void Destroy(this WorldTreeCore self)
-        {
+			//游戏时间管理器
+			self.AddComponent(out self.GameTimeManager);
 
-            self.SetActive(false);
+			//核心激活
+			self.SetActive(true);
 
-            self.RemoveComponent<WorldTreeRoot>();
-            self.RemoveComponent<GameTimeManager>();
-            self.RemoveComponent<ArrayPoolManager>();
-            self.RemoveComponent<NodePoolManager>();
-            self.RemoveComponent<UnitPoolManager>();
-            self.RemoveComponent<RuleManager>();
-            self.RemoveComponent<RealTimeManager>();
-            self.RemoveComponent<IdManager>();
-            self.RemoveComponent<ReferencedPoolManager>();
+		}
 
-            self.RemoveAll();
+		/// <summary>
+		/// 框架销毁
+		/// </summary>
+		public static void Destroy(this WorldTreeCore self)
+		{
 
-            self.NewRuleGroup = null;
-            self.GetRuleGroup = null;
-            self.RecycleRuleGroup = null;
-            self.DestroyRuleGroup = null;
+			self.SetActive(false);
+			self.RemoveComponent<WorldTreeRoot>();
+			self.RemoveComponent<GameTimeManager>();
+			self.RemoveComponent<ArrayPoolManager>();
+			self.RemoveComponent<NodePoolManager>();
+			self.RemoveComponent<UnitPoolManager>();
+			self.RemoveComponent<RuleManager>();
+			self.RemoveComponent<RealTimeManager>();
+			self.RemoveComponent<IdManager>();
+			self.RemoveComponent<ReferencedPoolManager>();
 
-            self.AddRuleGroup = null;
-            self.RemoveRuleGroup = null;
-            self.EnableRuleGroup = null;
-            self.DisableRuleGroup = null;
+			self.RemoveAll();
 
-            self.ReferencedPoolManager = null;
-            self.IdManager = null;
-            self.RealTimeManager = null;
-            self.RuleManager = null;
-            self.UnitPoolManager = null;
-            self.NodePoolManager = null;
-            self.ArrayPoolManager = null;
-            self.Root = null;
-        }
-        #endregion
+			self.NewRuleGroup = null;
+			self.GetRuleGroup = null;
+			self.RecycleRuleGroup = null;
+			self.DestroyRuleGroup = null;
 
-        /// <summary>
-        /// 框架刷新
-        /// </summary>
-        public static void Update()
-        {
-        }
+			self.AddRuleGroup = null;
+			self.RemoveRuleGroup = null;
+			self.EnableRuleGroup = null;
+			self.DisableRuleGroup = null;
+
+			self.ReferencedPoolManager = null;
+			self.IdManager = null;
+			self.RealTimeManager = null;
+			self.RuleManager = null;
+			self.UnitPoolManager = null;
+			self.NodePoolManager = null;
+			self.ArrayPoolManager = null;
+			self.Root = null;
+		}
+		#endregion
+
+		/// <summary>
+		/// 框架刷新
+		/// </summary>
+		public static void Update()
+		{
+		}
 
 		#region 节点添加与移除
 
@@ -228,66 +227,66 @@ namespace WorldTree
 		/// 核心添加一个节点
 		/// </summary>
 		public static void AddNode(this WorldTreeCore self, INode node)
-        {
+		{
 			self.ReferencedPoolManager.TryAdd(node);
 
-            node.SetActive(true);
-            self.EnableRuleGroup?.Send(node);//添加后调用激活事件
+			node.SetActive(true);
+			self.EnableRuleGroup?.Send(node);//添加后调用激活事件
 
-            //广播给全部监听器!!!
-            if (node is not ICoreNode)
-            {
-                node.GetListenerActuator<IListenerAddRule>()?.Send(node);
-            }
+			//广播给全部监听器!!!
+			if (node is not ICoreNode)
+			{
+				node.GetListenerActuator<IListenerAddRule>()?.Send(node);
+			}
 
-            if (node is INodeListener nodeListener && node is not ICoreNode)
-            {
-                //检测添加静态监听
-                self.ReferencedPoolManager.TryAddStaticListener(nodeListener);
-            }
+			if (node is INodeListener nodeListener && node is not ICoreNode)
+			{
+				//检测添加静态监听
+				self.ReferencedPoolManager.TryAddStaticListener(nodeListener);
+			}
 
-            //这个节点的添加事件
-            self.AddRuleGroup?.Send(node);
-        }
+			//这个节点的添加事件
+			self.AddRuleGroup?.Send(node);
+		}
 
-        /// <summary>
-        /// 核心移除一个节点
-        /// </summary>
-        public static void RemoveNode(this WorldTreeCore self, INode node)
-        {
-            //从父节点中移除
-            node.RemoveInParent();
-            //引用关系移除通知
-            node.SendAllReferencedNodeRemove();
+		/// <summary>
+		/// 核心移除一个节点
+		/// </summary>
+		public static void RemoveNode(this WorldTreeCore self, INode node)
+		{
+			//从父节点中移除
+			node.RemoveInParent();
+			//引用关系移除通知
+			node.SendAllReferencedNodeRemove();
 
-            node.SetActive(false);//激活标记变更
+			node.SetActive(false);//激活标记变更
 
-            self.DisableRuleGroup?.Send(node);//调用禁用事件
+			self.DisableRuleGroup?.Send(node);//调用禁用事件
 
-            if (node is INodeListener && node is not ICoreNode)
-            {
-                INodeListener nodeListener = (node as INodeListener);
+			if (node is INodeListener && node is not ICoreNode)
+			{
+				INodeListener nodeListener = (node as INodeListener);
 
-                //检测移除静态监听
-                self.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-                //检测移除动态监听
-                self.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
-            }
+				//检测移除静态监听
+				self.ReferencedPoolManager.RemoveStaticListener(nodeListener);
+				//检测移除动态监听
+				self.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
+			}
 
-            //这个节点的移除事件
-            self.RemoveRuleGroup?.Send(node);
+			//这个节点的移除事件
+			self.RemoveRuleGroup?.Send(node);
 
-            //广播给全部监听器!!!
-            if (node is not ICoreNode)
-            {
-                node.GetListenerActuator<IListenerRemoveRule>()?.Send(node);
-            }
+			//广播给全部监听器!!!
+			if (node is not ICoreNode)
+			{
+				node.GetListenerActuator<IListenerRemoveRule>()?.Send(node);
+			}
 
-            self.ReferencedPoolManager.Remove(node);
+			self.ReferencedPoolManager.Remove(node);
 
-            node.DisposeDomain();//清除域节点
-            node.Parent = null;//清除父节点
-        }
-        #endregion
-    }
+			node.DisposeDomain();//清除域节点
+			node.Parent = null;//清除父节点
+		}
+		#endregion
+	}
 }

@@ -98,26 +98,20 @@
 			}
 		}
 
-
-
-
 		/// <summary>
 		/// 从父节点分支移除
 		/// </summary>
 		public static void RemoveInParentBranch(this INode self)
 		{
-			if (self.Parent != null)
+			if (self.Parent == null) return;
+			if (self.Parent.m_Branchs == null) return;
+
+			if (self.Parent.m_Branchs.TryGetValue(self.BranchType, out IBranch branch))
 			{
-				if (self.Parent.m_Branchs != null)
+				branch.RemoveNode(self);
+				if (branch.Count == 0)
 				{
-					if (self.Parent.m_Branchs.TryGetValue(self.BranchType, out IBranch branch))
-					{
-						branch.RemoveNode(self);
-						if (branch.Count == 0)
-						{
-							self.Parent.RemoveBranch(self.BranchType);
-						}
-					}
+					self.Parent.RemoveBranch(self.BranchType);
 				}
 			}
 		}

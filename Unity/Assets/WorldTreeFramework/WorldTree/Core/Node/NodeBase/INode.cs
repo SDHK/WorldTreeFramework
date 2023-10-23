@@ -12,12 +12,7 @@ using System;
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 组件：父节点限制
-	/// </summary>
-	/// <typeparam name="T">父节点类型</typeparam>
-	/// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
-	public interface ComponentOf<in T> where T : class, INode { }
+
 
 	/// <summary>
 	/// 节点：父节点限制
@@ -42,10 +37,6 @@ namespace WorldTree
 	public interface ICoreNode { }
 
 
-
-
-
-
 	/// <summary>
 	/// 世界树节点接口
 	/// </summary>
@@ -61,6 +52,9 @@ namespace WorldTree
 
 		, AsRule<IEnableRule>
 		, AsRule<IDisableRule>
+
+		, AsRule<IGraftRule>
+		, AsRule<ICutRule>
 
 		, AsRule<IAddRule>
 		, AsRule<IUpdateRule>
@@ -190,12 +184,49 @@ namespace WorldTree
 		/// <summary>
 		/// 树结构添加自己
 		/// </summary>
-		public void TreeAddSelf();
+		public void TreeAddSelf()
+		{
+
+		}
+		/// <summary>
+		/// 树结构添加自己时的处理
+		/// </summary>
+		public void OnTreeAddSelf()
+		{
+
+		}
+
+		/// <summary>
+		/// 将自己嫁接到树上
+		/// </summary>
+		public void TreeGraftSelf();
+
+		/// <summary>
+		/// 将自己嫁接到树上时的处理
+		/// </summary>
+		public void OnTreeGraftSelf();
 
 
 		/// <summary>
-		/// 树结构移除自己
+		/// 将自己从树上裁剪下来
 		/// </summary>
-		public void TreeRemoveSelf();
+		public void TreeCutSelf();
+
+		/// <summary>
+		/// 树结构移除自己时的处理
+		/// </summary>
+		public void OnTreeCutSelf();
+
+
+
+		/// <summary>
+		/// 释放前的处理
+		/// </summary>
+		public void OnBeforeDispose()
+		{
+
+		}
+
+
 	}
 }

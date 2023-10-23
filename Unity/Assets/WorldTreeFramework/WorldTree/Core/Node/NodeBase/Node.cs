@@ -6,8 +6,8 @@
 
 ****************************************/
 
+using Codice.Client.Common.TreeGrouper;
 using System;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using static Codice.CM.Common.CmCallContext;
 
 namespace WorldTree
@@ -20,7 +20,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树节点基类
 	/// </summary>
-	public abstract partial class Node : INode
+	public abstract partial class Node : INode//真的需要每一个节点都有id吗？
 	{
 		public bool IsFromPool { get; set; }
 		public bool IsRecycle { get; set; }
@@ -86,125 +86,143 @@ namespace WorldTree
 			return GetType().ToString();
 		}
 
+		#region 嫁接
+
+		public virtual void TreeGraftSelf()
+		{
+			this.RefreshActive();
+			this.TraversalLevel(current => current.OnTreeGraftSelf());
+		}
+
+		public virtual void OnTreeGraftSelf()
+		{
+			this.Core = this.Parent.Core;
+			this.Root = this.Parent.Root;
+			if (this.Domain != this) this.Domain = this.Parent.Domain;
+			this.Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
+			if (this.IsActive != this.m_ActiveEventMark)//激活变更
+			{
+				if (this.IsActive)
+				{
+					this.Core.EnableRuleGroup?.Send(this);//激活事件通知
+				}
+				else
+				{
+					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
+				}
+			}
+			if (this is not ICoreNode)//广播给全部监听器
+			{
+				this.GetListenerActuator<IListenerAddRule>()?.Send((INode)this);
+			}
+			if (this is INodeListener nodeListener && this is not ICoreNode)//检测添加静态监听
+			{
+				this.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
+			}
+			this.SendRule(DefaultType<IGraftRule>.Default);
+		}
+
+		#endregion
+
+		#region 裁剪
+
+		public virtual void TreeCutSelf()//为什么是写给Node而不是Branch
+		{
+			if (this.IsRecycle) return; //是否已经回收
+			this.TraversalPostorder(current => current.OnTreeCutSelf());
+			this.RemoveInParentBranch();//从父节点分支移除
+		}
+		public virtual void OnTreeCutSelf()
+		{
+			this.SendAllReferencedNodeRemove();//_判断移除引用关系 X
+			if (this is INodeListener nodeListener && this is not ICoreNode)
+			{
+				//检测移除静态监听
+				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
+				//检测移除动态监听
+				this.Core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
+			}
+			this.SendRule(DefaultType<ICutRule>.Default);
+			if (this is not ICoreNode)//广播给全部监听器通知 X
+			{
+				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
+			}
+			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
+		}
+
+		#endregion
+
 
 		#region 添加
 
 		public virtual void TreeAddSelf()
 		{
-			this.RefreshActive();
-			this.TraversalLevel
-			(
-				(INode current) =>
-				{
-					current.Core = current.Parent.Core;
-					current.Root = current.Parent.Root;
-					if (current.Domain != current) current.Domain = current.Parent.Domain;
-					current.Core.ReferencedPoolManager.TryAdd(current);//添加到引用池
-					if (current.IsActive != current.m_ActiveEventMark)//激活变更
-					{
-						if (current.IsActive)
-						{
-							current.Core.EnableRuleGroup?.Send(current);//激活事件通知
-						}
-						else
-						{
-							current.Core.DisableRuleGroup?.Send(current); //禁用事件通知
-						}
-					}
-					if (current is not ICoreNode)//广播给全部监听器
-					{
-						current.GetListenerActuator<IListenerAddRule>()?.Send(current);
-					}
-					if (current is INodeListener nodeListener && current is not ICoreNode)//检测添加静态监听
-					{
-						current.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
-					}
-					current.Core.AddRuleGroup?.Send(current);//节点添加事件通知
-				}
-			);
+			this.Core = this.Parent.Core;
+			this.Root = this.Parent.Root;
+			if (this.Domain != this) this.Domain = this.Parent.Domain;
+			this.SetActive(true);//激活变更
+			this.Core.EnableRuleGroup?.Send(this);//激活事件通知
+			this.OnTreeAddSelf();
 		}
 
-		#endregion
-
-		#region 移除
-
-		public virtual void TreeRemoveSelf()
+		public virtual void OnTreeAddSelf()
 		{
-			if (this.IsRecycle) return; //是否已经回收
-
-			this.TraversalPostorder
-			(
-				(INode current) =>
-				{
-					current.SendAllReferencedNodeRemove();//_判断移除引用关系 X
-					if (current is INodeListener nodeListener && current is not ICoreNode)
-					{
-						//检测移除静态监听
-						current.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-						//检测移除动态监听
-						current.Core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
-					}
-					if (current is not ICoreNode)//广播给全部监听器通知 X
-					{
-						current.GetListenerActuator<IListenerRemoveRule>()?.Send(current);
-					}
-					current.Core.ReferencedPoolManager.Remove(current);//引用池移除 ?
-				}
-			);
-			this.RemoveInParentBranch();//从父节点分支移除
+			this.Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
+			if (this is not ICoreNode)//广播给全部监听器
+			{
+				this.GetListenerActuator<IListenerAddRule>()?.Send((INode)this);
+			}
+			if (this is INodeListener nodeListener && this is not ICoreNode)//检测添加静态监听
+			{
+				this.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
+			}
+			this.Core.AddRuleGroup?.Send(this);//节点添加事件通知
 		}
-		#endregion
 
+		#endregion
 
 		#region 释放
 
-
 		/// <summary>
-		/// 回收节点的处理
+		/// 回收节点
 		/// </summary>
 		public virtual void Dispose()
 		{
-			if (this.IsRecycle || this.IsDisposed) return; //是否已经回收
-			this.TraversalPrePostOrder
-			(
-				(INode current) =>//节点回收前序遍历处理
-				{
-					current.Core.BeforeRemoveRuleGroup?.Send(current);
-				}
-			,
-				(INode current) =>//节点回收后续遍历处理
-				{
-					current.RemoveInParentBranch();//从父节点分支移除
-					current.SendAllReferencedNodeRemove();//_判断移除引用关系 X
-					current.SetActive(false);//激活变更
-					current.Core.DisableRuleGroup?.Send(current); //禁用事件通知 X
-					if (current is INodeListener nodeListener && current is not ICoreNode)
-					{
-						//检测移除静态监听
-						current.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-						//检测移除动态监听
-						current.Core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
-					}
-					current.Core.RemoveRuleGroup?.Send(current);//移除事件通知
-					if (current is not ICoreNode)//广播给全部监听器通知 X
-					{
-						current.GetListenerActuator<IListenerRemoveRule>()?.Send(current);
-					}
-					current.Core.ReferencedPoolManager.Remove(current);//引用池移除 ?
-					current.DisposeDomain(); //清除域节点
-					current.Parent = null;//清除父节点
-					current.OnDispose();//释放或回收到池
-				}
-			);
+			//是否已经回收
+			if (this.IsRecycle || this.IsDisposed) return;
+			//节点回收前序遍历处理,节点回收后续遍历处理
+			this.TraversalPrePostOrder(current => current.OnBeforeDispose(), current => current.OnDispose());
 		}
 
-		/// <summary>
-		/// 释放后：回收到对象池
-		/// </summary>
+		public void OnBeforeDispose()
+		{
+			this.Core.BeforeRemoveRuleGroup?.Send(this);
+		}
+
 		public virtual void OnDispose()
 		{
-			Core?.Recycle(this);
+			this.RemoveInParentBranch();//从父节点分支移除
+			this.SendAllReferencedNodeRemove();//_判断移除引用关系 X
+			this.SetActive(false);//激活变更
+			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知 X
+			if (this is INodeListener nodeListener && this is not ICoreNode)
+			{
+				//检测移除静态监听
+				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
+				//检测移除动态监听
+				this.Core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
+			}
+			this.Core.RemoveRuleGroup?.Send(this);//移除事件通知
+			if (this is not ICoreNode)//广播给全部监听器通知 X
+			{
+				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
+			}
+			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
+			this.DisposeDomain(); //清除域节点
+			this.Parent = null;//清除父节点
+			Core?.Recycle(this);//回收到池
 		}
+
 		#endregion
 	}
 

@@ -27,7 +27,7 @@ namespace WorldTree
         bool IsDisposed { get; set; }
 
         /// <summary>
-        /// 对象释放时
+        /// 对象释放时的处理
         /// </summary>
         void OnDispose();
     }
