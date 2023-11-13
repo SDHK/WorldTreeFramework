@@ -281,7 +281,7 @@ namespace WorldTree
 		/// <summary>
 		/// 树结构尝试嫁接节点
 		/// </summary>
-		public bool TreeGraftNode<B, K, N>(K key, N node) where N : class, INode where B : class, IBranch<K>;
+		public bool TreeGraftNode<B, K>(K key, INode node) where B : class, IBranch<K>;
 
 		/// <summary>
 		/// 树结构嫁接自己时的处理

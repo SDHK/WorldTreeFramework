@@ -6,12 +6,11 @@
 * 描述： 组件分支
 * 
 * 主要分支之一
-* 设定为根据类型为键进行存储，
+* 设定根据类型为键挂载，
 * 所以在同一节点下，同一类型的组件只能有一个
 * 
 
 */
-
 
 namespace WorldTree
 {
@@ -39,15 +38,8 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGetComponent(this INode self, long type, out INode component)
 		{
-			if (self.TryGetBranch(out ComponentBranch branch))
-			{
-				return branch.TryGetNode(type, out component);
-			}
-			else
-			{
-				component = null;
-				return false;
-			}
+			component = null;
+			return self.TryGetBranch(out ComponentBranch branch) && branch.TryGetNode(type, out component);
 		}
 
 		/// <summary>
@@ -57,29 +49,36 @@ namespace WorldTree
 			where N : class, INode, AsNode<ComponentBranch, T>
 			where T : class, INode
 		{
-			if (self.TryGetBranch(out ComponentBranch branch))
-			{
-				if (branch.TryGetNode(TypeInfo<T>.HashCode64, out INode node))
-				{
-					component = node as T;
-					return true;
-				}
-				else
-				{
-					component = null;
-					return false;
-				}
-			}
-			else
-			{
-				component = null;
-				return false;
-			}
+			component = null;
+			return self.TryGetComponent(TypeInfo<T>.HashCode64, out INode node) && (component = node as T) != null;
 		}
 
 		#endregion
 
 		#region 裁剪
+
+		/// <summary>
+		/// 裁剪组件
+		/// </summary>
+		public static void CutComponent<T>(this INode self)
+			where T : class, INode
+		{
+			self.RemoveComponent(TypeInfo<T>.HashCode64);
+		}
+
+		/// <summary>
+		/// 裁剪组件
+		/// </summary>
+		public static void CutComponent(this INode self, long type)
+		{
+			if (self.TryGetBranch(out ComponentBranch branch))
+			{
+				if (branch.TryGetNode(type, out INode node))
+				{
+					node.TreeCutSelf();
+				}
+			}
+		}
 
 		#endregion
 
@@ -92,7 +91,7 @@ namespace WorldTree
 			where N : class, INode, AsNode<ComponentBranch, T>
 			where T : class, INode
 		{
-			self.TreeGraftNode<ComponentBranch, long, T>(TypeInfo<T>.HashCode64, component);
+			self.TreeGraftNode<ComponentBranch, long>(TypeInfo<T>.HashCode64, component);
 		}
 
 		#endregion
@@ -127,23 +126,12 @@ namespace WorldTree
 		/// </summary>
 		public static void RemoveAllComponent(this INode self)
 		{
-			if (self.TryGetBranch(out ComponentBranch branch))
-			{
-				var nodes = self.PoolGet<UnitStack<INode>>();
-				foreach (var item in branch) nodes.Push(item);
-
-				int length = nodes.Count;
-				for (int i = 0; i < length; i++)
-				{
-					nodes.Pop().Dispose();
-				}
-				nodes.Dispose();
-			}
+			if (self.TryGetBranch(out ComponentBranch branch)) branch.RemoveAllNode();
 		}
 
 		#endregion
 
-		#region AddComponent
+		#region 添加
 
 		#region 池
 

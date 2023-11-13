@@ -6,7 +6,7 @@
 * 描述： 子节点分支
 * 
 * 主要分支之一
-* 设定为根据实例id为键进行存储。
+* 设定根据实例id为键挂载。
 * 
 
 */
@@ -16,36 +16,101 @@ namespace WorldTree
 	/// <summary>
 	/// 子分支
 	/// </summary>
-	public class ChildBranch : Branch<long> //内置与id对应的键值字典
+	public class ChildBranch : Branch<long> { }
+
+
+	public static class NodeChildBranchRule
 	{
-		public override bool TryAddNode<N>(long key, out N Node, bool isPool = true)
+		#region 获取
+
+		/// <summary>
+		/// 尝试获取子节点
+		/// </summary>
+		public static bool TryGetChild(this INode self, long id, out INode child)
 		{
-			if (Nodes.TryGetValue(key, out INode node))
-			{
-				node = isPool ? Self.Core.GetNode(TypeInfo<N>.HashCode64) : Self.Core.NewNodeLifecycle(TypeInfo<N>.HashCode64);
-				NodeKeys.Add(node.Id, key);
-				node.BranchType = TypeInfo<ChildBranch>.HashCode64;
-				node.Parent = Self;
-				node.Core = Self.Core;
-				node.Root = Self.Root;
-				if (node.Domain != node) node.Domain = Self.Domain;
-				node.SetActive(true);//激活节点
-				Nodes.Add(key, node);
-			}
-			Node = node as N;
-			return Node != null;
+			child = null;
+			return self.TryGetBranch(out ChildBranch branch) && branch.TryGetNodeById(id, out child);
 		}
 
-		public override bool TryGraftNode(long key, INode node)
+		#endregion
+
+		#region 裁剪
+
+		/// <summary>
+		/// 裁剪子节点
+		/// </summary>
+		public static void CutChild(this INode self, long id)
 		{
-			if (Nodes.TryAdd(key, node))
+			if (self.TryGetBranch(out ChildBranch branch))
 			{
-				NodeKeys.Add(node.Id, key);
-				node.BranchType = TypeInfo<ChildBranch>.HashCode64;
-				node.Parent = Self;
-				return true;
+				if (branch.TryGetNode(id, out INode node))
+				{
+					node.TreeCutSelf();
+				}
 			}
-			return false;
 		}
+
+		#endregion
+
+		#region 嫁接
+
+		/// <summary>
+		/// 嫁接子节点
+		/// </summary>
+		public static void GraftChild<N, T>(this INode self, T node)
+			where N : class, INode, AsNode<ChildBranch, T>
+			where T : class, INode
+		{
+			self.TreeGraftNode<ChildBranch, long>(node.Id, node);
+		}
+
+		/// <summary>
+		/// 设定id嫁接子节点
+		/// </summary>
+		public static void GraftChild(this INode self, long id, INode node)
+		{
+			self.TreeGraftNode<ChildBranch, long>(id, node);
+		}
+
+		#endregion
+
+		#region 移除
+
+		/// <summary>
+		/// 移除子节点
+		/// </summary>
+		public static void RemoveChild(this INode self, long id)
+		{
+			if (self.TryGetBranch(out ChildBranch branch))
+			{
+				if (branch.TryGetNode(id, out INode node))
+				{
+					node.Dispose();
+				}
+			}
+		}
+
+		/// <summary>
+		/// 移除全部子节点
+		/// </summary>
+		public static void RemoveAllChild(this INode self)
+		{
+			if (self.TryGetBranch(out ChildBranch branch)) branch.RemoveAllNode();
+		}
+
+		#endregion
+
+		#region 添加
+
+		#region 池
+
+		#endregion
+
+		#region 非池
+
+		#endregion
+
+		#endregion
 	}
+
 }

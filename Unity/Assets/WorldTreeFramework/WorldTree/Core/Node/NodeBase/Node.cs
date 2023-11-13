@@ -346,8 +346,7 @@ namespace WorldTree
 
 		#region 嫁接
 
-		public virtual bool TreeGraftNode<B, K, N>(K key, N node)
-			where N : class, INode
+		public virtual bool TreeGraftNode<B, K>(K key, INode node)
 			where B : class, IBranch<K>
 		{
 			if (!this.AddBranch<B>().TryGraftNode(key, node)) return false;
