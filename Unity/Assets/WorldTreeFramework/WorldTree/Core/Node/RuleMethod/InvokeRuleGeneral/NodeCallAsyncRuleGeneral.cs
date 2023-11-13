@@ -12,8 +12,8 @@ namespace WorldTree
 
     public static class NodeCallAsyncRuleGeneral
     {
-        #region Call
-        public static TreeTask<OutT> TryCallAsync<OutT>(this INode self, OutT defaultOutT) => self.TryCallRuleAsync(DefaultType<ICallRuleAsync<OutT>>.Default, defaultOutT);
+		#region Call  
+		public static TreeTask<OutT> TryCallAsync<OutT>(this INode self, OutT defaultOutT) => self.TryCallRuleAsync(ICallRuleAsync<OutT>.Default, defaultOutT);
         public static TreeTask<OutT> TryCallAsync<T1, OutT>(this INode self, T1 arg1, OutT defaultOutT) => self.TryCallRuleAsync(DefaultType<ICallRuleAsync<T1, OutT>>.Default, arg1, defaultOutT);
         public static TreeTask<OutT> TryCallAsync<T1, T2, OutT>(this INode self, T1 arg1, T2 arg2, OutT defaultOutT) => self.TryCallRuleAsync(DefaultType<ICallRuleAsync<T1, T2, OutT>>.Default, arg1, arg2, defaultOutT);
         public static TreeTask<OutT> TryCallAsync<T1, T2, T3, OutT>(this INode self, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT) => self.TryCallRuleAsync(DefaultType<ICallRuleAsync<T1, T2, T3, OutT>>.Default, arg1, arg2, arg3, defaultOutT);

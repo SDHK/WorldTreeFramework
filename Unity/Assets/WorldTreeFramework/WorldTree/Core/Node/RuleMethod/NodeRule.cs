@@ -27,33 +27,33 @@ namespace WorldTree
 		}
 
 
-		/// <summary>
-		/// 从父节点中删除
-		/// </summary>
-		public static void RemoveInParent(this INode self)
-		{
-			if (self.Parent != null)
-			{
-				if (self.isComponent)
-				{
-					self.Parent.m_Components.Remove(self.Type);
-					if (self.Parent.m_Components.Count == 0)
-					{
-						self.Parent.m_Components.Dispose();
-						self.Parent.m_Components = null;
-					}
-				}
-				else
-				{
-					self.Parent.m_Children.Remove(self.Id);
-					if (self.Parent.m_Children.Count == 0)
-					{
-						self.Parent.m_Children.Dispose();
-						self.Parent.m_Children = null;
-					}
-				}
-			}
-		}
+		///// <summary>
+		///// 从父节点中删除
+		///// </summary>
+		//public static void RemoveInParent(this INode self)
+		//{
+		//	if (self.Parent != null)
+		//	{
+		//		if (self.isComponent)
+		//		{
+		//			self.Parent.m_Components.Remove(self.Type);
+		//			if (self.Parent.m_Components.Count == 0)
+		//			{
+		//				self.Parent.m_Components.Dispose();
+		//				self.Parent.m_Components = null;
+		//			}
+		//		}
+		//		else
+		//		{
+		//			self.Parent.m_Children.Remove(self.Id);
+		//			if (self.Parent.m_Children.Count == 0)
+		//			{
+		//				self.Parent.m_Children.Dispose();
+		//				self.Parent.m_Children = null;
+		//			}
+		//		}
+		//	}
+		//}
 
 		/// <summary>
 		/// 回收自己

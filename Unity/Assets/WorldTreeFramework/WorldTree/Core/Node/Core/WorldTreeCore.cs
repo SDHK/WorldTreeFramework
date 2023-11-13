@@ -223,70 +223,70 @@ namespace WorldTree
 
 		#region 节点添加与移除
 
-		/// <summary>
-		/// 核心添加一个节点
-		/// </summary>
-		public static void AddNode(this WorldTreeCore self, INode node)
-		{
-			self.ReferencedPoolManager.TryAdd(node);
+		///// <summary>
+		///// 核心添加一个节点
+		///// </summary>
+		//public static void AddNode(this WorldTreeCore self, INode node)
+		//{
+		//	self.ReferencedPoolManager.TryAdd(node);
 
-			node.SetActive(true);
-			self.EnableRuleGroup?.Send(node);//添加后调用激活事件
+		//	node.SetActive(true);
+		//	self.EnableRuleGroup?.Send(node);//添加后调用激活事件
 
-			//广播给全部监听器!!!
-			if (node is not ICoreNode)
-			{
-				node.GetListenerActuator<IListenerAddRule>()?.Send(node);
-			}
+		//	//广播给全部监听器!!!
+		//	if (node is not ICoreNode)
+		//	{
+		//		node.GetListenerActuator<IListenerAddRule>()?.Send(node);
+		//	}
 
-			if (node is INodeListener nodeListener && node is not ICoreNode)
-			{
-				//检测添加静态监听
-				self.ReferencedPoolManager.TryAddStaticListener(nodeListener);
-			}
+		//	if (node is INodeListener nodeListener && node is not ICoreNode)
+		//	{
+		//		//检测添加静态监听
+		//		self.ReferencedPoolManager.TryAddStaticListener(nodeListener);
+		//	}
 
-			//这个节点的添加事件
-			self.AddRuleGroup?.Send(node);
-		}
+		//	//这个节点的添加事件
+		//	self.AddRuleGroup?.Send(node);
+		//}
 
-		/// <summary>
-		/// 核心移除一个节点
-		/// </summary>
-		public static void RemoveNode(this WorldTreeCore self, INode node)
-		{
-			//从父节点中移除
-			node.RemoveInParent();
-			//引用关系移除通知
-			node.SendAllReferencedNodeRemove();
+		///// <summary>
+		///// 核心移除一个节点
+		///// </summary>
+		//public static void RemoveNode(this WorldTreeCore self, INode node)
+		//{
+		//	//从父节点中移除
+		//	node.RemoveInParent();
+		//	//引用关系移除通知
+		//	node.SendAllReferencedNodeRemove();
 
-			node.SetActive(false);//激活标记变更
+		//	node.SetActive(false);//激活标记变更
 
-			self.DisableRuleGroup?.Send(node);//调用禁用事件
+		//	self.DisableRuleGroup?.Send(node);//调用禁用事件
 
-			if (node is INodeListener && node is not ICoreNode)
-			{
-				INodeListener nodeListener = (node as INodeListener);
+		//	if (node is INodeListener && node is not ICoreNode)
+		//	{
+		//		INodeListener nodeListener = (node as INodeListener);
 
-				//检测移除静态监听
-				self.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-				//检测移除动态监听
-				self.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
-			}
+		//		//检测移除静态监听
+		//		self.ReferencedPoolManager.RemoveStaticListener(nodeListener);
+		//		//检测移除动态监听
+		//		self.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
+		//	}
 
-			//这个节点的移除事件
-			self.RemoveRuleGroup?.Send(node);
+		//	//这个节点的移除事件
+		//	self.RemoveRuleGroup?.Send(node);
 
-			//广播给全部监听器!!!
-			if (node is not ICoreNode)
-			{
-				node.GetListenerActuator<IListenerRemoveRule>()?.Send(node);
-			}
+		//	//广播给全部监听器!!!
+		//	if (node is not ICoreNode)
+		//	{
+		//		node.GetListenerActuator<IListenerRemoveRule>()?.Send(node);
+		//	}
 
-			self.ReferencedPoolManager.Remove(node);
+		//	self.ReferencedPoolManager.Remove(node);
 
-			node.DisposeDomain();//清除域节点
-			node.Parent = null;//清除父节点
-		}
+		//	node.DisposeDomain();//清除域节点
+		//	node.Parent = null;//清除父节点
+		//}
 		#endregion
 	}
 }

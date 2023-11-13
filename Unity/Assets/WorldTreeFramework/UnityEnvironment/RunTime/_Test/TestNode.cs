@@ -1,22 +1,20 @@
-﻿using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2023/10/28 12:50
+
+* 描述： 
+
+*/
+
 using WorldTree;
 
-public class TreeNode : Node
 
-	, ComponentOf<InitialDomain>
-	, ChildOf<InitialDomain>
-
-	, BranchOf<InitialDomain, ComponentBranch>
-	, BranchOf<InitialDomain, ChildBranch>
-
-
+public class TestNode : Node
 	, AsRule<IFixedUpdateTimeRule>
 	, AsRule<ILateUpdateTimeRule>
 	, AsRule<IAwakeRule>
 {
-
 	public static bool bit = true;
 
 	public async TreeTask Test1(bool b = false)
@@ -160,9 +158,9 @@ public class TreeNode : Node
 	//    }
 	//}
 
-	class NodeUpdateSystem : UpdateTimeRule<TreeNode>
+	class NodeUpdateSystem : UpdateTimeRule<TestNode>
 	{
-		protected override void OnEvent(TreeNode self, float deltaTime)
+		protected override void OnEvent(TestNode self, float deltaTime)
 		{
 			//Debug.Log("UpdateSystem!");
 		}

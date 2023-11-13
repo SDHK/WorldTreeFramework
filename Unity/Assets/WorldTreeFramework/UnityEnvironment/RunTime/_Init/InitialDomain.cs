@@ -71,8 +71,9 @@ namespace WorldTree
 		, AsRule<IAwakeRule>
 		, AsRule<IFixedUpdateTimeRule>
 		, AsRule<ILateUpdateTimeRule>
+		, AsNode<ComponentBranch,TestNode>
 	{
-		public TreeNode node;
+		public TestNode node;
 		public TreeValue<float> valueFloat;
 		public TreeValue<int> valueInt;
 
@@ -317,14 +318,15 @@ namespace WorldTree
 				//	World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value} :{self.valueString.Value}");
 
 				//}
-				
+
 				if (Input.GetKeyDown(KeyCode.Q))
 				{
 					//self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
 					//self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
 					//self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
-					self.AddComponent(out TreeNode _).Test1().Coroutine();
+					self.AddComponent(out TestNode _).Test1().Coroutine();
+					self.AddNode(ComponentBranch, TypeInfo<TestNode>.HashCode64, out TestNode node);
 
 					//for (int i = 0; i < 1000; i++)
 					//{
@@ -449,6 +451,6 @@ namespace WorldTree
 			}
 
 		}
-		
+
 	}
 }

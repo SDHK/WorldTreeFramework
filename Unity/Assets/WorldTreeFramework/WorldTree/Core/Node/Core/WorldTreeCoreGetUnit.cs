@@ -33,10 +33,29 @@ namespace WorldTree
             return obj;
         }
 
-        /// <summary>
-        /// 回收单位
-        /// </summary>
-        public static void Recycle(this WorldTreeCore self, IUnitPoolEventItem obj)
+		/// <summary>
+		/// 从池中获取单位对象
+		/// </summary>
+		public static IUnitPoolEventItem GetUnit(this WorldTreeCore self, long type)
+        {
+			if (self.IsActive)
+			{
+				if (self.UnitPoolManager.TryGet(type, out IUnitPoolEventItem unit))
+				{
+					return unit;
+				}
+			}
+			IUnitPoolEventItem obj = Activator.CreateInstance(type.HashCore64ToType(), true) as IUnitPoolEventItem;
+			obj.Type = type;
+			obj.OnNew();
+			obj.OnGet();
+			return obj;
+		}
+
+		/// <summary>
+		/// 回收单位
+		/// </summary>
+		public static void Recycle(this WorldTreeCore self, IUnitPoolEventItem obj)
         {
             if (self.IsActive && obj.IsFromPool)
             {

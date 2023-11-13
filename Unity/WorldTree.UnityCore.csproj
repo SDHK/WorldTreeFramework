@@ -75,7 +75,7 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WIndowUpdateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Assets\AssetBundle\RuleBase\LoadAssetAsyncRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Extension\GameObjectEntityExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\Node.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\TestNode.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\WindowManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Pool\GameObjectPool.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Assets\Addressables\AddressablesManager.cs" />

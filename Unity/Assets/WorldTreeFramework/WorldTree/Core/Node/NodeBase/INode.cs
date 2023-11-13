@@ -179,54 +179,144 @@ namespace WorldTree
 		public UnitDictionary<long, IBranch> m_Branchs { get; set; }
 
 
+		/// <summary>
+		/// 树分支
+		/// </summary>
+		public UnitDictionary<long, IBranch> Branchs { get; }
+
+
 		#endregion
 
-		/// <summary>
-		/// 树结构添加自己
-		/// </summary>
-		public void TreeAddSelf()
-		{
 
-		}
+		#region 分支处理
+
+		#region 添加
+
+		/// <summary>
+		/// 添加分支
+		/// </summary>
+		public B AddBranch<B>() where B : class, IBranch;
+
+		/// <summary>
+		/// 添加分支
+		/// </summary>
+		public IBranch AddBranch(long Type);
+
+		#endregion
+
+		#region 移除
+
+		/// <summary>
+		/// 移除分支的所有节点
+		/// </summary>
+		public void RemoveBranch<B>() where B : class, IBranch;
+
+		/// <summary>
+		/// 移除分支的所有节点
+		/// </summary>
+		public void RemoveBranch(long Type);
+
+		/// <summary>
+		/// 从父节点分支移除
+		/// </summary>
+		public void RemoveInParentBranch();
+
+		#endregion
+
+		#region 获取
+
+		/// <summary>
+		/// 尝试获取分支
+		/// </summary>
+		public bool TryGetBranch<B>(out B branch) where B : class, IBranch;
+
+		/// <summary>
+		/// 尝试获取分支
+		/// </summary>
+		public bool TryGetBranch(long branchType, out IBranch branch);
+
+		#endregion
+
+		#endregion
+
+		#region 节点处理
+
+		#region 添加
+
+		/// <summary>
+		/// 树结构添加节点
+		/// </summary>
+		public N TreeAddNode<B, K, N>(K key, out N node, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		/// <summary>
+		/// 树结构添加节点
+		/// </summary>
+		public N TreeAddNode<B, K, N, T1>(K key, out N node, T1 arg1, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		/// <summary>
+		/// 树结构添加节点
+		/// </summary>
+		public N TreeAddNode<B, K, N, T1, T2>(K key, out N node, T1 arg1, T2 arg2, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		/// <summary>
+		/// 树结构添加节点
+		/// </summary>
+		public N TreeAddNode<B, K, N, T1, T2, T3>(K key, out N node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		/// <summary>
+		/// 树结构添加节点
+		/// </summary>
+		public N TreeAddNode<B, K, N, T1, T2, T3, T4>(K key, out N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		/// <summary>
+		/// 树结构添加节点
+		/// </summary>
+		public N TreeAddNode<B, K, N, T1, T2, T3, T4, T5>(K key, out N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+
 		/// <summary>
 		/// 树结构添加自己时的处理
 		/// </summary>
-		public void OnTreeAddSelf()
-		{
+		/// <remarks>由框架内部调用</remarks>
+		public void OnTreeAddSelf();
 
-		}
+		#endregion
 
-		/// <summary>
-		/// 将自己嫁接到树上
-		/// </summary>
-		public void TreeGraftSelf();
+		#region 嫁接
 
 		/// <summary>
-		/// 将自己嫁接到树上时的处理
+		/// 树结构尝试嫁接节点
 		/// </summary>
+		public bool TreeGraftNode<B, K, N>(K key, N node) where N : class, INode where B : class, IBranch<K>;
+
+		/// <summary>
+		/// 树结构嫁接自己时的处理
+		/// </summary>
+		/// <remarks>由框架内部调用</remarks>
 		public void OnTreeGraftSelf();
 
+		#endregion
+
+		#region 裁剪
 
 		/// <summary>
-		/// 将自己从树上裁剪下来
+		/// 从树上将自己裁剪下来
 		/// </summary>
 		public void TreeCutSelf();
 
 		/// <summary>
-		/// 树结构移除自己时的处理
+		/// 从树上将自己裁剪下来时的处理
 		/// </summary>
+		/// <remarks>由框架内部调用</remarks>
 		public void OnTreeCutSelf();
 
+		#endregion
 
+		#region 释放
 
 		/// <summary>
 		/// 释放前的处理
 		/// </summary>
-		public void OnBeforeDispose()
-		{
+		/// <remarks>由框架内部调用</remarks>
+		public void OnBeforeDispose();
 
-		}
+		#endregion
 
+		#endregion
 
 	}
 }
