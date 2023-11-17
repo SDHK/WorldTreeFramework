@@ -230,10 +230,21 @@ namespace WorldTree
 		/// </summary>
 		public bool TryGetBranch<B>(out B branch) where B : class, IBranch;
 
+
 		/// <summary>
 		/// 尝试获取分支
 		/// </summary>
 		public bool TryGetBranch(long branchType, out IBranch branch);
+
+		/// <summary>
+		/// 获取分支
+		/// </summary>
+		public B GetBranch<B>() where B : class, IBranch;
+
+		/// <summary>
+		/// 获取分支
+		/// </summary>
+		public IBranch GetBranch(long branchType);
 
 		#endregion
 
@@ -294,9 +305,28 @@ namespace WorldTree
 		#region 裁剪
 
 		/// <summary>
+		/// 树结构尝试裁剪节点
+		/// </summary>
+		public bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch;
+		/// <summary>
+		/// 树结构尝试裁剪节点
+		/// </summary>
+		public bool TryCutNode<B, K>(K key, out INode node) where B : class, IBranch<K>;
+
+		/// <summary>
+		/// 树结构裁剪节点
+		/// </summary>
+		public INode CutNodeById<B>(long id) where B : class, IBranch;
+		/// <summary>
+		/// 树结构裁剪节点
+		/// </summary>
+		public INode CutNode<B, K>(K key) where B : class, IBranch<K>;
+
+
+		/// <summary>
 		/// 从树上将自己裁剪下来
 		/// </summary>
-		public void TreeCutSelf();
+		public INode TreeCutSelf();
 
 		/// <summary>
 		/// 从树上将自己裁剪下来时的处理
@@ -309,10 +339,53 @@ namespace WorldTree
 		#region 释放
 
 		/// <summary>
+		/// 释放所有分支的所有节点
+		/// </summary>
+		public void RemoveAllNode();
+
+		/// <summary>
+		/// 释放分支的所有节点
+		/// </summary>
+		public void RemoveAllNode<B>() where B : class, IBranch;
+
+		/// <summary>
+		/// 根据键值释放分支的节点
+		/// </summary>
+		public void RemoveNode<B, K>(K key) where B : class, IBranch<K>;
+
+		/// <summary>
+		/// 根据id释放分支的节点
+		/// </summary>
+		public void RemoveNodeById<B>(long id) where B : class, IBranch;
+
+		/// <summary>
 		/// 释放前的处理
 		/// </summary>
 		/// <remarks>由框架内部调用</remarks>
 		public void OnBeforeDispose();
+
+		#endregion
+
+		#region 获取
+
+		/// <summary>
+		/// 树结构尝试获取节点
+		/// </summary>
+		public bool TryGetNodeById<B>(long id, out INode node) where B : class, IBranch;
+
+		/// <summary>
+		/// 树结构尝试获取节点
+		/// </summary>
+		public bool TryGetNode<B, K>(K key, out INode node) where B : class, IBranch<K>;
+
+		/// <summary>
+		/// 树结构获取节点
+		/// </summary>
+		public INode GetNodeById<B>(long id) where B : class, IBranch;
+		/// <summary>
+		/// 树结构获取节点
+		/// </summary>
+		public INode GetNode<B, K>(K key) where B : class, IBranch<K>;
 
 		#endregion
 

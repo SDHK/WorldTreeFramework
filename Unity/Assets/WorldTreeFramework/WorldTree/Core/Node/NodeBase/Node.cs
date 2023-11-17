@@ -119,33 +119,13 @@ namespace WorldTree
 
 		public virtual void RemoveBranch<B>() where B : class, IBranch => this.RemoveBranch(TypeInfo<B>.HashCode64);
 
-		public virtual void RemoveBranch(long branchType)
-		{
-			if (this.m_Branchs != null && this.m_Branchs.TryGetValue(branchType, out IBranch iBranch) && iBranch.Count != 0)
-			{
-				//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
-				using (this.PoolGet(out UnitStack<INode> nodes))
-				{
-					foreach (var item in iBranch) nodes.Push(item);
-					while (nodes.Count != 0) nodes.Pop().Dispose();
-				}
-
-				//假如在节点移除过程中，节点又添加了新的节点。那么就是错误的，新增节点将无法回收，父节点的分支键值将被占用。
-				if (iBranch.Count != 0)
-				{
-					foreach (var item in iBranch)
-					{
-						World.Log($"移除分支出错，意外的新节点，分支:{iBranch.GetType()} 节点:{item.GetType()}:{item.Id}");
-					}
-				}
-			}
-		}
+		public virtual void RemoveBranch(long branchType) => this.GetBranch(branchType)?.RemoveAllNode();
 
 		public virtual void RemoveInParentBranch()
 		{
 			if (this.Parent.TryGetBranch(this.BranchType, out IBranch branch))
 			{
-				branch.RemoveNode(this);
+				branch.RemoveNodeInDictionary(this);
 				if (branch.Count == 0)
 				{
 					branch.Dispose();
@@ -159,34 +139,37 @@ namespace WorldTree
 			}
 		}
 
+		public virtual void RemoveAllNode()
+		{
+			if (this.m_Branchs == null) return;
+			using (this.PoolGet(out UnitStack<IBranch> branchs))
+			{
+				foreach (var item in this.m_Branchs) branchs.Push(item.Value);
+				while (branchs.Count != 0) branchs.Pop().RemoveAllNode();
+			}
+			//假如在分支移除过程中，节点又添加了新的分支。那么就是错误的，新增分支将无法回收。
+			if (m_Branchs.Count != 0)
+			{
+				foreach (var item in m_Branchs)
+				{
+					World.Log($"移除分支出错，意外的新分支，节点：{this} 分支:{item.GetType()}");
+				}
+			}
+		}
+
 		#endregion
 
 		#region 获取
 
-		public virtual bool TryGetBranch<B>(out B branch) where B : class, IBranch
-		{
-			if (this.m_Branchs != null && this.m_Branchs.TryGetValue(TypeInfo<B>.HashCode64, out IBranch iBranch))
-			{
-				branch = iBranch as B;
-				return true;
-			}
-			branch = null;
-			return false;
-		}
+		public virtual bool TryGetBranch<B>(out B branch) where B : class, IBranch => (branch = (this.m_Branchs != null && this.m_Branchs.TryGetValue(TypeInfo<B>.HashCode64, out IBranch Ibranch)) ? Ibranch as B : null) != null;
 
-		public virtual bool TryGetBranch(long branchType, out IBranch branch)
-		{
-			if (this.m_Branchs != null && this.m_Branchs.TryGetValue(branchType, out IBranch iBranch))
-			{
-				branch = iBranch;
-				return true;
-			}
-			branch = null;
-			return false;
-		}
+		public virtual bool TryGetBranch(long branchType, out IBranch branch) => (branch = (this.m_Branchs != null && this.m_Branchs.TryGetValue(branchType, out branch)) ? branch : null) != null;
+
+		public virtual B GetBranch<B>() where B : class, IBranch => (this.m_Branchs != null && this.m_Branchs.TryGetValue(TypeInfo<B>.HashCode64, out IBranch iBranch)) ? iBranch as B : null;
+
+		public virtual IBranch GetBranch(long branchType) => (this.m_Branchs != null && this.m_Branchs.TryGetValue(branchType, out IBranch iBranch)) ? iBranch : null;
 
 		#endregion
-
 
 		#endregion
 
@@ -274,7 +257,6 @@ namespace WorldTree
 
 		public virtual void OnTreeAddSelf()
 		{
-
 			this.Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
 			if (this is not ICoreNode)//广播给全部监听器
 			{
@@ -302,6 +284,12 @@ namespace WorldTree
 
 		#region 释放
 
+		public virtual void RemoveAllNode<B>() where B : class, IBranch => this.GetBranch<B>()?.RemoveAllNode();
+
+		public virtual void RemoveNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.RemoveNode(key);
+
+		public virtual void RemoveNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.RemoveNodeById(id);
+
 		/// <summary>
 		/// 回收节点
 		/// </summary>
@@ -313,10 +301,7 @@ namespace WorldTree
 			this.TraversalPrePostOrder(current => current.OnBeforeDispose(), current => current.OnDispose());
 		}
 
-		public void OnBeforeDispose()
-		{
-			this.Core.BeforeRemoveRuleGroup?.Send(this);
-		}
+		public void OnBeforeDispose() => this.Core.BeforeRemoveRuleGroup?.Send(this);
 
 		public virtual void OnDispose()//未完
 		{
@@ -388,11 +373,18 @@ namespace WorldTree
 
 		#region 裁剪
 
-		public virtual void TreeCutSelf()
+		public virtual bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.TryGetBranch(out B branch) && branch.TryCutNodeById(id, out node) ? node : null) != null;
+		public virtual bool TryCutNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.TryGetBranch(out B branch) && branch.TryCutNode(key, out node) ? node : null) != null;
+
+		public virtual INode CutNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.CutNodeById(id);
+		public virtual INode CutNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.CutNode(key);
+
+		public virtual INode TreeCutSelf()
 		{
-			if (this.IsRecycle) return; //是否已经回收
+			if (this.IsRecycle) return null; //是否已经回收
 			this.TraversalPostorder(current => current.OnTreeCutSelf());
 			this.RemoveInParentBranch();//从父节点分支移除
+			return this;
 		}
 		public virtual void OnTreeCutSelf()
 		{
@@ -411,6 +403,16 @@ namespace WorldTree
 			}
 			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
 		}
+
+		#endregion
+
+		#region 获取	
+
+		public virtual bool TryGetNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.TryGetBranch(out B branch) && branch.TryGetNodeById(id, out node) ? node : null) != null;
+
+		public virtual bool TryGetNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.TryGetBranch(out B branch) && branch.TryGetNode(key, out node) ? node : null) != null;
+		public virtual INode GetNodeById<B>(long Id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(Id);
+		public virtual INode GetNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key);
 
 		#endregion
 

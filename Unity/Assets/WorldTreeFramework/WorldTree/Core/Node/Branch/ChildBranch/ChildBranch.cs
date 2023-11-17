@@ -67,7 +67,9 @@ namespace WorldTree
 		/// <summary>
 		/// 设定id嫁接子节点
 		/// </summary>
-		public static void GraftChild(this INode self, long id, INode node)
+		public static void GraftChild<N, T>(this INode self, long id, T node)
+			where N : class, INode, AsNode<ChildBranch, T>
+			where T : class, INode
 		{
 			self.TreeGraftNode<ChildBranch, long>(id, node);
 		}
@@ -77,16 +79,13 @@ namespace WorldTree
 		#region 移除
 
 		/// <summary>
-		/// 移除子节点
+		/// 根据键值移除子节点
 		/// </summary>
 		public static void RemoveChild(this INode self, long id)
 		{
 			if (self.TryGetBranch(out ChildBranch branch))
 			{
-				if (branch.TryGetNode(id, out INode node))
-				{
-					node.Dispose();
-				}
+				branch.RemoveNode(id);
 			}
 		}
 
@@ -103,6 +102,8 @@ namespace WorldTree
 		#region 添加
 
 		#region 池
+
+
 
 		#endregion
 

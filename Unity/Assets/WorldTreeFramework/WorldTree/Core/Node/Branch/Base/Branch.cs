@@ -10,6 +10,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 
 namespace WorldTree
 {
@@ -22,6 +23,16 @@ namespace WorldTree
 		public int Count => Nodes.Count;
 		protected UnitDictionary<K, INode> Nodes;
 		protected UnitDictionary<long, K> NodeKeys;
+
+		public void SetNode(INode node)
+		{
+			if (Self == null)
+			{
+				Self = node;
+				Self.PoolGet(out Nodes);
+				Self.PoolGet(out NodeKeys);
+			}
+		}
 
 		public virtual bool TryAddNode<N>(K key, out N Node, bool isPool = true) where N : class, INode
 		{
@@ -52,7 +63,49 @@ namespace WorldTree
 		}
 
 		public virtual bool TryGetNodeKey(INode node, out K key) => NodeKeys.TryGetValue(node.Id, out key);
-		public virtual void RemoveNode(INode node)
+
+		public virtual bool TryGetNode(K key, out INode node) => this.Nodes.TryGetValue(key, out node);
+
+		public virtual bool TryGetNodeById(long id, out INode node) => (node = this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out node) ? node : null) != null;
+
+		public virtual INode GetNode(K key) => this.Nodes.TryGetValue(key, out INode node) ? node : null;
+
+		public virtual INode GetNodeById(long id) => this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out INode node) ? node : null;
+
+
+		public virtual bool TryCutNode(K key, out INode node) => (node = this.GetNode(key)?.TreeCutSelf()) != null;
+
+		public virtual bool TryCutNodeById(long id, out INode node) => (node = this.GetNodeById(id)?.TreeCutSelf()) != null;
+
+		public virtual INode CutNode(K key) => this.GetNode(key)?.TreeCutSelf();
+
+		public virtual INode CutNodeById(long id) => this.GetNodeById(id)?.TreeCutSelf();
+
+
+		public virtual void RemoveNodeById(long id) => GetNodeById(id)?.Dispose();
+
+		public virtual void RemoveNode(K key) => GetNode(key)?.Dispose();
+
+		public virtual void RemoveAllNode()
+		{
+			if (Nodes.Count == 0) return;
+			//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
+			using (Self.PoolGet(out UnitStack<INode> nodes))
+			{
+				foreach (var item in Nodes) nodes.Push(item.Value);
+				while (nodes.Count != 0) nodes.Pop().Dispose();
+			}
+			//假如在节点移除过程中，节点又添加了新的节点。那么就是错误的，新增节点将无法回收，父节点的分支键值将被占用。
+			if (Nodes.Count != 0)
+			{
+				foreach (var item in Nodes)
+				{
+					World.LogError($"移除节点出错，意外的新节点，分支:{this.GetType()} 节点:{item.Value.GetType()}:{item.Value.Id}");
+				}
+			}
+		}
+
+		public virtual void RemoveNodeInDictionary(INode node)
 		{
 			if (NodeKeys.TryGetValue(node.Id, out K key))
 			{
@@ -60,26 +113,10 @@ namespace WorldTree
 				Nodes.Remove(key);
 			}
 		}
-		public virtual void RemoveAllNode()
-		{
-			if (Nodes.Count == 0) return;
-			using (Self.PoolGet(out UnitStack<INode> nodes))
-			{
-				foreach (var item in Nodes) nodes.Push(item.Value);
-				int length = nodes.Count;
-				for (int i = 0; i < length; i++) nodes.Pop().Dispose();
-			}
-		}
 
-		public void SetNode(INode node)
-		{
-			if (Self == null)
-			{
-				Self = node;
-				Self.PoolGet(out Nodes);
-				Self.PoolGet(out NodeKeys);
-			}
-		}
+
+		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
 
 		public override void OnRecycle()
 		{
@@ -90,17 +127,5 @@ namespace WorldTree
 			this.NodeKeys = null;
 			base.OnRecycle();
 		}
-
-		public bool TryGetNode(K key, out INode Node) => this.Nodes.TryGetValue(key, out Node);
-
-		public bool TryGetNodeById(long id, out INode Node)
-		{
-			if (NodeKeys.TryGetValue(id, out K key)) return this.Nodes.TryGetValue(key, out Node);
-			Node = null;
-			return false;
-		}
-
-		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
 	}
 }

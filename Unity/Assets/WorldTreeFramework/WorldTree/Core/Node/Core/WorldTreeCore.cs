@@ -48,6 +48,15 @@ namespace WorldTree
 	/// 世界树核心
 	/// </summary>
 	public class WorldTreeCore : CoreNode
+		, AsComponent<IdManager>
+		, AsComponent<RealTimeManager>
+		, AsComponent<GameTimeManager>
+		, AsComponent<RuleManager>
+		, AsComponent<UnitPoolManager>
+		, AsComponent<NodePoolManager>
+		, AsComponent<ReferencedPoolManager>
+		, AsComponent<ArrayPoolManager>
+		, AsComponent<WorldTreeRoot>
 	{
 		public IRuleGroup<IAddRule> AddRuleGroup;
 		public IRuleGroup<IBeforeRemoveRule> BeforeRemoveRuleGroup;
@@ -191,7 +200,7 @@ namespace WorldTree
 			self.RemoveComponent<IdManager>();
 			self.RemoveComponent<ReferencedPoolManager>();
 
-			self.RemoveAll();
+			self.RemoveAllNode();
 
 			self.NewRuleGroup = null;
 			self.GetRuleGroup = null;

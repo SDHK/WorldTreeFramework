@@ -14,12 +14,17 @@
 
 namespace WorldTree
 {
+	///// <summary>
+	///// 组件：父节点限制
+	///// </summary>
+	///// <typeparam name="N">父节点类型</typeparam>
+	///// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
+	//public interface ComponentOf<in N> { }
+
 	/// <summary>
-	/// 组件：父节点限制
+	/// 组件节点
 	/// </summary>
-	/// <typeparam name="N">父节点类型</typeparam>
-	/// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
-	public interface ComponentOf<in N> { }
+	public interface AsComponent<in N> : AsNode<ComponentBranch, N> where N : class, INode { }
 
 
 	/// <summary>
@@ -30,28 +35,19 @@ namespace WorldTree
 
 	public static class NodeComponentBranchRule
 	{
-
 		#region 获取
 
 		/// <summary>
 		/// 尝试获取组件
 		/// </summary>
-		public static bool TryGetComponent(this INode self, long type, out INode component)
-		{
-			component = null;
-			return self.TryGetBranch(out ComponentBranch branch) && branch.TryGetNode(type, out component);
-		}
+		public static bool TryGetComponent(this INode self, long type, out INode component) => self.TryGetNode<ComponentBranch, long>(type, out component);
 
 		/// <summary>
 		/// 尝试获取组件
 		/// </summary>
-		public static bool TryGetComponent<N, T>(this N self, out T component)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode
-		{
-			component = null;
-			return self.TryGetComponent(TypeInfo<T>.HashCode64, out INode node) && (component = node as T) != null;
-		}
+		public static bool TryGetComponent<N, T>(this N self, out T component) where N : class, INode, AsNode<ComponentBranch, T> where T : class, INode
+		=> (component = self.TryGetNode<ComponentBranch, long>(TypeInfo<T>.HashCode64, out INode node) ? node as T : null) != null;
+
 
 		#endregion
 
@@ -60,25 +56,12 @@ namespace WorldTree
 		/// <summary>
 		/// 裁剪组件
 		/// </summary>
-		public static void CutComponent<T>(this INode self)
-			where T : class, INode
-		{
-			self.RemoveComponent(TypeInfo<T>.HashCode64);
-		}
+		public static bool TryCutComponent<T>(this INode self, out T node) where T : class, INode => (node = self.TryCutNode<ComponentBranch, long>(TypeInfo<T>.HashCode64, out INode Inode) ? Inode as T : null) != null;
 
 		/// <summary>
 		/// 裁剪组件
 		/// </summary>
-		public static void CutComponent(this INode self, long type)
-		{
-			if (self.TryGetBranch(out ComponentBranch branch))
-			{
-				if (branch.TryGetNode(type, out INode node))
-				{
-					node.TreeCutSelf();
-				}
-			}
-		}
+		public static bool TryCutComponent(this INode self, long type, out INode node) => self.TryCutNode<ComponentBranch, long>(type, out node);
 
 		#endregion
 
@@ -90,9 +73,7 @@ namespace WorldTree
 		public static void GraftComponent<N, T>(this N self, T component)
 			where N : class, INode, AsNode<ComponentBranch, T>
 			where T : class, INode
-		{
-			self.TreeGraftNode<ComponentBranch, long>(TypeInfo<T>.HashCode64, component);
-		}
+		=> self.TreeGraftNode<ComponentBranch, long>(TypeInfo<T>.HashCode64, component);
 
 		#endregion
 
@@ -101,33 +82,17 @@ namespace WorldTree
 		/// <summary>
 		/// 移除组件
 		/// </summary>
-		public static void RemoveComponent<T>(this INode self)
-			where T : class, INode
-		{
-			self.RemoveComponent(TypeInfo<T>.HashCode64);
-		}
+		public static void RemoveComponent<T>(this INode self) where T : class, INode => self.RemoveNode<ComponentBranch, long>(TypeInfo<T>.HashCode64);
 
 		/// <summary>
 		/// 移除组件
 		/// </summary>
-		public static void RemoveComponent(this INode self, long type)
-		{
-			if (self.TryGetBranch(out ComponentBranch branch))
-			{
-				if (branch.TryGetNode(type, out INode node))
-				{
-					node.Dispose();
-				}
-			}
-		}
+		public static void RemoveComponent(this INode self, long type) => self.RemoveNode<ComponentBranch, long>(type);
 
 		/// <summary>
 		/// 移除全部组件
 		/// </summary>
-		public static void RemoveAllComponent(this INode self)
-		{
-			if (self.TryGetBranch(out ComponentBranch branch)) branch.RemoveAllNode();
-		}
+		public static void RemoveAllComponent(this INode self) => self.RemoveAllNode<ComponentBranch>();
 
 		#endregion
 

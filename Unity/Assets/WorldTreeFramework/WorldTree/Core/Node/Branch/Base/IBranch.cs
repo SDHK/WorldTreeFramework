@@ -34,10 +34,12 @@ namespace WorldTree
 		/// 自身节点
 		/// </summary>
 		public INode Self { get; set; }
+
 		/// <summary>
 		/// 节点数量
 		/// </summary>
 		public int Count { get; }
+
 		/// <summary>
 		/// 设置挂载节点
 		/// </summary>
@@ -49,14 +51,35 @@ namespace WorldTree
 		public bool TryGetNodeById(long id, out INode Node);
 
 		/// <summary>
-		/// 移除一个节点
+		/// 通过id获取节点
+		/// </summary>
+		public INode GetNodeById(long id);
+
+		/// <summary>
+		/// 将节点从分支字典中移除
 		/// </summary>
 		/// <remarks>单纯的将节点从分支字典中移除，不是释放和裁剪节点</remarks>
-		public void RemoveNode(INode node);
+		public void RemoveNodeInDictionary(INode node);
+
+		/// <summary>
+		/// 根据id移除节点
+		/// </summary>
+		public void RemoveNodeById(long node);
+
 		/// <summary>
 		/// 移除释放所有分支节点
 		/// </summary>
 		public void RemoveAllNode();
+
+		/// <summary>
+		/// 尝试通过id裁剪节点
+		/// </summary>
+		public bool TryCutNodeById(long id, out INode node);
+
+		/// <summary>
+		/// 通过id裁剪节点
+		/// </summary>
+		public INode CutNodeById(long id);
 	}
 
 	/// <summary>
@@ -73,6 +96,10 @@ namespace WorldTree
 		/// 尝试通过键值获取节点
 		/// </summary>
 		public bool TryGetNode(K key, out INode Node);
+		/// <summary>
+		/// 通过键值获取节点
+		/// </summary>
+		public INode GetNode(K key);
 
 		/// <summary>
 		/// 尝试添加组件
@@ -84,8 +111,23 @@ namespace WorldTree
 		public bool TryAddNode<N>(K key, out N Node, bool isPool = true) where N : class, INode;
 
 		/// <summary>
+		/// 根据键值移除节点
+		/// </summary>
+		public void RemoveNode(K key);
+
+		/// <summary>
 		/// 尝试接入外部树结构
 		/// </summary>
 		public bool TryGraftNode(K key, INode node);
+
+		/// <summary>
+		/// 尝试根据键值裁剪节点
+		/// </summary>
+		public bool TryCutNode(K key, out INode node);
+
+		/// <summary>
+		/// 根据键值裁剪节点
+		/// </summary>
+		public INode CutNode(K key);
 	}
 }

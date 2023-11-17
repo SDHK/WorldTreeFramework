@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 世界树根
     /// </summary>
-    public class WorldTreeRoot : Node, ComponentOf<WorldTreeCore>
+    public class WorldTreeRoot : Node
     {
         public WorldTreeRoot()
         {

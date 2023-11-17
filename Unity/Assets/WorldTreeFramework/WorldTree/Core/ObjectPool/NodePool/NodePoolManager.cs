@@ -36,7 +36,6 @@ namespace WorldTree
     /// 节点对象池管理器
     /// </summary>
     public class NodePoolManager : PoolManagerBase<NodePool>
-        , ComponentOf<WorldTreeCore>
     {
         /// <summary>
         /// 尝试获取节点

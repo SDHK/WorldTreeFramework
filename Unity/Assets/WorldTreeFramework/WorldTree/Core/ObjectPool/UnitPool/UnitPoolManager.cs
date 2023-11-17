@@ -37,7 +37,7 @@ namespace WorldTree
     /// <summary>
     /// 单位对象池管理器
     /// </summary>
-    public class UnitPoolManager : PoolManagerBase<UnitPool>, ComponentOf<WorldTreeCore>
+    public class UnitPoolManager : PoolManagerBase<UnitPool>
         , AsRule<IAwakeRule>
     {
         /// <summary>

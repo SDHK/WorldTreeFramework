@@ -17,7 +17,6 @@ namespace WorldTree
     /// 引用池管理器
     /// </summary>
     public class ReferencedPoolManager : CoreNode
-        , ComponentOf<WorldTreeCore>
     {
         /// <summary>
         /// 全部节点
