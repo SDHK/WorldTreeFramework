@@ -7,9 +7,6 @@
 
 */
 
-using System;
-using static Codice.CM.Common.CmCallContext;
-
 namespace WorldTree
 {
 	public static partial class NodeRule
@@ -22,21 +19,15 @@ namespace WorldTree
 			where N : class, B, INode
 			where B : class, INode, AsRule<R>
 		{
-			self.Core.RuleManager.TryGetRuleList(TypeInfo<N>.HashCode64, out IRuleList<R> rulelist);
+			self.Core.RuleManager.TryGetRuleList(TypeInfo<N>.TypeCode, out IRuleList<R> rulelist);
 			return rulelist;
 		}
 
 
-
-		///// <summary>
-		///// 移除全部组件和子节点
-		///// </summary>
-		//public static void RemoveAll(this INode self)
-		//{
-		//	self.RemoveAllChildren();
-		//	self.RemoveAllComponent();
-		//}
-
+		/// <summary>
+		/// 获取新建节点
+		/// </summary>
+		public static N GetOrNewNode<N>(this INode self, bool isPool = true) where N : class, INode => (isPool ? self.Core.GetNode(TypeInfo<N>.TypeCode) : self.Core.NewNodeLifecycle(TypeInfo<N>.TypeCode)) as N;
 
 		/// <summary>
 		/// 类型转换为
@@ -85,7 +76,7 @@ namespace WorldTree
 			INode node = self.Parent;
 			while (node != null)
 			{
-				if (node.Type == TypeInfo<T>.HashCode64)
+				if (node.Type == TypeInfo<T>.TypeCode)
 				{
 					parent = node as T;
 					break;
@@ -94,37 +85,6 @@ namespace WorldTree
 			}
 			return parent != null;
 		}
-
-
-
-		//添加
-		//获取事件通知
-		//添加父节点
-		//添加域节点
-		//添加到父分支
-		//初始化事件通知
-		//添加到引用池
-		//激活变更
-		//激活事件通知
-		//广播给全部监听器
-		//是否为监听器注册
-		//节点添加事件通知
-
-		//倒序遍历
-
-		//即将移除事件通知 X?
-		//从父节点分支移除
-		//_判断移除引用关系 X
-		//激活变更
-		//禁用事件通知 X
-		//是否为监听器注册
-		//移除事件通知
-		//广播给全部监听器通知 X
-		//引用池移除 ?
-		//清除域节点
-		//清除父节点
-		//回到对象池，回收事件通知 X
-
 
 		/// <summary>
 		/// 返回用字符串绘制的树

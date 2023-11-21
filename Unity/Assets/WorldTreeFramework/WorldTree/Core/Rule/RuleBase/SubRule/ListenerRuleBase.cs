@@ -58,8 +58,8 @@ namespace WorldTree
     where LR : IListenerRule
     where TR : IRule
     {
-        public virtual long TargetNodeType => TypeInfo<TN>.HashCode64;
-        public virtual long TargetRuleType => TypeInfo<TR>.HashCode64;
+        public virtual long TargetNodeType => TypeInfo<TN>.TypeCode;
+        public virtual long TargetRuleType => TypeInfo<TR>.TypeCode;
 
         public virtual void Invoke(INode self, INode node) => OnEvent(self as LN, node as TN);
         protected abstract void OnEvent(LN self, TN node);

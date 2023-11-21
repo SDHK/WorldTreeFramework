@@ -11,16 +11,11 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 	/// <summary>
-	/// 分支结构约定
+	/// 节点限制
 	/// </summary>
-	public interface AsBranch<in B> where B : class, IBranch { }
-
-	/// <summary>
-	/// 子节点约定
-	/// </summary>
-	/// <typeparam name="B"></typeparam>
-	/// <typeparam name="N"></typeparam>
-	public interface AsNode<in B, in N> : INode, AsBranch<B> where B : class, IBranch where N : class, INode { }
+	/// <typeparam name="P">父节点</typeparam>
+	/// <typeparam name="B">分支</typeparam>
+	public interface NodeOf<in P, in B> : INode where P : class, INode where B : class, IBranch { }
 
 	/// <summary>
 	/// 世界树分支接口
@@ -44,6 +39,12 @@ namespace WorldTree
 		/// 设置挂载节点
 		/// </summary>
 		public void SetNode(INode node);
+
+
+		/// <summary>
+		/// 节点id包含判断
+		/// </summary>
+		public bool ContainsId(long id);
 
 		/// <summary>
 		/// 尝试通过id获取节点
@@ -88,6 +89,12 @@ namespace WorldTree
 	public interface IBranch<K> : IBranch
 	{
 		/// <summary>
+		/// 节点键值包含判断
+		/// </summary>
+		public bool Contains(K key);
+
+
+		/// <summary>
 		/// 尝试通过节点获取键值
 		/// </summary>
 		public bool TryGetNodeKey(INode node, out K key);
@@ -102,23 +109,14 @@ namespace WorldTree
 		public INode GetNode(K key);
 
 		/// <summary>
-		/// 尝试添加组件
+		/// 尝试添加节点到字典
 		/// </summary>
-		/// <remarks>从池里获取</remarks>
-		/// <typeparam name="N">节点类型</typeparam>
-		/// <param name="key">键值</param>
-		/// <param name="Node">节点</param>
-		public bool TryAddNode<N>(K key, out N Node, bool isPool = true) where N : class, INode;
+		public bool TryAddNode<N>(K key, N Node) where N : class, INode;
 
 		/// <summary>
 		/// 根据键值移除节点
 		/// </summary>
 		public void RemoveNode(K key);
-
-		/// <summary>
-		/// 尝试接入外部树结构
-		/// </summary>
-		public bool TryGraftNode(K key, INode node);
 
 		/// <summary>
 		/// 尝试根据键值裁剪节点

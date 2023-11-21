@@ -49,7 +49,7 @@ namespace WorldTree
 		where R : IRule
 	{
 		public bool IsMulticast { get; set; } = true;
-		public virtual long NodeType => TypeInfo<N>.HashCode64;
-		public virtual long RuleType => TypeInfo<R>.HashCode64;
+		public virtual long NodeType => TypeInfo<N>.TypeCode;
+		public virtual long RuleType => TypeInfo<R>.TypeCode;
 	}
 }

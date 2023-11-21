@@ -9,16 +9,18 @@
 
 */
 
+using System.ComponentModel;
+
 namespace WorldTree
 {
-    /// <summary>
-    /// 世界树根
-    /// </summary>
-    public class WorldTreeRoot : Node
-    {
-        public WorldTreeRoot()
-        {
-            Domain = this;
-        }
-    }
+	/// <summary>
+	/// 世界树根
+	/// </summary>
+	public class WorldTreeRoot : Node, ComponentOf<WorldTreeCore>
+	{
+		public WorldTreeRoot()
+		{
+			Domain = this;
+		}
+	}
 }

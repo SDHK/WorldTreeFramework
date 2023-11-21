@@ -11,39 +11,39 @@
 namespace WorldTree
 {
 
-    /// <summary>
-    /// id管理器
-    /// </summary>
-    public class IdManager : CoreNode
-    {
-        public IdManager()
-        {
-            Type = TypeInfo<IdManager>.HashCode64;
-        }
+	/// <summary>
+	/// id管理器
+	/// </summary>
+	public class IdManager : CoreNode, ComponentOf<WorldTreeCore>
+	{
+		public IdManager()
+		{
+			Type = TypeInfo<IdManager>.TypeCode;
+		}
 
-        /// <summary>
-        /// 当前递增的id值
-        /// </summary>
-        public long currentId = 0;
+		/// <summary>
+		/// 当前递增的id值
+		/// </summary>
+		public long currentId = 0;
 
-        /// <summary>
-        /// 释放后
-        /// </summary>
-        public override void OnDispose()
-        {
+		/// <summary>
+		/// 释放后
+		/// </summary>
+		public override void OnDispose()
+		{
 			this.IsRecycle = true;
 			this.IsDisposed = true;
 		}
-    }
+	}
 
-    public static class IdManagerRule
-    {
-        /// <summary>
-        /// 获取id后递增
-        /// </summary>
-        public static long GetId(this IdManager self)
-        {
-            return self.currentId++;
-        }
-    }
+	public static class IdManagerRule
+	{
+		/// <summary>
+		/// 获取id后递增
+		/// </summary>
+		public static long GetId(this IdManager self)
+		{
+			return self.currentId++;
+		}
+	}
 }

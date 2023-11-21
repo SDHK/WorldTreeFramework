@@ -12,16 +12,6 @@ using System;
 
 namespace WorldTree
 {
-
-
-	/// <summary>
-	/// 节点：父节点限制
-	/// </summary>
-	/// <typeparam name="T">父节点类型</typeparam>
-	/// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
-	public interface ChildOf<in T> where T : class, INode { }
-
-
 	/// <summary>
 	/// 节点：可用法则限制
 	/// </summary>
@@ -230,7 +220,6 @@ namespace WorldTree
 		/// </summary>
 		public bool TryGetBranch<B>(out B branch) where B : class, IBranch;
 
-
 		/// <summary>
 		/// 尝试获取分支
 		/// </summary>
@@ -257,27 +246,27 @@ namespace WorldTree
 		/// <summary>
 		/// 树结构添加节点
 		/// </summary>
-		public N TreeAddNode<B, K, N>(K key, out N node, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		public N TreeAddNode<B, K, N>(K key, N node) where B : class, IBranch<K> where N : class, INode;
 		/// <summary>
 		/// 树结构添加节点
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1>(K key, out N node, T1 arg1, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		public N TreeAddNode<B, K, N, T1>(K key, N node, T1 arg1) where B : class, IBranch<K> where N : class, INode;
 		/// <summary>
 		/// 树结构添加节点
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1, T2>(K key, out N node, T1 arg1, T2 arg2, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		public N TreeAddNode<B, K, N, T1, T2>(K key, N node, T1 arg1, T2 arg2) where B : class, IBranch<K> where N : class, INode;
 		/// <summary>
 		/// 树结构添加节点
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1, T2, T3>(K key, out N node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		public N TreeAddNode<B, K, N, T1, T2, T3>(K key, N node, T1 arg1, T2 arg2, T3 arg3) where B : class, IBranch<K> where N : class, INode;
 		/// <summary>
 		/// 树结构添加节点
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1, T2, T3, T4>(K key, out N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		public N TreeAddNode<B, K, N, T1, T2, T3, T4>(K key, N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where B : class, IBranch<K> where N : class, INode;
 		/// <summary>
 		/// 树结构添加节点
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1, T2, T3, T4, T5>(K key, out N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true) where N : class, INode where B : class, IBranch<K>;
+		public N TreeAddNode<B, K, N, T1, T2, T3, T4, T5>(K key, N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where B : class, IBranch<K> where N : class, INode;
 
 		/// <summary>
 		/// 树结构添加自己时的处理
@@ -367,6 +356,15 @@ namespace WorldTree
 		#endregion
 
 		#region 获取
+
+		/// <summary>
+		/// 节点Id包含判断
+		/// </summary>
+		public bool ContainsId<B>(long id) where B : class, IBranch;
+		/// <summary>
+		/// 节点键值包含判断
+		/// </summary>
+		public bool Contains<B, K>(K key) where B : class, IBranch<K>;
 
 		/// <summary>
 		/// 树结构尝试获取节点

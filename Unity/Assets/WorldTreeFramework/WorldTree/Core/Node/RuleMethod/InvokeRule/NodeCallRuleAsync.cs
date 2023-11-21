@@ -49,7 +49,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
 
@@ -63,7 +63,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
         public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, OutT defaultOutT)
@@ -76,7 +76,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
         public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
@@ -89,7 +89,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
         public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, T4, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
@@ -102,7 +102,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
         public static async TreeTask<OutT> TryCallRuleAsync<R, T1, T2, T3, T4, T5, OutT>(this INode self, R nullRule, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
@@ -115,7 +115,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
 

@@ -27,7 +27,7 @@ namespace WorldTree
                 outT = rule.Invoke(node);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT = DefaultType<OutT>.Default;
+            return outT = TypeInfo<OutT>.Default;
         }
 
         public static OutT Call<R, T1, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, out OutT outT)
@@ -39,7 +39,7 @@ namespace WorldTree
                 outT = rule.Invoke(node, arg1);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT = DefaultType<OutT>.Default;
+            return outT = TypeInfo<OutT>.Default;
         }
 
         public static OutT Call<R, T1, T2, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, out OutT outT)
@@ -51,7 +51,7 @@ namespace WorldTree
                 outT = rule.Invoke(node, arg1, arg2);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT = DefaultType<OutT>.Default;
+            return outT = TypeInfo<OutT>.Default;
         }
 
         public static OutT Call<R, T1, T2, T3, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, out OutT outT)
@@ -63,7 +63,7 @@ namespace WorldTree
                 outT = rule.Invoke(node, arg1, arg2, arg3);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT = DefaultType<OutT>.Default;
+            return outT = TypeInfo<OutT>.Default;
         }
 
         public static OutT Call<R, T1, T2, T3, T4, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out OutT outT)
@@ -75,7 +75,7 @@ namespace WorldTree
                 outT = rule.Invoke(node, arg1, arg2, arg3, arg4);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT = DefaultType<OutT>.Default;
+            return outT = TypeInfo<OutT>.Default;
         }
 
         public static OutT Call<R, T1, T2, T3, T4, T5, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out OutT outT)
@@ -87,7 +87,7 @@ namespace WorldTree
                 outT = rule.Invoke(node, arg1, arg2, arg3, arg4, arg5);
                 if (!rule.IsMulticast) return outT;
             }
-            return outT = DefaultType<OutT>.Default;
+            return outT = TypeInfo<OutT>.Default;
         }
 
 

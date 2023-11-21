@@ -200,7 +200,7 @@ namespace WorldTree
         private static bool TryAddComponent<T>(this INode self, out T Component)
             where T : class, INode
         {
-            var type = TypeInfo<T>.HashCode64;
+            var type = TypeInfo<T>.TypeCode;
             if (!self.ComponentsDictionary().TryGetValue(type, out INode component))
             {
                 component = self.PoolGet(type);
@@ -225,7 +225,7 @@ namespace WorldTree
         private static bool TryAddNewComponent<T>(this INode self, out T Component)
             where T : class, INode
         {
-            var type = TypeInfo<T>.HashCode64;
+            var type = TypeInfo<T>.TypeCode;
             if (!self.ComponentsDictionary().TryGetValue(type, out INode component))
             {
                 component = self.Core.NewNodeLifecycle(type);

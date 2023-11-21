@@ -23,7 +23,7 @@ namespace WorldTree
     /// <summary>
     /// 世界法则管理器
     /// </summary>
-    public class RuleManager : CoreNode
+    public class RuleManager : CoreNode, ComponentOf<WorldTreeCore>
     {
         /// <summary>
         /// 已支持的类型哈希名单
@@ -95,7 +95,7 @@ namespace WorldTree
     {
         public static void Awake(this RuleManager self)
         {
-            self.Type = TypeInfo<RuleManager>.HashCode64;
+            self.Type = TypeInfo<RuleManager>.TypeCode;
 
             //反射获取全局继承IRule的法则类型列表
             var RuleTypeList = self.FindTypesIsInterface(typeof(IRule));
@@ -183,7 +183,7 @@ namespace WorldTree
         /// </summary>
         private static void AddListenerRule(this RuleManager self, IListenerRule listenerRule)
         {
-            if (listenerRule.TargetNodeType == TypeInfo<INode>.HashCode64 && listenerRule.TargetRuleType != TypeInfo<IRule>.HashCode64)
+            if (listenerRule.TargetNodeType == TypeInfo<INode>.TypeCode && listenerRule.TargetRuleType != TypeInfo<IRule>.TypeCode)
             {
                 //只约束了法则
                 self.TargetRuleListenerRuleHashDictionary.GetValue(listenerRule.TargetRuleType).Add(listenerRule);
@@ -206,7 +206,7 @@ namespace WorldTree
                 self.DictionaryAddNodeRule(listenerRule.TargetNodeType, listenerRule);
 
                 //动态监听器判断
-                if (listenerRule.TargetNodeType == TypeInfo<INode>.HashCode64 && listenerRule.TargetRuleType == TypeInfo<IRule>.HashCode64)
+                if (listenerRule.TargetNodeType == TypeInfo<INode>.TypeCode && listenerRule.TargetRuleType == TypeInfo<IRule>.TypeCode)
                 {
                     if (!self.DynamicListenerTypeHash.Contains(listenerRule.NodeType)) self.DynamicListenerTypeHash.Add(listenerRule.NodeType);
                 }
@@ -447,7 +447,7 @@ namespace WorldTree
         public static bool TryGetTargetRuleGroup<LR>(this RuleManager self, long targetType, out IRuleGroup<LR> ruleGroup)
             where LR : IListenerRule
         {
-            if (self.TryGetTargetRuleGroup(TypeInfo<LR>.HashCode64, targetType, out var RuleGroup))
+            if (self.TryGetTargetRuleGroup(TypeInfo<LR>.TypeCode, targetType, out var RuleGroup))
             {
                 ruleGroup = RuleGroup as IRuleGroup<LR>;
                 return true;
@@ -462,7 +462,7 @@ namespace WorldTree
         public static bool TryGetTargetRuleGroup<LR>(this RuleManager self, long targetType, out RuleGroup ruleGroup)
             where LR : IListenerRule
         {
-               return self.TryGetTargetRuleGroup(TypeInfo<LR>.HashCode64, targetType, out ruleGroup);
+               return self.TryGetTargetRuleGroup(TypeInfo<LR>.TypeCode, targetType, out ruleGroup);
         }
 
         /// <summary>
@@ -484,7 +484,7 @@ namespace WorldTree
         public static RuleGroup GetOrNewTargetRuleGroup<LR>(this RuleManager self, long targetType)
             where LR : IListenerRule
         {
-            return self.GetOrNewTargetRuleGroup(TypeInfo<LR>.HashCode64, targetType);
+            return self.GetOrNewTargetRuleGroup(TypeInfo<LR>.TypeCode, targetType);
         }
 
         /// <summary>
@@ -526,7 +526,7 @@ namespace WorldTree
         {
             if (self.TargetRuleListenerGroupDictionary.TryGetValue(targetType, out var ruleGroupDictionary))
             {
-                if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.HashCode64, out var ruleGroup))
+                if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.TypeCode, out var ruleGroup))
                 {
                     if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
                     {
@@ -554,7 +554,7 @@ namespace WorldTree
         {
             if (self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerType, out var ruleGroupDictionary))
             {
-                if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.HashCode64, out var RuleGroup))
+                if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.TypeCode, out var RuleGroup))
                 {
                     ruleGroup = RuleGroup as IRuleGroup<LR>;
                     return true;
@@ -572,7 +572,7 @@ namespace WorldTree
         {
             if (self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerType, out var ruleGroupDictionary))
             {
-                if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.HashCode64, out var ruleGroup))
+                if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.TypeCode, out var ruleGroup))
                 {
                     if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
                     {
@@ -597,7 +597,7 @@ namespace WorldTree
         public static bool TryGetRuleGroup<R>(this RuleManager self, out IRuleGroup<R> ruleGroup)
          where R : IRule
         {
-            if (self.TryGetRuleGroup(TypeInfo<R>.HashCode64, out var RuleGroup))
+            if (self.TryGetRuleGroup(TypeInfo<R>.TypeCode, out var RuleGroup))
             {
                 ruleGroup = (IRuleGroup<R>)RuleGroup;
                 return true;
@@ -612,7 +612,7 @@ namespace WorldTree
         public static bool TryGetRuleGroup<R>(this RuleManager self, out RuleGroup ruleGroup)
          where R : IRule
         {
-            return self.TryGetRuleGroup(TypeInfo<R>.HashCode64, out ruleGroup);
+            return self.TryGetRuleGroup(TypeInfo<R>.TypeCode, out ruleGroup);
         }
 
         /// <summary>
@@ -630,7 +630,7 @@ namespace WorldTree
         public static RuleGroup GetOrNewRuleGroup<R>(this RuleManager self)
          where R : IRule
         {
-            return self.GetOrNewRuleGroup(TypeInfo<R>.HashCode64);
+            return self.GetOrNewRuleGroup(TypeInfo<R>.TypeCode);
         }
 
         /// <summary>
@@ -690,7 +690,7 @@ namespace WorldTree
          where R : IRule
         {
 
-            if (self.RuleGroupDictionary.TryGetValue(TypeInfo<R>.HashCode64, out RuleGroup ruleGroup))
+            if (self.RuleGroupDictionary.TryGetValue(TypeInfo<R>.TypeCode, out RuleGroup ruleGroup))
             {
                 return ruleGroup.TryGetValue(nodeType, out ruleList);
             }
@@ -707,7 +707,7 @@ namespace WorldTree
         public static RuleList GetOrNewRuleList<R>(this RuleManager self, long nodeType)
          where R : IRule
         {
-            return self.GetOrNewRuleList(nodeType, TypeInfo<R>.HashCode64);
+            return self.GetOrNewRuleList(nodeType, TypeInfo<R>.TypeCode);
         }
 
         /// <summary>

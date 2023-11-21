@@ -25,7 +25,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
 
@@ -40,7 +40,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
 
@@ -54,7 +54,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
 
@@ -68,7 +68,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
         public static async TreeTask<OutT> CallAsync<R, T1, T2, T3, T4, OutT>(this IRuleGroup<R> group, INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
@@ -81,7 +81,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
 
@@ -95,7 +95,7 @@ namespace WorldTree
             else
             {
                 await self.TreeTaskCompleted();
-                return DefaultType<OutT>.Default;
+                return TypeInfo<OutT>.Default;
             }
         }
 

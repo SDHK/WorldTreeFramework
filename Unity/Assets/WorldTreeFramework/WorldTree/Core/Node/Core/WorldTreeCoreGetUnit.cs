@@ -21,13 +21,13 @@ namespace WorldTree
         {
             if (self.IsActive)
             {
-                if (self.UnitPoolManager.TryGet(TypeInfo<T>.HashCode64, out IUnitPoolEventItem unit))
+                if (self.UnitPoolManager.TryGet(TypeInfo<T>.TypeCode, out IUnitPoolEventItem unit))
                 {
                     return unit as T;
                 }
             }
             T obj = Activator.CreateInstance(TypeInfo<T>.Type, true) as T;
-            obj.Type = TypeInfo<T>.HashCode64;
+            obj.Type = TypeInfo<T>.TypeCode;
             obj.OnNew();
             obj.OnGet();
             return obj;

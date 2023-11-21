@@ -6,7 +6,8 @@
 * 描述： 子节点分支
 * 
 * 主要分支之一
-* 设定根据实例id为键挂载。
+* 
+* 设定根据实例自身id为键的分支。
 * 
 
 */
@@ -14,10 +15,17 @@
 namespace WorldTree
 {
 	/// <summary>
+	/// 子节点约束
+	/// </summary>
+	/// <typeparam name="T">父节点类型</typeparam>
+	/// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
+
+	public interface ChildOf<in P> : NodeOf<P, ChildBranch> where P : class, INode { }
+
+	/// <summary>
 	/// 子分支
 	/// </summary>
 	public class ChildBranch : Branch<long> { }
-
 
 	public static class NodeChildBranchRule
 	{
@@ -39,16 +47,7 @@ namespace WorldTree
 		/// <summary>
 		/// 裁剪子节点
 		/// </summary>
-		public static void CutChild(this INode self, long id)
-		{
-			if (self.TryGetBranch(out ChildBranch branch))
-			{
-				if (branch.TryGetNode(id, out INode node))
-				{
-					node.TreeCutSelf();
-				}
-			}
-		}
+		public static bool TryCutChild(this INode self, long id, out INode node) => self.TryCutNode<ChildBranch, long>(id, out node);
 
 		#endregion
 
@@ -57,59 +56,94 @@ namespace WorldTree
 		/// <summary>
 		/// 嫁接子节点
 		/// </summary>
-		public static void GraftChild<N, T>(this INode self, T node)
-			where N : class, INode, AsNode<ChildBranch, T>
-			where T : class, INode
-		{
-			self.TreeGraftNode<ChildBranch, long>(node.Id, node);
-		}
-
-		/// <summary>
-		/// 设定id嫁接子节点
-		/// </summary>
-		public static void GraftChild<N, T>(this INode self, long id, T node)
-			where N : class, INode, AsNode<ChildBranch, T>
-			where T : class, INode
-		{
-			self.TreeGraftNode<ChildBranch, long>(id, node);
-		}
+		public static void GraftChild<N, T>(this N self, T node)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ChildBranch>
+		=> self.TreeGraftNode<ChildBranch, long>(node.Id, node);
 
 		#endregion
 
 		#region 移除
 
 		/// <summary>
-		/// 根据键值移除子节点
+		/// 根据id移除子节点
 		/// </summary>
-		public static void RemoveChild(this INode self, long id)
-		{
-			if (self.TryGetBranch(out ChildBranch branch))
-			{
-				branch.RemoveNode(id);
-			}
-		}
+		public static void RemoveChild(this INode self, long id) => self.RemoveNode<ChildBranch, long>(id);
 
 		/// <summary>
 		/// 移除全部子节点
 		/// </summary>
-		public static void RemoveAllChild(this INode self)
-		{
-			if (self.TryGetBranch(out ChildBranch branch)) branch.RemoveAllNode();
-		}
+		public static void RemoveAllChild(this INode self) => self.RemoveBranch<ChildBranch>();
 
 		#endregion
 
 		#region 添加
 
-		#region 池
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static T AddChild<N, T>(this N self, out T node, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule>
+		{
+			node = self.GetOrNewNode<T>(isPool);
+			return self.TreeAddNode<ChildBranch, long, T>(node.Id, node);
+		}
 
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static T AddChild<N, T, T1>(this N self, out T node, T1 arg1, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1>>
+		{
+			node = self.GetOrNewNode<T>(isPool);
+			return self.TreeAddNode<ChildBranch, long, T, T1>(node.Id, node, arg1);
+		}
 
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static T AddChild<N, T, T1, T2>(this N self, out T node, T1 arg1, T2 arg2, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2>>
+		{
+			node = self.GetOrNewNode<T>(isPool);
+			return self.TreeAddNode<ChildBranch, long, T, T1, T2>(node.Id, node, arg1, arg2);
+		}
 
-		#endregion
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static T AddChild<N, T, T1, T2, T3>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2, T3>>
+		{
+			node = self.GetOrNewNode<T>(isPool);
+			return self.TreeAddNode<ChildBranch, long, T, T1, T2, T3>(node.Id, node, arg1, arg2, arg3);
+		}
 
-		#region 非池
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static T AddChild<N, T, T1, T2, T3, T4>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2, T3, T4>>
+		{
+			node = self.GetOrNewNode<T>(isPool);
+			return self.TreeAddNode<ChildBranch, long, T, T1, T2, T3, T4>(node.Id, node, arg1, arg2, arg3, arg4);
+		}
 
-		#endregion
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static T AddChild<N, T, T1, T2, T3, T4, T5>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
+		{
+			node = self.GetOrNewNode<T>(isPool);
+			return self.TreeAddNode<ChildBranch, long, T, T1, T2, T3, T4, T5>(node.Id, node, arg1, arg2, arg3, arg4, arg5);
+		}
 
 		#endregion
 	}

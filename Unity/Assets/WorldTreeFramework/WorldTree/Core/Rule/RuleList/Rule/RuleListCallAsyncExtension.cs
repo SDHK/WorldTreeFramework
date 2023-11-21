@@ -24,7 +24,7 @@ namespace WorldTree
                 outT = await rule.Invoke(node);
                 if (!rule.IsMulticast) return outT;
             }
-            return DefaultType<OutT>.Default;
+            return TypeInfo<OutT>.Default;
         }
         public static async TreeTask<OutT> CallAsync<R, T1, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, OutT defaultOutT)
             where R : ICallRuleAsyncBase<T1, OutT>
@@ -36,7 +36,7 @@ namespace WorldTree
                 outT = await rule.Invoke(node, arg1);
                 if (!rule.IsMulticast) return outT;
             }
-            return DefaultType<OutT>.Default;
+            return TypeInfo<OutT>.Default;
         }
 
         public static async TreeTask<OutT> CallAsync<R, T1, T2, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, OutT defaultOutT)
@@ -49,7 +49,7 @@ namespace WorldTree
                 outT = await rule.Invoke(node, arg1, arg2);
                 if (!rule.IsMulticast) return outT;
             }
-            return DefaultType<OutT>.Default;
+            return TypeInfo<OutT>.Default;
         }
 
         public static async TreeTask<OutT> CallAsync<R, T1, T2, T3, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, OutT defaultOutT)
@@ -62,7 +62,7 @@ namespace WorldTree
                 outT = await rule.Invoke(node, arg1, arg2, arg3);
                 if (!rule.IsMulticast) return outT;
             }
-            return DefaultType<OutT>.Default;
+            return TypeInfo<OutT>.Default;
         }
         public static async TreeTask<OutT> CallAsync<R, T1, T2, T3, T4, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, OutT defaultOutT)
             where R : ICallRuleAsyncBase<T1, T2, T3, T4, OutT>
@@ -74,7 +74,7 @@ namespace WorldTree
                 outT = await rule.Invoke(node, arg1, arg2, arg3, arg4);
                 if (!rule.IsMulticast) return outT;
             }
-            return DefaultType<OutT>.Default;
+            return TypeInfo<OutT>.Default;
         }
 
         public static async TreeTask<OutT> CallAsync<R, T1, T2, T3, T4, T5, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, OutT defaultOutT)
@@ -87,7 +87,7 @@ namespace WorldTree
                 outT = await rule.Invoke(node, arg1, arg2, arg3, arg4, arg5);
                 if (!rule.IsMulticast) return outT;
             }
-            return DefaultType<OutT>.Default;
+            return TypeInfo<OutT>.Default;
         }
 
 

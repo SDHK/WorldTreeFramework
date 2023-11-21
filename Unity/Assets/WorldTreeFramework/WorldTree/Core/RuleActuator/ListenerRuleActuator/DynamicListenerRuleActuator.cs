@@ -54,7 +54,7 @@ namespace WorldTree
                             if (nodeListener.listenerState == ListenerState.Node)
                             {
                                 //判断是否全局监听 或 是指定的目标类型
-                                if (nodeListener.listenerTarget == TypeInfo<INode>.HashCode64 || nodeListener.listenerTarget == nodeType)
+                                if (nodeListener.listenerTarget == TypeInfo<INode>.TypeCode || nodeListener.listenerTarget == nodeType)
                                 {
                                     self.TryAdd(nodeListener);
                                 }

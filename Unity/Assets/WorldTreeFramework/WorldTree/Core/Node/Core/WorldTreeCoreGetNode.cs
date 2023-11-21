@@ -22,7 +22,7 @@ namespace WorldTree
         {
             Type type = typeof(T);
             node = Activator.CreateInstance(type, true) as T;
-            node.Type = TypeInfo<T>.HashCode64;
+            node.Type = TypeInfo<T>.TypeCode;
             node.Core = self.Core;
             node.Root = self.Root;
             node.Id = self.Core.IdManager.GetId();
@@ -78,7 +78,7 @@ namespace WorldTree
 
             if (self.IsActive)
             {
-                if (self.NodePoolManager.TryGet(TypeInfo<T>.HashCode64, out INode node))
+                if (self.NodePoolManager.TryGet(TypeInfo<T>.TypeCode, out INode node))
                 {
                     node.Id = self.IdManager.GetId();
                     return node as T;

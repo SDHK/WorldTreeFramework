@@ -17,27 +17,27 @@ namespace WorldTree
 	/// <summary>
 	/// 初始化法则接口
 	/// </summary>
-	public interface IAwakeRule : ITypeInfo<IAwakeRule>, ISendRuleBase { }
+	public interface IAwakeRule : ISendRuleBase { }
 	/// <summary>
 	/// 初始化法则接口
 	/// </summary>
-	public interface IAwakeRule<T1> : ITypeInfo<IAwakeRule<T1>>, ISendRuleBase<T1> { }
+	public interface IAwakeRule<T1> : ISendRuleBase<T1> { }
 	/// <summary>
 	/// 初始化法则接口
 	/// </summary>
-	public interface IAwakeRule<T1, T2> : ITypeInfo<IAwakeRule<T1, T2>>, ISendRuleBase<T1, T2> { }
+	public interface IAwakeRule<T1, T2> : ISendRuleBase<T1, T2> { }
 	/// <summary>
 	/// 初始化法则接口
 	/// </summary>
-	public interface IAwakeRule<T1, T2, T3> : ITypeInfo<IAwakeRule<T1, T2, T3>>, ISendRuleBase<T1, T2, T3> { }
+	public interface IAwakeRule<T1, T2, T3> : ISendRuleBase<T1, T2, T3> { }
 	/// <summary>
 	/// 初始化法则接口
 	/// </summary>
-	public interface IAwakeRule<T1, T2, T3, T4> : ITypeInfo<IAwakeRule<T1, T2, T3, T4>>, ISendRuleBase<T1, T2, T3, T4> { }
+	public interface IAwakeRule<T1, T2, T3, T4> : ISendRuleBase<T1, T2, T3, T4> { }
 	/// <summary>
 	/// 初始化法则接口
 	/// </summary>
-	public interface IAwakeRule<T1, T2, T3, T4, T5> : ITypeInfo<IAwakeRule<T1, T2, T3, T4, T5>>, ISendRuleBase<T1, T2, T3, T4, T5> { }
+	public interface IAwakeRule<T1, T2, T3, T4, T5> : ISendRuleBase<T1, T2, T3, T4, T5> { }
 
 
 	/// <summary>

@@ -51,7 +51,7 @@ namespace WorldTree
         public static bool TryAddRuleActuator<R>(this HybridListenerRuleActuatorGroup self, long nodeType, out IRuleActuator<R> actuator)
             where R : IListenerRule
         {
-            long ruleType = TypeInfo<R>.HashCode64;
+            long ruleType = TypeInfo<R>.TypeCode;
 
             //执行器已存在，直接返回
             if (self.actuatorDictionary.TryGetValue(ruleType, out HybridListenerRuleActuator ruleActuator))
@@ -67,7 +67,7 @@ namespace WorldTree
                 }
                 if (ruleActuator.dynamicListenerRuleActuator == null)
                 {
-                    if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, TypeInfo<INode>.HashCode64, out RuleGroup dynamicRuleGroup1))
+                    if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, TypeInfo<INode>.TypeCode, out RuleGroup dynamicRuleGroup1))
                     {
                         ruleActuator.AddComponent(out ruleActuator.dynamicListenerRuleActuator, dynamicRuleGroup1).RuleActuatorAddListener(nodeType);
                     }
@@ -76,7 +76,7 @@ namespace WorldTree
             }
             //执行器不存在，检测获取目标法则集合，并新建执行器
             bool checkStatic = self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, nodeType, out RuleGroup staticRuleGroup);
-            bool checkDynamic = self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, TypeInfo<INode>.HashCode64, out RuleGroup dynamicRuleGroup);
+            bool checkDynamic = self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, TypeInfo<INode>.TypeCode, out RuleGroup dynamicRuleGroup);
             if (checkStatic || checkDynamic)
             {
                 self.actuatorDictionary.Add(ruleType, self.AddNewComponent(out ruleActuator));
@@ -179,7 +179,7 @@ namespace WorldTree
             {
                 if (node.listenerState == ListenerState.Node)
                 {
-                    if (node.listenerTarget == TypeInfo<INode>.HashCode64)
+                    if (node.listenerTarget == TypeInfo<INode>.TypeCode)
                     {
                         self.AddAllTarget(node);
                     }
@@ -201,7 +201,7 @@ namespace WorldTree
         private static void AddAllTarget(this ReferencedPoolManager self, INodeListener node)
         {
             //获取 INode 动态目标 法则集合集合
-            if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.HashCode64, out Dictionary<long, RuleGroup> ruleGroupDictionary))
+            if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.TypeCode, out Dictionary<long, RuleGroup> ruleGroupDictionary))
             {
                 //遍历获取动态法则集合
                 foreach (var ruleGroupPair in ruleGroupDictionary)
@@ -253,7 +253,7 @@ namespace WorldTree
                 if (listenerPool.TryGetComponent(out HybridListenerRuleActuatorGroup ListenerRuleActuatorGroup))
                 {
                     //获取 INode 动态目标 法则集合集合
-                    if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.HashCode64, out var ruleGroupDictionary))
+                    if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.TypeCode, out var ruleGroupDictionary))
                     {
                         //遍历获取动态法则集合，并添加自己
                         foreach (var ruleGroup in ruleGroupDictionary)
@@ -286,7 +286,7 @@ namespace WorldTree
             {
                 if (node.listenerState == ListenerState.Node)
                 {
-                    if (node.listenerTarget == TypeInfo<INode>.HashCode64)
+                    if (node.listenerTarget == TypeInfo<INode>.TypeCode)
                     {
                         self.RemoveAllTarget(node);
                     }
@@ -310,7 +310,7 @@ namespace WorldTree
         private static void RemoveAllTarget(this ReferencedPoolManager self, INodeListener node)
         {
             //获取 INode 动态目标 法则集合集合
-            if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.HashCode64, out var ruleGroupDictionary))
+            if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.TypeCode, out var ruleGroupDictionary))
             {
                 //遍历获取动态法则集合
                 foreach (var ruleGroupPair in ruleGroupDictionary)
@@ -363,7 +363,7 @@ namespace WorldTree
                 if (listenerPool.TryGetComponent(out HybridListenerRuleActuatorGroup ListenerRuleActuatorGroup))
                 {
                     //获取 INode 动态目标 法则集合集合
-                    if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.HashCode64, out var ruleGroupDictionary))
+                    if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.TypeCode, out var ruleGroupDictionary))
                     {
                         //遍历获取动态法则集合，移除自己
                         foreach (var ruleGroup in ruleGroupDictionary)

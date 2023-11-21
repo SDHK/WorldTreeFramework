@@ -25,7 +25,7 @@ namespace WorldTree
             }
             else
             {
-                outT = DefaultType<OutT>.Default;
+                outT = TypeInfo<OutT>.Default;
                 return false;
             }
         }
@@ -40,7 +40,7 @@ namespace WorldTree
             }
             else
             {
-                outT = DefaultType<OutT>.Default;
+                outT = TypeInfo<OutT>.Default;
                 return false;
             }
         }
@@ -54,7 +54,7 @@ namespace WorldTree
             }
             else
             {
-                outT = DefaultType<OutT>.Default;
+                outT = TypeInfo<OutT>.Default;
                 return false;
             }
         }
@@ -69,7 +69,7 @@ namespace WorldTree
             }
             else
             {
-                outT = DefaultType<OutT>.Default;
+                outT = TypeInfo<OutT>.Default;
                 return false;
             }
         }
@@ -83,7 +83,7 @@ namespace WorldTree
             }
             else
             {
-                outT = DefaultType<OutT>.Default;
+                outT = TypeInfo<OutT>.Default;
                 return false;
             }
         }
@@ -98,7 +98,7 @@ namespace WorldTree
             }
             else
             {
-                outT = DefaultType<OutT>.Default;
+                outT = TypeInfo<OutT>.Default;
                 return false;
             }
         }

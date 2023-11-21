@@ -51,7 +51,7 @@ namespace WorldTree
             where T : class, INode, ComponentOf<INode>, AsRule<IAwakeRule>
 
         {
-            if (windows.TryGetValue(TypeInfo<T>.HashCode64, out INode node))
+            if (windows.TryGetValue(TypeInfo<T>.TypeCode, out INode node))
             {
                 if (windowStack.TryPeek(out INode outNode))
                 {
@@ -91,7 +91,7 @@ namespace WorldTree
         public void Dispose<T>()
            where T : class, INode
         {
-            if (windows.TryGetValue(TypeInfo<T>.HashCode64, out INode targetNode))
+            if (windows.TryGetValue(TypeInfo<T>.TypeCode, out INode targetNode))
             {
                 if (windowStack.TryPeek(out INode topNode))
                 {

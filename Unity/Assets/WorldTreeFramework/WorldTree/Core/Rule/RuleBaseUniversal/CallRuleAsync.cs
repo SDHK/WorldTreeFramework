@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 异步通用调用法则接口
 	/// </summary>
-	public interface ICallRuleAsync<OutT> : ICallRuleAsyncBase<OutT>, ITypeInfo<ICallRuleAsync<OutT>> { }
+	public interface ICallRuleAsync<OutT> : ICallRuleAsyncBase<OutT> { }
 	/// <summary>
 	/// 异步通用调用法则接口
 	/// </summary>

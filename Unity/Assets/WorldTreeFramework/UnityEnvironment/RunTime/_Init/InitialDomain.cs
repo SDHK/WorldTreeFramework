@@ -71,7 +71,6 @@ namespace WorldTree
 		, AsRule<IAwakeRule>
 		, AsRule<IFixedUpdateTimeRule>
 		, AsRule<ILateUpdateTimeRule>
-		, AsNode<ComponentBranch,TestNode>
 	{
 		public TestNode node;
 		public TreeValue<float> valueFloat;
@@ -326,7 +325,7 @@ namespace WorldTree
 
 					//self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
 					self.AddComponent(out TestNode _).Test1().Coroutine();
-					self.AddNode(ComponentBranch, TypeInfo<TestNode>.HashCode64, out TestNode node);
+					self.AddNode(ComponentBranch, TypeInfo<TestNode>.TypeCode, out TestNode node);
 
 					//for (int i = 0; i < 1000; i++)
 					//{

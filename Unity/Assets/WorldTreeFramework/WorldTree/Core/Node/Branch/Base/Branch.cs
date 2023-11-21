@@ -10,7 +10,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 
 namespace WorldTree
 {
@@ -34,59 +33,37 @@ namespace WorldTree
 			}
 		}
 
-		public virtual bool TryAddNode<N>(K key, out N Node, bool isPool = true) where N : class, INode
-		{
-			if (Nodes.TryGetValue(key, out INode node))
-			{
-				node = isPool ? Self.Core.GetNode(TypeInfo<N>.HashCode64) : Self.Core.NewNodeLifecycle(TypeInfo<N>.HashCode64);
-				NodeKeys.Add(node.Id, key);
-				node.BranchType = TypeInfo<ComponentBranch>.HashCode64;
-				node.Parent = Self;
-				node.Core = Self.Core;
-				node.Root = Self.Root;
-				if (node.Domain != node) node.Domain = Self.Domain;
-				Nodes.Add(key, node);
-			}
-			Node = node as N;
-			return Node != null;
-		}
-		public virtual bool TryGraftNode(K key, INode node)
-		{
-			if (Nodes.TryAdd(key, node))
-			{
-				NodeKeys.Add(node.Id, key);
-				node.BranchType = TypeInfo<ComponentBranch>.HashCode64;
-				node.Parent = Self;
-				return true;
-			}
-			return false;
-		}
+		public bool Contains(K key) => Nodes.ContainsKey(key);
 
-		public virtual bool TryGetNodeKey(INode node, out K key) => NodeKeys.TryGetValue(node.Id, out key);
+		public bool ContainsId(long id) => NodeKeys.ContainsKey(id);
 
-		public virtual bool TryGetNode(K key, out INode node) => this.Nodes.TryGetValue(key, out node);
+		public bool TryAddNode<N>(K key, N node) where N : class, INode => Nodes.TryAdd(key, node) && NodeKeys.TryAdd(node.Id, key);
 
-		public virtual bool TryGetNodeById(long id, out INode node) => (node = this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out node) ? node : null) != null;
+		public bool TryGetNodeKey(INode node, out K key) => NodeKeys.TryGetValue(node.Id, out key);
 
-		public virtual INode GetNode(K key) => this.Nodes.TryGetValue(key, out INode node) ? node : null;
+		public bool TryGetNode(K key, out INode node) => this.Nodes.TryGetValue(key, out node);
 
-		public virtual INode GetNodeById(long id) => this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out INode node) ? node : null;
+		public bool TryGetNodeById(long id, out INode node) => (node = this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out node) ? node : null) != null;
+
+		public INode GetNode(K key) => this.Nodes.TryGetValue(key, out INode node) ? node : null;
+
+		public INode GetNodeById(long id) => this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out INode node) ? node : null;
 
 
-		public virtual bool TryCutNode(K key, out INode node) => (node = this.GetNode(key)?.TreeCutSelf()) != null;
+		public bool TryCutNode(K key, out INode node) => (node = this.GetNode(key)?.TreeCutSelf()) != null;
 
-		public virtual bool TryCutNodeById(long id, out INode node) => (node = this.GetNodeById(id)?.TreeCutSelf()) != null;
+		public bool TryCutNodeById(long id, out INode node) => (node = this.GetNodeById(id)?.TreeCutSelf()) != null;
 
-		public virtual INode CutNode(K key) => this.GetNode(key)?.TreeCutSelf();
+		public INode CutNode(K key) => this.GetNode(key)?.TreeCutSelf();
 
-		public virtual INode CutNodeById(long id) => this.GetNodeById(id)?.TreeCutSelf();
+		public INode CutNodeById(long id) => this.GetNodeById(id)?.TreeCutSelf();
 
 
-		public virtual void RemoveNodeById(long id) => GetNodeById(id)?.Dispose();
+		public void RemoveNodeById(long id) => GetNodeById(id)?.Dispose();
 
-		public virtual void RemoveNode(K key) => GetNode(key)?.Dispose();
+		public void RemoveNode(K key) => GetNode(key)?.Dispose();
 
-		public virtual void RemoveAllNode()
+		public void RemoveAllNode()
 		{
 			if (Nodes.Count == 0) return;
 			//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
@@ -105,7 +82,7 @@ namespace WorldTree
 			}
 		}
 
-		public virtual void RemoveNodeInDictionary(INode node)
+		public void RemoveNodeInDictionary(INode node)
 		{
 			if (NodeKeys.TryGetValue(node.Id, out K key))
 			{

@@ -6,7 +6,6 @@
 
 ****************************************/
 
-using Codice.Client.Common.TreeGrouper;
 using System;
 
 namespace WorldTree
@@ -94,9 +93,9 @@ namespace WorldTree
 			where B : class, IBranch
 		{
 			var Branchs = this.Branchs;
-			if (!Branchs.TryGetValue(TypeInfo<B>.HashCode64, out IBranch iBranch))
+			if (!Branchs.TryGetValue(TypeInfo<B>.TypeCode, out IBranch iBranch))
 			{
-				Branchs.Add(TypeInfo<B>.HashCode64, iBranch = this.PoolGet<B>());
+				Branchs.Add(TypeInfo<B>.TypeCode, iBranch = this.PoolGet<B>());
 				iBranch.SetNode(this);
 			}
 			return iBranch as B;
@@ -117,7 +116,7 @@ namespace WorldTree
 
 		#region 移除 
 
-		public virtual void RemoveBranch<B>() where B : class, IBranch => this.RemoveBranch(TypeInfo<B>.HashCode64);
+		public virtual void RemoveBranch<B>() where B : class, IBranch => this.GetBranch(TypeInfo<B>.TypeCode)?.RemoveAllNode();
 
 		public virtual void RemoveBranch(long branchType) => this.GetBranch(branchType)?.RemoveAllNode();
 
@@ -161,11 +160,11 @@ namespace WorldTree
 
 		#region 获取
 
-		public virtual bool TryGetBranch<B>(out B branch) where B : class, IBranch => (branch = (this.m_Branchs != null && this.m_Branchs.TryGetValue(TypeInfo<B>.HashCode64, out IBranch Ibranch)) ? Ibranch as B : null) != null;
+		public virtual bool TryGetBranch<B>(out B branch) where B : class, IBranch => (branch = (this.m_Branchs != null && this.m_Branchs.TryGetValue(TypeInfo<B>.TypeCode, out IBranch Ibranch)) ? Ibranch as B : null) != null;
 
 		public virtual bool TryGetBranch(long branchType, out IBranch branch) => (branch = (this.m_Branchs != null && this.m_Branchs.TryGetValue(branchType, out branch)) ? branch : null) != null;
 
-		public virtual B GetBranch<B>() where B : class, IBranch => (this.m_Branchs != null && this.m_Branchs.TryGetValue(TypeInfo<B>.HashCode64, out IBranch iBranch)) ? iBranch as B : null;
+		public virtual B GetBranch<B>() where B : class, IBranch => (this.m_Branchs != null && this.m_Branchs.TryGetValue(TypeInfo<B>.TypeCode, out IBranch iBranch)) ? iBranch as B : null;
 
 		public virtual IBranch GetBranch(long branchType) => (this.m_Branchs != null && this.m_Branchs.TryGetValue(branchType, out IBranch iBranch)) ? iBranch : null;
 
@@ -177,79 +176,115 @@ namespace WorldTree
 
 		#region 添加
 
-		public virtual N TreeAddNode<B, K, N>(K key, out N node, bool isPool = true)
+		public virtual N TreeAddNode<B, K, N>(K key, N node)
 			where N : class, INode
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, out node, isPool))
+			if (this.AddBranch<B>().TryAddNode(key, node))
 			{
+				node.BranchType = TypeInfo<B>.TypeCode;
+				node.Parent = this;
+				node.Core = this.Core;
+				node.Root = this.Root;
+				if (node.Domain != node) node.Domain = this.Domain;
+
 				node.SetActive(true);//激活节点
-				node.TrySendRule(IAwakeRule.Default);
+				node.TrySendRule(TypeInfo<IAwakeRule>.Default);
 				node.OnTreeAddSelf();
 			}
 			return node;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1>(K key, out N node, T1 arg1, bool isPool = true)
+		public virtual N TreeAddNode<B, K, N, T1>(K key, N node, T1 arg1)
 			where N : class, INode
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, out node, isPool))
+			if (this.AddBranch<B>().TryAddNode(key, node))
 			{
+				node.BranchType = TypeInfo<B>.TypeCode;
+				node.Parent = this;
+				node.Core = this.Core;
+				node.Root = this.Root;
+				if (node.Domain != node) node.Domain = this.Domain;
+
 				node.SetActive(true);//激活节点
-				node.TrySendRule(IAwakeRule<T1>.Default, arg1);
+				node.TrySendRule(TypeInfo<IAwakeRule<T1>>.Default, arg1);
 				node.OnTreeAddSelf();
 			}
 			return node;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1, T2>(K key, out N node, T1 arg1, T2 arg2, bool isPool = true)
+		public virtual N TreeAddNode<B, K, N, T1, T2>(K key, N node, T1 arg1, T2 arg2)
 			where N : class, INode
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, out node, isPool))
+			if (this.AddBranch<B>().TryAddNode(key, node))
 			{
+				node.BranchType = TypeInfo<B>.TypeCode;
+				node.Parent = this;
+				node.Core = this.Core;
+				node.Root = this.Root;
+				if (node.Domain != node) node.Domain = this.Domain;
+
 				node.SetActive(true);//激活节点
-				node.TrySendRule(IAwakeRule<T1, T2>.Default, arg1, arg2);
+				node.TrySendRule(TypeInfo<IAwakeRule<T1, T2>>.Default, arg1, arg2);
 				node.OnTreeAddSelf();
 			}
 			return node;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1, T2, T3>(K key, out N node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
+		public virtual N TreeAddNode<B, K, N, T1, T2, T3>(K key, N node, T1 arg1, T2 arg2, T3 arg3)
 			where N : class, INode
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, out node, isPool))
+			if (this.AddBranch<B>().TryAddNode(key, node))
 			{
+				node.BranchType = TypeInfo<B>.TypeCode;
+				node.Parent = this;
+				node.Core = this.Core;
+				node.Root = this.Root;
+				if (node.Domain != node) node.Domain = this.Domain;
+
 				node.SetActive(true);//激活节点
-				node.TrySendRule(IAwakeRule<T1, T2, T3>.Default, arg1, arg2, arg3);
+				node.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3>>.Default, arg1, arg2, arg3);
 				node.OnTreeAddSelf();
 			}
 			return node;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1, T2, T3, T4>(K key, out N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
+		public virtual N TreeAddNode<B, K, N, T1, T2, T3, T4>(K key, N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
 			where N : class, INode
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, out node, isPool))
+			if (this.AddBranch<B>().TryAddNode(key, node))
 			{
+				node.BranchType = TypeInfo<B>.TypeCode;
+				node.Parent = this;
+				node.Core = this.Core;
+				node.Root = this.Root;
+				if (node.Domain != node) node.Domain = this.Domain;
+
 				node.SetActive(true);//激活节点
-				node.TrySendRule(IAwakeRule<T1, T2, T3, T4>.Default, arg1, arg2, arg3, arg4);
+				node.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3, T4>>.Default, arg1, arg2, arg3, arg4);
 				node.OnTreeAddSelf();
 			}
 			return node;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1, T2, T3, T4, T5>(K key, out N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
+		public virtual N TreeAddNode<B, K, N, T1, T2, T3, T4, T5>(K key, N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
 			where N : class, INode
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, out node, isPool))
+			if (this.AddBranch<B>().TryAddNode(key, node))
 			{
+				node.BranchType = TypeInfo<B>.TypeCode;
+				node.Parent = this;
+				node.Core = this.Core;
+				node.Root = this.Root;
+				if (node.Domain != node) node.Domain = this.Domain;
+
 				node.SetActive(true);//激活节点
-				node.TrySendRule(IAwakeRule<T1, T2, T3, T4, T5>.Default, arg1, arg2, arg3, arg4, arg5);
+				node.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3, T4, T5>>.Default, arg1, arg2, arg3, arg4, arg5);
 				node.OnTreeAddSelf();
 			}
 			return node;
@@ -334,7 +369,14 @@ namespace WorldTree
 		public virtual bool TreeGraftNode<B, K>(K key, INode node)
 			where B : class, IBranch<K>
 		{
-			if (!this.AddBranch<B>().TryGraftNode(key, node)) return false;
+			if (!this.AddBranch<B>().TryAddNode(key, node)) return false;
+
+			node.BranchType = TypeInfo<B>.TypeCode;
+			node.Parent = this;
+			node.Core = this.Core;
+			node.Root = this.Root;
+			if (node.Domain != node) node.Domain = this.Domain;
+
 			node.RefreshActive();
 			node.TraversalLevel(current => current.OnTreeGraftSelf());
 			return true;
@@ -366,7 +408,7 @@ namespace WorldTree
 					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			this.SendRule(DefaultType<IGraftRule>.Default);
+			this.SendRule(TypeInfo<IGraftRule>.Default);
 		}
 
 		#endregion
@@ -396,7 +438,7 @@ namespace WorldTree
 				//检测移除动态监听
 				this.Core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
 			}
-			this.SendRule(DefaultType<ICutRule>.Default);
+			this.SendRule(TypeInfo<ICutRule>.Default);
 			if (this is not ICoreNode)//广播给全部监听器通知 X
 			{
 				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
@@ -407,6 +449,10 @@ namespace WorldTree
 		#endregion
 
 		#region 获取	
+
+		public virtual bool ContainsId<B>(long id) where B : class, IBranch => GetBranch<B>()?.ContainsId(id) ?? false;
+
+		public virtual bool Contains<B, K>(K key) where B : class, IBranch<K> => GetBranch<B>()?.Contains(key) ?? false;
 
 		public virtual bool TryGetNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.TryGetBranch(out B branch) && branch.TryGetNodeById(id, out node) ? node : null) != null;
 

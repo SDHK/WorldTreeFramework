@@ -53,12 +53,9 @@
     <UnityVersion>2021.3.16f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="D:\SDHK\Program\Work\VisualStudio\2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Branch\Base\Branch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\CutRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\GraftRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTweenManager.cs" />
@@ -73,6 +70,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ReferencedPool\ReferencedPool.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitHashSet.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Branch\TypeNodeBranch\TypeNodeBranch.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskVoidMethodBuilder.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\PoolBase\PoolManagerBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Rule\RuleActuatorSendRule.cs" />
@@ -137,6 +135,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Branch\RuleMethod\NodeBranchRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldTreeCoreGetUnit.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\FloatValueChangeRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\CutRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Interface\IUnitPoolItem.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Extension\TreeTaskExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\ListenerRemoveRule.cs" />
@@ -166,6 +165,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Branch\Base\IBranch.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListCallAsyncExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldTreeCoreGetArray.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Branch\Base\Branch.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\GlobalRuleActuator\GlobalRuleActuatorManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Serialized\Serialized.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\SendRuleAsync.cs" />
@@ -184,6 +184,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\CallRuleBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\GenericPool\GenericPool.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\GraftRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListSendAsyncExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\QuaternionFloat.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\Extension\TimerAsyncExtension.cs" />
@@ -235,8 +236,8 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\GenericsValueChangeRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskVoid.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListSendExtension.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Branch\IdNodeBranch\IdNodeBranch.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\TreeTaskQueueLock\TreeTaskQueueLockManagerRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Type\DefaultType.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\CallRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\GlobalRuleActuator\GlobalRuleActuatorBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\DynamicListenerRuleActuator.cs" />
@@ -264,7 +265,6 @@
     <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\Sqlite\Dll\Mono.Data.Sqlite.dll" />
     <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Libmongocrypt.dll" />
     <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Driver.Core.dll" />
-    <None Include="Unity2.licenseheader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="LZ4">

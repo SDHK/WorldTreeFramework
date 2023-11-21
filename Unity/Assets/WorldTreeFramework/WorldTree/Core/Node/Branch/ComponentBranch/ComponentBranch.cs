@@ -14,18 +14,12 @@
 
 namespace WorldTree
 {
-	///// <summary>
-	///// 组件：父节点限制
-	///// </summary>
-	///// <typeparam name="N">父节点类型</typeparam>
-	///// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
-	//public interface ComponentOf<in N> { }
-
 	/// <summary>
-	/// 组件节点
+	/// 组件节点约束
 	/// </summary>
-	public interface AsComponent<in N> : AsNode<ComponentBranch, N> where N : class, INode { }
-
+	/// <typeparam name="P">父节点类型</typeparam>
+	/// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
+	public interface ComponentOf<in P> : NodeOf<P, ComponentBranch> where P : class, INode { }
 
 	/// <summary>
 	/// 组件分支
@@ -45,9 +39,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取组件
 		/// </summary>
-		public static bool TryGetComponent<N, T>(this N self, out T component) where N : class, INode, AsNode<ComponentBranch, T> where T : class, INode
-		=> (component = self.TryGetNode<ComponentBranch, long>(TypeInfo<T>.HashCode64, out INode node) ? node as T : null) != null;
-
+		public static bool TryGetComponent<N, T>(this N self, out T component) where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch> => (component = self.TryGetNode<ComponentBranch, long>(TypeInfo<T>.TypeCode, out INode node) ? node as T : null) != null;
 
 		#endregion
 
@@ -56,7 +48,7 @@ namespace WorldTree
 		/// <summary>
 		/// 裁剪组件
 		/// </summary>
-		public static bool TryCutComponent<T>(this INode self, out T node) where T : class, INode => (node = self.TryCutNode<ComponentBranch, long>(TypeInfo<T>.HashCode64, out INode Inode) ? Inode as T : null) != null;
+		public static bool TryCutComponent<T>(this INode self, out T node) where T : class, INode => (node = self.TryCutNode<ComponentBranch, long>(TypeInfo<T>.TypeCode, out INode Inode) ? Inode as T : null) != null;
 
 		/// <summary>
 		/// 裁剪组件
@@ -70,10 +62,7 @@ namespace WorldTree
 		/// <summary>
 		/// 外部接入组件
 		/// </summary>
-		public static void GraftComponent<N, T>(this N self, T component)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode
-		=> self.TreeGraftNode<ComponentBranch, long>(TypeInfo<T>.HashCode64, component);
+		public static void GraftComponent<N, T>(this N self, T component) where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch> => self.TreeGraftNode<ComponentBranch, long>(TypeInfo<T>.TypeCode, component);
 
 		#endregion
 
@@ -82,7 +71,7 @@ namespace WorldTree
 		/// <summary>
 		/// 移除组件
 		/// </summary>
-		public static void RemoveComponent<T>(this INode self) where T : class, INode => self.RemoveNode<ComponentBranch, long>(TypeInfo<T>.HashCode64);
+		public static void RemoveComponent<T>(this INode self) where T : class, INode => self.RemoveNode<ComponentBranch, long>(TypeInfo<T>.TypeCode);
 
 		/// <summary>
 		/// 移除组件
@@ -98,97 +87,53 @@ namespace WorldTree
 
 		#region 添加
 
-		#region 池
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static T AddComponent<N, T>(this N self, out T Component, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule>
+		=> self.AddNode<N, ComponentBranch, long, T>(TypeInfo<T>.TypeCode, out Component, isPool);
 
 		/// <summary>
 		/// 添加组件
 		/// </summary>
-		public static T AddComponent<N, T>(this N self, out T Component)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode, AsRule<IAwakeRule>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T>(TypeInfo<T>.HashCode64, out Component);
-		}
+		public static T AddComponent<N, T, T1>(this N self, out T Component, T1 arg1, bool isPool = true)
+		  where N : class, INode
+		  where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1>>
+		=> self.AddNode<N, ComponentBranch, long, T, T1>(TypeInfo<T>.TypeCode, out Component, arg1, isPool);
 
-		public static T AddComponent<N, T, T1>(this N self, out T Component, T1 arg1)
-		  where N : class, INode, AsNode<ComponentBranch, T>
-		  where T : class, INode, AsRule<IAwakeRule<T1>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1>(TypeInfo<T>.HashCode64, out Component, arg1);
-		}
-		public static T AddComponent<N, T, T1, T2>(this N self, out T Component, T1 arg1, T2 arg2)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode, AsRule<IAwakeRule<T1, T2>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1, T2>(TypeInfo<T>.HashCode64, out Component, arg1, arg2);
-		}
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static T AddComponent<N, T, T1, T2>(this N self, out T Component, T1 arg1, T2 arg2, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2>>
+		=> self.AddNode<N, ComponentBranch, long, T, T1, T2>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, isPool);
 
-		public static T AddComponent<N, T, T1, T2, T3>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode, AsRule<IAwakeRule<T1, T2, T3>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1, T2, T3>(TypeInfo<T>.HashCode64, out Component, arg1, arg2, arg3);
-		}
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static T AddComponent<N, T, T1, T2, T3>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2, T3>>
+		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, isPool);
 
-		public static T AddComponent<N, T, T1, T2, T3, T4>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode, AsRule<IAwakeRule<T1, T2, T3, T4>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1, T2, T3, T4>(TypeInfo<T>.HashCode64, out Component, arg1, arg2, arg3, arg4);
-		}
-		public static T AddComponent<N, T, T1, T2, T3, T4, T5>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1, T2, T3, T4, T5>(TypeInfo<T>.HashCode64, out Component, arg1, arg2, arg3, arg4, arg5);
-		}
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static T AddComponent<N, T, T1, T2, T3, T4>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2, T3, T4>>
+		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3, T4>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, arg4, isPool);
 
-		#endregion
-
-
-		#region 非池
-
-		public static T AddNewComponent<N, T>(this N self, out T Component)
-		  where N : class, INode, AsNode<ComponentBranch, T>
-		  where T : class, INode, AsRule<IAwakeRule>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T>(TypeInfo<T>.HashCode64, out Component, isPool: false);
-		}
-
-		public static T AddNewComponent<N, T, T1>(this N self, out T Component, T1 arg1)
-		 where N : class, INode, AsNode<ComponentBranch, T>
-		 where T : class, INode, AsRule<IAwakeRule<T1>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1>(TypeInfo<T>.HashCode64, out Component, arg1, isPool: false);
-		}
-		public static T AddNewComponent<N, T, T1, T2>(this N self, out T Component, T1 arg1, T2 arg2)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode, AsRule<IAwakeRule<T1, T2>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1, T2>(TypeInfo<T>.HashCode64, out Component, arg1, arg2, isPool: false);
-		}
-
-		public static T AddNewComponent<N, T, T1, T2, T3>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode, AsRule<IAwakeRule<T1, T2, T3>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1, T2, T3>(TypeInfo<T>.HashCode64, out Component, arg1, arg2, arg3, isPool: false);
-		}
-
-		public static T AddNewComponent<N, T, T1, T2, T3, T4>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode, AsRule<IAwakeRule<T1, T2, T3, T4>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1, T2, T3, T4>(TypeInfo<T>.HashCode64, out Component, arg1, arg2, arg3, arg4, isPool: false);
-		}
-		public static T AddNewComponent<N, T, T1, T2, T3, T4, T5>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-			where N : class, INode, AsNode<ComponentBranch, T>
-			where T : class, INode, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
-		{
-			return self.TreeAddNode<ComponentBranch, long, T, T1, T2, T3, T4, T5>(TypeInfo<T>.HashCode64, out Component, arg1, arg2, arg3, arg4, arg5, isPool: false);
-		}
-
-		#endregion
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static T AddComponent<N, T, T1, T2, T3, T4, T5>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
+		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3, T4, T5>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, arg4, arg5, isPool);
 
 		#endregion
 

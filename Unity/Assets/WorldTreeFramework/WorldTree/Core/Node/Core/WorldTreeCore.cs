@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/7/18 9:35
@@ -12,9 +11,6 @@
 * 
 
 */
-
-using System;
-using System.ComponentModel;
 
 namespace WorldTree
 {
@@ -48,15 +44,6 @@ namespace WorldTree
 	/// 世界树核心
 	/// </summary>
 	public class WorldTreeCore : CoreNode
-		, AsComponent<IdManager>
-		, AsComponent<RealTimeManager>
-		, AsComponent<GameTimeManager>
-		, AsComponent<RuleManager>
-		, AsComponent<UnitPoolManager>
-		, AsComponent<NodePoolManager>
-		, AsComponent<ReferencedPoolManager>
-		, AsComponent<ArrayPoolManager>
-		, AsComponent<WorldTreeRoot>
 	{
 		public IRuleGroup<IAddRule> AddRuleGroup;
 		public IRuleGroup<IBeforeRemoveRule> BeforeRemoveRuleGroup;
@@ -132,7 +119,7 @@ namespace WorldTree
 		public static void Awake(this WorldTreeCore self)
 		{
 			//根节点初始化
-			self.Type = TypeInfo<WorldTreeCore>.HashCode64;
+			self.Type = TypeInfo<WorldTreeCore>.TypeCode;
 			self.Core = self;
 			self.Domain = self;
 
@@ -168,9 +155,9 @@ namespace WorldTree
 			self.GraftComponent(self.RuleManager);
 
 			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
-			self.UnitPoolManager = self.AddNewComponent(out UnitPoolManager _);
-			self.NodePoolManager = self.AddNewComponent(out NodePoolManager _);
-			self.ArrayPoolManager = self.AddNewComponent(out ArrayPoolManager _);
+			self.UnitPoolManager = self.AddComponent(out UnitPoolManager _, isPool: false);
+			self.NodePoolManager = self.AddComponent(out NodePoolManager _, isPool: false);
+			self.ArrayPoolManager = self.AddComponent(out ArrayPoolManager _, isPool: false);
 
 			//树根节点
 			self.GraftComponent(self.Root = self.PoolGet<WorldTreeRoot>());

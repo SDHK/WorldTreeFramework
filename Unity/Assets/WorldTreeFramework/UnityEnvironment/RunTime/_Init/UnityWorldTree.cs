@@ -53,7 +53,7 @@ namespace WorldTree
 
 
 			//Core.Root.AddComponent(out InitialDomain _);
-			Core.Root.TreeAddNode<ComponentBranch, long, InitialDomain>(TypeInfo<InitialDomain>.HashCode64, out _);
+			Core.Root.TreeAddNode<ComponentBranch, long, InitialDomain>(TypeInfo<InitialDomain>.TypeCode, out _);
 		}
 
 		private void Update()

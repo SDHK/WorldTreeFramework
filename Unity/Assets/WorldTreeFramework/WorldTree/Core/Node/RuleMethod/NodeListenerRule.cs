@@ -17,13 +17,13 @@ namespace WorldTree
         /// </summary>
         public static bool ListenerSwitchesTarget<T>(this INodeListener self, ListenerState state)
         {
-            if (self.listenerTarget != TypeInfo<T>.HashCode64)
+            if (self.listenerTarget != TypeInfo<T>.TypeCode)
             {
                 //判断是否为监听器
                 if (self.Core.RuleManager.DynamicListenerTypeHash.Contains(self.Type))
                 {
                     self.Core.ReferencedPoolManager.RemoveDynamicListener(self);
-                    self.listenerTarget = TypeInfo<T>.HashCode64;
+                    self.listenerTarget = TypeInfo<T>.TypeCode;
                     self.listenerState = state;
                     self.Core.ReferencedPoolManager.TryAddDynamicListener(self);
                     return true;
