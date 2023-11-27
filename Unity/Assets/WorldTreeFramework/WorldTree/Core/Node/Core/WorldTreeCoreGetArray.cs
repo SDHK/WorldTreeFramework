@@ -1,4 +1,4 @@
-﻿
+
 /****************************************
 
 * 作者： 闪电黑客
@@ -12,6 +12,7 @@ using System;
 
 namespace WorldTree
 {
+
     public static partial class WorldTreeCoreRule
     {
         /// <summary>

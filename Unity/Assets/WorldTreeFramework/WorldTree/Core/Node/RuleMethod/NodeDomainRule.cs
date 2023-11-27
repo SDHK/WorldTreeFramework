@@ -86,37 +86,37 @@ namespace WorldTree
             }
         }
 
-        /// <summary>
-        /// 层序遍历释放域
-        /// </summary>
-        public static INode TraversalLevelDisposeDomain(this INode self)
-        {
-            UnitQueue<INode> queue = self.PoolGet<UnitQueue<INode>>();
-            queue.Enqueue(self);
+        ///// <summary>
+        ///// 层序遍历释放域
+        ///// </summary>
+        //public static INode TraversalLevelDisposeDomain(this INode self)
+        //{
+        //    UnitQueue<INode> queue = self.PoolGet<UnitQueue<INode>>();
+        //    queue.Enqueue(self);
 
-            while (queue.Count != 0)
-            {
-                var current = queue.Dequeue();
+        //    while (queue.Count != 0)
+        //    {
+        //        var current = queue.Dequeue();
 
-                current.DisposeDomain();
+        //        current.DisposeDomain();
 
-                if (current.m_Components != null)
-                {
-                    foreach (var item in current.m_Components)
-                    {
-                        queue.Enqueue(item.Value);
-                    }
-                }
-                if (current.m_Children != null)
-                {
-                    foreach (var item in current.m_Children)
-                    {
-                        queue.Enqueue(item.Value);
-                    }
-                }
-            }
-            queue.Dispose();
-            return self;
-        }
+        //        if (current.m_Components != null)
+        //        {
+        //            foreach (var item in current.m_Components)
+        //            {
+        //                queue.Enqueue(item.Value);
+        //            }
+        //        }
+        //        if (current.m_Children != null)
+        //        {
+        //            foreach (var item in current.m_Children)
+        //            {
+        //                queue.Enqueue(item.Value);
+        //            }
+        //        }
+        //    }
+        //    queue.Dispose();
+        //    return self;
+        //}
     }
 }

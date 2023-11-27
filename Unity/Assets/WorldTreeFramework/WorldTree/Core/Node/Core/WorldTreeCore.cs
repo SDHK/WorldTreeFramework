@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/7/18 9:35
@@ -38,6 +38,7 @@ namespace WorldTree
 	//时域与时间轮
 
 	//将Add综合到核心
+
 
 
 	/// <summary>
@@ -96,7 +97,7 @@ namespace WorldTree
 		public WorldTreeCore()
 		{
 			this.Awake();
-		}
+		} 
 
 		/// <summary>
 		/// 释放
@@ -193,6 +194,7 @@ namespace WorldTree
 			self.GetRuleGroup = null;
 			self.RecycleRuleGroup = null;
 			self.DestroyRuleGroup = null;
+
 
 			self.AddRuleGroup = null;
 			self.RemoveRuleGroup = null;

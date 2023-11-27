@@ -10,7 +10,7 @@
 using WorldTree;
 
 
-public class TestNode : Node
+public class TestNode : Node, ComponentOf<InitialDomain>
 	, AsRule<IFixedUpdateTimeRule>
 	, AsRule<ILateUpdateTimeRule>
 	, AsRule<IAwakeRule>

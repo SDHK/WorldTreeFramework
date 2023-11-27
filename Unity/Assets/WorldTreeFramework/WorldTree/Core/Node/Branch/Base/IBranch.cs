@@ -49,7 +49,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试通过id获取节点
 		/// </summary>
-		public bool TryGetNodeById(long id, out INode Node);
+		public bool TryGetNodeById(long id, out INode node);
 
 		/// <summary>
 		/// 通过id获取节点
@@ -65,22 +65,12 @@ namespace WorldTree
 		/// <summary>
 		/// 根据id移除节点
 		/// </summary>
-		public void RemoveNodeById(long node);
+		public void RemoveNodeById(long id);
 
 		/// <summary>
 		/// 移除释放所有分支节点
 		/// </summary>
 		public void RemoveAllNode();
-
-		/// <summary>
-		/// 尝试通过id裁剪节点
-		/// </summary>
-		public bool TryCutNodeById(long id, out INode node);
-
-		/// <summary>
-		/// 通过id裁剪节点
-		/// </summary>
-		public INode CutNodeById(long id);
 	}
 
 	/// <summary>
@@ -102,7 +92,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试通过键值获取节点
 		/// </summary>
-		public bool TryGetNode(K key, out INode Node);
+		public bool TryGetNode(K key, out INode node);
 		/// <summary>
 		/// 通过键值获取节点
 		/// </summary>
@@ -111,21 +101,11 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试添加节点到字典
 		/// </summary>
-		public bool TryAddNode<N>(K key, N Node) where N : class, INode;
+		public bool TryAddNode<N>(K key, N node) where N : class, INode;
 
 		/// <summary>
 		/// 根据键值移除节点
 		/// </summary>
 		public void RemoveNode(K key);
-
-		/// <summary>
-		/// 尝试根据键值裁剪节点
-		/// </summary>
-		public bool TryCutNode(K key, out INode node);
-
-		/// <summary>
-		/// 根据键值裁剪节点
-		/// </summary>
-		public INode CutNode(K key);
 	}
 }

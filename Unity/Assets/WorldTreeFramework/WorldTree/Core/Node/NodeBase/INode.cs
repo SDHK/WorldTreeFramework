@@ -67,12 +67,6 @@ namespace WorldTree
 		public long Id { get; set; }
 
 		/// <summary>
-		/// 数据节点ID
-		/// </summary>
-		/// <remarks>保证数据唯一</remarks>
-		public long DataId { get; set; }
-
-		/// <summary>
 		/// 树根节点
 		/// </summary>
 		/// <remarks>挂载核心启动后的管理器组件</remarks>
@@ -105,38 +99,6 @@ namespace WorldTree
 		/// 活跃事件标记
 		/// </summary>
 		public bool m_ActiveEventMark { get; set; }
-
-		#endregion
-
-		#region Children
-
-		/// <summary>
-		/// 子节点
-		/// </summary>
-		public UnitDictionary<long, INode> m_Children { get; set; }
-
-		#endregion
-
-		#region Components
-
-		/// <summary>
-		/// 组件标记
-		/// </summary>
-		public bool isComponent { get; set; }
-
-		/// <summary>
-		/// 组件节点
-		/// </summary>
-		public UnitDictionary<long, INode> m_Components { get; set; }
-		#endregion
-
-
-		#region Domains
-
-		/// <summary>
-		/// 域节点
-		/// </summary>
-		public UnitDictionary<Type, INode> m_Domains { get; set; }
 
 		#endregion
 

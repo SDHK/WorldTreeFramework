@@ -18,7 +18,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树节点基类
 	/// </summary>
-	public abstract partial class Node : INode//真的需要每一个节点都有id吗？
+	public abstract partial class Node : INode
 	{
 		public bool IsFromPool { get; set; }
 		public bool IsRecycle { get; set; }
@@ -26,8 +26,6 @@ namespace WorldTree
 		public bool IsDisposed { get; set; }
 
 		public long Id { get; set; }
-		public long DataId { get; set; }
-
 		public long Type { get; set; }
 
 		public WorldTreeCore Core { get; set; }
@@ -45,22 +43,6 @@ namespace WorldTree
 
 		#endregion
 
-		#region Children
-
-		public UnitDictionary<long, INode> m_Children { get; set; }
-		#endregion
-
-
-		#region Component
-		public bool isComponent { get; set; }
-		public UnitDictionary<long, INode> m_Components { get; set; }
-		#endregion
-
-		#region Domains
-
-
-		public UnitDictionary<Type, INode> m_Domains { get; set; }
-		#endregion
 
 		#region Referenceds
 
@@ -415,11 +397,11 @@ namespace WorldTree
 
 		#region 裁剪
 
-		public virtual bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.TryGetBranch(out B branch) && branch.TryCutNodeById(id, out node) ? node : null) != null;
-		public virtual bool TryCutNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.TryGetBranch(out B branch) && branch.TryCutNode(key, out node) ? node : null) != null;
+		public virtual bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.GetBranch<B>()?.GetNodeById(id).TreeCutSelf()) != null;
+		public virtual bool TryCutNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.GetBranch<B>()?.GetNode(key).TreeCutSelf()) != null;
 
-		public virtual INode CutNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.CutNodeById(id);
-		public virtual INode CutNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.CutNode(key);
+		public virtual INode CutNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(id).TreeCutSelf();
+		public virtual INode CutNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key).TreeCutSelf();
 
 		public virtual INode TreeCutSelf()
 		{

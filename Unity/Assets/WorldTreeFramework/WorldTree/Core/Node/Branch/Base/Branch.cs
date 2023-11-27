@@ -50,15 +50,6 @@ namespace WorldTree
 		public INode GetNodeById(long id) => this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out INode node) ? node : null;
 
 
-		public bool TryCutNode(K key, out INode node) => (node = this.GetNode(key)?.TreeCutSelf()) != null;
-
-		public bool TryCutNodeById(long id, out INode node) => (node = this.GetNodeById(id)?.TreeCutSelf()) != null;
-
-		public INode CutNode(K key) => this.GetNode(key)?.TreeCutSelf();
-
-		public INode CutNodeById(long id) => this.GetNodeById(id)?.TreeCutSelf();
-
-
 		public void RemoveNodeById(long id) => GetNodeById(id)?.Dispose();
 
 		public void RemoveNode(K key) => GetNode(key)?.Dispose();

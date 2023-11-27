@@ -10,7 +10,6 @@
 * 可用于初始化启动需要的功能组件
 
 */
-using System;
 using System.IO;
 using UnityEngine;
 using YooAsset;
@@ -325,7 +324,6 @@ namespace WorldTree
 
 					//self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
 					self.AddComponent(out TestNode _).Test1().Coroutine();
-					self.AddNode(ComponentBranch, TypeInfo<TestNode>.TypeCode, out TestNode node);
 
 					//for (int i = 0; i < 1000; i++)
 					//{
