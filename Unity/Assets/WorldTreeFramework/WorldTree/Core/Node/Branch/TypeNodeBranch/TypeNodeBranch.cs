@@ -72,7 +72,7 @@ namespace WorldTree
 		/// <summary>
 		/// 移除所有类型节点
 		/// </summary>
-		public static void RemoveAllTypeNode(this INode self) => self.RemoveBranch<TypeNodeBranch>();
+		public static void RemoveAllTypeNode(this INode self) => self.RemoveAllNode<TypeNodeBranch>();
 
 		#endregion
 

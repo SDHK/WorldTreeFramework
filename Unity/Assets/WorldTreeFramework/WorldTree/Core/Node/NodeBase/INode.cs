@@ -8,7 +8,6 @@
 * 抽出这个接口是为了用于扩展原生类型
 
 */
-using System;
 
 namespace WorldTree
 {
@@ -102,22 +101,6 @@ namespace WorldTree
 
 		#endregion
 
-
-		#region Referenceds
-
-		/// <summary>
-		/// 引用我的父关系节点
-		/// </summary>
-		public UnitDictionary<long, INode> m_ReferencedParents { get; set; }
-
-		/// <summary>
-		/// 我引用的子关系节点
-		/// </summary>
-		public UnitDictionary<long, INode> m_ReferencedChilden { get; set; }
-
-		#endregion
-
-
 		#region Branch
 
 		/// <summary>
@@ -159,19 +142,14 @@ namespace WorldTree
 		#region 移除
 
 		/// <summary>
-		/// 移除分支的所有节点
+		/// 移除分支中的节点
 		/// </summary>
-		public void RemoveBranch<B>() where B : class, IBranch;
+		public void RemoveBranchNode<B>(INode node) where B : class, IBranch;
 
 		/// <summary>
-		/// 移除分支的所有节点
+		/// 移除分支中的节点
 		/// </summary>
-		public void RemoveBranch(long Type);
-
-		/// <summary>
-		/// 从父节点分支移除
-		/// </summary>
-		public void RemoveInParentBranch();
+		public void RemoveBranchNode(long branchType, INode node);
 
 		#endregion
 

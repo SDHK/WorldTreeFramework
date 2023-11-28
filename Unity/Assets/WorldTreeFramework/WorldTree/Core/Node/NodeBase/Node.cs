@@ -43,15 +43,6 @@ namespace WorldTree
 
 		#endregion
 
-
-		#region Referenceds
-
-		public UnitDictionary<long, INode> m_ReferencedParents { get; set; }
-
-		public UnitDictionary<long, INode> m_ReferencedChilden { get; set; }
-
-		#endregion
-
 		#region Branch 
 
 		public long BranchType { get; set; }
@@ -98,45 +89,9 @@ namespace WorldTree
 
 		#region 移除 
 
-		public virtual void RemoveBranch<B>() where B : class, IBranch => this.GetBranch(TypeInfo<B>.TypeCode)?.RemoveAllNode();
+		public void RemoveBranchNode<B>(INode node) where B : class, IBranch => this.GetBranch<B>()?.RemoveNodeAndBranchDispose(node.Id);
 
-		public virtual void RemoveBranch(long branchType) => this.GetBranch(branchType)?.RemoveAllNode();
-
-		public virtual void RemoveInParentBranch()
-		{
-			if (this.Parent.TryGetBranch(this.BranchType, out IBranch branch))
-			{
-				branch.RemoveNodeInDictionary(this);
-				if (branch.Count == 0)
-				{
-					branch.Dispose();
-					this.Parent.m_Branchs.Remove(this.BranchType);
-					if (this.Parent.m_Branchs.Count == 0)
-					{
-						this.Parent.m_Branchs.Dispose();
-						this.Parent.m_Branchs = null;
-					}
-				}
-			}
-		}
-
-		public virtual void RemoveAllNode()
-		{
-			if (this.m_Branchs == null) return;
-			using (this.PoolGet(out UnitStack<IBranch> branchs))
-			{
-				foreach (var item in this.m_Branchs) branchs.Push(item.Value);
-				while (branchs.Count != 0) branchs.Pop().RemoveAllNode();
-			}
-			//假如在分支移除过程中，节点又添加了新的分支。那么就是错误的，新增分支将无法回收。
-			if (m_Branchs.Count != 0)
-			{
-				foreach (var item in m_Branchs)
-				{
-					World.Log($"移除分支出错，意外的新分支，节点：{this} 分支:{item.GetType()}");
-				}
-			}
-		}
+		public void RemoveBranchNode(long branchType, INode node) => this.GetBranch(branchType)?.RemoveNodeAndBranchDispose(node.Id);
 
 		#endregion
 
@@ -301,6 +256,24 @@ namespace WorldTree
 
 		#region 释放
 
+		public virtual void RemoveAllNode()
+		{
+			if (this.m_Branchs == null) return;
+			using (this.PoolGet(out UnitStack<IBranch> branchs))
+			{
+				foreach (var item in this.m_Branchs) branchs.Push(item.Value);
+				while (branchs.Count != 0) branchs.Pop().RemoveAllNode();
+			}
+			//假如在分支移除过程中，节点又添加了新的分支。那么就是错误的，新增分支将无法回收。
+			if (m_Branchs.Count != 0)
+			{
+				foreach (var item in m_Branchs)
+				{
+					World.Log($"移除分支出错，意外的新分支，节点：{this} 分支:{item.GetType()}");
+				}
+			}
+		}
+
 		public virtual void RemoveAllNode<B>() where B : class, IBranch => this.GetBranch<B>()?.RemoveAllNode();
 
 		public virtual void RemoveNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.RemoveNode(key);
@@ -322,7 +295,7 @@ namespace WorldTree
 
 		public virtual void OnDispose()//未完
 		{
-			this.RemoveInParentBranch();//从父节点分支移除
+			this.Parent?.RemoveBranchNode(this.BranchType,this);//从父节点分支移除
 			this.SendAllReferencedNodeRemove();//_判断移除引用关系 X
 			this.SetActive(false);//激活变更
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知 X
@@ -407,7 +380,7 @@ namespace WorldTree
 		{
 			if (this.IsRecycle) return null; //是否已经回收
 			this.TraversalPostorder(current => current.OnTreeCutSelf());
-			this.RemoveInParentBranch();//从父节点分支移除
+			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			return this;
 		}
 		public virtual void OnTreeCutSelf()

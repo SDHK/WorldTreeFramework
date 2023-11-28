@@ -73,12 +73,27 @@ namespace WorldTree
 			}
 		}
 
-		public void RemoveNodeInDictionary(INode node)
+		public void RemoveNodeAndBranchDispose(long nodeId)
 		{
-			if (NodeKeys.TryGetValue(node.Id, out K key))
+			if (NodeKeys.TryGetValue(nodeId, out K key))
 			{
-				NodeKeys.Remove(node.Id);
+				NodeKeys.Remove(nodeId);
 				Nodes.Remove(key);
+			}
+
+			//如果分支字典为空，那么就释放分支字典
+			if (Nodes.Count == 0)
+			{
+				//移除分支自己
+				this.Self.m_Branchs.Remove(this.Type);
+				//如果分支字典为空，那么就释放分支字典
+				if (this.Self.m_Branchs.Count == 0)
+				{
+					this.Self.m_Branchs.Dispose();
+					this.Self.m_Branchs = null;
+				}
+				//释放分支自己
+				this.Dispose();
 			}
 		}
 

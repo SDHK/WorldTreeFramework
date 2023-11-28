@@ -57,10 +57,10 @@ namespace WorldTree
 		public INode GetNodeById(long id);
 
 		/// <summary>
-		/// 将节点从分支字典中移除
+		/// 将节点从分支中移除，并释放分支
 		/// </summary>
-		/// <remarks>单纯的将节点从分支字典中移除，不是释放和裁剪节点</remarks>
-		public void RemoveNodeInDictionary(INode node);
+		/// <remarks>从分支中移除节点，节点为0则释放分支</remarks>
+		public void RemoveNodeAndBranchDispose(long nodeId);
 
 		/// <summary>
 		/// 根据id移除节点
