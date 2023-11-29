@@ -21,6 +21,7 @@ namespace WorldTree
 
 		public override void Dispose()
 		{
+			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.IsRecycle = true;
 			this.IsDisposed = true;
 			this.SetActive(false);

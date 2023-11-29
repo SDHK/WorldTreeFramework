@@ -31,6 +31,7 @@ namespace WorldTree
 		/// </summary>
 		public override void OnDispose()
 		{
+			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.IsRecycle = true;
 			this.IsDisposed = true;
 		}
