@@ -101,10 +101,16 @@ namespace WorldTree
 
 		#endregion
 
+		#region Rattan
+
+
+
+		#endregion
+
 		#region Branch
 
 		/// <summary>
-		/// 分支类型
+		/// 挂载的分支类型
 		/// </summary>
 		public long BranchType { get; set; }
 

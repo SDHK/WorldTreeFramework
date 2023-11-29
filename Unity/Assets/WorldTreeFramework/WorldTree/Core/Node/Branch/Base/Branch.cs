@@ -18,19 +18,14 @@ namespace WorldTree
 	/// </summary>
 	public abstract class Branch<K> : UnitPoolItem, IBranch<K>
 	{
-		public INode Self { get; set; }
 		public int Count => Nodes.Count;
 		protected UnitDictionary<K, INode> Nodes;
 		protected UnitDictionary<long, K> NodeKeys;
 
-		public void SetNode(INode node)
+		public override void OnGet()
 		{
-			if (Self == null)
-			{
-				Self = node;
-				Self.PoolGet(out Nodes);
-				Self.PoolGet(out NodeKeys);
-			}
+			Core.PoolGet(out Nodes);
+			Core.PoolGet(out NodeKeys);
 		}
 
 		public bool Contains(K key) => Nodes.ContainsKey(key);
@@ -58,7 +53,7 @@ namespace WorldTree
 		{
 			if (Nodes.Count == 0) return;
 			//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
-			using (Self.PoolGet(out UnitStack<INode> nodes))
+			using (Core.PoolGet(out UnitStack<INode> nodes))
 			{
 				foreach (var item in Nodes) nodes.Push(item.Value);
 				while (nodes.Count != 0) nodes.Pop().Dispose();
@@ -73,27 +68,12 @@ namespace WorldTree
 			}
 		}
 
-		public void RemoveNodeAndBranchDispose(long nodeId)
+		public void BranchRemoveNode(long nodeId)
 		{
 			if (NodeKeys.TryGetValue(nodeId, out K key))
 			{
 				NodeKeys.Remove(nodeId);
 				Nodes.Remove(key);
-			}
-
-			//如果分支字典为空，那么就释放分支字典
-			if (Nodes.Count == 0)
-			{
-				//移除分支自己
-				this.Self.m_Branchs.Remove(this.Type);
-				//如果分支字典为空，那么就释放分支字典
-				if (this.Self.m_Branchs.Count == 0)
-				{
-					this.Self.m_Branchs.Dispose();
-					this.Self.m_Branchs = null;
-				}
-				//释放分支自己
-				this.Dispose();
 			}
 		}
 
@@ -105,7 +85,6 @@ namespace WorldTree
 		{
 			this.Nodes.Dispose();
 			this.NodeKeys.Dispose();
-			this.Self = null;
 			this.Nodes = null;
 			this.NodeKeys = null;
 			base.OnRecycle();

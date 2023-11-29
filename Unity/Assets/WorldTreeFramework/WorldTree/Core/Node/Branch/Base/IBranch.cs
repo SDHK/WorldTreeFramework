@@ -26,20 +26,9 @@ namespace WorldTree
 	public interface IBranch : IUnitPoolEventItem, IEnumerable<INode>
 	{
 		/// <summary>
-		/// 自身节点
-		/// </summary>
-		public INode Self { get; set; }
-
-		/// <summary>
 		/// 节点数量
 		/// </summary>
 		public int Count { get; }
-
-		/// <summary>
-		/// 设置挂载节点
-		/// </summary>
-		public void SetNode(INode node);
-
 
 		/// <summary>
 		/// 节点id包含判断
@@ -57,13 +46,13 @@ namespace WorldTree
 		public INode GetNodeById(long id);
 
 		/// <summary>
-		/// 将节点从分支中移除，并释放分支
+		/// 将节点从分支中移除
 		/// </summary>
-		/// <remarks>从分支中移除节点，节点为0则释放分支</remarks>
-		public void RemoveNodeAndBranchDispose(long nodeId);
+		/// <remarks>单纯的从分支中移除节点</remarks>
+		public void BranchRemoveNode(long nodeId);
 
 		/// <summary>
-		/// 根据id移除节点
+		/// 根据id移除释放节点
 		/// </summary>
 		public void RemoveNodeById(long id);
 
@@ -82,7 +71,6 @@ namespace WorldTree
 		/// 节点键值包含判断
 		/// </summary>
 		public bool Contains(K key);
-
 
 		/// <summary>
 		/// 尝试通过节点获取键值
@@ -108,4 +96,10 @@ namespace WorldTree
 		/// </summary>
 		public void RemoveNode(K key);
 	}
+
+	/// <summary>
+	/// 世界树藤接口
+	/// </summary>
+	public interface IRattan { }
+
 }

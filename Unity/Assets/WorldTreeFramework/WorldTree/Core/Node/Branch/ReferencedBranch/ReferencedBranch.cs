@@ -13,13 +13,9 @@ namespace WorldTree
 
 		protected UnitDictionary<long, INode> Nodes;
 
-		public void SetNode(INode node)
+		public override void OnGet()
 		{
-			if (Self == null)
-			{
-				Self = node;
-				Self.PoolGet(out Nodes);
-			}
+			Core.PoolGet(out Nodes);
 		}
 
 
@@ -40,9 +36,9 @@ namespace WorldTree
 
 
 
-		public void RemoveNode(long key) => RemoveNodeAndBranchDispose(key);
+		public void RemoveNode(long key) => BranchRemoveNode(key);
 
-		public void RemoveNodeById(long id) => RemoveNodeAndBranchDispose(id);
+		public void RemoveNodeById(long id) => BranchRemoveNode(id);
 
 		public void RemoveAllNode()
 		{
@@ -59,26 +55,7 @@ namespace WorldTree
 			this.Dispose();
 		}
 
-		public void RemoveNodeAndBranchDispose(long nodeId)
-		{
-			Nodes.Remove(nodeId);
-
-			//如果分支字典为空，那么就释放分支字典
-			if (Nodes.Count == 0)
-			{
-				//移除分支自己
-				this.Self.m_Branchs.Remove(this.Type);
-				//如果分支字典为空，那么就释放分支字典
-				if (this.Self.m_Branchs.Count == 0)
-				{
-					this.Self.m_Branchs.Dispose();
-					this.Self.m_Branchs = null;
-				}
-				//释放分支自己
-				this.Dispose();
-			}
-		}
-
+		public void BranchRemoveNode(long nodeId) => Nodes.Remove(nodeId);
 
 		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
@@ -109,15 +86,15 @@ namespace WorldTree
 		/// </summary>
 		public static void DeReferenced(this INode self, INode node)
 		{
-			if (self.TryGetBranch(out ReferencedChildBranch branch))
+			if (self.TryGetBranch(out ReferencedChildBranch _))
 			{
-				branch.RemoveNodeAndBranchDispose(node.Id);
+				self.RemoveBranchNode<ReferencedChildBranch>(node);
 				self.TrySendRule(TypeInfo<IDeReferencedChildRule>.Default, node);
 			}
 
-			if (node.TryGetBranch(out ReferencedParentBranch branch2))
+			if (node.TryGetBranch(out ReferencedParentBranch _))
 			{
-				branch2.RemoveNodeAndBranchDispose(self.Id);
+				self.RemoveBranchNode<ReferencedParentBranch>(self);
 				node.TrySendRule(TypeInfo<IDeReferencedParentRule>.Default, self);
 			}
 		}
@@ -163,7 +140,7 @@ namespace WorldTree
 					while (nodes.Count != 0)
 					{
 						var node = nodes.Dequeue();
-						node.GetBranch<ReferencedChildBranch>()?.RemoveNodeAndBranchDispose(self.Id);
+						node.RemoveBranchNode<ReferencedChildBranch>(self);
 						node.TrySendRule(TypeInfo<IReferencedChildRemoveRule>.Default, self);
 					}
 				}
@@ -178,7 +155,7 @@ namespace WorldTree
 					while (nodes.Count != 0)
 					{
 						var node = nodes.Dequeue();
-						node.GetBranch<ReferencedParentBranch>()?.RemoveNodeAndBranchDispose(self.Id);
+						node.RemoveBranchNode<ReferencedParentBranch>(self);
 						node.TrySendRule(TypeInfo<IReferencedParentRemoveRule>.Default, self);
 					}
 				}

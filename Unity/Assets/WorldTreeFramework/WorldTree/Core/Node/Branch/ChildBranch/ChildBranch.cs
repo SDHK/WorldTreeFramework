@@ -37,13 +37,9 @@ namespace WorldTree
 
 		protected UnitDictionary<long, INode> Nodes;
 
-		public void SetNode(INode node)
+		public override void OnGet()
 		{
-			if (Self == null)
-			{
-				Self = node;
-				Self.PoolGet(out Nodes);
-			}
+			Core.PoolGet(out Nodes);
 		}
 
 		public bool Contains(long key) => Nodes.ContainsKey(key);
@@ -86,25 +82,7 @@ namespace WorldTree
 			}
 		}
 
-		public void RemoveNodeAndBranchDispose(long nodeId)
-		{
-			Nodes.Remove(nodeId);
-
-			//如果分支字典为空，那么就释放分支字典
-			if (Nodes.Count == 0)
-			{
-				//移除分支自己
-				this.Self.m_Branchs.Remove(this.Type);
-				//如果分支字典为空，那么就释放分支字典
-				if (this.Self.m_Branchs.Count == 0)
-				{
-					this.Self.m_Branchs.Dispose();
-					this.Self.m_Branchs = null;
-				}
-				//释放分支自己
-				this.Dispose();
-			}
-		}
+		public void BranchRemoveNode(long nodeId) => Nodes.Remove(nodeId);
 
 
 		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();

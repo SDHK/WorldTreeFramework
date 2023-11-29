@@ -66,7 +66,6 @@ namespace WorldTree
 			if (!Branchs.TryGetValue(TypeInfo<B>.TypeCode, out IBranch iBranch))
 			{
 				Branchs.Add(TypeInfo<B>.TypeCode, iBranch = this.PoolGet<B>());
-				iBranch.SetNode(this);
 			}
 			return iBranch as B;
 		}
@@ -77,7 +76,6 @@ namespace WorldTree
 			if (!Branchs.TryGetValue(Type, out IBranch iBranch))
 			{
 				Branchs.Add(Type, iBranch = this.Core.GetUnit(Type) as IBranch);
-				iBranch.SetNode(this);
 			}
 			return iBranch;
 		}
@@ -86,9 +84,27 @@ namespace WorldTree
 
 		#region 移除 
 
-		public void RemoveBranchNode<B>(INode node) where B : class, IBranch => this.GetBranch<B>()?.RemoveNodeAndBranchDispose(node.Id);
+		public void RemoveBranchNode<B>(INode node) where B : class, IBranch => RemoveBranchNode(TypeInfo<B>.TypeCode, node);
 
-		public void RemoveBranchNode(long branchType, INode node) => this.GetBranch(branchType)?.RemoveNodeAndBranchDispose(node.Id);
+		public void RemoveBranchNode(long branchType, INode node)
+		{
+			if (this.TryGetBranch(branchType, out IBranch branch))
+			{
+				branch.BranchRemoveNode(node.Id);
+				if (branch.Count == 0)
+				{
+					//移除分支
+					this.m_Branchs.Remove(branchType);
+					if (this.m_Branchs.Count == 0)
+					{
+						this.m_Branchs.Dispose();
+						this.m_Branchs = null;
+					}
+					//释放分支
+					branch.Dispose();
+				}
+			}
+		}
 
 		#endregion
 

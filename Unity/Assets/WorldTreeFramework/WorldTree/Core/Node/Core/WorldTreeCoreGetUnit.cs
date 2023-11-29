@@ -26,11 +26,12 @@ namespace WorldTree
                     return unit as T;
                 }
             }
-            T obj = Activator.CreateInstance(TypeInfo<T>.Type, true) as T;
-            obj.Type = TypeInfo<T>.TypeCode;
-            obj.OnNew();
-            obj.OnGet();
-            return obj;
+            T unitObj = Activator.CreateInstance(TypeInfo<T>.Type, true) as T;
+            unitObj.Type = TypeInfo<T>.TypeCode;
+			unitObj.Core = self;
+			unitObj.OnNew();
+            unitObj.OnGet();
+            return unitObj;
         }
 
 		/// <summary>
@@ -45,11 +46,12 @@ namespace WorldTree
 					return unit;
 				}
 			}
-			IUnitPoolEventItem obj = Activator.CreateInstance(type.HashCore64ToType(), true) as IUnitPoolEventItem;
-			obj.Type = type;
-			obj.OnNew();
-			obj.OnGet();
-			return obj;
+			IUnitPoolEventItem unitObj = Activator.CreateInstance(type.HashCore64ToType(), true) as IUnitPoolEventItem;
+			unitObj.Type = type;
+			unitObj.Core = self;
+			unitObj.OnNew();
+			unitObj.OnGet();
+			return unitObj;
 		}
 
 		/// <summary>

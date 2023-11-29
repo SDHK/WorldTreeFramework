@@ -69,7 +69,6 @@ namespace WorldTree
 			if (!Branchs.TryGetValue(TypeInfo<B>.TypeCode, out IBranch iBranch))
 			{
 				Branchs.Add(TypeInfo<B>.TypeCode, iBranch = this.PoolGet<B>());
-				iBranch.SetNode(this);
 			}
 			return iBranch as B;
 		}
@@ -80,7 +79,6 @@ namespace WorldTree
 			if (!Branchs.TryGetValue(Type, out IBranch iBranch))
 			{
 				Branchs.Add(Type, iBranch = this.Core.GetUnit(Type) as IBranch);
-				iBranch.SetNode(this);
 			}
 			return iBranch;
 		}
@@ -90,9 +88,27 @@ namespace WorldTree
 
 		#region 移除 
 
-		public void RemoveBranchNode<B>(INode node) where B : class, IBranch => this.GetBranch<B>()?.RemoveNodeAndBranchDispose(node.Id);
+		public void RemoveBranchNode<B>(INode node) where B : class, IBranch => RemoveBranchNode(TypeInfo<B>.TypeCode, node);
 
-		public void RemoveBranchNode(long branchType, INode node) => this.GetBranch(branchType)?.RemoveNodeAndBranchDispose(node.Id);
+		public void RemoveBranchNode(long branchType, INode node)
+		{
+			if (this.TryGetBranch(branchType, out IBranch branch))
+			{
+				branch.BranchRemoveNode(node.Id);
+				if (branch.Count == 0)
+				{
+					//移除分支
+					this.m_Branchs.Remove(branchType);
+					if (this.m_Branchs.Count == 0)
+					{
+						this.m_Branchs.Dispose();
+						this.m_Branchs = null;
+					}
+					//释放分支
+					branch.Dispose();
+				}
+			}
+		}
 
 		#endregion
 
@@ -296,7 +312,7 @@ namespace WorldTree
 
 		public virtual void OnDispose()//未完
 		{
-			this.Parent?.RemoveBranchNode(this.BranchType,this);//从父节点分支移除
+			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.SendAllReferencedNodeRemove();//_判断移除引用关系 X
 			this.SetActive(false);//激活变更
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知 X
@@ -313,7 +329,7 @@ namespace WorldTree
 				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
 			}
 			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
-			//this.DisposeDomain(); //清除域节点
+														 //this.DisposeDomain(); //清除域节点
 			this.Parent = null;//清除父节点
 			Core?.Recycle(this);//回收到池
 		}
