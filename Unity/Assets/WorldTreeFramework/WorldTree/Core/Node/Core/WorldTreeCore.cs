@@ -160,11 +160,18 @@ namespace WorldTree
 			self.NodePoolManager = self.AddComponent(out NodePoolManager _, isPool: false);
 			self.ArrayPoolManager = self.AddComponent(out ArrayPoolManager _, isPool: false);
 
+			self.UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
+
 			//树根节点
 			self.GraftComponent(self.Root = self.PoolGet<WorldTreeRoot>());
 
+			self.ReferencedPoolManager.SetActive(true);
+			self.IdManager.SetActive(true);
+			self.RuleManager.SetActive(true);
+			self.Root.SetActive(true);
+
 			//游戏时间管理器
-			self.AddComponent(out self.GameTimeManager);
+			//self.AddComponent(out self.GameTimeManager);
 
 			//核心激活
 			self.SetActive(true);

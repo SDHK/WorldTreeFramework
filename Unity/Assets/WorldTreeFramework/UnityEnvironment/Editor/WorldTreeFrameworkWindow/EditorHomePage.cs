@@ -36,11 +36,11 @@ namespace EditorTool
 
             EditorGUILayout.BeginVertical(GUILayout.Width(150));
 
-            foreach (var item in self.ChildrenDictionary())
+            foreach (var item in self.GetBranch<ChildBranch>())
             {
-                if (GUILayout.Button(item.Value.Type.HashCore64ToType().Name))
+                if (GUILayout.Button(item.Type.HashCore64ToType().Name))
                 {
-                    self.page = item.Value;
+                    self.page = item;
                 }
             }
 

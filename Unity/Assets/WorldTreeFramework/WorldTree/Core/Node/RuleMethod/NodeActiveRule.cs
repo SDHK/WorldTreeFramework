@@ -52,7 +52,10 @@ namespace WorldTree
 							{
 								foreach (INode node in branchs.Value)
 								{
-									queue.Enqueue(node);
+									if (node.BranchType == branchs.Value.Type)
+									{
+										queue.Enqueue(node);
+									}
 								}
 							}
 						}

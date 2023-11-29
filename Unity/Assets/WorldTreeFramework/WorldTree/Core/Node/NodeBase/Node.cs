@@ -65,7 +65,7 @@ namespace WorldTree
 		public virtual B AddBranch<B>()
 			where B : class, IBranch
 		{
-			var Branchs = this.Branchs;
+
 			if (!Branchs.TryGetValue(TypeInfo<B>.TypeCode, out IBranch iBranch))
 			{
 				Branchs.Add(TypeInfo<B>.TypeCode, iBranch = this.PoolGet<B>());
@@ -84,6 +84,7 @@ namespace WorldTree
 			}
 			return iBranch;
 		}
+
 
 		#endregion
 
@@ -312,7 +313,7 @@ namespace WorldTree
 				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
 			}
 			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
-			this.DisposeDomain(); //清除域节点
+			//this.DisposeDomain(); //清除域节点
 			this.Parent = null;//清除父节点
 			Core?.Recycle(this);//回收到池
 		}

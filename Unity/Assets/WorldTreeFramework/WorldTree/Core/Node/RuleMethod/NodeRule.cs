@@ -101,9 +101,13 @@ namespace WorldTree
 				foreach (var branchs in self.m_Branchs)
 				{
 					str += t1 + $"   {branchs.Value.GetType().Name}:\n";
+
 					foreach (INode node in branchs.Value)
 					{
-						str += node.ToStringDrawTree(t1);
+						if (branchs.Value.Type == node.BranchType)
+						{
+							str += node.ToStringDrawTree(t1);
+						}
 					}
 				}
 			}

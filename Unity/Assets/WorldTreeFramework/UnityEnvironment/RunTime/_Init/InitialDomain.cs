@@ -319,6 +319,7 @@ namespace WorldTree
 
 				if (Input.GetKeyDown(KeyCode.Q))
 				{
+					World.Log("初始域启动");
 					//self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
 					//self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 

@@ -83,6 +83,13 @@ namespace WorldTree
 		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
 
+		public override void OnRecycle()
+		{
+			this.Nodes.Dispose();
+			this.Self = null;
+			this.Nodes = null;
+			base.OnRecycle();
+		}
 	}
 
 

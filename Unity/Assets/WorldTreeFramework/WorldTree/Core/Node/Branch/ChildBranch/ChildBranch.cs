@@ -12,6 +12,10 @@
 
 */
 
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
+
 namespace WorldTree
 {
 	/// <summary>
@@ -25,7 +29,95 @@ namespace WorldTree
 	/// <summary>
 	/// 子分支
 	/// </summary>
-	public class ChildBranch : Branch<long> { }
+	public class ChildBranch : UnitPoolItem, IBranch<long>
+	{
+		public INode Self { get; set; }
+
+		public int Count => Nodes.Count;
+
+		protected UnitDictionary<long, INode> Nodes;
+
+		public void SetNode(INode node)
+		{
+			if (Self == null)
+			{
+				Self = node;
+				Self.PoolGet(out Nodes);
+			}
+		}
+
+		public bool Contains(long key) => Nodes.ContainsKey(key);
+
+		public bool ContainsId(long id) => Nodes.ContainsKey(id);
+
+
+		public bool TryAddNode<N>(long key, N node) where N : class, INode => Nodes.TryAdd(key, node);
+
+		public bool TryGetNodeKey(INode node, out long key) { key = node.Id; return true; }
+
+		public bool TryGetNode(long key, out INode node) => this.Nodes.TryGetValue(key, out node);
+		public bool TryGetNodeById(long id, out INode node) => this.Nodes.TryGetValue(id, out node);
+
+		public INode GetNode(long key) => this.Nodes.TryGetValue(key, out INode node) ? node : null;
+		public INode GetNodeById(long id) => this.Nodes.TryGetValue(id, out INode node) ? node : null;
+
+
+
+		public void RemoveNode(long key) => GetNode(key)?.Dispose();
+
+		public void RemoveNodeById(long id) => GetNodeById(id)?.Dispose();
+
+		public void RemoveAllNode()
+		{
+			if (Nodes.Count == 0) return;
+			//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
+			using (Self.PoolGet(out UnitStack<INode> nodes))
+			{
+				foreach (var item in Nodes) nodes.Push(item.Value);
+				while (nodes.Count != 0) nodes.Pop().Dispose();
+			}
+			//假如在节点移除过程中，节点又添加了新的节点。那么就是错误的，新增节点将无法回收，父节点的分支键值将被占用。
+			if (Nodes.Count != 0)
+			{
+				foreach (var item in Nodes)
+				{
+					World.LogError($"移除节点出错，意外的新节点，分支:{this.GetType()} 节点:{item.Value.GetType()}:{item.Value.Id}");
+				}
+			}
+		}
+
+		public void RemoveNodeAndBranchDispose(long nodeId)
+		{
+			Nodes.Remove(nodeId);
+
+			//如果分支字典为空，那么就释放分支字典
+			if (Nodes.Count == 0)
+			{
+				//移除分支自己
+				this.Self.m_Branchs.Remove(this.Type);
+				//如果分支字典为空，那么就释放分支字典
+				if (this.Self.m_Branchs.Count == 0)
+				{
+					this.Self.m_Branchs.Dispose();
+					this.Self.m_Branchs = null;
+				}
+				//释放分支自己
+				this.Dispose();
+			}
+		}
+
+
+		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
+
+		public override void OnRecycle()
+		{
+			this.Nodes.Dispose();
+			this.Self = null;
+			this.Nodes = null;
+			base.OnRecycle();
+		}
+	}
 
 	public static class NodeChildBranchRule
 	{

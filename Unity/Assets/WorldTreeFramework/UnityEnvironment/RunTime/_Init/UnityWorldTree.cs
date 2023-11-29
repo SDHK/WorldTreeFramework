@@ -52,8 +52,7 @@ namespace WorldTree
 			//Core.TryGetGlobalRuleActuator(out onGUI);
 
 
-			//Core.Root.AddComponent(out InitialDomain _);
-			Core.Root.TreeAddNode<ComponentBranch, long, InitialDomain>(TypeInfo<InitialDomain>.TypeCode, out _);
+			Core.Root.AddComponent(out InitialDomain _);
 		}
 
 		private void Update()

@@ -71,7 +71,8 @@ namespace WorldTree
 				self.Core.NewNodeLifecycle(out pool);
 				pool.ReferencedType = type.HashCore64ToType();
 				self.pools.Add(type, pool);
-				self.AddChild(pool);
+				self.GraftChild(pool);
+				pool.SetActive(true);
 			}
 			return pool;
 		}

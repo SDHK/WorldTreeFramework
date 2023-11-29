@@ -21,7 +21,7 @@ namespace WorldTree
     {
         public override string ToString()
         {
-            return $"GlobalRuleActuator : {ruleGroup?.RuleType.HashCore64ToType()}";
+            return $"GlobalRuleActuator : {ruleGroup?.RuleType.HashCore64ToType()} {this.nodeDictionary?.Count}";
         }
     }
 

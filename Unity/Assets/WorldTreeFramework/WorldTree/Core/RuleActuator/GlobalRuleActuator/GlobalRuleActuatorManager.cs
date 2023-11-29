@@ -13,22 +13,22 @@ using System;
 namespace WorldTree
 {
 
-    public static partial class NodeRule
-    {
-        /// <summary>
-        /// 强制获取全局节点法则执行器
-        /// </summary>
-        public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this INode self, out GlobalRuleActuator<R> globalRuleActuator)
-        where R : IRule
-        {
-            return self.Root.AddNewComponent(out GlobalRuleActuatorManager _).AddNewComponent(out globalRuleActuator);
-        }
-    }
+	public static partial class NodeRule
+	{
+		/// <summary>
+		/// 强制获取全局节点法则执行器
+		/// </summary>
+		public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this INode self, out GlobalRuleActuator<R> globalRuleActuator)
+		where R : IRule
+		{
+			return self.Root.AddComponent(out GlobalRuleActuatorManager _, isPool: false).AddComponent(out globalRuleActuator, isPool: false);
+		}
+	}
 
-    /// <summary>
-    /// 全局法则执行器管理器
-    /// </summary>
-    public class GlobalRuleActuatorManager : Node, ComponentOf<WorldTreeRoot>
-        , AsRule<IAwakeRule>
-    { }
+	/// <summary>
+	/// 全局法则执行器管理器
+	/// </summary>
+	public class GlobalRuleActuatorManager : Node, ComponentOf<WorldTreeRoot>
+		, AsRule<IAwakeRule>
+	{ }
 }
