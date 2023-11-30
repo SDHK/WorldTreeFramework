@@ -284,6 +284,11 @@ namespace WorldTree
 		public void RemoveAllNode<B>() where B : class, IBranch;
 
 		/// <summary>
+		/// 释放分支的所有节点
+		/// </summary>
+		public void RemoveAllNode(long branchType);
+
+		/// <summary>
 		/// 根据键值释放分支的节点
 		/// </summary>
 		public void RemoveNode<B, K>(K key) where B : class, IBranch<K>;

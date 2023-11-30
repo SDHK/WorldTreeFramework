@@ -48,18 +48,12 @@ namespace WorldTree
 		/// <summary>
 		/// 将节点从分支中移除
 		/// </summary>
-		/// <remarks>单纯的从分支中移除节点</remarks>
-		public void BranchRemoveNode(long nodeId);
+		public void RemoveNode(long nodeId);
 
 		/// <summary>
-		/// 根据id移除释放节点
+		/// 清空分支
 		/// </summary>
-		public void RemoveNodeById(long id);
-
-		/// <summary>
-		/// 移除释放所有分支节点
-		/// </summary>
-		public void RemoveAllNode();
+		public void Clear();
 	}
 
 	/// <summary>
@@ -91,15 +85,19 @@ namespace WorldTree
 		/// </summary>
 		public bool TryAddNode<N>(K key, N node) where N : class, INode;
 
-		/// <summary>
-		/// 根据键值移除节点
-		/// </summary>
-		public void RemoveNode(K key);
 	}
 
 	/// <summary>
 	/// 世界树藤接口
 	/// </summary>
-	public interface IRattan { }
+	public interface IRattan
+	{
+
+		/// <summary>
+		/// 节点数量
+		/// </summary>
+		public int Count { get; }
+
+	}
 
 }

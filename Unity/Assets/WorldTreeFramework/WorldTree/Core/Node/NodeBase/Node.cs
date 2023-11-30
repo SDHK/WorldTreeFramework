@@ -94,7 +94,7 @@ namespace WorldTree
 		{
 			if (this.TryGetBranch(branchType, out IBranch branch))
 			{
-				branch.BranchRemoveNode(node.Id);
+				branch.RemoveNode(node.Id);
 				if (branch.Count == 0)
 				{
 					//移除分支
@@ -279,7 +279,7 @@ namespace WorldTree
 			using (this.PoolGet(out UnitStack<IBranch> branchs))
 			{
 				foreach (var item in this.m_Branchs) branchs.Push(item.Value);
-				while (branchs.Count != 0) branchs.Pop().RemoveAllNode();
+				while (branchs.Count != 0) RemoveAllNode(branchs.Pop().Type);
 			}
 			//假如在分支移除过程中，节点又添加了新的分支。那么就是错误的，新增分支将无法回收。
 			if (m_Branchs.Count != 0)
@@ -291,11 +291,35 @@ namespace WorldTree
 			}
 		}
 
-		public virtual void RemoveAllNode<B>() where B : class, IBranch => this.GetBranch<B>()?.RemoveAllNode();
+		public virtual void RemoveAllNode<B>() where B : class, IBranch => RemoveAllNode(TypeInfo<B>.TypeCode);
 
-		public virtual void RemoveNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.RemoveNode(key);
+		public virtual void RemoveAllNode(long branchType)
+		{
+			if (TryGetBranch(branchType, out IBranch branch))
+			{
+				if (branch.Count != 0)
+				{
+					//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
+					using (Core.PoolGet(out UnitStack<INode> nodes))
+					{
+						foreach (var item in branch) nodes.Push(item);
+						while (nodes.Count != 0) nodes.Pop().Dispose();
+					}
+					//假如在节点移除过程中，节点又添加了新的节点。那么就是错误的，新增节点将无法回收，父节点的分支键值将被占用。
+					if (branch.Count != 0)
+					{
+						foreach (var item in branch)
+						{
+							World.LogError($"移除节点出错，意外的新节点，分支:{this.GetType()} 节点:{item.GetType()}:{item.Id}");
+						}
+					}
+				}
+			}
+		}
 
-		public virtual void RemoveNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.RemoveNodeById(id);
+		public virtual void RemoveNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key)?.Dispose();
+
+		public virtual void RemoveNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(id)?.Dispose();
 
 		/// <summary>
 		/// 回收节点

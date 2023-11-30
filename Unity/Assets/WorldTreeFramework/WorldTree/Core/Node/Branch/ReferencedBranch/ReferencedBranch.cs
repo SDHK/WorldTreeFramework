@@ -35,27 +35,12 @@ namespace WorldTree
 		public INode GetNodeById(long id) => this.Nodes.TryGetValue(id, out INode node) ? node : null;
 
 
+		public void RemoveNode(long nodeId) => Nodes.Remove(nodeId);
 
-		public void RemoveNode(long key) => BranchRemoveNode(key);
-
-		public void RemoveNodeById(long id) => BranchRemoveNode(id);
-
-		public void RemoveAllNode()
+		public void Clear()
 		{
 			Nodes.Clear();
-			//移除分支自己
-			this.Self.m_Branchs.Remove(this.Type);
-			//如果分支字典为空，那么就释放分支字典
-			if (this.Self.m_Branchs.Count == 0)
-			{
-				this.Self.m_Branchs.Dispose();
-				this.Self.m_Branchs = null;
-			}
-			//释放分支自己
-			this.Dispose();
 		}
-
-		public void BranchRemoveNode(long nodeId) => Nodes.Remove(nodeId);
 
 		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
@@ -65,7 +50,6 @@ namespace WorldTree
 			this.Nodes.Dispose();
 			this.Self = null;
 			this.Nodes = null;
-			base.OnRecycle();
 		}
 	}
 

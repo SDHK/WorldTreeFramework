@@ -57,32 +57,12 @@ namespace WorldTree
 		public INode GetNode(long key) => this.Nodes.TryGetValue(key, out INode node) ? node : null;
 		public INode GetNodeById(long id) => this.Nodes.TryGetValue(id, out INode node) ? node : null;
 
+		public void RemoveNode(long nodeId) => Nodes.Remove(nodeId);
 
-
-		public void RemoveNode(long key) => GetNode(key)?.Dispose();
-
-		public void RemoveNodeById(long id) => GetNodeById(id)?.Dispose();
-
-		public void RemoveAllNode()
-		{
-			if (Nodes.Count == 0) return;
-			//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
-			using (Self.PoolGet(out UnitStack<INode> nodes))
-			{
-				foreach (var item in Nodes) nodes.Push(item.Value);
-				while (nodes.Count != 0) nodes.Pop().Dispose();
-			}
-			//假如在节点移除过程中，节点又添加了新的节点。那么就是错误的，新增节点将无法回收，父节点的分支键值将被占用。
-			if (Nodes.Count != 0)
-			{
-				foreach (var item in Nodes)
-				{
-					World.LogError($"移除节点出错，意外的新节点，分支:{this.GetType()} 节点:{item.Value.GetType()}:{item.Value.Id}");
-				}
-			}
+		public void Clear()
+		{ 
+			Nodes.Clear();
 		}
-
-		public void BranchRemoveNode(long nodeId) => Nodes.Remove(nodeId);
 
 
 		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
@@ -93,7 +73,6 @@ namespace WorldTree
 			this.Nodes.Dispose();
 			this.Self = null;
 			this.Nodes = null;
-			base.OnRecycle();
 		}
 	}
 
