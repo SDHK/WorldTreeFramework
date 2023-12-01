@@ -33,7 +33,6 @@ namespace WorldTree
 		{
 			protected override void OnEvent(GlobalRuleActuator<R> self, INode node)
 			{
-				World.Log("!!!!!" + node.GetType());
 				self.TryAdd(node);
 			}
 		}
@@ -53,7 +52,6 @@ namespace WorldTree
 			protected override void OnEvent(GlobalRuleActuator<R> self)
 			{
 				self.ruleGroup = self.Core.RuleManager.GetOrNewRuleGroup<R>();
-				//self.ListenerSwitchesRule<R>();
 				self.LoadGlobalNode();
 			}
 		}

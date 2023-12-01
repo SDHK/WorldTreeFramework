@@ -42,8 +42,7 @@ namespace WorldTree
 			}
 			else //重复则覆盖
 			{
-				RemoveAt(index);
-				Insert(index, rule);
+				this[index] = rule;
 			}
 		}
 	}
