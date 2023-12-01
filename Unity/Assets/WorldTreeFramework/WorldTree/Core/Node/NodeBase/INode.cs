@@ -18,6 +18,13 @@ namespace WorldTree
 	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
 	public interface AsRule<in R> where R : IRule { }
 
+	/// <summary>
+	/// 节点限制
+	/// </summary>
+	/// <typeparam name="P">父节点</typeparam>
+	/// <typeparam name="B">分支</typeparam>
+	public interface NodeOf<in P, in B> : INode where P : class, INode where B : class, IBranch { }
+
 
 	/// <summary>
 	/// 核心节点标记

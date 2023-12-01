@@ -186,20 +186,20 @@ namespace WorldTree
         }
     }
 
-    class WindowManagerNodeAddRule : ListenerAddRule<WindowManager>
-    {
-        protected override void OnEvent(WindowManager self, INode node)
-        {
+    //class WindowManagerNodeAddRule : ListenerAddRule<WindowManager>
+    //{
+    //    protected override void OnEvent(WindowManager self, INode node)
+    //    {
 
-        }
-    }
-    class WindowManagerNodeRemoveRule : ListenerRemoveRule<WindowManager>
-    {
-        protected override void OnEvent(WindowManager self, INode node)
-        {
+    //    }
+    //}
+    //class WindowManagerNodeRemoveRule : ListenerRemoveRule<WindowManager>
+    //{
+    //    protected override void OnEvent(WindowManager self, INode node)
+    //    {
 
-        }
-    }
+    //    }
+    //}
 
 
 }

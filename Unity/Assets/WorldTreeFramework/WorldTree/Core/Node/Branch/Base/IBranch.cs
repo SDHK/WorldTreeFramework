@@ -10,13 +10,7 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 节点限制
-	/// </summary>
-	/// <typeparam name="P">父节点</typeparam>
-	/// <typeparam name="B">分支</typeparam>
-	public interface NodeOf<in P, in B> : INode where P : class, INode where B : class, IBranch { }
-
+	
 	/// <summary>
 	/// 世界树分支接口
 	/// </summary>
@@ -88,16 +82,69 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 世界树藤接口
+	/// 世界树藤接口,单纯接口？
 	/// </summary>
 	public interface IRattan
 	{
-
 		/// <summary>
 		/// 节点数量
 		/// </summary>
 		public int Count { get; }
 
+		/// <summary>
+		/// 节点id包含判断
+		/// </summary>
+		public bool ContainsId(long id);
+
+		/// <summary>
+		/// 尝试通过id获取节点
+		/// </summary>
+		public bool TryGetNodeById(long id, out INode node);
+
+		/// <summary>
+		/// 通过id获取节点
+		/// </summary>
+		public INode GetNodeById(long id);
+
+		/// <summary>
+		/// 将节点从分支中移除
+		/// </summary>
+		public void RemoveNode(long nodeId);
+
+		/// <summary>
+		/// 清空分支
+		/// </summary>
+		public void Clear();
 	}
 
+	/// <summary>
+	/// 世界树分支泛型键值接口
+	/// </summary>
+	public interface IRattan<K> : IBranch
+	{
+		/// <summary>
+		/// 节点键值包含判断
+		/// </summary>
+		public bool Contains(K key);
+
+		/// <summary>
+		/// 尝试通过节点获取键值
+		/// </summary>
+		public bool TryGetNodeKey(INode node, out K key);
+
+		/// <summary>
+		/// 尝试通过键值获取节点
+		/// </summary>
+		public bool TryGetNode(K key, out INode node);
+		/// <summary>
+		/// 通过键值获取节点
+		/// </summary>
+		public INode GetNode(K key);
+
+		/// <summary>
+		/// 尝试添加节点到字典
+		/// </summary>
+		public bool TryAddNode<N>(K key, N node) where N : class, INode;
+
+	}
 }

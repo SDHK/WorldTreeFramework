@@ -14,35 +14,35 @@ using System;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 全局法则执行器基类
-    /// </summary>
-    public abstract class GlobalRuleActuatorBase : RuleActuatorBase, INodeListener, IRuleActuator
-    {
-        public ListenerState listenerState { get; set; }
-        public long listenerTarget { get; set; }
+	/// <summary>
+	/// 全局法则执行器基类
+	/// </summary>
+	public abstract class GlobalRuleActuatorBase : RuleActuatorBase, INodeListener, IRuleActuator
+	{
+		public ListenerState listenerState { get; set; }
+		public long listenerTarget { get; set; }
 
-    }
+	}
 
-    public static class GlobalRuleActuatorBaseRule
-    {
+	public static class GlobalRuleActuatorBaseRule
+	{
 
 
-        class ListenerAddRule : ListenerAddRule<GlobalRuleActuatorBase>
-        {
-            protected override void OnEvent(GlobalRuleActuatorBase self, INode node)
-            {
-                self.TryAdd(node);
-            }
-        }
+		//class ListenerAddRule : ListenerAddRule<GlobalRuleActuatorBase>
+		//{
+		//	protected override void OnEvent(GlobalRuleActuatorBase self, INode node)
+		//	{
+		//		self.TryAdd(node);
+		//	}
+		//}
 
-        class ListenerRemoveRule : ListenerRemoveRule<GlobalRuleActuatorBase>
-        {
-            protected override void OnEvent(GlobalRuleActuatorBase self, INode node)
-            {
-                self.Remove(node);
-            }
-        }
-    }
+		//class ListenerRemoveRule : ListenerRemoveRule<GlobalRuleActuatorBase>
+		//{
+		//	protected override void OnEvent(GlobalRuleActuatorBase self, INode node)
+		//	{
+		//		self.Remove(node);
+		//	}
+		//}
+	}
 
 }

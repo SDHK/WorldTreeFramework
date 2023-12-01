@@ -30,7 +30,7 @@ namespace WorldTree
 
 		public WorldTreeCore Core { get; set; }
 		public WorldTreeRoot Root { get; set; }
-		public INode Domain { get; set; }
+		public INode Domain { get; set; }//接口标记域节点
 		public INode Parent { get; set; }
 
 		#region Active
@@ -40,6 +40,10 @@ namespace WorldTree
 		public bool IsActive { get; set; }
 
 		public bool m_ActiveEventMark { get; set; }
+
+		#endregion
+
+		#region Rattan
 
 		#endregion
 

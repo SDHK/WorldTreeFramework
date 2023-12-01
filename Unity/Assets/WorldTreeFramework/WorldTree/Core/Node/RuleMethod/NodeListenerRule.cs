@@ -70,7 +70,7 @@ namespace WorldTree
             return self.ListenerSwitchesTarget<T>(ListenerState.Node);
         }
         /// <summary>
-        /// 动态监听器切换系统目标
+        /// 动态监听器切换法则目标
         /// </summary>
         public static bool ListenerSwitchesRule<T>(this INodeListener self)
             where T : IRule
