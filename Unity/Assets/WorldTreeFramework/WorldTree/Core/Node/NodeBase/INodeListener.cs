@@ -34,11 +34,17 @@ namespace WorldTree
     }
 
     /// <summary>
-    /// 动态监听器接口
+    /// 节点监听器接口
     /// </summary>
     public interface INodeListener : INode
-      , AsRule<IListenerAddRule>
-      , AsRule<IListenerRemoveRule>
+	    , AsRule<IListenerAddRule>
+	    , AsRule<IListenerRemoveRule>
+	{ }
+
+	/// <summary>
+	/// 动态监听器接口
+	/// </summary>
+	public interface IDynamicNodeListener : INodeListener
     {
         #region Listener
         /// <summary>

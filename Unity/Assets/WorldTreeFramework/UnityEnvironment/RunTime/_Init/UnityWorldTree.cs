@@ -40,6 +40,7 @@ namespace WorldTree
 
 			Core = new WorldTreeCore();
 
+
 			Core.GetOrNewGlobalRuleActuator(out enable);
 			Core.GetOrNewGlobalRuleActuator(out update);
 			Core.GetOrNewGlobalRuleActuator(out updateTime);
@@ -50,7 +51,6 @@ namespace WorldTree
 			Core.GetOrNewGlobalRuleActuator(out fixedUpdate);
 			Core.GetOrNewGlobalRuleActuator(out fixedUpdateTime);
 			//Core.TryGetGlobalRuleActuator(out onGUI);
-
 
 			Core.Root.AddComponent(out InitialDomain _);
 		}

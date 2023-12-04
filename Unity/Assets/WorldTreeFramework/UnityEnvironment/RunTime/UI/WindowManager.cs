@@ -27,7 +27,7 @@ namespace WorldTree
     /// <summary>
     /// UI 栈窗口管理器
     /// </summary>
-    public class WindowManager : NodeListener
+    public class WindowManager : DynamicNodeListener
         , AsRule<IAwakeRule>
     {
         /// <summary>

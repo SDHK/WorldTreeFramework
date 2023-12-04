@@ -15,7 +15,8 @@ namespace WorldTree
 	/// <summary>
 	/// 全局法则执行器
 	/// </summary>
-	public class GlobalRuleActuator<R> : GlobalRuleActuatorBase, IRuleActuator<R>, ComponentOf<GlobalRuleActuatorManager>
+	public class GlobalRuleActuator<R> : RuleActuatorBase, INodeListener, IRuleActuator<R>
+		, ComponentOf<GlobalRuleActuatorManager>
 		, AsRule<IAwakeRule>
 		where R : IRule
 	{
@@ -36,6 +37,7 @@ namespace WorldTree
 				self.TryAdd(node);
 			}
 		}
+
 		class ListenerRemoveRule<R> : ListenerRemoveRule<GlobalRuleActuator<R>, INode, R>
 			where R : IRule
 		{
@@ -46,7 +48,7 @@ namespace WorldTree
 		}
 
 
-		class GlobalRuleActuatorAddRule<R> : AddRule<GlobalRuleActuator<R>>
+		class AddRuleGeneric<R> : AddRule<GlobalRuleActuator<R>>
 			where R : IRule
 		{
 			protected override void OnEvent(GlobalRuleActuator<R> self)

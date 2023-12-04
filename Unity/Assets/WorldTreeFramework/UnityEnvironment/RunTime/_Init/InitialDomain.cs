@@ -66,7 +66,7 @@ namespace WorldTree
 	/// <summary>
 	/// 初始域
 	/// </summary>
-	public class InitialDomain : NodeListener, ComponentOf<INode>
+	public class InitialDomain : DynamicNodeListener, ComponentOf<INode>
 		, AsRule<IAwakeRule>
 		, AsRule<IFixedUpdateTimeRule>
 		, AsRule<ILateUpdateTimeRule>
@@ -316,6 +316,7 @@ namespace WorldTree
 				//	World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value} :{self.valueString.Value}");
 
 				//}
+				World.Log("初始域启动!!!");
 
 				if (Input.GetKeyDown(KeyCode.Q))
 				{
@@ -324,7 +325,8 @@ namespace WorldTree
 					//self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
 					//self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
-					self.AddComponent(out TestNode _).Test1().Coroutine();
+					//self.AddComponent(out TestNode _).Test1().Coroutine();
+					self.AddComponent(out TestNode _);
 
 					//for (int i = 0; i < 1000; i++)
 					//{

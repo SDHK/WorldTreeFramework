@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/3/14 20:30
@@ -8,8 +7,6 @@
 * 挂载核心启动后的管理器组件
 
 */
-
-using System.ComponentModel;
 
 namespace WorldTree
 {
@@ -20,7 +17,6 @@ namespace WorldTree
 	{
 		public WorldTreeRoot()
 		{
-			Domain = this;
 		}
 	}
 }

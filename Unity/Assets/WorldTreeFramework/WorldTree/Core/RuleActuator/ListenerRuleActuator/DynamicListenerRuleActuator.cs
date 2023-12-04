@@ -46,7 +46,7 @@ namespace WorldTree
                     //全部注入到执行器
                     foreach (var listenerPair in listenerPool)
                     {
-                        INodeListener nodeListener = (listenerPair.Value as INodeListener);
+						IDynamicNodeListener nodeListener = (listenerPair.Value as IDynamicNodeListener);
 
                         //判断目标是否被该监听器监听
                         if (nodeListener.listenerTarget != 0)

@@ -82,7 +82,7 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 世界树藤接口,单纯接口？
+	/// 世界树藤接口
 	/// </summary>
 	public interface IRattan
 	{
@@ -107,12 +107,12 @@ namespace WorldTree
 		public INode GetNodeById(long id);
 
 		/// <summary>
-		/// 将节点从分支中移除
+		/// 将节点从树藤中移除
 		/// </summary>
 		public void RemoveNode(long nodeId);
 
 		/// <summary>
-		/// 清空分支
+		/// 清空
 		/// </summary>
 		public void Clear();
 	}
@@ -120,7 +120,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树分支泛型键值接口
 	/// </summary>
-	public interface IRattan<K> : IBranch
+	public interface IRattan<K> : IRattan
 	{
 		/// <summary>
 		/// 节点键值包含判断

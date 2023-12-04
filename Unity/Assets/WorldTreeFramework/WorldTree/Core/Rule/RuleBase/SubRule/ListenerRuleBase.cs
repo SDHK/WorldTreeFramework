@@ -39,11 +39,11 @@ namespace WorldTree
     public interface IListenerRule : ISendRuleBase<INode>
     {
         /// <summary>
-        /// 监听：目标节点类型
+        /// 监听目标:节点类型
         /// </summary>
         long TargetNodeType { get; }
         /// <summary>
-        /// 监听：目标节点法则
+        /// 监听目标:节点法则
         /// </summary>
         long TargetRuleType { get; }
     }

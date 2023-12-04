@@ -13,9 +13,9 @@ using System;
 namespace WorldTree
 {
     /// <summary>
-    /// 世界树节点监听器基类
+    /// 世界树动态节点监听器基类
     /// </summary>
-    public abstract partial class NodeListener : Node, INodeListener
+    public abstract partial class DynamicNodeListener : Node, INodeListener
     {
         #region Listener 
 

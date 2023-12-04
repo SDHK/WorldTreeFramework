@@ -340,8 +340,11 @@ namespace WorldTree
 			{
 				//检测移除静态监听
 				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-				//检测移除动态监听
-				this.Core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
+				if (nodeListener is IDynamicNodeListener dynamicNodeListener)
+				{
+					//检测移除动态监听
+					this.Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
+				}
 			}
 			this.Core.RemoveRuleGroup?.Send(this);//移除事件通知
 			if (this is not ICoreNode)//广播给全部监听器通知 X
@@ -428,8 +431,11 @@ namespace WorldTree
 			{
 				//检测移除静态监听
 				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-				//检测移除动态监听
-				this.Core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
+				if (nodeListener is IDynamicNodeListener dynamicNodeListener)
+				{
+					//检测移除动态监听
+					this.Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
+				}
 			}
 			this.SendRule(TypeInfo<ICutRule>.Default);
 			if (this is not ICoreNode)//广播给全部监听器通知 X

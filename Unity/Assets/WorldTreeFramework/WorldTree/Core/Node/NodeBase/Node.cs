@@ -338,7 +338,7 @@ namespace WorldTree
 
 		public void OnBeforeDispose() => this.Core.BeforeRemoveRuleGroup?.Send(this);
 
-		public virtual void OnDispose()//未完
+		public virtual void OnDispose()
 		{
 			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.SendAllReferencedNodeRemove();//_判断移除引用关系 X
@@ -348,15 +348,18 @@ namespace WorldTree
 			{
 				//检测移除静态监听
 				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-				//检测移除动态监听
-				this.Core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
+				if (nodeListener is IDynamicNodeListener dynamicNodeListener)
+				{
+					//检测移除动态监听
+					this.Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
+				}
 			}
 			this.Core.RemoveRuleGroup?.Send(this);//移除事件通知
 			if (this is not ICoreNode)//广播给全部监听器通知 X
 			{
 				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
 			}
-			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
+			this.Core.ReferencedPoolManager.Remove(this);//引用池移除
 														 //this.DisposeDomain(); //清除域节点
 			this.Parent = null;//清除父节点
 			Core?.Recycle(this);//回收到池
@@ -435,8 +438,11 @@ namespace WorldTree
 			{
 				//检测移除静态监听
 				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-				//检测移除动态监听
-				this.Core.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
+				if (nodeListener is IDynamicNodeListener dynamicNodeListener)
+				{
+					//检测移除动态监听
+					this.Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
+				}
 			}
 			this.SendRule(TypeInfo<ICutRule>.Default);
 			if (this is not ICoreNode)//广播给全部监听器通知 X
