@@ -1,9 +1,9 @@
 ﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/11/13 03:52:45
+* 日期： 2023/12/04 07:54:45
 
-* 描述： 世界树分支基类
+* 描述： 世界树藤基类
 * 
 
 */
@@ -14,12 +14,12 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 	/// <summary>
-	/// 世界树分支基类
+	/// 世界树藤基类
 	/// </summary>
-	public abstract class Branch<K> : UnitPoolItem, IBranch<K>
+	public class Rattan<K> : UnitPoolItem, IRattan<K>
 	{
 		public int Count => Nodes.Count;
-		protected UnitDictionary<K, INode> Nodes;
+		protected UnitDictionary<K, NodeRef<INode>> Nodes;
 		protected UnitDictionary<long, K> NodeKeys;
 
 		public override void OnGet()
@@ -32,17 +32,19 @@ namespace WorldTree
 
 		public bool ContainsId(long id) => NodeKeys.ContainsKey(id);
 
-		public bool TryAddNode<N>(K key, N node) where N : class, INode => Nodes.TryAdd(key, node) && NodeKeys.TryAdd(node.Id, key);
-
 		public bool TryGetNodeKey(long nodeId, out K key) => NodeKeys.TryGetValue(nodeId, out key);
 
-		public bool TryGetNode(K key, out INode node) => this.Nodes.TryGetValue(key, out node);
 
-		public bool TryGetNodeById(long id, out INode node) => (node = this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out node) ? node : null) != null;
+		public bool TryAddNode<N>(K key, N node) where N : class, INode => Nodes.TryAdd(key, node) && NodeKeys.TryAdd(node.Id, key);
 
-		public INode GetNode(K key) => this.Nodes.TryGetValue(key, out INode node) ? node : null;
 
-		public INode GetNodeById(long id) => this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out INode node) ? node : null;
+		public bool TryGetNode(K key, out NodeRef<INode> node) => this.Nodes.TryGetValue(key, out node);
+
+		public bool TryGetNodeById(long id, out NodeRef<INode> node) => (node = this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out node) ? node : default).Get() != null;
+
+		public NodeRef<INode> GetNode(K key) => this.Nodes.TryGetValue(key, out NodeRef<INode> node) ? node : null;
+
+		public NodeRef<INode> GetNodeById(long id) => this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out NodeRef<INode> node) ? node : null;
 
 		public void RemoveNode(long nodeId)
 		{
@@ -59,7 +61,7 @@ namespace WorldTree
 			NodeKeys.Clear();
 		}
 
-		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
+		public IEnumerator<NodeRef<INode>> GetEnumerator() => Nodes.Values.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
 
 		public override void OnRecycle()

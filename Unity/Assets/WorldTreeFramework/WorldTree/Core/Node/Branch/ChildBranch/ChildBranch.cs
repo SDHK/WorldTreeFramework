@@ -49,7 +49,7 @@ namespace WorldTree
 
 		public bool TryAddNode<N>(long key, N node) where N : class, INode => Nodes.TryAdd(key, node);
 
-		public bool TryGetNodeKey(INode node, out long key) { key = node.Id; return true; }
+		public bool TryGetNodeKey(long nodeId, out long key) { key = nodeId; return true; }
 
 		public bool TryGetNode(long key, out INode node) => this.Nodes.TryGetValue(key, out node);
 		public bool TryGetNodeById(long id, out INode node) => this.Nodes.TryGetValue(id, out node);
@@ -60,7 +60,7 @@ namespace WorldTree
 		public void RemoveNode(long nodeId) => Nodes.Remove(nodeId);
 
 		public void Clear()
-		{ 
+		{
 			Nodes.Clear();
 		}
 

@@ -1,26 +1,22 @@
 ﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/10/28 12:58:19
+* 日期： 2023/12/04 07:40:53
 
-* 描述： 世界树分支基类接口
+* 描述： 世界树藤基类接口
 * 
-* 分支是树的主体成部分之一。
-* 除了根节点，其余节点必定属于某个分支，节点自身也会记录属于哪个分支。
+* 
 
 */
+
 using System.Collections.Generic;
 
 namespace WorldTree
 {
-	
 	/// <summary>
-	/// 世界树分支接口
+	/// 世界树藤接口
 	/// </summary>
-	/// <remarks>
-	/// <para>世界树节点的结构组织接口基类</para> 
-	/// </remarks>
-	public interface IBranch : IUnitPoolEventItem, IEnumerable<INode>
+	public interface IRattan : IUnitPoolEventItem, IEnumerable<NodeRef<INode>>
 	{
 		/// <summary>
 		/// 节点数量
@@ -35,28 +31,28 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试通过id获取节点
 		/// </summary>
-		public bool TryGetNodeById(long id, out INode node);
+		public bool TryGetNodeById(long id, out NodeRef<INode> node);
 
 		/// <summary>
 		/// 通过id获取节点
 		/// </summary>
-		public INode GetNodeById(long id);
+		public NodeRef<INode> GetNodeById(long id);
 
 		/// <summary>
-		/// 将节点从分支中移除
+		/// 将节点从树藤中移除
 		/// </summary>
 		public void RemoveNode(long nodeId);
 
 		/// <summary>
-		/// 清空分支
+		/// 清空
 		/// </summary>
 		public void Clear();
 	}
 
 	/// <summary>
-	/// 世界树分支泛型键值接口
+	/// 世界树藤泛型键值接口
 	/// </summary>
-	public interface IBranch<K> : IBranch
+	public interface IRattan<K> : IRattan
 	{
 		/// <summary>
 		/// 节点键值包含判断
@@ -71,11 +67,11 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试通过键值获取节点
 		/// </summary>
-		public bool TryGetNode(K key, out INode node);
+		public bool TryGetNode(K key, out NodeRef<INode> node);
 		/// <summary>
 		/// 通过键值获取节点
 		/// </summary>
-		public INode GetNode(K key);
+		public NodeRef<INode> GetNode(K key);
 
 		/// <summary>
 		/// 尝试添加节点到字典

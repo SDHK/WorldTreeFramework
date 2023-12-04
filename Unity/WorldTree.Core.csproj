@@ -85,6 +85,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Interface\IUnit.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPool.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\UnitPoolManager.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\NodeRef.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\TreeTaskToken.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Base\UnitPoolItem.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\Lifecycle\GenericsLifecycleRule.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\StringTweenUpdateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\TimerCall.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Rattan\Rattan.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\AwakeRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\CounterCall.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\Curve.cs" />
@@ -153,6 +155,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskMethodBuilder.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathMatrix4x4Float.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRule\NodeSendRuleAsyncRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Rattan\IRattan.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeComponentRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\CallRuleAsyncBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Exception\RuleActuatorException.cs" />
