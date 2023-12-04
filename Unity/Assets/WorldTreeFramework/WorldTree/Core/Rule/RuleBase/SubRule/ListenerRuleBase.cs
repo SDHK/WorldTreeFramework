@@ -33,35 +33,64 @@ using System;
 namespace WorldTree
 {
 
-    /// <summary>
-    /// 节点监听法则接口
-    /// </summary>
-    public interface IListenerRule : ISendRuleBase<INode>
-    {
-        /// <summary>
-        /// 监听目标:节点类型
-        /// </summary>
-        long TargetNodeType { get; }
-        /// <summary>
-        /// 监听目标:节点法则
-        /// </summary>
-        long TargetRuleType { get; }
-    }
+	/// <summary>
+	/// 节点监听法则接口
+	/// </summary>
+	public interface IListenerRule : ISendRuleBase<INode>
+	{
+		/// <summary>
+		/// 监听目标:节点类型
+		/// </summary>
+		long TargetNodeType { get; }
+		/// <summary>
+		/// 监听目标:节点法则
+		/// </summary>
+		long TargetRuleType { get; }
+	}
 
 
-    /// <summary>
-    /// 节点监听法则抽象基类
-    /// </summary>
-    public abstract class ListenerRuleBase<LN, LR, TN, TR> : RuleBase<LN, LR>, IListenerRule
-    where LN : class, INode, AsRule<LR>
-    where TN : class, INode
-    where LR : IListenerRule
-    where TR : IRule
-    {
-        public virtual long TargetNodeType => TypeInfo<TN>.TypeCode;
-        public virtual long TargetRuleType => TypeInfo<TR>.TypeCode;
+	/// <summary>
+	/// 节点监听法则抽象基类
+	/// </summary>
+	/// <remarks>目标为INode和IRule时为动态监听</remarks>
+	public abstract class ListenerRuleBase<LN, LR, TN, TR> : RuleBase<LN, LR>, IListenerRule
+	where LN : class, INode, AsRule<LR>
+	where TN : class, INode
+	where LR : IListenerRule
+	where TR : IRule
+	{
+		public virtual long TargetNodeType => TypeInfo<TN>.TypeCode;
+		public virtual long TargetRuleType => TypeInfo<TR>.TypeCode;
 
-        public virtual void Invoke(INode self, INode node) => OnEvent(self as LN, node as TN);
-        protected abstract void OnEvent(LN self, TN node);
-    }
+		public virtual void Invoke(INode self, INode node) => OnEvent(self as LN, node as TN);
+		protected abstract void OnEvent(LN self, TN node);
+	}
+
+	/// <summary>
+	/// 【动态】节点监听法则抽象基类
+	/// </summary>
+	public abstract class NodeRuleListenerRuleBase<LN, LR> : ListenerRuleBase<LN, LR, INode, IRule>
+		where LN : class, INode, AsRule<LR>
+		where LR : IListenerRule
+	{ }
+
+	/// <summary>
+	/// 【静态】节点监听法则抽象基类
+	/// </summary>
+	public abstract class NodeListenerRuleBase<LN, LR, TN> : ListenerRuleBase<LN, LR, TN, IRule>
+		where LN : class, INode, AsRule<LR>
+		where LR : IListenerRule
+		where TN : class, INode
+	{ }
+
+	/// <summary>
+	/// 【静态】节点法则监听法则抽象基类
+	/// </summary>
+	public abstract class RuleListenerRuleBase<LN, LR, TR> : ListenerRuleBase<LN, LR, INode, TR>
+		where LN : class, INode, AsRule<LR>
+		where LR : IListenerRule
+		where TR : IRule
+	{ }
+
+
 }

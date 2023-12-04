@@ -29,7 +29,7 @@ namespace WorldTree
 
 	public static class GlobalRuleActuatorRule
 	{
-		class ListenerAddRule<R> : ListenerAddRule<GlobalRuleActuator<R>, INode, R>
+		class ListenerAddRule<R> : ListenerAddRule.Rule<GlobalRuleActuator<R>, R>
 			where R : IRule
 		{
 			protected override void OnEvent(GlobalRuleActuator<R> self, INode node)
@@ -38,7 +38,7 @@ namespace WorldTree
 			}
 		}
 
-		class ListenerRemoveRule<R> : ListenerRemoveRule<GlobalRuleActuator<R>, INode, R>
+		class ListenerRemoveRule<R> : ListenerRemoveRule.Rule<GlobalRuleActuator<R>, R>
 			where R : IRule
 		{
 			protected override void OnEvent(GlobalRuleActuator<R> self, INode node)

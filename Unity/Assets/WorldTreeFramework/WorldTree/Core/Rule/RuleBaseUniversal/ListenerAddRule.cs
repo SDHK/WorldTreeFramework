@@ -9,20 +9,25 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 监听节点添加法则接口
-    /// </summary>
-    public interface IListenerAddRule : IListenerRule { }
 
 	/// <summary>
-	/// 监听节点添加法则
+	/// 监听节点添加法则接口
 	/// </summary>
-	/// <remarks>目标为INode和IRule时为动态监听</remarks>
-	public abstract class ListenerAddRule<LN, TN, TR> : ListenerRuleBase<LN, IListenerAddRule, TN, TR> where TN : class, INode where LN : class, INodeListener, AsRule<IListenerAddRule> where TR : IRule { }
+	public interface IListenerAddRule : IListenerRule { }
 
-    /// <summary>
-    /// 【动态】监听节点添加法则
-    /// </summary>
-    public abstract class ListenerAddRule<LN> : ListenerRuleBase<LN, IListenerAddRule, INode, IRule> where LN : class, IDynamicNodeListener, AsRule<IListenerAddRule> { }
-
+	public static class ListenerAddRule
+	{
+		/// <summary>
+		/// 【动态】监听节点添加法则
+		/// </summary>
+		public abstract class NodeRule<LN> : NodeRuleListenerRuleBase<LN, IListenerAddRule> where LN : class, IDynamicNodeListener, AsRule<IListenerAddRule> { }
+		/// <summary>
+		/// 【静态】监听节点添加法则
+		/// </summary>
+		public abstract class Node<LN, TN> : NodeListenerRuleBase<LN, IListenerAddRule, TN> where LN : class, INodeListener, AsRule<IListenerAddRule> where TN : class, INode { }
+		/// <summary>
+		/// 【静态】监听节点添加法则
+		/// </summary>
+		public abstract class Rule<LN, TR> : RuleListenerRuleBase<LN, IListenerAddRule, TR> where LN : class, INodeListener, AsRule<IListenerAddRule> where TR : IRule { }
+	}
 }
