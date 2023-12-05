@@ -15,7 +15,7 @@ namespace WorldTree
 	public struct NodeRef<N>
 		where N : class, INode
 	{
-		private readonly long nodeId;
+		public readonly long nodeId;
 		private N node;
 
 		private NodeRef(N node)

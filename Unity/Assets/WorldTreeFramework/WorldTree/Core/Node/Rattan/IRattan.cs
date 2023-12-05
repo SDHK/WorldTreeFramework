@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树藤接口
 	/// </summary>
-	public interface IRattan : IUnitPoolEventItem, IEnumerable<NodeRef<INode>>
+	public interface IRattan : IUnitPoolEventItem, IEnumerable<INode>
 	{
 		/// <summary>
 		/// 节点数量
@@ -31,12 +31,12 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试通过id获取节点
 		/// </summary>
-		public bool TryGetNodeById(long id, out NodeRef<INode> node);
+		public bool TryGetNodeById(long id, out INode node);
 
 		/// <summary>
 		/// 通过id获取节点
 		/// </summary>
-		public NodeRef<INode> GetNodeById(long id);
+		public INode GetNodeById(long id);
 
 		/// <summary>
 		/// 将节点从树藤中移除
@@ -67,11 +67,11 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试通过键值获取节点
 		/// </summary>
-		public bool TryGetNode(K key, out NodeRef<INode> node);
+		public bool TryGetNode(K key, out INode node);
 		/// <summary>
 		/// 通过键值获取节点
 		/// </summary>
-		public NodeRef<INode> GetNode(K key);
+		public INode GetNode(K key);
 
 		/// <summary>
 		/// 尝试添加节点到字典

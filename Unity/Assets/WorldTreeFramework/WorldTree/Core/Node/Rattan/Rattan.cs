@@ -38,13 +38,13 @@ namespace WorldTree
 		public bool TryAddNode<N>(K key, N node) where N : class, INode => Nodes.TryAdd(key, node) && NodeKeys.TryAdd(node.Id, key);
 
 
-		public bool TryGetNode(K key, out NodeRef<INode> node) => this.Nodes.TryGetValue(key, out node);
+		public bool TryGetNode(K key, out INode node) => this.Nodes.TryGetValue(key, out NodeRef<INode> node);
 
-		public bool TryGetNodeById(long id, out NodeRef<INode> node) => (node = this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out node) ? node : default).Get() != null;
+		public bool TryGetNodeById(long id, out INode node) => (node = this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out node) ? node : default) != null;
 
-		public NodeRef<INode> GetNode(K key) => this.Nodes.TryGetValue(key, out NodeRef<INode> node) ? node : null;
+		public INode GetNode(K key) => this.Nodes.TryGetValue(key, out NodeRef<INode> node) ? node.Get() : null;
 
-		public NodeRef<INode> GetNodeById(long id) => this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out NodeRef<INode> node) ? node : null;
+		public INode GetNodeById(long id) => this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out NodeRef<INode> node) ? node.Get() : null;
 
 		public void RemoveNode(long nodeId)
 		{
@@ -61,7 +61,10 @@ namespace WorldTree
 			NodeKeys.Clear();
 		}
 
-		public IEnumerator<NodeRef<INode>> GetEnumerator() => Nodes.Values.GetEnumerator();
+		public IEnumerator<INode> GetEnumerator()
+		{
+			foreach (var item in Nodes.Values) yield return item.Get();//队列和循环
+		}
 		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
 
 		public override void OnRecycle()
