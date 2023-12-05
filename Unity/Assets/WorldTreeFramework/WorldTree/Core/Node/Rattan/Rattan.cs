@@ -28,23 +28,57 @@ namespace WorldTree
 			Core.PoolGet(out NodeKeys);
 		}
 
-		public bool Contains(K key) => Nodes.ContainsKey(key);
+		public bool Contains(K key) => TryGetNode(key, out _);
 
-		public bool ContainsId(long id) => NodeKeys.ContainsKey(id);
+		public bool ContainsId(long id) => TryGetNodeKey(id, out _);
 
-		public bool TryGetNodeKey(long nodeId, out K key) => NodeKeys.TryGetValue(nodeId, out key);
+		public bool TryGetNodeKey(long nodeId, out K key) => NodeKeys.TryGetValue(nodeId, out key) && TryGetNode(key, out _);
 
+		public bool TryAddNode<N>(K key, N node) where N : class, INode
+		{
+			if (!TryGetNode(key, out _) && !NodeKeys.ContainsKey(node.Id))
+			{
+				Nodes.Add(key, node);
+				NodeKeys.Add(node.Id, key);
+				return true;
+			}
+			return false;
+		}
 
-		public bool TryAddNode<N>(K key, N node) where N : class, INode => Nodes.TryAdd(key, node) && NodeKeys.TryAdd(node.Id, key);
+		public bool TryGetNode(K key, out INode node)
+		{
+			if (Nodes.TryGetValue(key, out var nodeRef))
+			{
+				if (nodeRef.IsNull)
+				{
+					Nodes.Remove(key);
+					NodeKeys.Remove(nodeRef.nodeId);
+					node = null;
+					return false;
+				}
+				else
+				{
+					node = nodeRef.Value;
+					return true;
+				}
+			}
+			node = null;
+			return false;
+		}
 
+		public bool TryGetNodeById(long nodeId, out INode node)
+		{
+			if (NodeKeys.TryGetValue(nodeId, out K key))
+			{
+				return TryGetNode(key, out node);
+			}
+			node = null;
+			return false;
+		}
 
-		public bool TryGetNode(K key, out INode node) => this.Nodes.TryGetValue(key, out NodeRef<INode> node);
+		public INode GetNode(K key) => TryGetNode(key, out INode node) ? node : null;
 
-		public bool TryGetNodeById(long id, out INode node) => (node = this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out node) ? node : default) != null;
-
-		public INode GetNode(K key) => this.Nodes.TryGetValue(key, out NodeRef<INode> node) ? node.Get() : null;
-
-		public INode GetNodeById(long id) => this.NodeKeys.TryGetValue(id, out K key) && this.Nodes.TryGetValue(key, out NodeRef<INode> node) ? node.Get() : null;
+		public INode GetNodeById(long id) => TryGetNodeById(id, out INode node) ? node : null;
 
 		public void RemoveNode(long nodeId)
 		{
@@ -63,9 +97,23 @@ namespace WorldTree
 
 		public IEnumerator<INode> GetEnumerator()
 		{
-			foreach (var item in Nodes.Values) yield return item.Get();//队列和循环
+			using (this.Core.PoolGet(out UnitQueue<NodeRef<INode>> Queue))
+			{
+				foreach (var item in Nodes.Values) Queue.Enqueue(item);
+				while (Queue.Count != 0)
+				{
+					NodeRef<INode> nodeRef = Queue.Dequeue();
+					if (nodeRef.IsNull)
+					{
+						RemoveNode(nodeRef.nodeId);
+						continue;
+					}
+					yield return nodeRef.Value;
+				}
+			}
 		}
-		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		public override void OnRecycle()
 		{

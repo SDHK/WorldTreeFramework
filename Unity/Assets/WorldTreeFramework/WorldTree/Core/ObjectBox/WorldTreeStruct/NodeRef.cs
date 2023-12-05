@@ -18,6 +18,13 @@ namespace WorldTree
 		public readonly long nodeId;
 		private N node;
 
+		public N Value => (node is null || nodeId == node.Id) ? node : node = null;
+		
+		/// <summary>
+		/// 是否为空
+		/// </summary>
+		public bool IsNull => Value is null;
+
 		private NodeRef(N node)
 		{
 			if (node is null)
@@ -29,15 +36,11 @@ namespace WorldTree
 			nodeId = node.Id;
 			this.node = node;
 		}
-		public N Get() => node;
-		public bool TryGet(out N node)
-		{
-			node = this.node;
-			return node is not null;
-		}
+
+		public bool TryGet(out N node)=> (node = Value) is not null;
+
 		public static implicit operator NodeRef<N>(N node) => new(node);
 
-		public static implicit operator N(NodeRef<N> nodeRef)
-			=> (nodeRef.node is null || nodeRef.nodeId == nodeRef.node.Id) ? nodeRef.node : nodeRef.node = null;
+		public static implicit operator N(NodeRef<N> nodeRef) => nodeRef.Value;
 	}
 }
