@@ -7,7 +7,7 @@
         {
             if (Self.IsActive)
             {
-                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+                IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.TraversalCount; i++)
                 {
@@ -23,7 +23,7 @@
         {
             if (Self.IsActive)
             {
-                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+                IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.TraversalCount; i++)
                 {
@@ -39,7 +39,7 @@
         {
             if (Self.IsActive)
             {
-                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+                IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.TraversalCount; i++)
                 {
@@ -55,7 +55,7 @@
         {
             if (Self.IsActive)
             {
-                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+                IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.TraversalCount; i++)
                 {
@@ -71,7 +71,7 @@
         {
             if (Self.IsActive)
             {
-                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+                IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.TraversalCount; i++)
                 {
@@ -87,7 +87,7 @@
         {
             if (Self.IsActive)
             {
-                IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+                IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
                 self.RefreshTraversalCount();
                 for (int i = 0; i < self.TraversalCount; i++)
                 {

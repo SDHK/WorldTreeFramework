@@ -1,287 +1,122 @@
-﻿/****************************************
-
-* 作者： 闪电黑客
-* 日期： 2023/6/1 19:44
-
-* 描述： 法则执行器基类
-*
-* 执行拥有指定法则的节点
-* 用于代替委托事件
-
- */
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 法则执行器基类
-    /// </summary>
-    public abstract class RuleActuatorBase : Node, IRuleActuator, IRuleActuatorTraversal
-    {
-        /// <summary>
-        /// 单法则集合
-        /// </summary>
-        public RuleGroup ruleGroup;
 
-        /// <summary>
-        /// 节点id队列
-        /// </summary>
-        public TreeQueue<long> idQueue;
+	public class RuleActuatorBase : Node, IRuleActuator, IRuleActuatorEnumerable
+	{
+		/// <summary>
+		/// 节点法则队列
+		/// </summary>
+		/// <remarks>高速遍历执行的队列</remarks>
+		public TreeQueue<ValueTuple<NodeRef<INode>, RuleList>> nodeRuleQueue;
 
-        /// <summary>
-        /// 节点字典
-        /// </summary>
-        public TreeDictionary<long, INode> nodeDictionary;
+		/// <summary>
+		/// 节点Id字典
+		/// </summary>
+		/// <remarks>确保同一时刻不允许有两个相同的节点</remarks>
+		public TreeHashSet<long> nodeIdHash;
 
-        /// <summary>
-        /// 节点id被移除的次数
-        /// </summary>
-        public TreeDictionary<long, int> removeIdDictionary;
+		/// <summary>
+		/// 节点id被移除的次数
+		/// </summary>
+		/// <remarks>队列是无法移除任意位置的，所以需要记录，并在获取时抵消</remarks>
+		public TreeDictionary<long, int> removeIdDictionary;
 
-        /// <summary>
-        /// 法则集合字典
-        /// </summary>
-        public TreeDictionary<long, RuleList> ruleGroupDictionary;
+		private int traversalCount;
 
+		public void Clear()
+		{
+			nodeRuleQueue.Clear();
+			nodeIdHash.Clear();
+			removeIdDictionary.Clear();
+			traversalCount = 0;
+		}
 
-        public int TraversalCount { get => traversalCount; }
-        private int traversalCount;
+		public void Remove(long id)
+		{
+			if (nodeIdHash != null && nodeIdHash.Contains(id))
+			{
+				nodeIdHash.Remove(id);
 
-        public override string ToString()
-        {
-            return $"RuleActuator : {ruleGroup?.RuleType.HashCore64ToType()}";
-        }
+				//累计强制移除的节点id
+				removeIdDictionary ??= this.AddChild(out removeIdDictionary);
+				if (removeIdDictionary.TryGetValue(id, out var count))
+				{
+					removeIdDictionary[id] = count + 1;
+				}
+				else
+				{
+					removeIdDictionary.Add(id, 1);
+				}
+			}
+		}
 
-        /// <summary>
-        /// 刷新动态遍历数量
-        /// </summary>
-        public int RefreshTraversalCount()
-        {
-            return traversalCount = idQueue is null ? 0 : idQueue.Count;
-        }
+		public void Remove(INode node) => Remove(node.Id);
 
-        /// <summary>
-        /// 尝试出列
-        /// </summary>
-        public bool TryGetNext(out INode node, out RuleList ruleList)
-        {
-            //尝试获取一个id
-            if (idQueue != null && idQueue.TryDequeue(out long id))
-            {
-                //假如id被回收了
-                while (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
-                {
-                    //回收次数抵消
-                    removeIdDictionary[id] = --count;
-                    //遍历数抵消
-                    if (TraversalCount != 0) traversalCount--;
+		public bool TryAdd(INode node, RuleList ruleList)
+		{
+			//节点存在则不允许重复添加。
+			//如果节点是意外回收了，那么Id是递增的不再出现，也就是那个回收的Id已经被永久销毁了，同样禁止添加。
+			if (nodeIdHash.Contains(node.Id)) return false;
+			NodeRef<INode> NodeRef = new(node);
+			nodeRuleQueue.Enqueue((NodeRef, ruleList));
+			nodeIdHash.Add(node.Id);
+			return true;
+		}
 
-                    //次数为0时删除id
-                    if (count == 0) removeIdDictionary.Remove(id);
-                    if (removeIdDictionary.Count == 0)
-                    {
-                        removeIdDictionary.Dispose();
-                        removeIdDictionary = null;
-                    }
+		public IEnumerator<ValueTuple<INode, RuleList>> GetEnumerator()
+		{
+			traversalCount = nodeRuleQueue is null ? 0 : nodeRuleQueue.Count;
+			for (int i = 0; i < traversalCount; i++)
+			{
+				//从队列里拿到id
+				if (nodeRuleQueue.TryDequeue(out (NodeRef<INode>, RuleList) nodeRuleTuple))
+				{
+					while (true)
+					{
+						long id = nodeRuleTuple.Item1.nodeId;
+						//假如id被主动移除了
+						if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+						{
+							removeIdDictionary[id] = --count;//回收次数抵消
+							if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
+							if (removeIdDictionary.Count == 0)//假如字典空了,则释放
+							{
+								removeIdDictionary.Dispose();
+								removeIdDictionary = null;
+							}
 
-                    //获取下一个id
-                    if (!idQueue.TryDequeue(out id))
-                    {
-                        //假如队列空了,则直接返回退出
-                        ruleList = null;
-                        node = null;
-                        return false;
-                    }
-                }
+							if (traversalCount != 0) traversalCount--; //遍历数抵消
+							//获取下一个id,假如队列空了,则直接返回退出
+							if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
+						}
+						else
+						{
+							INode node = nodeRuleTuple.Item1.Value;
 
-                //此时的id是正常id，查找节点是否存在
-                if (nodeDictionary.TryGetValue(id, out node))
-                {
-                    //存在则获取列表
-                    if (ruleGroupDictionary == null || !ruleGroupDictionary.TryGetValue(id, out ruleList))
-                    {
-                        this.ruleGroup.TryGetValue(node.Type, out ruleList);
-                    }
-                    //id压回队列
-                    idQueue.Enqueue(id);
-                    return true;
-                }
-                else
-                {
-                    idQueue.Enqueue(id);
-                }
-            }
-            ruleList = null;
-            node = null;
-            return false;
-        }
+							if (node == null)//节点意外移除
+							{
+								//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
+								nodeIdHash.Remove(id);
 
-        #region 添加
-
-        /// <summary>
-        /// 尝试添加节点
-        /// </summary>
-        public bool TryAdd(INode node)
-        {
-            nodeDictionary ??= this.AddChild(out nodeDictionary);
-            if (nodeDictionary.ContainsKey(node.Id))
-            {
-                return false;
-            }
-
-            idQueue ??= this.AddChild(out idQueue);
-            nodeDictionary ??= this.AddChild(out nodeDictionary);
-
-            idQueue.Enqueue(node.Id);
-            nodeDictionary.Add(node.Id, node);
-
-            return true;
-        }
-
-        /// <summary>
-        /// 尝试添加节点，并建立引用关系
-        /// </summary>
-        public bool TryAddReferenced(INode node)
-        {
-            if (TryAdd(node))
-            {
-                this.Referenced(node);
-                return true;
-            }
-            return false;
-        }
-
-
-        /// <summary>
-        /// 尝试添加节点与对应法则
-        /// </summary>
-        public bool TryAdd(INode node, RuleList ruleList)
-        {
-
-            if (ruleList != null)
-            {
-                if (TryAdd(node))
-                {
-                    ruleGroupDictionary ??= this.AddChild(out ruleGroupDictionary);
-                    ruleGroupDictionary.Add(node.Id, ruleList);
-                    return true;
-                }
-                else
-                {
-                    if (ruleGroupDictionary.TryGetValue(node.Id, out RuleList OldRuleGroup))
-                    {
-                        if (OldRuleGroup.RuleType != ruleList.RuleType) World.LogError("执行器中已存在这个节点，但注册的法则不同。");
-                    }
-                    return false;
-                }
-            }
-            else
-            {
-                World.LogError("法则为空");
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 尝试添加节点与对应法则，并建立引用关系
-        /// </summary>
-        public bool TryAddReferenced(INode node, RuleList ruleList)
-        {
-            if (TryAdd(node, ruleList))
-            {
-                this.Referenced(node);
-                return true;
-            }
-            return false;
-        }
-
-
-
-        #endregion
-
-        #region 移除
-
-        /// <summary>
-        /// 移除节点
-        /// </summary>
-        public void Remove(long id)
-        {
-            if (nodeDictionary != null && nodeDictionary.TryGetValue(id, out INode node))
-            {
-                nodeDictionary.Remove(id);
-                ruleGroupDictionary?.Remove(id);
-
-                this.DeReferenced(node);
-                //累计强制移除的节点id
-                removeIdDictionary ??= this.AddChild(out removeIdDictionary);
-                if (removeIdDictionary.TryGetValue(id, out var count))
-                {
-                    removeIdDictionary[id] = count + 1;
-                }
-                else
-                {
-                    removeIdDictionary.Add(id, 1);
-                }
-
-                if (nodeDictionary.Count == 0)
-                {
-                    Clear();
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// 移除节点
-        /// </summary>
-        public void Remove(INode node)
-        {
-            Remove(node.Id);
-        }
-
-        /// <summary>
-        /// 清除
-        /// </summary>
-        public void Clear()
-        {
-            if (nodeDictionary != null)
-            {
-                foreach (INode node in nodeDictionary.Values)
-                {
-                    this.DeReferenced(node);
-                }
-                nodeDictionary.Dispose();
-                nodeDictionary = null;
-            }
-
-            idQueue?.Dispose();
-            ruleGroupDictionary?.Dispose();
-            removeIdDictionary?.Dispose();
-
-            idQueue = null;
-            ruleGroupDictionary = null;
-            removeIdDictionary = null;
-
-            traversalCount = 0;
-        }
-
-
-
-
-        #endregion
-
-    }
-
-    public static class RuleActuatorBaseRule
-    {
-        class RemoveRule : RemoveRule<RuleActuatorBase>
-        {
-            protected override void OnEvent(RuleActuatorBase self)
-            {
-                self.ruleGroup = null;
-                self.Clear();
-            }
-        }
-    }
-
-
+								if (traversalCount != 0) traversalCount--; //遍历数抵消
+								//获取下一个id,假如队列空了,则直接返回退出
+								if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
+							}
+							else//节点存在
+							{
+								nodeRuleQueue.Enqueue(nodeRuleTuple);//塞回队列用于下次遍历
+								yield return (node, nodeRuleTuple.Item2);//返回执行组
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+	}
 }

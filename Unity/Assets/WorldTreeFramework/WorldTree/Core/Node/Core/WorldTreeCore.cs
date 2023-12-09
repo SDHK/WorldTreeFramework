@@ -41,7 +41,7 @@ namespace WorldTree
 
 	//Rattan 树藤
 
-	//全改NodeRef
+	//不全改NodeRef
 
 
 	/// <summary>

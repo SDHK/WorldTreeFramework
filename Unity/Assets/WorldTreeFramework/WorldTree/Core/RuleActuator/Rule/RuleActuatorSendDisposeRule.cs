@@ -15,7 +15,7 @@ namespace WorldTree
         public static void SendDispose<R>(this IRuleActuator<R> Self)
             where R : ISendRuleBase
         {
-            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+            IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
@@ -33,7 +33,7 @@ namespace WorldTree
         public static void SendDispose<R, T1>(this IRuleActuator<R> Self, T1 arg1)
             where R : ISendRuleBase<T1>
         {
-            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+            IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
@@ -52,7 +52,7 @@ namespace WorldTree
         public static void SendDispose<R, T1, T2>(this IRuleActuator<R> Self, T1 arg1, T2 arg2)
             where R : ISendRuleBase<T1, T2>
         {
-            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+            IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
@@ -69,7 +69,7 @@ namespace WorldTree
         public static void SendDispose<R, T1, T2, T3>(this IRuleActuator<R> Self, T1 arg1, T2 arg2, T3 arg3)
             where R : ISendRuleBase<T1, T2, T3>
         {
-            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+            IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
@@ -86,7 +86,7 @@ namespace WorldTree
         public static void SendDispose<R, T1, T2, T3, T4>(this IRuleActuator<R> Self, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             where R : ISendRuleBase<T1, T2, T3, T4>
         {
-            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+            IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();
@@ -103,7 +103,7 @@ namespace WorldTree
         public static void SendDispose<R, T1, T2, T3, T4, T5>(this IRuleActuator<R> Self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             where R : ISendRuleBase<T1, T2, T3, T4, T5>
         {
-            IRuleActuatorTraversal self = (IRuleActuatorTraversal)Self;
+            IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
             if (self.IsActive)
             {
                 self.RefreshTraversalCount();

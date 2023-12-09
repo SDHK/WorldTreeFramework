@@ -49,7 +49,7 @@ namespace WorldTree
 		{
 			if (Nodes.TryGetValue(key, out var nodeRef))
 			{
-				if (nodeRef.IsNull)
+				if (nodeRef.Value is null)
 				{
 					Nodes.Remove(key);
 					NodeKeys.Remove(nodeRef.nodeId);
@@ -103,7 +103,7 @@ namespace WorldTree
 				while (Queue.Count != 0)
 				{
 					NodeRef<INode> nodeRef = Queue.Dequeue();
-					if (nodeRef.IsNull)
+					if (nodeRef.Value is null)
 					{
 						RemoveNode(nodeRef.nodeId);
 						continue;
