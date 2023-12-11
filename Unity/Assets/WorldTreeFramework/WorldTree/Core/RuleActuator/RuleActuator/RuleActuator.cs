@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 泛型法则执行器
     /// </summary>
-    public class RuleActuator<R> : RuleListActuatorBase, ChildOf<INode>, IRuleActuator<R>
+    public class RuleActuator<R> : RuleActuatorBase, ChildOf<INode>, IRuleActuator<R>
 
         , AsRule<IAwakeRule>
         where R : IRule
@@ -22,7 +22,7 @@ namespace WorldTree
     {
         public override string ToString()
         {
-            return $"RuleActuator<{typeof(R)}>:[{nodeDictionary?.Count}]";
+            return $"RuleActuator<{typeof(R)}>";
         }
     }
 
@@ -48,7 +48,7 @@ namespace WorldTree
         {
             if (self.Core.RuleManager.TryGetRuleList<NR>(node.Type, out RuleList ruleList))
             {
-                self.TryAddReferenced(node, ruleList);
+                self.TryAdd(node, ruleList);
             }
             else
             {

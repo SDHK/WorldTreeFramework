@@ -1,10 +1,26 @@
-﻿using System;
+﻿/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2023/12/11 11:52:09
+
+* 描述： 法则执行器基类
+* 
+* 这是一个可以在遍历时，增加和移除节点的队列遍历器。
+* 在遍历时，如果增加了节点，那么会在下一次遍历时执行。
+* 
+* 如果移除了节点，那么就会被抵消跳过，不会执行。
+* 如果节点被意外回收了，那么也会被跳过，不会执行。
+
+*/
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace WorldTree
 {
-
+	/// <summary>
+	/// 法则执行器基类
+	/// </summary>
 	public class RuleActuatorBase : Node, IRuleActuator, IRuleActuatorEnumerable
 	{
 		/// <summary>
@@ -29,9 +45,9 @@ namespace WorldTree
 
 		public void Clear()
 		{
-			nodeRuleQueue.Clear();
-			nodeIdHash.Clear();
-			removeIdDictionary.Clear();
+			nodeRuleQueue?.Clear();
+			nodeIdHash?.Clear();
+			removeIdDictionary?.Clear();
 			traversalCount = 0;
 		}
 
@@ -60,7 +76,9 @@ namespace WorldTree
 		{
 			//节点存在则不允许重复添加。
 			//如果节点是意外回收了，那么Id是递增的不再出现，也就是那个回收的Id已经被永久销毁了，同样禁止添加。
-			if (nodeIdHash.Contains(node.Id)) return false;
+			if (nodeIdHash != null && nodeIdHash.Contains(node.Id)) return false;
+			nodeIdHash ??= this.AddChild(out nodeIdHash);
+			nodeRuleQueue ??= this.AddChild(out nodeRuleQueue);
 			NodeRef<INode> NodeRef = new(node);
 			nodeRuleQueue.Enqueue((NodeRef, ruleList));
 			nodeIdHash.Add(node.Id);
@@ -90,20 +108,20 @@ namespace WorldTree
 							}
 
 							if (traversalCount != 0) traversalCount--; //遍历数抵消
-							//获取下一个id,假如队列空了,则直接返回退出
+																	   //获取下一个id,假如队列空了,则直接返回退出
 							if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
 						}
 						else
 						{
 							INode node = nodeRuleTuple.Item1.Value;
 
-							if (node == null)//节点意外移除
+							if (node == null)//节点意外回收
 							{
 								//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
 								nodeIdHash.Remove(id);
 
 								if (traversalCount != 0) traversalCount--; //遍历数抵消
-								//获取下一个id,假如队列空了,则直接返回退出
+																		   //获取下一个id,假如队列空了,则直接返回退出
 								if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
 							}
 							else//节点存在
@@ -118,5 +136,16 @@ namespace WorldTree
 			}
 		}
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+	}
+
+	public static class RuleActuatorBaseRule
+	{
+		class RemoveRule : RemoveRule<RuleActuatorBase>
+		{
+			protected override void OnEvent(RuleActuatorBase self)
+			{
+				self.Clear();
+			}
+		}
 	}
 }

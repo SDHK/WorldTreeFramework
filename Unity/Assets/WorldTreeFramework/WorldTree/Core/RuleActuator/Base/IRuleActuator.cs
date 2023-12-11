@@ -56,11 +56,6 @@ namespace WorldTree
 		public bool TryAdd(INode node, RuleList ruleList);
 
 		/// <summary>
-		/// 尝试添加节点
-		/// </summary>
-		public bool TryAdd(INode node);
-
-		/// <summary>
 		/// 移除节点
 		/// </summary>
 		public void Remove(long id);

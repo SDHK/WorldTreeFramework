@@ -8,6 +8,9 @@
 
 */
 
+using System.Collections;
+using System.Collections.Generic;
+
 namespace WorldTree
 {
 
@@ -27,28 +30,26 @@ namespace WorldTree
         /// </summary>
         public DynamicListenerRuleActuator dynamicListenerRuleActuator;
 
-        public int TraversalCount => staticListenerRuleActuator?.TraversalCount ?? 0 + dynamicListenerRuleActuator?.TraversalCount ?? 0;
-
-        public int RefreshTraversalCount()
-        {
-            return staticListenerRuleActuator?.RefreshTraversalCount() ?? 0 + dynamicListenerRuleActuator?.RefreshTraversalCount() ?? 0;
-        }
-
-        public bool TryGetNext(out INode node, out RuleList ruleList)
-        {
-            if (staticListenerRuleActuator != null && staticListenerRuleActuator.TraversalCount != 0)
+		public IEnumerator<(INode, RuleList)> GetEnumerator()
+		{
+            if (staticListenerRuleActuator!=null)
             {
-                return staticListenerRuleActuator.TryGetNext(out node, out ruleList);
+                foreach (var item in staticListenerRuleActuator)
+                {
+                    yield return item;
+				}
             }
-            if (dynamicListenerRuleActuator != null && dynamicListenerRuleActuator.TraversalCount != 0)
-            {
-                return dynamicListenerRuleActuator.TryGetNext(out node, out ruleList);
-            }
-            node = null;
-            ruleList = null;
-            return false;
-        }
-    }
+			if (dynamicListenerRuleActuator != null)
+			{
+				foreach (var item in dynamicListenerRuleActuator)
+				{
+					yield return item;
+				}
+			}
+		}
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+	}
 
     public static class HybridListenerRuleActuatorRule
     {

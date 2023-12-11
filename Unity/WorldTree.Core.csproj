@@ -56,9 +56,6 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\RuleActuatorBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\RuleGroupSafeActuatorBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\RuleListActuatorBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTweenManager.cs" />
@@ -193,6 +190,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\GenericPool\GenericPool.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\GraftRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListSendAsyncExtension.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\RuleActuatorBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\QuaternionFloat.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\Extension\TimerAsyncExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeQueue.cs" />
