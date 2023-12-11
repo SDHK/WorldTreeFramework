@@ -126,121 +126,115 @@ namespace WorldTree
 
 		#region 添加
 
-		public virtual N TreeAddNode<B, K, N>(K key, N node)
-			where N : class, INode
+		public virtual INode AddSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, node))
+			if (parent.AddBranch<B>().TryAddNode(key, this))
 			{
-				node.BranchType = TypeInfo<B>.TypeCode;
-				node.Parent = this;
-				node.Core = this.Core;
-				node.Root = this.Root;
-				if (node.Domain != node) node.Domain = this.Domain;
+				this.BranchType = TypeInfo<B>.TypeCode;
+				this.Parent = parent;
+				this.Core = parent.Core;
+				this.Root = parent.Root;
+				if (this.Domain != this) this.Domain = parent.Domain;
 
-				node.SetActive(true);//激活节点
-				node.TrySendRule(TypeInfo<IAwakeRule>.Default);
-				node.OnTreeAddSelf();
+				this.SetActive(true);//激活节点
+				this.TrySendRule(TypeInfo<IAwakeRule>.Default);
+				this.OnAddSelfToTree();
 			}
-			return node;
+			return this;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1>(K key, N node, T1 arg1)
-			where N : class, INode
+		public virtual INode AddSelfToTree<B, K, T1>(K key, INode parent, T1 arg1)
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, node))
+			if (parent.AddBranch<B>().TryAddNode(key, this))
 			{
-				node.BranchType = TypeInfo<B>.TypeCode;
-				node.Parent = this;
-				node.Core = this.Core;
-				node.Root = this.Root;
-				if (node.Domain != node) node.Domain = this.Domain;
+				this.BranchType = TypeInfo<B>.TypeCode;
+				this.Parent = parent;
+				this.Core = parent.Core;
+				this.Root = parent.Root;
+				if (this.Domain != this) this.Domain = parent.Domain;
 
-				node.SetActive(true);//激活节点
-				node.TrySendRule(TypeInfo<IAwakeRule<T1>>.Default, arg1);
-				node.OnTreeAddSelf();
+				this.SetActive(true);//激活节点
+				this.TrySendRule(TypeInfo<IAwakeRule<T1>>.Default, arg1);
+				this.OnAddSelfToTree();
 			}
-			return node;
+			return this;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1, T2>(K key, N node, T1 arg1, T2 arg2)
-			where N : class, INode
+		public virtual INode AddSelfToTree<B, K, T1, T2>(K key, INode parent, T1 arg1, T2 arg2)
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, node))
+			if (parent.AddBranch<B>().TryAddNode(key, this))
 			{
-				node.BranchType = TypeInfo<B>.TypeCode;
-				node.Parent = this;
-				node.Core = this.Core;
-				node.Root = this.Root;
-				if (node.Domain != node) node.Domain = this.Domain;
+				this.BranchType = TypeInfo<B>.TypeCode;
+				this.Parent = parent;
+				this.Core = parent.Core;
+				this.Root = parent.Root;
+				if (this.Domain != this) this.Domain = parent.Domain;
 
-				node.SetActive(true);//激活节点
-				node.TrySendRule(TypeInfo<IAwakeRule<T1, T2>>.Default, arg1, arg2);
-				node.OnTreeAddSelf();
+				this.SetActive(true);//激活节点
+				this.TrySendRule(TypeInfo<IAwakeRule<T1, T2>>.Default, arg1, arg2);
+				this.OnAddSelfToTree();
 			}
-			return node;
+			return this;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1, T2, T3>(K key, N node, T1 arg1, T2 arg2, T3 arg3)
-			where N : class, INode
+		public virtual INode AddSelfToTree<B, K, T1, T2, T3>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3)
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, node))
+			if (parent.AddBranch<B>().TryAddNode(key, this))
 			{
-				node.BranchType = TypeInfo<B>.TypeCode;
-				node.Parent = this;
-				node.Core = this.Core;
-				node.Root = this.Root;
-				if (node.Domain != node) node.Domain = this.Domain;
+				this.BranchType = TypeInfo<B>.TypeCode;
+				this.Parent = parent;
+				this.Core = parent.Core;
+				this.Root = parent.Root;
+				if (this.Domain != this) this.Domain = parent.Domain;
 
-				node.SetActive(true);//激活节点
-				node.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3>>.Default, arg1, arg2, arg3);
-				node.OnTreeAddSelf();
+				this.SetActive(true);//激活节点
+				this.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3>>.Default, arg1, arg2, arg3);
+				this.OnAddSelfToTree();
 			}
-			return node;
+			return this;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1, T2, T3, T4>(K key, N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-			where N : class, INode
+		public virtual INode AddSelfToTree<B, K, T1, T2, T3, T4>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, node))
+			if (parent.AddBranch<B>().TryAddNode(key, this))
 			{
-				node.BranchType = TypeInfo<B>.TypeCode;
-				node.Parent = this;
-				node.Core = this.Core;
-				node.Root = this.Root;
-				if (node.Domain != node) node.Domain = this.Domain;
+				this.BranchType = TypeInfo<B>.TypeCode;
+				this.Parent = parent;
+				this.Core = parent.Core;
+				this.Root = parent.Root;
+				if (this.Domain != this) this.Domain = parent.Domain;
 
-				node.SetActive(true);//激活节点
-				node.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3, T4>>.Default, arg1, arg2, arg3, arg4);
-				node.OnTreeAddSelf();
+				this.SetActive(true);//激活节点
+				this.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3, T4>>.Default, arg1, arg2, arg3, arg4);
+				this.OnAddSelfToTree();
 			}
-			return node;
+			return this;
 		}
 
-		public virtual N TreeAddNode<B, K, N, T1, T2, T3, T4, T5>(K key, N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
-			where N : class, INode
+		public virtual INode AddSelfToTree<B, K, T1, T2, T3, T4, T5>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
 			where B : class, IBranch<K>
 		{
-			if (this.AddBranch<B>().TryAddNode(key, node))
+			if (parent.AddBranch<B>().TryAddNode(key, this))
 			{
-				node.BranchType = TypeInfo<B>.TypeCode;
-				node.Parent = this;
-				node.Core = this.Core;
-				node.Root = this.Root;
-				if (node.Domain != node) node.Domain = this.Domain;
+				this.BranchType = TypeInfo<B>.TypeCode;
+				this.Parent = parent;
+				this.Core = parent.Core;
+				this.Root = parent.Root;
+				if (this.Domain != this) this.Domain = parent.Domain;
 
-				node.SetActive(true);//激活节点
-				node.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3, T4, T5>>.Default, arg1, arg2, arg3, arg4, arg5);
-				node.OnTreeAddSelf();
+				this.SetActive(true);//激活节点
+				this.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3, T4, T5>>.Default, arg1, arg2, arg3, arg4, arg5);
+				this.OnAddSelfToTree();
 			}
-			return node;
+			return this;
 		}
 
-		public virtual void OnTreeAddSelf()
+		public virtual void OnAddSelfToTree()
 		{
 			this.Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
 			if (this is not ICoreNode)//广播给全部监听器
@@ -362,23 +356,23 @@ namespace WorldTree
 
 		#region 嫁接
 
-		public virtual bool TreeGraftNode<B, K>(K key, INode node)
+		public virtual bool GraftSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
 		{
-			if (!this.AddBranch<B>().TryAddNode(key, node)) return false;
+			if (!parent.AddBranch<B>().TryAddNode(key, this)) return false;
 
-			node.BranchType = TypeInfo<B>.TypeCode;
-			node.Parent = this;
-			node.Core = this.Core;
-			node.Root = this.Root;
-			if (node.Domain != node) node.Domain = this.Domain;
+			this.BranchType = TypeInfo<B>.TypeCode;
+			this.Parent = parent;
+			this.Core = parent.Core;
+			this.Root = parent.Root;
+			if (this.Domain != this) this.Domain = parent.Domain;
 
-			node.RefreshActive();
-			node.TraversalLevel(current => current.OnTreeGraftSelf());
+			this.RefreshActive();
+			this.TraversalLevel(current => current.OnGraftSelfToTree());
 			return true;
 		}
 
-		public virtual void OnTreeGraftSelf()//id相同数据同步？
+		public virtual void OnGraftSelfToTree()//id相同数据同步？
 		{
 			this.Core = this.Parent.Core;
 			this.Root = this.Parent.Root;
@@ -411,20 +405,20 @@ namespace WorldTree
 
 		#region 裁剪
 
-		public virtual bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.GetBranch<B>()?.GetNodeById(id).TreeCutSelf()) != null;
-		public virtual bool TryCutNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.GetBranch<B>()?.GetNode(key).TreeCutSelf()) != null;
+		public virtual bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.GetBranch<B>()?.GetNodeById(id).CutSelf()) != null;
+		public virtual bool TryCutNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.GetBranch<B>()?.GetNode(key).CutSelf()) != null;
 
-		public virtual INode CutNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(id).TreeCutSelf();
-		public virtual INode CutNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key).TreeCutSelf();
+		public virtual INode CutNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(id).CutSelf();
+		public virtual INode CutNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key).CutSelf();
 
-		public virtual INode TreeCutSelf()
+		public virtual INode CutSelf()
 		{
 			if (this.IsRecycle) return null; //是否已经回收
-			this.TraversalPostorder(current => current.OnTreeCutSelf());
+			this.TraversalPostorder(current => current.OnCutSelf());
 			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			return this;
 		}
-		public virtual void OnTreeCutSelf()
+		public virtual void OnCutSelf()
 		{
 			this.SendAllReferencedNodeRemove();//_判断移除引用关系 X
 			if (this is INodeListener nodeListener && this is not ICoreNode)

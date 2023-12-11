@@ -58,7 +58,7 @@ namespace WorldTree
 		public static void GraftTypeNode<N, T>(this N self, long type, T node)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, TypeNodeBranch>
-			=> self.TreeGraftNode<TypeNodeBranch, long>(type, node);
+			=> node.GraftSelfToTree<TypeNodeBranch, long>(type, self);
 
 		#endregion
 

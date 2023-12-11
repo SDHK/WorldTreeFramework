@@ -9,7 +9,7 @@
 			where N : class, INode
 			where B : class, IBranch<K>
 			where T : class, INode, NodeOf<N, B>, AsRule<IAwakeRule>
-		=> node = self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.TreeAddNode<B, K, T>(key, self.GetOrNewNode<T>(isPool));
+		=> node = (T)(self.Contains<B, K>(key) ? self.GetNode<B, K>(key) : self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K>(key, self));
 
 		/// <summary>
 		/// 添加节点
@@ -18,7 +18,7 @@
 			where N : class, INode
 			where B : class, IBranch<K>
 			where T : class, INode, NodeOf<N, B>, AsRule<IAwakeRule<T1>>
-		=> node = self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.TreeAddNode<B, K, T, T1>(key, self.GetOrNewNode<T>(isPool), arg1);
+		=> node = (T)(self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K, T1>(key, self, arg1));
 
 		/// <summary>
 		/// 添加节点
@@ -27,7 +27,7 @@
 			where N : class, INode
 			where B : class, IBranch<K>
 			where T : class, INode, NodeOf<N, B>, AsRule<IAwakeRule<T1, T2>>
-		=> node = self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.TreeAddNode<B, K, T, T1, T2>(key, self.GetOrNewNode<T>(isPool), arg1, arg2);
+		=> node = (T)(self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K, T1, T2>(key, self, arg1, arg2));
 
 		/// <summary>
 		/// 添加节点
@@ -36,7 +36,7 @@
 			where N : class, INode
 			where B : class, IBranch<K>
 			where T : class, INode, NodeOf<N, B>, AsRule<IAwakeRule<T1, T2, T3>>
-		=> node = self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.TreeAddNode<B, K, T, T1, T2, T3>(key, self.GetOrNewNode<T>(isPool), arg1, arg2, arg3);
+		=> node = (T)(self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K, T1, T2, T3>(key, self, arg1, arg2, arg3));
 
 		/// <summary>
 		/// 添加节点
@@ -45,7 +45,7 @@
 			where N : class, INode
 			where B : class, IBranch<K>
 			where T : class, INode, NodeOf<N, B>, AsRule<IAwakeRule<T1, T2, T3, T4>>
-		=> node = self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.TreeAddNode<B, K, T, T1, T2, T3, T4>(key, self.GetOrNewNode<T>(isPool), arg1, arg2, arg3, arg4);
+		=> node = (T)(self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K, T1, T2, T3, T4>(key, self, arg1, arg2, arg3, arg4));
 
 		/// <summary>
 		/// 添加节点
@@ -54,7 +54,7 @@
 			where N : class, INode
 			where B : class, IBranch<K>
 			where T : class, INode, NodeOf<N, B>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
-		=> node = self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.TreeAddNode<B, K, T, T1, T2, T3, T4, T5>(key, self.GetOrNewNode<T>(isPool), arg1, arg2, arg3, arg4, arg5);
+		=> node = (T)(self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K, T1, T2, T3, T4, T5>(key, self, arg1, arg2, arg3, arg4, arg5));
 
 	}
 }

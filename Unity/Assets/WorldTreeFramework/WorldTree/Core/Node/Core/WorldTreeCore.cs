@@ -41,8 +41,7 @@ namespace WorldTree
 
 	//Rattan 树藤
 
-	//不全改NodeRef
-
+	//添加方法倒转为节点自身的方法
 
 	/// <summary>
 	/// 世界树核心

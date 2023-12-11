@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树藤基类
 	/// </summary>
-	public class Rattan<K> : UnitPoolItem, IRattan<K>
+	public abstract class Rattan<K> : UnitPoolItem, IRattan<K>
 	{
 		public int Count => Nodes.Count;
 		protected UnitDictionary<K, NodeRef<INode>> Nodes;
@@ -97,19 +97,10 @@ namespace WorldTree
 
 		public IEnumerator<INode> GetEnumerator()
 		{
-			using (this.Core.PoolGet(out UnitQueue<NodeRef<INode>> Queue))
+			foreach (var item in Nodes.Values)
 			{
-				foreach (var item in Nodes.Values) Queue.Enqueue(item);
-				while (Queue.Count != 0)
-				{
-					NodeRef<INode> nodeRef = Queue.Dequeue();
-					if (nodeRef.Value is null)
-					{
-						RemoveNode(nodeRef.nodeId);
-						continue;
-					}
-					yield return nodeRef.Value;
-				}
+				INode node = item.Value;
+				if (node != null) yield return node;
 			}
 		}
 

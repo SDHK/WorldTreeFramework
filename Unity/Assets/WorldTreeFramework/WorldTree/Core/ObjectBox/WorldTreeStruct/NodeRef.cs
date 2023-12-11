@@ -18,6 +18,10 @@ namespace WorldTree
 		public readonly long nodeId;
 		private N node;
 
+		/// <summary>
+		/// 获取节点，如果节点被回收，那么会返回null
+		/// </summary>
+		/// <remarks> 每次获取都会进行判断，建议获取后将值用变量存起来 </remarks>
 		public N Value => (node is null || nodeId == node.Id) ? node : node = null;
 
 		public NodeRef(N node)
@@ -39,7 +43,7 @@ namespace WorldTree
 		/// <summary>
 		/// 清空引用
 		/// </summary>
-		public void Clear()=> node = null;
+		public void Clear() => node = null;
 
 		public static implicit operator NodeRef<N>(N node) => new(node);
 

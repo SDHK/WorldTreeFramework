@@ -197,50 +197,50 @@ namespace WorldTree
 		#region 添加
 
 		/// <summary>
-		/// 树结构添加节点
+		/// 节点加入树结构
 		/// </summary>
-		public N TreeAddNode<B, K, N>(K key, N node) where B : class, IBranch<K> where N : class, INode;
+		public INode AddSelfToTree<B, K>(K key, INode parent) where B : class, IBranch<K>;
 		/// <summary>
-		/// 树结构添加节点
+		/// 节点加入树结构
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1>(K key, N node, T1 arg1) where B : class, IBranch<K> where N : class, INode;
+		public INode AddSelfToTree<B, K, T1>(K key, INode parent, T1 arg1) where B : class, IBranch<K>;
 		/// <summary>
-		/// 树结构添加节点
+		/// 节点加入树结构
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1, T2>(K key, N node, T1 arg1, T2 arg2) where B : class, IBranch<K> where N : class, INode;
+		public INode AddSelfToTree<B, K, T1, T2>(K key, INode parent, T1 arg1, T2 arg2) where B : class, IBranch<K>;
 		/// <summary>
-		/// 树结构添加节点
+		/// 节点加入树结构
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1, T2, T3>(K key, N node, T1 arg1, T2 arg2, T3 arg3) where B : class, IBranch<K> where N : class, INode;
+		public INode AddSelfToTree<B, K, T1, T2, T3>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3) where B : class, IBranch<K>;
 		/// <summary>
-		/// 树结构添加节点
+		/// 节点加入树结构
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1, T2, T3, T4>(K key, N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where B : class, IBranch<K> where N : class, INode;
+		public INode AddSelfToTree<B, K, T1, T2, T3, T4>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where B : class, IBranch<K>;
 		/// <summary>
-		/// 树结构添加节点
+		/// 节点加入树结构
 		/// </summary>
-		public N TreeAddNode<B, K, N, T1, T2, T3, T4, T5>(K key, N node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where B : class, IBranch<K> where N : class, INode;
+		public INode AddSelfToTree<B, K, T1, T2, T3, T4, T5>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where B : class, IBranch<K>;
 
 		/// <summary>
-		/// 树结构添加自己时的处理
+		/// 节点加入树结构时的处理
 		/// </summary>
 		/// <remarks>由框架内部调用</remarks>
-		public void OnTreeAddSelf();
+		public void OnAddSelfToTree();
 
 		#endregion
 
 		#region 嫁接
 
 		/// <summary>
-		/// 树结构尝试嫁接节点
+		/// 节点嫁接到树结构
 		/// </summary>
-		public bool TreeGraftNode<B, K>(K key, INode node) where B : class, IBranch<K>;
+		public bool GraftSelfToTree<B, K>(K key, INode parent) where B : class, IBranch<K>;
 
 		/// <summary>
-		/// 树结构嫁接自己时的处理
+		/// 节点嫁接到树结构时的处理
 		/// </summary>
 		/// <remarks>由框架内部调用</remarks>
-		public void OnTreeGraftSelf();
+		public void OnGraftSelfToTree();
 
 		#endregion
 
@@ -268,13 +268,13 @@ namespace WorldTree
 		/// <summary>
 		/// 从树上将自己裁剪下来
 		/// </summary>
-		public INode TreeCutSelf();
+		public INode CutSelf();
 
 		/// <summary>
 		/// 从树上将自己裁剪下来时的处理
 		/// </summary>
 		/// <remarks>由框架内部调用</remarks>
-		public void OnTreeCutSelf();
+		public void OnCutSelf();
 
 		#endregion
 
