@@ -81,6 +81,8 @@
 
 		#endregion
 
+		#region 节点处理
+
 		/// <summary>
 		/// 添加节点
 		/// </summary>
@@ -134,6 +136,7 @@
 			where B : class, IBranch<K>
 			where T : class, INode, NodeOf<N, B>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
 		=> node = (T)(self.Contains<B, K>(key) ? self.GetNode<B, K>(key) as T : self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K, T1, T2, T3, T4, T5>(key, self, arg1, arg2, arg3, arg4, arg5));
-
+		
+		#endregion
 	}
 }

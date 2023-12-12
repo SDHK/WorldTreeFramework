@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-	public class ReferencedChildBranch : ReferencedParentBranch { }
+	public class ReferencedChildRattan : ReferencedParentRattan { }
 
-	public class ReferencedParentBranch : UnitPoolItem, IBranch<long>
+	public class ReferencedParentRattan : UnitPoolItem, IRattan<long>
 	{
 		public INode Self { get; set; }
 
@@ -54,15 +54,15 @@ namespace WorldTree
 	}
 
 
-	public static class NodeReferencedBranchRule
+	public static class NodeReferencedRattanRule
 	{
 		/// <summary>
 		/// 建立引用关系
 		/// </summary>
 		public static void Referenced(this INode self, INode node)
 		{
-			self.AddBranch<ReferencedChildBranch>().TryAddNode(node.Id, node);
-			node.AddBranch<ReferencedParentBranch>().TryAddNode(self.Id, self);
+			self.AddRattan<ReferencedChildRattan>().TryAddNode(node.Id, node);
+			node.AddRattan<ReferencedParentRattan>().TryAddNode(self.Id, self);
 		}
 
 		/// <summary>
@@ -70,15 +70,15 @@ namespace WorldTree
 		/// </summary>
 		public static void DeReferenced(this INode self, INode node)
 		{
-			if (self.TryGetBranch(out ReferencedChildBranch _))
+			if (self.TryGetRattan(out ReferencedChildRattan _))
 			{
-				self.RemoveBranchNode<ReferencedChildBranch>(node);
+				self.RemoveRattanNode<ReferencedChildRattan>(node);
 				self.TrySendRule(TypeInfo<IDeReferencedChildRule>.Default, node);
 			}
 
-			if (node.TryGetBranch(out ReferencedParentBranch _))
+			if (node.TryGetRattan(out ReferencedParentRattan _))
 			{
-				self.RemoveBranchNode<ReferencedParentBranch>(self);
+				self.RemoveRattanNode<ReferencedParentRattan>(self);
 				node.TrySendRule(TypeInfo<IDeReferencedParentRule>.Default, self);
 			}
 		}
@@ -89,21 +89,21 @@ namespace WorldTree
 		public static void DeReferencedAll(this INode self)
 		{
 			//移除父级
-			if (self.TryGetBranch(out ReferencedParentBranch parentBranch))
+			if (self.TryGetRattan(out ReferencedParentRattan parentRattan))
 			{
 				using (self.PoolGet(out UnitQueue<INode> nodes))
 				{
-					foreach (var item in parentBranch) nodes.Enqueue(item);
+					foreach (var item in parentRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0) self.DeReferenced(nodes.Dequeue());
 				}
 			}
 
 			//移除子级
-			if (self.TryGetBranch(out ReferencedChildBranch childBranch))
+			if (self.TryGetRattan(out ReferencedChildRattan childRattan))
 			{
 				using (self.PoolGet(out UnitQueue<INode> nodes))
 				{
-					foreach (var item in childBranch) nodes.Enqueue(item);
+					foreach (var item in childRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0) self.DeReferenced(nodes.Dequeue());
 				}
 			}
@@ -116,30 +116,30 @@ namespace WorldTree
 		public static void SendAllReferencedNodeRemove(this INode self)
 		{
 			//移除父级
-			if (self.TryGetBranch(out ReferencedParentBranch parentBranch))
+			if (self.TryGetRattan(out ReferencedParentRattan parentRattan))
 			{
 				using (self.PoolGet(out UnitQueue<INode> nodes))
 				{
-					foreach (var item in parentBranch) nodes.Enqueue(item);
+					foreach (var item in parentRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0)
 					{
 						var node = nodes.Dequeue();
-						node.RemoveBranchNode<ReferencedChildBranch>(self);
+						node.RemoveRattanNode<ReferencedChildRattan>(self);
 						node.TrySendRule(TypeInfo<IReferencedChildRemoveRule>.Default, self);
 					}
 				}
 			}
 
 			//移除子级
-			if (self.TryGetBranch(out ReferencedChildBranch childBranch))
+			if (self.TryGetRattan(out ReferencedChildRattan childRattan))
 			{
 				using (self.PoolGet(out UnitQueue<INode> nodes))
 				{
-					foreach (var item in childBranch) nodes.Enqueue(item);
+					foreach (var item in childRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0)
 					{
 						var node = nodes.Dequeue();
-						node.RemoveBranchNode<ReferencedParentBranch>(self);
+						node.RemoveRattanNode<ReferencedParentRattan>(self);
 						node.TrySendRule(TypeInfo<IReferencedParentRemoveRule>.Default, self);
 					}
 				}
