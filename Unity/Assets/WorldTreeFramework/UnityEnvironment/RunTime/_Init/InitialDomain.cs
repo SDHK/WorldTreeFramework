@@ -10,6 +10,7 @@
 * 可用于初始化启动需要的功能组件
 
 */
+using Mono.Data.Sqlite;
 using System.IO;
 using UnityEngine;
 using YooAsset;
@@ -305,18 +306,19 @@ namespace WorldTree
 		{
 			protected override void OnEvent(InitialDomain self)
 			{
-				//if (Input.GetKeyDown(KeyCode.A))
-				//{
-				//	self.valueFloat.Value += 1.5f;
-				//	World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
-				//}
-				//if (Input.GetKeyDown(KeyCode.S))
-				//{
-				//	//self.valueInt.Value += 1;
-				//	World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value} :{self.valueString.Value}");
+                //if (Input.GetKeyDown(KeyCode.A))
+                //{
+                //	self.valueFloat.Value += 1.5f;
+                //	World.Log($"A {self.valueFloat.Value} : {self.valueInt.Value}");
+                //}
+                //if (Input.GetKeyDown(KeyCode.S))
+                //{
+                //	//self.valueInt.Value += 1;
+                //	World.Log($"S {self.valueFloat.Value} : {self.valueInt.Value} :{self.valueString.Value}");
 
-				//}
-				World.Log("初始域启动!!!");
+                //}
+
+                World.Log("初始域启动!!!");
 
 				if (Input.GetKeyDown(KeyCode.Q))
 				{

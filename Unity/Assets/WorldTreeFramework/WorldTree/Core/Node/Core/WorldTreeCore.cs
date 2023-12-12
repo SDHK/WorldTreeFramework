@@ -14,17 +14,15 @@
 
 namespace WorldTree
 {
-	//剩余
-	//异常处理？
+	//计划
 
+	//异常处理？
 
 	//对法则执行器进行更加详细的划分，生命周期，全局事件，回调事件？
 
 	//对象池需要一个启动标记？
 
 	//Log改为 Self.Log
-
-
 
 	//新增TimeUpdate,特化的双方法法则
 	//真实与游戏时间双法则
@@ -33,15 +31,11 @@ namespace WorldTree
 
 	//生命周期整理
 
-	//执行器整理，改为用结构体指针
-
 	//时域与时间轮
 
 	//将Add综合到核心
 
 	//Rattan 树藤
-
-	//添加方法倒转为节点自身的方法
 
 	/// <summary>
 	/// 世界树核心
@@ -167,6 +161,7 @@ namespace WorldTree
 			//树根节点
 			self.GraftComponent(self.Root = self.PoolGet<WorldTreeRoot>());
 
+			//嫁接节点需要手动激活
 			self.ReferencedPoolManager.SetActive(true);
 			self.IdManager.SetActive(true);
 			self.RuleManager.SetActive(true);
@@ -226,74 +221,7 @@ namespace WorldTree
 		/// </summary>
 		public static void Update()
 		{
+			//Update 应该放这里面执行
 		}
-
-		#region 节点添加与移除
-
-		///// <summary>
-		///// 核心添加一个节点
-		///// </summary>
-		//public static void AddNode(this WorldTreeCore self, INode node)
-		//{
-		//	self.ReferencedPoolManager.TryAdd(node);
-
-		//	node.SetActive(true);
-		//	self.EnableRuleGroup?.Send(node);//添加后调用激活事件
-
-		//	//广播给全部监听器!!!
-		//	if (node is not ICoreNode)
-		//	{
-		//		node.GetListenerActuator<IListenerAddRule>()?.Send(node);
-		//	}
-
-		//	if (node is INodeListener nodeListener && node is not ICoreNode)
-		//	{
-		//		//检测添加静态监听
-		//		self.ReferencedPoolManager.TryAddStaticListener(nodeListener);
-		//	}
-
-		//	//这个节点的添加事件
-		//	self.AddRuleGroup?.Send(node);
-		//}
-
-		///// <summary>
-		///// 核心移除一个节点
-		///// </summary>
-		//public static void RemoveNode(this WorldTreeCore self, INode node)
-		//{
-		//	//从父节点中移除
-		//	node.RemoveInParent();
-		//	//引用关系移除通知
-		//	node.SendAllReferencedNodeRemove();
-
-		//	node.SetActive(false);//激活标记变更
-
-		//	self.DisableRuleGroup?.Send(node);//调用禁用事件
-
-		//	if (node is INodeListener && node is not ICoreNode)
-		//	{
-		//		INodeListener nodeListener = (node as INodeListener);
-
-		//		//检测移除静态监听
-		//		self.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-		//		//检测移除动态监听
-		//		self.ReferencedPoolManager.RemoveDynamicListener(nodeListener);
-		//	}
-
-		//	//这个节点的移除事件
-		//	self.RemoveRuleGroup?.Send(node);
-
-		//	//广播给全部监听器!!!
-		//	if (node is not ICoreNode)
-		//	{
-		//		node.GetListenerActuator<IListenerRemoveRule>()?.Send(node);
-		//	}
-
-		//	self.ReferencedPoolManager.Remove(node);
-
-		//	node.DisposeDomain();//清除域节点
-		//	node.Parent = null;//清除父节点
-		//}
-		#endregion
 	}
 }

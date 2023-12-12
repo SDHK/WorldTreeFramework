@@ -110,7 +110,15 @@ namespace WorldTree
 
 		#region Rattan
 
+		/// <summary>
+		/// 树藤分支
+		/// </summary>
+		public UnitDictionary<long, IRattan> m_Rattans { get; set; }
 
+		/// <summary>
+		/// 树藤分支
+		/// </summary>
+		public UnitDictionary<long, IRattan> Rattans { get; }
 
 		#endregion
 
@@ -132,63 +140,6 @@ namespace WorldTree
 		/// </summary>
 		public UnitDictionary<long, IBranch> Branchs { get; }
 
-
-		#endregion
-
-
-		#region 分支处理
-
-		#region 添加
-
-		/// <summary>
-		/// 添加分支
-		/// </summary>
-		public B AddBranch<B>() where B : class, IBranch;
-
-		/// <summary>
-		/// 添加分支
-		/// </summary>
-		public IBranch AddBranch(long Type);
-
-		#endregion
-
-		#region 移除
-
-		/// <summary>
-		/// 移除分支中的节点
-		/// </summary>
-		public void RemoveBranchNode<B>(INode node) where B : class, IBranch;
-
-		/// <summary>
-		/// 移除分支中的节点
-		/// </summary>
-		public void RemoveBranchNode(long branchType, INode node);
-
-		#endregion
-
-		#region 获取
-
-		/// <summary>
-		/// 尝试获取分支
-		/// </summary>
-		public bool TryGetBranch<B>(out B branch) where B : class, IBranch;
-
-		/// <summary>
-		/// 尝试获取分支
-		/// </summary>
-		public bool TryGetBranch(long branchType, out IBranch branch);
-
-		/// <summary>
-		/// 获取分支
-		/// </summary>
-		public B GetBranch<B>() where B : class, IBranch;
-
-		/// <summary>
-		/// 获取分支
-		/// </summary>
-		public IBranch GetBranch(long branchType);
-
-		#endregion
 
 		#endregion
 

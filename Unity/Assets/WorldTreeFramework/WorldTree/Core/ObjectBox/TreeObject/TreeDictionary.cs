@@ -16,25 +16,32 @@ namespace WorldTree
 	/// 树字典泛型类
 	/// </summary>
 	public class TreeDictionary<Key, V> : Dictionary<Key, V>, INode, ComponentOf<INode>, ChildOf<INode>
-        , AsRule<IAwakeRule>
-    {
-        public bool IsFromPool { get; set; }
-        public bool IsRecycle { get; set; }
-        public bool IsDisposed { get; set; }
-        public long Id { get; set; }
-        public long DataId { get; set; }
-        public long Type { get; set; }
-        public WorldTreeCore Core { get; set; }
-        public WorldTreeRoot Root { get; set; }
-        public INode Domain { get; set; }
-        public INode Parent { get; set; }
+		, AsRule<IAwakeRule>
+	{
+		public bool IsFromPool { get; set; }
+		public bool IsRecycle { get; set; }
+		public bool IsDisposed { get; set; }
+		public long Id { get; set; }
+		public long DataId { get; set; }
+		public long Type { get; set; }
+		public WorldTreeCore Core { get; set; }
+		public WorldTreeRoot Root { get; set; }
+		public INode Domain { get; set; }
+		public INode Parent { get; set; }
 
-        #region Active
-        public bool ActiveToggle { get; set; }
-        public bool IsActive { get; set; }
-        public bool m_ActiveEventMark { get; set; }
-        #endregion
+		#region Active
+		public bool ActiveToggle { get; set; }
+		public bool IsActive { get; set; }
+		public bool m_ActiveEventMark { get; set; }
+		#endregion
 
+		#region Rattan
+
+		public UnitDictionary<long, IRattan> m_Rattans { get; set; }
+
+		public UnitDictionary<long, IRattan> Rattans { get; }
+
+		#endregion
 
 		#region Branch
 
@@ -52,73 +59,6 @@ namespace WorldTree
 
 		#endregion
 
-
-		#region 分支处理
-
-		#region 添加
-
-		public virtual B AddBranch<B>()
-			where B : class, IBranch
-		{
-			var Branchs = this.Branchs;
-			if (!Branchs.TryGetValue(TypeInfo<B>.TypeCode, out IBranch iBranch))
-			{
-				Branchs.Add(TypeInfo<B>.TypeCode, iBranch = this.PoolGet<B>());
-			}
-			return iBranch as B;
-		}
-
-		public virtual IBranch AddBranch(long Type)
-		{
-			var Branchs = this.Branchs;
-			if (!Branchs.TryGetValue(Type, out IBranch iBranch))
-			{
-				Branchs.Add(Type, iBranch = this.Core.GetUnit(Type) as IBranch);
-			}
-			return iBranch;
-		}
-
-		#endregion
-
-		#region 移除 
-
-		public void RemoveBranchNode<B>(INode node) where B : class, IBranch => RemoveBranchNode(TypeInfo<B>.TypeCode, node);
-
-		public void RemoveBranchNode(long branchType, INode node)
-		{
-			if (this.TryGetBranch(branchType, out IBranch branch))
-			{
-				branch.RemoveNode(node.Id);
-				if (branch.Count == 0)
-				{
-					//移除分支
-					this.m_Branchs.Remove(branchType);
-					if (this.m_Branchs.Count == 0)
-					{
-						this.m_Branchs.Dispose();
-						this.m_Branchs = null;
-					}
-					//释放分支
-					branch.Dispose();
-				}
-			}
-		}
-
-		#endregion
-
-		#region 获取
-
-		public virtual bool TryGetBranch<B>(out B branch) where B : class, IBranch => (branch = (this.m_Branchs != null && this.m_Branchs.TryGetValue(TypeInfo<B>.TypeCode, out IBranch Ibranch)) ? Ibranch as B : null) != null;
-
-		public virtual bool TryGetBranch(long branchType, out IBranch branch) => (branch = (this.m_Branchs != null && this.m_Branchs.TryGetValue(branchType, out branch)) ? branch : null) != null;
-
-		public virtual B GetBranch<B>() where B : class, IBranch => (this.m_Branchs != null && this.m_Branchs.TryGetValue(TypeInfo<B>.TypeCode, out IBranch iBranch)) ? iBranch as B : null;
-
-		public virtual IBranch GetBranch(long branchType) => (this.m_Branchs != null && this.m_Branchs.TryGetValue(branchType, out IBranch iBranch)) ? iBranch : null;
-
-		#endregion
-
-		#endregion
 
 		#region 节点处理
 
@@ -283,7 +223,7 @@ namespace WorldTree
 
 		public virtual void RemoveAllNode(long branchType)
 		{
-			if (TryGetBranch(branchType, out IBranch branch))
+			if (this.TryGetBranch(branchType, out IBranch branch))
 			{
 				if (branch.Count != 0)
 				{
@@ -344,7 +284,7 @@ namespace WorldTree
 				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
 			}
 			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
-			//this.DisposeDomain(); //清除域节点
+														 //this.DisposeDomain(); //清除域节点
 			this.Parent = null;//清除父节点
 			Clear();
 			Core?.Recycle(this);//回收到池
@@ -441,9 +381,9 @@ namespace WorldTree
 
 		#region 获取	
 
-		public virtual bool ContainsId<B>(long id) where B : class, IBranch => GetBranch<B>()?.ContainsId(id) ?? false;
+		public virtual bool ContainsId<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.ContainsId(id) ?? false;
 
-		public virtual bool Contains<B, K>(K key) where B : class, IBranch<K> => GetBranch<B>()?.Contains(key) ?? false;
+		public virtual bool Contains<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.Contains(key) ?? false;
 
 		public virtual bool TryGetNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.TryGetBranch(out B branch) && branch.TryGetNodeById(id, out node) ? node : null) != null;
 
@@ -455,6 +395,6 @@ namespace WorldTree
 
 		#endregion
 
-    }
+	}
 
 }
