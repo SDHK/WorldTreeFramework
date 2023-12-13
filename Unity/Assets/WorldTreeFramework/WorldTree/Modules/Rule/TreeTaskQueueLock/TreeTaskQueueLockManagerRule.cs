@@ -70,7 +70,7 @@ namespace WorldTree
 
             //节点添加任务锁
             _ = node.AddChild(out TreeTask<TreeTaskQueueCompleter> treeTask);
-            TaskQueue.EnqueueReferenced(treeTask);
+            TaskQueue.TryEnqueue(treeTask);
 
             //返回一个任务锁
             return await treeTask;

@@ -9,248 +9,259 @@
 
 */
 
+using System.Collections;
+using System.Collections.Generic;
+
 namespace WorldTree
 {
-    /// <summary>
-    /// 动态节点队列
-    /// </summary>
-    public class DynamicNodeQueue : Node, ComponentOf<INode>, ChildOf<INode>
-        , AsRule<IAwakeRule>
-    {
-        /// <summary>
-        /// 节点id队列
-        /// </summary>
-        public TreeQueue<long> idQueue;
+	/// <summary>
+	/// 动态节点队列
+	/// </summary>
+	public class DynamicNodeQueue : Node, ComponentOf<INode>, ChildOf<INode>, IEnumerable<INode>
+		, AsRule<IAwakeRule>
+	{
+		/// <summary>
+		/// 节点id队列
+		/// </summary>
+		public TreeQueue<NodeRef<INode>> nodeQueue;
 
-        /// <summary>
-        /// 节点id被移除的次数
-        /// </summary>
-        public TreeDictionary<long, int> removeIdDictionary;
+		/// <summary>
+		/// 节点id被移除的次数
+		/// </summary>
+		public TreeDictionary<long, int> removeIdDictionary;
 
-        /// <summary>
-        /// 节点名单
-        /// </summary>
-        public TreeDictionary<long, INode> nodeDictionary;
+		/// <summary>
+		/// 节点Id字典
+		/// </summary>
+		public TreeHashSet<long> nodeIdHash;
 
-        /// <summary>
-        /// 当前队列数量
-        /// </summary>
-        public int Count => nodeDictionary is null ? 0 : nodeDictionary.Count;
+		/// <summary>
+		/// 当前队列数量
+		/// </summary>
+		public int Count => nodeQueue.Count;
 
-        /// <summary>
-        /// 动态的遍历数量
-        /// </summary>
-        /// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
-        public int traversalCount;
-    }
-
-    public static class DynamicNodeQueueRule
-    {
-        class AddRule : AddRule<DynamicNodeQueue>
-        {
-            protected override void OnEvent(DynamicNodeQueue self)
-            {
-                self.AddChild(out self.idQueue);
-                self.AddChild(out self.removeIdDictionary);
-                self.AddChild(out self.nodeDictionary);
-            }
-        }
+		/// <summary>
+		/// 动态的遍历数量
+		/// </summary>
+		/// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
+		private int traversalCount;
 
 
-        class RemoveRule : RemoveRule<DynamicNodeQueue>
-        {
-            protected override void OnEvent(DynamicNodeQueue self)
-            {
-                self.idQueue = default;
-                self.removeIdDictionary = default;
-                self.nodeDictionary = default;
-            }
-        }
+		/// <summary>
+		/// 节点入列
+		/// </summary>
+		public bool TryEnqueue(INode node)
+		{
+			if (nodeIdHash != null && nodeIdHash.Contains(node.Id)) return false;
+			nodeQueue ??= this.AddChild(out nodeQueue);
+			nodeIdHash ??= this.AddChild(out nodeIdHash);
+			NodeRef<INode> NodeRef = new(node);
 
-        class ReferencedChildRemoveRule : ReferencedChildRemoveRule<DynamicNodeQueue>
-        {
-            protected override void OnEvent(DynamicNodeQueue self, INode node)
-            {
-                self.Remove(node);
-            }
-        }
+			this.nodeQueue.Enqueue(NodeRef);
+			this.nodeIdHash.Add(node.Id);
+			return true;
+		}
 
+		public void Remove(INode node) => Remove(node.Id);
 
-        /// <summary>
-        /// 节点入列并建立引用关系
-        /// </summary>
-        public static void EnqueueReferenced(this DynamicNodeQueue self, INode node)
-        {
-            if (self.nodeDictionary.ContainsKey(node.Id)) return;
-            self.Referenced(node);
+		/// <summary>
+		/// 节点移除
+		/// </summary>
+		public void Remove(long id)
+		{
+			if (nodeIdHash != null && nodeIdHash.Contains(id))
+			{
+				nodeIdHash.Remove(id);
 
-            self.idQueue.Enqueue(node.Id);
-            self.nodeDictionary.Add(node.Id, node);
-        }
+				//累计强制移除的节点id
+				removeIdDictionary ??= this.AddChild(out removeIdDictionary);
+				if (removeIdDictionary.TryGetValue(id, out var count))
+				{
+					removeIdDictionary[id] = count + 1;
+				}
+				else
+				{
+					removeIdDictionary.Add(id, 1);
+				}
+			}
+		}
 
-        /// <summary>
-        /// 节点入列
-        /// </summary>
-        public static void Enqueue(this DynamicNodeQueue self, INode node)
-        {
-            if (self.nodeDictionary.ContainsKey(node.Id)) return;
-            self.idQueue.Enqueue(node.Id);
-            self.nodeDictionary.Add(node.Id, node);
-        }
+		public void Clear()
+		{
+			nodeQueue?.Clear();
+			nodeIdHash?.Clear();
+			removeIdDictionary?.Clear();
+			traversalCount = 0;
+		}
 
-        /// <summary>
-        /// 节点移除
-        /// </summary>
-        public static void Remove(this DynamicNodeQueue self, INode node)
-        {
-            if (self.nodeDictionary.ContainsKey(node.Id))
-            {
-                self.nodeDictionary.Remove(node.Id);
-                self.DeReferenced(node);
-                //累计强制移除的节点id
-                if (self.removeIdDictionary.TryGetValue(node.Id, out var count))
-                {
-                    self.removeIdDictionary[node.Id] = count + 1;
-                }
-                else
-                {
-                    self.removeIdDictionary.Add(node.Id, 1);
-                }
-            }
-        }
+		/// <summary>
+		/// 获取队顶
+		/// </summary>
+		public INode Peek()
+		{
+			if (this.TryPeek(out INode node))
+			{
+				return node;
+			}
+			else
+			{
+				return null;
+			}
+		}
 
-        /// <summary>
-        /// 清除
-        /// </summary>
-        public static void Clear(this DynamicNodeQueue self)
-        {
-            if (self.nodeDictionary != null)
-            {
-                foreach (var item in self.nodeDictionary)
-                {
-                    self.DeReferenced(item.Value);
-                }
-                self.nodeDictionary?.Clear();
-            }
-            self.removeIdDictionary?.Clear();
-            self.idQueue?.Clear();
-        }
+		/// <summary>
+		/// 尝试获取队顶
+		/// </summary>
+		public bool TryPeek(out INode node)
+		{
+			NodeRef<INode> nodeRef = null;
+			do
+			{
+				//尝试获取一个id
+				if (nodeQueue != null && nodeQueue.TryPeek(out nodeRef))
+				{
+					long id = nodeRef.nodeId;
+					//假如id被回收了
+					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+					{
+						//回收次数抵消
+						removeIdDictionary[id] = --count;
+						if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
+						if (removeIdDictionary.Count == 0)//假如字典空了,则释放
+						{
+							removeIdDictionary.Dispose();
+							removeIdDictionary = null;
+						}
 
-        /// <summary>
-        /// 获取队顶
-        /// </summary>
-        public static INode Peek(this DynamicNodeQueue self)
-        {
-            if (self.TryPeek(out INode node))
-            {
-                return node;
-            }
-            else
-            {
-                return null;
-            }
-        }
+						if (traversalCount > 0) traversalCount--;
+						nodeQueue.Dequeue();//移除这个id
+					}
+					else
+					{
+						node = nodeRef.Value;
+						if (node == null)//节点意外回收
+						{
+							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
+							nodeIdHash.Remove(id);
+							if (traversalCount != 0) traversalCount--; //遍历数抵消
+							nodeQueue.Dequeue();//移除这个id
+						}
+						else
+						{
+							return true;
+						}
+					}
+				}
+				else
+				{
+					node = null;
+					return false;
+				}
 
-
-        /// <summary>
-        /// 刷新动态遍历数量
-        /// </summary>
-        public static void RefreshTraversalCount(this DynamicNodeQueue self)
-        {
-            self.traversalCount = self.idQueue is null ? 0 : self.idQueue.Count;
-        }
-
-
-        /// <summary>
-        /// 尝试获取队顶
-        /// </summary>
-        public static bool TryPeek(this DynamicNodeQueue self, out INode node)
-        {
-            do
-            {
-                //尝试获取一个id
-                if (self.idQueue.TryPeek(out long id))
-                {
-                    //假如id被回收了
-                    if (self.removeIdDictionary.TryGetValue(id, out int count))
-                    {
-                        //回收次数抵消
-                        self.removeIdDictionary[id] = --count;
-                        if (self.traversalCount > 0) self.traversalCount--;
-
-                        //次数为0时删除id
-                        if (count == 0) self.removeIdDictionary.Remove(id);
-                        //移除这个id
-                        self.idQueue.Dequeue();
-                    }
-                    else
-                    {
-                        return self.nodeDictionary.TryGetValue(id, out node);
-                    }
-                }
-                else
-                {
-                    node = null;
-                    return false;
-                }
-
-            } while (true);
-        }
+			} while (true);
+		}
+		/// <summary>
+		/// 节点出列
+		/// </summary>
+		public INode Dequeue()
+		{
+			if (TryDequeue(out INode node))
+			{
+				return node;
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 
-        /// <summary>
-        /// 节点出列
-        /// </summary>
-        public static INode Dequeue(this DynamicNodeQueue self)
-        {
-            if (self.TryDequeue(out INode node))
-            {
-                return node;
-            }
-            else
-            {
-                return null;
-            }
-        }
+		/// <summary>
+		/// 尝试出列
+		/// </summary>
+		public bool TryDequeue(out INode node)
+		{
+			//尝试获取一个id
+			if (nodeQueue != null && nodeQueue.TryDequeue(out NodeRef<INode> nodeRef))
+			{
+				while (true)
+				{
+					long id = nodeRef.nodeId;
+					//假如id被主动移除了
+					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+					{
 
+						id = nodeRef.nodeId;
 
-        /// <summary>
-        /// 尝试出列
-        /// </summary>
-        public static bool TryDequeue(this DynamicNodeQueue self, out INode node)
-        {
-            //尝试获取一个id
-            if (self.idQueue.TryDequeue(out long id))
-            {
-                //假如id被回收了
-                while (self.removeIdDictionary.TryGetValue(id, out int count))
-                {
-                    //回收次数抵消
-                    self.removeIdDictionary[id] = --count;
-                    if (self.traversalCount > 0) self.traversalCount--;
+						removeIdDictionary[id] = --count;//回收次数抵消
+						if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
+						if (removeIdDictionary.Count == 0)//假如字典空了,则释放
+						{
+							removeIdDictionary.Dispose();
+							removeIdDictionary = null;
+						}
 
-                    //次数为0时删除id
-                    if (count == 0) self.removeIdDictionary.Remove(id);
+						if (traversalCount > 0) traversalCount--;
 
-                    //获取下一个id
-                    if (!self.idQueue.TryDequeue(out id))
-                    {
-                        //假如队列空了,则直接返回退出
-                        node = null;
-                        return false;
-                    }
-                }
-                //此时的id是正常id
-                if (self.nodeDictionary.TryGetValue(id, out node))
-                {
-                    self.nodeDictionary.Remove(node.Id);
-                    self.DeReferenced(node);
-                    return true;
-                }
-            }
+						//获取下一个id
+						if (!nodeQueue.TryDequeue(out nodeRef))
+						{
+							//假如队列空了,则直接返回退出
+							node = null;
+							return false;
+						}
+					}
+					else
+					{
+						node = nodeRef.Value;
+						if (node == null)//节点意外回收
+						{
+							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
+							nodeIdHash.Remove(id);
 
-            node = null;
-            return false;
-        }
-    }
+							if (traversalCount != 0) traversalCount--;
+							//获取下一个id
+							if (!nodeQueue.TryDequeue(out nodeRef))
+							{
+								//假如队列空了,则直接返回退出
+								node = null;
+								return false;
+							}
+						}
+						else //节点存在
+						{
+							return true;
+						}
+					}
+				}
+			}
+			node = null;
+			return false;
+		}
+
+		public IEnumerator<INode> GetEnumerator()
+		{
+			traversalCount = nodeQueue is null ? 0 : nodeQueue.Count;
+			for (int i = 0; i < traversalCount; i++)
+			{
+				if (TryDequeue(out INode node)) yield return node;
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+	}
+
+	public static class DynamicNodeQueueRule
+	{
+		class RemoveRule : RemoveRule<DynamicNodeQueue>
+		{
+			protected override void OnEvent(DynamicNodeQueue self)
+			{
+				self.Clear();
+				self.nodeQueue = null;
+				self.removeIdDictionary = null;
+				self.nodeIdHash = null;
+			}
+		}
+	}
 }

@@ -41,6 +41,10 @@ namespace WorldTree
 		/// <remarks>队列是无法移除任意位置的，所以需要记录，并在获取时抵消</remarks>
 		public TreeDictionary<long, int> removeIdDictionary;
 
+		/// <summary>
+		/// 动态的遍历数量
+		/// </summary>
+		/// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
 		private int traversalCount;
 
 		public void Clear()
@@ -145,6 +149,9 @@ namespace WorldTree
 			protected override void OnEvent(RuleActuatorBase self)
 			{
 				self.Clear();
+				self.nodeRuleQueue = null;
+				self.removeIdDictionary = null;
+				self.nodeIdHash = null;
 			}
 		}
 	}
