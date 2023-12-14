@@ -318,7 +318,7 @@ namespace WorldTree
 
                 //}
 
-                World.Log("初始域启动!!!");
+                //World.Log("初始域启动!!!");
 
 				if (Input.GetKeyDown(KeyCode.Q))
 				{
@@ -327,8 +327,8 @@ namespace WorldTree
 					//self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
 					//self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
-					//self.AddComponent(out TestNode _).Test1().Coroutine();
-					self.AddComponent(out TestNode _);
+					self.AddComponent(out TestNode _).Test().Coroutine();
+					//self.AddComponent(out TestNode _);
 
 					//for (int i = 0; i < 1000; i++)
 					//{

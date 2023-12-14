@@ -57,13 +57,6 @@ namespace WorldTree
 		, AsRule<IUpdateTimeRule>
 		, AsRule<IBeforeRemoveRule>
 		, AsRule<IRemoveRule>
-
-		, AsRule<IDeReferencedChildRule>
-		, AsRule<IDeReferencedParentRule>
-
-		, AsRule<IReferencedChildRemoveRule>
-		, AsRule<IReferencedParentRemoveRule>
-
 	{
 
 		/// <summary>

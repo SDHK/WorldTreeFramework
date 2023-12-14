@@ -190,7 +190,6 @@ namespace WorldTree
 					//假如id被主动移除了
 					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
 					{
-
 						id = nodeRef.nodeId;
 
 						removeIdDictionary[id] = --count;//回收次数抵消

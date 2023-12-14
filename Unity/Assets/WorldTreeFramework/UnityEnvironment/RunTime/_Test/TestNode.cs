@@ -20,6 +20,7 @@ public class TestNode : Node, ComponentOf<InitialDomain>
 	public async TreeTask Test1(bool b = false)
 	{
 		World.Log("1！");
+
 		await Test2();
 		World.Log("1结束！");
 
@@ -35,7 +36,7 @@ public class TestNode : Node, ComponentOf<InitialDomain>
 	public async TreeTask Test3(bool b = false)
 	{
 		World.Log("3！");
-		if (b) await this.TreeTaskCompleted();
+		await this.TreeTaskCompleted();
 		World.Log("3结束！");
 	}
 
@@ -63,7 +64,9 @@ public class TestNode : Node, ComponentOf<InitialDomain>
 		World.Log("5！");
 
 		await this.TreeTaskCompleted();
+		World.Log("5 ！计时");
 		await this.AsyncDelay(3);
+		World.Log("6！");
 
 	}
 
@@ -116,7 +119,7 @@ public class TestNode : Node, ComponentOf<InitialDomain>
 	{
 		World.Log("T7 1！");
 		var tk = await this.TreeTaskTokenCatch();
-		World.Log($"TK!!!!!!!{tk.Id}");
+		World.Log($"TK!!!!!!!{tk?.Id}");
 
 		await this.TreeTaskCompleted();
 	}

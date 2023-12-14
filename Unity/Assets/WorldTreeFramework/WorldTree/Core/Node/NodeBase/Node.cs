@@ -271,7 +271,6 @@ namespace WorldTree
 		public virtual void OnDispose()
 		{
 			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
-			this.SendAllReferencedNodeRemove();//_判断移除引用关系 X
 			this.SetActive(false);//激活变更
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
 			if (this is INodeListener nodeListener && this is not ICoreNode)
@@ -363,7 +362,6 @@ namespace WorldTree
 		}
 		public virtual void OnCutSelf()
 		{
-			this.SendAllReferencedNodeRemove();//_判断移除引用关系 X
 			if (this is INodeListener nodeListener && this is not ICoreNode)
 			{
 				//检测移除静态监听

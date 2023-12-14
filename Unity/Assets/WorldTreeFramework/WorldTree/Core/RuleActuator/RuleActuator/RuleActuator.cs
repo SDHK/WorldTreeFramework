@@ -29,17 +29,8 @@ namespace WorldTree
 
     public static class RuleActuatorRule
     {
-        class RuleActuatorReferencedChildRemoveRule<R> : ReferencedChildRemoveRule<RuleActuator<R>>
-            where R : IRule
-        {
-            protected override void OnEvent(RuleActuator<R> self, INode node)
-            {
-                self.Remove(node);
-            }
-        }
-
         /// <summary>
-        /// 添加节点法则并建立引用关系
+        /// 添加节点法则
         /// </summary>
         public static void Add<R, N, NR>(this RuleActuator<R> self, N node, NR defaultRule)
             where R : IRule
