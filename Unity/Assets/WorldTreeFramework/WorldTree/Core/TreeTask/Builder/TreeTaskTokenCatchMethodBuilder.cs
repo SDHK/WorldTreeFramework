@@ -69,7 +69,7 @@ namespace WorldTree.Internal
 		{
 			if (treeTaskStateMachine == null)
 			{
-				this.treeTaskStateMachine = awaiter.PoolGet(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
+				this.treeTaskStateMachine = awaiter.PoolGetUnit(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
 				taskStateMachine.SetStateMachine(ref stateMachine);
 			}
 			if (task == null)

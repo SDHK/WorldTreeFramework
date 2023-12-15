@@ -101,7 +101,7 @@ namespace WorldTree
         public static UnitList<OutT> Calls<R, OutT>(this IRuleList<R> ruleList, INode node, out UnitList<OutT> outT)
          where R : ICallRuleBase<OutT>
         {
-            outT = node.PoolGet<UnitList<OutT>>();
+            outT = node.PoolGetUnit<UnitList<OutT>>();
             foreach (ICallRuleBase<OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
@@ -114,7 +114,7 @@ namespace WorldTree
         public static UnitList<OutT> Calls<R, T1, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, out UnitList<OutT> outT)
          where R : ICallRuleBase<T1, OutT>
         {
-            outT = node.PoolGet<UnitList<OutT>>();
+            outT = node.PoolGetUnit<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
@@ -126,7 +126,7 @@ namespace WorldTree
         public static UnitList<OutT> Calls<R, T1, T2, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, out UnitList<OutT> outT)
          where R : ICallRuleBase<T1, T2, OutT>
         {
-            outT = node.PoolGet<UnitList<OutT>>();
+            outT = node.PoolGetUnit<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, T2, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
@@ -139,7 +139,7 @@ namespace WorldTree
         public static UnitList<OutT> Calls<R, T1, T2, T3, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, out UnitList<OutT> outT)
          where R : ICallRuleBase<T1, T2, T3, OutT>
         {
-            outT = node.PoolGet<UnitList<OutT>>();
+            outT = node.PoolGetUnit<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, T2, T3, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
@@ -152,7 +152,7 @@ namespace WorldTree
         public static UnitList<OutT> Calls<R, T1, T2, T3, T4, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, out UnitList<OutT> outT)
          where R : ICallRuleBase<T1, T2, T3, T4, OutT>
         {
-            outT = node.PoolGet<UnitList<OutT>>();
+            outT = node.PoolGetUnit<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, T2, T3, T4, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;
@@ -165,7 +165,7 @@ namespace WorldTree
         public static UnitList<OutT> Calls<R, T1, T2, T3, T4, T5, OutT>(this IRuleList<R> ruleList, INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, out UnitList<OutT> outT)
          where R : ICallRuleBase<T1, T2, T3, T4, T5, OutT>
         {
-            outT = node.PoolGet<UnitList<OutT>>();
+            outT = node.PoolGetUnit<UnitList<OutT>>();
             foreach (ICallRuleBase<T1, T2, T3, T4, T5, OutT> rule in ruleList as RuleList)
             {
                 rule.IsMulticast = true;

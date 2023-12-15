@@ -65,7 +65,7 @@ namespace WorldTree
 		/// </summary>
 		private T NewPool(long type)
 		{
-			this.Core.NewNodeLifecycle(out T pool);
+			this.NewNodeLifecycle(out T pool);
 			pool.ObjectType = type.HashCore64ToType();
 			pool.ObjectTypeCore = type;
 			this.m_Pools.Add(pool.ObjectTypeCore, pool);

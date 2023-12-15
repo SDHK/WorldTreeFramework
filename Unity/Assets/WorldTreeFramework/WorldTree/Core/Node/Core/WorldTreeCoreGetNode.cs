@@ -47,12 +47,12 @@ namespace WorldTree
 		/// 新建节点对象并调用生命周期
 		/// </summary>
 		/// <remarks>执行法则生命周期</remarks>
-		public static T NewNodeLifecycle<T>(this WorldTreeCore self, out T node) where T : class, INode
+		public static T NewNodeLifecycle<T>(this INode self, out T node) where T : class, INode
 		{
 			self.NewNode(out node);
-			self.RuleManager.SupportNodeRule(node.Type);
-			self.NewRuleGroup?.Send(node);
-			self.GetRuleGroup?.Send(node);
+			self.Core.RuleManager.SupportNodeRule(node.Type);
+			self.Core.NewRuleGroup?.Send(node);
+			self.Core.GetRuleGroup?.Send(node);
 			return node;
 		}
 
@@ -60,12 +60,12 @@ namespace WorldTree
 		/// 新建节点对象并调用生命周期
 		/// </summary>
 		/// <remarks>执行法则生命周期</remarks>
-		public static INode NewNodeLifecycle(this WorldTreeCore self, long type)
+		public static INode NewNodeLifecycle(this INode self, long type)
 		{
 			INode node = self.NewNode(type);
-			self.RuleManager.SupportNodeRule(node.Type);
-			self.NewRuleGroup?.Send(node);
-			self.GetRuleGroup?.Send(node);
+			self.Core.RuleManager.SupportNodeRule(node.Type);
+			self.Core.NewRuleGroup?.Send(node);
+			self.Core.GetRuleGroup?.Send(node);
 			return node;
 		}
 
@@ -73,14 +73,13 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static T GetNode<T>(this WorldTreeCore self) where T : class, INode
+		public static T PoolGetNode<T>(this INode self) where T : class, INode
 		{
-
-			if (self.IsActive)
+			if (self.Core.IsActive)
 			{
-				if (self.NodePoolManager.TryGet(TypeInfo<T>.TypeCode, out INode node))
+				if (self.Core.NodePoolManager.TryGet(TypeInfo<T>.TypeCode, out INode node))
 				{
-					node.Id = self.IdManager.GetId();
+					node.Id = self.Core.IdManager.GetId();
 					return node as T;
 				}
 			}
@@ -90,13 +89,13 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static INode GetNode(this WorldTreeCore self, long type)
+		public static INode PoolGetNode(this INode self, long type)
 		{
-			if (self.IsActive)
+			if (self.Core.IsActive)
 			{
-				if (self.NodePoolManager.TryGet(type, out INode node))
+				if (self.Core.NodePoolManager.TryGet(type, out INode node))
 				{
-					node.Id = self.IdManager.GetId();
+					node.Id = self.Core.IdManager.GetId();
 					return node;
 				}
 			}
@@ -106,16 +105,16 @@ namespace WorldTree
 		/// <summary>
 		/// 回收节点
 		/// </summary>
-		public static void Recycle(this WorldTreeCore self, INode obj)
+		public static void Recycle(this INode self, INode obj)
 		{
-			if (self.IsActive && obj.IsFromPool)
+			if (self.Core.IsActive && obj.IsFromPool)
 			{
-				if (self.NodePoolManager.TryRecycle(obj)) return;
+				if (self.Core.NodePoolManager.TryRecycle(obj)) return;
 			}
 			obj.IsRecycle = true;
-			self.RecycleRuleGroup?.Send(obj);
+			self.Core.RecycleRuleGroup?.Send(obj);
 			obj.IsDisposed = true;
-			self.DestroyRuleGroup?.Send(obj);
+			self.Core.DestroyRuleGroup?.Send(obj);
 			obj.Id = 0;
 		}
 	}

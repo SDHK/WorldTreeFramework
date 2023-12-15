@@ -24,8 +24,8 @@ namespace WorldTree
 
 		public override void OnGet()
 		{
-			Core.PoolGet(out Nodes);
-			Core.PoolGet(out NodeKeys);
+			Core.PoolGetUnit(out Nodes);
+			Core.PoolGetUnit(out NodeKeys);
 		}
 
 		public bool Contains(K key) => Nodes.ContainsKey(key);

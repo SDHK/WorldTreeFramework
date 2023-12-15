@@ -43,7 +43,7 @@ namespace WorldTree
     {
         protected override void OnEvent(TreeArray<T> self, int length)
         {
-            self.array = self.Core.GetArray<T>(length);
+            self.array = self.PoolGetArray<T>(length);
         }
     }
 

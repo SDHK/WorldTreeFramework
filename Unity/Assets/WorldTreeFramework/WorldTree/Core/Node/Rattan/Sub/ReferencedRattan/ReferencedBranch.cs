@@ -31,7 +31,7 @@ namespace WorldTree
 
 		public override void OnGet()
 		{
-			Core.PoolGet(out Nodes);
+			Core.PoolGetUnit(out Nodes);
 		}
 
 
@@ -107,7 +107,7 @@ namespace WorldTree
 			//移除父级
 			if (self.TryGetRattan(out ReferencedParentRattan parentRattan))
 			{
-				using (self.PoolGet(out UnitQueue<INode> nodes))
+				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in parentRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0) self.DeReferenced(nodes.Dequeue());
@@ -117,7 +117,7 @@ namespace WorldTree
 			//移除子级
 			if (self.TryGetRattan(out ReferencedChildRattan childRattan))
 			{
-				using (self.PoolGet(out UnitQueue<INode> nodes))
+				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in childRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0) self.DeReferenced(nodes.Dequeue());
@@ -134,7 +134,7 @@ namespace WorldTree
 			//移除父级
 			if (self.TryGetRattan(out ReferencedParentRattan parentRattan))
 			{
-				using (self.PoolGet(out UnitQueue<INode> nodes))
+				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in parentRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0)
@@ -149,7 +149,7 @@ namespace WorldTree
 			//移除子级
 			if (self.TryGetRattan(out ReferencedChildRattan childRattan))
 			{
-				using (self.PoolGet(out UnitQueue<INode> nodes))
+				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in childRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0)

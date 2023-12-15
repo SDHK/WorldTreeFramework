@@ -158,7 +158,7 @@ namespace WorldTree
 			self.UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
 
 			//树根节点
-			self.GraftComponent(self.Root = self.PoolGet<WorldTreeRoot>());
+			self.GraftComponent(self.Root = self.PoolGetNode<WorldTreeRoot>());
 
 			//嫁接节点需要手动激活
 			self.ReferencedPoolManager.SetActive(true);

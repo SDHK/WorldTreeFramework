@@ -19,7 +19,7 @@
 			var Branchs = self.Branchs;
 			if (!Branchs.TryGetValue(Type, out IBranch iBranch))
 			{
-				Branchs.Add(Type, iBranch = self.Core.GetUnit(Type) as IBranch);
+				Branchs.Add(Type, iBranch = self.PoolGetUnit(Type) as IBranch);
 			}
 			return iBranch;
 		}

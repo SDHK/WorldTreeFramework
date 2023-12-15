@@ -108,7 +108,7 @@ namespace WorldTree
                 if (value == this._items.Length) return;
                 if (value > 0)
                 {
-                    var destinationArray = this.Core.GetArray<T>(value);
+                    var destinationArray = this.PoolGetArray<T>(value);
                     if (this._size > 0)
                         Array.Copy(this._items, 0, destinationArray, 0, this._size);
                     this.Core.Recycle(this._items);
@@ -120,7 +120,7 @@ namespace WorldTree
                     {
                         this.Core.Recycle(this._items);
                     }
-                    this._items = this.Core.GetArray<T>(_defaultCapacity);
+                    this._items = this.PoolGetArray<T>(_defaultCapacity);
                 }
             }
         }
@@ -862,7 +862,7 @@ namespace WorldTree
     {
         protected override void OnEvent(TreeList<T> self)
         {
-            self._items = self.Core.GetArray<T>(self._defaultCapacity);
+            self._items = self.PoolGetArray<T>(self._defaultCapacity);
         }
     }
 
@@ -875,7 +875,7 @@ namespace WorldTree
             if (capacity == 0)
                 World.LogError("容量为0");
             else
-                self._items = self.Core.GetArray<T>(capacity);
+                self._items = self.PoolGetArray<T>(capacity);
         }
     }
 
@@ -890,11 +890,11 @@ namespace WorldTree
                 int count = objs.Count;
                 if (count == 0)
                 {
-                    self._items = self.Core.GetArray<T>(self._defaultCapacity);
+                    self._items = self.PoolGetArray<T>(self._defaultCapacity);
                 }
                 else
                 {
-                    self._items = self.Core.GetArray<T>(count);
+                    self._items = self.PoolGetArray<T>(count);
                     objs.CopyTo(self._items, 0);
                     self._size = count;
                 }
@@ -902,7 +902,7 @@ namespace WorldTree
             else
             {
                 self._size = self._defaultCapacity;
-                self._items = self.Core.GetArray<T>(self._defaultCapacity);
+                self._items = self.PoolGetArray<T>(self._defaultCapacity);
                 foreach (T obj in collection)
                     self.Add(obj);
             }

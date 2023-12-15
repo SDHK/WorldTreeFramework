@@ -28,7 +28,7 @@ namespace WorldTree
 			var Rattans = self.Rattans;
 			if (!Rattans.TryGetValue(Type, out IRattan iRattan))
 			{
-				Rattans.Add(Type, iRattan = self.Core.GetUnit(Type) as IRattan);
+				Rattans.Add(Type, iRattan = self.PoolGetUnit(Type) as IRattan);
 			}
 			return iRattan;
 		}

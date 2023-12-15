@@ -11,44 +11,51 @@ using System;
 
 namespace WorldTree
 {
-    public static partial class WorldTreeCoreRule
-    {
-        /// <summary>
-        /// 从池中获取单位对象
-        /// </summary>
-        public static T GetUnit<T>(this WorldTreeCore self)
-        where T : class, IUnitPoolEventItem
-        {
-            if (self.IsActive)
-            {
-                if (self.UnitPoolManager.TryGet(TypeInfo<T>.TypeCode, out IUnitPoolEventItem unit))
-                {
-                    return unit as T;
-                }
-            }
-            T unitObj = Activator.CreateInstance(TypeInfo<T>.Type, true) as T;
-            unitObj.Type = TypeInfo<T>.TypeCode;
-			unitObj.Core = self;
-			unitObj.OnNew();
-            unitObj.OnGet();
-            return unitObj;
-        }
+	public static partial class WorldTreeCoreRule
+	{
+		/// <summary>
+		/// 从池中获取单位对象
+		/// </summary>
+		public static T PoolGetUnit<T>(this INode self, out T unit) 
+			where T : class, IUnitPoolEventItem
+		=> unit = self.PoolGetUnit<T>();
 
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
-		public static IUnitPoolEventItem GetUnit(this WorldTreeCore self, long type)
-        {
-			if (self.IsActive)
+		public static T PoolGetUnit<T>(this INode self)
+		where T : class, IUnitPoolEventItem
+		{
+			if (self.Core.IsActive)
 			{
-				if (self.UnitPoolManager.TryGet(type, out IUnitPoolEventItem unit))
+				if (self.Core.UnitPoolManager.TryGet(TypeInfo<T>.TypeCode, out IUnitPoolEventItem unit))
+				{
+					return unit as T;
+				}
+			}
+			T unitObj = Activator.CreateInstance(TypeInfo<T>.Type, true) as T;
+			unitObj.Type = TypeInfo<T>.TypeCode;
+			unitObj.Core = self.Core;
+			unitObj.OnNew();
+			unitObj.OnGet();
+			return unitObj;
+		}
+
+		/// <summary>
+		/// 从池中获取单位对象
+		/// </summary>
+		public static IUnitPoolEventItem PoolGetUnit(this INode self, long type)
+		{
+			if (self.Core.IsActive)
+			{
+				if (self.Core.UnitPoolManager.TryGet(type, out IUnitPoolEventItem unit))
 				{
 					return unit;
 				}
 			}
 			IUnitPoolEventItem unitObj = Activator.CreateInstance(type.HashCore64ToType(), true) as IUnitPoolEventItem;
 			unitObj.Type = type;
-			unitObj.Core = self;
+			unitObj.Core = self.Core;
 			unitObj.OnNew();
 			unitObj.OnGet();
 			return unitObj;
@@ -57,16 +64,16 @@ namespace WorldTree
 		/// <summary>
 		/// 回收单位
 		/// </summary>
-		public static void Recycle(this WorldTreeCore self, IUnitPoolEventItem obj)
-        {
-            if (self.IsActive && obj.IsFromPool)
-            {
-                if (self.UnitPoolManager.TryRecycle(obj)) return;
-            }
-            obj.IsRecycle = true;
-            obj.OnRecycle();
-            obj.IsDisposed = true;
-            obj.OnDispose();
+		public static void Recycle(this INode self, IUnitPoolEventItem obj)
+		{
+			if (self.Core.IsActive && obj.IsFromPool)
+			{
+				if (self.Core.UnitPoolManager.TryRecycle(obj)) return;
+			}
+			obj.IsRecycle = true;
+			obj.OnRecycle();
+			obj.IsDisposed = true;
+			obj.OnDispose();
 		}
-    }
+	}
 }

@@ -57,7 +57,7 @@ namespace WorldTree
 
 		public UnitDictionary<long, IBranch> m_Branchs { get; set; }
 
-		public UnitDictionary<long, IBranch> Branchs => this.m_Branchs ??= this.PoolGet<UnitDictionary<long, IBranch>>();
+		public UnitDictionary<long, IBranch> Branchs => this.m_Branchs ??= this.PoolGetUnit<UnitDictionary<long, IBranch>>();
 
 		#endregion
 
@@ -210,7 +210,7 @@ namespace WorldTree
 		public virtual void RemoveAllNode()
 		{
 			if (this.m_Branchs == null) return;
-			using (this.PoolGet(out UnitStack<IBranch> branchs))
+			using (this.PoolGetUnit(out UnitStack<IBranch> branchs))
 			{
 				foreach (var item in this.m_Branchs) branchs.Push(item.Value);
 				while (branchs.Count != 0) RemoveAllNode(branchs.Pop().Type);
@@ -234,7 +234,7 @@ namespace WorldTree
 				if (branch.Count != 0)
 				{
 					//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
-					using (Core.PoolGet(out UnitStack<INode> nodes))
+					using (this.PoolGetUnit(out UnitStack<INode> nodes))
 					{
 						foreach (var item in branch) nodes.Push(item);
 						while (nodes.Count != 0) nodes.Pop().Dispose();

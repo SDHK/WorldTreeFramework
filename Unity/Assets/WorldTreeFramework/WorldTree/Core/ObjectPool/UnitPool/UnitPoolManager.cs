@@ -12,28 +12,6 @@ using System;
 
 namespace WorldTree
 {
-    public static partial class NodeUnitRule
-    {
-        /// <summary>
-        /// 从池中获取单位对象
-        /// </summary>
-        public static T PoolGet<T>(this INode self)
-        where T : class, IUnitPoolEventItem
-        {
-            return self.Core.GetUnit<T>();
-        }
-
-        /// <summary>
-        /// 从池中获取单位对象
-        /// </summary>
-        public static T PoolGet<T>(this INode self, out T unit)
-        where T : class, IUnitPoolEventItem
-        {
-            return unit = self.Core.GetUnit<T>();
-        }
-    }
-
-
     /// <summary>
     /// 单位对象池管理器
     /// </summary>

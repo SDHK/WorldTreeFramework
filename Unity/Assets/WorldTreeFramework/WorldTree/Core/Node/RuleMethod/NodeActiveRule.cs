@@ -36,7 +36,7 @@ namespace WorldTree
 			if (self.IsActive == ((self.Parent == null) ? self.ActiveToggle : self.Parent.IsActive && self.ActiveToggle)) return;
 
 			//层序遍历设置子节点
-			using (self.PoolGet(out UnitQueue<INode> queue))
+			using (self.PoolGetUnit(out UnitQueue<INode> queue))
 			{
 				queue.Enqueue(self);
 				while (queue.Count != 0)

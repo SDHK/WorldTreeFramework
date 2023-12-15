@@ -18,12 +18,12 @@ namespace WorldTree
         /// <summary>
         /// 获取数组对象
         /// </summary>
-        public static T[] GetArray<T>(this WorldTreeCore self, out T[] outT, int Length)
+        public static T[] PoolGetArray<T>(this INode self, out T[] outT, int Length)
         {
             Type type = typeof(T);
-            if (self.ArrayPoolManager != null)
+            if (self.Core.ArrayPoolManager != null)
             {
-                outT = self.ArrayPoolManager.Get(type, Length) as T[];
+                outT = self.Core.ArrayPoolManager.Get(type, Length) as T[];
             }
             else
             {
@@ -35,12 +35,12 @@ namespace WorldTree
         /// <summary>
         /// 获取数组对象
         /// </summary>
-        public static T[] GetArray<T>(this WorldTreeCore self, int Length)
+        public static T[] PoolGetArray<T>(this INode self, int Length)
         {
             Type type = typeof(T);
-            if (self.ArrayPoolManager != null)
+            if (self.Core.ArrayPoolManager != null)
             {
-                return self.ArrayPoolManager.Get(type, Length) as T[];
+                return self.Core.ArrayPoolManager.Get(type, Length) as T[];
             }
             return Array.CreateInstance(type, Length) as T[];
         }
@@ -48,11 +48,11 @@ namespace WorldTree
         /// <summary>
         /// 回收数组
         /// </summary>
-        public static void Recycle(this WorldTreeCore self, Array obj)
+        public static void Recycle(this INode self, Array obj)
         {
-            if (self.ArrayPoolManager != null)
+            if (self.Core.ArrayPoolManager != null)
             {
-                self.ArrayPoolManager.Recycle(obj);
+                self.Core.ArrayPoolManager.Recycle(obj);
             }
             else
             {
