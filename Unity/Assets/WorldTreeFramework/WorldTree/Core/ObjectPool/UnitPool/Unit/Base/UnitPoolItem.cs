@@ -30,7 +30,7 @@ namespace WorldTree
         /// </summary>
         public override void Dispose()
         {
-            Core?.Recycle(this);
+            Core.PoolRecycle(this);
         }
 
         public virtual void OnGet()

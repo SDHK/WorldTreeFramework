@@ -288,7 +288,7 @@ namespace WorldTree
 			//this.DisposeDomain(); //清除域节点
 			this.Parent = null;//清除父节点
 			Clear();
-			Core?.Recycle(this);//回收到池
+			this.PoolRecycle(this);//回收到池
 		}
 
 		#endregion

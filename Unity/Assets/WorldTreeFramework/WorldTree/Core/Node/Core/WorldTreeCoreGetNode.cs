@@ -105,7 +105,7 @@ namespace WorldTree
 		/// <summary>
 		/// 回收节点
 		/// </summary>
-		public static void Recycle(this INode self, INode obj)
+		public static void PoolRecycle(this INode self, INode obj)
 		{
 			if (self.Core.IsActive && obj.IsFromPool)
 			{

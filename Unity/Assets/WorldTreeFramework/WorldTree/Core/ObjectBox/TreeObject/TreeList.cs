@@ -111,14 +111,14 @@ namespace WorldTree
                     var destinationArray = this.PoolGetArray<T>(value);
                     if (this._size > 0)
                         Array.Copy(this._items, 0, destinationArray, 0, this._size);
-                    this.Core.Recycle(this._items);
+                    this.PoolRecycle(this._items);
                     this._items = destinationArray;
                 }
                 else
                 {
                     if (this._items != null)
                     {
-                        this.Core.Recycle(this._items);
+                        this.PoolRecycle(this._items);
                     }
                     this._items = this.PoolGetArray<T>(_defaultCapacity);
                 }
@@ -914,7 +914,7 @@ namespace WorldTree
         protected override void OnEvent(TreeList<T> self)
         {
             self.Clear();
-            self.Core.Recycle(self._items);
+            self.PoolRecycle(self._items);
             self._items = null;
             self._size = 0;
             self._version = 0;

@@ -64,7 +64,7 @@ namespace WorldTree
 		/// <summary>
 		/// 回收单位
 		/// </summary>
-		public static void Recycle(this INode self, IUnitPoolEventItem obj)
+		public static void PoolRecycle(this INode self, IUnitPoolEventItem obj)
 		{
 			if (self.Core.IsActive && obj.IsFromPool)
 			{

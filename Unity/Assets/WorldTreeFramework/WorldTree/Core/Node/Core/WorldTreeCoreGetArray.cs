@@ -48,7 +48,7 @@ namespace WorldTree
         /// <summary>
         /// 回收数组
         /// </summary>
-        public static void Recycle(this INode self, Array obj)
+        public static void PoolRecycle(this INode self, Array obj)
         {
             if (self.Core.ArrayPoolManager != null)
             {

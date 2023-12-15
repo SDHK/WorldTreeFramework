@@ -52,7 +52,7 @@ namespace WorldTree
     {
         protected override void OnEvent(TreeArray<T> self)
         {
-            self.Core.Recycle(self.array);
+            self.PoolRecycle(self.array);
             self.array = null;
         }
     }
