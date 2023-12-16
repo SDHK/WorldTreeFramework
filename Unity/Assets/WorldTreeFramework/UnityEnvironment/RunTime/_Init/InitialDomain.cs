@@ -264,11 +264,11 @@ namespace WorldTree
 				World.Log($"初始域启动！！");
 				TreeTaskBase.ExceptionHandler = World.LogError;
 
-				//self.AddComponent(out self.multilayerPerceptronManager);
+				self.AddComponent(out self.multilayerPerceptronManager);
 
-				//self.multilayerPerceptronManager.AddLayer(3);
-				//self.multilayerPerceptronManager.AddLayer(4);
-				//self.multilayerPerceptronManager.AddLayer(1);
+				self.multilayerPerceptronManager.AddLayer(3);
+				self.multilayerPerceptronManager.AddLayer(4);
+				self.multilayerPerceptronManager.AddLayer(1);
 
 				//self.ListenerSwitchesEntity<INode>();
 
@@ -320,21 +320,21 @@ namespace WorldTree
 
                 //World.Log("初始域启动!!!");
 
-				if (Input.GetKeyDown(KeyCode.Q))
-				{
-					World.Log("初始域启动");
-					//self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-					//self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
+				//if (Input.GetKeyDown(KeyCode.Q))
+				//{
+				//	World.Log("初始域启动");
+				//	//self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+				//	//self.AddComponent(out TreeNode _).Test().Coroutine(treeTaskToken);
 
-					//self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
-					self.AddComponent(out TestNode _).Test().Coroutine();
-					//self.AddComponent(out TestNode _);
+				//	//self.treeTween.Run().WaitForCompletion().Coroutine(treeTaskToken);
+				//	self.AddComponent(out TestNode _).Test().Coroutine();
+				//	//self.AddComponent(out TestNode _);
 
-					//for (int i = 0; i < 1000; i++)
-					//{
-					//	self.AddComponent(out TreeNode _).Test1().Coroutine();
-					//}
-				}
+				//	//for (int i = 0; i < 1000; i++)
+				//	//{
+				//	//	self.AddComponent(out TreeNode _).Test1().Coroutine();
+				//	//}
+				//}
 
 				//if (Input.GetKeyDown(KeyCode.W))
 				//{
@@ -357,97 +357,97 @@ namespace WorldTree
 		{
 			protected override void OnEvent(InitialDomain self)
 			{
-				//    if (Input.GetKeyDown(KeyCode.A))
-				//    {
-				//        for (int i = 0; i < 1; i++)
-				//        {
-				//            Test(self);
-				//        }
-				//        //self.perceptron.Train();
-				//        //Test(self).Coroutine();
-				//    }
-				//    if (Input.GetKeyDown(KeyCode.S))
-				//    {
-				//        for (int i = 0; i < 10; i++)
-				//        {
-				//            Test(self);
-				//        }
-				//    }
+				if (Input.GetKeyDown(KeyCode.A))
+				{
+					for (int i = 0; i < 1; i++)
+					{
+						Test(self);
+					}
+					//self.perceptron.Train();
+					//Test(self).Coroutine();
+				}
+				if (Input.GetKeyDown(KeyCode.S))
+				{
+					for (int i = 0; i < 10; i++)
+					{
+						Test(self);
+					}
+				}
 
-				//    if (Input.GetKeyDown(KeyCode.D))
-				//    {
-				//        for (int i = 0; i < 100; i++)
-				//        {
-				//            Test(self);
-				//        }
-				//    }
-				//    if (Input.GetKeyDown(KeyCode.F))
-				//    {
-				//        for (int i = 0; i < 1000; i++)
-				//        {
-				//            Test(self);
-				//        }
-				//    }
+				if (Input.GetKeyDown(KeyCode.D))
+				{
+					for (int i = 0; i < 100; i++)
+					{
+						Test(self);
+					}
+				}
+				if (Input.GetKeyDown(KeyCode.F))
+				{
+					for (int i = 0; i < 1000; i++)
+					{
+						Test(self);
+					}
+				}
 
-				//    if (Input.GetKeyDown(KeyCode.Z))
-				//    {
-				//        //self.perceptron.DY();
-				//        self.multilayerPerceptronManager.SetInputs(1, 1, 1);
+				if (Input.GetKeyDown(KeyCode.Z))
+				{
+					//self.perceptron.DY();
+					self.multilayerPerceptronManager.SetInputs(1, 1, 1);
 
-				//        World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+					World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
 
-				//        //self.B.Value += 1;
-				//        //World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
-				//    }
+					//self.B.Value += 1;
+					//World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
+				}
 
-				//    if (Input.GetKeyDown(KeyCode.X))
-				//    {
-				//        self.multilayerPerceptronManager.SetInputs(1, 0, 1);
-				//        World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
-				//    }
+				if (Input.GetKeyDown(KeyCode.X))
+				{
+					self.multilayerPerceptronManager.SetInputs(1, 0, 1);
+					World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+				}
 
-				//    if (Input.GetKeyDown(KeyCode.C))
-				//    {
-				//        self.multilayerPerceptronManager.SetInputs(0, 1, 1);
-				//        World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
-				//    }
+				if (Input.GetKeyDown(KeyCode.C))
+				{
+					self.multilayerPerceptronManager.SetInputs(0, 1, 1);
+					World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+				}
 
-				//    if (Input.GetKeyDown(KeyCode.V))
-				//    {
-				//        self.multilayerPerceptronManager.SetInputs(0, 0, 1);
-				//        World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
-				//    }
-				//}
+				if (Input.GetKeyDown(KeyCode.V))
+				{
+					self.multilayerPerceptronManager.SetInputs(0, 0, 1);
+					World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+				}
+			}
 
-				//public void Test(InitialDomain self)
-				//{
+			public void Test(InitialDomain self)
+			{
 
-				//    self.multilayerPerceptronManager.SetInputs(0, 0, 0);
-				//    self.multilayerPerceptronManager.SetOutputs(0);
+				self.multilayerPerceptronManager.SetInputs(0, 0, 0);
+				self.multilayerPerceptronManager.SetOutputs(0);
 
-				//    self.multilayerPerceptronManager.SetInputs(0, 1, 0);
-				//    self.multilayerPerceptronManager.SetOutputs(1);
+				self.multilayerPerceptronManager.SetInputs(0, 1, 0);
+				self.multilayerPerceptronManager.SetOutputs(1);
 
-				//    self.multilayerPerceptronManager.SetInputs(1, 0, 0);
-				//    self.multilayerPerceptronManager.SetOutputs(1);
+				self.multilayerPerceptronManager.SetInputs(1, 0, 0);
+				self.multilayerPerceptronManager.SetOutputs(1);
 
-				//    self.multilayerPerceptronManager.SetInputs(1, 1, 0);
-				//    self.multilayerPerceptronManager.SetOutputs(0);
-
-
-				//    self.multilayerPerceptronManager.SetInputs(0, 0, 1);
-				//    self.multilayerPerceptronManager.SetOutputs(0);
-
-				//    self.multilayerPerceptronManager.SetInputs(0, 1, 1);
-				//    self.multilayerPerceptronManager.SetOutputs(1);
+				self.multilayerPerceptronManager.SetInputs(1, 1, 0);
+				self.multilayerPerceptronManager.SetOutputs(0);
 
 
-				//    self.multilayerPerceptronManager.SetInputs(1, 0, 1);
-				//    self.multilayerPerceptronManager.SetOutputs(1);
+				self.multilayerPerceptronManager.SetInputs(0, 0, 1);
+				self.multilayerPerceptronManager.SetOutputs(0);
+
+				self.multilayerPerceptronManager.SetInputs(0, 1, 1);
+				self.multilayerPerceptronManager.SetOutputs(1);
 
 
-				//    self.multilayerPerceptronManager.SetInputs(1, 1, 1);
-				//    self.multilayerPerceptronManager.SetOutputs(0);
+				self.multilayerPerceptronManager.SetInputs(1, 0, 1);
+				self.multilayerPerceptronManager.SetOutputs(1);
+
+
+				self.multilayerPerceptronManager.SetInputs(1, 1, 1);
+				self.multilayerPerceptronManager.SetOutputs(0);
 
 
 			}

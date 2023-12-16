@@ -158,7 +158,7 @@ namespace WorldTree
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2>>
 		{
 			node = self.GetOrNewNode<T>(isPool);
-			return (T)self.AddSelfToTree<ChildBranch, long, T1, T2>(node.Id, self, arg1, arg2);
+			return (T)node.AddSelfToTree<ChildBranch, long, T1, T2>(node.Id, self, arg1, arg2);
 		}
 
 		/// <summary>
@@ -169,7 +169,7 @@ namespace WorldTree
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2, T3>>
 		{
 			node = self.GetOrNewNode<T>(isPool);
-			return (T)self.AddSelfToTree<ChildBranch, long, T1, T2, T3>(node.Id, self, arg1, arg2, arg3);
+			return (T)node.AddSelfToTree<ChildBranch, long, T1, T2, T3>(node.Id, self, arg1, arg2, arg3);
 		}
 
 		/// <summary>
@@ -180,7 +180,7 @@ namespace WorldTree
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2, T3, T4>>
 		{
 			node = self.GetOrNewNode<T>(isPool);
-			return (T)self.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4>(node.Id, self, arg1, arg2, arg3, arg4);
+			return (T)node.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4>(node.Id, self, arg1, arg2, arg3, arg4);
 		}
 
 		/// <summary>
@@ -191,7 +191,7 @@ namespace WorldTree
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
 		{
 			node = self.GetOrNewNode<T>(isPool);
-			return (T)self.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4, T5>(node.Id, self, arg1, arg2, arg3, arg4, arg5);
+			return (T)node.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4, T5>(node.Id, self, arg1, arg2, arg3, arg4, arg5);
 		}
 
 		#endregion

@@ -120,7 +120,7 @@ namespace WorldTree
 
 	public static partial class NodePoolRule
 	{
-		class AddRule : AddRule<NodePool>
+		class GraftRule : GraftRule<NodePool>
 		{
 			protected override void OnEvent(NodePool self)
 			{
