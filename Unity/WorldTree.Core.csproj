@@ -231,7 +231,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Rattan\Base\IRattan.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\DynamicNodeQueue\DynamicNodeQueue.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Rattan\Base\Rattan.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleEventBase\ValueChangeRuleEvent.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\RuleBase\ValueChangeRuleEvent.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRule\NodeCallRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeArray.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\RemoveRule.cs" />

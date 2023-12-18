@@ -21,10 +21,6 @@ namespace WorldTree
 
 		public WorldTreeCore Core;
 
-		GlobalRuleActuator<IEnableRule> enable;
-		GlobalRuleActuator<IDisableRule> disable;
-		GlobalRuleActuator<IUpdateRule> update;
-		GlobalRuleActuator<IUpdateTimeRule> updateTime;
 		GlobalRuleActuator<ILateUpdateRule> lateUpdate;
 		GlobalRuleActuator<ILateUpdateTimeRule> lateUpdateTime;
 		GlobalRuleActuator<IFixedUpdateRule> fixedUpdate;
@@ -39,12 +35,6 @@ namespace WorldTree
 			World.LogError = Debug.LogError;
 
 			Core = new WorldTreeCore();
-
-
-			Core.GetOrNewGlobalRuleActuator(out enable);
-			Core.GetOrNewGlobalRuleActuator(out update);
-			Core.GetOrNewGlobalRuleActuator(out updateTime);
-			Core.GetOrNewGlobalRuleActuator(out disable);
 
 			Core.GetOrNewGlobalRuleActuator(out lateUpdate);
 			Core.GetOrNewGlobalRuleActuator(out lateUpdateTime);
@@ -63,11 +53,7 @@ namespace WorldTree
 			Profiler.BeginSample("SDHK");
 
 			//sw.Restart();
-			enable?.Send();
-			update?.Send();
-			updateTime?.Send(Time.deltaTime);
-			disable?.Send();
-
+			Core.Update(Time.deltaTime);
 			//sw.Stop();
 			//World.Log($"毫秒: {sw.ElapsedMilliseconds}");
 
@@ -96,11 +82,7 @@ namespace WorldTree
 		{
 			Core?.Dispose();
 			Core = null;
-
-			enable = null;
-			update = null;
-			updateTime = null;
-			disable = null;
+		
 			lateUpdate = null;
 			lateUpdateTime = null;
 			fixedUpdate = null;

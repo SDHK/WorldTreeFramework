@@ -13,10 +13,10 @@ namespace WorldTree
 {
     public static class RuleGroupSendExtension
     {
-
+		
         #region TrySend
 
-        public static bool TrySend<R>(this IRuleGroup<R> group, INode node)
+		public static bool TrySend<R>(this IRuleGroup<R> group, INode node)
             where R : ISendRuleBase
         {
             if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
@@ -33,7 +33,7 @@ namespace WorldTree
         public static bool TrySend<R, T1>(this IRuleGroup<R> group, INode node, T1 t1)
             where R : ISendRuleBase<T1>
         {
-            if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
+            if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
             {
                 ((IRuleList<R>)ruleList).Send(node, t1);
                 return true;

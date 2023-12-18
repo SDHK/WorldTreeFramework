@@ -14,7 +14,7 @@
 
 namespace WorldTree
 {
-	//计划
+	//计划 7AGLUH5U
 
 	//新增TimeUpdate,特化的双方法法则
 
@@ -28,13 +28,12 @@ namespace WorldTree
 
 	//对象池需要一个启动标记？
 
-	//Log改为 Self.Log
-
 	//对法则执行器进行更加详细的划分，生命周期，全局事件，回调事件？
 
-	//生命周期整理
+	//管理器改为分支 整理
 
-	//对象池获取整理
+	//Log改为 Self.Log
+
 
 	/// <summary>
 	/// 世界树核心
@@ -51,6 +50,8 @@ namespace WorldTree
 		public IRuleGroup<IGetRule> GetRuleGroup;
 		public IRuleGroup<IRecycleRule> RecycleRuleGroup;
 		public IRuleGroup<IDestroyRule> DestroyRuleGroup;
+
+
 
 		/// <summary>
 		/// Id管理器
@@ -89,10 +90,16 @@ namespace WorldTree
 		public ArrayPoolManager ArrayPoolManager;
 
 
+		public GlobalRuleActuator<IEnableRule> enable;
+		public GlobalRuleActuator<IDisableRule> disable;
+		public GlobalRuleActuator<IUpdateRule> update;
+		public GlobalRuleActuator<IUpdateTimeRule> updateTime;
+
+
 		public WorldTreeCore()
 		{
 			this.Awake();
-		} 
+		}
 
 		/// <summary>
 		/// 释放
@@ -172,6 +179,10 @@ namespace WorldTree
 			//核心激活
 			self.SetActive(true);
 
+			self.GetOrNewGlobalRuleActuator(out self.enable);
+			self.GetOrNewGlobalRuleActuator(out self.update);
+			self.GetOrNewGlobalRuleActuator(out self.updateTime);
+			self.GetOrNewGlobalRuleActuator(out self.disable);
 		}
 
 		/// <summary>
@@ -212,15 +223,23 @@ namespace WorldTree
 			self.NodePoolManager = null;
 			self.ArrayPoolManager = null;
 			self.Root = null;
+
+			self.enable = null;
+			self.update = null;
+			self.updateTime = null;
+			self.disable = null;
 		}
 		#endregion
 
 		/// <summary>
 		/// 框架刷新
 		/// </summary>
-		public static void Update()
+		public static void Update(this WorldTreeCore self, float deltaTime)
 		{
-			//Update 应该放这里面执行
+			self.enable?.Send();
+			self.update?.Send();
+			self.updateTime?.Send(deltaTime);
+			self.disable?.Send();
 		}
 	}
 }
