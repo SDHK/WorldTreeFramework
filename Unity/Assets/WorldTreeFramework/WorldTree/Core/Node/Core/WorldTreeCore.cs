@@ -12,6 +12,9 @@
 
 */
 
+using System;
+using System.Diagnostics;
+
 namespace WorldTree
 {
 	//计划 7AGLUH5U
@@ -34,12 +37,27 @@ namespace WorldTree
 
 	//Log改为 Self.Log
 
+	//核心分布到法则
+
 
 	/// <summary>
 	/// 世界树核心
 	/// </summary>
 	public class WorldTreeCore : CoreNode
 	{
+		/// <summary>
+		/// 打印日志
+		/// </summary>
+		public Action<object> Log;
+		/// <summary>
+		/// 打印警告日志
+		/// </summary>
+		public Action<object> LogWarning;
+		/// <summary>
+		/// 打印错误日志
+		/// </summary>
+		public Action<object> LogError;
+
 		public IRuleGroup<IAddRule> AddRuleGroup;
 		public IRuleGroup<IBeforeRemoveRule> BeforeRemoveRuleGroup;
 		public IRuleGroup<IRemoveRule> RemoveRuleGroup;
@@ -96,11 +114,6 @@ namespace WorldTree
 		public GlobalRuleActuator<IUpdateTimeRule> updateTime;
 
 
-		public WorldTreeCore()
-		{
-			this.Awake();
-		}
-
 		/// <summary>
 		/// 释放
 		/// </summary>
@@ -113,6 +126,22 @@ namespace WorldTree
 
 	public static partial class WorldTreeCoreRule
 	{
+		#region 日志
+
+		/// <summary>
+		/// 打印日志
+		/// </summary>
+		public static void Log(this IUnitPoolItem self, object message) => self.Core.Log?.Invoke(message);
+		/// <summary>
+		/// 打印警告日志
+		/// </summary>
+		public static void LogWarning(this IUnitPoolItem self, object message) => self.Core.LogWarning?.Invoke(message);
+		/// <summary>
+		/// 打印错误日志
+		/// </summary>
+		public static void LogError(this IUnitPoolItem self, object message) => self.Core.LogError?.Invoke(message);
+
+		#endregion
 
 		#region 框架启动与销毁
 

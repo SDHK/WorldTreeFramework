@@ -111,7 +111,6 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRule\NodeCallRuleAsync.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeDomainRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\TileTool.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\World.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\GlobalRuleActuator\GlobalRuleActuator.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitSortedDictionary.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\NewRule.cs" />

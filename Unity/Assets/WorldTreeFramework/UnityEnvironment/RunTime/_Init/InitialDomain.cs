@@ -180,7 +180,7 @@ namespace WorldTree
 				await self.GetAwaiter(operation);
 				if (operation.Status != EOperationStatus.Succeed)
 				{
-					World.LogError("版本号更新失败，可能是找不到服务器");
+					self.LogError("版本号更新失败，可能是找不到服务器");
 					return;
 				}
 				//这是获取到的版本号，在下一个步骤要用
@@ -195,7 +195,7 @@ namespace WorldTree
 				await self.GetAwaiter(op);
 				if (op.Status != EOperationStatus.Succeed)
 				{
-					World.LogError("Mainfest更新失败！");
+					self.LogError("Mainfest更新失败！");
 				}
 			}
 
@@ -206,14 +206,14 @@ namespace WorldTree
 
 			public async TreeTask Download(INode self)
 			{
-				World.Log("下载!!!");
+				self.Log("下载!!!");
 
 				var package = YooAssets.GetPackage("DefaultPackage");
 				var downloader = package.CreateResourceDownloader(downloadingMaxNum, failedTryAgain, timeout);
 				//下载数量是0，直接就完成了
 				if (downloader.TotalDownloadCount == 0)
 				{
-					World.Log("下载数量是0，直接就完成了");
+					self.Log("下载数量是0，直接就完成了");
 
 					await self.TreeTaskCompleted();
 					return;
@@ -226,19 +226,19 @@ namespace WorldTree
 				//downloader.OnStartDownloadFileCallback += OnStartDownOne;
 
 				//开始下载
-				World.Log("开始下载???");
+				self.Log("开始下载???");
 
 				downloader.BeginDownload();
 				//等待下载完成
 				await self.GetAwaiter(downloader);
-				World.Log("等待下载完成???");
+				self.Log("等待下载完成???");
 
 				await self.TreeTaskCompleted();
 
 				//检查状态
 				if (downloader.Status == EOperationStatus.Succeed)
 				{
-					World.Log("下载完成");
+					self.Log("下载完成");
 
 					AssetOperationHandle handle = await self.GetAwaiter(package.LoadAssetAsync<GameObject>("MainWindow"));
 
@@ -246,7 +246,7 @@ namespace WorldTree
 				}
 				else
 				{
-					World.Log("下载失败");
+					self.Log("下载失败");
 				}
 			}
 
@@ -261,8 +261,8 @@ namespace WorldTree
 			{
 				//CRC32 a = new CRC32();
 
-				World.Log($"初始域启动！！");
-				TreeTaskBase.ExceptionHandler = World.LogError;
+				self.Log($"初始域启动！！");
+				TreeTaskBase.ExceptionHandler = self.LogError;
 
 				self.AddComponent(out self.multilayerPerceptronManager);
 
@@ -394,7 +394,7 @@ namespace WorldTree
 					//self.perceptron.DY();
 					self.multilayerPerceptronManager.SetInputs(1, 1, 1);
 
-					World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+					self.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
 
 					//self.B.Value += 1;
 					//World.Log($"B  A:{self.A.Value}  B:{self.B.Value}");
@@ -403,19 +403,19 @@ namespace WorldTree
 				if (Input.GetKeyDown(KeyCode.X))
 				{
 					self.multilayerPerceptronManager.SetInputs(1, 0, 1);
-					World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+					self.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
 				}
 
 				if (Input.GetKeyDown(KeyCode.C))
 				{
 					self.multilayerPerceptronManager.SetInputs(0, 1, 1);
-					World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+					self.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
 				}
 
 				if (Input.GetKeyDown(KeyCode.V))
 				{
 					self.multilayerPerceptronManager.SetInputs(0, 0, 1);
-					World.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+					self.Log($"正向 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
 				}
 			}
 

@@ -167,7 +167,7 @@ namespace WorldTree
     {
         protected override void OnEvent(WindowManager self)
         {
-            World.Log("WindowManager启动!!!");
+			self.Log("WindowManager启动!!!");
             self.gameObject = self.AddComponent(out GameObjectNode _).Instantiate<WindowManager>();
         }
     }

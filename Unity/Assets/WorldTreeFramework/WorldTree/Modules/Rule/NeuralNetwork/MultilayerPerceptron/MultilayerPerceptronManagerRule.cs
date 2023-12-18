@@ -48,11 +48,11 @@
         {
             if (self.layers.Count < 2)
             {
-                World.LogError("网络层数小于2");
+                self.LogError("网络层数小于2");
             }
             if (self.layers[0].nodes.Count != values.Length)
             {
-                World.LogError("参数数量与第输入层节点数不等");
+				self.LogError("参数数量与第输入层节点数不等");
             }
 
             for (int i = 0; i < values.Length; i++)
@@ -71,11 +71,11 @@
         {
             if (self.layers.Count < 2)
             {
-                World.LogError("网络层数小于2");
+				self.LogError("网络层数小于2");
             }
             if (self.layers[^1].nodes.Count != values.Length)
             {
-                World.LogError("参数数量与输出层节点数不等");
+				self.LogError("参数数量与输出层节点数不等");
             }
 
             for (int i = 0; i < values.Length; i++)

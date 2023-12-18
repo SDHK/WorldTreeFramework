@@ -215,7 +215,7 @@ namespace WorldTree
 			{
 				foreach (var item in m_Branchs)
 				{
-					World.Log($"移除分支出错，意外的新分支，节点：{this} 分支:{item.GetType()}");
+					this.Log($"移除分支出错，意外的新分支，节点：{this} 分支:{item.GetType()}");
 				}
 			}
 		}
@@ -239,7 +239,7 @@ namespace WorldTree
 					{
 						foreach (var item in branch)
 						{
-							World.LogError($"移除节点出错，意外的新节点，分支:{this.GetType()} 节点:{item.GetType()}:{item.Id}");
+							this.LogError($"移除节点出错，意外的新节点，分支:{this.GetType()} 节点:{item.GetType()}:{item.Id}");
 						}
 					}
 				}

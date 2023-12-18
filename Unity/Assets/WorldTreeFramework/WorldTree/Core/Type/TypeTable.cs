@@ -33,7 +33,7 @@ namespace WorldTree
 
                 if (Hash64Type.TryGetValue(hash64, out Type oldType))
                 {
-                    World.LogError($"64位哈希码冲突 {type} 与 {oldType}");
+					throw new InvalidOperationException($"64位哈希码冲突 {type} 与 {oldType}");
                 }
                 else
                 {

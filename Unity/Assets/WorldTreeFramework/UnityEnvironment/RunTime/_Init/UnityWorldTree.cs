@@ -30,11 +30,13 @@ namespace WorldTree
 
 		private void Start()
 		{
-			World.Log = Debug.Log;
-			World.LogWarning = Debug.LogWarning;
-			World.LogError = Debug.LogError;
-
 			Core = new WorldTreeCore();
+			Core.Log = Debug.Log;
+			Core.LogWarning = Debug.LogWarning;
+			Core.LogError = Debug.LogError;
+
+			Core.Awake();
+
 
 			Core.GetOrNewGlobalRuleActuator(out lateUpdate);
 			Core.GetOrNewGlobalRuleActuator(out lateUpdateTime);

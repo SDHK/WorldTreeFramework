@@ -19,54 +19,54 @@ public class TestNode : Node, ComponentOf<InitialDomain>
 
 	public async TreeTask Test1(bool b = false)
 	{
-		World.Log("1！");
+		this.Log("1！");
 
 		await Test2();
-		World.Log("1结束！");
+		this.Log("1结束！");
 
 	}
 
 	public async TreeTask Test2(bool b = false)
 	{
-		World.Log("2！");
+		this.Log("2！");
 		await Test3();
-		World.Log("2结束！");
+		this.Log("2结束！");
 	}
 
 	public async TreeTask Test3(bool b = false)
 	{
-		World.Log("3！");
+		this.Log("3！");
 		await this.TreeTaskCompleted();
-		World.Log("3结束！");
+		this.Log("3结束！");
 	}
 
 	public async TreeTask Test()
 	{
 		await this.AsyncDelay(3);
 
-		World.Log("0！");
+		this.Log("0！");
 
 		//await T2();
 
 
-		World.Log("1！");
+		this.Log("1！");
 		await this.TreeTaskCompleted();
-		World.Log("2！");
+		this.Log("2！");
 
 		await this.TreeTaskCompleted();
-		World.Log("3！");
+		this.Log("3！");
 
 		await this.TreeTaskCompleted();
-		World.Log("4！");
+		this.Log("4！");
 		//await this.AsyncDelay(10);
 		await T5();
 		await this.TreeTaskCompleted();
-		World.Log("5！");
+		this.Log("5！");
 
 		await this.TreeTaskCompleted();
-		World.Log("5 ！计时");
+		this.Log("5 ！计时");
 		await this.AsyncDelay(3);
-		World.Log("6！");
+		this.Log("6！");
 
 	}
 
@@ -74,18 +74,18 @@ public class TestNode : Node, ComponentOf<InitialDomain>
 	{
 		//await this.AsyncDelay(5);
 
-		World.Log("T2 1！");
+		this.Log("T2 1！");
 
 		await T3();
 		//await this.TreeTaskCompleted();
 	}
 	public async TreeTask T3()
 	{
-		World.Log("T3 1！");
+		this.Log("T3 1！");
 
 		//await this.TreeTaskCompleted();
 		var tk = await this.TreeTaskTokenCatch();
-		World.Log($"TK!!!!!!!{tk.Id}");
+		this.Log($"TK!!!!!!!{tk.Id}");
 
 		//World.Log(await T4());
 
@@ -95,7 +95,7 @@ public class TestNode : Node, ComponentOf<InitialDomain>
 
 	public async TreeTask<int> T4()
 	{
-		World.Log("T4 1！");
+		this.Log("T4 1！");
 
 		await this.TreeTaskCompleted();
 
@@ -104,22 +104,22 @@ public class TestNode : Node, ComponentOf<InitialDomain>
 
 	public async TreeTask T5()
 	{
-		World.Log("T5 1！");
+		this.Log("T5 1！");
 		await T6();
 		await this.TreeTaskCompleted();
 	}
 	public async TreeTask T6()
 	{
-		World.Log("T6 1！");
+		this.Log("T6 1！");
 		await T7();
 
 		await this.TreeTaskCompleted();
 	}
 	public async TreeTask T7()
 	{
-		World.Log("T7 1！");
+		this.Log("T7 1！");
 		var tk = await this.TreeTaskTokenCatch();
-		World.Log($"TK!!!!!!!{tk?.Id}");
+		this.Log($"TK!!!!!!!{tk?.Id}");
 
 		await this.TreeTaskCompleted();
 	}
