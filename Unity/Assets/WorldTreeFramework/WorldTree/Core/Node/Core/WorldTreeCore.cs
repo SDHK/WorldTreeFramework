@@ -29,16 +29,10 @@ namespace WorldTree
 
 
 
-	//对象池需要一个启动标记？
-
-	//对法则执行器进行更加详细的划分，生命周期，全局事件，回调事件？
 
 	//管理器改为分支 整理
 
-	//Log改为 Self.Log
-
-	//核心分布到法则
-
+	//对象池需要一个启动标记？
 
 	/// <summary>
 	/// 世界树核心
@@ -219,9 +213,8 @@ namespace WorldTree
 		/// </summary>
 		public static void Destroy(this WorldTreeCore self)
 		{
-
-			self.SetActive(false);
 			self.RemoveComponent<WorldTreeRoot>();
+			self.SetActive(false);
 			self.RemoveComponent<GameTimeManager>();
 			self.RemoveComponent<ArrayPoolManager>();
 			self.RemoveComponent<NodePoolManager>();

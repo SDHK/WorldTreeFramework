@@ -68,7 +68,4 @@ namespace WorldTree
 		/// </summary>
 		public void Clear();
 	}
-
-	
-
 }

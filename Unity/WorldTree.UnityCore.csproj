@@ -59,12 +59,14 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowLostFocusRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Item\MonoObject.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Input\InputEventData.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\YooAssetTest.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Manager\GameObjectPoolManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowFocusUpdateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Tools\Mathf\MathfVector2.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\LateUpdate\LateUpdateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\ObjectBox\WorldTreeStruct\Vector3FloatConversion.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Tools\Extension\AsyncOperationExtension.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\MultilayerPerceptronTest.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowCloseRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowFocusRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Input\InputManager.cs" />
@@ -75,7 +77,8 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WIndowUpdateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Assets\AssetBundle\RuleBase\LoadAssetAsyncRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Extension\GameObjectEntityExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\TestNode.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\TaskTest.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\TreeValueTest.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\WindowManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Pool\GameObjectPool.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Assets\Addressables\AddressablesManager.cs" />
