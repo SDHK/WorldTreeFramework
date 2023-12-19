@@ -18,14 +18,14 @@ namespace WorldTree
 		public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this INode self, out GlobalRuleActuator<R> globalRuleActuator)
 		where R : IRule
 		{
-			return self.Root.AddComponent(out GlobalRuleActuatorManager _, isPool: false).AddComponent(out globalRuleActuator, isPool: false);
+			return self.Core.AddComponent(out GlobalRuleActuatorManager _, isPool: false).AddComponent(out globalRuleActuator, isPool: false);
 		}
 	}
 
 	/// <summary>
 	/// 全局法则执行器管理器
 	/// </summary>
-	public class GlobalRuleActuatorManager : Node, ComponentOf<WorldTreeRoot>
+	public class GlobalRuleActuatorManager : Node, ComponentOf<WorldTreeCore>
 		, AsRule<IAwakeRule>
 	{ }
 }

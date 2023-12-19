@@ -14,29 +14,29 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 给节点添加组件的法则
-    /// </summary>
-    /// <typeparam name="N">节点</typeparam>
-    /// <typeparam name="C">组件</typeparam>
-    /// <remarks>用于节点的饿汉单例</remarks>
-    public abstract class NodeAddRule<N, C> : AddRule<N>
-        where N : class, INode
-        where C : class, INode, ComponentOf<N>, AsRule<IAwakeRule>
-    {
-        protected override void OnEvent(N self)
-        {
-            self.AddComponent(out C _);
-        }
-    }
+	/// <summary>
+	/// 给节点添加组件的法则
+	/// </summary>
+	/// <typeparam name="N">节点</typeparam>
+	/// <typeparam name="C">组件</typeparam>
+	/// <remarks>用于节点的饿汉单例</remarks>
+	public abstract class NodeAddRule<N, C> : AddRule<N>
+		where N : class, INode
+		where C : class, INode, ComponentOf<N>, AsRule<IAwakeRule>
+	{
+		protected override void OnEvent(N self)
+		{
+			self.AddComponent(out C c_);
+		}
+	}
 
-    /// <summary>
-    /// 给根节点添加组件的法则
-    /// </summary>
-    /// <typeparam name="C">根节点组件</typeparam>
-    /// <remarks>用于根节点的饿汉单例</remarks>
-    public abstract class RootAddRule<C> : NodeAddRule<WorldTreeRoot, C>
-        where C : class, INode, ComponentOf<WorldTreeRoot>, AsRule<IAwakeRule>
-    { }
+	/// <summary>
+	/// 给根节点添加组件的法则
+	/// </summary>
+	/// <typeparam name="C">根节点组件</typeparam>
+	/// <remarks>用于根节点的饿汉单例</remarks>
+	public abstract class RootAddRule<C> : NodeAddRule<WorldTreeRoot, C>
+		where C : class, INode, ComponentOf<WorldTreeRoot>, AsRule<IAwakeRule>
+	{ }
 
 }

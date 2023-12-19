@@ -188,24 +188,31 @@ namespace WorldTree
 			self.UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
 
 			//树根节点
-			self.GraftComponent(self.Root = self.PoolGetNode<WorldTreeRoot>());
+			//self.GraftComponent(self.Root = self.PoolGetNode<WorldTreeRoot>());
+
 
 			//嫁接节点需要手动激活
 			self.ReferencedPoolManager.SetActive(true);
 			self.IdManager.SetActive(true);
 			self.RuleManager.SetActive(true);
-			self.Root.SetActive(true);
+			//self.Root.SetActive(true);
 
 			//游戏时间管理器
 			//self.AddComponent(out self.GameTimeManager);
 
+
 			//核心激活
 			self.SetActive(true);
+
+
 
 			self.GetOrNewGlobalRuleActuator(out self.enable);
 			self.GetOrNewGlobalRuleActuator(out self.update);
 			self.GetOrNewGlobalRuleActuator(out self.updateTime);
 			self.GetOrNewGlobalRuleActuator(out self.disable);
+
+			self.Root = self.AddComponent(out WorldTreeRoot _);
+			self.Root.Root = self.Root;
 		}
 
 		/// <summary>
@@ -213,6 +220,8 @@ namespace WorldTree
 		/// </summary>
 		public static void Destroy(this WorldTreeCore self)
 		{
+			self.RemoveComponent<GlobalRuleActuatorManager>();
+
 			self.RemoveComponent<WorldTreeRoot>();
 			self.SetActive(false);
 			self.RemoveComponent<GameTimeManager>();

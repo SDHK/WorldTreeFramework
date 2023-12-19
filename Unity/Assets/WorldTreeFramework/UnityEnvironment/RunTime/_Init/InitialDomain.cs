@@ -33,7 +33,7 @@ namespace WorldTree
 			protected override void OnEvent(InitialDomain self)
 			{
 				self.Log($"初始域启动！！");
-				self.AddComponent(out MultilayerPerceptronTest _);
+				self.AddComponent(out TreeValueTest _);
 
 			}
 		}
