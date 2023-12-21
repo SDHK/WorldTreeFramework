@@ -283,7 +283,7 @@ namespace WorldTree
 		/// </remarks>
 		public static void SupportGenericNodeRule(this RuleManager self, long NodeType)
 		{
-			Type Type = NodeType.HashCore64ToType();
+			Type Type = NodeType.CoreToType();
 			while (Type != null && Type != typeof(IUnitPoolItem) && Type != typeof(object))
 			{
 				//节点可能会是非泛型，但父类则有泛型的情况，需要多态化所有父类泛型法则
@@ -322,9 +322,9 @@ namespace WorldTree
 			if (!self.ListenerRuleTargetGroupDictionary.ContainsKey(listenerNodeType))
 			{
 				//监听器父类类型键值
-				Type listenerBaseTypeKey = listenerNodeType.HashCore64ToType().BaseType;
+				Type listenerBaseTypeKey = listenerNodeType.CoreToType().BaseType;
 				//类型哈希码
-				long listenerBaseTypeCoreKey = listenerBaseTypeKey.TypeToHashCore64();
+				long listenerBaseTypeCoreKey = listenerBaseTypeKey.TypeToCore();
 
 				//父类法则查询标记
 				bool isBaseRule = false;
@@ -393,9 +393,9 @@ namespace WorldTree
 			HashSet<long> ruleTypeHash = self.NodeTypeRulesDictionary.GetValue(NodeType);
 
 			//开始遍历查询父类型法则
-			Type BaseTypeKey = NodeType.HashCore64ToType().BaseType;
+			Type BaseTypeKey = NodeType.CoreToType().BaseType;
 			//父类型哈希码
-			long BaseTypeCoreKey = BaseTypeKey.TypeToHashCore64();
+			long BaseTypeCoreKey = BaseTypeKey.TypeToCore();
 
 			while (BaseTypeKey != null && BaseTypeKey != typeof(IUnitPoolItem))
 			{

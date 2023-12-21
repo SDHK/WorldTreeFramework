@@ -33,16 +33,7 @@ namespace WorldTree
 			protected override void OnEvent(InitialDomain self)
 			{
 				self.Log($"初始域启动！！");
-				self.AddComponent(out TreeValueTest _);
-
-			}
-		}
-
-
-		class UpdateRule : UpdateRule<InitialDomain>
-		{
-			protected override void OnEvent(InitialDomain self)
-			{
+				self.AddComponent(out SphereManagerTest _);
 
 			}
 		}

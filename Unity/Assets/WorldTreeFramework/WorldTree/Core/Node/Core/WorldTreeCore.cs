@@ -13,11 +13,10 @@
 */
 
 using System;
-using System.Diagnostics;
 
 namespace WorldTree
 {
-	//计划 7AGLUH5U
+	//计划
 
 	//新增TimeUpdate,特化的双方法法则
 
@@ -28,11 +27,9 @@ namespace WorldTree
 	//时域与时间轮
 
 
-
-
 	//管理器改为分支 整理
 
-	//对象池需要一个启动标记？
+
 
 	/// <summary>
 	/// 世界树核心
@@ -120,25 +117,6 @@ namespace WorldTree
 
 	public static partial class WorldTreeCoreRule
 	{
-		#region 日志
-
-		/// <summary>
-		/// 打印日志
-		/// </summary>
-		public static void Log(this IUnitPoolItem self, object message) => self.Core.Log?.Invoke(message);
-		/// <summary>
-		/// 打印警告日志
-		/// </summary>
-		public static void LogWarning(this IUnitPoolItem self, object message) => self.Core.LogWarning?.Invoke(message);
-		/// <summary>
-		/// 打印错误日志
-		/// </summary>
-		public static void LogError(this IUnitPoolItem self, object message) => self.Core.LogError?.Invoke(message);
-
-		#endregion
-
-		#region 框架启动与销毁
-
 		/// <summary>
 		/// 框架启动
 		/// </summary>
@@ -187,10 +165,6 @@ namespace WorldTree
 
 			self.UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
 
-			//树根节点
-			//self.GraftComponent(self.Root = self.PoolGetNode<WorldTreeRoot>());
-
-
 			//嫁接节点需要手动激活
 			self.ReferencedPoolManager.SetActive(true);
 			self.IdManager.SetActive(true);
@@ -220,9 +194,8 @@ namespace WorldTree
 		/// </summary>
 		public static void Destroy(this WorldTreeCore self)
 		{
-			self.RemoveComponent<GlobalRuleActuatorManager>();
-
 			self.RemoveComponent<WorldTreeRoot>();
+			self.RemoveComponent<GlobalRuleActuatorManager>();
 			self.SetActive(false);
 			self.RemoveComponent<GameTimeManager>();
 			self.RemoveComponent<ArrayPoolManager>();
@@ -260,7 +233,6 @@ namespace WorldTree
 			self.updateTime = null;
 			self.disable = null;
 		}
-		#endregion
 
 		/// <summary>
 		/// 框架刷新

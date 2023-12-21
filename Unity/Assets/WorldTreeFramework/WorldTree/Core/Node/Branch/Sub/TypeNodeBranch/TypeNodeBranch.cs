@@ -36,7 +36,17 @@ namespace WorldTree
 		public static bool TryGetTypeNode(this INode self, long type, out INode node)
 		{
 			node = null;
-			return self.TryGetBranch(out TypeNodeBranch branch) && branch.TryGetNodeById(type, out node);
+			return self.TryGetBranch(out TypeNodeBranch branch) && branch.TryGetNode(type, out node);
+		}
+
+		/// <summary>
+		/// 尝试获取类型节点
+		/// </summary>
+		public static bool TryGetTypeNode<N, T>(this N self, long type, out T typeNode)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, TypeNodeBranch>
+		{
+			return (typeNode = self.TryGetBranch(out TypeNodeBranch branch) && branch.TryGetNode(type, out INode node) ? node as T : null) != null;
 		}
 
 		#endregion
@@ -85,7 +95,7 @@ namespace WorldTree
 			where N : class, INode
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<IAwakeRule>
 		=> self.AddNode<N, TypeNodeBranch, long, T>(type, out node, isPool);
-		
+
 		/// <summary>
 		/// type为键值，添加节点
 		/// </summary>
@@ -93,7 +103,7 @@ namespace WorldTree
 			where N : class, INode
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<IAwakeRule<T1>>
 		=> self.AddNode<N, TypeNodeBranch, long, T, T1>(type, out node, arg1, isPool);
-		
+
 		/// <summary>
 		/// type为键值，添加节点
 		/// </summary>
@@ -101,7 +111,7 @@ namespace WorldTree
 			where N : class, INode
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<IAwakeRule<T1, T2>>
 		=> self.AddNode<N, TypeNodeBranch, long, T, T1, T2>(type, out node, arg1, arg2, isPool);
-		
+
 		/// <summary>
 		/// type为键值，添加节点
 		/// </summary>
@@ -109,7 +119,7 @@ namespace WorldTree
 			where N : class, INode
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<IAwakeRule<T1, T2, T3>>
 		=> self.AddNode<N, TypeNodeBranch, long, T, T1, T2, T3>(type, out node, arg1, arg2, arg3, isPool);
-		
+
 		/// <summary>
 		/// type为键值，添加节点
 		/// </summary>
@@ -117,7 +127,7 @@ namespace WorldTree
 			where N : class, INode
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<IAwakeRule<T1, T2, T3, T4>>
 		=> self.AddNode<N, TypeNodeBranch, long, T, T1, T2, T3, T4>(type, out node, arg1, arg2, arg3, arg4, isPool);
-		
+
 		/// <summary>
 		/// type为键值，添加节点
 		/// </summary>

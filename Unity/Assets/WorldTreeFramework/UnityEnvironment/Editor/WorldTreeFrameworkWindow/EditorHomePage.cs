@@ -38,7 +38,7 @@ namespace EditorTool
 
             foreach (var item in self.GetBranch<ChildBranch>())
             {
-                if (GUILayout.Button(item.Type.HashCore64ToType().Name))
+                if (GUILayout.Button(item.Type.CoreToType().Name))
                 {
                     self.page = item;
                 }

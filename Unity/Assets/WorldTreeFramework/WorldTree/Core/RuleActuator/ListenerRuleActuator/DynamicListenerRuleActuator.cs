@@ -18,7 +18,7 @@ namespace WorldTree
 	{
 		public override string ToString()
 		{
-			return $"DynamicListenerRuleActuator : {ruleGroup?.RuleType.HashCore64ToType()}";
+			return $"DynamicListenerRuleActuator : {ruleGroup?.RuleType.CoreToType()}";
 		}
 	}
 

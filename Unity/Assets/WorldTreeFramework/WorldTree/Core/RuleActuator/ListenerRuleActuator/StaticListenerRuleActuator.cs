@@ -20,7 +20,7 @@ namespace WorldTree
     {
         public override string ToString()
         {
-            return $"StaticListenerRuleActuator : {ruleGroup?.RuleType.HashCore64ToType()}";
+            return $"StaticListenerRuleActuator : {ruleGroup?.RuleType.CoreToType()}";
         }
     }
 

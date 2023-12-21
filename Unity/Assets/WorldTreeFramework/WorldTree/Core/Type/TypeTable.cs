@@ -47,7 +47,7 @@ namespace WorldTree
         /// <summary>
         /// 类型转64位哈希码
         /// </summary>
-        public static long TypeToHashCore64(this Type type)
+        public static long TypeToCore(this Type type)
         {
             if (!TypeHash64.TryGetValue(type, out long hash64))
             {
@@ -60,7 +60,7 @@ namespace WorldTree
         /// <summary>
         /// 哈希码64转类型
         /// </summary>
-        public static Type HashCore64ToType(this long rcr) => Hash64Type[rcr];
+        public static Type CoreToType(this long rcr) => Hash64Type[rcr];
     }
 
 }

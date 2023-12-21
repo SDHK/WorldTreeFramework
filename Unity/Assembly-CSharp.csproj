@@ -78,6 +78,7 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIWindow\GUIWindow.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListDictionary.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\StateMachineWrap.cs" />
+    <Compile Include="Assets\Scripts\_Test\ECS\Drop.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETCancellationToken.cs" />
     <Compile Include="Assets\Scripts\_Test\TestMonogo.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETVoidMethodBuilder.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIButton.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETTaskCompleted.cs" />
     <Compile Include="Assets\Scripts\_Test\ConsoleToScreen.cs" />
+    <Compile Include="Assets\Scripts\_Test\ECS\DropManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\HybridCLRGenerate\link.xml" />

@@ -56,6 +56,7 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\SphereTest.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowLostFocusRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Item\MonoObject.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Input\InputEventData.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Assets\Addressables\AddressablesManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Assets\ColorTexture2D\ColorTexture2DManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Init\InitialDomain.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\SphereManagerTest.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\GameObjectNode.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\GuiUpdate\GuiUpdateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\FixedUpdate\FixedUpdateRule.cs" />

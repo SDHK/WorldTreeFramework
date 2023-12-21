@@ -21,11 +21,6 @@ namespace EditorTool
             script = target as UnityWorldTree;
             GUILayout.Label(script.Core.ToStringDrawTree());
         }
-
-
-
-
-
     }
 
     [InitializeOnLoad]
