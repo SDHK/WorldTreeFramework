@@ -1,4 +1,3 @@
-D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.csproj.AssemblyReference.cache
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.GeneratedMSBuildEditorConfig.editorconfig
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.AssemblyInfoInputs.cache
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.AssemblyInfo.cs

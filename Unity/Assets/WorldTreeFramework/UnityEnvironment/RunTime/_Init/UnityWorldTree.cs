@@ -82,7 +82,7 @@ namespace WorldTree
 
 		private void OnDestroy()
 		{
-			Core?.Dispose();
+			Core.Dispose();
 			Core = null;
 		
 			lateUpdate = null;

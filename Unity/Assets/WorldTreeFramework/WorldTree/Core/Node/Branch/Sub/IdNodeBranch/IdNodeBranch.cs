@@ -29,10 +29,20 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取id节点
 		/// </summary>
-		public static bool TryGetIdNode(this INode self, long id, out INode node)
+		public static bool TryGetIdNode(this INode self, long idKey, out INode node)
 		{
 			node = null;
-			return self.TryGetBranch(out IdNodeBranch branch) && branch.TryGetNodeById(id, out node);
+			return self.TryGetBranch(out IdNodeBranch branch) && branch.TryGetNode(idKey, out node);
+		}
+
+		/// <summary>
+		/// 尝试获取id节点
+		/// </summary>
+		public static bool TryGetIdNode<N, T>(this N self, long idKey, out T idNode)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, IdNodeBranch>
+		{
+			return (idNode = self.TryGetBranch(out IdNodeBranch branch) && branch.TryGetNode(idKey, out INode node) ? node as T : null) != null;
 		}
 
 		#endregion
@@ -42,7 +52,7 @@ namespace WorldTree
 		/// <summary>
 		/// 裁剪id节点
 		/// </summary>
-		public static void TryCutIdNode(this INode self, long id, out INode node) => self.TryCutNode<IdNodeBranch, long>(id, out node);
+		public static void TryCutIdNode(this INode self, long idKey, out INode node) => self.TryCutNode<IdNodeBranch, long>(idKey, out node);
 
 		#endregion
 
@@ -51,10 +61,10 @@ namespace WorldTree
 		/// <summary>
 		/// 嫁接id节点
 		/// </summary>
-		public static void GraftIdNode<N, T>(this N self, long id, T node)
+		public static void GraftIdNode<N, T>(this N self, long idKey, T node)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>
-		=> node.GraftSelfToTree<IdNodeBranch, long>(id, self);
+		=> node.GraftSelfToTree<IdNodeBranch, long>(idKey, self);
 
 
 		#endregion
@@ -64,7 +74,7 @@ namespace WorldTree
 		/// <summary>
 		/// 根据id移除节点
 		/// </summary>
-		public static void RemoveIdNode(this INode self, long id) => self.RemoveNode<IdNodeBranch, long>(id);
+		public static void RemoveIdNode(this INode self, long idKey) => self.RemoveNode<IdNodeBranch, long>(idKey);
 
 		/// <summary>
 		/// 移除全部id节点

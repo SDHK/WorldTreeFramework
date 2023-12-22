@@ -14,7 +14,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 
 namespace WorldTree
 {
@@ -87,6 +86,16 @@ namespace WorldTree
 		{
 			child = null;
 			return self.TryGetBranch(out ChildBranch branch) && branch.TryGetNodeById(id, out child);
+		}
+
+		/// <summary>
+		/// 尝试获取子节点
+		/// </summary>
+		public static bool TryGetChild<N, T>(this N self, long id, out T child)
+			where N : class, INode
+			where T : class, INode, NodeOf<N, ChildBranch>
+		{
+			return (child = self.TryGetBranch(out ChildBranch branch) && branch.TryGetNodeById(id, out INode node) ? node as T : null) != null;
 		}
 
 		#endregion
