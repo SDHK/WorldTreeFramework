@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace WorldTree
 {
 	public class SphereTest : Node
-		,IdNodeOf<SphereManagerTest>
-		,AsRule<IAwakeRule>
+		, IdNodeOf<SphereManagerTest>
+		, AsRule<IAwakeRule>
 	{
 		public GameObject gameObject;
 		public SphereManagerTest manager;
@@ -14,12 +15,12 @@ namespace WorldTree
 
 	}
 
-    public static class SphereTestRule
+	public static class SphereTestRule
 	{
 
-		class UpdateTimeRule: UpdateTimeRule<SphereTest>
+		class UpdateTimeRule : UpdateTimeRule<SphereTest>
 		{
-			protected override void OnEvent(SphereTest self,float deltaTime)
+			protected override void OnEvent(SphereTest self, float deltaTime)
 			{
 				if (self.delay > 0)
 				{

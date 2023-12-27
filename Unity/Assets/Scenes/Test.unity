@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 496922178}
   - component: {fileID: 496922177}
   - component: {fileID: 496922176}
-  - component: {fileID: 496922175}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -142,19 +141,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!135 &496922175
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 496922174}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &496922176
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -274,7 +260,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 20
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -347,8 +333,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1871300719}
-  - component: {fileID: 1871300718}
   - component: {fileID: 1871300720}
+  - component: {fileID: 1871300721}
+  - component: {fileID: 1871300722}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -356,22 +343,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1871300718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1871300717}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b31bedfb3a211c545b0774591ee5f705, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  y: 0
-  dataY: 0
-  byteIndex: 0
-  notRemainderY: 0
 --- !u!4 &1871300719
 Transform:
   m_ObjectHideFlags: 0
@@ -394,13 +365,45 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1871300717}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b10677f87400c4448f4f389951315fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 68e6b31637073684c9d563eb84e860a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  G: 10
-  bottomY: 0
-  topY: 10
-  spawnCount: 5000
-  balls: {fileID: 496922174}
+  gameObj: {fileID: 496922174}
+  Count: 2000
+  offset: 0.1
+  radius: 10
+--- !u!114 &1871300721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871300717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdab578e1ba9d5d4f9006b3a86ba60de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameObj: {fileID: 496922174}
+  Count: 50
+  offset: 0.1
+  radius: 10
+--- !u!114 &1871300722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871300717}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e6d97e80a1902e4082fb7a840b83f40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameObj: {fileID: 496922174}
+  Count: 50
+  offset: 0.1
+  radius: 10
+  list: []

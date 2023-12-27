@@ -58,8 +58,10 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETTaskMethodBuilder.cs" />
     <Compile Include="Assets\HybridCLRGenerate\AOTGenericReferences.cs" />
+    <Compile Include="Assets\Scripts\_Test\ECS\AsyncTaskTest.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\Base\GUIBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIWindow\SystemBase\GUIDrawSystem.cs" />
+    <Compile Include="Assets\Scripts\_Test\ECS\MonoTest.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIFoldoutButton.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListAssetBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIWindow\GUIGeneralWindow.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETTaskCompletedMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\_Test\MoveAreaLimiter.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETVoid.cs" />
+    <Compile Include="Assets\Scripts\_Test\ECS\MailTest.cs" />
     <Compile Include="Assets\Scripts\_Test\TestGC.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIBeginVertical.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIRepeatButton.cs" />
@@ -78,7 +81,6 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIWindow\GUIWindow.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListDictionary.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\StateMachineWrap.cs" />
-    <Compile Include="Assets\Scripts\_Test\ECS\Drop.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETCancellationToken.cs" />
     <Compile Include="Assets\Scripts\_Test\TestMonogo.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETVoidMethodBuilder.cs" />
@@ -87,7 +89,6 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIButton.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETTaskCompleted.cs" />
     <Compile Include="Assets\Scripts\_Test\ConsoleToScreen.cs" />
-    <Compile Include="Assets\Scripts\_Test\ECS\DropManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\HybridCLRGenerate\link.xml" />

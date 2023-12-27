@@ -49,9 +49,6 @@ namespace WorldTree
 
 		private void Update()
 		{
-
-			/* 代码执行过程 */
-
 			Profiler.BeginSample("SDHK");
 
 			//sw.Restart();

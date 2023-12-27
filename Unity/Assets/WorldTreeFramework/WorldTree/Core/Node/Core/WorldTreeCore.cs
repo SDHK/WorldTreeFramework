@@ -29,6 +29,10 @@ namespace WorldTree
 
 	//管理器改为分支 整理
 
+	//界程
+
+	//切线程，同步上下文
+
 
 
 	/// <summary>
