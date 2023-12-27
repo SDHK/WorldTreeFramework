@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.TextCore.Text;
 
 namespace ECSTest
 {
@@ -21,11 +22,14 @@ namespace ECSTest
 
 		public MailThread(MailTest mailTest, int Count, float offset, float radius)
 		{
+			System.Random rand = new System.Random();
+
 			//初始化数据
 			for (int i = 0; i < Count; i++)
 			{
 				float angle = ((i / (float)Count) * 360f + offset);
-				list.Add(new MailData() { id = i, position = ToVector2(angle) * radius, eulerAngles = new Vector3(0, angle, 0) });
+				float randRadius = (float)(rand.NextDouble() * (radius - 1) + 1);
+				list.Add(new MailData() { id = i, position = ToVector2(angle) * randRadius, eulerAngles = new Vector3(randRadius, angle, 0) });
 			}
 
 
@@ -37,9 +41,9 @@ namespace ECSTest
 					{
 						MailData trans = list[i];
 						float angle = (trans.eulerAngles.y + offset);
-						trans.position = ToVector2(angle) * radius;
-						trans.eulerAngles = new Vector3(0, angle, 0);
-						list[i] = trans;//?
+						trans.position = ToVector2(angle) * trans.eulerAngles.x;
+						trans.eulerAngles = new Vector3(trans.eulerAngles.x, angle, 0);
+						list[i] = trans;
 					}
 					if (mailTest.mailDatas.Count <= list.Count)
 					{
@@ -82,12 +86,28 @@ namespace ECSTest
 
 		List<GameObject> list = new List<GameObject>();
 
-		//邮箱
+		/// <summary>
+		/// 邮箱
+		/// </summary>
 		public Queue<MailData> mailDatas = new Queue<MailData>();
 		MailThread mailThread = null;
 
+
+		private int fps = 0;
+		private int frameNumber = 0;
+		private float lastShowFPSTime = 0f;
+		private GUIStyle textStyle = new GUIStyle();
+
+		private void Awake()
+		{
+			QualitySettings.vSyncCount = 0;//关闭垂直同步
+			Application.targetFrameRate = -1;//解除帧率限制
+		}
+
 		void Start()
 		{
+			textStyle.normal.textColor = Color.red;
+			textStyle.fontSize = 60;
 			for (int i = 0; i < Count; i++)
 			{
 				GameObject gameObject = GameObject.Instantiate(gameObj);
@@ -109,6 +129,20 @@ namespace ECSTest
 				trans.eulerAngles = data.eulerAngles;
 			}
 			Profiler.EndSample();
+
+			frameNumber += 1;//每秒帧数累计
+			float time = Time.realtimeSinceStartup - lastShowFPSTime;
+			if (time >= 1)//大于一秒后
+			{
+				fps = (int)(frameNumber / time);//计算帧数
+				frameNumber = 0;//归零
+				lastShowFPSTime = Time.realtimeSinceStartup;
+			}
+		}
+
+		private void OnGUI()
+		{
+			GUILayout.Label(fps.ToString(), textStyle);
 		}
 
 

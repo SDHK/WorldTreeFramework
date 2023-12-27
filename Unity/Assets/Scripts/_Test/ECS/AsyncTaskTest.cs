@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace ECSTest
 {
@@ -153,13 +154,20 @@ namespace ECSTest
 	{
 		public static ThreadContext Instance = new ThreadContext();
 	}
-
+	public struct AsyncData
+	{
+		public int id;
+		public Vector3 position;
+		public Vector3 eulerAngles;
+	}
 
 	public class AsyncTaskThread : IDisposable
 	{
 		Thread thread;
 
 		AsyncTaskTest asyncTaskTest;
+
+		Queue<AsyncData> asyncDatas = new Queue<AsyncData>();
 
 		public SynchronizationContext context;
 		public AsyncTaskThread(AsyncTaskTest asyncTaskTest)
@@ -179,26 +187,40 @@ namespace ECSTest
 
 		public async Task Event()
 		{
+			await new AsyncModeTask(MonoContext.Instance);//切主线程
+
+
 			for (int i = 0; i < asyncTaskTest.list.Count; i++)
 			{
-				await new AsyncModeTask(MonoContext.Instance);//切主线程
-
 				Transform trans = asyncTaskTest.list[i].transform;
-				float angle = (trans.eulerAngles.y + asyncTaskTest.offset);
-				float radius = asyncTaskTest.radius;
 
-				await new AsyncModeTask(ThreadContext.Instance);//切多线程
-
-				Vector3 position = ToVector2(angle) * radius;
-				Vector3 eulerAngles = new Vector3(0, angle, 0);
-
-				await new AsyncModeTask(MonoContext.Instance);//切主线程
-
-				trans.position = position;
-				trans.eulerAngles = eulerAngles;
-
-				await new AsyncModeTask(ThreadContext.Instance);//切多线程
+				asyncDatas.Enqueue(new AsyncData() { id = i, eulerAngles = trans.eulerAngles, position = trans.position });
 			}
+
+			await new AsyncModeTask(ThreadContext.Instance);//切多线程
+
+			for (int i = 0; i < asyncTaskTest.list.Count; i++)
+			{
+				asyncDatas.TryDequeue(out AsyncData asyncData);
+				float angle = (asyncData.eulerAngles.y + asyncTaskTest.offset);
+				asyncData.position = ToVector2(angle) * asyncData.eulerAngles.x;
+				asyncData.eulerAngles = new Vector3(asyncData.eulerAngles.x, angle, 0);
+				asyncDatas.Enqueue(asyncData);
+			}
+			await new AsyncModeTask(MonoContext.Instance);//切主线程
+
+			Profiler.BeginSample("SDHK AsyncTaskTest");
+
+			while (asyncDatas.TryDequeue(out AsyncData asyncData))
+			{
+				Transform trans = asyncTaskTest.list[asyncData.id].transform;
+				trans.position = asyncData.position;
+				trans.eulerAngles = asyncData.eulerAngles;
+			}
+
+			Profiler.EndSample();
+
+			await new AsyncModeTask(ThreadContext.Instance);//切多线程
 		}
 
 		public void Dispose()
@@ -231,17 +253,34 @@ namespace ECSTest
 		public List<GameObject> list = new List<GameObject>();
 		AsyncTaskThread asyncTaskThread;
 
+		private int fps = 0;
+		private int frameNumber = 0;
+		private float lastShowFPSTime = 0f;
+		private GUIStyle textStyle = new GUIStyle();
+
+		private void Awake()
+		{
+			QualitySettings.vSyncCount = 0;//关闭垂直同步
+			Application.targetFrameRate = -1;//解除帧率限制
+		}
+
 		private void Start()
 		{
+			textStyle.normal.textColor = Color.red;
+			textStyle.fontSize = 60;
+
 			var monoContext = MonoContext.Instance;
+			System.Random rand = new System.Random();
 
 			for (int i = 0; i < Count; i++)
 			{
+				float randRadius = (float)(rand.NextDouble() * (radius - 1) + 1);
+
 				GameObject gameObject = GameObject.Instantiate(gameObj);
 				gameObject.transform.SetParent(transform, false);
 				float angle = ((i / (float)Count) * 360f + offset);
-				gameObject.transform.position = ToVector2(angle) * radius;
-				gameObject.transform.eulerAngles = new Vector3(0, angle, 0);
+				gameObject.transform.position = ToVector2(angle) * randRadius;
+				gameObject.transform.eulerAngles = new Vector3(randRadius, angle, 0);
 				list.Add(gameObject);
 			}
 			asyncTaskThread = new AsyncTaskThread(this);
@@ -249,6 +288,18 @@ namespace ECSTest
 		void Update()
 		{
 
+			frameNumber += 1;//每秒帧数累计
+			float time = Time.realtimeSinceStartup - lastShowFPSTime;
+			if (time >= 1)//大于一秒后
+			{
+				fps = (int)(frameNumber / time);//计算帧数
+				frameNumber = 0;//归零
+				lastShowFPSTime = Time.realtimeSinceStartup;
+			}
+		}
+		private void OnGUI()
+		{
+			GUILayout.Label(fps.ToString(), textStyle);
 		}
 
 		private void OnDestroy()

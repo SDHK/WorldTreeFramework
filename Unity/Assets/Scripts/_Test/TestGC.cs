@@ -29,7 +29,6 @@ public class TestGC : MonoBehaviour
 			Profiler.BeginSample("SDHK");
 			Test1().Coroutine();
 			Profiler.EndSample();
-			UnityEditor.EditorApplication.isPaused = true;
 		}
 
 
