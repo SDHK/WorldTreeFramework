@@ -1,22 +1,24 @@
 ﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/3/3 10:51
+* 日期： 2023/12/28 03:28:38
 
 * 描述： 树泛型队列
 
 */
 
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace WorldTree
 {
 	/// <summary>
-	/// 树泛型队列
+	/// 树并发队列
 	/// </summary>
-	public class TreeQueue<T> : Queue<T>, INode, ChildOf<INode>, ComponentOf<INode>
+	public class TreeConcurrentQueue<T> : ConcurrentQueue<T>, INode
+		, ChildOf<INode>, ComponentOf<INode>
 		, AsRule<IAwakeRule>
 	{
+
 		public bool IsFromPool { get; set; }
 		public bool IsRecycle { get; set; }
 		public bool IsDisposed { get; set; }
@@ -394,8 +396,4 @@ namespace WorldTree
 		#endregion
 
 	}
-
-
-
-
 }

@@ -32,6 +32,9 @@ namespace WorldTree
 	//界程
 
 	//切线程，同步上下文
+	
+	//邮箱组件需要管理器Update
+	//节点邮箱组件，只有SendMail<1,2,3,4,5>
 
 
 

@@ -3,26 +3,27 @@
 * 作者： 闪电黑客
 * 日期： 2023/3/3 10:51
 
-* 描述： 树泛型队列
+* 描述： 世界环境
 
 */
-
-using System.Collections.Generic;
+using System;
+using System.Threading;
 
 namespace WorldTree
 {
 	/// <summary>
-	/// 树泛型队列
+	/// 世界环境
 	/// </summary>
-	public class TreeQueue<T> : Queue<T>, INode, ChildOf<INode>, ComponentOf<INode>
-		, AsRule<IAwakeRule>
+	/// <remarks>线程的上下文</remarks>
+	public class WorldContext : SynchronizationContext, INode
 	{
+		#region INode
+
 		public bool IsFromPool { get; set; }
 		public bool IsRecycle { get; set; }
 		public bool IsDisposed { get; set; }
 		public long Id { get; set; }
 		public long DataId { get; set; }
-
 		public long Type { get; set; }
 		public WorldTreeCore Core { get; set; }
 		public WorldTreeRoot Root { get; set; }
@@ -54,8 +55,8 @@ namespace WorldTree
 		/// 树分支
 		/// </summary>
 		public UnitDictionary<long, IBranch> m_Branchs { get; set; }
-
 		public UnitDictionary<long, IBranch> Branchs => this.m_Branchs ??= this.PoolGetUnit<UnitDictionary<long, IBranch>>();
+
 
 		#endregion
 
@@ -285,7 +286,6 @@ namespace WorldTree
 			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
 														 //this.DisposeDomain(); //清除域节点
 			this.Parent = null;//清除父节点
-			Clear();
 			this.PoolRecycle(this);//回收到池
 		}
 
@@ -393,9 +393,48 @@ namespace WorldTree
 
 		#endregion
 
+		#endregion
+
+		public TreeConcurrentQueue<Action> m_Queue;
+
+		public override void Post(SendOrPostCallback callback, object state)
+		{
+			this.Post(() => callback(state));
+		}
+
+		public void Post(Action action)
+		{
+			this.m_Queue.Enqueue(action);
+		}
 	}
 
+	public static class WorldContextRule
+	{
+		class AddRule : AddRule<WorldContext>
+		{
+			protected override void OnEvent(WorldContext self)
+			{
+				self.AddComponent(out self.m_Queue);
+			}
+		}
 
-
-
+		class UpdateRule : UpdateRule<WorldContext>
+		{
+			protected override void OnEvent(WorldContext self)
+			{
+				while (true)
+				{
+					if (!self.m_Queue.TryDequeue(out Action action)) return;
+					try
+					{
+						action();
+					}
+					catch (Exception e)
+					{
+						self.LogError(e);
+					}
+				}
+			}
+		}
+	}
 }
