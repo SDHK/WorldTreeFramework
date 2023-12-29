@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 静态监听器法则执行器
     /// </summary>
-    public class StaticListenerRuleActuator : RuleGroupActuatorBase, ICoreNode, IRuleActuator<IRule>
+    public class StaticListenerRuleActuator : RuleGroupActuatorBase, IListenerIgnorer, IRuleActuator<IRule>
         , ComponentOf<HybridListenerRuleActuator>
         , AsRule<IAwakeRule<RuleGroup>>
     {

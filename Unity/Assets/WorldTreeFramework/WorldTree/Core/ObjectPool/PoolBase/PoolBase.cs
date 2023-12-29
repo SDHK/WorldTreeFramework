@@ -48,7 +48,7 @@ namespace WorldTree
     /// <summary>
     /// 对象池接口
     /// </summary>
-    public interface IPool : ICoreNode
+    public interface IPool : IListenerIgnorer
     {
         /// <summary>
         /// 对象类型

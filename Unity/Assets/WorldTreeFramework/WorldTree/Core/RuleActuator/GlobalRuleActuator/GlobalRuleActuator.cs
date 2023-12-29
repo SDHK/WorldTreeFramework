@@ -66,7 +66,7 @@ namespace WorldTree
 		{
 			foreach (var item in self.ruleGroup)
 			{
-				if (!item.Key.CoreToType().GetInterfaces().Contains(typeof(ICoreNode)))
+				if (!item.Key.CoreToType().GetInterfaces().Contains(typeof(IListenerIgnorer)))
 				{
 					if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
 					{

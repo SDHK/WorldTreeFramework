@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树根
 	/// </summary>
-	public class WorldTreeRoot : CoreNode, ComponentOf<WorldTreeCore>
+	public class WorldTreeRoot : Node, ComponentOf<WorldTreeCore>
 		,AsRule<IAwakeRule>
 	{
 		public WorldTreeRoot()

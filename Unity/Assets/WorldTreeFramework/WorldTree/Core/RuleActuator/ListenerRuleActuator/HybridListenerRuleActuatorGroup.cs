@@ -14,7 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 混合型监听器法则执行器组
 	/// </summary>
-	public class HybridListenerRuleActuatorGroup : CoreNode, ComponentOf<ReferencedPool>
+	public class HybridListenerRuleActuatorGroup : Node, IListenerIgnorer, ComponentOf<ReferencedPool>
 		, AsRule<IAwakeRule>
 	{
 		/// <summary>

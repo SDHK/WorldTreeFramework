@@ -18,7 +18,7 @@ namespace WorldTree
 		/// 新建节点对象
 		/// </summary>
 		/// <remarks>不执行法则生命周期</remarks>
-		private static T NewNode<T>(this INode self, out T node) where T : class, INode
+		public static T NewNode<T>(this INode self, out T node) where T : class, INode
 		{
 			Type type = typeof(T);
 			node = Activator.CreateInstance(type, true) as T;
@@ -33,7 +33,7 @@ namespace WorldTree
 		/// 新建节点对象
 		/// </summary>
 		/// <remarks>不执行法则生命周期</remarks>
-		private static INode NewNode(this INode self, long type)
+		public static INode NewNode(this INode self, long type)
 		{
 			INode node = Activator.CreateInstance(type.CoreToType(), true) as INode;
 			node.Type = type;

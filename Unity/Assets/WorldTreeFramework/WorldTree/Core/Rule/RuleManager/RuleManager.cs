@@ -23,7 +23,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界法则管理器
 	/// </summary>
-	public class RuleManager : CoreNode, ComponentOf<WorldTreeCore>
+	public class RuleManager : Node, IListenerIgnorer, ComponentOf<WorldTreeCore>
 	{
 		/// <summary>
 		/// 已支持的类型哈希名单

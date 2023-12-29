@@ -56,9 +56,6 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldContext\WorldContext.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldContext\WorldThread.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeConcurrentQueue.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTweenManager.cs" />
@@ -98,6 +95,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\IRuleActuator.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\NodeBase\INodeListener.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\RuleList.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldContext\WorldContext.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRuleGeneral\NodeCallAsyncRuleGeneral.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\SendRuleBase.cs" />
@@ -150,7 +148,9 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathVector4Float.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\UnitPool.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitQueue.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeConcurrentQueue.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\CurveManager.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\Core\WorldContext\WorldThread.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\RuleBase\CurveEvaluateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\RuleActuator\RuleActuator.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskMethodBuilder.cs" />

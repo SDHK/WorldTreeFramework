@@ -27,10 +27,10 @@ namespace WorldTree
 
 
 	/// <summary>
-	/// 核心节点标记
+	/// 监听器忽略标记
 	/// </summary>
-	/// <remarks>将节点标记为核心组件，避免核心启动时处理自己出现死循环</remarks>
-	public interface ICoreNode { }
+	/// <remarks>避免核心启动时监听处理出现死循环</remarks>
+	public interface IListenerIgnorer { }
 
 
 	/// <summary>

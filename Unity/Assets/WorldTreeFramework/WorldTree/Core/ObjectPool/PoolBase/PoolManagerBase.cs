@@ -9,7 +9,7 @@ namespace WorldTree
 	/// <summary>
 	/// 对象池管理器基类
 	/// </summary>
-	public abstract class PoolManagerBase : CoreNode
+	public abstract class PoolManagerBase : Node, IListenerIgnorer
 	 , ComponentOf<WorldTreeCore>
 	 , AsRule<IAwakeRule>
 

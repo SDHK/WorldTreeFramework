@@ -22,7 +22,7 @@ namespace WorldTree
 		, AsRule<IAwakeRule>
 		, AsRule<IFixedUpdateTimeRule>
 		, AsRule<ILateUpdateTimeRule>
-	{}
+	{ }
 
 	public static class InitialDomainRule
 	{
@@ -33,8 +33,17 @@ namespace WorldTree
 			protected override void OnEvent(InitialDomain self)
 			{
 				self.Log($"初始域启动！！");
-				self.AddComponent(out SphereManagerTest _);
-
+				//WorldTreeCore core = new WorldTreeCore();
+				//core.Log = self.Core.Log;
+				//core.LogWarning = self.Core.LogWarning;
+				//core.LogError = self.Core.LogError;
+				//core.Awake();
+				//self.GraftComponent(core);
+				self.AddComponent(out WorldTreeCore core, isPool: false);
+				core.Log = self.Core.Log;
+				core.LogWarning = self.Core.LogWarning;
+				core.LogError = self.Core.LogError;
+				core.Awake();
 			}
 		}
 	}

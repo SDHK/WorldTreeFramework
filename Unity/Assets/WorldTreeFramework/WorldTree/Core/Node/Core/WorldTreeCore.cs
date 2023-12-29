@@ -32,16 +32,35 @@ namespace WorldTree
 	//界程
 
 	//切线程，同步上下文
-	
+
 	//邮箱组件需要管理器Update
 	//节点邮箱组件，只有SendMail<1,2,3,4,5>
 
 
 
 	/// <summary>
+	/// 世界树核心接口
+	/// </summary>
+	public interface IWorldTreeCore : INode
+	{
+		/// <summary>
+		/// 框架启动
+		/// </summary>
+		public void Awake();
+
+		/// <summary>
+		/// 框架刷新
+		/// </summary>
+		public void Update(float deltaTime);
+	}
+
+
+	/// <summary>
 	/// 世界树核心
 	/// </summary>
-	public class WorldTreeCore : CoreNode
+	public class WorldTreeCore : Node, IWorldTreeCore, IListenerIgnorer
+		, ComponentOf<INode>
+		, AsRule<IAwakeRule>
 	{
 		/// <summary>
 		/// 打印日志
@@ -112,70 +131,58 @@ namespace WorldTree
 		public GlobalRuleActuator<IUpdateTimeRule> updateTime;
 
 
-		/// <summary>
-		/// 释放
-		/// </summary>
-		public override void Dispose()
+		public virtual void Awake()
 		{
-			this.Destroy();
-		}
-	}
+			this.SetActive(false);
 
-
-	public static partial class WorldTreeCoreRule
-	{
-		/// <summary>
-		/// 框架启动
-		/// </summary>
-		public static void Awake(this WorldTreeCore self)
-		{
 			//根节点初始化
-			self.Type = TypeInfo<WorldTreeCore>.TypeCode;
-			self.Core = self;
-			self.Domain = self;
+			this.Type = TypeInfo<WorldTreeCore>.TypeCode;
+			this.Core = this;
+			this.Domain = this;
+			this.Root = null;
 
 			//框架核心启动组件新建初始化
 
 			//Id管理器初始化
-			self.NewNode(out self.IdManager);
-			self.Id = self.IdManager.GetId();
+			this.NewNode(out this.IdManager);
+			this.Id = this.IdManager.GetId();
 
 			//时间管理器初始化
-			self.NewNode(out self.RealTimeManager);
+			this.NewNode(out this.RealTimeManager);
 
 			//法则管理器初始化
-			self.NewNode(out self.RuleManager);
+			this.NewNode(out this.RuleManager);
 
-			self.NewRuleGroup = self.RuleManager.GetOrNewRuleGroup<INewRule>();
-			self.GetRuleGroup = self.RuleManager.GetOrNewRuleGroup<IGetRule>();
-			self.BeforeRemoveRuleGroup = self.RuleManager.GetOrNewRuleGroup<IBeforeRemoveRule>();
-			self.RecycleRuleGroup = self.RuleManager.GetOrNewRuleGroup<IRecycleRule>();
-			self.DestroyRuleGroup = self.RuleManager.GetOrNewRuleGroup<IDestroyRule>();
+			this.NewRuleGroup = this.RuleManager.GetOrNewRuleGroup<INewRule>();
+			this.GetRuleGroup = this.RuleManager.GetOrNewRuleGroup<IGetRule>();
+			this.BeforeRemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<IBeforeRemoveRule>();
+			this.RecycleRuleGroup = this.RuleManager.GetOrNewRuleGroup<IRecycleRule>();
+			this.DestroyRuleGroup = this.RuleManager.GetOrNewRuleGroup<IDestroyRule>();
 
-			self.AddRuleGroup = self.RuleManager.GetOrNewRuleGroup<IAddRule>();
-			self.RemoveRuleGroup = self.RuleManager.GetOrNewRuleGroup<IRemoveRule>();
-			self.EnableRuleGroup = self.RuleManager.GetOrNewRuleGroup<IEnableRule>();
-			self.DisableRuleGroup = self.RuleManager.GetOrNewRuleGroup<IDisableRule>();
+			this.AddRuleGroup = this.RuleManager.GetOrNewRuleGroup<IAddRule>();
+			this.RemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<IRemoveRule>();
+			this.EnableRuleGroup = this.RuleManager.GetOrNewRuleGroup<IEnableRule>();
+			this.DisableRuleGroup = this.RuleManager.GetOrNewRuleGroup<IDisableRule>();
 
 			//引用池管理器初始化
-			self.NewNodeLifecycle(out self.ReferencedPoolManager);
+			this.NewNodeLifecycle(out this.ReferencedPoolManager);
 
 			//组件添加到树
-			self.GraftComponent(self.ReferencedPoolManager);
-			self.GraftComponent(self.IdManager);
-			self.GraftComponent(self.RuleManager);
+			this.GraftComponent(this.ReferencedPoolManager);
+			this.GraftComponent(this.IdManager);
+			this.GraftComponent(this.RuleManager);
 
 			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
-			self.UnitPoolManager = self.AddComponent(out UnitPoolManager _, isPool: false);
-			self.NodePoolManager = self.AddComponent(out NodePoolManager _, isPool: false);
-			self.ArrayPoolManager = self.AddComponent(out ArrayPoolManager _, isPool: false);
+			this.UnitPoolManager = this.AddComponent(out UnitPoolManager _, isPool: false);
+			this.NodePoolManager = this.AddComponent(out NodePoolManager _, isPool: false);
+			this.ArrayPoolManager = this.AddComponent(out ArrayPoolManager _, isPool: false);
 
-			self.UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
+			this.UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
 
 			//嫁接节点需要手动激活
-			self.ReferencedPoolManager.SetActive(true);
-			self.IdManager.SetActive(true);
-			self.RuleManager.SetActive(true);
+			this.ReferencedPoolManager.SetActive(true);
+			this.IdManager.SetActive(true);
+			this.RuleManager.SetActive(true);
 			//self.Root.SetActive(true);
 
 			//游戏时间管理器
@@ -183,73 +190,87 @@ namespace WorldTree
 
 
 			//核心激活
-			self.SetActive(true);
+			this.SetActive(true);
 
 
+			this.GetOrNewGlobalRuleActuator(out this.enable);
+			this.GetOrNewGlobalRuleActuator(out this.update);
+			this.GetOrNewGlobalRuleActuator(out this.updateTime);
+			this.GetOrNewGlobalRuleActuator(out this.disable);
 
-			self.GetOrNewGlobalRuleActuator(out self.enable);
-			self.GetOrNewGlobalRuleActuator(out self.update);
-			self.GetOrNewGlobalRuleActuator(out self.updateTime);
-			self.GetOrNewGlobalRuleActuator(out self.disable);
-
-			self.Root = self.AddComponent(out WorldTreeRoot _);
-			self.Root.Root = self.Root;
+			this.Root = this.AddComponent(out WorldTreeRoot _);
+			this.Root.Root = this.Root;
+		}
+		public virtual void Update(float deltaTime)
+		{
+			this.enable?.Send();
+			this.update?.Send();
+			this.updateTime?.Send(deltaTime);
+			this.disable?.Send();
 		}
 
 		/// <summary>
-		/// 框架销毁
+		/// 释放
 		/// </summary>
-		public static void Destroy(this WorldTreeCore self)
+		public override void Dispose()
 		{
-			self.RemoveComponent<WorldTreeRoot>();
-			self.RemoveComponent<GlobalRuleActuatorManager>();
-			self.SetActive(false);
-			self.RemoveComponent<GameTimeManager>();
-			self.RemoveComponent<ArrayPoolManager>();
-			self.RemoveComponent<NodePoolManager>();
-			self.RemoveComponent<UnitPoolManager>();
-			self.RemoveComponent<RuleManager>();
-			self.RemoveComponent<RealTimeManager>();
-			self.RemoveComponent<IdManager>();
-			self.RemoveComponent<ReferencedPoolManager>();
+			this.RemoveComponent<WorldTreeRoot>();
+			this.RemoveComponent<GlobalRuleActuatorManager>();
+			this.SetActive(false);
+			this.RemoveComponent<GameTimeManager>();
+			this.RemoveComponent<ArrayPoolManager>();
+			this.RemoveComponent<NodePoolManager>();
+			this.RemoveComponent<UnitPoolManager>();
+			this.RemoveComponent<RuleManager>();
+			this.RemoveComponent<RealTimeManager>();
+			this.RemoveComponent<IdManager>();
+			this.RemoveComponent<ReferencedPoolManager>();
 
-			self.RemoveAllNode();
+			this.RemoveAllNode();
 
-			self.NewRuleGroup = null;
-			self.GetRuleGroup = null;
-			self.RecycleRuleGroup = null;
-			self.DestroyRuleGroup = null;
+			this.NewRuleGroup = null;
+			this.GetRuleGroup = null;
+			this.RecycleRuleGroup = null;
+			this.DestroyRuleGroup = null;
 
 
-			self.AddRuleGroup = null;
-			self.RemoveRuleGroup = null;
-			self.EnableRuleGroup = null;
-			self.DisableRuleGroup = null;
+			this.AddRuleGroup = null;
+			this.RemoveRuleGroup = null;
+			this.EnableRuleGroup = null;
+			this.DisableRuleGroup = null;
 
-			self.ReferencedPoolManager = null;
-			self.IdManager = null;
-			self.RealTimeManager = null;
-			self.RuleManager = null;
-			self.UnitPoolManager = null;
-			self.NodePoolManager = null;
-			self.ArrayPoolManager = null;
-			self.Root = null;
+			this.ReferencedPoolManager = null;
+			this.IdManager = null;
+			this.RealTimeManager = null;
+			this.RuleManager = null;
+			this.UnitPoolManager = null;
+			this.NodePoolManager = null;
+			this.ArrayPoolManager = null;
+			this.Root = null;
 
-			self.enable = null;
-			self.update = null;
-			self.updateTime = null;
-			self.disable = null;
+			this.enable = null;
+			this.update = null;
+			this.updateTime = null;
+			this.disable = null;
+		}
+	}
+
+
+	public static partial class WorldTreeCoreRule
+	{
+
+		class AddRule : AddRule<WorldTreeCore>
+		{
+			protected override void OnEvent(WorldTreeCore self)
+			{
+			}
 		}
 
-		/// <summary>
-		/// 框架刷新
-		/// </summary>
-		public static void Update(this WorldTreeCore self, float deltaTime)
+		class RemoveRule : RemoveRule<WorldTreeCore>
 		{
-			self.enable?.Send();
-			self.update?.Send();
-			self.updateTime?.Send(deltaTime);
-			self.disable?.Send();
+			protected override void OnEvent(WorldTreeCore self)
+			{
+			}
 		}
 	}
 }

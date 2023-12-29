@@ -9,11 +9,6 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 世界树核心节点基类
-	/// </summary>
-	public abstract partial class CoreNode : Node, ICoreNode { }
-
-	/// <summary>
 	/// 世界树节点基类
 	/// </summary>
 	public abstract partial class Node : INode
@@ -179,11 +174,11 @@ namespace WorldTree
 		public virtual void OnAddSelfToTree()
 		{
 			this.Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
-			if (this is not ICoreNode)//广播给全部监听器
+			if (this is not IListenerIgnorer)//广播给全部监听器
 			{
 				this.GetListenerActuator<IListenerAddRule>()?.Send((INode)this);
 			}
-			if (this is INodeListener nodeListener && this is not ICoreNode)//检测添加静态监听
+			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
 			{
 				this.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
 			}
@@ -271,7 +266,7 @@ namespace WorldTree
 			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.SetActive(false);//激活变更
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
-			if (this is INodeListener nodeListener && this is not ICoreNode)
+			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
 			{
 				//检测移除静态监听
 				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
@@ -282,7 +277,7 @@ namespace WorldTree
 				}
 			}
 			this.Core.RemoveRuleGroup?.Send(this);//移除事件通知
-			if (this is not ICoreNode)//广播给全部监听器通知 X
+			if (this is not IListenerIgnorer)//广播给全部监听器通知 X
 			{
 				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
 			}
@@ -319,11 +314,11 @@ namespace WorldTree
 			if (this.Domain != this) this.Domain = this.Parent.Domain;
 
 			this.Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
-			if (this is not ICoreNode)//广播给全部监听器
+			if (this is not IListenerIgnorer)//广播给全部监听器
 			{
 				this.GetListenerActuator<IListenerAddRule>()?.Send((INode)this);
 			}
-			if (this is INodeListener nodeListener && this is not ICoreNode)//检测添加静态监听
+			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
 			{
 				this.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
 			}
@@ -360,7 +355,7 @@ namespace WorldTree
 		}
 		public virtual void OnCutSelf()
 		{
-			if (this is INodeListener nodeListener && this is not ICoreNode)
+			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
 			{
 				//检测移除静态监听
 				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
@@ -371,7 +366,7 @@ namespace WorldTree
 				}
 			}
 			this.SendRule(TypeInfo<ICutRule>.Default);
-			if (this is not ICoreNode)//广播给全部监听器通知 X
+			if (this is not IListenerIgnorer)//广播给全部监听器通知 X
 			{
 				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
 			}
