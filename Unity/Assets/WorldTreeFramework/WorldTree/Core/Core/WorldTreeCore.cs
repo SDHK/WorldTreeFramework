@@ -18,6 +18,8 @@ namespace WorldTree
 {
 	//计划
 
+	//藤蔓网状结构
+
 	//新增TimeUpdate,特化的双方法法则
 
 	//真实与游戏时间双法则
@@ -29,12 +31,14 @@ namespace WorldTree
 
 	//管理器改为分支 整理
 
-	//界程
+	//世界线程，界程
 
 	//切线程，同步上下文
 
 	//邮箱组件需要管理器Update
 	//节点邮箱组件，只有SendMail<1,2,3,4,5>
+
+
 
 
 
@@ -59,7 +63,7 @@ namespace WorldTree
 	/// 世界树核心
 	/// </summary>
 	public class WorldTreeCore : Node, IWorldTreeCore, IListenerIgnorer
-		, ComponentOf<INode>
+		, ComponentOf<WorldTreeCore>
 		, AsRule<IAwakeRule>
 	{
 		/// <summary>
@@ -210,7 +214,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 释放
+		/// 框架释放
 		/// </summary>
 		public override void Dispose()
 		{

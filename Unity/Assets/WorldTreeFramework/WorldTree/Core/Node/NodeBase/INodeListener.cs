@@ -33,10 +33,16 @@ namespace WorldTree
         Rule
     }
 
-    /// <summary>
-    /// 节点监听器接口
-    /// </summary>
-    public interface INodeListener : INode
+	/// <summary>
+	/// 监听器忽略标记
+	/// </summary>
+	/// <remarks>避免核心启动时监听处理出现死循环</remarks>
+	public interface IListenerIgnorer { }
+
+	/// <summary>
+	/// 节点监听器接口
+	/// </summary>
+	public interface INodeListener : INode
 	    , AsRule<IListenerAddRule>
 	    , AsRule<IListenerRemoveRule>
 	{ }

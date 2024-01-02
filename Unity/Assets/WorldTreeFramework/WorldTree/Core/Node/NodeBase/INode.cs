@@ -27,13 +27,6 @@ namespace WorldTree
 
 
 	/// <summary>
-	/// 监听器忽略标记
-	/// </summary>
-	/// <remarks>避免核心启动时监听处理出现死循环</remarks>
-	public interface IListenerIgnorer { }
-
-
-	/// <summary>
 	/// 世界树节点接口
 	/// </summary>
 	/// <remarks>
