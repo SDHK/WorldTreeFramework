@@ -27,9 +27,7 @@ namespace WorldTree.Internal
 		[DebuggerHidden]
 		public static TreeTaskMethodBuilder Create()
 		{
-
-			TreeTaskMethodBuilder builder = new TreeTaskMethodBuilder();
-			return builder;
+			return new TreeTaskMethodBuilder();
 		}
 
 		// 2. TaskLike Task property.

@@ -21,7 +21,8 @@ namespace WorldTree.Internal
     /// </summary>
     [AsyncMethodBuilder(typeof(TreeTaskCompletedMethodBuilder))]
     public class TreeTaskCompleted : TreeTaskBase
-        , AsRule<IAwakeRule>
+		, ChildOf<INode>
+		, AsRule<IAwakeRule>
         , ISyncTask
     {
         public TreeTaskCompleted GetAwaiter() => this;

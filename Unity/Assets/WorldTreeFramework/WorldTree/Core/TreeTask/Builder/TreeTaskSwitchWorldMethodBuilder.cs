@@ -1,13 +1,11 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/6/13 19:46
+* 日期： 2024/01/03 11:33:27
 
 * 描述： 
 
 */
-
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -15,22 +13,24 @@ using System.Security;
 
 namespace WorldTree.Internal
 {
-	public struct TreeTaskTokenCatchMethodBuilder
+	/// <summary>
+	/// 异步任务构建器
+	/// </summary>
+	public struct TreeTaskSwitchWorldMethodBuilder
 	{
 		private ITreeTaskStateMachine treeTaskStateMachine;
 
-		private TreeTaskTokenCatch task;
+		private TreeTaskSwitchWorld task;
 
 		[DebuggerHidden]
-		public static TreeTaskTokenCatchMethodBuilder Create()
+		public static TreeTaskSwitchWorldMethodBuilder Create()
 		{
-			TreeTaskTokenCatchMethodBuilder builder = new TreeTaskTokenCatchMethodBuilder();
-			return builder;
+			return new TreeTaskSwitchWorldMethodBuilder();
 		}
 
 		// 2. TaskLike Task property.
 		[DebuggerHidden]
-		public TreeTaskTokenCatch Task
+		public TreeTaskSwitchWorld Task
 		{
 			get
 			{
@@ -73,22 +73,7 @@ namespace WorldTree.Internal
 				this.treeTaskStateMachine = awaiter.PoolGetUnit(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
 				taskStateMachine.SetStateMachine(ref stateMachine);
 			}
-			if (task == null)
-			{
-				awaiter.Parent.AddChild(out task);
-
-				if (awaiter.m_TreeTaskToken is null)
-				{
-					task.m_RelevanceTask = awaiter;
-				}
-				else
-				{
-					task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
-					task.m_TreeTaskToken.tokenEvent.Add(task, TypeInfo<ITreeTaskTokenEventRule>.Default);
-				}
-				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
-			}
-			else
+			if (task != null)
 			{
 				if (task.m_TreeTaskToken != null)
 				{
@@ -97,6 +82,8 @@ namespace WorldTree.Internal
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 			}
 		}
+
+
 
 		// 7. Start
 		[DebuggerHidden]

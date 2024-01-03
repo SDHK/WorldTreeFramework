@@ -38,6 +38,10 @@ namespace WorldTree
 	//邮箱组件需要管理器Update
 	//节点邮箱组件，只有SendMail<1,2,3,4,5>
 
+	//核心处理重写
+
+	//多线程核心设计
+
 
 
 
@@ -56,6 +60,11 @@ namespace WorldTree
 		/// 框架刷新
 		/// </summary>
 		public void Update(float deltaTime);
+
+		///// <summary>
+		///// 框架异步释放
+		///// </summary>
+		//public TreeTask DisposeAsync();
 	}
 
 
@@ -63,7 +72,7 @@ namespace WorldTree
 	/// 世界树核心
 	/// </summary>
 	public class WorldTreeCore : Node, IWorldTreeCore, IListenerIgnorer
-		, ComponentOf<WorldTreeCore>
+		, WorldOf<WorldTreeCore>
 		, AsRule<IAwakeRule>
 	{
 		/// <summary>
@@ -128,6 +137,11 @@ namespace WorldTree
 		/// </summary>
 		public ArrayPoolManager ArrayPoolManager;
 
+		/// <summary>
+		/// 世界环境
+		/// </summary>
+		public WorldContext worldContext;
+
 
 		public GlobalRuleActuator<IEnableRule> enable;
 		public GlobalRuleActuator<IDisableRule> disable;
@@ -149,7 +163,10 @@ namespace WorldTree
 
 			//Id管理器初始化
 			this.NewNode(out this.IdManager);
-			this.Id = this.IdManager.GetId();
+			if (this.Id == 0)
+			{
+				this.Id = this.IdManager.GetId();
+			}
 
 			//时间管理器初始化
 			this.NewNode(out this.RealTimeManager);
@@ -213,13 +230,21 @@ namespace WorldTree
 			this.disable?.Send();
 		}
 
-		/// <summary>
-		/// 框架释放
-		/// </summary>
-		public override void Dispose()
+
+		//整理：添加，嫁接，裁剪 
+
+
+		public override void OnBeforeDispose()
 		{
+			this.Core.BeforeRemoveRuleGroup?.Send(this);
+
+			//需要提前按顺序移除
+			this.RemoveAllNode<WorldBranch>();
+
 			this.RemoveComponent<WorldTreeRoot>();
 			this.RemoveComponent<GlobalRuleActuatorManager>();
+
+			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.SetActive(false);
 			this.RemoveComponent<GameTimeManager>();
 			this.RemoveComponent<ArrayPoolManager>();
@@ -257,6 +282,11 @@ namespace WorldTree
 			this.updateTime = null;
 			this.disable = null;
 		}
+
+		/// <summary>
+		/// 框架释放
+		/// </summary>
+		public override void OnDispose() { }
 	}
 
 

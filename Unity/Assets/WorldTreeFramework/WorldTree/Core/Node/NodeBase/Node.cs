@@ -237,7 +237,7 @@ namespace WorldTree
 					{
 						foreach (var item in branch)
 						{
-							this.LogError($"移除节点出错，意外的新节点，分支:{this.GetType()} 节点:{item.GetType()}:{item.Id}");
+							this.LogError($"移除节点出错，意外的新节点，父级:{this.GetType()} 分支: {branch.GetType()} 节点:{item.GetType()}:{item.Id}");
 						}
 					}
 				}
@@ -259,7 +259,7 @@ namespace WorldTree
 			this.TraversalPrePostOrder(current => current.OnBeforeDispose(), current => current.OnDispose());
 		}
 
-		public void OnBeforeDispose() => this.Core.BeforeRemoveRuleGroup?.Send(this);
+		public virtual void OnBeforeDispose() => this.Core.BeforeRemoveRuleGroup?.Send(this);
 
 		public virtual void OnDispose()
 		{

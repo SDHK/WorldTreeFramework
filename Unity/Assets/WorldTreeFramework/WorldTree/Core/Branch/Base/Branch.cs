@@ -18,7 +18,7 @@ namespace WorldTree
 	/// </summary>
 	public abstract class Branch<K> : UnitPoolItem, IBranch<K>
 	{
-		public int Count => Nodes.Count;
+		public int Count => Nodes == null ? 0 : Nodes.Count;
 		protected UnitDictionary<K, INode> Nodes;
 		protected UnitDictionary<long, K> NodeKeys;
 
