@@ -159,6 +159,11 @@ namespace WorldTree
 		public INode AddSelfToTree<B, K, T1, T2, T3, T4, T5>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where B : class, IBranch<K>;
 
 		/// <summary>
+		/// 尝试添加到树结构上
+		/// </summary>
+		public bool TryAddSelfToTree<B, K>(K Key, INode parent) where B : class, IBranch<K>;
+
+		/// <summary>
 		/// 节点加入树结构时的处理
 		/// </summary>
 		/// <remarks>由框架内部调用</remarks>

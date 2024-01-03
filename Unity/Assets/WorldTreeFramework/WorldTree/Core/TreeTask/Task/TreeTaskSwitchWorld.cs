@@ -8,19 +8,14 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using WorldTree.Internal;
 
 namespace WorldTree
 {
 	[AsyncMethodBuilder(typeof(TreeTaskSwitchWorldMethodBuilder))]
 	public class TreeTaskSwitchWorld : TreeTaskBase
-		, ChildOf<INode>
+		, ChildOf<WorldContext>
 		, AsRule<IAwakeRule<WorldContext>>
 		, AsRule<ITreeTaskSetResuItRule>
 	{

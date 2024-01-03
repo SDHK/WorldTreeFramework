@@ -66,15 +66,8 @@ namespace WorldTree
 		public virtual INode AddSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
 		{
-			if (parent.AddBranch<B>().TryAddNode(key, this))
+			if (TryAddSelfToTree<B, K>(key, parent))
 			{
-				this.BranchType = TypeInfo<B>.TypeCode;
-				this.Parent = parent;
-				this.Core = parent.Core;
-				this.Root = parent.Root;
-				if (this.Domain != this) this.Domain = parent.Domain;
-
-				this.SetActive(true);//激活节点
 				this.TrySendRule(TypeInfo<IAwakeRule>.Default);
 				this.OnAddSelfToTree();
 			}
@@ -84,15 +77,8 @@ namespace WorldTree
 		public virtual INode AddSelfToTree<B, K, T1>(K key, INode parent, T1 arg1)
 			where B : class, IBranch<K>
 		{
-			if (parent.AddBranch<B>().TryAddNode(key, this))
+			if (TryAddSelfToTree<B, K>(key, parent))
 			{
-				this.BranchType = TypeInfo<B>.TypeCode;
-				this.Parent = parent;
-				this.Core = parent.Core;
-				this.Root = parent.Root;
-				if (this.Domain != this) this.Domain = parent.Domain;
-
-				this.SetActive(true);//激活节点
 				this.TrySendRule(TypeInfo<IAwakeRule<T1>>.Default, arg1);
 				this.OnAddSelfToTree();
 			}
@@ -102,15 +88,8 @@ namespace WorldTree
 		public virtual INode AddSelfToTree<B, K, T1, T2>(K key, INode parent, T1 arg1, T2 arg2)
 			where B : class, IBranch<K>
 		{
-			if (parent.AddBranch<B>().TryAddNode(key, this))
+			if (TryAddSelfToTree<B, K>(key, parent))
 			{
-				this.BranchType = TypeInfo<B>.TypeCode;
-				this.Parent = parent;
-				this.Core = parent.Core;
-				this.Root = parent.Root;
-				if (this.Domain != this) this.Domain = parent.Domain;
-
-				this.SetActive(true);//激活节点
 				this.TrySendRule(TypeInfo<IAwakeRule<T1, T2>>.Default, arg1, arg2);
 				this.OnAddSelfToTree();
 			}
@@ -120,15 +99,8 @@ namespace WorldTree
 		public virtual INode AddSelfToTree<B, K, T1, T2, T3>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3)
 			where B : class, IBranch<K>
 		{
-			if (parent.AddBranch<B>().TryAddNode(key, this))
+			if (TryAddSelfToTree<B, K>(key, parent))
 			{
-				this.BranchType = TypeInfo<B>.TypeCode;
-				this.Parent = parent;
-				this.Core = parent.Core;
-				this.Root = parent.Root;
-				if (this.Domain != this) this.Domain = parent.Domain;
-
-				this.SetActive(true);//激活节点
 				this.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3>>.Default, arg1, arg2, arg3);
 				this.OnAddSelfToTree();
 			}
@@ -138,15 +110,8 @@ namespace WorldTree
 		public virtual INode AddSelfToTree<B, K, T1, T2, T3, T4>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
 			where B : class, IBranch<K>
 		{
-			if (parent.AddBranch<B>().TryAddNode(key, this))
+			if (TryAddSelfToTree<B, K>(key, parent))
 			{
-				this.BranchType = TypeInfo<B>.TypeCode;
-				this.Parent = parent;
-				this.Core = parent.Core;
-				this.Root = parent.Root;
-				if (this.Domain != this) this.Domain = parent.Domain;
-
-				this.SetActive(true);//激活节点
 				this.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3, T4>>.Default, arg1, arg2, arg3, arg4);
 				this.OnAddSelfToTree();
 			}
@@ -156,19 +121,28 @@ namespace WorldTree
 		public virtual INode AddSelfToTree<B, K, T1, T2, T3, T4, T5>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
 			where B : class, IBranch<K>
 		{
-			if (parent.AddBranch<B>().TryAddNode(key, this))
+			if (TryAddSelfToTree<B, K>(key, parent))
+			{
+				this.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3, T4, T5>>.Default, arg1, arg2, arg3, arg4, arg5);
+				this.OnAddSelfToTree();
+			}
+			return this;
+		}
+
+		public virtual bool TryAddSelfToTree<B, K>(K Key, INode parent)
+			where B : class, IBranch<K>
+		{
+			if (parent.AddBranch<B>().TryAddNode(Key, this))
 			{
 				this.BranchType = TypeInfo<B>.TypeCode;
 				this.Parent = parent;
 				this.Core = parent.Core;
 				this.Root = parent.Root;
 				if (this.Domain != this) this.Domain = parent.Domain;
-
 				this.SetActive(true);//激活节点
-				this.TrySendRule(TypeInfo<IAwakeRule<T1, T2, T3, T4, T5>>.Default, arg1, arg2, arg3, arg4, arg5);
-				this.OnAddSelfToTree();
+				return true;
 			}
-			return this;
+			return false;
 		}
 
 		public virtual void OnAddSelfToTree()

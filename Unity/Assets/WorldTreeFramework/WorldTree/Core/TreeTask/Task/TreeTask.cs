@@ -51,6 +51,11 @@ namespace WorldTree
 			this.TrySyncTaskSetCompleted();
 
 		}
+
+		public void SetResult()
+		{
+			this.SetCompleted();
+		}
 	}
 
 
@@ -100,15 +105,15 @@ namespace WorldTree
 
 		}
 
-		public void SetResult()
+		public void SetResult(T result)
 		{
+			this.Result = result;
 			this.SetCompleted();
 		}
 	}
 
 	public static class TreeTaskRule
 	{
-
 		class SetResultSendRule : TreeTaskSetResuItRule<TreeTask>
 		{
 			protected override void OnEvent(TreeTask self)
@@ -117,11 +122,6 @@ namespace WorldTree
 			}
 		}
 
-		public static void SetResult<T>(this TreeTask<T> self, T result)
-		{
-			self.Result = result;
-			self.SetCompleted();
-		}
 		class SetResultSendRule<T> : TreeTaskSetResuItRule<TreeTask<T>, T>
 		{
 			protected override void OnEvent(TreeTask<T> self, T result)

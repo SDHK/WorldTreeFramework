@@ -76,6 +76,11 @@ namespace WorldTree
 		, AsRule<IAwakeRule>
 	{
 		/// <summary>
+		/// 主核心
+		/// </summary>
+		IWorldTreeCore RootCore;
+
+		/// <summary>
 		/// 打印日志
 		/// </summary>
 		public Action<object> Log;
@@ -99,6 +104,7 @@ namespace WorldTree
 		public IRuleGroup<IRecycleRule> RecycleRuleGroup;
 		public IRuleGroup<IDestroyRule> DestroyRuleGroup;
 
+		public bool IsCoreActive = false;
 
 
 		/// <summary>
@@ -233,6 +239,28 @@ namespace WorldTree
 
 		//整理：添加，嫁接，裁剪 
 
+		#region 节点处理
+
+		#region 添加
+
+		public override bool TryAddSelfToTree<B, K>(K Key, INode parent)
+		{
+			if (parent.AddBranch<B>().TryAddNode(Key, this))
+			{
+				this.BranchType = TypeInfo<B>.TypeCode;
+				this.Parent = parent;
+				this.Core = this;
+				this.Root = this.Root;
+				if (this.Domain != this) this.Domain = this;
+				this.SetActive(true);//激活节点
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
+
+		#region 释放
 
 		public override void OnBeforeDispose()
 		{
@@ -287,6 +315,10 @@ namespace WorldTree
 		/// 框架释放
 		/// </summary>
 		public override void OnDispose() { }
+
+		#endregion
+
+		#endregion
 	}
 
 
