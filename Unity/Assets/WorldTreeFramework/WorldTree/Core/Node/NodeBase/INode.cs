@@ -176,7 +176,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点嫁接到树结构
 		/// </summary>
-		public bool GraftSelfToTree<B, K>(K key, INode parent) where B : class, IBranch<K>;
+		public bool TryGraftSelfToTree<B, K>(K key, INode parent) where B : class, IBranch<K>;
 
 		/// <summary>
 		/// 节点嫁接到树结构时的处理

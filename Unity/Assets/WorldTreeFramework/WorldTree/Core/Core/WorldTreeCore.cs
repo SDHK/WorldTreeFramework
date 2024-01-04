@@ -75,10 +75,13 @@ namespace WorldTree
 		, WorldOf<WorldTreeCore>
 		, AsRule<IAwakeRule>
 	{
+
+		#region 字段
+
 		/// <summary>
 		/// 主核心
 		/// </summary>
-		IWorldTreeCore RootCore;
+		WorldTreeCore RootCore;
 
 		/// <summary>
 		/// 打印日志
@@ -104,6 +107,9 @@ namespace WorldTree
 		public IRuleGroup<IRecycleRule> RecycleRuleGroup;
 		public IRuleGroup<IDestroyRule> DestroyRuleGroup;
 
+		/// <summary>
+		/// 核心激活标记
+		/// </summary>
 		public bool IsCoreActive = false;
 
 
@@ -155,6 +161,10 @@ namespace WorldTree
 		public GlobalRuleActuator<IUpdateTimeRule> updateTime;
 
 
+		#endregion
+
+		#region 生命周期
+
 		public virtual void Awake()
 		{
 			this.SetActive(false);
@@ -169,10 +179,7 @@ namespace WorldTree
 
 			//Id管理器初始化
 			this.NewNode(out this.IdManager);
-			if (this.Id == 0)
-			{
-				this.Id = this.IdManager.GetId();
-			}
+			if (this.Id == 0) this.Id = this.IdManager.GetId();
 
 			//时间管理器初始化
 			this.NewNode(out this.RealTimeManager);
@@ -216,8 +223,9 @@ namespace WorldTree
 			//self.AddComponent(out self.GameTimeManager);
 
 
-			//核心激活
+			//核心激活标记
 			this.SetActive(true);
+			this.IsCoreActive = true;
 
 
 			this.GetOrNewGlobalRuleActuator(out this.enable);
@@ -236,8 +244,8 @@ namespace WorldTree
 			this.disable?.Send();
 		}
 
+		#endregion
 
-		//整理：添加，嫁接，裁剪 
 
 		#region 节点处理
 
@@ -249,15 +257,32 @@ namespace WorldTree
 			{
 				this.BranchType = TypeInfo<B>.TypeCode;
 				this.Parent = parent;
-				this.Core = this;
-				this.Root = this.Root;
-				if (this.Domain != this) this.Domain = this;
+				this.Core = parent.Core ?? this;
+				this.Root = null;
+				this.Domain = null;
+				this.RootCore = parent.Core.RootCore ?? this;
 				this.SetActive(true);//激活节点
 				return true;
 			}
 			return false;
 		}
 
+		public override void OnAddSelfToTree()
+		{
+			//核心独立，不入上级引用池，也不用广播
+			if (this.IsActive != this.m_ActiveEventMark)//激活变更
+			{
+				if (this.IsActive)
+				{
+					this.Core.EnableRuleGroup?.Send(this);//激活事件通知
+				}
+				else
+				{
+					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
+				}
+			}
+			this.Core.AddRuleGroup?.Send(this);//节点添加事件通知
+		}
 		#endregion
 
 		#region 释放
@@ -272,8 +297,8 @@ namespace WorldTree
 			this.RemoveComponent<WorldTreeRoot>();
 			this.RemoveComponent<GlobalRuleActuatorManager>();
 
-			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
-			this.SetActive(false);
+			this.IsCoreActive = false;
+
 			this.RemoveComponent<GameTimeManager>();
 			this.RemoveComponent<ArrayPoolManager>();
 			this.RemoveComponent<NodePoolManager>();
@@ -284,17 +309,20 @@ namespace WorldTree
 			this.RemoveComponent<ReferencedPoolManager>();
 
 			this.RemoveAllNode();
+		}
 
-			this.NewRuleGroup = null;
-			this.GetRuleGroup = null;
-			this.RecycleRuleGroup = null;
-			this.DestroyRuleGroup = null;
+		/// <summary>
+		/// 框架释放
+		/// </summary>
+		public override void OnDispose()
+		{
+			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
+			this.SetActive(false);
+			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
+			this.Core.RemoveRuleGroup?.Send(this);//移除事件通知
+			this.Parent = null;//清除父节点
 
-
-			this.AddRuleGroup = null;
-			this.RemoveRuleGroup = null;
-			this.EnableRuleGroup = null;
-			this.DisableRuleGroup = null;
+			this.PoolRecycle(this);//回收到池
 
 			this.ReferencedPoolManager = null;
 			this.IdManager = null;
@@ -309,33 +337,74 @@ namespace WorldTree
 			this.update = null;
 			this.updateTime = null;
 			this.disable = null;
+
+			this.NewRuleGroup = null;
+			this.GetRuleGroup = null;
+			this.RecycleRuleGroup = null;
+			this.DestroyRuleGroup = null;
+
+			this.AddRuleGroup = null;
+			this.RemoveRuleGroup = null;
+			this.EnableRuleGroup = null;
+			this.DisableRuleGroup = null;
 		}
 
-		/// <summary>
-		/// 框架释放
-		/// </summary>
-		public override void OnDispose() { }
+		#endregion
+
+		#region 嫁接
+
+		public override bool TryGraftSelfToTree<B, K>(K key, INode parent)
+		{
+			if (!parent.AddBranch<B>().TryAddNode(key, this)) return false;
+
+			this.BranchType = TypeInfo<B>.TypeCode;
+			this.Parent = parent;
+			this.RefreshActive();
+			this.TraversalLevel(current => current.OnGraftSelfToTree());
+			return true;
+		}
+
+		public override void OnGraftSelfToTree()
+		{
+			if (this.IsActive != this.m_ActiveEventMark)//激活变更
+			{
+				if (this.IsActive)
+				{
+					this.Core.EnableRuleGroup?.Send(this);//激活事件通知
+				}
+				else
+				{
+					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
+				}
+			}
+			this.SendRule(TypeInfo<IGraftRule>.Default);//节点嫁接事件通知
+		}
+
+		#endregion
+
+		#region 裁剪
+
+		public override void OnCutSelf()
+		{
+			this.SendRule(TypeInfo<ICutRule>.Default);
+		}
 
 		#endregion
 
 		#endregion
 	}
 
-
 	public static partial class WorldTreeCoreRule
 	{
-
 		class AddRule : AddRule<WorldTreeCore>
 		{
 			protected override void OnEvent(WorldTreeCore self)
 			{
-			}
-		}
-
-		class RemoveRule : RemoveRule<WorldTreeCore>
-		{
-			protected override void OnEvent(WorldTreeCore self)
-			{
+				self.Log = self.Core.Log;
+				self.LogWarning = self.Core.LogWarning;
+				self.LogError = self.Core.LogError;
+				self.Awake();
+				self.Log($"核心启动{self.Id}");
 			}
 		}
 	}

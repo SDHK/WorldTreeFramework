@@ -66,18 +66,18 @@ namespace WorldTree
 		/// <summary>
 		/// 添加世界
 		/// </summary>
-		public static T AddWorld<N, T>(this N self, out T core, bool isPool = true)
+		public static T AddWorld<N, T>(this N self, out T core)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, WorldBranch>, AsRule<IAwakeRule>
-		=> self.AddNode<N, WorldBranch, long, T>(TypeInfo<T>.TypeCode, out core, isPool);
+		=> self.AddNode<N, WorldBranch, long, T>(TypeInfo<T>.TypeCode, out core, isPool: false);
 
 		/// <summary>
 		/// 添加世界
 		/// </summary>
-		public static T AddWorld<N, T, T1>(this N self, out T core, T1 arg1, bool isPool = true)
+		public static T AddWorld<N, T, T1>(this N self, out T core, T1 arg1)
 		  where N : class, INode
 		  where T : class, INode, NodeOf<N, WorldBranch>, AsRule<IAwakeRule<T1>>
-		=> self.AddNode<N, WorldBranch, long, T, T1>(TypeInfo<T>.TypeCode, out core, arg1, isPool);
+		=> self.AddNode<N, WorldBranch, long, T, T1>(TypeInfo<T>.TypeCode, out core, arg1, isPool:false);
 
 
 		#endregion

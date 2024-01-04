@@ -64,7 +64,7 @@ namespace WorldTree
 		public static void GraftIdNode<N, T>(this N self, long idKey, T node)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>
-		=> node.GraftSelfToTree<IdNodeBranch, long>(idKey, self);
+		=> node.TryGraftSelfToTree<IdNodeBranch, long>(idKey, self);
 
 
 		#endregion

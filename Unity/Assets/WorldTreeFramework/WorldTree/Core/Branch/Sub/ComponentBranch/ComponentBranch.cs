@@ -62,7 +62,7 @@ namespace WorldTree
 		/// <summary>
 		/// 外部接入组件
 		/// </summary>
-		public static void GraftComponent<N, T>(this N self, T component) where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch> => component.GraftSelfToTree<ComponentBranch, long>(TypeInfo<T>.TypeCode, self);
+		public static void GraftComponent<N, T>(this N self, T component) where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch> => component.TryGraftSelfToTree<ComponentBranch, long>(TypeInfo<T>.TypeCode, self);
 
 		#endregion
 

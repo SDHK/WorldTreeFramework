@@ -267,7 +267,7 @@ namespace WorldTree
 
 		#region 嫁接
 
-		public virtual bool GraftSelfToTree<B, K>(K key, INode parent)
+		public virtual bool TryGraftSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
 		{
 			if (!parent.AddBranch<B>().TryAddNode(key, this)) return false;

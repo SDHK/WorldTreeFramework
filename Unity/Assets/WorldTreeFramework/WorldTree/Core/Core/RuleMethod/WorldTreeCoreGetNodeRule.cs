@@ -75,7 +75,7 @@ namespace WorldTree
 		/// </summary>
 		public static T PoolGetNode<T>(this INode self) where T : class, INode
 		{
-			if (self.Core.IsActive)
+			if (self.Core.IsCoreActive)
 			{
 				if (self.Core.NodePoolManager.TryGet(TypeInfo<T>.TypeCode, out INode node))
 				{
@@ -91,7 +91,7 @@ namespace WorldTree
 		/// </summary>
 		public static INode PoolGetNode(this INode self, long type)
 		{
-			if (self.Core.IsActive)
+			if (self.Core.IsCoreActive)
 			{
 				if (self.Core.NodePoolManager.TryGet(type, out INode node))
 				{
@@ -107,7 +107,7 @@ namespace WorldTree
 		/// </summary>
 		public static void PoolRecycle(this INode self, INode obj)
 		{
-			if (self.Core.IsActive && obj.IsFromPool)
+			if (self.Core.IsCoreActive && obj.IsFromPool)
 			{
 				if (self.Core.NodePoolManager.TryRecycle(obj)) return;
 			}

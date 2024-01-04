@@ -117,7 +117,7 @@ namespace WorldTree
 		public static void GraftChild<N, T>(this N self, T node)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, ChildBranch>
-		=> node.GraftSelfToTree<ChildBranch, long>(node.Id, self);
+		=> node.TryGraftSelfToTree<ChildBranch, long>(node.Id, self);
 
 		#endregion
 

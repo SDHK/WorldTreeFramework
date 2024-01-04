@@ -26,7 +26,7 @@ namespace WorldTree
 		public static T PoolGetUnit<T>(this INode self)
 		where T : class, IUnitPoolEventItem
 		{
-			if (self.Core.IsActive)
+			if (self.Core.IsCoreActive)
 			{
 				if (self.Core.UnitPoolManager.TryGet(TypeInfo<T>.TypeCode, out IUnitPoolEventItem unit))
 				{
@@ -46,7 +46,7 @@ namespace WorldTree
 		/// </summary>
 		public static IUnitPoolEventItem PoolGetUnit(this INode self, long type)
 		{
-			if (self.Core.IsActive)
+			if (self.Core.IsCoreActive)
 			{
 				if (self.Core.UnitPoolManager.TryGet(type, out IUnitPoolEventItem unit))
 				{
@@ -66,7 +66,7 @@ namespace WorldTree
 		/// </summary>
 		public static void PoolRecycle(this INode self, IUnitPoolEventItem obj)
 		{
-			if (self.Core.IsActive && obj.IsFromPool)
+			if (self.Core.IsCoreActive && obj.IsFromPool)
 			{
 				if (self.Core.UnitPoolManager.TryRecycle(obj)) return;
 			}
