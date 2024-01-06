@@ -266,10 +266,10 @@ namespace WorldTree
 		{
 			if (!self.SupportTypeHash.Contains(NodeType))
 			{
-				self.SupportGenericNodeRule(NodeType);
-				self.SupportPolymorphicListenerRule(NodeType);
-				self.SupportPolymorphicRule(NodeType);
-				self.SupportTypeHash.Add(NodeType);
+				self.SupportGenericNodeRule(NodeType);//支持泛型法则
+				self.SupportPolymorphicListenerRule(NodeType);//支撑继承监听法则
+				self.SupportPolymorphicRule(NodeType);//支撑继承法则
+				self.SupportTypeHash.Add(NodeType);//已支持名单
 			}
 		}
 

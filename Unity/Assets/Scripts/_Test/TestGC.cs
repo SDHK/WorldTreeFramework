@@ -7,6 +7,12 @@ using WorldTree;
 
 public class TestGC : MonoBehaviour
 {
+	public GameObject gameObject1;
+
+	public GameObject gameObject2;
+
+	public GameObject gameObject3;
+
 	public int y;
 	public int dataY;
 	public int byteIndex;
@@ -23,41 +29,24 @@ public class TestGC : MonoBehaviour
 	void Update()
 	{
 
-		if (Input.GetKeyDown(KeyCode.A))
-		{
 
-			Profiler.BeginSample("SDHK");
-			Test1().Coroutine();
-			Profiler.EndSample();
-		}
+		Profiler.BeginSample("SDHK");
+		//向量打到平面上的点
+		Vector3 rayDir = gameObject1.transform.forward;
+		Vector3 rayOrigin = gameObject1.transform.position;
+		Vector3 planeNormal = gameObject2.transform.up;
+
+		float dot = Vector3.Dot(rayDir, planeNormal);
+		float d = -Vector3.Dot(planeNormal, gameObject2.transform.position);
+		float t = -(Vector3.Dot(planeNormal, rayOrigin) + d) / dot;
+
+		gameObject3.transform.position = rayOrigin + t * rayDir;
+
+		Profiler.EndSample();
+
 
 
 	}
-
-	public async ETTask Test1(bool b = false)
-	{
-		Debug.Log("1！");
-		await ETTask.CompletedTask;
-		await Test2();
-		Debug.Log("1结束！");
-
-	}
-
-	public async ETTask Test2(bool b = false)
-	{
-		Debug.Log("2！");
-		await ETTask.CompletedTask;
-		await Test3();
-		Debug.Log("2结束！");
-	}
-
-	public async ETTask Test3(bool b = false)
-	{
-		Debug.Log("3！");
-		if (b) await ETTask.CompletedTask;
-		Debug.Log("3结束！");
-	}
-
 
 
 }

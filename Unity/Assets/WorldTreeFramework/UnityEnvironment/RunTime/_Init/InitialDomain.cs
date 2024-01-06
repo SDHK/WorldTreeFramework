@@ -33,7 +33,7 @@ namespace WorldTree
 			protected override void OnEvent(InitialDomain self)
 			{
 				self.Log($"初始域启动！！");
-				self.Core.AddWorld(out WorldTreeCore core);
+				self.Core.AddWorld(out WorldTreeCore core);//添加子世界
 			}
 		}
 	}

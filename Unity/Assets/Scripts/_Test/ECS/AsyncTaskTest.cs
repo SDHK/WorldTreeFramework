@@ -197,7 +197,7 @@ namespace ECSTest
 				asyncDatas.Enqueue(new AsyncData() { id = i, eulerAngles = trans.eulerAngles, position = trans.position });
 			}
 
-			await new AsyncModeTask(ThreadContext.Instance);//切多线程
+			await new AsyncModeTask(ThreadContext.Instance);//切多线程，计算位置
 
 			for (int i = 0; i < asyncTaskTest.list.Count; i++)
 			{
@@ -207,7 +207,7 @@ namespace ECSTest
 				asyncData.eulerAngles = new Vector3(asyncData.eulerAngles.x, angle, 0);
 				asyncDatas.Enqueue(asyncData);
 			}
-			await new AsyncModeTask(MonoContext.Instance);//切主线程
+			await new AsyncModeTask(MonoContext.Instance);//切主线程，设置所有位置
 
 			Profiler.BeginSample("SDHK AsyncTaskTest");
 

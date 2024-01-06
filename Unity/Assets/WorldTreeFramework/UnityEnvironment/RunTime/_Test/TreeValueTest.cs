@@ -35,16 +35,16 @@ namespace WorldTree
 
 		class UpdateRule : UpdateRule<TreeValueTest>
 		{
-			protected override void OnEvent(TreeValueTest self)
+			protected override  void OnEvent(TreeValueTest self)
 			{
 				if (Input.GetKeyDown(KeyCode.A))
 				{
 					//对 字符串数值组件 启动一个渐变动画，从 "Hello world! 你好世界！" 变成 "Hello" 动画时间为10秒
-					self.valueString.GetTween("Hello", 10f).Run();
+					 self.valueString.GetTween("Hello", 10f).Run();
 				}
 				if (Input.GetKeyDown(KeyCode.S))
 				{
-					self.valueString.GetTween("Hello world! 你好世界！", 10f).Run();
+					self.valueString.GetTween("Hello world! 你好世界！", 10f).SetCurve<CurveBase>().Run();
 				}
 
 				if (Input.GetKeyDown(KeyCode.D))

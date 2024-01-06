@@ -25,24 +25,23 @@ namespace WorldTree
 		GlobalRuleActuator<ILateUpdateTimeRule> lateUpdateTime;
 		GlobalRuleActuator<IFixedUpdateRule> fixedUpdate;
 		GlobalRuleActuator<IFixedUpdateTimeRule> fixedUpdateTime;
-		//GlobalRuleActuator<IGuiUpdateRule> onGUI;
+		GlobalRuleActuator<IGuiUpdateRule> onGUI;
 
 
 		private void Start()
 		{
 			Core = new WorldTreeCore();
+
 			Core.Log = Debug.Log;
 			Core.LogWarning = Debug.LogWarning;
 			Core.LogError = Debug.LogError;
-
 			Core.Awake();
-
 
 			Core.GetOrNewGlobalRuleActuator(out lateUpdate);
 			Core.GetOrNewGlobalRuleActuator(out lateUpdateTime);
 			Core.GetOrNewGlobalRuleActuator(out fixedUpdate);
 			Core.GetOrNewGlobalRuleActuator(out fixedUpdateTime);
-			//Core.TryGetGlobalRuleActuator(out onGUI);
+			Core.GetOrNewGlobalRuleActuator(out onGUI);
 
 			Core.Root.AddComponent(out InitialDomain _);
 		}
@@ -72,10 +71,10 @@ namespace WorldTree
 			fixedUpdateTime?.Send(Time.fixedDeltaTime);
 		}
 
-		//private void OnGuiUpdate()
-		//{
-		//    onGUI.Send(0.02f);
-		//}
+		private void OnGUI()
+		{
+			onGUI.Send(0.02f);
+		}
 
 		private void OnDestroy()
 		{

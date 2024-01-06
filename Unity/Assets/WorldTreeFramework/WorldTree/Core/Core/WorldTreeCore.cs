@@ -149,10 +149,20 @@ namespace WorldTree
 		/// </summary>
 		public ArrayPoolManager ArrayPoolManager;
 
+
+		//用法AddWorld(WorldThread)
+
 		/// <summary>
 		/// 世界环境
 		/// </summary>
 		public WorldContext worldContext;
+
+		/// <summary>
+		/// 世界线程
+		/// </summary>
+		public IWorldThread worldThread;
+
+
 
 
 		public GlobalRuleActuator<IEnableRule> enable;
