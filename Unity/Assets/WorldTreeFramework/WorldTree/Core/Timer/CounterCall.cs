@@ -9,6 +9,8 @@
 */
 
 
+using System;
+
 namespace WorldTree
 {
     /// <summary>
@@ -47,9 +49,9 @@ namespace WorldTree
             }
         }
 
-        class UpdateRule : UpdateTimeRule<CounterCall>
+        class UpdateRule : UpdateRule<CounterCall>
         {
-            protected override void OnEvent(CounterCall self, float deltaTime)
+            protected override void OnEvent(CounterCall self)
             {
                 if (self.IsActive && self.isRun)
                 {

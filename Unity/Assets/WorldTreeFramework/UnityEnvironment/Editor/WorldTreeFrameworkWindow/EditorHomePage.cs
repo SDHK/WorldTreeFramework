@@ -7,6 +7,7 @@
 * 描述： 主页面
 
 */
+using System;
 using UnityEditor;
 using UnityEngine;
 using WorldTree;
@@ -28,7 +29,7 @@ namespace EditorTool
     }
     class EditorHomePageOnGUISystem : GuiUpdateRule<EditorHomePage>
     {
-        protected override void OnEvent(EditorHomePage self, float deltaTime)
+        protected override void OnEvent(EditorHomePage self)
         {
             GUILayout.Space(20);
 
@@ -66,7 +67,7 @@ namespace EditorTool
 
     class EditorHomePageUpdateSystem : UpdateTimeRule<EditorHomePage>
     {
-        protected override void OnEvent(EditorHomePage self, float deltaTime)
+        protected override void OnEvent(EditorHomePage self, TimeSpan deltaTime)
         {
         }
     }

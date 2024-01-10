@@ -8,25 +8,14 @@
 
 */
 
-using System;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace WorldTree
 {
 
 	public class UnityWorldTree : MonoBehaviour
 	{
-		public System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-
 		public WorldTreeCore Core;
-
-		GlobalRuleActuator<ILateUpdateRule> lateUpdate;
-		GlobalRuleActuator<ILateUpdateTimeRule> lateUpdateTime;
-		GlobalRuleActuator<IFixedUpdateRule> fixedUpdate;
-		GlobalRuleActuator<IFixedUpdateTimeRule> fixedUpdateTime;
-		GlobalRuleActuator<IGuiUpdateRule> onGUI;
-
 
 		private void Start()
 		{
@@ -37,55 +26,20 @@ namespace WorldTree
 			Core.LogError = Debug.LogError;
 			Core.Awake();
 
-			Core.GetOrNewGlobalRuleActuator(out lateUpdate);
-			Core.GetOrNewGlobalRuleActuator(out lateUpdateTime);
-			Core.GetOrNewGlobalRuleActuator(out fixedUpdate);
-			Core.GetOrNewGlobalRuleActuator(out fixedUpdateTime);
-			Core.GetOrNewGlobalRuleActuator(out onGUI);
+			Core.Root.AddComponent(out WorldHeartUnity _, 0).Run();//添加Unity世界心跳，间隔毫秒为0
 
 			Core.Root.AddComponent(out InitialDomain _);
 		}
 
 		private void Update()
 		{
-			Profiler.BeginSample("SDHK");
-
-			//sw.Restart();
-			Core.Update(Time.deltaTime);
-			//sw.Stop();
-			//World.Log($"毫秒: {sw.ElapsedMilliseconds}");
-
-			Profiler.EndSample();
-
 			if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(Core.ToStringDrawTree());
-		}
-
-		private void LateUpdate()
-		{
-			lateUpdate?.Send();
-			lateUpdateTime?.Send(Time.deltaTime);
-		}
-		private void FixedUpdate()
-		{
-			fixedUpdate?.Send();
-			fixedUpdateTime?.Send(Time.fixedDeltaTime);
-		}
-
-		private void OnGUI()
-		{
-			onGUI.Send(0.02f);
 		}
 
 		private void OnDestroy()
 		{
 			Core.Dispose();
 			Core = null;
-		
-			lateUpdate = null;
-			lateUpdateTime = null;
-			fixedUpdate = null;
-			fixedUpdateTime = null;
-			//onGUI = null;
 		}
 
 	}

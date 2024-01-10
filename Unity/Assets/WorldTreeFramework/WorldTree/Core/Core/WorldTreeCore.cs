@@ -43,9 +43,6 @@ namespace WorldTree
 	//多线程核心设计
 
 
-
-
-
 	/// <summary>
 	/// 世界树核心接口
 	/// </summary>
@@ -55,18 +52,7 @@ namespace WorldTree
 		/// 框架启动
 		/// </summary>
 		public void Awake();
-
-		/// <summary>
-		/// 框架刷新
-		/// </summary>
-		public void Update(float deltaTime);
-
-		///// <summary>
-		///// 框架异步释放
-		///// </summary>
-		//public TreeTask DisposeAsync();
 	}
-
 
 	/// <summary>
 	/// 世界树核心
@@ -149,27 +135,10 @@ namespace WorldTree
 		/// </summary>
 		public ArrayPoolManager ArrayPoolManager;
 
-
-		//用法AddWorld(WorldThread)
-
 		/// <summary>
 		/// 世界环境
 		/// </summary>
 		public WorldContext worldContext;
-
-		/// <summary>
-		/// 世界线程
-		/// </summary>
-		public IWorldThread worldThread;
-
-
-
-
-		public GlobalRuleActuator<IEnableRule> enable;
-		public GlobalRuleActuator<IDisableRule> disable;
-		public GlobalRuleActuator<IUpdateRule> update;
-		public GlobalRuleActuator<IUpdateTimeRule> updateTime;
-
 
 		#endregion
 
@@ -237,25 +206,10 @@ namespace WorldTree
 			this.SetActive(true);
 			this.IsCoreActive = true;
 
-
-			this.GetOrNewGlobalRuleActuator(out this.enable);
-			this.GetOrNewGlobalRuleActuator(out this.update);
-			this.GetOrNewGlobalRuleActuator(out this.updateTime);
-			this.GetOrNewGlobalRuleActuator(out this.disable);
-
 			this.Root = this.AddComponent(out WorldTreeRoot _);
 			this.Root.Root = this.Root;
 		}
-		public virtual void Update(float deltaTime)
-		{
-			this.enable?.Send();
-			this.update?.Send();
-			this.updateTime?.Send(deltaTime);
-			this.disable?.Send();
-		}
-
 		#endregion
-
 
 		#region 节点处理
 
@@ -342,11 +296,6 @@ namespace WorldTree
 			this.NodePoolManager = null;
 			this.ArrayPoolManager = null;
 			this.Root = null;
-
-			this.enable = null;
-			this.update = null;
-			this.updateTime = null;
-			this.disable = null;
 
 			this.NewRuleGroup = null;
 			this.GetRuleGroup = null;

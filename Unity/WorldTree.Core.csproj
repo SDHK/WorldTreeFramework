@@ -102,6 +102,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\SendRuleBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Encipherment\HashCore.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreLogRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldPulse.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Type\TypeTable.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListCallExtension.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\RuleBase.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\StringTweenUpdateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\TimerCall.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldPulseBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\AwakeRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\CounterCall.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\Curve.cs" />
@@ -151,7 +153,6 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitQueue.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeConcurrentQueue.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\CurveManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldContext\WorldThread.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\RuleBase\CurveEvaluateRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\RuleActuator\RuleActuator.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskMethodBuilder.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTask.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValueDelegate.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldHeartBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskSwitchWorldMethodBuilder.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\TimeDomain.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRuleGeneral\NodeSendRuleGeneral.cs" />
@@ -234,6 +236,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Type\TypeInfo.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\DisableRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rattan\Base\IRattan.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldHeart.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\DynamicNodeQueue\DynamicNodeQueue.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rattan\Base\Rattan.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\RuleBase\ValueChangeRuleEvent.cs" />

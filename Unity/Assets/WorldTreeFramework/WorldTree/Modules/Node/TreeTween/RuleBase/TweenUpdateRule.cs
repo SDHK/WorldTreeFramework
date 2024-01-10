@@ -7,16 +7,18 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
     /// <summary>
     /// 渐变法则接口
     /// </summary>
-    public interface ITweenUpdateRule : ISendRuleBase<float> { }
+    public interface ITweenUpdateRule : ISendRuleBase<TimeSpan> { }
 
     /// <summary>
     /// 渐变法则
     /// </summary>
-    public abstract class TweenUpdateRule<N> : SendRuleBase<N, ITweenUpdateRule, float> where N : class, INode, AsRule<ITweenUpdateRule> { }
+    public abstract class TweenUpdateRule<N> : SendRuleBase<N, ITweenUpdateRule, TimeSpan> where N : class, INode, AsRule<ITweenUpdateRule> { }
 
 }

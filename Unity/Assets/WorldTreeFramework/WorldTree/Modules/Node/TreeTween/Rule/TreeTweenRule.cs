@@ -59,7 +59,7 @@ namespace WorldTree
             self.startValue.Value = self.changeValue;
             self.endValue.Value = endValue;
             self.clock.Value = clock;
-            self.time = 0;
+            self.time = TimeSpan.Zero;
             return self;
         }
 
@@ -79,7 +79,7 @@ namespace WorldTree
         public static TreeTweenBase Run(this TreeTweenBase self)
         {
             if (self.m_Curve == null) self.Root.AddComponent(out CurveManager _).AddComponent(out self.m_Curve);
-            self.time = 0;
+            self.time = TimeSpan.Zero;
             self.isRun = true;
             self.isReverse = false;
             return self;
@@ -89,7 +89,7 @@ namespace WorldTree
         /// <summary>
         /// 曲线计算
         /// </summary>
-        public static float GetCurveEvaluate(this TreeTweenBase self, float deltaTime)
+        public static float GetCurveEvaluate(this TreeTweenBase self, TimeSpan deltaTime)
         {
             return self.m_Curve.CallRule(TypeInfo<ICurveEvaluateRule>.Default, self.GetTimeScale(deltaTime), out float _);
         }
@@ -97,18 +97,18 @@ namespace WorldTree
         /// <summary>
         /// 时间尺度计算
         /// </summary>
-        public static float GetTimeScale(this TreeTweenBase self, float deltaTime)
+        public static float GetTimeScale(this TreeTweenBase self, TimeSpan deltaTime)
         {
 
             self.time += deltaTime * (self.isReverse ? -1 : 1);
 
-            if (self.isReverse && self.time < 0)
+            if (self.isReverse && self.time < TimeSpan.Zero)
             {
-                self.time = 0;
+                self.time = TimeSpan.Zero;
                 self.isRun = false;
             }
 
-            self.timeScale = self.time / self.clock;
+            self.timeScale = (float)self.time.TotalSeconds / self.clock;
             self.timeScale = MathFloat.Clamp01(self.timeScale);
 
 

@@ -8,17 +8,19 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
     public static partial class TreeTweenRule
     {
         class IntTweenUpdateRule : TweenUpdateRule<TreeTween<int>>
         {
-            protected override void OnEvent(TreeTween<int> self, float deltaTime)
+            protected override void OnEvent(TreeTween<int> self, TimeSpan deltaTime)
             {
                 if (self.isRun)
                 {
-                    if (self.time < self.clock)
+                    if (self.time.TotalSeconds < self.clock)
                     {
                         self.changeValue.Value = (int)((self.endValue.Value - self.startValue.Value) * self.GetCurveEvaluate(deltaTime) + self.startValue);
                     }

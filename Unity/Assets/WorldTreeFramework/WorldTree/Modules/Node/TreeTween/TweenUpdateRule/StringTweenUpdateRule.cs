@@ -7,24 +7,26 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
 	public static partial class TreeTweenRule
 	{
 		class StringTweenUpdateRule : TweenUpdateRule<TreeTween<string>>
 		{
-			protected override void OnEvent(TreeTween<string> self, float deltaTime)
+			protected override void OnEvent(TreeTween<string> self, TimeSpan deltaTime)
 			{
 				if (self.isRun)
 				{
-					if (self.time < self.clock)
+					if (self.time.TotalSeconds < self.clock)
 					{
 						//选取最长的值
 						var longValue = self.startValue.Value.Length > self.endValue.Value.Length ? self.startValue.Value : self.endValue.Value;
 						var shortValue = self.startValue.Value.Length > self.endValue.Value.Length ? self.endValue.Value : self.startValue.Value;
 
 						//判断长包含短，否则清空开始值
-						if (self.time == 0 && self.startValue.Value.Length != 0 && longValue.Length != 0 && !longValue.StartsWith(shortValue))
+						if (self.time == TimeSpan.Zero && self.startValue.Value.Length != 0 && longValue.Length != 0 && !longValue.StartsWith(shortValue))
 						{
 							self.startValue.Value = string.Empty;
 						}

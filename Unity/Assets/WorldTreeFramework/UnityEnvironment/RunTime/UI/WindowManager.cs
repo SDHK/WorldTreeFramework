@@ -174,7 +174,7 @@ namespace WorldTree
 
     class WindowManagerUpdateRule : UpdateTimeRule<WindowManager>
     {
-        protected override void OnEvent(WindowManager self, float deltaTime)
+        protected override void OnEvent(WindowManager self, TimeSpan deltaTime)
         {
             if (self.windowStack.Count != 0)
             {

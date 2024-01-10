@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WorldTree
 {
@@ -23,7 +19,23 @@ namespace WorldTree
 			{
 				self.Log(" 初始化！！！");
 
-				self.Log(self.Core.ToStringDrawTree());
+				//self.Log(self.Core.ToStringDrawTree());
+			}
+		}
+
+		class UpdateTimeRule : UpdateTimeRule<DotNetTestNode>
+		{
+			protected override void OnEvent(DotNetTestNode self, TimeSpan timeSpan)
+			{
+				self.Log($"初始更新！！{timeSpan.TotalSeconds}");
+			}
+		}
+
+		class RemoveRule : RemoveRule<DotNetTestNode>
+		{
+			protected override void OnEvent(DotNetTestNode self)
+			{
+				self.Log($"初始关闭！！");
 			}
 		}
 

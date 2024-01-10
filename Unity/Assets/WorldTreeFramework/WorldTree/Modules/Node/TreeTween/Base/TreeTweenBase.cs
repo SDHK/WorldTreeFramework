@@ -8,6 +8,8 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
     /// <summary>
@@ -34,7 +36,7 @@ namespace WorldTree
         /// <summary>
         /// 计时
         /// </summary>
-        public float time;
+        public TimeSpan time;
 
         /// <summary>
         /// 定时

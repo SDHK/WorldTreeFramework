@@ -10,6 +10,8 @@
 
 
 
+using System;
+
 namespace WorldTree
 {
     class TreeTweenManagerRootAddRule : RootAddRule<TreeTweenManager> { }
@@ -30,7 +32,7 @@ namespace WorldTree
 
     class TreeTweenManagerUpdateRule : UpdateTimeRule<TreeTweenManager>
     {
-        protected override void OnEvent(TreeTweenManager self, float deltaTime)
+        protected override void OnEvent(TreeTweenManager self, TimeSpan deltaTime)
         {
             self.ruleActuator?.Send(deltaTime);
         }

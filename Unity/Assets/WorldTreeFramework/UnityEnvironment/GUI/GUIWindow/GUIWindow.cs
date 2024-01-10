@@ -6,6 +6,7 @@
 * 描述： 
 
 */
+using System;
 using UnityEngine;
 
 
@@ -45,7 +46,7 @@ namespace WorldTree
 
     class GUIWindowOnGUISystem : GuiUpdateRule<GUIWindow>
     {
-        protected override void OnEvent(GUIWindow self, float deltaTime)
+        protected override void OnEvent(GUIWindow self)
         {
             self.rect = GUILayout.Window(self.GetHashCode(), self.rect, self.Window, default(string), self.Style);
         }

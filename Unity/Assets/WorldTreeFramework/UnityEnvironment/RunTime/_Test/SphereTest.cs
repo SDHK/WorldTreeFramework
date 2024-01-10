@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace WorldTree
@@ -20,16 +21,16 @@ namespace WorldTree
 
 		class UpdateTimeRule : UpdateTimeRule<SphereTest>
 		{
-			protected override void OnEvent(SphereTest self, float deltaTime)
+			protected override void OnEvent(SphereTest self, TimeSpan deltaTime)
 			{
 				if (self.delay > 0)
 				{
-					self.delay -= deltaTime;
+					self.delay -= (float)deltaTime.TotalSeconds;
 				}
 				else
 				{
 					Vector3 pos = self.gameObject.transform.position;
-					float v = self.velocity + self.manager.G * self.mass * deltaTime;
+					float v = self.velocity + self.manager.G * self.mass * (float)deltaTime.TotalSeconds;
 					pos.y += v;
 					if (pos.y < self.manager.bottomY)
 					{

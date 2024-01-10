@@ -16,13 +16,11 @@ namespace WorldTree
 			Core.LogError = Console.Error.WriteLine;
 			Core.Awake();
 
+			Core.Root.AddComponent(out WorldHeart _, 1000).Run();//启动世界心跳 设定间隔为1000ms
+
 			Core.Root.AddComponent(out DotNetTestNode _);
 
-            while (true)
-            {
-                Thread.Sleep(100);
-				Core.Update(100);
-			}
+          
         }
     }
 }

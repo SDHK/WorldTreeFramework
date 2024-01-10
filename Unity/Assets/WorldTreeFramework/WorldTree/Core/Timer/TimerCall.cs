@@ -8,6 +8,8 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
 
@@ -49,11 +51,11 @@ namespace WorldTree
 
         class UpdateRule : UpdateTimeRule<TimerCall>
         {
-            protected override void OnEvent(TimerCall self, float deltaTime)
+            protected override void OnEvent(TimerCall self, TimeSpan deltaTime)
             {
                 if (self.IsActive && self.isRun)
                 {
-                    self.time += deltaTime;
+                    self.time += (float)deltaTime.TotalSeconds;
                     if (self.time >= self.timeOutTime)
                     {
                         self.callback.Send();

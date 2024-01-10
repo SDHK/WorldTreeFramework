@@ -1,4 +1,6 @@
-﻿namespace WorldTree
+﻿using System;
+
+namespace WorldTree
 {
 
     /// <summary>
@@ -15,10 +17,10 @@
     /// <summary>
     /// FixedUpdate法则接口
     /// </summary>
-    public interface IFixedUpdateTimeRule : ISendRuleBase<float> { }
+    public interface IFixedUpdateTimeRule : ISendRuleBase<TimeSpan> { }
 
     /// <summary>
     /// FixedUpdate法则
     /// </summary>
-    public abstract class FixedUpdateTimeRule<T> : SendRuleBase<T, IFixedUpdateTimeRule, float> where T : class, INode, AsRule<IFixedUpdateTimeRule> { }
+    public abstract class FixedUpdateTimeRule<T> : SendRuleBase<T, IFixedUpdateTimeRule, TimeSpan> where T : class, INode, AsRule<IFixedUpdateTimeRule> { }
 }

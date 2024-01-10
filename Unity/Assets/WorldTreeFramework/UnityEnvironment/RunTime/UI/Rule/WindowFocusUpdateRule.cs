@@ -7,15 +7,17 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
     /// <summary>
     /// UI窗口焦点更新系统接口
     /// </summary>
-    public interface IWindowFocusUpdateRule : ISendRuleBase<float> { }
+    public interface IWindowFocusUpdateRule : ISendRuleBase<TimeSpan> { }
 
     /// <summary>
     /// UI窗口焦点更新系统
     /// </summary>
-    public abstract class WindowFocusUpdateRule<N> : SendRuleBase<N, IWindowFocusUpdateRule, float> where N : class, INode, AsRule<IWindowFocusUpdateRule> { }
+    public abstract class WindowFocusUpdateRule<N> : SendRuleBase<N, IWindowFocusUpdateRule, TimeSpan> where N : class, INode, AsRule<IWindowFocusUpdateRule> { }
 }

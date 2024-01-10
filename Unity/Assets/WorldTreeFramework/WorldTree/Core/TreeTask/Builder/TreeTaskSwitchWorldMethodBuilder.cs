@@ -22,6 +22,7 @@ namespace WorldTree.Internal
 
 		private TreeTaskSwitchWorld task;
 
+
 		[DebuggerHidden]
 		public static TreeTaskSwitchWorldMethodBuilder Create()
 		{
@@ -73,6 +74,7 @@ namespace WorldTree.Internal
 				this.treeTaskStateMachine = awaiter.PoolGetUnit(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
 				taskStateMachine.SetStateMachine(ref stateMachine);
 			}
+			task = null;
 			if (task != null)
 			{
 				if (task.m_TreeTaskToken != null)

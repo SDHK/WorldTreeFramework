@@ -28,11 +28,11 @@ namespace WorldTree
     {
         class UpdateRule : UpdateTimeRule<TimerCycle>
         {
-            protected override void OnEvent(TimerCycle self, float deltaTime)
+            protected override void OnEvent(TimerCycle self, TimeSpan deltaTime)
             {
                 if (self.IsActive)
                 {
-                    self.time += deltaTime;
+                    self.time += (float)deltaTime.TotalSeconds;
                     if (self.time >= self.timeOutTime)
                     {
                         self.time = 0;

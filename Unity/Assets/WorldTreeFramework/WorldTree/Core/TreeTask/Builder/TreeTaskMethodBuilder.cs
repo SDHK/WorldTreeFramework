@@ -63,7 +63,7 @@ namespace WorldTree.Internal
 
 		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-
+			AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
 		}
 
 		// 6. AwaitUnsafeOnCompleted
