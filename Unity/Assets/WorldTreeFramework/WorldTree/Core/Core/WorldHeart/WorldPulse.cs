@@ -54,22 +54,10 @@ namespace WorldTree
 		/// </summary>
 		public override void Update(TimeSpan deltaTime)
 		{
-			double time = frameTime * 0.001;
-			if (deltaTime.TotalMilliseconds < time)
+			m_Time += deltaTime;
+			if (m_Time.TotalMilliseconds >= frameTime * 0.001)
 			{
-				if (m_Time.TotalSeconds < time)
-				{
-					m_Time += deltaTime;
-				}
-				else
-				{
-					if (isRun) this.m_RuleList?.Send(Parent, m_Time);
-					m_Time = TimeSpan.Zero;
-				}
-			}
-			else
-			{
-				if (isRun) this.m_RuleList?.Send(Parent, deltaTime);
+				if (isRun) m_RuleList?.Send(Parent, m_Time);
 				m_Time = TimeSpan.Zero;
 			}
 		}

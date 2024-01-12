@@ -26,6 +26,11 @@ namespace WorldTree
 		public INode Domain { get; set; }//接口标记域节点
 		public INode Parent { get; set; }
 
+		/// <summary>
+		/// 调试显示
+		/// </summary>
+		public ITreeNodeView View { get; set; }
+
 		#region Active
 
 		public bool ActiveToggle { get; set; }
@@ -140,6 +145,8 @@ namespace WorldTree
 				this.Root = parent.Root;
 				if (this.Domain != this) this.Domain = parent.Domain;
 				this.SetActive(true);//激活节点
+				View = View == null ? Parent?.View != null ? this.PoolGetUnit(Parent.View.Type) as ITreeNodeView : null : null;
+				View?.Draw(this, Parent);
 				return true;
 			}
 			return false;
@@ -237,6 +244,8 @@ namespace WorldTree
 
 		public virtual void OnDispose()
 		{
+			this.View?.Dispose();
+			this.View = null;
 			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.SetActive(false);//激活变更
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
@@ -283,6 +292,8 @@ namespace WorldTree
 
 		public virtual void OnGraftSelfToTree()//id相同数据同步？
 		{
+			View = View == null ? Parent?.View != null ? this.PoolGetUnit(Parent.View.Type) as ITreeNodeView : null : null;
+			View?.Draw(this, Parent);
 			this.Core = this.Parent.Core;
 			this.Root = this.Parent.Root;
 			if (this.Domain != this) this.Domain = this.Parent.Domain;

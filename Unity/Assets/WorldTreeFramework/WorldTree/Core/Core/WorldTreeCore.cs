@@ -38,9 +38,12 @@ namespace WorldTree
 	//邮箱组件需要管理器Update
 	//节点邮箱组件，只有SendMail<1,2,3,4,5>
 
-	//核心处理重写
 
-	//多线程核心设计
+	//不需要引用的是否需要接口标记
+
+	//节点分支添加需要补充Type类型，不然无法配表
+
+	//Unity的节点可视化组件
 
 
 	/// <summary>
@@ -226,6 +229,7 @@ namespace WorldTree
 				this.Domain = null;
 				this.RootCore = parent.Core.RootCore ?? this;
 				this.SetActive(true);//激活节点
+				View?.Draw(this, Parent);
 				return true;
 			}
 			return false;
@@ -280,6 +284,8 @@ namespace WorldTree
 		/// </summary>
 		public override void OnDispose()
 		{
+			this.View?.Dispose();
+			this.View = null;
 			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.SetActive(false);
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知

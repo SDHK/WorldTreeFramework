@@ -15,7 +15,6 @@
 
 using System;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace WorldTree
 {
@@ -57,7 +56,6 @@ namespace WorldTree
 
 			protected override void OnEvent(InitialDomain self, TimeSpan timeSpan)
 			{
-				self.Log($"初始域GUI更新！！{timeSpan.TotalSeconds}");
 				textStyle.normal.textColor = Color.red;
 				GUILayout.Label($"初始域GUI更新！！{timeSpan.TotalMilliseconds}", textStyle);
 			}

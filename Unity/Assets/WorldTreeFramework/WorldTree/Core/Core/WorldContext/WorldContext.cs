@@ -30,6 +30,9 @@ namespace WorldTree
 		public INode Domain { get; set; }
 		public INode Parent { get; set; }
 
+		public ITreeNodeView View { get; set; }
+
+
 		#region Active
 		public bool ActiveToggle { get; set; }
 		public bool IsActive { get; set; }
@@ -56,6 +59,7 @@ namespace WorldTree
 		/// </summary>
 		public UnitDictionary<long, IBranch> m_Branchs { get; set; }
 		public UnitDictionary<long, IBranch> Branchs => this.m_Branchs ??= this.PoolGetUnit<UnitDictionary<long, IBranch>>();
+
 
 
 		#endregion
@@ -142,6 +146,8 @@ namespace WorldTree
 				this.Root = parent.Root;
 				if (this.Domain != this) this.Domain = parent.Domain;
 				this.SetActive(true);//激活节点
+				this.View = this.View != null ? this.Parent?.View != null ? this.PoolGetUnit(this.Parent.View.Type) as ITreeNodeView : null : null;
+				View?.Draw(this, Parent);
 				return true;
 			}
 			return false;
@@ -239,6 +245,8 @@ namespace WorldTree
 
 		public virtual void OnDispose()//未完
 		{
+			this.View?.Dispose();
+			this.View = null;
 			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.SetActive(false);//激活变更
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知 X
@@ -285,6 +293,8 @@ namespace WorldTree
 
 		public virtual void OnGraftSelfToTree()//id相同数据同步？
 		{
+			View = View == null ? Parent?.View != null ? this.PoolGetUnit(Parent.View.Type) as ITreeNodeView : null : null;
+			View?.Draw(this, Parent);
 			this.Core = this.Parent.Core;
 			this.Root = this.Parent.Root;
 			if (this.Domain != this) this.Domain = this.Parent.Domain;
@@ -376,7 +386,7 @@ namespace WorldTree
 			this.Post(() => callback(state));
 		}
 
-		public void Post(Action action) 
+		public void Post(Action action)
 		{
 			this.m_Queue.Enqueue(action);
 		}

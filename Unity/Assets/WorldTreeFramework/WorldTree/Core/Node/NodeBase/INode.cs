@@ -25,6 +25,11 @@ namespace WorldTree
 	/// <typeparam name="B">分支</typeparam>
 	public interface NodeOf<in P, in B> : INode where P : class, INode where B : class, IBranch { }
 
+	public interface ITreeNodeView: IUnitPoolItem
+	{
+		public void Draw(INode node, INode parent = null);
+
+	}
 
 	/// <summary>
 	/// 世界树节点接口
@@ -75,6 +80,10 @@ namespace WorldTree
 		/// </summary>
 		public INode Parent { get; set; }
 
+		/// <summary>
+		/// 调试显示
+		/// </summary>
+		public ITreeNodeView View { get; set; }
 
 		#region Active
 		/// <summary>
