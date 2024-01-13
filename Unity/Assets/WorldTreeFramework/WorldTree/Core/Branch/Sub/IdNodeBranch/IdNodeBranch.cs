@@ -59,12 +59,17 @@ namespace WorldTree
 		#region 嫁接
 
 		/// <summary>
-		/// 嫁接id节点
+		/// 尝试嫁接id节点
 		/// </summary>
-		public static void GraftIdNode<N, T>(this N self, long idKey, T node)
+		public static bool TryGraftIdNode<N, T>(this N self, long idKey, T node)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>
 		=> node.TryGraftSelfToTree<IdNodeBranch, long>(idKey, self);
+
+		/// <summary>
+		/// 尝试嫁接id节点
+		/// </summary>
+		public static bool TryGraftIdNode(this INode self, long idKey, INode node) => node.TryGraftSelfToTree<IdNodeBranch, long>(idKey, self);
 
 
 		#endregion
@@ -85,6 +90,48 @@ namespace WorldTree
 
 		#region 添加
 
+		#region 类型
+
+		/// <summary>
+		/// Id为键值，添加节点
+		/// </summary>
+		public static INode AddIdNode(this INode self, long idKey, long type, out INode node, bool isPool = true)
+			=> self.AddNode<IdNodeBranch, long>(idKey, type, out node, isPool);
+
+		/// <summary>
+		/// Id为键值，添加节点
+		/// </summary>
+		public static INode AddIdNode< T1>(this INode self, long idKey, long type, out INode node, T1 arg1, bool isPool = true)
+			=> self.AddNode<IdNodeBranch, long, T1>(idKey, type, out node, arg1, isPool);
+		
+		/// <summary>
+		/// Id为键值，添加节点
+		/// </summary>
+		public static INode AddIdNode<T1, T2>(this INode self, long idKey, long type, out INode node, T1 arg1, T2 arg2, bool isPool = true)
+			=> self.AddNode<IdNodeBranch, long, T1, T2>(idKey, type, out node, arg1, arg2, isPool);
+		
+		/// <summary>
+		/// Id为键值，添加节点
+		/// </summary>
+		public static INode AddIdNode<T1, T2, T3>(this INode self, long idKey, long type, out INode node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
+			=> self.AddNode<IdNodeBranch, long, T1, T2, T3>(idKey, type, out node, arg1, arg2, arg3, isPool);
+		
+		/// <summary>
+		/// Id为键值，添加节点
+		/// </summary>
+		public static INode AddIdNode<T1, T2, T3, T4>(this INode self, long idKey, long type, out INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
+			=> self.AddNode<IdNodeBranch, long, T1, T2, T3, T4>(idKey, type, out node, arg1, arg2, arg3, arg4, isPool);
+		
+		/// <summary>
+		/// Id为键值，添加节点
+		/// </summary>
+		public static INode AddIdNode<T1, T2, T3, T4, T5>(this INode self, long idKey, long type, out INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
+			=> self.AddNode<IdNodeBranch, long, T1, T2, T3, T4, T5>(idKey, type, out node, arg1, arg2, arg3, arg4, arg5, isPool);
+
+		#endregion
+
+		#region 泛型
+
 		/// <summary>
 		/// Id为键值，添加节点
 		/// </summary>
@@ -96,7 +143,7 @@ namespace WorldTree
 		/// <summary>
 		/// Id为键值，添加节点
 		/// </summary>
-		public static T AddChild<N, T, T1>(this N self, long idKey, out T node, T1 arg1, bool isPool = true)
+		public static T AddIdNode<N, T, T1>(this N self, long idKey, out T node, T1 arg1, bool isPool = true)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1>(idKey, out node, arg1, isPool);
@@ -104,7 +151,7 @@ namespace WorldTree
 		/// <summary>
 		/// Id为键值，添加节点
 		/// </summary>
-		public static T AddChild<N, T, T1, T2>(this N self, long idKey, out T node, T1 arg1, T2 arg2, bool isPool = true)
+		public static T AddIdNode<N, T, T1, T2>(this N self, long idKey, out T node, T1 arg1, T2 arg2, bool isPool = true)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1, T2>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2>(idKey, out node, arg1, arg2, isPool);
@@ -112,7 +159,7 @@ namespace WorldTree
 		/// <summary>
 		/// Id为键值，添加节点
 		/// </summary>
-		public static T AddChild<N, T, T1, T2, T3>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
+		public static T AddIdNode<N, T, T1, T2, T3>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1, T2, T3>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2, T3>(idKey, out node, arg1, arg2, arg3, isPool);
@@ -120,7 +167,7 @@ namespace WorldTree
 		/// <summary>
 		/// Id为键值，添加节点
 		/// </summary>
-		public static T AddChild<N, T, T1, T2, T3, T4>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
+		public static T AddIdNode<N, T, T1, T2, T3, T4>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1, T2, T3, T4>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2, T3, T4>(idKey, out node, arg1, arg2, arg3, arg4, isPool);
@@ -128,10 +175,12 @@ namespace WorldTree
 		/// <summary>
 		/// Id为键值，添加节点
 		/// </summary>
-		public static T AddChild<N, T, T1, T2, T3, T4, T5>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
+		public static T AddIdNode<N, T, T1, T2, T3, T4, T5>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2, T3, T4, T5>(idKey, out node, arg1, arg2, arg3, arg4, arg5, isPool);
+
+		#endregion
 
 		#endregion
 

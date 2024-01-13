@@ -60,9 +60,14 @@ namespace WorldTree
 		#region 嫁接
 
 		/// <summary>
-		/// 外部接入组件
+		/// 尝试外部接入组件
 		/// </summary>
-		public static void GraftComponent<N, T>(this N self, T component) where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch> => component.TryGraftSelfToTree<ComponentBranch, long>(TypeInfo<T>.TypeCode, self);
+		public static bool TryGraftComponent<N, T>(this N self, T component) where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch> => component.TryGraftSelfToTree<ComponentBranch, long>(TypeInfo<T>.TypeCode, self);
+
+		/// <summary>
+		/// 尝试外部接入组件
+		/// </summary>
+		public static bool TryGraftComponent(this INode self, long type, INode component) => component.TryGraftSelfToTree<ComponentBranch, long>(type, self);
 
 		#endregion
 
@@ -86,6 +91,48 @@ namespace WorldTree
 		#endregion
 
 		#region 添加
+
+		#region 类型
+
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static INode AddComponent(this INode self, long type, out INode Component, bool isPool = true)
+		=> self.AddNode<ComponentBranch, long>(type, type, out Component, isPool);
+
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static INode AddComponent<T1>(this INode self, long type, out INode Component, T1 arg1, bool isPool = true)
+		=> self.AddNode<ComponentBranch, long, T1>(type, type, out Component, arg1, isPool);
+
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static INode AddComponent<T1, T2>(this INode self, long type, out INode Component, T1 arg1, T2 arg2, bool isPool = true)
+		=> self.AddNode<ComponentBranch, long, T1, T2>(type, type, out Component, arg1, arg2, isPool);
+
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static INode AddComponent<T1, T2, T3>(this INode self, long type, out INode Component, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
+		=> self.AddNode<ComponentBranch, long, T1, T2, T3>(type, type, out Component, arg1, arg2, arg3, isPool);
+
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static INode AddComponent<T1, T2, T3, T4>(this INode self, long type, out INode Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
+		=> self.AddNode<ComponentBranch, long, T1, T2, T3, T4>(type, type, out Component, arg1, arg2, arg3, arg4, isPool);
+
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		public static INode AddComponent<T1, T2, T3, T4, T5>(this INode self, long type, out INode Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
+		=> self.AddNode<ComponentBranch, long, T1, T2, T3, T4, T5>(type, type, out Component, arg1, arg2, arg3, arg4, arg5, isPool);
+
+		#endregion
+
+		#region 泛型
 
 		/// <summary>
 		/// 添加组件
@@ -137,6 +184,7 @@ namespace WorldTree
 
 		#endregion
 
+		#endregion
 	}
 
 }

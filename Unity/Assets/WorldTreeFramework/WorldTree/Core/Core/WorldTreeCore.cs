@@ -41,9 +41,9 @@ namespace WorldTree
 
 	//不需要引用的是否需要接口标记
 
-	//节点分支添加需要补充Type类型，不然无法配表
-
 	//Unity的节点可视化组件
+
+	//节点分支添加需要补充Type类型，不然无法配表
 
 
 	/// <summary>
@@ -184,9 +184,9 @@ namespace WorldTree
 			this.NewNodeLifecycle(out this.ReferencedPoolManager);
 
 			//组件添加到树
-			this.GraftComponent(this.ReferencedPoolManager);
-			this.GraftComponent(this.IdManager);
-			this.GraftComponent(this.RuleManager);
+			this.TryGraftComponent(this.ReferencedPoolManager);
+			this.TryGraftComponent(this.IdManager);
+			this.TryGraftComponent(this.RuleManager);
 
 			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
 			this.UnitPoolManager = this.AddComponent(out UnitPoolManager _, isPool: false);
@@ -229,7 +229,6 @@ namespace WorldTree
 				this.Domain = null;
 				this.RootCore = parent.Core.RootCore ?? this;
 				this.SetActive(true);//激活节点
-				View?.Draw(this, Parent);
 				return true;
 			}
 			return false;
@@ -237,6 +236,8 @@ namespace WorldTree
 
 		public override void OnAddSelfToTree()
 		{
+			this.View?.Dispose();
+			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeView : null;
 			//核心独立，不入上级引用池，也不用广播
 			if (this.IsActive != this.m_ActiveEventMark)//激活变更
 			{
@@ -331,6 +332,8 @@ namespace WorldTree
 
 		public override void OnGraftSelfToTree()
 		{
+			this.View?.Dispose();
+			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeView : null;
 			if (this.IsActive != this.m_ActiveEventMark)//激活变更
 			{
 				if (this.IsActive)
@@ -351,6 +354,8 @@ namespace WorldTree
 
 		public override void OnCutSelf()
 		{
+			this.View?.Dispose();
+			this.View = null;
 			this.SendRule(TypeInfo<ICutRule>.Default);
 		}
 

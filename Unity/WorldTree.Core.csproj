@@ -72,6 +72,7 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Branch\Sub\TypeNodeBranch\TypeNodeBranch.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskVoidMethodBuilder.cs" />
+    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\WorldTreeNodeFieldInfoViewRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\PoolBase\PoolManagerBase.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Rule\RuleActuatorSendRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Vector2Float.cs" />

@@ -30,7 +30,7 @@ namespace WorldTree
 		public INode Domain { get; set; }
 		public INode Parent { get; set; }
 
-		public ITreeNodeView View { get; set; }
+		public IWorldTreeNodeView View { get; set; }
 
 
 		#region Active
@@ -146,8 +146,8 @@ namespace WorldTree
 				this.Root = parent.Root;
 				if (this.Domain != this) this.Domain = parent.Domain;
 				this.SetActive(true);//激活节点
-				this.View = this.View != null ? this.Parent?.View != null ? this.PoolGetUnit(this.Parent.View.Type) as ITreeNodeView : null : null;
-				View?.Draw(this, Parent);
+				this.View?.Dispose();
+				this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeView : null;
 				return true;
 			}
 			return false;
@@ -293,8 +293,8 @@ namespace WorldTree
 
 		public virtual void OnGraftSelfToTree()//id相同数据同步？
 		{
-			View = View == null ? Parent?.View != null ? this.PoolGetUnit(Parent.View.Type) as ITreeNodeView : null : null;
-			View?.Draw(this, Parent);
+			this.View?.Dispose();
+			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeView : null;
 			this.Core = this.Parent.Core;
 			this.Root = this.Parent.Root;
 			if (this.Domain != this) this.Domain = this.Parent.Domain;
@@ -341,6 +341,8 @@ namespace WorldTree
 		}
 		public virtual void OnCutSelf()
 		{
+			this.View?.Dispose();
+			this.View = null;
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
 			{
 				//检测移除静态监听

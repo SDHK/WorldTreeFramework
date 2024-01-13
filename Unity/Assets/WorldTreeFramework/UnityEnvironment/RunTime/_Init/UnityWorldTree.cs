@@ -16,18 +16,29 @@ namespace WorldTree
 	public class UnityWorldTree : MonoBehaviour
 	{
 		public WorldTreeCore Core;
+		public WorldTreeCore ViewCore;
 
 		private void Start()
 		{
-			Core = new WorldTreeCore();
-			Core.View = Core.PoolGetUnit<TreeNodeView>();
-			Core.View.Draw(Core);
+			ViewCore = new WorldTreeCore();//调试用的可视化框架
+			Core = new WorldTreeCore();//主框架
+
+			ViewCore.Log = Debug.Log;
+			ViewCore.LogWarning = Debug.LogWarning;
+			ViewCore.LogError = Debug.LogError;
+
 			Core.Log = Debug.Log;
 			Core.LogWarning = Debug.LogWarning;
 			Core.LogError = Debug.LogError;
-			Core.Awake();
 
-			Core.Root.AddComponent(out UnityWorldHeart _, 0).Run();//添加Unity世界心跳，间隔毫秒为0
+			ViewCore.Awake(); //可视化框架初始化
+
+			//可视化节点赋值给主框架
+			Core.View = ViewCore.Root.AddChild(out WorldTreeNodeUnityView _, (INode)Core, TypeInfo<INode>.Default);
+
+			Core.Awake();//主框架初始化
+
+			Core.Root.AddComponent(out UnityWorldHeart _, 0).Run();//主框架添加Unity世界心跳，间隔毫秒为0
 
 			Core.Root.AddComponent(out InitialDomain _);
 		}
@@ -36,12 +47,20 @@ namespace WorldTree
 		{
 			if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(Core.ToStringDrawTree());
 		}
+		private void OnApplicationQuit()
+		{
+			Core.Dispose();
+			ViewCore.Dispose();
+			Core = null;
+			ViewCore = null;
+		}
 
 		private void OnDestroy()
 		{
-			Core.Dispose();
+			Core?.Dispose();
+			ViewCore?.Dispose();
 			Core = null;
+			ViewCore = null;
 		}
-
 	}
 }

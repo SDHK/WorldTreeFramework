@@ -28,6 +28,10 @@ namespace WorldTree
 		/// 获取新建节点
 		/// </summary>
 		public static N GetOrNewNode<N>(this INode self, bool isPool = true) where N : class, INode => (isPool ? self.PoolGetNode(TypeInfo<N>.TypeCode) : self.NewNodeLifecycle(TypeInfo<N>.TypeCode)) as N;
+		/// <summary>
+		/// 获取新建节点
+		/// </summary>
+		public static INode GetOrNewNode(this INode self,long type, bool isPool = true)  => (isPool ? self.PoolGetNode(type) : self.NewNodeLifecycle(type));
 
 		/// <summary>
 		/// 类型转换为

@@ -69,7 +69,7 @@ namespace WorldTree
 			pool.ObjectType = type.CoreToType();
 			pool.ObjectTypeCore = type;
 			this.m_Pools.Add(pool.ObjectTypeCore, pool);
-			this.GraftChild(pool);
+			this.TryGraftChild(pool);
 			pool.SetActive(true);
 			return pool;
 		}

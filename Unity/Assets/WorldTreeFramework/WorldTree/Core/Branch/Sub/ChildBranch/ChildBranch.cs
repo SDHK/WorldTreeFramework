@@ -112,12 +112,17 @@ namespace WorldTree
 		#region 嫁接
 
 		/// <summary>
-		/// 嫁接子节点
+		/// 尝试嫁接子节点
 		/// </summary>
-		public static void GraftChild<N, T>(this N self, T node)
+		public static bool TryGraftChild<N, T>(this N self, T node)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, ChildBranch>
 		=> node.TryGraftSelfToTree<ChildBranch, long>(node.Id, self);
+
+		/// <summary>
+		/// 尝试嫁接子节点
+		/// </summary>
+		public static bool TryGraftChild(this INode self, INode node) => node.TryGraftSelfToTree<ChildBranch, long>(node.Id, self);
 
 		#endregion
 
@@ -136,6 +141,63 @@ namespace WorldTree
 		#endregion
 
 		#region 添加
+
+		#region 类型
+
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static INode AddChild(this INode self, long type, out INode node, bool isPool = true)
+		{
+			node = self.GetOrNewNode(type, isPool);
+			return node.AddSelfToTree<ChildBranch, long>(node.Id, self);
+		}
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static INode AddChild<T1>(this INode self, long type, out INode node, T1 arg1, bool isPool = true)
+		{
+			node = self.GetOrNewNode(type, isPool);
+			return node.AddSelfToTree<ChildBranch, long, T1>(node.Id, self, arg1);
+		}
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static INode AddChild<T1, T2>(this INode self, long type, out INode node, T1 arg1, T2 arg2, bool isPool = true)
+		{
+			node = self.GetOrNewNode(type, isPool);
+			return node.AddSelfToTree<ChildBranch, long, T1, T2>(node.Id, self, arg1, arg2);
+		}
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static INode AddChild<T1, T2, T3>(this INode self, long type, out INode node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
+		{
+			node = self.GetOrNewNode(type, isPool);
+			return node.AddSelfToTree<ChildBranch, long, T1, T2, T3>(node.Id, self, arg1, arg2, arg3);
+		}
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static INode AddChild<T1, T2, T3, T4>(this INode self, long type, out INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
+		{
+			node = self.GetOrNewNode(type, isPool);
+			return node.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4>(node.Id, self, arg1, arg2, arg3, arg4);
+		}
+		/// <summary>
+		/// 添加子节点
+		/// </summary>
+		public static INode AddChild<T1, T2, T3, T4, T5>(this INode self, long type, out INode node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
+		{
+			node = self.GetOrNewNode(type, isPool);
+			return node.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4, T5>(node.Id, self, arg1, arg2, arg3, arg4, arg5);
+		}
+
+
+
+		#endregion
+
+		#region 泛型
 
 		/// <summary>
 		/// 添加子节点
@@ -202,6 +264,7 @@ namespace WorldTree
 			node = self.GetOrNewNode<T>(isPool);
 			return (T)node.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4, T5>(node.Id, self, arg1, arg2, arg3, arg4, arg5);
 		}
+		#endregion
 
 		#endregion
 	}
