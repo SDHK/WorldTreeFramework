@@ -21,7 +21,7 @@ namespace EditorTool
 	public class WorldTreeFrameworkWindow : Node
 
 
-		, AsRule<IGUIDrawSystem>
+		//, AsRule<IGUIDrawSystem>
 		, AsRule<IEditorWindowInspectorUpdateSystem>
 
 	{
@@ -56,13 +56,7 @@ namespace EditorTool
 			self.AddComponent(out EditorHomePage _);
 		}
 	}
-	class WorldTreeFrameworkWindowGUIDrawSystem : GUIDrawSystem<WorldTreeFrameworkWindow>
-	{
-		protected override void OnEvent(WorldTreeFrameworkWindow self)
-		{
-			//self.onGUI.Send( 0.02f);
-		}
-	}
+
 
 	class WorldTreeFrameworkWindowEditorWindowInspectorUpdateSystem : EditorWindowInspectorUpdateSystem<WorldTreeFrameworkWindow>
 	{

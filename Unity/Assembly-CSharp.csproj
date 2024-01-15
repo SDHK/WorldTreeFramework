@@ -59,34 +59,21 @@
     <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETTaskMethodBuilder.cs" />
     <Compile Include="Assets\HybridCLRGenerate\AOTGenericReferences.cs" />
     <Compile Include="Assets\Scripts\_Test\ECS\AsyncTaskTest.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\Base\GUIBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIWindow\SystemBase\GUIDrawSystem.cs" />
     <Compile Include="Assets\Scripts\_Test\ECS\MonoTest.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIFoldoutButton.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListAssetBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIWindow\GUIGeneralWindow.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETTaskHelper.cs" />
     <Compile Include="Assets\Scripts\_Test\LoadDll.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIBox.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETTaskCompletedMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\_Test\MoveAreaLimiter.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETVoid.cs" />
     <Compile Include="Assets\Scripts\_Test\ECS\MailTest.cs" />
     <Compile Include="Assets\Scripts\_Test\TestGC.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIBeginVertical.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIRepeatButton.cs" />
     <Compile Include="Assets\Scripts\_Test\TestLine4.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETTask.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIBeginScrollView.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIWindow\GUIWindow.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListDictionary.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\StateMachineWrap.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETCancellationToken.cs" />
     <Compile Include="Assets\Scripts\_Test\TestMonogo.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETVoidMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\IAwaiter.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIBeginHorizontal.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\GUI\GUIComponent\GUIButton.cs" />
     <Compile Include="Assets\Scripts\_Test\ETTask\ETTaskCompleted.cs" />
     <Compile Include="Assets\Scripts\_Test\ConsoleToScreen.cs" />
   </ItemGroup>
@@ -843,14 +830,14 @@
     <Reference Include="Unity.2D.IK.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.IK.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.2D.Path.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Path.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
@@ -1014,6 +1001,10 @@
     <ProjectReference Include="WorldTree.Core.csproj">
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.UnityEditor.csproj">
+      <Project>{CE88A4A4-C618-ED9D-444A-4AE005D2FBC6}</Project>
+      <Name>WorldTree.UnityEditor</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.UnityCore.csproj">
       <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>

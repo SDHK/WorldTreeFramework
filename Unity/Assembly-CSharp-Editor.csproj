@@ -56,29 +56,19 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityWorldTreeEditor.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\EntityBindMonoTool.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\Editor\ScriptableSingleton.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeNodeMonoView\RuleBase\WorldTreeNodeViewFloatRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\EditorAssetField.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\MonoEditorGUIWindow.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ComponentBindItem.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\SystemBase\EditorWindowSystem.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\Editor\ToolKitWindow.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\UIFormEditor.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\CreateAssetClassFile.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindItem.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeFrameworkWindow\EditorHomePage.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeNodeMonoView\WorldTreeNodeMonoViewEditor.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindGroup.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\Addressables\AddressablesEditorTool.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\Editor\FilePathAttribute.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ComponentEventItem.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\EditorAssetClass.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\Addressables\AddressRepetitionAnalyzeRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptInitSetting\Editor\ScriptInitSettings.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\EditorGUIWindow.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeFrameworkWindow\WorldTreeFrameworkWindow.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\GuidePage\Editor\GuidePage.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\ScriptableEditor.cs" />
   </ItemGroup>
@@ -857,14 +847,14 @@
     <Reference Include="Unity.2D.IK.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.IK.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.2D.Path.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Path.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
@@ -1032,6 +1022,10 @@
     <ProjectReference Include="WorldTree.Core.csproj">
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Editor.csproj">
+      <Project>{CD311104-1830-B119-81B6-5DBEE2467FFB}</Project>
+      <Name>Unity.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.UnityCore.csproj">
       <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>

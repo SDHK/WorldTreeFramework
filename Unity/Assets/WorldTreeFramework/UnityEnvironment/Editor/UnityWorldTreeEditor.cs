@@ -35,7 +35,7 @@ namespace EditorTool
         static bool markable = false;
         static void OnPostHeaderGUI(Editor editor)
         {
-            if (!editor.target.IsPrefabDefinition()) return;
+            //if (!editor.target.IsPrefabDefinition()) return;
             markable = GUILayout.Toggle(markable, new GUIContent("MyAA", "tips"));
             GUILayout.Label(editor.target.name);
             if (!markable) return;

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Reflection;
-using System;
 using UnityEditor;
 using UnityEngine;
 using WorldTree;
-using System.Linq;
 
 namespace EditorTool
 {
@@ -13,17 +11,24 @@ namespace EditorTool
 	{
 		public override void OnInspectorGUI()
 		{
-			WorldTreeNodeMonoView treeNodeMonoView = (WorldTreeNodeMonoView)target;
-			INode node = treeNodeMonoView.Node;
-			INode View = treeNodeMonoView.View;
+			WorldTreeNodeMonoView monoView = (WorldTreeNodeMonoView)target;
+			INode node = monoView.Node;
+			INode View = monoView.View;
 			try
 			{
 				EditorGUILayout.BeginVertical();
 
-				EditorGUILayout.LongField("Id", node.Id);
 				EditorGUILayout.LabelField("Type", node.ToString());
+				EditorGUILayout.LongField("Id", node.Id);
+				EditorGUILayout.Toggle("IsActive", node.IsActive);
+				EditorGUILayout.Space();
+				node.SetActive(EditorGUILayout.Toggle("ActiveToggle", node.ActiveToggle));
+				if (node.IsActive != monoView.gameObject.activeSelf)
+				{
+					monoView.gameObject.SetActive(node.IsActive);
+				}
 
-				FieldInfo[] fields = treeNodeMonoView.Node.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+				FieldInfo[] fields = monoView.Node.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 				foreach (FieldInfo fieldInfo in fields)
 				{
 					Type type = fieldInfo.FieldType;
@@ -31,7 +36,7 @@ namespace EditorTool
 					if (View?.Root != null && View.Root.AddComponent(out ViewTypeManager _).types.TryGetValue(type, out Type nodeType))
 					{
 						View.Root.AddComponent(nodeType.TypeToCore(), out INode viewNode, isPool: false);
-						viewNode.TrySendRule(TypeInfo<IWorldTreeNodeFieldInfoViewRule>.Default, node, fieldInfo);
+						viewNode.TrySendRule(TypeInfo<INodeFieldViewRule>.Default, node, fieldInfo);
 					}
 				}
 
@@ -39,7 +44,7 @@ namespace EditorTool
 			}
 			catch (Exception e)
 			{
-				Debug.Log($"component view error: {node.GetType().FullName} {e}");
+				Debug.Log($"Node View error: {node.GetType().FullName} {e}");
 			}
 		}
 	}

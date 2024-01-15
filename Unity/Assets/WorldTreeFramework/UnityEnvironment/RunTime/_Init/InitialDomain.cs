@@ -98,6 +98,22 @@ namespace WorldTree
 			}
 		}
 
+		class EnableRule : EnableRule<InitialDomain>
+		{
+			protected override void OnEvent(InitialDomain self)
+			{
+				self.Log($"初始域激活！！");
+			}
+		}
+
+		class DisableRule : DisableRule<InitialDomain>
+		{
+			protected override void OnEvent(InitialDomain self)
+			{
+				self.Log($"初始域禁用！！");
+			}
+		}
+
 		class UpdateTimeRule : UpdateTimeRule<InitialDomain>
 		{
 			protected override void OnEvent(InitialDomain self, TimeSpan timeSpan)

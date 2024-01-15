@@ -56,7 +56,7 @@ namespace EditorTool
 
             EditorGUILayout.BeginVertical();
 
-            self.page?.TrySendRule<IGUIDrawSystem>();
+            //self.page?.TrySendRule<IGUIDrawSystem>();
 
             EditorGUILayout.EndVertical();
 

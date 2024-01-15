@@ -8,11 +8,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>WorldTree</RootNamespace>
-    <ProjectGuid>{5E34D762-F009-1C9B-3359-DA8578BC2462}</ProjectGuid>
+    <RootNamespace></RootNamespace>
+    <ProjectGuid>{CE88A4A4-C618-ED9D-444A-4AE005D2FBC6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>WorldTree.Core</AssemblyName>
+    <AssemblyName>WorldTree.UnityEditor</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -48,7 +48,7 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
     <UnityProjectGeneratorVersion>2.0.16</UnityProjectGeneratorVersion>
-    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2021.3.16f1</UnityVersion>
   </PropertyGroup>
@@ -56,228 +56,314 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTweenManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeActiveRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValue.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolGroup.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Rule\RuleActuatorSendDisposeRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Base\TreeTaskBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRule\NodeSendRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeListenerRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\HybridListenerRuleActuator.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ReferencedPool\ReferencedPool.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitHashSet.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Branch\Sub\TypeNodeBranch\TypeNodeBranch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskVoidMethodBuilder.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\PoolBase\PoolManagerBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Rule\RuleActuatorSendRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Vector2Float.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLineRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\NodePool.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\TreeTaskQueueLock\TreeTaskQueueCompleterRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\BeforeRemoveRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\IntTweenUpdateRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Extension\TreeValueRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Extension\DictionaryExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Interface\IUnit.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPool.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\UnitPoolManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\NodeRef.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\Branch\WorldBranch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\TreeTaskToken.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Base\UnitPoolItem.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\Lifecycle\GenericsLifecycleRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\TimerCycle.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\ListenerRuleBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Rule\TreeTweenRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\IRuleActuator.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\NodeBase\INodeListener.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\RuleList.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldContext\WorldContext.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRuleGeneral\NodeCallAsyncRuleGeneral.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\SendRuleBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Encipherment\HashCore.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreLogRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldPulse.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Type\TypeTable.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListCallExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\RuleBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeDictionary.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Time\RealTimeManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\StaticListenerRuleActuator.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskCompleted.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\SendRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\NodeBase\DynamicNodeListener.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreGetArrayRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRule\NodeCallRuleAsync.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeDomainRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\TileTool.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\GlobalRuleActuator\GlobalRuleActuator.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitSortedDictionary.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\NewRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeHashSet.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\UpdateRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\ListenerAddRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\NodeBase\Node.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Encipherment\CRC64.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Triangle.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\StringTweenUpdateRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\TimerCall.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldPulseBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\AwakeRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\CounterCall.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\Curve.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\IdManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTaskQueueLock\TreeTaskQueueLockManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\ReferencedPool\ReferencedPoolManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\StringValueChangeRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\FloatTweenUpdateRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Branch\RuleMethod\NodeBranchRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rattan\Sub\ReferencedRattan\ReferencedBranch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\FloatValueChangeRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\CutRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Interface\IUnitPoolItem.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Extension\TreeTaskExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\ListenerRemoveRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\IntValueChangeRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitStack.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\NodeBase\INode.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathVector4Float.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\UnitPool.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitQueue.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeConcurrentQueue.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\CurveManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\RuleBase\CurveEvaluateRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\RuleActuator\RuleActuator.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskMethodBuilder.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathMatrix4x4Float.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRule\NodeSendRuleAsyncRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreGetUnitRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\CallRuleAsyncBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Exception\RuleActuatorException.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\EnableRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\RuleBase\TreeTaskSetResuItRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\RuleBase\TweenUpdateRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRuleGeneral\NodeCallRuleGeneral.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleManager\RuleManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\RuleGroupActuatorBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\HybridListenerRuleActuatorGroup.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Branch\Base\IBranch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListCallAsyncExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Branch\Base\Branch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\GlobalRuleActuator\GlobalRuleActuatorManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Serialized\Serialized.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\SendRuleAsync.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskCompletedMethodBuilder.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTaskQueueLock\TreeTaskQueueCompleter.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\GetRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTask.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValueDelegate.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldHeartBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskSwitchWorldMethodBuilder.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\TimeDomain.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRuleGeneral\NodeSendRuleGeneral.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Branch\Sub\ChildBranch\ChildBranch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronNode.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTween.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeStack.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\CallRuleBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\GenericPool\GenericPool.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreGetNodeRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\GraftRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListSendAsyncExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\RuleActuatorBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\QuaternionFloat.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Timer\Extension\TimerAsyncExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeQueue.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\StateMachine\TreeTaskStateMachine.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\Rule\RuleGroupSendAsyncExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\NodePoolManager.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskTokenCatchMethodBuilder.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\ReferencedRemoveRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitDictionary.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRuleGeneral\NodeSendAsyncRuleGeneral.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\SendRuleAsyncBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathTriangle.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\Rule\RuleGroupCallExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\RecycleRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\Rule\RuleGroupCallAsyncExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Base\TreeValueBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeList.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\Rule\RuleGroupSendExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Branch\RuleMethod\NodeBranchTraversalRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldTreeRoot.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathQuaternionFloat.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\PlaneFloat.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathVector3Float.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeMatrix2.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\AddRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\DestroyRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskTokenCatch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\CallRuleAsync.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Vector3Float.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rattan\RuleMethod\NodeRattanRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Base\TreeTweenBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Vector4Float.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleMethod\TreeValueBaseRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\Lifecycle\StringLifecycleRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldTreeCore.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathInt.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Branch\Sub\ComponentBranch\ComponentBranch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\PoolBase\PoolBase.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Type\TypeInfo.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\DisableRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rattan\Base\IRattan.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldHeart.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\DynamicNodeQueue\DynamicNodeQueue.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rattan\Base\Rattan.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\RuleBase\ValueChangeRuleEvent.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\InvokeRule\NodeCallRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeArray.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\RemoveRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitList.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\GenericsValueChangeRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskVoid.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleList\Rule\RuleListSendExtension.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Branch\Sub\IdNodeBranch\IdNodeBranch.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Modules\Rule\TreeTaskQueueLock\TreeTaskQueueLockManagerRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\CallRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\DynamicListenerRuleActuator.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskSwitchWorld.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Base\Unit.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Matrix4x4Float.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\NodeAddRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Tools\Math\MathFloat.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\RuleGroup.cs" />
-    <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Time\GameTimeManager.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector4ViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityWorldTreeEditor.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\EntityBindMonoTool.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\ScriptableSingleton.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\UnityNodeFieldViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\EditorAssetField.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\CharViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\MonoEditorGUIWindow.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListAssetBase.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ComponentBindItem.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\LongViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\SystemBase\EditorWindowSystem.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\IntViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\ToolKitWindow.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\UIFormEditor.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\CreateAssetClassFile.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector2ViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindItem.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\EnumViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeFrameworkWindow\EditorHomePage.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeNodeMonoView\WorldTreeNodeMonoViewEditor.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindGroup.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\Addressables\AddressablesEditorTool.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\ColorViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\RectViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\FloatViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\FilePathAttribute.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ComponentEventItem.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\NodeFieldViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\EditorAssetClass.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\Addressables\AddressRepetitionAnalyzeRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\AnimationCurveViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListDictionary.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptInitSetting\Editor\ScriptInitSettings.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\EditorGUIWindow.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\StringViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\BoolViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\DoubleViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeFrameworkWindow\WorldTreeFrameworkWindow.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\UnityNodeFieldView.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector3ViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\GuidePage\Editor\GuidePage.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\ScriptableEditor.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\DateTimeViewRule.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\ViewTypeManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\runtimes\win\native\mongocrypt.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Bson.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\runtimes\win\native\snappy64.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\runtimes\win\native\snappy32.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\SharpCompress.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\System.Runtime.CompilerServices.Unsafe.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Driver.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\DnsClient.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\System.Buffers.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\System.Text.Encoding.CodePages.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\runtimes\win\native\libzstd.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\Sqlite\Dll\sqlite3.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\Sqlite\Dll\Mono.Data.Sqlite.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Libmongocrypt.dll" />
-    <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Driver.Core.dll" />
+    <None Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTree.UnityEditor.asmdef" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="UnityEngine">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.ARModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.AccessibilityModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.AndroidJNIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterInputModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.ClusterInputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterRendererModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.ClusterRendererModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DSPGraphModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.DSPGraphModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GIModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.GIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.GameCenterModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.HotReloadModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.LocalizationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.NVIDIAModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.NVIDIAModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.PerformanceReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ProfilerModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.ProfilerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.StreamingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubstanceModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubsystemsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.TLSModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreFontEngineModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreTextEngineModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsNativeModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIElementsNativeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UNETModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UmbraModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityCurlModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityCurlModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityTestProtocolModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.VFXModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VirtualTexturingModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.VirtualTexturingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.WindModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.CoreModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.DeviceSimulatorModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.DeviceSimulatorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.DiagnosticsModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.DiagnosticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.GraphViewModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.GraphViewModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.PackageManagerUIModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.PackageManagerUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.QuickSearchModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.QuickSearchModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.SceneTemplateModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.SceneTemplateModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TextCoreFontEngineModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.TextCoreFontEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TextCoreTextEngineModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.TextCoreTextEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UIBuilderModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIBuilderModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UIElementsModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UIElementsSamplesModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIElementsSamplesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UIServiceModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIServiceModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UnityConnectModule">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Android.Extensions">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+      <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="LZ4">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@1f9faf49a3\Plugins\LZ4.dll</HintPath>
     </Reference>
@@ -367,6 +453,9 @@
     </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
@@ -749,6 +838,28 @@
     <Reference Include="System.Xml.XPath.XDocument">
       <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TestRunner">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.TestRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TestRunner">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.TestRunner.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="WorldTree.UnityCore.csproj">
+      <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>
+      <Name>WorldTree.UnityCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.Core.csproj">
+      <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
+      <Name>WorldTree.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
