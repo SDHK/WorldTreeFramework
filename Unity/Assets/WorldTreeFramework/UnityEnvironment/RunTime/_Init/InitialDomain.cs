@@ -13,6 +13,7 @@
 
 */
 
+using MemoryPack;
 using System;
 using UnityEngine;
 
@@ -85,6 +86,7 @@ namespace WorldTree
 
 	}
 
+
 	public static class InitialDomainRule
 	{
 
@@ -94,7 +96,9 @@ namespace WorldTree
 			protected override void OnEvent(InitialDomain self)
 			{
 				self.Log($"初始域启动！！");
-				self.Core.AddWorld(out WorldTreeCore core);//添加子世界
+				//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
+
+				self.AddComponent(out MemoryPackTest _);
 
 			}
 		}

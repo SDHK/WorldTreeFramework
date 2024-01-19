@@ -1,10 +1,10 @@
+D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\DotNet.Core.deps.json
+D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\DotNet.Core.dll
+D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\DotNet.Core.pdb
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.GeneratedMSBuildEditorConfig.editorconfig
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.AssemblyInfoInputs.cache
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.AssemblyInfo.cs
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.csproj.CoreCompileInputs.cache
-D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\DotNet.Core.deps.json
-D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\DotNet.Core.dll
-D:\SDHK\Project\Unity\SDHK\WorldTree\Bin\DotNet.Core.pdb
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.dll
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\refint\DotNet.Core.dll
 D:\SDHK\Project\Unity\SDHK\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.pdb

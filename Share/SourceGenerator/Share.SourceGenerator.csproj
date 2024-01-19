@@ -1,13 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>11</LangVersion>
-
+    
     <RootNamespace>WorldTree.SourceGenerator</RootNamespace>
-
+    
+    <!--执行扩展分析器规则-->
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 
     <!--用于控制构建输出是否应复制到发布文件夹。-->
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -25,7 +27,7 @@
   <ItemGroup>
     
     <!--对于 Microsoft.CodeAnalysis.CSharp 包:PrivateAssets="all" 表示这个包的所有资产都是私有的,都不会流向依赖项目。-->
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" PrivateAssets="all" />
 
     
     <!--对于 Microsoft.CodeAnalysis.Analyzers 包: -->

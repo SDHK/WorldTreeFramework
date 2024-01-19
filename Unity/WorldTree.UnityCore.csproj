@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowLostFocusRule.cs" />
@@ -129,11 +130,17 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteString.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteDateTime.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteFloat.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\_Test\MemoryPackTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Assets\WorldTreeFramework\UnityEnvironment\RunTime\WorldTree.UnityCore.asmdef" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="LiteDB, Version=5.0.17.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>packages\LiteDB.5.0.17\lib\net45\LiteDB.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
@@ -874,6 +881,10 @@
     <ProjectReference Include="WorldTree.Core.csproj">
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="MemoryPack.csproj">
+      <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
+      <Name>MemoryPack</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

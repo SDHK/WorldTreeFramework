@@ -6,18 +6,20 @@ namespace WorldTree
 	/// 测试节点
 	/// </summary>
 	class DotNetTestNode : Node, ComponentOf<INode>
-		,AsRule<IAwakeRule>
+		, AsRule<IAwakeRule>
 	{
+
 
 	}
 
 	public static partial class DotNetTestNodeRule
 	{
+
 		class AddRule : AddRule<DotNetTestNode>
 		{
 			protected override void OnEvent(DotNetTestNode self)
 			{
-				self.Log(" 初始化！！！");
+				self.Log(" 初始化！！！!!");
 
 				//self.Log(self.Core.ToStringDrawTree());
 			}

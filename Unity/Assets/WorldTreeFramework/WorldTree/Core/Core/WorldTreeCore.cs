@@ -203,8 +203,8 @@ namespace WorldTree
 			this.IsCoreActive = true;
 
 			this.Root = this.AddComponent(out WorldTreeRoot _);
-			this.worldContext = this.AddComponent(out WorldContext _);
 			this.Root.Root = this.Root;
+			this.worldContext = this.Root.AddComponent(out WorldContext _);
 		}
 		#endregion
 

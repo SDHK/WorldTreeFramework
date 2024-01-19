@@ -1,0 +1,242 @@
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LiteCollection`1 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LiteQueryable`1 生成存根: 类型没有对程序集可见的构造函数。构造函数本身或参数可能不可见。。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.EntityBuilder`1 生成存根: 类型没有对程序集可见的构造函数。构造函数本身或参数可能不可见。。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LinqExpressionVisitor 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ParameterExpressionVisitor 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonValueResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ConvertResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.DateTimeResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.EnumerableResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.GuidResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ICollectionResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ITypeResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.MathResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.NullableResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.NumberResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ObjectIdResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.RegexResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.StringResolver 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Reflection 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.DefaultTypeNameBinder 生成存根: 类型没有对程序集可见的构造函数。构造函数本身或参数可能不可见。。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.SqlParser 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LiteFileStream`1 生成存根: 类型没有对程序集可见的构造函数。构造函数本身或参数可能不可见。。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonDataReader 生成存根: 类型没有对程序集可见的构造函数。构造函数本身或参数可能不可见。。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonDataReaderExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonExpression 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonExpressionMethods 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.VolatileAttribute 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonExpressionFunctions 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonExpressionOperators 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonExpressionParser 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ExpressionContext 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.AesEncryption 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonReader 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ByteReader 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BufferSlice 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Constants 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ExtendedLengthHelper 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BufferExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BufferSliceExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.DateExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.DictionaryExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ExpressionExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.HashSetExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.IOExceptionExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LinqExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.StreamExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.StringExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.TypeInfoExtensions 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.FileHelper 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LCID 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.MimeTypeConverter 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ArrayPool`1 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BucketHelper 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Token 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Tokenizer 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DiskReader 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DiskService 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DiskWriterQueue 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.MemoryCache 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BufferPool 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BufferReader 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BufferWriter 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.FileStreamFactory 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IStreamFactory 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.StreamFactory 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.StreamPool 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.ConcurrentStream 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.EnginePragmas 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.FileReaderV7 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.FileReaderV8 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IFileReader 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexInfo 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BasePage 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.CollectionPage 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DataPage 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.HeaderPage 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexPage 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Pragmas 生成存根: 类型已密封。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Index 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexAll 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexEquals 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexIn 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexLike 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexRange 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexScan 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexVirtual 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DatafileLookup 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IDocumentLookup 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexLookup 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BasePipe 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DocumentCacheEnumerable 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.GroupByPipe 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.QueryPipe 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.QueryExecutor 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.QueryOptimization 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.GroupBy 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexCost 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.OrderBy 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.QueryPlan 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Select 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.CollectionService 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DataService 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexService 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.LockService 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Snapshot 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.TransactionMonitor 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.TransactionService 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.WalIndexService 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SortContainer 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SortDisk 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SortService 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.CollectionIndex 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.CursorInfo 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DataBlock 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Done 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexNode 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.PageBuffer 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Pragma 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.TransactionPages 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysDump 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysFile 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysFileCsv 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysFileJson 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysPageList 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysQuery 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SystemCollection 生成存根: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LinqExpressionVisitor 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ParameterExpressionVisitor 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonValueResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ConvertResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.DateTimeResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.EnumerableResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.GuidResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ICollectionResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.MathResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.NullableResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.NumberResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ObjectIdResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.RegexResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.StringResolver 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Reflection 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.SqlParser 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonExpressionMethods 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.VolatileAttribute 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonExpressionFunctions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonExpressionOperators 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonExpressionParser 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ExpressionContext 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.AesEncryption 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BsonReader 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ByteReader 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BufferSlice 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Constants 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ExtendedLengthHelper 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BufferExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BufferSliceExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.DateExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.DictionaryExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ExpressionExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.HashSetExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.IOExceptionExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LinqExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LastItem`1 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.StreamExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.StringExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.TypeInfoExtensions 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.FileHelper 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.LCID 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.MimeTypeConverter 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.ArrayPool`1 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.BucketHelper 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Token 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Tokenizer 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DiskReader 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DiskService 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DiskWriterQueue 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.MemoryCache 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BufferPool 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BufferReader 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BufferWriter 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.FileStreamFactory 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.StreamFactory 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.StreamPool 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.ConcurrentStream 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.EnginePragmas 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.FileReaderV7 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.FileReaderV8 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexInfo 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BasePage 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.CollectionPage 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DataPage 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.HeaderPage 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexPage 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Index 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexAll 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexEquals 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexIn 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexLike 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexRange 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexScan 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexVirtual 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DatafileLookup 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexLookup 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.BasePipe 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DocumentCacheEnumerable 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.GroupByPipe 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.QueryPipe 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.QueryExecutor 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.QueryOptimization 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.GroupBy 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexCost 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.OrderBy 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.QueryPlan 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Select 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.CollectionService 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DataService 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexService 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.LockService 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Snapshot 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.TransactionMonitor 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.TransactionService 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.WalIndexService 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SortContainer 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SortDisk 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SortService 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.CollectionIndex 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.CursorInfo 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.DataBlock 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Done 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.IndexNode 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.PageAddress 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.PageBuffer 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.PagePosition 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.Pragma 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.TransactionPages 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysDump 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysFile 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysFileCsv 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysFileJson 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysPageList 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SysQuery 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。
+D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Fakes\LiteDB.fakes : warning : 无法为 LiteDB.Engine.SystemCollection 生成填充码: 类型对 exported or assembly(LiteDB.5.0.17.0.Fakes) 不可见。

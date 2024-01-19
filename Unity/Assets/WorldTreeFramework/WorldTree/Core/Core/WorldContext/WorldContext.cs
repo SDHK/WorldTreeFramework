@@ -16,7 +16,7 @@ namespace WorldTree
 	/// </summary>
 	/// <remarks>线程的上下文</remarks>
 	public class WorldContext : SynchronizationContext, INode
-		,ComponentOf<WorldTreeCore>
+		,ComponentOf<WorldTreeRoot>
 		,AsRule<IAwakeRule>
 	{
 		#region INode
