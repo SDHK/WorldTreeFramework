@@ -74,6 +74,7 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\CreateAssetClassFile.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector2ViewRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindItem.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\ViewTypeManager.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\EnumViewRule.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeFrameworkWindow\EditorHomePage.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeNodeMonoView\WorldTreeNodeMonoViewEditor.cs" />
@@ -100,7 +101,7 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\GuidePage\Editor\GuidePage.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\ScriptableEditor.cs" />
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\DateTimeViewRule.cs" />
-    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\ViewTypeManager.cs" />
+    <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\BoundsViewRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTree.UnityEditor.asmdef" />

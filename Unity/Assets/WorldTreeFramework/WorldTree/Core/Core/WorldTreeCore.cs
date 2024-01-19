@@ -20,7 +20,7 @@ namespace WorldTree
 
 	//藤蔓网状结构
 
-	//新增TimeUpdate,特化的双方法法则
+	//需要定时器TimeUpdate,特化的双方法法则？
 
 	//真实与游戏时间双法则
 
@@ -38,13 +38,7 @@ namespace WorldTree
 	//邮箱组件需要管理器Update
 	//节点邮箱组件，只有SendMail<1,2,3,4,5>
 
-
-	//不需要引用的是否需要接口标记
-
-	//Unity的节点可视化组件
-
-	//节点分支添加需要补充Type类型，不然无法配表
-
+	//域节点接口标记
 
 	/// <summary>
 	/// 世界树核心接口
@@ -199,7 +193,6 @@ namespace WorldTree
 			this.ReferencedPoolManager.SetActive(true);
 			this.IdManager.SetActive(true);
 			this.RuleManager.SetActive(true);
-			//self.Root.SetActive(true);
 
 			//游戏时间管理器
 			//self.AddComponent(out self.GameTimeManager);
@@ -210,6 +203,7 @@ namespace WorldTree
 			this.IsCoreActive = true;
 
 			this.Root = this.AddComponent(out WorldTreeRoot _);
+			this.worldContext = this.AddComponent(out WorldContext _);
 			this.Root.Root = this.Root;
 		}
 		#endregion

@@ -858,68 +858,74 @@ namespace WorldTree
 
 	}
 
-	class TreeListAwakeRule<T> : AwakeRule<TreeList<T>>
+	public static class TreeListRule
 	{
-		protected override void OnEvent(TreeList<T> self)
+		class AwakeRule_<T> : AwakeRule<TreeList<T>>
 		{
-			self._items = self.PoolGetArray<T>(self._defaultCapacity);
-		}
-	}
-
-	class TreeListAwakeRuleCapacity<T> : AwakeRule<TreeList<T>, int>
-	{
-		protected override void OnEvent(TreeList<T> self, int capacity)
-		{
-			if (capacity < 0)
-				self.LogError("容量为负");
-			if (capacity == 0)
-				self.LogError("容量为0");
-			else
-				self._items = self.PoolGetArray<T>(capacity);
-		}
-	}
-
-	class TreeListAwakeRuleCollection<T> : AwakeRule<TreeList<T>, IEnumerable<T>>
-	{
-		protected override void OnEvent(TreeList<T> self, IEnumerable<T> collection)
-		{
-			if (collection == null)
-				self.LogError("集合为空");
-			if (collection is ICollection<T> objs)
+			protected override void OnEvent(TreeList<T> self)
 			{
-				int count = objs.Count;
-				if (count == 0)
+				self._items = self.PoolGetArray<T>(self._defaultCapacity);
+			}
+		}
+
+		class AwakeRuleCapacity<T> : AwakeRule<TreeList<T>, int>
+		{
+			protected override void OnEvent(TreeList<T> self, int capacity)
+			{
+				if (capacity < 0)
+					self.LogError("容量为负");
+				if (capacity == 0)
+					self.LogError("容量为0");
+				else
+					self._items = self.PoolGetArray<T>(capacity);
+			}
+		}
+
+		class AwakeRuleCollection<T> : AwakeRule<TreeList<T>, IEnumerable<T>>
+		{
+			protected override void OnEvent(TreeList<T> self, IEnumerable<T> collection)
+			{
+				if (collection == null)
+					self.LogError("集合为空");
+				if (collection is ICollection<T> objs)
 				{
-					self._items = self.PoolGetArray<T>(self._defaultCapacity);
+					int count = objs.Count;
+					if (count == 0)
+					{
+						self._items = self.PoolGetArray<T>(self._defaultCapacity);
+					}
+					else
+					{
+						self._items = self.PoolGetArray<T>(count);
+						objs.CopyTo(self._items, 0);
+						self._size = count;
+					}
 				}
 				else
 				{
-					self._items = self.PoolGetArray<T>(count);
-					objs.CopyTo(self._items, 0);
-					self._size = count;
+					self._size = self._defaultCapacity;
+					self._items = self.PoolGetArray<T>(self._defaultCapacity);
+					foreach (T obj in collection)
+						self.Add(obj);
 				}
 			}
-			else
+		}
+
+		class RemoveRule_<T> : RemoveRule<TreeList<T>>
+		{
+			protected override void OnEvent(TreeList<T> self)
 			{
-				self._size = self._defaultCapacity;
-				self._items = self.PoolGetArray<T>(self._defaultCapacity);
-				foreach (T obj in collection)
-					self.Add(obj);
+				self.Clear();
+				self.PoolRecycle(self._items);
+				self._items = null;
+				self._size = 0;
+				self._version = 0;
 			}
 		}
+
 	}
 
-	class TreeListRemoveRule<T> : RemoveRule<TreeList<T>>
-	{
-		protected override void OnEvent(TreeList<T> self)
-		{
-			self.Clear();
-			self.PoolRecycle(self._items);
-			self._items = null;
-			self._size = 0;
-			self._version = 0;
-		}
-	}
+	
 
 
 

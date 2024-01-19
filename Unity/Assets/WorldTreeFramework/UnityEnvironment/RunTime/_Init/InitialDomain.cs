@@ -75,6 +75,7 @@ namespace WorldTree
 		public bool TestBool = true;
 		public string TestString = "1";
 		public char TestChar = '1';
+		public Bounds Bounds = new Bounds(Vector3.one, Vector3.one);
 		public DateTime TestDateTime = DateTime.Now;
 		public Rect Rect = new Rect(0, 0, 100, 100);
 		public Color TestColor = Color.red;
