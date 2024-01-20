@@ -261,7 +261,6 @@
     <Compile Include="Assets\WorldTreeFramework\WorldTree\Core\Time\GameTimeManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Assets\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />
     <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\runtimes\win\native\mongocrypt.dll" />
     <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Bson.dll" />
@@ -278,17 +277,10 @@
     <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\Sqlite\Dll\Mono.Data.Sqlite.dll" />
     <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Libmongocrypt.dll" />
     <None Include="Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Driver.Core.dll" />
-    <Fakes Include="Fakes\LiteDB.fakes" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="LiteDB.5.0.17.0.Fakes">
-      <HintPath>FakesAssemblies\LiteDB.5.0.17.0.Fakes.dll</HintPath>
-    </Reference>
     <Reference Include="LZ4">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@1f9faf49a3\Plugins\LZ4.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="SharpCompress">
       <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\SharpCompress.dll</HintPath>
@@ -355,6 +347,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Share.SourceGenerator">
+      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
@@ -765,7 +760,6 @@
       <Name>MemoryPack</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

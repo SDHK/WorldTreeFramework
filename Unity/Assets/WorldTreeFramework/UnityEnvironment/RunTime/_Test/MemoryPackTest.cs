@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using LiteDB;
 
 namespace WorldTree
 {
@@ -32,16 +31,6 @@ namespace WorldTree
 		{
 			protected override void OnEvent(MemoryPackTest self)
 			{
-
-				LiteDatabase db =new LiteDatabase("");
-
-				ILiteCollection<MemoryPackDataTest<string>> lst = db.GetCollection<MemoryPackDataTest<string>>("test");
-				
-				lst.FindAll().ToList().ForEach((v) =>
-				{
-					self.Log($"{v.t} : {v.Age} : {v.Name}:{v.ints[1]}");
-				});
-
 				self.data = new MemoryPackDataTest<string> { t = "ASDF", Age = 60, Name = 654321L, ints = new List<int>() { 7, 8, 9 } };
 				
 				List<int> ints = self.data.ints;

@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{CD8C9303-404B-FB8D-6B9B-21988D5CAC0A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -80,7 +79,6 @@
     <Compile Include="Assets\Scripts\_Test\ConsoleToScreen.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Assets\HybridCLRGenerate\link.xml" />
     <None Include="Assets\Tools\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
     <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.Config.xml" />
@@ -394,6 +392,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Share.SourceGenerator">
+      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
@@ -997,6 +998,10 @@
       <Project>{E08E16CA-3A74-25C0-DA34-103051062683}</Project>
       <Name>HotUpdate</Name>
     </ProjectReference>
+    <ProjectReference Include="MemoryPack.csproj">
+      <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
+      <Name>MemoryPack</Name>
+    </ProjectReference>
     <ProjectReference Include="Sirenix.OdinInspector.CompatibilityLayer.csproj">
       <Project>{E387569F-725F-F5C8-517B-584709B7D5D8}</Project>
       <Name>Sirenix.OdinInspector.CompatibilityLayer</Name>
@@ -1012,10 +1017,6 @@
     <ProjectReference Include="WorldTree.UnityCore.csproj">
       <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>
       <Name>WorldTree.UnityCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="MemoryPack.csproj">
-      <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
-      <Name>MemoryPack</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

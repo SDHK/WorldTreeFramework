@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{CE88A4A4-C618-ED9D-444A-4AE005D2FBC6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -106,7 +105,6 @@
     <Compile Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\BoundsViewRule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Assets\WorldTreeFramework\UnityEnvironment\Editor\WorldTree.UnityEditor.asmdef" />
   </ItemGroup>
   <ItemGroup>
@@ -436,6 +434,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Share.SourceGenerator">
+      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
