@@ -8,11 +8,11 @@
       "hash": "1f9faf49a3ac4b6b5417188cd7579084d7563514"
     },
     "com.tuyoogame.yooasset": {
-      "version": "1.4.17",
+      "version": "2.1.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.20.2",
+        "com.unity.scriptablebuildpipeline": "1.21.21",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
@@ -204,7 +204,7 @@
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.20.2",
+      "version": "1.21.21",
       "depth": 1,
       "source": "registry",
       "dependencies": {},

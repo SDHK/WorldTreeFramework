@@ -67,7 +67,7 @@ namespace WorldTree
 		, AsRule<IFixedUpdateTimeRule>
 		, AsRule<ILateUpdateTimeRule>
 		, AsRule<IGuiUpdateTimeRule>
-	{ 
+	{
 		public AnimationCurve AnimationCurve = new AnimationCurve();
 		public float TestFloat = 1f;
 		public double TestDouble = 1;
@@ -87,63 +87,16 @@ namespace WorldTree
 	}
 
 
-	public static class InitialDomainRule
-	{
+	//public static class InitialDomainRule_
+	//{
 
-		//测试框架功能
-		class AddRule : AddRule<InitialDomain>
-		{
-			protected override void OnEvent(InitialDomain self)
-			{
-				self.Log($"初始域启动！！");
-				//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
-
-				self.AddComponent(out MemoryPackTest _);
-
-			}
-		}
-
-		class EnableRule : EnableRule<InitialDomain>
-		{
-			protected override void OnEvent(InitialDomain self)
-			{
-				self.Log($"初始域激活！！");
-			}
-		}
-
-		class DisableRule : DisableRule<InitialDomain>
-		{
-			protected override void OnEvent(InitialDomain self)
-			{
-				self.Log($"初始域禁用！！");
-			}
-		}
-
-		class UpdateTimeRule : UpdateTimeRule<InitialDomain>
-		{
-			protected override void OnEvent(InitialDomain self, TimeSpan timeSpan)
-			{
-				//self.Log($"初始域更新！！{timeSpan.TotalSeconds}");
-			}
-		}
-
-		class GuiUpdateTimeRule : GuiUpdateTimeRule<InitialDomain>
-		{
-			GUIStyle textStyle = new GUIStyle() { fontSize = 60 };
-
-			protected override void OnEvent(InitialDomain self, TimeSpan timeSpan)
-			{
-				textStyle.normal.textColor = Color.red;
-				GUILayout.Label($"初始域GUI更新！！{timeSpan.TotalMilliseconds}", textStyle);
-			}
-		}
-
-		class RemoveRule : RemoveRule<InitialDomain>
-		{
-			protected override void OnEvent(InitialDomain self)
-			{
-				self.Log($"初始域关闭！！");
-			}
-		}
-	}
+	//	//测试框架功能
+	//	class AddRule : AddRule<InitialDomain>
+	//	{
+	//		protected override void OnEvent(InitialDomain self)
+	//		{
+	//			self.Log($"初始域启动！");
+	//		}
+	//	}
+	//}
 }

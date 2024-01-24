@@ -34,7 +34,7 @@ namespace WorldTree
 			ViewCore.Awake(); //可视化框架初始化
 
 			//可视化节点赋值给主框架
-			Core.View = ViewCore.Root.AddChild(out WorldTreeNodeUnityView _, (INode)Core, TypeInfo<INode>.Default);
+			Core.View = ViewCore.Root.AddChild(out TreeNodeUnityView _, (INode)Core, TypeInfo<INode>.Default);
 
 			Core.Awake();//主框架初始化
 

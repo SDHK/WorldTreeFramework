@@ -57,26 +57,10 @@
     <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETTaskMethodBuilder.cs" />
     <Compile Include="Assets\HybridCLRGenerate\AOTGenericReferences.cs" />
-    <Compile Include="Assets\Scripts\_Test\ECS\AsyncTaskTest.cs" />
-    <Compile Include="Assets\Scripts\_Test\ECS\MonoTest.cs" />
-    <Compile Include="Assets\Scripts\_Test\ETTask\ETTaskHelper.cs" />
-    <Compile Include="Assets\Scripts\_Test\LoadDll.cs" />
-    <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETTaskCompletedMethodBuilder.cs" />
-    <Compile Include="Assets\Scripts\_Test\MoveAreaLimiter.cs" />
-    <Compile Include="Assets\Scripts\_Test\ETTask\ETVoid.cs" />
-    <Compile Include="Assets\Scripts\_Test\ECS\MailTest.cs" />
-    <Compile Include="Assets\Scripts\_Test\TestGC.cs" />
-    <Compile Include="Assets\Scripts\_Test\TestLine4.cs" />
-    <Compile Include="Assets\Scripts\_Test\ETTask\ETTask.cs" />
-    <Compile Include="Assets\Scripts\_Test\ETTask\StateMachineWrap.cs" />
-    <Compile Include="Assets\Scripts\_Test\ETTask\ETCancellationToken.cs" />
-    <Compile Include="Assets\Scripts\_Test\TestMonogo.cs" />
-    <Compile Include="Assets\Scripts\_Test\ETTask\AsyncETVoidMethodBuilder.cs" />
-    <Compile Include="Assets\Scripts\_Test\ETTask\IAwaiter.cs" />
-    <Compile Include="Assets\Scripts\_Test\ETTask\ETTaskCompleted.cs" />
-    <Compile Include="Assets\Scripts\_Test\ConsoleToScreen.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\GameObjectAssetReference.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\AssetOperationHandleExtension.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\LoadAssetsByTagOperation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\HybridCLRGenerate\link.xml" />
@@ -349,10 +333,10 @@
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@1f9faf49a3\Plugins\LZ4.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\SharpCompress.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Bson">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Bson.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\MongoDB.Bson.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
@@ -367,16 +351,16 @@
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Libmongocrypt">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Libmongocrypt.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\MongoDB.Libmongocrypt.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Encoding.CodePages">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\System.Text.Encoding.CodePages.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Driver">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Driver.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities.Editor">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
@@ -393,9 +377,6 @@
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="Share.SourceGenerator">
-      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
-    </Reference>
     <Reference Include="Sirenix.Utilities">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
     </Reference>
@@ -403,16 +384,16 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="DnsClient">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\DnsClient.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\DnsClient.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\Sqlite\Dll\Mono.Data.Sqlite.dll</HintPath>
+      <HintPath>Assets\Plugins\Sqlite\Dll\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Assets\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Driver.Core">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Driver.Core.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\MongoDB.Driver.Core.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
@@ -816,9 +797,6 @@
     <Reference Include="Unity.RenderPipelines.Universal.Shaders">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.CacheServer">
-      <HintPath>Library\ScriptAssemblies\UnityEditor.CacheServer.dll</HintPath>
-    </Reference>
     <Reference Include="PsdPlugin">
       <HintPath>Library\ScriptAssemblies\PsdPlugin.dll</HintPath>
     </Reference>
@@ -960,11 +938,11 @@
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.2D.Common.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Common.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ScriptableBuildPipeline">
       <HintPath>Library\ScriptAssemblies\Unity.ScriptableBuildPipeline.dll</HintPath>
@@ -998,6 +976,14 @@
       <Project>{E08E16CA-3A74-25C0-DA34-103051062683}</Project>
       <Name>HotUpdate</Name>
     </ProjectReference>
+    <ProjectReference Include="WorldTree.NodeUnity.csproj">
+      <Project>{87D7A9A4-9501-ED3F-257D-B606468CC860}</Project>
+      <Name>WorldTree.NodeUnity</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.Node.csproj">
+      <Project>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</Project>
+      <Name>WorldTree.Node</Name>
+    </ProjectReference>
     <ProjectReference Include="MemoryPack.csproj">
       <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
       <Name>MemoryPack</Name>
@@ -1010,13 +996,21 @@
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="WorldTree.UnityEditor.csproj">
-      <Project>{CE88A4A4-C618-ED9D-444A-4AE005D2FBC6}</Project>
-      <Name>WorldTree.UnityEditor</Name>
+    <ProjectReference Include="WorldTree.EditorUnity.csproj">
+      <Project>{10EDEBF6-0383-482E-16B3-BB558877F9B0}</Project>
+      <Name>WorldTree.EditorUnity</Name>
     </ProjectReference>
-    <ProjectReference Include="WorldTree.UnityCore.csproj">
-      <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>
-      <Name>WorldTree.UnityCore</Name>
+    <ProjectReference Include="WorldTree.RuleUnity.csproj">
+      <Project>{C5203975-51CB-FD0D-CE85-3FB4249C96BC}</Project>
+      <Name>WorldTree.RuleUnity</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.CoreUnity.csproj">
+      <Project>{CCAAEB54-E5BE-7998-5D51-E704B3DB0E9A}</Project>
+      <Name>WorldTree.CoreUnity</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.Rule.csproj">
+      <Project>{ED3E2C28-BFB8-82E2-44AE-BA5579F582B9}</Project>
+      <Name>WorldTree.Rule</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

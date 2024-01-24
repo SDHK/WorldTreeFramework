@@ -1,4 +1,13 @@
-﻿using System;
+﻿/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2024/01/24 06:17:03
+
+* 描述：可视化类型管理器
+
+*/
+
+using System;
 using System.Collections.Generic;
 
 namespace WorldTree
@@ -21,7 +30,7 @@ namespace WorldTree
 		{
 			protected override void OnEvent(ViewTypeManager self)
 			{
-				//收集所有实现了IWorldTreeNodeFieldInfoViewRule的法则的节点 
+				//收集所有实现了INodeFieldViewRule的法则的节点 
 				if (self.Core.RuleManager.TryGetRuleGroup(typeof(INodeFieldViewRule).TypeToCore(), out RuleGroup ruleGroup))
 				{
 					foreach (var NodeTypeRuleType in ruleGroup)

@@ -325,10 +325,10 @@
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@1f9faf49a3\Plugins\LZ4.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\SharpCompress.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Bson">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Bson.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\MongoDB.Bson.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
@@ -349,16 +349,16 @@
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Libmongocrypt">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Libmongocrypt.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\MongoDB.Libmongocrypt.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Encoding.CodePages">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\System.Text.Encoding.CodePages.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Driver">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Driver.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities.Editor">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
@@ -390,9 +390,6 @@
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="Share.SourceGenerator">
-      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
-    </Reference>
     <Reference Include="Sirenix.Utilities">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
     </Reference>
@@ -400,16 +397,16 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="DnsClient">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\DnsClient.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\DnsClient.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\Sqlite\Dll\Mono.Data.Sqlite.dll</HintPath>
+      <HintPath>Assets\Plugins\Sqlite\Dll\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Assets\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Driver.Core">
-      <HintPath>Assets\WorldTreeFramework\WorldTree\ExternalTools\MongoDB\Dll\MongoDB.Driver.Core.dll</HintPath>
+      <HintPath>Assets\Plugins\MongoDB\Dll\MongoDB.Driver.Core.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>

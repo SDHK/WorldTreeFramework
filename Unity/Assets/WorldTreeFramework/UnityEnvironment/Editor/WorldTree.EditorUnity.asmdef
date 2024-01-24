@@ -1,0 +1,19 @@
+{
+    "name": "WorldTree.EditorUnity",
+    "rootNamespace": "",
+    "references": [
+        "WorldTree.Core",
+        "WorldTree.CoreUnity"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
