@@ -11,7 +11,7 @@ namespace WorldTree
 				if (Input.GetKeyDown(KeyCode.Q))
 				{
 					self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-					self.Test().Coroutine(treeTaskToken);
+					self.Test().Coroutine();
 				}
 
 				if (Input.GetKeyDown(KeyCode.W))

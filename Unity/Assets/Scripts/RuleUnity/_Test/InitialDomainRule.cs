@@ -12,8 +12,8 @@ public static partial class InitialDomainRule
 			self.Log($"初始域启动！！!");
 			//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
 
-
-			self.AddComponent(out MemoryPackTest _);
+			TreeTask.ExceptionHandler = (e) => self.LogError(e.ToString());
+			self.AddComponent(out YooAssetTest _);
 
 		}
 	}

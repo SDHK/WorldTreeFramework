@@ -1,0 +1,78 @@
+{
+    "Summary": {
+        "YooVersion": "2.1.1",
+        "UnityVersion": "2021.3.16f1",
+        "BuildDate": "2024/1/25 18:11:42",
+        "BuildSeconds": 13,
+        "BuildTarget": 19,
+        "BuildMode": 0,
+        "BuildPipeline": "BuiltinBuildPipeline",
+        "BuildPackageName": "DefaultPackage",
+        "BuildPackageVersion": "2024-01-25-1091",
+        "UniqueBundleName": false,
+        "EnableAddressable": true,
+        "LocationToLower": false,
+        "IncludeAssetGUID": false,
+        "IgnoreDefaultType": false,
+        "AutoCollectShaders": true,
+        "EnableSharePackRule": true,
+        "EncryptionClassName": "null",
+        "FileNameStyle": 2,
+        "CompressOption": 2,
+        "DisableWriteTypeTree": false,
+        "IgnoreTypeTreeChanges": true,
+        "AssetFileTotalCount": 3,
+        "MainAssetTotalCount": 3,
+        "AllBundleTotalCount": 1,
+        "AllBundleTotalSize": 12995,
+        "EncryptedBundleTotalCount": 0,
+        "EncryptedBundleTotalSize": 0
+    },
+    "AssetInfos": [
+        {
+            "Address": "MainWindow",
+            "AssetPath": "Assets/AssetBundles/Assets/UI/MainWindow.prefab",
+            "AssetGUID": "b734efd44fc2c1445b21992e396bcf25",
+            "AssetTags": [],
+            "MainBundleName": "assets_assetbundles_assets_ui.bundle",
+            "MainBundleSize": 12995,
+            "DependAssets": []
+        },
+        {
+            "Address": "Window1",
+            "AssetPath": "Assets/AssetBundles/Assets/UI/Window1.prefab",
+            "AssetGUID": "7b84226f471047c40b8f96865d56e1d4",
+            "AssetTags": [],
+            "MainBundleName": "assets_assetbundles_assets_ui.bundle",
+            "MainBundleSize": 12995,
+            "DependAssets": []
+        },
+        {
+            "Address": "Window2",
+            "AssetPath": "Assets/AssetBundles/Assets/UI/Window2.prefab",
+            "AssetGUID": "b41dfb18970a2614386cd864de30e5d9",
+            "AssetTags": [],
+            "MainBundleName": "assets_assetbundles_assets_ui.bundle",
+            "MainBundleSize": 12995,
+            "DependAssets": []
+        }
+    ],
+    "BundleInfos": [
+        {
+            "BundleName": "assets_assetbundles_assets_ui.bundle",
+            "FileName": "assets_assetbundles_assets_ui_5b7a6ad55f9fee24c95c87c77c382c5b.bundle",
+            "FileHash": "5b7a6ad55f9fee24c95c87c77c382c5b",
+            "FileCRC": "52038958",
+            "FileSize": 12995,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundles": [],
+            "AllBuiltinAssets": [
+                "Assets/AssetBundles/Assets/UI/MainWindow.prefab",
+                "Assets/AssetBundles/Assets/UI/Window1.prefab",
+                "Assets/AssetBundles/Assets/UI/Window2.prefab"
+            ]
+        }
+    ],
+    "IndependAssets": []
+}

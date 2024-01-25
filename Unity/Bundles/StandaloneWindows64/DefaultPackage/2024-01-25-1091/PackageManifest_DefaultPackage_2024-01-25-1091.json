@@ -1,0 +1,45 @@
+{
+    "FileVersion": "2.0.0",
+    "EnableAddressable": true,
+    "LocationToLower": false,
+    "IncludeAssetGUID": false,
+    "OutputNameStyle": 2,
+    "BuildPipeline": "BuiltinBuildPipeline",
+    "PackageName": "DefaultPackage",
+    "PackageVersion": "2024-01-25-1091",
+    "AssetList": [
+        {
+            "Address": "MainWindow",
+            "AssetPath": "Assets/AssetBundles/Assets/UI/MainWindow.prefab",
+            "AssetGUID": "",
+            "AssetTags": [],
+            "BundleID": 0
+        },
+        {
+            "Address": "Window1",
+            "AssetPath": "Assets/AssetBundles/Assets/UI/Window1.prefab",
+            "AssetGUID": "",
+            "AssetTags": [],
+            "BundleID": 0
+        },
+        {
+            "Address": "Window2",
+            "AssetPath": "Assets/AssetBundles/Assets/UI/Window2.prefab",
+            "AssetGUID": "",
+            "AssetTags": [],
+            "BundleID": 0
+        }
+    ],
+    "BundleList": [
+        {
+            "BundleName": "assets_assetbundles_assets_ui.bundle",
+            "UnityCRC": 2783737194,
+            "FileHash": "5b7a6ad55f9fee24c95c87c77c382c5b",
+            "FileCRC": "52038958",
+            "FileSize": 12995,
+            "Encrypted": false,
+            "Tags": [],
+            "DependIDs": []
+        }
+    ]
+}
