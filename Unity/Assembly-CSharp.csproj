@@ -57,13 +57,48 @@
     <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\Behaviour\ApplicationQuit.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\EventDefine\UserEventDefine.cs" />
     <Compile Include="Assets\HybridCLRGenerate\AOTGenericReferences.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\BattleRoom.cs" />
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\GameObjectAssetReference.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmUpdatePackageVersion.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityBullet.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\WindowLogic\UIBattleWindow.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\GameLogic\SceneBattle.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmDownloadPackageFiles.cs" />
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\AssetOperationHandleExtension.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmUpdaterDone.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\WindowLogic\UIHomeWindow.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\EventDefine\SceneEventDefine.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\PatchWindow.cs" />
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\LoadAssetsByTagOperation.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\ThirdParty\StreamingAssetsHelper\StreamingAssetsHelper.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityEnemy.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityEffect.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\EventDefine\BattleEventDefine.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmInitializePackage.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\GameLogic\GameManager.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\WindowLogic\UILoadingWindow.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmUpdatePackageManifest.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\EventDefine\PatchEventDefine.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityAsteroid.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmCreatePackageDownloader.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityPlayer.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmDownloadPackageOver.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\Behaviour\BackgroundScroller.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\GameLogic\SceneHome.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\Boot.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\ThirdParty\StreamingAssetsHelper\BuildinFileManifest.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\PatchOperation.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmClearPackageCache.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\WindowLogic\UIAboutWindow.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\ThirdParty\StreamingAssetsHelper\StreamingAssetsDefine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\AssetSetting\AssetBundleCollectorConfig.xml" />
     <None Include="Assets\HybridCLRGenerate\link.xml" />
+    <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameArt\Shader\MyUnlitShader.shader" />
     <None Include="Assets\Tools\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
     <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.Config.xml" />
     <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.Config.dll" />
@@ -75,9 +110,11 @@
     <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.xml" />
     <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.dll" />
     <None Include="Assets\Tools\Sirenix\Assemblies\NoEditor\Sirenix.Utilities.dll" />
+    <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameArt\Shader\StandardMobile.shader" />
     <None Include="Assets\Tools\Sirenix\Assemblies\link.xml" />
     <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.Editor.xml" />
     <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll" />
+    <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameArt\Shader\StandardMobile.cginc" />
     <None Include="Assets\Tools\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll" />
     <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.dll" />
     <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.xml" />
@@ -964,6 +1001,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="UniFramework.Event.csproj">
+      <Project>{1615337F-3C01-980B-7784-3454848F0AE8}</Project>
+      <Name>UniFramework.Event</Name>
+    </ProjectReference>
     <ProjectReference Include="Sirenix.OdinInspector.Modules.UnityMathematics.csproj">
       <Project>{E41DDF56-3676-7520-3B3D-021F8DBA6BFA}</Project>
       <Name>Sirenix.OdinInspector.Modules.UnityMathematics</Name>
@@ -984,6 +1025,10 @@
       <Project>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</Project>
       <Name>WorldTree.Node</Name>
     </ProjectReference>
+    <ProjectReference Include="UniFramework.Machine.csproj">
+      <Project>{DDAE7AF7-E9B8-7938-F31E-4720C55E3FF8}</Project>
+      <Name>UniFramework.Machine</Name>
+    </ProjectReference>
     <ProjectReference Include="MemoryPack.csproj">
       <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
       <Name>MemoryPack</Name>
@@ -999,6 +1044,10 @@
     <ProjectReference Include="WorldTree.EditorUnity.csproj">
       <Project>{10EDEBF6-0383-482E-16B3-BB558877F9B0}</Project>
       <Name>WorldTree.EditorUnity</Name>
+    </ProjectReference>
+    <ProjectReference Include="UniFramework.Utility.csproj">
+      <Project>{39887015-4656-1AD3-6137-37EA8E58EC85}</Project>
+      <Name>UniFramework.Utility</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.RuleUnity.csproj">
       <Project>{C5203975-51CB-FD0D-CE85-3FB4249C96BC}</Project>

@@ -74,6 +74,14 @@ namespace WorldTree
 				}
 				return true;
 			}
+
+			//核心不是激活状态，不能新建，直接返回
+			if (!self.Core.IsCoreActive)
+			{
+				actuator = null;
+				return false;
+			}
+
 			//执行器不存在，检测获取目标法则集合，并新建执行器
 			bool checkStatic = self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, nodeType, out RuleGroup staticRuleGroup);
 			bool checkDynamic = self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, TypeInfo<INode>.TypeCode, out RuleGroup dynamicRuleGroup);

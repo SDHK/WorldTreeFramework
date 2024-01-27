@@ -61,6 +61,7 @@
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Editor\ShaderVariantCollector\ShaderVariantCollector.cs" />
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Editor\ShaderVariantCollector\ShaderVariantCollectionHelper.cs" />
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Editor\CustomPackRule.cs" />
+    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Editor\Encryption.cs" />
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Editor\PackageImporter\PackageImporterWindow.cs" />
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Editor\ShaderVariantCollector\ShaderVariantCollectorWindow.cs" />
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Editor\ShaderVariantCollector\ShaderVariantCollectionManifest.cs" />
@@ -997,6 +998,10 @@
       <Project>{CD8C9303-404B-FB8D-6B9B-21988D5CAC0A}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
+    <ProjectReference Include="UniFramework.Event.csproj">
+      <Project>{1615337F-3C01-980B-7784-3454848F0AE8}</Project>
+      <Name>UniFramework.Event</Name>
+    </ProjectReference>
     <ProjectReference Include="Sirenix.OdinInspector.Modules.UnityMathematics.csproj">
       <Project>{E41DDF56-3676-7520-3B3D-021F8DBA6BFA}</Project>
       <Name>Sirenix.OdinInspector.Modules.UnityMathematics</Name>
@@ -1017,6 +1022,10 @@
       <Project>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</Project>
       <Name>WorldTree.Node</Name>
     </ProjectReference>
+    <ProjectReference Include="UniFramework.Machine.csproj">
+      <Project>{DDAE7AF7-E9B8-7938-F31E-4720C55E3FF8}</Project>
+      <Name>UniFramework.Machine</Name>
+    </ProjectReference>
     <ProjectReference Include="MemoryPack.csproj">
       <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
       <Name>MemoryPack</Name>
@@ -1032,6 +1041,10 @@
     <ProjectReference Include="WorldTree.EditorUnity.csproj">
       <Project>{10EDEBF6-0383-482E-16B3-BB558877F9B0}</Project>
       <Name>WorldTree.EditorUnity</Name>
+    </ProjectReference>
+    <ProjectReference Include="UniFramework.Utility.csproj">
+      <Project>{39887015-4656-1AD3-6137-37EA8E58EC85}</Project>
+      <Name>UniFramework.Utility</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.RuleUnity.csproj">
       <Project>{C5203975-51CB-FD0D-CE85-3FB4249C96BC}</Project>

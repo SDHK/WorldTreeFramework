@@ -14,31 +14,36 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-    /// <summary>
-    /// 混合型监听器法则执行器
-    /// </summary>
-    public class HybridListenerRuleActuator : Node,IListenerIgnorer, IRuleActuatorEnumerable, IRuleActuator<IRule>
-        , ComponentOf<HybridListenerRuleActuatorGroup>
-        , AsRule<IAwakeRule>
-    {
-        /// <summary>
-        /// 静态监听器法则执行器
-        /// </summary>
-        public StaticListenerRuleActuator staticListenerRuleActuator;
-        /// <summary>
-        /// 动态监听器法则执行器
-        /// </summary>
-        public DynamicListenerRuleActuator dynamicListenerRuleActuator;
+	/// <summary>
+	/// 混合型监听器法则执行器
+	/// </summary>
+	public class HybridListenerRuleActuator : Node, IListenerIgnorer, IRuleActuatorEnumerable, IRuleActuator<IRule>
+		, ComponentOf<HybridListenerRuleActuatorGroup>
+		, AsRule<IAwakeRule>
+	{
+		/// <summary>
+		/// 静态监听器法则执行器
+		/// </summary>
+		public StaticListenerRuleActuator staticListenerRuleActuator;
+		/// <summary>
+		/// 动态监听器法则执行器
+		/// </summary>
+		public DynamicListenerRuleActuator dynamicListenerRuleActuator;
+
+		public override string ToString()
+		{
+			return $"HybridListenerRuleActuator:{this.GetHashCode()} : {staticListenerRuleActuator == null} ??  {dynamicListenerRuleActuator == null}";
+		}
 
 		public IEnumerator<(INode, RuleList)> GetEnumerator()
 		{
-            if (staticListenerRuleActuator!=null)
-            {
-                foreach (var item in staticListenerRuleActuator)
-                {
-                    yield return item;
+			if (staticListenerRuleActuator != null)
+			{
+				foreach (var item in staticListenerRuleActuator)
+				{
+					yield return item;
 				}
-            }
+			}
 			if (dynamicListenerRuleActuator != null)
 			{
 				foreach (var item in dynamicListenerRuleActuator)
@@ -48,18 +53,18 @@ namespace WorldTree
 			}
 		}
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 
-    public static class HybridListenerRuleActuatorRule
-    {
-        class RemoveRule : RemoveRule<HybridListenerRuleActuator>
-        {
-            protected override void OnEvent(HybridListenerRuleActuator self)
-            {
-                self.staticListenerRuleActuator = null;
-                self.dynamicListenerRuleActuator = null;
-            }
-        }
-    }
+	public static class HybridListenerRuleActuatorRule
+	{
+		class RemoveRule : RemoveRule<HybridListenerRuleActuator>
+		{
+			protected override void OnEvent(HybridListenerRuleActuator self)
+			{
+				self.staticListenerRuleActuator = null;
+				self.dynamicListenerRuleActuator = null;
+			}
+		}
+	}
 }

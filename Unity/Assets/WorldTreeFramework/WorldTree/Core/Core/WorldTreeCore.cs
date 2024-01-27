@@ -255,17 +255,30 @@ namespace WorldTree
 
 		#region 释放
 
+
+		/// <summary>
+		/// 回收节点
+		/// </summary>
+		public override void Dispose()
+		{
+			//核心激活关闭
+			this.IsCoreActive = false;
+
+			//是否已经回收
+			if (this.IsRecycle || this.IsDisposed) return;
+
+			//节点回收前序遍历处理,节点回收后续遍历处理
+			this.TraversalPrePostOrder(current => current.OnBeforeDispose(), current => current.OnDispose());
+		}
+
 		public override void OnBeforeDispose()
 		{
 			this.Core.BeforeRemoveRuleGroup?.Send(this);
 
 			//需要提前按顺序移除
 			this.RemoveAllNode<WorldBranch>();
-
 			this.RemoveComponent<WorldTreeRoot>();
 			this.RemoveComponent<GlobalRuleActuatorManager>();
-
-			this.IsCoreActive = false;
 
 			this.RemoveComponent<GameTimeManager>();
 			this.RemoveComponent<ArrayPoolManager>();
