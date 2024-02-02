@@ -11,7 +11,7 @@ public static partial class InitialDomainRule
 		{
 			self.Log($"初始域启动！！!");
 			//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
-		
+
 			self.AddComponent(out YooAssetTest _);
 
 

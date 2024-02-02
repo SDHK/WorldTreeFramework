@@ -32,7 +32,7 @@ namespace WorldTree
 				// 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
 				YooAssets.SetDefaultPackage(self.package);
 
-				self.InitializeYooAsset1().Continue();
+				self.InitializeYooAsset1().Coroutine();
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace WorldTree
 			handle.Dispose();
 
 			//抛空异常
-			throw new System.Exception("测试抛出异常");
+			//throw new System.Exception("测试抛出异常");
 		}
 	
 
