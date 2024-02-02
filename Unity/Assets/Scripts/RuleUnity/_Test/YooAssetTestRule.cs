@@ -50,6 +50,8 @@ namespace WorldTree
 
 			GameObject gameObject = handle.AssetObject as GameObject;
 			self.Log($"YooAsset ??? : {gameObject.name}");
+
+
 		}
 
 		/// <summary>
@@ -63,7 +65,12 @@ namespace WorldTree
 			AssetHandle handle = await self.GetAwaiter(self.package.LoadAssetAsync<GameObject>("MainWindow"));
 			GameObject gameObject = handle.AssetObject as GameObject;
 			self.Log($"YooAsset ??? : {gameObject.name}");
+			handle.Dispose();
+
+			//抛空异常
+			throw new System.Exception("测试抛出异常");
 		}
+	
 
 		private static async TreeTask InitializeYooAsset2(this YooAssetTest self)
 		{
@@ -86,6 +93,8 @@ namespace WorldTree
 			}
 
 			await self.TreeTaskCompleted();
+
+		
 
 		}
 

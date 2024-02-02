@@ -7,15 +7,35 @@ namespace WorldTree
 	/// <summary>
 	/// 测试节点
 	/// </summary>
-	class DotNetTestNode : Node, ComponentOf<INode>
+	public class DotNetTestNode : Node, ComponentOf<INode>
 		, AsRule<IAwakeRule>
 	{
 
+		public int TestValue;
 
+		public async void AwakeAsync(DotNetTestNode self)
+		{
+			await self.TreeTaskCompleted();
+
+		}
 	}
 
 	public static partial class DotNetTestNodeRule
 	{
+
+	
+		public static async void TestAsync(this DotNetTestNode self)
+		{
+			await self.TreeTaskCompleted();
+
+		}
+
+		public static async void Test(this DotNetTestNode self)
+		{
+			self.TestAsync();
+			await self.TreeTaskCompleted();
+
+		}
 
 		class AddRule : AddRule<DotNetTestNode>
 		{

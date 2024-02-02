@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/7/14 11:37
@@ -12,7 +11,8 @@ using System;
 
 namespace WorldTree
 {
-    public class AssetManager : Node, ComponentOf<WorldTreeRoot>
+    public class AssetManager : Node
+        , ComponentOf<WorldTreeRoot>
         , AsRule<ILoadAssetAsyncRule>
     {
         public TreeDictionary<string, Object> assets;

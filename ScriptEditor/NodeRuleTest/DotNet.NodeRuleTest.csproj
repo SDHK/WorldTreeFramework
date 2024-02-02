@@ -33,15 +33,17 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-
   <ItemGroup>
-    <Compile Include="..\..\Unity\Assets\Scripts\Node\**\*.cs">
-      <Link>WorldTree\%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </Compile>
 
-    <Compile Include="..\..\Unity\Assets\Scripts\Rule\**\*.cs">
-      <Link>WorldTree\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    <Compile Include="..\..\Unity\Assets\Scripts\NodeUnity\**\*.cs">
+        <Link>WorldTree\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
+    
+    <Compile Include="..\..\Unity\Assets\Scripts\RuleUnity\**\*.cs">
+      <Link>WorldTree\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <!--<DependentUpon>WorldTree\%(Filename)%(Extension)</DependentUpon>-->
+    </Compile>
+    
   </ItemGroup>
 
   

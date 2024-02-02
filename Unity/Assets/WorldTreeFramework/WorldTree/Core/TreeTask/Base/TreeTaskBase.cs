@@ -26,11 +26,6 @@ namespace WorldTree
 		, AsRule<ITreeTaskTokenEventRule>
 	{
 		/// <summary>
-		/// 异常处理委托
-		/// </summary>
-		public static Action<Exception> ExceptionHandler;
-
-		/// <summary>
 		/// 树任务令牌
 		/// </summary>
 		public TreeTaskToken m_TreeTaskToken;

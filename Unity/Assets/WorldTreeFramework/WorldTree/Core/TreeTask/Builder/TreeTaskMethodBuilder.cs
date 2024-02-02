@@ -44,7 +44,9 @@ namespace WorldTree.Internal
 		[DebuggerHidden]
 		public void SetException(Exception exception)
 		{
-			TreeTaskBase.ExceptionHandler?.Invoke(exception);
+			task.LogError(exception);
+
+			//TreeTaskBase.ExceptionHandler?.Invoke(exception);
 		}
 
 		// 4. SetResult
@@ -66,6 +68,9 @@ namespace WorldTree.Internal
 			AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
 		}
 
+
+		//在调用异步方法时，方法本身不是第一个Task,第一个Task是方法内部生成的一个Task。
+
 		// 6. AwaitUnsafeOnCompleted
 		[SecuritySafeCritical]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
@@ -75,6 +80,7 @@ namespace WorldTree.Internal
 				this.treeTaskStateMachine = awaiter.PoolGetUnit(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
 				taskStateMachine.SetStateMachine(ref stateMachine);
 			}
+
 			if (task == null)
 			{
 
@@ -147,7 +153,7 @@ namespace WorldTree.Internal
 		[DebuggerHidden]
 		public void SetException(Exception exception)
 		{
-			TreeTaskBase.ExceptionHandler?.Invoke(exception);
+			task.LogError(exception);
 		}
 
 		// 4. SetResult

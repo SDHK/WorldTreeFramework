@@ -11,10 +11,14 @@ public static partial class InitialDomainRule
 		{
 			self.Log($"初始域启动！！!");
 			//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
-
-			TreeTask.ExceptionHandler = (e) => self.LogError(e.ToString());
+		
 			self.AddComponent(out YooAssetTest _);
 
+
+			//添加宏测试成功，应该在编辑器下才能添加
+			//string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone);
+			//if (!currentDefines.Contains("MY_NEW_DEFINE")) currentDefines += ";MY_NEW_DEFINE";
+			//PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, currentDefines);
 		}
 	}
 

@@ -77,7 +77,6 @@
     <Compile Include="Assets\Scripts\NodeUnity\_Test\TreeValueTest.cs" />
     <Compile Include="Assets\Scripts\NodeUnity\_Test\_MonoTest\ETTask\ETCancellationToken.cs" />
     <Compile Include="Assets\Scripts\NodeUnity\_Test\SphereManagerTest.cs" />
-    <Compile Include="Assets\Scripts\NodeUnity\_Test\_MonoTest\TestMonogo.cs" />
     <Compile Include="Assets\Scripts\NodeUnity\_Test\_MonoTest\ETTask\AsyncETVoidMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\NodeUnity\_Test\_MonoTest\ETTask\IAwaiter.cs" />
     <Compile Include="Assets\Scripts\NodeUnity\_Test\SphereTest.cs" />
@@ -366,6 +365,9 @@
     </Reference>
     <Reference Include="dnlib">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@1f9faf49a3\Plugins\dnlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Share.SourceGenerator">
+      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Serialization.Config">
       <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>

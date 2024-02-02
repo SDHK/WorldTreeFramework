@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Profiling;
-using UnityEngine.TextCore.Text;
 
 namespace ECSTest
 {
