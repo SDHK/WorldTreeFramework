@@ -1,12 +1,64 @@
 ﻿using System;
 using System.Buffers.Binary;
+using System.Collections.Generic;
 using System.IO;
+using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 
 namespace WorldTree
 {
 
 	public static class Serialized
 	{
+		public static byte[] Get(object value)
+		{
+
+		 object.ReferenceEquals(value, null);
+			//循环引用问题
+			//先拿出所有引用类型,存入字典<object,long>
+			//然后在对每个引用类型遍历序列化，遇到引用类型就跳过，遇到值类型就序列化
+
+			//当前类型
+			(Type, object) current;
+
+			Stack<(Type, object)> stack = new();
+
+			stack.Push((value.GetType(),value));
+
+			while (stack.Count != 0)
+			{
+				current = stack.Pop();
+
+				//处理类型转为byte[]
+				Handle(current);
+
+				//反射获取类型
+				Type type = current.Item1;
+
+				//反射获取字段
+				var fields = type.GetFields();
+				foreach (var field in fields)
+				{
+					stack.Push((field.FieldType,field.GetValue(current)));
+				}
+
+				//反射获取属性
+				var properties = type.GetProperties();
+				foreach (var property in properties)
+				{
+					stack.Push((property.PropertyType,property.GetValue(current)));
+				}
+			}
+
+
+			void Handle((Type, object) value)
+			{
+				//value.Item1.IsValueType
+			}
+
+			return null;
+		}
+
+
 		public static byte[] Get(int value)
 		{
 			//BinaryPrimitives.WriteInt32BigEndian
@@ -14,6 +66,11 @@ namespace WorldTree
 			//BitConverter.GetBytes(new object())
 
 			//Type.GetTypeCode
+			return BitConverter.GetBytes(value);
+		}
+
+		public static byte[] Get(short value)
+		{
 			return BitConverter.GetBytes(value);
 		}
 	}
@@ -63,6 +120,11 @@ namespace WorldTree
 
             */
 
+			// 数据长度| 类型编号：类型名称
+
+			// 类型编号：类型长度
+			// 实例ID：类型编号|数据
+
 
 			switch (value)
 			{
@@ -101,7 +163,7 @@ namespace WorldTree
 	/// </summary>
 	public class SerializedBasicType : Node, ISerializedBasicType
 	{
-		public void Read<T>(byte[] data, out T value)
+		public void Read<T>(byte[] data, out T value)//反射序列化成二进制
 		{
 			MemoryStream stream = new();
 			var BW = new BinaryWriter(stream);
@@ -113,9 +175,11 @@ namespace WorldTree
 			throw new NotImplementedException();
 		}
 
-		public void Write<T>(T value, out byte[] data)
+		public void Write<T>(T value, out byte[] data)//二进制反序列成对象
 		{
 			throw new NotImplementedException();
 		}
 	}
+
+
 }
