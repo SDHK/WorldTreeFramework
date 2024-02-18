@@ -46,9 +46,7 @@ namespace WorldTree
 
 	//YooAsset管理器
 
-	//C#语法分析器,异常修复 ,异步，私有字段
-
-	//Log传递到NodeView
+	//C#语法分析器,异常修复 ,异步，私有字段?
 
 
 	/// <summary>

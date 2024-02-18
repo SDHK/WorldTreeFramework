@@ -19,7 +19,7 @@ namespace EditorTool
         {
             get
             {
-                mInstance ??= LoadOrCreate();
+                //mInstance ??= LoadOrCreate();
 
                 return mInstance;
             }
@@ -30,7 +30,7 @@ namespace EditorTool
             string filePath = GetFilePath();
             if (!string.IsNullOrEmpty(filePath))
             {
-                T instance = AssetDatabase.LoadAssetAtPath<T>(filePath);
+				T instance = AssetDatabase.LoadAssetAtPath<T>(filePath);
                 if (!instance)
                 {
                     instance = CreateInstance<T>();

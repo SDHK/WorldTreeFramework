@@ -21,10 +21,13 @@ namespace WorldTree
         Assembly hotUpdateAss = Assembly.Load(File.ReadAllBytes($"{Application.streamingAssetsPath}/HotUpdate.dll.bytes"));
 #else
             // Editor下无需加载，直接查找获得HotUpdate程序集
-            Assembly hotUpdateAss = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "HotUpdate");
+            //Assembly hotUpdateAss = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "HotUpdate1");
 #endif
 
-            Type type = hotUpdateAss.GetType("Hello");
+			Assembly hotUpdateAss = Assembly.Load(File.ReadAllBytes($"{Application.streamingAssetsPath}/HotUpdate2.dll.bytes"));
+
+
+			Type type = hotUpdateAss.GetType("Hello");
             type.GetMethod("Run").Invoke(null, null);
         }
     }

@@ -633,8 +633,9 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: ODIN_INSPECTOR;ODIN_INSPECTOR_3
-  additionalCompilerArguments: {}
+    Standalone: ODIN_INSPECTOR;ODIN_INSPECTOR_3;UNITY_IL2CPP_PATH
+  additionalCompilerArguments:
+    Standalone: []
   platformArchitecture: {}
   scriptingBackend:
     Standalone: 1

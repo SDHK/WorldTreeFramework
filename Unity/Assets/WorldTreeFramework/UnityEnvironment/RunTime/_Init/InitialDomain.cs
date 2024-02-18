@@ -53,7 +53,6 @@ namespace WorldTree
 		public void SetData(byte[] dataBytes)
 		{
 
-
 		}
 	}
 
@@ -86,17 +85,16 @@ namespace WorldTree
 
 	}
 
+	public static class InitialDomainRule_
+	{
 
-	//public static class InitialDomainRule_
-	//{
-
-	//	//测试框架功能
-	//	class AddRule : AddRule<InitialDomain>
-	//	{
-	//		protected override void OnEvent(InitialDomain self)
-	//		{
-	//			self.Log($"初始域启动！");
-	//		}
-	//	}
-	//}
+		//测试框架功能
+		class AddRule : AddRule<InitialDomain>
+		{
+			protected override void OnEvent(InitialDomain self)
+			{
+				self.Log($"初始域启动！");
+			}
+		}
+	}
 }

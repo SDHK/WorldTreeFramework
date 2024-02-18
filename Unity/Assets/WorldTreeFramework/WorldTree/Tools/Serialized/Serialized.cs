@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
-using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 
 namespace WorldTree
 {

@@ -56,10 +56,10 @@ namespace EditorTool
         protected override OdinMenuTree BuildMenuTree()
         {
             var tree = new OdinMenuTree(true);
-            tree.AddAssetAtPath("关于", GuidePage.Inst.FilePath).AddIcon(EditorIcons.Info);
+            //tree.AddAssetAtPath("关于", GuidePage.Inst.FilePath).AddIcon(EditorIcons.Info);
             //tree.AddAssetAtPath("脚本工具", ScriptInitSetting.Inst.FilePath).AddIcon(EditorIcons.SingleUser);
             //tree.AddAssetAtPath("资源编辑器", ScriptableEditor.Inst.FilePath);
-            tree.AddAssetAtPath("实体绑定Mono", EntityBindMonoTool.Inst.FilePath);
+            //tree.AddAssetAtPath("实体绑定Mono", EntityBindMonoTool.Inst.FilePath);
 
             return tree;
         }
