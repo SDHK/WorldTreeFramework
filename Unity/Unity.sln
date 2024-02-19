@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirenix.OdinInspector.Compa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldTree.Node", "WorldTree.Node.csproj", "{1022309A-A609-51BF-E1EC-4DF4D148FD42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEntry", "GameEntry.csproj", "{D4C64E87-992D-156B-D2B4-A12B236B4D8B}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldTree.EditorUnity", "WorldTree.EditorUnity.csproj", "{10EDEBF6-0383-482E-16B3-BB558877F9B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirenix.OdinInspector.CompatibilityLayer.Editor", "Sirenix.OdinInspector.CompatibilityLayer.Editor.csproj", "{686145E0-A51B-685E-EF99-A1034C8B63AB}"
@@ -93,6 +95,10 @@ Global
 		{1022309A-A609-51BF-E1EC-4DF4D148FD42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1022309A-A609-51BF-E1EC-4DF4D148FD42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1022309A-A609-51BF-E1EC-4DF4D148FD42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4C64E87-992D-156B-D2B4-A12B236B4D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4C64E87-992D-156B-D2B4-A12B236B4D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4C64E87-992D-156B-D2B4-A12B236B4D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4C64E87-992D-156B-D2B4-A12B236B4D8B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10EDEBF6-0383-482E-16B3-BB558877F9B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10EDEBF6-0383-482E-16B3-BB558877F9B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10EDEBF6-0383-482E-16B3-BB558877F9B0}.Release|Any CPU.ActiveCfg = Release|Any CPU

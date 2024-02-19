@@ -54,9 +54,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sqlite\Mono.Data.Sqlite.dll" />
-    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\LiteDB\LiteDB.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Utilities.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll" />
     <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Serialization.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
+    <Analyzer Include="D:\SDHK\Project\Unity\SDHK\WorldTree\Unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\Behaviour\ApplicationQuit.cs" />
@@ -101,25 +109,8 @@
     <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\AssetSetting\AssetBundleCollectorConfig.xml" />
     <None Include="Assets\HybridCLRGenerate\link.xml" />
     <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameArt\Shader\MyUnlitShader.shader" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.Config.xml" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.Config.dll" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.xml" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\NoEditor\Sirenix.Serialization.dll" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.xml" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.xml" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.dll" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\NoEditor\Sirenix.Utilities.dll" />
     <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameArt\Shader\StandardMobile.shader" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\link.xml" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.Editor.xml" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll" />
     <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameArt\Shader\StandardMobile.cginc" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.dll" />
-    <None Include="Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -371,29 +362,20 @@
     <Reference Include="LZ4">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\LZ4.dll</HintPath>
     </Reference>
-    <Reference Include="Sirenix.OdinInspector.Attributes">
-      <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Burst.Cecil.Pdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
     </Reference>
     <Reference Include="dnlib">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\dnlib.dll</HintPath>
     </Reference>
-    <Reference Include="Sirenix.Serialization.Config">
-      <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Sirenix.Utilities.Editor">
-      <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Sirenix.OdinInspector.Editor">
-      <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="LiteDB">
+      <HintPath>Assets\Plugins\LiteDB\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
@@ -401,23 +383,32 @@
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="Sirenix.Utilities">
-      <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>Assets\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="Sirenix.Serialization">
-      <HintPath>Assets\Tools\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="LiteDB">
-      <HintPath>Assets\Plugins\LiteDB\LiteDB.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>Assets\Plugins\Sqlite\Mono.Data.Sqlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.OdinInspector.Attributes">
+      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization.Config">
+      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Utilities.Editor">
+      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.OdinInspector.Editor">
+      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Utilities">
+      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization">
+      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>D:\SDHK\Program\Work\Unity\2021.3.16f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
@@ -989,13 +980,9 @@
       <Project>{1615337F-3C01-980B-7784-3454848F0AE8}</Project>
       <Name>UniFramework.Event</Name>
     </ProjectReference>
-    <ProjectReference Include="Sirenix.OdinInspector.Modules.UnityMathematics.csproj">
-      <Project>{E41DDF56-3676-7520-3B3D-021F8DBA6BFA}</Project>
-      <Name>Sirenix.OdinInspector.Modules.UnityMathematics</Name>
-    </ProjectReference>
-    <ProjectReference Include="Sirenix.OdinInspector.CompatibilityLayer.Editor.csproj">
-      <Project>{686145E0-A51B-685E-EF99-A1034C8B63AB}</Project>
-      <Name>Sirenix.OdinInspector.CompatibilityLayer.Editor</Name>
+    <ProjectReference Include="HotUpdate1.csproj">
+      <Project>{6E2693E2-947D-DDC0-EAD0-17B62EE08880}</Project>
+      <Name>HotUpdate1</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.NodeUnity.csproj">
       <Project>{87D7A9A4-9501-ED3F-257D-B606468CC860}</Project>
@@ -1012,10 +999,6 @@
     <ProjectReference Include="MemoryPack.csproj">
       <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
       <Name>MemoryPack</Name>
-    </ProjectReference>
-    <ProjectReference Include="Sirenix.OdinInspector.CompatibilityLayer.csproj">
-      <Project>{E387569F-725F-F5C8-517B-584709B7D5D8}</Project>
-      <Name>Sirenix.OdinInspector.CompatibilityLayer</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.Core.csproj">
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
@@ -1041,9 +1024,21 @@
       <Project>{ED3E2C28-BFB8-82E2-44AE-BA5579F582B9}</Project>
       <Name>WorldTree.Rule</Name>
     </ProjectReference>
-    <ProjectReference Include="HotUpdate1.csproj">
-      <Project>{6E2693E2-947D-DDC0-EAD0-17B62EE08880}</Project>
-      <Name>HotUpdate1</Name>
+    <ProjectReference Include="Sirenix.OdinInspector.Modules.UnityMathematics.csproj">
+      <Project>{E41DDF56-3676-7520-3B3D-021F8DBA6BFA}</Project>
+      <Name>Sirenix.OdinInspector.Modules.UnityMathematics</Name>
+    </ProjectReference>
+    <ProjectReference Include="Sirenix.OdinInspector.CompatibilityLayer.Editor.csproj">
+      <Project>{686145E0-A51B-685E-EF99-A1034C8B63AB}</Project>
+      <Name>Sirenix.OdinInspector.CompatibilityLayer.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Sirenix.OdinInspector.CompatibilityLayer.csproj">
+      <Project>{E387569F-725F-F5C8-517B-584709B7D5D8}</Project>
+      <Name>Sirenix.OdinInspector.CompatibilityLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="GameEntry.csproj">
+      <Project>{D4C64E87-992D-156B-D2B4-A12B236B4D8B}</Project>
+      <Name>GameEntry</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
