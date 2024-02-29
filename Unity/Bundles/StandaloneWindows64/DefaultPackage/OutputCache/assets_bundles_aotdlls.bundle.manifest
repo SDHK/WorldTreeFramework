@@ -1,0 +1,24 @@
+ManifestFileVersion: 0
+CRC: 922286996
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: da32c9856e602f3346b735c1a74bf4bb
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Bundles/AotDlls/System.Core.dll.bytes
+- Assets/Bundles/AotDlls/UnityEngine.CoreModule.dll.bytes
+- Assets/Bundles/AotDlls/YooAsset.dll.bytes
+- Assets/Bundles/AotDlls/System.dll.bytes
+- Assets/Bundles/AotDlls/MemoryPack.dll.bytes
+- Assets/Bundles/AotDlls/LiteDB.dll.bytes
+- Assets/Bundles/AotDlls/mscorlib.dll.bytes
+- Assets/Bundles/AotDlls/System.Runtime.CompilerServices.Unsafe.dll.bytes
+Dependencies: []

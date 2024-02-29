@@ -3,7 +3,12 @@
     "rootNamespace": "",
     "references": [
         "WorldTree.Core",
-        "WorldTree.CoreUnity"
+        "WorldTree.CoreUnity",
+        "HybridCLR.Runtime",
+        "HybridCLR.Editor",
+        "YooAsset.Editor",
+        "YooAsset",
+        "GameEntry"
     ],
     "includePlatforms": [
         "Editor"
