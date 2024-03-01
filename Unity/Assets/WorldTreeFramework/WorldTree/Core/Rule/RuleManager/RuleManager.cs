@@ -4,22 +4,22 @@
 * 日期： 2022/6/26 16:29
 
 * 描述： 世界法则管理器
-* 
+*
 * 通过反射获取全局继承了IRule的接口的法则类
-* 
+*
 * 支持多播：法则可以实现多个，将通过名称顺序执行，同时附带责任链模式。
 * 支持多态：设计目的是可通过继承复用代码，不提倡设计复杂的多重继承，能拆分写的功能就拆分写。
 * 支持泛型：设计目的是更进一步复用代码，同时附带了策略模式。
-* 
+*
 
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace WorldTree
 {
-
 	/// <summary>
 	/// 世界法则管理器
 	/// </summary>
@@ -50,17 +50,17 @@ namespace WorldTree
 		/// 监听法则字典 目标节点类型
 		/// </summary>
 		/// <remarks>
-		/// <para>目标节点类型 法则类型 《监听类型,监听法则》</para> 
-		/// <para>这个是真正被使用的</para> 
+		/// <para>目标节点类型 法则类型 《监听类型,监听法则》</para>
+		/// <para>这个是真正被使用的</para>
 		/// </remarks>
 		public UnitDictionary<long, Dictionary<long, RuleGroup>> TargetRuleListenerGroupDictionary = new();
 
 		/// <summary>
 		/// 监听法则字典 监听器类型
 		/// </summary>
-		/// <remarks> 
-		/// <para>监听类型 法则类型 《目标节点类型,监听法则》</para> 
-		/// <para>这个是用来查询关系的</para> 
+		/// <remarks>
+		/// <para>监听类型 法则类型 《目标节点类型,监听法则》</para>
+		/// <para>这个是用来查询关系的</para>
 		/// </remarks>
 		public UnitDictionary<long, Dictionary<long, RuleGroup>> ListenerRuleTargetGroupDictionary = new();
 
@@ -89,7 +89,6 @@ namespace WorldTree
 			this.Destroy();
 		}
 	}
-
 
 	public static class RuleManagerRule
 	{
@@ -127,7 +126,6 @@ namespace WorldTree
 			self.IsDisposed = true;
 		}
 
-
 		#region 添加法则
 
 		/// <summary>
@@ -135,6 +133,7 @@ namespace WorldTree
 		/// </summary>
 		private static List<Type> FindTypesIsInterface(this RuleManager self, Type Interface)
 		{
+			System.Reflection.Assembly[] assemblys = AppDomain.CurrentDomain.GetAssemblies();
 			return AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes().Where(T => T.GetInterfaces().Contains(Interface) && !T.IsAbstract)).ToList();
 		}
 
@@ -209,7 +208,6 @@ namespace WorldTree
 				{
 					if (!self.DynamicListenerTypeHash.Contains(listenerRule.NodeType)) self.DynamicListenerTypeHash.Add(listenerRule.NodeType);
 				}
-
 			}
 		}
 
@@ -223,7 +221,6 @@ namespace WorldTree
 			ruleList.RuleType = rule.RuleType;
 			group.RuleType = rule.RuleType;
 			ruleList.AddRule(rule);
-
 
 			self.NodeTypeRulesDictionary.GetValue(rule.NodeType).Add(rule.RuleType);
 
@@ -310,7 +307,6 @@ namespace WorldTree
 
 		#endregion
 
-
 		#region 法则多态
 
 		/// <summary>
@@ -382,13 +378,11 @@ namespace WorldTree
 			}
 		}
 
-
 		/// <summary>
 		/// 支持节点多态法则
 		/// </summary>
 		public static void SupportPolymorphicRule(this RuleManager self, long NodeType)
 		{
-
 			//拿到节点类型的法则哈希表
 			HashSet<long> ruleTypeHash = self.NodeTypeRulesDictionary.GetValue(NodeType);
 
@@ -428,14 +422,9 @@ namespace WorldTree
 
 		#endregion
 
-
 		#endregion
 
-
 		#region 法则获取
-
-
-
 
 		#region 获取监听目标法则组
 
@@ -539,9 +528,6 @@ namespace WorldTree
 
 		#endregion
 
-
-
-
 		#region  获取监听法则组
 
 		/// <summary>
@@ -582,10 +568,8 @@ namespace WorldTree
 			ruleList = default;
 			return false;
 		}
+
 		#endregion
-
-
-
 
 		#region  获取法则组
 
@@ -621,7 +605,6 @@ namespace WorldTree
 			return self.RuleGroupDictionary.TryGetValue(ruleType, out ruleGroup);
 		}
 
-
 		/// <summary>
 		/// 强制获取占位法则组
 		/// </summary>
@@ -640,8 +623,6 @@ namespace WorldTree
 			group.RuleType = ruleType;
 			return group;
 		}
-
-
 
 		#endregion
 
@@ -687,7 +668,6 @@ namespace WorldTree
 		public static bool TryGetRuleList<R>(this RuleManager self, long nodeType, out RuleList ruleList)
 		 where R : IRule
 		{
-
 			if (self.RuleGroupDictionary.TryGetValue(TypeInfo<R>.TypeCode, out RuleGroup ruleGroup))
 			{
 				return ruleGroup.TryGetValue(nodeType, out ruleList);
@@ -738,11 +718,6 @@ namespace WorldTree
 
 		#endregion
 
-
-
-
 		#endregion
 	}
-
-
 }

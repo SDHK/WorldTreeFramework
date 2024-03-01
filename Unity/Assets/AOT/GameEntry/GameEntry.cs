@@ -1,6 +1,7 @@
 using HybridCLR;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using YooAsset;
@@ -8,7 +9,6 @@ using YooAsset;
 public class GameEntry : MonoBehaviour
 {
 	public ResourcePackage package;
-	private OfflinePlayModeParameters initParameters = new OfflinePlayModeParameters();
 
 	// Start is called before the first frame update
 	private void Start()
@@ -30,18 +30,10 @@ public class GameEntry : MonoBehaviour
 		// 初始化资源系统
 		YooAssets.Initialize();
 		// 创建默认的资源包
-		var package = YooAssets.CreatePackage("DefaultPackage");
+		package = YooAssets.CreatePackage("DefaultPackage");
 		// 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
 		YooAssets.SetDefaultPackage(package);
-
-		InitializationOperation operation = package.InitializeAsync(initParameters);
-
-		yield return operation;
-
-		if (operation.Status == EOperationStatus.Succeed)
-		{
-			Debug.Log($"更新默认包的版本: {operation.PackageVersion}");
-		}
+		yield return SingleInitializeYooAsset(package);
 
 		AssetHandle assetHandle = package.LoadAssetAsync<GameObject>("MainWindow");
 		yield return assetHandle;
@@ -54,47 +46,55 @@ public class GameEntry : MonoBehaviour
 		Debug.Log($"AOT开始 ！！！");
 
 		//AOT
-		HomologousImageMode mode = HomologousImageMode.SuperSet;
-		ResourcePackage package = YooAssets.CreatePackage("AotDlls");
-		InitializationOperation operation = package.InitializeAsync(initParameters);
-		yield return operation;
-		if (operation.Status == EOperationStatus.Succeed)
+		foreach (string address in GetAddressesByTag("aotDlls"))
 		{
-			Debug.Log($"更新默认包的版本: {operation.PackageVersion}");
-			AllAssetsHandle handle = package.LoadAllAssetsAsync<TextAsset>("YooAsset.dll");
+			Debug.Log($"AOT:{address}");
+
+			AssetHandle handle = package.LoadAssetAsync<TextAsset>(address);
 			yield return handle;
-
-			foreach (TextAsset assetObject in handle.AllAssetObjects)
-			{
-				RuntimeApi.LoadMetadataForAOTAssembly(assetObject.bytes, mode);
-			}
-
-			Debug.Log($"AOT完成 ！！！");
+			RuntimeApi.LoadMetadataForAOTAssembly((handle.AssetObject as TextAsset).bytes, HomologousImageMode.SuperSet);
 		}
+		Debug.Log($"AOT完成 ！！！");
 	}
 
 	private IEnumerator LoadHotUpdate()
 	{
 		Debug.Log($"HotUpdate开始 ！！！");
+		Dictionary<string, Assembly> assemblys = new();
 
-		ResourcePackage package = YooAssets.CreatePackage("HotUpdateDlls");
-		InitializationOperation operation = package.InitializeAsync(initParameters);
-		if (operation.Status == EOperationStatus.Succeed)
+		foreach (string address in GetAddressesByTag("hotUpdateDlls"))
 		{
-			Debug.Log($"更新默认包的版本: {operation.PackageVersion}");
-
-			AllAssetsHandle handle = package.LoadAllAssetsAsync<TextAsset>("WorldTree.Node.dll");
+			AssetHandle handle = package.LoadAssetAsync<TextAsset>(address);
 			yield return handle;
-			foreach (TextAsset assetObject in handle.AllAssetObjects)
-			{
-				Assembly assembly = Assembly.Load(assetObject.bytes);
-				if (assetObject.name == "WorldTree.CoreUnity")
-				{
-					Type type = assembly.GetType("UnityWorldTree");
-					this.gameObject.AddComponent(type);
-				}
-			}
-			Debug.Log($"HotUpdate完成 ！！！");
+			Debug.Log($"HotUpdate {address}:{(handle.AssetObject as TextAsset).bytes.Length}");
+
+			Assembly assembly = Assembly.Load((handle.AssetObject as TextAsset).bytes);
+			assemblys.Add(address, assembly);
 		}
+		Debug.Log($"HotUpdate完成 ！！！");
+
+		if (assemblys.TryGetValue("WorldTree.CoreUnity.dll", out Assembly assembly1))
+		{
+			Type type = assembly1.GetType("WorldTree.UnityWorldTree");
+			gameObject.AddComponent(type);
+		}
+	}
+
+	private IEnumerator SingleInitializeYooAsset(ResourcePackage package)
+	{
+		var initParameters = new OfflinePlayModeParameters();
+		yield return package.InitializeAsync(initParameters);
+	}
+
+	public string[] GetAddressesByTag(string tag)
+	{
+		AssetInfo[] assetInfos = YooAssets.GetAssetInfos(tag);
+		string[] addresses = new string[assetInfos.Length];
+		for (int i = 0; i < assetInfos.Length; i++)
+		{
+			addresses[i] = assetInfos[i].Address;
+		}
+
+		return addresses;
 	}
 }
