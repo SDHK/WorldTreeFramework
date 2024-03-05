@@ -16,15 +16,12 @@ namespace WorldTree
 	{
 		public WorldTreeCore Core;
 		public WorldTreeCore ViewCore;
-		public Assembly[] assemblies;
 
 		public void Start1()
 		{
 #if UNITY_EDITOR
 
 			ViewCore = new WorldTreeCore();//调试用的可视化框架
-
-			ViewCore.SetAssemblys(assemblies);//设置程序集
 
 			ViewCore.Log = Debug.Log;
 			ViewCore.LogWarning = Debug.LogWarning;
@@ -34,7 +31,6 @@ namespace WorldTree
 #endif
 
 			Core = new WorldTreeCore();//主框架
-			Core.SetAssemblys(assemblies);//设置程序集
 
 			Core.Log = Debug.Log;
 			Core.LogWarning = Debug.LogWarning;

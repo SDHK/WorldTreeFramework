@@ -22,10 +22,46 @@ public class GameEntry : MonoBehaviour
 	{
 		Debug.Log($"加载物体AB包！！！ ");
 
+#if UNITY_EDITOR
+		yield return InitializeYooAsset();
+#else
 		yield return LoadDefaultPackage();
 		yield return LoadAOT();
 		yield return LoadHotUpdate();
+#endif
+
+		Assembly hotUpdateAssembly = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "WorldTree.CoreUnity");
+
+		Type type = hotUpdateAssembly.GetType("WorldTree.UnityWorldTree");
+		Component component = gameObject.AddComponent(type);
+		//反射设置字段
+		component.GetType().GetMethod("Start1").Invoke(component, null);
 	}
+
+	#region 编辑器
+
+	private IEnumerator InitializeYooAsset()
+	{
+		// 初始化资源系统
+		YooAssets.Initialize();
+		// 创建默认的资源包
+		package = YooAssets.CreatePackage("DefaultPackage");
+		YooAssets.SetDefaultPackage(package);
+
+		var initParameters = new EditorSimulateModeParameters();
+		var simulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
+		initParameters.SimulateManifestFilePath = simulateManifestFilePath;
+		yield return package.InitializeAsync(initParameters);
+
+		AssetHandle assetHandle = package.LoadAssetAsync<GameObject>("MainWindow");
+		yield return assetHandle;
+
+		Debug.Log($"编辑器加载物体 : {assetHandle.AssetObject.name}");
+	}
+
+	#endregion
+
+	#region 单机
 
 	private IEnumerator LoadDefaultPackage()
 	{
@@ -69,18 +105,9 @@ public class GameEntry : MonoBehaviour
 			Assembly assembly = Assembly.Load((handle.AssetObject as TextAsset).bytes);
 			assemblys.Add(address, assembly);
 		}
-
-		//if (assemblys.TryGetValue("WorldTree.CoreUnity.dll", out Assembly assembly1))
-		//{
-		//	Type type = assembly1.GetType("WorldTree.UnityWorldTree");
-		//	Component component = gameObject.AddComponent(type);
-		//	//反射设置字段
-		//	component.GetType().GetField("assemblies").SetValue(component, assemblys.Values.ToArray());
-		//	component.GetType().GetMethod("Start1").Invoke(component, null);
-		//}
-		UnityWorldTree unityWorldTree = gameObject.AddComponent<UnityWorldTree>();
-		unityWorldTree.Start1();
 	}
+
+	#endregion
 
 	private IEnumerator SingleInitializeYooAsset(ResourcePackage package)
 	{

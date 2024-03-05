@@ -71,7 +71,7 @@ namespace WorldTree
 		/// <summary>
 		/// 程序集
 		/// </summary>
-		public Assembly[] Assemblys;
+		//public Assembly[] Assemblys;
 
 		/// <summary>
 		/// 主核心
@@ -157,11 +157,6 @@ namespace WorldTree
 		#endregion
 
 		#region 生命周期
-
-		public void SetAssemblys(params Assembly[] assemblys)
-		{
-			this.Assemblys = assemblys;
-		}
 
 		public virtual void Awake()
 		{

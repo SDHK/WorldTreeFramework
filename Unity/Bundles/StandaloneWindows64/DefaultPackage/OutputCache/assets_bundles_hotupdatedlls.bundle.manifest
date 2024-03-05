@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 559959856
+CRC: 4211916028
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 4b98c592e4538313d724f0b0cbc8f33d
+    Hash: 4165685009734eb5c2814f7b40d6378a
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
@@ -16,5 +16,7 @@ Assets:
 - Assets/Bundles/HotUpdateDlls/WorldTree.NodeUnity.dll.bytes
 - Assets/Bundles/HotUpdateDlls/WorldTree.Rule.dll.bytes
 - Assets/Bundles/HotUpdateDlls/WorldTree.RuleUnity.dll.bytes
+- Assets/Bundles/HotUpdateDlls/WorldTree.CoreUnity.dll.bytes
 - Assets/Bundles/HotUpdateDlls/WorldTree.Node.dll.bytes
+- Assets/Bundles/HotUpdateDlls/WorldTree.Core.dll.bytes
 Dependencies: []

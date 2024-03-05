@@ -1,0 +1,195 @@
+{
+    "FileVersion": "2.0.0",
+    "EnableAddressable": true,
+    "LocationToLower": false,
+    "IncludeAssetGUID": false,
+    "OutputNameStyle": 0,
+    "BuildPipeline": "BuiltinBuildPipeline",
+    "PackageName": "DefaultPackage",
+    "PackageVersion": "2024-03-05-1242",
+    "AssetList": [
+        {
+            "Address": "MainWindow",
+            "AssetPath": "Assets/AssetBundles/Assets/UI/MainWindow.prefab",
+            "AssetGUID": "",
+            "AssetTags": [],
+            "BundleID": 0
+        },
+        {
+            "Address": "Window1",
+            "AssetPath": "Assets/AssetBundles/Assets/UI/Window1.prefab",
+            "AssetGUID": "",
+            "AssetTags": [],
+            "BundleID": 0
+        },
+        {
+            "Address": "Window2",
+            "AssetPath": "Assets/AssetBundles/Assets/UI/Window2.prefab",
+            "AssetGUID": "",
+            "AssetTags": [],
+            "BundleID": 0
+        },
+        {
+            "Address": "LiteDB.dll",
+            "AssetPath": "Assets/Bundles/AotDlls/LiteDB.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "aotDlls"
+            ],
+            "BundleID": 1
+        },
+        {
+            "Address": "MemoryPack.dll",
+            "AssetPath": "Assets/Bundles/AotDlls/MemoryPack.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "aotDlls"
+            ],
+            "BundleID": 1
+        },
+        {
+            "Address": "mscorlib.dll",
+            "AssetPath": "Assets/Bundles/AotDlls/mscorlib.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "aotDlls"
+            ],
+            "BundleID": 1
+        },
+        {
+            "Address": "System.Core.dll",
+            "AssetPath": "Assets/Bundles/AotDlls/System.Core.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "aotDlls"
+            ],
+            "BundleID": 1
+        },
+        {
+            "Address": "System.dll",
+            "AssetPath": "Assets/Bundles/AotDlls/System.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "aotDlls"
+            ],
+            "BundleID": 1
+        },
+        {
+            "Address": "System.Runtime.CompilerServices.Unsafe.dll",
+            "AssetPath": "Assets/Bundles/AotDlls/System.Runtime.CompilerServices.Unsafe.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "aotDlls"
+            ],
+            "BundleID": 1
+        },
+        {
+            "Address": "UnityEngine.CoreModule.dll",
+            "AssetPath": "Assets/Bundles/AotDlls/UnityEngine.CoreModule.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "aotDlls"
+            ],
+            "BundleID": 1
+        },
+        {
+            "Address": "YooAsset.dll",
+            "AssetPath": "Assets/Bundles/AotDlls/YooAsset.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "aotDlls"
+            ],
+            "BundleID": 1
+        },
+        {
+            "Address": "WorldTree.Core.dll",
+            "AssetPath": "Assets/Bundles/HotUpdateDlls/WorldTree.Core.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
+            "Address": "WorldTree.CoreUnity.dll",
+            "AssetPath": "Assets/Bundles/HotUpdateDlls/WorldTree.CoreUnity.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
+            "Address": "WorldTree.Node.dll",
+            "AssetPath": "Assets/Bundles/HotUpdateDlls/WorldTree.Node.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
+            "Address": "WorldTree.NodeUnity.dll",
+            "AssetPath": "Assets/Bundles/HotUpdateDlls/WorldTree.NodeUnity.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
+            "Address": "WorldTree.Rule.dll",
+            "AssetPath": "Assets/Bundles/HotUpdateDlls/WorldTree.Rule.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
+            "Address": "WorldTree.RuleUnity.dll",
+            "AssetPath": "Assets/Bundles/HotUpdateDlls/WorldTree.RuleUnity.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        }
+    ],
+    "BundleList": [
+        {
+            "BundleName": "assets_assetbundles_assets_ui.bundle",
+            "UnityCRC": 2783737194,
+            "FileHash": "5b7a6ad55f9fee24c95c87c77c382c5b",
+            "FileCRC": "52038958",
+            "FileSize": 12995,
+            "Encrypted": false,
+            "Tags": [],
+            "DependIDs": []
+        },
+        {
+            "BundleName": "assets_bundles_aotdlls.bundle",
+            "UnityCRC": 496655524,
+            "FileHash": "e6a6b8416576c2290895dd441cdf8ff7",
+            "FileCRC": "ec300a67",
+            "FileSize": 2491048,
+            "Encrypted": false,
+            "Tags": [
+                "aotDlls"
+            ],
+            "DependIDs": []
+        },
+        {
+            "BundleName": "assets_bundles_hotupdatedlls.bundle",
+            "UnityCRC": 4211916028,
+            "FileHash": "587a1aff48c749467e303e0f5dc29fe2",
+            "FileCRC": "c931827d",
+            "FileSize": 246936,
+            "Encrypted": false,
+            "Tags": [
+                "hotUpdateDlls"
+            ],
+            "DependIDs": []
+        }
+    ]
+}

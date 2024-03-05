@@ -18,6 +18,8 @@ MonoBehaviour:
   il2cppPlusRepoURL: https://gitee.com/focus-creative-games/il2cpp_plus
   hotUpdateAssemblyDefinitions: []
   hotUpdateAssemblies:
+  - WorldTree.Core
+  - WorldTree.CoreUnity
   - WorldTree.Node
   - WorldTree.NodeUnity
   - WorldTree.Rule

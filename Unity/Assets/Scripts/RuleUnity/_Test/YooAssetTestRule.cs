@@ -19,16 +19,16 @@ namespace WorldTree
 		{
 			protected override void OnEvent(YooAssetTest self)
 			{
-				// 初始化资源系统
-				YooAssets.Initialize();
+				//// 初始化资源系统
+				//YooAssets.Initialize();
 
-				// 创建默认的资源包
-				self.package = YooAssets.CreatePackage("DefaultPackage");
+				//// 创建默认的资源包
+				//self.package = YooAssets.CreatePackage("DefaultPackage");
 
-				// 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
-				YooAssets.SetDefaultPackage(self.package);
+				//// 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
+				//YooAssets.SetDefaultPackage(self.package);
 
-				self.InitializeYooAsset1().Coroutine();
+				//self.InitializeYooAsset1().Coroutine();
 			}
 		}
 

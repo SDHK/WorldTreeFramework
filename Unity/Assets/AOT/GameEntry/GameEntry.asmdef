@@ -3,9 +3,7 @@
     "rootNamespace": "",
     "references": [
         "YooAsset",
-        "HybridCLR.Runtime",
-        "WorldTree.CoreUnity",
-        "WorldTree.Core"
+        "HybridCLR.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

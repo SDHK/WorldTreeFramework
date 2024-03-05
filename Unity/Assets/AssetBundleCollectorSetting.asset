@@ -39,7 +39,7 @@ MonoBehaviour:
         UserData: 
     - GroupName: AotDlls
       GroupDesc: 
-      AssetTags: aotdlls
+      AssetTags: aotDlls
       ActiveRuleName: EnableGroup
       Collectors:
       - CollectPath: Assets/Bundles/AotDlls

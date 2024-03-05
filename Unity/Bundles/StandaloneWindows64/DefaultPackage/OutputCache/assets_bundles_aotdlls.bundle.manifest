@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 780528535
+CRC: 496655524
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8def62116954ba54330562e125b96852
+    Hash: 31262bf2567c7d88ee5484e5db6273d3
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
@@ -13,11 +13,10 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Bundles/AotDlls/WorldTree.CoreUnity.dll.bytes
 - Assets/Bundles/AotDlls/System.Core.dll.bytes
 - Assets/Bundles/AotDlls/UnityEngine.CoreModule.dll.bytes
 - Assets/Bundles/AotDlls/YooAsset.dll.bytes
-- Assets/Bundles/AotDlls/WorldTree.Core.dll.bytes
+- Assets/Bundles/AotDlls/System.dll.bytes
 - Assets/Bundles/AotDlls/MemoryPack.dll.bytes
 - Assets/Bundles/AotDlls/LiteDB.dll.bytes
 - Assets/Bundles/AotDlls/mscorlib.dll.bytes
