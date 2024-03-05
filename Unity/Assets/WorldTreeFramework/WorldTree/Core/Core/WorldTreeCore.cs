@@ -4,15 +4,16 @@
 * 日期： 2022/7/18 9:35
 
 * 描述： 世界树核心
-* 
+*
 * 框架的启动入口，根节点
-* 
+*
 * 管理分发全局的节点与组件的生命周期
-* 
+*
 
 */
 
 using System;
+using System.Reflection;
 
 namespace WorldTree
 {
@@ -28,7 +29,6 @@ namespace WorldTree
 
 	//时域与时间轮
 
-
 	//管理器改为分支 整理
 
 	//世界线程，界程
@@ -39,7 +39,7 @@ namespace WorldTree
 	//节点邮箱组件，只有SendMail<1,2,3,4,5>
 
 	//域节点接口标记
-	
+
 	//代码表格
 
 	//程序集加载
@@ -47,7 +47,6 @@ namespace WorldTree
 	//YooAsset管理器
 
 	//C#语法分析器,异常修复 ,异步，私有字段?
-
 
 	/// <summary>
 	/// 世界树核心接口
@@ -67,22 +66,28 @@ namespace WorldTree
 		, WorldOf<WorldTreeCore>
 		, AsRule<IAwakeRule>
 	{
-
 		#region 字段
+
+		/// <summary>
+		/// 程序集
+		/// </summary>
+		public Assembly[] Assemblys;
 
 		/// <summary>
 		/// 主核心
 		/// </summary>
-		WorldTreeCore RootCore;
+		private WorldTreeCore RootCore;
 
 		/// <summary>
 		/// 打印日志
 		/// </summary>
 		public Action<object> Log;
+
 		/// <summary>
 		/// 打印警告日志
 		/// </summary>
 		public Action<object> LogWarning;
+
 		/// <summary>
 		/// 打印错误日志
 		/// </summary>
@@ -104,7 +109,6 @@ namespace WorldTree
 		/// </summary>
 		public bool IsCoreActive = false;
 
-
 		/// <summary>
 		/// Id管理器
 		/// </summary>
@@ -124,18 +128,22 @@ namespace WorldTree
 		/// 法则管理器
 		/// </summary>
 		public RuleManager RuleManager;
+
 		/// <summary>
 		/// 单位对象池管理器
 		/// </summary>
 		public UnitPoolManager UnitPoolManager;
+
 		/// <summary>
 		/// 节点对象池管理器
 		/// </summary>
 		public NodePoolManager NodePoolManager;
+
 		/// <summary>
 		/// 节点引用池管理器
 		/// </summary>
 		public ReferencedPoolManager ReferencedPoolManager;
+
 		/// <summary>
 		/// 数组对象池管理器
 		/// </summary>
@@ -149,6 +157,11 @@ namespace WorldTree
 		#endregion
 
 		#region 生命周期
+
+		public void SetAssemblys(params Assembly[] assemblys)
+		{
+			this.Assemblys = assemblys;
+		}
 
 		public virtual void Awake()
 		{
@@ -171,6 +184,7 @@ namespace WorldTree
 
 			//法则管理器初始化
 			this.NewNode(out this.RuleManager);
+			this.RuleManager.Awake();
 
 			this.NewRuleGroup = this.RuleManager.GetOrNewRuleGroup<INewRule>();
 			this.GetRuleGroup = this.RuleManager.GetOrNewRuleGroup<IGetRule>();
@@ -206,7 +220,6 @@ namespace WorldTree
 			//游戏时间管理器
 			//self.AddComponent(out self.GameTimeManager);
 
-
 			//核心激活标记
 			this.SetActive(true);
 			this.IsCoreActive = true;
@@ -215,6 +228,7 @@ namespace WorldTree
 			this.Root.Root = this.Root;
 			this.worldContext = this.Root.AddComponent(out WorldContext _);
 		}
+
 		#endregion
 
 		#region 节点处理
@@ -255,10 +269,10 @@ namespace WorldTree
 			}
 			this.Core.AddRuleGroup?.Send(this);//节点添加事件通知
 		}
+
 		#endregion
 
 		#region 释放
-
 
 		/// <summary>
 		/// 回收节点
@@ -382,7 +396,7 @@ namespace WorldTree
 
 	public static partial class WorldTreeCoreRule
 	{
-		class AddRule : AddRule<WorldTreeCore>
+		private class AddRule : AddRule<WorldTreeCore>
 		{
 			protected override void OnEvent(WorldTreeCore self)
 			{

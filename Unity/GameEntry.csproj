@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AOT\GameEntry\HybridCLRGenerate\AOTGenericReferences.cs" />
@@ -796,14 +797,22 @@
     <Reference Include="HybridCLR.Runtime">
       <HintPath>Library\ScriptAssemblies\HybridCLR.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="WorldTree.CoreUnity.csproj">
+      <Project>{CCAAEB54-E5BE-7998-5D51-E704B3DB0E9A}</Project>
+      <Name>WorldTree.CoreUnity</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.Core.csproj">
+      <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
+      <Name>WorldTree.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

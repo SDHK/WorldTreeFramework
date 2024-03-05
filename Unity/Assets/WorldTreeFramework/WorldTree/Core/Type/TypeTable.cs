@@ -28,11 +28,19 @@ namespace WorldTree
 			if (!TypeHash64.ContainsKey(type))
 			{
 				type.GetHashCode();
-				long hash64 = type.FullName.GetHash64();
+				long hash64 = type.AssemblyQualifiedName.GetHash64();
 
 				if (Hash64Type.TryGetValue(hash64, out Type oldType))
 				{
-					throw new InvalidOperationException($"64位哈希码冲突 {type} 与 {oldType} {type == oldType}");
+					if (type.FullName == oldType.FullName)
+					{
+						Hash64Type[hash64] = type;
+						TypeHash64.TryRemove(oldType, out _);
+					}
+					else
+					{
+						throw new InvalidOperationException($"64位哈希码冲突 {type} 与 {oldType} {type == oldType}");
+					}
 				}
 				else
 				{

@@ -76,11 +76,6 @@ namespace WorldTree
 		/// <remarks>记录节点拥有的法则类型，用于法则多态化的查询</remarks>
 		public UnitDictionary<long, HashSet<long>> NodeTypeRulesDictionary = new();
 
-		public RuleManager()
-		{
-			this.Awake();
-		}
-
 		/// <summary>
 		/// 释放后
 		/// </summary>
@@ -133,7 +128,8 @@ namespace WorldTree
 		/// </summary>
 		private static List<Type> FindTypesIsInterface(this RuleManager self, Type Interface)
 		{
-			System.Reflection.Assembly[] assemblys = AppDomain.CurrentDomain.GetAssemblies();
+			//return self.Core.Assemblys.SelectMany(a => a.GetTypes().Where(T => T.GetInterfaces().Contains(Interface) && !T.IsAbstract)).ToList();
+			//System.Reflection.Assembly[] assemblys = AppDomain.CurrentDomain.GetAssemblies();
 			return AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes().Where(T => T.GetInterfaces().Contains(Interface) && !T.IsAbstract)).ToList();
 		}
 

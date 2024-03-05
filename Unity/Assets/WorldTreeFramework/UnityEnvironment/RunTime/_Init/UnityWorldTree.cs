@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/7/18 9:35
@@ -8,33 +7,43 @@
 
 */
 
+using System.Reflection;
 using UnityEngine;
 
 namespace WorldTree
 {
-
 	public class UnityWorldTree : MonoBehaviour
 	{
 		public WorldTreeCore Core;
 		public WorldTreeCore ViewCore;
+		public Assembly[] assemblies;
 
-		private void Start()
+		public void Start1()
 		{
+#if UNITY_EDITOR
+
 			ViewCore = new WorldTreeCore();//调试用的可视化框架
-			Core = new WorldTreeCore();//主框架
+
+			ViewCore.SetAssemblys(assemblies);//设置程序集
 
 			ViewCore.Log = Debug.Log;
 			ViewCore.LogWarning = Debug.LogWarning;
 			ViewCore.LogError = Debug.LogError;
 
+			ViewCore.Awake(); //可视化框架初始化
+#endif
+
+			Core = new WorldTreeCore();//主框架
+			Core.SetAssemblys(assemblies);//设置程序集
+
 			Core.Log = Debug.Log;
 			Core.LogWarning = Debug.LogWarning;
 			Core.LogError = Debug.LogError;
-
-			ViewCore.Awake(); //可视化框架初始化
+#if UNITY_EDITOR
 
 			//可视化节点赋值给主框架
 			Core.View = ViewCore.Root.AddChild(out TreeNodeUnityView _, (INode)Core, TypeInfo<INode>.Default);
+#endif
 
 			Core.Awake();//主框架初始化
 
@@ -47,10 +56,11 @@ namespace WorldTree
 		{
 			if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(Core.ToStringDrawTree());
 		}
+
 		private void OnApplicationQuit()
 		{
-			Core.Dispose();
-			ViewCore.Dispose();
+			Core?.Dispose();
+			ViewCore?.Dispose();
 			Core = null;
 			ViewCore = null;
 		}

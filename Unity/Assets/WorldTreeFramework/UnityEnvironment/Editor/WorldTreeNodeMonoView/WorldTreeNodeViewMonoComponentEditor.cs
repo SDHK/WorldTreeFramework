@@ -33,10 +33,11 @@ namespace EditorTool
 				{
 					Type type = fieldInfo.FieldType;
 
+					//通过字段类型拿到预注册的绘制节点类型
 					if (View?.Root != null && View.Root.AddComponent(out ViewTypeManager _).types.TryGetValue(type, out Type nodeType))
 					{
-						View.Root.AddComponent(nodeType.TypeToCore(), out INode viewNode, isPool: false);
-						viewNode.TrySendRule(TypeInfo<INodeFieldViewRule>.Default, node, fieldInfo);
+						View.Root.AddComponent(nodeType.TypeToCore(), out INode viewNode, isPool: false);//通过绘制类型拿到绘制节点实例
+						viewNode.TrySendRule(TypeInfo<INodeFieldViewRule>.Default, node, fieldInfo);//调用绘制法则
 					}
 				}
 

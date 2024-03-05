@@ -362,6 +362,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1466723558}
   - component: {fileID: 1466723559}
+  - component: {fileID: 1466723560}
   m_Layer: 0
   m_Name: WorldTree
   m_TagString: Untagged
@@ -396,3 +397,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 044aabfbda8d2fe42b5d480dbc0cbb45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1466723560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466723556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebb3964ce8877584a97dd8586c937c26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fontSize: 15

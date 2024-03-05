@@ -782,11 +782,11 @@
     <Reference Include="YooAsset">
       <HintPath>Library\ScriptAssemblies\YooAsset.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -802,10 +802,6 @@
       <Project>{87D7A9A4-9501-ED3F-257D-B606468CC860}</Project>
       <Name>WorldTree.NodeUnity</Name>
     </ProjectReference>
-    <ProjectReference Include="MemoryPack.csproj">
-      <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
-      <Name>MemoryPack</Name>
-    </ProjectReference>
     <ProjectReference Include="WorldTree.Rule.csproj">
       <Project>{ED3E2C28-BFB8-82E2-44AE-BA5579F582B9}</Project>
       <Name>WorldTree.Rule</Name>
@@ -813,6 +809,10 @@
     <ProjectReference Include="WorldTree.Node.csproj">
       <Project>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</Project>
       <Name>WorldTree.Node</Name>
+    </ProjectReference>
+    <ProjectReference Include="MemoryPack.csproj">
+      <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
+      <Name>MemoryPack</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

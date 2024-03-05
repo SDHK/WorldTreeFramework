@@ -2,8 +2,10 @@ using HybridCLR;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using WorldTree;
 using YooAsset;
 
 public class GameEntry : MonoBehaviour
@@ -43,8 +45,6 @@ public class GameEntry : MonoBehaviour
 
 	private IEnumerator LoadAOT()
 	{
-		Debug.Log($"AOT开始 ！！！");
-
 		//AOT
 		foreach (string address in GetAddressesByTag("aotDlls"))
 		{
@@ -54,12 +54,10 @@ public class GameEntry : MonoBehaviour
 			yield return handle;
 			RuntimeApi.LoadMetadataForAOTAssembly((handle.AssetObject as TextAsset).bytes, HomologousImageMode.SuperSet);
 		}
-		Debug.Log($"AOT完成 ！！！");
 	}
 
 	private IEnumerator LoadHotUpdate()
 	{
-		Debug.Log($"HotUpdate开始 ！！！");
 		Dictionary<string, Assembly> assemblys = new();
 
 		foreach (string address in GetAddressesByTag("hotUpdateDlls"))
@@ -71,13 +69,17 @@ public class GameEntry : MonoBehaviour
 			Assembly assembly = Assembly.Load((handle.AssetObject as TextAsset).bytes);
 			assemblys.Add(address, assembly);
 		}
-		Debug.Log($"HotUpdate完成 ！！！");
 
-		if (assemblys.TryGetValue("WorldTree.CoreUnity.dll", out Assembly assembly1))
-		{
-			Type type = assembly1.GetType("WorldTree.UnityWorldTree");
-			gameObject.AddComponent(type);
-		}
+		//if (assemblys.TryGetValue("WorldTree.CoreUnity.dll", out Assembly assembly1))
+		//{
+		//	Type type = assembly1.GetType("WorldTree.UnityWorldTree");
+		//	Component component = gameObject.AddComponent(type);
+		//	//反射设置字段
+		//	component.GetType().GetField("assemblies").SetValue(component, assemblys.Values.ToArray());
+		//	component.GetType().GetMethod("Start1").Invoke(component, null);
+		//}
+		UnityWorldTree unityWorldTree = gameObject.AddComponent<UnityWorldTree>();
+		unityWorldTree.Start1();
 	}
 
 	private IEnumerator SingleInitializeYooAsset(ResourcePackage package)

@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.IO;
-using UnityEngine;
-using WorldTree;
+﻿using UnityEngine;
 using YooAsset;
 
 namespace WorldTree
@@ -18,8 +15,7 @@ namespace WorldTree
 			return asyncTask;
 		}
 
-
-		class AddRule : AddRule<YooAssetTest>
+		private class AddRule : AddRule<YooAssetTest>
 		{
 			protected override void OnEvent(YooAssetTest self)
 			{
@@ -50,8 +46,6 @@ namespace WorldTree
 
 			GameObject gameObject = handle.AssetObject as GameObject;
 			self.Log($"YooAsset ??? : {gameObject.name}");
-
-
 		}
 
 		/// <summary>
@@ -70,7 +64,6 @@ namespace WorldTree
 			//抛空异常
 			//throw new System.Exception("测试抛出异常");
 		}
-	
 
 		private static async TreeTask InitializeYooAsset2(this YooAssetTest self)
 		{
@@ -93,12 +86,6 @@ namespace WorldTree
 			}
 
 			await self.TreeTaskCompleted();
-
-		
-
 		}
-
-
 	}
-
 }

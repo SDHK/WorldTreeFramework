@@ -6,7 +6,13 @@ using UnityEngine;
 
 public static class HybridCLREditor
 {
-	[MenuItem("HybridCLR/CopyHotUpdateDlls")]
+	[MenuItem("HybridCLR/CopyDlls")]
+	public static void CopyDlls()
+	{
+		CopyHotUpdateDlls();
+		CopyAotDll();
+	}
+
 	public static void CopyHotUpdateDlls()
 	{
 		string externalHotUpdatePath = HybridCLRSettings.Instance.externalHotUpdateAssembliyDirs[0];
@@ -27,7 +33,6 @@ public static class HybridCLREditor
 		AssetDatabase.Refresh();
 	}
 
-	[MenuItem("HybridCLR/CopyAotDlls")]
 	public static void CopyAotDll()
 	{
 		BuildTarget target = EditorUserBuildSettings.activeBuildTarget;

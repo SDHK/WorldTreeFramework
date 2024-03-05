@@ -22,8 +22,6 @@ MonoBehaviour:
   - WorldTree.NodeUnity
   - WorldTree.Rule
   - WorldTree.RuleUnity
-  - WorldTree.CoreUnity
-  - WorldTree.Core
   preserveHotUpdateAssemblies: []
   hotUpdateDllCompileOutputRootDir: HybridCLRData/HotUpdateDlls
   externalHotUpdateAssembliyDirs:
