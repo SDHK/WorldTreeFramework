@@ -7,7 +7,6 @@
 
 */
 
-using System.Reflection;
 using UnityEngine;
 
 namespace WorldTree
@@ -17,35 +16,32 @@ namespace WorldTree
 		public WorldTreeCore Core;
 		public WorldTreeCore ViewCore;
 
-		public void Start1()
+		private TreeNodeUnityView treeView;
+
+		public void Start()
 		{
 #if UNITY_EDITOR
 
-			ViewCore = new WorldTreeCore();//调试用的可视化框架
-
+			ViewCore = new();//调试用的可视化框架
 			ViewCore.Log = Debug.Log;
 			ViewCore.LogWarning = Debug.LogWarning;
 			ViewCore.LogError = Debug.LogError;
-
 			ViewCore.Awake(); //可视化框架初始化
+			ViewCore.Root.AddChild(out treeView, (INode)Core, TypeInfo<INode>.Default);
 #endif
 
-			Core = new WorldTreeCore();//主框架
-
+			Core = new();//主框架
 			Core.Log = Debug.Log;
 			Core.LogWarning = Debug.LogWarning;
 			Core.LogError = Debug.LogError;
-#if UNITY_EDITOR
 
-			//可视化节点赋值给主框架
-			Core.View = ViewCore.Root.AddChild(out TreeNodeUnityView _, (INode)Core, TypeInfo<INode>.Default);
-#endif
+			Core.View = treeView;//可视化节点赋值给主框架
 
 			Core.Awake();//主框架初始化
 
 			Core.Root.AddComponent(out UnityWorldHeart _, 0).Run();//主框架添加Unity世界心跳，间隔毫秒为0
 
-			Core.Root.AddComponent(out InitialDomain _);
+			Core.Root.AddComponent(out InitialDomain _);//主框架添加初始化域
 		}
 
 		private void Update()
@@ -59,6 +55,7 @@ namespace WorldTree
 			ViewCore?.Dispose();
 			Core = null;
 			ViewCore = null;
+			treeView = null;
 		}
 
 		private void OnDestroy()
@@ -67,6 +64,7 @@ namespace WorldTree
 			ViewCore?.Dispose();
 			Core = null;
 			ViewCore = null;
+			treeView = null;
 		}
 	}
 }

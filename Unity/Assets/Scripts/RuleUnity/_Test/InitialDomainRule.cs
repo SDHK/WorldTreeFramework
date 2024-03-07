@@ -11,6 +11,7 @@ namespace WorldTree
 			protected override void OnEvent(InitialDomain self)
 			{
 				self.Log($"初始域热更部分！！!");
+
 				//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
 
 				self.AddComponent(out YooAssetTest _);
@@ -53,7 +54,7 @@ namespace WorldTree
 			protected override void OnEvent(InitialDomain self, TimeSpan timeSpan)
 			{
 				textStyle.normal.textColor = Color.red;
-				GUILayout.Label($"初始域GUI更新！！{this.GetHashCode()}:{timeSpan.TotalMilliseconds}", textStyle);
+				GUILayout.Label($"初始域GUI更新！！{timeSpan.TotalMilliseconds}", textStyle);
 			}
 		}
 

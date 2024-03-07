@@ -1,129 +1,192 @@
 using HybridCLR;
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using WorldTree;
 using YooAsset;
 
 public class GameEntry : MonoBehaviour
 {
-	public ResourcePackage package;
+	public string netPath = "http://127.0.0.1:9999/FTP/2023-04-20-1108";
 
-	// Start is called before the first frame update
+	private ResourcePackage package;
+
 	private void Start()
 	{
-		StartCoroutine(Load());
+		StartCoroutine(StartLoad());
 	}
 
-	private IEnumerator Load()
+	private IEnumerator StartLoad()
 	{
-		Debug.Log($"¼ÓÔØÎïÌåAB°ü£¡£¡£¡ ");
-
+		package = InitializeYooAsset();
 #if UNITY_EDITOR
-		yield return InitializeYooAsset();
+		yield return EditorYooAsset(package);
 #else
-		yield return LoadDefaultPackage();
-		yield return LoadAOT();
-		yield return LoadHotUpdate();
+		yield return SingleYooAsset(package);
+		yield return LoadAOT(package);
+		yield return LoadHotUpdate(package);
 #endif
-
-		Assembly hotUpdateAssembly = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "WorldTree.CoreUnity");
-
-		Type type = hotUpdateAssembly.GetType("WorldTree.UnityWorldTree");
-		Component component = gameObject.AddComponent(type);
-		//·´ÉäÉèÖÃ×Ö¶Î
-		component.GetType().GetMethod("Start1").Invoke(component, null);
+		StartWorldTree();
 	}
 
-	#region ±à¼­Æ÷
-
-	private IEnumerator InitializeYooAsset()
+	/// <summary>
+	/// å¯åŠ¨æ¡†æ¶
+	/// </summary>
+	private void StartWorldTree()
 	{
-		// ³õÊ¼»¯×ÊÔ´ÏµÍ³
+		Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "WorldTree.CoreUnity");
+		gameObject.AddComponent(assembly.GetType("WorldTree.UnityWorldTree"));
+	}
+
+	/// <summary>
+	/// åˆå§‹åŒ–èµ„æºç³»ç»Ÿ
+	/// </summary>
+	private ResourcePackage InitializeYooAsset()
+	{
+		// åˆå§‹åŒ–èµ„æºç³»ç»Ÿ
 		YooAssets.Initialize();
-		// ´´½¨Ä¬ÈÏµÄ×ÊÔ´°ü
-		package = YooAssets.CreatePackage("DefaultPackage");
+
+		// åˆ›å»ºé»˜è®¤çš„èµ„æºåŒ…
+		ResourcePackage package = YooAssets.CreatePackage("DefaultPackage");
+
+		// è®¾ç½®è¯¥èµ„æºåŒ…ä¸ºé»˜è®¤çš„èµ„æºåŒ…ï¼Œå¯ä»¥ä½¿ç”¨YooAssetsç›¸å…³åŠ è½½æ¥å£åŠ è½½è¯¥èµ„æºåŒ…å†…å®¹ã€‚
 		YooAssets.SetDefaultPackage(package);
+		return package;
+	}
 
-		var initParameters = new EditorSimulateModeParameters();
-		var simulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
-		initParameters.SimulateManifestFilePath = simulateManifestFilePath;
+	#region ç¼–è¾‘å™¨
+
+	/// <summary>
+	/// ç¼–è¾‘å™¨æ¨¡æ‹Ÿæ¨¡å¼
+	/// </summary>
+	private IEnumerator EditorYooAsset(ResourcePackage package)
+	{
+		EditorSimulateModeParameters initParameters = new();
+		initParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
 		yield return package.InitializeAsync(initParameters);
-
-		AssetHandle assetHandle = package.LoadAssetAsync<GameObject>("MainWindow");
-		yield return assetHandle;
-
-		Debug.Log($"±à¼­Æ÷¼ÓÔØÎïÌå : {assetHandle.AssetObject.name}");
 	}
 
 	#endregion
 
-	#region µ¥»ú
+	#region å•æœº
 
-	private IEnumerator LoadDefaultPackage()
+	/// <summary>
+	/// å•æœºæ¨¡å¼
+	/// </summary>
+	private IEnumerator SingleYooAsset(ResourcePackage package)
 	{
-		// ³õÊ¼»¯×ÊÔ´ÏµÍ³
-		YooAssets.Initialize();
-		// ´´½¨Ä¬ÈÏµÄ×ÊÔ´°ü
-		package = YooAssets.CreatePackage("DefaultPackage");
-		// ÉèÖÃ¸Ã×ÊÔ´°üÎªÄ¬ÈÏµÄ×ÊÔ´°ü£¬¿ÉÒÔÊ¹ÓÃYooAssetsÏà¹Ø¼ÓÔØ½Ó¿Ú¼ÓÔØ¸Ã×ÊÔ´°üÄÚÈİ¡£
-		YooAssets.SetDefaultPackage(package);
-		yield return SingleInitializeYooAsset(package);
-
-		AssetHandle assetHandle = package.LoadAssetAsync<GameObject>("MainWindow");
-		yield return assetHandle;
-
-		Debug.Log($"¼ÓÔØÎïÌå : {assetHandle.AssetObject.name}");
+		yield return package.InitializeAsync(new OfflinePlayModeParameters());
 	}
 
-	private IEnumerator LoadAOT()
-	{
-		//AOT
-		foreach (string address in GetAddressesByTag("aotDlls"))
-		{
-			Debug.Log($"AOT:{address}");
+	#endregion
 
-			AssetHandle handle = package.LoadAssetAsync<TextAsset>(address);
-			yield return handle;
-			RuntimeApi.LoadMetadataForAOTAssembly((handle.AssetObject as TextAsset).bytes, HomologousImageMode.SuperSet);
+	#region ç½‘ç»œ
+
+	private IEnumerator NetInitializeYooAsset(ResourcePackage package)
+	{
+		HostPlayModeParameters initParameters = new HostPlayModeParameters();
+		initParameters.BuildinQueryServices = new BuildinQueryService();
+		initParameters.RemoteServices = new RemoteServices(netPath);
+
+		//initParameters.DeliveryQueryServices = new DeliveryQueryService();
+		InitializationOperation initOperation = package.InitializeAsync(initParameters);
+		yield return initOperation;
+		if (initOperation.Status == EOperationStatus.Succeed)
+		{
+			Debug.Log("èµ„æºåŒ…åˆå§‹åŒ–æˆåŠŸï¼");
+		}
+		else
+		{
+			Debug.LogError($"èµ„æºåŒ…åˆå§‹åŒ–å¤±è´¥ï¼š{initOperation.Error}");
 		}
 	}
 
-	private IEnumerator LoadHotUpdate()
+	/// <summary>
+	/// å†…ç½®æŸ¥è¯¢æœåŠ¡
+	/// </summary>
+	private class BuildinQueryService : IBuildinQueryServices
 	{
-		Dictionary<string, Assembly> assemblys = new();
-
-		foreach (string address in GetAddressesByTag("hotUpdateDlls"))
+		public bool Query(string packageName, string fileName, string fileCRC)
 		{
-			AssetHandle handle = package.LoadAssetAsync<TextAsset>(address);
-			yield return handle;
-			Debug.Log($"HotUpdate {address}:{(handle.AssetObject as TextAsset).bytes.Length}");
+			// è·å–StreamingAssetsæ–‡ä»¶å¤¹çš„è·¯å¾„
+			string path = Path.Combine(Application.streamingAssetsPath, packageName, fileName);
 
-			Assembly assembly = Assembly.Load((handle.AssetObject as TextAsset).bytes);
-			assemblys.Add(address, assembly);
+			// æ£€æŸ¥æ–‡ä»¶æ˜¯å¦å­˜åœ¨
+			return File.Exists(path);
+		}
+	}
+
+	/// <summary>
+	/// é…é€æŸ¥è¯¢æœåŠ¡
+	/// </summary>
+	private class DeliveryQueryService : IDeliveryQueryServices
+	{
+		public string GetFilePath(string packageName, string fileName)
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool Query(string packageName, string fileName, string fileCRC)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	private class RemoteServices : IRemoteServices
+	{
+		private string netPath;
+
+		public RemoteServices(string defaultHostServer)
+		{
+			netPath = defaultHostServer;
+		}
+
+		public string GetRemoteFallbackURL(string fileName)
+		{
+			throw new NotImplementedException();
+		}
+
+		public string GetRemoteMainURL(string fileName)
+		{
+			throw new NotImplementedException();
 		}
 	}
 
 	#endregion
 
-	private IEnumerator SingleInitializeYooAsset(ResourcePackage package)
-	{
-		var initParameters = new OfflinePlayModeParameters();
-		yield return package.InitializeAsync(initParameters);
-	}
+	#region DLLåŠ è½½
 
-	public string[] GetAddressesByTag(string tag)
+	/// <summary>
+	/// åŠ è½½AOT
+	/// </summary>
+	private IEnumerator LoadAOT(ResourcePackage package)
 	{
-		AssetInfo[] assetInfos = YooAssets.GetAssetInfos(tag);
-		string[] addresses = new string[assetInfos.Length];
-		for (int i = 0; i < assetInfos.Length; i++)
+		foreach (AssetInfo assetInfo in YooAssets.GetAssetInfos("aotDlls"))
 		{
-			addresses[i] = assetInfos[i].Address;
+			AssetHandle handle = package.LoadAssetAsync<TextAsset>(assetInfo.Address);
+			yield return handle;
+			TextAsset textAsset = (handle.AssetObject as TextAsset);
+			Debug.Log($"AOTåŠ è½½:{assetInfo.Address} : {textAsset.bytes.Length}");
+			RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HomologousImageMode.SuperSet);
 		}
-
-		return addresses;
 	}
+
+	/// <summary>
+	/// åŠ è½½çƒ­æ›´
+	/// </summary>
+	private IEnumerator LoadHotUpdate(ResourcePackage package)
+	{
+		foreach (AssetInfo assetInfo in YooAssets.GetAssetInfos("hotUpdateDlls"))
+		{
+			AssetHandle handle = package.LoadAssetAsync<TextAsset>(assetInfo.Address);
+			yield return handle;
+			TextAsset textAsset = (handle.AssetObject as TextAsset);
+			Debug.Log($"HotUpdateåŠ è½½ {assetInfo.Address}:{textAsset.bytes.Length}");
+			Assembly.Load(textAsset.bytes);
+		}
+	}
+
+	#endregion
 }
