@@ -11,6 +11,16 @@ public class GameEntry : MonoBehaviour
 {
 	public string netPath = "http://127.0.0.1:9999/FTP/2023-04-20-1108";
 
+	/// <summary>
+	/// 根目录名称（保持和YooAssets资源系统一致）
+	/// </summary>
+	public const string RootFolderName = "yoo";
+
+	/// <summary>
+	/// 查询内置文件的时候，是否比对文件哈希值
+	/// </summary>
+	public static bool CompareFileCRC = false;
+
 	private ResourcePackage package;
 
 	private void Start()
@@ -111,7 +121,7 @@ public class GameEntry : MonoBehaviour
 		public bool Query(string packageName, string fileName, string fileCRC)
 		{
 			// 获取StreamingAssets文件夹的路径
-			string path = Path.Combine(Application.streamingAssetsPath, packageName, fileName);
+			string path = Path.Combine(Application.streamingAssetsPath, RootFolderName, packageName, fileName);
 
 			// 检查文件是否存在
 			return File.Exists(path);
