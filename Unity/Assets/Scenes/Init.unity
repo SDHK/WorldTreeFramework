@@ -397,6 +397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 044aabfbda8d2fe42b5d480dbc0cbb45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  netPath: http://127.0.0.1:9999/FTP/2023-04-20-1108
 --- !u!114 &1466723560
 MonoBehaviour:
   m_ObjectHideFlags: 0

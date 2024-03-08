@@ -57,10 +57,10 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Rule\_Test\MemoryPackTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\_Test\MemoryPackTestRule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\Rule\WorldTree.Rule.asmdef" />
+    <None Include="Assets\Scripts\HotUpdate\Rule\WorldTree.Rule.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="LZ4">

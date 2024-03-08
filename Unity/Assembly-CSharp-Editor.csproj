@@ -1004,13 +1004,13 @@
       <Project>{E387569F-725F-F5C8-517B-584709B7D5D8}</Project>
       <Name>Sirenix.OdinInspector.CompatibilityLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="WorldTree.EditorUnity.csproj">
-      <Project>{10EDEBF6-0383-482E-16B3-BB558877F9B0}</Project>
-      <Name>WorldTree.EditorUnity</Name>
-    </ProjectReference>
     <ProjectReference Include="UniFramework.Utility.csproj">
       <Project>{39887015-4656-1AD3-6137-37EA8E58EC85}</Project>
       <Name>UniFramework.Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.EditorUnity.csproj">
+      <Project>{10EDEBF6-0383-482E-16B3-BB558877F9B0}</Project>
+      <Name>WorldTree.EditorUnity</Name>
     </ProjectReference>
     <ProjectReference Include="GameEntry.csproj">
       <Project>{D4C64E87-992D-156B-D2B4-A12B236B4D8B}</Project>

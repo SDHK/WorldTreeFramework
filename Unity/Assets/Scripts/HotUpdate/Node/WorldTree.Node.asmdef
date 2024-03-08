@@ -1,0 +1,18 @@
+{
+    "name": "WorldTree.Node",
+    "rootNamespace": "",
+    "references": [
+        "GUID:104971acd352de048964cb7f7b53027b",
+        "GUID:5d5d5e2d0b2f4f043a69128e7d0ec763",
+        "GUID:756335c0388f7114790e504ed368ae1d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

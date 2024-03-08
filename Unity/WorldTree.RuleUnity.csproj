@@ -57,18 +57,18 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\RuleUnity\_Test\SqliteToolTestRule.cs" />
-    <Compile Include="Assets\Scripts\RuleUnity\_Test\TaskTestRule.cs" />
-    <Compile Include="Assets\Scripts\RuleUnity\_Test\SphereManagerTestRule.cs" />
-    <Compile Include="Assets\Scripts\RuleUnity\_Test\LiteDBTestRule.cs" />
-    <Compile Include="Assets\Scripts\RuleUnity\_Test\MultilayerPerceptronTestRule.cs" />
-    <Compile Include="Assets\Scripts\RuleUnity\_Test\InitialDomainRule.cs" />
-    <Compile Include="Assets\Scripts\RuleUnity\_Test\TreeValueTestRule.cs" />
-    <Compile Include="Assets\Scripts\RuleUnity\_Test\YooAssetTestRule.cs" />
-    <Compile Include="Assets\Scripts\RuleUnity\_Test\SphereTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SqliteToolTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\TaskTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SphereManagerTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\LiteDBTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\MultilayerPerceptronTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\InitialDomainRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\TreeValueTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\YooAssetTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SphereTestRule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\RuleUnity\WorldTree.RuleUnity.asmdef" />
+    <None Include="Assets\Scripts\HotUpdate\RuleUnity\WorldTree.RuleUnity.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

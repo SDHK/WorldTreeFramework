@@ -56,30 +56,30 @@
     <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AOT\GameEntry\HybridCLRGenerate\AOTGenericReferences.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\TestLine4.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\AsyncETVoidMethodBuilder.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\ETTask.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\IAwaiter.cs" />
-    <Compile Include="Assets\AOT\GameEntry\GameEntry.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\StateMachineWrap.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\ETCancellationToken.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\AsyncETTaskMethodBuilder.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\ETTaskCompleted.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ConsoleToScreen.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\AsyncETTaskCompletedMethodBuilder.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ECS\AsyncTaskTest.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\ETTaskHelper.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ETTask\ETVoid.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\TestGC.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ECS\MonoTest.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\LoadDll.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\MoveAreaLimiter.cs" />
-    <Compile Include="Assets\AOT\GameEntry\_MonoTest\ECS\MailTest.cs" />
+    <Compile Include="Assets\Scripts\AOT\HybridCLRGenerate\AOTGenericReferences.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\TestLine4.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\AsyncETVoidMethodBuilder.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETTask.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\IAwaiter.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\GameEntry.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\StateMachineWrap.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETCancellationToken.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\AsyncETTaskMethodBuilder.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETTaskCompleted.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ConsoleToScreen.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\AsyncETTaskCompletedMethodBuilder.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ECS\AsyncTaskTest.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETTaskHelper.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETVoid.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\TestGC.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ECS\MonoTest.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\LoadDll.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\MoveAreaLimiter.cs" />
+    <Compile Include="Assets\Scripts\AOT\_MonoTest\ECS\MailTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\AOT\GameEntry\HybridCLRGenerate\link.xml" />
-    <None Include="Assets\AOT\GameEntry\GameEntry.asmdef" />
+    <None Include="Assets\Scripts\AOT\HybridCLRGenerate\link.xml" />
+    <None Include="Assets\Scripts\AOT\GameEntry.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -57,17 +57,17 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\NodeUnity\_Test\YooAssetTest.cs" />
-    <Compile Include="Assets\Scripts\NodeUnity\_Test\MultilayerPerceptronTest.cs" />
-    <Compile Include="Assets\Scripts\NodeUnity\_Test\SqliteToolTest.cs" />
-    <Compile Include="Assets\Scripts\NodeUnity\_Test\LiteDBTest.cs" />
-    <Compile Include="Assets\Scripts\NodeUnity\_Test\TaskTest.cs" />
-    <Compile Include="Assets\Scripts\NodeUnity\_Test\TreeValueTest.cs" />
-    <Compile Include="Assets\Scripts\NodeUnity\_Test\SphereManagerTest.cs" />
-    <Compile Include="Assets\Scripts\NodeUnity\_Test\SphereTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\YooAssetTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\MultilayerPerceptronTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\SqliteToolTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\LiteDBTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\TaskTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\TreeValueTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\SphereManagerTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\SphereTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\NodeUnity\WorldTree.NodeUnity.asmdef" />
+    <None Include="Assets\Scripts\HotUpdate\NodeUnity\WorldTree.NodeUnity.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
