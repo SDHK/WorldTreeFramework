@@ -60,6 +60,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector4ViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityWorldTreeEditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\EntityBindMonoTool.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Plugins\HybridCLR\Generate\AOTGenericReferences.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\ScriptableSingleton.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\UnityNodeFieldViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\EditorAssetField.cs" />
@@ -100,12 +101,13 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\UnityNodeFieldView.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector3ViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\GuidePage\Editor\GuidePage.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Plugins\HybridCLREditor.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Plugins\HybridCLR\HybridCLREditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\ScriptableEditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\DateTimeViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\BoundsViewRule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Plugins\HybridCLR\Generate\link.xml" />
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\WorldTree.EditorUnity.asmdef" />
   </ItemGroup>
   <ItemGroup>
@@ -384,6 +386,9 @@
     </Reference>
     <Reference Include="dnlib">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\dnlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Share.SourceGenerator">
+      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Serialization.Config">
       <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
@@ -856,10 +861,6 @@
     <ProjectReference Include="WorldTree.CoreUnity.csproj">
       <Project>{CCAAEB54-E5BE-7998-5D51-E704B3DB0E9A}</Project>
       <Name>WorldTree.CoreUnity</Name>
-    </ProjectReference>
-    <ProjectReference Include="GameEntry.csproj">
-      <Project>{D4C64E87-992D-156B-D2B4-A12B236B4D8B}</Project>
-      <Name>GameEntry</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

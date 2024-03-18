@@ -96,9 +96,11 @@ public class GameEntry : MonoBehaviour
 
 	private IEnumerator NetInitializeYooAsset(ResourcePackage package)
 	{
+		string defaultHostServer = GetHostServerURL();
+		string fallbackHostServer = GetHostServerURL();
 		HostPlayModeParameters initParameters = new HostPlayModeParameters();
 		initParameters.BuildinQueryServices = new BuildinQueryService();
-		initParameters.RemoteServices = new RemoteServices(netPath);
+		initParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
 
 		//initParameters.DeliveryQueryServices = new DeliveryQueryService();
 		InitializationOperation initOperation = package.InitializeAsync(initParameters);
@@ -118,49 +120,145 @@ public class GameEntry : MonoBehaviour
 	/// </summary>
 	private class BuildinQueryService : IBuildinQueryServices
 	{
+		public static bool CompareFileCRC = false;
+
 		public bool Query(string packageName, string fileName, string fileCRC)
 		{
-			// 获取StreamingAssets文件夹的路径
-			string path = Path.Combine(Application.streamingAssetsPath, RootFolderName, packageName, fileName);
-
 			// 检查文件是否存在
-			return File.Exists(path);
+			return FileExists(packageName, fileName, fileCRC);
+		}
+
+		public static bool FileExists(string packageName, string fileName, string fileCRC)
+		{
+			string filePath = Path.Combine(Application.streamingAssetsPath, RootFolderName, packageName, fileName);
+			if (File.Exists(filePath))
+			{
+				if (BuildinQueryService.CompareFileCRC)
+				{
+					string crc32 = YooAsset.Editor.EditorTools.GetFileCRC32(filePath);
+					return crc32 == fileCRC;
+				}
+				else
+				{
+					return true;
+				}
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 
 	/// <summary>
-	/// 配送查询服务
+	/// 远端资源地址查询服务类
 	/// </summary>
-	private class DeliveryQueryService : IDeliveryQueryServices
-	{
-		public string GetFilePath(string packageName, string fileName)
-		{
-			throw new NotImplementedException();
-		}
-
-		public bool Query(string packageName, string fileName, string fileCRC)
-		{
-			throw new NotImplementedException();
-		}
-	}
-
 	private class RemoteServices : IRemoteServices
 	{
-		private string netPath;
+		private readonly string _defaultHostServer;
+		private readonly string _fallbackHostServer;
 
-		public RemoteServices(string defaultHostServer)
+		public RemoteServices(string defaultHostServer, string fallbackHostServer)
 		{
-			netPath = defaultHostServer;
+			_defaultHostServer = defaultHostServer;
+			_fallbackHostServer = fallbackHostServer;
 		}
 
 		public string GetRemoteFallbackURL(string fileName)
 		{
-			throw new NotImplementedException();
+			return $"{_defaultHostServer}/{fileName}";
 		}
 
 		public string GetRemoteMainURL(string fileName)
 		{
-			throw new NotImplementedException();
+			return $"{_fallbackHostServer}/{fileName}";
+		}
+	}
+
+	/// <summary>
+	/// 获取资源服务器地址
+	/// </summary>
+	private string GetHostServerURL()
+	{
+		//string hostServerIP = "http://10.0.2.2"; //安卓模拟器地址
+		string hostServerIP = "http://127.0.0.1";
+		string appVersion = "v1.0";
+
+#if UNITY_EDITOR
+		if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.Android)
+			return $"{hostServerIP}/CDN/Android/{appVersion}";
+		else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.iOS)
+			return $"{hostServerIP}/CDN/IPhone/{appVersion}";
+		else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.WebGL)
+			return $"{hostServerIP}/CDN/WebGL/{appVersion}";
+		else
+			return $"{hostServerIP}/CDN/PC/{appVersion}";
+#else
+        if (Application.platform == RuntimePlatform.Android)
+            return $"{hostServerIP}/CDN/Android/{appVersion}";
+        else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            return $"{hostServerIP}/CDN/IPhone/{appVersion}";
+        else if (Application.platform == RuntimePlatform.WebGLPlayer)
+            return $"{hostServerIP}/CDN/WebGL/{appVersion}";
+        else
+            return $"{hostServerIP}/CDN/PC/{appVersion}";
+#endif
+	}
+
+	/// <summary>
+	/// 资源文件流加载解密类
+	/// </summary>
+	private class FileStreamDecryption : IDecryptionServices
+	{
+		/// <summary>
+		/// 同步方式获取解密的资源包对象 注意：加载流对象在资源包对象释放的时候会自动释放
+		/// </summary>
+		AssetBundle IDecryptionServices.LoadAssetBundle(DecryptFileInfo fileInfo, out Stream managedStream)
+		{
+			BundleStream bundleStream = new BundleStream(fileInfo.FileLoadPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+			managedStream = bundleStream;
+			return AssetBundle.LoadFromStream(bundleStream, fileInfo.ConentCRC, GetManagedReadBufferSize());
+		}
+
+		/// <summary>
+		/// 异步方式获取解密的资源包对象 注意：加载流对象在资源包对象释放的时候会自动释放
+		/// </summary>
+		AssetBundleCreateRequest IDecryptionServices.LoadAssetBundleAsync(DecryptFileInfo fileInfo, out Stream managedStream)
+		{
+			BundleStream bundleStream = new BundleStream(fileInfo.FileLoadPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+			managedStream = bundleStream;
+			return AssetBundle.LoadFromStreamAsync(bundleStream, fileInfo.ConentCRC, GetManagedReadBufferSize());
+		}
+
+		private static uint GetManagedReadBufferSize()
+		{
+			return 1024;
+		}
+	}
+
+	/// <summary>
+	/// 资源文件解密流
+	/// </summary>
+	public class BundleStream : FileStream
+	{
+		public const byte KEY = 64;
+
+		public BundleStream(string path, FileMode mode, FileAccess access, FileShare share) : base(path, mode, access, share)
+		{
+		}
+
+		public BundleStream(string path, FileMode mode) : base(path, mode)
+		{
+		}
+
+		public override int Read(byte[] array, int offset, int count)
+		{
+			var index = base.Read(array, offset, count);
+			for (int i = 0; i < array.Length; i++)
+			{
+				array[i] ^= KEY;
+			}
+			return index;
 		}
 	}
 

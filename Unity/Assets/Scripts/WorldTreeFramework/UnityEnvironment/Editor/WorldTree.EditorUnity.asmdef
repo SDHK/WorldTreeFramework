@@ -7,8 +7,7 @@
         "HybridCLR.Runtime",
         "HybridCLR.Editor",
         "YooAsset.Editor",
-        "YooAsset",
-        "GameEntry"
+        "YooAsset"
     ],
     "includePlatforms": [
         "Editor"

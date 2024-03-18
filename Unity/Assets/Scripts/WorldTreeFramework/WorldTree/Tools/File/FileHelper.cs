@@ -69,7 +69,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取文件的哈希值
 		/// </summary>
-		public static int GetCRC32(string filePath)
+		public static uint GetCRC32(string filePath)
 		{
 			using FileStream fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 			return CRC32Helper.StreamCRC32(fs);

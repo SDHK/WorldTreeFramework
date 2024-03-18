@@ -6,7 +6,9 @@
 * 描述： CRC32校验工具类
 *
 */
-using Ionic.Crc;
+
+//using Ionic.Crc;
+using System;
 using System.IO;
 
 namespace WorldTree
@@ -16,11 +18,11 @@ namespace WorldTree
 		/// <summary>
 		/// 获取CRC32
 		/// </summary>
-		public static int StreamCRC32(Stream stream)
+		public static uint StreamCRC32(Stream stream)
 		{
-			CRC32 crc32 = new CRC32();
-			return crc32.GetCrc32(stream);
+			CRC32Algorithm hash = new CRC32Algorithm();
+			byte[] hashBytes = hash.ComputeHash(stream);
+			return BitConverter.ToUInt32(hashBytes, 0);
 		}
-
 	}
 }

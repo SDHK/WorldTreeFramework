@@ -3,7 +3,9 @@
     "rootNamespace": "",
     "references": [
         "YooAsset",
-        "HybridCLR.Runtime"
+        "HybridCLR.Runtime",
+        "WorldTree.EditorUnity",
+        "YooAsset.Editor"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -21,13 +21,13 @@ public static class HybridCLREditor
 		Directory.CreateDirectory(toDir);
 		AssetDatabase.Refresh();
 
-		Debug.Log("´Ó " + externalHotUpdatePath + "¸´ÖÆµ½" + toDir);
+		Debug.Log("ä» " + externalHotUpdatePath + "å¤åˆ¶åˆ°" + toDir);
 
 		foreach (var hotUpdateAssemblie in HybridCLRSettings.Instance.hotUpdateAssemblies)
 		{
 			File.Copy(Path.Combine(externalHotUpdatePath, $"{hotUpdateAssemblie}.dll"), Path.Combine(toDir, $"{hotUpdateAssemblie}.dll.bytes"), true);
 		}
-		Debug.Log("CopyHotUpdateDlls Íê³É !!!");
+		Debug.Log("CopyHotUpdateDlls å®Œæˆ !!!");
 
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
@@ -42,18 +42,19 @@ public static class HybridCLREditor
 		Directory.CreateDirectory(toDir);
 		AssetDatabase.Refresh();
 
-		Debug.Log("´Ó " + fromDir + "¸´ÖÆµ½" + toDir);
+		Debug.Log("ä» " + fromDir + "å¤åˆ¶åˆ°" + toDir);
 
 		foreach (string aotDll in AOTGenericReferences.PatchedAOTAssemblyList)
 		{
 			File.Copy(Path.Combine(fromDir, aotDll), Path.Combine(toDir, $"{aotDll}.bytes"), true);
 		}
+
 		//foreach (string aotDll in HybridCLRSettings.Instance.patchAOTAssemblies)
 		//{
 		//	File.Copy(Path.Combine(fromDir, aotDll), Path.Combine(toDir, $"{aotDll}.bytes"), true);
 		//}
 
-		Debug.Log("CopyAotDlls Íê³É !!!");
+		Debug.Log("CopyAotDlls å®Œæˆ !!!");
 
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
@@ -66,15 +67,16 @@ public static class HybridCLREditor
 		CompileDllCommand.CompileDll(target);
 		Il2CppDefGeneratorCommand.GenerateIl2CppDef();
 
-		// Õâ¼¸¸öÉú³ÉÒÀÀµHotUpdateDlls
+		// è¿™å‡ ä¸ªç”Ÿæˆä¾èµ–HotUpdateDlls
 		LinkGeneratorCommand.GenerateLinkXml(target);
 
-		//ÕâÒ»²½Ê¹ÓÃÎÒÃÇ×Ô¼ºµÄ
-		// Éú³É²Ã¼ôºóµÄaot dll
+		//è¿™ä¸€æ­¥ä½¿ç”¨æˆ‘ä»¬è‡ªå·±çš„
+		// ç”Ÿæˆè£å‰ªåçš„aot dll
 		StripAOTDllCommand.GenerateStripedAOTDlls();
+
 		//GenerateStripedAOTDlls(target, EditorUserBuildSettings.selectedBuildTargetGroup);
 
-		// ÇÅ½Óº¯ÊıÉú³ÉÒÀÀµÓÚAOT dll£¬±ØĞë±£Ö¤ÒÑ¾­build¹ı£¬Éú³ÉAOT dll
+		// æ¡¥æ¥å‡½æ•°ç”Ÿæˆä¾èµ–äºAOT dllï¼Œå¿…é¡»ä¿è¯å·²ç»buildè¿‡ï¼Œç”ŸæˆAOT dll
 		MethodBridgeGeneratorCommand.GenerateMethodBridge(target);
 		ReversePInvokeWrapperGeneratorCommand.GenerateReversePInvokeWrapper(target);
 		AOTReferenceGeneratorCommand.GenerateAOTGenericReference(target);

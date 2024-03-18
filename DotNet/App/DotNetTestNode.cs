@@ -12,54 +12,35 @@ namespace WorldTree
 	{
 
 		public int TestValue;
-
-		public async void AwakeAsync(DotNetTestNode self)
-		{
-			await self.TreeTaskCompleted();
-
-		}
 	}
 
 	public static partial class DotNetTestNodeRule
 	{
 
-	
-		public static async void TestAsync(this DotNetTestNode self)
-		{
-			await self.TreeTaskCompleted();
-
-		}
-
-		public static async void Test(this DotNetTestNode self)
-		{
-			self.TestAsync();
-			await self.TreeTaskCompleted();
-
-		}
 
 		class AddRule : AddRule<DotNetTestNode>
 		{
 			protected override void OnEvent(DotNetTestNode self)
 			{
-				// 1. 创建自定义AssemblyLoadContext
-				var alc = new AssemblyLoadContext("NewALC", true);
+				//// 1. 创建自定义AssemblyLoadContext
+				//var alc = new AssemblyLoadContext("NewALC", true);
 
-				// 3. 加载程序集
-				alc.LoadFromAssemblyPath("A.dll");
+				//// 3. 加载程序集
+				//alc.LoadFromAssemblyPath("A.dll");
 
-				// 4. 创建对象并调用 
-				Type t = alc.LoadFromAssemblyName(new AssemblyName("A.MyClass")).GetType("A.MyClass");
-				dynamic obj = Activator.CreateInstance(t);
-				obj.MyMethod();
+				//// 4. 创建对象并调用 
+				//Type t = alc.LoadFromAssemblyName(new AssemblyName("A.MyClass")).GetType("A.MyClass");
+				//dynamic obj = Activator.CreateInstance(t);
+				//obj.MyMethod();
 
-				//卸载程序集
-				alc.Unload();
+				////卸载程序集
+				//alc.Unload();
 
 
 
 
 				self.Log(" 初始化！！！!!");
-
+				//self.AddComponent(out RefeshCsProjFileCompileInclude _);
 				//self.Log(self.Core.ToStringDrawTree());
 			}
 		}
