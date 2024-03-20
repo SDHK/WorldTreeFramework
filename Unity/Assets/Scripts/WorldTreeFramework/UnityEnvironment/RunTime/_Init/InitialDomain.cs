@@ -1,14 +1,14 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2022/8/26 0:23
+* 作者：闪电黑客
+* 日期：2022/8/26 0:23
 
-* 描述： 初始域组件
-* 
+* 描述：初始域组件
+*
 * 在 世界树 启动后挂载
-* 
+*
 * 可用于初始化启动需要的功能组件
-* 
+*
 * 然而框架还没完成，目前用于功能测试
 
 */
@@ -22,6 +22,7 @@ namespace WorldTree
 	public interface ISendData
 	{
 		public long nodeId { get; set; }
+
 		public void Send(INode node);
 	}
 
@@ -37,9 +38,9 @@ namespace WorldTree
 		/// </summary>
 		public long nodeId { get; set; }
 
-		T1 arg1;
-		T2 arg2;
-		T3 arg3;
+		private T1 arg1;
+		private T2 arg2;
+		private T3 arg3;
 
 		/// <summary>
 		/// 调用将参数塞入目标节点
@@ -49,14 +50,10 @@ namespace WorldTree
 			node.TrySend(TypeInfo<R>.Default, arg1, arg2, arg3);
 		}
 
-
 		public void SetData(byte[] dataBytes)
 		{
-
 		}
 	}
-
-
 
 	/// <summary>
 	/// 初始域
@@ -82,14 +79,12 @@ namespace WorldTree
 		public Vector2 TestVector2 = Vector2.one;
 		public Vector3 TestVector3 = Vector3.one;
 		public Vector4 TestVector4 = Vector4.one;
-
 	}
 
 	public static class InitialDomainRule_
 	{
-
 		//测试框架功能
-		class AddRule : AddRule<InitialDomain>
+		private class AddRule : AddRule<InitialDomain>
 		{
 			protected override void OnEvent(InitialDomain self)
 			{
