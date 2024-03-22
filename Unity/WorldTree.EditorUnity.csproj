@@ -54,13 +54,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
+    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector4ViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityWorldTreeEditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\EntityBindMonoTool.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Plugins\HybridCLR\Generate\AOTGenericReferences.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ThirdParty\HybridCLR\Generate\AOTGenericReferences.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\ScriptableSingleton.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\UnityNodeFieldViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\EditorAssetField.cs" />
@@ -101,13 +101,13 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\UnityNodeFieldView.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector3ViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\GuidePage\Editor\GuidePage.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Plugins\HybridCLR\HybridCLREditor.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ThirdParty\HybridCLR\HybridCLREditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\ScriptableEditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\DateTimeViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\BoundsViewRule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Plugins\HybridCLR\Generate\link.xml" />
+    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ThirdParty\HybridCLR\Generate\link.xml" />
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\WorldTree.EditorUnity.asmdef" />
   </ItemGroup>
   <ItemGroup>
@@ -373,7 +373,7 @@
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\LZ4.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.IonicZip">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
@@ -387,17 +387,14 @@
     <Reference Include="dnlib">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\dnlib.dll</HintPath>
     </Reference>
-    <Reference Include="Share.SourceGenerator">
-      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
-    </Reference>
     <Reference Include="Sirenix.Serialization.Config">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities.Editor">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1.17.7\Lib\Editor\PlasticSCM\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
@@ -409,7 +406,7 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.OdinInspector.Editor">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
@@ -418,7 +415,7 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
     </Reference>
     <Reference Include="LiteDB">
-      <HintPath>Assets\Plugins\LiteDB\LiteDB.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\LiteDB\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="unityplastic">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1.17.7\Lib\Editor\PlasticSCM\unityplastic.dll</HintPath>
@@ -430,19 +427,19 @@
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
-      <HintPath>Assets\Plugins\Sqlite\Mono.Data.Sqlite.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\Sqlite\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Serialization">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>

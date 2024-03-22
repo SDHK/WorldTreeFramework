@@ -42,7 +42,7 @@ MonoBehaviour:
       AssetTags: aotDlls
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/Bundles/AotDlls
+      - CollectPath: Assets/AssetBundles/Dlls/AotDlls
         CollectorGUID: 8d6faf5b900c4044bbc8e20e04475dff
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -55,7 +55,7 @@ MonoBehaviour:
       AssetTags: hotUpdateDlls
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/Bundles/HotUpdateDlls
+      - CollectPath: Assets/AssetBundles/Dlls/HotUpdateDlls
         CollectorGUID: 7b3b7f5cc2082984fbd61a3e763ef143
         CollectorType: 0
         AddressRuleName: AddressByFileName

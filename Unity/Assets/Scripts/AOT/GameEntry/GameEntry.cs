@@ -7,11 +7,13 @@
 
 */
 
+using Sirenix.OdinInspector;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace WorldTree.AOT
 {
@@ -26,6 +28,13 @@ namespace WorldTree.AOT
 		public static GameEntry instance;
 
 		/// <summary>
+		/// 进度条
+		/// </summary>
+		public Slider slider;
+
+		public Text text;
+
+		/// <summary>
 		/// 游戏运行模式
 		/// </summary>
 		public GamePlayMode playMode = GamePlayMode.OfflinePlayMode;
@@ -33,38 +42,35 @@ namespace WorldTree.AOT
 		/// <summary>
 		/// 资源包版本号
 		/// </summary>
+		[ReadOnly]
 		public string packageVersion;
-
-		/// <summary>
-		/// 资源服务器地址
-		/// </summary>
-		private string netPath = "http://127.0.0.1:9999/FTP/2023-04-20-1108";
 
 		private void Awake()
 		{
 			instance = this;
 		}
 
-		private async void Start()
+		private void Start()
 		{
-			AppDomain.CurrentDomain.GetAssemblies().ToList().ForEach(a => Debug.Log($"本地程序集：{a.GetName().Name}"));
+			//AppDomain.CurrentDomain.GetAssemblies().ToList().ForEach(a => Debug.Log($"本地程序集：{a.GetName().Name}"));
 
 			StartLoad();
 		}
 
 		public void StartLoad()
 		{
-			//await YooAssetsHelper.Initialize(playMode);
-			//await HybridCLRHelper.LoadAOT();
-			//await HybridCLRHelper.LoadHotUpdate();
+			YooAssetsHelper.InitializePackage();
+
 			//StartWorldTree();
 		}
 
 		/// <summary>
 		/// 启动框架
 		/// </summary>
-		private void StartWorldTree()
+		public void StartWorldTree()
 		{
+			Debug.Log("启动框架!");
+
 			Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "WorldTree.CoreUnity");
 			gameObject.AddComponent(assembly.GetType("WorldTree.UnityWorldTree"));
 		}

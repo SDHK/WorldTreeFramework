@@ -7,7 +7,6 @@
 
 */
 
-using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using YooAsset;
@@ -22,13 +21,13 @@ namespace WorldTree.AOT
 		public static async void InitializePackage()
 		{
 			Debug.Log("初始化资源包！");
-			InitializationOperation initialization = Initialize(GamePlayMode.OfflinePlayMode);
+			InitializationOperation initialization = Initialize(GameEntry.instance.playMode);
 			await initialization.Task;
 
 			// 如果初始化失败弹出提示界面
 			if (initialization.Status != EOperationStatus.Succeed)
 			{
-				Debug.LogWarning($"{initialization.Error}");
+				Debug.Log($"初始化资源包失败 {initialization.Error}");
 
 				//初始化资源包失败事件
 			}
@@ -36,7 +35,17 @@ namespace WorldTree.AOT
 			{
 				var version = initialization.PackageVersion;
 				Debug.Log($"Init资源包版本 : {version}");
-				UpdatePackageVersion();
+
+				if (GameEntry.instance.playMode is GamePlayMode.NetPlayMode or GamePlayMode.WebPlayMode)
+				{
+					UpdatePackageVersion();
+				}
+				else
+				{
+					await HybridCLRHelper.LoadAOT();
+					await HybridCLRHelper.LoadHotUpdate();
+					GameEntry.instance.StartWorldTree();
+				}
 			}
 		}
 
@@ -51,7 +60,7 @@ namespace WorldTree.AOT
 			await operation.Task;
 			if (operation.Status != EOperationStatus.Succeed)
 			{
-				Debug.LogWarning(operation.Error);
+				Debug.Log($"资源版本号更新失败 {operation.Error}");
 
 				//资源版本号更新失败事件
 			}
@@ -74,7 +83,7 @@ namespace WorldTree.AOT
 			await operation.Task;
 			if (operation.Status != EOperationStatus.Succeed)
 			{
-				Console.WriteLine(operation.Error);
+				Debug.Log($"资源清单更新失败 {operation.Error}");
 
 				//资源清单更新失败事件
 			}
@@ -118,7 +127,10 @@ namespace WorldTree.AOT
 
 				downloader.OnDownloadProgressCallback += (totalDownloadCount, currentDownloadCount, totalDownloadSizeBytes, currentDownloadSizeBytes) =>
 				{
-					//Debug.Log($"下载进度! {fileName}: {progress}");
+					float progressCount = (float)currentDownloadCount / totalDownloadCount;
+					float progressSize = (float)currentDownloadSizeBytes / totalDownloadSizeBytes;
+					GameEntry.instance.slider.value = progressCount;
+					GameEntry.instance.text.text = $"{currentDownloadCount}/{totalDownloadCount} : {progressCount * 100}%\n{currentDownloadSizeBytes}/{totalDownloadSizeBytes} : {progressSize * 100}%";
 				};
 
 				// 开始下载
@@ -150,11 +162,15 @@ namespace WorldTree.AOT
 			await operation.Task;
 			if (operation.Status != EOperationStatus.Succeed)
 			{
-				Debug.LogWarning(operation.Error);
+				Debug.Log($"清理资源包缓存失败! {operation.Error}");
 			}
 			else
 			{
 				Debug.Log("清理资源包缓存成功!");
+
+				await HybridCLRHelper.LoadAOT();
+				await HybridCLRHelper.LoadHotUpdate();
+				GameEntry.instance.StartWorldTree();
 			}
 		}
 	}

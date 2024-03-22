@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{D4C64E87-992D-156B-D2B4-A12B236B4D8B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -55,40 +54,39 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
+    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AOT\GameEntry\GamePlayMode.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\HybridCLR\HybridCLRHelper.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\AssetsInitializeHelper.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\AssetsLoadHelper.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\BuildinQueryService.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\BundleStream.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\FileStreamDecryption.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\RemoteServices.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\YooAssetsHelper.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\TestLine4.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\AsyncETVoidMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETTask.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\IAwaiter.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\FileStreamDecryption.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\GameEntry.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\StateMachineWrap.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\HybridCLR\HybridCLRHelper.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETCancellationToken.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\AsyncETTaskMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETTaskCompleted.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ConsoleToScreen.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\BundleStream.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\BuildinQueryService.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\AssetsInitializeHelper.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\AsyncETTaskCompletedMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ECS\AsyncTaskTest.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETTaskHelper.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ETTask\ETVoid.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\YooAssetsHelper.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\AssetsLoadHelper.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\TestGC.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ECS\MonoTest.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\RemoteServices.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\MoveAreaLimiter.cs" />
     <Compile Include="Assets\Scripts\AOT\_MonoTest\ECS\MailTest.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\GamePlayMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\AOT\GameEntry.asmdef" />
-    <None Include="Unity.licenseheader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -350,7 +348,7 @@
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\LZ4.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.IonicZip">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
@@ -364,17 +362,14 @@
     <Reference Include="dnlib">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\dnlib.dll</HintPath>
     </Reference>
-    <Reference Include="Share.SourceGenerator">
-      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
-    </Reference>
     <Reference Include="Sirenix.Serialization.Config">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities.Editor">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1.17.7\Lib\Editor\PlasticSCM\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
@@ -386,7 +381,7 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.OdinInspector.Editor">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
@@ -395,7 +390,7 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
     </Reference>
     <Reference Include="LiteDB">
-      <HintPath>Assets\Plugins\LiteDB\LiteDB.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\LiteDB\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="unityplastic">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1.17.7\Lib\Editor\PlasticSCM\unityplastic.dll</HintPath>
@@ -407,19 +402,19 @@
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
-      <HintPath>Assets\Plugins\Sqlite\Mono.Data.Sqlite.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\Sqlite\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Serialization">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
@@ -824,7 +819,6 @@
       <Name>WorldTree.EditorUnity</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

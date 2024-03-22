@@ -1,0 +1,22 @@
+ManifestFileVersion: 0
+CRC: 1855654150
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 368535975430e03380e95e2064a1b530
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.NodeUnity.dll.bytes
+- Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.Rule.dll.bytes
+- Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.RuleUnity.dll.bytes
+- Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.CoreUnity.dll.bytes
+- Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.Node.dll.bytes
+- Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.Core.dll.bytes
+Dependencies: []

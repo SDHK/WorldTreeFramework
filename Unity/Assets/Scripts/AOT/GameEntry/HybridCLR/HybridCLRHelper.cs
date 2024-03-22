@@ -26,6 +26,8 @@ namespace WorldTree.AOT
 		/// </summary>
 		public static async Task LoadAOT()
 		{
+#if !UNITY_EDITOR
+
 			ResourcePackage package = YooAssets.GetPackage("DefaultPackage");
 
 			foreach (AssetInfo assetInfo in YooAssets.GetAssetInfos("aotDlls"))
@@ -36,6 +38,8 @@ namespace WorldTree.AOT
 				Debug.Log($"AOT加载:{assetInfo.Address} : {textAsset.bytes.Length}");
 				RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HomologousImageMode.SuperSet);
 			}
+#endif
+			await Task.CompletedTask;
 		}
 
 		/// <summary>
@@ -43,6 +47,8 @@ namespace WorldTree.AOT
 		/// </summary>
 		public static async Task LoadHotUpdate()
 		{
+#if !UNITY_EDITOR
+
 			ResourcePackage package = YooAssets.GetPackage("DefaultPackage");
 
 			foreach (AssetInfo assetInfo in YooAssets.GetAssetInfos("hotUpdateDlls"))
@@ -52,8 +58,10 @@ namespace WorldTree.AOT
 				TextAsset textAsset = (handle.AssetObject as TextAsset);
 				Debug.Log($"HotUpdate加载 {assetInfo.Address}:{textAsset.bytes.Length}");
 				Assembly.Load(textAsset.bytes);
-				AppDomain.Unload(AppDomain.CurrentDomain);
 			}
+#endif
+
+			await Task.CompletedTask;
 		}
 	}
 }

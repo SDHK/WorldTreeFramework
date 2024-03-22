@@ -54,52 +54,36 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
+    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\Behaviour\ApplicationQuit.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\EventDefine\UserEventDefine.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\BattleRoom.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\GameObjectAssetReference.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmUpdatePackageVersion.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityBullet.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\WindowLogic\UIBattleWindow.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\GameLogic\SceneBattle.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmDownloadPackageFiles.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\AssetOperationHandleExtension.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmUpdaterDone.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\WindowLogic\UIHomeWindow.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\EventDefine\SceneEventDefine.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\PatchWindow.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\LoadAssetsByTagOperation.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\ThirdParty\StreamingAssetsHelper\StreamingAssetsHelper.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityEnemy.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityEffect.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\EventDefine\BattleEventDefine.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmInitializePackage.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\GameLogic\GameManager.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\WindowLogic\UILoadingWindow.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmUpdatePackageManifest.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\EventDefine\PatchEventDefine.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityAsteroid.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmCreatePackageDownloader.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\BattleLogic\EntityPlayer.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmDownloadPackageOver.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\Behaviour\BackgroundScroller.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\GameLogic\SceneHome.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\Boot.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\ThirdParty\StreamingAssetsHelper\BuildinFileManifest.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\PatchOperation.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\PatchLogic\FsmNode\FsmClearPackageCache.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameScript\Runtime\WindowLogic\UIAboutWindow.cs" />
-    <Compile Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\ThirdParty\StreamingAssetsHelper\StreamingAssetsDefine.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\GameObjectAssetReference.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\AssetOperationHandleExtension.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\LoadAssetsByTagOperation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\AssetSetting\AssetBundleCollectorConfig.xml" />
-    <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameArt\Shader\MyUnlitShader.shader" />
-    <None Include="Assets\HybridCLRGenerate\link.xml" />
-    <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameArt\Shader\StandardMobile.shader" />
-    <None Include="Assets\Samples\YooAsset\2.1.1\Space Shooter\GameArt\Shader\StandardMobile.cginc" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\LiteDB\LiteDB.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\LiteDB\LiteDB.xml" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.xml" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.xml" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Serialization.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.xml" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.xml" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Utilities.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\Sqlite\sqlite3.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\link.xml" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\Sqlite\Mono.Data.Sqlite.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.xml" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll" />
+    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -352,7 +336,7 @@
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\LZ4.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Pdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
@@ -360,26 +344,23 @@
     <Reference Include="dnlib">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\dnlib.dll</HintPath>
     </Reference>
-    <Reference Include="Share.SourceGenerator">
-      <HintPath>Assets\Plugins\Share.SourceGenerator.dll</HintPath>
-    </Reference>
     <Reference Include="Sirenix.Serialization.Config">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities.Editor">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.OdinInspector.Editor">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
     </Reference>
     <Reference Include="LiteDB">
-      <HintPath>Assets\Plugins\LiteDB\LiteDB.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\LiteDB\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
@@ -388,19 +369,19 @@
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Utilities">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
-      <HintPath>Assets\Plugins\Sqlite\Mono.Data.Sqlite.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\Sqlite\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Serialization">
-      <HintPath>Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
+      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
@@ -968,10 +949,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="UniFramework.Event.csproj">
-      <Project>{1615337F-3C01-980B-7784-3454848F0AE8}</Project>
-      <Name>UniFramework.Event</Name>
-    </ProjectReference>
     <ProjectReference Include="Sirenix.OdinInspector.Modules.UnityMathematics.csproj">
       <Project>{E41DDF56-3676-7520-3B3D-021F8DBA6BFA}</Project>
       <Name>Sirenix.OdinInspector.Modules.UnityMathematics</Name>
@@ -979,10 +956,6 @@
     <ProjectReference Include="Sirenix.OdinInspector.CompatibilityLayer.Editor.csproj">
       <Project>{686145E0-A51B-685E-EF99-A1034C8B63AB}</Project>
       <Name>Sirenix.OdinInspector.CompatibilityLayer.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="UniFramework.Machine.csproj">
-      <Project>{DDAE7AF7-E9B8-7938-F31E-4720C55E3FF8}</Project>
-      <Name>UniFramework.Machine</Name>
     </ProjectReference>
     <ProjectReference Include="MemoryPack.csproj">
       <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
@@ -995,10 +968,6 @@
     <ProjectReference Include="WorldTree.EditorUnity.csproj">
       <Project>{10EDEBF6-0383-482E-16B3-BB558877F9B0}</Project>
       <Name>WorldTree.EditorUnity</Name>
-    </ProjectReference>
-    <ProjectReference Include="UniFramework.Utility.csproj">
-      <Project>{39887015-4656-1AD3-6137-37EA8E58EC85}</Project>
-      <Name>UniFramework.Utility</Name>
     </ProjectReference>
     <ProjectReference Include="GameEntry.csproj">
       <Project>{D4C64E87-992D-156B-D2B4-A12B236B4D8B}</Project>

@@ -33,8 +33,9 @@ namespace WorldTree.AOT
 			{
 				if (CompareFileCRC)
 				{
-					string crc32 = YooAsset.Editor.EditorTools.GetFileCRC32(filePath);
-					return crc32 == fileCRC;
+					//string crc32 = EditorTools.GetFileCRC32(filePath);
+					//return crc32 == fileCRC;
+					return true;
 				}
 				else
 				{

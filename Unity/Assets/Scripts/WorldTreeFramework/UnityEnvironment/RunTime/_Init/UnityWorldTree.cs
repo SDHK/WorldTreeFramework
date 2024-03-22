@@ -20,17 +20,18 @@ namespace WorldTree
 
 		public void Start()
 		{
-#if UNITY_EDITOR
+			Core = new();//主框架
 
+#if UNITY_EDITOR
 			ViewCore = new();//调试用的可视化框架
 			ViewCore.Log = Debug.Log;
 			ViewCore.LogWarning = Debug.LogWarning;
 			ViewCore.LogError = Debug.LogError;
 			ViewCore.Awake(); //可视化框架初始化
+
 			ViewCore.Root.AddChild(out treeView, (INode)Core, TypeInfo<INode>.Default);
 #endif
 
-			Core = new();//主框架
 			Core.Log = Debug.Log;
 			Core.LogWarning = Debug.LogWarning;
 			Core.LogError = Debug.LogError;
