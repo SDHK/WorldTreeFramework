@@ -53,8 +53,8 @@ namespace WorldTree
 
 			protected override void OnEvent(InitialDomain self, TimeSpan timeSpan)
 			{
-				textStyle.normal.textColor = Color.red;
-				GUILayout.Label($"初始域GUI更新！！{timeSpan.TotalMilliseconds}", textStyle);
+				textStyle.normal.textColor = Color.green;
+				GUILayout.Label($"            !!{timeSpan.TotalMilliseconds}", textStyle);
 			}
 		}
 

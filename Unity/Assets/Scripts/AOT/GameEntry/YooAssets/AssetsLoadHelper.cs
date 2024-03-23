@@ -42,8 +42,6 @@ namespace WorldTree.AOT
 				}
 				else
 				{
-					await HybridCLRHelper.LoadAOT();
-					await HybridCLRHelper.LoadHotUpdate();
 					GameEntry.instance.StartWorldTree();
 				}
 			}
@@ -57,6 +55,7 @@ namespace WorldTree.AOT
 			await Task.Delay(500);
 			ResourcePackage package = YooAssets.GetPackage(packageName);
 			UpdatePackageVersionOperation operation = package.UpdatePackageVersionAsync();
+
 			await operation.Task;
 			if (operation.Status != EOperationStatus.Succeed)
 			{
@@ -66,6 +65,8 @@ namespace WorldTree.AOT
 			}
 			else
 			{
+				Debug.Log($"资源版本号更新成功 {operation.Error}");
+
 				GameEntry.instance.packageVersion = operation.PackageVersion;
 				UpdatePackageManifest();
 			}
@@ -89,6 +90,8 @@ namespace WorldTree.AOT
 			}
 			else
 			{
+				Debug.Log($"资源清单更新成功{operation.Error}");
+
 				CreatePackageDownloader();
 			}
 		}
@@ -103,6 +106,7 @@ namespace WorldTree.AOT
 			int downloadingMaxNum = 10;
 			int failedTryAgain = 3;
 			ResourceDownloaderOperation downloader = package.CreateResourceDownloader(downloadingMaxNum, failedTryAgain);
+			downloader.BeginDownload();
 
 			await downloader.Task;
 			if (downloader.TotalDownloadCount == 0)
@@ -134,7 +138,7 @@ namespace WorldTree.AOT
 				};
 
 				// 开始下载
-				downloader.BeginDownload();
+				//downloader.BeginDownload();
 
 				await downloader.Task;
 
@@ -168,8 +172,6 @@ namespace WorldTree.AOT
 			{
 				Debug.Log("清理资源包缓存成功!");
 
-				await HybridCLRHelper.LoadAOT();
-				await HybridCLRHelper.LoadHotUpdate();
 				GameEntry.instance.StartWorldTree();
 			}
 		}

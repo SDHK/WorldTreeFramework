@@ -638,7 +638,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slider: {fileID: 1231623346}
   text: {fileID: 1707502865}
-  playMode: 1
+  hostServerIP: http://127.0.0.1:9999
+  playMode: 2
   packageVersion: 
 --- !u!114 &1466723560
 MonoBehaviour:
@@ -652,7 +653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebb3964ce8877584a97dd8586c937c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fontSize: 15
+  fontSize: 10
 --- !u!1 &1707502863
 GameObject:
   m_ObjectHideFlags: 0

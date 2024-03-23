@@ -54,67 +54,67 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
+    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Internal\PreserveAttribute.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\MemoryPackableFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\CultureInfoFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Unity\ProviderInitializer.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\BigIntegerFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\IMemoryPackFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Internal\FixedArrayBufferWriter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\MultiDimensionalArrayFormatters.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializer.Serialize.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Internal\MemoryMarshalEx.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Internal\ReusableLinkedArrayBufferWriter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Compression\BrotliDecompressor.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\CollectionFormatters.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\LazyFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializerOptions.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\GenericCollectionFormatters.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\InterfaceCollectionFormatters.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackReader.Unmanaged.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\UriFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\UnmanagedFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackReaderOptionalState.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\IMemoryPackable.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Compression\BrotliCompressor.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\KeyValuePairFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializer.NonGenerics.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\StringFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Internal\TypeHelpers.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackWriter.Unmanaged.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackReader.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializationException.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Compression\BitPackFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackWriterOptionalState.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Internal\ReusableReadOnlySequenceBuilder.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackFormatterProvider.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Internal\EnumerableExtensions.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackCode.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\NullableFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\ArrayFormatters.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Compression\BrotliFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Internal\MathEx.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\StringBuilderFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Unity\UnityFormatters.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\TimeZoneInfoFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackFormatterProvider.WellknownTypes.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializer.Deserialize.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\CustomFormatterAttributes.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackReaderWriter.VarInt.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\VersionFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Attributes.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\BitArrayFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\TypeFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\DynamicUnionFormatter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\MemoryPackWriter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Core\Formatters\TupleFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Internal\PreserveAttribute.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\MemoryPackableFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\CultureInfoFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Unity\ProviderInitializer.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\BigIntegerFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\IMemoryPackFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Internal\FixedArrayBufferWriter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\MultiDimensionalArrayFormatters.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializer.Serialize.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Internal\MemoryMarshalEx.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Internal\ReusableLinkedArrayBufferWriter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Compression\BrotliDecompressor.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\CollectionFormatters.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\LazyFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializerOptions.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\GenericCollectionFormatters.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\InterfaceCollectionFormatters.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackReader.Unmanaged.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\UriFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\UnmanagedFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackReaderOptionalState.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\IMemoryPackable.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Compression\BrotliCompressor.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\KeyValuePairFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializer.NonGenerics.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\StringFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Internal\TypeHelpers.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackWriter.Unmanaged.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackReader.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializationException.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Compression\BitPackFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackWriterOptionalState.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Internal\ReusableReadOnlySequenceBuilder.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackFormatterProvider.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Internal\EnumerableExtensions.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackCode.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\NullableFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\ArrayFormatters.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Compression\BrotliFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Internal\MathEx.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\StringBuilderFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Unity\UnityFormatters.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\TimeZoneInfoFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackFormatterProvider.WellknownTypes.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackSerializer.Deserialize.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\CustomFormatterAttributes.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackReaderWriter.VarInt.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\VersionFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Attributes.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\BitArrayFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\TypeFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\DynamicUnionFormatter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\MemoryPackWriter.cs" />
+    <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Formatters\TupleFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.asmdef" />
-    <None Include="Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
+    <None Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.asmdef" />
+    <None Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -373,7 +373,7 @@
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\Scripts\WorldTreeFramework\ThirdParty\External\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Assets\Scripts\AOT\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>

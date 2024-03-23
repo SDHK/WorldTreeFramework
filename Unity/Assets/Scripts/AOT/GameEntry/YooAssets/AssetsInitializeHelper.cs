@@ -16,11 +16,6 @@ namespace WorldTree.AOT
 	public static partial class YooAssetsHelper
 	{
 		/// <summary>
-		/// 资源服务器地址
-		/// </summary>
-		private static string hostServerIP = "http://127.0.0.1:9999";
-
-		/// <summary>
 		/// 资源包初始化
 		/// </summary>
 		private static ResourcePackage PackageInitialize()
@@ -70,7 +65,8 @@ namespace WorldTree.AOT
 			string fallbackHostServer = GetHostServerURL();
 			HostPlayModeParameters initParameters = new HostPlayModeParameters();
 			initParameters.BuildinQueryServices = new BuildinQueryService();
-			initParameters.DecryptionServices = new FileStreamDecryption();
+
+			//initParameters.DecryptionServices = new FileStreamDecryption();
 			initParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
 			return package.InitializeAsync(initParameters);
 		}
@@ -88,7 +84,8 @@ namespace WorldTree.AOT
 			string fallbackHostServer = GetHostServerURL();
 			WebPlayModeParameters initParameters = new WebPlayModeParameters();
 			initParameters.BuildinQueryServices = new BuildinQueryService();
-			initParameters.DecryptionServices = new FileStreamDecryption();
+
+			//initParameters.DecryptionServices = new FileStreamDecryption();
 			initParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
 			return package.InitializeAsync(initParameters);
 		}
@@ -102,22 +99,22 @@ namespace WorldTree.AOT
 		{
 #if UNITY_EDITOR
 			if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.Android)
-				return $"{hostServerIP}/FTP/Android";
+				return $"{GameEntry.instance.hostServerIP}/FTP/Android";
 			else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.iOS)
-				return $"{hostServerIP}/FTP/IPhone";
+				return $"{GameEntry.instance.hostServerIP}/FTP/IPhone";
 			else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.WebGL)
-				return $"{hostServerIP}/FTP/WebGL";
+				return $"{GameEntry.instance.hostServerIP}/FTP/WebGL";
 			else
-				return $"{hostServerIP}/FTP/PC";
+				return $"{GameEntry.instance.hostServerIP}/FTP/PC";
 #else
         if (Application.platform == RuntimePlatform.Android)
-            return $"{hostServerIP}/FTP/Android";
+            return $"{GameEntry.instance.hostServerIP}/FTP/Android";
         else if (Application.platform == RuntimePlatform.IPhonePlayer)
-            return $"{hostServerIP}/FTP/IPhone";
+            return $"{GameEntry.instance.hostServerIP}/FTP/IPhone";
         else if (Application.platform == RuntimePlatform.WebGLPlayer)
-            return $"{hostServerIP}/FTP/WebGL";
+            return $"{GameEntry.instance.hostServerIP}/FTP/WebGL";
         else
-            return $"{hostServerIP}/FTP/PC";
+            return $"{GameEntry.instance.hostServerIP}/FTP/PC";
 #endif
 		}
 	}

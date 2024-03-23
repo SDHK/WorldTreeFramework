@@ -9,10 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71b02dfa7aa9d4545b3417a18477fbee, type: 3}
+  m_Script: {fileID: 0}
   m_Name: BuildinFileManifest
   m_EditorClassIdentifier: 
-  BuildinFiles:
-  - PackageName: DefaultPackage
-    FileName: assets_assetbundles_assets_ui_5b7a6ad55f9fee24c95c87c77c382c5b.bundle
-    FileCRC32: 52038958

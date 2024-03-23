@@ -9,6 +9,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace WorldTree
 {
@@ -37,7 +38,6 @@ namespace WorldTree
 		public WorldPulse<IDrawGizmosUpdateTimeRule> worldDrawGizmosUpdate;
 
 		#endregion
-
 
 		#region 全局事件法则
 
@@ -73,11 +73,11 @@ namespace WorldTree
 			m_Thread.isRun = false;
 			m_Thread.isOneFrame = true;
 		}
-
 	}
+
 	public static class WorldHeartUnityRule
 	{
-		class AwakeRule : AwakeRule<UnityWorldHeart, int>
+		private class AwakeRule : AwakeRule<UnityWorldHeart, int>
 		{
 			protected override void OnEvent(UnityWorldHeart self, int frameTime)
 			{
@@ -112,7 +112,7 @@ namespace WorldTree
 			}
 		}
 
-		class RemoveRule : RemoveRule<UnityWorldHeart>
+		private class RemoveRule : RemoveRule<UnityWorldHeart>
 		{
 			protected override void OnEvent(UnityWorldHeart self)
 			{
@@ -140,9 +140,7 @@ namespace WorldTree
 			}
 		}
 
-
-
-		class UpdateTimeRule : UpdateTimeRule<UnityWorldHeart>
+		private class UpdateTimeRule : UpdateTimeRule<UnityWorldHeart>
 		{
 			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
 			{
@@ -153,7 +151,7 @@ namespace WorldTree
 			}
 		}
 
-		class LateUpdateTimeRule : LateUpdateTimeRule<UnityWorldHeart>
+		private class LateUpdateTimeRule : LateUpdateTimeRule<UnityWorldHeart>
 		{
 			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
 			{
@@ -162,7 +160,7 @@ namespace WorldTree
 			}
 		}
 
-		class FixedUpdateTimeRule : FixedUpdateTimeRule<UnityWorldHeart>
+		private class FixedUpdateTimeRule : FixedUpdateTimeRule<UnityWorldHeart>
 		{
 			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
 			{
@@ -171,7 +169,7 @@ namespace WorldTree
 			}
 		}
 
-		class GuiUpdateTimeRule : GuiUpdateTimeRule<UnityWorldHeart>
+		private class GuiUpdateTimeRule : GuiUpdateTimeRule<UnityWorldHeart>
 		{
 			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
 			{
@@ -180,7 +178,7 @@ namespace WorldTree
 			}
 		}
 
-		class DrawGizmosUpdateTimeRule : DrawGizmosUpdateTimeRule<UnityWorldHeart>
+		private class DrawGizmosUpdateTimeRule : DrawGizmosUpdateTimeRule<UnityWorldHeart>
 		{
 			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
 			{

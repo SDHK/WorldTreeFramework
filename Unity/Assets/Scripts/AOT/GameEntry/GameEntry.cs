@@ -34,6 +34,10 @@ namespace WorldTree.AOT
 
 		public Text text;
 
+		//http://192.168.31.95:9999
+		//http://127.0.0.1:9999
+		public string hostServerIP = "http://127.0.0.1:9999";
+
 		/// <summary>
 		/// 游戏运行模式
 		/// </summary>
@@ -52,6 +56,8 @@ namespace WorldTree.AOT
 
 		private void Start()
 		{
+			Debug.Log($"启动模式:{playMode}");
+
 			//AppDomain.CurrentDomain.GetAssemblies().ToList().ForEach(a => Debug.Log($"本地程序集：{a.GetName().Name}"));
 
 			StartLoad();
@@ -67,8 +73,13 @@ namespace WorldTree.AOT
 		/// <summary>
 		/// 启动框架
 		/// </summary>
-		public void StartWorldTree()
+		public async void StartWorldTree()
 		{
+			await Task.CompletedTask;
+#if !UNITY_EDITOR
+			await HybridCLRHelper.LoadAOT();
+			await HybridCLRHelper.LoadHotUpdate();
+#endif
 			Debug.Log("启动框架!");
 
 			Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "WorldTree.CoreUnity");
