@@ -54,7 +54,7 @@ namespace WorldTree
 			protected override void OnEvent(InitialDomain self, TimeSpan timeSpan)
 			{
 				textStyle.normal.textColor = Color.green;
-				GUILayout.Label($"            !!{timeSpan.TotalMilliseconds}", textStyle);
+				GUILayout.Label($"            !!!!{timeSpan.TotalMilliseconds}", textStyle);
 			}
 		}
 

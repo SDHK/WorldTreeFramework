@@ -1,0 +1,13 @@
+ManifestFileVersion: 0
+CRC: 1154321422
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: assets_assetbundles_assets_ui.bundle
+      Dependencies: {}
+    Info_1:
+      Name: assets_assetbundles_dlls_aotdlls.bundle
+      Dependencies: {}
+    Info_2:
+      Name: assets_assetbundles_dlls_hotupdatedlls.bundle
+      Dependencies: {}
