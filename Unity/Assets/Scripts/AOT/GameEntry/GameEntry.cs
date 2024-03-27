@@ -32,7 +32,9 @@ namespace WorldTree.AOT
 		/// </summary>
 		public Slider slider;
 
-		public Text text;
+		public Text sliderText;
+
+		public Text LogText;
 
 		//http://192.168.31.95:9999
 		//http://127.0.0.1:9999
@@ -42,6 +44,12 @@ namespace WorldTree.AOT
 		/// 游戏运行模式
 		/// </summary>
 		public GamePlayMode playMode = GamePlayMode.OfflinePlayMode;
+
+		/// <summary>
+		/// 本地资源版本号
+		/// </summary>
+		[ReadOnly]
+		public string LocalVersion;
 
 		/// <summary>
 		/// 资源包版本号
@@ -58,16 +66,31 @@ namespace WorldTree.AOT
 		{
 			Debug.Log($"启动模式:{playMode}");
 
-			//AppDomain.CurrentDomain.GetAssemblies().ToList().ForEach(a => Debug.Log($"本地程序集：{a.GetName().Name}"));
-
 			StartLoad();
 		}
+
+		private void OnEnable()
+		{ Application.logMessageReceived += Log; }
+
+		private void OnDisable()
+		{ Application.logMessageReceived -= Log; }
+
+		public void Log(string logString, string stackTrace, LogType type)
+		{
+			string timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+			this.LogText.text += $"<color=#{GetLogColor(type)}>[{timeStamp}] Log: {logString} </color>\n";
+		}
+
+		private string GetLogColor(LogType type) => type switch
+		{
+			LogType.Error or LogType.Exception or LogType.Assert => "FF0000",
+			LogType.Warning => "FFFF00",
+			_ => "00ff00",
+		};
 
 		public void StartLoad()
 		{
 			YooAssetsHelper.InitializePackage();
-
-			//StartWorldTree();
 		}
 
 		/// <summary>
@@ -75,7 +98,7 @@ namespace WorldTree.AOT
 		/// </summary>
 		public async void StartWorldTree()
 		{
-			await Task.CompletedTask;
+			await System.Threading.Tasks.Task.CompletedTask;
 #if !UNITY_EDITOR
 			await HybridCLRHelper.LoadAOT();
 			await HybridCLRHelper.LoadHotUpdate();

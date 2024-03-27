@@ -28,13 +28,11 @@ namespace WorldTree.AOT
 			if (initialization.Status != EOperationStatus.Succeed)
 			{
 				Debug.Log($"初始化资源包失败 {initialization.Error}");
-
-				//初始化资源包失败事件
 			}
 			else
 			{
-				var version = initialization.PackageVersion;
-				Debug.Log($"Init资源包版本 : {version}");
+				GameEntry.instance.LocalVersion = initialization.PackageVersion;
+				Debug.Log($"本地资源包版本 : {GameEntry.instance.LocalVersion}");
 
 				if (GameEntry.instance.playMode is GamePlayMode.NetPlayMode or GamePlayMode.WebPlayMode)
 				{
@@ -60,14 +58,19 @@ namespace WorldTree.AOT
 			if (operation.Status != EOperationStatus.Succeed)
 			{
 				Debug.Log($"资源版本号更新失败 {operation.Error}");
-
-				//资源版本号更新失败事件
 			}
 			else
 			{
 				Debug.Log($"资源版本号更新成功 {operation.Error}");
 
 				GameEntry.instance.packageVersion = operation.PackageVersion;
+				if (GameEntry.instance.packageVersion == GameEntry.instance.LocalVersion)
+				{
+					Debug.Log("资源包版本号一致，无需更新！");
+					GameEntry.instance.StartWorldTree();
+					return;
+				}
+
 				UpdatePackageManifest();
 			}
 		}
@@ -85,8 +88,6 @@ namespace WorldTree.AOT
 			if (operation.Status != EOperationStatus.Succeed)
 			{
 				Debug.Log($"资源清单更新失败 {operation.Error}");
-
-				//资源清单更新失败事件
 			}
 			else
 			{
@@ -102,23 +103,18 @@ namespace WorldTree.AOT
 		public static async void CreatePackageDownloader()
 		{
 			await Task.Delay(500);
-			ResourcePackage package = YooAssets.GetPackage(YooAssetsHelper.packageName);
+			ResourcePackage package = YooAssets.GetPackage(packageName);
 			int downloadingMaxNum = 10;
 			int failedTryAgain = 3;
 			ResourceDownloaderOperation downloader = package.CreateResourceDownloader(downloadingMaxNum, failedTryAgain);
-			downloader.BeginDownload();
 
 			await downloader.Task;
 			if (downloader.TotalDownloadCount == 0)
 			{
 				Debug.Log("没有找到任何下载文件!");
-
-				//创建补丁包下载器失败事件
 			}
 			else
 			{
-				// 发现新更新文件后，挂起流程系统
-
 				// 注意：开发者需要在下载前检测磁盘空间不足
 				int totalDownloadCount = downloader.TotalDownloadCount;
 				long totalDownloadBytes = downloader.TotalDownloadBytes;
@@ -133,12 +129,12 @@ namespace WorldTree.AOT
 				{
 					float progressCount = (float)currentDownloadCount / totalDownloadCount;
 					float progressSize = (float)currentDownloadSizeBytes / totalDownloadSizeBytes;
-					GameEntry.instance.slider.value = progressCount;
-					GameEntry.instance.text.text = $"{currentDownloadCount}/{totalDownloadCount} : {progressCount * 100}%\n{currentDownloadSizeBytes}/{totalDownloadSizeBytes} : {progressSize * 100}%";
+					GameEntry.instance.slider.value = progressSize;
+					GameEntry.instance.sliderText.text = $"{currentDownloadCount}/{totalDownloadCount} : {progressCount * 100}%\n{currentDownloadSizeBytes}/{totalDownloadSizeBytes} : {progressSize * 100}%";
 				};
 
 				// 开始下载
-				//downloader.BeginDownload();
+				downloader.BeginDownload();
 
 				await downloader.Task;
 
