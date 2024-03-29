@@ -4,22 +4,22 @@
 * 日期： 2023/10/28 12:58:19
 
 * 描述： 世界树分支基类接口
-* 
+*
 * 分支是树的主体部分之一。
 * 除了根节点，其余节点必定属于某个分支，节点自身也会记录属于哪个分支。
-* 
+*
 
 */
+
 using System.Collections.Generic;
 
 namespace WorldTree
 {
-	
 	/// <summary>
 	/// 世界树分支接口
 	/// </summary>
 	/// <remarks>
-	/// <para>世界树节点的结构组织接口基类</para> 
+	/// <para>世界树节点的结构组织接口基类</para>
 	/// </remarks>
 	public interface IBranch : IUnitPoolEventItem, IEnumerable<INode>
 	{
@@ -73,6 +73,7 @@ namespace WorldTree
 		/// 尝试通过键值获取节点
 		/// </summary>
 		public bool TryGetNode(K key, out INode node);
+
 		/// <summary>
 		/// 通过键值获取节点
 		/// </summary>
@@ -82,6 +83,5 @@ namespace WorldTree
 		/// 尝试添加节点到字典
 		/// </summary>
 		public bool TryAddNode<N>(K key, N node) where N : class, INode;
-
 	}
 }

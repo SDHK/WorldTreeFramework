@@ -4,6 +4,7 @@ namespace WorldTree
 {
 	public class SphereManagerTest : Node
 		, ComponentOf<InitialDomain>
+		, AsIdNodeBranch
 		, AsRule<IAwakeRule>
 	{
 		public int G = 10;

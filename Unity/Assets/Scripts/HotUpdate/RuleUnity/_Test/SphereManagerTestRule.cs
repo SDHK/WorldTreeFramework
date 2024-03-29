@@ -4,8 +4,7 @@ namespace WorldTree
 {
 	public static class SphereManagerTestRule
 	{
-
-		class UpdateRule : UpdateRule<SphereManagerTest>
+		private class UpdateRule : UpdateRule<SphereManagerTest>
 		{
 			protected override void OnEvent(SphereManagerTest self)
 			{
@@ -15,7 +14,6 @@ namespace WorldTree
 				}
 			}
 		}
-
 
 		private static void Run(this SphereManagerTest self)
 		{
@@ -31,6 +29,7 @@ namespace WorldTree
 				self.AddIdNode(i, out SphereTest dropComponent);
 				dropComponent.manager = self;
 				dropComponent.gameObject = go;
+
 				//dropComponent.delay = 0.02f * i;
 				dropComponent.mass = UnityEngine.Random.Range(0.5f, 3f);
 

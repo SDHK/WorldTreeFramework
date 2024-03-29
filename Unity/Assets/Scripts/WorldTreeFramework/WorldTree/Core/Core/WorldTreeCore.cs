@@ -48,6 +48,9 @@ namespace WorldTree
 
 	//C#语法分析器,异常修复 ,异步，私有字段?
 
+	// Rule分类
+	//C# 代码生成RuleBase? 忽略生成接口标记
+
 	/// <summary>
 	/// 世界树核心接口
 	/// </summary>
@@ -250,6 +253,7 @@ namespace WorldTree
 		{
 			this.View?.Dispose();
 			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeView : null;
+
 			//核心独立，不入上级引用池，也不用广播
 			if (this.IsActive != this.m_ActiveEventMark)//激活变更
 			{

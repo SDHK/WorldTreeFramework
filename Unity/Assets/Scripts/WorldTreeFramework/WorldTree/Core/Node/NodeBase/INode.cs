@@ -4,7 +4,7 @@
 * 日期： 2023/3/11 16:39
 
 * 描述： 树节点最底层接口
-* 
+*
 * 抽出这个接口是为了用于扩展原生类型
 
 */
@@ -12,31 +12,44 @@
 namespace WorldTree
 {
 	/// <summary>
+	/// 节点: 可用分支
+	/// </summary>
+	/// <typeparam name="B"></typeparam>
+	public interface AsBranch<in B> where B : IBranch
+	{ }
+
+	/// <summary>
 	/// 节点：可用法则限制
 	/// </summary>
 	/// <typeparam name="R">法则类型</typeparam>
 	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
-	public interface AsRule<in R> where R : IRule { }
+	public interface AsRule<in R> where R : IRule
+	{ }
 
 	/// <summary>
 	/// 节点限制
 	/// </summary>
 	/// <typeparam name="P">父节点</typeparam>
 	/// <typeparam name="B">分支</typeparam>
-	public interface NodeOf<in P, in B> : INode where P : class, INode where B : class, IBranch { }
+	public interface NodeOf<in P, in B> : INode where P : class, INode where B : class, IBranch
+	{ }
 
 	/// <summary>
 	/// 世界树节点可视化接口
 	/// </summary>
-	public interface IWorldTreeNodeView: INode{}
+	public interface IWorldTreeNodeView : INode
+	{ }
 
 	/// <summary>
 	/// 世界树节点接口
 	/// </summary>
 	/// <remarks>
-	/// <para>世界树节点最底层接口</para> 
+	/// <para>世界树节点最底层接口</para>
 	/// </remarks>
 	public partial interface INode : IUnitPoolItem
+
+		, AsComponentBranch
+		, AsChildBranch
 
 		, AsRule<INewRule>
 		, AsRule<IGetRule>
@@ -55,7 +68,6 @@ namespace WorldTree
 		, AsRule<IBeforeRemoveRule>
 		, AsRule<IRemoveRule>
 	{
-
 		/// <summary>
 		/// 节点ID
 		/// </summary>
@@ -85,6 +97,7 @@ namespace WorldTree
 		public IWorldTreeNodeView View { get; set; }
 
 		#region Active
+
 		/// <summary>
 		/// 活跃开关
 		/// </summary>
@@ -128,12 +141,10 @@ namespace WorldTree
 		/// </summary>
 		public UnitDictionary<long, IBranch> m_Branchs { get; set; }
 
-
 		/// <summary>
 		/// 树分支
 		/// </summary>
 		public UnitDictionary<long, IBranch> Branchs { get; }
-
 
 		#endregion
 
@@ -145,22 +156,27 @@ namespace WorldTree
 		/// 节点加入树结构
 		/// </summary>
 		public INode AddSelfToTree<B, K>(K key, INode parent) where B : class, IBranch<K>;
+
 		/// <summary>
 		/// 节点加入树结构
 		/// </summary>
 		public INode AddSelfToTree<B, K, T1>(K key, INode parent, T1 arg1) where B : class, IBranch<K>;
+
 		/// <summary>
 		/// 节点加入树结构
 		/// </summary>
 		public INode AddSelfToTree<B, K, T1, T2>(K key, INode parent, T1 arg1, T2 arg2) where B : class, IBranch<K>;
+
 		/// <summary>
 		/// 节点加入树结构
 		/// </summary>
 		public INode AddSelfToTree<B, K, T1, T2, T3>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3) where B : class, IBranch<K>;
+
 		/// <summary>
 		/// 节点加入树结构
 		/// </summary>
 		public INode AddSelfToTree<B, K, T1, T2, T3, T4>(K key, INode parent, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where B : class, IBranch<K>;
+
 		/// <summary>
 		/// 节点加入树结构
 		/// </summary>
@@ -200,6 +216,7 @@ namespace WorldTree
 		/// 树结构尝试裁剪节点
 		/// </summary>
 		public bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch;
+
 		/// <summary>
 		/// 树结构尝试裁剪节点
 		/// </summary>
@@ -209,11 +226,11 @@ namespace WorldTree
 		/// 树结构裁剪节点
 		/// </summary>
 		public INode CutNodeById<B>(long id) where B : class, IBranch;
+
 		/// <summary>
 		/// 树结构裁剪节点
 		/// </summary>
 		public INode CutNode<B, K>(K key) where B : class, IBranch<K>;
-
 
 		/// <summary>
 		/// 从树上将自己裁剪下来
@@ -269,6 +286,7 @@ namespace WorldTree
 		/// 节点Id包含判断
 		/// </summary>
 		public bool ContainsId<B>(long id) where B : class, IBranch;
+
 		/// <summary>
 		/// 节点键值包含判断
 		/// </summary>
@@ -288,6 +306,7 @@ namespace WorldTree
 		/// 树结构获取节点
 		/// </summary>
 		public INode GetNodeById<B>(long id) where B : class, IBranch;
+
 		/// <summary>
 		/// 树结构获取节点
 		/// </summary>
@@ -296,6 +315,5 @@ namespace WorldTree
 		#endregion
 
 		#endregion
-
 	}
 }

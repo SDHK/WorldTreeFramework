@@ -4,28 +4,32 @@
 * 日期： 2023/10/24 22:00
 
 * 描述： 组件分支
-* 
+*
 * 主要分支之一
 * 设定根据类型为键挂载，
 * 所以在同一节点下，同一类型的组件只能有一个
-* 
+*
 
 */
 
 namespace WorldTree
 {
+	public interface AsComponentBranch : AsBranch<ComponentBranch>
+	{ }
+
 	/// <summary>
 	/// 组件节点约束
 	/// </summary>
 	/// <typeparam name="P">父节点类型</typeparam>
 	/// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
-	public interface ComponentOf<in P> : NodeOf<P, ComponentBranch> where P : class, INode { }
+	public interface ComponentOf<in P> : NodeOf<P, ComponentBranch> where P : class, INode
+	{ }
 
 	/// <summary>
 	/// 组件分支
 	/// </summary>
-	public class ComponentBranch : Branch<long> { }
-
+	public class ComponentBranch : Branch<long>
+	{ }
 
 	public static class NodeComponentBranchRule
 	{
@@ -138,7 +142,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T>(this N self, out T Component, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsComponentBranch
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule>
 		=> self.AddNode<N, ComponentBranch, long, T>(TypeInfo<T>.TypeCode, out Component, isPool);
 
@@ -146,7 +150,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1>(this N self, out T Component, T1 arg1, bool isPool = true)
-		  where N : class, INode
+		  where N : class, INode, AsComponentBranch
 		  where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1>(TypeInfo<T>.TypeCode, out Component, arg1, isPool);
 
@@ -154,7 +158,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2>(this N self, out T Component, T1 arg1, T2 arg2, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsComponentBranch
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, isPool);
 
@@ -162,7 +166,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2, T3>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsComponentBranch
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2, T3>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, isPool);
 
@@ -170,7 +174,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2, T3, T4>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsComponentBranch
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2, T3, T4>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3, T4>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, arg4, isPool);
 
@@ -178,7 +182,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2, T3, T4, T5>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsComponentBranch
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3, T4, T5>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, arg4, arg5, isPool);
 
@@ -186,5 +190,4 @@ namespace WorldTree
 
 		#endregion
 	}
-
 }

@@ -4,11 +4,11 @@
 * 日期： 2023/11/11 04:04:48
 
 * 描述： 子节点分支
-* 
+*
 * 主要分支之一
-* 
+*
 * 设定根据实例自身id为键的分支。
-* 
+*
 
 */
 
@@ -17,13 +17,17 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
+	public interface AsChildBranch : AsBranch<ChildBranch>
+	{ }
+
 	/// <summary>
 	/// 子节点约束
 	/// </summary>
 	/// <typeparam name="T">父节点类型</typeparam>
 	/// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
 
-	public interface ChildOf<in P> : NodeOf<P, ChildBranch> where P : class, INode { }
+	public interface ChildOf<in P> : NodeOf<P, ChildBranch> where P : class, INode
+	{ }
 
 	/// <summary>
 	/// 子分支
@@ -45,15 +49,17 @@ namespace WorldTree
 
 		public bool ContainsId(long id) => Nodes.ContainsKey(id);
 
-
 		public bool TryAddNode<N>(long key, N node) where N : class, INode => Nodes.TryAdd(key, node);
 
-		public bool TryGetNodeKey(long nodeId, out long key) { key = nodeId; return true; }
+		public bool TryGetNodeKey(long nodeId, out long key)
+		{ key = nodeId; return true; }
 
 		public bool TryGetNode(long key, out INode node) => this.Nodes.TryGetValue(key, out node);
+
 		public bool TryGetNodeById(long id, out INode node) => this.Nodes.TryGetValue(id, out node);
 
 		public INode GetNode(long key) => this.Nodes.TryGetValue(key, out INode node) ? node : null;
+
 		public INode GetNodeById(long id) => this.Nodes.TryGetValue(id, out INode node) ? node : null;
 
 		public void RemoveNode(long nodeId) => Nodes.Remove(nodeId);
@@ -63,8 +69,8 @@ namespace WorldTree
 			Nodes.Clear();
 		}
 
-
 		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
+
 		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
 
 		public override void OnRecycle()
@@ -152,6 +158,7 @@ namespace WorldTree
 			node = self.GetOrNewNode(type, isPool);
 			return node.AddSelfToTree<ChildBranch, long>(node.Id, self);
 		}
+
 		/// <summary>
 		/// 添加子节点
 		/// </summary>
@@ -160,6 +167,7 @@ namespace WorldTree
 			node = self.GetOrNewNode(type, isPool);
 			return node.AddSelfToTree<ChildBranch, long, T1>(node.Id, self, arg1);
 		}
+
 		/// <summary>
 		/// 添加子节点
 		/// </summary>
@@ -168,6 +176,7 @@ namespace WorldTree
 			node = self.GetOrNewNode(type, isPool);
 			return node.AddSelfToTree<ChildBranch, long, T1, T2>(node.Id, self, arg1, arg2);
 		}
+
 		/// <summary>
 		/// 添加子节点
 		/// </summary>
@@ -176,6 +185,7 @@ namespace WorldTree
 			node = self.GetOrNewNode(type, isPool);
 			return node.AddSelfToTree<ChildBranch, long, T1, T2, T3>(node.Id, self, arg1, arg2, arg3);
 		}
+
 		/// <summary>
 		/// 添加子节点
 		/// </summary>
@@ -184,6 +194,7 @@ namespace WorldTree
 			node = self.GetOrNewNode(type, isPool);
 			return node.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4>(node.Id, self, arg1, arg2, arg3, arg4);
 		}
+
 		/// <summary>
 		/// 添加子节点
 		/// </summary>
@@ -193,8 +204,6 @@ namespace WorldTree
 			return node.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4, T5>(node.Id, self, arg1, arg2, arg3, arg4, arg5);
 		}
 
-
-
 		#endregion
 
 		#region 泛型
@@ -203,7 +212,7 @@ namespace WorldTree
 		/// 添加子节点
 		/// </summary>
 		public static T AddChild<N, T>(this N self, out T node, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsChildBranch
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule>
 		{
 			node = self.GetOrNewNode<T>(isPool);
@@ -214,7 +223,7 @@ namespace WorldTree
 		/// 添加子节点
 		/// </summary>
 		public static T AddChild<N, T, T1>(this N self, out T node, T1 arg1, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsChildBranch
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1>>
 		{
 			node = self.GetOrNewNode<T>(isPool);
@@ -225,7 +234,7 @@ namespace WorldTree
 		/// 添加子节点
 		/// </summary>
 		public static T AddChild<N, T, T1, T2>(this N self, out T node, T1 arg1, T2 arg2, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsChildBranch
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2>>
 		{
 			node = self.GetOrNewNode<T>(isPool);
@@ -236,7 +245,7 @@ namespace WorldTree
 		/// 添加子节点
 		/// </summary>
 		public static T AddChild<N, T, T1, T2, T3>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsChildBranch
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2, T3>>
 		{
 			node = self.GetOrNewNode<T>(isPool);
@@ -247,7 +256,7 @@ namespace WorldTree
 		/// 添加子节点
 		/// </summary>
 		public static T AddChild<N, T, T1, T2, T3, T4>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsChildBranch
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2, T3, T4>>
 		{
 			node = self.GetOrNewNode<T>(isPool);
@@ -258,15 +267,15 @@ namespace WorldTree
 		/// 添加子节点
 		/// </summary>
 		public static T AddChild<N, T, T1, T2, T3, T4, T5>(this N self, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
-			where N : class, INode
+			where N : class, INode, AsChildBranch
 			where T : class, INode, NodeOf<N, ChildBranch>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
 		{
 			node = self.GetOrNewNode<T>(isPool);
 			return (T)node.AddSelfToTree<ChildBranch, long, T1, T2, T3, T4, T5>(node.Id, self, arg1, arg2, arg3, arg4, arg5);
 		}
+
 		#endregion
 
 		#endregion
 	}
-
 }

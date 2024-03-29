@@ -36,13 +36,17 @@ namespace WorldTree
 			Core.LogWarning = Debug.LogWarning;
 			Core.LogError = Debug.LogError;
 
-			Core.View = treeView;//可视化节点赋值给主框架
+			//可视化节点赋值给主框架
+			Core.View = treeView;
 
-			Core.Awake();//主框架初始化
+			//主框架初始化
+			Core.Awake();
 
-			Core.Root.AddComponent(out UnityWorldHeart _, 0).Run();//主框架添加Unity世界心跳，间隔毫秒为0
+			//主框架添加Unity世界心跳，间隔毫秒为0
+			Core.Root.AddComponent(out UnityWorldHeart _, 0).Run();
 
-			Core.Root.AddComponent(out InitialDomain _);//主框架添加初始化域
+			//主框架添加初始化域
+			Core.Root.AddComponent(out InitialDomain _);
 		}
 
 		private void Update()

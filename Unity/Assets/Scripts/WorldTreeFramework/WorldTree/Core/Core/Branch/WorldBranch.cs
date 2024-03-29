@@ -4,27 +4,31 @@
 * 日期： 2024/01/02 03:08:51
 
 * 描述： 世界分支
-* 
+*
 * 框架核心分支
 * 根据类型为键挂载，只能挂在核心节点上
-* 
-* 
+*
+*
 
 */
 
 namespace WorldTree
 {
+	public interface AsWorldBranch : AsBranch<WorldBranch>
+	{ }
+
 	/// <summary>
 	/// 世界树核心约束
 	/// </summary>
 	/// <typeparam name="P"></typeparam>
-	public interface WorldOf<in P> : NodeOf<P, WorldBranch> where P : class, INode { }
+	public interface WorldOf<in P> : NodeOf<P, WorldBranch> where P : class, INode
+	{ }
 
 	/// <summary>
 	/// 世界分支
 	/// </summary>
-	public class WorldBranch : Branch<long> { }
-
+	public class WorldBranch : Branch<long>
+	{ }
 
 	public static class NodeWorldBranchRule
 	{
@@ -67,7 +71,7 @@ namespace WorldTree
 		/// 添加世界
 		/// </summary>
 		public static T AddWorld<N, T>(this N self, out T core)
-			where N : class, INode
+			where N : class, INode, AsBranch<WorldBranch>
 			where T : class, INode, NodeOf<N, WorldBranch>, AsRule<IAwakeRule>
 		=> self.AddNode<N, WorldBranch, long, T>(TypeInfo<T>.TypeCode, out core, isPool: false);
 
@@ -75,15 +79,10 @@ namespace WorldTree
 		/// 添加世界
 		/// </summary>
 		public static T AddWorld<N, T, T1>(this N self, out T core, T1 arg1)
-		  where N : class, INode
+		  where N : class, INode, AsBranch<WorldBranch>
 		  where T : class, INode, NodeOf<N, WorldBranch>, AsRule<IAwakeRule<T1>>
-		=> self.AddNode<N, WorldBranch, long, T, T1>(TypeInfo<T>.TypeCode, out core, arg1, isPool:false);
-
+		=> self.AddNode<N, WorldBranch, long, T, T1>(TypeInfo<T>.TypeCode, out core, arg1, isPool: false);
 
 		#endregion
-
 	}
-
-
-
 }
