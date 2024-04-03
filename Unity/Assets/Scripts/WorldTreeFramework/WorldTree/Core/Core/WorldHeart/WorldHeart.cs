@@ -12,7 +12,6 @@ using System.Threading;
 
 namespace WorldTree
 {
-
 	/// <summary>
 	/// 世界之心：C#多线程
 	/// </summary>
@@ -20,7 +19,6 @@ namespace WorldTree
 		, ComponentOf<WorldTreeRoot>
 		, AsRule<IAwakeRule<int>>
 	{
-
 		/// <summary>
 		/// 线程退出标记
 		/// </summary>
@@ -38,7 +36,6 @@ namespace WorldTree
 		public WorldPulse<IUpdateTimeRule> worldUpdate;
 
 		#endregion
-
 
 		#region 全局事件法则
 
@@ -90,9 +87,10 @@ namespace WorldTree
 			}
 		}
 	}
+
 	public static class WorldHeartRule
 	{
-		class AwakeRule : AwakeRule<WorldHeart, int>
+		private class AwakeRule : AwakeRule<WorldHeart, int>
 		{
 			protected override void OnEvent(WorldHeart self, int frameTime)
 			{
@@ -110,7 +108,8 @@ namespace WorldTree
 				self.m_Thread.Start();
 			}
 		}
-		class RemoveRule : RemoveRule<WorldHeart>
+
+		private class RemoveRule : RemoveRule<WorldHeart>
 		{
 			protected override void OnEvent(WorldHeart self)
 			{
@@ -126,7 +125,7 @@ namespace WorldTree
 			}
 		}
 
-		class UpdateTimeRule : UpdateTimeRule<WorldHeart>
+		private class UpdateTimeRule : UpdateTimeRule<WorldHeart>
 		{
 			protected override void OnEvent(WorldHeart self, TimeSpan deltaTime)
 			{

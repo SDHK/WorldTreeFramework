@@ -19,6 +19,11 @@ namespace WorldTree
 {
 	//计划
 
+	//C#语法分析器,异常修复 ,异步，私有字段?
+
+	// Rule分类
+	//C# 代码生成RuleBase? 忽略生成接口标记
+
 	//藤蔓网状结构
 
 	//需要定时器TimeUpdate,特化的双方法法则？
@@ -42,14 +47,7 @@ namespace WorldTree
 
 	//代码表格
 
-	//程序集加载
-
 	//YooAsset管理器
-
-	//C#语法分析器,异常修复 ,异步，私有字段?
-
-	// Rule分类
-	//C# 代码生成RuleBase? 忽略生成接口标记
 
 	/// <summary>
 	/// 世界树核心接口

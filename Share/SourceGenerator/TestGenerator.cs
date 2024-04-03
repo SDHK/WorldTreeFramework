@@ -8,7 +8,6 @@ namespace WorldTree.SourceGenerator
 	[Generator]
 	public class TestGenerator : ISourceGenerator
 	{
-
 		public void Initialize(GeneratorInitializationContext context)
 		{
 			//在编译过程开始时调用，用于初始化源生成器。
@@ -36,21 +35,19 @@ namespace WorldTree.SourceGenerator
 							.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword))
 							.AddModifiers(SyntaxFactory.Token(SyntaxKind.PartialKeyword));
 
-
-
 						//获取类名当作泛型参数
 						TypeSyntax nodeType = SyntaxFactory.ParseTypeName(receiver.ClassDeclarations.Identifier.ValueText);
+
 						//继承基类
 						ClassDeclarationSyntax ruleBaseClass = SyntaxFactory.ClassDeclaration("AddRule");
+
 						//泛型组装
 						GenericNameSyntax genericNameSyntax = SyntaxFactory.GenericName(ruleBaseClass.Identifier)
 						.WithTypeArgumentList(SyntaxFactory.TypeArgumentList(SyntaxFactory.SingletonSeparatedList(nodeType)));
 
-
 						ClassDeclarationSyntax ruleClass = SyntaxFactory.ClassDeclaration("AddRule_")
 							.AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword))
 							.AddBaseListTypes(SyntaxFactory.SimpleBaseType(genericNameSyntax));
-
 
 						//方法参数
 						ParameterSyntax parameterSyntax = SyntaxFactory.Parameter(SyntaxFactory.Identifier("self")).WithType(nodeType);
@@ -82,7 +79,6 @@ namespace WorldTree.SourceGenerator
 							//方法体组装到方法
 							.WithBody(block);
 
-
 						ruleClass = ruleClass.AddMembers(methodDeclarationSyntax);//方法组装到类
 						classDeclarationSyntax = classDeclarationSyntax.AddMembers(ruleClass);//类中类组装
 						namespaceDeclarationSyntax = namespaceDeclarationSyntax.AddMembers(classDeclarationSyntax);//静态类组装到命名空间
@@ -102,26 +98,24 @@ namespace WorldTree.SourceGenerator
 			}
 		}
 
-
-	}
-
-	class SyntaxContextReceiver : ISyntaxReceiver
-	{
-		internal static ISyntaxReceiver Create() => new SyntaxContextReceiver();
-
-		public ClassDeclarationSyntax? ClassDeclarations;
-
-		public void OnVisitSyntaxNode(SyntaxNode node)
+		private class SyntaxContextReceiver : ISyntaxReceiver
 		{
-			if (node is not ClassDeclarationSyntax classDeclarationSyntax) return;
+			internal static ISyntaxReceiver Create() => new SyntaxContextReceiver();
 
-			SeparatedSyntaxList<BaseTypeSyntax> baseTypes = classDeclarationSyntax.BaseList?.Types ?? default;
-			foreach (var baseType in baseTypes)
+			public ClassDeclarationSyntax? ClassDeclarations;
+
+			public void OnVisitSyntaxNode(SyntaxNode node)
 			{
-				if (baseType.Type is IdentifierNameSyntax identifierNameSyntax && identifierNameSyntax.Identifier.ValueText == "Node")
+				if (node is not ClassDeclarationSyntax classDeclarationSyntax) return;
+
+				SeparatedSyntaxList<BaseTypeSyntax> baseTypes = classDeclarationSyntax.BaseList?.Types ?? default;
+				foreach (var baseType in baseTypes)
 				{
-					ClassDeclarations = classDeclarationSyntax;
-					return;
+					if (baseType.Type is IdentifierNameSyntax identifierNameSyntax && identifierNameSyntax.Identifier.ValueText == "Node")
+					{
+						ClassDeclarations = classDeclarationSyntax;
+						return;
+					}
 				}
 			}
 		}

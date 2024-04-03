@@ -26,7 +26,6 @@ namespace WorldTree
 		public INode Domain { get; set; }//接口标记域节点
 		public INode Parent { get; set; }
 
-
 		/// <summary>
 		/// 调试可视化节点
 		/// </summary>
@@ -50,7 +49,7 @@ namespace WorldTree
 
 		#endregion
 
-		#region Branch 
+		#region Branch
 
 		public long BranchType { get; set; }
 
@@ -190,6 +189,7 @@ namespace WorldTree
 				foreach (var item in this.m_Branchs) branchs.Push(item.Value);
 				while (branchs.Count != 0) RemoveAllNode(branchs.Pop().Type);
 			}
+
 			//假如在分支移除过程中，节点又添加了新的分支。那么就是错误的，新增分支将无法回收。
 			if (m_Branchs.Count != 0)
 			{
@@ -214,6 +214,7 @@ namespace WorldTree
 						foreach (var item in branch) nodes.Push(item);
 						while (nodes.Count != 0) nodes.Pop().Dispose();
 					}
+
 					//假如在节点移除过程中，节点又添加了新的节点。那么就是错误的，新增节点将无法回收，父节点的分支键值将被占用。
 					if (branch.Count != 0)
 					{
@@ -237,6 +238,7 @@ namespace WorldTree
 		{
 			//是否已经回收
 			if (this.IsRecycle || this.IsDisposed) return;
+
 			//节点回收前序遍历处理,节点回收后续遍历处理
 			this.TraversalPrePostOrder(current => current.OnBeforeDispose(), current => current.OnDispose());
 		}
@@ -266,7 +268,8 @@ namespace WorldTree
 				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);
 			}
 			this.Core.ReferencedPoolManager.Remove(this);//引用池移除
-														 //this.DisposeDomain(); //清除域节点
+
+			//this.DisposeDomain(); //清除域节点
 			this.Parent = null;//清除父节点
 			this.PoolRecycle(this);//回收到池
 		}
@@ -327,9 +330,11 @@ namespace WorldTree
 		#region 裁剪
 
 		public virtual bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.GetBranch<B>()?.GetNodeById(id).CutSelf()) != null;
+
 		public virtual bool TryCutNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.GetBranch<B>()?.GetNode(key).CutSelf()) != null;
 
 		public virtual INode CutNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(id).CutSelf();
+
 		public virtual INode CutNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key).CutSelf();
 
 		public virtual INode CutSelf()
@@ -339,6 +344,7 @@ namespace WorldTree
 			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			return this;
 		}
+
 		public virtual void OnCutSelf()
 		{
 			this.View?.Dispose();
@@ -364,7 +370,7 @@ namespace WorldTree
 
 		#endregion
 
-		#region 获取	
+		#region 获取
 
 		public virtual bool ContainsId<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.ContainsId(id) ?? false;
 
@@ -373,12 +379,13 @@ namespace WorldTree
 		public virtual bool TryGetNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.TryGetBranch(out B branch) && branch.TryGetNodeById(id, out node) ? node : null) != null;
 
 		public virtual bool TryGetNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.TryGetBranch(out B branch) && branch.TryGetNode(key, out node) ? node : null) != null;
+
 		public virtual INode GetNodeById<B>(long Id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(Id);
+
 		public virtual INode GetNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key);
 
 		#endregion
 
 		#endregion
-
 	}
 }

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace HookTest
 {
-	class Program
+	internal class Program
 	{
 		private const int WH_KEYBOARD_LL = 13;
 		private const int WM_KEYDOWN = 0x0100;
@@ -12,7 +12,8 @@ namespace HookTest
 		private static Form1 form1 = new Form1();
 
 		public static int a = 0;
-		static void Main(string[] args)
+
+		private static void Main(string[] args)
 		{
 			_hookID = SetHook(_proc);
 
@@ -51,7 +52,7 @@ namespace HookTest
 		{
 			// 在这里添加修改配置文件的代码逻辑
 			string ModelPath = @"E:\Project\Git\HeadMaster\DotNet\Model\DotNet.Model.csproj";
-			string HotfixPath = @"E:\Project\Git\HeadMaster\DotNet\Model\DotNet.Model.csproj";
+			string HotfixPath = @"E:\Project\Git\HeadMaster\DotNet\Hotfix\DotNet.Hotfix.csproj";
 
 			string ModelString = File.ReadAllText(ModelPath);
 			string HotfixString = File.ReadAllText(HotfixPath);
@@ -85,8 +86,6 @@ namespace HookTest
 				File.WriteAllText(HotfixPath, HotfixString);
 			});
 		}
-
-
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
