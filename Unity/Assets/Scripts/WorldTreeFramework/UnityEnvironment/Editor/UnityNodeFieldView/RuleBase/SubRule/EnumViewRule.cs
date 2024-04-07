@@ -9,7 +9,7 @@ namespace WorldTree
 	{
 		class EnumViewRule : GenericsViewRule<Enum>
 		{
-			protected override void OnEvent(UnityNodeFieldView<Enum> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<Enum> self, INode node, FieldInfo arg1)
 			{
 				if (arg1.FieldType.IsDefined(typeof(FlagsAttribute), false))
 				{

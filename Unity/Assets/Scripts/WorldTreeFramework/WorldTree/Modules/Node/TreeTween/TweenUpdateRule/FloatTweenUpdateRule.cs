@@ -16,7 +16,7 @@ namespace WorldTree
     {
         class FloatTweenUpdateRule : TweenUpdateRule<TreeTween<float>>
         {
-            protected override void OnEvent(TreeTween<float> self, TimeSpan deltaTime)
+            protected override void Execute(TreeTween<float> self, TimeSpan deltaTime)
             {
                 if (self.isRun)
                 {

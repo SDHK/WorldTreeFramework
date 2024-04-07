@@ -13,14 +13,14 @@ namespace WorldTree
     {
         class FloatStringChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, string>
         {
-            protected override void OnEvent(TreeValueBase<float> self, string value)
+            protected override void Execute(TreeValueBase<float> self, string value)
             {
                 self.Value = string.IsNullOrEmpty(value) ? 0f : float.Parse(value);
             }
         }
         class FloatIntChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, int>
         {
-            protected override void OnEvent(TreeValueBase<float> self, int value)
+            protected override void Execute(TreeValueBase<float> self, int value)
             {
                 self.Value = value;
             }
@@ -28,21 +28,21 @@ namespace WorldTree
 
         class FloatShortChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, short>
         {
-            protected override void OnEvent(TreeValueBase<float> self, short value)
+            protected override void Execute(TreeValueBase<float> self, short value)
             {
                 self.Value = value;
             }
         }
         class FloatLongChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, long>
         {
-            protected override void OnEvent(TreeValueBase<float> self, long value)
+            protected override void Execute(TreeValueBase<float> self, long value)
             {
                 self.Value = value;
             }
         }
         class FloatDoubleChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, double>
         {
-            protected override void OnEvent(TreeValueBase<float> self, double value)
+            protected override void Execute(TreeValueBase<float> self, double value)
             {
                 self.Value = (float)value;
             }

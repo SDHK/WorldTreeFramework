@@ -28,7 +28,7 @@ namespace WorldTree
     {
         class AwakeRule : AwakeRule<StaticListenerRuleActuator, RuleGroup>
         {
-            protected override void OnEvent(StaticListenerRuleActuator self, RuleGroup arg1)
+            protected override void Execute(StaticListenerRuleActuator self, RuleGroup arg1)
             {
                 self.ruleGroup = arg1;
             }

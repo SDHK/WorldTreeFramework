@@ -68,7 +68,7 @@ namespace WorldTree
 		class AwakeRuleGeneric<R> : AwakeRule<WorldPulse<R>, int>
 			where R : ISendRuleBase<TimeSpan>
 		{
-			protected override void OnEvent(WorldPulse<R> self, int FrameTime)
+			protected override void Execute(WorldPulse<R> self, int FrameTime)
 			{
 				self.frameTime = FrameTime;
 				self.Core.RuleManager.TryGetRuleList(self.Parent.Type, out self.m_RuleList);
@@ -78,7 +78,7 @@ namespace WorldTree
 		class RemoveRuleGeneric<R> : RemoveRule<WorldPulse<R>>
 			where R : ISendRuleBase<TimeSpan>
 		{
-			protected override void OnEvent(WorldPulse<R> self)
+			protected override void Execute(WorldPulse<R> self)
 			{
 				self.frameTime = 0;
 				self.m_Time = TimeSpan.Zero;

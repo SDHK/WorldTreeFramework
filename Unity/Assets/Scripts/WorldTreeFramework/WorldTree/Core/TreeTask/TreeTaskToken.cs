@@ -97,7 +97,7 @@ namespace WorldTree
     {
         class AddRule : AddRule<TreeTaskToken>
         {
-            protected override void OnEvent(TreeTaskToken self)
+            protected override void Execute(TreeTaskToken self)
             {
                 self.taskState = TaskState.Running;
                 self.AddChild(out self.tokenEvent);
@@ -106,7 +106,7 @@ namespace WorldTree
 
         class RemoveRule : RemoveRule<TreeTaskToken>
         {
-            protected override void OnEvent(TreeTaskToken self)
+            protected override void Execute(TreeTaskToken self)
             {
                 self.stopTask = null;
                 self.tokenEvent = null;

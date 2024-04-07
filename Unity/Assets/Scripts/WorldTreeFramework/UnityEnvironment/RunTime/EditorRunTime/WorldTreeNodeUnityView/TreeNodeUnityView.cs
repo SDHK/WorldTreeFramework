@@ -28,7 +28,7 @@ namespace WorldTree
 	{
 		class AwakeRule : AwakeRule<TreeNodeUnityView, INode, INode>
 		{
-			protected override void OnEvent(TreeNodeUnityView self, INode node, INode parent)
+			protected override void Execute(TreeNodeUnityView self, INode node, INode parent)
 			{
 				self.node = node;
 				self.gameObject ??= new GameObject(node.GetType().Name);
@@ -58,7 +58,7 @@ namespace WorldTree
 		}
 		class RemoveRule : RemoveRule<TreeNodeUnityView>
 		{
-			protected override void OnEvent(TreeNodeUnityView self)
+			protected override void Execute(TreeNodeUnityView self)
 			{
 				self.node = null;
 

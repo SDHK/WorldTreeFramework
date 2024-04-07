@@ -7,7 +7,7 @@ namespace WorldTree
 	{
 		class LongViewRule : GenericsViewRule<long>
 		{
-			protected override void OnEvent(UnityNodeFieldView<long> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<long> self, INode node, FieldInfo arg1)
 			{
 				arg1.SetValue(node, EditorGUILayout.LongField(arg1.Name, (long)arg1.GetValue(node)));
 			}

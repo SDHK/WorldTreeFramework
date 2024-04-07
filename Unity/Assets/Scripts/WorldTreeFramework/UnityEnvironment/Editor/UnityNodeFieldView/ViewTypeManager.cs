@@ -28,7 +28,7 @@ namespace WorldTree
 	{
 		class AddRule : AddRule<ViewTypeManager>
 		{
-			protected override void OnEvent(ViewTypeManager self)
+			protected override void Execute(ViewTypeManager self)
 			{
 				//收集所有实现了INodeFieldViewRule的法则的节点 
 				if (self.Core.RuleManager.TryGetRuleGroup(typeof(INodeFieldViewRule).TypeToCore(), out RuleGroup ruleGroup))

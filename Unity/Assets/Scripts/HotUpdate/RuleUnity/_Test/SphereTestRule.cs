@@ -7,7 +7,7 @@ namespace WorldTree
 	{
 		class UpdateTimeRule : UpdateTimeRule<SphereTest>
 		{
-			protected override void OnEvent(SphereTest self, TimeSpan deltaTime)
+			protected override void Execute(SphereTest self, TimeSpan deltaTime)
 			{
 				if (self.delay > 0)
 				{

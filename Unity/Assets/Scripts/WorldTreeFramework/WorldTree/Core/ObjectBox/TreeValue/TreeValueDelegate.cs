@@ -57,7 +57,7 @@ namespace WorldTree
         class AwakeRuleGenerics<T> : AwakeRule<TreeValueDelegate<T>, object, Func<object, T>, Action<object, T>>
             where T : struct, IEquatable<T>
         {
-            protected override void OnEvent(TreeValueDelegate<T> self, object arg1, Func<object, T> arg2, Action<object, T> arg3)
+            protected override void Execute(TreeValueDelegate<T> self, object arg1, Func<object, T> arg2, Action<object, T> arg3)
             {
                 self.m_BindObject = arg1;
                 self.m_Get = arg2;

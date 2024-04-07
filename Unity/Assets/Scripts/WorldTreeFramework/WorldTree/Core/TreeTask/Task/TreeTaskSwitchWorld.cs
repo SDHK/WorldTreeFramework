@@ -65,7 +65,7 @@ namespace WorldTree
 	{
 		class AwakeRule : AwakeRule<TreeTaskSwitchWorld, WorldContext>
 		{
-			protected override void OnEvent(TreeTaskSwitchWorld self, WorldContext worldContext)
+			protected override void Execute(TreeTaskSwitchWorld self, WorldContext worldContext)
 			{
 				self.worldContext = worldContext;
 			}
@@ -73,7 +73,7 @@ namespace WorldTree
 
 		class RemoveRule : RemoveRule<TreeTaskSwitchWorld>
 		{
-			protected override void OnEvent(TreeTaskSwitchWorld self)
+			protected override void Execute(TreeTaskSwitchWorld self)
 			{
 				self.worldContext = null;
 			}

@@ -11,7 +11,7 @@ namespace WorldTree
 	{
 		class DateTimeViewRule : GenericsViewRule<DateTime>
 		{
-			protected override void OnEvent(UnityNodeFieldView<DateTime> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<DateTime> self, INode node, FieldInfo arg1)
 			{
 				var dateString = arg1.GetValue(node).ToString();
 				var newDateString = EditorGUILayout.TextField(arg1.Name, dateString);

@@ -66,8 +66,8 @@ namespace WorldTree
     where N : class, INode, AsRule<R>
     where R : ISendRuleAsyncBase
     {
-        public virtual TreeTask Invoke(INode self) => OnEvent(self as N);
-        protected abstract TreeTask OnEvent(N self);
+        public virtual TreeTask Invoke(INode self) => Execute(self as N);
+        protected abstract TreeTask Execute(N self);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -76,8 +76,8 @@ namespace WorldTree
     where N : class, INode, AsRule<R>
     where R : ISendRuleAsyncBase<T1>
     {
-        public virtual TreeTask Invoke(INode self, T1 arg1) => OnEvent(self as N, arg1);
-        protected abstract TreeTask OnEvent(N self, T1 arg1);
+        public virtual TreeTask Invoke(INode self, T1 arg1) => Execute(self as N, arg1);
+        protected abstract TreeTask Execute(N self, T1 arg1);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -86,8 +86,8 @@ namespace WorldTree
     where N : class, INode, AsRule<R>
     where R : ISendRuleAsyncBase<T1, T2>
     {
-        public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2) => OnEvent(self as N, arg1, arg2);
-        protected abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2);
+        public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2) => Execute(self as N, arg1, arg2);
+        protected abstract TreeTask Execute(N self, T1 arg1, T2 arg2);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -96,8 +96,8 @@ namespace WorldTree
     where N : class, INode, AsRule<R>
     where R : ISendRuleAsyncBase<T1, T2, T3>
     {
-        public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => OnEvent(self as N, arg1, arg2, arg3);
-        protected abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2, T3 arg3);
+        public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => Execute(self as N, arg1, arg2, arg3);
+        protected abstract TreeTask Execute(N self, T1 arg1, T2 arg2, T3 arg3);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -106,8 +106,8 @@ namespace WorldTree
     where N : class, INode, AsRule<R>
     where R : ISendRuleAsyncBase<T1, T2, T3, T4>
     {
-        public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => OnEvent(self as N, arg1, arg2, arg3, arg4);
-        protected abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+        public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => Execute(self as N, arg1, arg2, arg3, arg4);
+        protected abstract TreeTask Execute(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
     }
     /// <summary>
     /// 异步通知法则基类
@@ -116,7 +116,7 @@ namespace WorldTree
     where N : class, INode, AsRule<R>
     where R : ISendRuleAsyncBase<T1, T2, T3, T4, T5>
     {
-        public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => OnEvent(self as N, arg1, arg2, arg3, arg4, arg5);
-        protected abstract TreeTask OnEvent(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+        public virtual TreeTask Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => Execute(self as N, arg1, arg2, arg3, arg4, arg5);
+        protected abstract TreeTask Execute(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
     }
 }

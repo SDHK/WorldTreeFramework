@@ -254,7 +254,7 @@ namespace WorldTree
 	{
 		class RemoveRule : RemoveRule<DynamicNodeQueue>
 		{
-			protected override void OnEvent(DynamicNodeQueue self)
+			protected override void Execute(DynamicNodeQueue self)
 			{
 				self.Clear();
 				self.nodeQueue = null;

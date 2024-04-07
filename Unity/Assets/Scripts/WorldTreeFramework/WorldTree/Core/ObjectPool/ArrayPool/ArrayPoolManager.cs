@@ -26,7 +26,7 @@ namespace WorldTree
 	{
 		class AddRule : AddRule<ArrayPoolManager>
 		{
-			protected override void OnEvent(ArrayPoolManager self)
+			protected override void Execute(ArrayPoolManager self)
 			{
 				self.AddChild(out self.PoolGroups);
 			}
@@ -34,7 +34,7 @@ namespace WorldTree
 
 		class RemoveRule : RemoveRule<ArrayPoolManager>
 		{
-			protected override void OnEvent(ArrayPoolManager self)
+			protected override void Execute(ArrayPoolManager self)
 			{
 				self.PoolGroups = null;
 			}

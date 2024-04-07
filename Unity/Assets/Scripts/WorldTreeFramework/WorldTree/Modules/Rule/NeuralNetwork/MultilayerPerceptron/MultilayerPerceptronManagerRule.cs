@@ -5,7 +5,7 @@
     {
         class AddRule : AddRule<MultilayerPerceptronManager>
         {
-            protected override void OnEvent(MultilayerPerceptronManager self)
+            protected override void Execute(MultilayerPerceptronManager self)
             {
                 self.AddComponent(out self.layers);
             }
@@ -13,7 +13,7 @@
 
         class RemoveRule : RemoveRule<MultilayerPerceptronManager>
         {
-            protected override void OnEvent(MultilayerPerceptronManager self)
+            protected override void Execute(MultilayerPerceptronManager self)
             {
                 self.layers = null;
             }

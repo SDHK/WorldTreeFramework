@@ -39,7 +39,7 @@ namespace WorldTree
     }
     class GUIFoldoutButtonRecycleSystem : RecycleRule<GUIFoldoutButton>
     {
-        protected override void OnEvent(GUIFoldoutButton self)
+        protected override void Execute(GUIFoldoutButton self)
         {
             //self.PoolRecycle(self.style);
             self.style = null;

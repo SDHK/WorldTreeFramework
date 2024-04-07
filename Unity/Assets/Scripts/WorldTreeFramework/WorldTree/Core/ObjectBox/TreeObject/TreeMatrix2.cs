@@ -62,7 +62,7 @@ namespace WorldTree
 	}
 	public class TreeMatrix2AwakeRule<T> : AwakeRule<TreeMatrix2<T>, int, int>
 	{
-		protected override void OnEvent(TreeMatrix2<T> self, int xLength, int yLength)
+		protected override void Execute(TreeMatrix2<T> self, int xLength, int yLength)
 		{
 			self.xLength = xLength;
 			self.yLength = yLength;
@@ -72,7 +72,7 @@ namespace WorldTree
 
 	class TreeMatrix2RemoveRule<T> : RemoveRule<TreeMatrix2<T>>
 	{
-		protected override void OnEvent(TreeMatrix2<T> self)
+		protected override void Execute(TreeMatrix2<T> self)
 		{
 			self.xLength = 0;
 			self.yLength = 0;

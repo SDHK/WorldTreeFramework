@@ -400,7 +400,7 @@ namespace WorldTree
 	{
 		class AddRule : AddRule<WorldContext>
 		{
-			protected override void OnEvent(WorldContext self)
+			protected override void Execute(WorldContext self)
 			{
 				self.AddComponent(out self.m_Queue);
 			}
@@ -408,7 +408,7 @@ namespace WorldTree
 
 		class UpdateRule : UpdateRule<WorldContext>
 		{
-			protected override void OnEvent(WorldContext self)
+			protected override void Execute(WorldContext self)
 			{
 				while (true)
 				{

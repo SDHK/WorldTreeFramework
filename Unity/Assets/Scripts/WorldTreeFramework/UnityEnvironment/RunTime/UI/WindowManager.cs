@@ -165,7 +165,7 @@ namespace WorldTree
 
     class WindowManagerAddRule : AddRule<WindowManager>
     {
-        protected override void OnEvent(WindowManager self)
+        protected override void Execute(WindowManager self)
         {
 			self.Log("WindowManager启动!!!");
             self.gameObject = self.AddComponent(out GameObjectNode _).Instantiate<WindowManager>();
@@ -174,7 +174,7 @@ namespace WorldTree
 
     class WindowManagerUpdateRule : UpdateTimeRule<WindowManager>
     {
-        protected override void OnEvent(WindowManager self, TimeSpan deltaTime)
+        protected override void Execute(WindowManager self, TimeSpan deltaTime)
         {
             if (self.windowStack.Count != 0)
             {

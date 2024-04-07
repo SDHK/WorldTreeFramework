@@ -12,7 +12,7 @@ namespace WorldTree
 
     class GUIBeginVerticalAddSystem : AddRule<GUIBeginVertical>
     {
-        protected override void OnEvent(GUIBeginVertical self)
+        protected override void Execute(GUIBeginVertical self)
         {
             self.Texture = self.GetColorTexture(0.1f);
 
@@ -22,7 +22,7 @@ namespace WorldTree
 
     class GUIBeginVerticalRecycleSystem : RecycleRule<GUIBeginVertical>
     {
-        protected override void OnEvent(GUIBeginVertical self)
+        protected override void Execute(GUIBeginVertical self)
         {
             //self.PoolRecycle(self.style);
             self.style = null;

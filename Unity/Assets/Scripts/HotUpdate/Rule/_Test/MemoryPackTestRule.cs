@@ -7,7 +7,7 @@ namespace WorldTree
 	{
 		class AddRule : AddRule<MemoryPackTest>
 		{
-			protected override void OnEvent(MemoryPackTest self)
+			protected override void Execute(MemoryPackTest self)
 			{
 				self.data = new MemoryPackDataTest<string> { t = "ASDF", Age = 60, Name = 654321L, ints = new List<int>() { 7, 8, 9 } };
 
@@ -21,7 +21,7 @@ namespace WorldTree
 
 		class UpdateRule : UpdateRule<MemoryPackTest>
 		{
-			protected override void OnEvent(MemoryPackTest self)
+			protected override void Execute(MemoryPackTest self)
 			{
 			}
 		}

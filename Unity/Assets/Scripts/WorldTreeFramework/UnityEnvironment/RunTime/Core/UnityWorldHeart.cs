@@ -78,7 +78,7 @@ namespace WorldTree
 	{
 		private class AwakeRule : AwakeRule<UnityWorldHeart, int>
 		{
-			protected override void OnEvent(UnityWorldHeart self, int frameTime)
+			protected override void Execute(UnityWorldHeart self, int frameTime)
 			{
 				self.frameTime = frameTime;
 
@@ -113,7 +113,7 @@ namespace WorldTree
 
 		private class RemoveRule : RemoveRule<UnityWorldHeart>
 		{
-			protected override void OnEvent(UnityWorldHeart self)
+			protected override void Execute(UnityWorldHeart self)
 			{
 				if (self.m_Thread != null) GameObject.Destroy(self.m_Thread.gameObject);
 				self.m_Thread = null;
@@ -141,7 +141,7 @@ namespace WorldTree
 
 		private class UpdateTimeRule : UpdateTimeRule<UnityWorldHeart>
 		{
-			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
+			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
 				self.enable?.Send();
 				self.update?.Send();
@@ -152,7 +152,7 @@ namespace WorldTree
 
 		private class LateUpdateTimeRule : LateUpdateTimeRule<UnityWorldHeart>
 		{
-			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
+			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
 				self.lateUpdate?.Send();
 				self.lateUpdateTime?.Send(deltaTime);
@@ -161,7 +161,7 @@ namespace WorldTree
 
 		private class FixedUpdateTimeRule : FixedUpdateTimeRule<UnityWorldHeart>
 		{
-			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
+			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
 				self.fixedUpdate?.Send();
 				self.fixedUpdateTime?.Send(deltaTime);
@@ -170,7 +170,7 @@ namespace WorldTree
 
 		private class GuiUpdateTimeRule : GuiUpdateTimeRule<UnityWorldHeart>
 		{
-			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
+			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
 				self.onGUI?.Send();
 				self.onGUIUpdateTime?.Send(deltaTime);
@@ -179,7 +179,7 @@ namespace WorldTree
 
 		private class DrawGizmosUpdateTimeRule : DrawGizmosUpdateTimeRule<UnityWorldHeart>
 		{
-			protected override void OnEvent(UnityWorldHeart self, TimeSpan deltaTime)
+			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
 				self.drawGizmos?.Send();
 				self.drawGizmosUpdateTime?.Send(deltaTime);

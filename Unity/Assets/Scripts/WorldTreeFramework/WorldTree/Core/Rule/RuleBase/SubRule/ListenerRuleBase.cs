@@ -62,8 +62,8 @@ namespace WorldTree
 		public virtual long TargetNodeType => TypeInfo<TN>.TypeCode;
 		public virtual long TargetRuleType => TypeInfo<TR>.TypeCode;
 
-		public virtual void Invoke(INode self, INode node) => OnEvent(self as LN, node as TN);
-		protected abstract void OnEvent(LN self, TN node);
+		public virtual void Invoke(INode self, INode node) => Execute(self as LN, node as TN);
+		protected abstract void Execute(LN self, TN node);
 	}
 
 	/// <summary>

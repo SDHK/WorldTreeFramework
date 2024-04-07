@@ -24,7 +24,7 @@ namespace WorldTree
 
     class GUIBeginScrollViewRecycleSystem : RecycleRule<GUIBeginScrollView>
     {
-        protected override void OnEvent(GUIBeginScrollView self)
+        protected override void Execute(GUIBeginScrollView self)
         {
             //self.PoolRecycle(self.style);
             self.style = null;

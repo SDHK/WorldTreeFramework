@@ -6,7 +6,7 @@ namespace WorldTree
 	{
 		class AddRule : AddRule<TreeValueTest>
 		{
-			protected override void OnEvent(TreeValueTest self)
+			protected override void Execute(TreeValueTest self)
 			{
 				self.AddChild(out self.valueFloat);
 				self.AddChild(out self.valueInt);
@@ -20,7 +20,7 @@ namespace WorldTree
 
 		class UpdateRule : UpdateRule<TreeValueTest>
 		{
-			protected override void OnEvent(TreeValueTest self)
+			protected override void Execute(TreeValueTest self)
 			{
 				if (Input.GetKeyDown(KeyCode.A))
 				{

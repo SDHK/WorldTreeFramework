@@ -28,7 +28,7 @@ namespace WorldTree
     {
         class AwakeRule : AwakeRule<ArrayPoolGroup, Type>
         {
-            protected override void OnEvent(ArrayPoolGroup self, Type type)
+            protected override void Execute(ArrayPoolGroup self, Type type)
             {
                 self.ArrayType = type;
             }
@@ -36,7 +36,7 @@ namespace WorldTree
 
         class AddRule : AddRule<ArrayPoolGroup>
         {
-            protected override void OnEvent(ArrayPoolGroup self)
+            protected override void Execute(ArrayPoolGroup self)
             {
                 self.AddChild(out self.Pools);
             }
@@ -44,7 +44,7 @@ namespace WorldTree
 
         class RemoveRule : RemoveRule<ArrayPoolGroup>
         {
-            protected override void OnEvent(ArrayPoolGroup self)
+            protected override void Execute(ArrayPoolGroup self)
             {
                 self.Pools = null;
             }

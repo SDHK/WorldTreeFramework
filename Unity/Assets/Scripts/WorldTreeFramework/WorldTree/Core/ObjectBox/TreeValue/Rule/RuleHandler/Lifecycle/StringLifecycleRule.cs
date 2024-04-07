@@ -13,7 +13,7 @@ namespace WorldTree
 	{
 		private class TreeValueStringAwakeRule : AwakeRule<TreeValue<string>>
 		{
-			protected override void OnEvent(TreeValue<string> self)
+			protected override void Execute(TreeValue<string> self)
 			{
 				self.Value = "";
 			}
@@ -21,7 +21,7 @@ namespace WorldTree
 
 		private class TreeValueStringValueAwakeRule : AwakeRule<TreeValue<string>, string>
 		{
-			protected override void OnEvent(TreeValue<string> self, string value)
+			protected override void Execute(TreeValue<string> self, string value)
 			{
 				self.Value = value;
 			}

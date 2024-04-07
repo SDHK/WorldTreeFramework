@@ -15,7 +15,7 @@ namespace WorldTree
 	{
 		class StringTweenUpdateRule : TweenUpdateRule<TreeTween<string>>
 		{
-			protected override void OnEvent(TreeTween<string> self, TimeSpan deltaTime)
+			protected override void Execute(TreeTween<string> self, TimeSpan deltaTime)
 			{
 				if (self.isRun)
 				{

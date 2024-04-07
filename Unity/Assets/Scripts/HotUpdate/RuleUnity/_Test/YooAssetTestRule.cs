@@ -17,7 +17,7 @@ namespace WorldTree
 
 		private class AddRule : AddRule<YooAssetTest>
 		{
-			protected override void OnEvent(YooAssetTest self)
+			protected override void Execute(YooAssetTest self)
 			{
 				//// 初始化资源系统
 				//YooAssets.Initialize();

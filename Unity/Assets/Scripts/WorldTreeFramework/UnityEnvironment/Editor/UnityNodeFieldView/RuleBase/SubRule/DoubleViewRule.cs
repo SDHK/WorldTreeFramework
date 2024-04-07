@@ -8,7 +8,7 @@ namespace WorldTree
 	{
 		class DoubleViewRule : GenericsViewRule<double>
 		{
-			protected override void OnEvent(UnityNodeFieldView<double> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<double> self, INode node, FieldInfo arg1)
 			{
 				arg1.SetValue(node, EditorGUILayout.DoubleField(arg1.Name, (double)arg1.GetValue(node)));
 			}

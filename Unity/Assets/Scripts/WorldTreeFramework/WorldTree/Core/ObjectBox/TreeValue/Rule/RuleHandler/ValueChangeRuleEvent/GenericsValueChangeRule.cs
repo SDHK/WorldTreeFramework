@@ -16,7 +16,7 @@ namespace WorldTree
         class GenericsValueChangeRuleEvent<T> : TreeValueChangeRuleEvent<T>
             where T : IEquatable<T>
         {
-            protected override void OnEvent(TreeValueBase<T> self, T arg1)
+            protected override void Execute(TreeValueBase<T> self, T arg1)
             {
                 self.Value = arg1;
             }

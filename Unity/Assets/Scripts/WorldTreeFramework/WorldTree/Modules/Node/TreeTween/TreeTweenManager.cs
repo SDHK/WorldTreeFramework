@@ -24,7 +24,7 @@ namespace WorldTree
 
     class TreeTweenManagerAddRule : AddRule<TreeTweenManager>
     {
-        protected override void OnEvent(TreeTweenManager self)
+        protected override void Execute(TreeTweenManager self)
         {
             self.GetOrNewGlobalRuleActuator(out self.ruleActuator);
         }
@@ -32,7 +32,7 @@ namespace WorldTree
 
     class TreeTweenManagerUpdateRule : UpdateTimeRule<TreeTweenManager>
     {
-        protected override void OnEvent(TreeTweenManager self, TimeSpan deltaTime)
+        protected override void Execute(TreeTweenManager self, TimeSpan deltaTime)
         {
             self.ruleActuator?.Send(deltaTime);
         }
@@ -40,7 +40,7 @@ namespace WorldTree
 
     class TreeTweenManagerRemoveRule : RemoveRule<TreeTweenManager>
     {
-        protected override void OnEvent(TreeTweenManager self)
+        protected override void Execute(TreeTweenManager self)
         {
             self.ruleActuator?.Dispose();
             self.ruleActuator = null;

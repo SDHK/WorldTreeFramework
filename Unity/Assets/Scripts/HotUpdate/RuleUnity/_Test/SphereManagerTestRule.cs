@@ -6,7 +6,7 @@ namespace WorldTree
 	{
 		private class UpdateRule : UpdateRule<SphereManagerTest>
 		{
-			protected override void OnEvent(SphereManagerTest self)
+			protected override void Execute(SphereManagerTest self)
 			{
 				if (Input.GetKeyDown(KeyCode.Q))
 				{

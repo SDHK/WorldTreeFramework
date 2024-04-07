@@ -24,7 +24,7 @@ namespace WorldTree
 
     class CurveBaseCurveEvaluateRule : CurveEvaluateRule<CurveBase>
     {
-        protected override float OnEvent(CurveBase self, float arg1)
+        protected override float Execute(CurveBase self, float arg1)
         {
             return arg1;
         }

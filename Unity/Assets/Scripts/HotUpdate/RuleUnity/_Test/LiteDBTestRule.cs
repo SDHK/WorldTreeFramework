@@ -8,7 +8,7 @@ namespace WorldTree
 	{
 		class AwakeRule : AwakeRule<LiteDBTest>
 		{
-			protected override void OnEvent(LiteDBTest self)
+			protected override void Execute(LiteDBTest self)
 			{
 				self.db = new LiteDatabase("LiteDBTest.db");
 				ILiteCollection<TestClass> liteCollection = self.db.GetCollection<TestClass>("test");

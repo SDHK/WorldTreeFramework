@@ -60,7 +60,7 @@ namespace WorldTree
 	{
 		class RemoveRule : RemoveRule<HybridListenerRuleActuator>
 		{
-			protected override void OnEvent(HybridListenerRuleActuator self)
+			protected override void Execute(HybridListenerRuleActuator self)
 			{
 				self.staticListenerRuleActuator = null;
 				self.dynamicListenerRuleActuator = null;

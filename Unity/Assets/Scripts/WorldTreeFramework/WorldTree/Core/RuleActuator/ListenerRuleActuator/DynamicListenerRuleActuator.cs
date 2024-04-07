@@ -26,7 +26,7 @@ namespace WorldTree
 	{
 		private class AwakeRule : AwakeRule<DynamicListenerRuleActuator, RuleGroup>
 		{
-			protected override void OnEvent(DynamicListenerRuleActuator self, RuleGroup arg1)
+			protected override void Execute(DynamicListenerRuleActuator self, RuleGroup arg1)
 			{
 				self.ruleGroup = arg1;
 			}

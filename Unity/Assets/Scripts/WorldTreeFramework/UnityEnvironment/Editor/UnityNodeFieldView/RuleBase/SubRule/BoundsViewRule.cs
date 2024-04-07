@@ -8,7 +8,7 @@ namespace WorldTree
 	{
 		class BoundsViewRule : GenericsViewRule<Bounds>
 		{ 
-			protected override void OnEvent(UnityNodeFieldView<Bounds> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<Bounds> self, INode node, FieldInfo arg1)
 			{
 				arg1.SetValue(node, EditorGUILayout.BoundsField(arg1.Name, (Bounds)arg1.GetValue(node)));
 			}

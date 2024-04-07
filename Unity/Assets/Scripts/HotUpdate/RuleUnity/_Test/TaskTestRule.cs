@@ -7,7 +7,7 @@ namespace WorldTree
 	{
 		private class UpdateRule : UpdateRule<TaskTest>
 		{
-			protected override void OnEvent(TaskTest self)
+			protected override void Execute(TaskTest self)
 			{
 				if (Input.GetKeyDown(KeyCode.Q))
 				{

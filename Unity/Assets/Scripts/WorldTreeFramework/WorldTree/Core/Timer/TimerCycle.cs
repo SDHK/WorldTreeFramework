@@ -28,7 +28,7 @@ namespace WorldTree
     {
         class UpdateRule : UpdateTimeRule<TimerCycle>
         {
-            protected override void OnEvent(TimerCycle self, TimeSpan deltaTime)
+            protected override void Execute(TimerCycle self, TimeSpan deltaTime)
             {
                 if (self.IsActive)
                 {
@@ -44,7 +44,7 @@ namespace WorldTree
 
         class GetRule : GetRule<TimerCycle>
         {
-            protected override void OnEvent(TimerCycle self)
+            protected override void Execute(TimerCycle self)
             {
                 self.time = 0;
             }

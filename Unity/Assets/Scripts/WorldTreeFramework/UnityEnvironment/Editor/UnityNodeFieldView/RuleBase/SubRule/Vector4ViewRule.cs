@@ -8,7 +8,7 @@ namespace WorldTree
 	{
 		class Vector4ViewRule : GenericsViewRule<Vector4>
 		{
-			protected override void OnEvent(UnityNodeFieldView<Vector4> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<Vector4> self, INode node, FieldInfo arg1)
 			{
 				arg1.SetValue(node, EditorGUILayout.Vector4Field(arg1.Name, (Vector4)arg1.GetValue(node)));
 			}

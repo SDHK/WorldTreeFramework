@@ -31,7 +31,7 @@ namespace WorldTree
                 if (!self.IsActive)
                 {
 					self.m_ActiveEventMark = self.IsActive;
-					OnEvent(self as N);
+					Execute(self as N);
 				}
 			}
         }

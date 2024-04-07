@@ -36,7 +36,7 @@ namespace WorldTree
 	{
 		class RemoveRule : RemoveRule<RuleGroupActuatorBase>
 		{
-			protected override void OnEvent(RuleGroupActuatorBase self)
+			protected override void Execute(RuleGroupActuatorBase self)
 			{
 				self.ruleGroup = null;
 				self.Clear();

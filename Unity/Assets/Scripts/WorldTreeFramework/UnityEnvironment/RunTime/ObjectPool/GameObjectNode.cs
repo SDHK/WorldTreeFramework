@@ -163,7 +163,7 @@ namespace WorldTree
 
     class GameObjectEntityRemoveRule : RemoveRule<GameObjectNode>
     {
-        protected override void OnEvent(GameObjectNode self)
+        protected override void Execute(GameObjectNode self)
         {
             self.DestroyGameObject();
             self.gameObject = null;

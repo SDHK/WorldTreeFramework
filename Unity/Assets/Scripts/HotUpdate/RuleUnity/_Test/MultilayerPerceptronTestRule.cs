@@ -6,7 +6,7 @@ namespace WorldTree
 	{
 		class AwakeRule : AwakeRule<MultilayerPerceptronTest>
 		{
-			protected override void OnEvent(MultilayerPerceptronTest self)
+			protected override void Execute(MultilayerPerceptronTest self)
 			{
 				self.AddComponent(out self.multilayerPerceptronManager);
 				self.multilayerPerceptronManager.AddLayer(3);
@@ -17,7 +17,7 @@ namespace WorldTree
 
 		class UpdateRule : UpdateRule<MultilayerPerceptronTest>
 		{
-			protected override void OnEvent(MultilayerPerceptronTest self)
+			protected override void Execute(MultilayerPerceptronTest self)
 			{
 				if (Input.GetKeyDown(KeyCode.A))
 				{

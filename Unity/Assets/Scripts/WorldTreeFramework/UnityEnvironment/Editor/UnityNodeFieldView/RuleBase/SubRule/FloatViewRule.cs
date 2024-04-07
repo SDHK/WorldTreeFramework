@@ -7,7 +7,7 @@ namespace WorldTree
 	{
 		class FloatViewRule : GenericsViewRule<float>
 		{
-			protected override void OnEvent(UnityNodeFieldView<float> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<float> self, INode node, FieldInfo arg1)
 			{
 				arg1.SetValue(node, EditorGUILayout.FloatField(arg1.Name, (float)arg1.GetValue(node)));
 			}

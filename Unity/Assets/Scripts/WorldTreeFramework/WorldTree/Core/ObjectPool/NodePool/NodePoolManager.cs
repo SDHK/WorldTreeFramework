@@ -35,7 +35,7 @@ namespace WorldTree
 
     class NodePoolManagerAddRule : AddRule<NodePoolManager>
     {
-        protected override void OnEvent(NodePoolManager self)
+        protected override void Execute(NodePoolManager self)
         {
             
         }

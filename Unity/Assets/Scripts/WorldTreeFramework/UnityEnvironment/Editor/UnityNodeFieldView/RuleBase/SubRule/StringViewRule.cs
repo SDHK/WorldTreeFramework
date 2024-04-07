@@ -7,7 +7,7 @@ namespace WorldTree
 	{
 		class StringViewRule : GenericsViewRule<string>
 		{
-			protected override void OnEvent(UnityNodeFieldView<string> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<string> self, INode node, FieldInfo arg1)
 			{
 				arg1.SetValue(node, EditorGUILayout.DelayedTextField(arg1.Name, (string)arg1.GetValue(node)));
 			}

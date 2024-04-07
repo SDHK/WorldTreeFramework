@@ -9,7 +9,7 @@ namespace WorldTree
 	{
 		class RectViewRule : GenericsViewRule<Rect>
 		{
-			protected override void OnEvent(UnityNodeFieldView<Rect> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<Rect> self, INode node, FieldInfo arg1)
 			{
 				arg1.SetValue(node, EditorGUILayout.RectField(arg1.Name, (Rect)arg1.GetValue(node)));
 			}

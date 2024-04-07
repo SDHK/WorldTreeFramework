@@ -13,7 +13,7 @@ namespace WorldTree
     {
         class AwakeRule : AwakeRule<TreeTaskQueueCompleter, long, TreeTaskQueueLockManager>
         {
-            protected override void OnEvent(TreeTaskQueueCompleter self, long key, TreeTaskQueueLockManager queueLock)
+            protected override void Execute(TreeTaskQueueCompleter self, long key, TreeTaskQueueLockManager queueLock)
             {
                 self.key = key;
                 self.m_QueueLock = queueLock;
@@ -22,7 +22,7 @@ namespace WorldTree
 
         class RemoveRule : RemoveRule<TreeTaskQueueCompleter>
         {
-            protected override void OnEvent(TreeTaskQueueCompleter self)
+            protected override void Execute(TreeTaskQueueCompleter self)
             {
                 self.m_QueueLock.RunNext(self.key);
                 self.m_QueueLock = default;

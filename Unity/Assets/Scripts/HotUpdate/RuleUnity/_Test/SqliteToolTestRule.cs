@@ -6,7 +6,7 @@ namespace WorldTree
 	{
 		class AddRule : AddRule<SqliteToolTest>
 		{
-			protected override void OnEvent(SqliteToolTest self)
+			protected override void Execute(SqliteToolTest self)
 			{
 
 				string path = "C:\\Users\\MyPC\\Desktop\\SDHK_Tool\\test.db";
@@ -30,7 +30,7 @@ namespace WorldTree
 
 		class RemoveRule : RemoveRule<SqliteToolTest>
 		{
-			protected override void OnEvent(SqliteToolTest self)
+			protected override void Execute(SqliteToolTest self)
 			{
 				self.Log($"SqliteToolTest关闭！！");
 				SqliteTool.Close();

@@ -146,7 +146,7 @@ namespace WorldTree
 	{
 		class RemoveRule : RemoveRule<RuleActuatorBase>
 		{
-			protected override void OnEvent(RuleActuatorBase self)
+			protected override void Execute(RuleActuatorBase self)
 			{
 				self.Clear();
 				self.nodeRuleQueue = null;

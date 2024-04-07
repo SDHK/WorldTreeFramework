@@ -122,7 +122,7 @@ namespace WorldTree
 	{
 		class GraftRule : GraftRule<NodePool>
 		{
-			protected override void OnEvent(NodePool self)
+			protected override void Execute(NodePool self)
 			{
 				self.Core.RuleManager.SupportNodeRule(self.ObjectTypeCore);
 
@@ -135,7 +135,7 @@ namespace WorldTree
 		}
 		class DestroyRule : DestroyRule<NodePool>
 		{
-			protected override void OnEvent(NodePool self)
+			protected override void Execute(NodePool self)
 			{
 				self.DisposeAll();
 				self.NewObject = null;

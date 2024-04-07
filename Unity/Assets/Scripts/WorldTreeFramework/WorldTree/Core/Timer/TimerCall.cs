@@ -37,7 +37,7 @@ namespace WorldTree
 	{
 		private class AwakeRule : AwakeRule<TimerCall, float>
 		{
-			protected override void OnEvent(TimerCall self, float timeOutTime)
+			protected override void Execute(TimerCall self, float timeOutTime)
 			{
 				self.timeOutTime = timeOutTime;
 				self.time = 0;
@@ -48,7 +48,7 @@ namespace WorldTree
 
 		private class UpdateRule : UpdateTimeRule<TimerCall>
 		{
-			protected override void OnEvent(TimerCall self, TimeSpan deltaTime)
+			protected override void Execute(TimerCall self, TimeSpan deltaTime)
 			{
 				if (self.IsActive && self.isRun)
 				{
@@ -64,7 +64,7 @@ namespace WorldTree
 
 		private class RemoveRule : RemoveRule<TimerCall>
 		{
-			protected override void OnEvent(TimerCall self)
+			protected override void Execute(TimerCall self)
 			{
 				self.isRun = false;
 				self.callback = null;
@@ -73,7 +73,7 @@ namespace WorldTree
 
 		private class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TimerCall, TaskState>
 		{
-			protected override void OnEvent(TimerCall self, TaskState state)
+			protected override void Execute(TimerCall self, TaskState state)
 			{
 				switch (state)
 				{

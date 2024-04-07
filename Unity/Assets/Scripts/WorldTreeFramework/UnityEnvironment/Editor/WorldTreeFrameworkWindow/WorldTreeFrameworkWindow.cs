@@ -46,7 +46,7 @@ namespace EditorTool
 
 	class WorldTreeFrameworkWindowAddSystem : AddRule<WorldTreeFrameworkWindow>
 	{
-		protected override void OnEvent(WorldTreeFrameworkWindow self)
+		protected override void Execute(WorldTreeFrameworkWindow self)
 		{
 			self.AddComponent(out EditorGUIWindow _);
 			//self.GetOrNewGlobalRuleActuator(out self.enable);
@@ -60,7 +60,7 @@ namespace EditorTool
 
 	class WorldTreeFrameworkWindowEditorWindowInspectorUpdateSystem : EditorWindowInspectorUpdateSystem<WorldTreeFrameworkWindow>
 	{
-		protected override void OnEvent(WorldTreeFrameworkWindow self)
+		protected override void Execute(WorldTreeFrameworkWindow self)
 		{
 			//self.enable.Send();
 			//self.update.Send(TimeSpan.FromSeconds(0.02));

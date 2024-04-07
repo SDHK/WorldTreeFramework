@@ -26,7 +26,7 @@ namespace WorldTree
 
     class GUIGeneralWindowAddSystem : AddRule<GUIGeneralWindow>
     {
-        protected override void OnEvent(GUIGeneralWindow self)
+        protected override void Execute(GUIGeneralWindow self)
         {
             //self.group = self.Core.RuleManager.GetRuleGroup<IGUIDrawSystem>();
             self.AddComponent(out GUIWindow _);
@@ -35,7 +35,7 @@ namespace WorldTree
 
     class GUIGeneralWindowOnGUISystem : GUIDrawSystem<GUIGeneralWindow>
     {
-        protected override void OnEvent(GUIGeneralWindow self)
+        protected override void Execute(GUIGeneralWindow self)
         {
             self.VerticalBox.Draw();
 

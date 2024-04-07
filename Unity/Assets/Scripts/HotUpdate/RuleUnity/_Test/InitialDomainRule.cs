@@ -8,7 +8,7 @@ namespace WorldTree
 		//测试框架功能
 		private class AddRule : AddRule<InitialDomain>
 		{
-			protected override void OnEvent(InitialDomain self)
+			protected override void Execute(InitialDomain self)
 			{
 				self.Log($"初始域热更部分！！!");
 
@@ -25,7 +25,7 @@ namespace WorldTree
 
 		private class EnableRule : EnableRule<InitialDomain>
 		{
-			protected override void OnEvent(InitialDomain self)
+			protected override void Execute(InitialDomain self)
 			{
 				self.Log($"初始域激活！！");
 			}
@@ -33,7 +33,7 @@ namespace WorldTree
 
 		private class DisableRule : DisableRule<InitialDomain>
 		{
-			protected override void OnEvent(InitialDomain self)
+			protected override void Execute(InitialDomain self)
 			{
 				self.Log($"初始域禁用！！");
 			}
@@ -41,7 +41,7 @@ namespace WorldTree
 
 		private class UpdateTimeRule : UpdateTimeRule<InitialDomain>
 		{
-			protected override void OnEvent(InitialDomain self, TimeSpan timeSpan)
+			protected override void Execute(InitialDomain self, TimeSpan timeSpan)
 			{
 				//self.Log($"初始域更新！！{timeSpan.TotalSeconds}");
 			}
@@ -51,7 +51,7 @@ namespace WorldTree
 		{
 			private GUIStyle textStyle = new GUIStyle() { fontSize = 60 };
 
-			protected override void OnEvent(InitialDomain self, TimeSpan timeSpan)
+			protected override void Execute(InitialDomain self, TimeSpan timeSpan)
 			{
 				textStyle.normal.textColor = Color.green;
 				GUILayout.Label($"            !!!!{timeSpan.TotalMilliseconds}", textStyle);
@@ -60,7 +60,7 @@ namespace WorldTree
 
 		private class RemoveRule : RemoveRule<InitialDomain>
 		{
-			protected override void OnEvent(InitialDomain self)
+			protected override void Execute(InitialDomain self)
 			{
 				self.Log($"初始域关闭！！");
 			}

@@ -16,7 +16,7 @@ namespace WorldTree
         class GenericsRemoveRule<T> : RemoveRule<TreeValueBase<T>>
         where T : IEquatable<T>
         {
-            protected override void OnEvent(TreeValueBase<T> self)
+            protected override void Execute(TreeValueBase<T> self)
             {
                 self.m_GlobalValueChange = default;
                 self.m_ValueChange = default;

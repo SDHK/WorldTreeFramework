@@ -395,7 +395,7 @@ namespace WorldTree
 	{
 		private class AddRule : AddRule<WorldTreeCore>
 		{
-			protected override void OnEvent(WorldTreeCore self)
+			protected override void Execute(WorldTreeCore self)
 			{
 				self.Log = self.Core.Log;
 				self.LogWarning = self.Core.LogWarning;

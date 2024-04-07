@@ -7,7 +7,7 @@ namespace WorldTree
 	{
 		class IntViewRule : GenericsViewRule<int>
 		{
-			protected override void OnEvent(UnityNodeFieldView<int> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<int> self, INode node, FieldInfo arg1)
 			{
 				arg1.SetValue(node, EditorGUILayout.IntField(arg1.Name, (int)arg1.GetValue(node)));
 			}

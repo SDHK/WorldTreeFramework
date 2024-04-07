@@ -92,7 +92,7 @@ namespace WorldTree
 	{
 		private class AwakeRule : AwakeRule<WorldHeart, int>
 		{
-			protected override void OnEvent(WorldHeart self, int frameTime)
+			protected override void Execute(WorldHeart self, int frameTime)
 			{
 				self.frameTime = frameTime;
 
@@ -111,7 +111,7 @@ namespace WorldTree
 
 		private class RemoveRule : RemoveRule<WorldHeart>
 		{
-			protected override void OnEvent(WorldHeart self)
+			protected override void Execute(WorldHeart self)
 			{
 				self.isExit = true;
 				self.m_Thread = null;
@@ -127,7 +127,7 @@ namespace WorldTree
 
 		private class UpdateTimeRule : UpdateTimeRule<WorldHeart>
 		{
-			protected override void OnEvent(WorldHeart self, TimeSpan deltaTime)
+			protected override void Execute(WorldHeart self, TimeSpan deltaTime)
 			{
 				self.enable?.Send();
 				self.update?.Send();

@@ -86,7 +86,7 @@ namespace WorldTree
 		//测试框架功能
 		private class AddRule : AddRule<InitialDomain>
 		{
-			protected override void OnEvent(InitialDomain self)
+			protected override void Execute(InitialDomain self)
 			{
 				self.Log($"初始域启动！");
 			}

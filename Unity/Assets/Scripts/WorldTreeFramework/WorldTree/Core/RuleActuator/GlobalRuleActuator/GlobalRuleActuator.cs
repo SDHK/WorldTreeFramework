@@ -32,7 +32,7 @@ namespace WorldTree
 		class ListenerAddRule<R> : ListenerAddRule.Rule<GlobalRuleActuator<R>, R>
 			where R : IRule
 		{
-			protected override void OnEvent(GlobalRuleActuator<R> self, INode node)
+			protected override void Execute(GlobalRuleActuator<R> self, INode node)
 			{
 				self.TryAdd(node);
 			}
@@ -41,7 +41,7 @@ namespace WorldTree
 		class ListenerRemoveRule<R> : ListenerRemoveRule.Rule<GlobalRuleActuator<R>, R>
 			where R : IRule
 		{
-			protected override void OnEvent(GlobalRuleActuator<R> self, INode node)
+			protected override void Execute(GlobalRuleActuator<R> self, INode node)
 			{
 				self.Remove(node);
 			}
@@ -51,7 +51,7 @@ namespace WorldTree
 		class AddRuleGeneric<R> : AddRule<GlobalRuleActuator<R>>
 			where R : IRule
 		{
-			protected override void OnEvent(GlobalRuleActuator<R> self)
+			protected override void Execute(GlobalRuleActuator<R> self)
 			{
 				self.ruleGroup = self.Core.RuleManager.GetOrNewRuleGroup<R>();
 				self.LoadGlobalNode();
