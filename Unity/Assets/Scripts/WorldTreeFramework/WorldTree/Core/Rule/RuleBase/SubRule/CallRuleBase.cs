@@ -22,123 +22,123 @@
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 调用法则基类接口
-	/// </summary>
-	public interface ICallRuleBase<OutT> : IRule
-	{
-		OutT Invoke(INode self);
-	}
+	///// <summary>
+	///// 调用法则基类接口
+	///// </summary>
+	//public interface ICallRuleBase<OutT> : IRule
+	//{
+	//	OutT Invoke(INode self);
+	//}
 
-	/// <summary>
-	/// 调用法则基类接口
-	/// </summary>
-	public interface ICallRuleBase<T1, OutT> : IRule
-	{
-		OutT Invoke(INode self, T1 arg1);
-	}
+	///// <summary>
+	///// 调用法则基类接口
+	///// </summary>
+	//public interface ICallRuleBase<T1, OutT> : IRule
+	//{
+	//	OutT Invoke(INode self, T1 arg1);
+	//}
 
-	/// <summary>
-	/// 调用法则基类接口
-	/// </summary>
-	public interface ICallRuleBase<T1, T2, OutT> : IRule
-	{
-		OutT Invoke(INode self, T1 arg1, T2 arg2);
-	}
+	///// <summary>
+	///// 调用法则基类接口
+	///// </summary>
+	//public interface ICallRuleBase<T1, T2, OutT> : IRule
+	//{
+	//	OutT Invoke(INode self, T1 arg1, T2 arg2);
+	//}
 
-	/// <summary>
-	/// 调用法则基类接口
-	/// </summary>
-	public interface ICallRuleBase<T1, T2, T3, OutT> : IRule
-	{
-		OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3);
-	}
+	///// <summary>
+	///// 调用法则基类接口
+	///// </summary>
+	//public interface ICallRuleBase<T1, T2, T3, OutT> : IRule
+	//{
+	//	OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3);
+	//}
 
-	/// <summary>
-	/// 调用法则基类接口
-	/// </summary>
-	public interface ICallRuleBase<T1, T2, T3, T4, OutT> : IRule
-	{
-		OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
-	}
+	///// <summary>
+	///// 调用法则基类接口
+	///// </summary>
+	//public interface ICallRuleBase<T1, T2, T3, T4, OutT> : IRule
+	//{
+	//	OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+	//}
 
-	/// <summary>
-	/// 调用法则基类接口
-	/// </summary>
-	public interface ICallRuleBase<T1, T2, T3, T4, T5, OutT> : IRule
-	{
-		OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
-	}
+	///// <summary>
+	///// 调用法则基类接口
+	///// </summary>
+	//public interface ICallRuleBase<T1, T2, T3, T4, T5, OutT> : IRule
+	//{
+	//	OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+	//}
 
-	/// <summary>
-	/// 调用法则基类
-	/// </summary>
-	public abstract class CallRuleBase<N, R, OutT> : RuleBase<N, R>, ICallRuleBase<OutT>
-	where N : class, INode, AsRule<R>
-	where R : ICallRuleBase<OutT>
-	{
-		public virtual OutT Invoke(INode self) => Execute(self as N);
+	///// <summary>
+	///// 调用法则基类
+	///// </summary>
+	//public abstract class CallRuleBase<N, R, OutT> : RuleBase<N, R>, ICallRuleBase<OutT>
+	//where N : class, INode, AsRule<R>
+	//where R : ICallRuleBase<OutT>
+	//{
+	//	public virtual OutT Invoke(INode self) => Execute(self as N);
 
-		protected abstract OutT Execute(N self);
-	}
+	//	protected abstract OutT Execute(N self);
+	//}
 
-	/// <summary>
-	/// 调用法则基类
-	/// </summary>
-	public abstract class CallRuleBase<N, R, T1, OutT> : RuleBase<N, R>, ICallRuleBase<T1, OutT>
-	where N : class, INode, AsRule<R>
-	where R : ICallRuleBase<T1, OutT>
-	{
-		public virtual OutT Invoke(INode self, T1 arg1) => Execute(self as N, arg1);
+	///// <summary>
+	///// 调用法则基类
+	///// </summary>
+	//public abstract class CallRuleBase<N, R, T1, OutT> : RuleBase<N, R>, ICallRuleBase<T1, OutT>
+	//where N : class, INode, AsRule<R>
+	//where R : ICallRuleBase<T1, OutT>
+	//{
+	//	public virtual OutT Invoke(INode self, T1 arg1) => Execute(self as N, arg1);
 
-		protected abstract OutT Execute(N self, T1 arg1);
-	}
+	//	protected abstract OutT Execute(N self, T1 arg1);
+	//}
 
-	/// <summary>
-	/// 调用法则基类
-	/// </summary>
-	public abstract class CallRuleBase<N, R, T1, T2, OutT> : RuleBase<N, R>, ICallRuleBase<T1, T2, OutT>
-	where N : class, INode, AsRule<R>
-	where R : ICallRuleBase<T1, T2, OutT>
-	{
-		public virtual OutT Invoke(INode self, T1 arg1, T2 arg2) => Execute(self as N, arg1, arg2);
+	///// <summary>
+	///// 调用法则基类
+	///// </summary>
+	//public abstract class CallRuleBase<N, R, T1, T2, OutT> : RuleBase<N, R>, ICallRuleBase<T1, T2, OutT>
+	//where N : class, INode, AsRule<R>
+	//where R : ICallRuleBase<T1, T2, OutT>
+	//{
+	//	public virtual OutT Invoke(INode self, T1 arg1, T2 arg2) => Execute(self as N, arg1, arg2);
 
-		protected abstract OutT Execute(N self, T1 arg1, T2 arg2);
-	}
+	//	protected abstract OutT Execute(N self, T1 arg1, T2 arg2);
+	//}
 
-	/// <summary>
-	/// 调用法则基类
-	/// </summary>
-	public abstract class CallRuleBase<N, R, T1, T2, T3, OutT> : RuleBase<N, R>, ICallRuleBase<T1, T2, T3, OutT>
-	where N : class, INode, AsRule<R>
-	where R : ICallRuleBase<T1, T2, T3, OutT>
-	{
-		public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => Execute(self as N, arg1, arg2, arg3);
+	///// <summary>
+	///// 调用法则基类
+	///// </summary>
+	//public abstract class CallRuleBase<N, R, T1, T2, T3, OutT> : RuleBase<N, R>, ICallRuleBase<T1, T2, T3, OutT>
+	//where N : class, INode, AsRule<R>
+	//where R : ICallRuleBase<T1, T2, T3, OutT>
+	//{
+	//	public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3) => Execute(self as N, arg1, arg2, arg3);
 
-		protected abstract OutT Execute(N self, T1 arg1, T2 arg2, T3 arg3);
-	}
+	//	protected abstract OutT Execute(N self, T1 arg1, T2 arg2, T3 arg3);
+	//}
 
-	/// <summary>
-	/// 调用法则基类
-	/// </summary>
-	public abstract class CallRuleBase<N, R, T1, T2, T3, T4, OutT> : RuleBase<N, R>, ICallRuleBase<T1, T2, T3, T4, OutT>
-	where N : class, INode, AsRule<R>
-	where R : ICallRuleBase<T1, T2, T3, T4, OutT>
-	{
-		public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => Execute(self as N, arg1, arg2, arg3, arg4);
+	///// <summary>
+	///// 调用法则基类
+	///// </summary>
+	//public abstract class CallRuleBase<N, R, T1, T2, T3, T4, OutT> : RuleBase<N, R>, ICallRuleBase<T1, T2, T3, T4, OutT>
+	//where N : class, INode, AsRule<R>
+	//where R : ICallRuleBase<T1, T2, T3, T4, OutT>
+	//{
+	//	public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4) => Execute(self as N, arg1, arg2, arg3, arg4);
 
-		protected abstract OutT Execute(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
-	}
+	//	protected abstract OutT Execute(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+	//}
 
-	/// <summary>
-	/// 调用法则基类
-	/// </summary>
-	public abstract class CallRuleBase<N, R, T1, T2, T3, T4, T5, OutT> : RuleBase<N, R>, ICallRuleBase<T1, T2, T3, T4, T5, OutT>
-	where N : class, INode, AsRule<R>
-	where R : ICallRuleBase<T1, T2, T3, T4, T5, OutT>
-	{
-		public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => Execute(self as N, arg1, arg2, arg3, arg4, arg5);
+	///// <summary>
+	///// 调用法则基类
+	///// </summary>
+	//public abstract class CallRuleBase<N, R, T1, T2, T3, T4, T5, OutT> : RuleBase<N, R>, ICallRuleBase<T1, T2, T3, T4, T5, OutT>
+	//where N : class, INode, AsRule<R>
+	//where R : ICallRuleBase<T1, T2, T3, T4, T5, OutT>
+	//{
+	//	public virtual OutT Invoke(INode self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) => Execute(self as N, arg1, arg2, arg3, arg4, arg5);
 
-		protected abstract OutT Execute(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
-	}
+	//	protected abstract OutT Execute(N self, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+	//}
 }

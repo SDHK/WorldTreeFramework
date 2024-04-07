@@ -13,7 +13,7 @@ namespace WorldTree.SourceGenerator
 			//在编译过程开始时调用，用于初始化源生成器。
 			//通常，你可以在这里注册一些需要分析的语法树节点、提供一些生成器的选项等。
 
-			context.RegisterForSyntaxNotifications(() => SyntaxContextReceiver.Create());
+			//context.RegisterForSyntaxNotifications(() => SyntaxContextReceiver.Create());
 		}
 
 		public void Execute(GeneratorExecutionContext context)
@@ -69,7 +69,7 @@ namespace WorldTree.SourceGenerator
 						MethodDeclarationSyntax methodDeclarationSyntax = SyntaxFactory.MethodDeclaration(
 
 							//方法声明和返回值
-							SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.VoidKeyword)), "OnEvent")
+							SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.VoidKeyword)), "Execute")
 							.AddModifiers(SyntaxFactory.Token(SyntaxKind.ProtectedKeyword))
 							.AddModifiers(SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
 

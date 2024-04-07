@@ -21,6 +21,6 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 参数数量
 		/// </summary>
-		public static int argumentCount = 5;
+		public static int argumentCount = 10;
 	}
 }
