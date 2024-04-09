@@ -41,18 +41,18 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 获取泛型类型
 		/// </summary>
-		public static string GetGenerics(int index, bool isPre = true)
+		public static string GetGenerics(int index, bool isAfter = false)
 		{
 			StringBuilder generics = new StringBuilder();
 			for (int i = 0; i < index; i++)
 			{
-				if (isPre)
+				if (isAfter)
 				{
-					generics.Append($", T{i + 1}");
+					generics.Append($"T{i + 1}, ");
 				}
 				else
 				{
-					generics.Append($"T{i + 1}, ");
+					generics.Append($", T{i + 1}");
 				}
 			}
 			return generics.ToString();

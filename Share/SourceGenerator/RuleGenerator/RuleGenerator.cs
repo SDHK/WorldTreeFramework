@@ -3,7 +3,7 @@
 * 作者：闪电黑客
 * 日期：2024/4/7 17:08
 
-* 描述：
+* 描述：法则生成器
 
 */
 
@@ -27,14 +27,25 @@ namespace WorldTree.SourceGenerator
 				if (!(context.SyntaxReceiver is SyntaxContextReceiver receiver and not null)) return;
 				if (receiver.isGenerator == false) return;
 
-				SendRuleBaseGeneratorHelper.Execute(context);
-				SendRuleAsyncBaseGeneratorHelper.Execute(context);
-				CallRuleBaseGeneratorHelper.Execute(context);
-				CallRuleAsyncBaseGeneratorHelper.Execute(context);
-				SendRuleGeneratorHelper.Execute(context);
-				SendRuleAsyncGeneratorHelper.Execute(context);
-				CallRuleGeneratorHelper.Execute(context);
-				CallRuleAsyncGeneratorHelper.Execute(context);
+				SendRuleBaseGenerator.Execute(context);
+				SendRuleAsyncBaseGenerator.Execute(context);
+				CallRuleBaseGenerator.Execute(context);
+				CallRuleAsyncBaseGenerator.Execute(context);
+
+				SendRuleGenerator.Execute(context);
+				SendRuleAsyncGenerator.Execute(context);
+				CallRuleGenerator.Execute(context);
+				CallRuleAsyncGenerator.Execute(context);
+
+				RuleListSendRuleGenerator.Execute(context);
+				RuleListSendAsyncRuleGenerator.Execute(context);
+				RuleListCallRuleGenerator.Execute(context);
+				RuleListCallAsyncRuleGenerator.Execute(context);
+
+				RuleGroupSendRuleGenerator.Execute(context);
+				RuleGroupSendAsyncRuleGenerator.Execute(context);
+				RuleGroupCallRuleGenerator.Execute(context);
+				RuleGroupCallAsyncRuleGenerator.Execute(context);
 			}
 			catch (Exception e)
 			{
