@@ -998,7 +998,7 @@ MonoBehaviour:
   sliderText: {fileID: 972459267}
   LogText: {fileID: 1707502865}
   hostServerIP: http://127.0.0.1:9999
-  playMode: 2
+  playMode: 1
   LocalVersion: 
   packageVersion: 
 --- !u!1 &1707502863
