@@ -46,6 +46,7 @@ namespace WorldTree.SourceGenerator
 
 				Code.Append
 ($@"
+
 	/// <summary>
 	/// 通知法则基类接口
 	/// </summary>
@@ -53,9 +54,7 @@ namespace WorldTree.SourceGenerator
 	{{
 		void Invoke(INode self{GenericTypeParameter});
 	}}
-");
-				Code.Append
-($@"
+
 	/// <summary>
 	/// 通知法则基类
 	/// </summary>

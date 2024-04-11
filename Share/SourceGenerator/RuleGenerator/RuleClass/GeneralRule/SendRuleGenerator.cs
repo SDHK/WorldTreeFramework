@@ -34,16 +34,15 @@ namespace WorldTree.SourceGenerator
 				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
 				Code.Append
 ($@"
+
     /// <summary>
-	/// 通用通知法则接口
-	/// </summary>
+    /// 通用通知法则接口
+    /// </summary>
     public interface ISendRule{genericsAngle} : ISendRuleBase{genericsAngle} {{}}
-");
-				Code.Append
-($@"
+
     /// <summary>
-	/// 通用通知法则
-	/// </summary>
+    /// 通用通知法则
+    /// </summary>
     public abstract class SendRule<N{generics}> : SendRuleBase<N, ISendRule{genericsAngle}{generics}> where N : class, INode, AsRule<ISendRule{genericsAngle}> {{}}
 ");
 			}

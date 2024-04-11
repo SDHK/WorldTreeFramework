@@ -9,6 +9,9 @@ namespace WorldTree
 		public LiteDatabase db;
 	}
 
+	/// <summary>
+	/// 测试数据类
+	/// </summary>
 	public class TestClass
 	{
 		public int Id { get; set; }

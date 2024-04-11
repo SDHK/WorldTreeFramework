@@ -7,10 +7,8 @@
 
 */
 
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -55,9 +53,6 @@ namespace WorldTree.SourceGenerator
 			await node.TreeTaskCompleted();
 			return TypeInfo<OutT>.Default;
 		}}
-");
-				Code.Append
-($@"
 
 		/// <summary>
 		/// 调用法则集合异步执行

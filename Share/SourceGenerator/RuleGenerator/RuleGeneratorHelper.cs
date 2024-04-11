@@ -17,7 +17,7 @@ namespace WorldTree.SourceGenerator
 	internal static class RuleGeneratorHelper
 	{
 		/// <summary>
-		/// 获取泛型类型带尖括号
+		/// 获取泛型类型带尖括号:《T1, T2, T3》
 		/// </summary>
 		public static string GetGenericsAngle(int index)
 		{
@@ -39,7 +39,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 获取泛型类型
+		/// 获取泛型类型: , T1, T2, T3
 		/// </summary>
 		public static string GetGenerics(int index, bool isAfter = false)
 		{
@@ -59,7 +59,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 获取泛型类型加参数
+		/// 获取泛型类型加参数: , T1 arg1, T2 arg2, T3 arg3
 		/// </summary>
 		public static string GetGenericTypeParameter(int index)
 		{
@@ -72,7 +72,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 获取泛型参数
+		/// 获取泛型参数: , arg1, arg2, arg3
 		/// </summary>
 		public static string GetGenericParameter(int index)
 		{

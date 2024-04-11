@@ -34,13 +34,12 @@ namespace WorldTree.SourceGenerator
 				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
 				Code.Append
 ($@"
+
 	/// <summary>
 	/// 通用调用法则接口
 	/// </summary>
 	public interface ICallRule<{genericsAfter}OutT> : ICallRuleBase<{genericsAfter}OutT> {{}}
-");
-				Code.Append
-($@"
+
 	/// <summary>
 	/// 通用调用法则
 	/// </summary>

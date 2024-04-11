@@ -54,9 +54,6 @@ namespace WorldTree.SourceGenerator
 			}}
 			return outT;
 		}}
-");
-				Code.Append
-($@"
 
 		/// <summary>
 		/// 法则列表异步调用执行

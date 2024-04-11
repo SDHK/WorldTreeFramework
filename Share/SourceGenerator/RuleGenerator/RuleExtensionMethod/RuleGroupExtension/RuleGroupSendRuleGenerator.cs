@@ -7,12 +7,9 @@
 
 */
 
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using System.Text;
-using System.Reflection.Metadata;
 
 namespace WorldTree.SourceGenerator
 {
@@ -52,9 +49,6 @@ namespace WorldTree.SourceGenerator
 			((IRuleList<R>)ruleList).Send(node{genericParameter});
 			return true;
 		}}
-");
-				Code.Append
-($@"
 
 		/// <summary>
 		/// 通知法则集合执行

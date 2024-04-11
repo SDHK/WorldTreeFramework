@@ -7,10 +7,8 @@
 
 */
 
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
 namespace WorldTree.SourceGenerator

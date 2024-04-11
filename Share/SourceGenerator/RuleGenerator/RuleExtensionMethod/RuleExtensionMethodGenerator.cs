@@ -9,9 +9,6 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
@@ -39,6 +36,12 @@ namespace WorldTree.SourceGenerator
 				RuleGroupSendAsyncRuleGenerator.Execute(context);
 				RuleGroupCallRuleGenerator.Execute(context);
 				RuleGroupCallAsyncRuleGenerator.Execute(context);
+
+				NodeSendRuleGenerator.Execute(context);
+				NodeSendRuleAsyncGenerator.Execute(context);
+				NodeCallRuleGenerator.Execute(context);
+				NodeCallRuleAsyncGenerator.Execute(context);
+				
 			}
 			catch (Exception e)
 			{

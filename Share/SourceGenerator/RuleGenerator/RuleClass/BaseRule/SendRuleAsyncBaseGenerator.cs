@@ -49,19 +49,18 @@ namespace WorldTree.SourceGenerator
 
 				Code.Append
 ($@"
+
     /// <summary>
-	/// 异步通知系统基类接口
-	/// </summary>
+    /// 异步通知系统基类接口
+    /// </summary>
 	public interface ISendRuleAsyncBase{genericsAngle} : IRule
 	{{
 		TreeTask Invoke(INode self{GenericTypeParameter});
 	}}
-");
-				Code.Append
-($@"
+
     /// <summary>
-	/// 异步通知法则基类
-	/// </summary>
+    /// 异步通知法则基类
+    /// </summary>
     public abstract class SendRuleAsyncBase<N, R{generics}> : RuleBase<N, R>, ISendRuleAsyncBase{genericsAngle}
 		where N : class, INode, AsRule<R>
 		where R : ISendRuleAsyncBase{genericsAngle}

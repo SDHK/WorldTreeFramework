@@ -9,7 +9,6 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using System.Reflection.Metadata;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -48,17 +47,15 @@ namespace WorldTree.SourceGenerator
 
 				Code.Append
 ($@"
+
     /// <summary>
     /// 异步调用法则基类接口
-	/// </summary>
+    /// </summary>
     public interface ICallRuleAsyncBase<{genericsAfter}OutT> : IRule
 	{{
         TreeTask<OutT> Invoke(INode self{GenericTypeParameter});
 	}}
-");
 
-				Code.Append
-($@"
     /// <summary>
 	/// 异步调用法则基类
 	///</summary>
@@ -69,7 +66,6 @@ namespace WorldTree.SourceGenerator
 		public virtual TreeTask<OutT> Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
 		protected abstract TreeTask<OutT> Execute(N self{GenericTypeParameter});
 	}}
-
 ");
 			}
 			Code.Append("}");

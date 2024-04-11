@@ -33,16 +33,15 @@ namespace WorldTree.SourceGenerator
 				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
 				Code.Append
 ($@"
+
     /// <summary>
-	/// 异步通用调用法则接口
-	/// </summary>
+    /// 异步通用调用法则接口
+    /// </summary>
 	public interface ICallRuleAsync<{genericsAfter}OutT> : ICallRuleAsyncBase<{genericsAfter}OutT> {{}}
-");
-				Code.Append
-($@"
+
     /// <summary>
-	/// 异步通用调用法则
-	/// </summary>
+    /// 异步通用调用法则
+    /// </summary>
 	public abstract class CallRuleAsync<N{generics}, OutT> : CallRuleAsyncBase<N, ICallRuleAsync<{genericsAfter}OutT>, {genericsAfter}OutT> where N : class, INode, AsRule<ICallRuleAsync<{genericsAfter}OutT>> {{}}
 ");
 			}

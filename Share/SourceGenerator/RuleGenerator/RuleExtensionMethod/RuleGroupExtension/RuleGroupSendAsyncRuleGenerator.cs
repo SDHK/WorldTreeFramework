@@ -7,10 +7,8 @@
 
 */
 
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -47,17 +45,14 @@ namespace WorldTree.SourceGenerator
 		public static async TreeTask<bool> TrySendAsync<R{generics}>(this IRuleGroup<R> group, INode node{genericTypeParameter})
 			where R : ISendRuleAsyncBase{genericsAngle}
 		{{
-			if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
+			if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
 			{{
-				await node.TreeTaskCompleted();
-				return false;
+				await ((IRuleList<R>)ruleList).SendAsync(node{genericParameter});
+				return true;
 			}}
-			await ((IRuleList<R>)ruleList).SendAsync(node{genericParameter});
-			return true;
+			await node.TreeTaskCompleted();
+			return false;
 		}}
-");
-				Code.Append
-($@"
 
 		/// <summary>
 		/// 通知法则集合异步执行

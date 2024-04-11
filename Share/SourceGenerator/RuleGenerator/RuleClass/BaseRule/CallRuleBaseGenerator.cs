@@ -46,6 +46,7 @@ namespace WorldTree.SourceGenerator
 				string GenericParameter = RuleGeneratorHelper.GetGenericParameter(i);
 				Code.Append
 ($@"
+
 	/// <summary>
 	/// 调用法则基类接口
 	/// </summary>
@@ -53,9 +54,7 @@ namespace WorldTree.SourceGenerator
 	{{
 		OutT Invoke(INode self{GenericTypeParameter});
 	}}
-");
-				Code.Append
-($@"
+
 	/// <summary>
 	/// 调用法则基类
 	/// </summary>

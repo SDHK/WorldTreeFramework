@@ -34,19 +34,17 @@ namespace WorldTree.SourceGenerator
 				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
 				Code.Append
 ($@"
+
     /// <summary>
-	/// 异步通用通知法则接口
-	/// </summary>
+    /// 异步通用通知法则接口
+    /// </summary>
 	public interface ISendRuleAsync{genericsAngle} : ISendRuleAsyncBase{genericsAngle} {{}}
-");
-				Code.Append
-($@"
+
     /// <summary>
-	/// 异步通用通知法则
-	/// </summary>
+    /// 异步通用通知法则
+    /// </summary>
 	public abstract class SendRuleAsync<N{generics}> : SendRuleAsyncBase<N, ISendRuleAsync{genericsAngle}{generics}> where N : class, INode, AsRule<ISendRuleAsync{genericsAngle}> {{}}
 ");
-
 			}
 			Code.Append("}");
 

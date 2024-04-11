@@ -7,10 +7,8 @@
 
 */
 
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -47,17 +45,14 @@ namespace WorldTree.SourceGenerator
 		public static bool TryCall<R{generics}, OutT>(this IRuleGroup<R> group, INode node{genericTypeParameter}, out OutT outT)
 			where R : ICallRuleBase<{genericsAfter}OutT>
 		{{
-			if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
+			if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
 			{{
-				outT = TypeInfo<OutT>.Default;
-				return false;
+				((IRuleList<R>)ruleList).Call(node{genericParameter}, out outT);
+				return true;
 			}}
-			((IRuleList<R>)ruleList).Call(node{genericParameter}, out outT);
-			return true;
+			outT = TypeInfo<OutT>.Default;
+			return false;
 		}}
-");
-				Code.Append
-($@"
 
 		/// <summary>
 		/// 调用法则集合执行
@@ -68,9 +63,6 @@ namespace WorldTree.SourceGenerator
 			group.TryCall(node{genericParameter}, out OutT outT);
 			return outT;
 		}}
-");
-				Code.Append
-($@"
 
 		/// <summary>
 		/// 尝试调用法则集合执行
@@ -86,9 +78,6 @@ namespace WorldTree.SourceGenerator
 			outT = null;
 			return true;
 		}}
-");
-				Code.Append
-($@"
 
 		/// <summary>
 		/// 调用法则集合执行
