@@ -41,7 +41,11 @@ namespace WorldTree.SourceGenerator
 				NodeSendRuleAsyncGenerator.Execute(context);
 				NodeCallRuleGenerator.Execute(context);
 				NodeCallRuleAsyncGenerator.Execute(context);
-				
+
+				NodeCallRuleAsyncGeneralGenerator.Execute(context);
+				NodeCallRuleGeneralGenerator.Execute(context);
+				NodeSendRuleAsyncGeneralGenerator.Execute(context);
+				NodeSendRuleGeneralGenerator.Execute(context);
 			}
 			catch (Exception e)
 			{
