@@ -7,10 +7,8 @@
 
 */
 
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -35,7 +33,6 @@ namespace WorldTree.SourceGenerator
 			for (int i = 0; i <= argumentCount; i++)
 			{
 				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
 				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
 				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
 				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
