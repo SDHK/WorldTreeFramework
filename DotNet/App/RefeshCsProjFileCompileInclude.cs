@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using static WorldTree.RefeshCsProjFileCompileInclude;
+//using static WorldTree.RefeshCsProjFileCompileInclude;
 
 namespace WorldTree
 {
@@ -65,17 +65,17 @@ namespace WorldTree
 		/// </summary>
 		/// <param name="proc"></param>
 		/// <returns></returns>
-		public static IntPtr SetHook(LowLevelKeyboardProc proc)
+		public static IntPtr SetHook(RefeshCsProjFileCompileInclude.LowLevelKeyboardProc proc)
 		{
 			using (Process curProcess = Process.GetCurrentProcess())
 			using (ProcessModule curModule = curProcess.MainModule)
 			{
-				return SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
+				return SetWindowsHookEx(RefeshCsProjFileCompileInclude.WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
 			}
 		}
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		public static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+		public static extern IntPtr SetWindowsHookEx(int idHook, RefeshCsProjFileCompileInclude.LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]

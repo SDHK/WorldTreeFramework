@@ -1,18 +1,18 @@
 ﻿/****************************************
 
 * 作者：闪电黑客
-* 日期：2024/4/9 20:41
+* 日期：2024/4/15 14:45
 
 * 描述：
 
 */
-
 using Microsoft.CodeAnalysis;
 
 namespace WorldTree.SourceGenerator
 {
 	[Generator]
-	internal class RuleExtensionMethodGenerator : ISourceGenerator
+
+	internal class NodeExtensionMethodGenerator : ISourceGenerator
 	{
 		public void Initialize(GeneratorInitializationContext context)
 		{
@@ -26,15 +26,15 @@ namespace WorldTree.SourceGenerator
 				if (!(context.SyntaxReceiver is FindCoreSyntaxReceiver receiver and not null)) return;
 				if (receiver.isGenerator == false) return;
 
-				RuleListSendRuleGenerator.Execute(context);
-				RuleListSendAsyncRuleGenerator.Execute(context);
-				RuleListCallRuleGenerator.Execute(context);
-				RuleListCallAsyncRuleGenerator.Execute(context);
+				NodeSendRuleGenerator.Execute(context);
+				NodeSendRuleAsyncGenerator.Execute(context);
+				NodeCallRuleGenerator.Execute(context);
+				NodeCallRuleAsyncGenerator.Execute(context);
 
-				RuleGroupSendRuleGenerator.Execute(context);
-				RuleGroupSendAsyncRuleGenerator.Execute(context);
-				RuleGroupCallRuleGenerator.Execute(context);
-				RuleGroupCallAsyncRuleGenerator.Execute(context);
+				NodeSendRuleAsyncGeneralGenerator.Execute(context);
+				NodeSendRuleGeneralGenerator.Execute(context);
+				NodeCallRuleAsyncGeneralGenerator.Execute(context);
+				NodeCallRuleGeneralGenerator.Execute(context);
 			}
 			catch (Exception e)
 			{
@@ -42,5 +42,6 @@ namespace WorldTree.SourceGenerator
 				throw;
 			}
 		}
+
 	}
 }

@@ -7,10 +7,6 @@
 
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace WorldTree.SourceGenerator
 {
 	/// <summary>
@@ -21,6 +17,6 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 参数数量
 		/// </summary>
-		public static int argumentCount = 10;
+		public static int argumentCount = 5;
 	}
 }

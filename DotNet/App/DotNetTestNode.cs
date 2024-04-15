@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Reflection;
-using System.Runtime.Loader;
 
 namespace WorldTree
 {
@@ -15,28 +13,37 @@ namespace WorldTree
 
 	public static partial class DotNetTestNodeRule
 	{
+		private class AwakeRule : AwakeRule<DotNetTestNode>
+		{
+			protected override void Execute(DotNetTestNode self)
+			{
+				self.Log("唤醒！！");
+			}
+		}
+
+		private class EnableRule : EnableRule<DotNetTestNode>
+		{
+			protected override void Execute(DotNetTestNode self)
+			{
+				self.Log("激活！！");
+			}
+		}
+
 		private class AddRule : AddRule<DotNetTestNode>
 		{
 			protected override void Execute(DotNetTestNode self)
 			{
-				// 1. 创建自定义AssemblyLoadContext
-				//var alc = new AssemblyLoadContext("NewALC", true);
-
-				//// 3. 加载程序集
-				//alc.LoadFromAssemblyPath("A.dll");
-
-				//// 4. 创建对象并调用
-				//Type t = alc.LoadFromAssemblyName(new AssemblyName("A.MyClass")).GetType("A.MyClass");
-				//dynamic obj = Activator.CreateInstance(t);
-				//obj.MyMethod();
-
-				////卸载程序集
-				//alc.Unload();
-
 				self.Log(" 初始化！！！!!");
-
 				//self.AddComponent(out RefeshCsProjFileCompileInclude _);
 				//self.Log(self.Core.ToStringDrawTree());
+			}
+		}
+
+		private class DisableRule : DisableRule<DotNetTestNode>
+		{
+			protected override void Execute(DotNetTestNode self)
+			{
+				self.Log("失活！！");
 			}
 		}
 
