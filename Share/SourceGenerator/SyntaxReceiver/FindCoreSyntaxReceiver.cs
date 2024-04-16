@@ -3,14 +3,18 @@
 * 作者：闪电黑客
 * 日期：2024/4/15 14:26
 
-* 描述：
+* 描述：查找核心程序集
 
 */
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace WorldTree.SourceGenerator
 {
+	/// <summary>
+	/// 查找核心程序集
+	/// </summary>
 	public class FindCoreSyntaxReceiver : ISyntaxReceiver
 	{
 		public bool isGenerator = false;
