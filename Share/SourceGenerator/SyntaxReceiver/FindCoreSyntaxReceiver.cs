@@ -25,10 +25,9 @@ namespace WorldTree.SourceGenerator
 			if (node is not InterfaceDeclarationSyntax interfaceDeclarationSyntax) return;
 
 			//判断类型是否是INode,因为INode是基类在核心程序集中
-			if (interfaceDeclarationSyntax.Identifier.ValueText == "INode")
-			{
-				isGenerator = true;
-			}
+			if (interfaceDeclarationSyntax.Identifier.ValueText != "INode") return;
+
+			isGenerator = true;
 		}
 	}
 }

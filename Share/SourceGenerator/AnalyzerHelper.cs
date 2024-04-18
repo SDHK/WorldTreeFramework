@@ -57,7 +57,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		/// <param name="classDecl">类声明语法</param>
 		/// <param name="interfaceName">接口名称</param>
-		public static bool CheckBaseExtendInterface(ClassDeclarationSyntax classDecl, string interfaceName)
+		public static bool CheckBaseExtendInterface(ClassDeclarationSyntax classDecl, string interfaceName, bool CheckSelf = true)
 		{
 			// 使用队列存储需要检查的类型
 			Queue<ClassDeclarationSyntax> classQueue = new Queue<ClassDeclarationSyntax>();
@@ -72,13 +72,11 @@ namespace WorldTree.SourceGenerator
 
 				if (baseTypes is not null)
 				{
-					// 检查基类列表中是否包含指定接口
-					bool inheritsDirectly = false;
 					foreach (BaseTypeSyntax baseTypeItem in baseTypes)
 					{
 						// 判断基类型名称是否为指定接口
-						inheritsDirectly = baseTypeItem.Type.ToString() == interfaceName;
-						if (inheritsDirectly) return true;
+						if (!CheckSelf && classDecl == currentClass) break;
+						if (baseTypeItem.Type.ToString() == interfaceName) return true;
 					}
 
 					// 将基类加入队列
