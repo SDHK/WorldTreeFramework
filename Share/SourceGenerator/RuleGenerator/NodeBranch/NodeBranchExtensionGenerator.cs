@@ -39,6 +39,20 @@ namespace WorldTree.SourceGenerator
 ($@"
 
 		/// <summary>
+		/// 节点加入树结构
+		/// </summary>
+		public static INode AddSelfToTree<B, K{generics}>(this INode self, K key, INode parent{genericTypeParameter})
+			where B : class, IBranch<K>
+		{{
+			if (self.TryAddSelfToTree<B, K>(key, parent))
+			{{
+				self.TrySendRule(TypeInfo<IAwakeRule{genericsAngle}>.Default{genericParameter});
+				self.OnAddSelfToTree();
+			}}
+			return self;
+		}}
+
+		/// <summary>
 		/// 添加节点
 		/// </summary>
 		public static INode AddNode<B, K{generics}>(this INode self, K key, long type, out INode node{genericTypeParameter}, bool isPool = true)

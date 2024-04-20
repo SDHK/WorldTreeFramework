@@ -3,7 +3,7 @@
 * 作者：闪电黑客
 * 日期：2024/4/16 17:05
 
-* 描述：NodeClass生成器
+* 描述：Node复制兄弟类 生成器
 
 */
 
@@ -16,7 +16,7 @@ using System.Text;
 namespace WorldTree.SourceGenerator
 {
 	[Generator]
-	internal  class NodeClassGenerator : ISourceGenerator
+	internal class CopyNodeClassGenerator : ISourceGenerator
 	{
 		public void Initialize(GeneratorInitializationContext context)
 		{
@@ -115,7 +115,9 @@ namespace WorldTree.SourceGenerator
 			}
 		}
 
-
+		/// <summary>
+		/// 获取Node类的成员和方法字符串
+		/// </summary>
 		public static string GetClassMembers(ClassDeclarationSyntax classDeclaration)
 		{
 			var fullText = classDeclaration.ToFullString();
