@@ -35,6 +35,8 @@ namespace WorldTree.SourceGenerator
 				SendRuleAsyncGenerator.Execute(context);
 				CallRuleGenerator.Execute(context);
 				CallRuleAsyncGenerator.Execute(context);
+
+				AwakeRuleGenerator.Execute(context);
 			}
 			catch (Exception e)
 			{
