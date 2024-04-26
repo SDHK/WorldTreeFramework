@@ -36,6 +36,12 @@ namespace WorldTree.SourceGenerator
 ($@"
 
 	/// <summary>
+	/// 节点：通用调用法则限制
+	/// </summary>
+	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
+    public interface AsCallRule<{genericsAfter}OutT> : AsRule<ICallRule<{genericsAfter}OutT>> {{}}
+
+	/// <summary>
 	/// 通用调用法则接口
 	/// </summary>
 	public interface ICallRule<{genericsAfter}OutT> : ICallRuleBase<{genericsAfter}OutT> {{}}

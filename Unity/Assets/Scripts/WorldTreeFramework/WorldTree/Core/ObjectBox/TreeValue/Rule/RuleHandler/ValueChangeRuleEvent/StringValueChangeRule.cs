@@ -11,20 +11,30 @@ using System;
 
 namespace WorldTree
 {
-    public static partial class TreeValueBaseRule
-    {
-        class StringValueChangeRuleEvent<T> : TreeValueGenericsChangeRuleEvent<string, T>
-           where T : IEquatable<T>
-        {
-            protected override void Execute(TreeValueBase<string> self, T arg1)
-            {
-                self.Value = arg1.ToString();
-            }
-        }
-        class StringIntChangeRuleEvent : StringValueChangeRuleEvent<int> { }
-        class StringShortChangeRuleEvent : StringValueChangeRuleEvent<short> { }
-        class StringLongChangeRuleEvent : StringValueChangeRuleEvent<long> { }
-        class StringFloatChangeRuleEvent : StringValueChangeRuleEvent<float> { }
-        class StringDoubleChangeRuleEvent : StringValueChangeRuleEvent<double> { }
-    }
+	public static partial class TreeValueBaseRule
+	{
+		private class StringValueChangeRuleEvent<T> : TreeValueGenericsChangeRuleEvent<string, T>
+		   where T : IEquatable<T>
+		{
+			protected override void Execute(TreeValueBase<string> self, T arg1)
+			{
+				self.Value = arg1.ToString();
+			}
+		}
+
+		private class StringIntChangeRuleEvent : StringValueChangeRuleEvent<int>
+		{ }
+
+		private class StringShortChangeRuleEvent : StringValueChangeRuleEvent<short>
+		{ }
+
+		private class StringLongChangeRuleEvent : StringValueChangeRuleEvent<long>
+		{ }
+
+		private class StringFloatChangeRuleEvent : StringValueChangeRuleEvent<float>
+		{ }
+
+		private class StringDoubleChangeRuleEvent : StringValueChangeRuleEvent<double>
+		{ }
+	}
 }

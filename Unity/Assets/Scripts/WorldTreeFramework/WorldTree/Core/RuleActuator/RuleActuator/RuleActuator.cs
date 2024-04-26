@@ -4,10 +4,9 @@
 * 日期： 2022/9/16 22:03
 
 * 描述： 泛型法则执行器
-* 
+*
 
 */
-
 
 namespace WorldTree
 {
@@ -25,7 +24,6 @@ namespace WorldTree
 			return $"RuleActuator<{typeof(R)}>";
 		}
 	}
-
 
 	public static class RuleActuatorRule
 	{

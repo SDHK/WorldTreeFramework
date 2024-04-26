@@ -37,12 +37,15 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取世界
 		/// </summary>
-		public static bool TryGetWorld(this INode self, long type, out INode core) => self.TryGetNode<WorldBranch, long>(type, out core);
+		public static bool TryGetWorld(this INode self, long type, out INode core)
+			=> (core = self.GetBranch<WorldBranch>()?.GetNode(type)) != null;
 
 		/// <summary>
 		/// 尝试获取世界
 		/// </summary>
-		public static bool TryGetWorld<N, T>(this N self, out T core) where N : class, INode where T : class, INode, NodeOf<N, WorldBranch> => (core = self.TryGetNode<WorldBranch, long>(TypeInfo<T>.TypeCode, out INode node) ? node as T : null) != null;
+		public static bool TryGetWorld<N, T>(this N self, out T core)
+			where N : class, INode where T : class, INode, NodeOf<N, WorldBranch>
+		=> (core = self.GetBranch<WorldBranch>()?.GetNode(TypeInfo<T>.TypeCode) as T) != null;
 
 		#endregion
 
@@ -51,17 +54,20 @@ namespace WorldTree
 		/// <summary>
 		/// 移除世界
 		/// </summary>
-		public static void RemoveWorld<T>(this INode self) where T : class, INode => self.RemoveNode<WorldBranch, long>(TypeInfo<T>.TypeCode);
+		public static void RemoveWorld<T>(this INode self) where T : class, INode
+			=> self.GetBranch<WorldBranch>()?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();
 
 		/// <summary>
 		/// 移除世界
 		/// </summary>
-		public static void RemoveWorld(this INode self, long type) => self.RemoveNode<WorldBranch, long>(type);
+		public static void RemoveWorld(this INode self, long type)
+			=> self.GetBranch<WorldBranch>()?.GetNode(type)?.Dispose();
 
 		/// <summary>
 		/// 移除全部组件
 		/// </summary>
-		public static void RemoveAllWorld(this INode self) => self.RemoveAllNode<WorldBranch>();
+		public static void RemoveAllWorld(this INode self)
+			=> self.RemoveAllNode(TypeInfo<WorldBranch>.TypeCode);
 
 		#endregion
 

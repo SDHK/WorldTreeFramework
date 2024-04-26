@@ -12,6 +12,7 @@ namespace WorldTree
 	/// 世界树节点基类
 	/// </summary>
 	public abstract partial class Node : INode
+
 	{
 		public bool IsFromPool { get; set; }
 		public bool IsRecycle { get; set; }
@@ -134,8 +135,6 @@ namespace WorldTree
 			}
 		}
 
-		public virtual void RemoveAllNode<B>() where B : class, IBranch => RemoveAllNode(TypeInfo<B>.TypeCode);
-
 		public virtual void RemoveAllNode(long branchType)
 		{
 			if (this.TryGetBranch(branchType, out IBranch branch))
@@ -160,10 +159,6 @@ namespace WorldTree
 				}
 			}
 		}
-
-		public virtual void RemoveNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key)?.Dispose();
-
-		public virtual void RemoveNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(id)?.Dispose();
 
 		/// <summary>
 		/// 回收节点
@@ -263,14 +258,6 @@ namespace WorldTree
 
 		#region 裁剪
 
-		public virtual bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.GetBranch<B>()?.GetNodeById(id).CutSelf()) != null;
-
-		public virtual bool TryCutNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.GetBranch<B>()?.GetNode(key).CutSelf()) != null;
-
-		public virtual INode CutNodeById<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(id).CutSelf();
-
-		public virtual INode CutNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key).CutSelf();
-
 		public virtual INode CutSelf()
 		{
 			if (this.IsRecycle) return null; //是否已经回收
@@ -301,22 +288,6 @@ namespace WorldTree
 			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
 			this.Parent = null;//清除父节点
 		}
-
-		#endregion
-
-		#region 获取
-
-		public virtual bool ContainsId<B>(long id) where B : class, IBranch => this.GetBranch<B>()?.ContainsId(id) ?? false;
-
-		public virtual bool Contains<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.Contains(key) ?? false;
-
-		public virtual bool TryGetNodeById<B>(long id, out INode node) where B : class, IBranch => (node = this.TryGetBranch(out B branch) && branch.TryGetNodeById(id, out node) ? node : null) != null;
-
-		public virtual bool TryGetNode<B, K>(K key, out INode node) where B : class, IBranch<K> => (node = this.TryGetBranch(out B branch) && branch.TryGetNode(key, out node) ? node : null) != null;
-
-		public virtual INode GetNodeById<B>(long Id) where B : class, IBranch => this.GetBranch<B>()?.GetNodeById(Id);
-
-		public virtual INode GetNode<B, K>(K key) where B : class, IBranch<K> => this.GetBranch<B>()?.GetNode(key);
 
 		#endregion
 

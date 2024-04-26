@@ -36,8 +36,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGetIdNode(this INode self, long idKey, out INode node)
 		{
-			node = null;
-			return self.TryGetBranch(out IdNodeBranch branch) && branch.TryGetNode(idKey, out node);
+			return (node = self.GetBranch<IdNodeBranch>()?.GetNode(idKey)) != null;
 		}
 
 		/// <summary>
@@ -47,7 +46,7 @@ namespace WorldTree
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>
 		{
-			return (idNode = self.TryGetBranch(out IdNodeBranch branch) && branch.TryGetNode(idKey, out INode node) ? node as T : null) != null;
+			return (idNode = self.GetBranch<IdNodeBranch>()?.GetNode(idKey) as T) != null;
 		}
 
 		#endregion
@@ -57,7 +56,8 @@ namespace WorldTree
 		/// <summary>
 		/// 裁剪id节点
 		/// </summary>
-		public static void TryCutIdNode(this INode self, long idKey, out INode node) => self.TryCutNode<IdNodeBranch, long>(idKey, out node);
+		public static bool TryCutIdNode(this INode self, long idKey, out INode node)
+			=> (node = self.GetBranch<IdNodeBranch>()?.GetNode(idKey)?.CutSelf()) != null;
 
 		#endregion
 
@@ -74,7 +74,8 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试嫁接id节点
 		/// </summary>
-		public static bool TryGraftIdNode(this INode self, long idKey, INode node) => node.TryGraftSelfToTree<IdNodeBranch, long>(idKey, self);
+		public static bool TryGraftIdNode(this INode self, long idKey, INode node)
+			=> node.TryGraftSelfToTree<IdNodeBranch, long>(idKey, self);
 
 		#endregion
 
@@ -83,12 +84,14 @@ namespace WorldTree
 		/// <summary>
 		/// 根据id移除节点
 		/// </summary>
-		public static void RemoveIdNode(this INode self, long idKey) => self.RemoveNode<IdNodeBranch, long>(idKey);
+		public static void RemoveIdNode(this INode self, long idKey)
+			=> self.GetBranch<IdNodeBranch>()?.GetNode(idKey)?.Dispose();
 
 		/// <summary>
 		/// 移除全部id节点
 		/// </summary>
-		public static void RemoveAllIdNode(this INode self) => self.RemoveAllNode<IdNodeBranch>();
+		public static void RemoveAllIdNode(this INode self)
+			=> self.RemoveAllNode(TypeInfo<IdNodeBranch>.TypeCode);
 
 		#endregion
 

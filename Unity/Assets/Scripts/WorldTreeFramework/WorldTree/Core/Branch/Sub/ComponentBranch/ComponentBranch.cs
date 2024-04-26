@@ -38,12 +38,15 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取组件
 		/// </summary>
-		public static bool TryGetComponent(this INode self, long type, out INode component) => self.TryGetNode<ComponentBranch, long>(type, out component);
+		public static bool TryGetComponent(this INode self, long type, out INode component)
+			=> (component = self.GetBranch<ComponentBranch>()?.GetNode(type)) != null;
 
 		/// <summary>
 		/// 尝试获取组件
 		/// </summary>
-		public static bool TryGetComponent<N, T>(this N self, out T component) where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch> => (component = self.TryGetNode<ComponentBranch, long>(TypeInfo<T>.TypeCode, out INode node) ? node as T : null) != null;
+		public static bool TryGetComponent<N, T>(this N self, out T component)
+			where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch>
+		=> (component = (self.GetBranch<ComponentBranch>()?.GetNode(TypeInfo<T>.TypeCode)) as T) != null;
 
 		#endregion
 
@@ -52,12 +55,15 @@ namespace WorldTree
 		/// <summary>
 		/// 裁剪组件
 		/// </summary>
-		public static bool TryCutComponent<T>(this INode self, out T node) where T : class, INode => (node = self.TryCutNode<ComponentBranch, long>(TypeInfo<T>.TypeCode, out INode Inode) ? Inode as T : null) != null;
+		public static bool TryCutComponent<T>(this INode self, out T node)
+			where T : class, INode
+		=> (node = self.GetBranch<ComponentBranch>()?.GetNode(TypeInfo<T>.TypeCode)?.CutSelf() as T) != null;
 
 		/// <summary>
 		/// 裁剪组件
 		/// </summary>
-		public static bool TryCutComponent(this INode self, long type, out INode node) => self.TryCutNode<ComponentBranch, long>(type, out node);
+		public static bool TryCutComponent(this INode self, long type, out INode node)
+			=> (node = self.GetBranch<ComponentBranch>()?.GetNode(type)?.CutSelf()) != null;
 
 		#endregion
 
@@ -80,17 +86,21 @@ namespace WorldTree
 		/// <summary>
 		/// 移除组件
 		/// </summary>
-		public static void RemoveComponent<T>(this INode self) where T : class, INode => self.RemoveNode<ComponentBranch, long>(TypeInfo<T>.TypeCode);
+		public static void RemoveComponent<T>(this INode self)
+			where T : class, INode
+		=> self.GetBranch<ComponentBranch>()?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();
 
 		/// <summary>
 		/// 移除组件
 		/// </summary>
-		public static void RemoveComponent(this INode self, long type) => self.RemoveNode<ComponentBranch, long>(type);
+		public static void RemoveComponent(this INode self, long type)
+			=> self.GetBranch<ComponentBranch>()?.GetNode(type)?.Dispose();
 
 		/// <summary>
 		/// 移除全部组件
 		/// </summary>
-		public static void RemoveAllComponent(this INode self) => self.RemoveAllNode<ComponentBranch>();
+		public static void RemoveAllComponent(this INode self)
+			=> self.RemoveAllNode(TypeInfo<ComponentBranch>.TypeCode);
 
 		#endregion
 

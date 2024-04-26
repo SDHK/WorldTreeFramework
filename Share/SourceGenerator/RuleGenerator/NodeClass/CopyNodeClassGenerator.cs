@@ -30,16 +30,17 @@ namespace WorldTree.SourceGenerator
 				if (!(context.SyntaxReceiver is FindINodeSubSyntaxReceiver receiver)) return;
 				if (receiver.ClassDeclarations.Count == 0) return;
 
-
 				ClassDeclarationSyntax? NodeClassDeclaration = null;
 
 				// 获取当前编译器实例
 				CSharpCompilation compilation = (CSharpCompilation)context.Compilation;
+
 				// 遍历所有的语法树
 				foreach (var tree in compilation.SyntaxTrees)
 				{
 					// 获取根节点
 					var root = (CompilationUnitSyntax)tree.GetRoot();
+
 					// 遍历所有的类声明
 					foreach (var classDeclaration in root.DescendantNodes().OfType<ClassDeclarationSyntax>())
 					{
@@ -67,11 +68,9 @@ namespace WorldTree.SourceGenerator
 				// 如果没找到类型，直接返回
 				if (NodeClassDeclaration == null) return;
 
-
-                foreach (ClassDeclarationSyntax CopyClassDeclarations in receiver.ClassDeclarations)
-                {
+				foreach (ClassDeclarationSyntax CopyClassDeclarations in receiver.ClassDeclarations)
+				{
 					string fileName = Path.GetFileNameWithoutExtension(CopyClassDeclarations.SyntaxTree.FilePath);
-
 
 					string className;
 					if (CopyClassDeclarations.TypeParameterList != null)
@@ -86,7 +85,6 @@ namespace WorldTree.SourceGenerator
 						className = CopyClassDeclarations.Identifier.ValueText;
 					}
 
-
 					SyntaxTree syntaxTree = CopyClassDeclarations.SyntaxTree;
 					SyntaxNode syntaxRoot = syntaxTree.GetRoot();
 					StringBuilder Code = new StringBuilder();
@@ -99,10 +97,7 @@ namespace WorldTree.SourceGenerator
 	);
 					Code.AppendLine("namespace WorldTree");
 					Code.AppendLine("{");
-					Code.AppendLine($"	public partial class {className}");
-					Code.Append("	{");
-					Code.Append($"{GetClassMembers(NodeClassDeclaration)}");
-					Code.AppendLine("}");
+					Code.AppendLine($"	public partial class {className} :{GetClassMembers(NodeClassDeclaration)}");
 					Code.Append("}");
 
 					context.AddSource($"{fileName}CopyNode.cs", SourceText.From(Code.ToString(), Encoding.UTF8));//生成代码
@@ -121,8 +116,10 @@ namespace WorldTree.SourceGenerator
 		public static string GetClassMembers(ClassDeclarationSyntax classDeclaration)
 		{
 			var fullText = classDeclaration.ToFullString();
-			var startIndex = fullText.IndexOf('{') + 1;
-			var endIndex = fullText.LastIndexOf('}');
+
+			//判断字符串INode裁剪
+			var startIndex = fullText.IndexOf(':') + 1;
+			var endIndex = fullText.LastIndexOf('}') + 1;
 			var membersText = fullText.Substring(startIndex, endIndex - startIndex);
 
 			return membersText;

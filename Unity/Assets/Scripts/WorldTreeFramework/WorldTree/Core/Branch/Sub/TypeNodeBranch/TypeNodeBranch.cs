@@ -37,11 +37,8 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取类型节点
 		/// </summary>
-		public static bool TryGetTypeNode(this INode self, long type, out INode node)
-		{
-			node = null;
-			return self.TryGetBranch(out TypeNodeBranch branch) && branch.TryGetNode(type, out node);
-		}
+		public static bool TryGetTypeNode(this INode self, long type, out INode typeNode)
+			=> (typeNode = self.GetBranch<TypeNodeBranch>()?.GetNode(type)) != null;
 
 		/// <summary>
 		/// 尝试获取类型节点
@@ -49,9 +46,7 @@ namespace WorldTree
 		public static bool TryGetTypeNode<N, T>(this N self, long type, out T typeNode)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, TypeNodeBranch>
-		{
-			return (typeNode = self.TryGetBranch(out TypeNodeBranch branch) && branch.TryGetNode(type, out INode node) ? node as T : null) != null;
-		}
+		=> (typeNode = (self.GetBranch<TypeNodeBranch>()?.GetNode(type)) as T) != null;
 
 		#endregion
 
@@ -60,7 +55,8 @@ namespace WorldTree
 		/// <summary>
 		/// 裁剪类型节点
 		/// </summary>
-		public static bool TryCutTypeNode(this INode self, long type, out INode node) => self.TryCutNode<TypeNodeBranch, long>(type, out node);
+		public static bool TryCutTypeNode(this INode self, long type, out INode node)
+			=> (node = self.GetBranch<TypeNodeBranch>()?.GetNode(type)?.CutSelf()) != null;
 
 		#endregion
 
@@ -87,12 +83,14 @@ namespace WorldTree
 		/// <summary>
 		/// 移除类型节点
 		/// </summary>
-		public static void RemoveTypeNode(this INode self, long type) => self.RemoveNode<TypeNodeBranch, long>(type);
+		public static void RemoveTypeNode(this INode self, long type)
+			=> self.GetBranch<TypeNodeBranch>()?.GetNode(type)?.Dispose();
 
 		/// <summary>
 		/// 移除所有类型节点
 		/// </summary>
-		public static void RemoveAllTypeNode(this INode self) => self.RemoveAllNode<TypeNodeBranch>();
+		public static void RemoveAllTypeNode(this INode self)
+			=> self.RemoveAllNode(TypeInfo<TypeNodeBranch>.TypeCode);
 
 		#endregion
 

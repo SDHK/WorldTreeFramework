@@ -2,84 +2,54 @@
 
 namespace WorldTree
 {
-	//public class TestNode001 : INode
-	//{
-		
-	//}
-
 	/// <summary>
 	/// 测试节点
 	/// </summary>
 	public class DotNetTestNode : Node, ComponentOf<INode>
-		, AsRule<IAwakeRule>
-		, AsRule<IAwakeRule<float>>
+		, AsAwakeRule
+		, AsAwakeRule<string>
 	{
 		public int TestValue;
 	}
 
-
-	//根据业务代码生成
 	public static partial class DotNetTestNodeRule
 	{
-		private class DotNetTestNodeAwake : SendRuleBase<DotNetTestNode, IAwakeRule>
+		//代码生成
+		public static void AwakeRule(this AsAwakeRule awakeRule)
 		{
-			protected override void Execute(DotNetTestNode self)
-			{
-				self.Awake<IAwakeRule>();
-			}
+			awakeRule.SendRule(TypeInfo<IAwakeRule>.Default);
 		}
 
-
-		private class DotNetTestNodeAwake_float : SendRuleBase<DotNetTestNode, IAwakeRule<float>, float>
+		//代码生成
+		public static void AwakeRule1<T1>(this AsAwakeRule<T1> awakeRule, T1 t1)
 		{
-			protected override void Execute(DotNetTestNode self, float value)
-			{
-				self.Awake<IAwakeRule<float>>(value);
-			}
+			awakeRule.SendRule(TypeInfo<IAwakeRule<T1>>.Default, t1);
 		}
 
-		private class DotNetTestNodeUpdatet : SendRuleBase<DotNetTestNode, IUpdateRule>
+		//代码生成
+		public static void AwakeRule2<T1, T2>(this AsRule<IAwakeRule<T1, T2>> awakeRule, T1 t1, T2 t2)
 		{
-			protected override void Execute(DotNetTestNode self)
-			{
-				self.Update<IUpdateRule>();
-			}
 		}
-	}
-
-	//业务代码
-	public static partial class DotNetTestNodeRule
-	{
-		private static void Awake<R>(this DotNetTestNode self)
-			where R : IAwakeRule
-		{
-
-		}
-
-
-		private static void Awake<R>(this DotNetTestNode self, float value)
-			where R : IAwakeRule<float>
-		{
-
-		}
-
-		private static void Update<R>(this DotNetTestNode self)
-			where R : IUpdateRule
-		{
-
-		}
-	}
-
-
-
-	public static partial class DotNetTestNodeRule
-	{
-
 
 		private class EnableRule : EnableRule<DotNetTestNode>
 		{
 			protected override void Execute(DotNetTestNode self)
 			{
+				//尝试调用
+				self.AwakeRule();
+
+				//尝试调用
+				self.AwakeRule1("1f");
+
+				//有提示参数不对
+				self.AwakeRule1(1f);
+
+				//没有就是直接白色没有提示
+				self.AwakeRule2("2", "1f");
+
+				//原来的代码，就算没有也有提示
+				self.SendRule(TypeInfo<IAwakeRule<long, int>>.Default, 1, 1);
+
 				self.Log("激活！！");
 			}
 		}

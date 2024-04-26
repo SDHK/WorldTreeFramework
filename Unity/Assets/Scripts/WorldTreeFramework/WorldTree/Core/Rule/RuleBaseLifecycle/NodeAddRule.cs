@@ -4,11 +4,11 @@
 * 日期： 2022/7/18 9:35
 
 * 描述： 给节点添加组件的法则
-* 
+*
 * 用于节点的饿汉单例
-* 
+*
 * 法则是可多播的，执行顺序由名字排序
-* 
+*
 
 */
 
@@ -21,7 +21,7 @@ namespace WorldTree
 	/// <typeparam name="C">组件</typeparam>
 	/// <remarks>用于节点的饿汉单例</remarks>
 	public abstract class NodeAddRule<N, C> : AddRule<N>
-		where N : class, INode
+		where N : class, INode, AsRule<IAddRule>
 		where C : class, INode, ComponentOf<N>, AsRule<IAwakeRule>
 	{
 		protected override void Execute(N self)
@@ -38,5 +38,4 @@ namespace WorldTree
 	public abstract class RootAddRule<C> : NodeAddRule<WorldTreeRoot, C>
 		where C : class, INode, ComponentOf<WorldTreeRoot>, AsRule<IAwakeRule>
 	{ }
-
 }

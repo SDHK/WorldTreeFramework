@@ -34,6 +34,12 @@ namespace WorldTree.SourceGenerator
 				Code.Append
 ($@"
 
+	/// <summary>
+	/// 节点：异步通用调用法则限制
+	/// </summary>
+	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
+    public interface AsCallRuleAsync<{genericsAfter}OutT> : AsRule<ICallRuleAsync<{genericsAfter}OutT>> {{}}
+
     /// <summary>
     /// 异步通用调用法则接口
     /// </summary>

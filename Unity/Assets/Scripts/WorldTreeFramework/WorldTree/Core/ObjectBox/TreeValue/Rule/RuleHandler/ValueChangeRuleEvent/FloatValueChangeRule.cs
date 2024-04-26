@@ -7,46 +7,50 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
-    public static partial class TreeValueBaseRule
-    {
-        class FloatStringChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, string>
-        {
-            protected override void Execute(TreeValueBase<float> self, string value)
-            {
-                self.Value = string.IsNullOrEmpty(value) ? 0f : float.Parse(value);
-            }
-        }
-        class FloatIntChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, int>
-        {
-            protected override void Execute(TreeValueBase<float> self, int value)
-            {
-                self.Value = value;
-            }
-        }
+	public static partial class TreeValueBaseRule
+	{
+		private class FloatStringChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, string>
+		{
+			protected override void Execute(TreeValueBase<float> self, string value)
+			{
+				self.Value = string.IsNullOrEmpty(value) ? 0f : float.Parse(value);
+			}
+		}
 
-        class FloatShortChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, short>
-        {
-            protected override void Execute(TreeValueBase<float> self, short value)
-            {
-                self.Value = value;
-            }
-        }
-        class FloatLongChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, long>
-        {
-            protected override void Execute(TreeValueBase<float> self, long value)
-            {
-                self.Value = value;
-            }
-        }
-        class FloatDoubleChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, double>
-        {
-            protected override void Execute(TreeValueBase<float> self, double value)
-            {
-                self.Value = (float)value;
-            }
-        }
-    }
+		private class FloatIntChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, int>
+		{
+			protected override void Execute(TreeValueBase<float> self, int value)
+			{
+				self.Value = value;
+			}
+		}
 
+		private class FloatShortChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, short>
+		{
+			protected override void Execute(TreeValueBase<float> self, short value)
+			{
+				self.Value = value;
+			}
+		}
+
+		private class FloatLongChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, long>
+		{
+			protected override void Execute(TreeValueBase<float> self, long value)
+			{
+				self.Value = value;
+			}
+		}
+
+		private class FloatDoubleChangeRuleEvent : TreeValueGenericsChangeRuleEvent<float, double>
+		{
+			protected override void Execute(TreeValueBase<float> self, double value)
+			{
+				self.Value = (float)value;
+			}
+		}
+	}
 }

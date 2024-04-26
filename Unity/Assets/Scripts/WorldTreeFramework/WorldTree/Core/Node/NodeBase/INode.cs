@@ -47,7 +47,6 @@ namespace WorldTree
 	/// <para>世界树节点最底层接口</para>
 	/// </remarks>
 	public partial interface INode : IUnitPoolItem
-
 		, AsComponentBranch
 		, AsChildBranch
 
@@ -67,6 +66,7 @@ namespace WorldTree
 		, AsRule<IUpdateTimeRule>
 		, AsRule<IBeforeRemoveRule>
 		, AsRule<IRemoveRule>
+
 	{
 		/// <summary>
 		/// 节点ID
@@ -151,7 +151,7 @@ namespace WorldTree
 		#region 节点处理
 
 		#region 添加
-		
+
 		/// <summary>
 		/// 尝试添加到树结构上
 		/// </summary>
@@ -183,26 +183,6 @@ namespace WorldTree
 		#region 裁剪
 
 		/// <summary>
-		/// 树结构尝试裁剪节点
-		/// </summary>
-		public bool TryCutNodeById<B>(long id, out INode node) where B : class, IBranch;
-
-		/// <summary>
-		/// 树结构尝试裁剪节点
-		/// </summary>
-		public bool TryCutNode<B, K>(K key, out INode node) where B : class, IBranch<K>;
-
-		/// <summary>
-		/// 树结构裁剪节点
-		/// </summary>
-		public INode CutNodeById<B>(long id) where B : class, IBranch;
-
-		/// <summary>
-		/// 树结构裁剪节点
-		/// </summary>
-		public INode CutNode<B, K>(K key) where B : class, IBranch<K>;
-
-		/// <summary>
 		/// 从树上将自己裁剪下来
 		/// </summary>
 		public INode CutSelf();
@@ -225,62 +205,13 @@ namespace WorldTree
 		/// <summary>
 		/// 释放分支的所有节点
 		/// </summary>
-		public void RemoveAllNode<B>() where B : class, IBranch;
-
-		/// <summary>
-		/// 释放分支的所有节点
-		/// </summary>
 		public void RemoveAllNode(long branchType);
-
-		/// <summary>
-		/// 根据键值释放分支的节点
-		/// </summary>
-		public void RemoveNode<B, K>(K key) where B : class, IBranch<K>;
-
-		/// <summary>
-		/// 根据id释放分支的节点
-		/// </summary>
-		public void RemoveNodeById<B>(long id) where B : class, IBranch;
 
 		/// <summary>
 		/// 释放前的处理
 		/// </summary>
 		/// <remarks>由框架内部调用</remarks>
 		public void OnBeforeDispose();
-
-		#endregion
-
-		#region 获取
-
-		/// <summary>
-		/// 节点Id包含判断
-		/// </summary>
-		public bool ContainsId<B>(long id) where B : class, IBranch;
-
-		/// <summary>
-		/// 节点键值包含判断
-		/// </summary>
-		public bool Contains<B, K>(K key) where B : class, IBranch<K>;
-
-		/// <summary>
-		/// 树结构尝试获取节点
-		/// </summary>
-		public bool TryGetNodeById<B>(long id, out INode node) where B : class, IBranch;
-
-		/// <summary>
-		/// 树结构尝试获取节点
-		/// </summary>
-		public bool TryGetNode<B, K>(K key, out INode node) where B : class, IBranch<K>;
-
-		/// <summary>
-		/// 树结构获取节点
-		/// </summary>
-		public INode GetNodeById<B>(long id) where B : class, IBranch;
-
-		/// <summary>
-		/// 树结构获取节点
-		/// </summary>
-		public INode GetNode<B, K>(K key) where B : class, IBranch<K>;
 
 		#endregion
 

@@ -6,6 +6,7 @@
 * 描述：
 
 */
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System.Text;
@@ -35,6 +36,12 @@ namespace WorldTree.SourceGenerator
 				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
 				Code.Append
 ($@"
+
+	/// <summary>
+	/// 节点：初始化法则限制
+	/// </summary>
+	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
+    public interface AsAwakeRule{genericsAngle} : AsRule<IAwakeRule{genericsAngle}>, INode {{}}
 
     /// <summary>
     /// 初始化法则接口
