@@ -2,91 +2,10 @@
 
 namespace WorldTree
 {
-	public partial class TestNode : INode
-	{
-		public long Id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public WorldTreeRoot Root { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public INode Domain { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public INode Parent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public IWorldTreeNodeView View { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public bool ActiveToggle { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public bool IsActive { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public bool m_ActiveEventMark { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public UnitDictionary<long, IRattan> m_Rattans { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-		public UnitDictionary<long, IRattan> Rattans => throw new NotImplementedException();
-
-		public long BranchType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public UnitDictionary<long, IBranch> m_Branchs { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-		public UnitDictionary<long, IBranch> Branchs => throw new NotImplementedException();
-
-		public WorldTreeCore Core { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public bool IsFromPool { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public bool IsRecycle { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public long Type { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public bool IsDisposed { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-		public INode CutSelf()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void Dispose()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void OnAddSelfToTree()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void OnBeforeDispose()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void OnCutSelf()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void OnDispose()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void OnGraftSelfToTree()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void RemoveAllNode()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void RemoveAllNode(long branchType)
-		{
-			throw new NotImplementedException();
-		}
-
-		bool INode.TryAddSelfToTree<B, K>(K Key, INode parent)
-		{
-			throw new NotImplementedException();
-		}
-
-		bool INode.TryGraftSelfToTree<B, K>(K key, INode parent)
-		{
-			throw new NotImplementedException();
-		}
-	}
-
 	/// <summary>
 	/// 测试节点
 	/// </summary>
-	public class DotNetTestNode : Node, ComponentOf<INode>
+	public partial class DotNetTestNode : Node, ComponentOf<INode>
 		, AsAwakeRule
 		, AsAwakeRule<string>
 	{
@@ -121,6 +40,8 @@ namespace WorldTree
 
 				//尝试调用
 				self.AwakeRule1("1f");
+
+				new TestNode1T();
 
 				////有提示参数不对
 				//self.AwakeRule1(1f);

@@ -126,7 +126,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\TimerCall.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldPulseBase.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\AwakeRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CounterCall.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\Curve.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\IdManager.cs" />

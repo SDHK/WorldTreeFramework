@@ -7,6 +7,7 @@
     <Nullable>disable</Nullable>
     <RootNamespace>WorldTree</RootNamespace>
     <AssemblyName>App</AssemblyName>
+    <AnalysisLevel>6.0</AnalysisLevel>
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   
@@ -14,27 +15,34 @@
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-  
+
+
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>DOTNET</DefineConstants>
     <OutputPath>..\..\Bin\</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>DOTNET</DefineConstants>
     <OutputPath>..\..\Bin\</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
  
   <ItemGroup>
     <ProjectReference Include="..\..\Share\Analyzer\Share.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\Share\SourceGenerator\Share.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Core\DotNet.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Share\SourceGenerator\Share.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
 
 </Project>

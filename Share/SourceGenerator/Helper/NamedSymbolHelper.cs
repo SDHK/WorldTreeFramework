@@ -37,7 +37,6 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		/// <param name="namedTypeSymbol">命名符号</param>
 		/// <param name="interfaceSymbol">接口</param>
-		/// <returns></returns>
 		public static bool CheckSelfInterface(this INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol interfaceSymbol)
 		{
 			return namedTypeSymbol.Interfaces.Contains(interfaceSymbol);
@@ -46,11 +45,9 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 迭代检查类及其基类(包括抽象类)是否继承了指定接口
 		/// </summary>
-		/// <param name="typeDecl">类声明语法</param>
-		/// <param name="interfaceName">接口名称(包括命名空间)</param>
-		/// <param name="compilation">编译类</param>
+		/// <param name="typeSymbol">类声明语法</param>
+		/// <param name="interfaceSymbol">接口名称(包括命名空间)</param>
 		/// <param name="CheckSelf">是否检查类型自身</param>
-		/// <returns></returns>
 		public static bool CheckBaseExtendInterface(this INamedTypeSymbol typeSymbol, INamedTypeSymbol interfaceSymbol, bool CheckSelf = true)
 		{
 			// 使用队列存储需要检查的类型符号
@@ -71,6 +68,25 @@ namespace WorldTree.SourceGenerator
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// 源码获取
+		/// </summary>
+		/// <param name="typeSymbol">命名符号</param>
+		public static string GetTypeSourceCode(this INamedTypeSymbol typeSymbol)
+		{
+			// 找到声明该类型的语法树
+			var syntaxTree = typeSymbol.DeclaringSyntaxReferences.FirstOrDefault()?.SyntaxTree;
+			if (syntaxTree != null)
+			{
+				// 获取类型声明的语法节点
+				var typeNode = typeSymbol.DeclaringSyntaxReferences.First().GetSyntax(CancellationToken.None);
+
+				// 获取源代码字符串
+				return typeNode.ToFullString();
+			}
+			return null;
 		}
 	}
 }

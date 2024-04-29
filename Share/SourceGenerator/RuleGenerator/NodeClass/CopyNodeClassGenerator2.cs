@@ -1,97 +1,79 @@
 ﻿/****************************************
 
 * 作者：闪电黑客
-* 日期：2024/4/28 21:06
+* 日期：2024/4/16 17:05
 
-* 描述：
+* 描述：Node复制兄弟类 生成器
 
 */
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
-using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	[Generator]
-	internal class CopyNodeClassGenerator2 : ISourceGenerator
+	//[Generator]
+	internal class CopyNodeClassGenerator2
+
+	//: ISourceGenerator
 	{
 		public void Initialize(GeneratorInitializationContext context)
 		{
-			context.RegisterForSyntaxNotifications(() => new FindSubClassSyntaxReceiver());
+			context.RegisterForSyntaxNotifications(() => new FindINodeSubSyntaxReceiver());
 		}
 
 		public void Execute(GeneratorExecutionContext context)
 		{
 			try
 			{
-				if (!(context.SyntaxContextReceiver is FindSubClassSyntaxReceiver receiver)) return;
+				if (!(context.SyntaxReceiver is FindINodeSubSyntaxReceiver receiver)) return;
 				if (receiver.ClassDeclarations.Count == 0) return;
+				if (receiver.ClassDeclarations.Count != 0) return;
 
 				ClassDeclarationSyntax? NodeClassDeclaration = null;
 
 				// 获取当前编译器实例
 				CSharpCompilation compilation = (CSharpCompilation)context.Compilation;
 
-				INamedTypeSymbol? namedType = compilation.GetTypeByMetadataName("WorldTree.Node");
-				string? s = null;
-
-				if (namedType != null) s = GetTypeSourceCode(namedType);
-
-				if (s == null) s = "";
-				foreach (var classDeclarationSyntax in receiver.ClassDeclarations)
+				// 遍历所有的语法树
+				foreach (var tree in compilation.SyntaxTrees)
 				{
-					INamedTypeSymbol? interfaceName = compilation.GetTypeByMetadataName("WorldTree.INode");
-					if (interfaceName == null) return;
-					if (!compilation.ToINamedTypeSymbol(classDeclarationSyntax).CheckSelfInterface(interfaceName)) continue;
+					// 获取根节点
+					var root = (CompilationUnitSyntax)tree.GetRoot();
 
-					if (compilation.ToINamedTypeSymbol(classDeclarationSyntax).CheckBaseExtendInterface(interfaceName, false)) continue;
+					// 遍历所有的类声明
+					foreach (var classDeclaration in root.DescendantNodes().OfType<ClassDeclarationSyntax>())
+					{
+						// 如果类的名称匹配
+						if (classDeclaration.Identifier.Text == "Node")
+						{
+							if (!IsValidClassDeclaration(classDeclaration)) continue;
 
-					//string fileName = Path.GetFileNameWithoutExtension(classDeclarationSyntax.SyntaxTree.FilePath);
+							//判断命名空间，如果不是WorldTree则跳过
+							if (classDeclaration.Parent is NamespaceDeclarationSyntax namespaceDeclaration)
+							{
+								if (namespaceDeclaration.Name.ToString() != "WorldTree") continue;
+							}
 
-					string className = classDeclarationSyntax.Identifier.ValueText;
+							//判断classDeclaration不是一个类种类
+							if (classDeclaration.Modifiers.Any(SyntaxKind.AbstractKeyword) == false) continue;
 
-					//剔除名称里的泛型和符号
-					className = className.Split('<')[0].Split('[')[0];
-
-					//if (classDeclarationSyntax.TypeParameterList != null)
-					//{
-					//	// 处理泛型类
-					//	string typeParameters = string.Join(", ", classDeclarationSyntax.TypeParameterList.Parameters.Select(p => p.Identifier.ValueText));
-					//	className = $"{classDeclarationSyntax.Identifier.ValueText}<{typeParameters}>";
-					//}
-					//else
-					//{
-					//	// 非泛型类
-					//	className = classDeclarationSyntax.Identifier.ValueText;
-					//}
-
-					context.AddSource($"{className}TestCopyNode111.cs", SourceText.From($"//测试{className}:{receiver.ClassDeclarations.Count} //{namedType.Name} + \n/*\n{s}\n*/", Encoding.UTF8));//生成代码
-					return;
+							NodeClassDeclaration = classDeclaration;
+							break;
+						}
+					}
+					if (NodeClassDeclaration != null) break;
 				}
+
+				// 如果没找到类型，直接返回
+				if (NodeClassDeclaration == null) return;
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine(e);
 				throw;
 			}
-		}
-
-		/// <summary>
-		/// 获取Node类的成员和方法字符串
-		/// </summary>
-		public static string GetClassMembers(ClassDeclarationSyntax classDeclaration)
-		{
-			var fullText = classDeclaration.ToFullString();
-
-			//判断字符串INode裁剪
-			var startIndex = fullText.IndexOf(':') + 1;
-			var endIndex = fullText.LastIndexOf('}') + 1;
-			var membersText = fullText.Substring(startIndex, endIndex - startIndex);
-
-			return membersText;
 		}
 
 		/// <summary>
@@ -113,25 +95,6 @@ namespace WorldTree.SourceGenerator
 			}
 
 			return true;
-		}
-
-		/// <summary>
-		/// 源码获取
-		/// </summary>
-		/// <param name="typeSymbol">命名符号</param>
-		public static string? GetTypeSourceCode(INamedTypeSymbol typeSymbol)
-		{
-			// 找到声明该类型的语法树
-			var syntaxTree = typeSymbol.DeclaringSyntaxReferences.FirstOrDefault()?.SyntaxTree;
-			if (syntaxTree != null)
-			{
-				// 获取类型声明的语法节点
-				var typeNode = typeSymbol.DeclaringSyntaxReferences.First().GetSyntax(CancellationToken.None);
-
-				// 获取源代码字符串
-				return typeNode.ToFullString();
-			}
-			return null;
 		}
 	}
 }

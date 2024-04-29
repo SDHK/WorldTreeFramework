@@ -12,7 +12,6 @@ namespace WorldTree
 	/// 世界树节点基类
 	/// </summary>
 	public abstract partial class Node : INode
-
 	{
 		public bool IsFromPool { get; set; }
 		public bool IsRecycle { get; set; }
