@@ -31,7 +31,7 @@
   <ItemGroup>
     
     <!--对于 Microsoft.CodeAnalysis.CSharp 包:PrivateAssets="all" 表示这个包的所有资产都是私有的,都不会流向依赖项目。-->
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
 
     
     <!--对于 Microsoft.CodeAnalysis.Analyzers 包: -->
