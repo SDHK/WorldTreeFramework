@@ -21,8 +21,6 @@ namespace WorldTree.SourceGenerator
 
 		public void OnVisitSyntaxNode(SyntaxNode node)
 		{
-			//SyntaxNode node = context.Node;
-
 			//判断是否是类
 			if (!(node is ClassDeclarationSyntax classDeclarationSyntax)) return;
 
@@ -45,53 +43,19 @@ namespace WorldTree.SourceGenerator
 		}
 	}
 
-	/// <summary>
-	/// 查找继承了IRule的类
-	/// </summary>
-	public class FindIRuleSubSyntaxReceiver : ISyntaxContextReceiver
-	{
-		public List<ClassDeclarationSyntax> ClassDeclarations = new();
+	///// <summary>
+	///// 查找继承了IRule的类
+	///// </summary>
+	//public class FindIRuleSubSyntaxReceiver : ISyntaxReceiver
+	//{
+	//	public List<InterfaceDeclarationSyntax> InterfaceDeclarations = new();
 
-		public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
-		{
-			SyntaxNode node = context.Node;
+	// public void OnVisitSyntaxNode(SyntaxNode node) { //判断是否是接口 if (!(node is
+	// InterfaceDeclarationSyntax interfaceDeclarationSyntax)) return;
 
-			//判断是否是接口
-			if (!(node is InterfaceDeclarationSyntax interfaceDeclarationSyntax)) return;
-
-			//判断类型是否继承了IRule
-			if (!TreeSyntaxHelper.CheckExtendInterface(interfaceDeclarationSyntax, "IRule")) return;
-		}
-
-		//public void OnVisitSyntaxNode(SyntaxNode node)
-		//{
-		//	//判断是否是接口
-		//	if (!(node is InterfaceDeclarationSyntax interfaceDeclarationSyntax)) return;
-
-		//	//判断类型是否继承了IRule
-		//	if (!AnalyzerHelper.CheckExtendInterface(interfaceDeclarationSyntax, "IRule")) return;
-		//}
-	}
-
-	/// <summary>
-	/// 查找子类
-	/// </summary>
-	public class FindSubClassSyntaxReceiver : ISyntaxContextReceiver
-	{
-		public List<ClassDeclarationSyntax> ClassDeclarations = new();
-
-		public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
-		{
-			SyntaxNode node = context.Node;
-
-			//判断是否是类
-			if (!(node is ClassDeclarationSyntax classDeclarationSyntax)) return;
-
-			//判断类型是否有继承
-			if (classDeclarationSyntax.BaseList is null) return;
-			if (classDeclarationSyntax.BaseList.Types.Count == 0) return;
-
-			ClassDeclarations.Add(classDeclarationSyntax);
-		}
-	}
+	//		//判断类型是否继承了IRule
+	//		if (!TreeSyntaxHelper.CheckExtendInterface(interfaceDeclarationSyntax, "IRule")) return;
+	//		InterfaceDeclarations.Add(interfaceDeclarationSyntax);
+	//	}
+	//}
 }

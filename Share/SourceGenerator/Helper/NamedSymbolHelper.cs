@@ -22,11 +22,22 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		/// <param name="typeDecl">类声明语法</param>
 		/// <param name="compilation">编译类</param>
-		public static INamedTypeSymbol ToINamedTypeSymbol(this Compilation compilation, TypeDeclarationSyntax typeDecl)
+		public static INamedTypeSymbol? ToINamedTypeSymbol(this Compilation compilation, TypeDeclarationSyntax typeDecl)
 		{
 			return compilation.GetSemanticModel(typeDecl.SyntaxTree).GetDeclaredSymbol(typeDecl) as INamedTypeSymbol;
 		}
 
+		public static INamedTypeSymbol? ToINamedTypeSymbol(this Compilation compilation, string typeFullName)
+		{
+			return compilation.GetTypeByMetadataName(typeFullName);
+		}
+
+		/// <summary>
+		/// 检查类是否继承了指定接口
+		/// </summary>
+		/// <param name="namedTypeSymbol"></param>
+		/// <param name="interfaceSymbol"></param>
+		/// <returns></returns>
 		public static bool CheckAllInterface(this INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol interfaceSymbol)
 		{
 			return namedTypeSymbol.AllInterfaces.Contains(interfaceSymbol);
@@ -74,19 +85,66 @@ namespace WorldTree.SourceGenerator
 		/// 源码获取
 		/// </summary>
 		/// <param name="typeSymbol">命名符号</param>
-		public static string GetTypeSourceCode(this INamedTypeSymbol typeSymbol)
+		public static string GetTypeSourceCode1(this INamedTypeSymbol typeSymbol)
 		{
 			// 找到声明该类型的语法树
-			var syntaxTree = typeSymbol.DeclaringSyntaxReferences.FirstOrDefault()?.SyntaxTree;
+			SyntaxTree? syntaxTree = typeSymbol?.DeclaringSyntaxReferences.FirstOrDefault()?.SyntaxTree;
+
 			if (syntaxTree != null)
 			{
 				// 获取类型声明的语法节点
-				var typeNode = typeSymbol.DeclaringSyntaxReferences.First().GetSyntax(CancellationToken.None);
+				SyntaxNode? typeNode = typeSymbol?.DeclaringSyntaxReferences.First()?.GetSyntax();
 
 				// 获取源代码字符串
-				return typeNode.ToFullString();
+				return typeNode?.ToFullString();
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// 源码获取
+		/// </summary>
+		/// <param name="typeSymbol">命名符号</param>
+		public static string GetTypeSourceCode(this INamedTypeSymbol typeSymbol)
+		{
+			// 检查 typeSymbol 是否为 null
+			if (typeSymbol == null)
+			{
+				return null;
+			}
+
+			// 获取类型声明的语法参考
+			var declaringSyntaxReferences = typeSymbol.DeclaringSyntaxReferences;
+
+			// 检查 declaringSyntaxReferences 是否为空
+			if (declaringSyntaxReferences.Length == 0)
+			{
+				return null;
+			}
+
+			// 获取第一个语法参考
+			var syntaxReference = declaringSyntaxReferences.First();
+
+			// 获取语法树
+			SyntaxTree? syntaxTree = syntaxReference.SyntaxTree;
+
+			// 检查语法树是否为 null
+			if (syntaxTree == null)
+			{
+				return null;
+			}
+
+			// 获取类型声明的语法节点
+			SyntaxNode? typeNode = syntaxReference.GetSyntax();
+
+			// 检查语法节点是否为 null
+			if (typeNode == null)
+			{
+				return null;
+			}
+
+			// 获取源代码字符串
+			return typeNode.ToFullString();
 		}
 	}
 }

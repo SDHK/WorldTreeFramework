@@ -39,10 +39,10 @@
       <Link>WorldTree\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
   </ItemGroup>
+  
 
   <ItemGroup>
     <ProjectReference Include="..\..\Share\SourceGenerator\Share.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
-
 
 </Project>

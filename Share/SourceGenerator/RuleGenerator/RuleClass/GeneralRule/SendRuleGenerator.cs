@@ -54,7 +54,7 @@ namespace WorldTree.SourceGenerator
 			}
 			Code.Append("}");
 
-			context.AddSource("SendRule.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));
+			context.AddSource("SendRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
 	}
 }

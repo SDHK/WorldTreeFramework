@@ -1,57 +1,40 @@
 ﻿using System;
+using System.Numerics;
 
 namespace WorldTree
 {
+	public interface ITestRule : ISendRuleBase
+	{ }
+
+	public interface ITestRule<T1> : ISendRuleBase<T1>
+		where T1 : IEquatable<T1>
+	{ }
+
+	public interface ITestRuleFloat<T1, T2> : ISendRuleBase<T1, Vector3, T2>
+		where T1 : IEquatable<T1>
+		where T2 : class
+	{ }
+
+	public interface ITestRuleFloat2 : ISendRuleBase<float>
+	{ }
+
 	/// <summary>
 	/// 测试节点
 	/// </summary>
 	public partial class DotNetTestNode : Node, ComponentOf<INode>
 		, AsAwakeRule
 		, AsAwakeRule<string>
+
 	{
 		public int TestValue;
 	}
 
 	public static partial class DotNetTestNodeRule
 	{
-		//代码生成
-		public static void AwakeRule(this AsAwakeRule awakeRule)
-		{
-			awakeRule.SendRule(TypeInfo<IAwakeRule>.Default);
-		}
-
-		//代码生成
-		public static void AwakeRule1<T1>(this AsAwakeRule<T1> awakeRule, T1 t1)
-		{
-			awakeRule.SendRule(TypeInfo<IAwakeRule<T1>>.Default, t1);
-		}
-
-		//代码生成
-		public static void AwakeRule2<T1, T2>(this AsRule<IAwakeRule<T1, T2>> awakeRule, T1 t1, T2 t2)
-		{
-		}
-
 		private class EnableRule : EnableRule<DotNetTestNode>
 		{
 			protected override void Execute(DotNetTestNode self)
 			{
-				//尝试调用
-				self.AwakeRule();
-
-				//尝试调用
-				self.AwakeRule1("1f");
-
-				new TestNode1T();
-
-				////有提示参数不对
-				//self.AwakeRule1(1f);
-
-				////没有就是直接白色没有提示
-				//self.AwakeRule2("2", "1f");
-
-				////原来的代码，就算没有也有提示
-				//self.SendRule(TypeInfo<IAwakeRule<long, int>>.Default, 1, 1);
-
 				self.Log("激活！！");
 			}
 		}

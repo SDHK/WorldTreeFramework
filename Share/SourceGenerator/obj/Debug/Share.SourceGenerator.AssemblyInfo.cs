@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Share.SourceGenerator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+138cf9799e1a5a25a1f0125fecbd6bb3bad63213")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b0cdf71b283a1d0e96997466d8a9b396dfa8d0d9")]
 [assembly: System.Reflection.AssemblyProductAttribute("Share.SourceGenerator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Share.SourceGenerator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
