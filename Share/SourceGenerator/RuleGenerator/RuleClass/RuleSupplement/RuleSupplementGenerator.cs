@@ -10,6 +10,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System.Security;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -47,14 +48,19 @@ namespace WorldTree.SourceGenerator
 		public static Dictionary<string, List<INamedTypeSymbol>> fileClassDict = new();
 
 		/// <summary>
-		/// 文件名-引用集合
+		/// 文件名-引用
 		/// </summary>
 		public static Dictionary<string, string> fileUsings = new();
 
 		/// <summary>
-		/// 接口名-where约束集合
+		/// 接口名-where约束
 		/// </summary>
 		public static Dictionary<string, string> classWheres = new();
+
+		/// <summary>
+		/// 接口名-注释
+		/// </summary>
+		public static Dictionary<string, string> classSummary = new();
 
 		public static string ISendRuleBase = "ISendRuleBase";
 		public static string ICallRuleBase = "ICallRuleBase";
@@ -66,6 +72,7 @@ namespace WorldTree.SourceGenerator
 			fileClassDict.Clear();
 			fileUsings.Clear();
 			classWheres.Clear();
+			classSummary.Clear();
 		}
 
 		public static void Add(InterfaceDeclarationSyntax interfaceDeclaration, Compilation compilation)
@@ -89,7 +96,7 @@ namespace WorldTree.SourceGenerator
 
 			if (set.Any(a => a.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) == namedType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))) return;
 			set.Add(namedType);
-
+			classSummary.Add(namedType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat), GetInterfaceSummary(interfaceDeclaration));
 			classWheres.Add(namedType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat), TreeSyntaxHelper.GetWhereTypeArguments(interfaceDeclaration));
 		}
 
@@ -137,7 +144,7 @@ namespace WorldTree.SourceGenerator
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
 
-							//CallRuleAsyncMethod(MethodCode, fileClass, baseInterface);
+							CallRuleAsyncMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
 				}
@@ -168,9 +175,19 @@ namespace WorldTree.SourceGenerator
 			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
 			string ClassFullName = IClassFullName.TrimStart('I');
 			string WhereTypeArguments = classWheres[IClassFullName];
+			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
+			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
 
 			//As约束接口
+			Code.AppendLine(@$"	/// <summary>");
+			Code.AppendLine(@$"	/// 约束接口: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"	/// </summary>");
 			Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{IClassFullName}>, INode {WhereTypeArguments}{{}}");
+
+			//抽象基类注释
+			Code.AppendLine(@$"	/// <summary>");
+			Code.AppendLine(@$"	/// 法则基类: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"	/// </summary>");
 
 			//抽象基类
 			Code.AppendLine(@$"	public abstract class {ClassName}<N{TypeArguments}> : {BaseName}<N, {IClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{IClassFullName}> {WhereTypeArguments}{{}}");
@@ -178,78 +195,90 @@ namespace WorldTree.SourceGenerator
 
 		private static void SendRuleMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
-			//获取类名
 			string IClassName = typeSymbol.Name;
 			string ClassName = IClassName.TrimStart('I');
 			int baseTypeCount = baseInterface.TypeArguments.Count();
-
-			//获取类全名
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
-
 			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
-
 			string ClassFullName = IClassFullName.TrimStart('I');
-
 			string genericParameter = RuleGeneratorHelper.GetGenericParameter(baseTypeCount);
-
 			string genericTypeParameter = GetGenericTypeParameter(baseInterface);
-
 			string WhereTypeArguments = classWheres[IClassFullName];
-
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
+			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
+			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
 
 			//生成调用方法
+			Code.AppendLine(@$"		/// <summary>");
+			Code.AppendLine(@$"		/// 执行通知法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"		/// </summary>");
 			Code.AppendLine(@$"		public static void {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
 		}
 
 		private static void SendRuleAsyncMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
-			//获取类名
 			string IClassName = typeSymbol.Name;
 			string ClassName = IClassName.TrimStart('I');
 			int baseTypeCount = baseInterface.TypeArguments.Count();
-
-			//获取类全名
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
-
 			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
-
 			string ClassFullName = IClassFullName.TrimStart('I');
-
 			string genericParameter = RuleGeneratorHelper.GetGenericParameter(baseTypeCount);
-
 			string genericTypeParameter = GetGenericTypeParameter(baseInterface);
-
 			string WhereTypeArguments = classWheres[IClassFullName];
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
+			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
+			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
 
 			//生成调用方法
+			Code.AppendLine(@$"		/// <summary>");
+			Code.AppendLine(@$"		/// 执行异步通知法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"		/// </summary>");
 			Code.AppendLine(@$"		public static TreeTask {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
 		}
 
 		private static void CallRuleMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
-			//获取类名
 			string IClassName = typeSymbol.Name;
 			string ClassName = IClassName.TrimStart('I');
-			int baseTypeCount = baseInterface.TypeArguments.Count();
-
-			//获取类全名
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
-
 			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
-
 			string ClassFullName = IClassFullName.TrimStart('I');
-
-			string genericParameter = RuleGeneratorHelper.GetGenericParameter(baseTypeCount);
-
-			string genericTypeParameter = GetGenericTypeParameter(baseInterface);
-
+			string genericParameter = GetCallRuleGetGenericParameter(baseInterface);
+			string genericTypeParameter = GetCallRuleGenericTypesParameters(baseInterface);
 			string WhereTypeArguments = classWheres[IClassFullName];
 			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
+			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
+			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
 
 			//生成调用方法
-			Code.AppendLine(@$"		public static {outType} {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => NodeCallRule.CallRule(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
+			Code.AppendLine(@$"		/// <summary>");
+			Code.AppendLine(@$"		/// 执行调用法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"		/// </summary>");
+			Code.AppendLine(@$"		public static {outType} {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
+		}
+
+		private static void CallRuleAsyncMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
+		{
+			string IClassName = typeSymbol.Name;
+			string ClassName = IClassName.TrimStart('I');
+			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
+			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
+			string ClassFullName = IClassFullName.TrimStart('I');
+			string genericParameter = GetCallRuleAsyncGetGenericParameter(baseInterface);
+			string genericTypeParameter = GetCallRuleAsyncGenericTypesParameters(baseInterface);
+			string WhereTypeArguments = classWheres[IClassFullName];
+			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
+			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
+			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
+
+			//生成调用方法
+			Code.AppendLine(@$"		/// <summary>");
+			Code.AppendLine(@$"		/// 执行异步调用法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"		/// </summary>");
+			Code.AppendLine(@$"		public static TreeTask<{outType}> {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
 		}
 
 		/// <summary>
@@ -262,7 +291,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 获取泛型参数
+		/// 获取泛型参数 《T1, T2》
 		/// </summary>
 		public static string GetTypeArgumentsAngle(INamedTypeSymbol typeSymbol)
 		{
@@ -293,6 +322,96 @@ namespace WorldTree.SourceGenerator
 				sb.Append($", {typeSymbol.TypeArguments[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} arg{i + 1}");
 			}
 			return sb.ToString();
+		}
+
+		/// <summary>
+		/// 获取泛型参数 , T1 arg1, T2 arg2 ,out T3 outT
+		/// </summary>
+		public static string GetCallRuleGenericTypesParameters(INamedTypeSymbol typeSymbol)
+		{
+			if (!typeSymbol.IsGenericType) return "";
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < typeSymbol.TypeArguments.Length - 1; i++)
+			{
+				sb.Append($", {typeSymbol.TypeArguments[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} arg{i + 1}");
+			}
+			sb.Append($", out {typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} outT");
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// 获取泛型参数 , arg1, arg2 ,out outT
+		/// </summary>
+		public static string GetCallRuleGetGenericParameter(INamedTypeSymbol typeSymbol)
+		{
+			if (!typeSymbol.IsGenericType) return "";
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < typeSymbol.TypeArguments.Length - 1; i++)
+			{
+				sb.Append($", arg{i + 1}");
+			}
+			sb.Append($", out outT");
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// 获取泛型参数 , T1 arg1, T2 arg2, T3 defaultOutT
+		/// </summary>
+		public static string GetCallRuleAsyncGenericTypesParameters(INamedTypeSymbol typeSymbol)
+		{
+			if (!typeSymbol.IsGenericType) return "";
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < typeSymbol.TypeArguments.Length - 1; i++)
+			{
+				sb.Append($", {typeSymbol.TypeArguments[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} arg{i + 1}");
+			}
+			sb.Append($", {typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} defaultOutT");
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// 获取泛型参数 , arg1, arg2 ,out defaultOutT
+		/// </summary>
+		public static string GetCallRuleAsyncGetGenericParameter(INamedTypeSymbol typeSymbol)
+		{
+			if (!typeSymbol.IsGenericType) return "";
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < typeSymbol.TypeArguments.Length - 1; i++)
+			{
+				sb.Append($", arg{i + 1}");
+			}
+			sb.Append($", defaultOutT");
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// 获取接口的声明注释
+		/// </summary>
+		public static string GetInterfaceSummary(InterfaceDeclarationSyntax interfaceDeclarationSyntax)
+		{
+			//获取注释
+			var summaryTrivia = interfaceDeclarationSyntax.GetLeadingTrivia()
+			 .Select(i => i.GetStructure())
+			 .OfType<DocumentationCommentTriviaSyntax>()
+			 .FirstOrDefault();
+
+			if (summaryTrivia == null) return string.Empty;
+
+			//获取summary节点
+			var summaryNode = summaryTrivia.ChildNodes().OfType<XmlElementSyntax>()
+				.FirstOrDefault(i => i.StartTag.Name.ToString() == "summary");
+
+			//获取summary节点的内容
+			if (summaryNode == null) return string.Empty;
+			string summaryNodeContent = summaryNode.Content.ToString();
+
+			//去除后换行
+			summaryNodeContent = summaryNodeContent.Trim('\r', '\n', ' ', '\t', '/');
+			return summaryNodeContent;
 		}
 	}
 }

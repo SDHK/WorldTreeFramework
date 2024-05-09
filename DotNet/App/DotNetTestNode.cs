@@ -7,13 +7,22 @@ namespace WorldTree
 	{
 	}
 
+	/// <summary>
+	/// 测试注释1
+	/// </summary>
 	public interface ITestRule : ISendRuleBase
 	{ }
 
+	/// <summary>
+	/// 测试注释2
+	/// </summary>
 	public interface ITestRule<T1> : ISendRuleBase<T1>
 		where T1 : IEquatable<T1>
 	{ }
 
+	/// <summary>
+	/// 测试注释3
+	/// </summary>
 	public interface ITestRuleFloat<T1, T2> : ISendRuleBase<T1, Vector3, T2>
 		where T1 : IEquatable<T1>
 		where T2 : class

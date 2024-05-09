@@ -57,10 +57,10 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 调用法则集合执行
 		/// </summary>
-		public static OutT Call<R{generics}, OutT>(this IRuleGroup<R> group, INode node{genericTypeParameter})
+		public static OutT Call<R{generics}, OutT>(this IRuleGroup<R> group, INode node{genericTypeParameter}, out OutT outT)
 			where R : ICallRuleBase<{genericsAfter}OutT>
 		{{
-			group.TryCall(node{genericParameter}, out OutT outT);
+			group.TryCall(node{genericParameter}, out outT);
 			return outT;
 		}}
 
@@ -82,10 +82,10 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 调用法则集合执行
 		/// </summary>
-		public static UnitList<OutT> Calls<R{generics}, OutT>(this IRuleGroup<R> group, INode node{genericTypeParameter})
+		public static UnitList<OutT> Calls<R{generics}, OutT>(this IRuleGroup<R> group, INode node{genericTypeParameter}, out UnitList<OutT> outT)
 			where R : ICallRuleBase<{genericsAfter}OutT>
 		{{
-			group.TryCalls(node{genericParameter}, out UnitList<OutT> outT);
+			group.TryCalls(node{genericParameter}, out outT);
 			return outT;
 		}}
 ");
