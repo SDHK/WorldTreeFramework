@@ -35,8 +35,8 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 检查类是否继承了指定接口
 		/// </summary>
-		/// <param name="namedTypeSymbol"></param>
-		/// <param name="interfaceSymbol"></param>
+		/// <param name="namedTypeSymbol">命名符号</param>
+		/// <param name="interfaceSymbol">接口</param>
 		/// <returns></returns>
 		public static bool CheckAllInterface(this INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol interfaceSymbol)
 		{
@@ -54,7 +54,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 迭代检查类及其基类(包括抽象类)是否继承了指定接口
+		/// 迭代检查类及其基类(包括抽象类)是否继承了指定接口,如果是泛型，名称需一一对应
 		/// </summary>
 		/// <param name="typeSymbol">类声明语法</param>
 		/// <param name="interfaceSymbol">接口名称(包括命名空间)</param>
@@ -82,27 +82,26 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 源码获取
+		/// 检测是否继承接口（只对比接口名称，不包括泛型）
 		/// </summary>
-		/// <param name="typeSymbol">命名符号</param>
-		public static string GetTypeSourceCode1(this INamedTypeSymbol typeSymbol)
+		/// <param name="typeSymbol">子接口</param>
+		/// <param name="RuleBases">接口名称</param>
+		/// <param name="Interface">基类接口符号</param>
+		/// <returns></returns>
+		public static bool CheckInterface(INamedTypeSymbol typeSymbol, string InterfaceName, out INamedTypeSymbol? Interface)
 		{
-			// 找到声明该类型的语法树
-			SyntaxTree? syntaxTree = typeSymbol?.DeclaringSyntaxReferences.FirstOrDefault()?.SyntaxTree;
-
-			if (syntaxTree != null)
+			Interface = null;
+			foreach (var Interfaces in typeSymbol.AllInterfaces)
 			{
-				// 获取类型声明的语法节点
-				SyntaxNode? typeNode = typeSymbol?.DeclaringSyntaxReferences.First()?.GetSyntax();
-
-				// 获取源代码字符串
-				return typeNode?.ToFullString();
+				if (Interfaces.Name != InterfaceName) continue;
+				Interface = Interfaces;
+				return true;
 			}
-			return null;
+			return false;
 		}
 
 		/// <summary>
-		/// 源码获取
+		/// 源码获取(能获取到但是会导致生成的代码文件无法被项目收集编译)
 		/// </summary>
 		/// <param name="typeSymbol">命名符号</param>
 		public static string GetTypeSourceCode(this INamedTypeSymbol typeSymbol)

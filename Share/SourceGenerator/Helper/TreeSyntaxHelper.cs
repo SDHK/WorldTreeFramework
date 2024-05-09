@@ -9,6 +9,7 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
@@ -93,6 +94,36 @@ namespace WorldTree.SourceGenerator
 				}
 			}
 			return false;
+		}
+
+		/// <summary> 获取泛型参数的Where约束字符串 where T1 : IEquatable<T1> where T2 : IEquatable<T2> </summary>
+		public static string GetWhereTypeArguments(TypeDeclarationSyntax typeDeclaration)
+		{
+			var typeParameters = typeDeclaration.TypeParameterList?.Parameters;
+			if (typeParameters == null || !typeParameters.Value.Any()) return "";
+
+			StringBuilder sb = new StringBuilder();
+			foreach (var typeParameter in typeParameters)
+			{
+				var constraints = typeDeclaration.ConstraintClauses.FirstOrDefault(c => c.Name.Identifier.Text == typeParameter.Identifier.Text);
+				if (constraints != null)
+				{
+					sb.Append($" where {typeParameter.Identifier.Text} : ");
+					var interfaces = constraints.Constraints.Select(c => c.ToString());
+					sb.Append(string.Join(", ", interfaces));
+				}
+			}
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// 复制类型所在源码文件的命名空间
+		/// </summary>
+		public static string GetUsings(TypeDeclarationSyntax typeDeclaration)
+		{
+			var root = typeDeclaration.SyntaxTree.GetRoot();
+			var usings = root.DescendantNodes().OfType<UsingDirectiveSyntax>();
+			return string.Join(Environment.NewLine, usings.Select(u => u.ToString()));
 		}
 	}
 }

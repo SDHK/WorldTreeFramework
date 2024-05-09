@@ -3,6 +3,10 @@ using System.Numerics;
 
 namespace WorldTree
 {
+	public static partial class TestRule
+	{
+	}
+
 	public interface ITestRule : ISendRuleBase
 	{ }
 
@@ -16,6 +20,42 @@ namespace WorldTree
 	{ }
 
 	public interface ITestRuleFloat2 : ISendRuleBase<float>
+	{ }
+
+	public interface ITestRuleAsync : ISendRuleAsyncBase
+	{ }
+
+	public interface ITestRuleAsync<T1> : ISendRuleAsyncBase<T1>
+	where T1 : IEquatable<T1>
+	{ }
+
+	public interface ITestRuleFloatAsync<T1, T2> : ISendRuleAsyncBase<T1, Vector3, T2>
+		where T1 : IEquatable<T1>
+		where T2 : class
+	{ }
+
+	public interface ICallTestRuleFloat2 : ICallRuleBase<float>
+	{ }
+
+	public interface ICallTestRule<T1> : ICallRuleBase<T1>
+	where T1 : IEquatable<T1>
+	{ }
+
+	public interface ICallTestRuleFloat<T1, T2> : ICallRuleBase<T1, Vector3, T2>
+	where T1 : IEquatable<T1>
+	where T2 : class
+	{ }
+
+	public interface ICallTestRuleFloat2Async : ICallRuleAsyncBase<float>
+	{ }
+
+	public interface ICallTestRuleAsync<T1> : ICallRuleAsyncBase<T1>
+		where T1 : IEquatable<T1>
+	{ }
+
+	public interface ICallTestRuleFloatAsync<T1, T2> : ICallRuleAsyncBase<T1, Vector3, T2>
+		where T1 : IEquatable<T1>
+		where T2 : class
 	{ }
 
 	/// <summary>
