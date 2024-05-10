@@ -10,8 +10,11 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Security;
 using System.Text;
+using System.Xml.Linq;
 
 namespace WorldTree.SourceGenerator
 {
@@ -176,18 +179,20 @@ namespace WorldTree.SourceGenerator
 			string ClassFullName = IClassFullName.TrimStart('I');
 			string WhereTypeArguments = classWheres[IClassFullName];
 			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
-			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
+			string BaseTypeArgumentsAngle = GetTypeArgumentsSummary(baseInterface, "\t");
 
 			//As约束接口
 			Code.AppendLine(@$"	/// <summary>");
-			Code.AppendLine(@$"	/// 约束接口: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"	/// 约束接口: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {classSummary[IClassFullName]}");
 			Code.AppendLine(@$"	/// </summary>");
+			Code.Append(BaseTypeArgumentsAngle);
 			Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{IClassFullName}>, INode {WhereTypeArguments}{{}}");
 
 			//抽象基类注释
 			Code.AppendLine(@$"	/// <summary>");
-			Code.AppendLine(@$"	/// 法则基类: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"	/// 法则基类: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {classSummary[IClassFullName]}");
 			Code.AppendLine(@$"	/// </summary>");
+			Code.Append(BaseTypeArgumentsAngle);
 
 			//抽象基类
 			Code.AppendLine(@$"	public abstract class {ClassName}<N{TypeArguments}> : {BaseName}<N, {IClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{IClassFullName}> {WhereTypeArguments}{{}}");
@@ -206,12 +211,13 @@ namespace WorldTree.SourceGenerator
 			string WhereTypeArguments = classWheres[IClassFullName];
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
 			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
-			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
+			string BaseTypeArgumentsAngle = GetTypeArgumentsSummary(baseInterface, "\t\t");
 
 			//生成调用方法
 			Code.AppendLine(@$"		/// <summary>");
-			Code.AppendLine(@$"		/// 执行通知法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"		/// 执行通知法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {classSummary[IClassFullName]}");
 			Code.AppendLine(@$"		/// </summary>");
+			Code.Append(BaseTypeArgumentsAngle);
 			Code.AppendLine(@$"		public static void {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
 		}
 
@@ -228,12 +234,13 @@ namespace WorldTree.SourceGenerator
 			string WhereTypeArguments = classWheres[IClassFullName];
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
 			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
-			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
+			string BaseTypeArgumentsAngle = GetTypeArgumentsSummary(baseInterface, "\t\t");
 
 			//生成调用方法
 			Code.AppendLine(@$"		/// <summary>");
-			Code.AppendLine(@$"		/// 执行异步通知法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"		/// 执行异步通知法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {classSummary[IClassFullName]}");
 			Code.AppendLine(@$"		/// </summary>");
+			Code.Append(BaseTypeArgumentsAngle);
 			Code.AppendLine(@$"		public static TreeTask {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
 		}
 
@@ -250,12 +257,13 @@ namespace WorldTree.SourceGenerator
 			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
 			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
-			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
+			string BaseTypeArgumentsAngle = GetTypeArgumentsSummary(baseInterface, "\t\t");
 
 			//生成调用方法
 			Code.AppendLine(@$"		/// <summary>");
-			Code.AppendLine(@$"		/// 执行调用法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine(@$"		/// 执行调用法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {classSummary[IClassFullName]}");
 			Code.AppendLine(@$"		/// </summary>");
+			Code.Append(BaseTypeArgumentsAngle);
 			Code.AppendLine(@$"		public static {outType} {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
 		}
 
@@ -272,12 +280,13 @@ namespace WorldTree.SourceGenerator
 			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
 			string IBaseFullName = SecurityElement.Escape(GetNameWithGenericArguments(baseInterface));
-			string BaseTypeArgumentsAngle = SecurityElement.Escape(GetTypeArgumentsAngle(baseInterface));
+			string BaseTypeArgumentsAngle = GetTypeArgumentsSummary(baseInterface, "\t\t");
 
 			//生成调用方法
 			Code.AppendLine(@$"		/// <summary>");
-			Code.AppendLine(@$"		/// 执行异步调用法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {BaseTypeArgumentsAngle} {classSummary[IClassFullName]}");
+			Code.AppendLine($@"		/// 执行异步调用法则: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{IBaseFullName}""/> {classSummary[IClassFullName]}");
 			Code.AppendLine(@$"		/// </summary>");
+			Code.Append(BaseTypeArgumentsAngle);
 			Code.AppendLine(@$"		public static TreeTask<{outType}> {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
 		}
 
@@ -310,6 +319,40 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
+		/// 获取泛型参数summary T1 : <see cref="float"/>, OutT : <see cref="int"/>
+		/// </summary>
+		public static string GetTypeArgumentsSummary(INamedTypeSymbol typeSymbol, string tab)
+		{
+			if (!typeSymbol.IsGenericType) return "";
+			StringBuilder sb = new StringBuilder();
+			StringBuilder sbType = new StringBuilder();
+
+			sb.AppendLine($"{tab}/// <remarks>");
+
+			sb.Append($"{tab}/// {typeSymbol.Name}");
+			int index = 1;
+			for (int i = 0; i < typeSymbol.TypeArguments.Length; i++)
+			{
+				string name = typeSymbol.TypeArguments[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+				//不是泛型
+				if (typeSymbol.TypeArguments[i].TypeKind != TypeKind.TypeParameter)
+				{
+					sbType.Append($", <see cref=\"{name}\"/>");
+				}
+				else //是泛型参数
+				{
+					sbType.Append($", <typeparamref name= \"{name}\"/>");
+				}
+				index++;
+			}
+			sb.AppendLine($"&lt;{sbType.ToString().TrimStart(',', ' ')}&gt;");
+			sb.AppendLine($"{tab}/// </remarks>");
+
+			return sb.ToString();
+		}
+
+		/// <summary>
 		/// 获取泛型参数 , T1 arg1, T2 arg2
 		/// </summary>
 		public static string GetGenericTypeParameter(INamedTypeSymbol typeSymbol)
@@ -325,7 +368,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 获取泛型参数 , T1 arg1, T2 arg2 ,out T3 outT
+		/// 获取泛型参数 , T1 arg1, T2 arg2 ,out T3 defaultOutT = default
 		/// </summary>
 		public static string GetCallRuleGenericTypesParameters(INamedTypeSymbol typeSymbol)
 		{
@@ -336,12 +379,12 @@ namespace WorldTree.SourceGenerator
 			{
 				sb.Append($", {typeSymbol.TypeArguments[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} arg{i + 1}");
 			}
-			sb.Append($", out {typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} outT");
+			sb.Append($", {typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} defaultOutT = default");
 			return sb.ToString();
 		}
 
 		/// <summary>
-		/// 获取泛型参数 , arg1, arg2 ,out outT
+		/// 获取泛型参数 , arg1, arg2 ,out defaultOutT
 		/// </summary>
 		public static string GetCallRuleGetGenericParameter(INamedTypeSymbol typeSymbol)
 		{
@@ -352,12 +395,12 @@ namespace WorldTree.SourceGenerator
 			{
 				sb.Append($", arg{i + 1}");
 			}
-			sb.Append($", out outT");
+			sb.Append($", out defaultOutT");
 			return sb.ToString();
 		}
 
 		/// <summary>
-		/// 获取泛型参数 , T1 arg1, T2 arg2, T3 defaultOutT
+		/// 获取泛型参数 , T1 arg1, T2 arg2, T3 defaultOutT = default
 		/// </summary>
 		public static string GetCallRuleAsyncGenericTypesParameters(INamedTypeSymbol typeSymbol)
 		{
@@ -368,7 +411,7 @@ namespace WorldTree.SourceGenerator
 			{
 				sb.Append($", {typeSymbol.TypeArguments[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} arg{i + 1}");
 			}
-			sb.Append($", {typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} defaultOutT");
+			sb.Append($", {typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} defaultOutT = default");
 			return sb.ToString();
 		}
 

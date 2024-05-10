@@ -4,14 +4,15 @@
 * 日期： 2023/12/11 11:52:09
 
 * 描述： 法则执行器基类
-* 
+*
 * 这是一个可以在遍历时，增加和移除节点的队列遍历器。
 * 在遍历时，如果增加了节点，那么会在下一次遍历时执行。
-* 
+*
 * 如果移除了节点，那么就会被抵消跳过，不会执行。
 * 如果节点被意外回收了，那么也会被跳过，不会执行。
 
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -100,6 +101,7 @@ namespace WorldTree
 					while (true)
 					{
 						long id = nodeRuleTuple.Item1.nodeId;
+
 						//假如id被主动移除了
 						if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
 						{
@@ -112,7 +114,8 @@ namespace WorldTree
 							}
 
 							if (traversalCount != 0) traversalCount--; //遍历数抵消
-																	   //获取下一个id,假如队列空了,则直接返回退出
+
+							//获取下一个id,假如队列空了,则直接返回退出
 							if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
 						}
 						else
@@ -125,7 +128,8 @@ namespace WorldTree
 								nodeIdHash.Remove(id);
 
 								if (traversalCount != 0) traversalCount--; //遍历数抵消
-																		   //获取下一个id,假如队列空了,则直接返回退出
+
+								//获取下一个id,假如队列空了,则直接返回退出
 								if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
 							}
 							else//节点存在
@@ -139,12 +143,13 @@ namespace WorldTree
 				}
 			}
 		}
+
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 
 	public static class RuleActuatorBaseRule
 	{
-		class RemoveRule : RemoveRule<RuleActuatorBase>
+		private class RemoveRule : RemoveRule<RuleActuatorBase>
 		{
 			protected override void Execute(RuleActuatorBase self)
 			{

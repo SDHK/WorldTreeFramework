@@ -3,10 +3,6 @@ using System.Numerics;
 
 namespace WorldTree
 {
-	public static partial class TestRule
-	{
-	}
-
 	/// <summary>
 	/// 测试注释1
 	/// </summary>
@@ -58,10 +54,19 @@ namespace WorldTree
 	public interface ICallTestRuleFloat2Async : ICallRuleAsyncBase<float>
 	{ }
 
+	/// <summary>
+	/// 测试
+	/// </summary>
+	/// <typeparam name="T1">123</typeparam>
 	public interface ICallTestRuleAsync<T1> : ICallRuleAsyncBase<T1>
 		where T1 : IEquatable<T1>
 	{ }
 
+	/// <summary>
+	/// 测试Call法则
+	/// </summary>
+	/// <typeparam name="T1">1</typeparam>
+	/// <typeparam name="T2">2</typeparam>
 	public interface ICallTestRuleFloatAsync<T1, T2> : ICallRuleAsyncBase<T1, Vector3, T2>
 		where T1 : IEquatable<T1>
 		where T2 : class
@@ -74,6 +79,10 @@ namespace WorldTree
 		, AsAwakeRule
 		, AsAwakeRule<string>
 
+		, AsCallTestRuleFloatAsync<string, string>
+
+		, AsCallTestRuleFloatAsync<int, string>
+
 	{
 		public int TestValue;
 	}
@@ -85,6 +94,7 @@ namespace WorldTree
 			protected override void Execute(DotNetTestNode self)
 			{
 				self.Log("激活！！");
+				self.CallTestRuleFloatAsync("1", default, "1q");
 			}
 		}
 
