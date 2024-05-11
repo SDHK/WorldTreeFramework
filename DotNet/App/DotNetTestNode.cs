@@ -6,6 +6,12 @@ namespace WorldTree
 	/// <summary>
 	/// 测试注释1
 	/// </summary>
+	public interface ITestEventRule : ISendRuleBase
+	{ }
+
+	/// <summary>
+	/// 测试注释1
+	/// </summary>
 	public interface ITestRule : ISendRuleBase
 	{ }
 
@@ -58,6 +64,7 @@ namespace WorldTree
 	/// 测试
 	/// </summary>
 	/// <typeparam name="T1">123</typeparam>
+	/// <remarks>a</remarks>
 	public interface ICallTestRuleAsync<T1> : ICallRuleAsyncBase<T1>
 		where T1 : IEquatable<T1>
 	{ }
@@ -65,6 +72,9 @@ namespace WorldTree
 	/// <summary>
 	/// 测试Call法则
 	/// </summary>
+	/// <remarks>
+	/// <para>a这是一个测试</para>
+	/// </remarks>
 	/// <typeparam name="T1">1</typeparam>
 	/// <typeparam name="T2">2</typeparam>
 	public interface ICallTestRuleFloatAsync<T1, T2> : ICallRuleAsyncBase<T1, Vector3, T2>
