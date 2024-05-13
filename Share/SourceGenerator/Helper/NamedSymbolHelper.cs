@@ -85,7 +85,7 @@ namespace WorldTree.SourceGenerator
 		/// 检测是否继承接口（只对比接口名称，不包括泛型）
 		/// </summary>
 		/// <param name="typeSymbol">子接口</param>
-		/// <param name="RuleBases">接口名称</param>
+		/// <param name="InterfaceName">接口名称</param>
 		/// <param name="Interface">基类接口符号</param>
 		/// <returns></returns>
 		public static bool CheckInterface(INamedTypeSymbol typeSymbol, string InterfaceName, out INamedTypeSymbol? Interface)

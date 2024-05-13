@@ -102,6 +102,9 @@ namespace WorldTree.SourceGenerator
 
 		public static void Execute(GeneratorExecutionContext context)
 		{
+			var ILifeCycleRule = context.Compilation.ToINamedTypeSymbol("WorldTree.ILifeCycleRule");
+			if (ILifeCycleRule == null) return;
+
 			foreach (var fileClassList in fileClassDict)
 			{
 				StringBuilder ClassCode = new();
@@ -118,7 +121,8 @@ namespace WorldTree.SourceGenerator
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							SendRuleMethod(MethodCode, fileClass, baseInterface);
+							if (!NamedSymbolHelper.CheckAllInterface(fileClass, ILifeCycleRule))
+								SendRuleMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
 					else if (NamedSymbolHelper.CheckInterface(fileClass, ISendRuleAsyncBase, out baseInterface))
@@ -126,7 +130,8 @@ namespace WorldTree.SourceGenerator
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							SendRuleAsyncMethod(MethodCode, fileClass, baseInterface);
+							if (!NamedSymbolHelper.CheckAllInterface(fileClass, ILifeCycleRule))
+								SendRuleAsyncMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
 					else if (NamedSymbolHelper.CheckInterface(fileClass, ICallRuleBase, out baseInterface))
@@ -134,8 +139,8 @@ namespace WorldTree.SourceGenerator
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-
-							CallRuleMethod(MethodCode, fileClass, baseInterface);
+							if (!NamedSymbolHelper.CheckAllInterface(fileClass, ILifeCycleRule))
+								CallRuleMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
 					else if (NamedSymbolHelper.CheckInterface(fileClass, ICallRuleAsyncBase, out baseInterface))
@@ -143,21 +148,24 @@ namespace WorldTree.SourceGenerator
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-
-							CallRuleAsyncMethod(MethodCode, fileClass, baseInterface);
+							if (!NamedSymbolHelper.CheckAllInterface(fileClass, ILifeCycleRule))
+								CallRuleAsyncMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
 				}
+				if (MethodCode.ToString() != "")
+				{
+					ClassCode.AppendLine($"	public static class {fileClassList.Key}Supplement");
+					ClassCode.AppendLine("	{");
 
-				ClassCode.AppendLine($"	public static class {fileClassList.Key}Supplement");
-				ClassCode.AppendLine("	{");
+					ClassCode.AppendLine($"{MethodCode}");
 
-				ClassCode.AppendLine($"{MethodCode}");
+					ClassCode.AppendLine("	}");
+				}
 
-				ClassCode.AppendLine("	}");
 				ClassCode.Append("}");
 
-				context.AddSource($"{fileClassList.Key}Supplement.cs", SourceText.From(ClassCode.ToString(), Encoding.UTF8));
+				context.AddSource($"{fileClassList.Key}RuleSupplement.cs", SourceText.From(ClassCode.ToString(), Encoding.UTF8));
 			}
 		}
 
@@ -167,7 +175,7 @@ namespace WorldTree.SourceGenerator
 		private static void RuleClass(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
 			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName.TrimStart('I');
+			string ClassName = IClassName;
 			string BaseName = baseInterface.Name.TrimStart('I');
 			string TypeArguments = GetTypeArguments(typeSymbol);
 			string BaseTypeArguments = GetTypeArguments(baseInterface);
@@ -191,13 +199,13 @@ namespace WorldTree.SourceGenerator
 			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[IClassFullName], CommentPara.ToString(), "\t"));
 
 			//抽象基类
-			Code.AppendLine(@$"	public abstract class {ClassName}<N{TypeArguments}> : {BaseName}<N, {IClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{IClassFullName}> {WhereTypeArguments}{{}}");
+			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {IClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{IClassFullName}> {WhereTypeArguments}{{}}");
 		}
 
 		private static void SendRuleMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
 			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName.TrimStart('I');
+			string ClassName = IClassName;
 			int baseTypeCount = baseInterface.TypeArguments.Count();
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
 			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
@@ -220,7 +228,7 @@ namespace WorldTree.SourceGenerator
 		private static void SendRuleAsyncMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
 			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName.TrimStart('I');
+			string ClassName = IClassName;
 			int baseTypeCount = baseInterface.TypeArguments.Count();
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
 			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
@@ -243,7 +251,7 @@ namespace WorldTree.SourceGenerator
 		private static void CallRuleMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
 			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName.TrimStart('I');
+			string ClassName = IClassName;
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
 			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
 			string ClassFullName = IClassFullName.TrimStart('I');
@@ -265,7 +273,7 @@ namespace WorldTree.SourceGenerator
 		private static void CallRuleAsyncMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
 			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName.TrimStart('I');
+			string ClassName = IClassName;
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
 			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
 			string ClassFullName = IClassFullName.TrimStart('I');

@@ -6,12 +6,12 @@
 * 描述：
 
 */
+
 using Microsoft.CodeAnalysis;
 
 namespace WorldTree.SourceGenerator
 {
 	[Generator]
-
 	internal class NodeExtensionMethodGenerator : ISourceGenerator
 	{
 		public void Initialize(GeneratorInitializationContext context)
@@ -31,10 +31,10 @@ namespace WorldTree.SourceGenerator
 				NodeCallRuleGenerator.Execute(context);
 				NodeCallRuleAsyncGenerator.Execute(context);
 
-				NodeSendRuleAsyncGeneralGenerator.Execute(context);
-				NodeSendRuleGeneralGenerator.Execute(context);
-				NodeCallRuleAsyncGeneralGenerator.Execute(context);
-				NodeCallRuleGeneralGenerator.Execute(context);
+				//NodeSendRuleAsyncGeneralGenerator.Execute(context);
+				//NodeSendRuleGeneralGenerator.Execute(context);
+				//NodeCallRuleAsyncGeneralGenerator.Execute(context);
+				//NodeCallRuleGeneralGenerator.Execute(context);
 
 				RuleActuatorSendRuleGenerator.Execute(context);
 				RuleActuatorCallRuleGenerator.Execute(context);
@@ -45,6 +45,5 @@ namespace WorldTree.SourceGenerator
 				throw;
 			}
 		}
-
 	}
 }

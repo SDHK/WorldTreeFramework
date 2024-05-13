@@ -104,7 +104,7 @@ namespace WorldTree
 			protected override void Execute(DotNetTestNode self)
 			{
 				self.Log("激活！！");
-				self.CallTestRuleFloatAsync("1", default, "1q");
+				self.ICallTestRuleFloatAsync(1, default, "1q").Coroutine(treeTaskToken);
 			}
 		}
 
