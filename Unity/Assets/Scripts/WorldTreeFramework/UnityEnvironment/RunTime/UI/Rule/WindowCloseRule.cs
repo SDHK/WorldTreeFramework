@@ -9,12 +9,8 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// UI窗口关闭系统接口
-    /// </summary>
-    public interface IWindowCloseRule : ISendRuleBase { }
-    /// <summary>
-    /// UI窗口关闭系统
-    /// </summary>
-    public abstract class WindowCloseRule<N> : SendRuleBase<N, IWindowCloseRule> where N : class, INode, AsRule<IWindowCloseRule> { }
+	/// <summary>
+	/// UI窗口关闭法则
+	/// </summary>
+	public interface WindowClose : ISendRuleBase { }
 }

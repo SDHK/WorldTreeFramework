@@ -125,5 +125,16 @@ namespace WorldTree.SourceGenerator
 			var usings = root.DescendantNodes().OfType<UsingDirectiveSyntax>();
 			return string.Join(Environment.NewLine, usings.Select(u => u.ToString()));
 		}
+
+		/// <summary>
+		/// 获取所在命名空间
+		/// </summary>
+		public static string GetUsing(TypeDeclarationSyntax typeDeclaration)
+		{
+			var root = typeDeclaration.SyntaxTree.GetRoot();
+			var ns = root.DescendantNodes().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
+			if (ns == null) return "";
+			return ns.Name.ToString();
+		}
 	}
 }

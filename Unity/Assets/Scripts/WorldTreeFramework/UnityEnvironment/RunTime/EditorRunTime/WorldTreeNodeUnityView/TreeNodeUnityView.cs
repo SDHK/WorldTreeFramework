@@ -48,7 +48,7 @@ namespace WorldTree
 						parentBranchObj.transform.SetParent(parentObj.transform);
 						parentView.BranchObjs.Add(node.BranchType, parentBranchObj);
 					}
-					self.gameObject.transform.SetParent(parentBranchObj.transform);
+					self?.gameObject?.transform?.SetParent(parentBranchObj.transform);
 				}
 				else
 				{

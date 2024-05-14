@@ -16,7 +16,7 @@ namespace EditorTool
 {
     public class EditorHomePage : Node, ComponentOf<INode>
         , AsRule<IAwakeRule>
-        , AsRule<IGuiUpdateRule>
+        , AsRule<GuiUpdate>
     {
         public INode page;
     }

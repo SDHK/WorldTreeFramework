@@ -13,9 +13,9 @@ using UnityEngine;
 namespace WorldTree
 {
     public class GUIGeneralWindow : Node
-        , AsRule<IGUIDrawSystem>
+        , AsRule<GUIDraw>
     {
-        public IRuleGroup<IGUIDrawSystem> group;
+        public IRuleGroup<GUIDraw> group;
 
         public GUIBeginVertical VerticalBox;
 
@@ -33,7 +33,7 @@ namespace WorldTree
         }
     }
 
-    class GUIGeneralWindowOnGUISystem : GUIDrawSystem<GUIGeneralWindow>
+    class GUIGeneralWindowOnGUISystem : GUIDrawRule<GUIGeneralWindow>
     {
         protected override void Execute(GUIGeneralWindow self)
         {

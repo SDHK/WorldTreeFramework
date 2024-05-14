@@ -11,13 +11,8 @@ using System;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// UI窗口焦点更新系统接口
-    /// </summary>
-    public interface IWindowFocusUpdateRule : ISendRuleBase<TimeSpan> { }
-
-    /// <summary>
-    /// UI窗口焦点更新系统
-    /// </summary>
-    public abstract class WindowFocusUpdateRule<N> : SendRuleBase<N, IWindowFocusUpdateRule, TimeSpan> where N : class, INode, AsRule<IWindowFocusUpdateRule> { }
+	/// <summary>
+	/// UI窗口焦点更新法制
+	/// </summary>
+	public interface WindowFocusUpdate : ISendRuleBase<TimeSpan> { }
 }

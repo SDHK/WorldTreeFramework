@@ -7,22 +7,24 @@ namespace WorldTree
 	{
 		private class UpdateRule : UpdateRule<TaskTest>
 		{
-			protected override void Execute(TaskTest self)
+			protected override async void Execute(TaskTest self)
 			{
 				if (Input.GetKeyDown(KeyCode.Q))
 				{
+					self.Log($"异步启动:！！！！！");
+
 					self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-					self.Test().Coroutine();
+					self.Test().Coroutine(treeTaskToken);
 				}
 
 				if (Input.GetKeyDown(KeyCode.W))
 				{
-					self.AddComponent(out TreeTaskToken treeTaskToken).Stop();
+					self.AddComponent(out TreeTaskToken _).Stop();
 				}
 
 				if (Input.GetKeyDown(KeyCode.E))
 				{
-					self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+					self.AddComponent(out TreeTaskToken _).Continue();
 				}
 
 				if (Input.GetKeyDown(KeyCode.R))
@@ -33,41 +35,13 @@ namespace WorldTree
 			}
 		}
 
-		public static async TreeTask TaskRun(this TaskTest self, Action action)
-		{
-			await self.Core.worldContext.AddChild(out TreeTaskSwitchWorld _, self.Core.worldContext);
-			action?.Invoke();
-		}
-
-		public static async TreeTask Test1(this TaskTest self)
-		{
-			self.Log("1！");
-
-			await self.Test2();
-			self.Log("1结束！");
-		}
-
-		public static async TreeTask Test2(this TaskTest self)
-		{
-			self.Log("2！");
-			await self.Test3();
-			self.Log("2结束！");
-		}
-
-		public static async TreeTask Test3(this TaskTest self)
-		{
-			self.Log("3！");
-			await self.TreeTaskCompleted();
-			self.Log("3结束！");
-		}
-
 		public static async TreeTask Test(this TaskTest self)
 		{
+			var TaskTokenCatch = await self.TreeTaskTokenCatch();
+
+			self.Log($"0！令牌捕获:{TaskTokenCatch.Id}");
+
 			await self.AsyncDelay(3);
-
-			self.Log("0！");
-
-			//await T2();
 
 			self.Log("1！");
 			await self.TreeTaskCompleted();
@@ -146,5 +120,12 @@ namespace WorldTree
 
 			await self.TreeTaskCompleted();
 		}
+
+		public static async TreeTask TaskRun(this TaskTest self, Action action)
+		{
+			await self.Core.worldContext.AddChild(out TreeTaskSwitchWorld _, self.Core.worldContext);
+			action?.Invoke();
+		}
+
 	}
 }

@@ -18,10 +18,10 @@ namespace WorldTree
 	public class UnityWorldHeart : WorldHeartBase
 		, ComponentOf<WorldTreeRoot>
 		, AsRule<IAwakeRule<int>>
-		, AsRule<ILateUpdateTimeRule>
-		, AsRule<IFixedUpdateTimeRule>
-		, AsRule<IGuiUpdateTimeRule>
-		, AsRule<IDrawGizmosUpdateTimeRule>
+		, AsRule<LateUpdateTime>
+		, AsRule<FixedUpdateTime>
+		, AsRule<GuiUpdateTime>
+		, AsRule<DrawGizmosUpdateTime>
 	{
 		/// <summary>
 		/// 运行线程
@@ -30,28 +30,28 @@ namespace WorldTree
 
 		#region 世界脉搏
 
-		public WorldPulse<IUpdateTimeRule> worldUpdate;
-		public WorldPulse<ILateUpdateTimeRule> worldLateUpdate;
-		public WorldPulse<IFixedUpdateTimeRule> worldFixedUpdate;
-		public WorldPulse<IGuiUpdateTimeRule> worldGuiUpdate;
-		public WorldPulse<IDrawGizmosUpdateTimeRule> worldDrawGizmosUpdate;
+		public WorldPulse<UpdateTime> worldUpdate;
+		public WorldPulse<LateUpdateTime> worldLateUpdate;
+		public WorldPulse<FixedUpdateTime> worldFixedUpdate;
+		public WorldPulse<GuiUpdateTime> worldGuiUpdate;
+		public WorldPulse<DrawGizmosUpdateTime> worldDrawGizmosUpdate;
 
 		#endregion
 
 		#region 全局事件法则
 
-		public GlobalRuleActuator<IEnableRule> enable;
-		public GlobalRuleActuator<IDisableRule> disable;
-		public GlobalRuleActuator<IUpdateRule> update;
-		public GlobalRuleActuator<IUpdateTimeRule> updateTime;
-		public GlobalRuleActuator<ILateUpdateRule> lateUpdate;
-		public GlobalRuleActuator<ILateUpdateTimeRule> lateUpdateTime;
-		public GlobalRuleActuator<IFixedUpdateRule> fixedUpdate;
-		public GlobalRuleActuator<IFixedUpdateTimeRule> fixedUpdateTime;
-		public GlobalRuleActuator<IGuiUpdateRule> onGUI;
-		public GlobalRuleActuator<IGuiUpdateTimeRule> onGUIUpdateTime;
-		public GlobalRuleActuator<IDrawGizmosUpdateRule> drawGizmos;
-		public GlobalRuleActuator<IDrawGizmosUpdateTimeRule> drawGizmosUpdateTime;
+		public GlobalRuleActuator<Enable> enable;
+		public GlobalRuleActuator<Disable> disable;
+		public GlobalRuleActuator<Update> update;
+		public GlobalRuleActuator<UpdateTime> updateTime;
+		public GlobalRuleActuator<LateUpdate> lateUpdate;
+		public GlobalRuleActuator<LateUpdateTime> lateUpdateTime;
+		public GlobalRuleActuator<FixedUpdate> fixedUpdate;
+		public GlobalRuleActuator<FixedUpdateTime> fixedUpdateTime;
+		public GlobalRuleActuator<GuiUpdate> onGUI;
+		public GlobalRuleActuator<GuiUpdateTime> onGUIUpdateTime;
+		public GlobalRuleActuator<DrawGizmosUpdate> drawGizmos;
+		public GlobalRuleActuator<DrawGizmosUpdateTime> drawGizmosUpdateTime;
 
 		#endregion
 

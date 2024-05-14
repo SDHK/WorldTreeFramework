@@ -20,11 +20,11 @@ namespace WorldTree
 
     public class GUIWindow : GUIBase, ComponentOf<GUIGeneralWindow>
         , AsRule<IAwakeRule>
-        , AsRule<IGuiUpdateRule>
+        , AsRule<GuiUpdate>
     {
         public Rect rect = new Rect(0, 0, 400, 300);
         public bool isDrag = true;
-        public IRuleGroup<IGUIDrawSystem> group;
+        public IRuleGroup<GUIDraw> group;
 
         public void Window(int id)
         {

@@ -52,6 +52,10 @@ namespace WorldTree.SourceGenerator
 		/// 文件名-引用
 		/// </summary>
 		public static Dictionary<string, string> fileUsings = new();
+		/// <summary>
+		/// 文件名-命名空间
+		/// </summary>
+		public static Dictionary<string, string> fileUsing = new();
 
 		/// <summary>
 		/// 接口名-语法树
@@ -67,6 +71,7 @@ namespace WorldTree.SourceGenerator
 		{
 			fileClassDict.Clear();
 			fileUsings.Clear();
+			fileUsing.Clear();
 			classInterfaceSyntax.Clear();
 		}
 
@@ -87,6 +92,7 @@ namespace WorldTree.SourceGenerator
 				set = new List<INamedTypeSymbol>();
 				fileClassDict.Add(fileName, set);
 				fileUsings.Add(fileName, TreeSyntaxHelper.GetUsings(interfaceDeclaration));
+				fileUsing.Add(fileName, TreeSyntaxHelper.GetUsing(interfaceDeclaration));
 			}
 			string interfaceName = namedType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
@@ -169,7 +175,7 @@ namespace WorldTree.SourceGenerator
 				if (ClassCode.ToString() != "") {
 
 					fileCode.AppendLine(fileUsings[fileClassList.Key]);
-					fileCode.AppendLine("namespace WorldTree");
+					fileCode.AppendLine($"namespace {fileUsing[fileClassList.Key]}");
 					fileCode.AppendLine("{");
 					fileCode.Append(ClassCode);
 					fileCode.Append("}");

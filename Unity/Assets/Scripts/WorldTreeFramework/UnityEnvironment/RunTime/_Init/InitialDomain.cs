@@ -37,7 +37,7 @@ namespace WorldTree
 		/// 目标类型id
 		/// </summary>
 		public long nodeId { get; set; }
-
+		
 		private T1 arg1;
 		private T2 arg2;
 		private T3 arg3;
@@ -47,7 +47,7 @@ namespace WorldTree
 		/// </summary>
 		public void Send(INode node)
 		{
-			node.TrySend(TypeInfo<R>.Default, arg1, arg2, arg3);
+			//node.TrySend(TypeInfo<R>.Default, arg1, arg2, arg3);
 		}
 
 		public void SetData(byte[] dataBytes)
@@ -60,9 +60,9 @@ namespace WorldTree
 	/// </summary>
 	public class InitialDomain : Node, ComponentOf<INode>
 		, AsRule<IAwakeRule>
-		, AsRule<IFixedUpdateTimeRule>
-		, AsRule<ILateUpdateTimeRule>
-		, AsRule<IGuiUpdateTimeRule>
+		, AsRule<FixedUpdateTime>
+		, AsRule<LateUpdateTime>
+		, AsRule<GuiUpdateTime>
 	{
 		public AnimationCurve AnimationCurve = new AnimationCurve();
 		public float TestFloat = 1f;

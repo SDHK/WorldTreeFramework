@@ -14,7 +14,7 @@ namespace WorldTree
 
 				//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
 
-				self.AddComponent(out YooAssetTest _);
+				self.AddComponent(out TaskTest _);
 
 				//添加宏测试成功，应该在编辑器下才能添加
 				//string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone);

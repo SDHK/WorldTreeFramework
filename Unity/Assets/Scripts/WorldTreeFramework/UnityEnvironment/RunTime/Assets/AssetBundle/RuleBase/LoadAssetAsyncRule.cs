@@ -12,12 +12,8 @@ using System;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 异步加载资源法则接口
-    /// </summary>
-    public interface ILoadAssetAsyncRule : ICallRuleAsync<string, Object> { }
-    /// <summary>
-    /// 异步加载资源法则
-    /// </summary>
-    public abstract class LoadAssetAsyncRule<N> : CallRuleAsyncBase<N, ILoadAssetAsyncRule, string, Object> where N : class, INode, AsRule<ILoadAssetAsyncRule> { }
+	/// <summary>
+	/// 异步加载资源法则
+	/// </summary>
+	public interface LoadAssetAsync : ICallRuleAsyncBase<string, Object> { }
 }

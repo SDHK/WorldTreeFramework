@@ -13,7 +13,7 @@ namespace WorldTree
 {
     public class AssetManager : Node
         , ComponentOf<WorldTreeRoot>
-        , AsRule<ILoadAssetAsyncRule>
+        , AsRule<LoadAssetAsync>
     {
         public TreeDictionary<string, Object> assets;
 
@@ -24,7 +24,7 @@ namespace WorldTree
             var key = typeof(N);
             if (!assets.TryGetValue(key.Name, out var asset))
             {
-                asset = await this.CallRuleAsync(TypeInfo<ILoadAssetAsyncRule>.Default, key.Name, TypeInfo<Object>.Default);
+                asset = await this.CallRuleAsync(TypeInfo<LoadAssetAsync>.Default, key.Name, TypeInfo<Object>.Default);
                 assets.Add(key.Name, asset);
             }
             else

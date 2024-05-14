@@ -61,7 +61,7 @@ namespace EditorTool
         }
         private void OnGUI()
         {
-            entity?.TrySendRule<IGUIDrawSystem>();
+            entity?.TrySendRule<GUIDraw>();
         }
 
         private void OnLostFocus()
