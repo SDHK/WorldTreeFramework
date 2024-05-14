@@ -11,48 +11,23 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 引用子关系解除法则接口
-    /// </summary>
-    public interface IDeReferencedChildRule : ISendRuleBase<INode> { }
+	/// <summary>
+	/// 引用子关系解除法则
+	/// </summary>
+	public interface DeReferencedChild : ISendRuleBase<INode>, ILifeCycleRule { }
 
-    /// <summary>
-    /// 引用子关系解除法则
-    /// </summary>
-    public abstract class DeReferencedChildRule<N> : SendRuleBase<N, IDeReferencedChildRule, INode> where N : class, INode, AsRule<IDeReferencedChildRule> { }
+	/// <summary>
+	/// 引用父关系解除法则
+	/// </summary>
+	public interface DeReferencedParent : ISendRuleBase<INode>, ILifeCycleRule { }
 
-
-    /// <summary>
-    /// 引用父关系解除法则接口
-    /// </summary>
-    public interface IDeReferencedParentRule : ISendRuleBase<INode> { }
-
-    /// <summary>
-    /// 引用父关系解除法则
-    /// </summary>
-    public abstract class DeReferencedParentRule<N> : SendRuleBase<N, IDeReferencedParentRule, INode> where N : class, INode, AsRule<IDeReferencedParentRule> { }
-
-
-
-    /// <summary>
-    /// 引用子关系移除法则接口
-    /// </summary>
-    public interface IReferencedChildRemoveRule : ISendRuleBase<INode> { }
-    /// <summary>
-    /// 引用子关系移除法则
-    /// </summary>
-    public abstract class ReferencedChildRemoveRule<N> : SendRuleBase<N, IReferencedChildRemoveRule, INode> where N : class, INode, AsRule<IReferencedChildRemoveRule> { }
-
-
-    /// <summary>
-    /// 引用父关系移除法则接口
-    /// </summary>
-    public interface IReferencedParentRemoveRule : ISendRuleBase<INode> { }
-
-    /// <summary>
-    /// 引用父关系移除法则
-    /// </summary>
-    public abstract class ReferencedParentRemoveRule<N> : SendRuleBase<N, IReferencedParentRemoveRule, INode> where N : class, INode, AsRule<IReferencedParentRemoveRule> { }
-
-
+	/// <summary>
+	/// 引用子关系移除法则
+	/// </summary>
+	public interface ReferencedChildRemove : ISendRuleBase<INode>, ILifeCycleRule { }
+	
+	/// <summary>
+	/// 引用父关系移除法则
+	/// </summary>
+	public interface ReferencedParentRemove : ISendRuleBase<INode>, ILifeCycleRule { }
 }

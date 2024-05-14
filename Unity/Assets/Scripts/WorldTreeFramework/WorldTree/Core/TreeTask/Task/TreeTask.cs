@@ -21,7 +21,7 @@ namespace WorldTree
 	public class TreeTask : TreeTaskBase
 		, ChildOf<INode>
 		, AsRule<IAwakeRule>
-		, AsRule<ITreeTaskSetResuItRule>
+		, AsRule<TreeTaskSetResuIt>
 	{
 		public TreeTask GetAwaiter() => this;
 		public override bool IsCompleted { get; set; }
@@ -68,7 +68,7 @@ namespace WorldTree
 	public class TreeTask<T> : TreeTaskBase
 		, ChildOf<INode>
 		, AsRule<IAwakeRule>
-		, AsRule<ITreeTaskSetResuItRule<T>>
+		, AsRule<TreeTaskSetResuIt<T>>
 	{
 		public TreeTask<T> GetAwaiter() => this;
 		public override bool IsCompleted { get; set; }

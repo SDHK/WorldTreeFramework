@@ -33,16 +33,16 @@ namespace WorldTree
 
 		#region 世界脉搏
 
-		public WorldPulse<IUpdateTimeRule> worldUpdate;
+		public WorldPulse<UpdateTime> worldUpdate;
 
 		#endregion
 
 		#region 全局事件法则
 
-		public GlobalRuleActuator<IEnableRule> enable;
-		public GlobalRuleActuator<IDisableRule> disable;
-		public GlobalRuleActuator<IUpdateRule> update;
-		public GlobalRuleActuator<IUpdateTimeRule> updateTime;
+		public GlobalRuleActuator<Enable> enable;
+		public GlobalRuleActuator<Disable> disable;
+		public GlobalRuleActuator<Update> update;
+		public GlobalRuleActuator<UpdateTime> updateTime;
 
 		#endregion
 

@@ -21,7 +21,7 @@ namespace WorldTree
 	/// <typeparam name="C">组件</typeparam>
 	/// <remarks>用于节点的饿汉单例</remarks>
 	public abstract class NodeAddRule<N, C> : AddRule<N>
-		where N : class, INode, AsRule<IAddRule>
+		where N : class, INode, AsRule<Add>
 		where C : class, INode, ComponentOf<N>, AsRule<IAwakeRule>
 	{
 		protected override void Execute(N self)

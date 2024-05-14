@@ -9,13 +9,8 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 获取法则接口
-    /// </summary>
-    public interface IGetRule : ISendRuleBase { }
-
-    /// <summary>
-    /// 获取法则
-    /// </summary>
-    public abstract class GetRule<N> : SendRuleBase<N, IGetRule> where N : class, INode, AsRule<IGetRule> { }
+	/// <summary>
+	/// 获取法则
+	/// </summary>
+	public interface Get : ISendRuleBase, ILifeCycleRule { }
 }

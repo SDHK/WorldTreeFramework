@@ -17,7 +17,7 @@ namespace WorldTree
 	public class TreeTaskSwitchWorld : TreeTaskBase
 		, ChildOf<WorldContext>
 		, AsRule<IAwakeRule<WorldContext>>
-		, AsRule<ITreeTaskSetResuItRule>
+		, AsRule<TreeTaskSetResuIt>
 	{
 		public TreeTaskSwitchWorld GetAwaiter() => this;
 		public override bool IsCompleted { get; set; }

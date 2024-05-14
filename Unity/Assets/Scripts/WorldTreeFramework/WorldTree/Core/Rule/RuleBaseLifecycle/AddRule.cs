@@ -23,21 +23,8 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 生命周期法则
-	/// </summary>
-	public interface ILifeCycleRule
-	{
-	}
-
-	/// <summary>
-	/// 添加法则接口
-	/// </summary>
-	public interface IAddRule : ISendRuleBase, ILifeCycleRule
-	{ }
-
-	/// <summary>
 	/// 添加法则
 	/// </summary>
-	public abstract class AddRule<N> : SendRuleBase<N, IAddRule> where N : class, INode, AsRule<IAddRule>
+	public interface Add : ISendRuleBase, ILifeCycleRule
 	{ }
 }

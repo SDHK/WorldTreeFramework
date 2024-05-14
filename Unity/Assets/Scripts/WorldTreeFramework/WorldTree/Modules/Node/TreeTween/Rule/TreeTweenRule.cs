@@ -14,7 +14,7 @@ namespace WorldTree
 {
     public static partial class TreeTweenRule
     {
-        class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TreeTweenBase, TaskState>
+        class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TreeTweenBase>
         {
             protected override void Execute(TreeTweenBase self, TaskState state)
             {
@@ -91,7 +91,7 @@ namespace WorldTree
         /// </summary>
         public static float GetCurveEvaluate(this TreeTweenBase self, TimeSpan deltaTime)
         {
-            return self.m_Curve.CallRule(TypeInfo<ICurveEvaluateRule>.Default, self.GetTimeScale(deltaTime), out float _);
+            return self.m_Curve.CallRule(TypeInfo<CurveEvaluate>.Default, self.GetTimeScale(deltaTime), out float _);
         }
 
         /// <summary>

@@ -10,13 +10,10 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 新建法则接口
-    /// </summary>
-    public interface INewRule : ISendRuleBase { }
+	/// <summary>
+	/// 新建法则
+	/// </summary>
+	public interface New : ISendRuleBase, ILifeCycleRule { }
 
-    /// <summary>
-    /// 新建法则
-    /// </summary>
-    public abstract class NewRule<N> : SendRuleBase<N, INewRule> where N : class, INode, AsRule<INewRule> { }
+
 }

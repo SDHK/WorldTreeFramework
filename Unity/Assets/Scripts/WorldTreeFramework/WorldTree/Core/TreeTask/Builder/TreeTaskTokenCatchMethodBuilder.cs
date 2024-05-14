@@ -84,7 +84,7 @@ namespace WorldTree.Internal
 				else
 				{
 					task.m_TreeTaskToken = awaiter.m_TreeTaskToken;
-					task.m_TreeTaskToken.tokenEvent.Add(task, TypeInfo<ITreeTaskTokenEventRule>.Default);
+					task.m_TreeTaskToken.tokenEvent.Add(task, TypeInfo<TreeTaskTokenEvent>.Default);
 				}
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 			}

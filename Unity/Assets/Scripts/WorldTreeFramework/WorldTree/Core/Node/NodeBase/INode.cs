@@ -50,22 +50,22 @@ namespace WorldTree
 		, AsComponentBranch
 		, AsChildBranch
 
-		, AsRule<INewRule>
-		, AsRule<IGetRule>
-		, AsRule<IRecycleRule>
-		, AsRule<IDestroyRule>
+		, AsRule<New>
+		, AsRule<Get>
+		, AsRule<Recycle>
+		, AsRule<Destroy>
 
-		, AsRule<IEnableRule>
-		, AsRule<IDisableRule>
+		, AsRule<Enable>
+		, AsRule<Disable>
 
-		, AsRule<IGraftRule>
-		, AsRule<ICutRule>
+		, AsRule<Graft>
+		, AsRule<Cut>
 
-		, AsRule<IAddRule>
-		, AsRule<IUpdateRule>
-		, AsRule<IUpdateTimeRule>
-		, AsRule<IBeforeRemoveRule>
-		, AsRule<IRemoveRule>
+		, AsRule<Add>
+		, AsRule<Update>
+		, AsRule<UpdateTime>
+		, AsRule<BeforeRemove>
+		, AsRule<Remove>
 
 	{
 		/// <summary>

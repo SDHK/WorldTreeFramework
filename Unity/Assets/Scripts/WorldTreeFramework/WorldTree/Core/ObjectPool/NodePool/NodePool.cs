@@ -23,10 +23,10 @@ namespace WorldTree
 	public class NodePool : GenericPool<INode>
 		, ChildOf<PoolManagerBase<NodePool>>
 	{
-		public IRuleList<INewRule> newRule;
-		public IRuleList<IGetRule> getRule;
-		public IRuleList<IRecycleRule> recycleRule;
-		public IRuleList<IDestroyRule> destroyRule;
+		public IRuleList<New> newRule;
+		public IRuleList<Get> getRule;
+		public IRuleList<Recycle> recycleRule;
+		public IRuleList<Destroy> destroyRule;
 
 
 		public NodePool() : base()

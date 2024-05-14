@@ -16,7 +16,7 @@ namespace WorldTree
 	/// </summary>
 	public class TimerCall : Node, ComponentOf<INode>
 		, AsRule<IAwakeRule<float>>
-		, AsRule<ITreeTaskTokenEventRule>
+		, AsRule<TreeTaskTokenEvent>
 	{
 		public bool isRun = false;
 		public float time = 0;
@@ -71,7 +71,7 @@ namespace WorldTree
 			}
 		}
 
-		private class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TimerCall, TaskState>
+		private class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TimerCall>
 		{
 			protected override void Execute(TimerCall self, TaskState state)
 			{

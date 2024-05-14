@@ -47,7 +47,7 @@ namespace WorldTree
         /// <summary>
         /// 任务令牌事件
         /// </summary>
-        public RuleActuator<ITreeTaskTokenEventRule> tokenEvent;
+        public RuleActuator<TreeTaskTokenEvent> tokenEvent;
 
 
         /// <summary>

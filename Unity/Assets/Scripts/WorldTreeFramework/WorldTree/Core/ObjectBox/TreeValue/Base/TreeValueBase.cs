@@ -22,19 +22,19 @@ namespace WorldTree
 	/// </summary>
 	public abstract partial class TreeValueBase<T> : TreeValueBase
 		, ChildOf<INode>
-		, AsRule<IValueChangeRuleEvent>
+		, AsRule<IValueChangeEvent>
 		where T : IEquatable<T>
 
 	{
 		/// <summary>
 		/// 全局法则执行器
 		/// </summary>
-		public IRuleActuator<IValueChangeRuleEvent<T>> m_GlobalValueChange;
+		public IRuleActuator<ValueChangeEvent<T>> m_GlobalValueChange;
 
 		/// <summary>
 		/// 法则执行器
 		/// </summary>
-		public RuleActuator<IValueChangeRuleEvent<T>> m_ValueChange;
+		public RuleActuator<ValueChangeEvent<T>> m_ValueChange;
 
 		/// <summary>
 		/// 值

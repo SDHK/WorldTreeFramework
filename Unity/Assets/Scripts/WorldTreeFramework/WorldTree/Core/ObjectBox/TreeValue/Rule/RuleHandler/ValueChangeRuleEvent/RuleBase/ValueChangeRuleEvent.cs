@@ -14,21 +14,21 @@ namespace WorldTree
 	/// <summary>
 	/// 泛型数值监听接口，用于监听未知类型，同时解除AsRule的法则限制
 	/// </summary>
-	public interface IValueChangeRuleEvent : IRule
+	public interface IValueChangeEvent : IRule
 	{ }
 
 	/// <summary>
-	/// 数值变化监听事件法则接口
+	/// 数值变化监听事件法则
 	/// </summary>
-	public interface IValueChangeRuleEvent<T1> : ISendRuleBase<T1>, IValueChangeRuleEvent
+	public interface ValueChangeEvent<T1> : ISendRuleBase<T1>, IValueChangeEvent, IRuleSupplementIgnore
 		where T1 : IEquatable<T1>
 	{ }
 
 	/// <summary>
 	/// 数值变化监听事件法则(同类型转换)
 	/// </summary>
-	public abstract class ValueChangeRuleEvent<N, T1> : SendRuleBase<N, IValueChangeRuleEvent<T1>, T1>
-		where N : class, INode, AsRule<IValueChangeRuleEvent<T1>>
+	public abstract class ValueChangeRuleEvent<N, T1> : SendRuleBase<N, ValueChangeEvent<T1>, T1>
+		where N : class, INode, AsRule<ValueChangeEvent<T1>>
 		where T1 : IEquatable<T1>
 	{ }
 

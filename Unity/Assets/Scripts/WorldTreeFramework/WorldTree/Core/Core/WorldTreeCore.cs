@@ -105,16 +105,16 @@ namespace WorldTree
 		/// </summary>
 		public Action<object> LogError;
 
-		public IRuleGroup<IAddRule> AddRuleGroup;
-		public IRuleGroup<IBeforeRemoveRule> BeforeRemoveRuleGroup;
-		public IRuleGroup<IRemoveRule> RemoveRuleGroup;
-		public IRuleGroup<IEnableRule> EnableRuleGroup;
-		public IRuleGroup<IDisableRule> DisableRuleGroup;
+		public IRuleGroup<Add> AddRuleGroup;
+		public IRuleGroup<BeforeRemove> BeforeRemoveRuleGroup;
+		public IRuleGroup<Remove> RemoveRuleGroup;
+		public IRuleGroup<Enable> EnableRuleGroup;
+		public IRuleGroup<Disable> DisableRuleGroup;
 
-		public IRuleGroup<INewRule> NewRuleGroup;
-		public IRuleGroup<IGetRule> GetRuleGroup;
-		public IRuleGroup<IRecycleRule> RecycleRuleGroup;
-		public IRuleGroup<IDestroyRule> DestroyRuleGroup;
+		public IRuleGroup<New> NewRuleGroup;
+		public IRuleGroup<Get> GetRuleGroup;
+		public IRuleGroup<Recycle> RecycleRuleGroup;
+		public IRuleGroup<Destroy> DestroyRuleGroup;
 
 		/// <summary>
 		/// 核心激活标记
@@ -193,16 +193,16 @@ namespace WorldTree
 			this.NewNode(out this.RuleManager);
 			this.RuleManager.Awake();
 
-			this.NewRuleGroup = this.RuleManager.GetOrNewRuleGroup<INewRule>();
-			this.GetRuleGroup = this.RuleManager.GetOrNewRuleGroup<IGetRule>();
-			this.BeforeRemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<IBeforeRemoveRule>();
-			this.RecycleRuleGroup = this.RuleManager.GetOrNewRuleGroup<IRecycleRule>();
-			this.DestroyRuleGroup = this.RuleManager.GetOrNewRuleGroup<IDestroyRule>();
+			this.NewRuleGroup = this.RuleManager.GetOrNewRuleGroup<New>();
+			this.GetRuleGroup = this.RuleManager.GetOrNewRuleGroup<Get>();
+			this.BeforeRemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<BeforeRemove>();
+			this.RecycleRuleGroup = this.RuleManager.GetOrNewRuleGroup<Recycle>();
+			this.DestroyRuleGroup = this.RuleManager.GetOrNewRuleGroup<Destroy>();
 
-			this.AddRuleGroup = this.RuleManager.GetOrNewRuleGroup<IAddRule>();
-			this.RemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<IRemoveRule>();
-			this.EnableRuleGroup = this.RuleManager.GetOrNewRuleGroup<IEnableRule>();
-			this.DisableRuleGroup = this.RuleManager.GetOrNewRuleGroup<IDisableRule>();
+			this.AddRuleGroup = this.RuleManager.GetOrNewRuleGroup<Add>();
+			this.RemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<Remove>();
+			this.EnableRuleGroup = this.RuleManager.GetOrNewRuleGroup<Enable>();
+			this.DisableRuleGroup = this.RuleManager.GetOrNewRuleGroup<Disable>();
 
 			//引用池管理器初始化
 			this.NewNodeLifecycle(out this.ReferencedPoolManager);
@@ -383,7 +383,7 @@ namespace WorldTree
 					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			this.SendRule(TypeInfo<IGraftRule>.Default);//节点嫁接事件通知
+			this.SendRule(TypeInfo<Graft>.Default);//节点嫁接事件通知
 		}
 
 		#endregion
@@ -394,7 +394,7 @@ namespace WorldTree
 		{
 			this.View?.Dispose();
 			this.View = null;
-			this.SendRule(TypeInfo<ICutRule>.Default);
+			this.SendRule(TypeInfo<Cut>.Default);
 		}
 
 		#endregion

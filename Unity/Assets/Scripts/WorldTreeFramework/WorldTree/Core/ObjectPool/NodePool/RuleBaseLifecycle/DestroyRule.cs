@@ -10,13 +10,8 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 释放法则接口
-    /// </summary>
-    public interface IDestroyRule : ISendRuleBase { }
-
-    /// <summary>
-    /// 释放法则
-    /// </summary>
-    public abstract class DestroyRule<N> : SendRuleBase<N, IDestroyRule> where N : class, INode, AsRule<IDestroyRule> { }
+	/// <summary>
+	/// 释放法则
+	/// </summary>
+	public interface Destroy : ISendRuleBase, ILifeCycleRule { }
 }

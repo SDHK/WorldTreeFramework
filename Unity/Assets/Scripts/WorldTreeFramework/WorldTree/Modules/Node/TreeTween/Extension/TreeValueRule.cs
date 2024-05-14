@@ -38,7 +38,7 @@ namespace WorldTree
             //(await self.TreeTaskTokenCatch())?.tokenEvent.Add(self, default(ITreeTaskTokenEventRule));
 
             //组件的任务完成回调注册
-            self.OnCompleted.Add(asyncTask, default(ITreeTaskSetResuItRule));
+            self.OnCompleted.Add(asyncTask, default(TreeTaskSetResuIt));
 
             //等待异步执行
             await asyncTask;

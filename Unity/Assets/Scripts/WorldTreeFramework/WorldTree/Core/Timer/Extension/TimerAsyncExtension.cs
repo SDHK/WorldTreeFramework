@@ -19,10 +19,10 @@ namespace WorldTree
             self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter, count);
 
             //令牌是否为空,不为空则将组件挂入令牌
-            (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
+            (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(TreeTaskTokenEvent));
 
             //组件的任务完成回调注册
-            counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
+            counter.callback.Add(asyncTask, default(TreeTaskSetResuIt));
 
             //等待异步执行
             await asyncTask;
@@ -37,9 +37,9 @@ namespace WorldTree
             self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall counter, time);
 
             //令牌是否为空,不为空则将组件挂入令牌
-            (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(ITreeTaskTokenEventRule));
+            (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(TreeTaskTokenEvent));
             //组件的任务完成回调注册
-            counter.callback.Add(asyncTask, default(ITreeTaskSetResuItRule));
+            counter.callback.Add(asyncTask, default(TreeTaskSetResuIt));
 
             //等待异步执行
             await asyncTask;

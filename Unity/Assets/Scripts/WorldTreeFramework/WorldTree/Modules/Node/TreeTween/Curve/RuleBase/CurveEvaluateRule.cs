@@ -11,12 +11,8 @@
 namespace WorldTree
 {
     /// <summary>
-    /// 曲线执行法则接口
-    /// </summary>
-    public interface ICurveEvaluateRule : ICallRuleBase<float, float> { }
-
-    /// <summary>
     /// 曲线执行法则
     /// </summary>
-    public abstract class CurveEvaluateRule<N> : CallRuleBase<N, ICurveEvaluateRule, float, float> where N : class, INode, AsRule<ICurveEvaluateRule> { }
+    public interface CurveEvaluate : ICallRuleBase<float, float> { }
+
 }

@@ -11,11 +11,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Security;
 using System.Text;
-using System.Xml.Linq;
 
 namespace WorldTree.SourceGenerator
 {
@@ -103,20 +100,26 @@ namespace WorldTree.SourceGenerator
 		public static void Execute(GeneratorExecutionContext context)
 		{
 			var ILifeCycleRule = context.Compilation.ToINamedTypeSymbol("WorldTree.ILifeCycleRule");
+			var IRuleSupplementIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.IRuleSupplementIgnore");
+
+
 			if (ILifeCycleRule == null) return;
+			if (IRuleSupplementIgnore == null) return;
 
 			foreach (var fileClassList in fileClassDict)
 			{
+				StringBuilder fileCode = new();
+
 				StringBuilder ClassCode = new();
 				StringBuilder MethodCode = new();
 
-				ClassCode.AppendLine(fileUsings[fileClassList.Key]);
-				ClassCode.AppendLine("namespace WorldTree");
-				ClassCode.AppendLine("{");
+				
 
 				foreach (INamedTypeSymbol fileClass in fileClassList.Value)
 				{
-					if (NamedSymbolHelper.CheckInterface(fileClass, ISendRuleBase, out INamedTypeSymbol? baseInterface))
+					if (NamedSymbolHelper.CheckAllInterface(fileClass, IRuleSupplementIgnore)) continue;
+
+						if (NamedSymbolHelper.CheckInterface(fileClass, ISendRuleBase, out INamedTypeSymbol? baseInterface))
 					{
 						if (baseInterface != null)
 						{
@@ -158,14 +161,22 @@ namespace WorldTree.SourceGenerator
 					ClassCode.AppendLine($"	public static class {fileClassList.Key}Supplement");
 					ClassCode.AppendLine("	{");
 
-					ClassCode.AppendLine($"{MethodCode}");
+					ClassCode.Append(MethodCode);
 
 					ClassCode.AppendLine("	}");
 				}
 
-				ClassCode.Append("}");
+				if (ClassCode.ToString() != "") {
 
-				context.AddSource($"{fileClassList.Key}RuleSupplement.cs", SourceText.From(ClassCode.ToString(), Encoding.UTF8));
+					fileCode.AppendLine(fileUsings[fileClassList.Key]);
+					fileCode.AppendLine("namespace WorldTree");
+					fileCode.AppendLine("{");
+					fileCode.Append(ClassCode);
+					fileCode.Append("}");
+					context.AddSource($"{fileClassList.Key}Supplement.cs", SourceText.From(fileCode.ToString(), Encoding.UTF8));
+				}
+
+				
 			}
 		}
 

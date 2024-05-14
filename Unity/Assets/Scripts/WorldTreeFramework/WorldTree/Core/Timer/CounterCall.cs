@@ -16,7 +16,7 @@ namespace WorldTree
 	/// </summary>
 	public class CounterCall : Node, ComponentOf<INode>
 		, AsRule<IAwakeRule<int>>
-		, AsRule<ITreeTaskTokenEventRule>
+		, AsRule<TreeTaskTokenEvent>
 
 	{
 		public bool isRun = false;
@@ -72,7 +72,7 @@ namespace WorldTree
 			}
 		}
 
-		private class TreeTaskTokenEventRule : TreeTaskTokenEventRule<CounterCall, TaskState>
+		private class TreeTaskTokenEventRule : TreeTaskTokenEventRule<CounterCall>
 		{
 			protected override void Execute(CounterCall self, TaskState state)
 			{

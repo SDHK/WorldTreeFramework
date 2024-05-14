@@ -23,7 +23,7 @@ namespace WorldTree
 	/// 树异步任务基类
 	/// </summary>
 	public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion
-		, AsRule<ITreeTaskTokenEventRule>
+		, AsRule<TreeTaskTokenEvent>
 	{
 		/// <summary>
 		/// 树任务令牌
@@ -112,7 +112,7 @@ namespace WorldTree
 			while (NowAwaiter != null)
 			{
 				NowAwaiter.m_TreeTaskToken = treeTaskToken;
-				treeTaskToken.tokenEvent.Add(NowAwaiter, default(ITreeTaskTokenEventRule));
+				treeTaskToken.tokenEvent.Add(NowAwaiter, default(TreeTaskTokenEvent));
 				NowAwaiter = NowAwaiter.m_RelevanceTask;
 			}
 			return this;
@@ -146,7 +146,7 @@ namespace WorldTree
 		}
 	}
 
-	class TreeTaskBaseTaskTokenEventRule : TreeTaskTokenEventRule<TreeTaskBase, TaskState>
+	class TreeTaskBaseTaskTokenEventRule : TreeTaskTokenEventRule<TreeTaskBase>
 	{
 		protected override void Execute(TreeTaskBase self, TaskState state)
 		{

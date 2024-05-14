@@ -13,14 +13,14 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 剪切法则接口
-	/// </summary>
-	public interface ICutRule : ISendRuleBase
-	{ }
-
-	/// <summary>
 	/// 剪切法则
 	/// </summary>
-	public abstract class CutRule<N> : SendRuleBase<N, ICutRule> where N : class, INode, AsRule<ICutRule>
+	public interface Cut : ISendRuleBase, ILifeCycleRule
 	{ }
+
+	///// <summary>
+	///// 剪切法则
+	///// </summary>
+	//public abstract class CutRule<N> : SendRuleBase<N, Cut> where N : class, INode, AsRule<Cut>
+	//{ }
 }
