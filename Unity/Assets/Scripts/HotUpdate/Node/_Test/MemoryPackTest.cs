@@ -19,7 +19,7 @@ namespace WorldTree
 
 	public class MemoryPackTest : Node
 		, ComponentOf<InitialDomain>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 		public MemoryPackDataTest<string> data;
 

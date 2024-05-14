@@ -47,7 +47,7 @@ namespace WorldTree.SourceGenerator
 		{{
 			if (self.TryAddSelfToTree<B, K>(key, parent))
 			{{
-				self.TrySendRule(TypeInfo<IAwakeRule{genericsAngle}>.Default{genericParameter});
+				self.TrySendRule(TypeInfo<Awake{genericsAngle}>.Default{genericParameter});
 				self.OnAddSelfToTree();
 			}}
 			return self;
@@ -66,7 +66,7 @@ namespace WorldTree.SourceGenerator
 		public static T AddNode<N, B, K, T{generics}>(this N self, K key, out T node{genericTypeParameter}, bool isPool = true)
 			where N : class, INode, AsBranch<B>
 			where B : class, IBranch<K>
-			where T : class, INode, NodeOf<N, B>, AsRule<IAwakeRule{genericsAngle}>
+			where T : class, INode, NodeOf<N, B>, AsRule<Awake{genericsAngle}>
 		=> node = (T)(self.GetBranch<B>()?.GetNode(key) ?? self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K{generics}>(key, self{genericParameter}));
 ");
 			}

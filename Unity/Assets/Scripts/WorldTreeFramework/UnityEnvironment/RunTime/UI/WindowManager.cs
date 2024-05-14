@@ -28,8 +28,8 @@ namespace WorldTree
     /// UI 栈窗口管理器
     /// </summary>
     public class WindowManager : DynamicNodeListener
-        , AsRule<IAwakeRule>
-    {
+        , AsAwake
+	{
         /// <summary>
         /// 全部窗口
         /// </summary>
@@ -48,7 +48,7 @@ namespace WorldTree
         /// 打开窗口入栈
         /// </summary>
         public async TreeTask<T> Show<T>()
-            where T : class, INode, ComponentOf<INode>, AsRule<IAwakeRule>
+            where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 
         {
             if (windows.TryGetValue(TypeInfo<T>.TypeCode, out INode node))

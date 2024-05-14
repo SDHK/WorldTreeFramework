@@ -3,7 +3,7 @@
 namespace WorldTree
 {
 	public class MultilayerPerceptronTest : Node, ComponentOf<InitialDomain>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 		public MultilayerPerceptronManager multilayerPerceptronManager;
 	}

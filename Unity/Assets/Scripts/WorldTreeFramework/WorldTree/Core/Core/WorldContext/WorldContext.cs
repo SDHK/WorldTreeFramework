@@ -17,7 +17,7 @@ namespace WorldTree
 	/// <remarks>线程的上下文</remarks>
 	public partial class WorldContext : SynchronizationContext, INode
 		,ComponentOf<WorldTreeRoot>
-		,AsRule<IAwakeRule>
+		,AsAwake
 	{
 
 		public TreeConcurrentQueue<Action> m_Queue;

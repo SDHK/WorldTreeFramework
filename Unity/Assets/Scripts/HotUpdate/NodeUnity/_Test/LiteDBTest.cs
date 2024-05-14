@@ -4,7 +4,7 @@ namespace WorldTree
 {
 	public class LiteDBTest : Node
 		, ComponentOf<InitialDomain>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 		public LiteDatabase db;
 	}

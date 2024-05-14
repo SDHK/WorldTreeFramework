@@ -23,7 +23,7 @@ namespace WorldTree
 	/// 树异步任务基类
 	/// </summary>
 	public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion
-		, AsRule<TreeTaskTokenEvent>
+		, AsTreeTaskTokenEvent
 	{
 		/// <summary>
 		/// 树任务令牌

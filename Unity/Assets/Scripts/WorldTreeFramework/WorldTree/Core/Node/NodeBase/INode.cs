@@ -19,7 +19,7 @@ namespace WorldTree
 	{ }
 
 	/// <summary>
-	/// 节点：可用法则限制
+	/// 法则约束
 	/// </summary>
 	/// <typeparam name="R">法则类型</typeparam>
 	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>

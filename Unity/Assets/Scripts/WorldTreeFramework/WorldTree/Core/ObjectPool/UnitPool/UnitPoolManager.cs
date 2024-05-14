@@ -16,7 +16,7 @@ namespace WorldTree
     /// 单位对象池管理器
     /// </summary>
     public class UnitPoolManager : PoolManagerBase<UnitPool>,ComponentOf<WorldTreeCore>
-        , AsRule<IAwakeRule>
+        , AsAwake
     {
         /// <summary>
         /// 尝试获取单位

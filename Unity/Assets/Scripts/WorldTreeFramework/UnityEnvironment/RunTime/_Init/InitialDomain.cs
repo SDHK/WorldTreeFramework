@@ -59,10 +59,10 @@ namespace WorldTree
 	/// 初始域
 	/// </summary>
 	public class InitialDomain : Node, ComponentOf<INode>
-		, AsRule<IAwakeRule>
-		, AsRule<FixedUpdateTime>
-		, AsRule<LateUpdateTime>
-		, AsRule<GuiUpdateTime>
+		, AsAwake
+		, AsFixedUpdateTime
+		, AsLateUpdateTime
+		, AsGuiUpdateTime
 	{
 		public AnimationCurve AnimationCurve = new AnimationCurve();
 		public float TestFloat = 1f;

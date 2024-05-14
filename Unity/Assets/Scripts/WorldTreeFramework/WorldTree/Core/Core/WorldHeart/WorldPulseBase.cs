@@ -16,7 +16,7 @@ namespace WorldTree
 	/// </summary>
 	public abstract class WorldPulseBase : Node
 		, ComponentOf<WorldHeartBase>
-		, AsRule<IAwakeRule<int>>
+		, AsAwake<int>
 	{
 		/// <summary>
 		/// 是否运行

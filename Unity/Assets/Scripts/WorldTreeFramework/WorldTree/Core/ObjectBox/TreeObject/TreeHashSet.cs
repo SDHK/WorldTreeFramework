@@ -16,7 +16,7 @@ namespace WorldTree
     /// 树泛型HashSet
     /// </summary>
     public partial class TreeHashSet<T> : HashSet<T>, INode, ChildOf<INode>
-        , AsRule<IAwakeRule>
+        , AsAwake
     {
 
 	}

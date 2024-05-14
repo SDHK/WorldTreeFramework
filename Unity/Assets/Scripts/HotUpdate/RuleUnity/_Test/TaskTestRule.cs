@@ -5,16 +5,24 @@ namespace WorldTree
 {
 	public static class TaskTestRule
 	{
-		private class UpdateRule : UpdateRule<TaskTest>
+		private class Update : UpdateRule<TaskTest>
 		{
-			protected override async void Execute(TaskTest self)
+			protected override void Execute(TaskTest self)
 			{
 				if (Input.GetKeyDown(KeyCode.Q))
 				{
 					self.Log($"异步启动:！！！！！");
 
-					self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-					self.Test().Coroutine(treeTaskToken);
+					//self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+					//self.Test().Coroutine(treeTaskToken);
+
+					TestAwait(self).Coroutine();
+
+				}
+				if (Input.GetKeyDown(KeyCode.T))
+				{
+					self.Log($"异步完成:！！！！！");
+					self.treeTask.SetResult();
 				}
 
 				if (Input.GetKeyDown(KeyCode.W))
@@ -33,13 +41,18 @@ namespace WorldTree
 					treeTaskToken.Dispose();
 				}
 			}
+
+			private async TreeTask TestAwait(TaskTest self)
+			{
+				await self.Test();
+			}
 		}
 
 		public static async TreeTask Test(this TaskTest self)
 		{
 			var TaskTokenCatch = await self.TreeTaskTokenCatch();
 
-			self.Log($"0！令牌捕获:{TaskTokenCatch.Id}");
+			self.Log($"0！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
 
 			await self.AsyncDelay(3);
 

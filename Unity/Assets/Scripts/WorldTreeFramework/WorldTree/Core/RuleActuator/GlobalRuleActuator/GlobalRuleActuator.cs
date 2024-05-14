@@ -17,7 +17,7 @@ namespace WorldTree
 	/// </summary>
 	public class GlobalRuleActuator<R> : RuleGroupActuatorBase, INodeListener, IRuleActuator<R>
 		, ComponentOf<GlobalRuleActuatorManager>
-		, AsRule<IAwakeRule>
+		, AsAwake
 		where R : IRule
 	{
 		public override string ToString()

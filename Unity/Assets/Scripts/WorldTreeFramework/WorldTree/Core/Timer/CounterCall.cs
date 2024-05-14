@@ -15,8 +15,8 @@ namespace WorldTree
 	/// 计数器
 	/// </summary>
 	public class CounterCall : Node, ComponentOf<INode>
-		, AsRule<IAwakeRule<int>>
-		, AsRule<TreeTaskTokenEvent>
+		, AsAwake<int>
+		, AsTreeTaskTokenEvent
 
 	{
 		public bool isRun = false;

@@ -14,7 +14,7 @@ namespace WorldTree
 	/// </summary>
 	public class DynamicListenerRuleActuator : RuleGroupActuatorBase, IListenerIgnorer, IRuleActuator<IRule>
 		, ComponentOf<HybridListenerRuleActuator>
-		, AsRule<IAwakeRule<RuleGroup>>
+		, AsAwake<RuleGroup>
 	{
 		public override string ToString()
 		{

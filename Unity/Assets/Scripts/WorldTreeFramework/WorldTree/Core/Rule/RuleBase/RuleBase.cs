@@ -69,4 +69,9 @@ namespace WorldTree
 	public interface IRuleSupplementIgnore : IRule
 	{
 	}
+
+	/// <summary>
+	/// 可调用方法法则标记
+	/// </summary>
+	public interface IMethodRule { }
 }

@@ -17,7 +17,7 @@ namespace WorldTree
 	/// </summary>
 	public class UnityWorldHeart : WorldHeartBase
 		, ComponentOf<WorldTreeRoot>
-		, AsRule<IAwakeRule<int>>
+		, AsAwake<int>
 		, AsRule<LateUpdateTime>
 		, AsRule<FixedUpdateTime>
 		, AsRule<GuiUpdateTime>

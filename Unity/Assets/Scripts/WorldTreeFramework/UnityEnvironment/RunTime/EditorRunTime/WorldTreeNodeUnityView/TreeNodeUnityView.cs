@@ -17,7 +17,7 @@ namespace WorldTree
 	/// </summary>
 	public class TreeNodeUnityView : Node, IWorldTreeNodeView
 		, ChildOf<WorldTreeRoot>
-		, AsRule<IAwakeRule<INode, INode>>
+		, AsAwake<INode, INode>
 	{
 		public INode node;
 		public GameObject gameObject;

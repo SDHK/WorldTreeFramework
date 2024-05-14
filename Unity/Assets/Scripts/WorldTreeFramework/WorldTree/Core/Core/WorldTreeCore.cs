@@ -76,7 +76,7 @@ namespace WorldTree
 	/// </summary>
 	public class WorldTreeCore : Node, IWorldTreeCore, IListenerIgnorer
 		, WorldOf<WorldTreeCore>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 		#region 字段
 

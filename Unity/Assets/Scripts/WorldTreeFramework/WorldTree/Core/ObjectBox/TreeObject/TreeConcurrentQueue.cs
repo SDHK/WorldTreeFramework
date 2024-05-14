@@ -16,7 +16,7 @@ namespace WorldTree
 	/// </summary>
 	public partial class TreeConcurrentQueue<T> : ConcurrentQueue<T>, INode
 		, ChildOf<INode>, ComponentOf<INode>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 	}
 

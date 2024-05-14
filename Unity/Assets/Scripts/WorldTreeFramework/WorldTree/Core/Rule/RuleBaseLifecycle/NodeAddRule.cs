@@ -22,7 +22,7 @@ namespace WorldTree
 	/// <remarks>用于节点的饿汉单例</remarks>
 	public abstract class NodeAddRule<N, C> : AddRule<N>
 		where N : class, INode, AsRule<Add>
-		where C : class, INode, ComponentOf<N>, AsRule<IAwakeRule>
+		where C : class, INode, ComponentOf<N>, AsRule<Awake>
 	{
 		protected override void Execute(N self)
 		{
@@ -36,6 +36,6 @@ namespace WorldTree
 	/// <typeparam name="C">根节点组件</typeparam>
 	/// <remarks>用于根节点的饿汉单例</remarks>
 	public abstract class RootAddRule<C> : NodeAddRule<WorldTreeRoot, C>
-		where C : class, INode, ComponentOf<WorldTreeRoot>, AsRule<IAwakeRule>
+		where C : class, INode, ComponentOf<WorldTreeRoot>, AsRule<Awake>
 	{ }
 }

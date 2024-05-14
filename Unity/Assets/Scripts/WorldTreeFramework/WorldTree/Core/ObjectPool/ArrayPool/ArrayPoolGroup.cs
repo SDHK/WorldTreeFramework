@@ -15,7 +15,7 @@ namespace WorldTree
     /// 数组对象池集合
     /// </summary>
     public class ArrayPoolGroup : Node, ChildOf<ArrayPoolManager>
-        , AsRule<IAwakeRule<Type>>
+        , AsAwake<Type>
     {
         /// <summary>
         /// 数组类型

@@ -17,7 +17,7 @@ namespace WorldTree
     public class TreeArray<T> : Node
         , ChildOf<INode>
         , ComponentOf<INode>
-        , AsRule<IAwakeRule<int>>
+        , AsAwake<int>
     {
         public T[] array;
         public int Length { get { return array.Length; } }

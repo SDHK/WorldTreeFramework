@@ -17,7 +17,7 @@ namespace WorldTree
     /// 实体泛型栈
     /// </summary>
     public partial class TreeStack<T> : Stack<T>, INode, ChildOf<INode>
-        , AsRule<IAwakeRule>
+        , AsAwake
     {
 	}
 

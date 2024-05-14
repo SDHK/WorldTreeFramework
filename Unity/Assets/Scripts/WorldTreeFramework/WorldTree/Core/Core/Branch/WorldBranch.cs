@@ -78,7 +78,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddWorld<N, T>(this N self, out T core)
 			where N : class, INode, AsBranch<WorldBranch>
-			where T : class, INode, NodeOf<N, WorldBranch>, AsRule<IAwakeRule>
+			where T : class, INode, NodeOf<N, WorldBranch>, AsRule<Awake>
 		=> self.AddNode<N, WorldBranch, long, T>(TypeInfo<T>.TypeCode, out core, isPool: false);
 
 		/// <summary>
@@ -86,7 +86,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddWorld<N, T, T1>(this N self, out T core, T1 arg1)
 		  where N : class, INode, AsBranch<WorldBranch>
-		  where T : class, INode, NodeOf<N, WorldBranch>, AsRule<IAwakeRule<T1>>
+		  where T : class, INode, NodeOf<N, WorldBranch>, AsRule<Awake<T1>>
 		=> self.AddNode<N, WorldBranch, long, T, T1>(TypeInfo<T>.TypeCode, out core, arg1, isPool: false);
 
 		#endregion

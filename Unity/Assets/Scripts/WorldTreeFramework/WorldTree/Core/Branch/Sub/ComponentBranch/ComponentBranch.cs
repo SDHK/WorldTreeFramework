@@ -153,7 +153,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddComponent<N, T>(this N self, out T Component, bool isPool = true)
 			where N : class, INode, AsComponentBranch
-			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule>
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake>
 		=> self.AddNode<N, ComponentBranch, long, T>(TypeInfo<T>.TypeCode, out Component, isPool);
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddComponent<N, T, T1>(this N self, out T Component, T1 arg1, bool isPool = true)
 		  where N : class, INode, AsComponentBranch
-		  where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1>>
+		  where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1>(TypeInfo<T>.TypeCode, out Component, arg1, isPool);
 
 		/// <summary>
@@ -169,7 +169,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2>(this N self, out T Component, T1 arg1, T2 arg2, bool isPool = true)
 			where N : class, INode, AsComponentBranch
-			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2>>
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1, T2>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, isPool);
 
 		/// <summary>
@@ -177,7 +177,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2, T3>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
 			where N : class, INode, AsComponentBranch
-			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2, T3>>
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1, T2, T3>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, isPool);
 
 		/// <summary>
@@ -185,7 +185,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2, T3, T4>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
 			where N : class, INode, AsComponentBranch
-			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2, T3, T4>>
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1, T2, T3, T4>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3, T4>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, arg4, isPool);
 
 		/// <summary>
@@ -193,7 +193,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2, T3, T4, T5>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
 			where N : class, INode, AsComponentBranch
-			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
+			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1, T2, T3, T4, T5>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3, T4, T5>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, arg4, arg5, isPool);
 
 		#endregion

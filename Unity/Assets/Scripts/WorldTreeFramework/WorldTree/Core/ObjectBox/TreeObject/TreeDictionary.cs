@@ -15,7 +15,7 @@ namespace WorldTree
 	/// 树字典泛型类
 	/// </summary>
 	public partial class TreeDictionary<Key, V> : Dictionary<Key, V>, INode, ComponentOf<INode>, ChildOf<INode>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 	
 	}

@@ -11,7 +11,7 @@ namespace WorldTree
 	/// </summary>
 	public abstract class PoolManagerBase : Node, IListenerIgnorer
 	 , ComponentOf<WorldTreeCore>
-	 , AsRule<IAwakeRule>
+	 , AsAwake
 
 	{
 		/// <summary>

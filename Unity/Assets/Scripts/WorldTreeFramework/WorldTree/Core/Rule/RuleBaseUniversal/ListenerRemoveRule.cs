@@ -10,6 +10,12 @@
 namespace WorldTree
 {
 	/// <summary>
+	/// 法则约束 : 监听节点移除法则
+	/// </summary>
+	public interface AsListenerRemoveRule : AsRule<IListenerRemoveRule>
+	{ }
+
+	/// <summary>
 	/// 监听节点移除法则接口
 	/// </summary>
 	public interface IListenerRemoveRule : IListenerRule

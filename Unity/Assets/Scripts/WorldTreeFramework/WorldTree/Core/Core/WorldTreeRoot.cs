@@ -14,7 +14,7 @@ namespace WorldTree
 	/// 世界树根
 	/// </summary>
 	public class WorldTreeRoot : Node, ComponentOf<WorldTreeCore>
-		,AsRule<IAwakeRule>
+		,AsAwake
 	{
 		public WorldTreeRoot()
 		{

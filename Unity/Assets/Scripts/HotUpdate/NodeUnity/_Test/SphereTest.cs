@@ -6,7 +6,7 @@ namespace WorldTree
 {
 	public class SphereTest : Node
 		, IdNodeOf<SphereManagerTest>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 		public GameObject gameObject;
 		public SphereManagerTest manager;

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 namespace WorldTree
 {
 	public class RefeshCsProjFileCompileInclude : Node, ComponentOf<INode>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 		public const int WH_KEYBOARD_LL = 13;
 		public const int WM_KEYDOWN = 0x0100;

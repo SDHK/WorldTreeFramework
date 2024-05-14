@@ -13,7 +13,7 @@ namespace WorldTree
 	/// 游戏时间管理器
 	/// </summary>
 	public class GameTimeManager : Node, ComponentOf<WorldTreeCore>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 
 		/// <summary>

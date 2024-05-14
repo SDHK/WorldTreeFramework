@@ -20,8 +20,8 @@ namespace WorldTree
 	[AsyncMethodBuilder(typeof(TreeTaskMethodBuilder))]
 	public class TreeTask : TreeTaskBase
 		, ChildOf<INode>
-		, AsRule<IAwakeRule>
-		, AsRule<TreeTaskSetResuIt>
+		, AsAwake
+		, AsTreeTaskSetResuIt
 	{
 		public TreeTask GetAwaiter() => this;
 		public override bool IsCompleted { get; set; }
@@ -67,8 +67,8 @@ namespace WorldTree
 	[AsyncMethodBuilder(typeof(TreeTaskMethodBuilder<>))]
 	public class TreeTask<T> : TreeTaskBase
 		, ChildOf<INode>
-		, AsRule<IAwakeRule>
-		, AsRule<TreeTaskSetResuIt<T>>
+		, AsAwake
+		, AsTreeTaskSetResuIt<T>
 	{
 		public TreeTask<T> GetAwaiter() => this;
 		public override bool IsCompleted { get; set; }

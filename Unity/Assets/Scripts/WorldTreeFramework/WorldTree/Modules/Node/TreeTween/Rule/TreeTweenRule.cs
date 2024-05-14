@@ -67,7 +67,7 @@ namespace WorldTree
         /// 设置曲线 
         /// </summary>
         public static TreeTweenBase SetCurve<C>(this TreeTweenBase self)
-            where C : CurveBase, AsRule<IAwakeRule>
+            where C : CurveBase
         {
             self.m_Curve = self.Root.AddComponent(out CurveManager _).AddComponent(out C _);
             return self;

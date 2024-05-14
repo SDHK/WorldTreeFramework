@@ -3,13 +3,21 @@ using System.Numerics;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 方法法则
+	/// </summary>
+	public interface TestEvent : ISendRuleBase , IMethodRule
+	{
+
+
+	}
 
 	/// <summary>
 	/// 测试节点
 	/// </summary>
 	public partial class DotNetTestNode : Node, ComponentOf<INode>
-		, AsAwakeRule
-		, AsAwakeRule<string>
+		, AsAwake
+		, AsAwake<string>
 		, AsNew
 	{
 		public int TestValue;

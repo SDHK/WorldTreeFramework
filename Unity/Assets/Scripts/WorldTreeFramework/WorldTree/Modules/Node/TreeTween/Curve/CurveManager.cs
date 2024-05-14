@@ -16,7 +16,7 @@ namespace WorldTree
     /// 曲线管理器
     /// </summary>
     public class CurveManager : Node, ComponentOf<WorldTreeRoot>
-         , AsRule<IAwakeRule>
+         , AsAwake
     {
 
     }

@@ -16,7 +16,7 @@ namespace WorldTree
 	/// </summary>
 	public class WorldPulse<R> : WorldPulseBase
 		, ComponentOf<WorldHeartBase>
-		, AsRule<IAwakeRule<int>>
+		, AsAwake<int>
 		where R : ISendRuleBase<TimeSpan>
 	{
 		/// <summary>

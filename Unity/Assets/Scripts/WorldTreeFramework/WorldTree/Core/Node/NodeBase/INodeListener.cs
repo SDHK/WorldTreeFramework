@@ -43,8 +43,8 @@ namespace WorldTree
 	/// 节点监听器接口
 	/// </summary>
 	public interface INodeListener : INode
-	    , AsRule<IListenerAddRule>
-	    , AsRule<IListenerRemoveRule>
+	    , AsListenerAddRule
+		, AsListenerRemoveRule
 	{ }
 
 	/// <summary>

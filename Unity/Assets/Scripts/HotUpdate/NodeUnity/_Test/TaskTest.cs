@@ -10,8 +10,8 @@
 namespace WorldTree
 {
 	public class TaskTest : Node, ComponentOf<InitialDomain>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
-
+		public TreeTask treeTask;
 	}
 }

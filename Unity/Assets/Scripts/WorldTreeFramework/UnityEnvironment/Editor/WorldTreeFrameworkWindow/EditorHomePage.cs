@@ -15,7 +15,7 @@ using WorldTree;
 namespace EditorTool
 {
     public class EditorHomePage : Node, ComponentOf<INode>
-        , AsRule<IAwakeRule>
+        , AsAwake
         , AsRule<GuiUpdate>
     {
         public INode page;

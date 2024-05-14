@@ -144,7 +144,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddIdNode<N, T>(this N self, long idKey, out T node, bool isPool = true)
 			where N : class, INode, AsIdNodeBranch
-			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule>
+			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake>
 		=> self.AddNode<N, IdNodeBranch, long, T>(idKey, out node, isPool);
 
 		/// <summary>
@@ -152,7 +152,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddIdNode<N, T, T1>(this N self, long idKey, out T node, T1 arg1, bool isPool = true)
 			where N : class, INode, AsIdNodeBranch
-			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1>>
+			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake<T1>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1>(idKey, out node, arg1, isPool);
 
 		/// <summary>
@@ -160,7 +160,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddIdNode<N, T, T1, T2>(this N self, long idKey, out T node, T1 arg1, T2 arg2, bool isPool = true)
 			where N : class, INode, AsIdNodeBranch
-			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1, T2>>
+			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake<T1, T2>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2>(idKey, out node, arg1, arg2, isPool);
 
 		/// <summary>
@@ -168,7 +168,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddIdNode<N, T, T1, T2, T3>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
 			where N : class, INode, AsIdNodeBranch
-			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1, T2, T3>>
+			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake<T1, T2, T3>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2, T3>(idKey, out node, arg1, arg2, arg3, isPool);
 
 		/// <summary>
@@ -176,7 +176,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddIdNode<N, T, T1, T2, T3, T4>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
 			where N : class, INode, AsIdNodeBranch
-			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1, T2, T3, T4>>
+			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake<T1, T2, T3, T4>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2, T3, T4>(idKey, out node, arg1, arg2, arg3, arg4, isPool);
 
 		/// <summary>
@@ -184,7 +184,7 @@ namespace WorldTree
 		/// </summary>
 		public static T AddIdNode<N, T, T1, T2, T3, T4, T5>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
 			where N : class, INode, AsIdNodeBranch
-			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<IAwakeRule<T1, T2, T3, T4, T5>>
+			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake<T1, T2, T3, T4, T5>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2, T3, T4, T5>(idKey, out node, arg1, arg2, arg3, arg4, arg5, isPool);
 
 		#endregion

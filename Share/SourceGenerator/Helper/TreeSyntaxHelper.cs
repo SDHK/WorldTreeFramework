@@ -129,7 +129,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 获取所在命名空间
 		/// </summary>
-		public static string GetUsing(TypeDeclarationSyntax typeDeclaration)
+		public static string GetNamespace(TypeDeclarationSyntax typeDeclaration)
 		{
 			var root = typeDeclaration.SyntaxTree.GetRoot();
 			var ns = root.DescendantNodes().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();

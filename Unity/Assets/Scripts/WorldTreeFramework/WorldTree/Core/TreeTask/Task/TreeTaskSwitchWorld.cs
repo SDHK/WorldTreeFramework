@@ -16,8 +16,8 @@ namespace WorldTree
 	[AsyncMethodBuilder(typeof(TreeTaskSwitchWorldMethodBuilder))]
 	public class TreeTaskSwitchWorld : TreeTaskBase
 		, ChildOf<WorldContext>
-		, AsRule<IAwakeRule<WorldContext>>
-		, AsRule<TreeTaskSetResuIt>
+		, AsAwake<WorldContext>
+		, AsTreeTaskSetResuIt
 	{
 		public TreeTaskSwitchWorld GetAwaiter() => this;
 		public override bool IsCompleted { get; set; }

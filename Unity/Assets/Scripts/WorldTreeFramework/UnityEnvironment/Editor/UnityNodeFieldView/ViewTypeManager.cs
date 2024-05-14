@@ -16,7 +16,7 @@ namespace WorldTree
 	/// 可视化类型管理器
 	/// </summary>
 	public class ViewTypeManager : Node
-		, AsRule<IAwakeRule>
+		, AsAwake
 		, ComponentOf<WorldTreeRoot>
 	{
 		/// <summary>

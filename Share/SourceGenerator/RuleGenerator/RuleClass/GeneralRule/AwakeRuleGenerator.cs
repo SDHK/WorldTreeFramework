@@ -38,20 +38,19 @@ namespace WorldTree.SourceGenerator
 ($@"
 
 	/// <summary>
-	/// 节点：初始化法则限制
+	/// 法则约束：初始化法则
 	/// </summary>
-	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
-    public interface AsAwakeRule{genericsAngle} : AsRule<IAwakeRule{genericsAngle}>, INode {{}}
-
-    /// <summary>
-    /// 初始化法则接口
-    /// </summary>
-    public interface IAwakeRule{genericsAngle} : ISendRuleBase{genericsAngle} {{}}
+    public interface AsAwake{genericsAngle} : AsRule<Awake{genericsAngle}>, INode {{}}
 
     /// <summary>
     /// 初始化法则
     /// </summary>
-    public abstract class AwakeRule<N{generics}> : SendRuleBase<N, IAwakeRule{genericsAngle}{generics}> where N : class, INode, AsRule<IAwakeRule{genericsAngle}> {{}}
+    public interface Awake{genericsAngle} : ISendRuleBase{genericsAngle} {{}}
+
+    /// <summary>
+    /// 初始化法则
+    /// </summary>
+    public abstract class AwakeRule<N{generics}> : SendRuleBase<N, Awake{genericsAngle}{generics}> where N : class, INode, AsRule<Awake{genericsAngle}> {{}}
 ");
 			}
 			Code.Append("}");

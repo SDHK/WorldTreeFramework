@@ -17,7 +17,7 @@ namespace WorldTree
     class TreeTweenManagerRootAddRule : RootAddRule<TreeTweenManager> { }
 
     public class TreeTweenManager : Node, ComponentOf<WorldTreeRoot>
-        , AsRule<IAwakeRule>
+        , AsAwake
     {
         public GlobalRuleActuator<TweenUpdate> ruleActuator;
     }

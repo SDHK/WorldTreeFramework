@@ -18,7 +18,7 @@ namespace WorldTree
     /// 真实时间管理器
     /// </summary>
     public class RealTimeManager : Node
-        , AsRule<IAwakeRule>
+        , AsAwake
     {
         /// <summary>
         /// 一毫秒，10000Tick

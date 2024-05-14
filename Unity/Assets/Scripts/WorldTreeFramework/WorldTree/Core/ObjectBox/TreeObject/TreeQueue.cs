@@ -15,7 +15,7 @@ namespace WorldTree
 	/// 树泛型队列
 	/// </summary>
 	public partial class TreeQueue<T> : Queue<T>, INode, ChildOf<INode>, ComponentOf<INode>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 		
 

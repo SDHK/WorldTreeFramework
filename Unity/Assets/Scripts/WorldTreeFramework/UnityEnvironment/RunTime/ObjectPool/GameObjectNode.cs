@@ -19,7 +19,7 @@ namespace WorldTree
     /// 游戏物体实体
     /// </summary>
     public class GameObjectNode : Node, ComponentOf<INode>, ChildOf<INode>
-        , AsRule<IAwakeRule>
+        , AsAwake
     {
         public GameObjectPool pool;
 

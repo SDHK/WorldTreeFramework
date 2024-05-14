@@ -55,7 +55,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 文件名-命名空间
 		/// </summary>
-		public static Dictionary<string, string> fileUsing = new();
+		public static Dictionary<string, string> fileNamespace = new();
 
 		/// <summary>
 		/// 接口名-语法树
@@ -71,7 +71,7 @@ namespace WorldTree.SourceGenerator
 		{
 			fileClassDict.Clear();
 			fileUsings.Clear();
-			fileUsing.Clear();
+			fileNamespace.Clear();
 			classInterfaceSyntax.Clear();
 		}
 
@@ -92,7 +92,7 @@ namespace WorldTree.SourceGenerator
 				set = new List<INamedTypeSymbol>();
 				fileClassDict.Add(fileName, set);
 				fileUsings.Add(fileName, TreeSyntaxHelper.GetUsings(interfaceDeclaration));
-				fileUsing.Add(fileName, TreeSyntaxHelper.GetUsing(interfaceDeclaration));
+				fileNamespace.Add(fileName, TreeSyntaxHelper.GetNamespace(interfaceDeclaration));
 			}
 			string interfaceName = namedType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
@@ -107,10 +107,12 @@ namespace WorldTree.SourceGenerator
 		{
 			var ILifeCycleRule = context.Compilation.ToINamedTypeSymbol("WorldTree.ILifeCycleRule");
 			var IRuleSupplementIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.IRuleSupplementIgnore");
+			var IMethodRule = context.Compilation.ToINamedTypeSymbol("WorldTree.IMethodRule");
 
 
 			if (ILifeCycleRule == null) return;
 			if (IRuleSupplementIgnore == null) return;
+			if (IMethodRule == null) return;
 
 			foreach (var fileClassList in fileClassDict)
 			{
@@ -130,7 +132,7 @@ namespace WorldTree.SourceGenerator
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							if (!NamedSymbolHelper.CheckAllInterface(fileClass, ILifeCycleRule))
+							if (NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule))
 								SendRuleMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
@@ -139,7 +141,7 @@ namespace WorldTree.SourceGenerator
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							if (!NamedSymbolHelper.CheckAllInterface(fileClass, ILifeCycleRule))
+							if (NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule))
 								SendRuleAsyncMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
@@ -148,7 +150,7 @@ namespace WorldTree.SourceGenerator
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							if (!NamedSymbolHelper.CheckAllInterface(fileClass, ILifeCycleRule))
+							if (NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule))
 								CallRuleMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
@@ -157,7 +159,7 @@ namespace WorldTree.SourceGenerator
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							if (!NamedSymbolHelper.CheckAllInterface(fileClass, ILifeCycleRule))
+							if (NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule))
 								CallRuleAsyncMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
@@ -175,7 +177,7 @@ namespace WorldTree.SourceGenerator
 				if (ClassCode.ToString() != "") {
 
 					fileCode.AppendLine(fileUsings[fileClassList.Key]);
-					fileCode.AppendLine($"namespace {fileUsing[fileClassList.Key]}");
+					fileCode.AppendLine($"namespace {fileNamespace[fileClassList.Key]}");
 					fileCode.AppendLine("{");
 					fileCode.Append(ClassCode);
 					fileCode.Append("}");
@@ -191,122 +193,117 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		private static void RuleClass(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
-			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName;
+			string ClassName = typeSymbol.Name;
+			string ClassFullName = GetNameWithGenericArguments(typeSymbol);
+
 			string BaseName = baseInterface.Name.TrimStart('I');
 			string TypeArguments = GetTypeArguments(typeSymbol);
 			string BaseTypeArguments = GetTypeArguments(baseInterface);
-			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
-			string ClassFullName = IClassFullName.TrimStart('I');
-			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[IClassFullName]);
+			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
 
 			StringBuilder CommentPara = new();
 
 			//As约束接口
-			AddCommentPara(CommentPara, typeSymbol, baseInterface, "约束接口", "\t");
+			AddCommentPara(CommentPara, typeSymbol, baseInterface, "法则约束", "\t");
 			string BaseTypePara = GetBaseTypePara(baseInterface, "\t");
 			CommentPara.Append(BaseTypePara);
-			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[IClassFullName], CommentPara.ToString(), "\t"));
-			Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{IClassFullName}>, INode {WhereTypeArguments}{{}}");
+			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
+			Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{ClassFullName}>, INode {WhereTypeArguments}{{}}");
 
 			//抽象基类注释
 			CommentPara.Clear();
 			AddCommentPara(CommentPara, typeSymbol, baseInterface, "法则基类", "\t");
 			CommentPara.Append(BaseTypePara);
-			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[IClassFullName], CommentPara.ToString(), "\t"));
+			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
 
 			//抽象基类
-			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {IClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{IClassFullName}> {WhereTypeArguments}{{}}");
+			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
 		}
 
 		private static void SendRuleMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
-			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName;
+			string ClassName = typeSymbol.Name;
+			string ClassFullName = GetNameWithGenericArguments(typeSymbol);
+
 			int baseTypeCount = baseInterface.TypeArguments.Count();
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
-			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
-			string ClassFullName = IClassFullName.TrimStart('I');
 			string genericParameter = RuleGeneratorHelper.GetGenericParameter(baseTypeCount);
 			string genericTypeParameter = GetGenericTypeParameter(baseInterface);
-			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[IClassFullName]);
+			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
 
 			StringBuilder CommentPara = new();
 			AddCommentPara(CommentPara, typeSymbol, baseInterface, "执行通知法则", "\t\t");
 			string BaseTypePara = GetBaseTypePara(baseInterface, "\t\t");
 			CommentPara.Append(BaseTypePara);
-			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[IClassFullName], CommentPara.ToString(), "\t\t"));
+			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
 			//生成调用方法
-			Code.AppendLine(@$"		public static void {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
+			Code.AppendLine(@$"		public static void {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");
 		}
 
 		private static void SendRuleAsyncMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
-			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName;
+			string ClassName = typeSymbol.Name;
+			string ClassFullName = GetNameWithGenericArguments(typeSymbol);
+
 			int baseTypeCount = baseInterface.TypeArguments.Count();
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
-			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
-			string ClassFullName = IClassFullName.TrimStart('I');
 			string genericParameter = RuleGeneratorHelper.GetGenericParameter(baseTypeCount);
 			string genericTypeParameter = GetGenericTypeParameter(baseInterface);
-			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[IClassFullName]);
+			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
 			StringBuilder CommentPara = new();
 			AddCommentPara(CommentPara, typeSymbol, baseInterface, "执行异步通知法则", "\t\t");
 			string BaseTypePara = GetBaseTypePara(baseInterface, "\t\t");
 			CommentPara.Append(BaseTypePara);
-			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[IClassFullName], CommentPara.ToString(), "\t\t"));
+			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
 			//生成调用方法
 
-			Code.AppendLine(@$"		public static TreeTask {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
+			Code.AppendLine(@$"		public static TreeTask {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");
 		}
 
 		private static void CallRuleMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
-			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName;
+			string ClassName = typeSymbol.Name;
+			string ClassFullName = GetNameWithGenericArguments(typeSymbol);
+
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
-			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
-			string ClassFullName = IClassFullName.TrimStart('I');
 			string genericParameter = GetCallRuleGetGenericParameter(baseInterface);
 			string genericTypeParameter = GetCallRuleGenericTypesParameters(baseInterface);
-			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[IClassFullName]);
+			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
 			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
 			StringBuilder CommentPara = new();
 			AddCommentPara(CommentPara, typeSymbol, baseInterface, "执行调用法则", "\t\t");
 			string BaseTypePara = GetBaseTypePara(baseInterface, "\t\t");
 			CommentPara.Append(BaseTypePara);
-			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[IClassFullName], CommentPara.ToString(), "\t\t"));
+			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
 			//生成调用方法
-			Code.AppendLine(@$"		public static {outType} {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
+			Code.AppendLine(@$"		public static {outType} {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");
 		}
 
 		private static void CallRuleAsyncMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
-			string IClassName = typeSymbol.Name;
-			string ClassName = IClassName;
+			string ClassName = typeSymbol.Name;
+			string ClassFullName = GetNameWithGenericArguments(typeSymbol);
+
 			string TypeArgumentsAngle = GetTypeArgumentsAngle(typeSymbol);
-			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
-			string ClassFullName = IClassFullName.TrimStart('I');
 			string genericParameter = GetCallRuleAsyncGetGenericParameter(baseInterface);
 			string genericTypeParameter = GetCallRuleAsyncGenericTypesParameters(baseInterface);
-			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[IClassFullName]);
+			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
 			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
 			StringBuilder CommentPara = new();
 			AddCommentPara(CommentPara, typeSymbol, baseInterface, "执行异步调用法则", "\t\t");
 			string BaseTypePara = GetBaseTypePara(baseInterface, "\t\t");
 			CommentPara.Append(BaseTypePara);
-			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[IClassFullName], CommentPara.ToString(), "\t\t"));
+			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
 			//生成调用方法
-			Code.AppendLine(@$"		public static TreeTask<{outType}> {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{IClassFullName}>.Default{genericParameter});");
+			Code.AppendLine(@$"		public static TreeTask<{outType}> {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");
 		}
 
 		/// <summary>

@@ -15,8 +15,8 @@ namespace WorldTree
 	/// 计时器：单次调用
 	/// </summary>
 	public class TimerCall : Node, ComponentOf<INode>
-		, AsRule<IAwakeRule<float>>
-		, AsRule<TreeTaskTokenEvent>
+		, AsAwake<float>
+		, AsTreeTaskTokenEvent
 	{
 		public bool isRun = false;
 		public float time = 0;

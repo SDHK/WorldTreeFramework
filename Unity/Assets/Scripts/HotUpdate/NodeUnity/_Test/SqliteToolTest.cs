@@ -4,7 +4,7 @@ namespace WorldTree
 {
 	public class SqliteToolTest : Node
 		, ComponentOf<InitialDomain>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 
 	}

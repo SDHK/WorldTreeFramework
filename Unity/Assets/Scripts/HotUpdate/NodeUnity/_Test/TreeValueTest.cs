@@ -1,7 +1,7 @@
 ﻿namespace WorldTree
 {
 	public class TreeValueTest : Node, ComponentOf<InitialDomain>
-		, AsRule<IAwakeRule>
+		, AsAwake
 	{
 		public TreeValue<float> valueFloat;
 		public TreeValue<int> valueInt;

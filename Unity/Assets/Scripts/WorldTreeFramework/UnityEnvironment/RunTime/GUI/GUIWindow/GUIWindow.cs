@@ -19,8 +19,8 @@ namespace WorldTree
 {
 
     public class GUIWindow : GUIBase, ComponentOf<GUIGeneralWindow>
-        , AsRule<IAwakeRule>
-        , AsRule<GuiUpdate>
+        , AsAwake
+        , AsGuiUpdate
     {
         public Rect rect = new Rect(0, 0, 400, 300);
         public bool isDrag = true;
