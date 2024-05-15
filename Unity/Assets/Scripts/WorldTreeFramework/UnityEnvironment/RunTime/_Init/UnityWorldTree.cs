@@ -46,7 +46,7 @@ namespace WorldTree
 			Core.Root.AddComponent(out UnityWorldHeart _, 0).Run();
 
 			//主框架添加初始化域
-			Core.Root.AddComponent(out InitialDomain _);
+			//Core.Root.AddComponent(out InitialDomain _);
 		}
 
 		private void Update()

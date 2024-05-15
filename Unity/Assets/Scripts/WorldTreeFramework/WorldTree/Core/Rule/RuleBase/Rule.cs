@@ -57,7 +57,7 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 生命周期法则标记
+	/// 生命周期法则标记(暂时无用)
 	/// </summary>
 	public interface ILifeCycleRule : IRule
 	{

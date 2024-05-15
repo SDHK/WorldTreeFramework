@@ -11,11 +11,18 @@ namespace WorldTree
 {
     public static partial class NodeRule
     {
-        /// <summary>
-        /// 异步队列锁
-        /// </summary>
-        /// <remarks>按照队列顺序执行异步任务</remarks>
-        public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this INode self, long key)
+		/// <summary>
+		/// 异步队列锁
+		/// </summary>
+		/// <remarks>
+		/// <code>
+		/// using (await self.AsyncLock(self.Id))
+		/// {
+		///     await self.TreeTaskCompleted();
+		/// }
+		/// </code>
+		/// 按照队列顺序执行异步任务</remarks>
+		public static TreeTask<TreeTaskQueueCompleter> AsyncLock(this INode self, long key)
         {
             return self.Root.AddComponent(out TreeTaskQueueLockManager _).Lock(self, key);
         }

@@ -6,7 +6,7 @@ namespace WorldTree
 	/// <summary>
 	/// 方法法则
 	/// </summary>
-	public interface TestEvent : ISendRule , IMethodRule
+	public interface TestEvent : ISendRule, IMethodRule
 	{
 
 
@@ -19,6 +19,7 @@ namespace WorldTree
 		, AsAwake
 		, AsAwake<string>
 		, AsNew
+		, AsTestEvent
 	{
 		public int TestValue;
 	}
