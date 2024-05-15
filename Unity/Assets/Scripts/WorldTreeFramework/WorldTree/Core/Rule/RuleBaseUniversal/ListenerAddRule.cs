@@ -23,7 +23,7 @@ namespace WorldTree
 		/// <summary>
 		/// 【动态】监听节点添加法则
 		/// </summary>
-		public abstract class NodeRule<LN> : NodeRuleListenerRuleBase<LN, IListenerAddRule> where LN : class, IDynamicNodeListener, AsRule<IListenerAddRule> { }
+		public abstract class NodeRule<LN> : NodeRuleListenerRule<LN, IListenerAddRule> where LN : class, IDynamicNodeListener, AsRule<IListenerAddRule> { }
 		/// <summary>
 		/// 【静态】监听节点添加法则
 		/// </summary>

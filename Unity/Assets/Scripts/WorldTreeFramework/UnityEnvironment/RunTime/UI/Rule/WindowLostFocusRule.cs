@@ -12,5 +12,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口失焦法制
     /// </summary>
-    public interface WindowLostFocus : ISendRuleBase { }
+    public interface WindowLostFocus : ISendRule { }
 }

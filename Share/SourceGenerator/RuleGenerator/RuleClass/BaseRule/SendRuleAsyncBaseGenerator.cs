@@ -25,11 +25,11 @@ namespace WorldTree.SourceGenerator
 @$"/****************************************
 * 可以理解为Node的无返回值异步方法
 *
-* ISendRuleAsyncBase 继承 IRule
+* ISendRuleAsync 继承 IRule
 * 主要作用：统一 调用方法 Invoke(INode self,T1 arg1, ...);
 *
-* SendRuleAsyncBase 则继承 RuleBase
-* 同时还继承了 ISendRuleAsyncBase 可以转换为 ISendRuleAsyncBase 进行统一调用。
+* SendRuleAsync 则继承 Rule
+* 同时还继承了 ISendRuleAsync 可以转换为 ISendRuleAsync 进行统一调用。
 *
 * 主要作用：确定Node的类型并转换，并统一 Invoke 中转调用 Execute 的过程。
 * 其中 Invoke 设定为虚方法方便子类写特殊的中转调用。
@@ -53,7 +53,7 @@ namespace WorldTree.SourceGenerator
     /// <summary>
     /// 异步通知系统基类接口
     /// </summary>
-	public interface ISendRuleAsyncBase{genericsAngle} : IRule
+	public interface ISendRuleAsync{genericsAngle} : IRule
 	{{
 		TreeTask Invoke(INode self{GenericTypeParameter});
 	}}
@@ -61,9 +61,9 @@ namespace WorldTree.SourceGenerator
     /// <summary>
     /// 异步通知法则基类
     /// </summary>
-    public abstract class SendRuleAsyncBase<N, R{generics}> : RuleBase<N, R>, ISendRuleAsyncBase{genericsAngle}
+    public abstract class SendRuleAsync<N, R{generics}> : Rule<N, R>, ISendRuleAsync{genericsAngle}
 		where N : class, INode, AsRule<R>
-		where R : ISendRuleAsyncBase{genericsAngle}
+		where R : ISendRuleAsync{genericsAngle}
 	{{
 		public virtual TreeTask Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
 		protected abstract TreeTask Execute(N self{GenericTypeParameter});
@@ -73,7 +73,7 @@ namespace WorldTree.SourceGenerator
 
 			Code.Append("}");
 
-			context.AddSource("SendRuleAsyncBase.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));//生成代码
+			context.AddSource("SendRuleAsync.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));//生成代码
 		}
 	}
 }

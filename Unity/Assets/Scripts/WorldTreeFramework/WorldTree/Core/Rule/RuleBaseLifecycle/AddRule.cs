@@ -25,6 +25,6 @@ namespace WorldTree
 	/// <summary>
 	/// 添加法则
 	/// </summary>
-	public interface Add : ISendRuleBase, ILifeCycleRule
+	public interface Add : ISendRule, ILifeCycleRule
 	{ }
 }

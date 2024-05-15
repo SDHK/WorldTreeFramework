@@ -3,15 +3,15 @@
 	/// <summary>
 	/// 树任务设置结果法则
 	/// </summary>
-	public interface TreeTaskSetResuIt : ISendRuleBase { }
+	public interface TreeTaskSetResuIt : ISendRule { }
 
 	/// <summary>
 	/// 泛型树任务设置结果法则
 	/// </summary>
-	public interface TreeTaskSetResuIt<T1> : ISendRuleBase<T1> { }
+	public interface TreeTaskSetResuIt<T1> : ISendRule<T1> { }
 
 	/// <summary>
 	/// 树任务令牌事件法则
 	/// </summary>
-	public interface TreeTaskTokenEvent : ISendRuleBase<TaskState> { }
+	public interface TreeTaskTokenEvent : ISendRule<TaskState> { }
 }

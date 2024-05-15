@@ -142,13 +142,13 @@ namespace WorldTree
 			{
 				var BaseType = RuleType.BaseType;
 
-				//遍历获取一路查到最底层RuleBase<N,R>
-				while (BaseType.GetGenericTypeDefinition() != typeof(RuleBase<,>))
+				//遍历获取一路查到最底层Rule<N,R>
+				while (BaseType.GetGenericTypeDefinition() != typeof(Rule<,>))
 				{
 					BaseType = BaseType.BaseType;
 				}
 				var GenericArguments = BaseType.GetGenericArguments();
-				//RuleBase<N,R> 第一个泛型参数就是法则负责的目标节点
+				//Rule<N,R> 第一个泛型参数就是法则负责的目标节点
 				self.GenericRuleTypeHashDictionary.GetValue(GenericArguments[0].GetGenericTypeDefinition()).Add(RuleType);
 			}
 			else

@@ -12,5 +12,5 @@ namespace WorldTree
     /// <summary>
     /// UI窗口更新法制
     /// </summary>
-    public interface WindowUpdate : ISendRuleBase<float> { }
+    public interface WindowUpdate : ISendRule<float> { }
 }

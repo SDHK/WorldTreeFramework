@@ -43,10 +43,10 @@ namespace WorldTree.SourceGenerator
 		/// 法则列表异步调用执行
 		/// </summary>
 		public static async TreeTask<OutT> CallAsync<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsyncBase<{genericsAfter}OutT>
+			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
 			OutT outT = TypeInfo<OutT>.Default;
-			foreach (ICallRuleAsyncBase<{genericsAfter}OutT> rule in (RuleList)ruleList)
+			foreach (ICallRuleAsync<{genericsAfter}OutT> rule in (RuleList)ruleList)
 			{{
 				rule.IsMulticast = true;
 				outT = await rule.Invoke(node{genericParameter});
@@ -59,10 +59,10 @@ namespace WorldTree.SourceGenerator
 		/// 法则列表异步调用执行
 		/// </summary>
 		public static async TreeTask<UnitList<OutT>> CallsAsync<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsyncBase<{genericsAfter}OutT>
+			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
 			UnitList<OutT> outT = node.PoolGetUnit<UnitList<OutT>>();
-			foreach (ICallRuleAsyncBase<{genericsAfter}OutT> rule in (RuleList)ruleList)
+			foreach (ICallRuleAsync<{genericsAfter}OutT> rule in (RuleList)ruleList)
 			{{
 				rule.IsMulticast = true;
 				outT.Add(await rule.Invoke(node{genericParameter}));

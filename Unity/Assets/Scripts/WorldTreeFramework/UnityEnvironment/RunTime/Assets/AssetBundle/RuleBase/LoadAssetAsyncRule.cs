@@ -15,5 +15,5 @@ namespace WorldTree
 	/// <summary>
 	/// 异步加载资源法则
 	/// </summary>
-	public interface LoadAssetAsync : ICallRuleAsyncBase<string, Object> { }
+	public interface LoadAssetAsync : ICallRuleAsync<string, Object> { }
 }

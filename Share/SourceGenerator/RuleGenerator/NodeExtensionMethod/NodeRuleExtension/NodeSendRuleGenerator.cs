@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 		/// 尝试执行通知法则
 		/// </summary>
 		public static bool TrySendRule<R{generics}>(this INode self, R nullRule{(i == 0 ? " = null" : genericTypeParameter)})
-			where R : class, ISendRuleBase{genericsAngle}
+			where R : class, ISendRule{genericsAngle}
 		{{
 			if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return false;
 			ruleList.Send(self{genericParameter});
@@ -55,7 +55,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static void SendRule<N, R{generics}>(this N self, R nullRule{genericTypeParameter})
 			where N : class, INode, AsRule<R>
-			where R : class, ISendRuleBase{genericsAngle}
+			where R : class, ISendRule{genericsAngle}
 		{{
 			if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return;
 			ruleList.Send(self{genericParameter});

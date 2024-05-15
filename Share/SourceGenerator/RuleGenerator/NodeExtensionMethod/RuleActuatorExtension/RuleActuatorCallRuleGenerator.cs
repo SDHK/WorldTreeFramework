@@ -42,7 +42,7 @@ namespace WorldTree.SourceGenerator
 		/// 执行器执行调用法则
 		/// </summary>
 		public static OutT Call<R{generics}, OutT>(this IRuleActuator<R> Self{genericTypeParameter}, out OutT outT)
-			where R : ICallRuleBase<{genericsAfter}OutT>
+			where R : ICallRule<{genericsAfter}OutT>
 		{{
 			outT = default;
 			if (!Self.IsActive) return outT;
@@ -58,7 +58,7 @@ namespace WorldTree.SourceGenerator
 		/// 执行器执行异步调用法则
 		/// </summary>
 		public static async TreeTask<OutT> CallAsync<R{generics}, OutT>(this IRuleActuator<R> Self{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsyncBase<{genericsAfter}OutT>
+			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
 			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
 			if (!Self.IsActive || self.GetEnumerator().Current == default)

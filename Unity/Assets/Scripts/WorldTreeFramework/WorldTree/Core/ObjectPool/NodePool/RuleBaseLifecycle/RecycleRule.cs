@@ -12,5 +12,5 @@ namespace WorldTree
 	/// <summary>
 	/// 回收法则
 	/// </summary>
-	public interface Recycle : ISendRuleBase, ILifeCycleRule { }
+	public interface Recycle : ISendRule, ILifeCycleRule { }
 }

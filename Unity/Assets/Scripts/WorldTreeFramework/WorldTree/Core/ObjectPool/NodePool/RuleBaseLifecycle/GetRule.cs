@@ -12,5 +12,5 @@ namespace WorldTree
 	/// <summary>
 	/// 获取法则
 	/// </summary>
-	public interface Get : ISendRuleBase, ILifeCycleRule { }
+	public interface Get : ISendRule, ILifeCycleRule { }
 }

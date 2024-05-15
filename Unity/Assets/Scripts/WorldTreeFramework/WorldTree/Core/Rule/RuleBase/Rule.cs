@@ -47,7 +47,7 @@ namespace WorldTree
 	/// <para>法则的最底层基类</para>
 	/// <para>主要作用是通过泛型给标记赋值</para>
 	/// </remarks>
-	public abstract class RuleBase<N, R> : IRule
+	public abstract class Rule<N, R> : IRule
 		where N : class, INode, AsRule<R>
 		where R : IRule
 	{

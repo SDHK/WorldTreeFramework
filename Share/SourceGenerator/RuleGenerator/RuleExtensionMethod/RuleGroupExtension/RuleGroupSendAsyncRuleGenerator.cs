@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 		/// 尝试通知法则集合异步执行
 		/// </summary>
 		public static async TreeTask<bool> TrySendAsync<R{generics}>(this IRuleGroup<R> group, INode node{genericTypeParameter})
-			where R : ISendRuleAsyncBase{genericsAngle}
+			where R : ISendRuleAsync{genericsAngle}
 		{{
 			if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
 			{{
@@ -58,7 +58,7 @@ namespace WorldTree.SourceGenerator
 		/// 通知法则集合异步执行
 		/// </summary>
 		public static async TreeTask SendAsync<R{generics}>(this IRuleGroup<R> group, INode node{genericTypeParameter})
-			where R : ISendRuleAsyncBase{genericsAngle}
+			where R : ISendRuleAsync{genericsAngle}
 		{{
 			if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) await node.TreeTaskCompleted();
 			await ((IRuleList<R>)ruleList).SendAsync(node{genericParameter});

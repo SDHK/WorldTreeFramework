@@ -13,6 +13,6 @@ namespace WorldTree
     /// <summary>
     /// 曲线执行法则
     /// </summary>
-    public interface CurveEvaluate : ICallRuleBase<float, float> { }
+    public interface CurveEvaluate : ICallRule<float, float> { }
 
 }

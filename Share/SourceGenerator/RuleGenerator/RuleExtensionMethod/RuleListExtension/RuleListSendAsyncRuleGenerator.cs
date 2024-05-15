@@ -43,9 +43,9 @@ namespace WorldTree.SourceGenerator
 		/// 法则列表异步通知执行
 		/// </summary>
 		public static async TreeTask SendAsync<R{generics}>(this IRuleList<R> ruleList, INode node{genericTypeParameter})
-			where R : ISendRuleAsyncBase{genericsAngle}
+			where R : ISendRuleAsync{genericsAngle}
 		{{
-			foreach (ISendRuleAsyncBase{genericsAngle} rule in (RuleList)ruleList)
+			foreach (ISendRuleAsync{genericsAngle} rule in (RuleList)ruleList)
 			{{
 				rule.IsMulticast = true;
 				await rule.Invoke(node{genericParameter});

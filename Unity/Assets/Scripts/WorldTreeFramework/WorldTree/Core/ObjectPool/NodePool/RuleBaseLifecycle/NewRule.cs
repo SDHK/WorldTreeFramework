@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 新建法则
 	/// </summary>
-	public interface New : ISendRuleBase, ILifeCycleRule { }
+	public interface New : ISendRule, ILifeCycleRule { }
 
 
 }

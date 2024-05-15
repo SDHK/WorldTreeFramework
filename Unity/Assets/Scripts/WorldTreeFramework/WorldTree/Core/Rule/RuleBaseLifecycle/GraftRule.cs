@@ -15,7 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 嫁接法则
 	/// </summary>
-	public interface Graft : ISendRuleBase, ILifeCycleRule
+	public interface Graft : ISendRule, ILifeCycleRule
 	{ }
 
 	///// <summary>

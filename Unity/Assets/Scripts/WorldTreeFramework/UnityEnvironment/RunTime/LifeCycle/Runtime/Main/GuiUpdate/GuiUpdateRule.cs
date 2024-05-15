@@ -5,10 +5,10 @@ namespace WorldTree
 	/// <summary>
 	/// OnGUI法则
 	/// </summary>
-	public interface GuiUpdateTime : ISendRuleBase<TimeSpan>, ILifeCycleRule { }
+	public interface GuiUpdateTime : ISendRule<TimeSpan>, ILifeCycleRule { }
 
 	/// <summary>
 	/// OnGUI法则
 	/// </summary>
-	public interface GuiUpdate : ISendRuleBase, ILifeCycleRule { }
+	public interface GuiUpdate : ISendRule, ILifeCycleRule { }
 }

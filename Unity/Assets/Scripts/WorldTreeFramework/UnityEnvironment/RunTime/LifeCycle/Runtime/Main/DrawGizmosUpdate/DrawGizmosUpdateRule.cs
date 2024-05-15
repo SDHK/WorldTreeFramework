@@ -5,10 +5,10 @@ namespace WorldTree
 	/// <summary>
 	/// DrawGizmos法则
 	/// </summary>
-	public interface DrawGizmosUpdateTime : ISendRuleBase<TimeSpan>, ILifeCycleRule { }
+	public interface DrawGizmosUpdateTime : ISendRule<TimeSpan>, ILifeCycleRule { }
 
 	/// <summary>
 	/// DrawGizmos法则
 	/// </summary>
-	public interface DrawGizmosUpdate : ISendRuleBase, ILifeCycleRule { }
+	public interface DrawGizmosUpdate : ISendRule, ILifeCycleRule { }
 }

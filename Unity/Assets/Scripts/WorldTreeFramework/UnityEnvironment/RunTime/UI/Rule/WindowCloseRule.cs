@@ -12,5 +12,5 @@ namespace WorldTree
 	/// <summary>
 	/// UI窗口关闭法则
 	/// </summary>
-	public interface WindowClose : ISendRuleBase { }
+	public interface WindowClose : ISendRule { }
 }

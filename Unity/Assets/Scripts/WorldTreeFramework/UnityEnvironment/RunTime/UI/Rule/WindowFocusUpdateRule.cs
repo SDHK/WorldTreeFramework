@@ -14,5 +14,5 @@ namespace WorldTree
 	/// <summary>
 	/// UI窗口焦点更新法制
 	/// </summary>
-	public interface WindowFocusUpdate : ISendRuleBase<TimeSpan> { }
+	public interface WindowFocusUpdate : ISendRule<TimeSpan> { }
 }

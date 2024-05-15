@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 		/// 尝试执行异步通知法则
 		/// </summary>
 		public static async TreeTask<bool> TrySendRuleAsync<R{generics}>(this INode self, R nullRule{(i == 0 ? " = null" : string.Empty)}{genericTypeParameter})
-			where R : class, ISendRuleAsyncBase{genericsAngle}
+			where R : class, ISendRuleAsync{genericsAngle}
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 			{{
@@ -59,7 +59,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static async TreeTask SendRuleAsync<N, R{generics}>(this N self, R nullRule{genericTypeParameter})
 			where N : class, INode, AsRule<R>
-			where R : class, ISendRuleAsyncBase{genericsAngle}
+			where R : class, ISendRuleAsync{genericsAngle}
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 			{{

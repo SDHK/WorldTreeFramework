@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 		/// 尝试执行调用法则
 		/// </summary>
 		public static bool TryCallRule<R{generics}, OutT>(this INode self, R nullRule{genericTypeParameter}, out OutT outT)
-			where R : ICallRuleBase<{genericsAfter}OutT>
+			where R : ICallRule<{genericsAfter}OutT>
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 			{{
@@ -59,7 +59,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static OutT CallRule<N, R{generics}, OutT>(this N self, R nullRule{genericTypeParameter}, out OutT outT)
 			where N : class, INode, AsRule<R>
-			where R : ICallRuleBase<{genericsAfter}OutT>
+			where R : ICallRule<{genericsAfter}OutT>
 		{{
 			self.TryCallRule(nullRule{genericParameter}, out outT);
 			return outT;
@@ -69,7 +69,7 @@ namespace WorldTree.SourceGenerator
 		/// 尝试执行调用法则
 		/// </summary>
 		public static bool TryCallsRule<R{generics}, OutT>(this INode self, R nullRule{genericTypeParameter}, out UnitList<OutT> outT)
-			where R : ICallRuleBase<{genericsAfter}OutT>
+			where R : ICallRule<{genericsAfter}OutT>
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 			{{
@@ -85,7 +85,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static UnitList<OutT> CallsRule<N, R{generics}, OutT>(this N self, R nullRule{genericTypeParameter}, out UnitList<OutT> outT)
 			where N : class, INode, AsRule<R>
-			where R : ICallRuleBase<{genericsAfter}OutT>
+			where R : ICallRule<{genericsAfter}OutT>
 		{{
 			self.TryCallsRule(nullRule{genericParameter}, out outT);
 			return outT;

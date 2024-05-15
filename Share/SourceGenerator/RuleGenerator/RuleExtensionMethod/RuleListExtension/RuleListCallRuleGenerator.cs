@@ -43,10 +43,10 @@ namespace WorldTree.SourceGenerator
 		/// 法则列表调用执行
 		/// </summary>
 		public static OutT Call<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, out OutT outT)
-			where R : ICallRuleBase<{genericsAfter}OutT>
+			where R : ICallRule<{genericsAfter}OutT>
 		{{
 			outT = TypeInfo<OutT>.Default;
-			foreach (ICallRuleBase<{genericsAfter}OutT> rule in (RuleList)ruleList)
+			foreach (ICallRule<{genericsAfter}OutT> rule in (RuleList)ruleList)
 			{{
 				rule.IsMulticast = true;
 				outT = rule.Invoke(node{genericParameter});
@@ -59,10 +59,10 @@ namespace WorldTree.SourceGenerator
 		/// 法则列表调用执行
 		/// </summary>
 		public static UnitList<OutT> Calls<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, out UnitList<OutT> outT)
-			where R : ICallRuleBase<{genericsAfter}OutT>
+			where R : ICallRule<{genericsAfter}OutT>
 		{{
 			outT = node.PoolGetUnit<UnitList<OutT>>();
-			foreach (ICallRuleBase<{genericsAfter}OutT> rule in  (RuleList)ruleList)
+			foreach (ICallRule<{genericsAfter}OutT> rule in  (RuleList)ruleList)
 			{{
 				rule.IsMulticast = true;
 				outT.Add(rule.Invoke(node{genericParameter}));

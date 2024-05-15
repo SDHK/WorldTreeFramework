@@ -13,5 +13,5 @@ namespace WorldTree
 	/// <summary>
 	/// 释放法则
 	/// </summary>
-	public interface Destroy : ISendRuleBase, ILifeCycleRule { }
+	public interface Destroy : ISendRule, ILifeCycleRule { }
 }

@@ -62,10 +62,10 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static Dictionary<string, InterfaceDeclarationSyntax> classInterfaceSyntax = new();
 
-		public static string ISendRuleBase = "ISendRuleBase";
-		public static string ICallRuleBase = "ICallRuleBase";
-		public static string ISendRuleAsyncBase = "ISendRuleAsyncBase";
-		public static string ICallRuleAsyncBase = "ICallRuleAsyncBase";
+		public static string ISendRule = "ISendRule";
+		public static string ICallRule = "ICallRule";
+		public static string ISendRuleAsync = "ISendRuleAsync";
+		public static string ICallRuleAsync = "ICallRuleAsync";
 
 		public static void Init(Compilation compilation)
 		{
@@ -81,10 +81,10 @@ namespace WorldTree.SourceGenerator
 			if (namedType == null) return;
 
 			//检测是否继承4大法则接口
-			if (!(NamedSymbolHelper.CheckInterface(namedType, ISendRuleBase, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, ICallRuleBase, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, ISendRuleAsyncBase, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, ICallRuleAsyncBase, out _))) return;
+			if (!(NamedSymbolHelper.CheckInterface(namedType, ISendRule, out _) ||
+				NamedSymbolHelper.CheckInterface(namedType, ICallRule, out _) ||
+				NamedSymbolHelper.CheckInterface(namedType, ISendRuleAsync, out _) ||
+				NamedSymbolHelper.CheckInterface(namedType, ICallRuleAsync, out _))) return;
 
 			string fileName = Path.GetFileNameWithoutExtension(interfaceDeclaration.SyntaxTree.FilePath);
 			if (!fileClassDict.TryGetValue(fileName, out List<INamedTypeSymbol> set))
@@ -105,62 +105,55 @@ namespace WorldTree.SourceGenerator
 
 		public static void Execute(GeneratorExecutionContext context)
 		{
-			var ILifeCycleRule = context.Compilation.ToINamedTypeSymbol("WorldTree.ILifeCycleRule");
 			var IRuleSupplementIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.IRuleSupplementIgnore");
 			var IMethodRule = context.Compilation.ToINamedTypeSymbol("WorldTree.IMethodRule");
 
-
-			if (ILifeCycleRule == null) return;
 			if (IRuleSupplementIgnore == null) return;
 			if (IMethodRule == null) return;
 
 			foreach (var fileClassList in fileClassDict)
 			{
 				StringBuilder fileCode = new();
-
 				StringBuilder ClassCode = new();
 				StringBuilder MethodCode = new();
 
-				
+
 
 				foreach (INamedTypeSymbol fileClass in fileClassList.Value)
 				{
 					if (NamedSymbolHelper.CheckAllInterface(fileClass, IRuleSupplementIgnore)) continue;
+					bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
 
-						if (NamedSymbolHelper.CheckInterface(fileClass, ISendRuleBase, out INamedTypeSymbol? baseInterface))
+					if (NamedSymbolHelper.CheckInterface(fileClass, ISendRule, out INamedTypeSymbol? baseInterface))
 					{
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							if (NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule))
-								SendRuleMethod(MethodCode, fileClass, baseInterface);
+							if (isMethodRule) SendRuleMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, ISendRuleAsyncBase, out baseInterface))
+					else if (NamedSymbolHelper.CheckInterface(fileClass, ISendRuleAsync, out baseInterface))
 					{
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							if (NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule))
-								SendRuleAsyncMethod(MethodCode, fileClass, baseInterface);
+							if (isMethodRule) SendRuleAsyncMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, ICallRuleBase, out baseInterface))
+					else if (NamedSymbolHelper.CheckInterface(fileClass, ICallRule, out baseInterface))
 					{
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							if (NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule))
-								CallRuleMethod(MethodCode, fileClass, baseInterface);
+							if (isMethodRule) CallRuleMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, ICallRuleAsyncBase, out baseInterface))
+					else if (NamedSymbolHelper.CheckInterface(fileClass, ICallRuleAsync, out baseInterface))
 					{
 						if (baseInterface != null)
 						{
 							RuleClass(ClassCode, fileClass, baseInterface);
-							if (NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule))
-								CallRuleAsyncMethod(MethodCode, fileClass, baseInterface);
+							if (isMethodRule) CallRuleAsyncMethod(MethodCode, fileClass, baseInterface);
 						}
 					}
 				}
@@ -174,7 +167,8 @@ namespace WorldTree.SourceGenerator
 					ClassCode.AppendLine("	}");
 				}
 
-				if (ClassCode.ToString() != "") {
+				if (ClassCode.ToString() != "")
+				{
 
 					fileCode.AppendLine(fileUsings[fileClassList.Key]);
 					fileCode.AppendLine($"namespace {fileNamespace[fileClassList.Key]}");
@@ -184,15 +178,16 @@ namespace WorldTree.SourceGenerator
 					context.AddSource($"{fileClassList.Key}Supplement.cs", SourceText.From(fileCode.ToString(), Encoding.UTF8));
 				}
 
-				
+
 			}
 		}
 
 		/// <summary>
 		/// 生成法则类
 		/// </summary>
-		private static void RuleClass(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
+		private static void RuleClass(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
 		{
+			if (baseInterface == null) return;
 			string ClassName = typeSymbol.Name;
 			string ClassFullName = GetNameWithGenericArguments(typeSymbol);
 
@@ -204,15 +199,15 @@ namespace WorldTree.SourceGenerator
 			StringBuilder CommentPara = new();
 
 			//As约束接口
-			AddCommentPara(CommentPara, typeSymbol, baseInterface, "法则约束", "\t");
-			string BaseTypePara = GetBaseTypePara(baseInterface, "\t");
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "法则约束", "\t");
+			string BaseTypePara = GetRuleParametersTypeCommentPara(baseInterface, "\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
 			Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{ClassFullName}>, INode {WhereTypeArguments}{{}}");
 
 			//抽象基类注释
 			CommentPara.Clear();
-			AddCommentPara(CommentPara, typeSymbol, baseInterface, "法则基类", "\t");
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "法则基类", "\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
 
@@ -230,11 +225,11 @@ namespace WorldTree.SourceGenerator
 			string genericParameter = RuleGeneratorHelper.GetGenericParameter(baseTypeCount);
 			string genericTypeParameter = GetGenericTypeParameter(baseInterface);
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
-			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
+			string BaseName = baseInterface.Name.TrimStart('I');
 
 			StringBuilder CommentPara = new();
-			AddCommentPara(CommentPara, typeSymbol, baseInterface, "执行通知法则", "\t\t");
-			string BaseTypePara = GetBaseTypePara(baseInterface, "\t\t");
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "执行通知法则", "\t\t");
+			string BaseTypePara = GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
@@ -252,10 +247,10 @@ namespace WorldTree.SourceGenerator
 			string genericParameter = RuleGeneratorHelper.GetGenericParameter(baseTypeCount);
 			string genericTypeParameter = GetGenericTypeParameter(baseInterface);
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
-			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
+			string BaseName = baseInterface.Name.TrimStart('I');
 			StringBuilder CommentPara = new();
-			AddCommentPara(CommentPara, typeSymbol, baseInterface, "执行异步通知法则", "\t\t");
-			string BaseTypePara = GetBaseTypePara(baseInterface, "\t\t");
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "执行异步通知法则", "\t\t");
+			string BaseTypePara = GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
@@ -274,10 +269,10 @@ namespace WorldTree.SourceGenerator
 			string genericTypeParameter = GetCallRuleGenericTypesParameters(baseInterface);
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
 			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
+			string BaseName = baseInterface.Name.TrimStart('I');
 			StringBuilder CommentPara = new();
-			AddCommentPara(CommentPara, typeSymbol, baseInterface, "执行调用法则", "\t\t");
-			string BaseTypePara = GetBaseTypePara(baseInterface, "\t\t");
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "执行调用法则", "\t\t");
+			string BaseTypePara = GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
@@ -295,10 +290,10 @@ namespace WorldTree.SourceGenerator
 			string genericTypeParameter = GetCallRuleAsyncGenericTypesParameters(baseInterface);
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
 			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			string BaseName = baseInterface.Name.TrimStart('I').Replace("Base", "");
+			string BaseName = baseInterface.Name.TrimStart('I');
 			StringBuilder CommentPara = new();
-			AddCommentPara(CommentPara, typeSymbol, baseInterface, "执行异步调用法则", "\t\t");
-			string BaseTypePara = GetBaseTypePara(baseInterface, "\t\t");
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "执行异步调用法则", "\t\t");
+			string BaseTypePara = GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
@@ -414,9 +409,9 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 添加注释Para
+		/// 添加法则继承注释
 		/// </summary>
-		private static void AddCommentPara(StringBuilder sb, INamedTypeSymbol typeSymbol, INamedTypeSymbol BaseSymbol, string Title, string tab)
+		private static void AddRuleExtendCommentPara(StringBuilder sb, INamedTypeSymbol typeSymbol, INamedTypeSymbol BaseSymbol, string Title, string tab)
 		{
 			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
 			string IBaseFullName = GetNameWithGenericArguments(BaseSymbol);
@@ -426,10 +421,10 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 获取泛型参数
+		/// 获取法则参数泛型类型注释
 		/// <para>T1 : <see cref="float"/>, OutT : <see cref="int"/></para>
 		/// </summary>
-		public static string GetBaseTypePara(INamedTypeSymbol BaseTypeSymbol, string tab)
+		public static string GetRuleParametersTypeCommentPara(INamedTypeSymbol BaseTypeSymbol, string tab)
 		{
 			if (!BaseTypeSymbol.IsGenericType) return "";
 			StringBuilder sb = new StringBuilder();
@@ -458,6 +453,9 @@ namespace WorldTree.SourceGenerator
 			return sb.ToString();
 		}
 
+		/// <summary>
+		/// 获取注释，添加或插入备注
+		/// </summary>
 		public static string GetCommentAddOrInsertRemarks(InterfaceDeclarationSyntax interfaceDeclarationSyntax, string remarksToAdd, string tab)
 		{
 			var triviaList = interfaceDeclarationSyntax.GetLeadingTrivia().Where(i => i.Kind() == SyntaxKind.SingleLineDocumentationCommentTrivia);

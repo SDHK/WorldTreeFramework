@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 		/// 尝试通知法则集合执行
 		/// </summary>
 		public static bool TrySend<R{generics}>(this IRuleGroup<R> group, INode node{genericTypeParameter})
-			where R : ISendRuleBase{genericsAngle}
+			where R : ISendRule{genericsAngle}
 		{{
 			if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) return false;
 			((IRuleList<R>)ruleList).Send(node{genericParameter});
@@ -54,7 +54,7 @@ namespace WorldTree.SourceGenerator
 		/// 通知法则集合执行
 		/// </summary>
 		public static void Send<R{generics}>(this IRuleGroup<R> group, INode node{genericTypeParameter})
-			where R : ISendRuleBase{genericsAngle}
+			where R : ISendRule{genericsAngle}
 		{{
 			group.TrySend(node{genericParameter});
 		}}

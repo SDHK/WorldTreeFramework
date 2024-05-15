@@ -31,7 +31,7 @@ namespace WorldTree
 	/// </summary>
 	/// <typeparam name="R">事件类型</typeparam>
 	public class SendData<R, T1, T2, T3> : Node
-		where R : ISendRuleBase<T1, T2, T3>
+		where R : ISendRule<T1, T2, T3>
 	{
 		/// <summary>
 		/// 目标类型id

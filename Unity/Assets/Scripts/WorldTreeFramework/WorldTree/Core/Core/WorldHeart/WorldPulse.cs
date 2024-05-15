@@ -17,7 +17,7 @@ namespace WorldTree
 	public class WorldPulse<R> : WorldPulseBase
 		, ComponentOf<WorldHeartBase>
 		, AsAwake<int>
-		where R : ISendRuleBase<TimeSpan>
+		where R : ISendRule<TimeSpan>
 	{
 		/// <summary>
 		/// 核心法则
@@ -66,7 +66,7 @@ namespace WorldTree
 	public static class WorldPulseRule
 	{
 		class AwakeRuleGeneric<R> : AwakeRule<WorldPulse<R>, int>
-			where R : ISendRuleBase<TimeSpan>
+			where R : ISendRule<TimeSpan>
 		{
 			protected override void Execute(WorldPulse<R> self, int FrameTime)
 			{
@@ -76,7 +76,7 @@ namespace WorldTree
 		}
 
 		class RemoveRuleGeneric<R> : RemoveRule<WorldPulse<R>>
-			where R : ISendRuleBase<TimeSpan>
+			where R : ISendRule<TimeSpan>
 		{
 			protected override void Execute(WorldPulse<R> self)
 			{

@@ -30,7 +30,7 @@ namespace WorldTree
 		/// <summary>
 		/// 【动态】监听节点移除法则
 		/// </summary>
-		public abstract class NodeRule<LN> : NodeRuleListenerRuleBase<LN, IListenerRemoveRule> where LN : class, IDynamicNodeListener, AsRule<IListenerRemoveRule>
+		public abstract class NodeRule<LN> : NodeRuleListenerRule<LN, IListenerRemoveRule> where LN : class, IDynamicNodeListener, AsRule<IListenerRemoveRule>
 		{ }
 
 		/// <summary>

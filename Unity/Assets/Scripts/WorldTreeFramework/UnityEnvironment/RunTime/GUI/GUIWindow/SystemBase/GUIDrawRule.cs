@@ -12,6 +12,6 @@ namespace WorldTree
 	/// <summary>
 	/// GUI绘制法则
 	/// </summary>
-	public interface GUIDraw : ISendRuleBase, ILifeCycleRule { }
+	public interface GUIDraw : ISendRule, ILifeCycleRule { }
 
 }

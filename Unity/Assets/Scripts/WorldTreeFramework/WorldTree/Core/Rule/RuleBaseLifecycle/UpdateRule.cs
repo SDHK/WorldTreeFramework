@@ -14,7 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 刷新法则
 	/// </summary>
-	public interface UpdateTime : ISendRuleBase<TimeSpan>, ILifeCycleRule
+	public interface UpdateTime : ISendRule<TimeSpan>, ILifeCycleRule
 	{ }
 
 	///// <summary>
@@ -26,7 +26,7 @@ namespace WorldTree
 	/// <summary>
 	/// 刷新法则
 	/// </summary>
-	public interface Update : ISendRuleBase, ILifeCycleRule
+	public interface Update : ISendRule, ILifeCycleRule
 	{ }
 
 	///// <summary>

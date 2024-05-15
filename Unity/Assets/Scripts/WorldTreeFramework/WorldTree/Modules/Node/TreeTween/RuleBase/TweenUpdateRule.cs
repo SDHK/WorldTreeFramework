@@ -14,5 +14,5 @@ namespace WorldTree
 	/// <summary>
 	/// 渐变法则
 	/// </summary>
-	public interface TweenUpdate : ISendRuleBase<TimeSpan>, ILifeCycleRule { }
+	public interface TweenUpdate : ISendRule<TimeSpan>, ILifeCycleRule { }
 }

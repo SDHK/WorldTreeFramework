@@ -20,14 +20,14 @@ namespace WorldTree
 	/// <summary>
 	/// 数值变化监听事件法则
 	/// </summary>
-	public interface ValueChangeEvent<T1> : ISendRuleBase<T1>, IValueChangeEvent, IRuleSupplementIgnore
+	public interface ValueChangeEvent<T1> : ISendRule<T1>, IValueChangeEvent, IRuleSupplementIgnore
 		where T1 : IEquatable<T1>
 	{ }
 
 	/// <summary>
 	/// 数值变化监听事件法则(同类型转换)
 	/// </summary>
-	public abstract class ValueChangeRuleEvent<N, T1> : SendRuleBase<N, ValueChangeEvent<T1>, T1>
+	public abstract class ValueChangeRuleEvent<N, T1> : SendRule<N, ValueChangeEvent<T1>, T1>
 		where N : class, INode, AsRule<ValueChangeEvent<T1>>
 		where T1 : IEquatable<T1>
 	{ }

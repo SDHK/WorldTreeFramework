@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 		/// 尝试执行异步调用法则
 		/// </summary>
 		public static async TreeTask<OutT> TryCallRuleAsync<R{generics}, OutT>(this INode self, R nullRule{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsyncBase<{genericsAfter}OutT>
+			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 			{{
@@ -58,14 +58,14 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static async TreeTask<OutT> CallRuleAsync<N, R{generics}, OutT>(this N self, R nullRule{genericTypeParameter}, OutT defaultOutT)
 			where N : class, INode, AsRule<R>
-			where R : ICallRuleAsyncBase<{genericsAfter}OutT>
+			where R : ICallRuleAsync<{genericsAfter}OutT>
 		=> await self.TryCallRuleAsync(nullRule{genericParameter}, defaultOutT);
 
 		/// <summary>
 		/// 尝试执行异步调用法则
 		/// </summary>
 		public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R{generics}, OutT>(this INode self, R nullRule{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsyncBase<{genericsAfter}OutT>
+			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 			{{
@@ -80,7 +80,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R{generics}, OutT>(this N self, R nullRule{genericTypeParameter}, OutT defaultOutT)
 			where N : class, INode, AsRule<R>
-			where R : ICallRuleAsyncBase<{genericsAfter}OutT>
+			where R : ICallRuleAsync<{genericsAfter}OutT>
 		=> await self.TryCallsRuleAsync(nullRule{genericParameter}, defaultOutT);
 ");
 			}

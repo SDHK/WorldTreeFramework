@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 		/// 执行器执行通知法则
 		/// </summary>
 		public static void Send<R{generics}>(this IRuleActuator<R> Self{genericTypeParameter})
-			where R : ISendRuleBase{genericsAngle}
+			where R : ISendRule{genericsAngle}
 		{{
 			if (!Self.IsActive) return;
 			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
@@ -57,7 +57,7 @@ namespace WorldTree.SourceGenerator
 		/// 执行器执行异步通知法则
 		/// </summary>
 		public static async TreeTask SendAsync<R{generics}>(this IRuleActuator<R> Self{genericTypeParameter})
-			where R : ISendRuleAsyncBase{genericsAngle}
+			where R : ISendRuleAsync{genericsAngle}
 		{{
 			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
 			if (!Self.IsActive || self.GetEnumerator().Current == default) await Self.TreeTaskCompleted();

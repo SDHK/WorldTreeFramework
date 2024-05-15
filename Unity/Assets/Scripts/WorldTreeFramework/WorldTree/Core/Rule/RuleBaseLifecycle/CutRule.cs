@@ -15,7 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 剪切法则
 	/// </summary>
-	public interface Cut : ISendRuleBase, ILifeCycleRule
+	public interface Cut : ISendRule, ILifeCycleRule
 	{ }
 
 	///// <summary>

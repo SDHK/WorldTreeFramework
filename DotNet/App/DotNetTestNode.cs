@@ -6,7 +6,7 @@ namespace WorldTree
 	/// <summary>
 	/// 方法法则
 	/// </summary>
-	public interface TestEvent : ISendRuleBase , IMethodRule
+	public interface TestEvent : ISendRule , IMethodRule
 	{
 
 

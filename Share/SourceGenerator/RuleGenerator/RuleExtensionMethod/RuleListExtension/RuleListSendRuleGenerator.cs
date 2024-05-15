@@ -42,9 +42,9 @@ namespace WorldTree.SourceGenerator
 		/// 法则列表通知执行
 		/// </summary>
 		public static void Send<R{generics}>(this IRuleList<R> ruleList, INode node{genericTypeParameter})
-			where R : ISendRuleBase{genericsAngle}
+			where R : ISendRule{genericsAngle}
 		{{
-			foreach (ISendRuleBase{genericsAngle} rule in (RuleList)ruleList)
+			foreach (ISendRule{genericsAngle} rule in (RuleList)ruleList)
 			{{
 				rule.IsMulticast = true;
 				rule.Invoke(node{genericParameter});

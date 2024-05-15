@@ -36,7 +36,7 @@ namespace WorldTree
 	/// <summary>
 	/// 节点监听法则接口
 	/// </summary>
-	public interface IListenerRule : ISendRuleBase<INode>, ILifeCycleRule, IRuleSupplementIgnore
+	public interface IListenerRule : ISendRule<INode>, ILifeCycleRule, IRuleSupplementIgnore
 	{
 		/// <summary>
 		/// 监听目标:节点类型
@@ -53,7 +53,7 @@ namespace WorldTree
 	/// 节点监听法则抽象基类
 	/// </summary>
 	/// <remarks>目标为INode和IRule时为动态监听</remarks>
-	public abstract class ListenerRuleBase<LN, LR, TN, TR> : RuleBase<LN, LR>, IListenerRule
+	public abstract class ListenerRule<LN, LR, TN, TR> : Rule<LN, LR>, IListenerRule
 	where LN : class, INode, AsRule<LR>
 	where TN : class, INode
 	where LR : IListenerRule
@@ -69,7 +69,7 @@ namespace WorldTree
 	/// <summary>
 	/// 【动态】节点监听法则抽象基类
 	/// </summary>
-	public abstract class NodeRuleListenerRuleBase<LN, LR> : ListenerRuleBase<LN, LR, INode, IRule>
+	public abstract class NodeRuleListenerRule<LN, LR> : ListenerRule<LN, LR, INode, IRule>
 		where LN : class, INode, AsRule<LR>
 		where LR : IListenerRule
 	{ }
@@ -77,7 +77,7 @@ namespace WorldTree
 	/// <summary>
 	/// 【静态】节点监听法则抽象基类
 	/// </summary>
-	public abstract class NodeListenerRuleBase<LN, LR, TN> : ListenerRuleBase<LN, LR, TN, IRule>
+	public abstract class NodeListenerRuleBase<LN, LR, TN> : ListenerRule<LN, LR, TN, IRule>
 		where LN : class, INode, AsRule<LR>
 		where LR : IListenerRule
 		where TN : class, INode
@@ -86,7 +86,7 @@ namespace WorldTree
 	/// <summary>
 	/// 【静态】节点法则监听法则抽象基类
 	/// </summary>
-	public abstract class RuleListenerRuleBase<LN, LR, TR> : ListenerRuleBase<LN, LR, INode, TR>
+	public abstract class RuleListenerRuleBase<LN, LR, TR> : ListenerRule<LN, LR, INode, TR>
 		where LN : class, INode, AsRule<LR>
 		where LR : IListenerRule
 		where TR : IRule

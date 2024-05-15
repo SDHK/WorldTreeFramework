@@ -18,9 +18,9 @@ namespace WorldTree
 		/// </summary>
 		public static void SetGlobalRuleActuator<T, R>(this TreeValueBase<T> self, R defaultRule = default)
 			where T : IEquatable<T>
-			where R : ISendRuleBase<T>
+			where R : ISendRule<T>
 		{
-			self.m_GlobalValueChange = (IRuleActuator<ISendRuleBase<T>>)self.GetOrNewGlobalRuleActuator<R>(out _);
+			self.m_GlobalValueChange = (IRuleActuator<ISendRule<T>>)self.GetOrNewGlobalRuleActuator<R>(out _);
 		}
 
 		/// <summary>
@@ -28,7 +28,7 @@ namespace WorldTree
 		/// </summary>
 		public static void AddListenerValueChange<T1, N>(this TreeValueBase<T1> self, N eventNode)
 			where T1 : IEquatable<T1>
-			where N : class, INode, AsRule<ISendRuleBase<T1>>
+			where N : class, INode, AsRule<ISendRule<T1>>
 		{
 			if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
 			self.m_ValueChange.Add(eventNode, default(ValueChangeEvent<T1>));

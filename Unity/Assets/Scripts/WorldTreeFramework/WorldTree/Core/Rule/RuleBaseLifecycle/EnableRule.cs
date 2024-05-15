@@ -14,13 +14,13 @@ namespace WorldTree
 	/// <summary>
 	/// 活跃启用法则
 	/// </summary>
-	public interface Enable : ISendRuleBase, ILifeCycleRule, IRuleSupplementIgnore
+	public interface Enable : ISendRule, ILifeCycleRule, IRuleSupplementIgnore
 	{ }
 
 	/// <summary>
 	/// 活跃启用法则
 	/// </summary>
-	public abstract class EnableRule<N> : SendRuleBase<N, Enable>
+	public abstract class EnableRule<N> : SendRule<N, Enable>
 	where N : class, INode, AsRule<Enable>
 	{
 		public override void Invoke(INode self)

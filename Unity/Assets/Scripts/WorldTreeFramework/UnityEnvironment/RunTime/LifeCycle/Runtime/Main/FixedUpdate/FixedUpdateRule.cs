@@ -5,10 +5,10 @@ namespace WorldTree
 	/// <summary>
 	/// FixedUpdate法则
 	/// </summary>
-	public interface FixedUpdate : ISendRuleBase, ILifeCycleRule { }
+	public interface FixedUpdate : ISendRule, ILifeCycleRule { }
 
 	/// <summary>
 	/// FixedUpdate法则
 	/// </summary>
-	public interface FixedUpdateTime : ISendRuleBase<TimeSpan>, ILifeCycleRule { }
+	public interface FixedUpdateTime : ISendRule<TimeSpan>, ILifeCycleRule { }
 }

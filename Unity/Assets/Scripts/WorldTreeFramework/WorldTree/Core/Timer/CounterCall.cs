@@ -26,7 +26,7 @@ namespace WorldTree
 		/// <summary>
 		/// 计数结束回调
 		/// </summary>
-		public RuleActuator<ISendRuleBase> callback;
+		public RuleActuator<ISendRule> callback;
 
 		public override string ToString()
 		{

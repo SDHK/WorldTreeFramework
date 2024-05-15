@@ -19,7 +19,7 @@ namespace WorldTree
     {
         public float time = 0;
         public float timeOutTime = 0;
-        public RuleActuator<ISendRuleBase> callback;
+        public RuleActuator<ISendRule> callback;
 
     }
 

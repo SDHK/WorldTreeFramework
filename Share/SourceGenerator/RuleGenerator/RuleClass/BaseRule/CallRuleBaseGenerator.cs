@@ -23,11 +23,11 @@ namespace WorldTree.SourceGenerator
 @$"/****************************************
 * 可以理解为Node的有返回值扩展方法
 *
-* ICallRuleBase 继承 IRule
+* ICallRule 继承 IRule
 * 主要作用：统一 调用方法  OutT Invoke(INode self,T1 arg1, ...);
 *
-* CallRuleBase 则继承 RuleBase
-* 同时还继承了 ICallRuleBase 可以转换为 ICallRuleBase 进行统一调用。
+* CallRule 则继承 Rule
+* 同时还继承了 ICallRule 可以转换为 ICallRule 进行统一调用。
 *
 * 主要作用：确定Node的类型并转换，并统一 Invoke 中转调用 Execute 的过程。
 * 其中 Invoke 设定为虚方法方便子类写特殊的中转调用。
@@ -50,7 +50,7 @@ namespace WorldTree.SourceGenerator
 	/// <summary>
 	/// 调用法则基类接口
 	/// </summary>
-	public interface ICallRuleBase<{genericsAfter}OutT> : IRule
+	public interface ICallRule<{genericsAfter}OutT> : IRule
 	{{
 		OutT Invoke(INode self{GenericTypeParameter});
 	}}
@@ -58,9 +58,9 @@ namespace WorldTree.SourceGenerator
 	/// <summary>
 	/// 调用法则基类
 	/// </summary>
-	public abstract class CallRuleBase<N, R{generics}, OutT> : RuleBase<N, R>, ICallRuleBase<{genericsAfter}OutT>
+	public abstract class CallRule<N, R{generics}, OutT> : Rule<N, R>, ICallRule<{genericsAfter}OutT>
 		where N : class, INode, AsRule<R>
-		where R : ICallRuleBase<{genericsAfter}OutT>
+		where R : ICallRule<{genericsAfter}OutT>
 	{{
 		public virtual OutT Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
 		protected abstract OutT Execute(N self{GenericTypeParameter});
@@ -70,7 +70,7 @@ namespace WorldTree.SourceGenerator
 
 			Code.Append("}");
 
-			context.AddSource("CallRuleBase.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));//生成代码
+			context.AddSource("CallRule.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));//生成代码
 		}
 	}
 }

@@ -13,5 +13,5 @@ namespace WorldTree
 	/// <summary>
 	/// UI窗口焦点法则
 	/// </summary>
-	public interface WindowFocus : ISendRuleBase { }
+	public interface WindowFocus : ISendRule { }
 }

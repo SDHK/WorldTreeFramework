@@ -44,7 +44,7 @@ namespace WorldTree.SourceGenerator
 		/// 调用法则集合异步执行
 		/// </summary>
 		public static async TreeTask<OutT> CallAsync<R{generics}, OutT>(this IRuleGroup<R> group, INode node{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsyncBase<{genericsAfter}OutT>
+			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
 			if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
 			{{
@@ -58,7 +58,7 @@ namespace WorldTree.SourceGenerator
 		/// 调用法则集合异步执行
 		/// </summary>
 		public static async TreeTask<UnitList<OutT>> CallsAsync<R{generics}, OutT>(this IRuleGroup<R> group, INode node{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsyncBase<{genericsAfter}OutT>
+			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
 			if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
 			{{

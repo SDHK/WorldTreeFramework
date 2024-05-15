@@ -14,20 +14,20 @@ namespace WorldTree
 	/// <summary>
 	/// 引用子关系解除法则
 	/// </summary>
-	public interface DeReferencedChild : ISendRuleBase<INode>, ILifeCycleRule { }
+	public interface DeReferencedChild : ISendRule<INode>, ILifeCycleRule { }
 
 	/// <summary>
 	/// 引用父关系解除法则
 	/// </summary>
-	public interface DeReferencedParent : ISendRuleBase<INode>, ILifeCycleRule { }
+	public interface DeReferencedParent : ISendRule<INode>, ILifeCycleRule { }
 
 	/// <summary>
 	/// 引用子关系移除法则
 	/// </summary>
-	public interface ReferencedChildRemove : ISendRuleBase<INode>, ILifeCycleRule { }
+	public interface ReferencedChildRemove : ISendRule<INode>, ILifeCycleRule { }
 	
 	/// <summary>
 	/// 引用父关系移除法则
 	/// </summary>
-	public interface ReferencedParentRemove : ISendRuleBase<INode>, ILifeCycleRule { }
+	public interface ReferencedParentRemove : ISendRule<INode>, ILifeCycleRule { }
 }

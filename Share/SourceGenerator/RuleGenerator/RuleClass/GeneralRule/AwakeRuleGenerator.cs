@@ -45,12 +45,12 @@ namespace WorldTree.SourceGenerator
     /// <summary>
     /// 初始化法则
     /// </summary>
-    public interface Awake{genericsAngle} : ISendRuleBase{genericsAngle} {{}}
+    public interface Awake{genericsAngle} : ISendRule{genericsAngle} {{}}
 
     /// <summary>
     /// 初始化法则
     /// </summary>
-    public abstract class AwakeRule<N{generics}> : SendRuleBase<N, Awake{genericsAngle}{generics}> where N : class, INode, AsRule<Awake{genericsAngle}> {{}}
+    public abstract class AwakeRule<N{generics}> : SendRule<N, Awake{genericsAngle}{generics}> where N : class, INode, AsRule<Awake{genericsAngle}> {{}}
 ");
 			}
 			Code.Append("}");
