@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "tcFuu9F6iPFWvpYLFb1FWLioDL1NQS7Aoru3kwecEbdsXc9eWvdHjRALrgq38T4HCOyZ3BC2KYGD727QPUr8OA==",
+  "dgSpecHash": "YdsD6YNFTWgWRutI5DXjSUPWqAUutgGyO40tbDaWX20K9f5euncNxlgabHZviq0kmSjVc2BGUxYt/36MfjoP4g==",
   "success": true,
   "projectFilePath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\App\\DotNet.App.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.27\\microsoft.netcore.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.27\\microsoft.aspnetcore.app.ref.6.0.27.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.27\\microsoft.netcore.app.host.win-x64.6.0.27.nupkg.sha512"
   ],

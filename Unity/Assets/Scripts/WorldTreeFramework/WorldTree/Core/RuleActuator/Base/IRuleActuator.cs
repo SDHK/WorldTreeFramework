@@ -31,7 +31,24 @@ namespace WorldTree
 	/// 法则执行器遍历接口
 	/// </summary>
 	/// <remarks>让执行器可以遍历执行</remarks>
-	public interface IRuleActuatorEnumerable : IRuleActuatorBase, IEnumerable<ValueTuple<INode, RuleList>> { }
+	public interface IRuleActuatorEnumerable : IRuleActuatorBase, IEnumerable<ValueTuple<INode, RuleList>>
+	{
+		/// <summary>
+		/// 动态的遍历数量
+		/// </summary>
+		/// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
+		public int TraversalCount { get; }
+
+		/// <summary>
+		/// 刷新遍历数量
+		/// </summary>
+		public int RefreshTraversalCount();
+		/// <summary>
+		/// 尝试出列
+		/// </summary>
+		public bool TryDequeue(out ValueTuple<INode, RuleList> value);
+
+	}
 
 	/// <summary>
 	/// 法则列表执行器接口

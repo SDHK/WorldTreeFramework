@@ -9,6 +9,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace WorldTree
 {
@@ -76,6 +77,30 @@ namespace WorldTree
 
 	public static class WorldHeartUnityRule
 	{
+
+		/// <summary>
+		/// 执行器执行通知法则
+		/// </summary>
+		public static void SendTest<R>(this IRuleActuator<R> Self)
+			where R : ISendRule
+		{
+			if (!Self.IsActive) return;
+			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
+			self.RefreshTraversalCount();
+			for (int i = 0; i < self.TraversalCount; i++)
+			{
+				if (self.TryDequeue(out var nodeRuleTuple))
+				{
+					((IRuleList<R>)nodeRuleTuple.Item2).Send(nodeRuleTuple.Item1);
+				}
+			}
+
+			//foreach ((INode, RuleList) nodeRuleTuple in self)
+			//{
+			//	((IRuleList<R>)nodeRuleTuple.Item2).Send(nodeRuleTuple.Item1);
+			//}
+		}
+
 		private class AwakeRule : AwakeRule<UnityWorldHeart, int>
 		{
 			protected override void Execute(UnityWorldHeart self, int frameTime)
@@ -143,10 +168,10 @@ namespace WorldTree
 		{
 			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
-				self.enable?.Send();
-				self.update?.Send();
-				self.updateTime?.Send(deltaTime);
-				self.disable?.Send();
+				self.enable?.SendTest();
+				self.update?.SendTest();
+				//self.updateTime?.Send(deltaTime);
+				self.disable?.SendTest();
 			}
 		}
 
@@ -154,8 +179,8 @@ namespace WorldTree
 		{
 			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
-				self.lateUpdate?.Send();
-				self.lateUpdateTime?.Send(deltaTime);
+				self.lateUpdate?.SendTest();
+				//self.lateUpdateTime?.Send(deltaTime);
 			}
 		}
 

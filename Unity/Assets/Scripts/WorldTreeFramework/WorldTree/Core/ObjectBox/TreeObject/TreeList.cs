@@ -784,7 +784,7 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 遍历器
+		/// 迭代器
 		/// </summary>
 		[Serializable]
 		public struct Enumerator : IEnumerator<T>, IDisposable, IEnumerator

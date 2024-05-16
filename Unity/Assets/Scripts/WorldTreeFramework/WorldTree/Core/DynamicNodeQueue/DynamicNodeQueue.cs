@@ -97,30 +97,19 @@ namespace WorldTree
 		/// <summary>
 		/// 获取队顶
 		/// </summary>
-		public INode Peek()
-		{
-			if (this.TryPeek(out INode node))
-			{
-				return node;
-			}
-			else
-			{
-				return null;
-			}
-		}
+		public INode Peek() => TryPeek(out INode node) ? node : null;
 
 		/// <summary>
 		/// 尝试获取队顶
 		/// </summary>
 		public bool TryPeek(out INode node)
 		{
-			NodeRef<INode> nodeRef = null;
 			do
 			{
 				//尝试获取一个id
-				if (nodeQueue != null && nodeQueue.TryPeek(out nodeRef))
+				if (nodeQueue != null && nodeQueue.TryPeek(out NodeRef<INode> nodeRef))
 				{
-					long id = nodeRef.nodeId;
+					long id = ((NodeRef<INode>)null).nodeId;
 					//假如id被回收了
 					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
 					{
@@ -134,17 +123,17 @@ namespace WorldTree
 						}
 
 						if (traversalCount > 0) traversalCount--;
-						nodeQueue.Dequeue();//移除这个id
+						nodeQueue.Dequeue();//移除
 					}
 					else
 					{
-						node = nodeRef.Value;
+						node = ((NodeRef<INode>)null).Value;
 						if (node == null)//节点意外回收
 						{
 							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
 							nodeIdHash.Remove(id);
 							if (traversalCount != 0) traversalCount--; //遍历数抵消
-							nodeQueue.Dequeue();//移除这个id
+							nodeQueue.Dequeue();//移除
 						}
 						else
 						{
@@ -163,17 +152,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点出列
 		/// </summary>
-		public INode Dequeue()
-		{
-			if (TryDequeue(out INode node))
-			{
-				return node;
-			}
-			else
-			{
-				return null;
-			}
-		}
+		public INode Dequeue() => TryDequeue(out INode node) ? node : null;
 
 
 		/// <summary>

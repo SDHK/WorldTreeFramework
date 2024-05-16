@@ -20,8 +20,13 @@ namespace WorldTree
 	///// <summary>
 	///// 刷新法则
 	///// </summary>
-	//public abstract class UpdateTimeRule<N> : SendRuleBase<N, UpdateTime, TimeSpan> where N : class, INode, AsRule<UpdateTime>
-	//{ }
+	//public abstract class UpdateTimeRule<N> : SendRule<N, UpdateTime, TimeSpan> where N : class, INode, AsRule<UpdateTime>
+	//{
+	//	protected override void Execute(N self, TimeSpan arg1)
+	//	{
+
+	//	}
+	//}
 
 	/// <summary>
 	/// 刷新法则
@@ -32,6 +37,11 @@ namespace WorldTree
 	///// <summary>
 	///// 刷新法则
 	///// </summary>
-	//public abstract class UpdateRule<N> : SendRuleBase<N, Update> where N : class, INode, AsRule<Update>
-	//{ }
+	//public abstract class UpdateRule<N> : SendRule<N, Update> where N : class, INode, AsRule<Update>
+	//{
+
+	//	protected override void Execute(N self)
+	//	{
+	//	}
+	//}
 }

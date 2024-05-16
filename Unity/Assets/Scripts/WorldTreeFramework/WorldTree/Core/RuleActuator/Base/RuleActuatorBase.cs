@@ -48,6 +48,17 @@ namespace WorldTree
 		/// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
 		private int traversalCount;
 
+		/// <summary>
+		/// 动态的遍历数量
+		/// </summary>
+		/// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
+		public int TraversalCount => traversalCount;
+
+		/// <summary>
+		/// 刷新遍历数量
+		/// </summary>
+		public int RefreshTraversalCount() => traversalCount = nodeRuleQueue is null ? 0 : nodeRuleQueue.Count;
+
 		public void Clear()
 		{
 			nodeRuleQueue?.Clear();
@@ -90,61 +101,248 @@ namespace WorldTree
 			return true;
 		}
 
-		public IEnumerator<ValueTuple<INode, RuleList>> GetEnumerator()
-		{
-			traversalCount = nodeRuleQueue is null ? 0 : nodeRuleQueue.Count;
-			for (int i = 0; i < traversalCount; i++)
-			{
-				//从队列里拿到id
-				if (nodeRuleQueue.TryDequeue(out (NodeRef<INode>, RuleList) nodeRuleTuple))
-				{
-					while (true)
-					{
-						long id = nodeRuleTuple.Item1.nodeId;
 
-						//假如id被主动移除了
-						if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+		//public IEnumerator<ValueTuple<INode, RuleList>> GetEnumerator123()
+		//{
+		//	traversalCount = nodeRuleQueue is null ? 0 : nodeRuleQueue.Count;
+		//	for (int i = 0; i < traversalCount; i++)
+		//	{
+		//		//从队列里拿到id
+		//		if (nodeRuleQueue.TryDequeue(out (NodeRef<INode>, RuleList) nodeRuleTuple))
+		//		{
+		//			while (true)
+		//			{
+		//				long id = nodeRuleTuple.Item1.nodeId;
+
+		//				//假如id被主动移除了
+		//				if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+		//				{
+		//					removeIdDictionary[id] = --count;//回收次数抵消
+		//					if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
+		//					if (removeIdDictionary.Count == 0)//假如字典空了,则释放
+		//					{
+		//						removeIdDictionary.Dispose();
+		//						removeIdDictionary = null;
+		//					}
+
+		//					if (traversalCount != 0) traversalCount--; //遍历数抵消
+
+		//					//获取下一个id,假如队列空了,则直接返回退出
+		//					if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
+		//				}
+		//				else
+		//				{
+		//					INode node = nodeRuleTuple.Item1.Value;
+
+		//					if (node == null)//节点意外回收
+		//					{
+		//						//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
+		//						nodeIdHash.Remove(id);
+
+		//						if (traversalCount != 0) traversalCount--; //遍历数抵消
+
+		//						//获取下一个id,假如队列空了,则直接返回退出
+		//						if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
+		//					}
+		//					else//节点存在
+		//					{
+		//						nodeRuleQueue.Enqueue(nodeRuleTuple);//塞回队列用于下次遍历
+		//						yield return (node, nodeRuleTuple.Item2);//返回执行组
+		//						break;
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
+
+
+		/// <summary>
+		/// 获取队顶
+		/// </summary>
+		public ValueTuple<INode, RuleList> Peek() => TryPeek(out ValueTuple<INode, RuleList> value) ? value : default;
+
+		/// <summary>
+		/// 尝试获取队顶
+		/// </summary>
+		public bool TryPeek(out ValueTuple<INode, RuleList> value)
+		{
+			do
+			{
+				if (nodeRuleQueue != null && nodeRuleQueue.TryPeek(out (NodeRef<INode>, RuleList) valueRef))
+				{
+					long id = valueRef.Item1.nodeId;
+					//假如id被回收了
+					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+					{
+						//回收次数抵消
+						removeIdDictionary[id] = --count;
+						if (count == 0) removeIdDictionary.Remove(id);// 次数为0时删除id
+						if (removeIdDictionary.Count == 0)//假如字典空了,则释放
 						{
-							removeIdDictionary[id] = --count;//回收次数抵消
-							if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
-							if (removeIdDictionary.Count == 0)//假如字典空了,则释放
-							{
-								removeIdDictionary.Dispose();
-								removeIdDictionary = null;
-							}
+							removeIdDictionary.Dispose();
+							removeIdDictionary = null;
+						}
+
+						if (traversalCount > 0) traversalCount--;
+						nodeRuleQueue.Dequeue();//移除
+					}
+					else
+					{
+						INode node = valueRef.Item1.Value;
+						if (node == null)//节点意外回收
+						{
+							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
+							nodeIdHash.Remove(id);
+							if (traversalCount != 0) traversalCount--; //遍历数抵消
+							nodeRuleQueue.Dequeue();//移除
+						}
+						else
+						{
+							value = (node, valueRef.Item2);
+							return true;
+						}
+					}
+				}
+				else
+				{
+					value = default;
+					return false;
+				}
+			} while (true);
+
+		}
+
+
+		/// <summary>
+		/// 尝试出列
+		/// </summary>
+		public bool TryDequeue(out ValueTuple<INode, RuleList> value)
+		{
+			//从队列里拿到id
+			if (nodeRuleQueue.TryDequeue(out (NodeRef<INode>, RuleList) nodeRuleTuple))
+			{
+				while (true)
+				{
+					long id = nodeRuleTuple.Item1.nodeId;
+					//假如id被主动移除了
+					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+					{
+						removeIdDictionary[id] = --count;//回收次数抵消
+						if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
+						if (removeIdDictionary.Count == 0)//假如字典空了,则释放
+						{
+							removeIdDictionary.Dispose();
+							removeIdDictionary = null;
+						}
+
+						if (traversalCount != 0) traversalCount--; //遍历数抵消
+																   //获取下一个id,假如队列空了,则直接返回退出
+						if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple))
+						{
+							value = default;
+							return false;
+						}
+					}
+					else
+					{
+						INode node = nodeRuleTuple.Item1.Value;
+
+						if (node == null)//节点意外回收
+						{
+							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
+							nodeIdHash.Remove(id);
 
 							if (traversalCount != 0) traversalCount--; //遍历数抵消
 
 							//获取下一个id,假如队列空了,则直接返回退出
-							if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
+							if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple))
+							{
+								value = default;
+								return false;
+							}
 						}
-						else
+						else//节点存在
 						{
-							INode node = nodeRuleTuple.Item1.Value;
-
-							if (node == null)//节点意外回收
-							{
-								//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
-								nodeIdHash.Remove(id);
-
-								if (traversalCount != 0) traversalCount--; //遍历数抵消
-
-								//获取下一个id,假如队列空了,则直接返回退出
-								if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
-							}
-							else//节点存在
-							{
-								nodeRuleQueue.Enqueue(nodeRuleTuple);//塞回队列用于下次遍历
-								yield return (node, nodeRuleTuple.Item2);//返回执行组
-								break;
-							}
+							nodeRuleQueue.Enqueue(nodeRuleTuple);//塞回队列用于下次遍历
+							value = (node, nodeRuleTuple.Item2);//返回执行组
+							return true;
 						}
 					}
 				}
 			}
+			value = default;
+			return false;
 		}
 
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		/// <summary>
+		/// 节点出列
+		/// </summary>
+		public ValueTuple<INode, RuleList> Dequeue() => TryDequeue(out ValueTuple<INode, RuleList> value) ? value : default;
+
+
+		public IEnumerator<ValueTuple<INode, RuleList>> GetEnumerator() => new Enumerator(this);
+
+		IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
+
+
+		/// <summary>
+		/// 迭代器
+		/// </summary>
+		[Serializable]
+		public struct Enumerator : IEnumerator<ValueTuple<INode, RuleList>>, IDisposable, IEnumerator
+		{
+			private RuleActuatorBase Actuator;
+
+			/// <summary>
+			/// 当前索引标记
+			/// </summary>
+			private int index;
+
+			private ValueTuple<INode, RuleList> current;
+
+			internal Enumerator(RuleActuatorBase Actuator)
+			{
+				this.Actuator = Actuator;
+				Actuator.RefreshTraversalCount();
+				index = 0;
+				current = default;
+			}
+
+
+			public ValueTuple<INode, RuleList> Current => current;
+
+			object IEnumerator.Current => current;
+
+			public void Dispose()
+			{
+				Actuator = null;
+				current = default;
+			}
+
+			public bool MoveNext()
+			{
+				if (index < Actuator.TraversalCount)
+				{
+					index++;
+					return Actuator.TryDequeue(out current);
+				}
+				else
+				{
+					return false;
+				}
+
+			}
+
+			/// <summary>
+			/// 执行过的会排到队尾，刷新遍历数量，并不是从头开始遍历
+			/// </summary>
+			public void Reset()
+			{
+				Actuator.RefreshTraversalCount();
+				index = 0;
+			}
+		}
 	}
 
 	public static class RuleActuatorBaseRule

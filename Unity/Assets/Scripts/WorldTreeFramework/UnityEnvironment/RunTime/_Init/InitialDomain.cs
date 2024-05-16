@@ -14,8 +14,11 @@
 */
 
 using MemoryPack;
+using PlasticPipe.PlasticProtocol.Server.Stubs;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace WorldTree
 {
@@ -79,6 +82,8 @@ namespace WorldTree
 		public Vector2 TestVector2 = Vector2.one;
 		public Vector3 TestVector3 = Vector3.one;
 		public Vector4 TestVector4 = Vector4.one;
+
+		public TreeList<int> values;
 	}
 
 	public static class InitialDomainRule_
@@ -89,7 +94,26 @@ namespace WorldTree
 			protected override void Execute(InitialDomain self)
 			{
 				self.Log($"初始域启动！");
+
+				self.AddChild(out self.values);
+				for (int i = 0; i < 100; i++)
+				{
+					self.values.Add(i);
+				}
 			}
 		}
+
+		private class Update : UpdateRule<InitialDomain>
+		{
+			protected override void Execute(InitialDomain self)
+			{
+				foreach (var item in self.values)
+				{
+
+				}
+			}
+		}
+
+
 	}
 }
