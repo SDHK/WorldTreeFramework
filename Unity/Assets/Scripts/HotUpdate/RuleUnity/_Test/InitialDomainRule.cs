@@ -35,7 +35,6 @@ namespace WorldTree
 		{
 			protected override void Execute(InitialDomain self)
 			{
-
 				Profiler.BeginSample("SDHK UpdateList");
 
 				foreach (var item in self.values)

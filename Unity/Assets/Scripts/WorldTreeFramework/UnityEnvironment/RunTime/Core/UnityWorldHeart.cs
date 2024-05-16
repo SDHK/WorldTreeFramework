@@ -168,10 +168,10 @@ namespace WorldTree
 		{
 			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
-				self.enable?.Send();
-				self.update?.Send();
-				self.updateTime?.Send(deltaTime);
-				self.disable?.Send();
+				self.enable?.SendTest();
+				self.update?.SendTest();
+				//self.updateTime?.Send(deltaTime);
+				self.disable?.SendTest();
 			}
 		}
 
