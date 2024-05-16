@@ -94,26 +94,7 @@ namespace WorldTree
 			protected override void Execute(InitialDomain self)
 			{
 				self.Log($"初始域启动！");
-
-				self.AddChild(out self.values);
-				for (int i = 0; i < 100; i++)
-				{
-					self.values.Add(i);
-				}
 			}
 		}
-
-		private class Update : UpdateRule<InitialDomain>
-		{
-			protected override void Execute(InitialDomain self)
-			{
-				foreach (var item in self.values)
-				{
-
-				}
-			}
-		}
-
-
 	}
 }

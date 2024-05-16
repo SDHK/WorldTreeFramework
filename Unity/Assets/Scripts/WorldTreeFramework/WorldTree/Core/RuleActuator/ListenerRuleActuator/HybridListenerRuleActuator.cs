@@ -40,25 +40,25 @@ namespace WorldTree
 
 		public IEnumerator<(INode, RuleList)> GetEnumerator()
 		{
-			//if (staticListenerRuleActuator != null)
-			//{
-			//	foreach (var item in staticListenerRuleActuator)
-			//	{
-			//		yield return item;
-			//	}
-			//}
-			//if (dynamicListenerRuleActuator != null)
-			//{
-			//	foreach (var item in dynamicListenerRuleActuator)
-			//	{
-			//		yield return item;
-			//	}
-			//}
+			if (staticListenerRuleActuator != null)
+			{
+				foreach (var item in staticListenerRuleActuator)
+				{
+					yield return item;
+				}
+			}
+			if (dynamicListenerRuleActuator != null)
+			{
+				foreach (var item in dynamicListenerRuleActuator)
+				{
+					yield return item;
+				}
+			}
 
-			return new Enumerator(this);
+			//return new Enumerator(this);
 		}
 
-		IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		public int RefreshTraversalCount()
 		{

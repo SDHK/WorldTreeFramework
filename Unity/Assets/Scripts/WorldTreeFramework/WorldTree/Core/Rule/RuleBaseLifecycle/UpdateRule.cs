@@ -17,31 +17,9 @@ namespace WorldTree
 	public interface UpdateTime : ISendRule<TimeSpan>, ILifeCycleRule
 	{ }
 
-	///// <summary>
-	///// 刷新法则
-	///// </summary>
-	//public abstract class UpdateTimeRule<N> : SendRule<N, UpdateTime, TimeSpan> where N : class, INode, AsRule<UpdateTime>
-	//{
-	//	protected override void Execute(N self, TimeSpan arg1)
-	//	{
-
-	//	}
-	//}
-
 	/// <summary>
 	/// 刷新法则
 	/// </summary>
 	public interface Update : ISendRule, ILifeCycleRule
 	{ }
-
-	///// <summary>
-	///// 刷新法则
-	///// </summary>
-	//public abstract class UpdateRule<N> : SendRule<N, Update> where N : class, INode, AsRule<Update>
-	//{
-
-	//	protected override void Execute(N self)
-	//	{
-	//	}
-	//}
 }

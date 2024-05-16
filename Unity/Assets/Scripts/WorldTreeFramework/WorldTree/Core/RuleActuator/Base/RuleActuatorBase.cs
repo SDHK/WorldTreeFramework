@@ -102,59 +102,59 @@ namespace WorldTree
 		}
 
 
-		//public IEnumerator<ValueTuple<INode, RuleList>> GetEnumerator123()
-		//{
-		//	traversalCount = nodeRuleQueue is null ? 0 : nodeRuleQueue.Count;
-		//	for (int i = 0; i < traversalCount; i++)
-		//	{
-		//		//从队列里拿到id
-		//		if (nodeRuleQueue.TryDequeue(out (NodeRef<INode>, RuleList) nodeRuleTuple))
-		//		{
-		//			while (true)
-		//			{
-		//				long id = nodeRuleTuple.Item1.nodeId;
+		public IEnumerator<ValueTuple<INode, RuleList>> GetEnumerator123()
+		{
+			traversalCount = nodeRuleQueue is null ? 0 : nodeRuleQueue.Count;
+			for (int i = 0; i < traversalCount; i++)
+			{
+				//从队列里拿到id
+				if (nodeRuleQueue.TryDequeue(out (NodeRef<INode>, RuleList) nodeRuleTuple))
+				{
+					while (true)
+					{
+						long id = nodeRuleTuple.Item1.nodeId;
 
-		//				//假如id被主动移除了
-		//				if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
-		//				{
-		//					removeIdDictionary[id] = --count;//回收次数抵消
-		//					if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
-		//					if (removeIdDictionary.Count == 0)//假如字典空了,则释放
-		//					{
-		//						removeIdDictionary.Dispose();
-		//						removeIdDictionary = null;
-		//					}
+						//假如id被主动移除了
+						if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+						{
+							removeIdDictionary[id] = --count;//回收次数抵消
+							if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
+							if (removeIdDictionary.Count == 0)//假如字典空了,则释放
+							{
+								removeIdDictionary.Dispose();
+								removeIdDictionary = null;
+							}
 
-		//					if (traversalCount != 0) traversalCount--; //遍历数抵消
+							if (traversalCount != 0) traversalCount--; //遍历数抵消
 
-		//					//获取下一个id,假如队列空了,则直接返回退出
-		//					if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
-		//				}
-		//				else
-		//				{
-		//					INode node = nodeRuleTuple.Item1.Value;
+							//获取下一个id,假如队列空了,则直接返回退出
+							if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
+						}
+						else
+						{
+							INode node = nodeRuleTuple.Item1.Value;
 
-		//					if (node == null)//节点意外回收
-		//					{
-		//						//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
-		//						nodeIdHash.Remove(id);
+							if (node == null)//节点意外回收
+							{
+								//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
+								nodeIdHash.Remove(id);
 
-		//						if (traversalCount != 0) traversalCount--; //遍历数抵消
+								if (traversalCount != 0) traversalCount--; //遍历数抵消
 
-		//						//获取下一个id,假如队列空了,则直接返回退出
-		//						if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
-		//					}
-		//					else//节点存在
-		//					{
-		//						nodeRuleQueue.Enqueue(nodeRuleTuple);//塞回队列用于下次遍历
-		//						yield return (node, nodeRuleTuple.Item2);//返回执行组
-		//						break;
-		//					}
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
+								//获取下一个id,假如队列空了,则直接返回退出
+								if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple)) yield break;
+							}
+							else//节点存在
+							{
+								nodeRuleQueue.Enqueue(nodeRuleTuple);//塞回队列用于下次遍历
+								yield return (node, nodeRuleTuple.Item2);//返回执行组
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
 
 
 		/// <summary>
@@ -283,7 +283,7 @@ namespace WorldTree
 
 		public IEnumerator<ValueTuple<INode, RuleList>> GetEnumerator() => new Enumerator(this);
 
-		IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 
 		/// <summary>

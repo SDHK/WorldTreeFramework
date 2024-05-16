@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 2560
     height: 1357
   m_ShowMode: 4
-  m_Title: Profiler
+  m_Title: Game
   m_RootView: {fileID: 9}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 189
+  controlID: 181
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 300}
   m_MaxSize: {x: 32384, y: 24288}
   vertical: 0
-  controlID: 182
+  controlID: 194
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ProfilerWindow
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -202,14 +202,14 @@ MonoBehaviour:
     y: 530
     width: 1582
     height: 777
-  m_MinSize: {x: 881, y: 237}
+  m_MinSize: {x: 101, y: 121}
   m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 20}
+  m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 20}
   - {fileID: 15}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -305,7 +305,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 300}
   m_MaxSize: {x: 16192, y: 24288}
   vertical: 1
-  controlID: 42
+  controlID: 179
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 0
-  controlID: 188
+  controlID: 180
 --- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -350,8 +350,8 @@ MonoBehaviour:
     y: 100
     width: 1108
     height: 430
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 25}
   m_Panes:
   - {fileID: 25}
@@ -558,16 +558,16 @@ MonoBehaviour:
         m_PaneScroll: {x: 0, y: 0}
         m_ViewType: 0
         updateViewLive: 1
-        m_CurrentFrameIndex: 10079
+        m_CurrentFrameIndex: -1
         m_HierarchyOverruledThreadFromSelection: 0
         m_ProfilerViewFilteringOptions: 1
         m_FrameDataHierarchyView:
           m_Serialized: 1
           m_TreeViewState:
-            scrollPos: {x: 0, y: 0}
-            m_SelectedIDs: ea010000
+            scrollPos: {x: 0, y: 48}
+            m_SelectedIDs: 9f030000
             m_LastClickedID: 0
-            m_ExpandedIDs: 0400000048000000d4000000c1010000cd010000d0010000d4010000e0010000e3010000e6010000
+            m_ExpandedIDs: 0400000048000000dc0000008c030000
             m_RenameOverlay:
               m_UserAcceptedRename: 0
               m_Name: 
@@ -712,7 +712,7 @@ MonoBehaviour:
           m_ThreadIndexInThreadNames: 0
           m_DetailedViewType: 2
           m_DetailedViewSpliterState:
-            ID: 19006
+            ID: 6944
             splitterInitialOffset: 0
             currentActiveSplitter: -1
             realSizes:
@@ -848,9 +848,9 @@ MonoBehaviour:
               oldMaxSizes: 
               oldSplitSize: 0
           m_DetailedCallsView:
-            m_SelectedID: 490
+            m_SelectedID: -1
             m_VertSplit:
-              ID: 19186
+              ID: 7400
               splitterInitialOffset: 0
               currentActiveSplitter: -1
               realSizes:
@@ -901,9 +901,9 @@ MonoBehaviour:
                 - width: 216
                   sortedAscending: 1
                   headerContent:
-                    m_Text: Calls To
+                    m_Text: Called From
                     m_Image: {fileID: 0}
-                    m_Tooltip: 'Functions which are called from the selected function
+                    m_Tooltip: 'Parents the selected function is called from
 
 
                       (Press
@@ -952,7 +952,7 @@ MonoBehaviour:
                   headerContent:
                     m_Text: Time ms
                     m_Image: {fileID: 0}
-                    m_Tooltip: Total time the child call spends within selected function
+                    m_Tooltip: Total time the selected function spends within a parent
                   contextMenuText: 
                   headerTextAlignment: 0
                   sortingArrowAlignment: 2
@@ -967,8 +967,8 @@ MonoBehaviour:
                   headerContent:
                     m_Text: Time %
                     m_Image: {fileID: 0}
-                    m_Tooltip: Shows how often child call was called from the selected
-                      function
+                    m_Tooltip: Shows how often the selected function was called from
+                      the parent call
                   contextMenuText: 
                   headerTextAlignment: 0
                   sortingArrowAlignment: 2
@@ -1089,7 +1089,7 @@ MonoBehaviour:
                 m_SortedColumns: 03000000
           m_FullThreadName: Main Thread
           m_ThreadName: Main Thread
-          <threadId>k__BackingField: 24248
+          <threadId>k__BackingField: 34624
           <threadIndex>k__BackingField: 0
           m_GroupName: 
     - rid: 3272302905197854721
@@ -1672,7 +1672,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 4aae0000
     m_LastClickedID: 44618
-    m_ExpandedIDs: 000000008a7500008c7500008e75000090750000927500009475000096750000987500009a7500009c7500009e750000a0750000a2750000a4750000a6750000a8750000aa750000ac750000ae750000b0750000b2750000b4750000b6750000b8750000ba750000bc750000be750000c0750000c2750000c4750000c6750000c8750000ca750000cc750000ce750000d0750000d2750000d4750000d6750000d8750000da750000dc750000de750000e0750000e2750000e4750000e6750000e8750000ea750000ec750000ee750000f0750000f2750000f4750000f6750000f8750000fa750000fc750000fe75000000760000027600000476000006760000087600000a7600000c7600000e76000010760000127600001476000016760000
+    m_ExpandedIDs: 000000007c7500007e75000080750000827500008475000086750000887500008a7500008c7500008e75000090750000927500009475000096750000987500009a7500009c7500009e750000a0750000a2750000a4750000a6750000a8750000aa750000ac750000ae750000b0750000b2750000b4750000b6750000b8750000ba750000bc750000be750000c0750000c2750000c4750000c6750000c8750000ca750000cc750000ce750000d0750000d2750000d4750000d6750000d8750000da750000dc750000de750000e0750000e2750000e4750000e6750000e8750000ea750000ec750000ee750000f0750000f2750000f4750000f6750000f8750000fa750000fc750000fe7500000076000002760000047600000676000008760000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1700,7 +1700,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff000000008a7500008c7500008e75000090750000927500009475000096750000987500009a7500009c7500009e750000a0750000a2750000a4750000a6750000a8750000aa750000ac750000ae750000b0750000b2750000b4750000b6750000b8750000ba750000bc750000be750000c0750000c2750000c4750000c6750000c8750000ca750000cc750000ce750000d0750000d2750000d4750000d6750000d8750000da750000dc750000de750000e0750000e2750000e4750000e6750000e8750000ea750000ec750000ee750000f0750000f2750000f4750000f6750000f8750000fa750000fc750000fe75000000760000027600000476000006760000087600000a7600000c7600000e76000010760000127600001476000016760000
+    m_ExpandedIDs: ffffffff000000007c7500007e75000080750000827500008475000086750000887500008a7500008c7500008e75000090750000927500009475000096750000987500009a7500009c7500009e750000a0750000a2750000a4750000a6750000a8750000aa750000ac750000ae750000b0750000b2750000b4750000b6750000b8750000ba750000bc750000be750000c0750000c2750000c4750000c6750000c8750000ca750000cc750000ce750000d0750000d2750000d4750000d6750000d8750000da750000dc750000de750000e0750000e2750000e4750000e6750000e8750000ea750000ec750000ee750000f0750000f2750000f4750000f6750000f8750000fa750000fc750000fe7500000076000002760000047600000676000008760000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1828,9 +1828,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 22750000
-      m_LastClickedID: 29986
-      m_ExpandedIDs: 14fbffff
+      m_SelectedIDs: 14750000
+      m_LastClickedID: 29972
+      m_ExpandedIDs: 22fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
