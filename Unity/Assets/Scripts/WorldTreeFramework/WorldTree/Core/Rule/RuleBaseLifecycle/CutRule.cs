@@ -17,10 +17,4 @@ namespace WorldTree
 	/// </summary>
 	public interface Cut : ISendRule, ILifeCycleRule
 	{ }
-
-	///// <summary>
-	///// 剪切法则
-	///// </summary>
-	//public abstract class CutRule<N> : SendRuleBase<N, Cut> where N : class, INode, AsRule<Cut>
-	//{ }
 }

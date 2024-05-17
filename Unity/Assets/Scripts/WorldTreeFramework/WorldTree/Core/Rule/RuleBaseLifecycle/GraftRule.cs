@@ -17,10 +17,4 @@ namespace WorldTree
 	/// </summary>
 	public interface Graft : ISendRule, ILifeCycleRule
 	{ }
-
-	///// <summary>
-	///// 嫁接法则
-	///// </summary>
-	//public abstract class GraftRule<N> : SendRuleBase<N, Graft> where N : class, INode, AsRule<Graft>
-	//{ }
 }

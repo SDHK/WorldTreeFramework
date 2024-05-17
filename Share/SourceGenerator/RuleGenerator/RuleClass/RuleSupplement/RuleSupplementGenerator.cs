@@ -303,22 +303,24 @@ namespace WorldTree.SourceGenerator
 				foreach (var trivia in triviaList)
 				{
 					CommentNode.Clear();
+                    //根据换行符分割注释
 					string[] triviaStrings = trivia.ToFullString().Split('\n');
-
-					foreach (string triviaStringLine in triviaStrings)//遍历出一行注释
+                    //遍历出一行注释
+					foreach (string triviaStringLine in triviaStrings)
 					{
 						if (triviaStringLine == string.Empty) continue;
-
-						string newTriviaStringLine = triviaStringLine.TrimStart('\t', ' ');
-						if (triviaStringLine.Contains("</remarks>"))
+                        //去掉前后空格和制表符
+						string newTriviaStringLine = triviaStringLine.TrimStart('\t', ' ').TrimEnd('\n',' ');
+                        //如果有remarks节点，插入到remarks节点
+						if (newTriviaStringLine.Contains("</remarks>"))
 						{
 							remarksExists = true;
-							var index = triviaStringLine.IndexOf("</remarks>");
-							CommentNode.Append(tab + newTriviaStringLine.Insert(index - 1, $"\n{remarksToAdd}{tab}/// "));
+							var index = newTriviaStringLine.IndexOf("</remarks>");
+							CommentNode.Append(tab + newTriviaStringLine.Insert(index, $"\n{remarksToAdd.Trim('\n')}\n{tab}/// ")+ "\n");
 						}
 						else
 						{
-							CommentNode.Append(tab + newTriviaStringLine);
+							CommentNode.Append(tab + newTriviaStringLine + "\n");
 						}
 					}
 					CommentNodeIndex++;

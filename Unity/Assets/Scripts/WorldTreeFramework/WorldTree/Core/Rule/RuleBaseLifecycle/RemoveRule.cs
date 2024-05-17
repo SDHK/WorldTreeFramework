@@ -17,11 +17,4 @@ namespace WorldTree
 	/// <remarks>移除时，按照后序遍历通知</remarks>
 	public interface Remove : ISendRule, ILifeCycleRule
 	{ }
-
-	///// <summary>
-	///// 移除法则
-	///// </summary>
-	///// <remarks>移除时，按照后序遍历通知</remarks>
-	//public abstract class RemoveRule<N> : SendRuleBase<N, Remove> where N : class, INode, AsRule<Remove>
-	//{ }
 }
