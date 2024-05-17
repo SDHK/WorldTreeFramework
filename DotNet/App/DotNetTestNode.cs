@@ -5,7 +5,9 @@ namespace WorldTree
 {
 
 
-
+	public interface TestEvent<T> : ISendRule<float>, IMethodRule
+	{
+	}
 
 	/// <summary>
 	/// 测试节点
@@ -14,6 +16,7 @@ namespace WorldTree
 		, AsAwake
 		, AsAwake<string>
 		, AsNew
+		, AsTestEvent<float>
 	{
 		public int TestValue;
 	}

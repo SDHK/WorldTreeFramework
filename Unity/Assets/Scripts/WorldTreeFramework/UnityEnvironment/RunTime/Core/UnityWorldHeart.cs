@@ -19,10 +19,10 @@ namespace WorldTree
 	public class UnityWorldHeart : WorldHeartBase
 		, ComponentOf<WorldTreeRoot>
 		, AsAwake<int>
-		, AsRule<LateUpdateTime>
-		, AsRule<FixedUpdateTime>
-		, AsRule<GuiUpdateTime>
-		, AsRule<DrawGizmosUpdateTime>
+		, AsLateUpdateTime
+		, AsFixedUpdateTime
+		, AsGuiUpdateTime
+		, AsDrawGizmosUpdateTime
 	{
 		/// <summary>
 		/// 运行线程

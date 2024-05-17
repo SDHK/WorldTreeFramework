@@ -248,7 +248,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static void AddRuleExtendCommentPara(StringBuilder sb, INamedTypeSymbol typeSymbol, INamedTypeSymbol BaseSymbol, string Title, string tab)
 		{
-			string IClassFullName = GetNameWithGenericArguments(typeSymbol);
+			string IClassFullName = typeSymbol.ToDisplayString();
 			string IBaseFullName = GetNameWithGenericArguments(BaseSymbol);
 			sb.AppendLine(@$"{tab}/// <Para>");
 			sb.AppendLine(@$"{tab}/// {Title}: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{SecurityElement.Escape(IBaseFullName)}""/>");
