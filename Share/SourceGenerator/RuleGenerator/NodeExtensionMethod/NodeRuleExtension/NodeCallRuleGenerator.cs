@@ -27,7 +27,7 @@ namespace WorldTree.SourceGenerator
 );
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
-			Code.AppendLine("	public static class NodeCallRule");
+			Code.AppendLine("	public static partial class NodeRuleHelper");
 			Code.Append("	{");
 
 			for (int i = 0; i <= argumentCount; i++)
@@ -42,7 +42,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 尝试执行调用法则
 		/// </summary>
-		public static bool TryCallRule<R{generics}, OutT>(this INode self, R nullRule{genericTypeParameter}, out OutT outT)
+		public static bool TryCallRule<R{generics}, OutT>(INode self, R nullRule{genericTypeParameter}, out OutT outT)
 			where R : ICallRule<{genericsAfter}OutT>
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
@@ -57,18 +57,23 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 执行调用法则
 		/// </summary>
-		public static OutT CallRule<N, R{generics}, OutT>(this N self, R nullRule{genericTypeParameter}, out OutT outT)
+		public static OutT CallRule<N, R{generics}, OutT>(N self, R nullRule{genericTypeParameter}, out OutT outT)
 			where N : class, INode, AsRule<R>
 			where R : ICallRule<{genericsAfter}OutT>
 		{{
-			self.TryCallRule(nullRule{genericParameter}, out outT);
+			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+			{{
+				ruleList.Call(self{genericParameter}, out outT);
+				return outT;
+			}}
+			outT = TypeInfo<OutT>.Default;
 			return outT;
 		}}
 
 		/// <summary>
 		/// 尝试执行调用法则
 		/// </summary>
-		public static bool TryCallsRule<R{generics}, OutT>(this INode self, R nullRule{genericTypeParameter}, out UnitList<OutT> outT)
+		public static bool TryCallsRule<R{generics}, OutT>(INode self, R nullRule{genericTypeParameter}, out UnitList<OutT> outT)
 			where R : ICallRule<{genericsAfter}OutT>
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
@@ -83,11 +88,16 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 执行调用法则
 		/// </summary>
-		public static UnitList<OutT> CallsRule<N, R{generics}, OutT>(this N self, R nullRule{genericTypeParameter}, out UnitList<OutT> outT)
+		public static UnitList<OutT> CallsRule<N, R{generics}, OutT>(N self, R nullRule{genericTypeParameter}, out UnitList<OutT> outT)
 			where N : class, INode, AsRule<R>
 			where R : ICallRule<{genericsAfter}OutT>
 		{{
-			self.TryCallsRule(nullRule{genericParameter}, out outT);
+			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+			{{
+				ruleList.Calls(self{genericParameter}, out outT);
+				return outT;
+			}}
+			outT = null;
 			return outT;
 		}}
 ");
@@ -95,7 +105,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("	}");
 			Code.Append("}");
 
-			context.AddSource("NodeCallRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+			context.AddSource("NodeRuleHelperCallRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
 	}
 }

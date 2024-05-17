@@ -47,7 +47,7 @@ namespace WorldTree.SourceGenerator
 		{{
 			if (self.TryAddSelfToTree<B, K>(key, parent))
 			{{
-				self.TrySendRule(TypeInfo<Awake{genericsAngle}>.Default{genericParameter});
+				NodeRuleHelper.TrySendRule(self, TypeInfo<Awake{genericsAngle}>.Default{genericParameter});
 				self.OnAddSelfToTree();
 			}}
 			return self;

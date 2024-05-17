@@ -13,16 +13,8 @@ namespace WorldTree
 				{
 					self.Log($"异步启动:！！！！！");
 
-					//self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-					//self.Test().Coroutine(treeTaskToken);
-
-					TestAwait(self).Coroutine();
-
-				}
-				if (Input.GetKeyDown(KeyCode.T))
-				{
-					self.Log($"异步完成:！！！！！");
-					self.treeTask.SetResult();
+					self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+					self.Test().Coroutine(treeTaskToken);
 				}
 
 				if (Input.GetKeyDown(KeyCode.W))
@@ -41,40 +33,25 @@ namespace WorldTree
 					treeTaskToken.Dispose();
 				}
 			}
-
-			private async TreeTask TestAwait(TaskTest self)
-			{
-				await self.Test();
-			}
 		}
 
 		public static async TreeTask Test(this TaskTest self)
 		{
-			var TaskTokenCatch = await self.TreeTaskTokenCatch();
+			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
+
+
 
 			self.Log($"0！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
 
 			await self.AsyncDelay(3);
-
 			self.Log("1！");
 			await self.TreeTaskCompleted();
 			self.Log("2！");
 
 			await self.TreeTaskCompleted();
-			self.Log("3！");
-
-			await self.TreeTaskCompleted();
-			self.Log("4！");
-
-			//await self.AsyncDelay(10);
-			await self.T5();
-			await self.TreeTaskCompleted();
-			self.Log("5！");
-
-			await self.TreeTaskCompleted();
-			self.Log("5 ！计时");
+			self.Log("计时");
 			await self.AsyncDelay(3);
-			self.Log("6！");
+			self.Log("3！");
 		}
 
 		public static async TreeTask T2(this TaskTest self)

@@ -250,7 +250,7 @@ namespace WorldTree
 					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			this.SendRule(TypeInfo<Graft>.Default);
+			NodeRuleHelper.SendRule(this,TypeInfo<Graft>.Default);
 		}
 
 		#endregion
@@ -279,7 +279,7 @@ namespace WorldTree
 					this.Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
 				}
 			}
-			this.SendRule(TypeInfo<Cut>.Default);
+			NodeRuleHelper.SendRule(this, TypeInfo<Cut>.Default);
 			if (this is not IListenerIgnorer)//广播给全部监听器通知 X
 			{
 				this.GetListenerActuator<IListenerRemoveRule>()?.Send((INode)this);

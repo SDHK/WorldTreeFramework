@@ -27,7 +27,7 @@ namespace WorldTree.SourceGenerator
 );
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
-			Code.AppendLine("	public static class NodeSendRuleAsync");
+			Code.AppendLine("	public static partial class NodeRuleHelper");
 			Code.Append("	{");
 
 			for (int i = 0; i <= argumentCount; i++)
@@ -42,7 +42,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 尝试执行异步通知法则
 		/// </summary>
-		public static async TreeTask<bool> TrySendRuleAsync<R{generics}>(this INode self, R nullRule{(i == 0 ? " = null" : string.Empty)}{genericTypeParameter})
+		public static async TreeTask<bool> TrySendRuleAsync<R{generics}>(INode self, R nullRule{(i == 0 ? " = null" : string.Empty)}{genericTypeParameter})
 			where R : class, ISendRuleAsync{genericsAngle}
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
@@ -57,7 +57,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 执行异步通知法则
 		/// </summary>
-		public static async TreeTask SendRuleAsync<N, R{generics}>(this N self, R nullRule{genericTypeParameter})
+		public static async TreeTask SendRuleAsync<N, R{generics}>(N self, R nullRule{genericTypeParameter})
 			where N : class, INode, AsRule<R>
 			where R : class, ISendRuleAsync{genericsAngle}
 		{{
@@ -72,7 +72,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("	}");
 			Code.Append("}");
 
-			context.AddSource("NodeSendRuleAsync.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+			context.AddSource("NodeRuleHelperSendRuleAsync.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
 	}
 }

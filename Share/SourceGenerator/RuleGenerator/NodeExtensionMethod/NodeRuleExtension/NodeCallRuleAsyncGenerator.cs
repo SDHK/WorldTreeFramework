@@ -27,7 +27,7 @@ namespace WorldTree.SourceGenerator
 );
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
-			Code.AppendLine("	public static class NodeCallRuleAsync");
+			Code.AppendLine("	public static partial class NodeRuleHelper");
 			Code.Append("	{");
 
 			for (int i = 0; i <= argumentCount; i++)
@@ -42,7 +42,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 尝试执行异步调用法则
 		/// </summary>
-		public static async TreeTask<OutT> TryCallRuleAsync<R{generics}, OutT>(this INode self, R nullRule{genericTypeParameter}, OutT defaultOutT)
+		public static async TreeTask<OutT> TryCallRuleAsync<R{generics}, OutT>(INode self, R nullRule{genericTypeParameter}, OutT defaultOutT)
 			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
@@ -56,10 +56,17 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 执行异步调用法则
 		/// </summary>
-		public static async TreeTask<OutT> CallRuleAsync<N, R{generics}, OutT>(this N self, R nullRule{genericTypeParameter}, OutT defaultOutT)
+		public static async TreeTask<OutT> CallRuleAsync<N, R{generics}, OutT>(N self, R nullRule{genericTypeParameter}, OutT defaultOutT)
 			where N : class, INode, AsRule<R>
 			where R : ICallRuleAsync<{genericsAfter}OutT>
-		=> await self.TryCallRuleAsync(nullRule{genericParameter}, defaultOutT);
+		{{
+			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+			{{
+				return await ruleList.CallAsync(self{genericParameter}, defaultOutT);
+			}}
+			await self.TreeTaskCompleted();
+			return TypeInfo<OutT>.Default;
+		}}
 
 		/// <summary>
 		/// 尝试执行异步调用法则
@@ -78,16 +85,23 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 执行异步调用法则
 		/// </summary>
-		public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R{generics}, OutT>(this N self, R nullRule{genericTypeParameter}, OutT defaultOutT)
+		public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R{generics}, OutT>(N self, R nullRule{genericTypeParameter}, OutT defaultOutT)
 			where N : class, INode, AsRule<R>
 			where R : ICallRuleAsync<{genericsAfter}OutT>
-		=> await self.TryCallsRuleAsync(nullRule{genericParameter}, defaultOutT);
+		{{
+			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+			{{
+				return await ruleList.CallsAsync(self{genericParameter}, defaultOutT);
+			}}
+			await self.TreeTaskCompleted();
+			return null;
+		}}
 ");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");
 
-			context.AddSource("NodeCallRuleAsync.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+			context.AddSource("NodeRuleHelperCallRuleAsync.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
 	}
 }

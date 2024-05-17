@@ -33,7 +33,7 @@ namespace WorldTree.SourceGenerator
 			Code.Append(RuleSupplementHelper.GetCommentAddOrInsertRemarks(RuleSupplementHelper.classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
 			//生成调用方法
-			Code.AppendLine(@$"		public static TreeTask<{outType}> {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => Node{BaseName}.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");
+			Code.AppendLine(@$"		public static TreeTask<{outType}> {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => NodeRuleHelper.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");
 		}
 
 		/// <summary>
@@ -64,6 +64,9 @@ namespace WorldTree.SourceGenerator
 			{
 				sb.Append($", arg{i + 1}");
 			}
+			string outType = typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			//sb.Append($", TypeInfo<{outType}>.Default");
+
 			sb.Append($", defaultOutT");
 			return sb.ToString();
 		}

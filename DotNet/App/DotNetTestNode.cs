@@ -3,14 +3,9 @@ using System.Numerics;
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 方法法则
-	/// </summary>
-	public interface TestEvent : ISendRule, IMethodRule
-	{
 
 
-	}
+
 
 	/// <summary>
 	/// 测试节点
@@ -19,7 +14,6 @@ namespace WorldTree
 		, AsAwake
 		, AsAwake<string>
 		, AsNew
-		, AsTestEvent
 	{
 		public int TestValue;
 	}

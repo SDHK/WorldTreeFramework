@@ -16,71 +16,71 @@ using WorldTree;
 
 namespace EditorTool
 {
-    /// <summary>
-    /// 继承Mono的编辑器窗体
-    /// </summary>
-    public class MonoEditorGUIWindow : EditorWindow
-    {
-        public INode entity;
+	/// <summary>
+	/// 继承Mono的编辑器窗体
+	/// </summary>
+	public class MonoEditorGUIWindow : EditorWindow
+	{
+		public INode entity;
 
-        public bool isShow = false;
+		public bool isShow = false;
 
 
-        private void OnEnable()
-        {
-            if (!isShow)
-            {
-                isShow = true;
-            }
-            entity?.TrySendRule<IEditorWindowEnableSystem>();
-        }
+		private void OnEnable()
+		{
+			if (!isShow)
+			{
+				isShow = true;
+			}
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowEnableSystem>.Default);
+		}
 
-        private void OnFocus()
-        {
-            entity?.TrySendRule<IEditorWindowFocusSystem>();
-        }
+		private void OnFocus()
+		{
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowFocusSystem>.Default);
+		}
 
-        private void OnInspectorUpdate()
-        {
-            entity?.TrySendRule<IEditorWindowInspectorUpdateSystem>();
-        }
+		private void OnInspectorUpdate()
+		{
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowInspectorUpdateSystem>.Default);
+		}
 
-        public void OnProjectChange()
-        {
-            entity?.TrySendRule<IEditorWindowProjectChangeSystem>();
-        }
+		public void OnProjectChange()
+		{
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowProjectChangeSystem>.Default);
+		}
 
-        private void OnSelectionChange()
-        {
-            entity?.TrySendRule<IEditorWindowSelectionChangeSystem>();
-        }
+		private void OnSelectionChange()
+		{
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowSelectionChangeSystem>.Default);
+		}
 
-        public void OnHierarchyChange()
-        {
-            entity?.TrySendRule<IEditorWindowHierarchyChangeSystem>();
-        }
-        private void OnGUI()
-        {
-            entity?.TrySendRule<GUIDraw>();
-        }
+		public void OnHierarchyChange()
+		{
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowHierarchyChangeSystem>.Default);
+		}
+		private void OnGUI()
+		{
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<GUIDraw>.Default);
+		}
 
-        private void OnLostFocus()
-        {
-            entity?.TrySendRule<IEditorWindowLostFocusSystem>();
-        }
-        private void OnDisable()
-        {
-            entity?.TrySendRule<IEditorWindowDisableSystem>();
-        }
-        private void OnDestroy()
-        {
-            entity?.TrySendRule<IEditorWindowDestroySystem>();
-            if (isShow)
-            {
-                isShow = false;
-                entity?.Dispose();
-            }
-        }
-    }
+		private void OnLostFocus()
+		{
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowLostFocusSystem>.Default);
+		}
+		private void OnDisable()
+		{
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowDisableSystem>.Default);
+		}
+		private void OnDestroy()
+		{
+			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowDestroySystem>.Default);
+			if (isShow)
+			{
+				isShow = false;
+				entity?.Dispose();
+			}
+		}
+	}
 }
 

@@ -11,27 +11,27 @@ using System;
 
 namespace WorldTree
 {
-    public class AssetManager : Node
-        , ComponentOf<WorldTreeRoot>
-        , AsRule<LoadAssetAsync>
-    {
-        public TreeDictionary<string, Object> assets;
+	public class AssetManager : Node
+		, ComponentOf<WorldTreeRoot>
+		, AsLoadAssetAsync
+	{
+		public TreeDictionary<string, Object> assets;
 
-        public async TreeTask<T> LoadAssetAsync<T, N>()
-            where T : class
-            where N : class, INode
-        {
-            var key = typeof(N);
-            if (!assets.TryGetValue(key.Name, out var asset))
-            {
-                asset = await this.CallRuleAsync(TypeInfo<LoadAssetAsync>.Default, key.Name, TypeInfo<Object>.Default);
-                assets.Add(key.Name, asset);
-            }
-            else
-            {
-                await this.TreeTaskCompleted();
-            }
-            return asset as T;
-        }
-    }
+		public async TreeTask<T> LoadAssetAsync<T, N>()
+			where T : class
+			where N : class, INode
+		{
+			var key = typeof(N);
+			if (!assets.TryGetValue(key.Name, out var asset))
+			{
+				asset = await this.LoadAssetAsync(key.Name);
+				assets.Add(key.Name, asset);
+			}
+			else
+			{
+				await this.TreeTaskCompleted();
+			}
+			return asset as T;
+		}
+	}
 }

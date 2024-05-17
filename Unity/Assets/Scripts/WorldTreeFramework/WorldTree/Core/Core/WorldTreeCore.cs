@@ -51,7 +51,9 @@ namespace WorldTree
 
 	//YooAsset管理器
 
-	//分析器
+	//分析器?
+
+	//异步TreeTask梳理，分离Task和Awaiter
 
 	//法则接口抽象类生成，
 	//法则简写继承类生成
@@ -383,7 +385,7 @@ namespace WorldTree
 					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			this.SendRule(TypeInfo<Graft>.Default);//节点嫁接事件通知
+			NodeRuleHelper.SendRule(this, TypeInfo<Graft>.Default);//节点嫁接事件通知
 		}
 
 		#endregion
@@ -394,7 +396,7 @@ namespace WorldTree
 		{
 			this.View?.Dispose();
 			this.View = null;
-			this.SendRule(TypeInfo<Cut>.Default);
+			NodeRuleHelper.SendRule(this, TypeInfo<Cut>.Default);
 		}
 
 		#endregion

@@ -27,7 +27,7 @@ namespace WorldTree.SourceGenerator
 );
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
-			Code.AppendLine("	public static class NodeSendRule");
+			Code.AppendLine("	public static partial class NodeRuleHelper");
 			Code.Append("	{");
 
 			for (int i = 0; i <= argumentCount; i++)
@@ -42,7 +42,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 尝试执行通知法则
 		/// </summary>
-		public static bool TrySendRule<R{generics}>(this INode self, R nullRule{(i == 0 ? " = null" : genericTypeParameter)})
+		public static bool TrySendRule<R{generics}>(INode self, R nullRule{(i == 0 ? " = null" : genericTypeParameter)})
 			where R : class, ISendRule{genericsAngle}
 		{{
 			if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return false;
@@ -53,7 +53,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 执行通知法则
 		/// </summary>
-		public static void SendRule<N, R{generics}>(this N self, R nullRule{genericTypeParameter})
+		public static void SendRule<N, R{generics}>(N self, R nullRule{genericTypeParameter})
 			where N : class, INode, AsRule<R>
 			where R : class, ISendRule{genericsAngle}
 		{{
@@ -65,7 +65,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("	}");
 			Code.Append("}");
 
-			context.AddSource("NodeSendRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+			context.AddSource("NodeRuleHelperSendRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
 	}
 }
