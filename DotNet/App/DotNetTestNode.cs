@@ -62,7 +62,7 @@ namespace WorldTree
 		{
 			protected override void Execute(DotNetTestNode self, TimeSpan timeSpan)
 			{
-				self.Log($"初始更新！！{timeSpan.TotalSeconds}");
+				self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 			}
 		}
 
