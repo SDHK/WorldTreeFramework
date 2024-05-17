@@ -32,7 +32,7 @@ namespace WorldTree.SourceGenerator
 			for (int i = 0; i <= argumentCount; i++)
 			{
 				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i,true);
+				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
 				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
 				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
 				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
@@ -47,9 +47,13 @@ namespace WorldTree.SourceGenerator
 			outT = default;
 			if (!Self.IsActive) return outT;
 			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
-			foreach ((INode, RuleList) nodeRuleTuple in self)
+			self.RefreshTraversalCount();
+			for (int i = 0; i < self.TraversalCount; i++)
 			{{
-				((IRuleList<R>)nodeRuleTuple.Item2).Call(nodeRuleTuple.Item1{genericParameter}, out outT);
+				if (self.TryDequeue(out var nodeRuleTuple))
+				{{
+					((IRuleList<R>)nodeRuleTuple.Item2).Call(nodeRuleTuple.Item1{genericParameter}, out outT);
+				}}
 			}}
 			return outT;
 		}}
@@ -60,15 +64,29 @@ namespace WorldTree.SourceGenerator
 		public static async TreeTask<OutT> CallAsync<R{generics}, OutT>(this IRuleActuator<R> Self{genericTypeParameter}, OutT defaultOutT)
 			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
-			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
-			if (!Self.IsActive || self.GetEnumerator().Current == default)
+			if (!Self.IsActive) 
 			{{
-				await Self.TreeTaskCompleted();
+				await Self.TreeTaskCompleted(); 
 				return defaultOutT;
 			}}
-			foreach ((INode, RuleList) nodeRuleTuple in self)
+			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
+			self.RefreshTraversalCount();
+			if (self.TraversalCount == 0) 
 			{{
-				defaultOutT = await ((IRuleList<R>)nodeRuleTuple.Item2).CallAsync(nodeRuleTuple.Item1{genericParameter}, defaultOutT);
+				await Self.TreeTaskCompleted(); 
+				return defaultOutT;
+			}}
+			for (int i = 0; i < self.TraversalCount; i++)
+			{{
+				if (self.TryDequeue(out var nodeRuleTuple))
+				{{
+					defaultOutT = await ((IRuleList<R>)nodeRuleTuple.Item2).CallAsync(nodeRuleTuple.Item1{genericParameter}, defaultOutT);
+				}}
+				else
+				{{
+					await Self.TreeTaskCompleted();
+					return defaultOutT;
+				}}
 			}}
 			return defaultOutT;
 		}}

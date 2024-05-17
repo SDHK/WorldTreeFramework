@@ -47,9 +47,13 @@ namespace WorldTree.SourceGenerator
 		{{
 			if (!Self.IsActive) return;
 			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
-			foreach ((INode, RuleList) nodeRuleTuple in self)
+			self.RefreshTraversalCount();
+			for (int i = 0; i < self.TraversalCount; i++)
 			{{
-				((IRuleList<R>)nodeRuleTuple.Item2).Send(nodeRuleTuple.Item1{genericParameter});
+				if (self.TryDequeue(out var nodeRuleTuple))
+				{{
+					((IRuleList<R>)nodeRuleTuple.Item2).Send(nodeRuleTuple.Item1{genericParameter});
+				}}
 			}}
 		}}
 
@@ -59,11 +63,28 @@ namespace WorldTree.SourceGenerator
 		public static async TreeTask SendAsync<R{generics}>(this IRuleActuator<R> Self{genericTypeParameter})
 			where R : ISendRuleAsync{genericsAngle}
 		{{
-			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
-			if (!Self.IsActive || self.GetEnumerator().Current == default) await Self.TreeTaskCompleted();
-			foreach ((INode, RuleList) nodeRuleTuple in self)
+			if (!Self.IsActive)
 			{{
-				await ((IRuleList<R>)nodeRuleTuple.Item2).SendAsync(nodeRuleTuple.Item1{genericParameter});
+				await Self.TreeTaskCompleted();
+				return;
+			}}
+			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
+			self.RefreshTraversalCount();
+			if (self.TraversalCount == 0)
+			{{ 
+				await Self.TreeTaskCompleted();
+				return;			
+			}}
+			for (int i = 0; i < self.TraversalCount; i++)
+			{{
+				if (self.TryDequeue(out var nodeRuleTuple))
+				{{
+					await ((IRuleList<R>)nodeRuleTuple.Item2).SendAsync(nodeRuleTuple.Item1{genericParameter});
+				}}
+				else
+				{{
+					await Self.TreeTaskCompleted();
+				}}
 			}}
 		}}
 ");

@@ -31,7 +31,7 @@ namespace WorldTree
 	/// 法则执行器遍历接口
 	/// </summary>
 	/// <remarks>让执行器可以遍历执行</remarks>
-	public interface IRuleActuatorEnumerable : IRuleActuatorBase, IEnumerable<ValueTuple<INode, RuleList>>
+	public interface IRuleActuatorEnumerable : IRuleActuatorBase
 	{
 		/// <summary>
 		/// 动态的遍历数量
@@ -48,6 +48,20 @@ namespace WorldTree
 		/// </summary>
 		public bool TryDequeue(out ValueTuple<INode, RuleList> value);
 
+		/// <summary>
+		/// 尝试获取队顶
+		/// </summary>
+		public bool TryPeek(out ValueTuple<INode, RuleList> value);
+
+		/// <summary>
+		/// 节点出列
+		/// </summary>
+		public ValueTuple<INode, RuleList> Dequeue();
+		
+		/// <summary>
+		/// 获取队顶
+		/// </summary>
+		public ValueTuple<INode, RuleList> Peek();
 	}
 
 	/// <summary>

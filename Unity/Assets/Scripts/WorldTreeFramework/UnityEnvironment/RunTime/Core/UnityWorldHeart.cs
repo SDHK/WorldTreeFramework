@@ -101,6 +101,8 @@ namespace WorldTree
 			//}
 		}
 
+
+
 		private class AwakeRule : AwakeRule<UnityWorldHeart, int>
 		{
 			protected override void Execute(UnityWorldHeart self, int frameTime)
@@ -168,10 +170,10 @@ namespace WorldTree
 		{
 			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
-				self.enable?.SendTest();
-				self.update?.SendTest();
-				//self.updateTime?.Send(deltaTime);
-				self.disable?.SendTest();
+				self.enable?.Send();
+				self.update?.Send();
+				self.updateTime?.Send(deltaTime);
+				self.disable?.Send();
 			}
 		}
 

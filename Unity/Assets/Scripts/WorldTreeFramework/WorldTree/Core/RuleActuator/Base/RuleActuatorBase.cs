@@ -14,7 +14,6 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace WorldTree
@@ -156,12 +155,6 @@ namespace WorldTree
 			}
 		}
 
-
-		/// <summary>
-		/// 获取队顶
-		/// </summary>
-		public ValueTuple<INode, RuleList> Peek() => TryPeek(out ValueTuple<INode, RuleList> value) ? value : default;
-
 		/// <summary>
 		/// 尝试获取队顶
 		/// </summary>
@@ -212,7 +205,6 @@ namespace WorldTree
 			} while (true);
 
 		}
-
 
 		/// <summary>
 		/// 尝试出列
@@ -276,73 +268,15 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 获取队顶
+		/// </summary>
+		public ValueTuple<INode, RuleList> Peek() => TryPeek(out ValueTuple<INode, RuleList> value) ? value : default;
+
+		/// <summary>
 		/// 节点出列
 		/// </summary>
 		public ValueTuple<INode, RuleList> Dequeue() => TryDequeue(out ValueTuple<INode, RuleList> value) ? value : default;
 
-
-		public IEnumerator<ValueTuple<INode, RuleList>> GetEnumerator() => new Enumerator(this);
-
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-
-		/// <summary>
-		/// 迭代器
-		/// </summary>
-		[Serializable]
-		public struct Enumerator : IEnumerator<ValueTuple<INode, RuleList>>, IDisposable, IEnumerator
-		{
-			private RuleActuatorBase Actuator;
-
-			/// <summary>
-			/// 当前索引标记
-			/// </summary>
-			private int index;
-
-			private ValueTuple<INode, RuleList> current;
-
-			internal Enumerator(RuleActuatorBase Actuator)
-			{
-				this.Actuator = Actuator;
-				Actuator.RefreshTraversalCount();
-				index = 0;
-				current = default;
-			}
-
-
-			public ValueTuple<INode, RuleList> Current => current;
-
-			object IEnumerator.Current => current;
-
-			public void Dispose()
-			{
-				Actuator = null;
-				current = default;
-			}
-
-			public bool MoveNext()
-			{
-				if (index < Actuator.TraversalCount)
-				{
-					index++;
-					return Actuator.TryDequeue(out current);
-				}
-				else
-				{
-					return false;
-				}
-
-			}
-
-			/// <summary>
-			/// 执行过的会排到队尾，刷新遍历数量，并不是从头开始遍历
-			/// </summary>
-			public void Reset()
-			{
-				Actuator.RefreshTraversalCount();
-				index = 0;
-			}
-		}
 	}
 
 	public static class RuleActuatorBaseRule
