@@ -263,7 +263,7 @@ namespace WorldTree
 		public override void OnAddSelfToTree()
 		{
 			this.View?.Dispose();
-			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeView : null;
+			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeViewBuilder : null;
 
 			//核心独立，不入上级引用池，也不用广播
 			if (this.IsActive != this.m_ActiveEventMark)//激活变更
@@ -373,7 +373,7 @@ namespace WorldTree
 		public override void OnGraftSelfToTree()
 		{
 			this.View?.Dispose();
-			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeView : null;
+			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeViewBuilder : null;
 			if (this.IsActive != this.m_ActiveEventMark)//激活变更
 			{
 				if (this.IsActive)

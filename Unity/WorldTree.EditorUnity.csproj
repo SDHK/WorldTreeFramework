@@ -80,7 +80,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\ViewTypeManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\EnumViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeFrameworkWindow\EditorHomePage.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeNodeMonoView\WorldTreeNodeViewMonoComponentEditor.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityWorldTreeNodeView\UnityWorldTreeNodeViewEditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindGroup.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Addressables\AddressablesEditorTool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\ColorViewRule.cs" />

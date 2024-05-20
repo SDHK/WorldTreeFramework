@@ -16,7 +16,7 @@ namespace WorldTree
 		public WorldTreeCore Core;
 		public WorldTreeCore ViewCore;
 
-		private TreeNodeUnityView treeView;
+		private UnityWorldTreeNodeViewBuilder treeView;
 
 		public void Start()
 		{

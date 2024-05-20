@@ -35,9 +35,9 @@ namespace WorldTree
 	{ }
 
 	/// <summary>
-	/// 世界树节点可视化接口
+	/// 世界树节点可视化生成器接口
 	/// </summary>
-	public interface IWorldTreeNodeView : INode
+	public interface IWorldTreeNodeViewBuilder : INode
 	{ }
 
 	/// <summary>
@@ -92,9 +92,9 @@ namespace WorldTree
 		public INode Parent { get; set; }
 
 		/// <summary>
-		/// 调试显示
+		/// 可视化组件
 		/// </summary>
-		public IWorldTreeNodeView View { get; set; }
+		public IWorldTreeNodeViewBuilder View { get; set; }
 
 		#region Active
 

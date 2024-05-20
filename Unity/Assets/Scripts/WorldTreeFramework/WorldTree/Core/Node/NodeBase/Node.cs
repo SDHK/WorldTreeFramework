@@ -29,7 +29,7 @@ namespace WorldTree
 		/// <summary>
 		/// 调试可视化节点
 		/// </summary>
-		public IWorldTreeNodeView View { get; set; }
+		public IWorldTreeNodeViewBuilder View { get; set; }
 
 		#region Active
 
@@ -80,7 +80,7 @@ namespace WorldTree
 				if (this.Domain != this) this.Domain = parent.Domain;
 				this.SetActive(true);//激活节点
 				this.View?.Dispose();
-				this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeView : null;
+				this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeViewBuilder : null;
 				return true;
 			}
 			return false;
@@ -225,7 +225,7 @@ namespace WorldTree
 		public virtual void OnGraftSelfToTree()//id相同数据同步？
 		{
 			this.View?.Dispose();
-			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeView : null;
+			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeViewBuilder : null;
 			this.Core = this.Parent.Core;
 			this.Root = this.Parent.Root;
 			if (this.Domain != this) this.Domain = this.Parent.Domain;

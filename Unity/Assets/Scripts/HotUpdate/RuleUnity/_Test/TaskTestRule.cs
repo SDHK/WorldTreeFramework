@@ -39,8 +39,6 @@ namespace WorldTree
 		{
 			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
 
-
-
 			self.Log($"0！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
 
 			await self.AsyncDelay(3);
@@ -54,62 +52,7 @@ namespace WorldTree
 			self.Log("3！");
 		}
 
-		public static async TreeTask T2(this TaskTest self)
-		{
-			//await self.AsyncDelay(5);
 
-			self.Log("T2 1！");
-
-			await self.T3();
-
-			//await self.TreeTaskCompleted();
-		}
-
-		public static async TreeTask T3(this TaskTest self)
-		{
-			self.Log("T3 1！");
-
-			//await self.TreeTaskCompleted();
-			var tk = await self.TreeTaskTokenCatch();
-			self.Log($"TK!!!!!!!{tk.Id}");
-
-			//World.Log(await T4());
-
-			//await T5();
-		}
-
-		public static async TreeTask<int> T4(this TaskTest self)
-		{
-			self.Log("T4 1！");
-
-			await self.TreeTaskCompleted();
-
-			return 10021;
-		}
-
-		public static async TreeTask T5(this TaskTest self)
-		{
-			self.Log("T5 1！");
-			await self.T6();
-			await self.TreeTaskCompleted();
-		}
-
-		public static async TreeTask T6(this TaskTest self)
-		{
-			self.Log("T6 1！");
-			await self.T7();
-
-			await self.TreeTaskCompleted();
-		}
-
-		public static async TreeTask T7(this TaskTest self)
-		{
-			self.Log("T7 1！");
-			var tk = await self.TreeTaskTokenCatch();
-			self.Log($"TK!!!!!!!{tk?.Id}");
-
-			await self.TreeTaskCompleted();
-		}
 
 		public static async TreeTask TaskRun(this TaskTest self, Action action)
 		{
