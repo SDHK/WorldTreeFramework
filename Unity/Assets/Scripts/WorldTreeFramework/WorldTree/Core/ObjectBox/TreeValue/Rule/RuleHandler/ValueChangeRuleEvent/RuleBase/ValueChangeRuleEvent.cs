@@ -20,7 +20,7 @@ namespace WorldTree
 	/// <summary>
 	/// 数值变化监听事件法则
 	/// </summary>
-	public interface ValueChangeEvent<T1> : ISendRule<T1>, IValueChangeEvent, IRuleSupplementIgnore
+	public interface ValueChangeEvent<T1> : ISendRule<T1>, IValueChangeEvent, ISourceGeneratorIgnore
 		where T1 : IEquatable<T1>
 	{ }
 

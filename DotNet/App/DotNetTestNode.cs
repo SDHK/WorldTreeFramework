@@ -5,7 +5,7 @@ namespace WorldTree
 {
 
 
-	public interface TestEvent<T> : ISendRule<float>, IMethodRule
+	public interface TestEvent : ISendRule<float>, IMethodRule
 	{
 	}
 
@@ -16,7 +16,7 @@ namespace WorldTree
 		, AsAwake
 		, AsAwake<string>
 		, AsNew
-		, AsTestEvent<float>
+		, AsTestEvent
 	{
 		public int TestValue;
 	}
@@ -27,6 +27,7 @@ namespace WorldTree
 		{
 			protected override void Execute(DotNetTestNode self)
 			{
+				self.TestEvent(1f);
 				self.Log("新建！！");
 			}
 		}

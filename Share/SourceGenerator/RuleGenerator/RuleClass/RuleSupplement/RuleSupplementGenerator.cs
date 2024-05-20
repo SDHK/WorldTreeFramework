@@ -3,7 +3,7 @@
 * 作者：闪电黑客
 * 日期：2024/4/28 14:22
 
-* 描述：补充法则类型生成器
+* 描述：法则类型补充生成器
 
 */
 
@@ -17,7 +17,7 @@ using System.Text;
 namespace WorldTree.SourceGenerator
 {
 	/// <summary>
-	/// 补充法则类型生成器
+	/// 法则类型补充生成器
 	/// </summary>
 	[Generator]
 	internal class RuleSupplementGenerator : ISourceGenerator
@@ -105,10 +105,10 @@ namespace WorldTree.SourceGenerator
 
 		public static void Execute(GeneratorExecutionContext context)
 		{
-			var IRuleSupplementIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.IRuleSupplementIgnore");
+			var ISourceGeneratorIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.ISourceGeneratorIgnore");
 			var IMethodRule = context.Compilation.ToINamedTypeSymbol("WorldTree.IMethodRule");
 
-			if (IRuleSupplementIgnore == null) return;
+			if (ISourceGeneratorIgnore == null) return;
 			if (IMethodRule == null) return;
 
 			foreach (var fileClassList in fileClassDict)
@@ -119,7 +119,7 @@ namespace WorldTree.SourceGenerator
 
 				foreach (INamedTypeSymbol fileClass in fileClassList.Value)
 				{
-					if (NamedSymbolHelper.CheckAllInterface(fileClass, IRuleSupplementIgnore)) continue;
+					if (NamedSymbolHelper.CheckAllInterface(fileClass, ISourceGeneratorIgnore)) continue;
 					INamedTypeSymbol? baseInterface = null;
 					bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
 

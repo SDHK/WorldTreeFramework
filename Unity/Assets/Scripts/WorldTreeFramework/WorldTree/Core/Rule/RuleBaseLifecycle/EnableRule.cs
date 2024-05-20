@@ -14,7 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 活跃启用法则
 	/// </summary>
-	public interface Enable : ISendRule, ILifeCycleRule, IRuleSupplementIgnore
+	public interface Enable : ISendRule, ILifeCycleRule, ISourceGeneratorIgnore
 	{ }
 
 	/// <summary>

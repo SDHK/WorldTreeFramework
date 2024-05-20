@@ -71,7 +71,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 尝试执行异步调用法则
 		/// </summary>
-		public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R{generics}, OutT>(this INode self, R nullRule{genericTypeParameter}, OutT defaultOutT)
+		public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R{generics}, OutT>(INode self, R nullRule{genericTypeParameter}, OutT defaultOutT)
 			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
 			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))

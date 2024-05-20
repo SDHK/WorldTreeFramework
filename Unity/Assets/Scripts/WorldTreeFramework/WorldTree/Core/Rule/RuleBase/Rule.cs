@@ -64,14 +64,14 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 法则补充生成器忽略标记
+	/// 代码生成器忽略标记
 	/// </summary>
-	public interface IRuleSupplementIgnore : IRule
+	public interface ISourceGeneratorIgnore 
 	{
 	}
 
 	/// <summary>
 	/// 可调用方法法则标记
 	/// </summary>
-	public interface IMethodRule { }
+	public interface IMethodRule : IRule { }
 }

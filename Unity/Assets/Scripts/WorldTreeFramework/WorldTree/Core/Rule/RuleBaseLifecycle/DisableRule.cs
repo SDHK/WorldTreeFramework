@@ -15,7 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 活跃禁用法则
 	/// </summary>
-	public interface Disable : ISendRule, ILifeCycleRule, IRuleSupplementIgnore
+	public interface Disable : ISendRule, ILifeCycleRule, ISourceGeneratorIgnore
 	{ }
 
 	/// <summary>

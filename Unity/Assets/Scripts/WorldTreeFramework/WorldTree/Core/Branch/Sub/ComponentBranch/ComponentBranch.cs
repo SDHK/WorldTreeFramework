@@ -14,6 +14,9 @@
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 组件分支
+	/// </summary>
 	public interface AsComponentBranch : AsBranch<ComponentBranch>
 	{ }
 
