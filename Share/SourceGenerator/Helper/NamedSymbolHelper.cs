@@ -9,6 +9,7 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
@@ -98,6 +99,40 @@ namespace WorldTree.SourceGenerator
 				return true;
 			}
 			return false;
+		}
+
+
+		/// <summary>
+		/// 获取法则参数泛型类型注释，例：
+		/// <para>T1 : <see cref="float"/>, OutT : <see cref="int"/></para>
+		/// </summary>
+		public static string GetRuleParametersTypeCommentPara(INamedTypeSymbol typeSymbol, string tab)
+		{
+			if (!typeSymbol.IsGenericType) return "";
+			StringBuilder sb = new StringBuilder();
+			StringBuilder sbType = new StringBuilder();
+
+			sb.AppendLine($"{tab}/// <para>");
+			sb.Append($"{tab}/// {typeSymbol.Name}");
+			int index = 1;
+			for (int i = 0; i < typeSymbol.TypeArguments.Length; i++)
+			{
+				string name = typeSymbol.TypeArguments[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+				//不是泛型
+				if (typeSymbol.TypeArguments[i].TypeKind != TypeKind.TypeParameter)
+				{
+					sbType.Append($", <see cref=\"{name}\"/>");
+				}
+				else //是泛型参数
+				{
+					sbType.Append($", <typeparamref name= \"{name}\"/>");
+				}
+				index++;
+			}
+			sb.AppendLine($"&lt;{sbType.ToString().TrimStart(',', ' ')}&gt;");
+			sb.AppendLine($"{tab}/// </para>");
+			return sb.ToString();
 		}
 
 		/// <summary>

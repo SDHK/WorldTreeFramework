@@ -17,7 +17,7 @@ namespace WorldTree.SourceGenerator
 		{
 			if (baseInterface == null) return;
 			string ClassName = typeSymbol.Name;
-			string ClassFullName = RuleSupplementHelper.GetNameWithGenericArguments(typeSymbol);
+			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 			int baseTypeCount = baseInterface.TypeArguments.Count();
 			string TypeArgumentsAngle = RuleSupplementHelper.GetTypeArgumentsAngle(typeSymbol);
@@ -28,9 +28,9 @@ namespace WorldTree.SourceGenerator
 
 			StringBuilder CommentPara = new();
 			RuleSupplementHelper.AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "执行通知法则", "\t\t");
-			string BaseTypePara = RuleSupplementHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
 			CommentPara.Append(BaseTypePara);
-			Code.Append(RuleSupplementHelper.GetCommentAddOrInsertRemarks(RuleSupplementHelper.classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
+			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(RuleSupplementHelper.classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
 			//生成调用方法
 			Code.AppendLine(@$"		public static void {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => NodeRuleHelper.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");

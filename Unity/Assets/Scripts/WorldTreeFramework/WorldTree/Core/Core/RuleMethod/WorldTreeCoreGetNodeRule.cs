@@ -35,7 +35,7 @@ namespace WorldTree
 		/// <remarks>不执行法则生命周期</remarks>
 		public static INode NewNode(this INode self, long type)
 		{
-			INode node = Activator.CreateInstance(type.CoreToType(), true) as INode;
+			INode node = Activator.CreateInstance(type.CodeToType(), true) as INode;
 			node.Type = type;
 			node.Core = self.Core;
 			node.Root = self.Root;

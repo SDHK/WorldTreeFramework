@@ -65,6 +65,16 @@ namespace WorldTree.SourceGenerator
 		public virtual void Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
 		protected abstract void Execute(N self{GenericTypeParameter});
 	}}
+
+	/// <summary>
+	/// 通知法则默认实现基类
+	/// </summary>
+    public abstract class SendRuleDefault< R{generics}> : Rule<Node, R>, ISendRule{genericsAngle}
+		where R : ISendRule{genericsAngle}
+	{{
+		public virtual void Invoke(INode self{GenericTypeParameter}) => Execute(self{GenericParameter});
+		protected abstract void Execute(INode self{GenericTypeParameter});
+	}}
 ");
 			}
 

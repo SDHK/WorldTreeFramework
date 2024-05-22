@@ -22,7 +22,7 @@ namespace WorldTree
 	{
 		public override string ToString()
 		{
-			return $"GlobalRuleActuator : {ruleGroup?.RuleType.CoreToType()}";
+			return $"GlobalRuleActuator : {ruleGroup?.RuleType.CodeToType()}";
 		}
 	}
 
@@ -66,7 +66,7 @@ namespace WorldTree
 		{
 			foreach (var item in self.ruleGroup)
 			{
-				if (!item.Key.CoreToType().GetInterfaces().Contains(typeof(IListenerIgnorer)))
+				if (!item.Key.CodeToType().GetInterfaces().Contains(typeof(IListenerIgnorer)))
 				{
 					if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
 					{

@@ -72,7 +72,7 @@ namespace WorldTree
 			if (!self.pools.TryGetValue(type, out ReferencedPool pool))
 			{
 				self.NewNodeLifecycle(out pool);
-				pool.ReferencedType = type.CoreToType();
+				pool.ReferencedType = type.CodeToType();
 				self.pools.Add(type, pool);
 				self.TryGraftChild(pool);
 				pool.SetActive(true);

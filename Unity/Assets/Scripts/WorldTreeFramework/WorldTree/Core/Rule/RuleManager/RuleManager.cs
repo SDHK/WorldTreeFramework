@@ -36,7 +36,7 @@ namespace WorldTree
 		public UnitHashSet<long> DynamicListenerTypeHash = new();
 
 		/// <summary>
-		/// 指定法则的 监听器法则哈希表 字典
+		/// 监听目标为 法则 的 ，监听器法则 字典
 		/// </summary>
 		public UnitDictionary<long, UnitHashSet<IListenerRule>> TargetRuleListenerRuleHashDictionary = new();
 
@@ -50,7 +50,7 @@ namespace WorldTree
 		/// 监听法则字典 目标节点类型
 		/// </summary>
 		/// <remarks>
-		/// <para>目标节点类型 法则类型 《监听类型,监听法则》</para>
+		/// <para>目标节点类型 法则类型 《监听器类型,监听法则列表》</para>
 		/// <para>这个是真正被使用的</para>
 		/// </remarks>
 		public UnitDictionary<long, Dictionary<long, RuleGroup>> TargetRuleListenerGroupDictionary = new();
@@ -59,7 +59,7 @@ namespace WorldTree
 		/// 监听法则字典 监听器类型
 		/// </summary>
 		/// <remarks>
-		/// <para>监听类型 法则类型 《目标节点类型,监听法则》</para>
+		/// <para>监听器类型 法则类型 《目标节点类型,监听法则列表》</para>
 		/// <para>这个是用来查询关系的</para>
 		/// </remarks>
 		public UnitDictionary<long, Dictionary<long, RuleGroup>> ListenerRuleTargetGroupDictionary = new();
@@ -182,7 +182,7 @@ namespace WorldTree
 		{
 			if (listenerRule.TargetNodeType == TypeInfo<INode>.TypeCode && listenerRule.TargetRuleType != TypeInfo<IRule>.TypeCode)
 			{
-				//只约束了法则
+				//监听目标为法则的
 				self.TargetRuleListenerRuleHashDictionary.GetValue(listenerRule.TargetRuleType).Add(listenerRule);
 
 				//获取 监听法则 目标法则类型，当前的法则组。
@@ -196,7 +196,7 @@ namespace WorldTree
 			}
 			else
 			{
-				//指定了节点，或 动态指定节点
+				//监听目标为节点，或 动态监听
 				self.DictionaryAddNodeRule(listenerRule.TargetNodeType, listenerRule);
 
 				//动态监听器判断
@@ -233,15 +233,15 @@ namespace WorldTree
 		/// <summary>
 		/// 字典分组添加监听器法则
 		/// </summary>
-		private static void DictionaryAddNodeRule(this RuleManager self, long NodeType, IListenerRule listenerRule)
+		private static void DictionaryAddNodeRule(this RuleManager self, long TargetNodeType, IListenerRule listenerRule)
 		{
 			var ListenerRuleGroup = self.ListenerRuleTargetGroupDictionary.GetValue(listenerRule.NodeType).GetValue(listenerRule.RuleType);
-			var ListenerRuleList = ListenerRuleGroup.GetValue(NodeType);
+			var ListenerRuleList = ListenerRuleGroup.GetValue(TargetNodeType);
 			ListenerRuleList.AddRule(listenerRule);
 			ListenerRuleList.RuleType = listenerRule.RuleType;
 			ListenerRuleGroup.RuleType = listenerRule.RuleType;
 
-			var TargetRuleGroup = self.TargetRuleListenerGroupDictionary.GetValue(NodeType).GetValue(listenerRule.RuleType);
+			var TargetRuleGroup = self.TargetRuleListenerGroupDictionary.GetValue(TargetNodeType).GetValue(listenerRule.RuleType);
 			var TargetRuleList = TargetRuleGroup.GetValue(listenerRule.NodeType);
 			TargetRuleList.AddRule(listenerRule);
 			TargetRuleList.RuleType = listenerRule.RuleType;
@@ -276,8 +276,8 @@ namespace WorldTree
 		/// </remarks>
 		public static void SupportGenericNodeRule(this RuleManager self, long NodeType)
 		{
-			Type Type = NodeType.CoreToType();
-			while (Type != null && Type != typeof(IUnitPoolItem) && Type != typeof(object))
+			Type Type = NodeType.CodeToType();
+			while (Type != null && Type != typeof(object))
 			{
 				//节点可能会是非泛型，但父类则有泛型的情况，需要多态化所有父类泛型法则
 				if (Type.IsGenericType)
@@ -310,109 +310,116 @@ namespace WorldTree
 		/// </summary>
 		public static void SupportPolymorphicListenerRule(this RuleManager self, long listenerNodeType)
 		{
-			//判断如果没有这样的监听器
-			if (!self.ListenerRuleTargetGroupDictionary.ContainsKey(listenerNodeType))
+			//监听器父类类型键值
+			Type listenerBaseType = listenerNodeType.CodeToType().BaseType;
+			//类型哈希码
+			long listenerBaseTypeCodeKey = listenerBaseType.TypeToCode();
+
+			while (listenerBaseType != null && listenerBaseType != typeof(object))
 			{
-				//监听器父类类型键值
-				Type listenerBaseTypeKey = listenerNodeType.CoreToType().BaseType;
-				//类型哈希码
-				long listenerBaseTypeCoreKey = listenerBaseTypeKey.TypeToCore();
+				self.PolymorphicListenerRule(listenerNodeType, listenerBaseTypeCodeKey);
+				listenerBaseType = listenerBaseType.BaseType;
+				listenerBaseTypeCodeKey = listenerBaseType.TypeToCode();
+			}
+			if (listenerBaseType.GetInterfaces().Contains(TypeInfo<INode>.Type))
+				self.PolymorphicListenerRule(listenerNodeType, TypeInfo<INode>.TypeCode);
+		}
 
-				//父类法则查询标记
-				bool isBaseRule = false;
+		/// <summary>
+		/// 多态化一个节点类型的监听法则
+		/// </summary>
+		private static void PolymorphicListenerRule(this RuleManager self, long listenerNodeType, long listenerBaseTypeCodeKey)
+		{
+			//判断父类是否有法则，没有则退出
+			if (!self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerBaseTypeCodeKey, out var RuleType_TargerGroupDictionary)) return;
 
-				//法则类型 《目标节点类型,监听法则》
-				Dictionary<long, RuleGroup> RuleType_TargerGroupDictionary = null;
+			//拿到节点自身的：法则类型 《目标节点类型,监听法则》
+			Dictionary<long, RuleGroup> NodeRuleType_TargerGroupDictionary = self.ListenerRuleTargetGroupDictionary.GetValue(listenerNodeType);
 
-				//在没有找到法则的时候向上查找父类法则
-				while (!isBaseRule && listenerBaseTypeKey != null && listenerBaseTypeKey != typeof(object))
+			//动态监听法则多态记录
+			if (self.DynamicListenerTypeHash.Contains(listenerBaseTypeCodeKey))
+			{
+				if (!self.DynamicListenerTypeHash.Contains(listenerNodeType))
+					self.DynamicListenerTypeHash.Add(listenerNodeType);
+			}
+
+			//K:法则类型 , V:《目标节点类型,监听法则列表》
+			foreach (var RuleType_TargetGroupKV in RuleType_TargerGroupDictionary)
+			{
+				//自身已经存在的法则则跳过
+				if (NodeRuleType_TargerGroupDictionary.ContainsKey(RuleType_TargetGroupKV.Key)) continue;
+
+				//父类的监听法则添加到自身，也就是继承法则功能
+				NodeRuleType_TargerGroupDictionary.Add(RuleType_TargetGroupKV.Key, RuleType_TargetGroupKV.Value);
+
+				//接下来补齐 ListenerRuleTargetGroupDictionary 对应的 TargetRuleListenerGroupDictionary
+				//K:目标节点类型 , V:监听法则列表
+				foreach (var TargetType_RuleListKV in RuleType_TargetGroupKV.Value)
 				{
-					//判断类型是否有法则列表
-					isBaseRule = self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerBaseTypeCoreKey, out RuleType_TargerGroupDictionary);
-					if (!isBaseRule)//不存在则向上找父类
-					{
-						listenerBaseTypeKey = listenerBaseTypeKey.BaseType;
-					}
-				}
+					//目标类型为主的字典， 进行目标类型查找
+					if (!self.TargetRuleListenerGroupDictionary.TryGetValue(TargetType_RuleListKV.Key, out var RuleType_ListenerGroupDictionary)) continue;
 
-				if (isBaseRule)//如果找到了法则
-				{
-					//动态监听法则多态
-					if (self.DynamicListenerTypeHash.Contains(listenerBaseTypeCoreKey))
-					{
-						self.DynamicListenerTypeHash.Add(listenerNodeType);
-					}
+					//法则类型查找
+					if (!RuleType_ListenerGroupDictionary.TryGetValue(RuleType_TargetGroupKV.Key, out var ListenerGroup)) continue;
 
-					//监听器为主的字典添加相应的父类法则
-					self.ListenerRuleTargetGroupDictionary.Add(listenerNodeType, RuleType_TargerGroupDictionary);
+					//监听器存在的父类型 查找 法则列表
+					if (!ListenerGroup.TryGetValue(listenerBaseTypeCodeKey, out var ruleList)) continue;
 
-					//遍历这个被多态的法则字典
-
-					//K:法则类型 , V:《目标节点类型,监听法则》
-					foreach (var RuleType_TargetGroupKV in RuleType_TargerGroupDictionary)
-					{
-						//K:目标节点类型 , V:监听法则列表
-						foreach (var TargetType_RuleListKV in RuleType_TargetGroupKV.Value)
-						{
-							//目标类型为主的字典， 进行目标类型查找
-							if (self.TargetRuleListenerGroupDictionary.TryGetValue(TargetType_RuleListKV.Key, out var RuleType_ListenerGroupDictionary))
-							{
-								//法则类型查找
-								if (RuleType_ListenerGroupDictionary.TryGetValue(RuleType_TargetGroupKV.Key, out var ListenerGroup))
-								{
-									//监听器存在的父类型 查找 法则列表
-									if (ListenerGroup.TryGetValue(listenerBaseTypeCoreKey, out var ruleList))
-									{
-										//将父类的 法则列表，添加进 没有法则的 监听器类型。
-										ListenerGroup.TryAdd(listenerNodeType, ruleList);
-									}
-								}
-							}
-						}
-					}
+					//尝试将父类的 法则列表，添加进 没有法则的 监听器类型。
+					ListenerGroup.TryAdd(listenerNodeType, ruleList);
 				}
 			}
 		}
+
 
 		/// <summary>
 		/// 支持节点多态法则
 		/// </summary>
 		public static void SupportPolymorphicRule(this RuleManager self, long NodeType)
 		{
+			//开始遍历查询父类型法则
+			Type BaseType = NodeType.CodeToType().BaseType;
+			//父类型哈希码
+			long BaseTypeCodeKey = BaseType.TypeToCode();
+
+			while (BaseType != null && BaseType != typeof(object))
+			{
+				self.PolymorphicRule(NodeType, BaseTypeCodeKey);
+				BaseType = BaseType.BaseType;
+				BaseTypeCodeKey = BaseType.TypeToCode();
+			}
+			//检测是否继承了INode 接口,支持INode的多态法则
+			if (BaseType.GetInterfaces().Contains(TypeInfo<INode>.Type))
+				self.PolymorphicRule(NodeType, TypeInfo<INode>.TypeCode);
+		}
+
+		/// <summary>
+		/// 多态化一个节点类型的法则
+		/// </summary>
+		private static void PolymorphicRule(this RuleManager self, long NodeType, long BaseTypeCodeKey)
+		{
+			//判断父类是否有法则，没有则退出
+			if (!self.NodeTypeRulesDictionary.TryGetValue(BaseTypeCodeKey, out var BaseRuleHash)) return;
+
 			//拿到节点类型的法则哈希表
 			HashSet<long> ruleTypeHash = self.NodeTypeRulesDictionary.GetValue(NodeType);
 
-			//开始遍历查询父类型法则
-			Type BaseTypeKey = NodeType.CoreToType().BaseType;
-			//父类型哈希码
-			long BaseTypeCoreKey = BaseTypeKey.TypeToCore();
-
-			while (BaseTypeKey != null && BaseTypeKey != typeof(IUnitPoolItem))
+			//遍历父类型法则
+			foreach (var ruleType in BaseRuleHash)
 			{
-				//尝试获取父类型法则
-				if (self.NodeTypeRulesDictionary.TryGetValue(BaseTypeCoreKey, out var BaseRuleHash))
-				{
-					//遍历父类型法则
-					foreach (var ruleType in BaseRuleHash)
-					{
-						//法则不存在，则添加到节点的哈希表里
-						if (!ruleTypeHash.Contains(ruleType))
-						{
-							ruleTypeHash.Add(ruleType);
-							//法则字典的补充
-							if (self.RuleGroupDictionary.TryGetValue(ruleType, out var RuleGroup))
-							{
-								//获取父类型法则列表
-								if (RuleGroup.TryGetValue(BaseTypeCoreKey, out var ruleList))
-								{
-									//法则列表添加进节点类型
-									RuleGroup.TryAdd(NodeType, ruleList);
-								}
-							}
-						}
-					}
-				}
-				BaseTypeKey = BaseTypeKey.BaseType;
+				//存在的法则则跳过
+				if (ruleTypeHash.Contains(ruleType)) continue;
+
+				ruleTypeHash.Add(ruleType);
+
+				//法则字典的补充
+				if (!self.RuleGroupDictionary.TryGetValue(ruleType, out var RuleGroup)) continue;
+
+				//获取父类型法则列表
+				if (!RuleGroup.TryGetValue(BaseTypeCodeKey, out var ruleList)) continue;
+
+				//法则列表添加进节点类型
+				RuleGroup.TryAdd(NodeType, ruleList);
 			}
 		}
 

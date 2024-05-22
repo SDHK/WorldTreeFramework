@@ -23,7 +23,7 @@ namespace WorldTree
 
 		public override string ToString()
 		{
-			return $"RuleGroupActuator : {ruleGroup?.RuleType.CoreToType()}";
+			return $"RuleGroupActuator : {ruleGroup?.RuleType.CodeToType()}";
 		}
 
 		/// <summary>

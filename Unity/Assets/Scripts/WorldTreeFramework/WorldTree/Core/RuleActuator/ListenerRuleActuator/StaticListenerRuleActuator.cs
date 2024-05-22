@@ -20,7 +20,7 @@ namespace WorldTree
     {
         public override string ToString()
         {
-            return $"StaticListenerRuleActuator : {ruleGroup?.RuleType.CoreToType()}";
+            return $"StaticListenerRuleActuator : {ruleGroup?.RuleType.CodeToType()}";
         }
     }
 

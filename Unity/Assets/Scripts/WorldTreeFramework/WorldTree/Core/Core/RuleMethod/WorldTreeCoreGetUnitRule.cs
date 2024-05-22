@@ -53,7 +53,7 @@ namespace WorldTree
 					return unit;
 				}
 			}
-			IUnitPoolEventItem unitObj = Activator.CreateInstance(type.CoreToType(), true) as IUnitPoolEventItem;
+			IUnitPoolEventItem unitObj = Activator.CreateInstance(type.CodeToType(), true) as IUnitPoolEventItem;
 			unitObj.Type = type;
 			unitObj.Core = self.Core;
 			unitObj.OnNew();

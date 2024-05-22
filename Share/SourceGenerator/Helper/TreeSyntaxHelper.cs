@@ -8,6 +8,7 @@
 */
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
 
@@ -135,6 +136,65 @@ namespace WorldTree.SourceGenerator
 			var ns = root.DescendantNodes().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
 			if (ns == null) return "";
 			return ns.Name.ToString();
+		}
+
+
+		/// <summary>
+		/// 获取类型原注释，添加或插入remarks节点备注
+		/// </summary>
+		public static string GetCommentAddOrInsertRemarks(TypeDeclarationSyntax typeDeclarationSyntax, string remarksToAdd, string tab)
+		{
+			var triviaList = typeDeclarationSyntax.GetLeadingTrivia().Where(i => i.Kind() == SyntaxKind.SingleLineDocumentationCommentTrivia);
+			bool remarksExists = false;
+			StringBuilder allComments = new StringBuilder();
+			if (triviaList.Any())
+			{
+				StringBuilder CommentNode = new StringBuilder();
+				int CommentNodeIndex = 0;
+				foreach (var trivia in triviaList)
+				{
+					CommentNode.Clear();
+					//根据换行符分割注释
+					string[] triviaStrings = trivia.ToFullString().Split('\n');
+					//遍历出一行注释
+					foreach (string triviaStringLine in triviaStrings)
+					{
+						if (triviaStringLine == string.Empty) continue;
+						//去掉前后空格和制表符
+						string newTriviaStringLine = triviaStringLine.TrimStart('\t', ' ').TrimEnd('\n', ' ');
+						//如果有remarks节点，插入到remarks节点
+						if (newTriviaStringLine.Contains("</remarks>"))
+						{
+							remarksExists = true;
+							var index = newTriviaStringLine.IndexOf("</remarks>");
+							CommentNode.Append(tab + newTriviaStringLine.Insert(index, $"\n{remarksToAdd.Trim('\n')}\n{tab}/// ") + "\n");
+						}
+						else
+						{
+							CommentNode.Append(tab + newTriviaStringLine + "\n");
+						}
+					}
+					CommentNodeIndex++;
+
+					if (CommentNodeIndex != triviaList.Count())
+					{
+						allComments.AppendLine(CommentNode.ToString());
+					}
+					else
+					{
+						allComments.Append(CommentNode.ToString());
+					}
+				}
+			}
+			// If there is no remarks node, add one
+			if (!remarksExists)
+			{
+				allComments.AppendLine($"{tab}/// <remarks>");
+				allComments.Append($"{remarksToAdd}");
+				allComments.AppendLine($"{tab}/// </remarks>");
+			}
+
+			return allComments.ToString();
 		}
 	}
 }

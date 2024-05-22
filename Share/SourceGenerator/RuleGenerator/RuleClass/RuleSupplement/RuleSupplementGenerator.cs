@@ -174,7 +174,7 @@ namespace WorldTree.SourceGenerator
 		{
 			if (baseInterface == null) return;
 			string ClassName = typeSymbol.Name;
-			string ClassFullName = GetNameWithGenericArguments(typeSymbol);
+			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 			string BaseName = baseInterface.Name.TrimStart('I');
 			string TypeArguments = GetTypeArguments(typeSymbol);
@@ -185,28 +185,19 @@ namespace WorldTree.SourceGenerator
 
 			//As约束接口
 			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "法则约束", "\t");
-			string BaseTypePara = GetRuleParametersTypeCommentPara(baseInterface, "\t");
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t");
 			CommentPara.Append(BaseTypePara);
-			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
+			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
 			Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{ClassFullName}>, INode {WhereTypeArguments}{{}}");
 
 			//抽象基类注释
 			CommentPara.Clear();
 			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "法则基类", "\t");
 			CommentPara.Append(BaseTypePara);
-			Code.Append(GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
+			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
 
 			//抽象基类
 			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
-		}
-
-		/// <summary>
-		/// 获取类型名称包括泛型
-		/// </summary>
-		public static string GetNameWithGenericArguments(INamedTypeSymbol typeSymbol)
-		{
-			if (!typeSymbol.IsGenericType) return typeSymbol.Name;
-			return typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 		}
 
 		/// <summary>
@@ -249,102 +240,10 @@ namespace WorldTree.SourceGenerator
 		public static void AddRuleExtendCommentPara(StringBuilder sb, INamedTypeSymbol typeSymbol, INamedTypeSymbol BaseSymbol, string Title, string tab)
 		{
 			string IClassFullName = typeSymbol.ToDisplayString();
-			string IBaseFullName = GetNameWithGenericArguments(BaseSymbol);
+			string IBaseFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			sb.AppendLine(@$"{tab}/// <Para>");
 			sb.AppendLine(@$"{tab}/// {Title}: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{SecurityElement.Escape(IBaseFullName)}""/>");
 			sb.AppendLine(@$"{tab}/// </Para>");
-		}
-
-		/// <summary>
-		/// 获取法则参数泛型类型注释
-		/// <para>T1 : <see cref="float"/>, OutT : <see cref="int"/></para>
-		/// </summary>
-		public static string GetRuleParametersTypeCommentPara(INamedTypeSymbol BaseTypeSymbol, string tab)
-		{
-			if (!BaseTypeSymbol.IsGenericType) return "";
-			StringBuilder sb = new StringBuilder();
-			StringBuilder sbType = new StringBuilder();
-
-			sb.AppendLine($"{tab}/// <para>");
-			sb.Append($"{tab}/// {BaseTypeSymbol.Name}");
-			int index = 1;
-			for (int i = 0; i < BaseTypeSymbol.TypeArguments.Length; i++)
-			{
-				string name = BaseTypeSymbol.TypeArguments[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-
-				//不是泛型
-				if (BaseTypeSymbol.TypeArguments[i].TypeKind != TypeKind.TypeParameter)
-				{
-					sbType.Append($", <see cref=\"{name}\"/>");
-				}
-				else //是泛型参数
-				{
-					sbType.Append($", <typeparamref name= \"{name}\"/>");
-				}
-				index++;
-			}
-			sb.AppendLine($"&lt;{sbType.ToString().TrimStart(',', ' ')}&gt;");
-			sb.AppendLine($"{tab}/// </para>");
-			return sb.ToString();
-		}
-
-		/// <summary>
-		/// 获取注释，添加或插入备注
-		/// </summary>
-		public static string GetCommentAddOrInsertRemarks(InterfaceDeclarationSyntax interfaceDeclarationSyntax, string remarksToAdd, string tab)
-		{
-			var triviaList = interfaceDeclarationSyntax.GetLeadingTrivia().Where(i => i.Kind() == SyntaxKind.SingleLineDocumentationCommentTrivia);
-			bool remarksExists = false;
-			StringBuilder allComments = new StringBuilder();
-			if (triviaList.Any())
-			{
-				StringBuilder CommentNode = new StringBuilder();
-				int CommentNodeIndex = 0;
-				foreach (var trivia in triviaList)
-				{
-					CommentNode.Clear();
-                    //根据换行符分割注释
-					string[] triviaStrings = trivia.ToFullString().Split('\n');
-                    //遍历出一行注释
-					foreach (string triviaStringLine in triviaStrings)
-					{
-						if (triviaStringLine == string.Empty) continue;
-                        //去掉前后空格和制表符
-						string newTriviaStringLine = triviaStringLine.TrimStart('\t', ' ').TrimEnd('\n',' ');
-                        //如果有remarks节点，插入到remarks节点
-						if (newTriviaStringLine.Contains("</remarks>"))
-						{
-							remarksExists = true;
-							var index = newTriviaStringLine.IndexOf("</remarks>");
-							CommentNode.Append(tab + newTriviaStringLine.Insert(index, $"\n{remarksToAdd.Trim('\n')}\n{tab}/// ")+ "\n");
-						}
-						else
-						{
-							CommentNode.Append(tab + newTriviaStringLine + "\n");
-						}
-					}
-					CommentNodeIndex++;
-
-					if (CommentNodeIndex != triviaList.Count())
-					{
-						allComments.AppendLine(CommentNode.ToString());
-					}
-					else
-					{
-						allComments.Append(CommentNode.ToString());
-					}
-				}
-			}
-
-			// If there is no remarks node, add one
-			if (!remarksExists)
-			{
-				allComments.AppendLine($"{tab}/// <remarks>");
-				allComments.Append($"{remarksToAdd}");
-				allComments.AppendLine($"{tab}/// </remarks>");
-			}
-
-			return allComments.ToString();
 		}
 	}
 }
