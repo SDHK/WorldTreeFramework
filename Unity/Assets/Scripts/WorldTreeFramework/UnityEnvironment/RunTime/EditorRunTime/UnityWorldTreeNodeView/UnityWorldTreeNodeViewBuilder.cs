@@ -47,7 +47,7 @@ namespace WorldTree
 					GameObject parentObj = parentView.gameObject;
 					if (!parentView.BranchObjs.TryGetValue(node.BranchType, out self.parentBranchObj))
 					{
-						self.parentBranchObj = new GameObject(node.BranchType.CoreToType().Name);
+						self.parentBranchObj = new GameObject(node.BranchType.CodeToType().Name);
 						self.parentBranchObj.transform.SetParent(parentObj.transform);
 						parentView.BranchObjs.Add(node.BranchType, self.parentBranchObj);
 					}
