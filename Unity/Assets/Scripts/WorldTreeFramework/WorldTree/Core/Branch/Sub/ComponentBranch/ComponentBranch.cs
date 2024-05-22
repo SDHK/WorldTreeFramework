@@ -14,11 +14,14 @@
 
 namespace WorldTree
 {
+
 	/// <summary>
-	/// 组件分支
+	/// 测试分支
 	/// </summary>
-	public interface AsComponentBranch : AsBranch<ComponentBranch>
+	public class TestBranch<T> : Branch<long>
+		where T : class, INode
 	{ }
+
 
 	/// <summary>
 	/// 组件节点约束
@@ -42,14 +45,14 @@ namespace WorldTree
 		/// 尝试获取组件
 		/// </summary>
 		public static bool TryGetComponent(this INode self, long type, out INode component)
-			=> (component = self.GetBranch<ComponentBranch>()?.GetNode(type)) != null;
+			=> (component = NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(type)) != null;
 
 		/// <summary>
 		/// 尝试获取组件
 		/// </summary>
 		public static bool TryGetComponent<N, T>(this N self, out T component)
 			where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch>
-		=> (component = (self.GetBranch<ComponentBranch>()?.GetNode(TypeInfo<T>.TypeCode)) as T) != null;
+		=> (component = (NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(TypeInfo<T>.TypeCode)) as T) != null;
 
 		#endregion
 
@@ -60,13 +63,13 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryCutComponent<T>(this INode self, out T node)
 			where T : class, INode
-		=> (node = self.GetBranch<ComponentBranch>()?.GetNode(TypeInfo<T>.TypeCode)?.CutSelf() as T) != null;
+		=> (node = NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(TypeInfo<T>.TypeCode)?.CutSelf() as T) != null;
 
 		/// <summary>
 		/// 裁剪组件
 		/// </summary>
 		public static bool TryCutComponent(this INode self, long type, out INode node)
-			=> (node = self.GetBranch<ComponentBranch>()?.GetNode(type)?.CutSelf()) != null;
+			=> (node = NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(type)?.CutSelf()) != null;
 
 		#endregion
 
@@ -91,13 +94,13 @@ namespace WorldTree
 		/// </summary>
 		public static void RemoveComponent<T>(this INode self)
 			where T : class, INode
-		=> self.GetBranch<ComponentBranch>()?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();
+		=> NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();
 
 		/// <summary>
 		/// 移除组件
 		/// </summary>
 		public static void RemoveComponent(this INode self, long type)
-			=> self.GetBranch<ComponentBranch>()?.GetNode(type)?.Dispose();
+			=> NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(type)?.Dispose();
 
 		/// <summary>
 		/// 移除全部组件
@@ -155,7 +158,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T>(this N self, out T Component, bool isPool = true)
-			where N : class, INode, AsComponentBranch
+			where N : class, INode, AsBranch<ComponentBranch>
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake>
 		=> self.AddNode<N, ComponentBranch, long, T>(TypeInfo<T>.TypeCode, out Component, isPool);
 
@@ -163,7 +166,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1>(this N self, out T Component, T1 arg1, bool isPool = true)
-		  where N : class, INode, AsComponentBranch
+		  where N : class, INode, AsBranch<ComponentBranch>
 		  where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1>(TypeInfo<T>.TypeCode, out Component, arg1, isPool);
 
@@ -171,7 +174,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2>(this N self, out T Component, T1 arg1, T2 arg2, bool isPool = true)
-			where N : class, INode, AsComponentBranch
+			where N : class, INode, AsBranch<ComponentBranch>
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1, T2>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, isPool);
 
@@ -179,7 +182,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2, T3>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
-			where N : class, INode, AsComponentBranch
+			where N : class, INode, AsBranch<ComponentBranch>
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1, T2, T3>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, isPool);
 
@@ -187,7 +190,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2, T3, T4>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
-			where N : class, INode, AsComponentBranch
+			where N : class, INode, AsBranch<ComponentBranch>
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1, T2, T3, T4>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3, T4>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, arg4, isPool);
 
@@ -195,7 +198,7 @@ namespace WorldTree
 		/// 添加组件
 		/// </summary>
 		public static T AddComponent<N, T, T1, T2, T3, T4, T5>(this N self, out T Component, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
-			where N : class, INode, AsComponentBranch
+			where N : class, INode, AsBranch<ComponentBranch>
 			where T : class, INode, NodeOf<N, ComponentBranch>, AsRule<Awake<T1, T2, T3, T4, T5>>
 		=> self.AddNode<N, ComponentBranch, long, T, T1, T2, T3, T4, T5>(TypeInfo<T>.TypeCode, out Component, arg1, arg2, arg3, arg4, arg5, isPool);
 

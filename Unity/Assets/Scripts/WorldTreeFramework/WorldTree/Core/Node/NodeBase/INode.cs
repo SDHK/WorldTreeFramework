@@ -47,8 +47,8 @@ namespace WorldTree
 	/// <para>世界树节点最底层接口</para>
 	/// </remarks>
 	public partial interface INode : IUnitPoolItem
-		, AsComponentBranch
-		, AsChildBranch
+		, AsBranch<ComponentBranch>
+		, AsBranch<ChildBranch>
 
 		, AsRule<New>
 		, AsRule<Get>

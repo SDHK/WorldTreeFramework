@@ -14,9 +14,6 @@
 
 namespace WorldTree
 {
-	public interface AsTypeNodeBranch : AsBranch<TypeNodeBranch>
-	{ }
-
 	/// <summary>
 	/// 类型节点约束
 	/// </summary>
@@ -38,7 +35,7 @@ namespace WorldTree
 		/// 尝试获取类型节点
 		/// </summary>
 		public static bool TryGetTypeNode(this INode self, long type, out INode typeNode)
-			=> (typeNode = self.GetBranch<TypeNodeBranch>()?.GetNode(type)) != null;
+			=> (typeNode = NodeBranchHelper.GetBranch<TypeNodeBranch>(self)?.GetNode(type)) != null;
 
 		/// <summary>
 		/// 尝试获取类型节点
@@ -46,7 +43,7 @@ namespace WorldTree
 		public static bool TryGetTypeNode<N, T>(this N self, long type, out T typeNode)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, TypeNodeBranch>
-		=> (typeNode = (self.GetBranch<TypeNodeBranch>()?.GetNode(type)) as T) != null;
+		=> (typeNode = (NodeBranchHelper.GetBranch<TypeNodeBranch>(self)?.GetNode(type)) as T) != null;
 
 		#endregion
 
@@ -56,7 +53,7 @@ namespace WorldTree
 		/// 裁剪类型节点
 		/// </summary>
 		public static bool TryCutTypeNode(this INode self, long type, out INode node)
-			=> (node = self.GetBranch<TypeNodeBranch>()?.GetNode(type)?.CutSelf()) != null;
+			=> (node = NodeBranchHelper.GetBranch<TypeNodeBranch>(self)?.GetNode(type)?.CutSelf()) != null;
 
 		#endregion
 
@@ -84,7 +81,7 @@ namespace WorldTree
 		/// 移除类型节点
 		/// </summary>
 		public static void RemoveTypeNode(this INode self, long type)
-			=> self.GetBranch<TypeNodeBranch>()?.GetNode(type)?.Dispose();
+			=> NodeBranchHelper.GetBranch<TypeNodeBranch>(self)?.GetNode(type)?.Dispose();
 
 		/// <summary>
 		/// 移除所有类型节点
@@ -142,7 +139,7 @@ namespace WorldTree
 		/// type为键值，添加节点
 		/// </summary>
 		public static T AddTypeNode<N, T>(this N self, long typeKey, out T node, bool isPool = true)
-			where N : class, INode, AsTypeNodeBranch
+			where N : class, INode, AsBranch<TypeNodeBranch>
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<Awake>
 		=> self.AddNode<N, TypeNodeBranch, long, T>(typeKey, out node, isPool);
 
@@ -150,7 +147,7 @@ namespace WorldTree
 		/// type为键值，添加节点
 		/// </summary>
 		public static T AddTypeNode<N, T, T1>(this N self, long typeKey, out T node, T1 arg1, bool isPool = true)
-			where N : class, INode, AsTypeNodeBranch
+			where N : class, INode, AsBranch<TypeNodeBranch>
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<Awake<T1>>
 		=> self.AddNode<N, TypeNodeBranch, long, T, T1>(typeKey, out node, arg1, isPool);
 
@@ -158,7 +155,7 @@ namespace WorldTree
 		/// type为键值，添加节点
 		/// </summary>
 		public static T AddTypeNode<N, T, T1, T2>(this N self, long typeKey, out T node, T1 arg1, T2 arg2, bool isPool = true)
-			where N : class, INode, AsTypeNodeBranch
+			where N : class, INode, AsBranch<TypeNodeBranch>
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<Awake<T1, T2>>
 		=> self.AddNode<N, TypeNodeBranch, long, T, T1, T2>(typeKey, out node, arg1, arg2, isPool);
 
@@ -166,7 +163,7 @@ namespace WorldTree
 		/// type为键值，添加节点
 		/// </summary>
 		public static T AddTypeNode<N, T, T1, T2, T3>(this N self, long typeKey, out T node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
-			where N : class, INode, AsTypeNodeBranch
+			where N : class, INode, AsBranch<TypeNodeBranch>
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<Awake<T1, T2, T3>>
 		=> self.AddNode<N, TypeNodeBranch, long, T, T1, T2, T3>(typeKey, out node, arg1, arg2, arg3, isPool);
 
@@ -174,7 +171,7 @@ namespace WorldTree
 		/// type为键值，添加节点
 		/// </summary>
 		public static T AddTypeNode<N, T, T1, T2, T3, T4>(this N self, long typeKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
-			where N : class, INode, AsTypeNodeBranch
+			where N : class, INode, AsBranch<TypeNodeBranch>
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<Awake<T1, T2, T3, T4>>
 		=> self.AddNode<N, TypeNodeBranch, long, T, T1, T2, T3, T4>(typeKey, out node, arg1, arg2, arg3, arg4, isPool);
 
@@ -182,7 +179,7 @@ namespace WorldTree
 		/// type为键值，添加节点
 		/// </summary>
 		public static T AddTypeNode<N, T, T1, T2, T3, T4, T5>(this N self, long typeKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
-			where N : class, INode, AsTypeNodeBranch
+			where N : class, INode, AsBranch<TypeNodeBranch>
 			where T : class, INode, NodeOf<N, TypeNodeBranch>, AsRule<Awake<T1, T2, T3, T4, T5>>
 		=> self.AddNode<N, TypeNodeBranch, long, T, T1, T2, T3, T4, T5>(typeKey, out node, arg1, arg2, arg3, arg4, arg5, isPool);
 

@@ -58,7 +58,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static INode AddNode<B, K{generics}>(this INode self, K key, long type, out INode node{genericTypeParameter}, bool isPool = true)
 			where B : class, IBranch<K>
-		=> node = self.GetBranch<B>()?.GetNode(key) ?? self.GetOrNewNode(type, isPool).AddSelfToTree<B, K{generics}>(key, self{genericParameter});
+		=> node = NodeBranchHelper.GetBranch<B>(self)?.GetNode(key) ?? self.GetOrNewNode(type, isPool).AddSelfToTree<B, K{generics}>(key, self{genericParameter});
 
 		/// <summary>
 		/// 添加泛型节点
@@ -67,7 +67,7 @@ namespace WorldTree.SourceGenerator
 			where N : class, INode, AsBranch<B>
 			where B : class, IBranch<K>
 			where T : class, INode, NodeOf<N, B>, AsRule<Awake{genericsAngle}>
-		=> node = (T)(self.GetBranch<B>()?.GetNode(key) ?? self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K{generics}>(key, self{genericParameter}));
+		=> node = (T)(NodeBranchHelper.GetBranch<B>(self)?.GetNode(key) ?? self.GetOrNewNode<T>(isPool).AddSelfToTree<B, K{generics}>(key, self{genericParameter}));
 ");
 			}
 			Code.AppendLine("	}");

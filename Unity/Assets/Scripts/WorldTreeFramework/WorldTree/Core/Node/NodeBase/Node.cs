@@ -71,7 +71,7 @@ namespace WorldTree
 		public virtual bool TryAddSelfToTree<B, K>(K Key, INode parent)
 			where B : class, IBranch<K>
 		{
-			if (parent.AddBranch<B>().TryAddNode(Key, this))
+			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(Key, this))
 			{
 				this.BranchType = TypeInfo<B>.TypeCode;
 				this.Parent = parent;
@@ -136,7 +136,7 @@ namespace WorldTree
 
 		public virtual void RemoveAllNode(long branchType)
 		{
-			if (this.TryGetBranch(branchType, out IBranch branch))
+			if (NodeBranchHelper.TryGetBranch(this, branchType, out IBranch branch))
 			{
 				if (branch.Count != 0)
 				{
@@ -177,7 +177,7 @@ namespace WorldTree
 		{
 			this.View?.Dispose();
 			this.View = null;
-			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
 			this.SetActive(false);//激活变更
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
@@ -209,7 +209,7 @@ namespace WorldTree
 		public virtual bool TryGraftSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
 		{
-			if (!parent.AddBranch<B>().TryAddNode(key, this)) return false;
+			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
 			this.BranchType = TypeInfo<B>.TypeCode;
 			this.Parent = parent;
@@ -250,7 +250,7 @@ namespace WorldTree
 					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			NodeRuleHelper.SendRule(this,TypeInfo<Graft>.Default);
+			NodeRuleHelper.SendRule(this, TypeInfo<Graft>.Default);
 		}
 
 		#endregion
@@ -261,7 +261,7 @@ namespace WorldTree
 		{
 			if (this.IsRecycle) return null; //是否已经回收
 			this.TraversalPostorder(current => current.OnCutSelf());
-			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
 			return this;
 		}
 

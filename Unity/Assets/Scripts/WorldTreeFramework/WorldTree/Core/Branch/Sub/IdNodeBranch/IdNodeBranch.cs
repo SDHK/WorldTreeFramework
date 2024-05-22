@@ -14,9 +14,6 @@
 
 namespace WorldTree
 {
-	public interface AsIdNodeBranch : AsBranch<IdNodeBranch>
-	{ }
-
 	/// <summary>
 	/// Id节点约束
 	/// </summary>
@@ -36,7 +33,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGetIdNode(this INode self, long idKey, out INode node)
 		{
-			return (node = self.GetBranch<IdNodeBranch>()?.GetNode(idKey)) != null;
+			return (node = NodeBranchHelper.GetBranch<IdNodeBranch>(self)?.GetNode(idKey)) != null;
 		}
 
 		/// <summary>
@@ -46,7 +43,7 @@ namespace WorldTree
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>
 		{
-			return (idNode = self.GetBranch<IdNodeBranch>()?.GetNode(idKey) as T) != null;
+			return (idNode = NodeBranchHelper.GetBranch<IdNodeBranch>(self)?.GetNode(idKey) as T) != null;
 		}
 
 		#endregion
@@ -57,7 +54,7 @@ namespace WorldTree
 		/// 裁剪id节点
 		/// </summary>
 		public static bool TryCutIdNode(this INode self, long idKey, out INode node)
-			=> (node = self.GetBranch<IdNodeBranch>()?.GetNode(idKey)?.CutSelf()) != null;
+			=> (node = NodeBranchHelper.GetBranch<IdNodeBranch>(self)?.GetNode(idKey)?.CutSelf()) != null;
 
 		#endregion
 
@@ -85,7 +82,7 @@ namespace WorldTree
 		/// 根据id移除节点
 		/// </summary>
 		public static void RemoveIdNode(this INode self, long idKey)
-			=> self.GetBranch<IdNodeBranch>()?.GetNode(idKey)?.Dispose();
+			=> NodeBranchHelper.GetBranch<IdNodeBranch>(self)?.GetNode(idKey)?.Dispose();
 
 		/// <summary>
 		/// 移除全部id节点
@@ -143,7 +140,7 @@ namespace WorldTree
 		/// Id为键值，添加节点
 		/// </summary>
 		public static T AddIdNode<N, T>(this N self, long idKey, out T node, bool isPool = true)
-			where N : class, INode, AsIdNodeBranch
+			where N : class, INode, AsBranch<IdNodeBranch>
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake>
 		=> self.AddNode<N, IdNodeBranch, long, T>(idKey, out node, isPool);
 
@@ -151,7 +148,7 @@ namespace WorldTree
 		/// Id为键值，添加节点
 		/// </summary>
 		public static T AddIdNode<N, T, T1>(this N self, long idKey, out T node, T1 arg1, bool isPool = true)
-			where N : class, INode, AsIdNodeBranch
+			where N : class, INode, AsBranch<IdNodeBranch>
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake<T1>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1>(idKey, out node, arg1, isPool);
 
@@ -167,7 +164,7 @@ namespace WorldTree
 		/// Id为键值，添加节点
 		/// </summary>
 		public static T AddIdNode<N, T, T1, T2, T3>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, bool isPool = true)
-			where N : class, INode, AsIdNodeBranch
+			where N : class, INode, AsBranch<IdNodeBranch>
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake<T1, T2, T3>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2, T3>(idKey, out node, arg1, arg2, arg3, isPool);
 
@@ -175,7 +172,7 @@ namespace WorldTree
 		/// Id为键值，添加节点
 		/// </summary>
 		public static T AddIdNode<N, T, T1, T2, T3, T4>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool isPool = true)
-			where N : class, INode, AsIdNodeBranch
+			where N : class, INode, AsBranch<IdNodeBranch>
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake<T1, T2, T3, T4>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2, T3, T4>(idKey, out node, arg1, arg2, arg3, arg4, isPool);
 
@@ -183,7 +180,7 @@ namespace WorldTree
 		/// Id为键值，添加节点
 		/// </summary>
 		public static T AddIdNode<N, T, T1, T2, T3, T4, T5>(this N self, long idKey, out T node, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool isPool = true)
-			where N : class, INode, AsIdNodeBranch
+			where N : class, INode, AsBranch<IdNodeBranch>
 			where T : class, INode, NodeOf<N, IdNodeBranch>, AsRule<Awake<T1, T2, T3, T4, T5>>
 		=> self.AddNode<N, IdNodeBranch, long, T, T1, T2, T3, T4, T5>(idKey, out node, arg1, arg2, arg3, arg4, arg5, isPool);
 

@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 
-namespace WorldTree
+namespace WorldTree.Sample
 {
     public static partial class SqliteDataReaderExtension
     {

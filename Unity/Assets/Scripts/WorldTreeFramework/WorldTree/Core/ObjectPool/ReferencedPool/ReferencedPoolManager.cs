@@ -29,7 +29,7 @@ namespace WorldTree
 
 		public override void OnDispose()
 		{
-			this.Parent?.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
 			allNode.Clear();
 			pools.Clear();
 			allNode = null;

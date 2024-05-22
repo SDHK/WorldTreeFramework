@@ -120,9 +120,9 @@ namespace WorldTree.SourceGenerator
 				foreach (INamedTypeSymbol fileClass in fileClassList.Value)
 				{
 					if (NamedSymbolHelper.CheckAllInterface(fileClass, ISourceGeneratorIgnore)) continue;
-					INamedTypeSymbol? baseInterface = null;
 					bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
 
+					INamedTypeSymbol? baseInterface = null;
 					if (NamedSymbolHelper.CheckInterface(fileClass, ISendRule, out baseInterface))
 					{
 						if (isMethodRule) SendRuleSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);

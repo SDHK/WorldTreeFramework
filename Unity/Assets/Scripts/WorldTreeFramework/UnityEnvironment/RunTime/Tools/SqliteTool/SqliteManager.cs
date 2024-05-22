@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WorldTree
+namespace WorldTree.Sample
 {
 
 

@@ -6,6 +6,7 @@ namespace WorldTree
 	/// 测试节点
 	/// </summary>
 	public partial class DotNetTestNode : Node, ComponentOf<INode>
+		,AsAwake
 	{
 		public int TestValue;
 	}

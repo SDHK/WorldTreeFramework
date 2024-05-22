@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WorldTree
+namespace WorldTree.Sample
 {
     public abstract class SingletonBase<T>:IDisposable
     where T : SingletonBase<T>, new()

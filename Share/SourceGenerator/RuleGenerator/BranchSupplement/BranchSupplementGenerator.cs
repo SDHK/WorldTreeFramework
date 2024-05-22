@@ -8,6 +8,8 @@
 */
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
+using System.Reflection.Metadata;
 using System.Security;
 using System.Text;
 
@@ -29,6 +31,12 @@ namespace WorldTree.SourceGenerator
 			if (!(context.SyntaxReceiver is FindSubClassSyntaxReceiver receiver)) return;
 			if (receiver.ClassDeclarations.Count == 0) return;
 
+			BranchSupplementHelper.Init(context.Compilation);
+			foreach (var ClassDeclaration in receiver.ClassDeclarations)
+			{
+				BranchSupplementHelper.Add(ClassDeclaration, context.Compilation);
+			}
+			BranchSupplementHelper.Execute(context);
 		}
 	}
 
@@ -51,7 +59,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static Dictionary<string, ClassDeclarationSyntax> classSyntax = new();
 
-		public static string Branch = "Branch";
+		public static string IBranch = "IBranch";
 
 		public static void Init(Compilation compilation)
 		{
@@ -65,9 +73,11 @@ namespace WorldTree.SourceGenerator
 		{
 			INamedTypeSymbol? namedType = compilation.ToINamedTypeSymbol(classDeclarationSyntax);
 			if (namedType == null) return;
+			if (namedType.Name == "Branch") return;
 
 			//检测是否继承分支基类
-			if (namedType.BaseType?.Name != Branch) return;
+			if (!NamedSymbolHelper.CheckInterface(namedType, IBranch, out _)) return;
+
 			string fileName = Path.GetFileNameWithoutExtension(classDeclarationSyntax.SyntaxTree.FilePath);
 			if (!fileClassDict.TryGetValue(fileName, out List<INamedTypeSymbol> set))
 			{
@@ -87,7 +97,10 @@ namespace WorldTree.SourceGenerator
 		public static void Execute(GeneratorExecutionContext context)
 		{
 			var ISourceGeneratorIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.ISourceGeneratorIgnore");
+			var IMethodRule = context.Compilation.ToINamedTypeSymbol("WorldTree.IMethodRule");
+
 			if (ISourceGeneratorIgnore == null) return;
+			if (IMethodRule == null) return;
 
 			foreach (var fileClassList in fileClassDict)
 			{
@@ -97,24 +110,85 @@ namespace WorldTree.SourceGenerator
 				foreach (INamedTypeSymbol fileClass in fileClassList.Value)
 				{
 
+					if (NamedSymbolHelper.CheckAllInterface(fileClass, ISourceGeneratorIgnore)) continue;
 
+					//bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
+
+
+					if (NamedSymbolHelper.CheckInterface(fileClass, IBranch, out var baseInterface))
+					{
+						BranchClass(ClassCode, fileClass, baseInterface);
+						GetMethod(MethodCode, fileClass, baseInterface);
+					}
+				}
+
+				if (MethodCode.ToString() != "")
+				{
+					ClassCode.AppendLine($"	public static class {fileClassList.Key}Supplement");
+					ClassCode.AppendLine("	{");
+
+					ClassCode.Append(MethodCode);
+
+					ClassCode.AppendLine("	}");
+				}
+
+				if (ClassCode.ToString() != "")
+				{
+
+					fileCode.AppendLine(fileUsings[fileClassList.Key]);
+					fileCode.AppendLine($"namespace {fileNamespace[fileClassList.Key]}");
+					fileCode.AppendLine("{");
+					fileCode.Append(ClassCode);
+					fileCode.Append("}");
+					context.AddSource($"{fileClassList.Key}Supplement.cs", SourceText.From(fileCode.ToString(), Encoding.UTF8));
 				}
 			}
-
 		}
 
 		private static void BranchClass(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseClass)
 		{
 			if (baseClass == null) return;
-			string ClassName = typeSymbol.Name;
 			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classSyntax[ClassFullName]);
 			StringBuilder CommentPara = new();
 
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseClass, "法则约束", "\t");
+			//As约束接口
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseClass, "分支约束", "\t");
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseClass, "\t");
+			CommentPara.Append(BaseTypePara);
+			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t"));
+			Code.AppendLine(@$"	public interface As{ClassFullName} : AsBranch<{ClassFullName}>, INode {WhereTypeArguments}{{}}");
+		}
 
+
+		public static void GetMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
+		{
+			if (baseInterface == null) return;
+			string ClassName = typeSymbol.Name;
+			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+			//string ClassNameShort = typeSymbol.Name.Replace("Branch","");
+
+			// 获取泛型参数 《T1, T2》
+			string TypeArgumentsAngle = typeSymbol.IsGenericType ? typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat).Replace(typeSymbol.Name, "") : "";
+
+			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
+			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classSyntax[ClassFullName]);
+
+			StringBuilder CommentPara = new();
+
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "尝试获取分支", "\t\t");
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
+			CommentPara.Append(BaseTypePara);
+			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
+
+
+			Code.AppendLine(@$"		public static bool TryGet{ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self, {genericType} key, out INode node)
+			{WhereTypeArguments}
+			=> (node = NodeBranchHelper.GetBranch<{ClassFullName}>(self)?.GetNode(key)) != null;");
 
 		}
+
 
 		/// <summary>
 		/// 添加法则继承注释

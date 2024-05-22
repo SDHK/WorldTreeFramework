@@ -37,7 +37,7 @@ namespace EditorTool
 
             EditorGUILayout.BeginVertical(GUILayout.Width(150));
 
-            foreach (var item in self.GetBranch<ChildBranch>())
+            foreach (var item in NodeBranchHelper.GetBranch<ChildBranch>(self))
             {
                 if (GUILayout.Button(item.Type.CodeToType().Name))
                 {

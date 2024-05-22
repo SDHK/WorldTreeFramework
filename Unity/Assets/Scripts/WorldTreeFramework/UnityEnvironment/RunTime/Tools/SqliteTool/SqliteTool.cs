@@ -16,7 +16,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 
-namespace WorldTree
+namespace WorldTree.Sample
 {
 	/// <summary>
 	/// SQlite不加密特性
