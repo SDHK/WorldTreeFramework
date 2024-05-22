@@ -67,9 +67,9 @@ namespace WorldTree.SourceGenerator
 	}}
 
 	/// <summary>
-	/// 通知法则默认实现基类
+	/// 通知法则基类实现
 	/// </summary>
-    public abstract class SendRuleDefault< R{generics}> : Rule<Node, R>, ISendRule{genericsAngle}
+    public abstract class SendRuleDefault<R{generics}> : Rule<INode, R>, ISendRule{genericsAngle}
 		where R : ISendRule{genericsAngle}
 	{{
 		public virtual void Invoke(INode self{GenericTypeParameter}) => Execute(self{GenericParameter});
@@ -80,7 +80,7 @@ namespace WorldTree.SourceGenerator
 
 			Code.Append("}");
 
-			context.AddSource("SendRuleBase.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));//生成代码
+			context.AddSource("SendRule.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));//生成代码
 		}
 	}
 }

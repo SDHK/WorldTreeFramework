@@ -2,25 +2,10 @@
 
 namespace WorldTree
 {
-	public interface TestEvent : ISendRule, IMethodRule{}
-
-	public class TestEventINode : SendRuleDefault<TestEvent>
-	{
-		protected override void Execute(INode self)
-		{
-			self.Log($"法则默认实现");
-		}
-	}
-
-
 	/// <summary>
 	/// 测试节点
 	/// </summary>
 	public partial class DotNetTestNode : Node, ComponentOf<INode>
-		, AsAwake
-		, AsAwake<string>
-		, AsNew
-		, AsTestEvent
 	{
 		public int TestValue;
 	}
@@ -32,15 +17,6 @@ namespace WorldTree
 			protected override void Execute(DotNetTestNode self)
 			{
 				self.Log("新建！！");
-				self.TestEvent();//调用
-			}
-		}
-
-		public class TestEvent : TestEventRule<DotNetTestNode>
-		{
-			protected override void Execute(DotNetTestNode self)
-			{
-				self.Log($"TestEventRule子类重载实现");
 			}
 		}
 

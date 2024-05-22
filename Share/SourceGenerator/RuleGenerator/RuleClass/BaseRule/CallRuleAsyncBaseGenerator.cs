@@ -66,6 +66,16 @@ namespace WorldTree.SourceGenerator
 		public virtual TreeTask<OutT> Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
 		protected abstract TreeTask<OutT> Execute(N self{GenericTypeParameter});
 	}}
+	
+	/// <summary>
+	/// 异步调用法则基类实现
+	/// </summary>
+    public abstract class CallRuleAsyncDefault<R{generics}, OutT> : Rule<INode, R>, ICallRuleAsync<{genericsAfter}OutT>
+		where R : ICallRuleAsync<{genericsAfter}OutT>
+	{{
+		public virtual TreeTask<OutT> Invoke(INode self{GenericTypeParameter}) => Execute(self{GenericParameter});
+		protected abstract TreeTask<OutT> Execute(INode self{GenericTypeParameter});
+	}}
 ");
 			}
 			Code.Append("}");

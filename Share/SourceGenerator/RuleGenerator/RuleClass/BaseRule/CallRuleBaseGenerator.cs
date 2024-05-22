@@ -65,6 +65,17 @@ namespace WorldTree.SourceGenerator
 		public virtual OutT Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
 		protected abstract OutT Execute(N self{GenericTypeParameter});
 	}}
+
+
+	/// <summary>
+	/// 调用法则基类实现
+	/// </summary>
+    public abstract class CallRuleDefault<R{generics}, OutT> : Rule<INode, R>, ICallRule<{genericsAfter}OutT>
+		where R : ICallRule<{genericsAfter}OutT>
+	{{
+		public virtual OutT Invoke(INode self{GenericTypeParameter}) => Execute(self{GenericParameter});
+		protected abstract OutT Execute(INode self{GenericTypeParameter});
+	}}
 ");
 			}
 
