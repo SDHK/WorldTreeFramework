@@ -15,6 +15,7 @@ namespace WorldTree
     /// 引用池
     /// </summary>
     public class ReferencedPool : TreeDictionary<long, INode>, IListenerIgnorer, ChildOf<ReferencedPoolManager>
+        ,AsComponentBranch
     {
         /// <summary>
         /// 引用池类型

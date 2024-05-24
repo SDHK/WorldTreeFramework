@@ -9,12 +9,14 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 多层感知器管理器
-    /// </summary>
-    public class MultilayerPerceptronManager : Node, ChildOf<INode>, ComponentOf<INode>
-        ,AsAwake
-    {
-        public TreeList<PerceptronLayer> layers;
-    }
+	/// <summary>
+	/// 多层感知器管理器
+	/// </summary>
+	public class MultilayerPerceptronManager : Node, ChildOf<INode>, ComponentOf<INode>
+		, AsComponentBranch
+		, AsChildBranch
+		, AsAwake
+	{
+		public TreeList<PerceptronLayer> layers;
+	}
 }

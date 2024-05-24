@@ -28,6 +28,8 @@ namespace WorldTree
 	/// UI 栈窗口管理器
 	/// </summary>
 	public class WindowManager : DynamicNodeListener
+		, AsChildBranch
+		, AsComponentBranch
 		, AsAwake
 	{
 		/// <summary>
@@ -69,7 +71,7 @@ namespace WorldTree
 			}
 			else
 			{
-				node = await this.AddGameObjectNode<T>(gameObject);
+				node = await this.AddGameObjectNode<WindowManager, T>(gameObject);
 
 				windows.Add(node.Type, node);
 
@@ -168,7 +170,7 @@ namespace WorldTree
 		protected override void Execute(WindowManager self)
 		{
 			self.Log("WindowManager启动!!!");
-			self.gameObject = self.AddComponent(out GameObjectNode _).Instantiate<WindowManager>();
+			self.gameObject = self.AddComponent<WindowManager, GameObjectNode>(out GameObjectNode _).Instantiate<WindowManager>();
 		}
 	}
 

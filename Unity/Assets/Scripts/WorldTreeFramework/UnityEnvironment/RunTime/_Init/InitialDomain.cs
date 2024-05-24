@@ -58,6 +58,7 @@ namespace WorldTree
 	/// 初始域
 	/// </summary>
 	public class InitialDomain : Node, ComponentOf<INode>
+		, AsComponentBranch
 		, AsAwake
 		, AsFixedUpdateTime
 		, AsLateUpdateTime

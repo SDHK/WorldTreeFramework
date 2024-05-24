@@ -172,7 +172,7 @@ namespace WorldTree
 				this.LogError("数量小于0");
 			if (this._size - index < count)
 				this.LogError("无效参数");
-			TreeList<T> range = this.Parent.AddChild(out TreeList<T> _, count);
+			TreeList<T> range = this.Parent.AddTemp(out TreeList<T> _, count);
 			Array.Copy(_items, index, range._items, 0, count);
 			range._size = count;
 			return range;
@@ -674,7 +674,7 @@ namespace WorldTree
 		{
 			if (converter == null)
 				this.LogError("转换器为空");
-			TreeList<TOutput> outputList = this.Parent.AddChild(out TreeList<TOutput> _, this._size);
+			TreeList<TOutput> outputList = this.Parent.AddTemp(out TreeList<TOutput> _, this._size);
 			for (int index = 0; index < this._size; ++index)
 				outputList._items[index] = converter(this._items[index]);
 			outputList._size = this._size;
@@ -698,7 +698,7 @@ namespace WorldTree
 		/// <remarks>新数组将会挂在当前列表父节点上</remarks>
 		public TreeArray<T> ToTreeArray()
 		{
-			TreeArray<T> destinationArray = this.Parent.AddChild(out TreeArray<T> _, this._size);
+			TreeArray<T> destinationArray = this.Parent.AddTemp(out TreeArray<T> _, this._size);
 			Array.Copy(_items, 0, destinationArray, 0, this._size);
 			return destinationArray;
 		}

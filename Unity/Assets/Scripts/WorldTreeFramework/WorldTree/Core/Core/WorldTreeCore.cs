@@ -70,6 +70,7 @@ namespace WorldTree
 	/// 世界树核心
 	/// </summary>
 	public class WorldTreeCore : Node, IWorldTreeCore, IListenerIgnorer
+		, AsComponentBranch
 		, WorldOf<WorldTreeCore>
 		, AsAwake
 	{

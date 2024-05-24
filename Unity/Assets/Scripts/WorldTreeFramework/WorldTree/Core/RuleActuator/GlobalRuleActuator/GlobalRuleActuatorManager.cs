@@ -26,6 +26,7 @@ namespace WorldTree
 	/// 全局法则执行器管理器
 	/// </summary>
 	public class GlobalRuleActuatorManager : Node, ComponentOf<WorldTreeCore>
+		, AsComponentBranch
 		, AsAwake
 	{ }
 }

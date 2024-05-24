@@ -16,7 +16,7 @@ namespace WorldTree
         /// </summary>
         public static async TreeTask AsyncYield(this INode self, int count = 0)
         {
-            self.AddChild(out TreeTask asyncTask).AddComponent(out CounterCall counter, count);
+            self.AddTemp(out TreeTask asyncTask).AddTemp(out CounterCall counter, count);
 
             //令牌是否为空,不为空则将组件挂入令牌
             (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(TreeTaskTokenEvent));
@@ -34,7 +34,7 @@ namespace WorldTree
         /// </summary>
         public static async TreeTask AsyncDelay(this INode self, float time)
         {
-            self.AddChild(out TreeTask asyncTask).AddComponent(out TimerCall counter, time);
+            self.AddTemp(out TreeTask asyncTask).AddTemp(out TimerCall counter, time);
 
             //令牌是否为空,不为空则将组件挂入令牌
             (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(TreeTaskTokenEvent));

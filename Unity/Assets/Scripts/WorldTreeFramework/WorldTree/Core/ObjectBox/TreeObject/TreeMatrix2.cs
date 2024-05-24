@@ -15,6 +15,7 @@ namespace WorldTree
 	/// 二维矩阵
 	/// </summary>
 	public class TreeMatrix2<T> : Node, ChildOf<INode>
+		, AsChildBranch
 		, AsAwake<int, int>
 
 	{
@@ -96,7 +97,7 @@ namespace WorldTree
 			if (aCols != bRows)
 				throw new Exception("不能做矩阵乘法。不正确的尺寸。");
 
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, aRows, bCols);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, aRows, bCols);
 
 			for (int i = 0; i < aRows; i++)
 				for (int j = 0; j < bCols; j++)
@@ -116,7 +117,7 @@ namespace WorldTree
 				matrixA.LogError("矩阵大小不相等");
 				return null;
 			}
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[i, j] = matrixA[i, j] * matrixB[i, j];
@@ -128,7 +129,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeMatrix2<double> Pow(this TreeMatrix2<double> matrixA, double value)
 		{
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[i, j] = (double)Math.Pow(matrixA[i, j], value);
@@ -141,7 +142,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeMatrix2<double> Additive(this TreeMatrix2<double> matrixA, double value)
 		{
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[i, j] = matrixA[i, j] + value;
@@ -172,7 +173,7 @@ namespace WorldTree
 				matrixA.LogError("矩阵大小不相等");
 				return null;
 			}
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[i, j] = matrixA[i, j] - matrixB[i, j];
@@ -185,7 +186,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeMatrix2<double> Subtraction_(this double value, TreeMatrix2<double> matrixA)
 		{
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[i, j] = value - matrixA[i, j];
@@ -197,7 +198,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeMatrix2<double> Division(this TreeMatrix2<double> matrixA, double value)
 		{
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[i, j] = matrixA[i, j] / value;
@@ -210,7 +211,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeMatrix2<double> Division(this double value, TreeMatrix2<double> matrixA)
 		{
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[i, j] = value / matrixA[i, j];
@@ -222,7 +223,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeMatrix2<double> Exp(this TreeMatrix2<double> matrixA)
 		{
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[i, j] = (double)Math.Exp(matrixA[i, j]);
@@ -234,7 +235,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeMatrix2<double> Exp_(this TreeMatrix2<double> matrixA)
 		{
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[i, j] = Math.Exp(-matrixA[i, j]);
@@ -246,7 +247,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeMatrix2<double> Turn(this TreeMatrix2<double> matrixA)
 		{
-			matrixA.Parent.AddChild(out TreeMatrix2<double> result, matrixA.yLength, matrixA.xLength);
+			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.yLength, matrixA.xLength);
 			for (int i = 0; i < matrixA.xLength; i++)
 				for (int j = 0; j < matrixA.yLength; j++)
 					result[j, i] = matrixA[i, j];

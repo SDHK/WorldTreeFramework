@@ -18,6 +18,7 @@ namespace WorldTree
 	/// </summary>
 	public class UnityWorldHeart : WorldHeartBase
 		, ComponentOf<WorldTreeRoot>
+		, AsComponentBranch
 		, AsAwake<int>
 		, AsLateUpdateTime
 		, AsFixedUpdateTime

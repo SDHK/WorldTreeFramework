@@ -16,6 +16,7 @@ namespace WorldTree
 	/// 世界之心：C#多线程
 	/// </summary>
 	public class WorldHeart : WorldHeartBase
+		, AsComponentBranch
 		, ComponentOf<WorldTreeRoot>
 		, AsAwake<int>
 	{

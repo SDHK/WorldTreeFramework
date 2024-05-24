@@ -10,7 +10,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeTask<AssetHandle> GetAwaiter(this INode self, AssetHandle asyncOperation)
 		{
-			self.AddChild(out TreeTask<AssetHandle> asyncTask);
+			self.AddTemp(out TreeTask<AssetHandle> asyncTask);
 			asyncOperation.Completed += asyncTask.SetResult;
 			return asyncTask;
 		}

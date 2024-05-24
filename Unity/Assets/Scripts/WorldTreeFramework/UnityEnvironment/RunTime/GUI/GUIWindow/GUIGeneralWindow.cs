@@ -13,6 +13,7 @@ using UnityEngine;
 namespace WorldTree
 {
     public class GUIGeneralWindow : Node
+        , AsComponentBranch
         , AsRule<GUIDraw>
     {
         public IRuleGroup<GUIDraw> group;

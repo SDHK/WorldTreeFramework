@@ -21,6 +21,7 @@ namespace WorldTree
 	/// 法则执行器基类
 	/// </summary>
 	public class RuleActuatorBase : Node, IRuleActuator, IRuleActuatorEnumerable
+		,AsChildBranch
 	{
 		/// <summary>
 		/// 节点法则队列

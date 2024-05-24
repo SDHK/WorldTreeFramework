@@ -218,7 +218,7 @@ namespace WorldTree
         {
             while (points.Count > 1)
             {
-                points.Parent.AddChild(out TreeList<Vector3Float> newp);
+                points.Parent.AddTemp(out TreeList<Vector3Float> newp);
                 for (int i = 0; i < points.Count - 1; i++)
                 {
                     Vector3Float p0p1 = points[i].Lerp(points[i + 1], TimeRatio);

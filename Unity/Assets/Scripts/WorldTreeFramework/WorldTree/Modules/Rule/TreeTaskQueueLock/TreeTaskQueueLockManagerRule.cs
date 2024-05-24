@@ -37,7 +37,7 @@ namespace WorldTree
         {
             protected override void Execute(TreeTaskQueueLockManager self)
             {
-                self.AddComponent(out self.nodeQueueDictitonary);
+                self.AddChild(out self.nodeQueueDictitonary);
             }
         }
 
@@ -60,13 +60,13 @@ namespace WorldTree
             if (!self.nodeQueueDictitonary.TryGetValue(key, out DynamicNodeQueue TaskQueue))
             {
                 //新建动态节点队列
-                self.nodeQueueDictitonary.AddChild(out TaskQueue);
+                self.nodeQueueDictitonary.AddTemp(out TaskQueue);
 
                 //动态节点队列添加进字典
                 self.nodeQueueDictitonary.Add(key, TaskQueue);
 
                 //节点添加解锁器
-                node.AddChild(out TreeTaskQueueCompleter taskQueueCompleter, key, self);
+                node.AddTemp(out TreeTaskQueueCompleter taskQueueCompleter, key, self);
 
                 //防止异常
                 await node.TreeTaskCompleted();
@@ -76,7 +76,7 @@ namespace WorldTree
             }
 
             //节点添加任务锁
-            _ = node.AddChild(out TreeTask<TreeTaskQueueCompleter> treeTask);
+            _ = node.AddTemp(out TreeTask<TreeTaskQueueCompleter> treeTask);
             TaskQueue.TryEnqueue(treeTask);
 
             //返回一个任务锁
@@ -98,12 +98,12 @@ namespace WorldTree
                         if (nodeQueue.TryPeek(out var nextTask))
                         {
                             //给下一个任务父节点挂上任务解锁器
-                            nextTask.Parent.AddChild(out taskQueueCompleter, key, self);
+                            nextTask.Parent.AddTemp(out taskQueueCompleter, key, self);
                         }
                         else
                         {
                             //下一个任务不存在，意味着已是最后一个，解锁器挂最后节点身上
-                            task.Parent.AddChild(out taskQueueCompleter, key, self);
+                            task.Parent.AddTemp(out taskQueueCompleter, key, self);
                         }
 
                         //启动下一个任务，塞入任务解锁器

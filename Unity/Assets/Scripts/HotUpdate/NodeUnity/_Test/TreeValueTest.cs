@@ -1,6 +1,7 @@
 ﻿namespace WorldTree
 {
 	public class TreeValueTest : Node, ComponentOf<InitialDomain>
+		, AsChildBranch
 		, AsAwake
 	{
 		public TreeValue<float> valueFloat;

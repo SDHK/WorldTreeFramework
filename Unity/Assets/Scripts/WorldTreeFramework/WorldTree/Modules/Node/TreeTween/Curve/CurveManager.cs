@@ -10,14 +10,15 @@
 namespace WorldTree
 {
 
-    class CurveManagerRootAddRule : RootAddRule<CurveManager> { }
+	class CurveManagerRootAddRule : RootAddRule<CurveManager> { }
 
-    /// <summary>
-    /// 曲线管理器
-    /// </summary>
-    public class CurveManager : Node, ComponentOf<WorldTreeRoot>
-         , AsAwake
-    {
+	/// <summary>
+	/// 曲线管理器
+	/// </summary>
+	public class CurveManager : Node, ComponentOf<WorldTreeRoot>
+		, AsComponentBranch
+		, AsAwake
+	{
 
-    }
+	}
 }

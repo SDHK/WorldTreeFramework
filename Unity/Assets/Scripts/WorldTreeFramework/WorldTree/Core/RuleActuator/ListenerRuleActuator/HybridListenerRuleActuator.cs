@@ -15,6 +15,7 @@ namespace WorldTree
 	/// </summary>
 	public class HybridListenerRuleActuator : Node, IListenerIgnorer, IRuleActuatorEnumerable, IRuleActuator<IRule>
 		, ComponentOf<HybridListenerRuleActuatorGroup>
+		, AsComponentBranch
 		, AsAwake
 	{
 		/// <summary>

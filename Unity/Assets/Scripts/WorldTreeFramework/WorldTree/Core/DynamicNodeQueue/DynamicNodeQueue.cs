@@ -18,6 +18,7 @@ namespace WorldTree
 	/// 动态节点队列
 	/// </summary>
 	public class DynamicNodeQueue : Node, ComponentOf<INode>, ChildOf<INode>, IEnumerable<INode>
+		, AsChildBranch
 		, AsAwake
 	{
 		/// <summary>

@@ -16,6 +16,7 @@ namespace WorldTree
     /// 感知器单元节点
     /// </summary>
     public class PerceptronNode : Node, ChildOf<INode>
+        , AsChildBranch
         , AsAwake
     {
         /// <summary>

@@ -23,7 +23,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeTask<AsyncOperation> GetAwaiter(this INode self, AsyncOperation asyncOperation)
 		{
-			self.AddChild(out TreeTask<AsyncOperation> asyncTask);
+			self.AddTemp(out TreeTask<AsyncOperation> asyncTask);
 			asyncOperation.completed += asyncTask.SetResult;
 			return asyncTask;
 		}
@@ -34,7 +34,7 @@ namespace WorldTree
 		public static TreeTask<T> GetAwaiter<T>(this INode self, T handle)
 			where T : AsyncOperationBase
 		{
-			self.AddChild(out TreeTask<T> asyncTask);
+			self.AddTemp(out TreeTask<T> asyncTask);
 			handle.Completed += (a) => asyncTask.SetResult(a as T);
 			return asyncTask;
 		}

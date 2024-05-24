@@ -15,7 +15,7 @@ namespace WorldTree
         {
             protected override void Execute(PerceptronLayer self, int count)
             {
-                self.AddComponent(out self.nodes);
+                self.AddChild(out self.nodes);
 
                 for (int i = 0; i < count; i++)
                 {

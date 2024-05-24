@@ -10,6 +10,7 @@
 namespace WorldTree
 {
 	public class TaskTest : Node, ComponentOf<InitialDomain>
+		, AsComponentBranch
 		, AsAwake
 	{
 		public TreeTask treeTask;

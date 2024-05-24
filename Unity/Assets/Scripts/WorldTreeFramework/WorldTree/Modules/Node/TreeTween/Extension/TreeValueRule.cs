@@ -32,7 +32,7 @@ namespace WorldTree
         /// </summary>
         public static async TreeTask WaitForCompletion(this TreeTweenBase self)
         {
-            TreeTask asyncTask = self.AddChild(out TreeTask _);
+            TreeTask asyncTask = self.AddTemp(out TreeTask _);
 
             //令牌是否为空,不为空则将组件挂入令牌
             //(await self.TreeTaskTokenCatch())?.tokenEvent.Add(self, default(ITreeTaskTokenEventRule));

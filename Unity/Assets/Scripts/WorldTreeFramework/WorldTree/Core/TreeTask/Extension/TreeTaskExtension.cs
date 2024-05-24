@@ -22,7 +22,7 @@ namespace WorldTree
         /// </summary>
         public static TreeTaskCompleted TreeTaskCompleted(this INode self)
         {
-            return self.AddChild(out TreeTaskCompleted _);
+            return self.AddTemp(out TreeTaskCompleted _);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace WorldTree
         /// </summary>
         public static TreeTaskTokenCatch TreeTaskTokenCatch(this INode self)
         {
-            return self.AddChild(out TreeTaskTokenCatch _);
+            return self.AddTemp(out TreeTaskTokenCatch _);
         }
     }
 }

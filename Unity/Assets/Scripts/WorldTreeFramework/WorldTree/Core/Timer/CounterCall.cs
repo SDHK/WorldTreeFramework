@@ -14,7 +14,8 @@ namespace WorldTree
 	/// <summary>
 	/// 计数器
 	/// </summary>
-	public class CounterCall : Node, ComponentOf<INode>
+	public class CounterCall : Node, ComponentOf<INode>,TempOf<INode>
+		, AsChildBranch
 		, AsAwake<int>
 		, AsTreeTaskTokenEvent
 

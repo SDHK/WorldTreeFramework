@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolGroup.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Base\TreeTaskBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\CRC32Algorithm.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\Sub\TempBranch\TempBranch.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeListenerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\HybridListenerRuleActuator.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ReferencedPool\ReferencedPool.cs" />

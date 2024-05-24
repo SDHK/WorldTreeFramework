@@ -78,7 +78,7 @@ namespace WorldTree.Internal
 			}
 			if (task == null)
             {
-                task = awaiter.Parent.AddChild(out task);
+                task = awaiter.Parent.AddTemp(out task);
 
                 if (awaiter.m_TreeTaskToken is null)
                 {

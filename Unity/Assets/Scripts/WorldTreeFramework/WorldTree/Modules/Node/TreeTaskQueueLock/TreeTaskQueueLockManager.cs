@@ -10,12 +10,13 @@
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 异步任务队列锁
-    /// </summary>
-    public class TreeTaskQueueLockManager : Node, ComponentOf<WorldTreeRoot>
-        , AsAwake
-    {
-        public TreeDictionary<long, DynamicNodeQueue> nodeQueueDictitonary;
-    }
+	/// <summary>
+	/// 异步任务队列锁
+	/// </summary>
+	public class TreeTaskQueueLockManager : Node, ComponentOf<WorldTreeRoot>
+		, AsChildBranch
+		, AsAwake
+	{
+		public TreeDictionary<long, DynamicNodeQueue> nodeQueueDictitonary;
+	}
 }
