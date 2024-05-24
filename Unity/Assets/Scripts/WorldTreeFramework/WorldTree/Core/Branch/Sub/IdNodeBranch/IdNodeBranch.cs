@@ -33,7 +33,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGetIdNode(this INode self, long idKey, out INode node)
 		{
-			return (node = NodeBranchHelper.GetBranch<IdNodeBranch>(self)?.GetNode(idKey)) != null;
+			return (node = self.GetBranch<IdNodeBranch>()?.GetNode(idKey)) != null;
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace WorldTree
 			where N : class, INode
 			where T : class, INode, NodeOf<N, IdNodeBranch>
 		{
-			return (idNode = NodeBranchHelper.GetBranch<IdNodeBranch>(self)?.GetNode(idKey) as T) != null;
+			return (idNode = self.GetBranch<IdNodeBranch>()?.GetNode(idKey) as T) != null;
 		}
 
 		#endregion
@@ -54,7 +54,7 @@ namespace WorldTree
 		/// 裁剪id节点
 		/// </summary>
 		public static bool TryCutIdNode(this INode self, long idKey, out INode node)
-			=> (node = NodeBranchHelper.GetBranch<IdNodeBranch>(self)?.GetNode(idKey)?.CutSelf()) != null;
+			=> (node = self.GetBranch<IdNodeBranch>()?.GetNode(idKey)?.CutSelf()) != null;
 
 		#endregion
 
@@ -82,7 +82,7 @@ namespace WorldTree
 		/// 根据id移除节点
 		/// </summary>
 		public static void RemoveIdNode(this INode self, long idKey)
-			=> NodeBranchHelper.GetBranch<IdNodeBranch>(self)?.GetNode(idKey)?.Dispose();
+			=> self.GetBranch<IdNodeBranch>()?.GetNode(idKey)?.Dispose();
 
 		/// <summary>
 		/// 移除全部id节点

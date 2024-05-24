@@ -86,7 +86,7 @@ namespace WorldTree
 		/// 尝试获取子节点
 		/// </summary>
 		public static bool TryGetChild(this INode self, long id, out INode child)
-			=> (child = NodeBranchHelper.GetBranch<ChildBranch>(self)?.GetNode(id)) != null;
+			=> (child = self.GetBranch<ChildBranch>()?.GetNode(id)) != null;
 
 		/// <summary>
 		/// 尝试获取子节点
@@ -94,7 +94,7 @@ namespace WorldTree
 		public static bool TryGetChild<N, T>(this N self, long id, out T child)
 			where N : class, INode
 			where T : class, INode, NodeOf<N, ChildBranch>
-		=> (child = (NodeBranchHelper.GetBranch<ChildBranch>(self)?.GetNode(id)) as T) != null;
+		=> (child = (self.GetBranch<ChildBranch>()?.GetNode(id)) as T) != null;
 
 		#endregion
 
@@ -104,7 +104,7 @@ namespace WorldTree
 		/// 裁剪子节点
 		/// </summary>
 		public static bool TryCutChild(this INode self, long id, out INode node)
-			=> (node = NodeBranchHelper.GetBranch<ChildBranch>(self)?.GetNode(id)?.CutSelf()) != null;
+			=> (node = self.GetBranch<ChildBranch>()?.GetNode(id)?.CutSelf()) != null;
 
 		#endregion
 
@@ -131,7 +131,7 @@ namespace WorldTree
 		/// 根据id移除子节点
 		/// </summary>
 		public static void RemoveChild(this INode self, long id)
-			=> NodeBranchHelper.GetBranch<ChildBranch>(self)?.GetNode(id)?.Dispose();
+			=> self.GetBranch<ChildBranch>()?.GetNode(id)?.Dispose();
 
 		/// <summary>
 		/// 移除全部子节点

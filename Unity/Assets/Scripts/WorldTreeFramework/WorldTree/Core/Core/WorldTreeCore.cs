@@ -239,7 +239,7 @@ namespace WorldTree
 
 		public override bool TryAddSelfToTree<B, K>(K Key, INode parent)
 		{
-			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(Key, this))
+			if (parent.AddBranch<B>().TryAddNode(Key, this))
 			{
 				this.BranchType = TypeInfo<B>.TypeCode;
 				this.Parent = parent;
@@ -320,7 +320,7 @@ namespace WorldTree
 		{
 			this.View?.Dispose();
 			this.View = null;
-			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
+			this.Parent.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			this.SetActive(false);
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
 			this.Core.RemoveRuleGroup?.Send(this);//移除事件通知
@@ -354,7 +354,7 @@ namespace WorldTree
 
 		public override bool TryGraftSelfToTree<B, K>(K key, INode parent)
 		{
-			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
+			if (!parent.AddBranch<B>().TryAddNode(key, this)) return false;
 
 			this.BranchType = TypeInfo<B>.TypeCode;
 			this.Parent = parent;

@@ -2,22 +2,56 @@
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 测试节点
-	/// </summary>
-	public partial class DotNetTestNode : Node, ComponentOf<INode>
-		,AsAwake
+
+	public partial class TestNode : Node, ComponentOf<DotNetTestNode>
+		, AsAwake
 	{
 		public int TestValue;
 	}
 
+	/// <summary>
+	/// 测试节点
+	/// </summary>
+	public partial class DotNetTestNode : Node, ComponentOf<INode>
+		, AsAwake
+
+	{
+		public int TestValue;
+	}
+
+
+
 	public static partial class DotNetTestNodeRule
 	{
+
+		public static bool TryGetComponentBranch1<N, BN>(this N self, long key, out BN node)
+			where N : class, INode, AsComponentBranch
+			where BN : class, INode, NodeOf<N, ComponentBranch>
+		=> (node = self.GetBranch<ComponentBranch>()?.GetNode(key) as BN) != null;
+
+		public static bool TryGetTestBranch<N, BN, T>(this N self, long key, out BN node)
+			where N : class, INode, AsBranch<TestBranch<T>>
+			where BN : class, INode, NodeOf<AsTestBranch<T>, TestBranch<T>> where T : class, INode
+		=> (node = self.GetBranch<TestBranch<T>>()?.GetNode(key) as BN) != null;
+
+
+		/// <summary>
+		/// 执行通知法则
+		/// </summary>
+		public static void SendRule1<N, R>(this N self, R nullRule)
+			where N : class, AsCut
+			where R : class, ISendRule
+		{
+			if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return;
+			ruleList.Send(self);
+		}
+
 		private class New : NewRule<DotNetTestNode>
 		{
 			protected override void Execute(DotNetTestNode self)
 			{
 				self.Log("新建！！");
+
 			}
 		}
 

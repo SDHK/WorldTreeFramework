@@ -96,12 +96,6 @@ namespace WorldTree
 	public static partial class NodeRule
 	{
 		/// <summary>
-		/// 释放分支的所有节点
-		/// </summary>
-		public static void RemoveAllNode<B>(this INode self) where B : class, IBranch
-			=> self.RemoveAllNode(TypeInfo<B>.TypeCode);
-
-		/// <summary>
 		/// 获取指定父类型法则列表
 		/// </summary>
 		public static IRuleList<R> GetBaseRule<N, B, R>(this N self)

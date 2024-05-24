@@ -109,7 +109,7 @@ namespace WorldTree
 
 		public static void Destroy(this RuleManager self)
 		{
-			NodeBranchHelper.RemoveBranchNode(self.Parent, self.BranchType, self);//从父节点分支移除
+			self.Parent.RemoveBranchNode(self.BranchType, self);//从父节点分支移除
 
 			self.RuleGroupDictionary.Clear();
 			self.NodeTypeRulesDictionary.Clear();

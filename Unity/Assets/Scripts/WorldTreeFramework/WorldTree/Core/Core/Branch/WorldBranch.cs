@@ -35,14 +35,14 @@ namespace WorldTree
 		/// 尝试获取世界
 		/// </summary>
 		public static bool TryGetWorld(this INode self, long type, out INode core)
-			=> (core = NodeBranchHelper.GetBranch<WorldBranch>(self)?.GetNode(type)) != null;
+			=> (core = self.GetBranch<WorldBranch>()?.GetNode(type)) != null;
 
 		/// <summary>
 		/// 尝试获取世界
 		/// </summary>
 		public static bool TryGetWorld<N, T>(this N self, out T core)
 			where N : class, INode where T : class, INode, NodeOf<N, WorldBranch>
-		=> (core = NodeBranchHelper.GetBranch<WorldBranch>(self)?.GetNode(TypeInfo<T>.TypeCode) as T) != null;
+		=> (core = self.GetBranch<WorldBranch>()?.GetNode(TypeInfo<T>.TypeCode) as T) != null;
 
 		#endregion
 
@@ -52,13 +52,13 @@ namespace WorldTree
 		/// 移除世界
 		/// </summary>
 		public static void RemoveWorld<T>(this INode self) where T : class, INode
-			=> NodeBranchHelper.GetBranch<WorldBranch>(self)?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();
+			=> self.GetBranch<WorldBranch>()?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();
 
 		/// <summary>
 		/// 移除世界
 		/// </summary>
 		public static void RemoveWorld(this INode self, long type)
-			=> NodeBranchHelper.GetBranch<WorldBranch>(self)?.GetNode(type)?.Dispose();
+			=> self.GetBranch<WorldBranch>()?.GetNode(type)?.Dispose();
 
 		/// <summary>
 		/// 移除全部组件

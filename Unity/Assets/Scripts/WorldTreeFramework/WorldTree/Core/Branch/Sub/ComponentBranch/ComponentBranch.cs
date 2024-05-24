@@ -45,14 +45,14 @@ namespace WorldTree
 		/// 尝试获取组件
 		/// </summary>
 		public static bool TryGetComponent(this INode self, long type, out INode component)
-			=> (component = NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(type)) != null;
+			=> (component = self.GetBranch<ComponentBranch>()?.GetNode(type)) != null;
 
 		/// <summary>
 		/// 尝试获取组件
 		/// </summary>
 		public static bool TryGetComponent<N, T>(this N self, out T component)
 			where N : class, INode where T : class, INode, NodeOf<N, ComponentBranch>
-		=> (component = (NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(TypeInfo<T>.TypeCode)) as T) != null;
+		=> (component = (self.GetBranch<ComponentBranch>()?.GetNode(TypeInfo<T>.TypeCode)) as T) != null;
 
 		#endregion
 
@@ -63,13 +63,13 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryCutComponent<T>(this INode self, out T node)
 			where T : class, INode
-		=> (node = NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(TypeInfo<T>.TypeCode)?.CutSelf() as T) != null;
+		=> (node = self.GetBranch<ComponentBranch>()?.GetNode(TypeInfo<T>.TypeCode)?.CutSelf() as T) != null;
 
 		/// <summary>
 		/// 裁剪组件
 		/// </summary>
 		public static bool TryCutComponent(this INode self, long type, out INode node)
-			=> (node = NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(type)?.CutSelf()) != null;
+			=> (node = self.GetBranch<ComponentBranch>()?.GetNode(type)?.CutSelf()) != null;
 
 		#endregion
 
@@ -94,13 +94,13 @@ namespace WorldTree
 		/// </summary>
 		public static void RemoveComponent<T>(this INode self)
 			where T : class, INode
-		=> NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();
+		=> self.GetBranch<ComponentBranch>()?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();
 
 		/// <summary>
 		/// 移除组件
 		/// </summary>
 		public static void RemoveComponent(this INode self, long type)
-			=> NodeBranchHelper.GetBranch<ComponentBranch>(self)?.GetNode(type)?.Dispose();
+			=> self.GetBranch<ComponentBranch>()?.GetNode(type)?.Dispose();
 
 		/// <summary>
 		/// 移除全部组件
