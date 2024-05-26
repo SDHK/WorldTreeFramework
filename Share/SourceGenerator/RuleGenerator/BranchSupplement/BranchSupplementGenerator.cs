@@ -182,7 +182,7 @@ namespace WorldTree.SourceGenerator
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
 
 			CommentPara.Clear();
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "尝试获取分支", "\t\t");
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "测试111尝试获取分支", "\t\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 			Code.AppendLine(@$"		public static bool TryGet{ClassName}<N, BN{TypeArguments}>(this As{ClassFullName} self, {genericType} key, out BN node)

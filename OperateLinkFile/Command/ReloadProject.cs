@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -118,7 +119,18 @@ namespace OperateLinkFile.Command
 				if (selectedItem.Project != null)
 				{
 					//获取项目已打开的文件的路径
-					List<string> openedFiles = GetOpenedFiles(selectedItem.Project);
+
+					bool isUnity = IsUnityProject(selectedItem.Project);
+					List<string> openedFiles = null;
+					if (isUnity)
+					{
+						openedFiles = GetOpenedFiles(dte, selectedItem.Project.FullName);
+					}
+					else
+					{
+						openedFiles = GetOpenedFiles(selectedItem.Project);
+					}
+
 
 					// 命令卸载项目
 					dte.ExecuteCommand("Project.UnloadProject");
@@ -130,27 +142,63 @@ namespace OperateLinkFile.Command
 					foreach (var file in openedFiles) dte.ItemOperations.OpenFile(file);
 				}
 			}
-			return;
+
 		}
 
 		private List<string> GetOpenedFiles(Project project)
 		{
-			ThreadHelper.ThrowIfNotOnUIThread();
-
+			ThreadHelper.ThrowIfNotOnUIThread();//无法获取Link的文件
 			List<string> openedFiles = new List<string>();
-
 			foreach (ProjectItem item in project.ProjectItems)
 			{
 				// 检查项目项是否有文档和活动窗口
 				if (item.Document != null && item.Document.ActiveWindow != null)
 				{
 					// 检查项目项是否有文件名
-					openedFiles.Add(item.FileNames[0]);
+					string FileName = item.FileNames[0];
+					openedFiles.Add(FileName);
 				}
 			}
-
 			return openedFiles;
 		}
 
+
+		private List<string> GetOpenedFiles(DTE2 dte, string projectPath)
+		{
+			//projectPath的父级目录
+			projectPath = Path.GetDirectoryName(projectPath);
+
+			List<string> openedFiles = new List<string>();
+
+			// 获取项目目录中的所有C#文件
+			string[] files = Directory.GetFiles(projectPath, "*.cs", SearchOption.AllDirectories);
+			foreach (string file in files)
+			{
+				// 检查文件是否已在Visual Studio中打开
+				Document document = dte.Documents.Cast<Document>().FirstOrDefault(doc => doc.FullName == file);
+				if (document != null && document.ActiveWindow != null)
+				{
+					openedFiles.Add(file);
+				}
+			}
+			return openedFiles;
+		}
+
+		private bool IsUnityProject(Project project)
+		{
+			ThreadHelper.ThrowIfNotOnUIThread();
+			// 获取项目文件的路径
+			string projectFilePath = Path.GetDirectoryName(project.FullName);
+			//查找是否有Assets文件夹
+			string[] dirs = Directory.GetDirectories(projectFilePath);
+			foreach (string dir in dirs)
+			{
+				if (dir.EndsWith("Assets"))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }
