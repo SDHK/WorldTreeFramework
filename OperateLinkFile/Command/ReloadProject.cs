@@ -1,21 +1,15 @@
 ﻿using EnvDTE;
 using EnvDTE80;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
 using Task = System.Threading.Tasks.Task;
 
-namespace OperateLinkFile.Command
+namespace OperateLinkFile
 {
 	/// <summary>
 	/// Command handler
@@ -105,13 +99,13 @@ namespace OperateLinkFile.Command
 			if (dte.Documents.Cast<Document>().Any(doc => !doc.Saved))
 			{
 				// 如果有文件未保存成功,则弹出对话框让用户选择是否要重新加载
-				var result = MessageBox.Show("有未保存的更改，是否要重新加载项目？", "警告", MessageBoxButtons.YesNo);
+				var result = MessageBox.Show("有未保存的更改，是否要重新加载？", "警告", MessageBoxButtons.YesNo);
 				if (result == DialogResult.No)
 				{
 					return;
 				}
 			}
-
+			//await VS.StatusBar.ShowProgressAsync("Step 3/3", 3, 3);
 			var selectedItems = dte.SelectedItems;
 			//假如选择了多个项目，那么就遍历处理
 			foreach (SelectedItem selectedItem in selectedItems)
@@ -128,40 +122,51 @@ namespace OperateLinkFile.Command
 					}
 					else
 					{
-						openedFiles = GetOpenedFiles(selectedItem.Project);
+						openedFiles = GetOpenedFiles(dte, selectedItem.Project);
 					}
-
 
 					// 命令卸载项目
 					dte.ExecuteCommand("Project.UnloadProject");
 					// 命令加载项目
 					dte.ExecuteCommand("Project.ReloadProject");
 
-
 					//重新打开所有已打开的文件
 					foreach (var file in openedFiles) dte.ItemOperations.OpenFile(file);
 				}
 			}
-
 		}
 
-		private List<string> GetOpenedFiles(Project project)
-		{
-			ThreadHelper.ThrowIfNotOnUIThread();//无法获取Link的文件
+		private List<string> GetOpenedFiles(DTE2 dte, Project project)
+		{ 
+			ThreadHelper.ThrowIfNotOnUIThread();
 			List<string> openedFiles = new List<string>();
+			Stack<ProjectItem> stack = new Stack<ProjectItem>();
+
+			ProjectItem current;
 			foreach (ProjectItem item in project.ProjectItems)
 			{
-				// 检查项目项是否有文档和活动窗口
-				if (item.Document != null && item.Document.ActiveWindow != null)
+				stack.Push(item);
+				while (stack.Count > 0)
 				{
-					// 检查项目项是否有文件名
-					string FileName = item.FileNames[0];
-					openedFiles.Add(FileName);
+					current = stack.Pop();
+
+					// 检查项目项是否有文档和活动窗口
+					if (current.Document != null && current.Document.ActiveWindow != null)
+					{
+						// 检查项目项是否有文件名
+						string FileName = current.FileNames[0];
+						openedFiles.Add(FileName);
+					}
+
+					// 将子项目项添加到栈中
+					foreach (ProjectItem ProjectItem in current.ProjectItems)
+					{
+						stack.Push(ProjectItem);
+					}
 				}
 			}
 			return openedFiles;
 		}
-
 
 		private List<string> GetOpenedFiles(DTE2 dte, string projectPath)
 		{

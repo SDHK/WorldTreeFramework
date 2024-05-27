@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "3FjyTZ2mH9A=",
+  "dgSpecHash": "kiukyar2wEaszEUBEprivNwl+CWNbO3tdwfAcuymXe8sT7x6P7GKDsTUQgHwlGZgoisHPFp73ObU6VRkbtQKfQ==",
   "success": true,
-  "projectFilePath": "D:\\Projects\\GameEngine\\Unity\\GitHub\\WorldTree\\DotNet\\Core\\DotNet.Core.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Core\\DotNet.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.27\\microsoft.netcore.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.27\\microsoft.aspnetcore.app.ref.6.0.27.nupkg.sha512"
+  ],
   "logs": []
 }

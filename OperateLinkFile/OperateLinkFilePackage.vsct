@@ -37,11 +37,13 @@
          must be a menu. -->
     <Groups>
       <Group guid="guidOperateLinkFilePackageCmdSet" id="ReloadSolutionGroup" priority="0x0600">
-        <!--<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>-->
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE" />
       </Group>
       <Group guid="guidOperateLinkFilePackageCmdSet1" id="ReloadProjectGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidOperateLinkFilePackageCmdSet2" id="DeleteFileGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
       </Group>
     </Groups>
 
@@ -70,6 +72,22 @@
           <ButtonText>重新加载项目</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidOperateLinkFilePackageCmdSet2" id="DeleteFile" priority="0x0100" type="Button">
+        <Parent guid="guidOperateLinkFilePackageCmdSet2" id="DeleteFileGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>删除文件</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidOperateLinkFilePackageCmdSet2" id="cmdidToolWindowCommand" priority="0x0200" type="Button">
+        <!--<Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />-->
+        <Parent guid="guidOperateLinkFilePackageCmdSet2" id="DeleteFileGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>工具窗口</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -87,17 +105,25 @@
     <!-- This is the package guid. -->
     <GuidSymbol name="guidOperateLinkFilePackage" value="{74135e63-00e9-4602-af2e-afcebd73f41e}" />
 
-    <!-- This is the guid used to group the menu commands together -->
+    <!--引用类型Id-->
     <GuidSymbol name="guidOperateLinkFilePackageCmdSet" value="{290fe293-9565-4326-86d2-0b9e0b048177}">
       <IDSymbol name="ReloadSolutionGroup" value="0x1020" />
       <IDSymbol name="ReloadSolution" value="0x0100" />
     </GuidSymbol>
 
-    <!--引用类型Id-->
-    <GuidSymbol name="guidOperateLinkFilePackageCmdSet1" value="{7c59721e-b62a-45c9-a354-c6594c19e7ae}" >
-      <IDSymbol name="ReloadProjectGroup" value="0x1020"  />
-      <IDSymbol name="ReloadProject" value="0x0200"  />
+    
+    <GuidSymbol name="guidOperateLinkFilePackageCmdSet1" value="{7c59721e-b62a-45c9-a354-c6594c19e7ae}">
+      <IDSymbol name="ReloadProjectGroup" value="0x1020" />
+      <IDSymbol name="ReloadProject" value="0x0200" />
     </GuidSymbol>
+    
+
+    <GuidSymbol name="guidOperateLinkFilePackageCmdSet2" value="{f0caa44f-08f2-45f5-84ae-6e6ef252bdad}" >
+      <IDSymbol name="DeleteFileGroup" value="0x1020" />
+      <IDSymbol name="DeleteFile" value="0x0300" />
+      <IDSymbol name="cmdidToolWindowCommand" value="0x0400" />
+    </GuidSymbol>
+    
 
     <!--图片设置-->
     <GuidSymbol name="guidImages" value="{4589e727-fe79-4634-bda2-1f2a75a4e7c0}">
@@ -108,5 +134,7 @@
       <IDSymbol name="bmpPicArrows" value="5" />
       <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
+
+
   </Symbols>
 </CommandTable>

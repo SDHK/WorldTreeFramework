@@ -1,28 +1,28 @@
-﻿using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
-using System.Linq;
-using System.Windows.Forms;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
 namespace OperateLinkFile
 {
 	/// <summary>
-	/// 重新加载解决方案
+	/// Command handler
 	/// </summary>
-	internal sealed class ReloadSolution
+	internal sealed class ToolWindowCommand
 	{
 		/// <summary>
 		/// Command ID.
 		/// </summary>
-		public const int CommandId = 0x0100;
+		public const int CommandId = 0x0400;
 
 		/// <summary>
 		/// Command menu group (command set GUID).
 		/// </summary>
-		public static readonly Guid CommandSet = new Guid("290fe293-9565-4326-86d2-0b9e0b048177");
+		public static readonly Guid CommandSet = new Guid("f0caa44f-08f2-45f5-84ae-6e6ef252bdad");
 
 		/// <summary>
 		/// VS Package that provides this command, not null.
@@ -30,25 +30,25 @@ namespace OperateLinkFile
 		private readonly AsyncPackage package;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ReloadSolution"/> class.
+		/// Initializes a new instance of the <see cref="ToolWindowCommand"/> class.
 		/// Adds our command handlers for menu (commands must exist in the command table file)
 		/// </summary>
 		/// <param name="package">Owner package, not null.</param>
 		/// <param name="commandService">Command service to add command to, not null.</param>
-		private ReloadSolution(AsyncPackage package, OleMenuCommandService commandService)
+		private ToolWindowCommand(AsyncPackage package, OleMenuCommandService commandService)
 		{
 			this.package = package ?? throw new ArgumentNullException(nameof(package));
 			commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
 			var menuCommandID = new CommandID(CommandSet, CommandId);
-			var menuItem = new MenuCommand(this.ExecuteAsync, menuCommandID);
+			var menuItem = new MenuCommand(this.Execute, menuCommandID);
 			commandService.AddCommand(menuItem);
 		}
 
 		/// <summary>
 		/// Gets the instance of the command.
 		/// </summary>
-		public static ReloadSolution Instance
+		public static ToolWindowCommand Instance
 		{
 			get;
 			private set;
@@ -71,47 +71,43 @@ namespace OperateLinkFile
 		/// <param name="package">Owner package, not null.</param>
 		public static async Task InitializeAsync(AsyncPackage package)
 		{
-			// Switch to the main thread - the call to AddCommand in Command1's constructor requires
+			// Switch to the main thread - the call to AddCommand in ToolWindowCommand's constructor requires
 			// the UI thread.
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
 			OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-			Instance = new ReloadSolution(package, commandService);
+			Instance = new ToolWindowCommand(package, commandService);
 		}
 
 		/// <summary>
-		/// This function is the callback used to execute the command when the menu item is clicked.
-		/// See the constructor to see how the menu item is associated with this function using
-		/// OleMenuCommandService service and MenuCommand class.
+		/// Shows the tool window when the menu item is clicked.
 		/// </summary>
-		/// <param name="sender">Event sender.</param>
-		/// <param name="e">Event args.</param>
-		private void ExecuteAsync(object sender, EventArgs e)
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event args.</param>
+		private void Execute(object sender, EventArgs e)
 		{
 			ThreadHelper.ThrowIfNotOnUIThread();
 
-			// 获取DTE服务
-			var dte = ServiceProvider.GetServiceAsync(typeof(DTE)).Result as DTE2;
-
-			// 获取当前解决方案路径
-			string solutionPath = dte.Solution.FullName;
-
-			// 检查是否有未保存的更改
-			if (dte.Documents.Cast<Document>().Any(doc => !doc.Saved))
+			// Get the instance number 0 of this tool window. This window is single instance so this instance
+			// is actually the only one.
+			// The last flag is set to true so that if the tool window does not exists it will be created.
+			ToolWindowPane window = this.package.FindToolWindow(typeof(ToolWindow), 0, true);
+			if ((null == window) || (null == window.Frame))
 			{
-				// 如果有文件未保存成功,则弹出对话框让用户选择是否要重新加载
-				var result = MessageBox.Show("有未保存的更改，是否要重新加载？", "警告", MessageBoxButtons.YesNo);
-				if (result == DialogResult.No)
+				throw new NotSupportedException("Cannot create tool window");
+			}
+
+
+			if (window is ToolWindow toolWindow)
+			{
+				if (toolWindow.Content is ToolWindowControl toolWindowControl)
 				{
-					return;
+					toolWindowControl.ServiceProvider = ServiceProvider;
 				}
 			}
 
-			// 关闭解决方案
-			dte.Solution.Close();
-
-			// 重新打开解决方案 
-			dte.Solution.Open(solutionPath);
+			IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+			Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
 		}
 	}
 }

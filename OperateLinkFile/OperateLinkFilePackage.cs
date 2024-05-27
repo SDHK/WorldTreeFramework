@@ -26,6 +26,7 @@ namespace OperateLinkFile
 	[PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
 	[Guid(OperateLinkFilePackage.PackageGuidString)]
 	[ProvideMenuResource("Menus.ctmenu", 1)]
+	[ProvideToolWindow(typeof(ToolWindow))]
 	public sealed class OperateLinkFilePackage : AsyncPackage
 	{
 		/// <summary>
@@ -48,7 +49,9 @@ namespace OperateLinkFile
 			// Do any initialization that requires the UI thread after switching to the UI thread.
 			await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 		    await ReloadSolution.InitializeAsync(this);
-		    await OperateLinkFile.Command.ReloadProject.InitializeAsync(this);
+		    await ReloadProject.InitializeAsync(this);
+		    await DeleteFile.InitializeAsync(this);
+		    await ToolWindowCommand.InitializeAsync(this);
 		}
 
 		#endregion
