@@ -2,6 +2,7 @@
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
 using System.Windows.Forms;
@@ -17,7 +18,7 @@ namespace OperateLinkFile
 		/// <summary>
 		/// Command ID.
 		/// </summary>
-		public const int CommandId = 0x0300;
+		public const int CommandId = 0x0200;
 
 		/// <summary>
 		/// Command menu group (command set GUID).
@@ -91,25 +92,44 @@ namespace OperateLinkFile
 			ThreadHelper.ThrowIfNotOnUIThread();
 			DTE2 dte = ServiceProvider.GetServiceAsync(typeof(DTE)).Result as DTE2;
 
-			var selectedItem = dte.SelectedItems.Item(1);
-			if (selectedItem == null || !(selectedItem.ProjectItem is ProjectItem projectItem)) return;
+			List<string> files = new List<string>();
+			List<string> ProjectPaths = new List<string>();
 
-			string filePath = projectItem.FileNames[0]; // 获取文件路径
+			string ShowText = "";
+			foreach (var selectedItem in dte.SelectedItems)
+			{
+				if (selectedItem == null || !(selectedItem is SelectedItem SelectedItem)) continue;
+				var projectItem = SelectedItem.ProjectItem;
+				if (projectItem == null) continue;
 
-			string oldFileName = Path.GetFileName(filePath);
+				string filePath = projectItem.FileNames[0]; // 获取文件路径
+				if (!File.Exists(filePath)) continue;//文件不存在
 
-			var result = MessageBox.Show($"确定删除文件：{oldFileName} \n{filePath}", "警告", MessageBoxButtons.YesNo);
+				ShowText += Path.GetFileName(filePath) + "\n";
+				files.Add(filePath);
+				string ProjectPath = projectItem.ContainingProject.FullName;
+				if (!File.Exists(ProjectPath) || ProjectPaths.Contains(ProjectPath)) continue;
+				ProjectPaths.Add(projectItem.ContainingProject.FullName);
+			}
+
+			var result = MessageBox.Show($"确定删除文件：\n{ShowText}", "警告", MessageBoxButtons.YesNo);
 			if (result == DialogResult.No) return;
-			//检测这是文件夹还是文件
-			if (Directory.Exists(filePath))
-			{
-				Directory.Delete(filePath, true);//删除文件夹
-			}
-			else if (File.Exists(filePath))
-			{
-				File.Delete(filePath);//删除文件
-			}
 
+			//删除文件
+			foreach (var file in files) File.Delete(file);
+
+			//刷新项目配置
+			foreach (var ProjectPath in ProjectPaths) RefreshProject(ProjectPath);
+		}
+
+		public void RefreshProject(string ProjectPath)
+		{
+			string text = File.ReadAllText(ProjectPath);
+			text += " "; // 在文件尾部添加空格
+			File.WriteAllText(ProjectPath, text); // 保存文件
+
+			text.TrimEnd(); // 删除文件尾部空格
+			File.WriteAllText(ProjectPath, text); // 保存文件
 		}
 	}
 }

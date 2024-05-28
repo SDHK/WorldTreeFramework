@@ -26,7 +26,6 @@ namespace OperateLinkFile
 	[PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
 	[Guid(OperateLinkFilePackage.PackageGuidString)]
 	[ProvideMenuResource("Menus.ctmenu", 1)]
-	[ProvideToolWindow(typeof(ToolWindow))]
 	public sealed class OperateLinkFilePackage : AsyncPackage
 	{
 		/// <summary>
@@ -51,7 +50,10 @@ namespace OperateLinkFile
 		    await ReloadSolution.InitializeAsync(this);
 		    await ReloadProject.InitializeAsync(this);
 		    await DeleteFile.InitializeAsync(this);
-		    await ToolWindowCommand.InitializeAsync(this);
+		    await NewFile.InitializeAsync(this);
+		    await FolderNewFile.InitializeAsync(this);
+		    await NewFolder.InitializeAsync(this);
+		    await DeleteFolder.InitializeAsync(this);
 		}
 
 		#endregion

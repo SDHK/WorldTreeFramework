@@ -19,7 +19,7 @@ namespace OperateLinkFile
 		/// <summary>
 		/// Command ID.
 		/// </summary>
-		public const int CommandId = 0x0200;
+		public const int CommandId = 0x0100;
 
 		/// <summary>
 		/// Command menu group (command set GUID).

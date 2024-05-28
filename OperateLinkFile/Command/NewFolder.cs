@@ -1,29 +1,33 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using OperateLinkFile.Windows;
 using System;
 using System.ComponentModel.Design;
-using System.Linq;
+using System.Globalization;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using Task = System.Threading.Tasks.Task;
 
 namespace OperateLinkFile
 {
 	/// <summary>
-	/// 重新加载解决方案
+	/// Command handler
 	/// </summary>
-	internal sealed class ReloadSolution
+	internal sealed class NewFolder
 	{
 		/// <summary>
 		/// Command ID.
 		/// </summary>
-		public const int CommandId = 0x0100;
+		public const int CommandId = 0x0200;
 
 		/// <summary>
 		/// Command menu group (command set GUID).
 		/// </summary>
-		public static readonly Guid CommandSet = new Guid("290fe293-9565-4326-86d2-0b9e0b048177");
+		public static readonly Guid CommandSet = new Guid("5304f298-039c-426f-a592-b3a2eb83dfe6");
 
 		/// <summary>
 		/// VS Package that provides this command, not null.
@@ -31,25 +35,25 @@ namespace OperateLinkFile
 		private readonly AsyncPackage package;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ReloadSolution"/> class.
+		/// Initializes a new instance of the <see cref="NewFolder"/> class.
 		/// Adds our command handlers for menu (commands must exist in the command table file)
 		/// </summary>
 		/// <param name="package">Owner package, not null.</param>
 		/// <param name="commandService">Command service to add command to, not null.</param>
-		private ReloadSolution(AsyncPackage package, OleMenuCommandService commandService)
+		private NewFolder(AsyncPackage package, OleMenuCommandService commandService)
 		{
 			this.package = package ?? throw new ArgumentNullException(nameof(package));
 			commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
 			var menuCommandID = new CommandID(CommandSet, CommandId);
-			var menuItem = new MenuCommand(this.ExecuteAsync, menuCommandID);
+			var menuItem = new MenuCommand(this.Execute, menuCommandID);
 			commandService.AddCommand(menuItem);
 		}
 
 		/// <summary>
 		/// Gets the instance of the command.
 		/// </summary>
-		public static ReloadSolution Instance
+		public static NewFolder Instance
 		{
 			get;
 			private set;
@@ -72,12 +76,12 @@ namespace OperateLinkFile
 		/// <param name="package">Owner package, not null.</param>
 		public static async Task InitializeAsync(AsyncPackage package)
 		{
-			// Switch to the main thread - the call to AddCommand in Command1's constructor requires
+			// Switch to the main thread - the call to AddCommand in NewFolder's constructor requires
 			// the UI thread.
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
 			OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-			Instance = new ReloadSolution(package, commandService);
+			Instance = new NewFolder(package, commandService);
 		}
 
 		/// <summary>
@@ -87,32 +91,51 @@ namespace OperateLinkFile
 		/// </summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
-		private void ExecuteAsync(object sender, EventArgs e)
+		private void Execute(object sender, EventArgs e)
 		{
 			ThreadHelper.ThrowIfNotOnUIThread();
+			InputFieldWindow newFileWindow = new InputFieldWindow();
+			newFileWindow.callback = Execute;
+			newFileWindow.Title = "请输入文件夹名称";
+			newFileWindow.ShowDialog();
+		}
 
-			// 获取DTE服务
-			var dte = ServiceProvider.GetServiceAsync(typeof(DTE)).Result as DTE2;
+		private void Execute(InputFieldControl inputFieldControl, bool bit)
+		{
+			ThreadHelper.ThrowIfNotOnUIThread();
+			if (!bit) return;
 
-			// 获取当前解决方案路径
-			string solutionPath = dte.Solution.FullName;
+			DTE2 dte = ServiceProvider.GetServiceAsync(typeof(DTE)).Result as DTE2;
+			var selectedItem = dte.SelectedItems.Item(1);
+			if (selectedItem == null || !(selectedItem.ProjectItem is ProjectItem projectItem)) return;
 
-			// 检查是否有未保存的更改
-			if (dte.Documents.Cast<Document>().Any(doc => !doc.Saved))
+			//在路径创建文件并添加到项目中
+			string folderPath = Path.Combine(projectItem.FileNames[0], inputFieldControl.TextBox.Text);
+
+			//检测文件夹是否存在，路径是否正确
+			if (!Directory.Exists(folderPath))
 			{
-				// 如果有文件未保存成功,则弹出对话框让用户选择是否要重新加载
-				var result = System.Windows.Forms.MessageBox.Show("有未保存的更改，是否要重新加载？", "警告", MessageBoxButtons.YesNo);
-				if (result == DialogResult.No)
-				{
-					return;
-				}
+				Directory.CreateDirectory(folderPath);
+			}
+			else
+			{
+				MessageBox.Show("文件夹已存在！！！");
 			}
 
-			// 关闭解决方案
-			dte.Solution.Close();
+			//刷新项目配置
+			string ProjectPath = projectItem.ContainingProject.FullName;
+			RefreshProject(ProjectPath);
+		}
 
-			// 重新打开解决方案 
-			dte.Solution.Open(solutionPath);
+
+		public void RefreshProject(string ProjectPath)
+		{
+			string text = File.ReadAllText(ProjectPath);
+			text += " "; // 在文件尾部添加空格
+			File.WriteAllText(ProjectPath, text); // 保存文件
+
+			text.TrimEnd(); // 删除文件尾部空格
+			File.WriteAllText(ProjectPath, text); // 保存文件
 		}
 	}
 }
