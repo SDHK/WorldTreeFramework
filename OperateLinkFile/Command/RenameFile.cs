@@ -1,10 +1,14 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using OperateLinkFile.Windows;
 using System;
 using System.ComponentModel.Design;
+using System.Globalization;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Task = System.Threading.Tasks.Task;
 
@@ -13,12 +17,12 @@ namespace OperateLinkFile
 	/// <summary>
 	/// Command handler
 	/// </summary>
-	internal sealed class NewFile
+	internal sealed class RenameFile
 	{
 		/// <summary>
 		/// Command ID.
 		/// </summary>
-		public const int CommandId = 0x0100;
+		public const int CommandId = 0x0300;
 
 		/// <summary>
 		/// Command menu group (command set GUID).
@@ -31,12 +35,12 @@ namespace OperateLinkFile
 		private readonly AsyncPackage package;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="NewFile"/> class.
+		/// Initializes a new instance of the <see cref="RenameFile"/> class.
 		/// Adds our command handlers for menu (commands must exist in the command table file)
 		/// </summary>
 		/// <param name="package">Owner package, not null.</param>
 		/// <param name="commandService">Command service to add command to, not null.</param>
-		private NewFile(AsyncPackage package, OleMenuCommandService commandService)
+		private RenameFile(AsyncPackage package, OleMenuCommandService commandService)
 		{
 			this.package = package ?? throw new ArgumentNullException(nameof(package));
 			commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
@@ -49,7 +53,7 @@ namespace OperateLinkFile
 		/// <summary>
 		/// Gets the instance of the command.
 		/// </summary>
-		public static NewFile Instance
+		public static RenameFile Instance
 		{
 			get;
 			private set;
@@ -72,12 +76,12 @@ namespace OperateLinkFile
 		/// <param name="package">Owner package, not null.</param>
 		public static async Task InitializeAsync(AsyncPackage package)
 		{
-			// Switch to the main thread - the call to AddCommand in NewFile's constructor requires
+			// Switch to the main thread - the call to AddCommand in RenameFile's constructor requires
 			// the UI thread.
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
 			OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-			Instance = new NewFile(package, commandService);
+			Instance = new RenameFile(package, commandService);
 		}
 
 		/// <summary>
@@ -92,7 +96,7 @@ namespace OperateLinkFile
 			ThreadHelper.ThrowIfNotOnUIThread();
 			InputFieldWindow newFileWindow = new InputFieldWindow();
 			newFileWindow.callback = Execute;
-			newFileWindow.Title = "请输入文件名称";
+			newFileWindow.Title = "重命名文件名称";
 			newFileWindow.ShowDialog();
 		}
 
@@ -104,34 +108,26 @@ namespace OperateLinkFile
 			var selectedItem = dte.SelectedItems.Item(1);
 			if (selectedItem == null || !(selectedItem.ProjectItem is ProjectItem projectItem)) return;
 			string filePath = projectItem.FileNames[0]; //获取文件路径
+			if (!File.Exists(filePath)) return;
+
 			filePath = Path.GetDirectoryName(filePath); //获取文件父级路径
 
 			//在路径创建文件并添加到项目中
-			string FileName = inputFieldControl.TextBox.Text;
-			string file = Path.Combine(filePath, FileName);
+			string fileName = inputFieldControl.TextBox.Text;
+			string newFile = Path.Combine(filePath, fileName);
 
 			//检测文件是否存在，路径是否正确
-			if (!File.Exists(file))
+			if (!File.Exists(newFile))
 			{
-				//检测路径不存在创建父级文件夹
-				string DirectoryPath = Path.GetDirectoryName(file);
-
-				if (!Directory.Exists(DirectoryPath)) Directory.CreateDirectory(DirectoryPath);
-				File.Create(file).Close();
+				//重命名文件
+				File.Move(projectItem.FileNames[0], newFile);
 			}
 			else
 			{
-				MessageBox.Show("文件已存在！！！");
+				//提示文件重名
+				MessageBox.Show("文件重名！！！");
 			}
-
-			dte.ItemOperations.OpenFile(file);
-
-			//刷新项目配置
-			CommandHelper.RefreshProject(projectItem.ContainingProject.FullName);
+			dte.ItemOperations.OpenFile(newFile);
 		}
-
-
-
-
 	}
 }

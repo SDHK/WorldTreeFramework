@@ -54,6 +54,9 @@ namespace OperateLinkFile
 		    await FolderNewFile.InitializeAsync(this);
 		    await NewFolder.InitializeAsync(this);
 		    await DeleteFolder.InitializeAsync(this);
+		    await RenameFile.InitializeAsync(this);
+		    await RenameFolder.InitializeAsync(this);
+		    await RefreshProject.InitializeAsync(this);
 		}
 
 		#endregion

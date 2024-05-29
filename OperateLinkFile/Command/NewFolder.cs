@@ -109,13 +109,21 @@ namespace OperateLinkFile
 			var selectedItem = dte.SelectedItems.Item(1);
 			if (selectedItem == null || !(selectedItem.ProjectItem is ProjectItem projectItem)) return;
 
+
+			//获取链接文件夹的原始路径
+			if (!(CommandHelper.GetOriginalPath(projectItem) is string folderPath))
+			{
+				// 拿不到则直接获取文件夹路径
+				folderPath = projectItem.FileNames[0];
+			}
+
 			//在路径创建文件并添加到项目中
-			string folderPath = Path.Combine(projectItem.FileNames[0], inputFieldControl.TextBox.Text);
+			string folderSubPath = Path.Combine(folderPath, inputFieldControl.TextBox.Text);
 
 			//检测文件夹是否存在，路径是否正确
-			if (!Directory.Exists(folderPath))
+			if (!Directory.Exists(folderSubPath))
 			{
-				Directory.CreateDirectory(folderPath);
+				Directory.CreateDirectory(folderSubPath);
 			}
 			else
 			{

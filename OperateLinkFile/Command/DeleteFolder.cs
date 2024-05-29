@@ -103,12 +103,18 @@ namespace OperateLinkFile
 				var projectItem = SelectedItem.ProjectItem;
 				if (projectItem == null) continue;
 
-				string filePath = projectItem.FileNames[0]; // 获取文件夹路径
-				if (!Directory.Exists(filePath)) continue;//文件夹不存在
+				//获取链接文件夹的原始路径
+				if (!(CommandHelper.GetOriginalPath(projectItem) is string folderPath))
+				{
+					// 拿不到则直接获取文件夹路径
+					folderPath = projectItem.FileNames[0];
+				}
 
-				filePath = filePath.TrimEnd('\\');
-				ShowText += filePath.Split('\\').Last() + "\n";
-				files.Add(filePath);
+				if (!Directory.Exists(folderPath)) continue;//文件夹不存在
+
+				folderPath = folderPath.TrimEnd('\\');
+				ShowText += folderPath.Split('\\').Last() + "\n";
+				files.Add(folderPath);
 				string ProjectPath = projectItem.ContainingProject.FullName;
 				if (!Directory.Exists(ProjectPath) || ProjectPaths.Contains(ProjectPath)) continue;
 				ProjectPaths.Add(projectItem.ContainingProject.FullName);
@@ -121,17 +127,9 @@ namespace OperateLinkFile
 			foreach (var file in files) Directory.Delete(file, true);
 
 			//刷新项目配置
-			foreach (var ProjectPath in ProjectPaths) RefreshProject(ProjectPath);
+			foreach (var ProjectPath in ProjectPaths) CommandHelper.RefreshProject(ProjectPath);
 		}
 
-		public void RefreshProject(string ProjectPath)
-		{
-			string text = File.ReadAllText(ProjectPath);
-			text += " "; // 在文件尾部添加空格
-			File.WriteAllText(ProjectPath, text); // 保存文件
 
-			text.TrimEnd(); // 删除文件尾部空格
-			File.WriteAllText(ProjectPath, text); // 保存文件
-		}
 	}
 }

@@ -3,9 +3,12 @@ using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using OperateLinkFile.Windows;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Xml.Linq;
 using Task = System.Threading.Tasks.Task;
 
 namespace OperateLinkFile
@@ -105,43 +108,36 @@ namespace OperateLinkFile
 			var selectedItem = dte.SelectedItems.Item(1);
 			if (selectedItem == null || !(selectedItem.ProjectItem is ProjectItem projectItem)) return;
 
-			string filePath = projectItem.FileNames[0]; //获取文件路径
-			filePath = Path.GetDirectoryName(filePath); //获取文件父级路径
+			//获取链接文件夹的原始路径
+			if (!(CommandHelper.GetOriginalPath(projectItem) is string folderPath))
+			{
+				// 拿不到则直接获取文件夹路径
+				folderPath = projectItem.FileNames[0];
+			}
 
 			//在路径创建文件并添加到项目中
 			string FileName = inputFieldControl.TextBox.Text;
-			string file = Path.Combine(filePath, FileName);
-			
+			string filePath = Path.Combine(folderPath, FileName);
+
 			//检测文件是否存在，路径是否正确
-			if (!File.Exists(file))
+			if (!File.Exists(filePath))
 			{
+				
 				//检测路径不存在创建父级文件夹
-				string DirectoryPath = Path.GetDirectoryName(file);
+				string DirectoryPath = Path.GetDirectoryName(filePath);
 
 				if (!Directory.Exists(DirectoryPath)) Directory.CreateDirectory(DirectoryPath);
-				File.Create(file).Close();
+				File.Create(filePath).Close();
 			}
 			else
 			{
 				MessageBox.Show("文件已存在！！！");
 			}
 
-			dte.ItemOperations.OpenFile(file);
+			dte.ItemOperations.OpenFile(filePath);
 
 			//刷新项目配置
-			string ProjectPath = projectItem.ContainingProject.FullName;
-			RefreshProject(ProjectPath);
-		}
-
-
-		public void RefreshProject(string ProjectPath)
-		{
-			string text = File.ReadAllText(ProjectPath);
-			text += " "; // 在文件尾部添加空格
-			File.WriteAllText(ProjectPath, text); // 保存文件
-
-			text.TrimEnd(); // 删除文件尾部空格
-			File.WriteAllText(ProjectPath, text); // 保存文件
+			CommandHelper.RefreshProject(projectItem.ContainingProject.FullName);
 		}
 	}
 }

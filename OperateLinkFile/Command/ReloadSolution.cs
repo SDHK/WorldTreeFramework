@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using Task = System.Threading.Tasks.Task;
 
 namespace OperateLinkFile

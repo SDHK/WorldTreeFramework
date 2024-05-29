@@ -81,6 +81,24 @@
         </Strings>
       </Button>
 
+      <Button guid="guidOperateLinkFilePackageCmdSet1" id="RefreshProject" priority="0x0100" type="Button">
+        <Parent guid="guidOperateLinkFilePackageCmdSet1" id="ReloadProjectGroup" />
+        <Icon guid="guidImages" id="bmpPic3" />
+        <Strings>
+          <ButtonText>刷新项目</ButtonText>
+        </Strings>
+      </Button>
+
+
+      <!--文件菜单新建文件-->
+      <Button guid="guidOperateLinkFilePackageCmdSet2" id="NewFile" priority="0x0100" type="Button">
+        <Parent guid="guidOperateLinkFilePackageCmdSet2" id="FileMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>新建文件</ButtonText>
+        </Strings>
+      </Button>
+
       <!--文件菜单删除文件-->
       <Button guid="guidOperateLinkFilePackageCmdSet2" id="DeleteFile" priority="0x0100" type="Button">
         <Parent guid="guidOperateLinkFilePackageCmdSet2" id="FileMenuGroup" />
@@ -90,12 +108,12 @@
         </Strings>
       </Button>
 
-      <!--文件菜单新建文件-->
-      <Button guid="guidOperateLinkFilePackageCmdSet2" id="NewFile" priority="0x0100" type="Button">
+      <!--文件菜单重命名文件-->
+      <Button guid="guidOperateLinkFilePackageCmdSet2" id="RenameFile" priority="0x0100" type="Button">
         <Parent guid="guidOperateLinkFilePackageCmdSet2" id="FileMenuGroup" />
-        <Icon guid="guidImages" id="bmpPic2" />
+        <Icon guid="guidImages" id="bmpPic4" />
         <Strings>
-          <ButtonText>新建文件</ButtonText>
+          <ButtonText>重命名文件</ButtonText>
         </Strings>
       </Button>
 
@@ -110,13 +128,13 @@
 
 
       <!--文件夹菜单新建文件夹-->
-      <Button guid="guidOperateLinkFilePackageCmdSet3" id="FolderNewFolder" priority="0x0100" type="Button">
+      <!--<Button guid="guidOperateLinkFilePackageCmdSet3" id="FolderNewFolder" priority="0x0100" type="Button">
         <Parent guid="guidOperateLinkFilePackageCmdSet3" id="FolderMenuGroup" />
         <Icon guid="guidImages" id="bmpPic3" />
         <Strings>
           <ButtonText>新建文件夹</ButtonText>
         </Strings>
-      </Button>
+      </Button>-->
 
       <!--文件夹菜单删除文件夹-->
       <Button guid="guidOperateLinkFilePackageCmdSet3" id="DeleteFolder" priority="0x0100" type="Button">
@@ -126,6 +144,17 @@
           <ButtonText>删除文件夹</ButtonText>
         </Strings>
       </Button>
+      
+      <!--文件夹菜单重命名文件夹-->
+      <!--<Button guid="guidOperateLinkFilePackageCmdSet3" id="RenameFolder" priority="0x0100" type="Button">
+        <Parent guid="guidOperateLinkFilePackageCmdSet3" id="FolderMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic4" />
+        <Strings>
+          <ButtonText>重命名文件夹</ButtonText>
+        </Strings>
+      </Button>-->
+      
+     
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -135,7 +164,7 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\Command1.png" usedList="bmpPic1, bmpPic2, bmpPic3, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+      <Bitmap guid="guidImages" href="Resources\Command1.png" usedList="bmpPic1, bmpPic2, bmpPic3, bmpPic4, bmpPicArrows, bmpPicStrikethrough" />
     </Bitmaps>
   </Commands>
 
@@ -152,31 +181,33 @@
     <GuidSymbol name="guidOperateLinkFilePackageCmdSet1" value="{7c59721e-b62a-45c9-a354-c6594c19e7ae}">
       <IDSymbol name="ReloadProjectGroup" value="0x1020" />
       <IDSymbol name="ReloadProject" value="0x0100" />
+      <IDSymbol name="RefreshProject" value="0x0200" />
     </GuidSymbol>
     
     <GuidSymbol name="guidOperateLinkFilePackageCmdSet2" value="{f0caa44f-08f2-45f5-84ae-6e6ef252bdad}">
       <IDSymbol name="FileMenuGroup" value="0x1020" />
       <IDSymbol name="NewFile" value="0x0100" />
       <IDSymbol name="DeleteFile" value="0x0200" />
+      <IDSymbol name="RenameFile" value="0x0300" />
     </GuidSymbol>
 
     <GuidSymbol name="guidOperateLinkFilePackageCmdSet3" value="{5304f298-039c-426f-a592-b3a2eb83dfe6}">
       <IDSymbol name="FolderMenuGroup" value="0x1020" />
       <IDSymbol name="FolderNewFile" value="0x0100" />
-      <IDSymbol name="FolderNewFolder" value="0x0200" />
+      <!--<IDSymbol name="FolderNewFolder" value="0x0200" />-->
       <IDSymbol name="DeleteFolder" value="0x0300" />
+      <!--<IDSymbol name="RenameFolder" value="0x0400" />-->
     </GuidSymbol>
-
     
     <!--图片设置-->
     <GuidSymbol name="guidImages" value="{4589e727-fe79-4634-bda2-1f2a75a4e7c0}">
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
       <IDSymbol name="bmpPic3" value="3" />
-      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPic4" value="4" />
       <IDSymbol name="bmpPicArrows" value="5" />
       <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
-
+  
   </Symbols>
 </CommandTable>

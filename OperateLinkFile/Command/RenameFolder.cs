@@ -1,10 +1,14 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using OperateLinkFile.Windows;
 using System;
 using System.ComponentModel.Design;
+using System.Globalization;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Task = System.Threading.Tasks.Task;
 
@@ -13,17 +17,17 @@ namespace OperateLinkFile
 	/// <summary>
 	/// Command handler
 	/// </summary>
-	internal sealed class NewFile
+	internal sealed class RenameFolder
 	{
 		/// <summary>
 		/// Command ID.
 		/// </summary>
-		public const int CommandId = 0x0100;
+		public const int CommandId = 0x0400;
 
 		/// <summary>
 		/// Command menu group (command set GUID).
 		/// </summary>
-		public static readonly Guid CommandSet = new Guid("f0caa44f-08f2-45f5-84ae-6e6ef252bdad");
+		public static readonly Guid CommandSet = new Guid("5304f298-039c-426f-a592-b3a2eb83dfe6");
 
 		/// <summary>
 		/// VS Package that provides this command, not null.
@@ -31,12 +35,12 @@ namespace OperateLinkFile
 		private readonly AsyncPackage package;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="NewFile"/> class.
+		/// Initializes a new instance of the <see cref="RenameFolder"/> class.
 		/// Adds our command handlers for menu (commands must exist in the command table file)
 		/// </summary>
 		/// <param name="package">Owner package, not null.</param>
 		/// <param name="commandService">Command service to add command to, not null.</param>
-		private NewFile(AsyncPackage package, OleMenuCommandService commandService)
+		private RenameFolder(AsyncPackage package, OleMenuCommandService commandService)
 		{
 			this.package = package ?? throw new ArgumentNullException(nameof(package));
 			commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
@@ -49,7 +53,7 @@ namespace OperateLinkFile
 		/// <summary>
 		/// Gets the instance of the command.
 		/// </summary>
-		public static NewFile Instance
+		public static RenameFolder Instance
 		{
 			get;
 			private set;
@@ -72,12 +76,12 @@ namespace OperateLinkFile
 		/// <param name="package">Owner package, not null.</param>
 		public static async Task InitializeAsync(AsyncPackage package)
 		{
-			// Switch to the main thread - the call to AddCommand in NewFile's constructor requires
+			// Switch to the main thread - the call to AddCommand in RenameFolder's constructor requires
 			// the UI thread.
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
 			OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-			Instance = new NewFile(package, commandService);
+			Instance = new RenameFolder(package, commandService);
 		}
 
 		/// <summary>
@@ -92,7 +96,7 @@ namespace OperateLinkFile
 			ThreadHelper.ThrowIfNotOnUIThread();
 			InputFieldWindow newFileWindow = new InputFieldWindow();
 			newFileWindow.callback = Execute;
-			newFileWindow.Title = "请输入文件名称";
+			newFileWindow.Title = "重命名文件夹名称";
 			newFileWindow.ShowDialog();
 		}
 
@@ -103,35 +107,39 @@ namespace OperateLinkFile
 			DTE2 dte = ServiceProvider.GetServiceAsync(typeof(DTE)).Result as DTE2;
 			var selectedItem = dte.SelectedItems.Item(1);
 			if (selectedItem == null || !(selectedItem.ProjectItem is ProjectItem projectItem)) return;
-			string filePath = projectItem.FileNames[0]; //获取文件路径
-			filePath = Path.GetDirectoryName(filePath); //获取文件父级路径
 
-			//在路径创建文件并添加到项目中
-			string FileName = inputFieldControl.TextBox.Text;
-			string file = Path.Combine(filePath, FileName);
 
-			//检测文件是否存在，路径是否正确
-			if (!File.Exists(file))
+			//获取链接文件夹的原始路径
+			if (!(CommandHelper.GetOriginalPath(projectItem) is string folderPath))
 			{
-				//检测路径不存在创建父级文件夹
-				string DirectoryPath = Path.GetDirectoryName(file);
+				// 拿不到则直接获取文件夹路径
+				folderPath = projectItem.FileNames[0];
+			}
+			string folderDirectoryPath = Path.GetDirectoryName(folderPath); //获取文件夹父级路径
 
-				if (!Directory.Exists(DirectoryPath)) Directory.CreateDirectory(DirectoryPath);
-				File.Create(file).Close();
+			if (!Directory.Exists(folderDirectoryPath)) return;
+
+			//在路径创建文件夹并添加到项目中
+			string newFolderPath = Path.Combine(folderDirectoryPath, inputFieldControl.TextBox.Text);
+
+			//检测文件夹是否存在，路径是否正确
+			if (!Directory.Exists(newFolderPath))
+			{
+				try
+				{
+					//重命名文件夹
+					Directory.Move(folderPath, newFolderPath);
+				}
+				catch (IOException)
+				{ 
+					MessageBox.Show("文件夹被程序占用中！！！");
+				}
 			}
 			else
 			{
-				MessageBox.Show("文件已存在！！！");
+				//提示文件夹重名
+				MessageBox.Show("文件夹重名！！！");
 			}
-
-			dte.ItemOperations.OpenFile(file);
-
-			//刷新项目配置
-			CommandHelper.RefreshProject(projectItem.ContainingProject.FullName);
 		}
-
-
-
-
 	}
 }

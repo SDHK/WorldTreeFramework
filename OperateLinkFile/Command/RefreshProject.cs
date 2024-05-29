@@ -1,11 +1,12 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
-using OperateLinkFile.Windows;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
-using System.IO;
-using System.Windows;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
 namespace OperateLinkFile
@@ -13,17 +14,17 @@ namespace OperateLinkFile
 	/// <summary>
 	/// Command handler
 	/// </summary>
-	internal sealed class NewFile
+	internal sealed class RefreshProject
 	{
 		/// <summary>
 		/// Command ID.
 		/// </summary>
-		public const int CommandId = 0x0100;
+		public const int CommandId = 0x0200;
 
 		/// <summary>
 		/// Command menu group (command set GUID).
 		/// </summary>
-		public static readonly Guid CommandSet = new Guid("f0caa44f-08f2-45f5-84ae-6e6ef252bdad");
+		public static readonly Guid CommandSet = new Guid("7c59721e-b62a-45c9-a354-c6594c19e7ae");
 
 		/// <summary>
 		/// VS Package that provides this command, not null.
@@ -31,12 +32,12 @@ namespace OperateLinkFile
 		private readonly AsyncPackage package;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="NewFile"/> class.
+		/// Initializes a new instance of the <see cref="RefreshProject"/> class.
 		/// Adds our command handlers for menu (commands must exist in the command table file)
 		/// </summary>
 		/// <param name="package">Owner package, not null.</param>
 		/// <param name="commandService">Command service to add command to, not null.</param>
-		private NewFile(AsyncPackage package, OleMenuCommandService commandService)
+		private RefreshProject(AsyncPackage package, OleMenuCommandService commandService)
 		{
 			this.package = package ?? throw new ArgumentNullException(nameof(package));
 			commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
@@ -49,7 +50,7 @@ namespace OperateLinkFile
 		/// <summary>
 		/// Gets the instance of the command.
 		/// </summary>
-		public static NewFile Instance
+		public static RefreshProject Instance
 		{
 			get;
 			private set;
@@ -72,12 +73,12 @@ namespace OperateLinkFile
 		/// <param name="package">Owner package, not null.</param>
 		public static async Task InitializeAsync(AsyncPackage package)
 		{
-			// Switch to the main thread - the call to AddCommand in NewFile's constructor requires
+			// Switch to the main thread - the call to AddCommand in RefreshProject's constructor requires
 			// the UI thread.
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
 			OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-			Instance = new NewFile(package, commandService);
+			Instance = new RefreshProject(package, commandService);
 		}
 
 		/// <summary>
@@ -90,48 +91,11 @@ namespace OperateLinkFile
 		private void Execute(object sender, EventArgs e)
 		{
 			ThreadHelper.ThrowIfNotOnUIThread();
-			InputFieldWindow newFileWindow = new InputFieldWindow();
-			newFileWindow.callback = Execute;
-			newFileWindow.Title = "请输入文件名称";
-			newFileWindow.ShowDialog();
-		}
-
-		private void Execute(InputFieldControl inputFieldControl, bool bit)
-		{
-			if (!bit) return;
-
 			DTE2 dte = ServiceProvider.GetServiceAsync(typeof(DTE)).Result as DTE2;
+			if (dte == null) return;
 			var selectedItem = dte.SelectedItems.Item(1);
-			if (selectedItem == null || !(selectedItem.ProjectItem is ProjectItem projectItem)) return;
-			string filePath = projectItem.FileNames[0]; //获取文件路径
-			filePath = Path.GetDirectoryName(filePath); //获取文件父级路径
-
-			//在路径创建文件并添加到项目中
-			string FileName = inputFieldControl.TextBox.Text;
-			string file = Path.Combine(filePath, FileName);
-
-			//检测文件是否存在，路径是否正确
-			if (!File.Exists(file))
-			{
-				//检测路径不存在创建父级文件夹
-				string DirectoryPath = Path.GetDirectoryName(file);
-
-				if (!Directory.Exists(DirectoryPath)) Directory.CreateDirectory(DirectoryPath);
-				File.Create(file).Close();
-			}
-			else
-			{
-				MessageBox.Show("文件已存在！！！");
-			}
-
-			dte.ItemOperations.OpenFile(file);
-
-			//刷新项目配置
-			CommandHelper.RefreshProject(projectItem.ContainingProject.FullName);
+			if (selectedItem == null || !(selectedItem.Project is Project project)) return;
+			CommandHelper.RefreshProject(project.FullName);
 		}
-
-
-
-
 	}
 }
