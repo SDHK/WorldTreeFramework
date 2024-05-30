@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" ?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="OperateLinkFile.922519f1-14f3-4a72-8858-ff08133ce4a1" Version="2.0" Language="zh-CN" Publisher="闪电黑客" />
+        <Identity Id="OperateLinkFile.922519f1-14f3-4a72-8858-ff08133ce4a1" Version="2.1" Language="zh-CN" Publisher="闪电黑客" />
         <DisplayName>OperateLinkFile</DisplayName>
         <Description xml:space="preserve">使得VS可以对链接的文件进行操作和刷新</Description>
     </Metadata>

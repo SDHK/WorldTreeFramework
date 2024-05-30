@@ -132,18 +132,8 @@ namespace OperateLinkFile
 
 			//刷新项目配置
 			string ProjectPath = projectItem.ContainingProject.FullName;
-			RefreshProject(ProjectPath);
+			CommandHelper.RefreshProject(ProjectPath);
 		}
 
-
-		public void RefreshProject(string ProjectPath)
-		{
-			string text = File.ReadAllText(ProjectPath);
-			text += " "; // 在文件尾部添加空格
-			File.WriteAllText(ProjectPath, text); // 保存文件
-
-			text.TrimEnd(); // 删除文件尾部空格
-			File.WriteAllText(ProjectPath, text); // 保存文件
-		}
 	}
 }

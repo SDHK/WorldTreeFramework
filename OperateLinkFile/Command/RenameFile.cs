@@ -128,6 +128,9 @@ namespace OperateLinkFile
 				MessageBox.Show("文件重名！！！");
 			}
 			dte.ItemOperations.OpenFile(newFile);
+
+			//刷新项目配置
+			CommandHelper.RefreshProject(projectItem.ContainingProject.FullName);
 		}
 	}
 }
