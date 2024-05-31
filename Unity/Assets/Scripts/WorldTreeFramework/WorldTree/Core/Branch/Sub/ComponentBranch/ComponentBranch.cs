@@ -108,6 +108,7 @@ namespace WorldTree
 		public static void RemoveAllComponent(this INode self)
 			=> self.RemoveAllNode(TypeInfo<ComponentBranch>.TypeCode);
 
+
 		#endregion
 
 		#region 添加

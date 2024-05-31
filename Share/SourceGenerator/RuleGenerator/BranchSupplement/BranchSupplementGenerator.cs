@@ -172,7 +172,7 @@ namespace WorldTree.SourceGenerator
 			// 获取泛型参数 《T1, T2》
 			string TypeArgumentsAngle = typeSymbol.IsGenericType ? typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat).Replace(typeSymbol.Name, "") : "";
 			// 获取泛型参数 , T1, T2
-			string TypeArguments = typeSymbol.IsGenericType ? ", " + TypeArgumentsAngle.Trim('<', '>') : "";
+			string TypeArguments = typeSymbol.IsGenericType ? (", " + TypeArgumentsAngle.Trim('<', '>')) : "";
 
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classSyntax[ClassFullName]);
@@ -182,11 +182,10 @@ namespace WorldTree.SourceGenerator
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
 
 			CommentPara.Clear();
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "测试111尝试获取分支", "\t\t");
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "尝试获取分支", "\t\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
-			Code.AppendLine(@$"		public static bool TryGet{ClassName}<N, BN{TypeArguments}>(this As{ClassFullName} self, {genericType} key, out BN node)
-				where N : class, INode, As{ClassFullName}
+			Code.AppendLine(@$"		public static bool TryGet{ClassName}<BN{TypeArguments}>(this As{ClassFullName} self, {genericType} key, out BN node)
 				where BN : class, INode, NodeOf<As{ClassFullName}, {ClassFullName}> {WhereTypeArguments} 
 			=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key) as BN) != null;");
 
@@ -194,9 +193,9 @@ namespace WorldTree.SourceGenerator
 			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "尝试裁剪节点", "\t\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
-			Code.AppendLine(@$"		public static bool TryCut{ClassName}<N, BN{TypeArguments}>(this As{ClassFullName} self, {genericType} key, out BN node)
+			Code.AppendLine(@$"		public static bool TryCut{ClassName}<BN{TypeArguments}>(this As{ClassFullName} self, {genericType} key, out BN node)
 				where BN : class, INode, NodeOf<As{ClassFullName}, ComponentBranch> {WhereTypeArguments} 
-			=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key).CutSelf() as BN) != null;");
+			=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key)?.CutSelf() as BN) != null;");
 
 			CommentPara.Clear();
 			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "尝试嫁接节点", "\t\t");
@@ -205,6 +204,20 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine(@$"		public static bool TryGraft{ClassName}<BN{TypeArguments}>(this As{ClassFullName} self, {genericType} key, BN node)
 				where BN : class, INode, NodeOf<As{ClassFullName}, {ClassFullName}> {WhereTypeArguments}
 			=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(key, self);");
+
+			CommentPara.Clear();
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "移除分支节点", "\t\t");
+			CommentPara.Append(BaseTypePara);
+			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
+			Code.AppendLine(@$"		public static void Remove{ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self, {genericType} key){WhereTypeArguments} 
+			=> self.GetBranch<{ClassFullName}>()?.GetNode(key)?.Dispose();");
+
+			CommentPara.Clear();
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "移除分支全部节点", "\t\t");
+			CommentPara.Append(BaseTypePara);
+			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
+			Code.AppendLine(@$"		public static void RemoveAll{ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self){WhereTypeArguments} 
+			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
 
 		}
 
