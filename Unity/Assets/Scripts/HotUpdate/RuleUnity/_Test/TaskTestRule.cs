@@ -37,20 +37,28 @@ namespace WorldTree
 
 		public static async TreeTask Test(this TaskTest self)
 		{
+
 			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
+			self.Log($"A！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
 
-			self.Log($"0！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
+			if (self == null)
+			{
+				await self.AsyncDelay(1);
+			}
 
+			self.TestB().Coroutine(TaskTokenCatch);
 			await self.AsyncDelay(3);
-			self.Log("1！");
-			await self.TreeTaskCompleted();
-			self.Log("2！");
 
-			await self.TreeTaskCompleted();
-			self.Log("计时");
-			await self.AsyncDelay(3);
-			self.Log("3！");
 		}
+
+		public static async TreeTask TestB(this TaskTest self)
+		{
+			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
+			self.Log($"B！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
+			await self.AsyncDelay(3);
+
+		}
+
 
 
 
