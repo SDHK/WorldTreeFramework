@@ -17,7 +17,13 @@ namespace WorldTree
 	/// 同步任务标记接口
 	/// </summary>
 	/// <remarks>任务将会在构建器中以同步形式直接执行</remarks>
-	public interface ISyncTask { }
+	public interface ISyncTask
+	{
+		/// <summary>
+		/// 同步任务设置完成
+		/// </summary>
+		void SetCompleted();
+	}
 
 	/// <summary>
 	/// 树异步任务基类
@@ -35,7 +41,14 @@ namespace WorldTree
 		/// </summary>
 		public TreeTaskBase m_RelevanceTask;
 
-
+		/// <summary>
+		/// 同步任务记录
+		/// </summary>
+		/// <remarks>
+		/// <para>记录异步调用流 await 的第一个 Task 是否为同步任务</para>
+		/// <para>如果是同步任务，将会在构建器中直接执行</para>
+		/// </remarks>
+		public ISyncTask syncTask;
 
 		/// <summary>
 		/// 是否完成
@@ -52,6 +65,8 @@ namespace WorldTree
 		/// </summary>
 		public void SetCompleted()
 		{
+			if (IsCompleted) return;
+			//this.Log($"[{this.Id}]({this.GetType().Name}) 任务完成!!!");
 			IsCompleted = true;
 			if (m_TreeTaskToken is null)
 			{
@@ -111,7 +126,18 @@ namespace WorldTree
 			TreeTaskBase NowAwaiter = this;
 			while (NowAwaiter != null)
 			{
-				NowAwaiter.m_TreeTaskToken = treeTaskToken;
+
+				if (NowAwaiter.m_TreeTaskToken == null)
+				{
+					//NowAwaiter.Log($"{NowAwaiter.Id}({NowAwaiter.GetType().Name})设置令牌：{treeTaskToken?.Id}!!!!!!!!");
+					NowAwaiter.m_TreeTaskToken = treeTaskToken;
+				}
+				else
+				{
+					//NowAwaiter.Log($"{NowAwaiter.Id}({NowAwaiter.GetType().Name})已有令牌：{NowAwaiter.m_TreeTaskToken?.Id}XXXXX");
+					return this;
+				}
+
 				treeTaskToken.tokenEvent.Add(NowAwaiter, default(TreeTaskTokenEvent));
 				NowAwaiter = NowAwaiter.m_RelevanceTask;
 			}
@@ -123,16 +149,8 @@ namespace WorldTree
 		/// </summary>
 		public void TrySyncTaskSetCompleted()
 		{
-			TreeTaskBase NowAwaiter = this;
-			while (NowAwaiter != null)
-			{
-				if (NowAwaiter is ISyncTask)
-				{
-					NowAwaiter.SetCompleted();
-				}
-				NowAwaiter = NowAwaiter.m_RelevanceTask;
-			}
-
+			//this.Log($"同步任务执行[{(this.syncTask as TreeTaskBase)?.Id}]({this.syncTask?.GetType().Name})完成");
+			this.syncTask?.SetCompleted();
 		}
 
 		public override void OnDispose()
@@ -141,7 +159,7 @@ namespace WorldTree
 			m_TreeTaskToken = null;
 			m_RelevanceTask = null;
 			m_Continuation = null;
-
+			syncTask = null;
 			base.OnDispose();
 		}
 	}
@@ -153,6 +171,7 @@ namespace WorldTree
 			if (state == TaskState.Cancel)
 			{
 				self.Dispose();
+			
 			}
 		}
 	}

@@ -16,7 +16,6 @@ namespace WorldTree
     /// <summary>
     /// 树任务令牌捕获
     /// </summary>
-    [AsyncMethodBuilder(typeof(TreeTaskTokenCatchMethodBuilder))]
     public class TreeTaskTokenCatch : TreeTaskBase
 		, ChildOf<INode>
 		, AsAwake

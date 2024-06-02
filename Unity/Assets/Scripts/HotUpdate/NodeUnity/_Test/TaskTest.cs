@@ -11,8 +11,10 @@ namespace WorldTree
 {
 	public class TaskTest : Node, ComponentOf<InitialDomain>
 		, AsComponentBranch
+		, AsChildBranch
 		, AsAwake
 	{
 		public TreeTask treeTask;
+		public TreeTaskToken treeTaskToken;
 	}
 }

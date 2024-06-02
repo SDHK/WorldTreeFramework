@@ -13,7 +13,6 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
-	[AsyncMethodBuilder(typeof(TreeTaskSwitchWorldMethodBuilder))]
 	public class TreeTaskSwitchWorld : TreeTaskBase
 		, ChildOf<WorldContext>
 		, AsAwake<WorldContext>

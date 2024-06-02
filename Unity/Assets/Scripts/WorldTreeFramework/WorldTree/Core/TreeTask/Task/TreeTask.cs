@@ -9,6 +9,7 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using WorldTree.Internal;
 
 namespace WorldTree
@@ -38,7 +39,9 @@ namespace WorldTree
 		/// </summary>
 		public void Coroutine()
 		{
+			//this.Log($"this任务[{this.Id}]");
 			InnerCoroutine().Coroutine();
+			//this.Log($"this任务[{this.Id}]尝试完成同步任务！！！");
 			this.TrySyncTaskSetCompleted();
 		}
 		/// <summary>
@@ -46,8 +49,10 @@ namespace WorldTree
 		/// </summary>
 		public void Coroutine(TreeTaskToken treeTaskToken)
 		{
+			//this.Log($"this任务[{this.Id}]");
 			this.SetToken(treeTaskToken);
 			InnerCoroutine().Coroutine();
+			//this.Log($"this任务[{this.Id}]尝试完成同步任务！！！");
 			this.TrySyncTaskSetCompleted();
 
 		}

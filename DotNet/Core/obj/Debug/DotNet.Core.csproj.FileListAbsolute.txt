@@ -21,3 +21,15 @@ E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.dll
 E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\refint\DotNet.Core.dll
 E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.pdb
 E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\ref\DotNet.Core.dll
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\Bin\DotNet.Core.deps.json
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\Bin\DotNet.Core.dll
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\Bin\DotNet.Core.pdb
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.AssemblyInfoInputs.cache
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.AssemblyInfo.cs
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.csproj.CoreCompileInputs.cache
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.sourcelink.json
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.dll
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\Core\obj\Debug\refint\DotNet.Core.dll
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.pdb
+D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\Core\obj\Debug\ref\DotNet.Core.dll

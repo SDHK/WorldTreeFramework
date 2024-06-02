@@ -18,7 +18,6 @@ namespace WorldTree.Internal
     /// <summary>
     /// 异步任务完成类
     /// </summary>
-    [AsyncMethodBuilder(typeof(TreeTaskCompletedMethodBuilder))]
     public class TreeTaskCompleted : TreeTaskBase
 		, ChildOf<INode>
 		, AsAwake

@@ -70,10 +70,14 @@ namespace WorldTree.AOT
 		}
 
 		private void OnEnable()
-		{ Application.logMessageReceived += Log; }
+		{
+			//Application.logMessageReceived += Log;
+		}
 
 		private void OnDisable()
-		{ Application.logMessageReceived -= Log; }
+		{
+			//Application.logMessageReceived -= Log;
+		}
 
 		public void Log(string logString, string stackTrace, LogType type)
 		{
