@@ -5,6 +5,13 @@
 * 日期： 2022/11/10 10:12
 
 * 描述： 异步任务构建器
+* 
+* 实现了内联传递令牌功能
+* 
+* 将会在 AwaitUnsafeOnCompleted 方法中将Task进行互相关联，并设置令牌。
+* 
+* 实现通过 await TreeTaskTokenCatch 在异步方法中凭空获取到令牌。
+* 
 
 */
 
@@ -45,8 +52,6 @@ namespace WorldTree.Internal
 		public void SetException(Exception exception)
 		{
 			task.LogError(exception);
-
-			//TreeTaskBase.ExceptionHandler?.Invoke(exception);
 		}
 
 		// 4. SetResult
@@ -94,7 +99,6 @@ namespace WorldTree.Internal
 				//以便在后续的同步执行时，可以直接获取这个同步任务。
 				task.syncTask = awaiter.syncTask;
 
-
 				//任务关联
 				//传入的 awaiter 就是方法内的第一个 TreeTask
 				//因为此时 awaiter 和 新建的 task 都没有令牌，所以需要关联起来。
@@ -121,10 +125,10 @@ namespace WorldTree.Internal
 				}
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}] ，当前状态机：{stateMachine}");
-				//尝试当前状态机找到同步任务执行
+
+				//尝试执行记录的同步任务
 				awaiter.TrySyncTaskSetCompleted();
 			}
-
 		}
 
 		// 7. Start
@@ -193,7 +197,7 @@ namespace WorldTree.Internal
 
 		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-
+			AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
 		}
 
 		// 6. AwaitUnsafeOnCompleted
@@ -212,9 +216,7 @@ namespace WorldTree.Internal
 			{
 				awaiter.Parent.AddTemp(out task);
 				task.syncTask = awaiter.syncTask;
-
 				task.m_RelevanceTask = awaiter;
-
 				//task.Log($"新建任务[{task.Id}] 关联任务=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) ，当前状态机：{stateMachine}");
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 			}
@@ -229,7 +231,6 @@ namespace WorldTree.Internal
 				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}] ，当前状态机：{stateMachine}");
 				awaiter.TrySyncTaskSetCompleted();
 			}
-
 		}
 
 		// 7. Start

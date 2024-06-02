@@ -5,6 +5,8 @@
 * 日期： 2023/2/9 14:34
 
 * 描述： 世界树异步任务基类
+* 
+* 内联令牌的异步Task基类
 
 */
 
@@ -126,7 +128,6 @@ namespace WorldTree
 			TreeTaskBase NowAwaiter = this;
 			while (NowAwaiter != null)
 			{
-
 				if (NowAwaiter.m_TreeTaskToken == null)
 				{
 					//NowAwaiter.Log($"{NowAwaiter.Id}({NowAwaiter.GetType().Name})设置令牌：{treeTaskToken?.Id}!!!!!!!!");
@@ -145,7 +146,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 同步任务完成
+		/// 尝试执行记录的同步任务
 		/// </summary>
 		public void TrySyncTaskSetCompleted()
 		{

@@ -1,28 +1,29 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/6/13 19:30
 
-* 描述： 树任务令牌捕获
+* 描述： 树任务令牌捕获任务
+* 
+* 这是一个和TreeTaskCompleted一样的同步任务，
+* 
+* 它可以从异步流中捕获到令牌
+* 
 
 */
 
-using System.Runtime.CompilerServices;
-using WorldTree.Internal;
-
-namespace WorldTree
+namespace WorldTree.Internal
 {
-    /// <summary>
-    /// 树任务令牌捕获
-    /// </summary>
-    public class TreeTaskTokenCatch : TreeTaskBase
+	/// <summary>
+	/// 树任务令牌捕获任务
+	/// </summary>
+	public class TreeTaskTokenCatch : TreeTaskBase, ISyncTask
 		, ChildOf<INode>
 		, AsAwake
-        , ISyncTask
-    {
-        public TreeTaskTokenCatch GetAwaiter() => this;
-        public override bool IsCompleted { get; set; }
-        public TreeTaskToken GetResult() { return m_TreeTaskToken; }
-    }
+
+	{
+		public TreeTaskTokenCatch GetAwaiter() => this;
+		public override bool IsCompleted { get; set; }
+		public TreeTaskToken GetResult() { return m_TreeTaskToken; }
+	}
 }
