@@ -27,8 +27,12 @@ namespace WorldTree
 				if (Input.GetKeyDown(KeyCode.R))
 				{
 					self.treeTaskToken.Cancel();
+				}
+				if (Input.GetKeyDown(KeyCode.T))
+				{
 					self.treeTaskToken.Dispose();
 				}
+
 			}
 		}
 

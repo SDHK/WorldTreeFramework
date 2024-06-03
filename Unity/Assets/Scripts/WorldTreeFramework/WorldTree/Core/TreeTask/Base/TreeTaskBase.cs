@@ -30,12 +30,14 @@ namespace WorldTree
 		/// <summary>
 		/// 树任务令牌
 		/// </summary>
-		public TreeTaskToken m_TreeTaskToken;
+		/// <remarks>如果令牌被释放，异步链将变成无令牌控制状态</remarks>
+		public NodeRef<TreeTaskToken> m_TreeTaskToken;
 
 		/// <summary>
 		/// 关联令牌的任务
 		/// </summary>
-		public TreeTaskBase m_RelevanceTask;
+		/// <remarks>如果关联任务被意外释放，令牌传播可能断掉</remarks>
+		public NodeRef<TreeTaskBase> m_RelevanceTask;
 
 		/// <summary>
 		/// 是否完成
@@ -52,24 +54,25 @@ namespace WorldTree
 		/// </summary>
 		public void SetCompleted()
 		{
-			if (IsCompleted) return;
+			if (IsRecycle || IsCompleted) return;
 			//this.Log($"[{this.Id}]({this.GetType().Name}) 任务完成!!!");
 			IsCompleted = true;
-			if (m_TreeTaskToken is null)
+
+			if (m_TreeTaskToken.Value is null)//没有令牌就直接完成
 			{
 				m_Continuation?.Invoke();
 				Dispose();
 			}
 			else
 			{
-				switch (m_TreeTaskToken.State)
+				switch (m_TreeTaskToken.Value.State)
 				{
 					case TaskState.Running:
 						m_Continuation?.Invoke();
 						Dispose();
 						break;
 					case TaskState.Stop:
-						m_TreeTaskToken.stopTask = this;
+						m_TreeTaskToken.Value.stopTask = this;
 						break;
 					case TaskState.Cancel:
 						Dispose();
@@ -119,13 +122,13 @@ namespace WorldTree
 			TreeTaskBase nowTask = this;
 			while (nowTask != null)
 			{
-				if (nowTask.m_TreeTaskToken == null)
+				if (nowTask.m_TreeTaskToken.Value == null)
 				{
 					//NowAwaiter.Log($"{NowAwaiter.Id}({NowAwaiter.GetType().Name})设置令牌：{treeTaskToken?.Id}!!!!!!!!");
 					//将令牌传递给更深层的关联任务
 					nowTask.m_TreeTaskToken = treeTaskToken;
 				}
-				else 
+				else
 				{
 					//NowAwaiter.Log($"{NowAwaiter.Id}({NowAwaiter.GetType().Name})已有令牌：{NowAwaiter.m_TreeTaskToken?.Id}XXXXX");
 					//已有令牌的情况，发生在异步方法内部新建了令牌，所以当前传递的令牌不再往下传播，直接退出。
@@ -144,7 +147,7 @@ namespace WorldTree
 		{
 			TreeTaskBase nowTask = this;
 			//找到最深层的关联任务
-			while (nowTask.m_RelevanceTask != null) nowTask = nowTask.m_RelevanceTask;
+			while (nowTask.m_RelevanceTask.Value != null) nowTask = nowTask.m_RelevanceTask;
 			//如果是同步任务就直接执行
 			if (nowTask is ISyncTask)
 			{
@@ -153,23 +156,27 @@ namespace WorldTree
 			}
 		}
 
+
 		public override void OnDispose()
 		{
 			IsCompleted = false;
 			m_TreeTaskToken = null;
-			m_RelevanceTask = null;
+			m_RelevanceTask = default;
 			m_Continuation = null;
 			base.OnDispose();
 		}
 	}
 
-	class TreeTaskBaseTaskTokenEventRule : TreeTaskTokenEventRule<TreeTaskBase>
+
+	public static class TreeTaskBaseRule
 	{
-		protected override void Execute(TreeTaskBase self, TaskState state)
+		class TreeTaskTokenEvent: TreeTaskTokenEventRule<TreeTaskBase>
 		{
-			if (state == TaskState.Cancel)
+			protected override void Execute(TreeTaskBase self, TaskState state)
 			{
-				self.Dispose();
+				if (state == TaskState.Cancel)
+				{
+				}
 			}
 		}
 	}

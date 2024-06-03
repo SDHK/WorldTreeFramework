@@ -107,7 +107,7 @@ namespace WorldTree.Internal
 			}
 			else //发生在异步方法等待的第一个以后的 await TreeTask 时。
 			{
-				if (task.m_TreeTaskToken != null)
+				if (task.m_TreeTaskToken.Value != null)
 				{
 					//task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 					//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
@@ -208,7 +208,7 @@ namespace WorldTree.Internal
 			}
 			else
 			{
-				if (task.m_TreeTaskToken != null)
+				if (task.m_TreeTaskToken.Value != null)
 				{
 					//task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 					awaiter.SetToken(task.m_TreeTaskToken);
