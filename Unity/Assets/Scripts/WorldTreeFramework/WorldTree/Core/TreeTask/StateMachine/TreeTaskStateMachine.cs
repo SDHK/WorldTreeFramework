@@ -23,7 +23,6 @@ namespace WorldTree.Internal
 		, TempOf<INode>
 		, AsAwake
 		, AsTreeTaskTokenEvent
-
 	{
 		/// <summary>
 		/// 当前状态机任务
@@ -31,18 +30,12 @@ namespace WorldTree.Internal
 		public IAsyncStateMachine m_StateMachine;
 
 		/// <summary>
-		/// 当前状态机的任务
-		/// </summary>
-		public NodeRef<TreeTaskBase> m_Task;
-
-		/// <summary>
 		/// 设置状态机
 		/// </summary>
-		public void SetStateMachine<T>(ref T stateMachine, TreeTaskBase treeTaskBase)
+		public void SetStateMachine<T>(ref T stateMachine)
 			where T : IAsyncStateMachine
 		{
 			m_StateMachine = stateMachine;
-			m_Task = treeTaskBase;
 		}
 
 		/// <summary>
@@ -50,7 +43,7 @@ namespace WorldTree.Internal
 		/// </summary>
 		public void MoveNext()
 		{
-			//this.Log($"状态机MoveNext !!! {m_Task.nodeId} {m_Task.Value != null} {!this.IsRecycle}");
+			//this.Log($"状态机MoveNext !!!  {!this.IsRecycle}");
 			//假如当前状态机的任务丢失了，那么可能是令牌取消了，将Tsak释放了
 			//那么任务等于断了，状态机也就没有继续的必要了。
 			 m_StateMachine?.MoveNext();
@@ -65,7 +58,6 @@ namespace WorldTree.Internal
 			protected override void Execute(TreeTaskStateMachine self)
 			{
 				self.m_StateMachine = null;
-				self.m_Task = default;
 			}
 		}
 

@@ -83,7 +83,7 @@ namespace WorldTree.Internal
 				//新建一个TreeTask
 				awaiter.Parent.AddTemp(out task);
 				//新建状态机
-				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine, task);
+				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
 
 				//任务关联
 				//传入的 awaiter 就是方法内的第一个 TreeTask
@@ -197,7 +197,7 @@ namespace WorldTree.Internal
 			{
 				awaiter.Parent.AddTemp(out task);
 
-				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine, task);
+				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
 
 				task.m_RelevanceTask = awaiter;
 				//task.Log($"新建任务[{task.Id}] 关联任务=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) ，当前状态机：{stateMachine}");
