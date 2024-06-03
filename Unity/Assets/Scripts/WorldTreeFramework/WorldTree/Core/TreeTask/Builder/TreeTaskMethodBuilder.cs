@@ -27,7 +27,7 @@ namespace WorldTree.Internal
 	/// </summary>
 	public struct TreeTaskMethodBuilder
 	{
-		private ITreeTaskStateMachine treeTaskStateMachine;
+		private TreeTaskStateMachine treeTaskStateMachine;
 		private TreeTask task;
 		// 1. Static Create method.
 
@@ -78,16 +78,12 @@ namespace WorldTree.Internal
 		[SecuritySafeCritical]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			if (treeTaskStateMachine == null)
-			{
-				this.treeTaskStateMachine = awaiter.PoolGetUnit(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
-				taskStateMachine.SetStateMachine(ref stateMachine);
-			}
-
 			if (task == null)//发生在异步方法等待的第一个 await TreeTask 时。
 			{
 				//新建一个TreeTask
 				awaiter.Parent.AddTemp(out task);
+				//新建状态机
+				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine, task);
 
 				//任务关联
 				//传入的 awaiter 就是方法内的第一个 TreeTask
@@ -112,9 +108,13 @@ namespace WorldTree.Internal
 					//task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 					//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
 					awaiter.SetToken(task.m_TreeTaskToken);
+
+					//给状态机添加令牌事件
+					task.m_TreeTaskToken.Value.tokenEvent.Add(this.treeTaskStateMachine, TypeInfo<TreeTaskTokenEvent>.Default);
 				}
+
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
-				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}] ，当前状态机：{stateMachine}");
+				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}]({task.IsRecycle}) ，当前状态机：{stateMachine}");
 				//尝试找到同步任务执行
 				awaiter.FindSyncTaskSetCompleted();
 			}
@@ -138,7 +138,7 @@ namespace WorldTree.Internal
 
 	public struct TreeTaskMethodBuilder<T>
 	{
-		private ITreeTaskStateMachine treeTaskStateMachine;
+		private TreeTaskStateMachine treeTaskStateMachine;
 
 		private TreeTask<T> task;
 		// 1. Static Create method.
@@ -193,15 +193,12 @@ namespace WorldTree.Internal
 		[SecuritySafeCritical]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			if (treeTaskStateMachine == null)
-			{
-				this.treeTaskStateMachine = awaiter.PoolGetUnit(out TreeTaskStateMachine<TStateMachine> taskStateMachine);
-				taskStateMachine.SetStateMachine(ref stateMachine);
-			}
-
 			if (task == null)
 			{
 				awaiter.Parent.AddTemp(out task);
+
+				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine, task);
+
 				task.m_RelevanceTask = awaiter;
 				//task.Log($"新建任务[{task.Id}] 关联任务=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) ，当前状态机：{stateMachine}");
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
@@ -210,11 +207,14 @@ namespace WorldTree.Internal
 			{
 				if (task.m_TreeTaskToken.Value != null)
 				{
+
 					//task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 					awaiter.SetToken(task.m_TreeTaskToken);
+					task.m_TreeTaskToken.Value.tokenEvent.Add(this.treeTaskStateMachine, TypeInfo<TreeTaskTokenEvent>.Default);
 				}
+
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
-				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}] ，当前状态机：{stateMachine}");
+				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}]({task.IsRecycle}) ，当前状态机：{stateMachine}");
 				awaiter.FindSyncTaskSetCompleted();
 			}
 		}

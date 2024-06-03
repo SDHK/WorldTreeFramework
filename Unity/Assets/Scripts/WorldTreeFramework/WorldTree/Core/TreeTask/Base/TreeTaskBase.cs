@@ -12,6 +12,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace WorldTree
 {
@@ -55,7 +56,7 @@ namespace WorldTree
 		public void SetCompleted()
 		{
 			if (IsRecycle || IsCompleted) return;
-			//this.Log($"[{this.Id}]({this.GetType().Name}) 任务完成!!!");
+			//this.Log($"[{this.Id}]({this.GetType().Name} X: {m_TreeTaskToken.Value?.State} 任务完成!!!");
 			IsCompleted = true;
 
 			if (m_TreeTaskToken.Value is null)//没有令牌就直接完成
@@ -124,13 +125,13 @@ namespace WorldTree
 			{
 				if (nowTask.m_TreeTaskToken.Value == null)
 				{
-					//NowAwaiter.Log($"{NowAwaiter.Id}({NowAwaiter.GetType().Name})设置令牌：{treeTaskToken?.Id}!!!!!!!!");
+					//nowTask.Log($"{nowTask.Id}({nowTask.GetType().Name})设置令牌：{treeTaskToken?.Id}!!!!!!!!");
 					//将令牌传递给更深层的关联任务
 					nowTask.m_TreeTaskToken = treeTaskToken;
 				}
 				else
 				{
-					//NowAwaiter.Log($"{NowAwaiter.Id}({NowAwaiter.GetType().Name})已有令牌：{NowAwaiter.m_TreeTaskToken?.Id}XXXXX");
+					//nowTask.Log($"{nowTask.Id}({nowTask.GetType().Name})已有令牌：{nowTask.m_TreeTaskToken.Value?.Id}XXXXX");
 					//已有令牌的情况，发生在异步方法内部新建了令牌，所以当前传递的令牌不再往下传播，直接退出。
 					return this;
 				}
@@ -151,7 +152,7 @@ namespace WorldTree
 			//如果是同步任务就直接执行
 			if (nowTask is ISyncTask)
 			{
-				//this.Log($"同步任务执行[{(this.syncTask as TreeTaskBase)?.Id}]({this.syncTask?.GetType().Name})完成");
+				//this.Log($"同步任务执行[{nowTask.Id}]({nowTask.GetType().Name})完成");
 				nowTask.SetCompleted();
 			}
 		}
@@ -160,7 +161,7 @@ namespace WorldTree
 		public override void OnDispose()
 		{
 			IsCompleted = false;
-			m_TreeTaskToken = null;
+			m_TreeTaskToken = default;
 			m_RelevanceTask = default;
 			m_Continuation = null;
 			base.OnDispose();
@@ -170,12 +171,13 @@ namespace WorldTree
 
 	public static class TreeTaskBaseRule
 	{
-		class TreeTaskTokenEvent: TreeTaskTokenEventRule<TreeTaskBase>
+		class TreeTaskTokenEvent : TreeTaskTokenEventRule<TreeTaskBase>
 		{
 			protected override void Execute(TreeTaskBase self, TaskState state)
 			{
 				if (state == TaskState.Cancel)
 				{
+					self.Dispose();
 				}
 			}
 		}
