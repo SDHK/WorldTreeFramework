@@ -19,13 +19,7 @@ namespace WorldTree
 	/// 同步任务标记接口
 	/// </summary>
 	/// <remarks>任务将会在构建器中以同步形式直接执行</remarks>
-	public interface ISyncTask
-	{
-		/// <summary>
-		/// 同步任务设置完成
-		/// </summary>
-		void SetCompleted();
-	}
+	public interface ISyncTask { }
 
 	/// <summary>
 	/// 树异步任务基类
@@ -42,15 +36,6 @@ namespace WorldTree
 		/// 关联令牌的任务
 		/// </summary>
 		public TreeTaskBase m_RelevanceTask;
-
-		/// <summary>
-		/// 同步任务记录
-		/// </summary>
-		/// <remarks>
-		/// <para>记录异步调用流 await 的第一个 Task 是否为同步任务</para>
-		/// <para>如果是同步任务，将会在构建器中直接执行</para>
-		/// </remarks>
-		public ISyncTask syncTask;
 
 		/// <summary>
 		/// 是否完成
@@ -123,35 +108,49 @@ namespace WorldTree
 		/// <summary>
 		/// 设置并传递令牌
 		/// </summary>
+		/// <remarks>由于令牌通过关联任务进行内部传播，所以设置后不可更改，也不能传空</remarks>
 		public TreeTaskBase SetToken(TreeTaskToken treeTaskToken)
 		{
-			TreeTaskBase NowAwaiter = this;
-			while (NowAwaiter != null)
+			if (treeTaskToken == null)
 			{
-				if (NowAwaiter.m_TreeTaskToken == null)
+				this.LogError($"{this.Id}任务设置令牌为null");
+				return this;
+			}
+			TreeTaskBase nowTask = this;
+			while (nowTask != null)
+			{
+				if (nowTask.m_TreeTaskToken == null)
 				{
 					//NowAwaiter.Log($"{NowAwaiter.Id}({NowAwaiter.GetType().Name})设置令牌：{treeTaskToken?.Id}!!!!!!!!");
-					NowAwaiter.m_TreeTaskToken = treeTaskToken;
+					//将令牌传递给更深层的关联任务
+					nowTask.m_TreeTaskToken = treeTaskToken;
 				}
-				else
+				else 
 				{
 					//NowAwaiter.Log($"{NowAwaiter.Id}({NowAwaiter.GetType().Name})已有令牌：{NowAwaiter.m_TreeTaskToken?.Id}XXXXX");
+					//已有令牌的情况，发生在异步方法内部新建了令牌，所以当前传递的令牌不再往下传播，直接退出。
 					return this;
 				}
-
-				treeTaskToken.tokenEvent.Add(NowAwaiter, default(TreeTaskTokenEvent));
-				NowAwaiter = NowAwaiter.m_RelevanceTask;
+				treeTaskToken.tokenEvent.Add(nowTask, default(TreeTaskTokenEvent));
+				nowTask = nowTask.m_RelevanceTask;
 			}
 			return this;
 		}
 
 		/// <summary>
-		/// 尝试执行记录的同步任务
+		/// 尝试找到同步任务执行
 		/// </summary>
-		public void TrySyncTaskSetCompleted()
+		public void FindSyncTaskSetCompleted()
 		{
-			//this.Log($"同步任务执行[{(this.syncTask as TreeTaskBase)?.Id}]({this.syncTask?.GetType().Name})完成");
-			this.syncTask?.SetCompleted();
+			TreeTaskBase nowTask = this;
+			//找到最深层的关联任务
+			while (nowTask.m_RelevanceTask != null) nowTask = nowTask.m_RelevanceTask;
+			//如果是同步任务就直接执行
+			if (nowTask is ISyncTask)
+			{
+				//this.Log($"同步任务执行[{(this.syncTask as TreeTaskBase)?.Id}]({this.syncTask?.GetType().Name})完成");
+				nowTask.SetCompleted();
+			}
 		}
 
 		public override void OnDispose()
@@ -160,7 +159,6 @@ namespace WorldTree
 			m_TreeTaskToken = null;
 			m_RelevanceTask = null;
 			m_Continuation = null;
-			syncTask = null;
 			base.OnDispose();
 		}
 	}
@@ -172,7 +170,6 @@ namespace WorldTree
 			if (state == TaskState.Cancel)
 			{
 				self.Dispose();
-			
 			}
 		}
 	}

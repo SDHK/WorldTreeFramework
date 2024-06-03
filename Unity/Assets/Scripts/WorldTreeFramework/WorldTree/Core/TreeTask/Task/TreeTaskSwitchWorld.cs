@@ -40,7 +40,7 @@ namespace WorldTree
 		public void Coroutine()
 		{
 			InnerCoroutine().Coroutine();
-			this.TrySyncTaskSetCompleted();
+			this.FindSyncTaskSetCompleted();
 		}
 		/// <summary>
 		/// 协程启动
@@ -49,7 +49,7 @@ namespace WorldTree
 		{
 			this.SetToken(treeTaskToken);
 			InnerCoroutine().Coroutine();
-			this.TrySyncTaskSetCompleted();
+			this.FindSyncTaskSetCompleted();
 
 		}
 

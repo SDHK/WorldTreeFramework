@@ -1024,23 +1024,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\SDHK\\.nuget\\packages\\": {},
-    "D:\\1Make\\Code\\VisualStudio\\2019\\Shared\\NuGetPackages": {}
+    "C:\\Users\\admin\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\GameEngine\\Unity\\GitHub\\WorldTree\\Share\\SourceGenerator\\Share.SourceGenerator.csproj",
+      "projectUniqueName": "E:\\Project\\GitHub\\WorldTree\\Share\\SourceGenerator\\Share.SourceGenerator.csproj",
       "projectName": "Share.SourceGenerator",
-      "projectPath": "D:\\Projects\\GameEngine\\Unity\\GitHub\\WorldTree\\Share\\SourceGenerator\\Share.SourceGenerator.csproj",
-      "packagesPath": "C:\\Users\\SDHK\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\GameEngine\\Unity\\GitHub\\WorldTree\\Share\\SourceGenerator\\obj\\",
+      "projectPath": "E:\\Project\\GitHub\\WorldTree\\Share\\SourceGenerator\\Share.SourceGenerator.csproj",
+      "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+      "outputPath": "E:\\Project\\GitHub\\WorldTree\\Share\\SourceGenerator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\1Make\\Code\\VisualStudio\\2019\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\SDHK\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1049,7 +1049,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1102,7 +1101,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
       }
     }
   }

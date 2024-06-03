@@ -74,9 +74,6 @@ namespace WorldTree.Internal
 			AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
 		}
 
-
-		//在调用异步方法时，方法本身不是第一个Task,第一个Task是方法内部生成的一个Task。
-
 		// 6. AwaitUnsafeOnCompleted
 		[SecuritySafeCritical]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
@@ -87,17 +84,10 @@ namespace WorldTree.Internal
 				taskStateMachine.SetStateMachine(ref stateMachine);
 			}
 
-			//如果传入的awaiter是一个同步任务，那么将自己记录起来。
-			if (awaiter is ISyncTask syncTask) awaiter.syncTask = syncTask;
-
 			if (task == null)//发生在异步方法等待的第一个 await TreeTask 时。
 			{
 				//新建一个TreeTask
 				awaiter.Parent.AddTemp(out task);
-
-				//尝试拿到上一个Task(也就是更深层方法)记录的同步任务。
-				//以便在后续的同步执行时，可以直接获取这个同步任务。
-				task.syncTask = awaiter.syncTask;
 
 				//任务关联
 				//传入的 awaiter 就是方法内的第一个 TreeTask
@@ -119,15 +109,14 @@ namespace WorldTree.Internal
 			{
 				if (task.m_TreeTaskToken != null)
 				{
-					//如果当前任务有令牌，那么设置给传入的awaiter,同时会设置给所有 没有令牌 的关联任务。
 					//task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
+					//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
 					awaiter.SetToken(task.m_TreeTaskToken);
 				}
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}] ，当前状态机：{stateMachine}");
-
-				//尝试执行记录的同步任务
-				awaiter.TrySyncTaskSetCompleted();
+				//尝试找到同步任务执行
+				awaiter.FindSyncTaskSetCompleted();
 			}
 		}
 
@@ -210,12 +199,9 @@ namespace WorldTree.Internal
 				taskStateMachine.SetStateMachine(ref stateMachine);
 			}
 
-			if (awaiter is ISyncTask syncTask) awaiter.syncTask = syncTask;
-
 			if (task == null)
 			{
 				awaiter.Parent.AddTemp(out task);
-				task.syncTask = awaiter.syncTask;
 				task.m_RelevanceTask = awaiter;
 				//task.Log($"新建任务[{task.Id}] 关联任务=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) ，当前状态机：{stateMachine}");
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
@@ -229,7 +215,7 @@ namespace WorldTree.Internal
 				}
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}] ，当前状态机：{stateMachine}");
-				awaiter.TrySyncTaskSetCompleted();
+				awaiter.FindSyncTaskSetCompleted();
 			}
 		}
 
