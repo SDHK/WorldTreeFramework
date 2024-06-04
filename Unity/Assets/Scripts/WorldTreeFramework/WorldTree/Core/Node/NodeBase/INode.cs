@@ -12,29 +12,6 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 节点: 可用分支
-	/// </summary>
-	/// <typeparam name="B"></typeparam>
-	public interface AsBranch<in B> where B : IBranch
-	{ }
-
-	/// <summary>
-	/// 法则约束
-	/// </summary>
-	/// <typeparam name="R">法则类型</typeparam>
-	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
-	public interface AsRule<in R> where R : IRule
-	{ }
-
-	/// <summary>
-	/// 节点限制
-	/// </summary>
-	/// <typeparam name="P">父节点</typeparam>
-	/// <typeparam name="B">分支</typeparam>
-	public interface NodeOf<in P, in B> : INode where P : class, INode where B : class, IBranch
-	{ }
-
-	/// <summary>
 	/// 世界树节点可视化生成器接口
 	/// </summary>
 	public interface IWorldTreeNodeViewBuilder : INode

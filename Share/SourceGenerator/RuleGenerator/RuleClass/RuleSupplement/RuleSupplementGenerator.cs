@@ -183,9 +183,10 @@ namespace WorldTree.SourceGenerator
 
 			StringBuilder CommentPara = new();
 
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t");
+
 			//As约束接口
 			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "法则约束", "\t");
-			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
 			Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{ClassFullName}>, INode {WhereTypeArguments}{{}}");

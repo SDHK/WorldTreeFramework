@@ -84,4 +84,30 @@ namespace WorldTree
 		/// </summary>
 		public bool TryAddNode<N>(K key, N node) where N : class, INode;
 	}
+
+	/// <summary>
+	/// 以Id为键值的分支
+	/// </summary>
+	public interface IBranchIdKey : IBranch<long> { }
+
+	/// <summary>
+	/// 以Type为键值的分支
+	/// </summary>
+	public interface IBranchTypeKey : IBranch<long> { }
+
+	/// <summary>
+	/// 节点: 可用分支
+	/// </summary>
+	/// <typeparam name="B"></typeparam>
+	public interface AsBranch<in B> where B : IBranch
+	{ }
+
+
+	/// <summary>
+	/// 节点限制
+	/// </summary>
+	/// <typeparam name="P">父节点</typeparam>
+	/// <typeparam name="B">分支</typeparam>
+	public interface NodeOf<in P, in B> : INode where P : class, INode where B : class, IBranch
+	{ }
 }

@@ -256,9 +256,7 @@ namespace WorldTree
 
 		public override void OnAddSelfToTree()
 		{
-			this.View?.Dispose();
-			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeViewBuilder : null;
-
+			AddNodeView();
 			//核心独立，不入上级引用池，也不用广播
 			if (this.IsActive != this.m_ActiveEventMark)//激活变更
 			{
@@ -299,17 +297,17 @@ namespace WorldTree
 
 			//需要提前按顺序移除
 			this.RemoveAllNode<WorldBranch>();
-			this.RemoveComponent<WorldTreeRoot>();
-			this.RemoveComponent<GlobalRuleActuatorManager>();
+			this.RemoveComponent<WorldTreeCore,WorldTreeRoot>();
+			this.RemoveComponent<WorldTreeCore, GlobalRuleActuatorManager>();
 
-			this.RemoveComponent<GameTimeManager>();
-			this.RemoveComponent<ArrayPoolManager>();
-			this.RemoveComponent<NodePoolManager>();
-			this.RemoveComponent<UnitPoolManager>();
-			this.RemoveComponent<RuleManager>();
-			this.RemoveComponent<RealTimeManager>();
-			this.RemoveComponent<IdManager>();
-			this.RemoveComponent<ReferencedPoolManager>();
+			this.RemoveComponent<WorldTreeCore, GameTimeManager>();
+			this.RemoveComponent<WorldTreeCore, ArrayPoolManager>();
+			this.RemoveComponent<WorldTreeCore, NodePoolManager>();
+			this.RemoveComponent<WorldTreeCore, UnitPoolManager>();
+			this.RemoveComponent<WorldTreeCore, RuleManager>();
+			this.RemoveComponent<WorldTreeCore, RealTimeManager>();
+			this.RemoveComponent<WorldTreeCore, IdManager>();
+			this.RemoveComponent<WorldTreeCore, ReferencedPoolManager>();
 
 			this.RemoveAllNode();
 		}
@@ -366,8 +364,7 @@ namespace WorldTree
 
 		public override void OnGraftSelfToTree()
 		{
-			this.View?.Dispose();
-			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeViewBuilder : null;
+			AddNodeView();
 			if (this.IsActive != this.m_ActiveEventMark)//激活变更
 			{
 				if (this.IsActive)

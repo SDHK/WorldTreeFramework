@@ -15,6 +15,8 @@
 
 namespace WorldTree
 {
+
+
 	/// <summary>
 	/// 法则接口
 	/// </summary>
@@ -55,6 +57,14 @@ namespace WorldTree
 		public virtual long NodeType => TypeInfo<N>.TypeCode;
 		public virtual long RuleType => TypeInfo<R>.TypeCode;
 	}
+
+	/// <summary>
+	/// 法则约束
+	/// </summary>
+	/// <typeparam name="R">法则类型</typeparam>
+	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
+	public interface AsRule<in R> where R : IRule
+	{ }
 
 	/// <summary>
 	/// 生命周期法则标记(暂时无用)

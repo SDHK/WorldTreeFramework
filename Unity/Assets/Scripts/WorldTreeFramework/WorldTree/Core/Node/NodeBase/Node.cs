@@ -79,8 +79,7 @@ namespace WorldTree
 				this.Root = parent.Root;
 				if (this.Domain != this) this.Domain = parent.Domain;
 				this.SetActive(true);//激活节点
-				this.View?.Dispose();
-				this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeViewBuilder : null;
+				AddNodeView();
 				return true;
 			}
 			return false;
@@ -224,8 +223,7 @@ namespace WorldTree
 
 		public virtual void OnGraftSelfToTree()//id相同数据同步？
 		{
-			this.View?.Dispose();
-			this.View = this.Parent?.View != null ? Parent.View.Parent.AddChild<INode, INode>(Parent.View.Type, out _, this, Parent) as IWorldTreeNodeViewBuilder : null;
+			AddNodeView();
 			this.Core = this.Parent.Core;
 			this.Root = this.Parent.Root;
 			if (this.Domain != this) this.Domain = this.Parent.Domain;
@@ -286,6 +284,24 @@ namespace WorldTree
 			}
 			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
 			this.Parent = null;//清除父节点
+		}
+
+		/// <summary>
+		/// 添加节点可视化
+		/// </summary>
+		protected void AddNodeView()
+		{
+			this.View?.Dispose();
+			if (this.Parent?.View != null)
+			{
+				INode viewParent = Parent.View.Parent;
+				INode nodeView = viewParent.GetOrNewNode(Parent.View.Type);
+				this.View = nodeView.AddSelfToTree<ChildBranch, long, INode, INode>(nodeView.Id, viewParent, this, Parent) as IWorldTreeNodeViewBuilder;
+			}
+			else
+			{
+				this.View = null;
+			}
 		}
 
 		#endregion

@@ -5,7 +5,6 @@ using UnityEngine;
 namespace WorldTree
 {
 	public class SphereTest : Node
-		, IdNodeOf<SphereManagerTest>
 		, AsAwake
 	{
 		public GameObject gameObject;

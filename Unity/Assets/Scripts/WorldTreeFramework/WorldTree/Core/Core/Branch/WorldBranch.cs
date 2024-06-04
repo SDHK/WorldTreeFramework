@@ -15,16 +15,9 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 世界树核心约束
-	/// </summary>
-	/// <typeparam name="P"></typeparam>
-	public interface WorldOf<in P> : NodeOf<P, WorldBranch> where P : class, INode
-	{ }
-
-	/// <summary>
 	/// 世界分支
 	/// </summary>
-	public class WorldBranch : Branch<long>
+	public class WorldBranch : ComponentBranch
 	{ }
 
 	public static class NodeWorldBranchRule

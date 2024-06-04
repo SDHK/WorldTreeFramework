@@ -60,6 +60,9 @@ namespace WorldTree.SourceGenerator
 		public static Dictionary<string, ClassDeclarationSyntax> classSyntax = new();
 
 		public static string IBranch = "IBranch";
+		public static string IBranchIdKey = "IBranchIdKey";
+		public static string IBranchTypeKey = "IBranchTypeKey";
+
 
 		public static void Init(Compilation compilation)
 		{
@@ -77,6 +80,7 @@ namespace WorldTree.SourceGenerator
 
 			//检测是否继承分支基类
 			if (!NamedSymbolHelper.CheckInterface(namedType, IBranch, out _)) return;
+			if (namedType.IsGenericType) return;
 
 			string fileName = Path.GetFileNameWithoutExtension(classDeclarationSyntax.SyntaxTree.FilePath);
 			if (!fileClassDict.TryGetValue(fileName, out List<INamedTypeSymbol> set))
@@ -114,11 +118,22 @@ namespace WorldTree.SourceGenerator
 
 					//bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
 
-
 					if (NamedSymbolHelper.CheckInterface(fileClass, IBranch, out var baseInterface))
 					{
 						BranchClass(ClassCode, fileClass, baseInterface);
-						GetMethod(MethodCode, fileClass, baseInterface);
+
+						if (NamedSymbolHelper.CheckInterface(fileClass, IBranchIdKey, out _))
+						{
+							GetMethodIdKey(MethodCode, fileClass, baseInterface);
+						}
+						else if (NamedSymbolHelper.CheckInterface(fileClass, IBranchTypeKey, out _))
+						{
+							GetMethodTypeKey(MethodCode, fileClass, baseInterface);
+						}
+						else
+						{
+							GetMethod(MethodCode, fileClass, baseInterface);
+						}
 					}
 				}
 
@@ -148,99 +163,223 @@ namespace WorldTree.SourceGenerator
 		private static void BranchClass(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseClass)
 		{
 			if (baseClass == null) return;
+			//拿到类型包含命名空间全名
+			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
+
+			//拿到类型名称
 			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classSyntax[ClassFullName]);
-			StringBuilder CommentPara = new();
+			string BaseFullName = baseClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+			//拿到泛型显示
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseClass, "\t");
 
+			//拿到去除Branch的类名
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+
 			//As约束接口
-			CommentPara.Clear();
+			AddComment(Code, "分支约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"	public interface As{ClassFullName} : AsBranch<{ClassFullName}>, INode {{}}");
 
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseClass, "分支约束", "\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t"));
-			Code.AppendLine(@$"	public interface As{ClassFullName} : AsBranch<{ClassFullName}>, INode {WhereTypeArguments}{{}}");
-
-			CommentPara.Clear();
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseClass, "父节点约束", "\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t"));
-			Code.AppendLine(@$"	public interface {ClassFullName}Of<in P> : NodeOf<P,{ClassFullName}>, INode where P : class, INode {WhereTypeArguments}{{}}");
+			AddComment(Code, "父节点约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"	public interface {ClassNameUnBranch}Of<in P> : NodeOf<P,{ClassFullName}>, INode where P : class, INode {{}}");
 
 		}
-
 
 		public static void GetMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
 		{
 			if (baseInterface == null) return;
-			string ClassName = typeSymbol.Name;
+			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
 			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-
-			//string ClassNameShort = typeSymbol.Name.Replace("Branch","");
-
-			// 获取泛型参数 《T1, T2》
-			string TypeArgumentsAngle = typeSymbol.IsGenericType ? typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat).Replace(typeSymbol.Name, "") : "";
-			// 获取泛型参数 , T1, T2
-			string TypeArguments = typeSymbol.IsGenericType ? (", " + TypeArgumentsAngle.Trim('<', '>')) : "";
-
-			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
-			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classSyntax[ClassFullName]);
-
-			StringBuilder CommentPara = new();
-
+			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 
-			CommentPara.Clear();
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "尝试获取分支", "\t\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
-			Code.AppendLine(@$"		public static bool TryGet{ClassName}<BN{TypeArguments}>(this As{ClassFullName} self, {genericType} key, out BN node)
-				where BN : class, INode, NodeOf<As{ClassFullName}, {ClassFullName}> {WhereTypeArguments} 
-			=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key) as BN) != null;");
+			//拿到键值泛型类型
+			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			CommentPara.Clear();
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "尝试裁剪节点", "\t\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
-			Code.AppendLine(@$"		public static bool TryCut{ClassName}<BN{TypeArguments}>(this As{ClassFullName} self, {genericType} key, out BN node)
-				where BN : class, INode, NodeOf<As{ClassFullName}, ComponentBranch> {WhereTypeArguments} 
-			=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key)?.CutSelf() as BN) != null;");
+			AddComment(Code, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, {genericType} key, out T node)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key) as T) != null;");
 
-			CommentPara.Clear();
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "尝试嫁接节点", "\t\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
-			Code.AppendLine(@$"		public static bool TryGraft{ClassName}<BN{TypeArguments}>(this As{ClassFullName} self, {genericType} key, BN node)
-				where BN : class, INode, NodeOf<As{ClassFullName}, {ClassFullName}> {WhereTypeArguments}
-			=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(key, self);");
+			AddComment(Code, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, {genericType} key, out T node)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key)?.CutSelf() as T) != null;");
 
-			CommentPara.Clear();
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "移除分支节点", "\t\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
-			Code.AppendLine(@$"		public static void Remove{ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self, {genericType} key){WhereTypeArguments} 
-			=> self.GetBranch<{ClassFullName}>()?.GetNode(key)?.Dispose();");
+			AddComment(Code, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, {genericType} key, T node)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(key, self);");
 
-			CommentPara.Clear();
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "移除分支全部节点", "\t\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
-			Code.AppendLine(@$"		public static void RemoveAll{ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self){WhereTypeArguments} 
-			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+			AddComment(Code, "移除分支节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static void Remove{ClassNameUnBranch}(this As{ClassFullName} self, {genericType} key)
+		=> self.GetBranch<{ClassFullName}>()?.GetNode(key)?.Dispose();");
 
+			AddComment(Code, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this As{ClassFullName} self)
+		=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+
+
+			//where T : class, INode, NodeOf<As{ClassFullName}, {ClassFullName}> , AsRule<Awake{genericsAngle}>
+			//添加方法的生成
+			int argumentCount = RuleGeneratorSetting.argumentCount;
+			for (int i = 0; i <= argumentCount; i++)
+			{
+				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
+				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
+				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
+				string generics = RuleGeneratorHelper.GetGenerics(i);
+
+				AddComment(Code, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+				Code.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, {genericType} key, out T node{genericTypeParameter}, bool isPool = true)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsAngle}>
+		=> self.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(key, out node{genericParameter}, isPool);");
+			}
 		}
 
+
+		public static void GetMethodIdKey(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
+		{
+			if (baseInterface == null) return;
+			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
+			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+
+			//拿到键值泛型类型
+			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
+
+			AddComment(Code, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, {genericType} id, out T node)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(id) as T) != null;");
+
+			AddComment(Code, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, {genericType} id, out T node)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(id)?.CutSelf() as T) != null;");
+
+			AddComment(Code, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, T node)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(node.Id, self);");
+
+			AddComment(Code, "移除分支节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static void Remove{ClassNameUnBranch}(this As{ClassFullName} self, {genericType} id)
+			=> self.GetBranch<{ClassFullName}>()?.GetNode(id)?.Dispose();");
+
+			AddComment(Code, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this As{ClassFullName} self)
+			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+
+			//添加方法的生成
+			int argumentCount = RuleGeneratorSetting.argumentCount;
+			for (int i = 0; i <= argumentCount; i++)
+			{
+				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
+				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
+				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
+				string generics = RuleGeneratorHelper.GetGenerics(i);
+
+				AddComment(Code, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+				Code.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, out T node{genericTypeParameter}, bool isPool = true)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsAngle}>
+		{{
+			node = self.GetOrNewNode<T>(isPool);
+			return (T)node.AddSelfToTree<{ClassFullName}, {genericType}{generics}>(node.Id, self{genericParameter});
+		}}");
+
+			}
+		}
+
+
+		public static void GetMethodTypeKey(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
+		{
+			if (baseInterface == null) return;
+			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
+			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+
+			//拿到键值泛型类型
+			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
+
+			AddComment(Code, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, out T node)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode) as T) != null;");
+
+			AddComment(Code, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, out T node)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode)?.CutSelf() as T) != null;");
+
+			AddComment(Code, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, T node)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(TypeInfo<T>.TypeCode, self);");
+
+			AddComment(Code, "移除分支节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static void Remove{ClassNameUnBranch}<N, T>(this N self)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();");
+
+			AddComment(Code, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this As{ClassFullName} self)
+			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+
+			//添加方法的生成
+			int argumentCount = RuleGeneratorSetting.argumentCount;
+			for (int i = 0; i <= argumentCount; i++)
+			{
+				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
+				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
+				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
+				string generics = RuleGeneratorHelper.GetGenerics(i);
+
+				AddComment(Code, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+				Code.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, out T node{genericTypeParameter}, bool isPool = true)
+			where N : class, As{ClassFullName}
+			where T : class, INode, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsAngle}>
+		=> self.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(TypeInfo<T>.TypeCode, out node{genericParameter}, isPool);");
+			}
+		}
 
 		/// <summary>
 		/// 添加法则继承注释
 		/// </summary>
-		public static void AddRuleExtendCommentPara(StringBuilder sb, INamedTypeSymbol typeSymbol, INamedTypeSymbol BaseSymbol, string Title, string tab)
+		public static string AddRuleExtendCommentPara(string IClassFullName, string IBaseFullName, string BaseTypePara, string Title, string tab)
 		{
-			string IClassFullName = typeSymbol.ToDisplayString();
-			string IBaseFullName = BaseSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			StringBuilder sb = new();
 			sb.AppendLine(@$"{tab}/// <Para>");
 			sb.AppendLine(@$"{tab}/// {Title}: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{SecurityElement.Escape(IBaseFullName)}""/>");
 			sb.AppendLine(@$"{tab}/// </Para>");
+			sb.Append(@$"{BaseTypePara}");
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// 添加注释
+		/// </summary>
+		public static void AddComment(StringBuilder stringBuilder, string Title, string tab, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara)
+		{
+			string Para = AddRuleExtendCommentPara(ClassFullNameAndNameSpace, BaseFullName, BaseTypePara, Title, tab);
+			stringBuilder.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], Para, tab));
 		}
 
 

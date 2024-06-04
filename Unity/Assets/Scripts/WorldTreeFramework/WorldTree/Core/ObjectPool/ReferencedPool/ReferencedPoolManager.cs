@@ -74,7 +74,7 @@ namespace WorldTree
 				self.NewNodeLifecycle(out pool);
 				pool.ReferencedType = type.CodeToType();
 				self.pools.Add(type, pool);
-				self.TryGraftChild(pool);
+				pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, self);
 				pool.SetActive(true);
 			}
 			return pool;

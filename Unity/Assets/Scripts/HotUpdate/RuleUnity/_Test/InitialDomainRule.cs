@@ -11,7 +11,6 @@ namespace WorldTree
 		{
 			protected override void Execute(InitialDomain self)
 			{
-
 				self.Log($"初始域热更部分！！!");
 
 

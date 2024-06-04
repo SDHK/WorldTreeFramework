@@ -47,7 +47,10 @@ namespace EditorTool
 					//通过字段类型拿到预注册的绘制节点类型
 					if (View?.Root != null && View.Root.AddComponent(out ViewTypeManager _).types.TryGetValue(type, out Type nodeType))
 					{
-						View.Root.AddComponent(nodeType.TypeToCode(), out INode viewNode, isPool: false);//通过绘制类型拿到绘制节点实例
+						//通过绘制类型拿到绘制节点实例
+						View.Root.AddNode<ComponentBranch, long>(nodeType.TypeToCode(), nodeType.TypeToCode(), out INode viewNode, isPool: false);
+																																				 
+						//View.Root.AddComponent(nodeType.TypeToCode(), out INode viewNode, isPool: false);//通过绘制类型拿到绘制节点实例
 						NodeRuleHelper.TrySendRule(viewNode, TypeInfo<INodeFieldViewRule>.Default, node, fieldInfo);//调用绘制法则
 					}
 				}

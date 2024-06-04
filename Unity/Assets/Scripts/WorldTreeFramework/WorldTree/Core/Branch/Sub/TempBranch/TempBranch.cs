@@ -1,26 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WorldTree
+﻿namespace WorldTree
 {
-
-	/// <summary>
-	/// 临时节点约束
-	/// </summary>
-	/// <typeparam name="T">父节点类型</typeparam>
-	public interface TempOf<in P> : NodeOf<P, TempBranch> where P : class, INode
-	{ }
 
 	/// <summary>
 	/// 临时节点分支
 	/// </summary>
-	public class TempBranch : ChildBranch
-	{
-
-	}
+	public class TempBranch : ChildBranch { }
 
 	public static class NodeTempBranchRule
 	{

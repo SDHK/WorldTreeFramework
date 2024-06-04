@@ -29,10 +29,6 @@ namespace WorldTree
 			where BN : class, INode, NodeOf<N, ComponentBranch>
 		=> (node = self.GetBranch<ComponentBranch>()?.GetNode(key) as BN) != null;
 
-		public static bool TryGetTestBranch<N, BN, T>(this N self, long key, out BN node)
-			where N : class, INode, AsBranch<TestBranch<T>>
-			where BN : class, INode, NodeOf<AsTestBranch<T>, TestBranch<T>> where T : class, INode
-		=> (node = self.GetBranch<TestBranch<T>>()?.GetNode(key) as BN) != null;
 
 
 		/// <summary>
