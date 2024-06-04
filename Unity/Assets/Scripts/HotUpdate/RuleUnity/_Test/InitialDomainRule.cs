@@ -16,10 +16,7 @@ namespace WorldTree
 	{
 		public static void Test(this  T1 self)
 		{
-
 		}
-
-
 	}
 
 	public static partial class InitialDomainRule
