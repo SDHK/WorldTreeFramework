@@ -151,13 +151,22 @@ namespace WorldTree.SourceGenerator
 			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classSyntax[ClassFullName]);
 			StringBuilder CommentPara = new();
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseClass, "\t");
 
 			//As约束接口
+			CommentPara.Clear();
+
 			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseClass, "分支约束", "\t");
-			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseClass, "\t");
 			CommentPara.Append(BaseTypePara);
 			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t"));
 			Code.AppendLine(@$"	public interface As{ClassFullName} : AsBranch<{ClassFullName}>, INode {WhereTypeArguments}{{}}");
+
+			CommentPara.Clear();
+			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseClass, "父节点约束", "\t");
+			CommentPara.Append(BaseTypePara);
+			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], CommentPara.ToString(), "\t"));
+			Code.AppendLine(@$"	public interface {ClassFullName}Of<in P> : NodeOf<P,{ClassFullName}>, INode where P : class, INode {WhereTypeArguments}{{}}");
+
 		}
 
 

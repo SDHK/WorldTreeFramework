@@ -23,7 +23,7 @@ namespace WorldTree
 	/// <typeparam name="T">父节点类型</typeparam>
 	/// <remarks>限制节点可挂的父节点，和Where约束搭配形成结构限制</remarks>
 
-	public interface ChildOf<in P> : NodeOf<P, ChildBranch> where P : class, INode
+	public interface ChildOf<in P> : NodeOf<P, ChildBranch>, INode where P : class, INode
 	{ }
 
 	/// <summary>

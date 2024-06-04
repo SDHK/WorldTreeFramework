@@ -48,8 +48,6 @@ namespace WorldTree
 				self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
 				await (self.TestB().SetToken(treeTaskToken) as TreeTask);
 
-				//await self.TestB();
-
 				await self.TaskD();
 
 			}
