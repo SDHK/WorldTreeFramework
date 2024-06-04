@@ -1,9 +1,27 @@
 using System;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace WorldTree
 {
+
+	public class T1 : Node
+	{
+
+
+
+	}
+
+
+	public static partial class T1Rule
+	{
+		public static void Test(this  T1 self)
+		{
+
+		}
+
+
+	}
+
 	public static partial class InitialDomainRule
 	{
 		//测试框架功能

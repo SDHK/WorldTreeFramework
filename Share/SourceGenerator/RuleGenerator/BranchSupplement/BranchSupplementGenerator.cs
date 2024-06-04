@@ -62,6 +62,7 @@ namespace WorldTree.SourceGenerator
 		public static string IBranch = "IBranch";
 		public static string IBranchIdKey = "IBranchIdKey";
 		public static string IBranchTypeKey = "IBranchTypeKey";
+		public static string IBranchUnConstraint = "IBranchUnConstraint";
 
 
 		public static void Init(Compilation compilation)
@@ -163,6 +164,7 @@ namespace WorldTree.SourceGenerator
 		private static void BranchClass(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseClass)
 		{
 			if (baseClass == null) return;
+
 			//拿到类型包含命名空间全名
 			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
 
@@ -177,8 +179,11 @@ namespace WorldTree.SourceGenerator
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 
 			//As约束接口
-			AddComment(Code, "分支约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"	public interface As{ClassFullName} : AsBranch<{ClassFullName}>, INode {{}}");
+			if (!NamedSymbolHelper.CheckInterface(typeSymbol, IBranchUnConstraint, out _))
+			{
+				AddComment(Code, "分支约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+				Code.AppendLine(@$"	public interface As{ClassFullName} : AsBranch<{ClassFullName}>, INode {{}}");
+			}
 
 			AddComment(Code, "父节点约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			Code.AppendLine(@$"	public interface {ClassNameUnBranch}Of<in P> : NodeOf<P,{ClassFullName}>, INode where P : class, INode {{}}");
@@ -192,54 +197,16 @@ namespace WorldTree.SourceGenerator
 			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
-			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
-
-			//拿到键值泛型类型
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			AddComment(Code, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, {genericType} key, out T node)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key) as T) != null;");
+			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, IBranchUnConstraint, out _);
 
-			AddComment(Code, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, {genericType} key, out T node)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key)?.CutSelf() as T) != null;");
-
-			AddComment(Code, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, {genericType} key, T node)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(key, self);");
-
-			AddComment(Code, "移除分支节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static void Remove{ClassNameUnBranch}(this As{ClassFullName} self, {genericType} key)
-		=> self.GetBranch<{ClassFullName}>()?.GetNode(key)?.Dispose();");
-
-			AddComment(Code, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this As{ClassFullName} self)
-		=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
-
-
-			//where T : class, INode, NodeOf<As{ClassFullName}, {ClassFullName}> , AsRule<Awake{genericsAngle}>
-			//添加方法的生成
-			int argumentCount = RuleGeneratorSetting.argumentCount;
-			for (int i = 0; i <= argumentCount; i++)
-			{
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-
-				AddComment(Code, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-				Code.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, {genericType} key, out T node{genericTypeParameter}, bool isPool = true)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsAngle}>
-		=> self.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(key, out node{genericParameter}, isPool);");
-			}
+			BranchGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchCutNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchGraftNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchRemoveNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchRemoveAllNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
+			BranchAddNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
 		}
 
 
@@ -250,56 +217,18 @@ namespace WorldTree.SourceGenerator
 			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
-			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 
 			//拿到键值泛型类型
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			AddComment(Code, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, {genericType} id, out T node)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(id) as T) != null;");
+			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, IBranchUnConstraint, out _);
 
-			AddComment(Code, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, {genericType} id, out T node)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(id)?.CutSelf() as T) != null;");
-
-			AddComment(Code, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, T node)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(node.Id, self);");
-
-			AddComment(Code, "移除分支节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static void Remove{ClassNameUnBranch}(this As{ClassFullName} self, {genericType} id)
-			=> self.GetBranch<{ClassFullName}>()?.GetNode(id)?.Dispose();");
-
-			AddComment(Code, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this As{ClassFullName} self)
-			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
-
-			//添加方法的生成
-			int argumentCount = RuleGeneratorSetting.argumentCount;
-			for (int i = 0; i <= argumentCount; i++)
-			{
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-
-				AddComment(Code, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-				Code.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, out T node{genericTypeParameter}, bool isPool = true)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsAngle}>
-		{{
-			node = self.GetOrNewNode<T>(isPool);
-			return (T)node.AddSelfToTree<{ClassFullName}, {genericType}{generics}>(node.Id, self{genericParameter});
-		}}");
-
-			}
+			BranchIdKeyGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchIdKeyCutNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchIdKeyGraftNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchIdKeyRemoveNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchIdKeyRemoveAllNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
+			BranchIdKeyAddNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
 		}
 
 
@@ -310,54 +239,18 @@ namespace WorldTree.SourceGenerator
 			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
-			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 
 			//拿到键值泛型类型
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			AddComment(Code, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, out T node)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode) as T) != null;");
+			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, IBranchUnConstraint, out _);
 
-			AddComment(Code, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, out T node)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode)?.CutSelf() as T) != null;");
-
-			AddComment(Code, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, T node)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(TypeInfo<T>.TypeCode, self);");
-
-			AddComment(Code, "移除分支节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static void Remove{ClassNameUnBranch}<N, T>(this N self)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}>
-		=> self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();");
-
-			AddComment(Code, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this As{ClassFullName} self)
-			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
-
-			//添加方法的生成
-			int argumentCount = RuleGeneratorSetting.argumentCount;
-			for (int i = 0; i <= argumentCount; i++)
-			{
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-
-				AddComment(Code, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-				Code.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, out T node{genericTypeParameter}, bool isPool = true)
-			where N : class, As{ClassFullName}
-			where T : class, INode, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsAngle}>
-		=> self.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(TypeInfo<T>.TypeCode, out node{genericParameter}, isPool);");
-			}
+			BranchTypeKeyGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
+			BranchTypeKeyCutNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
+			BranchTypeKeyGraftNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchTypeKeyRemoveNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
+			BranchTypeKeyRemoveAllNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
+			BranchTypeKeyAddNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
 		}
 
 		/// <summary>
@@ -382,6 +275,222 @@ namespace WorldTree.SourceGenerator
 			stringBuilder.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classSyntax[ClassFullName], Para, tab));
 		}
 
+		#region 泛型限制
+
+		#region 普通分支
+
+		private static void BranchGetNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, {genericType} key, out T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key) as T) != null;");
+		}
+
+		private static void BranchCutNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, {genericType} key, out T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(key)?.CutSelf() as T) != null;");
+		}
+
+		private static void BranchGraftNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, {genericType} key, T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(key, self);");
+		}
+
+		private static void BranchRemoveNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "移除分支节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static void Remove{ClassNameUnBranch}(this {(isUnConstraint ? "INode" : $"As{ClassFullName}")} self, {genericType} key)
+		=> self.GetBranch<{ClassFullName}>()?.GetNode(key)?.Dispose();");
+		}
+
+		private static void BranchRemoveAllNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this {(isUnConstraint ? "INode" : $"As{ClassFullName}")} self)
+		=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+		}
+
+		private static void BranchAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+
+			int argumentCount = RuleGeneratorSetting.argumentCount;
+			for (int i = 0; i <= argumentCount; i++)
+			{
+				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
+				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
+				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
+				string generics = RuleGeneratorHelper.GetGenerics(i);
+
+				AddComment(stringBuilder, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, {genericType} key, out T node{genericTypeParameter}, bool isPool = true)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsAngle}>
+		=> self.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(key, out node{genericParameter}, isPool);");
+			}
+		}
+
+		#endregion
+
+		#region Id键值分支
+
+		private static void BranchIdKeyGetNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, {genericType} id, out T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(id) as T) != null;");
+		}
+		private static void BranchIdKeyCutNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, {genericType} id, out T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(id)?.CutSelf() as T) != null;");
+		}
+
+		private static void BranchIdKeyGraftNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(node.Id, self);");
+		}
+
+		private static void BranchIdKeyRemoveNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "移除分支节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static void Remove{ClassNameUnBranch}(this {(isUnConstraint ? "INode" : $"As{ClassFullName}")} self, {genericType} id)
+			=> self.GetBranch<{ClassFullName}>()?.GetNode(id)?.Dispose();");
+		}
+
+		private static void BranchIdKeyRemoveAllNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this {(isUnConstraint ? "INode" : $"As{ClassFullName}")} self)
+			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+		}
+		private static void BranchIdKeyAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+
+			int argumentCount = RuleGeneratorSetting.argumentCount;
+			for (int i = 0; i <= argumentCount; i++)
+			{
+				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
+				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
+				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
+				string generics = RuleGeneratorHelper.GetGenerics(i);
+
+				AddComment(stringBuilder, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, out T node{genericTypeParameter}, bool isPool = true)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsAngle}>
+		{{
+			node = self.GetOrNewNode<T>(isPool);
+			return (T)node.AddSelfToTree<{ClassFullName}, {genericType}{generics}>(node.Id, self{genericParameter});
+		}}");
+
+			}
+		}
+		#endregion
+
+
+		#region 类型键值分支
+
+		private static void BranchTypeKeyGetNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, out T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode) as T) != null;");
+		}
+
+		private static void BranchTypeKeyCutNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, out T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode)?.CutSelf() as T) != null;");
+		}
+
+		private static void BranchTypeKeyGraftNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(TypeInfo<T>.TypeCode, self);");
+		}
+
+		private static void BranchTypeKeyRemoveNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "移除分支节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static void Remove{ClassNameUnBranch}<N, T>(this N self)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}>
+		=> self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();");
+		}
+
+		private static void BranchTypeKeyRemoveAllNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			AddComment(stringBuilder, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this {(isUnConstraint ? "INode" : $"As{ClassFullName}")} self)
+			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+		}
+
+		private static void BranchTypeKeyAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			int argumentCount = RuleGeneratorSetting.argumentCount;
+			for (int i = 0; i <= argumentCount; i++)
+			{
+				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
+				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
+				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
+				string generics = RuleGeneratorHelper.GetGenerics(i);
+
+				AddComment(stringBuilder, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, out T node{genericTypeParameter}, bool isPool = true)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, INode, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsAngle}>
+		=> self.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(TypeInfo<T>.TypeCode, out node{genericParameter}, isPool);");
+			}
+		}
+
+		#endregion
+
+		#endregion
 
 
 	}

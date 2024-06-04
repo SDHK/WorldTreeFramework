@@ -96,6 +96,11 @@ namespace WorldTree
 	public interface IBranchTypeKey : IBranch<long> { }
 
 	/// <summary>
+	/// 分支无约束标记
+	/// </summary>
+	public interface IBranchUnConstraint { }
+
+	/// <summary>
 	/// 节点: 可用分支
 	/// </summary>
 	/// <typeparam name="B"></typeparam>
