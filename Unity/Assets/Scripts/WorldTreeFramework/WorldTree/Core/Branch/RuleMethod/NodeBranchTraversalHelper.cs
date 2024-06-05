@@ -17,7 +17,7 @@ namespace WorldTree
 			}
 
 			INode current;
-			UnitStack<INode> stack = self.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> stack = self.Core.PoolGetUnit<UnitStack<INode>>();
 			stack.Push(self);
 			while (stack.Count != 0)
 			{
@@ -50,7 +50,7 @@ namespace WorldTree
 				return self;
 			}
 
-			UnitQueue<INode> queue = self.PoolGetUnit<UnitQueue<INode>>();
+			UnitQueue<INode> queue = self.Core.PoolGetUnit<UnitQueue<INode>>();
 			queue.Enqueue(self);
 
 			while (queue.Count != 0)
@@ -87,8 +87,8 @@ namespace WorldTree
 			}
 
 			INode current;
-			UnitStack<INode> stack = self.PoolGetUnit<UnitStack<INode>>();
-			UnitStack<INode> allStack = self.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> stack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> allStack = self.Core.PoolGetUnit<UnitStack<INode>>();
 			stack.Push(self);
 			while (stack.Count != 0)
 			{
@@ -128,8 +128,8 @@ namespace WorldTree
 			}
 
 			INode current;
-			UnitStack<INode> stack = self.PoolGetUnit<UnitStack<INode>>();
-			UnitStack<INode> allStack = self.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> stack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> allStack = self.Core.PoolGetUnit<UnitStack<INode>>();
 			stack.Push(self);
 			while (stack.Count != 0)
 			{

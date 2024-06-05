@@ -17,7 +17,7 @@ namespace WorldTree
 
 		public override void Dispose()
 		{
-			this.Parent.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
 			this.IsRecycle = true;
 			this.IsDisposed = true;
 			this.SetActive(false);
@@ -61,7 +61,7 @@ namespace WorldTree
 		/// </summary>
 		private T NewPool(long type)
 		{
-			this.NewNodeLifecycle(out T pool);
+			this.Core.NewNodeLifecycle(out T pool);
 			pool.ObjectType = type.CodeToType();
 			pool.ObjectTypeCore = type;
 			this.m_Pools.Add(pool.ObjectTypeCore, pool);

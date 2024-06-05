@@ -341,7 +341,7 @@ namespace WorldTree.SourceGenerator
 				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, {genericType} key, out T node{genericTypeParameter}, bool isPool = true)
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsAngle}>
-		=> self.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(key, out node{genericParameter}, isPool);");
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(self, key, out node{genericParameter}, isPool);");
 			}
 		}
 
@@ -410,8 +410,8 @@ namespace WorldTree.SourceGenerator
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsAngle}>
 		{{
-			node = self.GetOrNewNode<T>(isPool);
-			return (T)node.AddSelfToTree<{ClassFullName}, {genericType}{generics}>(node.Id, self{genericParameter});
+			node = self.Core.GetOrNewNode<T>(isPool);
+			return (T)NodeBranchHelper.AddSelfToTree<{ClassFullName}, {genericType}{generics}>(node, node.Id, self{genericParameter});
 		}}");
 
 			}
@@ -484,7 +484,7 @@ namespace WorldTree.SourceGenerator
 				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{generics}>(this N self, out T node{genericTypeParameter}, bool isPool = true)
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsAngle}>
-		=> self.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(TypeInfo<T>.TypeCode, out node{genericParameter}, isPool);");
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{generics}>(self, TypeInfo<T>.TypeCode, out node{genericParameter}, isPool);");
 			}
 		}
 

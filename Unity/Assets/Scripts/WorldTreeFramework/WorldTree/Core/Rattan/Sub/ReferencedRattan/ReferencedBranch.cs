@@ -78,8 +78,8 @@ namespace WorldTree
 		/// </summary>
 		public static void Referenced(INode self, INode node)
 		{
-			self.AddRattan<ReferencedChildRattan>().TryAddNode(node.Id, node);
-			node.AddRattan<ReferencedParentRattan>().TryAddNode(self.Id, self);
+			NodeRattanHelper.AddRattan<ReferencedChildRattan>(self).TryAddNode(node.Id, node);
+			NodeRattanHelper.AddRattan<ReferencedParentRattan>(node).TryAddNode(self.Id, self);
 		}
 
 		/// <summary>
@@ -89,13 +89,13 @@ namespace WorldTree
 		{
 			if (self.TryGetRattan(out ReferencedChildRattan _))
 			{
-				self.RemoveRattanNode<ReferencedChildRattan>(node);
+				NodeRattanHelper.RemoveRattanNode<ReferencedChildRattan>(self, node);
 				NodeRuleHelper.TrySendRule(self, TypeInfo<DeReferencedChild>.Default, node);
 			}
 
 			if (node.TryGetRattan(out ReferencedParentRattan _))
 			{
-				self.RemoveRattanNode<ReferencedParentRattan>(self);
+				NodeRattanHelper.RemoveRattanNode<ReferencedParentRattan>(node, self);
 				NodeRuleHelper.TrySendRule(node, TypeInfo<DeReferencedParent>.Default, self);
 			}
 		}
@@ -108,7 +108,7 @@ namespace WorldTree
 			//移除父级
 			if (self.TryGetRattan(out ReferencedParentRattan parentRattan))
 			{
-				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
+				using (self.Core.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in parentRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0) DeReferenced(self, nodes.Dequeue());
@@ -118,7 +118,7 @@ namespace WorldTree
 			//移除子级
 			if (self.TryGetRattan(out ReferencedChildRattan childRattan))
 			{
-				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
+				using (self.Core.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in childRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0) DeReferenced(self, nodes.Dequeue());
@@ -135,13 +135,13 @@ namespace WorldTree
 			//移除父级
 			if (self.TryGetRattan(out ReferencedParentRattan parentRattan))
 			{
-				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
+				using (self.Core.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in parentRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0)
 					{
 						var node = nodes.Dequeue();
-						node.RemoveRattanNode<ReferencedChildRattan>(self);
+						NodeRattanHelper.RemoveRattanNode<ReferencedChildRattan>(node,self);
 						NodeRuleHelper.TrySendRule(node, TypeInfo<ReferencedChildRemove>.Default, self);
 					}
 				}
@@ -150,13 +150,13 @@ namespace WorldTree
 			//移除子级
 			if (self.TryGetRattan(out ReferencedChildRattan childRattan))
 			{
-				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
+				using (self.Core.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in childRattan) nodes.Enqueue(item);
 					while (nodes.Count != 0)
 					{
 						var node = nodes.Dequeue();
-						node.RemoveRattanNode<ReferencedParentRattan>(self);
+						NodeRattanHelper.RemoveRattanNode<ReferencedParentRattan>(node, self);
 						NodeRuleHelper.TrySendRule(node, TypeInfo<ReferencedParentRemove>.Default, self);
 					}
 				}

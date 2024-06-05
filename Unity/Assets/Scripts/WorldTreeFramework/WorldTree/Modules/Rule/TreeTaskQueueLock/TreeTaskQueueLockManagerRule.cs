@@ -107,7 +107,7 @@ namespace WorldTree
                         }
 
                         //启动下一个任务，塞入任务解锁器
-                        task.To<TreeTask<TreeTaskQueueCompleter>>().SetResult(taskQueueCompleter);
+                        task.As<TreeTask<TreeTaskQueueCompleter>>().SetResult(taskQueueCompleter);
                     }
                     //队列空了则删掉键值
                     if (nodeQueue.Count == 0)

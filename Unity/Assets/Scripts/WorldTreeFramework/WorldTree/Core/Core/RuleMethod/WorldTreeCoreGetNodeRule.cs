@@ -18,14 +18,14 @@ namespace WorldTree
 		/// 新建节点对象
 		/// </summary>
 		/// <remarks>不执行法则生命周期</remarks>
-		public static T NewNode<T>(this INode self, out T node) where T : class, INode
+		public static T NewNode<T>(this WorldTreeCore self, out T node) where T : class, INode
 		{
 			Type type = typeof(T);
 			node = Activator.CreateInstance(type, true) as T;
 			node.Type = TypeInfo<T>.TypeCode;
-			node.Core = self.Core;
+			node.Core = self;
 			node.Root = self.Root;
-			node.Id = self.Core.IdManager.GetId();
+			node.Id = self.IdManager.GetId();
 			return node;
 		}
 
@@ -33,13 +33,13 @@ namespace WorldTree
 		/// 新建节点对象
 		/// </summary>
 		/// <remarks>不执行法则生命周期</remarks>
-		public static INode NewNode(this INode self, long type)
+		public static INode NewNode(this WorldTreeCore self, long type)
 		{
 			INode node = Activator.CreateInstance(type.CodeToType(), true) as INode;
 			node.Type = type;
-			node.Core = self.Core;
+			node.Core = self;
 			node.Root = self.Root;
-			node.Id = self.Core.IdManager.GetId();
+			node.Id = self.IdManager.GetId();
 			return node;
 		}
 
@@ -47,12 +47,12 @@ namespace WorldTree
 		/// 新建节点对象并调用生命周期
 		/// </summary>
 		/// <remarks>执行法则生命周期</remarks>
-		public static T NewNodeLifecycle<T>(this INode self, out T node) where T : class, INode
+		public static T NewNodeLifecycle<T>(this WorldTreeCore self, out T node) where T : class, INode
 		{
 			self.NewNode(out node);
-			self.Core.RuleManager.SupportNodeRule(node.Type);
-			self.Core.NewRuleGroup?.Send(node);
-			self.Core.GetRuleGroup?.Send(node);
+			self.RuleManager.SupportNodeRule(node.Type);
+			self.NewRuleGroup?.Send(node);
+			self.GetRuleGroup?.Send(node);
 			return node;
 		}
 
@@ -60,12 +60,12 @@ namespace WorldTree
 		/// 新建节点对象并调用生命周期
 		/// </summary>
 		/// <remarks>执行法则生命周期</remarks>
-		public static INode NewNodeLifecycle(this INode self, long type)
+		public static INode NewNodeLifecycle(this WorldTreeCore self, long type)
 		{
 			INode node = self.NewNode(type);
-			self.Core.RuleManager.SupportNodeRule(node.Type);
-			self.Core.NewRuleGroup?.Send(node);
-			self.Core.GetRuleGroup?.Send(node);
+			self.RuleManager.SupportNodeRule(node.Type);
+			self.NewRuleGroup?.Send(node);
+			self.GetRuleGroup?.Send(node);
 			return node;
 		}
 
@@ -73,13 +73,13 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static T PoolGetNode<T>(this INode self) where T : class, INode
+		public static T PoolGetNode<T>(this WorldTreeCore self) where T : class, INode
 		{
-			if (self.Core.IsCoreActive)
+			if (self.IsCoreActive)
 			{
-				if (self.Core.NodePoolManager.TryGet(TypeInfo<T>.TypeCode, out INode node))
+				if (self.NodePoolManager.TryGet(TypeInfo<T>.TypeCode, out INode node))
 				{
-					node.Id = self.Core.IdManager.GetId();
+					node.Id = self.IdManager.GetId();
 					return node as T;
 				}
 			}
@@ -89,13 +89,13 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static INode PoolGetNode(this INode self, long type)
+		public static INode PoolGetNode(this WorldTreeCore self, long type)
 		{
-			if (self.Core.IsCoreActive)
+			if (self.IsCoreActive)
 			{
-				if (self.Core.NodePoolManager.TryGet(type, out INode node))
+				if (self.NodePoolManager.TryGet(type, out INode node))
 				{
-					node.Id = self.Core.IdManager.GetId();
+					node.Id = self.IdManager.GetId();
 					return node;
 				}
 			}
@@ -105,16 +105,16 @@ namespace WorldTree
 		/// <summary>
 		/// 回收节点
 		/// </summary>
-		public static void PoolRecycle(this INode self, INode obj)
+		public static void PoolRecycle(this WorldTreeCore self, INode obj)
 		{
-			if (self.Core.IsCoreActive && obj.IsFromPool)
+			if (self.IsCoreActive && obj.IsFromPool)
 			{
-				if (self.Core.NodePoolManager.TryRecycle(obj)) return;
+				if (self.NodePoolManager.TryRecycle(obj)) return;
 			}
 			obj.IsRecycle = true;
-			self.Core.RecycleRuleGroup?.Send(obj);
+			self.RecycleRuleGroup?.Send(obj);
 			obj.IsDisposed = true;
-			self.Core.DestroyRuleGroup?.Send(obj);
+			self.DestroyRuleGroup?.Send(obj);
 			obj.Id = 0;
 		}
 	}

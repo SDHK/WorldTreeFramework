@@ -5,7 +5,6 @@
 * 描    述:   世界树节点基类
 
 ****************************************/
-using WorldTree.Internal;
 namespace WorldTree
 {
 	/// <summary>
@@ -35,9 +34,54 @@ namespace WorldTree
 
 		public bool ActiveToggle { get; set; }
 
+
 		public bool IsActive { get; set; }
 
 		public bool m_ActiveEventMark { get; set; }
+
+
+		public void SetActive(bool value)
+		{
+			if (this.ActiveToggle != value)
+			{
+				this.ActiveToggle = value;
+				this.RefreshActive();
+			}
+		}
+
+		public void RefreshActive()
+		{
+			//如果状态相同，不需要刷新
+			if (this.IsActive == ((this.Parent == null) ? this.ActiveToggle : this.Parent.IsActive && this.ActiveToggle)) return;
+
+			//层序遍历设置子节点
+			using (this.Core.PoolGetUnit(out UnitQueue<INode> queue))
+			{
+				queue.Enqueue(this);
+				while (queue.Count != 0)
+				{
+					var current = queue.Dequeue();
+					if (current.IsActive != ((current.Parent == null) ? current.ActiveToggle : current.Parent.IsActive && current.ActiveToggle))
+					{
+						current.IsActive = !current.IsActive;
+
+						if (current.m_Branchs != null)
+						{
+							foreach (var branchs in current.m_Branchs)
+							{
+								foreach (INode node in branchs.Value)
+								{
+									if (node.BranchType == branchs.Value.Type)
+									{
+										queue.Enqueue(node);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 		#endregion
 
@@ -55,7 +99,7 @@ namespace WorldTree
 
 		public UnitDictionary<long, IBranch> m_Branchs { get; set; }
 
-		public UnitDictionary<long, IBranch> Branchs => this.m_Branchs ??= this.PoolGetUnit<UnitDictionary<long, IBranch>>();
+		public UnitDictionary<long, IBranch> Branchs => this.m_Branchs ??= this.Core.PoolGetUnit<UnitDictionary<long, IBranch>>();
 
 		#endregion
 
@@ -71,7 +115,7 @@ namespace WorldTree
 		public virtual bool TryAddSelfToTree<B, K>(K Key, INode parent)
 			where B : class, IBranch<K>
 		{
-			if (parent.AddBranch<B>().TryAddNode(Key, this))
+			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(Key, this))
 			{
 				this.BranchType = TypeInfo<B>.TypeCode;
 				this.Parent = parent;
@@ -117,7 +161,7 @@ namespace WorldTree
 		public virtual void RemoveAllNode()
 		{
 			if (this.m_Branchs == null) return;
-			using (this.PoolGetUnit(out UnitStack<IBranch> branchs))
+			using (this.Core.PoolGetUnit(out UnitStack<IBranch> branchs))
 			{
 				foreach (var item in this.m_Branchs) branchs.Push(item.Value);
 				while (branchs.Count != 0) RemoveAllNode(branchs.Pop().Type);
@@ -135,12 +179,12 @@ namespace WorldTree
 
 		public virtual void RemoveAllNode(long branchType)
 		{
-			if (this.TryGetBranch(branchType, out IBranch branch))
+			if (NodeBranchHelper.TryGetBranch(this, branchType, out IBranch branch))
 			{
 				if (branch.Count != 0)
 				{
 					//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
-					using (this.PoolGetUnit(out UnitStack<INode> nodes))
+					using (this.Core.PoolGetUnit(out UnitStack<INode> nodes))
 					{
 						foreach (var item in branch) nodes.Push(item);
 						while (nodes.Count != 0) nodes.Pop().Dispose();
@@ -176,7 +220,7 @@ namespace WorldTree
 		{
 			this.View?.Dispose();
 			this.View = null;
-			this.Parent.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
 			this.SetActive(false);//激活变更
 			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
@@ -198,7 +242,7 @@ namespace WorldTree
 
 			//this.DisposeDomain(); //清除域节点
 			this.Parent = null;//清除父节点
-			this.PoolRecycle(this);//回收到池
+			this.Core.PoolRecycle(this);//回收到池
 		}
 
 		#endregion
@@ -208,7 +252,7 @@ namespace WorldTree
 		public virtual bool TryGraftSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
 		{
-			if (!parent.AddBranch<B>().TryAddNode(key, this)) return false;
+			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
 			this.BranchType = TypeInfo<B>.TypeCode;
 			this.Parent = parent;
@@ -259,7 +303,7 @@ namespace WorldTree
 		{
 			if (this.IsRecycle) return null; //是否已经回收
 			NodeBranchTraversalHelper.TraversalPostorder(this, current => current.OnCutSelf());
-			this.Parent.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
 			return this;
 		}
 
@@ -295,8 +339,8 @@ namespace WorldTree
 			if (this.Parent?.View != null)
 			{
 				INode viewParent = Parent.View.Parent;
-				INode nodeView = viewParent.GetOrNewNode(Parent.View.Type);
-				this.View = nodeView.AddSelfToTree<ChildBranch, long, INode, INode>(nodeView.Id, viewParent, this, Parent) as IWorldTreeNodeViewBuilder;
+				INode nodeView = viewParent.Core.GetOrNewNode(Parent.View.Type);
+				this.View = NodeBranchHelper.AddSelfToTree<ChildBranch, long, INode, INode>(nodeView, nodeView.Id, viewParent, this, Parent) as IWorldTreeNodeViewBuilder;
 			}
 			else
 			{

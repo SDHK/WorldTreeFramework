@@ -61,7 +61,7 @@ namespace WorldTree.SourceGenerator
 		public static UnitList<OutT> Calls<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, out UnitList<OutT> outT)
 			where R : ICallRule<{genericsAfter}OutT>
 		{{
-			outT = node.PoolGetUnit<UnitList<OutT>>();
+			outT = node.Core.PoolGetUnit<UnitList<OutT>>();
 			foreach (ICallRule<{genericsAfter}OutT> rule in  (RuleList)ruleList)
 			{{
 				rule.IsMulticast = true;

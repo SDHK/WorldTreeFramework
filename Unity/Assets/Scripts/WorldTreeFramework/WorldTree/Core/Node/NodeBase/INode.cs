@@ -40,7 +40,6 @@ namespace WorldTree
 		, AsRule<UpdateTime>
 		, AsRule<BeforeRemove>
 		, AsRule<Remove>
-
 	{
 		/// <summary>
 		/// 节点ID
@@ -83,10 +82,20 @@ namespace WorldTree
 		public bool IsActive { get; set; }
 
 		/// <summary>
-		/// 活跃事件标记
+		/// 活跃事件标记，这个由框架内部调用设置，禁止修改
 		/// </summary>
 		public bool m_ActiveEventMark { get; set; }
 
+		/// <summary>
+		/// 设置激活状态
+		/// </summary>
+		public void SetActive(bool value);
+
+		/// <summary>
+		/// 刷新激活状态：层序遍历设置子节点
+		/// </summary>
+		public void RefreshActive();
+	
 		#endregion
 
 		#region Rattan
@@ -106,7 +115,7 @@ namespace WorldTree
 		#region Branch
 
 		/// <summary>
-		/// 挂载的分支类型
+		/// 此节点挂载到父级的分支类型
 		/// </summary>
 		public long BranchType { get; set; }
 

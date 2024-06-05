@@ -31,7 +31,7 @@ namespace WorldTree
 
 		public override void OnDispose()
 		{
-			this.Parent.RemoveBranchNode( this.BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
 			allNode.Clear();
 			pools.Clear();
 			allNode = null;
@@ -73,7 +73,7 @@ namespace WorldTree
 		{
 			if (!self.pools.TryGetValue(type, out ReferencedPool pool))
 			{
-				self.NewNodeLifecycle(out pool);
+				self.Core.NewNodeLifecycle(out pool);
 				pool.ReferencedType = type.CodeToType();
 				self.pools.Add(type, pool);
 				pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, self);

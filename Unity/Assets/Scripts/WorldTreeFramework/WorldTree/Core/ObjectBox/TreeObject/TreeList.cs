@@ -108,19 +108,19 @@ namespace WorldTree
 				if (value == this._items.Length) return;
 				if (value > 0)
 				{
-					var destinationArray = this.PoolGetArray<T>(value);
+					var destinationArray = this.Core.PoolGetArray<T>(value);
 					if (this._size > 0)
 						Array.Copy(this._items, 0, destinationArray, 0, this._size);
-					this.PoolRecycle(this._items);
+					this.Core.PoolRecycle(this._items);
 					this._items = destinationArray;
 				}
 				else
 				{
 					if (this._items != null)
 					{
-						this.PoolRecycle(this._items);
+						this.Core.PoolRecycle(this._items);
 					}
-					this._items = this.PoolGetArray<T>(_defaultCapacity);
+					this._items = this.Core.PoolGetArray<T>(_defaultCapacity);
 				}
 			}
 		}
@@ -864,7 +864,7 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeList<T> self)
 			{
-				self._items = self.PoolGetArray<T>(self._defaultCapacity);
+				self._items = self.Core.PoolGetArray<T>(self._defaultCapacity);
 			}
 		}
 
@@ -877,7 +877,7 @@ namespace WorldTree
 				if (capacity == 0)
 					self.LogError("容量为0");
 				else
-					self._items = self.PoolGetArray<T>(capacity);
+					self._items = self.Core.PoolGetArray<T>(capacity);
 			}
 		}
 
@@ -892,11 +892,11 @@ namespace WorldTree
 					int count = objs.Count;
 					if (count == 0)
 					{
-						self._items = self.PoolGetArray<T>(self._defaultCapacity);
+						self._items = self.Core.PoolGetArray<T>(self._defaultCapacity);
 					}
 					else
 					{
-						self._items = self.PoolGetArray<T>(count);
+						self._items = self.Core.PoolGetArray<T>(count);
 						objs.CopyTo(self._items, 0);
 						self._size = count;
 					}
@@ -904,7 +904,7 @@ namespace WorldTree
 				else
 				{
 					self._size = self._defaultCapacity;
-					self._items = self.PoolGetArray<T>(self._defaultCapacity);
+					self._items = self.Core.PoolGetArray<T>(self._defaultCapacity);
 					foreach (T obj in collection)
 						self.Add(obj);
 				}
@@ -916,7 +916,7 @@ namespace WorldTree
 			protected override void Execute(TreeList<T> self)
 			{
 				self.Clear();
-				self.PoolRecycle(self._items);
+				self.Core.PoolRecycle(self._items);
 				self._items = null;
 				self._size = 0;
 				self._version = 0;

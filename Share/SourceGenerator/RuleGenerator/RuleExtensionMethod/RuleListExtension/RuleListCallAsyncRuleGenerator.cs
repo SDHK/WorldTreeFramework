@@ -61,7 +61,7 @@ namespace WorldTree.SourceGenerator
 		public static async TreeTask<UnitList<OutT>> CallsAsync<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, OutT defaultOutT)
 			where R : ICallRuleAsync<{genericsAfter}OutT>
 		{{
-			UnitList<OutT> outT = node.PoolGetUnit<UnitList<OutT>>();
+			UnitList<OutT> outT = node.Core.PoolGetUnit<UnitList<OutT>>();
 			foreach (ICallRuleAsync<{genericsAfter}OutT> rule in (RuleList)ruleList)
 			{{
 				rule.IsMulticast = true;
