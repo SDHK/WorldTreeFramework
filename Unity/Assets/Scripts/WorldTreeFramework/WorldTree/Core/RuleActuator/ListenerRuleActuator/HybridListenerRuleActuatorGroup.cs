@@ -26,26 +26,6 @@ namespace WorldTree
 
 	public static class HybridListenerRuleActuatorGroupRule
 	{
-
-		/// <summary>
-		/// 获取节点监听执行器
-		/// </summary>
-		public static IRuleActuator<R> GetListenerActuator<R>(this INode node)
-		   where R : IListenerRule
-		{
-			if (node.Core.ReferencedPoolManager != null)
-			{
-				if (node.Core.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool))
-				{
-					if (nodePool.AddComponent(out HybridListenerRuleActuatorGroup _, isPool: false).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
-					{
-						return actuator;
-					}
-				}
-			}
-			return null;
-		}
-
 		/// <summary>
 		/// 添加监听执行器,并自动填装监听器
 		/// </summary>

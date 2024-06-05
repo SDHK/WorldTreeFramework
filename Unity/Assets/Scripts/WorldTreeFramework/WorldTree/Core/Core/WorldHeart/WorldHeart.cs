@@ -91,16 +91,16 @@ namespace WorldTree
 
 	public static class WorldHeartRule
 	{
-		private class AwakeRule : AwakeRule<WorldHeart, int>
+		private class Awake : AwakeRule<WorldHeart, int>
 		{
 			protected override void Execute(WorldHeart self, int frameTime)
 			{
 				self.frameTime = frameTime;
 
-				self.GetOrNewGlobalRuleActuator(out self.enable);
-				self.GetOrNewGlobalRuleActuator(out self.update);
-				self.GetOrNewGlobalRuleActuator(out self.updateTime);
-				self.GetOrNewGlobalRuleActuator(out self.disable);
+				self.Core.GetOrNewGlobalRuleActuator(out self.enable);
+				self.Core.GetOrNewGlobalRuleActuator(out self.update);
+				self.Core.GetOrNewGlobalRuleActuator(out self.updateTime);
+				self.Core.GetOrNewGlobalRuleActuator(out self.disable);
 
 				self.AddComponent(out self.worldUpdate, frameTime).Run();
 
@@ -110,7 +110,7 @@ namespace WorldTree
 			}
 		}
 
-		private class RemoveRule : RemoveRule<WorldHeart>
+		private class Remove : RemoveRule<WorldHeart>
 		{
 			protected override void Execute(WorldHeart self)
 			{
@@ -126,7 +126,7 @@ namespace WorldTree
 			}
 		}
 
-		private class UpdateTimeRule : UpdateTimeRule<WorldHeart>
+		private class UpdateTime : UpdateTimeRule<WorldHeart>
 		{
 			protected override void Execute(WorldHeart self, TimeSpan deltaTime)
 			{

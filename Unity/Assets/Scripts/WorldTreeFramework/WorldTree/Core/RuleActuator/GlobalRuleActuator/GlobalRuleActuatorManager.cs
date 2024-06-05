@@ -10,15 +10,15 @@
 namespace WorldTree
 {
 
-	public static partial class NodeRule
+	public static partial class WorldTreeCoreExtension
 	{
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this INode self, out GlobalRuleActuator<R> globalRuleActuator)
+		public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this WorldTreeCore self, out GlobalRuleActuator<R> globalRuleActuator)
 		where R : IRule
 		{
-			return self.Core.AddComponent(out GlobalRuleActuatorManager _, isPool: false).AddComponent(out globalRuleActuator, isPool: false);
+			return self.AddComponent(out GlobalRuleActuatorManager _, isPool: false).AddComponent(out globalRuleActuator, isPool: false);
 		}
 	}
 

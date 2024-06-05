@@ -84,18 +84,18 @@ namespace WorldTree
 			{
 				self.frameTime = frameTime;
 
-				self.GetOrNewGlobalRuleActuator(out self.enable);
-				self.GetOrNewGlobalRuleActuator(out self.update);
-				self.GetOrNewGlobalRuleActuator(out self.updateTime);
-				self.GetOrNewGlobalRuleActuator(out self.disable);
-				self.GetOrNewGlobalRuleActuator(out self.lateUpdate);
-				self.GetOrNewGlobalRuleActuator(out self.lateUpdateTime);
-				self.GetOrNewGlobalRuleActuator(out self.fixedUpdate);
-				self.GetOrNewGlobalRuleActuator(out self.fixedUpdateTime);
-				self.GetOrNewGlobalRuleActuator(out self.onGUI);
-				self.GetOrNewGlobalRuleActuator(out self.onGUIUpdateTime);
-				self.GetOrNewGlobalRuleActuator(out self.drawGizmos);
-				self.GetOrNewGlobalRuleActuator(out self.drawGizmosUpdateTime);
+				self.Core.GetOrNewGlobalRuleActuator(out self.enable);
+				self.Core.GetOrNewGlobalRuleActuator(out self.update);
+				self.Core.GetOrNewGlobalRuleActuator(out self.updateTime);
+				self.Core.GetOrNewGlobalRuleActuator(out self.disable);
+				self.Core.GetOrNewGlobalRuleActuator(out self.lateUpdate);
+				self.Core.GetOrNewGlobalRuleActuator(out self.lateUpdateTime);
+				self.Core.GetOrNewGlobalRuleActuator(out self.fixedUpdate);
+				self.Core.GetOrNewGlobalRuleActuator(out self.fixedUpdateTime);
+				self.Core.GetOrNewGlobalRuleActuator(out self.onGUI);
+				self.Core.GetOrNewGlobalRuleActuator(out self.onGUIUpdateTime);
+				self.Core.GetOrNewGlobalRuleActuator(out self.drawGizmos);
+				self.Core.GetOrNewGlobalRuleActuator(out self.drawGizmosUpdateTime);
 
 				self.AddComponent(out self.worldUpdate, frameTime).Run();
 				self.AddComponent(out self.worldLateUpdate, frameTime).Run();

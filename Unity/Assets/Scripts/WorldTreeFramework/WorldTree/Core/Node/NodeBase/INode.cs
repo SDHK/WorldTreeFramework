@@ -87,12 +87,12 @@ namespace WorldTree
 		public bool m_ActiveEventMark { get; set; }
 
 		/// <summary>
-		/// 设置激活状态
+		/// 设置当前节点激活状态
 		/// </summary>
 		public void SetActive(bool value);
 
 		/// <summary>
-		/// 刷新激活状态：层序遍历设置子节点
+		/// 刷新当前节点激活状态：层序遍历设置子节点
 		/// </summary>
 		public void RefreshActive();
 	

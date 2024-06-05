@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using WorldTree.Internal;
+using WorldTree.Sample;
 
 namespace WorldTree
 {
@@ -15,7 +16,6 @@ namespace WorldTree
 	{
 		public static void Test(this T1 self)
 		{
-			self.FindParent
 		}
 
 	}
