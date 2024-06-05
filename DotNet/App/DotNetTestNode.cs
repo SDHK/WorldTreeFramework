@@ -3,6 +3,22 @@
 namespace WorldTree
 {
 
+
+	public class T1 : Node
+	{
+
+	}
+
+
+	public static partial class T1Rule
+	{
+
+		public static void Test(this T1 self)
+		{
+		}
+
+	}
+
 	public partial class TestNode : Node, ComponentOf<DotNetTestNode>
 		, AsAwake
 	{

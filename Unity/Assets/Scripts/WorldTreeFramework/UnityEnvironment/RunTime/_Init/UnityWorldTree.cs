@@ -36,7 +36,7 @@ namespace WorldTree
 			Core.LogWarning = Debug.LogWarning;
 			Core.LogError = Debug.LogError;
 
-			//可视化节点赋值给主框架
+			//可视化生成器赋值给主框架
 			Core.View = treeView;
 
 			//主框架初始化
@@ -51,7 +51,7 @@ namespace WorldTree
 
 		private void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(Core.ToStringDrawTree());
+			if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(NodeRule.ToStringDrawTree(Core));
 		}
 
 		private void OnApplicationQuit()

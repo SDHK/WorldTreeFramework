@@ -13,12 +13,34 @@ namespace WorldTree.SourceGenerator
 {
 	public static class CallRuleAsyncSupplementHelper
 	{
+		public static void GetDelegate(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
+		{
+			if (baseInterface == null) return;
+			string ClassName = typeSymbol.Name;
+			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
+			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+			string TypeArguments = RuleSupplementHelper.GetTypeArguments(typeSymbol);
+
+			string genericTypeParameter = GetCallRuleAsyncGenericTypesParameters(baseInterface, false);
+			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(RuleSupplementHelper.classInterfaceSyntax[ClassFullName]);
+			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t");
+
+			RuleSupplementHelper.AddComment(Code, "异步调用法则委托", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			Code.AppendLine(@$"	public delegate TreeTask<{outType}> On{ClassName}<N{TypeArguments}>(N self{genericTypeParameter}) where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments};");
+		}
+
 		public static void GetMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
 		{
 			if (baseInterface == null) return;
 
 			string ClassName = typeSymbol.Name;
+			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
 			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 			string TypeArgumentsAngle = RuleSupplementHelper.GetTypeArgumentsAngle(typeSymbol);
 			string genericParameter = GetCallRuleAsyncGetGenericParameter(baseInterface);
@@ -26,12 +48,9 @@ namespace WorldTree.SourceGenerator
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(RuleSupplementHelper.classInterfaceSyntax[ClassFullName]);
 			string outType = baseInterface.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string BaseName = baseInterface.Name.TrimStart('I');
-			StringBuilder CommentPara = new();
-			RuleSupplementHelper.AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "执行异步调用法则", "\t\t");
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(RuleSupplementHelper.classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t\t"));
 
+			RuleSupplementHelper.AddComment(Code, "执行异步调用法则", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			//生成调用方法
 			Code.AppendLine(@$"		public static TreeTask<{outType}> {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => NodeRuleHelper.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");
 		}
@@ -39,7 +58,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 获取泛型参数 , T1 arg1, T2 arg2, T3 defaultOutT = default
 		/// </summary>
-		public static string GetCallRuleAsyncGenericTypesParameters(INamedTypeSymbol typeSymbol)
+		public static string GetCallRuleAsyncGenericTypesParameters(INamedTypeSymbol typeSymbol, bool isOutT = true)
 		{
 			if (!typeSymbol.IsGenericType) return "";
 
@@ -48,7 +67,7 @@ namespace WorldTree.SourceGenerator
 			{
 				sb.Append($", {typeSymbol.TypeArguments[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} arg{i + 1}");
 			}
-			sb.Append($", {typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} defaultOutT = default");
+			if (isOutT) sb.Append($", {typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} defaultOutT = default");
 			return sb.ToString();
 		}
 

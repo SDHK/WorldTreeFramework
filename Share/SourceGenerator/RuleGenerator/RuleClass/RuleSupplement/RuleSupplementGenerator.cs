@@ -174,31 +174,43 @@ namespace WorldTree.SourceGenerator
 		{
 			if (baseInterface == null) return;
 			string ClassName = typeSymbol.Name;
+			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
 			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 			string BaseName = baseInterface.Name.TrimStart('I');
+			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string TypeArguments = GetTypeArguments(typeSymbol);
 			string BaseTypeArguments = GetTypeArguments(baseInterface);
+			string genericTypeParameter = GetGenericTypeParameter(baseInterface);
+
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
-
-			StringBuilder CommentPara = new();
-
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t");
 
 			//As约束接口
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "法则约束", "\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
+			AddComment(Code, "法则约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{ClassFullName}>, INode {WhereTypeArguments}{{}}");
 
-			//抽象基类注释
-			CommentPara.Clear();
-			AddRuleExtendCommentPara(CommentPara, typeSymbol, baseInterface, "法则基类", "\t");
-			CommentPara.Append(BaseTypePara);
-			Code.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], CommentPara.ToString(), "\t"));
-
 			//抽象基类
+			AddComment(Code, "法则基类", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
+
+			//法则委托
+			if (NamedSymbolHelper.CheckInterface(typeSymbol, ISendRule, out _))
+			{
+				SendRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
+			}
+			else if (NamedSymbolHelper.CheckInterface(typeSymbol, ISendRuleAsync, out _))
+			{
+				SendRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
+			}
+			else if (NamedSymbolHelper.CheckInterface(typeSymbol, ICallRule, out _))
+			{
+				CallRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
+			}
+			else if (NamedSymbolHelper.CheckInterface(typeSymbol, ICallRuleAsync, out _))
+			{
+				CallRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
+			}
 		}
 
 		/// <summary>
@@ -245,6 +257,29 @@ namespace WorldTree.SourceGenerator
 			sb.AppendLine(@$"{tab}/// <Para>");
 			sb.AppendLine(@$"{tab}/// {Title}: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{SecurityElement.Escape(IBaseFullName)}""/>");
 			sb.AppendLine(@$"{tab}/// </Para>");
+		}
+
+
+		/// <summary>
+		/// 添加法则继承注释
+		/// </summary>
+		public static string AddRuleExtendCommentPara(string IClassFullName, string IBaseFullName, string BaseTypePara, string Title, string tab)
+		{
+			StringBuilder sb = new();
+			sb.AppendLine(@$"{tab}/// <Para>");
+			sb.AppendLine(@$"{tab}/// {Title}: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{SecurityElement.Escape(IBaseFullName)}""/>");
+			sb.AppendLine(@$"{tab}/// </Para>");
+			sb.Append(@$"{BaseTypePara}");
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// 添加注释
+		/// </summary>
+		public static void AddComment(StringBuilder stringBuilder, string Title, string tab, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara)
+		{
+			string Para = AddRuleExtendCommentPara(ClassFullNameAndNameSpace, BaseFullName, BaseTypePara, Title, tab);
+			stringBuilder.Append(TreeSyntaxHelper.GetCommentAddOrInsertRemarks(classInterfaceSyntax[ClassFullName], Para, tab));
 		}
 	}
 }

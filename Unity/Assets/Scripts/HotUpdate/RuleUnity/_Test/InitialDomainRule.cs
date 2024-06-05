@@ -1,24 +1,58 @@
 using System;
 using UnityEngine;
 using WorldTree.Internal;
-using WorldTree.Sample;
 
 namespace WorldTree
 {
 
-	public class T1 : Node
+	public class T1<T> : Node
 	{
 
 	}
 
 
+	public delegate T Call<N, T>(N self, TimeSpan timeSpan = default) where N : class, INode, AsRule<UpdateTime>;
+
+	public delegate TreeTask<T> CallAsync<N, T>(N self, TimeSpan timeSpan = default) where N : class, INode, AsRule<UpdateTime>;
+
+	/// <summary>
+	/// 异步调用法则基类接口
+	/// </summary>
+	public interface ICallRuleAsync1<OutT> : IRule
+	{
+		TreeTask<OutT> Invoke(INode self);
+	}
+
+	/// <summary>
+	/// 代码生成兄弟类型调用委托
+	/// </summary>
 	public static partial class T1Rule
 	{
-		public static void Test(this T1 self)
+		class UpdateTimeRule : UpdateTimeRule<T1<float>>
 		{
+			public override void Invoke(INode self, TimeSpan arg1) => UpdateTime(self as T1<float>, arg1);
+
+			protected override void Execute(T1<float> self, TimeSpan timeSpan)
+			{
+				UpdateTime(self, timeSpan);
+			}
 		}
+	}
+
+	/// <summary>
+	/// 业务写的代码
+	/// </summary>
+	public static partial class T1Rule
+	{
+		static OnUpdateTime<T1<float>> UpdateTime = (self, timeSpan) =>
+		{
+			self.Log($"T1<float>更新！！{timeSpan.TotalSeconds}");
+		};
+
 
 	}
+
+
 
 	public static partial class InitialDomainRule
 	{

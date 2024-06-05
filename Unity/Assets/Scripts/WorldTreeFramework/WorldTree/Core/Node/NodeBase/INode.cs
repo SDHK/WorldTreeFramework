@@ -65,7 +65,7 @@ namespace WorldTree
 		public INode Parent { get; set; }
 
 		/// <summary>
-		/// 可视化组件
+		/// 可视化生成器
 		/// </summary>
 		public IWorldTreeNodeViewBuilder View { get; set; }
 

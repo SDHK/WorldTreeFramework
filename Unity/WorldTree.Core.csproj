@@ -58,7 +58,6 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\NodeListenerActuatorHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTweenManager.cs" />
@@ -239,6 +238,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\GameTimeManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\RuleMethod\NodeBranchHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rattan\RuleMethod\NodeRattanExtension.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\NodeListenerActuatorHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />

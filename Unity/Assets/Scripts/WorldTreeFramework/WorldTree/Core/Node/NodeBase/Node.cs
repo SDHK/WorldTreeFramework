@@ -25,9 +25,6 @@ namespace WorldTree
 		public INode Domain { get; set; }//接口标记域节点
 		public INode Parent { get; set; }
 
-		/// <summary>
-		/// 调试可视化节点
-		/// </summary>
 		public IWorldTreeNodeViewBuilder View { get; set; }
 
 		#region Active

@@ -86,7 +86,7 @@ namespace WorldTree
 		/// <summary>
 		/// 返回用字符串绘制的树
 		/// </summary>
-		public static string ToStringDrawTree(this INode self, string t = "\t")
+		public static string ToStringDrawTree(INode self, string t = "\t")
 		{
 			string t1 = "\t" + t;
 			string str = "";
@@ -103,7 +103,7 @@ namespace WorldTree
 					{
 						if (branchs.Value.Type == node.BranchType)
 						{
-							str += node.ToStringDrawTree(t1);
+							str += ToStringDrawTree(node, t1);
 						}
 					}
 				}

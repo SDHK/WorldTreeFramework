@@ -17,7 +17,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取节点监听执行器
 		/// </summary>
-		/// <remarks>获取监听这个节点的执行器</remarks>
+		/// <remarks>获取监听这个节点的监听器法则执行器</remarks>
 		public static IRuleActuator<R> GetListenerActuator<R>(INode node)
 		   where R : IListenerRule
 		{
