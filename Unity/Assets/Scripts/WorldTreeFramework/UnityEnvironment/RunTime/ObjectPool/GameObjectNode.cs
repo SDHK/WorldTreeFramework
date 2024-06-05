@@ -106,7 +106,7 @@ namespace WorldTree
 			if (prefab)
 			{
 				DestroyGameObject();
-				pool = this.GamePoolManager().GetPool(prefab);
+				pool = this.Root.AddComponent(out GameObjectPoolManager _).GetPool(prefab);
 				gameObject = pool.Get();
 				transform = gameObject.transform;
 
@@ -130,7 +130,7 @@ namespace WorldTree
 			if (prefab)
 			{
 				DestroyGameObject();
-				pool = this.GamePoolManager().GetPool(prefab);
+				pool = this.Root.AddComponent(out GameObjectPoolManager _).GetPool(prefab);
 				gameObject = pool.Get();
 				transform = gameObject.transform;
 			}

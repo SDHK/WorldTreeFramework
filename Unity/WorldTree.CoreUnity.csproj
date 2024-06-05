@@ -98,7 +98,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ThirdParty\YooAsset\YooAssetManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\_Init\UnityWorldTree.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Assets\AssetBundle\AssetManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ThirdParty\Addressables\AddressablesAsyncExtension.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WIndowUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\SqliteHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIBeginScrollView.cs" />
@@ -107,7 +106,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteChar.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Assets\AssetBundle\RuleBase\LoadAssetAsyncRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\EditorRunTime\UnityWorldTreeNodeView\UnityWorldTreeNodeView.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Extension\GameObjectEntityExtension.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Extension\GameObjectNodeHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteGuid.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\SqliteTool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteByte.cs" />

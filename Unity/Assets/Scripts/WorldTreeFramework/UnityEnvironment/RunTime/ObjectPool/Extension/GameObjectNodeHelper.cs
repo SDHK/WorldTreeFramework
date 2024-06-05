@@ -2,39 +2,39 @@
 
 namespace WorldTree
 {
-	public static class GameObjectEntityExtension
+	public static class GameObjectNodeHelper
 	{
 
 		/// <summary>
 		/// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
 		/// </summary>
-		public static async TreeTask<T> AddGameObjectNode<N, T>(this N self)
+		public static async TreeTask<T> AddGameObjectNode<N, T>( N self)
 			where N : class, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
-			GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
+			GameObject prefab = await self.Root.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
 			return self.AddChild(out GameObjectNode _).Instantiate(prefab).AddComponent(out T _);
 		}
 
 		/// <summary>
 		/// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
 		/// </summary>
-		public static async TreeTask<T> AddGameObjectNode<N, T>(this N self, Transform parent)
+		public static async TreeTask<T> AddGameObjectNode<N, T>( N self, Transform parent)
 			where N : class, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
-			GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
+			GameObject prefab = await self.Root.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
 			return self.AddChild(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
 		}
 
 		/// <summary>
 		/// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
 		/// </summary>
-		public static async TreeTask<T> AddGameObjectNode<N, T>(this N self, GameObjectNode parent)
+		public static async TreeTask<T> AddGameObjectNode<N, T>( N self, GameObjectNode parent)
 			where N : class, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
-			GameObject prefab = await self.AddressablesLoadAssetAsync<GameObject, T>();
+			GameObject prefab = await self.Root.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
 			return self.AddChild(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
 		}
 	}

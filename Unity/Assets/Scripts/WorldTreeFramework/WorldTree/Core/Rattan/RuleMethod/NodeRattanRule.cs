@@ -3,11 +3,11 @@
 * 作者： 闪电黑客
 * 日期： 2023/12/12 08:25:17
 
-* 描述： 
+* 描述： 未完成...
 
 */
 
-namespace WorldTree
+namespace WorldTree.Internal
 {
 	public static class NodeRattanRule
 	{

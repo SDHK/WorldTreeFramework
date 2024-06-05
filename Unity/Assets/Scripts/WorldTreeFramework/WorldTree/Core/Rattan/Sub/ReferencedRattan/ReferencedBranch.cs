@@ -16,6 +16,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using WorldTree.Internal;
 
 namespace WorldTree
 {
@@ -70,12 +71,12 @@ namespace WorldTree
 	}
 
 
-	public static class NodeReferencedRattanRule
+	public static class NodeReferencedRattanHelper
 	{
 		/// <summary>
 		/// 建立引用关系
 		/// </summary>
-		public static void Referenced(this INode self, INode node)
+		public static void Referenced(INode self, INode node)
 		{
 			self.AddRattan<ReferencedChildRattan>().TryAddNode(node.Id, node);
 			node.AddRattan<ReferencedParentRattan>().TryAddNode(self.Id, self);
@@ -84,7 +85,7 @@ namespace WorldTree
 		/// <summary>
 		/// 解除引用关系
 		/// </summary>
-		public static void DeReferenced(this INode self, INode node)
+		public static void DeReferenced(INode self, INode node)
 		{
 			if (self.TryGetRattan(out ReferencedChildRattan _))
 			{
@@ -102,7 +103,7 @@ namespace WorldTree
 		/// <summary>
 		/// 解除所有引用关系
 		/// </summary>
-		public static void DeReferencedAll(this INode self)
+		public static void DeReferencedAll(INode self)
 		{
 			//移除父级
 			if (self.TryGetRattan(out ReferencedParentRattan parentRattan))
@@ -110,7 +111,7 @@ namespace WorldTree
 				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in parentRattan) nodes.Enqueue(item);
-					while (nodes.Count != 0) self.DeReferenced(nodes.Dequeue());
+					while (nodes.Count != 0) DeReferenced(self, nodes.Dequeue());
 				}
 			}
 
@@ -120,7 +121,7 @@ namespace WorldTree
 				using (self.PoolGetUnit(out UnitQueue<INode> nodes))
 				{
 					foreach (var item in childRattan) nodes.Enqueue(item);
-					while (nodes.Count != 0) self.DeReferenced(nodes.Dequeue());
+					while (nodes.Count != 0) DeReferenced(self, nodes.Dequeue());
 				}
 			}
 		}
@@ -129,7 +130,7 @@ namespace WorldTree
 		/// <summary>
 		/// 解除所有引用关系, 通知自己的移除生命周期事件
 		/// </summary>
-		public static void SendAllReferencedNodeRemove(this INode self)
+		public static void SendAllReferencedNodeRemove(INode self)
 		{
 			//移除父级
 			if (self.TryGetRattan(out ReferencedParentRattan parentRattan))

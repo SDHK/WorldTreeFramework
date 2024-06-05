@@ -7,16 +7,20 @@ namespace WorldTree
 	public class T1 : Node
 	{
 
+		public void T()
+		{
 
+		}
 
 	}
 
 
 	public static partial class T1Rule
 	{
-		public static void Test(this  T1 self)
+		public static void Test(this T1 self)
 		{
 		}
+
 	}
 
 	public static partial class InitialDomainRule

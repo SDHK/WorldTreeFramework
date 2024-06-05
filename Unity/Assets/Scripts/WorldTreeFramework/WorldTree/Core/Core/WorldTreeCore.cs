@@ -14,6 +14,7 @@
 
 using System;
 using System.Reflection;
+using WorldTree.Internal;
 
 namespace WorldTree
 {
@@ -70,6 +71,7 @@ namespace WorldTree
 	/// </summary>
 	public class WorldTreeCore : Node, IWorldTreeCore, IListenerIgnorer
 		, AsComponentBranch
+		, AsWorldBranch
 		, WorldOf<WorldTreeCore>
 		, AsAwake
 	{
@@ -287,7 +289,7 @@ namespace WorldTree
 			if (this.IsRecycle || this.IsDisposed) return;
 
 			//节点回收前序遍历处理,节点回收后续遍历处理
-			this.TraversalPrePostOrder(current => current.OnBeforeDispose(), current => current.OnDispose());
+			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => current.OnBeforeDispose(), current => current.OnDispose());
 		}
 
 		public override void OnBeforeDispose()
@@ -295,7 +297,7 @@ namespace WorldTree
 			this.Core.BeforeRemoveRuleGroup?.Send(this);
 
 			//需要提前按顺序移除
-			this.RemoveAllNode<WorldBranch>();
+			this.RemoveAllWorld();
 			this.RemoveComponent<WorldTreeCore,WorldTreeRoot>();
 			this.RemoveComponent<WorldTreeCore, GlobalRuleActuatorManager>();
 
@@ -357,7 +359,7 @@ namespace WorldTree
 			this.BranchType = TypeInfo<B>.TypeCode;
 			this.Parent = parent;
 			this.RefreshActive();
-			this.TraversalLevel(current => current.OnGraftSelfToTree());
+			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
 			return true;
 		}
 

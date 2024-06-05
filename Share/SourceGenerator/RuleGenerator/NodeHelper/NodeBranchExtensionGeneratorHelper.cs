@@ -54,7 +54,7 @@ namespace WorldTree.SourceGenerator
 		}}
 
 		/// <summary>
-		/// 添加节点，无限制类型
+		/// 添加节点，无约束
 		/// </summary>
 		public static INode AddNode<B, K{generics}>(this INode self, K key, long type, out INode node{genericTypeParameter}, bool isPool = true)
 			where B : class, IBranch<K>

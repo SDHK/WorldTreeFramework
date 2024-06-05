@@ -11,6 +11,8 @@
 
 */
 
+using WorldTree.Internal;
+
 namespace WorldTree
 {
 	/// <summary>

@@ -2,12 +2,12 @@
 
 namespace WorldTree
 {
-	public static class NodeBranchTraversalRule
+	public static class NodeBranchTraversalHelper
 	{
 		/// <summary>
 		/// 前序遍历
 		/// </summary>
-		public static INode TraversalPreorder(this INode self, Action<INode> action)
+		public static INode TraversalPreorder(INode self, Action<INode> action)
 		{
 			//自己没有分支
 			if (self.m_Branchs == null || self.m_Branchs.Count == 0)
@@ -41,7 +41,7 @@ namespace WorldTree
 		/// <summary>
 		/// 层序遍历
 		/// </summary>
-		public static INode TraversalLevel(this INode self, Action<INode> action)
+		public static INode TraversalLevel(INode self, Action<INode> action)
 		{
 			//自己没有分支
 			if (self.m_Branchs == null || self.m_Branchs.Count == 0)
@@ -77,7 +77,7 @@ namespace WorldTree
 		/// <summary>
 		/// 后序遍历
 		/// </summary>
-		public static INode TraversalPostorder(this INode self, Action<INode> action)
+		public static INode TraversalPostorder(INode self, Action<INode> action)
 		{
 			//自己没有分支
 			if (self.m_Branchs == null || self.m_Branchs.Count == 0)
@@ -117,7 +117,7 @@ namespace WorldTree
 		/// <summary>
 		/// 前后双序遍历
 		/// </summary>
-		public static INode TraversalPrePostOrder(this INode self, Action<INode> PreAction, Action<INode> PostAction)
+		public static INode TraversalPrePostOrder(INode self, Action<INode> PreAction, Action<INode> PostAction)
 		{
 			//自己没有分支
 			if (self.m_Branchs == null || self.m_Branchs.Count == 0)

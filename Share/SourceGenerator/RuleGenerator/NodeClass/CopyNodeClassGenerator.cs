@@ -88,14 +88,16 @@ namespace WorldTree.SourceGenerator
 					SyntaxTree syntaxTree = CopyClassDeclarations.SyntaxTree;
 					SyntaxNode syntaxRoot = syntaxTree.GetRoot();
 					StringBuilder Code = new StringBuilder();
-
+					string Namespace = TreeSyntaxHelper.GetNamespace(NodeClassDeclaration);
+					string Usings =  TreeSyntaxHelper.GetUsings(NodeClassDeclaration);
 					Code.AppendLine(
 	@$"/****************************************
 * {className}对Node基类的实现内容拷贝
 */
 "
 	);
-					Code.AppendLine("namespace WorldTree");
+					Code.AppendLine(Usings);
+					Code.AppendLine($"namespace {Namespace}");
 					Code.AppendLine("{");
 					Code.AppendLine($"	public partial class {className} :{GetClassMembers(NodeClassDeclaration)}");
 					Code.Append("}");

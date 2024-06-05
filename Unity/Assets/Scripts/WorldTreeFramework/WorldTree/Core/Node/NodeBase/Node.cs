@@ -5,7 +5,7 @@
 * 描    述:   世界树节点基类
 
 ****************************************/
-
+using WorldTree.Internal;
 namespace WorldTree
 {
 	/// <summary>
@@ -167,7 +167,7 @@ namespace WorldTree
 			if (this.IsRecycle || this.IsDisposed) return;
 
 			//节点回收前序遍历处理,节点回收后续遍历处理
-			this.TraversalPrePostOrder(current => current.OnBeforeDispose(), current => current.OnDispose());
+			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => current.OnBeforeDispose(), current => current.OnDispose());
 		}
 
 		public virtual void OnBeforeDispose() => this.Core.BeforeRemoveRuleGroup?.Send(this);
@@ -217,7 +217,7 @@ namespace WorldTree
 			if (this.Domain != this) this.Domain = parent.Domain;
 
 			this.RefreshActive();
-			this.TraversalLevel(current => current.OnGraftSelfToTree());
+			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
 			return true;
 		}
 
@@ -258,7 +258,7 @@ namespace WorldTree
 		public virtual INode CutSelf()
 		{
 			if (this.IsRecycle) return null; //是否已经回收
-			this.TraversalPostorder(current => current.OnCutSelf());
+			NodeBranchTraversalHelper.TraversalPostorder(this, current => current.OnCutSelf());
 			this.Parent.RemoveBranchNode(this.BranchType, this);//从父节点分支移除
 			return this;
 		}

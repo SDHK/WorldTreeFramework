@@ -12,35 +12,6 @@ using UnityEngine;
 
 namespace WorldTree
 {
-
-    public static class GameObjectPoolManagerExtension
-    {
-        /// <summary>
-        /// 获取游戏对象池管理器
-        /// </summary>
-        public static GameObjectPoolManager GamePoolManager(this INode self)
-        {
-            return self.Root.AddComponent(out GameObjectPoolManager _);
-        }
-
-        /// <summary>
-        /// 通过预制体从池中获取游戏对象
-        /// </summary>
-        public static GameObject PoolGet(this INode self, GameObject prefab)
-        {
-            return self.Root.AddComponent(out GameObjectPoolManager _).Get(prefab);
-        }
-
-        /// <summary>
-        /// 通过预制体回收游戏对象
-        /// </summary>
-        public static void PoolRecycle(this INode self, GameObject prefab, GameObject obj)
-        {
-            self.Root.AddComponent(out GameObjectPoolManager _).Recycle(prefab, obj);
-        }
-    }
-
-
     /// <summary>
     /// 游戏对象池管理器
     /// </summary>

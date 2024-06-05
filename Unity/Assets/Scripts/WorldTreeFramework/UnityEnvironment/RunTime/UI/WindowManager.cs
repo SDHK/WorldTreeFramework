@@ -71,7 +71,7 @@ namespace WorldTree
 			}
 			else
 			{
-				node = await this.AddGameObjectNode<WindowManager, T>(gameObject);
+				node = await GameObjectNodeHelper.AddGameObjectNode<WindowManager, T>(this, gameObject);
 
 				windows.Add(node.Type, node);
 

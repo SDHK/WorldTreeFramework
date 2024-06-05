@@ -6,15 +6,12 @@
 * 描述：节点分支处理帮助类
 
 */
-namespace WorldTree
+
+
+namespace WorldTree.Internal
 {
-	/// <summary>
-	/// 节点分支处理帮助类
-	/// </summary>
 	public static partial class NodeBranchExtension
 	{
-		#region 分支处理
-
 		#region 添加
 
 		/// <summary>
@@ -50,7 +47,7 @@ namespace WorldTree
 		public static void RemoveBranchNode(this INode self, long branchType, INode node)
 		{
 			if (self == null) return;
-			if (TryGetBranch(self, branchType, out IBranch branch))
+			if (self.TryGetBranch(branchType, out IBranch branch))
 			{
 				branch.RemoveNode(node.Id);
 				if (branch.Count == 0)
@@ -77,6 +74,16 @@ namespace WorldTree
 
 		#endregion
 
+	}
+}
+
+namespace WorldTree
+{
+	/// <summary>
+	/// 节点分支处理帮助类
+	/// </summary>
+	public static partial class NodeBranchExtension
+	{
 		#region 获取
 
 		/// <summary>
@@ -98,8 +105,6 @@ namespace WorldTree
 		/// 获取分支
 		/// </summary>
 		public static IBranch GetBranch(this INode self, long branchType) => (self.m_Branchs != null && self.m_Branchs.TryGetValue(branchType, out IBranch iBranch)) ? iBranch : null;
-
-		#endregion
 
 		#endregion
 	}

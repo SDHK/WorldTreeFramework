@@ -8,6 +8,8 @@
 * 后续需要改为根据时间生成
 */
 
+using WorldTree.Internal;
+
 namespace WorldTree
 {
 
