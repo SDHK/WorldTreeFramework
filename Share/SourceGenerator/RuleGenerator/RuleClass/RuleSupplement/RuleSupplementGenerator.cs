@@ -250,19 +250,6 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 添加法则继承注释
 		/// </summary>
-		public static void AddRuleExtendCommentPara(StringBuilder sb, INamedTypeSymbol typeSymbol, INamedTypeSymbol BaseSymbol, string Title, string tab)
-		{
-			string IClassFullName = typeSymbol.ToDisplayString();
-			string IBaseFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			sb.AppendLine(@$"{tab}/// <Para>");
-			sb.AppendLine(@$"{tab}/// {Title}: <see cref=""{SecurityElement.Escape(IClassFullName)}""/> : <see cref=""{SecurityElement.Escape(IBaseFullName)}""/>");
-			sb.AppendLine(@$"{tab}/// </Para>");
-		}
-
-
-		/// <summary>
-		/// 添加法则继承注释
-		/// </summary>
 		public static string AddRuleExtendCommentPara(string IClassFullName, string IBaseFullName, string BaseTypePara, string Title, string tab)
 		{
 			StringBuilder sb = new();

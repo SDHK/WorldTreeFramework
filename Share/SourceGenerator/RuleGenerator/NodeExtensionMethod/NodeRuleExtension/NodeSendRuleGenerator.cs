@@ -32,35 +32,36 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+			
+				Code.Append(
+				$$"""
 
-		/// <summary>
-		/// 尝试执行通知法则
-		/// </summary>
-		public static bool TrySendRule<R{generics}>(INode self, R nullRule{(i == 0 ? " = null" : genericTypeParameter)})
-			where R : class, ISendRule{genericsAngle}
-		{{
-			if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return false;
-			ruleList.Send(self{genericParameter});
-			return true;
-		}}
+						/// <summary>
+						/// 尝试执行通知法则
+						/// </summary>
+						public static bool TrySendRule<R{{genericsType}}>(INode self, R nullRule{{(i == 0 ? " = null" : genericTypeParameter)}})
+							where R : class, ISendRule{{genericsTypeAngle}}
+						{
+							if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return false;
+							ruleList.Send(self{{genericParameter}});
+							return true;
+						}
 
-		/// <summary>
-		/// 执行通知法则
-		/// </summary>
-		public static void SendRule<N, R{generics}>(N self, R nullRule{genericTypeParameter})
-			where N : class, INode, AsRule<R>
-			where R : class, ISendRule{genericsAngle}
-		{{
-			if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return;
-			ruleList.Send(self{genericParameter});
-		}}
-");
+						/// <summary>
+						/// 执行通知法则
+						/// </summary>
+						public static void SendRule<N, R{{genericsType}}>(N self, R nullRule{{genericTypeParameter}})
+							where N : class, INode, AsRule<R>
+							where R : class, ISendRule{{genericsTypeAngle}}
+						{
+							if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return;
+							ruleList.Send(self{{genericParameter}});
+						}
+				""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

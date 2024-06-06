@@ -32,45 +32,46 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+			
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 法则列表异步调用执行
-		/// </summary>
-		public static async TreeTask<OutT> CallAsync<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsync<{genericsAfter}OutT>
-		{{
-			OutT outT = TypeInfo<OutT>.Default;
-			foreach (ICallRuleAsync<{genericsAfter}OutT> rule in (RuleList)ruleList)
-			{{
-				rule.IsMulticast = true;
-				outT = await rule.Invoke(node{genericParameter});
-				if (!rule.IsMulticast) return outT;
-			}}
-			return outT;
-		}}
+							/// <summary>
+							/// 法则列表异步调用执行
+							/// </summary>
+							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, OutT defaultOutT)
+								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
+							{
+								OutT outT = TypeInfo<OutT>.Default;
+								foreach (ICallRuleAsync<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
+								{
+									rule.IsMulticast = true;
+									outT = await rule.Invoke(node{{genericParameter}});
+									if (!rule.IsMulticast) return outT;
+								}
+								return outT;
+							}
 
-		/// <summary>
-		/// 法则列表异步调用执行
-		/// </summary>
-		public static async TreeTask<UnitList<OutT>> CallsAsync<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsync<{genericsAfter}OutT>
-		{{
-			UnitList<OutT> outT = node.Core.PoolGetUnit<UnitList<OutT>>();
-			foreach (ICallRuleAsync<{genericsAfter}OutT> rule in (RuleList)ruleList)
-			{{
-				rule.IsMulticast = true;
-				outT.Add(await rule.Invoke(node{genericParameter}));
-				if (!rule.IsMulticast) return outT;
-			}}
-			return outT;
-		}}
-");
+							/// <summary>
+							/// 法则列表异步调用执行
+							/// </summary>
+							public static async TreeTask<UnitList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, OutT defaultOutT)
+								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
+							{
+								UnitList<OutT> outT = node.Core.PoolGetUnit<UnitList<OutT>>();
+								foreach (ICallRuleAsync<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
+								{
+									rule.IsMulticast = true;
+									outT.Add(await rule.Invoke(node{{genericParameter}}));
+									if (!rule.IsMulticast) return outT;
+								}
+								return outT;
+							}
+					""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

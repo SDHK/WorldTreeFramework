@@ -39,43 +39,43 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string GenericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				string GenericParameter = RuleGeneratorHelper.GetGenericParameter(i);
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
-				Code.Append
-($@"
+				Code.Append(
+					$$"""
 
-	/// <summary>
-	/// 通知法则基类接口
-	/// </summary>
-	public interface ISendRule{genericsAngle} : IRule
-	{{
-		void Invoke(INode self{GenericTypeParameter});
-	}}
+						/// <summary>
+						/// 通知法则基类接口
+						/// </summary>
+						public interface ISendRule{{genericsTypeAngle}} : IRule
+						{
+							void Invoke(INode self{{genericTypeParameter}});
+						}
 
-	/// <summary>
-	/// 通知法则基类
-	/// </summary>
-    public abstract class SendRule<N, R{generics}> : Rule<N, R>, ISendRule{genericsAngle}
-		where N : class, INode, AsRule<R>
-		where R : ISendRule{genericsAngle}
-	{{
-		public virtual void Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
-		protected abstract void Execute(N self{GenericTypeParameter});
-	}}
+						/// <summary>
+						/// 通知法则基类
+						/// </summary>
+						public abstract class SendRule<N, R{{genericsType}}> : Rule<N, R>, ISendRule{{genericsTypeAngle}}
+							where N : class, INode, AsRule<R>
+							where R : ISendRule{{genericsTypeAngle}}
+						{
+							public virtual void Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							protected abstract void Execute(N self{{genericTypeParameter}});
+						}
 
-	/// <summary>
-	/// 通知法则基类实现
-	/// </summary>
-    public abstract class SendRuleDefault<R{generics}> : Rule<INode, R>, ISendRule{genericsAngle}
-		where R : ISendRule{genericsAngle}
-	{{
-		public virtual void Invoke(INode self{GenericTypeParameter}) => Execute(self{GenericParameter});
-		protected abstract void Execute(INode self{GenericTypeParameter});
-	}}
-");
+						/// <summary>
+						/// 通知法则基类实现
+						/// </summary>
+						public abstract class SendRuleDefault<R{{genericsType}}> : Rule<INode, R>, ISendRule{{genericsTypeAngle}}
+							where R : ISendRule{{genericsTypeAngle}}
+						{
+							public virtual void Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							protected abstract void Execute(INode self{{genericTypeParameter}});
+						}
+					""");
 			}
 
 			Code.Append("}");

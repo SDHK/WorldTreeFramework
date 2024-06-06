@@ -32,38 +32,39 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+			
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 尝试通知法则集合异步执行
-		/// </summary>
-		public static async TreeTask<bool> TrySendAsync<R{generics}>(this IRuleGroup<R> group, INode node{genericTypeParameter})
-			where R : ISendRuleAsync{genericsAngle}
-		{{
-			if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
-			{{
-				await ((IRuleList<R>)ruleList).SendAsync(node{genericParameter});
-				return true;
-			}}
-			await node.TreeTaskCompleted();
-			return false;
-		}}
+							/// <summary>
+							/// 尝试通知法则集合异步执行
+							/// </summary>
+							public static async TreeTask<bool> TrySendAsync<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
+								where R : ISendRuleAsync{{genericsTypeAngle}}
+							{
+								if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
+								{
+									await ((IRuleList<R>)ruleList).SendAsync(node{{genericParameter}});
+									return true;
+								}
+								await node.TreeTaskCompleted();
+								return false;
+							}
 
-		/// <summary>
-		/// 通知法则集合异步执行
-		/// </summary>
-		public static async TreeTask SendAsync<R{generics}>(this IRuleGroup<R> group, INode node{genericTypeParameter})
-			where R : ISendRuleAsync{genericsAngle}
-		{{
-			if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) await node.TreeTaskCompleted();
-			await ((IRuleList<R>)ruleList).SendAsync(node{genericParameter});
-		}}
-");
+							/// <summary>
+							/// 通知法则集合异步执行
+							/// </summary>
+							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
+								where R : ISendRuleAsync{{genericsTypeAngle}}
+							{
+								if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) await node.TreeTaskCompleted();
+								await ((IRuleList<R>)ruleList).SendAsync(node{{genericParameter}});
+							}
+					""");
 			}
 
 			Code.AppendLine("	}");

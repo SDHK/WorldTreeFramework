@@ -32,26 +32,27 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+			
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 尝试执行异步通知法则
-		/// </summary>
-		public static TreeTask<bool> TrySendAsync{genericsAngle}(this INode self{genericTypeParameter})
-			=> self.TrySendRuleAsync(TypeInfo<ISendRuleAsync{genericsAngle}>.Default{genericParameter});
+							/// <summary>
+							/// 尝试执行异步通知法则
+							/// </summary>
+							public static TreeTask<bool> TrySendAsync{{genericsTypeAngle}}(this INode self{{genericTypeParameter}})
+								=> self.TrySendRuleAsync(TypeInfo<ISendRuleAsync{{genericsTypeAngle}}>.Default{{genericParameter}});
 
-		/// <summary>
-		/// 执行异步通知法则
-		/// </summary>
-		public static TreeTask SendAsync<N{generics}>(this N self{genericTypeParameter})
-			where N : class, INode, AsRule<ISendRuleAsync{genericsAngle}>
-		=> self.SendRuleAsync(TypeInfo<ISendRuleAsync{genericsAngle}>.Default{genericParameter});
-");
+							/// <summary>
+							/// 执行异步通知法则
+							/// </summary>
+							public static TreeTask SendAsync<N{{genericsType}}>(this N self{{genericTypeParameter}})
+								where N : class, INode, AsRule<ISendRuleAsync{{genericsTypeAngle}}>
+							=> self.SendRuleAsync(TypeInfo<ISendRuleAsync{{genericsTypeAngle}}>.Default{{genericParameter}});
+					""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

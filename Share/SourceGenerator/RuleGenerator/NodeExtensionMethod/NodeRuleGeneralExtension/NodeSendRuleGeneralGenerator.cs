@@ -32,26 +32,27 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
-		/// <summary>
-		/// 尝试执行异步通知法则
-		/// </summary>
-		public static bool TrySend{genericsAngle}(this INode self{genericTypeParameter})
-			=> self.TrySendRule(TypeInfo<ISendRule{genericsAngle}>.Default{genericParameter});
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 执行异步通知法则
-		/// </summary>
-		public static void Send<N{generics}>(this N self{genericTypeParameter})
-			where N : class, INode, AsRule<ISendRule{genericsAngle}>
-		=> self.SendRule(TypeInfo<ISendRule{genericsAngle}>.Default{genericParameter});
-");
+							/// <summary>
+							/// 尝试执行异步通知法则
+							/// </summary>
+							public static bool TrySend{{genericsTypeAngle}}(this INode self{{genericTypeParameter}})
+								=> self.TrySendRule(TypeInfo<ISendRule{{genericsTypeAngle}}>.Default{{genericParameter}});
+
+							/// <summary>
+							/// 执行异步通知法则
+							/// </summary>
+							public static void Send<N{{genericsType}}>(this N self{{genericTypeParameter}})
+								where N : class, INode, AsRule<ISendRule{{genericsTypeAngle}}>
+							=> self.SendRule(TypeInfo<ISendRule{{genericsTypeAngle}}>.Default{{genericParameter}});
+					""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

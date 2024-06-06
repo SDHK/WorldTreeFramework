@@ -31,66 +31,66 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
-		/// <summary>
-		/// 执行器执行调用法则
-		/// </summary>
-		public static OutT Call<R{generics}, OutT>(this IRuleActuator<R> Self{genericTypeParameter}, out OutT outT)
-			where R : ICallRule<{genericsAfter}OutT>
-		{{
-			outT = default;
-			if (!Self.IsActive) return outT;
-			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
-			self.RefreshTraversalCount();
-			for (int i = 0; i < self.TraversalCount; i++)
-			{{
-				if (self.TryDequeue(out var nodeRuleTuple))
-				{{
-					((IRuleList<R>)nodeRuleTuple.Item2).Call(nodeRuleTuple.Item1{genericParameter}, out outT);
-				}}
-			}}
-			return outT;
-		}}
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+			
+				Code.Append(
+					$$"""
+							/// <summary>
+							/// 执行器执行调用法则
+							/// </summary>
+							public static OutT Call<R{{genericsType}}, OutT>(this IRuleActuator<R> Self{{genericTypeParameter}}, out OutT outT)
+								where R : ICallRule<{{genericsTypeAfter}}OutT>
+							{
+								outT = default;
+								if (!Self.IsActive) return outT;
+								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
+								self.RefreshTraversalCount();
+								for (int i = 0; i < self.TraversalCount; i++)
+								{
+									if (self.TryDequeue(out var nodeRuleTuple))
+									{
+										((IRuleList<R>)nodeRuleTuple.Item2).Call(nodeRuleTuple.Item1{{genericParameter}}, out outT);
+									}
+								}
+								return outT;
+							}
 
-		/// <summary>
-		/// 执行器执行异步调用法则
-		/// </summary>
-		public static async TreeTask<OutT> CallAsync<R{generics}, OutT>(this IRuleActuator<R> Self{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsync<{genericsAfter}OutT>
-		{{
-			if (!Self.IsActive) 
-			{{
-				await Self.TreeTaskCompleted(); 
-				return defaultOutT;
-			}}
-			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
-			self.RefreshTraversalCount();
-			if (self.TraversalCount == 0) 
-			{{
-				await Self.TreeTaskCompleted(); 
-				return defaultOutT;
-			}}
-			for (int i = 0; i < self.TraversalCount; i++)
-			{{
-				if (self.TryDequeue(out var nodeRuleTuple))
-				{{
-					defaultOutT = await ((IRuleList<R>)nodeRuleTuple.Item2).CallAsync(nodeRuleTuple.Item1{genericParameter}, defaultOutT);
-				}}
-				else
-				{{
-					await Self.TreeTaskCompleted();
-					return defaultOutT;
-				}}
-			}}
-			return defaultOutT;
-		}}
-");
+							/// <summary>
+							/// 执行器执行异步调用法则
+							/// </summary>
+							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleActuator<R> Self{{genericTypeParameter}}, OutT defaultOutT)
+								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
+							{
+								if (!Self.IsActive) 
+								{
+									await Self.TreeTaskCompleted(); 
+									return defaultOutT;
+								}
+								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
+								self.RefreshTraversalCount();
+								if (self.TraversalCount == 0) 
+								{
+									await Self.TreeTaskCompleted(); 
+									return defaultOutT;
+								}
+								for (int i = 0; i < self.TraversalCount; i++)
+								{
+									if (self.TryDequeue(out var nodeRuleTuple))
+									{
+										defaultOutT = await ((IRuleList<R>)nodeRuleTuple.Item2).CallAsync(nodeRuleTuple.Item1{{genericParameter}}, defaultOutT);
+									}
+									else
+									{
+										await Self.TreeTaskCompleted();
+										return defaultOutT;
+									}
+								}
+								return defaultOutT;
+							}
+					""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

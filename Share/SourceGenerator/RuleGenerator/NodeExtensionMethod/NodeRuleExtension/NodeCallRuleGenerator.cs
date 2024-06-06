@@ -32,75 +32,75 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 				Code.Append
-($@"
+				($$"""
 
-		/// <summary>
-		/// 尝试执行调用法则
-		/// </summary>
-		public static bool TryCallRule<R{generics}, OutT>(INode self, R nullRule{genericTypeParameter}, out OutT outT)
-			where R : ICallRule<{genericsAfter}OutT>
-		{{
-			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
-			{{
-				ruleList.Call(self{genericParameter}, out outT);
-				return true;
-			}}
-			outT = TypeInfo<OutT>.Default;
-			return false;
-		}}
+						/// <summary>
+						/// 尝试执行调用法则
+						/// </summary>
+						public static bool TryCallRule<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, out OutT outT)
+							where R : ICallRule<{{genericsTypeAfter}}OutT>
+						{
+							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							{
+								ruleList.Call(self{{genericParameter}}, out outT);
+								return true;
+							}
+							outT = TypeInfo<OutT>.Default;
+							return false;
+						}
 
-		/// <summary>
-		/// 执行调用法则
-		/// </summary>
-		public static OutT CallRule<N, R{generics}, OutT>(N self, R nullRule{genericTypeParameter}, out OutT outT)
-			where N : class, INode, AsRule<R>
-			where R : ICallRule<{genericsAfter}OutT>
-		{{
-			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
-			{{
-				ruleList.Call(self{genericParameter}, out outT);
-				return outT;
-			}}
-			outT = TypeInfo<OutT>.Default;
-			return outT;
-		}}
+						/// <summary>
+						/// 执行调用法则
+						/// </summary>
+						public static OutT CallRule<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, out OutT outT)
+							where N : class, INode, AsRule<R>
+							where R : ICallRule<{{genericsTypeAfter}}OutT>
+						{
+							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							{
+								ruleList.Call(self{{genericParameter}}, out outT);
+								return outT;
+							}
+							outT = TypeInfo<OutT>.Default;
+							return outT;
+						}
 
-		/// <summary>
-		/// 尝试执行调用法则
-		/// </summary>
-		public static bool TryCallsRule<R{generics}, OutT>(INode self, R nullRule{genericTypeParameter}, out UnitList<OutT> outT)
-			where R : ICallRule<{genericsAfter}OutT>
-		{{
-			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
-			{{
-				ruleList.Calls(self{genericParameter}, out outT);
-				return true;
-			}}
-			outT = null;
-			return true;
-		}}
+						/// <summary>
+						/// 尝试执行调用法则
+						/// </summary>
+						public static bool TryCallsRule<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, out UnitList<OutT> outT)
+							where R : ICallRule<{{genericsTypeAfter}}OutT>
+						{
+							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							{
+								ruleList.Calls(self{{genericParameter}}, out outT);
+								return true;
+							}
+							outT = null;
+							return true;
+						}
 
-		/// <summary>
-		/// 执行调用法则
-		/// </summary>
-		public static UnitList<OutT> CallsRule<N, R{generics}, OutT>(N self, R nullRule{genericTypeParameter}, out UnitList<OutT> outT)
-			where N : class, INode, AsRule<R>
-			where R : ICallRule<{genericsAfter}OutT>
-		{{
-			if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
-			{{
-				ruleList.Calls(self{genericParameter}, out outT);
-				return outT;
-			}}
-			outT = null;
-			return outT;
-		}}
-");
+						/// <summary>
+						/// 执行调用法则
+						/// </summary>
+						public static UnitList<OutT> CallsRule<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, out UnitList<OutT> outT)
+							where N : class, INode, AsRule<R>
+							where R : ICallRule<{{genericsTypeAfter}}OutT>
+						{
+							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							{
+								ruleList.Calls(self{{genericParameter}}, out outT);
+								return outT;
+							}
+							outT = null;
+							return outT;
+						}
+				""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

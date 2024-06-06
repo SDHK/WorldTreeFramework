@@ -32,42 +32,42 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
-				Code.Append
-($@"
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 调用法则集合异步执行
-		/// </summary>
-		public static async TreeTask<OutT> CallAsync<R{generics}, OutT>(this IRuleGroup<R> group, INode node{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsync<{genericsAfter}OutT>
-		{{
-			if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
-			{{
-				return await ((IRuleList<R>)ruleList).CallAsync(node{genericParameter}, defaultOutT);
-			}}
-			await node.TreeTaskCompleted();
-			return TypeInfo<OutT>.Default;
-		}}
+							/// <summary>
+							/// 调用法则集合异步执行
+							/// </summary>
+							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, OutT defaultOutT)
+								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
+							{
+								if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
+								{
+									return await ((IRuleList<R>)ruleList).CallAsync(node{{genericParameter}}, defaultOutT);
+								}
+								await node.TreeTaskCompleted();
+								return TypeInfo<OutT>.Default;
+							}
 
-		/// <summary>
-		/// 调用法则集合异步执行
-		/// </summary>
-		public static async TreeTask<UnitList<OutT>> CallsAsync<R{generics}, OutT>(this IRuleGroup<R> group, INode node{genericTypeParameter}, OutT defaultOutT)
-			where R : ICallRuleAsync<{genericsAfter}OutT>
-		{{
-			if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
-			{{
-				return await ((IRuleList<R>)ruleList).CallsAsync(node{genericParameter}, defaultOutT);
-			}}
-			await node.TreeTaskCompleted();
-			return null;
-		}}
-");
+							/// <summary>
+							/// 调用法则集合异步执行
+							/// </summary>
+							public static async TreeTask<UnitList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, OutT defaultOutT)
+								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
+							{
+								if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
+								{
+									return await ((IRuleList<R>)ruleList).CallsAsync(node{{genericParameter}}, defaultOutT);
+								}
+								await node.TreeTaskCompleted();
+								return null;
+							}
+					""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

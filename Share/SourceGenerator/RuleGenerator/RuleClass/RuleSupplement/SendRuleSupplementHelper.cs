@@ -37,7 +37,7 @@ namespace WorldTree.SourceGenerator
 
 			int baseTypeCount = baseInterface.TypeArguments.Count();
 			string TypeArgumentsAngle = RuleSupplementHelper.GetTypeArgumentsAngle(typeSymbol);
-			string genericParameter = RuleGeneratorHelper.GetGenericParameter(baseTypeCount);
+			string genericParameter = GeneratorTemplate.GenericsParameter[baseTypeCount];
 			string genericTypeParameter = RuleSupplementHelper.GetGenericTypeParameter(baseInterface);
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(RuleSupplementHelper.classInterfaceSyntax[ClassFullName]);
 			string BaseName = baseInterface.Name.TrimStart('I');

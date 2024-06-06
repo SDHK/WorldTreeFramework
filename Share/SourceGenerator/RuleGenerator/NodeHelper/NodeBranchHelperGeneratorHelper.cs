@@ -32,43 +32,44 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+			
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 节点加入树结构，框架内部使用
-		/// </summary>
-		public static INode AddSelfToTree<B, K{generics}>(INode self, K key, INode parent{genericTypeParameter})
-			where B : class, IBranch<K>
-		{{
-			if (self.TryAddSelfToTree<B, K>(key, parent))
-			{{
-				NodeRuleHelper.TrySendRule(self, TypeInfo<Awake{genericsAngle}>.Default{genericParameter});
-				self.OnAddSelfToTree();
-			}}
-			return self;
-		}}
+							/// <summary>
+							/// 节点加入树结构，框架内部使用
+							/// </summary>
+							public static INode AddSelfToTree<B, K{{genericsType}}>(INode self, K key, INode parent{{genericTypeParameter}})
+								where B : class, IBranch<K>
+							{
+								if (self.TryAddSelfToTree<B, K>(key, parent))
+								{
+									NodeRuleHelper.TrySendRule(self, TypeInfo<Awake{{genericsTypeAngle}}>.Default{{genericParameter}});
+									self.OnAddSelfToTree();
+								}
+								return self;
+							}
 
-		/// <summary>
-		/// 添加节点，无约束
-		/// </summary>
-		public static INode AddNode<B, K{generics}>(INode self, K key, long type, out INode node{genericTypeParameter}, bool isPool = true)
-			where B : class, IBranch<K>
-		=> node = self.GetBranch<B>()?.GetNode(key) ?? NodeBranchHelper.AddSelfToTree<B, K{generics}>(self.Core.GetOrNewNode(type, isPool),key, self{genericParameter});
+							/// <summary>
+							/// 添加节点，无约束
+							/// </summary>
+							public static INode AddNode<B, K{{genericsType}}>(INode self, K key, long type, out INode node{{genericTypeParameter}}, bool isPool = true)
+								where B : class, IBranch<K>
+							=> node = self.GetBranch<B>()?.GetNode(key) ?? NodeBranchHelper.AddSelfToTree<B, K{{genericsType}}>(self.Core.GetOrNewNode(type, isPool),key, self{{genericParameter}});
 
-		/// <summary>
-		/// 添加泛型节点
-		/// </summary>
-		public static T AddNode<N, B, K, T{generics}>(N self, K key, out T node{genericTypeParameter}, bool isPool = true)
-			where N : class, INode, AsBranch<B>
-			where B : class, IBranch<K>
-			where T : class, INode, NodeOf<N, B>, AsRule<Awake{genericsAngle}>
-		=> node = (T)(self.GetBranch<B>()?.GetNode(key) ?? NodeBranchHelper.AddSelfToTree<B, K{generics}>(self.Core.GetOrNewNode<T>(isPool),key, self{genericParameter}));
-");
+							/// <summary>
+							/// 添加泛型节点
+							/// </summary>
+							public static T AddNode<N, B, K, T{{genericsType}}>(N self, K key, out T node{{genericTypeParameter}}, bool isPool = true)
+								where N : class, INode, AsBranch<B>
+								where B : class, IBranch<K>
+								where T : class, INode, NodeOf<N, B>, AsRule<Awake{{genericsTypeAngle}}>
+							=> node = (T)(self.GetBranch<B>()?.GetNode(key) ?? NodeBranchHelper.AddSelfToTree<B, K{{genericsType}}>(self.Core.GetOrNewNode<T>(isPool),key, self{{genericParameter}}));
+					""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

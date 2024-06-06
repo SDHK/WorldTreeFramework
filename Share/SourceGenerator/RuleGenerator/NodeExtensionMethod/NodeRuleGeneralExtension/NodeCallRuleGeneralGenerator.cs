@@ -32,39 +32,40 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+			
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 尝试执行调用法则
-		/// </summary>
-		public static bool TryCall<{genericsAfter}OutT>(this INode self{genericTypeParameter}, out OutT outT)
-			=> self.TryCallRule(TypeInfo<ICallRule<{genericsAfter}OutT>>.Default{genericParameter}, out outT);
+							/// <summary>
+							/// 尝试执行调用法则
+							/// </summary>
+							public static bool TryCall<{{genericsTypeAfter}}OutT>(this INode self{{genericTypeParameter}}, out OutT outT)
+								=> self.TryCallRule(TypeInfo<ICallRule<{{genericsTypeAfter}}OutT>>.Default{{genericParameter}}, out outT);
 
-		/// <summary>
-		/// 执行调用法则
-		/// </summary>
-		public static OutT Call<N{generics}, OutT>(this N self{genericTypeParameter}, out OutT outT)
-			where N : class, INode, AsRule<ICallRule<{genericsAfter}OutT>>
-		=> self.CallRule(TypeInfo<ICallRule<{genericsAfter}OutT>>.Default{genericParameter}, out outT);
+							/// <summary>
+							/// 执行调用法则
+							/// </summary>
+							public static OutT Call<N{{genericsType}}, OutT>(this N self{{genericTypeParameter}}, out OutT outT)
+								where N : class, INode, AsRule<ICallRule<{{genericsTypeAfter}}OutT>>
+							=> self.CallRule(TypeInfo<ICallRule<{{genericsTypeAfter}}OutT>>.Default{{genericParameter}}, out outT);
 
-		/// <summary>
-		/// 尝试执行调用法则
-		/// </summary>
-		public static bool TryCalls<{genericsAfter}OutT>(this INode self{genericTypeParameter}, out UnitList<OutT> outT)
-			=> self.TryCallsRule(TypeInfo<ICallRule<{genericsAfter}OutT>>.Default{genericParameter}, out outT);
+							/// <summary>
+							/// 尝试执行调用法则
+							/// </summary>
+							public static bool TryCalls<{{genericsTypeAfter}}OutT>(this INode self{{genericTypeParameter}}, out UnitList<OutT> outT)
+								=> self.TryCallsRule(TypeInfo<ICallRule<{{genericsTypeAfter}}OutT>>.Default{{genericParameter}}, out outT);
 
-		/// <summary>
-		/// 执行调用法则
-		/// </summary>
-		public static UnitList<OutT> Calls<N{generics}, OutT>(this N self{genericTypeParameter}, out UnitList<OutT> outT)
-			where N : class, INode, AsRule<ICallRule<{genericsAfter}OutT>>
-		=> self.CallsRule(TypeInfo<ICallRule<{genericsAfter}OutT>>.Default{genericParameter}, out outT);
-");
+							/// <summary>
+							/// 执行调用法则
+							/// </summary>
+							public static UnitList<OutT> Calls<N{{genericsType}}, OutT>(this N self{{genericTypeParameter}}, out UnitList<OutT> outT)
+								where N : class, INode, AsRule<ICallRule<{{genericsTypeAfter}}OutT>>
+							=> self.CallsRule(TypeInfo<ICallRule<{{genericsTypeAfter}}OutT>>.Default{{genericParameter}}, out outT);
+					""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

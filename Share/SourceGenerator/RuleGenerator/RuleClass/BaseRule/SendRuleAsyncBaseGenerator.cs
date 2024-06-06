@@ -42,44 +42,44 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string GenericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				string GenericParameter = RuleGeneratorHelper.GetGenericParameter(i);
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
-				Code.Append
-($@"
+				Code.Append(
+					$$"""
 
-    /// <summary>
-    /// 异步通知系统基类接口
-    /// </summary>
-	public interface ISendRuleAsync{genericsAngle} : IRule
-	{{
-		TreeTask Invoke(INode self{GenericTypeParameter});
-	}}
+						/// <summary>
+						/// 异步通知系统基类接口
+						/// </summary>
+						public interface ISendRuleAsync{{genericsTypeAngle}} : IRule
+						{
+							TreeTask Invoke(INode self{{genericTypeParameter}});
+						}
 
-    /// <summary>
-    /// 异步通知法则基类
-    /// </summary>
-    public abstract class SendRuleAsync<N, R{generics}> : Rule<N, R>, ISendRuleAsync{genericsAngle}
-		where N : class, INode, AsRule<R>
-		where R : ISendRuleAsync{genericsAngle}
-	{{
-		public virtual TreeTask Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
-		protected abstract TreeTask Execute(N self{GenericTypeParameter});
-	}}
+						/// <summary>
+						/// 异步通知法则基类
+						/// </summary>
+						public abstract class SendRuleAsync<N, R{{genericsType}}> : Rule<N, R>, ISendRuleAsync{{genericsTypeAngle}}
+							where N : class, INode, AsRule<R>
+							where R : ISendRuleAsync{{genericsTypeAngle}}
+						{
+							public virtual TreeTask Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							protected abstract TreeTask Execute(N self{{genericTypeParameter}});
+						}
 
-	/// <summary>
-	/// 异步通知法则基类实现
-	/// </summary>
-    public abstract class SendRuleAsyncDefault< R{generics}> : Rule<Node, R>, ISendRuleAsync{genericsAngle}
-		where R : ISendRuleAsync{genericsAngle}
-	{{
-		public virtual TreeTask Invoke(INode self{GenericTypeParameter}) => Execute(self{GenericParameter});
-		protected abstract TreeTask Execute(INode self{GenericTypeParameter});
-	}}
+						/// <summary>
+						/// 异步通知法则基类实现
+						/// </summary>
+						public abstract class SendRuleAsyncDefault< R{{genericsType}}> : Rule<Node, R>, ISendRuleAsync{{genericsTypeAngle}}
+							where R : ISendRuleAsync{{genericsTypeAngle}}
+						{
+							public virtual TreeTask Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							protected abstract TreeTask Execute(INode self{{genericTypeParameter}});
+						}
 
-");
+					""");
 			}
 
 			Code.Append("}");

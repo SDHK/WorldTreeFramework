@@ -40,43 +40,44 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
-				string GenericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				string GenericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+			
+				Code.Append(
+					$$"""
 
-	/// <summary>
-	/// 调用法则基类接口
-	/// </summary>
-	public interface ICallRule<{genericsAfter}OutT> : IRule
-	{{
-		OutT Invoke(INode self{GenericTypeParameter});
-	}}
+						/// <summary>
+						/// 调用法则基类接口
+						/// </summary>
+						public interface ICallRule<{{genericsTypeAfter}}OutT> : IRule
+						{
+							OutT Invoke(INode self{{genericTypeParameter}});
+						}
 
-	/// <summary>
-	/// 调用法则基类
-	/// </summary>
-	public abstract class CallRule<N, R{generics}, OutT> : Rule<N, R>, ICallRule<{genericsAfter}OutT>
-		where N : class, INode, AsRule<R>
-		where R : ICallRule<{genericsAfter}OutT>
-	{{
-		public virtual OutT Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
-		protected abstract OutT Execute(N self{GenericTypeParameter});
-	}}
+						/// <summary>
+						/// 调用法则基类
+						/// </summary>
+						public abstract class CallRule<N, R{{genericsType}}, OutT> : Rule<N, R>, ICallRule<{{genericsTypeAfter}}OutT>
+							where N : class, INode, AsRule<R>
+							where R : ICallRule<{{genericsTypeAfter}}OutT>
+						{
+							public virtual OutT Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							protected abstract OutT Execute(N self{{genericTypeParameter}});
+						}
 
 
-	/// <summary>
-	/// 调用法则基类实现
-	/// </summary>
-    public abstract class CallRuleDefault<R{generics}, OutT> : Rule<INode, R>, ICallRule<{genericsAfter}OutT>
-		where R : ICallRule<{genericsAfter}OutT>
-	{{
-		public virtual OutT Invoke(INode self{GenericTypeParameter}) => Execute(self{GenericParameter});
-		protected abstract OutT Execute(INode self{GenericTypeParameter});
-	}}
-");
+						/// <summary>
+						/// 调用法则基类实现
+						/// </summary>
+						public abstract class CallRuleDefault<R{{genericsType}}, OutT> : Rule<INode, R>, ICallRule<{{genericsTypeAfter}}OutT>
+							where R : ICallRule<{{genericsTypeAfter}}OutT>
+						{
+							public virtual OutT Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							protected abstract OutT Execute(INode self{{genericTypeParameter}});
+						}
+					""");
 			}
 
 			Code.Append("}");

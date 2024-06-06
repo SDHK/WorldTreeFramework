@@ -32,27 +32,28 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+				
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 法则列表异步通知执行
-		/// </summary>
-		public static async TreeTask SendAsync<R{generics}>(this IRuleList<R> ruleList, INode node{genericTypeParameter})
-			where R : ISendRuleAsync{genericsAngle}
-		{{
-			foreach (ISendRuleAsync{genericsAngle} rule in (RuleList)ruleList)
-			{{
-				rule.IsMulticast = true;
-				await rule.Invoke(node{genericParameter});
-				if (!rule.IsMulticast) return;
-			}}
-		}}
-");
+							/// <summary>
+							/// 法则列表异步通知执行
+							/// </summary>
+							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}})
+								where R : ISendRuleAsync{{genericsTypeAngle}}
+							{
+								foreach (ISendRuleAsync{{genericsTypeAngle}} rule in (RuleList)ruleList)
+								{
+									rule.IsMulticast = true;
+									await rule.Invoke(node{{genericParameter}});
+									if (!rule.IsMulticast) return;
+								}
+							}
+					""");
 			}
 
 			Code.AppendLine("	}");

@@ -32,33 +32,34 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
-		/// <summary>
-		/// 尝试通知法则集合执行
-		/// </summary>
-		public static bool TrySend<R{generics}>(this IRuleGroup<R> group, INode node{genericTypeParameter})
-			where R : ISendRule{genericsAngle}
-		{{
-			if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) return false;
-			((IRuleList<R>)ruleList).Send(node{genericParameter});
-			return true;
-		}}
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 通知法则集合执行
-		/// </summary>
-		public static void Send<R{generics}>(this IRuleGroup<R> group, INode node{genericTypeParameter})
-			where R : ISendRule{genericsAngle}
-		{{
-			group.TrySend(node{genericParameter});
-		}}
-");
+							/// <summary>
+							/// 尝试通知法则集合执行
+							/// </summary>
+							public static bool TrySend<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
+								where R : ISendRule{{genericsTypeAngle}}
+							{
+								if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) return false;
+								((IRuleList<R>)ruleList).Send(node{{genericParameter}});
+								return true;
+							}
+
+							/// <summary>
+							/// 通知法则集合执行
+							/// </summary>
+							public static void Send<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
+								where R : ISendRule{{genericsTypeAngle}}
+							{
+								group.TrySend(node{{genericParameter}});
+							}
+					""");
 			}
 
 			Code.AppendLine("	}");

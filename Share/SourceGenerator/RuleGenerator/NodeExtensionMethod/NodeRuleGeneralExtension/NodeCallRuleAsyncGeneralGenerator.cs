@@ -32,39 +32,39 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+				
+				Code.Append(
+					$$"""
+							/// <summary>
+							/// 尝试执行异步调用法则
+							/// </summary>
+							public static TreeTask<OutT> TryCallAsync<{{{genericsTypeAfter}}}OutT>(this INode self{{genericTypeParameter}}, OutT defaultOutT)
+								=> self.TryCallRuleAsync(TypeInfo<ICallRuleAsync<{{genericsTypeAfter}}OutT>>.Default{{genericParameter}}, defaultOutT);
 
-		/// <summary>
-		/// 尝试执行异步调用法则
-		/// </summary>
-		public static TreeTask<OutT> TryCallAsync<{genericsAfter}OutT>(this INode self{genericTypeParameter}, OutT defaultOutT)
-			=> self.TryCallRuleAsync(TypeInfo<ICallRuleAsync<{genericsAfter}OutT>>.Default{genericParameter}, defaultOutT);
+							/// <summary>
+							/// 执行异步调用法则
+							/// </summary>
+							public static TreeTask<OutT> CallAsync<N{{genericsType}}, OutT>(this N self{{genericTypeParameter}}, OutT defaultOutT)
+								where N : class, INode, AsRule<ICallRuleAsync<{{genericsTypeAfter}}OutT>>
+							=> self.CallRuleAsync(TypeInfo<ICallRuleAsync<{{genericsTypeAfter}}OutT>>.Default{{genericParameter}}, defaultOutT);
 
-		/// <summary>
-		/// 执行异步调用法则
-		/// </summary>
-		public static TreeTask<OutT> CallAsync<N{generics}, OutT>(this N self{genericTypeParameter}, OutT defaultOutT)
-			where N : class, INode, AsRule<ICallRuleAsync<{genericsAfter}OutT>>
-		=> self.CallRuleAsync(TypeInfo<ICallRuleAsync<{genericsAfter}OutT>>.Default{genericParameter}, defaultOutT);
+							/// <summary>
+							/// 尝试执行异步调用法则
+							/// </summary>
+							public static TreeTask<UnitList<OutT>> TryCallsAsync<{{genericsTypeAfter}}OutT>(this INode self{{genericTypeParameter}}, OutT defaultOutT)
+								=> self.TryCallsRuleAsync(TypeInfo<ICallRuleAsync<{{genericsTypeAfter}}OutT>>.Default{{genericParameter}}, defaultOutT);
 
-		/// <summary>
-		/// 尝试执行异步调用法则
-		/// </summary>
-		public static TreeTask<UnitList<OutT>> TryCallsAsync<{genericsAfter}OutT>(this INode self{genericTypeParameter}, OutT defaultOutT)
-			=> self.TryCallsRuleAsync(TypeInfo<ICallRuleAsync<{genericsAfter}OutT>>.Default{genericParameter}, defaultOutT);
-
-		/// <summary>
-		/// 执行异步调用法则
-		/// </summary>
-		public static TreeTask<UnitList<OutT>> CallsAsync<N{generics}, OutT>(this N self{genericTypeParameter}, OutT defaultOutT)
-			where N : class, INode, AsRule<ICallRuleAsync<{genericsAfter}OutT>>
-		=> self.CallsRuleAsync(TypeInfo<ICallRuleAsync<{genericsAfter}OutT>>.Default{genericParameter}, defaultOutT);
-");
+							/// <summary>
+							/// 执行异步调用法则
+							/// </summary>
+							public static TreeTask<UnitList<OutT>> CallsAsync<N{{genericsType}}, OutT>(this N self{{genericTypeParameter}}, OutT defaultOutT)
+								where N : class, INode, AsRule<ICallRuleAsync<{{genericsTypeAfter}}OutT>>
+							=> self.CallsRuleAsync(TypeInfo<ICallRuleAsync<{{genericsTypeAfter}}OutT>>.Default{{genericParameter}}, defaultOutT);
+					""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

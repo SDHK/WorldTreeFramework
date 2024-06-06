@@ -40,43 +40,43 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
-				string GenericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				string GenericParameter = RuleGeneratorHelper.GetGenericParameter(i);
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
-				Code.Append
-($@"
+				Code.Append(
+					$$"""
 
-    /// <summary>
-    /// 异步调用法则基类接口
-    /// </summary>
-    public interface ICallRuleAsync<{genericsAfter}OutT> : IRule
-	{{
-        TreeTask<OutT> Invoke(INode self{GenericTypeParameter});
-	}}
+						/// <summary>
+						/// 异步调用法则基类接口
+						/// </summary>
+						public interface ICallRuleAsync<{{genericsTypeAfter}}OutT> : IRule
+						{
+							TreeTask<OutT> Invoke(INode self{{genericTypeParameter}});
+						}
 
-    /// <summary>
-	/// 异步调用法则基类
-	///</summary>
-	public abstract class CallRuleAsync<N, R{generics}, OutT> : Rule<N, R>, ICallRuleAsync<{genericsAfter}OutT>
-		where N : class, INode, AsRule<R>
-		where R : ICallRuleAsync<{genericsAfter}OutT>
-	{{
-		public virtual TreeTask<OutT> Invoke(INode self{GenericTypeParameter}) => Execute(self as N{GenericParameter});
-		protected abstract TreeTask<OutT> Execute(N self{GenericTypeParameter});
-	}}
+						/// <summary>
+						/// 异步调用法则基类
+						///</summary>
+						public abstract class CallRuleAsync<N, R{{genericsType}}, OutT> : Rule<N, R>, ICallRuleAsync<{{genericsTypeAfter}}OutT>
+							where N : class, INode, AsRule<R>
+							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
+						{
+							public virtual TreeTask<OutT> Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							protected abstract TreeTask<OutT> Execute(N self{{genericTypeParameter}});
+						}
 	
-	/// <summary>
-	/// 异步调用法则基类实现
-	/// </summary>
-    public abstract class CallRuleAsyncDefault<R{generics}, OutT> : Rule<INode, R>, ICallRuleAsync<{genericsAfter}OutT>
-		where R : ICallRuleAsync<{genericsAfter}OutT>
-	{{
-		public virtual TreeTask<OutT> Invoke(INode self{GenericTypeParameter}) => Execute(self{GenericParameter});
-		protected abstract TreeTask<OutT> Execute(INode self{GenericTypeParameter});
-	}}
-");
+						/// <summary>
+						/// 异步调用法则基类实现
+						/// </summary>
+						public abstract class CallRuleAsyncDefault<R{{genericsType}}, OutT> : Rule<INode, R>, ICallRuleAsync<{{genericsTypeAfter}}OutT>
+							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
+						{
+							public virtual TreeTask<OutT> Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							protected abstract TreeTask<OutT> Execute(INode self{{genericTypeParameter}});
+						}
+					""");
 			}
 			Code.Append("}");
 

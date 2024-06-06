@@ -32,45 +32,46 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAfter = RuleGeneratorHelper.GetGenerics(i, true);
-				string genericParameter = RuleGeneratorHelper.GetGenericParameter(i);
-				string genericTypeParameter = RuleGeneratorHelper.GetGenericTypeParameter(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
-		/// <summary>
-		/// 法则列表调用执行
-		/// </summary>
-		public static OutT Call<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, out OutT outT)
-			where R : ICallRule<{genericsAfter}OutT>
-		{{
-			outT = TypeInfo<OutT>.Default;
-			foreach (ICallRule<{genericsAfter}OutT> rule in (RuleList)ruleList)
-			{{
-				rule.IsMulticast = true;
-				outT = rule.Invoke(node{genericParameter});
-				if (!rule.IsMulticast) return outT;
-			}}
-			return outT;
-		}}
+				Code.Append(
+					$$"""
 
-		/// <summary>
-		/// 法则列表调用执行
-		/// </summary>
-		public static UnitList<OutT> Calls<R{generics}, OutT>(this IRuleList<R> ruleList, INode node{genericTypeParameter}, out UnitList<OutT> outT)
-			where R : ICallRule<{genericsAfter}OutT>
-		{{
-			outT = node.Core.PoolGetUnit<UnitList<OutT>>();
-			foreach (ICallRule<{genericsAfter}OutT> rule in  (RuleList)ruleList)
-			{{
-				rule.IsMulticast = true;
-				outT.Add(rule.Invoke(node{genericParameter}));
-				if (!rule.IsMulticast) return outT;
-			}}
-			return outT;
-		}}
-");
+							/// <summary>
+							/// 法则列表调用执行
+							/// </summary>
+							public static OutT Call<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, out OutT outT)
+								where R : ICallRule<{{genericsTypeAfter}}OutT>
+							{
+								outT = TypeInfo<OutT>.Default;
+								foreach (ICallRule<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
+								{
+									rule.IsMulticast = true;
+									outT = rule.Invoke(node{{genericParameter}});
+									if (!rule.IsMulticast) return outT;
+								}
+								return outT;
+							}
+
+							/// <summary>
+							/// 法则列表调用执行
+							/// </summary>
+							public static UnitList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, out UnitList<OutT> outT)
+								where R : ICallRule<{{genericsTypeAfter}}OutT>
+							{
+								outT = node.Core.PoolGetUnit<UnitList<OutT>>();
+								foreach (ICallRule<{{genericsTypeAfter}}OutT> rule in  (RuleList)ruleList)
+								{
+									rule.IsMulticast = true;
+									outT.Add(rule.Invoke(node{{genericParameter}}));
+									if (!rule.IsMulticast) return outT;
+								}
+								return outT;
+							}
+					""");
 			}
 			Code.AppendLine("	}");
 			Code.Append("}");

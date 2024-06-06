@@ -31,11 +31,6 @@ namespace WorldTree.SourceGenerator
 				CallRuleBaseGenerator.Execute(context);
 				CallRuleAsyncBaseGenerator.Execute(context);
 
-				//SendRuleGenerator.Execute(context);
-				//SendRuleAsyncGenerator.Execute(context);
-				//CallRuleGenerator.Execute(context);
-				//CallRuleAsyncGenerator.Execute(context);
-
 				AwakeRuleGenerator.Execute(context);
 			}
 			catch (Exception e)

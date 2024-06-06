@@ -32,26 +32,27 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string generics = RuleGeneratorHelper.GetGenerics(i);
-				string genericsAngle = RuleGeneratorHelper.GetGenericsAngle(i);
-				Code.Append
-($@"
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
 
-	/// <summary>
-	/// 法则约束：初始化法则
-	/// </summary>
-    public interface AsAwake{genericsAngle} : AsRule<Awake{genericsAngle}>, INode {{}}
+				Code.Append(
+					$$"""
 
-    /// <summary>
-    /// 初始化法则
-    /// </summary>
-    public interface Awake{genericsAngle} : ISendRule{genericsAngle} {{}}
+						/// <summary>
+						/// 法则约束：初始化法则
+						/// </summary>
+						public interface AsAwake{{genericsTypeAngle}} : AsRule<Awake{{genericsTypeAngle}}>, INode {}
 
-    /// <summary>
-    /// 初始化法则
-    /// </summary>
-    public abstract class AwakeRule<N{generics}> : SendRule<N, Awake{genericsAngle}{generics}> where N : class, INode, AsRule<Awake{genericsAngle}> {{}}
-");
+						/// <summary>
+						/// 初始化法则
+						/// </summary>
+						public interface Awake{{genericsTypeAngle}} : ISendRule{{genericsTypeAngle}} {}
+
+						/// <summary>
+						/// 初始化法则
+						/// </summary>
+						public abstract class AwakeRule<N{{genericsType}}> : SendRule<N, Awake{{genericsTypeAngle}}{{genericsType}}> where N : class, INode, AsRule<Awake{{genericsTypeAngle}}> {}
+					""");
 			}
 			Code.Append("}");
 
