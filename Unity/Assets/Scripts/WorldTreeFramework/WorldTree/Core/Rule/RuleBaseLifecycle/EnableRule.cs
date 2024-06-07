@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2022/8/24 17:30
 
-* 描述： 活跃启用法则
+* 描述： 激活法则
 *
 * 会在加入节点后触发事件
 
@@ -12,13 +12,13 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 活跃启用法则
+	/// 激活法则
 	/// </summary>
 	public interface Enable : ISendRule, ILifeCycleRule, ISourceGeneratorIgnore
 	{ }
 
 	/// <summary>
-	/// 活跃启用法则
+	/// 激活法则
 	/// </summary>
 	public abstract class EnableRule<N> : SendRule<N, Enable>
 	where N : class, INode, AsRule<Enable>
@@ -35,6 +35,13 @@ namespace WorldTree
 			}
 		}
 	}
-
+	/// <summary>
+	/// 激活法则
+	/// </summary>
+	/// <remarks>
+	/// <Para>
+	/// 通知法则委托: <see cref="WorldTree.Enable"/> : <see cref="ISendRule"/>
+	/// </Para>
+	/// </remarks>
 	public delegate void OnEnable<N>(N self) where N : class, INode, AsRule<Enable>;
 }
