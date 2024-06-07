@@ -33,6 +33,11 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static string ICallRuleAsync = "ICallRuleAsync";
 
+		/// <summary>
+		/// 生成忽略接口
+		/// </summary>
+		public static string ISourceGeneratorIgnore = "ISourceGeneratorIgnore";
+
 	}
 
 }

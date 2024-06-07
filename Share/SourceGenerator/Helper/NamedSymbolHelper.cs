@@ -9,6 +9,7 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -28,6 +29,11 @@ namespace WorldTree.SourceGenerator
 			return compilation.GetSemanticModel(typeDecl.SyntaxTree).GetDeclaredSymbol(typeDecl) as INamedTypeSymbol;
 		}
 
+		/// <summary>
+		/// 类型名称转换为命名类型符号
+		/// </summary>
+		/// <param name="compilation">编译类</param>
+		/// <param name="typeFullName">带命名空间全名</param>
 		public static INamedTypeSymbol? ToINamedTypeSymbol(this Compilation compilation, string typeFullName)
 		{
 			return compilation.GetTypeByMetadataName(typeFullName);
@@ -38,7 +44,6 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		/// <param name="namedTypeSymbol">命名符号</param>
 		/// <param name="interfaceSymbol">接口</param>
-		/// <returns></returns>
 		public static bool CheckAllInterface(this INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol interfaceSymbol)
 		{
 			return namedTypeSymbol.AllInterfaces.Contains(interfaceSymbol);
@@ -102,6 +107,9 @@ namespace WorldTree.SourceGenerator
 		}
 
 
+
+
+
 		/// <summary>
 		/// 获取法则参数泛型类型注释，例：
 		/// <para>T1 : <see cref="float"/>, OutT : <see cref="int"/></para>
@@ -134,6 +142,83 @@ namespace WorldTree.SourceGenerator
 			sb.AppendLine($"{tab}/// </para>");
 			return sb.ToString();
 		}
+
+
+
+
+		/// <summary>
+		/// 获取所有接口，包括引用的程序集中的接口
+		/// </summary>
+		/// <param name="compilation"></param>
+		/// <returns></returns>
+		public static List<INamedTypeSymbol> CollectAllInterfaces(Compilation compilation)
+		{
+			List<INamedTypeSymbol> allInterfaces = new List<INamedTypeSymbol>();
+
+			// 遍历当前编译上下文中的所有类型
+			foreach (var syntaxTree in compilation.SyntaxTrees)
+			{
+				var semanticModel = compilation.GetSemanticModel(syntaxTree);
+				var root = syntaxTree.GetRoot();
+				var nodes = new Stack<SyntaxNode>(root.ChildNodes());
+
+				while (nodes.Count > 0)
+				{
+					var node = nodes.Pop();
+
+					if (node is InterfaceDeclarationSyntax interfaceDeclaration)
+					{
+						var interfaceSymbol = semanticModel.GetDeclaredSymbol(interfaceDeclaration);
+						if (interfaceSymbol != null)
+						{
+							allInterfaces.Add(interfaceSymbol);
+						}
+					}
+
+					foreach (var child in node.ChildNodes())
+					{
+						nodes.Push(child);
+					}
+				}
+			}
+
+			// 遍历引用的程序集中的所有类型
+			foreach (var referencedAssembly in compilation.References)
+			{
+				var assemblySymbol = compilation.GetAssemblyOrModuleSymbol(referencedAssembly) as IAssemblySymbol;
+				if (assemblySymbol != null)
+				{
+					var typesInAssembly = GetAllTypes(assemblySymbol.GlobalNamespace);
+					var interfacesInAssembly = typesInAssembly.Where(t => t.TypeKind == TypeKind.Interface);
+					allInterfaces.AddRange(interfacesInAssembly);
+				}
+			}
+
+			return allInterfaces;
+		}
+
+		/// <summary>
+		/// 获取命名空间下的所有类型
+		/// </summary>
+		public static IEnumerable<INamedTypeSymbol> GetAllTypes(INamespaceSymbol namespaceSymbol)
+		{
+			foreach (var memberSymbol in namespaceSymbol.GetMembers())
+			{
+				if (memberSymbol is INamedTypeSymbol typeSymbol)
+				{
+					yield return typeSymbol;
+				}
+				else if (memberSymbol is INamespaceSymbol nestedNamespaceSymbol)
+				{
+					foreach (var nestedTypeSymbol in GetAllTypes(nestedNamespaceSymbol))
+					{
+						yield return nestedTypeSymbol;
+					}
+				}
+			}
+		}
+
+
 
 		/// <summary>
 		/// 源码获取(能获取到但是会导致生成的代码文件无法被项目收集编译)

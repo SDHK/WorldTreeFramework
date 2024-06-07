@@ -4,7 +4,6 @@
 	/// 树任务设置结果法则
 	/// </summary>
 	public interface TreeTaskSetResuIt : ISendRule { }
-
 	/// <summary>
 	/// 泛型树任务设置结果法则
 	/// </summary>

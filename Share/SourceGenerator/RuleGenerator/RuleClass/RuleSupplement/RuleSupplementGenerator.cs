@@ -38,6 +38,7 @@ namespace WorldTree.SourceGenerator
 				RuleSupplementHelper.Add(interfaceDeclaration, context.Compilation);
 			}
 			RuleSupplementHelper.Execute(context);
+
 		}
 	}
 
@@ -62,10 +63,6 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static Dictionary<string, InterfaceDeclarationSyntax> classInterfaceSyntax = new();
 
-		public static string ISendRule = "ISendRule";
-		public static string ICallRule = "ICallRule";
-		public static string ISendRuleAsync = "ISendRuleAsync";
-		public static string ICallRuleAsync = "ICallRuleAsync";
 
 		public static void Init(Compilation compilation)
 		{
@@ -81,10 +78,13 @@ namespace WorldTree.SourceGenerator
 			if (namedType == null) return;
 
 			//检测是否继承4大法则接口
-			if (!(NamedSymbolHelper.CheckInterface(namedType, ISendRule, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, ICallRule, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, ISendRuleAsync, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, ICallRuleAsync, out _))) return;
+			if (!(NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISendRule, out _) ||
+				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ICallRule, out _) ||
+				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISendRuleAsync, out _) ||
+				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ICallRuleAsync, out _))) return;
+
+			if (NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISourceGeneratorIgnore, out _)) return;
+
 
 			string fileName = Path.GetFileNameWithoutExtension(interfaceDeclaration.SyntaxTree.FilePath);
 			if (!fileClassDict.TryGetValue(fileName, out List<INamedTypeSymbol> set))
@@ -105,10 +105,10 @@ namespace WorldTree.SourceGenerator
 
 		public static void Execute(GeneratorExecutionContext context)
 		{
-			var ISourceGeneratorIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.ISourceGeneratorIgnore");
+			//var ISourceGeneratorIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.ISourceGeneratorIgnore");
 			var IMethodRule = context.Compilation.ToINamedTypeSymbol("WorldTree.IMethodRule");
 
-			if (ISourceGeneratorIgnore == null) return;
+			//if (ISourceGeneratorIgnore == null) return;
 			if (IMethodRule == null) return;
 
 			foreach (var fileClassList in fileClassDict)
@@ -119,23 +119,23 @@ namespace WorldTree.SourceGenerator
 
 				foreach (INamedTypeSymbol fileClass in fileClassList.Value)
 				{
-					if (NamedSymbolHelper.CheckAllInterface(fileClass, ISourceGeneratorIgnore)) continue;
+					//if (NamedSymbolHelper.CheckAllInterface(fileClass, ISourceGeneratorIgnore)) continue;
 					bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
 
 					INamedTypeSymbol? baseInterface = null;
-					if (NamedSymbolHelper.CheckInterface(fileClass, ISendRule, out baseInterface))
+					if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ISendRule, out baseInterface))
 					{
 						if (isMethodRule) SendRuleSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, ISendRuleAsync, out baseInterface))
+					else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ISendRuleAsync, out baseInterface))
 					{
 						if (isMethodRule) SendRuleAsyncSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, ICallRule, out baseInterface))
+					else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ICallRule, out baseInterface))
 					{
 						if (isMethodRule) CallRuleSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, ICallRuleAsync, out baseInterface))
+					else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ICallRuleAsync, out baseInterface))
 					{
 						if (isMethodRule) CallRuleAsyncSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);
 					}
@@ -195,19 +195,19 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
 
 			//法则委托
-			if (NamedSymbolHelper.CheckInterface(typeSymbol, ISendRule, out _))
+			if (NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.ISendRule, out _))
 			{
 				SendRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
 			}
-			else if (NamedSymbolHelper.CheckInterface(typeSymbol, ISendRuleAsync, out _))
+			else if (NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.ISendRuleAsync, out _))
 			{
 				SendRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
 			}
-			else if (NamedSymbolHelper.CheckInterface(typeSymbol, ICallRule, out _))
+			else if (NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.ICallRule, out _))
 			{
 				CallRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
 			}
-			else if (NamedSymbolHelper.CheckInterface(typeSymbol, ICallRuleAsync, out _))
+			else if (NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.ICallRuleAsync, out _))
 			{
 				CallRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
 			}

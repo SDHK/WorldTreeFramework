@@ -2,61 +2,74 @@
 
 namespace WorldTree
 {
+	public interface CallTast<T1, T2> : ICallRule<T1, T2,float> { }
 
+	public interface SendTast<T1, T2> : ISendRule<T1, T2> { }
 
-	public class T1 : Node
-	{
+	//public static partial class DotNetTestNodeRule
+	//{
+	//	class OnCallTastRuleExecute : CallTastRule<DotNetTestNode, int, int>
+	//	{
+	//		protected override int Execute(DotNetTestNode self, int arg1)
+	//		=> OnCallTast(self, arg1);
+	//	}
+	//}
 
-	}
-
-
-	public static partial class T1Rule
-	{
-
-		public static void Test(this T1 self)
-		{
-		}
-
-	}
-
-	public partial class TestNode : Node, ComponentOf<DotNetTestNode>
-		, AsAwake
-	{
-		public int TestValue;
-	}
 
 	/// <summary>
 	/// 测试节点
 	/// </summary>
 	public partial class DotNetTestNode : Node, ComponentOf<INode>
 		, AsAwake
-
+		, AsCallTast<int, int>
+		, AsCurveEvaluate
+		, AsSendTast<int, int>
 	{
 		public int TestValue;
 	}
 
-
+	public static partial class T1
+	{
+		private static int a;
+	}
 
 	public static partial class DotNetTestNodeRule
 	{
-
-		public static bool TryGetComponentBranch1<N, BN>(this N self, long key, out BN node)
-			where N : class, INode, AsComponentBranch
-			where BN : class, INode, NodeOf<N, ComponentBranch>
-		=> (node = self.GetBranch<ComponentBranch>()?.GetNode(key) as BN) != null;
-
-
-
-		/// <summary>
-		/// 执行通知法则
-		/// </summary>
-		public static void SendRule1<N, R>(this N self, R nullRule)
-			where N : class, AsCut
-			where R : class, ISendRule
+		private static OnCallTast<DotNetTestNode, int, int> OnCallTast =
+		(self, t1,t2) =>
 		{
-			if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return;
-			ruleList.Send(self);
-		}
+			return 123f;
+		};
+
+		private static OnCurveEvaluate<DotNetTestNode> OnCurveEvaluate =
+		(self, t1) =>
+		{
+			return 1;
+		};
+
+		static OnUpdateTime<DotNetTestNode> updateTime =
+	   (self, timeSpan) =>
+	   {
+		   self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
+	   };
+
+
+
+		private static OnUpdate<DotNetTestNode> OnUpdat123 =
+		(self) =>
+		{
+
+		};
+
+		private static OnSendTast<DotNetTestNode, int, int> OnSendTast =
+		 delegate (DotNetTestNode self, int t1, int t2)
+		{
+
+		};
+
+
+
+
 
 		private class New : NewRule<DotNetTestNode>
 		{
@@ -108,4 +121,5 @@ namespace WorldTree
 			}
 		}
 	}
+
 }

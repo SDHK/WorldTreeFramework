@@ -48,8 +48,6 @@ namespace WorldTree
 		{
 			self.Log($"T1<float>更新！！{timeSpan.TotalSeconds}");
 		};
-
-
 	}
 
 
