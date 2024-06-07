@@ -35,7 +35,7 @@ namespace WorldTree.SourceGenerator
 				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
 				string genericParameter = GeneratorTemplate.GenericsParameter[i];
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
-				Code.Append(
+				Code.AppendLine(
 					$$"""
 
 							/// <summary>
@@ -46,9 +46,7 @@ namespace WorldTree.SourceGenerator
 							{
 								foreach (ISendRule{{genericsTypeAngle}} rule in (RuleList)ruleList)
 								{
-									rule.IsMulticast = true;
 									rule.Invoke(node{{genericParameter}});
-									if (!rule.IsMulticast) return;
 								}
 							}
 					""");

@@ -36,7 +36,7 @@ namespace WorldTree.SourceGenerator
 				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
 				string genericParameter = GeneratorTemplate.GenericsParameter[i];
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
-				Code.Append(
+				Code.AppendLine(
 					$$"""
 
 							/// <summary>

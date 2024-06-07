@@ -37,7 +37,7 @@ namespace WorldTree.SourceGenerator
 				string genericParameter = GeneratorTemplate.GenericsParameter[i];
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 			
-				Code.Append(
+				Code.AppendLine(
 					$$"""
 
 							/// <summary>
@@ -49,9 +49,7 @@ namespace WorldTree.SourceGenerator
 								OutT outT = TypeInfo<OutT>.Default;
 								foreach (ICallRuleAsync<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
 								{
-									rule.IsMulticast = true;
 									outT = await rule.Invoke(node{{genericParameter}});
-									if (!rule.IsMulticast) return outT;
 								}
 								return outT;
 							}
@@ -65,9 +63,7 @@ namespace WorldTree.SourceGenerator
 								UnitList<OutT> outT = node.Core.PoolGetUnit<UnitList<OutT>>();
 								foreach (ICallRuleAsync<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
 								{
-									rule.IsMulticast = true;
 									outT.Add(await rule.Invoke(node{{genericParameter}}));
-									if (!rule.IsMulticast) return outT;
 								}
 								return outT;
 							}

@@ -29,7 +29,7 @@ namespace WorldTree
 			{
 				if (self.IsActive)
 				{
-					self.m_ActiveEventMark = self.IsActive;
+					if (this.RuleIndex == this.RuleCount - 1) { self.m_ActiveEventMark = self.IsActive; }
 					Execute(self as N);
 				}
 			}

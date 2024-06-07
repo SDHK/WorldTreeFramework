@@ -17,7 +17,9 @@ namespace WorldTree
 	/// <para>主要通过法则类型逆变提示可填写参数</para>
 	/// <para> RuleList 是没有泛型反射实例的，所以执行参数可能填错</para>
 	/// </remarks>
-	public interface IRuleList<in T> : IRuleList where T : IRule { }
+	public interface IRuleList<in T> : IRuleList where T : IRule
+	{
+	}
 
 	/// <summary>
 	/// 法则列表
@@ -39,10 +41,18 @@ namespace WorldTree
 			if (index == -1)
 			{
 				Add(rule);
+				for (int i = 0; i < Count; i++)
+				{
+					this[i].RuleIndex = i;
+					this[i].RuleCount = Count;
+				}
 			}
 			else //重复则覆盖
 			{
 				this[index] = rule;
+				rule.RuleIndex = index;
+				rule.RuleCount = Count;
+				return;
 			}
 		}
 	}

@@ -27,11 +27,6 @@ namespace WorldTree
 	public interface IRule
 	{
 		/// <summary>
-		/// 多播标记
-		/// </summary>
-		bool IsMulticast { get; set; }
-
-		/// <summary>
 		/// 节点类型标记
 		/// </summary>
 		long NodeType { get; }
@@ -40,6 +35,17 @@ namespace WorldTree
 		/// 法则类型标记
 		/// </summary>
 		long RuleType { get; }
+
+		/// <summary>
+		/// 法则执行顺序下标
+		/// </summary>
+		/// <remarks>由框架自动赋值，只读</remarks>
+		int RuleIndex { get; set; }
+		/// <summary>
+		/// 法则执行总数
+		/// </summary>
+		/// <remarks>由框架自动赋值，只读</remarks>
+		int RuleCount { get; set; }
 	}
 
 	/// <summary>
@@ -53,9 +59,10 @@ namespace WorldTree
 		where N : class, INode
 		where R : IRule
 	{
-		public bool IsMulticast { get; set; } = true;
 		public virtual long NodeType => TypeInfo<N>.TypeCode;
 		public virtual long RuleType => TypeInfo<R>.TypeCode;
+		public int RuleIndex { get; set; }
+		public int RuleCount { get; set; }
 	}
 
 	/// <summary>
@@ -76,7 +83,7 @@ namespace WorldTree
 	/// <summary>
 	/// 代码生成器忽略标记
 	/// </summary>
-	public interface ISourceGeneratorIgnore 
+	public interface ISourceGeneratorIgnore
 	{
 	}
 

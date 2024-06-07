@@ -15,44 +15,47 @@ namespace WorldTree
 
 	public static partial class DotNetTestNodeRule
 	{
-		private static OnCurveEvaluate<DotNetTestNode> OnCurveEvaluate= (self, time) =>
+		static OnCurveEvaluate<DotNetTestNode> OnCurveEvaluate = (self, time) =>
 		{
 			self.Log($"曲线更新！！！{time}");
 			return time;
 		};
 
-		private static OnEnable<DotNetTestNode> Enable = (self) =>
+		static OnEnable<DotNetTestNode> Enable1 = (self) =>
 		{
-			self.Log("激活！！");
+			self.Log("激活1！！");
 		};
 
-		private static OnDisable<DotNetTestNode> Disable = (self) =>
+		static OnEnable<DotNetTestNode> Enable2 = (self) =>
+		{
+			self.Log("激活2！！");
+		};
+
+		static OnDisable<DotNetTestNode> Disable = (self) =>
 		{
 			self.Log("失活！！");
 		};
 
-		private static OnNew<DotNetTestNode> New1 = (self) =>
+		static OnNew<DotNetTestNode> New1 = (self) =>
 		{
 			self.Log("新建1！！");
 		};
-
-		private static OnNew<DotNetTestNode> New2 = (self) =>
+		static OnNew<DotNetTestNode> New2 = (self) =>
 		{
+
 			self.Log("新建2！！");
 		};
-
-		private static OnAdd<DotNetTestNode> Add = (self) =>
+		static OnAdd<DotNetTestNode> Add = (self) =>
 		{
 			self.Log(" 初始化！！！");
 		};
 
-		private static OnUpdateTime<DotNetTestNode> updateTime = (self, timeSpan) =>
+		static OnUpdateTime<DotNetTestNode> updateTime = (self, timeSpan) =>
 		{
 			self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		};
 
-
-		private static OnRemove<DotNetTestNode> Remove = (self) =>
+		static OnRemove<DotNetTestNode> Remove = (self) =>
 		{
 			self.Log($"初始关闭！！");
 		};
