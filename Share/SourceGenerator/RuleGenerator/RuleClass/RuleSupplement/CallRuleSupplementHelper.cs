@@ -29,7 +29,6 @@ namespace WorldTree.SourceGenerator
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t");
 
 			RuleSupplementHelper.AddComment(Code, "调用法则委托", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine($$"""	[RuleDelegateTag("{{ClassFullName}}")]""");
 			Code.AppendLine(@$"	public delegate {outType} On{ClassName}<N{TypeArguments}>(N self{genericTypeParameter}) where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments};");
 		}
 

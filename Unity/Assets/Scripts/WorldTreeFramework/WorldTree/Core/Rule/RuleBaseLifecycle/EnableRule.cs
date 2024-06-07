@@ -35,4 +35,6 @@ namespace WorldTree
 			}
 		}
 	}
+
+	public delegate void OnEnable<N>(N self) where N : class, INode, AsRule<Enable>;
 }

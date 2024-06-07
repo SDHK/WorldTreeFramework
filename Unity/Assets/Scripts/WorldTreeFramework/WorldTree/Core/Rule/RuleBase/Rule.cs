@@ -17,23 +17,6 @@ using System;
 
 namespace WorldTree
 {
-
-	/// <summary>
-	/// 法则委托标签
-	/// </summary>
-	/// <remarks>用于代码生成的查找</remarks>
-	[AttributeUsage(AttributeTargets.Delegate)]
-	public class RuleDelegateTagAttribute : Attribute
-	{
-		public string Description { get; }
-
-		public RuleDelegateTagAttribute(string description)
-		{
-			Description = description;
-		}
-	}
-
-
 	/// <summary>
 	/// 法则接口
 	/// </summary>

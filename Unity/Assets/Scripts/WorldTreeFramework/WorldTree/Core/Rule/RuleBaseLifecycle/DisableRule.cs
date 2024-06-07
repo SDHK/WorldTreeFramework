@@ -36,4 +36,6 @@ namespace WorldTree
 			}
 		}
 	}
+	public delegate void OnDisable<N>(N self) where N : class, INode, AsRule<Disable>;
+
 }
