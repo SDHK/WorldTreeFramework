@@ -345,16 +345,32 @@ namespace WorldTree.SourceGenerator
 		{
 			int startIndex = ruleType.IndexOf('<') + 1;
 			if (startIndex == -1) return null;
-			int endIndex = ruleType.IndexOf('>');
+			int endIndex = ruleType.LastIndexOf('>');
 			if (endIndex == -1) return null;
 
 			string content = ruleType.Substring(startIndex, endIndex - startIndex);
-			string[] splitContent = content.Split(',');
-			for (int i = 0; i < splitContent.Length; i++)
+			List<string> splitContent = new List<string>();
+			int bracketCount = 0;
+			int lastSplit = 0;
+			for (int i = 0; i < content.Length; i++)
 			{
-				splitContent[i] = splitContent[i].Trim();
+				if (content[i] == '<')
+				{
+					bracketCount++;
+				}
+				else if (content[i] == '>')
+				{
+					bracketCount--;
+				}
+				else if (content[i] == ',' && bracketCount == 0)
+				{
+					splitContent.Add(content.Substring(lastSplit, i - lastSplit).Trim());
+					lastSplit = i + 1;
+				}
 			}
-			return splitContent;
+			splitContent.Add(content.Substring(lastSplit).Trim());
+
+			return splitContent.ToArray();
 		}
 
 		/// <summary>

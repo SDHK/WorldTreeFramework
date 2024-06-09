@@ -160,7 +160,7 @@
         {
             "BundleName": "assets_assetbundles_assets_ui.bundle",
             "UnityCRC": 0,
-            "FileHash": "5073502437c2d8b6f46ba456ef154bbc",
+            "FileHash": "47ec435737ea1a60e7f02518fe484864",
             "FileCRC": "00000000",
             "FileSize": 59629,
             "Encrypted": false,
@@ -170,7 +170,7 @@
         {
             "BundleName": "assets_assetbundles_dlls_aotdlls.bundle",
             "UnityCRC": 0,
-            "FileHash": "a0269a7c0712701ff4dc380dbaf422a1",
+            "FileHash": "5fb6df9ba430a282481f7181f9716e7e",
             "FileCRC": "00000000",
             "FileSize": 5241344,
             "Encrypted": false,
@@ -180,7 +180,7 @@
         {
             "BundleName": "assets_assetbundles_dlls_hotupdatedlls.bundle",
             "UnityCRC": 0,
-            "FileHash": "e54216329e621390782aae238903e923",
+            "FileHash": "d443317f5f9197fc7b06f26defc50797",
             "FileCRC": "00000000",
             "FileSize": 513024,
             "Encrypted": false,

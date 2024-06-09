@@ -63,6 +63,7 @@ namespace WorldTree
 		, AsFixedUpdateTime
 		, AsLateUpdateTime
 		, AsGuiUpdateTime
+		, AsRule<IRule>
 	{
 		public AnimationCurve AnimationCurve = new AnimationCurve();
 		public float TestFloat = 1f;
