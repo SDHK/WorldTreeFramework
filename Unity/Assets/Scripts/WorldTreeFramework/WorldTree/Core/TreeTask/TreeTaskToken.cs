@@ -38,6 +38,7 @@ namespace WorldTree
 	public class TreeTaskToken : Node, ChildOf<INode>, ComponentOf<INode>
 		, AsChildBranch
 		, AsAwake
+		, AsTreeTaskTokenEvent
 	{
 		/// <summary>
 		/// 任务状态
@@ -123,6 +124,17 @@ namespace WorldTree
 			{
 				//self.stopTask = null;
 				self.tokenEvent = null;
+			}
+		}
+
+		class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TreeTaskToken>
+		{
+			protected override void Execute(TreeTaskToken self, TaskState state)
+			{
+				if (state == TaskState.Cancel)
+				{
+					self.Cancel();
+				}
 			}
 		}
 	}

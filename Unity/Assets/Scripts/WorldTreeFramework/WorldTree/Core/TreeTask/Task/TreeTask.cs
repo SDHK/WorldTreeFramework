@@ -41,8 +41,6 @@ namespace WorldTree
 			//this.Log($"this任务[{this.Id}]");
 			this.SetToken(null);
 			InnerCoroutine().Coroutine();
-			//this.Log($"this任务[{this.Id}]尝试完成同步任务！！！");
-			//this.FindSyncTaskSetCompleted();
 		}
 		/// <summary>
 		/// 协程启动
@@ -52,9 +50,6 @@ namespace WorldTree
 			//this.Log($"this任务[{this.Id}]");
 			this.SetToken(treeTaskToken);
 			InnerCoroutine().Coroutine();
-			//this.Log($"this任务[{this.Id}]尝试完成同步任务！！！");
-			//this.FindSyncTaskSetCompleted();
-
 		}
 
 		public void SetResult()
@@ -120,6 +115,27 @@ namespace WorldTree
 
 	public static class TreeTaskRule
 	{
+		/// <summary>
+		/// 插入新令牌：可以用新令牌取消，也能被老令牌取消
+		/// </summary>
+		public static async TreeTask AddToken(this TreeTask self, TreeTaskToken treeTaskToken)
+		{
+			var token = await self.TreeTaskTokenCatch();
+			token.tokenEvent.Add(treeTaskToken);
+			self.SetToken(treeTaskToken);
+			await self;
+		}
+		/// <summary>
+		/// 插入新令牌：可以用新令牌取消，也能被老令牌取消
+		/// </summary>
+		public static async TreeTask<T> AddToken<T>(this TreeTask<T> self, TreeTaskToken treeTaskToken)
+		{
+			var token = await self.TreeTaskTokenCatch();
+			token.tokenEvent.Add(treeTaskToken);
+			self.SetToken(treeTaskToken);
+			return await self;
+		}
+
 		class SetResultSendRule : TreeTaskSetResuItRule<TreeTask>
 		{
 			protected override void Execute(TreeTask self)

@@ -46,10 +46,12 @@ namespace WorldTree
 				await self.AsyncDelay(6);
 				if (TaskTokenCatch.taskState == TaskState.Cancel) return;
 
-				//self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-				//await (self.TestB().SetToken(treeTaskToken) as TreeTask);
+				self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
 
-				await self.TestB();
+				//self.TestB().SetToken(treeTaskToken);
+				await self.TestB().AddToken(treeTaskToken);
+
+				//await self.TestB();
 
 				if (TaskTokenCatch.taskState == TaskState.Cancel) return;
 				await self.TaskD();

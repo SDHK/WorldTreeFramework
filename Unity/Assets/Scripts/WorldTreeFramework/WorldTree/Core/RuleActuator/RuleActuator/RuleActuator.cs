@@ -27,7 +27,7 @@ namespace WorldTree
 	public static class RuleActuatorRule
 	{
 		/// <summary>
-		/// 添加节点法则
+		/// 添加节点法则：指定法则
 		/// </summary>
 		public static void Add<R, N, NR>(this RuleActuator<R> self, N node, NR defaultRule)
 			where R : IRule
@@ -41,6 +41,24 @@ namespace WorldTree
 			else
 			{
 				self.Log($"空法则{typeof(NR)}");
+			}
+		}
+
+
+		/// <summary>
+		/// 添加节点法则
+		/// </summary>
+		public static void Add<R, N>(this RuleActuator<R> self, N node)
+			where R : IRule
+			where N : class, INode, AsRule<R>
+		{
+			if (self.Core.RuleManager.TryGetRuleList<R>(node.Type, out RuleList ruleList))
+			{
+				self.TryAdd(node, ruleList);
+			}
+			else
+			{
+				self.Log($"空法则{typeof(R)}");
 			}
 		}
 	}

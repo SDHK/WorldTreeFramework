@@ -31,7 +31,7 @@ namespace WorldTree
 			where N : class, INode, AsRule<ISendRule<T1>>
 		{
 			if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
-			self.m_ValueChange.Add(eventNode, default(ValueChangeEvent<T1>));
+			self.m_ValueChange.Add(eventNode);
 		}
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace WorldTree
 			where T2 : IEquatable<T2>
 		{
 			if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
-			self.m_ValueChange.Add(treeValue, default(ValueChangeEvent<T1>));
+			self.m_ValueChange.Add(treeValue);
 		}
 
 		/// <summary>
@@ -54,8 +54,8 @@ namespace WorldTree
 		{
 			if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
 			if (treeValue.m_ValueChange is null) treeValue.AddChild(out treeValue.m_ValueChange);
-			self.m_ValueChange.Add(treeValue, default(ValueChangeEvent<T1>));
-			treeValue.m_ValueChange.Add(self, default(ValueChangeEvent<T2>));
+			self.m_ValueChange.Add(treeValue);
+			treeValue.m_ValueChange.Add(self);
 		}
 	}
 }

@@ -80,7 +80,7 @@ namespace WorldTree
 		/// </summary>
 		/// <param name="treeTaskToken"></param>
 		/// <returns></returns>
-		public TreeTaskBase SetToken(TreeTaskToken treeTaskToken)
+		public void SetToken(TreeTaskToken treeTaskToken)
 		{
 			TreeTaskBase nowTask = this;
 			while (nowTask != null)
@@ -113,8 +113,9 @@ namespace WorldTree
 					break;
 				}
 			}
-			return this;
 		}
+
+	
 	}
 
 
@@ -231,7 +232,7 @@ namespace WorldTree
 					//已有令牌的情况，发生在异步方法内部新建了令牌，所以当前传递的令牌不再往下传播，直接退出。
 					return this;
 				}
-				treeTaskToken.tokenEvent.Add(nowTask, default(TreeTaskTokenEvent));
+				treeTaskToken.tokenEvent.Add(nowTask);
 				nowTask = nowTask.m_RelevanceTask;
 			}
 			return this;
