@@ -27,9 +27,7 @@ namespace WorldTree
 
 	//需要定时器TimeUpdate,特化的双方法法则？
 
-	//真实与游戏时间双法则
-	//真实时间和游戏时间
-	//时域与时间轮
+
 
 	//管理器改为分支 整理
 
@@ -43,17 +41,15 @@ namespace WorldTree
 	//域节点接口标记
 
 
-
 	//代码表格
 
 	//YooAsset管理器
 
 	//分析器?
 
-	//异步TreeTask梳理，分离Task和Awaiter
-
-
-
+	//真实与游戏时间双法则
+	//真实时间和游戏时间
+	//时域与时间轮
 
 	/// <summary>
 	/// 世界树核心接口

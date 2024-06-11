@@ -29,7 +29,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加节点法则：指定法则
 		/// </summary>
-		public static void Add<R, N, NR>(this RuleActuator<R> self, N node, NR defaultRule)
+		public static void Add<R, N, NR>(this RuleActuator<R> self, N node, NR defaultRule = default)
 			where R : IRule
 			where N : class, INode, AsRule<NR>
 			where NR : R
@@ -46,7 +46,7 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 添加节点法则
+		/// 添加节点法则：默认法则
 		/// </summary>
 		public static void Add<R, N>(this RuleActuator<R> self, N node)
 			where R : IRule
