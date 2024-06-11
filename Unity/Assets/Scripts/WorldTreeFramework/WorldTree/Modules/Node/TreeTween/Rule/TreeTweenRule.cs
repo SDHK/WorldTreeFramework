@@ -27,9 +27,9 @@ namespace WorldTree
                         self.isRun = false;
                         break;
                     case TaskState.Cancel:
-                        self.isRun = true;
-                        self.isReverse = true;
-                        break;
+						self.isRun = false;
+						self.OnCompleted.Send();
+						break;
                 }
             }
         }

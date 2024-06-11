@@ -24,6 +24,6 @@ namespace WorldTree.Internal
 	{
 		public TreeTaskTokenCatch GetAwaiter() => this;
 		public override bool IsCompleted { get; set; }
-		public TreeTaskToken GetResult() { return m_TreeTaskToken; }
+		public TreeTaskToken GetResult() { return m_Context as TreeTaskToken; }
 	}
 }

@@ -19,10 +19,13 @@ namespace WorldTree
             self.AddTemp(out TreeTask asyncTask).AddTemp(out CounterCall counter, count);
 
             //令牌是否为空,不为空则将组件挂入令牌
-            (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(TreeTaskTokenEvent));
+            if (await self.TreeTaskTokenCatch() is TreeTaskToken taskToken)
+            {
+				taskToken.tokenEvent.Add(counter, default(TreeTaskTokenEvent));
+			}
 
-            //组件的任务完成回调注册
-            counter.callback.Add(asyncTask, default(TreeTaskSetResuIt));
+			//组件的任务完成回调注册
+			counter.callback.Add(asyncTask, default(TreeTaskSetResuIt));
 
             //等待异步执行
             await asyncTask;
@@ -36,10 +39,14 @@ namespace WorldTree
         {
             self.AddTemp(out TreeTask asyncTask).AddTemp(out TimerCall counter, time);
 
-            //令牌是否为空,不为空则将组件挂入令牌
-            (await self.TreeTaskTokenCatch())?.tokenEvent.Add(counter, default(TreeTaskTokenEvent));
-            //组件的任务完成回调注册
-            counter.callback.Add(asyncTask, default(TreeTaskSetResuIt));
+			//令牌是否为空,不为空则将组件挂入令牌
+			if (await self.TreeTaskTokenCatch() is TreeTaskToken taskToken)
+			{
+				taskToken.tokenEvent.Add(counter, default(TreeTaskTokenEvent));
+			}
+
+			//组件的任务完成回调注册
+			counter.callback.Add(asyncTask, default(TreeTaskSetResuIt));
 
             //等待异步执行
             await asyncTask;

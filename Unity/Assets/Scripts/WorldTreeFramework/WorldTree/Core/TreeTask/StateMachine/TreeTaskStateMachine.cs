@@ -43,9 +43,6 @@ namespace WorldTree.Internal
 		/// </summary>
 		public void MoveNext()
 		{
-			//this.Log($"状态机MoveNext !!!  {!this.IsRecycle}");
-			//假如当前状态机的任务丢失了，那么可能是令牌取消了，将Tsak释放了
-			//那么任务等于断了，状态机也就没有继续的必要了。
 			 m_StateMachine?.MoveNext();
 		}
 	}
@@ -58,18 +55,6 @@ namespace WorldTree.Internal
 			protected override void Execute(TreeTaskStateMachine self)
 			{
 				self.m_StateMachine = null;
-			}
-		}
-
-		class TreeTaskTokenEvent : TreeTaskTokenEventRule<TreeTaskStateMachine>
-		{
-			protected override void Execute(TreeTaskStateMachine self, TaskState state)
-			{
-				//假如令牌取消了，直接释放状态机。
-				if (state == TaskState.Cancel)
-				{
-					self.Dispose();
-				}
 			}
 		}
 	}

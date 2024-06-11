@@ -3,7 +3,7 @@
 * 作者：闪电黑客
 * 日期：2024/6/6 10:28
 
-* 描述：
+* 描述：对于法则委托简写的调用生成
 
 */
 using Microsoft.CodeAnalysis;
@@ -168,6 +168,8 @@ namespace WorldTree.SourceGenerator
 				}
 				if (ClassCode.ToString() != "")
 				{
+					fileCode.AppendLine(@$"//对于法则委托简写的调用生成");
+
 					fileCode.AppendLine(fileUsings[fileClassList.Key]);
 					fileCode.AppendLine($"namespace {fileNamespace[fileClassList.Key]}");
 					fileCode.AppendLine("{");
@@ -302,14 +304,17 @@ namespace WorldTree.SourceGenerator
 		/// </remarks>
 		private string[] GetReflectionRuleType(INamedTypeSymbol delegateType, INamedTypeSymbol ruleClass, INamedTypeSymbol ruleBase)
 		{
+			//SymbolDisplayFormat.MinimallyQualifiedFormat
+			//因为委托简写可以省略写类型，导致原文件不需要写参数的命名空间，
+			//所以这里要获取到泛型参数的类型全名，包括命名空间。
+
 			// 获取 ruleType 的泛型参数
-			var ruleTypeArgs = GetGenericArguments(delegateType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)).ToArray();
+			var ruleTypeArgs = GetGenericArguments(delegateType.ToDisplayString()).ToArray();
 
 			var types = new List<string>();
 			types.Add(ruleTypeArgs[0]);
-
 			// 获取 ruleBaseSymbol 的泛型参数
-			string[]? ruleBaseArgs = GetGenericArguments(ruleBase.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
+			string[]? ruleBaseArgs = GetGenericArguments(ruleBase.ToDisplayString());
 
 			if (ruleBaseArgs == null)
 			{

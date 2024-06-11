@@ -78,46 +78,29 @@ namespace WorldTree.Internal
 		[SecuritySafeCritical]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			if (task == null)//发生在异步方法等待的第一个 await TreeTask 时。
+			if (task == null)
 			{
 				//新建一个TreeTask
 				awaiter.Parent.AddTemp(out task);
-				//新建状态机
 				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
 
-				//任务关联
-				//传入的 awaiter 就是方法内的第一个 TreeTask
-				//因为此时 awaiter 和 新建的 task 都没有令牌，所以需要关联起来。
+				task.Log($"新建任务[{task.Id}] ！！！！，当前状态机：{stateMachine}");
 
-				//假设：是A异步方法,调用B异步方法（B是第一个await）
-
-				//那么B方法的状态机内部生成的TreeTask，也会被当做awaiter，传入到A的方法状态机内部。
-				//于是所有的异步方法的第一个await任务，都会被关联起来。
-
-				//另一种情况：传入的 awaiter 有令牌 ，这意味着在A方法里面，新建了个令牌2，给了B方法。
-				//那么也只关联任务，不设置令牌2。因为这个令牌2是属于B方法的，不属于当前的A方法。
-				task.m_RelevanceTask = awaiter;
-
-				//task.Log($"新建任务[{task.Id}] 关联任务=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) ，当前状态机：{stateMachine}");
-				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 			}
-			else //发生在异步方法等待的第一个以后的 await TreeTask 时。
+
+			awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
+
+			if (task.m_Context is TreeTaskToken taskToken)
 			{
-				if (task.m_TreeTaskToken.Value != null)
-				{
-					//task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
-					//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
-					awaiter.SetToken(task.m_TreeTaskToken);
-
-					//给状态机添加令牌事件
-					task.m_TreeTaskToken.Value.tokenEvent.Add(this.treeTaskStateMachine, TypeInfo<TreeTaskTokenEvent>.Default);
-				}
-
-				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
-				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}]({task.IsRecycle}) ，当前状态机：{stateMachine}");
-				//尝试找到同步任务执行
-				awaiter.FindSyncTaskSetCompleted();
+				task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
+				//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
+				awaiter.SetToken(taskToken);
+				return;
 			}
+
+			//任务关联
+			task.m_Context = awaiter;
+			task.Log($"当前任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 		}
 
 		// 7. Start
@@ -195,28 +178,25 @@ namespace WorldTree.Internal
 		{
 			if (task == null)
 			{
+				//新建一个TreeTask
 				awaiter.Parent.AddTemp(out task);
-
 				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
-
-				task.m_RelevanceTask = awaiter;
-				//task.Log($"新建任务[{task.Id}] 关联任务=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) ，当前状态机：{stateMachine}");
-				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
+				task.Log($"新建任务[{task.Id}] ！！！！，当前状态机：{stateMachine}");
 			}
-			else
+
+			awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
+
+			if (task.m_Context is TreeTaskToken taskToken)
 			{
-				if (task.m_TreeTaskToken.Value != null)
-				{
-
-					//task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
-					awaiter.SetToken(task.m_TreeTaskToken);
-					task.m_TreeTaskToken.Value.tokenEvent.Add(this.treeTaskStateMachine, TypeInfo<TreeTaskTokenEvent>.Default);
-				}
-
-				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
-				//task.Log($"Awaiter[{awaiter.Id}]({awaiter.GetType().Name}) 尝试完成同步任务： if在当前task[{task.Id}]({task.IsRecycle}) ，当前状态机：{stateMachine}");
-				awaiter.FindSyncTaskSetCompleted();
+				task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
+				//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
+				awaiter.SetToken(taskToken);
+				return;
 			}
+
+			//任务关联
+			task.m_Context = awaiter;
+			task.Log($"当前任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 		}
 
 		// 7. Start

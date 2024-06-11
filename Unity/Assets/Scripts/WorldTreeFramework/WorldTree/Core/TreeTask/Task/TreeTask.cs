@@ -39,9 +39,10 @@ namespace WorldTree
 		public void Coroutine()
 		{
 			//this.Log($"this任务[{this.Id}]");
+			this.SetToken(null);
 			InnerCoroutine().Coroutine();
 			//this.Log($"this任务[{this.Id}]尝试完成同步任务！！！");
-			this.FindSyncTaskSetCompleted();
+			//this.FindSyncTaskSetCompleted();
 		}
 		/// <summary>
 		/// 协程启动
@@ -52,7 +53,7 @@ namespace WorldTree
 			this.SetToken(treeTaskToken);
 			InnerCoroutine().Coroutine();
 			//this.Log($"this任务[{this.Id}]尝试完成同步任务！！！");
-			this.FindSyncTaskSetCompleted();
+			//this.FindSyncTaskSetCompleted();
 
 		}
 
@@ -95,8 +96,9 @@ namespace WorldTree
 		/// </summary>
 		public void Coroutine()
 		{
+			this.SetToken(null);
 			InnerCoroutine().Coroutine();
-			this.FindSyncTaskSetCompleted();
+			//this.FindSyncTaskSetCompleted();
 		}
 		/// <summary>
 		/// 协程启动
@@ -105,7 +107,7 @@ namespace WorldTree
 		{
 			this.SetToken(treeTaskToken);
 			InnerCoroutine().Coroutine();
-			this.FindSyncTaskSetCompleted();
+			//this.FindSyncTaskSetCompleted();
 
 		}
 

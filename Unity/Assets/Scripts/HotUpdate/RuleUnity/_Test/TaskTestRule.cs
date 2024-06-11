@@ -44,10 +44,14 @@ namespace WorldTree
 			while (TaskTokenCatch.taskState != TaskState.Cancel)
 			{
 				await self.AsyncDelay(6);
+				if (TaskTokenCatch.taskState == TaskState.Cancel) return;
 
-				self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-				await (self.TestB().SetToken(treeTaskToken) as TreeTask);
+				//self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
+				//await (self.TestB().SetToken(treeTaskToken) as TreeTask);
 
+				await self.TestB();
+
+				if (TaskTokenCatch.taskState == TaskState.Cancel) return;
 				await self.TaskD();
 
 			}
@@ -57,7 +61,7 @@ namespace WorldTree
 		public static async TreeTask TestB(this TaskTest self)
 		{
 			await self.TaskC();
-			await self.AsyncDelay(2);
+			await self.AsyncDelay(4);
 
 			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
 			self.Log($"B！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");

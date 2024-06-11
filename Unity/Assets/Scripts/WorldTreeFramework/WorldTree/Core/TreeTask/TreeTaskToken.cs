@@ -8,6 +8,7 @@
 */
 
 
+using System;
 using System.Threading.Tasks;
 
 namespace WorldTree
@@ -43,26 +44,25 @@ namespace WorldTree
 		/// </summary>
 		public TaskState taskState = TaskState.Running;
 
-		/// <summary>
-		/// 暂停的任务
-		/// </summary>
-		public TreeTaskBase stopTask;
+		///// <summary>
+		///// 暂停的任务
+		///// </summary>
+		//public TreeTaskBase stopTask;
 
 		/// <summary>
 		/// 任务令牌事件
 		/// </summary>
 		public RuleActuator<TreeTaskTokenEvent> tokenEvent;
 
-
 		/// <summary>
 		/// 任务状态
 		/// </summary>
 		public TaskState State { get => taskState; }
 
-		public override string ToString()
-		{
-			return $"TreeTaskToken({stopTask?.Id})";
-		}
+		//public override string ToString()
+		//{
+		//	return $"TreeTaskToken({stopTask?.Id})";
+		//}
 
 		/// <summary>
 		/// 继续执行
@@ -71,8 +71,8 @@ namespace WorldTree
 		{
 			taskState = TaskState.Running;
 			tokenEvent?.Send(taskState);
-			stopTask?.Continue();
-			stopTask = null;
+			//stopTask?.Continue();
+			//stopTask = null;
 		}
 
 		/// <summary>
@@ -92,7 +92,7 @@ namespace WorldTree
 			taskState = TaskState.Cancel;
 			tokenEvent?.Send(taskState);
 			tokenEvent.Clear();
-			stopTask = null;
+			//stopTask = null;
 		}
 
 	}
@@ -121,7 +121,7 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeTaskToken self)
 			{
-				self.stopTask = null;
+				//self.stopTask = null;
 				self.tokenEvent = null;
 			}
 		}
