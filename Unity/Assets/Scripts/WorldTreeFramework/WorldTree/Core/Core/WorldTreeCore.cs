@@ -22,12 +22,7 @@ namespace WorldTree
 
 	//C#语法分析器,异常修复 ,异步，私有字段?
 
-
 	//藤蔓网状结构
-
-	//需要定时器TimeUpdate,特化的双方法法则？
-
-
 
 	//管理器改为分支 整理
 
@@ -46,6 +41,8 @@ namespace WorldTree
 	//YooAsset管理器
 
 	//分析器?
+
+	//需要定时器TimeUpdate,特化的双方法法则？
 
 	//真实与游戏时间双法则
 	//真实时间和游戏时间
@@ -179,9 +176,6 @@ namespace WorldTree
 			this.NewNode(out this.IdManager);
 			if (this.Id == 0) this.Id = this.IdManager.GetId();
 
-			//时间管理器初始化
-			this.NewNode(out this.RealTimeManager);
-
 			//法则管理器初始化
 			this.NewNode(out this.RuleManager);
 			this.RuleManager.Awake();
@@ -217,12 +211,18 @@ namespace WorldTree
 			this.IdManager.SetActive(true);
 			this.RuleManager.SetActive(true);
 
-			//游戏时间管理器
-			//self.AddComponent(out self.GameTimeManager);
 
-			//核心激活标记
+
+			//核心激活
 			this.SetActive(true);
 			this.IsCoreActive = true;
+
+			//真实时间管理器
+			this.RealTimeManager = this.AddComponent(out RealTimeManager _);
+
+			//游戏时间管理器
+			this.GameTimeManager = this.AddComponent(out GameTimeManager _);
+
 
 			this.Root = this.AddComponent(out WorldTreeRoot _);
 			this.Root.Root = this.Root;
@@ -295,14 +295,13 @@ namespace WorldTree
 			//需要提前按顺序移除
 			this.RemoveAllWorld();
 			this.RemoveComponent<WorldTreeCore,WorldTreeRoot>();
-			this.RemoveComponent<WorldTreeCore, GlobalRuleActuatorManager>();
-
+			this.RemoveComponent<WorldTreeCore, RealTimeManager>();
 			this.RemoveComponent<WorldTreeCore, GameTimeManager>();
+			this.RemoveComponent<WorldTreeCore, GlobalRuleActuatorManager>();
 			this.RemoveComponent<WorldTreeCore, ArrayPoolManager>();
 			this.RemoveComponent<WorldTreeCore, NodePoolManager>();
 			this.RemoveComponent<WorldTreeCore, UnitPoolManager>();
 			this.RemoveComponent<WorldTreeCore, RuleManager>();
-			this.RemoveComponent<WorldTreeCore, RealTimeManager>();
 			this.RemoveComponent<WorldTreeCore, IdManager>();
 			this.RemoveComponent<WorldTreeCore, ReferencedPoolManager>();
 

@@ -44,7 +44,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点ID
 		/// </summary>
-		/// <remarks>在框架内唯一</remarks>
+		/// <remarks>递增ID，只在每个框架实例内唯一</remarks>
 		public long Id { get; set; }
 
 		/// <summary>
@@ -95,7 +95,7 @@ namespace WorldTree
 		/// 刷新当前节点激活状态：层序遍历设置子节点
 		/// </summary>
 		public void RefreshActive();
-	
+
 		#endregion
 
 		#region Rattan

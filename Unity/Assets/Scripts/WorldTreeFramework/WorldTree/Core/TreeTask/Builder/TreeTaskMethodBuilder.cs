@@ -78,29 +78,32 @@ namespace WorldTree.Internal
 		[SecuritySafeCritical]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			if (task == null)
+			if (task == null)//发生在异步方法等待的第一个 await TreeTask 时。
 			{
 				//新建一个TreeTask
 				awaiter.Parent.AddTemp(out task);
 				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
-
 				task.Log($"新建任务[{task.Id}] ！！！！，当前状态机：{stateMachine}");
 
+
+				//任务关联
+				task.m_RelevanceTask = awaiter;
+				task.Log($"当前任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
+				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 			}
-
-			awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
-
-			if (task.m_Context is TreeTaskToken taskToken)
+			else
 			{
-				task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
-				//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
-				awaiter.SetToken(taskToken);
-				return;
-			}
 
-			//任务关联
-			task.m_Context = awaiter;
-			task.Log($"当前任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
+				if (task.m_TreeTaskToken.Value != null)
+				{
+					task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
+					//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
+					awaiter.SetToken(task.m_TreeTaskToken);
+				}
+
+				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
+				awaiter.FindSyncTaskSetCompleted();
+			}
 		}
 
 		// 7. Start
@@ -176,27 +179,32 @@ namespace WorldTree.Internal
 		[SecuritySafeCritical]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			if (task == null)
+			if (task == null)//发生在异步方法等待的第一个 await TreeTask 时。
 			{
 				//新建一个TreeTask
 				awaiter.Parent.AddTemp(out task);
 				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
 				task.Log($"新建任务[{task.Id}] ！！！！，当前状态机：{stateMachine}");
+
+
+				//任务关联
+				task.m_RelevanceTask = awaiter;
+				task.Log($"当前任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
+				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 			}
-
-			awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
-
-			if (task.m_Context is TreeTaskToken taskToken)
+			else
 			{
-				task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
-				//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
-				awaiter.SetToken(taskToken);
-				return;
-			}
 
-			//任务关联
-			task.m_Context = awaiter;
-			task.Log($"当前任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
+				if (task.m_TreeTaskToken.Value != null)
+				{
+					task.Log($"当前任务[{task.Id}] 有令牌，设置令牌给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
+					//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
+					awaiter.SetToken(task.m_TreeTaskToken);
+				}
+
+				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
+				awaiter.FindSyncTaskSetCompleted();
+			}
 		}
 
 		// 7. Start

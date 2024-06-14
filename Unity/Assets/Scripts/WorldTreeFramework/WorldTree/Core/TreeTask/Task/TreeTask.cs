@@ -39,8 +39,8 @@ namespace WorldTree
 		public void Coroutine()
 		{
 			//this.Log($"this任务[{this.Id}]");
-			this.SetToken(null);
 			InnerCoroutine().Coroutine();
+			this.FindSyncTaskSetCompleted();
 		}
 		/// <summary>
 		/// 协程启动
@@ -50,6 +50,7 @@ namespace WorldTree
 			//this.Log($"this任务[{this.Id}]");
 			this.SetToken(treeTaskToken);
 			InnerCoroutine().Coroutine();
+			this.FindSyncTaskSetCompleted();
 		}
 
 		public void SetResult()

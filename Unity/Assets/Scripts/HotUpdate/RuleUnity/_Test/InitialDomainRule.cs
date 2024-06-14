@@ -14,7 +14,14 @@ namespace WorldTree
 			self.Log($"初始域热更部分！！!");
 
 			//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
-			self.AddComponent(out TaskTest _);
+			//self.AddComponent(out TaskTest _);
+
+
+			DateTime dateTime = self.Core.RealTimeManager.UtcNow;
+
+			self.Log($"网络时间：{dateTime}");
+			self.Log($"本地机器Utc时间：{DateTime.UtcNow}");
+			self.Log($"本地机器时间：{DateTime.Now}");
 
 			//添加宏测试成功，应该在编辑器下才能添加
 			//string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone);
@@ -25,6 +32,12 @@ namespace WorldTree
 		static OnUpdate<InitialDomain> OnUpdate = (self) =>
 		{
 			//self.Log($"初始域更新！！");
+
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				self.Core.RealTimeManager.m_UtcNow = DateTime.UtcNow;
+				self.AddComponent(out UtcTimeTest _);
+			}
 		};
 
 		static OnEnable<InitialDomain> OnEnable = (self) =>
@@ -37,9 +50,10 @@ namespace WorldTree
 			self.Log($"初始域失活！！");
 		};
 
+
 		static OnGuiUpdateTime<InitialDomain> OnGui = (self, timeSpan) =>
 		{
-			GUILayout.Label($"            !!!!{timeSpan.TotalMilliseconds}", new GUIStyle() { fontSize = 60 });
+			//GUILayout.Label($@"    {timeSpan.TotalMilliseconds} !  ", new GUIStyle() { fontSize = 60 });
 		};
 
 		static OnRemove<InitialDomain> OnRemove = (self) =>

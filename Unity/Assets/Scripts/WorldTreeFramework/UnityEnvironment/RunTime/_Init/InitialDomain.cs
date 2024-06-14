@@ -36,7 +36,7 @@ namespace WorldTree
 		/// 目标类型id
 		/// </summary>
 		public long nodeId { get; set; }
-		
+
 		private T1 arg1;
 		private T2 arg2;
 		private T3 arg3;
@@ -74,7 +74,7 @@ namespace WorldTree
 		public string TestString = "1";
 		public char TestChar = '1';
 		public Bounds Bounds = new Bounds(Vector3.one, Vector3.one);
-		public DateTime TestDateTime = DateTime.Now;
+		public DateTime TestDateTime = default;
 		public Rect Rect = new Rect(0, 0, 100, 100);
 		public Color TestColor = Color.red;
 		public Vector2 TestVector2 = Vector2.one;

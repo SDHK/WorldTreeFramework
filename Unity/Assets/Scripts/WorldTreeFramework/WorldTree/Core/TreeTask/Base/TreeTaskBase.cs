@@ -30,9 +30,22 @@ namespace WorldTree
 	public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion
 	{
 		/// <summary>
-		/// 内联传递的令牌
+		/// 树任务令牌
 		/// </summary>
-		public object m_Context;
+		/// <remarks>如果令牌被释放，异步链将变成无令牌控制状态</remarks>
+		public NodeRef<TreeTaskToken> m_TreeTaskToken;
+
+		/// <summary>
+		/// 关联令牌的任务
+		/// </summary>
+		/// <remarks>如果关联任务被意外释放，令牌传播可能断掉</remarks>
+		public NodeRef<TreeTaskBase> m_RelevanceTask;
+
+
+		///// <summary>
+		///// 内联传递的令牌
+		///// </summary>
+		//public object m_Context;
 
 		/// <summary>
 		/// 是否完成
@@ -70,52 +83,60 @@ namespace WorldTree
 		public override void OnDispose()
 		{
 			IsCompleted = false;
-			m_Context = default;
+			//m_Context = default;
 			m_Continuation = null;
 			base.OnDispose();
 		}
 
 		/// <summary>
-		/// 设置令牌
+		/// 设置并传递令牌
 		/// </summary>
-		/// <param name="treeTaskToken"></param>
-		/// <returns></returns>
-		public void SetToken(TreeTaskToken treeTaskToken)
+		/// <remarks>由于令牌通过关联任务进行内部传播，所以设置后不可更改，也不能传空</remarks>
+		public TreeTaskBase SetToken(TreeTaskToken treeTaskToken)
 		{
+			if (treeTaskToken == null)
+			{
+				this.LogError($"{this.Id}任务设置令牌为null");
+				return this;
+			}
 			TreeTaskBase nowTask = this;
 			while (nowTask != null)
 			{
-				//如果是同步任务就直接执行
-				if (nowTask is ISyncTask)
+				if (nowTask.m_TreeTaskToken.Value == null)
 				{
-					this.Log($"[{nowTask.Id}]({nowTask.GetType().Name}) :  同步任务执行!!!");
-
-					nowTask.m_Context = treeTaskToken;
-					nowTask.SetCompleted();
-					break;
+					//nowTask.Log($"{nowTask.Id}({nowTask.GetType().Name})设置令牌：{treeTaskToken?.Id}!!!!!!!!");
+					//将令牌传递给更深层的关联任务
+					nowTask.m_TreeTaskToken = treeTaskToken;
 				}
-
-				//如果没有设置过令牌就设置
-				if (nowTask.m_Context is not TreeTaskToken)
+				else
 				{
-					//假如当前任务有关联任务，那么就将关联任务设置为下次的当前任务
-					TreeTaskBase nextTask = nowTask.m_Context as TreeTaskBase;
-					//当前任务设置令牌
-					nowTask.m_Context = treeTaskToken;
-					this.Log($"[{nowTask.Id}]({nowTask.GetType().Name}) :  令牌传递!!!");
+					//nowTask.Log($"{nowTask.Id}({nowTask.GetType().Name})已有令牌：{nowTask.m_TreeTaskToken.Value?.Id}XXXXX");
+					//已有令牌的情况，发生在异步方法内部新建了令牌，所以当前传递的令牌不再往下传播，直接退出。
+					return this;
+				}
+				nowTask = nowTask.m_RelevanceTask;
+			}
+			return this;
+		}
 
-					//如果有关联任务就继续往下传递
-					nowTask = nextTask;
-				}
-				else//如果设置过就不再往下传播
-				{
-					this.Log($"[{nowTask.Id}]({nowTask.GetType().Name}) :  已有令牌存在XXXX");
-					break;
-				}
+		/// <summary>
+		/// 尝试找到同步任务执行
+		/// </summary>
+		public void FindSyncTaskSetCompleted()
+		{
+			TreeTaskBase nowTask = this;
+			//找到最深层的关联任务
+			while (nowTask.m_RelevanceTask.Value != null) nowTask = nowTask.m_RelevanceTask;
+			//如果是同步任务就直接执行
+			if (nowTask is ISyncTask)
+			{
+				//this.Log($"同步任务执行[{nowTask.Id}]({nowTask.GetType().Name})完成");
+				nowTask.SetCompleted();
 			}
 		}
 
-	
+
+
 	}
 
 

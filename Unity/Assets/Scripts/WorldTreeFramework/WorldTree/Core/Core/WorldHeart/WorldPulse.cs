@@ -65,7 +65,7 @@ namespace WorldTree
 
 	public static class WorldPulseRule
 	{
-		class AwakeRuleGeneric<R> : AwakeRule<WorldPulse<R>, int>
+		class Awake<R> : AwakeRule<WorldPulse<R>, int>
 			where R : ISendRule<TimeSpan>
 		{
 			protected override void Execute(WorldPulse<R> self, int FrameTime)
@@ -75,7 +75,7 @@ namespace WorldTree
 			}
 		}
 
-		class RemoveRuleGeneric<R> : RemoveRule<WorldPulse<R>>
+		class Remove<R> : RemoveRule<WorldPulse<R>>
 			where R : ISendRule<TimeSpan>
 		{
 			protected override void Execute(WorldPulse<R> self)
