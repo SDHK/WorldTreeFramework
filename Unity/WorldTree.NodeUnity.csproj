@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\YooAssetTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\UtcTimeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\MultilayerPerceptronTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\SqliteToolTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\_Test\LiteDBTest.cs" />

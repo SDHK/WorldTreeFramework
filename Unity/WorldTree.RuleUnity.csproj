@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\TaskTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SphereManagerTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\LiteDBTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\UtcTimeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\MultilayerPerceptronTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\InitialDomainRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\TreeValueTestRule.cs" />

@@ -14,20 +14,16 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
-	public class TreeTaskSwitchWorld : TreeTaskBase
+	public class TreeTaskSwitchWorld : AwaiterBase
 		, ChildOf<WorldContext>
 		, AsAwake<WorldContext>
 		, AsTreeTaskSetResuIt
 	{
-		public TreeTaskSwitchWorld GetAwaiter() => this;
-		public override bool IsCompleted { get; set; }
-
 		/// <summary>
 		/// 世界上下文
 		/// </summary>
 		public WorldContext worldContext;
 
-		public void GetResult() { }
 
 		private async TreeTaskVoid InnerCoroutine()
 		{
@@ -39,9 +35,8 @@ namespace WorldTree
 		/// </summary>
 		public void Coroutine()
 		{
-			this.SetToken(null);
 			InnerCoroutine().Coroutine();
-			//this.FindSyncTaskSetCompleted();
+			this.FindSyncTaskSetCompleted();
 		}
 		/// <summary>
 		/// 协程启动
@@ -50,10 +45,9 @@ namespace WorldTree
 		{
 			this.SetToken(treeTaskToken);
 			InnerCoroutine().Coroutine();
-			//this.FindSyncTaskSetCompleted();
+			this.FindSyncTaskSetCompleted();
 
 		}
-
 
 		public override void OnCompleted(Action continuation)
 		{

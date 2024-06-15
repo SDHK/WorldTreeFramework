@@ -12,5 +12,5 @@
 	/// <summary>
 	/// 树任务令牌事件法则
 	/// </summary>
-	public interface TreeTaskTokenEvent : ISendRule<TaskState> { }
+	public interface TreeTaskTokenEvent : ISendRule<TokenState> { }
 }

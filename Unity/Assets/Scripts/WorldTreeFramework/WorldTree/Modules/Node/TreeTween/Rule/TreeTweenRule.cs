@@ -16,17 +16,17 @@ namespace WorldTree
     {
         class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TreeTweenBase>
         {
-            protected override void Execute(TreeTweenBase self, TaskState state)
+            protected override void Execute(TreeTweenBase self, TokenState state)
             {
                 switch (state)
                 {
-                    case TaskState.Running:
+                    case TokenState.Running:
                         self.isRun = true;
                         break;
-                    case TaskState.Stop:
+                    case TokenState.Stop:
                         self.isRun = false;
                         break;
-                    case TaskState.Cancel:
+                    case TokenState.Cancel:
 						self.isRun = false;
 						self.OnCompleted.Send();
 						break;

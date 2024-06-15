@@ -12,7 +12,6 @@ namespace WorldTree
 		static OnAdd<InitialDomain> OnAdd = (self) =>
 		{
 			self.Log($"初始域热更部分！！!");
-
 			//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
 			//self.AddComponent(out TaskTest _);
 

@@ -75,19 +75,19 @@ namespace WorldTree
 
 		private class TreeTaskTokenEventRule : TreeTaskTokenEventRule<CounterCall>
 		{
-			protected override void Execute(CounterCall self, TaskState state)
+			protected override void Execute(CounterCall self, TokenState state)
 			{
 				switch (state)
 				{
-					case TaskState.Running:
+					case TokenState.Running:
 						self.isRun = true;
 						break;
 
-					case TaskState.Stop:
+					case TokenState.Stop:
 						self.isRun = false;
 						break;
 
-					case TaskState.Cancel:
+					case TokenState.Cancel:
 						self.isRun = false;
 						self.callback.Send();
 						self.Dispose();

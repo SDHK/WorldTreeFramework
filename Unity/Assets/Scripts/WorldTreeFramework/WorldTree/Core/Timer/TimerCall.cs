@@ -12,7 +12,7 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 计时器：单次调用
+	/// 计时器：单次调用,不要挂在由它销毁的节点上
 	/// </summary>
 	public class TimerCall : Node, ComponentOf<INode>, TempOf<INode>
 		, AsChildBranch
@@ -27,6 +27,7 @@ namespace WorldTree
 		/// 计时结束回调
 		/// </summary>
 		public RuleActuator<ISendRule> callback;
+		public Action action;
 
 		public override string ToString()
 		{
@@ -56,7 +57,8 @@ namespace WorldTree
 					self.time += (float)deltaTime.TotalSeconds;
 					if (self.time >= self.timeOutTime)
 					{
-						self.callback.Send();
+						self.callback?.Send();
+						self.action?.Invoke();
 						self.Dispose();
 					}
 				}
@@ -69,26 +71,28 @@ namespace WorldTree
 			{
 				self.isRun = false;
 				self.callback = null;
+				self.action = null;
 			}
 		}
 
 		private class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TimerCall>
 		{
-			protected override void Execute(TimerCall self, TaskState state)
+			protected override void Execute(TimerCall self, TokenState state)
 			{
 				switch (state)
 				{
-					case TaskState.Running:
+					case TokenState.Running:
 						self.isRun = true;
 						break;
 
-					case TaskState.Stop:
+					case TokenState.Stop:
 						self.isRun = false;
 						break;
 
-					case TaskState.Cancel:
+					case TokenState.Cancel:
 						self.isRun = false;
 						self.callback.Send();
+						self.action?.Invoke();
 						self.Dispose();
 						break;
 				}

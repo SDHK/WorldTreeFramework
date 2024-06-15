@@ -7,8 +7,10 @@
 * 
 */
 
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using WorldTree.Internal;
 
 namespace WorldTree
@@ -16,17 +18,13 @@ namespace WorldTree
 	/// <summary>
 	/// 异步任务
 	/// </summary>
-	/// <remarks>因为继承Node所以可以挂在树上</remarks>
+	/// <remarks>因为继承Node所以可以挂在树上,请不要在Task身上挂东西</remarks>
 	[AsyncMethodBuilder(typeof(TreeTaskMethodBuilder))]
-	public class TreeTask : TreeTaskBase
-		, ChildOf<INode>
+	public class TreeTask : AwaiterBase
+		, TempOf<INode>
 		, AsAwake
 		, AsTreeTaskSetResuIt
 	{
-		public TreeTask GetAwaiter() => this;
-		public override bool IsCompleted { get; set; }
-
-		public void GetResult() { }
 
 		private async TreeTaskVoid InnerCoroutine()
 		{
@@ -52,11 +50,6 @@ namespace WorldTree
 			InnerCoroutine().Coroutine();
 			this.FindSyncTaskSetCompleted();
 		}
-
-		public void SetResult()
-		{
-			this.SetCompleted();
-		}
 	}
 
 
@@ -65,22 +58,13 @@ namespace WorldTree
 	/// <summary>
 	/// 泛型异步任务
 	/// </summary>
+	/// <remarks>因为继承Node所以可以挂在树上,请不要在Task身上挂东西</remarks>
 	[AsyncMethodBuilder(typeof(TreeTaskMethodBuilder<>))]
-	public class TreeTask<T> : TreeTaskBase
-		, ChildOf<INode>
+	public class TreeTask<T> : AwaiterBase<T>
+		, TempOf<INode>
 		, AsAwake
 		, AsTreeTaskSetResuIt<T>
 	{
-		public TreeTask<T> GetAwaiter() => this;
-		public override bool IsCompleted { get; set; }
-
-		public T Result;
-
-		public T GetResult()
-		{
-			return Result;
-		}
-
 		[DebuggerHidden]
 		private async TreeTaskVoid InnerCoroutine()
 		{
@@ -92,9 +76,9 @@ namespace WorldTree
 		/// </summary>
 		public void Coroutine()
 		{
-			this.SetToken(null);
+			//this.SetToken(null);
 			InnerCoroutine().Coroutine();
-			//this.FindSyncTaskSetCompleted();
+			this.FindSyncTaskSetCompleted();
 		}
 		/// <summary>
 		/// 协程启动
@@ -103,35 +87,53 @@ namespace WorldTree
 		{
 			this.SetToken(treeTaskToken);
 			InnerCoroutine().Coroutine();
-			//this.FindSyncTaskSetCompleted();
+			this.FindSyncTaskSetCompleted();
 
-		}
-
-		public void SetResult(T result)
-		{
-			this.Result = result;
-			this.SetCompleted();
 		}
 	}
 
 	public static class TreeTaskRule
 	{
+
+		///// <summary>
+		///// 在await的同时可以换一个新的cancellationToken
+		///// </summary>
+		//[DebuggerHidden]
+		//public static async TreeTask NewToken(this TreeTask self, TreeTaskToken treeTaskToken)
+		//{
+		//	self.SetToken(treeTaskToken);
+		//	self.FindSyncTaskSetCompleted();
+		//	await self;
+		//}
+
+		///// <summary>
+		///// 在await的同时可以换一个新的cancellationToken
+		///// </summary>
+		//[DebuggerHidden]
+		//public static async TreeTask<T> NewToken<T>(this TreeTask<T> self, TreeTaskToken treeTaskToken)
+		//{
+		//	self.SetToken(treeTaskToken);
+		//	self.FindSyncTaskSetCompleted();
+		//	return await self;
+		//}
+
 		/// <summary>
 		/// 插入新令牌：可以用新令牌取消，也能被老令牌取消
 		/// </summary>
 		public static async TreeTask AddToken(this TreeTask self, TreeTaskToken treeTaskToken)
 		{
-			var token = await self.TreeTaskTokenCatch();
+			var token = await self.Parent.TreeTaskTokenCatch();
 			token.tokenEvent.Add(treeTaskToken);
 			self.SetToken(treeTaskToken);
 			await self;
 		}
+
 		/// <summary>
 		/// 插入新令牌：可以用新令牌取消，也能被老令牌取消
 		/// </summary>
 		public static async TreeTask<T> AddToken<T>(this TreeTask<T> self, TreeTaskToken treeTaskToken)
 		{
-			var token = await self.TreeTaskTokenCatch();
+			var token = await self.Parent.TreeTaskTokenCatch();
 			token.tokenEvent.Add(treeTaskToken);
 			self.SetToken(treeTaskToken);
 			return await self;

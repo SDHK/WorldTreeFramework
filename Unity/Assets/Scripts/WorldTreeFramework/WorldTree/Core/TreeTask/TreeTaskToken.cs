@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 任务状态
 	/// </summary>
-	public enum TaskState
+	public enum TokenState
 	{
 		/// <summary>
 		/// 任务运行中
@@ -43,12 +43,12 @@ namespace WorldTree
 		/// <summary>
 		/// 任务状态
 		/// </summary>
-		public TaskState taskState = TaskState.Running;
+		public TokenState taskState = TokenState.Running;
 
-		///// <summary>
-		///// 暂停的任务
-		///// </summary>
-		//public TreeTaskBase stopTask;
+		/// <summary>
+		/// 暂停的任务
+		/// </summary>
+		public TreeTaskBase stopTask;
 
 		/// <summary>
 		/// 任务令牌事件
@@ -58,22 +58,22 @@ namespace WorldTree
 		/// <summary>
 		/// 任务状态
 		/// </summary>
-		public TaskState State { get => taskState; }
+		public TokenState State { get => taskState; }
 
-		//public override string ToString()
-		//{
-		//	return $"TreeTaskToken({stopTask?.Id})";
-		//}
+		public override string ToString()
+		{
+			return $"TreeTaskToken({stopTask?.Id})";
+		}
 
 		/// <summary>
 		/// 继续执行
 		/// </summary>
 		public void Continue()
 		{
-			taskState = TaskState.Running;
+			taskState = TokenState.Running;
 			tokenEvent?.Send(taskState);
-			//stopTask?.Continue();
-			//stopTask = null;
+			stopTask?.SetCompleted();
+			stopTask = null;
 		}
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace WorldTree
 		/// </summary>
 		public void Stop()
 		{
-			taskState = TaskState.Stop;
+			taskState = TokenState.Stop;
 			tokenEvent?.Send(taskState);
 		}
 
@@ -90,10 +90,10 @@ namespace WorldTree
 		/// </summary>
 		public void Cancel()
 		{
-			taskState = TaskState.Cancel;
+			taskState = TokenState.Cancel;
 			tokenEvent?.Send(taskState);
 			tokenEvent.Clear();
-			//stopTask = null;
+			stopTask = null;
 		}
 
 	}
@@ -104,7 +104,7 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeTaskToken self)
 			{
-				self.taskState = TaskState.Running;
+				self.taskState = TokenState.Running;
 				self.AddChild(out self.tokenEvent);
 			}
 		}
@@ -114,7 +114,7 @@ namespace WorldTree
 			protected override void Execute(TreeTaskToken self)
 			{
 				//令牌释放回收前，让挂起任务继续执行
-				if (self.taskState == TaskState.Stop) self.Continue();
+				if (self.taskState == TokenState.Stop) self.Continue();
 			}
 		}
 
@@ -122,16 +122,16 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeTaskToken self)
 			{
-				//self.stopTask = null;
+				self.stopTask = null;
 				self.tokenEvent = null;
 			}
 		}
 
 		class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TreeTaskToken>
 		{
-			protected override void Execute(TreeTaskToken self, TaskState state)
+			protected override void Execute(TreeTaskToken self, TokenState state)
 			{
-				if (state == TaskState.Cancel)
+				if (state == TokenState.Cancel)
 				{
 					self.Cancel();
 				}

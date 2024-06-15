@@ -15,13 +15,8 @@ namespace WorldTree.Internal
 	/// <summary>
 	/// 异步任务完成类
 	/// </summary>
-	public class TreeTaskCompleted : TreeTaskBase, ISyncTask
+	public class TreeTaskCompleted : AwaiterBase, ISyncTask
 		, ChildOf<INode>
 		, AsAwake
-        
-    {
-        public TreeTaskCompleted GetAwaiter() => this;
-        public override bool IsCompleted { get; set; }
-        public void GetResult() { }
-    }
+    {  }
 }

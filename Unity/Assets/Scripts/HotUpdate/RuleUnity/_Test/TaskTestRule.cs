@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace WorldTree
@@ -41,19 +42,20 @@ namespace WorldTree
 			//await self.AsyncDelay(1);
 			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
 			self.Log($"A！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
-			while (TaskTokenCatch.taskState != TaskState.Cancel)
+			while (TaskTokenCatch.taskState != TokenState.Cancel)
 			{
 				await self.AsyncDelay(6);
-				if (TaskTokenCatch.taskState == TaskState.Cancel) return;
+				if (TaskTokenCatch.taskState == TokenState.Cancel) return;
 
 				self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
 
 				//self.TestB().SetToken(treeTaskToken);
+
 				await self.TestB().AddToken(treeTaskToken);
 
 				//await self.TestB();
 
-				if (TaskTokenCatch.taskState == TaskState.Cancel) return;
+				if (TaskTokenCatch.taskState == TokenState.Cancel) return;
 				await self.TaskD();
 
 			}
