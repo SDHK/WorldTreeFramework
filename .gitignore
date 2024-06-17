@@ -16,6 +16,8 @@ bin/
 /Unity/Sirenix.OdinInspector.Modules.UnityMathematics.csproj
 /Unity/Sirenix.OdinInspector.CompatibilityLayer.Editor.csproj
 /Unity/Sirenix.OdinInspector.CompatibilityLayer.csproj
+
+/Unity/Assembly-CSharp.csproj
 /Unity/Assembly-CSharp-Editor.csproj
 
 /Unity/WorldTree.Core.csproj

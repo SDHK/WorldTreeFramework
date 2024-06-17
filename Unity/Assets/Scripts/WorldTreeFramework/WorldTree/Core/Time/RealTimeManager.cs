@@ -11,10 +11,6 @@
 * 
 * 无Utc是时区时间，经过了时区偏差的时间。
 * 
-* 
-* 累加update时间判断时间是否跳跃，如果时间跳跃，那么就请求网络时间。
-* 
-* 
 
 */
 
@@ -100,7 +96,7 @@ namespace WorldTree
 		/// <summary>
 		/// 是否直接使用机器时间
 		/// </summary>
-		/// <remarks>默认为false, 使用的是内部维护时间，可以防止玩家改时间</remarks>
+		/// <remarks>默认为false, 可内部维护时间，单机可以防止玩家改时间</remarks>
 		public bool isLocal = false;
 
 		/// <summary>
@@ -152,12 +148,21 @@ namespace WorldTree
 		private DateTime cumulativeUtcTime;
 
 		/// <summary>
+		/// NTP消息
+		/// </summary>
+		private byte[] ntpData;
+
+		/// <summary>
 		/// 是否请求网络时间
 		/// </summary>
 		private bool isRequest = false;
 
 		public RealTimeManager()
 		{
+			// NTP消息大小 - 16字节（RFC 2030）
+			ntpData = new byte[48];
+			// 设置协议版本号为3（RFC 1305）
+			ntpData[0] = 0x1B;
 			cumulativeUtcTime = DateTime.UtcNow;
 			stopwatchClock = Stopwatch.StartNew();
 			localUtcNowClock = DateTime.UtcNow;
@@ -176,20 +181,14 @@ namespace WorldTree
 			if (isLocal) return cumulativeUtcTime = DateTime.UtcNow;
 
 			//计算时间偏差
-			long offsetTicks = CumulativeTime();
-
-			//将时间累加到Utc时间 累计时间
-			cumulativeUtcTime = cumulativeUtcTime.AddTicks(offsetTicks);
-
-			//将偏差时间累加到 请求累计时间
-			timeRequestClock += offsetTicks;
+			CumulativeTime();
 
 			//如果触发了网络请求，则不用机器时间
 			if (!isRequest)
 			{
 				//计算 机器时间 和 累计时间 的偏差
 				//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 阈值，那么判为时间跳跃。
-				offsetTicks = (DateTime.UtcNow - cumulativeUtcTime).Ticks;
+				long offsetTicks = (DateTime.UtcNow - cumulativeUtcTime).Ticks;
 				if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * MilliTick))
 				{
 					//如果时间相差在 阈值 以内，那么就使用机器时间。
@@ -210,8 +209,8 @@ namespace WorldTree
 		/// <summary>
 		/// 获取累计时间
 		/// </summary>
-		/// <returns></returns>
-		private long CumulativeTime()
+		/// <returns>相差的Ticks</returns>
+		private void CumulativeTime()
 		{
 			long offsetTicks;
 			if (localUtcNowClock <= DateTime.UtcNow)
@@ -225,26 +224,37 @@ namespace WorldTree
 				{
 					//如果 两个计时器 时间相差大于 阈值，那么判为当前帧发生 机器时间 跳跃。
 					isRequest = true;
-					offsetTicks = stopwatchOffsetTicks;
+				}
+
+				//将时间累加到Utc时间 累计时间
+				DateTime localUtcTime = cumulativeUtcTime.AddTicks(localOffsetTicks);
+				DateTime stopwatchUtcTime = cumulativeUtcTime.AddTicks(stopwatchOffsetTicks);
+
+				//从 机器时间 和 Stopwatch计时器 中，拿到偏差最小的时间，除非两个同时出问题。
+				if (Math.Abs((DateTime.UtcNow - localUtcTime).Ticks) < Math.Abs((DateTime.UtcNow - stopwatchUtcTime).Ticks))
+				{
+					timeRequestClock += localOffsetTicks;
+					cumulativeUtcTime = localUtcTime;
 				}
 				else
 				{
-					//从 机器时间 和 Stopwatch计时器 中，拿到偏差最小的时间，除非两个同时出问题。
-					offsetTicks = Math.Min(localOffsetTicks, stopwatchOffsetTicks);
+					timeRequestClock += stopwatchOffsetTicks;
+					cumulativeUtcTime = stopwatchUtcTime;
 				}
 			}
 			else
 			{
 				//如果 当前的机器时间 大于 上一次机器时间，判为当前帧发生时间倒流。
 				isRequest = true;
-				offsetTicks = stopwatchClock.ElapsedTicks;
+				//将偏差时间累加到 请求累计时间
+				timeRequestClock += stopwatchClock.ElapsedTicks;
+				cumulativeUtcTime = cumulativeUtcTime.AddTicks(stopwatchClock.ElapsedTicks);
 			}
 
 			//重置Stopwatch计时器
 			stopwatchClock.Restart();
 			//重置本地Utc计时器
 			localUtcNowClock = DateTime.UtcNow;
-			return offsetTicks;
 		}
 
 		/// <summary>
@@ -325,14 +335,7 @@ namespace WorldTree
 		/// <returns>成功</returns>
 		private bool TryGetNetworkUtcDateTime(string ntpServer, out DateTime networkDateTime)
 		{
-
-			//================================
-			// NTP消息大小 - 16字节（RFC 2030）
-			var ntpData = new byte[48];
-
-			// 设置协议版本号为3（RFC 1305）
-			ntpData[0] = 0x1B;
-
+			Array.Clear(ntpData, 1, ntpData.Length);
 			try
 			{
 				var addresses = Dns.GetHostEntry(ntpServer).AddressList;
@@ -366,8 +369,9 @@ namespace WorldTree
 			}
 			catch (Exception)
 			{
+				// 获取失败就返回默认值
 				networkDateTime = default;
-				return false; // 表示获取网络时间失败
+				return false;
 			}
 		}
 
@@ -407,17 +411,17 @@ namespace WorldTree
 		/// <summary>
 		/// 获取毫秒时间戳，从1970年到当前的总毫秒数
 		/// </summary>
-		public static long NowUtcTime(this RealTimeManager self)
+		public static long GetUtcTimeSeconds(this RealTimeManager self)
 		{
-			return (long)(self.UtcNow - self.UtcDateTime1970).TotalMilliseconds;
+			return (long)(self.UtcNow - self.UtcDateTime1970).TotalSeconds;
 		}
 
 		/// <summary>
 		/// 获取毫秒时间戳，从1970年到当前的总毫秒数
 		/// </summary>
-		public static long NowTime(this RealTimeManager self)
+		public static long GetTimeSeconds(this RealTimeManager self)
 		{
-			return (long)(self.UtcNow - self.DateTime1970).TotalMilliseconds;
+			return (long)(self.UtcNow - self.DateTime1970).TotalSeconds;
 		}
 
 		/// <summary> 

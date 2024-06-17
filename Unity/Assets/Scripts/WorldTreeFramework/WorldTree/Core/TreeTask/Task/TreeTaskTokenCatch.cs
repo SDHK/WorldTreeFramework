@@ -87,7 +87,7 @@ namespace WorldTree.Internal
 
 
 	/// <summary>
-	/// 树任务令牌捕获任务
+	/// 树任务Task启动器
 	/// </summary>
 	public class TreeTaskBox<T> : AwaiterBase<T>, ISyncTask
 		, ChildOf<INode>
