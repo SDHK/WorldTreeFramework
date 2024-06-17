@@ -114,21 +114,21 @@ namespace WorldTree
 		public long timeRequestTime = 60000;//1分钟
 
 		/// <summary>
-		/// 机器时间和网络时间的阀值 毫秒
+		/// 机器时间和网络时间的阈值 毫秒
 		/// </summary>
 		/// <remarks>机器时间与网络时间差距在阈值内则不校准</remarks>
 		public long networkThresholdTime = 2000;//2秒
 
 		/// <summary>
-		/// 机器当前时间和累计时间的阀值 毫秒
+		/// 机器当前时间和累计时间的阈值 毫秒
 		/// </summary>
 		/// <remarks>机器时间比累计时间快过阈值，则使用累计时间，并尝试请求网络</remarks>
 		public long localThresholdTime = 1000;//1秒
 
 		/// <summary>
-		/// 机器计时器和累计计时器的阀值 毫秒
+		/// 机器计时器和累计计时器的阈值 毫秒
 		/// </summary>
-		/// <remarks>当两个累加计时器差距超过阀值，尝试请求网络</remarks>
+		/// <remarks>当两个累加计时器差距超过阈值，尝试请求网络</remarks>
 		public long clockThresholdTime = 1000;//1秒
 
 		/// <summary>
@@ -188,11 +188,11 @@ namespace WorldTree
 			if (!isRequest)
 			{
 				//计算 机器时间 和 累计时间 的偏差
-				//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 阀值，那么判为时间跳跃。
+				//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 阈值，那么判为时间跳跃。
 				offsetTicks = (DateTime.UtcNow - cumulativeUtcTime).Ticks;
 				if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * MilliTick))
 				{
-					//如果时间相差在 阀值 以内，那么就使用机器时间。
+					//如果时间相差在 阈值 以内，那么就使用机器时间。
 					return cumulativeUtcTime = DateTime.UtcNow;
 				}
 			}
@@ -251,8 +251,8 @@ namespace WorldTree
 		/// 请求获取网络时间刷新
 		/// </summary>
 		/// <remarks>
-		/// <para>网络时间与机器快慢相差超过 阀值，并且累计时间小于网络时间时，更新为网络时间 </para>
-		/// <para>相差在 阀值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
+		/// <para>网络时间与机器快慢相差超过 阈值，并且累计时间小于网络时间时，更新为网络时间 </para>
+		/// <para>相差在 阈值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
 		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
 		public void RequestUtcDateTime() => RequestUtcDateTimeAsync().Coroutine();
@@ -261,8 +261,8 @@ namespace WorldTree
 		/// 异步请求获取网络时间刷新
 		/// </summary>
 		/// <remarks>
-		/// <para>网络时间与机器快慢相差超过 阀值，并且累计时间小于网络时间时，更新为网络时间 </para>
-		/// <para>相差在 阀值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
+		/// <para>网络时间与机器快慢相差超过 阈值，并且累计时间小于网络时间时，更新为网络时间 </para>
+		/// <para>相差在 阈值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
 		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
 		private async TreeTask RequestUtcDateTimeAsync()
@@ -272,7 +272,7 @@ namespace WorldTree
 			{
 				//检测网络时间和机器时间相差
 				long offsetMilliseconds = (NetTime - DateTime.UtcNow).Milliseconds;
-				//网络时间快慢相差都在 阀值 内，则不校准
+				//网络时间快慢相差都在 阈值 内，则不校准
 				if (Math.Abs(offsetMilliseconds) > networkThresholdTime)
 				{
 					//网络时间相差，快则判为机器时间倒流了，慢则判为时间跳跃了。
