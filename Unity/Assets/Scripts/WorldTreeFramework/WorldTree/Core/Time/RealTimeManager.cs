@@ -168,8 +168,7 @@ namespace WorldTree
 		/// 获取Utc时间
 		/// </summary>
 		/// <remarks>
-		/// <para>若内部计时</para>
-		/// <para>以累计时间为准，机器时间比累计时间快，并小于 校准时差，则使用机器时间</para>
+		/// 若检测出时间跳跃，则开始使用内部累计时间，并尝试请求网络
 		/// </remarks>
 		public DateTime GetUtcNow()
 		{
@@ -189,11 +188,11 @@ namespace WorldTree
 			if (!isRequest)
 			{
 				//计算 机器时间 和 累计时间 的偏差
-				//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 校准时差，那么判为时间跳跃。
+				//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 阀值，那么判为时间跳跃。
 				offsetTicks = (DateTime.UtcNow - cumulativeUtcTime).Ticks;
 				if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * MilliTick))
 				{
-					//如果时间相差在 校准时差 以内，那么就使用机器时间。
+					//如果时间相差在 阀值 以内，那么就使用机器时间。
 					return cumulativeUtcTime = DateTime.UtcNow;
 				}
 			}
@@ -208,7 +207,10 @@ namespace WorldTree
 			return cumulativeUtcTime;
 		}
 
-
+		/// <summary>
+		/// 获取累计时间
+		/// </summary>
+		/// <returns></returns>
 		private long CumulativeTime()
 		{
 			long offsetTicks;
@@ -249,8 +251,8 @@ namespace WorldTree
 		/// 请求获取网络时间刷新
 		/// </summary>
 		/// <remarks>
-		/// <para>网络时间与机器快慢相差超过 校准时差，并且累计时间小于网络时间时，更新为网络时间 </para>
-		/// <para>相差在 校准时差 内 或者 所有请求都失败，那么就继续使用累计时间</para>
+		/// <para>网络时间与机器快慢相差超过 阀值，并且累计时间小于网络时间时，更新为网络时间 </para>
+		/// <para>相差在 阀值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
 		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
 		public void RequestUtcDateTime() => RequestUtcDateTimeAsync().Coroutine();
@@ -259,8 +261,8 @@ namespace WorldTree
 		/// 异步请求获取网络时间刷新
 		/// </summary>
 		/// <remarks>
-		/// <para>网络时间与机器快慢相差超过 校准时差，并且累计时间小于网络时间时，更新为网络时间 </para>
-		/// <para>相差在 校准时差 内 或者 所有请求都失败，那么就继续使用累计时间</para>
+		/// <para>网络时间与机器快慢相差超过 阀值，并且累计时间小于网络时间时，更新为网络时间 </para>
+		/// <para>相差在 阀值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
 		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
 		private async TreeTask RequestUtcDateTimeAsync()
@@ -270,7 +272,7 @@ namespace WorldTree
 			{
 				//检测网络时间和机器时间相差
 				long offsetMilliseconds = (NetTime - DateTime.UtcNow).Milliseconds;
-				//网络时间快慢相差都在 校准时差 内，则不校准
+				//网络时间快慢相差都在 阀值 内，则不校准
 				if (Math.Abs(offsetMilliseconds) > networkThresholdTime)
 				{
 					//网络时间相差，快则判为机器时间倒流了，慢则判为时间跳跃了。
