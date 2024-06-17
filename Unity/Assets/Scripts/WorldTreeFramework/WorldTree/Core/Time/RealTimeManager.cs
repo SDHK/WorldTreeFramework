@@ -34,6 +34,27 @@ namespace WorldTree
 		, AsAwake
 		, ComponentOf<WorldTreeCore>
 	{
+		/// <summary>
+		/// 一毫秒，10000Tick
+		/// </summary>
+		public const int MilliTick = 10000;
+
+		/// <summary>
+		/// 一秒，1000毫秒
+		/// </summary>
+		public const int Second = 1000;
+		/// <summary>
+		/// 一分钟，60000毫秒
+		/// </summary>
+		public const long Minute = 60000;
+		/// <summary>
+		/// 一小时，3600000毫秒
+		/// </summary>
+		public const long Hour = 3600000;
+		/// <summary>
+		/// 一天，86400000毫秒
+		/// </summary>
+		public const long Day = 86400000;
 
 		/// <summary>
 		/// NTP服务器地址列表
@@ -71,12 +92,10 @@ namespace WorldTree
 		/// </summary>
 		public DateTime UtcDateTime1970;
 
-
 		/// <summary>
 		/// Utc时间获取
 		/// </summary>
 		public DateTime UtcNow => GetUtcNow();
-
 
 		/// <summary>
 		/// 是否直接使用机器时间
@@ -87,23 +106,35 @@ namespace WorldTree
 		/// <summary>
 		/// 网络请求超时时间 毫秒
 		/// </summary>
-		public int ReceiveTimeout = 1000;
+		public int receiveTimeout = 1000;
 
 		/// <summary>
-		/// Utc时间请求更新间隔时间（分钟）
+		/// Utc时间请求更新间隔时间（毫秒）
 		/// </summary>
-		public float UtcTimeRequestMinutes = 1;
+		public long timeRequestTime = 60000;//1分钟
 
 		/// <summary>
-		/// 校准时差 毫秒
+		/// 机器时间和网络时间的阀值 毫秒
 		/// </summary>
-		public long CalibrationOffsetTime = 10000;
+		/// <remarks>机器时间与网络时间差距在阈值内则不校准</remarks>
+		public long networkThresholdTime = 2000;//2秒
 
 		/// <summary>
-		/// Update网络请求计时器
+		/// 机器当前时间和累计时间的阀值 毫秒
 		/// </summary>
-		public TimeSpan UtcTimeRequestClock;
+		/// <remarks>机器时间比累计时间快过阈值，则使用累计时间，并尝试请求网络</remarks>
+		public long localThresholdTime = 1000;//1秒
 
+		/// <summary>
+		/// 机器计时器和累计计时器的阀值 毫秒
+		/// </summary>
+		/// <remarks>当两个累加计时器差距超过阀值，尝试请求网络</remarks>
+		public long clockThresholdTime = 1000;//1秒
+
+		/// <summary>
+		/// 网络请求计时器 
+		/// </summary>
+		private long timeRequestClock;
 
 		/// <summary>
 		/// 本地Utc时间计时器
@@ -113,186 +144,173 @@ namespace WorldTree
 		/// <summary>
 		/// Utc时间计时器
 		/// </summary>
-		public Stopwatch stopwatchClock;
+		private Stopwatch stopwatchClock;
 
 		/// <summary>
 		/// 内部维护累计的Utc时间
 		/// </summary>
-		public DateTime m_UtcNow;
+		private DateTime cumulativeUtcTime;
 
 		/// <summary>
-		/// 时间偏差 
+		/// 是否请求网络时间
 		/// </summary>
-		private long offsetTicks;
+		private bool isRequest = false;
 
+		public RealTimeManager()
+		{
+			cumulativeUtcTime = DateTime.UtcNow;
+			stopwatchClock = Stopwatch.StartNew();
+			localUtcNowClock = DateTime.UtcNow;
+			timeRequestClock = 0;
+		}
 
 		/// <summary>
 		/// 获取Utc时间
 		/// </summary>
-		/// <remarks>以累计时间为准，机器时间比累计时间快，并小于1分钟，则使用机器时间 </remarks>
+		/// <remarks>
+		/// <para>若内部计时</para>
+		/// <para>以累计时间为准，机器时间比累计时间快，并小于 校准时差，则使用机器时间</para>
+		/// </remarks>
 		public DateTime GetUtcNow()
 		{
 			//如果是，直接使用机器时间
-			if (isLocal) return DateTime.UtcNow;
+			if (isLocal) return cumulativeUtcTime = DateTime.UtcNow;
 
-			//以累计时间为准，如果时间相差在 校准时差 以内，那么就使用机器时间
-			//如果时间相差大于 校准时差，那么判为时间跳跃。
-			//如果时间相差小于0，那么判为时间倒流。
-			offsetTicks = (DateTime.UtcNow - m_UtcNow).Milliseconds;
-			if (offsetTicks >= 0 && offsetTicks <= CalibrationOffsetTime)
+			//计算时间偏差
+			long offsetTicks = CumulativeTime();
+
+			//将时间累加到Utc时间 累计时间
+			cumulativeUtcTime = cumulativeUtcTime.AddTicks(offsetTicks);
+
+			//将偏差时间累加到 请求累计时间
+			timeRequestClock += offsetTicks;
+
+			//如果触发了网络请求，则不用机器时间
+			if (!isRequest)
 			{
-				RestartTimer();
-				return m_UtcNow = DateTime.UtcNow;
-			}
-			//差值不在 校准时差 内，那么就使用累计时间
-
-			//计算 机器时间 和上次获取的偏差。假如 机器时间 小于上次获取的时间，就是时间倒流，那么就将偏差值设置到最大
-			offsetTicks = (localUtcNowClock < DateTime.UtcNow) ? (DateTime.UtcNow - localUtcNowClock).Ticks : long.MaxValue;
-
-			//从 机器时间 和 Stopwatch计时器 中，拿到偏差最小的时间，除非两个同时出问题。
-			offsetTicks = Math.Min(offsetTicks, stopwatchClock.ElapsedTicks);
-			RestartTimer();
-
-			//将时间累加到Utc时间
-			return m_UtcNow = m_UtcNow.AddTicks(offsetTicks);
-		}
-
-
-		/// <summary>
-		/// 一帧时间
-		/// </summary>
-		public long FrameTime;
-
-
-		/// <summary>
-		/// 一毫秒，10000Tick
-		/// </summary>
-		public const int MilliTick = 10000;
-
-		/// <summary>
-		/// 一秒，1000毫秒
-		/// </summary>
-		public const int Second = 1000;
-		/// <summary>
-		/// 一分钟，60000毫秒
-		/// </summary>
-		public const long Minute = 60000;
-		/// <summary>
-		/// 一小时，3600000毫秒
-		/// </summary>
-		public const long Hour = 3600000;
-		/// <summary>
-		/// 一天，86400000毫秒
-		/// </summary>
-		public const long Day = 86400000;
-
-
-		public RealTimeManager()
-		{
-			m_UtcNow = DateTime.UtcNow;
-			//m_UtcNow = this.GetNetworkUtcDateTime();
-		}
-
-
-		/// <summary>
-		/// 重启计时器
-		/// </summary>
-		private void RestartTimer()
-		{
-			//重置Stopwatch计时器
-			stopwatchClock.Restart();
-			//重置本地Utc时间
-			localUtcNowClock = DateTime.UtcNow;
-		}
-
-	}
-
-
-	public static partial class RealTimeManagerRule
-	{
-
-		class Add : AddRule<RealTimeManager>
-		{
-			protected override void Execute(RealTimeManager self)
-			{
-				//获取网络时间
-				//开始计时
-				self.stopwatchClock = Stopwatch.StartNew();
-
-				self.DateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-				self.UtcDateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-				self.FrameTime = self.NowUtcTime();
-			}
-		}
-
-		class UpdateTime : UpdateTimeRule<RealTimeManager>
-		{
-			protected override void Execute(RealTimeManager self, TimeSpan arg1)
-			{
-				self.UtcTimeRequestClock += arg1;
-
-				//假如Update计时器超过了请求时间，那么就请求一次网络时间
-				if (self.UtcTimeRequestClock.TotalMinutes > self.UtcTimeRequestMinutes)
+				//计算 机器时间 和 累计时间 的偏差
+				//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 校准时差，那么判为时间跳跃。
+				offsetTicks = (DateTime.UtcNow - cumulativeUtcTime).Ticks;
+				if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * MilliTick))
 				{
-					self.UtcTimeRequestClock = TimeSpan.Zero;
-					//请求网络时间
-					self.UpdateUtcDateTime().Coroutine();
+					//如果时间相差在 校准时差 以内，那么就使用机器时间。
+					return cumulativeUtcTime = DateTime.UtcNow;
 				}
 			}
+
+			//到了这里 机器时间不可信。假如请求计时器超过了请求时间，那么就尝试异步请求一次网络时间
+			if (timeRequestClock > timeRequestTime * MilliTick)
+			{
+				timeRequestClock = 0;
+				//请求网络时间刷新
+				RequestUtcDateTime();
+			}
+			return cumulativeUtcTime;
 		}
 
 
+		private long CumulativeTime()
+		{
+			long offsetTicks;
+			if (localUtcNowClock <= DateTime.UtcNow)
+			{
+				//计算 机器时间 和 上次获取 的差值。
+				long localOffsetTicks = (DateTime.UtcNow - localUtcNowClock).Ticks;
+				long stopwatchOffsetTicks = stopwatchClock.ElapsedTicks;
+				offsetTicks = localOffsetTicks - stopwatchOffsetTicks;
+
+				if (offsetTicks > clockThresholdTime * MilliTick)
+				{
+					//如果 两个计时器 时间相差大于 阈值，那么判为当前帧发生 机器时间 跳跃。
+					isRequest = true;
+					offsetTicks = stopwatchOffsetTicks;
+				}
+				else
+				{
+					//从 机器时间 和 Stopwatch计时器 中，拿到偏差最小的时间，除非两个同时出问题。
+					offsetTicks = Math.Min(localOffsetTicks, stopwatchOffsetTicks);
+				}
+			}
+			else
+			{
+				//如果 当前的机器时间 大于 上一次机器时间，判为当前帧发生时间倒流。
+				isRequest = true;
+				offsetTicks = stopwatchClock.ElapsedTicks;
+			}
+
+			//重置Stopwatch计时器
+			stopwatchClock.Restart();
+			//重置本地Utc计时器
+			localUtcNowClock = DateTime.UtcNow;
+			return offsetTicks;
+		}
+
 		/// <summary>
-		/// 请求获取网络时间
+		/// 请求获取网络时间刷新
 		/// </summary>
 		/// <remarks>
-		/// <para>网络时间与本地快慢相差超过10秒，并且累计时间小于网络时间时，更新为网络时间 </para>
-		/// <para>相差在10秒内 或者 所有请求都失败，那么就继续使用累计时间</para>
+		/// <para>网络时间与机器快慢相差超过 校准时差，并且累计时间小于网络时间时，更新为网络时间 </para>
+		/// <para>相差在 校准时差 内 或者 所有请求都失败，那么就继续使用累计时间</para>
+		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
-		private static async TreeTask UpdateUtcDateTime(this RealTimeManager self)
+		public void RequestUtcDateTime() => RequestUtcDateTimeAsync().Coroutine();
+
+		/// <summary>
+		/// 异步请求获取网络时间刷新
+		/// </summary>
+		/// <remarks>
+		/// <para>网络时间与机器快慢相差超过 校准时差，并且累计时间小于网络时间时，更新为网络时间 </para>
+		/// <para>相差在 校准时差 内 或者 所有请求都失败，那么就继续使用累计时间</para>
+		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
+		/// </remarks>
+		private async TreeTask RequestUtcDateTimeAsync()
 		{
-			DateTime NetTime = await self.GetNetworkUtcDateTimeAsync();
+			DateTime NetTime = await GetNetworkUtcDateTimeAsync();
 			if (NetTime != default)
 			{
-				//检测网络时间和本地时间相差
-				var offsetTicks = (NetTime - DateTime.UtcNow).TotalMilliseconds;
+				//检测网络时间和机器时间相差
+				long offsetMilliseconds = (NetTime - DateTime.UtcNow).Milliseconds;
 				//网络时间快慢相差都在 校准时差 内，则不校准
-				if (Math.Abs(offsetTicks) > self.CalibrationOffsetTime)
+				if (Math.Abs(offsetMilliseconds) > networkThresholdTime)
 				{
-					//网络时间相差，快则判为本地时间倒流了，慢则判为时间跳跃了。
+					//网络时间相差，快则判为机器时间倒流了，慢则判为时间跳跃了。
 
-					//此时本地时间已不可信，检测网络时间和累计时间相差
-					offsetTicks = (NetTime - self.m_UtcNow).Ticks;
-					//如果网络时间比累计时间快，那么就将累计时间校准为网络时间
-					if (offsetTicks > 0)
+					//此时机器时间已不可信，检测网络时间和累计时间相差
+					offsetMilliseconds = (NetTime - cumulativeUtcTime).Milliseconds;
+					//如果网络时间比累计时间快，那么就将累计时间校准为网络时间，慢则不校准。
+					if (offsetMilliseconds > 0)
 					{
-						self.Log($"校准为网络时间：{NetTime} {self.m_UtcNow}");
-						self.m_UtcNow = NetTime;
+						this.Log($"校准为网络时间：{NetTime} {cumulativeUtcTime}");
+						cumulativeUtcTime = NetTime;
+
+						//重置网络请求标记
+						isRequest = false;
+						//重置Stopwatch计时器
+						stopwatchClock.Restart();
+						//重置本地Utc计时器
+						localUtcNowClock = DateTime.UtcNow;
 					}
 				}
 			}
-			//刷新时间
-			self.GetUtcNow();
 		}
-
 
 
 		/// <summary>
 		/// 异步获取网络时间
 		/// </summary>
-		public static async TreeTask<DateTime> GetNetworkUtcDateTimeAsync(this RealTimeManager self)
+		public async TreeTask<DateTime> GetNetworkUtcDateTimeAsync()
 		{
-			return await self.TreeTaskBox(Task.Run(self.GetNetworkUtcDateTime));
+			return await this.TreeTaskBox(Task.Run(GetNetworkUtcDateTime));
 		}
 
 		/// <summary>
 		/// 同步阻塞 获取网络时间
 		/// </summary>
-		private static DateTime GetNetworkUtcDateTime(this RealTimeManager self)
+		private DateTime GetNetworkUtcDateTime()
 		{
-			foreach (string ntpServer in self.ntpServers)
+			foreach (string ntpServer in ntpServers)
 			{
-				if (self.TryGetNetworkUtcDateTime(ntpServer, out DateTime networkDateTime)) return networkDateTime;
+				if (TryGetNetworkUtcDateTime(ntpServer, out DateTime networkDateTime)) return networkDateTime;
 			}
 			return default;
 		}
@@ -303,7 +321,7 @@ namespace WorldTree
 		/// <param name="ntpServer">ntp服务器地址</param>
 		/// <param name="networkDateTime">网络时间</param>
 		/// <returns>成功</returns>
-		private static bool TryGetNetworkUtcDateTime(this RealTimeManager self, string ntpServer, out DateTime networkDateTime)
+		private bool TryGetNetworkUtcDateTime(string ntpServer, out DateTime networkDateTime)
 		{
 
 			//================================
@@ -323,7 +341,7 @@ namespace WorldTree
 
 					// 发送请求
 					socket.Send(ntpData);
-					socket.ReceiveTimeout = self.ReceiveTimeout; // 设置接收超时时间（毫秒）
+					socket.ReceiveTimeout = receiveTimeout; // 设置接收超时时间（毫秒）
 
 					// 接收来自服务器的响应
 					socket.Receive(ntpData);
@@ -361,6 +379,28 @@ namespace WorldTree
 
 
 
+	}
+
+
+	public static partial class RealTimeManagerRule
+	{
+
+		class Add : AddRule<RealTimeManager>
+		{
+			protected override void Execute(RealTimeManager self)
+			{
+				self.DateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+				self.UtcDateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			}
+		}
+
+		class UpdateTime : UpdateTimeRule<RealTimeManager>
+		{
+			protected override void Execute(RealTimeManager self, TimeSpan arg1)
+			{
+				self.GetUtcNow();
+			}
+		}
 
 		/// <summary>
 		/// 获取毫秒时间戳，从1970年到当前的总毫秒数

@@ -41,14 +41,14 @@ namespace WorldTree
 			treeTaskBox.task = task;
 			return treeTaskBox;
 		}
-
+		
 		public static TreeTaskBox<T> TreeTaskBox<T>(this INode self, Task<T> task)
 		{ 
 			self.AddTemp(out TreeTaskBox<T> treeTaskBox);
 			treeTaskBox.task = task;
 			return treeTaskBox;
 		}
-
+		
 
 		public static async TreeTask GetAwaiter(this INode self, Task task)
 		{

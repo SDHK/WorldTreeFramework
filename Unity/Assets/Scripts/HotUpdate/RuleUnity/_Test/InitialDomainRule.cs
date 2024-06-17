@@ -34,7 +34,6 @@ namespace WorldTree
 
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
-				self.Core.RealTimeManager.m_UtcNow = DateTime.UtcNow;
 				self.AddComponent(out UtcTimeTest _);
 			}
 		};
