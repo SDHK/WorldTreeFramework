@@ -21,7 +21,7 @@ namespace WorldTree
 	/// 法则执行器基类
 	/// </summary>
 	public class RuleActuatorBase : Node, IRuleActuator, IRuleActuatorEnumerable
-		,AsChildBranch
+		, AsChildBranch
 	{
 		/// <summary>
 		/// 节点法则队列
@@ -110,6 +110,7 @@ namespace WorldTree
 				if (nodeRuleQueue != null && nodeRuleQueue.TryPeek(out (NodeRef<INode>, RuleList) valueRef))
 				{
 					long id = valueRef.Item1.nodeId;
+
 					//假如id被回收了
 					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
 					{
@@ -148,7 +149,6 @@ namespace WorldTree
 					return false;
 				}
 			} while (true);
-
 		}
 
 		/// <summary>
@@ -162,6 +162,7 @@ namespace WorldTree
 				while (true)
 				{
 					long id = nodeRuleTuple.Item1.nodeId;
+
 					//假如id被主动移除了
 					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
 					{
@@ -174,7 +175,8 @@ namespace WorldTree
 						}
 
 						if (traversalCount != 0) traversalCount--; //遍历数抵消
-																   //获取下一个id,假如队列空了,则直接返回退出
+
+						//获取下一个id,假如队列空了,则直接返回退出
 						if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple))
 						{
 							value = default;
@@ -221,7 +223,6 @@ namespace WorldTree
 		/// 节点出列
 		/// </summary>
 		public ValueTuple<INode, RuleList> Dequeue() => TryDequeue(out ValueTuple<INode, RuleList> value) ? value : default;
-
 	}
 
 	public static class RuleActuatorBaseRule

@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/11/23 17:17
@@ -35,34 +34,37 @@ namespace WorldTree
 			return self.AddTemp(out TreeTaskTokenCatch _);
 		}
 
-		public static TreeTaskBox TreeTaskBox(this INode self,Task task)
+		/// <summary>
+		/// 树任务连接
+		/// </summary>
+		public static TreeTaskLink TreeTaskLink(this INode self, Task task)
 		{
-			self.AddTemp(out TreeTaskBox treeTaskBox);
+			self.AddTemp(out TreeTaskLink treeTaskBox);
 			treeTaskBox.task = task;
 			return treeTaskBox;
 		}
-		
-		public static TreeTaskBox<T> TreeTaskBox<T>(this INode self, Task<T> task)
-		{ 
-			self.AddTemp(out TreeTaskBox<T> treeTaskBox);
+
+		/// <summary>
+		/// 树任务连接
+		/// </summary>
+		public static TreeTaskLink<T> TreeTaskLink<T>(this INode self, Task<T> task)
+		{
+			self.AddTemp(out TreeTaskLink<T> treeTaskBox);
 			treeTaskBox.task = task;
 			return treeTaskBox;
 		}
-		
 
 		public static async TreeTask GetAwaiter(this INode self, Task task)
 		{
 			if (task.IsCompleted)
 			{
-				self.Log($"进同步Task!!!!!!!!!!!!!");
 				await self.TreeTaskCompleted();
 			}
 			else
 			{
 				TreeTask treeTask = self.AddTemp(out TreeTask _);
-				Task task1 = task.ContinueWith(t =>
+				task.GetAwaiter().OnCompleted(() =>
 				{
-					treeTask.Log($"有回调Task!!!!!!!!!!!!![{treeTask.Id}] {treeTask}");
 					treeTask.Core.worldContext.Post(treeTask.SetResult);
 				});
 
@@ -72,11 +74,8 @@ namespace WorldTree
 
 		public static async TreeTask<T> GetAwaiter<T>(this INode self, Task<T> task)
 		{
-
 			if (task.IsCompleted)
 			{
-				self.Log($"进同步!!!!!!!!!!!!!Task<{typeof(T)}>");
-
 				await self.TreeTaskCompleted();
 				return task.Result;
 			}
@@ -86,13 +85,8 @@ namespace WorldTree
 				task.GetAwaiter().OnCompleted(() =>
 				{
 					treeTask.Core.worldContext.Post((x) => treeTask.SetResult((T)x), task.Result);
-					treeTask.Log($"有回调Task<{typeof(T)}>!!!!!!!!!!!!![{treeTask.Id}] {treeTask}");
+				});
 
-				});
-				Task task1 = task.ContinueWith(t =>
-				{
-					treeTask.Log($"有回调Task<{typeof(T)}>!!!!!!!!!!!!![{treeTask.Id}] {treeTask}");
-				});
 				return await treeTask;
 			}
 		}
@@ -134,6 +128,5 @@ namespace WorldTree
 			treeTaskToken.TimeOut(TimeOut).Coroutine();
 			return await self.AddToken(treeTaskToken);
 		}
-
 	}
 }

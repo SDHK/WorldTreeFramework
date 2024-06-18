@@ -3,8 +3,8 @@
 * 作者： 闪电黑客
 * 日期： 2023/8/30 19:23
 
-* 描述： 
-* 
+* 描述：
+*
 
 */
 
@@ -20,12 +20,14 @@ namespace WorldTree
 	/// <remarks>
 	/// <para>主要作用是通过法则类型逆变提示可填写参数</para>
 	/// </remarks>
-	public interface IRuleActuator<in T> : IRuleActuatorBase where T : IRule { }
+	public interface IRuleActuator<in T> : IRuleActuatorBase where T : IRule
+	{ }
 
 	/// <summary>
 	/// 法则执行器接口基类
 	/// </summary>
-	public interface IRuleActuatorBase : INode { }
+	public interface IRuleActuatorBase : INode
+	{ }
 
 	/// <summary>
 	/// 法则执行器遍历接口
@@ -43,6 +45,7 @@ namespace WorldTree
 		/// 刷新遍历数量
 		/// </summary>
 		public int RefreshTraversalCount();
+
 		/// <summary>
 		/// 尝试出列
 		/// </summary>
@@ -57,7 +60,7 @@ namespace WorldTree
 		/// 节点出列
 		/// </summary>
 		public ValueTuple<INode, RuleList> Dequeue();
-		
+
 		/// <summary>
 		/// 获取队顶
 		/// </summary>
@@ -89,6 +92,7 @@ namespace WorldTree
 		/// 移除节点
 		/// </summary>
 		public void Remove(long id);
+
 		/// <summary>
 		/// 移除节点
 		/// </summary>

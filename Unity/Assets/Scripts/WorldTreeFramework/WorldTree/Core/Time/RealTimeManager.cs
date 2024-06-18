@@ -294,7 +294,7 @@ namespace WorldTree
 		/// </summary>
 		public async TreeTask<DateTime> GetNetworkUtcDateTimeAsync()
 		{
-			return await this.TreeTaskBox(Task.Run(GetNetworkUtcDateTime));
+			return await this.TreeTaskLink(Task.Run(GetNetworkUtcDateTime));
 		}
 
 		/// <summary>

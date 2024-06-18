@@ -8,6 +8,8 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
 	/// <summary>
@@ -43,7 +45,6 @@ namespace WorldTree
 				self.Log($"空法则{typeof(NR)}");
 			}
 		}
-
 
 		/// <summary>
 		/// 添加节点法则：默认法则

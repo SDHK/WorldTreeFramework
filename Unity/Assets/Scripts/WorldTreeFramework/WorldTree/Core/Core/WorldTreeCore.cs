@@ -35,7 +35,6 @@ namespace WorldTree
 
 	//域节点接口标记
 
-
 	//代码表格
 
 	//YooAsset管理器
@@ -48,9 +47,7 @@ namespace WorldTree
 
 	//时域与时间轮
 
-	//真实时间和游戏时间
-
-	//TaskBox改名 
+	//TaskBox改名
 
 	/// <summary>
 	/// 世界树核心接口
@@ -215,8 +212,6 @@ namespace WorldTree
 			this.IdManager.SetActive(true);
 			this.RuleManager.SetActive(true);
 
-
-
 			//核心激活
 			this.SetActive(true);
 			this.IsCoreActive = true;
@@ -226,7 +221,6 @@ namespace WorldTree
 
 			//游戏时间管理器
 			this.GameTimeManager = this.AddComponent(out GameTimeManager _);
-
 
 			this.Root = this.AddComponent(out WorldTreeRoot _);
 			this.Root.Root = this.Root;
@@ -258,6 +252,7 @@ namespace WorldTree
 		public override void OnAddSelfToTree()
 		{
 			AddNodeView();
+
 			//核心独立，不入上级引用池，也不用广播
 			if (this.IsActive != this.m_ActiveEventMark)//激活变更
 			{
@@ -298,9 +293,9 @@ namespace WorldTree
 
 			//需要提前按顺序移除
 			this.RemoveAllWorld();
-			this.RemoveComponent<WorldTreeCore,WorldTreeRoot>();
-			this.RemoveComponent<WorldTreeCore, RealTimeManager>();
+			this.RemoveComponent<WorldTreeCore, WorldTreeRoot>();
 			this.RemoveComponent<WorldTreeCore, GameTimeManager>();
+			this.RemoveComponent<WorldTreeCore, RealTimeManager>();
 			this.RemoveComponent<WorldTreeCore, GlobalRuleActuatorManager>();
 			this.RemoveComponent<WorldTreeCore, ArrayPoolManager>();
 			this.RemoveComponent<WorldTreeCore, NodePoolManager>();
