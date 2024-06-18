@@ -4,8 +4,15 @@
 * 日期： 2023/8/28 19:56
 
 * 描述： 游戏时间管理器，通过累加增量时间计时，用于暂停，加速，减速等
+*
+* 这个时间可能比真实时间慢，属于框架内部虚拟的时间，不受外部时间影响
+*
+* 游戏暂停时，时间不会增加，因为它是通过增量时间计算的
+*
 
 */
+
+using System;
 
 namespace WorldTree
 {
@@ -15,11 +22,78 @@ namespace WorldTree
 	public class GameTimeManager : Node, ComponentOf<WorldTreeCore>
 		, AsAwake
 	{
+		/// <summary>
+		/// 时间缩放比例
+		/// </summary>
+		public float timeScale = 1;
 
 		/// <summary>
-		/// 帧时间
+		/// 当前帧时间
 		/// </summary>
-		public float FrameTime;
+		public TimeSpan FrameTime => frameTime;
 
+		/// <summary>
+		/// 累计游戏时间
+		/// </summary>
+		public TimeSpan GameTime => gameTime;
+
+		/// <summary>
+		/// 无缩放的当前帧时间
+		/// </summary>
+		public TimeSpan UnscaleFrameTime => unscaleFrameTime;
+
+		/// <summary>
+		/// 无缩放的累计游戏时间
+		/// </summary>
+		public TimeSpan UnscaleGameTime => unscaleTotalTime;
+
+		/// <summary>
+		/// 当前帧时间
+		/// </summary>
+		private TimeSpan frameTime;
+
+		/// <summary>
+		/// 累计游戏时间
+		/// </summary>
+		private TimeSpan gameTime;
+
+		/// <summary>
+		/// 无缩放的当前帧时间
+		/// </summary>
+		private TimeSpan unscaleFrameTime;
+
+		/// <summary>
+		/// 无缩放的累计游戏时间
+		/// </summary>
+		private TimeSpan unscaleTotalTime;
+
+		public GameTimeManager()
+		{
+			gameTime = TimeSpan.MinValue;
+			unscaleTotalTime = TimeSpan.MinValue;
+		}
+
+		/// <summary>
+		/// 累加时间
+		/// </summary>
+		/// <param name="deltaTime">时间增量</param>
+		public void UpdateTime(TimeSpan deltaTime)
+		{
+			unscaleFrameTime = deltaTime;
+			unscaleTotalTime += deltaTime;
+			frameTime = deltaTime * timeScale;
+			gameTime += frameTime;
+		}
+	}
+
+	public partial class GameTimeManagerRule
+	{
+		private class UpdateTime : UpdateTimeRule<GameTimeManager>
+		{
+			protected override void Execute(GameTimeManager self, TimeSpan arg1)
+			{
+				self.UpdateTime(arg1);
+			}
+		}
 	}
 }
