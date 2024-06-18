@@ -35,7 +35,7 @@ namespace WorldTree
 		/// <summary>
 		/// 累计游戏时间
 		/// </summary>
-		public TimeSpan GameTime => gameTime;
+		public TimeSpan TotalTime => totalTime;
 
 		/// <summary>
 		/// 无缩放的当前帧时间
@@ -45,7 +45,7 @@ namespace WorldTree
 		/// <summary>
 		/// 无缩放的累计游戏时间
 		/// </summary>
-		public TimeSpan UnscaleGameTime => unscaleTotalTime;
+		public TimeSpan UnscaleTotalTimeTime => unscaleTotalTime;
 
 		/// <summary>
 		/// 当前帧时间
@@ -55,7 +55,7 @@ namespace WorldTree
 		/// <summary>
 		/// 累计游戏时间
 		/// </summary>
-		private TimeSpan gameTime;
+		private TimeSpan totalTime;
 
 		/// <summary>
 		/// 无缩放的当前帧时间
@@ -69,7 +69,7 @@ namespace WorldTree
 
 		public GameTimeManager()
 		{
-			gameTime = TimeSpan.MinValue;
+			totalTime = TimeSpan.MinValue;
 			unscaleTotalTime = TimeSpan.MinValue;
 		}
 
@@ -82,7 +82,7 @@ namespace WorldTree
 			unscaleFrameTime = deltaTime;
 			unscaleTotalTime += deltaTime;
 			frameTime = deltaTime * timeScale;
-			gameTime += frameTime;
+			totalTime += frameTime;
 		}
 	}
 
