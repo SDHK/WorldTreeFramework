@@ -22,7 +22,7 @@ namespace WorldTree
 		#region 时间常量
 
 		/// <summary>
-		/// 一毫秒，10000Tick
+		/// 一毫秒，10000刻度
 		/// </summary>
 		public const int MilliTick = 10000;
 
@@ -59,7 +59,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 获取两个时间戳跨度多少秒
+		/// 获取两个时间刻度跨度多少秒
 		/// </summary>
 		public static int GetTimeSpanSeconds(long startTimerTicks, long endTimerTicks)
 		{
@@ -67,7 +67,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 获取两个时间跨度多少秒
+		/// 获取两个时间跨多少秒
 		/// </summary>
 		public static int GetTimeSpanSeconds(DateTime startTimerTicks, DateTime endTimerTicks)
 		{
@@ -75,7 +75,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 获取两个时间戳跨度多少分钟
+		/// 获取两个时间刻度跨多少分钟
 		/// </summary>
 		public static int GetTimeSpanMinutes(long startTimerTicks, long endTimerTicks)
 		{
@@ -83,7 +83,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 获取两个时间跨度多少分钟
+		/// 获取两个时间跨多少分钟
 		/// </summary>
 		public static int GetTimeSpanMinutes(DateTime startTimerTicks, DateTime endTimerTicks)
 		{
@@ -91,7 +91,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 获取两个时间戳跨度多少小时
+		/// 获取两个时间刻度跨度多少小时
 		/// </summary>
 		public static int GetTimeSpanHours(long startTimerTicks, long endTimerTicks)
 		{
@@ -99,7 +99,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 获取两个时间跨度多少小时
+		/// 获取两个时间跨多少小时
 		/// </summary>
 		public static int GetTimeSpanHours(DateTime startTimerTicks, DateTime endTimerTicks)
 		{
@@ -107,7 +107,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 获取两个时间戳跨度多少天
+		/// 获取两个时间刻度跨多少天
 		/// </summary>
 		public static int GetTimeSpanDays(long startTimerTicks, long endTimerTicks)
 		{
@@ -115,7 +115,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 获取两个时间跨度多少天
+		/// 获取两个时间跨多少天
 		/// </summary>
 		public static int GetTimeSpanDays(DateTime startTimerTicks, DateTime endTimerTicks)
 		{

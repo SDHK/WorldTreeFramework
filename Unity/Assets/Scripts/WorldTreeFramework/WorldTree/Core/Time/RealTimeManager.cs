@@ -186,7 +186,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取累计时间
 		/// </summary>
-		/// <returns>相差的Ticks</returns>
+		/// <returns>相差的时间刻度</returns>
 		private void CumulativeTime()
 		{
 			long offsetTicks;
@@ -421,7 +421,7 @@ namespace WorldTree
 		#region 时间超时检测
 
 		/// <summary>
-		/// 检查是否超时
+		/// 检查是否超时：时间刻度
 		/// </summary>
 		public static bool CheckTimeout(this RealTimeManager self, long startTicks, long rangeTicks)
 		{
