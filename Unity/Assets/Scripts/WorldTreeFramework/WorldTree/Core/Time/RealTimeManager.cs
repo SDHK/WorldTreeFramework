@@ -1,16 +1,15 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/7/31 11:30
 
 * 描述： 真实时间管理器，将根据机器时间计时
-* 
+*
 * 带Utc的是世界标准时间，是0时区时间，
 * 无论你在哪个时区，Utc时间都是一样的。
-* 
+*
 * 无Utc是时区时间，经过了时区偏差的时间。
-* 
+*
 
 */
 
@@ -30,28 +29,6 @@ namespace WorldTree
 		, AsAwake
 		, ComponentOf<WorldTreeCore>
 	{
-		/// <summary>
-		/// 一毫秒，10000Tick
-		/// </summary>
-		public const int MilliTick = 10000;
-
-		/// <summary>
-		/// 一秒，1000毫秒
-		/// </summary>
-		public const int Second = 1000;
-		/// <summary>
-		/// 一分钟，60000毫秒
-		/// </summary>
-		public const long Minute = 60000;
-		/// <summary>
-		/// 一小时，3600000毫秒
-		/// </summary>
-		public const long Hour = 3600000;
-		/// <summary>
-		/// 一天，86400000毫秒
-		/// </summary>
-		public const long Day = 86400000;
-
 		/// <summary>
 		/// NTP服务器地址列表
 		/// </summary>
@@ -128,7 +105,7 @@ namespace WorldTree
 		public long clockThresholdTime = 1000;//1秒
 
 		/// <summary>
-		/// 网络请求计时器 
+		/// 网络请求计时器
 		/// </summary>
 		private long timeRequestClock;
 
@@ -161,6 +138,7 @@ namespace WorldTree
 		{
 			// NTP消息大小 - 16字节（RFC 2030）
 			ntpData = new byte[48];
+
 			// 设置协议版本号为3（RFC 1305）
 			ntpData[0] = 0x1B;
 			cumulativeUtcTime = DateTime.UtcNow;
@@ -172,9 +150,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取Utc时间
 		/// </summary>
-		/// <remarks>
-		/// 若检测出时间跳跃，则开始使用内部累计时间，并尝试请求网络
-		/// </remarks>
+		/// <remarks>若检测出时间跳跃，则开始使用内部累计时间，并尝试请求网络</remarks>
 		public DateTime GetUtcNow()
 		{
 			//如果是，直接使用机器时间
@@ -189,7 +165,7 @@ namespace WorldTree
 				//计算 机器时间 和 累计时间 的偏差
 				//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 阈值，那么判为时间跳跃。
 				long offsetTicks = (DateTime.UtcNow - cumulativeUtcTime).Ticks;
-				if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * MilliTick))
+				if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * TimeHelper.MilliTick))
 				{
 					//如果时间相差在 阈值 以内，那么就使用机器时间。
 					return cumulativeUtcTime = DateTime.UtcNow;
@@ -197,9 +173,10 @@ namespace WorldTree
 			}
 
 			//到了这里 机器时间不可信。假如请求计时器超过了请求时间，那么就尝试异步请求一次网络时间
-			if (timeRequestClock > timeRequestTime * MilliTick)
+			if (timeRequestClock > timeRequestTime * TimeHelper.MilliTick)
 			{
 				timeRequestClock = 0;
+
 				//请求网络时间刷新
 				RequestUtcDateTime();
 			}
@@ -220,7 +197,7 @@ namespace WorldTree
 				long stopwatchOffsetTicks = stopwatchClock.ElapsedTicks;
 				offsetTicks = localOffsetTicks - stopwatchOffsetTicks;
 
-				if (offsetTicks > clockThresholdTime * MilliTick)
+				if (offsetTicks > clockThresholdTime * TimeHelper.MilliTick)
 				{
 					//如果 两个计时器 时间相差大于 阈值，那么判为当前帧发生 机器时间 跳跃。
 					isRequest = true;
@@ -246,6 +223,7 @@ namespace WorldTree
 			{
 				//如果 当前的机器时间 大于 上一次机器时间，判为当前帧发生时间倒流。
 				isRequest = true;
+
 				//将偏差时间累加到 请求累计时间
 				timeRequestClock += stopwatchClock.ElapsedTicks;
 				cumulativeUtcTime = cumulativeUtcTime.AddTicks(stopwatchClock.ElapsedTicks);
@@ -253,6 +231,7 @@ namespace WorldTree
 
 			//重置Stopwatch计时器
 			stopwatchClock.Restart();
+
 			//重置本地Utc计时器
 			localUtcNowClock = DateTime.UtcNow;
 		}
@@ -261,7 +240,7 @@ namespace WorldTree
 		/// 请求获取网络时间刷新
 		/// </summary>
 		/// <remarks>
-		/// <para>网络时间与机器快慢相差超过 阈值，并且累计时间小于网络时间时，更新为网络时间 </para>
+		/// <para>网络时间与机器快慢相差超过 阈值，并且累计时间小于网络时间时，更新为网络时间</para>
 		/// <para>相差在 阈值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
 		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
@@ -271,7 +250,7 @@ namespace WorldTree
 		/// 异步请求获取网络时间刷新
 		/// </summary>
 		/// <remarks>
-		/// <para>网络时间与机器快慢相差超过 阈值，并且累计时间小于网络时间时，更新为网络时间 </para>
+		/// <para>网络时间与机器快慢相差超过 阈值，并且累计时间小于网络时间时，更新为网络时间</para>
 		/// <para>相差在 阈值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
 		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
@@ -282,6 +261,7 @@ namespace WorldTree
 			{
 				//检测网络时间和机器时间相差
 				long offsetMilliseconds = (NetTime - DateTime.UtcNow).Milliseconds;
+
 				//网络时间快慢相差都在 阈值 内，则不校准
 				if (Math.Abs(offsetMilliseconds) > networkThresholdTime)
 				{
@@ -289,6 +269,7 @@ namespace WorldTree
 
 					//此时机器时间已不可信，检测网络时间和累计时间相差
 					offsetMilliseconds = (NetTime - cumulativeUtcTime).Milliseconds;
+
 					//如果网络时间比累计时间快，那么就将累计时间校准为网络时间，慢则不校准。
 					if (offsetMilliseconds > 0)
 					{
@@ -297,15 +278,16 @@ namespace WorldTree
 
 						//重置网络请求标记
 						isRequest = false;
+
 						//重置Stopwatch计时器
 						stopwatchClock.Restart();
+
 						//重置本地Utc计时器
 						localUtcNowClock = DateTime.UtcNow;
 					}
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// 异步获取网络时间
@@ -362,6 +344,7 @@ namespace WorldTree
 				fractPart = SwapEndianness(fractPart);
 
 				var milliseconds = intPart * 1000 + fractPart * 1000 / 0x100000000L;
+
 				// NTP时间戳是从1900年开始的，将其转换为从1970年开始的Unix时间戳
 				networkDateTime = (new DateTime(1900, 1, 1)).AddMilliseconds((long)milliseconds);
 
@@ -382,16 +365,11 @@ namespace WorldTree
 		{
 			return (uint)(((x & 0x000000ff) << 24) + ((x & 0x0000ff00) << 8) + ((x & 0x00ff0000) >> 8) + ((x & 0xff000000) >> 24));
 		}
-
-
-
 	}
-
 
 	public static partial class RealTimeManagerRule
 	{
-
-		class Add : AddRule<RealTimeManager>
+		private class Add : AddRule<RealTimeManager>
 		{
 			protected override void Execute(RealTimeManager self)
 			{
@@ -400,7 +378,7 @@ namespace WorldTree
 			}
 		}
 
-		class UpdateTime : UpdateTimeRule<RealTimeManager>
+		private class UpdateTime : UpdateTimeRule<RealTimeManager>
 		{
 			protected override void Execute(RealTimeManager self, TimeSpan arg1)
 			{
@@ -424,17 +402,17 @@ namespace WorldTree
 			return (long)(self.UtcNow - self.DateTime1970).TotalSeconds;
 		}
 
-		/// <summary> 
-		/// 毫秒时间戳转为时间 
-		/// </summary>  
+		/// <summary>
+		/// 毫秒时间戳转为时间
+		/// </summary>
 		public static DateTime ToUtcDateTime(this RealTimeManager self, long timeMilliSecond)
 		{
 			return self.UtcDateTime1970.AddMilliseconds(timeMilliSecond);
 		}
 
-		/// <summary> 
-		/// 毫秒时间戳转为时间 
-		/// </summary>  
+		/// <summary>
+		/// 毫秒时间戳转为时间
+		/// </summary>
 		public static DateTime ToDateTime(this RealTimeManager self, long timeMilliSecond)
 		{
 			return self.DateTime1970.AddMilliseconds(timeMilliSecond);
@@ -467,7 +445,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 检测是否超时：分钟
+		/// 检测是否超时：小时
 		/// </summary>
 		public static bool CheckTimeoutByHours(this RealTimeManager self, long startTicks, int hours)
 		{
@@ -482,8 +460,6 @@ namespace WorldTree
 			return TimeHelper.GetTimeSpanDays(startTicks, self.UtcNow.Ticks) > days;
 		}
 
-
 		#endregion
-
 	}
 }
