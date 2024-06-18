@@ -8,63 +8,65 @@
 		, AsCurveEvaluate
 	{
 		public int TestValue;
+		public int AAcB;
 	}
-
 
 	public static partial class DotNetTestNodeRule
 	{
-		static OnCurveEvaluate<DotNetTestNode> OnCurveEvaluate = (self, time) =>
+		private static OnUpdate<DotNetTestNode> update = (self) =>
+		{
+			self.Log($"初始更新！！！");
+		};
+
+		private static OnUpdateTime<DotNetTestNode> updateTime = (self, timeSpan) =>
+		{
+			self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
+		};
+
+		private static OnCurveEvaluate<DotNetTestNode> OnCurveEvaluate = (self, time) =>
 		{
 			self.Log($"曲线更新！！！{time}");
 			return time;
 		};
 
-		static OnEnable<DotNetTestNode> Enable1 = (self) =>
+		private static OnEnable<DotNetTestNode> Enable1 = (self) =>
 		{
 			self.Log("激活1！！");
 		};
 
-		static OnEnable<DotNetTestNode> Enable2 = (self) =>
+		private static OnEnable<DotNetTestNode> Enable2 = (self) =>
 		{
 			self.Log("激活2！！");
 		};
 
-		static OnEnable<DotNetTestNode> Enable3 = (self) =>
+		private static OnEnable<DotNetTestNode> Enable3 = (self) =>
 		{
 			self.Log("激活3！！");
 		};
 
-		static OnDisable<DotNetTestNode> Disable = (self) =>
+		private static OnDisable<DotNetTestNode> Disable = (self) =>
 		{
 			self.Log("失活！！");
 		};
 
-		static OnNew<DotNetTestNode> New1 = (self) =>
+		private static OnNew<DotNetTestNode> New1 = (self) =>
 		{
 			self.Log("新建1！！");
 		};
-		static OnNew<DotNetTestNode> New2 = (self) =>
+
+		private static OnNew<DotNetTestNode> New2 = (self) =>
 		{
 			self.Log("新建2！！");
 		};
-		static OnAdd<DotNetTestNode> Add = (self) =>
+
+		private static OnAdd<DotNetTestNode> Add = (self) =>
 		{
 			self.Log(" 初始化！！！");
 		};
-		static OnUpdate<DotNetTestNode> update = (self) =>
-		{
-			self.Log($"初始更新！！！");
-		};
-		static OnUpdateTime<DotNetTestNode> updateTime = (self, timeSpan) =>
-		{
-			self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
-		};
 
-		static OnRemove<DotNetTestNode> Remove = (self) =>
+		private static OnRemove<DotNetTestNode> Remove = (self) =>
 		{
 			self.Log($"初始关闭！！");
 		};
-
 	}
-
 }

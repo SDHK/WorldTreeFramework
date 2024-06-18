@@ -6,6 +6,7 @@
 * 描述：对于法则委托简写的调用生成
 
 */
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -39,7 +40,9 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public Dictionary<string, string> fileNamespace = new();
 
-		public void Initialize(GeneratorInitializationContext context) { }
+		public void Initialize(GeneratorInitializationContext context)
+		{ }
+
 		public void Execute(GeneratorExecutionContext context)
 		{
 			delegateInstances.Clear();
@@ -47,6 +50,7 @@ namespace WorldTree.SourceGenerator
 			fileClassDict.Clear();
 			fileUsings.Clear();
 			fileNamespace.Clear();
+
 			//classInterfaceSyntax.Clear();
 
 			CollectAllInterfaces(context.Compilation);
@@ -68,6 +72,7 @@ namespace WorldTree.SourceGenerator
 
 					//判断是否和接口名称一致
 					if (!RuleTypes.TryGetValue(delegateType.Name, out var Count_Type)) continue;
+
 					//判断是否有对应的泛型数量
 					if (!Count_Type.TryGetValue(TypeCount - 1, out _)) continue;
 
@@ -85,8 +90,7 @@ namespace WorldTree.SourceGenerator
 					}
 					string? delegateName = delegateInstance?.Declaration?.Variables.First().Identifier.Text;
 					if (delegateName == null) continue;
-					set.Add((delegateName,delegateType, delegateInstance));
-
+					set.Add((delegateName, delegateType, delegateInstance));
 				}
 			}
 
@@ -140,6 +144,7 @@ namespace WorldTree.SourceGenerator
 							"""
 							);
 							break;
+
 						case 2:
 
 							ClassCode.AppendLine(
@@ -148,6 +153,7 @@ namespace WorldTree.SourceGenerator
 							"""
 							);
 							break;
+
 						case 3:
 							ClassCode.AppendLine(
 							$$"""
@@ -155,6 +161,7 @@ namespace WorldTree.SourceGenerator
 							"""
 							);
 							break;
+
 						case 4:
 
 							ClassCode.AppendLine(
@@ -163,7 +170,6 @@ namespace WorldTree.SourceGenerator
 							"""
 							);
 							break;
-
 					}
 				}
 				if (ClassCode.ToString() != "")
@@ -185,7 +191,6 @@ namespace WorldTree.SourceGenerator
 					context.AddSource($"{fileClassList.Key}Execute.cs", SourceText.From(fileCode.ToString(), Encoding.UTF8));
 				}
 			}
-
 		}
 
 		/// <summary>
@@ -240,7 +245,6 @@ namespace WorldTree.SourceGenerator
 		/// <param name="Compilation"></param>
 		private void CollectAllInterfaces(Compilation Compilation)
 		{
-
 			foreach (var item in NamedSymbolHelper.CollectAllInterfaces(Compilation))
 			{
 				//检测是否继承忽略接口
@@ -275,8 +279,6 @@ namespace WorldTree.SourceGenerator
 					continue;
 				}
 
-
-
 				if (!RuleTypes.TryGetValue(DelegateName, out Dictionary<int, INamedTypeSymbol> Length_Type))
 				{
 					Length_Type = new Dictionary<int, INamedTypeSymbol>();
@@ -299,9 +301,7 @@ namespace WorldTree.SourceGenerator
 		/// <param name="delegateType">法则委托简写类型</param>
 		/// <param name="ruleClass">法则类型</param>
 		/// <param name="ruleBase">法则基类</param>
-		/// <remarks>
-		/// delegateType 类型 映射到 ruleClass 类型，然后再映射到 ruleBase 类型
-		/// </remarks>
+		/// <remarks>delegateType 类型 映射到 ruleClass 类型，然后再映射到 ruleBase 类型</remarks>
 		private string[] GetReflectionRuleType(INamedTypeSymbol delegateType, INamedTypeSymbol ruleClass, INamedTypeSymbol ruleBase)
 		{
 			//SymbolDisplayFormat.MinimallyQualifiedFormat
@@ -313,6 +313,7 @@ namespace WorldTree.SourceGenerator
 
 			var types = new List<string>();
 			types.Add(ruleTypeArgs[0]);
+
 			// 获取 ruleBaseSymbol 的泛型参数
 			string[]? ruleBaseArgs = GetGenericArguments(ruleBase.ToDisplayString());
 
@@ -320,6 +321,7 @@ namespace WorldTree.SourceGenerator
 			{
 				return types.ToArray();
 			}
+
 			// 获取 ruleClass 的泛型参数
 			var ruleClassArgs = ruleClass.TypeArguments.Select(t => t.Name.Trim()).ToArray();
 
@@ -339,6 +341,7 @@ namespace WorldTree.SourceGenerator
 					types.Add(ruleBaseArgs[i]);
 				}
 			}
+
 			// 返回一个字符串，该字符串包含了这些参数类型
 			return types.ToArray();
 		}
@@ -379,7 +382,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 转换 泛型参数 ：T0, T1, T2, T3 => T0 self T1 arg1, T2 arg2, T3 arg3
+		/// 转换 泛型参数 ：T0, T1, T2, T3 =&gt; T0 self T1 arg1, T2 arg2, T3 arg3
 		/// </summary>
 		private string GetRuleTypeParameter(string[] Types, bool isCall, out string outType)
 		{
@@ -408,7 +411,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
-		/// 转换 泛型参数 ：T0, T1, T2, T3 => self, arg1, arg2, arg3
+		/// 转换 泛型参数 ：T0, T1, T2, T3 =&gt; self, arg1, arg2, arg3
 		/// </summary>
 		private string GetRuleParameter(string[] Types, bool isCall, out string outType)
 		{

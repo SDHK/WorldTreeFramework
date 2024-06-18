@@ -7,7 +7,6 @@
 
 */
 
-
 using System;
 using System.Threading.Tasks;
 
@@ -22,10 +21,12 @@ namespace WorldTree
 		/// 任务运行中
 		/// </summary>
 		Running,
+
 		/// <summary>
 		/// 任务暂停
 		/// </summary>
 		Stop,
+
 		/// <summary>
 		/// 任务取消
 		/// </summary>
@@ -95,12 +96,11 @@ namespace WorldTree
 			tokenEvent.Clear();
 			stopTask = null;
 		}
-
 	}
 
 	public static class TreeTaskTokenRule
 	{
-		class AddRule : AddRule<TreeTaskToken>
+		private class AddRule : AddRule<TreeTaskToken>
 		{
 			protected override void Execute(TreeTaskToken self)
 			{
@@ -109,7 +109,7 @@ namespace WorldTree
 			}
 		}
 
-		class Remove : BeforeRemoveRule<TreeTaskToken>
+		private class Remove : BeforeRemoveRule<TreeTaskToken>
 		{
 			protected override void Execute(TreeTaskToken self)
 			{
@@ -118,7 +118,7 @@ namespace WorldTree
 			}
 		}
 
-		class RemoveRule : RemoveRule<TreeTaskToken>
+		private class RemoveRule : RemoveRule<TreeTaskToken>
 		{
 			protected override void Execute(TreeTaskToken self)
 			{
@@ -127,7 +127,7 @@ namespace WorldTree
 			}
 		}
 
-		class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TreeTaskToken>
+		private class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TreeTaskToken>
 		{
 			protected override void Execute(TreeTaskToken self, TokenState state)
 			{
