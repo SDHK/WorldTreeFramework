@@ -1,5 +1,4 @@
 /Unity/Library
-/Unity/.vs
 /Unity/Logs
 /Unity/Temp
 /Unity/obj
@@ -10,6 +9,8 @@ obj/
 Bin/
 bin/
 /Unity/.vs/
+
+/Unity/UserSettings
 
 /Unity/HybridCLRData
 /Unity/Logs/shadercompiler-UnityShaderCompiler.exe0.log
