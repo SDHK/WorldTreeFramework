@@ -60,6 +60,11 @@
               "target": "Package",
               "version": "[3.9.0, )"
             },
+            "Microsoft.CodeAnalysis.CSharp.Workspaces": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.9.0, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",

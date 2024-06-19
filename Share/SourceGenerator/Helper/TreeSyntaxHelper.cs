@@ -138,7 +138,6 @@ namespace WorldTree.SourceGenerator
 			return ns.Name.ToString();
 		}
 
-
 		/// <summary>
 		/// 获取类型原注释，添加或插入remarks节点备注
 		/// </summary>
@@ -154,14 +153,18 @@ namespace WorldTree.SourceGenerator
 				foreach (var trivia in triviaList)
 				{
 					CommentNode.Clear();
+
 					//根据换行符分割注释
 					string[] triviaStrings = trivia.ToFullString().Split('\n');
+
 					//遍历出一行注释
 					foreach (string triviaStringLine in triviaStrings)
 					{
 						if (triviaStringLine == string.Empty) continue;
+
 						//去掉前后空格和制表符
 						string newTriviaStringLine = triviaStringLine.TrimStart('\t', ' ').TrimEnd('\n', ' ');
+
 						//如果有remarks节点，插入到remarks节点
 						if (newTriviaStringLine.Contains("</remarks>"))
 						{
@@ -186,6 +189,7 @@ namespace WorldTree.SourceGenerator
 					}
 				}
 			}
+
 			// If there is no remarks node, add one
 			if (!remarksExists)
 			{
@@ -195,6 +199,35 @@ namespace WorldTree.SourceGenerator
 			}
 
 			return allComments.ToString();
+		}
+
+		/// <summary>
+		/// 检测是否有私有访问修饰符,包括没写访问修饰符的情况
+		/// </summary>
+		public static bool ModifiersCheckPrivateKeyword(SyntaxTokenList modifiers)
+		{
+			var privateKeyword = modifiers.Any(SyntaxKind.PrivateKeyword);
+			if (!privateKeyword)
+			{
+				privateKeyword = true;
+				foreach (var modifier in modifiers)
+				{
+					if (modifier.IsKind(SyntaxKind.PrivateKeyword))
+					{
+						privateKeyword = true;
+						break;
+					}
+					else if (modifier.IsKind(SyntaxKind.PublicKeyword))
+					{
+						privateKeyword = false;
+					}
+					else if (modifier.IsKind(SyntaxKind.ProtectedKeyword))
+					{
+						privateKeyword = false;
+					}
+				}
+			}
+			return privateKeyword;
 		}
 	}
 }

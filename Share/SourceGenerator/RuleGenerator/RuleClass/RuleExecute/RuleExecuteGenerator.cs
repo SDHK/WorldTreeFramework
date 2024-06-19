@@ -213,19 +213,19 @@ namespace WorldTree.SourceGenerator
 
 					foreach (var modifier in fieldDeclaration.Modifiers)
 					{
-						if (modifier.Kind() == SyntaxKind.StaticKeyword)
+						if (modifier.IsKind(SyntaxKind.StaticKeyword))
 						{
 							hasStaticKeyword = true;
 						}
-						else if (modifier.Kind() == SyntaxKind.PrivateKeyword)
+						else if (modifier.IsKind(SyntaxKind.PrivateKeyword))
 						{
 							hasPrivateKeyword = true;
 						}
-						else if (modifier.Kind() == SyntaxKind.PublicKeyword)
+						else if (modifier.IsKind(SyntaxKind.PublicKeyword))
 						{
 							hasPrivateKeyword = false;
 						}
-						else if (modifier.Kind() == SyntaxKind.ProtectedKeyword)
+						else if (modifier.IsKind(SyntaxKind.ProtectedKeyword))
 						{
 							hasPrivateKeyword = false;
 						}
