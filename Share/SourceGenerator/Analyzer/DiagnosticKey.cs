@@ -16,7 +16,7 @@ namespace WorldTree.Analyzer
 	public enum DiagnosticKey
 	{
 		/// <summary>
-		/// 类命名规范诊断
+		/// 类型命名规范诊断
 		/// </summary>
 		ClassNaming = 1,
 
@@ -54,5 +54,10 @@ namespace WorldTree.Analyzer
 		/// 方法命名规范诊断
 		/// </summary>
 		MethodNaming = 1 << 7,
+
+		/// <summary>
+		/// 类型字段命名规范诊断
+		/// </summary>
+		ClassFieldNaming = 1 << 8,
 	}
 }

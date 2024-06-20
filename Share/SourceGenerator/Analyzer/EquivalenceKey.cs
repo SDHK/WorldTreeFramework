@@ -12,9 +12,9 @@ namespace WorldTree.Analyzer
 	public enum EquivalenceKey
 	{
 		/// <summary>
-		/// 类命名修复
+		/// 字段命名修复
 		/// </summary>
-		ClassNamingFix,
+		FieldNamingFix,
 
 		/// <summary>
 		/// 公共字段命名修复

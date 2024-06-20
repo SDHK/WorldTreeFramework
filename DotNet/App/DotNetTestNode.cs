@@ -1,4 +1,6 @@
-﻿namespace WorldTree
+﻿using System.Collections.Generic;
+
+namespace WorldTree
 {
 	/// <summary>
 	/// 测试节点
@@ -8,9 +10,11 @@
 		, AsCurveEvaluate
 		, AsTestEvent
 	{
+		protected List<int> aIntList;
 		public int TestValue;
-		public int CB;
-		private int bacc;
+		public int ABaaLis;
+		private int cbacca;
+		protected int cbacc1;
 	}
 
 	public static partial class DotNetTestNodeRule
@@ -36,7 +40,7 @@
 			self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		};
 
-		private static OnCurveEvaluate<DotNetTestNode> OnCurveEvaluate = (self, time) =>
+		private static OnCurveEvaluate<DotNetTestNode> onCurveEvaluate = (self, time) =>
 		{
 			self.Log($"曲线更新！！！{time}");
 			return time;
@@ -72,12 +76,12 @@
 			self.Log("新建2！！");
 		};
 
-		private static OnAdd<DotNetTestNode> Add = (self) =>
+		private static OnAdd<DotNetTestNode> add = (self) =>
 		{
 			self.Log(" 初始化！！！");
 		};
 
-		private static OnRemove<DotNetTestNode> Remove = (self) =>
+		private static OnRemove<DotNetTestNode> remove = (self) =>
 		{
 			self.Log($"初始关闭！！");
 		};

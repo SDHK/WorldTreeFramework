@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
+using WorldTree.Analyzer;
 
 namespace WorldTree.SourceGenerator
 {
@@ -229,5 +230,60 @@ namespace WorldTree.SourceGenerator
 			}
 			return privateKeyword;
 		}
+
+		/// <summary>
+		/// 判断否包含指定的修饰符
+		/// </summary>
+		public static bool SyntaxKindContains(List<SyntaxKind> keys, List<SyntaxKind> values)
+		{
+			foreach (var value in values)
+			{
+				if (!keys.Contains(value))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// 判断是否包含指定的修饰符
+		/// </summary>
+		public static bool SyntaxKindContains(SyntaxTokenList keys, List<SyntaxKind> values)
+		{
+			foreach (var value in values)
+			{
+				bool flag = false;
+				foreach (var key in keys)
+				{
+					if (key.IsKind(value))
+					{
+						flag = true;
+					}
+				}
+				if (!flag)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// 获取节点所在的类型
+		/// </summary>
+		public static BaseTypeDeclarationSyntax GetParentType(SyntaxNode syntaxNode)
+		{
+			while (syntaxNode != null)
+			{
+				if (syntaxNode is BaseTypeDeclarationSyntax typeDeclaration)
+				{
+					return typeDeclaration;
+				}
+				syntaxNode = syntaxNode.Parent;
+			}
+			return null;
+		}
+
 	}
 }

@@ -19,131 +19,132 @@ using WorldTree.SourceGenerator;
 
 namespace WorldTree.Analyzer
 {
-	/// <summary>
-	/// 字段命名规范诊断器
-	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class FieldNamingAnalyzer : DiagnosticAnalyzer
-	{
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(new DiagnosticDescriptor[]
-			 {
-				 PublicFieldNamingDiagnosticRule.Rule,
-				 PrivateFieldNamingDiagnosticRule.Rule,
-				 ProtectedFieldNamingDiagnosticRule.Rule
-			 });
 
-		public override void Initialize(AnalysisContext context)
-		{
-			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			context.EnableConcurrentExecution();
-			context.RegisterSyntaxNodeAction(AnalyzeFieldDeclaration, SyntaxKind.FieldDeclaration);
-		}
+	///// <summary>
+	///// 字段命名规范诊断器
+	///// </summary>
+	//[DiagnosticAnalyzer(LanguageNames.CSharp)]
+	//public class FieldNamingAnalyzer : DiagnosticAnalyzer
+	//{
+	//	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(new DiagnosticDescriptor[]
+	//		 {
+	//			 PublicFieldNamingDiagnosticRule.Rule,
+	//			 PrivateFieldNamingDiagnosticRule.Rule,
+	//			 ProtectedFieldNamingDiagnosticRule.Rule
+	//		 });
 
-		private void AnalyzeFieldDeclaration(SyntaxNodeAnalysisContext context)
-		{
-			FieldDeclarationSyntax fieldDeclaration = (FieldDeclarationSyntax)context.Node;
+	//	public override void Initialize(AnalysisContext context)
+	//	{
+	//		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+	//		context.EnableConcurrentExecution();
+	//		context.RegisterSyntaxNodeAction(AnalyzeFieldDeclaration, SyntaxKind.FieldDeclaration);
+	//	}
 
-			if (AnalyzerSetting.ProjectAnalyzers.TryGetValue(context.Compilation.AssemblyName, out DiagnosticKey projectAnalyzer))
-			{
-				if (fieldDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword))
-				{
-					CheckField(context, projectAnalyzer, DiagnosticKey.PublicFieldNaming, PublicFieldNamingDiagnosticRule.Rule);
-				}
-				else if (TreeSyntaxHelper.ModifiersCheckPrivateKeyword(fieldDeclaration.Modifiers))
-				{
-					CheckField(context, projectAnalyzer, DiagnosticKey.PrivateFieldNaming, PrivateFieldNamingDiagnosticRule.Rule);
-				}
-				else if (fieldDeclaration.Modifiers.Any(SyntaxKind.ProtectedKeyword))
-				{
-					CheckField(context, projectAnalyzer, DiagnosticKey.ProtectedFieldNaming, ProtectedFieldNamingDiagnosticRule.Rule);
-				}
-			}
-		}
+	//	private void AnalyzeFieldDeclaration(SyntaxNodeAnalysisContext context)
+	//	{
+	//		FieldDeclarationSyntax fieldDeclaration = (FieldDeclarationSyntax)context.Node;
 
-		/// <summary>
-		/// 检查字段
-		/// </summary>
-		private void CheckField(SyntaxNodeAnalysisContext context, DiagnosticKey projectAnalyzer, DiagnosticKey diagnosticKey, DiagnosticDescriptor Rule)
-		{
-			if (projectAnalyzer.HasFlag(diagnosticKey))
-			{
-				if (AnalyzerSetting.AnalyzerChecks.TryGetValue(diagnosticKey, out var checks))
-				{
-					FieldDeclarationSyntax fieldDeclaration = (FieldDeclarationSyntax)context.Node;
+	//		if (AnalyzerSetting.ProjectAnalyzers.TryGetValue(context.Compilation.AssemblyName, out DiagnosticKey projectAnalyzer))
+	//		{
+	//			if (fieldDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword))
+	//			{
+	//				CheckField(context, projectAnalyzer, DiagnosticKey.PublicFieldNaming, PublicFieldNamingDiagnosticRule.Rule);
+	//			}
+	//			else if (TreeSyntaxHelper.ModifiersCheckPrivateKeyword(fieldDeclaration.Modifiers))
+	//			{
+	//				CheckField(context, projectAnalyzer, DiagnosticKey.PrivateFieldNaming, PrivateFieldNamingDiagnosticRule.Rule);
+	//			}
+	//			else if (fieldDeclaration.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+	//			{
+	//				CheckField(context, projectAnalyzer, DiagnosticKey.ProtectedFieldNaming, ProtectedFieldNamingDiagnosticRule.Rule);
+	//			}
+	//		}
+	//	}
 
-					foreach (var variable in fieldDeclaration.Declaration.Variables)
-					{
-						if (!checks.Invoke(variable.Identifier.Text)) context.ReportDiagnostic(Diagnostic.Create(Rule, variable.GetLocation(), variable.Identifier.Text));
-					}
-				}
-			}
-		}
-	}
+	//	/// <summary>
+	//	/// 检查字段
+	//	/// </summary>
+	//	private void CheckField(SyntaxNodeAnalysisContext context, DiagnosticKey projectAnalyzer, DiagnosticKey diagnosticKey, DiagnosticDescriptor Rule)
+	//	{
+	//		if (projectAnalyzer.HasFlag(diagnosticKey))
+	//		{
+	//			if (AnalyzerSetting.AnalyzerChecks.TryGetValue(diagnosticKey, out var checks))
+	//			{
+	//				FieldDeclarationSyntax fieldDeclaration = (FieldDeclarationSyntax)context.Node;
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(FieldNamingCodeFixProvider)), Shared]
-	public class FieldNamingCodeFixProvider : CodeFixProvider
-	{
-		public override sealed ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(new string[]
-				{
-					DiagnosticKey.PublicFieldNaming.ToString(),
-					DiagnosticKey.PrivateFieldNaming.ToString(),
-					DiagnosticKey.ProtectedFieldNaming.ToString()
-				});
+	//				foreach (var variable in fieldDeclaration.Declaration.Variables)
+	//				{
+	//					if (!checks.Invoke(variable.Identifier.Text)) context.ReportDiagnostic(Diagnostic.Create(Rule, variable.GetLocation(), variable.Identifier.Text));
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
-		public override sealed FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+	//[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(FieldNamingCodeFixProvider)), Shared]
+	//public class FieldNamingCodeFixProvider : CodeFixProvider
+	//{
+	//	public override sealed ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(new string[]
+	//			{
+	//				DiagnosticKey.PublicFieldNaming.ToString(),
+	//				DiagnosticKey.PrivateFieldNaming.ToString(),
+	//				DiagnosticKey.ProtectedFieldNaming.ToString()
+	//			});
 
-		public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
-		{
-			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-			Diagnostic diagnostic = context.Diagnostics[0];
-			var diagnosticSpan = diagnostic.Location.SourceSpan;
+	//	public override sealed FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
-			var projectName = context.Document.Project.AssemblyName;
-			if (!AnalyzerSetting.ProjectAnalyzers.TryGetValue(projectName, out DiagnosticKey projectAnalyzer)) return;
+	//	public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
+	//	{
+	//		var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+	//		Diagnostic diagnostic = context.Diagnostics[0];
+	//		var diagnosticSpan = diagnostic.Location.SourceSpan;
 
-			// 找到需要修复的字段声明
-			VariableDeclaratorSyntax declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<VariableDeclaratorSyntax>().First();
+	//		var projectName = context.Document.Project.AssemblyName;
+	//		if (!AnalyzerSetting.ProjectAnalyzers.TryGetValue(projectName, out DiagnosticKey projectAnalyzer)) return;
 
-			if (diagnostic.Id == DiagnosticKey.PublicFieldNaming.ToString())
-			{
-				RegisterCodeFix(context, diagnostic, declaration, DiagnosticKey.PublicFieldNaming, EquivalenceKey.PublicFieldNamingFix, PublicFieldNamingDiagnosticRule.CodeFixTitle);
-			}
-			else if (diagnostic.Id == DiagnosticKey.PrivateFieldNaming.ToString())
-			{
-				RegisterCodeFix(context, diagnostic, declaration, DiagnosticKey.PrivateFieldNaming, EquivalenceKey.PrivateFieldNamingFix, PrivateFieldNamingDiagnosticRule.CodeFixTitle);
-			}
-			else if (diagnostic.Id == DiagnosticKey.ProtectedFieldNaming.ToString())
-			{
-				RegisterCodeFix(context, diagnostic, declaration, DiagnosticKey.ProtectedFieldNaming, EquivalenceKey.ProtectedFieldNamingFix, ProtectedFieldNamingDiagnosticRule.CodeFixTitle);
-			}
-		}
+	//		// 找到需要修复的字段声明
+	//		VariableDeclaratorSyntax declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<VariableDeclaratorSyntax>().First();
 
-		/// <summary>
-		/// 注册代码修复
-		/// </summary>
-		private void RegisterCodeFix(CodeFixContext context, Diagnostic diagnostic, VariableDeclaratorSyntax declaration, DiagnosticKey DiagnosticKey, EquivalenceKey equivalence, string CodeFixTitle)
-		{
-			context.RegisterCodeFix(
-			CodeAction.Create(title: CodeFixTitle,
-				createChangedDocument: c => CodeFix(DiagnosticKey, context.Document, declaration, c),
-				equivalenceKey: equivalence.ToString()),
-			diagnostic);
-		}
+	//		if (diagnostic.Id == DiagnosticKey.PublicFieldNaming.ToString())
+	//		{
+	//			RegisterCodeFix(context, diagnostic, declaration, DiagnosticKey.PublicFieldNaming, EquivalenceKey.PublicFieldNamingFix, PublicFieldNamingDiagnosticRule.CodeFixTitle);
+	//		}
+	//		else if (diagnostic.Id == DiagnosticKey.PrivateFieldNaming.ToString())
+	//		{
+	//			RegisterCodeFix(context, diagnostic, declaration, DiagnosticKey.PrivateFieldNaming, EquivalenceKey.PrivateFieldNamingFix, PrivateFieldNamingDiagnosticRule.CodeFixTitle);
+	//		}
+	//		else if (diagnostic.Id == DiagnosticKey.ProtectedFieldNaming.ToString())
+	//		{
+	//			RegisterCodeFix(context, diagnostic, declaration, DiagnosticKey.ProtectedFieldNaming, EquivalenceKey.ProtectedFieldNamingFix, ProtectedFieldNamingDiagnosticRule.CodeFixTitle);
+	//		}
+	//	}
 
-		private async Task<Document> CodeFix(DiagnosticKey projectAnalyze, Document document, VariableDeclaratorSyntax fieldDecl, CancellationToken cancellationToken)
-		{
-			// 实现将字段名修改为camelCase的逻辑
-			var fieldName = fieldDecl.Identifier.Text;
+	//	/// <summary>
+	//	/// 注册代码修复
+	//	/// </summary>
+	//	private void RegisterCodeFix(CodeFixContext context, Diagnostic diagnostic, VariableDeclaratorSyntax declaration, DiagnosticKey DiagnosticKey, EquivalenceKey equivalence, string CodeFixTitle)
+	//	{
+	//		context.RegisterCodeFix(
+	//		CodeAction.Create(title: CodeFixTitle,
+	//			createChangedDocument: c => CodeFix(DiagnosticKey, context.Document, declaration, c),
+	//			equivalenceKey: equivalence.ToString()),
+	//		diagnostic);
+	//	}
 
-			if (AnalyzerSetting.AnalyzerCodeFix.TryGetValue(projectAnalyze, out var codeFix)) fieldName = codeFix?.Invoke(fieldName);
+	//	private async Task<Document> CodeFix(DiagnosticKey projectAnalyze, Document document, VariableDeclaratorSyntax fieldDecl, CancellationToken cancellationToken)
+	//	{
+	//		// 实现将字段名修改为camelCase的逻辑
+	//		var fieldName = fieldDecl.Identifier.Text;
 
-			// 创建新的字段名并替换旧的字段名
-			var newFieldDecl = fieldDecl.WithIdentifier(SyntaxFactory.Identifier(fieldName));
-			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-			var newRoot = root.ReplaceNode(fieldDecl, newFieldDecl);
+	//		if (AnalyzerSetting.AnalyzerCodeFix.TryGetValue(projectAnalyze, out var codeFix)) fieldName = codeFix?.Invoke(fieldName);
 
-			// 返回包含修改的文档
-			return document.WithSyntaxRoot(newRoot);
-		}
-	}
+	//		// 创建新的字段名并替换旧的字段名
+	//		var newFieldDecl = fieldDecl.WithIdentifier(SyntaxFactory.Identifier(fieldName));
+	//		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+	//		var newRoot = root.ReplaceNode(fieldDecl, newFieldDecl);
+
+	//		// 返回包含修改的文档
+	//		return document.WithSyntaxRoot(newRoot);
+	//	}
+	//}
 }

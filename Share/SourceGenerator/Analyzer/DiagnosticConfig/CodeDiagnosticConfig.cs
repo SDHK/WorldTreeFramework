@@ -1,0 +1,85 @@
+﻿/****************************************
+
+* 作者：闪电黑客
+* 日期：2024/6/20 15:18
+
+* 描述：
+
+*/
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using System.Text.RegularExpressions;
+
+namespace WorldTree.Analyzer
+{
+	/// <summary>
+	/// 代码规范诊断配置
+	/// </summary>
+	public class CodeDiagnosticConfig
+	{
+		/// <summary>
+		/// 诊断标题
+		/// </summary>
+		public string Title = "命名规范诊断";
+
+		/// <summary>
+		/// 诊断消息格式
+		/// </summary>
+		public string MessageFormat = " {0} 命名不规范";
+
+		/// <summary>
+		/// 诊断描述
+		/// </summary>
+		public string Description = "命名不规范.";
+
+		/// <summary>
+		/// 修复标题
+		/// </summary>
+		public string CodeFixTitle = "【修复为规范命名】";
+
+		/// <summary>
+		/// 诊断名称
+		/// </summary>
+		public string Key = "Name";
+
+		/// <summary>
+		/// 声明语法形式筛选
+		/// </summary>
+		public List<SyntaxKind> DeclarationSyntaxKinds = new();
+	
+		/// <summary>
+		/// 修饰符语法形式筛选
+		/// </summary>
+		public List<SyntaxKind> KeywordSyntaxKinds = new();
+
+		/// <summary>
+		/// 检查规则
+		/// </summary>
+		public Func<string, bool> Check = s => Regex.IsMatch(s, "^[A-Z].*$");
+
+		/// <summary>
+		/// 修复规则
+		/// </summary>
+		public Func<string, string> Fix = s => char.ToUpper(s[0]) + s.Substring(1);
+
+		/// <summary>
+		/// 诊断规则
+		/// </summary>
+		public DiagnosticDescriptor Diagnostic = null;
+
+		/// <summary>
+		/// 初始化配置
+		/// </summary>
+		/// <param name="key">键值</param>
+		public CodeDiagnosticConfig Init(string key)
+		{
+			this.Key = key;
+			foreach (SyntaxKind item in DeclarationSyntaxKinds) this.Key += item;// 生成唯一诊断名称
+			foreach (SyntaxKind item in KeywordSyntaxKinds) this.Key += item;
+
+			Diagnostic = new DiagnosticDescriptor(this.Key, Title, MessageFormat, DiagnosticCategories.CodingSpecification, DiagnosticSeverity.Error, true, Description);
+			return this;
+		}
+	}
+}
