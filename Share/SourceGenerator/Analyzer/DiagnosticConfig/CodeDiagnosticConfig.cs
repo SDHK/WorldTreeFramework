@@ -46,8 +46,8 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 声明语法形式筛选
 		/// </summary>
-		public List<SyntaxKind> DeclarationSyntaxKinds = new();
-	
+		public SyntaxKind DeclarationKind = SyntaxKind.None;
+
 		/// <summary>
 		/// 修饰符语法形式筛选
 		/// </summary>
@@ -61,7 +61,7 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 修复规则
 		/// </summary>
-		public Func<string, string> Fix = s => char.ToUpper(s[0]) + s.Substring(1);
+		public Func<string, string> FixCode = s => char.ToUpper(s[0]) + s.Substring(1);
 
 		/// <summary>
 		/// 诊断规则
@@ -75,7 +75,7 @@ namespace WorldTree.Analyzer
 		public CodeDiagnosticConfig Init(string key)
 		{
 			this.Key = key;
-			foreach (SyntaxKind item in DeclarationSyntaxKinds) this.Key += item;// 生成唯一诊断名称
+			this.Key += DeclarationKind;// 生成唯一诊断名称
 			foreach (SyntaxKind item in KeywordSyntaxKinds) this.Key += item;
 
 			Diagnostic = new DiagnosticDescriptor(this.Key, Title, MessageFormat, DiagnosticCategories.CodingSpecification, DiagnosticSeverity.Error, true, Description);

@@ -31,3 +31,8 @@ D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\App\obj\Debug\refint\App.dl
 D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\App\obj\Debug\App.pdb
 D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\App\obj\Debug\DotNet.App.genruntimeconfig.cache
 D:\Projects\GameEngine\Unity\GitHub\WorldTree\DotNet\App\obj\Debug\ref\App.dll
+E:\Project\GitHub\WorldTree\DotNet\App\obj\Debug\DotNet.App.GeneratedMSBuildEditorConfig.editorconfig
+E:\Project\GitHub\WorldTree\DotNet\App\obj\Debug\DotNet.App.AssemblyInfoInputs.cache
+E:\Project\GitHub\WorldTree\DotNet\App\obj\Debug\DotNet.App.AssemblyInfo.cs
+E:\Project\GitHub\WorldTree\DotNet\App\obj\Debug\DotNet.App.csproj.CoreCompileInputs.cache
+E:\Project\GitHub\WorldTree\DotNet\App\obj\Debug\DotNet.App.sourcelink.json

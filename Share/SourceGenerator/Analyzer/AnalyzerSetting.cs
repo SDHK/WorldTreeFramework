@@ -27,13 +27,13 @@ namespace WorldTree.Analyzer
 		{
 			{ "App",new(){
 					new ListDiagnostic().Init(),
-					new ObjectDiagnostic().Init() 
+					new ObjectDiagnostic().Init()
 				}
 			},
-			{ "DotNet.Core",new(){ 
-					new ListDiagnostic().Init(), 
-					new ObjectDiagnostic().Init() 
-				} 
+			{ "DotNet.Core",new(){
+					new ListDiagnostic().Init(),
+					new ObjectDiagnostic().Init()
+				}
 			},
 		};
 
@@ -41,7 +41,7 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 获取诊断描述
 		/// </summary>
-		public static DiagnosticDescriptor[] GetDiagnosticDescriptors(List<SyntaxKind> SyntaxKinds)
+		public static DiagnosticDescriptor[] GetDiagnosticDescriptors(SyntaxKind declarationKind)
 		{
 			List<DiagnosticDescriptor> descriptors = new();
 			HashSet<Type> types = new();
@@ -54,7 +54,7 @@ namespace WorldTree.Analyzer
 
 					foreach (CodeDiagnosticConfig codeDiagnosticConfig in objectDiagnostic.CodeDiagnostics.Values)
 					{
-						if (TreeSyntaxHelper.SyntaxKindContains(codeDiagnosticConfig.DeclarationSyntaxKinds, SyntaxKinds))
+						if (codeDiagnosticConfig.DeclarationKind == declarationKind)
 						{
 							descriptors.Add(codeDiagnosticConfig.Diagnostic);
 						}
@@ -67,7 +67,7 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 获取诊断描述Id
 		/// </summary>
-		public static string[] GetDiagnosticDescriptorsId(List<SyntaxKind> SyntaxKinds)
+		public static string[] GetDiagnosticDescriptorsId(SyntaxKind declarationKind)
 		{
 			List<string> descriptors = new();
 			HashSet<Type> types = new();
@@ -80,7 +80,7 @@ namespace WorldTree.Analyzer
 
 					foreach (CodeDiagnosticConfig codeDiagnosticConfig in objectDiagnostic.CodeDiagnostics.Values)
 					{
-						if (TreeSyntaxHelper.SyntaxKindContains(codeDiagnosticConfig.DeclarationSyntaxKinds, SyntaxKinds))
+						if (codeDiagnosticConfig.DeclarationKind==declarationKind)
 						{
 							descriptors.Add(codeDiagnosticConfig.Diagnostic.Id);
 						}
@@ -93,7 +93,7 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 尝试查找诊断配置
 		/// </summary>
-		public static bool TryFindDiagnosticDescriptor(string id,out CodeDiagnosticConfig codeDiagnostic)
+		public static bool TryFindDiagnosticDescriptor(string id, out CodeDiagnosticConfig codeDiagnostic)
 		{
 			foreach (List<ObjectDiagnostic> objectDiagnosticList in ProjectDiagnostics.Values)
 			{

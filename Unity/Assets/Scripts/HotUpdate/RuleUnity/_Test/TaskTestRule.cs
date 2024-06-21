@@ -15,6 +15,7 @@ namespace WorldTree
 					self.Log($"异步启动:！！！！！");
 
 					self.AddChild(out self.treeTaskToken).Continue();
+
 					self.Test().Coroutine(self.treeTaskToken);
 				}
 				if (Input.GetKeyDown(KeyCode.W))
@@ -33,7 +34,6 @@ namespace WorldTree
 				{
 					self.treeTaskToken.Dispose();
 				}
-
 			}
 		}
 
@@ -47,19 +47,11 @@ namespace WorldTree
 				await self.AsyncDelay(6);
 				if (TaskTokenCatch.taskState == TokenState.Cancel) return;
 
-				self.AddComponent(out TreeTaskToken treeTaskToken).Continue();
-
-				//self.TestB().SetToken(treeTaskToken);
-
-				await self.TestB().AddToken(treeTaskToken);
-
-				//await self.TestB();
+				await self.TestB();
 
 				if (TaskTokenCatch.taskState == TokenState.Cancel) return;
 				await self.TaskD();
-
 			}
-
 		}
 
 		public static async TreeTask TestB(this TaskTest self)
@@ -71,14 +63,12 @@ namespace WorldTree
 			self.Log($"B！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
 		}
 
-
-
-
 		public static async TreeTask TaskC(this TaskTest self)
 		{
 			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
 			self.Log($"C！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
 		}
+
 		public static async TreeTask TaskD(this TaskTest self)
 		{
 			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();

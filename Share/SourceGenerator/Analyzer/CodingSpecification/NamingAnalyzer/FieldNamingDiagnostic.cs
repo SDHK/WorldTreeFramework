@@ -22,7 +22,7 @@ namespace WorldTree.Analyzer
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class FieldNamingDiagnostic : DiagnosticAnalyzer
 	{
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(AnalyzerSetting.GetDiagnosticDescriptors(new() { SyntaxKind.FieldDeclaration }));
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(AnalyzerSetting.GetDiagnosticDescriptors(SyntaxKind.FieldDeclaration));
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -42,15 +42,8 @@ namespace WorldTree.Analyzer
 				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前字段的类型
-					TypeSyntax fieldType = fieldDeclaration.Declaration.Type;
-
-					// 获取字段类型的符号信息
-					ITypeSymbol fieldTypeSymbol = semanticModel.GetTypeInfo(fieldType).Type;
-
-					// 从符号信息中获取类型名称
-					string typeName = fieldTypeSymbol?.ToDisplayString() ?? string.Empty;
-
-					if (objectDiagnostic.CheckClassName(typeName))
+					ITypeSymbol fieldTypeSymbol = semanticModel.GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
+					if (objectDiagnostic.Screen(fieldTypeSymbol))
 					{
 						if (objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassFieldNaming, out CodeDiagnosticConfig codeDiagnostic))
 						{
@@ -64,29 +57,24 @@ namespace WorldTree.Analyzer
 						}
 					}
 
-
 					//获取当前字段所在的类型名称
 					BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(fieldDeclaration);
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
-					string fullTypeName = typeSymbol?.ToDisplayString() ?? string.Empty;
-					//检查类名
-					if (!objectDiagnostic.CheckClassName(fullTypeName)) continue;
-					//检查语法形式
-					if (TreeSyntaxHelper.SyntaxKindContains(parentType.Modifiers, objectDiagnostic.SyntaxKinds)) continue;
-
-					foreach (CodeDiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
+					if (objectDiagnostic.Screen(typeSymbol))
 					{
-						if (!TreeSyntaxHelper.SyntaxKindContains(codeDiagnostic.DeclarationSyntaxKinds, new() { SyntaxKind.FieldDeclaration })) continue;
-						if (TreeSyntaxHelper.SyntaxKindContains(fieldDeclaration.Modifiers, codeDiagnostic.KeywordSyntaxKinds))
+						foreach (CodeDiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
 						{
-							foreach (var variable in fieldDeclaration.Declaration.Variables)
+							if (codeDiagnostic.DeclarationKind != SyntaxKind.FieldDeclaration) continue;
+							if (TreeSyntaxHelper.SyntaxKindContains(fieldDeclaration.Modifiers, codeDiagnostic.KeywordSyntaxKinds))
 							{
-								if (!codeDiagnostic.Check.Invoke(variable.Identifier.Text))
+								foreach (var variable in fieldDeclaration.Declaration.Variables)
 								{
-									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
+									if (!codeDiagnostic.Check.Invoke(variable.Identifier.Text))
+									{
+										context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
+									}
 								}
 							}
-							return;
 						}
 					}
 				}
@@ -99,7 +87,7 @@ namespace WorldTree.Analyzer
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(FieldNamingCodeFixProvider)), Shared]
 	public class FieldNamingCodeFixProvider : CodeFixProvider
 	{
-		public override sealed ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AnalyzerSetting.GetDiagnosticDescriptorsId(new() { SyntaxKind.FieldDeclaration }));
+		public override sealed ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AnalyzerSetting.GetDiagnosticDescriptorsId(SyntaxKind.FieldDeclaration));
 
 		public override sealed FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -131,7 +119,7 @@ namespace WorldTree.Analyzer
 			// 实现将字段名修改为camelCase的逻辑
 			var fieldName = fieldDecl.Identifier.Text;
 
-			fieldName = codeDiagnostic.Fix?.Invoke(fieldName);
+			fieldName = codeDiagnostic.FixCode?.Invoke(fieldName);
 
 			// 创建新的字段名并替换旧的字段名
 			var newFieldDecl = fieldDecl.WithIdentifier(SyntaxFactory.Identifier(fieldName));

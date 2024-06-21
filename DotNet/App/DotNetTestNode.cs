@@ -10,10 +10,14 @@ namespace WorldTree
 		, AsCurveEvaluate
 		, AsTestEvent
 	{
-		protected List<int> aIntList;
-		public int TestValue;
+		public List<int> AntLiList { get; }
+		public List<int> AntLiList;
+
+		public int ab { get; }
+
+		public int testValue;
 		public int ABaaLis;
-		private int cbacca;
+		private int Cbacca;
 		protected int cbacc1;
 	}
 

@@ -59,5 +59,9 @@ namespace WorldTree.Analyzer
 		/// 类型字段命名规范诊断
 		/// </summary>
 		ClassFieldNaming = 1 << 8,
+		/// <summary>
+		/// 类型属性命名规范诊断
+		/// </summary>
+		ClassPropertyNaming = 1 << 9,
 	}
 }
