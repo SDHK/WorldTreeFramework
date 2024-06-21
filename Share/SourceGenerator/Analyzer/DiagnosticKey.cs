@@ -12,56 +12,56 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 诊断枚举
 	/// </summary>
-	[Flags]
 	public enum DiagnosticKey
 	{
 		/// <summary>
 		/// 类型命名规范诊断
 		/// </summary>
-		ClassNaming = 1,
+		ClassNaming,
 
 		/// <summary>
 		/// 公共字段命名规范诊断
 		/// </summary>
-		PublicFieldNaming = 1 << 1,
+		PublicFieldNaming,
 
 		/// <summary>
 		/// 私有字段命名规范诊断
 		/// </summary>
-		PrivateFieldNaming = 1 << 2,
+		PrivateFieldNaming,
 
 		/// <summary>
 		/// 保护字段命名规范诊断
 		/// </summary>
-		ProtectedFieldNaming = 1 << 3,
+		ProtectedFieldNaming,
 
 		/// <summary>
 		/// 公共属性命名规范诊断
 		/// </summary>
-		PublicPropertyNaming = 1 << 4,
+		PublicPropertyNaming,
 
 		/// <summary>
 		/// 私有属性命名规范诊断
 		/// </summary>
-		PrivatePropertyNaming = 1 << 5,
+		PrivatePropertyNaming,
 
 		/// <summary>
 		/// 保护属性命名规范诊断
 		/// </summary>
-		ProtectedPropertyNaming = 1 << 6,
+		ProtectedPropertyNaming,
 
 		/// <summary>
 		/// 方法命名规范诊断
 		/// </summary>
-		MethodNaming = 1 << 7,
+		MethodNaming,
 
 		/// <summary>
 		/// 类型字段命名规范诊断
 		/// </summary>
-		ClassFieldNaming = 1 << 8,
+		ClassFieldNaming,
+
 		/// <summary>
 		/// 类型属性命名规范诊断
 		/// </summary>
-		ClassPropertyNaming = 1 << 9,
+		ClassPropertyNaming,
 	}
 }
