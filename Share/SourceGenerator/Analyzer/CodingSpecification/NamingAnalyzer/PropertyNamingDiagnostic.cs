@@ -74,8 +74,8 @@ namespace WorldTree.Analyzer
 								}
 							}
 						}
+						return;
 					}
-
 				}
 			}
 		}

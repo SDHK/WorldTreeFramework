@@ -59,7 +59,6 @@ namespace WorldTree.Analyzer
 		public virtual ObjectDiagnostic Init()
 		{
 			Screen = (s) => true;
-
 			SetNamingRule(DiagnosticKey.ClassNaming, new CodeDiagnosticConfig()
 			{
 				Title = "类型命名规范诊断",

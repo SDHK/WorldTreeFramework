@@ -2,6 +2,7 @@
 
 namespace WorldTree
 {
+
 	/// <summary>
 	/// 测试节点
 	/// </summary>
@@ -10,15 +11,22 @@ namespace WorldTree
 		, AsCurveEvaluate
 		, AsTestEvent
 	{
-		public List<int> AntLiList { get; }
-		public List<int> AntLiList;
+		private int a;
 
-		public int ab { get; }
-
-		public int testValue;
-		public int ABaaLis;
-		private int Cbacca;
 		protected int cbacc1;
+
+		public List<int> NtList { get; }
+		public List<int> NtLi1LisList;
+
+		public int Ab { get; }
+
+		public int AestValue;
+		public int ABaaLis;
+
+		public void AVvv()
+		{
+
+		}
 	}
 
 	public static partial class DotNetTestNodeRule

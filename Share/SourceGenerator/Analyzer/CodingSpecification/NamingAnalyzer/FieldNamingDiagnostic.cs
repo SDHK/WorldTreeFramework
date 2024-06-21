@@ -3,7 +3,7 @@
 * 作者：闪电黑客
 * 日期：2024/6/20 16:35
 
-* 描述：
+* 描述：字段命名规范诊断器
 
 */
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -19,6 +19,9 @@ using System.Composition;
 namespace WorldTree.Analyzer
 {
 
+	/// <summary>
+	/// 字段命名规范诊断器
+	/// </summary>
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class FieldNamingDiagnostic : DiagnosticAnalyzer
 	{
@@ -76,6 +79,7 @@ namespace WorldTree.Analyzer
 								}
 							}
 						}
+						return;
 					}
 				}
 			}

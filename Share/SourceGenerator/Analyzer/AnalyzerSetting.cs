@@ -9,9 +9,6 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Linq;
-using System.Text.RegularExpressions;
-using WorldTree.SourceGenerator;
 
 namespace WorldTree.Analyzer
 {
