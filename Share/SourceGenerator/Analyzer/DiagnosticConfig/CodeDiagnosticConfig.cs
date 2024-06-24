@@ -44,6 +44,11 @@ namespace WorldTree.Analyzer
 		public string Key = "Name";
 
 		/// <summary>
+		/// 是否需要注释
+		/// </summary>
+		public bool NeedComment = true;
+
+		/// <summary>
 		/// 声明语法形式筛选
 		/// </summary>
 		public SyntaxKind DeclarationKind = SyntaxKind.None;
@@ -78,6 +83,8 @@ namespace WorldTree.Analyzer
 		/// <param name="key">键值</param>
 		public CodeDiagnosticConfig Init(string key)
 		{
+			if(NeedComment) MessageFormat += "【需要注释】";
+
 			// 生成唯一诊断名称
 			this.Key = key;
 			this.Key += DeclarationKind.ToString().Replace("Declaration", "");

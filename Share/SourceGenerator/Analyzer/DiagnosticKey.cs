@@ -30,6 +30,21 @@ namespace WorldTree.Analyzer
 		InterfaceNaming,
 
 		/// <summary>
+		/// 委托命名规范诊断
+		/// </summary>
+		DelegateNaming,
+
+		/// <summary>
+		/// 枚举命名规范诊断
+		/// </summary>
+		EnumNaming,
+
+		/// <summary>
+		/// 枚举成员命名规范诊断
+		/// </summary>
+		EnumMemberNaming,
+
+		/// <summary>
 		/// 常量命名规范诊断
 		/// </summary>
 		ConstNaming,
@@ -68,6 +83,13 @@ namespace WorldTree.Analyzer
 		/// 方法命名规范诊断
 		/// </summary>
 		MethodNaming,
+
+		/// <summary>
+		/// 参数命名规范诊断
+		/// </summary>
+		ParameterNaming,
+
+
 
 		/// <summary>
 		/// 类型字段命名规范诊断

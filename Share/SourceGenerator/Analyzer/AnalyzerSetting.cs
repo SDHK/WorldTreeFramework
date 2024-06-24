@@ -24,11 +24,15 @@ namespace WorldTree.Analyzer
 		{
 			{ "App",new(){
 					new ListDiagnostic().Init(),
+
+					new StaticRuleDiagnostic().Init(),
 					new ObjectDiagnostic().Init()
 				}
 			},
 			{ "DotNet.Core",new(){
 					new ListDiagnostic().Init(),
+
+					new StaticRuleDiagnostic().Init(),
 					new ObjectDiagnostic().Init()
 				}
 			},

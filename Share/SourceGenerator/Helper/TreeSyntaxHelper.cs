@@ -140,6 +140,65 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
+		/// 检查节点是否有注释
+		/// </summary>
+		public static bool CheckComment(SyntaxNode node)
+		{
+			// 获取节点之前的Trivia集合
+			var leadingTrivia = node.GetLeadingTrivia();
+
+			// 遍历Trivia集合，检查是否存在注释
+			foreach (var trivia in leadingTrivia)
+			{
+				if (trivia.IsKind(SyntaxKind.SingleLineCommentTrivia) ||
+					trivia.IsKind(SyntaxKind.MultiLineCommentTrivia) ||
+					trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
+					trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia))
+				{
+					return true; // 找到注释，返回true
+				}
+			}
+			return false; // 没有找到注释，返回false
+		}
+
+		/// <summary>
+		/// 检查节点是否有 summary 注释
+		/// </summary>
+		public static bool CheckSummaryComment(SyntaxNode node)
+		{
+			// 获取节点之前的Trivia集合
+			var leadingTrivia = node.GetLeadingTrivia();
+
+			// 遍历Trivia集合，检查是否存在 summary 注释
+			foreach (var trivia in leadingTrivia)
+			{
+				if (trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
+					trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia))
+				{
+					// 将Trivia转换为XML文档注释并检查是否包含 <summary> 标签
+					var xmlTrivia = trivia.GetStructure() as DocumentationCommentTriviaSyntax;
+					if (xmlTrivia != null)
+					{
+						foreach (var xmlElement in xmlTrivia.ChildNodes().OfType<XmlElementSyntax>())
+						{
+							if (xmlElement.StartTag.Name.LocalName.Text == "summary")
+							{
+								// 检查 summary 注释的内容是否非空且不仅仅是空白字符
+								var summaryContent = xmlElement.Content.ToString().Trim();
+								summaryContent = summaryContent.Replace("/", "").Trim(); // 移除斜杠符号并再次去除空白
+								if (!string.IsNullOrWhiteSpace(summaryContent)) // 使用 IsNullOrWhiteSpace 来检查
+								{
+									return true; // summary 注释非空且不仅仅是空白字符，返回true
+								}
+							}
+						}
+					}
+				}
+			}
+			return false; // 没有找到 summary 注释，返回false
+		}
+
+		/// <summary>
 		/// 获取类型原注释，添加或插入remarks节点备注
 		/// </summary>
 		public static string GetCommentAddOrInsertRemarks(TypeDeclarationSyntax typeDeclarationSyntax, string remarksToAdd, string tab)
@@ -258,6 +317,10 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static bool SyntaxKindContains(SyntaxTokenList keys, List<SyntaxKind> values, bool valuesZero = true)
 		{
+			if (values.Count == 0)
+			{
+				return valuesZero;
+			}
 			foreach (var value in values)
 			{
 				bool flag = false;
@@ -273,14 +336,31 @@ namespace WorldTree.SourceGenerator
 					return false;
 				}
 			}
+			return true;
+		}
+
+		/// <summary>
+		/// 判断是否包含指定的其中一个修饰符
+		/// </summary>
+		public static bool SyntaxKindContainsAny(SyntaxTokenList keys, List<SyntaxKind> values, bool valuesZero = true)
+		{
 			if (values.Count == 0)
 			{
 				return valuesZero;
 			}
-			else
+
+			foreach (var value in values)
 			{
-				return true;
+				foreach (var key in keys)
+				{
+					if (key.IsKind(value))
+					{
+						return true; // 如果找到匹配的修饰符，立即返回true
+					}
+				}
 			}
+
+			return false; // 如果没有找到任何匹配
 		}
 
 		/// <summary>
