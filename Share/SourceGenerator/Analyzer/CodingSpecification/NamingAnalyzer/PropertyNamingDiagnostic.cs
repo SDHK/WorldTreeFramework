@@ -66,12 +66,14 @@ namespace WorldTree.Analyzer
 						foreach (CodeDiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
 						{
 							if (codeDiagnostic.DeclarationKind != SyntaxKind.PropertyDeclaration) continue;
-							if (TreeSyntaxHelper.SyntaxKindContains(propertyDeclaration.Modifiers, codeDiagnostic.KeywordSyntaxKinds))
+							// 需要的修饰符
+							if (!TreeSyntaxHelper.SyntaxKindContains(propertyDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
+							// 不需要检查的修饰符
+							if (TreeSyntaxHelper.SyntaxKindContains(propertyDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
+							// 检查属性名是否符合规范
+							if (!codeDiagnostic.Check.Invoke(propertyDeclaration.Identifier.Text))
 							{
-								if (!codeDiagnostic.Check.Invoke(propertyDeclaration.Identifier.Text))
-								{
-									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
-								}
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
 							}
 						}
 						return;

@@ -67,15 +67,19 @@ namespace WorldTree.Analyzer
 					{
 						foreach (CodeDiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
 						{
+							// 字段声明
 							if (codeDiagnostic.DeclarationKind != SyntaxKind.FieldDeclaration) continue;
-							if (TreeSyntaxHelper.SyntaxKindContains(fieldDeclaration.Modifiers, codeDiagnostic.KeywordSyntaxKinds))
+							// 需要的修饰符
+							if (!TreeSyntaxHelper.SyntaxKindContains(fieldDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
+							// 不需要检查的修饰符
+							if (TreeSyntaxHelper.SyntaxKindContains(fieldDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
+
+							// 检查属性名是否符合规范
+							foreach (var variable in fieldDeclaration.Declaration.Variables)
 							{
-								foreach (var variable in fieldDeclaration.Declaration.Variables)
+								if (!codeDiagnostic.Check.Invoke(variable.Identifier.Text))
 								{
-									if (!codeDiagnostic.Check.Invoke(variable.Identifier.Text))
-									{
-										context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
-									}
+									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
 								}
 							}
 						}

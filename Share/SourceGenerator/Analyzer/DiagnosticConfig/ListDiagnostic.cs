@@ -46,7 +46,24 @@ namespace WorldTree.Analyzer
 			});
 			return this;
 		}
+	}
 
-		
+
+	public class ConstFieldDiagnostic : ObjectDiagnostic
+	{
+		public override ObjectDiagnostic Init()
+		{
+			Screen = (TypeSymbol) =>
+			{
+				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
+				if (TypeSymbol.DeclaredAccessibility != Accessibility.Public) return false;
+				//if(TypeSymbol.IsStatic)
+				string typeName = TypeSymbol?.ToDisplayString() ?? string.Empty;
+				return Regex.IsMatch(typeName, "^System.Collections.Generic.List<.*>$");
+			};
+			
+			return this;
+		}
+
 	}
 }

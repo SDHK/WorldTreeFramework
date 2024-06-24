@@ -234,7 +234,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 判断否包含指定的修饰符
 		/// </summary>
-		public static bool SyntaxKindContains(List<SyntaxKind> keys, List<SyntaxKind> values)
+		public static bool SyntaxKindContains(List<SyntaxKind> keys, List<SyntaxKind> values, bool valuesZero = true)
 		{
 			foreach (var value in values)
 			{
@@ -243,13 +243,20 @@ namespace WorldTree.SourceGenerator
 					return false;
 				}
 			}
-			return true;
+			if (values.Count == 0)
+			{
+				return valuesZero;
+			}
+			else
+			{
+				return true;
+			}
 		}
 
 		/// <summary>
 		/// 判断是否包含指定的修饰符
 		/// </summary>
-		public static bool SyntaxKindContains(SyntaxTokenList keys, List<SyntaxKind> values)
+		public static bool SyntaxKindContains(SyntaxTokenList keys, List<SyntaxKind> values, bool valuesZero = true)
 		{
 			foreach (var value in values)
 			{
@@ -266,7 +273,14 @@ namespace WorldTree.SourceGenerator
 					return false;
 				}
 			}
-			return true;
+			if (values.Count == 0)
+			{
+				return valuesZero;
+			}
+			else
+			{
+				return true;
+			}
 		}
 
 		/// <summary>

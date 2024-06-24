@@ -20,6 +20,21 @@ namespace WorldTree.Analyzer
 		ClassNaming,
 
 		/// <summary>
+		/// 结构体命名规范诊断
+		/// </summary>
+		StructNaming,
+
+		/// <summary>
+		/// 接口命名规范诊断
+		/// </summary>
+		InterfaceNaming,
+
+		/// <summary>
+		/// 常量命名规范诊断
+		/// </summary>
+		ConstNaming,
+
+		/// <summary>
 		/// 公共字段命名规范诊断
 		/// </summary>
 		PublicFieldNaming,

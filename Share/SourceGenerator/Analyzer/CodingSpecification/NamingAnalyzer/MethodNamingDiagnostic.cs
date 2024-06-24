@@ -46,6 +46,10 @@ namespace WorldTree.Analyzer
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
 					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.MethodNaming, out CodeDiagnosticConfig codeDiagnostic)) continue;
+					// 需要的修饰符
+					if (!TreeSyntaxHelper.SyntaxKindContains(methodDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
+					// 不需要检查的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(methodDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
 					if (!codeDiagnostic.Check.Invoke(methodDeclaration.Identifier.Text))
 					{
 						context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));

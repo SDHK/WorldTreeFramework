@@ -49,9 +49,13 @@ namespace WorldTree.Analyzer
 		public SyntaxKind DeclarationKind = SyntaxKind.None;
 
 		/// <summary>
-		/// 修饰符语法形式筛选
+		/// 有修饰符语的法形式筛选
 		/// </summary>
-		public List<SyntaxKind> KeywordSyntaxKinds = new();
+		public List<SyntaxKind> KeywordKinds = new();
+		/// <summary>
+		/// 没有修饰符的语法形式筛选
+		/// </summary>
+		public List<SyntaxKind> UnKeywordKinds = new();
 
 		/// <summary>
 		/// 检查规则
@@ -74,9 +78,11 @@ namespace WorldTree.Analyzer
 		/// <param name="key">键值</param>
 		public CodeDiagnosticConfig Init(string key)
 		{
+			// 生成唯一诊断名称
 			this.Key = key;
-			this.Key += DeclarationKind;// 生成唯一诊断名称
-			foreach (SyntaxKind item in KeywordSyntaxKinds) this.Key += item;
+			this.Key += DeclarationKind.ToString().Replace("Declaration", "");
+			foreach (SyntaxKind item in KeywordKinds) this.Key += item.ToString().Replace("Keyword", "");
+			foreach (SyntaxKind item in UnKeywordKinds) this.Key += item.ToString().Replace("Keyword", "");
 
 			Diagnostic = new DiagnosticDescriptor(this.Key, Title, MessageFormat, DiagnosticCategories.CodingSpecification, DiagnosticSeverity.Error, true, Description);
 			return this;

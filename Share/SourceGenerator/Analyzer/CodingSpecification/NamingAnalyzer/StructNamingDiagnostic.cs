@@ -1,64 +1,61 @@
 ﻿/****************************************
 
 * 作者：闪电黑客
-* 日期：2024/6/21 18:14
+* 日期：2024/6/24 10:53
 
 * 描述：
 
 */
-using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using WorldTree.SourceGenerator;
-using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
 using System.Composition;
-using Microsoft.CodeAnalysis.CodeActions;
+using WorldTree.SourceGenerator;
 
 namespace WorldTree.Analyzer
 {
-
-
-
 	/// <summary>
-	/// 类型命名规范诊断器
+	/// 结构体命名规范诊断器
 	/// </summary>
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class ClassNamingDiagnostic : DiagnosticAnalyzer
+	public class StructNamingDiagnostic : DiagnosticAnalyzer
 	{
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-			=> ImmutableArray.Create(AnalyzerSetting.GetDiagnosticDescriptors(SyntaxKind.ClassDeclaration));
+			=> ImmutableArray.Create(AnalyzerSetting.GetDiagnosticDescriptors(SyntaxKind.StructDeclaration));
 
 		public override void Initialize(AnalysisContext context)
 		{
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.EnableConcurrentExecution();
-			context.RegisterSyntaxNodeAction(AnalyzeClassDeclaration, SyntaxKind.ClassDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeStructDeclaration, SyntaxKind.StructDeclaration);
 		}
 
-		private void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context)
+		private void AnalyzeStructDeclaration(SyntaxNodeAnalysisContext context)
 		{
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 
-			ClassDeclarationSyntax classDeclaration = (ClassDeclarationSyntax)context.Node;
+			StructDeclarationSyntax structDeclaration = (StructDeclarationSyntax)context.Node;
 
 			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<ObjectDiagnostic> objectDiagnostics))
 			{
 				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前类的类型
-					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
+					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(structDeclaration);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassNaming, out CodeDiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.StructNaming, out CodeDiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
-					if (!TreeSyntaxHelper.SyntaxKindContains(classDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
+					if (!TreeSyntaxHelper.SyntaxKindContains(structDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符
-					if (TreeSyntaxHelper.SyntaxKindContains(classDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-					if (!codeDiagnostic.Check.Invoke(classDeclaration.Identifier.Text))
+					if (TreeSyntaxHelper.SyntaxKindContains(structDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
+					if (!codeDiagnostic.Check.Invoke(structDeclaration.Identifier.Text))
 					{
-						context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
+						context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, structDeclaration.GetLocation(), structDeclaration.Identifier.Text));
 					}
 					return;
 				}
@@ -66,12 +63,11 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ClassNamingCodeFixProvider)), Shared]
-	public class ClassNamingCodeFixProvider : CodeFixProvider
+	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(StructNamingCodeFixProvider)), Shared]
+	public class StructNamingCodeFixProvider : CodeFixProvider
 	{
 		public override ImmutableArray<string> FixableDiagnosticIds
-			 => ImmutableArray.Create(AnalyzerSetting.GetDiagnosticDescriptorsId(SyntaxKind.ClassDeclaration));
-
+			 => ImmutableArray.Create(AnalyzerSetting.GetDiagnosticDescriptorsId(SyntaxKind.StructDeclaration));
 
 		public override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
@@ -80,20 +76,20 @@ namespace WorldTree.Analyzer
 			var diagnosticSpan = diagnostic.Location.SourceSpan;
 			var projectName = context.Document.Project.AssemblyName;
 			if (!AnalyzerSetting.ProjectDiagnostics.TryGetValue(projectName, out _)) return;
-			ClassDeclarationSyntax declaration = root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+			StructDeclarationSyntax declaration = root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<StructDeclarationSyntax>().FirstOrDefault();
 
 			// 根据不同的诊断类型注册不同的代码修复
 			if (AnalyzerSetting.TryFindDiagnosticDescriptor(diagnostic.Id, out CodeDiagnosticConfig codeDiagnostic))
 			{
 				context.RegisterCodeFix(
-				CodeAction.Create(title: codeDiagnostic.CodeFixTitle,
+					CodeAction.Create(title: codeDiagnostic.CodeFixTitle,
 					createChangedDocument: c => CodeFix(codeDiagnostic, context.Document, declaration, c),
 					equivalenceKey: codeDiagnostic.Diagnostic.Id),
-				diagnostic);
+					diagnostic);
 			}
 		}
 
-		private async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, ClassDeclarationSyntax methodDecl, CancellationToken cancellationToken)
+		private async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, StructDeclarationSyntax methodDecl, CancellationToken cancellationToken)
 		{
 			var fieldName = methodDecl.Identifier.Text;
 

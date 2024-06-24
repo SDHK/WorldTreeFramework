@@ -3,6 +3,15 @@
 namespace WorldTree
 {
 
+	delegate void aOnTestEvent<T>(T self) where T : INode;
+
+	public struct AT
+	{
+		public const int ACC_BAA = 1;
+		public int A;
+	}
+
+
 	/// <summary>
 	/// 测试节点
 	/// </summary>
@@ -14,6 +23,9 @@ namespace WorldTree
 		private int a;
 
 		protected int cbacc1;
+
+		private const int A_ACC_BAA = 1;
+
 
 		public List<int> NtList { get; }
 		public List<int> NtLi1LisList;
