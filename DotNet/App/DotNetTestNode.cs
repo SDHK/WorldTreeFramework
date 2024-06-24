@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -32,13 +33,16 @@ namespace WorldTree
 	public struct AT
 	{
 
-		public const int aCC_BAA = 1;
+		public const int A_CC_BAA = 1;
 		
 		/// <summary>
 		/// 测试变量
 		/// </summary>
 		private int a,v;
 
+		/// <summary>
+		/// 注释
+		/// </summary>
 		public int ATa21;
 
 	}
@@ -68,22 +72,36 @@ namespace WorldTree
 		/// </summary>
 		private int a;
 
-		protected int cbacc1;
-
-		private const int A_ACC_BAA = 1;
+		/// <summary>
+		/// 注释
+		/// </summary>
+		public List<int> NtList;
 
 		/// <summary>
-		/// a
+		/// 字典注释
 		/// </summary>
-		public List<int> NtList { get; }
+		public Dictionary<int,string> KeysDicDict;
+
 		/// <summary>
-		/// a
+		/// 数组注释
 		/// </summary>
-		public List<int> NtLi1LisList;
+		public int[] Ints;
 
-	
+		/// <summary>
+		/// 注释
+		/// </summary>
+		public Queue<int> IntsQueue;
 
-	
+		/// <summary>
+		/// 注释
+		/// </summary>
+		public Stack<int> IntsStack;
+
+		/// <summary>
+		/// 注释
+		/// </summary>
+		public HashSet<int> IntsHash;
+
 	}
 
 	/// <summary>

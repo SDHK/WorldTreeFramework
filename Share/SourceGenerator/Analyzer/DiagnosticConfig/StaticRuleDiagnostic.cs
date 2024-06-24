@@ -12,12 +12,13 @@ using System.Text.RegularExpressions;
 
 namespace WorldTree.Analyzer
 {
+
 	/// <summary>
 	/// Rule后缀静态类型诊断
 	/// </summary>
-	public class StaticRuleDiagnostic : ObjectDiagnostic
+	public class StaticRuleDiagnostic : DiagnosticGroupConfig
 	{
-		public override ObjectDiagnostic Init()
+		public override DiagnosticGroupConfig Init()
 		{
 			Screen = (Symbol) =>
 			{
@@ -29,17 +30,17 @@ namespace WorldTree.Analyzer
 				return Regex.IsMatch(typeName, "Rule$");
 			};
 
-			SetNamingRule(DiagnosticKey.ConstNaming, new CodeDiagnosticConfig()
+			SetNamingRule(DiagnosticKey.ConstNaming, new DiagnosticConfig()
 			{
 				Title = "Rule常量命名规范诊断",
 				MessageFormat = "Rule静态类型中不准写常量字段",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
-				KeywordKinds = new() { SyntaxKind.ConstKeyword},
+				KeywordKinds = new() { SyntaxKind.ConstKeyword },
 				NeedComment = false,
 				Check = s => false,
 			});
 
-			SetNamingRule(DiagnosticKey.PublicFieldNaming, new CodeDiagnosticConfig()
+			SetNamingRule(DiagnosticKey.PublicFieldNaming, new DiagnosticConfig()
 			{
 				Title = "Rule公开字段命名规范诊断",
 				MessageFormat = "Rule静态类型中不准写公开字段",
@@ -50,7 +51,7 @@ namespace WorldTree.Analyzer
 				Check = s => false,
 			});
 
-			SetNamingRule(DiagnosticKey.PrivateFieldNaming, new CodeDiagnosticConfig()
+			SetNamingRule(DiagnosticKey.PrivateFieldNaming, new DiagnosticConfig()
 			{
 				Title = "Rule私有字段命名规范诊断",
 				MessageFormat = "Rule私有字段命名开头要大写",
@@ -59,9 +60,9 @@ namespace WorldTree.Analyzer
 				UnKeywordKinds = new() { SyntaxKind.ConstKeyword, },
 				NeedComment = false,
 			});
-			
 
-			SetNamingRule(DiagnosticKey.PublicPropertyNaming, new CodeDiagnosticConfig()
+
+			SetNamingRule(DiagnosticKey.PublicPropertyNaming, new DiagnosticConfig()
 			{
 				Title = "公开属性命名规范诊断",
 				MessageFormat = "Rule静态类型中不准写公开属性",
@@ -71,7 +72,7 @@ namespace WorldTree.Analyzer
 				Check = s => false,
 
 			});
-			SetNamingRule(DiagnosticKey.PrivatePropertyNaming, new CodeDiagnosticConfig()
+			SetNamingRule(DiagnosticKey.PrivatePropertyNaming, new DiagnosticConfig()
 			{
 				Title = "私有属性命名规范诊断",
 				MessageFormat = "Rule静态类型中不准写私有属性",
@@ -80,13 +81,13 @@ namespace WorldTree.Analyzer
 				NeedComment = false,
 				Check = s => false,
 			});
-			SetNamingRule(DiagnosticKey.MethodNaming, new CodeDiagnosticConfig()
+			SetNamingRule(DiagnosticKey.MethodNaming, new DiagnosticConfig()
 			{
 				Title = "方法命名规范诊断",
 				MessageFormat = "方法命名开头要大写",
 				DeclarationKind = SyntaxKind.MethodDeclaration,
 			});
-			SetNamingRule(DiagnosticKey.ParameterNaming, new CodeDiagnosticConfig()
+			SetNamingRule(DiagnosticKey.ParameterNaming, new DiagnosticConfig()
 			{
 				Title = "方法参数命名规范诊断",
 				MessageFormat = "方法参数命名开头要小写",

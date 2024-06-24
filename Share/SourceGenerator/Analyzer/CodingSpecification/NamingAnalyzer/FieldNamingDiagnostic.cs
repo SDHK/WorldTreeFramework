@@ -31,15 +31,15 @@ namespace WorldTree.Analyzer
 
 			FieldDeclarationSyntax fieldDeclaration = (FieldDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<ObjectDiagnostic> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前字段的类型
 					ITypeSymbol fieldTypeSymbol = semanticModel.GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
 					if (objectDiagnostic.Screen(fieldTypeSymbol))
 					{
-						if (objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassFieldNaming, out CodeDiagnosticConfig codeDiagnostic))
+						if (objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassFieldNaming, out DiagnosticConfig codeDiagnostic))
 						{
 							foreach (var variable in fieldDeclaration.Declaration.Variables)
 							{
@@ -56,7 +56,7 @@ namespace WorldTree.Analyzer
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 					if (objectDiagnostic.Screen(typeSymbol))
 					{
-						foreach (CodeDiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
+						foreach (DiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
 						{
 							// 字段声明
 							if (codeDiagnostic.DeclarationKind != SyntaxKind.FieldDeclaration) continue;
@@ -88,7 +88,7 @@ namespace WorldTree.Analyzer
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.FieldDeclaration;
 
-		protected override async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, VariableDeclaratorSyntax decl, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, VariableDeclaratorSyntax decl, CancellationToken cancellationToken)
 		{
 			var fieldName = decl.Identifier.Text;
 			fieldName = codeDiagnostic.FixCode?.Invoke(fieldName);

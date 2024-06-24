@@ -34,14 +34,14 @@ namespace WorldTree.Analyzer
 
 			ClassDeclarationSyntax classDeclaration = (ClassDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<ObjectDiagnostic> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
 			{
 				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前类的类型
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassNaming, out CodeDiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(classDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符
@@ -61,7 +61,7 @@ namespace WorldTree.Analyzer
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.ClassDeclaration;
 
-		protected override async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, ClassDeclarationSyntax decl, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, ClassDeclarationSyntax decl, CancellationToken cancellationToken)
 		{
 			var fieldName = decl.Identifier.Text;
 			fieldName = codeDiagnostic.FixCode?.Invoke(fieldName);

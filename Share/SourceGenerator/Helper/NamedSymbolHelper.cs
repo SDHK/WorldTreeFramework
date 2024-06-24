@@ -94,7 +94,7 @@ namespace WorldTree.SourceGenerator
 		/// <param name="InterfaceName">接口名称</param>
 		/// <param name="Interface">基类接口符号</param>
 		/// <returns></returns>
-		public static bool CheckInterface(INamedTypeSymbol typeSymbol, string InterfaceName, out INamedTypeSymbol? Interface)
+		public static bool CheckInterface(ITypeSymbol typeSymbol, string InterfaceName, out INamedTypeSymbol? Interface)
 		{
 			Interface = null;
 			foreach (var Interfaces in typeSymbol.AllInterfaces)
@@ -106,9 +106,27 @@ namespace WorldTree.SourceGenerator
 			return false;
 		}
 
-
-
-
+		/// <summary>
+		/// 检测是否继承类型
+		/// </summary>
+		/// <param name="typeSymbol">子类</param>
+		/// <param name="BaseName">父类全名称</param>
+		/// <param name="baseSymbol">基类符号</param>
+		public static bool CheckBase(ITypeSymbol typeSymbol, string BaseName, out ITypeSymbol? baseSymbol)
+		{
+			baseSymbol = null;
+			var currentBaseType = typeSymbol.BaseType;
+			while (currentBaseType != null)
+			{
+				if (currentBaseType.ToDisplayString() == BaseName)
+				{
+					baseSymbol = currentBaseType;
+					return true;
+				}
+				currentBaseType = currentBaseType.BaseType;
+			}
+			return false;
+		}
 
 		/// <summary>
 		/// 获取法则参数泛型类型注释，例：

@@ -32,16 +32,16 @@ namespace WorldTree.Analyzer
 
 			PropertyDeclarationSyntax propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<ObjectDiagnostic> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
 				{
 
 					//获取当前属性的类型
 					ITypeSymbol fieldTypeSymbol = semanticModel.GetTypeInfo(propertyDeclaration.Type).Type;
 					if (objectDiagnostic.Screen(fieldTypeSymbol))
 					{
-						if (objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassPropertyNaming, out CodeDiagnosticConfig codeDiagnostic))
+						if (objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassPropertyNaming, out DiagnosticConfig codeDiagnostic))
 						{
 							if (!codeDiagnostic.Check.Invoke(propertyDeclaration.Identifier.Text) )
 							{
@@ -55,7 +55,7 @@ namespace WorldTree.Analyzer
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 					if (objectDiagnostic.Screen(typeSymbol))
 					{
-						foreach (CodeDiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
+						foreach (DiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
 						{
 							if (codeDiagnostic.DeclarationKind != SyntaxKind.PropertyDeclaration) continue;
 							// 需要的修饰符
@@ -80,7 +80,7 @@ namespace WorldTree.Analyzer
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.PropertyDeclaration;
 
-		protected override async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, PropertyDeclarationSyntax decl, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, PropertyDeclarationSyntax decl, CancellationToken cancellationToken)
 		{
 			var fieldName = decl.Identifier.Text;
 			fieldName = codeDiagnostic.FixCode?.Invoke(fieldName);

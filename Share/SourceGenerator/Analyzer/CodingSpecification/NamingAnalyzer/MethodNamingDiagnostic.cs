@@ -30,14 +30,14 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 			MethodDeclarationSyntax? methodDeclaration = context.Node as MethodDeclarationSyntax;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<ObjectDiagnostic> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
 				{
 					BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(methodDeclaration);
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.MethodNaming, out CodeDiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.MethodNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(methodDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符
@@ -57,7 +57,7 @@ namespace WorldTree.Analyzer
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.MethodDeclaration;
 
-		protected override async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, MethodDeclarationSyntax decl, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, MethodDeclarationSyntax decl, CancellationToken cancellationToken)
 		{
 			var fieldName = decl.Identifier.Text;
 			fieldName = codeDiagnostic.FixCode?.Invoke(fieldName);

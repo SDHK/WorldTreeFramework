@@ -29,14 +29,14 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 			DelegateDeclarationSyntax delegateDeclaration = (DelegateDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<ObjectDiagnostic> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前委托的类型
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(delegateDeclaration);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.DelegateNaming, out CodeDiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.DelegateNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(delegateDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符
@@ -54,7 +54,7 @@ namespace WorldTree.Analyzer
 	public class DelegateNamingCodeFixProvider : NamingCodeFixProviderBase<DelegateDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.DelegateDeclaration;
-		protected override async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, DelegateDeclarationSyntax delegateDecl, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, DelegateDeclarationSyntax delegateDecl, CancellationToken cancellationToken)
 		{
 			var delegateName = delegateDecl.Identifier.Text;
 			delegateName = codeDiagnostic.FixCode?.Invoke(delegateName);

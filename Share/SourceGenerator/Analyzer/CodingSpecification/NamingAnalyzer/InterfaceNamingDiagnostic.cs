@@ -35,14 +35,14 @@ namespace WorldTree.Analyzer
 
 			InterfaceDeclarationSyntax interfaceDeclaration = (InterfaceDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<ObjectDiagnostic> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前接口的类型
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(interfaceDeclaration);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.InterfaceNaming, out CodeDiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.InterfaceNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(interfaceDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符
@@ -61,7 +61,7 @@ namespace WorldTree.Analyzer
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.InterfaceDeclaration;
 
-		protected override async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, InterfaceDeclarationSyntax decl, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, InterfaceDeclarationSyntax decl, CancellationToken cancellationToken)
 		{
 			var interfaceName = decl.Identifier.Text;
 			interfaceName = codeDiagnostic.FixCode?.Invoke(interfaceName);

@@ -62,7 +62,7 @@ namespace WorldTree.Analyzer
 			T declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<T>().First();
 
 			// 根据不同的诊断类型注册不同的代码修复
-			if (AnalyzerSetting.TryFindDiagnosticDescriptor(diagnostic.Id, out CodeDiagnosticConfig codeDiagnostic))
+			if (AnalyzerSetting.TryFindDiagnosticDescriptor(diagnostic.Id, out DiagnosticConfig codeDiagnostic))
 			{
 				context.RegisterCodeFix(
 				CodeAction.Create(title: codeDiagnostic.CodeFixTitle,
@@ -71,7 +71,7 @@ namespace WorldTree.Analyzer
 				diagnostic);
 			}
 		}
-		protected abstract Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, T decl, CancellationToken cancellationToken);
+		protected abstract Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, T decl, CancellationToken cancellationToken);
 	}
 
 

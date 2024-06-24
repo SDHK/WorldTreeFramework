@@ -20,19 +20,31 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 项目诊断配置
 		/// </summary>
-		public static Dictionary<string, List<ObjectDiagnostic>> ProjectDiagnostics = new()
+		public static Dictionary<string, List<DiagnosticGroupConfig>> ProjectDiagnostics = new()
 		{
 			{ "App",new(){
 					new ListDiagnostic().Init(),
-
+					new ArrayDiagnostic().Init(),
+					new DictionaryDiagnostic().Init(),
+					new HashSetDiagnostic().Init(),
+					new QueueDiagnostic().Init(),
+					new StackDiagnostic().Init(),
+					new NodeDiagnostic().Init(),
 					new StaticRuleDiagnostic().Init(),
 					new ObjectDiagnostic().Init()
 				}
 			},
 			{ "DotNet.Core",new(){
 					new ListDiagnostic().Init(),
+					new ArrayDiagnostic().Init(),
+					new DictionaryDiagnostic().Init(),
+					new HashSetDiagnostic().Init(),
+					new QueueDiagnostic().Init(),
+					new StackDiagnostic().Init(),
 
+					new NodeDiagnostic().Init(),
 					new StaticRuleDiagnostic().Init(),
+
 					new ObjectDiagnostic().Init()
 				}
 			},
@@ -46,14 +58,14 @@ namespace WorldTree.Analyzer
 		{
 			List<DiagnosticDescriptor> descriptors = new();
 			HashSet<Type> types = new();
-			foreach (List<ObjectDiagnostic> objectDiagnosticList in ProjectDiagnostics.Values)
+			foreach (List<DiagnosticGroupConfig> objectDiagnosticList in ProjectDiagnostics.Values)
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnosticList)
+				foreach (DiagnosticGroupConfig diagnosticConfig in objectDiagnosticList)
 				{
-					if (types.Contains(objectDiagnostic.GetType())) continue;
-					types.Add(objectDiagnostic.GetType());
+					if (types.Contains(diagnosticConfig.GetType())) continue;
+					types.Add(diagnosticConfig.GetType());
 
-					foreach (CodeDiagnosticConfig codeDiagnosticConfig in objectDiagnostic.CodeDiagnostics.Values)
+					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.CodeDiagnostics.Values)
 					{
 						if (codeDiagnosticConfig.DeclarationKind == declarationKind)
 						{
@@ -72,14 +84,14 @@ namespace WorldTree.Analyzer
 		{
 			List<string> descriptors = new();
 			HashSet<Type> types = new();
-			foreach (List<ObjectDiagnostic> objectDiagnosticList in ProjectDiagnostics.Values)
+			foreach (List<DiagnosticGroupConfig> objectDiagnosticList in ProjectDiagnostics.Values)
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnosticList)
+				foreach (DiagnosticGroupConfig diagnosticConfig in objectDiagnosticList)
 				{
-					if (types.Contains(objectDiagnostic.GetType())) continue;
-					types.Add(objectDiagnostic.GetType());
+					if (types.Contains(diagnosticConfig.GetType())) continue;
+					types.Add(diagnosticConfig.GetType());
 
-					foreach (CodeDiagnosticConfig codeDiagnosticConfig in objectDiagnostic.CodeDiagnostics.Values)
+					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.CodeDiagnostics.Values)
 					{
 						if (codeDiagnosticConfig.DeclarationKind==declarationKind)
 						{
@@ -94,13 +106,13 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 尝试查找诊断配置
 		/// </summary>
-		public static bool TryFindDiagnosticDescriptor(string id, out CodeDiagnosticConfig codeDiagnostic)
+		public static bool TryFindDiagnosticDescriptor(string id, out DiagnosticConfig codeDiagnostic)
 		{
-			foreach (List<ObjectDiagnostic> objectDiagnosticList in ProjectDiagnostics.Values)
+			foreach (List<DiagnosticGroupConfig> objectDiagnosticList in ProjectDiagnostics.Values)
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnosticList)
+				foreach (DiagnosticGroupConfig diagnosticConfig in objectDiagnosticList)
 				{
-					foreach (CodeDiagnosticConfig codeDiagnosticConfig in objectDiagnostic.CodeDiagnostics.Values)
+					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.CodeDiagnostics.Values)
 					{
 						if (codeDiagnosticConfig.Diagnostic.Id == id)
 						{

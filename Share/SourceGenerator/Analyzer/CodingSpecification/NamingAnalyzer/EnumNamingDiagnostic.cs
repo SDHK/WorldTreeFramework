@@ -34,14 +34,14 @@ namespace WorldTree.Analyzer
 
 			EnumDeclarationSyntax enumDeclaration = (EnumDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<ObjectDiagnostic> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前枚举的类型
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(enumDeclaration);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.EnumNaming, out CodeDiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.EnumNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(enumDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符
@@ -59,7 +59,7 @@ namespace WorldTree.Analyzer
 	public class EnumNamingCodeFixProvider : NamingCodeFixProviderBase<EnumDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.EnumDeclaration;
-		protected override async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, EnumDeclarationSyntax decl, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, EnumDeclarationSyntax decl, CancellationToken cancellationToken)
 		{
 			var enumName = decl.Identifier.Text;
 			enumName = codeDiagnostic.FixCode?.Invoke(enumName);

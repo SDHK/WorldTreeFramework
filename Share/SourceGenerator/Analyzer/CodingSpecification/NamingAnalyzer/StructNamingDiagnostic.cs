@@ -30,14 +30,14 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 			StructDeclarationSyntax structDeclaration = (StructDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<ObjectDiagnostic> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
 			{
-				foreach (ObjectDiagnostic objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前类的类型
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(structDeclaration);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.StructNaming, out CodeDiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.StructNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(structDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符
@@ -56,7 +56,7 @@ namespace WorldTree.Analyzer
 	public class StructNamingCodeFixProvider : NamingCodeFixProviderBase<StructDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.StructDeclaration;
-		protected override async Task<Document> CodeFix(CodeDiagnosticConfig codeDiagnostic, Document document, StructDeclarationSyntax decl, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, StructDeclarationSyntax decl, CancellationToken cancellationToken)
 		{
 
 			var fieldName = decl.Identifier.Text;

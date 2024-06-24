@@ -39,6 +39,7 @@ namespace WorldTree.Analyzer
 		/// </summary>
 		EnumNaming,
 
+
 		/// <summary>
 		/// 枚举成员命名规范诊断
 		/// </summary>

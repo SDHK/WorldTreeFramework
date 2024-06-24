@@ -16,7 +16,7 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 代码规范诊断配置
 	/// </summary>
-	public class CodeDiagnosticConfig
+	public class DiagnosticConfig
 	{
 		/// <summary>
 		/// 诊断标题
@@ -81,7 +81,7 @@ namespace WorldTree.Analyzer
 		/// 初始化配置
 		/// </summary>
 		/// <param name="key">键值</param>
-		public CodeDiagnosticConfig Init(string key)
+		public DiagnosticConfig Init(string key)
 		{
 			if(NeedComment) MessageFormat += "【需要注释】";
 
