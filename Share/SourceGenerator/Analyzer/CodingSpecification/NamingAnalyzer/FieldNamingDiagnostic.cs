@@ -31,15 +31,15 @@ namespace WorldTree.Analyzer
 
 			FieldDeclarationSyntax fieldDeclaration = (FieldDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics))
 			{
-				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前字段的类型
 					ITypeSymbol fieldTypeSymbol = semanticModel.GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
 					if (objectDiagnostic.Screen(fieldTypeSymbol))
 					{
-						if (objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassFieldNaming, out DiagnosticConfig codeDiagnostic))
+						if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassFieldNaming, out DiagnosticConfig codeDiagnostic))
 						{
 							foreach (var variable in fieldDeclaration.Declaration.Variables)
 							{
@@ -56,7 +56,7 @@ namespace WorldTree.Analyzer
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 					if (objectDiagnostic.Screen(typeSymbol))
 					{
-						foreach (DiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
+						foreach (DiagnosticConfig codeDiagnostic in objectDiagnostic.Diagnostics.Values)
 						{
 							// 字段声明
 							if (codeDiagnostic.DeclarationKind != SyntaxKind.FieldDeclaration) continue;

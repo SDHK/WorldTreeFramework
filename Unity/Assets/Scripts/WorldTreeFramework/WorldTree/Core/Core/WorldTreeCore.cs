@@ -79,7 +79,7 @@ namespace WorldTree
 		/// <summary>
 		/// 主核心
 		/// </summary>
-		private WorldTreeCore RootCore;
+		private WorldTreeCore rootCore;
 
 		/// <summary>
 		/// 打印日志
@@ -96,15 +96,42 @@ namespace WorldTree
 		/// </summary>
 		public Action<object> LogError;
 
+		/// <summary>
+		/// 添加法则组
+		/// </summary>
 		public IRuleGroup<Add> AddRuleGroup;
+		/// <summary>
+		/// 移除前法则组
+		/// </summary>
 		public IRuleGroup<BeforeRemove> BeforeRemoveRuleGroup;
+		/// <summary>
+		/// 移除法则组
+		/// </summary>
 		public IRuleGroup<Remove> RemoveRuleGroup;
+		/// <summary>
+		/// 激活法则组
+		/// </summary>
 		public IRuleGroup<Enable> EnableRuleGroup;
+		/// <summary>
+		/// 禁用法则组
+		/// </summary>
 		public IRuleGroup<Disable> DisableRuleGroup;
 
+		/// <summary>
+		/// 新建法则组
+		/// </summary>
 		public IRuleGroup<New> NewRuleGroup;
+		/// <summary>
+		/// 获取法则组
+		/// </summary>
 		public IRuleGroup<Get> GetRuleGroup;
+		/// <summary>
+		/// 回收法则组
+		/// </summary>
 		public IRuleGroup<Recycle> RecycleRuleGroup;
+		/// <summary>
+		/// 销毁法则组
+		/// </summary>
 		public IRuleGroup<Destroy> DestroyRuleGroup;
 
 		/// <summary>
@@ -161,6 +188,9 @@ namespace WorldTree
 
 		#region 生命周期
 
+		/// <summary>
+		/// 框架启动
+		/// </summary>
 		public virtual void Awake()
 		{
 			this.SetActive(false);
@@ -233,16 +263,16 @@ namespace WorldTree
 
 		#region 添加
 
-		public override bool TryAddSelfToTree<B, K>(K Key, INode parent)
+		public override bool TryAddSelfToTree<B, K>(K key, INode parent)
 		{
-			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(Key, this))
+			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
 				this.BranchType = TypeInfo<B>.TypeCode;
 				this.Parent = parent;
 				this.Core = parent.Core ?? this;
 				this.Root = null;
 				this.Domain = null;
-				this.RootCore = parent.Core.RootCore ?? this;
+				this.rootCore = parent.Core.rootCore ?? this;
 				this.SetActive(true);//激活节点
 				return true;
 			}

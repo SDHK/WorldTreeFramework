@@ -140,6 +140,44 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
+		/// 检测方法是否有注释
+		/// </summary>
+		/// <param name="methodDecl"></param>
+		/// <param name="semanticModel"></param>
+		/// <returns></returns>
+		public static bool CheckInterfaceMethodComment(MethodDeclarationSyntax methodDecl, SemanticModel semanticModel)
+		{
+			// 获取方法的符号信息
+			var methodSymbol = semanticModel.GetDeclaredSymbol(methodDecl);
+			if (methodSymbol == null) return false;
+
+			// 检查方法是否是接口实现
+			foreach (var implementedInterface in methodSymbol.ContainingType.AllInterfaces)
+			{
+				foreach (var interfaceMember in implementedInterface.GetMembers())
+				{
+					if (methodSymbol.Equals(methodSymbol.ContainingType.FindImplementationForInterfaceMember(interfaceMember)))
+					{
+						// 找到接口中对应的方法
+						var interfaceMethod = interfaceMember as IMethodSymbol;
+						if (interfaceMethod != null)
+						{
+							// 获取接口方法的语法节点
+							var interfaceMethodDecl = interfaceMethod.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() as MethodDeclarationSyntax;
+							if (interfaceMethodDecl != null)
+							{
+								// 检查接口方法是否有注释
+								return TreeSyntaxHelper.CheckComment(interfaceMethodDecl);
+							}
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
 		/// 检查节点是否有注释
 		/// </summary>
 		public static bool CheckComment(SyntaxNode node)

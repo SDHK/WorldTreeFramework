@@ -30,14 +30,14 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 			ParameterSyntax parameter = (ParameterSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics))
 			{
-				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前参数的类型
 					ISymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parameter);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ParameterNaming, out DiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ParameterNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(parameter.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符

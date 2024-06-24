@@ -20,32 +20,30 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 项目诊断配置
 		/// </summary>
-		public static Dictionary<string, List<DiagnosticGroupConfig>> ProjectDiagnostics = new()
+		public static Dictionary<string, List<DiagnosticConfigGroup>> ProjectDiagnostics = new()
 		{
 			{ "App",new(){
-					new ListDiagnostic().Init(),
-					new ArrayDiagnostic().Init(),
-					new DictionaryDiagnostic().Init(),
-					new HashSetDiagnostic().Init(),
-					new QueueDiagnostic().Init(),
-					new StackDiagnostic().Init(),
-					new NodeDiagnostic().Init(),
-					new StaticRuleDiagnostic().Init(),
-					new ObjectDiagnostic().Init()
+					new ListDiagnosticConfig(),
+					new ArrayDiagnosticConfig(),
+					new DictionaryDiagnosticConfig(),
+					new HashSetDiagnosticConfig(),
+					new QueueDiagnosticConfig(),
+					new StackDiagnosticConfig(),
+					new NodeDiagnosticConfig(),
+					new StaticRuleDiagnosticConfig(),
+					new ObjectDiagnosticConfig()
 				}
 			},
 			{ "DotNet.Core",new(){
-					new ListDiagnostic().Init(),
-					new ArrayDiagnostic().Init(),
-					new DictionaryDiagnostic().Init(),
-					new HashSetDiagnostic().Init(),
-					new QueueDiagnostic().Init(),
-					new StackDiagnostic().Init(),
-
-					new NodeDiagnostic().Init(),
-					new StaticRuleDiagnostic().Init(),
-
-					new ObjectDiagnostic().Init()
+					new ListDiagnosticConfig(),
+					new ArrayDiagnosticConfig(),
+					new DictionaryDiagnosticConfig(),
+					new HashSetDiagnosticConfig(),
+					new QueueDiagnosticConfig(),
+					new StackDiagnosticConfig(),
+					new NodeDiagnosticConfig(),
+					new StaticRuleDiagnosticConfig(),
+					new ObjectDiagnosticConfig()
 				}
 			},
 		};
@@ -58,14 +56,14 @@ namespace WorldTree.Analyzer
 		{
 			List<DiagnosticDescriptor> descriptors = new();
 			HashSet<Type> types = new();
-			foreach (List<DiagnosticGroupConfig> objectDiagnosticList in ProjectDiagnostics.Values)
+			foreach (List<DiagnosticConfigGroup> objectDiagnosticList in ProjectDiagnostics.Values)
 			{
-				foreach (DiagnosticGroupConfig diagnosticConfig in objectDiagnosticList)
+				foreach (DiagnosticConfigGroup diagnosticConfig in objectDiagnosticList)
 				{
 					if (types.Contains(diagnosticConfig.GetType())) continue;
 					types.Add(diagnosticConfig.GetType());
 
-					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.CodeDiagnostics.Values)
+					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
 					{
 						if (codeDiagnosticConfig.DeclarationKind == declarationKind)
 						{
@@ -84,14 +82,14 @@ namespace WorldTree.Analyzer
 		{
 			List<string> descriptors = new();
 			HashSet<Type> types = new();
-			foreach (List<DiagnosticGroupConfig> objectDiagnosticList in ProjectDiagnostics.Values)
+			foreach (List<DiagnosticConfigGroup> objectDiagnosticList in ProjectDiagnostics.Values)
 			{
-				foreach (DiagnosticGroupConfig diagnosticConfig in objectDiagnosticList)
+				foreach (DiagnosticConfigGroup diagnosticConfig in objectDiagnosticList)
 				{
 					if (types.Contains(diagnosticConfig.GetType())) continue;
 					types.Add(diagnosticConfig.GetType());
 
-					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.CodeDiagnostics.Values)
+					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
 					{
 						if (codeDiagnosticConfig.DeclarationKind==declarationKind)
 						{
@@ -108,11 +106,11 @@ namespace WorldTree.Analyzer
 		/// </summary>
 		public static bool TryFindDiagnosticDescriptor(string id, out DiagnosticConfig codeDiagnostic)
 		{
-			foreach (List<DiagnosticGroupConfig> objectDiagnosticList in ProjectDiagnostics.Values)
+			foreach (List<DiagnosticConfigGroup> objectDiagnosticList in ProjectDiagnostics.Values)
 			{
-				foreach (DiagnosticGroupConfig diagnosticConfig in objectDiagnosticList)
+				foreach (DiagnosticConfigGroup diagnosticConfig in objectDiagnosticList)
 				{
-					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.CodeDiagnostics.Values)
+					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
 					{
 						if (codeDiagnosticConfig.Diagnostic.Id == id)
 						{
@@ -122,7 +120,7 @@ namespace WorldTree.Analyzer
 					}
 				}
 			}
-			codeDiagnostic = null;
+			codeDiagnostic = default;
 			return false;
 		}
 	}

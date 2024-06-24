@@ -29,14 +29,14 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 			DelegateDeclarationSyntax delegateDeclaration = (DelegateDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics))
 			{
-				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前委托的类型
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(delegateDeclaration);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.DelegateNaming, out DiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.DelegateNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(delegateDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符

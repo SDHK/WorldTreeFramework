@@ -31,14 +31,14 @@ namespace WorldTree.Analyzer
 
 			EnumMemberDeclarationSyntax enumMemberDeclaration = (EnumMemberDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics))
 			{
-				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 				{
 					//获取当前枚举成员的类型
 					ISymbol? symbol = semanticModel.GetDeclaredSymbol(enumMemberDeclaration);
 					if (!objectDiagnostic.Screen(symbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.EnumMemberNaming, out DiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.EnumMemberNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(enumMemberDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符

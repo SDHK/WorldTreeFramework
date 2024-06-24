@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Composition;
+using System.Linq;
 using WorldTree.SourceGenerator;
 
 namespace WorldTree.Analyzer
@@ -30,21 +31,35 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 			MethodDeclarationSyntax? methodDeclaration = context.Node as MethodDeclarationSyntax;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics))
 			{
-				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 				{
 					BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(methodDeclaration);
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 					if (!objectDiagnostic.Screen(typeSymbol)) continue;
-					if (!objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.MethodNaming, out DiagnosticConfig codeDiagnostic)) continue;
+					if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.MethodNaming, out DiagnosticConfig codeDiagnostic)) continue;
 					// 需要的修饰符
 					if (!TreeSyntaxHelper.SyntaxKindContains(methodDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 					// 不需要检查的修饰符
 					if (TreeSyntaxHelper.SyntaxKindContainsAny(methodDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-					if (!codeDiagnostic.Check.Invoke(methodDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(methodDeclaration)))
+
+					//检查方法名
+					if (!codeDiagnostic.Check.Invoke(methodDeclaration.Identifier.Text))
 					{
 						context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));
+					}
+					//是否需要注释
+					else if (codeDiagnostic.NeedComment)
+					{
+						//是否为重写方法
+						if (!methodDeclaration.Modifiers.Any((kind) => kind.IsKind(SyntaxKind.OverrideKeyword)))
+						{
+							if (!TreeSyntaxHelper.CheckSummaryComment(methodDeclaration))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));
+							}
+						}
 					}
 					return;
 				}

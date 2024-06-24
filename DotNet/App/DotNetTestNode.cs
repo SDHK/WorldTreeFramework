@@ -13,7 +13,7 @@ namespace WorldTree
 
 	}
 	/// <summary>
-	///  
+	///  a
 	/// </summary>
 	delegate void AOnTestEvent<T>(T self) where T : INode;
 
@@ -23,27 +23,34 @@ namespace WorldTree
 	public interface AITa
 	{
 		/// <summary>
-		/// 
+		/// a
 		/// </summary>
-		public const int A_CT = 1;
+		public const int A_A_CT = 1;
 	}
 	/// <summary>
 	/// a
 	/// </summary>
-	public struct AT
+	public class AT
 	{
-
-		public const int A_CC_BAA = 1;
+		
 		
 		/// <summary>
 		/// 测试变量
 		/// </summary>
-		private int a,v;
+		private int a, v;
 
 		/// <summary>
 		/// 注释
 		/// </summary>
 		public int ATa21;
+
+		/// <summary>
+		/// 注释
+		/// </summary>
+		public virtual void Test()
+		{
+
+		}
 
 	}
 
@@ -90,12 +97,12 @@ namespace WorldTree
 		/// <summary>
 		/// 注释
 		/// </summary>
-		public Queue<int> IntsQueue;
+		public Queue<int> intsQueue;
 
 		/// <summary>
 		/// 注释
 		/// </summary>
-		public Stack<int> IntsStack;
+		private Stack<int> intsStack;
 
 		/// <summary>
 		/// 注释

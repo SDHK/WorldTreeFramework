@@ -32,16 +32,16 @@ namespace WorldTree.Analyzer
 
 			PropertyDeclarationSyntax propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
 
-			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticGroupConfig> objectDiagnostics))
+			if (AnalyzerSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics))
 			{
-				foreach (DiagnosticGroupConfig objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 				{
 
 					//获取当前属性的类型
 					ITypeSymbol fieldTypeSymbol = semanticModel.GetTypeInfo(propertyDeclaration.Type).Type;
 					if (objectDiagnostic.Screen(fieldTypeSymbol))
 					{
-						if (objectDiagnostic.CodeDiagnostics.TryGetValue(DiagnosticKey.ClassPropertyNaming, out DiagnosticConfig codeDiagnostic))
+						if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassPropertyNaming, out DiagnosticConfig codeDiagnostic))
 						{
 							if (!codeDiagnostic.Check.Invoke(propertyDeclaration.Identifier.Text) )
 							{
@@ -55,7 +55,7 @@ namespace WorldTree.Analyzer
 					INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 					if (objectDiagnostic.Screen(typeSymbol))
 					{
-						foreach (DiagnosticConfig codeDiagnostic in objectDiagnostic.CodeDiagnostics.Values)
+						foreach (DiagnosticConfig codeDiagnostic in objectDiagnostic.Diagnostics.Values)
 						{
 							if (codeDiagnostic.DeclarationKind != SyntaxKind.PropertyDeclaration) continue;
 							// 需要的修饰符
