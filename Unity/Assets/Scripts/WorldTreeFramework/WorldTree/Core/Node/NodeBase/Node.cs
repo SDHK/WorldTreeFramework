@@ -109,10 +109,10 @@ namespace WorldTree
 
 		#region 添加
 
-		public virtual bool TryAddSelfToTree<B, K>(K Key, INode parent)
+		public virtual bool TryAddSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
 		{
-			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(Key, this))
+			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
 				this.BranchType = TypeInfo<B>.TypeCode;
 				this.Parent = parent;

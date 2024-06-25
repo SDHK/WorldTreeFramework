@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
-using WorldTree.Analyzer;
 
 namespace WorldTree.SourceGenerator
 {
@@ -139,43 +138,7 @@ namespace WorldTree.SourceGenerator
 			return ns.Name.ToString();
 		}
 
-		/// <summary>
-		/// 检测方法是否有注释
-		/// </summary>
-		/// <param name="methodDecl"></param>
-		/// <param name="semanticModel"></param>
-		/// <returns></returns>
-		public static bool CheckInterfaceMethodComment(MethodDeclarationSyntax methodDecl, SemanticModel semanticModel)
-		{
-			// 获取方法的符号信息
-			var methodSymbol = semanticModel.GetDeclaredSymbol(methodDecl);
-			if (methodSymbol == null) return false;
-
-			// 检查方法是否是接口实现
-			foreach (var implementedInterface in methodSymbol.ContainingType.AllInterfaces)
-			{
-				foreach (var interfaceMember in implementedInterface.GetMembers())
-				{
-					if (methodSymbol.Equals(methodSymbol.ContainingType.FindImplementationForInterfaceMember(interfaceMember)))
-					{
-						// 找到接口中对应的方法
-						var interfaceMethod = interfaceMember as IMethodSymbol;
-						if (interfaceMethod != null)
-						{
-							// 获取接口方法的语法节点
-							var interfaceMethodDecl = interfaceMethod.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() as MethodDeclarationSyntax;
-							if (interfaceMethodDecl != null)
-							{
-								// 检查接口方法是否有注释
-								return TreeSyntaxHelper.CheckComment(interfaceMethodDecl);
-							}
-						}
-					}
-				}
-			}
-
-			return false;
-		}
+		
 
 		/// <summary>
 		/// 检查节点是否有注释
@@ -193,7 +156,14 @@ namespace WorldTree.SourceGenerator
 					trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
 					trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia))
 				{
-					return true; // 找到注释，返回true
+					// 获取注释的文本内容
+					var commentText = trivia.ToString().TrimStart('/', ' ', '*').TrimEnd('/', ' ', '*').Trim();
+
+					// 检查注释内容是否非空
+					if (!string.IsNullOrWhiteSpace(commentText))
+					{
+						return true; // 找到非空的注释内容，返回true
+					}
 				}
 			}
 			return false; // 没有找到注释，返回false

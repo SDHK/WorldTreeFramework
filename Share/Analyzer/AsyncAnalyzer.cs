@@ -25,6 +25,9 @@ namespace WorldTree.Analyzer
 
 		private void AnalyzeMemberAccessExpression(SyntaxNodeAnalysisContext context)
 		{
+			if (context.Node != null) return;
+			if (context.Node == null) return;
+
 			//节点不是方法声明
 			if (context.Node is not MethodDeclarationSyntax methodDeclarationSyntax) return;
 

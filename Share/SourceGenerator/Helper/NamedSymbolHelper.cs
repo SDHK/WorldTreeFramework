@@ -88,6 +88,22 @@ namespace WorldTree.SourceGenerator
 		}
 
 		/// <summary>
+		/// 检测是否接口实现 的 属性或方法节点
+		/// </summary>
+		public static bool CheckInterfaceImplements(ISymbol methodSymbol)
+		{
+			return methodSymbol.ContainingType.AllInterfaces.Any(@interface =>
+			{
+				var interfaceMembers = @interface.GetMembers();
+				return interfaceMembers.Any(member =>
+				{
+					var methodImplementingInterfaceMember = methodSymbol.ContainingType.FindImplementationForInterfaceMember(member);
+					return methodImplementingInterfaceMember?.Equals(methodSymbol, SymbolEqualityComparer.Default) ?? false;
+				});
+			});
+		}
+
+		/// <summary>
 		/// 检测是否继承接口（只对比接口名称，不包括泛型）
 		/// </summary>
 		/// <param name="typeSymbol">子接口</param>

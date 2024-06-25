@@ -2,18 +2,31 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <ImplicitUsings>desable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>11</LangVersion>
+
+    <RootNamespace>WorldTree.Analyzer</RootNamespace>
+
+    <!--执行扩展分析器规则-->
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <!--用于控制构建输出是否应复制到发布文件夹。-->
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <Nullable>disable</Nullable>
-    <LangVersion>10</LangVersion>
-  </PropertyGroup>
-  
-  <PropertyGroup>
+    <!--设置包是否为开发依赖项。true表示开发依赖,它只会用于项目开发和编译,但不会流入发布的部署包中。-->
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <!--控制发布文件夹是否包含符号文件(.pdb)。false表示不包含符号文件,可以减小发布大小。-->
+    <IncludeSymbols>false</IncludeSymbols>
+    <!--是否将目标框架 appending 到输出路径。false表示不添加,输出与框架无关。-->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+
+    <NoWarn> RS2008</NoWarn>
+
   </PropertyGroup>
 
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+
+
+  <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1701;1702;RS2008</NoWarn>
   </PropertyGroup>
@@ -21,11 +34,25 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1701;1702;RS2008</NoWarn>
-  </PropertyGroup>
+  </PropertyGroup>-->
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
-  </ItemGroup>
+
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+      <!--PrivateAssets=all 同样表示包的所有资产都是私有的。-->
+      <PrivateAssets>all</PrivateAssets>
+
+      <!--<IncludeAssets>元素用于选择性地公开私有资产-->
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    
+    </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetDir)/$(TargetName).dll" DestinationFolder="$(ProjectDir)/../../Unity/Assets/Plugins/" ContinueOnError="false" />
+  </Target>
 
 </Project>

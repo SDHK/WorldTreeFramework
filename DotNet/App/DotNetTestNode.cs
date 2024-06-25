@@ -3,56 +3,19 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-	/// <summary> 
-	/// 
-	/// </summary>
-	public enum TTTEnam
-	{
-		// 测试注释
-		Aa,
-
-	}
-	/// <summary>
-	///  a
-	/// </summary>
-	delegate void AOnTestEvent<T>(T self) where T : INode;
 
 	/// <summary>
 	/// 测试接口
 	/// </summary>
-	public interface AITa
+	public interface AITa<A>
 	{
 		/// <summary>
 		/// a
 		/// </summary>
-		public const int A_A_CT = 1;
+		public const int AA_A_CT = 1;
 	}
-	/// <summary>
-	/// a
-	/// </summary>
-	public class AT
-	{
-		
-		
-		/// <summary>
-		/// 测试变量
-		/// </summary>
-		private int a, v;
 
-		/// <summary>
-		/// 注释
-		/// </summary>
-		public int ATa21;
 
-		/// <summary>
-		/// 注释
-		/// </summary>
-		public virtual void Test()
-		{
-
-		}
-
-	}
 
 	/// <summary>
 	/// 测试节点规则
@@ -66,6 +29,8 @@ namespace WorldTree
 
 	}
 
+
+
 	/// <summary>
 	/// 测试节点
 	/// </summary>
@@ -75,7 +40,7 @@ namespace WorldTree
 		, AsTestEvent
 	{
 		/// <summary>
-		/// act阿萨
+		/// a
 		/// </summary>
 		private int a;
 
@@ -87,7 +52,7 @@ namespace WorldTree
 		/// <summary>
 		/// 字典注释
 		/// </summary>
-		public Dictionary<int,string> KeysDicDict;
+		public Dictionary<int, string> KeysDicDict;
 
 		/// <summary>
 		/// 数组注释
@@ -105,9 +70,25 @@ namespace WorldTree
 		private Stack<int> intsStack;
 
 		/// <summary>
-		/// 注释
+		/// a
 		/// </summary>
 		public HashSet<int> IntsHash;
+
+		/// <summary>
+		/// a
+		/// </summary>
+		public void OuterMethod()
+		{
+			// a
+			int LocalFunction(int x, int y)
+			{
+				return x + y;
+			}
+
+			// a
+			int result = LocalFunction(5, 3);
+			Console.WriteLine(result); // 输出: 8
+		}
 
 	}
 
