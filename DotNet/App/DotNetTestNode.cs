@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
@@ -10,11 +11,33 @@ namespace WorldTree
 	public interface AITa<A>
 	{
 		/// <summary>
+		/// 测试aaa
+		/// </summary>
+		public int AAA_A { get; set; }
+		/// <summary>
 		/// a
 		/// </summary>
-		public const int AA_A_CT = 1;
+		public void Tast();
+
 	}
 
+	/// <summary>
+	/// 测试节点
+	/// </summary>
+	public class Test1 : Node
+		, AsAwake
+		 , ComponentOf<INode>
+	{
+		/// <summary>
+		/// a
+		/// </summary>
+		public int a;
+
+		/// <summary>
+		/// B
+		/// </summary>
+		public int B;
+	}
 
 
 	/// <summary>
@@ -23,12 +46,35 @@ namespace WorldTree
 	public static partial class DotNetTestNodeRule
 	{
 		/// <summary>
-		/// 测试事件
+		/// 测试扩展方法
 		/// </summary>
-		private static int A;
+		public static void Test(this Test1 self, DotNetTestNode dotNetTestNode)
+		{
+			// a获取
+			var a = dotNetTestNode.AddComponent(out Test1 _).a;
+
+			// b获取
+			var b = dotNetTestNode.AddComponent(out Test1 _).B;
+		}
+
+		private static OnAdd<Test1> AddTest = delegate (Test1 self) 
+		{
+			// a获取
+			//var a = self.AddComponent(out Test1 _).a;
+			var a = self.a;
+		};
+
+		private class AddT : AddRule<Test1>
+		{
+			protected override void Execute(Test1 self)
+			{
+				// a
+				var a = self.a;
+			}
+		}
+
 
 	}
-
 
 
 	/// <summary>
@@ -38,11 +84,19 @@ namespace WorldTree
 		, AsAwake
 		, AsCurveEvaluate
 		, AsTestEvent
+		, AsComponentBranch
 	{
 		/// <summary>
 		/// a
 		/// </summary>
-		private int a;
+		public int a;
+
+		/// <summary>
+		/// a
+		/// </summary>
+		public int At { get; }
+
+		//public int At =>this.TryGetComponent(out Test1 test1) ? test1.a : 0;
 
 		/// <summary>
 		/// 注释
@@ -104,6 +158,9 @@ namespace WorldTree
 
 		private static OnUpdate<DotNetTestNode> Update = (self) =>
 		{
+			// a 
+			var a = self.NtList;
+
 			//全局调用
 			self.Core.GetOrNewGlobalRuleActuator(out GlobalRuleActuator<TestEvent> act).Send();
 

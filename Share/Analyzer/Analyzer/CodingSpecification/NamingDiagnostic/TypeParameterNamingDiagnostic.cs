@@ -11,8 +11,8 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Composition;
 using System.Collections.Generic;
+using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 

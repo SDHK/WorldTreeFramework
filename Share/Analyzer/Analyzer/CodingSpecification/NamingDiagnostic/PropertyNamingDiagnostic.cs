@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
-using WorldTree.SourceGenerator;
 
 namespace WorldTree.Analyzer
 {
@@ -53,8 +52,9 @@ namespace WorldTree.Analyzer
 
 				//获取当前属性所在的类型名称
 				BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(propertyDeclaration);
-				INamedTypeSymbol? propertySymbol = semanticModel.GetDeclaredSymbol(parentType);
-				if (objectDiagnostic.Screen(propertySymbol))
+				IPropertySymbol? propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration);
+				INamedTypeSymbol? propertyParentSymbol = semanticModel.GetDeclaredSymbol(parentType);
+				if (objectDiagnostic.Screen(propertyParentSymbol))
 				{
 					foreach (DiagnosticConfig codeDiagnostic in objectDiagnostic.Diagnostics.Values)
 					{
@@ -69,16 +69,14 @@ namespace WorldTree.Analyzer
 							context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
 						}
 						//是否需要注释
-						else if (codeDiagnostic.NeedComment)
+						if (codeDiagnostic.NeedComment)
 						{
 							// 检查属性是否为重写的
 							bool isOverride = propertySymbol.IsOverride;
-
 							if (!isOverride)
 							{
 								// 检查属性是否直接声明在当前类中
-								INamedTypeSymbol? parentTypeSymbol = semanticModel.GetDeclaredSymbol(parentType);
-								isOverride = !propertySymbol.ContainingType.Equals(parentTypeSymbol, SymbolEqualityComparer.Default);
+								isOverride = !propertySymbol.ContainingType.Equals(propertyParentSymbol, SymbolEqualityComparer.Default);
 								if (!isOverride)
 								{
 									// 检查属性是否实现了任何接口

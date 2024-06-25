@@ -15,13 +15,9 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
-using WorldTree.SourceGenerator;
 
 namespace WorldTree.Analyzer
 {
-
-
-
 	/// <summary>
 	/// 类型命名规范诊断器
 	/// </summary>
@@ -33,7 +29,7 @@ namespace WorldTree.Analyzer
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
-			
+
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 

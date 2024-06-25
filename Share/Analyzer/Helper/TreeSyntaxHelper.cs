@@ -14,9 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WorldTree.Analyzer;
 
-namespace WorldTree.SourceGenerator
+namespace WorldTree.Analyzer
 {
 	/// <summary>
 	/// 语法树帮助类
@@ -391,5 +390,40 @@ namespace WorldTree.SourceGenerator
 			return null;
 		}
 
-	}
+		/// <summary>
+		/// 获取节点所在的方法
+		/// </summary>
+		public static MethodDeclarationSyntax GetParentMethod(SyntaxNode syntaxNode)
+		{
+			while (syntaxNode != null)
+			{
+				if (syntaxNode is MethodDeclarationSyntax methodDeclaration)
+				{
+					return methodDeclaration;
+				}
+				syntaxNode = syntaxNode.Parent;
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// 获取节点所在的匿名委托
+		/// </summary>
+		/// <param name="syntaxNode">要检查的语法节点</param>
+		/// <returns>匿名委托的语法节点，如果不存在则返回null</returns>
+		public static SyntaxNode GetParentAnonymousDelegate(SyntaxNode syntaxNode)
+		{
+			while (syntaxNode != null)
+			{
+				if (syntaxNode is AnonymousMethodExpressionSyntax ||
+					syntaxNode is ParenthesizedLambdaExpressionSyntax ||
+					syntaxNode is SimpleLambdaExpressionSyntax)
+				{
+					return syntaxNode;
+				}
+				syntaxNode = syntaxNode.Parent;
+			}
+			return null;
+		}
+}
 }

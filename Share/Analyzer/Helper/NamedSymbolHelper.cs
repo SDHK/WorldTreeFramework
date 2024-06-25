@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WorldTree.SourceGenerator
+namespace WorldTree.Analyzer
 {
 	/// <summary>
 	/// 命名符号帮助类

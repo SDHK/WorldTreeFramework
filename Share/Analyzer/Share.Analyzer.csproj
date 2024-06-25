@@ -23,7 +23,9 @@
 
   </PropertyGroup>
 
-
+  <ItemGroup>
+    <None Include="..\..\Unity\Unity.licenseheader" Link="Unity.licenseheader" />
+  </ItemGroup>
 
 
   <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

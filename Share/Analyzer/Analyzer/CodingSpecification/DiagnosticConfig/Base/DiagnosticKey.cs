@@ -116,5 +116,12 @@ namespace WorldTree.Analyzer
 		/// 类型属性命名规范诊断
 		/// </summary>
 		ClassPropertyNaming,
+
+
+		/// <summary>
+		/// 实例字段访问诊断
+		/// </summary>
+		InstanceFieldAccess,
+
 	}
 }

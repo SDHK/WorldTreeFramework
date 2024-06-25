@@ -36,13 +36,13 @@ namespace WorldTree.Analyzer
 		{
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.EnableConcurrentExecution();
-			//context.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
-			context.RegisterCompilationStartAction(analysisContext =>
-					{
-						if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(analysisContext.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
-						analysisContext.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
-					}
-				);
+			context.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
+			//context.RegisterCompilationStartAction(analysisContext =>
+			//		{
+			//			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(analysisContext.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			//			analysisContext.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
+			//		}
+			//	);
 
 		}
 		protected abstract void DiagnosticAction(SyntaxNodeAnalysisContext context);

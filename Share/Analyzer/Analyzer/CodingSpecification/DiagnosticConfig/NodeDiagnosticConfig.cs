@@ -9,7 +9,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Text.RegularExpressions;
-using WorldTree.SourceGenerator;
 
 namespace WorldTree.Analyzer
 {
@@ -28,6 +27,7 @@ namespace WorldTree.Analyzer
 			};
 			SetConfig(DiagnosticKey.ConstNaming, new DiagnosticConfig()
 			{
+
 				Title = "Node常量命名",
 				MessageFormat = "常量命名都要大写",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
@@ -92,6 +92,14 @@ namespace WorldTree.Analyzer
 				Title = "Node方法命名",
 				MessageFormat = "方法命名开头要大写",
 				DeclarationKind = SyntaxKind.MethodDeclaration,
+			});
+			SetConfig(DiagnosticKey.InstanceFieldAccess, new DiagnosticConfig()
+			{
+				Title = "Node字段访问",
+				MessageFormat = "设定小写是私有，不可访问",
+				NeedComment = false,
+				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
+				DeclarationKind = SyntaxKind.SimpleMemberAccessExpression
 			});
 		}
 
