@@ -21,6 +21,8 @@ namespace WorldTree
 
 	}
 
+
+
 	/// <summary>
 	/// 测试节点
 	/// </summary>
@@ -37,6 +39,16 @@ namespace WorldTree
 		/// B
 		/// </summary>
 		public int B;
+
+		/// <summary>
+		/// a1
+		/// </summary>
+		public int a1 { get; }
+
+		/// <summary>
+		/// B1
+		/// </summary>
+		public int B1 =>B;
 	}
 
 
@@ -48,22 +60,25 @@ namespace WorldTree
 		/// <summary>
 		/// 测试扩展方法
 		/// </summary>
-		public static void Test(this Test1 self, DotNetTestNode dotNetTestNode)
+		public static void Test(this DotNetTestNode self, DotNetTestNode dotNetTestNode)
 		{
 			// a获取
-			var a = dotNetTestNode.AddComponent(out Test1 _).a;
+			var a = dotNetTestNode.AddComponent(out Test1 _).a1;
 
 			// b获取
-			var b = dotNetTestNode.AddComponent(out Test1 _).B;
+			var b = dotNetTestNode.AddComponent(out Test1 _).B1;
 		}
 
-		private static OnAdd<Test1> AddTest = delegate (Test1 self) 
+		private static OnAdd<DotNetTestNode> AddTest = delegate (DotNetTestNode self) 
 		{
 			// a获取
-			//var a = self.AddComponent(out Test1 _).a;
-			var a = self.a;
+			var a = self.AddComponent(out Test1 _).a1;
+			//var a = self.a;
 		};
 
+		/// <summary>
+		/// a
+		/// </summary>
 		private class AddT : AddRule<Test1>
 		{
 			protected override void Execute(Test1 self)

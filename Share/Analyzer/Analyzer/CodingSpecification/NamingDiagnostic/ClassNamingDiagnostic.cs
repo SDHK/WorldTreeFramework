@@ -28,28 +28,34 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 
 			ClassDeclarationSyntax classDeclaration = (ClassDeclarationSyntax)context.Node;
 
-			foreach (ObjectDiagnosticConfig objectDiagnostic in objectDiagnostics)
+			foreach (DiagnosticConfigGroup DiagnosticGroup in DiagnosticGroups)
 			{
 				//获取当前类的类型
 				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
-				if (!objectDiagnostic.Screen(typeSymbol)) continue;
-				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassNaming, out DiagnosticConfig codeDiagnostic)) continue;
-				// 需要的修饰符
-				if (!TreeSyntaxHelper.SyntaxKindContains(classDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
-				// 不需要检查的修饰符
-				if (TreeSyntaxHelper.SyntaxKindContainsAny(classDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-				if (!codeDiagnostic.Check.Invoke(classDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(classDeclaration)))
+				if (!DiagnosticGroup.Screen(typeSymbol)) continue;
+				if (DiagnosticGroup.Diagnostics.TryGetValue(DiagnosticKey.ClassNaming, out DiagnosticConfig codeDiagnostic))
 				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
+					// 需要的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(classDeclaration.Modifiers, codeDiagnostic.KeywordKinds))
+					{
+						// 不需要检查的修饰符
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(classDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
+						{
+							if (!codeDiagnostic.Check.Invoke(classDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(classDeclaration)))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
+							}
+						}
+					}
+					return;
 				}
-				return;
 			}
 		}
 	}

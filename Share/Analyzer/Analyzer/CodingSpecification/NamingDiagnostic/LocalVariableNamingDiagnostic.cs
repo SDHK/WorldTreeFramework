@@ -36,27 +36,31 @@ namespace WorldTree.Analyzer
 			LocalDeclarationStatementSyntax? localDeclaration = context.Node as LocalDeclarationStatementSyntax;
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.LocalVariableNaming, out DiagnosticConfig codeDiagnostic)) continue;
-				// 需要的修饰符
-				if (!TreeSyntaxHelper.SyntaxKindContains(localDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
-				// 不需要检查的修饰符
-				if (TreeSyntaxHelper.SyntaxKindContainsAny(localDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-
-				//检查变量名
-				foreach (VariableDeclaratorSyntax variable in localDeclaration.Declaration.Variables)
+				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.LocalVariableNaming, out DiagnosticConfig codeDiagnostic))
 				{
-					if (!codeDiagnostic.Check.Invoke(variable.Identifier.Text))
+					// 需要的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(localDeclaration.Modifiers, codeDiagnostic.KeywordKinds))
 					{
-						context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
+						// 不需要检查的修饰符
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(localDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
+						{
+							//检查变量名
+							foreach (VariableDeclaratorSyntax variable in localDeclaration.Declaration.Variables)
+							{
+								if (!codeDiagnostic.Check.Invoke(variable.Identifier.Text))
+								{
+									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
+								}
+							}
+
+							if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckComment(localDeclaration))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localDeclaration.GetLocation()));
+							}
+						}
 					}
+					return;
 				}
-
-				if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckComment(localDeclaration))
-				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localDeclaration.GetLocation()));
-				}
-
-				return;
 			}
 		}
 	}

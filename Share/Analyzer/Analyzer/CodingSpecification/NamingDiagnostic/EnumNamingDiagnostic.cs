@@ -38,19 +38,27 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 
 			EnumDeclarationSyntax enumDeclaration = (EnumDeclarationSyntax)context.Node;
+			//获取当前枚举的类型
+			INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(enumDeclaration);
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				//获取当前枚举的类型
-				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(enumDeclaration);
 				if (!objectDiagnostic.Screen(typeSymbol)) continue;
-				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.EnumNaming, out DiagnosticConfig codeDiagnostic)) continue;
-				// 需要的修饰符
-				if (!TreeSyntaxHelper.SyntaxKindContains(enumDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
-				// 不需要检查的修饰符
-				if (TreeSyntaxHelper.SyntaxKindContainsAny(enumDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-				if (!codeDiagnostic.Check.Invoke(enumDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(enumDeclaration)))
+				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.EnumNaming, out DiagnosticConfig codeDiagnostic))
 				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, enumDeclaration.Identifier.GetLocation(), enumDeclaration.Identifier.Text));
+					// 需要的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(enumDeclaration.Modifiers, codeDiagnostic.KeywordKinds))
+					{
+						// 不需要检查的修饰符
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(enumDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
+						{
+							if (!codeDiagnostic.Check.Invoke(enumDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(enumDeclaration)))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, enumDeclaration.Identifier.GetLocation(), enumDeclaration.Identifier.Text));
+							}
+
+						}
+					}
+					return;
 				}
 			}
 		}

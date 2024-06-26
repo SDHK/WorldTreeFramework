@@ -18,9 +18,6 @@ using System.Threading.Tasks;
 
 namespace WorldTree.Analyzer
 {
-
-
-
 	/// <summary>
 	/// 局部方法命名规范诊断器
 	/// </summary>
@@ -37,19 +34,26 @@ namespace WorldTree.Analyzer
 			LocalFunctionStatementSyntax? localFunction = context.Node as LocalFunctionStatementSyntax;
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.LocalMethodNaming, out DiagnosticConfig codeDiagnostic)) continue;
-				// 需要的修饰符
-				if (!TreeSyntaxHelper.SyntaxKindContains(localFunction.Modifiers, codeDiagnostic.KeywordKinds)) continue;
-				// 不需要检查的修饰符
-				if (TreeSyntaxHelper.SyntaxKindContainsAny(localFunction.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-				//检查方法名
-				if (!codeDiagnostic.Check.Invoke(localFunction.Identifier.Text))
+				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.LocalMethodNaming, out DiagnosticConfig codeDiagnostic))
 				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localFunction.GetLocation(), localFunction.Identifier.Text));
-				}
-				else if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckComment(localFunction))
-				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localFunction.GetLocation(), localFunction.Identifier.Text));
+					// 需要的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(localFunction.Modifiers, codeDiagnostic.KeywordKinds))
+					{
+						// 不需要检查的修饰符
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(localFunction.Modifiers, codeDiagnostic.UnKeywordKinds, false))
+						{
+							//检查方法名
+							if (!codeDiagnostic.Check.Invoke(localFunction.Identifier.Text))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localFunction.GetLocation(), localFunction.Identifier.Text));
+							}
+							else if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckComment(localFunction))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localFunction.GetLocation(), localFunction.Identifier.Text));
+							}
+						}
+					}
+					return;
 				}
 			}
 		}

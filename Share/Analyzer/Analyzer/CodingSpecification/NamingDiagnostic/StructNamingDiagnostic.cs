@@ -38,16 +38,21 @@ namespace WorldTree.Analyzer
 				//获取当前类的类型
 				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(structDeclaration);
 				if (!objectDiagnostic.Screen(typeSymbol)) continue;
-				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.StructNaming, out DiagnosticConfig codeDiagnostic)) continue;
-				// 需要的修饰符
-				if (!TreeSyntaxHelper.SyntaxKindContains(structDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
-				// 不需要检查的修饰符
-				if (TreeSyntaxHelper.SyntaxKindContainsAny(structDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-				if (!codeDiagnostic.Check.Invoke(structDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(structDeclaration)))
+				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.StructNaming, out DiagnosticConfig codeDiagnostic))
 				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, structDeclaration.GetLocation(), structDeclaration.Identifier.Text));
+					// 需要的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(structDeclaration.Modifiers, codeDiagnostic.KeywordKinds)){
+						// 不需要检查的修饰符
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(structDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) {
+
+							if (!codeDiagnostic.Check.Invoke(structDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(structDeclaration)))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, structDeclaration.GetLocation(), structDeclaration.Identifier.Text));
+							}
+						}
+					}
+					return;
 				}
-				return;
 			}
 		}
 	}

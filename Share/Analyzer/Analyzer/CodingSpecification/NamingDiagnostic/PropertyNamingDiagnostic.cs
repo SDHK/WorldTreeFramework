@@ -29,72 +29,83 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
+			DiagnosticProperty(context, DiagnosticKey.PublicPropertyNaming);
+			DiagnosticProperty(context, DiagnosticKey.PrivatePropertyNaming);
+			DiagnosticProperty(context, DiagnosticKey.ProtectedPropertyNaming);
+		}
+
+		private void DiagnosticProperty(SyntaxNodeAnalysisContext context, DiagnosticKey diagnosticKey)
+		{
+
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
-
 			PropertyDeclarationSyntax propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
+
+
+			//获取当前属性所在的类型名称
+			BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(propertyDeclaration);
+			IPropertySymbol? propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration);
+			INamedTypeSymbol? propertyParentSymbol = semanticModel.GetDeclaredSymbol(parentType);
+
+			//获取当前属性的类型
+			ITypeSymbol propertyTypeSymbol = semanticModel.GetTypeInfo(propertyDeclaration.Type).Type;
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-
-				//获取当前属性的类型
-				ITypeSymbol propertyTypeSymbol = semanticModel.GetTypeInfo(propertyDeclaration.Type).Type;
 				if (objectDiagnostic.Screen(propertyTypeSymbol))
 				{
-					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassPropertyNaming, out DiagnosticConfig codeDiagnostic))
+					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassPropertyNaming, out DiagnosticConfig diagnosticConfig))
 					{
-						if (!codeDiagnostic.Check.Invoke(propertyDeclaration.Identifier.Text))
+						if (!diagnosticConfig.Check.Invoke(propertyDeclaration.Identifier.Text))
 						{
-							context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
+							context.ReportDiagnostic(Diagnostic.Create(diagnosticConfig.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
 						}
 					}
 				}
-
-				//获取当前属性所在的类型名称
-				BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(propertyDeclaration);
-				IPropertySymbol? propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration);
-				INamedTypeSymbol? propertyParentSymbol = semanticModel.GetDeclaredSymbol(parentType);
-				if (objectDiagnostic.Screen(propertyParentSymbol))
+				if (!objectDiagnostic.Screen(propertyParentSymbol)) continue;
+				if (objectDiagnostic.Diagnostics.TryGetValue(diagnosticKey, out DiagnosticConfig codeDiagnostic))
 				{
-					foreach (DiagnosticConfig codeDiagnostic in objectDiagnostic.Diagnostics.Values)
+					// 需要的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(propertyDeclaration.Modifiers, codeDiagnostic.KeywordKinds))
 					{
-						if (codeDiagnostic.DeclarationKind != SyntaxKind.PropertyDeclaration) continue;
-						// 需要的修饰符
-						if (!TreeSyntaxHelper.SyntaxKindContains(propertyDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
 						// 不需要检查的修饰符
-						if (TreeSyntaxHelper.SyntaxKindContainsAny(propertyDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-						// 检查属性名是否符合规范
-						if (!codeDiagnostic.Check.Invoke(propertyDeclaration.Identifier.Text))
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(propertyDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
-							context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
-						}
-						//是否需要注释
-						if (codeDiagnostic.NeedComment)
-						{
-							// 检查属性是否为重写的
-							bool isOverride = propertySymbol.IsOverride;
-							if (!isOverride)
+							// 检查属性名是否符合规范
+							if (!codeDiagnostic.Check.Invoke(propertyDeclaration.Identifier.Text))
 							{
-								// 检查属性是否直接声明在当前类中
-								isOverride = !propertySymbol.ContainingType.Equals(propertyParentSymbol, SymbolEqualityComparer.Default);
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
+							}
+							//是否需要注释
+							if (codeDiagnostic.NeedComment)
+							{
+								// 检查属性是否为重写的
+								bool isOverride = propertySymbol.IsOverride;
 								if (!isOverride)
 								{
-									// 检查属性是否实现了任何接口
-									isOverride = NamedSymbolHelper.CheckInterfaceImplements(propertySymbol);
+									// 检查属性是否直接声明在当前类中
+									isOverride = !propertySymbol.ContainingType.Equals(propertyParentSymbol, SymbolEqualityComparer.Default);
+									if (!isOverride)
+									{
+										// 检查属性是否实现了任何接口
+										isOverride = NamedSymbolHelper.CheckInterfaceImplements(propertySymbol);
+									}
 								}
-							}
-							if (!isOverride)
-							{
-								if (!TreeSyntaxHelper.CheckSummaryComment(propertyDeclaration))
+								if (!isOverride)
 								{
-									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
+									if (!TreeSyntaxHelper.CheckSummaryComment(propertyDeclaration))
+									{
+										context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
+									}
 								}
 							}
 						}
+
 					}
 					return;
 				}
 			}
+
 		}
 	}
 

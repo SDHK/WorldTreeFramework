@@ -31,21 +31,27 @@ namespace WorldTree.Analyzer
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
-
 			InterfaceDeclarationSyntax interfaceDeclaration = (InterfaceDeclarationSyntax)context.Node;
+			INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(interfaceDeclaration);
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
 				//获取当前接口的类型
-				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(interfaceDeclaration);
 				if (!objectDiagnostic.Screen(typeSymbol)) continue;
-				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.InterfaceNaming, out DiagnosticConfig codeDiagnostic)) continue;
-				// 需要的修饰符
-				if (!TreeSyntaxHelper.SyntaxKindContains(interfaceDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
-				// 不需要检查的修饰符
-				if (TreeSyntaxHelper.SyntaxKindContainsAny(interfaceDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-				if (!codeDiagnostic.Check.Invoke(interfaceDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(interfaceDeclaration)))
+				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.InterfaceNaming, out DiagnosticConfig codeDiagnostic))
 				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, interfaceDeclaration.Identifier.GetLocation(), interfaceDeclaration.Identifier.Text));
+					// 需要的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(interfaceDeclaration.Modifiers, codeDiagnostic.KeywordKinds))
+					{
+						// 不需要检查的修饰符
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(interfaceDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
+						{
+							if (!codeDiagnostic.Check.Invoke(interfaceDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(interfaceDeclaration)))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, interfaceDeclaration.Identifier.GetLocation(), interfaceDeclaration.Identifier.Text));
+							}
+						}
+					}
+					return;
 				}
 			}
 		}

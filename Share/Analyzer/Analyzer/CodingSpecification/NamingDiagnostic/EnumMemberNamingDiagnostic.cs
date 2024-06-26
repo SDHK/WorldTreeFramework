@@ -34,19 +34,26 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 
 			EnumMemberDeclarationSyntax enumMemberDeclaration = (EnumMemberDeclarationSyntax)context.Node;
+			//获取当前枚举成员的类型
+			ISymbol? symbol = semanticModel.GetDeclaredSymbol(enumMemberDeclaration);
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				//获取当前枚举成员的类型
-				ISymbol? symbol = semanticModel.GetDeclaredSymbol(enumMemberDeclaration);
 				if (!objectDiagnostic.Screen(symbol)) continue;
-				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.EnumMemberNaming, out DiagnosticConfig codeDiagnostic)) continue;
-				// 需要的修饰符
-				if (!TreeSyntaxHelper.SyntaxKindContains(enumMemberDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
-				// 不需要检查的修饰符
-				if (TreeSyntaxHelper.SyntaxKindContainsAny(enumMemberDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-				if (!codeDiagnostic.Check.Invoke(enumMemberDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(enumMemberDeclaration)))
+				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.EnumMemberNaming, out DiagnosticConfig codeDiagnostic))
 				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, enumMemberDeclaration.Identifier.GetLocation(), enumMemberDeclaration.Identifier.Text));
+					// 需要的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(enumMemberDeclaration.Modifiers, codeDiagnostic.KeywordKinds))
+					{
+						// 不需要检查的修饰符
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(enumMemberDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
+						{
+							if (!codeDiagnostic.Check.Invoke(enumMemberDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(enumMemberDeclaration)))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, enumMemberDeclaration.Identifier.GetLocation(), enumMemberDeclaration.Identifier.Text));
+							}
+						}
+					}
+					return;
 				}
 			}
 		}

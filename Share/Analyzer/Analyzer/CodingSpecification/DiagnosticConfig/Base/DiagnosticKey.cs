@@ -119,9 +119,12 @@ namespace WorldTree.Analyzer
 
 
 		/// <summary>
-		/// 实例字段访问诊断
+		/// 实例的简单成员访问诊断
 		/// </summary>
-		InstanceFieldAccess,
+		/// <remarks>字段，属性，事件字段</remarks>
+		SimpleMemberAccess,
+
+
 
 	}
 }

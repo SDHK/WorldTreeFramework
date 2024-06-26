@@ -19,35 +19,65 @@ namespace WorldTree.Analyzer
 	/// </summary>
 	public static partial class ProjectDiagnosticSetting
 	{
+		private static List<DiagnosticConfigGroup> CoreConfigs = new()
+		{
+			new ListDiagnosticConfig(),
+			new ArrayDiagnosticConfig(),
+			new DictionaryDiagnosticConfig(),
+			new HashSetDiagnosticConfig(),
+			new QueueDiagnosticConfig(),
+			new StackDiagnosticConfig(),
+			new CodeNodeDiagnosticConfig(),
+			new StaticRuleDiagnosticConfig(),
+			new ObjectDiagnosticConfig()
+		};
+
+		private static List<DiagnosticConfigGroup> NodeConfigs = new()
+		{
+			new ListDiagnosticConfig(),
+			new ArrayDiagnosticConfig(),
+			new DictionaryDiagnosticConfig(),
+			new HashSetDiagnosticConfig(),
+			new QueueDiagnosticConfig(),
+			new StackDiagnosticConfig(),
+
+			new NodeDiagnosticConfig(),
+			new StaticRuleDiagnosticConfig(),
+			new ObjectDiagnosticConfig()
+		};
+
+		private static List<DiagnosticConfigGroup> RuleConfigs = new()
+		{
+			new ListDiagnosticConfig(),
+			new ArrayDiagnosticConfig(),
+			new DictionaryDiagnosticConfig(),
+			new HashSetDiagnosticConfig(),
+			new QueueDiagnosticConfig(),
+			new StackDiagnosticConfig(),
+
+			new RuleDiagnosticConfig(),
+			new ProjectBanModelDiagnosticConfig(),
+			new StaticRuleDiagnosticConfig(),
+			new ObjectDiagnosticConfig()
+		};
+
 		/// <summary>
 		/// 项目诊断配置
 		/// </summary>
 		public static Dictionary<string, List<DiagnosticConfigGroup>> ProjectDiagnostics = new()
 		{
-			{ "App",new(){
-					new ListDiagnosticConfig(),
-					new ArrayDiagnosticConfig(),
-					new DictionaryDiagnosticConfig(),
-					new HashSetDiagnosticConfig(),
-					new QueueDiagnosticConfig(),
-					new StackDiagnosticConfig(),
-					new NodeDiagnosticConfig(),
-					new StaticRuleDiagnosticConfig(),
-					new ObjectDiagnosticConfig()
-				}
-			},
-			{ "DotNet.Core",new(){
-					new ListDiagnosticConfig(),
-					new ArrayDiagnosticConfig(),
-					new DictionaryDiagnosticConfig(),
-					new HashSetDiagnosticConfig(),
-					new QueueDiagnosticConfig(),
-					new StackDiagnosticConfig(),
-					new NodeDiagnosticConfig(),
-					new StaticRuleDiagnosticConfig(),
-					new ObjectDiagnosticConfig()
-				}
-			},
+			//后端配置
+			{ "App",CoreConfigs},
+			{ "DotNet.Core",CoreConfigs},
+
+			//前端限制
+			{ "WorldTree.Core",CoreConfigs},
+			{ "WorldTree.CoreUnity",CoreConfigs},
+
+			{ "WorldTree.Node",NodeConfigs},
+			{ "WorldTree.NodeUnity",NodeConfigs},
+			{ "WorldTree.Rule",RuleConfigs},
+			{ "WorldTree.RuleUnity",RuleConfigs},
 		};
 
 
@@ -93,7 +123,7 @@ namespace WorldTree.Analyzer
 
 					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
 					{
-						if (codeDiagnosticConfig.DeclarationKind==declarationKind)
+						if (codeDiagnosticConfig.DeclarationKind == declarationKind)
 						{
 							descriptors.Add(codeDiagnosticConfig.Diagnostic.Id);
 						}

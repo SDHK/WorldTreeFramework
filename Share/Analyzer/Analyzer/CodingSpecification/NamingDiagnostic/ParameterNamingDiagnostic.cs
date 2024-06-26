@@ -37,14 +37,20 @@ namespace WorldTree.Analyzer
 				//获取当前参数的类型
 				ISymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parameter);
 				if (!objectDiagnostic.Screen(typeSymbol)) continue;
-				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ParameterNaming, out DiagnosticConfig codeDiagnostic)) continue;
-				// 需要的修饰符
-				if (!TreeSyntaxHelper.SyntaxKindContains(parameter.Modifiers, codeDiagnostic.KeywordKinds)) continue;
-				// 不需要检查的修饰符
-				if (TreeSyntaxHelper.SyntaxKindContainsAny(parameter.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-				if (!codeDiagnostic.Check.Invoke(parameter.Identifier.Text))
+				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ParameterNaming, out DiagnosticConfig codeDiagnostic))
 				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, parameter.Identifier.GetLocation(), parameter.Identifier.Text));
+					// 需要的修饰符
+					if (TreeSyntaxHelper.SyntaxKindContains(parameter.Modifiers, codeDiagnostic.KeywordKinds))
+					{
+						// 不需要检查的修饰符
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(parameter.Modifiers, codeDiagnostic.UnKeywordKinds, false))
+						{
+							if (!codeDiagnostic.Check.Invoke(parameter.Identifier.Text))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, parameter.Identifier.GetLocation(), parameter.Identifier.Text));
+							}
+						}
+					}
 				}
 			}
 		}
