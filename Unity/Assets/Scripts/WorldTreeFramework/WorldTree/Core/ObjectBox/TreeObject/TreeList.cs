@@ -56,7 +56,7 @@ namespace WorldTree
 		/// 同步根
 		/// </summary>
 		[NonSerialized]
-		private object _syncRoot;
+		private object syncRoot;
 
 		/// <summary>
 		/// 真实大小
@@ -89,9 +89,9 @@ namespace WorldTree
 		{
 			get
 			{
-				if (this._syncRoot == null)
-					Interlocked.CompareExchange<object>(ref this._syncRoot, new object(), null);
-				return this._syncRoot;
+				if (this.syncRoot == null)
+					Interlocked.CompareExchange<object>(ref this.syncRoot, new object(), null);
+				return this.syncRoot;
 			}
 		}
 
@@ -125,6 +125,9 @@ namespace WorldTree
 			}
 		}
 
+		/// <summary>
+		/// 保证容量
+		/// </summary>
 		private void EnsureCapacity(int min)
 		{
 			if (this._items.Length >= min)
@@ -321,15 +324,24 @@ namespace WorldTree
 			return Array.IndexOf<T>(this._items, item, index, count);
 		}
 
-
+		/// <summary>
+		/// 搜索最后一次出现的下标
+		/// </summary>
 		public int LastIndexOf(T item) => this._size == 0 ? -1 : this.LastIndexOf(item, this._size - 1, this._size);
 
+		/// <summary>
+		/// 搜索最后一次出现的下标
+		/// </summary>
 		public int LastIndexOf(T item, int index)
 		{
 			if (index >= this._size)
 				this.LogError("下标超过大小");
 			return this.LastIndexOf(item, index, index + 1);
 		}
+
+		/// <summary>
+		/// 搜索最后一次出现的下标
+		/// </summary>
 		public int LastIndexOf(T item, int index, int count)
 		{
 			if (this.Count != 0 && index < 0)
@@ -770,6 +782,9 @@ namespace WorldTree
 
 		#region 遍历
 
+		/// <summary>
+		/// 遍历
+		/// </summary>
 		public Enumerator GetEnumerator() => new Enumerator(this);
 
 		IEnumerator IEnumerable.GetEnumerator()
@@ -789,14 +804,26 @@ namespace WorldTree
 		[Serializable]
 		public struct Enumerator : IEnumerator<T>, IDisposable, IEnumerator
 		{
-			private TreeList<T> list;
+			/// <summary>
+			/// 要迭代的列表
+			/// </summary>
+			private TreeList<T> nowList;
+			/// <summary>
+			/// 当前下标
+			/// </summary>
 			private int index;
+			/// <summary>
+			/// 版本号
+			/// </summary>
 			private int version;
+			/// <summary>
+			/// 当前元素
+			/// </summary>
 			private T current;
 
 			internal Enumerator(TreeList<T> list)
 			{
-				this.list = list;
+				this.nowList = list;
 				this.index = 0;
 				this.version = list._version;
 				this.current = default(T);
@@ -804,13 +831,13 @@ namespace WorldTree
 
 			public void Dispose()
 			{
-				list = null;
+				nowList = null;
 				current = default;
 			}
 
 			public bool MoveNext()
 			{
-				TreeList<T> list = this.list;
+				TreeList<T> list = this.nowList;
 				if (this.version != list._version || (uint)this.index >= (uint)list._size)
 					return this.MoveNextRare();
 				this.current = list._items[this.index];
@@ -818,11 +845,14 @@ namespace WorldTree
 				return true;
 			}
 
+			/// <summary>
+			/// 移动
+			/// </summary>
 			private bool MoveNextRare()
 			{
-				if (this.version != this.list._version)
-					this.list.LogError("失败的版本号");
-				this.index = this.list._size + 1;
+				if (this.version != this.nowList._version)
+					this.nowList.LogError("失败的版本号");
+				this.index = this.nowList._size + 1;
 				this.current = default(T);
 				return false;
 			}
@@ -836,16 +866,16 @@ namespace WorldTree
 			{
 				get
 				{
-					if (this.index == 0 || this.index == this.list._size + 1)
-						this.list.LogError("不可遍历");
+					if (this.index == 0 || this.index == this.nowList._size + 1)
+						this.nowList.LogError("不可遍历");
 					return (object)this.Current;
 				}
 			}
 
 			void IEnumerator.Reset()
 			{
-				if (this.version != this.list._version)
-					this.list.LogError("失败的版本号");
+				if (this.version != this.nowList._version)
+					this.nowList.LogError("失败的版本号");
 				this.index = 0;
 				this.current = default(T);
 			}

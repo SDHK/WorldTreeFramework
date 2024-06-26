@@ -7,15 +7,14 @@
 
 */
 
-using System;
 using System.Collections.Generic;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 树泛型HashSet
-    /// </summary>
-    public partial class TreeHashSet<T> : HashSet<T>, INode, ChildOf<INode>
+	/// <summary>
+	/// 树泛型HashSet
+	/// </summary>
+	public partial class TreeHashSet<T> : HashSet<T>, INode, ChildOf<INode>
         , AsAwake
     {
 

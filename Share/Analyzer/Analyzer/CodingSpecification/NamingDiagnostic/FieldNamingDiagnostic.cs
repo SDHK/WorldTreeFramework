@@ -28,14 +28,14 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			DiagnosticField(context, DiagnosticKey.PublicFieldNaming);
-			DiagnosticField(context, DiagnosticKey.PrivateFieldNaming);
-			DiagnosticField(context, DiagnosticKey.ProtectedFieldNaming);
+			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			DiagnosticField(context, DiagnosticKey.PublicFieldNaming, objectDiagnostics);
+			DiagnosticField(context, DiagnosticKey.PrivateFieldNaming, objectDiagnostics);
+			DiagnosticField(context, DiagnosticKey.ProtectedFieldNaming, objectDiagnostics);
 		}
 
-		private void DiagnosticField(SyntaxNodeAnalysisContext context, DiagnosticKey diagnosticKey)
+		private void DiagnosticField(SyntaxNodeAnalysisContext context, DiagnosticKey diagnosticKey, List<DiagnosticConfigGroup> objectDiagnostics)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 
@@ -89,39 +89,6 @@ namespace WorldTree.Analyzer
 					return;
 				}
 			}
-
-
-			////获取当前字段所在的类型名称
-			//BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(fieldDeclaration);
-			//INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
-			//if (objectDiagnostic.Screen(typeSymbol))
-			//{
-			//	foreach (DiagnosticConfig codeDiagnostic in objectDiagnostic.Diagnostics.Values)
-			//	{
-			//		// 字段声明
-			//		if (codeDiagnostic.DeclarationKind != SyntaxKind.FieldDeclaration) continue;
-			//		// 需要的修饰符
-			//		if (!TreeSyntaxHelper.SyntaxKindContains(fieldDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) continue;
-			//		// 不需要检查的修饰符
-			//		if (TreeSyntaxHelper.SyntaxKindContainsAny(fieldDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) continue;
-
-			//		// 检查属性名是否符合规范
-			//		foreach (var variable in fieldDeclaration.Declaration.Variables)
-			//		{
-			//			if (!codeDiagnostic.Check.Invoke(variable.Identifier.Text))
-			//			{
-			//				context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
-			//			}
-			//		}
-
-			//		if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(fieldDeclaration))
-			//		{
-			//			context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, fieldDeclaration.GetLocation()));
-			//		}
-			//	}
-			//	return;
-			//}
-
 		}
 	}
 

@@ -11,20 +11,32 @@ using System.Threading;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 世界环境的工作请求数据
+	/// </summary>
 	public struct WorldContextWorkRequest
 	{
-		private readonly SendOrPostCallback m_DelagateCallback;
-		private readonly object m_DelagateState;
+		/// <summary>
+		/// 委托回调
+		/// </summary>
+		private readonly SendOrPostCallback delagateCallback;
+		/// <summary>
+		/// 委托状态
+		/// </summary>
+		private readonly object delagateState;
 
 		public WorldContextWorkRequest(SendOrPostCallback callback, object state)
 		{
-			m_DelagateCallback = callback;
-			m_DelagateState = state;
+			delagateCallback = callback;
+			delagateState = state;
 		}
 
+		/// <summary>
+		/// 执行委托
+		/// </summary>
 		public void Invoke()
 		{
-			m_DelagateCallback?.Invoke(m_DelagateState);
+			delagateCallback?.Invoke(delagateState);
 		}
 
 	}
@@ -38,17 +50,22 @@ namespace WorldTree
 		, ComponentOf<WorldTreeRoot>
 		, AsAwake
 	{
-
-		public TreeConcurrentQueue<WorldContextWorkRequest> m_Queue;
+		/// <summary>
+		/// 请求队列
+		/// </summary>
+		public TreeConcurrentQueue<WorldContextWorkRequest> queue;
 
 		public override void Post(SendOrPostCallback callback, object state)
 		{
-			this.m_Queue.Enqueue(new(callback, state));
+			this.queue.Enqueue(new(callback, state));
 		}
 
+		/// <summary>
+		/// 注入委托
+		/// </summary>
 		public void Post(Action action)
 		{
-			this.m_Queue.Enqueue(new WorldContextWorkRequest((x) => action(), null));
+			this.queue.Enqueue(new WorldContextWorkRequest((x) => action(), null));
 		}
 	}
 
@@ -58,7 +75,7 @@ namespace WorldTree
 		{
 			protected override void Execute(WorldContext self)
 			{
-				self.AddChild(out self.m_Queue);
+				self.AddChild(out self.queue);
 			}
 		}
 
@@ -68,7 +85,7 @@ namespace WorldTree
 			{
 				while (true)
 				{
-					if (!self.m_Queue.TryDequeue(out WorldContextWorkRequest workRequest)) return;
+					if (!self.queue.TryDequeue(out WorldContextWorkRequest workRequest)) return;
 					try
 					{
 						workRequest.Invoke();

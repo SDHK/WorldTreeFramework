@@ -56,13 +56,16 @@ namespace WorldTree
 			if (nodeIdHash != null && nodeIdHash.Contains(node.Id)) return false;
 			nodeQueue ??= this.AddChild(out nodeQueue);
 			nodeIdHash ??= this.AddChild(out nodeIdHash);
-			NodeRef<INode> NodeRef = new(node);
+			NodeRef<INode> nodeRef = new(node);
 
-			this.nodeQueue.Enqueue(NodeRef);
+			this.nodeQueue.Enqueue(nodeRef);
 			this.nodeIdHash.Add(node.Id);
 			return true;
 		}
 
+		/// <summary>
+		/// 节点移除
+		/// </summary>
 		public void Remove(INode node) => Remove(node.Id);
 
 		/// <summary>
@@ -87,6 +90,9 @@ namespace WorldTree
 			}
 		}
 
+		/// <summary>
+		/// 清除
+		/// </summary>
 		public void Clear()
 		{
 			nodeQueue?.Clear();
@@ -110,7 +116,7 @@ namespace WorldTree
 				//尝试获取一个id
 				if (nodeQueue != null && nodeQueue.TryPeek(out NodeRef<INode> nodeRef))
 				{
-					long id = ((NodeRef<INode>)null).nodeId;
+					long id = ((NodeRef<INode>)null).NodeId;
 					//假如id被回收了
 					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
 					{
@@ -166,11 +172,11 @@ namespace WorldTree
 			{
 				while (true)
 				{
-					long id = nodeRef.nodeId;
+					long id = nodeRef.NodeId;
 					//假如id被主动移除了
 					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
 					{
-						id = nodeRef.nodeId;
+						id = nodeRef.NodeId;
 
 						removeIdDictionary[id] = --count;//回收次数抵消
 						if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id

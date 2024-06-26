@@ -28,6 +28,7 @@ namespace WorldTree.Analyzer
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
 			new CodeNodeDiagnosticConfig(),
+			new RuleDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
 			new ObjectDiagnosticConfig()
 		};

@@ -14,7 +14,10 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    public class UnitQueue<T> : Queue<T>, IUnitPoolEventItem
+	/// <summary>
+	/// 单元队列：可由对象池管理回收
+	/// </summary>
+	public class UnitQueue<T> : Queue<T>, IUnitPoolEventItem
     {
         public WorldTreeCore Core { get; set; }
         public long Type { get; set; }

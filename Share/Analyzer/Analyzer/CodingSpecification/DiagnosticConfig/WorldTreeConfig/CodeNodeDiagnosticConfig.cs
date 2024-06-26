@@ -23,8 +23,14 @@ namespace WorldTree.Analyzer
 			Screen = (Symbol) =>
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
-				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				return NamedSymbolHelper.CheckInterface(TypeSymbol, "INode", out _);
+				if (TypeSymbol.TypeKind == TypeKind.Class || TypeSymbol.TypeKind == TypeKind.Interface)
+				{
+					return TypeSymbol.Name == "INode" ? true : NamedSymbolHelper.CheckInterface(TypeSymbol, "INode", out _);
+				}
+				else
+				{
+					return false;
+				}
 			};
 
 			SetConfig(DiagnosticKey.ConstNaming, new DiagnosticConfig()

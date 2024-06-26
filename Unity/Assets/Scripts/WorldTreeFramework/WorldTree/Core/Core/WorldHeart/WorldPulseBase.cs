@@ -31,7 +31,7 @@ namespace WorldTree
 		/// <summary>
 		/// 时间累计
 		/// </summary>
-		public TimeSpan m_Time = TimeSpan.Zero;
+		public TimeSpan time = TimeSpan.Zero;
 
 		/// <summary>
 		/// 运行

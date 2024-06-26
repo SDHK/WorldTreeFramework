@@ -10,7 +10,7 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 节点分支处理帮助类 
+	/// 节点分支处理帮助类
 	/// </summary>
 	/// <remarks>无约束不安全的用法</remarks>
 	public static partial class NodeBranchHelper
@@ -25,12 +25,13 @@ namespace WorldTree
 		/// <summary>
 		/// 添加分支
 		/// </summary>
-		public static IBranch AddBranch(INode self, long Type)
+		public static IBranch AddBranch(INode self, long type)
 		{
-			var Branchs = self.Branchs;
-			if (!Branchs.TryGetValue(Type, out IBranch iBranch))
+			// 拿到分支字典
+			var branchs = self.GetBranchDict;
+			if (!branchs.TryGetValue(type, out IBranch iBranch))
 			{
-				Branchs.Add(Type, iBranch = self.Core.PoolGetUnit(Type) as IBranch);
+				branchs.Add(type, iBranch = self.Core.PoolGetUnit(type) as IBranch);
 			}
 			return iBranch;
 		}
@@ -56,11 +57,11 @@ namespace WorldTree
 				if (branch.Count == 0)
 				{
 					//移除分支
-					self.m_Branchs.Remove(branchType);
-					if (self.m_Branchs.Count == 0)
+					self.BranchDict.Remove(branchType);
+					if (self.BranchDict.Count == 0)
 					{
-						self.m_Branchs.Dispose();
-						self.m_Branchs = null;
+						self.BranchDict.Dispose();
+						self.BranchDict = null;
 					}
 
 					//释放分支
@@ -82,12 +83,12 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取分支
 		/// </summary>
-		public static bool TryGetBranch(INode self, long branchType, out IBranch branch) => (branch = (self.m_Branchs != null && self.m_Branchs.TryGetValue(branchType, out branch)) ? branch : null) != null;
+		public static bool TryGetBranch(INode self, long branchType, out IBranch branch) => (branch = (self.BranchDict != null && self.BranchDict.TryGetValue(branchType, out branch)) ? branch : null) != null;
 
 		/// <summary>
 		/// 获取分支
 		/// </summary>
-		public static IBranch GetBranch(INode self, long branchType) => (self.m_Branchs != null && self.m_Branchs.TryGetValue(branchType, out IBranch iBranch)) ? iBranch : null;
+		public static IBranch GetBranch(INode self, long branchType) => (self.BranchDict != null && self.BranchDict.TryGetValue(branchType, out IBranch iBranch)) ? iBranch : null;
 
 		#endregion
 	}

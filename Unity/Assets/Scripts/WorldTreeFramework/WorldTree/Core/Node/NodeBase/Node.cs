@@ -5,6 +5,7 @@
 * 描    述:   世界树节点基类
 
 ****************************************/
+
 namespace WorldTree
 {
 	/// <summary>
@@ -31,11 +32,9 @@ namespace WorldTree
 
 		public bool ActiveToggle { get; set; }
 
-
 		public bool IsActive { get; set; }
 
 		public bool m_ActiveEventMark { get; set; }
-
 
 		public void SetActive(bool value)
 		{
@@ -57,14 +56,15 @@ namespace WorldTree
 				queue.Enqueue(this);
 				while (queue.Count != 0)
 				{
+					// 广度优先，出队
 					var current = queue.Dequeue();
 					if (current.IsActive != ((current.Parent == null) ? current.ActiveToggle : current.Parent.IsActive && current.ActiveToggle))
 					{
 						current.IsActive = !current.IsActive;
 
-						if (current.m_Branchs != null)
+						if (current.BranchDict != null)
 						{
-							foreach (var branchs in current.m_Branchs)
+							foreach (var branchs in current.BranchDict)
 							{
 								foreach (INode node in branchs.Value)
 								{
@@ -84,9 +84,9 @@ namespace WorldTree
 
 		#region Rattan
 
-		public UnitDictionary<long, IRattan> m_Rattans { get; set; }
+		public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
-		public UnitDictionary<long, IRattan> Rattans { get; }
+		public UnitDictionary<long, IRattan> GetRattanDict { get; }
 
 		#endregion
 
@@ -94,9 +94,9 @@ namespace WorldTree
 
 		public long BranchType { get; set; }
 
-		public UnitDictionary<long, IBranch> m_Branchs { get; set; }
+		public UnitDictionary<long, IBranch> BranchDict { get; set; }
 
-		public UnitDictionary<long, IBranch> Branchs => this.m_Branchs ??= this.Core.PoolGetUnit<UnitDictionary<long, IBranch>>();
+		public UnitDictionary<long, IBranch> GetBranchDict => this.BranchDict ??= this.Core.PoolGetUnit<UnitDictionary<long, IBranch>>();
 
 		#endregion
 
@@ -157,17 +157,17 @@ namespace WorldTree
 
 		public virtual void RemoveAllNode()
 		{
-			if (this.m_Branchs == null) return;
+			if (this.BranchDict == null) return;
 			using (this.Core.PoolGetUnit(out UnitStack<IBranch> branchs))
 			{
-				foreach (var item in this.m_Branchs) branchs.Push(item.Value);
+				foreach (var item in this.BranchDict) branchs.Push(item.Value);
 				while (branchs.Count != 0) RemoveAllNode(branchs.Pop().Type);
 			}
 
 			//假如在分支移除过程中，节点又添加了新的分支。那么就是错误的，新增分支将无法回收。
-			if (m_Branchs.Count != 0)
+			if (BranchDict.Count != 0)
 			{
-				foreach (var item in m_Branchs)
+				foreach (var item in BranchDict)
 				{
 					this.Log($"移除分支出错，意外的新分支，节点：{this} 分支:{item.GetType()}");
 				}
@@ -335,8 +335,13 @@ namespace WorldTree
 			this.View?.Dispose();
 			if (this.Parent?.View != null)
 			{
+				// 拿到父节点的可视化生成器的父级节点
 				INode viewParent = Parent.View.Parent;
+
+				// 生成自身的可视化生成器
 				INode nodeView = viewParent.Core.GetOrNewNode(Parent.View.Type);
+
+				// 将自身添加到父节点的可视化生成器中，而可视化则挂到可视化父级节点上
 				this.View = NodeBranchHelper.AddSelfToTree<ChildBranch, long, INode, INode>(nodeView, nodeView.Id, viewParent, this, Parent) as IWorldTreeNodeViewBuilder;
 			}
 			else

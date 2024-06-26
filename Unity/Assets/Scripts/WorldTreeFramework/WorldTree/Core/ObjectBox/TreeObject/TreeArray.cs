@@ -19,23 +19,30 @@ namespace WorldTree
         , ComponentOf<INode>
         , AsAwake<int>
     {
-        public T[] array;
-        public int Length { get { return array.Length; } }
+        /// <summary>
+        /// 数组
+        /// </summary>
+        public T[] arrays;
+
+        /// <summary>
+        /// 数组长度
+        /// </summary>
+        public int Length { get { return arrays.Length; } }
 
         public T this[int index]
         {
-            get { return array[index]; }
-            set { array[index] = value; }
+            get { return arrays[index]; }
+            set { arrays[index] = value; }
         }
 
 
         public static implicit operator Array(TreeArray<T> treeArray)
         {
-            return treeArray.array;
+            return treeArray.arrays;
         }
         public static implicit operator T[](TreeArray<T> treeArray)
         {
-            return treeArray.array;
+            return treeArray.arrays;
         }
     }
 
@@ -43,7 +50,7 @@ namespace WorldTree
     {
         protected override void Execute(TreeArray<T> self, int length)
         {
-            self.array = self.Core.PoolGetArray<T>(length);
+            self.arrays = self.Core.PoolGetArray<T>(length);
         }
     }
 
@@ -52,8 +59,8 @@ namespace WorldTree
     {
         protected override void Execute(TreeArray<T> self)
         {
-            self.Core.PoolRecycle(self.array);
-            self.array = null;
+            self.Core.PoolRecycle(self.arrays);
+            self.arrays = null;
         }
     }
 

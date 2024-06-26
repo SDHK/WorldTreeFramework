@@ -31,7 +31,7 @@ namespace WorldTree
 		 , ComponentOf<INode>
 	{
 		/// <summary>
-		/// a
+		/// 
 		/// </summary>
 		public int a;
 
@@ -65,7 +65,7 @@ namespace WorldTree
 			// a获取
 			var a = dotNetTestNode.AddComponent(out Test1 _).a1;
 
-			// b获取
+			// 
 			var b = dotNetTestNode.AddComponent(out Test1 _).B1;
 		}
 
@@ -77,7 +77,7 @@ namespace WorldTree
 		};
 
 		/// <summary>
-		/// a
+		/// 
 		/// </summary>
 		private class AddT : AddRule<Test1>
 		{
@@ -116,32 +116,32 @@ namespace WorldTree
 		/// <summary>
 		/// 注释
 		/// </summary>
-		public List<int> NtList;
+		public UnitList<int> NtLis;
 
 		/// <summary>
 		/// 字典注释
 		/// </summary>
-		public Dictionary<int, string> KeysDicDict;
+		public UnitDictionary<int, string> KeysDict;
 
 		/// <summary>
 		/// 数组注释
 		/// </summary>
-		public int[] Ints;
+		public int[] Int;
 
 		/// <summary>
 		/// 注释
 		/// </summary>
-		public Queue<int> intsQueue;
+		public UnitQueue<int> intsQueue;
 
 		/// <summary>
 		/// 注释
 		/// </summary>
-		private Stack<int> intsStack;
+		private Stack<int> intsStac;
 
 		/// <summary>
 		/// a
 		/// </summary>
-		public HashSet<int> IntsHash;
+		public HashSet<int> IntsHas;
 
 		/// <summary>
 		/// a

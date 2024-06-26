@@ -9,9 +9,8 @@
 
 namespace WorldTree.Internal
 {
-
 	/// <summary>
-	/// 节点藤分支处理帮助类 
+	/// 节点藤分支处理帮助类
 	/// </summary>
 	/// <remarks>无约束不安全的用法</remarks>
 	public static class NodeRattanHelper
@@ -30,7 +29,7 @@ namespace WorldTree.Internal
 		/// </summary>
 		public static IRattan AddRattan(INode self, long Type)
 		{
-			var Rattans = self.Rattans;
+			var Rattans = self.GetRattanDict;
 			if (!Rattans.TryGetValue(Type, out IRattan iRattan))
 			{
 				Rattans.Add(Type, iRattan = self.Core.PoolGetUnit(Type) as IRattan);
@@ -40,7 +39,7 @@ namespace WorldTree.Internal
 
 		#endregion
 
-		#region 移除 
+		#region 移除
 
 		/// <summary>
 		/// 移除藤分支中的节点
@@ -58,12 +57,13 @@ namespace WorldTree.Internal
 				if (Rattan.Count == 0)
 				{
 					//移除藤分支
-					self.m_Rattans.Remove(RattanType);
-					if (self.m_Rattans.Count == 0)
+					self.RattanDict.Remove(RattanType);
+					if (self.RattanDict.Count == 0)
 					{
-						self.m_Rattans.Dispose();
-						self.m_Rattans = null;
+						self.RattanDict.Dispose();
+						self.RattanDict = null;
 					}
+
 					//释放藤分支
 					Rattan.Dispose();
 				}
@@ -77,12 +77,12 @@ namespace WorldTree.Internal
 		/// <summary>
 		/// 尝试获取藤分支
 		/// </summary>
-		public static bool TryGetRattan(INode self, long RattanType, out IRattan Rattan) => (Rattan = (self.m_Rattans != null && self.m_Rattans.TryGetValue(RattanType, out Rattan)) ? Rattan : null) != null;
+		public static bool TryGetRattan(INode self, long RattanType, out IRattan Rattan) => (Rattan = (self.RattanDict != null && self.RattanDict.TryGetValue(RattanType, out Rattan)) ? Rattan : null) != null;
 
 		/// <summary>
 		/// 获取藤分支
 		/// </summary>
-		public static IRattan GetRattan(INode self, long RattanType) => (self.m_Rattans != null && self.m_Rattans.TryGetValue(RattanType, out IRattan iRattan)) ? iRattan : null;
+		public static IRattan GetRattan(INode self, long RattanType) => (self.RattanDict != null && self.RattanDict.TryGetValue(RattanType, out IRattan iRattan)) ? iRattan : null;
 
 		#endregion
 

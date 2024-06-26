@@ -25,6 +25,13 @@ namespace WorldTree.Analyzer
 				return NamedSymbolHelper.CheckInterface(TypeSymbol, "IRule", out _);
 			};
 
+			SetConfig(DiagnosticKey.ClassNaming, new DiagnosticConfig()
+			{
+				Title = "类型命名",
+				MessageFormat = "类型命名开头要大写",
+				DeclarationKind = SyntaxKind.ClassDeclaration,
+				NeedComment = false
+			});
 			SetConfig(DiagnosticKey.MethodNaming, new DiagnosticConfig()
 			{
 				Title = "Rule类型方法禁止",
@@ -33,6 +40,7 @@ namespace WorldTree.Analyzer
 				UnKeywordKinds = new() { SyntaxKind.ProtectedKeyword, SyntaxKind.OverrideKeyword },
 				Check = s => false,
 			});
+			
 
 		}
 

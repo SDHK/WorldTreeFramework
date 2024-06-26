@@ -20,7 +20,7 @@ namespace WorldTree
 			where T : IEquatable<T>
 			where R : ISendRule<T>
 		{
-			self.m_GlobalValueChange = (IRuleActuator<ISendRule<T>>)self.Core.GetOrNewGlobalRuleActuator<R>(out _);
+			self.globalValueChange = (IRuleActuator<ISendRule<T>>)self.Core.GetOrNewGlobalRuleActuator<R>(out _);
 		}
 
 		/// <summary>
@@ -30,8 +30,8 @@ namespace WorldTree
 			where T1 : IEquatable<T1>
 			where N : class, INode, AsRule<ISendRule<T1>>
 		{
-			if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
-			self.m_ValueChange.Add(eventNode);
+			if (self.valueChange is null) self.AddChild(out self.valueChange);
+			self.valueChange.Add(eventNode);
 		}
 
 		/// <summary>
@@ -41,8 +41,8 @@ namespace WorldTree
 			where T1 : IEquatable<T1>
 			where T2 : IEquatable<T2>
 		{
-			if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
-			self.m_ValueChange.Add(treeValue);
+			if (self.valueChange is null) self.AddChild(out self.valueChange);
+			self.valueChange.Add(treeValue);
 		}
 
 		/// <summary>
@@ -52,10 +52,10 @@ namespace WorldTree
 			where T1 : IEquatable<T1>
 			where T2 : IEquatable<T2>
 		{
-			if (self.m_ValueChange is null) self.AddChild(out self.m_ValueChange);
-			if (treeValue.m_ValueChange is null) treeValue.AddChild(out treeValue.m_ValueChange);
-			self.m_ValueChange.Add(treeValue);
-			treeValue.m_ValueChange.Add(self);
+			if (self.valueChange is null) self.AddChild(out self.valueChange);
+			if (treeValue.valueChange is null) treeValue.AddChild(out treeValue.valueChange);
+			self.valueChange.Add(treeValue);
+			treeValue.valueChange.Add(self);
 		}
 	}
 }

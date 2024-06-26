@@ -24,8 +24,8 @@ namespace WorldTree.Analyzer
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
 				if (TypeSymbol.DeclaredAccessibility != Accessibility.Public) return false;
-				string typeName = TypeSymbol?.ToDisplayString() ?? string.Empty;
-				return Regex.IsMatch(typeName, "^System.Collections.Generic.List<.*>$");
+				return NamedSymbolHelper.CheckInterface(TypeSymbol, "IList", out _);
+				//return Regex.IsMatch(typeName, "^System.Collections.Generic.List<.*>$");
 			};
 
 			SetConfig(DiagnosticKey.ClassFieldNaming, new DiagnosticConfig()

@@ -106,6 +106,23 @@ namespace WorldTree.Analyzer
 		}
 
 		/// <summary>
+		/// 检测是否继承接口
+		/// </summary>
+		public static bool CheckInterface(ITypeSymbol typeSymbol, ITypeSymbol interfaceSymbol)
+		{
+			foreach (var implementedInterface in typeSymbol.AllInterfaces)
+			{
+				// 检查当前接口是否与目标接口相同，或其原始定义是否与目标接口的原始定义相同
+				if (SymbolEqualityComparer.Default.Equals(implementedInterface, interfaceSymbol) ||
+					SymbolEqualityComparer.Default.Equals(implementedInterface.OriginalDefinition, interfaceSymbol.OriginalDefinition))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// 检测是否继承接口（只对比接口名称，不包括泛型）
 		/// </summary>
 		/// <param name="typeSymbol">子接口</param>
@@ -124,8 +141,27 @@ namespace WorldTree.Analyzer
 			return false;
 		}
 
+
 		/// <summary>
 		/// 检测是否继承类型
+		/// </summary>
+		public static bool CheckBase(ITypeSymbol typeSymbol, ITypeSymbol baseSymbol)
+		{
+			var currentBaseType = typeSymbol;
+			while (currentBaseType != null)
+			{
+				if (SymbolEqualityComparer.Default.Equals(currentBaseType, baseSymbol) ||
+					SymbolEqualityComparer.Default.Equals(currentBaseType.OriginalDefinition, baseSymbol.OriginalDefinition))
+				{
+					return true;
+				}
+				currentBaseType = currentBaseType.BaseType;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// 检测是否继承类型 （只对比名称，不包括泛型）
 		/// </summary>
 		/// <param name="typeSymbol">子类</param>
 		/// <param name="BaseName">父类全名称</param>
@@ -133,10 +169,10 @@ namespace WorldTree.Analyzer
 		public static bool CheckBase(ITypeSymbol typeSymbol, string BaseName, out ITypeSymbol? baseSymbol)
 		{
 			baseSymbol = null;
-			var currentBaseType = typeSymbol.BaseType;
+			var currentBaseType = typeSymbol;
 			while (currentBaseType != null)
 			{
-				if (currentBaseType.ToDisplayString() == BaseName)
+				if (currentBaseType.Name == BaseName)
 				{
 					baseSymbol = currentBaseType;
 					return true;
@@ -145,6 +181,8 @@ namespace WorldTree.Analyzer
 			}
 			return false;
 		}
+
+
 
 		/// <summary>
 		/// 获取法则参数泛型类型注释，例：

@@ -156,7 +156,8 @@ namespace WorldTree.Analyzer
 				MessageFormat = "局部变量命名开头要小写",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
 				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
-				FixCode = s => char.ToLower(s[0]) + s.Substring(1)
+				FixCode = s => char.ToLower(s[0]) + s.Substring(1),
+				NeedComment = false
 			});
 
 			SetConfig(DiagnosticKey.LocalMethodNaming, new DiagnosticConfig()
@@ -168,7 +169,7 @@ namespace WorldTree.Analyzer
 				FixCode = s => char.ToUpper(s[0]) + s.Substring(1)
 			});
 
-			
+
 		}
 	}
 }

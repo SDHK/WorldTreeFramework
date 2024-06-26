@@ -12,22 +12,21 @@ using System;
 
 namespace WorldTree
 {
-
-    public static partial class WorldTreeCoreRule
+	public static partial class WorldTreeCoreRule
     {
         /// <summary>
         /// 获取数组对象
         /// </summary>
-        public static T[] PoolGetArray<T>(this WorldTreeCore self, out T[] outT, int Length)
+        public static T[] PoolGetArray<T>(this WorldTreeCore self, out T[] outT, int length)
         {
             Type type = typeof(T);
             if (self.ArrayPoolManager != null)
             {
-                outT = self.ArrayPoolManager.Get(type, Length) as T[];
+                outT = self.ArrayPoolManager.Get(type, length) as T[];
             }
             else
             {
-                outT = Array.CreateInstance(type, Length) as T[];
+                outT = Array.CreateInstance(type, length) as T[];
             }
             return outT;
         }
@@ -35,14 +34,14 @@ namespace WorldTree
         /// <summary>
         /// 获取数组对象
         /// </summary>
-        public static T[] PoolGetArray<T>(this WorldTreeCore self, int Length)
+        public static T[] PoolGetArray<T>(this WorldTreeCore self, int length)
         {
             Type type = typeof(T);
             if (self.ArrayPoolManager != null)
             {
-                return self.ArrayPoolManager.Get(type, Length) as T[];
+                return self.ArrayPoolManager.Get(type, length) as T[];
             }
-            return Array.CreateInstance(type, Length) as T[];
+            return Array.CreateInstance(type, length) as T[];
         }
 
         /// <summary>

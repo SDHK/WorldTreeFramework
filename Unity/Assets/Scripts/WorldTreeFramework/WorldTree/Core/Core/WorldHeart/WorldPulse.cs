@@ -22,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 核心法则
 		/// </summary>
-		public IRuleList<R> m_RuleList;
+		public IRuleList<R> ruleList;
 
 		/// <summary>
 		/// 单帧运行
@@ -30,7 +30,7 @@ namespace WorldTree
 		public override void OneFrame()
 		{
 			isRun = false;
-			m_RuleList?.Send(Parent, m_Time);
+			ruleList?.Send(Parent, time);
 		}
 
 		/// <summary>
@@ -54,11 +54,11 @@ namespace WorldTree
 		/// </summary>
 		public override void Update(TimeSpan deltaTime)
 		{
-			m_Time += deltaTime;
-			if (m_Time.TotalMilliseconds >= frameTime * 0.001)
+			time += deltaTime;
+			if (time.TotalMilliseconds >= frameTime * 0.001)
 			{
-				if (isRun) m_RuleList?.Send(Parent, m_Time);
-				m_Time = TimeSpan.Zero;
+				if (isRun) ruleList?.Send(Parent, time);
+				time = TimeSpan.Zero;
 			}
 		}
 	}
@@ -68,10 +68,10 @@ namespace WorldTree
 		class Awake<R> : AwakeRule<WorldPulse<R>, int>
 			where R : ISendRule<TimeSpan>
 		{
-			protected override void Execute(WorldPulse<R> self, int FrameTime)
+			protected override void Execute(WorldPulse<R> self, int frameTime)
 			{
-				self.frameTime = FrameTime;
-				self.Core.RuleManager.TryGetRuleList(self.Parent.Type, out self.m_RuleList);
+				self.frameTime = frameTime;
+				self.Core.RuleManager.TryGetRuleList(self.Parent.Type, out self.ruleList);
 			}
 		}
 
@@ -81,8 +81,8 @@ namespace WorldTree
 			protected override void Execute(WorldPulse<R> self)
 			{
 				self.frameTime = 0;
-				self.m_Time = TimeSpan.Zero;
-				self.m_RuleList = null;
+				self.time = TimeSpan.Zero;
+				self.ruleList = null;
 			}
 		}
 	}

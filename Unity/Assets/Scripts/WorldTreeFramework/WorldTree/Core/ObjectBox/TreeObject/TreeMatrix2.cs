@@ -28,7 +28,10 @@ namespace WorldTree
 		/// </summary>
 		public int yLength;
 
-		public TreeArray<INode> m_Array;
+		/// <summary>
+		/// 数组
+		/// </summary>
+		public TreeArray<INode> array;
 
 
 
@@ -38,8 +41,8 @@ namespace WorldTree
 			{
 				if (x < xLength && y < yLength)
 				{
-					m_Array[x] ??= this.AddChild(out TreeArray<T> _, yLength);
-					return ((TreeArray<T>)m_Array[x])[y];
+					array[x] ??= this.AddChild(out TreeArray<T> _, yLength);
+					return ((TreeArray<T>)array[x])[y];
 				}
 				else
 				{
@@ -51,8 +54,8 @@ namespace WorldTree
 			{
 				if (x < xLength && y < yLength)
 				{
-					m_Array[x] ??= this.AddChild(out TreeArray<T> _, yLength);
-					((TreeArray<T>)m_Array[x])[y] = value;
+					array[x] ??= this.AddChild(out TreeArray<T> _, yLength);
+					((TreeArray<T>)array[x])[y] = value;
 				}
 				else
 				{
@@ -67,7 +70,7 @@ namespace WorldTree
 		{
 			self.xLength = xLength;
 			self.yLength = yLength;
-			self.AddChild(out self.m_Array, xLength);
+			self.AddChild(out self.array, xLength);
 		}
 	}
 
@@ -77,7 +80,7 @@ namespace WorldTree
 		{
 			self.xLength = 0;
 			self.yLength = 0;
-			self.m_Array = null;
+			self.array = null;
 		}
 	}
 
@@ -184,7 +187,7 @@ namespace WorldTree
 		/// <summary>
 		/// 减法
 		/// </summary>
-		public static TreeMatrix2<double> Subtraction_(this double value, TreeMatrix2<double> matrixA)
+		public static TreeMatrix2<double> Subtraction_(this TreeMatrix2<double> matrixA, double value)
 		{
 			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)
@@ -209,7 +212,7 @@ namespace WorldTree
 		/// <summary>
 		/// 除法运算
 		/// </summary>
-		public static TreeMatrix2<double> Division(this double value, TreeMatrix2<double> matrixA)
+		public static TreeMatrix2<double> Division_(this TreeMatrix2<double> matrixA, double value)
 		{
 			matrixA.Parent.AddTemp(out TreeMatrix2<double> result, matrixA.xLength, matrixA.yLength);
 			for (int i = 0; i < matrixA.xLength; i++)

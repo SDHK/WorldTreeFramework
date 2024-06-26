@@ -15,24 +15,30 @@ namespace WorldTree
 	public struct NodeRef<N>
 		where N : class, INode
 	{
-		public readonly long nodeId;
+		/// <summary>
+		/// 节点ID
+		/// </summary>
+		public readonly long NodeId;
+		/// <summary>
+		/// 节点
+		/// </summary>
 		private N node;
 
 		/// <summary>
 		/// 获取节点，如果节点被回收，那么会返回null
 		/// </summary>
 		/// <remarks> 每次获取都会进行判断，建议获取后将值用变量存起来 </remarks>
-		public N Value => (node is null || nodeId == node.Id) ? node : node = null;
+		public N Value => (node is null || NodeId == node.Id) ? node : node = null;
 
 		public NodeRef(N node)
 		{
 			if (node is null)
 			{
-				nodeId = 0;
+				NodeId = 0;
 				this.node = null;
 				return;
 			}
-			nodeId = node.Id;
+			NodeId = node.Id;
 			this.node = node;
 		}
 		/// <summary>

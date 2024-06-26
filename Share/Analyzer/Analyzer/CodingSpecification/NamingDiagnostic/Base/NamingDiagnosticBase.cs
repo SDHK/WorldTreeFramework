@@ -70,7 +70,8 @@ namespace WorldTree.Analyzer
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(projectName, out _)) return;
 
 			// 找到需要修复的委托声明
-			T declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<T>().First();
+			T? declaration = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<T>()?.First();
+			if (declaration == null) return;
 
 			// 根据不同的诊断类型注册不同的代码修复
 			if (ProjectDiagnosticSetting.TryFindDiagnosticDescriptor(diagnostic.Id, out DiagnosticConfig codeDiagnostic))

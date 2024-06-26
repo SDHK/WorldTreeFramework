@@ -20,23 +20,26 @@ namespace WorldTree
 		, ChildOf<INode>
 		where T : IEquatable<T>
 	{
-		public T m_Value;
+		/// <summary>
+		/// 值
+		/// </summary>
+		public T value;
 
 		public override T Value
 		{
-			get => m_Value;
+			get => value;
 
 			set
 			{
-				if (this.m_Value is null)
+				if (this.value is null)
 				{
-					this.m_Value = value;
+					this.value = value;
 				}
-				else if (!this.m_Value.Equals(value))
+				else if (!this.value.Equals(value))
 				{
-					this.m_Value = value;
-					m_ValueChange?.Send(value);
-					m_GlobalValueChange?.Send(value);
+					this.value = value;
+					valueChange?.Send(value);
+					globalValueChange?.Send(value);
 				}
 			}
 		}

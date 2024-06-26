@@ -14,7 +14,11 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    public class UnitHashSet<T> : HashSet<T>, IUnitPoolEventItem
+	/// <summary>
+	/// 单元哈希集合：可由对象池管理回收
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public class UnitHashSet<T> : HashSet<T>, IUnitPoolEventItem
     {
         public WorldTreeCore Core { get; set; }
         public long Type { get; set; }

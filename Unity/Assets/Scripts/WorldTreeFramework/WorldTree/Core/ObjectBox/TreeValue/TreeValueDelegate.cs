@@ -22,30 +22,30 @@ namespace WorldTree
         /// <summary>
         /// 绑定的对象
         /// </summary>
-        public object m_BindObject;
+        public object bindObject;
         /// <summary>
         /// 从绑定对象上获取值
         /// </summary>
-        public Func<object, T> m_Get;
+        public Func<object, T> getCallBack;
         /// <summary>
         /// 将值设置到绑定对象上
         /// </summary>
-        public Action<object, T> m_Set;
+        public Action<object, T> setCallBack;
         public override T Value
         {
-            get => m_Get(m_BindObject);
+            get => getCallBack(bindObject);
 
             set
             {
-                if (this.m_Get(m_BindObject) is null)
+                if (this.getCallBack(bindObject) is null)
                 {
-                    this.m_Set(m_BindObject, value);
+                    this.setCallBack(bindObject, value);
                 }
-                else if (!m_Get(m_BindObject).Equals(value))
+                else if (!getCallBack(bindObject).Equals(value))
                 {
-                    m_Set(m_BindObject, value);
-                    m_ValueChange?.Send(value);
-                    m_GlobalValueChange?.Send(value);
+                    setCallBack(bindObject, value);
+                    valueChange?.Send(value);
+                    globalValueChange?.Send(value);
                 }
             }
         }
@@ -59,9 +59,9 @@ namespace WorldTree
         {
             protected override void Execute(TreeValueDelegate<T> self, object arg1, Func<object, T> arg2, Action<object, T> arg3)
             {
-                self.m_BindObject = arg1;
-                self.m_Get = arg2;
-                self.m_Set = arg3;
+                self.bindObject = arg1;
+                self.getCallBack = arg2;
+                self.setCallBack = arg3;
             }
         }
     }

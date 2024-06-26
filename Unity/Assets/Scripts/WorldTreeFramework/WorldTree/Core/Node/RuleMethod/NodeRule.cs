@@ -93,9 +93,9 @@ namespace WorldTree
 
 			str += t1 + $"[{self.Id:0}] " + self.ToString() + "\n";
 
-			if (self.m_Branchs != null)
+			if (self.BranchDict != null)
 			{
-				foreach (var branchs in self.m_Branchs)
+				foreach (var branchs in self.BranchDict)
 				{
 					str += t1 + $"   {branchs.Value.GetType().Name}:\n";
 

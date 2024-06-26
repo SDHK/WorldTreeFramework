@@ -109,7 +109,7 @@ namespace WorldTree
 			{
 				if (nodeRuleQueue != null && nodeRuleQueue.TryPeek(out (NodeRef<INode>, RuleList) valueRef))
 				{
-					long id = valueRef.Item1.nodeId;
+					long id = valueRef.Item1.NodeId;
 
 					//假如id被回收了
 					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
@@ -161,7 +161,7 @@ namespace WorldTree
 			{
 				while (true)
 				{
-					long id = nodeRuleTuple.Item1.nodeId;
+					long id = nodeRuleTuple.Item1.NodeId;
 
 					//假如id被主动移除了
 					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))

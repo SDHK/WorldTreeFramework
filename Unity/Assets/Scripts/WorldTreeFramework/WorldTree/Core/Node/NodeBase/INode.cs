@@ -103,12 +103,12 @@ namespace WorldTree
 		/// <summary>
 		/// 树藤分支
 		/// </summary>
-		public UnitDictionary<long, IRattan> m_Rattans { get; set; }
+		public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
 		/// <summary>
-		/// 树藤分支
+		/// 树藤分支,假如没有则创建
 		/// </summary>
-		public UnitDictionary<long, IRattan> Rattans { get; }
+		public UnitDictionary<long, IRattan> GetRattanDict { get; }
 
 		#endregion
 
@@ -122,12 +122,12 @@ namespace WorldTree
 		/// <summary>
 		/// 树分支
 		/// </summary>
-		public UnitDictionary<long, IBranch> m_Branchs { get; set; }
+		public UnitDictionary<long, IBranch> BranchDict { get; set; }
 
 		/// <summary>
-		/// 树分支
+		/// 树分支,假如没有则创建
 		/// </summary>
-		public UnitDictionary<long, IBranch> Branchs { get; }
+		public UnitDictionary<long, IBranch> GetBranchDict { get; }
 
 		#endregion
 
@@ -138,7 +138,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试添加到树结构上
 		/// </summary>
-		public bool TryAddSelfToTree<B, K>(K Key, INode parent) where B : class, IBranch<K>;
+		public bool TryAddSelfToTree<B, K>(K key, INode parent) where B : class, IBranch<K>;
 
 		/// <summary>
 		/// 节点加入树结构时的处理

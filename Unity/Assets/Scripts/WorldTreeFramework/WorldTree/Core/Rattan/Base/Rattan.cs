@@ -52,7 +52,7 @@ namespace WorldTree
 				if (nodeRef.Value is null)
 				{
 					Nodes.Remove(key);
-					NodeKeys.Remove(nodeRef.nodeId);
+					NodeKeys.Remove(nodeRef.NodeId);
 					node = null;
 					return false;
 				}

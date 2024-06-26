@@ -18,8 +18,8 @@ namespace WorldTree
         {
             protected override void Execute(TreeValueBase<T> self)
             {
-                self.m_GlobalValueChange = default;
-                self.m_ValueChange = default;
+                self.globalValueChange = default;
+                self.valueChange = default;
                 self.Value = default;
             }
         }

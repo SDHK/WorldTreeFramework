@@ -30,19 +30,36 @@ namespace WorldTree
 		/// </summary>
 		public Thread m_Thread;
 
+		/// <summary>
+		/// 上一次运行时间
+		/// </summary>
 		public DateTime afterTime;
 
 		#region 世界脉搏
-
+		/// <summary>
+		/// 世界脉搏 UpdateTime
+		/// </summary>
 		public WorldPulse<UpdateTime> worldUpdate;
 
 		#endregion
 
 		#region 全局事件法则
 
+		/// <summary>
+		/// 全局事件法则 Enable
+		/// </summary>
 		public GlobalRuleActuator<Enable> enable;
+		/// <summary>
+		/// 全局事件法则 Disable
+		/// </summary>
 		public GlobalRuleActuator<Disable> disable;
+		/// <summary>
+		/// 全局事件法则 Update
+		/// </summary>
 		public GlobalRuleActuator<Update> update;
+		/// <summary>
+		/// 全局事件法则 UpdateTime
+		/// </summary>
 		public GlobalRuleActuator<UpdateTime> updateTime;
 
 		#endregion
