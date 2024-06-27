@@ -27,12 +27,12 @@ namespace WorldTree.Internal
 		/// <summary>
 		/// 添加藤分支
 		/// </summary>
-		public static IRattan AddRattan(INode self, long Type)
+		public static IRattan AddRattan(INode self, long type)
 		{
-			var Rattans = self.GetRattanDict;
-			if (!Rattans.TryGetValue(Type, out IRattan iRattan))
+			UnitDictionary<long, IRattan> rattans = self.GetRattanDict;
+			if (!rattans.TryGetValue(type, out IRattan iRattan))
 			{
-				Rattans.Add(Type, iRattan = self.Core.PoolGetUnit(Type) as IRattan);
+				rattans.Add(type, iRattan = self.Core.PoolGetUnit(type) as IRattan);
 			}
 			return iRattan;
 		}
@@ -49,15 +49,15 @@ namespace WorldTree.Internal
 		/// <summary>
 		/// 移除藤分支中的节点
 		/// </summary>
-		public static void RemoveRattanNode(INode self, long RattanType, INode node)
+		public static void RemoveRattanNode(INode self, long rattanType, INode node)
 		{
-			if (TryGetRattan(self, RattanType, out IRattan Rattan))
+			if (TryGetRattan(self, rattanType, out IRattan Rattan))
 			{
 				Rattan.RemoveNode(node.Id);
 				if (Rattan.Count == 0)
 				{
 					//移除藤分支
-					self.RattanDict.Remove(RattanType);
+					self.RattanDict.Remove(rattanType);
 					if (self.RattanDict.Count == 0)
 					{
 						self.RattanDict.Dispose();
@@ -77,12 +77,12 @@ namespace WorldTree.Internal
 		/// <summary>
 		/// 尝试获取藤分支
 		/// </summary>
-		public static bool TryGetRattan(INode self, long RattanType, out IRattan Rattan) => (Rattan = (self.RattanDict != null && self.RattanDict.TryGetValue(RattanType, out Rattan)) ? Rattan : null) != null;
+		public static bool TryGetRattan(INode self, long rattanType, out IRattan rattan) => (rattan = (self.RattanDict != null && self.RattanDict.TryGetValue(rattanType, out rattan)) ? rattan : null) != null;
 
 		/// <summary>
 		/// 获取藤分支
 		/// </summary>
-		public static IRattan GetRattan(INode self, long RattanType) => (self.RattanDict != null && self.RattanDict.TryGetValue(RattanType, out IRattan iRattan)) ? iRattan : null;
+		public static IRattan GetRattan(INode self, long rattanType) => (self.RattanDict != null && self.RattanDict.TryGetValue(rattanType, out IRattan iRattan)) ? iRattan : null;
 
 		#endregion
 

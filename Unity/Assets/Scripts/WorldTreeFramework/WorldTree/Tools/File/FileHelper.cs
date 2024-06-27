@@ -12,6 +12,9 @@ using System.Text;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 文件工具类
+	/// </summary>
 	public static partial class FileHelper
 	{
 		/// <summary>

@@ -37,7 +37,7 @@ namespace WorldTree
 			//令牌是否为空,不为空则将组件挂入令牌
 			if (await self.TreeTaskTokenCatch() is TreeTaskToken taskToken)
 			{
-				taskToken.tokenEvent.Add(self);
+				taskToken.TokenEvent.Add(self);
 			}
 
 			//组件的任务完成回调注册

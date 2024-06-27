@@ -12,18 +12,21 @@ using System;
 
 namespace WorldTree
 {
-    public static class MathInt
+	/// <summary>
+	/// int类型的数学计算静态工具类
+	/// </summary>
+	public static class MathInt
     {
         /// <summary>
         /// 循环的正整数                                        
         /// 数值会在 0 ~ MaxIndex 之间循环
         /// </summary>
-        /// <param name="Index">正负整数</param>
-        /// <param name="MaxIndex">循环最大值</param>
-        public static int Loop(this int Index, int MaxIndex)
+        /// <param name="index">正负整数</param>
+        /// <param name="maxIndex">循环最大值</param>
+        public static int Loop(this int index, int maxIndex)
         {
-            int remainder = Math.Abs(Index) % MaxIndex;
-            return (Index >= 0) ? Index % MaxIndex : (remainder == 0) ? 0 : MaxIndex - remainder;
+            int remainder = Math.Abs(index) % maxIndex;
+            return (index >= 0) ? index % maxIndex : (remainder == 0) ? 0 : maxIndex - remainder;
         }
     }
 }

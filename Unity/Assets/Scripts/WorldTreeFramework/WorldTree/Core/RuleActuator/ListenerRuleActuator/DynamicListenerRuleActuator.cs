@@ -20,7 +20,7 @@ namespace WorldTree
 	{
 		public override string ToString()
 		{
-			return $"DynamicListenerRuleActuator : {ruleGroup?.RuleType.CodeToType()}";
+			return $"DynamicListenerRuleActuator : {ruleGroupDict?.RuleType.CodeToType()}";
 		}
 	}
 
@@ -30,7 +30,7 @@ namespace WorldTree
 		{
 			protected override void Execute(DynamicListenerRuleActuator self, RuleGroup arg1)
 			{
-				self.ruleGroup = arg1;
+				self.ruleGroupDict = arg1;
 			}
 		}
 
@@ -40,7 +40,7 @@ namespace WorldTree
 		public static void RuleActuatorAddListener(this DynamicListenerRuleActuator self, long nodeType)
 		{
 			//遍历法则集合获取监听器类型
-			foreach (var listenerType in self.ruleGroup)
+			foreach (var listenerType in self.ruleGroupDict)
 			{
 				//从池里拿到已存在的监听器
 				if (self.Core.ReferencedPoolManager.TryGetPool(listenerType.Key, out ReferencedPool listenerPool))
@@ -51,20 +51,20 @@ namespace WorldTree
 						IDynamicNodeListener nodeListener = (listenerPair.Value as IDynamicNodeListener);
 
 						//判断目标是否被该监听器监听
-						if (nodeListener.listenerTarget != 0)
+						if (nodeListener.ListenerTarget != 0)
 						{
-							if (nodeListener.listenerState == ListenerState.Node)
+							if (nodeListener.ListenerState == ListenerState.Node)
 							{
 								//判断是否全局监听 或 是指定的目标类型
-								if (nodeListener.listenerTarget == TypeInfo<INode>.TypeCode || nodeListener.listenerTarget == nodeType)
+								if (nodeListener.ListenerTarget == TypeInfo<INode>.TypeCode || nodeListener.ListenerTarget == nodeType)
 								{
 									self.TryAdd(nodeListener);
 								}
 							}
-							else if (nodeListener.listenerState == ListenerState.Rule)
+							else if (nodeListener.ListenerState == ListenerState.Rule)
 							{
 								//判断的实体类型是否拥有目标系统
-								if (self.Core.RuleManager.TryGetRuleList(nodeType, nodeListener.listenerTarget, out _))
+								if (self.Core.RuleManager.TryGetRuleList(nodeType, nodeListener.ListenerTarget, out _))
 								{
 									self.TryAdd(nodeListener);
 								}

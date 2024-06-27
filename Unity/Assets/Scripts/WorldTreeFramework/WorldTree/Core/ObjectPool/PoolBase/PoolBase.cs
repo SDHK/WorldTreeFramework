@@ -45,81 +45,83 @@ using System;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 对象池接口
-    /// </summary>
-    public interface IPool : IListenerIgnorer
-    {
-        /// <summary>
-        /// 对象类型
-        /// </summary>
-        public Type ObjectType { get; set; }
+	/// <summary>
+	/// 对象池接口
+	/// </summary>
+	public interface IPool : IListenerIgnorer
+	{
+		/// <summary>
+		/// 对象类型
+		/// </summary>
+		public Type ObjectType { get; set; }
 
-        /// <summary>
-        /// 当前保留对象数量
-        /// </summary>
-        public int Count { get; }
+		/// <summary>
+		/// 当前保留对象数量
+		/// </summary>
+		public int Count { get; }
 
-        /// <summary>
-        /// 获取对象
-        /// </summary>
-        public object GetObject();
+		/// <summary>
+		/// 获取对象
+		/// </summary>
+		public object GetObject();
 
-        /// <summary>
-        /// 回收对象
-        /// </summary>
-        public void Recycle(object obj);
+		/// <summary>
+		/// 回收对象
+		/// </summary>
+		public void Recycle(object obj);
 
-        /// <summary>
-        /// 释放全部对象
-        /// </summary>
-        public void DisposeAll();
+		/// <summary>
+		/// 释放全部对象
+		/// </summary>
+		public void DisposeAll();
 
-        /// <summary>
-        /// 释放一个对象
-        /// </summary>
-        public void DisposeOne();
+		/// <summary>
+		/// 释放一个对象
+		/// </summary>
+		public void DisposeOne();
 
-        /// <summary>
-        /// 预加载
-        /// </summary>
-        public void Preload();
+		/// <summary>
+		/// 预加载
+		/// </summary>
+		public void Preload();
 
-    }
-
-
-
-    /// <summary>
-    /// 对象池抽象基类
-    /// </summary>
-    public abstract class PoolBase : Node, IPool
-    {
-
-        public Type ObjectType { get; set; }
-        public long ObjectTypeCore { get; set; }
-
-        public abstract int Count { get; }
-
-        /// <summary>
-        /// 预加载数量
-        /// </summary>
-        public int minLimit = 0;
-
-        /// <summary>
-        /// 对象回收数量限制
-        /// </summary>
-        public int maxLimit = -1;
+	}
 
 
-        public abstract object GetObject();
 
-        public abstract void Recycle(object obj);
+	/// <summary>
+	/// 对象池抽象基类
+	/// </summary>
+	public abstract class PoolBase : Node, IPool
+	{
+		public Type ObjectType { get; set; }
+		public abstract int Count { get; }
 
-        public abstract void DisposeAll();
+		/// <summary>
+		/// 对象类型码
+		/// </summary>
+		public long ObjectTypeCode;
 
-        public abstract void DisposeOne();
+		/// <summary>
+		/// 预加载数量
+		/// </summary>
+		public int minLimit = 0;
 
-        public abstract void Preload();
-    }
+		/// <summary>
+		/// 对象回收数量限制
+		/// </summary>
+		public int maxLimit = -1;
+
+
+		public abstract object GetObject();
+
+		public abstract void Recycle(object obj);
+
+		public abstract void DisposeAll();
+
+		public abstract void DisposeOne();
+
+		public abstract void Preload();
+	}
 
 }

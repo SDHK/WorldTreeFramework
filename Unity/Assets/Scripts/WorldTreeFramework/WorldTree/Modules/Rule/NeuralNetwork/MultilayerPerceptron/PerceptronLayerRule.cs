@@ -15,11 +15,11 @@ namespace WorldTree
         {
             protected override void Execute(PerceptronLayer self, int count)
             {
-                self.AddChild(out self.nodes);
+                self.AddChild(out self.NodeList);
 
                 for (int i = 0; i < count; i++)
                 {
-                    self.nodes.Add(self.AddChild(out PerceptronNode _));
+                    self.NodeList.Add(self.AddChild(out PerceptronNode _));
                 }
             }
         }
@@ -28,7 +28,7 @@ namespace WorldTree
         {
             protected override void Execute(PerceptronLayer self)
             {
-                self.nodes = null;
+                self.NodeList = null;
             }
         }
     }

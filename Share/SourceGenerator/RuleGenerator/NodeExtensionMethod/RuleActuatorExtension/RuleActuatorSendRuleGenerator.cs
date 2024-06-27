@@ -42,11 +42,11 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 执行器执行通知法则
 							/// </summary>
-							public static void Send<R{{genericsType}}>(this IRuleActuator<R> Self{{genericTypeParameter}})
+							public static void Send<R{{genericsType}}>(this IRuleActuator<R> selfActuator{{genericTypeParameter}})
 								where R : ISendRule{{genericsTypeAngle}}
 							{
-								if (!Self.IsActive) return;
-								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
+								if (!selfActuator.IsActive) return;
+								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)selfActuator;
 								self.RefreshTraversalCount();
 								for (int i = 0; i < self.TraversalCount; i++)
 								{
@@ -60,19 +60,19 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 执行器执行异步通知法则
 							/// </summary>
-							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleActuator<R> Self{{genericTypeParameter}})
+							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleActuator<R> selfActuator{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
-								if (!Self.IsActive)
+								if (!selfActuator.IsActive)
 								{
-									await Self.TreeTaskCompleted();
+									await selfActuator.TreeTaskCompleted();
 									return;
 								}
-								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
+								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)selfActuator;
 								self.RefreshTraversalCount();
 								if (self.TraversalCount == 0)
 								{
-									await Self.TreeTaskCompleted();
+									await selfActuator.TreeTaskCompleted();
 									return;			
 								}
 								for (int i = 0; i < self.TraversalCount; i++)
@@ -83,7 +83,7 @@ namespace WorldTree.SourceGenerator
 									}
 									else
 									{
-										await Self.TreeTaskCompleted();
+										await selfActuator.TreeTaskCompleted();
 									}
 								}
 							}

@@ -13,13 +13,28 @@ using System;
 
 namespace WorldTree
 {
-    public static class MathFloat
+	/// <summary>
+	/// 浮点数数学类型
+	/// </summary>
+	public static class MathFloat
     {
-        public static volatile float FloatMinNormal = 1.1754944E-38f;
-        public static volatile float FloatMinDenormal = float.Epsilon;
-        public static bool IsFlushToZeroEnabled = (double)FloatMinDenormal == 0.0;
+		/// <summary>
+		/// 浮点数的最小正常值。
+		/// </summary>
+		public static volatile float FloatMinNormal = 1.1754944E-38f;
+		/// <summary>
+		/// 浮点数的最小非正常值。
+		/// </summary>
+		public static volatile float FloatMinDenormal = float.Epsilon;
+		/// <summary>
+		/// 是否启用零值截断。
+		/// </summary>
+		public static bool IsFlushToZeroEnabled = (double)FloatMinDenormal == 0.0;
 
-        public static readonly float Epsilon = IsFlushToZeroEnabled ? FloatMinNormal : FloatMinDenormal;
+		/// <summary>
+		/// 一个非常小的浮点数，用于比较浮点数是否接近零。
+		/// </summary>
+		public static readonly float Epsilon = IsFlushToZeroEnabled ? FloatMinNormal : FloatMinDenormal;
 
         /// <summary>
         ///   <para>The well-known 3.14159265358979... value (Read Only).</para>
@@ -28,19 +43,19 @@ namespace WorldTree
         /// <summary>
         ///   <para>A representation of positive infinity (Read Only).</para>
         /// </summary>
-        public const float Infinity = float.PositiveInfinity;
+        public const float INFINITY = float.PositiveInfinity;
         /// <summary>
-        ///   <para>A representation of negative infinity (Read Only).</para>
+        ///  <para>A representation of negative infinity (Read Only).</para>
         /// </summary>
-        public const float NegativeInfinity = float.NegativeInfinity;
+        public const float NEGATIVE_INFINITY = float.NegativeInfinity;
         /// <summary>
-        ///   <para>Degrees-to-radians conversion constant (Read Only).</para>
+        ///  <para>Degrees-to-radians conversion constant (Read Only).</para>
         /// </summary>
-        public const float Deg2Rad = 0.017453292f;
+        public const float DEG_RAD = 0.017453292f;
         /// <summary>
         ///   <para>Radians-to-degrees conversion constant (Read Only).</para>
         /// </summary>
-        public const float Rad2Deg = 57.29578f;
+        public const float RAD_DEG = 57.29578f;
 
         /// <summary>
         ///   <para>Returns the sine of angle f.</para>

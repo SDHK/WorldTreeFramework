@@ -140,6 +140,9 @@ namespace WorldTree.SourceGenerator
 
 				if (MethodCode.ToString() != "")
 				{
+					ClassCode.AppendLine($"	/// <summary>");
+					ClassCode.AppendLine($"	/// {fileClassList.Key}补充类");
+					ClassCode.AppendLine($"	/// </summary>");
 					ClassCode.AppendLine($"	public static class {fileClassList.Key}Supplement");
 					ClassCode.AppendLine("	{");
 

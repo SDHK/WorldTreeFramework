@@ -16,7 +16,7 @@ namespace WorldTree
             protected override void Execute(TreeTaskQueueCompleter self, long key, TreeTaskQueueLockManager queueLock)
             {
                 self.key = key;
-                self.m_QueueLock = queueLock;
+                self.queueLock = queueLock;
             }
         }
 
@@ -24,8 +24,8 @@ namespace WorldTree
         {
             protected override void Execute(TreeTaskQueueCompleter self)
             {
-                self.m_QueueLock.RunNext(self.key);
-                self.m_QueueLock = default;
+                self.queueLock.RunNext(self.key);
+                self.queueLock = default;
                 self.key = default;
             }
         }

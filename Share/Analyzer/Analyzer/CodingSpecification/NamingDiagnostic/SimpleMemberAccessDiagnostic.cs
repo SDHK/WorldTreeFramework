@@ -29,81 +29,11 @@ namespace WorldTree.Analyzer
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
-
 			ISymbol? filedSymbol = context.SemanticModel.GetSymbolInfo(context.Node).Symbol;
 			//字段和属性和事件的访问
 			if (filedSymbol is IFieldSymbol || filedSymbol is IPropertySymbol || filedSymbol is IEventSymbol)
 			{
 				MemberAccessExpressionSyntax memberAccess = (MemberAccessExpressionSyntax)context.Node;
-				BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(memberAccess);
-
-				var parentTypeSymbol = semanticModel.GetDeclaredSymbol(parentType);
-
-				//判断当前字段所在的类型是否是来源类型，是则跳过
-				if (SymbolEqualityComparer.Default.Equals(filedSymbol.ContainingType.OriginalDefinition, parentTypeSymbol.OriginalDefinition)) return;
-
-				//// 判断 来源类型 是否继承了 当前字段所在的类型，是则跳过
-				//if (filedSymbol.ContainingType.TypeKind == TypeKind.Class && NamedSymbolHelper.CheckBase(filedSymbol.ContainingType.OriginalDefinition, parentTypeSymbol.OriginalDefinition)) return;
-				//// 判断 来源类型 是否继承了 当前字段所在的类型，是则跳过
-				//if (filedSymbol.ContainingType.TypeKind == TypeKind.Interface && NamedSymbolHelper.CheckInterface(filedSymbol.ContainingType.OriginalDefinition, parentTypeSymbol.OriginalDefinition)) return;
-
-				//判断当前字段所在的类型是否继承了来源接口，是则跳过
-				if (filedSymbol.ContainingType.TypeKind == TypeKind.Interface && NamedSymbolHelper.CheckInterface(parentTypeSymbol, filedSymbol.ContainingType)) return;
-				//判断当前字段所在的类型是否继承了来源类型，是则跳过
-				if (filedSymbol.ContainingType.TypeKind == TypeKind.Class && NamedSymbolHelper.CheckBase(parentTypeSymbol, filedSymbol.ContainingType)) return;
-
-				MethodDeclarationSyntax parentMethod = TreeSyntaxHelper.GetParentMethod(memberAccess);
-				if (parentMethod != null)
-				{
-					ParameterSyntax? firstParameter = parentMethod.ParameterList.Parameters.FirstOrDefault();
-					if (firstParameter != null)
-					{
-						// 使用语义模型获取第一个参数的类型的符号信息
-						ITypeSymbol? firstParameterTypeSymbol = semanticModel.GetSymbolInfo(firstParameter.Type).Symbol as ITypeSymbol;
-
-						// 如果方法是静态的，并且第一个参数使用了 this 关键字，则该方法是静态扩展方法
-						bool isStaticMethod = parentMethod.Modifiers.Any(SyntaxKind.StaticKeyword);
-						if (isStaticMethod)
-						{
-							// 检查方法的第一个参数是否使用了 this 关键字
-							bool isFirstParameterWithThis = firstParameter?.Modifiers.Any(SyntaxKind.ThisKeyword) ?? false;
-							if (isFirstParameterWithThis)
-							{
-								//判断扩展类型是否是来源类型，是则跳过
-								if (filedSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return;
-
-								//判断当前字段所在的类型是否继承了来源接口，是则跳过
-								if (filedSymbol.ContainingType.TypeKind == TypeKind.Interface && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, filedSymbol.ContainingType)) return;
-								//判断当前字段所在的类型是否继承了来源类型，是则跳过
-								if (filedSymbol.ContainingType.TypeKind == TypeKind.Class && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, filedSymbol.ContainingType)) return;
-
-							}
-						}
-						// 判断方法第一个参数名称是否为self
-						else if (firstParameter?.Identifier.Text.Trim() == "self")
-						{
-							//判断扩展类型是否是来源类型，是则跳过
-							if (filedSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return;
-
-							//判断当前字段所在的类型是否继承了来源接口，是则跳过
-							if (filedSymbol.ContainingType.TypeKind == TypeKind.Interface && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, filedSymbol.ContainingType)) return;
-							//判断当前字段所在的类型是否继承了来源类型，是则跳过
-							if (filedSymbol.ContainingType.TypeKind == TypeKind.Class && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, filedSymbol.ContainingType)) return;
-						}
-					}
-				}
-				else
-				{
-					// 检测是否在匿名委托中，并获取第一个参数
-					(SyntaxNode parentDelegate, ParameterSyntax firstParameter1) = GetParentAnonymousDelegateAndFirstParameter(memberAccess);
-					if (parentDelegate != null && firstParameter1 != null && firstParameter1.Identifier.Text == "self")
-					{
-						ITypeSymbol? firstParameterTypeSymbol = semanticModel.GetSymbolInfo(firstParameter1.Type).Symbol as ITypeSymbol;
-						// 判断扩展类型是否是来源类型，是则跳过
-						if (filedSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return;
-					}
-				}
-
 				foreach (DiagnosticConfigGroup DiagnosticGroup in DiagnosticGroups)
 				{
 					//检测字段来源类型是否符合要求
@@ -113,14 +43,107 @@ namespace WorldTree.Analyzer
 					{
 						if (codeDiagnostic.Check.Invoke(memberAccess.Name.Identifier.Text))
 						{
-							context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, memberAccess.Name.GetLocation()));
+							if (CheckMemberAccess(context))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, memberAccess.Name.GetLocation()));
+							}
 						}
 						return;
 					}
 				}
 			}
-
 		}
+
+
+		/// <summary>
+		/// 判断是否需要进行诊断
+		/// </summary>
+		private bool CheckMemberAccess(SyntaxNodeAnalysisContext context)
+		{
+			// 获取语义模型
+			SemanticModel semanticModel = context.SemanticModel;
+			ISymbol? memberAccessSymbol = context.SemanticModel.GetSymbolInfo(context.Node).Symbol;
+
+			MemberAccessExpressionSyntax memberAccess = (MemberAccessExpressionSyntax)context.Node;
+			BaseTypeDeclarationSyntax parentTypeSyntax = TreeSyntaxHelper.GetParentType(memberAccess);
+			INamedTypeSymbol? parentTypeSymbol = semanticModel.GetDeclaredSymbol(parentTypeSyntax);
+
+			//判断当前字段所在的类型是否是来源类型，是则跳过
+			if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, parentTypeSymbol.OriginalDefinition)) return false;
+
+			bool isInterfaceContainingType = memberAccessSymbol.ContainingType.TypeKind == TypeKind.Interface;
+			bool isClassContainingType = memberAccessSymbol.ContainingType.TypeKind == TypeKind.Class;
+
+			//判断当前字段所在的类型是否继承了来源接口，是则跳过
+			if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(parentTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+			//判断当前字段所在的类型是否继承了来源类型，是则跳过
+			if (isClassContainingType && NamedSymbolHelper.CheckBase(parentTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+
+			// 判断是否在静态类中
+			if (parentTypeSyntax.Modifiers.Any(SyntaxKind.StaticKeyword))
+			{
+				MethodDeclarationSyntax parentMethodSyntax = TreeSyntaxHelper.GetParentMethod(memberAccess);
+				// 判断是否在方法中
+				if (parentMethodSyntax != null)
+				{
+					// 获取第一个参数的类型的符号信息
+					ParameterSyntax? firstParameterSyntax = parentMethodSyntax.ParameterList.Parameters.FirstOrDefault();
+					ITypeSymbol? firstParameterTypeSymbol = semanticModel.GetSymbolInfo(firstParameterSyntax.Type).Symbol as ITypeSymbol;
+
+					// 检查方法的第一个参数是否使用了 this 关键字
+					if (firstParameterSyntax.Modifiers.Any(SyntaxKind.ThisKeyword))
+					{
+						//判断扩展类型是否是来源类型，是则跳过
+						if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return false;
+						//判断当前字段所在的类型是否继承了来源接口，是则跳过
+						if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+						//判断当前字段所在的类型是否继承了来源类型，是则跳过
+						if (isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+					}
+					// 不是静态类型,判断是否在委托中
+					else
+					{
+						(SyntaxNode parentDelegate, ParameterSyntax firstParameter1) = GetParentAnonymousDelegateAndFirstParameter(memberAccess);
+						if (parentDelegate != null && firstParameter1 != null && firstParameter1.Identifier.Text == "self")
+						{
+							// 判断扩展类型是否是来源类型，是则跳过
+							if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return false;
+							//判断当前字段所在的类型是否继承了来源接口，是则跳过
+							if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+							//判断当前字段所在的类型是否继承了来源类型，是则跳过
+							if (isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+						}
+					}
+				}
+			}
+			else // 检测是否在Rule类型中
+			{
+				MethodDeclarationSyntax parentMethodSyntax = TreeSyntaxHelper.GetParentMethod(memberAccess);
+				if (parentMethodSyntax != null)
+				{
+					ParameterSyntax? firstParameterSyntax = parentMethodSyntax.ParameterList.Parameters.FirstOrDefault();
+					ITypeSymbol? firstParameterTypeSymbol = semanticModel.GetSymbolInfo(firstParameterSyntax.Type).Symbol as ITypeSymbol;
+					if (firstParameterSyntax.Identifier.Text.Trim() == "self")
+					{
+						INamedTypeSymbol? IRuleSymbol = NamedSymbolHelper.ToINamedTypeSymbol(context.Compilation, "WorldTree.IRule");
+						if (IRuleSymbol == null) return true;
+						// 判断类型是否继承了IRule接口
+						if (NamedSymbolHelper.CheckInterface(parentTypeSymbol, IRuleSymbol))
+						{
+							//判断扩展类型是否是来源类型，是则跳过
+							if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return false;
+							//判断当前字段所在的类型是否继承了来源接口，是则跳过
+							if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+							//判断当前字段所在的类型是否继承了来源类型，是则跳过
+							if (isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+						}
+					}
+				}
+			}
+			return true;
+		}
+
+
 
 		private static (SyntaxNode, ParameterSyntax) GetParentAnonymousDelegateAndFirstParameter(SyntaxNode syntaxNode)
 		{

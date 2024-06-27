@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace WorldTree.Analyzer
 {
@@ -141,7 +142,7 @@ namespace WorldTree.Analyzer
 			return ns.Name.ToString();
 		}
 
-		
+
 
 		/// <summary>
 		/// 检查节点是否有注释
@@ -152,7 +153,7 @@ namespace WorldTree.Analyzer
 			var leadingTrivia = node.GetLeadingTrivia();
 
 			// 遍历Trivia集合，检查是否存在注释
-			foreach (var trivia in leadingTrivia)
+			foreach (SyntaxTrivia trivia in leadingTrivia)
 			{
 				if (trivia.IsKind(SyntaxKind.SingleLineCommentTrivia) ||
 					trivia.IsKind(SyntaxKind.MultiLineCommentTrivia) ||
@@ -175,39 +176,37 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 检查节点是否有 summary 注释
 		/// </summary>
-		public static bool CheckSummaryComment(SyntaxNode node)
+		public static bool CheckSummaryComment(SyntaxNode node) => CheckComment(node);
+
+
+		/// <summary>
+		/// 检查节点是否有 summary 注释,不知道为什么编译时识别不到summary注释了
+		/// </summary>
+		public static bool CheckSummaryCommentOld(SyntaxNode node)
 		{
 			// 获取节点之前的Trivia集合
 			var leadingTrivia = node.GetLeadingTrivia();
 
 			// 遍历Trivia集合，检查是否存在 summary 注释
-			foreach (var trivia in leadingTrivia)
+			foreach (SyntaxTrivia trivia in leadingTrivia)
 			{
-				if (trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
+				if (trivia.IsKind(SyntaxKind.SingleLineCommentTrivia) ||
+					trivia.IsKind(SyntaxKind.MultiLineCommentTrivia) ||
+					trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
 					trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia))
 				{
 					// 将Trivia转换为XML文档注释并检查是否包含 <summary> 标签
-					var xmlTrivia = trivia.GetStructure() as DocumentationCommentTriviaSyntax;
-					if (xmlTrivia != null)
+					string triviaText = trivia.ToString();
+					// 检查字符串中是否包含 <summary> 标签
+					if (triviaText.Contains("<summary>")&& triviaText.Contains("</summary>"))
 					{
-						foreach (var xmlElement in xmlTrivia.ChildNodes().OfType<XmlElementSyntax>())
-						{
-							if (xmlElement.StartTag.Name.LocalName.Text == "summary")
-							{
-								// 检查 summary 注释的内容是否非空且不仅仅是空白字符
-								var summaryContent = xmlElement.Content.ToString().Trim();
-								summaryContent = summaryContent.Replace("/", "").Trim(); // 移除斜杠符号并再次去除空白
-								if (!string.IsNullOrWhiteSpace(summaryContent)) // 使用 IsNullOrWhiteSpace 来检查
-								{
-									return true; // summary 注释非空且不仅仅是空白字符，返回true
-								}
-							}
-						}
+						return true;
 					}
 				}
 			}
 			return false; // 没有找到 summary 注释，返回false
 		}
+
 
 		/// <summary>
 		/// 获取类型原注释，添加或插入remarks节点备注
@@ -425,5 +424,5 @@ namespace WorldTree.Analyzer
 			}
 			return null;
 		}
-}
+	}
 }

@@ -17,25 +17,31 @@ namespace WorldTree
 	/// </summary>
 	public static class TypeTable
 	{
-		private static readonly ConcurrentDictionary<Type, long> TypeHash64 = new();
-		private static readonly ConcurrentDictionary<long, Type> Hash64Type = new();
+		/// <summary>
+		/// 类型哈希码表
+		/// </summary>
+		private static readonly ConcurrentDictionary<Type, long> typeHash64Dict = new();
+		/// <summary>
+		/// 64位哈希码类型表
+		/// </summary>
+		private static readonly ConcurrentDictionary<long, Type> hash64TypeDict = new();
 
 		/// <summary>
 		/// 类型注册到信息表
 		/// </summary>
 		public static Type Add(this Type type)
 		{
-			if (!TypeHash64.ContainsKey(type))
+			if (!typeHash64Dict.ContainsKey(type))
 			{
 				type.GetHashCode();
 				long hash64 = type.AssemblyQualifiedName.GetHash64();
 
-				if (Hash64Type.TryGetValue(hash64, out Type oldType))
+				if (hash64TypeDict.TryGetValue(hash64, out Type oldType))
 				{
 					if (type.FullName == oldType.FullName)
 					{
-						Hash64Type[hash64] = type;
-						TypeHash64.TryRemove(oldType, out _);
+						hash64TypeDict[hash64] = type;
+						typeHash64Dict.TryRemove(oldType, out _);
 					}
 					else
 					{
@@ -44,8 +50,8 @@ namespace WorldTree
 				}
 				else
 				{
-					Hash64Type.TryAdd(hash64, type);
-					TypeHash64.TryAdd(type, hash64);
+					hash64TypeDict.TryAdd(hash64, type);
+					typeHash64Dict.TryAdd(type, hash64);
 				}
 			}
 			return type;
@@ -56,10 +62,10 @@ namespace WorldTree
 		/// </summary>
 		public static long TypeToCode(this Type type)
 		{
-			if (!TypeHash64.TryGetValue(type, out long hash64))
+			if (!typeHash64Dict.TryGetValue(type, out long hash64))
 			{
 				Add(type);
-				TypeHash64.TryGetValue(type, out hash64);
+				typeHash64Dict.TryGetValue(type, out hash64);
 			}
 			return hash64;
 		}
@@ -67,6 +73,6 @@ namespace WorldTree
 		/// <summary>
 		/// 哈希码64转类型
 		/// </summary>
-		public static Type CodeToType(this long rcr) => Hash64Type[rcr];
+		public static Type CodeToType(this long rcr) => hash64TypeDict[rcr];
 	}
 }

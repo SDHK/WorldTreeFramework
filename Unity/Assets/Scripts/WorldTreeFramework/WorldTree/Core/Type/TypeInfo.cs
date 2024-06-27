@@ -37,6 +37,9 @@ namespace WorldTree
 		/// </summary>
 		public static readonly string TypeName = typeof(T).Name;
 
+		/// <summary>
+		/// 初始化
+		/// </summary>
 		private static Type Init()
 		{
 			return TypeTable.Add(typeof(T));

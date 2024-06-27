@@ -19,12 +19,12 @@ namespace WorldTree
 		/// <summary>
 		/// 多项式 :这是由国际标准化组织(ISO)在1993年指定的64位CRC校验算法。
 		/// </summary>
-		private const ulong Polynomial = 0x42F0E1EBA9EA3693;
+		private const ulong POLYNOMIAL = 0x42F0E1EBA9EA3693;
 
 		/// <summary>
 		/// 查找表
 		/// </summary>
-		private static readonly long[] table = GenerateCRC64Table();
+		private static readonly long[] tables = GenerateCRC64Table();
 
 		/// <summary>
 		/// 生成CRC64位查找表
@@ -46,6 +46,9 @@ namespace WorldTree
 			return table;
 		}
 
+		/// <summary>
+		/// 计算CRC64
+		/// </summary>
 		private static ulong CalculateCRC64(int i)
 		{
 			ulong crc = (ulong)i;
@@ -53,7 +56,7 @@ namespace WorldTree
 			{
 				if ((crc & 1) == 1)
 				{
-					crc = (crc >> 1) ^ Polynomial;
+					crc = (crc >> 1) ^ POLYNOMIAL;
 				}
 				else
 				{
@@ -71,7 +74,7 @@ namespace WorldTree
 			long crc = 0;
 			foreach (char c in str)
 			{
-				crc = table[(crc ^ c) & 0xFF] ^ (crc >> 8);
+				crc = tables[(crc ^ c) & 0xFF] ^ (crc >> 8);
 			}
 			return crc;
 		}

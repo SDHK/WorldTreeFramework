@@ -52,6 +52,9 @@ namespace WorldTree.SourceGenerator
 						/// </summary>
 						public interface ISendRule{{genericsTypeAngle}} : IRule
 						{
+							/// <summary>
+							/// 调用
+							/// </summary>
 							void Invoke(INode self{{genericTypeParameter}});
 						}
 
@@ -62,7 +65,13 @@ namespace WorldTree.SourceGenerator
 							where N : class, INode, AsRule<R>
 							where R : ISendRule{{genericsTypeAngle}}
 						{
+							/// <summary>
+							/// 调用
+							/// </summary>
 							public virtual void Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							/// <summary>
+							/// 执行
+							/// </summary>
 							protected abstract void Execute(N self{{genericTypeParameter}});
 						}
 
@@ -72,7 +81,13 @@ namespace WorldTree.SourceGenerator
 						public abstract class SendRuleDefault<R{{genericsType}}> : Rule<INode, R>, ISendRule{{genericsTypeAngle}}
 							where R : ISendRule{{genericsTypeAngle}}
 						{
+							/// <summary>
+							/// 调用
+							/// </summary>
 							public virtual void Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							/// <summary>
+							/// 执行
+							/// </summary>
 							protected abstract void Execute(INode self{{genericTypeParameter}});
 						}
 					""");

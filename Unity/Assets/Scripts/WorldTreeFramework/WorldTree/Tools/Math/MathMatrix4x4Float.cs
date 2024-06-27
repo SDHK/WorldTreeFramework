@@ -9,7 +9,10 @@
 
 namespace WorldTree
 {
-    public static class MathMatrix4x4Float
+	/// <summary>
+	/// 4x4矩阵数学工具类
+	/// </summary>
+	public static class MathMatrix4x4Float
     {
         /// <summary>
         /// 通过这个矩阵 变换一个位置。(一般)
@@ -18,13 +21,13 @@ namespace WorldTree
         public static Vector3Float MultiplyPoint(this Matrix4x4Float self, Vector3Float point)
         {
             Vector3Float vector3;
-            vector3.x = (float)((double)self.m00 * (double)point.x + (double)self.m01 * (double)point.y + (double)self.m02 * (double)point.z) + self.m03;
-            vector3.y = (float)((double)self.m10 * (double)point.x + (double)self.m11 * (double)point.y + (double)self.m12 * (double)point.z) + self.m13;
-            vector3.z = (float)((double)self.m20 * (double)point.x + (double)self.m21 * (double)point.y + (double)self.m22 * (double)point.z) + self.m23;
-            float num = 1f / ((float)((double)self.m30 * (double)point.x + (double)self.m31 * (double)point.y + (double)self.m32 * (double)point.z) + self.m33);
-            vector3.x *= num;
-            vector3.y *= num;
-            vector3.z *= num;
+            vector3.X = (float)((double)self.M00 * (double)point.X + (double)self.M01 * (double)point.Y + (double)self.M02 * (double)point.Z) + self.M03;
+            vector3.Y = (float)((double)self.M10 * (double)point.X + (double)self.M11 * (double)point.Y + (double)self.M12 * (double)point.Z) + self.M13;
+            vector3.Z = (float)((double)self.M20 * (double)point.X + (double)self.M21 * (double)point.Y + (double)self.M22 * (double)point.Z) + self.M23;
+            float num = 1f / ((float)((double)self.M30 * (double)point.X + (double)self.M31 * (double)point.Y + (double)self.M32 * (double)point.Z) + self.M33);
+            vector3.X *= num;
+            vector3.Y *= num;
+            vector3.Z *= num;
             return vector3;
         }
         /// <summary>
@@ -33,9 +36,9 @@ namespace WorldTree
         public static Vector3Float MultiplyPoint3x4(this Matrix4x4Float self, Vector3Float point)
         {
             Vector3Float vector3;
-            vector3.x = (float)((double)self.m00 * (double)point.x + (double)self.m01 * (double)point.y + (double)self.m02 * (double)point.z) + self.m03;
-            vector3.y = (float)((double)self.m10 * (double)point.x + (double)self.m11 * (double)point.y + (double)self.m12 * (double)point.z) + self.m13;
-            vector3.z = (float)((double)self.m20 * (double)point.x + (double)self.m21 * (double)point.y + (double)self.m22 * (double)point.z) + self.m23;
+            vector3.X = (float)((double)self.M00 * (double)point.X + (double)self.M01 * (double)point.Y + (double)self.M02 * (double)point.Z) + self.M03;
+            vector3.Y = (float)((double)self.M10 * (double)point.X + (double)self.M11 * (double)point.Y + (double)self.M12 * (double)point.Z) + self.M13;
+            vector3.Z = (float)((double)self.M20 * (double)point.X + (double)self.M21 * (double)point.Y + (double)self.M22 * (double)point.Z) + self.M23;
             return vector3;
         }
 
@@ -45,9 +48,9 @@ namespace WorldTree
         public static Vector3Float MultiplyVector(this Matrix4x4Float self, Vector3Float vector)
         {
             Vector3Float vector3;
-            vector3.x = (float)((double)self.m00 * (double)vector.x + (double)self.m01 * (double)vector.y + (double)self.m02 * (double)vector.z);
-            vector3.y = (float)((double)self.m10 * (double)vector.x + (double)self.m11 * (double)vector.y + (double)self.m12 * (double)vector.z);
-            vector3.z = (float)((double)self.m20 * (double)vector.x + (double)self.m21 * (double)vector.y + (double)self.m22 * (double)vector.z);
+            vector3.X = (float)((double)self.M00 * (double)vector.X + (double)self.M01 * (double)vector.Y + (double)self.M02 * (double)vector.Z);
+            vector3.Y = (float)((double)self.M10 * (double)vector.X + (double)self.M11 * (double)vector.Y + (double)self.M12 * (double)vector.Z);
+            vector3.Z = (float)((double)self.M20 * (double)vector.X + (double)self.M21 * (double)vector.Y + (double)self.M22 * (double)vector.Z);
             return vector3;
         }
 

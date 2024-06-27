@@ -20,6 +20,7 @@ namespace WorldTree
 		/// 委托回调
 		/// </summary>
 		private readonly SendOrPostCallback delagateCallback;
+
 		/// <summary>
 		/// 委托状态
 		/// </summary>

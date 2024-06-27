@@ -44,12 +44,19 @@ namespace WorldTree
 			}
 		}
 
-		public static Array ObjectNew(this ArrayPool self, IPool pool)
+		/// <summary>
+		/// 创建一个数组的处理
+		/// </summary>
+		/// <returns></returns>
+		private static Array ObjectNew(this ArrayPool self, IPool pool)
 		{
 			return Array.CreateInstance(self.ObjectType, self.Length);
 		}
 
-		public static void ObjectOnRecycle(this ArrayPool self, Array obj)
+		/// <summary>
+		/// 回收一个数组的处理
+		/// </summary>
+		private static void ObjectOnRecycle(this ArrayPool self, Array obj)
 		{
 			Array.Clear(obj, 0, obj.Length);
 		}

@@ -22,10 +22,9 @@ namespace WorldTree
 	{
 		public override string ToString()
 		{
-			return $"GlobalRuleActuator : {ruleGroup?.RuleType.CodeToType()}";
+			return $"GlobalRuleActuator : {ruleGroupDict?.RuleType.CodeToType()}";
 		}
 	}
-
 
 	public static class GlobalRuleActuatorRule
 	{
@@ -53,7 +52,7 @@ namespace WorldTree
 		{
 			protected override void Execute(GlobalRuleActuator<R> self)
 			{
-				self.ruleGroup = self.Core.RuleManager.GetOrNewRuleGroup<R>();
+				self.ruleGroupDict = self.Core.RuleManager.GetOrNewRuleGroup<R>();
 				self.LoadGlobalNode();
 			}
 		}
@@ -64,7 +63,7 @@ namespace WorldTree
 		public static void LoadGlobalNode<R>(this GlobalRuleActuator<R> self)
 			where R : IRule
 		{
-			foreach (var item in self.ruleGroup)
+			foreach (var item in self.ruleGroupDict)
 			{
 				if (!item.Key.CodeToType().GetInterfaces().Contains(typeof(IListenerIgnorer)))
 				{

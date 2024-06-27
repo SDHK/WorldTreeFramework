@@ -63,6 +63,11 @@ namespace WorldTree
 		public virtual long TargetRuleType => TypeInfo<TR>.TypeCode;
 
 		public virtual void Invoke(INode self, INode node) => Execute(self as LN, node as TN);
+		/// <summary>
+		/// 执行
+		/// </summary>
+		/// <param name="self">自身</param>
+		/// <param name="node">监听目标</param>
 		protected abstract void Execute(LN self, TN node);
 	}
 

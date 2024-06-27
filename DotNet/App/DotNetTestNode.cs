@@ -4,93 +4,16 @@ using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
-
-	/// <summary>
-	/// 测试接口
-	/// </summary>
-	public interface AITa<A>
+	public partial class DotNetTestNode
 	{
-		/// <summary>
-		/// 测试aaa
-		/// </summary>
-		public int AAA_A { get; set; }
 		/// <summary>
 		/// a
 		/// </summary>
-		public void Tast();
-
-	}
-
-
-
-	/// <summary>
-	/// 测试节点
-	/// </summary>
-	public class Test1 : Node
-		, AsAwake
-		 , ComponentOf<INode>
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public int a;
-
-		/// <summary>
-		/// B
-		/// </summary>
-		public int B;
-
-		/// <summary>
-		/// a1
-		/// </summary>
-		public int a1 { get; }
-
-		/// <summary>
-		/// B1
-		/// </summary>
-		public int B1 =>B;
-	}
-
-
-	/// <summary>
-	/// 测试节点规则
-	/// </summary>
-	public static partial class DotNetTestNodeRule
-	{
-		/// <summary>
-		/// 测试扩展方法
-		/// </summary>
-		public static void Test(this DotNetTestNode self, DotNetTestNode dotNetTestNode)
+		public partial void Test()
 		{
-			// a获取
-			var a = dotNetTestNode.AddComponent(out Test1 _).a1;
-
-			// 
-			var b = dotNetTestNode.AddComponent(out Test1 _).B1;
 		}
 
-		private static OnAdd<DotNetTestNode> AddTest = delegate (DotNetTestNode self) 
-		{
-			// a获取
-			var a = self.AddComponent(out Test1 _).a1;
-			//var a = self.a;
-		};
-
-		/// <summary>
-		/// 
-		/// </summary>
-		private class AddT : AddRule<Test1>
-		{
-			protected override void Execute(Test1 self)
-			{
-				// a
-				var a = self.a;
-			}
-		}
-
-
 	}
-
 
 	/// <summary>
 	/// 测试节点
@@ -98,89 +21,23 @@ namespace WorldTree
 	public partial class DotNetTestNode : Node, ComponentOf<INode>
 		, AsAwake
 		, AsCurveEvaluate
-		, AsTestEvent
 		, AsComponentBranch
 	{
 		/// <summary>
 		/// a
 		/// </summary>
-		public int a;
-
-		/// <summary>
-		/// a
-		/// </summary>
-		public int At { get; }
-
-		//public int At =>this.TryGetComponent(out Test1 test1) ? test1.a : 0;
-
-		/// <summary>
-		/// 注释
-		/// </summary>
-		public UnitList<int> NtLis;
-
-		/// <summary>
-		/// 字典注释
-		/// </summary>
-		public UnitDictionary<int, string> KeysDict;
-
-		/// <summary>
-		/// 数组注释
-		/// </summary>
-		public int[] Int;
-
-		/// <summary>
-		/// 注释
-		/// </summary>
-		public UnitQueue<int> intsQueue;
-
-		/// <summary>
-		/// 注释
-		/// </summary>
-		private Stack<int> intsStac;
-
-		/// <summary>
-		/// a
-		/// </summary>
-		public HashSet<int> IntsHas;
-
-		/// <summary>
-		/// a
-		/// </summary>
-		public void OuterMethod()
-		{
-			// a
-			int LocalFunction(int x, int y)
-			{
-				return x + y;
-			}
-
-			// a
-			int result = LocalFunction(5, 3);
-			Console.WriteLine(result); // 输出: 8
-		}
+		public partial void Test();
 
 	}
+
 
 	/// <summary>
 	/// DotNetTestNodeRule
 	/// </summary>
 	public static partial class DotNetTestNodeRule
 	{
-		private static OnTestEvent<DotNetTestNode> TestEvent = (self) =>
-		{
-			self.Log("测试事件！！！");
-		};
-
 		private static OnUpdate<DotNetTestNode> Update = (self) =>
 		{
-			// a 
-			var a = self.NtList;
-
-			//全局调用
-			self.Core.GetOrNewGlobalRuleActuator(out GlobalRuleActuator<TestEvent> act).Send();
-
-			//指定调用
-			self.TestEvent();
 
 			self.Log($"初始更新！！！");
 		};

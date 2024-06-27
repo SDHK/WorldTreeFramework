@@ -26,3 +26,10 @@ E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.AssemblyInfoInputs
 E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.AssemblyInfo.cs
 E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.csproj.CoreCompileInputs.cache
 E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.sourcelink.json
+E:\Project\GitHub\WorldTree\Bin\DotNet.Core.deps.json
+E:\Project\GitHub\WorldTree\Bin\DotNet.Core.dll
+E:\Project\GitHub\WorldTree\Bin\DotNet.Core.pdb
+E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.dll
+E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\refint\DotNet.Core.dll
+E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.pdb
+E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\ref\DotNet.Core.dll

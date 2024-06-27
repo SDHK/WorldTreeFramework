@@ -40,7 +40,10 @@ namespace WorldTree
     /// </summary>
     public static class HashCore
     {
-        private readonly static SHA256 sha256 = SHA256.Create();
+		/// <summary>
+		/// SHA256
+		/// </summary>
+		private readonly static SHA256 sha256 = SHA256.Create();
 
         /// <summary>
         /// 获取64位的哈希码

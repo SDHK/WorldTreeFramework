@@ -13,6 +13,9 @@ namespace WorldTree.Internal
 
 	public interface ITreeTaskStateMachine : INode
 	{
+		/// <summary>
+		/// 状态机继续下一步
+		/// </summary>
 		public void MoveNext();
 	}
 

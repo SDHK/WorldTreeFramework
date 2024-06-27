@@ -17,6 +17,10 @@ using System;
 
 namespace WorldTree
 {
+
+	/// <summary>
+	/// 时间帮助类
+	/// </summary>
 	public static class TimeHelper
 	{
 		#region 时间常量
@@ -24,27 +28,27 @@ namespace WorldTree
 		/// <summary>
 		/// 一毫秒，10000刻度
 		/// </summary>
-		public const int MilliTick = 10000;
+		public const int MILLI_TICK = 10000;
 
 		/// <summary>
 		/// 一秒，1000毫秒
 		/// </summary>
-		public const int Second = 1000;
+		public const int SECOND = 1000;
 
 		/// <summary>
 		/// 一分钟，60000毫秒
 		/// </summary>
-		public const long Minute = 60000;
+		public const long MINUTE = 60000;
 
 		/// <summary>
 		/// 一小时，3600000毫秒
 		/// </summary>
-		public const long Hour = 3600000;
+		public const long HOUR = 3600000;
 
 		/// <summary>
 		/// 一天，86400000毫秒
 		/// </summary>
-		public const long Day = 86400000;
+		public const long DAY = 86400000;
 
 		#endregion
 

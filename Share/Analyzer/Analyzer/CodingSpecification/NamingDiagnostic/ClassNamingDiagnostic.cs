@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
 using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,9 +49,38 @@ namespace WorldTree.Analyzer
 						// 不需要检查的修饰符
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(classDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
-							if (!codeDiagnostic.Check.Invoke(classDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(classDeclaration)))
+							if (!codeDiagnostic.Check.Invoke(classDeclaration.Identifier.Text))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
+							}
+							//检查是否需要添加注释
+							else if (codeDiagnostic.NeedComment)
+							{
+								//判断是否是部分类
+								if (classDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))
+								{
+									// 获取所有部分类的语法声明
+									IEnumerable<ClassDeclarationSyntax> partialDeclarations = typeSymbol.DeclaringSyntaxReferences.Select(syntaxRef => syntaxRef.GetSyntax()).OfType<ClassDeclarationSyntax>();
+									bool isComment = false;
+
+									// 遍历所有部分类
+									foreach (ClassDeclarationSyntax partialDecl in partialDeclarations)
+									{
+										if (TreeSyntaxHelper.CheckSummaryComment(partialDecl))
+										{
+											isComment = true;
+											break;
+										}
+									}
+									if (!isComment)
+									{
+										context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
+									}
+								}
+								else if (!TreeSyntaxHelper.CheckSummaryComment(classDeclaration))
+								{
+									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
+								}
 							}
 						}
 					}

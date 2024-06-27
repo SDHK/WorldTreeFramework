@@ -22,19 +22,19 @@ namespace WorldTree
         /// 返回最小值
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3Float Min(this Vector3Float lhs, Vector3Float rhs) => new Vector3Float(Math.Min(lhs.x, rhs.x), Math.Min(lhs.y, rhs.y), Math.Min(lhs.z, rhs.z));
+        public static Vector3Float Min(this Vector3Float lhs, Vector3Float rhs) => new Vector3Float(Math.Min(lhs.X, rhs.X), Math.Min(lhs.Y, rhs.Y), Math.Min(lhs.Z, rhs.Z));
 
         /// <summary>
         /// 返回最大值
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3Float Max(this Vector3Float lhs, Vector3Float rhs) => new Vector3Float(Math.Max(lhs.x, rhs.x), Math.Max(lhs.y, rhs.y), Math.Max(lhs.z, rhs.z));
+        public static Vector3Float Max(this Vector3Float lhs, Vector3Float rhs) => new Vector3Float(Math.Max(lhs.X, rhs.X), Math.Max(lhs.Y, rhs.Y), Math.Max(lhs.Z, rhs.Z));
 
         /// <summary>
         /// 返回a和b之间的距离。</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Distance(this Vector3Float a, Vector3Float b) => (a - b).magnitude;
+        public static float Distance(this Vector3Float a, Vector3Float b) => (a - b).Magnitude;
 
 
         /// <summary>
@@ -43,13 +43,13 @@ namespace WorldTree
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3Float ClampMagnitude(this Vector3Float vector, float maxLength)
         {
-            float sqrMagnitude = vector.sqrMagnitude;
+            float sqrMagnitude = vector.SqrMagnitude;
             if ((double)sqrMagnitude <= (double)maxLength * (double)maxLength)
                 return vector;
             float num1 = (float)Math.Sqrt((double)sqrMagnitude);
-            float num2 = vector.x / num1;
-            float num3 = vector.y / num1;
-            float num4 = vector.z / num1;
+            float num2 = vector.X / num1;
+            float num3 = vector.Y / num1;
+            float num4 = vector.Z / num1;
             return new Vector3Float(num2 * maxLength, num3 * maxLength, num4 * maxLength);
         }
 
@@ -63,18 +63,18 @@ namespace WorldTree
         public static Vector3Float Reflect(this Vector3Float inDirection, Vector3Float inNormal)
         {
             float num = -2f * inNormal.Dot(inDirection);
-            return new Vector3Float(num * inNormal.x + inDirection.x, num * inNormal.y + inDirection.y, num * inNormal.z + inDirection.z);
+            return new Vector3Float(num * inNormal.X + inDirection.X, num * inNormal.Y + inDirection.Y, num * inNormal.Z + inDirection.Z);
         }
 
         /// <summary>
         /// 两个向量的点积。
         /// </summary>
-        public static float Dot(this Vector3Float lhs, Vector3Float rhs) => (float)((double)lhs.x * (double)rhs.x + (double)lhs.y * (double)rhs.y + (double)lhs.z * (double)rhs.z);
+        public static float Dot(this Vector3Float lhs, Vector3Float rhs) => (float)((double)lhs.X * (double)rhs.X + (double)lhs.Y * (double)rhs.Y + (double)lhs.Z * (double)rhs.Z);
 
         /// <summary>
         /// 两个向量的外积。
         /// </summary>
-        public static Vector3Float Cross(this Vector3Float lhs, Vector3Float rhs) => new Vector3Float((float)((double)lhs.y * (double)rhs.z - (double)lhs.z * (double)rhs.y), (float)((double)lhs.z * (double)rhs.x - (double)lhs.x * (double)rhs.z), (float)((double)lhs.x * (double)rhs.y - (double)lhs.y * (double)rhs.x));
+        public static Vector3Float Cross(this Vector3Float lhs, Vector3Float rhs) => new Vector3Float((float)((double)lhs.Y * (double)rhs.Z - (double)lhs.Z * (double)rhs.Y), (float)((double)lhs.Z * (double)rhs.X - (double)lhs.X * (double)rhs.Z), (float)((double)lhs.X * (double)rhs.Y - (double)lhs.Y * (double)rhs.X));
 
 
         /// <summary>
@@ -84,10 +84,10 @@ namespace WorldTree
         public static Vector3Float Project(this Vector3Float vector, Vector3Float onNormal)
         {
             float num1 = onNormal.Dot(onNormal);
-            if (num1 < Vector3Float.kEpsilon)
+            if (num1 < Vector3Float.K_EPSILON)
                 return Vector3Float.Zero;
             float num2 = vector.Dot(onNormal);
-            return new Vector3Float(onNormal.x * num2 / num1, onNormal.y * num2 / num1, onNormal.z * num2 / num1);
+            return new Vector3Float(onNormal.X * num2 / num1, onNormal.Y * num2 / num1, onNormal.Z * num2 / num1);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace WorldTree
             if (num1 < MathFloat.Epsilon)
                 return vector;
             float num2 = vector.Dot(planeNormal);
-            return new Vector3Float(vector.x - planeNormal.x * num2 / num1, vector.y - planeNormal.y * num2 / num1, vector.z - planeNormal.z * num2 / num1);
+            return new Vector3Float(vector.X - planeNormal.X * num2 / num1, vector.Y - planeNormal.Y * num2 / num1, vector.Z - planeNormal.Z * num2 / num1);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace WorldTree
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Angle(this Vector3Float from, Vector3Float to)
         {
-            float num = (float)Math.Sqrt((double)from.sqrMagnitude * (double)to.sqrMagnitude);
+            float num = (float)Math.Sqrt((double)from.SqrMagnitude * (double)to.SqrMagnitude);
             return (double)num < 1.0000000036274937E-15 ? 0.0f : (float)Math.Acos((double)Math.Clamp(from.Dot(to) / num, -1f, 1f)) * 57.29578f;
         }
 
@@ -122,10 +122,10 @@ namespace WorldTree
         public static float SignedAngle(this Vector3Float from, Vector3Float to, Vector3Float axis)
         {
             float num1 = from.Angle(to);
-            float num2 = (float)((double)from.y * (double)to.z - (double)from.z * (double)to.y);
-            float num3 = (float)((double)from.z * (double)to.x - (double)from.x * (double)to.z);
-            float num4 = (float)((double)from.x * (double)to.y - (double)from.y * (double)to.x);
-            float num5 = Math.Sign((float)((double)axis.x * (double)num2 + (double)axis.y * (double)num3 + (double)axis.z * (double)num4));
+            float num2 = (float)((double)from.Y * (double)to.Z - (double)from.Z * (double)to.Y);
+            float num3 = (float)((double)from.Z * (double)to.X - (double)from.X * (double)to.Z);
+            float num4 = (float)((double)from.X * (double)to.Y - (double)from.Y * (double)to.X);
+            float num5 = Math.Sign((float)((double)axis.X * (double)num2 + (double)axis.Y * (double)num3 + (double)axis.Z * (double)num4));
             return num1 * num5;
         }
 
@@ -146,19 +146,19 @@ namespace WorldTree
         /// </summary>
         public static bool TryPointOnLine(Vector3Float node1, Vector3Float node2, Vector3Float point)
         {
-            float maxX = node1.x > node2.x ? node1.x : node2.x;
-            float minX = node1.x > node2.x ? node2.x : node1.x;
-            float maxY = node1.y > node2.y ? node1.y : node2.y;
-            float minY = node1.y > node2.y ? node2.y : node1.y;
-            float maxZ = node1.z > node2.z ? node1.z : node2.z;
-            float minZ = node1.z > node2.z ? node2.z : node1.z;
+            float maxX = node1.X > node2.X ? node1.X : node2.X;
+            float minX = node1.X > node2.X ? node2.X : node1.X;
+            float maxY = node1.Y > node2.Y ? node1.Y : node2.Y;
+            float minY = node1.Y > node2.Y ? node2.Y : node1.Y;
+            float maxZ = node1.Z > node2.Z ? node1.Z : node2.Z;
+            float minZ = node1.Z > node2.Z ? node2.Z : node1.Z;
 
-            Vector3Float Vector1_P = point - node1;
-            Vector3Float Vector1_2 = node2 - node1;
-            return Vector1_P.Dot(Vector1_2) - Vector1_2.Dot(Vector1_P) == 0 &&
-                    (point.x >= minX && point.x <= maxX) &&
-                    (point.y >= minY && point.y <= maxY) &&
-                    (point.z >= minZ && point.z <= maxZ);
+            Vector3Float vector1_P = point - node1;
+            Vector3Float vector1_2 = node2 - node1;
+            return vector1_P.Dot(vector1_2) - vector1_2.Dot(vector1_P) == 0 &&
+                    (point.X >= minX && point.X <= maxX) &&
+                    (point.Y >= minY && point.Y <= maxY) &&
+                    (point.Z >= minZ && point.Z <= maxZ);
         }
 
 
@@ -167,12 +167,12 @@ namespace WorldTree
         /// </summary>
         public static bool RapidRepulsion(Vector3Float a, Vector3Float b, Vector3Float c, Vector3Float d)
         {
-            return Math.Min(a.x, b.x) <= Math.Max(c.x, d.x) ?
-                    Math.Min(c.x, d.x) <= Math.Max(a.x, b.x) ?
-                    Math.Min(a.y, b.y) <= Math.Max(c.y, d.y) ?
-                    Math.Min(c.y, d.y) <= Math.Max(a.y, b.y) ?
-                    Math.Min(a.z, b.z) <= Math.Max(c.z, d.z) ?
-                    Math.Min(c.z, d.z) <= Math.Max(a.z, b.z) : false : false : false : false : false;
+            return Math.Min(a.X, b.X) <= Math.Max(c.X, d.X) ?
+                    Math.Min(c.X, d.X) <= Math.Max(a.X, b.X) ?
+                    Math.Min(a.Y, b.Y) <= Math.Max(c.Y, d.Y) ?
+                    Math.Min(c.Y, d.Y) <= Math.Max(a.Y, b.Y) ?
+                    Math.Min(a.Z, b.Z) <= Math.Max(c.Z, d.Z) ?
+                    Math.Min(c.Z, d.Z) <= Math.Max(a.Z, b.Z) : false : false : false : false : false;
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace WorldTree
                 Vector3Float v1 = ca.Cross(cd);
                 Vector3Float v2 = cd.Cross(ab);
 
-                float ratio = v1.Dot(v2) / v2.sqrMagnitude;//获得比值
+                float ratio = v1.Dot(v2) / v2.SqrMagnitude;//获得比值
                 intersectPosition = a + ab * ratio;
                 return true;
             }
@@ -205,23 +205,23 @@ namespace WorldTree
         public static Vector3Float Lerp(this Vector3Float a, Vector3Float b, float t)
         {
             t = Math.Clamp(t, 0, 1);
-            return new Vector3Float(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
+            return new Vector3Float(a.X + (b.X - a.X) * t, a.Y + (b.Y - a.Y) * t, a.Z + (b.Z - a.Z) * t);
         }
 
         /// <summary>
         /// 贝塞尔曲线
         /// </summary>
-        /// <param name="TimeRatio">点的位置（时间比例0~1）</param>
+        /// <param name="timeRatio">点的位置（时间比例0~1）</param>
         /// <param name="points">曲线拉伸坐标点</param>
         /// <returns> 点的位置 </returns>
-        public static Vector3Float BezierCurve(TreeList<Vector3Float> points, float TimeRatio)
+        public static Vector3Float BezierCurve(TreeList<Vector3Float> points, float timeRatio)
         {
             while (points.Count > 1)
             {
                 points.Parent.AddTemp(out TreeList<Vector3Float> newp);
                 for (int i = 0; i < points.Count - 1; i++)
                 {
-                    Vector3Float p0p1 = points[i].Lerp(points[i + 1], TimeRatio);
+                    Vector3Float p0p1 = points[i].Lerp(points[i + 1], timeRatio);
                     newp.Add(p0p1);
                 }
                 points.Dispose();
@@ -239,9 +239,9 @@ namespace WorldTree
         /// <returns>中心点</returns>
         public static Vector3Float Center(TreeList<Vector3Float> points)
         {
-            Vector3Float Center = new Vector3Float();
-            for (int i = 0; i < points.Count; i++) Center += points[i];
-            return Center / points.Count;
+            Vector3Float center = new Vector3Float();
+            for (int i = 0; i < points.Count; i++) center += points[i];
+            return center / points.Count;
         }
 
 
@@ -267,7 +267,7 @@ namespace WorldTree
         /// <returns>return : 欧拉角(360度)</returns>
         public static Vector3Float ToEulerAngle(this Vector3Float vector)
         {
-            return QuaternionFloat.LookRotation(vector).eulerAngles;
+            return QuaternionFloat.LookRotation(vector).EulerAngles;
         }
 
         /// <summary>
@@ -278,8 +278,8 @@ namespace WorldTree
         public static Vector3Float ToVector3(this Vector3Float eulerAngles)
         {
             Vector3Float vector = new Vector3Float(0, 0, 1);
-            vector = QuaternionFloat.AngleAxis(eulerAngles.x, -Vector3Float.Left) * vector; //算出旋转后的向量
-            vector = QuaternionFloat.AngleAxis(eulerAngles.y, Vector3Float.Up) * vector; //算出旋转后的向量
+            vector = QuaternionFloat.AngleAxis(eulerAngles.X, -Vector3Float.Left) * vector; //算出旋转后的向量
+            vector = QuaternionFloat.AngleAxis(eulerAngles.Y, Vector3Float.Up) * vector; //算出旋转后的向量
 
             return vector;
         }

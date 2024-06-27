@@ -38,7 +38,7 @@ namespace WorldTree
 		/// <summary>
 		/// 数据id时间偏移
 		/// </summary>
-		private uint UIDTimeOffset;
+		private uint uIDTimeOffset;
 
 
 		/// <summary>
@@ -58,14 +58,14 @@ namespace WorldTree
 			if (time > currentUIDTime)
 			{
 				currentUIDTime = time;
-				UIDTimeOffset = 0;
+				uIDTimeOffset = 0;
 			}
 			else
 			{
-				UIDTimeOffset++;
-				if (UIDTimeOffset > ushort.MaxValue - 1)//超过最大值
+				uIDTimeOffset++;
+				if (uIDTimeOffset > ushort.MaxValue - 1)//超过最大值
 				{
-					UIDTimeOffset = 0;
+					uIDTimeOffset = 0;
 					currentUIDTime++; // 借用下一秒
 					this.LogError($"溢出的UID计数: {time} {currentUIDTime}");
 				}
@@ -77,7 +77,7 @@ namespace WorldTree
 			//32位时间为136年,18位偏移支持每秒并发262144个UID（20万）
 
 			//雪花算法 生成UID ：14位进程ID  30位秒级时间戳 20位时间偏移 三部分组成
-			var uid = (ProcessId << 50) | (currentUIDTime << 20) | UIDTimeOffset;
+			var uid = (ProcessId << 50) | (currentUIDTime << 20) | uIDTimeOffset;
 
 			return uid;
 		}

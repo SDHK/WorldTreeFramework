@@ -46,12 +46,12 @@ namespace WorldTree
         /// <summary>
         /// 对象池
         /// </summary>
-        protected Queue<T> objetPool = new Queue<T>();
+        protected Queue<T> objectPoolQueue = new Queue<T>();
 
         /// <summary>
         /// 当前保留对象数量
         /// </summary>
-        public override int Count => objetPool.Count;
+        public override int Count => objectPoolQueue.Count;
 
         /// <summary>
         /// 实例化对象的方法
@@ -107,15 +107,15 @@ namespace WorldTree
         /// </summary>
         public T DequeueOrNewObject()
         {
-            lock (objetPool)
+            lock (objectPoolQueue)
             {
                 T obj = null;
 
                 while (obj == null)
                 {
-                    if (objetPool.Count != 0)
+                    if (objectPoolQueue.Count != 0)
                     {
-                        obj = objetPool.Dequeue();
+                        obj = objectPoolQueue.Dequeue();
                     }
                     else
                     {
@@ -152,18 +152,18 @@ namespace WorldTree
 
         public override void Recycle(object recycleObject)
         {
-            lock (objetPool)
+            lock (objectPoolQueue)
             {
                 if (recycleObject != null)
                 {
                     T obj = recycleObject as T;
-                    if (maxLimit == -1 || objetPool.Count < maxLimit)
+                    if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
                     {
                         //对象没有回收的标记，所以只能由池自己判断，比较耗时
-                        if (!objetPool.Contains(obj))
+                        if (!objectPoolQueue.Contains(obj))
                         {
                             objectOnRecycle?.Invoke(obj);
-                            objetPool.Enqueue(obj);
+                            objectPoolQueue.Enqueue(obj);
                         }
                     }
                     else
@@ -177,11 +177,11 @@ namespace WorldTree
         }
         public override void DisposeOne()
         {
-            lock (objetPool)
+            lock (objectPoolQueue)
             {
-                if (objetPool.Count > 0)
+                if (objectPoolQueue.Count > 0)
                 {
-                    var obj = objetPool.Dequeue();
+                    var obj = objectPoolQueue.Dequeue();
                     objectOnDestroy?.Invoke(obj);
                     DestroyObject?.Invoke(obj);
                 }
@@ -189,11 +189,11 @@ namespace WorldTree
         }
         public override void DisposeAll()
         {
-            lock (objetPool)
+            lock (objectPoolQueue)
             {
-                while (objetPool.Count > 0)
+                while (objectPoolQueue.Count > 0)
                 {
-                    var obj = objetPool.Dequeue();
+                    var obj = objectPoolQueue.Dequeue();
                     objectOnDestroy?.Invoke(obj);
                     DestroyObject?.Invoke(obj);
                 }
@@ -202,13 +202,13 @@ namespace WorldTree
 
         public override void Preload()
         {
-            lock (objetPool)
+            lock (objectPoolQueue)
             {
-                while (objetPool.Count < minLimit)
+                while (objectPoolQueue.Count < minLimit)
                 {
                     T obj = NewObject(this);
                     objectOnNew?.Invoke(obj);
-                    objetPool.Enqueue(obj);
+                    objectPoolQueue.Enqueue(obj);
                 }
             }
         }

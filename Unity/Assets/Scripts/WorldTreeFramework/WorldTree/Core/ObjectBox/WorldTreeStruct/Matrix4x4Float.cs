@@ -31,19 +31,19 @@ namespace WorldTree
 		/// <summary>
 		/// 第一行
 		/// </summary>
-		private float m00, m10, m20, m30;
+		public float M00, M10, M20, M30;
 		/// <summary>
 		/// 第二行
 		/// </summary>
-		private float m01, m11, m21, m31;
+		public float M01, M11, M21, M31;
 		/// <summary>
 		/// 第三行
 		/// </summary>
-		private float m02, m12, m22, m32;
+		public float M02, M12, M22, M32;
 		/// <summary>
 		/// 第四行
 		/// </summary>
-		private float m03, m13, m23, m33;
+		public float M03, M13, M23, M33;
 
 		/// <summary>
 		/// 零矩阵(只读)。
@@ -70,22 +70,22 @@ namespace WorldTree
 
 		public Matrix4x4Float(Vector4Float column0, Vector4Float column1, Vector4Float column2, Vector4Float column3)
 		{
-			this.m00 = column0.x;
-			this.m01 = column1.x;
-			this.m02 = column2.x;
-			this.m03 = column3.x;
-			this.m10 = column0.y;
-			this.m11 = column1.y;
-			this.m12 = column2.y;
-			this.m13 = column3.y;
-			this.m20 = column0.z;
-			this.m21 = column1.z;
-			this.m22 = column2.z;
-			this.m23 = column3.z;
-			this.m30 = column0.w;
-			this.m31 = column1.w;
-			this.m32 = column2.w;
-			this.m33 = column3.w;
+			this.M00 = column0.X;
+			this.M01 = column1.X;
+			this.M02 = column2.X;
+			this.M03 = column3.X;
+			this.M10 = column0.Y;
+			this.M11 = column1.Y;
+			this.M12 = column2.Y;
+			this.M13 = column3.Y;
+			this.M20 = column0.Z;
+			this.M21 = column1.Z;
+			this.M22 = column2.Z;
+			this.M23 = column3.Z;
+			this.M30 = column0.W;
+			this.M31 = column1.W;
+			this.M32 = column2.W;
+			this.M33 = column3.W;
 		}
 
 
@@ -105,37 +105,37 @@ namespace WorldTree
 				switch (index)
 				{
 					case 0:
-						return this.m00;
+						return this.M00;
 					case 1:
-						return this.m10;
+						return this.M10;
 					case 2:
-						return this.m20;
+						return this.M20;
 					case 3:
-						return this.m30;
+						return this.M30;
 					case 4:
-						return this.m01;
+						return this.M01;
 					case 5:
-						return this.m11;
+						return this.M11;
 					case 6:
-						return this.m21;
+						return this.M21;
 					case 7:
-						return this.m31;
+						return this.M31;
 					case 8:
-						return this.m02;
+						return this.M02;
 					case 9:
-						return this.m12;
+						return this.M12;
 					case 10:
-						return this.m22;
+						return this.M22;
 					case 11:
-						return this.m32;
+						return this.M32;
 					case 12:
-						return this.m03;
+						return this.M03;
 					case 13:
-						return this.m13;
+						return this.M13;
 					case 14:
-						return this.m23;
+						return this.M23;
 					case 15:
-						return this.m33;
+						return this.M33;
 					default:
 						throw new IndexOutOfRangeException("Invalid Matrix4x4Float index!");
 				}
@@ -145,52 +145,52 @@ namespace WorldTree
 				switch (index)
 				{
 					case 0:
-						this.m00 = value;
+						this.M00 = value;
 						break;
 					case 1:
-						this.m10 = value;
+						this.M10 = value;
 						break;
 					case 2:
-						this.m20 = value;
+						this.M20 = value;
 						break;
 					case 3:
-						this.m30 = value;
+						this.M30 = value;
 						break;
 					case 4:
-						this.m01 = value;
+						this.M01 = value;
 						break;
 					case 5:
-						this.m11 = value;
+						this.M11 = value;
 						break;
 					case 6:
-						this.m21 = value;
+						this.M21 = value;
 						break;
 					case 7:
-						this.m31 = value;
+						this.M31 = value;
 						break;
 					case 8:
-						this.m02 = value;
+						this.M02 = value;
 						break;
 					case 9:
-						this.m12 = value;
+						this.M12 = value;
 						break;
 					case 10:
-						this.m22 = value;
+						this.M22 = value;
 						break;
 					case 11:
-						this.m32 = value;
+						this.M32 = value;
 						break;
 					case 12:
-						this.m03 = value;
+						this.M03 = value;
 						break;
 					case 13:
-						this.m13 = value;
+						this.M13 = value;
 						break;
 					case 14:
-						this.m23 = value;
+						this.M23 = value;
 						break;
 					case 15:
-						this.m33 = value;
+						this.M33 = value;
 						break;
 					default:
 						throw new IndexOutOfRangeException("Invalid Matrix4x4Float index!");
@@ -202,32 +202,32 @@ namespace WorldTree
 		public static Matrix4x4Float operator *(Matrix4x4Float lhs, Matrix4x4Float rhs)
 		{
 			Matrix4x4Float matrix4x4;
-			matrix4x4.m00 = (float)((double)lhs.m00 * (double)rhs.m00 + (double)lhs.m01 * (double)rhs.m10 + (double)lhs.m02 * (double)rhs.m20 + (double)lhs.m03 * (double)rhs.m30);
-			matrix4x4.m01 = (float)((double)lhs.m00 * (double)rhs.m01 + (double)lhs.m01 * (double)rhs.m11 + (double)lhs.m02 * (double)rhs.m21 + (double)lhs.m03 * (double)rhs.m31);
-			matrix4x4.m02 = (float)((double)lhs.m00 * (double)rhs.m02 + (double)lhs.m01 * (double)rhs.m12 + (double)lhs.m02 * (double)rhs.m22 + (double)lhs.m03 * (double)rhs.m32);
-			matrix4x4.m03 = (float)((double)lhs.m00 * (double)rhs.m03 + (double)lhs.m01 * (double)rhs.m13 + (double)lhs.m02 * (double)rhs.m23 + (double)lhs.m03 * (double)rhs.m33);
-			matrix4x4.m10 = (float)((double)lhs.m10 * (double)rhs.m00 + (double)lhs.m11 * (double)rhs.m10 + (double)lhs.m12 * (double)rhs.m20 + (double)lhs.m13 * (double)rhs.m30);
-			matrix4x4.m11 = (float)((double)lhs.m10 * (double)rhs.m01 + (double)lhs.m11 * (double)rhs.m11 + (double)lhs.m12 * (double)rhs.m21 + (double)lhs.m13 * (double)rhs.m31);
-			matrix4x4.m12 = (float)((double)lhs.m10 * (double)rhs.m02 + (double)lhs.m11 * (double)rhs.m12 + (double)lhs.m12 * (double)rhs.m22 + (double)lhs.m13 * (double)rhs.m32);
-			matrix4x4.m13 = (float)((double)lhs.m10 * (double)rhs.m03 + (double)lhs.m11 * (double)rhs.m13 + (double)lhs.m12 * (double)rhs.m23 + (double)lhs.m13 * (double)rhs.m33);
-			matrix4x4.m20 = (float)((double)lhs.m20 * (double)rhs.m00 + (double)lhs.m21 * (double)rhs.m10 + (double)lhs.m22 * (double)rhs.m20 + (double)lhs.m23 * (double)rhs.m30);
-			matrix4x4.m21 = (float)((double)lhs.m20 * (double)rhs.m01 + (double)lhs.m21 * (double)rhs.m11 + (double)lhs.m22 * (double)rhs.m21 + (double)lhs.m23 * (double)rhs.m31);
-			matrix4x4.m22 = (float)((double)lhs.m20 * (double)rhs.m02 + (double)lhs.m21 * (double)rhs.m12 + (double)lhs.m22 * (double)rhs.m22 + (double)lhs.m23 * (double)rhs.m32);
-			matrix4x4.m23 = (float)((double)lhs.m20 * (double)rhs.m03 + (double)lhs.m21 * (double)rhs.m13 + (double)lhs.m22 * (double)rhs.m23 + (double)lhs.m23 * (double)rhs.m33);
-			matrix4x4.m30 = (float)((double)lhs.m30 * (double)rhs.m00 + (double)lhs.m31 * (double)rhs.m10 + (double)lhs.m32 * (double)rhs.m20 + (double)lhs.m33 * (double)rhs.m30);
-			matrix4x4.m31 = (float)((double)lhs.m30 * (double)rhs.m01 + (double)lhs.m31 * (double)rhs.m11 + (double)lhs.m32 * (double)rhs.m21 + (double)lhs.m33 * (double)rhs.m31);
-			matrix4x4.m32 = (float)((double)lhs.m30 * (double)rhs.m02 + (double)lhs.m31 * (double)rhs.m12 + (double)lhs.m32 * (double)rhs.m22 + (double)lhs.m33 * (double)rhs.m32);
-			matrix4x4.m33 = (float)((double)lhs.m30 * (double)rhs.m03 + (double)lhs.m31 * (double)rhs.m13 + (double)lhs.m32 * (double)rhs.m23 + (double)lhs.m33 * (double)rhs.m33);
+			matrix4x4.M00 = (float)((double)lhs.M00 * (double)rhs.M00 + (double)lhs.M01 * (double)rhs.M10 + (double)lhs.M02 * (double)rhs.M20 + (double)lhs.M03 * (double)rhs.M30);
+			matrix4x4.M01 = (float)((double)lhs.M00 * (double)rhs.M01 + (double)lhs.M01 * (double)rhs.M11 + (double)lhs.M02 * (double)rhs.M21 + (double)lhs.M03 * (double)rhs.M31);
+			matrix4x4.M02 = (float)((double)lhs.M00 * (double)rhs.M02 + (double)lhs.M01 * (double)rhs.M12 + (double)lhs.M02 * (double)rhs.M22 + (double)lhs.M03 * (double)rhs.M32);
+			matrix4x4.M03 = (float)((double)lhs.M00 * (double)rhs.M03 + (double)lhs.M01 * (double)rhs.M13 + (double)lhs.M02 * (double)rhs.M23 + (double)lhs.M03 * (double)rhs.M33);
+			matrix4x4.M10 = (float)((double)lhs.M10 * (double)rhs.M00 + (double)lhs.M11 * (double)rhs.M10 + (double)lhs.M12 * (double)rhs.M20 + (double)lhs.M13 * (double)rhs.M30);
+			matrix4x4.M11 = (float)((double)lhs.M10 * (double)rhs.M01 + (double)lhs.M11 * (double)rhs.M11 + (double)lhs.M12 * (double)rhs.M21 + (double)lhs.M13 * (double)rhs.M31);
+			matrix4x4.M12 = (float)((double)lhs.M10 * (double)rhs.M02 + (double)lhs.M11 * (double)rhs.M12 + (double)lhs.M12 * (double)rhs.M22 + (double)lhs.M13 * (double)rhs.M32);
+			matrix4x4.M13 = (float)((double)lhs.M10 * (double)rhs.M03 + (double)lhs.M11 * (double)rhs.M13 + (double)lhs.M12 * (double)rhs.M23 + (double)lhs.M13 * (double)rhs.M33);
+			matrix4x4.M20 = (float)((double)lhs.M20 * (double)rhs.M00 + (double)lhs.M21 * (double)rhs.M10 + (double)lhs.M22 * (double)rhs.M20 + (double)lhs.M23 * (double)rhs.M30);
+			matrix4x4.M21 = (float)((double)lhs.M20 * (double)rhs.M01 + (double)lhs.M21 * (double)rhs.M11 + (double)lhs.M22 * (double)rhs.M21 + (double)lhs.M23 * (double)rhs.M31);
+			matrix4x4.M22 = (float)((double)lhs.M20 * (double)rhs.M02 + (double)lhs.M21 * (double)rhs.M12 + (double)lhs.M22 * (double)rhs.M22 + (double)lhs.M23 * (double)rhs.M32);
+			matrix4x4.M23 = (float)((double)lhs.M20 * (double)rhs.M03 + (double)lhs.M21 * (double)rhs.M13 + (double)lhs.M22 * (double)rhs.M23 + (double)lhs.M23 * (double)rhs.M33);
+			matrix4x4.M30 = (float)((double)lhs.M30 * (double)rhs.M00 + (double)lhs.M31 * (double)rhs.M10 + (double)lhs.M32 * (double)rhs.M20 + (double)lhs.M33 * (double)rhs.M30);
+			matrix4x4.M31 = (float)((double)lhs.M30 * (double)rhs.M01 + (double)lhs.M31 * (double)rhs.M11 + (double)lhs.M32 * (double)rhs.M21 + (double)lhs.M33 * (double)rhs.M31);
+			matrix4x4.M32 = (float)((double)lhs.M30 * (double)rhs.M02 + (double)lhs.M31 * (double)rhs.M12 + (double)lhs.M32 * (double)rhs.M22 + (double)lhs.M33 * (double)rhs.M32);
+			matrix4x4.M33 = (float)((double)lhs.M30 * (double)rhs.M03 + (double)lhs.M31 * (double)rhs.M13 + (double)lhs.M32 * (double)rhs.M23 + (double)lhs.M33 * (double)rhs.M33);
 			return matrix4x4;
 		}
 
 		public static Vector4Float operator *(Matrix4x4Float lhs, Vector4Float vector)
 		{
 			Vector4Float vector4;
-			vector4.x = (float)((double)lhs.m00 * (double)vector.x + (double)lhs.m01 * (double)vector.y + (double)lhs.m02 * (double)vector.z + (double)lhs.m03 * (double)vector.w);
-			vector4.y = (float)((double)lhs.m10 * (double)vector.x + (double)lhs.m11 * (double)vector.y + (double)lhs.m12 * (double)vector.z + (double)lhs.m13 * (double)vector.w);
-			vector4.z = (float)((double)lhs.m20 * (double)vector.x + (double)lhs.m21 * (double)vector.y + (double)lhs.m22 * (double)vector.z + (double)lhs.m23 * (double)vector.w);
-			vector4.w = (float)((double)lhs.m30 * (double)vector.x + (double)lhs.m31 * (double)vector.y + (double)lhs.m32 * (double)vector.z + (double)lhs.m33 * (double)vector.w);
+			vector4.X = (float)((double)lhs.M00 * (double)vector.X + (double)lhs.M01 * (double)vector.Y + (double)lhs.M02 * (double)vector.Z + (double)lhs.M03 * (double)vector.W);
+			vector4.Y = (float)((double)lhs.M10 * (double)vector.X + (double)lhs.M11 * (double)vector.Y + (double)lhs.M12 * (double)vector.Z + (double)lhs.M13 * (double)vector.W);
+			vector4.Z = (float)((double)lhs.M20 * (double)vector.X + (double)lhs.M21 * (double)vector.Y + (double)lhs.M22 * (double)vector.Z + (double)lhs.M23 * (double)vector.W);
+			vector4.W = (float)((double)lhs.M30 * (double)vector.X + (double)lhs.M31 * (double)vector.Y + (double)lhs.M32 * (double)vector.Z + (double)lhs.M33 * (double)vector.W);
 			return vector4;
 		}
 
@@ -292,10 +292,10 @@ namespace WorldTree
 			if (formatProvider == null)
 				formatProvider = CultureInfo.InvariantCulture.NumberFormat;
 			return string.Format("{0}\t{1}\t{2}\t{3}\n{4}\t{5}\t{6}\t{7}\n{8}\t{9}\t{10}\t{11}\n{12}\t{13}\t{14}\t{15}\n",
-				m00.ToString(format, formatProvider), m01.ToString(format, formatProvider), m02.ToString(format, formatProvider), m03.ToString(format, formatProvider),
-				m10.ToString(format, formatProvider), m11.ToString(format, formatProvider), m12.ToString(format, formatProvider), m13.ToString(format, formatProvider),
-				m20.ToString(format, formatProvider), m21.ToString(format, formatProvider), m22.ToString(format, formatProvider), m23.ToString(format, formatProvider),
-				m30.ToString(format, formatProvider), m31.ToString(format, formatProvider), m32.ToString(format, formatProvider), m33.ToString(format, formatProvider));
+				M00.ToString(format, formatProvider), M01.ToString(format, formatProvider), M02.ToString(format, formatProvider), M03.ToString(format, formatProvider),
+				M10.ToString(format, formatProvider), M11.ToString(format, formatProvider), M12.ToString(format, formatProvider), M13.ToString(format, formatProvider),
+				M20.ToString(format, formatProvider), M21.ToString(format, formatProvider), M22.ToString(format, formatProvider), M23.ToString(format, formatProvider),
+				M30.ToString(format, formatProvider), M31.ToString(format, formatProvider), M32.ToString(format, formatProvider), M33.ToString(format, formatProvider));
 		}
 
 		/// <summary>
@@ -306,36 +306,36 @@ namespace WorldTree
 		/// <summary>
 		/// 第一列
 		/// </summary>
-		public Vector4Float Column0 => new(this.m00, this.m10, this.m20, this.m30);
+		public Vector4Float Column0 => new(this.M00, this.M10, this.M20, this.M30);
 		/// <summary>
 		/// 第二列
 		/// </summary>
-		public Vector4Float Column1 => new(this.m01, this.m11, this.m21, this.m31);
+		public Vector4Float Column1 => new(this.M01, this.M11, this.M21, this.M31);
 		/// <summary>
 		/// 第三列
 		/// </summary>
-		public Vector4Float Column2 => new(this.m02, this.m12, this.m22, this.m32);
+		public Vector4Float Column2 => new(this.M02, this.M12, this.M22, this.M32);
 		/// <summary>
 		/// 第四列
 		/// </summary>
-		public Vector4Float Column3 => new(this.m03, this.m13, this.m23, this.m33);
+		public Vector4Float Column3 => new(this.M03, this.M13, this.M23, this.M33);
 
 		/// <summary>
 		/// 第一行
 		/// </summary>
-		public Vector4Float Row0 => new(this.m00, this.m01, this.m02, this.m03);
+		public Vector4Float Row0 => new(this.M00, this.M01, this.M02, this.M03);
 		/// <summary>
 		/// 第二行
 		/// </summary>
-		public Vector4Float Row1 => new(this.m10, this.m11, this.m12, this.m13);
+		public Vector4Float Row1 => new(this.M10, this.M11, this.M12, this.M13);
 		/// <summary>
 		/// 第三行
 		/// </summary>
-		public Vector4Float Row2 => new(this.m20, this.m21, this.m22, this.m23);
+		public Vector4Float Row2 => new(this.M20, this.M21, this.M22, this.M23);
 		/// <summary>
 		/// 第四行
 		/// </summary>
-		public Vector4Float Row3 => new(this.m30, this.m31, this.m32, this.m33);
+		public Vector4Float Row3 => new(this.M30, this.M31, this.M32, this.M33);
 
 		#region 方法
 
@@ -385,10 +385,10 @@ namespace WorldTree
 		/// </summary>
 		public void SetColumn(int index, Vector4Float column)
 		{
-			this[0, index] = column.x;
-			this[1, index] = column.y;
-			this[2, index] = column.z;
-			this[3, index] = column.w;
+			this[0, index] = column.X;
+			this[1, index] = column.Y;
+			this[2, index] = column.Z;
+			this[3, index] = column.W;
 		}
 
 		/// <summary>
@@ -396,10 +396,10 @@ namespace WorldTree
 		/// </summary>
 		public void SetRow(int index, Vector4Float row)
 		{
-			this[index, 0] = row.x;
-			this[index, 1] = row.y;
-			this[index, 2] = row.z;
-			this[index, 3] = row.w;
+			this[index, 0] = row.X;
+			this[index, 1] = row.Y;
+			this[index, 2] = row.Z;
+			this[index, 3] = row.W;
 		}
 
 		/// <summary>
@@ -416,15 +416,15 @@ namespace WorldTree
 		  float zFarPlane)
 		{
 			Matrix4x4Float orthographic;
-			orthographic.m00 = 2f / width;
-			orthographic.m01 = orthographic.m02 = orthographic.m03 = 0.0f;
-			orthographic.m11 = 2f / height;
-			orthographic.m10 = orthographic.m12 = orthographic.m13 = 0.0f;
-			orthographic.m22 = (float)(1.0 / ((double)zNearPlane - (double)zFarPlane));
-			orthographic.m20 = orthographic.m21 = orthographic.m23 = 0.0f;
-			orthographic.m30 = orthographic.m31 = 0.0f;
-			orthographic.m32 = zNearPlane / (zNearPlane - zFarPlane);
-			orthographic.m33 = 1f;
+			orthographic.M00 = 2f / width;
+			orthographic.M01 = orthographic.M02 = orthographic.M03 = 0.0f;
+			orthographic.M11 = 2f / height;
+			orthographic.M10 = orthographic.M12 = orthographic.M13 = 0.0f;
+			orthographic.M22 = (float)(1.0 / ((double)zNearPlane - (double)zFarPlane));
+			orthographic.M20 = orthographic.M21 = orthographic.M23 = 0.0f;
+			orthographic.M30 = orthographic.M31 = 0.0f;
+			orthographic.M32 = zNearPlane / (zNearPlane - zFarPlane);
+			orthographic.M33 = 1f;
 			return orthographic;
 		}
 		/// <summary>
@@ -445,16 +445,16 @@ namespace WorldTree
 			 float zFarPlane)
 		{
 			Matrix4x4Float orthographicOffCenter;
-			orthographicOffCenter.m00 = (float)(2.0 / ((double)right - (double)left));
-			orthographicOffCenter.m01 = orthographicOffCenter.m02 = orthographicOffCenter.m03 = 0.0f;
-			orthographicOffCenter.m11 = (float)(2.0 / ((double)top - (double)bottom));
-			orthographicOffCenter.m10 = orthographicOffCenter.m12 = orthographicOffCenter.m13 = 0.0f;
-			orthographicOffCenter.m22 = (float)(1.0 / ((double)zNearPlane - (double)zFarPlane));
-			orthographicOffCenter.m20 = orthographicOffCenter.m21 = orthographicOffCenter.m23 = 0.0f;
-			orthographicOffCenter.m30 = (float)(((double)left + (double)right) / ((double)left - (double)right));
-			orthographicOffCenter.m31 = (float)(((double)top + (double)bottom) / ((double)bottom - (double)top));
-			orthographicOffCenter.m32 = zNearPlane / (zNearPlane - zFarPlane);
-			orthographicOffCenter.m33 = 1f;
+			orthographicOffCenter.M00 = (float)(2.0 / ((double)right - (double)left));
+			orthographicOffCenter.M01 = orthographicOffCenter.M02 = orthographicOffCenter.M03 = 0.0f;
+			orthographicOffCenter.M11 = (float)(2.0 / ((double)top - (double)bottom));
+			orthographicOffCenter.M10 = orthographicOffCenter.M12 = orthographicOffCenter.M13 = 0.0f;
+			orthographicOffCenter.M22 = (float)(1.0 / ((double)zNearPlane - (double)zFarPlane));
+			orthographicOffCenter.M20 = orthographicOffCenter.M21 = orthographicOffCenter.M23 = 0.0f;
+			orthographicOffCenter.M30 = (float)(((double)left + (double)right) / ((double)left - (double)right));
+			orthographicOffCenter.M31 = (float)(((double)top + (double)bottom) / ((double)bottom - (double)top));
+			orthographicOffCenter.M32 = zNearPlane / (zNearPlane - zFarPlane);
+			orthographicOffCenter.M33 = 1f;
 			return orthographicOffCenter;
 		}
 
@@ -478,15 +478,15 @@ namespace WorldTree
 			if ((double)nearPlaneDistance >= (double)farPlaneDistance)
 				throw new ArgumentOutOfRangeException(nameof(nearPlaneDistance));
 			Matrix4x4Float perspective;
-			perspective.m00 = 2f * nearPlaneDistance / width;
-			perspective.m01 = perspective.m02 = perspective.m03 = 0.0f;
-			perspective.m11 = 2f * nearPlaneDistance / height;
-			perspective.m10 = perspective.m12 = perspective.m13 = 0.0f;
-			perspective.m22 = farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
-			perspective.m20 = perspective.m21 = 0.0f;
-			perspective.m23 = -1f;
-			perspective.m30 = perspective.m31 = perspective.m33 = 0.0f;
-			perspective.m32 = (float)((double)nearPlaneDistance * (double)farPlaneDistance / ((double)nearPlaneDistance - (double)farPlaneDistance));
+			perspective.M00 = 2f * nearPlaneDistance / width;
+			perspective.M01 = perspective.M02 = perspective.M03 = 0.0f;
+			perspective.M11 = 2f * nearPlaneDistance / height;
+			perspective.M10 = perspective.M12 = perspective.M13 = 0.0f;
+			perspective.M22 = farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+			perspective.M20 = perspective.M21 = 0.0f;
+			perspective.M23 = -1f;
+			perspective.M30 = perspective.M31 = perspective.M33 = 0.0f;
+			perspective.M32 = (float)((double)nearPlaneDistance * (double)farPlaneDistance / ((double)nearPlaneDistance - (double)farPlaneDistance));
 			return perspective;
 		}
 
@@ -514,16 +514,16 @@ namespace WorldTree
 			if ((double)nearPlaneDistance >= (double)farPlaneDistance)
 				throw new ArgumentOutOfRangeException(nameof(nearPlaneDistance));
 			Matrix4x4Float perspectiveOffCenter;
-			perspectiveOffCenter.m00 = (float)(2.0 * (double)nearPlaneDistance / ((double)right - (double)left));
-			perspectiveOffCenter.m01 = perspectiveOffCenter.m02 = perspectiveOffCenter.m03 = 0.0f;
-			perspectiveOffCenter.m11 = (float)(2.0 * (double)nearPlaneDistance / ((double)top - (double)bottom));
-			perspectiveOffCenter.m10 = perspectiveOffCenter.m12 = perspectiveOffCenter.m13 = 0.0f;
-			perspectiveOffCenter.m20 = (float)(((double)left + (double)right) / ((double)right - (double)left));
-			perspectiveOffCenter.m21 = (float)(((double)top + (double)bottom) / ((double)top - (double)bottom));
-			perspectiveOffCenter.m22 = farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
-			perspectiveOffCenter.m23 = -1f;
-			perspectiveOffCenter.m32 = (float)((double)nearPlaneDistance * (double)farPlaneDistance / ((double)nearPlaneDistance - (double)farPlaneDistance));
-			perspectiveOffCenter.m30 = perspectiveOffCenter.m31 = perspectiveOffCenter.m33 = 0.0f;
+			perspectiveOffCenter.M00 = (float)(2.0 * (double)nearPlaneDistance / ((double)right - (double)left));
+			perspectiveOffCenter.M01 = perspectiveOffCenter.M02 = perspectiveOffCenter.M03 = 0.0f;
+			perspectiveOffCenter.M11 = (float)(2.0 * (double)nearPlaneDistance / ((double)top - (double)bottom));
+			perspectiveOffCenter.M10 = perspectiveOffCenter.M12 = perspectiveOffCenter.M13 = 0.0f;
+			perspectiveOffCenter.M20 = (float)(((double)left + (double)right) / ((double)right - (double)left));
+			perspectiveOffCenter.M21 = (float)(((double)top + (double)bottom) / ((double)top - (double)bottom));
+			perspectiveOffCenter.M22 = farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+			perspectiveOffCenter.M23 = -1f;
+			perspectiveOffCenter.M32 = (float)((double)nearPlaneDistance * (double)farPlaneDistance / ((double)nearPlaneDistance - (double)farPlaneDistance));
+			perspectiveOffCenter.M30 = perspectiveOffCenter.M31 = perspectiveOffCenter.M33 = 0.0f;
 			return perspectiveOffCenter;
 		}
 
@@ -538,26 +538,26 @@ namespace WorldTree
 		  Vector3Float cameraTarget,
 		  Vector3Float cameraUpVector)
 		{
-			Vector3Float vector3_1 = (cameraPosition - cameraTarget).normalized;
-			Vector3Float vector3_2 = (cameraUpVector.Cross(vector3_1)).normalized;
+			Vector3Float vector3_1 = (cameraPosition - cameraTarget).Normalized;
+			Vector3Float vector3_2 = (cameraUpVector.Cross(vector3_1)).Normalized;
 			Vector3Float vector1 = vector3_1.Cross(vector3_2);
 			Matrix4x4Float lookAt;
-			lookAt.m00 = vector3_2.x;
-			lookAt.m01 = vector1.x;
-			lookAt.m02 = vector3_1.x;
-			lookAt.m03 = 0.0f;
-			lookAt.m10 = vector3_2.y;
-			lookAt.m11 = vector1.y;
-			lookAt.m12 = vector3_1.y;
-			lookAt.m13 = 0.0f;
-			lookAt.m20 = vector3_2.z;
-			lookAt.m21 = vector1.z;
-			lookAt.m22 = vector3_1.z;
-			lookAt.m23 = 0.0f;
-			lookAt.m30 = -(vector3_2.Dot(cameraPosition));
-			lookAt.m31 = -(vector1.Dot(cameraPosition));
-			lookAt.m32 = -(vector3_1.Dot(cameraPosition));
-			lookAt.m33 = 1f;
+			lookAt.M00 = vector3_2.X;
+			lookAt.M01 = vector1.X;
+			lookAt.M02 = vector3_1.X;
+			lookAt.M03 = 0.0f;
+			lookAt.M10 = vector3_2.Y;
+			lookAt.M11 = vector1.Y;
+			lookAt.M12 = vector3_1.Y;
+			lookAt.M13 = 0.0f;
+			lookAt.M20 = vector3_2.Z;
+			lookAt.M21 = vector1.Z;
+			lookAt.M22 = vector3_1.Z;
+			lookAt.M23 = 0.0f;
+			lookAt.M30 = -(vector3_2.Dot(cameraPosition));
+			lookAt.M31 = -(vector1.Dot(cameraPosition));
+			lookAt.M32 = -(vector3_1.Dot(cameraPosition));
+			lookAt.M33 = 1f;
 			return lookAt;
 		}
 
@@ -569,26 +569,26 @@ namespace WorldTree
 		/// <param name="up">上方</param>
 		public static Matrix4x4Float CreateWorld(Vector3Float position, Vector3Float forward, Vector3Float up)
 		{
-			Vector3Float vector3_1 = -forward.normalized;
-			Vector3Float vector2 = (up.Cross(vector3_1)).normalized;
+			Vector3Float vector3_1 = -forward.Normalized;
+			Vector3Float vector2 = (up.Cross(vector3_1)).Normalized;
 			Vector3Float vector3_2 = vector3_1.Cross(vector2);
 			Matrix4x4Float world;
-			world.m00 = vector2.x;
-			world.m01 = vector2.y;
-			world.m02 = vector2.z;
-			world.m03 = 0.0f;
-			world.m10 = vector3_2.x;
-			world.m11 = vector3_2.y;
-			world.m12 = vector3_2.z;
-			world.m13 = 0.0f;
-			world.m20 = vector3_1.x;
-			world.m21 = vector3_1.y;
-			world.m22 = vector3_1.z;
-			world.m23 = 0.0f;
-			world.m30 = position.x;
-			world.m31 = position.y;
-			world.m32 = position.z;
-			world.m33 = 1f;
+			world.M00 = vector2.X;
+			world.M01 = vector2.Y;
+			world.M02 = vector2.Z;
+			world.M03 = 0.0f;
+			world.M10 = vector3_2.X;
+			world.M11 = vector3_2.Y;
+			world.M12 = vector3_2.Z;
+			world.M13 = 0.0f;
+			world.M20 = vector3_1.X;
+			world.M21 = vector3_1.Y;
+			world.M22 = vector3_1.Z;
+			world.M23 = 0.0f;
+			world.M30 = position.X;
+			world.M31 = position.Y;
+			world.M32 = position.Z;
+			world.M33 = 1f;
 			return world;
 		}
 
@@ -599,29 +599,29 @@ namespace WorldTree
 		/// <param name="plane">平面</param>
 		public static Matrix4x4Float CreateShadow(Vector3Float lightDirection, PlaneFloat plane)
 		{
-			PlaneFloat plane1 = plane.normalized;
-			float num1 = (float)((double)plane1.normal.x * (double)lightDirection.x + (double)plane1.normal.y * (double)lightDirection.y + (double)plane1.normal.z * (double)lightDirection.z);
-			float num2 = -plane1.normal.x;
-			float num3 = -plane1.normal.y;
-			float num4 = -plane1.normal.z;
-			float num5 = -plane1.distance;
+			PlaneFloat plane1 = plane.Normalized;
+			float num1 = (float)((double)plane1.Normal.X * (double)lightDirection.X + (double)plane1.Normal.Y * (double)lightDirection.Y + (double)plane1.Normal.Z * (double)lightDirection.Z);
+			float num2 = -plane1.Normal.X;
+			float num3 = -plane1.Normal.Y;
+			float num4 = -plane1.Normal.Z;
+			float num5 = -plane1.Distance;
 			Matrix4x4Float shadow;
-			shadow.m00 = num2 * lightDirection.x + num1;
-			shadow.m10 = num3 * lightDirection.x;
-			shadow.m20 = num4 * lightDirection.x;
-			shadow.m30 = num5 * lightDirection.x;
-			shadow.m01 = num2 * lightDirection.y;
-			shadow.m11 = num3 * lightDirection.y + num1;
-			shadow.m21 = num4 * lightDirection.y;
-			shadow.m31 = num5 * lightDirection.y;
-			shadow.m02 = num2 * lightDirection.z;
-			shadow.m12 = num3 * lightDirection.z;
-			shadow.m22 = num4 * lightDirection.z + num1;
-			shadow.m32 = num5 * lightDirection.z;
-			shadow.m03 = 0.0f;
-			shadow.m13 = 0.0f;
-			shadow.m23 = 0.0f;
-			shadow.m33 = num1;
+			shadow.M00 = num2 * lightDirection.X + num1;
+			shadow.M10 = num3 * lightDirection.X;
+			shadow.M20 = num4 * lightDirection.X;
+			shadow.M30 = num5 * lightDirection.X;
+			shadow.M01 = num2 * lightDirection.Y;
+			shadow.M11 = num3 * lightDirection.Y + num1;
+			shadow.M21 = num4 * lightDirection.Y;
+			shadow.M31 = num5 * lightDirection.Y;
+			shadow.M02 = num2 * lightDirection.Z;
+			shadow.M12 = num3 * lightDirection.Z;
+			shadow.M22 = num4 * lightDirection.Z + num1;
+			shadow.M32 = num5 * lightDirection.Z;
+			shadow.M03 = 0.0f;
+			shadow.M13 = 0.0f;
+			shadow.M23 = 0.0f;
+			shadow.M33 = num1;
 			return shadow;
 		}
 
@@ -632,29 +632,29 @@ namespace WorldTree
 		public static Matrix4x4Float CreateReflection(PlaneFloat value)
 		{
 			value = value.Normalize();
-			float x = value.normal.x;
-			float y = value.normal.y;
-			float z = value.normal.z;
+			float x = value.Normal.X;
+			float y = value.Normal.Y;
+			float z = value.Normal.Z;
 			float num1 = -2f * x;
 			float num2 = -2f * y;
 			float num3 = -2f * z;
 			Matrix4x4Float reflection;
-			reflection.m00 = (float)((double)num1 * (double)x + 1.0);
-			reflection.m01 = num2 * x;
-			reflection.m02 = num3 * x;
-			reflection.m03 = 0.0f;
-			reflection.m10 = num1 * y;
-			reflection.m11 = (float)((double)num2 * (double)y + 1.0);
-			reflection.m12 = num3 * y;
-			reflection.m13 = 0.0f;
-			reflection.m20 = num1 * z;
-			reflection.m21 = num2 * z;
-			reflection.m22 = (float)((double)num3 * (double)z + 1.0);
-			reflection.m23 = 0.0f;
-			reflection.m30 = num1 * value.distance;
-			reflection.m31 = num2 * value.distance;
-			reflection.m32 = num3 * value.distance;
-			reflection.m33 = 1f;
+			reflection.M00 = (float)((double)num1 * (double)x + 1.0);
+			reflection.M01 = num2 * x;
+			reflection.M02 = num3 * x;
+			reflection.M03 = 0.0f;
+			reflection.M10 = num1 * y;
+			reflection.M11 = (float)((double)num2 * (double)y + 1.0);
+			reflection.M12 = num3 * y;
+			reflection.M13 = 0.0f;
+			reflection.M20 = num1 * z;
+			reflection.M21 = num2 * z;
+			reflection.M22 = (float)((double)num3 * (double)z + 1.0);
+			reflection.M23 = 0.0f;
+			reflection.M30 = num1 * value.Distance;
+			reflection.M31 = num2 * value.Distance;
+			reflection.M32 = num3 * value.Distance;
+			reflection.M33 = 1f;
 			return reflection;
 		}
 
@@ -664,22 +664,22 @@ namespace WorldTree
 		public static Matrix4x4Float Scale(Vector3Float vector)
 		{
 			Matrix4x4Float matrix4x4;
-			matrix4x4.m00 = vector.x;
-			matrix4x4.m01 = 0.0f;
-			matrix4x4.m02 = 0.0f;
-			matrix4x4.m03 = 0.0f;
-			matrix4x4.m10 = 0.0f;
-			matrix4x4.m11 = vector.y;
-			matrix4x4.m12 = 0.0f;
-			matrix4x4.m13 = 0.0f;
-			matrix4x4.m20 = 0.0f;
-			matrix4x4.m21 = 0.0f;
-			matrix4x4.m22 = vector.z;
-			matrix4x4.m23 = 0.0f;
-			matrix4x4.m30 = 0.0f;
-			matrix4x4.m31 = 0.0f;
-			matrix4x4.m32 = 0.0f;
-			matrix4x4.m33 = 1f;
+			matrix4x4.M00 = vector.X;
+			matrix4x4.M01 = 0.0f;
+			matrix4x4.M02 = 0.0f;
+			matrix4x4.M03 = 0.0f;
+			matrix4x4.M10 = 0.0f;
+			matrix4x4.M11 = vector.Y;
+			matrix4x4.M12 = 0.0f;
+			matrix4x4.M13 = 0.0f;
+			matrix4x4.M20 = 0.0f;
+			matrix4x4.M21 = 0.0f;
+			matrix4x4.M22 = vector.Z;
+			matrix4x4.M23 = 0.0f;
+			matrix4x4.M30 = 0.0f;
+			matrix4x4.M31 = 0.0f;
+			matrix4x4.M32 = 0.0f;
+			matrix4x4.M33 = 1f;
 			return matrix4x4;
 		}
 
@@ -689,22 +689,22 @@ namespace WorldTree
 		public static Matrix4x4Float Translate(Vector3Float vector)
 		{
 			Matrix4x4Float matrix4x4;
-			matrix4x4.m00 = 1f;
-			matrix4x4.m01 = 0.0f;
-			matrix4x4.m02 = 0.0f;
-			matrix4x4.m03 = vector.x;
-			matrix4x4.m10 = 0.0f;
-			matrix4x4.m11 = 1f;
-			matrix4x4.m12 = 0.0f;
-			matrix4x4.m13 = vector.y;
-			matrix4x4.m20 = 0.0f;
-			matrix4x4.m21 = 0.0f;
-			matrix4x4.m22 = 1f;
-			matrix4x4.m23 = vector.z;
-			matrix4x4.m30 = 0.0f;
-			matrix4x4.m31 = 0.0f;
-			matrix4x4.m32 = 0.0f;
-			matrix4x4.m33 = 1f;
+			matrix4x4.M00 = 1f;
+			matrix4x4.M01 = 0.0f;
+			matrix4x4.M02 = 0.0f;
+			matrix4x4.M03 = vector.X;
+			matrix4x4.M10 = 0.0f;
+			matrix4x4.M11 = 1f;
+			matrix4x4.M12 = 0.0f;
+			matrix4x4.M13 = vector.Y;
+			matrix4x4.M20 = 0.0f;
+			matrix4x4.M21 = 0.0f;
+			matrix4x4.M22 = 1f;
+			matrix4x4.M23 = vector.Z;
+			matrix4x4.M30 = 0.0f;
+			matrix4x4.M31 = 0.0f;
+			matrix4x4.M32 = 0.0f;
+			matrix4x4.M33 = 1f;
 			return matrix4x4;
 		}
 
@@ -713,35 +713,35 @@ namespace WorldTree
 		/// </summary>
 		public static Matrix4x4Float Rotate(QuaternionFloat q)
 		{
-			float num1 = q.x * 2f;
-			float num2 = q.y * 2f;
-			float num3 = q.z * 2f;
-			float num4 = q.x * num1;
-			float num5 = q.y * num2;
-			float num6 = q.z * num3;
-			float num7 = q.x * num2;
-			float num8 = q.x * num3;
-			float num9 = q.y * num3;
-			float num10 = q.w * num1;
-			float num11 = q.w * num2;
-			float num12 = q.w * num3;
+			float num1 = q.X * 2f;
+			float num2 = q.Y * 2f;
+			float num3 = q.Z * 2f;
+			float num4 = q.X * num1;
+			float num5 = q.Y * num2;
+			float num6 = q.Z * num3;
+			float num7 = q.X * num2;
+			float num8 = q.X * num3;
+			float num9 = q.Y * num3;
+			float num10 = q.W * num1;
+			float num11 = q.W * num2;
+			float num12 = q.W * num3;
 			Matrix4x4Float matrix4x4;
-			matrix4x4.m00 = (float)(1.0 - ((double)num5 + (double)num6));
-			matrix4x4.m10 = num7 + num12;
-			matrix4x4.m20 = num8 - num11;
-			matrix4x4.m30 = 0.0f;
-			matrix4x4.m01 = num7 - num12;
-			matrix4x4.m11 = (float)(1.0 - ((double)num4 + (double)num6));
-			matrix4x4.m21 = num9 + num10;
-			matrix4x4.m31 = 0.0f;
-			matrix4x4.m02 = num8 + num11;
-			matrix4x4.m12 = num9 - num10;
-			matrix4x4.m22 = (float)(1.0 - ((double)num4 + (double)num5));
-			matrix4x4.m32 = 0.0f;
-			matrix4x4.m03 = 0.0f;
-			matrix4x4.m13 = 0.0f;
-			matrix4x4.m23 = 0.0f;
-			matrix4x4.m33 = 1f;
+			matrix4x4.M00 = (float)(1.0 - ((double)num5 + (double)num6));
+			matrix4x4.M10 = num7 + num12;
+			matrix4x4.M20 = num8 - num11;
+			matrix4x4.M30 = 0.0f;
+			matrix4x4.M01 = num7 - num12;
+			matrix4x4.M11 = (float)(1.0 - ((double)num4 + (double)num6));
+			matrix4x4.M21 = num9 + num10;
+			matrix4x4.M31 = 0.0f;
+			matrix4x4.M02 = num8 + num11;
+			matrix4x4.M12 = num9 - num10;
+			matrix4x4.M22 = (float)(1.0 - ((double)num4 + (double)num5));
+			matrix4x4.M32 = 0.0f;
+			matrix4x4.M03 = 0.0f;
+			matrix4x4.M13 = 0.0f;
+			matrix4x4.M23 = 0.0f;
+			matrix4x4.M33 = 1f;
 			return matrix4x4;
 		}
 
@@ -755,41 +755,41 @@ namespace WorldTree
 		public static Matrix4x4Float TRS(Vector3Float pos, QuaternionFloat q, Vector3Float s)
 		{
 			//计算旋转矩阵的行列式并求其倒数
-			float det = 1f / (q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+			float det = 1f / (q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W);
 
 			//计算矩阵的第一列
-			float x2 = q.x + q.x;
-			float y2 = q.y + q.y;
-			float z2 = q.z + q.z;
+			float x2 = q.X + q.X;
+			float y2 = q.Y + q.Y;
+			float z2 = q.Z + q.Z;
 
-			float xx = q.x * x2 * det;
-			float xy = q.x * y2 * det;
-			float xz = q.x * z2 * det;
-			float xw = q.w * x2 * det;
+			float xx = q.X * x2 * det;
+			float xy = q.X * y2 * det;
+			float xz = q.X * z2 * det;
+			float xw = q.W * x2 * det;
 
-			float yy = q.y * y2 * det;
-			float yz = q.y * z2 * det;
-			float yw = q.w * y2 * det;
+			float yy = q.Y * y2 * det;
+			float yz = q.Y * z2 * det;
+			float yw = q.W * y2 * det;
 
-			float zz = q.z * z2 * det;
-			float zw = q.w * z2 * det;
+			float zz = q.Z * z2 * det;
+			float zw = q.W * z2 * det;
 
 			//计算变换矩阵
 			Matrix4x4Float matrix = new Matrix4x4Float();
-			matrix[0, 0] = (1f - yy - zz) * s.x;
-			matrix[0, 1] = (xy - zw) * s.y;
-			matrix[0, 2] = (xz + yw) * s.z;
-			matrix[0, 3] = pos.x;
+			matrix[0, 0] = (1f - yy - zz) * s.X;
+			matrix[0, 1] = (xy - zw) * s.Y;
+			matrix[0, 2] = (xz + yw) * s.Z;
+			matrix[0, 3] = pos.X;
 
-			matrix[1, 0] = (xy + zw) * s.x;
-			matrix[1, 1] = (1f - xx - zz) * s.y;
-			matrix[1, 2] = (yz - xw) * s.z;
-			matrix[1, 3] = pos.y;
+			matrix[1, 0] = (xy + zw) * s.X;
+			matrix[1, 1] = (1f - xx - zz) * s.Y;
+			matrix[1, 2] = (yz - xw) * s.Z;
+			matrix[1, 3] = pos.Y;
 
-			matrix[2, 0] = (xz - yw) * s.x;
-			matrix[2, 1] = (yz + xw) * s.y;
-			matrix[2, 2] = (1f - xx - yy) * s.z;
-			matrix[2, 3] = pos.z;
+			matrix[2, 0] = (xz - yw) * s.X;
+			matrix[2, 1] = (yz + xw) * s.Y;
+			matrix[2, 2] = (1f - xx - yy) * s.Z;
+			matrix[2, 3] = pos.Z;
 
 			matrix[3, 0] = 0f;
 			matrix[3, 1] = 0f;
@@ -809,21 +809,21 @@ namespace WorldTree
 			Vector4Float c2 = m.GetColumn(2);
 			Vector4Float c3 = m.GetColumn(3);
 
-			Vector4Float r0y_r1y_r0x_r1x = new(c1.x, c1.y, c0.x, c0.y);
-			Vector4Float r0z_r1z_r0w_r1w = new(c2.x, c2.y, c3.x, c3.y);
-			Vector4Float r2y_r3y_r2x_r3x = new(c0.x, c0.y, c1.x, c1.y);
-			Vector4Float r2z_r3z_r2w_r3w = new(c3.x, c3.y, c2.x, c2.y);
+			Vector4Float r0y_r1y_r0x_r1x = new(c1.X, c1.Y, c0.X, c0.Y);
+			Vector4Float r0z_r1z_r0w_r1w = new(c2.X, c2.Y, c3.X, c3.Y);
+			Vector4Float r2y_r3y_r2x_r3x = new(c0.X, c0.Y, c1.X, c1.Y);
+			Vector4Float r2z_r3z_r2w_r3w = new(c3.X, c3.Y, c2.X, c2.Y);
 
-			Vector4Float r1y_r2y_r1x_r2x = new(c1.y, c1.z, c0.y, c0.z);
-			Vector4Float r1z_r2z_r1w_r2w = new(c2.y, c2.z, c3.y, c3.z);
-			Vector4Float r3y_r0y_r3x_r0x = new(c1.w, c1.x, c0.w, c0.x);
-			Vector4Float r3z_r0z_r3w_r0w = new(c2.w, c2.x, c3.w, c3.x);
+			Vector4Float r1y_r2y_r1x_r2x = new(c1.Y, c1.Z, c0.Y, c0.Z);
+			Vector4Float r1z_r2z_r1w_r2w = new(c2.Y, c2.Z, c3.Y, c3.Z);
+			Vector4Float r3y_r0y_r3x_r0x = new(c1.W, c1.X, c0.W, c0.X);
+			Vector4Float r3z_r0z_r3w_r0w = new(c2.W, c2.X, c3.W, c3.X);
 
-			Vector4Float r0_wzyx = new(r0z_r1z_r0w_r1w.z, r0z_r1z_r0w_r1w.x, r0y_r1y_r0x_r1x.x, r0y_r1y_r0x_r1x.z);
-			Vector4Float r1_wzyx = new(r0z_r1z_r0w_r1w.w, r0z_r1z_r0w_r1w.y, r0y_r1y_r0x_r1x.y, r0y_r1y_r0x_r1x.w);
-			Vector4Float r2_wzyx = new(r2z_r3z_r2w_r3w.z, r2z_r3z_r2w_r3w.x, r2y_r3y_r2x_r3x.x, r2y_r3y_r2x_r3x.z);
-			Vector4Float r3_wzyx = new(r2z_r3z_r2w_r3w.w, r2z_r3z_r2w_r3w.y, r2y_r3y_r2x_r3x.y, r2y_r3y_r2x_r3x.w);
-			Vector4Float r0_xyzw = new(r0y_r1y_r0x_r1x.z, r0y_r1y_r0x_r1x.x, r0z_r1z_r0w_r1w.x, r0z_r1z_r0w_r1w.z);
+			Vector4Float r0_wzyx = new(r0z_r1z_r0w_r1w.Z, r0z_r1z_r0w_r1w.X, r0y_r1y_r0x_r1x.X, r0y_r1y_r0x_r1x.Z);
+			Vector4Float r1_wzyx = new(r0z_r1z_r0w_r1w.W, r0z_r1z_r0w_r1w.Y, r0y_r1y_r0x_r1x.Y, r0y_r1y_r0x_r1x.W);
+			Vector4Float r2_wzyx = new(r2z_r3z_r2w_r3w.Z, r2z_r3z_r2w_r3w.X, r2y_r3y_r2x_r3x.X, r2y_r3y_r2x_r3x.Z);
+			Vector4Float r3_wzyx = new(r2z_r3z_r2w_r3w.W, r2z_r3z_r2w_r3w.Y, r2y_r3y_r2x_r3x.Y, r2y_r3y_r2x_r3x.W);
+			Vector4Float r0_xyzw = new(r0y_r1y_r0x_r1x.Z, r0y_r1y_r0x_r1x.X, r0z_r1z_r0w_r1w.X, r0z_r1z_r0w_r1w.Z);
 
 			// Calculate remaining inner term pairs. inner terms have zw=-xy, so we only have to calculate xy and can pack two pairs per vector.
 			// 计算剩余的内部项对。内项有zw=-xy，所以我们只需要计算xy每个向量可以包含两对向量。
@@ -833,11 +833,11 @@ namespace WorldTree
 
 			// Expand inner terms back to 4 components. zw signs still need to be flipped
 			// 将内部项展开回4个分量。Zw标志仍然需要被翻转
-			Vector4Float inner12 = new(inner12_23.x, inner12_23.z, inner12_23.z, inner12_23.x);
-			Vector4Float inner23 = new(inner12_23.y, inner12_23.w, inner12_23.w, inner12_23.y);
+			Vector4Float inner12 = new(inner12_23.X, inner12_23.Z, inner12_23.Z, inner12_23.X);
+			Vector4Float inner23 = new(inner12_23.Y, inner12_23.W, inner12_23.W, inner12_23.Y);
 
-			Vector4Float inner02 = new(inner02_13.x, inner02_13.z, inner02_13.z, inner02_13.x);
-			Vector4Float inner13 = new(inner02_13.y, inner02_13.w, inner02_13.w, inner02_13.y);
+			Vector4Float inner02 = new(inner02_13.X, inner02_13.Z, inner02_13.Z, inner02_13.X);
+			Vector4Float inner13 = new(inner02_13.Y, inner02_13.W, inner02_13.W, inner02_13.Y);
 
 			// Calculate minors
 			Vector4Float minors0 = r3_wzyx * inner12 - r2_wzyx * inner13 + r1_wzyx * inner23;
@@ -846,15 +846,15 @@ namespace WorldTree
 
 			// Horizontal sum of denominator. Free sign flip of z and w compensates for missing flip in inner terms.
 			// 分母的水平和。z和w的自由符号翻转弥补了内部项中缺失的翻转。
-			denom += new Vector4Float(denom.y, denom.x, denom.w, denom.z);   // x+y        x+y            z+w            z+w
-			denom -= new Vector4Float(denom.z, denom.z, denom.x, denom.x);   // x+y-z-w  x+y-z-w        z+w-x-y        z+w-x-y
+			denom += new Vector4Float(denom.Y, denom.X, denom.W, denom.Z);   // x+y        x+y            z+w            z+w
+			denom -= new Vector4Float(denom.Z, denom.Z, denom.X, denom.X);   // x+y-z-w  x+y-z-w        z+w-x-y        z+w-x-y
 
 			Vector4Float rcp_denom_ppnn = Vector4Float.One / denom;
 			Matrix4x4Float res = new();
 			res.SetColumn(0, minors0 * rcp_denom_ppnn);
 
-			Vector4Float inner30 = new(inner30_01.x, inner30_01.z, inner30_01.z, inner30_01.x);
-			Vector4Float inner01 = new(inner30_01.y, inner30_01.w, inner30_01.w, inner30_01.y);
+			Vector4Float inner30 = new(inner30_01.X, inner30_01.Z, inner30_01.Z, inner30_01.X);
+			Vector4Float inner01 = new(inner30_01.Y, inner30_01.W, inner30_01.W, inner30_01.Y);
 
 			Vector4Float minors1 = r2_wzyx * inner30 - r0_wzyx * inner23 - r3_wzyx * inner02;
 			res.SetColumn(1, minors1 * rcp_denom_ppnn);
@@ -875,11 +875,11 @@ namespace WorldTree
 		public PlaneFloat TransformPlane(PlaneFloat plane)
 		{
 			Matrix4x4Float inverse = this.Inverse;
-			float x = plane.normal.x;
-			float y = plane.normal.y;
-			float z = plane.normal.z;
-			float distance = plane.distance;
-			return new PlaneFloat(new Vector3Float((float)((double)inverse.m00 * (double)x + (double)inverse.m10 * (double)y + (double)inverse.m20 * (double)z + (double)inverse.m30 * (double)distance), (float)((double)inverse.m01 * (double)x + (double)inverse.m11 * (double)y + (double)inverse.m21 * (double)z + (double)inverse.m31 * (double)distance), (float)((double)inverse.m02 * (double)x + (double)inverse.m12 * (double)y + (double)inverse.m22 * (double)z + (double)inverse.m32 * (double)distance)), (float)((double)inverse.m03 * (double)x + (double)inverse.m13 * (double)y + (double)inverse.m23 * (double)z + (double)inverse.m33 * (double)distance));
+			float x = plane.Normal.X;
+			float y = plane.Normal.Y;
+			float z = plane.Normal.Z;
+			float distance = plane.Distance;
+			return new PlaneFloat(new Vector3Float((float)((double)inverse.M00 * (double)x + (double)inverse.M10 * (double)y + (double)inverse.M20 * (double)z + (double)inverse.M30 * (double)distance), (float)((double)inverse.M01 * (double)x + (double)inverse.M11 * (double)y + (double)inverse.M21 * (double)z + (double)inverse.M31 * (double)distance), (float)((double)inverse.M02 * (double)x + (double)inverse.M12 * (double)y + (double)inverse.M22 * (double)z + (double)inverse.M32 * (double)distance)), (float)((double)inverse.M03 * (double)x + (double)inverse.M13 * (double)y + (double)inverse.M23 * (double)z + (double)inverse.M33 * (double)distance));
 		}
 
 		#endregion

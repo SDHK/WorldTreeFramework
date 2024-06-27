@@ -36,13 +36,13 @@ namespace WorldTree.Analyzer
 		{
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.EnableConcurrentExecution();
-			context.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
-			//context.RegisterCompilationStartAction(analysisContext =>
-			//		{
-			//			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(analysisContext.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
-			//			analysisContext.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
-			//		}
-			//	);
+			//context.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
+			context.RegisterCompilationStartAction(analysisContext =>
+					{
+						if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(analysisContext.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+						analysisContext.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
+					}
+				);
 
 		}
 		protected abstract void DiagnosticAction(SyntaxNodeAnalysisContext context);
@@ -70,7 +70,7 @@ namespace WorldTree.Analyzer
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(projectName, out _)) return;
 
 			// 找到需要修复的委托声明
-			T? declaration = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<T>()?.First();
+			T? declaration = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()?.OfType<T>()?.First();
 			if (declaration == null) return;
 
 			// 根据不同的诊断类型注册不同的代码修复

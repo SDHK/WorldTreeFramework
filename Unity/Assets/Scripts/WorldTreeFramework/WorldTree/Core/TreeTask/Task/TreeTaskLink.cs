@@ -26,9 +26,18 @@ namespace WorldTree.Internal
 		, ChildOf<INode>
 		, AsAwake
 	{
-		public Task task;
-		private CancellationToken cancellationToken; // 添加CancellationToken字段
+		/// <summary>
+		/// 任务
+		/// </summary>
+		public Task Task;
+		/// <summary>
+		/// 任务取消令牌
+		/// </summary>
+		//private CancellationToken cancellationToken; // 添加CancellationToken字段
 
+		/// <summary>
+		/// 是否启动
+		/// </summary>
 		private bool isStart = false;
 
 		public override void SetCompleted()
@@ -39,32 +48,35 @@ namespace WorldTree.Internal
 			RunTask();
 		}
 
+		/// <summary>
+		/// 运行任务
+		/// </summary>
 		public async void RunTask()
 		{
 			isStart = true;
 			try
 			{
-				if (!task.IsCompleted && !task.IsFaulted)
+				if (!Task.IsCompleted && !Task.IsFaulted)
 				{
-					await task;
+					await Task;
 				}
 
-				this.Core.worldContext.Post((self) =>
+				this.Core.WorldContext.Post((selfObj) =>
 				{
-					var Self = (TreeTaskLink)self;
+					var self = (TreeTaskLink)selfObj;
 					base.SetCompleted();
 				}, this);
 			}
 			catch (Exception e)
 			{
-				this.Core.worldContext.Post(this.LogError, e);
+				this.Core.WorldContext.Post(this.LogError, e);
 			}
 		}
 
 		public override void OnDispose()
 		{
 			this.isStart = false;
-			task = null;
+			Task = null;
 			base.OnDispose();
 		}
 	}
@@ -76,12 +88,17 @@ namespace WorldTree.Internal
 		, ChildOf<INode>
 		, AsAwake
 	{
-		public Task<T> task;
-
+		/// <summary>
+		/// 任务
+		/// </summary>
+		public Task<T> Task;
+		/// <summary>
+		/// 任务取消令牌
+		/// </summary>
 		private bool isStart = false;
 
 		public override T GetResult()
-		{ Result = task.Result; return base.GetResult(); }
+		{ Result = Task.Result; return base.GetResult(); }
 
 		public override void SetCompleted()
 		{
@@ -93,28 +110,31 @@ namespace WorldTree.Internal
 		public override void OnDispose()
 		{
 			this.isStart = false;
-			task = null;
+			Task = null;
 			base.OnDispose();
 		}
 
+		/// <summary>
+		/// 运行任务
+		/// </summary>
 		public async void RunTask()
 		{
 			isStart = true;
 			try
 			{
-				if (!task.IsCompleted && !task.IsFaulted)
+				if (!Task.IsCompleted && !Task.IsFaulted)
 				{
-					await task;
+					await Task;
 				}
-				this.Core.worldContext.Post((self) =>
+				this.Core.WorldContext.Post((selfObj) =>
 				{
-					var Self = (TreeTaskLink<T>)self;
+					var self = (TreeTaskLink<T>)selfObj;
 					base.SetCompleted();
 				}, this);
 			}
 			catch (Exception e)
 			{
-				this.Core.worldContext.Post(this.LogError, e);
+				this.Core.WorldContext.Post(this.LogError, e);
 			}
 		}
 	}

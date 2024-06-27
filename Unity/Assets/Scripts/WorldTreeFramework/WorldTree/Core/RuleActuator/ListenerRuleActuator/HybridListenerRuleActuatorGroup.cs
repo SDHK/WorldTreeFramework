@@ -21,7 +21,7 @@ namespace WorldTree
 		/// <summary>
 		/// 监听器执行器字典集合
 		/// </summary>
-		public UnitDictionary<long, HybridListenerRuleActuator> actuatorDictionary = new();
+		public UnitDictionary<long, HybridListenerRuleActuator> ActuatorDict = new();
 	}
 
 	public static class HybridListenerRuleActuatorGroupRule
@@ -35,22 +35,22 @@ namespace WorldTree
 			long ruleType = TypeInfo<R>.TypeCode;
 
 			//执行器已存在，直接返回
-			if (self.actuatorDictionary.TryGetValue(ruleType, out HybridListenerRuleActuator ruleActuator))
+			if (self.ActuatorDict.TryGetValue(ruleType, out HybridListenerRuleActuator ruleActuator))
 			{
 				actuator = ruleActuator as IRuleActuator<R>;
 				//检测是否存在目标法则集合，不存在则添加
-				if (ruleActuator.staticListenerRuleActuator == null)
+				if (ruleActuator.StaticListenerRuleActuator == null)
 				{
 					if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, nodeType, out RuleGroup staticRuleGroup1))
 					{
-						ruleActuator.AddComponent(out ruleActuator.staticListenerRuleActuator, staticRuleGroup1).RuleActuatorAddListener();
+						ruleActuator.AddComponent(out ruleActuator.StaticListenerRuleActuator, staticRuleGroup1).RuleActuatorAddListener();
 					}
 				}
-				if (ruleActuator.dynamicListenerRuleActuator == null)
+				if (ruleActuator.DynamicListenerRuleActuator == null)
 				{
 					if (self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, TypeInfo<INode>.TypeCode, out RuleGroup dynamicRuleGroup1))
 					{
-						ruleActuator.AddComponent(out ruleActuator.dynamicListenerRuleActuator, dynamicRuleGroup1).RuleActuatorAddListener(nodeType);
+						ruleActuator.AddComponent(out ruleActuator.DynamicListenerRuleActuator, dynamicRuleGroup1).RuleActuatorAddListener(nodeType);
 					}
 				}
 				return true;
@@ -68,9 +68,9 @@ namespace WorldTree
 			bool checkDynamic = self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, TypeInfo<INode>.TypeCode, out RuleGroup dynamicRuleGroup);
 			if (checkStatic || checkDynamic)
 			{
-				self.actuatorDictionary.Add(ruleType, self.AddComponent(out ruleActuator, isPool: false));
-				if (checkStatic) ruleActuator.AddComponent(out ruleActuator.staticListenerRuleActuator, staticRuleGroup).RuleActuatorAddListener();
-				if (checkDynamic) ruleActuator.AddComponent(out ruleActuator.dynamicListenerRuleActuator, dynamicRuleGroup).RuleActuatorAddListener(nodeType);
+				self.ActuatorDict.Add(ruleType, self.AddComponent(out ruleActuator, isPool: false));
+				if (checkStatic) ruleActuator.AddComponent(out ruleActuator.StaticListenerRuleActuator, staticRuleGroup).RuleActuatorAddListener();
+				if (checkDynamic) ruleActuator.AddComponent(out ruleActuator.DynamicListenerRuleActuator, dynamicRuleGroup).RuleActuatorAddListener(nodeType);
 			}
 
 			actuator = ruleActuator as IRuleActuator<R>;
@@ -103,10 +103,10 @@ namespace WorldTree
 								if (nodePool.TryGetComponent(out HybridListenerRuleActuatorGroup ListenerRuleActuatorGroup))
 								{
 									//是否有这个监听类型的执行器
-									if (ListenerRuleActuatorGroup.actuatorDictionary.TryGetValue(ruleGroup.Key, out HybridListenerRuleActuator listenerRuleActuator))
+									if (ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out HybridListenerRuleActuator listenerRuleActuator))
 									{
 										//监听器添加到执行器
-										listenerRuleActuator.staticListenerRuleActuator?.TryAdd(listener);
+										listenerRuleActuator.StaticListenerRuleActuator?.TryAdd(listener);
 									}
 								}
 							}
@@ -139,10 +139,10 @@ namespace WorldTree
 								if (nodePool.TryGetComponent(out HybridListenerRuleActuatorGroup ListenerRuleActuatorGroup))
 								{
 									//是否有这个监听类型的执行器
-									if (ListenerRuleActuatorGroup.actuatorDictionary.TryGetValue(ruleGroup.Key, out HybridListenerRuleActuator listenerRuleActuator))
+									if (ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out HybridListenerRuleActuator listenerRuleActuator))
 									{
 										//监听器添加到执行器
-										listenerRuleActuator.staticListenerRuleActuator?.Remove(listener);
+										listenerRuleActuator.StaticListenerRuleActuator?.Remove(listener);
 									}
 								}
 							}
@@ -164,22 +164,22 @@ namespace WorldTree
 		/// </summary>
 		public static void TryAddDynamicListener(this ReferencedPoolManager self, IDynamicNodeListener node)
 		{
-			if (node.listenerTarget != 0)
+			if (node.ListenerTarget != 0)
 			{
-				if (node.listenerState == ListenerState.Node)
+				if (node.ListenerState == ListenerState.Node)
 				{
-					if (node.listenerTarget == TypeInfo<INode>.TypeCode)
+					if (node.ListenerTarget == TypeInfo<INode>.TypeCode)
 					{
 						self.AddAllTarget(node);
 					}
 					else
 					{
-						self.AddNodeTarget(node, node.listenerTarget);
+						self.AddNodeTarget(node, node.ListenerTarget);
 					}
 				}
-				else if (node.listenerState == ListenerState.Rule)
+				else if (node.ListenerState == ListenerState.Rule)
 				{
-					self.AddRuleTarget(node, node.listenerTarget);
+					self.AddRuleTarget(node, node.ListenerTarget);
 				}
 			}
 
@@ -199,15 +199,15 @@ namespace WorldTree
 					if (ruleGroupPair.Value.ContainsKey(node.Type))
 					{
 						//遍历现有池
-						foreach (var poolPair in self.pools)
+						foreach (var poolPair in self.poolDict)
 						{
 							//尝试获取动态执行器集合组件
 							if (poolPair.Value.TryGetComponent(out HybridListenerRuleActuatorGroup ListenerRuleActuatorGroup))
 							{
 								//从执行器集合 提取这个 监听法则类型 的监听执行器，进行添加
-								if (ListenerRuleActuatorGroup.actuatorDictionary.TryGetValue(ruleGroupPair.Key, out var ruleActuator))
+								if (ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroupPair.Key, out var ruleActuator))
 								{
-									ruleActuator.dynamicListenerRuleActuator?.TryAdd(node);
+									ruleActuator.DynamicListenerRuleActuator?.TryAdd(node);
 								}
 							}
 						}
@@ -250,9 +250,9 @@ namespace WorldTree
 							//判断监听法则集合 是否有这个 监听器节点类型
 							if (ruleGroup.Value.ContainsKey(node.Type))
 							{
-								if (ListenerRuleActuatorGroup.actuatorDictionary.TryGetValue(ruleGroup.Key, out HybridListenerRuleActuator ruleActuator))
+								if (ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out HybridListenerRuleActuator ruleActuator))
 								{
-									ruleActuator.dynamicListenerRuleActuator?.TryAdd(node);
+									ruleActuator.DynamicListenerRuleActuator?.TryAdd(node);
 								}
 							}
 						}
@@ -271,25 +271,25 @@ namespace WorldTree
 		/// </summary>
 		public static void RemoveDynamicListener(this ReferencedPoolManager self, IDynamicNodeListener node)
 		{
-			if (node.listenerTarget != 0)
+			if (node.ListenerTarget != 0)
 			{
-				if (node.listenerState == ListenerState.Node)
+				if (node.ListenerState == ListenerState.Node)
 				{
-					if (node.listenerTarget == TypeInfo<INode>.TypeCode)
+					if (node.ListenerTarget == TypeInfo<INode>.TypeCode)
 					{
 						self.RemoveAllTarget(node);
 					}
 					else
 					{
-						self.RemoveNodeTarget(node, node.listenerTarget);
+						self.RemoveNodeTarget(node, node.ListenerTarget);
 					}
 				}
-				else if (node.listenerState == ListenerState.Rule)
+				else if (node.ListenerState == ListenerState.Rule)
 				{
-					self.RemoveRuleTarget(node, node.listenerTarget);
+					self.RemoveRuleTarget(node, node.ListenerTarget);
 				}
-				node.listenerTarget = 0;
-				node.listenerState = ListenerState.Not;
+				node.ListenerTarget = 0;
+				node.ListenerState = ListenerState.Not;
 			}
 		}
 
@@ -308,15 +308,15 @@ namespace WorldTree
 					if (ruleGroupPair.Value.ContainsKey(node.Type))
 					{
 						//遍历现有池
-						foreach (var poolPair in self.pools)
+						foreach (var poolPair in self.poolDict)
 						{
 							//尝试获取动态执行器集合组件
 							if (poolPair.Value.TryGetComponent(out HybridListenerRuleActuatorGroup ListenerRuleActuatorGroup))
 							{
 								//从执行器集合 提取这个 监听法则类型 的监听执行器，进行移除
-								if (ListenerRuleActuatorGroup.actuatorDictionary.TryGetValue(ruleGroupPair.Key, out var ruleActuator))
+								if (ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroupPair.Key, out var ruleActuator))
 								{
-									ruleActuator.dynamicListenerRuleActuator?.Remove(node);
+									ruleActuator.DynamicListenerRuleActuator?.Remove(node);
 								}
 							}
 						}
@@ -360,9 +360,9 @@ namespace WorldTree
 							//判断监听法则集合 是否有这个 监听器节点类型
 							if (ruleGroup.Value.ContainsKey(node.Type))
 							{
-								if (ListenerRuleActuatorGroup.actuatorDictionary.TryGetValue(ruleGroup.Key, out HybridListenerRuleActuator ruleActuator))
+								if (ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out HybridListenerRuleActuator ruleActuator))
 								{
-									ruleActuator.dynamicListenerRuleActuator?.Remove(node);
+									ruleActuator.DynamicListenerRuleActuator?.Remove(node);
 								}
 							}
 						}

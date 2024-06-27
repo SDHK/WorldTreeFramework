@@ -53,6 +53,9 @@ namespace WorldTree.SourceGenerator
 						/// </summary>
 						public interface ICallRuleAsync<{{genericsTypeAfter}}OutT> : IRule
 						{
+							/// <summary>
+							/// 调用
+							/// </summary>
 							TreeTask<OutT> Invoke(INode self{{genericTypeParameter}});
 						}
 
@@ -63,7 +66,13 @@ namespace WorldTree.SourceGenerator
 							where N : class, INode, AsRule<R>
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
+							/// <summary>
+							/// 调用
+							/// </summary>
 							public virtual TreeTask<OutT> Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							/// <summary>
+							/// 执行
+							/// </summary>
 							protected abstract TreeTask<OutT> Execute(N self{{genericTypeParameter}});
 						}
 	
@@ -73,7 +82,13 @@ namespace WorldTree.SourceGenerator
 						public abstract class CallRuleAsyncDefault<R{{genericsType}}, OutT> : Rule<INode, R>, ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
+							/// <summary>
+							/// 调用
+							/// </summary>
 							public virtual TreeTask<OutT> Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							/// <summary>
+							/// 执行
+							/// </summary>
 							protected abstract TreeTask<OutT> Execute(INode self{{genericTypeParameter}});
 						}
 					""");

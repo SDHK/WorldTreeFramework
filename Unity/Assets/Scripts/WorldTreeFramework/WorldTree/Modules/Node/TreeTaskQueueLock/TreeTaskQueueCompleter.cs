@@ -15,7 +15,13 @@ namespace WorldTree
 	public class TreeTaskQueueCompleter : Node, ChildOf<INode>
 		, AsAwake<long, TreeTaskQueueLockManager>
 	{
-		public TreeTaskQueueLockManager m_QueueLock;
+		/// <summary>
+		/// 管理器
+		/// </summary>
+		public TreeTaskQueueLockManager queueLock;
+		/// <summary>
+		/// 锁的key
+		/// </summary>
 		public long key;
 	}
 

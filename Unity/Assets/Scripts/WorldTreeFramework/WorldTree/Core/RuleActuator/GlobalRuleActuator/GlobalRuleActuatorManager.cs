@@ -9,7 +9,9 @@
 
 namespace WorldTree
 {
-
+	/// <summary>
+	/// 核心扩展类型
+	/// </summary>
 	public static partial class WorldTreeCoreExtension
 	{
 		/// <summary>

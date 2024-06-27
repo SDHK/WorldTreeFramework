@@ -22,7 +22,10 @@ namespace WorldTree
 		/// 数组类型
 		/// </summary>
 		public Type ArrayType;
-		public TreeDictionary<int, ArrayPool> Pools;
+		/// <summary>
+		/// 数组对象池集合
+		/// </summary>
+		public TreeDictionary<int, ArrayPool> PoolDict;
 	}
 
 	public static partial class ArrayPoolGroupRule
@@ -39,7 +42,7 @@ namespace WorldTree
 		{
 			protected override void Execute(ArrayPoolGroup self)
 			{
-				self.AddChild(out self.Pools);
+				self.AddChild(out self.PoolDict);
 			}
 		}
 
@@ -47,7 +50,7 @@ namespace WorldTree
 		{
 			protected override void Execute(ArrayPoolGroup self)
 			{
-				self.Pools = null;
+				self.PoolDict = null;
 			}
 		}
 
@@ -55,12 +58,12 @@ namespace WorldTree
 		/// <summary>
 		/// 获取数组对象池
 		/// </summary>
-		public static ArrayPool GetPool(this ArrayPoolGroup self, int Length)
+		public static ArrayPool GetPool(this ArrayPoolGroup self, int length)
 		{
-			if (!self.Pools.TryGetValue(Length, out ArrayPool arrayPool))
+			if (!self.PoolDict.TryGetValue(length, out ArrayPool arrayPool))
 			{
-				self.AddChild(out arrayPool, self.ArrayType, Length);
-				self.Pools.Add(Length, arrayPool);
+				self.AddChild(out arrayPool, self.ArrayType, length);
+				self.PoolDict.Add(length, arrayPool);
 			}
 			return arrayPool;
 		}
@@ -68,19 +71,19 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取数组对象池
 		/// </summary>
-		public static bool TryGetPool(this ArrayPoolGroup self, int Length, out ArrayPool arrayPool)
+		public static bool TryGetPool(this ArrayPoolGroup self, int length, out ArrayPool arrayPool)
 		{
-			return self.Pools.TryGetValue(Length, out arrayPool);
+			return self.PoolDict.TryGetValue(length, out arrayPool);
 		}
 
 		/// <summary>
 		/// 释放数组对象池
 		/// </summary>
-		public static void DisposePool(this ArrayPoolGroup self, int Length)
+		public static void DisposePool(this ArrayPoolGroup self, int length)
 		{
-			if (self.Pools.TryGetValue(Length, out ArrayPool arrayPool))
+			if (self.PoolDict.TryGetValue(length, out ArrayPool arrayPool))
 			{
-				self.Pools.Remove(Length);
+				self.PoolDict.Remove(length);
 				arrayPool.Dispose();
 			}
 		}

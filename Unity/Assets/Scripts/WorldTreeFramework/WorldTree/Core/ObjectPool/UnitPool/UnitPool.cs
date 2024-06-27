@@ -44,15 +44,15 @@ namespace WorldTree
         /// <param name="obj"></param>
         public void Recycle(IUnitPoolEventItem obj)
         {
-            lock (objetPool)
+            lock (objectPoolQueue)
             {
                 if (obj != null)
                 {
-                    if (maxLimit == -1 || objetPool.Count < maxLimit)
+                    if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
                     {
                         if (obj.IsRecycle) return;
                         objectOnRecycle.Invoke(obj);
-                        objetPool.Enqueue(obj);
+                        objectPoolQueue.Enqueue(obj);
                     }
                     else
                     {
@@ -64,32 +64,47 @@ namespace WorldTree
             }
         }
 
-        public IUnitPoolEventItem ObjectNew(IPool pool)
+		/// <summary>
+		/// 对象新建
+		/// </summary>
+		/// <param name="pool"></param>
+		/// <returns></returns>
+		public IUnitPoolEventItem ObjectNew(IPool pool)
         {
             IUnitPoolEventItem obj = Activator.CreateInstance(ObjectType, true) as IUnitPoolEventItem;
-            obj.Type = ObjectTypeCore;
+            obj.Type = ObjectTypeCode;
             obj.IsFromPool = true;
             obj.Core = Core;
             return obj;
         }
 
+        /// <summary>
+        /// 对象新建处理
+        /// </summary>
         public void ObjectOnNew(IUnitPoolEventItem obj)
         {
             obj.OnNew();
         }
-        public void ObjectOnGet(IUnitPoolEventItem obj)
+		/// <summary>
+		/// 对象获取处理
+		/// </summary>
+		public void ObjectOnGet(IUnitPoolEventItem obj)
         {
             obj.IsRecycle = false;
             obj.OnGet();
         }
-
-        public void ObjectOnRecycle(IUnitPoolEventItem obj)
+		/// <summary>
+		/// 对象回收处理
+		/// </summary>
+		public void ObjectOnRecycle(IUnitPoolEventItem obj)
         {
             obj.IsRecycle = true;
             obj.OnRecycle();
         }
-
-        public void ObjectOnDestroy(IUnitPoolEventItem obj)
+		/// <summary>
+		/// 对象销毁处理
+		/// </summary>
+		public void ObjectOnDestroy(IUnitPoolEventItem obj)
         {
             obj.IsDisposed = true;
             obj.OnDispose();

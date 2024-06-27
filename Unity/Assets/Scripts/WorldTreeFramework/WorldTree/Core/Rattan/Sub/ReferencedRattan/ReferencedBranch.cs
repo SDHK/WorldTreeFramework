@@ -20,57 +20,66 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 引用子级藤
+	/// </summary>
 	public class ReferencedChildRattan : ReferencedParentRattan { }
 
+	/// <summary>
+	/// 引用父级藤
+	/// </summary>
 	public class ReferencedParentRattan : UnitPoolItem, IRattan<long>
 	{
-		public INode Self { get; set; }
 
-		public int Count => Nodes.Count;
+		public int Count => nodeDict.Count;
 
-		protected UnitDictionary<long, INode> Nodes;
+		/// <summary>
+		/// 节点字典
+		/// </summary>
+		protected UnitDictionary<long, INode> nodeDict;
 
 		public override void OnGet()
 		{
-			Core.PoolGetUnit(out Nodes);
+			Core.PoolGetUnit(out nodeDict);
 		}
 
 
-		public bool Contains(long key) => Nodes.ContainsKey(key);
+		public bool Contains(long key) => nodeDict.ContainsKey(key);
 
-		public bool ContainsId(long id) => Nodes.ContainsKey(id);
+		public bool ContainsId(long id) => nodeDict.ContainsKey(id);
 
 
-		public bool TryAddNode<N>(long key, N node) where N : class, INode => Nodes.TryAdd(key, node);
+		public bool TryAddNode<N>(long key, N node) where N : class, INode => nodeDict.TryAdd(key, node);
 
 		public bool TryGetNodeKey(long nodeId, out long key) { key = nodeId; return true; }
 
-		public bool TryGetNode(long key, out INode node) => this.Nodes.TryGetValue(key, out node);
-		public bool TryGetNodeById(long id, out INode node) => this.Nodes.TryGetValue(id, out node);
+		public bool TryGetNode(long key, out INode node) => this.nodeDict.TryGetValue(key, out node);
+		public bool TryGetNodeById(long id, out INode node) => this.nodeDict.TryGetValue(id, out node);
 
-		public INode GetNode(long key) => this.Nodes.TryGetValue(key, out INode node) ? node : null;
-		public INode GetNodeById(long id) => this.Nodes.TryGetValue(id, out INode node) ? node : null;
+		public INode GetNode(long key) => this.nodeDict.TryGetValue(key, out INode node) ? node : null;
+		public INode GetNodeById(long id) => this.nodeDict.TryGetValue(id, out INode node) ? node : null;
 
 
-		public void RemoveNode(long nodeId) => Nodes.Remove(nodeId);
+		public void RemoveNode(long nodeId) => nodeDict.Remove(nodeId);
 
 		public void Clear()
 		{
-			Nodes.Clear();
+			nodeDict.Clear();
 		}
 
-		public IEnumerator<INode> GetEnumerator() => Nodes.Values.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => Nodes.Values.GetEnumerator();
+		public IEnumerator<INode> GetEnumerator() => nodeDict.Values.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => nodeDict.Values.GetEnumerator();
 
 		public override void OnRecycle()
 		{
-			this.Nodes.Dispose();
-			this.Self = null;
-			this.Nodes = null;
+			this.nodeDict.Dispose();
+			this.nodeDict = null;
 		}
 	}
 
-
+	/// <summary>
+	/// 节点引用关系藤帮助类
+	/// </summary>
 	public static class NodeReferencedRattanHelper
 	{
 		/// <summary>
@@ -141,7 +150,7 @@ namespace WorldTree
 					while (nodes.Count != 0)
 					{
 						var node = nodes.Dequeue();
-						NodeRattanHelper.RemoveRattanNode<ReferencedChildRattan>(node,self);
+						NodeRattanHelper.RemoveRattanNode<ReferencedChildRattan>(node, self);
 						NodeRuleHelper.TrySendRule(node, TypeInfo<ReferencedChildRemove>.Default, self);
 					}
 				}

@@ -21,37 +21,37 @@ namespace WorldTree
 		/// <summary>
 		/// 静态监听器法则执行器
 		/// </summary>
-		public StaticListenerRuleActuator staticListenerRuleActuator;
+		public StaticListenerRuleActuator StaticListenerRuleActuator;
 		/// <summary>
 		/// 动态监听器法则执行器
 		/// </summary>
-		public DynamicListenerRuleActuator dynamicListenerRuleActuator;
+		public DynamicListenerRuleActuator DynamicListenerRuleActuator;
 
-		public int TraversalCount => staticListenerRuleActuator?.TraversalCount ?? 0 + staticListenerRuleActuator?.TraversalCount ?? 0;
+		public int TraversalCount => StaticListenerRuleActuator?.TraversalCount ?? 0 + StaticListenerRuleActuator?.TraversalCount ?? 0;
 
 		public override string ToString()
 		{
-			return $"HybridListenerRuleActuator:{this.GetHashCode()} : {staticListenerRuleActuator == null} ??  {dynamicListenerRuleActuator == null}";
+			return $"HybridListenerRuleActuator:{this.GetHashCode()} : {StaticListenerRuleActuator == null} ??  {DynamicListenerRuleActuator == null}";
 		}
 
 
 		public int RefreshTraversalCount()
 		{
-			return staticListenerRuleActuator?.RefreshTraversalCount() ?? 0 + dynamicListenerRuleActuator?.RefreshTraversalCount() ?? 0;
+			return StaticListenerRuleActuator?.RefreshTraversalCount() ?? 0 + DynamicListenerRuleActuator?.RefreshTraversalCount() ?? 0;
 		}
 
 		public bool TryDequeue(out (INode, RuleList) value)
 		{
-			if (staticListenerRuleActuator != null)
+			if (StaticListenerRuleActuator != null)
 			{
-				if (staticListenerRuleActuator.TryDequeue(out value))
+				if (StaticListenerRuleActuator.TryDequeue(out value))
 				{
 					return true;
 				}
 			}
-			if (dynamicListenerRuleActuator != null)
+			if (DynamicListenerRuleActuator != null)
 			{
-				if (dynamicListenerRuleActuator.TryDequeue(out value))
+				if (DynamicListenerRuleActuator.TryDequeue(out value))
 				{
 					return true;
 				}
@@ -63,16 +63,16 @@ namespace WorldTree
 
 		public bool TryPeek(out (INode, RuleList) value)
 		{
-			if (staticListenerRuleActuator != null)
+			if (StaticListenerRuleActuator != null)
 			{
-				if (staticListenerRuleActuator.TryPeek(out value))
+				if (StaticListenerRuleActuator.TryPeek(out value))
 				{
 					return true;
 				}
 			}
-			if (dynamicListenerRuleActuator != null)
+			if (DynamicListenerRuleActuator != null)
 			{
-				if (dynamicListenerRuleActuator.TryPeek(out value))
+				if (DynamicListenerRuleActuator.TryPeek(out value))
 				{
 					return true;
 				}
@@ -99,8 +99,8 @@ namespace WorldTree
 		{
 			protected override void Execute(HybridListenerRuleActuator self)
 			{
-				self.staticListenerRuleActuator = null;
-				self.dynamicListenerRuleActuator = null;
+				self.StaticListenerRuleActuator = null;
+				self.DynamicListenerRuleActuator = null;
 			}
 		}
 	}

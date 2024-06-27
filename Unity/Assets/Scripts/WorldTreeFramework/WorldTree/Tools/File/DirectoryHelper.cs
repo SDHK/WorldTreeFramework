@@ -11,6 +11,9 @@ using System.IO;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 文件目录工具类
+	/// </summary>
 	public static partial class DirectoryHelper
 	{
 		/// <summary>

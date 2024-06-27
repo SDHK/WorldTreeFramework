@@ -17,6 +17,9 @@ namespace WorldTree
 		, AsChildBranch
 		, AsAwake
 	{
-		public TreeList<PerceptronLayer> layers;
+		/// <summary>
+		/// 感知器层
+		/// </summary>
+		public TreeList<PerceptronLayer> layerList;
 	}
 }

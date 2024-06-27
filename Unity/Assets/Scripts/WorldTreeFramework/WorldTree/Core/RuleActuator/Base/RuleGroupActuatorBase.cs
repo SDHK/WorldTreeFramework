@@ -19,17 +19,17 @@ namespace WorldTree
 		/// <summary>
 		/// 单法则集合
 		/// </summary>
-		public RuleGroup ruleGroup;
+		public RuleGroup ruleGroupDict;
 
 		public override string ToString()
 		{
-			return $"RuleGroupActuator : {ruleGroup?.RuleType.CodeToType()}";
+			return $"RuleGroupActuator : {ruleGroupDict?.RuleType.CodeToType()}";
 		}
 
 		/// <summary>
 		/// 尝试添加节点
 		/// </summary>
-		public bool TryAdd(INode node) => ruleGroup.TryGetValue(node.Type, out RuleList ruleList) && TryAdd(node, ruleList);
+		public bool TryAdd(INode node) => ruleGroupDict.TryGetValue(node.Type, out RuleList ruleList) && TryAdd(node, ruleList);
 	}
 
 	public static class RuleGroupActuatorBaseRule
@@ -38,7 +38,7 @@ namespace WorldTree
 		{
 			protected override void Execute(RuleGroupActuatorBase self)
 			{
-				self.ruleGroup = null;
+				self.ruleGroupDict = null;
 				self.Clear();
 			}
 		}

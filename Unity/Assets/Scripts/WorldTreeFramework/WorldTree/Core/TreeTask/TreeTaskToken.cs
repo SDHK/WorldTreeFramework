@@ -54,7 +54,7 @@ namespace WorldTree
 		/// <summary>
 		/// 任务令牌事件
 		/// </summary>
-		public RuleActuator<TreeTaskTokenEvent> tokenEvent;
+		public RuleActuator<TreeTaskTokenEvent> TokenEvent;
 
 		/// <summary>
 		/// 任务状态
@@ -72,7 +72,7 @@ namespace WorldTree
 		public void Continue()
 		{
 			taskState = TokenState.Running;
-			tokenEvent?.Send(taskState);
+			TokenEvent?.Send(taskState);
 			stopTask?.SetCompleted();
 			stopTask = null;
 		}
@@ -83,7 +83,7 @@ namespace WorldTree
 		public void Stop()
 		{
 			taskState = TokenState.Stop;
-			tokenEvent?.Send(taskState);
+			TokenEvent?.Send(taskState);
 		}
 
 		/// <summary>
@@ -92,8 +92,8 @@ namespace WorldTree
 		public void Cancel()
 		{
 			taskState = TokenState.Cancel;
-			tokenEvent?.Send(taskState);
-			tokenEvent.Clear();
+			TokenEvent?.Send(taskState);
+			TokenEvent.Clear();
 			stopTask = null;
 		}
 	}
@@ -105,7 +105,7 @@ namespace WorldTree
 			protected override void Execute(TreeTaskToken self)
 			{
 				self.taskState = TokenState.Running;
-				self.AddChild(out self.tokenEvent);
+				self.AddChild(out self.TokenEvent);
 			}
 		}
 
@@ -123,7 +123,7 @@ namespace WorldTree
 			protected override void Execute(TreeTaskToken self)
 			{
 				self.stopTask = null;
-				self.tokenEvent = null;
+				self.TokenEvent = null;
 			}
 		}
 

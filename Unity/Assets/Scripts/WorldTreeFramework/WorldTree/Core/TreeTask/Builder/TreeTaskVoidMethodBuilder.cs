@@ -20,10 +20,14 @@ namespace WorldTree.Internal
 	/// </summary>
 	public struct TreeTaskVoidMethodBuilder
 	{
-
+		/// <summary>
+		/// 等待器
+		/// </summary>
 		private TreeTaskBase awaiter;
 
-		// 1. Static Create method.
+		/// <summary>
+		/// 创建一个新的构建器
+		/// </summary>
 		[DebuggerHidden]
 		public static TreeTaskVoidMethodBuilder Create()
 		{
@@ -31,24 +35,31 @@ namespace WorldTree.Internal
 			return builder;
 		}
 
-		// 2. TaskLike Task property(void)
+		/// <summary>
+		/// 任务
+		/// </summary>
 		[DebuggerHidden]
 		public TreeTaskVoid Task => default;
 
-		// 3. SetException
+		/// <summary>
+		/// 设置异常
+		/// </summary>
 		[DebuggerHidden]
 		public void SetException(Exception exception)
 		{
 			awaiter.LogError(exception);
 		}
 
-		// 4. SetResult
+		/// <summary>
+		/// 设置结果
+		/// </summary>
 		public void SetResult()
 		{
-			// do nothing
 		}
 
-		// 5. AwaitOnCompleted
+		/// <summary>
+		/// 等待完成
+		/// </summary>
 		[DebuggerHidden]
 		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
@@ -56,7 +67,9 @@ namespace WorldTree.Internal
 			awaiter.OnCompleted(stateMachine.MoveNext);
 		}
 
-		// 6. AwaitUnsafeOnCompleted
+		/// <summary>
+		/// 等待完成
+		/// </summary>
 		[DebuggerHidden]
 		[SecuritySafeCritical]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
@@ -65,14 +78,18 @@ namespace WorldTree.Internal
 			awaiter.UnsafeOnCompleted(stateMachine.MoveNext);
 		}
 
-		// 7. Start
+		/// <summary>
+		/// 开始
+		/// </summary>
 		[DebuggerHidden]
 		public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
 		{
 			stateMachine.MoveNext();
 		}
 
-		// 8. SetStateMachine
+		/// <summary>
+		/// 设置状态机
+		/// </summary>
 		[DebuggerHidden]
 		public void SetStateMachine(IAsyncStateMachine stateMachine)
 		{

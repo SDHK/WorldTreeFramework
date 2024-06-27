@@ -37,7 +37,7 @@ namespace WorldTree
         {
             protected override void Execute(TreeTaskQueueLockManager self)
             {
-                self.AddChild(out self.nodeQueueDictitonary);
+                self.AddChild(out self.nodeQueueDict);
             }
         }
 
@@ -45,7 +45,7 @@ namespace WorldTree
         {
             protected override void Execute(TreeTaskQueueLockManager self)
             {
-                self.nodeQueueDictitonary = null;
+                self.nodeQueueDict = null;
             }
         }
 
@@ -57,13 +57,13 @@ namespace WorldTree
         public static async TreeTask<TreeTaskQueueCompleter> Lock(this TreeTaskQueueLockManager self, INode node, long key)
         {
             //判断如果没有这个键值
-            if (!self.nodeQueueDictitonary.TryGetValue(key, out DynamicNodeQueue TaskQueue))
+            if (!self.nodeQueueDict.TryGetValue(key, out DynamicNodeQueue TaskQueue))
             {
                 //新建动态节点队列
-                self.nodeQueueDictitonary.AddTemp(out TaskQueue);
+                self.nodeQueueDict.AddTemp(out TaskQueue);
 
                 //动态节点队列添加进字典
-                self.nodeQueueDictitonary.Add(key, TaskQueue);
+                self.nodeQueueDict.Add(key, TaskQueue);
 
                 //节点添加解锁器
                 node.AddTemp(out TreeTaskQueueCompleter taskQueueCompleter, key, self);
@@ -88,8 +88,8 @@ namespace WorldTree
         /// </summary>
         public static void RunNext(this TreeTaskQueueLockManager self, long key)
         {
-            if (self.nodeQueueDictitonary != null)
-                if (self.nodeQueueDictitonary.TryGetValue(key, out DynamicNodeQueue nodeQueue))
+            if (self.nodeQueueDict != null)
+                if (self.nodeQueueDict.TryGetValue(key, out DynamicNodeQueue nodeQueue))
                 {
                     //获取第一个任务
                     if (nodeQueue.TryDequeue(out var task))
@@ -112,7 +112,7 @@ namespace WorldTree
                     //队列空了则删掉键值
                     if (nodeQueue.Count == 0)
                     {
-                        self.nodeQueueDictitonary.Remove(key);
+                        self.nodeQueueDict.Remove(key);
                         nodeQueue.Dispose();
                     }
                 }

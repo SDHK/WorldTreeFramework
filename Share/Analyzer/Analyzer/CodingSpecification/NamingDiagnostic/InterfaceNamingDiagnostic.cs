@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
 using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,9 +46,36 @@ namespace WorldTree.Analyzer
 						// 不需要检查的修饰符
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(interfaceDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
-							if (!codeDiagnostic.Check.Invoke(interfaceDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(interfaceDeclaration)))
+							if (!codeDiagnostic.Check.Invoke(interfaceDeclaration.Identifier.Text))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, interfaceDeclaration.Identifier.GetLocation(), interfaceDeclaration.Identifier.Text));
+							}
+							else if (codeDiagnostic.NeedComment)
+							{
+								//判断是否是部分接口
+								if (interfaceDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))
+								{
+									// 获取所有部分接口的语法声明
+									IEnumerable<InterfaceDeclarationSyntax> partialDeclarations = typeSymbol.DeclaringSyntaxReferences.Select(syntaxRef => syntaxRef.GetSyntax()).OfType<InterfaceDeclarationSyntax>();
+									bool isComment = false;
+
+									foreach (InterfaceDeclarationSyntax partialDecl in partialDeclarations)
+									{
+										if (TreeSyntaxHelper.CheckSummaryComment(partialDecl))
+										{
+											isComment = true;
+											break;
+										}
+									}
+									if (!isComment)
+									{
+										context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, interfaceDeclaration.GetLocation(), interfaceDeclaration.Identifier.Text));
+									}
+								}
+								else if (!TreeSyntaxHelper.CheckSummaryComment(interfaceDeclaration))
+								{
+									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, interfaceDeclaration.GetLocation(), interfaceDeclaration.Identifier.Text));
+								}
 							}
 						}
 					}

@@ -27,6 +27,9 @@ namespace WorldTree.SourceGenerator
 );
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
+			Code.AppendLine($"	/// <summary>");
+			Code.AppendLine($"	/// 节点法则帮助类型");
+			Code.AppendLine($"	/// </summary>");
 			Code.AppendLine("	public static partial class NodeRuleHelper");
 			Code.Append("	{");
 

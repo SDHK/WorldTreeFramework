@@ -23,9 +23,21 @@ namespace WorldTree
 	public class NodePool : GenericPool<INode>
 		, ChildOf<PoolManagerBase<NodePool>>
 	{
+		/// <summary>
+		/// 对象新建规则列表
+		/// </summary>
 		public IRuleList<New> newRule;
+		/// <summary>
+		/// 对象获取规则列表
+		/// </summary>
 		public IRuleList<Get> getRule;
+		/// <summary>
+		/// 对象回收规则列表
+		/// </summary>
 		public IRuleList<Recycle> recycleRule;
+		/// <summary>
+		/// 对象销毁规则列表
+		/// </summary>
 		public IRuleList<Destroy> destroyRule;
 
 
@@ -55,18 +67,21 @@ namespace WorldTree
 		}
 
 		public override void Recycle(object obj) => Recycle(obj as INode);
+		/// <summary>
+		/// 回收对象
+		/// </summary>
 		public void Recycle(INode obj)
 		{
-			lock (objetPool)
+			lock (objectPoolQueue)
 			{
 				if (obj != null)
 				{
-					if (maxLimit == -1 || objetPool.Count < maxLimit)
+					if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
 					{
 						if (obj.IsRecycle) return;
 
 						objectOnRecycle.Invoke(obj);
-						objetPool.Enqueue(obj);
+						objectPoolQueue.Enqueue(obj);
 					}
 					else
 					{
@@ -77,38 +92,51 @@ namespace WorldTree
 				}
 			}
 		}
-
+		/// <summary>
+		/// 对象新建方法
+		/// </summary>
 		private INode ObjectNew(IPool pool)
 		{
 			INode obj = Activator.CreateInstance(ObjectType, true) as INode;
 			obj.IsFromPool = true;
 			obj.Core = Core;
 			obj.Root = Core.Root;
-			obj.Type = ObjectTypeCore;
+			obj.Type = ObjectTypeCode;
 			return obj;
 		}
+		/// <summary>
+		/// 对象销毁方法
+		/// </summary>
 		private void ObjectDestroy(INode obj)
 		{
 		}
-
+		/// <summary>
+		/// 对象新建处理事件
+		/// </summary>
 		private void ObjectOnNew(INode obj)
 		{
 			newRule?.Send(obj);
 		}
-
+		/// <summary>
+		/// 对象获取处理事件
+		/// </summary>
 		private void ObjectOnGet(INode obj)
 		{
 			obj.IsRecycle = false;
 			getRule?.Send(obj);
 		}
-
+		/// <summary>
+		/// 对象回收处理事件
+		/// </summary>
 		public void ObjectOnRecycle(INode obj)
 		{
 			obj.IsRecycle = true;
 			recycleRule?.Send(obj);
 			obj.Id = 0;
 		}
-
+		/// <summary>
+		/// 对象销毁处理事件
+		/// </summary>
 		private void ObjectOnDestroy(INode obj)
 		{
 			obj.IsDisposed = true;
@@ -124,13 +152,13 @@ namespace WorldTree
 		{
 			protected override void Execute(NodePool self)
 			{
-				self.Core.RuleManager.SupportNodeRule(self.ObjectTypeCore);
+				self.Core.RuleManager.SupportNodeRule(self.ObjectTypeCode);
 
 				//生命周期法则
-				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCore, out self.newRule);
-				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCore, out self.getRule);
-				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCore, out self.recycleRule);
-				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCore, out self.destroyRule);
+				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCode, out self.newRule);
+				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCode, out self.getRule);
+				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCode, out self.recycleRule);
+				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCode, out self.destroyRule);
 			}
 		}
 		class DestroyRule : DestroyRule<NodePool>

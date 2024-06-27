@@ -17,10 +17,16 @@ namespace WorldTree
     class TreeTweenManagerRootAddRule : RootAddRule<TreeTweenManager> { }
 
 
-    public class TreeTweenManager : Node, ComponentOf<WorldTreeRoot>
+	/// <summary>
+	/// 树渐变管理器
+	/// </summary>
+	public class TreeTweenManager : Node, ComponentOf<WorldTreeRoot>
         , AsAwake
     {
-        public GlobalRuleActuator<TweenUpdate> ruleActuator;
+		/// <summary>
+		/// 全局法则执行器
+		/// </summary>
+		public GlobalRuleActuator<TweenUpdate> ruleActuator;
     }
 
     class TreeTweenManagerAddRule : AddRule<TreeTweenManager>

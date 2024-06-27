@@ -12,13 +12,16 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    public static class DictionaryExtension
+	/// <summary>
+	/// 字典扩展方法
+	/// </summary>
+	public static class DictionaryExtension
     {
         /// <summary>
         /// 获取或新建值
         /// </summary>
         /// <remarks>值为对象，但未通过对象池创建</remarks>
-        public static V GetValue<K, V>(this Dictionary<K, V> self, K key)
+        public static V GetOrNewValue<K, V>(this Dictionary<K, V> self, K key)
             where V : class, new()
         {
 

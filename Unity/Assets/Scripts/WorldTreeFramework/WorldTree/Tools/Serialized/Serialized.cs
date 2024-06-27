@@ -4,85 +4,37 @@ using System.IO;
 
 namespace WorldTree
 {
-
+	/// <summary>
+	/// 序列化工具类
+	/// </summary>
 	public static class Serialized
 	{
-		public static byte[] Get(object value)
-		{
 
-		 object.ReferenceEquals(value, null);
-			//循环引用问题
-			//先拿出所有引用类型,存入字典<object,long>
-			//然后在对每个引用类型遍历序列化，遇到引用类型就跳过，遇到值类型就序列化
+		//public static byte[] Get(int value)
+		//{
+		//	//BinaryPrimitives.WriteInt32BigEndian
+		//	//BinaryPrimitives.ReadInt16BigEndian(,)
+		//	//BitConverter.GetBytes(new object())
 
-			//当前类型
-			(Type, object) current;
+		//	//Type.GetTypeCode
+		//	return BitConverter.GetBytes(value);
+		//}
 
-			Stack<(Type, object)> stack = new();
-
-			stack.Push((value.GetType(),value));
-
-			while (stack.Count != 0)
-			{
-				current = stack.Pop();
-
-				//处理类型转为byte[]
-				Handle(current);
-
-				//反射获取类型
-				Type type = current.Item1;
-
-				//反射获取字段
-				var fields = type.GetFields();
-				foreach (var field in fields)
-				{
-					stack.Push((field.FieldType,field.GetValue(current)));
-				}
-
-				//反射获取属性
-				var properties = type.GetProperties();
-				foreach (var property in properties)
-				{
-					stack.Push((property.PropertyType,property.GetValue(current)));
-				}
-			}
-
-
-			void Handle((Type, object) value)
-			{
-				//value.Item1.IsValueType
-			}
-
-			return null;
-		}
-
-
-		public static byte[] Get(int value)
-		{
-			//BinaryPrimitives.WriteInt32BigEndian
-			//BinaryPrimitives.ReadInt16BigEndian(,)
-			//BitConverter.GetBytes(new object())
-
-			//Type.GetTypeCode
-			return BitConverter.GetBytes(value);
-		}
-
-		public static byte[] Get(short value)
-		{
-			return BitConverter.GetBytes(value);
-		}
+		//public static byte[] Get(short value)
+		//{
+		//	return BitConverter.GetBytes(value);
+		//}
 	}
 
+	/// <summary>
+	/// 序列化策略
+	/// </summary>
 	public class SerializedStrategy : Node
 	{
 
-		public void GetS<T>(T value, out byte[] bytes)
-		{
-
-			bytes = null;
-
-		}
-
+		/// <summary>
+		/// a
+		/// </summary>
 		public void GetFields<T>(T value, out byte[] bytes)
 		{
 
@@ -123,22 +75,6 @@ namespace WorldTree
 			// 类型编号：类型长度
 			// 实例ID：类型编号|数据
 
-
-			switch (value)
-			{
-				case short:
-					break;
-				case ushort:
-					break;
-				case int:
-					break;
-				case null:
-					break;
-				default:
-					break;
-			}
-
-
 			bytes = null;
 
 		}
@@ -146,12 +82,14 @@ namespace WorldTree
 
 	public interface ISerializedBasicType
 	{
+		/// <summary>
+		/// 读取
+		/// </summary>
 		public void Read<T>(byte[] data, out T value);
-
-
+		/// <summary>
+		/// 写入
+		/// </summary>
 		public void Write<T>(T value, out byte[] data);
-
-
 	}
 
 
@@ -164,11 +102,11 @@ namespace WorldTree
 		public void Read<T>(byte[] data, out T value)//反射序列化成二进制
 		{
 			MemoryStream stream = new();
-			var BW = new BinaryWriter(stream);
+			var bW = new BinaryWriter(stream);
 
-			var BR = new BinaryReader(stream);
+			var bR = new BinaryReader(stream);
 			//BR.Read()
-			BW.Write(1);
+			bW.Write(1);
 
 			throw new NotImplementedException();
 		}

@@ -41,12 +41,12 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 执行器执行调用法则
 							/// </summary>
-							public static OutT Call<R{{genericsType}}, OutT>(this IRuleActuator<R> Self{{genericTypeParameter}}, out OutT outT)
+							public static OutT Call<R{{genericsType}}, OutT>(this IRuleActuator<R> selfActuator{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
 								outT = default;
-								if (!Self.IsActive) return outT;
-								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
+								if (!selfActuator.IsActive) return outT;
+								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)selfActuator;
 								self.RefreshTraversalCount();
 								for (int i = 0; i < self.TraversalCount; i++)
 								{
@@ -61,19 +61,19 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 执行器执行异步调用法则
 							/// </summary>
-							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleActuator<R> Self{{genericTypeParameter}}, OutT defaultOutT)
+							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleActuator<R> selfActuator{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
-								if (!Self.IsActive) 
+								if (!selfActuator.IsActive) 
 								{
-									await Self.TreeTaskCompleted(); 
+									await selfActuator.TreeTaskCompleted(); 
 									return defaultOutT;
 								}
-								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)Self;
+								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)selfActuator;
 								self.RefreshTraversalCount();
 								if (self.TraversalCount == 0) 
 								{
-									await Self.TreeTaskCompleted(); 
+									await selfActuator.TreeTaskCompleted(); 
 									return defaultOutT;
 								}
 								for (int i = 0; i < self.TraversalCount; i++)
@@ -84,7 +84,7 @@ namespace WorldTree.SourceGenerator
 									}
 									else
 									{
-										await Self.TreeTaskCompleted();
+										await selfActuator.TreeTaskCompleted();
 										return defaultOutT;
 									}
 								}

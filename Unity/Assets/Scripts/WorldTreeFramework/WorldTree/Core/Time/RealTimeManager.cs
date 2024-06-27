@@ -32,7 +32,7 @@ namespace WorldTree
 		/// <summary>
 		/// NTP服务器地址列表
 		/// </summary>
-		public List<string> ntpServers = new() { "cn.ntp.org.cn", "pool.ntp.org", "cn.pool.ntp.org", "edu.ntp.org.cn", "time.windows.com", "time.nist.gov" };
+		public List<string> ntpServerList = new() { "cn.ntp.org.cn", "pool.ntp.org", "cn.pool.ntp.org", "edu.ntp.org.cn", "time.windows.com", "time.nist.gov" };
 
 		/// <summary>
 		/// 时区偏差
@@ -127,7 +127,7 @@ namespace WorldTree
 		/// <summary>
 		/// NTP消息
 		/// </summary>
-		private byte[] ntpData;
+		private byte[] ntpDatas;
 
 		/// <summary>
 		/// 是否请求网络时间
@@ -137,10 +137,10 @@ namespace WorldTree
 		public RealTimeManager()
 		{
 			// NTP消息大小 - 16字节（RFC 2030）
-			ntpData = new byte[48];
+			ntpDatas = new byte[48];
 
 			// 设置协议版本号为3（RFC 1305）
-			ntpData[0] = 0x1B;
+			ntpDatas[0] = 0x1B;
 			cumulativeUtcTime = DateTime.UtcNow;
 			stopwatchClock = Stopwatch.StartNew();
 			localUtcNowClock = DateTime.UtcNow;
@@ -165,7 +165,7 @@ namespace WorldTree
 				//计算 机器时间 和 累计时间 的偏差
 				//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 阈值，那么判为时间跳跃。
 				long offsetTicks = (DateTime.UtcNow - cumulativeUtcTime).Ticks;
-				if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * TimeHelper.MilliTick))
+				if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * TimeHelper.MILLI_TICK))
 				{
 					//如果时间相差在 阈值 以内，那么就使用机器时间。
 					return cumulativeUtcTime = DateTime.UtcNow;
@@ -173,7 +173,7 @@ namespace WorldTree
 			}
 
 			//到了这里 机器时间不可信。假如请求计时器超过了请求时间，那么就尝试异步请求一次网络时间
-			if (timeRequestClock > timeRequestTime * TimeHelper.MilliTick)
+			if (timeRequestClock > timeRequestTime * TimeHelper.MILLI_TICK)
 			{
 				timeRequestClock = 0;
 
@@ -197,7 +197,7 @@ namespace WorldTree
 				long stopwatchOffsetTicks = stopwatchClock.ElapsedTicks;
 				offsetTicks = localOffsetTicks - stopwatchOffsetTicks;
 
-				if (offsetTicks > clockThresholdTime * TimeHelper.MilliTick)
+				if (offsetTicks > clockThresholdTime * TimeHelper.MILLI_TICK)
 				{
 					//如果 两个计时器 时间相差大于 阈值，那么判为当前帧发生 机器时间 跳跃。
 					isRequest = true;
@@ -256,11 +256,11 @@ namespace WorldTree
 		/// </remarks>
 		private async TreeTask RequestUtcDateTimeAsync()
 		{
-			DateTime NetTime = await GetNetworkUtcDateTimeAsync();
-			if (NetTime != default)
+			DateTime netTime = await GetNetworkUtcDateTimeAsync();
+			if (netTime != default)
 			{
 				//检测网络时间和机器时间相差
-				long offsetMilliseconds = (NetTime - DateTime.UtcNow).Milliseconds;
+				long offsetMilliseconds = (netTime - DateTime.UtcNow).Milliseconds;
 
 				//网络时间快慢相差都在 阈值 内，则不校准
 				if (Math.Abs(offsetMilliseconds) > networkThresholdTime)
@@ -268,13 +268,13 @@ namespace WorldTree
 					//网络时间相差，快则判为机器时间倒流了，慢则判为时间跳跃了。
 
 					//此时机器时间已不可信，检测网络时间和累计时间相差
-					offsetMilliseconds = (NetTime - cumulativeUtcTime).Milliseconds;
+					offsetMilliseconds = (netTime - cumulativeUtcTime).Milliseconds;
 
 					//如果网络时间比累计时间快，那么就将累计时间校准为网络时间，慢则不校准。
 					if (offsetMilliseconds > 0)
 					{
-						this.Log($"校准为网络时间：{NetTime} {cumulativeUtcTime}");
-						cumulativeUtcTime = NetTime;
+						this.Log($"校准为网络时间：{netTime} {cumulativeUtcTime}");
+						cumulativeUtcTime = netTime;
 
 						//重置网络请求标记
 						isRequest = false;
@@ -302,7 +302,7 @@ namespace WorldTree
 		/// </summary>
 		private DateTime GetNetworkUtcDateTime()
 		{
-			foreach (string ntpServer in ntpServers)
+			foreach (string ntpServer in ntpServerList)
 			{
 				if (TryGetNetworkUtcDateTime(ntpServer, out DateTime networkDateTime)) return networkDateTime;
 			}
@@ -317,7 +317,7 @@ namespace WorldTree
 		/// <returns>成功</returns>
 		private bool TryGetNetworkUtcDateTime(string ntpServer, out DateTime networkDateTime)
 		{
-			Array.Clear(ntpData, 1, ntpData.Length);
+			Array.Clear(ntpDatas, 1, ntpDatas.Length);
 			try
 			{
 				var addresses = Dns.GetHostEntry(ntpServer).AddressList;
@@ -327,17 +327,17 @@ namespace WorldTree
 					socket.Connect(ipEndPoint);
 
 					// 发送请求
-					socket.Send(ntpData);
+					socket.Send(ntpDatas);
 					socket.ReceiveTimeout = receiveTimeout; // 设置接收超时时间（毫秒）
 
 					// 接收来自服务器的响应
-					socket.Receive(ntpData);
+					socket.Receive(ntpDatas);
 					socket.Close();
 				}
 
 				// 从响应中提取传输时间戳
-				ulong intPart = BitConverter.ToUInt32(ntpData, 40);
-				ulong fractPart = BitConverter.ToUInt32(ntpData, 44);
+				ulong intPart = BitConverter.ToUInt32(ntpDatas, 40);
+				ulong fractPart = BitConverter.ToUInt32(ntpDatas, 44);
 
 				// 转换为网络字节序
 				intPart = SwapEndianness(intPart);

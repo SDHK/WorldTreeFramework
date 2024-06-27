@@ -182,7 +182,7 @@ namespace WorldTree
 		/// <summary>
 		/// 世界环境
 		/// </summary>
-		public WorldContext worldContext;
+		public WorldContext WorldContext;
 
 		#endregion
 
@@ -254,7 +254,7 @@ namespace WorldTree
 
 			this.Root = this.AddComponent(out WorldTreeRoot _);
 			this.Root.Root = this.Root;
-			this.worldContext = this.Root.AddComponent(out WorldContext _);
+			this.WorldContext = this.Root.AddComponent(out WorldContext _);
 		}
 
 		#endregion

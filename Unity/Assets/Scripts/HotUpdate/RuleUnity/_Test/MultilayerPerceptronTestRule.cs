@@ -52,25 +52,25 @@ namespace WorldTree
 				if (Input.GetKeyDown(KeyCode.Z))
 				{
 					self.multilayerPerceptronManager.SetInputs(1, 1, 1);
-					self.Log($"结果 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+					self.Log($"结果 {self.multilayerPerceptronManager.layerList[self.multilayerPerceptronManager.layerList.Count - 1].NodeList[0].Result}");
 				}
 
 				if (Input.GetKeyDown(KeyCode.X))
 				{
 					self.multilayerPerceptronManager.SetInputs(1, 0, 1);
-					self.Log($"结果 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+					self.Log($"结果 {self.multilayerPerceptronManager.layerList[self.multilayerPerceptronManager.layerList.Count - 1].NodeList[0].Result}");
 				}
 
 				if (Input.GetKeyDown(KeyCode.C))
 				{
 					self.multilayerPerceptronManager.SetInputs(0, 1, 1);
-					self.Log($"结果 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+					self.Log($"结果 {self.multilayerPerceptronManager.layerList[self.multilayerPerceptronManager.layerList.Count - 1].NodeList[0].Result}");
 				}
 
 				if (Input.GetKeyDown(KeyCode.V))
 				{
 					self.multilayerPerceptronManager.SetInputs(0, 0, 1);
-					self.Log($"结果 {self.multilayerPerceptronManager.layers[self.multilayerPerceptronManager.layers.Count - 1].nodes[0].result}");
+					self.Log($"结果 {self.multilayerPerceptronManager.layerList[self.multilayerPerceptronManager.layerList.Count - 1].NodeList[0].Result}");
 				}
 			}
 		}

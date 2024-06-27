@@ -17,6 +17,9 @@ namespace WorldTree
 		, AsChildBranch
 		, AsAwake
 	{
-		public TreeDictionary<long, DynamicNodeQueue> nodeQueueDictitonary;
+		/// <summary>
+		/// 锁的字典
+		/// </summary>
+		public TreeDictionary<long, DynamicNodeQueue> nodeQueueDict;
 	}
 }

@@ -11,6 +11,9 @@ using System.IO;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 路径工具类
+	/// </summary>
 	public static partial class PathHelper
 	{
 		/// <summary>

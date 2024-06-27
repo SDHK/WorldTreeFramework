@@ -2,20 +2,27 @@
 
 namespace WorldTree
 {
+
+	/// <summary>
+	/// Program
+	/// </summary>
 	internal class Program
 	{
+		/// <summary>
+		/// 启动
+		/// </summary>
 		private static void Main(string[] args)
 		{
-			WorldTreeCore Core = new WorldTreeCore();
+			WorldTreeCore core = new WorldTreeCore();
 
-			Core.Log = Console.WriteLine;
-			Core.LogWarning = Console.WriteLine;
-			Core.LogError = Console.Error.WriteLine;
-			Core.Awake();
+			core.Log = Console.WriteLine;
+			core.LogWarning = Console.WriteLine;
+			core.LogError = Console.Error.WriteLine;
+			core.Awake();
 
-			Core.Root.AddComponent(out WorldHeart _, 1000).Run();//启动世界心跳 设定间隔为1000ms
+			core.Root.AddComponent(out WorldHeart _, 1000).Run();//启动世界心跳 设定间隔为1000ms
 
-			Core.Root.AddComponent(out DotNetTestNode _);
+			core.Root.AddComponent(out DotNetTestNode _);
 		}
 	}
 }

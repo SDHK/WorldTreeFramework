@@ -56,12 +56,12 @@ namespace WorldTree
         /// <summary>
         /// 动态监听器状态
         /// </summary>
-        public ListenerState listenerState { get; set; }
+        public ListenerState ListenerState { get; set; }
 
         /// <summary>
         /// 动态监听目标类型
         /// </summary>
-        public long listenerTarget { get; set; }
+        public long ListenerTarget { get; set; }
         #endregion
     }
 }

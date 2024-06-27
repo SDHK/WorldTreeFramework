@@ -18,7 +18,6 @@ namespace WorldTree
 	public class RuleActuator<R> : RuleActuatorBase, ChildOf<INode>, IRuleActuator<R>
 		, AsAwake
 		where R : IRule
-
 	{
 		public override string ToString()
 		{

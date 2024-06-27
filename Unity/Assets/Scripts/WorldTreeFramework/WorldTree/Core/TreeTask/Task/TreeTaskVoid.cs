@@ -27,8 +27,14 @@ namespace WorldTree.Internal
 	[AsyncMethodBuilder(typeof(TreeTaskVoidMethodBuilder))]
 	public struct TreeTaskVoid : ICriticalNotifyCompletion
 	{
+		/// <summary>
+		/// 协程启动
+		/// </summary>
 		[DebuggerHidden]
 		public void Coroutine() { }
+		/// <summary>
+		/// 默认完成
+		/// </summary>
 		[DebuggerHidden]
 		public bool IsCompleted => true;
 		[DebuggerHidden]

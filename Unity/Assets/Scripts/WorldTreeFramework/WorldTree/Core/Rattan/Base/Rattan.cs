@@ -18,28 +18,38 @@ namespace WorldTree
 	/// </summary>
 	public abstract class Rattan<K> : UnitPoolItem, IRattan<K>
 	{
-		public int Count => Nodes.Count;
-		protected UnitDictionary<K, NodeRef<INode>> Nodes;
-		protected UnitDictionary<long, K> NodeKeys;
+		public int Count => nodeDict.Count;
+		/// <summary>
+		/// 节点字典
+		/// </summary>
+		/// <remarks>键值，节点 </remarks>
+		protected UnitDictionary<K, NodeRef<INode>> nodeDict;
+
+		/// <summary>
+		/// 节点键值字典
+		/// </summary>
+		/// <remarks>节点id，节点键值</remarks>
+		protected UnitDictionary<long, K> nodeKeyDict;
+
 
 		public override void OnGet()
 		{
-			Core.PoolGetUnit(out Nodes);
-			Core.PoolGetUnit(out NodeKeys);
+			Core.PoolGetUnit(out nodeDict);
+			Core.PoolGetUnit(out nodeKeyDict);
 		}
 
 		public bool Contains(K key) => TryGetNode(key, out _);
 
 		public bool ContainsId(long id) => TryGetNodeKey(id, out _);
 
-		public bool TryGetNodeKey(long nodeId, out K key) => NodeKeys.TryGetValue(nodeId, out key) && TryGetNode(key, out _);
+		public bool TryGetNodeKey(long nodeId, out K key) => nodeKeyDict.TryGetValue(nodeId, out key) && TryGetNode(key, out _);
 
 		public bool TryAddNode<N>(K key, N node) where N : class, INode
 		{
-			if (!TryGetNode(key, out _) && !NodeKeys.ContainsKey(node.Id))
+			if (!TryGetNode(key, out _) && !nodeKeyDict.ContainsKey(node.Id))
 			{
-				Nodes.Add(key, node);
-				NodeKeys.Add(node.Id, key);
+				nodeDict.Add(key, node);
+				nodeKeyDict.Add(node.Id, key);
 				return true;
 			}
 			return false;
@@ -47,12 +57,12 @@ namespace WorldTree
 
 		public bool TryGetNode(K key, out INode node)
 		{
-			if (Nodes.TryGetValue(key, out var nodeRef))
+			if (nodeDict.TryGetValue(key, out var nodeRef))
 			{
 				if (nodeRef.Value is null)
 				{
-					Nodes.Remove(key);
-					NodeKeys.Remove(nodeRef.NodeId);
+					nodeDict.Remove(key);
+					nodeKeyDict.Remove(nodeRef.NodeId);
 					node = null;
 					return false;
 				}
@@ -68,7 +78,7 @@ namespace WorldTree
 
 		public bool TryGetNodeById(long nodeId, out INode node)
 		{
-			if (NodeKeys.TryGetValue(nodeId, out K key))
+			if (nodeKeyDict.TryGetValue(nodeId, out K key))
 			{
 				return TryGetNode(key, out node);
 			}
@@ -82,22 +92,22 @@ namespace WorldTree
 
 		public void RemoveNode(long nodeId)
 		{
-			if (NodeKeys.TryGetValue(nodeId, out K key))
+			if (nodeKeyDict.TryGetValue(nodeId, out K key))
 			{
-				NodeKeys.Remove(nodeId);
-				Nodes.Remove(key);
+				nodeKeyDict.Remove(nodeId);
+				nodeDict.Remove(key);
 			}
 		}
 
 		public void Clear()
 		{
-			Nodes.Clear();
-			NodeKeys.Clear();
+			nodeDict.Clear();
+			nodeKeyDict.Clear();
 		}
 
 		public IEnumerator<INode> GetEnumerator()
 		{
-			foreach (var item in Nodes.Values)
+			foreach (var item in nodeDict.Values)
 			{
 				INode node = item.Value;
 				if (node != null) yield return node;
@@ -108,10 +118,10 @@ namespace WorldTree
 
 		public override void OnRecycle()
 		{
-			this.Nodes.Dispose();
-			this.NodeKeys.Dispose();
-			this.Nodes = null;
-			this.NodeKeys = null;
+			this.nodeDict.Dispose();
+			this.nodeKeyDict.Dispose();
+			this.nodeDict = null;
+			this.nodeKeyDict = null;
 		}
 	}
 }

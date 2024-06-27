@@ -17,14 +17,14 @@ namespace WorldTree
         /// </summary>
         public static bool ListenerSwitchesTarget<T>(this IDynamicNodeListener self, ListenerState state)
         {
-            if (self.listenerTarget != TypeInfo<T>.TypeCode)
+            if (self.ListenerTarget != TypeInfo<T>.TypeCode)
             {
                 //判断是否为监听器
                 if (self.Core.RuleManager.DynamicListenerTypeHash.Contains(self.Type))
                 {
                     self.Core.ReferencedPoolManager.RemoveDynamicListener(self);
-                    self.listenerTarget = TypeInfo<T>.TypeCode;
-                    self.listenerState = state;
+                    self.ListenerTarget = TypeInfo<T>.TypeCode;
+                    self.ListenerState = state;
                     self.Core.ReferencedPoolManager.TryAddDynamicListener(self);
                     return true;
                 }
@@ -42,14 +42,14 @@ namespace WorldTree
         /// </summary>
         public static bool ListenerSwitchesTarget(this IDynamicNodeListener self, long targetType, ListenerState state)
         {
-            if (self.listenerTarget != targetType)
+            if (self.ListenerTarget != targetType)
             {
                 //判断是否为监听器
                 if (self.Core.RuleManager.DynamicListenerTypeHash.Contains(self.Type))
                 {
                     self.Core.ReferencedPoolManager.RemoveDynamicListener(self);
-                    self.listenerTarget = targetType;
-                    self.listenerState = state;
+                    self.ListenerTarget = targetType;
+                    self.ListenerState = state;
                     self.Core.ReferencedPoolManager.TryAddDynamicListener(self);
                     return true;
                 }

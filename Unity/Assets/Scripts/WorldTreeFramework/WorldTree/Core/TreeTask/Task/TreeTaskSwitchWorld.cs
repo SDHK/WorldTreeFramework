@@ -14,6 +14,9 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 切换世界线任务
+	/// </summary>
 	public class TreeTaskSwitchWorld : AwaiterBase
 		, ChildOf<WorldContext>
 		, AsAwake<WorldContext>
@@ -24,7 +27,9 @@ namespace WorldTree
 		/// </summary>
 		public WorldContext worldContext;
 
-
+		/// <summary>
+		/// 内部协程
+		/// </summary>
 		private async TreeTaskVoid InnerCoroutine()
 		{
 			await this;

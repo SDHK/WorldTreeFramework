@@ -17,17 +17,26 @@ namespace WorldTree
 	/// </summary>
 	public class SafeProxy
 	{
-		private const uint Poly = 0xedb88320u;
-		private readonly uint[] _table = new uint[16 * 256];
+		/// <summary>
+		/// 多项式
+		/// </summary>
+		private const uint POLY = 0xedb88320u;
+		/// <summary>
+		/// 表
+		/// </summary>
+		private readonly uint[] tables = new uint[16 * 256];
 
 		internal SafeProxy()
 		{
-			Init(Poly);
+			Init(POLY);
 		}
 
+		/// <summary>
+		/// 初始化
+		/// </summary>
 		public void Init(uint poly)
 		{
-			var table = _table;
+			var table = this.tables;
 			for (uint i = 0; i < 256; i++)
 			{
 				uint res = i;
@@ -38,12 +47,14 @@ namespace WorldTree
 				}
 			}
 		}
-
+		/// <summary>
+		/// 附加
+		/// </summary>
 		public uint Append(uint crc, byte[] input, int offset, int length)
 		{
 			uint crcLocal = uint.MaxValue ^ crc;
 
-			uint[] table = _table;
+			uint[] table = this.tables;
 			while (length >= 16)
 			{
 				var a = table[(3 * 256) + input[offset + 12]]
@@ -83,7 +94,10 @@ namespace WorldTree
 	/// </summary>
 	public class CRC32Algorithm : HashAlgorithm
 	{
-		private uint _currentCrc;
+		/// <summary>
+		/// 当前CRC
+		/// </summary>
+		private uint currentCrc;
 
 		/// <summary>
 		/// 初始化一个新的实例类 <see cref="CRC32Algorithm"/> 。
@@ -100,7 +114,7 @@ namespace WorldTree
 		/// </summary>
 		public override void Initialize()
 		{
-			_currentCrc = 0;
+			currentCrc = 0;
 		}
 
 		/// <summary>
@@ -108,7 +122,7 @@ namespace WorldTree
 		/// </summary>
 		protected override void HashCore(byte[] input, int offset, int length)
 		{
-			_currentCrc = AppendInternal(_currentCrc, input, offset, length);
+			currentCrc = AppendInternal(currentCrc, input, offset, length);
 		}
 
 		/// <summary>
@@ -117,9 +131,9 @@ namespace WorldTree
 		protected override byte[] HashFinal()
 		{
 			if (BitConverter.IsLittleEndian)
-				return new[] { (byte)_currentCrc, (byte)(_currentCrc >> 8), (byte)(_currentCrc >> 16), (byte)(_currentCrc >> 24) };
+				return new[] { (byte)currentCrc, (byte)(currentCrc >> 8), (byte)(currentCrc >> 16), (byte)(currentCrc >> 24) };
 			else
-				return new[] { (byte)(_currentCrc >> 24), (byte)(_currentCrc >> 16), (byte)(_currentCrc >> 8), (byte)_currentCrc };
+				return new[] { (byte)(currentCrc >> 24), (byte)(currentCrc >> 16), (byte)(currentCrc >> 8), (byte)currentCrc };
 		}
 
 		/// <summary>
@@ -233,7 +247,7 @@ namespace WorldTree
 		/// <summary>
 		/// 安全代理
 		/// </summary>
-		private static readonly SafeProxy _proxy = new SafeProxy();
+		private static readonly SafeProxy proxy = new SafeProxy();
 
 		/// <summary>
 		/// 将指定的字节数组的CRC32值附加到当前CRC32值。
@@ -247,7 +261,7 @@ namespace WorldTree
 		{
 			if (length > 0)
 			{
-				return _proxy.Append(initial, input, offset, length);
+				return proxy.Append(initial, input, offset, length);
 			}
 			else
 				return initial;

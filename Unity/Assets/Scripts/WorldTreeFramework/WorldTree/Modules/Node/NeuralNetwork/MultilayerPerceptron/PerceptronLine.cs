@@ -18,26 +18,29 @@ namespace WorldTree
     public class PerceptronLine : Node, ChildOf<PerceptronNode>
         , AsAwake<PerceptronNode, PerceptronNode>
     {
-        public static Random rand = new Random();
+		/// <summary>
+		/// 随机数
+		/// </summary>
+		public static Random rand = new Random();
 
         /// <summary>
         /// 上连接
         /// </summary>
-        public PerceptronNode node1;
+        public PerceptronNode Node1;
 
         /// <summary>
         /// 下连接
         /// </summary>
-        public PerceptronNode node2;
+        public PerceptronNode Node2;
 
         /// <summary>
         /// 权重
         /// </summary>
-        public double weight = 0;
+        public double Weight = 0;
 
         public override string ToString()
         {
-            return $"{this.GetType().Name}\tweight:[{weight}]";
+            return $"{this.GetType().Name}\tweight:[{Weight}]";
         }
     }
 

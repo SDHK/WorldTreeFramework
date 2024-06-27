@@ -12,10 +12,6 @@
 
 */
 
-using System;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-
 namespace WorldTree.Internal
 {
 	/// <summary>
@@ -27,6 +23,6 @@ namespace WorldTree.Internal
 
 	{
 		public override TreeTaskToken GetResult()
-		{ Result = m_TreeTaskToken; return base.GetResult(); }
+		{ Result = TreeTaskToken; return base.GetResult(); }
 	}
 }

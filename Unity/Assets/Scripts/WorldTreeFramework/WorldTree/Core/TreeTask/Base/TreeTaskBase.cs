@@ -60,17 +60,30 @@ namespace WorldTree
 
 	}
 
+	/// <summary>
+	/// 异步任务基类
+	/// </summary>
 	public abstract class AwaiterBase<T> : TreeTaskBase
 	{
-
+		/// <summary>
+		/// 获取等待器
+		/// </summary>
 		public AwaiterBase<T> GetAwaiter() => this;
-
+		/// <summary>
+		/// 结果
+		/// </summary>
 		public T Result;
+		/// <summary>
+		/// 获取结果
+		/// </summary>
 		public virtual T GetResult()
 		{
 			OnGetResult();
 			return Result;
 		}
+		/// <summary>
+		/// 设置结果
+		/// </summary>
 		public void SetResult(T result)
 		{
 			this.Result = result;
@@ -78,36 +91,49 @@ namespace WorldTree
 		}
 	}
 
+	/// <summary>
+	/// 异步任务基类
+	/// </summary>
 	public abstract class AwaiterBase : TreeTaskBase
 	{
-
+		/// <summary>
+		/// 获取等待器
+		/// </summary>
 		public AwaiterBase GetAwaiter() => this;
 
+		/// <summary>
+		/// 获取结果
+		/// </summary>
 		public void GetResult()
 		{
 			OnGetResult();
 		}
 
+		/// <summary>
+		/// 设置结果
+		/// </summary>
 		public void SetResult()
 		{
 			this.SetCompleted();
 		}
 	}
 
-
+	/// <summary>
+	/// 树任务基类
+	/// </summary>
 	public abstract class TreeTaskBase : Node, ICriticalNotifyCompletion
 	{
 		/// <summary>
 		/// 树任务令牌
 		/// </summary>
 		/// <remarks>如果令牌被释放，异步链将变成无令牌控制状态</remarks>
-		public NodeRef<TreeTaskToken> m_TreeTaskToken;
+		public NodeRef<TreeTaskToken> TreeTaskToken;
 
 		/// <summary>
 		/// 关联令牌的任务
 		/// </summary>
 		/// <remarks>如果关联任务被意外释放，令牌传播可能断掉</remarks>
-		public NodeRef<TreeTaskBase> m_RelevanceTask;
+		public NodeRef<TreeTaskBase> RelevanceTask;
 
 		/// <summary>
 		/// 任务状态
@@ -136,7 +162,7 @@ namespace WorldTree
 			if (IsRecycle || IsCompleted) throw new InvalidOperationException($"[{Id}]({this.GetType().Name})当前任务早已完成");
 
 			//判断任务暂停状态
-			if (m_TreeTaskToken.Value is TreeTaskToken token)
+			if (TreeTaskToken.Value is TreeTaskToken token)
 			{
 				switch (token.State)
 				{
@@ -203,8 +229,8 @@ namespace WorldTree
 		public override void OnDispose()
 		{
 			state = AwaiterState.Pending;
-			m_RelevanceTask = default;
-			m_TreeTaskToken = default;
+			RelevanceTask = default;
+			TreeTaskToken = default;
 			m_Continuation = null;
 			base.OnDispose();
 		}
@@ -224,11 +250,11 @@ namespace WorldTree
 			TreeTaskBase nowTask = this;
 			while (nowTask != null)
 			{
-				if (nowTask.m_TreeTaskToken.Value == null)
+				if (nowTask.TreeTaskToken.Value == null)
 				{
 					//nowTask.Log($"{nowTask.Id}({nowTask.GetType().Name})设置令牌：{treeTaskToken?.Id}!!!!!!!!");
 					//将令牌传递给更深层的关联任务
-					nowTask.m_TreeTaskToken = treeTaskToken;
+					nowTask.TreeTaskToken = treeTaskToken;
 				}
 				else
 				{
@@ -236,7 +262,7 @@ namespace WorldTree
 					//已有令牌的情况，发生在异步方法内部新建了令牌，所以当前传递的令牌不再往下传播，直接退出。
 					return this;
 				}
-				nowTask = nowTask.m_RelevanceTask;
+				nowTask = nowTask.RelevanceTask;
 			}
 			return this;
 		}
@@ -248,7 +274,7 @@ namespace WorldTree
 		{
 			TreeTaskBase nowTask = this;
 			//找到最深层的关联任务
-			while (nowTask.m_RelevanceTask.Value != null) nowTask = nowTask.m_RelevanceTask;
+			while (nowTask.RelevanceTask.Value != null) nowTask = nowTask.RelevanceTask;
 			//如果是同步任务就直接执行
 			if (nowTask is ISyncTask)
 			{

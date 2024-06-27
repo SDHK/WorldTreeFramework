@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
 using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,9 +46,37 @@ namespace WorldTree.Analyzer
 						// 不需要检查的修饰符
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(structDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) {
 
-							if (!codeDiagnostic.Check.Invoke(structDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(structDeclaration)))
+							if (!codeDiagnostic.Check.Invoke(structDeclaration.Identifier.Text))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, structDeclaration.GetLocation(), structDeclaration.Identifier.Text));
+							}
+							//检查是否需要添加注释
+							else if (codeDiagnostic.NeedComment)
+							{
+								//判断是否是部分结构体
+								if (structDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))
+								{
+									// 获取所有部分结构体的语法声明
+									IEnumerable<StructDeclarationSyntax> partialDeclarations = typeSymbol.DeclaringSyntaxReferences.Select(syntaxRef => syntaxRef.GetSyntax()).OfType<StructDeclarationSyntax>();
+									bool isComment = false;
+									// 遍历所有部分结构体
+									foreach (StructDeclarationSyntax partialDecl in partialDeclarations)
+									{
+										if (TreeSyntaxHelper.CheckSummaryComment(partialDecl))
+										{
+											isComment = true;
+											break;
+										}
+									}
+									if (!isComment)
+									{
+										context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, structDeclaration.GetLocation(), structDeclaration.Identifier.Text));
+									}
+								}
+								else if (!TreeSyntaxHelper.CheckSummaryComment(structDeclaration))
+								{
+									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, structDeclaration.GetLocation(), structDeclaration.Identifier.Text));
+								}
 							}
 						}
 					}

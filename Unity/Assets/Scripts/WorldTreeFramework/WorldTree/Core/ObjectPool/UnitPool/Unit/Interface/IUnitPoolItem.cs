@@ -11,17 +11,17 @@
  * 描述:  
   
     泛型对象接口
-    让IUnit类获得对象池管理的生命周期
+    让IUnit类获得对象池管理
 
 ******************************/
 
 namespace WorldTree
 {
 
-    /// <summary>
-    /// 单位池对象接口
-    /// </summary>
-    public interface IUnitPoolItem : IUnit
+	/// <summary>
+	/// 单位池对象接口
+	/// </summary>
+	public interface IUnitPoolItem : IUnit
     {
         /// <summary>
         /// 世界树核心
@@ -43,27 +43,5 @@ namespace WorldTree
         /// 回收对象
         /// </summary>
         new void Dispose();
-    }
-
-    /// <summary>
-    /// 单位池事件对象接口
-    /// </summary>
-    public interface IUnitPoolEventItem : IUnitPoolItem
-    {
-
-        /// <summary>
-        /// 对象新建时
-        /// </summary>
-        void OnNew();
-
-        /// <summary>
-        /// 对象获取时
-        /// </summary>
-        void OnGet();
-
-        /// <summary>
-        /// 对象回收时
-        /// </summary>
-        void OnRecycle();
     }
 }

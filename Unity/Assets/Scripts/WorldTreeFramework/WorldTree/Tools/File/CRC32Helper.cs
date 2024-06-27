@@ -13,6 +13,9 @@ using System.IO;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// CRC32校验工具类
+	/// </summary>
 	public static partial class CRC32Helper
 	{
 		/// <summary>

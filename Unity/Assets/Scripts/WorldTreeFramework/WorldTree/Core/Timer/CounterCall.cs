@@ -20,14 +20,24 @@ namespace WorldTree
 		, AsTreeTaskTokenEvent
 
 	{
+		/// <summary>
+		/// 是否运行
+		/// </summary>
 		public bool isRun = false;
+		/// <summary>
+		/// 计数
+		/// </summary>
 		public int count = 0;
+		/// <summary>
+		/// 计数结束
+		/// </summary>
 		public int countOut = 0;
+
 
 		/// <summary>
 		/// 计数结束回调
 		/// </summary>
-		public RuleActuator<ISendRule> callback;
+		public RuleActuator<ISendRule> Callback;
 
 		public override string ToString()
 		{
@@ -44,7 +54,7 @@ namespace WorldTree
 				self.count = count;
 				self.countOut = count;
 				self.isRun = true;
-				self.AddChild(out self.callback);
+				self.AddChild(out self.Callback);
 			}
 		}
 
@@ -57,7 +67,7 @@ namespace WorldTree
 					self.count++;
 					if (self.count >= self.countOut)
 					{
-						self.callback.Send();
+						self.Callback.Send();
 						self.Dispose();
 					}
 				}
@@ -69,7 +79,7 @@ namespace WorldTree
 			protected override void Execute(CounterCall self)
 			{
 				self.isRun = false;
-				self.callback = null;
+				self.Callback = null;
 			}
 		}
 
@@ -89,7 +99,7 @@ namespace WorldTree
 
 					case TokenState.Cancel:
 						self.isRun = false;
-						self.callback.Send();
+						self.Callback.Send();
 						self.Dispose();
 						break;
 				}

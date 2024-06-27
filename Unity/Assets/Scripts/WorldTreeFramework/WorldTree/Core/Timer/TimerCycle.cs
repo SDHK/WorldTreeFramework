@@ -17,9 +17,18 @@ namespace WorldTree
     /// </summary>
     public class TimerCycle : Node
     {
-        public float time = 0;
-        public float timeOutTime = 0;
-        public RuleActuator<ISendRule> callback;
+		/// <summary>
+		/// 是否运行
+		/// </summary>
+		public float time = 0;
+		/// <summary>
+		/// 计时结束时间
+		/// </summary>
+		public float timeOutTime = 0;
+		/// <summary>
+		/// 计时结束回调
+		/// </summary>
+		public RuleActuator<ISendRule> Callback;
 
     }
 
@@ -36,7 +45,7 @@ namespace WorldTree
                     if (self.time >= self.timeOutTime)
                     {
                         self.time = 0;
-                        self.callback?.Send();
+                        self.Callback?.Send();
                     }
                 }
             }

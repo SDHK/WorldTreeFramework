@@ -17,27 +17,38 @@ namespace WorldTree
     /// </summary>
     public partial struct PlaneFloat
     {
-        internal const int size = 16;
-        private Vector3Float m_Normal;
-        private float m_Distance;
+        /// <summary>
+        /// 大小
+        /// </summary>
+        internal const int SIZE = 16;
+
+		/// <summary>
+		/// 平面的法向量。
+		/// </summary>
+		private Vector3Float normal;
+
+		/// <summary>
+		/// 沿平面法线从平面到世界原点的距离。
+		/// </summary>
+		private float distance;
 
 
         /// <summary>
         /// 平面的法向量。
         /// </summary>
-        public Vector3Float normal
+        public Vector3Float Normal
         {
-            get => this.m_Normal;
-            set => this.m_Normal = value;
+            get => this.normal;
+            set => this.normal = value;
         }
 
         /// <summary>
         /// 沿平面法线从平面到世界原点的距离。
         /// </summary>
-        public float distance
+        public float Distance
         {
-            get => this.m_Distance;
-            set => this.m_Distance = value;
+            get => this.distance;
+            set => this.distance = value;
         }
 
 
@@ -48,8 +59,8 @@ namespace WorldTree
         /// <param name="inPoint">平面上的一点</param>
         public PlaneFloat(Vector3Float inNormal, Vector3Float inPoint)
         {
-            this.m_Normal = inNormal.normalized;
-            this.m_Distance = -(this.m_Normal.Dot(inPoint));
+            this.normal = inNormal.Normalized;
+            this.distance = -(this.normal.Dot(inPoint));
         }
 
         /// <summary>
@@ -59,8 +70,8 @@ namespace WorldTree
         /// <param name="d">沿平面法线从平面到世界原点的距离</param>
         public PlaneFloat(Vector3Float inNormal, float d)
         {
-            this.m_Normal = inNormal.normalized;
-            this.m_Distance = d;
+            this.normal = inNormal.Normalized;
+            this.distance = d;
         }
 
         /// <summary>
@@ -68,18 +79,18 @@ namespace WorldTree
         /// </summary>
         public PlaneFloat(Vector3Float a, Vector3Float b, Vector3Float c)
         {
-            this.m_Normal = ((b - a).Cross(c - a)).normalized;
-            this.m_Distance = -(this.m_Normal.Dot(a));
+            this.normal = ((b - a).Cross(c - a)).Normalized;
+            this.distance = -(this.normal.Dot(a));
         }
 
         /// <summary>
         /// 标准化平面
         /// </summary>
-        public PlaneFloat normalized
+        public PlaneFloat Normalized
         {
             get
             {
-                return new PlaneFloat(this.normal, this.distance).Normalize();
+                return new PlaneFloat(this.Normal, this.Distance).Normalize();
             }
         }
 
@@ -90,12 +101,12 @@ namespace WorldTree
         /// </summary>
         public PlaneFloat Normalize()
         {
-            var sqrMagnitude = this.normal.sqrMagnitude;
+            var sqrMagnitude = this.Normal.SqrMagnitude;
             if ((double)Math.Abs(sqrMagnitude - 1f) < 1.1920928955078125E-07)
                 return this;
             float magnitude = (float)Math.Sqrt((double)sqrMagnitude);
-            this.normal /= magnitude;
-            this.distance /= magnitude;
+            this.Normal /= magnitude;
+            this.Distance /= magnitude;
             return this;
         }
 
@@ -105,8 +116,8 @@ namespace WorldTree
         /// </summary>
         public void SetNormalAndPosition(Vector3Float inNormal, Vector3Float inPoint)
         {
-            this.m_Normal = inNormal.normalized;
-            this.m_Distance = -(inNormal.Dot(inPoint));
+            this.normal = inNormal.Normalized;
+            this.distance = -(inNormal.Dot(inPoint));
         }
 
         /// <summary>
@@ -115,8 +126,8 @@ namespace WorldTree
         /// <remarks>当你往下看平面的上表面时，这些点是顺时针旋转的。</remarks>
         public void Set3Points(Vector3Float a, Vector3Float b, Vector3Float c)
         {
-            this.m_Normal = ((b - a).Cross(c - a)).normalized;
-            this.m_Distance = -(this.m_Normal.Dot(a));
+            this.normal = ((b - a).Cross(c - a)).Normalized;
+            this.distance = -(this.normal.Dot(a));
         }
 
         /// <summary>
@@ -124,8 +135,8 @@ namespace WorldTree
         /// </summary>
         public void Flip()
         {
-            this.m_Normal = -this.m_Normal;
-            this.m_Distance = -this.m_Distance;
+            this.normal = -this.normal;
+            this.distance = -this.distance;
         }
 
         #endregion

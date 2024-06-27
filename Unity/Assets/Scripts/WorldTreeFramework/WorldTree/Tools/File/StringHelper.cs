@@ -9,6 +9,9 @@
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 字符串工具类
+	/// </summary>
 	public static partial class StringHelper
 	{
 		/// <summary>

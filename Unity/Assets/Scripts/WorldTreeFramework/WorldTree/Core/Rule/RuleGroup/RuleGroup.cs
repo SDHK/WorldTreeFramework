@@ -8,16 +8,15 @@
 
 */
 
-using System;
 using System.Collections.Generic;
 
 namespace WorldTree
 {
 
-    /// <summary>
-    /// 法则集合 接口基类
-    /// </summary>
-    public interface IRuleGroup { }
+	/// <summary>
+	/// 法则集合 接口基类
+	/// </summary>
+	public interface IRuleGroup { }
 
     /// <summary>
     /// 法则集合 逆变泛型接口

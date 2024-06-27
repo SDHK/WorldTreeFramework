@@ -13,7 +13,7 @@ namespace WorldTree
 		/// <summary>
 		/// 忽略类型名单
 		/// </summary>
-		public TreeHashSet<long> m_IgnoreTypeHashSet = new TreeHashSet<long>();
+		public TreeHashSet<long> ignoreTypeHash = new TreeHashSet<long>();
 
 		public override void Dispose()
 		{
@@ -34,7 +34,7 @@ namespace WorldTree
 		/// <summary>
 		/// 池集合字典
 		/// </summary>
-		public TreeDictionary<long, T> m_Pools = new TreeDictionary<long, T>();
+		public TreeDictionary<long, T> poolDict = new TreeDictionary<long, T>();
 
 
 		/// <summary>
@@ -43,10 +43,10 @@ namespace WorldTree
 		public virtual bool TryNewOrGetPool(long type, out T pool)
 		{
 			//忽略类型表检测
-			if (!m_IgnoreTypeHashSet.Contains(type))
+			if (!ignoreTypeHash.Contains(type))
 			{
 				//不存在则新建
-				if (!m_Pools.TryGetValue(type, out pool))
+				if (!poolDict.TryGetValue(type, out pool))
 				{
 					pool = NewPool(type);
 				}
@@ -63,8 +63,8 @@ namespace WorldTree
 		{
 			this.Core.NewNodeLifecycle(out T pool);
 			pool.ObjectType = type.CodeToType();
-			pool.ObjectTypeCore = type;
-			this.m_Pools.Add(pool.ObjectTypeCore, pool);
+			pool.ObjectTypeCode = type;
+			this.poolDict.Add(pool.ObjectTypeCode, pool);
 			pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, this);
 			pool.SetActive(true);
 			return pool;
@@ -99,7 +99,7 @@ namespace WorldTree
 			}
 			else if (obj is T Tpool)
 			{
-				m_Pools.Remove(Tpool.ObjectTypeCore);
+				poolDict.Remove(Tpool.ObjectTypeCode);
 			}
 			return false;
 		}
@@ -111,7 +111,7 @@ namespace WorldTree
 		/// </summary>
 		public virtual bool TryGetPool(long type, out T pool)
 		{
-			return m_Pools.TryGetValue(type, out pool);
+			return poolDict.TryGetValue(type, out pool);
 		}
 
 		/// <summary>
@@ -119,7 +119,7 @@ namespace WorldTree
 		/// </summary>
 		public virtual void DisposePool(long type)
 		{
-			if (m_Pools.TryGetValue(type, out T pool))
+			if (poolDict.TryGetValue(type, out T pool))
 			{
 				pool.Dispose();
 			}

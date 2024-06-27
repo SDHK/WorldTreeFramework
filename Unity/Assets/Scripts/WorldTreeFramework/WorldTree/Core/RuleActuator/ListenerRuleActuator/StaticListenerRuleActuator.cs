@@ -20,7 +20,7 @@ namespace WorldTree
     {
         public override string ToString()
         {
-            return $"StaticListenerRuleActuator : {ruleGroup?.RuleType.CodeToType()}";
+            return $"StaticListenerRuleActuator : {ruleGroupDict?.RuleType.CodeToType()}";
         }
     }
 
@@ -30,7 +30,7 @@ namespace WorldTree
         {
             protected override void Execute(StaticListenerRuleActuator self, RuleGroup arg1)
             {
-                self.ruleGroup = arg1;
+                self.ruleGroupDict = arg1;
             }
         }
 
@@ -40,7 +40,7 @@ namespace WorldTree
         public static void RuleActuatorAddListener(this StaticListenerRuleActuator self)
         {
             //遍历法则集合获取监听器类型
-            foreach (var listenerType in self.ruleGroup)
+            foreach (var listenerType in self.ruleGroupDict)
             {
                 //从池里拿到已存在的监听器
                 if (self.Core.ReferencedPoolManager.TryGetPool(listenerType.Key, out ReferencedPool listenerPool))

@@ -22,10 +22,4 @@ namespace WorldTree
 	/// </summary>
 	public interface Update : ISendRule, ILifeCycleRule
 	{ }
-
-	/// <summary>
-	/// 新增测试法则
-	/// </summary>
-	public interface TestEvent : ISendRule, IMethodRule
-	{ }
 }

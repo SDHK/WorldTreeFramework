@@ -23,19 +23,19 @@ namespace WorldTree
 		/// <summary>
 		/// 全部节点
 		/// </summary>
-		public UnitDictionary<long, INode> allNode = new UnitDictionary<long, INode>();
+		public UnitDictionary<long, INode> allNodeDict = new UnitDictionary<long, INode>();
 		/// <summary>
 		/// 分类节点
 		/// </summary>
-		public UnitDictionary<long, ReferencedPool> pools = new UnitDictionary<long, ReferencedPool>();
+		public UnitDictionary<long, ReferencedPool> poolDict = new UnitDictionary<long, ReferencedPool>();
 
 		public override void OnDispose()
 		{
 			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
-			allNode.Clear();
-			pools.Clear();
-			allNode = null;
-			pools = null;
+			allNodeDict.Clear();
+			poolDict.Clear();
+			allNodeDict = null;
+			poolDict = null;
 			this.IsRecycle = true;
 			this.IsDisposed = true;
 		}
@@ -50,7 +50,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryAdd(this ReferencedPoolManager self, INode node)
 		{
-			self.allNode.TryAdd(node.Id, node);
+			self.allNodeDict.TryAdd(node.Id, node);
 			return self.GetPool(node.Type).TryAdd(node.Id, node);
 		}
 
@@ -59,7 +59,7 @@ namespace WorldTree
 		/// </summary>
 		public static void Remove(this ReferencedPoolManager self, INode node)
 		{
-			self.allNode.Remove(node.Id);
+			self.allNodeDict.Remove(node.Id);
 			if (self.TryGetPool(node.Type, out ReferencedPool pool))
 			{
 				pool.Remove(node.Id);
@@ -71,11 +71,11 @@ namespace WorldTree
 		/// </summary>
 		public static ReferencedPool GetPool(this ReferencedPoolManager self, long type)
 		{
-			if (!self.pools.TryGetValue(type, out ReferencedPool pool))
+			if (!self.poolDict.TryGetValue(type, out ReferencedPool pool))
 			{
 				self.Core.NewNodeLifecycle(out pool);
 				pool.ReferencedType = type.CodeToType();
-				self.pools.Add(type, pool);
+				self.poolDict.Add(type, pool);
 				pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, self);
 				pool.SetActive(true);
 			}
@@ -86,7 +86,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGetPool(this ReferencedPoolManager self, long type, out ReferencedPool pool)
 		{
-			return self.pools.TryGetValue(type, out pool);
+			return self.poolDict.TryGetValue(type, out pool);
 		}
 
 

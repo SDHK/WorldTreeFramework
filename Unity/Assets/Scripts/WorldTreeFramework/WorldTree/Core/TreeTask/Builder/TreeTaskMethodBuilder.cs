@@ -27,17 +27,27 @@ namespace WorldTree.Internal
 	/// </summary>
 	public struct TreeTaskMethodBuilder
 	{
+		/// <summary>
+		/// 状态机
+		/// </summary>
 		private TreeTaskStateMachine treeTaskStateMachine;
+		/// <summary>
+		/// 任务
+		/// </summary>
 		private TreeTask task;
-		// 1. Static Create method.
 
+		/// <summary>
+		/// 创建一个新的构建器
+		/// </summary>
 		[DebuggerHidden]
 		public static TreeTaskMethodBuilder Create()
 		{
 			return new TreeTaskMethodBuilder();
 		}
 
-		// 2. TaskLike Task property.
+		/// <summary>
+		/// 任务
+		/// </summary>
 		[DebuggerHidden]
 		public TreeTask Task
 		{
@@ -47,7 +57,9 @@ namespace WorldTree.Internal
 			}
 		}
 
-		// 3. SetException
+		/// <summary>
+		/// 设置异常
+		/// </summary>
 		[DebuggerHidden]
 		public void SetException(Exception exception)
 		{
@@ -59,7 +71,9 @@ namespace WorldTree.Internal
 			}
 		}
 
-		// 4. SetResult
+		/// <summary>
+		/// 设置结果
+		/// </summary>
 		public void SetResult()
 		{
 			
@@ -72,7 +86,9 @@ namespace WorldTree.Internal
 			}
 		}
 
-		// 5. AwaitOnCompleted
+		/// <summary>
+		/// 等待完成
+		/// </summary>
 		[DebuggerHidden]
 
 		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
@@ -80,8 +96,9 @@ namespace WorldTree.Internal
 			AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
 		}
 
-		// 6. AwaitUnsafeOnCompleted
-		[SecuritySafeCritical]
+		/// <summary>
+		/// 等待完成
+		/// </summary>
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
 
@@ -115,17 +132,16 @@ namespace WorldTree.Internal
 				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
 				//任务关联
 				//task.Log($"新建任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
-				task.m_RelevanceTask = awaiter;
+				task.RelevanceTask = awaiter;
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
-
 			}
 			else
 			{
-				if (task.m_TreeTaskToken.Value != null)
+				if (task.TreeTaskToken.Value != null)
 				{
 					//task.Log($"当前任务[{task.Id}] 有令牌，设置令牌[{task.m_TreeTaskToken.Value.Id}]给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 					//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
-					awaiter.SetToken(task.m_TreeTaskToken);
+					awaiter.SetToken(task.TreeTaskToken);
 				}
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 				awaiter.FindSyncTaskSetCompleted();
@@ -133,29 +149,41 @@ namespace WorldTree.Internal
 
 		}
 
-		// 7. Start
+		/// <summary>
+		/// 开始
+		/// </summary>
 		[DebuggerHidden]
 		public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
 		{
 			stateMachine.MoveNext();
 		}
 
-		// 8. SetStateMachine
+		/// <summary>
+		/// 设置状态机
+		/// </summary>
 		[DebuggerHidden]
 		public void SetStateMachine(IAsyncStateMachine stateMachine)
 		{
 		}
 	}
 
-
-
+	/// <summary>
+	/// 泛型异步任务构建器
+	/// </summary>
 	public struct TreeTaskMethodBuilder<T>
 	{
+		/// <summary>
+		/// 状态机
+		/// </summary>
 		private TreeTaskStateMachine treeTaskStateMachine;
-
+		/// <summary>
+		/// 任务
+		/// </summary>
 		private TreeTask<T> task;
-		// 1. Static Create method.
 
+		/// <summary>
+		/// 创建一个新的构建器
+		/// </summary>
 		[DebuggerHidden]
 		public static TreeTaskMethodBuilder<T> Create()
 		{
@@ -163,7 +191,9 @@ namespace WorldTree.Internal
 			return builder;
 		}
 
-		// 2. TaskLike Task property.
+		/// <summary>
+		/// 任务
+		/// </summary>
 		[DebuggerHidden]
 		public TreeTask<T> Task
 		{
@@ -173,7 +203,9 @@ namespace WorldTree.Internal
 			}
 		}
 
-		// 3. SetException
+		/// <summary>
+		/// 设置异常
+		/// </summary>
 		[DebuggerHidden]
 		public void SetException(Exception exception)
 		{
@@ -186,7 +218,9 @@ namespace WorldTree.Internal
 			}
 		}
 
-		// 4. SetResult
+		/// <summary>
+		/// 设置结果
+		/// </summary>
 		[DebuggerHidden]
 
 		public void SetResult(T ret)
@@ -200,15 +234,18 @@ namespace WorldTree.Internal
 			}
 		}
 
-		// 5. AwaitOnCompleted
+		/// <summary>
+		/// 等待完成
+		/// </summary>
 		[DebuggerHidden]
-
 		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, INotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
 			AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
 		}
 
-		// 6. AwaitUnsafeOnCompleted
+		/// <summary>
+		/// 等待完成
+		/// </summary>
 		[SecuritySafeCritical]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : TreeTaskBase, ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
@@ -242,31 +279,35 @@ namespace WorldTree.Internal
 				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
 				//任务关联
 				//task.Log($"新建任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
-				task.m_RelevanceTask = awaiter;
+				task.RelevanceTask = awaiter;
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 
 			}
 			else
 			{
-				if (task.m_TreeTaskToken.Value != null)
+				if (task.TreeTaskToken.Value != null)
 				{
 					//task.Log($"当前任务[{task.Id}] 有令牌，设置令牌[{task.m_TreeTaskToken.Value.Id}]给 Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 					//如果当前任务有令牌，那么设置给传入的awaiter，同时会设置给所有 没有令牌 的关联任务。
-					awaiter.SetToken(task.m_TreeTaskToken);
+					awaiter.SetToken(task.TreeTaskToken);
 				}
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 				awaiter.FindSyncTaskSetCompleted();
 			}
 		}
 
-		// 7. Start
+		/// <summary>
+		/// 开始
+		/// </summary>
 		[DebuggerHidden]
 		public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
 		{
 			stateMachine.MoveNext();
 		}
 
-		// 8. SetStateMachine
+		/// <summary>
+		/// 设置状态机
+		/// </summary>
 		[DebuggerHidden]
 		public void SetStateMachine(IAsyncStateMachine stateMachine)
 		{

@@ -26,7 +26,6 @@ namespace WorldTree
 		, ChildOf<INode>
 		, AsRule<IValueChangeEvent>
 		where T : IEquatable<T>
-
 	{
 		/// <summary>
 		/// 全局法则执行器

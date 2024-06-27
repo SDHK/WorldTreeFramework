@@ -15,9 +15,9 @@ namespace WorldTree
         {
             protected override void Execute(PerceptronLine self, PerceptronNode node1, PerceptronNode node2)
             {
-                self.node1 = node1;
-                self.node2 = node2;
-                self.weight = PerceptronLine.rand.NextDouble() * 2.0 - 1.0;
+                self.Node1 = node1;
+                self.Node2 = node2;
+                self.Weight = PerceptronLine.rand.NextDouble() * 2.0 - 1.0;
             }
 
         }
@@ -25,9 +25,9 @@ namespace WorldTree
         {
             protected override void Execute(PerceptronLine self)
             {
-                self.weight = 0;
-                self.node1 = null;
-                self.node2 = null;
+                self.Weight = 0;
+                self.Node1 = null;
+                self.Node2 = null;
             }
         }
 
@@ -37,10 +37,10 @@ namespace WorldTree
         /// </summary>
         public static void BackPropagationWeight(this PerceptronLine self)
         {
-            if (self.node1 is null || self.node2 is null) return;
+            if (self.Node1 is null || self.Node2 is null) return;
 
             //权重+=上连接的结果*下连接的误差增量
-            self.weight += self.node1.result * self.node2.delta;
+            self.Weight += self.Node1.Result * self.Node2.Delta;
         }
     }
 }

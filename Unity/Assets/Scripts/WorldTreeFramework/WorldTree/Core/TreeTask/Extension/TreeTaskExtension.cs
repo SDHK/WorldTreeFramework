@@ -7,7 +7,6 @@
 
 */
 
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using WorldTree.Internal;
 
@@ -40,7 +39,7 @@ namespace WorldTree
 		public static TreeTaskLink TreeTaskLink(this INode self, Task task)
 		{
 			self.AddTemp(out TreeTaskLink treeTaskBox);
-			treeTaskBox.task = task;
+			treeTaskBox.Task = task;
 			return treeTaskBox;
 		}
 
@@ -50,10 +49,13 @@ namespace WorldTree
 		public static TreeTaskLink<T> TreeTaskLink<T>(this INode self, Task<T> task)
 		{
 			self.AddTemp(out TreeTaskLink<T> treeTaskBox);
-			treeTaskBox.task = task;
+			treeTaskBox.Task = task;
 			return treeTaskBox;
 		}
 
+		/// <summary>
+		/// 异步等待
+		/// </summary>
 		public static async TreeTask GetAwaiter(this INode self, Task task)
 		{
 			if (task.IsCompleted)
@@ -65,13 +67,16 @@ namespace WorldTree
 				TreeTask treeTask = self.AddTemp(out TreeTask _);
 				task.GetAwaiter().OnCompleted(() =>
 				{
-					treeTask.Core.worldContext.Post(treeTask.SetResult);
+					treeTask.Core.WorldContext.Post(treeTask.SetResult);
 				});
 
 				await treeTask;
 			}
 		}
 
+		/// <summary>
+		/// 异步等待
+		/// </summary>
 		public static async TreeTask<T> GetAwaiter<T>(this INode self, Task<T> task)
 		{
 			if (task.IsCompleted)
@@ -84,7 +89,7 @@ namespace WorldTree
 				TreeTask<T> treeTask = self.AddTemp(out TreeTask<T> _);
 				task.GetAwaiter().OnCompleted(() =>
 				{
-					treeTask.Core.worldContext.Post((x) => treeTask.SetResult((T)x), task.Result);
+					treeTask.Core.WorldContext.Post((x) => treeTask.SetResult((T)x), task.Result);
 				});
 
 				return await treeTask;
@@ -94,14 +99,14 @@ namespace WorldTree
 		/// <summary>
 		/// 令牌超时取消 （秒）
 		/// </summary>
-		public static async TreeTask TimeOut(this TreeTaskToken self, float TimeOut)
+		public static async TreeTask TimeOut(this TreeTaskToken self, float timeOut)
 		{
-			if (TimeOut <= 0 || self.State == TokenState.Cancel)
+			if (timeOut <= 0 || self.State == TokenState.Cancel)
 			{
 				await self.TreeTaskCompleted();
 			}
 
-			await self.AsyncDelay(TimeOut);
+			await self.AsyncDelay(timeOut);
 
 			if (self.State == TokenState.Cancel) return;
 
@@ -112,20 +117,20 @@ namespace WorldTree
 		/// 超时任务
 		/// </summary>
 
-		public static async TreeTask TimeOut(this TreeTask self, float TimeOut)
+		public static async TreeTask TimeOut(this TreeTask self, float timeOut)
 		{
 			self.Parent.AddTemp(out TreeTaskToken treeTaskToken);
-			treeTaskToken.TimeOut(TimeOut).Coroutine();
+			treeTaskToken.TimeOut(timeOut).Coroutine();
 			await self.AddToken(treeTaskToken);
 		}
 
 		/// <summary>
 		/// 超时任务
 		/// </summary>
-		public static async TreeTask<T> TimeOut<T>(this TreeTask<T> self, float TimeOut)
+		public static async TreeTask<T> TimeOut<T>(this TreeTask<T> self, float timeOut)
 		{
 			self.Parent.AddTemp(out TreeTaskToken treeTaskToken);
-			treeTaskToken.TimeOut(TimeOut).Coroutine();
+			treeTaskToken.TimeOut(timeOut).Coroutine();
 			return await self.AddToken(treeTaskToken);
 		}
 	}

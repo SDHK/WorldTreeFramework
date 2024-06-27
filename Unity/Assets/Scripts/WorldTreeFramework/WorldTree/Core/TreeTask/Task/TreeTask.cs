@@ -25,7 +25,10 @@ namespace WorldTree
 		, AsAwake
 		, AsTreeTaskSetResuIt
 	{
-
+		/// <summary>
+		/// 内部协程
+		/// </summary>
+		[DebuggerHidden]
 		private async TreeTaskVoid InnerCoroutine()
 		{
 			await this;
@@ -65,6 +68,9 @@ namespace WorldTree
 		, AsAwake
 		, AsTreeTaskSetResuIt<T>
 	{
+		/// <summary>
+		/// 内部协程
+		/// </summary>
 		[DebuggerHidden]
 		private async TreeTaskVoid InnerCoroutine()
 		{
@@ -123,7 +129,7 @@ namespace WorldTree
 		public static async TreeTask AddToken(this TreeTask self, TreeTaskToken treeTaskToken)
 		{
 			var token = await self.Parent.TreeTaskTokenCatch();
-			token.tokenEvent.Add(treeTaskToken);
+			token.TokenEvent.Add(treeTaskToken);
 			self.SetToken(treeTaskToken);
 			await self;
 		}
@@ -134,7 +140,7 @@ namespace WorldTree
 		public static async TreeTask<T> AddToken<T>(this TreeTask<T> self, TreeTaskToken treeTaskToken)
 		{
 			var token = await self.Parent.TreeTaskTokenCatch();
-			token.tokenEvent.Add(treeTaskToken);
+			token.TokenEvent.Add(treeTaskToken);
 			self.SetToken(treeTaskToken);
 			return await self;
 		}

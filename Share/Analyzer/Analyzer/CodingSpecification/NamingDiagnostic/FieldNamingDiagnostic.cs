@@ -32,6 +32,7 @@ namespace WorldTree.Analyzer
 			DiagnosticField(context, DiagnosticKey.PublicFieldNaming, objectDiagnostics);
 			DiagnosticField(context, DiagnosticKey.PrivateFieldNaming, objectDiagnostics);
 			DiagnosticField(context, DiagnosticKey.ProtectedFieldNaming, objectDiagnostics);
+			DiagnosticField(context, DiagnosticKey.ConstNaming, objectDiagnostics);
 		}
 
 		private void DiagnosticField(SyntaxNodeAnalysisContext context, DiagnosticKey diagnosticKey, List<DiagnosticConfigGroup> objectDiagnostics)

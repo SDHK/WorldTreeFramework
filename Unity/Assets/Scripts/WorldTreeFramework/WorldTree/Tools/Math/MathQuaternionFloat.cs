@@ -11,13 +11,15 @@ using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
-    public static class MathQuaternionFloat
+	/// <summary>
+	/// 浮点四元数工具类
+	/// </summary>
+	public static class MathQuaternionFloat
     {
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Dot(this QuaternionFloat a, QuaternionFloat b) => (float)((double)a.x * (double)b.x + (double)a.y * (double)b.y + (double)a.z * (double)b.z + (double)a.w * (double)b.w);
-
-
-
+		/// <summary>
+		/// 点乘
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Dot(this QuaternionFloat a, QuaternionFloat b) => (float)((double)a.X * (double)b.X + (double)a.Y * (double)b.Y + (double)a.Z * (double)b.Z + (double)a.W * (double)b.W);
     }
 }

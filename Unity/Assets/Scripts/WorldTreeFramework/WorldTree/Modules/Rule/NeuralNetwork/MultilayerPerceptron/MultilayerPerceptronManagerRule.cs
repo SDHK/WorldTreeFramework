@@ -7,7 +7,7 @@
         {
             protected override void Execute(MultilayerPerceptronManager self)
             {
-                self.AddComponent(out self.layers);
+                self.AddComponent(out self.layerList);
             }
         }
 
@@ -15,7 +15,7 @@
         {
             protected override void Execute(MultilayerPerceptronManager self)
             {
-                self.layers = null;
+                self.layerList = null;
             }
         }
 
@@ -25,11 +25,11 @@
         /// </summary>
         public static void AddLayer(this MultilayerPerceptronManager self, int count)
         {
-            self.layers.Add(self.AddChild(out PerceptronLayer currentLayer, count));
-            if (self.layers.Count > 1)
+            self.layerList.Add(self.AddChild(out PerceptronLayer currentLayer, count));
+            if (self.layerList.Count > 1)
             {
-                var parentNodes = self.layers[^2].nodes;
-                var childNodes = currentLayer.nodes;
+                var parentNodes = self.layerList[^2].NodeList;
+                var childNodes = currentLayer.NodeList;
 
                 foreach (var parentNode in parentNodes)
                 {
@@ -46,18 +46,18 @@
         /// </summary>
         public static MultilayerPerceptronManager SetInputs(this MultilayerPerceptronManager self, params double[] values)
         {
-            if (self.layers.Count < 2)
+            if (self.layerList.Count < 2)
             {
                 self.LogError("网络层数小于2");
             }
-            if (self.layers[0].nodes.Count != values.Length)
+            if (self.layerList[0].NodeList.Count != values.Length)
             {
 				self.LogError("参数数量与第输入层节点数不等");
             }
 
             for (int i = 0; i < values.Length; i++)
             {
-                self.layers[0].nodes[i].result = values[i];
+                self.layerList[0].NodeList[i].Result = values[i];
             }
 
             self.ForwardPropagation();
@@ -69,19 +69,19 @@
         /// </summary>
         public static void SetOutputs(this MultilayerPerceptronManager self, params double[] values)
         {
-            if (self.layers.Count < 2)
+            if (self.layerList.Count < 2)
             {
 				self.LogError("网络层数小于2");
             }
-            if (self.layers[^1].nodes.Count != values.Length)
+            if (self.layerList[^1].NodeList.Count != values.Length)
             {
 				self.LogError("参数数量与输出层节点数不等");
             }
 
             for (int i = 0; i < values.Length; i++)
             {
-                var node = self.layers[^1].nodes[i];
-                node.SetError(values[i] - node.result);
+                var node = self.layerList[^1].NodeList[i];
+                node.SetError(values[i] - node.Result);
             }
 
             self.BackPropagation();
@@ -92,11 +92,11 @@
         /// </summary>
         public static double[] GetOutputs(this MultilayerPerceptronManager self)
         {
-            var nodes = self.layers[^1].nodes;
+            var nodes = self.layerList[^1].NodeList;
             double[] outputs = new double[nodes.Count];
             for (int i = 0; i < nodes.Count; i++)
             {
-                outputs[i] = nodes[i].result;
+                outputs[i] = nodes[i].Result;
             }
             return outputs;
         }
@@ -106,11 +106,11 @@
         /// </summary>
         public static void ForwardPropagation(this MultilayerPerceptronManager self)
         {
-            for (int x = 1; x < self.layers.Count; x++)
+            for (int x = 1; x < self.layerList.Count; x++)
             {
-                for (int y = 0; y < self.layers[x].nodes.Count; y++)
+                for (int y = 0; y < self.layerList[x].NodeList.Count; y++)
                 {
-                    self.layers[x].nodes[y].ForwardPropagation();
+                    self.layerList[x].NodeList[y].ForwardPropagation();
                 }
             }
         }
@@ -120,11 +120,11 @@
         /// </summary>
         public static void BackPropagation(this MultilayerPerceptronManager self)
         {
-            for (int x = self.layers.Count - 2; x >= 0; x--)
+            for (int x = self.layerList.Count - 2; x >= 0; x--)
             {
-                for (int y = 0; y < self.layers[x].nodes.Count; y++)
+                for (int y = 0; y < self.layerList[x].NodeList.Count; y++)
                 {
-                    self.layers[x].nodes[y].BackPropagation();
+                    self.layerList[x].NodeList[y].BackPropagation();
                 }
             }
         }

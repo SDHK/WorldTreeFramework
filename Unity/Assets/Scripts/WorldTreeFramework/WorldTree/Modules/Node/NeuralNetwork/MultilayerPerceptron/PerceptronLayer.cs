@@ -16,7 +16,10 @@ namespace WorldTree
         , AsChildBranch
         , AsAwake<int>
     {
-        public TreeList<PerceptronNode> nodes;
+		/// <summary>
+		/// 感知器节点
+		/// </summary>
+		public TreeList<PerceptronNode> NodeList;
     }
 }
 

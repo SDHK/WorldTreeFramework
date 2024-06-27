@@ -19,15 +19,28 @@ namespace WorldTree
 		, AsAwake<float>
 		, AsTreeTaskTokenEvent
 	{
+		/// <summary>
+		/// 是否运行
+		/// </summary>
 		public bool isRun = false;
+		/// <summary>
+		/// 计时
+		/// </summary>
 		public float time = 0;
+		/// <summary>
+		/// 计时结束时间
+		/// </summary>
 		public float timeOutTime = 0;
 
 		/// <summary>
 		/// 计时结束回调
 		/// </summary>
-		public RuleActuator<ISendRule> callback;
-		public Action action;
+		public RuleActuator<ISendRule> Callback;
+
+		/// <summary>
+		/// 计时结束回调
+		/// </summary>
+		public Action ActionCallback;
 
 		public override string ToString()
 		{
@@ -44,7 +57,7 @@ namespace WorldTree
 				self.timeOutTime = timeOutTime;
 				self.time = 0;
 				self.isRun = true;
-				self.AddChild(out self.callback);
+				self.AddChild(out self.Callback);
 			}
 		}
 
@@ -57,8 +70,8 @@ namespace WorldTree
 					self.time += (float)deltaTime.TotalSeconds;
 					if (self.time >= self.timeOutTime)
 					{
-						self.callback?.Send();
-						self.action?.Invoke();
+						self.Callback?.Send();
+						self.ActionCallback?.Invoke();
 						self.Dispose();
 					}
 				}
@@ -70,8 +83,8 @@ namespace WorldTree
 			protected override void Execute(TimerCall self)
 			{
 				self.isRun = false;
-				self.callback = null;
-				self.action = null;
+				self.Callback = null;
+				self.ActionCallback = null;
 			}
 		}
 
@@ -91,8 +104,8 @@ namespace WorldTree
 
 					case TokenState.Cancel:
 						self.isRun = false;
-						self.callback.Send();
-						self.action?.Invoke();
+						self.Callback.Send();
+						self.ActionCallback?.Invoke();
 						self.Dispose();
 						break;
 				}

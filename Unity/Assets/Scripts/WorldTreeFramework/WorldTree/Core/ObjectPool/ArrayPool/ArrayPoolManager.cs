@@ -19,7 +19,10 @@ namespace WorldTree
 		, AsChildBranch
 		, AsAwake
 	{
-		public TreeDictionary<Type, ArrayPoolGroup> PoolGroups;
+		/// <summary>
+		/// 数组对象池组字典
+		/// </summary>
+		public TreeDictionary<Type, ArrayPoolGroup> PoolGroupDict;
 	}
 
 
@@ -29,7 +32,7 @@ namespace WorldTree
 		{
 			protected override void Execute(ArrayPoolManager self)
 			{
-				self.AddChild(out self.PoolGroups);
+				self.AddChild(out self.PoolGroupDict);
 			}
 		}
 
@@ -37,25 +40,25 @@ namespace WorldTree
 		{
 			protected override void Execute(ArrayPoolManager self)
 			{
-				self.PoolGroups = null;
+				self.PoolGroupDict = null;
 			}
 		}
 
 		/// <summary>
 		/// 获取数组
 		/// </summary>
-		public static T[] Get<T>(this ArrayPoolManager self, int Length)
+		public static T[] Get<T>(this ArrayPoolManager self, int length)
 		{
-			return self.GetGroup(typeof(T)).GetPool(Length).Get() as T[];
+			return self.GetGroup(typeof(T)).GetPool(length).Get() as T[];
 		}
 
 
 		/// <summary>
 		/// 获取数组
 		/// </summary>
-		public static Array Get(this ArrayPoolManager self, Type type, int Length)
+		public static Array Get(this ArrayPoolManager self, Type type, int length)
 		{
-			return self.GetGroup(type).GetPool(Length).Get();
+			return self.GetGroup(type).GetPool(length).Get();
 		}
 
 		/// <summary>
@@ -77,10 +80,10 @@ namespace WorldTree
 		/// </summary>
 		public static ArrayPoolGroup GetGroup(this ArrayPoolManager self, Type type)
 		{
-			if (!self.PoolGroups.TryGetValue(type, out ArrayPoolGroup arrayPoolGroup))
+			if (!self.PoolGroupDict.TryGetValue(type, out ArrayPoolGroup arrayPoolGroup))
 			{
 				self.AddChild(out arrayPoolGroup, type);
-				self.PoolGroups.Add(type, arrayPoolGroup);
+				self.PoolGroupDict.Add(type, arrayPoolGroup);
 			}
 			return arrayPoolGroup;
 		}
@@ -90,7 +93,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGetGroup(this ArrayPoolManager self, Type type, out ArrayPoolGroup arrayPoolGroup)
 		{
-			return self.PoolGroups.TryGetValue(type, out arrayPoolGroup);
+			return self.PoolGroupDict.TryGetValue(type, out arrayPoolGroup);
 		}
 
 		/// <summary>
@@ -98,9 +101,9 @@ namespace WorldTree
 		/// </summary>
 		public static void DisposeGroup(this ArrayPoolManager self, Type type)
 		{
-			if (!self.PoolGroups.TryGetValue(type, out ArrayPoolGroup arrayPoolGroup))
+			if (!self.PoolGroupDict.TryGetValue(type, out ArrayPoolGroup arrayPoolGroup))
 			{
-				self.PoolGroups.Remove(type);
+				self.PoolGroupDict.Remove(type);
 				arrayPoolGroup.Dispose();
 			}
 		}

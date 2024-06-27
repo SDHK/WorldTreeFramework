@@ -15,6 +15,9 @@ namespace WorldTree
     /// </summary>
     public class TimeDomain : Node
     {
-        public float timeScale = 1;
+		/// <summary>
+		/// 时间缩放
+		/// </summary>
+		public float timeScale = 1;
     }
 }

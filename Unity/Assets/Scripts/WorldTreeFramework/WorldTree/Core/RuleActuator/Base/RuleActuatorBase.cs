@@ -94,8 +94,8 @@ namespace WorldTree
 			if (nodeIdHash != null && nodeIdHash.Contains(node.Id)) return false;
 			nodeIdHash ??= this.AddChild(out nodeIdHash);
 			nodeRuleQueue ??= this.AddChild(out nodeRuleQueue);
-			NodeRef<INode> NodeRef = new(node);
-			nodeRuleQueue.Enqueue((NodeRef, ruleList));
+			NodeRef<INode> nodeRef = new(node);
+			nodeRuleQueue.Enqueue((nodeRef, ruleList));
 			nodeIdHash.Add(node.Id);
 			return true;
 		}

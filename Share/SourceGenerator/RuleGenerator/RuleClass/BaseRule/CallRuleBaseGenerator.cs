@@ -53,6 +53,9 @@ namespace WorldTree.SourceGenerator
 						/// </summary>
 						public interface ICallRule<{{genericsTypeAfter}}OutT> : IRule
 						{
+							/// <summary>
+							/// 调用
+							/// </summary>
 							OutT Invoke(INode self{{genericTypeParameter}});
 						}
 
@@ -63,7 +66,13 @@ namespace WorldTree.SourceGenerator
 							where N : class, INode, AsRule<R>
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
+							/// <summary>
+							/// 调用
+							/// </summary>
 							public virtual OutT Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							/// <summary>
+							/// 执行
+							/// </summary>
 							protected abstract OutT Execute(N self{{genericTypeParameter}});
 						}
 
@@ -74,7 +83,13 @@ namespace WorldTree.SourceGenerator
 						public abstract class CallRuleDefault<R{{genericsType}}, OutT> : Rule<INode, R>, ICallRule<{{genericsTypeAfter}}OutT>
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
+							/// <summary>
+							/// 调用
+							/// </summary>
 							public virtual OutT Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							/// <summary>
+							/// 执行
+							/// </summary>
 							protected abstract OutT Execute(INode self{{genericTypeParameter}});
 						}
 					""");

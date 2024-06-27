@@ -86,7 +86,7 @@ namespace WorldTree
 		}
 	}
 
-	public partial class GameTimeManagerRule
+	public static partial class GameTimeManagerRule
 	{
 		private class UpdateTime : UpdateTimeRule<GameTimeManager>
 		{

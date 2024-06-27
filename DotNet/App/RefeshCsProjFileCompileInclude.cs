@@ -5,16 +5,37 @@ using System.Runtime.InteropServices;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 刷新
+	/// </summary>
 	public class RefeshCsProjFileCompileInclude : Node, ComponentOf<INode>
 		, AsAwake
 	{
+		/// <summary>
+		/// 窗口
+		/// </summary>
 		public const int WH_KEYBOARD_LL = 13;
+		/// <summary>
+		/// 窗口
+		/// </summary>
 		public const int WM_KEYDOWN = 0x0100;
+		/// <summary>
+		/// 回调
+		/// </summary>
 		public static LowLevelKeyboardProc _proc = HookCallback;
+		/// <summary>
+		/// id
+		/// </summary>
 		public static IntPtr _hookID = IntPtr.Zero;
 
+		/// <summary>
+		/// 委托
+		/// </summary>
 		public delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
+		/// <summary>
+		/// 钩子回调
+		/// </summary>
 		public static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
 			if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
@@ -31,6 +52,9 @@ namespace WorldTree
 			return RefeshCsProjFileCompileIncludeRule.CallNextHookEx(_hookID, nCode, wParam, lParam);
 		}
 
+		/// <summary>
+		/// 修改
+		/// </summary>
 		public static void ModifyProjectFile()
 		{
 			// 在这里添加修改配置文件的代码逻辑
@@ -73,17 +97,28 @@ namespace WorldTree
 				return SetWindowsHookEx(RefeshCsProjFileCompileInclude.WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
 			}
 		}
-
+		/// <summary>
+		/// dll
+		/// </summary>
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern IntPtr SetWindowsHookEx(int idHook, RefeshCsProjFileCompileInclude.LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
 
+		/// <summary>
+		/// dll
+		/// </summary>
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		public static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
+		/// <summary>
+		/// dll
+		/// </summary>
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
+		/// <summary>
+		/// dll
+		/// </summary>
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern IntPtr GetModuleHandle(string lpModuleName);
 	}
