@@ -27,7 +27,6 @@
     <None Include="..\..\Unity\Unity.licenseheader" Link="Unity.licenseheader" />
   </ItemGroup>
 
-
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <NoWarn>1701;1702;RS2008</NoWarn>
     <OutputPath>./obj</OutputPath>
@@ -39,10 +38,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" PrivateAssets="all" />
+    <!--只有3.9.0才对Unity起效-->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
 
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
       <!--PrivateAssets=all 同样表示包的所有资产都是私有的。-->
       <PrivateAssets>all</PrivateAssets>

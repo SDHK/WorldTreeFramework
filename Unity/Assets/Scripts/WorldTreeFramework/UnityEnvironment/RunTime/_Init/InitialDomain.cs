@@ -18,17 +18,24 @@ using UnityEngine;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 可序列化的发送数据
+	/// </summary>
 	public interface ISendData
 	{
-		public long nodeId { get; set; }
-
+		/// <summary>
+		/// 目标类型id
+		/// </summary>
+		public long NodeId { get; set; }
+		/// <summary>
+		/// 调用将参数塞入目标节点
+		/// </summary>
 		public void Send(INode node);
 	}
 
 	/// <summary>
 	/// 可序列化的发送数据
 	/// </summary>
-	/// <typeparam name="R">事件类型</typeparam>
 	public class SendData<R, T1, T2, T3> : Node
 		where R : ISendRule<T1, T2, T3>
 	{

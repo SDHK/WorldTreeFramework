@@ -80,6 +80,9 @@ namespace WorldTree
 		}
 	}
 
+	/// <summary>
+	/// 序列化基本类型
+	/// </summary>
 	public interface ISerializedBasicType
 	{
 		/// <summary>

@@ -63,6 +63,7 @@ namespace WorldTree.Analyzer
 		public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+			if (context.Diagnostics.Length == 0) return;
 			Diagnostic diagnostic = context.Diagnostics[0];
 			var diagnosticSpan = diagnostic.Location.SourceSpan;
 
@@ -70,7 +71,14 @@ namespace WorldTree.Analyzer
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(projectName, out _)) return;
 
 			// 找到需要修复的委托声明
-			T? declaration = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()?.OfType<T>()?.First();
+			T? declaration = null;
+			IEnumerable<SyntaxNode>? SyntaxNodes = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()?.OfType<T>();
+			foreach (SyntaxNode node in SyntaxNodes)
+			{
+				declaration = node as T;
+				break;
+			}
+			//T? declaration = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()?.OfType<T>()?.First();
 			if (declaration == null) return;
 
 			// 根据不同的诊断类型注册不同的代码修复

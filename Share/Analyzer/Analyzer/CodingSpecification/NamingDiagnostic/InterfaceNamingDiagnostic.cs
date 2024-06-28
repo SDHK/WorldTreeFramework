@@ -38,7 +38,7 @@ namespace WorldTree.Analyzer
 			{
 				//获取当前接口的类型
 				if (!objectDiagnostic.Screen(typeSymbol)) continue;
-				if (!objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.InterfaceNaming, out DiagnosticConfig codeDiagnostic))
+				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.InterfaceNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符
 					if (TreeSyntaxHelper.SyntaxKindContains(interfaceDeclaration.Modifiers, codeDiagnostic.KeywordKinds))

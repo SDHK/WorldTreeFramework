@@ -15,6 +15,12 @@ namespace WorldTree
 
 	}
 
+	public interface A
+	{
+
+
+	}
+
 	/// <summary>
 	/// 测试节点
 	/// </summary>

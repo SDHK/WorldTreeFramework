@@ -17,16 +17,6 @@ using System.Threading.Tasks;
 
 namespace WorldTree
 {
-	public interface ITreeTaskFlow
-	{
-		/// <summary>
-		/// 开始时
-		/// </summary>
-		void OnStart();
-
-	}
-
-
 	/// <summary>
 	/// 同步任务标记接口
 	/// </summary>

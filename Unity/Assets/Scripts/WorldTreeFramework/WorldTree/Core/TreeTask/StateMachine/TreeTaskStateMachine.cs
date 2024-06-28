@@ -10,7 +10,9 @@ using System.Runtime.CompilerServices;
 
 namespace WorldTree.Internal
 {
-
+	/// <summary>
+	/// 树任务方法状态机
+	/// </summary>
 	public interface ITreeTaskStateMachine : INode
 	{
 		/// <summary>
