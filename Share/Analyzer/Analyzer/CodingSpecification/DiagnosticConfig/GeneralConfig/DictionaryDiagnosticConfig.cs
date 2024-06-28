@@ -32,16 +32,27 @@ namespace WorldTree.Analyzer
 				Title = "Dictionary类型字段命名",
 				MessageFormat = "Dictionary类型字段 命名要加Dict后戳",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
-				Check = s => Regex.IsMatch(s, ".*Dict"),
+				Check = s => Regex.IsMatch(s, ".*Dict$"),
 				FixCode = s => s + "Dict",
+				NeedComment = false,
 			});
 			SetConfig(DiagnosticKey.ClassPropertyNaming, new DiagnosticConfig()
 			{
 				Title = "Dictionary类型属性命名",
 				MessageFormat = "Dictionary类型属性 命名要加Dict后戳",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
-				Check = s => Regex.IsMatch(s, ".*Dict"),
+				Check = s => Regex.IsMatch(s, ".*Dict$"),
 				FixCode = s => s + "Dict",
+				NeedComment = false,
+			});
+			SetConfig(DiagnosticKey.ClassLocalVariableNaming, new DiagnosticConfig()
+			{
+				Title = "Dictionary类型局部变量命名",
+				MessageFormat = "Dictionary类型局部变量 命名要加Dict后戳",
+				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
+				Check = s => Regex.IsMatch(s, ".*Dict$"),
+				FixCode = s => s + "Dict",
+				NeedComment = false,
 			});
 		}
 	}

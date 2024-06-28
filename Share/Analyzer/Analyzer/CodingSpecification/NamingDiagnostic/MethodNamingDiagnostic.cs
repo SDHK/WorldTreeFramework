@@ -28,16 +28,17 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> diagnosticConfigGroups)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			MethodDeclarationSyntax? methodDeclaration = context.Node as MethodDeclarationSyntax;
-			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			foreach (DiagnosticConfigGroup diagnosticConfigGroup in diagnosticConfigGroups)
 			{
 				BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(methodDeclaration);
 				IMethodSymbol? methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
-				if (!objectDiagnostic.Screen(methodSymbol)) continue;
-				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.MethodNaming, out DiagnosticConfig codeDiagnostic))
+				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
+				if (!diagnosticConfigGroup.Screen(typeSymbol)) continue;
+				if (diagnosticConfigGroup.Diagnostics.TryGetValue(DiagnosticKey.MethodNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符
 					if (TreeSyntaxHelper.SyntaxKindContains(methodDeclaration.Modifiers, codeDiagnostic.KeywordKinds))

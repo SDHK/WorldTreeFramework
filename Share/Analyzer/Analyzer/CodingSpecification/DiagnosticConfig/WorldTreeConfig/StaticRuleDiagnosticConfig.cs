@@ -39,23 +39,23 @@ namespace WorldTree.Analyzer
 
 			SetConfig(DiagnosticKey.ConstNaming, new DiagnosticConfig()
 			{
-				Title = "Rule常量命名",
-				MessageFormat = "Rule静态类型中不准写常量字段",
+				Title = "Rule常量字段禁止",
+				MessageFormat = "Rule静态类型禁止声明常量字段",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.ConstKeyword },
-				NeedComment = false,
 				Check = s => false,
+				NeedComment = false,
 			});
 
 			SetConfig(DiagnosticKey.PublicFieldNaming, new DiagnosticConfig()
 			{
-				Title = "Rule公开字段命名",
-				MessageFormat = "Rule静态类型中不准写公开字段",
+				Title = "Rule公开字段禁止",
+				MessageFormat = "Rule静态类型禁止声明公开字段",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.PublicKeyword, },
 				UnKeywordKinds = new() { SyntaxKind.ConstKeyword },
-				NeedComment = false,
 				Check = s => false,
+				NeedComment = false,
 			});
 
 			SetConfig(DiagnosticKey.PrivateFieldNaming, new DiagnosticConfig()
@@ -68,25 +68,23 @@ namespace WorldTree.Analyzer
 				NeedComment = false,
 			});
 
-
 			SetConfig(DiagnosticKey.PublicPropertyNaming, new DiagnosticConfig()
 			{
-				Title = "公开属性命名",
-				MessageFormat = "Rule静态类型中不准写公开属性",
+				Title = "Rule公开属性禁止",
+				MessageFormat = "Rule静态类型禁止声明公开属性",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				KeywordKinds = new() { SyntaxKind.PublicKeyword, },
-				NeedComment = false,
 				Check = s => false,
-
+				NeedComment = false,
 			});
 			SetConfig(DiagnosticKey.PrivatePropertyNaming, new DiagnosticConfig()
 			{
-				Title = "私有属性命名",
-				MessageFormat = "Rule静态类型中不准写私有属性",
+				Title = "Rule私有属性禁止",
+				MessageFormat = "Rule静态类型禁止声明私有属性",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				KeywordKinds = new() { SyntaxKind.PrivateKeyword },
-				NeedComment = false,
 				Check = s => false,
+				NeedComment = false,
 			});
 			SetConfig(DiagnosticKey.MethodNaming, new DiagnosticConfig()
 			{
@@ -94,15 +92,14 @@ namespace WorldTree.Analyzer
 				MessageFormat = "方法命名开头要大写",
 				DeclarationKind = SyntaxKind.MethodDeclaration,
 			});
-
 			SetConfig(DiagnosticKey.ParameterNaming, new DiagnosticConfig()
 			{
 				Title = "方法参数命名",
 				MessageFormat = "方法参数命名开头要小写",
 				DeclarationKind = SyntaxKind.Parameter,
-				NeedComment = false,
 				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
-				FixCode = s => char.ToLower(s[0]) + s.Substring(1)
+				FixCode = s => char.ToLower(s[0]) + s.Substring(1),
+				NeedComment = false,
 			});
 
 		}

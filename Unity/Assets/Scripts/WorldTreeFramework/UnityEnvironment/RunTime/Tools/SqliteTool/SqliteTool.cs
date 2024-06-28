@@ -358,18 +358,18 @@ namespace WorldTree.Sample
         {
             //一块的数据
             const int lCHUNK_SIZE = 2 * 1024;
-            byte[] buffer = new byte[lCHUNK_SIZE];
+            byte[] buffers = new byte[lCHUNK_SIZE];
             long bytesRead;
             long fieldOffset = 0;
             using (MemoryStream stream = new MemoryStream())
             {
-                while ((bytesRead = reader.GetBytes(name, fieldOffset, buffer, 0, buffer.Length)) > 0)
+                while ((bytesRead = reader.GetBytes(name, fieldOffset, buffers, 0, buffers.Length)) > 0)
                 {
-                    stream.Write(buffer, 0, (int)bytesRead);
+                    stream.Write(buffers, 0, (int)bytesRead);
                     fieldOffset += bytesRead;
                 }
-                byte[] result = stream.ToArray();
-                return (IsEncryption) ? Decryption?.Invoke(result) ?? result : result;
+                byte[] results = stream.ToArray();
+                return (IsEncryption) ? Decryption?.Invoke(results) ?? results : results;
             }
         }
 
@@ -380,7 +380,7 @@ namespace WorldTree.Sample
         {
             //一块的数据
             const int lCHUNK_SIZE = 2 * 1024;
-            byte[] buffer = new byte[lCHUNK_SIZE];
+            byte[] buffers = new byte[lCHUNK_SIZE];
             long bytesRead;
             long fieldOffset = 0;
             using (MemoryStream stream = new MemoryStream())
@@ -392,15 +392,15 @@ namespace WorldTree.Sample
                 else
                 {
 
-                    while ((bytesRead = reader.GetBytes(index, fieldOffset, buffer, 0, buffer.Length)) > 0)
+                    while ((bytesRead = reader.GetBytes(index, fieldOffset, buffers, 0, buffers.Length)) > 0)
                     {
-                        stream.Write(buffer, 0, (int)bytesRead);
+                        stream.Write(buffers, 0, (int)bytesRead);
                         fieldOffset += bytesRead;
                     }
 
-                    byte[] result = stream.ToArray();
+                    byte[] results = stream.ToArray();
 
-                    return (IsEncryption) ? Decryption?.Invoke(result) ?? result : result;
+                    return (IsEncryption) ? Decryption?.Invoke(results) ?? results : results;
                 }
             }
         }
@@ -520,15 +520,15 @@ namespace WorldTree.Sample
             var bit = IsEncryption;
             if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
             string tableName = type.Name;
-            FieldInfo[] fieldInfo = type.GetFields();
+            FieldInfo[] fieldInfos = type.GetFields();
 
-            string[] cols = new string[fieldInfo.Length];
-            byte[][] values = new byte[fieldInfo.Length][];
+            string[] cols = new string[fieldInfos.Length];
+            byte[][] values = new byte[fieldInfos.Length][];
 
-            for (int i = 0; i < fieldInfo.Length; i++)
+            for (int i = 0; i < fieldInfos.Length; i++)
             {
-                cols[i] = fieldInfo[i].Name;
-                values[i] = SwitchTypeGetBytes(fieldInfo[i].FieldType.Name, fieldInfo[i].GetValue(obj));//需要强转式
+                cols[i] = fieldInfos[i].Name;
+                values[i] = SwitchTypeGetBytes(fieldInfos[i].FieldType.Name, fieldInfos[i].GetValue(obj));//需要强转式
             }
             Insert(tableName, cols, values);
             IsEncryption = bit;
@@ -545,15 +545,15 @@ namespace WorldTree.Sample
             var bit = IsEncryption;
             if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
             string tableName = type.Name;
-            FieldInfo[] fieldInfo = type.GetFields();
+            FieldInfo[] fieldInfos = type.GetFields();
 
-            string[] cols = new string[fieldInfo.Length];
-            byte[][] values = new byte[fieldInfo.Length][];
+            string[] cols = new string[fieldInfos.Length];
+            byte[][] values = new byte[fieldInfos.Length][];
 
-            for (int i = 0; i < fieldInfo.Length; i++)
+            for (int i = 0; i < fieldInfos.Length; i++)
             {
-                cols[i] = fieldInfo[i].Name;
-                values[i] = SwitchTypeGetBytes(fieldInfo[i].FieldType.Name, fieldInfo[i].GetValue(obj));//需要强转式
+                cols[i] = fieldInfos[i].Name;
+                values[i] = SwitchTypeGetBytes(fieldInfos[i].FieldType.Name, fieldInfos[i].GetValue(obj));//需要强转式
             }
             Replace(tableName, cols, values);
             IsEncryption = bit;
@@ -569,15 +569,15 @@ namespace WorldTree.Sample
             if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
 
             string tableName = type.Name;
-            FieldInfo[] fieldInfo = type.GetFields();
+            FieldInfo[] fieldInfos = type.GetFields();
 
-            string[] cols = new string[fieldInfo.Length + valueNames.Length];
-            byte[][] datas = new byte[fieldInfo.Length + values.Length][];
+            string[] cols = new string[fieldInfos.Length + valueNames.Length];
+            byte[][] datas = new byte[fieldInfos.Length + values.Length][];
 
-            for (int i = 0; i < fieldInfo.Length; i++)
+            for (int i = 0; i < fieldInfos.Length; i++)
             {
-                cols[i] = fieldInfo[i].Name;
-                datas[i] = SwitchTypeGetBytes(fieldInfo[i].FieldType.Name, fieldInfo[i].GetValue(obj));//需要强转式
+                cols[i] = fieldInfos[i].Name;
+                datas[i] = SwitchTypeGetBytes(fieldInfos[i].FieldType.Name, fieldInfos[i].GetValue(obj));//需要强转式
             }
             for (int i = 0; i < valueNames.Length; i++)
             {
@@ -598,15 +598,15 @@ namespace WorldTree.Sample
             var bit = IsEncryption;
             if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
             string tableName = type.Name;
-            FieldInfo[] fieldInfo = type.GetFields();
+            FieldInfo[] fieldInfos = type.GetFields();
 
-            string[] cols = new string[fieldInfo.Length];
-            byte[][] datas = new byte[fieldInfo.Length][];
+            string[] cols = new string[fieldInfos.Length];
+            byte[][] datas = new byte[fieldInfos.Length][];
 
-            for (int i = 0; i < fieldInfo.Length; i++)
+            for (int i = 0; i < fieldInfos.Length; i++)
             {
-                cols[i] = fieldInfo[i].Name;
-                datas[i] = SwitchTypeGetBytes(fieldInfo[i].FieldType.Name, fieldInfo[i].GetValue(obj));//需要强转式
+                cols[i] = fieldInfos[i].Name;
+                datas[i] = SwitchTypeGetBytes(fieldInfos[i].FieldType.Name, fieldInfos[i].GetValue(obj));//需要强转式
             }
 
             Update(tableName, "", cols, datas);
@@ -632,13 +632,13 @@ namespace WorldTree.Sample
             var bit = IsEncryption;
             if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
             string tableName = type.Name;
-            FieldInfo[] fieldInfo = type.GetFields();
+            FieldInfo[] fieldInfos = type.GetFields();
 
-            string[] cols = new string[fieldInfo.Length];
+            string[] cols = new string[fieldInfos.Length];
 
-            for (int i = 0; i < fieldInfo.Length; i++)
+            for (int i = 0; i < fieldInfos.Length; i++)
             {
-                cols[i] = fieldInfo[i].Name;
+                cols[i] = fieldInfos[i].Name;
             }
 
             SqliteCommand command = SqliteConnection.CreateCommand();
@@ -653,7 +653,7 @@ namespace WorldTree.Sample
             SqliteDataReader reader = command.ExecuteReader();
 
 
-            List<T> list = new List<T>();
+            List<T> dataList = new List<T>();
 
             while (reader.Read())
             {
@@ -661,21 +661,21 @@ namespace WorldTree.Sample
 
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    var fileInfo = fieldInfo[i];
+                    var fileInfo = fieldInfos[i];
                     if (!reader.IsDBNull(i))
                     {
-                        object value = SwitchTypeGetValue(fileInfo.FieldType.Name.ToLower(), reader.GetBytesData(fieldInfo[i].Name));
+                        object value = SwitchTypeGetValue(fileInfo.FieldType.Name.ToLower(), reader.GetBytesData(fieldInfos[i].Name));
                         fileInfo.SetValue(t, value);
                     }
                 }
-                list.Add(t);
+                dataList.Add(t);
             }
 
             IsEncryption = bit;
 
             reader.Close();
             command.Dispose();
-            return list;
+            return dataList;
         }
 
 

@@ -180,19 +180,19 @@ namespace WorldTree.Sample
         {
             Type type = typeof(T);
 
-            List<object> datas = null;
+            List<object> dataList = null;
 
             string commandText = $"SELECT * FROM {type.Name} {sql}";
             sql = "";//清除查询语句            
 
             if (IsCache && (SQL_NUM > 0 || SQL_TIMER > 0))
             {
-                if (!sqlResultCacheDict.TryGetValue(commandText, out datas))
+                if (!sqlResultCacheDict.TryGetValue(commandText, out dataList))
                 {
 
                     var st = Time.realtimeSinceStartup;
                     {
-                        datas = new List<object>();
+                        dataList = new List<object>();
 
                         SqliteCommand command = SqliteTool.SqliteConnection.CreateCommand();
                         command.CommandText = commandText;
@@ -202,7 +202,7 @@ namespace WorldTree.Sample
                         {
                             T data = new T();
                             data.SetData(reader);
-                            datas.Add(data);
+                            dataList.Add(data);
                         }
                         reader.Close();
                         command.Dispose();
@@ -215,7 +215,7 @@ namespace WorldTree.Sample
                     var counter = GetSqlExecCount(commandText);
                     if (counter >= SQL_NUM || intelval >= SQL_TIMER)
                     {
-                        sqlResultCacheDict[commandText] = datas;
+                        sqlResultCacheDict[commandText] = dataList;
 
                     }
                     else
@@ -226,7 +226,7 @@ namespace WorldTree.Sample
             }
             else
             {
-                datas = new List<object>();
+                dataList = new List<object>();
 
                 SqliteCommand command = SqliteTool.SqliteConnection.CreateCommand();
                 command.CommandText = commandText;
@@ -236,7 +236,7 @@ namespace WorldTree.Sample
                 {
                     T data = new T();
                     data.SetData(reader);
-                    datas.Add(data);
+                    dataList.Add(data);
                 }
                 reader.Close();
                 command.Dispose();
@@ -246,8 +246,8 @@ namespace WorldTree.Sample
             }
 
 
-            var retList = new List<T>(datas.Count);
-            foreach (var item in datas)
+            var retList = new List<T>(dataList.Count);
+            foreach (var item in dataList)
             {
                 if (item is T tObj)
                 {

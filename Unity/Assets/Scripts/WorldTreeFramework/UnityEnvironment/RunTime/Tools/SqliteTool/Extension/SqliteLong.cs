@@ -60,16 +60,16 @@ namespace WorldTree.Sample
         public static long[] GetLongs(this byte[] arr)
         {
             if (arr == null) return null;
-            byte[] data = new byte[8];
-            long[] result = new long[arr.Length / data.Length];
+            byte[] datas = new byte[8];
+            long[] results = new long[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetLong();
+                stream.Read(datas);
+                results[i] = datas.GetLong();
             }
-            return result;
+            return results;
         }
 
         /// <summary>

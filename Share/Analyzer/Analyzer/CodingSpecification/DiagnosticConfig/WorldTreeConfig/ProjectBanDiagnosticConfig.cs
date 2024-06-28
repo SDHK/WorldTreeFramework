@@ -11,11 +11,11 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace WorldTree.Analyzer
 {
 	/// <summary>
-	/// 项目禁止数据类型诊断
+	/// 项目禁止类型诊断
 	/// </summary>
-	public class ProjectBanModelDiagnosticConfig : DiagnosticConfigGroup
+	public class ProjectBanDiagnosticConfig : DiagnosticConfigGroup
 	{
-		public ProjectBanModelDiagnosticConfig()
+		public ProjectBanDiagnosticConfig()
 		{
 			Screen = (Symbol) => true;
 

@@ -29,10 +29,10 @@ namespace WorldTree.Internal
 		/// </summary>
 		public static IRattan AddRattan(INode self, long type)
 		{
-			UnitDictionary<long, IRattan> rattans = self.GetRattanDict;
-			if (!rattans.TryGetValue(type, out IRattan iRattan))
+			UnitDictionary<long, IRattan> rattanDict = self.GetRattanDict;
+			if (!rattanDict.TryGetValue(type, out IRattan iRattan))
 			{
-				rattans.Add(type, iRattan = self.Core.PoolGetUnit(type) as IRattan);
+				rattanDict.Add(type, iRattan = self.Core.PoolGetUnit(type) as IRattan);
 			}
 			return iRattan;
 		}

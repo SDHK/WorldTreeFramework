@@ -65,16 +65,16 @@ namespace WorldTree.Sample
         {
 
             if (arr == null) return null;
-            byte[] data = new byte[8];
-            double[] result = new double[arr.Length / data.Length];
+            byte[] datas = new byte[8];
+            double[] results = new double[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetDouble();
+                stream.Read(datas);
+                results[i] = datas.GetDouble();
             }
-            return result;
+            return results;
         }
 
         /// <summary>

@@ -63,16 +63,16 @@ namespace WorldTree.Sample
         {
 
             if (arr == null) return null;
-            byte[] data = new byte[2];
-            short[] result = new short[arr.Length / data.Length];
+            byte[] datas = new byte[2];
+            short[] results = new short[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetShort();
+                stream.Read(datas);
+                results[i] = datas.GetShort();
             }
-            return result;
+            return results;
         }
 
         /// <summary>

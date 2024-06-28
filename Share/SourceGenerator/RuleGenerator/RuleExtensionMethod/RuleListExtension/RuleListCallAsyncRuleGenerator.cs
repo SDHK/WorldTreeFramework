@@ -60,12 +60,12 @@ namespace WorldTree.SourceGenerator
 							public static async TreeTask<UnitList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
-								UnitList<OutT> outT = node.Core.PoolGetUnit<UnitList<OutT>>();
+								UnitList<OutT> outTList = node.Core.PoolGetUnit<UnitList<OutT>>();
 								foreach (ICallRuleAsync<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
 								{
-									outT.Add(await rule.Invoke(node{{genericParameter}}));
+									outTList.Add(await rule.Invoke(node{{genericParameter}}));
 								}
-								return outT;
+								return outTList;
 							}
 					""");
 			}

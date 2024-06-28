@@ -31,6 +31,37 @@ namespace WorldTree.Analyzer
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+
+			DiagnosticLocalVariable(context, objectDiagnostics);
+			DiagnosticClassName(context, objectDiagnostics);
+		}
+
+		private void DiagnosticClassName(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> objectDiagnostics)
+		{
+			SemanticModel semanticModel = context.SemanticModel;
+			LocalDeclarationStatementSyntax localVariableDeclaration = (LocalDeclarationStatementSyntax)context.Node;
+			ITypeSymbol localVariableSymbol = semanticModel.GetTypeInfo(localVariableDeclaration.Declaration.Type).Type;
+			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			{
+				if (objectDiagnostic.Screen(localVariableSymbol))
+				{
+					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassLocalVariableNaming, out DiagnosticConfig DiagnosticConfig))
+					{
+						foreach (var variable in localVariableDeclaration.Declaration.Variables)
+						{
+							if (!DiagnosticConfig.Check.Invoke(variable.Identifier.Text))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(DiagnosticConfig.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		private void DiagnosticLocalVariable(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> objectDiagnostics)
+		{
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			LocalDeclarationStatementSyntax? localDeclaration = context.Node as LocalDeclarationStatementSyntax;
@@ -52,7 +83,6 @@ namespace WorldTree.Analyzer
 									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
 								}
 							}
-
 							if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckComment(localDeclaration))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localDeclaration.GetLocation()));

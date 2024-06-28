@@ -28,12 +28,12 @@
             self.layerList.Add(self.AddChild(out PerceptronLayer currentLayer, count));
             if (self.layerList.Count > 1)
             {
-                var parentNodes = self.layerList[^2].NodeList;
-                var childNodes = currentLayer.NodeList;
+                var parentNodeList = self.layerList[^2].NodeList;
+                var childNodeList = currentLayer.NodeList;
 
-                foreach (var parentNode in parentNodes)
+                foreach (var parentNode in parentNodeList)
                 {
-                    foreach (var childNode in childNodes)
+                    foreach (var childNode in childNodeList)
                     {
                         parentNode.Link(childNode);
                     }
@@ -92,11 +92,11 @@
         /// </summary>
         public static double[] GetOutputs(this MultilayerPerceptronManager self)
         {
-            var nodes = self.layerList[^1].NodeList;
-            double[] outputs = new double[nodes.Count];
-            for (int i = 0; i < nodes.Count; i++)
+            var nodeList = self.layerList[^1].NodeList;
+            double[] outputs = new double[nodeList.Count];
+            for (int i = 0; i < nodeList.Count; i++)
             {
-                outputs[i] = nodes[i].Result;
+                outputs[i] = nodeList[i].Result;
             }
             return outputs;
         }

@@ -64,16 +64,16 @@ namespace WorldTree.Sample
         {
 
             if (arr == null) return null;
-            byte[] data = new byte[8];
-            DateTime[] result = new DateTime[arr.Length / data.Length];
+            byte[] datas = new byte[8];
+            DateTime[] results = new DateTime[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetDateTime();
+                stream.Read(datas);
+                results[i] = datas.GetDateTime();
             }
-            return result;
+            return results;
         }
 
         /// <summary>

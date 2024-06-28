@@ -65,16 +65,16 @@ namespace WorldTree.Sample
         public static Vector2[] GetVector2s(this byte[] arr)
         {
             if (arr == null) return null;
-            byte[] data = new byte[8];
-            Vector2[] result = new Vector2[arr.Length / data.Length];
+            byte[] datas = new byte[8];
+            Vector2[] results = new Vector2[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetVector2();
+                stream.Read(datas);
+                results[i] = datas.GetVector2();
             }
-            return result;
+            return results;
         }
 
         /// <summary>
@@ -126,12 +126,12 @@ namespace WorldTree.Sample
             if (str != "" && str != null)
             {
                 string[] datas = str.Split('|');
-                Vector2[] result = new Vector2[datas.Length / 2];
-                for (int i = 0; i < result.Length; i++)
+                Vector2[] results = new Vector2[datas.Length / 2];
+                for (int i = 0; i < results.Length; i++)
                 {
-                    result[i] = (datas[i * 2] + "|" + datas[i * 2 + 1]).GetVector2();
+                    results[i] = (datas[i * 2] + "|" + datas[i * 2 + 1]).GetVector2();
                 }
-                return result;
+                return results;
             }
             else
             {

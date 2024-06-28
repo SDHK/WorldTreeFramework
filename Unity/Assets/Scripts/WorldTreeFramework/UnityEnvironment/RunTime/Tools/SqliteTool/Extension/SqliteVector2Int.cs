@@ -64,16 +64,16 @@ namespace WorldTree.Sample
         public static Vector2Int[] GetVector2Ints(this byte[] arr)
         {
             if (arr == null) return null;
-            byte[] data = new byte[8];
-            Vector2Int[] result = new Vector2Int[arr.Length / data.Length];
+            byte[] datas = new byte[8];
+            Vector2Int[] results = new Vector2Int[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetVector2Int();
+                stream.Read(datas);
+                results[i] = datas.GetVector2Int();
             }
-            return result;
+            return results;
         }
 
         /// <summary>
@@ -124,12 +124,12 @@ namespace WorldTree.Sample
             if (str != "" && str != null)
             {
                 string[] datas = str.Split('|');
-                Vector2Int[] result = new Vector2Int[datas.Length / 2];
-                for (int i = 0; i < result.Length; i++)
+                Vector2Int[] results = new Vector2Int[datas.Length / 2];
+                for (int i = 0; i < results.Length; i++)
                 {
-                    result[i] = (datas[i * 2] + "|" + datas[i * 2 + 1]).GetVector2Int();
+                    results[i] = (datas[i * 2] + "|" + datas[i * 2 + 1]).GetVector2Int();
                 }
-                return result;
+                return results;
             }
             else
             {

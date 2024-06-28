@@ -25,5 +25,8 @@ namespace WorldTree
 		/// 树任务令牌
 		/// </summary>
 		public TreeTaskToken treeTaskToken;
+
+	
+		//public void Test() { }
 	}
 }

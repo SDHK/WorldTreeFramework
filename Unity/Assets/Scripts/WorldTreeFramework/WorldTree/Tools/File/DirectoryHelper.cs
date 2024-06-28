@@ -87,8 +87,8 @@ namespace WorldTree
 			if (Directory.Exists(destPath) == false)
 				Directory.CreateDirectory(destPath);
 
-			string[] fileList = Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories);
-			foreach (string file in fileList)
+			string[] files = Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories);
+			foreach (string file in files)
 			{
 				string temp = PathHelper.GetRegularPath(file);
 				string savePath = temp.Replace(sourcePath, destPath);
@@ -105,14 +105,14 @@ namespace WorldTree
 		public static bool TryFind(string root, string folderName, out string fullPath)
 		{
 			DirectoryInfo rootInfo = new DirectoryInfo(root);
-			DirectoryInfo[] infoList = rootInfo.GetDirectories();
-			for (int i = 0; i < infoList.Length; i++)
+			DirectoryInfo[] infos = rootInfo.GetDirectories();
+			for (int i = 0; i < infos.Length; i++)
 			{
 				//获取子目录的全路径
-				fullPath = infoList[i].FullName;
+				fullPath = infos[i].FullName;
 
 				//如果找到目标文件夹, 返回true
-				if (infoList[i].Name == folderName) return true;
+				if (infos[i].Name == folderName) return true;
 
 				//递归查找子目录
 				if (TryFind(fullPath, folderName, out fullPath)) return true;

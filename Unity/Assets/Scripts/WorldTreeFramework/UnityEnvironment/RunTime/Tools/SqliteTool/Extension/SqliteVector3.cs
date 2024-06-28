@@ -66,16 +66,16 @@ namespace WorldTree.Sample
         public static Vector3[] GetVector3s(this byte[] arr)
         {
             if (arr == null) return null;
-            byte[] data = new byte[12];
-            Vector3[] result = new Vector3[arr.Length / data.Length];
+            byte[] datas = new byte[12];
+            Vector3[] results = new Vector3[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetVector3();
+                stream.Read(datas);
+                results[i] = datas.GetVector3();
             }
-            return result;
+            return results;
         }
 
         /// <summary>
@@ -125,12 +125,12 @@ namespace WorldTree.Sample
             if (str != "" && str != null)
             {
                 string[] datas = str.Split('|');
-                Vector3[] result = new Vector3[datas.Length / 3];
-                for (int i = 0; i < result.Length; i++)
+                Vector3[] results = new Vector3[datas.Length / 3];
+                for (int i = 0; i < results.Length; i++)
                 {
-                    result[i] = (datas[i * 3] + "|" + datas[i * 3 + 1] + "|" + datas[i * 3 + 2]).GetVector3();
+                    results[i] = (datas[i * 3] + "|" + datas[i * 3 + 1] + "|" + datas[i * 3 + 2]).GetVector3();
                 }
-                return result;
+                return results;
             }
             else
             {

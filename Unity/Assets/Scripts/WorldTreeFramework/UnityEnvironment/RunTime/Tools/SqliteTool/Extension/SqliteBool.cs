@@ -62,16 +62,16 @@ namespace WorldTree.Sample
         public static bool[] GetBools(this byte[] arr)
         {
             if (arr == null) return null;
-            byte[] data = new byte[1];
-            bool[] result = new bool[arr.Length / data.Length];
+            byte[] datas = new byte[1];
+            bool[] results = new bool[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetBool();
+                stream.Read(datas);
+                results[i] = datas.GetBool();
             }
-            return result;
+            return results;
         }
 
         /// <summary>

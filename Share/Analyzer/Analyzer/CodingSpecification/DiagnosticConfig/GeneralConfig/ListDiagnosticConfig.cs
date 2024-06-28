@@ -35,6 +35,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				Check = s => Regex.IsMatch(s, ".*List$"),
 				FixCode = s => s + "List",
+				NeedComment = false,
 			});
 			SetConfig(DiagnosticKey.ClassPropertyNaming, new DiagnosticConfig()
 			{
@@ -43,6 +44,16 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				Check = s => Regex.IsMatch(s, ".*List$"),
 				FixCode = s => s + "List",
+				NeedComment = false,
+			});
+			SetConfig(DiagnosticKey.ClassLocalVariableNaming, new DiagnosticConfig()
+			{
+				Title = "List类型局部变量命名",
+				MessageFormat = "List类型局部变量 命名要加List后戳",
+				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
+				Check = s => Regex.IsMatch(s, ".*List$"),
+				FixCode = s => s + "List",
+				NeedComment = false,
 			});
 		}
 	}

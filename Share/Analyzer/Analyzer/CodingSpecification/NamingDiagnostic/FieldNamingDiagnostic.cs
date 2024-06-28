@@ -33,6 +33,30 @@ namespace WorldTree.Analyzer
 			DiagnosticField(context, DiagnosticKey.PrivateFieldNaming, objectDiagnostics);
 			DiagnosticField(context, DiagnosticKey.ProtectedFieldNaming, objectDiagnostics);
 			DiagnosticField(context, DiagnosticKey.ConstNaming, objectDiagnostics);
+			DiagnosticClassName(context, objectDiagnostics);
+		}
+
+		private void DiagnosticClassName(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> objectDiagnostics)
+		{
+			SemanticModel semanticModel = context.SemanticModel;
+			FieldDeclarationSyntax fieldDeclaration = (FieldDeclarationSyntax)context.Node;
+			ITypeSymbol fieldTypeSymbol = semanticModel.GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
+			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			{
+				if (objectDiagnostic.Screen(fieldTypeSymbol))
+				{
+					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassFieldNaming, out DiagnosticConfig DiagnosticConfig))
+					{
+						foreach (var variable in fieldDeclaration.Declaration.Variables)
+						{
+							if (!DiagnosticConfig.Check.Invoke(variable.Identifier.Text))
+							{
+								context.ReportDiagnostic(Diagnostic.Create(DiagnosticConfig.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
+							}
+						}
+					}
+				}
+			}
 		}
 
 		private void DiagnosticField(SyntaxNodeAnalysisContext context, DiagnosticKey diagnosticKey, List<DiagnosticConfigGroup> objectDiagnostics)
@@ -50,20 +74,6 @@ namespace WorldTree.Analyzer
 			INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (objectDiagnostic.Screen(fieldTypeSymbol))
-				{
-					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassFieldNaming, out DiagnosticConfig DiagnosticConfig))
-					{
-						foreach (var variable in fieldDeclaration.Declaration.Variables)
-						{
-							if (!DiagnosticConfig.Check.Invoke(variable.Identifier.Text))
-							{
-								context.ReportDiagnostic(Diagnostic.Create(DiagnosticConfig.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
-							}
-						}
-					}
-				}
-			
 				if (!objectDiagnostic.Screen(typeSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(diagnosticKey, out DiagnosticConfig codeDiagnostic))
 				{

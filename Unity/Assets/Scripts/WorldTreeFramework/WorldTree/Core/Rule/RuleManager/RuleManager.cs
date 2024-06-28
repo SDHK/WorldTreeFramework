@@ -43,13 +43,13 @@ namespace WorldTree
 		/// <summary>
 		/// 监听目标为 法则 的 ，监听器法则 字典
 		/// </summary>
-		public UnitDictionary<long, UnitHashSet<IListenerRule>> TargetRuleListenerRuleHashDictionary = new();
+		public UnitDictionary<long, UnitHashSet<IListenerRule>> TargetRuleListenerRuleHashDict = new();
 
 		/// <summary>
 		/// 泛型节点泛型法则哈希表字典
 		/// </summary>
 		/// <remarks>泛型节点类型，泛型法则类型哈希表</remarks>
-		public UnitDictionary<Type, UnitHashSet<Type>> GenericRuleTypeHashDictionary = new();
+		public UnitDictionary<Type, UnitHashSet<Type>> GenericRuleTypeHashDict = new();
 
 		/// <summary>
 		/// 监听法则字典 目标节点类型
@@ -58,7 +58,7 @@ namespace WorldTree
 		/// <para>目标节点类型 法则类型 《监听器类型,监听法则列表》</para>
 		/// <para>这个是真正被使用的</para>
 		/// </remarks>
-		public UnitDictionary<long, Dictionary<long, RuleGroup>> TargetRuleListenerGroupDictionary = new();
+		public UnitDictionary<long, Dictionary<long, RuleGroup>> TargetRuleListenerGroupDict = new();
 
 		/// <summary>
 		/// 监听法则字典 监听器类型
@@ -67,19 +67,19 @@ namespace WorldTree
 		/// <para>监听器类型 法则类型 《目标节点类型,监听法则列表》</para>
 		/// <para>这个是用来查询关系的</para>
 		/// </remarks>
-		public UnitDictionary<long, Dictionary<long, RuleGroup>> ListenerRuleTargetGroupDictionary = new();
+		public UnitDictionary<long, Dictionary<long, RuleGroup>> ListenerRuleTargetGroupDict = new();
 
 		/// <summary>
 		/// 法则字典
 		/// </summary>
 		/// <remarks> 法则类型《节点类型,法则》</remarks>
-		public UnitDictionary<long, RuleGroup> RuleGroupDictionary = new();
+		public UnitDictionary<long, RuleGroup> RuleGroupDict = new();
 
 		/// <summary>
 		/// 节点法则字典
 		/// </summary>
 		/// <remarks>记录节点拥有的法则类型，用于法则多态化的查询</remarks>
-		public UnitDictionary<long, HashSet<long>> NodeTypeRulesDictionary = new();
+		public UnitDictionary<long, HashSet<long>> NodeTypeRulesDict = new();
 
 		/// <summary>
 		/// 释放后
@@ -118,15 +118,15 @@ namespace WorldTree
 		{
 			NodeBranchHelper.RemoveBranchNode(self.Parent, self.BranchType, self);//从父节点分支移除
 
-			self.RuleGroupDictionary.Clear();
-			self.NodeTypeRulesDictionary.Clear();
+			self.RuleGroupDict.Clear();
+			self.NodeTypeRulesDict.Clear();
 
 			self.DynamicListenerTypeHash.Clear();
-			self.GenericRuleTypeHashDictionary.Clear();
-			self.TargetRuleListenerRuleHashDictionary.Clear();
+			self.GenericRuleTypeHashDict.Clear();
+			self.TargetRuleListenerRuleHashDict.Clear();
 
-			self.TargetRuleListenerGroupDictionary.Clear();
-			self.ListenerRuleTargetGroupDictionary.Clear();
+			self.TargetRuleListenerGroupDict.Clear();
+			self.ListenerRuleTargetGroupDict.Clear();
 
 			self.IsRecycle = true;
 			self.IsDisposed = true;
@@ -160,7 +160,7 @@ namespace WorldTree
 				}
 				var genericArguments = baseType.GetGenericArguments();
 				//Rule<N,R> 第一个泛型参数就是法则负责的目标节点
-				self.GenericRuleTypeHashDictionary.GetOrNewValue(genericArguments[0].GetGenericTypeDefinition()).Add(ruleType);
+				self.GenericRuleTypeHashDict.GetOrNewValue(genericArguments[0].GetGenericTypeDefinition()).Add(ruleType);
 			}
 			else
 			{
@@ -194,10 +194,10 @@ namespace WorldTree
 			if (listenerRule.TargetNodeType == TypeInfo<INode>.TypeCode && listenerRule.TargetRuleType != TypeInfo<IRule>.TypeCode)
 			{
 				//监听目标为法则的
-				self.TargetRuleListenerRuleHashDictionary.GetOrNewValue(listenerRule.TargetRuleType).Add(listenerRule);
+				self.TargetRuleListenerRuleHashDict.GetOrNewValue(listenerRule.TargetRuleType).Add(listenerRule);
 
 				//获取 监听法则 目标法则类型，当前的法则组。
-				if (self.RuleGroupDictionary.TryGetValue(listenerRule.TargetRuleType, out RuleGroup ruleGroup))
+				if (self.RuleGroupDict.TryGetValue(listenerRule.TargetRuleType, out RuleGroup ruleGroup))
 				{
 					foreach (var ruleList in ruleGroup)
 					{
@@ -223,16 +223,16 @@ namespace WorldTree
 		/// </summary>
 		private static void AddNodeRule(this RuleManager self, IRule rule)
 		{
-			var group = self.RuleGroupDictionary.GetOrNewValue(rule.RuleType);
-			var ruleList = group.GetOrNewValue(rule.NodeType);
+			var groupDict = self.RuleGroupDict.GetOrNewValue(rule.RuleType);
+			var ruleList = groupDict.GetOrNewValue(rule.NodeType);
 			ruleList.RuleType = rule.RuleType;
-			group.RuleType = rule.RuleType;
+			groupDict.RuleType = rule.RuleType;
 			ruleList.AddRule(rule);
 
-			self.NodeTypeRulesDictionary.GetOrNewValue(rule.NodeType).Add(rule.RuleType);
+			self.NodeTypeRulesDict.GetOrNewValue(rule.NodeType).Add(rule.RuleType);
 
 			//监听器法则补齐
-			if (self.TargetRuleListenerRuleHashDictionary.TryGetValue(rule.NodeType, out var listenerRuleHash))
+			if (self.TargetRuleListenerRuleHashDict.TryGetValue(rule.NodeType, out var listenerRuleHash))
 			{
 				foreach (var listenerRule in listenerRuleHash)
 				{
@@ -246,17 +246,17 @@ namespace WorldTree
 		/// </summary>
 		private static void DictionaryAddNodeRule(this RuleManager self, long targetNodeType, IListenerRule listenerRule)
 		{
-			var listenerRuleGroup = self.ListenerRuleTargetGroupDictionary.GetOrNewValue(listenerRule.NodeType).GetOrNewValue(listenerRule.RuleType);
-			var listenerRuleList = listenerRuleGroup.GetOrNewValue(targetNodeType);
+			var listenerRuleGroupDict = self.ListenerRuleTargetGroupDict.GetOrNewValue(listenerRule.NodeType).GetOrNewValue(listenerRule.RuleType);
+			var listenerRuleList = listenerRuleGroupDict.GetOrNewValue(targetNodeType);
 			listenerRuleList.AddRule(listenerRule);
 			listenerRuleList.RuleType = listenerRule.RuleType;
-			listenerRuleGroup.RuleType = listenerRule.RuleType;
+			listenerRuleGroupDict.RuleType = listenerRule.RuleType;
 
-			var targetRuleGroup = self.TargetRuleListenerGroupDictionary.GetOrNewValue(targetNodeType).GetOrNewValue(listenerRule.RuleType);
-			var targetRuleList = targetRuleGroup.GetOrNewValue(listenerRule.NodeType);
+			var targetRuleGroupDict = self.TargetRuleListenerGroupDict.GetOrNewValue(targetNodeType).GetOrNewValue(listenerRule.RuleType);
+			var targetRuleList = targetRuleGroupDict.GetOrNewValue(listenerRule.NodeType);
 			targetRuleList.AddRule(listenerRule);
 			targetRuleList.RuleType = listenerRule.RuleType;
-			targetRuleGroup.RuleType = listenerRule.RuleType;
+			targetRuleGroupDict.RuleType = listenerRule.RuleType;
 		}
 
 		#endregion
@@ -298,7 +298,7 @@ namespace WorldTree
 					//获取泛型参数数组
 					Type[] genericTypes = type.GetGenericArguments();
 
-					if (self.GenericRuleTypeHashDictionary.TryGetValue(genericNodeType, out var RuleTypeHash))
+					if (self.GenericRuleTypeHashDict.TryGetValue(genericNodeType, out var RuleTypeHash))
 					{
 						foreach (var RuleType in RuleTypeHash)
 						{
@@ -342,10 +342,10 @@ namespace WorldTree
 		private static void PolymorphicListenerRule(this RuleManager self, long listenerNodeType, long listenerBaseTypeCodeKey)
 		{
 			//判断父类是否有法则，没有则退出
-			if (!self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerBaseTypeCodeKey, out var RuleType_TargerGroupDictionary)) return;
+			if (!self.ListenerRuleTargetGroupDict.TryGetValue(listenerBaseTypeCodeKey, out var RuleType_TargerGroupDictionary)) return;
 
 			//拿到节点自身的：法则类型 《目标节点类型,监听法则》
-			Dictionary<long, RuleGroup> nodeRuleType_TargerGroupDictionary = self.ListenerRuleTargetGroupDictionary.GetOrNewValue(listenerNodeType);
+			Dictionary<long, RuleGroup> nodeRuleType_TargerGroupDict = self.ListenerRuleTargetGroupDict.GetOrNewValue(listenerNodeType);
 
 			//动态监听法则多态记录
 			if (self.DynamicListenerTypeHash.Contains(listenerBaseTypeCodeKey))
@@ -358,17 +358,17 @@ namespace WorldTree
 			foreach (var RuleType_TargetGroupKV in RuleType_TargerGroupDictionary)
 			{
 				//自身已经存在的法则则跳过
-				if (nodeRuleType_TargerGroupDictionary.ContainsKey(RuleType_TargetGroupKV.Key)) continue;
+				if (nodeRuleType_TargerGroupDict.ContainsKey(RuleType_TargetGroupKV.Key)) continue;
 
 				//父类的监听法则添加到自身，也就是继承法则功能
-				nodeRuleType_TargerGroupDictionary.Add(RuleType_TargetGroupKV.Key, RuleType_TargetGroupKV.Value);
+				nodeRuleType_TargerGroupDict.Add(RuleType_TargetGroupKV.Key, RuleType_TargetGroupKV.Value);
 
 				//接下来补齐 ListenerRuleTargetGroupDictionary 对应的 TargetRuleListenerGroupDictionary
 				//K:目标节点类型 , V:监听法则列表
 				foreach (var TargetType_RuleListKV in RuleType_TargetGroupKV.Value)
 				{
 					//目标类型为主的字典， 进行目标类型查找
-					if (!self.TargetRuleListenerGroupDictionary.TryGetValue(TargetType_RuleListKV.Key, out var RuleType_ListenerGroupDictionary)) continue;
+					if (!self.TargetRuleListenerGroupDict.TryGetValue(TargetType_RuleListKV.Key, out var RuleType_ListenerGroupDictionary)) continue;
 
 					//法则类型查找
 					if (!RuleType_ListenerGroupDictionary.TryGetValue(RuleType_TargetGroupKV.Key, out var ListenerGroup)) continue;
@@ -410,10 +410,10 @@ namespace WorldTree
 		private static void PolymorphicRule(this RuleManager self, long nodeType, long baseTypeCodeKey)
 		{
 			//判断父类是否有法则，没有则退出
-			if (!self.NodeTypeRulesDictionary.TryGetValue(baseTypeCodeKey, out var BaseRuleHash)) return;
+			if (!self.NodeTypeRulesDict.TryGetValue(baseTypeCodeKey, out var BaseRuleHash)) return;
 
 			//拿到节点类型的法则哈希表
-			HashSet<long> ruleTypeHash = self.NodeTypeRulesDictionary.GetOrNewValue(nodeType);
+			HashSet<long> ruleTypeHash = self.NodeTypeRulesDict.GetOrNewValue(nodeType);
 
 			//遍历父类型法则
 			foreach (var ruleType in BaseRuleHash)
@@ -424,7 +424,7 @@ namespace WorldTree
 				ruleTypeHash.Add(ruleType);
 
 				//法则字典的补充
-				if (!self.RuleGroupDictionary.TryGetValue(ruleType, out var RuleGroup)) continue;
+				if (!self.RuleGroupDict.TryGetValue(ruleType, out var RuleGroup)) continue;
 
 				//获取父类型法则列表
 				if (!RuleGroup.TryGetValue(baseTypeCodeKey, out var ruleList)) continue;
@@ -471,7 +471,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGetTargetRuleGroup(this RuleManager self, long ruleType, long targetType, out RuleGroup ruleGroup)
 		{
-			if (self.TargetRuleListenerGroupDictionary.TryGetValue(targetType, out var ruleGroupDictionary))
+			if (self.TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
 			{
 				return ruleGroupDictionary.TryGetValue(ruleType, out ruleGroup);
 			}
@@ -493,7 +493,7 @@ namespace WorldTree
 		/// </summary>
 		public static RuleGroup GetOrNewTargetRuleGroup(this RuleManager self, long ruleType, long targetType)
 		{
-			if (self.TargetRuleListenerGroupDictionary.TryGetValue(targetType, out var ruleGroupDictionary))
+			if (self.TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
 			{
 				if (ruleGroupDictionary.TryGetValue(ruleType, out var ruleGroup))
 				{
@@ -508,10 +508,10 @@ namespace WorldTree
 			}
 			else
 			{
-				ruleGroupDictionary = self.TargetRuleListenerGroupDictionary.GetOrNewValue(targetType);
-				RuleGroup ruleGroup = ruleGroupDictionary.GetOrNewValue(ruleType);
-				ruleGroup.RuleType = ruleType;
-				return ruleGroup;
+				ruleGroupDictionary = self.TargetRuleListenerGroupDict.GetOrNewValue(targetType);
+				RuleGroup ruleGroupDict = ruleGroupDictionary.GetOrNewValue(ruleType);
+				ruleGroupDict.RuleType = ruleType;
+				return ruleGroupDict;
 			}
 		}
 
@@ -525,7 +525,7 @@ namespace WorldTree
 		public static bool TryGetTargetRuleList<LR>(this RuleManager self, long targetType, out IRuleList<LR> ruleList)
 			where LR : IListenerRule
 		{
-			if (self.TargetRuleListenerGroupDictionary.TryGetValue(targetType, out var ruleGroupDictionary))
+			if (self.TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
 			{
 				if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.TypeCode, out var ruleGroup))
 				{
@@ -550,7 +550,7 @@ namespace WorldTree
 		public static bool TryGetListenerRuleGroup<LR>(this RuleManager self, long listenerType, out IRuleGroup<LR> ruleGroup)
 			where LR : IListenerRule
 		{
-			if (self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerType, out var ruleGroupDictionary))
+			if (self.ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
 			{
 				if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.TypeCode, out var RuleGroup))
 				{
@@ -568,7 +568,7 @@ namespace WorldTree
 		public static bool TryGetListenerRuleList<LR>(this RuleManager self, long listenerType, long targetType, out IRuleList<LR> ruleList)
 			where LR : IListenerRule
 		{
-			if (self.ListenerRuleTargetGroupDictionary.TryGetValue(listenerType, out var ruleGroupDictionary))
+			if (self.ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
 			{
 				if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.TypeCode, out var ruleGroup))
 				{
@@ -616,7 +616,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGetRuleGroup(this RuleManager self, long ruleType, out RuleGroup ruleGroup)
 		{
-			return self.RuleGroupDictionary.TryGetValue(ruleType, out ruleGroup);
+			return self.RuleGroupDict.TryGetValue(ruleType, out ruleGroup);
 		}
 
 		/// <summary>
@@ -633,9 +633,9 @@ namespace WorldTree
 		/// </summary>
 		public static RuleGroup GetOrNewRuleGroup(this RuleManager self, long ruleType)
 		{
-			var group = self.RuleGroupDictionary.GetOrNewValue(ruleType);
-			group.RuleType = ruleType;
-			return group;
+			var groupDict = self.RuleGroupDict.GetOrNewValue(ruleType);
+			groupDict.RuleType = ruleType;
+			return groupDict;
 		}
 
 		#endregion
@@ -665,7 +665,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGetRuleList(this RuleManager self, long nodeType, long ruleType, out RuleList ruleList)
 		{
-			if (self.RuleGroupDictionary.TryGetValue(ruleType, out RuleGroup ruleGroup))
+			if (self.RuleGroupDict.TryGetValue(ruleType, out RuleGroup ruleGroup))
 			{
 				return ruleGroup.TryGetValue(nodeType, out ruleList);
 			}
@@ -682,7 +682,7 @@ namespace WorldTree
 		public static bool TryGetRuleList<R>(this RuleManager self, long nodeType, out RuleList ruleList)
 		 where R : IRule
 		{
-			if (self.RuleGroupDictionary.TryGetValue(TypeInfo<R>.TypeCode, out RuleGroup ruleGroup))
+			if (self.RuleGroupDict.TryGetValue(TypeInfo<R>.TypeCode, out RuleGroup ruleGroup))
 			{
 				return ruleGroup.TryGetValue(nodeType, out ruleList);
 			}
@@ -707,7 +707,7 @@ namespace WorldTree
 		/// </summary>
 		public static RuleList GetOrNewRuleList(this RuleManager self, long nodeType, long ruleType)
 		{
-			if (self.RuleGroupDictionary.TryGetValue(ruleType, out RuleGroup ruleGroup))
+			if (self.RuleGroupDict.TryGetValue(ruleType, out RuleGroup ruleGroup))
 			{
 				if (ruleGroup.TryGetValue(nodeType, out RuleList ruleList))
 				{
@@ -722,7 +722,7 @@ namespace WorldTree
 			}
 			else
 			{
-				ruleGroup = self.RuleGroupDictionary.GetOrNewValue(ruleType);
+				ruleGroup = self.RuleGroupDict.GetOrNewValue(ruleType);
 				ruleGroup.RuleType = ruleType;
 				var ruleList = ruleGroup.GetOrNewValue(nodeType);
 				ruleList.RuleType = ruleType;

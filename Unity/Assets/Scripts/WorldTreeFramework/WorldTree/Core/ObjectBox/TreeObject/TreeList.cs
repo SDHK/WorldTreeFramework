@@ -108,11 +108,11 @@ namespace WorldTree
 				if (value == this._items.Length) return;
 				if (value > 0)
 				{
-					var destinationArray = this.Core.PoolGetArray<T>(value);
+					var destinations = this.Core.PoolGetArray<T>(value);
 					if (this._size > 0)
-						Array.Copy(this._items, 0, destinationArray, 0, this._size);
+						Array.Copy(this._items, 0, destinations, 0, this._size);
 					this.Core.PoolRecycle(this._items);
-					this._items = destinationArray;
+					this._items = destinations;
 				}
 				else
 				{
@@ -175,10 +175,10 @@ namespace WorldTree
 				this.LogError("数量小于0");
 			if (this._size - index < count)
 				this.LogError("无效参数");
-			TreeList<T> range = this.Parent.AddTemp(out TreeList<T> _, count);
-			Array.Copy(_items, index, range._items, 0, count);
-			range._size = count;
-			return range;
+			TreeList<T> rangeList = this.Parent.AddTemp(out TreeList<T> _, count);
+			Array.Copy(_items, index, rangeList._items, 0, count);
+			rangeList._size = count;
+			return rangeList;
 		}
 
 
@@ -522,9 +522,9 @@ namespace WorldTree
 					}
 					else
 					{
-						T[] array = new T[count];
-						objs.CopyTo(array, 0);
-						array.CopyTo(_items, index);
+						T[] arrays = new T[count];
+						objs.CopyTo(arrays, 0);
+						arrays.CopyTo(_items, index);
 					}
 					this._size += count;
 				}
@@ -699,9 +699,9 @@ namespace WorldTree
 		/// <remarks>会创建一个真实大小新数组</remarks>
 		public T[] ToArray()
 		{
-			T[] destinationArray = new T[this._size];
-			Array.Copy(_items, 0, destinationArray, 0, this._size);
-			return destinationArray;
+			T[] destinations = new T[this._size];
+			Array.Copy(_items, 0, destinations, 0, this._size);
+			return destinations;
 		}
 
 		/// <summary>
@@ -837,10 +837,10 @@ namespace WorldTree
 
 			public bool MoveNext()
 			{
-				TreeList<T> list = this.nowList;
-				if (this.version != list._version || (uint)this.index >= (uint)list._size)
+				TreeList<T> valueList = this.nowList;
+				if (this.version != valueList._version || (uint)this.index >= (uint)valueList._size)
 					return this.MoveNextRare();
-				this.current = list._items[this.index];
+				this.current = valueList._items[this.index];
 				++this.index;
 				return true;
 			}

@@ -6,6 +6,7 @@
 * 描述：
 
 */
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace WorldTree.Analyzer
@@ -13,17 +14,31 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// Node类型诊断
 	/// </summary>
-	public class NodeDiagnosticConfig : CodeNodeDiagnosticConfig
+	public class NodeDiagnosticConfig : DiagnosticConfigGroup
 	{
-		public NodeDiagnosticConfig() : base()
+		public NodeDiagnosticConfig()
 		{
+			Screen = (Symbol) =>
+			{
+				if (Symbol is not ITypeSymbol TypeSymbol) return false;
+				if (TypeSymbol.TypeKind == TypeKind.Class || TypeSymbol.TypeKind == TypeKind.Interface)
+				{
+					return TypeSymbol.Name == "INode" ? true : NamedSymbolHelper.CheckInterface(TypeSymbol, "INode", out _);
+				}
+				else
+				{
+					return false;
+				}
+			};
+
 			SetConfig(DiagnosticKey.MethodNaming, new DiagnosticConfig()
 			{
 				Title = "Node方法禁止",
 				MessageFormat = "Node中不可以写方法",
 				DeclarationKind = SyntaxKind.MethodDeclaration,
 				Check = s => false,
-			});
+				NeedComment = false,
+			}) ;
 		}
 	}
 

@@ -28,10 +28,10 @@ namespace WorldTree
 		public static IBranch AddBranch(INode self, long type)
 		{
 			// 拿到分支字典
-			var branchs = self.GetBranchDict;
-			if (!branchs.TryGetValue(type, out IBranch iBranch))
+			var branchDict = self.GetBranchDict;
+			if (!branchDict.TryGetValue(type, out IBranch iBranch))
 			{
-				branchs.Add(type, iBranch = self.Core.PoolGetUnit(type) as IBranch);
+				branchDict.Add(type, iBranch = self.Core.PoolGetUnit(type) as IBranch);
 			}
 			return iBranch;
 		}

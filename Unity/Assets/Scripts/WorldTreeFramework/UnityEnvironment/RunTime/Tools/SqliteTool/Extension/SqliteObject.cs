@@ -52,9 +52,9 @@ namespace WorldTree.Sample
             MemoryStream stream = new MemoryStream();
             BinaryFormatter bf = new BinaryFormatter();
             bf.Serialize(stream, value);
-            byte[] data = stream.ToArray();
+            byte[] datas = stream.ToArray();
             stream.Close();
-            return data;
+            return datas;
         }
     }
 }

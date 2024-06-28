@@ -21,8 +21,8 @@ namespace WorldTree
 				//SqliteTool.Insert(new TestData() { id = 3, value = "D" });
 				//SqliteTool.Insert(new TestData() { id = 4, value = "E" });
 
-				List<TestData> testDatas = SqliteTool.Select<TestData>("id > @id", new[] { "id" }, new[] { 2.GetBytes() });
-				foreach (var testData in testDatas)
+				List<TestData> testDataList = SqliteTool.Select<TestData>("id > @id", new[] { "id" }, new[] { 2.GetBytes() });
+				foreach (var testData in testDataList)
 				{
 					self.Log($"{testData.Id} : {testData.Value}");
 				}

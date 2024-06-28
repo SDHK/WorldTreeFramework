@@ -87,7 +87,7 @@ namespace WorldTree
 		public static void TryAddStaticListener(this ReferencedPoolManager self, INodeListener listener)
 		{
 			//判断是否为监听器
-			if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+			if (self.Core.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary))
 			{
 				foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
 				{
@@ -123,7 +123,7 @@ namespace WorldTree
 		public static void RemoveStaticListener(this ReferencedPoolManager self, INodeListener listener)
 		{
 			//判断是否为监听器
-			if (self.Core.RuleManager.ListenerRuleTargetGroupDictionary.TryGetValue(listener.Type, out var ruleGroupDictionary))
+			if (self.Core.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary))
 			{
 				foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
 				{
@@ -190,7 +190,7 @@ namespace WorldTree
 		private static void AddAllTarget(this ReferencedPoolManager self, IDynamicNodeListener node)
 		{
 			//获取 INode 动态目标 法则集合集合
-			if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.TypeCode, out Dictionary<long, RuleGroup> ruleGroupDictionary))
+			if (node.Core.RuleManager.TargetRuleListenerGroupDict.TryGetValue(TypeInfo<INode>.TypeCode, out Dictionary<long, RuleGroup> ruleGroupDictionary))
 			{
 				//遍历获取动态法则集合
 				foreach (var ruleGroupPair in ruleGroupDictionary)
@@ -242,7 +242,7 @@ namespace WorldTree
 				if (listenerPool.TryGetComponent(out HybridListenerRuleActuatorGroup ListenerRuleActuatorGroup))
 				{
 					//获取 INode 动态目标 法则集合集合
-					if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.TypeCode, out var ruleGroupDictionary))
+					if (node.Core.RuleManager.TargetRuleListenerGroupDict.TryGetValue(TypeInfo<INode>.TypeCode, out var ruleGroupDictionary))
 					{
 						//遍历获取动态法则集合，并添加自己
 						foreach (var ruleGroup in ruleGroupDictionary)
@@ -299,7 +299,7 @@ namespace WorldTree
 		private static void RemoveAllTarget(this ReferencedPoolManager self, IDynamicNodeListener node)
 		{
 			//获取 INode 动态目标 法则集合集合
-			if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.TypeCode, out var ruleGroupDictionary))
+			if (node.Core.RuleManager.TargetRuleListenerGroupDict.TryGetValue(TypeInfo<INode>.TypeCode, out var ruleGroupDictionary))
 			{
 				//遍历获取动态法则集合
 				foreach (var ruleGroupPair in ruleGroupDictionary)
@@ -352,7 +352,7 @@ namespace WorldTree
 				if (listenerPool.TryGetComponent(out HybridListenerRuleActuatorGroup ListenerRuleActuatorGroup))
 				{
 					//获取 INode 动态目标 法则集合集合
-					if (node.Core.RuleManager.TargetRuleListenerGroupDictionary.TryGetValue(TypeInfo<INode>.TypeCode, out var ruleGroupDictionary))
+					if (node.Core.RuleManager.TargetRuleListenerGroupDict.TryGetValue(TypeInfo<INode>.TypeCode, out var ruleGroupDictionary))
 					{
 						//遍历获取动态法则集合，移除自己
 						foreach (var ruleGroup in ruleGroupDictionary)

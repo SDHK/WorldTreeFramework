@@ -22,11 +22,11 @@ namespace WorldTree
 			// 当前节点
 			INode current;
 			// 从对象池拿栈
-			UnitStack<INode> stack = self.Core.PoolGetUnit<UnitStack<INode>>();
-			stack.Push(self);
-			while (stack.Count != 0)
+			UnitStack<INode> nodeStack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			nodeStack.Push(self);
+			while (nodeStack.Count != 0)
 			{
-				current = stack.Pop();
+				current = nodeStack.Pop();
 				action(current);
 				if (current.BranchDict != null)
 				{
@@ -34,12 +34,12 @@ namespace WorldTree
 					{
 						foreach (INode node in branchs.Value)
 						{
-							stack.Push(node);
+							nodeStack.Push(node);
 						}
 					}
 				}
 			}
-			stack.Dispose();
+			nodeStack.Dispose();
 			return self;
 		}
 
@@ -56,13 +56,13 @@ namespace WorldTree
 			}
 
 			// 从对现场拿队列
-			UnitQueue<INode> queue = self.Core.PoolGetUnit<UnitQueue<INode>>();
-			queue.Enqueue(self);
+			UnitQueue<INode> nodeQueue = self.Core.PoolGetUnit<UnitQueue<INode>>();
+			nodeQueue.Enqueue(self);
 
-			while (queue.Count != 0)
+			while (nodeQueue.Count != 0)
 			{
 				// 当前节点
-				var current = queue.Dequeue();
+				var current = nodeQueue.Dequeue();
 
 				action(current);
 
@@ -72,12 +72,12 @@ namespace WorldTree
 					{
 						foreach (INode node in branchs.Value)
 						{
-							queue.Enqueue(node);
+							nodeQueue.Enqueue(node);
 						}
 					}
 				}
 			}
-			queue.Dispose();
+			nodeQueue.Dispose();
 			return self;
 		}
 
@@ -95,13 +95,13 @@ namespace WorldTree
 			// 当前节点
 			INode current;
 			// 从对象池拿栈，用于存放一个分支的节点
-			UnitStack<INode> stack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> nodeStack = self.Core.PoolGetUnit<UnitStack<INode>>();
 			// 从对象池拿栈，用于存放所有节点
 			UnitStack<INode> allStack = self.Core.PoolGetUnit<UnitStack<INode>>();
-			stack.Push(self);
-			while (stack.Count != 0)
+			nodeStack.Push(self);
+			while (nodeStack.Count != 0)
 			{
-				current = stack.Pop();
+				current = nodeStack.Pop();
 				allStack.Push(current);
 				if (current.BranchDict != null)
 				{
@@ -109,12 +109,12 @@ namespace WorldTree
 					{
 						foreach (INode node in branchs.Value)
 						{
-							stack.Push(node);
+							nodeStack.Push(node);
 						}
 					}
 				}
 			}
-			stack.Dispose();
+			nodeStack.Dispose();
 			while (allStack.Count != 0)
 			{
 				action(allStack.Pop());
@@ -138,13 +138,13 @@ namespace WorldTree
 			// 当前节点
 			INode current;
 			// 从对象池拿栈，用于存放一个分支的节点
-			UnitStack<INode> stack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> nodeStack = self.Core.PoolGetUnit<UnitStack<INode>>();
 			// 从对象池拿栈，用于存放所有节点
 			UnitStack<INode> allStack = self.Core.PoolGetUnit<UnitStack<INode>>();
-			stack.Push(self);
-			while (stack.Count != 0)
+			nodeStack.Push(self);
+			while (nodeStack.Count != 0)
 			{
-				current = stack.Pop();
+				current = nodeStack.Pop();
 				preAction(current);
 				allStack.Push(current);
 				if (current.BranchDict != null)
@@ -153,12 +153,12 @@ namespace WorldTree
 					{
 						foreach (INode node in branchs.Value)
 						{
-							stack.Push(node);
+							nodeStack.Push(node);
 						}
 					}
 				}
 			}
-			stack.Dispose();
+			nodeStack.Dispose();
 			while (allStack.Count != 0)
 			{
 				postAction(allStack.Pop());

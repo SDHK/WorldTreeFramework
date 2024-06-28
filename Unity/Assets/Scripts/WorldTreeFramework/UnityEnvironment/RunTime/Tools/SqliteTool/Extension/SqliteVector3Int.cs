@@ -66,16 +66,16 @@ namespace WorldTree.Sample
         public static Vector3Int[] GetVector3Ints(this byte[] arr)
         {
             if (arr == null) return null;
-            byte[] data = new byte[12];
-            Vector3Int[] result = new Vector3Int[arr.Length / data.Length];
+            byte[] datas = new byte[12];
+            Vector3Int[] results = new Vector3Int[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetVector3Int();
+                stream.Read(datas);
+                results[i] = datas.GetVector3Int();
             }
-            return result;
+            return results;
         }
 
         /// <summary>
@@ -130,12 +130,12 @@ namespace WorldTree.Sample
             if (str != "" && str != null)
             {
                 string[] datas = str.Split('|');
-                Vector3Int[] result = new Vector3Int[datas.Length / 3];
-                for (int i = 0; i < result.Length; i++)
+                Vector3Int[] results = new Vector3Int[datas.Length / 3];
+                for (int i = 0; i < results.Length; i++)
                 {
-                    result[i] = (datas[i * 3] + "|" + datas[i * 3 + 1] + "|" + datas[i * 3 + 2]).GetVector3Int();
+                    results[i] = (datas[i * 3] + "|" + datas[i * 3 + 1] + "|" + datas[i * 3 + 2]).GetVector3Int();
                 }
-                return result ;
+                return results ;
             }
             else
             {

@@ -31,7 +31,7 @@ namespace WorldTree
 		/// </summary>
 		private static long[] GenerateCRC64Table()
 		{
-			long[] table = new long[256];
+			long[] tables = new long[256];
 			for (int i = 0; i < 256; i++)
 			{
 				ulong crc = CalculateCRC64(i);
@@ -41,9 +41,9 @@ namespace WorldTree
 				{
 					value = (value << 8) | bytes[j];//这样操作可以覆盖到符号位
 				}
-				table[i] = value;
+				tables[i] = value;
 			}
-			return table;
+			return tables;
 		}
 
 		/// <summary>

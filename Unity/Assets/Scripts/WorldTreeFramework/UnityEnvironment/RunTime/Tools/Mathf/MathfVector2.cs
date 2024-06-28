@@ -150,13 +150,13 @@ namespace WorldTree
         {
             while (points.Count > 1)
             {
-                List<Vector2> newp = new List<Vector2>();
+                List<Vector2> newpList = new List<Vector2>();
                 for (int i = 0; i < points.Count - 1; i++)
                 {
                     Vector2 p0p1 = Vector2.Lerp(points[i], points[i + 1], timeRatio);
-                    newp.Add(p0p1);
+                    newpList.Add(p0p1);
                 }
-                points = newp;
+                points = newpList;
             }
             return points[0];
         }

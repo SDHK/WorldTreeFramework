@@ -29,7 +29,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点id被移除的次数
 		/// </summary>
-		public TreeDictionary<long, int> removeIdDictionary;
+		public TreeDictionary<long, int> removeIdDict;
 
 		/// <summary>
 		/// 节点Id字典
@@ -78,14 +78,14 @@ namespace WorldTree
 				nodeIdHash.Remove(id);
 
 				//累计强制移除的节点id
-				removeIdDictionary ??= this.AddChild(out removeIdDictionary);
-				if (removeIdDictionary.TryGetValue(id, out var count))
+				removeIdDict ??= this.AddChild(out removeIdDict);
+				if (removeIdDict.TryGetValue(id, out var count))
 				{
-					removeIdDictionary[id] = count + 1;
+					removeIdDict[id] = count + 1;
 				}
 				else
 				{
-					removeIdDictionary.Add(id, 1);
+					removeIdDict.Add(id, 1);
 				}
 			}
 		}
@@ -97,7 +97,7 @@ namespace WorldTree
 		{
 			nodeQueue?.Clear();
 			nodeIdHash?.Clear();
-			removeIdDictionary?.Clear();
+			removeIdDict?.Clear();
 			traversalCount = 0;
 		}
 
@@ -118,15 +118,15 @@ namespace WorldTree
 				{
 					long id = ((NodeRef<INode>)null).NodeId;
 					//假如id被回收了
-					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+					if (removeIdDict != null && removeIdDict.TryGetValue(id, out int count))
 					{
 						//回收次数抵消
-						removeIdDictionary[id] = --count;
-						if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
-						if (removeIdDictionary.Count == 0)//假如字典空了,则释放
+						removeIdDict[id] = --count;
+						if (count == 0) removeIdDict.Remove(id);//次数为0时删除id
+						if (removeIdDict.Count == 0)//假如字典空了,则释放
 						{
-							removeIdDictionary.Dispose();
-							removeIdDictionary = null;
+							removeIdDict.Dispose();
+							removeIdDict = null;
 						}
 
 						if (traversalCount > 0) traversalCount--;
@@ -174,16 +174,16 @@ namespace WorldTree
 				{
 					long id = nodeRef.NodeId;
 					//假如id被主动移除了
-					if (removeIdDictionary != null && removeIdDictionary.TryGetValue(id, out int count))
+					if (removeIdDict != null && removeIdDict.TryGetValue(id, out int count))
 					{
 						id = nodeRef.NodeId;
 
-						removeIdDictionary[id] = --count;//回收次数抵消
-						if (count == 0) removeIdDictionary.Remove(id);//次数为0时删除id
-						if (removeIdDictionary.Count == 0)//假如字典空了,则释放
+						removeIdDict[id] = --count;//回收次数抵消
+						if (count == 0) removeIdDict.Remove(id);//次数为0时删除id
+						if (removeIdDict.Count == 0)//假如字典空了,则释放
 						{
-							removeIdDictionary.Dispose();
-							removeIdDictionary = null;
+							removeIdDict.Dispose();
+							removeIdDict = null;
 						}
 
 						if (traversalCount > 0) traversalCount--;
@@ -244,7 +244,7 @@ namespace WorldTree
 			{
 				self.Clear();
 				self.nodeQueue = null;
-				self.removeIdDictionary = null;
+				self.removeIdDict = null;
 				self.nodeIdHash = null;
 			}
 		}

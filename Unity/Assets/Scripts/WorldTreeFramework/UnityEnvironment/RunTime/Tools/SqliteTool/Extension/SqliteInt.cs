@@ -65,16 +65,16 @@ namespace WorldTree.Sample
         public static int[] GetInts(this byte[] arr)
         {
             if (arr == null) return null;
-            byte[] data = new byte[4];
-            int[] result = new int[arr.Length / data.Length];
+            byte[] datas = new byte[4];
+            int[] results = new int[arr.Length / datas.Length];
             MemoryStream stream = new MemoryStream(arr);
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < results.Length; i++)
             {
-                stream.Read(data);
-                result[i] = data.GetInt();
+                stream.Read(datas);
+                results[i] = datas.GetInt();
             }
-            return result;
+            return results;
         }
 
 

@@ -117,6 +117,11 @@ namespace WorldTree.Analyzer
 		/// </summary>
 		ClassPropertyNaming,
 
+		/// <summary>
+		/// 类型局部变量命名规范诊断
+		/// </summary>
+		ClassLocalVariableNaming,
+
 
 		/// <summary>
 		/// 实例的简单成员访问诊断

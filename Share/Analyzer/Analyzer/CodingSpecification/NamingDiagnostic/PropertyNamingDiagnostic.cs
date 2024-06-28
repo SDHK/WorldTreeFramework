@@ -29,26 +29,17 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			DiagnosticProperty(context, DiagnosticKey.PublicPropertyNaming);
-			DiagnosticProperty(context, DiagnosticKey.PrivatePropertyNaming);
-			DiagnosticProperty(context, DiagnosticKey.ProtectedPropertyNaming);
+			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			DiagnosticProperty(context, DiagnosticKey.PublicPropertyNaming, objectDiagnostics);
+			DiagnosticProperty(context, DiagnosticKey.PrivatePropertyNaming, objectDiagnostics);
+			DiagnosticProperty(context, DiagnosticKey.ProtectedPropertyNaming, objectDiagnostics);
+			DiagnosticClassName(context, objectDiagnostics);
 		}
 
-		private void DiagnosticProperty(SyntaxNodeAnalysisContext context, DiagnosticKey diagnosticKey)
+		private void DiagnosticClassName(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> objectDiagnostics)
 		{
-
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
-			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			PropertyDeclarationSyntax propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
-
-
-			//获取当前属性所在的类型名称
-			BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(propertyDeclaration);
-			IPropertySymbol? propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration);
-			INamedTypeSymbol? propertyParentSymbol = semanticModel.GetDeclaredSymbol(parentType);
-
-			//获取当前属性的类型
 			ITypeSymbol propertyTypeSymbol = semanticModel.GetTypeInfo(propertyDeclaration.Type).Type;
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
@@ -62,6 +53,25 @@ namespace WorldTree.Analyzer
 						}
 					}
 				}
+			}
+		}
+
+		private void DiagnosticProperty(SyntaxNodeAnalysisContext context, DiagnosticKey diagnosticKey, List<DiagnosticConfigGroup> objectDiagnostics)
+		{
+
+			// 获取语义模型
+			SemanticModel semanticModel = context.SemanticModel;
+			PropertyDeclarationSyntax propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
+
+			//获取当前属性所在的类型名称
+			BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(propertyDeclaration);
+			IPropertySymbol? propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration);
+			INamedTypeSymbol? propertyParentSymbol = semanticModel.GetDeclaredSymbol(parentType);
+
+			//获取当前属性的类型
+			ITypeSymbol propertyTypeSymbol = semanticModel.GetTypeInfo(propertyDeclaration.Type).Type;
+			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			{
 				if (!objectDiagnostic.Screen(propertyParentSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(diagnosticKey, out DiagnosticConfig codeDiagnostic))
 				{

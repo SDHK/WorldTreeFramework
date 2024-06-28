@@ -33,11 +33,11 @@ namespace WorldTree
 		public static string FindDirectory(string root, string directoryName)
 		{
 			DirectoryInfo rootInfo = new DirectoryInfo(root);
-			DirectoryInfo[] infoList = rootInfo.GetDirectories();
-			for (int i = 0; i < infoList.Length; i++)
+			DirectoryInfo[] infos = rootInfo.GetDirectories();
+			for (int i = 0; i < infos.Length; i++)
 			{
-				string fullPath = infoList[i].FullName;
-				if (infoList[i].Name == directoryName)
+				string fullPath = infos[i].FullName;
+				if (infos[i].Name == directoryName)
 					return fullPath;
 
 				string result = FindDirectory(fullPath, directoryName);

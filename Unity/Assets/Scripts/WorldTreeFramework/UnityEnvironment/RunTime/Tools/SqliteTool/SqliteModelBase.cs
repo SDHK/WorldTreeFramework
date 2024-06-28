@@ -8,7 +8,6 @@
 
 */
 
-using WorldTree;
 using Mono.Data.Sqlite;
 using System;
 using System.Collections.Generic;
@@ -79,16 +78,16 @@ namespace Logic.SqliteData
         /// </summary>
         public List<T> Get(params ID[] ids)
         {
-            List<T> values = new List<T>();
+            List<T> valueList = new List<T>();
 
             foreach (var item in mDict)
             {
                 if (ids.Contains(item.Key))
                 {
-                    values.Add(item.Value);
+                    valueList.Add(item.Value);
                 }
             }
-            return values;
+            return valueList;
         }
 
         /// <summary>
