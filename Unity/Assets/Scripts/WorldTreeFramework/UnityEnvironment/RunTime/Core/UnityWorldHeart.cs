@@ -28,31 +28,82 @@ namespace WorldTree
 		/// <summary>
 		/// 运行线程
 		/// </summary>
-		public UnityMonoBehaviourThread m_Thread;
+		public UnityMonoBehaviourThread thread;
 
 		#region 世界脉搏
 
+		/// <summary>
+		/// 世界更新
+		/// </summary>
 		public WorldPulse<UpdateTime> worldUpdate;
+		/// <summary>
+		/// 世界晚更新
+		/// </summary>
 		public WorldPulse<LateUpdateTime> worldLateUpdate;
+		/// <summary>
+		/// 世界固定更新
+		/// </summary>
 		public WorldPulse<FixedUpdateTime> worldFixedUpdate;
+		/// <summary>
+		/// 世界GUI更新
+		/// </summary>
 		public WorldPulse<GuiUpdateTime> worldGuiUpdate;
+		/// <summary>
+		/// 世界绘制Gizmos更新
+		/// </summary>
 		public WorldPulse<DrawGizmosUpdateTime> worldDrawGizmosUpdate;
 
 		#endregion
 
 		#region 全局事件法则
 
+		/// <summary>
+		/// 启用
+		/// </summary>
 		public GlobalRuleActuator<Enable> enable;
+		/// <summary>
+		/// 禁用
+		/// </summary>
 		public GlobalRuleActuator<Disable> disable;
+		/// <summary>
+		/// 更新
+		/// </summary>
 		public GlobalRuleActuator<Update> update;
+		/// <summary>
+		/// 更新时间
+		/// </summary>
 		public GlobalRuleActuator<UpdateTime> updateTime;
+		/// <summary>
+		/// 晚更新
+		/// </summary>
 		public GlobalRuleActuator<LateUpdate> lateUpdate;
+		/// <summary>
+		/// 晚更新时间
+		/// </summary>
 		public GlobalRuleActuator<LateUpdateTime> lateUpdateTime;
+		/// <summary>
+		/// 固定更新
+		/// </summary>
 		public GlobalRuleActuator<FixedUpdate> fixedUpdate;
+		/// <summary>
+		/// 固定更新时间
+		/// </summary>
 		public GlobalRuleActuator<FixedUpdateTime> fixedUpdateTime;
+		/// <summary>
+		/// GUI更新
+		/// </summary>
 		public GlobalRuleActuator<GuiUpdate> onGUI;
+		/// <summary>
+		/// GUI更新时间
+		/// </summary>
 		public GlobalRuleActuator<GuiUpdateTime> onGUIUpdateTime;
+		/// <summary>
+		/// 绘制Gizmos更新
+		/// </summary>
 		public GlobalRuleActuator<DrawGizmosUpdate> drawGizmos;
+		/// <summary>
+		/// 绘制Gizmos更新时间
+		/// </summary>
 		public GlobalRuleActuator<DrawGizmosUpdateTime> drawGizmosUpdateTime;
 
 		#endregion
@@ -60,19 +111,19 @@ namespace WorldTree
 		public override void Run()
 		{
 			isRun = true;
-			m_Thread.isRun = true;
+			thread.IsRun = true;
 		}
 
 		public override void Pause()
 		{
 			isRun = false;
-			m_Thread.isRun = false;
+			thread.IsRun = false;
 		}
 
 		public override void OneFrame()
 		{
-			m_Thread.isRun = false;
-			m_Thread.isOneFrame = true;
+			thread.IsRun = false;
+			thread.IsOneFrame = true;
 		}
 	}
 
@@ -103,13 +154,13 @@ namespace WorldTree
 				self.AddComponent(out self.worldGuiUpdate, frameTime).Run();
 				self.AddComponent(out self.worldDrawGizmosUpdate, frameTime).Run();
 
-				self.m_Thread = new GameObject(self.GetType().Name).AddComponent<UnityMonoBehaviourThread>();
-				GameObject.DontDestroyOnLoad(self.m_Thread.gameObject);
-				self.m_Thread.onUpdate = self.worldUpdate.Update;
-				self.m_Thread.onLateUpdate = self.worldLateUpdate.Update;
-				self.m_Thread.onFixedUpdate = self.worldFixedUpdate.Update;
-				self.m_Thread.onGUI = self.worldGuiUpdate.Update;
-				self.m_Thread.onDrawGizmos = self.worldDrawGizmosUpdate.Update;
+				self.thread = new GameObject(self.GetType().Name).AddComponent<UnityMonoBehaviourThread>();
+				GameObject.DontDestroyOnLoad(self.thread.gameObject);
+				self.thread.OnUpdate = self.worldUpdate.Update;
+				self.thread.OnLateUpdate = self.worldLateUpdate.Update;
+				self.thread.OnFixedUpdate = self.worldFixedUpdate.Update;
+				self.thread.OnGuiUpdate = self.worldGuiUpdate.Update;
+				self.thread.OnDrawGizmosUpdate = self.worldDrawGizmosUpdate.Update;
 			}
 		}
 
@@ -117,8 +168,8 @@ namespace WorldTree
 		{
 			protected override void Execute(UnityWorldHeart self)
 			{
-				if (self.m_Thread != null) GameObject.Destroy(self.m_Thread.gameObject);
-				self.m_Thread = null;
+				if (self.thread != null) GameObject.Destroy(self.thread.gameObject);
+				self.thread = null;
 
 				self.worldUpdate = null;
 				self.worldLateUpdate = null;

@@ -3,11 +3,20 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    public class GUIRepeatButton : GUIBase
+	/// <summary>
+	/// Gui重复按钮
+	/// </summary>
+	public class GUIRepeatButton : GUIBase
     {
-        public Action action;
+		/// <summary>
+		/// 回调
+		/// </summary>
+		public Action action;
 
-        public void Draw()
+		/// <summary>
+		/// 绘制
+		/// </summary>
+		public void Draw()
         {
             if (GUILayout.RepeatButton(text, Style, options))
             {

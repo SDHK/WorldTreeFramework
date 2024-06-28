@@ -2,6 +2,9 @@
 
 namespace WorldTree
 {
+	/// <summary>
+	/// SqliteTool测试
+	/// </summary>
 	public class SqliteToolTest : Node
 		, ComponentOf<InitialDomain>
 		, AsAwake
@@ -9,9 +12,18 @@ namespace WorldTree
 
 	}
 
+	/// <summary>
+	/// 测试数据类
+	/// </summary>
 	public class TestData
 	{
-		public int id;
-		public string value;
+		/// <summary>
+		/// Id
+		/// </summary>
+		public int Id;
+		/// <summary>
+		/// 名称
+		/// </summary>
+		public string Value;
 	}
 }

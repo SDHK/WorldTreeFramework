@@ -12,6 +12,9 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 资源管理器
+	/// </summary>
 	public class YooAssetManager : Node
 	{
 		//默认包需要初始化

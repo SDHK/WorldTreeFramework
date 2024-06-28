@@ -12,18 +12,24 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    public abstract class GUIBase : Node
+	/// <summary>
+	/// GUI基类
+	/// </summary>
+	public abstract class GUIBase : Node
     {
         /// <summary>
         /// 文本内容
         /// </summary>
         public string text = default(string);
 
-
-        public GUIStyle style;
-
-        public GUILayoutOption[] options;
-
+		/// <summary>
+		/// GUI样式
+		/// </summary>
+		public GUIStyle style;
+		/// <summary>
+		/// 设置操作
+		/// </summary>
+		public GUILayoutOption[] options;
 
 
         /// <summary>

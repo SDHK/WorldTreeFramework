@@ -8,19 +8,38 @@ using System.Threading.Tasks;
 
 namespace WorldTree
 {
+
 	[MemoryPackable]
 	public partial class MemoryPackDataTest<T>
 	{
-		public T t;
+		/// <summary>
+		/// 测试泛型
+		/// </summary>
+		public T Test;
+		/// <summary>
+		/// 测试
+		/// </summary>
 		public long Name;
+		/// <summary>
+		/// 测试
+		/// </summary>
 		public int Age;
-		public List<int> ints;
+		/// <summary>
+		/// 测试
+		/// </summary>
+		public List<int> IntList;
 	}
 
+	/// <summary>
+	/// 测试内存包
+	/// </summary>
 	public class MemoryPackTest : Node
 		, ComponentOf<InitialDomain>
 		, AsAwake
 	{
+		/// <summary>
+		/// 测试数据
+		/// </summary>
 		public MemoryPackDataTest<string> data;
 
 	}

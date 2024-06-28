@@ -5,8 +5,6 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
-	public interface EventRule<T> : ISendRule<T> where T : struct { }
-
 	public static partial class InitialDomainRule
 	{
 		static OnAdd<InitialDomain> OnAdd = (self) =>

@@ -65,6 +65,9 @@ namespace WorldTree
 			//throw new System.Exception("测试抛出异常");
 		}
 
+		/// <summary>
+		/// 主机运行模式
+		/// </summary>
 		private static async TreeTask InitializeYooAsset2(this YooAssetTest self)
 		{
 			// 注意：GameQueryServices.cs 太空战机的脚本类，详细见StreamingAssetsHelper.cs

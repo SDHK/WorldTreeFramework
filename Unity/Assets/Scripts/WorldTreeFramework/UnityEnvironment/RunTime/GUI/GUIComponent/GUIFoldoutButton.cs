@@ -11,12 +11,25 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    public class GUIFoldoutButton : GUIBase
+	/// <summary>
+	/// GUI折叠按钮
+	/// </summary>
+	public class GUIFoldoutButton : GUIBase
     {
-        public Action action;
-        public bool isFoldout;
+		/// <summary>
+		/// 回调
+		/// </summary>
+		public Action action;
 
-        public bool Draw()
+		/// <summary>
+		/// 是否折叠
+		/// </summary>
+		public bool isFoldout;
+
+		/// <summary>
+		/// 绘制
+		/// </summary>
+		public bool Draw()
         {
             if (GUILayout.Button(text, Style, options))
             {
@@ -26,7 +39,10 @@ namespace WorldTree
             return isFoldout;
         }
 
-        public bool Draw(bool value)
+		/// <summary>
+		/// 绘制
+		/// </summary>
+		public bool Draw(bool value)
         {
             this.isFoldout = value;
             if (GUILayout.Button(text, Style, options))

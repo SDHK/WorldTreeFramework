@@ -10,12 +10,18 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    public class GUIBeginScrollView : GUIBase
+	/// <summary>
+	/// GUIBeginScrollView
+	/// </summary>
+	public class GUIBeginScrollView : GUIBase
     {
         /// <summary>
         /// 滚动位置
         /// </summary>
         public Vector2 scrollPosition;
+        /// <summary>
+        /// 绘制
+        /// </summary>
         public void Draw()
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, Style, options);

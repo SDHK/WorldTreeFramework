@@ -36,7 +36,9 @@ namespace WorldTree
         /// </summary>
         public GameObject prefab { get; set; }
 
-        //游戏对象名称
+        /// <summary>
+        /// 游戏对象名称
+        /// </summary>
         private string objName;
 
         public GameObjectPool()
@@ -87,24 +89,39 @@ namespace WorldTree
             return gameObject;
         }
 
+        /// <summary>
+        /// 新建对象
+        /// </summary>
         private GameObject ObjectNew(IPool pool)
         {
             return (prefab == null) ? new GameObject(objName) : GameObject.Instantiate(prefab);
         }
-        private void ObjectDestroy(GameObject gameObject)
+		/// <summary>
+		/// 销毁对象
+		/// </summary>
+		private void ObjectDestroy(GameObject gameObject)
         {
             GameObject.Destroy(gameObject);
         }
-
-        private void ObjectOnNew(GameObject gameObject)
+		/// <summary>
+		/// 对象新建处理
+		/// </summary>
+		/// <param name="gameObject"></param>
+		private void ObjectOnNew(GameObject gameObject)
         {
 
         }
-        private void ObjectOnGet(GameObject gameObject)
+		/// <summary>
+		/// 对象获取处理
+		/// </summary>
+		private void ObjectOnGet(GameObject gameObject)
         {
             gameObject.SetActive(true);
         }
-        private void ObjectOnRecycle(GameObject gameObject)
+		/// <summary>
+		/// 对象回收处理
+		/// </summary>
+		private void ObjectOnRecycle(GameObject gameObject)
         {
             gameObject.SetActive(false);
         }

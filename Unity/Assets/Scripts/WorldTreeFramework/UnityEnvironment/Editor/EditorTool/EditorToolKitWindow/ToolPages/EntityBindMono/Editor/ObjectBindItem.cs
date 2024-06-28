@@ -98,15 +98,15 @@ namespace EditorTool
 
         public void UpdateRefresh()
         {
-            if (components.Count != monoObject.components.Count)
+            if (components.Count != monoObject.ComponentList.Count)
             {
                 IsRefresh = true;
             }
             else
             {
-                for (int i = 0; i < monoObject.components.Count; i++)
+                for (int i = 0; i < monoObject.ComponentList.Count; i++)
                 {
-                    if (components[i].component != monoObject.components[i])
+                    if (components[i].component != monoObject.ComponentList[i])
                     {
                         IsRefresh = true;
                         break;
@@ -119,16 +119,16 @@ namespace EditorTool
 
                 List<ComponentBindItem> newComponents = new List<ComponentBindItem>();
 
-                for (int i = 0; i < monoObject.components.Count; i++)
+                for (int i = 0; i < monoObject.ComponentList.Count; i++)
                 {
-                    ComponentBindItem component = components.Find(x => x.component == monoObject.components[i]);
+                    ComponentBindItem component = components.Find(x => x.component == monoObject.ComponentList[i]);
                     if (component != null)
                     {
                         newComponents.Add(component);
                     }
                     else
                     {
-                        ComponentBindItem componentItem = new ComponentBindItem() { component = monoObject.components[i] };
+                        ComponentBindItem componentItem = new ComponentBindItem() { component = monoObject.ComponentList[i] };
                         newComponents.Add(componentItem);
                         componentItem.Refresh();
                     }

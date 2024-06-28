@@ -20,10 +20,22 @@ namespace WorldTree
 		, ChildOf<WorldTreeRoot>
 		, AsAwake<INode, INode>
 	{
+		/// <summary>
+		/// 节点
+		/// </summary>
 		public INode node;
+		/// <summary>
+		/// 游戏对象
+		/// </summary>
 		public GameObject gameObject;
+		/// <summary>
+		/// 父分支对象
+		/// </summary>
 		public GameObject parentBranchObj;
-		public Dictionary<long, GameObject> BranchObjs = new Dictionary<long, GameObject>();
+		/// <summary>
+		/// 分支对象字典
+		/// </summary>
+		public Dictionary<long, GameObject> branchObjDict = new Dictionary<long, GameObject>();
 	}
 
 	public static class TreeNodeUnityViewRule
@@ -37,19 +49,19 @@ namespace WorldTree
 				self.gameObject ??= new GameObject(node.GetType().Name);
 				if (self.gameObject != null)
 				{
-					UnityWorldTreeNodeView MonoView = self.gameObject.AddComponent<UnityWorldTreeNodeView>();
-					MonoView.Node = node;
-					MonoView.View = self;
+					UnityWorldTreeNodeView monoView = self.gameObject.AddComponent<UnityWorldTreeNodeView>();
+					monoView.Node = node;
+					monoView.View = self;
 				}
 				if (parent != null)
 				{
 					UnityWorldTreeNodeViewBuilder parentView = parent.View as UnityWorldTreeNodeViewBuilder;
 					GameObject parentObj = parentView.gameObject;
-					if (!parentView.BranchObjs.TryGetValue(node.BranchType, out self.parentBranchObj))
+					if (!parentView.branchObjDict.TryGetValue(node.BranchType, out self.parentBranchObj))
 					{
 						self.parentBranchObj = new GameObject(node.BranchType.CodeToType().Name);
 						self.parentBranchObj.transform.SetParent(parentObj.transform);
-						parentView.BranchObjs.Add(node.BranchType, self.parentBranchObj);
+						parentView.branchObjDict.Add(node.BranchType, self.parentBranchObj);
 					}
 
 					if (self.gameObject != null)
@@ -72,7 +84,7 @@ namespace WorldTree
 				{
 					GameObject.Destroy(self.parentBranchObj.gameObject);
 				}
-				self.BranchObjs.Clear();
+				self.branchObjDict.Clear();
 				self.node = null;
 				self.parentBranchObj = null;
 				self.gameObject = null;

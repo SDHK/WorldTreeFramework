@@ -35,7 +35,7 @@ namespace WorldTree
 		/// <summary>
 		/// 全部窗口
 		/// </summary>
-		public UnitDictionary<long, INode> windows = new UnitDictionary<long, INode>();
+		public UnitDictionary<long, INode> windowDict = new UnitDictionary<long, INode>();
 		/// <summary>
 		/// 栈窗口
 		/// </summary>
@@ -53,7 +53,7 @@ namespace WorldTree
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 
 		{
-			if (windows.TryGetValue(TypeInfo<T>.TypeCode, out INode node))
+			if (windowDict.TryGetValue(TypeInfo<T>.TypeCode, out INode node))
 			{
 				if (windowStack.TryPeek(out INode outNode))
 				{
@@ -62,7 +62,7 @@ namespace WorldTree
 				while (windowStack.Count != 0 ? windowStack.Peek().Id != node.Id : false)
 				{
 					outNode = windowStack.Pop();
-					windows.Remove(outNode.Type);
+					windowDict.Remove(outNode.Type);
 					outNode.ParentTo<GameObjectNode>()?.Dispose();
 				}
 				NodeRuleHelper.TrySendRule(node, TypeInfo<WindowFocus>.Default);
@@ -73,7 +73,7 @@ namespace WorldTree
 			{
 				node = await GameObjectNodeHelper.AddGameObjectNode<WindowManager, T>(this, gameObject);
 
-				windows.Add(node.Type, node);
+				windowDict.Add(node.Type, node);
 
 				if (windowStack.TryPeek(out INode topNode))
 				{
@@ -93,7 +93,7 @@ namespace WorldTree
 		public void Dispose<T>()
 		   where T : class, INode
 		{
-			if (windows.TryGetValue(TypeInfo<T>.TypeCode, out INode targetNode))
+			if (windowDict.TryGetValue(TypeInfo<T>.TypeCode, out INode targetNode))
 			{
 				if (windowStack.TryPeek(out INode topNode))
 				{
@@ -103,7 +103,7 @@ namespace WorldTree
 				{
 					if (topNode.Id == targetNode.Id)
 					{
-						windows.Remove(topNode.Type);
+						windowDict.Remove(topNode.Type);
 						topNode.ParentTo<GameObjectNode>()?.Dispose();
 						break;
 					}
@@ -122,7 +122,7 @@ namespace WorldTree
 		{
 			if (windowStack.TryPop(out INode outNode))
 			{
-				windows.Remove(outNode.Type);
+				windowDict.Remove(outNode.Type);
 				NodeRuleHelper.TrySendRule(outNode, TypeInfo<WindowLostFocus>.Default);
 				if (windowStack.TryPeek(out INode topNode))
 				{

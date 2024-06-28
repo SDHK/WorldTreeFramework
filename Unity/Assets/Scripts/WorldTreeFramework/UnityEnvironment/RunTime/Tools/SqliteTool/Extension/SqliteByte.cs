@@ -19,7 +19,6 @@ namespace WorldTree.Sample
 {
     public static partial class SqliteDataReaderExtension
     {
-
         /// <summary>
         /// 获取 byte
         /// </summary>

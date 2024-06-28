@@ -14,12 +14,20 @@ using UnityEngine;
 
 namespace WorldTree.Sample
 {
-    public abstract class SingletonBase<T>:IDisposable
+	/// <summary>
+	/// 单例基类
+	/// </summary>
+	public abstract class SingletonBase<T>:IDisposable
     where T : SingletonBase<T>, new()
     {
-
-        private static T instance;//实例
-        private static readonly object _lock = new object();//对象锁
+		/// <summary>
+		/// 实例
+		/// </summary>
+		private static T instance;
+		/// <summary>
+		/// 对象锁
+		/// </summary>
+		private static readonly object lockObj = new object();//对象锁
 
         /// <summary>
         /// 单例实例
@@ -30,7 +38,7 @@ namespace WorldTree.Sample
             {
                 if (instance == null)
                 {
-                    lock (_lock)
+                    lock (lockObj)
                     {
                         if (instance == null)
                         {
@@ -52,7 +60,10 @@ namespace WorldTree.Sample
             return Instance;
         }
 
-        public virtual void OnInstance() { }
+		/// <summary>
+		/// 实例化时调用
+		/// </summary>
+		public virtual void OnInstance() { }
 
         public abstract void Dispose();
     }

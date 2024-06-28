@@ -14,7 +14,10 @@ namespace WorldTree
     /// </summary>
     public class InputEventData : Node
     {
-        public bool isTouch;
+		/// <summary>
+		/// 输入事件类型
+		/// </summary>
+		public bool isTouch;
 
     }
 }

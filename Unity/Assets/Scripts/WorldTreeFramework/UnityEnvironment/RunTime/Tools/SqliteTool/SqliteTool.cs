@@ -24,16 +24,25 @@ namespace WorldTree.Sample
 	[AttributeUsage(AttributeTargets.Class)]
     public class SqliteUnEncrypted : Attribute { }
 
-    public static partial class SqliteTool
+	/// <summary>
+	/// 数据库工具类
+	/// </summary>
+	public static partial class SqliteTool
     {
-        public static readonly string PRIMARY_KEY_NOT_NULL = "PRIMARY KEY NOT NULL";
-        public static readonly string UNIQUE = "UNIQUE";
+		/// <summary>
+		/// 主键
+		/// </summary>
+		public static readonly string PRIMARY_KEY_NOT_NULL = "PRIMARY KEY NOT NULL";
+		/// <summary>
+		/// 唯一
+		/// </summary>
+		public static readonly string UNIQUE = "UNIQUE";
 
 
         /// <summary>
         /// 是否加密
         /// </summary>
-        public static bool isEncryption = false;
+        public static bool IsEncryption = false;
 
         /// <summary>
         /// 加密
@@ -46,22 +55,20 @@ namespace WorldTree.Sample
         public static Func<byte[], byte[]> Decryption = Xor;
 
 
-        /// <summary>
-        /// 异或因子
-        /// </summary>
-
-
-        public static SqliteConnection connection;
+		/// <summary>
+		/// 数据库连接
+		/// </summary>
+		public static SqliteConnection SqliteConnection;
         /// <summary>
         /// 判断是否连接到数据库
         /// </summary>
-        public static bool isOpen => (connection == null) ? false : connection.State == ConnectionState.Open;
+        public static bool IsOpen => (SqliteConnection == null) ? false : SqliteConnection.State == ConnectionState.Open;
 
 
         /// <summary>
         /// 异或因子
         /// </summary>
-        private static readonly byte[] xorScale = new byte[] { 45, 66, 38, 55, 23, 254, 9, 165, 90, 19, 41, 45, 201, 58, 55, 37, 254, 185, 165, 169, 19, 171 };
+        private static readonly byte[] xorScales = new byte[] { 45, 66, 38, 55, 23, 254, 9, 165, 90, 19, 41, 45, 201, 58, 55, 37, 254, 185, 165, 169, 19, 171 };
 
         /// <summary>
         /// 对数组进行异或
@@ -69,10 +76,10 @@ namespace WorldTree.Sample
         public static byte[] Xor(byte[] buffer)
         {
             if (buffer == null) return null;
-            int iScaleLen = xorScale.Length;
+            int iScaleLen = xorScales.Length;
             for (int i = 0; i < buffer.Length; i++)
             {
-                buffer[i] = (byte)(buffer[i] ^ xorScale[i % iScaleLen]);
+                buffer[i] = (byte)(buffer[i] ^ xorScales[i % iScaleLen]);
             }
             return buffer;
         }
@@ -96,16 +103,16 @@ namespace WorldTree.Sample
         {
             try
             {
-                connection = new SqliteConnection("Data Source = " + path);
-                connection.Open();
+				SqliteConnection = new SqliteConnection("Data Source = " + path);
+				SqliteConnection.Open();
                 Debug.Log("数据库连接成功");
             }
             catch (Exception e)
             {
                 Debug.LogException(e);
-                connection = null;
+				SqliteConnection = null;
             }
-            return connection;
+            return SqliteConnection;
         }
 
         /// <summary>
@@ -113,11 +120,11 @@ namespace WorldTree.Sample
         /// </summary>
         public static void Close()
         {
-            if (connection != null)
+            if (SqliteConnection != null)
             {
-                connection.Close();
-                connection.Dispose();
-                connection = null;
+				SqliteConnection.Close();
+				SqliteConnection.Dispose();
+				SqliteConnection = null;
             }
         }
 
@@ -127,7 +134,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static void Execute(string sql)
         {
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
             command.CommandText = sql;
             command.ExecuteNonQuery();
             command.Dispose();
@@ -138,7 +145,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static SqliteDataReader ExecuteReader(string sql)
         {
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
             command.CommandText = sql;
             var reader = command.ExecuteReader();
             command.Dispose();
@@ -150,7 +157,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static object ExecuteScalar(string sql)
         {
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
             command.CommandText = sql;
             var reader = command.ExecuteScalar();
             command.Dispose();
@@ -199,7 +206,7 @@ namespace WorldTree.Sample
         public static void Delete(string tableName, string condition, string[] valueNames, byte[][] values)
         {
             string sql = "DELETE FROM " + tableName + " WHERE " + condition;
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
             command.CommandText = sql;
             SetParameters(command, valueNames, values);
             command.ExecuteNonQuery();
@@ -222,7 +229,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static bool Contains(string tableName, string col, byte[] value)
         {
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
             command.CommandText = $"SELECT count(*) FROM {tableName} WHERE {col} = @{col}";
             AddParameter(command, col, value);
             return Convert.ToInt32(command.ExecuteScalar()) > 0;
@@ -234,7 +241,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static void Select(string tableName, string condition, string[] valueNames, byte[][] values, Action<SqliteDataReader> callBack, params string[] cols)
         {
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
             command.CommandText = $"SELECT {ParameterNames(cols)} FROM {tableName} {((condition == "") ? " " : " WHERE " + condition)}";
 
             SetParameters(command, valueNames, values);
@@ -255,7 +262,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static void Select(string tableName, Action<SqliteDataReader> callBack, params string[] cols)
         {
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
             command.CommandText = $"SELECT {ParameterNames(cols)} FROM {tableName} ";
 
             SqliteDataReader reader = command.ExecuteReader();
@@ -272,7 +279,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static void Insert(string tableName, string[] cols, byte[][] values)
         {
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
             command.CommandText = $"INSERT INTO " + tableName + $"({ParameterNames(cols)}) VALUES ({ParameterReferences(cols)} )";
             try
             {
@@ -293,7 +300,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static void Replace(string tableName, string[] cols, byte[][] values)
         {
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
             command.CommandText = $"REPLACE INTO " + tableName + $"({ParameterNames(cols)}) VALUES ({ParameterReferences(cols)} )";
             SetParameters(command, cols, values);
             command.ExecuteNonQuery();
@@ -305,7 +312,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static void Update(string tableName, string condition, string[] cols, byte[][] values)
         {
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
 
             string sql = "";
             for (int i = 0; i < cols.Length; i++)
@@ -341,7 +348,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static void AddParameter(SqliteCommand command, string col, byte[] value)
         {
-            command.Parameters.Add(col, DbType.Binary).Value = (isEncryption) ? Encryption?.Invoke(value) ?? value : value;
+            command.Parameters.Add(col, DbType.Binary).Value = (IsEncryption) ? Encryption?.Invoke(value) ?? value : value;
         }
 
         /// <summary>
@@ -350,8 +357,8 @@ namespace WorldTree.Sample
         public static byte[] GetBytesData(this SqliteDataReader reader, string name)
         {
             //一块的数据
-            const int CHUNK_SIZE = 2 * 1024;
-            byte[] buffer = new byte[CHUNK_SIZE];
+            const int lCHUNK_SIZE = 2 * 1024;
+            byte[] buffer = new byte[lCHUNK_SIZE];
             long bytesRead;
             long fieldOffset = 0;
             using (MemoryStream stream = new MemoryStream())
@@ -362,7 +369,7 @@ namespace WorldTree.Sample
                     fieldOffset += bytesRead;
                 }
                 byte[] result = stream.ToArray();
-                return (isEncryption) ? Decryption?.Invoke(result) ?? result : result;
+                return (IsEncryption) ? Decryption?.Invoke(result) ?? result : result;
             }
         }
 
@@ -372,8 +379,8 @@ namespace WorldTree.Sample
         public static byte[] GetBytesData(this SqliteDataReader reader, int index)
         {
             //一块的数据
-            const int CHUNK_SIZE = 2 * 1024;
-            byte[] buffer = new byte[CHUNK_SIZE];
+            const int lCHUNK_SIZE = 2 * 1024;
+            byte[] buffer = new byte[lCHUNK_SIZE];
             long bytesRead;
             long fieldOffset = 0;
             using (MemoryStream stream = new MemoryStream())
@@ -393,7 +400,7 @@ namespace WorldTree.Sample
 
                     byte[] result = stream.ToArray();
 
-                    return (isEncryption) ? Decryption?.Invoke(result) ?? result : result;
+                    return (IsEncryption) ? Decryption?.Invoke(result) ?? result : result;
                 }
             }
         }
@@ -498,10 +505,10 @@ namespace WorldTree.Sample
         public static void Delete<T>(string condition, string[] valueNames, byte[][] values)
         {
             Type type = typeof(T);
-            var bit = isEncryption;
-            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) isEncryption = false;
+            var bit = IsEncryption;
+            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
             Delete(typeof(T).Name, condition, valueNames, values);
-            isEncryption = bit;
+            IsEncryption = bit;
         }
 
         /// <summary>
@@ -510,8 +517,8 @@ namespace WorldTree.Sample
         public static void Insert<T>(T obj)
         {
             Type type = typeof(T);
-            var bit = isEncryption;
-            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) isEncryption = false;
+            var bit = IsEncryption;
+            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
             string tableName = type.Name;
             FieldInfo[] fieldInfo = type.GetFields();
 
@@ -524,7 +531,7 @@ namespace WorldTree.Sample
                 values[i] = SwitchTypeGetBytes(fieldInfo[i].FieldType.Name, fieldInfo[i].GetValue(obj));//需要强转式
             }
             Insert(tableName, cols, values);
-            isEncryption = bit;
+            IsEncryption = bit;
         }
 
 
@@ -535,8 +542,8 @@ namespace WorldTree.Sample
         public static void Replace<T>(T obj)
         {
             Type type = typeof(T);
-            var bit = isEncryption;
-            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) isEncryption = false;
+            var bit = IsEncryption;
+            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
             string tableName = type.Name;
             FieldInfo[] fieldInfo = type.GetFields();
 
@@ -549,7 +556,7 @@ namespace WorldTree.Sample
                 values[i] = SwitchTypeGetBytes(fieldInfo[i].FieldType.Name, fieldInfo[i].GetValue(obj));//需要强转式
             }
             Replace(tableName, cols, values);
-            isEncryption = bit;
+            IsEncryption = bit;
         }
 
         /// <summary>
@@ -558,8 +565,8 @@ namespace WorldTree.Sample
         public static void Update<T>(T obj, string condition, string[] valueNames, byte[][] values)
         {
             Type type = typeof(T);
-            var bit = isEncryption;
-            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) isEncryption = false;
+            var bit = IsEncryption;
+            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
 
             string tableName = type.Name;
             FieldInfo[] fieldInfo = type.GetFields();
@@ -579,7 +586,7 @@ namespace WorldTree.Sample
             }
             Update(tableName, condition, cols, datas);
 
-            isEncryption = bit;
+            IsEncryption = bit;
         }
 
         /// <summary>
@@ -588,8 +595,8 @@ namespace WorldTree.Sample
         public static void Update<T>(T obj)
         {
             Type type = typeof(T);
-            var bit = isEncryption;
-            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) isEncryption = false;
+            var bit = IsEncryption;
+            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
             string tableName = type.Name;
             FieldInfo[] fieldInfo = type.GetFields();
 
@@ -603,7 +610,7 @@ namespace WorldTree.Sample
             }
 
             Update(tableName, "", cols, datas);
-            isEncryption = bit;
+            IsEncryption = bit;
 
         }
 
@@ -622,8 +629,8 @@ namespace WorldTree.Sample
             where T : new()
         {
             Type type = typeof(T);
-            var bit = isEncryption;
-            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) isEncryption = false;
+            var bit = IsEncryption;
+            if (type.GetCustomAttributes(typeof(SqliteUnEncrypted), false).Length != 0) IsEncryption = false;
             string tableName = type.Name;
             FieldInfo[] fieldInfo = type.GetFields();
 
@@ -634,7 +641,7 @@ namespace WorldTree.Sample
                 cols[i] = fieldInfo[i].Name;
             }
 
-            SqliteCommand command = connection.CreateCommand();
+            SqliteCommand command = SqliteConnection.CreateCommand();
 
             command.CommandText = $"SELECT {ParameterNames(cols)} FROM {tableName}  {((condition == "") ? " " : " WHERE " + condition)}";
 
@@ -664,7 +671,7 @@ namespace WorldTree.Sample
                 list.Add(t);
             }
 
-            isEncryption = bit;
+            IsEncryption = bit;
 
             reader.Close();
             command.Dispose();
@@ -755,8 +762,8 @@ namespace WorldTree.Sample
         /// <summary>
         ///  给反射用的 object 转 byte[]
         /// </summary>
-        public static byte[] SwitchTypeGetBytes(string TypeName, object obj)
-           => TypeName.ToLower() switch
+        public static byte[] SwitchTypeGetBytes(string typeName, object obj)
+           => typeName.ToLower() switch
            {
                "short" or
               "int16" => ((short)obj).GetBytes(),
@@ -828,9 +835,11 @@ namespace WorldTree.Sample
                _ => obj.GetBytes(),
            };
 
-        #endregion
-
-        public static List<string> Keyword = new List<string>()
+		#endregion
+		/// <summary>
+		/// 关键字
+		/// </summary>
+		public static List<string> KeywordList = new List<string>()
         {
           @"ABORT","CREATE","FROM","NATURAL",
             "ACTION","CROSS","FULL","NO",

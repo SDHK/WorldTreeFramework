@@ -2,6 +2,9 @@
 
 namespace WorldTree
 {
+	/// <summary>
+	/// GameObject节点助手
+	/// </summary>
 	public static class GameObjectNodeHelper
 	{
 

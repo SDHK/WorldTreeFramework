@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace WorldTree
@@ -16,7 +12,7 @@ namespace WorldTree
 
 		};
 
-		static OnGuiUpdateTime<UtcTimeTest> onGui = (self, time) =>
+		private static OnGuiUpdateTime<UtcTimeTest> OnGui = (self, time) =>
 		{
 
 			// 需要确保 RealTimeManager 提供了 UtcNow 属性

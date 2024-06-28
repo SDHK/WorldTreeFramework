@@ -22,19 +22,19 @@ namespace WorldTree
         /// <summary>
         /// 组件列表
         /// </summary>
-        public List<Component> components = new List<Component>();
+        public List<Component> ComponentList = new List<Component>();
         
         /// <summary>
         /// 绑定的实体
         /// </summary>
-        public INode entity;
+        public INode Node;
 
         /// <summary>
         /// 清除所有组件注册的事件
         /// </summary>
         public void RemoveAllEvent()
         {
-            foreach (var component in components)
+            foreach (var component in ComponentList)
             {
                 switch (component)
                 {

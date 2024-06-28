@@ -22,9 +22,18 @@ namespace WorldTree
 		, AsComponentBranch
 		, AsAwake
 	{
+		/// <summary>
+		/// 对象池
+		/// </summary>
 		public GameObjectPool pool;
 
+		/// <summary>
+		/// 游戏物体
+		/// </summary>
 		public GameObject gameObject;
+		/// <summary>
+		/// 物体变换
+		/// </summary>
 		public Transform transform;
 
 		public override string ToString()

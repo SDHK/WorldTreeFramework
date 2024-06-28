@@ -18,7 +18,10 @@ using System.Threading.Tasks;
 
 namespace WorldTree.Sample
 {
-    public static partial class SqliteDataReaderExtension
+	/// <summary>
+	/// SqliteDataReader扩展
+	/// </summary>
+	public static partial class SqliteDataReaderExtension
     {
 
         /// <summary>

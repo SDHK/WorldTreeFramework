@@ -19,84 +19,127 @@ namespace WorldTree
 	/// </summary>
 	public class UnityMonoBehaviourThread : MonoBehaviour
 	{
-		public System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+		/// <summary>
+		/// 计时器
+		/// </summary>
+		public System.Diagnostics.Stopwatch Stopwatch = new System.Diagnostics.Stopwatch();
 
+		/// <summary>
+		/// 更新
+		/// </summary>
+		public Action<TimeSpan> OnUpdate;
+		/// <summary>
+		/// 晚更新
+		/// </summary>
+		public Action<TimeSpan> OnLateUpdate;
+		/// <summary>
+		/// 固定更新
+		/// </summary>
+		public Action<TimeSpan> OnFixedUpdate;
+		/// <summary>
+		/// GUI
+		/// </summary>
+		public Action<TimeSpan> OnGuiUpdate;
+		/// <summary>
+		/// 绘制Gizmos
+		/// </summary>
+		public Action<TimeSpan> OnDrawGizmosUpdate;
 
-		public Action<TimeSpan> onUpdate;
-		public Action<TimeSpan> onLateUpdate;
-		public Action<TimeSpan> onFixedUpdate;
-		public Action<TimeSpan> onGUI;
-		public Action<TimeSpan> onDrawGizmos;
+		/// <summary>
+		/// GUI时间
+		/// </summary>
+		public DateTime OnGUITime;
+		/// <summary>
+		/// 绘制Gizmos时间
+		/// </summary>
+		public DateTime OnDrawGizmosTime;
 
-		public DateTime onGUITime;
-		public DateTime onDrawGizmosTime;
+		/// <summary>
+		/// 是否运行
+		/// </summary>
+		public bool IsRun = false;
+		/// <summary>
+		/// 是否一帧
+		/// </summary>
+		public bool IsOneFrame = false;
 
-		public bool isRun = false;
-
-		public bool isOneFrame = false;
-
-
+		/// <summary>
+		/// 启动
+		/// </summary>
 		private void Awake()
 		{
-			onGUITime = DateTime.Now;
-			onDrawGizmosTime = DateTime.Now;
+			OnGUITime = DateTime.Now;
+			OnDrawGizmosTime = DateTime.Now;
 		}
 
+		/// <summary>
+		/// 更新
+		/// </summary>
 		private void Update()
 		{
 			Profiler.BeginSample("SDHK Update");
 			//sw.Restart();
-			if (isRun || isOneFrame)
+			if (IsRun || IsOneFrame)
 			{
 
-				onUpdate?.Invoke(TimeSpan.FromSeconds(Time.deltaTime));
+				OnUpdate?.Invoke(TimeSpan.FromSeconds(Time.deltaTime));
 			}
 			//sw.Stop();
 			//this.Log($"毫秒: {sw.ElapsedMilliseconds}");
 			Profiler.EndSample();
 		}
+		/// <summary>
+		/// 晚更新
+		/// </summary>
 		private void LateUpdate()
 		{
 			Profiler.BeginSample("SDHK LateUpdate");
-			if (isRun || isOneFrame)
+			if (IsRun || IsOneFrame)
 			{
-				onLateUpdate?.Invoke(TimeSpan.FromSeconds(Time.deltaTime));
-				isOneFrame = false;
+				OnLateUpdate?.Invoke(TimeSpan.FromSeconds(Time.deltaTime));
+				IsOneFrame = false;
 			}
 			Profiler.EndSample();
 		}
-
+		/// <summary>
+		/// 固定更新
+		/// </summary>
 		private void FixedUpdate()
 		{
 			Profiler.BeginSample("SDHK FixedUpdate");
-			onFixedUpdate?.Invoke(TimeSpan.FromSeconds(Time.fixedDeltaTime));
+			OnFixedUpdate?.Invoke(TimeSpan.FromSeconds(Time.fixedDeltaTime));
 			Profiler.EndSample();
 		}
-
+		/// <summary>
+		/// GUI
+		/// </summary>
 		private void OnGUI()
 		{
-
 			Profiler.BeginSample("SDHK OnGUI");
-			onGUI?.Invoke(DateTime.Now - onGUITime);
-			onGUITime = DateTime.Now;
+			OnGuiUpdate?.Invoke(DateTime.Now - OnGUITime);
+			OnGUITime = DateTime.Now;
 			Profiler.EndSample();
 		}
-
+		/// <summary>
+		/// 绘制Gizmos
+		/// </summary>
 		private void OnDrawGizmos()
 		{
 			Profiler.BeginSample("SDHK OnDrawGizmos");
-			onDrawGizmos?.Invoke(DateTime.Now - onDrawGizmosTime);
-			onDrawGizmosTime = DateTime.Now;
+			OnDrawGizmosUpdate?.Invoke(DateTime.Now - OnDrawGizmosTime);
+			OnDrawGizmosTime = DateTime.Now;
 			Profiler.EndSample();
 		}
-
+		/// <summary>
+		/// 销毁
+		/// </summary>
 		private void OnDestroy()
 		{
-			onUpdate = null;
-			onLateUpdate = null;
-			onFixedUpdate = null;
-			onGUI = null;
-			onDrawGizmos = null;
+			OnUpdate = null;
+			OnLateUpdate = null;
+			OnFixedUpdate = null;
+			OnGuiUpdate = null;
+			OnDrawGizmosUpdate = null;
 		}
 	}
 }

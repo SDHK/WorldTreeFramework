@@ -37,42 +37,54 @@ namespace WorldTree
 			}
 		}
 
+		/// <summary>
+		/// 测试
+		/// </summary>
 		public static async TreeTask Test(this TaskTest self)
 		{
 			//await self.AsyncDelay(1);
-			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
-			self.Log($"A！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
-			while (TaskTokenCatch.taskState != TokenState.Cancel)
+			TreeTaskToken taskTokenCatch = await self.TreeTaskTokenCatch();
+			self.Log($"A！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
+			while (taskTokenCatch.taskState != TokenState.Cancel)
 			{
 				await self.AsyncDelay(6);
-				if (TaskTokenCatch.taskState == TokenState.Cancel) return;
+				if (taskTokenCatch.taskState == TokenState.Cancel) return;
 
 				await self.TestB();
 
-				if (TaskTokenCatch.taskState == TokenState.Cancel) return;
+				if (taskTokenCatch.taskState == TokenState.Cancel) return;
 				await self.TaskD();
 			}
 		}
 
+		/// <summary>
+		/// 测试B
+		/// </summary>
 		public static async TreeTask TestB(this TaskTest self)
 		{
 			await self.TaskC();
 			await self.AsyncDelay(4);
 
-			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
-			self.Log($"B！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
+			TreeTaskToken taskTokenCatch = await self.TreeTaskTokenCatch();
+			self.Log($"B！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
 		}
 
+		/// <summary>
+		/// 测试C
+		/// </summary>
 		public static async TreeTask TaskC(this TaskTest self)
 		{
-			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
-			self.Log($"C！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
+			TreeTaskToken taskTokenCatch = await self.TreeTaskTokenCatch();
+			self.Log($"C！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
 		}
 
+		/// <summary>
+		/// 测试C
+		/// </summary>
 		public static async TreeTask TaskD(this TaskTest self)
 		{
-			TreeTaskToken TaskTokenCatch = await self.TreeTaskTokenCatch();
-			self.Log($"D！令牌捕获:{(TaskTokenCatch == null ? null : TaskTokenCatch.Id)}");
+			TreeTaskToken taskTokenCatch = await self.TreeTaskTokenCatch();
+			self.Log($"D！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
 		}
 	}
 }

@@ -64,11 +64,11 @@ namespace WorldTree
             maxY = node1.y > node2.y ? node1.y : node2.y;
             minY = node1.y > node2.y ? node2.y : node1.y;
 
-            Vector2 Vector1_P = (point - node1).normalized;
-            Vector2 Vector2_P = (point - node2).normalized;
-            Vector2 Vector1_2 = (node2 - node1).normalized;
+            Vector2 vector1_P = (point - node1).normalized;
+            Vector2 vector2_P = (point - node2).normalized;
+            Vector2 vector1_2 = (node2 - node1).normalized;
 
-            return Vector1_P == Vector1_2 && Vector2_P == -Vector1_2 &&
+            return vector1_P == vector1_2 && vector2_P == -vector1_2 &&
 
                     (point.x >= minX && point.x <= maxX) &&
                     (point.y >= minY && point.y <= maxY);
@@ -143,17 +143,17 @@ namespace WorldTree
         /// <summary>
         /// 贝塞尔曲线
         /// </summary>
-        /// <param name="TimeRatio">点的位置（时间比例0~1）</param>
+        /// <param name="timeRatio">点的位置（时间比例0~1）</param>
         /// <param name="points">曲线拉伸坐标点</param>
         /// <returns> 点的位置 </returns>
-        public static Vector2 BezierCurve(List<Vector2> points, float TimeRatio)
+        public static Vector2 BezierCurve(List<Vector2> points, float timeRatio)
         {
             while (points.Count > 1)
             {
                 List<Vector2> newp = new List<Vector2>();
                 for (int i = 0; i < points.Count - 1; i++)
                 {
-                    Vector2 p0p1 = Vector2.Lerp(points[i], points[i + 1], TimeRatio);
+                    Vector2 p0p1 = Vector2.Lerp(points[i], points[i + 1], timeRatio);
                     newp.Add(p0p1);
                 }
                 points = newp;
@@ -169,9 +169,9 @@ namespace WorldTree
         /// <returns>中心点</returns>
         public static Vector2 VectorsCenter(List<Vector2> points)
         {
-            Vector2 Center = new Vector2();
-            for (int i = 0; i < points.Count; i++) Center += points[i];
-            return Center / points.Count;
+            Vector2 center = new Vector2();
+            for (int i = 0; i < points.Count; i++) center += points[i];
+            return center / points.Count;
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace WorldTree
 				List<TestData> testDatas = SqliteTool.Select<TestData>("id > @id", new[] { "id" }, new[] { 2.GetBytes() });
 				foreach (var testData in testDatas)
 				{
-					self.Log($"{testData.id} : {testData.value}");
+					self.Log($"{testData.Id} : {testData.Value}");
 				}
 			}
 		}

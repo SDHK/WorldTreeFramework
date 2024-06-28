@@ -6,19 +6,32 @@ namespace WorldTree
 {
 	public partial class DotNetTestNode
 	{
+
+
 		/// <summary>
 		/// a
 		/// </summary>
+		/// <remarks>
+		///
+		/// </remarks>
 		public partial void Test()
 		{
 		}
 
 	}
 
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks>
+	/// <Para>
+	/// 法则约束: <see cref="WorldTree.Add"/> : <see cref="ISendRule"/>
+	/// </Para>
+	/// </remarks>
 	public interface A
 	{
-
-
 	}
 
 	/// <summary>

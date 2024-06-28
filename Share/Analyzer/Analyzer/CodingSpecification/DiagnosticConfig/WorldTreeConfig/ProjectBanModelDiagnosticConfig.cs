@@ -25,6 +25,7 @@ namespace WorldTree.Analyzer
 				MessageFormat = "项目禁止声明类型",
 				DeclarationKind = SyntaxKind.ClassDeclaration,
 				Check = s => false,
+				NeedComment = false,
 			});
 			SetConfig(DiagnosticKey.StructNaming, new DiagnosticConfig()
 			{
@@ -32,6 +33,7 @@ namespace WorldTree.Analyzer
 				MessageFormat = "项目禁止声明结构体",
 				DeclarationKind = SyntaxKind.StructDeclaration,
 				Check = s => false,
+				NeedComment = false,
 			});
 			SetConfig(DiagnosticKey.EnumNaming, new DiagnosticConfig()
 			{
@@ -39,6 +41,7 @@ namespace WorldTree.Analyzer
 				MessageFormat = "项目禁止声明枚举",
 				DeclarationKind = SyntaxKind.EnumDeclaration,
 				Check = s => false,
+				NeedComment = false,
 			});
 		}
 	}

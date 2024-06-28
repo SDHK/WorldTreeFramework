@@ -12,9 +12,15 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    public class GUIBox : GUIBase
+	/// <summary>
+	/// GUIBox
+	/// </summary>
+	public class GUIBox : GUIBase
     {
-        public void Draw()
+		/// <summary>
+		/// 绘制
+		/// </summary>
+		public void Draw()
         {
             GUILayout.Box(text, Style, options);
         }

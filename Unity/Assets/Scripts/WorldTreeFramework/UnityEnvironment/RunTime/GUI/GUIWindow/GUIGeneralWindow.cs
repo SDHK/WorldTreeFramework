@@ -12,15 +12,26 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    public class GUIGeneralWindow : Node
+	/// <summary>
+	/// GUI通用窗体
+	/// </summary>
+	public class GUIGeneralWindow : Node
         , AsComponentBranch
         , AsRule<GUIDraw>
     {
-        public IRuleGroup<GUIDraw> group;
+		/// <summary>
+		/// 绘制法则组
+		/// </summary>
+		public IRuleGroup<GUIDraw> group;
 
-        public GUIBeginVertical VerticalBox;
-
-        public GUIBeginHorizontal HorizontalBox;
+		/// <summary>
+		/// 垂直盒子
+		/// </summary>
+		public GUIBeginVertical VerticalBox;
+		/// <summary>
+		/// 水平盒子
+		/// </summary>
+		public GUIBeginHorizontal HorizontalBox;
 
 
     }

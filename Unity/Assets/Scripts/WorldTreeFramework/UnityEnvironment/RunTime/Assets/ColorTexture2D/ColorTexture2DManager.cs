@@ -14,7 +14,9 @@ using UnityEngine;
 
 namespace WorldTree
 {
-
+	/// <summary>
+	/// 颜色图片管理器帮助类
+	/// </summary>
 	public static partial class ColorTexture2DManagerHelper
 	{
 		/// <summary>
@@ -40,16 +42,22 @@ namespace WorldTree
 	public class ColorTexture2DManager : Node, ComponentOf<WorldTreeRoot>
 		, AsAwake
 	{
-		UnitDictionary<Color, Texture2D> colors = new UnitDictionary<Color, Texture2D>();
+		/// <summary>
+		/// 颜色图片字典
+		/// </summary>
+		UnitDictionary<Color, Texture2D> colorDict = new UnitDictionary<Color, Texture2D>();
+		/// <summary>
+		/// 获取
+		/// </summary>
 		public Texture2D Get(Color color)
 		{
 			Texture2D texture = null;
-			if (!colors.TryGetValue(color, out texture))
+			if (!colorDict.TryGetValue(color, out texture))
 			{
 				texture = new Texture2D(1, 1, Texture2D.grayTexture.format, true);
 				texture.SetPixel(0, 0, color);
 
-				colors.Add(color, texture);
+				colorDict.Add(color, texture);
 				texture.Apply();
 			}
 			return texture;

@@ -13,11 +13,20 @@ using UnityEngine;
 
 namespace WorldTree
 {
-    public class GUIButton : GUIBase
+	/// <summary>
+	/// GUIButton
+	/// </summary>
+	public class GUIButton : GUIBase
     {
-        public Action action;
+		/// <summary>
+		/// 回调
+		/// </summary>
+		public Action action;
 
-        public  void Draw()
+		/// <summary>
+		/// 绘制
+		/// </summary>
+		public void Draw()
         {
             if (GUILayout.Button(text, Style, options))
             {

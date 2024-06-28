@@ -11,21 +11,30 @@ using System;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 资源管理器
+	/// </summary>
 	public class AssetManager : Node
 		, ComponentOf<WorldTreeRoot>
 		, AsLoadAssetAsync
 	{
-		public TreeDictionary<string, Object> assets;
+		/// <summary>
+		/// 资源字典
+		/// </summary>
+		public TreeDictionary<string, Object> assetDict;
 
+		/// <summary>
+		/// 异步加载资源
+		/// </summary>
 		public async TreeTask<T> LoadAssetAsync<T, N>()
 			where T : class
 			where N : class, INode
 		{
 			var key = typeof(N);
-			if (!assets.TryGetValue(key.Name, out var asset))
+			if (!assetDict.TryGetValue(key.Name, out var asset))
 			{
 				asset = await this.LoadAssetAsync(key.Name);
-				assets.Add(key.Name, asset);
+				assetDict.Add(key.Name, asset);
 			}
 			else
 			{

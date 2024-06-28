@@ -27,17 +27,20 @@ namespace WorldTree.Sample
         /// <summary>
         /// 缓存开关
         /// </summary>
-        public bool isCache = true;
+        public bool IsCache = true;
 
-        private Dictionary<Type, SqliteModelBase> models = new Dictionary<Type, SqliteModelBase>();
+		/// <summary>
+		/// 数据模型字典
+		/// </summary>
+		private Dictionary<Type, SqliteModelBase> modelDict = new Dictionary<Type, SqliteModelBase>();
 
         #endregion
 
 
         public override void OnInstance()
         {
-            isCache = Application.isPlaying;
-            Debug.Log("数据库缓存: " + isCache);
+            IsCache = Application.isPlaying;
+            Debug.Log("数据库缓存: " + IsCache);
         }
 
 
@@ -46,7 +49,7 @@ namespace WorldTree.Sample
         /// </summary>
         public void Dispose<T>() where T : SqliteModelBase
         {
-            models.Remove(typeof(T));
+            modelDict.Remove(typeof(T));
         }
 
         /// <summary>
@@ -57,17 +60,17 @@ namespace WorldTree.Sample
         {
             Type typekey = typeof(T);
 
-            if (!models.TryGetValue(typekey, out SqliteModelBase model))
+            if (!modelDict.TryGetValue(typekey, out SqliteModelBase model))
             {
                 model = new T();
                 SqliteTool.Select(model.EntityType.Name, model.GetData, "*");
-                models.Add(typekey, model);
+                modelDict.Add(typekey, model);
             }
-            else if (!isCache)//数据已存在，不缓存，直接覆盖原有的
+            else if (!IsCache)//数据已存在，不缓存，直接覆盖原有的
             {
                 model = new T();
                 SqliteTool.Select(model.EntityType.Name, model.GetData, "*");
-                models[typekey] = model;
+                modelDict[typekey] = model;
             }
 
 
@@ -77,11 +80,11 @@ namespace WorldTree.Sample
 
         public override void Dispose()
         {
-            foreach (var item in models)
+            foreach (var item in modelDict)
             {
                 item.Value.Dispose();
             }
-            models.Clear();
+            modelDict.Clear();
         }
     }
 }

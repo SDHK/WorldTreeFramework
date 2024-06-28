@@ -18,15 +18,30 @@ using UnityEngine;
 namespace WorldTree
 {
 
-    public class GUIWindow : GUIBase, ComponentOf<GUIGeneralWindow>
+	/// <summary>
+	/// GUIWindow
+	/// </summary>
+	public class GUIWindow : GUIBase, ComponentOf<GUIGeneralWindow>
         , AsAwake
         , AsGuiUpdate
     {
-        public Rect rect = new Rect(0, 0, 400, 300);
-        public bool isDrag = true;
-        public IRuleGroup<GUIDraw> group;
+		/// <summary>
+		/// 标题
+		/// </summary>
+		public Rect rect = new Rect(0, 0, 400, 300);
+		/// <summary>
+		/// 是否拖拽
+		/// </summary>
+		public bool isDrag = true;
+		/// <summary>
+		/// 绘制法则组
+		/// </summary>
+		public IRuleGroup<GUIDraw> group;
 
-        public void Window(int id)
+		/// <summary>
+		/// 样式
+		/// </summary>
+		public void Window(int id)
         {
             group?.Send(Parent);
             if (isDrag)

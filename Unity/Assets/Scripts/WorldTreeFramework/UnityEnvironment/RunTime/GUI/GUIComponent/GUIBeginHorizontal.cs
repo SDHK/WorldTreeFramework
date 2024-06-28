@@ -2,9 +2,15 @@
 
 namespace WorldTree
 {
-    public class GUIBeginHorizontal : GUIBase
+	/// <summary>
+	/// GUIBeginHorizontal
+	/// </summary>
+	public class GUIBeginHorizontal : GUIBase
     {
-        public void Draw()
+		/// <summary>
+		/// 绘制
+		/// </summary>
+		public void Draw()
         {
             GUILayout.BeginHorizontal(Style, options);
         }

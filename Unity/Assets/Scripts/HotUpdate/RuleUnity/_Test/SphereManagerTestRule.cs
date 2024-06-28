@@ -15,6 +15,9 @@ namespace WorldTree
 			}
 		}
 
+		/// <summary>
+		/// 运行
+		/// </summary>
 		private static void Run(this SphereManagerTest self)
 		{
 			//self.balls = GameObject.Find("Sphere");

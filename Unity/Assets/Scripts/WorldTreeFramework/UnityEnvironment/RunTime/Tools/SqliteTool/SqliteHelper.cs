@@ -36,15 +36,19 @@ namespace WorldTree.Sample
         byte[][] GetData();
     }
 
-
-    public partial class SqliteHelper : SingletonBase<SqliteHelper>
+	/// <summary>
+	/// 数据库工具类
+	/// </summary>
+	public partial class SqliteHelper : SingletonBase<SqliteHelper>
     {
-
-        public static readonly char[] operation = { '=' };
+		/// <summary>
+		/// 操作符
+		/// </summary>
+		public static readonly char[] Operations = { '=' };
         /// <summary>
         /// 缓存开关
         /// </summary>
-        public bool isCache = true;
+        public bool IsCache = true;
 
         /// <summary>
         /// sql缓存的触发次数
@@ -57,18 +61,33 @@ namespace WorldTree.Sample
         /// </summary>
         public float SQL_TIMER = 0.05f;
 
-        private string sql = "";
-        private static Dictionary<string, List<object>> sqlResultCacheMap = new Dictionary<string, List<object>>();
-        private static Dictionary<string, int> sqlExecCounterMap = new Dictionary<string, int>();//次数表
+		/// <summary>
+		/// 查询语句
+		/// </summary>
+		private string sql = "";
+		/// <summary>
+		/// 查询结果缓存
+		/// </summary>
+		private static Dictionary<string, List<object>> sqlResultCacheDict = new Dictionary<string, List<object>>();
+		/// <summary>
+		/// 查询次数表
+		/// </summary>
+		private static Dictionary<string, int> sqlExecCounterDict = new Dictionary<string, int>();//次数表
 
-        public static List<string> valueNames = new List<string>();
-        public static List<byte[]> values = new List<byte[]>();
+		/// <summary>
+		/// 查询条件
+		/// </summary>
+		public static List<string> ValueNameList = new List<string>();
+		/// <summary>
+		/// 查询条件值
+		/// </summary>
+		public static List<byte[]> ValueList = new List<byte[]>();
 
 
         public override void OnInstance()
         {
-            isCache = Application.isPlaying;
-            Debug.Log("数据库缓存: " + isCache);
+            IsCache = Application.isPlaying;
+            Debug.Log("数据库缓存: " + IsCache);
         }
 
 
@@ -78,8 +97,8 @@ namespace WorldTree.Sample
         public SqliteHelper And(string str, byte[] data)
         {
             Instance.sql += " and " + str + "=@" + str;
-            valueNames.Add(str);
-            values.Add(data);
+            ValueNameList.Add(str);
+            ValueList.Add(data);
             return Instance;
         }
 
@@ -89,8 +108,8 @@ namespace WorldTree.Sample
         public SqliteHelper Or(string str, byte[] data)
         {
             Instance.sql += " or " + str + "=@" + str;
-            valueNames.Add(str);
-            values.Add(data);
+            ValueNameList.Add(str);
+            ValueList.Add(data);
             return Instance;
         }
 
@@ -101,8 +120,8 @@ namespace WorldTree.Sample
         public static SqliteHelper Where(string str, byte[] data)
         {
             Instance.sql = " WHERE " + str + "=@" + str;
-            valueNames.Add(str);
-            values.Add(data);
+            ValueNameList.Add(str);
+            ValueList.Add(data);
             return Instance;
         }
 
@@ -139,7 +158,7 @@ namespace WorldTree.Sample
         /// </summary>
         public static void Select(string tableName, string condition, string[] valueNames, byte[][] values, Action<SqliteDataReader> callBack, params string[] cols)
         {
-            SqliteCommand command = SqliteTool.connection.CreateCommand();
+            SqliteCommand command = SqliteTool.SqliteConnection.CreateCommand();
             command.CommandText = $"SELECT {SqliteTool.ParameterNames(cols)} FROM {tableName} {((condition == "") ? " " : " WHERE " + condition)}";
 
             SqliteTool.SetParameters(command, valueNames, values);
@@ -166,18 +185,18 @@ namespace WorldTree.Sample
             string commandText = $"SELECT * FROM {type.Name} {sql}";
             sql = "";//清除查询语句            
 
-            if (isCache && (SQL_NUM > 0 || SQL_TIMER > 0))
+            if (IsCache && (SQL_NUM > 0 || SQL_TIMER > 0))
             {
-                if (!sqlResultCacheMap.TryGetValue(commandText, out datas))
+                if (!sqlResultCacheDict.TryGetValue(commandText, out datas))
                 {
 
                     var st = Time.realtimeSinceStartup;
                     {
                         datas = new List<object>();
 
-                        SqliteCommand command = SqliteTool.connection.CreateCommand();
+                        SqliteCommand command = SqliteTool.SqliteConnection.CreateCommand();
                         command.CommandText = commandText;
-                        SqliteTool.SetParameters(command, valueNames.ToArray(), values.ToArray());
+                        SqliteTool.SetParameters(command, ValueNameList.ToArray(), ValueList.ToArray());
                         SqliteDataReader reader = command.ExecuteReader();
                         while (reader.Read())
                         {
@@ -188,20 +207,20 @@ namespace WorldTree.Sample
                         reader.Close();
                         command.Dispose();
 
-                        valueNames.Clear();
-                        values.Clear();
+                        ValueNameList.Clear();
+                        ValueList.Clear();
                     }
                     var intelval = Time.realtimeSinceStartup - st;
 
                     var counter = GetSqlExecCount(commandText);
                     if (counter >= SQL_NUM || intelval >= SQL_TIMER)
                     {
-                        sqlResultCacheMap[commandText] = datas;
+                        sqlResultCacheDict[commandText] = datas;
 
                     }
                     else
                     {
-                        sqlExecCounterMap[commandText] = counter + 1;
+                        sqlExecCounterDict[commandText] = counter + 1;
                     }
                 }
             }
@@ -209,9 +228,9 @@ namespace WorldTree.Sample
             {
                 datas = new List<object>();
 
-                SqliteCommand command = SqliteTool.connection.CreateCommand();
+                SqliteCommand command = SqliteTool.SqliteConnection.CreateCommand();
                 command.CommandText = commandText;
-                SqliteTool.SetParameters(command, valueNames.ToArray(), values.ToArray());
+                SqliteTool.SetParameters(command, ValueNameList.ToArray(), ValueList.ToArray());
                 SqliteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
@@ -222,8 +241,8 @@ namespace WorldTree.Sample
                 reader.Close();
                 command.Dispose();
 
-                valueNames.Clear();
-                values.Clear();
+                ValueNameList.Clear();
+                ValueList.Clear();
             }
 
 
@@ -250,8 +269,8 @@ namespace WorldTree.Sample
             if (str != "")
             {
                 Instance.sql = " WHERE " + str + "=@" + str;
-                valueNames.Add(str);
-                values.Add(data);
+                ValueNameList.Add(str);
+                ValueList.Add(data);
             }
 
             return Instance.FromAll<T>();
@@ -276,18 +295,20 @@ namespace WorldTree.Sample
         /// </summary>
         public static void ClearCache()
         {
-            sqlResultCacheMap?.Clear();
-            sqlExecCounterMap?.Clear();
+            sqlResultCacheDict?.Clear();
+            sqlExecCounterDict?.Clear();
         }
 
-
-        private int GetSqlExecCount(string cmd)
+		/// <summary>
+		/// 获取sql执行次数
+		/// </summary>
+		private int GetSqlExecCount(string cmd)
         {
             int counter = 0;
-            var ret = sqlExecCounterMap.TryGetValue(cmd, out counter);
+            var ret = sqlExecCounterDict.TryGetValue(cmd, out counter);
             if (!ret)
             {
-                sqlExecCounterMap[cmd] = 0;
+                sqlExecCounterDict[cmd] = 0;
             }
 
             return counter;

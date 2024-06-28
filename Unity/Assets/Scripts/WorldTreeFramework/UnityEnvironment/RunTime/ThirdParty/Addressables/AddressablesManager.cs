@@ -19,7 +19,10 @@ namespace WorldTree
 	public class AddressablesManager : Node, ComponentOf<WorldTreeRoot>
 		, AsAwake
 	{
-		public TreeDictionary<string, Object> assets;
+		/// <summary>
+		/// 资源字典
+		/// </summary>
+		public TreeDictionary<string, Object> assetDict;
 
 		/// <summary>
 		/// 根据节点类型步加载资源
@@ -31,10 +34,10 @@ namespace WorldTree
 			where N : class, INode
 		{
 			var key = typeof(N);
-			if (!assets.TryGetValue(key.Name, out var asset))
+			if (!assetDict.TryGetValue(key.Name, out var asset))
 			{
 				//asset = (await this.GetAwaiter(Addressables.LoadAssetAsync<T>(key.Name))).Result;
-				assets.Add(key.Name, asset);
+				assetDict.Add(key.Name, asset);
 			}
 			else
 			{

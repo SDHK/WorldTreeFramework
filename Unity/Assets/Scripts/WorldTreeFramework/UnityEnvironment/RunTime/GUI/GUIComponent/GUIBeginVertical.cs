@@ -2,8 +2,14 @@
 
 namespace WorldTree
 {
+	/// <summary>
+	/// GUIBeginVertical
+	/// </summary>
 	public class GUIBeginVertical : GUIBase
 	{
+		/// <summary>
+		/// 绘制
+		/// </summary>
 		public void Draw()
 		{
 			GUILayout.BeginVertical(Style, options);

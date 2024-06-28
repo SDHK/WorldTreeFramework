@@ -22,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 回调
 		/// </summary>
-		public static LowLevelKeyboardProc _proc = HookCallback;
+		public static LowLevelKeyboardProc Proc = HookCallback;
 		/// <summary>
 		/// id
 		/// </summary>
@@ -71,7 +71,7 @@ namespace WorldTree
 				// 设置钩子
 				Console.WriteLine("监听启动");
 
-				RefeshCsProjFileCompileInclude._hookID = SetHook(RefeshCsProjFileCompileInclude._proc);
+				RefeshCsProjFileCompileInclude._hookID = SetHook(RefeshCsProjFileCompileInclude.Proc);
 			}
 		}
 

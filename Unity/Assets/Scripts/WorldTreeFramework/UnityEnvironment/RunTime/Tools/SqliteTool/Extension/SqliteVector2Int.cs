@@ -43,8 +43,8 @@ namespace WorldTree.Sample
         /// </summary>
         public static Vector2Int GetVector2Int(this byte[] arr)
         {
-            int[] Ints = arr.GetInts();
-            return new Vector2Int(Ints[0], Ints[1]);
+            int[] ints = arr.GetInts();
+            return new Vector2Int(ints[0], ints[1]);
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace WorldTree.Sample
         {
             if (str != "" && str != null)
             {
-                string[] Ints = str.Split('|');
-                return new Vector2Int(int.Parse(Ints[0]), int.Parse(Ints[1]));
+                string[] ints = str.Split('|');
+                return new Vector2Int(int.Parse(ints[0]), int.Parse(ints[1]));
             }
             else
             {

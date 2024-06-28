@@ -19,7 +19,7 @@ namespace WorldTree
         , AsChildBranch
         , AsAwake
     {
-        UnitDictionary<GameObject, GameObjectPool> pools = new UnitDictionary<GameObject, GameObjectPool>();
+        UnitDictionary<GameObject, GameObjectPool> poolDict = new UnitDictionary<GameObject, GameObjectPool>();
 
         /// <summary>
         /// 获取实例
@@ -42,11 +42,11 @@ namespace WorldTree
         /// </summary>
         public GameObjectPool GetPool(GameObject prefab)
         {
-            if (!pools.TryGetValue(prefab, out GameObjectPool pool))
+            if (!poolDict.TryGetValue(prefab, out GameObjectPool pool))
             {
                 this.AddChild(out pool);
                 pool.SetPrefab(prefab);
-                pools.Add(prefab, pool);
+                poolDict.Add(prefab, pool);
             }
             return pool;
         }
@@ -56,10 +56,10 @@ namespace WorldTree
         /// </summary>
         public void DisposePool(GameObject prefab)
         {
-            if (pools.TryGetValue(prefab, out GameObjectPool pool))
+            if (poolDict.TryGetValue(prefab, out GameObjectPool pool))
             {
                 pool.Dispose();
-                pools.Remove(prefab);
+                poolDict.Remove(prefab);
             }
         }
     }

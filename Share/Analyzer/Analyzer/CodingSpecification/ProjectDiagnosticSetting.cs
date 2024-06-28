@@ -57,8 +57,8 @@ namespace WorldTree.Analyzer
 			new StackDiagnosticConfig(),
 
 			new RuleDiagnosticConfig(),
-			new ProjectBanModelDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
+			new ProjectBanModelDiagnosticConfig(),
 			new ObjectDiagnosticConfig()
 		};
 

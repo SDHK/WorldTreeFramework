@@ -11,13 +11,28 @@ using UnityEngine;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 世界树框架驱动器，一切从这里开始
+	/// </summary>
 	public class UnityWorldTree : MonoBehaviour
 	{
+		/// <summary>
+		/// 主框架
+		/// </summary>
 		public WorldTreeCore Core;
+		/// <summary>
+		/// 可视化框架
+		/// </summary>
 		public WorldTreeCore ViewCore;
 
+		/// <summary>
+		/// 可视化生成器
+		/// </summary>
 		private UnityWorldTreeNodeViewBuilder treeView;
 
+		/// <summary>
+		/// 启动
+		/// </summary>
 		public void Start()
 		{
 			Core = new();//主框架
@@ -49,11 +64,17 @@ namespace WorldTree
 			Core.Root.AddComponent(out InitialDomain _);
 		}
 
+		/// <summary>
+		/// 更新
+		/// </summary>
 		private void Update()
 		{
 			if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(NodeRule.ToStringDrawTree(Core));
 		}
 
+		/// <summary>
+		/// 退出
+		/// </summary>
 		private void OnApplicationQuit()
 		{
 			Core?.Dispose();
@@ -63,6 +84,9 @@ namespace WorldTree
 			treeView = null;
 		}
 
+		/// <summary>
+		/// 销毁
+		/// </summary>
 		private void OnDestroy()
 		{
 			Core?.Dispose();

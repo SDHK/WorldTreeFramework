@@ -21,9 +21,18 @@ namespace Logic.SqliteData
     /// </summary>
     public abstract class SqliteModelBase : IDisposable
     {
-        public abstract Type EntityType { get; }
-        public abstract void Dispose();
-        public abstract void GetData(SqliteDataReader sqliteData);
+		/// <summary>
+		/// 数据表实体类型
+		/// </summary>
+		public abstract Type EntityType { get; }
+		/// <summary>
+		/// 释放
+		/// </summary>
+		public abstract void Dispose();
+		/// <summary>
+		/// 从数据库接收数据的方法
+		/// </summary>
+		public abstract void GetData(SqliteDataReader sqliteData);
     }
 
 
@@ -34,8 +43,14 @@ namespace Logic.SqliteData
         where T : SqliteEntityBase<ID>
     {
         public override Type EntityType => typeof(T);
-        protected List<T> mList;
-        protected Dictionary<ID, T> mDict;
+		/// <summary>
+		/// 数据表实体列表
+		/// </summary>
+		protected List<T> mList;
+		/// <summary>
+		/// 数据表实体字典
+		/// </summary>
+		protected Dictionary<ID, T> mDict;
         public SqliteModelBase()
         {
             mList = new List<T>();

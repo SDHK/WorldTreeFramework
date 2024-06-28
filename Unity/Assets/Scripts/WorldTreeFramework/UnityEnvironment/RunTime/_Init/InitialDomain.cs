@@ -44,10 +44,6 @@ namespace WorldTree
 		/// </summary>
 		public long nodeId { get; set; }
 
-		private T1 arg1;
-		private T2 arg2;
-		private T3 arg3;
-
 		/// <summary>
 		/// 调用将参数塞入目标节点
 		/// </summary>
@@ -56,6 +52,9 @@ namespace WorldTree
 			//node.TrySend(TypeInfo<R>.Default, arg1, arg2, arg3);
 		}
 
+		/// <summary>
+		///  a
+		/// </summary>
 		public void SetData(byte[] dataBytes)
 		{
 		}
@@ -72,26 +71,73 @@ namespace WorldTree
 		, AsGuiUpdateTime
 		, AsRule<IRule>
 	{
+		/// <summary>
+		/// 测试动画曲线
+		/// </summary>
 		public AnimationCurve AnimationCurve = new AnimationCurve();
+		/// <summary>
+		/// 测试浮点
+		/// </summary>
 		public float TestFloat = 1f;
+		/// <summary>
+		/// 测试双精度
+		/// </summary>
 		public double TestDouble = 1;
+		/// <summary>
+		/// 测试整数
+		/// </summary>
 		public int TestInt = 1;
+		/// <summary>
+		/// 测试长整数
+		/// </summary>
 		public long TestLong = 1;
+		/// <summary>
+		/// 测试布尔
+		/// </summary>
 		public bool TestBool = true;
+		/// <summary>
+		/// 测试字符串
+		/// </summary>
 		public string TestString = "1";
+		/// <summary>
+		/// 测试字符
+		/// </summary>
 		public char TestChar = '1';
+		/// <summary>
+		/// 测试边界
+		/// </summary>
 		public Bounds Bounds = new Bounds(Vector3.one, Vector3.one);
+		/// <summary>
+		/// 测试日期时间
+		/// </summary>
 		public DateTime TestDateTime = default;
+		/// <summary>
+		/// 测试矩阵
+		/// </summary>
 		public Rect Rect = new Rect(0, 0, 100, 100);
+		/// <summary>
+		/// 测试颜色
+		/// </summary>
 		public Color TestColor = Color.red;
+		/// <summary>
+		/// 测试向量
+		/// </summary>
 		public Vector2 TestVector2 = Vector2.one;
+		/// <summary>
+		/// 测试向量
+		/// </summary>
 		public Vector3 TestVector3 = Vector3.one;
+		/// <summary>
+		/// 测试向量
+		/// </summary>
 		public Vector4 TestVector4 = Vector4.one;
-
-		public TreeList<int> values;
+		/// <summary>
+		/// 测试
+		/// </summary>
+		public TreeList<int> ValueList;
 	}
 
-	public static class InitialDomainRule_
+	public static class InitialDomainRule
 	{
 		//测试框架功能
 		private class AddRule : AddRule<InitialDomain>

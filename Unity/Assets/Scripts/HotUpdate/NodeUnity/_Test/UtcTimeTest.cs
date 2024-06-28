@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// Utc时间测试
+	/// </summary>
 	public class UtcTimeTest:Node
 		,ComponentOf<InitialDomain>
 		,AsAwake
 		,AsGuiUpdateTime
 	{
+		/// <summary>
+		/// 开始时间
+		/// </summary>
 		public DateTime StartTime;
 
 		/// <summary>
