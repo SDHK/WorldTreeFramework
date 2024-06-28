@@ -4,27 +4,10 @@ using UnityEngine;
 
 namespace WorldTree
 {
-	///// <summary>
-	///// 测试
-	///// </summary>
-	//public interface IT0 { }
 
-	//public class T1 { }
-
-	//public struct T2 { }
-
-	//public enum T3 { }
 
 	public static partial class UtcTimeTestRule
 	{
-		//public static int T5;
-
-		//public const int T6 = 0;
-
-		//protected const int T7 = 0;
-
-		private static int T8 = 0;
-
 		private static OnAdd<UtcTimeTest> OnAdd = (self) =>
 		{
 			self.StartTime = DateTime.UtcNow;

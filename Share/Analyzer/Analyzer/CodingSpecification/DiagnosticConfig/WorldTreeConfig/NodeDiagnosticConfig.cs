@@ -33,8 +33,8 @@ namespace WorldTree.Analyzer
 
 			SetConfig(DiagnosticKey.MethodNaming, new DiagnosticConfig()
 			{
-				Title = "Node方法禁止",
-				MessageFormat = "Node中不可以写方法",
+				Title = "Node类型方法禁止",
+				MessageFormat = "Node类禁止声明方法",
 				DeclarationKind = SyntaxKind.MethodDeclaration,
 				Check = s => false,
 				NeedComment = false,

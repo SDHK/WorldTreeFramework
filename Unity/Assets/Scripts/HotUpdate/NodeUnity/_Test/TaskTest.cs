@@ -26,7 +26,16 @@ namespace WorldTree
 		/// </summary>
 		public TreeTaskToken treeTaskToken;
 
-	
-		//public void Test() { }
+	}
+
+	/// <summary>
+	/// 测试
+	/// </summary>
+    public class  TestClass1
+    {
+		/// <summary>
+		/// 测试方法
+		/// </summary>
+		public void Test() { }
 	}
 }

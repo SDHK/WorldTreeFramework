@@ -39,7 +39,7 @@ namespace WorldTree.Analyzer
 
 			SetConfig(DiagnosticKey.ConstNaming, new DiagnosticConfig()
 			{
-				Title = "Rule常量字段禁止",
+				Title = "Rule静态类型常量字段禁止",
 				MessageFormat = "Rule静态类型禁止声明常量字段",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.ConstKeyword },
@@ -49,7 +49,7 @@ namespace WorldTree.Analyzer
 
 			SetConfig(DiagnosticKey.PublicFieldNaming, new DiagnosticConfig()
 			{
-				Title = "Rule公开字段禁止",
+				Title = "Rule静态类型公开字段禁止",
 				MessageFormat = "Rule静态类型禁止声明公开字段",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.PublicKeyword, },
@@ -60,7 +60,7 @@ namespace WorldTree.Analyzer
 
 			SetConfig(DiagnosticKey.PrivateFieldNaming, new DiagnosticConfig()
 			{
-				Title = "Rule私有字段命名",
+				Title = "Rule静态类型私有字段命名",
 				MessageFormat = "Rule私有字段命名开头要大写",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.PrivateKeyword, },
@@ -70,7 +70,7 @@ namespace WorldTree.Analyzer
 
 			SetConfig(DiagnosticKey.PublicPropertyNaming, new DiagnosticConfig()
 			{
-				Title = "Rule公开属性禁止",
+				Title = "Rule静态类型公开属性禁止",
 				MessageFormat = "Rule静态类型禁止声明公开属性",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				KeywordKinds = new() { SyntaxKind.PublicKeyword, },
@@ -79,7 +79,7 @@ namespace WorldTree.Analyzer
 			});
 			SetConfig(DiagnosticKey.PrivatePropertyNaming, new DiagnosticConfig()
 			{
-				Title = "Rule私有属性禁止",
+				Title = "Rule静态类型私有属性禁止",
 				MessageFormat = "Rule静态类型禁止声明私有属性",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				KeywordKinds = new() { SyntaxKind.PrivateKeyword },
