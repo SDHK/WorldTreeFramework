@@ -22,9 +22,7 @@ namespace WorldTree
         public WorldTreeCore Core { get; set; }
         public long Type { get; set; }
         public bool IsFromPool { get; set; }
-        public bool IsRecycle { get; set; }
         public bool IsDisposed { get; set; }
-
 
         public virtual void OnDispose()
         {

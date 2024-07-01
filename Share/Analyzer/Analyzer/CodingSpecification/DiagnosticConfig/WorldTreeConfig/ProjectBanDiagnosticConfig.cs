@@ -45,6 +45,4 @@ namespace WorldTree.Analyzer
 			});
 		}
 	}
-
-
 }

@@ -9,6 +9,8 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
 	/// <summary>
@@ -16,6 +18,31 @@ namespace WorldTree
 	/// </summary>
 	public interface IWorldTreeNodeViewBuilder : INode
 	{ }
+
+
+	/// <summary>
+	/// 节点状态
+	/// </summary>
+	[Flags]
+	public enum NodeState
+	{
+		/// <summary>
+		/// 无状态
+		/// </summary>
+		None = 0,
+
+		/// <summary>
+		/// 是否来自对象池
+		/// </summary>
+		IsFromPool = 1,
+
+		/// <summary>
+		/// 是否释放
+		/// </summary>
+		IsDisposed = 1 << 1,
+
+	}
+
 
 	/// <summary>
 	/// 世界树节点接口
@@ -84,7 +111,7 @@ namespace WorldTree
 		/// <summary>
 		/// 活跃事件标记，这个由框架内部调用设置，禁止修改
 		/// </summary>
-		public bool m_ActiveEventMark { get; set; }
+		public bool activeEventMark { get; set; }
 
 		/// <summary>
 		/// 设置当前节点激活状态
@@ -117,7 +144,7 @@ namespace WorldTree
 		/// <summary>
 		/// 此节点挂载到父级的分支类型
 		/// </summary>
-		public long BranchType { get; set; }
+		public long BranchType { get; }
 
 		/// <summary>
 		/// 树分支

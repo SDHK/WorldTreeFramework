@@ -88,7 +88,6 @@ namespace WorldTree
 		public override void OnDispose()
 		{
 			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
-			IsRecycle = true;
 			IsDisposed = true;
 		}
 	}

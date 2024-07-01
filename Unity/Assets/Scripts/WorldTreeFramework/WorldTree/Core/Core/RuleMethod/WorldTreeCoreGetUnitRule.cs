@@ -70,9 +70,8 @@ namespace WorldTree
 			{
 				if (self.UnitPoolManager.TryRecycle(obj)) return;
 			}
-			obj.IsRecycle = true;
-			obj.OnRecycle();
 			obj.IsDisposed = true;
+			obj.OnRecycle();
 			obj.OnDispose();
 		}
 	}

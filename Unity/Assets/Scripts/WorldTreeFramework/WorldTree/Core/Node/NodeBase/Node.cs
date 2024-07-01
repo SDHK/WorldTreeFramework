@@ -8,13 +8,15 @@
 
 namespace WorldTree
 {
+
+
+
 	/// <summary>
 	/// 世界树节点基类
 	/// </summary>
 	public abstract partial class Node : INode
 	{
 		public bool IsFromPool { get; set; }
-		public bool IsRecycle { get; set; }
 
 		public bool IsDisposed { get; set; }
 
@@ -34,7 +36,7 @@ namespace WorldTree
 
 		public bool IsActive { get; set; }
 
-		public bool m_ActiveEventMark { get; set; }
+		public bool activeEventMark { get; set; }
 
 		public void SetActive(bool value)
 		{
@@ -92,7 +94,12 @@ namespace WorldTree
 
 		#region Branch
 
-		public long BranchType { get; set; }
+		/// <summary>
+		/// 此节点挂载到父级的分支类型
+		/// </summary>
+		protected long branchType;
+
+		public long BranchType => branchType;
 
 		public UnitDictionary<long, IBranch> BranchDict { get; set; }
 
@@ -114,7 +121,7 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
-				this.BranchType = TypeInfo<B>.TypeCode;
+				this.branchType = TypeInfo<B>.TypeCode;
 				this.Parent = parent;
 				this.Core = parent.Core;
 				this.Root = parent.Root;
@@ -137,7 +144,7 @@ namespace WorldTree
 			{
 				this.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
 			}
-			if (this.IsActive != this.m_ActiveEventMark)//激活变更
+			if (this.IsActive != this.activeEventMark)//激活变更
 			{
 				if (this.IsActive)
 				{
@@ -205,7 +212,7 @@ namespace WorldTree
 		public virtual void Dispose()
 		{
 			//是否已经回收
-			if (this.IsRecycle || this.IsDisposed) return;
+			if (this.IsDisposed) return;
 
 			//节点回收前序遍历处理,节点回收后续遍历处理
 			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => current.OnBeforeDispose(), current => current.OnDispose());
@@ -251,7 +258,7 @@ namespace WorldTree
 		{
 			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
-			this.BranchType = TypeInfo<B>.TypeCode;
+			this.branchType = TypeInfo<B>.TypeCode;
 			this.Parent = parent;
 			this.Core = parent.Core;
 			this.Root = parent.Root;
@@ -278,7 +285,7 @@ namespace WorldTree
 			{
 				this.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
 			}
-			if (this.IsActive != this.m_ActiveEventMark)//激活变更
+			if (this.IsActive != this.activeEventMark)//激活变更
 			{
 				if (this.IsActive)
 				{
@@ -298,7 +305,7 @@ namespace WorldTree
 
 		public virtual INode CutSelf()
 		{
-			if (this.IsRecycle) return null; //是否已经回收
+			if (this.IsDisposed) return null; //是否已经回收
 			NodeBranchTraversalHelper.TraversalPostorder(this, current => current.OnCutSelf());
 			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
 			return this;

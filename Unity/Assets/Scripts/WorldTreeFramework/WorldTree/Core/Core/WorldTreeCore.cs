@@ -20,8 +20,6 @@ namespace WorldTree
 {
 	//计划
 
-	//C#语法分析器,异常修复 ,异步，私有字段?
-
 	//藤蔓网状结构
 
 	//管理器改为分支 整理
@@ -38,8 +36,6 @@ namespace WorldTree
 	//代码表格
 
 	//YooAsset管理器
-
-	//分析器?
 
 	//需要定时器TimeUpdate,特化的双方法法则？
 
@@ -267,7 +263,7 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
-				this.BranchType = TypeInfo<B>.TypeCode;
+				this.branchType = TypeInfo<B>.TypeCode;
 				this.Parent = parent;
 				this.Core = parent.Core ?? this;
 				this.Root = null;
@@ -284,7 +280,7 @@ namespace WorldTree
 			AddNodeView();
 
 			//核心独立，不入上级引用池，也不用广播
-			if (this.IsActive != this.m_ActiveEventMark)//激活变更
+			if (this.IsActive != this.activeEventMark)//激活变更
 			{
 				if (this.IsActive)
 				{
@@ -311,7 +307,7 @@ namespace WorldTree
 			this.IsCoreActive = false;
 
 			//是否已经回收
-			if (this.IsRecycle || this.IsDisposed) return;
+			if (this.IsDisposed) return;
 
 			//节点回收前序遍历处理,节点回收后续遍历处理
 			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => current.OnBeforeDispose(), current => current.OnDispose());
@@ -380,7 +376,7 @@ namespace WorldTree
 		{
 			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
-			this.BranchType = TypeInfo<B>.TypeCode;
+			this.branchType = TypeInfo<B>.TypeCode;
 			this.Parent = parent;
 			this.RefreshActive();
 			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
@@ -390,7 +386,7 @@ namespace WorldTree
 		public override void OnGraftSelfToTree()
 		{
 			AddNodeView();
-			if (this.IsActive != this.m_ActiveEventMark)//激活变更
+			if (this.IsActive != this.activeEventMark)//激活变更
 			{
 				if (this.IsActive)
 				{

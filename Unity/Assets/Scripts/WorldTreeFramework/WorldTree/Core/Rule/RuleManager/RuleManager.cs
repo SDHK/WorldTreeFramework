@@ -128,7 +128,6 @@ namespace WorldTree
 			self.TargetRuleListenerGroupDict.Clear();
 			self.ListenerRuleTargetGroupDict.Clear();
 
-			self.IsRecycle = true;
 			self.IsDisposed = true;
 		}
 

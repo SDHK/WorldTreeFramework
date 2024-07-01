@@ -23,7 +23,6 @@ namespace WorldTree
 
         public bool IsFromPool { get; set; }
 
-        public bool IsRecycle { get; set; }
 
         /// <summary>
         /// 回收对象

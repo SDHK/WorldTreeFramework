@@ -21,6 +21,7 @@ namespace WorldTree
         /// 类型码
         /// </summary>
         public long Type { get; set; }
+
         /// <summary>
         /// 释放标记
         /// </summary>

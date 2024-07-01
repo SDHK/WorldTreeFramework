@@ -78,7 +78,7 @@ namespace WorldTree
 				{
 					if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
 					{
-						if (obj.IsRecycle) return;
+						if (obj.IsDisposed) return;
 
 						objectOnRecycle.Invoke(obj);
 						objectPoolQueue.Enqueue(obj);
@@ -122,7 +122,7 @@ namespace WorldTree
 		/// </summary>
 		private void ObjectOnGet(INode obj)
 		{
-			obj.IsRecycle = false;
+			obj.IsDisposed = false;
 			getRule?.Send(obj);
 		}
 		/// <summary>
@@ -130,7 +130,7 @@ namespace WorldTree
 		/// </summary>
 		public void ObjectOnRecycle(INode obj)
 		{
-			obj.IsRecycle = true;
+			obj.IsDisposed = true;
 			recycleRule?.Send(obj);
 			obj.Id = 0;
 		}
@@ -139,7 +139,6 @@ namespace WorldTree
 		/// </summary>
 		private void ObjectOnDestroy(INode obj)
 		{
-			obj.IsDisposed = true;
 			destroyRule?.Send(obj);
 		}
 

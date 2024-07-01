@@ -50,7 +50,7 @@ namespace WorldTree
                 {
                     if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
                     {
-                        if (obj.IsRecycle) return;
+                        if (obj.IsDisposed) return;
                         objectOnRecycle.Invoke(obj);
                         objectPoolQueue.Enqueue(obj);
                     }
@@ -90,7 +90,7 @@ namespace WorldTree
 		/// </summary>
 		public void ObjectOnGet(IUnitPoolEventItem obj)
         {
-            obj.IsRecycle = false;
+            obj.IsDisposed = false;
             obj.OnGet();
         }
 		/// <summary>
@@ -98,7 +98,7 @@ namespace WorldTree
 		/// </summary>
 		public void ObjectOnRecycle(IUnitPoolEventItem obj)
         {
-            obj.IsRecycle = true;
+            obj.IsDisposed = true;
             obj.OnRecycle();
         }
 		/// <summary>

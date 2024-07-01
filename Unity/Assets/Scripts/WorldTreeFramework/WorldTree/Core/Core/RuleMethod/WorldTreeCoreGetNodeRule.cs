@@ -111,9 +111,8 @@ namespace WorldTree
 			{
 				if (self.NodePoolManager.TryRecycle(obj)) return;
 			}
-			obj.IsRecycle = true;
-			self.RecycleRuleGroup?.Send(obj);
 			obj.IsDisposed = true;
+			self.RecycleRuleGroup?.Send(obj);
 			self.DestroyRuleGroup?.Send(obj);
 			obj.Id = 0;
 		}

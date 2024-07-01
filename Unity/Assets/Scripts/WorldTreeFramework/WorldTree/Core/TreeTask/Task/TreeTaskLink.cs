@@ -43,7 +43,7 @@ namespace WorldTree.Internal
 		public override void SetCompleted()
 		{
 			this.Log($"[{this.Id}]({this.GetType().Name}) : SetCompleted Task启动！！！！!!!");
-			if (IsRecycle || IsCompleted) throw new InvalidOperationException("当前任务早已完成");
+			if (IsDisposed || IsCompleted) throw new InvalidOperationException("当前任务早已完成");
 			if (isStart) throw new InvalidOperationException("当前任务已经启动");
 			RunTask();
 		}
@@ -102,7 +102,7 @@ namespace WorldTree.Internal
 
 		public override void SetCompleted()
 		{
-			if (IsRecycle || IsCompleted) throw new InvalidOperationException("当前任务早已完成");
+			if (IsDisposed || IsCompleted) throw new InvalidOperationException("当前任务早已完成");
 			if (isStart) throw new InvalidOperationException("当前任务已经启动");
 			RunTask();
 		}

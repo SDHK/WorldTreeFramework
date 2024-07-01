@@ -149,7 +149,7 @@ namespace WorldTree
 		/// </summary>
 		public virtual void SetCompleted()
 		{
-			if (IsRecycle || IsCompleted) throw new InvalidOperationException($"[{Id}]({this.GetType().Name})当前任务早已完成");
+			if (IsDisposed || IsCompleted) throw new InvalidOperationException($"[{Id}]({this.GetType().Name})当前任务早已完成");
 
 			//判断任务暂停状态
 			if (TreeTaskToken.Value is TreeTaskToken token)
@@ -183,7 +183,7 @@ namespace WorldTree
 		/// </summary>
 		public virtual void SetException(Exception e)
 		{
-			if (IsRecycle || IsCompleted) throw new InvalidOperationException($"[{Id}]({this.GetType().Name})当前任务早已完成，但出了异常{e}");
+			if (IsDisposed || IsCompleted) throw new InvalidOperationException($"[{Id}]({this.GetType().Name})当前任务早已完成，但出了异常{e}");
 
 			//设置为失败完成状态
 			this.state = AwaiterState.Faulted;

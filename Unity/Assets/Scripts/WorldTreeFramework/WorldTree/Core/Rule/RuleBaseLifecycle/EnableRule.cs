@@ -25,11 +25,11 @@ namespace WorldTree
 	{
 		public override void Invoke(INode self)
 		{
-			if (self.IsActive != self.m_ActiveEventMark)
+			if (self.IsActive != self.activeEventMark)
 			{
 				if (self.IsActive)
 				{
-					if (this.RuleIndex == this.RuleCount - 1) { self.m_ActiveEventMark = self.IsActive; }
+					if (this.RuleIndex == this.RuleCount - 1) { self.activeEventMark = self.IsActive; }
 					Execute(self as N);
 				}
 			}

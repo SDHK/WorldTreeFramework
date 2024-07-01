@@ -36,7 +36,6 @@ namespace WorldTree
 			poolDict.Clear();
 			allNodeDict = null;
 			poolDict = null;
-			this.IsRecycle = true;
 			this.IsDisposed = true;
 		}
 	}

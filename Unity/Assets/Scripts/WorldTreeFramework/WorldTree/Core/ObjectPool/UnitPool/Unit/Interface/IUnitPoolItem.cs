@@ -33,15 +33,6 @@ namespace WorldTree
         /// 是否从池获取
         /// </summary>
         public bool IsFromPool { get; set; }
-
-        /// <summary>
-        /// 回收标记
-        /// </summary>
-        bool IsRecycle { get; set; }
-
-        /// <summary>
-        /// 回收对象
-        /// </summary>
-        new void Dispose();
+      
     }
 }
