@@ -20,7 +20,7 @@ namespace WorldTree
 	/// <summary>
 	/// 子分支
 	/// </summary>
-	public class ChildBranch : UnitPoolItem, IBranchIdKey
+	public class ChildBranch : Unit, IBranchIdKey
 	{
 		public int Count => nodeDict.Count;
 
@@ -29,7 +29,7 @@ namespace WorldTree
 		/// </summary>
 		protected UnitDictionary<long, INode> nodeDict;
 
-		public override void OnGet()
+		public override void OnCreate()
 		{
 			Core.PoolGetUnit(out nodeDict);
 		}
@@ -62,7 +62,7 @@ namespace WorldTree
 
 		IEnumerator IEnumerable.GetEnumerator() => nodeDict.Values.GetEnumerator();
 
-		public override void OnRecycle()
+		public override void OnDispose()
 		{
 			this.nodeDict.Dispose();
 			this.nodeDict = null;

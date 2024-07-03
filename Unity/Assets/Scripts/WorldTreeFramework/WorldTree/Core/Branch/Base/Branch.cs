@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树分支基类
 	/// </summary>
-	public abstract class Branch<K> : UnitPoolItem, IBranch<K>
+	public abstract class Branch<K> : Unit, IBranch<K>
 	{
 		public int Count => nodeDict == null ? 0 : nodeDict.Count;
 
@@ -32,7 +32,7 @@ namespace WorldTree
 		/// <remarks>节点Id，键值</remarks>
 		protected UnitDictionary<long, K> keyDict;
 
-		public override void OnGet()
+		public override void OnCreate()
 		{
 			Core.PoolGetUnit(out nodeDict);
 			Core.PoolGetUnit(out keyDict);
@@ -73,7 +73,7 @@ namespace WorldTree
 
 		IEnumerator IEnumerable.GetEnumerator() => nodeDict.Values.GetEnumerator();
 
-		public override void OnRecycle()
+		public override void OnDispose()
 		{
 			this.nodeDict.Dispose();
 			this.keyDict.Dispose();

@@ -1,35 +1,35 @@
-﻿
-/****************************************
+﻿/******************************
 
-* 作者： 闪电黑客
-* 日期： 2022/5/17 11:19
+ * Author: 闪电黑客
 
-* 描述： 给实现接口的类一个统一的销毁标记，和方法
+ * 日期: 2021/12/13 13:40:18
 
-*/
+ * 最后日期: 2021/12/15 18:32:23
 
-using System;
+ * 最后修改: 闪电黑客
+
+ * 描述:  
+  
+	单位对象接口
+    让IUnit类获得管理的生命周期
+
+******************************/
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 单位接口
-    /// </summary>
-    public interface IUnit : IDisposable
-    {
-        /// <summary>
-        /// 类型码
-        /// </summary>
-        public long Type { get; set; }
+	/// <summary>
+	/// 单位对象接口
+	/// </summary>
+	public interface IUnit : IWorldTreeBasic
+	{
+		/// <summary>
+		/// 对象创建时的处理
+		/// </summary>
+		public void OnCreate() { }
 
-        /// <summary>
-        /// 释放标记
-        /// </summary>
-        bool IsDisposed { get; set; }
-
-        /// <summary>
-        /// 对象释放时的处理
-        /// </summary>
-        void OnDispose();
-    }
+		/// <summary>
+		/// 对象释放时的处理
+		/// </summary>
+		public void OnDispose() { }
+	}
 }

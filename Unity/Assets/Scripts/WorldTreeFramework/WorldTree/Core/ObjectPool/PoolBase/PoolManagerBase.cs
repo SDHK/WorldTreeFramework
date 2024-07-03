@@ -89,7 +89,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试回收对象
 		/// </summary>
-		public bool TryRecycle(IUnit obj)
+		public bool TryRecycle(IWorldTreeBasic obj)
 		{
 			if (TryNewOrGetPool(obj.Type, out T pool))
 			{

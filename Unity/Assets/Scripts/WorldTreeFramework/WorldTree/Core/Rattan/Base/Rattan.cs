@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树藤基类
 	/// </summary>
-	public abstract class Rattan<K> : UnitPoolItem, IRattan<K>
+	public abstract class Rattan<K> : Unit, IRattan<K>
 	{
 		public int Count => nodeDict.Count;
 		/// <summary>
@@ -32,7 +32,7 @@ namespace WorldTree
 		protected UnitDictionary<long, K> nodeKeyDict;
 
 
-		public override void OnGet()
+		public override void OnCreate()
 		{
 			Core.PoolGetUnit(out nodeDict);
 			Core.PoolGetUnit(out nodeKeyDict);
@@ -116,7 +116,7 @@ namespace WorldTree
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-		public override void OnRecycle()
+		public override void OnDispose()
 		{
 			this.nodeDict.Dispose();
 			this.nodeKeyDict.Dispose();

@@ -32,14 +32,19 @@ namespace WorldTree
 		None = 0,
 
 		/// <summary>
+		/// 新建的
+		/// </summary>
+		IsNew = 1,
+
+		/// <summary>
 		/// 是否来自对象池
 		/// </summary>
-		IsFromPool = 1,
+		IsFromPool = 1 << 1,
 
 		/// <summary>
 		/// 是否释放
 		/// </summary>
-		IsDisposed = 1 << 1,
+		IsDisposed = 1 << 2,
 
 	}
 
@@ -48,9 +53,9 @@ namespace WorldTree
 	/// 世界树节点接口
 	/// </summary>
 	/// <remarks>
-	/// <para>世界树节点最底层接口</para>
+	/// <para>世界树节点的最底层接口</para>
 	/// </remarks>
-	public partial interface INode : IUnitPoolItem
+	public partial interface INode : IWorldTreeBasic
 		, AsRule<New>
 		, AsRule<Get>
 		, AsRule<Recycle>
@@ -222,6 +227,11 @@ namespace WorldTree
 		/// </summary>
 		/// <remarks>由框架内部调用</remarks>
 		public void OnBeforeDispose();
+
+		/// <summary>
+		/// 释放时的处理
+		/// </summary>
+		public void OnDispose() { }
 
 		#endregion
 

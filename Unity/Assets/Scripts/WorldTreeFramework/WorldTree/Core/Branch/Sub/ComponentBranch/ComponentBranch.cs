@@ -18,6 +18,9 @@ namespace WorldTree
 	/// 组件分支
 	/// </summary>
 	public class ComponentBranch : Branch<long>, IBranchTypeKey
-	{ }
+	{ 
+		
+	
+	}
 
 }

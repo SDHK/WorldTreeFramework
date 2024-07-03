@@ -15,14 +15,14 @@ namespace WorldTree
 		/// <summary>
 		/// 打印日志
 		/// </summary>
-		public static void Log(this IUnitPoolItem self, object message) => self.Core.Log?.Invoke(message);
+		public static void Log(this IWorldTreeBasic self, object message) => self.Core.Log?.Invoke(message);
 		/// <summary>
 		/// 打印警告日志
 		/// </summary>
-		public static void LogWarning(this IUnitPoolItem self, object message) => self.Core.LogWarning?.Invoke(message);
+		public static void LogWarning(this IWorldTreeBasic self, object message) => self.Core.LogWarning?.Invoke(message);
 		/// <summary>
 		/// 打印错误日志
 		/// </summary>
-		public static void LogError(this IUnitPoolItem self, object message) => self.Core.LogError?.Invoke(message);
+		public static void LogError(this IWorldTreeBasic self, object message) => self.Core.LogError?.Invoke(message);
 	}
 }

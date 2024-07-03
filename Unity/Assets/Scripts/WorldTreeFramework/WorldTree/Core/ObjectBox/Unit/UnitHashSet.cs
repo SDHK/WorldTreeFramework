@@ -18,35 +18,17 @@ namespace WorldTree
 	/// 单元哈希集合：可由对象池管理回收
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class UnitHashSet<T> : HashSet<T>, IUnitPoolEventItem
+	public class UnitHashSet<T> : HashSet<T>, IUnit
     {
         public WorldTreeCore Core { get; set; }
         public long Type { get; set; }
         public bool IsFromPool { get; set; }
         public bool IsDisposed { get; set; }
 
-
-        public virtual void OnDispose()
-        {
-        }
-
-        public virtual void OnGet()
-        {
-        }
-
-        public virtual void OnNew()
-        {
-        }
-
-        public virtual void OnRecycle()
-        {
-            Clear();
-        }
-
-
-        public void Dispose()
-        {
-            Core.PoolRecycle(this);
-        }
-    }
+		public void Dispose()
+		{
+			Core.PoolRecycle(this);
+		}
+		public virtual void OnDispose() => Clear();
+	}
 }

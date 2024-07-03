@@ -28,7 +28,7 @@ namespace WorldTree
 	/// <summary>
 	/// 引用父级藤
 	/// </summary>
-	public class ReferencedParentRattan : UnitPoolItem, IRattan<long>
+	public class ReferencedParentRattan : Unit, IRattan<long>
 	{
 
 		public int Count => nodeDict.Count;
@@ -38,7 +38,7 @@ namespace WorldTree
 		/// </summary>
 		protected UnitDictionary<long, INode> nodeDict;
 
-		public override void OnGet()
+		public override void OnCreate()
 		{
 			Core.PoolGetUnit(out nodeDict);
 		}
@@ -70,7 +70,7 @@ namespace WorldTree
 		public IEnumerator<INode> GetEnumerator() => nodeDict.Values.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => nodeDict.Values.GetEnumerator();
 
-		public override void OnRecycle()
+		public override void OnDispose()
 		{
 			this.nodeDict.Dispose();
 			this.nodeDict = null;

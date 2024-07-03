@@ -45,6 +45,10 @@ namespace WorldTree
 
 	//TaskBox改名
 
+	//代码生成Destroy，让引用=null 
+
+	//id赋值时机，UID和普通id 的区分，序列化和普通类型的id
+
 	/// <summary>
 	/// 世界树核心接口
 	/// </summary>

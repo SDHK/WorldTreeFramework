@@ -21,7 +21,7 @@ namespace WorldTree
 	/// <remarks>
 	/// <para>世界树节点的结构组织接口基类</para>
 	/// </remarks>
-	public interface IBranch : IUnitPoolEventItem, IEnumerable<INode>
+	public interface IBranch : IUnit, IEnumerable<INode>
 	{
 		/// <summary>
 		/// 节点数量

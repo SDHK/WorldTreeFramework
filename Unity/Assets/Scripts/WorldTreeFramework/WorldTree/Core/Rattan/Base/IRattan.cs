@@ -22,7 +22,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树藤接口
 	/// </summary>
-	public interface IRattan : IUnitPoolEventItem, IEnumerable<INode>
+	public interface IRattan : IUnit, IEnumerable<INode>
 	{
 		/// <summary>
 		/// 节点数量

@@ -17,37 +17,20 @@ namespace WorldTree
     /// <summary>
     /// 单位列表：可由对象池管理回收
     /// </summary>
-    public class UnitList<T> : List<T>, IUnitPoolEventItem
+    public class UnitList<T> : List<T>, IUnit
     {
         public WorldTreeCore Core { get; set; }
         public long Type { get; set; }
         public bool IsFromPool { get; set; }
         public bool IsDisposed { get; set; }
 
+		public void Dispose()
+		{
+			Core.PoolRecycle(this);
+		}
 
-        public virtual void OnDispose()
-        {
-        }
-
-        public virtual void OnGet()
-        {
-        }
-
-        public virtual void OnNew()
-        {
-        }
-
-        public virtual void OnRecycle()
-        {
-            Clear();
-        }
+		public virtual void OnDispose() => Clear();
 
 
-        public void Dispose()
-        {
-            Core.PoolRecycle(this);
-        }
-
-
-    }
+	}
 }

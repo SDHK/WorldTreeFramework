@@ -51,7 +51,7 @@ namespace WorldTree
             }
         }
 
-        class GetRule : GetRule<TimerCycle>
+        class AddRule : AddRule<TimerCycle>
         {
             protected override void Execute(TimerCycle self)
             {
