@@ -1,4 +1,5 @@
-﻿using WorldTree.Internal;
+﻿using System.Collections.Generic;
+using WorldTree.Internal;
 
 namespace WorldTree
 {
@@ -6,20 +7,19 @@ namespace WorldTree
 	/// 对象池管理器基类
 	/// </summary>
 	public abstract class PoolManagerBase : Node, IListenerIgnorer
-	 , ComponentOf<WorldTreeCore>
-	 , AsAwake
-
+		, ComponentOf<WorldTreeCore>
+		, AsAwake
 	{
 		/// <summary>
 		/// 忽略类型名单
 		/// </summary>
-		public TreeHashSet<long> ignoreTypeHash = new TreeHashSet<long>();
+		public HashSet<long> ignoreTypeHash = new HashSet<long>();
 
 		public override void Dispose()
 		{
-			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
-			this.IsDisposed = true;
-			this.SetActive(false);
+			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
+			IsDisposed = true;
+			SetActive(false);
 			base.Dispose();
 		}
 	}
@@ -33,8 +33,7 @@ namespace WorldTree
 		/// <summary>
 		/// 池集合字典
 		/// </summary>
-		public TreeDictionary<long, T> poolDict = new TreeDictionary<long, T>();
-
+		public Dictionary<long, T> poolDict = new Dictionary<long, T>();
 
 		/// <summary>
 		/// 尝试新建或获取对象池
@@ -60,10 +59,10 @@ namespace WorldTree
 		/// </summary>
 		private T NewPool(long type)
 		{
-			this.Core.NewNodeLifecycle(out T pool);
+			Core.NewNodeLifecycle(out T pool);
 			pool.ObjectType = type.CodeToType();
 			pool.ObjectTypeCode = type;
-			this.poolDict.Add(pool.ObjectTypeCode, pool);
+			poolDict.Add(pool.ObjectTypeCode, pool);
 			pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, this);
 			pool.SetActive(true);
 			return pool;
@@ -103,8 +102,6 @@ namespace WorldTree
 			return false;
 		}
 
-
-
 		/// <summary>
 		/// 尝试获取对象池
 		/// </summary>
@@ -124,23 +121,5 @@ namespace WorldTree
 			}
 		}
 	}
-
-	//class AddRule : AddRule<NodePoolManager>
-	//{
-	//    protected override void OnEvent(NodePoolManager self)
-	//    {
-	//        self.AddChild(out self.m_Pools);
-	//    }
-	//}
-
-	//class RemoveRule : RemoveRule<NodePoolManager>
-	//{
-	//    protected override void OnEvent(NodePoolManager self)
-	//    {
-	//        self.m_Pools = null;
-	//    }
-	//}
-
-
 
 }

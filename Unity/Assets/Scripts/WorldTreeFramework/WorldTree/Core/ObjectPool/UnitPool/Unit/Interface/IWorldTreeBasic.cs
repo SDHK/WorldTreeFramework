@@ -35,14 +35,15 @@ namespace WorldTree
 		bool IsDisposed { get; set; }
 
 		/// <summary>
+		/// 是否从池获取
+		/// </summary>
+		public bool IsFromPool { get; set; }
+
+		/// <summary>
 		/// 世界树核心
 		/// </summary>
 		/// <remarks>框架的核心</remarks>
 		public WorldTreeCore Core { get; set; }
 
-		/// <summary>
-		/// 是否从池获取
-		/// </summary>
-		public bool IsFromPool { get; set; }
     }
 }

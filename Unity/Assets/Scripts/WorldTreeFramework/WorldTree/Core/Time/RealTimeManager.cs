@@ -46,12 +46,12 @@ namespace WorldTree
 		{
 			get
 			{
-				return this.timeZone;
+				return timeZone;
 			}
 			set
 			{
-				this.timeZone = value;
-				this.DateTime1970 = UtcDateTime1970.AddHours(TimeZone);
+				timeZone = value;
+				DateTime1970 = UtcDateTime1970.AddHours(TimeZone);
 			}
 		}
 

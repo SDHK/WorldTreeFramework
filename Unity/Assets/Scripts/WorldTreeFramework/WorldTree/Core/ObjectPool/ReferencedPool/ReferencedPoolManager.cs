@@ -11,14 +11,13 @@
 
 */
 
-using WorldTree.Internal;
-
 namespace WorldTree
 {
 	/// <summary>
 	/// 引用池管理器
 	/// </summary>
-	public class ReferencedPoolManager : Node, IListenerIgnorer, ComponentOf<WorldTreeCore>
+	public class ReferencedPoolManager : Node, IListenerIgnorer
+		, ComponentOf<WorldTreeCore>
 	{
 		/// <summary>
 		/// 全部节点
@@ -31,35 +30,30 @@ namespace WorldTree
 
 		public override void OnDispose()
 		{
-			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
 			allNodeDict.Clear();
 			poolDict.Clear();
 			allNodeDict = null;
 			poolDict = null;
-			this.IsDisposed = true;
+			IsDisposed = true;
 		}
-	}
-
-
-	public static class ReferencedPoolManagerRule
-	{
 
 		/// <summary>
 		/// 添加节点对象
 		/// </summary>
-		public static bool TryAdd(this ReferencedPoolManager self, INode node)
+		public  bool TryAdd(INode node)
 		{
-			self.allNodeDict.TryAdd(node.Id, node);
-			return self.GetPool(node.Type).TryAdd(node.Id, node);
+			allNodeDict.TryAdd(node.Id, node);
+			return GetPool(node.Type).TryAdd(node.Id, node);
 		}
 
 		/// <summary>
 		/// 移除节点对象
 		/// </summary>
-		public static void Remove(this ReferencedPoolManager self, INode node)
+		public  void Remove( INode node)
 		{
-			self.allNodeDict.Remove(node.Id);
-			if (self.TryGetPool(node.Type, out ReferencedPool pool))
+			allNodeDict.Remove(node.Id);
+			if (TryGetPool(node.Type, out ReferencedPool pool))
 			{
 				pool.Remove(node.Id);
 			}
@@ -68,14 +62,14 @@ namespace WorldTree
 		/// <summary>
 		/// 获取池
 		/// </summary>
-		public static ReferencedPool GetPool(this ReferencedPoolManager self, long type)
+		public  ReferencedPool GetPool(long type)
 		{
-			if (!self.poolDict.TryGetValue(type, out ReferencedPool pool))
+			if (!poolDict.TryGetValue(type, out ReferencedPool pool))
 			{
-				self.Core.NewNodeLifecycle(out pool);
+				Core.NewNodeLifecycle(out pool);
 				pool.ReferencedType = type.CodeToType();
-				self.poolDict.Add(type, pool);
-				pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, self);
+				poolDict.Add(type, pool);
+				pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, this);
 				pool.SetActive(true);
 			}
 			return pool;
@@ -83,11 +77,9 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取池
 		/// </summary>
-		public static bool TryGetPool(this ReferencedPoolManager self, long type, out ReferencedPool pool)
+		public  bool TryGetPool( long type, out ReferencedPool pool)
 		{
-			return self.poolDict.TryGetValue(type, out pool);
+			return poolDict.TryGetValue(type, out pool);
 		}
-
-
 	}
 }

@@ -32,12 +32,4 @@ namespace WorldTree
             }
         }
     }
-
-    class NodePoolManagerAddRule : AddRule<NodePoolManager>
-    {
-        protected override void Execute(NodePoolManager self)
-        {
-            
-        }
-    }
 }

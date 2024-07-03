@@ -209,7 +209,6 @@ namespace WorldTree
 
 			//法则管理器初始化
 			this.NewNode(out this.RuleManager);
-			this.RuleManager.Awake();
 
 			this.NewRuleGroup = this.RuleManager.GetOrNewRuleGroup<New>();
 			this.GetRuleGroup = this.RuleManager.GetOrNewRuleGroup<Get>();
