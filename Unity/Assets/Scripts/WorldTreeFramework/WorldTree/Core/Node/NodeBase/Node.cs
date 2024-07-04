@@ -40,20 +40,20 @@ namespace WorldTree
 
 		public void SetActive(bool value)
 		{
-			if (this.ActiveToggle != value)
+			if (ActiveToggle != value)
 			{
-				this.ActiveToggle = value;
-				this.RefreshActive();
+				ActiveToggle = value;
+				RefreshActive();
 			}
 		}
 
 		public void RefreshActive()
 		{
 			//如果状态相同，不需要刷新
-			if (this.IsActive == ((this.Parent == null) ? this.ActiveToggle : this.Parent.IsActive && this.ActiveToggle)) return;
+			if (IsActive == ((Parent == null) ? ActiveToggle : Parent.IsActive && ActiveToggle)) return;
 
 			//层序遍历设置子节点
-			using (this.Core.PoolGetUnit(out UnitQueue<INode> queue))
+			using (Core.PoolGetUnit(out UnitQueue<INode> queue))
 			{
 				queue.Enqueue(this);
 				while (queue.Count != 0)
@@ -103,7 +103,7 @@ namespace WorldTree
 
 		public UnitDictionary<long, IBranch> BranchDict { get; set; }
 
-		public UnitDictionary<long, IBranch> GetBranchDict => this.BranchDict ??= this.Core.PoolGetUnit<UnitDictionary<long, IBranch>>();
+		public UnitDictionary<long, IBranch> GetBranchDict => BranchDict ??= Core.PoolGetUnit<UnitDictionary<long, IBranch>>();
 
 		#endregion
 
@@ -121,12 +121,12 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
-				this.branchType = TypeInfo<B>.TypeCode;
-				this.Parent = parent;
-				this.Core = parent.Core;
-				this.Root = parent.Root;
-				if (this.Domain != this) this.Domain = parent.Domain;
-				this.SetActive(true);//激活节点
+				branchType = TypeInfo<B>.TypeCode;
+				Parent = parent;
+				Core = parent.Core;
+				Root = parent.Root;
+				if (Domain != this) Domain = parent.Domain;
+				SetActive(true);//激活节点
 				AddNodeView();
 				return true;
 			}
@@ -135,27 +135,27 @@ namespace WorldTree
 
 		public virtual void OnAddSelfToTree()
 		{
-			this.Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
+			Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
 			if (this is not IListenerIgnorer)//广播给全部监听器
 			{
 				NodeListenerActuatorHelper.GetListenerActuator<IListenerAddRule>(this)?.Send((INode)this);
 			}
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
 			{
-				this.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
+				Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
 			}
-			if (this.IsActive != this.activeEventMark)//激活变更
+			if (IsActive != activeEventMark)//激活变更
 			{
-				if (this.IsActive)
+				if (IsActive)
 				{
-					this.Core.EnableRuleGroup?.Send(this);//激活事件通知
+					Core.EnableRuleGroup?.Send(this);//激活事件通知
 				}
 				else
 				{
-					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
+					Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			this.Core.AddRuleGroup?.Send(this);//节点添加事件通知
+			Core.AddRuleGroup?.Send(this);//节点添加事件通知
 		}
 
 		#endregion
@@ -164,10 +164,10 @@ namespace WorldTree
 
 		public virtual void RemoveAllNode()
 		{
-			if (this.BranchDict == null) return;
-			using (this.Core.PoolGetUnit(out UnitStack<IBranch> branchs))
+			if (BranchDict == null) return;
+			using (Core.PoolGetUnit(out UnitStack<IBranch> branchs))
 			{
-				foreach (var item in this.BranchDict) branchs.Push(item.Value);
+				foreach (var item in BranchDict) branchs.Push(item.Value);
 				while (branchs.Count != 0) RemoveAllNode(branchs.Pop().Type);
 			}
 
@@ -188,7 +188,7 @@ namespace WorldTree
 				if (branch.Count != 0)
 				{
 					//迭代器是没法一边迭代一边删除的，所以这里用了一个栈来存储需要删除的节点
-					using (this.Core.PoolGetUnit(out UnitStack<INode> nodes))
+					using (Core.PoolGetUnit(out UnitStack<INode> nodes))
 					{
 						foreach (var item in branch) nodes.Push(item);
 						while (nodes.Count != 0) nodes.Pop().Dispose();
@@ -199,7 +199,7 @@ namespace WorldTree
 					{
 						foreach (var item in branch)
 						{
-							this.LogError($"移除节点出错，意外的新节点，父级:{this.GetType()} 分支: {branch.GetType()} 节点:{item.GetType()}:{item.Id}");
+							this.LogError($"移除节点出错，意外的新节点，父级:{GetType()} 分支: {branch.GetType()} 节点:{item.GetType()}:{item.Id}");
 						}
 					}
 				}
@@ -212,41 +212,41 @@ namespace WorldTree
 		public virtual void Dispose()
 		{
 			//是否已经回收
-			if (this.IsDisposed) return;
+			if (IsDisposed) return;
 
 			//节点回收前序遍历处理,节点回收后续遍历处理
 			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => current.OnBeforeDispose(), current => current.OnDispose());
 		}
 
-		public virtual void OnBeforeDispose() => this.Core.BeforeRemoveRuleGroup?.Send(this);
+		public virtual void OnBeforeDispose() => Core.BeforeRemoveRuleGroup?.Send(this);
 
 		public virtual void OnDispose()
 		{
-			this.View?.Dispose();
-			this.View = null;
-			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
-			this.SetActive(false);//激活变更
-			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
+			View?.Dispose();
+			View = null;
+			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
+			SetActive(false);//激活变更
+			Core.DisableRuleGroup?.Send(this); //禁用事件通知
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
 			{
 				//检测移除静态监听
-				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
+				Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
 				if (nodeListener is IDynamicNodeListener dynamicNodeListener)
 				{
 					//检测移除动态监听
-					this.Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
+					Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
 				}
 			}
-			this.Core.RemoveRuleGroup?.Send(this);//移除事件通知
+			Core.RemoveRuleGroup?.Send(this);//移除事件通知
 			if (this is not IListenerIgnorer)//广播给全部监听器通知 X
 			{
 				NodeListenerActuatorHelper.GetListenerActuator<IListenerRemoveRule>(this)?.Send((INode)this);
 			}
-			this.Core.ReferencedPoolManager.Remove(this);//引用池移除
+			Core.ReferencedPoolManager.Remove(this);//引用池移除
 
 			//this.DisposeDomain(); //清除域节点
-			this.Parent = null;//清除父节点
-			this.Core.PoolRecycle(this);//回收到池
+			Parent = null;//清除父节点
+			Core.PoolRecycle(this);//回收到池
 		}
 
 		#endregion
@@ -258,13 +258,13 @@ namespace WorldTree
 		{
 			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
-			this.branchType = TypeInfo<B>.TypeCode;
-			this.Parent = parent;
-			this.Core = parent.Core;
-			this.Root = parent.Root;
-			if (this.Domain != this) this.Domain = parent.Domain;
+			branchType = TypeInfo<B>.TypeCode;
+			Parent = parent;
+			Core = parent.Core;
+			Root = parent.Root;
+			if (Domain != this) Domain = parent.Domain;
 
-			this.RefreshActive();
+			RefreshActive();
 			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
 			return true;
 		}
@@ -272,28 +272,28 @@ namespace WorldTree
 		public virtual void OnGraftSelfToTree()//id相同数据同步？
 		{
 			AddNodeView();
-			this.Core = this.Parent.Core;
-			this.Root = this.Parent.Root;
-			if (this.Domain != this) this.Domain = this.Parent.Domain;
+			Core = Parent.Core;
+			Root = Parent.Root;
+			if (Domain != this) Domain = Parent.Domain;
 
-			this.Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
+			Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
 			if (this is not IListenerIgnorer)//广播给全部监听器
 			{
 				NodeListenerActuatorHelper.GetListenerActuator<IListenerAddRule>(this)?.Send((INode)this);
 			}
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
 			{
-				this.Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
+				Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
 			}
-			if (this.IsActive != this.activeEventMark)//激活变更
+			if (IsActive != activeEventMark)//激活变更
 			{
-				if (this.IsActive)
+				if (IsActive)
 				{
-					this.Core.EnableRuleGroup?.Send(this);//激活事件通知
+					Core.EnableRuleGroup?.Send(this);//激活事件通知
 				}
 				else
 				{
-					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
+					Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
 			NodeRuleHelper.SendRule(this, TypeInfo<Graft>.Default);
@@ -305,24 +305,24 @@ namespace WorldTree
 
 		public virtual INode CutSelf()
 		{
-			if (this.IsDisposed) return null; //是否已经回收
+			if (IsDisposed) return null; //是否已经回收
 			NodeBranchTraversalHelper.TraversalPostorder(this, current => current.OnCutSelf());
-			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
 			return this;
 		}
 
 		public virtual void OnCutSelf()
 		{
-			this.View?.Dispose();
-			this.View = null;
+			View?.Dispose();
+			View = null;
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
 			{
 				//检测移除静态监听
-				this.Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
+				Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
 				if (nodeListener is IDynamicNodeListener dynamicNodeListener)
 				{
 					//检测移除动态监听
-					this.Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
+					Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
 				}
 			}
 			NodeRuleHelper.SendRule(this, TypeInfo<Cut>.Default);
@@ -330,8 +330,8 @@ namespace WorldTree
 			{
 				NodeListenerActuatorHelper.GetListenerActuator<IListenerRemoveRule>(this)?.Send((INode)this);
 			}
-			this.Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
-			this.Parent = null;//清除父节点
+			Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
+			Parent = null;//清除父节点
 		}
 
 		/// <summary>
@@ -339,8 +339,8 @@ namespace WorldTree
 		/// </summary>
 		protected void AddNodeView()
 		{
-			this.View?.Dispose();
-			if (this.Parent?.View != null)
+			View?.Dispose();
+			if (Parent?.View != null)
 			{
 				// 拿到父节点的可视化生成器的父级节点
 				INode viewParent = Parent.View.Parent;
@@ -349,11 +349,11 @@ namespace WorldTree
 				INode nodeView = viewParent.Core.GetOrNewNode(Parent.View.Type);
 
 				// 将自身添加到父节点的可视化生成器中，而可视化则挂到可视化父级节点上
-				this.View = NodeBranchHelper.AddSelfToTree<ChildBranch, long, INode, INode>(nodeView, nodeView.Id, viewParent, this, Parent) as IWorldTreeNodeViewBuilder;
+				View = NodeBranchHelper.AddSelfToTree<ChildBranch, long, INode, INode>(nodeView, nodeView.Id, viewParent, this, Parent) as IWorldTreeNodeViewBuilder;
 			}
 			else
 			{
-				this.View = null;
+				View = null;
 			}
 		}
 

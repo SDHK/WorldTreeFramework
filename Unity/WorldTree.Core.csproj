@@ -205,6 +205,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\File\FileHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\DestroyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskTokenCatch.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Interface\IWorldTreeBasic.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\NodeListenerActuatorHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Vector3Float.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Interface\IUnit.cs" />
@@ -240,7 +241,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Math\MathFloat.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\RuleGroup.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\GameTimeManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Interface\IWorldTreeBasic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />
