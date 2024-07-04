@@ -26,7 +26,7 @@ namespace WorldTree
 		}
 	}
 
-	class GUIBeginVerticalRecycleSystem : RecycleRule<GUIBeginVertical>
+	class GUIBeginVerticalRemoveSystem : RemoveRule<GUIBeginVertical>
 	{
 		protected override void Execute(GUIBeginVertical self)
 		{

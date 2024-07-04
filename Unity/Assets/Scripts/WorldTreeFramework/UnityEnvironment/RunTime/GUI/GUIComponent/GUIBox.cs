@@ -26,7 +26,7 @@ namespace WorldTree
         }
     }
 
-    class GUIBoxRecycleSystem : RecycleRule<GUIBox>
+    class GUIBoxRemoveRule : RemoveRule<GUIBox>
     {
         protected override void Execute(GUIBox self)
         {

@@ -6,19 +6,51 @@
 
 ****************************************/
 
+using System;
+
 namespace WorldTree
 {
-
-
-
 	/// <summary>
 	/// 世界树节点基类
 	/// </summary>
 	public abstract partial class Node : INode
 	{
-		public bool IsFromPool { get; set; }
+		/// <summary>
+		/// 节点复数状态
+		/// </summary>
+		private NodeState state;
 
-		public bool IsDisposed { get; set; }
+		public bool IsFromPool
+		{
+			get => (state & NodeState.IsFromPool) == NodeState.IsFromPool;
+			set
+			{
+				if (value)
+				{
+					state |= NodeState.IsFromPool;
+				}
+				else
+				{
+					state &= ~NodeState.IsFromPool;
+				}
+			}
+		}
+		public bool IsDisposed
+		{
+			get => (state & NodeState.IsDisposed) == NodeState.IsDisposed;
+			set
+			{
+				if (value)
+				{
+					state |= NodeState.IsDisposed;
+				}
+				else
+				{
+					state &= ~NodeState.IsDisposed;
+				}
+			}
+		}
+
 
 		public long Id { get; set; }
 		public long Type { get; set; }
@@ -107,6 +139,8 @@ namespace WorldTree
 
 		#endregion
 
+
+
 		public override string ToString()
 		{
 			return GetType().ToString();
@@ -114,7 +148,18 @@ namespace WorldTree
 
 		#region 节点处理
 
+		#region 创建
+		public virtual void OnCreate()
+		{
+			Id = Core.IdManager.GetId();
+			Core.RuleManager?.SupportNodeRule(Type);
+		}
+
+		#endregion
+
 		#region 添加
+
+
 
 		public virtual bool TryAddSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
@@ -246,6 +291,7 @@ namespace WorldTree
 
 			//this.DisposeDomain(); //清除域节点
 			Parent = null;//清除父节点
+						  //Core.RecycleRuleGroup?.Send(this);
 			Core.PoolRecycle(this);//回收到池
 		}
 

@@ -28,7 +28,7 @@ namespace WorldTree
         }
     }
 
-    class GUIBeginScrollViewRecycleSystem : RecycleRule<GUIBeginScrollView>
+    class GUIBeginScrollViewRecycleSystem : RemoveRule<GUIBeginScrollView>
     {
         protected override void Execute(GUIBeginScrollView self)
         {

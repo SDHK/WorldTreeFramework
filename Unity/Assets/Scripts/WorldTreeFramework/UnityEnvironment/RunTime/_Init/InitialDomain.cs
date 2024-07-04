@@ -70,6 +70,7 @@ namespace WorldTree
 		, AsLateUpdateTime
 		, AsGuiUpdateTime
 		, AsRule<IRule>
+		, AsCurveEvaluate 
 	{
 		/// <summary>
 		/// 测试动画曲线

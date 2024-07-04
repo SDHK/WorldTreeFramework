@@ -32,20 +32,14 @@ namespace WorldTree
 		None = 0,
 
 		/// <summary>
-		/// 新建的
-		/// </summary>
-		IsNew = 1,
-
-		/// <summary>
 		/// 是否来自对象池
 		/// </summary>
-		IsFromPool = 1 << 1,
+		IsFromPool = 1 ,
 
 		/// <summary>
 		/// 是否释放
 		/// </summary>
-		IsDisposed = 1 << 2,
-
+		IsDisposed = 1 << 1,
 	}
 
 
@@ -56,10 +50,10 @@ namespace WorldTree
 	/// <para>世界树节点的最底层接口</para>
 	/// </remarks>
 	public partial interface INode : IWorldTreeBasic
-		, AsRule<New>
-		, AsRule<Get>
-		, AsRule<Recycle>
-		, AsRule<Destroy>
+		//, AsRule<New>
+		//, AsRule<Get>
+		//, AsRule<Dispose>
+		//, AsRule<Destroy>
 
 		, AsRule<Enable>
 		, AsRule<Disable>
@@ -78,6 +72,8 @@ namespace WorldTree
 		/// </summary>
 		/// <remarks>递增ID，只在每个框架实例内唯一</remarks>
 		public long Id { get; set; }
+
+	
 
 		/// <summary>
 		/// 树根节点
@@ -227,11 +223,6 @@ namespace WorldTree
 		/// </summary>
 		/// <remarks>由框架内部调用</remarks>
 		public void OnBeforeDispose();
-
-		/// <summary>
-		/// 释放时的处理
-		/// </summary>
-		public void OnDispose() { }
 
 		#endregion
 

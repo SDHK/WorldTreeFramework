@@ -118,23 +118,6 @@ namespace WorldTree
 		public IRuleGroup<Disable> DisableRuleGroup;
 
 		/// <summary>
-		/// 新建法则组
-		/// </summary>
-		public IRuleGroup<New> NewRuleGroup;
-		/// <summary>
-		/// 获取法则组
-		/// </summary>
-		public IRuleGroup<Get> GetRuleGroup;
-		/// <summary>
-		/// 回收法则组
-		/// </summary>
-		public IRuleGroup<Recycle> RecycleRuleGroup;
-		/// <summary>
-		/// 销毁法则组
-		/// </summary>
-		public IRuleGroup<Destroy> DestroyRuleGroup;
-
-		/// <summary>
 		/// 核心激活标记
 		/// </summary>
 		public bool IsCoreActive = false;
@@ -210,11 +193,7 @@ namespace WorldTree
 			//法则管理器初始化
 			this.NewNode(out this.RuleManager);
 
-			this.NewRuleGroup = this.RuleManager.GetOrNewRuleGroup<New>();
-			this.GetRuleGroup = this.RuleManager.GetOrNewRuleGroup<Get>();
 			this.BeforeRemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<BeforeRemove>();
-			this.RecycleRuleGroup = this.RuleManager.GetOrNewRuleGroup<Recycle>();
-			this.DestroyRuleGroup = this.RuleManager.GetOrNewRuleGroup<Destroy>();
 
 			this.AddRuleGroup = this.RuleManager.GetOrNewRuleGroup<Add>();
 			this.RemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<Remove>();
@@ -359,11 +338,6 @@ namespace WorldTree
 			this.NodePoolManager = null;
 			this.ArrayPoolManager = null;
 			this.Root = null;
-
-			this.NewRuleGroup = null;
-			this.GetRuleGroup = null;
-			this.RecycleRuleGroup = null;
-			this.DestroyRuleGroup = null;
 
 			this.AddRuleGroup = null;
 			this.RemoveRuleGroup = null;

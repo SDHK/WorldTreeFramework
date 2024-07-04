@@ -8,8 +8,7 @@
 * 管理类型： INode
 *   
 *   调用 节点 生命周期法则， 生成， 获取， 回收， 销毁，
-*   
-*   同时对 节点 赋予 根节点 和 Id 分发。
+*  
 *   
 */
 using System;
@@ -23,33 +22,11 @@ namespace WorldTree
 	public class NodePool : GenericPool<INode>
 		, ChildOf<PoolManagerBase<NodePool>>
 	{
-		/// <summary>
-		/// 对象新建规则列表
-		/// </summary>
-		public IRuleList<New> newRule;
-		/// <summary>
-		/// 对象获取规则列表
-		/// </summary>
-		public IRuleList<Get> getRule;
-		/// <summary>
-		/// 对象回收规则列表
-		/// </summary>
-		public IRuleList<Recycle> recycleRule;
-		/// <summary>
-		/// 对象销毁规则列表
-		/// </summary>
-		public IRuleList<Destroy> destroyRule;
-
-
 		public NodePool() : base()
 		{
 			NewObject = ObjectNew;
-			DestroyObject = ObjectDestroy;
-
-			objectOnNew = ObjectOnNew;
 			objectOnGet = ObjectOnGet;
 			objectOnRecycle = ObjectOnRecycle;
-			objectOnDestroy = ObjectOnDestroy;
 		}
 
 		public override string ToString()
@@ -86,8 +63,6 @@ namespace WorldTree
 					else
 					{
 						objectOnRecycle.Invoke(obj);
-						objectOnDestroy.Invoke(obj);
-						DestroyObject.Invoke(obj);
 					}
 				}
 			}
@@ -105,25 +80,11 @@ namespace WorldTree
 			return obj;
 		}
 		/// <summary>
-		/// 对象销毁方法
-		/// </summary>
-		private void ObjectDestroy(INode obj)
-		{
-		}
-		/// <summary>
-		/// 对象新建处理事件
-		/// </summary>
-		private void ObjectOnNew(INode obj)
-		{
-			newRule?.Send(obj);
-		}
-		/// <summary>
 		/// 对象获取处理事件
 		/// </summary>
 		private void ObjectOnGet(INode obj)
 		{
 			obj.IsDisposed = false;
-			getRule?.Send(obj);
 		}
 		/// <summary>
 		/// 对象回收处理事件
@@ -131,51 +92,21 @@ namespace WorldTree
 		public void ObjectOnRecycle(INode obj)
 		{
 			obj.IsDisposed = true;
-			recycleRule?.Send(obj);
 			obj.Id = 0;
 		}
-		/// <summary>
-		/// 对象销毁处理事件
-		/// </summary>
-		private void ObjectOnDestroy(INode obj)
-		{
-			destroyRule?.Send(obj);
-		}
-
 	}
 
 
 	public static partial class NodePoolRule
 	{
-		class GraftRule : GraftRule<NodePool>
-		{
-			protected override void Execute(NodePool self)
-			{
-				self.Core.RuleManager.SupportNodeRule(self.ObjectTypeCode);
-
-				//生命周期法则
-				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCode, out self.newRule);
-				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCode, out self.getRule);
-				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCode, out self.recycleRule);
-				self.Core.RuleManager.TryGetRuleList(self.ObjectTypeCode, out self.destroyRule);
-			}
-		}
-		class DestroyRule : DestroyRule<NodePool>
+		class RemoveRule : RemoveRule<NodePool>
 		{
 			protected override void Execute(NodePool self)
 			{
 				self.DisposeAll();
 				self.NewObject = null;
-				self.DestroyObject = null;
-				self.objectOnNew = null;
 				self.objectOnGet = null;
 				self.objectOnRecycle = null;
-				self.objectOnDestroy = null;
-
-				self.newRule = default;
-				self.getRule = default;
-				self.recycleRule = default;
-				self.destroyRule = default;
 			}
 		}
 	}

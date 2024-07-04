@@ -11,19 +11,19 @@ using System;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 引用池
-    /// </summary>
-    public class ReferencedPool : TreeDictionary<long, INode>, IListenerIgnorer, ChildOf<ReferencedPoolManager>
-        ,AsComponentBranch
-    {
-        /// <summary>
-        /// 引用池类型
-        /// </summary>
-        public Type ReferencedType;
-        public override string ToString()
-        {
-            return $"ReferencedPool<{ReferencedType}>:[{Count}]";
-        }
-    }
+	/// <summary>
+	/// 引用池
+	/// </summary>
+	public class ReferencedPool : TreeDictionary<long, INode>, IListenerIgnorer, ChildOf<ReferencedPoolManager>
+		, AsComponentBranch
+	{
+		/// <summary>
+		/// 引用池类型
+		/// </summary>
+		public long ReferencedType;
+		public override string ToString()
+		{
+			return $"ReferencedPool<{ReferencedType.CodeToType()}>:[{Count}]";
+		}
+	}
 }

@@ -25,7 +25,7 @@ namespace WorldTree
 			node.Type = TypeInfo<T>.TypeCode;
 			node.Core = self;
 			node.Root = self.Root;
-			node.Id = self.IdManager.GetId();
+			node.OnCreate();
 			return node;
 		}
 
@@ -39,7 +39,7 @@ namespace WorldTree
 			node.Type = type;
 			node.Core = self;
 			node.Root = self.Root;
-			node.Id = self.IdManager.GetId();
+			node.OnCreate();
 			return node;
 		}
 
@@ -50,9 +50,6 @@ namespace WorldTree
 		public static T NewNodeLifecycle<T>(this WorldTreeCore self, out T node) where T : class, INode
 		{
 			self.NewNode(out node);
-			self.RuleManager.SupportNodeRule(node.Type);
-			self.NewRuleGroup?.Send(node);
-			self.GetRuleGroup?.Send(node);
 			return node;
 		}
 
@@ -63,9 +60,6 @@ namespace WorldTree
 		public static INode NewNodeLifecycle(this WorldTreeCore self, long type)
 		{
 			INode node = self.NewNode(type);
-			self.RuleManager.SupportNodeRule(node.Type);
-			self.NewRuleGroup?.Send(node);
-			self.GetRuleGroup?.Send(node);
 			return node;
 		}
 
@@ -79,7 +73,7 @@ namespace WorldTree
 			{
 				if (self.NodePoolManager.TryGet(TypeInfo<T>.TypeCode, out INode node))
 				{
-					node.Id = self.IdManager.GetId();
+					node.OnCreate();
 					return node as T;
 				}
 			}
@@ -95,7 +89,7 @@ namespace WorldTree
 			{
 				if (self.NodePoolManager.TryGet(type, out INode node))
 				{
-					node.Id = self.IdManager.GetId();
+					node.OnCreate();
 					return node;
 				}
 			}
@@ -112,8 +106,6 @@ namespace WorldTree
 				if (self.NodePoolManager.TryRecycle(obj)) return;
 			}
 			obj.IsDisposed = true;
-			self.RecycleRuleGroup?.Send(obj);
-			self.DestroyRuleGroup?.Send(obj);
 			obj.Id = 0;
 		}
 	}

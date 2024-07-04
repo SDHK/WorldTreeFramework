@@ -53,7 +53,7 @@ namespace WorldTree
             return isFoldout;
         }
     }
-    class GUIFoldoutButtonRecycleSystem : RecycleRule<GUIFoldoutButton>
+    class GUIFoldoutButtonRemoveRule : RemoveRule<GUIFoldoutButton>
     {
         protected override void Execute(GUIFoldoutButton self)
         {

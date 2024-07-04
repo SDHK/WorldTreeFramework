@@ -35,7 +35,7 @@ namespace WorldTree
         }
     }
 
-    class GUIButtonRecycleSystem : RecycleRule<GUIButton>
+    class GUIButtonRemoveRule : RemoveRule<GUIButton>
     {
         protected override void Execute(GUIButton self)
         {

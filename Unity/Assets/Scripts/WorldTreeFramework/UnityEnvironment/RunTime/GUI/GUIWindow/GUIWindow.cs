@@ -67,7 +67,7 @@ namespace WorldTree
         }
     }
 
-    class GUIWindowRecycleSystem : RecycleRule<GUIWindow>
+    class GUIWindowRemoveRule : RemoveRule<GUIWindow>
     {
         protected override void Execute(GUIWindow self)
         {

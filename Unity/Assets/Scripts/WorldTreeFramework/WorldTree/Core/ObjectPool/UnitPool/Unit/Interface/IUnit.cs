@@ -22,14 +22,5 @@ namespace WorldTree
 	/// </summary>
 	public interface IUnit : IWorldTreeBasic
 	{
-		/// <summary>
-		/// 对象创建时的处理
-		/// </summary>
-		public void OnCreate() { }
-
-		/// <summary>
-		/// 对象释放时的处理
-		/// </summary>
-		public void OnDispose() { }
 	}
 }

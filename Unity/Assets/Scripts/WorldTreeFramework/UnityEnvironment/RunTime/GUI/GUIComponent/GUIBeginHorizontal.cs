@@ -16,7 +16,7 @@ namespace WorldTree
         }
     }
 
-    class GUIBeginHorizontalRecycleSystem : RecycleRule<GUIBeginHorizontal>
+    class GUIBeginHorizontalRemoveRule : RemoveRule<GUIBeginHorizontal>
     {
         protected override void Execute(GUIBeginHorizontal self)
         {

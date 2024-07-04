@@ -115,7 +115,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Math\TileTool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleActuator\GlobalRuleActuator\GlobalRuleActuator.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitSortedDictionary.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\NewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeHashSet.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\UpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseUniversal\ListenerAddRule.cs" />
@@ -169,7 +168,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Serialized\Serialized.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\File\DirectoryHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTaskQueueLock\TreeTaskQueueCompleter.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\GetRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTask.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValueDelegate.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
@@ -192,7 +190,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\ReferencedRemoveRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitDictionary.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Math\MathTriangle.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\RecycleRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Base\TreeValueBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeList.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\RuleMethod\NodeBranchTraversalHelper.cs" />
@@ -203,7 +200,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeMatrix2.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\AddRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\File\FileHelper.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\RuleBaseLifecycle\DestroyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskTokenCatch.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Interface\IWorldTreeBasic.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\NodeListenerActuatorHelper.cs" />
