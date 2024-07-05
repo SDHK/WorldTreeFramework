@@ -8,22 +8,50 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
 	/// <summary>
 	/// 引用池
 	/// </summary>
-	public class ReferencedPool : TreeDictionary<long, INode>, IListenerIgnorer, ChildOf<ReferencedPoolManager>
+	public class ReferencedPool : Node, IListenerIgnorer, ChildOf<ReferencedPoolManager>
 		, AsComponentBranch
 	{
+		/// <summary>
+		/// 节点字典
+		/// </summary>
+		private Dictionary<long, INode> nodeDict = new Dictionary<long, INode>();
+
+		/// <summary>
+		/// 节点字典
+		/// </summary>
+		public Dictionary<long, INode> NodeDict => nodeDict;
+
+		/// <summary>
+		/// 添加节点
+		/// </summary>
+		public bool TryAdd(long id, INode node)
+		{
+			return nodeDict.TryAdd(id, node);
+		}
+
+		/// <summary>
+		/// 移除节点
+		/// </summary>
+		public void Remove(long id)
+		{
+			nodeDict.Remove(id);
+		}
+
+
 		/// <summary>
 		/// 引用池类型
 		/// </summary>
 		public long ReferencedType;
 		public override string ToString()
 		{
-			return $"ReferencedPool<{ReferencedType.CodeToType()}>:[{Count}]";
+			return $"ReferencedPool<{ReferencedType.CodeToType()}>:[{nodeDict.Count}]";
 		}
 	}
 }

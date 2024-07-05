@@ -46,7 +46,7 @@ namespace WorldTree
 				if (self.Core.ReferencedPoolManager.TryGetPool(listenerType.Key, out ReferencedPool listenerPool))
 				{
 					//全部注入到执行器
-					foreach (var listenerPair in listenerPool)
+					foreach (var listenerPair in listenerPool.NodeDict)
 					{
 						IDynamicNodeListener nodeListener = (listenerPair.Value as IDynamicNodeListener);
 

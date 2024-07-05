@@ -56,16 +56,6 @@ namespace WorldTree
 			self.Log("失活！！");
 		};
 
-		private static OnNew<DotNetTestNode> New1 = (self) =>
-		{
-			self.Log("新建1！！");
-		};
-
-		private static OnNew<DotNetTestNode> New2 = (self) =>
-		{
-			self.Log("新建2！！");
-		};
-
 		private static OnAdd<DotNetTestNode> Add = (self) =>
 		{
 			self.Log(" 初始化！！！");

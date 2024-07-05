@@ -22,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 数组对象池组字典
 		/// </summary>
-		public TreeDictionary<Type, ArrayPoolGroup> PoolGroupDict;
+		public UnitDictionary<Type, ArrayPoolGroup> PoolGroupDict;
 	}
 
 
@@ -32,7 +32,7 @@ namespace WorldTree
 		{
 			protected override void Execute(ArrayPoolManager self)
 			{
-				self.AddChild(out self.PoolGroupDict);
+				self.Core.PoolGetUnit(out self.PoolGroupDict);
 			}
 		}
 
@@ -40,6 +40,7 @@ namespace WorldTree
 		{
 			protected override void Execute(ArrayPoolManager self)
 			{
+				self.PoolGroupDict.Dispose();
 				self.PoolGroupDict = null;
 			}
 		}

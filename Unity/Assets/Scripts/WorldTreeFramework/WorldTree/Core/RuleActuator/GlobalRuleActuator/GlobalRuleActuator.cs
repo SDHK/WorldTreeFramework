@@ -69,7 +69,7 @@ namespace WorldTree
 				{
 					if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
 					{
-						foreach (var node in pool)
+						foreach (var node in pool.NodeDict)
 						{
 							self.TryAdd(node.Value);
 						}

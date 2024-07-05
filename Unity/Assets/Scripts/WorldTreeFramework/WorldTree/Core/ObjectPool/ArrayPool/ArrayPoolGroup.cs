@@ -8,6 +8,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -25,7 +26,7 @@ namespace WorldTree
 		/// <summary>
 		/// 数组对象池集合
 		/// </summary>
-		public TreeDictionary<int, ArrayPool> PoolDict;
+		public UnitDictionary<int, ArrayPool> PoolDict;
 	}
 
 	public static partial class ArrayPoolGroupRule
@@ -42,7 +43,7 @@ namespace WorldTree
 		{
 			protected override void Execute(ArrayPoolGroup self)
 			{
-				self.AddChild(out self.PoolDict);
+				self.Core.PoolGetUnit(out self.PoolDict);
 			}
 		}
 
@@ -50,6 +51,7 @@ namespace WorldTree
 		{
 			protected override void Execute(ArrayPoolGroup self)
 			{
+				self.PoolDict.Dispose();
 				self.PoolDict = null;
 			}
 		}
