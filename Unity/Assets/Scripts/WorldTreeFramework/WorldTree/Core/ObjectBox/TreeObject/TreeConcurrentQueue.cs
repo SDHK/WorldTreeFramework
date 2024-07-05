@@ -14,10 +14,11 @@ namespace WorldTree
 	/// <summary>
 	/// 树并发队列
 	/// </summary>
-	public partial class TreeConcurrentQueue<T> : ConcurrentQueue<T>, INode
+	public partial class TreeConcurrentQueue<T> : ConcurrentQueue<T>, INodeData, INode
 		, ChildOf<INode>, ComponentOf<INode>
 		, AsAwake
 	{
+		public long UID { get; set; }
 	}
 
 	public static class TreeConcurrentQueueRule

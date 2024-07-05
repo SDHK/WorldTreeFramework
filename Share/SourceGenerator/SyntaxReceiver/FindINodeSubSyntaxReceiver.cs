@@ -8,6 +8,7 @@
 */
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace WorldTree.SourceGenerator
@@ -28,34 +29,17 @@ namespace WorldTree.SourceGenerator
 			if (classDeclarationSyntax.BaseList is null) return;
 			if (classDeclarationSyntax.BaseList.Types.Count == 0) return;
 
-			// 跳过Node类
-			if (classDeclarationSyntax.Identifier.Text == "Node") return;
+			// 跳过抽象类
+			if (classDeclarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.AbstractKeyword))) return;
+
+			// 仅包含部分类
+			if (!classDeclarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PartialKeyword))) return;
+
 
 			//判断是否继承了INode,如果没有继承则不生成
-
-			if (!TreeSyntaxHelper.CheckExtendInterface(classDeclarationSyntax, "INode")) return;
-
-			//判断父类是否继承了INode,如果继承了则不生成
-
-			if (TreeSyntaxHelper.CheckBaseExtendInterface(classDeclarationSyntax, "INode", false)) return;
+			if (!TreeSyntaxHelper.CheckExtendDirectlyInterface(classDeclarationSyntax, "INode")) return;
 
 			ClassDeclarations.Add(classDeclarationSyntax);
 		}
 	}
-
-	///// <summary>
-	///// 查找继承了IRule的类
-	///// </summary>
-	//public class FindIRuleSubSyntaxReceiver : ISyntaxReceiver
-	//{
-	//	public List<InterfaceDeclarationSyntax> InterfaceDeclarations = new();
-
-	// public void OnVisitSyntaxNode(SyntaxNode node) { //判断是否是接口 if (!(node is
-	// InterfaceDeclarationSyntax interfaceDeclarationSyntax)) return;
-
-	//		//判断类型是否继承了IRule
-	//		if (!TreeSyntaxHelper.CheckExtendInterface(interfaceDeclarationSyntax, "IRule")) return;
-	//		InterfaceDeclarations.Add(interfaceDeclarationSyntax);
-	//	}
-	//}
 }

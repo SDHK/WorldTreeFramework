@@ -108,6 +108,17 @@ namespace WorldTree
 		/// 移除法则组
 		/// </summary>
 		public IRuleGroup<Remove> RemoveRuleGroup;
+
+		/// <summary>
+		/// 嫁接法则组
+		/// </summary>
+		public IRuleGroup<Graft> GraftRuleGroup;
+
+		/// <summary>
+		/// 裁剪法则组
+		/// </summary>
+		public IRuleGroup<Cut> CutRuleGroup;
+
 		/// <summary>
 		/// 激活法则组
 		/// </summary>
@@ -199,6 +210,8 @@ namespace WorldTree
 			this.RemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<Remove>();
 			this.EnableRuleGroup = this.RuleManager.GetOrNewRuleGroup<Enable>();
 			this.DisableRuleGroup = this.RuleManager.GetOrNewRuleGroup<Disable>();
+			this.GraftRuleGroup = this.RuleManager.GetOrNewRuleGroup<Graft>();
+			this.CutRuleGroup = this.RuleManager.GetOrNewRuleGroup<Cut>();
 
 			//引用池管理器初始化
 			this.NewNodeLifecycle(out this.ReferencedPoolManager);

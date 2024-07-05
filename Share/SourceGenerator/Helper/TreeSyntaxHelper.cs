@@ -19,6 +19,24 @@ namespace WorldTree.SourceGenerator
 	/// </summary>
 	internal static class TreeSyntaxHelper
 	{
+
+		/// <summary>
+		/// 检查类是否直接实现了指定接口
+		/// </summary>
+		/// <param name="classDeclaration">类声明</param>
+		/// <param name="interfaceName">接口名称</param>
+		/// <returns>如果类直接实现了指定接口，则返回true；否则返回false。</returns>
+		public static bool CheckExtendDirectlyInterface(ClassDeclarationSyntax classDeclaration, string interfaceName)
+		{
+			if (classDeclaration.BaseList == null) return false;
+
+			return classDeclaration.BaseList.Types
+				.Any(nodeType =>
+					nodeType is SimpleBaseTypeSyntax simpleBaseTypeSyntax &&
+					simpleBaseTypeSyntax.Type is IdentifierNameSyntax identifierNameSyntax &&
+					identifierNameSyntax.Identifier.Text == interfaceName);
+		}
+
 		/// <summary>
 		/// 检查类是否继承了指定接口
 		/// </summary>

@@ -16,12 +16,13 @@ namespace WorldTree
     /// <summary>
     /// 实体泛型栈
     /// </summary>
-    public partial class TreeStack<T> : Stack<T>, INode, ChildOf<INode>
+    public partial class TreeStack<T> : Stack<T>, INodeData, INode, ChildOf<INode>
         , AsAwake
     {
+		public long UID { get; set; }
 	}
 
-    public static class TreeStackRule
+	public static class TreeStackRule
     { 
         private class Remove<T> : RemoveRule<TreeStack<T>>
         {

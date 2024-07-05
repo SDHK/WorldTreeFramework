@@ -6,14 +6,27 @@
 
 ****************************************/
 
-using System;
-
 namespace WorldTree
 {
 	/// <summary>
+	/// 世界树数据节点基类
+	/// </summary>
+	public abstract class NodeData : Node, INodeData
+	{
+		public long UID { get; set; }
+
+		override public void OnCreate()
+		{
+			UID = Core.IdManager.GetUID();
+			Id = Core.IdManager.GetId();
+			Core.RuleManager?.SupportNodeRule(Type);
+		}
+	}
+
+	/// <summary>
 	/// 世界树节点基类
 	/// </summary>
-	public abstract partial class Node : INode
+	public abstract class Node : INode
 	{
 		/// <summary>
 		/// 节点复数状态
@@ -149,17 +162,17 @@ namespace WorldTree
 		#region 节点处理
 
 		#region 创建
+
 		public virtual void OnCreate()
 		{
 			Id = Core.IdManager.GetId();
+			if (this is INodeData nodeData) nodeData.UID = Core.IdManager.GetUID();
 			Core.RuleManager?.SupportNodeRule(Type);
 		}
 
 		#endregion
 
 		#region 添加
-
-
 
 		public virtual bool TryAddSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
@@ -205,7 +218,7 @@ namespace WorldTree
 
 		#endregion
 
-		#region 释放
+		#region 移除
 
 		public virtual void RemoveAllNode()
 		{
@@ -252,14 +265,14 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 回收节点
+		/// 释放节点
 		/// </summary>
 		public virtual void Dispose()
 		{
-			//是否已经回收
+			//是否已经释放
 			if (IsDisposed) return;
 
-			//节点回收前序遍历处理,节点回收后续遍历处理
+			//节点释放前序遍历处理,节点释放后续遍历处理
 			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => current.OnBeforeDispose(), current => current.OnDispose());
 		}
 
@@ -291,7 +304,6 @@ namespace WorldTree
 
 			//this.DisposeDomain(); //清除域节点
 			Parent = null;//清除父节点
-						  //Core.RecycleRuleGroup?.Send(this);
 			Core.PoolRecycle(this);//回收到池
 		}
 
@@ -342,7 +354,7 @@ namespace WorldTree
 					Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			NodeRuleHelper.SendRule(this, TypeInfo<Graft>.Default);
+			Core.GraftRuleGroup?.Send(this);//嫁接事件通知
 		}
 
 		#endregion
@@ -371,7 +383,7 @@ namespace WorldTree
 					Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
 				}
 			}
-			NodeRuleHelper.SendRule(this, TypeInfo<Cut>.Default);
+			Core.CutRuleGroup?.Send(this);//裁剪事件通知
 			if (this is not IListenerIgnorer)//广播给全部监听器通知 X
 			{
 				NodeListenerActuatorHelper.GetListenerActuator<IListenerRemoveRule>(this)?.Send((INode)this);
@@ -379,6 +391,10 @@ namespace WorldTree
 			Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
 			Parent = null;//清除父节点
 		}
+
+		#endregion
+
+		#endregion
 
 		/// <summary>
 		/// 添加节点可视化
@@ -402,9 +418,5 @@ namespace WorldTree
 				View = null;
 			}
 		}
-
-		#endregion
-
-		#endregion
 	}
 }

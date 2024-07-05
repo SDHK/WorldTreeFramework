@@ -14,10 +14,11 @@ namespace WorldTree
 	/// <summary>
 	/// 树泛型HashSet
 	/// </summary>
-	public partial class TreeHashSet<T> : HashSet<T>, INode, ChildOf<INode>
-        , AsAwake
-    {
-
+	public partial class TreeHashSet<T> : HashSet<T>, INodeData, INode
+		, ChildOf<INode>
+		, AsAwake
+	{
+		public long UID { get; set; }
 	}
 
 	public static class TreeHashSetRule

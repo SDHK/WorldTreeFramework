@@ -34,7 +34,7 @@ namespace WorldTree
 		/// <summary>
 		/// 是否来自对象池
 		/// </summary>
-		IsFromPool = 1 ,
+		IsFromPool = 1,
 
 		/// <summary>
 		/// 是否释放
@@ -44,27 +44,34 @@ namespace WorldTree
 
 
 	/// <summary>
+	/// 世界树数据节点接口
+	/// </summary>
+	public partial interface INodeData : INode
+	{
+		/// <summary>
+		/// 数据id
+		/// </summary>
+		/// <remarks>雪花id: 雪花算法生成的唯一id</remarks>
+		public long UID { get; set; }
+	}
+
+
+	/// <summary>
 	/// 世界树节点接口
 	/// </summary>
 	/// <remarks>
 	/// <para>世界树节点的最底层接口</para>
+	/// <para>部分类型直接继承INode接口，将会生成对应的Copy Node内容的部分类</para>
 	/// </remarks>
 	public partial interface INode : IWorldTreeBasic
-		//, AsRule<New>
-		//, AsRule<Get>
-		//, AsRule<Dispose>
-		//, AsRule<Destroy>
-
 		, AsRule<Enable>
-		, AsRule<Disable>
-
-		, AsRule<Graft>
-		, AsRule<Cut>
-
 		, AsRule<Add>
+		, AsRule<Graft>
 		, AsRule<Update>
 		, AsRule<UpdateTime>
+		, AsRule<Cut>
 		, AsRule<BeforeRemove>
+		, AsRule<Disable>
 		, AsRule<Remove>
 	{
 		/// <summary>
@@ -72,8 +79,6 @@ namespace WorldTree
 		/// </summary>
 		/// <remarks>递增ID，只在每个框架实例内唯一</remarks>
 		public long Id { get; set; }
-
-	
 
 		/// <summary>
 		/// 树根节点

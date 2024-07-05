@@ -14,10 +14,12 @@ namespace WorldTree
 	/// <summary>
 	/// 树字典泛型类
 	/// </summary>
-	public partial class TreeDictionary<Key, V> : Dictionary<Key, V>, INode, ComponentOf<INode>, ChildOf<INode>
+	public partial class TreeDictionary<Key, V> : Dictionary<Key, V>, INodeData, INode
+		, ComponentOf<INode>
+		, ChildOf<INode>
 		, AsAwake
 	{
-	
+		public long UID { get; set; }
 	}
 
 	public static class TreeDictionaryRule
