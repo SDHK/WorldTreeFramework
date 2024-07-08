@@ -134,8 +134,10 @@ namespace WorldTree
 		/// </summary>
 		private bool isRequest = false;
 
-		public RealTimeManager()
+		public override void OnCreate()
 		{
+			base.OnCreate();
+
 			// NTP消息大小 - 16字节（RFC 2030）
 			ntpDatas = new byte[48];
 

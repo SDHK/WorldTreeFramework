@@ -157,7 +157,7 @@ namespace WorldTree
 				switch (token.State)
 				{
 					case TokenState.Stop:
-						token.stopTask = this;
+						token.StopTask = this;
 						return;
 					case TokenState.Cancel:
 						state = AwaiterState.Canceled;

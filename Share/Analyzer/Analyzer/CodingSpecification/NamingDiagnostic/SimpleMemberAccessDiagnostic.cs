@@ -64,9 +64,13 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 			ISymbol? memberAccessSymbol = context.SemanticModel.GetSymbolInfo(context.Node).Symbol;
 
+			if (memberAccessSymbol == null) return false;
+
 			MemberAccessExpressionSyntax memberAccess = (MemberAccessExpressionSyntax)context.Node;
 			BaseTypeDeclarationSyntax parentTypeSyntax = TreeSyntaxHelper.GetParentType(memberAccess);
 			INamedTypeSymbol? parentTypeSymbol = semanticModel.GetDeclaredSymbol(parentTypeSyntax);
+
+			if (parentTypeSymbol == null) return false;
 
 			//判断当前字段所在的类型是否是来源类型，是则跳过
 			if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, parentTypeSymbol.OriginalDefinition)) return false;
@@ -88,13 +92,15 @@ namespace WorldTree.Analyzer
 				{
 					// 获取第一个参数的类型的符号信息
 					ParameterSyntax? firstParameterSyntax = parentMethodSyntax.ParameterList.Parameters.FirstOrDefault();
+					if (firstParameterSyntax == null) return true;
 					ITypeSymbol? firstParameterTypeSymbol = semanticModel.GetSymbolInfo(firstParameterSyntax.Type).Symbol as ITypeSymbol;
+					if (firstParameterTypeSymbol == null) return true;
 
 					// 检查方法的第一个参数是否使用了 this 关键字
 					if (firstParameterSyntax.Modifiers.Any(SyntaxKind.ThisKeyword))
 					{
 						//判断扩展类型是否是来源类型，是则跳过
-						if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return false;
+						if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol.ToString()) return false;
 						//判断当前字段所在的类型是否继承了来源接口，是则跳过
 						if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 						//判断当前字段所在的类型是否继承了来源类型，是则跳过
@@ -103,11 +109,11 @@ namespace WorldTree.Analyzer
 					// 不是静态类型,判断是否在委托中
 					else
 					{
-						(SyntaxNode parentDelegate, ParameterSyntax firstParameter1) = GetParentAnonymousDelegateAndFirstParameter(memberAccess);
+						(SyntaxNode? parentDelegate, ParameterSyntax? firstParameter1) = GetParentAnonymousDelegateAndFirstParameter(memberAccess);
 						if (parentDelegate != null && firstParameter1 != null && firstParameter1.Identifier.Text == "self")
 						{
 							// 判断扩展类型是否是来源类型，是则跳过
-							if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return false;
+							if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol.ToString()) return false;
 							//判断当前字段所在的类型是否继承了来源接口，是则跳过
 							if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 							//判断当前字段所在的类型是否继承了来源类型，是则跳过
@@ -122,7 +128,9 @@ namespace WorldTree.Analyzer
 				if (parentMethodSyntax != null)
 				{
 					ParameterSyntax? firstParameterSyntax = parentMethodSyntax.ParameterList.Parameters.FirstOrDefault();
+					if (firstParameterSyntax == null) return true;
 					ITypeSymbol? firstParameterTypeSymbol = semanticModel.GetSymbolInfo(firstParameterSyntax.Type).Symbol as ITypeSymbol;
+					if (firstParameterTypeSymbol == null) return true;
 					if (firstParameterSyntax.Identifier.Text.Trim() == "self")
 					{
 						INamedTypeSymbol? IRuleSymbol = NamedSymbolHelper.ToINamedTypeSymbol(context.Compilation, "WorldTree.IRule");
@@ -145,21 +153,21 @@ namespace WorldTree.Analyzer
 
 
 
-		private static (SyntaxNode, ParameterSyntax) GetParentAnonymousDelegateAndFirstParameter(SyntaxNode syntaxNode)
+		private static (SyntaxNode?, ParameterSyntax?) GetParentAnonymousDelegateAndFirstParameter(SyntaxNode syntaxNode)
 		{
 			SyntaxNode parentDelegate = TreeSyntaxHelper.GetParentAnonymousDelegate(syntaxNode);
-			ParameterSyntax firstParameter = null;
+			ParameterSyntax? firstParameter = null;
 
 			switch (parentDelegate)
 			{
 				case ParenthesizedLambdaExpressionSyntax lambda:
-					firstParameter = lambda.ParameterList.Parameters.FirstOrDefault();
+					firstParameter = lambda?.ParameterList?.Parameters.FirstOrDefault();
 					break;
 				case SimpleLambdaExpressionSyntax lambda2:
 					firstParameter = lambda2.Parameter;
 					break;
 				case AnonymousMethodExpressionSyntax lambda3:
-					firstParameter = lambda3.ParameterList.Parameters.FirstOrDefault();
+					firstParameter = lambda3?.ParameterList?.Parameters.FirstOrDefault();
 					break;
 			}
 
