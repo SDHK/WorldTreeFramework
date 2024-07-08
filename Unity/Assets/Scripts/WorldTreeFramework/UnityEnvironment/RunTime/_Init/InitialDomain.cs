@@ -121,6 +121,14 @@ namespace WorldTree
 		/// </summary>
 		public Color TestColor = Color.red;
 		/// <summary>
+		/// 测试颜色
+		/// </summary>
+		public Color TestColor1 => Color.red;
+		/// <summary>
+		/// a
+		/// </summary>
+		public Color TestColor2 { get; set; }
+		/// <summary>
 		/// 测试向量
 		/// </summary>
 		public Vector2 TestVector2 = Vector2.one;

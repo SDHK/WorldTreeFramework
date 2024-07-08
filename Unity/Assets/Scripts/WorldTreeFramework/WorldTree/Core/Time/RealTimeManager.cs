@@ -319,7 +319,7 @@ namespace WorldTree
 		/// <returns>成功</returns>
 		private bool TryGetNetworkUtcDateTime(string ntpServer, out DateTime networkDateTime)
 		{
-			Array.Clear(ntpDatas, 1, ntpDatas.Length);
+			Array.Clear(ntpDatas, 1, ntpDatas.Length - 1);
 			try
 			{
 				var addresses = Dns.GetHostEntry(ntpServer).AddressList;
