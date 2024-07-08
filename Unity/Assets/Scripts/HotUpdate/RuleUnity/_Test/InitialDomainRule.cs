@@ -15,7 +15,6 @@ namespace WorldTree
 			//self.AddComponent(out TaskTest _);
 
 
-
 			DateTime dateTime = self.Core.RealTimeManager.UtcNow;
 
 			self.Log($"网络时间：{dateTime}");
