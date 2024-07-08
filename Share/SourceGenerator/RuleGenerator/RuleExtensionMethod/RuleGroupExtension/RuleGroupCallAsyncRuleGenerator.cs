@@ -51,21 +51,21 @@ namespace WorldTree.SourceGenerator
 									return await ((IRuleList<R>)ruleList).CallAsync(node{{genericParameter}}, defaultOutT);
 								}
 								await node.TreeTaskCompleted();
-								return TypeInfo<OutT>.Default;
+								return defaultOutT;
 							}
 
 							/// <summary>
 							/// 调用法则集合异步执行
 							/// </summary>
-							public static async TreeTask<UnitList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, OutT defaultOutT)
+							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
 								{
-									return await ((IRuleList<R>)ruleList).CallsAsync(node{{genericParameter}}, defaultOutT);
+									return await ((IRuleList<R>)ruleList).CallsAsync(node{{genericParameter}}, outTList);
 								}
 								await node.TreeTaskCompleted();
-								return null;
+								return outTList;
 							}
 					""");
 			}

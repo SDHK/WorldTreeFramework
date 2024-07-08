@@ -50,7 +50,7 @@ namespace WorldTree.SourceGenerator
 								return await ruleList.CallAsync(self{{genericParameter}}, defaultOutT);
 							}
 							await self.TreeTaskCompleted();
-							return TypeInfo<OutT>.Default;
+							return defaultOutT;
 						}
 
 						/// <summary>
@@ -65,18 +65,18 @@ namespace WorldTree.SourceGenerator
 								return await ruleList.CallAsync(self{{genericParameter}}, defaultOutT);
 							}
 							await self.TreeTaskCompleted();
-							return TypeInfo<OutT>.Default;
+							return defaultOutT;
 						}
 
 						/// <summary>
 						/// 尝试执行异步调用法则
 						/// </summary>
-						public static async TreeTask<UnitList<OutT>> TryCallsRuleAsync<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, OutT defaultOutT)
+						public static async TreeTask<TreeList<OutT>> TryCallsRuleAsync<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
 							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
-								return await ruleList.CallsAsync(self{{genericParameter}}, defaultOutT);
+								return await ruleList.CallsAsync(self{{genericParameter}}, outTList);
 							}
 							await self.TreeTaskCompleted();
 							return null;
@@ -85,13 +85,13 @@ namespace WorldTree.SourceGenerator
 						/// <summary>
 						/// 执行异步调用法则
 						/// </summary>
-						public static async TreeTask<UnitList<OutT>> CallsRuleAsync<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, OutT defaultOutT)
+						public static async TreeTask<TreeList<OutT>> CallsRuleAsync<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
 							where N : class, INode, AsRule<R>
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
 							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
-								return await ruleList.CallsAsync(self{{genericParameter}}, defaultOutT);
+								return await ruleList.CallsAsync(self{{genericParameter}}, outTList);
 							}
 							await self.TreeTaskCompleted();
 							return null;

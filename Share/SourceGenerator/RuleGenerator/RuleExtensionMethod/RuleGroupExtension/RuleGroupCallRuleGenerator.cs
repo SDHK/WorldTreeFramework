@@ -69,26 +69,25 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 尝试调用法则集合执行
 							/// </summary>
-							public static bool TryCalls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, out UnitList<OutT> outT)
+							public static bool TryCalls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
 								if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
 								{
-									((IRuleList<R>)ruleList).Calls(node{{genericParameter}}, out outT);
+									((IRuleList<R>)ruleList).Calls(node{{genericParameter}}, outTList);
 									return true;
 								}
-								outT = null;
 								return true;
 							}
 
 							/// <summary>
 							/// 调用法则集合执行
 							/// </summary>
-							public static UnitList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, out UnitList<OutT> outT)
+							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
-								group.TryCalls(node{{genericParameter}}, out outT);
-								return outT;
+								group.TryCalls(node{{genericParameter}}, outTList);
+								return outTList;
 							}
 					""");
 			}

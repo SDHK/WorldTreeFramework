@@ -57,10 +57,9 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 法则列表调用执行
 							/// </summary>
-							public static UnitList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, out UnitList<OutT> outT)
+							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, TreeList<OutT> outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
-								outT = node.Core.PoolGetUnit<UnitList<OutT>>();
 								foreach (ICallRule<{{genericsTypeAfter}}OutT> rule in  (RuleList)ruleList)
 								{
 									outT.Add(rule.Invoke(node{{genericParameter}}));

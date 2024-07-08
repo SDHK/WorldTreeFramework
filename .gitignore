@@ -28,3 +28,4 @@ bin/
 /Unity/WorldTree.NodeUnity.csproj
 /Unity/WorldTree.Rule.csproj
 /Unity/WorldTree.RuleUnity.csproj
+Unity/Assets/Plugins/Share.SourceGenerator.dll

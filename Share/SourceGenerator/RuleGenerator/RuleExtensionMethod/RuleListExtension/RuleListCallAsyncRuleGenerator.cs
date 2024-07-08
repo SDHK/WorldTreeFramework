@@ -46,21 +46,19 @@ namespace WorldTree.SourceGenerator
 							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
-								OutT outT = TypeInfo<OutT>.Default;
 								foreach (ICallRuleAsync<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
 								{
-									outT = await rule.Invoke(node{{genericParameter}});
+									defaultOutT = await rule.Invoke(node{{genericParameter}});
 								}
-								return outT;
+								return defaultOutT;
 							}
 
 							/// <summary>
 							/// 法则列表异步调用执行
 							/// </summary>
-							public static async TreeTask<UnitList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, OutT defaultOutT)
+							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
-								UnitList<OutT> outTList = node.Core.PoolGetUnit<UnitList<OutT>>();
 								foreach (ICallRuleAsync<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
 								{
 									outTList.Add(await rule.Invoke(node{{genericParameter}}));

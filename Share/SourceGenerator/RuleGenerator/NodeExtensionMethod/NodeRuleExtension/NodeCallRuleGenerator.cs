@@ -73,32 +73,30 @@ namespace WorldTree.SourceGenerator
 						/// <summary>
 						/// 尝试执行调用法则
 						/// </summary>
-						public static bool TryCallsRule<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, out UnitList<OutT> outT)
+						public static bool TryCallsRule<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
 							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
-								ruleList.Calls(self{{genericParameter}}, out outT);
+								ruleList.Calls(self{{genericParameter}}, outTList);
 								return true;
 							}
-							outT = null;
 							return true;
 						}
 
 						/// <summary>
 						/// 执行调用法则
 						/// </summary>
-						public static UnitList<OutT> CallsRule<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, out UnitList<OutT> outT)
+						public static TreeList<OutT> CallsRule<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
 							where N : class, INode, AsRule<R>
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
 							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
-								ruleList.Calls(self{{genericParameter}}, out outT);
-								return outT;
+								ruleList.Calls(self{{genericParameter}}, outTList);
+								return outTList;
 							}
-							outT = null;
-							return outT;
+							return outTList;
 						}
 				""");
 			}
