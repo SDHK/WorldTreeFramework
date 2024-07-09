@@ -207,50 +207,50 @@ namespace WorldTree
 			if (Id == 0) Id = IdManager.GetId();
 
 			//法则管理器初始化
-			this.PoolGetNode(out this.RuleManager);
+			this.PoolGetNode(out RuleManager);
 
-			this.BeforeRemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<BeforeRemove>();
+			BeforeRemoveRuleGroup = RuleManager.GetOrNewRuleGroup<BeforeRemove>();
 
-			this.AddRuleGroup = this.RuleManager.GetOrNewRuleGroup<Add>();
-			this.RemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<Remove>();
-			this.EnableRuleGroup = this.RuleManager.GetOrNewRuleGroup<Enable>();
-			this.DisableRuleGroup = this.RuleManager.GetOrNewRuleGroup<Disable>();
-			this.GraftRuleGroup = this.RuleManager.GetOrNewRuleGroup<Graft>();
-			this.CutRuleGroup = this.RuleManager.GetOrNewRuleGroup<Cut>();
+			AddRuleGroup = RuleManager.GetOrNewRuleGroup<Add>();
+			RemoveRuleGroup = RuleManager.GetOrNewRuleGroup<Remove>();
+			EnableRuleGroup = RuleManager.GetOrNewRuleGroup<Enable>();
+			DisableRuleGroup = RuleManager.GetOrNewRuleGroup<Disable>();
+			GraftRuleGroup = RuleManager.GetOrNewRuleGroup<Graft>();
+			CutRuleGroup = RuleManager.GetOrNewRuleGroup<Cut>();
 
 			//引用池管理器初始化
-			this.PoolGetNode(out this.ReferencedPoolManager);
+			this.PoolGetNode(out ReferencedPoolManager);
 
 			//组件添加到树
-			this.TryGraftComponent(this.ReferencedPoolManager);
-			this.TryGraftComponent(this.IdManager);
-			this.TryGraftComponent(this.RuleManager);
+			this.TryGraftComponent(ReferencedPoolManager);
+			this.TryGraftComponent(IdManager);
+			this.TryGraftComponent(RuleManager);
 
 			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
-			this.UnitPoolManager = this.AddComponent(out UnitPoolManager _);
-			this.NodePoolManager = this.AddComponent(out NodePoolManager _);
-			this.ArrayPoolManager = this.AddComponent(out ArrayPoolManager _);
+			UnitPoolManager = this.AddComponent(out UnitPoolManager _);
+			NodePoolManager = this.AddComponent(out NodePoolManager _);
+			ArrayPoolManager = this.AddComponent(out ArrayPoolManager _);
 
-			this.UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
+			UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
 
 			//嫁接节点需要手动激活
-			this.ReferencedPoolManager.SetActive(true);
-			this.IdManager.SetActive(true);
-			this.RuleManager.SetActive(true);
+			ReferencedPoolManager.SetActive(true);
+			IdManager.SetActive(true);
+			RuleManager.SetActive(true);
 
 			//核心激活
-			this.SetActive(true);
-			this.IsCoreActive = true;
+			SetActive(true);
+			IsCoreActive = true;
 
 			//真实时间管理器
-			this.RealTimeManager = this.AddComponent(out RealTimeManager _);
+			RealTimeManager = this.AddComponent(out RealTimeManager _);
 
 			//游戏时间管理器
-			this.GameTimeManager = this.AddComponent(out GameTimeManager _);
+			GameTimeManager = this.AddComponent(out GameTimeManager _);
 
-			this.Root = this.AddComponent(out WorldTreeRoot _);
-			this.Root.Root = this.Root;
-			this.WorldContext = this.Root.AddComponent(out WorldContext _);
+			Root = this.AddComponent(out WorldTreeRoot _);
+			Root.Root = Root;
+			WorldContext = Root.AddComponent(out WorldContext _);
 		}
 
 		#endregion
@@ -263,13 +263,13 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
-				this.branchType = TypeInfo<B>.TypeCode;
-				this.Parent = parent;
-				this.Core = parent.Core ?? this;
-				this.Root = null;
-				this.Domain = null;
-				this.rootCore = parent.Core.rootCore ?? this;
-				this.SetActive(true);//激活节点
+				branchType = TypeInfo<B>.TypeCode;
+				Parent = parent;
+				Core = parent.Core ?? this;
+				Root = null;
+				Domain = null;
+				rootCore = parent.Core.rootCore ?? this;
+				SetActive(true);//激活节点
 				return true;
 			}
 			return false;
@@ -280,18 +280,18 @@ namespace WorldTree
 			AddNodeView();
 
 			//核心独立，不入上级引用池，也不用广播
-			if (this.IsActive != this.activeEventMark)//激活变更
+			if (IsActive != activeEventMark)//激活变更
 			{
-				if (this.IsActive)
+				if (IsActive)
 				{
-					this.Core.EnableRuleGroup?.Send(this);//激活事件通知
+					Core.EnableRuleGroup?.Send(this);//激活事件通知
 				}
 				else
 				{
-					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
+					Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			this.Core.AddRuleGroup?.Send(this);//节点添加事件通知
+			Core.AddRuleGroup?.Send(this);//节点添加事件通知
 		}
 
 		#endregion
@@ -304,10 +304,10 @@ namespace WorldTree
 		public override void Dispose()
 		{
 			//核心激活关闭
-			this.IsCoreActive = false;
+			IsCoreActive = false;
 
 			//是否已经回收
-			if (this.IsDisposed) return;
+			if (IsDisposed) return;
 
 			//节点回收前序遍历处理,节点回收后续遍历处理
 			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => current.OnBeforeDispose(), current => current.OnDispose());
@@ -315,7 +315,7 @@ namespace WorldTree
 
 		public override void OnBeforeDispose()
 		{
-			this.Core.BeforeRemoveRuleGroup?.Send(this);
+			Core.BeforeRemoveRuleGroup?.Send(this);
 
 			//需要提前按顺序移除
 			this.RemoveAllWorld();
@@ -330,7 +330,7 @@ namespace WorldTree
 			this.RemoveComponent<WorldTreeCore, IdManager>();
 			this.RemoveComponent<WorldTreeCore, ReferencedPoolManager>();
 
-			this.RemoveAllNode();
+			RemoveAllNode();
 		}
 
 		/// <summary>
@@ -338,29 +338,29 @@ namespace WorldTree
 		/// </summary>
 		public override void OnDispose()
 		{
-			this.View?.Dispose();
-			this.View = null;
-			NodeBranchHelper.RemoveBranchNode(this.Parent, this.BranchType, this);//从父节点分支移除
-			this.SetActive(false);
-			this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
-			this.Core.RemoveRuleGroup?.Send(this);//移除事件通知
-			this.Parent = null;//清除父节点
+			View?.Dispose();
+			View = null;
+			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
+			SetActive(false);
+			Core.DisableRuleGroup?.Send(this); //禁用事件通知
+			Core.RemoveRuleGroup?.Send(this);//移除事件通知
+			Parent = null;//清除父节点
 
 			this.PoolRecycle(this);//回收到池
 
-			this.ReferencedPoolManager = null;
-			this.IdManager = null;
-			this.RealTimeManager = null;
-			this.RuleManager = null;
-			this.UnitPoolManager = null;
-			this.NodePoolManager = null;
-			this.ArrayPoolManager = null;
-			this.Root = null;
+			ReferencedPoolManager = null;
+			IdManager = null;
+			RealTimeManager = null;
+			RuleManager = null;
+			UnitPoolManager = null;
+			NodePoolManager = null;
+			ArrayPoolManager = null;
+			Root = null;
 
-			this.AddRuleGroup = null;
-			this.RemoveRuleGroup = null;
-			this.EnableRuleGroup = null;
-			this.DisableRuleGroup = null;
+			AddRuleGroup = null;
+			RemoveRuleGroup = null;
+			EnableRuleGroup = null;
+			DisableRuleGroup = null;
 		}
 
 		#endregion
@@ -371,9 +371,9 @@ namespace WorldTree
 		{
 			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
-			this.branchType = TypeInfo<B>.TypeCode;
-			this.Parent = parent;
-			this.RefreshActive();
+			branchType = TypeInfo<B>.TypeCode;
+			Parent = parent;
+			RefreshActive();
 			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
 			return true;
 		}
@@ -381,15 +381,15 @@ namespace WorldTree
 		public override void OnGraftSelfToTree()
 		{
 			AddNodeView();
-			if (this.IsActive != this.activeEventMark)//激活变更
+			if (IsActive != activeEventMark)//激活变更
 			{
-				if (this.IsActive)
+				if (IsActive)
 				{
-					this.Core.EnableRuleGroup?.Send(this);//激活事件通知
+					Core.EnableRuleGroup?.Send(this);//激活事件通知
 				}
 				else
 				{
-					this.Core.DisableRuleGroup?.Send(this); //禁用事件通知
+					Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
 			NodeRuleHelper.SendRule(this, TypeInfo<Graft>.Default);//节点嫁接事件通知
@@ -401,8 +401,8 @@ namespace WorldTree
 
 		public override void OnCutSelf()
 		{
-			this.View?.Dispose();
-			this.View = null;
+			View?.Dispose();
+			View = null;
 			NodeRuleHelper.SendRule(this, TypeInfo<Cut>.Default);
 		}
 
