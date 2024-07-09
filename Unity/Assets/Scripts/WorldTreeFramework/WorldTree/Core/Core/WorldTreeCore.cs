@@ -49,6 +49,11 @@ namespace WorldTree
 
 	//id赋值时机，UID和普通id 的区分，序列化和普通类型的id
 
+	//GlobalRuleActuatorManager
+	//GlobalRuleActuator<R>
+	//HybridListenerRuleActuator
+	//HybridListenerRuleActuatorGroup
+
 	/// <summary>
 	/// 世界树核心接口
 	/// </summary>
@@ -187,22 +192,22 @@ namespace WorldTree
 		/// </summary>
 		public virtual void Awake()
 		{
-			this.SetActive(false);
+			SetActive(false);
 
 			//根节点初始化
-			this.Type = TypeInfo<WorldTreeCore>.TypeCode;
-			this.Core = this;
-			this.Domain = this;
-			this.Root = null;
+			Type = TypeInfo<WorldTreeCore>.TypeCode;
+			Core = this;
+			Domain = this;
+			Root = null;
 
 			//框架核心启动组件新建初始化
 
 			//Id管理器初始化
-			this.NewNode(out this.IdManager);
-			if (this.Id == 0) this.Id = this.IdManager.GetId();
+			this.PoolGetNode(out IdManager);
+			if (Id == 0) Id = IdManager.GetId();
 
 			//法则管理器初始化
-			this.NewNode(out this.RuleManager);
+			this.PoolGetNode(out this.RuleManager);
 
 			this.BeforeRemoveRuleGroup = this.RuleManager.GetOrNewRuleGroup<BeforeRemove>();
 
@@ -214,7 +219,7 @@ namespace WorldTree
 			this.CutRuleGroup = this.RuleManager.GetOrNewRuleGroup<Cut>();
 
 			//引用池管理器初始化
-			this.NewNode(out this.ReferencedPoolManager);
+			this.PoolGetNode(out this.ReferencedPoolManager);
 
 			//组件添加到树
 			this.TryGraftComponent(this.ReferencedPoolManager);
@@ -222,9 +227,9 @@ namespace WorldTree
 			this.TryGraftComponent(this.RuleManager);
 
 			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
-			this.UnitPoolManager = this.AddComponent(out UnitPoolManager _, isPool: false);
-			this.NodePoolManager = this.AddComponent(out NodePoolManager _, isPool: false);
-			this.ArrayPoolManager = this.AddComponent(out ArrayPoolManager _, isPool: false);
+			this.UnitPoolManager = this.AddComponent(out UnitPoolManager _);
+			this.NodePoolManager = this.AddComponent(out NodePoolManager _);
+			this.ArrayPoolManager = this.AddComponent(out ArrayPoolManager _);
 
 			this.UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
 

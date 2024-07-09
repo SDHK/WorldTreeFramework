@@ -16,9 +16,7 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
-		public static T PoolGetUnit<T>(this WorldTreeCore self, out T unit)
-			where T : class, IUnit
-		=> unit = self.PoolGetUnit<T>();
+		public static T PoolGetUnit<T>(this WorldTreeCore self, out T unit) where T : class, IUnit => unit = self.PoolGetUnit<T>();
 
 		/// <summary>
 		/// 从池中获取单位对象

@@ -57,18 +57,18 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 添加节点，无约束
 							/// </summary>
-							public static INode AddNode<B, K{{genericsType}}>(INode self, K key, long type, out INode node{{genericTypeParameter}}, bool isPool = true)
+							public static INode AddNode<B, K{{genericsType}}>(INode self, K key, long type, out INode node{{genericTypeParameter}})
 								where B : class, IBranch<K>
-							=> node = self.GetBranch<B>()?.GetNode(key) ?? NodeBranchHelper.AddSelfToTree<B, K{{genericsType}}>(self.Core.GetOrNewNode(type, isPool),key, self{{genericParameter}});
+							=> node = self.GetBranch<B>()?.GetNode(key) ?? NodeBranchHelper.AddSelfToTree<B, K{{genericsType}}>(self.Core.PoolGetNode(type),key, self{{genericParameter}});
 
 							/// <summary>
 							/// 添加泛型节点
 							/// </summary>
-							public static T AddNode<N, B, K, T{{genericsType}}>(N self, K key, out T node{{genericTypeParameter}}, bool isPool = true)
+							public static T AddNode<N, B, K, T{{genericsType}}>(N self, K key, out T node{{genericTypeParameter}})
 								where N : class, INode, AsBranch<B>
 								where B : class, IBranch<K>
 								where T : class, INode, NodeOf<N, B>, AsRule<Awake{{genericsTypeAngle}}>
-							=> node = (T)(self.GetBranch<B>()?.GetNode(key) ?? NodeBranchHelper.AddSelfToTree<B, K{{genericsType}}>(self.Core.GetOrNewNode<T>(isPool),key, self{{genericParameter}}));
+							=> node = (T)(self.GetBranch<B>()?.GetNode(key) ?? NodeBranchHelper.AddSelfToTree<B, K{{genericsType}}>(self.Core.PoolGetNode<T>(),key, self{{genericParameter}}));
 					""");
 			}
 			Code.AppendLine("	}");

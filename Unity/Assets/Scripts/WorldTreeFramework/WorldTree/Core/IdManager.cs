@@ -82,6 +82,12 @@ namespace WorldTree
 			return uid;
 		}
 
+		public override void OnCreate()
+		{
+			Id = GetId();
+			Core.RuleManager?.SupportNodeRule(Type);
+		}
+
 		/// <summary>
 		/// 释放后
 		/// </summary>

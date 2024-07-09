@@ -408,7 +408,7 @@ namespace WorldTree
 				INode viewParent = Parent.View.Parent;
 
 				// 生成自身的可视化生成器
-				INode nodeView = viewParent.Core.GetOrNewNode(Parent.View.Type);
+				INode nodeView = viewParent.Core.PoolGetNode(Parent.View.Type);
 
 				// 将自身添加到父节点的可视化生成器中，而可视化则挂到可视化父级节点上
 				View = NodeBranchHelper.AddSelfToTree<ChildBranch, long, INode, INode>(nodeView, nodeView.Id, viewParent, this, Parent) as IWorldTreeNodeViewBuilder;

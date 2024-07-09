@@ -20,7 +20,7 @@ namespace WorldTree
 		public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this WorldTreeCore self, out GlobalRuleActuator<R> globalRuleActuator)
 		where R : IRule
 		{
-			return self.AddComponent(out GlobalRuleActuatorManager _, isPool: false).AddComponent(out globalRuleActuator, isPool: false);
+			return self.AddComponent(out GlobalRuleActuatorManager _).AddComponent(out globalRuleActuator);
 		}
 	}
 

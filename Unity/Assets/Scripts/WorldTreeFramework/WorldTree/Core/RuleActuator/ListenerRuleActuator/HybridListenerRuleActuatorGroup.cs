@@ -68,7 +68,7 @@ namespace WorldTree
 			bool checkDynamic = self.Core.RuleManager.TryGetTargetRuleGroup(ruleType, TypeInfo<INode>.TypeCode, out RuleGroup dynamicRuleGroup);
 			if (checkStatic || checkDynamic)
 			{
-				self.ActuatorDict.Add(ruleType, self.AddComponent(out ruleActuator, isPool: false));
+				self.ActuatorDict.Add(ruleType, self.AddComponent(out ruleActuator));
 				if (checkStatic) ruleActuator.AddComponent(out ruleActuator.StaticListenerRuleActuator, staticRuleGroup).RuleActuatorAddListener();
 				if (checkDynamic) ruleActuator.AddComponent(out ruleActuator.DynamicListenerRuleActuator, dynamicRuleGroup).RuleActuatorAddListener(nodeType);
 			}

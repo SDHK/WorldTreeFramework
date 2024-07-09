@@ -20,7 +20,7 @@ namespace WorldTree
 		/// <summary>
 		/// 缓存列表
 		/// </summary>
-		private List<ByteBuffer> bufferList;
+		private List<ByteBuffer> bufferList  = null;
 
 		/// <summary>
 		/// 位移长度

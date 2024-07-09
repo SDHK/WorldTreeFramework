@@ -25,7 +25,7 @@ namespace WorldTree
 			{
 				if (node.Core.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool))
 				{
-					if (nodePool.AddComponent(out HybridListenerRuleActuatorGroup _, isPool: false).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
+					if (nodePool.AddComponent(out HybridListenerRuleActuatorGroup _).TryAddRuleActuator(node.Type, out IRuleActuator<R> actuator))
 					{
 						return actuator;
 					}

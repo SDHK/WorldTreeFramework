@@ -341,10 +341,10 @@ namespace WorldTree.SourceGenerator
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
 				AddComment(stringBuilder, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{genericsType}>(this N self, {genericType} key, out T node{genericTypeParameter}, bool isPool = true)
+				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{genericsType}>(this N self, {genericType} key, out T node{genericTypeParameter})
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsTypeAngle}>
-		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, key, out node{genericParameter}, isPool);");
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, key, out node{genericParameter});");
 			}
 		}
 
@@ -409,11 +409,11 @@ namespace WorldTree.SourceGenerator
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
 				AddComment(stringBuilder, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{genericsType}>(this N self, out T node{genericTypeParameter}, bool isPool = true)
+				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{genericsType}>(this N self, out T node{genericTypeParameter})
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsTypeAngle}>
 		{{
-			node = self.Core.GetOrNewNode<T>(isPool);
+			node = self.Core.PoolGetNode<T>();
 			return (T)NodeBranchHelper.AddSelfToTree<{ClassFullName}, {genericType}{genericsType}>(node, node.Id, self{genericParameter});
 		}}");
 
@@ -484,10 +484,10 @@ namespace WorldTree.SourceGenerator
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
 				AddComment(stringBuilder, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{genericsType}>(this N self, out T node{genericTypeParameter}, bool isPool = true)
+				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{genericsType}>(this N self, out T node{genericTypeParameter})
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsTypeAngle}>
-		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, TypeInfo<T>.TypeCode, out node{genericParameter}, isPool);");
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, TypeInfo<T>.TypeCode, out node{genericParameter});");
 			}
 		}
 
