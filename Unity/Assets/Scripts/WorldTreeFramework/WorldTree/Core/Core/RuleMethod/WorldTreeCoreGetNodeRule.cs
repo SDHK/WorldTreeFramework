@@ -15,6 +15,16 @@ namespace WorldTree
 	public static partial class WorldTreeCoreRule
 	{
 		/// <summary>
+		/// 获取新建节点
+		/// </summary>
+		public static N GetOrNewNode<N>(this WorldTreeCore self, bool isPool = true) where N : class, INode => (isPool ? self.PoolGetNode(TypeInfo<N>.TypeCode) : self.NewNode(TypeInfo<N>.TypeCode)) as N;
+
+		/// <summary>
+		/// 获取新建节点
+		/// </summary>
+		public static INode GetOrNewNode(this WorldTreeCore self, long type, bool isPool = true) => (isPool ? self.PoolGetNode(type) : self.NewNode(type));
+
+		/// <summary>
 		/// 新建节点对象
 		/// </summary>
 		/// <remarks>不执行法则生命周期</remarks>
@@ -44,27 +54,6 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 新建节点对象并调用生命周期
-		/// </summary>
-		/// <remarks>执行法则生命周期</remarks>
-		public static T NewNodeLifecycle<T>(this WorldTreeCore self, out T node) where T : class, INode
-		{
-			self.NewNode(out node);
-			return node;
-		}
-
-		/// <summary>
-		/// 新建节点对象并调用生命周期
-		/// </summary>
-		/// <remarks>执行法则生命周期</remarks>
-		public static INode NewNodeLifecycle(this WorldTreeCore self, long type)
-		{
-			INode node = self.NewNode(type);
-			return node;
-		}
-
-
-		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
 		public static T PoolGetNode<T>(this WorldTreeCore self) where T : class, INode
@@ -77,7 +66,7 @@ namespace WorldTree
 					return node as T;
 				}
 			}
-			return self.NewNodeLifecycle<T>(out _);
+			return self.NewNode<T>(out _);
 		}
 
 		/// <summary>
@@ -93,7 +82,7 @@ namespace WorldTree
 					return node;
 				}
 			}
-			return self.NewNodeLifecycle(type);
+			return self.NewNode(type);
 		}
 
 		/// <summary>

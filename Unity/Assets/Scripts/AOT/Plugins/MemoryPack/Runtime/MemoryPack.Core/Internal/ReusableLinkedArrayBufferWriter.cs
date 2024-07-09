@@ -377,7 +377,7 @@ internal struct BufferSegment
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Advance(int count)
     {
-        written += count;
+		written += count;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

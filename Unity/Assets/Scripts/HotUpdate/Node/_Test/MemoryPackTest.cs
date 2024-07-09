@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 namespace WorldTree
 {
 
+
+
+	/// <summary>
+	/// A
+	/// </summary>
 	[MemoryPackable]
 	public partial class MemoryPackDataTest<T>
 	{
@@ -28,6 +33,14 @@ namespace WorldTree
 		/// 测试
 		/// </summary>
 		public List<int> IntList;
+
+		/// <summary>
+		/// c
+		/// </summary>
+		public int UID;
+
+	
+
 	}
 
 	/// <summary>

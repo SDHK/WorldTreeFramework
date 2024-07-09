@@ -66,7 +66,7 @@ namespace WorldTree
 		{
 			if (!poolDict.TryGetValue(type, out ReferencedPool pool))
 			{
-				Core.NewNodeLifecycle(out pool);
+				Core.NewNode(out pool);
 				pool.ReferencedType = type;
 				poolDict.Add(type, pool);
 				pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, this);

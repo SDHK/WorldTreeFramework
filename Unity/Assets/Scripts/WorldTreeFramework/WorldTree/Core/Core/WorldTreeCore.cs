@@ -214,7 +214,7 @@ namespace WorldTree
 			this.CutRuleGroup = this.RuleManager.GetOrNewRuleGroup<Cut>();
 
 			//引用池管理器初始化
-			this.NewNodeLifecycle(out this.ReferencedPoolManager);
+			this.NewNode(out this.ReferencedPoolManager);
 
 			//组件添加到树
 			this.TryGraftComponent(this.ReferencedPoolManager);

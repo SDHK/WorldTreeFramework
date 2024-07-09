@@ -22,7 +22,6 @@ namespace WorldTree.Analyzer
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				if (TypeSymbol.DeclaredAccessibility != Accessibility.Public) return false;
 				return NamedSymbolHelper.CheckInterface(TypeSymbol, "IUnit", out _);
 			};
 

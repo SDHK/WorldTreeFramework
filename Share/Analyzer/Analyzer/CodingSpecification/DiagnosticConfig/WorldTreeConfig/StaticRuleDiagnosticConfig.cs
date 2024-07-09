@@ -23,7 +23,6 @@ namespace WorldTree.Analyzer
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				if (TypeSymbol.DeclaredAccessibility != Accessibility.Public) return false;
 				if (!TypeSymbol.IsStatic) return false;
 				string typeName = TypeSymbol?.ToDisplayString() ?? string.Empty;
 				return Regex.IsMatch(typeName, "Rule$");

@@ -40,7 +40,6 @@ namespace WorldTree
 				self.ObjectType = type;
 				self.Length = length;
 				self.NewObject = self.ObjectNew;
-				self.objectOnRecycle = self.ObjectOnRecycle;
 			}
 		}
 
@@ -51,14 +50,6 @@ namespace WorldTree
 		private static Array ObjectNew(this ArrayPool self, IPool pool)
 		{
 			return Array.CreateInstance(self.ObjectType, self.Length);
-		}
-
-		/// <summary>
-		/// 回收一个数组的处理
-		/// </summary>
-		private static void ObjectOnRecycle(this ArrayPool self, Array obj)
-		{
-			Array.Clear(obj, 0, obj.Length);
 		}
 	}
 }

@@ -59,7 +59,7 @@ namespace WorldTree
 		/// </summary>
 		private T NewPool(long type)
 		{
-			Core.NewNodeLifecycle(out T pool);
+			Core.NewNode(out T pool);
 			pool.ObjectType = type.CodeToType();
 			pool.ObjectTypeCode = type;
 			poolDict.Add(pool.ObjectTypeCode, pool);

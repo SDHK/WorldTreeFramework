@@ -65,8 +65,9 @@ namespace WorldTree
 		/// <summary>
 		/// 回收数组
 		/// </summary>
-		public static void Recycle(this ArrayPoolManager self, Array obj)
+		public static void Recycle(this ArrayPoolManager self, Array obj, bool clearArray = false)
 		{
+			if (clearArray) Array.Clear(obj, 0, obj.Length);
 			if (self.TryGetGroup(obj.GetType().GetElementType(), out ArrayPoolGroup arrayPoolGroup))
 			{
 				if (arrayPoolGroup.TryGetPool(obj.Length, out ArrayPool arrayPool))
