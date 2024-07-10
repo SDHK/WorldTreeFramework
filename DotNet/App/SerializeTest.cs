@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System;
+using System.Buffers;
 
 namespace WorldTree
 {
@@ -64,7 +65,7 @@ namespace WorldTree
 			 *	Node类型才能避免循环引用，引用UID
 			 *	普通类型直接序列化，引用下标
 			 *	Dict<long,INode>
-			 *	HashSet<Object>
+			 *	List<Object>
 			 *	
 			 */
 
@@ -74,34 +75,15 @@ namespace WorldTree
 				LongField = 4567890123456789,
 				FloatField = 123.45f
 			};
+			ByteBufferWriter bufferWriter = Core.PoolGetUnit(out ByteBufferWriter _);
 
-			byte[] bytes = new byte[sizeof(int) + sizeof(long) + sizeof(float)];
-
-			unsafe
-			{
-				fixed (byte* pBytesStart = bytes)
-				{
-					byte* pBytes = pBytesStart; 
-
-					*(int*)pBytes = obj.IntField;
-					pBytes += sizeof(int); 
-
-					*(long*)pBytes = obj.LongField;
-					pBytes += sizeof(long); 
-
-					*(float*)pBytes = obj.FloatField;
-					pBytes += sizeof(float);
-
-					*(int*)pBytes = 1;
-
-				}
-			}
+			Span<byte> span = bufferWriter.GetSpan(sizeof(int) + sizeof(long) + sizeof(float));
 
 			unsafe
 			{
-				fixed (byte* pBytes = bytes)
+				fixed (byte* pSpan = span)
 				{
-					byte* pCurrent = pBytes;
+					byte* pCurrent = pSpan;
 
 					// Copy IntField
 					byte* intFieldAsBytePtr = (byte*)Unsafe.AsPointer(ref Unsafe.As<int, byte>(ref obj.IntField));
@@ -120,7 +102,7 @@ namespace WorldTree
 			}
 
 			Console.WriteLine("Bytes:");
-			foreach (var b in bytes)
+			foreach (var b in span)
 			{
 				Console.WriteLine(b);
 			}
@@ -129,7 +111,7 @@ namespace WorldTree
 
 			unsafe
 			{
-				fixed (byte* pBytes = bytes)
+				fixed (byte* pBytes = span)
 				{
 					// 直接从byte数组读取数据到对象字段
 					newObj.IntField = *(int*)pBytes;
@@ -137,25 +119,6 @@ namespace WorldTree
 					newObj.FloatField = *(float*)(pBytes + sizeof(int) + sizeof(long));
 				}
 			}
-
-			//unsafe
-			//{
-			//	fixed (byte* pBytes = bytes)
-			//	{
-			//		byte* pCurrent = pBytes;
-
-			//		// Copy back IntField
-			//		newObj.IntField = Unsafe.Read<int>(pCurrent);
-			//		pCurrent += sizeof(int);
-
-			//		// Copy back LongField
-			//		newObj.LongField = Unsafe.Read<long>(pCurrent);
-			//		pCurrent += sizeof(long);
-
-			//		// Copy back FloatField
-			//		newObj.FloatField = Unsafe.Read<float>(pCurrent);
-			//	}
-			//}
 
 			// 现在newObj包含了从bytes数组中反序列化得到的值
 			Console.WriteLine($"IntField: {newObj.IntField}, LongField: {newObj.LongField}, FloatField: {newObj.FloatField}");

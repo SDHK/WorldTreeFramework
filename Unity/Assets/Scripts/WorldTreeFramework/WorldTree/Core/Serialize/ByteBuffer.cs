@@ -31,20 +31,23 @@ namespace WorldTree
 		/// 长度
 		/// </summary>
 		public int Length => length;
-
+		/// <summary>
+		/// 是否为空
+		/// </summary>
+		public bool IsNull => buffers == null;
 		/// <summary>
 		/// 有效的缓存
 		/// </summary>
-		public Span<byte> Caches => buffers.AsSpan(0, length);
+		public Span<byte> Buffer => buffers.AsSpan(0, length);
 
 		/// <summary>
 		/// 空白的缓存
 		/// </summary>
-		public Span<byte> FreeCaches => buffers.AsSpan(length);
+		public Span<byte> FreeBuffer => buffers.AsSpan(length);
 
 		public ByteBuffer(int size)
 		{
-			buffers = ArrayPool<byte>.Shared.Rent(size);
+			buffers = ArrayPool<byte>.Shared.Rent(MathInt.GetPowerOfTwo(size));
 			length = 0;
 		}
 

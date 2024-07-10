@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\Rule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeDictionary.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\RealTimeManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteBufferWriter.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleActuator\ListenerRuleActuator\StaticListenerRuleActuator.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskCompleted.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Node\NodeBase\DynamicNodeListener.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Base\TreeTweenBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Vector4Float.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleMethod\TreeValueBaseRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteBuffer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\Lifecycle\StringLifecycleRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldTreeCore.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Math\MathInt.cs" />
@@ -237,8 +239,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Math\MathFloat.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\RuleGroup.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\GameTimeManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteBuffer.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteBufferWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />

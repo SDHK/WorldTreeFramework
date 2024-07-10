@@ -27,6 +27,36 @@ namespace WorldTree
         {
             int remainder = Math.Abs(index) % maxIndex;
             return (index >= 0) ? index % maxIndex : (remainder == 0) ? 0 : maxIndex - remainder;
-        }
-    }
+
+			//未检验
+			//int result = index % maxIndex;
+			//return result < 0 ? result + maxIndex : result;
+		}
+
+		/// <summary>
+		/// 获取最小2次幂
+		/// </summary>
+		public static int GetPowerOfTwo(int n)
+        {
+			n--;
+			n |= n >> 1;
+			n |= n >> 2;
+			n |= n >> 4;
+			n |= n >> 8;
+			n |= n >> 16;
+			n++;
+			return n;
+
+			// 将n的二进制表示中最高位的1后面的所有位都设置为1，
+			// 然后再加1
+			// 例如：n = 0001 0001 
+			// n - 1 = 0001 0000
+			// n |= n >> 1 = 0001 1000
+			// n |= n >> 2 = 0001 1110
+			// n |= n >> 4 = 0001 1111 
+			// ... 
+			// n + 1 = 0010 0000
+		}
+
+	}
 }
