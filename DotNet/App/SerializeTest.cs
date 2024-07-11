@@ -5,10 +5,13 @@ using System.Buffers;
 namespace WorldTree
 {
 
+
+
+
 	/// <summary>
 	/// 测试类
 	/// </summary>
-	class MyClass
+	class MyClass : Node
 	{
 		/// <summary>
 		/// 整型字段
@@ -22,6 +25,26 @@ namespace WorldTree
 		/// 浮点型字段
 		/// </summary>
 		public float FloatField;
+	}
+
+	public static class MyClassRule
+	{ 
+		/// <summary>
+		/// 序列化
+		/// </summary>
+		public static void Serialize()
+		{
+
+		}
+
+		/// <summary>
+		/// 反序列化
+		/// </summary>
+		public static void Deserialize()
+		{
+
+		}
+
 	}
 
 	public static class SerializeTestRule
@@ -53,21 +76,20 @@ namespace WorldTree
 		{
 
 			/*
-			 * 类型码	对象UID	字节数 
+			 * 类型码 字节数 
+			 * int值
+			 * 结构体类型码 字节数
 			 * 
-			 * long		long		int		long ?
-			 * 类型码	UID/下标	分割数	字节数 
 			 * 
-			 *	string	0			1				
 			 * 
-			 *	int		1 	
-			 *	
-			 *	Node类型才能避免循环引用，引用UID
-			 *	普通类型直接序列化，引用下标
-			 *	Dict<long,INode>
-			 *	List<Object>
+			 * 数组类型码 字节数 {类型码 字节数}
+			 * 
+			 * 字典类型码 字节数 值数组类型码 字节数
+			 * 
 			 *	
 			 */
+
+
 
 			MyClass obj = new MyClass
 			{
@@ -111,14 +133,18 @@ namespace WorldTree
 
 			unsafe
 			{
-				fixed (byte* pBytes = span)
+				fixed (byte* pSpan = span)
 				{
-					// 直接从byte数组读取数据到对象字段
-					newObj.IntField = *(int*)pBytes;
-					newObj.LongField = *(long*)(pBytes + sizeof(int));
-					newObj.FloatField = *(float*)(pBytes + sizeof(int) + sizeof(long));
+					byte* pCurrent = pSpan;
+					// 使用Unsafe.ReadUnaligned从byte数组读取数据到对象字段
+					newObj.IntField = Unsafe.ReadUnaligned<int>(pCurrent);
+					pCurrent += sizeof(int);
+					newObj.LongField = Unsafe.ReadUnaligned<long>(pCurrent);
+					pCurrent += sizeof(long);
+					newObj.FloatField = Unsafe.ReadUnaligned<float>(pCurrent);
 				}
 			}
+
 
 			// 现在newObj包含了从bytes数组中反序列化得到的值
 			Console.WriteLine($"IntField: {newObj.IntField}, LongField: {newObj.LongField}, FloatField: {newObj.FloatField}");

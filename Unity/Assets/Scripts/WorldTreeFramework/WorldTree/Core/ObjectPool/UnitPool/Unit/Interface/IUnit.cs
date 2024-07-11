@@ -22,5 +22,6 @@ namespace WorldTree
 	/// </summary>
 	public interface IUnit : IWorldTreeBasic
 	{
+
 	}
 }

@@ -9,6 +9,7 @@
 
 namespace WorldTree
 {
+
 	/// <summary>
 	/// 节点引用
 	/// </summary>
@@ -54,5 +55,11 @@ namespace WorldTree
 		public static implicit operator NodeRef<N>(N node) => new(node);
 
 		public static implicit operator N(NodeRef<N> nodeRef) => nodeRef.Value;
+
+		//应该以node为准，因为node可能为空
+		public static bool operator ==(NodeRef<N> a, N b) => a.NodeId == b?.Id;
+		public static bool operator !=(NodeRef<N> a, N b) => a.NodeId != b?.Id;
+
+		public static implicit operator bool(NodeRef<N> nodeRef) => nodeRef.node is not null;
 	}
 }

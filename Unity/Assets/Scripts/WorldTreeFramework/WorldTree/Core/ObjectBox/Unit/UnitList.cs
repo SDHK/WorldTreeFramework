@@ -28,6 +28,7 @@ namespace WorldTree
 		{
 			Core.PoolRecycle(this);
 		}
+		public void OnCreate() { }
 
 		public virtual void OnDispose() => Clear();
 

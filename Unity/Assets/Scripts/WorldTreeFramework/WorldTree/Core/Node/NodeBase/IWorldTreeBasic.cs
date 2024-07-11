@@ -48,12 +48,12 @@ namespace WorldTree
 		/// <summary>
 		/// 对象创建时的处理
 		/// </summary>
-		public void OnCreate() { }
+		public void OnCreate();
 
 		/// <summary>
 		/// 对象释放时的处理
 		/// </summary>
-		public void OnDispose() { }
+		public void OnDispose();
 
 	}
 }

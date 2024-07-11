@@ -24,7 +24,10 @@ namespace WorldTree
         public bool IsFromPool { get; set; }
         public bool IsDisposed { get; set; }
 
-        public void Dispose()
+        public void OnCreate() { }
+
+
+		public void Dispose()
         {
             Core.PoolRecycle(this);
         }
