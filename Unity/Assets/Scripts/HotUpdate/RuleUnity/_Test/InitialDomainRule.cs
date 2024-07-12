@@ -33,7 +33,7 @@ namespace WorldTree
 
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
-				self.AddComponent(out UtcTimeTest _);
+				self.AddComponent(out SerializeTest _);
 			}
 		};
 

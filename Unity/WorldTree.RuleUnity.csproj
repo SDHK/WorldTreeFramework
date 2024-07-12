@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\TreeValueTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\YooAssetTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SphereTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SerializeTestRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\RuleUnity\WorldTree.RuleUnity.asmdef" />

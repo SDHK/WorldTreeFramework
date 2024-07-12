@@ -6,6 +6,7 @@
 * 描述：字节缓存段
 
 */
+using Sirenix.Serialization;
 using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
@@ -41,6 +42,12 @@ namespace WorldTree
 		public Span<byte> Buffer => buffers.AsSpan(0, length);
 
 		/// <summary>
+		/// 有效的缓存
+		/// </summary>
+		/// <remarks>效率不如Span，但可用于异步</remarks>
+		public Memory<byte> Memory => buffers.AsMemory(0, length);
+
+		/// <summary>
 		/// 空白的缓存
 		/// </summary>
 		public Span<byte> FreeBuffer => buffers.AsSpan(length);
@@ -55,7 +62,10 @@ namespace WorldTree
 		/// 位移长度
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Advance(int count) => length += count;
+		public void Advance(int count)
+		{
+			length += count;
+		}
 
 		/// <summary>
 		/// 清理
@@ -64,7 +74,7 @@ namespace WorldTree
 		public void Clear()
 		{
 			if (buffers != null) ArrayPool<byte>.Shared.Return(buffers);
-			buffers = null!;
+			buffers = null;
 			length = 0;
 		}
 	}

@@ -463,7 +463,7 @@ public ref partial struct MemoryPackReader
         where T1 : unmanaged
     {
         var size = Unsafe.SizeOf<T1>();
-        ref var spanRef = ref GetSpanReference(size);
+        ref byte spanRef = ref GetSpanReference(size);
         var value1 = Unsafe.ReadUnaligned<T1>(ref spanRef);
         Advance(size);
         return value1;
