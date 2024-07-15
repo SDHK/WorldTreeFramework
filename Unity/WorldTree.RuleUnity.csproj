@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SqliteToolTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\TaskTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SphereManagerTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SerializeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\LiteDBTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\UtcTimeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\MultilayerPerceptronTestRule.cs" />
@@ -69,7 +70,6 @@
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\TreeValueTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\YooAssetTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SphereTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\_Test\SerializeTestRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\RuleUnity\WorldTree.RuleUnity.asmdef" />

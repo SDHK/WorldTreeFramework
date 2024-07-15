@@ -17,7 +17,7 @@ namespace WorldTree
 	/// <summary>
 	/// 树序列化写入器
 	/// </summary>
-	public ref struct TreeSerializeWriter
+	public ref struct UnmanagedSerialize
 	{
 		IBufferWriter<byte> bufferWriter;
 		/// <summary>
@@ -25,7 +25,7 @@ namespace WorldTree
 		/// </summary>
 		private WorldTreeCore core;
 
-		public TreeSerializeWriter(WorldTreeCore core, IBufferWriter<byte> bufferWriter)
+		public UnmanagedSerialize(WorldTreeCore core, IBufferWriter<byte> bufferWriter)
 		{
 			this.core = core;
 			this.bufferWriter = bufferWriter;
@@ -34,7 +34,7 @@ namespace WorldTree
 		/// <summary>
 		/// 序列化写入非托管类型
 		/// </summary>
-		public void SerializeUnmanaged<T>(T value) where T : unmanaged
+		public void Serialize<T>(T value) where T : unmanaged
 		{
 			unsafe
 			{

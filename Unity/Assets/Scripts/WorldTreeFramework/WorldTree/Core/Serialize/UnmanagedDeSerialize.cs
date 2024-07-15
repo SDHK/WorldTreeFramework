@@ -17,7 +17,7 @@ namespace WorldTree
 	/// <summary>
 	/// 字节序列读取器
 	/// </summary>
-	public ref struct TreeSerializeRead
+	public ref struct UnmanagedDeSerialize
 	{
 		/// <summary>
 		/// 只读跨度器
@@ -67,7 +67,7 @@ namespace WorldTree
 		/// <summary>
 		/// 设置只读序列
 		/// </summary>
-		public TreeSerializeRead(in ReadOnlySequence<byte> sequence)
+		public UnmanagedDeSerialize(in ReadOnlySequence<byte> sequence)
 		{
 			this.bufferSource = sequence.IsSingleSegment ? ReadOnlySequence<byte>.Empty : sequence;
 			var span = sequence.FirstSpan;
@@ -83,7 +83,7 @@ namespace WorldTree
 		/// 设置只读跨度
 		/// </summary>
 		/// <param name="buffer"></param>
-		public TreeSerializeRead(in ReadOnlySpan<byte> buffer)
+		public UnmanagedDeSerialize(in ReadOnlySpan<byte> buffer)
 		{
 			this.bufferSource = ReadOnlySequence<byte>.Empty;
 			this.bufferReference = buffer;
@@ -160,7 +160,7 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 位移
+		/// 推进移动指针
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void Advance(int count)
@@ -180,7 +180,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 尝试位移序列
+		/// 尝试推进移动指针
 		/// </summary>
 		[MethodImpl(MethodImplOptions.NoInlining)]
 		private bool TryAdvanceSequence(int count)
@@ -237,11 +237,10 @@ namespace WorldTree
 			}
 		}
 
-
 		/// <summary>
 		/// 反序列化非托管类型
 		/// </summary>
-		public T DeserializeUnmanage<T>() where T : unmanaged
+		public T Deserialize<T>() where T : unmanaged
 		{
 			unsafe
 			{
@@ -249,7 +248,6 @@ namespace WorldTree
 				T value = Unsafe.ReadUnaligned<T>(ref GetSpanReference(size));
 				Advance(size);
 				return value;
-
 			}
 		}
 	}

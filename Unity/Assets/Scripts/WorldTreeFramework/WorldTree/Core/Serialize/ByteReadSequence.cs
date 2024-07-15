@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 字节只读序列片段
 	/// </summary>
-	public class ByteReadSequenceSegment : ReadOnlySequenceSegment<byte>, IUnit
+	public class ByteReadSequence : ReadOnlySequenceSegment<byte>, IUnit
 	{
 		public long Type { get; set; }
 		public bool IsDisposed { get; set; }
@@ -40,7 +40,7 @@ namespace WorldTree
 		/// <summary>
 		/// 设置运行索引和下一个片段
 		/// </summary>
-		public void SetRunningIndexAndNext(long runningIndex, ByteReadSequenceSegment nextSegment)
+		public void SetRunningIndexAndNext(long runningIndex, ByteReadSequence nextSegment)
 		{
 			RunningIndex = runningIndex;
 			Next = nextSegment;

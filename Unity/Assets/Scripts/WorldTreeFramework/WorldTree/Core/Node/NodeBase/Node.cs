@@ -15,11 +15,14 @@ namespace WorldTree
 	{
 		public long UID { get; set; }
 
+		/// <summary>
+		/// 创建时：NodeData的UID获取和法则支持
+		/// </summary>
 		override public void OnCreate()
 		{
 			UID = Core.IdManager.GetUID();
 			Id = Core.IdManager.GetId();
-			Core.RuleManager?.SupportNodeRule(Type);
+			Core.RuleManager.SupportNodeRule(Type);
 		}
 	}
 
@@ -163,6 +166,9 @@ namespace WorldTree
 
 		#region 创建
 
+		/// <summary>
+		/// 创建时：Node的Id获取和法则支持
+		/// </summary>
 		public virtual void OnCreate()
 		{
 			Id = Core.IdManager.GetId();
