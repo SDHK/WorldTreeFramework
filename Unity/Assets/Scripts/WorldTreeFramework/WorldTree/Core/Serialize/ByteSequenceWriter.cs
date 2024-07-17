@@ -10,6 +10,7 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -167,6 +168,22 @@ namespace WorldTree
 			length = 0;
 			sequenceList.Clear();
 			current = default;
+		}
+
+		/// <summary>
+		/// 序列化写入非托管类型
+		/// </summary>
+		public void Serialize<T>(T value) where T : unmanaged
+		{
+			unsafe
+			{
+				int size = Unsafe.SizeOf<T>();
+				Span<byte> span = GetSpan(size);
+				Advance(size);
+				ref byte destination = ref MemoryMarshal.GetReference(span);
+				ref byte source = ref Unsafe.As<T, byte>(ref value);
+				Unsafe.CopyBlockUnaligned(ref destination, ref source, (uint)size);
+			}
 		}
 	}
 }

@@ -3,110 +3,278 @@
 * 作者：闪电黑客
 * 日期：2024/7/9 15:29
 
-* 描述：字节序列只读器
+* 描述：
 
 */
+using MemoryPack;
 using System;
 using System.Buffers;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace WorldTree
 {
 
 	public static class ByteSequenceReaderRule
 	{
-		class Add : AddRule<ByteSequenceReader>
-		{
-			protected override void Execute(ByteSequenceReader self)
-			{
-				self.Core.PoolGetUnit(out self.segmentList);
-			}
-		}
-
 		class Remove : RemoveRule<ByteSequenceReader>
 		{
 			protected override void Execute(ByteSequenceReader self)
 			{
-				foreach (var item in self.segmentList) item.Dispose();
-				self.segmentList.Dispose();
-				self.segmentList = null;
+				if (self.rentBuffers != null)
+				{
+					ArrayPool<byte>.Shared.Return(self.rentBuffers);
+					self.rentBuffers = null;
+				}
+				self.bufferReference = default;
+				self.bufferSource = default;
+				self.bufferLength = 0;
+				self.length = 0;
+				self.consumeLength = 0;
+				self.advancedCount = 0;
 			}
 		}
 	}
 
+
 	/// <summary>
-	/// 字节序列只读器
+	/// 字节序列读取器
 	/// </summary>
-	public sealed class ByteSequenceReader : Node
-		,AsAwake
-		,AsComponentBranch
-		,TempOf<INode>
+	public class ByteSequenceReader : Node
+		, AsAwake
+		, AsComponentBranch
+		, TempOf<INode>
 	{
 		/// <summary>
-		/// 片段列表
+		/// 只读储存
 		/// </summary>
-		public UnitList<ByteReadSequence> segmentList;
+		public ReadOnlyMemory<byte> bufferReference;
 
 		/// <summary>
-		/// 添加
+		/// 只读序列
 		/// </summary>
-		public void Add(ReadOnlyMemory<byte> buffer, bool returnToPool)
+		public ReadOnlySequence<byte> bufferSource;
+
+		/// <summary>
+		/// 数据长度
+		/// </summary>
+		public int bufferLength;
+
+		/// <summary>
+		/// 总长度
+		/// </summary>
+		public long length;
+
+		/// <summary>
+		/// 消耗长度
+		/// </summary>
+		public int consumeLength;
+
+		/// <summary>
+		/// 租用缓冲区
+		/// </summary>
+		public byte[] rentBuffers;
+
+		/// <summary>
+		/// 已经推进的长度
+		/// </summary>
+		public int ConsumeLength => consumeLength;
+
+		/// <summary>
+		/// 剩余长度
+		/// </summary>
+		public long RemainLength => length - consumeLength;
+
+		/// <summary>
+		/// 总长度
+		/// </summary>
+		public long Length => length;
+
+		/// <summary>
+		/// a
+		/// </summary>
+		protected long Length1 => length;
+
+		/// <summary>
+		/// 推进移动数
+		/// </summary>
+		public int advancedCount;
+
+		/// <summary>
+		/// 设置只读序列
+		/// </summary>
+		public void SetReadOnlySequence(in ReadOnlySequence<byte> sequence)
 		{
-			Core.PoolGetUnit(out ByteReadSequence byteReadSequence);
-			byteReadSequence.SetBuffer(buffer, returnToPool);
-			segmentList.Add(byteReadSequence);
+			bufferSource = sequence.IsSingleSegment ? ReadOnlySequence<byte>.Empty : sequence;
+			ReadOnlyMemory<byte> span = sequence.First;
+			bufferReference = span;
+			bufferLength = span.Length;
+			advancedCount = 0;
+			consumeLength = 0;
+			if (rentBuffers != null)
+			{
+				ArrayPool<byte>.Shared.Return(rentBuffers);
+				rentBuffers = null;
+			}
+			length = sequence.Length;
 		}
 
 		/// <summary>
-		/// 尝试获取单个内存
+		/// 获取引用
 		/// </summary>
-		public bool TryGetSingleMemory(out ReadOnlyMemory<byte> memory)
+		public ref byte GetSpanReference(int sizeHint)
 		{
-			if (segmentList.Count == 1)
+			if (sizeHint <= bufferLength)
 			{
-				memory = segmentList[0].Memory;
-				return true;
+				return ref MemoryMarshal.GetReference(bufferReference.Span);
 			}
-			memory = default;
-			return false;
+			return ref GetNextSpan(sizeHint);
 		}
 
 		/// <summary>
-		/// 创建只读序列
+		/// 获取下一个跨度
 		/// </summary>
-		public ReadOnlySequence<byte> Build()
+		private ref byte GetNextSpan(int sizeHint)
 		{
-			if (segmentList.Count == 0)
+			if (rentBuffers != null)
 			{
-				return ReadOnlySequence<byte>.Empty;
+				ArrayPool<byte>.Shared.Return(rentBuffers);
+				rentBuffers = null;
 			}
-			if (segmentList.Count == 1)
-			{
-				return new ReadOnlySequence<byte>(segmentList[0].Memory);
-			}
-			long running = 0;
-			UnitList<ByteReadSequence> spanList = segmentList;
-			for (int i = 0; i < spanList.Count; i++)
-			{
-				ByteReadSequence next = i < spanList.Count - 1 ? spanList[i + 1] : null;
-				spanList[i].SetRunningIndexAndNext(running, next);
-				running += spanList[i].Memory.Length;
-			}
-			ByteReadSequence firstSegment = spanList[0];
-			ByteReadSequence lastSegment = spanList[spanList.Count - 1];
-			return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, lastSegment.Memory.Length);
 
+			if (RemainLength == 0)
+			{
+				this.LogError("序列已经到达末尾");
+			}
+
+			try
+			{
+				bufferSource = bufferSource.Slice(advancedCount);
+			}
+			catch (ArgumentOutOfRangeException)
+			{
+				this.LogError("序列已经到达末尾");
+			}
+
+			advancedCount = 0;
+
+
+			//判断是否有足够的空间
+			if (sizeHint <= RemainLength)
+			{
+				//判断第一个跨度是否有足够的空间
+				if (sizeHint <= bufferSource.First.Length)
+				{
+					bufferReference = bufferSource.First;
+					bufferLength = bufferSource.First.Length;
+					return ref MemoryMarshal.GetReference(bufferReference.Span);
+				}
+				//没有足够的空间，需要分配新的缓冲区
+				rentBuffers = ArrayPool<byte>.Shared.Rent(MathInt.GetPowerOfTwo(sizeHint));
+				bufferSource.Slice(0, sizeHint).CopyTo(rentBuffers);
+				var span = rentBuffers.AsMemory(0, sizeHint);
+
+				bufferReference = span;
+				bufferLength = span.Length;
+				return ref MemoryMarshal.GetReference(bufferReference.Span);
+			}
+
+			this.LogError("序列已经到达末尾");
+			return ref MemoryMarshal.GetReference(bufferReference.Span);
 		}
 
 		/// <summary>
-		/// 重置
+		/// 推进移动指针
 		/// </summary>
-		public void Reset()
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void Advance(int count)
 		{
-			foreach (var item in segmentList)
+			if (count == 0) return;
+
+			//如果剩余的数据长度小于需要推进的长度
+			int rest = bufferLength - count;
+			if (rest < 0)
 			{
-				item.Dispose();
+				if (TryAdvanceSequence(count))
+				{
+					return;
+				}
 			}
-			segmentList.Clear();
+			bufferReference = bufferReference.Slice(count);
+			advancedCount += count;
+			consumeLength += count;
 		}
+
+		/// <summary>
+		/// 尝试推进移动指针
+		/// </summary>
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		private bool TryAdvanceSequence(int count)
+		{
+			var rest = bufferSource.Length - count;
+			if (rest < 0)
+			{
+				MemoryPackSerializationException.ThrowInvalidAdvance();
+			}
+
+			bufferSource = bufferSource.Slice(advancedCount + count);
+
+			bufferReference = bufferSource.First;
+			bufferLength = bufferSource.First.Length;
+			advancedCount = 0;
+			consumeLength += count;
+			return true;
+		}
+
+		/// <summary>
+		/// 获取剩余源
+		/// </summary>
+		public void GetRemainingSource(out ReadOnlyMemory<byte> singleSource, out ReadOnlySequence<byte> remainingSource)
+		{
+			// 如果没有剩余的数据
+			if (bufferSource.IsEmpty)
+			{
+				remainingSource = ReadOnlySequence<byte>.Empty;
+				singleSource = bufferReference;
+				return;
+			}
+			else // 如果有剩余的数据
+			{
+				// 如果剩余的数据是单个段
+				if (bufferSource.IsSingleSegment)
+				{
+					remainingSource = ReadOnlySequence<byte>.Empty;
+					singleSource = bufferSource.First.Slice(advancedCount);
+					return;
+				}
+
+				// 如果剩余的数据不是单个段
+				singleSource = default;
+				remainingSource = bufferSource.Slice(advancedCount);
+				// 如果剩余的数据是单个段
+				if (remainingSource.IsSingleSegment)
+				{
+					singleSource = remainingSource.First;
+					remainingSource = ReadOnlySequence<byte>.Empty;
+					return;
+				}
+				return;
+			}
+		}
+
+		/// <summary>
+		/// 反序列化非托管类型
+		/// </summary>
+		public T Deserialize<T>() where T : unmanaged
+		{
+			unsafe
+			{
+				int size = Unsafe.SizeOf<T>();
+				T value = Unsafe.ReadUnaligned<T>(ref GetSpanReference(size));
+				Advance(size);
+				return value;
+			}
+		}
+
 	}
 }
