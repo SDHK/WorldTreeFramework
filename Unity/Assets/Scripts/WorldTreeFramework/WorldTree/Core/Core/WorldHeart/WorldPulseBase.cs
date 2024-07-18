@@ -26,12 +26,12 @@ namespace WorldTree
 		/// <summary>
 		/// 单帧时间 (毫秒)
 		/// </summary>
-		public int frameTime;
+		[Protected] public int frameTime;
 
 		/// <summary>
 		/// 时间累计
 		/// </summary>
-		public TimeSpan time = TimeSpan.Zero;
+		[Protected] public TimeSpan time = TimeSpan.Zero;
 
 		/// <summary>
 		/// 运行

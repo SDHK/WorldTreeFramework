@@ -37,195 +37,195 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-    /// <summary>
-    /// 泛型通用对象池
-    /// </summary>
-    public class GenericPool<T> : PoolBase
-        where T : class
-    {
-        /// <summary>
-        /// 对象池
-        /// </summary>
-        protected Queue<T> objectPoolQueue = new Queue<T>();
+	/// <summary>
+	/// 泛型通用对象池
+	/// </summary>
+	public class GenericPool<T> : PoolBase
+		where T : class
+	{
+		/// <summary>
+		/// 对象池
+		/// </summary>
+		[Protected] public Queue<T> objectPoolQueue = new Queue<T>();
 
-        /// <summary>
-        /// 当前保留对象数量
-        /// </summary>
-        public override int Count => objectPoolQueue.Count;
+		/// <summary>
+		/// 当前保留对象数量
+		/// </summary>
+		public override int Count => objectPoolQueue.Count;
 
-        /// <summary>
-        /// 实例化对象的方法
-        /// </summary>
-        public Func<PoolBase, T> NewObject;
-        /// <summary>
-        /// 销毁对象的方法
-        /// </summary>
-        public Action<T> DestroyObject;
-
-
-        /// <summary>
-        /// 对象新建时
-        /// </summary>
-        public Action<T> objectOnNew;
-
-        /// <summary>
-        /// 对象获取时
-        /// </summary>
-        public Action<T> objectOnGet;
-
-        /// <summary>
-        /// 对象回收时
-        /// </summary>
-        public Action<T> objectOnRecycle;
-
-        /// <summary>
-        /// 对象销毁时
-        /// </summary>
-        public Action<T> objectOnDestroy;
+		/// <summary>
+		/// 实例化对象的方法
+		/// </summary>
+		public Func<PoolBase, T> NewObject;
+		/// <summary>
+		/// 销毁对象的方法
+		/// </summary>
+		public Action<T> DestroyObject;
 
 
-        //用于继承的子类可实现无参数构造函数
-        protected GenericPool() { ObjectType = typeof(T); }
+		/// <summary>
+		/// 对象新建时
+		/// </summary>
+		[Protected] public Action<T> objectOnNew;
 
-        /// <summary>
-        /// 对象池构造 （实例化对象的委托，销毁对象的委托）
-        /// </summary>
-        public GenericPool(Func<PoolBase, T> objectNew, Action<T> objectDestroy = null)
-        {
-            ObjectType = typeof(T);
-            this.NewObject = objectNew;
-            this.DestroyObject = objectDestroy;
-        }
+		/// <summary>
+		/// 对象获取时
+		/// </summary>
+		[Protected] public Action<T> objectOnGet;
 
-        public override string ToString()
-        {
-            return "[GenericPool<" + ObjectType + ">]";
-        }
+		/// <summary>
+		/// 对象回收时
+		/// </summary>
+		[Protected] public Action<T> objectOnRecycle;
 
-        /// <summary>
-        /// 从队列获取一个对象，假如队列无对象则新建对象
-        /// </summary>
-        public T DequeueOrNewObject()
-        {
-            lock (objectPoolQueue)
-            {
-                T obj = null;
-
-                while (obj == null)
-                {
-                    if (objectPoolQueue.Count != 0)
-                    {
-                        obj = objectPoolQueue.Dequeue();
-                    }
-                    else
-                    {
-                        if (NewObject != null)
-                        {
-                            obj = NewObject(this);
-                            objectOnNew?.Invoke(obj);
-                        }
-                        return obj;
-                    }
-                }
-                return obj;
-            }
-        }
+		/// <summary>
+		/// 对象销毁时
+		/// </summary>
+		[Protected] public Action<T> objectOnDestroy;
 
 
-        /// <summary>
-        /// 获取对象
-        /// </summary>
-        public virtual T Get()
-        {
-            T obj = DequeueOrNewObject();
-            objectOnGet?.Invoke(obj);
-            Preload();
-            return obj;
-        }
+		//用于继承的子类可实现无参数构造函数
+		protected GenericPool() { ObjectType = typeof(T); }
+
+		/// <summary>
+		/// 对象池构造 （实例化对象的委托，销毁对象的委托）
+		/// </summary>
+		public GenericPool(Func<PoolBase, T> objectNew, Action<T> objectDestroy = null)
+		{
+			ObjectType = typeof(T);
+			this.NewObject = objectNew;
+			this.DestroyObject = objectDestroy;
+		}
+
+		public override string ToString()
+		{
+			return "[GenericPool<" + ObjectType + ">]";
+		}
+
+		/// <summary>
+		/// 从队列获取一个对象，假如队列无对象则新建对象
+		/// </summary>
+		public T DequeueOrNewObject()
+		{
+			lock (objectPoolQueue)
+			{
+				T obj = null;
+
+				while (obj == null)
+				{
+					if (objectPoolQueue.Count != 0)
+					{
+						obj = objectPoolQueue.Dequeue();
+					}
+					else
+					{
+						if (NewObject != null)
+						{
+							obj = NewObject(this);
+							objectOnNew?.Invoke(obj);
+						}
+						return obj;
+					}
+				}
+				return obj;
+			}
+		}
 
 
-        public override object GetObject()
-        {
-            return Get();
-        }
+		/// <summary>
+		/// 获取对象
+		/// </summary>
+		public virtual T Get()
+		{
+			T obj = DequeueOrNewObject();
+			objectOnGet?.Invoke(obj);
+			Preload();
+			return obj;
+		}
 
 
-        public override void Recycle(object recycleObject)
-        {
-            lock (objectPoolQueue)
-            {
-                if (recycleObject != null)
-                {
-                    T obj = recycleObject as T;
-                    if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
-                    {
-                        //对象没有回收的标记，所以只能由池自己判断，比较耗时
-                        if (!objectPoolQueue.Contains(obj))
-                        {
-                            objectOnRecycle?.Invoke(obj);
-                            objectPoolQueue.Enqueue(obj);
-                        }
-                    }
-                    else
-                    {
-                        objectOnRecycle?.Invoke(obj);
-                        objectOnDestroy?.Invoke(obj);
-                        DestroyObject?.Invoke(obj);
-                    }
-                }
-            }
-        }
-        public override void DisposeOne()
-        {
-            lock (objectPoolQueue)
-            {
-                if (objectPoolQueue.Count > 0)
-                {
-                    var obj = objectPoolQueue.Dequeue();
-                    objectOnDestroy?.Invoke(obj);
-                    DestroyObject?.Invoke(obj);
-                }
-            }
-        }
-        public override void DisposeAll()
-        {
-            lock (objectPoolQueue)
-            {
-                while (objectPoolQueue.Count > 0)
-                {
-                    var obj = objectPoolQueue.Dequeue();
-                    objectOnDestroy?.Invoke(obj);
-                    DestroyObject?.Invoke(obj);
-                }
-            }
-        }
+		public override object GetObject()
+		{
+			return Get();
+		}
 
-        public override void Preload()
-        {
-            lock (objectPoolQueue)
-            {
-                while (objectPoolQueue.Count < minLimit)
-                {
-                    T obj = NewObject(this);
-                    objectOnNew?.Invoke(obj);
-                    objectPoolQueue.Enqueue(obj);
-                }
-            }
-        }
-    }
 
-    class GenericPoolRemoveRule<T> : RemoveRule<GenericPool<T>>
-        where T : class
-    {
-        protected override void Execute(GenericPool<T> self)
-        {
-            self.DisposeAll();
-            self.NewObject = null;
-            self.DestroyObject = null;
-            self.objectOnNew = null;
-            self.objectOnGet = null;
-            self.objectOnRecycle = null;
-            self.objectOnDestroy = null;
-        }
-    }
+		public override void Recycle(object recycleObject)
+		{
+			lock (objectPoolQueue)
+			{
+				if (recycleObject != null)
+				{
+					T obj = recycleObject as T;
+					if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
+					{
+						//对象没有回收的标记，所以只能由池自己判断，比较耗时
+						if (!objectPoolQueue.Contains(obj))
+						{
+							objectOnRecycle?.Invoke(obj);
+							objectPoolQueue.Enqueue(obj);
+						}
+					}
+					else
+					{
+						objectOnRecycle?.Invoke(obj);
+						objectOnDestroy?.Invoke(obj);
+						DestroyObject?.Invoke(obj);
+					}
+				}
+			}
+		}
+		public override void DisposeOne()
+		{
+			lock (objectPoolQueue)
+			{
+				if (objectPoolQueue.Count > 0)
+				{
+					var obj = objectPoolQueue.Dequeue();
+					objectOnDestroy?.Invoke(obj);
+					DestroyObject?.Invoke(obj);
+				}
+			}
+		}
+		public override void DisposeAll()
+		{
+			lock (objectPoolQueue)
+			{
+				while (objectPoolQueue.Count > 0)
+				{
+					var obj = objectPoolQueue.Dequeue();
+					objectOnDestroy?.Invoke(obj);
+					DestroyObject?.Invoke(obj);
+				}
+			}
+		}
+
+		public override void Preload()
+		{
+			lock (objectPoolQueue)
+			{
+				while (objectPoolQueue.Count < minLimit)
+				{
+					T obj = NewObject(this);
+					objectOnNew?.Invoke(obj);
+					objectPoolQueue.Enqueue(obj);
+				}
+			}
+		}
+	}
+
+	class GenericPoolRemoveRule<T> : RemoveRule<GenericPool<T>>
+		where T : class
+	{
+		protected override void Execute(GenericPool<T> self)
+		{
+			self.DisposeAll();
+			self.NewObject = null;
+			self.DestroyObject = null;
+			self.objectOnNew = null;
+			self.objectOnGet = null;
+			self.objectOnRecycle = null;
+			self.objectOnDestroy = null;
+		}
+	}
 }

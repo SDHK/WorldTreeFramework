@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WorldTree.Analyzer
 {
@@ -27,7 +28,7 @@ namespace WorldTree.Analyzer
 		{
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
-			// 获取语义模型
+			//获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			ISymbol? filedSymbol = context.SemanticModel.GetSymbolInfo(context.Node).Symbol;
 			//字段和属性和事件的访问
@@ -38,12 +39,15 @@ namespace WorldTree.Analyzer
 				{
 					//检测字段来源类型是否符合要求
 					if (!DiagnosticGroup.Screen(filedSymbol.ContainingType)) continue;
+
+					bool isProtected = filedSymbol.GetAttributes().Any(attr => attr.AttributeClass?.Name == "ProtectedAttribute");
+
 					//检测是否有对应的诊断配置
 					if (DiagnosticGroup.Diagnostics.TryGetValue(DiagnosticKey.SimpleMemberAccess, out DiagnosticConfig codeDiagnostic))
 					{
 						if (codeDiagnostic.Check.Invoke(memberAccess.Name.Identifier.Text))
 						{
-							if (CheckMemberAccess(context))
+							if (CheckMemberAccess(context, isProtected))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, memberAccess.Name.GetLocation()));
 							}
@@ -58,7 +62,7 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 判断是否需要进行诊断
 		/// </summary>
-		private bool CheckMemberAccess(SyntaxNodeAnalysisContext context)
+		private bool CheckMemberAccess(SyntaxNodeAnalysisContext context, bool isProtected)
 		{
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
@@ -74,14 +78,17 @@ namespace WorldTree.Analyzer
 
 			//判断当前字段所在的类型是否是来源类型，是则跳过
 			if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, parentTypeSymbol.OriginalDefinition)) return false;
+			if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType, parentTypeSymbol)) return false;
 
 			bool isInterfaceContainingType = memberAccessSymbol.ContainingType.TypeKind == TypeKind.Interface;
 			bool isClassContainingType = memberAccessSymbol.ContainingType.TypeKind == TypeKind.Class;
 
+
+
 			//判断当前字段所在的类型是否继承了来源接口，是则跳过
-			if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(parentTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+			if (isProtected && isInterfaceContainingType && NamedSymbolHelper.CheckInterface(parentTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 			//判断当前字段所在的类型是否继承了来源类型，是则跳过
-			if (isClassContainingType && NamedSymbolHelper.CheckBase(parentTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+			if (isProtected && isClassContainingType && NamedSymbolHelper.CheckBase(parentTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 
 			// 判断是否在静态类中
 			if (parentTypeSyntax.Modifiers.Any(SyntaxKind.StaticKeyword))
@@ -100,11 +107,13 @@ namespace WorldTree.Analyzer
 					if (firstParameterSyntax.Modifiers.Any(SyntaxKind.ThisKeyword))
 					{
 						//判断扩展类型是否是来源类型，是则跳过
-						if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol.ToString()) return false;
+						//if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol.ToString()) return false;
+						if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, firstParameterTypeSymbol.OriginalDefinition)) return false;
+						if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType, firstParameterTypeSymbol)) return false;
 						//判断当前字段所在的类型是否继承了来源接口，是则跳过
-						if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+						if (isProtected && isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 						//判断当前字段所在的类型是否继承了来源类型，是则跳过
-						if (isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+						if (isProtected && isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 					}
 					// 不是静态类型,判断是否在委托中
 					else
@@ -112,12 +121,11 @@ namespace WorldTree.Analyzer
 						(SyntaxNode? parentDelegate, ParameterSyntax? firstParameter1) = GetParentAnonymousDelegateAndFirstParameter(memberAccess);
 						if (parentDelegate != null && firstParameter1 != null && firstParameter1.Identifier.Text == "self")
 						{
-							// 判断扩展类型是否是来源类型，是则跳过
-							if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol.ToString()) return false;
-							//判断当前字段所在的类型是否继承了来源接口，是则跳过
-							if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
-							//判断当前字段所在的类型是否继承了来源类型，是则跳过
-							if (isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+							//if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol.ToString()) return false;
+							if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, firstParameterTypeSymbol.OriginalDefinition)) return false;
+							if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType, firstParameterTypeSymbol)) return false;
+							if (isProtected && isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+							if (isProtected && isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 						}
 					}
 				}
@@ -138,12 +146,11 @@ namespace WorldTree.Analyzer
 						// 判断类型是否继承了IRule接口
 						if (NamedSymbolHelper.CheckInterface(parentTypeSymbol, IRuleSymbol))
 						{
-							//判断扩展类型是否是来源类型，是则跳过
-							if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return false;
-							//判断当前字段所在的类型是否继承了来源接口，是则跳过
-							if (isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
-							//判断当前字段所在的类型是否继承了来源类型，是则跳过
-							if (isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+							//if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol?.ToString()) return false;
+							if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, firstParameterTypeSymbol.OriginalDefinition)) return false;
+							if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType, firstParameterTypeSymbol)) return false;
+							if (isProtected && isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+							if (isProtected && isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 						}
 					}
 				}

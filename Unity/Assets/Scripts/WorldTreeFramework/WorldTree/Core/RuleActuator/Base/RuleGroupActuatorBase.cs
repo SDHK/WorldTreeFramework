@@ -19,7 +19,7 @@ namespace WorldTree
 		/// <summary>
 		/// 单法则集合
 		/// </summary>
-		public RuleGroup ruleGroupDict;
+		[Protected]public RuleGroup ruleGroupDict;
 
 		public override string ToString()
 		{

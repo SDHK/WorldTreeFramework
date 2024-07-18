@@ -22,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 单帧时间 (毫秒)
 		/// </summary>
-		public int frameTime;
+		[Protected]public int frameTime;
 
 		/// <summary>
 		/// 运行

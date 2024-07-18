@@ -6,7 +6,6 @@
 * 描述：
 
 */
-using MemoryPack;
 using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
@@ -89,11 +88,6 @@ namespace WorldTree
 		/// 总长度
 		/// </summary>
 		public long Length => length;
-
-		/// <summary>
-		/// a
-		/// </summary>
-		protected long Length1 => length;
 
 		/// <summary>
 		/// 推进移动数
@@ -214,7 +208,7 @@ namespace WorldTree
 			var rest = bufferSource.Length - count;
 			if (rest < 0)
 			{
-				MemoryPackSerializationException.ThrowInvalidAdvance();
+				this.LogError("移动超出序列长度");
 			}
 
 			bufferSource = bufferSource.Slice(advancedCount + count);
@@ -267,13 +261,10 @@ namespace WorldTree
 		/// </summary>
 		public T Deserialize<T>() where T : unmanaged
 		{
-			unsafe
-			{
-				int size = Unsafe.SizeOf<T>();
-				T value = Unsafe.ReadUnaligned<T>(ref GetSpanReference(size));
-				Advance(size);
-				return value;
-			}
+			int size = Unsafe.SizeOf<T>();
+			T value = Unsafe.ReadUnaligned<T>(ref GetSpanReference(size));
+			Advance(size);
+			return value;
 		}
 
 	}

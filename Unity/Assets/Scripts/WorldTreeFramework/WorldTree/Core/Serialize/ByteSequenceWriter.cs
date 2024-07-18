@@ -16,6 +16,52 @@ using System.Threading.Tasks;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 整数编码
+	/// </summary>
+	public static class VarIntCodes
+	{
+		/// <summary>
+		/// 最大单字节值
+		/// </summary>
+		public const byte MAX_SINGLE_VALUE = 127;
+		/// <summary>
+		/// 最小单字节值
+		/// </summary>
+		public const sbyte MIN_SINGLE_VALUE = -120;
+		/// <summary>
+		/// 字节
+		/// </summary>
+		public const sbyte BYTE = -121;
+		/// <summary>
+		/// 有符号字节
+		/// </summary>
+		public const sbyte SBYTE = -122;
+		/// <summary>
+		/// 无符号短整数
+		/// </summary>
+		public const sbyte UINT16 = -123;
+		/// <summary>
+		/// 有符号短整数
+		/// </summary>
+		public const sbyte INT16 = -124;
+		/// <summary>
+		/// 无符号整数
+		/// </summary>
+		public const sbyte UINT32 = -125;
+		/// <summary>
+		/// 有符号整数
+		/// </summary>
+		public const sbyte INT32 = -126;
+		/// <summary>
+		/// 无符号长整数
+		/// </summary>
+		public const sbyte UINT64 = -127;
+		/// <summary>
+		/// 有符号长整数
+		/// </summary>
+		public const sbyte INT64 = -128;
+	}
 
 	public static class ByteSequenceWriterRule
 	{
@@ -173,17 +219,16 @@ namespace WorldTree
 		/// <summary>
 		/// 序列化写入非托管类型
 		/// </summary>
-		public void Serialize<T>(T value) where T : unmanaged
+		public void Serialize<T>(in T value) where T : unmanaged
 		{
-			unsafe
-			{
-				int size = Unsafe.SizeOf<T>();
-				Span<byte> span = GetSpan(size);
-				Advance(size);
-				ref byte destination = ref MemoryMarshal.GetReference(span);
-				ref byte source = ref Unsafe.As<T, byte>(ref value);
-				Unsafe.CopyBlockUnaligned(ref destination, ref source, (uint)size);
-			}
+			int size = Unsafe.SizeOf<T>();
+			Span<byte> span = GetSpan(size);
+			ref byte destination = ref MemoryMarshal.GetReference(span);
+			Unsafe.WriteUnaligned(ref destination, value);
+			Advance(size);
+
+			//ref byte source = ref Unsafe.As<T, byte>(ref value);
+			//Unsafe.CopyBlockUnaligned(ref destination, ref source, (uint)size);
 		}
 	}
 }

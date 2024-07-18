@@ -11,7 +11,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试类
 	/// </summary>
-	class MyClass : Node
+	public class MyClass : Node
 	{
 		/// <summary>
 		/// 整型字段
@@ -25,26 +25,64 @@ namespace WorldTree
 		/// 浮点型字段
 		/// </summary>
 		public float FloatField;
+
 	}
 
-	public static class MyClassRule
-	{ 
+	/// <summary>
+	/// 测试类
+	/// </summary>
+	public class TestClass : Node
+	{
 		/// <summary>
-		/// 序列化
+		/// 测试私有字段
 		/// </summary>
-		public static void Serialize()
-		{
+		public float testPrivateField;
 
+		/// <summary>
+		/// 测试受保护字段
+		/// </summary>
+		[Protected] public float testProtectedField;
+
+
+
+	}
+
+	/// <summary>
+	/// 测试类子类
+	/// </summary>
+	public class TestClassSub : TestClass
+	{
+
+	}
+
+
+	public static class TestClassRule
+	{
+		/// <summary>
+		/// 自身访问测试
+		/// </summary>
+		public static void Test1(this TestClass self)
+		{
+			var a = self.testPrivateField;
+			var b = self.testProtectedField;
 		}
 
 		/// <summary>
-		/// 反序列化
+		/// 子类访问测试
 		/// </summary>
-		public static void Deserialize()
+		public static void Test2(this TestClassSub self)
 		{
-
+			var a = self.testPrivateField;
+			var b = self.testProtectedField;
 		}
-
+		/// <summary>
+		/// 外部访问测试
+		/// </summary>
+		public static void Test3(this MyClass self, TestClass node)
+		{
+			var a = node.testPrivateField;
+			var b = node.testProtectedField;
+		}
 	}
 
 	public static class SerializeTestRule
@@ -97,9 +135,8 @@ namespace WorldTree
 				LongField = 4567890123456789,
 				FloatField = 123.45f
 			};
-			ByteBufferWriter bufferWriter = Core.PoolGetUnit(out ByteBufferWriter _);
 
-			Span<byte> span = bufferWriter.GetSpan(sizeof(int) + sizeof(long) + sizeof(float));
+			Span<byte> span = new byte[sizeof(int) + sizeof(long) + sizeof(float)];
 
 			unsafe
 			{

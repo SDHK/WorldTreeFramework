@@ -147,7 +147,7 @@ namespace WorldTree.Analyzer
 		/// </summary>
 		public static bool CheckBase(ITypeSymbol typeSymbol, ITypeSymbol baseSymbol)
 		{
-			var currentBaseType = typeSymbol;
+			var currentBaseType = typeSymbol.BaseType;
 			while (currentBaseType != null)
 			{
 				if (SymbolEqualityComparer.Default.Equals(currentBaseType, baseSymbol) ||

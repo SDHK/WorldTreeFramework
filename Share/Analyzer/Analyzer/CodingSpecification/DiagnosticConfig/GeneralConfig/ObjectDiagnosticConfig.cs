@@ -70,7 +70,7 @@ namespace WorldTree.Analyzer
 				MessageFormat = "常量命名都要大写",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.ConstKeyword, },
-				Check = s => Regex.IsMatch(s, "^[A-Z]+(_[A-Z]+)*$"),
+				Check = s => Regex.IsMatch(s, "^[A-Z0-9]+(_[A-Z0-9]+)*$"),
 				FixCode = s => Regex.Replace(s, "([a-z])([A-Z])", "$1_$2").ToUpper()
 			});
 

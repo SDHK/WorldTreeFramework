@@ -50,11 +50,15 @@ namespace WorldTree
 
 	//id赋值时机，UID和普通id 的区分，序列化和普通类型的id
 
+	//不需要池的对象
 	//GlobalRuleActuatorManager
 	//GlobalRuleActuator<R>
 	//HybridListenerRuleActuator
 	//HybridListenerRuleActuatorGroup
 
+	
+
+	
 	/// <summary>
 	/// 世界树核心接口
 	/// </summary>

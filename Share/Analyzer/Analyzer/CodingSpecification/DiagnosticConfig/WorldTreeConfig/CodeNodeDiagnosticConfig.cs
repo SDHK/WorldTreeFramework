@@ -52,7 +52,7 @@ namespace WorldTree.Analyzer
 			SetConfig(DiagnosticKey.SimpleMemberAccess, new DiagnosticConfig()
 			{
 				Title = "Node成员访问限制",
-				MessageFormat = "设定小写是私有，不可访问",
+				MessageFormat = "不可访问:小写为私有,[Protected]为受保护",
 				NeedComment = false,
 				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
 				DeclarationKind = SyntaxKind.SimpleMemberAccessExpression,

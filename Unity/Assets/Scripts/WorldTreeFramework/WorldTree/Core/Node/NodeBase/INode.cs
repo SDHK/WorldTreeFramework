@@ -44,6 +44,12 @@ namespace WorldTree
 
 
 	/// <summary>
+	/// Node类型 受保护成员特性标记
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+	public class ProtectedAttribute : Attribute { }
+
+	/// <summary>
 	/// 世界树数据节点接口
 	/// </summary>
 	public partial interface INodeData : INode
