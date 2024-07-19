@@ -14,8 +14,6 @@ namespace WorldTree
 			//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
 			//self.AddComponent(out TaskTest _);
 
-
-
 			DateTime dateTime = self.Core.RealTimeManager.UtcNow;
 
 			self.Log($"网络时间：{dateTime}");

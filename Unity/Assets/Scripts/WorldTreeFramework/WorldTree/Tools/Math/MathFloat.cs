@@ -51,7 +51,7 @@ namespace WorldTree
         /// <summary>
         ///  <para>Degrees-to-radians conversion constant (Read Only).</para>
         /// </summary>
-        public const float DEG_RAD = 0.017453292f;
+        public const float DEG_RAD = 0.0174532924f;
         /// <summary>
         ///   <para>Radians-to-degrees conversion constant (Read Only).</para>
         /// </summary>

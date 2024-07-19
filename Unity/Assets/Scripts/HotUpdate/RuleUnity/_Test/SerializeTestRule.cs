@@ -6,17 +6,18 @@ namespace WorldTree
 	{
 		static OnAdd<SerializeTest> OnAdd = (self) =>
 		{
+			
 			self.Log($"序列化测试！！");
 
 			// 获取字节缓存写入器
 			self.AddTemp(out ByteSequenceWriter byteBufferWriter);
 
 			// 写入基本数值类型
-			byteBufferWriter.Serialize(self.TestFloat);
-			byteBufferWriter.Serialize(self.TestDouble);
-			byteBufferWriter.Serialize(self.TestInt);
-			byteBufferWriter.Serialize(self.TestLong);
-			byteBufferWriter.Serialize(self.TestBool);
+			byteBufferWriter.WriteUnmanaged(self.TestFloat);
+			byteBufferWriter.WriteUnmanaged(self.TestDouble);
+			byteBufferWriter.WriteUnmanaged(self.TestInt);
+			byteBufferWriter.WriteUnmanaged(self.TestLong);
+			byteBufferWriter.WriteUnmanaged(self.TestBool);
 
 			// 写入器转 换获 取字节数组
 			byte[] dataBytes = byteBufferWriter.ToArrayAndReset();
