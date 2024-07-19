@@ -59,7 +59,9 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteSequence.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ValueTypeCode.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteSequenceSegment.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\Writer\ByteSequenceWriterDynamicValueRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
@@ -216,7 +218,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Base\TreeTweenBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Vector4Float.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleMethod\TreeValueBaseRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\Writer\ByteSequence.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\Writer\ByteWriterSequence.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\Lifecycle\StringLifecycleRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldTreeCore.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Math\MathInt.cs" />

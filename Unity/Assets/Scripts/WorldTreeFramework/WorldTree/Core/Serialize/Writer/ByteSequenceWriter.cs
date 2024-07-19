@@ -16,15 +16,6 @@ using System.Threading.Tasks;
 
 namespace WorldTree
 {
-	/// <summary>
-	///  Byte序列片段
-	/// </summary>
-	public class ByteSequenceSegment : Node
-	{
-
-
-
-	}
 
 	public static partial class ByteSequenceWriterRule
 	{
@@ -61,12 +52,12 @@ namespace WorldTree
 		/// <summary>
 		/// 缓存列表
 		/// </summary>
-		public UnitList<ByteSequence> sequenceList = null;
+		public UnitList<ByteWriterSequence> sequenceList = null;
 
 		/// <summary>
 		/// 当前缓存
 		/// </summary>
-		public ByteSequence current;
+		public ByteWriterSequence current;
 
 		/// <summary>
 		/// 数据长度
@@ -108,7 +99,7 @@ namespace WorldTree
 			if (current.Length != 0) sequenceList.Add(current);
 
 			// 如果空白区域小于等于需要的空间，则需要重新申请一个缓存
-			ByteSequence next = new(sizeHint);
+			ByteWriterSequence next = new(sizeHint);
 			current = next;
 			return next.FreeSpan;
 		}
@@ -123,7 +114,7 @@ namespace WorldTree
 			byte[] results = new byte[length];
 			Span<byte> span = results.AsSpan();
 
-			foreach (ByteSequence item in sequenceList)
+			foreach (ByteWriterSequence item in sequenceList)
 			{
 				item.ByteSpan.CopyTo(span);
 				span = span.Slice(item.Length);

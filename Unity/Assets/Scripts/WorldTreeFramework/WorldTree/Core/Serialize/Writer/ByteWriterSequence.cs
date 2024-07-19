@@ -15,7 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 字节序列段
 	/// </summary>
-	public struct ByteSequence
+	public struct ByteWriterSequence
 	{
 		/// <summary>
 		/// 数据
@@ -52,7 +52,7 @@ namespace WorldTree
 		/// </summary>
 		public Span<byte> FreeSpan => bytes.AsSpan(length);
 
-		public ByteSequence(int size)
+		public ByteWriterSequence(int size)
 		{
 			bytes = ArrayPool<byte>.Shared.Rent(MathInt.GetPowerOfTwo(size));
 			length = 0;
