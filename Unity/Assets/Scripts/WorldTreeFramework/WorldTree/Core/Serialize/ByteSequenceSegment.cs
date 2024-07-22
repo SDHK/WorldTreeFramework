@@ -52,11 +52,29 @@ namespace WorldTree
 		/// </summary>
 		public Span<byte> FreeSpan => bytes.AsSpan(length);
 
+		/// <summary>
+		/// 是否是池
+		/// </summary>
+		private bool isPool;
+
 		public ByteSequenceSegment(int size)
 		{
+			isPool = true;
 			bytes = ArrayPool<byte>.Shared.Rent(MathInt.GetPowerOfTwo(size));
 			length = 0;
 		}
+
+		public ByteSequenceSegment(byte[] bytes, bool isPool = false)
+		{
+			this.isPool = isPool;
+			this.bytes = bytes;
+			length = bytes.Length;
+		}
+
+		/// <summary>
+		/// 获取操作跨度
+		/// </summary>
+		public Span<byte> ReadSpan(int start, int size) => bytes.AsSpan(start, size);
 
 		/// <summary>
 		/// 推进移动指针
@@ -71,7 +89,7 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void Clear()
 		{
-			if (bytes != null) ArrayPool<byte>.Shared.Return(bytes);
+			if (this.isPool && bytes != null) ArrayPool<byte>.Shared.Return(bytes);
 			bytes = null;
 			length = 0;
 		}

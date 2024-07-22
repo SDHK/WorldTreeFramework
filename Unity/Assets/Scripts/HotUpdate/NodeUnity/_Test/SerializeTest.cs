@@ -16,11 +16,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试浮点
 		/// </summary>
-		public float TestFloat = 1.5f;
-		/// <summary>
-		/// 测试双精度
-		/// </summary>
-		public double TestDouble = 1.123;
+		public float TestFloat = 1.54321f;
 		/// <summary>
 		/// 测试整数
 		/// </summary>
@@ -29,6 +25,10 @@ namespace WorldTree
 		/// 测试长整数
 		/// </summary>
 		public long TestLong = 456;
+		/// <summary>
+		/// 测试双精度
+		/// </summary>
+		public double TestDouble = 7.123456;
 		/// <summary>
 		/// 测试布尔
 		/// </summary>

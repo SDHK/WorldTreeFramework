@@ -4,41 +4,31 @@ namespace WorldTree
 {
 	public static partial class SerializeTestRule
 	{
-		static OnAdd<SerializeTest> OnAdd = (self) =>
+		static OnAdd<SerializeTest> OnAdd1 = (self) =>
 		{
-			
-			self.Log($"序列化测试！！");
+			self.Log($"序列化测试！！！！！");
 
 			// 获取字节缓存写入器
-			self.AddTemp(out ByteSequenceWriter byteBufferWriter);
+			self.AddTemp(out ByteSequence sequenceWrite);
 
 			// 写入基本数值类型
-			byteBufferWriter.WriteUnmanaged(self.TestFloat);
-			byteBufferWriter.WriteUnmanaged(self.TestDouble);
-			byteBufferWriter.WriteUnmanaged(self.TestInt);
-			byteBufferWriter.WriteUnmanaged(self.TestLong);
-			byteBufferWriter.WriteUnmanaged(self.TestBool);
+			sequenceWrite.Write(self.TestFloat);
+			sequenceWrite.WriteDynamic(self.TestInt);
+			sequenceWrite.WriteDynamic(self.TestLong);
+			sequenceWrite.Write(self.TestDouble);
+			sequenceWrite.Write(self.TestBool);
 
-			// 写入器转 换获 取字节数组
-			byte[] dataBytes = byteBufferWriter.ToArrayAndReset();
+			byte[] bytes = sequenceWrite.ToBytes();
 
-			// 获取字节只读序列生成器
-			self.AddTemp(out ByteReadOnlySequenceBuilder byteReadOnlySequenceBuilder);
-			// 添加字节数组 到读取器 (可多次添加)
-			byteReadOnlySequenceBuilder.Add(dataBytes, false);
-			ReadOnlySequence<byte> readOnlySequence =  byteReadOnlySequenceBuilder.Build();
+			self.AddTemp(out ByteSequence sequenceRead).SetBytes(bytes);
 
-			self.AddTemp(out ByteSequenceReader byteSequenceReader);
-			byteSequenceReader.SetReadOnlySequence(readOnlySequence);
-
-			// 反序列化基本数值类型
-			float testFloat = byteSequenceReader.Deserialize<float>();
-			double testDouble = byteSequenceReader.Deserialize<double>();
-			int testInt = byteSequenceReader.Deserialize<int>();
-			long testLong = byteSequenceReader.Deserialize<long>();
-			bool testBool = byteSequenceReader.Deserialize<bool>();
-
-			self.Log($"结果： {testFloat}:{testDouble}:{testInt}:{testLong}:{testBool}");
+			// 读取基本数值类型
+			float testFloat = sequenceRead.Read(out float _);
+			int testInt = sequenceRead.ReadDynamic(out int _);
+			long testLong = sequenceRead.ReadDynamic(out long _);
+			double testDouble = sequenceRead.Read(out double _);
+			bool testBool = sequenceRead.Read(out bool _);
+			self.Log($"测试结果： {testFloat}:{testInt}:{testLong}:{testDouble}:{testBool}");
 		};
 	}
 }
