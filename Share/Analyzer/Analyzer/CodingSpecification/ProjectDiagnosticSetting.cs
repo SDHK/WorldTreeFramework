@@ -42,7 +42,7 @@ namespace WorldTree.Analyzer
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
 
-			new NodeDiagnosticConfig(),
+			//new NodeDiagnosticConfig(),
 			new CodeNodeDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
 			new ProjectBanUnitDiagnosticConfig(),

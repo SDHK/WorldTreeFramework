@@ -60,10 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\Rule\FormatRule\SerializeTestFormatRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTweenManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValue.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolGroup.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\Rule\RuleBase\SerializeRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Base\TreeTaskBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\CRC32Algorithm.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\Sub\TempBranch\TempBranch.cs" />
@@ -181,9 +183,10 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTween.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeStack.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\SerializeIgnoreAttribute.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\GenericPool\GenericPool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreGetNodeRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteSequenceDynamicValueRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\Rule\RuleMethod\ByteSequenceDynamicValueRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\GraftRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleActuator\Base\RuleActuatorBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\QuaternionFloat.cs" />

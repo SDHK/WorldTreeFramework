@@ -11,13 +11,14 @@ using System;
 namespace WorldTree
 {
 
-
 	public static partial class ByteSequenceRule
 	{
+		#region 写入
+
 		/// <summary>
 		/// 写入byte，无符号字节
 		/// </summary>
-		public static void WriteDynamicValue(this ByteSequence self, byte x)
+		public static void WriteDynamic(this ByteSequence self, byte x)
 		{
 			if (x <= ValueTypeCode.MAX_SINGLE_VALUE)
 			{
@@ -232,6 +233,9 @@ namespace WorldTree
 			}
 		}
 
+		#endregion
+
+		#region 读取
 
 		/// <summary>
 		/// 读取byte，无符号字节
@@ -465,6 +469,6 @@ namespace WorldTree
 			}
 		}
 
-
+		#endregion
 	}
 }

@@ -56,6 +56,7 @@ namespace WorldTree.Analyzer
 				NeedComment = false,
 				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
 				DeclarationKind = SyntaxKind.SimpleMemberAccessExpression,
+				UnKeywordKinds = new() { SyntaxKind.PropertyKeyword, },
 			});
 		}
 	}

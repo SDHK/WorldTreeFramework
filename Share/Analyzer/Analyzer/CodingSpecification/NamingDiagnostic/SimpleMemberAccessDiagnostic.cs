@@ -40,7 +40,8 @@ namespace WorldTree.Analyzer
 					//检测字段来源类型是否符合要求
 					if (!DiagnosticGroup.Screen(filedSymbol.ContainingType)) continue;
 
-					bool isProtected = filedSymbol.GetAttributes().Any(attr => attr.AttributeClass?.Name == "ProtectedAttribute");
+					// 假设 filedSymbol 是一个 IFieldSymbol 实例
+					bool isProtected = filedSymbol.DeclaredAccessibility == Accessibility.Protected|| filedSymbol.GetAttributes().Any(attr => attr.AttributeClass?.Name == "ProtectedAttribute");
 
 					//检测是否有对应的诊断配置
 					if (DiagnosticGroup.Diagnostics.TryGetValue(DiagnosticKey.SimpleMemberAccess, out DiagnosticConfig codeDiagnostic))

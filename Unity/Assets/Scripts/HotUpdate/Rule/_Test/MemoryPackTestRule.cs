@@ -18,12 +18,6 @@ namespace WorldTree
 				self.Log($"{self.data.Test} : {self.data.Age} : {self.data.Name}:{intList[1]} :byte {bins.Length}");
 			}
 		}
-
-		class UpdateRule : UpdateRule<MemoryPackTest>
-		{
-			protected override void Execute(MemoryPackTest self)
-			{
-			}
-		}
+		
 	}
 }

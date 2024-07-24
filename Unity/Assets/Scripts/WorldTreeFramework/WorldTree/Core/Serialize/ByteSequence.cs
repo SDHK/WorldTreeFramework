@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 namespace WorldTree
 {
 
+
 	public static partial class ByteSequenceRule
 	{
 
@@ -42,6 +43,8 @@ namespace WorldTree
 		, AsAwake
 		, AsComponentBranch
 		, TempOf<INode>
+		, AsRule<ISerialize>
+		, AsRule<IDeserialize>
 	{
 		/// <summary>
 		/// 序列段列表

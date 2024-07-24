@@ -8,23 +8,76 @@ using System.Threading.Tasks;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 测试数据
+	/// </summary>
+	[MemoryPackable(GenerateType.Object)]
+	public partial class NodeDataTest1
+	{
+		/// <summary>
+		/// 测试
+		/// </summary>
+		[MemoryPackOrder(1)]
+		public int Age;
+		/// <summary>
+		/// 测试2
+		/// </summary>
+		[MemoryPackOrder(2)]
+		public int Age1;
 
+		/// <summary>
+		/// a
+		/// </summary>
+		[MemoryPackOrder(3)]
+		public int Age2;
+
+
+	}
+
+	/// <summary>
+	/// 测试数据
+	/// </summary>
+	//[MemoryPackable]
+	[MemoryPackable(GenerateType.VersionTolerant)]
+	public partial class NodeDataTest2
+	{
+		/// <summary>
+		/// 测试
+		/// </summary>
+		[MemoryPackOrder(1)]
+		public int Age;
+
+		/// <summary>
+		/// 测试
+		/// </summary>
+		[MemoryPackOrder(3)]
+		public float Age3;
+
+		/// <summary>
+		/// 测试
+		/// </summary>
+		[MemoryPackOrder(4)]
+		public NodeDataTest1 Age4;
+
+	}
 
 
 	/// <summary>
 	/// A
 	/// </summary>
 	[MemoryPackable]
-	public partial class MemoryPackDataTest<T>
+	public partial struct MemoryPackDataTest<T>
 	{
 		/// <summary>
 		/// 测试泛型
 		/// </summary>
 		public T Test;
+
 		/// <summary>
-		/// 测试
+		/// ce
 		/// </summary>
 		public long Name;
+
 		/// <summary>
 		/// 测试
 		/// </summary>
@@ -39,8 +92,10 @@ namespace WorldTree
 		/// </summary>
 		public int UID;
 
-	
-
+		/// <summary>
+		/// 测试3
+		/// </summary>
+		public NodeDataTest1 NodeDataTest1;
 	}
 
 	/// <summary>

@@ -23,7 +23,7 @@ namespace WorldTree
 		public const sbyte MIN_SINGLE_VALUE = -120;
 
 		/// <summary>
-		/// 字节
+		/// 无符号字节
 		/// </summary>
 		public const sbyte BYTE = -121;
 		/// <summary>

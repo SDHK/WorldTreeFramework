@@ -5,9 +5,6 @@ using System.Buffers;
 namespace WorldTree
 {
 
-
-
-
 	/// <summary>
 	/// 测试类
 	/// </summary>
@@ -44,57 +41,6 @@ namespace WorldTree
 		[Protected] public float testProtectedField;
 
 
-
-	}
-
-	/// <summary>
-	/// 测试类子类
-	/// </summary>
-	public class TestClassSub : TestClass
-	{
-
-	}
-
-
-	public static class TestClassRule
-	{
-		/// <summary>
-		/// 自身访问测试
-		/// </summary>
-		public static void Test1(this TestClass self)
-		{
-			var a = self.testPrivateField;
-			var b = self.testProtectedField;
-		}
-
-		/// <summary>
-		/// 子类访问测试
-		/// </summary>
-		public static void Test2(this TestClassSub self)
-		{
-			var a = self.testPrivateField;
-			var b = self.testProtectedField;
-		}
-		/// <summary>
-		/// 外部访问测试
-		/// </summary>
-		public static void Test3(this MyClass self, TestClass node)
-		{
-			var a = node.testPrivateField;
-			var b = node.testProtectedField;
-		}
-	}
-
-	public static class SerializeTestRule
-	{
-		/// <summary>
-		/// T
-		/// </summary>
-		/// <param name="self"></param>
-		public static void Test(this SerializeTest self)
-		{
-			int a = self.@A;
-		}
 
 	}
 

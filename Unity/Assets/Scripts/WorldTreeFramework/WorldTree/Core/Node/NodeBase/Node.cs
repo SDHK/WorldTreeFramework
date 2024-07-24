@@ -34,8 +34,10 @@ namespace WorldTree
 		/// <summary>
 		/// 节点复数状态
 		/// </summary>
-		private NodeState state;
+		[SerializeIgnore]
+		protected NodeState state;
 
+		[SerializeIgnore]
 		public bool IsFromPool
 		{
 			get => (state & NodeState.IsFromPool) == NodeState.IsFromPool;
@@ -51,6 +53,7 @@ namespace WorldTree
 				}
 			}
 		}
+		[SerializeIgnore]
 		public bool IsDisposed
 		{
 			get => (state & NodeState.IsDisposed) == NodeState.IsDisposed;
@@ -67,23 +70,36 @@ namespace WorldTree
 			}
 		}
 
-
+		[SerializeIgnore]
 		public long Id { get; set; }
+
+		[SerializeIgnore]
 		public long Type { get; set; }
 
+		[SerializeIgnore]
 		public WorldTreeCore Core { get; set; }
+
+		[SerializeIgnore]
 		public WorldTreeRoot Root { get; set; }
+
+		[SerializeIgnore]
 		public INode Domain { get; set; }//接口标记域节点
+
+		[SerializeIgnore]
 		public INode Parent { get; set; }
 
+		[SerializeIgnore]
 		public IWorldTreeNodeViewBuilder View { get; set; }
 
 		#region Active
 
+		[SerializeIgnore]
 		public bool ActiveToggle { get; set; }
 
+		[SerializeIgnore]
 		public bool IsActive { get; set; }
 
+		[SerializeIgnore]
 		public bool activeEventMark { get; set; }
 
 		public void SetActive(bool value)
@@ -134,8 +150,10 @@ namespace WorldTree
 
 		#region Rattan
 
+		[SerializeIgnore]
 		public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
+		[SerializeIgnore]
 		public UnitDictionary<long, IRattan> GetRattanDict { get; }
 
 		#endregion
@@ -147,10 +165,12 @@ namespace WorldTree
 		/// </summary>
 		protected long branchType;
 
+		[SerializeIgnore]
 		public long BranchType => branchType;
 
 		public UnitDictionary<long, IBranch> BranchDict { get; set; }
 
+		[SerializeIgnore]
 		public UnitDictionary<long, IBranch> GetBranchDict => BranchDict ??= Core.PoolGetUnit<UnitDictionary<long, IBranch>>();
 
 		#endregion
