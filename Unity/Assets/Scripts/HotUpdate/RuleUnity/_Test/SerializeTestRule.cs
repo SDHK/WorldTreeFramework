@@ -6,7 +6,7 @@ namespace WorldTree
 	{
 		class SerializeTestRule : SerializeRule<ByteSequence, SerializeTest>
 		{
-			protected override void Execute(ByteSequence self, SerializeTest arg1)
+			protected override void Execute(ByteSequence self,ref SerializeTest arg1)
 			{
 				self.Write(6);
 				self.Write(arg1.TestFloat);
@@ -20,7 +20,7 @@ namespace WorldTree
 
 		class DeserializeTestRule : DeserializeRule<ByteSequence, SerializeTest>
 		{
-			protected override void Execute(ByteSequence self, SerializeTest arg1)
+			protected override void Execute(ByteSequence self, ref SerializeTest arg1)
 			{
 				self.Read(out int count);
 				self.Read(out arg1.TestFloat);

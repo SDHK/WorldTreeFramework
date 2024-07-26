@@ -21,6 +21,11 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static string ISendRule = "ISendRule";
 		/// <summary>
+		/// 通知法则接口：引用参数
+		/// </summary>
+		public static string ISendRefRule = "ISendRefRule";
+
+		/// <summary>
 		/// 调用法则接口
 		/// </summary>
 		public static string ICallRule = "ICallRule";

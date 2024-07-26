@@ -31,10 +31,14 @@ namespace WorldTree.SourceGenerator
 				RuleListCallRuleGenerator.Execute(context);
 				RuleListCallAsyncRuleGenerator.Execute(context);
 
+				RuleListSendRefRuleGenerator.Execute(context);
+
 				RuleGroupSendRuleGenerator.Execute(context);
 				RuleGroupSendAsyncRuleGenerator.Execute(context);
 				RuleGroupCallRuleGenerator.Execute(context);
 				RuleGroupCallAsyncRuleGenerator.Execute(context);
+
+				RuleGroupSendRefRuleGenerator.Execute(context);
 			}
 			catch (Exception e)
 			{

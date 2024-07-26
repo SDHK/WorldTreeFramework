@@ -77,8 +77,9 @@ namespace WorldTree.SourceGenerator
 			INamedTypeSymbol? namedType = compilation.ToINamedTypeSymbol(interfaceDeclaration);
 			if (namedType == null) return;
 
-			//检测是否继承4大法则接口
+			//检测是否继承基础法则接口
 			if (!(NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISendRule, out _) ||
+				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISendRefRule, out _) ||
 				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ICallRule, out _) ||
 				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISendRuleAsync, out _) ||
 				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ICallRuleAsync, out _))) return;
@@ -105,10 +106,8 @@ namespace WorldTree.SourceGenerator
 
 		public static void Execute(GeneratorExecutionContext context)
 		{
-			//var ISourceGeneratorIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.ISourceGeneratorIgnore");
 			var IMethodRule = context.Compilation.ToINamedTypeSymbol("WorldTree.IMethodRule");
 
-			//if (ISourceGeneratorIgnore == null) return;
 			if (IMethodRule == null) return;
 
 			foreach (var fileClassList in fileClassDict)
@@ -119,7 +118,6 @@ namespace WorldTree.SourceGenerator
 
 				foreach (INamedTypeSymbol fileClass in fileClassList.Value)
 				{
-					//if (NamedSymbolHelper.CheckAllInterface(fileClass, ISourceGeneratorIgnore)) continue;
 					bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
 
 					INamedTypeSymbol? baseInterface = null;
@@ -139,6 +137,8 @@ namespace WorldTree.SourceGenerator
 					{
 						if (isMethodRule) CallRuleAsyncSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);
 					}
+					else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ISendRefRule, out baseInterface)) { }
+
 
 					RuleClass(ClassCode, fileClass, baseInterface);
 				}
@@ -185,7 +185,6 @@ namespace WorldTree.SourceGenerator
 			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			string TypeArguments = GetTypeArguments(typeSymbol);
 			string BaseTypeArguments = GetTypeArguments(baseInterface);
-			string genericTypeParameter = GetGenericTypeParameter(baseInterface);
 
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t");

@@ -6,6 +6,9 @@
 * 描述：
 
 */
+using System.Reflection;
+using System.Text;
+
 namespace WorldTree.SourceGenerator
 {
 	/// <summary>
@@ -13,32 +16,198 @@ namespace WorldTree.SourceGenerator
 	/// </summary>
 	public static partial class GeneratorTemplate
 	{
-		private static GenericsTypesTemplate genericsTypes = new();
-		private static GenericsTypesAfterTemplate genericsTypesAfter = new();
-		private static GenericsParameterTemplate genericsParameter = new();
-		private static GenericsTypeParameterTemplate genericsTypeParameter = new();
-		private static GenericsTypesAngleTemplate genericsTypesAngle = new();
+		private static Dictionary<int, string>? genericsTypes;
+		private static Dictionary<int, string>? genericsTypesAfter;
+		private static Dictionary<int, string>? genericsTypesAngle;
+		private static Dictionary<int, string>? genericsParameter;
+		private static Dictionary<int, string>? genericsTypeParameter;
+		private static Dictionary<int, string>? genericsRefParameter;
+		private static Dictionary<int, string>? genericsRefTypeParameter;
 
 		/// <summary>
 		/// 泛型类型模板: , T1, T2, T3
 		/// </summary>
-		public static GenericsTypesTemplate GenericsTypes => genericsTypes ??= new();
+		public static Dictionary<int, string> GenericsTypes
+		{
+			get
+			{
+				if (genericsTypes == null)
+				{
+					genericsTypes = new Dictionary<int, string>();
+					StringBuilder generics = new StringBuilder();
+					for (int index = 0; index <= RuleGeneratorSetting.argumentCount; index++)
+					{
+						for (int i = 0; i < index; i++)
+						{
+							generics.Append($", T{i + 1}");
+						}
+						genericsTypes.Add(index, generics.ToString());
+						generics.Clear();
+					}
+				}
+				return genericsTypes;
+			}
+		}
 		/// <summary>
 		/// 泛型类型模板: T1, T2, T3,
 		/// </summary>
-		public static GenericsTypesAfterTemplate GenericsTypesAfter => genericsTypesAfter ??= new();
-		/// <summary>
-		/// 泛型参数模板: , arg1, arg2, arg3
-		/// </summary>
-		public static GenericsParameterTemplate GenericsParameter => genericsParameter ??= new();
-		/// <summary>
-		/// 泛型类型参数模板: , T1 arg1, T2 arg2, T3 arg3
-		/// </summary>
-		public static GenericsTypeParameterTemplate GenericsTypeParameter => genericsTypeParameter ??= new();
+		public static Dictionary<int, string> GenericsTypesAfter
+		{
+			get
+			{
+				if (genericsTypesAfter == null)
+				{
+					genericsTypesAfter = new Dictionary<int, string>();
+					StringBuilder generics = new StringBuilder();
+
+					for (int index = 0; index <= RuleGeneratorSetting.argumentCount; index++)
+					{
+						for (int i = 0; i < index; i++)
+						{
+							generics.Append($"T{i + 1}, ");
+						}
+						genericsTypesAfter.Add(index, generics.ToString());
+						generics.Clear();
+					}
+				}
+				return genericsTypesAfter;
+			}
+		}
+
 		/// <summary>
 		/// 泛型类型角括号模板: &lt; T1, T2, T3 &gt;
 		/// </summary>
-		public static GenericsTypesAngleTemplate GenericsTypesAngle => genericsTypesAngle ??= new();
+		public static Dictionary<int, string> GenericsTypesAngle
+		{
+			get
+			{
+				if (genericsTypesAngle == null)
+				{
+					genericsTypesAngle = new Dictionary<int, string>();
+					StringBuilder generics = new StringBuilder();
+					for (int index = 0; index <= RuleGeneratorSetting.argumentCount; index++)
+					{
+						for (int i = 0; i < index; i++)
+						{
+							if (i == 0) generics.Append("<");
+							generics.Append($"T{i + 1}");
+							if (i == index - 1)
+							{
+								generics.Append(">");
+							}
+							else
+							{
+								generics.Append(", ");
+							}
+						}
+						genericsTypesAngle.Add(index, generics.ToString());
+						generics.Clear();
+					}
+				}
+				return genericsTypesAngle;
+			}
+		}
+
+		/// <summary>
+		/// 泛型参数模板: , arg1, arg2, arg3
+		/// </summary>
+		public static Dictionary<int, string> GenericsParameter
+		{
+			get
+			{
+				if (genericsParameter == null)
+				{
+					genericsParameter = new Dictionary<int, string>();
+					StringBuilder generics = new StringBuilder();
+					for (int index = 0; index <= RuleGeneratorSetting.argumentCount; index++)
+					{
+						for (int i = 0; i < index; i++)
+						{
+							generics.Append($", arg{i + 1}");
+						}
+						genericsParameter.Add(index, generics.ToString());
+						generics.Clear();
+					}
+				}
+				return genericsParameter;
+			}
+		}
+		/// <summary>
+		/// 泛型类型参数模板: , T1 arg1, T2 arg2, T3 arg3
+		/// </summary>
+		public static Dictionary<int, string> GenericsTypeParameter
+		{
+			get
+			{
+				if (genericsTypeParameter == null)
+				{
+					genericsTypeParameter = new Dictionary<int, string>();
+					StringBuilder generics = new StringBuilder();
+					for (int index = 0; index <= RuleGeneratorSetting.argumentCount; index++)
+					{
+						for (int i = 0; i < index; i++)
+						{
+							generics.Append($", T{i + 1} arg{i + 1}");
+						}
+						genericsTypeParameter.Add(index, generics.ToString());
+						generics.Clear();
+					}
+				}
+				return genericsTypeParameter;
+			}
+		}
+
+		/// <summary>
+		/// 泛型参数模板: , ref arg1, ref arg2, ref arg3
+		/// </summary>
+		public static Dictionary<int, string> GenericsRefParameter
+		{
+			get
+			{
+				if (genericsRefParameter == null)
+				{
+					genericsRefParameter = new Dictionary<int, string>();
+					StringBuilder generics = new StringBuilder();
+					for (int index = 0; index <= RuleGeneratorSetting.argumentCount; index++)
+					{
+						for (int i = 0; i < index; i++)
+						{
+							generics.Append($", ref arg{i + 1}");
+						}
+						genericsRefParameter.Add(index, generics.ToString());
+						generics.Clear();
+					}
+				}
+				return genericsRefParameter;
+			}
+		}
+
+		/// <summary>
+		/// 泛型类型参数模板: , ref T1 arg1, ref T2 arg2, ref T3 arg3
+		/// </summary>
+		public static Dictionary<int, string> GenericsRefTypeParameter
+		{
+			get
+			{
+				if (genericsRefTypeParameter == null)
+				{
+					genericsRefTypeParameter = new Dictionary<int, string>();
+					StringBuilder generics = new StringBuilder();
+					for (int index = 0; index <= RuleGeneratorSetting.argumentCount; index++)
+					{
+						for (int i = 0; i < index; i++)
+						{
+							generics.Append($", ref T{i + 1} arg{i + 1}");
+						}
+						genericsRefTypeParameter.Add(index, generics.ToString());
+						generics.Clear();
+					}
+				}
+				return genericsRefTypeParameter;
+			}
+		}
+
+
 	}
 }
 
