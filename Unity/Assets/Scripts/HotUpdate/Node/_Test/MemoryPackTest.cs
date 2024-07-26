@@ -9,16 +9,27 @@ using System.Threading.Tasks;
 namespace WorldTree
 {
 	/// <summary>
+	/// 测试数据接口
+	/// </summary>
+	[MemoryPackable()]
+	[MemoryPackUnion(0, typeof(NodeDataTest1))]
+	public partial interface INodeDataTest
+	{
+
+	}
+
+	/// <summary>
 	/// 测试数据
 	/// </summary>
 	[MemoryPackable(GenerateType.Object)]
-	public partial class NodeDataTest1
+	public partial class NodeDataTest1: INodeDataTest
 	{
 		/// <summary>
 		/// 测试
 		/// </summary>
 		[MemoryPackOrder(1)]
 		public int Age;
+
 		/// <summary>
 		/// 测试2
 		/// </summary>
@@ -32,6 +43,17 @@ namespace WorldTree
 		public int Age2;
 
 
+	}
+
+	/// <summary>
+	/// 测试数据
+	/// </summary>
+	public partial class NodeDataTestSub : NodeDataTest1
+	{
+		/// <summary>
+		/// 测试3
+		/// </summary>
+		public int AgeSub;
 	}
 
 	/// <summary>
@@ -57,7 +79,7 @@ namespace WorldTree
 		/// 测试
 		/// </summary>
 		[MemoryPackOrder(4)]
-		public NodeDataTest1 Age4;
+		public INodeDataTest Age4;
 
 	}
 

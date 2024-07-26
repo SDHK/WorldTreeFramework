@@ -6,15 +6,15 @@ namespace WorldTree
 	{
 		class SerializeTestRule : SerializeRule<ByteSequence, SerializeTest>
 		{
-			protected override void Execute(ByteSequence self,ref SerializeTest arg1)
+			protected override void Execute(ByteSequence self, ref SerializeTest arg1)
 			{
-				self.Write(6);
+				self.Write(7);
 				self.Write(arg1.TestFloat);
-				self.Write(arg1.TestInt);
-				self.Write(arg1.TestDouble);
-				self.Write(arg1.TestLong);
+				self.WriteDynamic(arg1.TestInt);
+				self.WriteDynamic(arg1.TestLong);
 				self.Write(arg1.TestDouble);
 				self.Write(arg1.TestBool);
+				self.Write(arg1.nodeDataTest);
 			}
 		}
 
@@ -22,22 +22,18 @@ namespace WorldTree
 		{
 			protected override void Execute(ByteSequence self, ref SerializeTest arg1)
 			{
+				if (arg1 == null) self.Core.PoolGetNode(out arg1);
+
 				self.Read(out int count);
 				self.Read(out arg1.TestFloat);
-				self.Read(out arg1.TestInt);
-				self.Read(out arg1.TestDouble);
-				self.Read(out arg1.TestLong);
+				self.ReadDynamic(out arg1.TestInt);
+				self.ReadDynamic(out arg1.TestLong);
 				self.Read(out arg1.TestDouble);
 				self.Read(out arg1.TestBool);
-
-				//new SerializeTest();
+				self.Read(out arg1.nodeDataTest);
 			}
 		}
 	}
-
-
-
-
 
 
 	public static partial class SerializeTestRule
@@ -45,39 +41,30 @@ namespace WorldTree
 		static OnAdd<SerializeTest> OnAdd = (self) =>
 		{
 			self.Log($"序列化测试！！！！！");
+			self.TestFloat = 5.789456f;
+			self.TestInt = 798456;
+			self.TestLong = 456123;
+			self.TestDouble = 123.456789;
+			self.TestBool = true;
+			self.nodeDataTest.Age1 = 123456;
 
 			// 获取字节缓存写入器
 			self.AddTemp(out ByteSequence sequenceWrite);
 
-
-			// 写入基本数值类型
-			sequenceWrite.Write(self.TestFloat);
-			sequenceWrite.WriteDynamic(self.TestInt);
-			sequenceWrite.WriteDynamic(self.TestLong);
-			sequenceWrite.Write(self.TestDouble);
-			sequenceWrite.Write(self.nodeDataTest);
-			sequenceWrite.Write(self.TestBool);
-
+			// 序列化法则
+			if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<Serialize<SerializeTest>> ruleGroup1))
+				ruleGroup1.TrySendRef(sequenceWrite, ref self);
 
 			byte[] bytes = sequenceWrite.ToBytes();
-
 			self.AddTemp(out ByteSequence sequenceRead).SetBytes(bytes);
 
-			// 读取基本数值类型
-			float testFloat = sequenceRead.Read(out float _);
-			int testInt = sequenceRead.ReadDynamic(out int _);
-			long testLong = sequenceRead.ReadDynamic(out long _);
-			double testDouble = sequenceRead.Read(out double _);
-			NodeDataTest nodeDataTest = sequenceRead.Read(out NodeDataTest _);
-			bool testBool = sequenceRead.Read(out bool _);
-
-			self.Log($"测试结果： {testFloat}:{testInt}:{testLong}:{testDouble}:{testBool}:{nodeDataTest.Age1}");
+			// 反序列化法则
+			SerializeTest st1 = null;
+			if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<Deserialize<SerializeTest>> ruleGroup))
+				ruleGroup.TrySendRef(sequenceRead, ref st1);
 
 
-			//NodeRuleHelper.SendRule(sequenceWrite, TypeInfo<Serialize<SerializeTest>>.Default, self);
-
+			self.Log($"测试结果： {st1.TestFloat}:{st1.TestInt}:{st1.TestLong}:{st1.TestDouble}:{st1.TestBool}:{st1.nodeDataTest.Age1}");
 		};
-
-
 	}
 }
