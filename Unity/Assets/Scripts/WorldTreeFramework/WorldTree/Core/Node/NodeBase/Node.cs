@@ -34,10 +34,10 @@ namespace WorldTree
 		/// <summary>
 		/// 节点复数状态
 		/// </summary>
-		[SerializeIgnore]
+		[TreePackIgnore]
 		protected NodeState state;
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public bool IsFromPool
 		{
 			get => (state & NodeState.IsFromPool) == NodeState.IsFromPool;
@@ -53,7 +53,7 @@ namespace WorldTree
 				}
 			}
 		}
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public bool IsDisposed
 		{
 			get => (state & NodeState.IsDisposed) == NodeState.IsDisposed;
@@ -70,36 +70,36 @@ namespace WorldTree
 			}
 		}
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public long Id { get; set; }
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public long Type { get; set; }
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public WorldTreeCore Core { get; set; }
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public WorldTreeRoot Root { get; set; }
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public INode Domain { get; set; }//接口标记域节点
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public INode Parent { get; set; }
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public IWorldTreeNodeViewBuilder View { get; set; }
 
 		#region Active
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public bool ActiveToggle { get; set; }
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public bool IsActive { get; set; }
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public bool activeEventMark { get; set; }
 
 		public void SetActive(bool value)
@@ -150,10 +150,10 @@ namespace WorldTree
 
 		#region Rattan
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public UnitDictionary<long, IRattan> GetRattanDict { get; }
 
 		#endregion
@@ -165,12 +165,12 @@ namespace WorldTree
 		/// </summary>
 		protected long branchType;
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public long BranchType => branchType;
 
 		public UnitDictionary<long, IBranch> BranchDict { get; set; }
 
-		[SerializeIgnore]
+		[TreePackIgnore]
 		public UnitDictionary<long, IBranch> GetBranchDict => BranchDict ??= Core.PoolGetUnit<UnitDictionary<long, IBranch>>();
 
 		#endregion

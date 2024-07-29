@@ -32,6 +32,10 @@
 
   <ItemGroup>
 
+    <Compile Include="../Analyzer/Helper/*.cs">
+      <Link>Helper\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Compile>
+
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
 
