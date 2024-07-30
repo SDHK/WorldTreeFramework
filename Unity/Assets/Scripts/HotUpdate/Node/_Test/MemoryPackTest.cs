@@ -61,7 +61,7 @@ namespace WorldTree
 	/// </summary>
 	//[MemoryPackable]
 	[MemoryPackable(GenerateType.VersionTolerant)]
-	public partial class NodeDataTest2
+	public partial class NodeDataTest2<T>
 	{
 		/// <summary>
 		/// 测试

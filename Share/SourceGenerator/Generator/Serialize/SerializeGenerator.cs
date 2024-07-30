@@ -23,6 +23,7 @@ namespace WorldTree.SourceGenerator
 		{
 			if (!(context.SyntaxReceiver is FindTreePackSyntaxReceiver receiver and not null)) return;
 			
+
 		}
 	}
 

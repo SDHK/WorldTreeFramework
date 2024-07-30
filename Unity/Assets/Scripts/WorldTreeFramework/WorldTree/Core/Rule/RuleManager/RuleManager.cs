@@ -11,9 +11,12 @@
 *
 * 支持多播：法则可以实现多个，将通过名称顺序执行，同时附带责任链模式。
 * 支持多态：设计目的是可通过继承复用代码，不提倡设计复杂的多重继承，能拆分写的功能就拆分写。
-* 支持泛型：设计目的是更进一步复用代码，同时附带了策略模式。不过泛型类型在第一次生成时，会有一次反射进行泛型组装。
+* 支持泛型节点：设计目的是更进一步复用代码，同时附带了策略模式。不过泛型类型在第一次生成时，会有一次反射进行泛型组装。
 * 
-* 这是一个功能类似接口的事件系统。
+* 特殊支持泛型参数：用于节点不是泛型，而只有一个泛型参数的情况。
+* 这种情况是极端的，不提倡使用，和泛型节点一样，内部是反射组装，但这不是自动的，需要动态的在运行时调用泛型支持。
+* 
+* 总之这是一个功能类似接口的事件系统。
 * 
 
 */
@@ -35,6 +38,23 @@ namespace WorldTree
 		public UnitHashSet<long> SupportTypeHash = new();
 
 		/// <summary>
+		/// 泛型节点 泛型法则哈希表字典
+		/// </summary>
+		/// <remarks>泛型节点类型，泛型法则类型哈希表</remarks>
+		public UnitDictionary<Type, UnitHashSet<Type>> GenericNodeRuleTypeHashDict = new();
+
+		/// <summary>
+		/// 已支持的泛型类型哈希名单
+		/// </summary>
+		public UnitHashSet<long> SupportGenericTypeHash = new();
+
+		/// <summary>
+		/// 泛型类型 泛型法则哈希表字典
+		/// </summary>
+		/// <remarks>泛型类型，泛型法则类型哈希表</remarks>
+		public UnitDictionary<Type, UnitHashSet<Type>> GenericTypeRuleTypeHashDict = new();
+
+		/// <summary>
 		/// 动态监听器节点类型哈希名单
 		/// </summary>
 		public UnitHashSet<long> DynamicListenerTypeHash = new();
@@ -43,12 +63,6 @@ namespace WorldTree
 		/// 监听目标为 法则 的 ，监听器法则 字典
 		/// </summary>
 		public UnitDictionary<long, UnitHashSet<IListenerRule>> TargetRuleListenerRuleHashDict = new();
-
-		/// <summary>
-		/// 泛型节点泛型法则哈希表字典
-		/// </summary>
-		/// <remarks>泛型节点类型，泛型法则类型哈希表</remarks>
-		public UnitDictionary<Type, UnitHashSet<Type>> GenericRuleTypeHashDict = new();
 
 		/// <summary>
 		/// 监听法则字典 目标节点类型
@@ -80,12 +94,14 @@ namespace WorldTree
 		/// <remarks>记录节点拥有的法则类型，用于法则多态化的查询</remarks>
 		public UnitDictionary<long, HashSet<long>> NodeTypeRulesDict = new();
 
-
-
-		public RuleManager()
+		public  RuleManager()
 		{
 			Type = TypeInfo<RuleManager>.TypeCode;
+		}
 
+		public override void OnCreate()
+		{
+			base.OnCreate();
 			//反射获取全局继承IRule的法则类型列表
 			var ruleTypeList = FindTypesIsInterface(typeof(IRule));
 
@@ -109,7 +125,7 @@ namespace WorldTree
 			NodeTypeRulesDict.Clear();
 
 			DynamicListenerTypeHash.Clear();
-			GenericRuleTypeHashDict.Clear();
+			GenericNodeRuleTypeHashDict.Clear();
 			TargetRuleListenerRuleHashDict.Clear();
 
 			TargetRuleListenerGroupDict.Clear();
@@ -141,13 +157,48 @@ namespace WorldTree
 				var baseType = ruleType.BaseType;
 
 				//遍历获取一路查到最底层Rule<N,R>
-				while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>))
-				{
-					baseType = baseType.BaseType;
-				}
+				while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>)) baseType = baseType.BaseType;
+
 				var genericArguments = baseType.GetGenericArguments();
 				//Rule<N,R> 第一个泛型参数就是法则负责的目标节点
-				GenericRuleTypeHashDict.GetOrNewValue(genericArguments[0].GetGenericTypeDefinition()).Add(ruleType);
+				if (genericArguments[0].IsGenericType)
+				{
+					GenericNodeRuleTypeHashDict.GetOrNewValue(genericArguments[0].GetGenericTypeDefinition()).Add(ruleType);
+				}
+				//假如Node不是泛型，那么就是参数是泛型的情况
+				else
+				{
+					//重新遍历基类，查找泛型参数
+					baseType = ruleType.BaseType;
+					Type genericType = null;
+
+					// 遍历基类，查找泛型参数
+					while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>))
+					{
+						// 父类是泛型的情况
+						if (baseType.IsGenericType)
+						{
+							//获取泛型参数数组
+							genericArguments = baseType.GetGenericArguments();
+							foreach (var arg in genericArguments)
+							{
+								// 泛型参数是泛型的情况
+								if (arg.IsGenericType)
+								{
+									genericType = arg;
+									break;
+								}
+							}
+						}
+						if (genericType != null) break;
+						baseType = baseType.BaseType;
+					}
+					// 如果找到了泛型参数
+					if (genericType != null)
+					{
+						GenericTypeRuleTypeHashDict.GetOrNewValue(genericType.GetGenericTypeDefinition()).Add(ruleType);
+					}
+				}
 			}
 			else
 			{
@@ -267,6 +318,34 @@ namespace WorldTree
 		#region 法则泛型
 
 		/// <summary>
+		/// 支持泛型法则
+		/// </summary>
+		/// <remarks>用于参数是泛型的情况</remarks>
+		/// <param name="typeCode">泛型类型码TypeCode</param>
+		public void SupportGenericRule(long typeCode)
+		{
+			if (SupportGenericTypeHash.Contains(typeCode)) return;
+
+			Type type = typeCode.CodeToType();
+			if (!type.IsGenericType) return;
+			//获取泛型本体类型
+			var genericDefinition = type.GetGenericTypeDefinition();
+			//获取泛型参数数组
+			Type[] genericTypes = type.GetGenericArguments();
+			if (GenericTypeRuleTypeHashDict.TryGetValue(genericDefinition, out var RuleTypeHash))
+			{
+				foreach (var RuleType in RuleTypeHash)
+				{
+					//填入对应的泛型参数，实例化泛型监听系统
+					IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
+					AddRule(rule);
+				}
+			}
+			SupportGenericTypeHash.Add(typeCode);//已支持名单
+		}
+
+
+		/// <summary>
 		/// 支持泛型节点法则
 		/// </summary>
 		/// <remarks>
@@ -285,7 +364,7 @@ namespace WorldTree
 					//获取泛型参数数组
 					Type[] genericTypes = type.GetGenericArguments();
 
-					if (GenericRuleTypeHashDict.TryGetValue(genericNodeType, out var RuleTypeHash))
+					if (GenericNodeRuleTypeHashDict.TryGetValue(genericNodeType, out var RuleTypeHash))
 					{
 						foreach (var RuleType in RuleTypeHash)
 						{
@@ -298,6 +377,7 @@ namespace WorldTree
 				type = type.BaseType;
 			}
 		}
+
 
 		#endregion
 

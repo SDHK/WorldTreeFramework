@@ -41,7 +41,7 @@ namespace WorldTree.Analyzer
 					if (!DiagnosticGroup.Screen(filedSymbol.ContainingType)) continue;
 
 					// 假设 filedSymbol 是一个 IFieldSymbol 实例
-					bool isProtected = filedSymbol.DeclaredAccessibility == Accessibility.Protected|| filedSymbol.GetAttributes().Any(attr => attr.AttributeClass?.Name == "ProtectedAttribute");
+					bool isProtected = filedSymbol.DeclaredAccessibility == Accessibility.Protected || filedSymbol.GetAttributes().Any(attr => attr.AttributeClass?.Name == "ProtectedAttribute");
 
 					//检测是否有对应的诊断配置
 					if (DiagnosticGroup.Diagnostics.TryGetValue(DiagnosticKey.SimpleMemberAccess, out DiagnosticConfig codeDiagnostic))
@@ -152,6 +152,13 @@ namespace WorldTree.Analyzer
 							if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType, firstParameterTypeSymbol)) return false;
 							if (isProtected && isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 							if (isProtected && isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+						}
+
+						//判断当前字段所在的Rule类型是否是类中类，并且是来源类型，是则跳过
+						if (parentTypeSymbol.ContainingType != null)
+						{
+							if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, parentTypeSymbol.ContainingType.OriginalDefinition)) return false;
+							if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType, parentTypeSymbol.ContainingType)) return false;
 						}
 					}
 				}

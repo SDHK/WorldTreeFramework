@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 
 namespace WorldTree
 {
@@ -22,29 +23,81 @@ namespace WorldTree
 
 	}
 
+	/// <summary>
+	/// 测试数据
+	/// </summary>
+	public partial class NodeClassDataTest<T> 
+		where T : unmanaged
+	{
+		/// <summary>
+		/// 测试浮点
+		/// </summary>
+		public float TestFloat = 1.54321f;
+		/// <summary>
+		/// 测试整数
+		/// </summary>
+		public int TestInt = 123;
+		/// <summary>
+		/// 测试长整数
+		/// </summary>
+		public long TestLong = 456;
+		/// <summary>
+		/// 测试双精度
+		/// </summary>
+		public double TestDouble = 7.123456;
+		/// <summary>
+		/// 测试布尔
+		/// </summary>
+		public bool TestBool = true;
+
+		/// <summary>
+		/// 测试泛型
+		/// </summary>
+		public T ValueT = default;
+
+	}
+
 
 	/// <summary>
 	/// 序列化生成兄弟类
 	/// </summary>
-	public partial class SerializeTest
+	public partial class NodeClassDataTest<T>
 	{
 		/// <summary>
-		/// 序列化
+		/// 序列化,参数必须是个确定类型
 		/// </summary>
-		public static void Serialize(ref SerializeTest self, ByteSequence byteSequence)
+		class SerializeTestRule : SerializeRule<ByteSequence, NodeClassDataTest<T>>
 		{
-			var a = self.state;
-
+			protected override void Execute(ByteSequence self, ref NodeClassDataTest<T> value)
+			{
+				self.Write(value.TestFloat);
+				self.WriteDynamic(value.TestInt);
+				self.WriteDynamic(value.TestLong);
+				self.Write(value.TestDouble);
+				self.Write(value.TestBool);
+				self.Write(value.ValueT);
+			}
 		}
 
 		/// <summary>
 		/// 反序列化
 		/// </summary>
-		public static void Deserialize(ref SerializeTest self, ByteSequence byteSequence)
+		class DeserializeTestRule : DeserializeRule<ByteSequence, NodeClassDataTest<T>>
 		{
-
+			protected override void Execute(ByteSequence self, ref NodeClassDataTest<T> value)
+			{
+				if (value == null) value = new();
+				self.Read(out value.TestFloat);
+				self.ReadDynamic(out value.TestInt);
+				self.ReadDynamic(out value.TestLong);
+				self.Read(out value.TestDouble);
+				self.Read(out value.TestBool);
+				self.Read(out value.ValueT);
+			}
 		}
 	}
+
+
 
 
 
