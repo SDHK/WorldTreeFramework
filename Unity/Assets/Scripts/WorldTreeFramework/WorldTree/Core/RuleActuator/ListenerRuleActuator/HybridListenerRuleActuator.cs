@@ -40,57 +40,47 @@ namespace WorldTree
 			return StaticListenerRuleActuator?.RefreshTraversalCount() ?? 0 + DynamicListenerRuleActuator?.RefreshTraversalCount() ?? 0;
 		}
 
-		public bool TryDequeue(out (INode, RuleList) value)
+		public bool TryDequeue(out INode node, out RuleList ruleList)
 		{
 			if (StaticListenerRuleActuator != null)
 			{
-				if (StaticListenerRuleActuator.TryDequeue(out value))
+				if (StaticListenerRuleActuator.TryDequeue(out  node, out  ruleList))
 				{
 					return true;
 				}
 			}
 			if (DynamicListenerRuleActuator != null)
 			{
-				if (DynamicListenerRuleActuator.TryDequeue(out value))
+				if (DynamicListenerRuleActuator.TryDequeue(out node, out ruleList))
 				{
 					return true;
 				}
 			}
-
-			value = default;
+			node = null;
+			ruleList = null;
 			return false;
 		}
 
-		public bool TryPeek(out (INode, RuleList) value)
+		public bool TryPeek(out INode node, out RuleList ruleList)
 		{
 			if (StaticListenerRuleActuator != null)
 			{
-				if (StaticListenerRuleActuator.TryPeek(out value))
+				if (StaticListenerRuleActuator.TryPeek(out node, out ruleList))
 				{
 					return true;
 				}
 			}
 			if (DynamicListenerRuleActuator != null)
 			{
-				if (DynamicListenerRuleActuator.TryPeek(out value))
+				if (DynamicListenerRuleActuator.TryPeek(out node, out ruleList))
 				{
 					return true;
 				}
 			}
-			value = default;
+			node = null;
+			ruleList = null;
 			return false;
 		}
-
-		public (INode, RuleList) Dequeue()
-		{
-			return TryDequeue(out var value) ? value : default;
-		}
-
-		public (INode, RuleList) Peek()
-		{
-			return TryPeek(out var value) ? value : default;
-		}
-
 	}
 
 	public static class HybridListenerRuleActuatorRule

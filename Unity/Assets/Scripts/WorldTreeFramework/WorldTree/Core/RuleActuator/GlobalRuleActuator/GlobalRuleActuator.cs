@@ -22,7 +22,7 @@ namespace WorldTree
 	{
 		public override string ToString()
 		{
-			return $"GlobalRuleActuator : {ruleGroupDict?.RuleType.CodeToType()}";
+			return GetType().ToString();
 		}
 	}
 
@@ -37,17 +37,17 @@ namespace WorldTree
 			}
 		}
 
-		class ListenerRemoveRule<R> : ListenerRemoveRule.Rule<GlobalRuleActuator<R>, R>
-			where R : IRule
-		{
-			protected override void Execute(GlobalRuleActuator<R> self, INode node)
-			{
-				self.Remove(node);
-			}
-		}
+		//class ListenerRemoveRule<R> : ListenerRemoveRule.Rule<GlobalRuleActuator<R>, R>
+		//	where R : IRule
+		//{
+		//	protected override void Execute(GlobalRuleActuator<R> self, INode node)
+		//	{
+		//		self.Remove(node);
+		//	}
+		//}
 
 
-		class AddRuleGeneric<R> : AddRule<GlobalRuleActuator<R>>
+		class Add<R> : AddRule<GlobalRuleActuator<R>>
 			where R : IRule
 		{
 			protected override void Execute(GlobalRuleActuator<R> self)

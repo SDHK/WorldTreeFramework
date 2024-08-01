@@ -37,10 +37,7 @@ namespace WorldTree
 		/// </summary>
 		public RuleActuator<ISendRule> Callback;
 
-		/// <summary>
-		/// 计时结束回调
-		/// </summary>
-		public Action ActionCallback;
+		
 
 		public override string ToString()
 		{
@@ -71,7 +68,6 @@ namespace WorldTree
 					if (self.time >= self.timeOutTime)
 					{
 						self.Callback?.Send();
-						self.ActionCallback?.Invoke();
 						self.Dispose();
 					}
 				}
@@ -84,7 +80,6 @@ namespace WorldTree
 			{
 				self.isRun = false;
 				self.Callback = null;
-				self.ActionCallback = null;
 			}
 		}
 
@@ -105,7 +100,6 @@ namespace WorldTree
 					case TokenState.Cancel:
 						self.isRun = false;
 						self.Callback.Send();
-						self.ActionCallback?.Invoke();
 						self.Dispose();
 						break;
 				}

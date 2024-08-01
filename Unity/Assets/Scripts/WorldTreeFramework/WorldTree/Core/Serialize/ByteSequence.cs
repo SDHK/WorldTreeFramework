@@ -22,7 +22,11 @@ namespace WorldTree
 		{
 			protected override void Execute(ByteSequence self)
 			{
+
 				self.Core.PoolGetUnit(out self.segmentList);
+
+				// 序列化法则
+				//if (self.Core.RuleManager.GetOrNewRuleList( NodeType,)
 			}
 		}
 
@@ -55,6 +59,16 @@ namespace WorldTree
 		/// 当前缓存
 		/// </summary>
 		private ByteSequenceSegment current;
+
+		/// <summary>
+		/// 序列化法则列表
+		/// </summary>
+		public RuleList serializeRuleList;
+
+		/// <summary>
+		/// 反序列化法则列表
+		/// </summary>
+		public RuleList deserializeRuleList;
 
 		/// <summary>
 		/// 数据长度

@@ -20,7 +20,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则执行器基类
 	/// </summary>
-	public class RuleActuatorBase : Node, IRuleActuator, IRuleActuatorEnumerable
+	public abstract class RuleActuatorBase : Node, IRuleListActuator, IRuleActuatorEnumerable
 		, AsChildBranch
 	{
 		/// <summary>
@@ -47,15 +47,9 @@ namespace WorldTree
 		/// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
 		private int traversalCount;
 
-		/// <summary>
-		/// 动态的遍历数量
-		/// </summary>
-		/// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
 		public int TraversalCount => traversalCount;
 
-		/// <summary>
-		/// 刷新遍历数量
-		/// </summary>
+
 		public int RefreshTraversalCount() => traversalCount = nodeRuleQueue is null ? 0 : nodeRuleQueue.Count;
 
 		public void Clear()
@@ -103,7 +97,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取队顶
 		/// </summary>
-		public bool TryPeek(out ValueTuple<INode, RuleList> value)
+		public bool TryPeek(out INode node, out RuleList ruleList)
 		{
 			do
 			{
@@ -128,7 +122,7 @@ namespace WorldTree
 					}
 					else
 					{
-						INode node = valueRef.Item1.Value;
+						node = valueRef.Item1.Value;
 						if (node == null)//节点意外回收
 						{
 							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
@@ -138,14 +132,15 @@ namespace WorldTree
 						}
 						else
 						{
-							value = (node, valueRef.Item2);
+							ruleList = valueRef.Item2;
 							return true;
 						}
 					}
 				}
 				else
 				{
-					value = default;
+					node = null;
+					ruleList = null;
 					return false;
 				}
 			} while (true);
@@ -154,7 +149,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试出列
 		/// </summary>
-		public bool TryDequeue(out ValueTuple<INode, RuleList> value)
+		public bool TryDequeue(out INode node, out RuleList ruleList)
 		{
 			//从队列里拿到id
 			if (nodeRuleQueue.TryDequeue(out (NodeRef<INode>, RuleList) nodeRuleTuple))
@@ -179,13 +174,14 @@ namespace WorldTree
 						//获取下一个id,假如队列空了,则直接返回退出
 						if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple))
 						{
-							value = default;
+							node = null;
+							ruleList = null;
 							return false;
 						}
 					}
 					else
 					{
-						INode node = nodeRuleTuple.Item1.Value;
+						node = nodeRuleTuple.Item1.Value;
 
 						if (node == null)//节点意外回收
 						{
@@ -197,32 +193,23 @@ namespace WorldTree
 							//获取下一个id,假如队列空了,则直接返回退出
 							if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple))
 							{
-								value = default;
+								ruleList = null;
 								return false;
 							}
 						}
 						else//节点存在
 						{
 							nodeRuleQueue.Enqueue(nodeRuleTuple);//塞回队列用于下次遍历
-							value = (node, nodeRuleTuple.Item2);//返回执行组
+							ruleList = nodeRuleTuple.Item2;
 							return true;
 						}
 					}
 				}
 			}
-			value = default;
+			node = null;
+			ruleList = null;
 			return false;
 		}
-
-		/// <summary>
-		/// 获取队顶
-		/// </summary>
-		public ValueTuple<INode, RuleList> Peek() => TryPeek(out ValueTuple<INode, RuleList> value) ? value : default;
-
-		/// <summary>
-		/// 节点出列
-		/// </summary>
-		public ValueTuple<INode, RuleList> Dequeue() => TryDequeue(out ValueTuple<INode, RuleList> value) ? value : default;
 	}
 
 	public static class RuleActuatorBaseRule

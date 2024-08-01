@@ -19,14 +19,12 @@ namespace WorldTree
 	/// <remarks>
 	/// <para>主要作用是通过法则类型逆变提示可填写参数</para>
 	/// </remarks>
-	public interface IRuleActuator<in T> : IRuleActuatorBase where T : IRule
-	{ }
+	public interface IRuleActuator<in T> : IRuleActuatorBase where T : IRule { }
 
 	/// <summary>
 	/// 法则执行器接口基类
 	/// </summary>
-	public interface IRuleActuatorBase : INode
-	{ }
+	public interface IRuleActuatorBase : INode { }
 
 	/// <summary>
 	/// 法则执行器遍历接口
@@ -48,22 +46,13 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试出列
 		/// </summary>
-		public bool TryDequeue(out ValueTuple<INode, RuleList> value);
+		public bool TryDequeue(out INode node, out RuleList ruleList);
 
 		/// <summary>
 		/// 尝试获取队顶
 		/// </summary>
-		public bool TryPeek(out ValueTuple<INode, RuleList> value);
+		public bool TryPeek(out INode node, out RuleList ruleList);
 
-		/// <summary>
-		/// 节点出列
-		/// </summary>
-		public ValueTuple<INode, RuleList> Dequeue();
-
-		/// <summary>
-		/// 获取队顶
-		/// </summary>
-		public ValueTuple<INode, RuleList> Peek();
 	}
 
 	/// <summary>
@@ -78,15 +67,21 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 法则执行器接口
+	/// 法则列表执行器接口
 	/// </summary>
-	public interface IRuleActuator : IRuleActuatorBase
+	public interface IRuleListActuator : IRuleActuator
 	{
 		/// <summary>
 		/// 尝试添加节点与对应法则
 		/// </summary>
 		public bool TryAdd(INode node, RuleList ruleList);
+	}
 
+	/// <summary>
+	/// 法则执行器接口
+	/// </summary>
+	public interface IRuleActuator : IRuleActuatorBase
+	{
 		/// <summary>
 		/// 移除节点
 		/// </summary>

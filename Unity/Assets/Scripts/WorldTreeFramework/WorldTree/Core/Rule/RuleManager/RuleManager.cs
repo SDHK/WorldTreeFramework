@@ -325,9 +325,9 @@ namespace WorldTree
 		public void SupportGenericRule(long typeCode)
 		{
 			if (SupportGenericTypeHash.Contains(typeCode)) return;
-
 			Type type = typeCode.CodeToType();
 			if (!type.IsGenericType) return;
+
 			//获取泛型本体类型
 			var genericDefinition = type.GetGenericTypeDefinition();
 			//获取泛型参数数组

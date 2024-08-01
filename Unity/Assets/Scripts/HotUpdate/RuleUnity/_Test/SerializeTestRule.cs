@@ -9,34 +9,36 @@ namespace WorldTree
 			self.Log($"序列化测试！！！！！");
 
 			// 动态支持法则
-			self.Core.RuleManager.SupportGenericRule(TypeInfo<NodeClassDataTest<int>>.TypeCode);
+			self.Core.RuleManager.SupportGenericRule(TypeInfo<NodeClassDataTest<int,float>>.TypeCode);
 
 
-			NodeClassDataTest<int> testData = new();
+			NodeClassDataTest<int, float> testData = new();
 			testData.TestFloat = 5.789456f;
 			testData.TestInt = 798456;
 			testData.TestLong = 456123;
 			testData.TestDouble = 123.456789;
 			testData.TestBool = true;
-			testData.ValueT = 987;
+			testData.ValueT1 = 987;
+			testData.ValueT2 = 45.321f;
 
 			// 获取字节缓存写入器
 			self.AddTemp(out ByteSequence sequenceWrite);
 
 			// 序列化法则
-			if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<Serialize<NodeClassDataTest<int>>> ruleGroup1))
+			if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<Serialize<NodeClassDataTest<int, float>>> ruleGroup1))
 				ruleGroup1.TrySendRef(sequenceWrite, ref testData);
 
 			byte[] bytes = sequenceWrite.ToBytes();
 			self.AddTemp(out ByteSequence sequenceRead).SetBytes(bytes);
 
 			// 反序列化法则
-			NodeClassDataTest<int> testData2 = null;
-			if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<Deserialize<NodeClassDataTest<int>>> ruleGroup))
+			NodeClassDataTest<int, float> testData2 = null;
+			if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<Deserialize<NodeClassDataTest<int, float>>> ruleGroup))
 				ruleGroup.TrySendRef(sequenceRead, ref testData2);
 
 
-			self.Log($"测试结果： {testData2.TestFloat}:{testData2.TestInt}:{testData2.TestLong}:{testData2.TestDouble}:{testData2.TestBool}:{testData2.ValueT}");
+			self.Log($"测试结果： {testData2.TestFloat}:{testData2.TestInt}:{testData2.TestLong}" +
+				$":{testData2.TestDouble}:{testData2.TestBool}:{testData2.ValueT1}:{testData2.ValueT2}");
 		};
 	}
 }
