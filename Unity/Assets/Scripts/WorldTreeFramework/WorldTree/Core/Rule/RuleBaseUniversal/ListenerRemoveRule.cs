@@ -27,20 +27,15 @@ namespace WorldTree
 	/// <remarks>目标为INode和IRule时为动态监听</remarks>
 	public static class ListenerRemoveRule
 	{
-		/// <summary>
-		/// 【动态】监听节点移除法则
-		/// </summary>
-		public abstract class NodeRule<LN> : NodeRuleListenerRule<LN, IListenerRemoveRule> where LN : class, IDynamicNodeListener, AsRule<IListenerRemoveRule>
-		{ }
 
 		/// <summary>
-		/// 【静态】监听节点移除法则
+		/// 监听节点移除法则
 		/// </summary>
 		public abstract class Node<LN, TN> : NodeListenerRuleBase<LN, IListenerRemoveRule, TN> where LN : class, INodeListener, AsRule<IListenerRemoveRule> where TN : class, INode
 		{ }
 
 		/// <summary>
-		/// 【静态】监听节点移除法则
+		/// 监听节点移除法则
 		/// </summary>
 		public abstract class Rule<LN, TR> : RuleListenerRuleBase<LN, IListenerRemoveRule, TR> where LN : class, INodeListener, AsRule<IListenerRemoveRule> where TR : IRule
 		{ }

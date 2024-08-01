@@ -224,9 +224,9 @@ namespace WorldTree
 			{
 				NodeListenerActuatorHelper.GetListenerActuator<IListenerAddRule>(this)?.Send((INode)this);
 			}
-			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
+			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测自身是否为监听器
 			{
-				Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
+				Core.ReferencedPoolManager.TryAddListener(nodeListener);
 			}
 			if (IsActive != activeEventMark)//激活变更
 			{
@@ -311,18 +311,12 @@ namespace WorldTree
 			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
 			SetActive(false);//激活变更
 			Core.DisableRuleGroup?.Send(this); //禁用事件通知
-			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
+			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测自身为监听器
 			{
-				//检测移除静态监听
-				Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-				if (nodeListener is IDynamicNodeListener dynamicNodeListener)
-				{
-					//检测移除动态监听
-					Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
-				}
+				Core.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
 			Core.RemoveRuleGroup?.Send(this);//移除事件通知
-			if (this is not IListenerIgnorer)//广播给全部监听器通知 X
+			if (this is not IListenerIgnorer)//广播给全部监听器通知
 			{
 				NodeListenerActuatorHelper.GetListenerActuator<IListenerRemoveRule>(this)?.Send((INode)this);
 			}
@@ -367,7 +361,7 @@ namespace WorldTree
 			}
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
 			{
-				Core.ReferencedPoolManager.TryAddStaticListener(nodeListener);
+				Core.ReferencedPoolManager.TryAddListener(nodeListener);
 			}
 			if (IsActive != activeEventMark)//激活变更
 			{
@@ -402,12 +396,7 @@ namespace WorldTree
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
 			{
 				//检测移除静态监听
-				Core.ReferencedPoolManager.RemoveStaticListener(nodeListener);
-				if (nodeListener is IDynamicNodeListener dynamicNodeListener)
-				{
-					//检测移除动态监听
-					Core.ReferencedPoolManager.RemoveDynamicListener(dynamicNodeListener);
-				}
+				Core.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
 			Core.CutRuleGroup?.Send(this);//裁剪事件通知
 			if (this is not IListenerIgnorer)//广播给全部监听器通知 X

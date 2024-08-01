@@ -21,15 +21,11 @@ namespace WorldTree
 	public static class ListenerAddRule
 	{
 		/// <summary>
-		/// 【动态】监听节点添加法则
-		/// </summary>
-		public abstract class NodeRule<LN> : NodeRuleListenerRule<LN, IListenerAddRule> where LN : class, IDynamicNodeListener, AsRule<IListenerAddRule> { }
-		/// <summary>
-		/// 【静态】监听节点添加法则
+		/// 监听节点添加法则
 		/// </summary>
 		public abstract class Node<LN, TN> : NodeListenerRuleBase<LN, IListenerAddRule, TN> where LN : class, INodeListener, AsRule<IListenerAddRule> where TN : class, INode { }
 		/// <summary>
-		/// 【静态】监听节点添加法则
+		/// 监听节点添加法则
 		/// </summary>
 		public abstract class Rule<LN, TR> : RuleListenerRuleBase<LN, IListenerAddRule, TR> where LN : class, INodeListener, AsRule<IListenerAddRule> where TR : IRule { }
 	}
