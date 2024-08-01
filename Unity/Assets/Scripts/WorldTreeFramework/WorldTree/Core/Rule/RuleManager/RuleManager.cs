@@ -44,7 +44,7 @@ namespace WorldTree
 		public UnitDictionary<Type, UnitHashSet<Type>> GenericNodeRuleTypeHashDict = new();
 
 		/// <summary>
-		/// 已支持的泛型类型哈希名单
+		/// 已支持的泛型参数类型哈希名单
 		/// </summary>
 		public UnitHashSet<long> SupportGenericTypeHash = new();
 
@@ -91,7 +91,10 @@ namespace WorldTree
 		/// <summary>
 		/// 节点法则字典
 		/// </summary>
-		/// <remarks>记录节点拥有的法则类型，也用于法则多态化的查询</remarks>
+		/// <remarks> 
+		/// <para> 节点类型《法则类型，法则列表》</para>
+		/// <para> 记录节点拥有的法则类型，也用于法则多态化的查询</para>
+		/// </remarks>
 		public UnitDictionary<long, Dictionary<long, RuleList>> NodeTypeRulesDict = new();
 
 		public RuleManager()

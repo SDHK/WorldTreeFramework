@@ -8,10 +8,6 @@ namespace WorldTree
 		{
 			self.Log($"序列化测试！！！！！");
 
-			// 动态支持法则
-			self.Core.RuleManager.SupportGenericRule(TypeInfo<NodeClassDataTest<int,float>>.TypeCode);
-
-
 			NodeClassDataTest<int, float> testData = new();
 			testData.TestFloat = 5.789456f;
 			testData.TestInt = 798456;
