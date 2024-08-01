@@ -7,7 +7,7 @@
 
 */
 
-using System.Linq;
+using System;
 
 namespace WorldTree
 {
@@ -37,16 +37,6 @@ namespace WorldTree
 			}
 		}
 
-		//class ListenerRemoveRule<R> : ListenerRemoveRule.Rule<GlobalRuleActuator<R>, R>
-		//	where R : IRule
-		//{
-		//	protected override void Execute(GlobalRuleActuator<R> self, INode node)
-		//	{
-		//		self.Remove(node);
-		//	}
-		//}
-
-
 		class Add<R> : AddRule<GlobalRuleActuator<R>>
 			where R : IRule
 		{
@@ -65,14 +55,21 @@ namespace WorldTree
 		{
 			foreach (var item in self.ruleGroupDict)
 			{
-				if (!item.Key.CodeToType().GetInterfaces().Contains(typeof(IListenerIgnorer)))
+				bool isListenerIgnorer = false;
+				foreach (Type typeItem in item.Key.CodeToType().GetInterfaces())
+				{
+					if (typeItem == typeof(IListenerIgnorer))
+					{
+						isListenerIgnorer = true;
+						break;
+					}
+				}
+
+				if (!isListenerIgnorer)
 				{
 					if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
 					{
-						foreach (var node in pool.NodeDict)
-						{
-							self.TryAdd(node.Value);
-						}
+						foreach (var node in pool.NodeDict) self.TryAdd(node.Value);
 					}
 				}
 			}
