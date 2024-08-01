@@ -321,20 +321,18 @@ namespace WorldTree
 		#region 法则泛型
 
 		/// <summary>
-		/// 支持泛型法则
+		/// 支持泛型参数法则
 		/// </summary>
 		/// <remarks>用于参数是泛型的情况</remarks>
-		/// <param name="typeCode">泛型类型码TypeCode</param>
-		public void SupportGenericRule(long typeCode)
+		public void SupportGenericRule<T>()
 		{
-			if (SupportGenericTypeHash.Contains(typeCode)) return;
-			Type type = typeCode.CodeToType();
-			if (!type.IsGenericType) return;
+			if (SupportGenericTypeHash.Contains(TypeInfo<T>.TypeCode)) return;
+			if (!TypeInfo<T>.Type.IsGenericType) return;
 
 			//获取泛型本体类型
-			var genericDefinition = type.GetGenericTypeDefinition();
+			var genericDefinition = TypeInfo<T>.Type.GetGenericTypeDefinition();
 			//获取泛型参数数组
-			Type[] genericTypes = type.GetGenericArguments();
+			Type[] genericTypes = TypeInfo<T>.Type.GetGenericArguments();
 			if (GenericTypeRuleTypeHashDict.TryGetValue(genericDefinition, out var RuleTypeHash))
 			{
 				foreach (var RuleType in RuleTypeHash)
@@ -344,8 +342,9 @@ namespace WorldTree
 					AddRule(rule);
 				}
 			}
-			SupportGenericTypeHash.Add(typeCode);//已支持名单
+			SupportGenericTypeHash.Add(TypeInfo<T>.TypeCode);//已支持名单
 		}
+
 
 
 		/// <summary>

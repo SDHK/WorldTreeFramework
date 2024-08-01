@@ -43,7 +43,7 @@ namespace WorldTree
 		/// </summary>
 		public static void Serialize<T>(this ByteSequence self, ref T value)
 		{
-			self.Core.RuleManager.SupportGenericRule(TypeInfo<T>.TypeCode);
+			self.Core.RuleManager.SupportGenericRule<T>();
 			if (self.ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
 				((IRuleList<Serialize<T>>)ruleList).SendRef(self, ref value);
 		}
@@ -53,7 +53,7 @@ namespace WorldTree
 		/// </summary>
 		public static void Deserialize<T>(this ByteSequence self, ref T value)
 		{
-			self.Core.RuleManager.SupportGenericRule(TypeInfo<T>.TypeCode);
+			self.Core.RuleManager.SupportGenericRule<T>();
 			if (self.ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
 				((IRuleList<Deserialize<T>>)ruleList).SendRef(self, ref value);
 		}
