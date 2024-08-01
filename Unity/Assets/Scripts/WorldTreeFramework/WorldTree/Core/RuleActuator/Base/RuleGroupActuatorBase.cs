@@ -27,7 +27,6 @@ namespace WorldTree
 		/// <summary>
 		/// 节点法则队列
 		/// </summary>
-		/// <remarks>高速遍历执行的队列</remarks>
 		public TreeQueue<ValueTuple<NodeRef<INode>, RuleList>> nodeRuleQueue;
 
 		/// <summary>

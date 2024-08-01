@@ -23,19 +23,16 @@ namespace WorldTree
 
 			// 获取字节缓存写入器
 			self.AddTemp(out ByteSequence sequenceWrite);
-
 			// 序列化法则
-			if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<Serialize<NodeClassDataTest<int, float>>> ruleGroup1))
-				ruleGroup1.TrySendRef(sequenceWrite, ref testData);
+			sequenceWrite.Serialize(ref testData);
 
 			byte[] bytes = sequenceWrite.ToBytes();
 			self.AddTemp(out ByteSequence sequenceRead).SetBytes(bytes);
 
-			// 反序列化法则
 			NodeClassDataTest<int, float> testData2 = null;
-			if (self.Core.RuleManager.TryGetRuleGroup(out IRuleGroup<Deserialize<NodeClassDataTest<int, float>>> ruleGroup))
-				ruleGroup.TrySendRef(sequenceRead, ref testData2);
 
+			// 反序列化法则
+			sequenceRead.Deserialize(ref testData2);
 
 			self.Log($"测试结果： {testData2.TestFloat}:{testData2.TestInt}:{testData2.TestLong}" +
 				$":{testData2.TestDouble}:{testData2.TestBool}:{testData2.ValueT1}:{testData2.ValueT2}");

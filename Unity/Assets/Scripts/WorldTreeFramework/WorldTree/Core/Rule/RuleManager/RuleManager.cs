@@ -91,10 +91,10 @@ namespace WorldTree
 		/// <summary>
 		/// 节点法则字典
 		/// </summary>
-		/// <remarks>记录节点拥有的法则类型，用于法则多态化的查询</remarks>
-		public UnitDictionary<long, HashSet<long>> NodeTypeRulesDict = new();
+		/// <remarks>记录节点拥有的法则类型，也用于法则多态化的查询</remarks>
+		public UnitDictionary<long, Dictionary<long, RuleList>> NodeTypeRulesDict = new();
 
-		public  RuleManager()
+		public RuleManager()
 		{
 			Type = TypeInfo<RuleManager>.TypeCode;
 		}
@@ -267,7 +267,7 @@ namespace WorldTree
 			groupDict.RuleType = rule.RuleType;
 			ruleList.AddRule(rule);
 
-			NodeTypeRulesDict.GetOrNewValue(rule.NodeType).Add(rule.RuleType);
+			NodeTypeRulesDict.GetOrNewValue(rule.NodeType).TryAdd(rule.RuleType, ruleList);
 
 			//监听器法则补齐
 			if (TargetRuleListenerRuleHashDict.TryGetValue(rule.NodeType, out var listenerRuleHash))
@@ -480,21 +480,23 @@ namespace WorldTree
 			if (!NodeTypeRulesDict.TryGetValue(baseTypeCodeKey, out var BaseRuleHash)) return;
 
 			//拿到节点类型的法则哈希表
-			HashSet<long> ruleTypeHash = NodeTypeRulesDict.GetOrNewValue(nodeType);
+			Dictionary<long, RuleList> ruleTypeDict = NodeTypeRulesDict.GetOrNewValue(nodeType);
 
 			//遍历父类型法则
 			foreach (var ruleType in BaseRuleHash)
 			{
 				//存在的法则则跳过
-				if (ruleTypeHash.Contains(ruleType)) continue;
+				if (ruleTypeDict.Contains(ruleType)) continue;
 
-				ruleTypeHash.Add(ruleType);
+				//节点记录法则
+				ruleTypeDict.TryAdd(ruleType.Key, ruleType.Value);
 
 				//法则字典的补充
-				if (!RuleGroupDict.TryGetValue(ruleType, out var RuleGroup)) continue;
+				if (!RuleGroupDict.TryGetValue(ruleType.Key, out var RuleGroup)) continue;
 
 				//获取父类型法则列表
 				if (!RuleGroup.TryGetValue(baseTypeCodeKey, out var ruleList)) continue;
+
 
 				//法则列表添加进节点类型
 				RuleGroup.TryAdd(nodeType, ruleList);

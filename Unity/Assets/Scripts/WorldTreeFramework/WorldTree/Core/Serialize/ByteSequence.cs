@@ -8,6 +8,7 @@
 */
 using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -22,11 +23,9 @@ namespace WorldTree
 		{
 			protected override void Execute(ByteSequence self)
 			{
-
 				self.Core.PoolGetUnit(out self.segmentList);
-
-				// 序列化法则
-				//if (self.Core.RuleManager.GetOrNewRuleList( NodeType,)
+				// 获取节点的法则集
+				self.Core.RuleManager.NodeTypeRulesDict.TryGetValue(self.Type, out self.ruleDict);
 			}
 		}
 
@@ -37,6 +36,24 @@ namespace WorldTree
 				self.Clear();
 				self.segmentList.Dispose();
 			}
+		}
+
+		/// <summary>
+		/// 序列化写入类型
+		/// </summary>
+		public static void Serialize<T>(this ByteSequence self, ref T value)
+		{
+			if (self.ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
+				((IRuleList<Serialize<T>>)ruleList).SendRef(self, ref value);
+		}
+
+		/// <summary>
+		/// 反序列化读取类型
+		/// </summary>
+		public static void Deserialize<T>(this ByteSequence self, ref T value)
+		{
+			if (self.ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
+				((IRuleList<Deserialize<T>>)ruleList).SendRef(self, ref value);
 		}
 	}
 
@@ -61,14 +78,10 @@ namespace WorldTree
 		private ByteSequenceSegment current;
 
 		/// <summary>
-		/// 序列化法则列表
+		/// 自身拥有的法则列表集合
 		/// </summary>
-		public RuleList serializeRuleList;
-
-		/// <summary>
-		/// 反序列化法则列表
-		/// </summary>
-		public RuleList deserializeRuleList;
+		/// <remarks> RuleTypeCode, 法则列表 </remarks>
+		public Dictionary<long, RuleList> ruleDict;
 
 		/// <summary>
 		/// 数据长度
