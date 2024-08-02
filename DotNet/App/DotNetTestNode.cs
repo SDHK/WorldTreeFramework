@@ -22,18 +22,18 @@
 
 		private static OnAdd<DotNetTestNode> Add = (self) =>
 		{
-			self.AddComponent(out SerializeTest _);
 			self.Log(" 初始化！！！");
+			self.AddComponent(out SerializeTest _);
 		};
 
 		private static OnUpdate<DotNetTestNode> Update = (self) =>
 		{
-			self.Log($"初始更新！！！");
+			//self.Log($"初始更新！！！");
 		};
 
 		private static OnUpdateTime<DotNetTestNode> UpdateTime = (self, timeSpan) =>
 		{
-			self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
+			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		};
 
 		private static OnDisable<DotNetTestNode> Disable = (self) =>

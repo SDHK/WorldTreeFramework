@@ -28,45 +28,48 @@ namespace WorldTree.SourceGenerator
 		{
 			if (!(context.SyntaxReceiver is FindTreePackSyntaxReceiver receiver and not null)) return;
 
+			StringBuilder Code = new StringBuilder();
+			StringBuilder ClassCode = new StringBuilder();
+
+			string? Namespace = null;
+			string? Usings = null;
+			string? fileName = null;
+
+			if (receiver.ClassDeclarations.Count != 0)
+			{
+				var classDeclaration = receiver.ClassDeclarations[0];
+				fileName ??= Path.GetFileNameWithoutExtension(classDeclaration.SyntaxTree.FilePath);
+				Namespace ??= TreeSyntaxHelper.GetNamespace(classDeclaration);
+				Usings ??= TreeSyntaxHelper.GetUsings(classDeclaration);
+			}
 			foreach (var classDeclaration in receiver.ClassDeclarations)
 			{
-				SerializeClassGenerator.Execute(context, classDeclaration);
+				SerializeClassGenerator.Execute(context, ClassCode, classDeclaration);
 			}
 
-			//context.AddSource($"TestSerialize.cs", SourceText.From($"{receiver.ClassDeclarations.Count}", Encoding.UTF8));
+			if (ClassCode.Length == 0) return;
 
+			Code.AppendLine(
+@$"/****************************************
+* 生成序列化部分
+*/
+"
+);
+			Code.AppendLine(Usings);
+			Code.AppendLine($"namespace {Namespace}");
+			Code.AppendLine("{");
+			Code.Append(ClassCode.ToString());
+			Code.Append("}");
+
+
+			context.AddSource($"{fileName}Serialize.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
 	}
 
 	internal static class SerializeClassGenerator
 	{
-		/// <summary>
-		/// 获取未托管类型参数
-		/// </summary>
-		private static HashSet<string> GetUnmanagedTypeParameters(ClassDeclarationSyntax classDeclaration)
+		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, ClassDeclarationSyntax classDeclaration)
 		{
-			var unmanagedTypeParameters = new HashSet<string>();
-
-			var typeParameters = classDeclaration.TypeParameterList?.Parameters;
-			foreach (var typeParameter in typeParameters)
-			{
-				var constraints = classDeclaration.ConstraintClauses
-					.FirstOrDefault(c => c.Name.Identifier.Text == typeParameter.Identifier.Text);
-
-				if (constraints != null && constraints.Constraints.Any(c => c is TypeConstraintSyntax typeConstraint && typeConstraint.Type.ToString() == "unmanaged"))
-				{
-					unmanagedTypeParameters.Add(typeParameter.Identifier.Text);
-				}
-			}
-
-			return unmanagedTypeParameters;
-		}
-
-
-		public static void Execute(GeneratorExecutionContext context, ClassDeclarationSyntax classDeclaration)
-		{
-		
-
 			// 将 ClassDeclarationSyntax 转换为 INamedTypeSymbol
 			INamedTypeSymbol? classSymbol = context.Compilation.ToINamedTypeSymbol(classDeclaration);
 
@@ -76,24 +79,8 @@ namespace WorldTree.SourceGenerator
 				.Where(f => !NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreePackIgnoreAttribute))
 				.ToList();
 
-
-
-			//生成序列化代码
-			StringBuilder Code = new StringBuilder();
-			Code.AppendLine(
-@$"/****************************************
-* 序列化兄弟类
-*/
-"
-);
-			//原类型的命名空间
-			var Usings = TreeSyntaxHelper.GetUsings(classDeclaration);
-			string Namespace = TreeSyntaxHelper.GetNamespace(classDeclaration);
 			// 获取类的完整名称，包括泛型参数
 			string className = TreeSyntaxHelper.GetFullTypeName(classDeclaration);
-			Code.AppendLine(Usings);
-			Code.AppendLine($"namespace {Namespace}");
-			Code.AppendLine("{");
 			Code.AppendLine($"	public partial class {className}");
 			Code.AppendLine("	{");
 
@@ -106,6 +93,10 @@ namespace WorldTree.SourceGenerator
 				if (fieldSymbol.Type.IsUnmanagedType)
 				{
 					Code.AppendLine($"				self.Write(value.{fieldSymbol.Name});");
+				}
+				else
+				{
+					Code.AppendLine($"				self.Serialize(ref value.{fieldSymbol.Name});");
 				}
 			}
 			Code.AppendLine("			}");
@@ -123,16 +114,15 @@ namespace WorldTree.SourceGenerator
 				{
 					Code.AppendLine($"				self.Read(out value.{fieldSymbol.Name});");
 				}
+				else
+				{
+					Code.AppendLine($"				self.Deserialize(ref value.{fieldSymbol.Name});");
+				}
 			}
 			Code.AppendLine("			}");
 			Code.AppendLine("		}");
 
-
 			Code.AppendLine("	}");
-			Code.Append("}");
-			//string fileName = Path.GetFileNameWithoutExtension(classDeclaration.SyntaxTree.FilePath);
-
-			context.AddSource($"{classDeclaration.Identifier}Serialize.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
 
 	}
