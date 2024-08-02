@@ -9,6 +9,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -31,38 +32,45 @@ namespace WorldTree.SourceGenerator
 			StringBuilder Code = new StringBuilder();
 			StringBuilder ClassCode = new StringBuilder();
 
-			string? Namespace = null;
-			string? Usings = null;
-			string? fileName = null;
-
-			if (receiver.ClassDeclarations.Count != 0)
+			foreach (var TypeListItem in receiver.TypeDeclarationsDict)
 			{
-				var classDeclaration = receiver.ClassDeclarations[0];
-				fileName ??= Path.GetFileNameWithoutExtension(classDeclaration.SyntaxTree.FilePath);
-				Namespace ??= TreeSyntaxHelper.GetNamespace(classDeclaration);
-				Usings ??= TreeSyntaxHelper.GetUsings(classDeclaration);
-			}
-			foreach (var classDeclaration in receiver.ClassDeclarations)
-			{
-				SerializeClassGenerator.Execute(context, ClassCode, classDeclaration);
-			}
+				string? Namespace = null;
+				string? Usings = null;
+				string fileName = TypeListItem.Key;
 
-			if (ClassCode.Length == 0) return;
+				if (TypeListItem.Value.Count != 0)
+				{
+					var classDeclaration = TypeListItem.Value[0];
+					Namespace ??= TreeSyntaxHelper.GetNamespace(classDeclaration);
+					Usings ??= TreeSyntaxHelper.GetUsings(classDeclaration);
+				}
 
-			Code.AppendLine(
+				foreach (TypeDeclarationSyntax typeDeclaration in TypeListItem.Value)
+				{
+					if (typeDeclaration is ClassDeclarationSyntax classDeclaration)
+					{
+						SerializeClassGenerator.Execute(context, ClassCode, classDeclaration);
+					}
+				}
+
+
+				if (ClassCode.Length == 0) return;
+
+				Code.AppendLine(
 @$"/****************************************
 * 生成序列化部分
 */
 "
-);
-			Code.AppendLine(Usings);
-			Code.AppendLine($"namespace {Namespace}");
-			Code.AppendLine("{");
-			Code.Append(ClassCode.ToString());
-			Code.Append("}");
+	);
+				Code.AppendLine(Usings);
+				Code.AppendLine($"namespace {Namespace}");
+				Code.AppendLine("{");
+				Code.Append(ClassCode.ToString());
+				Code.Append("}");
 
 
-			context.AddSource($"{fileName}Serialize.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+				context.AddSource($"{fileName}Serialize.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+			}
 		}
 	}
 
@@ -132,28 +140,50 @@ namespace WorldTree.SourceGenerator
 	/// </summary>
 	public class FindTreePackSyntaxReceiver : ISyntaxReceiver
 	{
-		public List<ClassDeclarationSyntax> ClassDeclarations = new();
-		public List<StructDeclarationSyntax> StructDeclarations = new();
-		public List<InterfaceDeclarationSyntax> interfaceDeclarations = new();
-
+		public Dictionary<string, List<TypeDeclarationSyntax>> TypeDeclarationsDict = new();
 
 		public void OnVisitSyntaxNode(SyntaxNode node)
 		{
-			// 判断是否是类或结构体
+			// 判断是否是类或结构体或接口
 			if (node is ClassDeclarationSyntax classDeclarationSyntax)
 			{
 				if (TreeSyntaxHelper.CheckAttribute(classDeclarationSyntax, GeneratorHelper.TreePackAttribute))
-					ClassDeclarations.Add(classDeclarationSyntax);
+				{
+					string fileName = Path.GetFileNameWithoutExtension(classDeclarationSyntax.SyntaxTree.FilePath);
+					if (!TypeDeclarationsDict.TryGetValue(fileName, out var list))
+					{
+						list = new();
+						TypeDeclarationsDict.Add(fileName, list);
+					}
+					list.Add(classDeclarationSyntax);
+				}
 			}
 			else if (node is StructDeclarationSyntax structDeclarationSyntax)
 			{
 				if (TreeSyntaxHelper.CheckAttribute(structDeclarationSyntax, GeneratorHelper.TreePackAttribute))
-					StructDeclarations.Add(structDeclarationSyntax);
+				{
+					string fileName = Path.GetFileNameWithoutExtension(structDeclarationSyntax.SyntaxTree.FilePath);
+					if (!TypeDeclarationsDict.TryGetValue(fileName, out var list))
+					{
+						list = new();
+						TypeDeclarationsDict.Add(fileName, list);
+					}
+					list.Add(structDeclarationSyntax);
+				}
+
 			}
 			else if (node is InterfaceDeclarationSyntax interfaceDeclarationSyntax)
 			{
 				if (TreeSyntaxHelper.CheckAttribute(interfaceDeclarationSyntax, GeneratorHelper.TreePackAttribute))
-					interfaceDeclarations.Add(interfaceDeclarationSyntax);
+				{
+					string fileName = Path.GetFileNameWithoutExtension(interfaceDeclarationSyntax.SyntaxTree.FilePath);
+					if (!TypeDeclarationsDict.TryGetValue(fileName, out var list))
+					{
+						list = new();
+						TypeDeclarationsDict.Add(fileName, list);
+					}
+					list.Add(interfaceDeclarationSyntax);
+				}
 			}
 		}
 	}
