@@ -14,13 +14,15 @@ namespace WorldTree
 			testData.TestLong = 456123;
 			testData.TestDouble = 123.456789;
 			testData.TestBool = true;
-			testData.ValueT1 = 987;
+			//testData.ValueT1 = 987;
 			testData.ValueT2 = 45.321f;
 
 			// 获取字节缓存写入器
 			self.AddTemp(out ByteSequence sequenceWrite).Serialize(ref testData);
-			
+
 			byte[] bytes = sequenceWrite.ToBytes();
+			self.Log($"序列化{bytes.Length}");
+
 			self.AddTemp(out ByteSequence sequenceRead).SetBytes(bytes);
 
 			NodeClassDataTest<int, float> testData2 = null;

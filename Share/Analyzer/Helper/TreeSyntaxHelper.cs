@@ -29,8 +29,43 @@ namespace WorldTree
 		public static bool CheckAttribute(TypeDeclarationSyntax node, string attributeName)
 		{
 			if (node.AttributeLists.Count == 0) return false;
-			return node.AttributeLists.Any(attributeList => attributeList.Attributes.Any(attribute => attribute.Name.ToString() == attributeName));
+
+			foreach (var attributeList in node.AttributeLists)
+			{
+				foreach (var attribute in attributeList.Attributes)
+				{
+					var attributeNameText = attribute.Name.ToString();
+					if (attributeNameText == attributeName || attributeNameText == attributeName.Replace("Attribute", ""))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
+
+		/// <summary>
+		/// 检查是否有指定的特性
+		/// </summary>
+		public static bool CheckAttribute(FieldDeclarationSyntax node, string attributeName)
+		{
+			if (node.AttributeLists.Count == 0) return false;
+
+			foreach (var attributeList in node.AttributeLists)
+			{
+				foreach (var attribute in attributeList.Attributes)
+				{
+					var attributeNameText = attribute.Name.ToString();
+					if (attributeNameText == attributeName || attributeNameText == attributeName.Replace("Attribute", ""))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+
 
 		/// <summary>
 		/// 检查类是否直接实现了指定接口
@@ -147,6 +182,23 @@ namespace WorldTree
 			}
 			return sb.ToString();
 		}
+
+		/// <summary>
+		/// 获取类的完整名称包括泛型
+		/// </summary>
+		public static string GetFullTypeName(ClassDeclarationSyntax classDeclaration)
+		{
+			// 获取类的名称
+			string className = classDeclaration.Identifier.Text;
+
+			// 获取泛型参数列表
+			if (classDeclaration.TypeParameterList != null)
+			{
+				className += classDeclaration.TypeParameterList.ToFullString();
+			}
+			return className.Trim();
+		}
+
 
 		/// <summary>
 		/// 复制类型所在源码文件的命名空间

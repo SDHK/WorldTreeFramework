@@ -5,6 +5,50 @@ using System.Buffers;
 namespace WorldTree
 {
 
+
+	/// <summary>
+	/// 测试数据
+	/// </summary>
+	[TreePack]
+	public partial class NodeClassDataTest<T1, T2>
+		where T1 : unmanaged
+		where T2 : unmanaged
+
+	{
+		/// <summary>
+		/// 测试浮点
+		/// </summary>
+		public float TestFloat = 1.54321f;
+		/// <summary>
+		/// 测试整数
+		/// </summary>
+		public int TestInt = 123;
+		/// <summary>
+		/// 测试长整数
+		/// </summary>
+		public long TestLong = 456;
+		/// <summary>
+		/// 测试双精度
+		/// </summary>
+		public double TestDouble = 7.123456;
+		/// <summary>
+		/// 测试布尔
+		/// </summary>
+		public bool TestBool = true;
+
+		/// <summary>
+		/// 测试泛型1
+		/// </summary>
+		public T1 ValueT1 = default;
+
+		/// <summary>
+		/// 测试泛型2
+		/// </summary>
+		public T2 ValueT2 = default;
+
+	}
+
+
 	/// <summary>
 	/// 测试类
 	/// </summary>
@@ -25,24 +69,6 @@ namespace WorldTree
 
 	}
 
-	/// <summary>
-	/// 测试类
-	/// </summary>
-	public class TestClass : Node
-	{
-		/// <summary>
-		/// 测试私有字段
-		/// </summary>
-		public float testPrivateField;
-
-		/// <summary>
-		/// 测试受保护字段
-		/// </summary>
-		[Protected] public float testProtectedField;
-
-
-
-	}
 
 	/// <summary>
 	/// 序列化测试

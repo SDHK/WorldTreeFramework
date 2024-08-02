@@ -1,31 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
+﻿using System.Collections.Generic;
 
 namespace WorldTree
 {
 	/// <summary>
 	/// 测试数据
 	/// </summary>
-	public partial struct NodeDataTest
-	{
-		/// <summary>
-		/// 测试
-		/// </summary>
-		public int Age;
-		/// <summary>
-		/// 测试2
-		/// </summary>
-		public int Age1;
-
-	}
-
-	/// <summary>
-	/// 测试数据
-	/// </summary>
+	[TreePack]
 	public partial class NodeClassDataTest<T1, T2>
 		where T1 : unmanaged
 		where T2 : unmanaged
@@ -64,46 +44,56 @@ namespace WorldTree
 	}
 
 
+
 	/// <summary>
-	/// 序列化生成兄弟类
+	/// 测试数据
 	/// </summary>
-	public partial class NodeClassDataTest<T1, T2>
+	public partial struct NodeDataTest
 	{
 		/// <summary>
-		/// 序列化,参数必须是个确定类型
+		/// 测试
 		/// </summary>
-		class SerializeTestRule : SerializeRule<ByteSequence, NodeClassDataTest<T1, T2>>
-		{
-			protected override void Execute(ByteSequence self, ref NodeClassDataTest<T1, T2> value)
-			{
-				self.Write(value.TestFloat);
-				self.WriteDynamic(value.TestInt);
-				self.WriteDynamic(value.TestLong);
-				self.Write(value.TestDouble);
-				self.Write(value.TestBool);
-				self.Write(value.ValueT1);
-				self.Write(value.ValueT2);
-			}
-		}
-
+		public int Age;
 		/// <summary>
-		/// 反序列化
+		/// 测试2
 		/// </summary>
-		class DeserializeTestRule : DeserializeRule<ByteSequence, NodeClassDataTest<T1, T2>>
-		{
-			protected override void Execute(ByteSequence self, ref NodeClassDataTest<T1, T2> value)
-			{
-				if (value == null) value = new();
-				self.Read(out value.TestFloat);
-				self.ReadDynamic(out value.TestInt);
-				self.ReadDynamic(out value.TestLong);
-				self.Read(out value.TestDouble);
-				self.Read(out value.TestBool);
-				self.Read(out value.ValueT1);
-				self.Read(out value.ValueT2);
-			}
-		}
+		public int Age1;
+
+
 	}
+
+
+
+	//public partial class NodeClassDataTest<T1, T2>
+	//{
+	//	class Serialize : SerializeRule<ByteSequence, NodeClassDataTest<T1, T2>>
+	//	{
+	//		protected override void Execute(ByteSequence self, ref NodeClassDataTest<T1, T2> value)
+	//		{
+	//			self.Write(value.TestFloat);
+	//			self.WriteDynamic(value.TestInt);
+	//			self.WriteDynamic(value.TestLong);
+	//			self.Write(value.TestDouble);
+	//			self.Write(value.TestBool);
+	//			self.Write(value.ValueT1);
+	//			self.Write(value.ValueT2);
+	//		}
+	//	}
+	//	class Deserialize : DeserializeRule<ByteSequence, NodeClassDataTest<T1, T2>>
+	//	{
+	//		protected override void Execute(ByteSequence self, ref NodeClassDataTest<T1, T2> value)
+	//		{
+	//			if (value == null) value = new();
+	//			self.Read(out value.TestFloat);
+	//			self.ReadDynamic(out value.TestInt);
+	//			self.ReadDynamic(out value.TestLong);
+	//			self.Read(out value.TestDouble);
+	//			self.Read(out value.TestBool);
+	//			self.Read(out value.ValueT1);
+	//			self.Read(out value.ValueT2);
+	//		}
+	//	}
+	//}
 
 
 

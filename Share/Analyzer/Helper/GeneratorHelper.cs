@@ -45,6 +45,11 @@ namespace WorldTree
 		/// </summary>
 		public static string TreePackAttribute = "TreePackAttribute";
 
+		/// <summary>
+		/// 树节点数据忽略特性标记
+		/// </summary>
+		public static string TreePackIgnoreAttribute = "TreePackIgnoreAttribute";
+
 	}
 
 }

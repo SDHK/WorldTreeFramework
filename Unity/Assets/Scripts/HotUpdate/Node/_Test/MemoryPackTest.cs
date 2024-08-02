@@ -73,7 +73,7 @@ namespace WorldTree
 		/// 测试
 		/// </summary>
 		[MemoryPackOrder(3)]
-		public float Age3;
+		public float Age3 { get; set; }
 
 		/// <summary>
 		/// 测试
@@ -89,6 +89,7 @@ namespace WorldTree
 	/// </summary>
 	[MemoryPackable]
 	public partial struct MemoryPackDataTest<T>
+		where T : unmanaged
 	{
 		/// <summary>
 		/// 测试泛型
@@ -112,7 +113,7 @@ namespace WorldTree
 		/// <summary>
 		/// c
 		/// </summary>
-		public int UID;
+		public int UID { get; set; }
 
 		/// <summary>
 		/// 测试3

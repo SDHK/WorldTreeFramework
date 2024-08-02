@@ -20,6 +20,18 @@ namespace WorldTree
 	/// </summary>
 	internal static class NamedSymbolHelper
 	{
+
+
+		/// <summary>
+		/// 获取字段类型
+		/// </summary>
+		public static ITypeSymbol? ToITypeSymbol(this Compilation compilation, FieldDeclarationSyntax fieldDeclaration)
+		{
+			return compilation.GetSemanticModel(fieldDeclaration.SyntaxTree).GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
+		}
+
+		
+
 		/// <summary>
 		/// 将类声明语法转换为命名类型符号
 		/// </summary>
@@ -29,6 +41,29 @@ namespace WorldTree
 		{
 			return compilation.GetSemanticModel(typeDecl.SyntaxTree).GetDeclaredSymbol(typeDecl) as INamedTypeSymbol;
 		}
+
+		/// <summary>
+		/// 判断字段是否为未托管类型
+		/// </summary>
+		public static bool IsFieldUnmanaged(ITypeSymbol typeInfo)
+		{
+			// 检查类型是否是未托管类型
+			if (typeInfo is ITypeParameterSymbol typeParameterSymbol)
+			{
+				return typeParameterSymbol.ConstraintTypes.Any(constraint => constraint.SpecialType == SpecialType.System_ValueType);
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// 检测字段是否有
+		/// </summary>
+		public static bool CheckAttribute(IFieldSymbol fieldSymbol, string attributeName)
+		{
+			return fieldSymbol.GetAttributes().Any(attr => attr.AttributeClass?.Name.Contains(attributeName) == true);
+		}
+
+
 
 		/// <summary>
 		/// 类型名称转换为命名类型符号

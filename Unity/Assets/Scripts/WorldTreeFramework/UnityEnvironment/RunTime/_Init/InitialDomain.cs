@@ -124,10 +124,7 @@ namespace WorldTree
 		/// 测试颜色
 		/// </summary>
 		public Color TestColor1 => Color.red;
-		/// <summary>
-		/// a
-		/// </summary>
-		public Color TestColor2 { get; set; }
+
 		/// <summary>
 		/// 测试向量
 		/// </summary>
