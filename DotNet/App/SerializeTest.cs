@@ -25,23 +25,26 @@ namespace WorldTree
 		/// <summary>
 		/// 测试class
 		/// </summary>
-		public NodeClassDataTest1 DataTest1 = null;
+		public NodeClassDataTest1<T1, T2> DataTest1 = null;
 	}
 
 	/// <summary>
 	/// 测试数据2
 	/// </summary>
 	[TreePack]
-	public partial class NodeClassDataTest1
+	public partial class NodeClassDataTest1<T1, T2>
+		where T1 : unmanaged
+		where T2 : unmanaged
 	{
-		/// <summary>
-		/// 测试浮点
-		/// </summary>
-		public float TestFloat = 1.54321f;
 		/// <summary>
 		/// 测试整数
 		/// </summary>
-		public int TestInt = 123;
+		public T1 TestInt = default;
+
+		/// <summary>
+		/// 测试浮点
+		/// </summary>
+		public T2 TestFloat = default;
 	}
 
 	/// <summary>
@@ -64,9 +67,10 @@ namespace WorldTree
 			testData.ValueT1 = 987;
 			testData.ValueT2 = 45.321f;
 			//嵌套类型
-			testData.DataTest1 = new NodeClassDataTest1() ;
-			testData.DataTest1.TestFloat = 5.789456f;
+			testData.DataTest1 = new NodeClassDataTest1<int, float>() ;
 			testData.DataTest1.TestInt = 798456;
+			testData.DataTest1.TestFloat = 5.789456f;
+
 
 
 			// 序列化

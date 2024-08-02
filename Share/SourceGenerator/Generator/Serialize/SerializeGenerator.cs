@@ -9,14 +9,10 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-
-
-
 	[Generator]
 	internal class SerializeGenerator : ISourceGenerator
 	{
@@ -145,44 +141,18 @@ namespace WorldTree.SourceGenerator
 		public void OnVisitSyntaxNode(SyntaxNode node)
 		{
 			// 判断是否是类或结构体或接口
-			if (node is ClassDeclarationSyntax classDeclarationSyntax)
+			if (node is ClassDeclarationSyntax or StructDeclarationSyntax or InterfaceDeclarationSyntax)
 			{
-				if (TreeSyntaxHelper.CheckAttribute(classDeclarationSyntax, GeneratorHelper.TreePackAttribute))
+				var TypeDeclaration = node as TypeDeclarationSyntax;
+				if (TreeSyntaxHelper.CheckAttribute(TypeDeclaration, GeneratorHelper.TreePackAttribute))
 				{
-					string fileName = Path.GetFileNameWithoutExtension(classDeclarationSyntax.SyntaxTree.FilePath);
+					string fileName = Path.GetFileNameWithoutExtension(TypeDeclaration.SyntaxTree.FilePath);
 					if (!TypeDeclarationsDict.TryGetValue(fileName, out var list))
 					{
 						list = new();
 						TypeDeclarationsDict.Add(fileName, list);
 					}
-					list.Add(classDeclarationSyntax);
-				}
-			}
-			else if (node is StructDeclarationSyntax structDeclarationSyntax)
-			{
-				if (TreeSyntaxHelper.CheckAttribute(structDeclarationSyntax, GeneratorHelper.TreePackAttribute))
-				{
-					string fileName = Path.GetFileNameWithoutExtension(structDeclarationSyntax.SyntaxTree.FilePath);
-					if (!TypeDeclarationsDict.TryGetValue(fileName, out var list))
-					{
-						list = new();
-						TypeDeclarationsDict.Add(fileName, list);
-					}
-					list.Add(structDeclarationSyntax);
-				}
-
-			}
-			else if (node is InterfaceDeclarationSyntax interfaceDeclarationSyntax)
-			{
-				if (TreeSyntaxHelper.CheckAttribute(interfaceDeclarationSyntax, GeneratorHelper.TreePackAttribute))
-				{
-					string fileName = Path.GetFileNameWithoutExtension(interfaceDeclarationSyntax.SyntaxTree.FilePath);
-					if (!TypeDeclarationsDict.TryGetValue(fileName, out var list))
-					{
-						list = new();
-						TypeDeclarationsDict.Add(fileName, list);
-					}
-					list.Add(interfaceDeclarationSyntax);
+					list.Add(TypeDeclaration);
 				}
 			}
 		}
