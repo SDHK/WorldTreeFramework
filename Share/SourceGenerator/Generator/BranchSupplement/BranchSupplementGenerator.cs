@@ -254,6 +254,7 @@ namespace WorldTree.SourceGenerator
 			BranchTypeKeyRemoveNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
 			BranchTypeKeyRemoveAllNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
 			BranchTypeKeyAddNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchBaseTypeKeyAddNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
 		}
 
 		/// <summary>
@@ -490,6 +491,28 @@ namespace WorldTree.SourceGenerator
 		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, TypeInfo<T>.TypeCode, out node{genericParameter});");
 			}
 		}
+
+		#region 基类类型键值
+
+		private static void BranchBaseTypeKeyAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
+			int argumentCount = GeneratorSetting.argumentCount;
+			for (int i = 0; i <= argumentCount; i++)
+			{
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+
+				AddComment(stringBuilder, "添加节点，以基类为键", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T, SubT{genericsType}>(this N self,T defaultBaseT, out SubT node{genericTypeParameter})
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where SubT : class, T, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsTypeAngle}>
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, SubT{genericsType}>(self, TypeInfo<T>.TypeCode, out node{genericParameter});");
+			}
+		}
+		#endregion
 
 		#endregion
 
