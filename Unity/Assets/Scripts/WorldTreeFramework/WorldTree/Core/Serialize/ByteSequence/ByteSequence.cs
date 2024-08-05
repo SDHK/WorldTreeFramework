@@ -14,51 +14,6 @@ using System.Runtime.InteropServices;
 
 namespace WorldTree
 {
-
-
-	public static partial class ByteSequenceRule
-	{
-
-		class Add : AddRule<ByteSequence>
-		{
-			protected override void Execute(ByteSequence self)
-			{
-				self.Core.PoolGetUnit(out self.segmentList);
-				// 获取节点的法则集
-				self.Core.RuleManager.NodeTypeRulesDict.TryGetValue(self.Type, out self.ruleDict);
-			}
-		}
-
-		class Remove : RemoveRule<ByteSequence>
-		{
-			protected override void Execute(ByteSequence self)
-			{
-				self.Clear();
-				self.segmentList.Dispose();
-			}
-		}
-
-		/// <summary>
-		/// 序列化写入类型
-		/// </summary>
-		public static void Serialize<T>(this ByteSequence self, ref T value)
-		{
-			self.Core.RuleManager.SupportGenericRule<T>();
-			if (self.ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
-				((IRuleList<Serialize<T>>)ruleList).SendRef(self, ref value);
-		}
-
-		/// <summary>
-		/// 反序列化读取类型
-		/// </summary>
-		public static void Deserialize<T>(this ByteSequence self, ref T value)
-		{
-			self.Core.RuleManager.SupportGenericRule<T>();
-			if (self.ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
-				((IRuleList<Deserialize<T>>)ruleList).SendRef(self, ref value);
-		}
-	}
-
 	/// <summary>
 	/// Byte序列
 	/// </summary>
@@ -285,9 +240,7 @@ namespace WorldTree
 		public void Write<T1>(in T1 value1)
 			where T1 : unmanaged
 		{
-			var size = Unsafe.SizeOf<T1>();
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(size));
-			Unsafe.WriteUnaligned(ref spanRef, value1);
+			Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<T1>())), value1);
 		}
 
 		/// <summary>
@@ -298,8 +251,7 @@ namespace WorldTree
 			where T1 : unmanaged
 			where T2 : unmanaged
 		{
-			var size = Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>();
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(size));
+			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()));
 			Unsafe.WriteUnaligned(ref spanRef, value1);
 			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()), value2);
 		}
@@ -313,8 +265,7 @@ namespace WorldTree
 			where T2 : unmanaged
 			where T3 : unmanaged
 		{
-			var size = Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>() + Unsafe.SizeOf<T3>();
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(size));
+			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>() + Unsafe.SizeOf<T3>()));
 			Unsafe.WriteUnaligned(ref spanRef, value1);
 			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()), value2);
 			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()), value3);
@@ -330,9 +281,7 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public T1 Read<T1>()
 		{
-			var size = Unsafe.SizeOf<T1>();
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(size));
-			return Unsafe.ReadUnaligned<T1>(ref spanRef);
+			return Unsafe.ReadUnaligned<T1>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>())));
 		}
 
 		/// <summary>
@@ -341,9 +290,7 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public T1 Read<T1>(out T1 value1)
 		{
-			var size = Unsafe.SizeOf<T1>();
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(size));
-			return value1 = Unsafe.ReadUnaligned<T1>(ref spanRef);
+			return value1 = Unsafe.ReadUnaligned<T1>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>())));
 		}
 
 		/// <summary>
@@ -351,8 +298,7 @@ namespace WorldTree
 		/// </summary>
 		public void Read<T1, T2>(out T1 value1, out T2 value2)
 		{
-			var size = Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>();
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(size));
+			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()));
 			value1 = Unsafe.ReadUnaligned<T1>(ref spanRef);
 			value2 = Unsafe.ReadUnaligned<T2>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()));
 		}
@@ -362,12 +308,55 @@ namespace WorldTree
 		/// </summary>
 		public void Read<T1, T2, T3>(out T1 value1, out T2 value2, out T3 value3)
 		{
-			var size = Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>() + Unsafe.SizeOf<T3>();
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(size));
+			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>() + Unsafe.SizeOf<T3>()));
 			value1 = Unsafe.ReadUnaligned<T1>(ref spanRef);
 			value2 = Unsafe.ReadUnaligned<T2>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()));
 			value3 = Unsafe.ReadUnaligned<T3>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()));
 		}
 		#endregion
 	}
+
+	public static partial class ByteSequenceRule
+	{
+
+		class Add : AddRule<ByteSequence>
+		{
+			protected override void Execute(ByteSequence self)
+			{
+				self.Core.PoolGetUnit(out self.segmentList);
+				// 获取节点的法则集
+				self.Core.RuleManager.NodeTypeRulesDict.TryGetValue(self.Type, out self.ruleDict);
+			}
+		}
+
+		class Remove : RemoveRule<ByteSequence>
+		{
+			protected override void Execute(ByteSequence self)
+			{
+				self.Clear();
+				self.segmentList.Dispose();
+			}
+		}
+
+		/// <summary>
+		/// 序列化写入类型
+		/// </summary>
+		public static void Serialize<T>(this ByteSequence self, ref T value)
+		{
+			self.Core.RuleManager.SupportGenericRule<T>();
+			if (self.ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
+				((IRuleList<Serialize<T>>)ruleList).SendRef(self, ref value);
+		}
+
+		/// <summary>
+		/// 反序列化读取类型
+		/// </summary>
+		public static void Deserialize<T>(this ByteSequence self, ref T value)
+		{
+			self.Core.RuleManager.SupportGenericRule<T>();
+			if (self.ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
+				((IRuleList<Deserialize<T>>)ruleList).SendRef(self, ref value);
+		}
+	}
+
 }

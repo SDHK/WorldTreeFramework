@@ -196,11 +196,10 @@ namespace WorldTree
 								{
 									//往下找到法则基类
 									Type ruleBaseType = baseType;
-									while (ruleBaseType.GetGenericTypeDefinition() != typeof(Rule<,>))
-									{
-										ruleBaseType = ruleBaseType.BaseType;
-									}
-									//判断这个泛型参数，不是法则标记，才是泛型参数
+									while (ruleBaseType.GetGenericTypeDefinition() != typeof(Rule<,>)) ruleBaseType = ruleBaseType.BaseType;
+
+									//判断这个泛型参数，不是法则标记，才是泛型参数。
+									//Rule<,> 的第二个参数就是法则标记。
 									if (arg != ruleBaseType.GetGenericArguments()[1])
 									{
 										genericType = arg;
@@ -364,10 +363,7 @@ namespace WorldTree
 						//添加法则，泛型动态支持不可覆盖已有定义
 						if (!RuleGroupDict.ContainsKey(rule.RuleType)) ruleList.Add(rule);
 					}
-					foreach (var rule in ruleList)
-					{
-						AddRule(rule);
-					}
+					foreach (var rule in ruleList) AddRule(rule);
 					ruleList.Dispose();
 				}
 			}
@@ -382,11 +378,7 @@ namespace WorldTree
 					//添加法则，泛型动态支持不可覆盖已有定义
 					if (!RuleGroupDict.ContainsKey(rule.RuleType)) ruleList.Add(rule);
 				}
-				foreach (var rule in ruleList)
-				{
-
-					AddRule(rule);
-				}
+				foreach (var rule in ruleList) AddRule(rule);
 				ruleList.Dispose();
 			}
 			SupportGenericTypeHash.Add(TypeInfo<T>.TypeCode);//已支持名单

@@ -56,9 +56,9 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 检测字段是否有
+		/// 检测是否有指定特性
 		/// </summary>
-		public static bool CheckAttribute(IFieldSymbol fieldSymbol, string attributeName)
+		public static bool CheckAttribute(ISymbol fieldSymbol, string attributeName)
 		{
 			return fieldSymbol.GetAttributes().Any(attr => attr.AttributeClass?.Name.Contains(attributeName) == true);
 		}

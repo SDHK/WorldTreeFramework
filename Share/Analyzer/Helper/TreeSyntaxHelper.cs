@@ -186,15 +186,15 @@ namespace WorldTree
 		/// <summary>
 		/// 获取类的完整名称包括泛型
 		/// </summary>
-		public static string GetFullTypeName(ClassDeclarationSyntax classDeclaration)
+		public static string GetFullTypeName(TypeDeclarationSyntax typeDeclaration)
 		{
 			// 获取类的名称
-			string className = classDeclaration.Identifier.Text;
+			string className = typeDeclaration.Identifier.Text;
 
 			// 获取泛型参数列表
-			if (classDeclaration.TypeParameterList != null)
+			if (typeDeclaration.TypeParameterList != null)
 			{
-				className += classDeclaration.TypeParameterList.ToFullString();
+				className += typeDeclaration.TypeParameterList.ToFullString();
 			}
 			return className.Trim();
 		}

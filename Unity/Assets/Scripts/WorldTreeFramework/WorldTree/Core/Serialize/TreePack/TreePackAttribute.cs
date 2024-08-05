@@ -14,14 +14,11 @@ namespace WorldTree
 	/// 序列化忽略特性标记
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-	public class TreePackIgnoreAttribute : Attribute{}
+	public class TreePackIgnoreAttribute : Attribute { }
 
 	/// <summary>
 	/// 树节点数据包装特性标记
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-	public class TreePackAttribute : Attribute
-	{
-	
-	}
+	public class TreePackAttribute : Attribute { }
 }

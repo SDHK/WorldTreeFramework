@@ -112,7 +112,7 @@ namespace WorldTree
 		/// <summary>
 		/// c
 		/// </summary>
-		public int UID { get; set; }
+		public int UID { set {  } }
 
 		/// <summary>
 		/// 测试3

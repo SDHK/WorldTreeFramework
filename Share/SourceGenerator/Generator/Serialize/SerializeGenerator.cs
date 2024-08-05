@@ -43,9 +43,9 @@ namespace WorldTree.SourceGenerator
 
 				foreach (TypeDeclarationSyntax typeDeclaration in TypeListItem.Value)
 				{
-					if (typeDeclaration is ClassDeclarationSyntax classDeclaration)
+					if (typeDeclaration is ClassDeclarationSyntax or StructDeclarationSyntax)
 					{
-						SerializeClassGenerator.Execute(context, ClassCode, classDeclaration);
+						SerializeClassGenerator.Execute(context, ClassCode, typeDeclaration);
 					}
 				}
 
@@ -72,36 +72,67 @@ namespace WorldTree.SourceGenerator
 
 	internal static class SerializeClassGenerator
 	{
-		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, ClassDeclarationSyntax classDeclaration)
+		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration)
 		{
 			// 将 ClassDeclarationSyntax 转换为 INamedTypeSymbol
-			INamedTypeSymbol? classSymbol = context.Compilation.ToINamedTypeSymbol(classDeclaration);
+			INamedTypeSymbol? classSymbol = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
 
-			// 获取字段，过滤掉 TreePackIgnore 标记的字段
-			List<IFieldSymbol> fieldSymbols = classSymbol.GetMembers()
-				.OfType<IFieldSymbol>()
-				.Where(f => !NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreePackIgnoreAttribute))
+			// 获取字段和属性，过滤掉 TreePackIgnore 标记的字段
+			List<ISymbol> fieldSymbols = classSymbol.GetMembers()
+				.Where(f =>
+					{
+						if (f is IFieldSymbol && !NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreePackIgnoreAttribute))
+						{
+							return true;
+						}
+						else if (f is IPropertySymbol propertySymbol && propertySymbol.GetMethod != null && propertySymbol.SetMethod != null && !NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreePackIgnoreAttribute))
+						{
+							return true;
+						}
+						return false;
+					}
+				)
 				.ToList();
 
+
 			// 获取类的完整名称，包括泛型参数
-			string className = TreeSyntaxHelper.GetFullTypeName(classDeclaration);
-			Code.AppendLine($"	public partial class {className}");
+			string className = TreeSyntaxHelper.GetFullTypeName(typeDeclaration);
+			if (typeDeclaration is ClassDeclarationSyntax)
+			{
+				Code.AppendLine($"	public partial class {className}");
+			}
+			else if (typeDeclaration is StructDeclarationSyntax)
+			{
+				Code.AppendLine($"	public partial struct {className}");
+
+			}
 			Code.AppendLine("	{");
 
 			Code.AppendLine($"		class Serialize : SerializeRule<ByteSequence, {className}>");
 			Code.AppendLine("		{");
 			Code.AppendLine($"			protected override void Execute(ByteSequence self, ref {className} value)");
 			Code.AppendLine("			{");
-			foreach (IFieldSymbol fieldSymbol in fieldSymbols)
+			foreach (ISymbol symbol in fieldSymbols)
 			{
-				if (fieldSymbol.Type.IsUnmanagedType)
+				bool IsUnmanagedType = (symbol as IFieldSymbol)?.Type.IsUnmanagedType ?? (symbol as IPropertySymbol)?.Type.IsUnmanagedType ?? false;
+				if (symbol is IFieldSymbol fieldSymbol)
 				{
-					Code.AppendLine($"				self.Write(value.{fieldSymbol.Name});");
+					//判断是否是属性的后备字段
+					if (fieldSymbol.AssociatedSymbol is IPropertySymbol propertySymbol) continue;
+
+					if (IsUnmanagedType)
+						Code.AppendLine($"				self.Write(value.{symbol.Name});");
+					else
+						Code.AppendLine($"				self.Serialize(ref value.{symbol.Name});");
 				}
-				else
+				else if (symbol is IPropertySymbol propertySymbol)
 				{
-					Code.AppendLine($"				self.Serialize(ref value.{fieldSymbol.Name});");
+					if (IsUnmanagedType)
+						Code.AppendLine($"				self.Write(value.{propertySymbol.Name});");
+					else
+						Code.AppendLine($"				self.Serialize(ref value.{propertySymbol.Name});");
 				}
+
 			}
 			Code.AppendLine("			}");
 			Code.AppendLine("		}");
@@ -111,16 +142,34 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("		{");
 			Code.AppendLine($"			protected override void Execute(ByteSequence self, ref {className} value)");
 			Code.AppendLine("			{");
-			Code.AppendLine($"				if (value == null) value = new();");
-			foreach (IFieldSymbol fieldSymbol in fieldSymbols)
+
+			if (typeDeclaration is ClassDeclarationSyntax)
+				Code.AppendLine($"				if (value == null) value = new();");
+
+			foreach (ISymbol symbol in fieldSymbols)
 			{
-				if (fieldSymbol.Type.IsUnmanagedType)
+				if (symbol is IFieldSymbol fieldSymbol)
 				{
-					Code.AppendLine($"				self.Read(out value.{fieldSymbol.Name});");
+					//判断是否是属性的后备字段
+					if (fieldSymbol.AssociatedSymbol is IPropertySymbol propertySymbol) continue;
+
+					if (fieldSymbol.Type.IsUnmanagedType)
+						Code.AppendLine($"				self.Read(out value.{symbol.Name});");
+					else
+						Code.AppendLine($"				self.Deserialize(ref value.{symbol.Name});");
 				}
-				else
+				else if (symbol is IPropertySymbol propertySymbol)
 				{
-					Code.AppendLine($"				self.Deserialize(ref value.{fieldSymbol.Name});");
+					if (propertySymbol.Type.IsUnmanagedType)
+					{
+						Code.AppendLine($"				self.Read(out {propertySymbol.Type.Name} m{propertySymbol.Name});");
+					}
+					else
+					{
+						Code.AppendLine($"				{propertySymbol.Type.Name} m{propertySymbol.Name};");
+						Code.AppendLine($"				self.Deserialize(ref m{propertySymbol.Name});");
+					}
+					Code.AppendLine($"				value.{propertySymbol.Name} = m{propertySymbol.Name};");
 				}
 			}
 			Code.AppendLine("			}");
@@ -130,6 +179,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 	}
+
 
 	/// <summary>
 	/// 查找序列化标记类型

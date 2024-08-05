@@ -1,43 +1,6 @@
 ﻿namespace WorldTree
 {
 
-	class SerializeT<T> : SerializeRule<ByteSequence, T>
-		where T : unmanaged
-	{
-		protected override void Execute(ByteSequence self, ref T value)
-		{
-			self.Log($"泛型序列 写入");
-			self.Write(value);
-		}
-	}
-	class DeserializeT<T> : DeserializeRule<ByteSequence, T>
-		where T : unmanaged
-	{
-		protected override void Execute(ByteSequence self, ref T value)
-		{
-			self.Log($"泛型序列 读取");
-			self.Read(out value);
-		}
-	}
-
-	class SerializeInt : SerializeRule<ByteSequence, int>
-	{
-		protected override void Execute(ByteSequence self, ref int value)
-		{
-			self.Write(value);
-			self.Log($"int序列 写入");
-		}
-	}
-	class DeserializeInt : DeserializeRule<ByteSequence, int>
-	{
-		protected override void Execute(ByteSequence self, ref int value)
-		{
-			self.Read(out value);
-			self.Log($"int序列 读取");
-		}
-	}
-
-
 	/// <summary>
 	/// 测试数据
 	/// </summary>
@@ -60,7 +23,7 @@
 		/// <summary>
 		/// 测试class
 		/// </summary>
-		public NodeClassDataTest1<T1, T2> DataTest1 = null;
+		public NodeClassDataTest1<T1, T2> DataTest1 = default;
 
 		/// <summary>
 		/// 测试泛型3
@@ -72,19 +35,19 @@
 	/// 测试数据2
 	/// </summary>
 	[TreePack]
-	public partial class NodeClassDataTest1<T1, T2>
+	public partial struct NodeClassDataTest1<T1, T2>
 		where T1 : unmanaged
 		where T2 : unmanaged
 	{
 		/// <summary>
 		/// 测试整数
 		/// </summary>
-		public T1 TestInt = default;
+		public T1 TestInt { get; set; }
 
 		/// <summary>
 		/// 测试浮点
 		/// </summary>
-		public T2 TestFloat = default;
+		public T2 TestFloat { get; set; }
 	}
 
 	/// <summary>
