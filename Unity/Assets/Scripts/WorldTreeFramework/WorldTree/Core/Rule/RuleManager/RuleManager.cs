@@ -49,15 +49,21 @@ namespace WorldTree
 		public UnitHashSet<long> SupportGenericTypeHash = new();
 
 		/// <summary>
-		/// 泛型类型 泛型法则哈希表字典
+		/// 泛型参数类型 泛型法则哈希表字典
 		/// </summary>
 		/// <remarks>泛型类型，泛型法则类型哈希表</remarks>
 		public UnitDictionary<Type, UnitHashSet<Type>> GenericTypeRuleTypeHashDict = new();
 
 		/// <summary>
-		/// 动态监听器节点类型哈希名单
+		/// 未知泛型参数类型 泛型法则哈希表字典
 		/// </summary>
-		public UnitHashSet<long> DynamicListenerTypeHash = new();
+		/// <remarks>未知泛型类型，泛型法则类型哈希表</remarks>
+		public UnitHashSet<Type> GenericRuleTypeHash = new();
+
+		///// <summary>
+		///// 动态监听器节点类型哈希名单
+		///// </summary>
+		//public UnitHashSet<long> DynamicListenerTypeHash = new();
 
 		/// <summary>
 		/// 监听目标为 法则 的 ，监听器法则 字典
@@ -127,7 +133,7 @@ namespace WorldTree
 			RuleGroupDict.Clear();
 			NodeTypeRulesDict.Clear();
 
-			DynamicListenerTypeHash.Clear();
+			//DynamicListenerTypeHash.Clear();
 			GenericNodeRuleTypeHashDict.Clear();
 			TargetRuleListenerRuleHashDict.Clear();
 
@@ -175,7 +181,7 @@ namespace WorldTree
 					baseType = ruleType.BaseType;
 					Type genericType = null;
 
-					// 遍历基类，查找泛型参数
+					//遍历基类，查找泛型参数
 					while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>))
 					{
 						// 父类是泛型的情况
@@ -188,18 +194,32 @@ namespace WorldTree
 								// 泛型参数是泛型的情况
 								if (arg.IsGenericType)
 								{
-									genericType = arg;
-									break;
+									//往下找到法则基类
+									Type ruleBaseType = baseType;
+									while (ruleBaseType.GetGenericTypeDefinition() != typeof(Rule<,>))
+									{
+										ruleBaseType = ruleBaseType.BaseType;
+									}
+									//判断这个泛型参数，不是法则标记，才是泛型参数
+									if (arg != ruleBaseType.GetGenericArguments()[1])
+									{
+										genericType = arg;
+										break;
+									}
 								}
 							}
 						}
 						if (genericType != null) break;
 						baseType = baseType.BaseType;
 					}
-					// 如果找到了泛型参数
-					if (genericType != null)
+					//如果找到了泛型参数
+					if (genericType != null && genericType.IsGenericType)
 					{
 						GenericTypeRuleTypeHashDict.GetOrNewValue(genericType.GetGenericTypeDefinition()).Add(ruleType);
+					}
+					else //泛型参数是泛型本身的情况
+					{
+						GenericRuleTypeHash.Add(ruleType);
 					}
 				}
 			}
@@ -252,10 +272,10 @@ namespace WorldTree
 				DictionaryAddNodeRule(listenerRule.TargetNodeType, listenerRule);
 
 				//动态监听器判断
-				if (listenerRule.TargetNodeType == TypeInfo<INode>.TypeCode && listenerRule.TargetRuleType == TypeInfo<IRule>.TypeCode)
-				{
-					if (!DynamicListenerTypeHash.Contains(listenerRule.NodeType)) DynamicListenerTypeHash.Add(listenerRule.NodeType);
-				}
+				//if (listenerRule.TargetNodeType == TypeInfo<INode>.TypeCode && listenerRule.TargetRuleType == TypeInfo<IRule>.TypeCode)
+				//{
+				//	if (!DynamicListenerTypeHash.Contains(listenerRule.NodeType)) DynamicListenerTypeHash.Add(listenerRule.NodeType);
+				//}
 			}
 		}
 
@@ -327,20 +347,47 @@ namespace WorldTree
 		public void SupportGenericRule<T>()
 		{
 			if (SupportGenericTypeHash.Contains(TypeInfo<T>.TypeCode)) return;
-			if (!TypeInfo<T>.Type.IsGenericType) return;
-
-			//获取泛型本体类型
-			var genericDefinition = TypeInfo<T>.Type.GetGenericTypeDefinition();
-			//获取泛型参数数组
-			Type[] genericTypes = TypeInfo<T>.Type.GetGenericArguments();
-			if (GenericTypeRuleTypeHashDict.TryGetValue(genericDefinition, out var RuleTypeHash))
+			if (TypeInfo<T>.Type.IsGenericType)
 			{
-				foreach (var RuleType in RuleTypeHash)
+				//获取泛型本体类型
+				Type genericDefinition = TypeInfo<T>.Type.GetGenericTypeDefinition();
+				//获取泛型参数数组
+				Type[] genericTypes = TypeInfo<T>.Type.GetGenericArguments();
+
+				if (GenericTypeRuleTypeHashDict.TryGetValue(genericDefinition, out var RuleTypeHash))
+				{
+					UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
+					foreach (var RuleType in RuleTypeHash)
+					{
+						//填入对应的泛型参数，实例化泛型监听系统
+						IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
+						//添加法则，泛型动态支持不可覆盖已有定义
+						if (!RuleGroupDict.ContainsKey(rule.RuleType)) ruleList.Add(rule);
+					}
+					foreach (var rule in ruleList)
+					{
+						AddRule(rule);
+					}
+					ruleList.Dispose();
+				}
+			}
+			else
+			{
+				Type genericDefinition = TypeInfo<T>.Type;
+				UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
+				foreach (var RuleType in GenericRuleTypeHash)
 				{
 					//填入对应的泛型参数，实例化泛型监听系统
-					IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
+					IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericDefinition));
+					//添加法则，泛型动态支持不可覆盖已有定义
+					if (!RuleGroupDict.ContainsKey(rule.RuleType)) ruleList.Add(rule);
+				}
+				foreach (var rule in ruleList)
+				{
+
 					AddRule(rule);
 				}
+				ruleList.Dispose();
 			}
 			SupportGenericTypeHash.Add(TypeInfo<T>.TypeCode);//已支持名单
 		}
@@ -368,12 +415,20 @@ namespace WorldTree
 
 					if (GenericNodeRuleTypeHashDict.TryGetValue(genericNodeType, out var RuleTypeHash))
 					{
+						UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
+
 						foreach (var RuleType in RuleTypeHash)
 						{
 							//填入对应的泛型参数，实例化泛型监听系统
 							IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
+							//添加法则，泛型动态支持不可覆盖已有定义
+							if (!RuleGroupDict.ContainsKey(rule.RuleType)) ruleList.Add(rule);
+						}
+						foreach (var rule in ruleList)
+						{
 							AddRule(rule);
 						}
+						ruleList.Dispose();
 					}
 				}
 				type = type.BaseType;
@@ -416,12 +471,12 @@ namespace WorldTree
 			//拿到节点自身的：法则类型 《目标节点类型,监听法则》
 			Dictionary<long, RuleGroup> nodeRuleType_TargerGroupDict = ListenerRuleTargetGroupDict.GetOrNewValue(listenerNodeType);
 
-			//动态监听法则多态记录
-			if (DynamicListenerTypeHash.Contains(listenerBaseTypeCodeKey))
-			{
-				if (!DynamicListenerTypeHash.Contains(listenerNodeType))
-					DynamicListenerTypeHash.Add(listenerNodeType);
-			}
+			///动态监听法则多态记录
+			//if (DynamicListenerTypeHash.Contains(listenerBaseTypeCodeKey))
+			//{
+			//	if (!DynamicListenerTypeHash.Contains(listenerNodeType))
+			//		DynamicListenerTypeHash.Add(listenerNodeType);
+			//}
 
 			//K:法则类型 , V:《目标节点类型,监听法则列表》
 			foreach (var RuleType_TargetGroupKV in RuleType_TargerGroupDictionary)

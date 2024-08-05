@@ -89,7 +89,6 @@ namespace WorldTree
 	/// </summary>
 	[MemoryPackable]
 	public partial struct MemoryPackDataTest<T>
-		where T : unmanaged
 	{
 		/// <summary>
 		/// 测试泛型
