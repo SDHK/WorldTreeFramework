@@ -23,11 +23,11 @@ namespace WorldTree
 			if (x <= ValueTypeCode.MAX_SINGLE_VALUE)
 			{
 				//小于等于最大单字节值127，直接写入
-				self.Write((sbyte)x);
+				self.WriteUnmanaged((sbyte)x);
 			}
 			else
 			{
-				self.Write(ValueTypeCode.BYTE, x);
+				self.WriteUnmanaged(ValueTypeCode.BYTE, x);
 			}
 		}
 
@@ -39,11 +39,11 @@ namespace WorldTree
 			if (ValueTypeCode.MIN_SINGLE_VALUE <= x)
 			{
 				//大于等于最小单字节值-120，直接写入
-				self.Write(x);
+				self.WriteUnmanaged(x);
 			}
 			else
 			{
-				self.Write(ValueTypeCode.SBYTE, x);
+				self.WriteUnmanaged(ValueTypeCode.SBYTE, x);
 			}
 		}
 
@@ -55,11 +55,11 @@ namespace WorldTree
 			if (x <= ValueTypeCode.MAX_SINGLE_VALUE)
 			{
 				//小于等于最大单字节值127，直接写入
-				self.Write((sbyte)x);
+				self.WriteUnmanaged((sbyte)x);
 			}
 			else
 			{
-				self.Write(ValueTypeCode.UINT16, (UInt16)x);
+				self.WriteUnmanaged(ValueTypeCode.UINT16, (UInt16)x);
 			}
 		}
 
@@ -73,26 +73,26 @@ namespace WorldTree
 				if (x <= ValueTypeCode.MAX_SINGLE_VALUE) // same as sbyte.MaxValue
 				{
 					//小于等于最大单字节值127，直接写入
-					self.Write((sbyte)x);
+					self.WriteUnmanaged((sbyte)x);
 				}
 				else
 				{
-					self.Write(ValueTypeCode.INT16, (Int16)x);
+					self.WriteUnmanaged(ValueTypeCode.INT16, (Int16)x);
 				}
 			}
 			else
 			{
 				if (ValueTypeCode.MIN_SINGLE_VALUE <= x)
 				{
-					self.Write((sbyte)x);
+					self.WriteUnmanaged((sbyte)x);
 				}
 				else if (sbyte.MinValue <= x)
 				{
-					self.Write(ValueTypeCode.SBYTE, (SByte)x);
+					self.WriteUnmanaged(ValueTypeCode.SBYTE, (SByte)x);
 				}
 				else
 				{
-					self.Write(ValueTypeCode.INT16, (Int16)x);
+					self.WriteUnmanaged(ValueTypeCode.INT16, (Int16)x);
 				}
 			}
 		}
@@ -105,15 +105,15 @@ namespace WorldTree
 			if (x <= ValueTypeCode.MAX_SINGLE_VALUE)
 			{
 				//小于等于最大单字节值127，直接写入
-				self.Write((sbyte)x);
+				self.WriteUnmanaged((sbyte)x);
 			}
 			else if (x <= ushort.MaxValue)
 			{
-				self.Write(ValueTypeCode.UINT16, (UInt16)x);
+				self.WriteUnmanaged(ValueTypeCode.UINT16, (UInt16)x);
 			}
 			else
 			{
-				self.Write(ValueTypeCode.UINT32, (UInt32)x);
+				self.WriteUnmanaged(ValueTypeCode.UINT32, (UInt32)x);
 			}
 		}
 
@@ -127,34 +127,34 @@ namespace WorldTree
 				if (x <= ValueTypeCode.MAX_SINGLE_VALUE) // same as sbyte.MaxValue
 				{
 					//小于等于最大单字节值127，直接写入
-					self.Write((sbyte)x);
+					self.WriteUnmanaged((sbyte)x);
 				}
 				else if (x <= short.MaxValue)
 				{
-					self.Write(ValueTypeCode.INT16, (Int16)x);
+					self.WriteUnmanaged(ValueTypeCode.INT16, (Int16)x);
 				}
 				else
 				{
-					self.Write(ValueTypeCode.INT32, (Int32)x);
+					self.WriteUnmanaged(ValueTypeCode.INT32, (Int32)x);
 				}
 			}
 			else
 			{
 				if (ValueTypeCode.MIN_SINGLE_VALUE <= x)
 				{
-					self.Write((sbyte)x);
+					self.WriteUnmanaged((sbyte)x);
 				}
 				else if (sbyte.MinValue <= x)
 				{
-					self.Write(ValueTypeCode.SBYTE, (SByte)x);
+					self.WriteUnmanaged(ValueTypeCode.SBYTE, (SByte)x);
 				}
 				else if (short.MinValue <= x)
 				{
-					self.Write(ValueTypeCode.INT64, (Int16)x);
+					self.WriteUnmanaged(ValueTypeCode.INT64, (Int16)x);
 				}
 				else
 				{
-					self.Write(ValueTypeCode.INT32, (Int32)x);
+					self.WriteUnmanaged(ValueTypeCode.INT32, (Int32)x);
 				}
 			}
 		}
@@ -167,19 +167,19 @@ namespace WorldTree
 			if (x <= ValueTypeCode.MAX_SINGLE_VALUE)
 			{
 				//小于等于最大单字节值127，直接写入
-				self.Write((sbyte)x);
+				self.WriteUnmanaged((sbyte)x);
 			}
 			else if (x <= ushort.MaxValue)
 			{
-				self.Write(ValueTypeCode.UINT16, (UInt16)x);
+				self.WriteUnmanaged(ValueTypeCode.UINT16, (UInt16)x);
 			}
 			else if (x <= uint.MaxValue)
 			{
-				self.Write(ValueTypeCode.UINT32, (UInt32)x);
+				self.WriteUnmanaged(ValueTypeCode.UINT32, (UInt32)x);
 			}
 			else
 			{
-				self.Write(ValueTypeCode.UINT64, (UInt64)x);
+				self.WriteUnmanaged(ValueTypeCode.UINT64, (UInt64)x);
 			}
 		}
 
@@ -193,42 +193,42 @@ namespace WorldTree
 				if (x <= ValueTypeCode.MAX_SINGLE_VALUE) // same as sbyte.MaxValue
 				{
 					//小于等于最大单字节值127，直接写入
-					self.Write((sbyte)x);
+					self.WriteUnmanaged((sbyte)x);
 				}
 				else if (x <= short.MaxValue)
 				{
-					self.Write(ValueTypeCode.INT16, (Int16)x);
+					self.WriteUnmanaged(ValueTypeCode.INT16, (Int16)x);
 				}
 				else if (x <= int.MaxValue)
 				{
-					self.Write(ValueTypeCode.INT32, (Int32)x);
+					self.WriteUnmanaged(ValueTypeCode.INT32, (Int32)x);
 				}
 				else
 				{
-					self.Write(ValueTypeCode.INT64, (Int64)x);
+					self.WriteUnmanaged(ValueTypeCode.INT64, (Int64)x);
 				}
 			}
 			else
 			{
 				if (ValueTypeCode.MIN_SINGLE_VALUE <= x)
 				{
-					self.Write((sbyte)x);
+					self.WriteUnmanaged((sbyte)x);
 				}
 				else if (sbyte.MinValue <= x)
 				{
-					self.Write(ValueTypeCode.SBYTE, (SByte)x);
+					self.WriteUnmanaged(ValueTypeCode.SBYTE, (SByte)x);
 				}
 				else if (short.MinValue <= x)
 				{
-					self.Write(ValueTypeCode.INT64, (Int16)x);
+					self.WriteUnmanaged(ValueTypeCode.INT64, (Int16)x);
 				}
 				else if (int.MinValue <= x)
 				{
-					self.Write(ValueTypeCode.INT32, (Int32)x);
+					self.WriteUnmanaged(ValueTypeCode.INT32, (Int32)x);
 				}
 				else
 				{
-					self.Write(ValueTypeCode.INT64, (Int64)x);
+					self.WriteUnmanaged(ValueTypeCode.INT64, (Int64)x);
 				}
 			}
 		}
@@ -242,25 +242,25 @@ namespace WorldTree
 		/// </summary>
 		public static byte ReadDynamic(this ByteSequence self, out byte value)
 		{
-			self.Read(out sbyte typeCode);
+			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
 			{
 				case ValueTypeCode.BYTE:
-					return value = self.Read<byte>();
+					return value = self.ReadUnmanaged<byte>();
 				case ValueTypeCode.SBYTE:
-					return value = checked((byte)self.Read<sbyte>());
+					return value = checked((byte)self.ReadUnmanaged<sbyte>());
 				case ValueTypeCode.UINT16:
-					return value = checked((byte)self.Read<byte>());
+					return value = checked((byte)self.ReadUnmanaged<byte>());
 				case ValueTypeCode.INT16:
-					return value = checked((byte)self.Read<short>());
+					return value = checked((byte)self.ReadUnmanaged<short>());
 				case ValueTypeCode.UINT32:
-					return value = checked((byte)self.Read<uint>());
+					return value = checked((byte)self.ReadUnmanaged<uint>());
 				case ValueTypeCode.INT32:
-					return value = checked((byte)self.Read<int>());
+					return value = checked((byte)self.ReadUnmanaged<int>());
 				case ValueTypeCode.UINT64:
-					return value = checked((byte)self.Read<ulong>());
+					return value = checked((byte)self.ReadUnmanaged<ulong>());
 				case ValueTypeCode.INT64:
-					return value = checked((byte)self.Read<long>());
+					return value = checked((byte)self.ReadUnmanaged<long>());
 				default:
 					return value = checked((byte)typeCode);
 			}
@@ -271,25 +271,25 @@ namespace WorldTree
 		/// </summary>
 		public static sbyte ReadDynamic(this ByteSequence self, out sbyte value)
 		{
-			self.Read(out sbyte typeCode);
+			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
 			{
 				case ValueTypeCode.BYTE:
-					return value = checked((sbyte)self.Read<byte>());
+					return value = checked((sbyte)self.ReadUnmanaged<byte>());
 				case ValueTypeCode.SBYTE:
-					return value = self.Read<sbyte>();
+					return value = self.ReadUnmanaged<sbyte>();
 				case ValueTypeCode.UINT16:
-					return value = checked((sbyte)self.Read<byte>());
+					return value = checked((sbyte)self.ReadUnmanaged<byte>());
 				case ValueTypeCode.INT16:
-					return value = checked((sbyte)self.Read<short>());
+					return value = checked((sbyte)self.ReadUnmanaged<short>());
 				case ValueTypeCode.UINT32:
-					return value = checked((sbyte)self.Read<uint>());
+					return value = checked((sbyte)self.ReadUnmanaged<uint>());
 				case ValueTypeCode.INT32:
-					return value = checked((sbyte)self.Read<int>());
+					return value = checked((sbyte)self.ReadUnmanaged<int>());
 				case ValueTypeCode.UINT64:
-					return value = checked((sbyte)self.Read<ulong>());
+					return value = checked((sbyte)self.ReadUnmanaged<ulong>());
 				case ValueTypeCode.INT64:
-					return value = checked((sbyte)self.Read<long>());
+					return value = checked((sbyte)self.ReadUnmanaged<long>());
 				default:
 					return value = typeCode;
 			}
@@ -300,25 +300,25 @@ namespace WorldTree
 		/// </summary>
 		public static ushort ReadDynamic(this ByteSequence self, out ushort value)
 		{
-			self.Read(out sbyte typeCode);
+			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
 			{
 				case ValueTypeCode.BYTE:
-					return value = self.Read<byte>();
+					return value = self.ReadUnmanaged<byte>();
 				case ValueTypeCode.SBYTE:
-					return value = checked((ushort)self.Read<sbyte>());
+					return value = checked((ushort)self.ReadUnmanaged<sbyte>());
 				case ValueTypeCode.UINT16:
-					return value = self.Read<ushort>();
+					return value = self.ReadUnmanaged<ushort>();
 				case ValueTypeCode.INT16:
-					return value = checked((ushort)self.Read<short>());
+					return value = checked((ushort)self.ReadUnmanaged<short>());
 				case ValueTypeCode.UINT32:
-					return value = checked((ushort)self.Read<uint>());
+					return value = checked((ushort)self.ReadUnmanaged<uint>());
 				case ValueTypeCode.INT32:
-					return value = checked((ushort)self.Read<int>());
+					return value = checked((ushort)self.ReadUnmanaged<int>());
 				case ValueTypeCode.UINT64:
-					return value = checked((ushort)self.Read<ulong>());
+					return value = checked((ushort)self.ReadUnmanaged<ulong>());
 				case ValueTypeCode.INT64:
-					return value = checked((ushort)self.Read<long>());
+					return value = checked((ushort)self.ReadUnmanaged<long>());
 				default:
 					return value = checked((ushort)typeCode);
 			}
@@ -329,25 +329,25 @@ namespace WorldTree
 		/// </summary>
 		public static short ReadDynamic(this ByteSequence self, out short value)
 		{
-			self.Read(out sbyte typeCode);
+			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
 			{
 				case ValueTypeCode.BYTE:
-					return value = self.Read<byte>();
+					return value = self.ReadUnmanaged<byte>();
 				case ValueTypeCode.SBYTE:
-					return value = self.Read<sbyte>();
+					return value = self.ReadUnmanaged<sbyte>();
 				case ValueTypeCode.UINT16:
-					return value = checked((short)self.Read<ushort>());
+					return value = checked((short)self.ReadUnmanaged<ushort>());
 				case ValueTypeCode.INT16:
-					return value = self.Read<short>();
+					return value = self.ReadUnmanaged<short>();
 				case ValueTypeCode.UINT32:
-					return value = checked((short)self.Read<uint>());
+					return value = checked((short)self.ReadUnmanaged<uint>());
 				case ValueTypeCode.INT32:
-					return value = checked((short)self.Read<int>());
+					return value = checked((short)self.ReadUnmanaged<int>());
 				case ValueTypeCode.UINT64:
-					return value = checked((short)self.Read<ulong>());
+					return value = checked((short)self.ReadUnmanaged<ulong>());
 				case ValueTypeCode.INT64:
-					return value = checked((short)self.Read<long>());
+					return value = checked((short)self.ReadUnmanaged<long>());
 				default:
 					return value = typeCode;
 			}
@@ -358,25 +358,25 @@ namespace WorldTree
 		/// </summary>
 		public static uint ReadDynamic(this ByteSequence self, out uint value)
 		{
-			self.Read(out sbyte typeCode);
+			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
 			{
 				case ValueTypeCode.BYTE:
-					return value = self.Read<byte>();
+					return value = self.ReadUnmanaged<byte>();
 				case ValueTypeCode.SBYTE:
-					return value = checked((uint)self.Read<sbyte>());
+					return value = checked((uint)self.ReadUnmanaged<sbyte>());
 				case ValueTypeCode.UINT16:
-					return value = self.Read<ushort>();
+					return value = self.ReadUnmanaged<ushort>();
 				case ValueTypeCode.INT16:
-					return value = checked((uint)self.Read<short>());
+					return value = checked((uint)self.ReadUnmanaged<short>());
 				case ValueTypeCode.UINT32:
-					return value = self.Read<uint>();
+					return value = self.ReadUnmanaged<uint>();
 				case ValueTypeCode.INT32:
-					return value = checked((uint)self.Read<int>());
+					return value = checked((uint)self.ReadUnmanaged<int>());
 				case ValueTypeCode.UINT64:
-					return value = checked((uint)self.Read<ulong>());
+					return value = checked((uint)self.ReadUnmanaged<ulong>());
 				case ValueTypeCode.INT64:
-					return value = checked((uint)self.Read<long>());
+					return value = checked((uint)self.ReadUnmanaged<long>());
 				default:
 					return value = checked((uint)typeCode);
 			}
@@ -387,25 +387,25 @@ namespace WorldTree
 		/// </summary>
 		public static int ReadDynamic(this ByteSequence self, out int value)
 		{
-			self.Read(out sbyte typeCode);
+			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
 			{
 				case ValueTypeCode.BYTE:
-					return value = self.Read<byte>();
+					return value = self.ReadUnmanaged<byte>();
 				case ValueTypeCode.SBYTE:
-					return value = self.Read<sbyte>();
+					return value = self.ReadUnmanaged<sbyte>();
 				case ValueTypeCode.UINT16:
-					return value = self.Read<ushort>();
+					return value = self.ReadUnmanaged<ushort>();
 				case ValueTypeCode.INT16:
-					return value = self.Read<short>();
+					return value = self.ReadUnmanaged<short>();
 				case ValueTypeCode.UINT32:
-					return value = checked((int)self.Read<uint>());
+					return value = checked((int)self.ReadUnmanaged<uint>());
 				case ValueTypeCode.INT32:
-					return value = self.Read<int>();
+					return value = self.ReadUnmanaged<int>();
 				case ValueTypeCode.UINT64:
-					return value = checked((int)self.Read<ulong>());
+					return value = checked((int)self.ReadUnmanaged<ulong>());
 				case ValueTypeCode.INT64:
-					return value = checked((int)self.Read<long>());
+					return value = checked((int)self.ReadUnmanaged<long>());
 				default:
 					return value = typeCode;
 			}
@@ -416,25 +416,25 @@ namespace WorldTree
 		/// </summary>
 		public static ulong ReadDynamic(this ByteSequence self, out ulong value)
 		{
-			self.Read(out sbyte typeCode);
+			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
 			{
 				case ValueTypeCode.BYTE:
-					return value = self.Read<byte>();
+					return value = self.ReadUnmanaged<byte>();
 				case ValueTypeCode.SBYTE:
-					return value = checked((ulong)self.Read<sbyte>());
+					return value = checked((ulong)self.ReadUnmanaged<sbyte>());
 				case ValueTypeCode.UINT16:
-					return value = self.Read<ushort>();
+					return value = self.ReadUnmanaged<ushort>();
 				case ValueTypeCode.INT16:
-					return value = checked((ulong)self.Read<short>());
+					return value = checked((ulong)self.ReadUnmanaged<short>());
 				case ValueTypeCode.UINT32:
-					return value = self.Read<uint>();
+					return value = self.ReadUnmanaged<uint>();
 				case ValueTypeCode.INT32:
-					return value = checked((ulong)self.Read<int>());
+					return value = checked((ulong)self.ReadUnmanaged<int>());
 				case ValueTypeCode.UINT64:
-					return value = self.Read<ulong>();
+					return value = self.ReadUnmanaged<ulong>();
 				case ValueTypeCode.INT64:
-					return value = checked((ulong)self.Read<long>());
+					return value = checked((ulong)self.ReadUnmanaged<long>());
 				default:
 					return value = checked((ulong)typeCode);
 			}
@@ -445,25 +445,25 @@ namespace WorldTree
 		/// </summary>
 		public static long ReadDynamic(this ByteSequence self, out long value)
 		{
-			self.Read(out sbyte typeCode);
+			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
 			{
 				case ValueTypeCode.BYTE:
-					return value = self.Read<byte>();
+					return value = self.ReadUnmanaged<byte>();
 				case ValueTypeCode.SBYTE:
-					return value = self.Read<sbyte>();
+					return value = self.ReadUnmanaged<sbyte>();
 				case ValueTypeCode.UINT16:
-					return value = self.Read<ushort>();
+					return value = self.ReadUnmanaged<ushort>();
 				case ValueTypeCode.INT16:
-					return value = self.Read<short>();
+					return value = self.ReadUnmanaged<short>();
 				case ValueTypeCode.UINT32:
-					return value = self.Read<uint>();
+					return value = self.ReadUnmanaged<uint>();
 				case ValueTypeCode.INT32:
-					return value = self.Read<int>();
+					return value = self.ReadUnmanaged<int>();
 				case ValueTypeCode.UINT64:
-					return value = checked((long)self.Read<ulong>());
+					return value = checked((long)self.ReadUnmanaged<ulong>());
 				case ValueTypeCode.INT64:
-					return value = self.Read<long>();
+					return value = self.ReadUnmanaged<long>();
 				default:
 					return value = typeCode;
 			}

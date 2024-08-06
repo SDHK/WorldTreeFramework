@@ -18,7 +18,7 @@ namespace WorldTree
 			testData.ValueT2 = 45.321f;
 
 			// 获取字节缓存写入器
-			self.AddTemp(out ByteSequence sequenceWrite).Serialize(ref testData);
+			self.AddTemp(out ByteSequence sequenceWrite).Serialize(testData);
 
 			byte[] bytes = sequenceWrite.ToBytes();
 			self.Log($"序列化{bytes.Length}");

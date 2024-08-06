@@ -37,7 +37,6 @@
 	[TreePack]
 	public partial struct NodeClassDataTest1<T1, T2>
 		where T1 : unmanaged
-		where T2 : unmanaged
 	{
 		/// <summary>
 		/// 测试整数
@@ -47,7 +46,7 @@
 		/// <summary>
 		/// 测试浮点
 		/// </summary>
-		public T2 TestFloat { get; set; }
+		public T2 TestT2 { get; set; }
 	}
 
 	/// <summary>
@@ -75,12 +74,12 @@
 			//嵌套类型
 			testData.DataTest1 = new NodeClassDataTest1<int, float>();
 			testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
-			testData.DataTest1.TestFloat = 5.789456f;
+			testData.DataTest1.TestT2 = 5.789456f;
 
 
 
 			// 序列化
-			self.AddTemp(out ByteSequence sequenceWrite).Serialize(ref testData);
+			self.AddTemp(out ByteSequence sequenceWrite).Serialize(testData);
 			byte[] bytes = sequenceWrite.ToBytes();
 
 			self.Log($"序列化字节长度{bytes.Length}");
@@ -89,7 +88,7 @@
 			self.AddTemp(out ByteSequence sequenceRead).SetBytes(bytes);
 			NodeClassDataTest<int, float, int> testData2 = null;
 			sequenceRead.Deserialize(ref testData2);
-			string logText = $"反序列化{testData2.ValueT1} {testData2.ValueT2}  嵌套类字段： {testData2.DataTest1.TestFloat}   泛型字段：{testData2.ValueT3}";
+			string logText = $"反序列化{testData2.ValueT1} {testData2.ValueT2}  嵌套类字段： {testData2.DataTest1.TestT2}   泛型字段：{testData2.ValueT3}";
 
 			logText += $" 数组：";
 			foreach (var item in testData2.DataTest1.TestInts)

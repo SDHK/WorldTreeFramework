@@ -13,6 +13,7 @@ namespace WorldTree
 	/// </summary>
 	[MemoryPackable()]
 	[MemoryPackUnion(0, typeof(NodeDataTest1))]
+	[MemoryPackUnion(1, typeof(NodeDataTest2))]
 	public partial interface INodeDataTest
 	{
 
@@ -23,6 +24,33 @@ namespace WorldTree
 	/// </summary>
 	[MemoryPackable(GenerateType.Object)]
 	public partial class NodeDataTest1: INodeDataTest
+	{
+		/// <summary>
+		/// 测试
+		/// </summary>
+		[MemoryPackOrder(1)]
+		public int Age;
+
+		/// <summary>
+		/// 测试2
+		/// </summary>
+		[MemoryPackOrder(2)]
+		public int Age1;
+
+		/// <summary>
+		/// a
+		/// </summary>
+		[MemoryPackOrder(3)]
+		public int Age2;
+
+
+	}
+
+	/// <summary>
+	/// 测试数据
+	/// </summary>
+	[MemoryPackable(GenerateType.Object)]
+	public partial class NodeDataTest2 : INodeDataTest
 	{
 		/// <summary>
 		/// 测试
@@ -107,12 +135,12 @@ namespace WorldTree
 		/// <summary>
 		/// 测试
 		/// </summary>
-		public int[] Ints { get; set; }
+		public List<int> IntList;
 
 		/// <summary>
 		/// c
 		/// </summary>
-		public int UID { get; set; }
+		public int UID { set {  } }
 
 		/// <summary>
 		/// 测试3

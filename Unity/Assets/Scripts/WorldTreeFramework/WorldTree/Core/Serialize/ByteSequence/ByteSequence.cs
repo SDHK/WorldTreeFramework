@@ -234,10 +234,20 @@ namespace WorldTree
 		#region 写入
 
 		/// <summary>
+		/// 写入值
+		/// </summary>
+		public void WriteValue<T>(in T value)
+		{
+			Core.RuleManager.SupportGenericRule<T>();
+			if (ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
+				((IRuleList<Serialize<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
+		}
+
+		/// <summary>
 		/// 写入固定长度数值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Write<T1>(in T1 value1)
+		public void WriteUnmanaged<T1>(in T1 value1)
 			where T1 : unmanaged
 		{
 			Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<T1>())), value1);
@@ -247,7 +257,7 @@ namespace WorldTree
 		/// 写入固定长度数值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Write<T1, T2>(in T1 value1, in T2 value2)
+		public void WriteUnmanaged<T1, T2>(in T1 value1, in T2 value2)
 			where T1 : unmanaged
 			where T2 : unmanaged
 		{
@@ -256,20 +266,7 @@ namespace WorldTree
 			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()), value2);
 		}
 
-		/// <summary>
-		/// 写入固定长度数值
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Write<T1, T2, T3>(in T1 value1, in T2 value2, in T3 value3)
-			where T1 : unmanaged
-			where T2 : unmanaged
-			where T3 : unmanaged
-		{
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>() + Unsafe.SizeOf<T3>()));
-			Unsafe.WriteUnaligned(ref spanRef, value1);
-			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()), value2);
-			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()), value3);
-		}
+
 
 		#region Array
 
@@ -293,7 +290,7 @@ namespace WorldTree
 		/// 危险写入非托管数组
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void DangerousWriteUnmanagedArray<T>(T[] value)
+		private void DangerousWriteUnmanagedArray<T>(T[] value)
 		{
 			if (value == null)
 			{
@@ -365,12 +362,23 @@ namespace WorldTree
 
 		#region 读取
 
+		/// <summary>
+		/// 读取值
+		/// </summary>
+		public void ReadValue<T>(ref T value)
+		{
+			Core.RuleManager.SupportGenericRule<T>();
+			if (ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
+				((IRuleList<Deserialize<T>>)ruleList).SendRef(this, ref value);
+		}
+
 
 		/// <summary>
 		/// 读取固定长度数值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public T1 Read<T1>()
+		public T1 ReadUnmanaged<T1>()
+			where T1 : unmanaged
 		{
 			return Unsafe.ReadUnaligned<T1>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>())));
 		}
@@ -379,7 +387,8 @@ namespace WorldTree
 		/// 读取固定长度数值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public T1 Read<T1>(out T1 value1)
+		public T1 ReadUnmanaged<T1>(out T1 value1)
+			where T1 : unmanaged
 		{
 			return value1 = Unsafe.ReadUnaligned<T1>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>())));
 		}
@@ -387,22 +396,13 @@ namespace WorldTree
 		/// <summary>
 		/// 读取固定长度数值
 		/// </summary>
-		public void Read<T1, T2>(out T1 value1, out T2 value2)
+		public void ReadUnmanaged<T1, T2>(out T1 value1, out T2 value2)
+			where T1 : unmanaged
+			where T2 : unmanaged
 		{
 			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()));
 			value1 = Unsafe.ReadUnaligned<T1>(ref spanRef);
 			value2 = Unsafe.ReadUnaligned<T2>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()));
-		}
-
-		/// <summary>
-		/// 读取固定长度数值
-		/// </summary>
-		public void Read<T1, T2, T3>(out T1 value1, out T2 value2, out T3 value3)
-		{
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>() + Unsafe.SizeOf<T3>()));
-			value1 = Unsafe.ReadUnaligned<T1>(ref spanRef);
-			value2 = Unsafe.ReadUnaligned<T2>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()));
-			value3 = Unsafe.ReadUnaligned<T3>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()));
 		}
 
 		#region Array
@@ -426,7 +426,7 @@ namespace WorldTree
 		/// 危险读取非托管数组
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public unsafe void DangerousReadUnmanagedArray<T>(ref T[] value)
+		private unsafe void DangerousReadUnmanagedArray<T>(ref T[] value)
 		{
 			if (!TryReadCollectionHeader(out var length))
 			{
@@ -528,11 +528,9 @@ namespace WorldTree
 		/// <summary>
 		/// 序列化写入类型
 		/// </summary>
-		public static void Serialize<T>(this ByteSequence self, ref T value)
+		public static void Serialize<T>(this ByteSequence self, in T value)
 		{
-			self.Core.RuleManager.SupportGenericRule<T>();
-			if (self.ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
-				((IRuleList<Serialize<T>>)ruleList).SendRef(self, ref value);
+			self.WriteValue(value);
 		}
 
 		/// <summary>
@@ -540,9 +538,7 @@ namespace WorldTree
 		/// </summary>
 		public static void Deserialize<T>(this ByteSequence self, ref T value)
 		{
-			self.Core.RuleManager.SupportGenericRule<T>();
-			if (self.ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
-				((IRuleList<Deserialize<T>>)ruleList).SendRef(self, ref value);
+			self.ReadValue(ref value);
 		}
 	}
 
