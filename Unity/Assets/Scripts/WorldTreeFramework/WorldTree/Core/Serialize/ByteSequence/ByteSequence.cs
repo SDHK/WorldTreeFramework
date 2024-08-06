@@ -271,9 +271,100 @@ namespace WorldTree
 			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()), value3);
 		}
 
+		#region Array
+
+		/// <summary>
+		/// 写入Null集合
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteNullCollectionHeader()
+		=> Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(4)), TreePackCode.NULL_COLLECTION);
+
+		/// <summary>
+		/// 写入集合头
+		/// </summary>
+		/// <param name="length"></param>
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteCollectionHeader(int length)
+		=> Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(4)), length);
+
+		/// <summary>
+		/// 危险写入非托管数组
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void DangerousWriteUnmanagedArray<T>(T[] value)
+		{
+			if (value == null)
+			{
+				WriteNullCollectionHeader();
+				return;
+			}
+			if (value.Length == 0)
+			{
+				WriteCollectionHeader(0);
+				return;
+			}
+
+			//获取数组数据长度
+			var srcLength = Unsafe.SizeOf<T>() * value.Length;
+			//包含数组数量的总长度
+			var allocSize = srcLength + 4;
+
+			//获取写入操作跨度
+			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(allocSize));
+
+			//获取数组数据的指针
+			ref var src = ref Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(value.AsSpan()));
+
+			//写入数组长度
+			Unsafe.WriteUnaligned(ref spanRef, value.Length);
+			//写入数组数据
+			Unsafe.CopyBlockUnaligned(ref Unsafe.Add(ref spanRef, 4), ref src, (uint)srcLength);
+		}
+
+		/// <summary>
+		/// 写入数组
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteArray<T>(T[] value)
+		{
+			if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+			{
+				DangerousWriteUnmanagedArray(value);
+				return;
+			}
+			if (value == null)
+			{
+				WriteNullCollectionHeader();
+				return;
+			}
+			WriteCollectionHeader(value.Length);
+
+			if (ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
+			{
+				IRuleList<Serialize<T>> ruleListT = ruleList;
+				for (int i = 0; i < value.Length; i++) ruleListT.SendRef(this, ref value[i]);
+			}
+		}
+
+		/// <summary>
+		/// 写入非托管数组
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteUnmanagedArray<T>(T[] value)
+			where T : unmanaged
+		{
+			DangerousWriteUnmanagedArray(value);
+		}
+
+		#endregion
+
+
 		#endregion
 
 		#region 读取
+
 
 		/// <summary>
 		/// 读取固定长度数值
@@ -313,6 +404,102 @@ namespace WorldTree
 			value2 = Unsafe.ReadUnaligned<T2>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()));
 			value3 = Unsafe.ReadUnaligned<T3>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()));
 		}
+
+		#region Array
+
+		/// <summary>
+		/// 尝试读取集合头
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool TryReadCollectionHeader(out int length)
+		{
+			length = Unsafe.ReadUnaligned<int>(ref MemoryMarshal.GetReference(GetReadSpan(4)));
+			if (ReadRemain < length)
+			{
+				this.LogError($"数组长度超出数据长度: {length}.");
+				return false;
+			}
+			return length != TreePackCode.NULL_COLLECTION;
+		}
+
+		/// <summary>
+		/// 危险读取非托管数组
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public unsafe void DangerousReadUnmanagedArray<T>(ref T[] value)
+		{
+			if (!TryReadCollectionHeader(out var length))
+			{
+				value = null;
+				return;
+			}
+
+			if (length == 0)
+			{
+				value = Array.Empty<T>();
+				return;
+			}
+
+			var byteCount = length * Unsafe.SizeOf<T>();
+			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(byteCount));
+
+			//假如数组为空或长度不一致，那么重新分配
+			if (value == null || value.Length != length) value = new T[length];
+
+			ref var src = ref Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(value.AsSpan()));
+			Unsafe.CopyBlockUnaligned(ref src, ref spanRef, (uint)byteCount);
+		}
+
+		/// <summary>
+		/// 读取数组
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void ReadArray<T>(ref T[] value)
+		{
+			if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+			{
+				DangerousReadUnmanagedArray(ref value);
+				return;
+			}
+
+			if (!TryReadCollectionHeader(out var length))
+			{
+				value = null;
+				return;
+			}
+
+			if (length == 0)
+			{
+				value = Array.Empty<T>();
+				return;
+			}
+
+			//假如数组为空或长度不一致，那么重新分配
+			if (value == null || value.Length != length)
+			{
+				value = new T[length];
+			}
+
+			Core.RuleManager.SupportGenericRule<T>();
+			if (ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
+			{
+				IRuleList<Deserialize<T>> ruleListT = ruleList;
+				for (int i = 0; i < length; i++) ruleListT.SendRef(this, ref value[i]);
+			}
+		}
+
+		/// <summary>
+		/// 读取非托管数组
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void ReadUnmanagedArray<T>(ref T[] value)
+			where T : unmanaged
+		{
+			DangerousReadUnmanagedArray(ref value);
+		}
+
+		#endregion
+
 		#endregion
 	}
 

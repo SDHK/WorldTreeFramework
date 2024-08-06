@@ -114,23 +114,42 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("			{");
 			foreach (ISymbol symbol in fieldSymbols)
 			{
-				bool IsUnmanagedType = (symbol as IFieldSymbol)?.Type.IsUnmanagedType ?? (symbol as IPropertySymbol)?.Type.IsUnmanagedType ?? false;
 				if (symbol is IFieldSymbol fieldSymbol)
 				{
 					//判断是否是属性的后备字段
 					if (fieldSymbol.AssociatedSymbol is IPropertySymbol propertySymbol) continue;
 
-					if (IsUnmanagedType)
-						Code.AppendLine($"				self.Write(value.{symbol.Name});");
+					if (fieldSymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
+					{
+						if (arrayTypeSymbol.ElementType.IsUnmanagedType)
+							Code.AppendLine($"				self.WriteUnmanagedArray(value.{symbol.Name});");
+						else
+							Code.AppendLine($"				self.WriteArray(value.{symbol.Name});");
+					}
 					else
-						Code.AppendLine($"				self.Serialize(ref value.{symbol.Name});");
+					{
+						if (fieldSymbol.Type.IsUnmanagedType)
+							Code.AppendLine($"				self.Write(value.{symbol.Name});");
+						else
+							Code.AppendLine($"				self.Serialize(ref value.{symbol.Name});");
+					}
 				}
 				else if (symbol is IPropertySymbol propertySymbol)
 				{
-					if (IsUnmanagedType)
-						Code.AppendLine($"				self.Write(value.{propertySymbol.Name});");
+					if (propertySymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
+					{
+						if (arrayTypeSymbol.ElementType.IsUnmanagedType)
+							Code.AppendLine($"				self.WriteUnmanagedArray(value.{symbol.Name});");
+						else
+							Code.AppendLine($"				self.WriteArray(value.{symbol.Name});");
+					}
 					else
-						Code.AppendLine($"				self.Serialize(ref value.{propertySymbol.Name});");
+					{
+						if (propertySymbol.Type.IsUnmanagedType)
+							Code.AppendLine($"				self.Write(value.{propertySymbol.Name});");
+						else
+							Code.AppendLine($"				self.Serialize(ref value.{propertySymbol.Name});");
+					}
 				}
 
 			}
@@ -153,21 +172,43 @@ namespace WorldTree.SourceGenerator
 					//判断是否是属性的后备字段
 					if (fieldSymbol.AssociatedSymbol is IPropertySymbol propertySymbol) continue;
 
-					if (fieldSymbol.Type.IsUnmanagedType)
-						Code.AppendLine($"				self.Read(out value.{symbol.Name});");
-					else
-						Code.AppendLine($"				self.Deserialize(ref value.{symbol.Name});");
-				}
-				else if (symbol is IPropertySymbol propertySymbol)
-				{
-					if (propertySymbol.Type.IsUnmanagedType)
+					if (fieldSymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
 					{
-						Code.AppendLine($"				self.Read(out {propertySymbol.Type.Name} m{propertySymbol.Name});");
+						if (arrayTypeSymbol.ElementType.IsUnmanagedType)
+							Code.AppendLine($"				self.ReadUnmanagedArray(ref value.{symbol.Name});");
+						else
+							Code.AppendLine($"				self.ReadArray(ref value.{symbol.Name});");
 					}
 					else
 					{
-						Code.AppendLine($"				{propertySymbol.Type.Name} m{propertySymbol.Name};");
-						Code.AppendLine($"				self.Deserialize(ref m{propertySymbol.Name});");
+						if (fieldSymbol.Type.IsUnmanagedType)
+							Code.AppendLine($"				self.Read(out value.{symbol.Name});");
+						else
+							Code.AppendLine($"				self.Deserialize(ref value.{symbol.Name});");
+					}
+				}
+				else if (symbol is IPropertySymbol propertySymbol)
+				{
+					if (propertySymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
+					{
+						Code.AppendLine($"				{arrayTypeSymbol.ElementType}[] m{propertySymbol.Name} = default;");
+
+						if (arrayTypeSymbol.ElementType.IsUnmanagedType)
+							Code.AppendLine($"				self.ReadUnmanagedArray(ref m{symbol.Name});");
+						else
+							Code.AppendLine($"				self.ReadArray(ref m{symbol.Name});");
+					}
+					else
+					{
+						if (propertySymbol.Type.IsUnmanagedType)
+						{
+							Code.AppendLine($"				self.Read(out {propertySymbol.Type.Name} m{propertySymbol.Name});");
+						}
+						else
+						{
+							Code.AppendLine($"				{propertySymbol.Type.Name} m{propertySymbol.Name};");
+							Code.AppendLine($"				self.Deserialize(ref m{propertySymbol.Name});");
+						}
 					}
 					Code.AppendLine($"				value.{propertySymbol.Name} = m{propertySymbol.Name};");
 				}

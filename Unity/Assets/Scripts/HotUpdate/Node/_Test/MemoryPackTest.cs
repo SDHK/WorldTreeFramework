@@ -107,12 +107,12 @@ namespace WorldTree
 		/// <summary>
 		/// 测试
 		/// </summary>
-		public List<int> IntList;
+		public int[] Ints { get; set; }
 
 		/// <summary>
 		/// c
 		/// </summary>
-		public int UID { set {  } }
+		public int UID { get; set; }
 
 		/// <summary>
 		/// 测试3

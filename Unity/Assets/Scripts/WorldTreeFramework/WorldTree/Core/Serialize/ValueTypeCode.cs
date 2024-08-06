@@ -8,6 +8,18 @@
 */
 namespace WorldTree
 {
+
+	/// <summary>
+	/// 树包编码
+	/// </summary>
+	public static class TreePackCode
+	{
+		/// <summary>
+		/// 集合Null值
+		/// </summary>
+		public const int NULL_COLLECTION = -1;
+	}
+
 	/// <summary>
 	/// 整数编码
 	/// </summary>

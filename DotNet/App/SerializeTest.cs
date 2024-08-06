@@ -42,7 +42,7 @@
 		/// <summary>
 		/// 测试整数
 		/// </summary>
-		public T1 TestInt { get; set; }
+		public T1[] TestInts { get; set; }
 
 		/// <summary>
 		/// 测试浮点
@@ -74,7 +74,7 @@
 
 			//嵌套类型
 			testData.DataTest1 = new NodeClassDataTest1<int, float>();
-			testData.DataTest1.TestInt = 798456;
+			testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
 			testData.DataTest1.TestFloat = 5.789456f;
 
 
@@ -89,7 +89,14 @@
 			self.AddTemp(out ByteSequence sequenceRead).SetBytes(bytes);
 			NodeClassDataTest<int, float, int> testData2 = null;
 			sequenceRead.Deserialize(ref testData2);
-			self.Log($"反序列化{testData2.ValueT1} {testData2.ValueT2}  嵌套类字段： {testData2.DataTest1.TestFloat} {testData2.DataTest1.TestInt}  泛型字段：{testData2.ValueT3}");
+			string logText = $"反序列化{testData2.ValueT1} {testData2.ValueT2}  嵌套类字段： {testData2.DataTest1.TestFloat}   泛型字段：{testData2.ValueT3}";
+
+			logText += $" 数组：";
+			foreach (var item in testData2.DataTest1.TestInts)
+			{
+				logText += $"{item}, ";
+			}
+			self.Log(logText);
 		};
 	}
 }
