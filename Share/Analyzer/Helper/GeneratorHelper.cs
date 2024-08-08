@@ -41,9 +41,14 @@ namespace WorldTree
 		public static string ISourceGeneratorIgnore = "ISourceGeneratorIgnore";
 
 		/// <summary>
-		/// 树节点数据包装特性标记
+		/// 树节点数据包特性标记
 		/// </summary>
 		public static string TreePackAttribute = "TreePackAttribute";
+
+		/// <summary>
+		/// 树节点数据包子类转换特性标记
+		/// </summary>
+		public static string TreePackSubAttribute = "TreePackSubAttribute";
 
 		/// <summary>
 		/// 树节点数据忽略特性标记

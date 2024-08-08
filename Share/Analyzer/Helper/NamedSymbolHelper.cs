@@ -23,6 +23,135 @@ namespace WorldTree
 
 
 		/// <summary>
+		/// 获取继承了指定基类或接口的所有子类
+		/// </summary>
+		/// <param name="compilation">编译类</param>
+		/// <param name="baseTypeName">基类或接口的全名</param>
+		/// <returns>继承了指定基类或接口的所有子类</returns>
+		public static IEnumerable<INamedTypeSymbol> GetDerivedTypes(this Compilation compilation, string baseTypeName)
+		{
+			INamedTypeSymbol? baseTypeSymbol = compilation.GetTypeByMetadataName(baseTypeName);
+			return compilation.GetDerivedTypes(baseTypeSymbol);
+		}
+
+		/// <summary>
+		/// 获取继承了指定基类或接口的所有子类
+		/// </summary>
+		/// <param name="compilation">编译类</param>
+		/// <param name="baseTypeDeclaration">基类或接口</param>
+		/// <returns>继承了指定基类或接口的所有子类</returns>
+		public static IEnumerable<INamedTypeSymbol> GetDerivedTypes(this Compilation compilation, TypeDeclarationSyntax baseTypeDeclaration)
+		{
+			var semanticModel = compilation.GetSemanticModel(baseTypeDeclaration.SyntaxTree);
+			return compilation.GetDerivedTypes(semanticModel.GetDeclaredSymbol(baseTypeDeclaration));
+		}
+
+		/// <summary>
+		/// 获取继承了指定基类或接口的所有子类
+		/// </summary>
+		/// <param name="compilation">编译类</param>
+		/// <param name="baseTypeSymbol">基类或接口</param>
+		/// <returns>继承了指定基类或接口的所有子类</returns>
+		public static IEnumerable<INamedTypeSymbol> GetDerivedTypes(this Compilation compilation, INamedTypeSymbol? baseTypeSymbol)
+		{
+			if (baseTypeSymbol == null)
+			{
+				return Enumerable.Empty<INamedTypeSymbol>();
+			}
+
+			return compilation.GetSymbolsWithName(
+				name => true, // 获取所有命名类型符号
+				SymbolFilter.Type
+			).OfType<INamedTypeSymbol>()
+			 .Where(type => IsDerivedFrom(type, baseTypeSymbol));
+		}
+
+
+		/// <summary>
+		/// 获取同程序集下的派生类型
+		/// </summary>
+		/// <param name="baseTypeSymbol">基类或接口</param>
+		/// <param name="compilation">编译类</param>
+		/// <returns>同程序集下的派生类型</returns>
+		public static List<TypeDeclarationSyntax> GetDerivedTypes(INamedTypeSymbol baseTypeSymbol, Compilation compilation)
+		{
+			var derivedTypes = new List<TypeDeclarationSyntax>();
+
+			if (baseTypeSymbol == null)
+			{
+				return derivedTypes;
+			}
+
+			foreach (var syntaxTree in compilation.SyntaxTrees)
+			{
+				SemanticModel model = compilation.GetSemanticModel(syntaxTree);
+				SyntaxNode root = syntaxTree.GetRoot();
+
+				var typeDeclarations = root.DescendantNodes().OfType<TypeDeclarationSyntax>();
+				foreach (var typeDeclaration in typeDeclarations)
+				{
+					var typeSymbol = model.GetDeclaredSymbol(typeDeclaration) as INamedTypeSymbol;
+					if (typeSymbol != null && IsDerivedFrom(typeSymbol, baseTypeSymbol))
+					{
+						derivedTypes.Add(typeDeclaration);
+					}
+				}
+			}
+			return derivedTypes;
+		}
+
+
+		/// <summary>
+		/// 检查类型是否派生自指定基类或接口
+		/// </summary>
+		public static bool IsDerivedFrom(INamedTypeSymbol type, INamedTypeSymbol baseType)
+		{
+			// 排除基类本身
+			if (SymbolEqualityComparer.Default.Equals(type, baseType)) return false;
+
+			// 接口判断
+			if (baseType.TypeKind == TypeKind.Interface)
+				return type.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, baseType));
+
+			// 遍历基类
+			var currentType = type;
+			while (currentType != null)
+			{
+				if (SymbolEqualityComparer.Default.Equals(currentType, baseType))
+				{
+					return true;
+				}
+				currentType = currentType.BaseType;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// 获取所有成员
+		/// </summary>
+		public static List<ISymbol> GetAllMembers(INamedTypeSymbol classSymbol)
+		{
+			var members = new List<ISymbol>(classSymbol.GetMembers());
+
+			// 获取父类的成员
+			var baseType = classSymbol.BaseType;
+			while (baseType != null)
+			{
+				foreach (var member in baseType.GetMembers())
+				{
+					// 检查是否已经存在同名成员
+					if (!members.Any(m => m.Name == member.Name && m.Kind == member.Kind))
+					{
+						members.Add(member);
+					}
+				}
+				baseType = baseType.BaseType;
+			}
+			return members;
+		}
+
+
+		/// <summary>
 		/// 获取字段类型
 		/// </summary>
 		public static ITypeSymbol? ToITypeSymbol(this Compilation compilation, FieldDeclarationSyntax fieldDeclaration)
@@ -30,7 +159,7 @@ namespace WorldTree
 			return compilation.GetSemanticModel(fieldDeclaration.SyntaxTree).GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
 		}
 
-		
+
 
 		/// <summary>
 		/// 将类声明语法转换为命名类型符号

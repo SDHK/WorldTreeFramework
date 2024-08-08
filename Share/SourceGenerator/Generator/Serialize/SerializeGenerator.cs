@@ -16,10 +16,15 @@ namespace WorldTree.SourceGenerator
 	[Generator]
 	internal class SerializeGenerator : ISourceGenerator
 	{
+		public Dictionary<INamedTypeSymbol, List<INamedTypeSymbol>> TypeSubDict = new();
+
+
 		public void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindTreePackSyntaxReceiver());
 		}
+
+
 
 		public void Execute(GeneratorExecutionContext context)
 		{
@@ -43,10 +48,28 @@ namespace WorldTree.SourceGenerator
 
 				foreach (TypeDeclarationSyntax typeDeclaration in TypeListItem.Value)
 				{
-					if (typeDeclaration is ClassDeclarationSyntax or StructDeclarationSyntax)
+					INamedTypeSymbol? baseNamedType = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
+					if (!TypeSubDict.TryGetValue(baseNamedType, out var SubList))
 					{
-						SerializePartialClassGenerator.Execute(context, ClassCode, typeDeclaration);
+						SubList = new();
+						TypeSubDict.Add(baseNamedType, SubList);
 					}
+					// 获取所有标记在类型上的特性
+					var attributes = baseNamedType.GetAttributes();
+					// 查找特定的 TreePackSubAttribute 特性
+					attributes.Where(attr => attr.AttributeClass?.Name == GeneratorHelper.TreePackSubAttribute).ToList()
+					.ForEach(attr =>
+					{
+						// 获取特性参数
+						var typeArgument = attr.ConstructorArguments.FirstOrDefault();
+						if (typeArgument.Kind == TypedConstantKind.Type && typeArgument.Value is INamedTypeSymbol namedTypeSymbol)
+						{
+							SubList.Add(namedTypeSymbol);
+							var typeName = namedTypeSymbol.ToDisplayString();
+						}
+					});
+
+					SerializePartialClassGenerator.Execute(context, ClassCode, typeDeclaration, SubList);
 				}
 
 

@@ -32,6 +32,8 @@ namespace WorldTree
 	/// </summary>
 	public class RuleManager : Node, IListenerIgnorer, ComponentOf<WorldTreeCore>
 	{
+		#region 泛型支持
+
 		/// <summary>
 		/// 已支持的类型哈希名单
 		/// </summary>
@@ -42,6 +44,7 @@ namespace WorldTree
 		/// </summary>
 		/// <remarks>泛型节点类型，泛型法则类型哈希表</remarks>
 		public UnitDictionary<Type, UnitHashSet<Type>> GenericNodeRuleTypeHashDict = new();
+
 
 		/// <summary>
 		/// 已支持的泛型参数类型哈希名单
@@ -59,6 +62,10 @@ namespace WorldTree
 		/// </summary>
 		/// <remarks>未知泛型类型，泛型法则类型哈希表</remarks>
 		public UnitHashSet<Type> GenericRuleTypeHash = new();
+
+		#endregion
+
+		#region 监听法则
 
 		///// <summary>
 		///// 动态监听器节点类型哈希名单
@@ -88,6 +95,8 @@ namespace WorldTree
 		/// </remarks>
 		public UnitDictionary<long, Dictionary<long, RuleGroup>> ListenerRuleTargetGroupDict = new();
 
+		#endregion
+
 		/// <summary>
 		/// 法则字典
 		/// </summary>
@@ -102,6 +111,8 @@ namespace WorldTree
 		/// <para> 记录节点拥有的法则类型，也用于法则多态化的查询</para>
 		/// </remarks>
 		public UnitDictionary<long, Dictionary<long, RuleList>> NodeTypeRulesDict = new();
+
+
 
 		public RuleManager()
 		{
@@ -346,12 +357,13 @@ namespace WorldTree
 		public void SupportGenericRule<T>()
 		{
 			if (SupportGenericTypeHash.Contains(TypeInfo<T>.TypeCode)) return;
-			if (TypeInfo<T>.Type.IsGenericType)
+			Type genericType = TypeInfo<T>.Type;
+			if (genericType.IsGenericType)
 			{
 				//获取泛型本体类型
-				Type genericDefinition = TypeInfo<T>.Type.GetGenericTypeDefinition();
+				Type genericDefinition = genericType.GetGenericTypeDefinition();
 				//获取泛型参数数组
-				Type[] genericTypes = TypeInfo<T>.Type.GetGenericArguments();
+				Type[] genericTypes = genericType.GetGenericArguments();
 
 				if (GenericTypeRuleTypeHashDict.TryGetValue(genericDefinition, out var RuleTypeHash))
 				{
@@ -369,7 +381,7 @@ namespace WorldTree
 			}
 			else
 			{
-				Type genericDefinition = TypeInfo<T>.Type;
+				Type genericDefinition = genericType;
 				UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
 				foreach (var RuleType in GenericRuleTypeHash)
 				{

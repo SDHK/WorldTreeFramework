@@ -6,7 +6,6 @@ namespace WorldTree.TreePack.Formatters
 	public static class UnmanagedFormatterRule
 	{
 		class Serialize<T> : SerializeRule<ByteSequence, T>
-			where T : unmanaged
 		{
 			protected override void Execute(ByteSequence self, ref T value)
 			{
@@ -14,7 +13,6 @@ namespace WorldTree.TreePack.Formatters
 			}
 		}
 		class Deserialize<T> : DeserializeRule<ByteSequence, T>
-			where T : unmanaged
 		{
 			protected override void Execute(ByteSequence self, ref T value)
 			{

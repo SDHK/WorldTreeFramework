@@ -66,7 +66,6 @@ namespace WorldTree
 		}
 
 
-
 		/// <summary>
 		/// 检查类是否直接实现了指定接口
 		/// </summary>

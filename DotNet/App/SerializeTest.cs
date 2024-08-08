@@ -1,4 +1,6 @@
-﻿namespace WorldTree
+﻿using System;
+
+namespace WorldTree
 {
 
 	/// <summary>
@@ -29,13 +31,19 @@
 		/// 测试泛型3
 		/// </summary>
 		public T3 ValueT3 = default;
+
+		/// <summary>
+		/// 测试class
+		/// </summary>
+		public NodeClassDataBase DataTestBase;
+
 	}
 
 	/// <summary>
 	/// 测试数据2
 	/// </summary>
 	[TreePack]
-	public partial struct NodeClassDataTest1<T1, T2>
+	public partial class NodeClassDataTest1<T1, T2>
 		where T1 : unmanaged
 	{
 		/// <summary>
@@ -48,6 +56,50 @@
 		/// </summary>
 		public T2 TestT2 { get; set; }
 	}
+
+	/// <summary>
+	/// 测试数据3
+	/// </summary>
+	[TreePack]
+	[TreePackSub(typeof(NodeClassDataSub1))]
+	[TreePackSub(typeof(NodeClassDataSub2))]
+	public partial class NodeClassDataBase
+	{
+		/// <summary>
+		/// 测试整数
+		/// </summary>
+		public int[] TestInts { get; set; }
+
+		/// <summary>
+		/// 测试浮点
+		/// </summary>
+		public int TestT2 { get; set; }
+	}
+
+	/// <summary>
+	/// 测试数据3
+	/// </summary>
+	[TreePack]
+	public partial class NodeClassDataSub1 : NodeClassDataBase
+	{
+		/// <summary>
+		/// 测试整数
+		/// </summary>
+		public int TestInt_T;
+	}
+
+	/// <summary>
+	/// 测试数据4
+	/// </summary>
+	[TreePack]
+	public partial class NodeClassDataSub2 : NodeClassDataBase
+	{
+		/// <summary>
+		/// 测试整数
+		/// </summary>
+		public float TestFloat_T;
+	}
+
 
 	/// <summary>
 	/// 序列化测试
@@ -76,6 +128,12 @@
 			testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
 			testData.DataTest1.TestT2 = 5.789456f;
 
+			testData.DataTestBase = new NodeClassDataSub2()
+			{
+				TestInts = new[] { 17, 31, 54, 88 },
+				TestT2 = 5,
+				TestFloat_T = 1.999f,
+			};
 
 
 			// 序列化
@@ -92,6 +150,14 @@
 
 			logText += $" 数组：";
 			foreach (var item in testData2.DataTest1.TestInts)
+			{
+				logText += $"{item}, ";
+			}
+
+			logText += $" 基类数组：";
+			NodeClassDataSub2 nodeClassDataSub = testData2.DataTestBase as NodeClassDataSub2;
+			logText += $" {nodeClassDataSub.TestFloat_T} ";
+			foreach (var item in nodeClassDataSub.TestInts)
 			{
 				logText += $"{item}, ";
 			}
