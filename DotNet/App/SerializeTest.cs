@@ -125,7 +125,7 @@ namespace WorldTree
 
 			//嵌套类型
 			testData.DataTest1 = new NodeClassDataTest1<int, float>();
-			testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
+			//testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
 			testData.DataTest1.TestT2 = 5.789456f;
 
 			testData.DataTestBase = new NodeClassDataBase()
@@ -149,10 +149,18 @@ namespace WorldTree
 			string logText = $"反序列化{testData2.ValueT1} {testData2.ValueT2}  嵌套类字段： {testData2.DataTest1.TestT2}   泛型字段：{testData2.ValueT3}";
 
 			logText += $" 数组：";
-			foreach (var item in testData2.DataTest1.TestInts)
+			if (testData2.DataTest1.TestInts == null)
 			{
-				logText += $"{item}, ";
+				logText += $"null !!, ";
 			}
+			else
+			{
+				foreach (var item in testData2.DataTest1.TestInts)
+				{
+					logText += $"{item}, ";
+				}
+			}
+
 
 			logText += $" 基类数组：";
 			NodeClassDataBase nodeClassDataSub = testData2.DataTestBase as NodeClassDataBase;

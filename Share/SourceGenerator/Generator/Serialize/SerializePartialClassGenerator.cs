@@ -69,6 +69,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("	{");
 			Code.AppendLine($"		class Serialize : SerializeRule<ByteSequence, {className}>");
 			Code.AppendLine("		{");
+
 			if (SubList != null && SubList.Count != 0)
 			{
 				Code.AppendLine($"			static readonly System.Collections.Generic.Dictionary<Type, short> m_typeToTagDict = new({SubList.Count})");
@@ -83,6 +84,20 @@ namespace WorldTree.SourceGenerator
 
 			Code.AppendLine($"			protected override void Execute(ByteSequence self, ref {className} value)");
 			Code.AppendLine("			{");
+			if (!classSymbol.TypeKind.HasFlag(TypeKind.Struct))
+			{
+				Code.AppendLine("				if(value == null)");
+				Code.AppendLine("				{");
+				Code.AppendLine("					self.WriteNullObjectHeader();");
+				Code.AppendLine("					return;");
+				Code.AppendLine("				}");
+				Code.AppendLine("				else");
+				Code.AppendLine("				{");
+				Code.AppendLine($"					self.WriteUnmanaged({fieldSymbols.Count});");
+				Code.AppendLine("				}");
+			}
+
+
 			if (SubList != null && SubList.Count != 0)
 			{
 				Code.AppendLine("				if (m_typeToTagDict.TryGetValue(value.GetType(), out short tag))");
@@ -159,6 +174,20 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("		{");
 			Code.AppendLine($"			protected override void Execute(ByteSequence self, ref {className} value)");
 			Code.AppendLine("			{");
+
+
+			if (!classSymbol.TypeKind.HasFlag(TypeKind.Struct))
+			{
+				Code.AppendLine("				if (!self.TryReadObjectHeader(out short tagCount))");
+				Code.AppendLine("				{");
+				Code.AppendLine("					value = default;");
+				Code.AppendLine("					return;");
+				Code.AppendLine("				}");
+				Code.AppendLine("				else");
+				Code.AppendLine("				{");
+				Code.AppendLine("					self.ReadUnmanaged(out tagCount);");
+				Code.AppendLine("				}");
+			}
 
 			if (SubList != null && SubList.Count != 0)
 			{

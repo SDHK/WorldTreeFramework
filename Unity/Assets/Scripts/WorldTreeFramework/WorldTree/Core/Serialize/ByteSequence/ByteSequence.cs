@@ -266,6 +266,12 @@ namespace WorldTree
 			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()), value2);
 		}
 
+		/// <summary>
+		/// 写入Null对象标记
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteNullObjectHeader()
+		=> Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<short>())), TreePackCode.NULL_OBJECT);
 
 
 		#region Array
@@ -277,6 +283,10 @@ namespace WorldTree
 		public void WriteNullCollectionHeader()
 		=> Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(4)), TreePackCode.NULL_COLLECTION);
 
+
+		
+
+
 		/// <summary>
 		/// 写入集合头
 		/// </summary>
@@ -284,7 +294,7 @@ namespace WorldTree
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void WriteCollectionHeader(int length)
-		=> Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(4)), length);
+		=> Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<int>())), length);
 
 		/// <summary>
 		/// 危险写入非托管数组
@@ -306,7 +316,7 @@ namespace WorldTree
 			//获取数组数据长度
 			var srcLength = Unsafe.SizeOf<T>() * value.Length;
 			//包含数组数量的总长度
-			var allocSize = srcLength + 4;
+			var allocSize = srcLength + Unsafe.SizeOf<int>();
 
 			//获取写入操作跨度
 			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(allocSize));
@@ -317,7 +327,7 @@ namespace WorldTree
 			//写入数组长度
 			Unsafe.WriteUnaligned(ref spanRef, value.Length);
 			//写入数组数据
-			Unsafe.CopyBlockUnaligned(ref Unsafe.Add(ref spanRef, 4), ref src, (uint)srcLength);
+			Unsafe.CopyBlockUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<int>()), ref src, (uint)srcLength);
 		}
 
 		/// <summary>
@@ -406,6 +416,16 @@ namespace WorldTree
 			value2 = Unsafe.ReadUnaligned<T2>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()));
 		}
 
+		/// <summary>
+		/// 尝试读取对象头标记
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool TryReadObjectHeader(out short memberCount)
+		{
+			memberCount = Unsafe.ReadUnaligned<short>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<short>())));
+			return memberCount != TreePackCode.NULL_OBJECT;
+		}
+
 		#region Array
 
 		/// <summary>
@@ -414,7 +434,7 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool TryReadCollectionHeader(out int length)
 		{
-			length = Unsafe.ReadUnaligned<int>(ref MemoryMarshal.GetReference(GetReadSpan(4)));
+			length = Unsafe.ReadUnaligned<int>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<int>())));
 			if (ReadRemain < length)
 			{
 				this.LogError($"数组长度超出数据长度: {length}.");
