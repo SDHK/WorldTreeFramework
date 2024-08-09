@@ -128,11 +128,11 @@ namespace WorldTree
 			testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
 			testData.DataTest1.TestT2 = 5.789456f;
 
-			testData.DataTestBase = new NodeClassDataSub2()
+			testData.DataTestBase = new NodeClassDataBase()
 			{
-				TestInts = new[] { 17, 31, 54, 88 },
+				TestInts = new[] { 17, 31, 54, 8899 },
 				TestT2 = 5,
-				TestFloat_T = 1.999f,
+				//TestFloat_T = 1.999f,
 			};
 
 
@@ -155,8 +155,8 @@ namespace WorldTree
 			}
 
 			logText += $" 基类数组：";
-			NodeClassDataSub2 nodeClassDataSub = testData2.DataTestBase as NodeClassDataSub2;
-			logText += $" {nodeClassDataSub.TestFloat_T} ";
+			NodeClassDataBase nodeClassDataSub = testData2.DataTestBase as NodeClassDataBase;
+			//logText += $" {nodeClassDataSub.TestFloat_T} ";
 			foreach (var item in nodeClassDataSub.TestInts)
 			{
 				logText += $"{item}, ";

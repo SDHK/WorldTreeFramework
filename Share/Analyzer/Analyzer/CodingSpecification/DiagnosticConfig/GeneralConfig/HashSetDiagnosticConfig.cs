@@ -39,7 +39,7 @@ namespace WorldTree.Analyzer
 			SetConfig(DiagnosticKey.ClassPropertyNaming, new DiagnosticConfig()
 			{
 				Title = "HashSet类型属性命名",
-				MessageFormat = "HashSet类型属性 命名要加Set后戳",
+				MessageFormat = "HashSet类型属性 命名要加Hash后戳",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				Check = s => Regex.IsMatch(s, ".*Hash$"),
 				FixCode = s => s + "Hash",
@@ -48,7 +48,7 @@ namespace WorldTree.Analyzer
 			SetConfig(DiagnosticKey.ClassLocalVariableNaming, new DiagnosticConfig()
 			{
 				Title = "HashSet类型局部变量命名",
-				MessageFormat = "HashSet类型局部变量 命名要加Set后戳",
+				MessageFormat = "HashSet类型局部变量 命名要加Hash后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
 				Check = s => Regex.IsMatch(s, ".*Hash$"),
 				FixCode = s => s + "Hash",

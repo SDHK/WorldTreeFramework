@@ -238,7 +238,7 @@ namespace WorldTree
 		/// </summary>
 		public void WriteValue<T>(in T value)
 		{
-			Core.RuleManager.SupportGenericRule<T>();
+			Core.RuleManager.SupportGenericRule<T>(typeof(Serialize<>));
 			if (ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
 				((IRuleList<Serialize<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
@@ -338,6 +338,7 @@ namespace WorldTree
 			}
 			WriteCollectionHeader(value.Length);
 
+			Core.RuleManager.SupportGenericRule<T>(typeof(Serialize<>));
 			if (ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
 			{
 				IRuleList<Serialize<T>> ruleListT = ruleList;
@@ -367,7 +368,7 @@ namespace WorldTree
 		/// </summary>
 		public void ReadValue<T>(ref T value)
 		{
-			Core.RuleManager.SupportGenericRule<T>();
+			Core.RuleManager.SupportGenericRule<T>(typeof(Deserialize<>));
 			if (ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
 				((IRuleList<Deserialize<T>>)ruleList).SendRef(this, ref value);
 		}
@@ -480,7 +481,7 @@ namespace WorldTree
 				value = new T[length];
 			}
 
-			Core.RuleManager.SupportGenericRule<T>();
+			Core.RuleManager.SupportGenericRule<T>(typeof(Deserialize<>));
 			if (ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
 			{
 				IRuleList<Deserialize<T>> ruleListT = ruleList;
