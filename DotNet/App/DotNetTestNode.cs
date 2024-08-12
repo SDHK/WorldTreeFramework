@@ -28,7 +28,7 @@
 
 		private static OnUpdate<DotNetTestNode> Update = (self) =>
 		{
-			//self.Log($"初始更新！！！");
+			self.Log($"初始更新！！！");
 		};
 
 		private static OnUpdateTime<DotNetTestNode> UpdateTime = (self, timeSpan) =>

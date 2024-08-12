@@ -386,7 +386,8 @@ namespace WorldTree
 							//填入对应的泛型参数，实例化泛型监听系统
 							IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
 							//添加法则，泛型动态支持不可覆盖已有定义
-							if (!RuleGroupDict.ContainsKey(rule.RuleType)) ruleList.Add(rule);
+							if (!(RuleGroupDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.ContainsKey(rule.NodeType)))
+								ruleList.Add(rule);
 						}
 						foreach (var rule in ruleList) AddRule(rule);
 						ruleList.Dispose();
@@ -407,7 +408,8 @@ namespace WorldTree
 					//填入对应的泛型参数，实例化泛型监听系统
 					IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericDefinition));
 					//添加法则，泛型动态支持不可覆盖已有定义
-					if (!RuleGroupDict.ContainsKey(rule.RuleType)) ruleList.Add(rule);
+					if (!(RuleGroupDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.ContainsKey(rule.NodeType)))
+						ruleList.Add(rule);
 				}
 				foreach (var rule in ruleList) AddRule(rule);
 				ruleList.Dispose();
@@ -444,12 +446,10 @@ namespace WorldTree
 							//填入对应的泛型参数，实例化泛型监听系统
 							IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
 							//添加法则，泛型动态支持不可覆盖已有定义
-							if (!RuleGroupDict.ContainsKey(rule.RuleType)) ruleList.Add(rule);
+							if (!(RuleGroupDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.ContainsKey(rule.NodeType)))
+								ruleList.Add(rule);
 						}
-						foreach (var rule in ruleList)
-						{
-							AddRule(rule);
-						}
+						foreach (var rule in ruleList) AddRule(rule);
 						ruleList.Dispose();
 					}
 				}
