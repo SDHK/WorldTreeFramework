@@ -18,7 +18,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入byte，无符号字节
 		/// </summary>
-		public static void WriteDynamic(this ByteSequence self, byte x)
+		public static void WriteDynamic(this IByteSequence self, byte x)
 		{
 			if (x <= ValueTypeCode.MAX_SINGLE_VALUE)
 			{
@@ -34,7 +34,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入sbyte，有符号字节
 		/// </summary>
-		public static void WriteDynamic(this ByteSequence self, sbyte x)
+		public static void WriteDynamic(this IByteSequence self, sbyte x)
 		{
 			if (ValueTypeCode.MIN_SINGLE_VALUE <= x)
 			{
@@ -50,7 +50,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入ushort，无符号短整数
 		/// </summary>
-		public static void WriteDynamic(this ByteSequence self, ushort x)
+		public static void WriteDynamic(this IByteSequence self, ushort x)
 		{
 			if (x <= ValueTypeCode.MAX_SINGLE_VALUE)
 			{
@@ -66,7 +66,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入short，有符号短整数
 		/// </summary>
-		public static void WriteDynamic(this ByteSequence self, short x)
+		public static void WriteDynamic(this IByteSequence self, short x)
 		{
 			if (0 <= x)
 			{
@@ -100,7 +100,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入uint
 		/// </summary>
-		public static void WriteDynamic(this ByteSequence self, uint x)
+		public static void WriteDynamic(this IByteSequence self, uint x)
 		{
 			if (x <= ValueTypeCode.MAX_SINGLE_VALUE)
 			{
@@ -120,7 +120,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入int
 		/// </summary>
-		public static void WriteDynamic(this ByteSequence self, int x)
+		public static void WriteDynamic(this IByteSequence self, int x)
 		{
 			if (0 <= x)
 			{
@@ -162,7 +162,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入ulong
 		/// </summary>
-		public static void WriteDynamic(this ByteSequence self, ulong x)
+		public static void WriteDynamic(this IByteSequence self, ulong x)
 		{
 			if (x <= ValueTypeCode.MAX_SINGLE_VALUE)
 			{
@@ -186,7 +186,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入long
 		/// </summary>
-		public static void WriteDynamic(this ByteSequence self, long x)
+		public static void WriteDynamic(this IByteSequence self, long x)
 		{
 			if (0 <= x)
 			{
@@ -240,7 +240,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取byte，无符号字节
 		/// </summary>
-		public static byte ReadDynamic(this ByteSequence self, out byte value)
+		public static byte ReadDynamic(this IByteSequence self, out byte value)
 		{
 			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
@@ -269,7 +269,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取sbyte，有符号字节
 		/// </summary>
-		public static sbyte ReadDynamic(this ByteSequence self, out sbyte value)
+		public static sbyte ReadDynamic(this IByteSequence self, out sbyte value)
 		{
 			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
@@ -298,7 +298,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取ushort，无符号短整数
 		/// </summary>
-		public static ushort ReadDynamic(this ByteSequence self, out ushort value)
+		public static ushort ReadDynamic(this IByteSequence self, out ushort value)
 		{
 			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
@@ -327,7 +327,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取short，有符号短整数
 		/// </summary>
-		public static short ReadDynamic(this ByteSequence self, out short value)
+		public static short ReadDynamic(this IByteSequence self, out short value)
 		{
 			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
@@ -356,7 +356,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取uint，无符号整数
 		/// </summary>
-		public static uint ReadDynamic(this ByteSequence self, out uint value)
+		public static uint ReadDynamic(this IByteSequence self, out uint value)
 		{
 			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
@@ -385,7 +385,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取int，有符号整数
 		/// </summary>
-		public static int ReadDynamic(this ByteSequence self, out int value)
+		public static int ReadDynamic(this IByteSequence self, out int value)
 		{
 			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
@@ -414,7 +414,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取ulong，无符号长整数
 		/// </summary>
-		public static ulong ReadDynamic(this ByteSequence self, out ulong value)
+		public static ulong ReadDynamic(this IByteSequence self, out ulong value)
 		{
 			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)
@@ -443,7 +443,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取long，有符号长整数
 		/// </summary>
-		public static long ReadDynamic(this ByteSequence self, out long value)
+		public static long ReadDynamic(this IByteSequence self, out long value)
 		{
 			self.ReadUnmanaged(out sbyte typeCode);
 			switch (typeCode)

@@ -67,14 +67,14 @@ namespace WorldTree.SourceGenerator
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 			Code.AppendLine("	{");
-			Code.AppendLine($"		class Serialize : SerializeRule<ByteSequence, {className}>");
+			Code.AppendLine($"		class Serialize : SerializeRule<TreePackByteSequence, {className}>");
 			Code.AppendLine("		{");
 
 			if (SubList != null && SubList.Count != 0)
 			{
 				Code.AppendLine($"			static readonly System.Collections.Generic.Dictionary<Type, short> m_typeToTagDict = new({SubList.Count})");
 				Code.AppendLine("			{");
-				Code.AppendLine($"				{{typeof({className}), -1 }},");
+				Code.AppendLine($"				{{typeof({className}), ValueMarkCode.THIS_OBJECT }},");
 				for (int i = 0; i < SubList.Count; i++)
 				{
 					Code.AppendLine($"				{{typeof({SubList[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}), {i} }},");
@@ -82,18 +82,18 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("			};");
 			}
 
-			Code.AppendLine($"			protected override void Execute(ByteSequence self, ref {className} value)");
+			Code.AppendLine($"			protected override void Execute(TreePackByteSequence self, ref {className} value)");
 			Code.AppendLine("			{");
 			if (!classSymbol.TypeKind.HasFlag(TypeKind.Struct))
 			{
 				Code.AppendLine("				if(value == null)");
 				Code.AppendLine("				{");
-				Code.AppendLine("					self.WriteNullObjectHeader();");
+				Code.AppendLine("					self.WriteUnmanaged(ValueMarkCode.NULL_OBJECT);");
 				Code.AppendLine("					return;");
 				Code.AppendLine("				}");
 				Code.AppendLine("				else");
 				Code.AppendLine("				{");
-				Code.AppendLine($"					self.WriteUnmanaged({fieldSymbols.Count});");
+				Code.AppendLine($"					self.WriteUnmanaged<short>({fieldSymbols.Count});");
 				Code.AppendLine("				}");
 			}
 
@@ -170,23 +170,23 @@ namespace WorldTree.SourceGenerator
 		private static void GeneratorDeserialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, List<INamedTypeSymbol> SubList)
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			Code.AppendLine($"		class Deserialize : DeserializeRule<ByteSequence, {className}>");
+			Code.AppendLine($"		class Deserialize : DeserializeRule<TreePackByteSequence, {className}>");
 			Code.AppendLine("		{");
-			Code.AppendLine($"			protected override void Execute(ByteSequence self, ref {className} value)");
+			Code.AppendLine($"			protected override void Execute(TreePackByteSequence self, ref {className} value)");
 			Code.AppendLine("			{");
 
 
 			if (!classSymbol.TypeKind.HasFlag(TypeKind.Struct))
 			{
-				Code.AppendLine("				if (!self.TryReadObjectHeader(out short tagCount))");
+				Code.AppendLine("				if (self.ReadUnmanaged(out short tagCount) == ValueMarkCode.NULL_OBJECT)");
 				Code.AppendLine("				{");
 				Code.AppendLine("					value = default;");
 				Code.AppendLine("					return;");
 				Code.AppendLine("				}");
-				Code.AppendLine("				else");
-				Code.AppendLine("				{");
-				Code.AppendLine("					self.ReadUnmanaged(out tagCount);");
-				Code.AppendLine("				}");
+				//Code.AppendLine("				else");
+				//Code.AppendLine("				{");
+				//Code.AppendLine("					self.ReadUnmanaged(out tagCount);");
+				//Code.AppendLine("				}");
 			}
 
 			if (SubList != null && SubList.Count != 0)

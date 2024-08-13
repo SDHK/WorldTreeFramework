@@ -9,20 +9,18 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 树包编码
+	/// 值标记编码
 	/// </summary>
-	public static class TreePackCode
+	public static class ValueMarkCode
 	{
 		/// <summary>
-		/// 集合Null值
+		/// 标记自身
 		/// </summary>
-		public const int NULL_COLLECTION = -1;
+		public const short THIS_OBJECT = -1;
 
 		/// <summary>
 		/// 空对象
 		/// </summary>
 		public const short NULL_OBJECT = -2;
-
-
 	}
 }

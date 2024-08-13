@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace WorldTree.TreePack.Formatters
 {
@@ -9,14 +8,14 @@ namespace WorldTree.TreePack.Formatters
 		{
 			protected override void Execute(ByteSequence self, ref T value)
 			{
-				Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(self.GetWriteSpan(Unsafe.SizeOf<T>())), value);
+				Unsafe.WriteUnaligned(ref self.GetWriteRefByte(Unsafe.SizeOf<T>()), value);
 			}
 		}
 		class Deserialize<T> : DeserializeRule<ByteSequence, T>
 		{
 			protected override void Execute(ByteSequence self, ref T value)
 			{
-				value = Unsafe.ReadUnaligned<T>(ref MemoryMarshal.GetReference(self.GetReadSpan(Unsafe.SizeOf<T>())));
+				value = Unsafe.ReadUnaligned<T>(ref self.GetReadRefByte(Unsafe.SizeOf<T>()));
 			}
 		}
 	}

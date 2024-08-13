@@ -14,10 +14,11 @@ using System.Runtime.InteropServices;
 
 namespace WorldTree
 {
+
 	/// <summary>
 	/// Byte序列
 	/// </summary>
-	public class ByteSequence : Node
+	public class ByteSequence : Node, IByteSequence
 		, AsAwake
 		, AsComponentBranch
 		, TempOf<INode>
@@ -231,17 +232,19 @@ namespace WorldTree
 			if (rentBuffers != null) ArrayPool<byte>.Shared.Return(rentBuffers);
 		}
 
-		#region 写入
+		/// <summary>
+		/// 获取写入引用
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public ref byte GetWriteRefByte(int sizeHint) => ref MemoryMarshal.GetReference(GetWriteSpan(sizeHint));
 
 		/// <summary>
-		/// 写入值
+		/// 获取读取引用
 		/// </summary>
-		public void WriteValue<T>(in T value)
-		{
-			Core.RuleManager.SupportGenericRule<T>(typeof(Serialize<>));
-			if (ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
-				((IRuleList<Serialize<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
-		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public ref byte GetReadRefByte(int sizeHint) => ref MemoryMarshal.GetReference(GetReadSpan(sizeHint));
+
+		#region 写入
 
 		/// <summary>
 		/// 写入固定长度数值
@@ -250,7 +253,7 @@ namespace WorldTree
 		public void WriteUnmanaged<T1>(in T1 value1)
 			where T1 : unmanaged
 		{
-			Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<T1>())), value1);
+			Unsafe.WriteUnaligned(ref GetWriteRefByte(Unsafe.SizeOf<T1>()), value1);
 		}
 
 		/// <summary>
@@ -261,55 +264,25 @@ namespace WorldTree
 			where T1 : unmanaged
 			where T2 : unmanaged
 		{
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()));
+			ref byte spanRef = ref GetWriteRefByte(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>());
 			Unsafe.WriteUnaligned(ref spanRef, value1);
 			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()), value2);
 		}
 
 		/// <summary>
-		/// 写入Null对象标记
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteNullObjectHeader()
-		=> Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<short>())), TreePackCode.NULL_OBJECT);
-
-
-		#region Array
-
-		/// <summary>
-		/// 写入Null集合
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteNullCollectionHeader()
-		=> Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(4)), TreePackCode.NULL_COLLECTION);
-
-
-		
-
-
-		/// <summary>
-		/// 写入集合头
-		/// </summary>
-		/// <param name="length"></param>
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteCollectionHeader(int length)
-		=> Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(GetWriteSpan(Unsafe.SizeOf<int>())), length);
-
-		/// <summary>
 		/// 危险写入非托管数组
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private void DangerousWriteUnmanagedArray<T>(T[] value)
+		protected void DangerousWriteUnmanagedArray<T>(T[] value)
 		{
 			if (value == null)
 			{
-				WriteNullCollectionHeader();
+				WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
 				return;
 			}
 			if (value.Length == 0)
 			{
-				WriteCollectionHeader(0);
+				WriteUnmanaged(0);
 				return;
 			}
 
@@ -319,7 +292,7 @@ namespace WorldTree
 			var allocSize = srcLength + Unsafe.SizeOf<int>();
 
 			//获取写入操作跨度
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetWriteSpan(allocSize));
+			ref byte spanRef = ref GetWriteRefByte(allocSize);
 
 			//获取数组数据的指针
 			ref var src = ref Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(value.AsSpan()));
@@ -330,59 +303,11 @@ namespace WorldTree
 			Unsafe.CopyBlockUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<int>()), ref src, (uint)srcLength);
 		}
 
-		/// <summary>
-		/// 写入数组
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteArray<T>(T[] value)
-		{
-			if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
-			{
-				DangerousWriteUnmanagedArray(value);
-				return;
-			}
-			if (value == null)
-			{
-				WriteNullCollectionHeader();
-				return;
-			}
-			WriteCollectionHeader(value.Length);
-
-			Core.RuleManager.SupportGenericRule<T>(typeof(Serialize<>));
-			if (ruleDict.TryGetValue(TypeInfo<Serialize<T>>.TypeCode, out RuleList ruleList))
-			{
-				IRuleList<Serialize<T>> ruleListT = ruleList;
-				for (int i = 0; i < value.Length; i++) ruleListT.SendRef(this, ref value[i]);
-			}
-		}
-
-		/// <summary>
-		/// 写入非托管数组
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteUnmanagedArray<T>(T[] value)
-			where T : unmanaged
-		{
-			DangerousWriteUnmanagedArray(value);
-		}
-
 		#endregion
 
 
-		#endregion
 
 		#region 读取
-
-		/// <summary>
-		/// 读取值
-		/// </summary>
-		public void ReadValue<T>(ref T value)
-		{
-			Core.RuleManager.SupportGenericRule<T>(typeof(Deserialize<>));
-			if (ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
-				((IRuleList<Deserialize<T>>)ruleList).SendRef(this, ref value);
-		}
-
 
 		/// <summary>
 		/// 读取固定长度数值
@@ -391,7 +316,7 @@ namespace WorldTree
 		public T1 ReadUnmanaged<T1>()
 			where T1 : unmanaged
 		{
-			return Unsafe.ReadUnaligned<T1>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>())));
+			return Unsafe.ReadUnaligned<T1>(ref GetReadRefByte(Unsafe.SizeOf<T1>()));
 		}
 
 		/// <summary>
@@ -401,68 +326,48 @@ namespace WorldTree
 		public T1 ReadUnmanaged<T1>(out T1 value1)
 			where T1 : unmanaged
 		{
-			return value1 = Unsafe.ReadUnaligned<T1>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>())));
+			return value1 = Unsafe.ReadUnaligned<T1>(ref GetReadRefByte(Unsafe.SizeOf<T1>()));
 		}
 
 		/// <summary>
 		/// 读取固定长度数值
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void ReadUnmanaged<T1, T2>(out T1 value1, out T2 value2)
 			where T1 : unmanaged
 			where T2 : unmanaged
 		{
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>()));
+			ref byte spanRef = ref GetReadRefByte(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>());
 			value1 = Unsafe.ReadUnaligned<T1>(ref spanRef);
 			value2 = Unsafe.ReadUnaligned<T2>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()));
 		}
 
-		/// <summary>
-		/// 尝试读取对象头标记
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool TryReadObjectHeader(out short memberCount)
-		{
-			memberCount = Unsafe.ReadUnaligned<short>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<short>())));
-			return memberCount != TreePackCode.NULL_OBJECT;
-		}
-
-		#region Array
-
-		/// <summary>
-		/// 尝试读取集合头
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool TryReadCollectionHeader(out int length)
-		{
-			length = Unsafe.ReadUnaligned<int>(ref MemoryMarshal.GetReference(GetReadSpan(Unsafe.SizeOf<int>())));
-			if (ReadRemain < length)
-			{
-				this.LogError($"数组长度超出数据长度: {length}.");
-				return false;
-			}
-			return length != TreePackCode.NULL_COLLECTION;
-		}
 
 		/// <summary>
 		/// 危险读取非托管数组
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private unsafe void DangerousReadUnmanagedArray<T>(ref T[] value)
+		protected unsafe void DangerousReadUnmanagedArray<T>(ref T[] value)
 		{
-			if (!TryReadCollectionHeader(out var length))
+			if (ReadUnmanaged(out int length) == ValueMarkCode.NULL_OBJECT)
 			{
 				value = null;
 				return;
 			}
-
-			if (length == 0)
+			else if (length == 0)
 			{
 				value = Array.Empty<T>();
 				return;
 			}
+			else if (ReadRemain < length)
+			{
+				this.LogError($"数组长度超出数据长度: {length}.");
+				value = null;
+				return;
+			}
 
 			var byteCount = length * Unsafe.SizeOf<T>();
-			ref byte spanRef = ref MemoryMarshal.GetReference(GetReadSpan(byteCount));
+			ref byte spanRef = ref GetReadRefByte(byteCount);
 
 			//假如数组为空或长度不一致，那么重新分配
 			if (value == null || value.Length != length) value = new T[length];
@@ -471,62 +376,11 @@ namespace WorldTree
 			Unsafe.CopyBlockUnaligned(ref src, ref spanRef, (uint)byteCount);
 		}
 
-		/// <summary>
-		/// 读取数组
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void ReadArray<T>(ref T[] value)
-		{
-			if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
-			{
-				DangerousReadUnmanagedArray(ref value);
-				return;
-			}
-
-			if (!TryReadCollectionHeader(out var length))
-			{
-				value = null;
-				return;
-			}
-
-			if (length == 0)
-			{
-				value = Array.Empty<T>();
-				return;
-			}
-
-			//假如数组为空或长度不一致，那么重新分配
-			if (value == null || value.Length != length)
-			{
-				value = new T[length];
-			}
-
-			Core.RuleManager.SupportGenericRule<T>(typeof(Deserialize<>));
-			if (ruleDict.TryGetValue(TypeInfo<Deserialize<T>>.TypeCode, out RuleList ruleList))
-			{
-				IRuleList<Deserialize<T>> ruleListT = ruleList;
-				for (int i = 0; i < length; i++) ruleListT.SendRef(this, ref value[i]);
-			}
-		}
-
-		/// <summary>
-		/// 读取非托管数组
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void ReadUnmanagedArray<T>(ref T[] value)
-			where T : unmanaged
-		{
-			DangerousReadUnmanagedArray(ref value);
-		}
-
-		#endregion
-
 		#endregion
 	}
 
 	public static partial class ByteSequenceRule
 	{
-
 		class Add : AddRule<ByteSequence>
 		{
 			protected override void Execute(ByteSequence self)
@@ -545,22 +399,5 @@ namespace WorldTree
 				self.segmentList.Dispose();
 			}
 		}
-
-		/// <summary>
-		/// 序列化写入类型
-		/// </summary>
-		public static void Serialize<T>(this ByteSequence self, in T value)
-		{
-			self.WriteValue(value);
-		}
-
-		/// <summary>
-		/// 反序列化读取类型
-		/// </summary>
-		public static void Deserialize<T>(this ByteSequence self, ref T value)
-		{
-			self.ReadValue(ref value);
-		}
 	}
-
 }

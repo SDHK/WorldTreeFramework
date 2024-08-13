@@ -13,7 +13,7 @@
 * 支持多态：设计目的是可通过继承复用代码，不提倡设计复杂的多重继承，能拆分写的功能就拆分写。
 * 支持泛型节点：设计目的是更进一步复用代码，同时附带了策略模式。不过泛型类型在第一次生成时，会有一次反射进行泛型组装。
 * 
-* 特殊支持泛型参数：用于节点不是泛型，而只有一个泛型参数的情况。
+* 特殊支持泛型参数：用于节点不是泛型，而只有一个泛型参数的情况。【不可继承】
 * 这种情况是极端的，不提倡使用，和泛型节点一样，内部是反射组装，但这不是自动的，需要动态的在运行时调用泛型支持。
 * 
 * 总之这是一个功能类似接口的事件系统。
@@ -64,6 +64,12 @@ namespace WorldTree
 		/// </summary>
 		/// <remarks>法则类型，未知泛型类型，泛型法则类型</remarks>
 		public Dictionary<Type, HashSet<Type>> GenericRuleTypeDict = new();
+
+		/// <summary>
+		/// 泛型参数法则目标节点子类型哈希名单
+		/// </summary>
+		/// <remarks>法则类型定义，节点类型，子类型集合。用于泛型参数法则子类继承支持</remarks>
+		public Dictionary<Type, Dictionary<long, HashSet<long>>> GenericNodeSubTypeDict = new();
 
 		#endregion
 
@@ -197,7 +203,8 @@ namespace WorldTree
 					//往下找到法则基类
 					Type ruleBaseType = baseType;
 					while (ruleBaseType.GetGenericTypeDefinition() != typeof(Rule<,>)) ruleBaseType = ruleBaseType.BaseType;
-					//Rule<,> 的第二个参数就是法则标记。
+					//Rule<,> 的第一个是节点标记第二个是法则标记。
+					Type nodeKeyType = ruleBaseType.GetGenericArguments()[0];
 					Type ruleKeyType = ruleBaseType.GetGenericArguments()[1];
 
 					//遍历基类，查找泛型参数
@@ -211,14 +218,12 @@ namespace WorldTree
 							foreach (var arg in genericArguments)
 							{
 								// 泛型参数是泛型的情况
-								if (arg.IsGenericType)
+								if (!arg.IsGenericType) continue;
+								//判断这个泛型参数，不是法则标记，才是泛型参数。
+								if (arg != ruleKeyType)
 								{
-									//判断这个泛型参数，不是法则标记，才是泛型参数。
-									if (arg != ruleKeyType)
-									{
-										genericType = arg;
-										break;
-									}
+									genericType = arg;
+									break;
 								}
 							}
 						}
@@ -229,10 +234,12 @@ namespace WorldTree
 					if (genericType != null && genericType.IsGenericType)
 					{
 						GenericTypeRuleTypeHashDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).GetOrNewValue(genericType.GetGenericTypeDefinition()).Add(ruleType);
+						GenericNodeSubTypeDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).GetOrNewValue(nodeKeyType.TypeToCode());
 					}
 					else //泛型参数是泛型本身的情况
 					{
 						GenericRuleTypeDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
+						GenericNodeSubTypeDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).GetOrNewValue(nodeKeyType.TypeToCode());
 					}
 				}
 			}
@@ -412,6 +419,13 @@ namespace WorldTree
 						ruleList.Add(rule);
 				}
 				foreach (var rule in ruleList) AddRule(rule);
+				foreach (var rule in ruleList)
+				{
+					if (!GenericNodeSubTypeDict.TryGetValue(ruleTypeDefinition, out var nodeTypeDict)) continue;
+					if (!nodeTypeDict.TryGetValue(rule.NodeType, out var subTypeHash)) continue;
+					foreach (long nodeType in subTypeHash) SupportPolymorphicRule(nodeType);
+					GenericNodeSubTypeDict.Remove(ruleTypeDefinition);
+				}
 				ruleList.Dispose();
 			}
 		}
@@ -454,6 +468,17 @@ namespace WorldTree
 					}
 				}
 				type = type.BaseType;
+
+				//泛型参数法则子类继承支持记录
+				//检测类型父类是否有泛型参数法则，有则记录
+				long typeCode = type.TypeToCode();
+				foreach (var NodeSubTypeDict in GenericNodeSubTypeDict)
+				{
+					if (NodeSubTypeDict.Value.TryGetValue(typeCode, out HashSet<long> subTypeHash))
+					{
+						if (!subTypeHash.Contains(nodeType)) subTypeHash.Add(nodeType);
+					}
+				}
 			}
 		}
 
@@ -566,17 +591,12 @@ namespace WorldTree
 			{
 				//存在的法则则跳过
 				if (ruleTypeDict.Contains(ruleType)) continue;
-
 				//节点记录法则
 				ruleTypeDict.TryAdd(ruleType.Key, ruleType.Value);
-
 				//法则字典的补充
 				if (!RuleGroupDict.TryGetValue(ruleType.Key, out var RuleGroup)) continue;
-
 				//获取父类型法则列表
 				if (!RuleGroup.TryGetValue(baseTypeCodeKey, out var ruleList)) continue;
-
-
 				//法则列表添加进节点类型
 				RuleGroup.TryAdd(nodeType, ruleList);
 			}

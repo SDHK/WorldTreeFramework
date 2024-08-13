@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
@@ -117,6 +118,13 @@ namespace WorldTree
 		{
 			self.Log($"嵌套序列化测试！！！！！");
 
+			//泛型参数支持继承
+			//self.AddTemp(out ByteSequence sequence);
+			//self.Core.RuleManager.SupportGenericRule<float>(typeof(Serialize<>));
+			//self.Core.RuleManager.SupportGenericRule<float>(typeof(Deserialize<>));
+
+
+
 			//随便写点不一样的数据
 			NodeClassDataTest<int, float, int> testData = new();
 			testData.ValueT1 = 987;
@@ -137,13 +145,13 @@ namespace WorldTree
 
 
 			// 序列化
-			self.AddTemp(out ByteSequence sequenceWrite).Serialize(testData);
+			self.AddTemp(out TreePackByteSequence sequenceWrite).Serialize(testData);
 			byte[] bytes = sequenceWrite.ToBytes();
 
 			self.Log($"序列化字节长度{bytes.Length}");
 
 			// 反序列化
-			self.AddTemp(out ByteSequence sequenceRead).SetBytes(bytes);
+			self.AddTemp(out TreePackByteSequence sequenceRead).SetBytes(bytes);
 			NodeClassDataTest<int, float, int> testData2 = null;
 			sequenceRead.Deserialize(ref testData2);
 			string logText = $"反序列化{testData2.ValueT1} {testData2.ValueT2}  嵌套类字段： {testData2.DataTest1.TestT2}   泛型字段：{testData2.ValueT3}";
