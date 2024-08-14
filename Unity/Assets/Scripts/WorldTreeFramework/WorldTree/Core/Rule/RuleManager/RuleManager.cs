@@ -32,18 +32,66 @@ namespace WorldTree
 	/// </summary>
 	public class RuleManager : Node, IListenerIgnorer, ComponentOf<WorldTreeCore>
 	{
+		/// <summary>
+		/// 法则字典
+		/// </summary>
+		/// <remarks> 法则类型《节点类型,法则》</remarks>
+		public Dictionary<long, RuleGroup> RuleGroupDict = new();
+
+		/// <summary>
+		/// 节点法则字典
+		/// </summary>
+		/// <remarks> 
+		/// <para> 节点类型《法则类型，法则列表》</para>
+		/// <para> 记录节点拥有的法则类型，也用于法则多态化的查询</para>
+		/// </remarks>
+		public Dictionary<long, Dictionary<long, RuleList>> NodeTypeRulesDict = new();
+
+		#region 监听法则
+
+		///// <summary>
+		///// 动态监听器节点类型哈希名单
+		///// </summary>
+		//public HashSet<long> DynamicListenerTypeHash = new();
+
+		/// <summary>
+		/// 监听目标为 法则 的 ，监听器法则 字典
+		/// </summary>
+		public Dictionary<long, HashSet<IListenerRule>> TargetRuleListenerRuleHashDict = new();
+
+		/// <summary>
+		/// 监听法则字典 目标节点类型
+		/// </summary>
+		/// <remarks>
+		/// <para>目标节点类型 法则类型 《监听器类型,监听法则列表》</para>
+		/// <para>这个是真正被使用的</para>
+		/// </remarks>
+		public Dictionary<long, Dictionary<long, RuleGroup>> TargetRuleListenerGroupDict = new();
+
+		/// <summary>
+		/// 监听法则字典 监听器类型
+		/// </summary>
+		/// <remarks>
+		/// <para>监听器类型 法则类型 《目标节点类型,监听法则列表》</para>
+		/// <para>这个是用来查询关系的</para>
+		/// </remarks>
+		public Dictionary<long, Dictionary<long, RuleGroup>> ListenerRuleTargetGroupDict = new();
+
+		#endregion
+
+
 		#region 泛型支持
 
 		/// <summary>
 		/// 已支持的类型哈希名单
 		/// </summary>
-		public UnitHashSet<long> SupportTypeHash = new();
+		public HashSet<long> SupportTypeHash = new();
 
 		/// <summary>
 		/// 泛型节点 泛型法则哈希表字典
 		/// </summary>
 		/// <remarks>泛型节点类型，泛型法则类型哈希表</remarks>
-		public UnitDictionary<Type, UnitHashSet<Type>> GenericNodeRuleTypeHashDict = new();
+		public Dictionary<Type, HashSet<Type>> GenericNodeRuleTypeHashDict = new();
 
 
 		/// <summary>
@@ -71,54 +119,6 @@ namespace WorldTree
 		public Dictionary<long, HashSet<long>> GenericNodeSubTypeDict = new();
 
 		#endregion
-
-		#region 监听法则
-
-		///// <summary>
-		///// 动态监听器节点类型哈希名单
-		///// </summary>
-		//public UnitHashSet<long> DynamicListenerTypeHash = new();
-
-		/// <summary>
-		/// 监听目标为 法则 的 ，监听器法则 字典
-		/// </summary>
-		public UnitDictionary<long, UnitHashSet<IListenerRule>> TargetRuleListenerRuleHashDict = new();
-
-		/// <summary>
-		/// 监听法则字典 目标节点类型
-		/// </summary>
-		/// <remarks>
-		/// <para>目标节点类型 法则类型 《监听器类型,监听法则列表》</para>
-		/// <para>这个是真正被使用的</para>
-		/// </remarks>
-		public UnitDictionary<long, Dictionary<long, RuleGroup>> TargetRuleListenerGroupDict = new();
-
-		/// <summary>
-		/// 监听法则字典 监听器类型
-		/// </summary>
-		/// <remarks>
-		/// <para>监听器类型 法则类型 《目标节点类型,监听法则列表》</para>
-		/// <para>这个是用来查询关系的</para>
-		/// </remarks>
-		public UnitDictionary<long, Dictionary<long, RuleGroup>> ListenerRuleTargetGroupDict = new();
-
-		#endregion
-
-		/// <summary>
-		/// 法则字典
-		/// </summary>
-		/// <remarks> 法则类型《节点类型,法则》</remarks>
-		public UnitDictionary<long, RuleGroup> RuleGroupDict = new();
-
-		/// <summary>
-		/// 节点法则字典
-		/// </summary>
-		/// <remarks> 
-		/// <para> 节点类型《法则类型，法则列表》</para>
-		/// <para> 记录节点拥有的法则类型，也用于法则多态化的查询</para>
-		/// </remarks>
-		public UnitDictionary<long, Dictionary<long, RuleList>> NodeTypeRulesDict = new();
-
 
 
 		public RuleManager()
@@ -157,6 +157,13 @@ namespace WorldTree
 
 			TargetRuleListenerGroupDict.Clear();
 			ListenerRuleTargetGroupDict.Clear();
+
+			SupportTypeHash.Clear();
+			GenericNodeRuleTypeHashDict.Clear();
+			SupportGenericTypeDict.Clear();
+			GenericTypeRuleTypeHashDict.Clear();
+			GenericRuleTypeDict.Clear();
+			GenericNodeSubTypeDict.Clear();
 
 			IsDisposed = true;
 		}

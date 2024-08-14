@@ -108,7 +108,6 @@ namespace WorldTree.Analyzer
 					if (firstParameterSyntax.Modifiers.Any(SyntaxKind.ThisKeyword))
 					{
 						//判断扩展类型是否是来源类型，是则跳过
-						//if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol.ToString()) return false;
 						if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, firstParameterTypeSymbol.OriginalDefinition)) return false;
 						if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType, firstParameterTypeSymbol)) return false;
 						//判断当前字段所在的类型是否继承了来源接口，是则跳过
@@ -116,18 +115,53 @@ namespace WorldTree.Analyzer
 						//判断当前字段所在的类型是否继承了来源类型，是则跳过
 						if (isProtected && isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 					}
-					// 不是静态类型,判断是否在委托中
-					else
+				}
+				// 不是静态类型,判断是否在委托中
+				else
+				{
+					(SyntaxNode? parentDelegate, ParameterSyntax? firstParameter1) = GetParentAnonymousDelegateAndFirstParameter(memberAccess);
+					if (parentDelegate != null && firstParameter1 != null && firstParameter1.Identifier.Text == "self")
 					{
-						(SyntaxNode? parentDelegate, ParameterSyntax? firstParameter1) = GetParentAnonymousDelegateAndFirstParameter(memberAccess);
-						if (parentDelegate != null && firstParameter1 != null && firstParameter1.Identifier.Text == "self")
+						ITypeSymbol? firstParameterTypeSymbol = null;
+						if (firstParameter1.Type != null) firstParameterTypeSymbol = semanticModel.GetTypeInfo(firstParameter1.Type).Type;
+						if (firstParameterTypeSymbol == null)
 						{
-							//if (memberAccessSymbol.ContainingType.ToDisplayString() == firstParameterTypeSymbol.ToString()) return false;
-							if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, firstParameterTypeSymbol.OriginalDefinition)) return false;
-							if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType, firstParameterTypeSymbol)) return false;
-							if (isProtected && isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
-							if (isProtected && isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+							// 获取第一个泛型参数的类型
+							SyntaxNode? currentNode = parentDelegate;
+							while (currentNode != null)
+							{
+								if (currentNode is GenericNameSyntax genericNameSyntax)
+								{
+									TypeSyntax firstGenericArgument = genericNameSyntax.TypeArgumentList.Arguments.FirstOrDefault();
+									if (firstGenericArgument != null)
+									{
+										firstParameterTypeSymbol = semanticModel.GetTypeInfo(firstGenericArgument).Type;
+										break;
+									}
+								}
+								else if (currentNode is VariableDeclarationSyntax variableDeclaration)
+								{
+									// 处理变量声明中的泛型类型
+									TypeSyntax variableType = variableDeclaration.Type;
+									if (variableType is GenericNameSyntax variableGenericNameSyntax)
+									{
+										TypeSyntax firstGenericArgument = variableGenericNameSyntax.TypeArgumentList.Arguments.FirstOrDefault();
+										if (firstGenericArgument != null)
+										{
+											firstParameterTypeSymbol = semanticModel.GetTypeInfo(firstGenericArgument).Type;
+											break;
+										}
+									}
+								}
+								currentNode = currentNode.Parent;
+							}
+							if (firstParameterTypeSymbol == null) return true;
 						}
+
+						if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, firstParameterTypeSymbol.OriginalDefinition)) return false;
+						if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType, firstParameterTypeSymbol)) return false;
+						if (isProtected && isInterfaceContainingType && NamedSymbolHelper.CheckInterface(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
+						if (isProtected && isClassContainingType && NamedSymbolHelper.CheckBase(firstParameterTypeSymbol, memberAccessSymbol.ContainingType)) return false;
 					}
 				}
 			}
@@ -175,19 +209,24 @@ namespace WorldTree.Analyzer
 
 			switch (parentDelegate)
 			{
-				case ParenthesizedLambdaExpressionSyntax lambda:
-					firstParameter = lambda?.ParameterList?.Parameters.FirstOrDefault();
+				// 无括号的 Lambda 表达式
+				case SimpleLambdaExpressionSyntax simpleLambda:
+					firstParameter = simpleLambda.Parameter;
 					break;
-				case SimpleLambdaExpressionSyntax lambda2:
-					firstParameter = lambda2.Parameter;
+				// 有括号的 Lambda 表达式
+				case ParenthesizedLambdaExpressionSyntax parenthesizedLambda:
+					firstParameter = parenthesizedLambda.ParameterList.Parameters.FirstOrDefault();
 					break;
-				case AnonymousMethodExpressionSyntax lambda3:
-					firstParameter = lambda3?.ParameterList?.Parameters.FirstOrDefault();
+				// 匿名方法
+				case AnonymousMethodExpressionSyntax anonymousMethod:
+					firstParameter = anonymousMethod.ParameterList.Parameters.FirstOrDefault();
 					break;
 			}
 
+
 			return (parentDelegate, firstParameter);
 		}
+
 
 	}
 }

@@ -18,12 +18,12 @@ namespace WorldTree
 			testData.ValueT2 = 45.321f;
 
 			// 获取字节缓存写入器
-			self.AddTemp(out ByteSequence sequenceWrite).Serialize(testData);
+			self.AddTemp(out TreePackByteSequence sequenceWrite).Serialize(testData);
 
 			byte[] bytes = sequenceWrite.ToBytes();
 			self.Log($"序列化{bytes.Length}");
 
-			self.AddTemp(out ByteSequence sequenceRead).SetBytes(bytes);
+			self.AddTemp(out TreePackByteSequence sequenceRead).SetBytes(bytes);
 
 			NodeClassDataTest<int, float> testData2 = null;
 			// 反序列化法则
