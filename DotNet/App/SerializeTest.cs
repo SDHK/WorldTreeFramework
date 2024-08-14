@@ -23,15 +23,18 @@ namespace WorldTree
 		/// </summary>
 		public T2 ValueT2 = default;
 
-		/// <summary>
-		/// 测试class
-		/// </summary>
-		public NodeClassDataTest1<T1, T2> DataTest1 = default;
 
 		/// <summary>
 		/// 测试泛型3
 		/// </summary>
 		public T3 ValueT3 = default;
+
+		/// <summary>
+		/// 测试class
+		/// </summary>
+		public NodeClassDataTest1<T1, T2> DataTest1 = default;
+
+	
 
 		/// <summary>
 		/// 测试class
@@ -129,11 +132,11 @@ namespace WorldTree
 			NodeClassDataTest<int, float, int> testData = new();
 			testData.ValueT1 = 987;
 			testData.ValueT2 = 45.321f;
-			testData.ValueT3 = 123456;
+			testData.ValueT3 = 1234567;
 
 			//嵌套类型
 			testData.DataTest1 = new NodeClassDataTest1<int, float>();
-			//testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
+			testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
 			testData.DataTest1.TestT2 = 5.789456f;
 
 			testData.DataTestBase = new NodeClassDataBase()
@@ -154,7 +157,7 @@ namespace WorldTree
 			self.AddTemp(out TreePackByteSequence sequenceRead).SetBytes(bytes);
 			NodeClassDataTest<int, float, int> testData2 = null;
 			sequenceRead.Deserialize(ref testData2);
-			string logText = $"反序列化{testData2.ValueT1} {testData2.ValueT2}  嵌套类字段： {testData2.DataTest1.TestT2}   泛型字段：{testData2.ValueT3}";
+			string logText = $"反序列化{testData2.ValueT1} {testData2.ValueT2}  泛型字段：{testData2.ValueT3}  嵌套类字段： {testData2.DataTest1.TestT2}  ";
 
 			logText += $" 数组：";
 			if (testData2.DataTest1.TestInts == null)

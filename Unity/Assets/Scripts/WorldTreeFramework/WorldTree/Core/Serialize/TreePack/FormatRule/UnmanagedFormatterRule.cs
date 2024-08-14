@@ -4,16 +4,16 @@ namespace WorldTree.TreePack.Formatters
 {
 	public static class UnmanagedFormatterRule
 	{
-		class Serialize<T> : SerializeRule<ByteSequence, T>
+		class Serialize<T> : SerializeRule<TreePackByteSequence, T>
 		{
-			protected override void Execute(ByteSequence self, ref T value)
+			protected override void Execute(TreePackByteSequence self, ref T value)
 			{
 				Unsafe.WriteUnaligned(ref self.GetWriteRefByte(Unsafe.SizeOf<T>()), value);
 			}
 		}
-		class Deserialize<T> : DeserializeRule<ByteSequence, T>
+		class Deserialize<T> : DeserializeRule<TreePackByteSequence, T>
 		{
-			protected override void Execute(ByteSequence self, ref T value)
+			protected override void Execute(TreePackByteSequence self, ref T value)
 			{
 				value = Unsafe.ReadUnaligned<T>(ref self.GetReadRefByte(Unsafe.SizeOf<T>()));
 			}
