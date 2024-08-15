@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteSequence\IByteSequence.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\KeyValuePairFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\TreePackByteSequence.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\UnmanagedFormatterRule.cs" />

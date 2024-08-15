@@ -18,12 +18,16 @@ namespace WorldTree.SourceGenerator
 		{
 			isBase = false;
 			string className = typeNamedTypeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			if (typeNamedTypeSymbol.TypeKind.HasFlag(TypeKind.Interface))
+			if (typeNamedTypeSymbol.TypeKind == TypeKind.Interface)
 			{
 				isBase = true;
 				Code.AppendLine($"	public partial interface {className}");
 			}
-			else if (typeNamedTypeSymbol.TypeKind.HasFlag(TypeKind.Class))
+			else if (typeNamedTypeSymbol.TypeKind == TypeKind.Struct)
+			{
+				Code.AppendLine($"    public partial struct {className}");
+			}
+			else if (typeNamedTypeSymbol.TypeKind == TypeKind.Class)
 			{
 				if (typeNamedTypeSymbol.IsAbstract)
 				{
@@ -35,10 +39,7 @@ namespace WorldTree.SourceGenerator
 					Code.AppendLine($"	public partial class {className}");
 				}
 			}
-			else if (typeNamedTypeSymbol.TypeKind == TypeKind.Struct)
-			{
-				Code.AppendLine($"    public partial struct {className}");
-			}
+
 		}
 
 		private static List<ISymbol>? FindField(INamedTypeSymbol classSymbol)
@@ -84,7 +85,7 @@ namespace WorldTree.SourceGenerator
 
 			Code.AppendLine($"			protected override void Execute(TreePackByteSequence self, ref {className} value)");
 			Code.AppendLine("			{");
-			if (!classSymbol.TypeKind.HasFlag(TypeKind.Struct))
+			if (classSymbol.TypeKind != TypeKind.Struct)
 			{
 				Code.AppendLine("				if(value == null)");
 				Code.AppendLine("				{");
@@ -176,7 +177,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("			{");
 
 
-			if (!classSymbol.TypeKind.HasFlag(TypeKind.Struct))
+			if (classSymbol.TypeKind != TypeKind.Struct)
 			{
 				Code.AppendLine("				if (self.ReadUnmanaged(out short tagCount) == ValueMarkCode.NULL_OBJECT)");
 				Code.AppendLine("				{");
@@ -203,7 +204,7 @@ namespace WorldTree.SourceGenerator
 
 			if (fieldSymbols != null)
 			{
-				if (classSymbol.TypeKind.HasFlag(TypeKind.Class))
+				if (classSymbol.TypeKind == TypeKind.Class)
 					Code.AppendLine($"				if (value == null) value = new();");
 				foreach (ISymbol symbol in fieldSymbols)
 				{

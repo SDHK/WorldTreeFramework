@@ -250,10 +250,10 @@ namespace WorldTree
 		/// 写入固定长度数值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteUnmanaged<T1>(in T1 value1)
+		public void WriteUnmanaged<T1>(in T1 value)
 			where T1 : unmanaged
 		{
-			Unsafe.WriteUnaligned(ref GetWriteRefByte(Unsafe.SizeOf<T1>()), value1);
+			Unsafe.WriteUnaligned(ref GetWriteRefByte(Unsafe.SizeOf<T1>()), value);
 		}
 
 		/// <summary>
@@ -267,6 +267,15 @@ namespace WorldTree
 			ref byte spanRef = ref GetWriteRefByte(Unsafe.SizeOf<T1>() + Unsafe.SizeOf<T2>());
 			Unsafe.WriteUnaligned(ref spanRef, value1);
 			Unsafe.WriteUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()), value2);
+		}
+
+		/// <summary>
+		/// 危险写入固定长度数值
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void DangerousWriteUnmanaged<T1>(in T1 value)
+		{
+			Unsafe.WriteUnaligned(ref GetWriteRefByte(Unsafe.SizeOf<T1>()), value);
 		}
 
 		/// <summary>
@@ -323,10 +332,10 @@ namespace WorldTree
 		/// 读取固定长度数值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public T1 ReadUnmanaged<T1>(out T1 value1)
+		public T1 ReadUnmanaged<T1>(out T1 value)
 			where T1 : unmanaged
 		{
-			return value1 = Unsafe.ReadUnaligned<T1>(ref GetReadRefByte(Unsafe.SizeOf<T1>()));
+			return value = Unsafe.ReadUnaligned<T1>(ref GetReadRefByte(Unsafe.SizeOf<T1>()));
 		}
 
 		/// <summary>
@@ -341,6 +350,17 @@ namespace WorldTree
 			value1 = Unsafe.ReadUnaligned<T1>(ref spanRef);
 			value2 = Unsafe.ReadUnaligned<T2>(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<T1>()));
 		}
+
+
+		/// <summary>
+		///  危险读取固定长度数值
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public T1 DangerousReadUnmanaged<T1>(out T1 value)
+		{
+			return value = Unsafe.ReadUnaligned<T1>(ref GetReadRefByte(Unsafe.SizeOf<T1>()));
+		}
+
 
 
 		/// <summary>

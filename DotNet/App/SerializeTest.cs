@@ -47,7 +47,7 @@ namespace WorldTree
 	/// 测试数据2
 	/// </summary>
 	[TreePack]
-	public partial class NodeClassDataTest1<T1, T2>
+	public partial struct NodeClassDataTest1<T1, T2>
 		where T1 : unmanaged
 	{
 		/// <summary>
@@ -60,6 +60,7 @@ namespace WorldTree
 		/// </summary>
 		public T2 TestT2 { get; set; }
 	}
+
 
 	/// <summary>
 	/// 测试数据3

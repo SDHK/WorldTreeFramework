@@ -103,6 +103,19 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 读取值
+		/// </summary>
+		public T ReadValue<T>()
+		{
+			 T value = default;
+			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserialize<>));
+			if (ruleDict.TryGetValue(TypeInfo<TreePackDeserialize<T>>.TypeCode, out RuleList ruleList))
+				((IRuleList<TreePackDeserialize<T>>)ruleList).SendRef(this, ref value);
+			return value;
+		}
+
+
+		/// <summary>
 		/// 读取数组
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
