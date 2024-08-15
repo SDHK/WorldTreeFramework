@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree
@@ -29,12 +30,13 @@ namespace WorldTree
 		/// </summary>
 		public T3 ValueT3 = default;
 
+
+
 		/// <summary>
 		/// 测试class
 		/// </summary>
 		public NodeClassDataTest1<T1, T2> DataTest1 = default;
 
-	
 
 		/// <summary>
 		/// 测试class
@@ -59,6 +61,11 @@ namespace WorldTree
 		/// 测试浮点
 		/// </summary>
 		public T2 TestT2 { get; set; }
+
+		/// <summary>
+		/// 测试字典
+		/// </summary>
+		public Dictionary<int, string> ValueT4Dict;
 	}
 
 
@@ -122,23 +129,23 @@ namespace WorldTree
 		{
 			self.Log($"嵌套序列化测试！！！！！");
 
-			//泛型参数支持继承
-			//self.AddTemp(out ByteSequence sequence);
-			//self.Core.RuleManager.SupportGenericRule<float>(typeof(Serialize<>));
-			//self.Core.RuleManager.SupportGenericRule<float>(typeof(Deserialize<>));
-
-
-
 			//随便写点不一样的数据
 			NodeClassDataTest<int, float, int> testData = new();
 			testData.ValueT1 = 987;
 			testData.ValueT2 = 45.321f;
 			testData.ValueT3 = 1234567;
 
+
 			//嵌套类型
 			testData.DataTest1 = new NodeClassDataTest1<int, float>();
 			testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
 			testData.DataTest1.TestT2 = 5.789456f;
+			testData.DataTest1.ValueT4Dict = new Dictionary<int, string>()
+			{
+				{ 1, "A1.145f" },
+				{ 2, "A2.278f" },
+				{ 3, "A3.312f" },
+			};
 
 			testData.DataTestBase = new NodeClassDataBase()
 			{
@@ -146,6 +153,7 @@ namespace WorldTree
 				TestT2 = 5,
 				//TestFloat_T = 1.999f,
 			};
+
 
 
 			// 序列化
@@ -160,7 +168,21 @@ namespace WorldTree
 			sequenceRead.Deserialize(ref testData2);
 			string logText = $"反序列化{testData2.ValueT1} {testData2.ValueT2}  泛型字段：{testData2.ValueT3}  嵌套类字段： {testData2.DataTest1.TestT2}  ";
 
-			logText += $" 数组：";
+			logText += $"\n字典：";
+			if (testData2.DataTest1.ValueT4Dict == null)
+			{
+				logText += $"null !!, ";
+			}
+			else
+			{
+				foreach (var item in testData2.DataTest1.ValueT4Dict)
+				{
+					logText += $"{item.Key} {item.Value}, ";
+				}
+			}
+
+
+			logText += $"\n数组：";
 			if (testData2.DataTest1.TestInts == null)
 			{
 				logText += $"null !!, ";
@@ -174,7 +196,7 @@ namespace WorldTree
 			}
 
 
-			logText += $" 基类数组：";
+			logText += $"\n基类数组：";
 			NodeClassDataBase nodeClassDataSub = testData2.DataTestBase as NodeClassDataBase;
 			//logText += $" {nodeClassDataSub.TestFloat_T} ";
 			foreach (var item in nodeClassDataSub.TestInts)
