@@ -70,6 +70,11 @@ namespace WorldTree
 		[MemoryPackOrder(3)]
 		public int Age2;
 
+		/// <summary>
+		/// 测试双精度
+		/// </summary>
+		[MemoryPackOrder(4)]
+		public string TestString = "7.123456";
 
 	}
 

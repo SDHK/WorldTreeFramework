@@ -142,9 +142,9 @@ namespace WorldTree
 			testData.DataTest1.TestT2 = 5.789456f;
 			testData.DataTest1.ValueT4Dict = new Dictionary<int, string>()
 			{
-				{ 1, "A1.145f" },
-				{ 2, "A2.278f" },
-				{ 3, "A3.312f" },
+				{ 1, "A1.145f拉" },
+				{ 2, "A2.278f擦" },
+				{ 3, "A3.312f达" },
 			};
 
 			testData.DataTestBase = new NodeClassDataBase()

@@ -31,16 +31,22 @@ namespace WorldTree.TreePack.Formatters
 				self.WriteUnmanaged(source.Length);
 
 				//申请总空间，包含utf8长度和数据
-				ref byte destPointer = ref self.GetWriteRefByte(maxByteCount + 4); // header int长度是4
+
+				// 由于不知道空间大小，所以字符数*3只是获取一个可能的最大空间，字符最小可能是只占1个字节
+				// 头部需要写入byte真实长度，int长度偏移+4
+				ref byte destPointer = ref self.GetWriteRefByte(maxByteCount + 4);
 
 				//申请数据空间，byte长度int要写到头部，所以要偏移4
 				Span<byte> dest = MemoryMarshal.CreateSpan(ref Unsafe.Add(ref destPointer, 4), maxByteCount);
-				// 数据写入到dest
+
+				// 数据写入到dest，此时拿到了byte的真实长度
 				int bytesWritten = Encoding.UTF8.GetBytes(value, dest);
 
-				// 在头中写入写入的 UTF8-length，即 ~length
+				// 在头部写入 真实长度
 				Unsafe.WriteUnaligned(ref destPointer, bytesWritten);
 
+				// 重新定位指针，裁剪空间
+				self.Current.SetPoint(bytesWritten + 4);
 			}
 		}
 		class Deserialize : TreePackDeserializeRule<TreePackByteSequence, string>
@@ -65,28 +71,25 @@ namespace WorldTree.TreePack.Formatters
 				}
 
 				// 获取总数据，包含utf8长度和数据
-				ref var spanRef = ref self.GetReadRefByte((length + 1) * 3 + 4);
+				//*3只是一个可能的最大空间，字符最小可能是只占1个字节
 
-				string str;
-				//读取 utf8Length
-				var utf16Length = Unsafe.ReadUnaligned<int>(ref spanRef);
+				//读取 utf8ByteLength
+				var utf8BytesLength = self.ReadUnmanaged<int>();
 
-				if (utf16Length <= 0)
+				ref var spanRef = ref self.GetReadRefByte(utf8BytesLength);
+
+				if (utf8BytesLength <= 0)
 				{
-					ReadOnlySpan<byte> src = MemoryMarshal.CreateReadOnlySpan(ref Unsafe.Add(ref spanRef, 4), length);
+					ReadOnlySpan<byte> src = MemoryMarshal.CreateReadOnlySpan(ref spanRef, utf8BytesLength);
 					value = Encoding.UTF8.GetString(src);
 				}
 				else
 				{
-					// 检查格式错误的 utf16Length
-					var max = unchecked((length + 1) * 3);
-					if (max < 0) max = int.MaxValue;
-					if (max < utf16Length)
+					if (self.ReadRemain < utf8BytesLength)
 					{
-						self.LogError($"字符串长度错误: {length}.");
+						self.LogError($"字符串长度超出数据长度: {utf8BytesLength}.");
 					}
-
-					var src = MemoryMarshal.CreateReadOnlySpan(ref Unsafe.Add(ref spanRef, 4), length);
+					var src = MemoryMarshal.CreateReadOnlySpan(ref spanRef, utf8BytesLength);
 					value = Encoding.UTF8.GetString(src);
 				}
 			}
