@@ -11,20 +11,20 @@ namespace WorldTree
 	/// <summary>
 	/// 序列化法则接口：用于序列化未知泛型，解除AsRule的法则限制
 	/// </summary>
-	public interface ISerialize : IRule { }
+	public interface ITreePackSerialize : IRule { }
 
 	/// <summary>
 	/// 反序列化法则接口：用于反序列化未知泛型，解除AsRule的法则限制
 	/// </summary>
-	public interface IDeserialize : IRule { }
+	public interface ITreePackDeserialize : IRule { }
 
 	/// <summary>
 	/// 序列化法则
 	/// </summary>
-	public interface Serialize<T> : ISendRefRule<T>, ISerialize { }
+	public interface TreePackSerialize<T> : ISendRefRule<T>, ITreePackSerialize { }
 
 	/// <summary>
 	/// 反序列化法则
 	/// </summary>
-	public interface Deserialize<T> :ISendRefRule<T>, IDeserialize { }
+	public interface TreePackDeserialize<T> :ISendRefRule<T>, ITreePackDeserialize { }
 }

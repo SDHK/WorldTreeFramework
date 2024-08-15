@@ -22,8 +22,8 @@ namespace WorldTree
 		, AsAwake
 		, AsComponentBranch
 		, TempOf<INode>
-		, AsRule<ISerialize>
-		, AsRule<IDeserialize>
+		, AsRule<ITreePackSerialize>
+		, AsRule<ITreePackDeserialize>
 	{
 		/// <summary>
 		/// 序列段列表
@@ -273,7 +273,7 @@ namespace WorldTree
 		/// 危险写入非托管数组
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected void DangerousWriteUnmanagedArray<T>(T[] value)
+		public void DangerousWriteUnmanagedArray<T>(T[] value)
 		{
 			if (value == null)
 			{
@@ -347,7 +347,7 @@ namespace WorldTree
 		/// 危险读取非托管数组
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected unsafe void DangerousReadUnmanagedArray<T>(ref T[] value)
+		public unsafe void DangerousReadUnmanagedArray<T>(ref T[] value)
 		{
 			if (ReadUnmanaged(out int length) == ValueMarkCode.NULL_OBJECT)
 			{

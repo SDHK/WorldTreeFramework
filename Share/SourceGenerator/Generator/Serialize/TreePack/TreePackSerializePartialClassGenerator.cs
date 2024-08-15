@@ -12,7 +12,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal static class SerializePartialClassGenerator
+	internal static class TreePackSerializePartialClassGenerator
 	{
 		private static void ClassGenerator(StringBuilder Code, INamedTypeSymbol typeNamedTypeSymbol, out bool isBase)
 		{
@@ -67,12 +67,12 @@ namespace WorldTree.SourceGenerator
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 			Code.AppendLine("	{");
-			Code.AppendLine($"		class Serialize : SerializeRule<TreePackByteSequence, {className}>");
+			Code.AppendLine($"		class TreePackSerialize : TreePackSerializeRule<TreePackByteSequence, {className}>");
 			Code.AppendLine("		{");
 
 			if (SubList != null && SubList.Count != 0)
 			{
-				Code.AppendLine($"			static readonly System.Collections.Generic.Dictionary<Type, short> m_typeToTagDict = new({SubList.Count})");
+				Code.AppendLine($"			static readonly System.Collections.Generic.Dictionary<Type, short> m_typeToMarkDict = new({SubList.Count})");
 				Code.AppendLine("			{");
 				Code.AppendLine($"				{{typeof({className}), ValueMarkCode.THIS_OBJECT }},");
 				for (int i = 0; i < SubList.Count; i++)
@@ -100,10 +100,10 @@ namespace WorldTree.SourceGenerator
 
 			if (SubList != null && SubList.Count != 0)
 			{
-				Code.AppendLine("				if (m_typeToTagDict.TryGetValue(value.GetType(), out short tag))");
+				Code.AppendLine("				if (m_typeToMarkDict.TryGetValue(value.GetType(), out short markCode))");
 				Code.AppendLine("				{");
-				Code.AppendLine("					self.WriteUnmanaged(tag);");
-				Code.AppendLine("					switch (tag)");
+				Code.AppendLine("					self.WriteUnmanaged(markCode);");
+				Code.AppendLine("					switch (markCode)");
 				Code.AppendLine("					{");
 				for (int i = 0; i < SubList.Count; i++)
 				{
@@ -170,7 +170,7 @@ namespace WorldTree.SourceGenerator
 		private static void GeneratorDeserialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, List<INamedTypeSymbol> SubList)
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			Code.AppendLine($"		class Deserialize : DeserializeRule<TreePackByteSequence, {className}>");
+			Code.AppendLine($"		class TreePackDeserialize : TreePackDeserializeRule<TreePackByteSequence, {className}>");
 			Code.AppendLine("		{");
 			Code.AppendLine($"			protected override void Execute(TreePackByteSequence self, ref {className} value)");
 			Code.AppendLine("			{");
@@ -183,25 +183,21 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("					value = default;");
 				Code.AppendLine("					return;");
 				Code.AppendLine("				}");
-				//Code.AppendLine("				else");
-				//Code.AppendLine("				{");
-				//Code.AppendLine("					self.ReadUnmanaged(out tagCount);");
-				//Code.AppendLine("				}");
 			}
 
 			if (SubList != null && SubList.Count != 0)
 			{
-				Code.AppendLine("				self.ReadUnmanaged(out short tag);");
-				Code.AppendLine("				switch (tag)");
+				Code.AppendLine("				self.ReadUnmanaged(out short markCode);");
+				Code.AppendLine("				switch (markCode)");
 				Code.AppendLine("				{");
-				Code.AppendLine($"					case -1: break;");
+				Code.AppendLine($"					case ValueMarkCode.THIS_OBJECT: break;");
 				for (int i = 0; i < SubList.Count; i++)
 				{
 					Code.AppendLine($"					case {i}:");
 					Code.AppendLine($"						self.ReadValue(ref System.Runtime.CompilerServices.Unsafe.As<{className}, {SubList[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}>(ref value));return;");
 				}
 				Code.AppendLine($"					default:");
-				Code.AppendLine($"						self.LogError($\"{{value.GetType()}}:没有可转换类型\");break;");
+				Code.AppendLine($"						self.LogError($\"{{value.GetType()}}:没有可转换类型\");return;");
 				Code.AppendLine("				}");
 			}
 

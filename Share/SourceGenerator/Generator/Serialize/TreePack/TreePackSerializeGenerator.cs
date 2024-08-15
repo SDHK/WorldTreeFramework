@@ -14,7 +14,7 @@ using System.Text;
 namespace WorldTree.SourceGenerator
 {
 	[Generator]
-	internal class SerializeGenerator : ISourceGenerator
+	internal class TreePackSerializeGenerator : ISourceGenerator
 	{
 		public Dictionary<INamedTypeSymbol, List<INamedTypeSymbol>> TypeSubDict = new();
 
@@ -69,7 +69,7 @@ namespace WorldTree.SourceGenerator
 						}
 					});
 
-					SerializePartialClassGenerator.Execute(context, ClassCode, typeDeclaration, SubList);
+					TreePackSerializePartialClassGenerator.Execute(context, ClassCode, typeDeclaration, SubList);
 				}
 
 
@@ -88,7 +88,7 @@ namespace WorldTree.SourceGenerator
 				Code.Append("}");
 
 
-				context.AddSource($"{fileName}Serialize.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+				context.AddSource($"{fileName}TreePackSerialize.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 			}
 		}
 	}
