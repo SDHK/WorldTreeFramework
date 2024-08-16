@@ -37,6 +37,8 @@ namespace WorldTree
 	/// 树包字节序列
 	/// </summary>
 	public class TreePackByteSequence : ByteSequence
+		, AsRule<ITreePackSerialize>
+		, AsRule<ITreePackDeserialize>
 	{
 		#region 读取
 

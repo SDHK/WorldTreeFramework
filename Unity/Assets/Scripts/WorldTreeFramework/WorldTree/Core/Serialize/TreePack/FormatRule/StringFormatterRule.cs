@@ -22,7 +22,7 @@ namespace WorldTree.TreePack.Formatters
 					return;
 				}
 
-				// (int ~utf8-byte-count, int utf16-length, utf8-bytes)
+				// (int utf16-length, int utf8-byte-count, utf8-bytes)
 				ReadOnlySpan<char> source = value.AsSpan();
 				// UTF8.GetMaxByteCount -> (length + 1) * 3
 				int maxByteCount = (source.Length + 1) * 3;
@@ -46,7 +46,7 @@ namespace WorldTree.TreePack.Formatters
 				Unsafe.WriteUnaligned(ref destPointer, bytesWritten);
 
 				// 重新定位指针，裁剪空间
-				self.Current.SetPoint(bytesWritten + 4);
+				self.WriteBytePoint = bytesWritten + 4;
 			}
 		}
 		class Deserialize : TreePackDeserializeRule<TreePackByteSequence, string>

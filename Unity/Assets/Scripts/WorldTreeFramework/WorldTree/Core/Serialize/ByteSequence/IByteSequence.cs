@@ -31,6 +31,11 @@ namespace WorldTree
 		public int ReadRemain { get; }
 
 		/// <summary>
+		/// 写入byte指针位置
+		/// </summary>
+		public int WriteBytePoint { get; set; }
+
+		/// <summary>
 		/// 获取写入操作跨度
 		/// </summary>
 		public Span<byte> GetWriteSpan(int sizeHint);
@@ -73,7 +78,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入固定长度数值
 		/// </summary>
-			
+
 		public void WriteUnmanaged<T1>(in T1 value1) where T1 : unmanaged;
 
 		/// <summary>
