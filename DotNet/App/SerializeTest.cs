@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace WorldTree
 {
@@ -28,7 +29,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试泛型3
 		/// </summary>
-		public T3 ValueT3 = default;
+		public T3 ValueT3 { get; set; } = default;
 
 
 
@@ -65,7 +66,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试字典
 		/// </summary>
-		public Dictionary<int, string> ValueT4Dict;
+		public UnitDictionary<int, string> ValueT4Dict;
 	}
 
 
@@ -123,11 +124,71 @@ namespace WorldTree
 
 
 
+
+
+	public static partial class SerializeTest1Rule
+	{
+
+		static unsafe Action<SerializeTest> OnAddSerializeTest1 = (self) =>
+		{
+
+			//随便写点不一样的数据
+			NodeClassDataTest<int, float, int> testData = new();
+			testData.ValueT1 = 987;
+			testData.ValueT2 = 45.321f;
+			testData.ValueT3 = 1234567;
+
+			UnitDictionary<int, float> objDict = new();
+
+
+			self.AddTemp(out TreePackByteSequence sequenceWrite);
+		};
+	}
+
+
+
+
+	/// <summary>
+	/// 1
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	internal class MemoryPackFormatter<T>
+	{
+		public MemoryPackFormatter()
+		{
+		}
+	}
+
 	public static partial class SerializeTestRule
 	{
+
+		///// <summary>
+		///// 法则列表通知执行
+		///// </summary>
+		//public static void SendRef1<R, T1>(this IRuleList<R> ruleList, INode node, ref T1 arg1)
+		//	where R : ISendRefRule<T1>
+		//{
+		//	foreach (IRule rule in (RuleList)ruleList)
+		//	{
+		//		Unsafe.As<ISendRefRule<T1>>(rule).Invoke(node, ref arg1);
+		//	}
+		//}
+
+		/// <summary>
+		/// ces 
+		/// </summary>
+		internal static object CreateGenericFormatter()
+		{
+			// 假设返回一个 MemoryPackFormatter<IDictionary<int, string>> 实例
+			return new MemoryPackFormatter<IDictionary<int, string>>();
+		}
 		static OnAdd<SerializeTest> OnAddSerializeTest = (self) =>
 		{
+
+
 			self.Log($"嵌套序列化测试！！！！！");
+
+
 
 			//随便写点不一样的数据
 			NodeClassDataTest<int, float, int> testData = new();
@@ -140,11 +201,11 @@ namespace WorldTree
 			testData.DataTest1 = new NodeClassDataTest1<int, float>();
 			testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
 			testData.DataTest1.TestT2 = 5.789456f;
-			testData.DataTest1.ValueT4Dict = new Dictionary<int, string>()
+			testData.DataTest1.ValueT4Dict = new UnitDictionary<int, string>()
 			{
-				{ 1, "A1.145f拉" },
-				{ 2, "A2.278f擦" },
-				{ 3, "A3.312f达" },
+					{ 1, "A1.145f拉扒拉巴拉" },
+					{ 2, "A2.278f擦" },
+					{ 3, "A3.312f达" },
 			};
 
 			testData.DataTestBase = new NodeClassDataBase()

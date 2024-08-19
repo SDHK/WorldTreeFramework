@@ -47,9 +47,19 @@ namespace WorldTree
 		/// </summary>
 		public void WriteValue<T>(in T value)
 		{
-			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerialize<>));
-			if (ruleDict.TryGetValue(TypeInfo<TreePackSerialize<T>>.TypeCode, out RuleList ruleList))
-				((IRuleList<TreePackSerialize<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
+			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
+			if (Core.RuleManager.TryGetRuleList<ITreePackSerialize>(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			{
+				foreach (IRule rule in ruleList)
+				{
+					Unsafe.As<TreePackSerializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref Unsafe.AsRef(value));
+				}
+				return;
+			}
+
+			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
+			if (ruleDict.TryGetValue(TypeInfo<TreePackSerializeUnmanaged<T>>.TypeCode, out ruleList))
+				((IRuleList<TreePackSerializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
 
 
@@ -72,10 +82,23 @@ namespace WorldTree
 
 			WriteUnmanaged(value.Length);
 
-			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerialize<>));
-			if (ruleDict.TryGetValue(TypeInfo<TreePackSerialize<T>>.TypeCode, out RuleList ruleList))
+			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
+			if (Core.RuleManager.TryGetRuleList<ITreePackSerialize>(TypeInfo<T>.TypeCode, out RuleList ruleList))
 			{
-				IRuleList<TreePackSerialize<T>> ruleListT = ruleList;
+				for (int i = 0; i < value.Length; i++)
+				{
+					foreach (IRule rule in ruleList)
+					{
+						Unsafe.As<TreePackSerializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref value[i]);
+					}
+				}
+				return;
+			}
+
+			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
+			if (ruleDict.TryGetValue(TypeInfo<TreePackSerializeUnmanaged<T>>.TypeCode, out ruleList))
+			{
+				IRuleList<TreePackSerializeUnmanaged<T>> ruleListT = ruleList;
 				for (int i = 0; i < value.Length; i++) ruleListT.SendRef(this, ref value[i]);
 			}
 		}
@@ -99,9 +122,19 @@ namespace WorldTree
 		/// </summary>
 		public void ReadValue<T>(ref T value)
 		{
-			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserialize<>));
-			if (ruleDict.TryGetValue(TypeInfo<TreePackDeserialize<T>>.TypeCode, out RuleList ruleList))
-				((IRuleList<TreePackDeserialize<T>>)ruleList).SendRef(this, ref value);
+			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
+			if (Core.RuleManager.TryGetRuleList<ITreePackDeserialize>(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			{
+				foreach (IRule rule in ruleList)
+				{
+					Unsafe.As<TreePackDeserializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref Unsafe.AsRef(value));
+				}
+				return;
+			}
+
+			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
+			if (ruleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.TypeCode, out ruleList))
+				((IRuleList<TreePackDeserializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
 
 		/// <summary>
@@ -109,10 +142,8 @@ namespace WorldTree
 		/// </summary>
 		public T ReadValue<T>()
 		{
-			 T value = default;
-			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserialize<>));
-			if (ruleDict.TryGetValue(TypeInfo<TreePackDeserialize<T>>.TypeCode, out RuleList ruleList))
-				((IRuleList<TreePackDeserialize<T>>)ruleList).SendRef(this, ref value);
+			T value = default;
+			ReadValue(ref value);
 			return value;
 		}
 
@@ -152,10 +183,23 @@ namespace WorldTree
 				value = new T[length];
 			}
 
-			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserialize<>));
-			if (ruleDict.TryGetValue(TypeInfo<TreePackDeserialize<T>>.TypeCode, out RuleList ruleList))
+			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
+			if (Core.RuleManager.TryGetRuleList<ITreePackDeserialize>(TypeInfo<T>.TypeCode, out RuleList ruleList))
 			{
-				IRuleList<TreePackDeserialize<T>> ruleListT = ruleList;
+				for (int i = 0; i < value.Length; i++)
+				{
+					foreach (IRule rule in ruleList)
+					{
+						Unsafe.As<TreePackDeserializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref value[i]);
+					}
+				}
+				return;
+			}
+
+			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
+			if (ruleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.TypeCode, out ruleList))
+			{
+				IRuleList<TreePackDeserializeUnmanaged<T>> ruleListT = ruleList;
 				for (int i = 0; i < length; i++) ruleListT.SendRef(this, ref value[i]);
 			}
 		}

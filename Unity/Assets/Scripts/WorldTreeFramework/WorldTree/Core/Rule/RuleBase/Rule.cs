@@ -56,8 +56,6 @@ namespace WorldTree
 	/// <para>主要作用是通过泛型给标记赋值</para>
 	/// </remarks>
 	public abstract class Rule<N, R> : IRule
-		where N : class, INode
-		where R : IRule
 	{
 		public virtual long NodeType => TypeInfo<N>.TypeCode;
 		public virtual long RuleType => TypeInfo<R>.TypeCode;

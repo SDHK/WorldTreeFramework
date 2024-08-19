@@ -4,10 +4,9 @@ namespace WorldTree.TreePack.Formatters
 {
 	public static class DictionaryFormatterRule
 	{
-
-		class Serialize<TKey, TValue> : TreePackSerializeRule<TreePackByteSequence, Dictionary<TKey, TValue>>
+		class Serialize<TKey, TValue> : TreePackSerializeRule<TreePackByteSequence, IDictionary<TKey, TValue>>
 		{
-			protected override void Execute(TreePackByteSequence self, ref Dictionary<TKey, TValue> value)
+			protected override void Execute(TreePackByteSequence self, ref IDictionary<TKey, TValue> value)
 			{
 				if (value == null)
 				{
@@ -21,9 +20,9 @@ namespace WorldTree.TreePack.Formatters
 				foreach (KeyValuePair<TKey, TValue> item in value) self.WriteValue(item);
 			}
 		}
-		class Deserialize<TKey, TValue> : TreePackDeserializeRule<TreePackByteSequence, Dictionary<TKey, TValue>>
+		class Deserialize<TKey, TValue> : TreePackDeserializeRule<TreePackByteSequence, IDictionary<TKey, TValue>>
 		{
-			protected override void Execute(TreePackByteSequence self, ref Dictionary<TKey, TValue> value)
+			protected override void Execute(TreePackByteSequence self, ref IDictionary<TKey, TValue> value)
 			{
 				if (self.ReadUnmanaged(out int tagCount) == ValueMarkCode.NULL_OBJECT)
 				{

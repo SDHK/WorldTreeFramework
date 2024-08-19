@@ -451,32 +451,13 @@ namespace WorldTree
 		private void SupportGenericNodeRule(long nodeType)
 		{
 			Type type = nodeType.CodeToType();
+			Type[] interfaces = type.GetInterfaces();
+
+			//开始遍历查询父类型泛型法则
 			while (type != null && type != typeof(object))
 			{
 				//节点可能会是非泛型，但父类则有泛型的情况，需要多态化所有父类泛型法则
-				if (type.IsGenericType)
-				{
-					//获取泛型本体类型
-					Type genericNodeType = type.GetGenericTypeDefinition();
-					//获取泛型参数数组
-					Type[] genericTypes = type.GetGenericArguments();
-
-					if (GenericNodeRuleTypeHashDict.TryGetValue(genericNodeType, out var RuleTypeHash))
-					{
-						UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
-
-						foreach (var RuleType in RuleTypeHash)
-						{
-							//填入对应的泛型参数，实例化泛型监听系统
-							IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
-							//添加法则，泛型动态支持不可覆盖已有定义
-							if (!(RuleGroupDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.ContainsKey(rule.NodeType)))
-								ruleList.Add(rule);
-						}
-						foreach (var rule in ruleList) AddRule(rule);
-						ruleList.Dispose();
-					}
-				}
+				CreateGenericNodeRule(type);
 				type = type.BaseType;
 
 				//泛型参数法则子类继承支持记录
@@ -486,7 +467,46 @@ namespace WorldTree
 				{
 					if (!nodeSubTypeHash.Contains(nodeType)) nodeSubTypeHash.Add(nodeType);
 				}
+			}
 
+			//遍历接口
+			foreach (var interfaceType in interfaces)
+			{
+				CreateGenericNodeRule(interfaceType);
+				long typeCode = interfaceType.TypeToCode();
+				if (GenericNodeSubTypeDict.TryGetValue(typeCode, out var nodeSubTypeHash))
+				{
+					if (!nodeSubTypeHash.Contains(nodeType)) nodeSubTypeHash.Add(nodeType);
+				}
+			}
+		}
+
+		/// <summary>
+		/// 组合创建泛型节点法则
+		/// </summary>
+		private void CreateGenericNodeRule(Type type)
+		{
+			if (type.IsGenericType)
+			{
+				//获取泛型本体类型
+				Type genericNodeType = type.GetGenericTypeDefinition();
+				//获取泛型参数数组
+				Type[] genericTypes = type.GetGenericArguments();
+				if (GenericNodeRuleTypeHashDict.TryGetValue(genericNodeType, out var RuleTypeHash))
+				{
+					UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
+
+					foreach (var RuleType in RuleTypeHash)
+					{
+						//填入对应的泛型参数，实例化泛型监听系统
+						IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
+						//添加法则，泛型动态支持不可覆盖已有定义
+						if (!(RuleGroupDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.ContainsKey(rule.NodeType)))
+							ruleList.Add(rule);
+					}
+					foreach (var rule in ruleList) AddRule(rule);
+					ruleList.Dispose();
+				}
 			}
 		}
 
@@ -498,21 +518,24 @@ namespace WorldTree
 		/// <summary>
 		/// 支持监听器的多态法则
 		/// </summary>
-		private void SupportPolymorphicListenerRule(long listenerNodeType)
+		private void SupportPolymorphicListenerRule(long listenerNodeTypeCode)
 		{
-			//监听器父类类型键值
-			Type listenerBaseType = listenerNodeType.CodeToType().BaseType;
-			//类型哈希码
-			long listenerBaseTypeCodeKey = listenerBaseType.TypeToCode();
+			Type listenerNodeType = listenerNodeTypeCode.CodeToType();
 
+			//监听器父类类型键值
+			Type listenerBaseType = listenerNodeType.BaseType;
 			while (listenerBaseType != null && listenerBaseType != typeof(object))
 			{
-				PolymorphicListenerRule(listenerNodeType, listenerBaseTypeCodeKey);
+				PolymorphicListenerRule(listenerNodeTypeCode, listenerBaseType.TypeToCode());
 				listenerBaseType = listenerBaseType.BaseType;
-				listenerBaseTypeCodeKey = listenerBaseType.TypeToCode();
 			}
-			if (listenerBaseType.GetInterfaces().Contains(TypeInfo<INode>.Type))
-				PolymorphicListenerRule(listenerNodeType, TypeInfo<INode>.TypeCode);
+
+			//遍历接口
+			Type[] interfaceTypes = listenerNodeType.GetInterfaces();
+			foreach (var interfaceType in interfaceTypes)
+			{
+				PolymorphicListenerRule(listenerNodeTypeCode, interfaceType.TypeToCode());
+			}
 		}
 
 		/// <summary>
@@ -565,22 +588,24 @@ namespace WorldTree
 		/// <summary>
 		/// 支持节点多态法则
 		/// </summary>
-		private void SupportPolymorphicRule(long nodeType)
+		private void SupportPolymorphicRule(long nodeTypeCode)
 		{
-			//开始遍历查询父类型法则
-			Type baseType = nodeType.CodeToType().BaseType;
-			//父类型哈希码
-			long baseTypeCodeKey = baseType.TypeToCode();
+			Type nodeType = nodeTypeCode.CodeToType();
 
+			//开始遍历查询父类型法则
+			Type baseType = nodeType.BaseType;
 			while (baseType != null && baseType != typeof(object))
 			{
-				PolymorphicRule(nodeType, baseTypeCodeKey);
+				PolymorphicRule(nodeTypeCode, baseType.TypeToCode());
 				baseType = baseType.BaseType;
-				baseTypeCodeKey = baseType.TypeToCode();
 			}
-			//检测是否继承了INode 接口,支持INode的多态法则
-			if (baseType.GetInterfaces().Contains(TypeInfo<INode>.Type))
-				PolymorphicRule(nodeType, TypeInfo<INode>.TypeCode);
+
+			//遍历接口
+			Type[] interfaceTypes = nodeType.GetInterfaces();
+			foreach (var interfaceType in interfaceTypes)
+			{ 
+				PolymorphicRule(nodeTypeCode, interfaceType.TypeToCode());
+			}
 		}
 
 		/// <summary>

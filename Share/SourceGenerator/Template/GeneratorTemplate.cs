@@ -24,6 +24,76 @@ namespace WorldTree.SourceGenerator
 		private static Dictionary<int, string>? genericsRefParameter;
 		private static Dictionary<int, string>? genericsRefTypeParameter;
 
+
+		private static Dictionary<int, string>? genericsInTypes;
+		private static Dictionary<int, string>? genericsInTypesAngle;
+
+
+
+		/// <summary>
+		/// 泛型类型模板: , in T1, in T2, in T3
+		/// </summary>
+		public static Dictionary<int, string> GenericsInTypes
+		{
+			get
+			{
+				if (genericsInTypes == null)
+				{
+					genericsInTypes = new Dictionary<int, string>();
+					StringBuilder generics = new StringBuilder();
+					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					{
+						for (int i = 0; i < index; i++)
+						{
+							generics.Append($", in T{i + 1}");
+						}
+						genericsInTypes.Add(index, generics.ToString());
+						generics.Clear();
+					}
+				}
+				return genericsInTypes;
+			}
+		}
+
+
+
+		/// <summary>
+		/// 泛型类型角括号模板: &lt;in T1, in T2, in T3 &gt;
+		/// </summary>
+		public static Dictionary<int, string> GenericsInTypesAngle
+		{
+			get
+			{
+				if (genericsInTypesAngle == null)
+				{
+					genericsInTypesAngle = new Dictionary<int, string>();
+					StringBuilder generics = new StringBuilder();
+					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					{
+						for (int i = 0; i < index; i++)
+						{
+							if (i == 0) generics.Append("<");
+							generics.Append($"in T{i + 1}");
+							if (i == index - 1)
+							{
+								generics.Append(">");
+							}
+							else
+							{
+								generics.Append(", ");
+							}
+						}
+						genericsInTypesAngle.Add(index, generics.ToString());
+						generics.Clear();
+					}
+				}
+				return genericsInTypesAngle;
+			}
+		}
+
+
+
+
 		/// <summary>
 		/// 泛型类型模板: , T1, T2, T3
 		/// </summary>
@@ -48,6 +118,9 @@ namespace WorldTree.SourceGenerator
 				return genericsTypes;
 			}
 		}
+
+
+
 		/// <summary>
 		/// 泛型类型模板: T1, T2, T3,
 		/// </summary>

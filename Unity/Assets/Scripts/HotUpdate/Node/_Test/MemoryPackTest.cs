@@ -151,6 +151,11 @@ namespace WorldTree
 		/// 测试3
 		/// </summary>
 		public NodeDataTest1 NodeDataTest1;
+
+		/// <summary>
+		/// 测试4
+		/// </summary>
+		public Dictionary<int,float> NodeDataDict;
 	}
 
 	/// <summary>
