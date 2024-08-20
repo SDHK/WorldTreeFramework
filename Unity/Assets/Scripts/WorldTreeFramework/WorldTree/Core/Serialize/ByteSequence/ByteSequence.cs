@@ -8,13 +8,11 @@
 */
 using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace WorldTree
 {
-
 	/// <summary>
 	/// Byte序列
 	/// </summary>
@@ -32,12 +30,6 @@ namespace WorldTree
 		/// 当前缓存
 		/// </summary>
 		private ByteSequenceSegment current;
-
-		/// <summary>
-		/// 自身拥有的法则列表集合
-		/// </summary>
-		/// <remarks> RuleTypeCode, 法则列表 </remarks>
-		public Dictionary<long, RuleList> ruleDict;
 
 		/// <summary>
 		/// 数据长度
@@ -326,8 +318,6 @@ namespace WorldTree
 
 		#endregion
 
-
-
 		#region 读取
 
 		/// <summary>
@@ -418,8 +408,6 @@ namespace WorldTree
 			protected override void Execute(ByteSequence self)
 			{
 				self.Core.PoolGetUnit(out self.segmentList);
-				// 获取节点的法则集
-				self.Core.RuleManager.NodeTypeRulesDict.TryGetValue(self.Type, out self.ruleDict);
 			}
 		}
 

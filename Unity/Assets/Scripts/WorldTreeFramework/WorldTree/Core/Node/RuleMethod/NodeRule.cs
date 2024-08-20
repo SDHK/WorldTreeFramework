@@ -19,11 +19,9 @@ namespace WorldTree
 			where N : class, B, INode
 			where B : class, INode, AsRule<R>
 		{
-			self.Core.RuleManager.TryGetRuleList(TypeInfo<N>.TypeCode, out IRuleList<R> rulelist);
+			self.Core.RuleManager.TryGetRuleList(TypeInfo<B>.TypeCode, out IRuleList<R> rulelist);
 			return rulelist;
 		}
-
-	
 
 		/// <summary>
 		/// 类型转换为

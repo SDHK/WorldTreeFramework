@@ -7,6 +7,7 @@
 
 */
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree
@@ -14,7 +15,6 @@ namespace WorldTree
 
 	public static partial class TreePackByteSequenceRule
 	{
-
 		/// <summary>
 		/// 序列化写入类型
 		/// </summary>
@@ -31,6 +31,18 @@ namespace WorldTree
 			self.ReadValue(ref value);
 		}
 
+		class AddRule : AddRule<TreePackByteSequence>
+		{
+			protected override void Execute(TreePackByteSequence self)
+			{
+				self.GetBaseRule<TreePackByteSequence, ByteSequence, Add>().Send(self);
+
+				// 获取节点的法则集
+				self.Core.RuleManager.NodeTypeRulesDict.TryGetValue(self.Type, out self.unmanagedRuleDict);
+				self.Core.RuleManager.TryGetRuleGroup<ITreePackSerialize>(out self.serializeRuleDict);
+				self.Core.RuleManager.TryGetRuleGroup<ITreePackDeserialize>(out self.deserializeRuleDict);
+			}
+		}
 	}
 
 	/// <summary>
@@ -40,15 +52,33 @@ namespace WorldTree
 		, AsRule<ITreePackSerialize>
 		, AsRule<ITreePackDeserialize>
 	{
+		/// <summary>
+		/// 自身拥有的非委托类型法则列表集合
+		/// </summary>
+		/// <remarks> RuleTypeCode, 法则列表 </remarks>
+		public Dictionary<long, RuleList> unmanagedRuleDict;
+
+		/// <summary>
+		/// 不同类型序列化法则列表集合
+		/// </summary>
+		public RuleGroup serializeRuleDict;
+
+		/// <summary>
+		/// 不同类型反序列化法则列表集合
+		/// </summary>
+		public RuleGroup deserializeRuleDict;
+
+
 		#region 读取
 
 		/// <summary>
 		/// 写入值
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void WriteValue<T>(in T value)
 		{
 			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
-			if (Core.RuleManager.TryGetRuleList<ITreePackSerialize>(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			if (serializeRuleDict.TryGetValue(TypeInfo<T>.TypeCode, out RuleList ruleList))
 			{
 				foreach (IRule rule in ruleList)
 				{
@@ -58,7 +88,7 @@ namespace WorldTree
 			}
 
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
-			if (ruleDict.TryGetValue(TypeInfo<TreePackSerializeUnmanaged<T>>.TypeCode, out ruleList))
+			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackSerializeUnmanaged<T>>.TypeCode, out ruleList))
 				((IRuleList<TreePackSerializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
 
@@ -83,7 +113,7 @@ namespace WorldTree
 			WriteUnmanaged(value.Length);
 
 			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
-			if (Core.RuleManager.TryGetRuleList<ITreePackSerialize>(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			if (serializeRuleDict.TryGetValue(TypeInfo<T>.TypeCode, out RuleList ruleList))
 			{
 				for (int i = 0; i < value.Length; i++)
 				{
@@ -96,7 +126,7 @@ namespace WorldTree
 			}
 
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
-			if (ruleDict.TryGetValue(TypeInfo<TreePackSerializeUnmanaged<T>>.TypeCode, out ruleList))
+			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackSerializeUnmanaged<T>>.TypeCode, out ruleList))
 			{
 				IRuleList<TreePackSerializeUnmanaged<T>> ruleListT = ruleList;
 				for (int i = 0; i < value.Length; i++) ruleListT.SendRef(this, ref value[i]);
@@ -120,10 +150,11 @@ namespace WorldTree
 		/// <summary>
 		/// 读取值
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void ReadValue<T>(ref T value)
 		{
 			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
-			if (Core.RuleManager.TryGetRuleList<ITreePackDeserialize>(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			if (deserializeRuleDict.TryGetValue(TypeInfo<T>.TypeCode, out RuleList ruleList))
 			{
 				foreach (IRule rule in ruleList)
 				{
@@ -133,13 +164,14 @@ namespace WorldTree
 			}
 
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
-			if (ruleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.TypeCode, out ruleList))
+			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.TypeCode, out ruleList))
 				((IRuleList<TreePackDeserializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
 
 		/// <summary>
 		/// 读取值
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public T ReadValue<T>()
 		{
 			T value = default;
@@ -184,7 +216,7 @@ namespace WorldTree
 			}
 
 			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
-			if (Core.RuleManager.TryGetRuleList<ITreePackDeserialize>(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			if (deserializeRuleDict.TryGetValue(TypeInfo<T>.TypeCode, out RuleList ruleList))
 			{
 				for (int i = 0; i < value.Length; i++)
 				{
@@ -197,7 +229,7 @@ namespace WorldTree
 			}
 
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
-			if (ruleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.TypeCode, out ruleList))
+			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.TypeCode, out ruleList))
 			{
 				IRuleList<TreePackDeserializeUnmanaged<T>> ruleListT = ruleList;
 				for (int i = 0; i < length; i++) ruleListT.SendRef(this, ref value[i]);
@@ -213,7 +245,6 @@ namespace WorldTree
 		{
 			DangerousReadUnmanagedArray(ref value);
 		}
-
 
 		#endregion
 	}
