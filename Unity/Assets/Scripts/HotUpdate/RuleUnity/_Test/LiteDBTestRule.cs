@@ -20,6 +20,7 @@ namespace WorldTree
 				liteCollection.Insert(new TestClass { Id = 2, Name = "Jane Doe" });
 				liteCollection.Insert(new TestClass { Id = 3, Name = "John Doe" });
 
+
 				//查询数据
 				IEnumerable<TestClass> result = liteCollection.Find((x) => x.Id == 3);
 

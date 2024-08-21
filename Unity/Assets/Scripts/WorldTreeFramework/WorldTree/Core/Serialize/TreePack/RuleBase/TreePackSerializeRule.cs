@@ -6,8 +6,6 @@
 * 描述：
 
 */
-using System;
-
 namespace WorldTree
 {
 	/// <summary>
@@ -19,7 +17,6 @@ namespace WorldTree
 	/// 树包反序列化法则接口：用于反序列化未知泛型，解除AsRule的法则限制
 	/// </summary>
 	public interface ITreePackDeserialize : IRule { }
-
 
 	/// <summary>
 	/// 树包序列化非托管法则
@@ -41,14 +38,13 @@ namespace WorldTree
 	/// </summary>
 	public abstract class TreePackDeserializeUnmanagedRule<N, T> : SendRefRule<N, TreePackDeserializeUnmanaged<T>, T> where N : class, INode, AsRule<TreePackDeserializeUnmanaged<T>> { }
 
-
 	#region 非常规法则
 
 	/// <summary>
 	/// 树包序列化法则基类
 	/// </summary>
 	/// <remarks>打破常规写法，以参数类型为主，支持继承法则</remarks>
-	public abstract class TreeSerializeRuleBase<N, R, T1> : Rule<T1, R>, ISendRefRule<T1>
+	public abstract class TreePackSerializeRuleBase<N, R, T1> : Rule<T1, R>, ISendRefRule<T1>
 		where N : class, INode, AsRule<R>
 		where R : IRule
 	{
@@ -65,14 +61,14 @@ namespace WorldTree
 	/// <summary>
 	/// 树包序列化法则
 	/// </summary>
-	public abstract class TreePackSerializeRule<N, GT> : TreeSerializeRuleBase<N, ITreePackSerialize, GT>
+	public abstract class TreePackSerializeRule<N, GT> : TreePackSerializeRuleBase<N, ITreePackSerialize, GT>
 			where N : class, INode, AsRule<ITreePackSerialize>
 	{}
 
 	/// <summary>
 	/// 树包反序列化法则
 	/// </summary>
-	public abstract class TreePackDeserializeRule<N, GT> : TreeSerializeRuleBase<N, ITreePackDeserialize, GT>
+	public abstract class TreePackDeserializeRule<N, GT> : TreePackSerializeRuleBase<N, ITreePackDeserialize, GT>
 			where N : class, INode, AsRule<ITreePackDeserialize>
 	{}
 

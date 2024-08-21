@@ -155,7 +155,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试4
 		/// </summary>
-		public Dictionary<int,float> NodeDataDict;
+		public UnitDictionary<int,float> NodeDataDict;
 	}
 
 	/// <summary>
