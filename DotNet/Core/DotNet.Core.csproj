@@ -11,10 +11,10 @@
 
   <PropertyGroup>
     <!--用于控制构建输出路径是否包含目标框架的版本号。
-    如果设置为 true,则输出路径会包含目标框架的版本号,例如 bin\Debug\net6.0\
+    如果设置为 true,则输出路径会包含目标框架的版本号,例如 bin\Debug\net8.0\
     如果设置为 false,则输出路径不包含版本号,例如 bin\Debug\-->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
 

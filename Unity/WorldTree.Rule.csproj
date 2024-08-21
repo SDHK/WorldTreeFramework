@@ -59,7 +59,7 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\Rule\_Test\MemoryPackTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\Client\_Test\MemoryPackTestRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\Rule\WorldTree.Rule.asmdef" />
