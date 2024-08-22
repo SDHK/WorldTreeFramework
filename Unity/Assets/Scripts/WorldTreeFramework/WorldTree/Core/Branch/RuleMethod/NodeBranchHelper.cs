@@ -20,7 +20,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加分支
 		/// </summary>
-		public static B AddBranch<B>(INode self) where B : class, IBranch => AddBranch(self, TypeInfo<B>.TypeCode) as B;
+		public static B AddBranch<B>(INode self) where B : class, IBranch => AddBranch(self, self.TypeToCode<B>()) as B;
 
 		/// <summary>
 		/// 添加分支
@@ -43,7 +43,7 @@ namespace WorldTree
 		/// <summary>
 		/// 移除分支中的节点
 		/// </summary>
-		public static void RemoveBranchNode<B>(INode self, INode node) where B : class, IBranch => RemoveBranchNode(self, TypeInfo<B>.TypeCode, node);
+		public static void RemoveBranchNode<B>(INode self, INode node) where B : class, IBranch => RemoveBranchNode(self, self.TypeToCode<B>(), node);
 
 		/// <summary>
 		/// 移除分支中的节点
@@ -74,7 +74,7 @@ namespace WorldTree
 		/// 释放分支的所有节点
 		/// </summary>
 		public static void RemoveAllNode<B>(INode self) where B : class, IBranch
-			=> self.RemoveAllNode(TypeInfo<B>.TypeCode);
+			=> self.RemoveAllNode(self.TypeToCode<B>());
 
 		#endregion
 

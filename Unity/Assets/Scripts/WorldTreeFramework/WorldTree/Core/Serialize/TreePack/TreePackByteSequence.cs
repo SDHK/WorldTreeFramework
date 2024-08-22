@@ -77,8 +77,9 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void WriteValue<T>(in T value)
 		{
-			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
-			if (serializeRuleDict.TryGetValue(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			long typeCode = Core.TypeToCode<T>();
+			Core.RuleManager.SupportNodeRule(typeCode);
+			if (serializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
 				foreach (IRule rule in ruleList)
 				{
@@ -88,7 +89,7 @@ namespace WorldTree
 			}
 
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
-			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackSerializeUnmanaged<T>>.TypeCode, out ruleList))
+			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackSerializeUnmanaged<T>>(), out ruleList))
 				((IRuleList<TreePackSerializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
 
@@ -112,8 +113,9 @@ namespace WorldTree
 
 			WriteUnmanaged(value.Length);
 
-			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
-			if (serializeRuleDict.TryGetValue(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			long typeCode = Core.TypeToCode<T>();
+			Core.RuleManager.SupportNodeRule(typeCode);
+			if (serializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
 				for (int i = 0; i < value.Length; i++)
 				{
@@ -126,7 +128,7 @@ namespace WorldTree
 			}
 
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
-			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackSerializeUnmanaged<T>>.TypeCode, out ruleList))
+			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackSerializeUnmanaged<T>>(), out ruleList))
 			{
 				IRuleList<TreePackSerializeUnmanaged<T>> ruleListT = ruleList;
 				for (int i = 0; i < value.Length; i++) ruleListT.SendRef(this, ref value[i]);
@@ -153,8 +155,9 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void ReadValue<T>(ref T value)
 		{
-			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
-			if (deserializeRuleDict.TryGetValue(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			long typeCode = Core.TypeToCode<T>();
+			Core.RuleManager.SupportNodeRule(typeCode);
+			if (deserializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
 				foreach (IRule rule in ruleList)
 				{
@@ -164,7 +167,7 @@ namespace WorldTree
 			}
 
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
-			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.TypeCode, out ruleList))
+			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackDeserializeUnmanaged<T>>(), out ruleList))
 				((IRuleList<TreePackDeserializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
 
@@ -214,9 +217,9 @@ namespace WorldTree
 			{
 				value = new T[length];
 			}
-
-			Core.RuleManager.SupportNodeRule(TypeInfo<T>.TypeCode);
-			if (deserializeRuleDict.TryGetValue(TypeInfo<T>.TypeCode, out RuleList ruleList))
+			long typeCode = Core.TypeToCode<T>();
+			Core.RuleManager.SupportNodeRule(typeCode);
+			if (deserializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
 				for (int i = 0; i < value.Length; i++)
 				{
@@ -229,7 +232,7 @@ namespace WorldTree
 			}
 
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
-			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.TypeCode, out ruleList))
+			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackDeserializeUnmanaged<T>>(), out ruleList))
 			{
 				IRuleList<TreePackDeserializeUnmanaged<T>> ruleListT = ruleList;
 				for (int i = 0; i < length; i++) ruleListT.SendRef(this, ref value[i]);

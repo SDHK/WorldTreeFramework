@@ -46,7 +46,7 @@ namespace WorldTree.SourceGenerator
 							public static OutT Call<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
-								outT = TypeInfo<OutT>.Default;
+								outT = default(OutT);
 								foreach (ICallRule<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
 								{
 									outT = rule.Invoke(node{{genericParameter}});

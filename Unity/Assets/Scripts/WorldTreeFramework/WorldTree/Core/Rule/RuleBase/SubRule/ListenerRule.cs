@@ -24,7 +24,6 @@
 *   节点必须指定为 INode，法则必须指定为 IRule
 *   可在运行时随意切换指定目标
 *   
-*   
 * 
 */
 
@@ -41,11 +40,11 @@ namespace WorldTree
 		/// <summary>
 		/// 监听目标:节点类型
 		/// </summary>
-		long TargetNodeType { get; }
+		long TargetNodeType { get; set; }
 		/// <summary>
 		/// 监听目标:节点法则
 		/// </summary>
-		long TargetRuleType { get; }
+		long TargetRuleType { get; set; }
 	}
 
 
@@ -59,8 +58,16 @@ namespace WorldTree
 	where LR : IListenerRule
 	where TR : IRule
 	{
-		public virtual long TargetNodeType => TypeInfo<TN>.TypeCode;
-		public virtual long TargetRuleType => TypeInfo<TR>.TypeCode;
+		public virtual long TargetNodeType { get; set; }
+		public virtual long TargetRuleType { get; set; }
+
+		override public void OnCreate()
+		{
+			NodeType = Core.TypeToCode(typeof(LN));
+			RuleType = Core.TypeToCode(typeof(LR));
+			TargetNodeType = Core.TypeToCode(typeof(TN));
+			TargetRuleType = Core.TypeToCode(typeof(TR));
+		}
 
 		public virtual void Invoke(INode self, INode node) => Execute(self as LN, node as TN);
 		/// <summary>

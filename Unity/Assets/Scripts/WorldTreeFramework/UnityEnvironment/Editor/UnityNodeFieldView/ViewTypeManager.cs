@@ -31,11 +31,11 @@ namespace WorldTree
 			protected override void Execute(ViewTypeManager self)
 			{
 				//收集所有实现了INodeFieldViewRule的法则的节点 
-				if (self.Core.RuleManager.TryGetRuleGroup(typeof(INodeFieldViewRule).TypeToCode(), out RuleGroup ruleGroup))
+				if (self.Core.RuleManager.TryGetRuleGroup(self.TypeToCode(typeof(INodeFieldViewRule)), out RuleGroup ruleGroup))
 				{
 					foreach (var NodeTypeRuleType in ruleGroup)
 					{
-						Type nodeType = NodeTypeRuleType.Key.CodeToType();
+						Type nodeType = self.CodeToType(NodeTypeRuleType.Key);
 
 						if (nodeType.IsGenericType)
 						{

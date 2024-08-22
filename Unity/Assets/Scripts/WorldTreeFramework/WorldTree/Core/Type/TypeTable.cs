@@ -29,7 +29,7 @@ namespace WorldTree
 		/// <summary>
 		/// 类型注册到信息表
 		/// </summary>
-		public static Type Add(this Type type)
+		public static Type Add(Type type)
 		{
 			if (!typeHash64Dict.ContainsKey(type))
 			{
@@ -57,22 +57,22 @@ namespace WorldTree
 			return type;
 		}
 
-		/// <summary>
-		/// 类型转64位哈希码
-		/// </summary>
-		public static long TypeToCode(this Type type)
-		{
-			if (!typeHash64Dict.TryGetValue(type, out long hash64))
-			{
-				Add(type);
-				typeHash64Dict.TryGetValue(type, out hash64);
-			}
-			return hash64;
-		}
+		///// <summary>
+		///// 类型转64位哈希码
+		///// </summary>
+		//public static long TypeToCode(this Type type)
+		//{
+		//	if (!typeHash64Dict.TryGetValue(type, out long hash64))
+		//	{
+		//		Add(type);
+		//		typeHash64Dict.TryGetValue(type, out hash64);
+		//	}
+		//	return hash64;
+		//}
 
-		/// <summary>
-		/// 哈希码64转类型
-		/// </summary>
-		public static Type CodeToType(this long rcr) => hash64TypeDict[rcr];
+		///// <summary>
+		///// 哈希码64转类型
+		///// </summary>
+		//public static Type CodeToType(this long rcr) => hash64TypeDict[rcr];
 	}
 }

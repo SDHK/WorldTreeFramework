@@ -56,7 +56,7 @@ namespace WorldTree
 			foreach (var item in self.ruleGroupDict)
 			{
 				bool isListenerIgnorer = false;
-				foreach (Type typeItem in item.Key.CodeToType().GetInterfaces())
+				foreach (Type typeItem in self.CodeToType(item.Key).GetInterfaces())
 				{
 					if (typeItem == typeof(IListenerIgnorer))
 					{

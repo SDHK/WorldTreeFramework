@@ -44,7 +44,7 @@ namespace WorldTree
 			ViewCore.LogError = Debug.LogError;
 			ViewCore.Awake(); //可视化框架初始化
 
-			ViewCore.Root.AddChild(out treeView, (INode)Core, TypeInfo<INode>.Default);
+			ViewCore.Root.AddChild(out treeView, (INode)Core, default(INode));
 #endif
 
 			Core.Log = Debug.Log;

@@ -149,6 +149,11 @@ namespace WorldTree
 		public IdManager IdManager;
 
 		/// <summary>
+		/// 类型信息
+		/// </summary>
+		public TypeInfo TypeInfo;
+
+		/// <summary>
 		/// 真实时间管理器
 		/// </summary>
 		public RealTimeManager RealTimeManager;
@@ -200,16 +205,27 @@ namespace WorldTree
 			SetActive(false);
 
 			//根节点初始化
-			Type = TypeInfo<WorldTreeCore>.TypeCode;
 			Core = this;
 			Domain = this;
 			Root = null;
 
 			//框架核心启动组件新建初始化
 
+			//类型信息初始化
+			TypeInfo = Activator.CreateInstance(typeof(TypeInfo), true) as TypeInfo;
+			TypeInfo.Core = this;
+			TypeInfo.Root = this.Root;
+			TypeInfo.Type = TypeInfo.TypeToCode(typeof(TypeInfo));
+			TypeInfo.OnCreate();
+
+
+			Type = this.TypeToCode();
+
 			//Id管理器初始化
 			this.PoolGetNode(out IdManager);
 			if (Id == 0) Id = IdManager.GetId();
+
+			TypeInfo.Id = IdManager.GetId();
 
 			//法则管理器初始化
 			this.PoolGetNode(out RuleManager);
@@ -229,6 +245,7 @@ namespace WorldTree
 			//组件添加到树
 			this.TryGraftComponent(ReferencedPoolManager);
 			this.TryGraftComponent(IdManager);
+			this.TryGraftComponent(TypeInfo);
 			this.TryGraftComponent(RuleManager);
 
 			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
@@ -236,7 +253,7 @@ namespace WorldTree
 			NodePoolManager = this.AddComponent(out NodePoolManager _);
 			ArrayPoolManager = this.AddComponent(out ArrayPoolManager _);
 
-			UnitPoolManager.TryGet(TypeInfo<ChildBranch>.TypeCode, out _);
+			UnitPoolManager.TryGet(this.TypeToCode<ChildBranch>(), out _);
 
 			//嫁接节点需要手动激活
 			ReferencedPoolManager.SetActive(true);
@@ -268,7 +285,7 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
-				branchType = TypeInfo<B>.TypeCode;
+				branchType = Core.TypeToCode<B>();
 				Parent = parent;
 				Core = parent.Core ?? this;
 				Root = null;
@@ -333,7 +350,9 @@ namespace WorldTree
 			this.RemoveComponent<WorldTreeCore, UnitPoolManager>();
 			this.RemoveComponent<WorldTreeCore, RuleManager>();
 			this.RemoveComponent<WorldTreeCore, IdManager>();
+			this.RemoveComponent<WorldTreeCore, TypeInfo>();
 			this.RemoveComponent<WorldTreeCore, ReferencedPoolManager>();
+
 
 			RemoveAllNode();
 		}
@@ -376,7 +395,7 @@ namespace WorldTree
 		{
 			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
-			branchType = TypeInfo<B>.TypeCode;
+			branchType = Core.TypeToCode<B>();
 			Parent = parent;
 			RefreshActive();
 			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
@@ -397,7 +416,7 @@ namespace WorldTree
 					Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			NodeRuleHelper.SendRule(this, TypeInfo<Graft>.Default);//节点嫁接事件通知
+			NodeRuleHelper.SendRule(this, default(Graft));//节点嫁接事件通知
 		}
 
 		#endregion
@@ -408,7 +427,7 @@ namespace WorldTree
 		{
 			View?.Dispose();
 			View = null;
-			NodeRuleHelper.SendRule(this, TypeInfo<Cut>.Default);
+			NodeRuleHelper.SendRule(this, default(Cut));
 		}
 
 		#endregion

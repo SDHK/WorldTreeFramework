@@ -121,15 +121,10 @@ namespace WorldTree
 
 		#endregion
 
-
-		public RuleManager()
-		{
-			Type = TypeInfo<RuleManager>.TypeCode;
-		}
-
 		public override void OnCreate()
 		{
 			base.OnCreate();
+
 			//反射获取全局继承IRule的法则类型列表
 			var ruleTypeList = FindTypesIsInterface(typeof(IRule));
 
@@ -241,19 +236,19 @@ namespace WorldTree
 					if (genericType != null && genericType.IsGenericType)
 					{
 						GenericTypeRuleTypeHashDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).GetOrNewValue(genericType.GetGenericTypeDefinition()).Add(ruleType);
-						GenericNodeSubTypeDict.GetOrNewValue(nodeKeyType.TypeToCode());
+						GenericNodeSubTypeDict.GetOrNewValue(Core.TypeToCode(nodeKeyType));
 					}
 					else //泛型参数是泛型本身的情况
 					{
 						GenericRuleTypeDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
-						GenericNodeSubTypeDict.GetOrNewValue(nodeKeyType.TypeToCode());
+						GenericNodeSubTypeDict.GetOrNewValue(Core.TypeToCode(nodeKeyType));
 					}
 				}
 			}
 			else
 			{
 				//实例化法则类
-				IRule rule = Activator.CreateInstance(ruleType, true) as IRule;
+				IRule rule = Core.NewUnit(ruleType, out _) as IRule;
 				AddRule(rule);
 			}
 		}
@@ -279,7 +274,7 @@ namespace WorldTree
 		/// </summary>
 		private void AddListenerRule(IListenerRule listenerRule)
 		{
-			if (listenerRule.TargetNodeType == TypeInfo<INode>.TypeCode && listenerRule.TargetRuleType != TypeInfo<IRule>.TypeCode)
+			if (listenerRule.TargetNodeType == Core.TypeToCode<INode>() && listenerRule.TargetRuleType != Core.TypeToCode<IRule>())
 			{
 				//监听目标为法则的
 				TargetRuleListenerRuleHashDict.GetOrNewValue(listenerRule.TargetRuleType).Add(listenerRule);
@@ -375,14 +370,14 @@ namespace WorldTree
 		{
 			if (SupportGenericTypeDict.TryGetValue(ruleTypeDefinition, out HashSet<long> typeHash))
 			{
-				if (typeHash.Contains(TypeInfo<T>.TypeCode)) return;
+				if (typeHash.Contains(Core.TypeToCode<T>())) return;
 			}
 			else
 			{
 				typeHash = SupportGenericTypeDict.GetOrNewValue(ruleTypeDefinition);
 			}
 
-			Type genericType = TypeInfo<T>.Type;
+			Type genericType = typeof(T);
 			if (genericType.IsGenericType)
 			{
 				//获取泛型本体类型
@@ -398,7 +393,8 @@ namespace WorldTree
 						foreach (var RuleType in RuleTypeHash)
 						{
 							//填入对应的泛型参数，实例化泛型监听系统
-							IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
+							
+							IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericTypes), out _);
 							//添加法则，泛型动态支持不可覆盖已有定义
 							if (!(RuleGroupDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.ContainsKey(rule.NodeType)))
 								ruleList.Add(rule);
@@ -411,7 +407,7 @@ namespace WorldTree
 						}
 						ruleList.Dispose();
 
-						typeHash.Add(TypeInfo<T>.TypeCode);//已支持名单
+						typeHash.Add(Core.TypeToCode<T>());//已支持名单
 						return;
 					}
 				}
@@ -425,7 +421,7 @@ namespace WorldTree
 				foreach (var RuleType in ruleTypeHash)
 				{
 					//填入对应的泛型参数，实例化泛型监听系统
-					IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericDefinition));
+					IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericDefinition), out _);
 					//添加法则，泛型动态支持不可覆盖已有定义
 					if (!(RuleGroupDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.ContainsKey(rule.NodeType)))
 						ruleList.Add(rule);
@@ -451,7 +447,7 @@ namespace WorldTree
 		/// </remarks>
 		private void SupportGenericNodeRule(long nodeType)
 		{
-			Type type = nodeType.CodeToType();
+			Type type = Core.CodeToType(nodeType);
 			Type[] interfaces = type.GetInterfaces();
 
 			//开始遍历查询父类型泛型法则
@@ -463,7 +459,7 @@ namespace WorldTree
 
 				//泛型参数法则子类继承支持记录
 				//检测类型父类是否有泛型参数法则，有则记录
-				long typeCode = type.TypeToCode();
+				long typeCode = Core.TypeToCode(type);
 				if (GenericNodeSubTypeDict.TryGetValue(typeCode, out var nodeSubTypeHash))
 				{
 					if (!nodeSubTypeHash.Contains(nodeType)) nodeSubTypeHash.Add(nodeType);
@@ -474,7 +470,7 @@ namespace WorldTree
 			foreach (var interfaceType in interfaces)
 			{
 				CreateGenericNodeRule(interfaceType);
-				long typeCode = interfaceType.TypeToCode();
+				long typeCode = Core.TypeToCode(interfaceType);
 				if (GenericNodeSubTypeDict.TryGetValue(typeCode, out var nodeSubTypeHash))
 				{
 					if (!nodeSubTypeHash.Contains(nodeType)) nodeSubTypeHash.Add(nodeType);
@@ -500,7 +496,7 @@ namespace WorldTree
 					foreach (var RuleType in RuleTypeHash)
 					{
 						//填入对应的泛型参数，实例化泛型监听系统
-						IRule rule = (IRule)Activator.CreateInstance(RuleType.MakeGenericType(genericTypes));
+						IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericTypes), out _);
 						//添加法则，泛型动态支持不可覆盖已有定义
 						if (!(RuleGroupDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.ContainsKey(rule.NodeType)))
 							ruleList.Add(rule);
@@ -521,13 +517,13 @@ namespace WorldTree
 		/// </summary>
 		private void SupportPolymorphicListenerRule(long listenerNodeTypeCode)
 		{
-			Type listenerNodeType = listenerNodeTypeCode.CodeToType();
+			Type listenerNodeType = Core.CodeToType(listenerNodeTypeCode);
 
 			//监听器父类类型键值
 			Type listenerBaseType = listenerNodeType.BaseType;
 			while (listenerBaseType != null && listenerBaseType != typeof(object))
 			{
-				PolymorphicListenerRule(listenerNodeTypeCode, listenerBaseType.TypeToCode());
+				PolymorphicListenerRule(listenerNodeTypeCode, Core.TypeToCode(listenerBaseType));
 				listenerBaseType = listenerBaseType.BaseType;
 			}
 
@@ -535,7 +531,7 @@ namespace WorldTree
 			Type[] interfaceTypes = listenerNodeType.GetInterfaces();
 			foreach (var interfaceType in interfaceTypes)
 			{
-				PolymorphicListenerRule(listenerNodeTypeCode, interfaceType.TypeToCode());
+				PolymorphicListenerRule(listenerNodeTypeCode, Core.TypeToCode(interfaceType));
 			}
 		}
 
@@ -591,21 +587,21 @@ namespace WorldTree
 		/// </summary>
 		private void SupportPolymorphicRule(long nodeTypeCode)
 		{
-			Type nodeType = nodeTypeCode.CodeToType();
+			Type nodeType = Core.CodeToType(nodeTypeCode);
 
 			//开始遍历查询父类型法则
 			Type baseType = nodeType.BaseType;
 			while (baseType != null && baseType != typeof(object))
 			{
-				PolymorphicRule(nodeTypeCode, baseType.TypeToCode());
+				PolymorphicRule(nodeTypeCode, Core.TypeToCode(baseType));
 				baseType = baseType.BaseType;
 			}
 
 			//遍历接口
 			Type[] interfaceTypes = nodeType.GetInterfaces();
 			foreach (var interfaceType in interfaceTypes)
-			{ 
-				PolymorphicRule(nodeTypeCode, interfaceType.TypeToCode());
+			{
+				PolymorphicRule(nodeTypeCode, Core.TypeToCode(interfaceType));
 			}
 		}
 
@@ -650,7 +646,7 @@ namespace WorldTree
 		public bool TryGetTargetRuleGroup<LR>(long targetType, out IRuleGroup<LR> ruleGroup)
 			where LR : IListenerRule
 		{
-			if (TryGetTargetRuleGroup(TypeInfo<LR>.TypeCode, targetType, out var RuleGroup))
+			if (TryGetTargetRuleGroup(Core.TypeToCode<LR>(), targetType, out var RuleGroup))
 			{
 				ruleGroup = RuleGroup as IRuleGroup<LR>;
 				return true;
@@ -665,7 +661,7 @@ namespace WorldTree
 		public bool TryGetTargetRuleGroup<LR>(long targetType, out RuleGroup ruleGroup)
 			where LR : IListenerRule
 		{
-			return TryGetTargetRuleGroup(TypeInfo<LR>.TypeCode, targetType, out ruleGroup);
+			return TryGetTargetRuleGroup(Core.TypeToCode<LR>(), targetType, out ruleGroup);
 		}
 
 		/// <summary>
@@ -687,7 +683,7 @@ namespace WorldTree
 		public RuleGroup GetOrNewTargetRuleGroup<LR>(long targetType)
 			where LR : IListenerRule
 		{
-			return GetOrNewTargetRuleGroup(TypeInfo<LR>.TypeCode, targetType);
+			return GetOrNewTargetRuleGroup(Core.TypeToCode<LR>(), targetType);
 		}
 
 		/// <summary>
@@ -729,7 +725,7 @@ namespace WorldTree
 		{
 			if (TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
 			{
-				if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.TypeCode, out var ruleGroup))
+				if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var ruleGroup))
 				{
 					if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
 					{
@@ -754,7 +750,7 @@ namespace WorldTree
 		{
 			if (ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
 			{
-				if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.TypeCode, out var RuleGroup))
+				if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var RuleGroup))
 				{
 					ruleGroup = RuleGroup as IRuleGroup<LR>;
 					return true;
@@ -772,7 +768,7 @@ namespace WorldTree
 		{
 			if (ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
 			{
-				if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.TypeCode, out var ruleGroup))
+				if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var ruleGroup))
 				{
 					if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
 					{
@@ -795,7 +791,7 @@ namespace WorldTree
 		public bool TryGetRuleGroup<R>(out IRuleGroup<R> ruleGroup)
 		 where R : IRule
 		{
-			if (TryGetRuleGroup(TypeInfo<R>.TypeCode, out var RuleGroup))
+			if (TryGetRuleGroup(Core.TypeToCode<R>(), out var RuleGroup))
 			{
 				ruleGroup = (IRuleGroup<R>)RuleGroup;
 				return true;
@@ -810,7 +806,7 @@ namespace WorldTree
 		public bool TryGetRuleGroup<R>(out RuleGroup ruleGroup)
 		 where R : IRule
 		{
-			return TryGetRuleGroup(TypeInfo<R>.TypeCode, out ruleGroup);
+			return TryGetRuleGroup(Core.TypeToCode<R>(), out ruleGroup);
 		}
 
 		/// <summary>
@@ -827,7 +823,7 @@ namespace WorldTree
 		public RuleGroup GetOrNewRuleGroup<R>()
 		 where R : IRule
 		{
-			return GetOrNewRuleGroup(TypeInfo<R>.TypeCode);
+			return GetOrNewRuleGroup(Core.TypeToCode<R>());
 		}
 
 		/// <summary>
@@ -884,7 +880,7 @@ namespace WorldTree
 		public bool TryGetRuleList<R>(long nodeType, out RuleList ruleList)
 		 where R : IRule
 		{
-			if (RuleGroupDict.TryGetValue(TypeInfo<R>.TypeCode, out RuleGroup ruleGroup))
+			if (RuleGroupDict.TryGetValue(Core.TypeToCode<R>(), out RuleGroup ruleGroup))
 			{
 				return ruleGroup.TryGetValue(nodeType, out ruleList);
 			}
@@ -901,7 +897,7 @@ namespace WorldTree
 		public RuleList GetOrNewRuleList<R>(long nodeType)
 		 where R : IRule
 		{
-			return GetOrNewRuleList(nodeType, TypeInfo<R>.TypeCode);
+			return GetOrNewRuleList(nodeType, Core.TypeToCode<R>());
 		}
 
 		/// <summary>

@@ -22,7 +22,7 @@ namespace WorldTree.Internal
 		/// <summary>
 		/// 添加藤分支
 		/// </summary>
-		public static R AddRattan<R>(INode self) where R : class, IRattan => AddRattan(self, TypeInfo<R>.TypeCode) as R;
+		public static R AddRattan<R>(INode self) where R : class, IRattan => AddRattan(self, self.TypeToCode<R>()) as R;
 
 		/// <summary>
 		/// 添加藤分支
@@ -44,7 +44,7 @@ namespace WorldTree.Internal
 		/// <summary>
 		/// 移除藤分支中的节点
 		/// </summary>
-		public static void RemoveRattanNode<R>(INode self, INode node) where R : class, IRattan => RemoveRattanNode(self, TypeInfo<R>.TypeCode, node);
+		public static void RemoveRattanNode<R>(INode self, INode node) where R : class, IRattan => RemoveRattanNode(self, self.TypeToCode<R>(), node);
 
 		/// <summary>
 		/// 移除藤分支中的节点

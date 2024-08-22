@@ -36,7 +36,7 @@ namespace WorldTree.SourceGenerator
 				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
 				string genericParameter = GeneratorTemplate.GenericsParameter[i];
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
-			
+
 				Code.AppendLine(
 					$$"""
 
@@ -48,7 +48,7 @@ namespace WorldTree.SourceGenerator
 							{
 								if (self.TryAddSelfToTree<B, K>(key, parent))
 								{
-									NodeRuleHelper.TrySendRule(self, TypeInfo<Awake{{genericsTypeAngle}}>.Default{{genericParameter}});
+									NodeRuleHelper.TrySendRule(self, default(Awake{{genericsTypeAngle}}){{genericParameter}});
 									self.OnAddSelfToTree();
 								}
 								return self;

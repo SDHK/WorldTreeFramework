@@ -19,7 +19,7 @@ namespace WorldTree
 			where N : class, B, INode
 			where B : class, INode, AsRule<R>
 		{
-			self.Core.RuleManager.TryGetRuleList(TypeInfo<B>.TypeCode, out IRuleList<R> rulelist);
+			self.Core.RuleManager.TryGetRuleList(self.TypeToCode<B>(), out IRuleList<R> rulelist);
 			return rulelist;
 		}
 
@@ -61,9 +61,10 @@ namespace WorldTree
 		{
 			parent = null;
 			INode node = self.Parent;
+			long typeCode = self.TypeToCode<T>();
 			while (node != null)
 			{
-				if (node.Type == TypeInfo<T>.TypeCode)
+				if (node.Type == typeCode)
 				{
 					parent = node as T;
 					break;

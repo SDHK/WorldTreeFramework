@@ -52,7 +52,7 @@ namespace WorldTree.SourceGenerator
 									((IRuleList<R>)ruleList).Call(node{{genericParameter}}, out outT);
 									return true;
 								}
-								outT = TypeInfo<OutT>.Default;
+								outT = default(OutT);
 								return false;
 							}
 

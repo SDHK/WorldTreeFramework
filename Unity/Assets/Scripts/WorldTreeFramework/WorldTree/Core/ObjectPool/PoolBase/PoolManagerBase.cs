@@ -60,7 +60,7 @@ namespace WorldTree
 		private T NewPool(long type)
 		{
 			Core.NewNode(out T pool);
-			pool.ObjectType = type.CodeToType();
+			pool.ObjectType = Core.CodeToType(type);
 			pool.ObjectTypeCode = type;
 			poolDict.Add(pool.ObjectTypeCode, pool);
 			pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, this);

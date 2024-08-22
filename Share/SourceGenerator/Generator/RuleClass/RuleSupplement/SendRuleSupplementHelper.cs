@@ -45,7 +45,7 @@ namespace WorldTree.SourceGenerator
 
 			RuleSupplementHelper.AddComment(Code, "执行通知法则", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			//生成调用方法
-			Code.AppendLine(@$"		public static void {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => NodeRuleHelper.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");
+			Code.AppendLine(@$"		public static void {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => NodeRuleHelper.{BaseName}(self, default({ClassFullName}){genericParameter});");
 		}
 
 

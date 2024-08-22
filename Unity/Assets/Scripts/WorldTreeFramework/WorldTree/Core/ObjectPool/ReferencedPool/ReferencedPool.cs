@@ -51,7 +51,7 @@ namespace WorldTree
 		public long ReferencedType;
 		public override string ToString()
 		{
-			return $"ReferencedPool<{ReferencedType.CodeToType()}>:[{nodeDict.Count}]";
+			return $"ReferencedPool<{GetType()}>:[{nodeDict.Count}]";
 		}
 	}
 }

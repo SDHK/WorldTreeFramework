@@ -13,6 +13,26 @@ namespace WorldTree
 {
 	public static partial class WorldTreeCoreRule
 	{
+
+		/// <summary>
+		/// 新建单位对象
+		/// </summary>
+		public static T NewUnit<T>(this WorldTreeCore self, out T unit) where T : class, IUnit
+			=> unit = self.NewUnit(typeof(T), out _) as T;
+
+		/// <summary>
+		/// 新建单位对象
+		/// </summary>
+		public static IUnit NewUnit(this WorldTreeCore self, Type type, out IUnit unit)
+		{
+			unit = Activator.CreateInstance(type, true) as IUnit;
+			unit.Core = self;
+			unit.Type = unit.TypeToCode(type);
+			unit.OnCreate();
+			return unit;
+		}
+
+
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
@@ -26,16 +46,12 @@ namespace WorldTree
 		{
 			if (self != null && self.IsCoreActive)
 			{
-				if (self.UnitPoolManager.TryGet(TypeInfo<T>.TypeCode, out IUnit unit))
+				if (self.UnitPoolManager.TryGet(self.TypeToCode<T>(), out IUnit unit))
 				{
 					return unit as T;
 				}
 			}
-			T unitObj = Activator.CreateInstance(TypeInfo<T>.Type, true) as T;
-			unitObj.Type = TypeInfo<T>.TypeCode;
-			unitObj.Core = self;
-			unitObj.OnCreate();
-			return unitObj;
+			return self.NewUnit<T>(out _);
 		}
 
 		/// <summary>
@@ -50,11 +66,7 @@ namespace WorldTree
 					return unit;
 				}
 			}
-			IUnit unitObj = Activator.CreateInstance(type.CodeToType(), true) as IUnit;
-			unitObj.Type = type;
-			unitObj.Core = self;
-			unitObj.OnCreate();
-			return unitObj;
+			return self.NewUnit(self.CodeToType(type), out _);
 		}
 
 		/// <summary>

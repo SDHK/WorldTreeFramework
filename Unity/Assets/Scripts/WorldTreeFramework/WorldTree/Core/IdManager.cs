@@ -20,11 +20,6 @@ namespace WorldTree
 		/// </summary>
 		public long ProcessId;
 
-		public IdManager()
-		{
-			Type = TypeInfo<IdManager>.TypeCode;
-		}
-
 		/// <summary>
 		/// 当前递增的id值
 		/// </summary>
@@ -85,7 +80,6 @@ namespace WorldTree
 		public override void OnCreate()
 		{
 			Id = GetId();
-			Core.RuleManager?.SupportNodeRule(Type);
 		}
 
 		/// <summary>

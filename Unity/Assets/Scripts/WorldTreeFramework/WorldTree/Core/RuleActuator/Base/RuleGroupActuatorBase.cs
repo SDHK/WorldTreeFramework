@@ -53,7 +53,7 @@ namespace WorldTree
 
 		public override string ToString()
 		{
-			return $"RuleGroupActuator : {ruleGroupDict?.RuleType.CodeToType()}";
+			return $"RuleGroupActuator : {(ruleGroupDict == null ? null : Core.CodeToType(ruleGroupDict.RuleType))}";
 		}
 
 		public bool TryAdd(INode node)
@@ -99,7 +99,7 @@ namespace WorldTree
 
 		public void Remove(INode node) => Remove(node.Id);
 
-	
+
 
 		/// <summary>
 		/// 尝试获取队顶

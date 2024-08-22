@@ -19,7 +19,7 @@ namespace WorldTree
 	{
 		public override string ToString()
 		{
-			return $"ListenerRuleActuator : {ruleGroupDict?.RuleType.CodeToType()}";
+			return $"ListenerRuleActuator : {(ruleGroupDict == null ? null : Core.CodeToType(ruleGroupDict.RuleType))}";
 		}
 	}
 

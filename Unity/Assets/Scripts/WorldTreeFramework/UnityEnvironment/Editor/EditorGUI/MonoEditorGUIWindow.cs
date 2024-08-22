@@ -32,49 +32,49 @@ namespace EditorTool
 			{
 				isShow = true;
 			}
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowEnableSystem>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(IEditorWindowEnableSystem));
 		}
 
 		private void OnFocus()
 		{
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowFocusSystem>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(IEditorWindowFocusSystem));
 		}
 
 		private void OnInspectorUpdate()
 		{
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowInspectorUpdateSystem>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(IEditorWindowInspectorUpdateSystem));
 		}
 
 		public void OnProjectChange()
 		{
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowProjectChangeSystem>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(IEditorWindowProjectChangeSystem));
 		}
 
 		private void OnSelectionChange()
 		{
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowSelectionChangeSystem>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(IEditorWindowSelectionChangeSystem));
 		}
 
 		public void OnHierarchyChange()
 		{
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowHierarchyChangeSystem>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(IEditorWindowHierarchyChangeSystem));
 		}
 		private void OnGUI()
 		{
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<GUIDraw>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(GUIDraw));
 		}
 
 		private void OnLostFocus()
 		{
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowLostFocusSystem>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(IEditorWindowLostFocusSystem));
 		}
 		private void OnDisable()
 		{
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowDisableSystem>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(IEditorWindowDisableSystem));
 		}
 		private void OnDestroy()
 		{
-			NodeRuleHelper.TrySendRule(entity, TypeInfo<IEditorWindowDestroySystem>.Default);
+			NodeRuleHelper.TrySendRule(entity, default(IEditorWindowDestroySystem));
 			if (isShow)
 			{
 				isShow = false;

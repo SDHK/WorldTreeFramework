@@ -326,7 +326,7 @@ namespace WorldTree.SourceGenerator
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 			AddComment(stringBuilder, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			stringBuilder.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this {(isUnConstraint ? "INode" : $"As{ClassFullName}")} self)
-		=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+		=> self.RemoveAllNode(self.TypeToCode<{ClassFullName}>());");
 		}
 
 		private static void BranchAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
@@ -395,7 +395,7 @@ namespace WorldTree.SourceGenerator
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 			AddComment(stringBuilder, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			stringBuilder.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this {(isUnConstraint ? "INode" : $"As{ClassFullName}")} self)
-			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+			=> self.RemoveAllNode(self.TypeToCode<{ClassFullName}>());");
 		}
 		private static void BranchIdKeyAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
 		{
@@ -432,7 +432,7 @@ namespace WorldTree.SourceGenerator
 			stringBuilder.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<N, T>(this N self, out T node)
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}>
-		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode) as T) != null;");
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(self.TypeToCode<T>()) as T) != null;");
 		}
 
 		private static void BranchTypeKeyCutNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, bool isUnConstraint)
@@ -442,7 +442,7 @@ namespace WorldTree.SourceGenerator
 			stringBuilder.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<N, T>(this N self, out T node)
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}>
-		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode)?.CutSelf() as T) != null;");
+		=> (node = self.GetBranch<{ClassFullName}>()?.GetNode(self.TypeToCode<T>())?.CutSelf() as T) != null;");
 		}
 
 		private static void BranchTypeKeyGraftNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
@@ -452,7 +452,7 @@ namespace WorldTree.SourceGenerator
 			stringBuilder.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<N, T>(this N self, T node)
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}>
-		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(TypeInfo<T>.TypeCode, self);");
+		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(self.TypeToCode<T>(), self);");
 		}
 
 		private static void BranchTypeKeyRemoveNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, bool isUnConstraint)
@@ -462,7 +462,7 @@ namespace WorldTree.SourceGenerator
 			stringBuilder.AppendLine(@$"		public static void Remove{ClassNameUnBranch}<N, T>(this N self)
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}>
-		=> self.GetBranch<{ClassFullName}>()?.GetNode(TypeInfo<T>.TypeCode)?.Dispose();");
+		=> self.GetBranch<{ClassFullName}>()?.GetNode(self.TypeToCode<T>())?.Dispose();");
 		}
 
 		private static void BranchTypeKeyRemoveAllNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, bool isUnConstraint)
@@ -470,7 +470,7 @@ namespace WorldTree.SourceGenerator
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 			AddComment(stringBuilder, "移除分支全部节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			stringBuilder.AppendLine(@$"		public static void RemoveAll{ClassNameUnBranch}(this {(isUnConstraint ? "INode" : $"As{ClassFullName}")} self)
-			=> self.RemoveAllNode(TypeInfo<{ClassFullName}>.TypeCode);");
+			=> self.RemoveAllNode(self.TypeToCode<{ClassFullName}>());");
 		}
 
 		private static void BranchTypeKeyAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
@@ -488,7 +488,7 @@ namespace WorldTree.SourceGenerator
 				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{genericsType}>(this N self, out T node{genericTypeParameter})
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsTypeAngle}>
-		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, TypeInfo<T>.TypeCode, out node{genericParameter});");
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, self.TypeToCode<T>(), out node{genericParameter});");
 			}
 		}
 
@@ -509,7 +509,7 @@ namespace WorldTree.SourceGenerator
 				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T, SubT{genericsType}>(this N self,T defaultBaseT, out SubT node{genericTypeParameter})
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where SubT : class, T, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsTypeAngle}>
-		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, SubT{genericsType}>(self, TypeInfo<T>.TypeCode, out node{genericParameter});");
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, SubT{genericsType}>(self, self.TypeToCode<T>(), out node{genericParameter});");
 			}
 		}
 		#endregion

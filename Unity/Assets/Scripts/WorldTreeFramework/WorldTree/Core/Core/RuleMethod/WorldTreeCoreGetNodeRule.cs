@@ -18,23 +18,17 @@ namespace WorldTree
 		/// 新建节点对象
 		/// </summary>
 		public static T NewNode<T>(this WorldTreeCore self, out T node) where T : class, INode
-		=> node = self.NewNode(TypeInfo<T>.TypeCode) as T;
+			=> node = self.NewNode(typeof(T), out _) as T;
 
 		/// <summary>
 		/// 新建节点对象
 		/// </summary>
-		public static INode NewNode(this WorldTreeCore self, long type)
-			=> self.NewNode(type,out _);
-
-		/// <summary>
-		/// 新建节点对象
-		/// </summary>
-		public static INode NewNode(this WorldTreeCore self, long type, out INode node)
+		public static INode NewNode(this WorldTreeCore self, Type type, out INode node)
 		{
-			node = Activator.CreateInstance(type.CodeToType(), true) as INode;
-			node.Type = type;
+			node = Activator.CreateInstance(type, true) as INode;
 			node.Core = self;
 			node.Root = self.Root;
+			node.Type = node.TypeToCode(type);
 			node.OnCreate();
 			return node;
 		}
@@ -51,7 +45,7 @@ namespace WorldTree
 		/// 从池中获取节点对象
 		/// </summary>
 		public static T PoolGetNode<T>(this WorldTreeCore self) where T : class, INode
-			=> self.PoolGetNode(TypeInfo<T>.TypeCode) as T;
+			=> self.PoolGetNode(self.TypeToCode<T>()) as T;
 
 		/// <summary>
 		/// 从池中获取节点对象
@@ -66,7 +60,7 @@ namespace WorldTree
 					return node;
 				}
 			}
-			return self.NewNode(type);
+			return self.NewNode(self.CodeToType(type), out _);
 		}
 
 		/// <summary>

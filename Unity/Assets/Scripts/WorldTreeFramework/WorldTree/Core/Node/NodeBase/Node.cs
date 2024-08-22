@@ -205,7 +205,7 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
-				branchType = TypeInfo<B>.TypeCode;
+				branchType = Core.TypeToCode<B>();
 				Parent = parent;
 				Core = parent.Core;
 				Root = parent.Root;
@@ -336,7 +336,7 @@ namespace WorldTree
 		{
 			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
-			branchType = TypeInfo<B>.TypeCode;
+			branchType = Core.TypeToCode<B>();
 			Parent = parent;
 			Core = parent.Core;
 			Root = parent.Root;

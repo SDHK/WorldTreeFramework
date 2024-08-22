@@ -50,7 +50,7 @@ namespace WorldTree.SourceGenerator
 								ruleList.Call(self{{genericParameter}}, out outT);
 								return true;
 							}
-							outT = TypeInfo<OutT>.Default;
+							outT = default(OutT);
 							return false;
 						}
 
@@ -66,7 +66,7 @@ namespace WorldTree.SourceGenerator
 								ruleList.Call(self{{genericParameter}}, out outT);
 								return outT;
 							}
-							outT = TypeInfo<OutT>.Default;
+							outT = default(OutT);
 							return outT;
 						}
 

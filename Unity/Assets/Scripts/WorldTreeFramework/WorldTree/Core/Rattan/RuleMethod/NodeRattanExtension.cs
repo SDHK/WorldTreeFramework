@@ -19,12 +19,14 @@ namespace WorldTree.Internal
 		/// <summary>
 		/// 尝试获取藤分支
 		/// </summary>
-		public static bool TryGetRattan<R>(this INode self, out R rattan) where R : class, IRattan => (rattan = (self.RattanDict != null && self.RattanDict.TryGetValue(TypeInfo<R>.TypeCode, out IRattan IRattan)) ? IRattan as R : null) != null;
+		public static bool TryGetRattan<R>(this INode self, out R rattan) where R : class, IRattan
+			=> (rattan = (self.RattanDict != null && self.RattanDict.TryGetValue(self.TypeToCode<R>(), out IRattan IRattan)) ? IRattan as R : null) != null;
 
 		/// <summary>
 		/// 获取藤分支
 		/// </summary>
-		public static R GetRattan<R>(this INode self) where R : class, IRattan => (self.RattanDict != null && self.RattanDict.TryGetValue(TypeInfo<R>.TypeCode, out IRattan iRattan)) ? iRattan as R : null;
+		public static R GetRattan<R>(this INode self) where R : class, IRattan
+			=> (self.RattanDict != null && self.RattanDict.TryGetValue(self.TypeToCode<R>(), out IRattan iRattan)) ? iRattan as R : null;
 
 		#endregion
 	}

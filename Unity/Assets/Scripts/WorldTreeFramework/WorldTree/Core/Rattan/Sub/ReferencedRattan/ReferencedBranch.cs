@@ -99,13 +99,13 @@ namespace WorldTree
 			if (self.TryGetRattan(out ReferencedChildRattan _))
 			{
 				NodeRattanHelper.RemoveRattanNode<ReferencedChildRattan>(self, node);
-				NodeRuleHelper.TrySendRule(self, TypeInfo<DeReferencedChild>.Default, node);
+				NodeRuleHelper.TrySendRule(self, default(DeReferencedChild), node);
 			}
 
 			if (node.TryGetRattan(out ReferencedParentRattan _))
 			{
 				NodeRattanHelper.RemoveRattanNode<ReferencedParentRattan>(node, self);
-				NodeRuleHelper.TrySendRule(node, TypeInfo<DeReferencedParent>.Default, self);
+				NodeRuleHelper.TrySendRule(node, default(DeReferencedParent), self);
 			}
 		}
 
@@ -151,7 +151,7 @@ namespace WorldTree
 					{
 						var node = nodes.Dequeue();
 						NodeRattanHelper.RemoveRattanNode<ReferencedChildRattan>(node, self);
-						NodeRuleHelper.TrySendRule(node, TypeInfo<ReferencedChildRemove>.Default, self);
+						NodeRuleHelper.TrySendRule(node, default(ReferencedChildRemove), self);
 					}
 				}
 			}
@@ -166,7 +166,7 @@ namespace WorldTree
 					{
 						var node = nodes.Dequeue();
 						NodeRattanHelper.RemoveRattanNode<ReferencedParentRattan>(node, self);
-						NodeRuleHelper.TrySendRule(node, TypeInfo<ReferencedParentRemove>.Default, self);
+						NodeRuleHelper.TrySendRule(node, default(ReferencedParentRemove), self);
 					}
 				}
 			}

@@ -52,7 +52,7 @@ namespace WorldTree.SourceGenerator
 
 			RuleSupplementHelper.AddComment(Code, "执行异步调用法则", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			//生成调用方法
-			Code.AppendLine(@$"		public static TreeTask<{outType}> {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => NodeRuleHelper.{BaseName}(self, TypeInfo<{ClassFullName}>.Default{genericParameter});");
+			Code.AppendLine(@$"		public static TreeTask<{outType}> {ClassName}{TypeArgumentsAngle}(this As{ClassFullName} self{genericTypeParameter}){WhereTypeArguments} => NodeRuleHelper.{BaseName}(self, default({ClassFullName}){genericParameter});");
 		}
 
 		/// <summary>
@@ -84,7 +84,6 @@ namespace WorldTree.SourceGenerator
 				sb.Append($", arg{i + 1}");
 			}
 			string outType = typeSymbol.TypeArguments.Last().ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			//sb.Append($", TypeInfo<{outType}>.Default");
 
 			sb.Append($", defaultOutT");
 			return sb.ToString();
