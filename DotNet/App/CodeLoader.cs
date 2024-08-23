@@ -16,7 +16,7 @@ namespace WorldTree
 		/// 程序集加载上下文
 		/// </summary>
 		private AssemblyLoadContext assemblyLoadContext;
-		
+
 		/// <summary>
 		/// 程序集
 		/// </summary>
@@ -39,7 +39,7 @@ namespace WorldTree
 			}
 			Assembly hotfixAssembly = this.LoadHotfix();
 
-
+			Core.TypeInfo.ReLoadAssembly(new[] { hotfixAssembly });
 		}
 
 		/// <summary>
@@ -47,8 +47,8 @@ namespace WorldTree
 		/// </summary>
 		private Assembly LoadHotfix()
 		{
-			assemblyLoadContext?.Unload();
-			GC.Collect();
+			//assemblyLoadContext?.Unload();
+			//GC.Collect();
 			assemblyLoadContext = new AssemblyLoadContext("Rule", true);
 			byte[] dllBytes = File.ReadAllBytes("./Rule.dll");
 			byte[] pdbBytes = File.ReadAllBytes("./Rule.pdb");

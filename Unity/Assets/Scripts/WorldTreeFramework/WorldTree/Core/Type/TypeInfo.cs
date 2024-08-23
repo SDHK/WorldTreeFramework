@@ -10,9 +10,23 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 类型信息：用于类型的信息获取
+	/// </summary>
+	public static class TypeInfo<T>
+	{
+		/// <summary>
+		/// 类型码
+		/// </summary>
+		public static long TypeCode = 0;
+	}
+
+
 	/// <summary>
 	/// 类型信息：用于类型的信息获取
 	/// </summary>
@@ -35,7 +49,32 @@ namespace WorldTree
 		/// </summary>
 		private readonly ConcurrentDictionary<long, Type> hash64TypeDict = new();
 
-		public override void OnCreate()	{}
+		public override void OnCreate() { }
+
+		/// <summary>
+		/// 清除
+		/// </summary>
+		public void Clear()
+		{
+			nameTypeDict.Clear();
+			typeHash64Dict.Clear();
+			hash64TypeDict.Clear();
+		}
+
+		/// <summary>
+		/// 重新加载程序集类型
+		/// </summary>
+		public void ReLoadAssembly(Assembly[] assemblies)
+		{
+			Clear();
+			foreach (Assembly ass in assemblies)
+			{
+				foreach (Type type in ass.GetTypes())
+				{
+					Add(type);
+				}
+			}
+		}
 
 		/// <summary>
 		/// 类型注册到信息表
@@ -52,7 +91,9 @@ namespace WorldTree
 					if (type.FullName == oldType.FullName)
 					{
 						hash64TypeDict[hash64] = type;
+						nameTypeDict[type.FullName] = type;
 						typeHash64Dict.TryRemove(oldType, out _);
+						typeHash64Dict.TryAdd(type, hash64);
 					}
 					else
 					{
@@ -61,6 +102,7 @@ namespace WorldTree
 				}
 				else
 				{
+					nameTypeDict.TryAdd(type.FullName, type);
 					hash64TypeDict.TryAdd(hash64, type);
 					typeHash64Dict.TryAdd(type, hash64);
 				}
