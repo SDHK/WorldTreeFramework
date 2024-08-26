@@ -41,12 +41,13 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 法则列表通知执行
 							/// </summary>
-							public static void Send<R{{genericsType}}>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}})
+							public static void Send<R{{genericsType}}>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}})
 								where R : ISendRule{{genericsTypeAngle}}
 							{
-								foreach (ISendRule{{genericsTypeAngle}} rule in (RuleList)ruleList)
+								RuleList ruleList = (RuleList)iRuleList;
+								for(int i = 0; i < ruleList.Count; i++)
 								{
-									rule.Invoke(node{{genericParameter}});
+									 ((ISendRule{{genericsTypeAngle}})ruleList[i]).Invoke(node{{genericParameter}});
 								}
 							}
 					""");

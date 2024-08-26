@@ -44,7 +44,7 @@ namespace WorldTree
 				if (key.Key == ConsoleKey.A)
 				{
 					self.Log($"键盘输入 'a' 键！！！");
-					//self.Root.AddComponent(out CodeLoader _).HotReload();
+					self.Root.AddComponent(out CodeLoader _).HotReload();
 				}
 			}
 			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");

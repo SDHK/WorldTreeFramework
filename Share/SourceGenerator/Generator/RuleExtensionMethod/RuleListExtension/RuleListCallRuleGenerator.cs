@@ -43,13 +43,14 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 法则列表调用执行
 							/// </summary>
-							public static OutT Call<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, out OutT outT)
+							public static OutT Call<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
+								RuleList ruleList = (RuleList)iRuleList;
 								outT = default(OutT);
-								foreach (ICallRule<{{genericsTypeAfter}}OutT> rule in (RuleList)ruleList)
+								for(int i = 0; i < ruleList.Count; i++)
 								{
-									outT = rule.Invoke(node{{genericParameter}});
+									outT = ((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(node{{genericParameter}});
 								}
 								return outT;
 							}
@@ -57,12 +58,13 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 法则列表调用执行
 							/// </summary>
-							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}}, TreeList<OutT> outT)
+							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}}, TreeList<OutT> outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
-								foreach (ICallRule<{{genericsTypeAfter}}OutT> rule in  (RuleList)ruleList)
+								RuleList ruleList = (RuleList)iRuleList;
+								for(int i = 0; i < ruleList.Count; i++)
 								{
-									outT.Add(rule.Invoke(node{{genericParameter}}));
+									outT.Add(((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(node{{genericParameter}}));
 								}
 								return outT;
 							}

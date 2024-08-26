@@ -43,12 +43,13 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 法则列表异步通知执行
 							/// </summary>
-							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleList<R> ruleList, INode node{{genericTypeParameter}})
+							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
-								foreach (ISendRuleAsync{{genericsTypeAngle}} rule in (RuleList)ruleList)
+								RuleList ruleList = (RuleList)iRuleList;
+								for(int i = 0; i < ruleList.Count; i++)
 								{
-									await rule.Invoke(node{{genericParameter}});
+									await ((ISendRuleAsync{{genericsTypeAngle}})ruleList[i]).Invoke(node{{genericParameter}});
 								}
 							}
 					""");
