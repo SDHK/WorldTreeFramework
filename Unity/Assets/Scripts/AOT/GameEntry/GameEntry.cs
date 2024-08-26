@@ -98,15 +98,27 @@ namespace WorldTree.AOT
 		}
 
 		/// <summary>
+		/// 是否运行模式
+		/// </summary>
+#if UNITY_EDITOR
+		public static bool IsRun = false;
+#else
+		public static bool IsRun = true;
+#endif
+
+		/// <summary>
 		/// 启动框架
 		/// </summary>
 		public async void StartWorldTree()
 		{
-			await System.Threading.Tasks.Task.CompletedTask;
-#if !UNITY_EDITOR
-			await HybridCLRHelper.LoadAOT();
-			await HybridCLRHelper.LoadHotUpdate();
-#endif
+			await Task.CompletedTask;
+
+			if (!IsRun)
+			{
+				await HybridCLRHelper.LoadAOT();
+				await HybridCLRHelper.LoadHotUpdate();
+			}
+
 			Debug.Log("启动框架!");
 
 			Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "WorldTree.CoreUnity");

@@ -7,6 +7,7 @@
     <RootNamespace>WorldTree</RootNamespace>
     <AnalysisLevel>6.0</AnalysisLevel>
     <LangVersion>10</LangVersion>
+    <AssemblyName>Core</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>

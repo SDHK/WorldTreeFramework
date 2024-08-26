@@ -15,7 +15,7 @@
     "version": "1.0.0",
     "restore": {
       "projectUniqueName": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Core\\DotNet.Core.csproj",
-      "projectName": "DotNet.Core",
+      "projectName": "Core",
       "projectPath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Core\\DotNet.Core.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
       "outputPath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Core\\obj\\",

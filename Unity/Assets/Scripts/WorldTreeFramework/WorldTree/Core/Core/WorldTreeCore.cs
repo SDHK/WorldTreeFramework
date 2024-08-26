@@ -149,9 +149,16 @@ namespace WorldTree
 		public IdManager IdManager;
 
 		/// <summary>
+		/// 代码加载器
+		/// </summary>
+		public CodeLoader CodeLoader;
+
+		/// <summary>
 		/// 类型信息
 		/// </summary>
 		public TypeInfo TypeInfo;
+
+		
 
 		/// <summary>
 		/// 真实时间管理器
@@ -258,6 +265,7 @@ namespace WorldTree
 			//嫁接节点需要手动激活
 			ReferencedPoolManager.SetActive(true);
 			IdManager.SetActive(true);
+			TypeInfo.SetActive(true);
 			RuleManager.SetActive(true);
 
 			//核心激活

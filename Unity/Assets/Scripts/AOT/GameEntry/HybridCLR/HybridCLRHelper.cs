@@ -22,23 +22,34 @@ namespace WorldTree.AOT
 	public static class HybridCLRHelper
 	{
 		/// <summary>
+		/// 是否运行模式
+		/// </summary>
+#if UNITY_EDITOR
+		public static bool IsRun = false;
+#else
+		public static bool IsRun = true;
+
+#endif
+
+		/// <summary>
 		/// 加载AOT
 		/// </summary>
 		public static async Task LoadAOT()
 		{
-#if !UNITY_EDITOR
-
-			ResourcePackage package = YooAssets.GetPackage("DefaultPackage");
-
-			foreach (AssetInfo assetInfo in YooAssets.GetAssetInfos("aotDlls"))
+			if (IsRun)
 			{
-				AssetHandle handle = package.LoadAssetAsync<TextAsset>(assetInfo.Address);
-				await handle.Task;
-				TextAsset textAsset = (handle.AssetObject as TextAsset);
-				Debug.Log($"AOT加载:{assetInfo.Address} : {textAsset.bytes.Length}");
-				RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HomologousImageMode.SuperSet);
+				ResourcePackage package = YooAssets.GetPackage("DefaultPackage");
+
+				foreach (AssetInfo assetInfo in YooAssets.GetAssetInfos("aotDlls"))
+				{
+					AssetHandle handle = package.LoadAssetAsync<TextAsset>(assetInfo.Address);
+					await handle.Task;
+					TextAsset textAsset = (handle.AssetObject as TextAsset);
+					Debug.Log($"AOT加载:{assetInfo.Address} : {textAsset.bytes.Length}");
+					RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HomologousImageMode.SuperSet);
+				}
 			}
-#endif
+
 			await Task.CompletedTask;
 		}
 
@@ -47,19 +58,19 @@ namespace WorldTree.AOT
 		/// </summary>
 		public static async Task LoadHotUpdate()
 		{
-#if !UNITY_EDITOR
-
-			ResourcePackage package = YooAssets.GetPackage("DefaultPackage");
-
-			foreach (AssetInfo assetInfo in YooAssets.GetAssetInfos("hotUpdateDlls"))
+			if (IsRun)
 			{
-				AssetHandle handle = package.LoadAssetAsync<TextAsset>(assetInfo.Address);
-				await handle.Task;
-				TextAsset textAsset = (handle.AssetObject as TextAsset);
-				Debug.Log($"HotUpdate加载 {assetInfo.Address}:{textAsset.bytes.Length}");
-				Assembly.Load(textAsset.bytes);
+				ResourcePackage package = YooAssets.GetPackage("DefaultPackage");
+
+				foreach (AssetInfo assetInfo in YooAssets.GetAssetInfos("hotUpdateDlls"))
+				{
+					AssetHandle handle = package.LoadAssetAsync<TextAsset>(assetInfo.Address);
+					await handle.Task;
+					TextAsset textAsset = (handle.AssetObject as TextAsset);
+					Debug.Log($"HotUpdate加载 {assetInfo.Address}:{textAsset.bytes.Length}");
+					Assembly.Load(textAsset.bytes);
+				}
 			}
-#endif
 
 			await Task.CompletedTask;
 		}

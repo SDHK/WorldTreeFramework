@@ -12,21 +12,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 类型信息：用于类型的信息获取
-	/// </summary>
-	public static class TypeInfo<T>
-	{
-		/// <summary>
-		/// 类型码
-		/// </summary>
-		public static long TypeCode = 0;
-	}
-
-
 	/// <summary>
 	/// 类型信息：用于类型的信息获取
 	/// </summary>
@@ -34,46 +23,58 @@ namespace WorldTree
 		, ComponentOf<WorldTreeCore>
 		, AsAwake
 	{
-
 		/// <summary>
 		/// 类型名称哈希码表
 		/// </summary>
-		private readonly ConcurrentDictionary<string, Type> nameTypeDict = new();
-
+		public readonly ConcurrentDictionary<string, Type> NameTypeDict = new();
 		/// <summary>
 		/// 类型哈希码表
 		/// </summary>
-		private readonly ConcurrentDictionary<Type, long> typeHash64Dict = new();
+		public readonly ConcurrentDictionary<Type, long> TypeHash64Dict = new();
 		/// <summary>
 		/// 64位哈希码类型表
 		/// </summary>
-		private readonly ConcurrentDictionary<long, Type> hash64TypeDict = new();
+		public readonly ConcurrentDictionary<long, Type> Hash64TypeDict = new();
 
-		public override void OnCreate() { }
+		public override void OnCreate()
+		{
+			int typeCount = 0;
+			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			foreach (Assembly assembly in assemblies)
+			{
+				var types = assembly.GetTypes();
+				foreach (Type type in types) Add(type);
+				this.Log($"加载程序集 {assembly.FullName}, 类型数量 {types.Length}");
+				typeCount += types.Length;
+			}
+			this.Log($"加载程序集数量 {assemblies.Length}, 类型数量 {typeCount}");
+		}
 
 		/// <summary>
 		/// 清除
 		/// </summary>
 		public void Clear()
 		{
-			nameTypeDict.Clear();
-			typeHash64Dict.Clear();
-			hash64TypeDict.Clear();
+			NameTypeDict.Clear();
+			TypeHash64Dict.Clear();
+			Hash64TypeDict.Clear();
 		}
 
 		/// <summary>
 		/// 重新加载程序集类型
 		/// </summary>
-		public void ReLoadAssembly(Assembly[] assemblies)
+		public void ReLoadAssembly(List<Assembly> assemblieList)
 		{
 			Clear();
-			foreach (Assembly ass in assemblies)
+			int typeCount = 0;
+			foreach (Assembly assembly in assemblieList)
 			{
-				foreach (Type type in ass.GetTypes())
-				{
-					Add(type);
-				}
+				var types = assembly.GetTypes();
+				foreach (Type type in types) Add(type);
+				this.Log($"重载程序集 {assembly.FullName}, 类型数量 {types.Length}");
+				typeCount += types.Length;
 			}
+			this.Log($"加载程序集数量 {assemblieList.Count}, 类型数量 {typeCount}");
 		}
 
 		/// <summary>
@@ -81,19 +82,19 @@ namespace WorldTree
 		/// </summary>
 		public Type Add(Type type)
 		{
-			if (!typeHash64Dict.ContainsKey(type))
+			if (!TypeHash64Dict.ContainsKey(type))
 			{
 				type.GetHashCode();
 				long hash64 = type.AssemblyQualifiedName.GetHash64();
 
-				if (hash64TypeDict.TryGetValue(hash64, out Type oldType))
+				if (Hash64TypeDict.TryGetValue(hash64, out Type oldType))
 				{
 					if (type.FullName == oldType.FullName)
 					{
-						hash64TypeDict[hash64] = type;
-						nameTypeDict[type.FullName] = type;
-						typeHash64Dict.TryRemove(oldType, out _);
-						typeHash64Dict.TryAdd(type, hash64);
+						Hash64TypeDict[hash64] = type;
+						NameTypeDict[type.FullName] = type;
+						TypeHash64Dict.TryRemove(oldType, out _);
+						TypeHash64Dict.TryAdd(type, hash64);
 					}
 					else
 					{
@@ -102,9 +103,9 @@ namespace WorldTree
 				}
 				else
 				{
-					nameTypeDict.TryAdd(type.FullName, type);
-					hash64TypeDict.TryAdd(hash64, type);
-					typeHash64Dict.TryAdd(type, hash64);
+					NameTypeDict.TryAdd(type.FullName, type);
+					Hash64TypeDict.TryAdd(hash64, type);
+					TypeHash64Dict.TryAdd(type, hash64);
 				}
 			}
 			return type;
@@ -115,10 +116,10 @@ namespace WorldTree
 		/// </summary>
 		public long TypeToCode(Type type)
 		{
-			if (!typeHash64Dict.TryGetValue(type, out long hash64))
+			if (!TypeHash64Dict.TryGetValue(type, out long hash64))
 			{
 				Add(type);
-				typeHash64Dict.TryGetValue(type, out hash64);
+				TypeHash64Dict.TryGetValue(type, out hash64);
 			}
 			return hash64;
 		}
@@ -126,7 +127,7 @@ namespace WorldTree
 		/// <summary>
 		/// 哈希码64转类型
 		/// </summary>
-		public Type CodeToType(long rcr) => hash64TypeDict[rcr];
+		public Type CodeToType(long rcr) => Hash64TypeDict[rcr];
 	}
 	public static class TypeInfoRule
 	{

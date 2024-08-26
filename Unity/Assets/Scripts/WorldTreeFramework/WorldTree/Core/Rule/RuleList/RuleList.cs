@@ -37,7 +37,7 @@ namespace WorldTree
 		/// </summary>
 		public void AddRule(IRule rule)
 		{
-			int index = FindIndex((old) => old.GetType() == rule.GetType());
+			int index = FindIndex((old) => old.Type == rule.Type);
 			if (index == -1)
 			{
 				Add(rule);

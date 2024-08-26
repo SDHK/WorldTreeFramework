@@ -10,13 +10,16 @@
 
 namespace WorldTree
 {
+
+	
+
 	/// <summary>
 	/// 世界树根
 	/// </summary>
 	public class WorldTreeRoot : Node, ComponentOf<WorldTreeCore>
-		,AsComponentBranch
-		,AsChildBranch
-		,AsAwake
+		, AsComponentBranch
+		, AsChildBranch
+		, AsAwake
 	{
 		public WorldTreeRoot()
 		{

@@ -2,20 +2,20 @@
   "version": 3,
   "targets": {
     "net6.0": {
-      "DotNet.Core/1.0.0": {
+      "Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "compile": {
-          "bin/placeholder/DotNet.Core.dll": {}
+          "bin/placeholder/Core.dll": {}
         },
         "runtime": {
-          "bin/placeholder/DotNet.Core.dll": {}
+          "bin/placeholder/Core.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "DotNet.Core/1.0.0": {
+    "Core/1.0.0": {
       "type": "project",
       "path": "../Core/DotNet.Core.csproj",
       "msbuildProject": "../Core/DotNet.Core.csproj"
@@ -23,7 +23,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "DotNet.Core >= 1.0.0"
+      "Core >= 1.0.0"
     ]
   },
   "packageFolders": {

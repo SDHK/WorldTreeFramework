@@ -1,4 +1,6 @@
-﻿namespace WorldTree
+﻿using System;
+
+namespace WorldTree
 {
 
 	/// <summary>
@@ -31,8 +33,20 @@
 			self.Log($"初始更新！！！");
 		};
 
+		// 需要修改代码生成,Rule遍历执行由Forech改为For
+
 		private static OnUpdateTime<DotNetTestNode> UpdateTime = (self, timeSpan) =>
 		{
+			//检测键盘输入a
+			if (Console.KeyAvailable)
+			{
+				var key = Console.ReadKey(intercept: true);
+				if (key.Key == ConsoleKey.A)
+				{
+					self.Log($"键盘输入 'a' 键！！！");
+					//self.Root.AddComponent(out CodeLoader _).HotReload();
+				}
+			}
 			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		};
 

@@ -25,6 +25,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Security.AccessControl;
 
 namespace WorldTree
 {
@@ -131,13 +133,24 @@ namespace WorldTree
 		public override void OnCreate()
 		{
 			base.OnCreate();
+			LoadRule();
+		}
 
+		/// <summary>
+		/// 重新加载法则
+		/// </summary>
+		public void LoadRule()
+		{
+			Clear();
 			//反射获取全局继承IRule的法则类型列表
-			var ruleTypeList = FindTypesIsInterface(typeof(IRule));
-
+			List<Type> ruleTypeList = new();
+			foreach (Type type in Core.TypeInfo.TypeHash64Dict.Keys)
+			{
+				if (type.GetInterfaces().Contains(typeof(IRule)) && !type.IsAbstract)
+					ruleTypeList.Add(type);
+			}
 			//将按照法则类名进行排序，规范执行顺序
 			ruleTypeList.Sort((rule1, rule2) => rule1.Name.CompareTo(rule2.Name));
-
 			foreach (var RuleType in ruleTypeList)//遍历类型列表
 			{
 				AddRuleType(RuleType);
@@ -167,7 +180,7 @@ namespace WorldTree
 			}
 
 			GenericNodeRuleTypeHashDict.Clear();
-		
+
 			TargetRuleListenerRuleHashDict.Clear();
 
 
@@ -232,15 +245,7 @@ namespace WorldTree
 
 		#region 添加法则
 
-		/// <summary>
-		/// 查找继承了接口的类型
-		/// </summary>
-		private List<Type> FindTypesIsInterface(Type interfaceType)
-		{
-			//return self.Core.Assemblys.SelectMany(a => a.GetTypes().Where(T => T.GetInterfaces().Contains(Interface) && !T.IsAbstract)).ToList();
-			//System.Reflection.Assembly[] assemblys = AppDomain.CurrentDomain.GetAssemblies();
-			return AppDomain.CurrentDomain.GetAssemblies().SelectMany(anyAssembly => anyAssembly.GetTypes().Where(anyType => anyType.GetInterfaces().Contains(interfaceType) && !anyType.IsAbstract)).ToList();
-		}
+
 
 		/// <summary>
 		/// 添加法则类型
@@ -463,7 +468,7 @@ namespace WorldTree
 						foreach (var RuleType in RuleTypeHash)
 						{
 							//填入对应的泛型参数，实例化泛型监听系统
-							
+
 							IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericTypes), out _);
 							//添加法则，泛型动态支持不可覆盖已有定义
 							if (!(RuleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
