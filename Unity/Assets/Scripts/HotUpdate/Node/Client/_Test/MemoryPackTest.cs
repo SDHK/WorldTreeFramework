@@ -162,7 +162,7 @@ namespace WorldTree
 	/// 测试内存包
 	/// </summary>
 	public class MemoryPackTest : Node
-		, ComponentOf<InitialDomain>
+		, ComponentOf<INode>
 		, AsAwake
 	{
 		/// <summary>

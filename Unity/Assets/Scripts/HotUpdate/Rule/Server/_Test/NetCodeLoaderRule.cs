@@ -1,27 +1,38 @@
-Ôªøusing System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
 
 namespace WorldTree
 {
-
-
 	public static class NetCodeLoaderRule
 	{
+		class Add : AddRule<CodeLoader>
+		{
+			protected override void Execute(CodeLoader self)
+			{
+				self.assemblyDict.Clear();
+				Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+				foreach (Assembly assembly in assemblies)
+				{
+					self.assemblyDict[assembly.GetName().Name] = assembly;
+				}
+			}
+		}
+
+
 		class HotReload : HotReloadRule<CodeLoader>
 		{
 			protected override void Execute(CodeLoader self)
 			{
-				self.Log("ÁÉ≠ÈáçËΩΩÔºÅÔºÅÔºÅ");
+				self.Log("»»÷ÿ‘ÿ£°£°£°");
 
 				if (!File.Exists("./HotReload/Rule.dll"))
 				{
-					self.Log("Rule.dll‰∏çÂ≠òÂú®ÔºÅÔºÅÔºÅ");
+					self.Log("Rule.dll≤ª¥Ê‘⁄£°£°£°");
 					return;
 				}
 
-				self.assemblyList.Clear();
 				//assemblyLoadContext?.Unload();
 				//GC.Collect();
 				AssemblyLoadContext assemblyLoadContext = new AssemblyLoadContext("Rule", true);
@@ -29,22 +40,9 @@ namespace WorldTree
 				byte[] pdbBytes = File.ReadAllBytes("./HotReload/Rule.pdb");
 				Assembly hotfixAssembly = assemblyLoadContext.LoadFromStream(new MemoryStream(dllBytes), new MemoryStream(pdbBytes));
 
-				Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-				foreach (Assembly assembly in assemblies)
-				{
-					switch (assembly.GetName().Name)
-					{
-						case "App":
-							self.assemblyList.Add(assembly); break;
-						case "Core":
-							self.assemblyList.Add(assembly); break;
-						case "Node":
-							self.assemblyList.Add(assembly); break;
-					}
-				}
+				self.assemblyDict[hotfixAssembly.GetName().Name] = hotfixAssembly;
 
-				self.assemblyList.Add(hotfixAssembly);
-				Core.TypeInfo.ReLoadAssembly(self.assemblyList);
+				Core.TypeInfo.ReLoadAssembly([hotfixAssembly]);
 				Core.RuleManager.LoadRule();
 			}
 		}

@@ -2,10 +2,13 @@
 {
 	public static partial class EntryRule
 	{
-		static OnAdd<Entry> onAdd = (self) =>
+		class Add : AddRule<Entry>
 		{
-			self.Log("入口！！！");
-			self.AddComponent(out InitialDomain _);
-		};
+			protected override void Execute(Entry self)
+			{
+				self.Log("入口！！！");
+				self.AddComponent(out InitialDomain _);
+			}
+		}
 	}
 }

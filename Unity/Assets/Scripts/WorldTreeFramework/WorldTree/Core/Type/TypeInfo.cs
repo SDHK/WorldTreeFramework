@@ -63,18 +63,37 @@ namespace WorldTree
 		/// <summary>
 		/// 重新加载程序集类型
 		/// </summary>
-		public void ReLoadAssembly(List<Assembly> assemblieList)
+		public void ReLoadAssembly(Assembly[] assemblies)
 		{
-			Clear();
 			int typeCount = 0;
-			foreach (Assembly assembly in assemblieList)
+			foreach (Assembly assembly in assemblies)
 			{
 				var types = assembly.GetTypes();
-				foreach (Type type in types) Add(type);
+				foreach (Type type in types) OverlayType(type);
 				this.Log($"重载程序集 {assembly.FullName}, 类型数量 {types.Length}");
 				typeCount += types.Length;
 			}
-			this.Log($"加载程序集数量 {assemblieList.Count}, 类型数量 {typeCount}");
+			this.Log($"加载程序集数量 {assemblies.Length}, 类型数量 {typeCount}");
+		}
+
+		/// <summary>
+		/// 覆盖或添加类型
+		/// </summary>
+		public void OverlayType(Type type)
+		{
+			if (NameTypeDict.Remove(type.FullName, out Type oldType))
+			{
+				if (TypeHash64Dict.Remove(oldType, out long typeCode))
+				{
+					Hash64TypeDict[typeCode] = type;
+					TypeHash64Dict.TryAdd(type, typeCode);
+				}
+				NameTypeDict.TryAdd(type.FullName, type);
+			}
+			else
+			{
+				Add(type);
+			}
 		}
 
 		/// <summary>

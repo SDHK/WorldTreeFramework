@@ -21,7 +21,7 @@ namespace WorldTree
 
 		private static OnUpdate<DotNetInit> Update = (self) =>
 		{
-			self.Log($"初始更新！！！热重载4");
+			self.Log($"初始更新！！！热重载6");
 		};
 
 		// 需要修改代码生成,Rule遍历执行由Forech改为For
@@ -32,9 +32,9 @@ namespace WorldTree
 			if (Console.KeyAvailable)
 			{
 				var key = Console.ReadKey(intercept: true);
-				if (key.Key == ConsoleKey.D)
+				if (key.Key == ConsoleKey.F)
 				{
-					self.Log($"键盘输入 'D' 键！！！");
+					self.Log($"键盘输入 'F' 键！！！");
 					self.Root.AddComponent(out CodeLoader _).HotReload();
 				}
 			}

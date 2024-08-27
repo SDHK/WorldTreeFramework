@@ -255,7 +255,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />
-    <None Include="Unity.licenseheader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="LZ4">

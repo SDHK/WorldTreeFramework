@@ -3,8 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/3/14 20:30
 
-* 描述： 世界树根
-* 挂载核心启动后的管理器组件
+* 描述： 热重载组件
 
 */
 
@@ -27,8 +26,8 @@ namespace WorldTree
 		, AsHotReload
 	{
 		/// <summary>
-		/// 程序集
+		/// 程序集字典
 		/// </summary>
-		public List<Assembly> assemblyList = new();
+		public Dictionary<string, Assembly> assemblyDict = new();
 	}
 }
