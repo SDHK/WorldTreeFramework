@@ -125,6 +125,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteString.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteDateTime.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteFloat.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\Define.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\WorldTree.CoreUnity.asmdef" />

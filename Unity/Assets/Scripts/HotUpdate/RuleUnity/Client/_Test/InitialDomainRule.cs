@@ -6,6 +6,8 @@ using WorldTree.Internal;
 
 namespace WorldTree
 {
+
+
 	public static partial class InitialDomainRule
 	{
 		static OnAdd<InitialDomain> OnAdd = (self) =>

@@ -38,16 +38,16 @@ namespace WorldTree
 
 		public override void OnCreate()
 		{
-			int typeCount = 0;
-			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-			foreach (Assembly assembly in assemblies)
-			{
-				var types = assembly.GetTypes();
-				foreach (Type type in types) Add(type);
-				this.Log($"加载程序集 {assembly.FullName}, 类型数量 {types.Length}");
-				typeCount += types.Length;
-			}
-			this.Log($"加载程序集数量 {assemblies.Length}, 类型数量 {typeCount}");
+			//int typeCount = 0;
+			//Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			//foreach (Assembly assembly in assemblies)
+			//{
+			//	var types = assembly.GetTypes();
+			//	foreach (Type type in types) Add(type);
+			//	this.Log($"加载程序集 {assembly.FullName}, 类型数量 {types.Length}");
+			//	typeCount += types.Length;
+			//}
+			//this.Log($"加载程序集数量 {assemblies.Length}, 类型数量 {typeCount}");
 		}
 
 		/// <summary>

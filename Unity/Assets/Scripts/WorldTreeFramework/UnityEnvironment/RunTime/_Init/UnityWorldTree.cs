@@ -7,6 +7,7 @@
 
 */
 
+using System;
 using UnityEngine;
 
 namespace WorldTree
@@ -37,15 +38,16 @@ namespace WorldTree
 		{
 			Core = new();//主框架
 
-#if UNITY_EDITOR
-			ViewCore = new();//调试用的可视化框架
-			ViewCore.Log = Debug.Log;
-			ViewCore.LogWarning = Debug.LogWarning;
-			ViewCore.LogError = Debug.LogError;
-			ViewCore.Awake(); //可视化框架初始化
+			if (Define.IsEditor)
+			{
+				ViewCore = new();//调试用的可视化框架
+				ViewCore.Log = Debug.Log;
+				ViewCore.LogWarning = Debug.LogWarning;
+				ViewCore.LogError = Debug.LogError;
+				ViewCore.Awake(); //可视化框架初始化
 
-			ViewCore.Root.AddChild(out treeView, (INode)Core, default(INode));
-#endif
+				ViewCore.Root.AddChild(out treeView, (INode)Core, default(INode));
+			}
 
 			Core.Log = Debug.Log;
 			Core.LogWarning = Debug.LogWarning;

@@ -26,6 +26,7 @@ public static class HybridCLREditor
 		foreach (var hotUpdateAssemblie in HybridCLRSettings.Instance.hotUpdateAssemblies)
 		{
 			File.Copy(Path.Combine(externalHotUpdatePath, $"{hotUpdateAssemblie}.dll"), Path.Combine(toDir, $"{hotUpdateAssemblie}.dll.bytes"), true);
+			File.Copy(Path.Combine(externalHotUpdatePath, $"{hotUpdateAssemblie}.pdb"), Path.Combine(toDir, $"{hotUpdateAssemblie}.pdb.bytes"), true);
 		}
 		Debug.Log("CopyHotUpdateDlls 完成 !!!");
 

@@ -22,24 +22,13 @@ namespace WorldTree.AOT
 	public static class HybridCLRHelper
 	{
 		/// <summary>
-		/// 是否运行模式
-		/// </summary>
-#if UNITY_EDITOR
-		public static bool IsRun = false;
-#else
-		public static bool IsRun = true;
-
-#endif
-
-		/// <summary>
 		/// 加载AOT
 		/// </summary>
 		public static async Task LoadAOT()
 		{
-			if (IsRun)
+			if (!Define.IsEditor)
 			{
 				ResourcePackage package = YooAssets.GetPackage("DefaultPackage");
-
 				foreach (AssetInfo assetInfo in YooAssets.GetAssetInfos("aotDlls"))
 				{
 					AssetHandle handle = package.LoadAssetAsync<TextAsset>(assetInfo.Address);
@@ -58,7 +47,7 @@ namespace WorldTree.AOT
 		/// </summary>
 		public static async Task LoadHotUpdate()
 		{
-			if (IsRun)
+			if (!Define.IsEditor)
 			{
 				ResourcePackage package = YooAssets.GetPackage("DefaultPackage");
 

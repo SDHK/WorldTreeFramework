@@ -17,6 +17,7 @@ using UnityEngine.UI;
 
 namespace WorldTree.AOT
 {
+
 	/// <summary>
 	/// 游戏启动入口
 	/// </summary>
@@ -97,14 +98,7 @@ namespace WorldTree.AOT
 			YooAssetsHelper.InitializePackage();
 		}
 
-		/// <summary>
-		/// 是否运行模式
-		/// </summary>
-#if UNITY_EDITOR
-		public static bool IsRun = false;
-#else
-		public static bool IsRun = true;
-#endif
+
 
 		/// <summary>
 		/// 启动框架
@@ -113,7 +107,7 @@ namespace WorldTree.AOT
 		{
 			await Task.CompletedTask;
 
-			if (!IsRun)
+			if (Define.IsEditor)
 			{
 				await HybridCLRHelper.LoadAOT();
 				await HybridCLRHelper.LoadHotUpdate();
