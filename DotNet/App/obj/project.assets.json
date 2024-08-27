@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
+    "net8.0": {
       "Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -11,6 +11,33 @@
         "runtime": {
           "bin/placeholder/Core.dll": {}
         }
+      },
+      "Node/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Node.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Node.dll": {}
+        }
+      },
+      "Rule/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Core": "1.0.0",
+          "Node": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Rule.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Rule.dll": {}
+        }
       }
     }
   },
@@ -19,11 +46,23 @@
       "type": "project",
       "path": "../Core/DotNet.Core.csproj",
       "msbuildProject": "../Core/DotNet.Core.csproj"
+    },
+    "Node/1.0.0": {
+      "type": "project",
+      "path": "../Node/DotNet.Node.csproj",
+      "msbuildProject": "../Node/DotNet.Node.csproj"
+    },
+    "Rule/1.0.0": {
+      "type": "project",
+      "path": "../Rule/DotNet.Rule.csproj",
+      "msbuildProject": "../Rule/DotNet.Rule.csproj"
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
-      "Core >= 1.0.0"
+    "net8.0": [
+      "Core >= 1.0.0",
+      "Node >= 1.0.0",
+      "Rule >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -48,18 +87,24 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net8.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "projectReferences": {
             "E:\\Project\\GitHub\\WorldTree\\DotNet\\Core\\DotNet.Core.csproj": {
               "projectPath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Core\\DotNet.Core.csproj"
+            },
+            "E:\\Project\\GitHub\\WorldTree\\DotNet\\Node\\DotNet.Node.csproj": {
+              "projectPath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Node\\DotNet.Node.csproj"
+            },
+            "E:\\Project\\GitHub\\WorldTree\\DotNet\\Rule\\DotNet.Rule.csproj": {
+              "projectPath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Rule\\DotNet.Rule.csproj"
             }
           }
         }
@@ -76,8 +121,8 @@
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net8.0": {
+        "targetAlias": "net8.0",
         "imports": [
           "net461",
           "net462",
@@ -89,30 +134,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.27, 6.0.27]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[6.0.27, 6.0.27]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.27, 6.0.27]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[6.0.27, 6.0.27]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

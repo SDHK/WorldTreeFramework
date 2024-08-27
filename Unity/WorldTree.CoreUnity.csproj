@@ -115,7 +115,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Pool\GameObjectPool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ThirdParty\Addressables\AddressablesManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Assets\ColorTexture2D\ColorTexture2DManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\_Init\InitialDomain.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\GameObjectNode.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\GuiUpdate\GuiUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIBeginHorizontal.cs" />

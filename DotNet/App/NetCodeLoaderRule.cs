@@ -15,12 +15,18 @@ namespace WorldTree
 			{
 				self.Log("热重载！！！");
 
+				if (!File.Exists("./HotReload/Rule.dll"))
+				{
+					self.Log("Rule.dll不存在！！！");
+					return;
+				}
+
 				self.assemblyList.Clear();
 				//assemblyLoadContext?.Unload();
 				//GC.Collect();
 				AssemblyLoadContext assemblyLoadContext = new AssemblyLoadContext("Rule", true);
-				byte[] dllBytes = File.ReadAllBytes("./Rule.dll");
-				byte[] pdbBytes = File.ReadAllBytes("./Rule.pdb");
+				byte[] dllBytes = File.ReadAllBytes("./HotReload/Rule.dll");
+				byte[] pdbBytes = File.ReadAllBytes("./HotReload/Rule.pdb");
 				Assembly hotfixAssembly = assemblyLoadContext.LoadFromStream(new MemoryStream(dllBytes), new MemoryStream(pdbBytes));
 
 				Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();

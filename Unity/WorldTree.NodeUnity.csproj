@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\SphereManagerTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\SerializeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\SphereTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\InitialDomain.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\NodeUnity\WorldTree.NodeUnity.asmdef" />

@@ -1,13 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "p4fiEmm6Jji7jG/DreKqvAlASdsDsrLuouaBjGkCyd5PfNLcy5o6KsiNE4IQW16oImg0apIwJ6Uc+S2t1sgZqg==",
+  "dgSpecHash": "XCx2LwJXhJxqP5I2sj0r4vdbPRgf4VN+dbhbnOuJK3EOHNtKbvRUlHkCDccPvC4NKfKmXBs6o1QPr0F4y2KCIQ==",
   "success": true,
   "projectFilePath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\App\\DotNet.App.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
-    "C:\\Users\\admin\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.27\\microsoft.netcore.app.ref.6.0.27.nupkg.sha512",
-    "C:\\Users\\admin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.27\\microsoft.aspnetcore.app.ref.6.0.27.nupkg.sha512",
-    "C:\\Users\\admin\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.27\\microsoft.netcore.app.host.win-x64.6.0.27.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }

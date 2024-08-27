@@ -19,48 +19,6 @@ using UnityEngine;
 namespace WorldTree
 {
 	/// <summary>
-	/// 可序列化的发送数据
-	/// </summary>
-	public interface ISendData
-	{
-		/// <summary>
-		/// 目标类型id
-		/// </summary>
-		public long NodeId { get; set; }
-		/// <summary>
-		/// 调用将参数塞入目标节点
-		/// </summary>
-		public void Send(INode node);
-	}
-
-	/// <summary>
-	/// 可序列化的发送数据
-	/// </summary>
-	public class SendData<R, T1, T2, T3> : Node
-		where R : ISendRule<T1, T2, T3>
-	{
-		/// <summary>
-		/// 目标类型id
-		/// </summary>
-		public long nodeId { get; set; }
-
-		/// <summary>
-		/// 调用将参数塞入目标节点
-		/// </summary>
-		public void Send(INode node)
-		{
-			//node.TrySend(TypeInfo<R>.Default, arg1, arg2, arg3);
-		}
-
-		/// <summary>
-		///  a
-		/// </summary>
-		public void SetData(byte[] dataBytes)
-		{
-		}
-	}
-
-	/// <summary>
 	/// 初始域
 	/// </summary>
 	public class InitialDomain : Node, ComponentOf<INode>
@@ -141,17 +99,5 @@ namespace WorldTree
 		/// 测试
 		/// </summary>
 		public TreeList<int> ValueList;
-	}
-
-	public static class InitialDomainRule
-	{
-		//测试框架功能
-		private class AddRule : AddRule<InitialDomain>
-		{
-			protected override void Execute(InitialDomain self)
-			{
-				self.Log($"初始域启动！");
-			}
-		}
 	}
 }

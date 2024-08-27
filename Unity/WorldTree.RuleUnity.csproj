@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\TreeValueTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\YooAssetTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\SphereTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\EntryRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\RuleUnity\WorldTree.RuleUnity.asmdef" />

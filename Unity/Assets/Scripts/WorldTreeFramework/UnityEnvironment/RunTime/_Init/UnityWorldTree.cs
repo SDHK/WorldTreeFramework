@@ -60,8 +60,8 @@ namespace WorldTree
 			//主框架添加Unity世界心跳，间隔毫秒为0
 			Core.Root.AddComponent(out UnityWorldHeart _, 0).Run();
 
-			//主框架添加初始化域
-			Core.Root.AddComponent(out InitialDomain _);
+			//主框架添加入口节点
+			Core.Root.AddComponent(out Entry _);
 		}
 
 		/// <summary>
