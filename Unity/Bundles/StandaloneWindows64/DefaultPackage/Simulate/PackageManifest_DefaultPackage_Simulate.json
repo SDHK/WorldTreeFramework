@@ -111,8 +111,26 @@
             "BundleID": 2
         },
         {
+            "Address": "WorldTree.Core.pdb",
+            "AssetPath": "Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.Core.pdb.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
             "Address": "WorldTree.CoreUnity.dll",
             "AssetPath": "Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.CoreUnity.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
+            "Address": "WorldTree.CoreUnity.pdb",
+            "AssetPath": "Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.CoreUnity.pdb.bytes",
             "AssetGUID": "",
             "AssetTags": [
                 "hotUpdateDlls"
@@ -129,8 +147,26 @@
             "BundleID": 2
         },
         {
+            "Address": "WorldTree.Node.pdb",
+            "AssetPath": "Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.Node.pdb.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
             "Address": "WorldTree.NodeUnity.dll",
             "AssetPath": "Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.NodeUnity.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
+            "Address": "WorldTree.NodeUnity.pdb",
+            "AssetPath": "Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.NodeUnity.pdb.bytes",
             "AssetGUID": "",
             "AssetTags": [
                 "hotUpdateDlls"
@@ -147,8 +183,26 @@
             "BundleID": 2
         },
         {
+            "Address": "WorldTree.Rule.pdb",
+            "AssetPath": "Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.Rule.pdb.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
             "Address": "WorldTree.RuleUnity.dll",
             "AssetPath": "Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.RuleUnity.dll.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "hotUpdateDlls"
+            ],
+            "BundleID": 2
+        },
+        {
+            "Address": "WorldTree.RuleUnity.pdb",
+            "AssetPath": "Assets/AssetBundles/Dlls/HotUpdateDlls/WorldTree.RuleUnity.pdb.bytes",
             "AssetGUID": "",
             "AssetTags": [
                 "hotUpdateDlls"
@@ -182,7 +236,7 @@
             "UnityCRC": 0,
             "FileHash": "e54216329e621390782aae238903e923",
             "FileCRC": "00000000",
-            "FileSize": 513024,
+            "FileSize": 2236416,
             "Encrypted": false,
             "Tags": [],
             "DependIDs": []

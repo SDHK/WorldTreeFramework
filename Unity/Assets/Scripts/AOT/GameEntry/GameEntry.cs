@@ -107,7 +107,7 @@ namespace WorldTree.AOT
 		{
 			await Task.CompletedTask;
 
-			if (Define.IsEditor)
+			if (!Define.IsEditor)
 			{
 				await HybridCLRHelper.LoadAOT();
 				await HybridCLRHelper.LoadHotUpdate();

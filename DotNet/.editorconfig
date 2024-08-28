@@ -1,0 +1,3 @@
+# .editorconfig
+[*.cs]
+charset = utf-8

@@ -29,13 +29,11 @@ namespace WorldTree
 
 				string hotPath = "Assets/AssetBundles/Dlls/HotUpdateDlls";
 
-				Path.Combine(hotPath, "WorldTree.RuleUnity.dll");
+				byte[] ruleDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.Rule.dll.bytes"));
+				byte[] rulePdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.Rule.pdb.bytes"));
 
-				byte[] ruleDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.Rule.dll"));
-				byte[] rulePdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.Rule.pdb"));
-
-				byte[] ruleUnityDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.RuleUnity.dll"));
-				byte[] ruleUnityPdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.RuleUnity.pdb"));
+				byte[] ruleUnityDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.RuleUnity.dll.bytes"));
+				byte[] ruleUnityPdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.RuleUnity.pdb.bytes"));
 
 				Assembly hotfixAssembly = Assembly.Load(ruleDllBytes, rulePdbBytes);
 				Assembly hotfixUnityAssembly = Assembly.Load(ruleUnityDllBytes, ruleUnityPdbBytes);
