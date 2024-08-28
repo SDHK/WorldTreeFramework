@@ -95,4 +95,11 @@ namespace WorldTree
 	/// 可调用方法法则标记
 	/// </summary>
 	public interface IMethodRule : IRule { }
+
+
+	/// <summary>
+	/// 法则类型数组生成标记
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	public class RuleTypesGeneratorAttribute : Attribute { }
 }

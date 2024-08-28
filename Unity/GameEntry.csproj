@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\TestLine4.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\AsyncETVoidMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\ETTask.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\Define.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\IAwaiter.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\FileStreamDecryption.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\GameEntry.cs" />
@@ -86,7 +87,6 @@
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\MoveAreaLimiter.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MailTest.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\GamePlayMode.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\Define.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\AOT\GameEntry\GameEntry.asmdef" />

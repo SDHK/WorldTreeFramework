@@ -64,14 +64,14 @@
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\SphereManagerTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\SerializeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\LiteDBTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\UnityCodeLoaderRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\UtcTimeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\MultilayerPerceptronTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\InitialDomainRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\EntryRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\TreeValueTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\YooAssetTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\SphereTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\EntryRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\UnityCodeLoaderRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\RuleUnity\WorldTree.RuleUnity.asmdef" />

@@ -133,7 +133,22 @@ namespace WorldTree
 		public override void OnCreate()
 		{
 			base.OnCreate();
-			LoadRule();
+			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			List<Type> ruleTypeList = new();
+			foreach (Assembly assembly in assemblies)
+			{
+				foreach (Type type in assembly.GetTypes())
+				{
+					if (type.GetInterfaces().Contains(typeof(IRule)) && !type.IsAbstract && !type.IsInterface)
+						ruleTypeList.Add(type);
+				}
+			}
+			//将按照法则类名进行排序，规范执行顺序
+			ruleTypeList.Sort((rule1, rule2) => rule1.Name.CompareTo(rule2.Name));
+			foreach (var RuleType in ruleTypeList)//遍历类型列表
+			{
+				AddRuleType(RuleType);
+			}
 		}
 
 		/// <summary>
@@ -141,14 +156,15 @@ namespace WorldTree
 		/// </summary>
 		public void LoadRule()
 		{
-			Clear();
 			//反射获取全局继承IRule的法则类型列表
 			List<Type> ruleTypeList = new();
 			foreach (Type type in Core.TypeInfo.TypeHash64Dict.Keys)
 			{
-				if (type.GetInterfaces().Contains(typeof(IRule)) && !type.IsAbstract)
+				if (type.GetInterfaces().Contains(typeof(IRule)) && !type.IsAbstract && !type.IsInterface)
 					ruleTypeList.Add(type);
 			}
+
+			Clear();
 			//将按照法则类名进行排序，规范执行顺序
 			ruleTypeList.Sort((rule1, rule2) => rule1.Name.CompareTo(rule2.Name));
 			foreach (var RuleType in ruleTypeList)//遍历类型列表
@@ -245,13 +261,24 @@ namespace WorldTree
 
 		#region 添加法则
 
-
+		/// <summary>
+		/// 添加法则类型
+		/// </summary>
+		public void AddRuleTypes(Type[] ruleTypes)
+		{
+			foreach (Type ruleType in ruleTypes)
+			{
+				AddRuleType(ruleType);
+			}
+		}
 
 		/// <summary>
 		/// 添加法则类型
 		/// </summary>
-		private void AddRuleType(Type ruleType)
+		public void AddRuleType(Type ruleType)
 		{
+			if (ruleType == null) return;
+
 			if (ruleType.IsGenericType) //判断法则类型是泛型
 			{
 				var baseType = ruleType.BaseType;

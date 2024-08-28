@@ -43,7 +43,7 @@ namespace WorldTree
 				self.assemblyDict[hotfixAssembly.GetName().Name] = hotfixAssembly;
 				self.assemblyDict[hotfixUnityAssembly.GetName().Name] = hotfixUnityAssembly;
 
-				Core.TypeInfo.ReLoadAssembly(new[] { hotfixAssembly, hotfixUnityAssembly });
+				Core.TypeInfo.LoadAssembly(new[] { hotfixAssembly, hotfixUnityAssembly });
 				Core.RuleManager.LoadRule();
 			}
 		}

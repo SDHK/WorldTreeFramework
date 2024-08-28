@@ -10,45 +10,42 @@ namespace WorldTree
 	{
 		private static OnEnable<DotNetInit> Enable1 = (self) =>
 		{
-			self.Log("¼¤»î£¡£¡");
+			self.Log("æ¿€æ´»ï¼ï¼");
 		};
 
 		private static OnAdd<DotNetInit> Add = (self) =>
 		{
-			self.Log(" ³õÊ¼»¯£¡£¡£¡");
+			self.Log(" åˆå§‹åŒ–ï¼ï¼ï¼");
 			self.AddComponent(out SerializeTest _);
 		};
 
 		private static OnUpdate<DotNetInit> Update = (self) =>
 		{
-			self.Log($"³õÊ¼¸üĞÂ£¡£¡£¡ÈÈÖØÔØ6");
+			self.Log($"åˆå§‹æ›´æ–°ï¼ï¼ï¼çƒ­é‡è½½5");
 		};
-
-		// ĞèÒªĞŞ¸Ä´úÂëÉú³É,Rule±éÀúÖ´ĞĞÓÉForech¸ÄÎªFor
 
 		private static OnUpdateTime<DotNetInit> UpdateTime = (self, timeSpan) =>
 		{
-			//¼ì²â¼üÅÌÊäÈëa
 			if (Console.KeyAvailable)
 			{
 				var key = Console.ReadKey(intercept: true);
 				if (key.Key == ConsoleKey.F)
 				{
-					self.Log($"¼üÅÌÊäÈë 'F' ¼ü£¡£¡£¡");
+					self.Log($"é”®ç›˜è¾“å…¥ 'F' é”®ï¼ï¼ï¼");
 					self.Root.AddComponent(out CodeLoader _).HotReload();
 				}
 			}
-			//self.Log($"³õÊ¼¸üĞÂ£¡£¡£¡{timeSpan.TotalSeconds}");
+			//self.Log($"åˆå§‹æ›´æ–°ï¼ï¼ï¼{timeSpan.TotalSeconds}");
 		};
 
 		private static OnDisable<DotNetInit> Disable = (self) =>
 		{
-			self.Log("Ê§»î£¡£¡");
+			self.Log("å¤±æ´»ï¼ï¼");
 		};
 
 		private static OnRemove<DotNetInit> Remove = (self) =>
 		{
-			self.Log($"³õÊ¼¹Ø±Õ£¡£¡");
+			self.Log($"åˆå§‹å…³é—­ï¼ï¼");
 		};
 	}
 

@@ -42,7 +42,7 @@ namespace WorldTree
 
 				self.assemblyDict[hotfixAssembly.GetName().Name] = hotfixAssembly;
 
-				Core.TypeInfo.ReLoadAssembly([hotfixAssembly]);
+				Core.TypeInfo.LoadAssembly([hotfixAssembly]);
 				Core.RuleManager.LoadRule();
 			}
 		}

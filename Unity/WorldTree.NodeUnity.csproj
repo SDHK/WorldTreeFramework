@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\YooAssetTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\UtcTimeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\MultilayerPerceptronTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\InitialDomain.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\SqliteToolTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\LiteDBTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\TaskTest.cs" />
@@ -69,7 +70,6 @@
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\SphereManagerTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\SerializeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\SphereTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\InitialDomain.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\NodeUnity\WorldTree.NodeUnity.asmdef" />

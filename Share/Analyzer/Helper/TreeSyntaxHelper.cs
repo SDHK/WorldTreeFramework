@@ -26,28 +26,7 @@ namespace WorldTree
 		/// <summary>
 		/// 检查是否有指定的特性
 		/// </summary>
-		public static bool CheckAttribute(TypeDeclarationSyntax node, string attributeName)
-		{
-			if (node.AttributeLists.Count == 0) return false;
-
-			foreach (var attributeList in node.AttributeLists)
-			{
-				foreach (var attribute in attributeList.Attributes)
-				{
-					var attributeNameText = attribute.Name.ToString();
-					if (attributeNameText == attributeName || attributeNameText == attributeName.Replace("Attribute", ""))
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// 检查是否有指定的特性
-		/// </summary>
-		public static bool CheckAttribute(FieldDeclarationSyntax node, string attributeName)
+		public static bool CheckAttribute(MemberDeclarationSyntax node, string attributeName)
 		{
 			if (node.AttributeLists.Count == 0) return false;
 
@@ -246,7 +225,7 @@ namespace WorldTree
 				// 检查注释内容是否非空
 				if (!string.IsNullOrWhiteSpace(commentText)) return true;
 			}
-			
+
 			return false; // 没有找到注释，返回false
 		}
 

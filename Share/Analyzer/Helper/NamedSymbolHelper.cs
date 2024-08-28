@@ -189,7 +189,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool CheckAttribute(ISymbol fieldSymbol, string attributeName)
 		{
-			return fieldSymbol.GetAttributes().Any(attr => attr.AttributeClass?.Name.Contains(attributeName) == true);
+			return fieldSymbol.GetAttributes().Any(attr => attr.AttributeClass?.ToDisplayString().Contains(attributeName) == true);
 		}
 
 
