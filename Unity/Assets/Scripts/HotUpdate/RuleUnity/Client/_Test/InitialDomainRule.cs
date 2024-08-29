@@ -30,7 +30,7 @@ namespace WorldTree
 
 		static OnUpdate<InitialDomain> OnUpdate = (self) =>
 		{
-			self.Log($"初始域更新！！");
+			self.Log($"初始域更新！！!");
 
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
