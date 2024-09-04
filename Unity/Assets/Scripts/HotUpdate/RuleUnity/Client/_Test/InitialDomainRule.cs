@@ -13,14 +13,6 @@ namespace WorldTree
 		static OnAdd<InitialDomain> OnAdd = (self) =>
 		{
 			self.Log($"初始域热更部分！！!");
-			//self.Core.AddWorld(out WorldTreeCore core);//添加子世界
-			//self.AddComponent(out TaskTest _);
-
-			DateTime dateTime = self.Core.RealTimeManager.UtcNow;
-
-			self.Log($"网络时间：{dateTime}");
-			self.Log($"本地机器Utc时间：{DateTime.UtcNow}");
-			self.Log($"本地机器时间：{DateTime.Now}");
 
 			//添加宏测试成功，应该在编辑器下才能添加
 			//string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone);

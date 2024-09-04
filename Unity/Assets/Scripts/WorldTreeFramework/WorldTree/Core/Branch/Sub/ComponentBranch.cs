@@ -19,8 +19,6 @@ namespace WorldTree
 	/// </summary>
 	public class ComponentBranch : Branch<long>, IBranchTypeKey
 	{ 
-		
-	
 	}
 
 }

@@ -161,14 +161,14 @@ namespace WorldTree
 			{
 				foreach (IRule rule in ruleList)
 				{
-					Unsafe.As<TreePackDeserializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref Unsafe.AsRef(value));
+					Unsafe.As<TreePackDeserializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref value);
 				}
 				return;
 			}
 
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
 			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackDeserializeUnmanaged<T>>(), out ruleList))
-				((IRuleList<TreePackDeserializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
+				((IRuleList<TreePackDeserializeUnmanaged<T>>)ruleList).SendRef(this, ref value);
 		}
 
 		/// <summary>

@@ -33,14 +33,17 @@ namespace WorldTree
 					return;
 				}
 
-				//assemblyLoadContext?.Unload();
-				//GC.Collect();
+				if(self.AssemblyLoadContext is AssemblyLoadContext assembly) assembly.Unload();
+				GC.Collect();
 				AssemblyLoadContext assemblyLoadContext = new AssemblyLoadContext("Rule", true);
 				byte[] dllBytes = File.ReadAllBytes("./HotReload/Rule.dll");
 				byte[] pdbBytes = File.ReadAllBytes("./HotReload/Rule.pdb");
 				Assembly hotfixAssembly = assemblyLoadContext.LoadFromStream(new MemoryStream(dllBytes), new MemoryStream(pdbBytes));
 
+				self.AssemblyLoadContext = assemblyLoadContext;
+
 				self.assemblyDict[hotfixAssembly.GetName().Name] = hotfixAssembly;
+
 
 				Core.TypeInfo.LoadAssembly([hotfixAssembly]);
 				Core.RuleManager.LoadRule();

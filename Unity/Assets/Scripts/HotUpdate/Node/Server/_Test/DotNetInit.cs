@@ -1,3 +1,5 @@
+using System;
+
 namespace WorldTree
 {
 	/// <summary>
@@ -6,5 +8,7 @@ namespace WorldTree
 	public partial class DotNetInit : Node, ComponentOf<INode>
 		, AsComponentBranch
 		, AsAwake
-	{ }
+	{ 
+		public Action action;
+	}
 }

@@ -26,6 +26,11 @@ namespace WorldTree
 		, AsHotReload
 	{
 		/// <summary>
+		/// 程序集加载上下文
+		/// </summary>
+		public object AssemblyLoadContext = null;
+
+		/// <summary>
 		/// 程序集字典
 		/// </summary>
 		public Dictionary<string, Assembly> assemblyDict = new();

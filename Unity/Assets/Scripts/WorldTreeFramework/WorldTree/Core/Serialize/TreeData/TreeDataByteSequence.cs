@@ -6,25 +6,39 @@
 * 描述：
 
 */
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// data
+	/// </summary>
+	public class AData
+	{
+		/// <summary>
+		/// a
+		/// </summary>
+		public int AInt;
+	}
+
 
 	public static class KeyValuePairFormatterRule
 	{
-		class Serialize<TKey, TValue> : TreeDataSerializeRule<TreeDataByteSequence, KeyValuePair<TKey, TValue>>
+		class Serialize : TreeDataSerializeRule<TreeDataByteSequence, AData>
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value)
 			{
-				if (!RuntimeHelpers.IsReferenceOrContainsReferences<KeyValuePair<TKey, TValue>>())
-				{
-					self.DangerousWriteUnmanaged(value);
-					return;
-				}
-				//self.WriteValue(value.Key);
-				//self.WriteValue(value.Value);
+				//记录字段名称，类型名称，最后是数据
+				//名称应该要转为数字码进行储存
+
+				AData data = (AData)value;
+				string className = "WorldTree.AData";
+				int mAIntType = 1;
+				string mAInt = nameof(data.AInt);
+
+				self.WriteUnmanaged(mAIntType);
 			}
 		}
 		class Deserialize<TKey, TValue> : TreeDataDeserializeRule<TreeDataByteSequence, KeyValuePair<TKey, TValue>>
@@ -37,8 +51,8 @@ namespace WorldTree
 					return;
 				}
 				value = new KeyValuePair<TKey, TValue>(
-				   //self.ReadValue<TKey>(),
-				   //self.ReadValue<TValue>()
+				//self.ReadValue<TKey>(),
+				//self.ReadValue<TValue>()
 				);
 			}
 		}
@@ -49,9 +63,6 @@ namespace WorldTree
 
 	public static class TreeDataByteSequenceRule
 	{
-
-
-
 		class AddRule : AddRule<TreeDataByteSequence>
 		{
 			protected override void Execute(TreeDataByteSequence self)
@@ -62,7 +73,6 @@ namespace WorldTree
 				self.Core.PoolGetUnit(out self.typeNameToCodeDict);
 			}
 		}
-
 	}
 
 	/// <summary>
@@ -82,5 +92,55 @@ namespace WorldTree
 		public UnitDictionary<string, long> typeNameToCodeDict;
 
 
+		//public void
+
+		/// <summary>
+		/// 写入值
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="value"></param>
+		public void WriteValue<T>(in T value)
+		{
+			WriteValue(typeof(T), ref Unsafe.AsRef<object>(value));
+		}
+
+
+		/// <summary>
+		/// 写入值
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteValue(Type type, ref object value)
+		{
+			long typeCode = this.Core.TypeToCode(type);
+			this.Core.RuleManager.SupportNodeRule(typeCode);
+			if (this.Core.RuleManager.TryGetRuleList<ITreeDataSerialize>(typeCode, out RuleList ruleList))
+			{
+				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref value);
+			}
+		}
+
+
+		/// <summary>
+		/// 读取值
+		/// </summary>
+		public void ReadValue<T>(ref T value)
+		{
+			object obj = value;
+			ReadValue(typeof(T), ref obj);
+			value = (T)obj;
+		}
+
+		/// <summary>
+		/// 读取值
+		/// </summary>
+		public void ReadValue(Type type, ref object value)
+		{
+			long typeCode = this.Core.TypeToCode(type);
+			this.Core.RuleManager.SupportNodeRule(typeCode);
+			if (this.Core.RuleManager.TryGetRuleList<ITreeDataSerialize>(typeCode, out RuleList ruleList))
+			{
+				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value);
+			}
+		}
 	}
 }
