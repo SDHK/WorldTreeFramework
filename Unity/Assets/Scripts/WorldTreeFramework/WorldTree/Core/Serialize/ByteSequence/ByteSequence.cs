@@ -27,9 +27,9 @@ namespace WorldTree
 		public UnitList<ByteSequenceSegment> segmentList = null;
 
 		/// <summary>
-		/// 当前缓存
+		/// 当前写入缓存
 		/// </summary>
-		private ByteSequenceSegment current;
+		private ByteSequenceSegment writeCurrent;
 
 		/// <summary>
 		/// 数据长度
@@ -48,15 +48,15 @@ namespace WorldTree
 
 		public int WriteBytePoint
 		{
-			get { return current.Length; }
+			get { return writeCurrent.Length; }
 
 			set
 			{
-				if (current.Length == value) return;
+				if (writeCurrent.Length == value) return;
 
-				if (value < 0 || value > current.Length) this.LogError("写入指针越界");
-				length += value - current.Length;
-				current.SetPoint(value);
+				if (value < 0 || value > writeCurrent.Length) this.LogError("写入指针越界");
+				length += value - writeCurrent.Length;
+				writeCurrent.SetPoint(value);
 			}
 		}
 
@@ -90,26 +90,26 @@ namespace WorldTree
 		/// </summary>
 		public Span<byte> GetWriteSpan(int sizeHint)
 		{
-			if (!current.IsNull)
+			if (!writeCurrent.IsNull)
 			{
 				// 拿到当前缓存的空白区域
-				Span<byte> buffer = current.FreeSpan;
+				Span<byte> buffer = writeCurrent.FreeSpan;
 				// 如果空白区域大于等于需要的空间，那么直接返回
 				if (buffer.Length > sizeHint)
 				{
-					current.Advance(sizeHint);
+					writeCurrent.Advance(sizeHint);
 					length += sizeHint;
 					return buffer;
 				}
 			}
 
 			// 因为是结构体，所以需要等到缓存满了之后再添加到列表
-			if (current.Length != 0) segmentList.Add(current);
+			if (writeCurrent.Length != 0) segmentList.Add(writeCurrent);
 
 			// 如果空白区域小于等于需要的空间，则需要重新申请一个缓存
 			ByteSequenceSegment next = new(sizeHint);
-			current = next;
-			current.Advance(sizeHint);
+			writeCurrent = next;
+			writeCurrent.Advance(sizeHint);
 			length += sizeHint;
 			return next.FreeSpan;
 		}
@@ -139,8 +139,83 @@ namespace WorldTree
 				item.ByteSpan.CopyTo(span);
 				span = span.Slice(item.Length);
 			}
-			if (!current.IsNull) current.ByteSpan.CopyTo(span);
+			if (!writeCurrent.IsNull) writeCurrent.ByteSpan.CopyTo(span);
 			return results;
+		}
+
+		/// <summary>
+		/// 读取指针回退
+		/// </summary>
+		public void ReadBack(int sizeHint)
+		{
+			if (sizeHint <= 0) return;
+			if (readPoint == 0) this.LogError("序列已经到达开头");
+			if (readPoint - sizeHint < 0) this.LogError("回退长度超出数据长度");
+			readPoint -= sizeHint;
+			while (sizeHint != 0)
+			{
+				ByteSequenceSegment nowSegment = segmentList[readSegmentPoint];
+				if (readBytePoint == 0)
+				{
+					readSegmentPoint--;
+					nowSegment = segmentList[readSegmentPoint];
+					readBytePoint = nowSegment.Length;
+				}
+				int nowRemain = readBytePoint;
+				if (nowRemain == sizeHint)
+				{
+					//如果当前片段的长度等于剩余需要读取的空间
+					readBytePoint = 0;
+					break;
+				}
+				//如果当前片段的长度大于剩余需要读取的空间
+				else if (nowRemain > sizeHint)
+				{
+					readBytePoint -= sizeHint;
+					break;
+				}
+				//如果当前片段的长度小于剩余需要读取的空间
+				else
+				{
+					readSegmentPoint--;
+					sizeHint -= nowRemain;
+				}
+			}
+		}
+
+		/// <summary>
+		/// 读取指针跳过指定长度
+		/// </summary>
+		public void ReadSkip(int sizeHint)
+		{
+			if (sizeHint <= 0) return;
+			if (readPoint == length) this.LogError("序列已经到达末尾");
+			if (readPoint + sizeHint > length) this.LogError("跳过长度超出数据长度");
+			readPoint += sizeHint;
+			while (sizeHint != 0)
+			{
+				ByteSequenceSegment nowSegment = segmentList[readSegmentPoint];
+				int nowRemain = nowSegment.Length - readBytePoint;
+				if (nowRemain == sizeHint)
+				{
+					//如果当前片段的长度等于剩余需要读取的空间
+					readBytePoint = 0;
+					readSegmentPoint++;
+					break;
+				}
+				//如果当前片段的长度大于剩余需要读取的空间
+				else if (nowRemain > sizeHint)
+				{
+					readBytePoint += sizeHint;
+					break;
+				}
+				//如果当前片段的长度小于剩余需要读取的空间
+				else
+				{
+					readSegmentPoint++;
+					sizeHint -= nowRemain;
+				}
+			}
 		}
 
 		/// <summary>
@@ -149,12 +224,11 @@ namespace WorldTree
 		public Span<byte> GetReadSpan(int sizeHint)
 		{
 			if (readPoint == length) this.LogError("序列已经到达末尾");
-			if (sizeHint > length - readPoint) this.LogError("超出读取长度");
-
-			if (!current.IsNull)
+			if (readPoint + sizeHint > length) this.LogError("超出读取长度");
+			if (!writeCurrent.IsNull)
 			{
-				segmentList.Add(current);
-				current = default;
+				segmentList.Add(writeCurrent);
+				writeCurrent = default;
 			}
 
 			ByteSequenceSegment nowSegment = segmentList[readSegmentPoint];
@@ -226,7 +300,7 @@ namespace WorldTree
 			readSegmentPoint = 0;
 			readBytePoint = 0;
 			readPoint = 0;
-			current = default;
+			writeCurrent = default;
 
 			if (length == 0) return;
 			foreach (var item in segmentList) item.Clear();

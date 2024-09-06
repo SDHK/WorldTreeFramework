@@ -6,6 +6,8 @@
 * 描述：
 
 */
+using System;
+
 namespace WorldTree
 {
 	/// <summary>
