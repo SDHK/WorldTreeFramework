@@ -11,7 +11,7 @@ namespace WorldTree
 		{
 			AData data = new AData();
 
-			data.AInt = 21;
+			data.AInt = 401;
 
 			self.AddTemp(out TreeDataByteSequence sequenceWrite).Serialize(data);
 

@@ -1,8 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace WorldTree.TreePack.Formatters
+namespace WorldTree.TreePackFormats
 {
-	public static class UnmanagedFormatterRule
+	public static class UnmanagedFormatRule
 	{
 		class Serialize<T> : TreePackSerializeUnmanagedRule<TreePackByteSequence, T>
 		{

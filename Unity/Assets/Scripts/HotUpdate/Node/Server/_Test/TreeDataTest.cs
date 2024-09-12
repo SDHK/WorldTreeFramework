@@ -1,6 +1,4 @@
 
-
-
 using System.Runtime.CompilerServices;
 using System;
 
@@ -17,7 +15,7 @@ namespace WorldTree
 		public int AInt = 10;
 	}
 
-
+	//以下代码需要由工具生成
 	public partial class AData
 	{
 		public static class KeyValuePairFormatterRule
@@ -26,11 +24,9 @@ namespace WorldTree
 			{
 				protected override void Execute(TreeDataByteSequence self, ref object value)
 				{
-					//记录字段名称，类型名称，最后是数据
-					//名称应该要转为数字码进行储存
+					//============ Data <=> Byte <=> Object ======
 
 					AData data = (AData)value;
-					//============ Data <=> Byte <=> Object ======
 					//类型名称
 					self.WriteUnmanaged(self.AddTypeCode(typeof(AData)));
 
@@ -55,7 +51,7 @@ namespace WorldTree
 				protected override void Execute(TreeDataByteSequence self, ref object value)
 				{
 					//读取类型码
-					self.ReadUnmanaged(out int typeCode);
+					self.ReadUnmanaged(out long typeCode);
 
 					//通过类型码获取类型
 					self.TryGetType(typeCode, out Type type);
@@ -126,7 +122,7 @@ namespace WorldTree
 						}
 						else
 						{
-							//不是本身类型，也不是子类型，也不是可转换类型，跳跃数据，应该能写成一个通用方法
+							//不是本身类型，也不是子类型，也不是可转换类型，跳跃数据。
 
 							//读取指针回退，类型码
 							self.ReadBack(4);
@@ -139,7 +135,7 @@ namespace WorldTree
 					void SkipData(TreeDataByteSequence self)
 					{
 						//读取类型码
-						self.ReadUnmanaged(out int typeCode);
+						self.ReadUnmanaged(out long typeCode);
 
 						//通过类型码获取类型
 						if (self.TryGetType(typeCode, out type))

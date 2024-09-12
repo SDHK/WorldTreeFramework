@@ -1,11 +1,6 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-
-namespace WorldTree.TreePack.Formatters
+﻿namespace WorldTree.TreePackFormats
 {
-	public static class StringFormatterRule
+	public static class StringFormatRule
 	{
 		class Serialize : TreePackSerializeRule<TreePackByteSequence, string>
 		{

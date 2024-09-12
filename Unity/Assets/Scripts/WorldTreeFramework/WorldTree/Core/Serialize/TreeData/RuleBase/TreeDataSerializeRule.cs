@@ -10,17 +10,6 @@ using System;
 
 namespace WorldTree
 {
-	///// <summary>
-	///// 树数据序列化法则接口：用于序列化未知泛型，解除AsRule的法则限制
-	///// </summary>
-	//public interface ITreeDataSerialize : IRule { }
-
-	///// <summary>
-	///// 树数据反序列化法则接口：用于反序列化未知泛型，解除AsRule的法则限制
-	///// </summary>
-	//public interface ITreeDataDeserialize : IRule { }
-
-
 	/// <summary>
 	/// 树数据序列化非托管法则
 	/// </summary>

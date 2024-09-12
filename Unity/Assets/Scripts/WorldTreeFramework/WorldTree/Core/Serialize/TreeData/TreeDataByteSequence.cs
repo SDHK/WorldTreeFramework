@@ -48,9 +48,7 @@ namespace WorldTree
 			protected override void Execute(TreeDataByteSequence self)
 			{
 				self.GetBaseRule<TreeDataByteSequence, ByteSequence, Add>().Send(self);
-
 				self.Core.PoolGetUnit(out self.TypeToCodeDict);
-				self.Core.PoolGetUnit(out self.CodeToTypeDict);
 				self.Core.PoolGetUnit(out self.codeToTypeNameDict);
 				self.Core.PoolGetUnit(out self.codeToNameDict);
 			}
@@ -60,13 +58,9 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self)
 			{
-				self.indexCode = 0;
-
 				self.TypeToCodeDict.Dispose();
-				self.CodeToTypeDict.Dispose();
 				self.codeToTypeNameDict.Dispose();
 				self.codeToNameDict.Dispose();
-
 			}
 		}
 	}
@@ -84,35 +78,19 @@ namespace WorldTree
 		public static Regex ShortTypeNameRegex = new Regex(@", Version=\d+.\d+.\d+.\d+, Culture=[\w-]+, PublicKeyToken=(?:null|[a-f0-9]{16})", RegexOptions.Compiled);
 
 		/// <summary>
-		/// 累计类型码
-		/// </summary>
-		public int indexCode;
-
-		/// <summary>
 		/// 类型对应类型码字典，32哈希码对应
 		/// </summary>
-		public UnitDictionary<Type, int> TypeToCodeDict;
-
-		/// <summary>
-		/// 类型码对应名称字典，32哈希码对应
-		/// </summary>
-		public UnitDictionary<int, Type> CodeToTypeDict;
+		public UnitDictionary<Type, long> TypeToCodeDict;
 
 		/// <summary>
 		/// 类型码对应类型名称字典，32哈希码对应
 		/// </summary>
-		public UnitDictionary<int, string> codeToTypeNameDict;
+		public UnitDictionary<long, string> codeToTypeNameDict;
 
 		/// <summary>
 		/// 字段码对应名称字典，32哈希码对应，代码生成直接使用int对比
 		/// </summary>
 		public UnitDictionary<int, string> codeToNameDict;
-
-		/// <summary>
-		/// 类型码判断
-		/// </summary>
-		public bool ContainsTypeCode(int typeCode)
-			=> CodeToTypeDict.ContainsKey(typeCode);
 
 		/// <summary>
 		/// 名称码判断
@@ -124,29 +102,32 @@ namespace WorldTree
 		/// <summary>
 		/// 序列化
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="value"></param>
 		public void Serialize<T>(in T value)
 		{
+			//写入数据
 			WriteValue(typeof(T), ref Unsafe.AsRef<object>(value));
-			int startPoint = Length;
-			//写入类型码
 
+			//记录映射表起始位置
+			int startPoint = Length;
 			//写入类型数量
 			WriteUnmanaged(TypeToCodeDict.Count);
 			foreach (var item in TypeToCodeDict)
 			{
+				//写入类型码
 				WriteUnmanaged(item.Value);
+				//写入类型名称
 				WriteString(ShortTypeNameRegex.Replace(item.Key.AssemblyQualifiedName, ""));
 			}
 			//写入字段数量
 			WriteUnmanaged(codeToNameDict.Count);
 			foreach (var item in codeToNameDict)
 			{
+				//写入字段码
 				WriteUnmanaged(item.Key);
+				//写入字段名称
 				WriteString(item.Value);
 			}
-			//写入映射表起始位置
+			//写入映射表起始位置偏差距离
 			WriteUnmanaged(length - startPoint);
 		}
 
@@ -170,7 +151,9 @@ namespace WorldTree
 			ReadUnmanaged(out int typeCount);
 			for (int i = 0; i < typeCount; i++)
 			{
-				ReadUnmanaged(out int typeCode);
+				//读取类型码
+				ReadUnmanaged(out long typeCode);
+				//读取类型名称
 				string typeName = ReadString();
 				codeToTypeNameDict.Add(typeCode, typeName);
 			}
@@ -178,7 +161,9 @@ namespace WorldTree
 			ReadUnmanaged(out int nameCount);
 			for (int i = 0; i < nameCount; i++)
 			{
+				//读取字段码
 				ReadUnmanaged(out int nameCode);
+				//读取字段名称
 				string name = ReadString();
 				codeToNameDict.Add(nameCode, name);
 			}
@@ -194,12 +179,12 @@ namespace WorldTree
 		/// <summary>
 		/// 添加类型
 		/// </summary>
-		public int AddTypeCode(Type type)
+		public long AddTypeCode(Type type)
 		{
-			if (!TypeToCodeDict.TryGetValue(type, out int typeCode))
+			if (!TypeToCodeDict.TryGetValue(type, out long typeCode))
 			{
-				typeCode = indexCode;
-				TypeToCodeDict.Add(type, indexCode++);
+				typeCode = this.TypeToCode(type);
+				TypeToCodeDict.Add(type, typeCode);
 			}
 			return typeCode;
 		}
@@ -223,14 +208,13 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取类型
 		/// </summary>
-		public bool TryGetType(int typeCode, out Type type)
+		public bool TryGetType(long typeCode, out Type type)
 		{
-			if (!CodeToTypeDict.TryGetValue(typeCode, out type))
+			if (!this.TryCodeToType(typeCode, out type))
 			{
 				if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
 				{
-					type = System.Type.GetType(typeName);
-					CodeToTypeDict.Add(typeCode, type);
+					this.TypeToCode(System.Type.GetType(typeName));
 					return true;
 				}
 			}
@@ -258,7 +242,6 @@ namespace WorldTree
 				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref value);
 			}
 		}
-
 
 		/// <summary>
 		/// 读取值

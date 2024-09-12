@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace WorldTree.TreePack.Formatters
+namespace WorldTree.TreePackFormats
 {
-	public static class KeyValuePairFormatterRule
+	public static class KeyValuePairFormatRule
 	{
 		class Serialize<TKey, TValue> : TreePackSerializeRule<TreePackByteSequence, KeyValuePair<TKey, TValue>>
 		{

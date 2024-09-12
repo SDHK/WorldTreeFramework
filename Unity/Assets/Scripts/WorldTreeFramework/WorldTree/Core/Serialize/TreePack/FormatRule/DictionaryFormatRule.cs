@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace WorldTree.TreePack.Formatters
+namespace WorldTree.TreePackFormats
 {
-	public static class DictionaryFormatterRule
+	public static class DictionaryFormatRule
 	{
 		class Serialize<TKey, TValue> : TreePackSerializeRule<TreePackByteSequence, IDictionary<TKey, TValue>>
 		{

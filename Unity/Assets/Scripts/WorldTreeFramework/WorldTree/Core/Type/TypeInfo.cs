@@ -136,7 +136,13 @@ namespace WorldTree
 		/// <summary>
 		/// 哈希码64转类型
 		/// </summary>
-		public Type CodeToType(long rcr) => Hash64TypeDict[rcr];
+		public Type CodeToType(long hash64) => Hash64TypeDict[hash64];
+
+		/// <summary>
+		/// 尝试获取类型
+		/// </summary>
+		public bool TryCodeToType(long hash64, out Type type) => Hash64TypeDict.TryGetValue(hash64, out type);
+
 	}
 	public static class TypeInfoRule
 	{
@@ -159,6 +165,11 @@ namespace WorldTree
 		/// 获取类型
 		/// </summary>
 		public static Type CodeToType(this IWorldTreeBasic self, long typeCode) => self.Core.TypeInfo.CodeToType(typeCode);
+
+		/// <summary>
+		/// 尝试获取类型
+		/// </summary>
+		public static bool TryCodeToType(this IWorldTreeBasic self, long typeCode, out Type type) => self.Core.TypeInfo.TryCodeToType(typeCode, out type);
 
 	}
 }
