@@ -33,7 +33,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入byte指针位置
 		/// </summary>
-		public int WriteBytePoint { get; set; }
+		public int WriteBytePoint { get; }
 
 		/// <summary>
 		/// 获取写入操作跨度

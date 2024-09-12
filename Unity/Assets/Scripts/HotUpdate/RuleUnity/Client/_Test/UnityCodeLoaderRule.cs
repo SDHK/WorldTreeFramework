@@ -26,7 +26,6 @@ namespace WorldTree
 				if (!Define.IsEditor) return;
 
 				self.Log("热重载！！！");
-
 				string hotPath = "Temp/Bin/Debug";
 
 				byte[] ruleDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.Rule.dll"));

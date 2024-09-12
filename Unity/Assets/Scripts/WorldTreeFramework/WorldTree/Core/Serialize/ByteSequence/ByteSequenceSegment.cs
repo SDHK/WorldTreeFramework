@@ -83,13 +83,6 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void Advance(int count) => length += count;
 
-		/// <summary>
-		/// 设置指针位置
-		/// </summary>
-		public void SetPoint(int index)
-		{
-			if (index > 0 && bytes.Length > index) length = index;
-		}
 
 		/// <summary>
 		/// 清理

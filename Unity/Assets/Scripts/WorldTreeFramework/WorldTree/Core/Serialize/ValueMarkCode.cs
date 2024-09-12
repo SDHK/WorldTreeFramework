@@ -14,13 +14,13 @@ namespace WorldTree
 	public static class ValueMarkCode
 	{
 		/// <summary>
-		/// 标记自身
-		/// </summary>
-		public const short THIS_OBJECT = -1;
-
-		/// <summary>
 		/// 空对象
 		/// </summary>
-		public const short NULL_OBJECT = -2;
+		public const short NULL_OBJECT = -1;
+
+		/// <summary>
+		/// 标记自身
+		/// </summary>
+		public const short THIS_OBJECT = -2;
 	}
 }

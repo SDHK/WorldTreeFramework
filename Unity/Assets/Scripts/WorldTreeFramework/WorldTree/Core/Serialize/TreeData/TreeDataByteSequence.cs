@@ -8,152 +8,11 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace WorldTree
 {
-	/// <summary>
-	/// data
-	/// </summary>
-	public class AData
-	{
-		/// <summary>
-		/// a
-		/// </summary>
-		public int AInt;
-	}
-
-
-	public static class KeyValuePairFormatterRule
-	{
-		class Serialize : TreeDataSerializeRule<TreeDataByteSequence, AData>
-		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
-			{
-				//记录字段名称，类型名称，最后是数据
-				//名称应该要转为数字码进行储存
-
-
-				AData data = (AData)value;
-
-
-				//============ Data <=> Byte <=> Object ======
-				//a.GetType("AData<AData<int>,float>");
-
-				//写入字段数量
-				self.WriteUnmanaged(1);
-
-				//object类型 
-				//类型名称
-				self.WriteUnmanaged(100); //假设数字是32位哈希码
-				if (!self.ContainsTypeCode(100)) self.AddTypeCode(100, typeof(AData));
-
-				//AData的字段名称1
-				self.WriteUnmanaged(101);
-				if (!self.ContainsNameCode(101)) self.AddNameCode(101, nameof(data.AInt));
-
-				//value类型
-				//类型名称
-				self.WriteUnmanaged(1011);
-				if (!self.ContainsTypeCode(1011)) self.AddTypeCode(1011, typeof(int));
-
-				//字段值
-				self.WriteUnmanaged(data.AInt);
-			}
-		}
-
-
-		class Deserialize : TreeDataDeserializeRule<TreeDataByteSequence, AData>
-		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
-			{
-				//假设数字是32位哈希码
-				Type type = null;
-
-				//读取类型码
-				//self.ReadUnmanaged(out int typeCode); 
-
-				//通过类型码获取类型
-				//self.GetType(typeCode,out  type)
-
-				//是本身类型
-				if (typeof(AData) == type)
-				{
-					//正常读取流程
-				}
-				//不是本身类型，判断是否是子类型
-				else if (type.BaseType == typeof(AData))
-				{
-					//读取指针回退，类型码
-					self.ReadBack(Unsafe.SizeOf<int>());
-					//子类型读取
-					self.ReadValue(type, ref value);
-				}
-				else if (self != null)//是否为可转换类型
-				{
-					//读取指针回退，类型码
-					self.ReadBack(Unsafe.SizeOf<int>());
-					//可转换类型读取,例如int转long
-					self.ReadValue(type, ref value);
-				}
-				else
-				{
-					//不是本身类型，也不是子类型，也不是可转换类型，跳跃数据，应该能写成一个通用方法
-
-				}
-
-
-
-
-
-				AData data = (AData)value;
-
-				////object类型 
-				////类型名称
-				//self.ReadUnmanaged(out int typeCode); //假设数字是32位哈希码
-
-
-
-
-				//AData的字段名称1
-				self.ReadUnmanaged(out int FName);
-				if (!self.ContainsNameCode(101)) self.AddNameCode(101, nameof(data.AInt));
-
-				//value类型
-				//类型名称
-				self.WriteUnmanaged(1011);
-				if (!self.ContainsTypeCode(1011)) self.AddTypeCode(1011, typeof(int));
-
-				//字段值
-				self.WriteUnmanaged(data.AInt);
-
-				switch (FName)
-				{
-					case 101:
-						self.ReadValue(ref data.AInt);
-						break;
-					default:
-						break;
-				}
-			}
-		}
-	}
-
-
-
-
-
-	public static class TreeDataByteSequenceRule
-	{
-		class AddRule : AddRule<TreeDataByteSequence>
-		{
-			protected override void Execute(TreeDataByteSequence self)
-			{
-				self.GetBaseRule<TreeDataByteSequence, ByteSequence, Add>().Send(self);
-			}
-		}
-	}
 
 	/// <summary>
 	/// 树数据类型
@@ -163,37 +22,91 @@ namespace WorldTree
 		/// <summary>
 		/// 基础值类型
 		/// </summary>
-		public static HashSet<Type> TypeHash = new()
+		public static Dictionary<Type, int> TypeDict = new()
 		{
-			typeof(int)
-
+			[typeof(bool)] = 1,
+			[typeof(byte)] = 1,
+			[typeof(sbyte)] = 1,
+			[typeof(short)] = 2,
+			[typeof(ushort)] = 2,
+			[typeof(uint)] = 4,
+			[typeof(int)] = 4,
+			[typeof(long)] = 8,
+			[typeof(ulong)] = 8,
+			[typeof(float)] = 4,
+			[typeof(double)] = 8,
+			[typeof(decimal)] = 16,
+			[typeof(char)] = 4,
 		};
-
 	}
 
+
+	public static class TreeDataByteSequenceRule
+	{
+		class AddRule : AddRule<TreeDataByteSequence>
+		{
+			protected override void Execute(TreeDataByteSequence self)
+			{
+				self.GetBaseRule<TreeDataByteSequence, ByteSequence, Add>().Send(self);
+
+				self.Core.PoolGetUnit(out self.TypeToCodeDict);
+				self.Core.PoolGetUnit(out self.CodeToTypeDict);
+				self.Core.PoolGetUnit(out self.codeToTypeNameDict);
+				self.Core.PoolGetUnit(out self.codeToNameDict);
+			}
+		}
+
+		class RemoveRule : RemoveRule<TreeDataByteSequence>
+		{
+			protected override void Execute(TreeDataByteSequence self)
+			{
+				self.indexCode = 0;
+
+				self.TypeToCodeDict.Dispose();
+				self.CodeToTypeDict.Dispose();
+				self.codeToTypeNameDict.Dispose();
+				self.codeToNameDict.Dispose();
+
+			}
+		}
+	}
 
 	/// <summary>
 	/// 树数据字节序列
 	/// </summary>
 	public class TreeDataByteSequence : ByteSequence
-		, AsRule<ITreeDataSerialize>
-		, AsRule<ITreeDataDeserialize>
+		, AsRule<TreeDataSerialize>
+		, AsRule<TreeDataDeserialize>
 	{
+		/// <summary>
+		/// 短类型名称正则表达式
+		/// </summary>
+		public static Regex ShortTypeNameRegex = new Regex(@", Version=\d+.\d+.\d+.\d+, Culture=[\w-]+, PublicKeyToken=(?:null|[a-f0-9]{16})", RegexOptions.Compiled);
+
+		/// <summary>
+		/// 累计类型码
+		/// </summary>
+		public int indexCode;
+
+		/// <summary>
+		/// 类型对应类型码字典，32哈希码对应
+		/// </summary>
+		public UnitDictionary<Type, int> TypeToCodeDict;
+
 		/// <summary>
 		/// 类型码对应名称字典，32哈希码对应
 		/// </summary>
 		public UnitDictionary<int, Type> CodeToTypeDict;
 
 		/// <summary>
-		/// 泛型类型码
+		/// 类型码对应类型名称字典，32哈希码对应
 		/// </summary>
-		public HashSet<int> GenericsTypeCodeHash;
+		public UnitDictionary<int, string> codeToTypeNameDict;
 
 		/// <summary>
 		/// 字段码对应名称字典，32哈希码对应，代码生成直接使用int对比
 		/// </summary>
 		public UnitDictionary<int, string> codeToNameDict;
-
 
 		/// <summary>
 		/// 类型码判断
@@ -207,12 +120,88 @@ namespace WorldTree
 		public bool ContainsNameCode(int nameCode)
 			=> codeToNameDict.ContainsKey(nameCode);
 
+
 		/// <summary>
-		/// 添加类型码
+		/// 序列化
 		/// </summary>
-		public void AddTypeCode(int typeCode, Type type)
+		/// <typeparam name="T"></typeparam>
+		/// <param name="value"></param>
+		public void Serialize<T>(in T value)
 		{
-			CodeToTypeDict.Add(typeCode, type);
+			WriteValue(typeof(T), ref Unsafe.AsRef<object>(value));
+			int startPoint = Length;
+			//写入类型码
+
+			//写入类型数量
+			WriteUnmanaged(TypeToCodeDict.Count);
+			foreach (var item in TypeToCodeDict)
+			{
+				WriteUnmanaged(item.Value);
+				WriteString(ShortTypeNameRegex.Replace(item.Key.AssemblyQualifiedName, ""));
+			}
+			//写入字段数量
+			WriteUnmanaged(codeToNameDict.Count);
+			foreach (var item in codeToNameDict)
+			{
+				WriteUnmanaged(item.Key);
+				WriteString(item.Value);
+			}
+			//写入映射表起始位置
+			WriteUnmanaged(length - startPoint);
+		}
+
+		/// <summary>
+		/// 反序列化
+		/// </summary>
+		public unsafe void Deserialize<T>(ref T value)
+		{
+			//读取指针定位到最后
+			readPoint = length;
+			readBytePoint = 0;
+			readSegmentPoint = segmentList.Count;
+			//回退4位
+			ReadBack(4);
+			//读取映射表起始位置距离
+			ReadUnmanaged(out int offset);
+			//回退到映射表起始位置
+			ReadBack(offset + 4);
+
+			//读取类型数量
+			ReadUnmanaged(out int typeCount);
+			for (int i = 0; i < typeCount; i++)
+			{
+				ReadUnmanaged(out int typeCode);
+				string typeName = ReadString();
+				codeToTypeNameDict.Add(typeCode, typeName);
+			}
+			//读取字段数量
+			ReadUnmanaged(out int nameCount);
+			for (int i = 0; i < nameCount; i++)
+			{
+				ReadUnmanaged(out int nameCode);
+				string name = ReadString();
+				codeToNameDict.Add(nameCode, name);
+			}
+
+			//读取指针定位到数据起始位置
+			readPoint = 0;
+			readBytePoint = 0;
+			readSegmentPoint = 0;
+			//读取数据
+			ReadValue(typeof(T), ref Unsafe.AsRef<object>(Unsafe.AsPointer(ref value)));
+		}
+
+		/// <summary>
+		/// 添加类型
+		/// </summary>
+		public int AddTypeCode(Type type)
+		{
+			if (!TypeToCodeDict.TryGetValue(type, out int typeCode))
+			{
+				typeCode = indexCode;
+				TypeToCodeDict.Add(type, indexCode++);
+			}
+			return typeCode;
 		}
 
 		/// <summary>
@@ -223,8 +212,30 @@ namespace WorldTree
 			codeToNameDict.Add(nameCode, name);
 		}
 
+		/// <summary>
+		/// 尝试获取字段名称
+		/// </summary>
+		public void TryGetName(int nameCode, out string name)
+		{
+			codeToNameDict.TryGetValue(nameCode, out name);
+		}
 
-
+		/// <summary>
+		/// 尝试获取类型
+		/// </summary>
+		public bool TryGetType(int typeCode, out Type type)
+		{
+			if (!CodeToTypeDict.TryGetValue(typeCode, out type))
+			{
+				if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
+				{
+					type = System.Type.GetType(typeName);
+					CodeToTypeDict.Add(typeCode, type);
+					return true;
+				}
+			}
+			return false;
+		}
 
 		/// <summary>
 		/// 写入值
@@ -242,7 +253,7 @@ namespace WorldTree
 		{
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
-			if (this.Core.RuleManager.TryGetRuleList<ITreeDataSerialize>(typeCode, out RuleList ruleList))
+			if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList))
 			{
 				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref value);
 			}
@@ -266,7 +277,7 @@ namespace WorldTree
 		{
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
-			if (this.Core.RuleManager.TryGetRuleList<ITreeDataSerialize>(typeCode, out RuleList ruleList))
+			if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
 			{
 				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value);
 			}

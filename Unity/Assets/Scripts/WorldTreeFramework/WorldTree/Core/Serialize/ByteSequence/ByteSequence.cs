@@ -10,6 +10,7 @@ using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace WorldTree
 {
@@ -21,6 +22,12 @@ namespace WorldTree
 		, AsComponentBranch
 		, TempOf<INode>
 	{
+
+		/// <summary>
+		/// 字符串编码
+		/// </summary>
+		public bool Utf8 = true;
+
 		/// <summary>
 		/// 序列段列表
 		/// </summary>
@@ -50,35 +57,35 @@ namespace WorldTree
 		{
 			get { return writeCurrent.Length; }
 
-			set
-			{
-				if (writeCurrent.Length == value) return;
+			//set
+			//{
+			//	if (writeCurrent.Length == value) return;
 
-				if (value < 0 || value > writeCurrent.Length) this.LogError("写入指针越界");
-				length += value - writeCurrent.Length;
-				writeCurrent.SetPoint(value);
-			}
+			//	if (value < 0 || value > writeCurrent.Length) this.LogError("写入指针越界");
+			//	length += (value - writeCurrent.Length);
+			//	writeCurrent.SetPoint(value);
+			//}
 		}
 
 		/// <summary>
 		/// 数据长度
 		/// </summary>
-		private int length = 0;
+		protected int length = 0;
 
 		/// <summary>
 		/// 读取片段指针
 		/// </summary>
-		private int readSegmentPoint = 0;
+		protected int readSegmentPoint = 0;
 
 		/// <summary>
 		/// 读取byte指针
 		/// </summary>
-		private int readBytePoint = 0;
+		protected int readBytePoint = 0;
 
 		/// <summary>
 		/// 读取总指针
 		/// </summary>
-		private int readPoint = 0;
+		protected int readPoint = 0;
 
 		/// <summary>
 		/// 租用缓冲区
@@ -144,6 +151,19 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 写入指针回退
+		/// </summary>
+		/// <param name="sizeHint"></param>
+		public void WriteBack(int sizeHint)
+		{
+			if (sizeHint <= 0) return;
+			if (writeCurrent.IsNull) this.LogError("序列已经到达开头");
+			if (writeCurrent.Length - sizeHint < 0) this.LogError("回退长度超出数据长度");
+			writeCurrent.Advance(-sizeHint);
+			length -= sizeHint;
+		}
+
+		/// <summary>
 		/// 读取指针回退
 		/// </summary>
 		public void ReadBack(int sizeHint)
@@ -154,7 +174,7 @@ namespace WorldTree
 			readPoint -= sizeHint;
 			while (sizeHint != 0)
 			{
-				ByteSequenceSegment nowSegment = segmentList[readSegmentPoint];
+				ByteSequenceSegment nowSegment;
 				if (readBytePoint == 0)
 				{
 					readSegmentPoint--;
@@ -390,6 +410,100 @@ namespace WorldTree
 			Unsafe.CopyBlockUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<int>()), ref src, (uint)srcLength);
 		}
 
+
+		/// <summary>
+		/// 写入字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteString(string value)
+		{
+			if (Utf8)
+			{
+				WriteUtf8(value);
+			}
+			else
+			{
+				WriteUtf16(value);
+			}
+		}
+
+		/// <summary>
+		/// 写入字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteUtf16(string value)
+		{
+			if (value == null)
+			{
+				WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
+				return;
+			}
+			if (value.Length == 0)
+			{
+				WriteUnmanaged(0);
+				return;
+			}
+
+
+			//获取字符串长度,因为 UTF-16 编码的每个字符占用 2 个字节，checked 防止溢出int值
+			var copyByteCount = checked(value.Length * 2);
+
+			//这行代码获取一个引用，指向一个足够大的缓冲区，以容纳字符串的字节数和额外的 4 个字节。
+			ref byte dest = ref GetWriteRefByte(copyByteCount + 4);
+			//这行代码将字符串的长度（以字符为单位）写入缓冲区的前 4 个字节
+			Unsafe.WriteUnaligned(ref dest, value.Length);
+
+			//这行代码将字符串的实际字节数据复制到缓冲区中，跳过前 4 个字节
+			MemoryMarshal.AsBytes(value.AsSpan()).CopyTo(MemoryMarshal.CreateSpan(ref Unsafe.Add(ref dest, 4), copyByteCount));
+		}
+
+		/// <summary>
+		/// 写入字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteUtf8(string value)
+		{
+			if (value == null)
+			{
+				WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
+				return;
+			}
+			if (value.Length == 0)
+			{
+				WriteUnmanaged(0);
+				return;
+			}
+
+			// (int utf16-length, int utf8-byte-count, utf8-bytes)
+			ReadOnlySpan<char> source = value.AsSpan();
+			// UTF8.GetMaxByteCount -> (length + 1) * 3
+			int maxByteCount = (source.Length + 1) * 3;
+
+			// write utf16-length ，字符长度
+			//WriteUnmanaged(source.Length);
+
+			//申请总空间，包含utf8长度和数据
+
+			// 由于不知道空间大小，所以字符数*3只是获取一个可能的最大空间，字符最小可能是只占1个字节
+			// 头部需要写入byte真实长度，int长度偏移+4
+			ref byte destPointer = ref GetWriteRefByte(maxByteCount + 4);
+
+			//申请数据空间，byte长度int要写到头部，所以要偏移4
+			Span<byte> dest = MemoryMarshal.CreateSpan(ref Unsafe.Add(ref destPointer, 4), maxByteCount);
+
+			// 数据写入到dest，此时拿到了byte的真实长度
+			int bytesWritten = Encoding.UTF8.GetBytes(value, dest);
+
+			// 在头部写入 真实长度，取反用于区分8位和16位
+			int nbytesWritten = ~bytesWritten;
+			Unsafe.WriteUnaligned(ref destPointer, nbytesWritten);
+			//~0 的结果是 -1，但前面if挡住了，所以不会出现-1，所以可以用来区分8位和16位
+
+			// 重新定位指针，裁剪空间
+			WriteBack(maxByteCount - bytesWritten);
+		}
+
+
 		#endregion
 
 		#region 读取
@@ -470,6 +584,86 @@ namespace WorldTree
 
 			ref var src = ref Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(value.AsSpan()));
 			Unsafe.CopyBlockUnaligned(ref src, ref spanRef, (uint)byteCount);
+		}
+
+		/// <summary>
+		/// 读取字符串
+		/// </summary>
+		public string ReadString()
+		{
+			if (ReadUnmanaged(out int length) == ValueMarkCode.NULL_OBJECT)
+			{
+				return null;
+			}
+			else if (length == 0)
+			{
+				return string.Empty;
+			}
+
+			if (length > 0)
+			{
+				return ReadUtf16(length);
+			}
+			else
+			{
+				return ReadUtf8(length);
+			}
+		}
+
+		/// <summary>
+		/// 读取字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public string ReadUtf16(int length)
+		{
+			if (ReadRemain < length)
+			{
+				this.LogError($"字符串长度超出数据长度: {length}.");
+				return null;
+			}
+			int byteCount = checked(length * 2);
+			ref byte src = ref GetReadRefByte(byteCount);
+			return new string(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.As<byte, char>(ref src), length));
+		}
+
+
+		/// <summary>
+		/// 读取字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.NoInlining)] // non default, no inline
+		public string ReadUtf8(int length)
+		{
+			length = ~length;
+			if (ReadRemain < length)
+			{
+				this.LogError($"字符串长度超出数据长度: {length}.");
+				return null;
+			}
+
+			// 获取总数据，包含utf8长度和数据
+			//*3只是一个可能的最大空间，字符最小可能是只占1个字节
+
+			//读取 utf8ByteLength
+			//var utf8BytesLength = ReadUnmanaged<int>();
+
+			ref var spanRef = ref GetReadRefByte(length);
+
+			if (length <= 0)
+			{
+				ReadOnlySpan<byte> src = MemoryMarshal.CreateReadOnlySpan(ref spanRef, length);
+				return Encoding.UTF8.GetString(src);
+			}
+			else
+			{
+				//if (ReadRemain < utf8BytesLength)
+				//{
+				//	this.LogError($"字符串长度超出数据长度: {utf8BytesLength}.");
+				//	return null;
+				//}
+
+				ReadOnlySpan<byte> src = MemoryMarshal.CreateReadOnlySpan(ref spanRef, length);
+				return Encoding.UTF8.GetString(src);
+			}
 		}
 
 		#endregion

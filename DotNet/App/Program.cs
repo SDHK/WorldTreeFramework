@@ -24,6 +24,7 @@ namespace WorldTree
 			core.Root.AddComponent(out Entry _);
 
 			Type ruleType = typeof(EntryRule);//防止程序集被优化掉
+			Type nodeType = typeof(DotNetInit);
 		}
 	}
 }
