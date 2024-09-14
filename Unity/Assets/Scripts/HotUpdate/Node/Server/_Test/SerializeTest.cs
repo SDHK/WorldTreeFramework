@@ -48,7 +48,7 @@ namespace WorldTree
 	/// </summary>
 	[TreePack]
 	public partial struct NodeClassDataTest1<T1, T2>
-		where T1 : unmanaged
+		//where T1 : unmanaged
 	{
 		/// <summary>
 		/// ²âÊÔÕûÊı

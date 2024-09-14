@@ -9,6 +9,8 @@ namespace WorldTree
 	{
 		static OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
+			self.Log($"TreeDataTestRule  {typeof(int[,])}");
+
 			AData data = new AData();
 
 			data.AInt = 401;

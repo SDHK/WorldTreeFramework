@@ -8,8 +8,11 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Xml.Linq;
 
 namespace WorldTree
 {
@@ -20,7 +23,7 @@ namespace WorldTree
 	public static class TreeDataType
 	{
 		/// <summary>
-		/// 基础值类型
+		/// 基础值类型,字节长度
 		/// </summary>
 		public static Dictionary<Type, int> TypeDict = new()
 		{
@@ -37,6 +40,26 @@ namespace WorldTree
 			[typeof(double)] = 8,
 			[typeof(decimal)] = 16,
 			[typeof(char)] = 4,
+		};
+
+		/// <summary>
+		/// 基础类型数组
+		/// </summary>
+		public static Dictionary<Type, int> ArrayTypeDict = new()
+		{
+			[typeof(bool[])] = 1,
+			[typeof(byte[])] = 1,
+			[typeof(sbyte[])] = 1,
+			[typeof(short[])] = 2,
+			[typeof(ushort[])] = 2,
+			[typeof(uint[])] = 4,
+			[typeof(int[])] = 4,
+			[typeof(long[])] = 8,
+			[typeof(ulong[])] = 8,
+			[typeof(float[])] = 4,
+			[typeof(double[])] = 8,
+			[typeof(decimal[])] = 16,
+			[typeof(char[])] = 4,
 		};
 	}
 
@@ -78,12 +101,12 @@ namespace WorldTree
 		public static Regex ShortTypeNameRegex = new Regex(@", Version=\d+.\d+.\d+.\d+, Culture=[\w-]+, PublicKeyToken=(?:null|[a-f0-9]{16})", RegexOptions.Compiled);
 
 		/// <summary>
-		/// 类型对应类型码字典，32哈希码对应
+		/// 类型对应类型码字典，64哈希码对应
 		/// </summary>
 		public UnitDictionary<Type, long> TypeToCodeDict;
 
 		/// <summary>
-		/// 类型码对应类型名称字典，32哈希码对应
+		/// 类型码对应类型名称字典，64哈希码对应
 		/// </summary>
 		public UnitDictionary<long, string> codeToTypeNameDict;
 
@@ -92,11 +115,60 @@ namespace WorldTree
 		/// </summary>
 		public UnitDictionary<int, string> codeToNameDict;
 
+		#region 映射表
 		/// <summary>
 		/// 名称码判断
 		/// </summary>
 		public bool ContainsNameCode(int nameCode)
 			=> codeToNameDict.ContainsKey(nameCode);
+
+		/// <summary>
+		/// 添加类型
+		/// </summary>
+		private long AddTypeCode(Type type)
+		{
+			if (!TypeToCodeDict.TryGetValue(type, out long typeCode))
+			{
+				typeCode = this.TypeToCode(type);
+				TypeToCodeDict.Add(type, typeCode);
+			}
+			return typeCode;
+		}
+
+		/// <summary>
+		/// 添加名称码
+		/// </summary>
+		public void AddNameCode(int nameCode, string name)
+		{
+			codeToNameDict.Add(nameCode, name);
+		}
+
+		/// <summary>
+		/// 尝试获取字段名称
+		/// </summary>
+		public void TryGetName(int nameCode, out string name)
+		{
+			codeToNameDict.TryGetValue(nameCode, out name);
+		}
+
+		/// <summary>
+		/// 尝试获取类型
+		/// </summary>
+		private bool TryGetType(long typeCode, out Type type)
+		{
+			if (!this.TryCodeToType(typeCode, out type))
+			{
+				if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
+				{
+					this.TypeToCode(System.Type.GetType(typeName));
+					return true;
+				}
+			}
+			return false;
+		}
+
+		#endregion
+
 
 
 		/// <summary>
@@ -105,7 +177,7 @@ namespace WorldTree
 		public void Serialize<T>(in T value)
 		{
 			//写入数据
-			WriteValue(typeof(T), ref Unsafe.AsRef<object>(value));
+			WriteValue(typeof(T), value);
 
 			//记录映射表起始位置
 			int startPoint = Length;
@@ -176,72 +248,69 @@ namespace WorldTree
 			ReadValue(typeof(T), ref Unsafe.AsRef<object>(Unsafe.AsPointer(ref value)));
 		}
 
-		/// <summary>
-		/// 添加类型
-		/// </summary>
-		public long AddTypeCode(Type type)
-		{
-			if (!TypeToCodeDict.TryGetValue(type, out long typeCode))
-			{
-				typeCode = this.TypeToCode(type);
-				TypeToCodeDict.Add(type, typeCode);
-			}
-			return typeCode;
-		}
-
-		/// <summary>
-		/// 添加名称码
-		/// </summary>
-		public void AddNameCode(int nameCode, string name)
-		{
-			codeToNameDict.Add(nameCode, name);
-		}
-
-		/// <summary>
-		/// 尝试获取字段名称
-		/// </summary>
-		public void TryGetName(int nameCode, out string name)
-		{
-			codeToNameDict.TryGetValue(nameCode, out name);
-		}
-
-		/// <summary>
-		/// 尝试获取类型
-		/// </summary>
-		public bool TryGetType(long typeCode, out Type type)
-		{
-			if (!this.TryCodeToType(typeCode, out type))
-			{
-				if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
-				{
-					this.TypeToCode(System.Type.GetType(typeName));
-					return true;
-				}
-			}
-			return false;
-		}
+		#region 写入
 
 		/// <summary>
 		/// 写入值
 		/// </summary>
 		public void WriteValue<T>(in T value)
 		{
-			WriteValue(typeof(T), ref Unsafe.AsRef<object>(value));
+			WriteValue(typeof(T), value);
+		}
+		/// <summary>
+		/// 写入类型
+		/// </summary>
+		public void WriteType(Type type)
+		{
+			WriteUnmanaged(AddTypeCode(type));
 		}
 
 		/// <summary>
 		/// 写入值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteValue(Type type, ref object value)
+		public void WriteValue(Type type, in object value)
 		{
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList))
 			{
-				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref value);
+				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 			}
 		}
+		/// <summary>
+		/// 写入数组
+		/// </summary>
+		public void WriteArray<T>(T[] array)
+		{
+			Type type = typeof(T[]);
+			WriteType(type);
+			if (array == null) //空对象
+			{
+				WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);
+				return;
+			}
+
+			//基础数组类型
+			if (TreeDataType.ArrayTypeDict.ContainsKey(type))
+			{
+				DangerousWriteUnmanagedArray(array);
+			}
+			else
+			{
+				WriteUnmanaged(array.Length);
+				foreach (var item in array)
+				{
+					WriteValue(typeof(T), item);
+				}
+			}
+		}
+
+
+
+		#endregion
+
+		#region 读取
 
 		/// <summary>
 		/// 读取值
@@ -258,11 +327,142 @@ namespace WorldTree
 		/// </summary>
 		public void ReadValue(Type type, ref object value)
 		{
+
+			//需要动态支持多维数组
+
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
 			{
 				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value);
+			}
+		}
+
+		/// <summary>
+		/// 读取数组：通用反序列化
+		/// </summary>
+		public void ReadArray<T>(ref T[] array)
+		{
+			Type type = typeof(T[]);
+
+			long typeCode = this.Core.TypeToCode(type);
+			this.Core.RuleManager.SupportNodeRule(typeCode);
+
+			//读取字段数量
+			ReadUnmanaged(out int count);
+			//空对象判断
+			if (count == ValueMarkCode.NULL_OBJECT)
+			{
+				array = null;
+				return;
+			}
+			//为0的情况下，是数组，但是数组长度为0
+			if (count == 0) return;
+
+			if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
+			{
+				//((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref array);
+			}
+		}
+
+
+		/// <summary>
+		/// 读取类型
+		/// </summary>
+		public bool TryReadType(out Type type)
+		{
+			ReadUnmanaged(out long typeCode);
+			return TryGetType(typeCode, out type);
+		}
+
+		/// <summary>
+		/// 尝试以子类型读取
+		/// </summary>
+		public void SubTypeReadValue(Type type, Type targetType, ref object value)
+		{
+			bool isSubType = false;
+			Type baseType = targetType.BaseType;
+			if (targetType.IsInterface)
+			{
+				while (baseType != null && baseType != typeof(object))
+				{
+					if (baseType == targetType)
+					{
+						isSubType = true;
+						break;
+					}
+					baseType = type.BaseType;
+				}
+			}
+			else //接口
+			{
+				Type[] interfaces = type.GetInterfaces();
+				foreach (var interfaceType in interfaces)
+				{
+					if (interfaceType == targetType)
+					{
+						isSubType = true;
+						break;
+					}
+				}
+			}
+			if (isSubType)//是子类型
+			{
+				//读取指针回退，类型码
+				ReadBack(8);
+				//子类型读取
+				ReadValue(type, ref value);
+			}
+			else //不是本身类型，也不是子类型，也不是可转换类型，跳跃数据。
+			{
+				//读取指针回退，类型码
+				ReadBack(8);
+				//跳跃数据
+				SkipData();
+			}
+		}
+
+		#endregion
+
+
+		/// <summary>
+		/// 跳跃数据，漏了多维数组
+		/// </summary>
+		public void SkipData()
+		{
+			//读取类型，是基础类型直接跳跃。
+			if (TryReadType(out Type type) && TreeDataType.TypeDict.TryGetValue(type, out int byteCount))
+			{
+				ReadSkip(byteCount);
+				return;
+			}
+
+			//读取字段数量
+			ReadUnmanaged(out int count);
+			//空对象判断
+			if (count == ValueMarkCode.NULL_OBJECT) return;
+			//为0的情况下，是数组，但是数组长度为0
+			if (count == 0) return;
+
+			//Type不存在的情况下，负数为普通类型
+			if (count < 0)
+			{
+				count = ~count;
+				for (int i = 0; i < count; i++)
+				{
+					//读取字段名称码
+					ReadSkip(4);
+					SkipData();
+				}
+			}
+			else if (TreeDataType.ArrayTypeDict.TryGetValue(type, out int arrayByteCount))
+			{
+				//基础数组类型，直接跳跃
+				ReadSkip(arrayByteCount * count);
+			}
+			else
+			{
+				for (int i = 0; i < count; i++) SkipData();
 			}
 		}
 	}
