@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>WorldTree</RootNamespace>
     <Nullable>disable</Nullable>
+    <RootNamespace>WorldTree</RootNamespace>
     <LangVersion>12</LangVersion>
     <AssemblyName>Node</AssemblyName>
   </PropertyGroup>
@@ -21,7 +21,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>DOTNET</DefineConstants>
     <OutputPath>..\..\Bin\</OutputPath>
-    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <!--元素用于控制编译器是否对生成的代码进行优化。-->
     <Optimize>false</Optimize>
     <!--<NoWarn>0169,0649,3021,8981,CS9193,CS9192</NoWarn>-->
@@ -31,7 +31,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>DOTNET</DefineConstants>
     <OutputPath>..\..\Bin\</OutputPath>
-    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <!--<NoWarn>0169,0649,3021,8981,CS9193,CS9192</NoWarn>-->
   </PropertyGroup>
 
@@ -50,4 +50,4 @@
     <ProjectReference Include="..\Core\DotNet.Core.csproj" />
   </ItemGroup>
 </Project>
-         
+             

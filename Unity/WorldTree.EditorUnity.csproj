@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ComponentBindItem.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\LongViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\SystemBase\EditorWindowSystem.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ManualScriptCompiler.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\IntViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\ToolKitWindow.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\UIFormEditor.cs" />
@@ -107,7 +108,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\ScriptableEditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\DateTimeViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\BoundsViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ManualScriptCompiler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ThirdParty\HybridCLR\Generate\link.xml" />

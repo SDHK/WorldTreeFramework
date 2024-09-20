@@ -73,6 +73,8 @@ namespace WorldTree.Analyzer
 			//后端配置
 			{ "App",CoreConfigs},
 			{ "Core",CoreConfigs},
+			{ "Node",NodeConfigs},
+			{ "Rule",RuleConfigs},
 
 			//前端限制
 			{ "WorldTree.Core",CoreConfigs},

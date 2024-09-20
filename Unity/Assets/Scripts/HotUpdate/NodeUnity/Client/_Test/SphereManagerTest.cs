@@ -7,6 +7,7 @@ namespace WorldTree
 	/// </summary>
 	public class SphereManagerTest : Node
 		, ComponentOf<InitialDomain>
+		, AsNumberNodeBranch
 		, AsAwake
 	{
 		/// <summary>
@@ -24,7 +25,7 @@ namespace WorldTree
 		/// <summary>
 		/// 生成数量
 		/// </summary>
-		public int spawnCount = 7000;
+		public int spawnCount = 1000;
 		/// <summary>
 		/// 球体
 		/// </summary>

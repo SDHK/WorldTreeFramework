@@ -9,6 +9,7 @@ namespace WorldTree
 	/// </summary>
 	public class SphereTest : Node
 		, AsAwake
+		,NumberNodeOf<SphereManagerTest>
 	{
 		/// <summary>
 		/// 球体

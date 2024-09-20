@@ -92,8 +92,8 @@ namespace WorldTree
 	/// 树数据字节序列
 	/// </summary>
 	public class TreeDataByteSequence : ByteSequence
-		, AsRule<TreeDataSerialize>
-		, AsRule<TreeDataDeserialize>
+		, AsRule<ITreeDataSerialize>
+		, AsRule<ITreeDataDeserialize>
 	{
 		/// <summary>
 		/// 短类型名称正则表达式
@@ -290,20 +290,23 @@ namespace WorldTree
 				WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);
 				return;
 			}
-
-			//基础数组类型
-			if (TreeDataType.ArrayTypeDict.ContainsKey(type))
+			if (type.IsArray)
 			{
-				DangerousWriteUnmanagedArray(array);
-			}
-			else
-			{
-				WriteUnmanaged(array.Length);
-				foreach (var item in array)
+				//基础数组类型
+				if (TreeDataType.TypeDict.ContainsKey(type.GetElementType()))
 				{
-					WriteValue(typeof(T), item);
+					//DangerousWriteUnmanagedArray(array);
+				}
+				else
+				{
+					WriteUnmanaged(array.Length);
+					foreach (var item in array)
+					{
+						WriteValue(typeof(T), item);
+					}
 				}
 			}
+
 		}
 
 
@@ -426,10 +429,13 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 跳跃数据，漏了多维数组
+		/// 跳跃数据
 		/// </summary>
 		public void SkipData()
 		{
+			
+
+
 			//读取类型，是基础类型直接跳跃。
 			if (TryReadType(out Type type) && TreeDataType.TypeDict.TryGetValue(type, out int byteCount))
 			{
@@ -441,8 +447,6 @@ namespace WorldTree
 			ReadUnmanaged(out int count);
 			//空对象判断
 			if (count == ValueMarkCode.NULL_OBJECT) return;
-			//为0的情况下，是数组，但是数组长度为0
-			if (count == 0) return;
 
 			//Type不存在的情况下，负数为普通类型
 			if (count < 0)
@@ -455,14 +459,32 @@ namespace WorldTree
 					SkipData();
 				}
 			}
-			else if (TreeDataType.ArrayTypeDict.TryGetValue(type, out int arrayByteCount))
+			else if (type.IsArray)
 			{
-				//基础数组类型，直接跳跃
-				ReadSkip(arrayByteCount * count);
+				//总长度
+				int totalLength = 0;
+				for (int i = 0; i < count; i++)
+				{
+					ReadUnmanaged(out int length);
+					totalLength *= length;
+				}
+				//为0的情况下，是数组，但是数组长度为0
+				if (totalLength == 0) return;
+				if (TreeDataType.TypeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
+				{
+					//基础数组类型，直接跳跃
+					ReadSkip(arrayByteCount * totalLength);
+				}
+				else
+				{
+					//非基础数组类型，递归跳跃
+					for (int i = 0; i < totalLength; i++) SkipData();
+				}
 			}
 			else
 			{
-				for (int i = 0; i < count; i++) SkipData();
+				//错误数据，报错
+				this.LogError($"数据错误: {type}");
 			}
 		}
 	}

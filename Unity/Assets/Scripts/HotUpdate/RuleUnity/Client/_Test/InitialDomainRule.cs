@@ -22,13 +22,13 @@ namespace WorldTree
 
 		static OnUpdate<InitialDomain> OnUpdate = (self) =>
 		{
-			self.Log($"初始域更新！！!");
+			//self.Log($"初始域更新！！!");
 
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
 
-				self.Root.AddComponent(out CodeLoader _).HotReload();
-				//self.AddComponent(out SerializeTest _);
+				//self.Root.AddComponent(out CodeLoader _).HotReload();
+				self.AddComponent(out SerializeTest _);
 			}
 		};
 

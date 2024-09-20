@@ -1,39 +1,11 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 namespace WorldTree.TreeDataFormats
 {
 	public static class IntFormatRule
 	{
-		//泛型一维
-		class ArraySerialize : TreeDataSerializeRule<TreeDataByteSequence, int[]>
-		{
-			protected override void Execute(TreeDataByteSequence self, ref object arg1)
-			{
-				self.WriteType(typeof(int[]));
-				self.DangerousWriteUnmanagedArray((int[])arg1);
-			}
-		}
 
-		class ArrayDeserialize : TreeDataDeserializeRule<TreeDataByteSequence, int[]>
-		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value)
-			{
-				self.TryReadType(out Type type);
-				if (type == typeof(int[]))
-				{
-					self.DangerousReadUnmanagedArray(ref Unsafe.AsRef<int[]>(Unsafe.AsPointer(ref value)));
-				}
-				else
-				{
-					//读取指针回退，类型码
-					self.ReadBack(8);
-					//跳跃数据
-					self.SkipData();
-				}
-			}
-		}
 
 		class Serialize : TreeDataSerializeRule<TreeDataByteSequence, int>
 		{

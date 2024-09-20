@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\MoveAreaLimiter.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MailTest.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\GamePlayMode.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MonoComponentTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\AOT\GameEntry\GameEntry.asmdef" />

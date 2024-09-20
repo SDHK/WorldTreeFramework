@@ -10,17 +10,26 @@ using System;
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 树数据序列化非托管法则
-	/// </summary>
-	public interface TreeDataSerialize : ISendRefRule<object>, ISourceGeneratorIgnore { }
 
 	/// <summary>
-	/// 树数据反序列化非托管法则
+	/// 树包序列化法则接口：用于序列化未知泛型，解除AsRule的法则限制
 	/// </summary>
-	public interface TreeDataDeserialize : ISendRefRule<object>, ISourceGeneratorIgnore { }
+	public interface ITreeDataSerialize : IRule { }
 
+	/// <summary>
+	/// 树包反序列化法则接口：用于反序列化未知泛型，解除AsRule的法则限制
+	/// </summary>
+	public interface ITreeDataDeserialize : IRule { }
 
+	/// <summary>
+	/// 树数据序列化法则
+	/// </summary>
+	public interface TreeDataSerialize : ISendRefRule<object>, ITreeDataSerialize, ISourceGeneratorIgnore { }
+
+	/// <summary>
+	/// 树数据反序列化法则
+	/// </summary>
+	public interface TreeDataDeserialize : ISendRefRule<object>, ITreeDataDeserialize, ISourceGeneratorIgnore { }
 
 	/// <summary>
 	/// 树数据序列化法则基类

@@ -9,6 +9,9 @@ namespace WorldTree
 		, AsComponentBranch
 		, AsAwake
 	{ 
-		public Action action;
+		/// <summary>
+		/// ≤‚ ‘
+		/// </summary>
+		public Action Action;
 	}
 }

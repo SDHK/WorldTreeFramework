@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>WorldTree</RootNamespace>
     <Nullable>disable</Nullable>
+    <RootNamespace>WorldTree</RootNamespace>
     <LangVersion>12</LangVersion>
     <AssemblyName>Rule</AssemblyName>
   </PropertyGroup>
