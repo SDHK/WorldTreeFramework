@@ -10,7 +10,7 @@ namespace WorldTree.TreeDataFormats
 		/// <summary>
 		/// 非托管泛型一维数组序列化基类
 		/// </summary>
-		public abstract class Serialize<T> : TreeDataSerializeRule<TreeDataByteSequence, T[]>
+		public class Serialize<T> : TreeDataSerializeRule<TreeDataByteSequence, T[]>
 			where T : unmanaged
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object arg1)
@@ -51,7 +51,7 @@ namespace WorldTree.TreeDataFormats
 		/// <summary>
 		/// 非托管泛型一维数组反序列化基类
 		/// </summary>
-		public abstract class Deserialize<T> : TreeDataDeserializeRule<TreeDataByteSequence, T[]>
+		public class Deserialize<T> : TreeDataDeserializeRule<TreeDataByteSequence, T[]>
 			where T : unmanaged
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value)

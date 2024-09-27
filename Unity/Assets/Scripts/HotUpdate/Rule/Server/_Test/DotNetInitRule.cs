@@ -14,6 +14,8 @@ using System.Text.RegularExpressions;
 
 namespace WorldTree
 {
+	
+
 	/// <summary>
 	/// DotNetTestNodeRule
 	/// </summary>
@@ -21,8 +23,18 @@ namespace WorldTree
 	{
 		private static OnEnable<DotNetInit> Enable1 = (self) =>
 		{
+			self.TestRule(1.0f, "字符串");
+
+
 			self.Log($"激活！！");
 		};
+
+
+		private static OnTestRule<DotNetInit> TestRule = (self, f, s) =>
+		{
+			self.Log($"测试法则{f} {s}");
+		};
+
 
 		private static OnAdd<DotNetInit> Add = (self) =>
 		{

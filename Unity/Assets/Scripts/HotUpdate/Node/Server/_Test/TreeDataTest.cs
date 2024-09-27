@@ -15,7 +15,10 @@ namespace WorldTree
 		/// </summary>
 		public int AInt = 10;
 
-		
+		/// <summary>
+		/// 测试int数组
+		/// </summary>
+		public int[] Ints;
 	}
 
 	//以下代码需要由工具生成
@@ -41,11 +44,15 @@ namespace WorldTree
 					}
 
 					//写入字段数量
-					self.WriteUnmanaged(~1);
+					self.WriteUnmanaged(~2);
 
 					//AData的字段名称1
 					self.WriteUnmanaged(101);
 					if (!self.ContainsNameCode(101)) self.AddNameCode(101, nameof(data.AInt));
+
+					//AData的字段名称1
+					self.WriteUnmanaged(102);
+					if (!self.ContainsNameCode(102)) self.AddNameCode(102, nameof(data.Ints));
 
 					//value类型
 					//类型名称
@@ -53,6 +60,11 @@ namespace WorldTree
 
 					//字段值
 					self.WriteUnmanaged(data.AInt);
+
+					//self.WriteValue(data.AInt);
+
+
+					self.WriteValue(data.Ints);
 				}
 			}
 
@@ -75,6 +87,7 @@ namespace WorldTree
 					if (typeof(AData) == type)
 					{
 						//判断是否为负数，负数为数组
+						if (count < 0) count = ~count;
 
 						//类型新建和转换
 						if (!(value is AData obj))
@@ -90,6 +103,8 @@ namespace WorldTree
 							switch (nameCode)
 							{
 								case 101: self.ReadValue(ref obj.AInt); break;
+
+								case 102: self.ReadValue(ref obj.Ints); break;
 
 								default://不存在该字段，跳跃数据
 									self.SkipData();

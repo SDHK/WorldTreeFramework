@@ -273,43 +273,15 @@ namespace WorldTree
 		{
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
+
+			//动态支持多维数组
+			if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
+
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList))
 			{
 				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 			}
 		}
-		/// <summary>
-		/// 写入数组
-		/// </summary>
-		public void WriteArray<T>(T[] array)
-		{
-			Type type = typeof(T[]);
-			WriteType(type);
-			if (array == null) //空对象
-			{
-				WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);
-				return;
-			}
-			if (type.IsArray)
-			{
-				//基础数组类型
-				if (TreeDataType.TypeDict.ContainsKey(type.GetElementType()))
-				{
-					//DangerousWriteUnmanagedArray(array);
-				}
-				else
-				{
-					WriteUnmanaged(array.Length);
-					foreach (var item in array)
-					{
-						WriteValue(typeof(T), item);
-					}
-				}
-			}
-
-		}
-
-
 
 		#endregion
 
@@ -330,44 +302,19 @@ namespace WorldTree
 		/// </summary>
 		public void ReadValue(Type type, ref object value)
 		{
-
-			//需要动态支持多维数组
-
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
+
+			//动态支持多维数组
+			if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
+
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
 			{
 				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value);
 			}
 		}
 
-		/// <summary>
-		/// 读取数组：通用反序列化
-		/// </summary>
-		public void ReadArray<T>(ref T[] array)
-		{
-			Type type = typeof(T[]);
-
-			long typeCode = this.Core.TypeToCode(type);
-			this.Core.RuleManager.SupportNodeRule(typeCode);
-
-			//读取字段数量
-			ReadUnmanaged(out int count);
-			//空对象判断
-			if (count == ValueMarkCode.NULL_OBJECT)
-			{
-				array = null;
-				return;
-			}
-			//为0的情况下，是数组，但是数组长度为0
-			if (count == 0) return;
-
-			if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
-			{
-				//((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref array);
-			}
-		}
-
+	
 
 		/// <summary>
 		/// 读取类型
@@ -433,9 +380,6 @@ namespace WorldTree
 		/// </summary>
 		public void SkipData()
 		{
-			
-
-
 			//读取类型，是基础类型直接跳跃。
 			if (TryReadType(out Type type) && TreeDataType.TypeDict.TryGetValue(type, out int byteCount))
 			{
@@ -459,7 +403,7 @@ namespace WorldTree
 					SkipData();
 				}
 			}
-			else if (type.IsArray)
+			else
 			{
 				//总长度
 				int totalLength = 0;
@@ -480,11 +424,6 @@ namespace WorldTree
 					//非基础数组类型，递归跳跃
 					for (int i = 0; i < totalLength; i++) SkipData();
 				}
-			}
-			else
-			{
-				//错误数据，报错
-				this.LogError($"数据错误: {type}");
 			}
 		}
 	}

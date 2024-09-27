@@ -46,7 +46,7 @@ namespace WorldTree.Analyzer
 			new CodeNodeDiagnosticConfig(),
 			new RuleDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
-			new ProjectBanUnitDiagnosticConfig(),
+			//new ProjectBanUnitDiagnosticConfig(),
 			new ObjectDiagnosticConfig()
 		};
 

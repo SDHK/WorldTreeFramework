@@ -5,8 +5,6 @@ namespace WorldTree.TreeDataFormats
 {
 	public static class IntFormatRule
 	{
-
-
 		class Serialize : TreeDataSerializeRule<TreeDataByteSequence, int>
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value)
@@ -15,6 +13,7 @@ namespace WorldTree.TreeDataFormats
 				self.WriteUnmanaged((int)value);
 			}
 		}
+
 		class Deserialize : TreeDataDeserializeRule<TreeDataByteSequence, int>
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value)
