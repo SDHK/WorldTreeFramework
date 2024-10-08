@@ -26,7 +26,7 @@ namespace WorldTree
 			AData data = new AData();
 
 			data.AInt = 401;
-			data.Ints = new int[] { 1, 2, 3, 4, 5 };
+			data.Ints = new int[] { 1, 2, 30, 4, 5 };
 
 			self.AddTemp(out TreeDataByteSequence sequenceWrite).Serialize(data);
 
@@ -41,11 +41,11 @@ namespace WorldTree
 
 			string logText = $"反序列化{data2.AInt} ";
 
-			//logText += $"数组长度{data2.Ints.Length} :";
-			//foreach (var item in data2.Ints)
-			//{
-			//	logText += $"{item} ";
-			//}
+			logText += $"数组长度{data2.Ints.Length} :";
+			foreach (var item in data2.Ints)
+			{
+				logText += $"{item} ";
+			}
 
 			self.Log(logText);
 		};

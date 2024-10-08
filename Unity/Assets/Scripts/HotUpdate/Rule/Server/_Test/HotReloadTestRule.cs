@@ -18,7 +18,7 @@ namespace WorldTree
 			self.Log($" 热重载测试！！！");
 		};
 
-		private static OnUpdate<DotNetInit> Update = (self) =>
+		private static OnUpdate<HotReloadTest> Update = (self) =>
 		{
 			self.Log($"热重载2");
 		};

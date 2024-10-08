@@ -41,26 +41,6 @@ namespace WorldTree
 			[typeof(decimal)] = 16,
 			[typeof(char)] = 4,
 		};
-
-		/// <summary>
-		/// 基础类型数组
-		/// </summary>
-		public static Dictionary<Type, int> ArrayTypeDict = new()
-		{
-			[typeof(bool[])] = 1,
-			[typeof(byte[])] = 1,
-			[typeof(sbyte[])] = 1,
-			[typeof(short[])] = 2,
-			[typeof(ushort[])] = 2,
-			[typeof(uint[])] = 4,
-			[typeof(int[])] = 4,
-			[typeof(long[])] = 8,
-			[typeof(ulong[])] = 8,
-			[typeof(float[])] = 4,
-			[typeof(double[])] = 8,
-			[typeof(decimal[])] = 16,
-			[typeof(char[])] = 4,
-		};
 	}
 
 
@@ -156,11 +136,13 @@ namespace WorldTree
 		/// </summary>
 		private bool TryGetType(long typeCode, out Type type)
 		{
-			if (!this.TryCodeToType(typeCode, out type))
+			if (this.TryCodeToType(typeCode, out type)) return true;
+			if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
 			{
-				if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
-				{
-					this.TypeToCode(System.Type.GetType(typeName));
+				type = System.Type.GetType(typeName);
+				if (type != null)
+				{ 
+					this.TypeToCode(type);
 					return true;
 				}
 			}
@@ -251,7 +233,7 @@ namespace WorldTree
 		#region 写入
 
 		/// <summary>
-		/// 写入值
+		/// 写入值，好像无用，修改成Object
 		/// </summary>
 		public void WriteValue<T>(in T value)
 		{
@@ -314,7 +296,7 @@ namespace WorldTree
 			}
 		}
 
-	
+
 
 		/// <summary>
 		/// 读取类型
