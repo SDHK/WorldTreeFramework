@@ -13,7 +13,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试int
 		/// </summary>
-		public int AInt = 10;
+		public float AInt = 10.1f;
 
 		/// <summary>
 		/// 测试int数组

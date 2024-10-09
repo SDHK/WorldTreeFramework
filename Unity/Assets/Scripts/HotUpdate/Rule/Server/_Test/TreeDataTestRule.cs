@@ -25,7 +25,7 @@ namespace WorldTree
 
 			AData data = new AData();
 
-			data.AInt = 401;
+			data.AInt = 401.5f;
 			data.Ints = new int[][,,]{
 				new int[2,2,5]{ { { 1, 2, 30, 4, 5 }, { 20, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }, { 2, 5, 9, 5, 2 } } },
 				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },

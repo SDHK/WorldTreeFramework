@@ -58,7 +58,7 @@ namespace WorldTree.TreeDataFormats
 						}
 					}
 				}
-				else //当成非托管类型处理
+				else //当成托管类型处理
 				{
 					for (int i = 0; i < dim1; i++)
 					{
@@ -133,7 +133,7 @@ namespace WorldTree.TreeDataFormats
 						}
 					}
 				}
-				else //当成非托管类型处理
+				else //当成托管类型处理
 				{
 					for (int i = 0; i < dim1; i++)
 					{

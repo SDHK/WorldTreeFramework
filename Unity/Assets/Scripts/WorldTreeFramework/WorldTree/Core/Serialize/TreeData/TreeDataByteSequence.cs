@@ -32,14 +32,14 @@ namespace WorldTree
 			[typeof(sbyte)] = 1,
 			[typeof(short)] = 2,
 			[typeof(ushort)] = 2,
-			[typeof(uint)] = 4,
 			[typeof(int)] = 4,
+			[typeof(uint)] = 4,
 			[typeof(long)] = 8,
 			[typeof(ulong)] = 8,
 			[typeof(float)] = 4,
 			[typeof(double)] = 8,
-			[typeof(decimal)] = 16,
 			[typeof(char)] = 4,
+			[typeof(decimal)] = 16,
 		};
 	}
 

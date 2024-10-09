@@ -4,11 +4,10 @@ using System.Runtime.InteropServices;
 
 namespace WorldTree.TreeDataFormats
 {
-
 	public static class Array1FormatRule
 	{
 		/// <summary>
-		/// 托管泛型一维数组序列化
+		/// 泛型一维数组序列化
 		/// </summary>
 		public class Serialize<T> : TreeDataSerializeRule<TreeDataByteSequence, T[]>
 		{
@@ -50,7 +49,7 @@ namespace WorldTree.TreeDataFormats
 					Unsafe.CopyBlockUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<int>()), ref src, (uint)srcLength);
 
 				}
-				else //当成非托管类型处理
+				else //当成托管类型处理
 				{
 					//写入数组数据长度
 					self.WriteUnmanaged(values.Length);
@@ -65,7 +64,7 @@ namespace WorldTree.TreeDataFormats
 		}
 
 		/// <summary>
-		/// 托管泛型一维数组反序列化
+		/// 泛型一维数组反序列化
 		/// </summary>
 		public class Deserialize<T> : TreeDataDeserializeRule<TreeDataByteSequence, T[]>
 		{
@@ -102,7 +101,7 @@ namespace WorldTree.TreeDataFormats
 					ref var src = ref Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(((T[])value).AsSpan()));
 					Unsafe.CopyBlockUnaligned(ref src, ref spanRef, (uint)byteCount);
 				}
-				else //当成非托管类型处理
+				else //当成托管类型处理
 				{
 					//读取数组数据
 					for (int i = 0; i < length; i++)
