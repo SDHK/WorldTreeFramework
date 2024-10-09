@@ -18,7 +18,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试int数组
 		/// </summary>
-		public int[] Ints;
+		public int[][,,] Ints;
 	}
 
 	//以下代码需要由工具生成

@@ -30,10 +30,10 @@ namespace WorldTree.TreeDataFormats
 				}
 
 				//判断是否为基础类型
-				if (TreeDataType.TypeDict.ContainsKey(typeof(T)))
+				if (TreeDataType.TypeDict.TryGetValue(typeof(T), out int size))
 				{
 					//获取数组数据长度
-					var srcLength = Unsafe.SizeOf<T>() * values.Length;
+					var srcLength = size * values.Length;
 
 					//包含数组数量的总长度
 					var allocSize = srcLength + Unsafe.SizeOf<int>();
@@ -94,9 +94,9 @@ namespace WorldTree.TreeDataFormats
 				//假如数组为空或长度不一致，那么重新分配
 				if (value == null || ((T[])value).Length != length) value = new T[length];
 
-				if (TreeDataType.TypeDict.ContainsKey(typeof(T)))
+				if (TreeDataType.TypeDict.TryGetValue(typeof(T), out int size))
 				{
-					var byteCount = length * Unsafe.SizeOf<T>();
+					var byteCount = length * size;
 					ref byte spanRef = ref self.GetReadRefByte(byteCount);
 
 					ref var src = ref Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(((T[])value).AsSpan()));

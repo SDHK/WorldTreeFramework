@@ -17,9 +17,7 @@ namespace WorldTree.TreeDataFormats
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value)
 			{
-				//通过类型码获取类型
 				self.TryReadType(out Type type);
-				//是本身类型，正常读取流程
 				if (typeof(int) == type)
 				{
 					self.ReadUnmanaged(out int data);
