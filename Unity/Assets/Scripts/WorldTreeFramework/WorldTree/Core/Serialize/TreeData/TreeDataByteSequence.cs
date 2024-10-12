@@ -141,7 +141,7 @@ namespace WorldTree
 			{
 				type = System.Type.GetType(typeName);
 				if (type != null)
-				{ 
+				{
 					this.TypeToCode(type);
 					return true;
 				}
@@ -358,7 +358,7 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 跳跃数据
+		/// 跳跃数据，跳跃前需要回退到类型
 		/// </summary>
 		public void SkipData()
 		{
@@ -368,7 +368,14 @@ namespace WorldTree
 				ReadSkip(byteCount);
 				return;
 			}
+			SkipData(type);
+		}
 
+		/// <summary>
+		/// 跳跃数据
+		/// </summary>
+		public void SkipData(Type type)
+		{
 			//读取字段数量
 			ReadUnmanaged(out int count);
 			//空对象判断
@@ -387,7 +394,7 @@ namespace WorldTree
 			}
 			else
 			{
-				//总长度
+				//此时Count是维度，直接累乘计算总长度，一般来说数量不会超过int极限。
 				int totalLength = 0;
 				for (int i = 0; i < count; i++)
 				{
@@ -396,7 +403,7 @@ namespace WorldTree
 				}
 				//为0的情况下，是数组，但是数组长度为0
 				if (totalLength == 0) return;
-				if (TreeDataType.TypeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
+				if (type != null && TreeDataType.TypeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
 				{
 					//基础数组类型，直接跳跃
 					ReadSkip(arrayByteCount * totalLength);
