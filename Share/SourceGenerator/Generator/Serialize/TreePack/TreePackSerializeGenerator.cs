@@ -7,12 +7,16 @@
 
 */
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
+
+
+
 	[Generator]
 	internal class TreePackSerializeGenerator : ISourceGenerator
 	{
@@ -90,6 +94,22 @@ namespace WorldTree.SourceGenerator
 
 				context.AddSource($"{fileName}TreePackSerialize.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 			}
+		}
+
+
+		/// <summary>
+		/// 格式化代码
+		/// </summary>
+		public static string FormatCode(string code)
+		{
+			//解析代码字符串为语法树
+			var tree = CSharpSyntaxTree.ParseText(code);
+			//获取根节点
+			var root = tree.GetRoot();
+			//格式化代码
+			var formattedCode = root.NormalizeWhitespace();
+			//返回格式化后的代码
+			return formattedCode.ToFullString();
 		}
 	}
 

@@ -8,11 +8,8 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Xml.Linq;
 
 namespace WorldTree
 {
@@ -42,7 +39,6 @@ namespace WorldTree
 			[typeof(decimal)] = 16,
 		};
 	}
-
 
 	public static class TreeDataByteSequenceRule
 	{
@@ -97,10 +93,13 @@ namespace WorldTree
 
 		#region 映射表
 		/// <summary>
-		/// 名称码判断
+		/// 写入名称码并判断是否存在
 		/// </summary>
-		public bool ContainsNameCode(int nameCode)
-			=> codeToNameDict.ContainsKey(nameCode);
+		public bool WriteCheckNameCode(int nameCode)
+		{
+			WriteUnmanaged(nameCode);
+			return codeToNameDict.ContainsKey(nameCode);
+		}
 
 		/// <summary>
 		/// 添加类型

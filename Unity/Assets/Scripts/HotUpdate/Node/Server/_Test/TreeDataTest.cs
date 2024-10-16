@@ -47,20 +47,18 @@ namespace WorldTree
 					self.WriteUnmanaged(~2);
 
 					//AData的字段名称1
-					self.WriteUnmanaged(101);
-					if (!self.ContainsNameCode(101)) self.AddNameCode(101, nameof(data.AInt));
+					if (!self.WriteCheckNameCode(101)) self.AddNameCode(101, nameof(data.AInt));
 
 					//value类型
 					//类型名称
-					self.WriteType(data.AInt.GetType());
+					//self.WriteType(data.AInt.GetType());
 					//字段值
-					self.WriteUnmanaged(data.AInt);
-					//self.WriteValue(data.AInt);
+					//self.WriteUnmanaged(data.AInt);
+					self.WriteValue(data.AInt);
 
 
 					//AData的字段名称1
-					self.WriteUnmanaged(102);
-					if (!self.ContainsNameCode(102)) self.AddNameCode(102, nameof(data.Ints));
+					if (!self.WriteCheckNameCode(102)) self.AddNameCode(102, nameof(data.Ints));
 
 					self.WriteValue(data.Ints);
 				}

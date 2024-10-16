@@ -71,7 +71,7 @@ namespace WorldTree
 	/// 测试数据3
 	/// </summary>
 	[TreePack]
-	[TreePackSub(typeof(NodeClassDataSub1))]
+	[TreePackSub(typeof(NodeClassDataSub1<int>))]
 	[TreePackSub(typeof(NodeClassDataSub2))]
 	public partial class NodeClassDataBase
 	{
@@ -90,7 +90,7 @@ namespace WorldTree
 	/// 测试数据3
 	/// </summary>
 	[TreePack]
-	public partial class NodeClassDataSub1 : NodeClassDataBase
+	public partial class NodeClassDataSub1<T> : NodeClassDataBase
 	{
 		/// <summary>
 		/// 测试整数
