@@ -38,8 +38,7 @@ namespace WorldTree
 			self.Log($"序列化字节长度{bytes.Length}");
 
 			self.AddTemp(out TreeDataByteSequence sequenceRead).SetBytes(bytes);
-
-			AData data2 = null;
+			AData data2 = new AData();
 			sequenceRead.Deserialize(ref data2);
 
 			string logText = $"反序列化{data2.AInt} ";

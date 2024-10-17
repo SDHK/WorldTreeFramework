@@ -48,12 +48,15 @@ namespace WorldTree.SourceGenerator
 			return NamedSymbolHelper.GetAllMembers(classSymbol)
 					.Where(f =>
 					{
-						if (f is IFieldSymbol fieldSymbol && !fieldSymbol.IsStatic && !fieldSymbol.IsReadOnly && !fieldSymbol.IsConst && !NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreePackIgnoreAttribute))
+						if (f is IFieldSymbol fieldSymbol && !fieldSymbol.IsStatic && !fieldSymbol.IsReadOnly && !fieldSymbol.IsConst )
 						{
+							if (fieldSymbol.AssociatedSymbol is IPropertySymbol) return false;
+							if (NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreePackIgnoreAttribute)) return false;
 							return true;
 						}
-						else if (f is IPropertySymbol propertySymbol && !propertySymbol.IsStatic && !propertySymbol.IsReadOnly && propertySymbol.GetMethod != null && propertySymbol.SetMethod != null && !NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreePackIgnoreAttribute))
+						else if (f is IPropertySymbol propertySymbol && !propertySymbol.IsStatic && !propertySymbol.IsReadOnly && propertySymbol.GetMethod != null && propertySymbol.SetMethod != null)
 						{
+							if (NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreePackIgnoreAttribute)) return false;
 							return true;
 						}
 						return false;
@@ -67,7 +70,6 @@ namespace WorldTree.SourceGenerator
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-			Code.AppendLine("	{");
 			Code.AppendLine($"		class TreePackSerialize : TreePackSerializeRule<TreePackByteSequence, {className}>");
 			Code.AppendLine("		{");
 
@@ -255,8 +257,6 @@ namespace WorldTree.SourceGenerator
 
 			Code.AppendLine("			}");
 			Code.AppendLine("		}");
-
-			Code.AppendLine("	}");
 		}
 
 		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration, List<INamedTypeSymbol> SubList)
@@ -270,8 +270,10 @@ namespace WorldTree.SourceGenerator
 			List<ISymbol>? fieldSymbols = null;
 			if (!isBase) fieldSymbols = FindField(classSymbol);
 
+			Code.AppendLine("	{");
 			GeneratorSerialize(Code, classSymbol, fieldSymbols, SubList);
 			GeneratorDeserialize(Code, classSymbol, fieldSymbols, SubList);
+			Code.AppendLine("	}");
 		}
 
 	}

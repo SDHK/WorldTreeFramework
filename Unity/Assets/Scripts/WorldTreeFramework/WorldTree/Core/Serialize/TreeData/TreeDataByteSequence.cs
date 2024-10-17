@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace WorldTree
 {
@@ -158,7 +159,7 @@ namespace WorldTree
 		public void Serialize<T>(in T value)
 		{
 			//写入数据
-			WriteValue(typeof(T), value);
+			WriteValue(value);
 
 			//记录映射表起始位置
 			int startPoint = Length;
@@ -225,8 +226,9 @@ namespace WorldTree
 			readPoint = 0;
 			readBytePoint = 0;
 			readSegmentPoint = 0;
+
 			//读取数据
-			ReadValue(typeof(T), ref Unsafe.AsRef<object>(Unsafe.AsPointer(ref value)));
+			ReadValue(ref value);
 		}
 
 		#region 写入

@@ -41,7 +41,6 @@ namespace WorldTree.SourceGenerator
 				{
 					TreeDataSerializePartialClassGenerator.Execute(context, ClassCode, typeDeclaration);
 				}
-
 				if (ClassCode.Length == 0) return;
 				Code.AppendLine(
 @$"/****************************************

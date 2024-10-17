@@ -33,41 +33,38 @@ namespace WorldTree.SourceGenerator
 
 			List<ISymbol>? fieldSymbols = null;
 			if (!isBase) fieldSymbols = FindField(classSymbol);
+			Code.AppendLine("	{");
 			GeneratorSerialize(Code, classSymbol, fieldSymbols);
-
-
+			GeneratorDeserialize(Code, classSymbol, fieldSymbols);
+			Code.AppendLine("	}");
 		}
 		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols)
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			Code.AppendLine("	{");
-			Code.AppendLine($"		class TreeDataSerialize : TreeDataSerializeRule<TreePackByteSequence, {className}>");
+			Code.AppendLine($"		class TreeDataSerialize : TreeDataSerializeRule<TreeDataByteSequence, {className}>");
 			Code.AppendLine("		{");
 			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value)");
 			Code.AppendLine("			{");
-			if (classSymbol.TypeKind != TypeKind.Struct)
-			{
-			}
+
 			Code.AppendLine($"				{className} data = ({className})value;");
 			Code.AppendLine($"				self.WriteType(typeof({className}));");
-			Code.AppendLine("				if (data == null);");
-			Code.AppendLine("				{");
-			Code.AppendLine("					self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);");
-			Code.AppendLine("					return;");
-			Code.AppendLine("				}");
-			Code.AppendLine($"					self.WriteUnmanaged(~{fieldSymbols.Count});");
+			if (classSymbol.TypeKind != TypeKind.Struct)
+			{
+				Code.AppendLine("				if (data == null)");
+				Code.AppendLine("				{");
+				Code.AppendLine("					self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);");
+				Code.AppendLine("					return;");
+				Code.AppendLine("				}");
+			}
 			if (fieldSymbols != null)
 			{
+				Code.AppendLine($"				self.WriteUnmanaged(~{fieldSymbols.Count});");
+
 				foreach (ISymbol symbol in fieldSymbols)
 				{
-					if (symbol is IFieldSymbol fieldSymbol)
-					{
-						//判断是否是属性的后备字段
-						if (fieldSymbol.AssociatedSymbol is IPropertySymbol) continue;
-					}
-					long hash =  GetHash64(symbol.Name);
-					Code.AppendLine($"					if (!self.WriteCheckNameCode({hash})) self.AddNameCode({hash}, nameof(data.{symbol.Name}));");
-					Code.AppendLine($"					self.WriteValue(data.{symbol.Name});");
+					int hash = symbol.Name.GetHashCode();
+					Code.AppendLine($"				if (!self.WriteCheckNameCode({hash})) self.AddNameCode({hash}, nameof(data.{symbol.Name}));");
+					Code.AppendLine($"				self.WriteValue(data.{symbol.Name});");
 				}
 			}
 
@@ -75,105 +72,74 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("		}");
 		}
 
-		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, List<INamedTypeSymbol> SubList)
+		private static void GeneratorDeserialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols)
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-			Code.AppendLine("	{");
-			Code.AppendLine($"		class TreePackSerialize : TreePackSerializeRule<TreePackByteSequence, {className}>");
+			Code.AppendLine($"		class TreeDataDeserialize : TreeDataDeserializeRule<TreeDataByteSequence, {className}>");
 			Code.AppendLine("		{");
-
-			if (SubList != null && SubList.Count != 0)
-			{
-				Code.AppendLine($"			static readonly System.Collections.Generic.Dictionary<Type, short> m_typeToMarkDict = new({SubList.Count})");
-				Code.AppendLine("			{");
-				Code.AppendLine($"				{{typeof({className}), ValueMarkCode.THIS_OBJECT }},");
-				for (int i = 0; i < SubList.Count; i++)
-				{
-					Code.AppendLine($"				{{typeof({SubList[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}), {i} }},");
-				}
-				Code.AppendLine("			};");
-			}
-
-			Code.AppendLine($"			protected override void Execute(TreePackByteSequence self, ref {className} value)");
+			Code.AppendLine("			protected override void Execute(TreeDataByteSequence self, ref object value)");
 			Code.AppendLine("			{");
+			Code.AppendLine("				self.TryReadType(out Type type);");
+			Code.AppendLine("				self.ReadUnmanaged(out int count);");
 			if (classSymbol.TypeKind != TypeKind.Struct)
 			{
-				Code.AppendLine("				if(value == null)");
+				Code.AppendLine("				if (count == ValueMarkCode.NULL_OBJECT)");
 				Code.AppendLine("				{");
-				Code.AppendLine("					self.WriteUnmanaged(ValueMarkCode.NULL_OBJECT);");
+				Code.AppendLine("					value = null;");
 				Code.AppendLine("					return;");
 				Code.AppendLine("				}");
-				Code.AppendLine("				else");
-				Code.AppendLine("				{");
-				Code.AppendLine($"					self.WriteUnmanaged<short>({fieldSymbols.Count});");
-				Code.AppendLine("				}");
 			}
-
-
-			if (SubList != null && SubList.Count != 0)
+			Code.AppendLine("				if (count < 0)");
+			Code.AppendLine("				{");
+			Code.AppendLine("					count = ~count;");
+			Code.AppendLine("				}");
+			Code.AppendLine("				else");
+			Code.AppendLine("				{");
+			Code.AppendLine("					self.ReadBack(4);");
+			Code.AppendLine("					self.SkipData(type);");
+			Code.AppendLine("					return;");
+			Code.AppendLine("				}");
+			Code.AppendLine($"				if (typeof({className}) == type)");
+			Code.AppendLine("				{");
+			if (classSymbol.TypeKind != TypeKind.Struct)
 			{
-				Code.AppendLine("				if (m_typeToMarkDict.TryGetValue(value.GetType(), out short markCode))");
-				Code.AppendLine("				{");
-				Code.AppendLine("					self.WriteUnmanaged(markCode);");
-				Code.AppendLine("					switch (markCode)");
-				Code.AppendLine("					{");
-				for (int i = 0; i < SubList.Count; i++)
-				{
-					Code.AppendLine($"						case {i}:");
-					Code.AppendLine($"							self.WriteValue(System.Runtime.CompilerServices.Unsafe.As<{className}, {SubList[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}>(ref value));return;");
-				}
-				Code.AppendLine($"						default: break;");
-				Code.AppendLine("					}");
-				Code.AppendLine("				}");
-				Code.AppendLine("				else");
-				Code.AppendLine("				{");
-				Code.AppendLine($"					self.LogError($\"{{value.GetType()}}:没有可转换类型\");");
-				Code.AppendLine("					return;");
-				Code.AppendLine("				}");
+				Code.AppendLine($"					if (!(value is {className} obj)) obj = new {className}();");
 			}
-
-			if (fieldSymbols != null)
+			else
+			{
+				Code.AppendLine($"					var obj = ({className})value;");
+			}
+			Code.AppendLine("					for (int i = 0; i < count; i++)");
+			Code.AppendLine("					{");
+			Code.AppendLine("						self.ReadUnmanaged(out int nameCode);");
+			if (fieldSymbols.Count != 0)
+			{
+				Code.AppendLine("						switch (nameCode)");
+				Code.AppendLine("						{");
 				foreach (ISymbol symbol in fieldSymbols)
 				{
-					if (symbol is IFieldSymbol fieldSymbol)
-					{
-						//判断是否是属性的后备字段
-						if (fieldSymbol.AssociatedSymbol is IPropertySymbol propertySymbol) continue;
-
-						if (fieldSymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
-						{
-							if (arrayTypeSymbol.ElementType.IsUnmanagedType)
-								Code.AppendLine($"				self.WriteUnmanagedArray(value.{symbol.Name});");
-							else
-								Code.AppendLine($"				self.WriteArray(value.{symbol.Name});");
-						}
-						else
-						{
-							if (fieldSymbol.Type.IsUnmanagedType)
-								Code.AppendLine($"				self.WriteUnmanaged(value.{symbol.Name});");
-							else
-								Code.AppendLine($"				self.WriteValue(value.{symbol.Name});");
-						}
-					}
-					else if (symbol is IPropertySymbol propertySymbol)
-					{
-						if (propertySymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
-						{
-							if (arrayTypeSymbol.ElementType.IsUnmanagedType)
-								Code.AppendLine($"				self.WriteUnmanagedArray(value.{symbol.Name});");
-							else
-								Code.AppendLine($"				self.WriteArray(value.{symbol.Name});");
-						}
-						else
-						{
-							if (propertySymbol.Type.IsUnmanagedType)
-								Code.AppendLine($"				self.WriteUnmanaged(value.{symbol.Name});");
-							else
-								Code.AppendLine($"				self.WriteValue(value.{symbol.Name});");
-						}
-					}
+					int hash = symbol.Name.GetHashCode();
+					Code.AppendLine($"							case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
 				}
+				Code.AppendLine($"							default: self.SkipData(); break;");
+				Code.AppendLine("						}");
+			}
+			else
+			{
+				Code.AppendLine("						self.SkipData();");
+			}
+			Code.AppendLine("					}");
+			Code.AppendLine("					value = obj;");
+			Code.AppendLine("				}");
+
+			if (classSymbol.TypeKind != TypeKind.Struct)
+			{
+				Code.AppendLine("				else");
+				Code.AppendLine("				{");
+				Code.AppendLine($"					self.SubTypeReadValue(type, typeof({className}), ref value);");
+				Code.AppendLine("				}");
+			}
 			Code.AppendLine("			}");
 			Code.AppendLine("		}");
 
@@ -185,12 +151,15 @@ namespace WorldTree.SourceGenerator
 			return NamedSymbolHelper.GetAllMembers(classSymbol)
 					.Where(f =>
 					{
-						if (f is IFieldSymbol fieldSymbol && !fieldSymbol.IsStatic && !fieldSymbol.IsReadOnly && !fieldSymbol.IsConst && !NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreeDataIgnoreAttribute))
+						if (f is IFieldSymbol fieldSymbol && !fieldSymbol.IsStatic && !fieldSymbol.IsReadOnly && !fieldSymbol.IsConst)
 						{
+							if (fieldSymbol.AssociatedSymbol is IPropertySymbol) return false;
+							if (NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreeDataIgnoreAttribute)) return false;
 							return true;
 						}
-						else if (f is IPropertySymbol propertySymbol && !propertySymbol.IsStatic && !propertySymbol.IsReadOnly && propertySymbol.GetMethod != null && propertySymbol.SetMethod != null && !NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreeDataIgnoreAttribute))
+						else if (f is IPropertySymbol propertySymbol && !propertySymbol.IsStatic && !propertySymbol.IsReadOnly && propertySymbol.GetMethod != null && propertySymbol.SetMethod != null)
 						{
+							if (NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreeDataIgnoreAttribute)) return false;
 							return true;
 						}
 						return false;
