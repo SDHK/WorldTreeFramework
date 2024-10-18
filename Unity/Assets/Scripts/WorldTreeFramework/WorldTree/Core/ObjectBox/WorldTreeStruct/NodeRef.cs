@@ -60,6 +60,9 @@ namespace WorldTree
 		public static bool operator ==(NodeRef<N> a, N b) => a.NodeId == b?.Id;
 		public static bool operator !=(NodeRef<N> a, N b) => a.NodeId != b?.Id;
 
+		public override bool Equals(object obj) => obj is N node ? NodeId == node.Id : false;
+		public override int GetHashCode() => node?.GetHashCode() ?? 0;
+
 		public static implicit operator bool(NodeRef<N> nodeRef) => nodeRef.node is not null;
 	}
 }
