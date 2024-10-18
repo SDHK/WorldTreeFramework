@@ -21,7 +21,7 @@ namespace WorldTree.TreeDataFormats
 					return;
 				}
 				//写入数组维度数量
-				self.WriteUnmanaged(1);
+				self.WriteUnmanaged(~1);
 				if (values.Length == 0)
 				{
 					self.WriteUnmanaged(0);
@@ -72,18 +72,26 @@ namespace WorldTree.TreeDataFormats
 			{
 				if (!(self.TryReadType(out Type type) && type == typeof(T[])))
 				{
-					//读取指针回退，类型码
-					self.ReadBack(8);
 					//跳跃数据
-					self.SkipData();
+					self.SkipData(type);
 					return;
 				}
 				//读取数组维度数量
-				if (self.ReadUnmanaged<int>() == ValueMarkCode.NULL_OBJECT)
+				self.ReadUnmanaged(out int count);
+				if (count == ValueMarkCode.NULL_OBJECT)
 				{
 					value = null;
 					return;
 				}
+				count = ~count;
+				if (count != 1)
+				{
+					//读取指针回退
+					self.ReadBack(4);
+					self.SkipData(type);
+					return;
+				}
+
 				self.ReadUnmanaged(out int length);
 				if (length == 0)
 				{

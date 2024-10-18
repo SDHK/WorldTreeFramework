@@ -8,7 +8,18 @@ namespace WorldTree
 	/// <summary>
 	/// data
 	/// </summary>
-	public partial struct AData
+	[TreeData]
+	public partial class ADataBase
+	{
+
+
+	}
+
+	/// <summary>
+	/// data
+	/// </summary>
+	[TreeData]
+	public partial class AData
 	{
 		/// <summary>
 		/// 测试int
@@ -26,55 +37,55 @@ namespace WorldTree
 		}
 	}
 
-	public partial struct AData
-	{
-		class TreeDataSerialize : TreeDataSerializeRule<TreeDataByteSequence, AData>
-		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
-			{
-				AData data = (AData)value;
-				self.WriteType(typeof(AData));
-				self.WriteUnmanaged(~2);
-				if (!self.WriteCheckNameCode(98932129)) self.AddNameCode(98932129, nameof(data.AInt));
-				self.WriteValue(data.AInt);
-				if (!self.WriteCheckNameCode(1233980284)) self.AddNameCode(1233980284, nameof(data.Ints));
-				self.WriteValue(data.Ints);
-			}
-		}
-		class TreeDataDeserialize : TreeDataDeserializeRule<TreeDataByteSequence, AData>
-		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
-			{
-				self.TryReadType(out Type type);
-				self.ReadUnmanaged(out int count);
-				if (count < 0)
-				{
-					count = ~count;
-				}
-				else
-				{
-					self.ReadBack(4);
-					self.SkipData(type);
-					return;
-				}
-				if (typeof(AData) == type)
-				{
-					if (!(value is AData obj)) obj = new AData();
-					for (int i = 0; i < count; i++)
-					{
-						self.ReadUnmanaged(out int nameCode);
-						switch (nameCode)
-						{
-							case 98932129: self.ReadValue(ref obj.AInt); break;
-							case 1233980284: self.ReadValue(ref obj.Ints); break;
-							default: self.SkipData(); break;
-						}
-					}
-					value = obj;
-				}
-			}
-		}
-	}
+	//public partial struct AData
+	//{
+	//	class TreeDataSerialize : TreeDataSerializeRule<TreeDataByteSequence, AData>
+	//	{
+	//		protected override void Execute(TreeDataByteSequence self, ref object value)
+	//		{
+	//			AData data = (AData)value;
+	//			self.WriteType(typeof(AData));
+	//			self.WriteUnmanaged(~2);
+	//			if (!self.WriteCheckNameCode(-571700491)) self.AddNameCode(-571700491, nameof(data.AInt));
+	//			self.WriteValue(data.AInt);
+	//			if (!self.WriteCheckNameCode(-1413616393)) self.AddNameCode(-1413616393, nameof(data.Ints));
+	//			self.WriteValue(data.Ints);
+	//		}
+	//	}
+	//	class TreeDataDeserialize : TreeDataDeserializeRule<TreeDataByteSequence, AData>
+	//	{
+	//		protected override void Execute(TreeDataByteSequence self, ref object value)
+	//		{
+	//			self.TryReadType(out Type type);
+	//			self.ReadUnmanaged(out int count);
+	//			if (count < 0)
+	//			{
+	//				count = ~count;
+	//			}
+	//			else
+	//			{
+	//				self.ReadBack(4);
+	//				self.SkipData(type);
+	//				return;
+	//			}
+	//			if (typeof(AData) == type)
+	//			{
+	//				if (!(value is AData obj)) obj = new AData();
+	//				for (int i = 0; i < count; i++)
+	//				{
+	//					self.ReadUnmanaged(out int nameCode);
+	//					switch (nameCode)
+	//					{
+	//						case -571700491: self.ReadValue(ref obj.AInt); break;
+	//						case -1413616393: self.ReadValue(ref obj.Ints); break;
+	//						default: self.SkipData(); break;
+	//					}
+	//				}
+	//				value = obj;
+	//			}
+	//		}
+	//	}
+	//}
 
 
 

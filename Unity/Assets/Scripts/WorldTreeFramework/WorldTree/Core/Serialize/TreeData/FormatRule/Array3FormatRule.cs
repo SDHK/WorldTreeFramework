@@ -20,7 +20,7 @@ namespace WorldTree.TreeDataFormats
 					return;
 				}
 				//写入数组维度数量
-				self.WriteUnmanaged(3);
+				self.WriteUnmanaged(~3);
 
 				// 写入数组维度
 				int dim1 = values.GetLength(0);
@@ -90,9 +90,18 @@ namespace WorldTree.TreeDataFormats
 					return;
 				}
 
-				if (self.ReadUnmanaged<int>() == ValueMarkCode.NULL_OBJECT)
+				self.ReadUnmanaged(out int count);
+				if (count == ValueMarkCode.NULL_OBJECT)
 				{
 					value = null;
+					return;
+				}
+				count = ~count;
+				if (count != 3)
+				{
+					//读取指针回退
+					self.ReadBack(4);
+					self.SkipData(type);
 					return;
 				}
 

@@ -8,20 +8,26 @@
 */
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
 	internal static class TreeDataSerializePartialClassGenerator
 	{
-		private readonly static SHA256 sha256 = SHA256.Create();
 		/// <summary>
-		/// 获取64位的哈希码
+		/// 快速获取32位的哈希码
 		/// </summary>
-		public static long GetHash64(string str)
+		public static int GetFNV1aHash32(this string str)
 		{
-			return BitConverter.ToInt64(sha256.ComputeHash(Encoding.UTF8.GetBytes(str)), 0);
+			const int fnvPrime = 0x01000193;
+			const int fnvOffsetBasis = unchecked((int)0x811C9DC5);
+			int hash = fnvOffsetBasis;
+			foreach (char c in str)
+			{
+				hash ^= c;
+				hash *= fnvPrime;
+			}
+			return hash;
 		}
 
 		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration)
@@ -58,11 +64,11 @@ namespace WorldTree.SourceGenerator
 			}
 			if (fieldSymbols != null)
 			{
-				Code.AppendLine($"				self.WriteUnmanaged(~{fieldSymbols.Count});");
+				Code.AppendLine($"				self.WriteUnmanaged({fieldSymbols.Count});");
 
 				foreach (ISymbol symbol in fieldSymbols)
 				{
-					int hash = symbol.Name.GetHashCode();
+					int hash = symbol.Name.GetFNV1aHash32();
 					Code.AppendLine($"				if (!self.WriteCheckNameCode({hash})) self.AddNameCode({hash}, nameof(data.{symbol.Name}));");
 					Code.AppendLine($"				self.WriteValue(data.{symbol.Name});");
 				}
@@ -92,10 +98,6 @@ namespace WorldTree.SourceGenerator
 			}
 			Code.AppendLine("				if (count < 0)");
 			Code.AppendLine("				{");
-			Code.AppendLine("					count = ~count;");
-			Code.AppendLine("				}");
-			Code.AppendLine("				else");
-			Code.AppendLine("				{");
 			Code.AppendLine("					self.ReadBack(4);");
 			Code.AppendLine("					self.SkipData(type);");
 			Code.AppendLine("					return;");
@@ -119,7 +121,7 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("						{");
 				foreach (ISymbol symbol in fieldSymbols)
 				{
-					int hash = symbol.Name.GetHashCode();
+					int hash = symbol.Name.GetFNV1aHash32();
 					Code.AppendLine($"							case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
 				}
 				Code.AppendLine($"							default: self.SkipData(); break;");

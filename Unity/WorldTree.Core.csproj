@@ -107,7 +107,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleList\RuleList.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldContext\WorldContext.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Encipherment\HashCore.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Encipherment\HashCodeHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreLogRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldPulse.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Type\TypeTable.cs" />

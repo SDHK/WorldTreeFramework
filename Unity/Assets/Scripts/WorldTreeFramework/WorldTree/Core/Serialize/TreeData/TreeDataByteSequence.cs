@@ -382,10 +382,9 @@ namespace WorldTree
 			//空对象判断
 			if (count == ValueMarkCode.NULL_OBJECT) return;
 
-			//Type不存在的情况下，负数为普通类型
-			if (count < 0)
+			//Type不存在的情况下，负数为数组类型
+			if (count >= 0)
 			{
-				count = ~count;
 				for (int i = 0; i < count; i++)
 				{
 					//读取字段名称码
@@ -395,6 +394,7 @@ namespace WorldTree
 			}
 			else
 			{
+				count = ~count;
 				//此时Count是维度，直接累乘计算总长度，一般来说数量不会超过int极限。
 				int totalLength = 0;
 				for (int i = 0; i < count; i++)
