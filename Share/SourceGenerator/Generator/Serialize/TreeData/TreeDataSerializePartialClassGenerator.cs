@@ -86,7 +86,12 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("		{");
 			Code.AppendLine("			protected override void Execute(TreeDataByteSequence self, ref object value)");
 			Code.AppendLine("			{");
-			Code.AppendLine("				self.TryReadType(out Type type);");
+			Code.AppendLine($"				var targetType = typeof({className});");
+			Code.AppendLine("				if (!(self.TryReadType(out Type type) && type == targetType))");
+			Code.AppendLine("				{");
+			Code.AppendLine("					self.SubTypeReadValue(type, targetType, ref value);");
+			Code.AppendLine("					return;");
+			Code.AppendLine("				}");
 			Code.AppendLine("				self.ReadUnmanaged(out int count);");
 			if (classSymbol.TypeKind != TypeKind.Struct)
 			{
@@ -102,46 +107,36 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("					self.SkipData(type);");
 			Code.AppendLine("					return;");
 			Code.AppendLine("				}");
-			Code.AppendLine($"				if (typeof({className}) == type)");
-			Code.AppendLine("				{");
 			if (classSymbol.TypeKind != TypeKind.Struct)
 			{
-				Code.AppendLine($"					if (!(value is {className} obj)) obj = new {className}();");
+				Code.AppendLine($"				if (!(value is {className} obj)) obj = new {className}();");
 			}
 			else
 			{
-				Code.AppendLine($"					var obj = ({className})value;");
+				Code.AppendLine($"				var obj = ({className})value;");
 			}
-			Code.AppendLine("					for (int i = 0; i < count; i++)");
-			Code.AppendLine("					{");
-			Code.AppendLine("						self.ReadUnmanaged(out int nameCode);");
+			Code.AppendLine("				for (int i = 0; i < count; i++)");
+			Code.AppendLine("				{");
 			if (fieldSymbols.Count != 0)
 			{
-				Code.AppendLine("						switch (nameCode)");
-				Code.AppendLine("						{");
+				Code.AppendLine("					self.ReadUnmanaged(out int nameCode);");
+				Code.AppendLine("					switch (nameCode)");
+				Code.AppendLine("					{");
 				foreach (ISymbol symbol in fieldSymbols)
 				{
 					int hash = symbol.Name.GetFNV1aHash32();
-					Code.AppendLine($"							case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
+					Code.AppendLine($"						case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
 				}
-				Code.AppendLine($"							default: self.SkipData(); break;");
-				Code.AppendLine("						}");
+				Code.AppendLine($"						default: self.SkipData(); break;");
+				Code.AppendLine("					}");
 			}
 			else
 			{
-				Code.AppendLine("						self.SkipData();");
+				Code.AppendLine("					self.ReadUnmanaged(out int _);");
+				Code.AppendLine("					self.SkipData();");
 			}
-			Code.AppendLine("					}");
-			Code.AppendLine("					value = obj;");
 			Code.AppendLine("				}");
-
-			if (classSymbol.TypeKind != TypeKind.Struct)
-			{
-				Code.AppendLine("				else");
-				Code.AppendLine("				{");
-				Code.AppendLine($"					self.SubTypeReadValue(type, typeof({className}), ref value);");
-				Code.AppendLine("				}");
-			}
+			Code.AppendLine("				value = obj;");
 			Code.AppendLine("			}");
 			Code.AppendLine("		}");
 

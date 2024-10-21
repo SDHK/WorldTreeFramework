@@ -11,21 +11,18 @@ namespace WorldTree
 	[TreeData]
 	public partial class ADataBase
 	{
-
-
+		/// <summary>
+		/// 测试int
+		/// </summary>
+		public float AInt = 10.1f;
 	}
 
 	/// <summary>
 	/// data
 	/// </summary>
 	[TreeData]
-	public partial class AData
+	public partial class AData : ADataBase
 	{
-		/// <summary>
-		/// 测试int
-		/// </summary>
-		public float AInt = 10.1f;
-
 		/// <summary>
 		/// 测试int数组
 		/// </summary>

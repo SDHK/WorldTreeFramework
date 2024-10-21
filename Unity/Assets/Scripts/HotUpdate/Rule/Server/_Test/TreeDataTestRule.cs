@@ -31,15 +31,17 @@ namespace WorldTree
 				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },
 			};
 
-			self.AddTemp(out TreeDataByteSequence sequenceWrite).Serialize(data);
+			ADataBase aDataBase = data;
+			self.AddTemp(out TreeDataByteSequence sequenceWrite).Serialize(aDataBase);
 
 			byte[] bytes = sequenceWrite.ToBytes();
 
 			self.Log($"序列化字节长度{bytes.Length}");
 
 			self.AddTemp(out TreeDataByteSequence sequenceRead).SetBytes(bytes);
-			AData data2 = new AData();
-			sequenceRead.Deserialize(ref data2);
+			ADataBase aDataBase2 = new AData();
+			sequenceRead.Deserialize(ref aDataBase2);
+			AData data2 = (AData)aDataBase;
 
 			string logText = $"反序列化{data2.AInt} ";
 

@@ -234,13 +234,6 @@ namespace WorldTree
 		#region 写入
 
 		/// <summary>
-		/// 写入值，好像无用，修改成Object
-		/// </summary>
-		public void WriteValue<T>(in T value)
-		{
-			WriteValue(typeof(T), value);
-		}
-		/// <summary>
 		/// 写入类型
 		/// </summary>
 		public void WriteType(Type type)
@@ -252,8 +245,9 @@ namespace WorldTree
 		/// 写入值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteValue(Type type, in object value)
+		public void WriteValue(in object value)
 		{
+			Type type = value.GetType();
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 
@@ -295,8 +289,12 @@ namespace WorldTree
 			{
 				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value);
 			}
+			else
+			{
+				//不支持的类型，跳跃数据
+				SkipData(type);
+			}
 		}
-
 
 
 		/// <summary>
@@ -314,20 +312,8 @@ namespace WorldTree
 		public void SubTypeReadValue(Type type, Type targetType, ref object value)
 		{
 			bool isSubType = false;
-			Type baseType = targetType.BaseType;
+			Type baseType = type.BaseType;
 			if (targetType.IsInterface)
-			{
-				while (baseType != null && baseType != typeof(object))
-				{
-					if (baseType == targetType)
-					{
-						isSubType = true;
-						break;
-					}
-					baseType = type.BaseType;
-				}
-			}
-			else //接口
 			{
 				Type[] interfaces = type.GetInterfaces();
 				foreach (var interfaceType in interfaces)
@@ -339,6 +325,18 @@ namespace WorldTree
 					}
 				}
 			}
+			else
+			{
+				while (baseType != null && baseType != typeof(object))
+				{
+					if (baseType == targetType)
+					{
+						isSubType = true;
+						break;
+					}
+					baseType = type.BaseType;
+				}
+			}
 			if (isSubType)//是子类型
 			{
 				//读取指针回退，类型码
@@ -348,10 +346,8 @@ namespace WorldTree
 			}
 			else //不是本身类型，也不是子类型，也不是可转换类型，跳跃数据。
 			{
-				//读取指针回退，类型码
-				ReadBack(8);
 				//跳跃数据
-				SkipData();
+				SkipData(type);
 			}
 		}
 

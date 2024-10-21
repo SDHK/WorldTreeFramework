@@ -57,7 +57,7 @@ namespace WorldTree.TreeDataFormats
 					for (int i = 0; i < values.Length; i++)
 					{
 						T t = values[i];
-						self.WriteValue(t.GetType(), t);
+						self.WriteValue(t);
 					}
 				}
 			}
