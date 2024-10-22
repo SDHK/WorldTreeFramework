@@ -1,15 +1,23 @@
-﻿using System;
+﻿/****************************************
+
+* 作者：闪电黑客
+* 日期：2024/10/8 15:59
+
+* 描述：
+
+*/
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace WorldTree.TreeDataFormats
+namespace WorldTree.TreeDataFormatters
 {
-	public static class Array1FormatRule
+	public static class Array1FormatterRule
 	{
 		/// <summary>
 		/// 泛型一维数组序列化
 		/// </summary>
-		public class Serialize<T> : TreeDataSerializeRule<TreeDataByteSequence, T[]>
+		private class Serialize<T> : TreeDataSerializeRule<TreeDataByteSequence, T[]>
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value)
 			{
@@ -66,7 +74,7 @@ namespace WorldTree.TreeDataFormats
 		/// <summary>
 		/// 泛型一维数组反序列化
 		/// </summary>
-		public class Deserialize<T> : TreeDataDeserializeRule<TreeDataByteSequence, T[]>
+		private class Deserialize<T> : TreeDataDeserializeRule<TreeDataByteSequence, T[]>
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value)
 			{
