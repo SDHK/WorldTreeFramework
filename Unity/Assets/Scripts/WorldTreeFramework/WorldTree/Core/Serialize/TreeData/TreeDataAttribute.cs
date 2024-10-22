@@ -10,11 +10,12 @@ using System;
 
 namespace WorldTree
 {
+
 	/// <summary>
 	/// 树节点数据装特性标记
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-	public class TreeDataAttribute : Attribute { }
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
+	public class TreeDataSerializableAttribute : Attribute { }
 
 	/// <summary>
 	/// 序列化忽略特性标记

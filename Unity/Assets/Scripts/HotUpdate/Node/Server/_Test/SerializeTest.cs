@@ -6,7 +6,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试数据
 	/// </summary>
-	[TreePack]
+	[TreePackSerializable]
 	public partial class NodeClassDataTest<T1, T2, T3>
 		where T1 : unmanaged
 		where T2 : unmanaged
@@ -28,8 +28,6 @@ namespace WorldTree
 		/// </summary>
 		public T3 ValueT3 { get; set; } = default;
 
-
-
 		/// <summary>
 		/// 测试class
 		/// </summary>
@@ -46,7 +44,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试数据2
 	/// </summary>
-	[TreePack]
+	[TreePackSerializable]
 	public partial struct NodeClassDataTest1<T1, T2>
 		//where T1 : unmanaged
 	{
@@ -70,7 +68,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试数据3
 	/// </summary>
-	[TreePack]
+	[TreePackSerializable]
 	[TreePackSub(typeof(NodeClassDataSub1<int>))]
 	[TreePackSub(typeof(NodeClassDataSub2))]
 	public partial class NodeClassDataBase
@@ -89,7 +87,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试数据3
 	/// </summary>
-	[TreePack]
+	[TreePackSerializable]
 	public partial class NodeClassDataSub1<T> : NodeClassDataBase
 	{
 		/// <summary>
@@ -101,7 +99,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试数据4
 	/// </summary>
-	[TreePack]
+	[TreePackSerializable]
 	public partial class NodeClassDataSub2 : NodeClassDataBase
 	{
 		/// <summary>

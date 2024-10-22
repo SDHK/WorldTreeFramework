@@ -8,7 +8,7 @@ namespace WorldTree
 	/// <summary>
 	/// data
 	/// </summary>
-	[TreeData]
+	[TreeDataSerializable]
 	public partial class ADataBase
 	{
 		/// <summary>
@@ -20,7 +20,7 @@ namespace WorldTree
 	/// <summary>
 	/// data
 	/// </summary>
-	[TreeData]
+	[TreeDataSerializable]
 	public partial class AData : ADataBase
 	{
 		/// <summary>
@@ -49,39 +49,39 @@ namespace WorldTree
 	//			self.WriteValue(data.Ints);
 	//		}
 	//	}
-	//	class TreeDataDeserialize : TreeDataDeserializeRule<TreeDataByteSequence, AData>
+	//class TreeDataDeserialize : TreeDataDeserializeRule<TreeDataByteSequence, AData>
+	//{
+	//	protected override void Execute(TreeDataByteSequence self, ref object value)
 	//	{
-	//		protected override void Execute(TreeDataByteSequence self, ref object value)
+	//		self.TryReadType(out Type type);
+	//		self.ReadUnmanaged(out int count);
+	//		if (count < 0)
 	//		{
-	//			self.TryReadType(out Type type);
-	//			self.ReadUnmanaged(out int count);
-	//			if (count < 0)
+	//			count = ~count;
+	//		}
+	//		else
+	//		{
+	//			self.ReadBack(4);
+	//			self.SkipData(type);
+	//			return;
+	//		}
+	//		if (typeof(AData) == type)
+	//		{
+	//			if (!(value is AData obj)) obj = new AData();
+	//			for (int i = 0; i < count; i++)
 	//			{
-	//				count = ~count;
-	//			}
-	//			else
-	//			{
-	//				self.ReadBack(4);
-	//				self.SkipData(type);
-	//				return;
-	//			}
-	//			if (typeof(AData) == type)
-	//			{
-	//				if (!(value is AData obj)) obj = new AData();
-	//				for (int i = 0; i < count; i++)
+	//				self.ReadUnmanaged(out int nameCode);
+	//				switch (nameCode)
 	//				{
-	//					self.ReadUnmanaged(out int nameCode);
-	//					switch (nameCode)
-	//					{
-	//						case -571700491: self.ReadValue(ref obj.AInt); break;
-	//						case -1413616393: self.ReadValue(ref obj.Ints); break;
-	//						default: self.SkipData(); break;
-	//					}
+	//					case -571700491: obj.AInt = self.ReadValue(obj.AInt); break;
+	//					case -1413616393: self.ReadValue(ref obj.Ints); break;
+	//					default: self.SkipData(); break;
 	//				}
-	//				value = obj;
 	//			}
+	//			value = obj;
 	//		}
 	//	}
+	//}
 	//}
 
 
@@ -198,8 +198,8 @@ namespace WorldTree
 	/// 序列化测试
 	/// </summary>
 	public class TreeDataTest : Node
-		, ComponentOf<INode>
-		, AsAwake
+			, ComponentOf<INode>
+			, AsAwake
 	{ }
 }
 

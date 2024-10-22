@@ -41,7 +41,7 @@ namespace WorldTree
 			self.AddTemp(out TreeDataByteSequence sequenceRead).SetBytes(bytes);
 			ADataBase aDataBase2 = new AData();
 			sequenceRead.Deserialize(ref aDataBase2);
-			AData data2 = (AData)aDataBase;
+			AData data2 = (AData)aDataBase2;
 
 			string logText = $"反序列化{data2.AInt} ";
 

@@ -125,7 +125,14 @@ namespace WorldTree.SourceGenerator
 				foreach (ISymbol symbol in fieldSymbols)
 				{
 					int hash = symbol.Name.GetFNV1aHash32();
-					Code.AppendLine($"						case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
+					if (symbol is IPropertySymbol)
+					{
+						Code.AppendLine($"						case {hash}: obj.{symbol.Name} = self.ReadValue(obj.{symbol.Name}); break;");
+					}
+					else
+					{
+						Code.AppendLine($"						case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
+					}
 				}
 				Code.AppendLine($"						default: self.SkipData(); break;");
 				Code.AppendLine("					}");

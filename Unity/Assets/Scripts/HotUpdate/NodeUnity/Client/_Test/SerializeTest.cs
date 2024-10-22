@@ -5,7 +5,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试数据
 	/// </summary>
-	[TreePack]
+	[TreePackSerializable]
 	public partial class NodeClassDataTest<T1, T2>
 		where T1 : unmanaged
 		where T2 : unmanaged

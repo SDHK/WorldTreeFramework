@@ -20,7 +20,7 @@ namespace WorldTree
 	/// 树节点数据包装特性标记
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-	public class TreePackAttribute : Attribute { }
+	public class TreePackSerializableAttribute : Attribute { }
 
 	/// <summary>
 	/// 树节点数据包子类转换标记

@@ -127,7 +127,7 @@ namespace WorldTree.SourceGenerator
 			if (node is ClassDeclarationSyntax or StructDeclarationSyntax or InterfaceDeclarationSyntax)
 			{
 				var TypeDeclaration = node as TypeDeclarationSyntax;
-				if (TreeSyntaxHelper.CheckAttribute(TypeDeclaration, GeneratorHelper.TreePackAttribute))
+				if (TreeSyntaxHelper.CheckAttribute(TypeDeclaration, GeneratorHelper.TreePackSerializableAttribute))
 				{
 					string fileName = Path.GetFileNameWithoutExtension(TypeDeclaration.SyntaxTree.FilePath);
 					if (!TypeDeclarationsDict.TryGetValue(fileName, out var list))

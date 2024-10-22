@@ -11,8 +11,9 @@ namespace WorldTree
 	/// <summary>
 	/// 树数据节点
 	/// </summary>
-	public class TreeData1 : Node
-		, StringNodeOf<TreeData1>
+	public class TreeData : Node
+		, StringNodeOf<TreeData>
+		, NumberNodeOf<TreeData>
 		, TempOf<INode>
 		, AsAwake
 	{
@@ -25,7 +26,7 @@ namespace WorldTree
 	/// <summary>
 	/// 树数值
 	/// </summary>
-	public class TreeValue : TreeData1
+	public class TreeValue : TreeData
 	{
 		/// <summary>
 		/// 数据

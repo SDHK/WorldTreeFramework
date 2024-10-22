@@ -43,7 +43,7 @@ namespace WorldTree
 		/// <summary>
 		/// 树节点数据包特性标记
 		/// </summary>
-		public static string TreePackAttribute = "TreePackAttribute";
+		public static string TreePackSerializableAttribute = "TreePackSerializableAttribute";
 
 		/// <summary>
 		/// 树节点数据包子类转换特性标记
@@ -58,7 +58,7 @@ namespace WorldTree
 		/// <summary>
 		/// 树节点数据特性标记
 		/// </summary>
-		public static string TreeDataAttribute = "TreeDataAttribute";
+		public static string TreeDataSerializableAttribute = "TreeDataSerializableAttribute";
 
 		/// <summary>
 		/// 树节点数据忽略特性标记

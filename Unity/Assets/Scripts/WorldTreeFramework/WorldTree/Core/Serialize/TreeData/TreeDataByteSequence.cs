@@ -274,6 +274,16 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 读取值，方便属性读取
+		/// </summary>
+		public T ReadValue<T>(T defaultValue)
+		{
+			object obj = default;
+			ReadValue(typeof(T), ref obj);
+			return (T)obj;
+		}
+
+		/// <summary>
 		/// 读取值
 		/// </summary>
 		public void ReadValue(Type type, ref object value)
@@ -294,6 +304,10 @@ namespace WorldTree
 				SkipData(type);
 			}
 		}
+
+
+
+
 
 
 		/// <summary>
