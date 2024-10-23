@@ -15,7 +15,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试int
 		/// </summary>
-		public float AInt = 10.1f;
+		public float AInt { get; set; } = 10.1f;
 
 		public BDataBase()
 		{
@@ -48,7 +48,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试字典
 		/// </summary>
-		public Dictionary<int, string> DataDict;
+		public UnitDictionary<int, string> DataDict;
 	}
 
 	//public partial struct AData

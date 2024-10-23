@@ -232,10 +232,11 @@ namespace WorldTree.SourceGenerator
 					}
 					else if (symbol is IPropertySymbol propertySymbol)
 					{
+						string symbolName = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+						Code.AppendLine($"				{symbolName} m{symbol.Name} = default;");
+
 						if (propertySymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
 						{
-							Code.AppendLine($"				{arrayTypeSymbol.ElementType}[] m{symbol.Name} = default;");
-
 							if (arrayTypeSymbol.ElementType.IsUnmanagedType)
 								Code.AppendLine($"				self.ReadUnmanagedArray(ref m{symbol.Name});");
 							else
@@ -243,7 +244,6 @@ namespace WorldTree.SourceGenerator
 						}
 						else
 						{
-							Code.AppendLine($"				{propertySymbol.Type.Name} m{symbol.Name} = default;");
 							if (propertySymbol.Type.IsUnmanagedType)
 								Code.AppendLine($"				self.ReadUnmanaged(out m{symbol.Name});");
 							else
@@ -252,7 +252,6 @@ namespace WorldTree.SourceGenerator
 						Code.AppendLine($"				value.{propertySymbol.Name} = m{symbol.Name};");
 					}
 				}
-
 			}
 
 			Code.AppendLine("			}");

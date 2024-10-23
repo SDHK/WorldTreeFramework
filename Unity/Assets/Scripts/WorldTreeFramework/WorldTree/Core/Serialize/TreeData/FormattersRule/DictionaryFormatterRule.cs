@@ -61,6 +61,9 @@ namespace WorldTree.TreeDataFormatters
 				Dictionary<TKey, TValue> dataDict = value as Dictionary<TKey, TValue>;
 				if (dataDict == null)
 				{
+					//改用Type反射创建
+					value.GetType();
+
 					value = dataDict = new Dictionary<TKey, TValue>(length);
 				}
 				else if (dataDict.Count != 0)
