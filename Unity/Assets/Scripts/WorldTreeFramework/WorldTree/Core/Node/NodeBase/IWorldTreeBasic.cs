@@ -27,22 +27,26 @@ namespace WorldTree
 		/// <summary>
 		/// 类型码
 		/// </summary>
+		[TreeDataIgnore]
 		public long Type { get; set; }
 
 		/// <summary>
 		/// 释放标记
 		/// </summary>
+		[TreeDataIgnore]
 		bool IsDisposed { get; set; }
 
 		/// <summary>
 		/// 是否从池获取
 		/// </summary>
+		[TreeDataIgnore]
 		public bool IsFromPool { get; set; }
 
 		/// <summary>
 		/// 世界树核心
 		/// </summary>
 		/// <remarks>框架的核心</remarks>
+		[TreeDataIgnore]
 		public WorldTreeCore Core { get; set; }
 
 		/// <summary>

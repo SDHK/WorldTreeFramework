@@ -284,6 +284,16 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 读取值，方便属性读取
+		/// </summary>
+		public T ReadValue<T>()
+		{
+			object obj = default;
+			ReadValue(typeof(T), ref obj);
+			return (T)obj;
+		}
+
+		/// <summary>
 		/// 读取值
 		/// </summary>
 		public void ReadValue(Type type, ref object value)
@@ -305,10 +315,14 @@ namespace WorldTree
 			}
 		}
 
-
-
-
-
+		/// <summary>
+		/// 读取字段名称
+		/// </summary>
+		public bool TryReadName(out string name)
+		{
+			ReadUnmanaged(out int nameCode);
+			return codeToNameDict.TryGetValue(nameCode, out name);
+		}
 
 		/// <summary>
 		/// 读取类型
@@ -425,5 +439,178 @@ namespace WorldTree
 				}
 			}
 		}
+
+
+
+
+
+		/// <summary>
+		/// 获取TreeData
+		/// </summary>
+		public TreeData GetTreeData()
+		{
+			TreeData data = null;
+			ReadUnmanaged(out long typeCode);
+			//判断是否是基础类型，或是字符串
+			if (this.TryGetType(typeCode, out Type type) && (type == typeof(string) || TreeDataType.TypeDict.TryGetValue(type, out _)))
+			{
+				data = this.Parent.AddTemp(out TreeValue treeValue);
+				codeToTypeNameDict.TryGetValue(typeCode, out treeValue.TypeName);
+				//取值????
+				return data;
+			}
+			//不是基础类型获取类型名称
+			if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
+			{
+				this.Parent.AddTemp(out data);
+				data.TypeName = typeName;
+			}
+
+			//读取字段数量
+			ReadUnmanaged(out int count);
+			//空对象判断
+			if (count == ValueMarkCode.NULL_OBJECT) return data;
+			data.IsDefault = false;
+
+			//Type不存在的情况下，负数为数组类型
+			if (count >= 0)
+			{
+				for (int i = 0; i < count; i++)
+				{
+					//读取字段名称码
+					if (TryReadName(out string name))
+					{
+						//????
+						data.AddStringNode(name, out TreeData node);
+					}
+				}
+			}
+			else
+			{
+				count = ~count;
+				//此时Count是维度，直接累乘计算总长度，一般来说数量不会超过int极限。
+				int totalLength = 0;
+				for (int i = 0; i < count; i++)
+				{
+					ReadUnmanaged(out int length);
+					totalLength *= length;
+				}
+				//为0的情况下，是数组，但是数组长度为0
+				if (totalLength == 0) return data;
+				if (type != null && TreeDataType.TypeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
+				{
+					//基础数组类型，直接跳跃
+					ReadSkip(arrayByteCount * totalLength);
+				}
+				else
+				{
+					//非基础数组类型，递归跳跃
+					for (int i = 0; i < totalLength; i++) SkipData();
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// 添加数组项
+		/// </summary>
+		public void AddItem(TreeData parentData, int index)
+		{
+			TreeData self;
+			ReadUnmanaged(out long typeCode);
+			//判断是否是基础类型，或是字符串
+			if (this.TryGetType(typeCode, out Type type) && (type == typeof(string) || TreeDataType.TypeDict.TryGetValue(type, out _)))
+			{
+				parentData.AddNumberNode(index, out TreeValue treeValue);
+				codeToTypeNameDict.TryGetValue(typeCode, out treeValue.TypeName);
+				//取值????
+				return;
+			}
+			//不是基础类型获取类型名称
+			if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
+			{
+				parentData.AddNumberNode(index, out self);
+				self.TypeName = typeName;
+			}
+			else
+			{
+				return;
+			}
+
+		}
+
+		/// <summary>
+		/// 设置数据
+		/// </summary>
+		public void AddField(TreeData parentData, string fieldName)
+		{
+			TreeData self;
+			ReadUnmanaged(out long typeCode);
+			//判断是否是基础类型，或是字符串
+			if (this.TryGetType(typeCode, out Type type) && (type == typeof(string) || TreeDataType.TypeDict.TryGetValue(type, out _)))
+			{
+				parentData.AddStringNode(fieldName, out TreeValue treeValue);
+				codeToTypeNameDict.TryGetValue(typeCode, out treeValue.TypeName);
+				//取值????
+				return;
+			}
+			//不是基础类型获取类型名称
+			if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
+			{
+				parentData.AddStringNode(fieldName, out self);
+				self.TypeName = typeName;
+			}
+			else
+			{
+				return;
+			}
+
+			//读取字段数量
+			ReadUnmanaged(out int count);
+			//空对象判断
+			if (count == ValueMarkCode.NULL_OBJECT) return;
+			parentData.IsDefault = false;
+
+			//Type不存在的情况下，负数为数组类型
+			if (count >= 0)
+			{
+				for (int i = 0; i < count; i++)
+				{
+					//读取字段名称码
+					if (TryReadName(out string name))
+					{
+						AddField(self, name);
+					}
+				}
+			}
+			else
+			{
+				count = ~count;
+				//此时Count是维度，直接累乘计算总长度，一般来说数量不会超过int极限。
+				int totalLength = 0;
+				for (int i = 0; i < count; i++)
+				{
+					ReadUnmanaged(out int length);
+					totalLength *= length;
+				}
+				//为0的情况下，是数组，但是数组长度为0
+				if (totalLength == 0) return;
+				if (type != null && TreeDataType.TypeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
+				{
+					//基础数组类型，直接跳跃
+					ReadSkip(arrayByteCount * totalLength);
+				}
+				else
+				{
+					//非基础数组类型，递归跳跃
+					for (int i = 0; i < totalLength; i++) SkipData();
+				}
+			}
+		}
+
 	}
+
+
+
 }

@@ -30,7 +30,7 @@ namespace WorldTree.TreeDataFormatters
 				//写入数组维度数量
 				self.WriteUnmanaged(~2);
 
-				// 写入数组维度
+				// 写入数组维度长度
 				int dim1 = values.GetLength(0);
 				int dim2 = values.GetLength(1);
 				self.WriteUnmanaged(dim1);

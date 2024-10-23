@@ -90,22 +90,26 @@ namespace WorldTree
 		/// 树根节点
 		/// </summary>
 		/// <remarks>挂载核心启动后的管理器组件</remarks>
+		[TreeDataIgnore]
 		public WorldTreeRoot Root { get; set; }
 
 		/// <summary>
 		/// 树枝节点
 		/// </summary>
 		/// <remarks>用于划分作用域</remarks>
+		[TreeDataIgnore]
 		public INode Domain { get; set; }
 
 		/// <summary>
 		/// 父节点
 		/// </summary>
+		[TreeDataIgnore]
 		public INode Parent { get; set; }
 
 		/// <summary>
 		/// 可视化生成器
 		/// </summary>
+		[TreeDataIgnore]
 		public IWorldTreeNodeViewBuilder View { get; set; }
 
 		#region Active
@@ -113,6 +117,7 @@ namespace WorldTree
 		/// <summary>
 		/// 活跃开关
 		/// </summary>
+		[TreeDataIgnore]
 		public bool ActiveToggle { get; set; }
 
 		/// <summary>
@@ -123,6 +128,7 @@ namespace WorldTree
 		/// <summary>
 		/// 活跃事件标记，这个由框架内部调用设置，禁止修改
 		/// </summary>
+		[TreeDataIgnore]
 		public bool activeEventMark { get; set; }
 
 		/// <summary>
@@ -142,11 +148,13 @@ namespace WorldTree
 		/// <summary>
 		/// 树藤分支
 		/// </summary>
+		[TreeDataIgnore]
 		public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
 		/// <summary>
 		/// 树藤分支,假如没有则创建
 		/// </summary>
+		[TreeDataIgnore]
 		public UnitDictionary<long, IRattan> GetRattanDict { get; }
 
 		#endregion
@@ -166,6 +174,7 @@ namespace WorldTree
 		/// <summary>
 		/// 树分支,假如没有则创建
 		/// </summary>
+		[TreeDataIgnore]
 		public UnitDictionary<long, IBranch> GetBranchDict { get; }
 
 		#endregion

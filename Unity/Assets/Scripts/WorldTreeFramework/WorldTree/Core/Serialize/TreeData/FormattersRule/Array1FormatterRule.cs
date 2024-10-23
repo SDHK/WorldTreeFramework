@@ -30,11 +30,9 @@ namespace WorldTree.TreeDataFormatters
 				}
 				//写入数组维度数量
 				self.WriteUnmanaged(~1);
-				if (values.Length == 0)
-				{
-					self.WriteUnmanaged(0);
-					return;
-				}
+				//写入数组数据长度
+				self.WriteUnmanaged(values.Length);
+				if (values.Length == 0) return;
 
 				//判断是否为基础类型
 				if (TreeDataType.TypeDict.TryGetValue(typeof(T), out int size))
@@ -59,8 +57,6 @@ namespace WorldTree.TreeDataFormatters
 				}
 				else //当成托管类型处理
 				{
-					//写入数组数据长度
-					self.WriteUnmanaged(values.Length);
 					//写入数组数据
 					for (int i = 0; i < values.Length; i++)
 					{

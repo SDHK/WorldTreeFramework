@@ -5,6 +5,23 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
+
+	/// <summary>
+	/// data
+	/// </summary>
+	[TreeDataSerializable]
+	public partial struct BDataBase
+	{
+		/// <summary>
+		/// 测试int
+		/// </summary>
+		public float AInt = 10.1f;
+
+		public BDataBase()
+		{
+		}
+	}
+
 	/// <summary>
 	/// data
 	/// </summary>
@@ -28,10 +45,10 @@ namespace WorldTree
 		/// </summary>
 		public int[][,,] Ints;
 
-		public AData()
-		{
-
-		}
+		/// <summary>
+		/// 测试字典
+		/// </summary>
+		public Dictionary<int, string> DataDict;
 	}
 
 	//public partial struct AData

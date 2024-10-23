@@ -1,6 +1,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree
@@ -8,20 +9,11 @@ namespace WorldTree
 
 	public static partial class TreeDataTestRule
 	{
+		static int Key = nameof(Key).GetFNV1aHash32();
+		static int Value = nameof(Value).GetFNV1aHash32();
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
-
-			//Array aList = new int[] { };
-			//self.Log($"{aList.Rank}:{aList.GetLength(0)}");
-
-
-			//int[,] as1s = new int[2, 3];
-
-			//DangerousReadUnmanagedArray1(ref Unsafe.AsRef<Array>(Unsafe.AsPointer(ref as1s)));
-
-			//self.Log($"{as1s.Rank}:? {as1s[0, 0]}");
-
-			//self.Log($"TreeDataTestRule  {typeof(int[,])}");
+			//self.Log(Key + " :: " + Value);
 
 			AData data = new AData();
 
@@ -31,21 +23,30 @@ namespace WorldTree
 				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },
 			};
 
+			data.DataDict = new Dictionary<int, string>()
+			{
+				{ 1, "1.1f测" },
+				{ 2, "2.2f测试" },
+				{ 3, "3.3f" },
+				{ 4, "4.4f" },
+				{ 5, "5.5f"},
+			};
+
 			ADataBase aDataBase = data;
 			self.AddTemp(out TreeDataByteSequence sequenceWrite).Serialize(aDataBase);
 
 			byte[] bytes = sequenceWrite.ToBytes();
 
-			self.Log($"序列化字节长度{bytes.Length}");
+			self.Log($"序列化字节长度{bytes.Length}\n");
 
 			self.AddTemp(out TreeDataByteSequence sequenceRead).SetBytes(bytes);
 			ADataBase aDataBase2 = new AData();
 			sequenceRead.Deserialize(ref aDataBase2);
 			AData data2 = (AData)aDataBase2;
 
-			string logText = $"反序列化{data2.AInt} ";
+			string logText = $"\n反序列化{data2.AInt} \n";
 
-			logText += $"数组数量{data2.Ints.Length} :";
+			logText += $"\n数组数量{data2.Ints.Length} :\n";
 			foreach (var item in data2.Ints)
 			{
 				logText += $"数组长度{item.Length} :";
@@ -55,6 +56,11 @@ namespace WorldTree
 					logText += $"{item1} ";
 				}
 				//logText += $"{item} ";
+			}
+			logText += $"\n字典数量{data2.DataDict.Count} :\n";
+			foreach (var item in data2.DataDict)
+			{
+				logText += $"[{item.Key}: {item.Value}],";
 			}
 			self.Log(logText);
 		};
@@ -67,7 +73,6 @@ namespace WorldTree
 		public static unsafe void DangerousReadUnmanagedArray1(ref Array value)
 		{
 		}
-
 	}
 
 

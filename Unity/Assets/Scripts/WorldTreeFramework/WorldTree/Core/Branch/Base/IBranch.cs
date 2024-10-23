@@ -96,6 +96,11 @@ namespace WorldTree
 	public interface IBranchTypeKey : IBranch<long> { }
 
 	/// <summary>
+	/// 以下标为键值的分支
+	/// </summary>
+	public interface IBranchIndexKey : IBranch<int> { }
+
+	/// <summary>
 	/// 分支无约束标记
 	/// </summary>
 	public interface IBranchUnConstraint { }

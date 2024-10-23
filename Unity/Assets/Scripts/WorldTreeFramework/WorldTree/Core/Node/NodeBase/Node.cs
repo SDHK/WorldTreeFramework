@@ -34,9 +34,11 @@ namespace WorldTree
 		/// <summary>
 		/// 节点复数状态
 		/// </summary>
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		protected NodeState state;
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public bool IsFromPool
 		{
@@ -53,6 +55,7 @@ namespace WorldTree
 				}
 			}
 		}
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public bool IsDisposed
 		{
@@ -70,35 +73,44 @@ namespace WorldTree
 			}
 		}
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public long Id { get; set; }
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public long Type { get; set; }
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public WorldTreeCore Core { get; set; }
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public WorldTreeRoot Root { get; set; }
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public INode Domain { get; set; }//接口标记域节点
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public INode Parent { get; set; }
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public IWorldTreeNodeViewBuilder View { get; set; }
 
 		#region Active
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public bool ActiveToggle { get; set; }
 
 		[TreePackIgnore]
 		public bool IsActive { get; set; }
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public bool activeEventMark { get; set; }
 
@@ -150,9 +162,11 @@ namespace WorldTree
 
 		#region Rattan
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public UnitDictionary<long, IRattan> GetRattanDict { get; }
 
@@ -165,11 +179,13 @@ namespace WorldTree
 		/// </summary>
 		protected long branchType;
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public long BranchType => branchType;
 
 		public UnitDictionary<long, IBranch> BranchDict { get; set; }
 
+		[TreeDataIgnore]
 		[TreePackIgnore]
 		public UnitDictionary<long, IBranch> GetBranchDict => BranchDict ??= Core.PoolGetUnit<UnitDictionary<long, IBranch>>();
 

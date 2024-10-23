@@ -89,7 +89,14 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine($"				var targetType = typeof({className});");
 			Code.AppendLine("				if (!(self.TryReadType(out Type type) && type == targetType))");
 			Code.AppendLine("				{");
-			Code.AppendLine("					self.SubTypeReadValue(type, targetType, ref value);");
+			if (classSymbol.TypeKind != TypeKind.Struct)
+			{
+				Code.AppendLine("					self.SubTypeReadValue(type, targetType, ref value);");
+			}
+			else
+			{
+				Code.AppendLine("					self.SkipData(type);");
+			}
 			Code.AppendLine("					return;");
 			Code.AppendLine("				}");
 			Code.AppendLine("				self.ReadUnmanaged(out int count);");
