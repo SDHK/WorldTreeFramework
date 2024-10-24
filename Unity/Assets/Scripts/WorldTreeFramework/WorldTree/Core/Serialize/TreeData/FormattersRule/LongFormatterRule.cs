@@ -31,23 +31,23 @@ namespace WorldTree.TreeDataFormatters
 			[typeof(decimal)] = (self) => (long)self.ReadUnmanaged<decimal>(),
 		};
 
-		class Serialize : TreeDataSerializeRule<TreeDataByteSequence, long>
+		class Serialize : TreeDataSerializeRule<long>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
+			protected override void Execute(TreeDataByteSequence self, ref object obj)
 			{
 				self.WriteType(typeof(long));
-				self.WriteUnmanaged((long)value);
+				self.WriteUnmanaged((long)obj);
 			}
 		}
 
-		class Deserialize : TreeDataDeserializeRule<TreeDataByteSequence, long>
+		class Deserialize : TreeDataDeserializeRule<long>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj)
 			{
-				if (self.TryReadType(out Type type) && TypeDict.TryGetValue(type, out var func))
-					value = func(self);
+				if (self.TryReadType(out Type dataType) && TypeDict.TryGetValue(dataType, out var func))
+					obj = func(self);
 				else
-					self.SkipData(type);
+					self.SkipData(dataType);
 			}
 		}
 	}

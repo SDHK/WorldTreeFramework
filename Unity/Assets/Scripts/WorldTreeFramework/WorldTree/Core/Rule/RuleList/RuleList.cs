@@ -28,6 +28,11 @@ namespace WorldTree
 	public class RuleList : List<IRule>, IRuleList<IRule>
 	{
 		/// <summary>
+		/// 节点的类型
+		/// </summary>
+		public long NodeType;
+
+		/// <summary>
 		/// 法则的类型
 		/// </summary>
 		public long RuleType;

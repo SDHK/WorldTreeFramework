@@ -16,12 +16,12 @@ namespace WorldTree.TreeDataFormatters
 		/// <summary>
 		/// 泛型二维数组序列化
 		/// </summary>
-		private class Serialize<T> : TreeDataSerializeRule<TreeDataByteSequence, T[,]>
+		private class Serialize<T> : TreeDataSerializeRule<T[,]>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
+			protected override void Execute(TreeDataByteSequence self, ref object obj)
 			{
 				self.WriteType(typeof(T[,]));
-				T[,] values = (T[,])value;
+				T[,] values = (T[,])obj;
 				if (values == null)
 				{
 					self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
@@ -78,11 +78,11 @@ namespace WorldTree.TreeDataFormatters
 		/// <summary>
 		/// 泛型二维数组反序列化
 		/// </summary>
-		private class Deserialize<T> : TreeDataDeserializeRule<TreeDataByteSequence, T[,]>
+		private class Deserialize<T> : TreeDataDeserializeRule<T[,]>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
+			protected override void Execute(TreeDataByteSequence self, ref object obj)
 			{
-				if (!(self.TryReadType(out Type type) && type == typeof(T[,])))
+				if (!(self.TryReadType(out Type dataType) && dataType == typeof(T[,])))
 				{
 					//读取指针回退，类型码
 					self.ReadBack(8);
@@ -94,7 +94,7 @@ namespace WorldTree.TreeDataFormatters
 				self.ReadUnmanaged(out int count);
 				if (count == ValueMarkCode.NULL_OBJECT)
 				{
-					value = null;
+					obj = null;
 					return;
 				}
 				count = ~count;
@@ -102,7 +102,7 @@ namespace WorldTree.TreeDataFormatters
 				{
 					//读取指针回退
 					self.ReadBack(4);
-					self.SkipData(type);
+					self.SkipData(dataType);
 					return;
 				}
 
@@ -110,9 +110,9 @@ namespace WorldTree.TreeDataFormatters
 				int dim2 = self.ReadUnmanaged<int>();
 
 				//假如数组为空或长度不一致，那么重新分配
-				if (value == null || ((T[,])value).GetLength(0) != dim1 || ((T[,])value).GetLength(1) != dim2)
+				if (obj == null || ((T[,])obj).GetLength(0) != dim1 || ((T[,])obj).GetLength(1) != dim2)
 				{
-					value = new T[dim1, dim2];
+					obj = new T[dim1, dim2];
 				}
 
 				if (TreeDataType.TypeDict.TryGetValue(typeof(T), out int size))
@@ -125,7 +125,7 @@ namespace WorldTree.TreeDataFormatters
 					{
 						// 一次性读取整个数组数据
 						ref byte spanRef = ref self.GetReadRefByte((int)totalSize);
-						ref byte dst = ref Unsafe.As<T, byte>(ref ((T[,])value)[0, 0]);
+						ref byte dst = ref Unsafe.As<T, byte>(ref ((T[,])obj)[0, 0]);
 						Unsafe.CopyBlockUnaligned(ref dst, ref spanRef, (uint)totalSize);
 					}
 					else
@@ -134,7 +134,7 @@ namespace WorldTree.TreeDataFormatters
 						for (int i = 0; i < dim1; i++)
 						{
 							ref byte spanRef = ref self.GetReadRefByte(elementSize);
-							ref byte dst = ref Unsafe.As<T, byte>(ref ((T[,])value)[i, 0]);
+							ref byte dst = ref Unsafe.As<T, byte>(ref ((T[,])obj)[i, 0]);
 							Unsafe.CopyBlockUnaligned(ref dst, ref spanRef, (uint)elementSize);
 						}
 					}
@@ -145,7 +145,7 @@ namespace WorldTree.TreeDataFormatters
 					{
 						for (int j = 0; j < dim2; j++)
 						{
-							self.ReadValue(ref ((T[,])value)[i, j]);
+							self.ReadValue(ref ((T[,])obj)[i, j]);
 						}
 					}
 				}

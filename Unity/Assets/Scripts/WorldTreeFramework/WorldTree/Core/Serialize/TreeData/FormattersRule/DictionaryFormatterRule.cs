@@ -5,11 +5,12 @@ namespace WorldTree.TreeDataFormatters
 {
 	public static class DictionaryFormatterRule
 	{
-		private class Serialize<TKey, TValue> : TreeDataSerializeRule<TreeDataByteSequence, Dictionary<TKey, TValue>>
+		private class Serialize<TKey, TValue> : TreeDataSerializeRule<Dictionary<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
+			protected override void Execute(TreeDataByteSequence self, ref object obj)
 			{
-				Dictionary<TKey, TValue> dataDict = (Dictionary<TKey, TValue>)value;
+
+				Dictionary<TKey, TValue> dataDict = (Dictionary<TKey, TValue>)obj;
 				self.WriteType(typeof(Dictionary<TKey, TValue>));
 				if (dataDict == null)
 				{
@@ -29,21 +30,22 @@ namespace WorldTree.TreeDataFormatters
 			}
 		}
 
-		private class Deserialize<TKey, TValue> : TreeDataDeserializeRule<TreeDataByteSequence, Dictionary<TKey, TValue>>
+		private class Deserialize<TKey, TValue> : TreeDataDeserializeRule<Dictionary<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
+			protected override void Execute(TreeDataByteSequence self, ref object obj)
 			{
-				if (!(self.TryReadType(out Type type) && type == typeof(Dictionary<TKey, TValue>)))
+				if (!(self.TryReadType(out Type dataType) && dataType == typeof(Dictionary<TKey, TValue>)))
 				{
-					//跳跃数据
-					self.SkipData(type);
+					//跳跃数据,子类读取数据
+					self.SkipData(dataType);
+
 					return;
 				}
 				//读取数组维度数量
 				self.ReadUnmanaged(out int count);
 				if (count == ValueMarkCode.NULL_OBJECT)
 				{
-					value = null;
+					obj = null;
 					return;
 				}
 				count = ~count;
@@ -51,20 +53,17 @@ namespace WorldTree.TreeDataFormatters
 				{
 					//读取指针回退
 					self.ReadBack(4);
-					self.SkipData(type);
+					self.SkipData(dataType);
 					return;
 				}
 
 				self.ReadUnmanaged(out int length);
 
 				//假如数组为空或长度不一致
-				Dictionary<TKey, TValue> dataDict = value as Dictionary<TKey, TValue>;
+				Dictionary<TKey, TValue> dataDict = obj as Dictionary<TKey, TValue>;
 				if (dataDict == null)
 				{
-					//改用Type反射创建
-					value.GetType();
-
-					value = dataDict = new Dictionary<TKey, TValue>(length);
+					obj = dataDict = new();
 				}
 				else if (dataDict.Count != 0)
 				{

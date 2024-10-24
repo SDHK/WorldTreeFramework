@@ -7,11 +7,11 @@ namespace WorldTree.TreeDataFormatters
 {
 	public static class KeyValuePairFormatterRule
 	{
-		class Serialize<TKey, TValue> : TreeDataSerializeRule<TreeDataByteSequence, KeyValuePair<TKey, TValue>>
+		class Serialize<TKey, TValue> : TreeDataSerializeRule<KeyValuePair<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
+			protected override void Execute(TreeDataByteSequence self, ref object obj)
 			{
-				KeyValuePair<TKey, TValue> data = (KeyValuePair<TKey, TValue>)value;
+				KeyValuePair<TKey, TValue> data = (KeyValuePair<TKey, TValue>)obj;
 				self.WriteType(typeof(KeyValuePair<TKey, TValue>));
 				self.WriteUnmanaged(2);
 				if (!self.WriteCheckNameCode(-853882612)) self.AddNameCode(-853882612, nameof(data.Key));
@@ -21,21 +21,21 @@ namespace WorldTree.TreeDataFormatters
 			}
 		}
 
-		class Deserialize<TKey, TValue> : TreeDataDeserializeRule<TreeDataByteSequence, KeyValuePair<TKey, TValue>>
+		class Deserialize<TKey, TValue> : TreeDataDeserializeRule<KeyValuePair<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value)
+			protected override void Execute(TreeDataByteSequence self, ref object obj)
 			{
 				var targetType = typeof(KeyValuePair<TKey, TValue>);
-				if (!(self.TryReadType(out Type type) && type == targetType))
+				if (!(self.TryReadType(out Type dataType) && dataType == targetType))
 				{
-					self.SkipData(type);
+					self.SkipData(dataType);
 					return;
 				}
 				self.ReadUnmanaged(out int count);
 				if (count < 0)
 				{
 					self.ReadBack(4);
-					self.SkipData(type);
+					self.SkipData(dataType);
 					return;
 				}
 				TKey key = default;
@@ -51,7 +51,7 @@ namespace WorldTree.TreeDataFormatters
 						default: self.SkipData(); break;
 					}
 				}
-				value = new KeyValuePair<TKey, TValue>(key, val);
+				obj = new KeyValuePair<TKey, TValue>(key, val);
 			}
 		}
 	}

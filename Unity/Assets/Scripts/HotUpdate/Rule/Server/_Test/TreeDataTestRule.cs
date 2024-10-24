@@ -57,22 +57,17 @@ namespace WorldTree
 				}
 				//logText += $"{item} ";
 			}
-			logText += $"\n字典数量{data2.DataDict.Count} :\n";
-			foreach (var item in data2.DataDict)
+			if (data2.DataDict != null)
 			{
-				logText += $"[{item.Key}: {item.Value}],";
+				logText += $"\n字典数量{data2.DataDict.Count} :\n";
+				foreach (var item in data2.DataDict)
+				{
+					logText += $"[{item.Key}: {item.Value}],";
+				}
 			}
 			self.Log(logText);
 		};
 
-		/// <summary>
-		/// 危险写入非托管数组
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="value"></param>
-		public static unsafe void DangerousReadUnmanagedArray1(ref Array value)
-		{
-		}
 	}
 
 

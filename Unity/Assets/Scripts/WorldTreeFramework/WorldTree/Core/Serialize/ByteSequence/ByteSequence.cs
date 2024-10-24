@@ -611,6 +611,29 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 跳过字符串
+		/// </summary>
+		public void SkipString()
+		{
+			if (ReadUnmanaged(out int length) == ValueMarkCode.NULL_OBJECT)
+			{
+				return;
+			}
+			else if (length == 0)
+			{
+				return;
+			}
+			if (length > 0)
+			{
+				ReadSkip(checked(length * 2));
+			}
+			else
+			{
+				ReadSkip(~length);
+			}
+		}
+
+		/// <summary>
 		/// 读取字符串
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

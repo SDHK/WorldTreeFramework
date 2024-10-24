@@ -428,6 +428,7 @@ namespace WorldTree
 		{
 			var groupDict = RuleGroupDict.GetOrNewValue(rule.RuleType);
 			var ruleList = groupDict.GetOrNewValue(rule.NodeType);
+			ruleList.NodeType = rule.NodeType;
 			ruleList.RuleType = rule.RuleType;
 			groupDict.RuleType = rule.RuleType;
 			ruleList.AddRule(rule);
@@ -457,12 +458,14 @@ namespace WorldTree
 			var listenerRuleGroupDict = ListenerRuleTargetGroupDict.GetOrNewValue(listenerRule.NodeType).GetOrNewValue(listenerRule.RuleType);
 			var listenerRuleList = listenerRuleGroupDict.GetOrNewValue(targetNodeType);
 			listenerRuleList.AddRule(listenerRule);
+			listenerRuleList.NodeType = listenerRule.NodeType;
 			listenerRuleList.RuleType = listenerRule.RuleType;
 			listenerRuleGroupDict.RuleType = listenerRule.RuleType;
 
 			var targetRuleGroupDict = TargetRuleListenerGroupDict.GetOrNewValue(targetNodeType).GetOrNewValue(listenerRule.RuleType);
 			var targetRuleList = targetRuleGroupDict.GetOrNewValue(listenerRule.NodeType);
 			targetRuleList.AddRule(listenerRule);
+			targetRuleList.NodeType = listenerRule.NodeType;
 			targetRuleList.RuleType = listenerRule.RuleType;
 			targetRuleGroupDict.RuleType = listenerRule.RuleType;
 		}
@@ -599,12 +602,6 @@ namespace WorldTree
 						ruleList.Add(rule);
 				}
 				foreach (var rule in ruleList) AddRule(rule);
-				//foreach (var rule in ruleList)
-				//{
-				//	if (!ParameterGenericNodeSubTypeDict.TryGetValue(rule.NodeType, out var subTypeHash)) continue;
-				//	foreach (long subNodeType in subTypeHash) SupportPolymorphicRule(subNodeType);
-				//}
-
 				ruleList.Dispose();
 			}
 			typeHash.Add(Core.TypeToCode(nodeType));//已支持名单
@@ -1086,6 +1083,7 @@ namespace WorldTree
 				else
 				{
 					ruleList = ruleGroup.GetOrNewValue(nodeType);
+					ruleList.NodeType = nodeType;
 					ruleList.RuleType = ruleType;
 					return ruleList;
 				}
@@ -1095,6 +1093,7 @@ namespace WorldTree
 				ruleGroup = RuleGroupDict.GetOrNewValue(ruleType);
 				ruleGroup.RuleType = ruleType;
 				var ruleList = ruleGroup.GetOrNewValue(nodeType);
+				ruleList.NodeType = nodeType;
 				ruleList.RuleType = ruleType;
 				return ruleList;
 			}

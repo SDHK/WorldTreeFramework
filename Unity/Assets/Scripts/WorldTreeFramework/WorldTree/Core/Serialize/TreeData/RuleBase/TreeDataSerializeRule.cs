@@ -42,25 +42,23 @@ namespace WorldTree
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(INode self, ref object arg1) => Execute(self as N, ref arg1);
+		public virtual void Invoke(INode self, ref object obj) => Execute(self as N, ref obj);
 		/// <summary>
 		/// 执行
 		/// </summary>
-		protected abstract void Execute(N self, ref object arg1);
+		protected abstract void Execute(N self, ref object obj);
 	}
 
 	/// <summary>
 	/// 树数据序列化法则
 	/// </summary>
-	public abstract class TreeDataSerializeRule<N, GT> : TreeDataSerializeRuleBase<N, TreeDataSerialize, GT>
-			where N : class, INode, AsRule<TreeDataSerialize>
+	public abstract class TreeDataSerializeRule<GT> : TreeDataSerializeRuleBase<TreeDataByteSequence, TreeDataSerialize, GT>
 	{ }
 
 	/// <summary>
 	/// 树数据反序列化法则
 	/// </summary>
-	public abstract class TreeDataDeserializeRule<N, GT> : TreeDataSerializeRuleBase<N, TreeDataDeserialize, GT>
-			where N : class, INode, AsRule<TreeDataDeserialize>
+	public abstract class TreeDataDeserializeRule<GT> : TreeDataSerializeRuleBase<TreeDataByteSequence, TreeDataDeserialize, GT>
 	{ }
 
 }

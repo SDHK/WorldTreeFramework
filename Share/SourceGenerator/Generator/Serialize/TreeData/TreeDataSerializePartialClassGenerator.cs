@@ -47,7 +47,7 @@ namespace WorldTree.SourceGenerator
 		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols)
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			Code.AppendLine($"		class TreeDataSerialize : TreeDataSerializeRule<TreeDataByteSequence, {className}>");
+			Code.AppendLine($"		class TreeDataSerialize : TreeDataSerializeRule<{className}>");
 			Code.AppendLine("		{");
 			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value)");
 			Code.AppendLine("			{");
@@ -82,20 +82,20 @@ namespace WorldTree.SourceGenerator
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-			Code.AppendLine($"		class TreeDataDeserialize : TreeDataDeserializeRule<TreeDataByteSequence, {className}>");
+			Code.AppendLine($"		class TreeDataDeserialize : TreeDataDeserializeRule<{className}>");
 			Code.AppendLine("		{");
 			Code.AppendLine("			protected override void Execute(TreeDataByteSequence self, ref object value)");
 			Code.AppendLine("			{");
 			Code.AppendLine($"				var targetType = typeof({className});");
-			Code.AppendLine("				if (!(self.TryReadType(out Type type) && type == targetType))");
+			Code.AppendLine("				if (!(self.TryReadType(out Type dataType) && dataType == targetType))");
 			Code.AppendLine("				{");
 			if (classSymbol.TypeKind != TypeKind.Struct)
 			{
-				Code.AppendLine("					self.SubTypeReadValue(type, targetType, ref value);");
+				Code.AppendLine("					self.SubTypeReadValue(dataType, targetType, ref value);");
 			}
 			else
 			{
-				Code.AppendLine("					self.SkipData(type);");
+				Code.AppendLine("					self.SkipData(dataType);");
 			}
 			Code.AppendLine("					return;");
 			Code.AppendLine("				}");
@@ -111,7 +111,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("				if (count < 0)");
 			Code.AppendLine("				{");
 			Code.AppendLine("					self.ReadBack(4);");
-			Code.AppendLine("					self.SkipData(type);");
+			Code.AppendLine("					self.SkipData(dataType);");
 			Code.AppendLine("					return;");
 			Code.AppendLine("				}");
 			if (classSymbol.TypeKind != TypeKind.Struct)
