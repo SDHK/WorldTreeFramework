@@ -69,7 +69,7 @@ namespace WorldTree
 		public RuleGroup deserializeRuleDict;
 
 
-		#region 读取
+		#region 写入
 
 		/// <summary>
 		/// 写入值

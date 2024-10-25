@@ -625,7 +625,7 @@ namespace WorldTree
 			}
 			if (length > 0)
 			{
-				ReadSkip(checked(length * 2));
+				ReadSkip(length);
 			}
 			else
 			{
@@ -644,9 +644,8 @@ namespace WorldTree
 				this.LogError($"字符串长度超出数据长度: {length}.");
 				return null;
 			}
-			int byteCount = checked(length * 2);
-			ref byte src = ref GetReadRefByte(byteCount);
-			return new string(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.As<byte, char>(ref src), length));
+			ref byte src = ref GetReadRefByte(length);
+			return new string(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.As<byte, char>(ref src), (int)(length*0.5f)));
 		}
 
 
