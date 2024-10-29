@@ -50,7 +50,7 @@ namespace WorldTree.Analyzer
 				Title = "HashSet类型局部变量命名",
 				MessageFormat = "HashSet类型局部变量 命名要加Hash后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*Hash$"),
+				Check = s => Regex.IsMatch(s, ".*Hash$") || s == "obj",
 				FixCode = s => s + "Hash",
 				NeedComment = false,
 			});

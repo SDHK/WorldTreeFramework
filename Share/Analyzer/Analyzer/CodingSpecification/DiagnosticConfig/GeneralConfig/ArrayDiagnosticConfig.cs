@@ -48,7 +48,7 @@ namespace WorldTree.Analyzer
 				Title = "Array类型局部变量命名",
 				MessageFormat = "Array类型局部变量 命名要加s后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*s$"),
+				Check = s => Regex.IsMatch(s, ".*s$") || s == "obj",
 				FixCode = s => s + "s",
 				NeedComment = false,
 			});

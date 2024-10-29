@@ -22,11 +22,24 @@ namespace WorldTree
 		}
 	}
 
+
 	/// <summary>
 	/// data
 	/// </summary>
 	[TreeDataSerializable]
-	public partial class ADataBase
+	public partial interface IADataBase
+	{
+		/// <summary>
+		/// 测试int
+		/// </summary>
+		public float AInt { get; set; }
+	}
+
+	/// <summary>
+	/// data
+	/// </summary>
+	[TreeDataSerializable]
+	public abstract partial class ADataBase
 	{
 		/// <summary>
 		/// 测试int

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 namespace WorldTree.TreeDataFormatters
 {
@@ -7,23 +8,23 @@ namespace WorldTree.TreeDataFormatters
 	{
 		private class Serialize<TKey, TValue> : TreeDataSerializeRule<Dictionary<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj)
+			protected override void Execute(TreeDataByteSequence self, ref object value)
 			{
+				Dictionary<TKey, TValue> obj = (Dictionary<TKey, TValue>)value;
 
-				Dictionary<TKey, TValue> dataDict = (Dictionary<TKey, TValue>)obj;
 				self.WriteType(typeof(Dictionary<TKey, TValue>));
-				if (dataDict == null)
+				if (obj == null)
 				{
 					self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);
 					return;
 				}
 				//写入数组维度数量
 				self.WriteUnmanaged(~1);
-				self.WriteUnmanaged(dataDict.Count);
-				if (dataDict.Count == 0) return;
+				self.WriteUnmanaged(obj.Count);
+				if (obj.Count == 0) return;
 
 				//写入数组数据
-				foreach (var item in dataDict)
+				foreach (var item in obj)
 				{
 					self.WriteValue(item);
 				}
@@ -32,20 +33,20 @@ namespace WorldTree.TreeDataFormatters
 
 		private class Deserialize<TKey, TValue> : TreeDataDeserializeRule<Dictionary<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj)
+			protected override void Execute(TreeDataByteSequence self, ref object value)
 			{
+				var targetType = typeof(Dictionary<TKey, TValue>);
 				if (!(self.TryReadType(out Type dataType) && dataType == typeof(Dictionary<TKey, TValue>)))
 				{
 					//跳跃数据,子类读取数据
-					self.SkipData(dataType);
-
+					self.SubTypeReadValue(dataType, targetType, ref value);
 					return;
 				}
 				//读取数组维度数量
 				self.ReadUnmanaged(out int count);
 				if (count == ValueMarkCode.NULL_OBJECT)
 				{
-					obj = null;
+					value = null;
 					return;
 				}
 				count = ~count;
@@ -60,14 +61,14 @@ namespace WorldTree.TreeDataFormatters
 				self.ReadUnmanaged(out int length);
 
 				//假如数组为空或长度不一致
-				Dictionary<TKey, TValue> dataDict = obj as Dictionary<TKey, TValue>;
-				if (dataDict == null)
+				Dictionary<TKey, TValue> obj = value as Dictionary<TKey, TValue>;
+				if (obj == null)
 				{
-					obj = dataDict = new();
+					value = obj = new();
 				}
-				else if (dataDict.Count != 0)
+				else if (obj.Count != 0)
 				{
-					dataDict.Clear();
+					obj.Clear();
 				}
 
 				//数据长度为0，直接返回
@@ -78,7 +79,7 @@ namespace WorldTree.TreeDataFormatters
 				for (int i = 0; i < length; i++)
 				{
 					keyValuePair = self.ReadValue<KeyValuePair<TKey, TValue>>();
-					dataDict.Add(keyValuePair.Key, keyValuePair.Value);
+					obj.Add(keyValuePair.Key, keyValuePair.Value);
 				}
 			}
 		}

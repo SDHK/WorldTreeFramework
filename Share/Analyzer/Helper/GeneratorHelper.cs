@@ -66,6 +66,11 @@ namespace WorldTree
 		public static string TreeDataIgnoreAttribute = "TreeDataIgnoreAttribute";
 
 		/// <summary>
+		/// 树节点数据特别处理特性标记
+		/// </summary>
+		public static string TreeDataSpecialAttribute = "TreeDataSpecialAttribute";
+
+		/// <summary>
 		/// 法则类型数组生成特性标记
 		/// </summary>
 		public static string RuleTypesGeneratorAttribute = "RuleTypesGeneratorAttribute";

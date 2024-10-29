@@ -49,7 +49,7 @@ namespace WorldTree.Analyzer
 				Title = "Dictionary类型局部变量命名",
 				MessageFormat = "Dictionary类型局部变量 命名要加Dict后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*Dict$"),
+				Check = s => Regex.IsMatch(s, ".*Dict$") || s == "obj",
 				FixCode = s => s + "Dict",
 				NeedComment = false,
 			});

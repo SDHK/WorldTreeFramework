@@ -10,6 +10,9 @@
 * 设定法则只服务于Node节点，不服务于Unit单位。
 * Unit会在框架启动时使用，这时候RuleManager还没有初始化，
 * 所以Unit无法使用Rule
+* 
+* Rule的目标是节点INode而不是Object,
+* 主要是为了能拿到节点树上的东西。
 
 */
 

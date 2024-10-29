@@ -265,6 +265,30 @@ namespace WorldTree
 			}
 		}
 
+
+		/// <summary>
+		/// 写入值
+		/// </summary>
+		public void WriteValue(Type type, in object value)
+		{
+			long typeCode = this.Core.TypeToCode(type);
+			this.Core.RuleManager.SupportNodeRule(typeCode);
+
+			//动态支持多维数组
+			if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
+
+			if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+			{
+				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value));
+			}
+			else
+			{
+				//不支持的类型，写入空对象
+				this.WriteType(typeof(object));
+				this.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
+			}
+		}
+
 		#endregion
 
 		#region 读取

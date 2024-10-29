@@ -52,7 +52,7 @@ namespace WorldTree.Analyzer
 				Title = "Stack类型局部变量命名",
 				MessageFormat = "Stack类型局部变量 命名要加Stack后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*Stack$"),
+				Check = s => Regex.IsMatch(s, ".*Stack$") || s == "obj",
 				FixCode = s => s + "Stack",
 				NeedComment = false,
 			});

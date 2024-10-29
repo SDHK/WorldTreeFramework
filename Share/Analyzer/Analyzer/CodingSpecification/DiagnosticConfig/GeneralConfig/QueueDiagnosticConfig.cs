@@ -50,7 +50,7 @@ namespace WorldTree.Analyzer
 				Title = "Queue类型局部变量命名",
 				MessageFormat = "Queue类型局部变量 命名要加Queue后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*Queue$"),
+				Check = s => Regex.IsMatch(s, ".*Queue$") || s == "obj",
 				FixCode = s => s + "Queue",
 				NeedComment = false,
 			});

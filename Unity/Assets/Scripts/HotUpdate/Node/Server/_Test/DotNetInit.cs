@@ -8,6 +8,7 @@ namespace WorldTree
 	public interface TestRule : ISendRule<float, string>, IMethodRule { }
 
 
+
 	/// <summary>
 	/// ²âÊÔ½Úµã
 	/// </summary>

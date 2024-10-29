@@ -50,7 +50,7 @@ namespace WorldTree.Analyzer
 				Title = "List类型局部变量命名",
 				MessageFormat = "List类型局部变量 命名要加List后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*List$"),
+				Check = s => Regex.IsMatch(s, ".*List$") || s == "obj",
 				FixCode = s => s + "List",
 				NeedComment = false,
 			});

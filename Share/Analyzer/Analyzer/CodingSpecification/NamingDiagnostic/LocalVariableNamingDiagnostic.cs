@@ -31,7 +31,6 @@ namespace WorldTree.Analyzer
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
-
 			DiagnosticLocalVariable(context, objectDiagnostics);
 			DiagnosticClassName(context, objectDiagnostics);
 		}

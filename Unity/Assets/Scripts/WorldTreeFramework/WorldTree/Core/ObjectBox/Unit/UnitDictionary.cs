@@ -14,23 +14,27 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 单位字典：可由对象池管理回收
-    /// </summary>
-    public partial class UnitDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IUnit
-    {
-        public WorldTreeCore Core { get; set; }
-        public long Type { get; set; }
-        public bool IsFromPool { get; set; }
-        public bool IsDisposed { get; set; }
+	/// <summary>
+	/// 单位字典：可由对象池管理回收
+	/// </summary>
+	[TreeDataSerializable(true)]
+	public partial class UnitDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IUnit
+	{
+		[TreeDataIgnore]
+		public WorldTreeCore Core { get; set; }
+		[TreeDataIgnore]
+		public long Type { get; set; }
+		[TreeDataIgnore]
+		public bool IsFromPool { get; set; }
+		[TreeDataIgnore]
+		public bool IsDisposed { get; set; }
 
-        public void OnCreate() { }
-
+		public void OnCreate() { }
 
 		public void Dispose()
-        {
-            Core.PoolRecycle(this);
-        }
+		{
+			Core.PoolRecycle(this);
+		}
 
 		public virtual void OnDispose() => Clear();
 

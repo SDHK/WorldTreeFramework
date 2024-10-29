@@ -44,6 +44,30 @@ namespace WorldTree
 			return false;
 		}
 
+		/// <summary>
+		/// 尝试获取指定的特性
+		/// </summary>
+		/// <returns></returns>
+		public static bool TryGetAttribute(MemberDeclarationSyntax node, string attributeName,out AttributeSyntax? attributeSyntax)
+		{
+			attributeSyntax = null;
+			if (node.AttributeLists.Count == 0) return false;
+
+			foreach (var attributeList in node.AttributeLists)
+			{
+				foreach (var attribute in attributeList.Attributes)
+				{
+					var attributeNameText = attribute.Name.ToString();
+					if (attributeNameText == attributeName || attributeNameText == attributeName.Replace("Attribute", ""))
+					{
+						attributeSyntax = attribute;
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
 
 		/// <summary>
 		/// 检查类是否直接实现了指定接口
