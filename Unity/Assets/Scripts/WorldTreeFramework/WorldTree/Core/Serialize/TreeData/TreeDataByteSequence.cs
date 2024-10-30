@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace WorldTree
 {
@@ -244,7 +245,7 @@ namespace WorldTree
 		/// 写入值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteValue<T>(in T value)
+		public void WriteValue<T>(in T value, int nameCode = -1)
 		{
 			Type type = value?.GetType() ?? typeof(T);
 			long typeCode = this.Core.TypeToCode(type);
@@ -255,7 +256,7 @@ namespace WorldTree
 
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
-				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value));
+				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value), ref nameCode);
 			}
 			else
 			{
@@ -269,7 +270,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入值
 		/// </summary>
-		public void WriteValue(Type type, in object value)
+		public void WriteValue(Type type, in object value, int nameCode = -1)
 		{
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
@@ -279,7 +280,7 @@ namespace WorldTree
 
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
-				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value));
+				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value), ref nameCode);
 			}
 			else
 			{
@@ -316,7 +317,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取值
 		/// </summary>
-		public void ReadValue(Type type, ref object value)
+		public void ReadValue(Type type, ref object value, int nameCode = -1)
 		{
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
@@ -326,7 +327,7 @@ namespace WorldTree
 
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
-				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value);
+				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value, ref nameCode);
 			}
 			else
 			{

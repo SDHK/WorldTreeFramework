@@ -24,29 +24,29 @@ namespace WorldTree
 	/// <summary>
 	/// 树数据序列化法则
 	/// </summary>
-	public interface TreeDataSerialize : ISendRefRule<object>, ITreeDataSerialize, ISourceGeneratorIgnore { }
+	public interface TreeDataSerialize : ISendRefRule<object, int>, ITreeDataSerialize, ISourceGeneratorIgnore { }
 
 	/// <summary>
 	/// 树数据反序列化法则
 	/// </summary>
-	public interface TreeDataDeserialize : ISendRefRule<object>, ITreeDataDeserialize, ISourceGeneratorIgnore { }
+	public interface TreeDataDeserialize : ISendRefRule<object, int>, ITreeDataDeserialize, ISourceGeneratorIgnore { }
 
 	/// <summary>
 	/// 树数据序列化法则基类
 	/// </summary>
 	/// <remarks>打破常规写法，以参数类型为主，支持继承法则</remarks>
-	public abstract class TreeDataSerializeRuleBase<N, R, T1> : Rule<T1, R>, ISendRefRule<object>
+	public abstract class TreeDataSerializeRuleBase<N, R, T1> : Rule<T1, R>, ISendRefRule<object, int>
 		where N : class, INode, AsRule<R>
-		where R : ISendRefRule<object>
+		where R : ISendRefRule<object, int>
 	{
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(INode self, ref object obj) => Execute(self as N, ref obj);
+		public virtual void Invoke(INode self, ref object value, ref int nameCode) => Execute(self as N, ref value, ref nameCode);
 		/// <summary>
 		/// 执行
 		/// </summary>
-		protected abstract void Execute(N self, ref object obj);
+		protected abstract void Execute(N self, ref object value, ref int nameCode);
 	}
 
 	/// <summary>

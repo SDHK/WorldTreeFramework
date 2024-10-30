@@ -9,7 +9,7 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<TKey, TValue> : TreeDataSerializeRule<KeyValuePair<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj)
+			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
 				KeyValuePair<TKey, TValue> data = (KeyValuePair<TKey, TValue>)obj;
 				self.WriteType(typeof(KeyValuePair<TKey, TValue>));
@@ -23,7 +23,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize<TKey, TValue> : TreeDataDeserializeRule<KeyValuePair<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj)
+			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
 				var targetType = typeof(KeyValuePair<TKey, TValue>);
 				if (!(self.TryReadType(out Type dataType) && dataType == targetType))
@@ -42,7 +42,7 @@ namespace WorldTree.TreeDataFormatters
 				TValue val = default;
 				for (int i = 0; i < count; i++)
 				{
-					self.ReadUnmanaged(out int nameCode);
+					self.ReadUnmanaged(out nameCode);
 
 					switch (nameCode)
 					{

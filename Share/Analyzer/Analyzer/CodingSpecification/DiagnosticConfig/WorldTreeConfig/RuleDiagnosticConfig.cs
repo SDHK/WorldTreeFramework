@@ -33,14 +33,15 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.ClassDeclaration,
 				NeedComment = false
 			});
-			SetConfig(DiagnosticKey.MethodNaming, new DiagnosticConfig()
-			{
-				Title = "Rule类型方法禁止",
-				MessageFormat = "Rule中不可以写方法",
-				DeclarationKind = SyntaxKind.MethodDeclaration,
-				UnKeywordKinds = new() { SyntaxKind.ProtectedKeyword, SyntaxKind.OverrideKeyword },
-				Check = s => false,
-			});
+
+			//SetConfig(DiagnosticKey.MethodNaming, new DiagnosticConfig()
+			//{
+			//	Title = "Rule类型方法禁止",
+			//	MessageFormat = "Rule中不可以写方法",
+			//	DeclarationKind = SyntaxKind.MethodDeclaration,
+			//	UnKeywordKinds = new() { SyntaxKind.ProtectedKeyword, SyntaxKind.OverrideKeyword },
+			//	Check = s => false,
+			//});
 			
 
 		}

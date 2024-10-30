@@ -61,7 +61,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试字典
 		/// </summary>
-		public UnitDictionary<int, string> DataDict;
+		public Dictionary<int, string> DataDict;
 	}
 
 	//public partial struct AData

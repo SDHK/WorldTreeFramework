@@ -22,7 +22,6 @@ namespace WorldTree
 	{
 		[TreeDataIgnore]
 		public WorldTreeCore Core { get; set; }
-		[TreeDataIgnore]
 		public long Type { get; set; }
 		[TreeDataIgnore]
 		public bool IsFromPool { get; set; }

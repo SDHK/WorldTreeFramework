@@ -13,7 +13,10 @@ namespace WorldTree
 		static int Value = nameof(Value).GetFNV1aHash32();
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
-			//self.Log(Key + " :: " + Value);
+			//int value1 = nameof(self).GetFNV1aHash32();
+			//self.Log(value1 + " :: " + Value);
+
+			//if (self != null) return;
 
 			AData data = new AData();
 

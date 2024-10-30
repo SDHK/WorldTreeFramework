@@ -63,83 +63,96 @@ namespace WorldTree.SourceGenerator
 			// 是否有父级转换
 			INamedTypeSymbol? baseSymbol = GetBaseClassName(typeDeclaration, classSymbol);
 
+			string? baseName = baseSymbol?.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+
 			// 获取类的完整名称，包括泛型参数
 			ClassGenerator(Code, classSymbol, out bool isBase);
 
 			List<ISymbol>? fieldSymbols = null;
 			if (!isBase) fieldSymbols = FindField(classSymbol, baseSymbol);
 			Code.AppendLine("	{");
-			GeneratorSerialize(Code, classSymbol, fieldSymbols, isBase, baseSymbol);
-			GeneratorDeserialize(Code, classSymbol, fieldSymbols, isBase, baseSymbol);
+			GeneratorSerialize(Code, classSymbol, fieldSymbols, isBase, baseName);
+			GeneratorDeserialize(Code, classSymbol, fieldSymbols, isBase, baseName);
 			Code.AppendLine("	}");
 		}
-		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isBase, INamedTypeSymbol baseSymbol)
+		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isBase, string baseName)
 		{
 			//获取类型上的特性
 
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			Code.AppendLine($"		class TreeDataSerialize : TreeDataSerializeRule<{className}>");
 			Code.AppendLine("		{");
-			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value)");
+			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)");
 			Code.AppendLine("			{");
 
 			if (!isBase) Code.AppendLine($"				{className} obj = ({className})value;");
-			Code.AppendLine($"				self.WriteType(typeof({className}));");
-
-
+			Code.AppendLine("				if (nameCode == -1)");
+			Code.AppendLine("				{");
+			Code.AppendLine($"					self.WriteType(typeof({className}));");
 			if (classSymbol.TypeKind != TypeKind.Struct)
 			{
 				if (isBase)
 				{
-					Code.AppendLine("				self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);");
+					Code.AppendLine("					self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);");
 				}
 				else
 				{
-					Code.AppendLine("				if (obj == null)");
-					Code.AppendLine("				{");
-					Code.AppendLine("					self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);");
-					Code.AppendLine("					return;");
-					Code.AppendLine("				}");
+					Code.AppendLine("					if (obj == null)");
+					Code.AppendLine("					{");
+					Code.AppendLine("						self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);");
+					Code.AppendLine("						return;");
+					Code.AppendLine("					}");
 				}
 			}
 			if (fieldSymbols != null)
 			{
-				if (baseSymbol != null)
+				if (baseName != null)
 				{
-					Code.AppendLine($"				self.WriteUnmanaged({fieldSymbols.Count + 1});");
+					Code.AppendLine($"					self.WriteUnmanaged({fieldSymbols.Count + 1});");
 				}
 				else
 				{
-					Code.AppendLine($"				self.WriteUnmanaged({fieldSymbols.Count});");
+					Code.AppendLine($"					self.WriteUnmanaged({fieldSymbols.Count});");
 				}
+			}
+			Code.AppendLine("				}");
+
+			if (fieldSymbols != null)
+			{
 				foreach (ISymbol symbol in fieldSymbols)
 				{
 					int hash = symbol.Name.GetFNV1aHash32();
 					Code.AppendLine($"				if (!self.WriteCheckNameCode({hash})) self.AddNameCode({hash}, nameof(obj.{symbol.Name}));");
 					Code.AppendLine($"				self.WriteValue(obj.{symbol.Name});");
 				}
-				if (baseSymbol != null)
+				if (baseName != null)
 				{
-					string baseName = baseSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-					int hash = baseName.GetFNV1aHash32();
-
-					Code.AppendLine($"				if (!self.WriteCheckNameCode({hash})) self.AddNameCode({hash}, nameof({baseName}));");
-					Code.AppendLine($"				self.WriteValue(typeof({baseName}), value);");
+					//int hash = baseName.GetFNV1aHash32();
+					//Code.AppendLine($"				if (!self.WriteCheckNameCode({hash})) self.AddNameCode({hash}, nameof({baseName}));");
+					Code.AppendLine($"				self.WriteValue(typeof({baseName}), value, 0);");
 				}
 			}
-
 			Code.AppendLine("			}");
 			Code.AppendLine("		}");
 		}
 
-		private static void GeneratorDeserialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isBase, INamedTypeSymbol baseSymbol)
+		private static void GeneratorDeserialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isBase, string baseName)
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 			Code.AppendLine($"		class TreeDataDeserialize : TreeDataDeserializeRule<{className}>");
 			Code.AppendLine("		{");
-			Code.AppendLine("			protected override void Execute(TreeDataByteSequence self, ref object value)");
+			Code.AppendLine("			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)");
 			Code.AppendLine("			{");
+			if (baseName != null)
+			{
+				Code.AppendLine("				if (nameCode != -1)");
+				Code.AppendLine("				{");
+				Code.AppendLine("					SwitchRead(self, ref value, nameCode);");
+				Code.AppendLine("					return;");
+				Code.AppendLine("				}");
+			}
 			Code.AppendLine($"				var targetType = typeof({className});");
 			Code.AppendLine("				if (!(self.TryReadType(out var dataType) && dataType == targetType))");
 			Code.AppendLine("				{");
@@ -174,11 +187,11 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("				}");
 				if (classSymbol.TypeKind == TypeKind.Class)
 				{
-					Code.AppendLine($"				if (!(value is {className} obj))value = obj = new {className}();");
+					Code.AppendLine($"				if (value is not {className})value = new {className}();");
 				}
 				else
 				{
-					Code.AppendLine($"				var obj = ({className})value;");
+					//Code.AppendLine($"				var obj = ({className})value;");
 				}
 
 			}
@@ -188,41 +201,57 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("				self.SkipData(dataType);");
 			}
 
-			if (fieldSymbols != null && fieldSymbols.Count != 0 || baseSymbol != null)
+			if (fieldSymbols != null && fieldSymbols.Count != 0 || baseName != null)
 			{
 				Code.AppendLine("				for (int i = 0; i < count; i++)");
 				Code.AppendLine("				{");
 
-				Code.AppendLine("					self.ReadUnmanaged(out int nameCode);");
-				Code.AppendLine("					switch (nameCode)");
-				Code.AppendLine("					{");
+				Code.AppendLine("					self.ReadUnmanaged(out nameCode);");
+				Code.AppendLine("					SwitchRead(self, ref value, nameCode);");
+				Code.AppendLine("				}");
+			}
+
+			//if (!isBase && classSymbol.TypeKind == TypeKind.Struct) Code.AppendLine("				value = obj;");
+
+			Code.AppendLine("			}");
+
+			Code.AppendLine("			/// <summary>");
+			Code.AppendLine("			/// 字段读取");
+			Code.AppendLine("			/// </summary>");
+			Code.AppendLine($"			private void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)");
+			Code.AppendLine("			{");
+			Code.AppendLine($"				if (value is not {className} obj) return;");
+			Code.AppendLine("				switch (nameCode)");
+			Code.AppendLine("				{");
+			if (fieldSymbols != null)
+			{
 				foreach (ISymbol symbol in fieldSymbols)
 				{
 					int hash = symbol.Name.GetFNV1aHash32();
 					if (symbol is IPropertySymbol propertySymbol)
 					{
 						string symbolName = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-						Code.AppendLine($"						case {hash}: obj.{symbol.Name} = self.ReadValue<{symbolName}>(); break;");
+						Code.AppendLine($"					case {hash}: obj.{symbol.Name} = self.ReadValue<{symbolName}>(); break;");
 					}
 					else
 					{
-						Code.AppendLine($"						case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
+						Code.AppendLine($"					case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
 					}
 				}
-				if (baseSymbol != null)
-				{
-					string baseName = baseSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-					int hash = baseName.GetFNV1aHash32();
-					Code.AppendLine($"						case {hash}: self.ReadValue(typeof({baseName}), ref value); break;");
-				}
-				Code.AppendLine($"						default: self.SkipData(); break;");
-				Code.AppendLine("					}");
-				Code.AppendLine("				}");
 			}
 
-			if (!isBase && classSymbol.TypeKind == TypeKind.Struct) Code.AppendLine("				value = obj;");
-
+			if (baseName != null)
+			{
+				Code.AppendLine($"					default: self.ReadValue(typeof({baseName}), ref value, nameCode); break;");
+			}
+			else
+			{
+				Code.AppendLine($"					default: self.SkipData(); break;");
+			}
+			Code.AppendLine("				}");
 			Code.AppendLine("			}");
+
+
 			Code.AppendLine("		}");
 
 		}
@@ -231,6 +260,7 @@ namespace WorldTree.SourceGenerator
 		{
 			Func<ISymbol, bool> filter = f =>
 			{
+				if (f.Name.Contains('.')) return false;
 				if (f is IFieldSymbol fieldSymbol && !fieldSymbol.IsStatic && !fieldSymbol.IsReadOnly && !fieldSymbol.IsConst)
 				{
 					if (fieldSymbol.AssociatedSymbol is IPropertySymbol) return false;
@@ -240,18 +270,34 @@ namespace WorldTree.SourceGenerator
 				else if (f is IPropertySymbol propertySymbol && !propertySymbol.IsStatic && !propertySymbol.IsReadOnly && propertySymbol.GetMethod != null && propertySymbol.SetMethod != null)
 				{
 					if (NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreeDataIgnoreAttribute)) return false;
+					// 过滤掉索引器
+					if (propertySymbol.IsIndexer) return false;
 					return true;
 				}
 				return false;
 			};
 
-			IEnumerable<ISymbol> members = NamedSymbolHelper.GetAllMembers(classSymbol).Where(filter);
 
+			IEnumerable<ISymbol> members;
 			if (baseTypeName != null)
 			{
-				// 获取字段和属性，过滤掉 TreeDataIgnore 标记的字段,并且过滤掉基类的字段
-				return members.Where(f => !baseTypeName.GetMembers().Any(m => SymbolEqualityComparer.Default.Equals(m, f))).ToList();
+				// 只收集 classSymbol 自身声明的字段和属性
+				members = classSymbol.GetMembers().Where(filter);
 			}
+			else
+			{
+				// 获取所有成员，包括继承的成员
+				members = NamedSymbolHelper.GetAllMembers(classSymbol).Where(filter);
+			}
+
+
+			//IEnumerable<ISymbol> members = NamedSymbolHelper.GetAllMembers(classSymbol).Where(filter);
+
+			//if (baseTypeName != null)
+			//{
+			//	// 获取字段和属性，过滤掉 TreeDataIgnore 标记的字段,并且过滤掉基类的字段
+			//	return members.Where(f => !baseTypeName.GetMembers().Any(m => SymbolEqualityComparer.Default.Equals(m, f))).ToList();
+			//}
 
 			// 获取字段和属性，过滤掉 TreeDataIgnore 标记的字段
 			return members.ToList();

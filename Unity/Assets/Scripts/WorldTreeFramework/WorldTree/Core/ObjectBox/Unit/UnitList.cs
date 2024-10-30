@@ -17,9 +17,11 @@ namespace WorldTree
     /// <summary>
     /// 单位列表：可由对象池管理回收
     /// </summary>
-    public class UnitList<T> : List<T>, IUnit
+	[TreeDataSerializable()]
+	public partial class UnitList<T> : List<T>, IUnit
     {
-        public WorldTreeCore Core { get; set; }
+		[TreeDataIgnore]
+		public WorldTreeCore Core { get; set; }
         public long Type { get; set; }
         public bool IsFromPool { get; set; }
         public bool IsDisposed { get; set; }
@@ -31,7 +33,6 @@ namespace WorldTree
 		public void OnCreate() { }
 
 		public virtual void OnDispose() => Clear();
-
 
 	}
 }

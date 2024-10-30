@@ -39,6 +39,8 @@ namespace WorldTree.SourceGenerator
 
 			foreach (var TypeListItem in receiver.TypeDeclarationsDict)
 			{
+				Code.Clear();
+				ClassCode.Clear();
 				string? Namespace = null;
 				string? Usings = null;
 				string fileName = TypeListItem.Key;

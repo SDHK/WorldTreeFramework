@@ -27,6 +27,8 @@ namespace WorldTree.SourceGenerator
 			StringBuilder ClassCode = new StringBuilder();
 			foreach (var TypeListItem in receiver.TypeDeclarationsDict)
 			{
+				Code.Clear();
+				ClassCode.Clear();
 				string? Namespace = null;
 				string? Usings = null;
 				string fileName = TypeListItem.Key;

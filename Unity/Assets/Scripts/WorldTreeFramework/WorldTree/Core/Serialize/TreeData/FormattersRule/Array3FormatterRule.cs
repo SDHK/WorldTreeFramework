@@ -18,7 +18,7 @@ namespace WorldTree.TreeDataFormatters
 		/// </summary>
 		private class Serialize<T> : TreeDataSerializeRule<T[,,]>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj)
+			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
 				self.WriteType(typeof(T[,,]));
 				T[,,] values = (T[,,])obj;
@@ -87,7 +87,7 @@ namespace WorldTree.TreeDataFormatters
 		/// </summary>
 		private class Deserialize<T> : TreeDataDeserializeRule<T[,,]>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj)
+			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
 				if (!(self.TryReadType(out Type dataType) && dataType == typeof(T[,,])))
 				{

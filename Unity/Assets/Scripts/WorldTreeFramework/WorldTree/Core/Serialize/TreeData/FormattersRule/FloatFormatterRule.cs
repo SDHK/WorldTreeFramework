@@ -33,7 +33,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Serialize : TreeDataSerializeRule<float>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj)
+			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
 				self.WriteType(typeof(float));
 				self.WriteUnmanaged((float)obj);
@@ -42,7 +42,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize : TreeDataDeserializeRule<float>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
 				if (self.TryReadType(out Type dataType) && TypeDict.TryGetValue(dataType, out var func))
 					obj = func(self);
