@@ -23,6 +23,7 @@ namespace WorldTree
 	{
 		[TreeDataIgnore]
 		public WorldTreeCore Core { get; set; }
+		[TreeDataIgnore]
 		public long Type { get; set; }
 		[TreeDataIgnore]
 		public bool IsFromPool { get; set; }
@@ -38,22 +39,5 @@ namespace WorldTree
 
 		public virtual void OnDispose() => Clear();
 
-	}
-
-	/// <summary>
-	/// 测试子级字典
-	/// </summary>
-	[TreeDataSerializable]
-	public partial class SubUnitDictionary<TKey, TValue> : UnitDictionary<TKey, TValue>
-	{
-		/// <summary>
-		/// 测试字段
-		/// </summary>
-		public int ABC;
-
-		/// <summary>
-		/// 测试字段
-		/// </summary>
-		public int ABC2;
 	}
 }

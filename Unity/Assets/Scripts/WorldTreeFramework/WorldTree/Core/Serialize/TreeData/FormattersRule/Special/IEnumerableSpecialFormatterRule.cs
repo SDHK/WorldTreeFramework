@@ -1,21 +1,34 @@
+
+
+
 using System.Collections.Generic;
 using System;
-using System.Collections;
 
 namespace WorldTree.TreeDataFormatters
 {
 
-	public static class DictionaryFormatterRule
+	/// <summary>
+	/// 枚举类型特殊格式化器
+	/// </summary>
+	public static class IEnumerableSpecialFormatterRule
 	{
-		[TreeDataSpecial(1)]
-		private class Serialize<TKey, TValue> : TreeDataSerializeRule<Dictionary<TKey, TValue>>
+		/// <summary>
+		/// 枚举类型特殊序列化法则基类
+		/// </summary>
+		public abstract class SerializeBase<T, ItemT> : TreeDataSerializeRule<T>
+			where T : class, IEnumerable<ItemT>, new()
 		{
+			/// <summary>
+			/// 遍历写入方法
+			/// </summary>
+			public abstract void ForeachWrite(TreeDataByteSequence self, T obj);
+
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				Dictionary<TKey, TValue> obj = (Dictionary<TKey, TValue>)value;
+				T obj = (T)value;
 				if (nameCode == -1)
 				{
-					self.WriteType(typeof(Dictionary<TKey, TValue>));
+					self.WriteType(typeof(T));
 					if (obj == null)
 					{
 						self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);
@@ -29,22 +42,24 @@ namespace WorldTree.TreeDataFormatters
 				if (!self.WriteCheckNameCode(1683726967)) self.AddNameCode(1683726967, nameof(self));
 
 				//序列化数组字段
-				self.WriteType(typeof(KeyValuePair<TKey, TValue>[]));
+				self.WriteType(typeof(ItemT[]));
 				//写入数组维度数量
 				self.WriteUnmanaged(~1);
-				self.WriteUnmanaged(obj.Count);
-				if (obj.Count == 0) return;
-
-				//写入数组数据
-				foreach (var item in obj)
-				{
-					self.WriteValue(item);
-				}
+				ForeachWrite(self, obj);
 			}
 		}
 
-		private  class Deserialize<TKey, TValue> : TreeDataDeserializeRule<Dictionary<TKey, TValue>>
+		/// <summary>
+		/// 枚举类型特殊反序列化法则基类
+		/// </summary>
+		public abstract class DeserializeBase<T, ItemT> : TreeDataDeserializeRule<T>
+			where T : class, IEnumerable<ItemT>, new()
 		{
+			/// <summary>
+			/// 遍历读取方法
+			/// </summary>
+			public abstract void ForeachRead(TreeDataByteSequence self, T obj);
+
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
 				if (nameCode != -1)
@@ -52,8 +67,8 @@ namespace WorldTree.TreeDataFormatters
 					SwitchRead(self, ref value, nameCode);
 					return;
 				}
-				var targetType = typeof(Dictionary<TKey, TValue>);
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(Dictionary<TKey, TValue>)))
+				var targetType = typeof(T);
+				if (!(self.TryReadType(out Type dataType) && dataType == typeof(T)))
 				{
 					//跳跃数据,子类读取数据
 					self.SubTypeReadValue(dataType, targetType, ref value);
@@ -72,7 +87,7 @@ namespace WorldTree.TreeDataFormatters
 					self.SkipData(dataType);
 					return;
 				}
-				if (value is not Dictionary<TKey, TValue>) value = new Dictionary<TKey, TValue>();
+				if (value is not T) value = new T();
 				for (int i = 0; i < count; i++)
 				{
 					self.ReadUnmanaged(out nameCode);
@@ -85,13 +100,13 @@ namespace WorldTree.TreeDataFormatters
 			/// </summary>
 			private void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)
 			{
-				if (value is not Dictionary<TKey, TValue> obj) return;
+				if (value is not T obj) return;
 				switch (nameCode)
 				{
 					case 1683726967:
 						{
 							//反序列化数组
-							if (!(self.TryReadType(out Type dataType) && dataType == typeof(KeyValuePair<TKey, TValue>[])))
+							if (!(self.TryReadType(out Type dataType) && dataType == typeof(ItemT[])))
 							{
 								//跳跃数据
 								self.SkipData(dataType);
@@ -99,18 +114,7 @@ namespace WorldTree.TreeDataFormatters
 							}
 							//读取数组维度数量,如果是null则会在前面挡掉,所以不用判断
 							self.ReadUnmanaged(out int _);
-							self.ReadUnmanaged(out int length);
-							//假如有数据
-							if (obj.Count != 0) obj.Clear();
-							//数据长度为0，直接返回
-							if (length == 0) return;
-							KeyValuePair<TKey, TValue> keyValuePair;
-							//读取数组数据
-							for (int j = 0; j < length; j++)
-							{
-								keyValuePair = self.ReadValue<KeyValuePair<TKey, TValue>>();
-								obj.Add(keyValuePair.Key, keyValuePair.Value);
-							}
+							ForeachRead(self, obj);
 						}
 						break;
 					default: self.SkipData(); break;

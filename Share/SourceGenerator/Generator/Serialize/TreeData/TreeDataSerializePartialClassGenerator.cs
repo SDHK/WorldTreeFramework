@@ -175,7 +175,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("			/// <summary>");
 			Code.AppendLine("			/// 字段读取");
 			Code.AppendLine("			/// </summary>");
-			Code.AppendLine($"			private void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)");
+			Code.AppendLine($"			private static void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)");
 			Code.AppendLine("			{");
 			Code.AppendLine($"				if (value is not {className} obj) return;");
 			Code.AppendLine("				switch (nameCode)");

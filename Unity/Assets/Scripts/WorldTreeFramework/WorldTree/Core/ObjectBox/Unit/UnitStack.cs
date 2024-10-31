@@ -17,18 +17,23 @@ namespace WorldTree
 	/// <summary>
 	/// 单位栈:这个栈可由对象池管理生成和回收
 	/// </summary>
-	public class UnitStack<T> : Stack<T>, IUnit
-    {
-        public WorldTreeCore Core { get; set; }
-        public long Type { get; set; }
-        public bool IsFromPool { get; set; }
-        public bool IsDisposed { get; set; }
+	[TreeDataSerializable]
+	public partial class UnitStack<T> : Stack<T>, IUnit
+	{
+		[TreeDataIgnore]
+		public WorldTreeCore Core { get; set; }
+		[TreeDataIgnore]
+		public long Type { get; set; }
+		[TreeDataIgnore]
+		public bool IsFromPool { get; set; }
+		[TreeDataIgnore]
+		public bool IsDisposed { get; set; }
 
 		public void Dispose()
 		{
 			Core.PoolRecycle(this);
 		}
-        public void OnCreate() { }
+		public void OnCreate() { }
 		public virtual void OnDispose() => Clear();
 	}
 }

@@ -11,21 +11,19 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 树节点数据装特性标记
+	/// 树节点数据标记
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
-	public class TreeDataSerializableAttribute : Attribute
-	{
-	}
+	public class TreeDataSerializableAttribute : Attribute { }
 
 	/// <summary>
-	/// 序列化忽略特性标记
+	/// 序列化成员忽略标记
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public class TreeDataIgnoreAttribute : Attribute { }
 
 	/// <summary>
-	/// 树节点特别数据标记，参数为设定的字段数量
+	/// 树节点特别处理标记，参数为设定的字段数量
 	/// </summary>
 	public class TreeDataSpecialAttribute : Attribute
 	{
