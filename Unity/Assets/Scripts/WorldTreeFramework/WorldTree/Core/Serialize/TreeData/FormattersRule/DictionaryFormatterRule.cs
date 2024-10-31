@@ -4,8 +4,10 @@ using System.Collections;
 
 namespace WorldTree.TreeDataFormatters
 {
+
 	public static class DictionaryFormatterRule
 	{
+		[TreeDataSpecial(1)]
 		private class Serialize<TKey, TValue> : TreeDataSerializeRule<Dictionary<TKey, TValue>>
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
@@ -41,7 +43,7 @@ namespace WorldTree.TreeDataFormatters
 			}
 		}
 
-		private class Deserialize<TKey, TValue> : TreeDataDeserializeRule<Dictionary<TKey, TValue>>
+		private  class Deserialize<TKey, TValue> : TreeDataDeserializeRule<Dictionary<TKey, TValue>>
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{

@@ -10,24 +10,12 @@ using System;
 
 namespace WorldTree
 {
-
 	/// <summary>
 	/// 树节点数据装特性标记
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
 	public class TreeDataSerializableAttribute : Attribute
 	{
-		/// <summary>
-		/// 是否是子类
-		/// </summary>
-		public bool IsSub = false;
-
-		public TreeDataSerializableAttribute(bool isSub = false)
-		{
-			IsSub = isSub;
-		}
-
-		public TreeDataSerializableAttribute() { }
 	}
 
 	/// <summary>
@@ -35,4 +23,20 @@ namespace WorldTree
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public class TreeDataIgnoreAttribute : Attribute { }
+
+	/// <summary>
+	/// 树节点特别数据标记，参数为设定的字段数量
+	/// </summary>
+	public class TreeDataSpecialAttribute : Attribute
+	{
+		/// <summary>
+		/// 字段数量
+		/// </summary>
+		public int FieldsCount;
+
+		public TreeDataSpecialAttribute(int fieldsCount = 1)
+		{
+			FieldsCount = fieldsCount;
+		}
+	}
 }

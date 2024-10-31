@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System;
 
 namespace WorldTree
 {
@@ -20,6 +21,24 @@ namespace WorldTree
 	/// </summary>
 	internal static class NamedSymbolHelper
 	{
+
+		[Flags]
+		public enum TypeCompareOptions
+		{
+			None = 0,
+			/// <summary>
+			/// 忽略类型参数名称
+			/// </summary>
+			IgnoreTypeParameterNames = 1,
+			/// <summary>
+			/// 忽略类型参数序号
+			/// </summary>
+			IgnoreTypeParameterOrdinal = 2,
+			/// <summary>
+			/// 严格比较类型参数
+			/// </summary>
+			StrictTypeParameterComparison = 4
+		}
 
 
 		/// <summary>
@@ -98,6 +117,53 @@ namespace WorldTree
 				}
 			}
 			return derivedTypes;
+		}
+
+
+		/// <summary>
+		/// 检查类型是否相等
+		/// </summary>
+		public static bool IsTypeSymbolEqual(INamedTypeSymbol type1, INamedTypeSymbol type2, TypeCompareOptions options = TypeCompareOptions.None)
+		{
+			if (SymbolEqualityComparer.Default.Equals(type1.OriginalDefinition, type2.OriginalDefinition))
+			{
+				if (type1.TypeArguments.Length == type2.TypeArguments.Length)
+				{
+					for (int i = 0; i < type1.TypeArguments.Length; i++)
+					{
+						var arg1 = type1.TypeArguments[i];
+						var arg2 = type2.TypeArguments[i];
+
+						if (arg1 is ITypeParameterSymbol param1 && arg2 is ITypeParameterSymbol param2)
+						{
+							// 严格比较
+							if (options.HasFlag(TypeCompareOptions.StrictTypeParameterComparison))
+							{
+								if (!SymbolEqualityComparer.Default.Equals(param1, param2))
+									return false;
+							}
+							// 忽略名称
+							else if (!options.HasFlag(TypeCompareOptions.IgnoreTypeParameterNames))
+							{
+								if (param1.Name != param2.Name)
+									return false;
+							}
+							// 检查序号
+							else if (!options.HasFlag(TypeCompareOptions.IgnoreTypeParameterOrdinal))
+							{
+								if (param1.Ordinal != param2.Ordinal)
+									return false;
+							}
+						}
+						else if (!SymbolEqualityComparer.Default.Equals(arg1, arg2))
+						{
+							return false;
+						}
+					}
+					return true;
+				}
+			}
+			return false;
 		}
 
 
@@ -305,21 +371,100 @@ namespace WorldTree
 		}
 
 
+		///// <summary>
+		///// 检测是否继承类型
+		///// </summary>
+		//public static bool CheckBase(ITypeSymbol typeSymbol, ITypeSymbol baseSymbol)
+		//{
+		//	var currentBaseType = typeSymbol.BaseType;
+		//	while (currentBaseType != null)
+		//	{
+		//		if (SymbolEqualityComparer.Default.Equals(currentBaseType, baseSymbol) ||
+		//			SymbolEqualityComparer.Default.Equals(currentBaseType.OriginalDefinition, baseSymbol.OriginalDefinition))
+		//		{
+		//			return true;
+		//		}
+		//		currentBaseType = currentBaseType.BaseType;
+		//	}
+		//	return false;
+		//}
+
 		/// <summary>
-		/// 检测是否继承类型
+		/// 检测是否继承类型，支持泛型检测
 		/// </summary>
 		public static bool CheckBase(ITypeSymbol typeSymbol, ITypeSymbol baseSymbol)
 		{
+			// 1. 先检查类型本身
+			if (SymbolEqualityComparer.Default.Equals(typeSymbol, baseSymbol) ||
+				SymbolEqualityComparer.Default.Equals(typeSymbol.OriginalDefinition, baseSymbol.OriginalDefinition))
+			{
+				return true;
+			}
+
+			// 2. 检查接口实现
+			if (baseSymbol.TypeKind == TypeKind.Interface)
+			{
+				foreach (var @interface in typeSymbol.AllInterfaces)
+				{
+					if (SymbolEqualityComparer.Default.Equals(@interface, baseSymbol) ||
+						SymbolEqualityComparer.Default.Equals(@interface.OriginalDefinition, baseSymbol.OriginalDefinition))
+					{
+						return true;
+					}
+				}
+			}
+
+			// 3. 检查基类继承
 			var currentBaseType = typeSymbol.BaseType;
 			while (currentBaseType != null)
 			{
-				if (SymbolEqualityComparer.Default.Equals(currentBaseType, baseSymbol) ||
-					SymbolEqualityComparer.Default.Equals(currentBaseType.OriginalDefinition, baseSymbol.OriginalDefinition))
+				// 直接比较类型
+				if (SymbolEqualityComparer.Default.Equals(currentBaseType, baseSymbol))
 				{
 					return true;
 				}
+
+				// 比较原始定义（处理泛型情况）
+				if (SymbolEqualityComparer.Default.Equals(currentBaseType.OriginalDefinition, baseSymbol.OriginalDefinition))
+				{
+					// 如果是泛型类型，可能还需要检查类型参数是否匹配
+					if (baseSymbol is INamedTypeSymbol baseNamedType &&
+						currentBaseType is INamedTypeSymbol currentNamedType)
+					{
+						// 如果不需要严格匹配泛型参数，直接返回true
+						return true;
+
+						// 如果需要严格匹配泛型参数，可以添加以下检查：
+						/*
+						if (baseNamedType.TypeArguments.Length == currentNamedType.TypeArguments.Length)
+						{
+							bool allTypeArgumentsMatch = true;
+							for (int i = 0; i < baseNamedType.TypeArguments.Length; i++)
+							{
+								if (!SymbolEqualityComparer.Default.Equals(
+									baseNamedType.TypeArguments[i], 
+									currentNamedType.TypeArguments[i]))
+								{
+									allTypeArgumentsMatch = false;
+									break;
+								}
+							}
+							if (allTypeArgumentsMatch)
+							{
+								return true;
+							}
+						}
+						*/
+					}
+					else
+					{
+						return true;
+					}
+				}
+
 				currentBaseType = currentBaseType.BaseType;
 			}
+
 			return false;
 		}
 

@@ -7,6 +7,7 @@
 
 */
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
 
@@ -30,69 +31,41 @@ namespace WorldTree.SourceGenerator
 			return hash;
 		}
 
-		private static INamedTypeSymbol? GetBaseClassName(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol? typeSymbol)
-		{
-			// 获取类型的符号信息
-			if (typeSymbol == null) return null;
-
-			// 获取特性
-			var attribute = typeSymbol.GetAttributes()
-				.FirstOrDefault(attr => attr.AttributeClass?.Name == GeneratorHelper.TreeDataSerializableAttribute);
-
-			if (attribute == null) return null;
-
-			// 获取 IsSub 参数值
-			var isSub = attribute.ConstructorArguments.Length > 0
-				? (bool?)attribute.ConstructorArguments[0].Value ?? false
-				: false;
-
-			// 如果 IsSub 为 true，返回基类名称
-			if (isSub && typeSymbol.BaseType != null)
-			{
-				return typeSymbol.BaseType;
-			}
-			return null;
-		}
-
-
 		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration)
 		{
-			// 将 ClassDeclarationSyntax 转换为 INamedTypeSymbol
 			INamedTypeSymbol? classSymbol = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
 
-			// 是否有父级转换
-			INamedTypeSymbol? baseSymbol = GetBaseClassName(typeDeclaration, classSymbol);
+			INamedTypeSymbol? baseSymbol = null;
+			int membersCount = 0;
 
+			// 获取类的完整名称，包括泛型参数
+			ClassGenerator(Code, classSymbol, out bool isAbstract);
+
+			List<ISymbol>? fieldSymbols = null;
+			if (!isAbstract) fieldSymbols = GetAllMembers(classSymbol, TreeDataSerializeGenerator.TypeFieldsCountDict, out baseSymbol, out membersCount);
 			string? baseName = baseSymbol?.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 
-			// 获取类的完整名称，包括泛型参数
-			ClassGenerator(Code, classSymbol, out bool isBase);
-
-			List<ISymbol>? fieldSymbols = null;
-			if (!isBase) fieldSymbols = FindField(classSymbol, baseSymbol);
 			Code.AppendLine("	{");
-			GeneratorSerialize(Code, classSymbol, fieldSymbols, isBase, baseName);
-			GeneratorDeserialize(Code, classSymbol, fieldSymbols, isBase, baseName);
+			GeneratorSerialize(Code, classSymbol, fieldSymbols, isAbstract, baseName, membersCount);
+			GeneratorDeserialize(Code, classSymbol, fieldSymbols, isAbstract, baseName, membersCount);
 			Code.AppendLine("	}");
 		}
-		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isBase, string baseName)
+		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount)
 		{
-			//获取类型上的特性
-
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			Code.AppendLine($"		class TreeDataSerialize : TreeDataSerializeRule<{className}>");
 			Code.AppendLine("		{");
 			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)");
 			Code.AppendLine("			{");
 
-			if (!isBase) Code.AppendLine($"				{className} obj = ({className})value;");
+			if (!isAbstract) Code.AppendLine($"				{className} obj = ({className})value;");
 			Code.AppendLine("				if (nameCode == -1)");
 			Code.AppendLine("				{");
 			Code.AppendLine($"					self.WriteType(typeof({className}));");
 			if (classSymbol.TypeKind != TypeKind.Struct)
 			{
-				if (isBase)
+				if (isAbstract)
 				{
 					Code.AppendLine("					self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);");
 				}
@@ -107,14 +80,7 @@ namespace WorldTree.SourceGenerator
 			}
 			if (fieldSymbols != null)
 			{
-				if (baseName != null)
-				{
-					Code.AppendLine($"					self.WriteUnmanaged({fieldSymbols.Count + 1});");
-				}
-				else
-				{
-					Code.AppendLine($"					self.WriteUnmanaged({fieldSymbols.Count});");
-				}
+				Code.AppendLine($"					self.WriteUnmanaged({membersCount});");
 			}
 			Code.AppendLine("				}");
 
@@ -128,8 +94,6 @@ namespace WorldTree.SourceGenerator
 				}
 				if (baseName != null)
 				{
-					//int hash = baseName.GetFNV1aHash32();
-					//Code.AppendLine($"				if (!self.WriteCheckNameCode({hash})) self.AddNameCode({hash}, nameof({baseName}));");
 					Code.AppendLine($"				self.WriteValue(typeof({baseName}), value, 0);");
 				}
 			}
@@ -137,7 +101,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("		}");
 		}
 
-		private static void GeneratorDeserialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isBase, string baseName)
+		private static void GeneratorDeserialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount)
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
@@ -177,7 +141,7 @@ namespace WorldTree.SourceGenerator
 			}
 
 
-			if (!isBase)
+			if (!isAbstract)
 			{
 				Code.AppendLine("				if (count < 0)");
 				Code.AppendLine("				{");
@@ -189,11 +153,6 @@ namespace WorldTree.SourceGenerator
 				{
 					Code.AppendLine($"				if (value is not {className})value = new {className}();");
 				}
-				else
-				{
-					//Code.AppendLine($"				var obj = ({className})value;");
-				}
-
 			}
 			else
 			{
@@ -210,8 +169,6 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("					SwitchRead(self, ref value, nameCode);");
 				Code.AppendLine("				}");
 			}
-
-			//if (!isBase && classSymbol.TypeKind == TypeKind.Struct) Code.AppendLine("				value = obj;");
 
 			Code.AppendLine("			}");
 
@@ -256,61 +213,14 @@ namespace WorldTree.SourceGenerator
 
 		}
 
-		private static List<ISymbol>? FindField(INamedTypeSymbol classSymbol, INamedTypeSymbol baseTypeName)
+		
+		private static void ClassGenerator(StringBuilder Code, INamedTypeSymbol typeNamedTypeSymbol, out bool isAbstract)
 		{
-			Func<ISymbol, bool> filter = f =>
-			{
-				if (f.Name.Contains('.')) return false;
-				if (f is IFieldSymbol fieldSymbol && !fieldSymbol.IsStatic && !fieldSymbol.IsReadOnly && !fieldSymbol.IsConst)
-				{
-					if (fieldSymbol.AssociatedSymbol is IPropertySymbol) return false;
-					if (NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreeDataIgnoreAttribute)) return false;
-					return true;
-				}
-				else if (f is IPropertySymbol propertySymbol && !propertySymbol.IsStatic && !propertySymbol.IsReadOnly && propertySymbol.GetMethod != null && propertySymbol.SetMethod != null)
-				{
-					if (NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreeDataIgnoreAttribute)) return false;
-					// 过滤掉索引器
-					if (propertySymbol.IsIndexer) return false;
-					return true;
-				}
-				return false;
-			};
-
-
-			IEnumerable<ISymbol> members;
-			if (baseTypeName != null)
-			{
-				// 只收集 classSymbol 自身声明的字段和属性
-				members = classSymbol.GetMembers().Where(filter);
-			}
-			else
-			{
-				// 获取所有成员，包括继承的成员
-				members = NamedSymbolHelper.GetAllMembers(classSymbol).Where(filter);
-			}
-
-
-			//IEnumerable<ISymbol> members = NamedSymbolHelper.GetAllMembers(classSymbol).Where(filter);
-
-			//if (baseTypeName != null)
-			//{
-			//	// 获取字段和属性，过滤掉 TreeDataIgnore 标记的字段,并且过滤掉基类的字段
-			//	return members.Where(f => !baseTypeName.GetMembers().Any(m => SymbolEqualityComparer.Default.Equals(m, f))).ToList();
-			//}
-
-			// 获取字段和属性，过滤掉 TreeDataIgnore 标记的字段
-			return members.ToList();
-
-		}
-
-		private static void ClassGenerator(StringBuilder Code, INamedTypeSymbol typeNamedTypeSymbol, out bool isBase)
-		{
-			isBase = false;
+			isAbstract = false;
 			string className = typeNamedTypeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			if (typeNamedTypeSymbol.TypeKind == TypeKind.Interface)
 			{
-				isBase = true;
+				isAbstract = true;
 				Code.AppendLine($"	public partial interface {className}");
 			}
 			else if (typeNamedTypeSymbol.TypeKind == TypeKind.Struct)
@@ -321,7 +231,7 @@ namespace WorldTree.SourceGenerator
 			{
 				if (typeNamedTypeSymbol.IsAbstract)
 				{
-					isBase = true;
+					isAbstract = true;
 					Code.AppendLine($"	public abstract partial class {className}");
 				}
 				else
@@ -331,5 +241,135 @@ namespace WorldTree.SourceGenerator
 			}
 
 		}
+
+
+
+		/// <summary>
+		/// 获取类型所有符合条件的字段和属性成员，遇到指定基类停止搜索
+		/// </summary>
+		public static List<ISymbol> GetAllMembers(INamedTypeSymbol classSymbol, Dictionary<INamedTypeSymbol, int> ignoreBaseSymbols, out INamedTypeSymbol? baseSymbol, out int membersCount)
+		{
+			int baseMembersCount = 0;
+			INamedTypeSymbol? baseTypeSymbol = null;
+
+			// 成员过滤条件
+			static bool FilterMember(ISymbol symbol)
+			{
+				// 排除包含点的名称
+				if (symbol.Name.Contains('.')) return false;
+
+				// 检查是否有忽略特性
+				if (NamedSymbolHelper.CheckAttribute(symbol, GeneratorHelper.TreeDataIgnoreAttribute))
+					return false;
+
+				// 处理字段
+				if (symbol is IFieldSymbol fieldSymbol)
+				{
+					// 只接受非静态、非只读、非常量的字段
+					if (!fieldSymbol.IsStatic && !fieldSymbol.IsReadOnly && !fieldSymbol.IsConst)
+					{
+						// 排除自动实现的属性的后备字段
+						return fieldSymbol.AssociatedSymbol is not IPropertySymbol;
+					}
+				}
+				// 处理属性
+				else if (symbol is IPropertySymbol propertySymbol)
+				{
+					// 只接受非静态、非只读、有get/set方法且非索引器的属性
+					return !propertySymbol.IsStatic &&
+						   !propertySymbol.IsReadOnly &&
+						   propertySymbol.GetMethod != null &&
+						   propertySymbol.SetMethod != null &&
+						   !propertySymbol.IsIndexer;
+				}
+
+				return false;
+			}
+
+			var members = new List<ISymbol>();
+			var processedTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+
+			bool CollectMembers(INamedTypeSymbol type)
+			{
+				// 避免重复处理
+				if (!processedTypes.Add(type))
+					return false;
+
+				// 检查是否达到了需要忽略的基类
+				if (ignoreBaseSymbols != null)
+				{
+					foreach (var ignoreType in ignoreBaseSymbols)
+					{
+						if (IsTypeSymbolEqual(type, ignoreType.Key))
+						{
+							baseMembersCount = ignoreType.Value;
+							baseTypeSymbol = type;
+							return true;
+						}
+					}
+				}
+
+				// 获取并过滤成员
+				foreach (var member in type.GetMembers().Where(FilterMember))
+				{
+					// 检查是否已存在同名成员
+					if (!members.Any(m => m.Name == member.Name))
+					{
+						members.Add(member);
+					}
+				}
+
+				// 处理基类
+				if (type.BaseType != null)
+				{
+					return CollectMembers(type.BaseType);
+				}
+
+				return false;
+			}
+
+			// 开始收集成员
+			CollectMembers(classSymbol);
+
+			membersCount = members.Count + baseMembersCount;
+			baseSymbol = baseTypeSymbol;
+			return members;
+		}
+
+		/// <summary>
+		/// 比较两个类型是否相等（包括泛型参数）
+		/// </summary>
+		private static bool IsTypeSymbolEqual(INamedTypeSymbol type1, INamedTypeSymbol type2)
+		{
+			if (SymbolEqualityComparer.Default.Equals(type1.OriginalDefinition, type2.OriginalDefinition))
+			{
+				// 检查泛型参数数量
+				if (type1.TypeArguments.Length == type2.TypeArguments.Length)
+				{
+					// 比较每个泛型参数
+					for (int i = 0; i < type1.TypeArguments.Length; i++)
+					{
+						var arg1 = type1.TypeArguments[i];
+						var arg2 = type2.TypeArguments[i];
+
+						// 如果是类型参数（如 T, T1 等）
+						if (arg1 is ITypeParameterSymbol param1 && arg2 is ITypeParameterSymbol param2)
+						{
+							// 这里可以选择合适的比较方式，这里使用最宽松的比较
+							continue;
+						}
+						// 如果是具体类型，直接比较
+						else if (!SymbolEqualityComparer.Default.Equals(arg1, arg2))
+						{
+							return false;
+						}
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+
+
 	}
 }

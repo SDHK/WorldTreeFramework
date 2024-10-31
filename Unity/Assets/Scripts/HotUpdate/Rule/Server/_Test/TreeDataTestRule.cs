@@ -26,7 +26,7 @@ namespace WorldTree
 				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },
 			};
 
-			data.DataDict = new UnitDictionary<int, string>()
+			data.DataDict = new SubUnitDictionary<int, string>()
 			{
 				{ 1, "1.1f测" },
 				{ 2, "2.2f测试" },
@@ -34,6 +34,7 @@ namespace WorldTree
 				{ 4, "4.4f" },
 				{ 5, "5.5f"},
 			};
+
 
 			ADataBase aDataBase = data;
 			self.AddTemp(out TreeDataByteSequence sequenceWrite).Serialize(aDataBase);

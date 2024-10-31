@@ -10,6 +10,7 @@
 
 */
 
+using System.Collections;
 using System.Collections.Generic;
 
 namespace WorldTree
@@ -17,7 +18,7 @@ namespace WorldTree
 	/// <summary>
 	/// 单位字典：可由对象池管理回收
 	/// </summary>
-	[TreeDataSerializable(true)]
+	[TreeDataSerializable]
 	public partial class UnitDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IUnit
 	{
 		[TreeDataIgnore]
@@ -37,5 +38,22 @@ namespace WorldTree
 
 		public virtual void OnDispose() => Clear();
 
+	}
+
+	/// <summary>
+	/// 测试子级字典
+	/// </summary>
+	[TreeDataSerializable]
+	public partial class SubUnitDictionary<TKey, TValue> : UnitDictionary<TKey, TValue>
+	{
+		/// <summary>
+		/// 测试字段
+		/// </summary>
+		public int ABC;
+
+		/// <summary>
+		/// 测试字段
+		/// </summary>
+		public int ABC2;
 	}
 }

@@ -16,12 +16,30 @@ namespace WorldTree.SourceGenerator
 	[Generator]
 	internal class TreeDataSerializeGenerator : ISourceGenerator
 	{
+
+		public static Dictionary<INamedTypeSymbol, int> TypeFieldsCountDict = new Dictionary<INamedTypeSymbol, int>();
+
+
 		public void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindTreeDataSyntaxReceiver());
 		}
 		public void Execute(GeneratorExecutionContext context)
 		{
+			TypeFieldsCountDict.Clear();
+			foreach (var tree in context.Compilation.SyntaxTrees)
+			{
+				var semanticModel = context.Compilation.GetSemanticModel(tree);
+				var root = tree.GetRoot();
+				var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
+				foreach (var classDeclaration in classDeclarations)
+				{
+					var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration) as INamedTypeSymbol;
+					// 查找特性并获取类型的 INamedTypeSymbol 和 int 值
+					FindTreeDataSpecialAttribute(classSymbol);
+				}
+			}
+
 			if (!(context.SyntaxReceiver is FindTreeDataSyntaxReceiver receiver and not null)) return;
 			StringBuilder Code = new StringBuilder();
 			StringBuilder ClassCode = new StringBuilder();
@@ -58,6 +76,32 @@ namespace WorldTree.SourceGenerator
 
 
 				context.AddSource($"{fileName}TreeDataSerialize.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+			}
+		}
+
+
+		private static void FindTreeDataSpecialAttribute(INamedTypeSymbol classSymbol)
+		{
+			// 1. 直接查找类上的特性
+			foreach (var attribute in classSymbol.GetAttributes())
+			{
+				if (attribute.AttributeClass?.Name == GeneratorHelper.TreeDataSpecialAttribute &&
+					attribute.ConstructorArguments.Length == 1 &&
+					attribute.ConstructorArguments[0].Value is int intValue)
+				{
+					var baseType = classSymbol.BaseType;
+					if (baseType != null && baseType.Name == "TreeDataSerializeRule" && baseType.TypeArguments.Length == 1)
+					{
+						var genericType = baseType.TypeArguments[0] as INamedTypeSymbol;
+						if (genericType != null)
+						{
+							// 处理泛型类型和特性参数
+							var typeName = genericType.ToDisplayString();
+							if (!TypeFieldsCountDict.ContainsKey(genericType))
+								TypeFieldsCountDict.Add(genericType, intValue);
+						}
+					}
+				}
 			}
 		}
 	}

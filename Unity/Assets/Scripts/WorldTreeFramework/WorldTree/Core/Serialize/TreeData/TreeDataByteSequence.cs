@@ -382,7 +382,7 @@ namespace WorldTree
 						isSubType = true;
 						break;
 					}
-					baseType = type.BaseType;
+					baseType = baseType.BaseType;
 				}
 			}
 			if (isSubType)//是子类型
