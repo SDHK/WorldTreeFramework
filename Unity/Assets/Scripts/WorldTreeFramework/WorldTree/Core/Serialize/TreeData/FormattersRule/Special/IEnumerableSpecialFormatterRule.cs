@@ -31,7 +31,7 @@ namespace WorldTree.TreeDataFormatters
 					self.WriteType(typeof(T));
 					if (obj == null)
 					{
-						self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);
+						self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
 						return;
 					}
 					//Ð´Èë×Ö¶ÎÊýÁ¿

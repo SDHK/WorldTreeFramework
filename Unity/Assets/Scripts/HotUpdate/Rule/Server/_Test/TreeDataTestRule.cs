@@ -15,7 +15,7 @@ namespace WorldTree
 		{
 			//int value1 = nameof(self).GetFNV1aHash32();
 			//self.Log(value1 + " :: " + Value);
-
+			
 			//if (self != null) return;
 
 			AData data = self.AddComponent(out AData _);
@@ -75,6 +75,10 @@ namespace WorldTree
 				}
 			}
 			self.Log(logText);
+			self.Log("\n反序列化结构打印\n");
+
+			self.Log(NodeRule.ToStringDrawTree(self.Core));
+			
 		};
 
 	}

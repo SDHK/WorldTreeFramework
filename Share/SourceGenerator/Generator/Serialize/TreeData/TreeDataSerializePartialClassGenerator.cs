@@ -67,13 +67,13 @@ namespace WorldTree.SourceGenerator
 			{
 				if (isAbstract)
 				{
-					Code.AppendLine("					self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);");
+					Code.AppendLine("					self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);");
 				}
 				else
 				{
 					Code.AppendLine("					if (obj == null)");
 					Code.AppendLine("					{");
-					Code.AppendLine("						self.WriteUnmanaged((long)ValueMarkCode.NULL_OBJECT);");
+					Code.AppendLine("						self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);");
 					Code.AppendLine("						return;");
 					Code.AppendLine("					}");
 				}
