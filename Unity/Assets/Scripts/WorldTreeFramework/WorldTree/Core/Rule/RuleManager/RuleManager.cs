@@ -624,7 +624,6 @@ namespace WorldTree
 			{
 				//节点可能会是非泛型，但父类则有泛型的情况，需要多态化所有父类泛型法则
 				CreateGenericNodeRule(type);
-				type = type.BaseType;
 
 				//泛型参数法则子类继承支持记录
 				//检测类型父类是否有泛型参数法则，有则记录
@@ -633,6 +632,7 @@ namespace WorldTree
 				{
 					if (!nodeSubTypeHash.Contains(nodeType)) nodeSubTypeHash.Add(nodeType);
 				}
+				type = type.BaseType;
 			}
 
 			//遍历接口

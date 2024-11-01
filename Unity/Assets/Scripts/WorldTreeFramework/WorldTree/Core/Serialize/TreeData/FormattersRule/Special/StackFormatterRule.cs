@@ -12,7 +12,6 @@ namespace WorldTree.TreeDataFormatters
 			public override void ForeachWrite(TreeDataByteSequence self, Stack<T> obj)
 			{
 				self.WriteUnmanaged(obj.Count);
-				if (obj.Count == 0) return;
 				foreach (var item in obj) self.WriteValue(item);
 			}
 		}
@@ -23,7 +22,6 @@ namespace WorldTree.TreeDataFormatters
 			{
 				if (obj.Count != 0) obj.Clear();
 				self.ReadUnmanaged(out int length);
-				if (length == 0) return;
 				for (int i = 0; i < length; i++) obj.Push(self.ReadValue<T>());
 			}
 		}

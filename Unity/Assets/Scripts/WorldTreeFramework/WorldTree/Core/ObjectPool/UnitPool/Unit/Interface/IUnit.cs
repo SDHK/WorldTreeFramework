@@ -20,7 +20,8 @@ namespace WorldTree
 	/// <summary>
 	/// 单位对象接口
 	/// </summary>
-	public interface IUnit : IWorldTreeBasic
+	[TreeDataSerializable]
+	public partial interface IUnit : IWorldTreeBasic
 	{
 
 	}

@@ -107,7 +107,6 @@ namespace WorldTree
 		[TreePackIgnore]
 		public bool ActiveToggle { get; set; }
 
-		[TreePackIgnore]
 		public bool IsActive { get; set; }
 
 		[TreeDataIgnore]
@@ -177,6 +176,8 @@ namespace WorldTree
 		/// <summary>
 		/// 此节点挂载到父级的分支类型
 		/// </summary>
+		[TreeDataIgnore]
+		[TreePackIgnore]
 		protected long branchType;
 
 		[TreeDataIgnore]

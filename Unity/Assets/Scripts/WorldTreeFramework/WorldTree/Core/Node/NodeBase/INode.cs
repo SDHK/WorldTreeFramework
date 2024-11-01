@@ -69,6 +69,7 @@ namespace WorldTree
 	/// <para>世界树节点的最底层接口</para>
 	/// <para>部分类型直接继承INode接口，将会生成对应的Copy Node内容的部分类</para>
 	/// </remarks>
+	[TreeDataSerializable]
 	public partial interface INode : IWorldTreeBasic
 		, AsRule<Enable>
 		, AsRule<Add>

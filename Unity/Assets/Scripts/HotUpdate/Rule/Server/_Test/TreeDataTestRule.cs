@@ -18,7 +18,11 @@ namespace WorldTree
 
 			//if (self != null) return;
 
-			AData data = new AData();
+			AData data = self.AddComponent(out AData _);
+
+			data.AddComponent(out TreeDataNode1 dataNode1);
+
+			dataNode1.BInt = 789.4f;
 
 			data.AInt = 401.5f;
 			data.Ints = new int[][,,]{
@@ -35,16 +39,17 @@ namespace WorldTree
 				{ 5, "5.5f"},
 			};
 
-
-			ADataBase aDataBase = data;
+			AData aDataBase = data;
 			self.AddTemp(out TreeDataByteSequence sequenceWrite).Serialize(aDataBase);
+
+			self.RemoveComponent<TreeDataTest, AData>();
 
 			byte[] bytes = sequenceWrite.ToBytes();
 
 			self.Log($"序列化字节长度{bytes.Length}\n");
 
 			self.AddTemp(out TreeDataByteSequence sequenceRead).SetBytes(bytes);
-			ADataBase aDataBase2 = new AData();
+			AData aDataBase2 = self.AddComponent(out AData _);
 			sequenceRead.Deserialize(ref aDataBase2);
 			AData data2 = (AData)aDataBase2;
 

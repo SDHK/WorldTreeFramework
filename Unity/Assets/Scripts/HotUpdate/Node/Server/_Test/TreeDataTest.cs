@@ -41,18 +41,23 @@ namespace WorldTree
 	[TreeDataSerializable]
 	public abstract partial class ADataBase
 	{
-		/// <summary>
-		/// 测试int
-		/// </summary>
-		public float AInt = 10.1f;
+
 	}
 
 	/// <summary>
 	/// data
 	/// </summary>
 	[TreeDataSerializable]
-	public partial class AData : ADataBase
+	public partial class AData : Node
+		, ComponentOf<TreeDataTest>
+		, AsAwake
+		, AsComponentBranch
 	{
+		/// <summary>
+		/// 测试int
+		/// </summary>
+		public float AInt = 10.1f;
+
 		/// <summary>
 		/// 测试int数组
 		/// </summary>
@@ -64,12 +69,33 @@ namespace WorldTree
 		public Dictionary<int, string> DataDict;
 	}
 
+
+	/// <summary>
+	/// 序列化测试2
+	/// </summary>
+	[TreeDataSerializable]
+	public partial class TreeDataNode1 : Node
+		, ComponentOf<AData>
+		, AsAwake
+	{
+		/// <summary>
+		/// 测试int
+		/// </summary>
+		public float BInt = 72.5f;
+	}
+
+
+
 	/// <summary>
 	/// 序列化测试
 	/// </summary>
 	public class TreeDataTest : Node
-			, ComponentOf<INode>
-			, AsAwake
+		, ComponentOf<INode>
+		, AsAwake
+		, AsComponentBranch
 	{ }
+
+
+	
 }
 

@@ -18,14 +18,14 @@ namespace WorldTree
 	/// </summary>
 	public abstract class Unit : IUnit
 	{
+		[TreeDataIgnore]
 		public long Type { get; set; }
+		[TreeDataIgnore]
 		public bool IsDisposed { get; set; }
-
-
+		[TreeDataIgnore]
 		public bool IsFromPool { get; set; }
-
+		[TreeDataIgnore]
 		public WorldTreeCore Core { get; set; }
-
 
 		public virtual void OnCreate() { }
 

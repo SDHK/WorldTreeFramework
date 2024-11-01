@@ -20,7 +20,8 @@ namespace WorldTree
 	/// <summary>
 	/// 子分支
 	/// </summary>
-	public class ChildBranch : Unit, IBranchIdKey
+	[TreeDataSerializable]
+	public partial class ChildBranch : Unit, IBranchIdKey
 	{
 		public int Count => nodeDict.Count;
 

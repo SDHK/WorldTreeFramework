@@ -17,7 +17,8 @@ namespace WorldTree
 	/// <summary>
 	/// 组件分支
 	/// </summary>
-	public class ComponentBranch : Branch<long>, IBranchTypeKey
+	[TreeDataSerializable]
+	public partial class ComponentBranch : Branch<long>, IBranchTypeKey
 	{ 
 	}
 

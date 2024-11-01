@@ -11,7 +11,6 @@ namespace WorldTree.TreeDataFormatters
 			public override void ForeachWrite(TreeDataByteSequence self, Dictionary<TKey, TValue> obj)
 			{
 				self.WriteUnmanaged(obj.Count);
-				if (obj.Count == 0) return;
 				foreach (var item in obj) self.WriteValue(item);
 			}
 		}
@@ -20,15 +19,9 @@ namespace WorldTree.TreeDataFormatters
 		{
 			public override void ForeachRead(TreeDataByteSequence self, Dictionary<TKey, TValue> obj)
 			{
-				//假如有数据，则清空数据
 				if (obj.Count != 0) obj.Clear();
-
 				self.ReadUnmanaged(out int length);
-				//数据长度为0，直接返回
-				if (length == 0) return;
-
 				KeyValuePair<TKey, TValue> keyValuePair;
-				//读取数组数据
 				for (int j = 0; j < length; j++)
 				{
 					keyValuePair = self.ReadValue<KeyValuePair<TKey, TValue>>();

@@ -12,7 +12,6 @@ namespace WorldTree.TreeDataFormatters
 			public override void ForeachWrite(TreeDataByteSequence self, Queue<T> obj)
 			{
 				self.WriteUnmanaged(obj.Count);
-				if (obj.Count == 0) return;
 				foreach (var item in obj) self.WriteValue(item);
 			}
 		}
