@@ -426,43 +426,7 @@ namespace WorldTree
 
 		#endregion
 
-		#region 序列化	
-
-		/// <summary>
-		/// 序列化
-		/// </summary>
-		/// <returns></returns>
-		public virtual INode Serialize()
-		{
-			if (IsDisposed) return null; //是否已经回收
-			NodeBranchTraversalHelper.TraversalPostorder(this, current => current.OnCutSelf());
-
-			return this;
-		}
-
-		/// <summary>
-		/// 序列化
-		/// </summary>
-		public virtual void OnSerializeSelfToTree()
-		{
-			View?.Dispose();
-			View = null;
-			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
-			{
-				//检测移除静态监听
-				Core.ReferencedPoolManager.RemoveListener(nodeListener);
-			}
-			Core.CutRuleGroup?.Send(this);//裁剪事件通知
-			if (this is not IListenerIgnorer)//广播给全部监听器通知 X
-			{
-				NodeListenerActuatorHelper.GetListenerActuator<IListenerRemoveRule>(this)?.Send((INode)this);
-			}
-		}
-
-		#endregion
-
 		#region 反序列化	
-
 
 		/// <summary>
 		/// 序列化

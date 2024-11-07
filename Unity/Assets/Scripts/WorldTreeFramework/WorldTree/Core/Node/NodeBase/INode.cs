@@ -40,6 +40,7 @@ namespace WorldTree
 		/// 是否释放
 		/// </summary>
 		IsDisposed = 1 << 1,
+
 	}
 
 

@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
+	//添加一个标记序列化的枚举
+	//利用嫁接的方式，将节点挂到树上，并彻底初始化
 
 	public static partial class TreeDataTestRule
 	{
