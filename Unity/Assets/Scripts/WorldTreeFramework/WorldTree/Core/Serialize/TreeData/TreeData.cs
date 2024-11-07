@@ -32,10 +32,7 @@ namespace WorldTree
 		/// </summary>
 		public bool IsDefault = true;
 	}
-
-
-
-
+	
 	/// <summary>
 	/// 树数值
 	/// </summary>

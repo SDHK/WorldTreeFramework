@@ -139,6 +139,16 @@ namespace WorldTree
 		public IRuleGroup<Disable> DisableRuleGroup;
 
 		/// <summary>
+		/// 序列化法则组
+		/// </summary>
+		public IRuleGroup<Serialize> SerializeRuleGroup;
+
+		/// <summary>
+		/// 反序列化法则组
+		/// </summary>
+		public IRuleGroup<Deserialize> DeserializeRuleGroup;
+
+		/// <summary>
 		/// 核心激活标记
 		/// </summary>
 		public bool IsCoreActive = false;
@@ -158,7 +168,7 @@ namespace WorldTree
 		/// </summary>
 		public TypeInfo TypeInfo;
 
-		
+
 
 		/// <summary>
 		/// 真实时间管理器
@@ -245,6 +255,8 @@ namespace WorldTree
 			DisableRuleGroup = RuleManager.GetOrNewRuleGroup<Disable>();
 			GraftRuleGroup = RuleManager.GetOrNewRuleGroup<Graft>();
 			CutRuleGroup = RuleManager.GetOrNewRuleGroup<Cut>();
+			SerializeRuleGroup = RuleManager.GetOrNewRuleGroup<Serialize>();
+			DeserializeRuleGroup = RuleManager.GetOrNewRuleGroup<Deserialize>();
 
 			//引用池管理器初始化
 			this.PoolGetNode(out ReferencedPoolManager);
@@ -445,7 +457,7 @@ namespace WorldTree
 
 	public static partial class WorldTreeCoreRule
 	{
-		private class AddRule : AddRule<WorldTreeCore>
+		private class AddRule1 : AddRule<WorldTreeCore>
 		{
 			protected override void Execute(WorldTreeCore self)
 			{

@@ -59,10 +59,7 @@ namespace WorldTree.SourceGenerator
 		/// </summary>
 		public static Dictionary<string, ClassDeclarationSyntax> classSyntax = new();
 
-		public static string IBranch = "IBranch";
-		public static string IBranchIdKey = "IBranchIdKey";
-		public static string IBranchTypeKey = "IBranchTypeKey";
-		public static string IBranchUnConstraint = "IBranchUnConstraint";
+
 
 
 		public static void Init(Compilation compilation)
@@ -80,7 +77,7 @@ namespace WorldTree.SourceGenerator
 			if (namedType.Name == "Branch") return;
 
 			//检测是否继承分支基类
-			if (!NamedSymbolHelper.CheckInterface(namedType, IBranch, out _)) return;
+			if (!NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.IBranch, out _)) return;
 			if (namedType.IsGenericType) return;
 
 			string fileName = Path.GetFileNameWithoutExtension(classDeclarationSyntax.SyntaxTree.FilePath);
@@ -119,15 +116,15 @@ namespace WorldTree.SourceGenerator
 
 					//bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
 
-					if (NamedSymbolHelper.CheckInterface(fileClass, IBranch, out var baseInterface))
+					if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.IBranch, out var baseInterface))
 					{
 						BranchClass(ClassCode, fileClass, baseInterface);
 
-						if (NamedSymbolHelper.CheckInterface(fileClass, IBranchIdKey, out _))
+						if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.IBranchIdKey, out _))
 						{
 							GetMethodIdKey(MethodCode, fileClass, baseInterface);
 						}
-						else if (NamedSymbolHelper.CheckInterface(fileClass, IBranchTypeKey, out _))
+						else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.IBranchTypeKey, out _))
 						{
 							GetMethodTypeKey(MethodCode, fileClass, baseInterface);
 						}
@@ -182,7 +179,7 @@ namespace WorldTree.SourceGenerator
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 
 			//As约束接口
-			if (!NamedSymbolHelper.CheckInterface(typeSymbol, IBranchUnConstraint, out _))
+			if (!NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.IBranchUnConstraint, out _))
 			{
 				AddComment(Code, "分支约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 				Code.AppendLine(@$"	public interface As{ClassFullName} : AsBranch<{ClassFullName}>, INode {{}}");
@@ -202,7 +199,7 @@ namespace WorldTree.SourceGenerator
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, IBranchUnConstraint, out _);
+			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.IBranchUnConstraint, out _);
 
 			NodeGetBranch(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
 			BranchTryGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
@@ -225,7 +222,7 @@ namespace WorldTree.SourceGenerator
 			//拿到键值泛型类型
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, IBranchUnConstraint, out _);
+			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.IBranchUnConstraint, out _);
 
 			NodeGetBranch(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
 			BranchIdKeyTryGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
@@ -248,7 +245,7 @@ namespace WorldTree.SourceGenerator
 			//拿到键值泛型类型
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, IBranchUnConstraint, out _);
+			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.IBranchUnConstraint, out _);
 
 			NodeGetBranch(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
 			BranchTypeKeyTryGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);

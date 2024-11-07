@@ -23,7 +23,7 @@ namespace WorldTree.Analyzer
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
 				if (TypeSymbol.IsAbstract) return false;
-				return NamedSymbolHelper.CheckInterface(TypeSymbol, "IRule", out _);
+				return NamedSymbolHelper.CheckInterface(TypeSymbol, GeneratorHelper.IRule, out _);
 			};
 
 			SetConfig(DiagnosticKey.ClassNaming, new DiagnosticConfig()

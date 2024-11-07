@@ -136,6 +136,7 @@ namespace WorldTree.Internal
 				awaiter.UnsafeOnCompleted(treeTaskStateMachine.MoveNext);
 			}
 			else
+
 			{
 				if (task.TreeTaskToken.Value != null)
 				{

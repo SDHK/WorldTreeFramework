@@ -78,11 +78,11 @@ namespace WorldTree.SourceGenerator
 			if (namedType == null) return;
 
 			//检测是否继承基础法则接口
-			if (!(NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISendRule, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISendRefRule, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ICallRule, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISendRuleAsync, out _) ||
-				NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ICallRuleAsync, out _))) return;
+			if (!(NamedSymbolHelper.CheckInterfaceName(namedType, GeneratorHelper.ISendRule, out _) ||
+				NamedSymbolHelper.CheckInterfaceName(namedType, GeneratorHelper.ISendRefRule, out _) ||
+				NamedSymbolHelper.CheckInterfaceName(namedType, GeneratorHelper.ICallRule, out _) ||
+				NamedSymbolHelper.CheckInterfaceName(namedType, GeneratorHelper.ISendRuleAsync, out _) ||
+				NamedSymbolHelper.CheckInterfaceName(namedType, GeneratorHelper.ICallRuleAsync, out _))) return;
 
 			if (NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISourceGeneratorIgnore, out _)) return;
 
@@ -106,7 +106,7 @@ namespace WorldTree.SourceGenerator
 
 		public static void Execute(GeneratorExecutionContext context)
 		{
-			var IMethodRule = context.Compilation.ToINamedTypeSymbol("WorldTree.IMethodRule");
+			var IMethodRule = context.Compilation.ToINamedTypeSymbol(GeneratorHelper.IMethodRule);
 
 			if (IMethodRule == null) return;
 
@@ -121,24 +121,23 @@ namespace WorldTree.SourceGenerator
 					bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
 
 					INamedTypeSymbol? baseInterface = null;
-					if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ISendRule, out baseInterface))
+					if (NamedSymbolHelper.CheckInterfaceName(fileClass, GeneratorHelper.ISendRule, out baseInterface))
 					{
 						if (isMethodRule) SendRuleSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ISendRuleAsync, out baseInterface))
+					else if (NamedSymbolHelper.CheckInterfaceName(fileClass, GeneratorHelper.ISendRuleAsync, out baseInterface))
 					{
 						if (isMethodRule) SendRuleAsyncSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ICallRule, out baseInterface))
+					else if (NamedSymbolHelper.CheckInterfaceName(fileClass, GeneratorHelper.ICallRule, out baseInterface))
 					{
 						if (isMethodRule) CallRuleSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ICallRuleAsync, out baseInterface))
+					else if (NamedSymbolHelper.CheckInterfaceName(fileClass, GeneratorHelper.ICallRuleAsync, out baseInterface))
 					{
 						if (isMethodRule) CallRuleAsyncSupplementHelper.GetMethod(MethodCode, fileClass, baseInterface);
 					}
-					else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.ISendRefRule, out baseInterface)) { }
-
+					else if (NamedSymbolHelper.CheckInterfaceName(fileClass, GeneratorHelper.ISendRefRule, out baseInterface)) { }
 
 					RuleClass(ClassCode, fileClass, baseInterface);
 				}
@@ -198,19 +197,19 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
 
 			//法则委托
-			if (NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.ISendRule, out _))
+			if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ISendRule, out _))
 			{
 				SendRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
 			}
-			else if (NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.ISendRuleAsync, out _))
+			else if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ISendRuleAsync, out _))
 			{
 				SendRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
 			}
-			else if (NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.ICallRule, out _))
+			else if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ICallRule, out _))
 			{
 				CallRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
 			}
-			else if (NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.ICallRuleAsync, out _))
+			else if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ICallRuleAsync, out _))
 			{
 				CallRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
 			}

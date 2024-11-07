@@ -11,16 +11,50 @@ namespace WorldTree
 	{
 		static int Key = nameof(Key).GetFNV1aHash32();
 		static int Value = nameof(Value).GetFNV1aHash32();
+
+		/// <summary>
+		/// 序列化节点
+		/// </summary>
+		public static void Serialize(INode self)
+		{
+			if (self.IsDisposed) return; //是否已经回收
+			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.SerializeRuleGroup.Send(current));
+
+			self.AddTemp(out TreeDataByteSequence sequence);
+			sequence.Serialize(self);
+			sequence.Dispose();
+		}
+
+		/// <summary>
+		/// 反序列化
+		/// </summary>
+		public static void Deserialize<N>(TreeDataByteSequence self)
+			where N : class, INode
+		{
+			N node = null;
+			self.Deserialize(ref node);
+			node.Core = self.Core;
+			NodeBranchTraversalHelper.TraversalPostorder(node, current => current.Core.SerializeRuleGroup.Send(current));
+		}
+
+		/// <summary>
+		/// 反序列化时
+		/// </summary>
+		public static void OnDeserialize(INode self)
+		{
+			
+		}
+
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
 			//int value1 = nameof(self).GetFNV1aHash32();
 			//self.Log(value1 + " :: " + Value);
-			
+
 			//if (self != null) return;
 
 			AData data = self.AddComponent(out AData _);
 
-			data.AddComponent(out TreeDataNode1 dataNode1);
+			data.AddChild(out TreeDataNode1 dataNode1);
 
 			dataNode1.BInt = 789.4f;
 
@@ -77,8 +111,8 @@ namespace WorldTree
 			self.Log(logText);
 			self.Log("\n反序列化结构打印\n");
 
-			self.Log(NodeRule.ToStringDrawTree(self.Core));
-			
+			self.Log(NodeRule.ToStringDrawTree(self));
+
 		};
 
 	}

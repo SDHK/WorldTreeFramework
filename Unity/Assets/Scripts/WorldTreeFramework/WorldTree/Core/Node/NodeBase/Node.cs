@@ -426,6 +426,103 @@ namespace WorldTree
 
 		#endregion
 
+		#region 序列化	
+
+		/// <summary>
+		/// 序列化
+		/// </summary>
+		/// <returns></returns>
+		public virtual INode Serialize()
+		{
+			if (IsDisposed) return null; //是否已经回收
+			NodeBranchTraversalHelper.TraversalPostorder(this, current => current.OnCutSelf());
+
+			return this;
+		}
+
+		/// <summary>
+		/// 序列化
+		/// </summary>
+		public virtual void OnSerializeSelfToTree()
+		{
+			View?.Dispose();
+			View = null;
+			if (this is INodeListener nodeListener && this is not IListenerIgnorer)
+			{
+				//检测移除静态监听
+				Core.ReferencedPoolManager.RemoveListener(nodeListener);
+			}
+			Core.CutRuleGroup?.Send(this);//裁剪事件通知
+			if (this is not IListenerIgnorer)//广播给全部监听器通知 X
+			{
+				NodeListenerActuatorHelper.GetListenerActuator<IListenerRemoveRule>(this)?.Send((INode)this);
+			}
+		}
+
+		#endregion
+
+		#region 反序列化	
+
+
+		/// <summary>
+		/// 序列化
+		/// </summary>
+		/// <typeparam name="B"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="key"></param>
+		/// <param name="parent"></param>
+		/// <returns></returns>
+		public bool Deserialize<B, K>(K key, INode parent)
+			where B : class, IBranch<K>
+		{
+			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
+
+			branchType = Core.TypeToCode<B>();
+			Parent = parent;
+			Core = parent.Core;
+			Root = parent.Root;
+			if (Domain != this) Domain = parent.Domain;
+
+			//NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
+			RefreshActive();
+			return true;
+		}
+
+		/// <summary>
+		/// 序列化
+		/// </summary>
+		public virtual void OnDeserializeSelfToTree()//id相同数据同步？
+		{
+			AddNodeView();
+			Core = Parent.Core;
+			Root = Parent.Root;
+			if (Domain != this) Domain = Parent.Domain;
+
+			Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
+			if (this is not IListenerIgnorer)//广播给全部监听器
+			{
+				NodeListenerActuatorHelper.GetListenerActuator<IListenerAddRule>(this)?.Send((INode)this);
+			}
+			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
+			{
+				Core.ReferencedPoolManager.TryAddListener(nodeListener);
+			}
+			if (IsActive != activeEventMark)//激活变更
+			{
+				if (IsActive)
+				{
+					Core.EnableRuleGroup?.Send(this);//激活事件通知
+				}
+				else
+				{
+					Core.DisableRuleGroup?.Send(this); //禁用事件通知
+				}
+			}
+			Core.GraftRuleGroup?.Send(this);//嫁接事件通知
+		}
+
+		#endregion
+
 		#endregion
 
 		/// <summary>

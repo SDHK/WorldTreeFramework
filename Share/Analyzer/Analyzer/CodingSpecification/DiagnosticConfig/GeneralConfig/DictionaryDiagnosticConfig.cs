@@ -23,7 +23,7 @@ namespace WorldTree.Analyzer
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				return NamedSymbolHelper.CheckInterface(TypeSymbol, "IDictionary", out _);
+				return NamedSymbolHelper.CheckInterface(TypeSymbol, GeneratorHelper.IDictonary, out _);
 			};
 
 			SetConfig(DiagnosticKey.ClassFieldNaming, new DiagnosticConfig()

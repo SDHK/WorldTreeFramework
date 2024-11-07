@@ -21,7 +21,7 @@ namespace WorldTree
 	/// 子分支
 	/// </summary>
 	[TreeDataSerializable]
-	public partial class ChildBranch : Unit, IBranchIdKey
+	public partial class ChildBranch : Unit, IBranchIdKey, ISerializable
 	{
 		public int Count => nodeDict.Count;
 
@@ -67,6 +67,19 @@ namespace WorldTree
 		{
 			this.nodeDict.Dispose();
 			this.nodeDict = null;
+		}
+
+		
+		public void OnSerialize()
+		{
+		}
+
+		public void OnDeserialize()
+		{
+			using UnitList<INode> nodeList = Core.PoolGetUnit<UnitList<INode>>();
+			foreach (var item in nodeDict) nodeList.Add(item.Value);
+			nodeDict.Clear();
+			foreach (var item in nodeList) nodeDict.TryAdd(item.Id, item);
 		}
 	}
 }

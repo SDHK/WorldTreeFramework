@@ -22,7 +22,7 @@ namespace WorldTree.Analyzer
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				return NamedSymbolHelper.CheckInterface(TypeSymbol, "IUnit", out _);
+				return NamedSymbolHelper.CheckInterface(TypeSymbol, GeneratorHelper.IUnit, out _);
 			};
 
 			SetConfig(DiagnosticKey.ClassNaming, new DiagnosticConfig()

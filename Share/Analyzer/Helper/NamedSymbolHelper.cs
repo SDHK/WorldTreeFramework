@@ -352,7 +352,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 检测是否继承接口（只对比接口名称，不包括泛型）
+		/// 检测是否继承接口（只对比接口带命名空间名称，不包括泛型）
 		/// </summary>
 		/// <param name="typeSymbol">子接口</param>
 		/// <param name="InterfaceName">接口名称</param>
@@ -363,7 +363,36 @@ namespace WorldTree
 			Interface = null;
 			foreach (var Interfaces in typeSymbol.AllInterfaces)
 			{
-				if (Interfaces.Name != InterfaceName) continue;
+				//剔除掉泛型参数
+				string name = Interfaces.ToDisplayString();
+				int index = name.IndexOf('<');
+				if (index != -1) name = name.Remove(index);
+				if (name != InterfaceName)
+				{
+					continue;
+				}
+				Interface = Interfaces;
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// 检测是否继承接口（只对比接口名称，不包括泛型和命名空间）
+		/// </summary>
+		/// <param name="typeSymbol">子接口</param>
+		/// <param name="InterfaceName">接口名称</param>
+		/// <param name="Interface">基类接口符号</param>
+		/// <returns></returns>
+		public static bool CheckInterfaceName(ITypeSymbol typeSymbol, string InterfaceName, out INamedTypeSymbol? Interface)
+		{
+			Interface = null;
+			foreach (var Interfaces in typeSymbol.AllInterfaces)
+			{
+				if (Interfaces.Name != InterfaceName)
+				{
+					continue;
+				}
 				Interface = Interfaces;
 				return true;
 			}

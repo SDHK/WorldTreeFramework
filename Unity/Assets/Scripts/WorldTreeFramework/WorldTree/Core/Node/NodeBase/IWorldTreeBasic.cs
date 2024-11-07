@@ -60,4 +60,20 @@ namespace WorldTree
 		public void OnDispose();
 
 	}
+
+
+	/// <summary>
+	/// 基础序列化生命周期接口
+	/// </summary>
+	public interface ISerializable
+	{
+		/// <summary>
+		/// 序列化时
+		/// </summary>
+		public void OnSerialize();
+		/// <summary>
+		/// 反序列化时
+		/// </summary>
+		public void OnDeserialize();
+	}
 }

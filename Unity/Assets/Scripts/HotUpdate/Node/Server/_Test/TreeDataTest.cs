@@ -33,6 +33,9 @@ namespace WorldTree
 		/// 测试int
 		/// </summary>
 		public float AInt { get; set; }
+
+
+		
 	}
 
 	/// <summary>
@@ -50,8 +53,10 @@ namespace WorldTree
 	[TreeDataSerializable]
 	public partial class AData : Node
 		, ComponentOf<TreeDataTest>
+		, ChildOf<TreeDataTest>
 		, AsAwake
 		, AsComponentBranch
+		, AsChildBranch
 	{
 		/// <summary>
 		/// 测试int
@@ -67,6 +72,10 @@ namespace WorldTree
 		/// 测试字典
 		/// </summary>
 		public Dictionary<int, string> DataDict;
+
+	
+
+
 	}
 
 
@@ -76,6 +85,7 @@ namespace WorldTree
 	[TreeDataSerializable]
 	public partial class TreeDataNode1 : Node
 		, ComponentOf<AData>
+		, ChildOf<AData>
 		, AsAwake
 	{
 		/// <summary>

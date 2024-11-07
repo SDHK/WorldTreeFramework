@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树分支基类
 	/// </summary>
-	public abstract class Branch<K> : Unit, IBranch<K>
+	public abstract class Branch<K> : Unit, IBranch<K>, ISerializable
 	{
 		public int Count => nodeDict == null ? 0 : nodeDict.Count;
 
@@ -30,6 +30,7 @@ namespace WorldTree
 		/// 键值集合
 		/// </summary>
 		/// <remarks>节点Id，键值</remarks>
+		[TreeDataIgnore]
 		protected UnitDictionary<long, K> keyDict;
 
 		public override void OnCreate()
@@ -79,6 +80,13 @@ namespace WorldTree
 			this.keyDict.Dispose();
 			this.nodeDict = null;
 			this.keyDict = null;
+		}
+		public virtual void OnSerialize() { }
+
+		public virtual void OnDeserialize()
+		{
+			keyDict.Clear();
+			foreach (var item in nodeDict) keyDict.TryAdd(item.Value.Id, item.Key);
 		}
 	}
 }

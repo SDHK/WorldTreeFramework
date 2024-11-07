@@ -126,10 +126,10 @@ namespace WorldTree.SourceGenerator
 
 					int ruleTypeCode = 0;
 					string[]? types = null;
-					if (NamedSymbolHelper.CheckInterface(ruleType, GeneratorHelper.ISendRule, out baseInterface)) ruleTypeCode = 1;
-					else if (NamedSymbolHelper.CheckInterface(ruleType, GeneratorHelper.ISendRuleAsync, out baseInterface)) ruleTypeCode = 2;
-					else if (NamedSymbolHelper.CheckInterface(ruleType, GeneratorHelper.ICallRule, out baseInterface)) ruleTypeCode = 3;
-					else if (NamedSymbolHelper.CheckInterface(ruleType, GeneratorHelper.ICallRuleAsync, out baseInterface)) ruleTypeCode = 4;
+					if (NamedSymbolHelper.CheckInterfaceName(ruleType, GeneratorHelper.ISendRule, out baseInterface)) ruleTypeCode = 1;
+					else if (NamedSymbolHelper.CheckInterfaceName(ruleType, GeneratorHelper.ISendRuleAsync, out baseInterface)) ruleTypeCode = 2;
+					else if (NamedSymbolHelper.CheckInterfaceName(ruleType, GeneratorHelper.ICallRule, out baseInterface)) ruleTypeCode = 3;
+					else if (NamedSymbolHelper.CheckInterfaceName(ruleType, GeneratorHelper.ICallRuleAsync, out baseInterface)) ruleTypeCode = 4;
 					types = GetReflectionRuleType(delegateType.Item2, ruleType, baseInterface);
 					string genericTypeParameter = GetRuleTypeParameter(types, ruleTypeCode > 2, out string outType);
 					string genericParameter = GetRuleParameter(types, ruleTypeCode > 2, out _);
@@ -251,28 +251,23 @@ namespace WorldTree.SourceGenerator
 				//if (NamedSymbolHelper.CheckInterface(item, GeneratorHelper.ISourceGeneratorIgnore, out _)) continue;
 
 				//检测是否继承4大法则接口
-				if (!(NamedSymbolHelper.CheckInterface(item, GeneratorHelper.ISendRule, out _) ||
-					NamedSymbolHelper.CheckInterface(item, GeneratorHelper.ICallRule, out _) ||
-					NamedSymbolHelper.CheckInterface(item, GeneratorHelper.ISendRuleAsync, out _) ||
-					NamedSymbolHelper.CheckInterface(item, GeneratorHelper.ICallRuleAsync, out _))) continue;
+				if (!(NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRule, out _) ||
+					NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRule, out _) ||
+					NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRuleAsync, out _) ||
+					NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRuleAsync, out _))) continue;
 
 				string DelegateName = $"On{item.Name}";
-				string RuleType = "";
-				if (NamedSymbolHelper.CheckInterface(item, GeneratorHelper.ISendRule, out _))
+				if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRule, out _))
 				{
-					RuleType = GeneratorHelper.ISendRule;
 				}
-				else if (NamedSymbolHelper.CheckInterface(item, GeneratorHelper.ICallRule, out _))
+				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRule, out _))
 				{
-					RuleType = GeneratorHelper.ICallRule;
 				}
-				else if (NamedSymbolHelper.CheckInterface(item, GeneratorHelper.ISendRuleAsync, out _))
+				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRuleAsync, out _))
 				{
-					RuleType = GeneratorHelper.ISendRuleAsync;
 				}
-				else if (NamedSymbolHelper.CheckInterface(item, GeneratorHelper.ICallRuleAsync, out _))
+				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRuleAsync, out _))
 				{
-					RuleType = GeneratorHelper.ICallRuleAsync;
 				}
 				else
 				{

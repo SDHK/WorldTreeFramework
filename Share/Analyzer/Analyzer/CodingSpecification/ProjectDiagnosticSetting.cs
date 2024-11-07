@@ -42,11 +42,11 @@ namespace WorldTree.Analyzer
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
 
-			//new NodeDiagnosticConfig(),
+			new NodeDiagnosticConfig(),
 			new CodeNodeDiagnosticConfig(),
 			new RuleDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
-			//new ProjectBanUnitDiagnosticConfig(),
+			//new ProjectBanUnitDiagnosticConfig(), //由于Rule也继承了Unit，所以这里不再需要
 			new ObjectDiagnosticConfig()
 		};
 
