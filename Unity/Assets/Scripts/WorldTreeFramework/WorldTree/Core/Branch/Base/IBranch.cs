@@ -50,6 +50,11 @@ namespace WorldTree
 		public void RemoveNode(long nodeId);
 
 		/// <summary>
+		/// 移植节点
+		/// </summary>
+		public TreeSpade SpadeNode(long nodeId);
+
+		/// <summary>
 		/// 清空分支
 		/// </summary>
 		public void Clear();

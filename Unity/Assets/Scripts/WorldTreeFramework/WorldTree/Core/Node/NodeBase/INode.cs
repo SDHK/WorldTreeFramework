@@ -41,6 +41,10 @@ namespace WorldTree
 		/// </summary>
 		IsDisposed = 1 << 1,
 
+		/// <summary>
+		/// 是否序列化创建
+		/// </summary>
+		IsSerialize = 1 << 2,
 	}
 
 
@@ -61,7 +65,6 @@ namespace WorldTree
 		/// <remarks>雪花id: 雪花算法生成的唯一id</remarks>
 		public long UID { get; set; }
 	}
-
 
 	/// <summary>
 	/// 世界树节点接口
@@ -107,6 +110,13 @@ namespace WorldTree
 		/// </summary>
 		[TreeDataIgnore]
 		public INode Parent { get; set; }
+
+
+		/// <summary>
+		/// 是否序列化创建
+		/// </summary>
+		[TreeDataIgnore]
+		public bool IsSerialize { get; set; }
 
 		/// <summary>
 		/// 可视化生成器
@@ -201,6 +211,11 @@ namespace WorldTree
 		#region 嫁接
 
 		/// <summary>
+		/// 节点嫁接到树结构，无约束条件
+		/// </summary>
+		public bool TryGraftSelfToTree<K>(long branchType, K key, INode parent);
+
+		/// <summary>
 		/// 节点嫁接到树结构
 		/// </summary>
 		public bool TryGraftSelfToTree<B, K>(K key, INode parent) where B : class, IBranch<K>;
@@ -218,7 +233,7 @@ namespace WorldTree
 		/// <summary>
 		/// 从树上将自己裁剪下来
 		/// </summary>
-		public INode CutSelf();
+		public TreeSpade CutSelf();
 
 		/// <summary>
 		/// 从树上将自己裁剪下来时的处理

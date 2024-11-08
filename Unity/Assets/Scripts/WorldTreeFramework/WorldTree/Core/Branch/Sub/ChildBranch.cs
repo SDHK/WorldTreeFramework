@@ -69,7 +69,7 @@ namespace WorldTree
 			this.nodeDict = null;
 		}
 
-		
+
 		public void OnSerialize()
 		{
 		}
@@ -80,6 +80,19 @@ namespace WorldTree
 			foreach (var item in nodeDict) nodeList.Add(item.Value);
 			nodeDict.Clear();
 			foreach (var item in nodeList) nodeDict.TryAdd(item.Id, item);
+		}
+
+		public TreeSpade SpadeNode(long nodeId)
+		{
+			if (nodeDict.TryGetValue(nodeId, out INode node))
+			{
+				Core.PoolGetUnit(out TreeSpade<long> spade);
+				spade.BranchType = Type;
+				spade.Key = nodeId;
+				spade.Node = node;
+				return spade;
+			}
+			return null;
 		}
 	}
 }

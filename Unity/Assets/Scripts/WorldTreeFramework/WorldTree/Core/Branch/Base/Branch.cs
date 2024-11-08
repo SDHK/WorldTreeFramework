@@ -88,5 +88,21 @@ namespace WorldTree
 			keyDict.Clear();
 			foreach (var item in nodeDict) keyDict.TryAdd(item.Value.Id, item.Key);
 		}
+
+		public TreeSpade SpadeNode(long nodeId)
+		{
+			if (keyDict.TryGetValue(nodeId, out K key))
+			{
+				if (nodeDict.TryGetValue(key, out INode node))
+				{
+					Core.PoolGetUnit(out TreeSpade<K> spade);
+					spade.BranchType = Type;
+					spade.Key = key;
+					spade.Node = node;
+					return spade;
+				}
+			}
+			return null;
+		}
 	}
 }

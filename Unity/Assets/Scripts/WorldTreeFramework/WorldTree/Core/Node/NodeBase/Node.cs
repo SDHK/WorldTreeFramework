@@ -72,6 +72,23 @@ namespace WorldTree
 				}
 			}
 		}
+		[TreeDataIgnore]
+		[TreePackIgnore]
+		public bool IsSerialize
+		{
+			get => (state & NodeState.IsSerialize) == NodeState.IsSerialize;
+			set
+			{
+				if (value)
+				{
+					state |= NodeState.IsSerialize;
+				}
+				else
+				{
+					state &= ~NodeState.IsSerialize;
+				}
+			}
+		}
 
 		[TreeDataIgnore]
 		[TreePackIgnore]
@@ -325,7 +342,7 @@ namespace WorldTree
 		{
 			View?.Dispose();
 			View = null;
-			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
 			SetActive(false);//激活变更
 			Core.DisableRuleGroup?.Send(this); //禁用事件通知
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测自身为监听器
@@ -350,10 +367,15 @@ namespace WorldTree
 
 		public virtual bool TryGraftSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
-		{
-			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
+		=> TryGraftSelfToTree<B, K>(key, parent);
 
-			branchType = Core.TypeToCode<B>();
+		//嫁接走前后双序,依靠bool值判断是否是序列化
+		public virtual bool TryGraftSelfToTree<K>(long branchType, K key, INode parent)
+		{
+			if (NodeBranchHelper.AddBranch(parent, branchType) is not IBranch<K> branch) return false;
+			if (branch.TryAddNode(key, this)) return false;
+
+			branchType = branch.Type;
 			Parent = parent;
 			Core = parent.Core;
 			Root = parent.Root;
@@ -364,7 +386,7 @@ namespace WorldTree
 			return true;
 		}
 
-		public virtual void OnGraftSelfToTree()//id相同数据同步？
+		public virtual void OnGraftSelfToTree()
 		{
 			AddNodeView();
 			Core = Parent.Core;
@@ -380,6 +402,7 @@ namespace WorldTree
 			{
 				Core.ReferencedPoolManager.TryAddListener(nodeListener);
 			}
+
 			if (IsActive != activeEventMark)//激活变更
 			{
 				if (IsActive)
@@ -398,12 +421,11 @@ namespace WorldTree
 
 		#region 裁剪
 
-		public virtual INode CutSelf()
+		public virtual TreeSpade CutSelf()
 		{
 			if (IsDisposed) return null; //是否已经回收
 			NodeBranchTraversalHelper.TraversalPostorder(this, current => current.OnCutSelf());
-			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
-			return this;
+			return NodeBranchHelper.SpadeNode(this);//从父节点分支移除
 		}
 
 		public virtual void OnCutSelf()
@@ -422,67 +444,6 @@ namespace WorldTree
 			}
 			Core.ReferencedPoolManager.Remove(this);//引用池移除 ?
 			Parent = null;//清除父节点
-		}
-
-		#endregion
-
-		#region 反序列化	
-
-		/// <summary>
-		/// 序列化
-		/// </summary>
-		/// <typeparam name="B"></typeparam>
-		/// <typeparam name="K"></typeparam>
-		/// <param name="key"></param>
-		/// <param name="parent"></param>
-		/// <returns></returns>
-		public bool Deserialize<B, K>(K key, INode parent)
-			where B : class, IBranch<K>
-		{
-			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
-
-			branchType = Core.TypeToCode<B>();
-			Parent = parent;
-			Core = parent.Core;
-			Root = parent.Root;
-			if (Domain != this) Domain = parent.Domain;
-
-			//NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
-			RefreshActive();
-			return true;
-		}
-
-		/// <summary>
-		/// 序列化
-		/// </summary>
-		public virtual void OnDeserializeSelfToTree()//id相同数据同步？
-		{
-			AddNodeView();
-			Core = Parent.Core;
-			Root = Parent.Root;
-			if (Domain != this) Domain = Parent.Domain;
-
-			Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
-			if (this is not IListenerIgnorer)//广播给全部监听器
-			{
-				NodeListenerActuatorHelper.GetListenerActuator<IListenerAddRule>(this)?.Send((INode)this);
-			}
-			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
-			{
-				Core.ReferencedPoolManager.TryAddListener(nodeListener);
-			}
-			if (IsActive != activeEventMark)//激活变更
-			{
-				if (IsActive)
-				{
-					Core.EnableRuleGroup?.Send(this);//激活事件通知
-				}
-				else
-				{
-					Core.DisableRuleGroup?.Send(this); //禁用事件通知
-				}
-			}
-			Core.GraftRuleGroup?.Send(this);//嫁接事件通知
 		}
 
 		#endregion

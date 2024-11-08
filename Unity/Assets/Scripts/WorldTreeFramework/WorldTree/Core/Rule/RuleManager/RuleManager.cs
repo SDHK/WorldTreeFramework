@@ -251,7 +251,7 @@ namespace WorldTree
 		/// </summary>
 		public override void OnDispose()
 		{
-			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
 
 			RuleGroupDict.Clear();
 			NodeTypeRulesDict.Clear();

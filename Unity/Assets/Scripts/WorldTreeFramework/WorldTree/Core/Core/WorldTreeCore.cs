@@ -384,7 +384,7 @@ namespace WorldTree
 		{
 			View?.Dispose();
 			View = null;
-			NodeBranchHelper.RemoveBranchNode(Parent, BranchType, this);//从父节点分支移除
+			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
 			SetActive(false);
 			Core.DisableRuleGroup?.Send(this); //禁用事件通知
 			Core.RemoveRuleGroup?.Send(this);//移除事件通知

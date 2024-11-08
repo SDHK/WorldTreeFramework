@@ -43,21 +43,42 @@ namespace WorldTree
 		/// <summary>
 		/// 移除分支中的节点
 		/// </summary>
-		public static void RemoveBranchNode<B>(INode self, INode node) where B : class, IBranch => RemoveBranchNode(self, self.TypeToCode<B>(), node);
-
-		/// <summary>
-		/// 移除分支中的节点
-		/// </summary>
-		public static void RemoveBranchNode(INode self, long branchType, INode node)
-		{
-			if (self == null) return;
-			if (TryGetBranch(self, branchType, out IBranch branch))
-			{
-				branch.RemoveNode(node.Id);
+		public static void RemoveNode(INode self)
+		{ 
+			if (self?.Parent == null) return;
+			if (TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
+			{ 
+				branch.RemoveNode(self.Id);
 				if (branch.Count == 0)
 				{
 					//移除分支
-					self.BranchDict.Remove(branchType);
+					self.Parent.BranchDict.Remove(self.BranchType);
+					if (self.Parent.BranchDict.Count == 0)
+					{
+						self.Parent.BranchDict.Dispose();
+						self.Parent.BranchDict = null;
+					}
+					//释放分支
+					branch.Dispose();
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// 移植分支中的节点
+		/// </summary>
+		public static TreeSpade SpadeNode(INode self)
+		{
+			if (self?.Parent == null) return null;
+			TreeSpade treeSpade = null;
+			if (TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
+			{
+				treeSpade = branch.SpadeNode(self.Id);
+				if (branch.Count == 0)
+				{
+					//移除分支
+					self.BranchDict.Remove(self.BranchType);
 					if (self.BranchDict.Count == 0)
 					{
 						self.BranchDict.Dispose();
@@ -68,6 +89,7 @@ namespace WorldTree
 					branch.Dispose();
 				}
 			}
+			return treeSpade;
 		}
 
 		/// <summary>
