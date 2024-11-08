@@ -40,9 +40,7 @@ namespace WorldTree
 		public INode Node;
 
 		public override bool TryGraftSelfToTree(INode parent)
-		{
-			return Node.TryGraftSelfToTree(BranchType, Key, parent);
-		}
+		=> Node.TryGraftSelfToTree(BranchType, Key, parent);
 
 		public override void OnDispose()
 		{

@@ -195,11 +195,8 @@ namespace WorldTree
 		/// </summary>
 		[TreeDataIgnore]
 		[TreePackIgnore]
-		protected long branchType;
+		public long BranchType { get; set; }
 
-		[TreeDataIgnore]
-		[TreePackIgnore]
-		public long BranchType => branchType;
 
 		public UnitDictionary<long, IBranch> BranchDict { get; set; }
 
@@ -239,7 +236,7 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
-				branchType = Core.TypeToCode<B>();
+				BranchType = Core.TypeToCode<B>();
 				Parent = parent;
 				Core = parent.Core;
 				Root = parent.Root;
@@ -367,9 +364,8 @@ namespace WorldTree
 
 		public virtual bool TryGraftSelfToTree<B, K>(K key, INode parent)
 			where B : class, IBranch<K>
-		=> TryGraftSelfToTree<B, K>(key, parent);
+		=> TryGraftSelfToTree(this.TypeToCode<B>(), key, parent);
 
-		//嫁接走前后双序,依靠bool值判断是否是序列化
 		public virtual bool TryGraftSelfToTree<K>(long branchType, K key, INode parent)
 		{
 			if (NodeBranchHelper.AddBranch(parent, branchType) is not IBranch<K> branch) return false;
@@ -382,17 +378,32 @@ namespace WorldTree
 			if (Domain != this) Domain = parent.Domain;
 
 			RefreshActive();
-			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
+			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => OnBeforeGraftSelfToTree(), current => current.OnGraftSelfToTree());
 			return true;
 		}
 
-		public virtual void OnGraftSelfToTree()
+		public virtual void OnBeforeGraftSelfToTree()
 		{
-			AddNodeView();
 			Core = Parent.Core;
 			Root = Parent.Root;
 			if (Domain != this) Domain = Parent.Domain;
 
+			//序列化时，需要重新设置所有节点的父节点
+			if (!IsSerialize || BranchDict == null) return;
+			foreach (var brancItem in BranchDict)
+			{
+				if (brancItem.Value == null) continue;
+				foreach (var nodeItem in brancItem.Value)
+				{
+					nodeItem.Parent = this;
+					nodeItem.BranchType = brancItem.Value.Type;
+				}
+			}
+			AddNodeView();
+		}
+
+		public virtual void OnGraftSelfToTree()
+		{
 			Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
 			if (this is not IListenerIgnorer)//广播给全部监听器
 			{
@@ -401,6 +412,12 @@ namespace WorldTree
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
 			{
 				Core.ReferencedPoolManager.TryAddListener(nodeListener);
+			}
+
+			if (IsSerialize)
+			{
+				Core.DeserializeRuleGroup?.Send(this);//反序列化事件通知
+				IsSerialize = false;
 			}
 
 			if (IsActive != activeEventMark)//激活变更
@@ -414,7 +431,7 @@ namespace WorldTree
 					Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			Core.GraftRuleGroup?.Send(this);//嫁接事件通知
+			if (!IsSerialize) Core.GraftRuleGroup?.Send(this);//嫁接事件通知
 		}
 
 		#endregion

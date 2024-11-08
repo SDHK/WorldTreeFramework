@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
-	
+
 
 	//添加一个标记序列化的枚举
 	//利用嫁接的方式，将节点挂到树上，并彻底初始化
@@ -19,35 +19,26 @@ namespace WorldTree
 		/// <summary>
 		/// 序列化节点
 		/// </summary>
-		public static void Serialize(INode self)
+		public static byte[] Serialize(INode self)
 		{
-			if (self.IsDisposed) return; //是否已经回收
+			if (self.IsDisposed) return null;
 			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.SerializeRuleGroup.Send(current));
 
 			self.AddTemp(out TreeDataByteSequence sequence);
-			sequence.Serialize(self);
+			if (self?.Parent == null) return null;
+			TreeSpade treeSpade = null;
+			if (NodeBranchHelper.TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
+			{
+				treeSpade = branch.SpadeNode(self.Id);
+			}
+			if (treeSpade == null) return null;
+			sequence.Serialize(treeSpade);
+			treeSpade.Dispose();
+			byte[] bytes = sequence.ToBytes();
 			sequence.Dispose();
+			return bytes;
 		}
-
-		/// <summary>
-		/// 反序列化
-		/// </summary>
-		public static void Deserialize<N>(TreeDataByteSequence self)
-			where N : class, INode
-		{
-			N node = null;
-			self.Deserialize(ref node);
-			node.Core = self.Core;
-			NodeBranchTraversalHelper.TraversalPostorder(node, current => current.Core.SerializeRuleGroup.Send(current));
-		}
-
-		/// <summary>
-		/// 反序列化时
-		/// </summary>
-		public static void OnDeserialize(INode self)
-		{
-			
-		}
+	
 
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{

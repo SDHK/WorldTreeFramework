@@ -176,7 +176,8 @@ namespace WorldTree
 		/// <summary>
 		/// 此节点挂载到父级的分支类型
 		/// </summary>
-		public long BranchType { get; }
+		[TreeDataIgnore]
+		public long BranchType { get; set; }
 
 		/// <summary>
 		/// 树分支
@@ -221,7 +222,13 @@ namespace WorldTree
 		public bool TryGraftSelfToTree<B, K>(K key, INode parent) where B : class, IBranch<K>;
 
 		/// <summary>
-		/// 节点嫁接到树结构时的处理
+		/// 节点嫁接前的处理
+		/// </summary>
+		/// <remarks>由框架内部调用</remarks>
+		public void OnBeforeGraftSelfToTree();
+
+		/// <summary>
+		/// 节点嫁接的处理
 		/// </summary>
 		/// <remarks>由框架内部调用</remarks>
 		public void OnGraftSelfToTree();

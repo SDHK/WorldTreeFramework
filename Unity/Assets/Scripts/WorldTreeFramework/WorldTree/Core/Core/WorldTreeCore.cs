@@ -305,7 +305,7 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
-				branchType = Core.TypeToCode<B>();
+				BranchType = Core.TypeToCode<B>();
 				Parent = parent;
 				Core = parent.Core ?? this;
 				Root = null;
@@ -415,16 +415,18 @@ namespace WorldTree
 		{
 			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
-			branchType = Core.TypeToCode<B>();
+			BranchType = Core.TypeToCode<B>();
 			Parent = parent;
 			RefreshActive();
 			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
 			return true;
 		}
-
+		public override void OnBeforeGraftSelfToTree()
+		{ 
+			AddNodeView();
+		}
 		public override void OnGraftSelfToTree()
 		{
-			AddNodeView();
 			if (IsActive != activeEventMark)//激活变更
 			{
 				if (IsActive)

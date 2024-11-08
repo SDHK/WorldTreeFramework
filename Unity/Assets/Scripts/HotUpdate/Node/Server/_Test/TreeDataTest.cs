@@ -73,9 +73,6 @@ namespace WorldTree
 		/// </summary>
 		public Dictionary<int, string> DataDict;
 
-	
-
-
 	}
 
 

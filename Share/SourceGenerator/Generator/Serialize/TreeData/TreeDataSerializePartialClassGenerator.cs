@@ -181,7 +181,11 @@ namespace WorldTree.SourceGenerator
 				{
 					if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.INode, out _))
 					{
-						Code.AppendLine($"				if (value is not {className} obj)value = obj = self.Core.PoolGetNode<{className}>();");
+						Code.AppendLine(@$"				if (value is not {className} obj)");
+						Code.AppendLine("				{");
+						Code.AppendLine($"					value = obj = self.Core.PoolGetNode<{className}>();");
+						Code.AppendLine("					obj.IsSerialize = true;");
+						Code.AppendLine("				}");
 					}
 					else if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.IUnit, out _))
 					{
