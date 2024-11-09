@@ -11,6 +11,48 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
+
+	/// <summary>
+	/// 序列化帮助类
+	/// </summary>
+	public static class TreeDataHelper
+	{
+		/// <summary>
+		/// 序列化节点
+		/// </summary>
+		public static byte[] SerializeNode(INode self)
+		{
+			if (self.IsDisposed) return null;
+			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.SerializeRuleGroup.Send(current));
+
+			self.AddTemp(out TreeDataByteSequence sequence);
+			if (self?.Parent == null) return null;
+			TreeSpade treeSpade = null;
+			if (NodeBranchHelper.TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
+			{
+				treeSpade = branch.SpadeNode(self.Id);
+			}
+			if (treeSpade == null) return null;
+			sequence.Serialize(treeSpade);
+			treeSpade.Dispose();
+			byte[] bytes = sequence.ToBytes();
+			sequence.Dispose();
+			return bytes;
+		}
+
+		/// <summary>
+		/// 反序列化节点
+		/// </summary>
+		public static TreeSpade DeseralizeNode(INode self, byte[] bytes)
+		{
+			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
+			TreeSpade treeSpade = null;
+			sequence.Deserialize(ref treeSpade);
+			sequence.Dispose();
+			return treeSpade;
+		}
+	}
+
 	/// <summary>
 	/// 树数据节点
 	/// </summary>
@@ -32,7 +74,7 @@ namespace WorldTree
 		/// </summary>
 		public bool IsDefault = true;
 	}
-	
+
 	/// <summary>
 	/// 树数值
 	/// </summary>

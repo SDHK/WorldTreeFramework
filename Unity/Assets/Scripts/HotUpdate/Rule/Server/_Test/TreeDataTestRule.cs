@@ -1,10 +1,3 @@
-
-
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace WorldTree
 {
 
@@ -17,28 +10,7 @@ namespace WorldTree
 		static int Key = nameof(Key).GetFNV1aHash32();
 		static int Value = nameof(Value).GetFNV1aHash32();
 
-		/// <summary>
-		/// 序列化节点
-		/// </summary>
-		public static byte[] Serialize(INode self)
-		{
-			if (self.IsDisposed) return null;
-			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.SerializeRuleGroup.Send(current));
 
-			self.AddTemp(out TreeDataByteSequence sequence);
-			if (self?.Parent == null) return null;
-			TreeSpade treeSpade = null;
-			if (NodeBranchHelper.TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
-			{
-				treeSpade = branch.SpadeNode(self.Id);
-			}
-			if (treeSpade == null) return null;
-			sequence.Serialize(treeSpade);
-			treeSpade.Dispose();
-			byte[] bytes = sequence.ToBytes();
-			sequence.Dispose();
-			return bytes;
-		}
 
 		static unsafe OnUpdate<TreeDataNode1> OnUpdate = (self) =>
 		{
@@ -69,17 +41,13 @@ namespace WorldTree
 			};
 
 			AData aDataBase = data;
-			byte[] bytes = Serialize(aDataBase);
+			byte[] bytes = TreeDataHelper.SerializeNode(aDataBase);
 			self.RemoveComponent<TreeDataTest, AData>();
-
 			self.Log($"序列化字节长度{bytes.Length}\n");
 
-			self.AddTemp(out TreeDataByteSequence sequenceRead).SetBytes(bytes);
-			TreeSpade aDataBase2 = null;
-			sequenceRead.Deserialize(ref aDataBase2);
 
-
-			aDataBase2.TryGraftSelfToTree(self);
+			TreeSpade treeSpade = TreeDataHelper.DeseralizeNode(self, bytes);
+			treeSpade.TryGraftSelfToTree(self);
 			self.TryGetComponent(out AData data2);
 			string logText = $"\n反序列化{data2.AInt} \n";
 

@@ -38,7 +38,6 @@ namespace WorldTree
 
 	//YooAsset管理器
 
-	//需要定时器TimeUpdate,特化的双方法法则？
 
 	//真实与游戏时间双法则
 
@@ -48,7 +47,6 @@ namespace WorldTree
 
 	//代码生成Destroy，让引用=null 
 
-	//id赋值时机，UID和普通id 的区分，序列化和普通类型的id
 
 	//不需要池的对象
 	//GlobalRuleActuatorManager
