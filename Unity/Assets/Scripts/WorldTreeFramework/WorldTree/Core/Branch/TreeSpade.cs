@@ -11,7 +11,8 @@ namespace WorldTree
 	/// <summary>
 	/// 树节点移植器基类
 	/// </summary>
-	public abstract class TreeSpade : Unit
+	[TreeDataSerializable]
+	public abstract partial class TreeSpade : Unit
 	{
 		/// <summary>
 		/// 分支类型码
@@ -27,7 +28,8 @@ namespace WorldTree
 	/// <summary>
 	/// 树节点移植器
 	/// </summary>
-	public class TreeSpade<K> : TreeSpade
+	[TreeDataSerializable]
+	public partial class TreeSpade<K> : TreeSpade
 	{
 		/// <summary>
 		/// 键值

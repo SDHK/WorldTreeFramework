@@ -120,10 +120,11 @@ namespace WorldTree
 
 		#region Active
 
-		[TreeDataIgnore]
-		[TreePackIgnore]
+
 		public bool ActiveToggle { get; set; }
 
+		[TreeDataIgnore]
+		[TreePackIgnore]
 		public bool IsActive { get; set; }
 
 		[TreeDataIgnore]
@@ -253,7 +254,8 @@ namespace WorldTree
 			Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
 			if (this is not IListenerIgnorer)//广播给全部监听器
 			{
-				NodeListenerActuatorHelper.GetListenerActuator<IListenerAddRule>(this)?.Send((INode)this);
+				IRuleActuator<IListenerAddRule> ruleActuator = NodeListenerActuatorHelper.GetListenerActuator<IListenerAddRule>(this);
+				ruleActuator?.Send((INode)this);
 			}
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测自身是否为监听器
 			{
@@ -369,9 +371,9 @@ namespace WorldTree
 		public virtual bool TryGraftSelfToTree<K>(long branchType, K key, INode parent)
 		{
 			if (NodeBranchHelper.AddBranch(parent, branchType) is not IBranch<K> branch) return false;
-			if (branch.TryAddNode(key, this)) return false;
+			if (!branch.TryAddNode(key, this)) return false;
 
-			branchType = branch.Type;
+			BranchType = branch.Type;
 			Parent = parent;
 			Core = parent.Core;
 			Root = parent.Root;
@@ -407,7 +409,8 @@ namespace WorldTree
 			Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
 			if (this is not IListenerIgnorer)//广播给全部监听器
 			{
-				NodeListenerActuatorHelper.GetListenerActuator<IListenerAddRule>(this)?.Send((INode)this);
+				IRuleActuator<IListenerAddRule> ruleActuator = NodeListenerActuatorHelper.GetListenerActuator<IListenerAddRule>(this);
+				ruleActuator?.Send((INode)this);
 			}
 			if (this is INodeListener nodeListener && this is not IListenerIgnorer)//检测添加静态监听
 			{

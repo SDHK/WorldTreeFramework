@@ -88,6 +88,11 @@ namespace WorldTree
 			{
 				foreach (var branchs in self.BranchDict)
 				{
+					if (branchs.Value == null)
+					{
+						str += t1 + $"   Null:\n";
+						continue;
+					}
 					str += t1 + $"   {branchs.Value.GetType().Name}:\n";
 
 					foreach (INode node in branchs.Value)

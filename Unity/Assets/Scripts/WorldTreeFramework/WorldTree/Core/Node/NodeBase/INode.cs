@@ -129,12 +129,12 @@ namespace WorldTree
 		/// <summary>
 		/// 活跃开关
 		/// </summary>
-		[TreeDataIgnore]
 		public bool ActiveToggle { get; set; }
 
 		/// <summary>
 		/// 活跃状态(设定为只读，禁止修改)
 		/// </summary>
+		[TreeDataIgnore]
 		public bool IsActive { get; set; }
 
 		/// <summary>

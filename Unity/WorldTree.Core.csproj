@@ -59,7 +59,7 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Node\NodeBase\TreeSpade.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\TreeSpade.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Array1FormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Array2FormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Array3FormatterRule.cs" />
