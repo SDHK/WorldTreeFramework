@@ -14,6 +14,25 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 	/// <summary>
+	/// 分支集合
+	/// </summary>
+	[TreeDataSerializable]
+	public partial class BranchGroup : UnitDictionary<long, IBranch>, ISerializable
+	{
+		public void OnDeserialize()
+		{
+			//清除值为空的分支
+			UnitList<long> keyList = Core.PoolGetUnit<UnitList<long>>();
+			foreach (var item in this) if (item.Value == null) keyList.Add(item.Key);
+			foreach (var key in keyList) Remove(key);
+		}
+
+		public void OnSerialize()
+		{
+		}
+	}
+
+	/// <summary>
 	/// 世界树分支基类
 	/// </summary>
 	public abstract class Branch<K> : Unit, IBranch<K>, ISerializable

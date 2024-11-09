@@ -25,7 +25,7 @@ namespace WorldTree
 			if (self.IsDisposed) return null;
 			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.SerializeRuleGroup.Send(current));
 
-			self.Parent.AddTemp(out TreeDataByteSequence sequence);
+			self.AddTemp(out TreeDataByteSequence sequence);
 			if (self?.Parent == null) return null;
 			TreeSpade treeSpade = null;
 			if (NodeBranchHelper.TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
@@ -74,7 +74,7 @@ namespace WorldTree
 
 			self.Log($"序列化字节长度{bytes.Length}\n");
 
-			self.Parent.AddTemp(out TreeDataByteSequence sequenceRead).SetBytes(bytes);
+			self.AddTemp(out TreeDataByteSequence sequenceRead).SetBytes(bytes);
 			TreeSpade aDataBase2 = null;
 			sequenceRead.Deserialize(ref aDataBase2);
 

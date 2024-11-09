@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
+using static WorldTree.NamedSymbolHelper;
 
 namespace WorldTree.SourceGenerator
 {
@@ -84,8 +85,7 @@ namespace WorldTree.SourceGenerator
 			if (!isAbstract)
 			{
 				Code.AppendLine($"				{className} obj = ({className})value;");
-				if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.ISerializable, out _))
-				 Code.AppendLine($"				obj.OnSerialize();");
+				
 			}
 
 			Code.AppendLine("				if (nameCode == -1)");
@@ -104,6 +104,8 @@ namespace WorldTree.SourceGenerator
 					Code.AppendLine("						self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);");
 					Code.AppendLine("						return;");
 					Code.AppendLine("					}");
+					if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.ISerializable, out _))
+						Code.AppendLine($"					obj.OnSerialize();");
 				}
 			}
 			if (fieldSymbols != null)
@@ -347,7 +349,7 @@ namespace WorldTree.SourceGenerator
 				{
 					foreach (var ignoreType in ignoreBaseSymbols)
 					{
-						if (IsTypeSymbolEqual(type, ignoreType.Key))
+						if (NamedSymbolHelper.IsTypeSymbolEqual(type, ignoreType.Key, TypeCompareOptions.CompareToGenericTypeDefinition))
 						{
 							baseMembersCount = ignoreType.Value;
 							baseTypeSymbol = type;

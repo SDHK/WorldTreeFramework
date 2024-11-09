@@ -182,13 +182,13 @@ namespace WorldTree
 		/// <summary>
 		/// 树分支
 		/// </summary>
-		public UnitDictionary<long, IBranch> BranchDict { get; set; }
+		public BranchGroup BranchDict { get; set; }
 
 		/// <summary>
 		/// 树分支,假如没有则创建
 		/// </summary>
 		[TreeDataIgnore]
-		public UnitDictionary<long, IBranch> GetBranchDict { get; }
+		public BranchGroup GetBranchDict { get; }
 
 		#endregion
 

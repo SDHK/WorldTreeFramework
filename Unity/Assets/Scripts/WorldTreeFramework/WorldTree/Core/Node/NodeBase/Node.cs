@@ -199,11 +199,11 @@ namespace WorldTree
 		public long BranchType { get; set; }
 
 
-		public UnitDictionary<long, IBranch> BranchDict { get; set; }
+		public BranchGroup BranchDict { get; set; }
 
 		[TreeDataIgnore]
 		[TreePackIgnore]
-		public UnitDictionary<long, IBranch> GetBranchDict => BranchDict ??= Core.PoolGetUnit<UnitDictionary<long, IBranch>>();
+		public BranchGroup GetBranchDict => BranchDict ??= Core.PoolGetUnit<BranchGroup>();
 
 		#endregion
 

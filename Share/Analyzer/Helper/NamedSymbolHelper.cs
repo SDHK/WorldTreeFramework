@@ -37,7 +37,11 @@ namespace WorldTree
 			/// <summary>
 			/// 严格比较类型参数
 			/// </summary>
-			StrictTypeParameterComparison = 4
+			StrictTypeParameterComparison = 4,
+			/// <summary>
+			/// 与GenericType定义比较
+			/// </summary>
+			CompareToGenericTypeDefinition = 8
 		}
 
 
@@ -125,6 +129,18 @@ namespace WorldTree
 		/// </summary>
 		public static bool IsTypeSymbolEqual(INamedTypeSymbol type1, INamedTypeSymbol type2, TypeCompareOptions options = TypeCompareOptions.None)
 		{
+			// 如果需要与泛型定义比较
+			if (options.HasFlag(TypeCompareOptions.CompareToGenericTypeDefinition))
+			{
+				// 获取两个类型的原始定义
+				var originalDef1 = type1.OriginalDefinition;
+				var originalDef2 = type2.OriginalDefinition;
+				
+				// 比较原始定义是否相同
+				return SymbolEqualityComparer.Default.Equals(originalDef1, originalDef2);
+			}
+
+			// 原有的比较逻辑
 			if (SymbolEqualityComparer.Default.Equals(type1.OriginalDefinition, type2.OriginalDefinition))
 			{
 				if (type1.TypeArguments.Length == type2.TypeArguments.Length)
@@ -133,22 +149,18 @@ namespace WorldTree
 					{
 						var arg1 = type1.TypeArguments[i];
 						var arg2 = type2.TypeArguments[i];
-
 						if (arg1 is ITypeParameterSymbol param1 && arg2 is ITypeParameterSymbol param2)
 						{
-							// 严格比较
 							if (options.HasFlag(TypeCompareOptions.StrictTypeParameterComparison))
 							{
 								if (!SymbolEqualityComparer.Default.Equals(param1, param2))
 									return false;
 							}
-							// 忽略名称
 							else if (!options.HasFlag(TypeCompareOptions.IgnoreTypeParameterNames))
 							{
 								if (param1.Name != param2.Name)
 									return false;
 							}
-							// 检查序号
 							else if (!options.HasFlag(TypeCompareOptions.IgnoreTypeParameterOrdinal))
 							{
 								if (param1.Ordinal != param2.Ordinal)
