@@ -28,7 +28,7 @@ namespace WorldTree
 			{
 
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
-				self.AddComponent(out SerializeTest _);
+				self.AddComponent(out TreeDataTest _);
 			}
 		};
 

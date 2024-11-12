@@ -5,21 +5,20 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-
 	/// <summary>
-	/// 序列化测试2
+	/// 序列化测试
 	/// </summary>
 	[TreeDataSerializable]
-	public partial class TreeDataNode1 : Node
-		, ComponentOf<AData>
-		, ChildOf<AData>
+	public partial class TreeDataTest : Node
+		, ComponentOf<INode>
+		, AsComponentBranch
+		, AsChildBranch
 		, AsAwake
 	{
 		/// <summary>
-		/// 测试int
+		/// data
 		/// </summary>
-		public float BInt;
-
+		public TreeDataNodeDataTest1 treeData;
 	}
 
 
@@ -66,51 +65,46 @@ namespace WorldTree
 
 
 
-
 	/// <summary>
-	/// 序列化测试
+	/// 测试节点数据1
 	/// </summary>
-	public class TreeDataTest : Node
-		, ComponentOf<INode>
+	[TreeDataSerializable]
+	public partial class TreeDataNodeDataTest1 : Node
+		, ChildOf<TreeDataTest>
 		, AsAwake
-		, AsComponentBranch
-	{ }
-
-
-
-
-
-	/// <summary>
-	/// data
-	/// </summary>
-	[TreeDataSerializable]
-	public partial struct BDataBase
+		, AsChildBranch
 	{
 		/// <summary>
-		/// 测试int
+		/// 名称
 		/// </summary>
-		public float AInt { get; set; } = 10.1f;
+		public string Name;
 
-		public BDataBase()
-		{
-		}
+		/// <summary>
+		/// 年龄
+		/// </summary>
+		public int Age;
+	}
+
+	/// <summary>
+	/// 测试节点数据1
+	/// </summary>
+	[TreeDataSerializable]
+	public partial class TreeDataNodeDataTest2 : Node
+		, ChildOf<TreeDataNodeDataTest1>
+		, AsAwake
+	{
+		/// <summary>
+		/// 名称
+		/// </summary>
+		public string Name;
+
+		/// <summary>
+		/// 年龄
+		/// </summary>
+		public int Age;
 	}
 
 
-	/// <summary>
-	/// data
-	/// </summary>
-	[TreeDataSerializable]
-	public partial interface IADataBase
-	{
-		/// <summary>
-		/// 测试int
-		/// </summary>
-		public float AInt { get; set; }
-
-
-
-	}
 
 	/// <summary>
 	/// data

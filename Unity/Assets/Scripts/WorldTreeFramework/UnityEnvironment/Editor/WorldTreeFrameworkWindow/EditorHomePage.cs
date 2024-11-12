@@ -17,9 +17,11 @@ namespace EditorTool
     public class EditorHomePage : Node, ComponentOf<INode>
         , AsAwake
         , AsRule<GuiUpdate>
+        , AsChildBranch
     {
         public INode page;
     }
+
 
     class EditorHomePageAddSystem : AddRule<EditorHomePage>
     {
@@ -36,8 +38,8 @@ namespace EditorTool
             EditorGUILayout.BeginHorizontal();
 
             EditorGUILayout.BeginVertical(GUILayout.Width(150));
-
-            foreach (var item in self.GetBranch<ChildBranch>())
+			
+			foreach (var item in self.ChildBranch())
             {
                 if (GUILayout.Button(self.CodeToType(item.Type).Name))
                 {

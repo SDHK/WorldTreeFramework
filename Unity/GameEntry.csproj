@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\ETTaskHelper.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\ETVoid.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\YooAssetsHelper.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MonoComponentTest.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\AssetsLoadHelper.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\TestGC.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MonoTest.cs" />
@@ -87,7 +88,6 @@
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\MoveAreaLimiter.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MailTest.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\GamePlayMode.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MonoComponentTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\AOT\GameEntry\GameEntry.asmdef" />
