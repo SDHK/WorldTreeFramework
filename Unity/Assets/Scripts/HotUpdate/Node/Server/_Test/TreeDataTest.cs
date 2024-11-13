@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace WorldTree
 {
@@ -151,15 +152,10 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				var targetType = typeof(TreeDataTest);
-				if (!(self.TryReadType(out var dataType) && dataType == targetType))
-				{
-					self.SubTypeReadValue(dataType, targetType, ref value);
-					return;
-				}
+				if (self.TryReadTypeOrSubType(typeof(TreeDataTest), out Type dataType, ref value)) return;
 				if (self.ReadCheckNull(out int count))
 				{
-					value = null;
+					value = default;
 					return;
 				}
 				if (count < 0)

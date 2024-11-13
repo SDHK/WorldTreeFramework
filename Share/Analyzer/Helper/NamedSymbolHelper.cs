@@ -16,35 +16,33 @@ using System;
 
 namespace WorldTree
 {
+	[Flags]
+	public enum TypeCompareOptions
+	{
+		None = 0,
+		/// <summary>
+		/// 忽略类型参数名称
+		/// </summary>
+		IgnoreTypeParameterNames = 1,
+		/// <summary>
+		/// 忽略类型参数序号
+		/// </summary>
+		IgnoreTypeParameterOrdinal = 2,
+		/// <summary>
+		/// 严格比较类型参数
+		/// </summary>
+		StrictTypeParameterComparison = 4,
+		/// <summary>
+		/// 与GenericType定义比较
+		/// </summary>
+		CompareToGenericTypeDefinition = 8
+	}
+
 	/// <summary>
 	/// 命名符号帮助类
 	/// </summary>
 	internal static class NamedSymbolHelper
 	{
-
-		[Flags]
-		public enum TypeCompareOptions
-		{
-			None = 0,
-			/// <summary>
-			/// 忽略类型参数名称
-			/// </summary>
-			IgnoreTypeParameterNames = 1,
-			/// <summary>
-			/// 忽略类型参数序号
-			/// </summary>
-			IgnoreTypeParameterOrdinal = 2,
-			/// <summary>
-			/// 严格比较类型参数
-			/// </summary>
-			StrictTypeParameterComparison = 4,
-			/// <summary>
-			/// 与GenericType定义比较
-			/// </summary>
-			CompareToGenericTypeDefinition = 8
-		}
-
-
 		/// <summary>
 		/// 获取继承了指定基类或接口的所有子类
 		/// </summary>

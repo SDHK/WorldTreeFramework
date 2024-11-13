@@ -8,6 +8,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
@@ -171,15 +172,15 @@ namespace WorldTree
 				//写入类型名称
 				WriteString(ShortTypeNameRegex.Replace(item.Key.AssemblyQualifiedName, ""));
 			}
-			//写入字段数量
-			WriteUnmanaged(codeToNameDict.Count);
-			foreach (var item in codeToNameDict)
-			{
-				//写入字段码
-				WriteUnmanaged(item.Key);
-				//写入字段名称
-				WriteString(item.Value);
-			}
+			////写入字段数量
+			//WriteUnmanaged(codeToNameDict.Count);
+			//foreach (var item in codeToNameDict)
+			//{
+			//	//写入字段码
+			//	WriteUnmanaged(item.Key);
+			//	//写入字段名称
+			//	WriteString(item.Value);
+			//}
 			//写入映射表起始位置偏差距离
 			WriteUnmanaged(length - startPoint);
 		}
@@ -210,16 +211,16 @@ namespace WorldTree
 				string typeName = ReadString();
 				codeToTypeNameDict.Add(typeCode, typeName);
 			}
-			//读取字段数量
-			ReadUnmanaged(out int nameCount);
-			for (int i = 0; i < nameCount; i++)
-			{
-				//读取字段码
-				ReadUnmanaged(out int nameCode);
-				//读取字段名称
-				string name = ReadString();
-				codeToNameDict.Add(nameCode, name);
-			}
+			////读取字段数量
+			//ReadUnmanaged(out int nameCount);
+			//for (int i = 0; i < nameCount; i++)
+			//{
+			//	//读取字段码
+			//	ReadUnmanaged(out int nameCode);
+			//	//读取字段名称
+			//	string name = ReadString();
+			//	codeToNameDict.Add(nameCode, name);
+			//}
 
 			//读取指针定位到数据起始位置
 			readPoint = 0;
@@ -230,14 +231,57 @@ namespace WorldTree
 			ReadValue(ref value);
 		}
 
+		/*
+		 	this.Log($"TypeCount: {codeToTypeNameDict.Count}");
+			foreach (var item in this.codeToTypeNameDict)
+			{
+				this.Log($"Type: {item.Value}");
+			}
+			this.Log($"NameCount: {codeToNameDict.Count}");
+			foreach (var item in this.codeToNameDict)
+			{
+				this.Log($"Name: {item.Value}");
+			}
+		 
+		 */
+
 		#region 写入
+		/// <summary>
+		/// 读取字段数量或空标记
+		/// </summary>
+		public bool ReadCheckNull(out int count)
+		{
+			this.ReadDynamic(out count);
+			if (count == ValueMarkCode.NULL_OBJECT) return true;
+			return false;
+		}
+
+
+		/// <summary>
+		/// 写入字段数量或空标记
+		/// </summary>
+		public bool WriteCheckNull<T>(in object value, int count, out T obj)
+		{
+			if (value is T objValue)
+			{
+				if (!objValue.Equals(default))
+				{
+					obj = objValue;
+					this.WriteDynamic(count);
+					return false;
+				}
+			}
+			obj = default;
+			this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
+			return true;
+		}
 
 		/// <summary>
 		/// 写入类型
 		/// </summary>
 		public void WriteType(Type type)
 		{
-			WriteUnmanaged(AddTypeCode(type));
+			this.WriteDynamic(AddTypeCode(type));
 		}
 
 		/// <summary>
@@ -246,7 +290,19 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void WriteValue<T>(in T value, int nameCode = -1)
 		{
-			Type type = value?.GetType() ?? typeof(T);
+			Type originalType = typeof(T);
+			Type type = value?.GetType();
+			//如果类型为空，或者类型和原始类型一致，则标记为0，不写入类型。
+			if (type == null)
+			{
+				type = originalType;
+				nameCode = 0;
+			}
+			else if (type == originalType)
+			{
+				nameCode = 0;
+			}
+
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 
@@ -349,15 +405,43 @@ namespace WorldTree
 		/// </summary>
 		public bool TryReadType(out Type type)
 		{
-			ReadUnmanaged(out long typeCode);
+			this.ReadDynamic(out long typeCode);
 			return TryGetType(typeCode, out type);
+		}
+
+		/// <summary>
+		/// 读取类型
+		/// </summary>
+		public bool TryReadTypeOrSubType(Type targetType, out Type dataType, ref object value)
+		{
+			this.ReadDynamic(out long typeCode);
+			if (typeCode == 0)//判断如果是0，则为原类型，尝试读取
+			{
+				dataType = targetType;
+				return false;
+			}
+			else if (TryGetType(typeCode, out dataType) && dataType == targetType)
+			{
+				//能读取到类型，说明是多态类型，判断一样则直接读取
+				return false;
+			}
+
+			//不一致或不存在的类型，尝试读取
+			return SubTypeReadValue(dataType, targetType, ref value);
 		}
 
 		/// <summary>
 		/// 尝试以子类型读取
 		/// </summary>
-		public void SubTypeReadValue(Type type, Type targetType, ref object value)
+		public bool SubTypeReadValue(Type type, Type targetType, ref object value)
 		{
+			//判断是否为基础类型，直接跳跃数据。
+			if (TreeDataType.TypeDict.ContainsKey(type) || type == typeof(string))
+			{
+				SkipData(type);
+				return true;
+			}
+
 			bool isSubType = false;
 			Type baseType = type.BaseType;
 			if (targetType.IsInterface)
@@ -372,7 +456,7 @@ namespace WorldTree
 					}
 				}
 			}
-			else
+			else if (type.IsClass)
 			{
 				while (baseType != null && baseType != typeof(object))
 				{
@@ -384,17 +468,23 @@ namespace WorldTree
 					baseType = baseType.BaseType;
 				}
 			}
+			else //不是接口也不是类型，直接跳跃数据
+			{
+				SkipData(type);
+				return true;
+			}
+
 			if (isSubType)//是子类型
 			{
 				//读取指针回退，类型码
 				ReadBack(8);
 				//子类型读取
 				ReadValue(type, ref value);
+				return true;
 			}
-			else //不是本身类型，也不是子类型，也不是可转换类型，跳跃数据。
+			else //不是子类型，返回去尝试读取。
 			{
-				//跳跃数据
-				SkipData(type);
+				return false;
 			}
 		}
 
@@ -406,21 +496,7 @@ namespace WorldTree
 		/// </summary>
 		public void SkipData()
 		{
-			//读取类型，是基础类型直接跳跃。
-			if (TryReadType(out Type type))
-			{
-				if (TreeDataType.TypeDict.TryGetValue(type, out int byteCount))
-				{
-					ReadSkip(byteCount);
-					return;
-				}
-				//string类型需要特殊处理
-				else if (type == typeof(string))
-				{
-					SkipString();
-					return;
-				}
-			}
+			TryReadType(out Type type);
 			SkipData(type);
 		}
 
@@ -429,6 +505,19 @@ namespace WorldTree
 		/// </summary>
 		public void SkipData(Type type)
 		{
+			//是基础类型直接跳跃
+			if (TreeDataType.TypeDict.TryGetValue(type, out int byteCount))
+			{
+				ReadSkip(byteCount);
+				return;
+			}
+			//string类型需要特殊处理
+			else if (type == typeof(string))
+			{
+				SkipString();
+				return;
+			}
+
 			//读取字段数量
 			ReadUnmanaged(out int count);
 			//空对象判断
@@ -485,7 +574,6 @@ namespace WorldTree
 			{
 				data = this.Parent.AddTemp(out TreeValue treeValue);
 				codeToTypeNameDict.TryGetValue(typeCode, out treeValue.TypeName);
-				//取值????
 				return data;
 			}
 			//不是基础类型获取类型名称
@@ -640,6 +728,187 @@ namespace WorldTree
 
 	}
 
+
+	/// <summary>
+	/// a
+	/// </summary>
+	public class TypeHashGenerator1
+	{
+		/// <summary>
+		/// 储存类型名称的字典
+		/// </summary>
+		public Dictionary<long, string> TypeNameDict = new();
+		/// <summary>
+		/// 储存泛型参数的字典
+		/// </summary>
+		public Dictionary<long, List<long>> GenericParamsDict = new();
+
+		/// <summary>
+		/// 获取类型的哈希码
+		/// </summary>
+		public long GetTypeHash(Type type)
+		{
+			// 处理数组类型
+			//if (type.IsArray)
+			//{
+			//	var elementHash = GetTypeHash(type.GetElementType());
+			//	var arrayString = $"Array[{type.GetArrayRank()}]";
+			//	var arrayHash = HashCodeHelper.GetHash64(arrayString);
+			//	TypeNameDict[arrayHash] = arrayString;
+
+			//	var paramList = new List<long> { elementHash };
+			//	GenericParamsDict[arrayHash] = paramList;
+			//	return arrayHash;
+			//}
+
+			if (type.IsArray)
+			{
+				var arrayHash = -type.GetArrayRank();
+				var elementHash = GetTypeHash(type.GetElementType());
+				// 将维度编码为负数，这样-1表示一维数组，-2表示二维数组，以此类推
+
+				var paramList = new List<long> { elementHash };
+				GenericParamsDict[arrayHash] = paramList;
+				return -type.GetArrayRank() * elementHash;
+			}
+
+			// 处理泛型类型
+			if (type.IsGenericType)
+			{
+				// 获取泛型类型定义
+				Type genericTypeDef = type.GetGenericTypeDefinition();
+				string typeName = TreeDataByteSequence.ShortTypeNameRegex.Replace(genericTypeDef.AssemblyQualifiedName, "");
+				long typeHash = HashCodeHelper.GetHash64(typeName);
+
+				// 储存类型定义名称
+				TypeNameDict[typeHash] = typeName;
+
+				// 递归处理所有泛型参数
+				var paramHasheList = new List<long>();
+				foreach (var argType in type.GetGenericArguments())
+				{
+					paramHasheList.Add(GetTypeHash(argType));
+				}
+
+				// 储存泛型参数哈希列表
+				GenericParamsDict[typeHash] = paramHasheList;
+
+				return typeHash;
+			}
+
+			// 处理普通类型
+			string fullName = TreeDataByteSequence.ShortTypeNameRegex.Replace(type.AssemblyQualifiedName, "");
+			long hash = HashCodeHelper.GetHash64(fullName);
+			TypeNameDict[hash] = fullName;
+			return hash;
+		}
+
+		/// <summary>
+		/// a
+		/// </summary>
+		/// <param name="hash"></param>
+		/// <returns></returns>
+		private long GetBasicHash(long hash)
+		{
+			if (hash < 0) hash = -hash;
+			return hash;
+		}
+
+		/// <summary>
+		/// 从哈希码还原类型
+		/// </summary>
+		public Type RestoreType(long hash)
+		{
+			// 处理数组类型
+			if (hash < 0 && hash > -100)
+			{
+				// 获取数组维度（负数）
+				int rank = -(int)hash;
+				// 还原元素类型的哈希
+				var elementType = RestoreType(rank);
+				// 根据维度创建数组类型
+				return rank == -1 ? elementType.MakeArrayType() : elementType.MakeArrayType(-rank);
+			}
+
+
+			// 获取类型名称
+			if (!TypeNameDict.TryGetValue(hash, out string typeName))
+			{
+				throw new KeyNotFoundException($"Type hash {hash} not found");
+			}
+
+			//// 处理数组类型
+			//if (typeName.StartsWith("Array["))
+			//{
+			//	var paramList = GenericParamsDict[hash];
+			//	var elementType = RestoreType(paramList[0]);
+			//	int rank = int.Parse(typeName.Substring(6, typeName.Length - 7));
+			//	return rank == 1 ? elementType.MakeArrayType() : elementType.MakeArrayType(rank);
+			//}
+
+			// 检查是否是泛型类型
+			if (GenericParamsDict.TryGetValue(hash, out List<long> paramHashes))
+			{
+				// 获取基础类型
+				Type baseType = Type.GetType(typeName);
+				if (baseType == null)
+				{
+					throw new TypeLoadException($"Cannot load type {typeName}");
+				}
+
+				// 还原所有泛型参数
+				Type[] genericArgs = paramHashes.Select(h => RestoreType(h)).ToArray();
+
+				// 构造完整的泛型类型
+				return baseType.MakeGenericType(genericArgs);
+			}
+
+			// 普通类型直接加载
+			return Type.GetType(typeName);
+		}
+
+	}
+
+
+
+
+	public static class TypeHashGeneratorRule
+	{
+		/// <summary>
+		/// 使用示例：
+		/// </summary>
+		public static void Example()
+		{
+			var generator = new TypeHashGenerator1();
+
+			// 测试简单类型
+			Type intType = typeof(int);
+			long intHash = generator.GetTypeHash(intType);
+
+			// 测试泛型类型
+			Type listType = typeof(List<int>);
+			long listHash = generator.GetTypeHash(listType);
+
+			// 测试嵌套泛型
+			Type dictType = typeof(Dictionary<string, List<int>>);
+			long dictHash = generator.GetTypeHash(dictType);
+
+			// 测试数组
+			Type arrayType = typeof(int[,]);
+			long arrayHash = generator.GetTypeHash(arrayType);
+
+			// 还原类型测试
+			Type restoredType = generator.RestoreType(listHash);
+			Console.WriteLine(restoredType.FullName);
+
+			foreach (var item in generator.TypeNameDict)
+			{
+				Console.WriteLine(item.Value);
+
+			}
+
+		}
+	}
 
 
 }

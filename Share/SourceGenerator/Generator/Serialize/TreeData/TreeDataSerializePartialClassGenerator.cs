@@ -10,7 +10,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
-using static WorldTree.NamedSymbolHelper;
 
 namespace WorldTree.SourceGenerator
 {
@@ -82,44 +81,31 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)");
 			Code.AppendLine("			{");
 
-			if (!isAbstract)
-			{
-				Code.AppendLine($"				{className} obj = ({className})value;");
-				
-			}
+			if (!isAbstract) Code.AppendLine($"				{className} obj;");
 
-			Code.AppendLine("				if (nameCode == -1)");
+			Code.AppendLine("				switch (nameCode)");
 			Code.AppendLine("				{");
-			Code.AppendLine($"					self.WriteType(typeof({className}));");
-			if (classSymbol.TypeKind != TypeKind.Struct)
-			{
-				if (isAbstract)
-				{
-					Code.AppendLine("					self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);");
-				}
-				else
-				{
-					Code.AppendLine("					if (obj == null)");
-					Code.AppendLine("					{");
-					Code.AppendLine("						self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);");
-					Code.AppendLine("						return;");
-					Code.AppendLine("					}");
-					if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.ISerializable, out _))
-						Code.AppendLine($"					obj.OnSerialize();");
-				}
-			}
-			if (fieldSymbols != null)
-			{
-				Code.AppendLine($"					self.WriteUnmanaged({membersCount});");
-			}
+			Code.AppendLine("					case 0:");
+			Code.AppendLine("						self.WriteDynamic(0L)");
+			Code.AppendLine($"						if (self.WriteCheckNull(value, {membersCount}, out obj)) return;");
+			Code.AppendLine("						break;");
+			Code.AppendLine("					case -1:");
+			Code.AppendLine($"						self.WriteType(typeof({className}));");
+			Code.AppendLine($"						if (self.WriteCheckNull(value, {membersCount}, out obj)) return;");
+			Code.AppendLine("						break;");
+			Code.AppendLine("					default:");
+			Code.AppendLine($"						obj = ({className})value;");
+			Code.AppendLine("						break;");
+
 			Code.AppendLine("				}");
+
 
 			if (fieldSymbols != null)
 			{
 				foreach (ISymbol symbol in fieldSymbols)
 				{
 					int hash = symbol.Name.GetFNV1aHash32();
-					Code.AppendLine($"				if (!self.WriteCheckNameCode({hash})) self.AddNameCode({hash}, nameof(obj.{symbol.Name}));");
+					Code.AppendLine($"				self.WriteUnmanaged({hash});");
 					Code.AppendLine($"				self.WriteValue(obj.{symbol.Name});");
 				}
 				if (baseName != null)
@@ -147,29 +133,12 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("					return;");
 				Code.AppendLine("				}");
 			}
-			Code.AppendLine($"				var targetType = typeof({className});");
-			Code.AppendLine("				if (!(self.TryReadType(out var dataType) && dataType == targetType))");
+			Code.AppendLine($"				if (self.TryReadTypeOrSubType(typeof({className}), out Type dataType, ref value)) return;");
+			Code.AppendLine("				if (self.ReadCheckNull(out int count))");
 			Code.AppendLine("				{");
-			if (classSymbol.TypeKind != TypeKind.Struct)
-			{
-				Code.AppendLine("					self.SubTypeReadValue(dataType, targetType, ref value);");
-			}
-			else
-			{
-				Code.AppendLine("					self.SkipData(dataType);");
-			}
+			Code.AppendLine("					value = default;");
 			Code.AppendLine("					return;");
 			Code.AppendLine("				}");
-			Code.AppendLine("				self.ReadUnmanaged(out int count);");
-			if (classSymbol.TypeKind != TypeKind.Struct)
-			{
-				Code.AppendLine("				if (count == ValueMarkCode.NULL_OBJECT)");
-				Code.AppendLine("				{");
-				Code.AppendLine("					value = null;");
-				Code.AppendLine("					return;");
-				Code.AppendLine("				}");
-			}
-
 
 			if (!isAbstract)
 			{
