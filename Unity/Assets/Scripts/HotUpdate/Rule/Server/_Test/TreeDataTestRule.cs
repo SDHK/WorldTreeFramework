@@ -12,9 +12,15 @@ namespace WorldTree
 		static int Key = nameof(Key).GetFNV1aHash32();
 		static int Value = nameof(Value).GetFNV1aHash32();
 
+		static unsafe OnAdd<TreeDataTest> OnAdd2 = (self) =>
+		{
+			TypeHashGeneratorRule.Example();
+		};
 
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
+			if (self != null) return;
+
 			self.AddChild(out self.treeData);
 			self.treeData.Name = "测试123";
 			self.treeData.Age = 18789;
@@ -25,6 +31,8 @@ namespace WorldTree
 
 			byte[] bytes = TreeDataHelper.SerializeNode(self.treeData);
 			string filePath = "C:\\Users\\admin\\Desktop\\新建文件夹\\TreeDataTest.bytes";
+
+			self.Log($"序列化字节长度{bytes.Length}\n");
 
 			//保存到桌面文件
 			File.WriteAllBytes(filePath, bytes);

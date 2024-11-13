@@ -380,8 +380,6 @@ namespace WorldTree
 			if (Domain != this) Domain = parent.Domain;
 
 			RefreshActive();
-			//NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnBeforeGraftSelfToTree());
-			//NodeBranchTraversalHelper.TraversalPostorder(this, current => current.OnGraftSelfToTree());
 			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => current.OnBeforeGraftSelfToTree(), current => current.OnGraftSelfToTree());
 			return true;
 		}
@@ -391,8 +389,6 @@ namespace WorldTree
 			this.Core = this.Parent.Core;
 			this.Root = this.Parent.Root;
 			if (Domain != this) Domain = this.Parent.Domain;
-			this.Log($"前序嫁接，节点：{this.Id} ：{this.GetType()}");
-
 			//序列化时，需要重新设置所有节点的父节点
 			if (IsSerialize)
 			{
@@ -414,7 +410,6 @@ namespace WorldTree
 
 		public virtual void OnGraftSelfToTree()
 		{
-			this.Log($"后序嫁接，节点：{this.Id} ：{this.GetType()}");
 			Core.ReferencedPoolManager.TryAdd(this);//添加到引用池
 			if (this is not IListenerIgnorer)//广播给全部监听器
 			{
