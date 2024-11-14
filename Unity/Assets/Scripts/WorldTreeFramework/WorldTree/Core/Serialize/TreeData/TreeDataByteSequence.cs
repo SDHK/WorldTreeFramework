@@ -8,6 +8,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -75,8 +76,8 @@ namespace WorldTree
 		/// <summary>
 		/// 短类型名称正则表达式
 		/// </summary>
-		public static Regex ShortTypeNameRegex = new Regex(@", Version=\d+.\d+.\d+.\d+, Culture=[\w-]+, PublicKeyToken=(?:null|[a-f0-9]{16})", RegexOptions.Compiled);
-
+		//public static Regex ShortTypeNameRegex = new Regex(@", Version=\d+.\d+.\d+.\d+, Culture=[\w-]+, PublicKeyToken=(?:null|[a-f0-9]{16})", RegexOptions.Compiled);
+		public static Regex ShortTypeNameRegex = new Regex(@"(?<=[\w.]+),.*?(?=(\]|$))", RegexOptions.Compiled);
 		/// <summary>
 		/// 类型对应类型码字典，64哈希码对应
 		/// </summary>
@@ -110,7 +111,8 @@ namespace WorldTree
 			if (!TypeToCodeDict.TryGetValue(type, out long typeCode))
 			{
 				typeCode = this.TypeToCode(type);
-				TypeToCodeDict.Add(type, typeCode);
+				if (!TreeDataType.TypeDict.ContainsKey(type) && type != typeof(string) && type != typeof(object))
+					TypeToCodeDict.Add(type, typeCode);
 			}
 			return typeCode;
 		}
@@ -170,7 +172,8 @@ namespace WorldTree
 				//写入类型码
 				WriteUnmanaged(item.Value);
 				//写入类型名称
-				WriteString(ShortTypeNameRegex.Replace(item.Key.AssemblyQualifiedName, ""));
+				//WriteString(ShortTypeNameRegex.Replace(item.Key.AssemblyQualifiedName, ""));
+				WriteString(ShortTypeNameRegex.Replace(item.Key.FullName, ""));
 			}
 			////写入字段数量
 			//WriteUnmanaged(codeToNameDict.Count);
@@ -227,6 +230,17 @@ namespace WorldTree
 			readBytePoint = 0;
 			readSegmentPoint = 0;
 
+			this.Log($"TypeCount: {codeToTypeNameDict.Count}");
+			foreach (var item in this.codeToTypeNameDict)
+			{
+				this.Log($"Type: {item.Value}");
+			}
+			this.Log($"NameCount: {codeToNameDict.Count}");
+			foreach (var item in this.codeToNameDict)
+			{
+				this.Log($"Name: {item.Value}");
+			}
+
 			//读取数据
 			ReadValue(ref value);
 		}
@@ -251,8 +265,49 @@ namespace WorldTree
 		/// </summary>
 		public bool ReadCheckNull(out int count)
 		{
-			this.ReadDynamic(out count);
+			this.ReadUnmanaged(out count);
 			if (count == ValueMarkCode.NULL_OBJECT) return true;
+			return false;
+		}
+
+		/// <summary>
+		/// 写入字段数量或空标记
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="value">类型</param>
+		/// <param name="nameCode">字段码</param>
+		/// <param name="count">字段数或数组维度</param>
+		/// <param name="obj">返回对象</param>
+		/// <returns>是否为Null退出</returns>
+		public bool TryWriteDataHead<T>(in object value, int nameCode, int count, out T obj)
+		{
+			switch (nameCode)
+			{
+				case -2:
+					this.WriteUnmanaged(0L);
+					if (this.WriteCheckNull(value, count, out obj)) return true;
+					break;
+				case -1:
+					this.WriteType(typeof(T));
+					if (this.WriteCheckNull(value, count, out obj)) return true;
+					break;
+			}
+			obj = (T)value;
+			return false;
+		}
+
+		/// <summary>
+		/// 检测类型字段数量是否为0
+		/// </summary>
+		public bool CheckClassCount(int count)
+		{
+			if (count < 0)
+			{
+				//能读取到count，说名这里的Type绝对不是基础类型，所以传null跳跃
+				ReadBack(4);
+				SkipData(null);
+				return true;
+			}
 			return false;
 		}
 
@@ -260,19 +315,19 @@ namespace WorldTree
 		/// <summary>
 		/// 写入字段数量或空标记
 		/// </summary>
-		public bool WriteCheckNull<T>(in object value, int count, out T obj)
+		private bool WriteCheckNull<T>(in object value, int count, out T obj)
 		{
 			if (value is T objValue)
 			{
 				if (!objValue.Equals(default))
 				{
 					obj = objValue;
-					this.WriteDynamic(count);
+					this.WriteUnmanaged(count);
 					return false;
 				}
 			}
 			obj = default;
-			this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
+			this.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
 			return true;
 		}
 
@@ -281,7 +336,7 @@ namespace WorldTree
 		/// </summary>
 		public void WriteType(Type type)
 		{
-			this.WriteDynamic(AddTypeCode(type));
+			this.WriteUnmanaged(AddTypeCode(type));
 		}
 
 		/// <summary>
@@ -296,11 +351,11 @@ namespace WorldTree
 			if (type == null)
 			{
 				type = originalType;
-				nameCode = 0;
+				nameCode = -2;
 			}
 			else if (type == originalType)
 			{
-				nameCode = 0;
+				nameCode = -2;
 			}
 
 			long typeCode = this.Core.TypeToCode(type);
@@ -405,47 +460,102 @@ namespace WorldTree
 		/// </summary>
 		public bool TryReadType(out Type type)
 		{
-			this.ReadDynamic(out long typeCode);
+			this.ReadUnmanaged(out long typeCode);
 			return TryGetType(typeCode, out type);
 		}
 
 		/// <summary>
 		/// 读取类型
 		/// </summary>
-		public bool TryReadTypeOrSubType(Type targetType, out Type dataType, ref object value)
+		public bool TryReadDataHead(Type targetType, ref object value, out int count)
 		{
-			this.ReadDynamic(out long typeCode);
+			bool isSkip = true;
+			Type dataType = null;
+			count = 0;
+			this.ReadUnmanaged(out long typeCode);
 			if (typeCode == 0)//判断如果是0，则为原类型，尝试读取
 			{
-				dataType = targetType;
-				return false;
+				//dataType = targetType;
+				this.ReadUnmanaged(out count);//直接尝试读取
+				if (count == ValueMarkCode.NULL_OBJECT)
+				{
+					value = default;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
-			else if (TryGetType(typeCode, out dataType) && dataType == targetType)
+			else if (TryGetType(typeCode, out dataType))
 			{
 				//能读取到类型，说明是多态类型，判断一样则直接读取
-				return false;
+				isSkip = false;
+				if (dataType == targetType)//如果直接相等
+				{
+					this.ReadUnmanaged(out count);
+					if (count == ValueMarkCode.NULL_OBJECT)
+					{
+						value = default;
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
 			}
 
-			//不一致或不存在的类型，尝试读取
-			return SubTypeReadValue(dataType, targetType, ref value);
+			if (isSkip)
+			{
+				SkipData(dataType);
+				return true;
+			}
+
+			//不一致或不存在的类型，尝试判断为子类读取或跳跃
+			if (!SubTypeReadValue(dataType, targetType, ref value))
+			{
+				this.ReadUnmanaged(out count);
+				if (count == ValueMarkCode.NULL_OBJECT)
+				{
+					value = default;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		/// <summary>
 		/// 尝试以子类型读取
 		/// </summary>
-		public bool SubTypeReadValue(Type type, Type targetType, ref object value)
+		private bool SubTypeReadValue(Type type, Type targetType, ref object value)
 		{
-			//判断是否为基础类型，直接跳跃数据。
-			if (TreeDataType.TypeDict.ContainsKey(type) || type == typeof(string))
+			if (type != null)
 			{
+				//判断是否为基础类型，直接跳跃数据。
+				if (TreeDataType.TypeDict.ContainsKey(type) || type == typeof(string))
+				{
+					SkipData(type);
+					return true;
+				}
+			}
+			else
+			{
+				//类型不存在直接跳跃数据
 				SkipData(type);
 				return true;
 			}
 
 			bool isSubType = false;
-			Type baseType = type.BaseType;
+			Type baseType = type?.BaseType;
 			if (targetType.IsInterface)
 			{
+
 				Type[] interfaces = type.GetInterfaces();
 				foreach (var interfaceType in interfaces)
 				{
@@ -455,9 +565,11 @@ namespace WorldTree
 						break;
 					}
 				}
+
 			}
-			else if (type.IsClass)
+			else if (targetType.IsClass)
 			{
+
 				while (baseType != null && baseType != typeof(object))
 				{
 					if (baseType == targetType)
@@ -467,6 +579,7 @@ namespace WorldTree
 					}
 					baseType = baseType.BaseType;
 				}
+
 			}
 			else //不是接口也不是类型，直接跳跃数据
 			{
@@ -506,20 +619,23 @@ namespace WorldTree
 		public void SkipData(Type type)
 		{
 			//是基础类型直接跳跃
-			if (TreeDataType.TypeDict.TryGetValue(type, out int byteCount))
+			if (type != null)
 			{
-				ReadSkip(byteCount);
-				return;
-			}
-			//string类型需要特殊处理
-			else if (type == typeof(string))
-			{
-				SkipString();
-				return;
+				if (TreeDataType.TypeDict.TryGetValue(type, out int byteCount))
+				{
+					ReadSkip(byteCount);
+					return;
+				}
+				//string类型需要特殊处理
+				else if (type == typeof(string))
+				{
+					SkipString();
+					return;
+				}
 			}
 
 			//读取字段数量
-			ReadUnmanaged(out int count);
+			this.ReadUnmanaged(out int count);
 			//空对象判断
 			if (count == ValueMarkCode.NULL_OBJECT) return;
 
@@ -540,7 +656,7 @@ namespace WorldTree
 				int totalLength = 1;
 				for (int i = 0; i < count; i++)
 				{
-					ReadUnmanaged(out int length);
+					this.ReadUnmanaged(out int length);
 					totalLength *= length;
 				}
 				//为0的情况下，是数组，但是数组长度为0

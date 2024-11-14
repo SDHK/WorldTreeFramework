@@ -18,21 +18,13 @@ namespace WorldTree.TreeDataFormatters
 		/// </summary>
 		private class Serialize<T> : TreeDataSerializeRule<T[,]>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				self.WriteType(typeof(T[,]));
-				T[,] values = (T[,])obj;
-				if (values == null)
-				{
-					self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
-					return;
-				}
-				//写入数组维度数量
-				self.WriteUnmanaged(~2);
+				if (self.TryWriteDataHead(value, nameCode, ~2, out T[,] obj)) return;
 
 				// 写入数组维度长度
-				int dim1 = values.GetLength(0);
-				int dim2 = values.GetLength(1);
+				int dim1 = obj.GetLength(0);
+				int dim2 = obj.GetLength(1);
 				self.WriteUnmanaged(dim1);
 				self.WriteUnmanaged(dim2);
 
@@ -47,7 +39,7 @@ namespace WorldTree.TreeDataFormatters
 					{
 						// 一次性写入整个数组数据
 						ref byte spanRef = ref self.GetWriteRefByte((int)totalSize);
-						ref byte src = ref Unsafe.As<T, byte>(ref values[0, 0]);
+						ref byte src = ref Unsafe.As<T, byte>(ref obj[0, 0]);
 						Unsafe.CopyBlockUnaligned(ref spanRef, ref src, (uint)totalSize);
 					}
 					else
@@ -56,7 +48,7 @@ namespace WorldTree.TreeDataFormatters
 						for (int i = 0; i < dim1; i++)
 						{
 							ref byte spanRef = ref self.GetWriteRefByte(elementSize);
-							ref byte src = ref Unsafe.As<T, byte>(ref values[i, 0]);
+							ref byte src = ref Unsafe.As<T, byte>(ref obj[i, 0]);
 							Unsafe.CopyBlockUnaligned(ref spanRef, ref src, (uint)elementSize);
 						}
 					}
@@ -67,7 +59,7 @@ namespace WorldTree.TreeDataFormatters
 					{
 						for (int j = 0; j < dim2; j++)
 						{
-							self.WriteValue(values[i, j]);
+							self.WriteValue(obj[i, j]);
 						}
 					}
 				}
@@ -80,29 +72,16 @@ namespace WorldTree.TreeDataFormatters
 		/// </summary>
 		private class Deserialize<T> : TreeDataDeserializeRule<T[,]>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(T[,])))
-				{
-					//读取指针回退，类型码
-					self.ReadBack(8);
-					//跳跃数据
-					self.SkipData();
-					return;
-				}
+				if (self.TryReadDataHead(typeof(T[,]), ref value, out int count)) return;
 
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					obj = null;
-					return;
-				}
 				count = ~count;
 				if (count != 2)
 				{
 					//读取指针回退
 					self.ReadBack(4);
-					self.SkipData(dataType);
+					self.SkipData(null);
 					return;
 				}
 
@@ -110,9 +89,9 @@ namespace WorldTree.TreeDataFormatters
 				int dim2 = self.ReadUnmanaged<int>();
 
 				//假如数组为空或长度不一致，那么重新分配
-				if (obj == null || ((T[,])obj).GetLength(0) != dim1 || ((T[,])obj).GetLength(1) != dim2)
+				if (value == null || ((T[,])value).GetLength(0) != dim1 || ((T[,])value).GetLength(1) != dim2)
 				{
-					obj = new T[dim1, dim2];
+					value = new T[dim1, dim2];
 				}
 
 				if (TreeDataType.TypeDict.TryGetValue(typeof(T), out int size))
@@ -125,7 +104,7 @@ namespace WorldTree.TreeDataFormatters
 					{
 						// 一次性读取整个数组数据
 						ref byte spanRef = ref self.GetReadRefByte((int)totalSize);
-						ref byte dst = ref Unsafe.As<T, byte>(ref ((T[,])obj)[0, 0]);
+						ref byte dst = ref Unsafe.As<T, byte>(ref ((T[,])value)[0, 0]);
 						Unsafe.CopyBlockUnaligned(ref dst, ref spanRef, (uint)totalSize);
 					}
 					else
@@ -134,7 +113,7 @@ namespace WorldTree.TreeDataFormatters
 						for (int i = 0; i < dim1; i++)
 						{
 							ref byte spanRef = ref self.GetReadRefByte(elementSize);
-							ref byte dst = ref Unsafe.As<T, byte>(ref ((T[,])obj)[i, 0]);
+							ref byte dst = ref Unsafe.As<T, byte>(ref ((T[,])value)[i, 0]);
 							Unsafe.CopyBlockUnaligned(ref dst, ref spanRef, (uint)elementSize);
 						}
 					}
@@ -145,7 +124,7 @@ namespace WorldTree.TreeDataFormatters
 					{
 						for (int j = 0; j < dim2; j++)
 						{
-							self.ReadValue(ref ((T[,])obj)[i, j]);
+							self.ReadValue(ref ((T[,])value)[i, j]);
 						}
 					}
 				}

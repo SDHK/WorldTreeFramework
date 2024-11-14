@@ -45,6 +45,16 @@
 
   </ItemGroup>
 
+ 
+  <ItemGroup>
+    <EditorConfigFiles Remove="E:\Project\GitHub\WorldTree\DotNet\App\.editorconfig" />
+  </ItemGroup>
+
+ 
+  <ItemGroup>
+    <None Include="E:\Project\GitHub\WorldTree\DotNet\App\.editorconfig" />
+  </ItemGroup>
+
 
 </Project>
                         

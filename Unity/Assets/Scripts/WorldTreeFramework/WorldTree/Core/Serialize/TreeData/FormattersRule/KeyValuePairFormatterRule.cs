@@ -9,35 +9,23 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<TKey, TValue> : TreeDataSerializeRule<KeyValuePair<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				KeyValuePair<TKey, TValue> data = (KeyValuePair<TKey, TValue>)obj;
-				self.WriteType(typeof(KeyValuePair<TKey, TValue>));
-				self.WriteUnmanaged(2);
-				if (!self.WriteCheckNameCode(-853882612)) self.AddNameCode(-853882612, nameof(data.Key));
-				self.WriteValue(data.Key);
-				if (!self.WriteCheckNameCode(-783812246)) self.AddNameCode(-783812246, nameof(data.Value));
-				self.WriteValue(data.Value);
+				if (self.TryWriteDataHead(value, nameCode, 2, out KeyValuePair<TKey, TValue> obj)) return;
+				self.WriteUnmanaged(-853882612);
+				self.WriteValue(obj.Key);
+				self.WriteUnmanaged(-783812246);
+				self.WriteValue(obj.Value);
 			}
 		}
 
 		class Deserialize<TKey, TValue> : TreeDataDeserializeRule<KeyValuePair<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				var targetType = typeof(KeyValuePair<TKey, TValue>);
-				if (!(self.TryReadType(out Type dataType) && dataType == targetType))
-				{
-					self.SkipData(dataType);
-					return;
-				}
-				self.ReadUnmanaged(out int count);
-				if (count < 0)
-				{
-					self.ReadBack(4);
-					self.SkipData(dataType);
-					return;
-				}
+				if (self.TryReadDataHead(typeof(KeyValuePair<TKey, TValue>), ref value, out int count)) return;
+				if (self.CheckClassCount(count)) return;
+
 				TKey key = default;
 				TValue val = default;
 				for (int i = 0; i < count; i++)
@@ -51,7 +39,7 @@ namespace WorldTree.TreeDataFormatters
 						default: self.SkipData(); break;
 					}
 				}
-				obj = new KeyValuePair<TKey, TValue>(key, val);
+				value = new KeyValuePair<TKey, TValue>(key, val);
 			}
 		}
 	}

@@ -60,7 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\YooAssetTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\TreeDataTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\UtcTimeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\MultilayerPerceptronTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\InitialDomain.cs" />

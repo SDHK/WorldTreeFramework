@@ -1,7 +1,3 @@
-
-
-
-using System;
 using System.Collections.Generic;
 
 namespace WorldTree.TreeDataFormatters
@@ -25,24 +21,12 @@ namespace WorldTree.TreeDataFormatters
 
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				T obj = (T)value;
-				if (nameCode == -1)
-				{
-					self.WriteType(typeof(T));
-					if (obj == null)
-					{
-						self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
-						return;
-					}
-					//写入字段数量
-					self.WriteUnmanaged(1);
-				}
+				if (self.TryWriteDataHead(value, nameCode, 1, out T obj)) return;
 
 				//假设字典有一个数组字段
-				if (!self.WriteCheckNameCode(1683726967)) self.AddNameCode(1683726967, nameof(self));
-
+				self.WriteUnmanaged(1683726967);
 				//序列化数组字段
-				self.WriteType(typeof(ItemT[]));
+				self.WriteUnmanaged(0L);
 				//写入数组维度数量
 				self.WriteUnmanaged(~1);
 				ForeachWrite(self, obj);
@@ -67,26 +51,9 @@ namespace WorldTree.TreeDataFormatters
 					SwitchRead(self, ref value, nameCode);
 					return;
 				}
-				var targetType = typeof(T);
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(T)))
-				{
-					//跳跃数据,子类读取数据
-					self.SubTypeReadValue(dataType, targetType, ref value);
-					return;
-				}
-				//读取字段数量
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = null;
-					return;
-				}
-				if (count < 0)
-				{
-					self.ReadBack(4);
-					self.SkipData(dataType);
-					return;
-				}
+				if (self.TryReadDataHead(typeof(T), ref value, out int count)) return;
+				if (self.CheckClassCount(count)) return;
+
 				if (value is not T) value = new T();
 				for (int i = 0; i < count; i++)
 				{
@@ -106,14 +73,15 @@ namespace WorldTree.TreeDataFormatters
 					case 1683726967:
 						{
 							//反序列化数组
-							if (!(self.TryReadType(out Type dataType) && dataType == typeof(ItemT[])))
+							if (self.TryReadDataHead(typeof(ItemT[]), ref value, out int count)) return;
+							count = ~count;
+							if (count != 1)
 							{
-								//跳跃数据
-								self.SkipData(dataType);
+								//读取指针回退
+								self.ReadBack(4);
+								self.SkipData(null);
 								return;
 							}
-							//读取数组维度数量,如果是null则会在前面挡掉,所以不用判断
-							self.ReadUnmanaged(out int _);
 							ForeachRead(self, obj);
 						}
 						break;

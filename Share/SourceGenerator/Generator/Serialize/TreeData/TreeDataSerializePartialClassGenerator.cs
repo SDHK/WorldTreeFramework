@@ -81,25 +81,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)");
 			Code.AppendLine("			{");
 
-			if (!isAbstract) Code.AppendLine($"				{className} obj;");
-
-			Code.AppendLine("				switch (nameCode)");
-			Code.AppendLine("				{");
-			Code.AppendLine("					case 0:");
-			Code.AppendLine("						self.WriteDynamic(0L)");
-			Code.AppendLine($"						if (self.WriteCheckNull(value, {membersCount}, out obj)) return;");
-			Code.AppendLine("						break;");
-			Code.AppendLine("					case -1:");
-			Code.AppendLine($"						self.WriteType(typeof({className}));");
-			Code.AppendLine($"						if (self.WriteCheckNull(value, {membersCount}, out obj)) return;");
-			Code.AppendLine("						break;");
-			Code.AppendLine("					default:");
-			Code.AppendLine($"						obj = ({className})value;");
-			Code.AppendLine("						break;");
-
-			Code.AppendLine("				}");
-
-
+			Code.AppendLine($"				if (self.TryWriteDataHead(value, nameCode, {membersCount}, out {className} obj)) return;");
 			if (fieldSymbols != null)
 			{
 				foreach (ISymbol symbol in fieldSymbols)
@@ -133,22 +115,12 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("					return;");
 				Code.AppendLine("				}");
 			}
-			Code.AppendLine($"				if (self.TryReadTypeOrSubType(typeof({className}), out Type dataType, ref value)) return;");
-			Code.AppendLine("				if (self.ReadCheckNull(out int count))");
-			Code.AppendLine("				{");
-			Code.AppendLine("					value = default;");
-			Code.AppendLine("					return;");
-			Code.AppendLine("				}");
+			Code.AppendLine($"				if (self.TryReadDataHead(typeof({className}), ref value, out int count)) return;");
 
 			if (!isAbstract)
 			{
-				Code.AppendLine("				if (count < 0)");
-				Code.AppendLine("				{");
-				Code.AppendLine("					self.ReadBack(4);");
-				Code.AppendLine("					self.SkipData(dataType);");
-				Code.AppendLine("					return;");
-				Code.AppendLine("				}");
-				if (classSymbol.TypeKind == TypeKind.Class)
+				Code.AppendLine("				if (self.CheckClassCount(count)) return;");
+				if (classSymbol.TypeKind == TypeKind.Class)//类型新建
 				{
 					if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.INode, out _))
 					{
@@ -168,10 +140,10 @@ namespace WorldTree.SourceGenerator
 					}
 				}
 			}
-			else
+			else //是抽象直接跳过
 			{
 				Code.AppendLine("				self.ReadBack(4);");
-				Code.AppendLine("				self.SkipData(dataType);");
+				Code.AppendLine("				self.SkipData(null);");
 			}
 
 			if (fieldSymbols != null && fieldSymbols.Count != 0 || baseName != null)

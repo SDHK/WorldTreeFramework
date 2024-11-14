@@ -30,7 +30,7 @@ namespace WorldTree
 
 				//保存到桌面文件
 				File.WriteAllBytes(filePath, bytes);
-				self.Log($"序列化保存！！!");
+				self.Log($"序列化保存！！!{bytes.Length}");
 			}
 
 			if (Input.GetKeyDown(KeyCode.E))
@@ -45,18 +45,18 @@ namespace WorldTree
 				string filePath = "C:\\Users\\admin\\Desktop\\新建文件夹\\TreeDataTest.bytes";
 				byte[] bytes = File.ReadAllBytes(filePath);
 				TreeDataHelper.DeseralizeNode(self, bytes).TryGraftSelfToTree(self);
-				self.Log($"反序列化！！!");
+				self.Log($"反序列化！！!{bytes.Length}");
 			}
 		};
 
 		static OnUpdate<TreeDataNodeDataTest1> OnUpdate1 = (self) =>
 		{
-			self.Log($"测试数据更新1！！!");
+			self.Log($"测试数据更新1！！!{self.Name}:{self.Age}");
 		};
 
 		static OnUpdate<TreeDataNodeDataTest2> OnUpdate2 = (self) =>
 		{
-			self.Log($"测试数据更新2！！!");
+			self.Log($"测试数据更新2！！!{self.Name}:{self.Age}");
 		};
 	}
 }
