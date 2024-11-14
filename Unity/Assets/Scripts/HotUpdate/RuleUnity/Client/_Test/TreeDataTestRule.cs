@@ -15,6 +15,8 @@ namespace WorldTree
 		{
 			//self.Log($"初始域更新！！!");
 
+			self.Log($"测试数据更新！！!{self.TypeToCode(typeof(long))}");
+
 			if (Input.GetKeyDown(KeyCode.W))
 			{
 				self.AddChild(out self.treeData);
@@ -26,7 +28,7 @@ namespace WorldTree
 				child.Age = 788789;
 
 				byte[] bytes = TreeDataHelper.SerializeNode(self.treeData);
-				string filePath = "C:\\Users\\admin\\Desktop\\新建文件夹\\TreeDataTest.bytes";
+				string filePath = "C:\\Users\\SDHK\\Desktop\\TreeDataTest.bytes";
 
 				//保存到桌面文件
 				File.WriteAllBytes(filePath, bytes);
@@ -42,7 +44,7 @@ namespace WorldTree
 			if (Input.GetKeyDown(KeyCode.R))
 			{
 				//读取桌面文件
-				string filePath = "C:\\Users\\admin\\Desktop\\新建文件夹\\TreeDataTest.bytes";
+				string filePath = "C:\\Users\\SDHK\\Desktop\\TreeDataTest.bytes";
 				byte[] bytes = File.ReadAllBytes(filePath);
 				TreeDataHelper.DeseralizeNode(self, bytes).TryGraftSelfToTree(self);
 				self.Log($"反序列化！！!{bytes.Length}");

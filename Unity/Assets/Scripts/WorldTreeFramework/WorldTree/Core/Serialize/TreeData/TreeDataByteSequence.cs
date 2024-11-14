@@ -77,7 +77,7 @@ namespace WorldTree
 		/// 短类型名称正则表达式
 		/// </summary>
 		//public static Regex ShortTypeNameRegex = new Regex(@", Version=\d+.\d+.\d+.\d+, Culture=[\w-]+, PublicKeyToken=(?:null|[a-f0-9]{16})", RegexOptions.Compiled);
-		public static Regex ShortTypeNameRegex = new Regex(@"(?<=[\w.]+),.*?(?=(\]|$))", RegexOptions.Compiled);
+		//public static Regex ShortTypeNameRegex = new Regex(@"(?<=[\w.]+),.*?(?=(\]|$))", RegexOptions.Compiled);
 		/// <summary>
 		/// 类型对应类型码字典，64哈希码对应
 		/// </summary>
@@ -173,7 +173,7 @@ namespace WorldTree
 				WriteUnmanaged(item.Value);
 				//写入类型名称
 				//WriteString(ShortTypeNameRegex.Replace(item.Key.AssemblyQualifiedName, ""));
-				WriteString(ShortTypeNameRegex.Replace(item.Key.FullName, ""));
+				WriteString(item.Key.ToString());
 			}
 			////写入字段数量
 			//WriteUnmanaged(codeToNameDict.Count);
@@ -224,6 +224,7 @@ namespace WorldTree
 			//	string name = ReadString();
 			//	codeToNameDict.Add(nameCode, name);
 			//}
+
 
 			//读取指针定位到数据起始位置
 			readPoint = 0;
@@ -893,7 +894,7 @@ namespace WorldTree
 			{
 				// 获取泛型类型定义
 				Type genericTypeDef = type.GetGenericTypeDefinition();
-				string typeName = TreeDataByteSequence.ShortTypeNameRegex.Replace(genericTypeDef.AssemblyQualifiedName, "");
+				string typeName = genericTypeDef.ToString();
 				long typeHash = HashCodeHelper.GetHash64(typeName);
 
 				// 储存类型定义名称
@@ -913,7 +914,7 @@ namespace WorldTree
 			}
 
 			// 处理普通类型
-			string fullName = TreeDataByteSequence.ShortTypeNameRegex.Replace(type.AssemblyQualifiedName, "");
+			string fullName = type.ToString();
 			long hash = HashCodeHelper.GetHash64(fullName);
 			TypeNameDict[hash] = fullName;
 			return hash;

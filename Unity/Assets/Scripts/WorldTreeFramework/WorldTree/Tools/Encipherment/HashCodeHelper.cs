@@ -40,10 +40,11 @@ namespace WorldTree
     /// </summary>
     public static class HashCodeHelper
     {
+		
 		/// <summary>
 		/// SHA256
 		/// </summary>
-		private readonly static SHA256 sha256 = SHA256.Create();
+		private readonly static SHA256CryptoServiceProvider sha256 = new();
 
         /// <summary>
         /// 获取64位的哈希码

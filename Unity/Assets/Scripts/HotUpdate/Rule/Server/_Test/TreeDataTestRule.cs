@@ -21,6 +21,8 @@ namespace WorldTree
 
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
+			self.Log($"测试数据更新！！!{typeof(OnAdd<TreeDataTest>).ToString()}");
+
 			//if (self != null) return;
 
 			//self.AddChild(out self.treeData);
@@ -32,7 +34,7 @@ namespace WorldTree
 			//child.Age = 788723;
 
 			//byte[] bytes = TreeDataHelper.SerializeNode(self.treeData);
-			string filePath = "C:\\Users\\admin\\Desktop\\新建文件夹\\TreeDataTest.bytes";
+			string filePath = "C:\\Users\\SDHK\\Desktop\\TreeDataTest.bytes";
 
 			//self.Log($"序列化字节长度{bytes.Length}\n");
 
@@ -47,7 +49,7 @@ namespace WorldTree
 			//读取桌面文件
 			byte[] bytes = File.ReadAllBytes(filePath);
 			TreeDataHelper.DeseralizeNode(self, bytes).TryGraftSelfToTree(self);
-			self.Log($"反序列化！！!{bytes.Length}");
+			self.Log($"反序列化！！!!?{bytes.Length}");
 			self.Log(NodeRule.ToStringDrawTree(self));
 		};
 

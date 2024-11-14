@@ -93,8 +93,7 @@ namespace WorldTree
 		{
 			if (!TypeHash64Dict.ContainsKey(type))
 			{
-				type.GetHashCode();
-				long hash64 = type.AssemblyQualifiedName.GetHash64();
+				long hash64 = type.ToString().GetHash64();
 
 				if (Hash64TypeDict.TryGetValue(hash64, out Type oldType))
 				{
