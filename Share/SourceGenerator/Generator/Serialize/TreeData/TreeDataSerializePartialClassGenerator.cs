@@ -115,11 +115,9 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("					return;");
 				Code.AppendLine("				}");
 			}
-			Code.AppendLine($"				if (self.TryReadDataHead(typeof({className}), ref value, out int count)) return;");
-
+			Code.AppendLine($"				if (self.TryReadClassHead(typeof({className}), ref value, out int count)) return;");
 			if (!isAbstract)
 			{
-				Code.AppendLine("				if (self.CheckClassCount(count)) return;");
 				if (classSymbol.TypeKind == TypeKind.Class)//类型新建
 				{
 					if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.INode, out _))

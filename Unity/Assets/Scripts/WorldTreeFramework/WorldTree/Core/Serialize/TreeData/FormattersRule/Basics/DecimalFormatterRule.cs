@@ -11,9 +11,9 @@ using System.Collections.Generic;
 
 namespace WorldTree.TreeDataFormatters
 {
-	public static class DoubleFormatterRule
+	public static class DecimalFormatterRule
 	{
-		private static Dictionary<Type, Func<TreeDataByteSequence, double>> TypeDict = new()
+		private static Dictionary<Type, Func<TreeDataByteSequence, decimal>> TypeDict = new()
 		{
 			[typeof(bool)] = (self) => (self.ReadUnmanaged<bool>() ? 1 : 0),
 			[typeof(byte)] = (self) => self.ReadUnmanaged<byte>(),
@@ -24,23 +24,23 @@ namespace WorldTree.TreeDataFormatters
 			[typeof(uint)] = (self) => self.ReadUnmanaged<uint>(),
 			[typeof(long)] = (self) => self.ReadUnmanaged<long>(),
 			[typeof(ulong)] = (self) => self.ReadUnmanaged<ulong>(),
-			[typeof(float)] = (self) => self.ReadUnmanaged<float>(),
-			[typeof(double)] = (self) => self.ReadUnmanaged<double>(),
+			[typeof(float)] = (self) => (decimal)self.ReadUnmanaged<float>(),
+			[typeof(double)] = (self) => (decimal)self.ReadUnmanaged<double>(),
 			[typeof(char)] = (self) => self.ReadUnmanaged<char>(),
-			[typeof(string)] = (self) => double.TryParse(self.ReadString(), out double result) ? result : default,
-			[typeof(decimal)] = (self) => (double)self.ReadUnmanaged<decimal>(),
+			[typeof(string)] = (self) => decimal.TryParse(self.ReadString(), out decimal result) ? result : default,
+			[typeof(decimal)] = (self) => self.ReadUnmanaged<decimal>(),
 		};
 
-		class Serialize : TreeDataSerializeRule<double>
+		class Serialize : TreeDataSerializeRule<decimal>
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
-				self.WriteType(typeof(double));
-				self.WriteUnmanaged((double)obj);
+				self.WriteType(typeof(decimal), false);
+				self.WriteUnmanaged((decimal)obj);
 			}
 		}
 
-		class Deserialize : TreeDataDeserializeRule<double>
+		class Deserialize : TreeDataDeserializeRule<decimal>
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{

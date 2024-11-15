@@ -23,8 +23,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				if (self.TryReadDataHead(typeof(KeyValuePair<TKey, TValue>), ref value, out int count)) return;
-				if (self.CheckClassCount(count)) return;
+				if (self.TryReadClassHead(typeof(KeyValuePair<TKey, TValue>), ref value, out int count)) return;
 
 				TKey key = default;
 				TValue val = default;

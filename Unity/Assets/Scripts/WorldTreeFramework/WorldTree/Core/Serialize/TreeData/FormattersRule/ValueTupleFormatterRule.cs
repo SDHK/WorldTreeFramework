@@ -16,9 +16,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				self.WriteType(typeof(ValueTuple<T>));
-				if (value is not ValueTuple<T> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
-				self.WriteUnmanaged(~1, 1);
+				if (self.TryWriteDataHead(value, nameCode, ~1, out ValueTuple<T> obj)) return;
+				self.WriteUnmanaged(1);
 				self.WriteValue(obj.Item1);
 			}
 		}
@@ -26,17 +25,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T>)))
-				{
-					self.SkipData(dataType);
-					return;
-				}
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = default;
-					return;
-				}
+				if (self.TryReadArrayHead(typeof(ValueTuple<T>), ref value, 1, out int count)) return;
+
 				self.ReadUnmanaged(out int _);
 				ValueTuple<T> obj = (ValueTuple<T>)value;
 				self.ReadValue(ref obj.Item1);
@@ -52,9 +42,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				self.WriteType(typeof(ValueTuple<T1, T2>));
-				if (value is not ValueTuple<T1, T2> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
-				self.WriteUnmanaged(~1, 2);
+				if (self.TryWriteDataHead(value, nameCode, ~1, out ValueTuple<T1, T2> obj)) return;
+				self.WriteUnmanaged(2);
 				self.WriteValue(obj.Item1);
 				self.WriteValue(obj.Item2);
 			}

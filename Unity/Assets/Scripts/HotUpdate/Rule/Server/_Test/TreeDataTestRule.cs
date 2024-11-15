@@ -12,42 +12,36 @@ namespace WorldTree
 		static int Key = nameof(Key).GetFNV1aHash32();
 		static int Value = nameof(Value).GetFNV1aHash32();
 
-		static unsafe OnAdd<TreeDataTest> OnAdd2 = (self) =>
-		{
-			if (self != null) return;
-
-			TypeHashGeneratorRule.Example();
-		};
 
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
-			self.Log($"测试数据更新！！!{typeof(OnAdd<TreeDataTest>).ToString()}");
+			//self.Log($"测试数据更新！！!{typeof(OnAdd<TreeDataTest>).ToString()}");
 
 			//if (self != null) return;
 
-			//self.AddChild(out self.treeData);
-			//self.treeData.Name = "测试123";
-			//self.treeData.Age = 18789;
+			self.AddChild(out self.treeData);
+			self.treeData.Name = "测试123";
+			self.treeData.Age = 18789;
 
-			//self.treeData.AddChild(out TreeDataNodeDataTest2 child);
-			//child.Name = "测试4658";
-			//child.Age = 788723;
+			self.treeData.AddChild(out TreeDataNodeDataTest2 child);
+			child.Name = "测试4658";
+			child.Age = 788723;
 
-			//byte[] bytes = TreeDataHelper.SerializeNode(self.treeData);
-			string filePath = "C:\\Users\\SDHK\\Desktop\\TreeDataTest.bytes";
+			byte[] bytes = TreeDataHelper.SerializeNode(self.treeData);
+			string filePath = "C:\\Users\\admin\\Desktop\\新建文件夹\\TreeDataTest.bytes";
 
-			//self.Log($"序列化字节长度{bytes.Length}\n");
+			self.Log($"序列化字节长度{bytes.Length}\n");
 
-			////保存到桌面文件
-			//File.WriteAllBytes(filePath, bytes);
-			//self.Log($"序列化保存！！!");
+			//保存到桌面文件
+			File.WriteAllBytes(filePath, bytes);
+			self.Log($"序列化保存！！!");
 
-			//self.treeData.Dispose();
-			//self.treeData = null;
+			self.treeData.Dispose();
+			self.treeData = null;
 
 
 			//读取桌面文件
-			byte[] bytes = File.ReadAllBytes(filePath);
+			bytes = File.ReadAllBytes(filePath);
 			TreeDataHelper.DeseralizeNode(self, bytes).TryGraftSelfToTree(self);
 			self.Log($"反序列化！！!!?{bytes.Length}");
 			self.Log(NodeRule.ToStringDrawTree(self));

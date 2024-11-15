@@ -51,8 +51,7 @@ namespace WorldTree.TreeDataFormatters
 					SwitchRead(self, ref value, nameCode);
 					return;
 				}
-				if (self.TryReadDataHead(typeof(T), ref value, out int count)) return;
-				if (self.CheckClassCount(count)) return;
+				if (self.TryReadClassHead(typeof(T), ref value, out int count)) return;
 
 				if (value is not T) value = new T();
 				for (int i = 0; i < count; i++)
@@ -73,15 +72,7 @@ namespace WorldTree.TreeDataFormatters
 					case 1683726967:
 						{
 							//反序列化数组
-							if (self.TryReadDataHead(typeof(ItemT[]), ref value, out int count)) return;
-							count = ~count;
-							if (count != 1)
-							{
-								//读取指针回退
-								self.ReadBack(4);
-								self.SkipData(null);
-								return;
-							}
+							if (self.TryReadArrayHead(typeof(ItemT[]), ref value, 1, out int count)) return;
 							ForeachRead(self, obj);
 						}
 						break;

@@ -28,7 +28,7 @@ namespace WorldTree.TreeDataFormatters
 				if (obj.Length == 0) return;
 
 				//判断是否为基础类型
-				if (TreeDataType.TypeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
 				{
 					//获取数组数据长度
 					var srcLength = size * obj.Length;
@@ -67,16 +67,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				if (self.TryReadDataHead(typeof(T[]), ref value, out int count)) return;
-
-				count = ~count;
-				if (count != 1)
-				{
-					//读取指针回退
-					self.ReadBack(4);
-					self.SkipData(null);
-					return;
-				}
+				if (self.TryReadArrayHead(typeof(T[]), ref value,1, out int count)) return;
 
 				self.ReadUnmanaged(out int length);
 				if (length == 0)
@@ -88,7 +79,7 @@ namespace WorldTree.TreeDataFormatters
 				//假如数组为空或长度不一致，那么重新分配
 				if (value == null || ((T[])value).Length != length) value = new T[length];
 
-				if (TreeDataType.TypeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
 				{
 					var byteCount = length * size;
 					ref byte spanRef = ref self.GetReadRefByte(byteCount);

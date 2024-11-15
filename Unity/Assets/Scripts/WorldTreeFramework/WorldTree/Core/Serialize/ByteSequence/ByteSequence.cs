@@ -204,6 +204,86 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 读取指针跳到指定位置
+		/// </summary>
+		/// <param name="readPoint"></param>
+		public void ReadJump(int readPoint)
+		{
+			if (readPoint < 0 || readPoint > length)
+			{
+				this.LogError("跳转位置超出数据长度");
+				return;
+			}
+
+			if (readPoint > this.readPoint)
+			{
+				// 向后跳
+				int sizeHint = readPoint - this.readPoint;
+				while (sizeHint != 0)
+				{
+					ByteSequenceSegment nowSegment = segmentList[readSegmentPoint];
+					int nowRemain = nowSegment.Length - readBytePoint;
+					if (nowRemain == sizeHint)
+					{
+						//如果当前片段的长度等于剩余需要读取的空间
+						readBytePoint = 0;
+						readSegmentPoint++;
+						break;
+					}
+					//如果当前片段的长度大于剩余需要读取的空间
+					else if (nowRemain > sizeHint)
+					{
+						readBytePoint += sizeHint;
+						break;
+					}
+					//如果当前片段的长度小于剩余需要读取的空间
+					else
+					{
+						readSegmentPoint++;
+						sizeHint -= nowRemain;
+					}
+				}
+			}
+			else
+			{
+				// 向前跳
+				int sizeHint = this.readPoint - readPoint;
+				while (sizeHint != 0)
+				{
+					ByteSequenceSegment nowSegment;
+					if (readBytePoint == 0)
+					{
+						readSegmentPoint--;
+						nowSegment = segmentList[readSegmentPoint];
+						readBytePoint = nowSegment.Length;
+					}
+					int nowRemain = readBytePoint;
+					if (nowRemain == sizeHint)
+					{
+						//如果当前片段的长度等于剩余需要读取的空间
+						readBytePoint = 0;
+						break;
+					}
+					//如果当前片段的长度大于剩余需要读取的空间
+					else if (nowRemain > sizeHint)
+					{
+						readBytePoint -= sizeHint;
+						break;
+					}
+					//如果当前片段的长度小于剩余需要读取的空间
+					else
+					{
+						readSegmentPoint--;
+						sizeHint -= nowRemain;
+					}
+				}
+			}
+
+			this.readPoint = readPoint;
+		}
+
+
+		/// <summary>
 		/// 读取指针跳过指定长度
 		/// </summary>
 		public void ReadSkip(int sizeHint)

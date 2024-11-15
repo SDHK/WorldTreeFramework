@@ -29,7 +29,7 @@ namespace WorldTree.TreeDataFormatters
 				self.WriteUnmanaged(dim2);
 
 				//判断是否为基础类型
-				if (TreeDataType.TypeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
 				{
 					int elementSize = dim2 * size;
 					long totalSize = (long)dim1 * elementSize;
@@ -74,16 +74,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				if (self.TryReadDataHead(typeof(T[,]), ref value, out int count)) return;
-
-				count = ~count;
-				if (count != 2)
-				{
-					//读取指针回退
-					self.ReadBack(4);
-					self.SkipData(null);
-					return;
-				}
+				if (self.TryReadArrayHead(typeof(T[,]), ref value, 2, out int count)) return;
 
 				int dim1 = self.ReadUnmanaged<int>();
 				int dim2 = self.ReadUnmanaged<int>();
@@ -94,7 +85,7 @@ namespace WorldTree.TreeDataFormatters
 					value = new T[dim1, dim2];
 				}
 
-				if (TreeDataType.TypeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
 				{
 					int elementSize = dim2 * size;
 					long totalSize = (long)dim1 * elementSize;
