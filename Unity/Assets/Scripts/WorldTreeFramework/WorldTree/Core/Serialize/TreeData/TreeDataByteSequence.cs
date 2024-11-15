@@ -112,6 +112,7 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self)
 			{
+
 				self.GetBaseRule<TreeDataByteSequence, ByteSequence, Add>().Send(self);
 				self.Core.PoolGetUnit(out self.TypeToCodeDict);
 				self.Core.PoolGetUnit(out self.codeToTypeNameDict);
@@ -122,6 +123,7 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self)
 			{
+				self.Clear();
 				self.TypeToCodeDict.Dispose();
 				self.codeToTypeNameDict.Dispose();
 			}
@@ -203,7 +205,7 @@ namespace WorldTree
 				//写入类型名称
 				WriteString(item.Key.ToString());
 			}
-			WriteUnmanaged(length - startPoint);
+			WriteUnmanaged(startPoint);
 		}
 
 		/// <summary>
@@ -216,11 +218,11 @@ namespace WorldTree
 			readBytePoint = 0;
 			readSegmentPoint = segmentList.Count;
 			//回退4位
-			ReadBack(4);
+			ReadJump(readPoint - 4);
 			//读取映射表起始位置距离
-			ReadUnmanaged(out int offset);
+			ReadUnmanaged(out int startPoint);
 			//回退到映射表起始位置
-			ReadBack(offset + 4);
+			ReadJump(startPoint);
 
 			//读取类型数量
 			ReadUnmanaged(out int typeCount);
@@ -461,9 +463,9 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试读取数组数据头部
 		/// </summary>
-		public bool TryReadArrayHead(Type targetType, ref object value, int targetCount, out int count)
+		public bool TryReadArrayHead(Type targetType, ref object value, int targetCount)
 		{
-			if (TryReadDataHead(targetType, ref value, out count)) return true;
+			if (TryReadDataHead(targetType, ref value, out int count)) return true;
 			count = ~count;
 			if (count != targetCount)
 			{

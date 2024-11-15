@@ -72,7 +72,7 @@ namespace WorldTree.TreeDataFormatters
 					case 1683726967:
 						{
 							//反序列化数组
-							if (self.TryReadArrayHead(typeof(ItemT[]), ref value, 1, out int count)) return;
+							if (self.TryReadArrayHead(typeof(ItemT[]), ref value, 1)) return;
 							ForeachRead(self, obj);
 						}
 						break;

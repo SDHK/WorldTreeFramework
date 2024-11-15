@@ -41,7 +41,7 @@ namespace WorldTree
 		/// <summary>
 		/// 数据长度
 		/// </summary>
-		public int Length => length;
+		[Protected]public int Length => length;
 
 		/// <summary>
 		/// 读取片段指针位置

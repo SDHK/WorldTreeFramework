@@ -119,54 +119,53 @@ namespace WorldTree
 
 
 
-	//public partial class TreeDataTest
-	//{
-	//	class TreeDataSerialize1 : TreeDataSerializeRule<TreeDataTest>
-	//	{
-	//		protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
-	//		{
-	//			if (self.TryWriteDataHead(value, nameCode, 3, out TreeDataTest obj)) return;
-	//			self.WriteUnmanaged(1869094581);
-	//			self.WriteValue(obj.treeData);
-	//			self.WriteUnmanaged(-306726429);
-	//			self.WriteValue(obj.ActiveToggle);
-	//			self.WriteUnmanaged(-2120054343);
-	//			self.WriteValue(obj.BranchDict);
-	//		}
-	//	}
-	//	class TreeDataDeserialize1 : TreeDataDeserializeRule<TreeDataTest>
-	//	{
-	//		protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
-	//		{
-	//			if (self.TryReadDataHead(typeof(TreeDataTest), ref value, out int count)) return;
-	//			if (self.CheckClassCount(count)) return;
+	public partial class TreeDataTest
+	{
+		class TreeDataSerialize1 : TreeDataSerializeRule<TreeDataTest>
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			{
+				if (self.TryWriteDataHead(value, nameCode, 3, out TreeDataTest obj)) return;
+				self.WriteUnmanaged(1869094581);
+				self.WriteValue(obj.treeData);
+				self.WriteUnmanaged(-306726429);
+				self.WriteValue(obj.ActiveToggle);
+				self.WriteUnmanaged(-2120054343);
+				self.WriteValue(obj.BranchDict);
+			}
+		}
+		class TreeDataDeserialize1 : TreeDataDeserializeRule<TreeDataTest>
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			{
+				if (self.TryReadClassHead(typeof(TreeDataTest), ref value, out int count)) return;
 
-	//			if (value is not TreeDataTest obj)
-	//			{
-	//				value = obj = self.Core.PoolGetNode<TreeDataTest>();
-	//				obj.IsSerialize = true;
-	//			}
-	//			for (int i = 0; i < count; i++)
-	//			{
-	//				self.ReadUnmanaged(out nameCode);
-	//				SwitchRead1(self, ref value, nameCode);
-	//			}
-	//		}
-	//		/// <summary>
-	//		/// 字段读取
-	//		/// </summary>
-	//		private static void SwitchRead1(TreeDataByteSequence self, ref object value, int nameCode)
-	//		{
-	//			if (value is not TreeDataTest obj) return;
-	//			switch (nameCode)
-	//			{
-	//				case 1869094581: self.ReadValue(ref obj.treeData); break;
-	//				case -306726429: obj.ActiveToggle = self.ReadValue<bool>(); break;
-	//				case -2120054343: obj.BranchDict = self.ReadValue<BranchGroup>(); break;
-	//				default: self.SkipData(); break;
-	//			}
-	//		}
-	//	}
-	//}
+				if (value is not TreeDataTest obj)
+				{
+					value = obj = self.Core.PoolGetNode<TreeDataTest>();
+					obj.IsSerialize = true;
+				}
+				for (int i = 0; i < count; i++)
+				{
+					self.ReadUnmanaged(out nameCode);
+					SwitchRead1(self, ref value, nameCode);
+				}
+			}
+			/// <summary>
+			/// 字段读取
+			/// </summary>
+			private static void SwitchRead1(TreeDataByteSequence self, ref object value, int nameCode)
+			{
+				if (value is not TreeDataTest obj) return;
+				switch (nameCode)
+				{
+					case 1869094581: self.ReadValue(ref obj.treeData); break;
+					case -306726429: obj.ActiveToggle = self.ReadValue<bool>(); break;
+					case -2120054343: obj.BranchDict = self.ReadValue<BranchGroup>(); break;
+					default: self.SkipData(); break;
+				}
+			}
+		}
+	}
 }
 
