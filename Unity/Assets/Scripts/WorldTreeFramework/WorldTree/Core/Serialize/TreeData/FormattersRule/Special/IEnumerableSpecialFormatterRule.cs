@@ -28,7 +28,7 @@ namespace WorldTree.TreeDataFormatters
 				//序列化数组字段
 				self.WriteType(typeof(object));
 				//写入数组维度数量
-				self.WriteUnmanaged(~1);
+				self.WriteDynamic(~1);
 				ForeachWrite(self, obj);
 			}
 		}

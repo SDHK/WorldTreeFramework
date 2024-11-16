@@ -330,12 +330,12 @@ namespace WorldTree
 				if (!objValue.Equals(default))
 				{
 					obj = objValue;
-					this.WriteUnmanaged(count);
+					this.WriteDynamic(count);
 					return false;
 				}
 			}
 			obj = default;
-			this.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
+			this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
 			return true;
 		}
 
@@ -380,7 +380,7 @@ namespace WorldTree
 			{
 				//不支持的类型，写入空对象
 				this.WriteType(typeof(object), false);
-				this.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
+				this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
 			}
 		}
 
@@ -404,7 +404,7 @@ namespace WorldTree
 			{
 				//不支持的类型，写入空对象
 				this.WriteType(typeof(object));
-				this.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
+				this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
 			}
 		}
 
@@ -509,7 +509,7 @@ namespace WorldTree
 			if (typeCode == 0)//判断如果是0，则为原类型
 			{
 				countPoint = readPoint;
-				this.ReadUnmanaged(out count);
+				this.ReadDynamic(out count);
 				if (count != ValueMarkCode.NULL_OBJECT) return false;
 				value = default;
 				return true;
@@ -522,7 +522,7 @@ namespace WorldTree
 				if (dataType == targetType)
 				{
 					countPoint = readPoint;
-					this.ReadUnmanaged(out count);
+					this.ReadDynamic(out count);
 					if (count != ValueMarkCode.NULL_OBJECT) return false;
 					value = default;
 					return true;
@@ -531,7 +531,7 @@ namespace WorldTree
 				else if (!SubTypeReadValue(dataType, targetType, ref value, countPoint))
 				{
 					countPoint = readPoint;
-					this.ReadUnmanaged(out count);
+					this.ReadDynamic(out count);
 					if (count != ValueMarkCode.NULL_OBJECT) return false;
 					value = default;
 					return true;
@@ -547,7 +547,7 @@ namespace WorldTree
 			{
 				countPoint = readPoint;
 				//不是基础类型则尝试读取
-				this.ReadUnmanaged(out count);
+				this.ReadDynamic(out count);
 				if (count != ValueMarkCode.NULL_OBJECT) return false;
 			}
 			//数据跳跃
@@ -657,7 +657,7 @@ namespace WorldTree
 			}
 
 			//读取字段数量
-			this.ReadUnmanaged(out int count);
+			this.ReadDynamic(out int count);
 			//空对象判断
 			if (count == ValueMarkCode.NULL_OBJECT) return;
 
