@@ -678,7 +678,7 @@ namespace WorldTree
 				int totalLength = 1;
 				for (int i = 0; i < count; i++)
 				{
-					this.ReadUnmanaged(out int length);
+					this.ReadDynamic(out int length);
 					totalLength *= length;
 				}
 				//为0的情况下，是数组，但是数组长度为0
@@ -695,8 +695,6 @@ namespace WorldTree
 				}
 			}
 		}
-
-
 
 
 

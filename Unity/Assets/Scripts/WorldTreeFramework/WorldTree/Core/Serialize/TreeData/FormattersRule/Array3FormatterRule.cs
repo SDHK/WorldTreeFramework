@@ -83,9 +83,9 @@ namespace WorldTree.TreeDataFormatters
 			{
 				if (self.TryReadArrayHead(typeof(T[,,]), ref value, 3)) return;
 
-				int dim1 = self.ReadUnmanaged<int>();
-				int dim2 = self.ReadUnmanaged<int>();
-				int dim3 = self.ReadUnmanaged<int>();
+				self.ReadDynamic(out int dim1);
+				self.ReadDynamic(out int dim2);
+				self.ReadDynamic(out int dim3);
 
 				//假如数组为空或长度不一致，那么重新分配
 				if (value == null || ((T[,,])value).GetLength(0) != dim1 || ((T[,,])value).GetLength(1) != dim2 || ((T[,,])value).GetLength(2) != dim3)

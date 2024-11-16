@@ -25,8 +25,8 @@ namespace WorldTree.TreeDataFormatters
 				// 写入数组维度长度
 				int dim1 = obj.GetLength(0);
 				int dim2 = obj.GetLength(1);
-				self.WriteUnmanaged(dim1);
-				self.WriteUnmanaged(dim2);
+				self.WriteDynamic(dim1);
+				self.WriteDynamic(dim2);
 
 				//判断是否为基础类型
 				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
@@ -76,8 +76,8 @@ namespace WorldTree.TreeDataFormatters
 			{
 				if (self.TryReadArrayHead(typeof(T[,]), ref value, 2)) return;
 
-				int dim1 = self.ReadUnmanaged<int>();
-				int dim2 = self.ReadUnmanaged<int>();
+				self.ReadDynamic(out int dim1);
+				self.ReadDynamic(out int dim2);
 
 				//假如数组为空或长度不一致，那么重新分配
 				if (value == null || ((T[,])value).GetLength(0) != dim1 || ((T[,])value).GetLength(1) != dim2)

@@ -24,7 +24,7 @@ namespace WorldTree.TreeDataFormatters
 				if (self.TryWriteDataHead(value, nameCode, ~1, out T[] obj)) return;
 
 				//写入数组数据长度
-				self.WriteUnmanaged(obj.Length);
+				self.WriteDynamic(obj.Length);
 				if (obj.Length == 0) return;
 
 				//判断是否为基础类型
@@ -71,7 +71,7 @@ namespace WorldTree.TreeDataFormatters
 
 				if (self.TryReadArrayHead(typeof(T[]), ref value, 1)) return;
 
-				self.ReadUnmanaged(out int length);
+				self.ReadDynamic(out int length);
 				if (length == 0)
 				{
 					value = Array.Empty<T>();
