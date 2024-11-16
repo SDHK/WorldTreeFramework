@@ -26,7 +26,7 @@ namespace WorldTree.TreeDataFormatters
 				//假设字典有一个数组字段
 				self.WriteUnmanaged(1683726967);
 				//序列化数组字段
-				self.WriteUnmanaged(0L);
+				self.WriteType(typeof(object));
 				//写入数组维度数量
 				self.WriteUnmanaged(~1);
 				ForeachWrite(self, obj);

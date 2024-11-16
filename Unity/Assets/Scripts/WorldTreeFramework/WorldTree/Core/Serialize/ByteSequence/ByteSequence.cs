@@ -44,7 +44,7 @@ namespace WorldTree
 		[Protected]public int Length => length;
 
 		/// <summary>
-		/// 读取片段指针位置
+		/// 读取总指针
 		/// </summary>
 		public int ReadPoint => readPoint;
 
@@ -166,7 +166,7 @@ namespace WorldTree
 		/// <summary>
 		/// 读取指针回退
 		/// </summary>
-		public void ReadBack(int sizeHint)
+		private void ReadBack(int sizeHint)
 		{
 			if (sizeHint <= 0) return;
 			if (readPoint == 0) this.LogError("序列已经到达开头");

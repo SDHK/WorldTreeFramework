@@ -67,6 +67,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
+				int typePoint = self.ReadPoint; 
+
 				if (self.TryReadArrayHead(typeof(T[]), ref value, 1)) return;
 
 				self.ReadUnmanaged(out int length);

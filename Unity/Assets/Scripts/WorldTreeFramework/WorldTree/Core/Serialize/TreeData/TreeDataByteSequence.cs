@@ -59,7 +59,7 @@ namespace WorldTree
 		};
 
 		/// <summary>
-		/// 基础类型码，以下标为准，用于最小化类型码，128个内为 1 Btye 长度
+		/// 默认类型码，类型不会记录到数据里，以下标为键，用于最小化类型码，128个内为 1 Btye 长度
 		/// </summary>
 		public static Type[] TypeCodes = new Type[]
 		{
@@ -78,6 +78,28 @@ namespace WorldTree
 			typeof(char),
 			typeof(decimal),
 			typeof(string),
+		};
+
+
+		/// <summary>
+		/// 基础值类型哈希表，这些类型序列化是直接写入数据的，用于跳跃数据过滤
+		/// </summary>
+		public static HashSet<Type> BasicsTypeHash = new()
+		{
+			typeof(bool),
+			typeof(byte),
+			typeof(sbyte),
+			typeof(short),
+			typeof(ushort),
+			typeof(int),
+			typeof(uint),
+			typeof(long),
+			typeof(ulong),
+			typeof(float),
+			typeof(double),
+			typeof(char),
+			typeof(decimal),
+			typeof(string),//string有特别判断，所以可以加入
 		};
 
 
@@ -156,6 +178,7 @@ namespace WorldTree
 		/// </summary>
 		private long GetTypeCode(Type type, bool isWriteName = true)
 		{
+			if (TreeDataType.TypeCodeDict.TryGetValue(type, out byte typeByteCode)) return typeByteCode;
 			if (!TypeToCodeDict.TryGetValue(type, out long typeCode))
 			{
 				typeCode = this.TypeToCode(type);
@@ -170,6 +193,12 @@ namespace WorldTree
 		/// </summary>
 		private bool TryGetType(long typeCode, out Type type)
 		{
+			if (TreeDataType.TypeCodes.Length > typeCode && typeCode >= 0)
+			{
+				type = TreeDataType.TypeCodes[typeCode];
+				return true;
+			}
+
 			if (this.TryCodeToType(typeCode, out type)) return true;
 			if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
 			{
@@ -276,7 +305,7 @@ namespace WorldTree
 			switch (nameCode)
 			{
 				case -2:
-					this.WriteUnmanaged(0L);
+					this.WriteType(typeof(object));
 					if (this.WriteCheckNull(value, count, out obj)) return true;
 					break;
 				case -1:
@@ -315,7 +344,7 @@ namespace WorldTree
 		/// </summary>
 		public void WriteType(Type type, bool isWriteName = true)
 		{
-			this.WriteUnmanaged(GetTypeCode(type, isWriteName));
+			this.WriteDynamic(GetTypeCode(type, isWriteName));
 		}
 
 		/// <summary>
@@ -383,15 +412,6 @@ namespace WorldTree
 
 		#region 读取
 
-		/// <summary>
-		/// 读取字段数量或空标记
-		/// </summary>
-		public bool ReadCheckNull(out int count)
-		{
-			this.ReadUnmanaged(out count);
-			if (count == ValueMarkCode.NULL_OBJECT) return true;
-			return false;
-		}
 
 		/// <summary>
 		/// 读取值
@@ -440,7 +460,7 @@ namespace WorldTree
 		/// </summary>
 		public bool TryReadType(out Type type)
 		{
-			this.ReadUnmanaged(out long typeCode);
+			this.ReadDynamic(out long typeCode);
 			return TryGetType(typeCode, out type);
 		}
 
@@ -449,11 +469,11 @@ namespace WorldTree
 		/// </summary>
 		public bool TryReadClassHead(Type targetType, ref object value, out int count)
 		{
-			if (TryReadDataHead(targetType, ref value, out count)) return true;
+			if (TryReadDataHead(targetType, ref value, out count, out int countPoint)) return true;
 			if (count < 0)
 			{
 				//能读取到count，说名这里的Type绝对不是基础类型，所以传null跳跃
-				ReadBack(4);
+				ReadJump(countPoint);
 				SkipData(null);
 				return true;
 			}
@@ -465,12 +485,13 @@ namespace WorldTree
 		/// </summary>
 		public bool TryReadArrayHead(Type targetType, ref object value, int targetCount)
 		{
-			if (TryReadDataHead(targetType, ref value, out int count)) return true;
+
+			if (TryReadDataHead(targetType, ref value, out int count, out int countPoint)) return true;
 			count = ~count;
 			if (count != targetCount)
 			{
 				//能读取到count，说名这里的Type绝对不是基础类型，所以传null跳跃
-				ReadBack(4);
+				ReadJump(countPoint);
 				SkipData(null);
 				return true;
 			}
@@ -480,78 +501,70 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试读取类型数据头部
 		/// </summary>
-		private bool TryReadDataHead(Type targetType, ref object value, out int count)
+		private bool TryReadDataHead(Type targetType, ref object value, out int count, out int countPoint)
 		{
-			bool isSkip = true;
-			Type dataType = null;
+			countPoint = readPoint;
 			count = 0;
-			this.ReadUnmanaged(out long typeCode);
-			if (typeCode == 0)//判断如果是0，则为原类型，尝试读取
+			this.ReadDynamic(out long typeCode);
+			if (typeCode == 0)//判断如果是0，则为原类型
 			{
-				//dataType = targetType;
-				this.ReadUnmanaged(out count);//直接尝试读取
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = default;
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else if (TryGetType(typeCode, out dataType))
-			{
-				//能读取到类型，说明是多态类型，判断一样则直接读取
-				isSkip = false;
-				if (dataType == targetType)//如果直接相等
-				{
-					this.ReadUnmanaged(out count);
-					if (count == ValueMarkCode.NULL_OBJECT)
-					{
-						value = default;
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-			}
-
-			if (isSkip)
-			{
-				SkipData(dataType);
+				countPoint = readPoint;
+				this.ReadUnmanaged(out count);
+				if (count != ValueMarkCode.NULL_OBJECT) return false;
+				value = default;
 				return true;
 			}
 
-			//不一致或不存在的类型，尝试判断为子类读取或跳跃
-			if (!SubTypeReadValue(dataType, targetType, ref value))
+			//尝试获取类型
+			if (TryGetType(typeCode, out Type dataType))
 			{
-				this.ReadUnmanaged(out count);
-				if (count == ValueMarkCode.NULL_OBJECT)
+				//类型一样直接读取
+				if (dataType == targetType)
 				{
+					countPoint = readPoint;
+					this.ReadUnmanaged(out count);
+					if (count != ValueMarkCode.NULL_OBJECT) return false;
+					value = default;
+					return true;
+				}
+				//不一样,判断多态类型，不是则尝试读取
+				else if (!SubTypeReadValue(dataType, targetType, ref value, countPoint))
+				{
+					countPoint = readPoint;
+					this.ReadUnmanaged(out count);
+					if (count != ValueMarkCode.NULL_OBJECT) return false;
 					value = default;
 					return true;
 				}
 				else
 				{
-					return false;
+					return true;
 				}
 			}
 
+			//数据类型不存在 ，判断目标类型是否非基础类型
+			if (!TreeDataType.BasicsTypeHash.Contains(targetType))
+			{
+				countPoint = readPoint;
+				//不是基础类型则尝试读取
+				this.ReadUnmanaged(out count);
+				if (count != ValueMarkCode.NULL_OBJECT) return false;
+			}
+			//数据跳跃
+			SkipData(dataType);
 			return true;
 		}
+
 
 		/// <summary>
 		/// 尝试以子类型读取
 		/// </summary>
-		private bool SubTypeReadValue(Type type, Type targetType, ref object value)
+		private bool SubTypeReadValue(Type type, Type targetType, ref object value, int typePoint)
 		{
 			if (type != null)
 			{
 				//判断是否为基础类型，直接跳跃数据。
-				if (TreeDataType.TypeSizeDict.ContainsKey(type) || type == typeof(string))
+				if (TreeDataType.BasicsTypeHash.Contains(type))
 				{
 					SkipData(type);
 					return true;
@@ -568,7 +581,6 @@ namespace WorldTree
 			Type baseType = type?.BaseType;
 			if (targetType.IsInterface)
 			{
-
 				Type[] interfaces = type.GetInterfaces();
 				foreach (var interfaceType in interfaces)
 				{
@@ -578,11 +590,9 @@ namespace WorldTree
 						break;
 					}
 				}
-
 			}
 			else if (targetType.IsClass)
 			{
-
 				while (baseType != null && baseType != typeof(object))
 				{
 					if (baseType == targetType)
@@ -592,7 +602,6 @@ namespace WorldTree
 					}
 					baseType = baseType.BaseType;
 				}
-
 			}
 			else //不是接口也不是类型，直接跳跃数据
 			{
@@ -602,8 +611,8 @@ namespace WorldTree
 
 			if (isSubType)//是子类型
 			{
-				//读取指针回退，类型码
-				ReadBack(8);
+				//读取指针回退到类型码
+				ReadJump(typePoint);
 				//子类型读取
 				ReadValue(type, ref value);
 				return true;

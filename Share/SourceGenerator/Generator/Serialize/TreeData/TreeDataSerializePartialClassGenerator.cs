@@ -115,6 +115,13 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("					return;");
 				Code.AppendLine("				}");
 			}
+
+			if (isAbstract)
+			{
+				Code.AppendLine("				int typePoint = self.ReadPoint;");
+			}
+
+
 			Code.AppendLine($"				if (self.TryReadClassHead(typeof({className}), ref value, out int count)) return;");
 			if (!isAbstract)
 			{
@@ -140,8 +147,8 @@ namespace WorldTree.SourceGenerator
 			}
 			else //是抽象直接跳过
 			{
-				Code.AppendLine("				self.ReadBack(4);");
-				Code.AppendLine("				self.SkipData(null);");
+				Code.AppendLine("				self.ReadJump(typePoint);");
+				Code.AppendLine("				self.SkipData();");
 			}
 
 			if (fieldSymbols != null && fieldSymbols.Count != 0 || baseName != null)
