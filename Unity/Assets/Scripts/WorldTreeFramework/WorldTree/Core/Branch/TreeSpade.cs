@@ -28,7 +28,7 @@ namespace WorldTree
 	/// <summary>
 	/// 树节点移植器
 	/// </summary>
-	[TreeDataSerializable]
+	[TreeDataSerializable(true)]
 	public partial class TreeSpade<K> : TreeSpade
 	{
 		/// <summary>

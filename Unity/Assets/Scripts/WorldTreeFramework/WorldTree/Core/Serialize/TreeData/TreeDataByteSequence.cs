@@ -23,8 +23,6 @@ namespace WorldTree
 		/// </summary>
 		public const short NULL_OBJECT = -1;
 
-
-
 		/// <summary>
 		/// 自动
 		/// </summary>
@@ -176,13 +174,13 @@ namespace WorldTree
 		/// <summary>
 		/// 添加类型
 		/// </summary>
-		private long GetTypeCode(Type type, bool isWriteName = true)
+		private long GetTypeCode(Type type, bool isIgnoreName = false)
 		{
 			if (TreeDataType.TypeCodeDict.TryGetValue(type, out byte typeByteCode)) return typeByteCode;
 			if (!TypeToCodeDict.TryGetValue(type, out long typeCode))
 			{
 				typeCode = this.TypeToCode(type);
-				if (isWriteName) TypeToCodeDict.Add(type, typeCode);
+				if (!isIgnoreName) TypeToCodeDict.Add(type, typeCode);
 			}
 			return typeCode;
 		}
@@ -290,7 +288,6 @@ namespace WorldTree
 
 		#region 写入
 
-
 		/// <summary>
 		/// 写入字段数量或空标记
 		/// </summary>
@@ -300,7 +297,7 @@ namespace WorldTree
 		/// <param name="count">字段数或数组维度</param>
 		/// <param name="obj">返回对象</param>
 		/// <returns>是否为Null退出</returns>
-		public bool TryWriteDataHead<T>(in object value, int nameCode, int count, out T obj)
+		public bool TryWriteDataHead<T>(in object value, int nameCode, int count, out T obj, bool isIgnoreName = false)
 		{
 			switch (nameCode)
 			{
@@ -309,7 +306,7 @@ namespace WorldTree
 					if (this.WriteCheckNull(value, count, out obj)) return true;
 					break;
 				case -1:
-					this.WriteType(typeof(T));
+					this.WriteType(typeof(T), isIgnoreName);
 					if (this.WriteCheckNull(value, count, out obj)) return true;
 					break;
 			}
@@ -342,9 +339,9 @@ namespace WorldTree
 		/// <summary>
 		/// 写入类型，默认写入类型名称
 		/// </summary>
-		public void WriteType(Type type, bool isWriteName = true)
+		public void WriteType(Type type, bool isIgnoreName = false)
 		{
-			this.WriteDynamic(GetTypeCode(type, isWriteName));
+			this.WriteDynamic(GetTypeCode(type, isIgnoreName));
 		}
 
 		/// <summary>

@@ -52,36 +52,49 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("	}");
 		}
 
-		//private static ISymbol? GetMethodWithAttribute(INamedTypeSymbol classSymbol, string attributeName)
-		//{
-		//	return classSymbol.GetMembers().FirstOrDefault(m => m.GetAttributes().Any(a => a.AttributeClass?.Name == attributeName));
-		//}
-
-		private static ISymbol? GetMethodWithAttribute(INamedTypeSymbol classSymbol, string attributeName)
+		private static bool GetIsConstantFromAttributes(INamedTypeSymbol classSymbol)
 		{
-			while (classSymbol != null)
+			var attribute = classSymbol.GetAttributes()
+				.FirstOrDefault(attr => attr.AttributeClass?.Name == GeneratorHelper.TreeDataSerializableAttribute);
+
+			if (attribute != null)
 			{
-				var method = classSymbol.GetMembers().FirstOrDefault(m => m.GetAttributes().Any(a => a.AttributeClass?.Name == attributeName));
-				if (method != null)
+				// 检查命名参数
+				var namedArgument = attribute.NamedArguments
+					.FirstOrDefault(arg => arg.Key == "IsConstant" && arg.Value.Value is bool);
+
+				if (namedArgument.Value.Value is bool isConstant)
 				{
-					return method;
+					return isConstant;
 				}
-				classSymbol = classSymbol.BaseType;
+
+				// 检查位置参数
+				if (attribute.ConstructorArguments.Length > 0 && attribute.ConstructorArguments[0].Value is bool positionalArgument)
+				{
+					return positionalArgument;
+				}
 			}
-			return null;
+
+			return false;
 		}
+
 
 
 
 		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount)
 		{
+
+			bool isConstant = GetIsConstantFromAttributes(classSymbol);
+
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			Code.AppendLine($"		class TreeDataSerialize : TreeDataSerializeRule<{className}>");
 			Code.AppendLine("		{");
 			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)");
 			Code.AppendLine("			{");
 
-			Code.AppendLine($"				if (self.TryWriteDataHead(value, nameCode, {membersCount}, out {className} obj)) return;");
+			Code.AppendLine($"				if (self.TryWriteDataHead(value, nameCode, {membersCount}, out {className} obj, {(isConstant ? "true" : "false")})) return;");
+
+
 			if (fieldSymbols != null)
 			{
 				foreach (ISymbol symbol in fieldSymbols)
@@ -330,41 +343,6 @@ namespace WorldTree.SourceGenerator
 			baseSymbol = baseTypeSymbol;
 			return members;
 		}
-
-		/// <summary>
-		/// 比较两个类型是否相等（包括泛型参数）
-		/// </summary>
-		private static bool IsTypeSymbolEqual(INamedTypeSymbol type1, INamedTypeSymbol type2)
-		{
-			if (SymbolEqualityComparer.Default.Equals(type1.OriginalDefinition, type2.OriginalDefinition))
-			{
-				// 检查泛型参数数量
-				if (type1.TypeArguments.Length == type2.TypeArguments.Length)
-				{
-					// 比较每个泛型参数
-					for (int i = 0; i < type1.TypeArguments.Length; i++)
-					{
-						var arg1 = type1.TypeArguments[i];
-						var arg2 = type2.TypeArguments[i];
-
-						// 如果是类型参数（如 T, T1 等）
-						if (arg1 is ITypeParameterSymbol param1 && arg2 is ITypeParameterSymbol param2)
-						{
-							// 这里可以选择合适的比较方式，这里使用最宽松的比较
-							continue;
-						}
-						// 如果是具体类型，直接比较
-						else if (!SymbolEqualityComparer.Default.Equals(arg1, arg2))
-						{
-							return false;
-						}
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-
 
 	}
 }

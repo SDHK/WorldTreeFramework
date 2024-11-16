@@ -11,10 +11,20 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 树节点数据标记
+	/// 树节点数据标记，默认为非恒定类型，恒定类型将不会记录类名到数据
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
-	public class TreeDataSerializableAttribute : Attribute { }
+	public class TreeDataSerializableAttribute : Attribute
+	{
+		/// <summary>
+		/// 是否为恒定类型
+		/// </summary>
+		public bool IsConstant = false;
+		public TreeDataSerializableAttribute(bool isConstant = false)
+		{
+			this.IsConstant = isConstant;
+		}
+	}
 
 	/// <summary>
 	/// 序列化成员忽略标记
