@@ -14,11 +14,10 @@ namespace WorldTree
 	/// <summary>
 	/// 二维矩阵
 	/// </summary>
-	public class TreeMatrix2<T> : NodeData
+	public class TreeMatrix2<T> : Node
 		, ChildOf<INode>
 		, AsChildBranch
 		, AsAwake<int, int>
-
 	{
 		/// <summary>
 		/// x轴长度

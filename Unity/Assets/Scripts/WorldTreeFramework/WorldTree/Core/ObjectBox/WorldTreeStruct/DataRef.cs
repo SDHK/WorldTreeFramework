@@ -46,7 +46,7 @@ namespace WorldTree
 				Core = null;
 				return;
 			}
-			DataUID = data.UID;
+			DataUID = data.Id;
 			this.data = data;
 			Core = data.Core;
 		}
@@ -65,8 +65,8 @@ namespace WorldTree
 
 		public static implicit operator N(DataRef<N> dataRef) => dataRef.Value;
 
-		public static bool operator ==(DataRef<N> a, N b) => a.DataUID == b?.UID;
-		public static bool operator !=(DataRef<N> a, N b) => a.DataUID != b?.UID;
+		public static bool operator ==(DataRef<N> a, N b) => a.DataUID == b?.Id;
+		public static bool operator !=(DataRef<N> a, N b) => a.DataUID != b?.Id;
 
 		public static implicit operator bool(DataRef<N> dataRef) => dataRef.data is not null;
 	}

@@ -17,18 +17,19 @@ namespace WorldTree
 		/// <summary>
 		/// 新建节点对象
 		/// </summary>
-		public static T NewNode<T>(this WorldTreeCore self, out T node) where T : class, INode
-			=> node = self.NewNode(typeof(T), out _) as T;
+		public static T NewNode<T>(this WorldTreeCore self, out T node, bool isSerialize = false) where T : class, INode
+			=> node = self.NewNode(typeof(T), out _, isSerialize) as T;
 
 		/// <summary>
 		/// 新建节点对象
 		/// </summary>
-		public static INode NewNode(this WorldTreeCore self, Type type, out INode node)
+		public static INode NewNode(this WorldTreeCore self, Type type, out INode node, bool isSerialize = false)
 		{
 			node = Activator.CreateInstance(type, true) as INode;
 			node.Core = self;
 			node.Root = self.Root;
 			node.Type = node.TypeToCode(type);
+			node.IsSerialize = isSerialize;
 			node.OnCreate();
 			return node;
 		}
@@ -37,30 +38,31 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static T PoolGetNode<T>(this WorldTreeCore self, out T outT)
+		public static T PoolGetNode<T>(this WorldTreeCore self, out T outT, bool isSerialize = false)
 			where T : class, INode
-		=> outT = self.PoolGetNode<T>();
+		=> outT = self.PoolGetNode<T>(isSerialize);
 
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static T PoolGetNode<T>(this WorldTreeCore self) where T : class, INode
-			=> self.PoolGetNode(self.TypeToCode<T>()) as T;
+		public static T PoolGetNode<T>(this WorldTreeCore self, bool isSerialize = false) where T : class, INode
+			=> self.PoolGetNode(self.TypeToCode<T>(), isSerialize) as T;
 
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static INode PoolGetNode(this WorldTreeCore self, long type)
+		public static INode PoolGetNode(this WorldTreeCore self, long type, bool isSerialize = false)
 		{
 			if (self.IsCoreActive)
 			{
 				if (self.NodePoolManager.TryGet(type, out INode node))
 				{
+					node.IsSerialize = isSerialize;
 					node.OnCreate();
 					return node;
 				}
 			}
-			return self.NewNode(self.CodeToType(type), out _);
+			return self.NewNode(self.CodeToType(type), out _, isSerialize);
 		}
 
 		/// <summary>
@@ -74,6 +76,7 @@ namespace WorldTree
 			}
 			obj.IsDisposed = true;
 			obj.Id = 0;
+			obj.InstanceId = 0;
 		}
 	}
 }

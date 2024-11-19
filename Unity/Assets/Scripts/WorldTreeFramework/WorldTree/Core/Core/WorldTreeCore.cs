@@ -238,9 +238,14 @@ namespace WorldTree
 
 			//Id管理器初始化
 			this.PoolGetNode(out IdManager);
-			if (Id == 0) Id = IdManager.GetId();
+			if (Id == 0)
+			{
+				InstanceId = IdManager.GetId();
+				Id = InstanceId;
+			}
 
-			TypeInfo.Id = IdManager.GetId();
+			TypeInfo.InstanceId = IdManager.GetId();
+			TypeInfo.Id = TypeInfo.InstanceId;
 
 			//法则管理器初始化
 			this.PoolGetNode(out RuleManager);
@@ -420,7 +425,7 @@ namespace WorldTree
 			return true;
 		}
 		public override void OnBeforeGraftSelfToTree()
-		{ 
+		{
 			AddNodeView();
 		}
 		public override void OnGraftSelfToTree()

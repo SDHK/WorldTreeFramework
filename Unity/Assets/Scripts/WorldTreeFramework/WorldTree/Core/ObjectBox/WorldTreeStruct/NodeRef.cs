@@ -10,36 +10,112 @@
 namespace WorldTree
 {
 
+
+	public partial struct NodeRef<N>
+	{
+		class TreeDataSerialize : TreeDataSerializeRule<NodeRef<N>>
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			{
+				if (self.TryWriteDataHead(value, nameCode, 1, out NodeRef<N> obj, false)) return;
+				self.WriteUnmanaged(921221376);
+				self.WriteValue(obj.Id);
+			}
+		}
+		class TreeDataDeserialize : TreeDataDeserializeRule<NodeRef<N>>
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			{
+				if (self.TryReadClassHead(typeof(NodeRef<N>), ref value, out int count)) return;
+				for (int i = 0; i < count; i++)
+				{
+					self.ReadUnmanaged(out nameCode);
+					SwitchRead(self, ref value, nameCode);
+				}
+			}
+			/// <summary>
+			/// 字段读取
+			/// </summary>
+			private static void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)
+			{
+				if (value is not NodeRef<N> obj) return;
+				obj.Core = self.Core;
+				switch (nameCode)
+				{
+					case 921221376: self.ReadValue(ref obj.Id); break;
+					default: self.SkipData(); break;
+				}
+				value = obj;
+			}
+		}
+	}
+
+
 	/// <summary>
 	/// 节点引用
 	/// </summary>
-	public struct NodeRef<N>
+	public partial struct NodeRef<N>
 		where N : class, INode
 	{
 		/// <summary>
-		/// 节点ID
+		/// 世界树核心
 		/// </summary>
-		public readonly long NodeId;
+		[TreeDataIgnore]
+		public WorldTreeCore Core;
+
+		/// <summary>
+		/// 节点数据ID，普通节点为0
+		/// </summary>
+		public long Id;
+
+		/// <summary>
+		/// 节点实例ID
+		/// </summary>
+		[TreeDataIgnore]
+		public long InstanceId;
+
 		/// <summary>
 		/// 节点
 		/// </summary>
+		[TreeDataIgnore]
 		private N node;
 
 		/// <summary>
 		/// 获取节点，如果节点被回收，那么会返回null
 		/// </summary>
-		/// <remarks> 每次获取都会进行判断，建议获取后将值用变量存起来 </remarks>
-		public N Value => (node is null || NodeId == node.Id) ? node : node = null;
+		public N Value
+		{
+			get
+			{
+				if (node is null || InstanceId != node.InstanceId)
+				{
+					if (Core == null || Id == 0 || !Core.ReferencedPoolManager.AllNodeDataDict.TryGetValue(Id, out INodeData nodeData))
+					{
+						node = null;
+					}
+					else
+					{
+						node = nodeData as N;
+						InstanceId = node.InstanceId;
+					}
+				}
+				return node;
+			}
+		}
 
 		public NodeRef(N node)
 		{
 			if (node is null)
 			{
-				NodeId = 0;
+				Id = 0;
+				InstanceId = 0;
 				this.node = null;
+				Core = null;
 				return;
 			}
-			NodeId = node.Id;
+			Core = node.Core;
+			Id = node is INodeData ? node.Id : 0;
+			InstanceId = node.InstanceId;
 			this.node = node;
 		}
 		/// <summary>
@@ -56,11 +132,10 @@ namespace WorldTree
 
 		public static implicit operator N(NodeRef<N> nodeRef) => nodeRef.Value;
 
-		//应该以node为准，因为node可能为空
-		public static bool operator ==(NodeRef<N> a, N b) => a.NodeId == b?.Id;
-		public static bool operator !=(NodeRef<N> a, N b) => a.NodeId != b?.Id;
+		public static bool operator ==(NodeRef<N> a, N b) => a.InstanceId == b?.InstanceId;
+		public static bool operator !=(NodeRef<N> a, N b) => a.InstanceId != b?.InstanceId;
 
-		public override bool Equals(object obj) => obj is N node ? NodeId == node.Id : false;
+		public override bool Equals(object obj) => obj is N node ? InstanceId == node.InstanceId : false;
 		public override int GetHashCode() => node?.GetHashCode() ?? 0;
 
 		public static implicit operator bool(NodeRef<N> nodeRef) => nodeRef.node is not null;

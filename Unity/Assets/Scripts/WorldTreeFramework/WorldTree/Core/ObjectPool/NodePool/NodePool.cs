@@ -73,7 +73,6 @@ namespace WorldTree
 		private INode ObjectNew(IPool pool)
 		{
 			INode obj = Activator.CreateInstance(ObjectType, true) as INode;
-			obj.IsFromPool = true;
 			obj.Core = Core;
 			obj.Root = Core.Root;
 			obj.Type = ObjectTypeCode;
@@ -84,6 +83,9 @@ namespace WorldTree
 		/// </summary>
 		private void ObjectOnGet(INode obj)
 		{
+			obj.IsFromPool = true;
+			obj.IsSerialize = false;
+			obj.IsActive = false;
 			obj.IsDisposed = false;
 		}
 		/// <summary>
@@ -93,6 +95,7 @@ namespace WorldTree
 		{
 			obj.IsDisposed = true;
 			obj.Id = 0;
+			obj.InstanceId = 0;
 		}
 	}
 

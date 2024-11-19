@@ -144,8 +144,7 @@ namespace WorldTree.SourceGenerator
 					{
 						Code.AppendLine(@$"				if (value is not {className} obj)");
 						Code.AppendLine("				{");
-						Code.AppendLine($"					value = obj = self.Core.PoolGetNode<{className}>();");
-						Code.AppendLine("					obj.IsSerialize = true;");
+						Code.AppendLine($"					value = obj = self.Core.PoolGetNode<{className}>(true);");
 						Code.AppendLine("				}");
 					}
 					else if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.IUnit, out _))
@@ -216,6 +215,10 @@ namespace WorldTree.SourceGenerator
 					Code.AppendLine($"					default: self.SkipData(); break;");
 				}
 				Code.AppendLine("				}");
+				if(classSymbol.TypeKind == TypeKind.Struct)
+				{
+					Code.AppendLine("				value = obj;");
+				}
 				Code.AppendLine("			}");
 			}
 			Code.AppendLine("		}");

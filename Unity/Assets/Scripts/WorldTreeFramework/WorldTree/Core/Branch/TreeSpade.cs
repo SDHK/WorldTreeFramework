@@ -22,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点嫁接到树上
 		/// </summary>
-		public abstract bool TryGraftSelfToTree(INode parent);
+		public abstract bool TryGraftSelfToTree(INode parent, out INode node);
 	}
 
 	/// <summary>
@@ -41,8 +41,12 @@ namespace WorldTree
 		/// </summary>
 		public INode Node;
 
-		public override bool TryGraftSelfToTree(INode parent)
-		=> Node.TryGraftSelfToTree(BranchType, Key, parent);
+		public override bool TryGraftSelfToTree(INode parent, out INode node)
+		{
+			node = Node;
+			return Node.TryGraftSelfToTree(BranchType, Key, parent);
+		}
+
 
 		public override void OnDispose()
 		{

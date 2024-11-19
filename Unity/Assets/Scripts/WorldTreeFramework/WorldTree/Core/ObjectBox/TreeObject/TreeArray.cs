@@ -14,7 +14,7 @@ namespace WorldTree
     /// <summary>
     /// 一维数组
     /// </summary>
-    public class TreeArray<T> : NodeData
+    public class TreeArray<T> : Node
 		, ChildOf<INode>
         , ComponentOf<INode>
         , AsAwake<int>

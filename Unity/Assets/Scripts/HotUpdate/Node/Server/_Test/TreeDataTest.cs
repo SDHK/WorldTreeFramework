@@ -84,13 +84,18 @@ namespace WorldTree
 		/// 年龄
 		/// </summary>
 		public int Age;
+
+		/// <summary>
+		/// 测试节点数据2
+		/// </summary>
+		public NodeRef<TreeDataNodeDataTest2> nodeRef;
 	}
 
 	/// <summary>
 	/// 测试节点数据1
 	/// </summary>
 	[TreeDataSerializable]
-	public partial class TreeDataNodeDataTest2 : Node
+	public partial class TreeDataNodeDataTest2 : NodeData
 		, ChildOf<TreeDataNodeDataTest1>
 		, AsAwake
 	{

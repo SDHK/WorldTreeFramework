@@ -9,19 +9,19 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 世界树数据节点基类
+	/// 世界树数据节点基类，ID由雪花算法生成
 	/// </summary>
 	public abstract class NodeData : Node, INodeData
 	{
-		public long UID { get; set; }
-
 		/// <summary>
 		/// 创建时：NodeData的UID获取和法则支持
 		/// </summary>
 		override public void OnCreate()
 		{
-			UID = Core.IdManager.GetUID();
-			Id = Core.IdManager.GetId();
+			//如果是新创建的节点，需要获取一个新的UID
+			//如果是反序列化的节点，不需要获取新的UID
+			if (!IsSerialize) Id = Core.IdManager.GetUID();
+			InstanceId = Core.IdManager.GetId();
 			Core.RuleManager.SupportNodeRule(Type);
 		}
 	}
@@ -90,9 +90,12 @@ namespace WorldTree
 			}
 		}
 
+
+		public virtual long Id { get; set; }
+
 		[TreeDataIgnore]
 		[TreePackIgnore]
-		public long Id { get; set; }
+		public long InstanceId { get; set; }
 
 		[TreeDataIgnore]
 		[TreePackIgnore]
@@ -223,8 +226,8 @@ namespace WorldTree
 		/// </summary>
 		public virtual void OnCreate()
 		{
-			Id = Core.IdManager.GetId();
-			if (this is INodeData nodeData) nodeData.UID = Core.IdManager.GetUID();
+			InstanceId = Core.IdManager.GetId();
+			Id = InstanceId;
 			Core.RuleManager?.SupportNodeRule(Type);
 		}
 

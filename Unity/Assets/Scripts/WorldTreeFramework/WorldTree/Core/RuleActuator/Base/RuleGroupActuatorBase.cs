@@ -60,13 +60,14 @@ namespace WorldTree
 		{
 			//节点存在则不允许重复添加。
 			//如果节点是意外回收了，那么Id是递增的不再出现，也就是那个回收的Id已经被永久销毁了，同样禁止添加。
-			if (nodeIdHash != null && nodeIdHash.Contains(node.Id)) return false;
+			if (nodeIdHash != null && nodeIdHash.Contains(node.InstanceId)) return false;
 			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(node.Type, out RuleList ruleList)) return false;
 			nodeIdHash ??= this.AddChild(out nodeIdHash);
 			nodeRuleQueue ??= this.AddChild(out nodeRuleQueue);
 			NodeRef<INode> nodeRef = new(node);
+			nodeRef.Core = null;
 			nodeRuleQueue.Enqueue((nodeRef, ruleList));
-			nodeIdHash.Add(node.Id);
+			nodeIdHash.Add(node.InstanceId);
 			return true;
 		}
 
@@ -110,7 +111,7 @@ namespace WorldTree
 			{
 				if (nodeRuleQueue != null && nodeRuleQueue.TryPeek(out (NodeRef<INode>, RuleList) valueRef))
 				{
-					long id = valueRef.Item1.NodeId;
+					long id = valueRef.Item1.InstanceId;
 
 					//假如id被回收了
 					if (removeIdDict != null && removeIdDict.TryGetValue(id, out int count))
@@ -163,7 +164,7 @@ namespace WorldTree
 			{
 				while (true)
 				{
-					long id = nodeRuleTuple.Item1.NodeId;
+					long id = nodeRuleTuple.Item1.InstanceId;
 
 					//假如id被主动移除了
 					if (removeIdDict != null && removeIdDict.TryGetValue(id, out int count))

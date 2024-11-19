@@ -62,7 +62,7 @@ namespace WorldTree
 
 		public bool ContainsId(long id) => keyDict.ContainsKey(id);
 
-		public bool TryAddNode<N>(K key, N node) where N : class, INode => nodeDict.TryAdd(key, node) && keyDict.TryAdd(node.Id, key);
+		public virtual bool TryAddNode<N>(K key, N node) where N : class, INode => nodeDict.TryAdd(key, node) && keyDict.TryAdd(node.Id, key);
 
 		public bool TryGetNodeKey(long nodeId, out K key) => keyDict.TryGetValue(nodeId, out key);
 

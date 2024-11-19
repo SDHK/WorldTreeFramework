@@ -23,9 +23,12 @@ namespace WorldTree
 			self.treeData.Name = "测试123";
 			self.treeData.Age = 18789;
 
+
 			self.treeData.AddChild(out TreeDataNodeDataTest2 child);
 			child.Name = "测试4658";
 			child.Age = 788723;
+
+			self.treeData.nodeRef = child;
 
 			byte[] bytes = TreeDataHelper.SerializeNode(self.treeData);
 			string filePath = "C:\\Users\\admin\\Desktop\\新建文件夹\\TreeDataTest.bytes";
@@ -36,13 +39,17 @@ namespace WorldTree
 			File.WriteAllBytes(filePath, bytes);
 			self.Log($"序列化保存！！!");
 
-			self.treeData.Dispose();
+
 			self.treeData = null;
 
 
 			//读取桌面文件
 			bytes = File.ReadAllBytes(filePath);
-			TreeDataHelper.DeseralizeNode(self, bytes).TryGraftSelfToTree(self);
+			TreeDataHelper.DeseralizeNode(self, bytes).TryGraftSelfToTree(self, out INode node);
+			self.treeData = node as TreeDataNodeDataTest1;
+
+			self.Log($"反序列化引用还原测试！！！{self.treeData.nodeRef} ： {self.treeData.nodeRef.Value.Age}");
+
 			self.Log($"反序列化！！!!?{bytes.Length}");
 			self.Log(NodeRule.ToStringDrawTree(self));
 		};
@@ -83,7 +90,7 @@ namespace WorldTree
 
 
 			TreeSpade treeSpade = TreeDataHelper.DeseralizeNode(self, bytes);
-			treeSpade.TryGraftSelfToTree(self);
+			treeSpade.TryGraftSelfToTree(self,out INode node);
 			self.TryGetComponent(out AData data2);
 			string logText = $"\n反序列化{data2.AInt} \n";
 

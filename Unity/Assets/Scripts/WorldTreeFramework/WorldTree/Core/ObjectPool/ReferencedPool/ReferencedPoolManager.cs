@@ -22,7 +22,13 @@ namespace WorldTree
 		/// <summary>
 		/// 全部节点
 		/// </summary>
-		public UnitDictionary<long, INode> allNodeDict = new UnitDictionary<long, INode>();
+		public UnitDictionary<long, INode> AllNodeDict = new UnitDictionary<long, INode>();
+
+		/// <summary>
+		/// 全部节点数据
+		/// </summary>
+		public UnitDictionary<long, INodeData> AllNodeDataDict = new UnitDictionary<long, INodeData>();
+
 		/// <summary>
 		/// 分类节点
 		/// </summary>
@@ -31,9 +37,9 @@ namespace WorldTree
 		public override void OnDispose()
 		{
 			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
-			allNodeDict.Clear();
+			AllNodeDict.Clear();
 			poolDict.Clear();
-			allNodeDict = null;
+			AllNodeDict = null;
 			poolDict = null;
 			IsDisposed = true;
 		}
@@ -41,28 +47,35 @@ namespace WorldTree
 		/// <summary>
 		/// 添加节点对象
 		/// </summary>
-		public  bool TryAdd(INode node)
+		public bool TryAdd(INode node)
 		{
-			allNodeDict.TryAdd(node.Id, node);
-			return GetPool(node.Type).TryAdd(node.Id, node);
+			AllNodeDict.TryAdd(node.InstanceId, node);
+			if (node is INodeData nodeData)
+			{
+
+				AllNodeDataDict.TryAdd(node.Id, nodeData);
+			}
+			return GetPool(node.Type).TryAdd(node.InstanceId, node);
 		}
 
 		/// <summary>
 		/// 移除节点对象
 		/// </summary>
-		public  void Remove( INode node)
+		public void Remove(INode node)
 		{
-			allNodeDict.Remove(node.Id);
+			AllNodeDict.Remove(node.InstanceId);
+			if (node is INodeData)
+				AllNodeDataDict.Remove(node.Id);
 			if (TryGetPool(node.Type, out ReferencedPool pool))
 			{
-				pool.Remove(node.Id);
+				pool.Remove(node.InstanceId);
 			}
 		}
 
 		/// <summary>
 		/// 获取池
 		/// </summary>
-		public  ReferencedPool GetPool(long type)
+		public ReferencedPool GetPool(long type)
 		{
 			if (!poolDict.TryGetValue(type, out ReferencedPool pool))
 			{
@@ -77,7 +90,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取池
 		/// </summary>
-		public  bool TryGetPool( long type, out ReferencedPool pool)
+		public bool TryGetPool(long type, out ReferencedPool pool)
 		{
 			return poolDict.TryGetValue(type, out pool);
 		}

@@ -54,20 +54,20 @@ namespace WorldTree
 		/// </summary>
 		public bool TryEnqueue(INode node)
 		{
-			if (nodeIdHash != null && nodeIdHash.Contains(node.Id)) return false;
+			if (nodeIdHash != null && nodeIdHash.Contains(node.InstanceId)) return false;
 			nodeQueue ??= this.AddChild(out nodeQueue);
 			nodeIdHash ??= this.AddChild(out nodeIdHash);
 			NodeRef<INode> nodeRef = new(node);
 
 			this.nodeQueue.Enqueue(nodeRef);
-			this.nodeIdHash.Add(node.Id);
+			this.nodeIdHash.Add(node.InstanceId);
 			return true;
 		}
 
 		/// <summary>
 		/// 节点移除
 		/// </summary>
-		public void Remove(INode node) => Remove(node.Id);
+		public void Remove(INode node) => Remove(node.InstanceId);
 
 		/// <summary>
 		/// 节点移除
@@ -117,7 +117,7 @@ namespace WorldTree
 				//尝试获取一个id
 				if (nodeQueue != null && nodeQueue.TryPeek(out NodeRef<INode> nodeRef))
 				{
-					long id = ((NodeRef<INode>)null).NodeId;
+					long id = ((NodeRef<INode>)null).InstanceId;
 					//假如id被回收了
 					if (removeIdDict != null && removeIdDict.TryGetValue(id, out int count))
 					{
@@ -138,8 +138,8 @@ namespace WorldTree
 						node = ((NodeRef<INode>)null).Value;
 						if (node == null)//节点意外回收
 						{
-							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
-							nodeIdHash.Remove(id);
+							//字典移除节点InstanceId，节点回收后id改变了，而id是递增，绝对不会再出现的。
+							nodeIdHash.Remove(InstanceId);
 							if (traversalCount != 0) traversalCount--; //遍历数抵消
 							nodeQueue.Dequeue();//移除
 						}
@@ -173,11 +173,11 @@ namespace WorldTree
 			{
 				while (true)
 				{
-					long id = nodeRef.NodeId;
+					long id = nodeRef.InstanceId;
 					//假如id被主动移除了
 					if (removeIdDict != null && removeIdDict.TryGetValue(id, out int count))
 					{
-						id = nodeRef.NodeId;
+						id = nodeRef.InstanceId;
 
 						removeIdDict[id] = --count;//回收次数抵消
 						if (count == 0) removeIdDict.Remove(id);//次数为0时删除id
@@ -202,7 +202,7 @@ namespace WorldTree
 						node = nodeRef.Value;
 						if (node == null)//节点意外回收
 						{
-							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
+							//字典移除节点InstanceId，节点回收后id改变了，而id是递增，绝对不会再出现的。
 							nodeIdHash.Remove(id);
 
 							if (traversalCount != 0) traversalCount--;

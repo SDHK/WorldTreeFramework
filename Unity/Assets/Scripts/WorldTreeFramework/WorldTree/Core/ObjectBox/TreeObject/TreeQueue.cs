@@ -14,10 +14,9 @@ namespace WorldTree
 	/// <summary>
 	/// 树泛型队列
 	/// </summary>
-	public partial class TreeQueue<T> : Queue<T>, INodeData, INode, ChildOf<INode>, ComponentOf<INode>
+	public partial class TreeQueue<T> : Queue<T>, INode, ChildOf<INode>, ComponentOf<INode>
 		, AsAwake
 	{
-		public long UID { get; set; }
 	}
 
 	public static class TreeQueueRule

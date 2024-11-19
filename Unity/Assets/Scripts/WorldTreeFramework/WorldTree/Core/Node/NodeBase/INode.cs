@@ -57,14 +57,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树数据节点接口
 	/// </summary>
-	public partial interface INodeData : INode
-	{
-		/// <summary>
-		/// 数据id
-		/// </summary>
-		/// <remarks>雪花id: 雪花算法生成的唯一id</remarks>
-		public long UID { get; set; }
-	}
+	public partial interface INodeData : INode { }
 
 	/// <summary>
 	/// 世界树节点接口
@@ -86,10 +79,16 @@ namespace WorldTree
 		, AsRule<Remove>
 	{
 		/// <summary>
-		/// 节点ID
+		/// 节点ID 、数据ID 
+		/// </summary>
+		/// <remarks>普通类型为实例ID、数据类型则为雪花ID</remarks>
+		public long Id { get; set; }
+
+		/// <summary>
+		/// 实例Id
 		/// </summary>
 		/// <remarks>递增ID，只在每个框架实例内唯一</remarks>
-		public long Id { get; set; }
+		public long InstanceId { get; set; }
 
 		/// <summary>
 		/// 树根节点

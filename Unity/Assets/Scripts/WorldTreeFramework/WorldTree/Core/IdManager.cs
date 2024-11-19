@@ -68,8 +68,6 @@ namespace WorldTree
 
 			//14位为16384个进程
 			//30位时间为34年,20位偏移支持每秒并发1048576个UID（100万）
-			//31位时间为68年,19位偏移支持每秒并发524288个UID（50万）
-			//32位时间为136年,18位偏移支持每秒并发262144个UID（20万）
 
 			//雪花算法 生成UID ：14位进程ID  30位秒级时间戳 20位时间偏移 三部分组成
 			var uid = (ProcessId << 50) | (currentUIDTime << 20) | uIDTimeOffset;
@@ -77,9 +75,13 @@ namespace WorldTree
 			return uid;
 		}
 
+		//31位时间为68年,19位偏移支持每秒并发524288个UID（50万）
+		//32位时间为136年,18位偏移支持每秒并发262144个UID（20万）
+
 		public override void OnCreate()
 		{
-			Id = GetId();
+			InstanceId = GetId();
+			Id = InstanceId;
 		}
 
 		/// <summary>
