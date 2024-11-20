@@ -26,7 +26,6 @@ namespace WorldTree.TreeDataFormatters
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
 				if (self.TryReadArrayHead(typeof(ValueTuple<T>), ref value, 1)) return;
-
 				self.ReadUnmanaged(out int _);
 				ValueTuple<T> obj = (ValueTuple<T>)value;
 				self.ReadValue(ref obj.Item1);

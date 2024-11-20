@@ -44,9 +44,9 @@ namespace WorldTree
         /// </summary>
         public double Result = 0;
 
-        public override string ToString()
-        {
-            return $"{this.GetType().Name}\tDelta:[{Delta}]\tBias:[{Bias}]\tResult:[{Result}]";
-        }
+        //public override string ToString()
+        //{
+        //    return $"{this.GetType().Name}\tDelta:[{Delta}]\tBias:[{Bias}]\tResult:[{Result}]";
+        //}
     }
 }

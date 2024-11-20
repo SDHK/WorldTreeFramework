@@ -38,10 +38,10 @@ namespace WorldTree
         /// </summary>
         public double Weight = 0;
 
-        public override string ToString()
-        {
-            return $"{this.GetType().Name}\tweight:[{Weight}]";
-        }
+        //public override string ToString()
+        //{
+        //    return $"{this.GetType().Name}\tweight:[{Weight}]";
+        //}
     }
 
 }

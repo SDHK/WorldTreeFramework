@@ -806,6 +806,10 @@
       <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
       <Name>MemoryPack</Name>
     </ProjectReference>
+    <ProjectReference Include="WorldTree.Node.csproj">
+      <Project>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</Project>
+      <Name>WorldTree.Node</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

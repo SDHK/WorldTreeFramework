@@ -46,7 +46,7 @@ namespace WorldTree
 				//读取桌面文件
 				string filePath = "C:\\Users\\SDHK\\Desktop\\TreeDataTest.bytes";
 				byte[] bytes = File.ReadAllBytes(filePath);
-				TreeDataHelper.DeseralizeNode(self, bytes).TryGraftSelfToTree(self,out _);
+				TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, bytes).SetParent(self);
 				self.Log($"反序列化！！!{bytes.Length}");
 			}
 		};
