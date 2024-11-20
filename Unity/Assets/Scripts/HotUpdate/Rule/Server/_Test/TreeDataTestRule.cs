@@ -39,14 +39,16 @@ namespace WorldTree
 			File.WriteAllBytes(filePath, bytes);
 			self.Log($"序列化保存！！!");
 
-
+			self.treeData.Dispose();
 			self.treeData = null;
 
 
 			//读取桌面文件
 			bytes = File.ReadAllBytes(filePath);
-			TreeDataHelper.DeseralizeNode(self, bytes).TryGraftSelfToTree(self, out INode node);
-			self.treeData = node as TreeDataNodeDataTest1;
+			TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, bytes);
+			node.SetParent(self);
+
+			self.treeData = node;
 
 			self.Log($"反序列化引用还原测试！！！{self.treeData.nodeRef} ： {self.treeData.nodeRef.Value.Age}");
 
@@ -89,8 +91,10 @@ namespace WorldTree
 			self.Log($"序列化字节长度{bytes.Length}\n");
 
 
-			TreeSpade treeSpade = TreeDataHelper.DeseralizeNode(self, bytes);
-			treeSpade.TryGraftSelfToTree(self,out INode node);
+			TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, bytes);
+			self.treeData = node;
+			node.SetParent(self);
+
 			self.TryGetComponent(out AData data2);
 			string logText = $"\n反序列化{data2.AInt} \n";
 

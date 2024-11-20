@@ -29,6 +29,16 @@ namespace WorldTree
 		public static T As<T>(this INode self) where T : class, INode => self as T;
 
 		/// <summary>
+		/// 设置父节点，指定子节点分支裁剪和嫁接
+		/// </summary>
+		public static void SetParent<N, P>(this N self, P parent)
+			where N : class, INode, ChildOf<P>
+			where P : class, INode, AsChildBranch
+		{
+			self.CutSelf()?.TryGraftSelfToTree<ChildBranch, long>(self.Id, parent);
+		}
+
+		/// <summary>
 		/// 父节点转换为
 		/// </summary>
 		public static T ParentTo<T>(this INode self) where T : class, INode => self.Parent as T;
@@ -73,6 +83,8 @@ namespace WorldTree
 			}
 			return parent != null;
 		}
+
+
 
 		/// <summary>
 		/// 返回用字符串绘制的树

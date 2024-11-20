@@ -27,14 +27,11 @@ namespace WorldTree
 
 			self.AddTemp(out TreeDataByteSequence sequence);
 			if (self?.Parent == null) return null;
-			TreeSpade treeSpade = null;
 			if (NodeBranchHelper.TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
 			{
-				treeSpade = branch.SpadeNode(self.Id);
+				branch.RemoveNode(self.Id);
 			}
-			if (treeSpade == null) return null;
-			sequence.Serialize(treeSpade);
-			treeSpade.Dispose();
+			sequence.Serialize(self);
 			byte[] bytes = sequence.ToBytes();
 			sequence.Dispose();
 			return bytes;
@@ -43,13 +40,14 @@ namespace WorldTree
 		/// <summary>
 		/// 反序列化节点
 		/// </summary>
-		public static TreeSpade DeseralizeNode(INode self, byte[] bytes)
+		public static N DeseralizeNode<N>(INode self, byte[] bytes)
+			where N : class, INode
 		{
 			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
-			TreeSpade treeSpade = null;
+			INode treeSpade = null;
 			sequence.Deserialize(ref treeSpade);
 			sequence.Dispose();
-			return treeSpade;
+			return treeSpade as N;
 		}
 	}
 

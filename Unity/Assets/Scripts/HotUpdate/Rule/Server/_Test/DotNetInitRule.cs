@@ -40,6 +40,9 @@ namespace WorldTree
 		{
 			//self.AddComponent(out SerializeTest _);
 			self.AddComponent(out TreeDataTest _);
+
+
+
 		};
 
 		private static OnUpdateTime<DotNetInit> UpdateTime = (self, timeSpan) =>

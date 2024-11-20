@@ -57,8 +57,7 @@ namespace WorldTree
 			if (nodeIdHash != null && nodeIdHash.Contains(node.InstanceId)) return false;
 			nodeQueue ??= this.AddChild(out nodeQueue);
 			nodeIdHash ??= this.AddChild(out nodeIdHash);
-			NodeRef<INode> nodeRef = new(node);
-
+			NodeRef<INode> nodeRef = new(node, false);
 			this.nodeQueue.Enqueue(nodeRef);
 			this.nodeIdHash.Add(node.InstanceId);
 			return true;

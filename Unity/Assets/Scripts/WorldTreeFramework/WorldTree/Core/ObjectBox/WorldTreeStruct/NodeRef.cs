@@ -103,7 +103,7 @@ namespace WorldTree
 			}
 		}
 
-		public NodeRef(N node)
+		public NodeRef(N node, bool isDataRef = true)
 		{
 			if (node is null)
 			{
@@ -113,7 +113,7 @@ namespace WorldTree
 				Core = null;
 				return;
 			}
-			Core = node.Core;
+			Core = isDataRef ? node.Core : null;
 			Id = node is INodeData ? node.Id : 0;
 			InstanceId = node.InstanceId;
 			this.node = node;

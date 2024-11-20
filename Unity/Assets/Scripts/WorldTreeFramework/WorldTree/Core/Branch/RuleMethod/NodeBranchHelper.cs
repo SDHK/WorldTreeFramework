@@ -64,34 +64,6 @@ namespace WorldTree
 			}
 		}
 
-
-		/// <summary>
-		/// 移植分支中的节点
-		/// </summary>
-		public static TreeSpade SpadeNode(INode self)
-		{
-			if (self?.Parent == null) return null;
-			TreeSpade treeSpade = null;
-			if (TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
-			{
-				treeSpade = branch.SpadeNode(self.Id);
-				if (branch.Count == 0)
-				{
-					//移除分支
-					self.BranchDict.Remove(self.BranchType);
-					if (self.BranchDict.Count == 0)
-					{
-						self.BranchDict.Dispose();
-						self.BranchDict = null;
-					}
-
-					//释放分支
-					branch.Dispose();
-				}
-			}
-			return treeSpade;
-		}
-
 		/// <summary>
 		/// 释放分支的所有节点
 		/// </summary>

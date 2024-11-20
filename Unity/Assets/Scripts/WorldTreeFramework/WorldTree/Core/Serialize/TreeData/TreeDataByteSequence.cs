@@ -8,6 +8,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree
@@ -167,6 +168,16 @@ namespace WorldTree
 		/// </summary>
 		public UnitDictionary<long, string> codeToTypeNameDict;
 
+		/// <summary>
+		/// 递归层级
+		/// </summary>
+		public int Layer;
+
+		/// <summary>
+		/// 最大递归层级
+		/// </summary>
+		public int LayerMax = 1000;
+
 
 		#region 映射表
 
@@ -219,6 +230,7 @@ namespace WorldTree
 		/// </summary>
 		public void Serialize<T>(in T value)
 		{
+			Layer = 0;
 			//写入数据
 			WriteValue(value);
 			//记录映射表起始位置
@@ -240,6 +252,7 @@ namespace WorldTree
 		/// </summary>
 		public unsafe void Deserialize<T>(ref T value)
 		{
+			Layer = 0;
 			//读取指针定位到最后
 			readPoint = length;
 			readBytePoint = 0;
@@ -273,18 +286,9 @@ namespace WorldTree
 				this.Log($"Type: {item.Value}");
 			}
 
-
 			//读取数据
 			ReadValue(ref value);
 		}
-
-		/*
-		 	this.Log($"TypeCount: {codeToTypeNameDict.Count}");
-			foreach (var item in this.codeToTypeNameDict)
-			{
-				this.Log($"Type: {item.Value}");
-			}
-		 */
 
 		#region 写入
 
@@ -350,6 +354,12 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void WriteValue<T>(in T value, int nameCode = -1)
 		{
+			Layer++;
+			if (Layer > LayerMax)
+			{
+				this.LogError("序列化超出最大层级");
+				return;
+			}
 			Type originalType = typeof(T);
 			Type type = value?.GetType();
 			//如果类型为空，或者类型和原始类型一致，则标记为0，不写入类型。
@@ -379,6 +389,7 @@ namespace WorldTree
 				this.WriteType(typeof(object), false);
 				this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
 			}
+			Layer--;
 		}
 
 
@@ -435,6 +446,12 @@ namespace WorldTree
 		/// </summary>
 		public void ReadValue(Type type, ref object value, int nameCode = -1)
 		{
+			Layer++;
+			if (Layer > LayerMax)
+			{
+				this.LogError("反序列化超出最大层级");
+				return;
+			}
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 
@@ -450,6 +467,7 @@ namespace WorldTree
 				//不支持的类型，跳跃数据
 				SkipData();
 			}
+			Layer--;
 		}
 
 		/// <summary>

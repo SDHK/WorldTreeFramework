@@ -29,6 +29,11 @@ namespace WorldTree
 
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
 				self.AddComponent(out TreeDataTest _);
+
+				//for (int i = 0; i < 100000; i++)
+				//{
+				//	self.AddChild(out TestNode _);
+				//}
 			}
 		};
 

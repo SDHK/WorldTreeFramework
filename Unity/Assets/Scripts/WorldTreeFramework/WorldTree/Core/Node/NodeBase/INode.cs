@@ -105,7 +105,7 @@ namespace WorldTree
 		public INode Domain { get; set; }
 
 		/// <summary>
-		/// 父节点
+		/// 父节点，禁止修改，只能通过方法设置
 		/// </summary>
 		[TreeDataIgnore]
 		public INode Parent { get; set; }
@@ -239,7 +239,7 @@ namespace WorldTree
 		/// <summary>
 		/// 从树上将自己裁剪下来
 		/// </summary>
-		public TreeSpade CutSelf();
+		public INode CutSelf();
 
 		/// <summary>
 		/// 从树上将自己裁剪下来时的处理

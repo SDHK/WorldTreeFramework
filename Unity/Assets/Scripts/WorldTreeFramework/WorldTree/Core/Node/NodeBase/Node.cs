@@ -448,11 +448,13 @@ namespace WorldTree
 
 		#region 裁剪
 
-		public virtual TreeSpade CutSelf()
+		public virtual INode CutSelf()
 		{
 			if (IsDisposed) return null; //是否已经回收
+			if (Parent == null) return this;
 			NodeBranchTraversalHelper.TraversalPostorder(this, current => current.OnCutSelf());
-			return NodeBranchHelper.SpadeNode(this);//从父节点分支移除
+			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
+			return this;
 		}
 
 		public virtual void OnCutSelf()

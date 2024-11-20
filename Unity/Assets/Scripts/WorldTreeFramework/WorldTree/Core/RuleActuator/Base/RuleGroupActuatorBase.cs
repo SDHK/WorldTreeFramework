@@ -64,8 +64,7 @@ namespace WorldTree
 			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(node.Type, out RuleList ruleList)) return false;
 			nodeIdHash ??= this.AddChild(out nodeIdHash);
 			nodeRuleQueue ??= this.AddChild(out nodeRuleQueue);
-			NodeRef<INode> nodeRef = new(node);
-			nodeRef.Core = null;
+			NodeRef<INode> nodeRef = new(node, false);
 			nodeRuleQueue.Enqueue((nodeRef, ruleList));
 			nodeIdHash.Add(node.InstanceId);
 			return true;

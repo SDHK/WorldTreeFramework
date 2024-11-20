@@ -18,17 +18,31 @@ using UnityEngine;
 
 namespace WorldTree
 {
+
+	/// <summary>
+	/// 测试节点
+	/// </summary>
+	public class TestNode : Node, ChildOf<InitialDomain>
+		, AsAwake
+	{
+		/// <summary>
+		/// 测试数据
+		/// </summary>
+		public Color color = Color.red;
+	}
+
 	/// <summary>
 	/// 初始域
 	/// </summary>
 	public class InitialDomain : Node, ComponentOf<INode>
 		, AsComponentBranch
+		, AsChildBranch
 		, AsAwake
 		, AsFixedUpdateTime
 		, AsLateUpdateTime
 		, AsGuiUpdateTime
 		, AsRule<IRule>
-		, AsCurveEvaluate 
+		, AsCurveEvaluate
 	{
 		/// <summary>
 		/// 测试动画曲线
