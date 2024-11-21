@@ -29,6 +29,10 @@ namespace WorldTree
 				{
 					self.Log($"{item.Id} {item.Name}");
 				}
+
+				//删除数据
+				liteCollection.Delete(3);
+
 				self.db.Dispose();
 			}
 		}

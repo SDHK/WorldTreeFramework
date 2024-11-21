@@ -42,6 +42,7 @@ namespace WorldTree
 		{
 			protected override void Execute(GlobalRuleActuator<R> self)
 			{
+				self.GetBaseRule<GlobalRuleActuator<R>, RuleGroupActuatorBase, Add>().Send(self);
 				self.ruleGroupDict = self.Core.RuleManager.GetOrNewRuleGroup<R>();
 				self.LoadGlobalNode();
 			}

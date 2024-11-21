@@ -8,10 +8,23 @@
 */
 namespace WorldTree
 {
+
+	/// <summary>
+	/// 数据集合
+	/// </summary>
+	public interface IDataCollection
+	{ 
+	
+	
+	}
+
+
 	/// <summary>
 	/// 数据库管理器
 	/// </summary>
-	public class DataBaseManager
+	public class DataBaseManager : Node
+		, ComponentOf<WorldTreeRoot>
+		, AsAwake
 	{
 	}
 }

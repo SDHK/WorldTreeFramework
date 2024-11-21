@@ -33,3 +33,4 @@ E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\Core.dll
 E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\refint\Core.dll
 E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\Core.pdb
 E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\ref\Core.dll
+E:\Project\GitHub\WorldTree\DotNet\Core\obj\Debug\DotNet.Core.csproj.AssemblyReference.cache

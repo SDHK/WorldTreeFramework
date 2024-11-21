@@ -11,219 +11,209 @@
 * 如果移除了节点，那么就会被抵消跳过，不会执行。
 * 如果节点被意外回收了，那么也会被跳过，不会执行。
 * 
-* 后续修改为类似委托的
 
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
+
 	/// <summary>
 	/// 法则执行器基类
 	/// </summary>
 	public abstract class RuleActuatorBase : Node, IRuleListActuator, IRuleActuatorEnumerable
 		, AsChildBranch
 	{
-		/// <summary>
-		/// 节点法则队列
-		/// </summary>
-		/// <remarks>高速遍历执行的队列</remarks>
-		public TreeQueue<ValueTuple<NodeRef<INode>, RuleList>> nodeRuleQueue;
 
 		/// <summary>
-		/// 节点InstanceId字典
+		/// 节点列表
 		/// </summary>
-		/// <remarks>确保同一时刻不允许有两个相同的节点</remarks>
-		public TreeHashSet<long> nodeIdHash;
+		public UnitList<NodeRef<INode>> nodeList;
 
 		/// <summary>
-		/// 节点id被移除的次数
+		/// 节点下一个列表
 		/// </summary>
-		/// <remarks>队列是无法移除任意位置的，所以需要记录，并在获取时抵消</remarks>
-		public TreeDictionary<long, int> removeIdDict;
+		public UnitList<NodeRef<INode>> nodeNextList;
 
 		/// <summary>
-		/// 动态的遍历数量
+		/// 委托列表
 		/// </summary>
-		/// <remarks>当遍历时移除后，在发生抵消的时候减少数量</remarks>
-		private int traversalCount;
+		public UnitList<RuleList> delegateList;
 
-		public int TraversalCount => traversalCount;
+		/// <summary>
+		/// 委托下一个列表
+		/// </summary>
+		public UnitList<RuleList> delegateNextList;
 
+		/// <summary>
+		/// 节点Id索引字典
+		/// </summary>
+		public UnitDictionary<long, int> IdIndexDict;
 
-		public int RefreshTraversalCount() => traversalCount = nodeRuleQueue is null ? 0 : nodeRuleQueue.Count;
+		/// <summary>
+		/// 节点Id下一个索引字典
+		/// </summary>
+		public UnitDictionary<long, int> IdIndexNextDict;
+
+		/// <summary>
+		/// 遍历下标
+		/// </summary>
+		public int nodeIndex;
+
+		public int TraversalCount => nodeList.Count;
 
 		public void Clear()
 		{
-			nodeRuleQueue?.Clear();
-			nodeIdHash?.Clear();
-			removeIdDict?.Clear();
-			traversalCount = 0;
+			nodeList?.Clear();
+			nodeNextList?.Clear();
+			delegateList?.Clear();
+			delegateNextList?.Clear();
+			IdIndexDict?.Clear();
+			IdIndexNextDict?.Clear();
+			nodeIndex = 0;
 		}
 
-		public void Remove(long id)
+		public int RefreshTraversalCount()
 		{
-			if (nodeIdHash != null && nodeIdHash.Contains(id))
-			{
-				nodeIdHash.Remove(id);
-
-				//累计强制移除的节点id
-				removeIdDict ??= this.AddChild(out removeIdDict);
-				if (removeIdDict.TryGetValue(id, out var count))
-				{
-					removeIdDict[id] = count + 1;
-				}
-				else
-				{
-					removeIdDict.Add(id, 1);
-				}
-			}
+			//交换列表
+			nodeIndex = 0;
+			(nodeList, nodeNextList) = (nodeNextList, nodeList);
+			(delegateList, delegateNextList) = (delegateNextList, delegateList);
+			(IdIndexDict, IdIndexNextDict) = (IdIndexNextDict, IdIndexDict);
+			nodeNextList.Clear();
+			delegateNextList.Clear();
+			IdIndexNextDict.Clear();
+			return nodeList.Count;
 		}
 
-		public void Remove(INode node) => Remove(node.InstanceId);
 
-		public bool TryAdd(INode node, RuleList ruleList)
+		public bool TryAdd(INode node, RuleList func)
 		{
-			//节点存在则不允许重复添加。
-			//如果节点是意外回收了，那么Id是递增的不再出现，也就是那个回收的Id已经被永久销毁了，同样禁止添加。
-			if (nodeIdHash != null && nodeIdHash.Contains(node.InstanceId)) return false;
-			nodeIdHash ??= this.AddChild(out nodeIdHash);
-			nodeRuleQueue ??= this.AddChild(out nodeRuleQueue);
-			NodeRef<INode> nodeRef = new(node, false);
-			nodeRuleQueue.Enqueue((nodeRef, ruleList));
-			nodeIdHash.Add(node.InstanceId);
+			if (IdIndexDict != null && IdIndexDict.ContainsKey(node.InstanceId)) return false;
+			if (IdIndexNextDict != null && IdIndexNextDict.ContainsKey(node.InstanceId)) return false;
+			nodeNextList.Add(new NodeRef<INode>(node, false));
+			delegateNextList.Add(func);
+			IdIndexNextDict.Add(node.InstanceId, nodeNextList.Count - 1);
 			return true;
 		}
 
-		/// <summary>
-		/// 尝试获取队顶
-		/// </summary>
-		public bool TryPeek(out INode node, out RuleList ruleList)
+		public bool TryDequeue(out INode node, out RuleList func)
 		{
-			do
+			NodeRef<INode> nodeRef;
+			while (nodeList.Count > nodeIndex)
 			{
-				if (nodeRuleQueue != null && nodeRuleQueue.TryPeek(out (NodeRef<INode>, RuleList) valueRef))
+				nodeRef = nodeList[nodeIndex];
+				node = nodeRef.Value;
+				if (node == null) // 节点意外回收
 				{
-					long id = valueRef.Item1.InstanceId;
-
-					//假如id被回收了
-					if (removeIdDict != null && removeIdDict.TryGetValue(id, out int count))
-					{
-						//回收次数抵消
-						removeIdDict[id] = --count;
-						if (count == 0) removeIdDict.Remove(id);// 次数为0时删除id
-						if (removeIdDict.Count == 0)//假如字典空了,则释放
-						{
-							removeIdDict.Dispose();
-							removeIdDict = null;
-						}
-
-						if (traversalCount > 0) traversalCount--;
-						nodeRuleQueue.Dequeue();//移除
-					}
-					else
-					{
-						node = valueRef.Item1.Value;
-						if (node == null)//节点意外回收
-						{
-							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
-							nodeIdHash.Remove(id);
-							if (traversalCount != 0) traversalCount--; //遍历数抵消
-							nodeRuleQueue.Dequeue();//移除
-						}
-						else
-						{
-							ruleList = valueRef.Item2;
-							return true;
-						}
-					}
+					nodeIndex++;
 				}
-				else
+				else // 节点存在
 				{
-					node = null;
-					ruleList = null;
-					return false;
-				}
-			} while (true);
-		}
-
-		/// <summary>
-		/// 尝试出列
-		/// </summary>
-		public bool TryDequeue(out INode node, out RuleList ruleList)
-		{
-			//从队列里拿到id
-			if (nodeRuleQueue.TryDequeue(out (NodeRef<INode>, RuleList) nodeRuleTuple))
-			{
-				while (true)
-				{
-					long id = nodeRuleTuple.Item1.InstanceId;
-
-					//假如id被主动移除了
-					if (removeIdDict != null && removeIdDict.TryGetValue(id, out int count))
-					{
-						removeIdDict[id] = --count;//回收次数抵消
-						if (count == 0) removeIdDict.Remove(id);//次数为0时删除id
-						if (removeIdDict.Count == 0)//假如字典空了,则释放
-						{
-							removeIdDict.Dispose();
-							removeIdDict = null;
-						}
-
-						if (traversalCount != 0) traversalCount--; //遍历数抵消
-
-						//获取下一个id,假如队列空了,则直接返回退出
-						if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple))
-						{
-							node = null;
-							ruleList = null;
-							return false;
-						}
-					}
-					else
-					{
-						node = nodeRuleTuple.Item1.Value;
-
-						if (node == null)//节点意外回收
-						{
-							//字典移除节点Id，节点回收后id改变了，而id是递增，绝对不会再出现的。
-							nodeIdHash.Remove(id);
-
-							if (traversalCount != 0) traversalCount--; //遍历数抵消
-
-							//获取下一个id,假如队列空了,则直接返回退出
-							if (!nodeRuleQueue.TryDequeue(out nodeRuleTuple))
-							{
-								ruleList = null;
-								return false;
-							}
-						}
-						else//节点存在
-						{
-							nodeRuleQueue.Enqueue(nodeRuleTuple);//塞回队列用于下次遍历
-							ruleList = nodeRuleTuple.Item2;
-							return true;
-						}
-					}
+					func = delegateList[nodeIndex];
+					nodeIndex++;
+					nodeNextList.Add(nodeRef); // 塞回队列用于下次遍历
+					delegateNextList.Add(func);
+					IdIndexDict.Remove(node.InstanceId);//索引字典移动
+					IdIndexNextDict.Add(node.InstanceId, nodeNextList.Count - 1);
+					return true;
 				}
 			}
 			node = null;
-			ruleList = null;
+			func = null;
 			return false;
+		}
+
+		public bool TryPeek(out INode node, out RuleList func)
+		{
+			while (nodeList.Count > nodeIndex)
+			{
+				node = nodeList[nodeIndex].Value;
+				if (node == null) // 节点意外回收
+				{
+					nodeIndex++;
+				}
+				else // 节点存在
+				{
+					func = delegateList[nodeIndex];
+					return true;
+				}
+			}
+			node = null;
+			func = null;
+			return false;
+		}
+
+
+		public void Remove(INode node) => Remove(node.InstanceId);
+
+
+
+		public void Remove(long id)
+		{
+			//下一次遍历列表
+			if (IdIndexNextDict.TryGetValue(id, out int index))
+			{
+				//不是遍历列表，直接快速移除
+				RemoveAtSwapBack(nodeNextList, index);
+				RemoveAtSwapBack(delegateNextList, index);
+				IdIndexNextDict.Remove(id);
+			}
+			//正在遍历的列表
+			else if (IdIndexDict.TryGetValue(id, out index))
+			{
+				IdIndexDict.Remove(id);
+				nodeList[index].Clear();//清除引用，让其变成意外回收
+			}
+		}
+
+		/// <summary>
+		/// 移动到最后并删除
+		/// </summary>
+		public void RemoveAtSwapBack<T>(List<T> list, int index)
+		{
+			int tail = list.Count - 1;
+			if (index != tail)
+				list[index] = list[tail];
+			list.RemoveAt(tail);
 		}
 	}
 
 	public static class RuleActuatorBaseRule
 	{
+		private class Add : AddRule<RuleActuatorBase>
+		{
+			protected override void Execute(RuleActuatorBase self)
+			{
+				self.Core.PoolGetUnit(out self.nodeList);
+				self.Core.PoolGetUnit(out self.nodeNextList);
+				self.Core.PoolGetUnit(out self.delegateList);
+				self.Core.PoolGetUnit(out self.delegateNextList);
+				self.Core.PoolGetUnit(out self.IdIndexDict);
+				self.Core.PoolGetUnit(out self.IdIndexNextDict);
+			}
+		}
+
+
 		private class RemoveRule : RemoveRule<RuleActuatorBase>
 		{
 			protected override void Execute(RuleActuatorBase self)
 			{
-				self.Clear();
-				self.nodeRuleQueue = null;
-				self.removeIdDict = null;
-				self.nodeIdHash = null;
+				self.nodeIndex = 0;
+				self.nodeList.Dispose();
+				self.nodeNextList.Dispose();
+				self.delegateList.Dispose();
+				self.delegateNextList.Dispose();
+				self.IdIndexDict.Dispose();
+				self.IdIndexNextDict.Dispose();
+				self.nodeList = null;
+				self.nodeNextList = null;
+				self.delegateList = null;
+				self.delegateNextList = null;
+				self.IdIndexDict = null;
+				self.IdIndexNextDict = null;
 			}
 		}
 	}

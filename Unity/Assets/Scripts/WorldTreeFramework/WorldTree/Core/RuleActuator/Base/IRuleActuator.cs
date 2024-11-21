@@ -75,6 +75,7 @@ namespace WorldTree
 		/// 尝试添加节点与对应法则
 		/// </summary>
 		public bool TryAdd(INode node, RuleList ruleList);
+	
 	}
 
 	/// <summary>
