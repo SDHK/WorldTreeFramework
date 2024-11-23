@@ -8,6 +8,7 @@
 */
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using System.Collections.Generic;
 
 namespace WorldTree.Analyzer
 {
@@ -21,7 +22,7 @@ namespace WorldTree.Analyzer
 			Screen = (Symbol) =>
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
-				if (TypeSymbol.TypeKind == TypeKind.Class || TypeSymbol.TypeKind == TypeKind.Interface)
+				if (TypeSymbol.TypeKind == TypeKind.Class)
 				{
 					return TypeSymbol.Name == "INode" ? true : NamedSymbolHelper.CheckInterface(TypeSymbol, GeneratorHelper.INode, out _);
 				}
@@ -36,9 +37,10 @@ namespace WorldTree.Analyzer
 				Title = "Node类型方法禁止",
 				MessageFormat = "Node类禁止声明方法",
 				DeclarationKind = SyntaxKind.MethodDeclaration,
+				UnKeywordKinds = new List<SyntaxKind> { SyntaxKind.AbstractKeyword },
 				Check = s => false,
 				NeedComment = false,
-			}) ;
+			});
 		}
 	}
 

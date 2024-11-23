@@ -6,46 +6,42 @@
 * 描述：
 
 */
+using System.Collections.Generic;
+
 namespace WorldTree
 {
 	public static partial class DataBaseManagerRule
 	{
-		private static OnAdd<DataBaseManager> OnAdd = (self) =>
-		{
-
-
-		};
-
 		/// <summary>
 		/// 插入
 		/// </summary>
-		public static void Insert<T>(this DataBaseManager self, T data)
+		public static void Insert<T>(this DataBaseManager self, long id, T data)
 		{
-
+			self.GetCollection<T>().Insert(id, data);
 		}
 
 		/// <summary>
 		/// 根据ID查找
 		/// </summary>
-		public static void FindById(this DataBaseManager self, long id)
+		public static T FindById<T>(this DataBaseManager self, long id)
 		{
-
+			return self.GetCollection<T>().FindById(id);
 		}
 
 		/// <summary>
 		/// 查找
 		/// </summary>
-		public static void Find<T>(this DataBaseManager self, System.Func<T, bool> func)
+		public static IEnumerable<T> Find<T>(this DataBaseManager self, System.Func<T, bool> func)
 		{
-
+			return self.GetCollection<T>()?.Find(func);
 		}
 
 		/// <summary>
 		/// 删除
 		/// </summary>
-		public static void Delete(this DataBaseManager self, long id)
+		public static void Delete<T>(this DataBaseManager self, long id)
 		{
-
+			self.GetCollection<T>()?.Delete(id);
 		}
 	}
 }

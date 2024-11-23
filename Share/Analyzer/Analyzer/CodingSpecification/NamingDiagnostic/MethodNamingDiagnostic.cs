@@ -46,35 +46,31 @@ namespace WorldTree.Analyzer
 						// 不需要检查的修饰符
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(methodDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
-							//检查方法名
-							if (!codeDiagnostic.Check.Invoke(methodDeclaration.Identifier.Text))
+							// 检查方法是否为重写的方法
+							bool isOverride = methodSymbol.IsOverride;
+							if (!isOverride)
 							{
-								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));
-							}
-							//是否需要注释
-							else if (codeDiagnostic.NeedComment)
-							{
-								// 检查方法是否为重写的方法
-								bool isOverride = methodSymbol.IsOverride;
+								// 检查方法是否直接声明在当前类中
+								INamedTypeSymbol? parentTypeSymbol = semanticModel.GetDeclaredSymbol(parentType);
+								isOverride = !methodSymbol.ContainingType.Equals(parentTypeSymbol, SymbolEqualityComparer.Default);
 								if (!isOverride)
 								{
-									// 检查方法是否直接声明在当前类中
-									INamedTypeSymbol? parentTypeSymbol = semanticModel.GetDeclaredSymbol(parentType);
-									isOverride = !methodSymbol.ContainingType.Equals(parentTypeSymbol, SymbolEqualityComparer.Default);
-									if (!isOverride)
-									{
-										// 检查方法是否实现了任何接口
-										isOverride = NamedSymbolHelper.CheckInterfaceImplements(methodSymbol);
-									}
+									// 检查方法是否实现了任何接口
+									isOverride = NamedSymbolHelper.CheckInterfaceImplements(methodSymbol);
+								}
+							}
+
+							//是否为原声明的方法，而不是重写的方法，或者是实现的接口方法
+							if (!isOverride)
+							{
+								if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(methodDeclaration))
+								{
+									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));
 								}
 
-								//是否为原声明的方法，而不是重写的方法，或者是实现的接口方法
-								if (!isOverride)
+								if (!codeDiagnostic.Check.Invoke(methodDeclaration.Identifier.Text))
 								{
-									if (!TreeSyntaxHelper.CheckSummaryComment(methodDeclaration))
-									{
-										context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));
-									}
+									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));
 								}
 							}
 						}
