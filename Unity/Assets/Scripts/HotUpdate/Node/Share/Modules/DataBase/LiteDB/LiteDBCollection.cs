@@ -39,6 +39,11 @@ namespace WorldTree
 			return collection.FindById(id);
 		}
 
+		public bool Update(long id, T data)
+		{
+			return collection.Update(id, data);
+		}
+
 		public void Delete(long id)
 		{
 			collection.Delete(id);

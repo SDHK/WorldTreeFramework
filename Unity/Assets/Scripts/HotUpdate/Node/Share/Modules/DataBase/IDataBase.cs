@@ -33,10 +33,10 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 数据库接口
+	/// 数据集合接口
 	/// </summary>
 	public interface IDataCollection<T> : IDataCollection
-		, ComponentOf<DataBaseManager>
+		, ComponentOf<IDataBase>
 	{
 		/// <summary>
 		/// 插入
@@ -44,24 +44,26 @@ namespace WorldTree
 		public void Insert(long id, T data);
 
 		/// <summary>
-		/// 根据条件查找
-		/// </summary>
-		public IEnumerable<T> Find(Func<T, bool> func);
-
-		/// <summary>
 		/// 根据Id查找
 		/// </summary>
 		public T FindById(long id);
+
+		/// <summary>
+		/// 更新
+		/// </summary>
+		public bool Update(long id, T data);
+
+		/// <summary>
+		/// 根据条件查找
+		/// </summary>
+		public IEnumerable<T> Find(Func<T, bool> func);
 	}
 
 
 	/// <summary>
 	/// 数据库接口
 	/// </summary>
-	public abstract class DataBaseManager : Node
-		, ComponentOf<WorldTreeRoot>
-		, AsAwake
-		, AsComponentBranch
+	public interface IDataBase : INode
 	{
 		/// <summary>
 		/// 获取集合

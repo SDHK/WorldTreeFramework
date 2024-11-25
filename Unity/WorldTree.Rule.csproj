@@ -60,13 +60,13 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\DataBaseManager\LiteDB\LiteDBManagerRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\DataBase\LiteDB\LiteDBManagerRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\NeuralNetwork\MultilayerPerceptron\PerceptronLineRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Client\_Test\MemoryPackTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\DataBaseManager\DataBaseManagerRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\DataBase\DataBaseProxyRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\Rule\WorldTree.Rule.asmdef" />

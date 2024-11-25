@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 数据库管理器
 	/// </summary>
-	public class LiteDBManager : DataBaseManager
+	public abstract class LiteDBManager : Node, IDataBase
 		, AsComponentBranch
 		, AsAwake<string>
 	{
@@ -22,20 +22,20 @@ namespace WorldTree
 		/// </summary>
 		public LiteDatabase database;
 
-		public override IDataCollection<T> GetCollection<T>()
+		public IDataCollection<T> GetCollection<T>()
 		{
 			if (!this.TryGetComponent(out IDataCollection<T> node))
 			{
 				ILiteCollection<T> collection = database.GetCollection<T>();
 				if (collection != null)
 				{
-					node = this.AddComponent(out LiteDBCollection<T> _, collection);
+					node = this.AddComponent(default(IDataCollection<T>), out LiteDBCollection<T> _, collection);
 				}
 			}
 			return node;
 		}
 
-		public override bool TryGetCollection<T>(out IDataCollection<T> collection)
+		public bool TryGetCollection<T>(out IDataCollection<T> collection)
 		{
 			if (!this.TryGetComponent(out collection))
 			{
