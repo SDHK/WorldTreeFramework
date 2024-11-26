@@ -47,7 +47,12 @@ namespace WorldTree
 		/// <summary>
 		/// 根据Id查找
 		/// </summary>
-		public T FindById(long id);
+		public T Find(long id);
+
+		/// <summary>
+		/// 查找所有
+		/// </summary>
+		public IEnumerable<T> FindAll();
 
 		/// <summary>
 		/// 更新
@@ -70,7 +75,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取集合
 		/// </summary>
-		public abstract bool TryGetCollection<T>(out IDataCollection<T> collection) where T :class, INodeData;
+		public abstract bool TryGetCollection<T>(out IDataCollection<T> collection) where T : class, INodeData;
 	}
 
 }

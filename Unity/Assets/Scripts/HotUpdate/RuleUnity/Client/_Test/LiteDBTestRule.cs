@@ -36,7 +36,7 @@
 				testClass.Dispose();
 
 				//查询数据
-				TestClass result = liteDB.FindById<TestClass>(id);
+				TestClass result = liteDB.Find<TestClass>(id);
 
 				result.SetParent(self);//设置父节点
 

@@ -6,6 +6,8 @@
 * 描述：数据库代理扩展
 
 */
+using System.Collections.Generic;
+
 namespace WorldTree
 {
 	public static partial class DataBaseProxyRule
@@ -47,14 +49,22 @@ namespace WorldTree
 			self.DataBase.GetCollection<T>().Insert(data);
 		}
 
-
 		/// <summary>
 		/// 根据ID查找
 		/// </summary>
-		public static T FindById<T>(this DataBaseProxy self, long id)
+		public static T Find<T>(this DataBaseProxy self, long id)
 			where T : class, INodeData
 		{
-			return self.DataBase.GetCollection<T>().FindById(id);
+			return self.DataBase.GetCollection<T>().Find(id);
+		}
+
+		/// <summary>
+		/// 查找所有
+		/// </summary>
+		public static IEnumerable<T> FindAll<T>(this DataBaseProxy self)
+			where T : class, INodeData
+		{
+			return self.DataBase.GetCollection<T>().FindAll();
 		}
 
 		/// <summary>

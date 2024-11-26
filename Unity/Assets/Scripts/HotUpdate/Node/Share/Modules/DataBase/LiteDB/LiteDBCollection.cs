@@ -7,6 +7,7 @@
 
 */
 using LiteDB;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -31,10 +32,18 @@ namespace WorldTree
 			});
 		}
 
-		public T FindById(long id)
+		public T Find(long id)
 		{
 			BsonDocument aDict = collection.FindById(id);
 			return aDict != null ? TreeDataHelper.DeseralizeNode<T>(this, aDict["D"].AsBinary) : null;
+		}
+
+		public IEnumerable<T> FindAll()
+		{
+			foreach (BsonDocument data in collection.FindAll())
+			{
+				yield return TreeDataHelper.DeseralizeNode<T>(this, data["D"].AsBinary);
+			}
 		}
 
 		public bool Update(T data)
@@ -60,5 +69,7 @@ namespace WorldTree
 		{
 			return collection.Count();
 		}
+
+
 	}
 }

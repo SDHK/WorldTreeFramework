@@ -41,6 +41,7 @@ namespace WorldTree
 				string collectionName = new string(collectionNameChars);
 
 				ILiteCollection<BsonDocument> collection = database.GetCollection(collectionName);
+
 				if (collection != null)
 				{
 					node = this.AddComponent(out LiteDBCollection<T> _, collection);
