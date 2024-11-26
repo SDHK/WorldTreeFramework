@@ -490,10 +490,6 @@ namespace WorldTree
 
 		#region 法则泛型
 
-
-
-
-
 		/// <summary>
 		/// 支持泛型参数法则
 		/// </summary>
