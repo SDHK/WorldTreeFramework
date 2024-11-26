@@ -37,11 +37,12 @@ namespace WorldTree
 	/// </summary>
 	public interface IDataCollection<T> : IDataCollection
 		, ComponentOf<IDataBase>
+		where T : class, INodeData
 	{
 		/// <summary>
 		/// 插入
 		/// </summary>
-		public void Insert(long id, T data);
+		public void Insert(T data);
 
 		/// <summary>
 		/// 根据Id查找
@@ -51,12 +52,8 @@ namespace WorldTree
 		/// <summary>
 		/// 更新
 		/// </summary>
-		public bool Update(long id, T data);
+		public bool Update(T data);
 
-		/// <summary>
-		/// 根据条件查找
-		/// </summary>
-		public IEnumerable<T> Find(Func<T, bool> func);
 	}
 
 
@@ -68,10 +65,12 @@ namespace WorldTree
 		/// <summary>
 		/// 获取集合
 		/// </summary>
-		public abstract IDataCollection<T> GetCollection<T>();
+		public abstract IDataCollection<T> GetCollection<T>() where T : class, INodeData;
+
 		/// <summary>
 		/// 尝试获取集合
 		/// </summary>
-		public abstract bool TryGetCollection<T>(out IDataCollection<T> collection);
+		public abstract bool TryGetCollection<T>(out IDataCollection<T> collection) where T :class, INodeData;
 	}
+
 }

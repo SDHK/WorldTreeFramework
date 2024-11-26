@@ -12,6 +12,7 @@ namespace WorldTree
 	/// 数据库代理基类
 	/// </summary>
 	public abstract class DataBaseProxy : Node
+		, AsComponentBranch
 		, ComponentOf<WorldTreeRoot>
 	{
 		/// <summary>

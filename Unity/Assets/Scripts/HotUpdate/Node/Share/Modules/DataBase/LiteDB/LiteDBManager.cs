@@ -13,8 +13,9 @@ namespace WorldTree
 	/// <summary>
 	/// 数据库管理器
 	/// </summary>
-	public abstract class LiteDBManager : Node, IDataBase
+	public class LiteDBManager : Node, IDataBase
 		, AsComponentBranch
+		, ComponentOf<DataBaseProxy>
 		, AsAwake<string>
 	{
 		/// <summary>
@@ -23,19 +24,33 @@ namespace WorldTree
 		public LiteDatabase database;
 
 		public IDataCollection<T> GetCollection<T>()
+			where T : class, INodeData
 		{
-			if (!this.TryGetComponent(out IDataCollection<T> node))
+			if (!this.TryGetComponent(out LiteDBCollection<T> node))
 			{
-				ILiteCollection<T> collection = database.GetCollection<T>();
+				// 键值规则为 a-Z$_，把非字母符号全换成下划线
+				string typeName = typeof(T).ToString();
+				char[] collectionNameChars = typeName.ToCharArray();
+				for (int i = 0; i < collectionNameChars.Length; i++)
+				{
+					if (!char.IsLetter(collectionNameChars[i]))
+					{
+						collectionNameChars[i] = '_';
+					}
+				}
+				string collectionName = new string(collectionNameChars);
+
+				ILiteCollection<BsonDocument> collection = database.GetCollection(collectionName);
 				if (collection != null)
 				{
-					node = this.AddComponent(default(IDataCollection<T>), out LiteDBCollection<T> _, collection);
+					node = this.AddComponent(out LiteDBCollection<T> _, collection);
 				}
 			}
 			return node;
 		}
 
 		public bool TryGetCollection<T>(out IDataCollection<T> collection)
+			where T : class, INodeData
 		{
 			if (!this.TryGetComponent(out collection))
 			{

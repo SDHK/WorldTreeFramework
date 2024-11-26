@@ -6,8 +6,6 @@
 * 描述：数据库代理扩展
 
 */
-using System.Collections.Generic;
-
 namespace WorldTree
 {
 	public static partial class DataBaseProxyRule
@@ -17,14 +15,16 @@ namespace WorldTree
 		/// 获取集合
 		/// </summary>
 		public static IDataCollection<T> GetCollection<T>(this DataBaseProxy self)
+			where T : class, INodeData
 		{
-            return self.DataBase.GetCollection<T>();
+			return self.DataBase.GetCollection<T>();
 		}
 
 		/// <summary>
 		/// 尝试获取集合
 		/// </summary>
 		public static bool TryGetCollection<T>(this DataBaseProxy self, out IDataCollection<T> collection)
+			where T : class, INodeData
 		{
 			return self.DataBase.TryGetCollection(out collection);
 		}
@@ -33,6 +33,7 @@ namespace WorldTree
 		/// 数量
 		/// </summary>
 		public static int Count<T>(this DataBaseProxy self)
+			where T : class, INodeData
 		{
 			return self.DataBase.GetCollection<T>().Count();
 		}
@@ -40,23 +41,18 @@ namespace WorldTree
 		/// <summary>
 		/// 插入
 		/// </summary>
-		public static void Insert<T>(this DataBaseProxy self, long id, T data)
+		public static void Insert<T>(this DataBaseProxy self, T data)
+			where T : class, INodeData
 		{
-			self.DataBase.GetCollection<T>().Insert(id, data);
+			self.DataBase.GetCollection<T>().Insert(data);
 		}
 
-		/// <summary>
-		/// 查找
-		/// </summary>
-		public static IEnumerable<T> Find<T>(this DataBaseProxy self, System.Func<T, bool> func)
-		{
-			return self.DataBase.GetCollection<T>()?.Find(func);
-		}
 
 		/// <summary>
 		/// 根据ID查找
 		/// </summary>
 		public static T FindById<T>(this DataBaseProxy self, long id)
+			where T : class, INodeData
 		{
 			return self.DataBase.GetCollection<T>().FindById(id);
 		}
@@ -64,15 +60,17 @@ namespace WorldTree
 		/// <summary>
 		/// 更新
 		/// </summary>
-		public static bool Update<T>(this DataBaseProxy self, long id, T data)
+		public static bool Update<T>(this DataBaseProxy self, T data)
+			where T : class, INodeData
 		{
-			return self.DataBase.GetCollection<T>().Update(id, data);
+			return self.DataBase.GetCollection<T>().Update(data);
 		}
 
 		/// <summary>
 		/// 删除所有
 		/// </summary>
 		public static void DeleteAll<T>(this DataBaseProxy self)
+			where T : class, INodeData
 		{
 			self.DataBase.GetCollection<T>()?.DeleteAll();
 		}
@@ -81,6 +79,7 @@ namespace WorldTree
 		/// 删除
 		/// </summary>
 		public static void Delete<T>(this DataBaseProxy self, long id)
+			where T : class, INodeData
 		{
 			self.DataBase.GetCollection<T>()?.Delete(id);
 		}

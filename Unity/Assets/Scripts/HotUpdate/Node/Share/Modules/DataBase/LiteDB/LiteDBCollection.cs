@@ -7,9 +7,6 @@
 
 */
 using LiteDB;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace WorldTree
 {
@@ -17,31 +14,36 @@ namespace WorldTree
 	/// 数据集合
 	/// </summary>
 	public class LiteDBCollection<T> : Node, IDataCollection<T>
-		, AsAwake<ILiteCollection<T>>
+		, AsAwake<ILiteCollection<BsonDocument>>
+		where T : class, INodeData
 	{
 		/// <summary>
 		/// 数据集合
 		/// </summary>
-		public ILiteCollection<T> collection;
+		public ILiteCollection<BsonDocument> collection;
 
-		public void Insert(long id, T data)
+		public void Insert(T data)
 		{
-			collection.Insert(data);
-		}
-
-		public IEnumerable<T> Find(Func<T, bool> func)
-		{
-			return collection.Find(func as Expression<Func<T, bool>>);
+			collection.Insert(new BsonDocument
+			{
+				["_id"] = data.Id,
+				["D"] = TreeDataHelper.SerializeNode(data)
+			});
 		}
 
 		public T FindById(long id)
 		{
-			return collection.FindById(id);
+			BsonDocument aDict = collection.FindById(id);
+			return aDict != null ? TreeDataHelper.DeseralizeNode<T>(this, aDict["D"].AsBinary) : null;
 		}
 
-		public bool Update(long id, T data)
+		public bool Update(T data)
 		{
-			return collection.Update(id, data);
+			return collection.Update(new BsonDocument
+			{
+				["_id"] = data.Id,
+				["D"] = TreeDataHelper.SerializeNode(data)
+			});
 		}
 
 		public void Delete(long id)

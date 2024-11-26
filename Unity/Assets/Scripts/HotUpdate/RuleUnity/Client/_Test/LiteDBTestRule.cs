@@ -1,39 +1,49 @@
-﻿using LiteDB;
-using System.Collections.Generic;
-
-namespace WorldTree
+﻿namespace WorldTree
 {
+	public static class LiteDBTestProxyRule
+	{
+		private class AwakeRule : AwakeRule<LiteDBTestProxy>
+		{
+			protected override void Execute(LiteDBTestProxy self)
+			{
+				string path = "C:\\Users\\admin\\Desktop\\新建文件夹\\LiteDBTest.db";
+				self.DataBase = self.AddComponent(out LiteDBManager _, path);
+			}
+		}
+	}
+
 	public static class LiteDBTestRule
 	{
+
 		private class AwakeRule : AwakeRule<LiteDBTest>
 		{
 			protected override void Execute(LiteDBTest self)
 			{
-				//创建数据库
-				self.db = new LiteDatabase("LiteDBTest.db");
+				//获取数据库代理
+				self.Root.AddComponent(out LiteDBTestProxy liteDB);
 
-				//获取集合
-				ILiteCollection<TestClass> liteCollection = self.db.GetCollection<TestClass>("test");
+				long id;
+
+				self.AddChild(out TestClass testClass);
+				testClass.Name = "A123测试Test!!!!!ABCD=123456789";
+
+				id = testClass.Id;
 
 				//插入数据
-				liteCollection.Insert(new TestClass { Id = 1, Name = "John Doe" });
-				liteCollection.Insert(new TestClass { Id = 2, Name = "Jane Doe" });
-				liteCollection.Insert(new TestClass { Id = 3, Name = "John Doe" });
+				liteDB.Insert(testClass);
 
+				//销毁类型
+				testClass.Dispose();
 
 				//查询数据
-				IEnumerable<TestClass> result = liteCollection.Find((x) => x.Id == 3);
+				TestClass result = liteDB.FindById<TestClass>(id);
 
-				//读取数据
-				foreach (TestClass item in result)
-				{
-					self.Log($"{item.Id} {item.Name}");
-				}
+				result.SetParent(self);//设置父节点
 
-				//删除数据
-				liteCollection.Delete(3);
 
-				self.db.Dispose();
+				self.Log($"读取：{result.Name}");
+
+				self.Log(NodeRule.ToStringDrawTree(self));
 			}
 		}
 	}

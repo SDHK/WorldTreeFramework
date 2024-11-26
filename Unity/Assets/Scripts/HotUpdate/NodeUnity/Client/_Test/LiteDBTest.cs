@@ -1,32 +1,38 @@
-﻿using LiteDB;
-
-namespace WorldTree
+﻿namespace WorldTree
 {
 	/// <summary>
 	/// LiteDB测试
 	/// </summary>
-	public class LiteDBTest : Node
-		, ComponentOf<InitialDomain>
+	public class LiteDBTestProxy : DataBaseProxy
 		, AsAwake
 	{
-		/// <summary>
-		/// 数据库
-		/// </summary>
-		public LiteDatabase db;
+
+	}
+
+
+	/// <summary>
+	/// 测试
+	/// </summary>
+	public class LiteDBTest : Node
+	, AsComponentBranch
+	, AsChildBranch
+	, ComponentOf<InitialDomain>
+	, AsAwake
+	{
+
 	}
 
 	/// <summary>
 	/// 测试数据类
 	/// </summary>
-	public class TestClass
+	[TreeDataSerializable]
+	public partial class TestClass : NodeData
+		,ChildOf<INode>
+		,AsAwake
 	{
-		/// <summary>
-		/// ID
-		/// </summary>
-		public int Id { get; set; }
 		/// <summary>
 		/// 名称
 		/// </summary>
-		public string Name { get; set; }
+		public string Name;
 	}
 }
