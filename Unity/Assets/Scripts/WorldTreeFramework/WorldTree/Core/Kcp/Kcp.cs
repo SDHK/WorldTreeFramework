@@ -18,63 +18,63 @@ namespace ET
 		// #define FASTACK_CONSERVE
 
 		/// <summary>
-		/// KCP段头	没有任何延迟
+		/// 表示在无延迟模式下的最小重传超时时间 30ms
 		/// </summary>
 		public const int RTO_NDL = 30;             // no delay min rto
 		/// <summary>
-		/// KCP段头	最小延迟
+		/// 重传超时最小时间 100ms
 		/// </summary>
 		public const int RTO_MIN = 100;            // normal min rto
 		/// <summary>
-		/// KCP段头	默认延迟
+		/// 重传超时时间 200ms
 		/// </summary>
 		public const int RTO_DEF = 200;            // default RTO
 		/// <summary>
-		/// KCP段头	最大延迟
+		/// 重传超时时间最大值 60000ms
 		/// </summary>
 		public const int RTO_MAX = 60000;          // maximum RTO
 		/// <summary>
-		/// KCP段头	命令：推送数据
+		/// 命令：推送数据 ：表示这是一个数据包，接收方需要将其数据内容推送到接收缓冲区中进行处理。
 		/// </summary>
 		public const int CMD_PUSH = 81;            // cmd: push data
 		/// <summary>
-		/// KCP段头	命令：确认
+		/// 命令：确认数据包的接收。
 		/// </summary>
 		public const int CMD_ACK = 82;            // cmd: ack
 		/// <summary>
-		/// KCP段头	命令：窗口探测（询问）
+		/// 命令：窗口探测（询问窗口大小）。
 		/// </summary>
 		public const int CMD_WASK = 83;            // cmd: window probe (ask)
 		/// <summary>
-		/// KCP段头	命令：窗口大小（告知/插入）
+		///	命令：告知窗口大小（告知/插入）
 		/// </summary>
 		public const int CMD_WINS = 84;            // cmd: window size (tell/insert)
 		/// <summary>
-		/// KCP段头	需要发送
+		/// 表示需要发送 CMD_WASK 命令。
 		/// </summary>
 		public const int ASK_SEND = 1;             // need to send CMD_WASK
 		/// <summary>
-		/// KCP段头	需要告知
+		/// 表示需要发送 CMD_WINS 命令
 		/// </summary>
 		public const int ASK_TELL = 2;             // need to send CMD_WINS
 		/// <summary>
-		/// KCP段头	默认发送窗口
+		/// 默认的发送窗口大小 32个数据包
 		/// </summary>
 		public const int WND_SND = 32;             // default send window
 		/// <summary>
-		/// KCP段头	默认接收窗口
+		/// 默认的接收窗口大小。128个数据包
 		/// </summary>
-		public const int WND_RCV = 128;            // default receive window. must be >= max fragment size
+		public const int WND_RCV = 128;            // 默认接收窗口。必须 >= 最大片段大小
 		/// <summary>
-		/// KCP段头	默认最大传输单元1200字节
+		/// 默认最大传输单元1200字节
 		/// </summary>
 		public const int MTU_DEF = 1200;           // default MTU (reduced to 1200 to fit all cases: https://en.wikipedia.org/wiki/Maximum_transmission_unit ; steam uses 1200 too!)
 		/// <summary>
-		/// KCP段头	快速重传
+		/// 快速确认的阈值 ：当发送方收到 3 个重复的确认包时，会触发快速重传机制，立即重传可能丢失的数据包。
 		/// </summary>
 		public const int ACK_FAST = 3;
 		/// <summary>
-		/// KCP段头	默认间隔
+		/// 更新间隔时间 100ms
 		/// </summary>
 		public const int INTERVAL = 100;
 		/// <summary>
@@ -82,46 +82,47 @@ namespace ET
 		/// </summary>
 		public const int OVERHEAD = 24;
 		/// <summary>
-		/// KCP段头	最大分片
+		/// 最大分片数量。
 		/// </summary>
 		public const int FRG_MAX = byte.MaxValue;  // kcp encodes 'frg' as byte. so we can only ever send up to 255 fragments.
 		/// <summary>
-		/// KCP段头	最大重传次数
+		/// 最大重传次数，如果一个数据包在指定的重传次数内仍然没有被确认，连接就会被认为已经断开。
 		/// </summary>
 		public const int DEADLINK = 20;            // default maximum amount of 'xmit' retransmissions until a segment is considered lost
 		/// <summary>
-		/// KCP段头	初始阈值
+		/// 初始慢启动阈值（Slow Start Threshold）在网络传输协议中，慢启动阈值用于控制拥塞窗口的增长速度，以避免网络拥塞。
 		/// </summary>
 		public const int THRESH_INIT = 2;
 		/// <summary>
-		/// KCP段头	最小阈值
+		/// 最小阈值 ：意味着即使在网络拥塞的情况下，发送方的拥塞窗口也不会小于 2。
 		/// </summary>
 		public const int THRESH_MIN = 2;
 		/// <summary>
-		/// KCP段头	初始探测
+		/// 探测窗口大小的初始间隔时间 7000ms
 		/// </summary>
 		public const int PROBE_INIT = 7000;        // 7 secs to probe window size
 		/// <summary>
-		/// KCP段头	最大探测
+		/// 探测窗口大小的探测间隔时间，上限为 120000 毫秒
 		/// </summary>
 		public const int PROBE_LIMIT = 120000;     // up to 120 secs to probe window
 		/// <summary>
-		/// KCP段头	快速重传限制
+		/// 快速重传的最大次数限制
 		/// </summary>
 		public const int FASTACK_LIMIT = 5;        // max times to trigger fastack
 
 		/// <summary>
-		/// KCP段头	保留字节
+		/// 保留字节
 		/// </summary>
 		public const int RESERVED_BYTE = 5; // 包头预留字节数 供et网络层使用
 
 		// KCP 成员。
+
 		/// <summary>
-		/// 状态
+		/// 表示 KCP 连接的当前状态。
 		/// </summary>
 		internal int state;
 		/// <summary>
-		/// 对话
+		/// 表示会话的编号。
 		/// </summary>
 		readonly uint conv;          // conversation 对话 
 		/// <summary>
@@ -129,95 +130,95 @@ namespace ET
 		/// </summary>
 		internal uint mtu;
 		/// <summary>
-		/// 最大分段大小
+		/// 最大分段的大小
 		/// </summary>
 		internal uint mss;           // maximum segment size := MTU - OVERHEAD
 		/// <summary>
-		/// 发送未确认
+		/// 表示未被确认的最早的序列号。
 		/// </summary>
 		internal uint snd_una;       // unacknowledged. e.g. snd_una is 9 it means 8 has been confirmed, 9 and 10 have been sent
 		/// <summary>
-		/// 发送下一个
+		/// 表示下一个将要发送的数据包的序列号。
 		/// </summary>
 		internal uint snd_nxt;       // forever growing send counter for sequence numbers
 		/// <summary>
-		/// 接收下一个
+		/// 表示下一个期望接收的数据包的序列号。
 		/// </summary>
 		internal uint rcv_nxt;       // forever growing receive counter for sequence numbers
 		/// <summary>
-		/// 发送窗口
+		/// 表示慢启动阈值 ：当拥塞窗口大小 小于等于 ssthresh 时，使用慢启动算法。
 		/// </summary>
 		internal uint ssthresh;      // slow start threshold
 		/// <summary>
-		/// 接收窗口
+		/// 表示往返时间（RTT）的平均偏差，用于测量 RTT 的抖动。
 		/// </summary>
 		internal int rx_rttval;      // average deviation of rtt, used to measure the jitter of rtt
 		/// <summary>
-		/// 平滑往返时间
+		/// 表示平滑的往返时间（SRTT），即 RTT 的加权平均值。
 		/// </summary>
 		internal int rx_srtt;        // smoothed round trip time (a weighted average of rtt)
 		/// <summary>
-		/// 发送窗口
+		/// 表示重传超时（RTO）的时间。 rx_rto = rx_srtt + 4 * rx_rttval
 		/// </summary>
 		internal int rx_rto;
 		/// <summary>
-		/// 最小RTO
+		/// 表示重传超时（RTO）的最小值。
 		/// </summary>
 		internal int rx_minrto;
 		/// <summary>
-		/// 发送窗口
+		/// 表示发送窗口的大小。:发送窗口的大小决定了发送方可以在没有收到接收方确认的情况下，连续发送的最大数据包数量。
 		/// </summary>
 		internal uint snd_wnd;       // send window
 		/// <summary>
-		/// 接收窗口
+		/// 表示接收窗口的大小。:接收窗口的大小决定了接收方可以在没有发送确认的情况下，连续接收的最大数据包数量。
 		/// </summary>
 		internal uint rcv_wnd;       // receive window
 		/// <summary>
-		/// 远程窗口
+		/// 表示远程窗口的大小。
 		/// </summary>
 		internal uint rmt_wnd;       // remote window
 		/// <summary>
-		/// 拥塞窗口
+		/// 表示拥塞窗口的大小。:拥塞窗口的大小决定了发送方在没有收到接收方确认的情况下，连续发送的最大数据包数量。
 		/// </summary>
 		internal uint cwnd;          // congestion window
 		/// <summary>
-		/// 拥塞窗口
+		/// 探测状态:用于记录探测请求的状态
 		/// </summary>
 		internal uint probe;
 		/// <summary>
-		/// 间隔
+		/// 更新间隔时间 ms
 		/// </summary>
 		internal uint interval;
 		/// <summary>
-		/// 最后刷新时间戳
+		/// 表示上次刷新（flush）的时间戳，以毫秒为单位。
 		/// </summary>
 		internal uint ts_flush;      // last flush timestamp in milliseconds
 		/// <summary>
-		/// 最后更新时间戳
+		/// 用于记录某个数据包的传输次数
 		/// </summary>
 		internal uint xmit;
 		/// <summary>
-		/// 是否延迟
+		/// 用于决定是否启用快速模式。
 		/// </summary>
 		internal uint nodelay;       // not a bool. original Kcp has '<2 else' check.
 		/// <summary>
-		/// 最后更新时间戳
+		/// 用于指示 KCP 协议是否已经初始化更新。以确保某些初始化操作只执行一次。
 		/// </summary>
 		internal bool updated;
 		/// <summary>
-		/// 探测时间戳
+		/// 用于记录上一次探测操作的时间
 		/// </summary>
 		internal uint ts_probe;      // probe timestamp
 		/// <summary>
-		/// 探测等待
+		/// 用于控制探测操作的间隔时间。
 		/// </summary>
 		internal uint probe_wait;
 		/// <summary>
-		/// 探测等待
+		/// 用于表示在一个数据段被认为丢失之前，允许的最大重传次数。
 		/// </summary>
 		internal uint dead_link;     // maximum amount of 'xmit' retransmissions until a segment is considered lost
 		/// <summary>
-		/// 最大等待
+		/// 用于表示拥塞窗口（congestion window）增加的字节数。
 		/// </summary>
 		internal uint incr;
 		/// <summary>
@@ -226,42 +227,42 @@ namespace ET
 		internal uint current;       // current time (milliseconds). set by Update.
 
 		/// <summary>
-		/// 快速重传
+		/// 快速重传的次数。
 		/// </summary>
 		internal int fastresend;
 		/// <summary>
-		/// 快速限制
+		/// 快速重传的最大次数限制
 		/// </summary>
 		internal int fastlimit;
 		/// <summary>
-		/// 是否无拥塞窗口
+		/// 用于控制是否禁用拥塞控制。
 		/// </summary>
 		internal bool nocwnd;        // congestion control, negated. heavily restricts send/recv window sizes.
 		/// <summary>
-		/// 是否流模式
+		/// 用于存储待发送的数据段队列。
 		/// </summary>
 		internal readonly Queue<SegmentStruct> snd_Queue = new Queue<SegmentStruct>(16); // send queue
 																						 // receive queue
 		/// <summary>
-		/// 接收队列
+		/// 用于存储接收到的数据段队列。
 		/// </summary>
 		internal readonly Queue<SegmentStruct> rcv_Queue = new Queue<SegmentStruct>(16);
 		// snd_buffer needs index removals.
 		// C# LinkedList allocates for each entry, so let's keep List for now.
 		// send buffer
 		/// <summary>
-		/// 发送缓冲区
+		/// 用于存储已发送但尚未收到确认的数据段列表。
 		/// </summary>
 		internal readonly List<SegmentStruct> snd_bufList = new List<SegmentStruct>(16);
 		// rcv_buffer needs index insertions and backwards iteration.
 		// C# LinkedList allocates for each entry, so let's keep List for now.
 		// receive buffer
 		/// <summary>
-		/// 接收缓冲区
+		/// 用于存储已接收但尚未处理的数据段列表。
 		/// </summary>
 		internal readonly List<SegmentStruct> rcv_bufList = new List<SegmentStruct>(16);
 		/// <summary>
-		/// 确认列表
+		/// 用于存储待处理的确认（ACK）项列表。这些确认项包含了接收到的数据段的序列号和时间戳，用于告知对端哪些数据段已经成功接收。
 		/// </summary>
 		internal readonly List<AckItem> ackList = new List<AckItem>(16);
 
@@ -274,13 +275,13 @@ namespace ET
 		// size depends on MTU.
 		// MTU can be changed at runtime, which resizes the buffer.
 		/// <summary>
-		/// 缓冲区
+		/// 用于存储字节数组，通常用于临时缓冲区或数据处理。
 		/// </summary>
 		internal byte[] buffers;
 
 		// output function of type <buffer, size>
 		/// <summary>
-		/// 输出
+		/// 用于处理发送数据的操作。
 		/// </summary>
 		readonly Action<byte[], int> output;
 
@@ -315,6 +316,9 @@ namespace ET
 			ssthresh = THRESH_INIT;
 			fastlimit = FASTACK_LIMIT;
 			dead_link = DEADLINK;
+
+			//乘以 3 的原因是为了确保在处理数据包时有足够的缓冲区空间。
+			//这个缓冲区需要同时容纳以下几种数据：发送的数据包 接收的数据包 可能的重传数据包
 			buffers = new byte[(mtu + OVERHEAD) * 3 + RESERVED_BYTE];
 		}
 
