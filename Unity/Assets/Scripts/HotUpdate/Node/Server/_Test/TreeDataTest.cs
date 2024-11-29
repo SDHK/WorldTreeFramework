@@ -88,7 +88,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试节点数据2
 		/// </summary>
-		public NodeRef<TreeDataNodeDataTest2> nodeRef;
+		public NodeRef<TreeDataNodeDataTest2> NodeRef;
 	}
 
 	/// <summary>

@@ -28,7 +28,7 @@ namespace WorldTree
 			child.Name = "测试4658";
 			child.Age = 788723;
 
-			self.treeData.nodeRef = child;
+			self.treeData.NodeRef = child;
 
 			byte[] bytes = TreeDataHelper.SerializeNode(self.treeData);
 			string filePath = "C:\\Users\\admin\\Desktop\\新建文件夹\\TreeDataTest.bytes";
@@ -50,7 +50,7 @@ namespace WorldTree
 
 			self.treeData = node;
 
-			self.Log($"反序列化引用还原测试！！！{self.treeData.nodeRef} ： {self.treeData.nodeRef.Value.Age}");
+			self.Log($"反序列化引用还原测试！！！{self.treeData.NodeRef} ： {self.treeData.NodeRef.Value.Age}");
 
 			self.Log($"反序列化！！!!?{bytes.Length}");
 			self.Log(NodeRule.ToStringDrawTree(self));

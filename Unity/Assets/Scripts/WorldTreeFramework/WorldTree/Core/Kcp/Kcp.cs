@@ -247,16 +247,16 @@ namespace ET
 		/// 用于存储接收到的数据段队列。
 		/// </summary>
 		internal readonly Queue<SegmentStruct> rcv_Queue = new Queue<SegmentStruct>(16);
-		// snd_buffer needs index removals.
-		// C# LinkedList allocates for each entry, so let's keep List for now.
-		// send buffer
+		// snd_buffer 需要索引移除操作。
+		// C# 的 LinkedList 为每个条目分配内存，所以我们暂时使用 List。
+		// 发送缓冲区
 		/// <summary>
 		/// 用于存储已发送但尚未收到确认的数据段列表。
 		/// </summary>
 		internal readonly List<SegmentStruct> snd_bufList = new List<SegmentStruct>(16);
-		// rcv_buffer needs index insertions and backwards iteration.
-		// C# LinkedList allocates for each entry, so let's keep List for now.
-		// receive buffer
+		// rcv_buffer 需要索引插入和向后迭代。
+		// C# 的 LinkedList 为每个条目分配内存，所以我们暂时使用 List。
+		// 接收缓冲区
 		/// <summary>
 		/// 用于存储已接收但尚未处理的数据段列表。
 		/// </summary>
@@ -271,9 +271,9 @@ namespace ET
 		/// </summary>
 		private ArrayPool<byte> kcpSegmentArrayPool;
 
-		// memory buffer
-		// size depends on MTU.
-		// MTU can be changed at runtime, which resizes the buffer.
+		// 内存缓冲区
+		// 大小取决于 MTU。
+		// MTU 可以在运行时更改，这会调整缓冲区大小。
 		/// <summary>
 		/// 用于存储字节数组，通常用于临时缓冲区或数据处理。
 		/// </summary>
@@ -285,20 +285,20 @@ namespace ET
 		/// </summary>
 		readonly Action<byte[], int> output;
 
-		// segment pool to avoid allocations in C#.
-		// this is not part of the original C code.
+		// 段池以避免在 C# 中的分配。
+		// 这不是原始 C 代码的一部分。
 		// readonly Pool<Segment> SegmentPool = new Pool<Segment>(
-		//     // create new segment
+		//     // 创建新的段
 		//     () => new Segment(),
-		//     // reset segment before reuse
+		//     // 在重用前重置段
 		//     (segment) => segment.Reset(),
-		//     // initial capacity
+		//     // 初始容量
 		//     32
 		// );
 
+
 		// ikcp_create
-		// create a new kcp control object, 'conv' must equal in two endpoint
-		// from the same connection.
+		// 创建一个新的 KCP 控制对象，'conv' 必须在同一连接的两个端点中相等。
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Kcp(uint conv, Action<byte[], int> output)
 		{
@@ -323,47 +323,59 @@ namespace ET
 		}
 
 		// ikcp_segment_new
-		// we keep the original function and add our pooling to it.
-		// this way we'll never miss it anywhere.
+		// 我们保留了原始函数并添加了我们的池化机制。
+		// 这样我们就不会在任何地方遗漏它。
 		// [MethodImpl(MethodImplOptions.AggressiveInlining)]
 		// Segment SegmentNew() => SegmentPool.Take();
 
 		// ikcp_segment_delete
-		// we keep the original function and add our pooling to it.
-		// this way we'll never miss it anywhere.
+		// 我们保留了原始函数并添加了我们的池化机制。
+		// 这样我们就不会在任何地方遗漏它。
 		// [MethodImpl(MethodImplOptions.AggressiveInlining)]
 		// void SegmentDelete(Segment seg) => SegmentPool.Return(seg);
 
-		// calculate how many packets are waiting to be sent
+		// 计算有多少数据包等待发送
+
 		/// <summary>
 		/// 等待发送
 		/// </summary>
 		public int WaitSnd => snd_bufList.Count + snd_Queue.Count;
 
 		// ikcp_wnd_unused
-		// returns the remaining space in receive window (rcv_wnd - rcv_queue)
+		// 返回接收窗口中剩余的空间 (rcv_wnd - rcv_queue)
+
+
+
 		/// <summary>
 		/// 未使用的窗口
 		/// </summary>
+		/// <remarks>
+		///方法的作用是计算并返回接收窗口中未使用的空间。
+		///接收窗口是一个缓冲区，用于存储接收到但尚未处理的数据包。
+		///这个方法通过计算接收窗口的总大小减去已使用的空间，
+		///来确定还有多少空间可以用来接收新的数据包。
+		/// </remarks>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal ushort WndUnused()
 		{
+			//判断接收窗口中已经使用的空间是否超过了接收窗口的总大小。
 			if (rcv_Queue.Count < rcv_wnd)
+				//没有超过，返回接收窗口的总大小减去已使用的空间。
 				return (ushort)(rcv_wnd - (uint)rcv_Queue.Count);
 			return 0;
 		}
 
 		/// <summary>
-		/// 更新
+		/// 从接收队列中读取数据
 		/// </summary>
 		public int Receive(Span<byte> data)
 		{
-			// kcp's ispeek feature is not supported.
-			// this makes 'merge fragment' code significantly easier because
-			// we can iterate while queue.Count > 0 and dequeue each time.
-			// if we had to consider ispeek then count would always be > 0 and
-			// we would have to remove only after the loop.
-			//
+			// kcp 的 ispeek 功能不支持。
+			// 这使得“合并片段”代码显著简化，因为
+			// 我们可以在 queue.Count > 0 时迭代并每次出队。
+			// 如果我们必须考虑 ispeek，那么 count 将始终 > 0 并且
+			// 我们必须在循环后才删除。
+
 			int len = data.Length;
 
 			if (rcv_Queue.Count == 0)
@@ -379,23 +391,23 @@ namespace ET
 
 			bool recover = rcv_Queue.Count >= rcv_wnd;
 
-			// merge fragment.
+			// 合并片段。
 
 			len = 0;
 			ref byte dest = ref MemoryMarshal.GetReference(data);
 
-			// original KCP iterates rcv_queue and deletes if !ispeek.
-			// removing from a c# queue while iterating is not possible, but
-			// we can change to 'while Count > 0' and remove every time.
-			// (we can remove every time because we removed ispeek support!)
+			// 原始 KCP 迭代 rcv_queue 并在 !ispeek 时删除。
+			// 在迭代时从 C# 队列中删除是不可能的，但
+			// 我们可以更改为“while Count > 0”并每次删除。
+			// （我们可以每次删除，因为我们删除了 ispeek 支持！）
 
 			while (rcv_Queue.Count > 0)
 			{
-				// unlike original kcp, we dequeue instead of just getting the
-				// entry. this is fine because we remove it in ANY case.
+				// 与原始 kcp 不同，我们出队而不是仅获取
+				// 条目。这没问题，因为我们在任何情况下都删除它。
 				SegmentStruct seg = rcv_Queue.Dequeue();
 
-				// copy segment data into our buffer
+				// 将段数据复制到我们的缓冲区中
 
 				ref byte source = ref MemoryMarshal.GetReference(seg.WrittenBuffer);
 				Unsafe.CopyBlockUnaligned(ref dest, ref source, (uint)seg.WrittenCount);
@@ -404,18 +416,18 @@ namespace ET
 				len += seg.WrittenCount;
 				uint fragment = seg.SegHead.Frg;
 
-				// note: ispeek is not supported in order to simplify this loop
+				// 注意：不支持 ispeek 以简化此循环
 
-				// unlike original kcp, we don't need to remove seg from queue
-				// because we already dequeued it.
-				// simply delete it
+				// 与原始 kcp 不同，我们不需要从队列中删除 seg
+				// 因为我们已经将其出队。
+				// 直接删除它
 				seg.Dispose();
 				if (fragment == 0)
 					break;
 			}
 
 
-			// move available data from rcv_buf -> rcv_queue
+			// 将可用数据从 rcv_buf 移动到 rcv_queue
 			int removed = 0;
 #if NET7_0_OR_GREATER
             foreach (ref SegmentStruct seg in CollectionsMarshal.AsSpan(this.rcv_buf))
@@ -425,13 +437,13 @@ namespace ET
 			{
 				if (seg.SegHead.Sn == rcv_nxt && rcv_Queue.Count < rcv_wnd)
 				{
-					// can't remove while iterating. remember how many to remove
-					// and do it after the loop.
-					// note: don't return segment. we only add it to rcv_queue
+					// 不能在迭代时删除。记住要删除的数量
+					// 并在循环后执行。
+					// 注意：不要返回段。我们只将其添加到 rcv_queue
 					++removed;
-					// add
+					// 添加
 					rcv_Queue.Enqueue(seg);
-					// increase sequence number for next segment
+					// 增加下一个段的序列号
 					rcv_nxt++;
 				}
 				else
@@ -441,49 +453,46 @@ namespace ET
 			}
 			rcv_bufList.RemoveRange(0, removed);
 
-			// fast recover
+			// 快速恢复
 			if (rcv_Queue.Count < rcv_wnd && recover)
 			{
-				// ready to send back CMD_WINS in flush
-				// tell remote my window size
+				// 准备在 flush 中发送回 CMD_WINS
+				// 告诉远程我的窗口大小
 				probe |= ASK_TELL;
 			}
-
 			return len;
 		}
 
-		// ikcp_peeksize
-		// check the size of next message in the recv queue.
-		// returns -1 if there is no message, or if the message is still incomplete.
 		/// <summary>
-		/// 查看大小
+		/// 查看接收队列中下一个消息的大小。
+		/// 如果没有消息或消息尚未完整接收，则返回 -1。
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public int PeekSize()
 		{
 			int length = 0;
 
-			// empty queue?
+			// 检查接收队列是否为空
 			if (rcv_Queue.Count == 0) return -1;
 
-			// peek the first segment
+			// 查看第一个段
 			SegmentStruct seq = rcv_Queue.Peek();
 
-			// seg.frg is 0 if the message requires no fragmentation.
-			// in that case, the segment's size is the final message size.
+			// 如果消息不需要分片，seg.frg 为 0
+			// 在这种情况下，段的大小就是最终消息的大小
 			if (seq.SegHead.Frg == 0) return seq.WrittenCount;
 
-			// check if all fragment parts were received yet.
-			// seg.frg is the n-th fragment, but in reverse.
-			// this way the first received segment tells us how many fragments there are for the message.
-			// for example, if a message contains 3 segments:
-			//   first segment:  .frg is 2 (index in reverse)
-			//   second segment: .frg is 1 (index in reverse)
-			//   third segment:  .frg is 0 (index in reverse)
+			// 检查是否已接收到所有分片部分
+			// seg.frg 是第 n 个分片，但顺序是反的
+			// 这样第一个接收到的段告诉我们消息有多少个分片
+			// 例如，如果一个消息包含 3 个段：
+			//   第一个段： .frg 是 2（反向索引）
+			//   第二个段： .frg 是 1（反向索引）
+			//   第三个段： .frg 是 0（反向索引）
 			if (rcv_Queue.Count < seq.SegHead.Frg + 1) return -1;
 
-			// recv_queue contains all the fragments necessary to reconstruct the message.
-			// sum all fragment's sizes to get the full message size.
+			// 接收队列包含重建消息所需的所有分片
+			// 累加所有分片的大小以获得完整消息的大小
 			foreach (SegmentStruct seg in rcv_Queue)
 			{
 				length += seg.WrittenCount;
@@ -493,44 +502,46 @@ namespace ET
 			return length;
 		}
 
-		// ikcp_send
-		// splits message into MTU sized fragments, adds them to snd_queue.
+
 		/// <summary>
-		/// 发送
+		/// 发送数据
+		/// 将消息拆分为 MTU 大小的片段，并将它们添加到发送队列中。
 		/// </summary>
+		/// <param name="data">要发送的数据</param>
+		/// <returns>操作结果</returns>
 		public int Send(ReadOnlySpan<byte> data)
 		{
-			// fragment count
+			// 片段数量
 			int count;
 			int len = data.Length;
 			int offset = 0;
 
-			// streaming mode: removed. we never want to send 'hello' and
-			// receive 'he' 'll' 'o'. we want to always receive 'hello'.
+			// 流模式：已移除。我们不希望发送 'hello' 并接收 'he' 'll' 'o'。
+			// 我们希望始终接收 'hello'。
 
-			// calculate amount of fragments necessary for 'len'
+			// 计算 'len' 所需的片段数量
 			if (len <= mss) count = 1;
 			else count = (int)((len + mss - 1) / mss);
 
-			// IMPORTANT kcp encodes 'frg' as 1 byte.
-			// so we can only support up to 255 fragments.
-			// (which limits max message size to around 288 KB)
-			// this is difficult to debug. let's make this 100% obvious.
+			// 重要提示：kcp 将 'frg' 编码为 1 个字节。
+			// 因此我们最多只能支持 255 个片段。
+			// （这将最大消息大小限制在大约 288 KB）
+			// 这很难调试。让我们使这一点 100% 明显。
 			if (count > FRG_MAX)
 				ThrowFrgCountException(len, count);
 
-			// original kcp uses WND_RCV const instead of rcv_wnd runtime:
+			// 原始 kcp 使用 WND_RCV 常量而不是 rcv_wnd 运行时：
 			// https://github.com/skywind3000/kcp/pull/291/files
-			// which always limits max message size to 144 KB:
-			//if (count >= WND_RCV) return -2;
-			// using configured rcv_wnd uncorks max message size to 'any':
+			// 这始终将最大消息大小限制为 144 KB：
+			// if (count >= WND_RCV) return -2;
+			// 使用配置的 rcv_wnd 取消最大消息大小限制：
 			if (count >= rcv_wnd) return -2;
 
 			if (count == 0) count = 1;
 
 			ref byte dataRef = ref MemoryMarshal.GetReference(data);
 
-			// fragment
+			// 片段
 			for (int i = 0; i < count; i++)
 			{
 				int size = len > (int)mss ? (int)mss : len;
@@ -552,95 +563,118 @@ namespace ET
 			return 0;
 		}
 
-		// ikcp_update_ack
+
 		/// <summary>
-		/// 更新确认
+		/// 更新确认时间
 		/// </summary>
-		/// <param name="rtt"></param>
+		/// <param name="rtt">往返时间</param>
 		void UpdateAck(int rtt) // round trip time
 		{
-			// https://tools.ietf.org/html/rfc6298
+			// 参考：https://tools.ietf.org/html/rfc6298
 			if (rx_srtt == 0)
 			{
+				// 如果这是第一次测量往返时间，直接设置
 				rx_srtt = rtt;
 				rx_rttval = rtt / 2;
 			}
 			else
 			{
+				// 计算新的往返时间偏差
 				int delta = rtt - rx_srtt;
 				if (delta < 0) delta = -delta;
+
+				// 更新往返时间偏差和平滑往返时间
 				rx_rttval = (3 * rx_rttval + delta) / 4;
 				rx_srtt = (7 * rx_srtt + rtt) / 8;
+
+				// 确保平滑往返时间至少为1
 				if (rx_srtt < 1) rx_srtt = 1;
 			}
+
+			// 计算重传超时时间
 			int rto = rx_srtt + Math.Max((int)interval, 4 * rx_rttval);
+
+			// 将重传超时时间限制在最小和最大值之间
 			rx_rto = Utils.Clamp(rto, rx_minrto, RTO_MAX);
 		}
 
-		// ikcp_shrink_buf
+
 		/// <summary>
-		/// 收缩缓冲区
+		/// 收缩发送缓冲区
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal void ShrinkBuf()
 		{
+			// 如果发送缓冲区中有数据
 			if (snd_bufList.Count > 0)
 			{
+				// 获取发送缓冲区中的第一个段
 				SegmentStruct seg = snd_bufList[0];
+				// 更新未确认的最早序列号
 				snd_una = seg.SegHead.Sn;
 			}
 			else
 			{
+				// 如果发送缓冲区为空，则将未确认的最早序列号设置为下一个待发送的序列号
 				snd_una = snd_nxt;
 			}
 		}
 
-		// ikcp_parse_ack
-		// removes the segment with 'sn' from send buffer
+
 		/// <summary>
-		/// 解析确认
+		/// 解析确认包
+		/// 从发送缓冲区中移除具有指定序列号的段
 		/// </summary>
+		/// <param name="sn">序列号</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal void ParseAck(uint sn)
 		{
+			// 如果序列号小于未确认的最早序列号或大于等于下一个待发送的序列号，则返回
 			if (Utils.TimeDiff(sn, snd_una) < 0 || Utils.TimeDiff(sn, snd_nxt) >= 0)
 				return;
-			// for-int so we can erase while iterating
+
+			// 标记是否需要移除段
 			bool needRemove = false;
+			// 要移除的段的索引
 			int removeIndex = 0;
+
 #if NET7_0_OR_GREATER
-            foreach (ref var seg in CollectionsMarshal.AsSpan(snd_buf))
+    foreach (ref var seg in CollectionsMarshal.AsSpan(snd_bufList))
 #else
 			foreach (var seg in snd_bufList)
 #endif
 			{
-				// is this the segment?
+				// 如果找到具有指定序列号的段
 				if (sn == seg.SegHead.Sn)
 				{
-					// remove and return
+					// 标记需要移除
 					needRemove = true;
-					// SegmentDelete(seg);
+					// 释放段资源
 					seg.Dispose();
 					break;
 				}
+				// 如果当前段的序列号大于指定的序列号，停止查找
 				if (Utils.TimeDiff(sn, seg.SegHead.Sn) < 0)
 				{
 					break;
 				}
 
+				// 更新要移除的段的索引
 				removeIndex++;
 			}
 
+			// 如果需要移除段，则从发送缓冲区中移除
 			if (needRemove)
 			{
 				snd_bufList.RemoveAt(removeIndex);
 			}
 		}
 
+
 		// ikcp_parse_una
-		// removes all unacknowledged segments with sequence numbers < una from send buffer
+		// 移除发送缓冲区中所有序列号小于una的未确认段
 		/// <summary>
-		/// 解析UNA
+		/// 解析UNA，移除所有序列号小于una的未确认段
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal void ParseUna(uint una)
@@ -652,13 +686,12 @@ namespace ET
 			foreach (SegmentStruct seg in snd_bufList)
 #endif
 			{
-				// if (Utils.TimeDiff(una, seg.sn) > 0)
+				// 如果段的序列号小于una
 				if (seg.SegHead.Sn < una)
 				{
-					// can't remove while iterating. remember how many to remove
-					// and do it after the loop.
+					// 不能在迭代时移除，记住要移除的数量，循环结束后再移除
 					++removed;
-					// SegmentDelete(seg);
+					// 删除段
 					seg.Dispose();
 				}
 				else
@@ -666,39 +699,43 @@ namespace ET
 					break;
 				}
 			}
+			// 从发送缓冲区中移除已确认的段
 			snd_bufList.RemoveRange(0, removed);
 		}
+
 
 		// ikcp_parse_fastack
 		/// <summary>
 		/// 解析快速确认
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal void ParseFastack(uint sn, uint ts) // serial number, timestamp
+		internal void ParseFastack(uint sn, uint ts) // 序列号，时间戳
 		{
-			// sn needs to be between snd_una and snd_nxt
+			// sn 需要在 snd_una 和 snd_nxt 之间
 			// if !(snd_una <= sn && sn < snd_nxt) return;
 
-			// if (Utils.TimeDiff(sn, snd_una) < 0)
+			// 如果 sn 小于 snd_una，则返回
 			if (sn < snd_una)
 				return;
 
-			// if (Utils.TimeDiff(sn, snd_nxt) >= 0)
+			// 如果 sn 大于等于 snd_nxt，则返回
 			if (sn >= snd_nxt)
 				return;
 #if NET7_0_OR_GREATER
             foreach (ref var seg in CollectionsMarshal.AsSpan(snd_buf))
             {
-                // if (Utils.TimeDiff(sn, seg.sn) < 0)
+                // 如果 sn 小于 seg 的序列号，则跳出循环
                 if (sn < seg.SegHead.sn)
                 {
                     break;
                 }
+                // 如果 sn 不等于 seg 的序列号，则增加 fastack 计数
                 else if (sn != seg.SegHead.sn)
                 {
 #if !FASTACK_CONSERVE
                     seg.fastack++;
 #else
+                    // 如果 ts 大于等于 seg 的时间戳，则增加 fastack 计数
                     if (Utils.TimeDiff(ts, seg.SegHead.ts) >= 0)
                     {
                         seg.fastack++;
@@ -710,17 +747,19 @@ namespace ET
 			for (int i = 0; i < this.snd_bufList.Count; i++)
 			{
 				SegmentStruct seg = this.snd_bufList[i];
-				// if (Utils.TimeDiff(sn, seg.sn) < 0)
+				// 如果 sn 小于 seg 的序列号，则跳出循环
 				if (sn < seg.SegHead.Sn)
 				{
 					break;
 				}
+				// 如果 sn 不等于 seg 的序列号，则增加 fastack 计数
 				else if (sn != seg.SegHead.Sn)
 				{
 #if !FASTACK_CONSERVE
 					seg.Fastack++;
 					this.snd_bufList[i] = seg;
 #else
+                    // 如果 ts 大于等于 seg 的时间戳，则增加 fastack 计数
                     if (Utils.TimeDiff(ts, seg.SegHead.ts) >= 0)
                     {
                         seg.fastack++;
@@ -730,21 +769,20 @@ namespace ET
 				}
 			}
 #endif
-
-
-
 		}
 
+
 		// ikcp_ack_push
-		// appends an ack.
+		// 添加一个确认项
 		/// <summary>
 		/// 确认推送
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		void AckPush(uint sn, uint ts) // serial number, timestamp
+		void AckPush(uint sn, uint ts) // 序列号，时间戳
 		{
 			ackList.Add(new AckItem { serialNumber = sn, timestamp = ts });
 		}
+
 
 		// ikcp_parse_data
 		/// <summary>
@@ -755,6 +793,7 @@ namespace ET
 		{
 			uint sn = newseg.SegHead.Sn;
 
+			// 如果 sn 超过接收窗口的范围，或者 sn 小于下一个接收序列号，则丢弃该段
 			if (Utils.TimeDiff(sn, rcv_nxt + rcv_wnd) >= 0 ||
 				Utils.TimeDiff(sn, rcv_nxt) < 0)
 			{
@@ -762,27 +801,29 @@ namespace ET
 				return;
 			}
 
+			// 将段插入接收缓冲区
 			InsertSegmentInReceiveBuffer(ref newseg);
+			// 将准备好的段移动到接收队列
 			MoveReceiveBufferReadySegmentsToQueue();
 		}
 
-		// inserts the segment into rcv_buf, ordered by seg.sn.
-		// drops the segment if one with the same seg.sn already exists.
-		// goes through receive buffer in reverse order for performance.
+
+		// 将段插入接收缓冲区，按 seg.sn 排序。
+		// 如果已经存在相同 seg.sn 的段，则丢弃该段。
+		// 为了性能，逆序遍历接收缓冲区。
 		//
-		// note: see KcpTests.InsertSegmentInReceiveBuffer test!
-		// note: 'insert or delete' can be done in different ways, but let's
-		//       keep consistency with original C kcp.
+		// 注意：参见 KcpTests.InsertSegmentInReceiveBuffer 测试！
+		// 注意：'插入或删除' 可以有不同的实现方式，但我们保持与原始 C 版 kcp 的一致性。
 		/// <summary>
 		/// 插入接收缓冲区
 		/// </summary>
-		/// <param name="newseg"></param>
+		/// <param name="newseg">新的段</param>
 		internal void InsertSegmentInReceiveBuffer(ref SegmentStruct newseg)
 		{
-			bool repeat = false; // 'duplicate'
+			bool repeat = false; // '重复'
 
-			// original C iterates backwards, so we need to do that as well.
-			// note if rcv_buf.Count == 0, i becomes -1 and no looping happens.
+			// 原始 C 版是逆序遍历，所以我们也需要这样做。
+			// 注意如果 rcv_buf.Count == 0，i 变为 -1，不会进行循环。
 			int i;
 #if NET7_0_OR_GREATER
             Span<SegmentStruct> arr = CollectionsMarshal.AsSpan(rcv_buf);
@@ -796,32 +837,32 @@ namespace ET
 #endif
 				if (seg.SegHead.Sn == newseg.SegHead.Sn)
 				{
-					// duplicate segment found. nothing will be added.
+					// 找到重复的段，不会添加任何内容。
 					repeat = true;
 					break;
 				}
 				if (Utils.TimeDiff(newseg.SegHead.Sn, seg.SegHead.Sn) > 0)
 				{
-					// this entry's sn is < newseg.sn, so let's stop
+					// 该条目的 sn 小于 newseg.sn，所以停止
 					break;
 				}
 			}
 
-			// no duplicate? then insert.
+			// 没有重复？则插入。
 			if (!repeat)
 			{
 				rcv_bufList.Insert(i + 1, newseg);
 			}
-			// duplicate. just delete it.
+			// 重复。直接删除。
 			else
 			{
 				newseg.Dispose();
 			}
 		}
 
-		// move ready segments from rcv_buf -> rcv_queue.
-		// moves only the ready segments which are in rcv_nxt sequence order.
-		// some may still be missing an inserted later.
+		// 将准备好的段从 rcv_buf 移动到 rcv_queue。
+		// 仅移动按 rcv_nxt 序列顺序准备好的段。
+		// 有些段可能仍然缺失，稍后插入。
 		/// <summary>
 		/// 移动接收缓冲区准备好的段到队列
 		/// </summary>
@@ -835,16 +876,16 @@ namespace ET
 			foreach (var seg in rcv_bufList)
 #endif
 			{
-				// move segments while they are in 'rcv_nxt' sequence order.
-				// some may still be missing and inserted later, in this case it stops immediately
-				// because segments always need to be received in the exact sequence order.
+				// 当段按 'rcv_nxt' 序列顺序时移动段。
+				// 有些段可能仍然缺失，稍后插入，在这种情况下会立即停止
+				// 因为段总是需要按确切的序列顺序接收。
 				if (seg.SegHead.Sn == rcv_nxt && rcv_Queue.Count < rcv_wnd)
 				{
-					// can't remove while iterating. remember how many to remove
-					// and do it after the loop.
+					// 不能在迭代时删除。记住要删除的数量
+					// 并在循环后执行删除。
 					++removed;
 					rcv_Queue.Enqueue(seg);
-					// increase sequence number for next segment
+					// 增加下一个段的序列号
 					rcv_nxt++;
 				}
 				else
@@ -855,64 +896,64 @@ namespace ET
 			rcv_bufList.RemoveRange(0, removed);
 		}
 
-		// ikcp_input
-		// used when you receive a low level packet (e.g. UDP packet)
-		// => original kcp uses offset=0, we made it a parameter so that high
-		//    level can skip the channel byte more easily
+
 		/// <summary>
 		/// 输入
 		/// </summary>
+		/// <param name="data">接收到的低层数据包（例如UDP包）</param>
+		/// <returns>处理结果，0表示成功，负数表示错误</returns>
 		public int Input(Span<byte> data)
 		{
-			int offset = 0;
-			int size = data.Length;
-			uint prev_una = snd_una;
-			uint maxack = 0;
-			uint latest_ts = 0;
-			int flag = 0;
+			int offset = 0; // 当前数据偏移量
+			int size = data.Length; // 数据长度
+			uint prev_una = snd_una; // 记录之前的未确认序列号
+			uint maxack = 0; // 最大的确认序列号
+			uint latest_ts = 0; // 最新的时间戳
+			int flag = 0; // 标志位
 
+			// 如果数据为空或长度小于协议头部长度，返回错误
 			if (data == null || size < OVERHEAD) return -1;
 
 			while (true)
 			{
-				// enough data left to decode segment (aka OVERHEAD bytes)?
+				// 如果剩余数据不足以解码一个协议头部，退出循环
 				if (size < OVERHEAD) break;
 
+				// 读取协议头部
 				var segHead = Unsafe.ReadUnaligned<SegmentHead>(ref MemoryMarshal.GetReference(data.Slice(offset)));
-				offset += Unsafe.SizeOf<SegmentHead>();
-				uint conv_ = segHead.Conv;
-				byte cmd = segHead.Cmd;
-				byte frg = segHead.Frg;
-				ushort wnd = segHead.Wnd;
-				uint ts = segHead.Ts;
-				uint sn = segHead.Sn;
-				uint una = segHead.Una;
-				uint len = segHead.Len;
+				offset += Unsafe.SizeOf<SegmentHead>(); // 更新偏移量
+				uint conv_ = segHead.Conv; // 会话ID
+				byte cmd = segHead.Cmd; // 命令类型
+				byte frg = segHead.Frg; // 分片序号
+				ushort wnd = segHead.Wnd; // 窗口大小
+				uint ts = segHead.Ts; // 时间戳
+				uint sn = segHead.Sn; // 序列号
+				uint una = segHead.Una; // 未确认序列号
+				uint len = segHead.Len; // 数据长度
 
-				// reduce remaining size by what was read
+				// 减少剩余数据长度
 				size -= OVERHEAD;
 
-				// enough remaining to read 'len' bytes of the actual payload?
-				// note: original kcp casts uint len to int for <0 check.
+				// 如果剩余数据不足以读取len长度的数据，返回错误
 				if (size < len || (int)len < 0) return -2;
 
-				// validate command type
-				if (cmd != CMD_PUSH && cmd != CMD_ACK &&
-					cmd != CMD_WASK && cmd != CMD_WINS)
+				// 验证命令类型
+				if (cmd != CMD_PUSH && cmd != CMD_ACK && cmd != CMD_WASK && cmd != CMD_WINS)
 					return -3;
 
-				rmt_wnd = wnd;
-				ParseUna(una);
-				ShrinkBuf();
+				rmt_wnd = wnd; // 更新远端窗口大小
+				ParseUna(una); // 解析未确认序列号
+				ShrinkBuf(); // 收缩发送缓冲区
 
 				if (cmd == CMD_ACK)
 				{
+					// 处理ACK命令
 					if (Utils.TimeDiff(current, ts) >= 0)
 					{
-						UpdateAck(Utils.TimeDiff(current, ts));
+						UpdateAck(Utils.TimeDiff(current, ts)); // 更新ACK
 					}
-					ParseAck(sn);
-					ShrinkBuf();
+					ParseAck(sn); // 解析ACK
+					ShrinkBuf(); // 收缩发送缓冲区
 					if (flag == 0)
 					{
 						flag = 1;
@@ -927,20 +968,21 @@ namespace ET
 							maxack = sn;
 							latest_ts = ts;
 #else
-                            if (Utils.TimeDiff(ts, latest_ts) > 0)
-                            {
-                                maxack = sn;
-                                latest_ts = ts;
-                            }
+                    if (Utils.TimeDiff(ts, latest_ts) > 0)
+                    {
+                        maxack = sn;
+                        latest_ts = ts;
+                    }
 #endif
 						}
 					}
 				}
 				else if (cmd == CMD_PUSH)
 				{
+					// 处理PUSH命令
 					if (Utils.TimeDiff(sn, rcv_nxt + rcv_wnd) < 0)
 					{
-						AckPush(sn, ts);
+						AckPush(sn, ts); // 推送ACK
 						if (Utils.TimeDiff(sn, rcv_nxt) >= 0)
 						{
 							SegmentStruct seg = new SegmentStruct((int)len, this.kcpSegmentArrayPool);
@@ -956,127 +998,141 @@ namespace ET
 							};
 							if (len > 0)
 							{
-								data.Slice(offset, (int)len).CopyTo(seg.FreeBuffer);
-								seg.Advance((int)len);
+								data.Slice(offset, (int)len).CopyTo(seg.FreeBuffer); // 复制数据
+								seg.Advance((int)len); // 更新数据长度
 							}
-							ParseData(ref seg);
+							ParseData(ref seg); // 解析数据
 						}
 					}
 				}
 				else if (cmd == CMD_WASK)
 				{
-					// ready to send back CMD_WINS in flush
-					// tell remote my window size
+					// 处理WASK命令，准备在flush中发送CMD_WINS
 					probe |= ASK_TELL;
 				}
 				else if (cmd == CMD_WINS)
 				{
-					// do nothing
+					// 处理WINS命令，不做任何操作
 				}
 				else
 				{
-					return -3;
+					return -3; // 未知命令类型，返回错误
 				}
 
-				offset += (int)len;
-				size -= (int)len;
+				offset += (int)len; // 更新偏移量
+				size -= (int)len; // 减少剩余数据长度
 			}
 
 			if (flag != 0)
 			{
-				ParseFastack(maxack, latest_ts);
+				ParseFastack(maxack, latest_ts); // 解析快速ACK
 			}
 
-			// cwnd update when packet arrived
+			// 当数据包到达时更新拥塞窗口
 			if (Utils.TimeDiff(snd_una, prev_una) > 0)
 			{
+				// 如果当前拥塞窗口小于远端窗口
 				if (cwnd < rmt_wnd)
 				{
+					// 如果当前拥塞窗口小于慢启动阈值
 					if (cwnd < ssthresh)
 					{
+						// 处于慢启动阶段，增加拥塞窗口和增量
 						cwnd++;
 						incr += mss;
 					}
 					else
 					{
-						if (incr < mss) incr = mss;
+						// 处于拥塞避免阶段
+						if (incr < mss) incr = mss; // 确保增量不小于MSS
+													// 增加增量，使用加法增量算法
 						incr += (mss * mss) / incr + (mss / 16);
+						// 如果新的拥塞窗口大小不超过增量
 						if ((cwnd + 1) * mss <= incr)
 						{
+							// 更新拥塞窗口大小
 							cwnd = (incr + mss - 1) / ((mss > 0) ? mss : 1);
 						}
 					}
+					// 如果拥塞窗口大小超过远端窗口
 					if (cwnd > rmt_wnd)
 					{
+						// 将拥塞窗口大小限制为远端窗口大小
 						cwnd = rmt_wnd;
+						// 更新增量为远端窗口大小乘以MSS
 						incr = rmt_wnd * mss;
 					}
 				}
+
 			}
 
-			return 0;
+			return 0; // 成功处理数据包
 		}
 
-		// flush helper function
+
 		/// <summary>
 		/// 制造空间
 		/// </summary>
-		/// <param name="size"></param>
-		/// <param name="space"></param>
+		/// <param name="size">当前缓冲区已使用的大小</param>
+		/// <param name="space">需要的额外空间大小</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		void MakeSpace(ref int size, int space)
 		{
+			// 如果当前缓冲区已使用的大小加上需要的额外空间大小超过了MTU（最大传输单元）
 			if (size + space > mtu)
 			{
+				// 调用输出回调函数，将当前缓冲区的数据输出
 				output(buffers, size);
+				// 重置缓冲区已使用的大小为0
 				size = 0;
 			}
 		}
 
-		// flush helper function
 		/// <summary>
 		/// 刷新缓冲区
 		/// </summary>
-		/// <param name="size"></param>
+		/// <param name="size">当前缓冲区已使用的大小</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		void FlushBuffer(int size)
 		{
-			// flush buffer up to 'offset' (<= MTU)
+			// 如果缓冲区中有数据（已使用的大小大于0）
 			if (size > 0)
 			{
+				// 调用输出回调函数，将当前缓冲区的数据输出
 				output(buffers, size);
 			}
 		}
 
+
 		// ikcp_flush
-		// flush remain ack segments.
-		// flush may output multiple <= MTU messages from MakeSpace / FlushBuffer.
-		// the amount of messages depends on the sliding window.
-		// configured by send/receive window sizes + congestion control.
-		// with congestion control, the window will be extremely small(!).
+		// 刷新剩余的ACK段。
+		// 刷新可能会输出多个小于等于MTU的消息，这些消息来自MakeSpace / FlushBuffer。
+		// 消息的数量取决于滑动窗口。
+		// 由发送/接收窗口大小和拥塞控制配置。
+		// 在拥塞控制下，窗口会非常小(!)。
 		/// <summary>
 		/// 刷新
 		/// </summary>
 		public void Flush()
 		{
-			int size = 0;     // amount of bytes to flush. 'buffer ptr' in C.
-			bool lost = false; // lost segments
+			int size = 0;     // 要刷新的字节数，相当于C语言中的'buffer ptr'。
+			bool lost = false; // 丢失的段
 
-			// update needs to be called before flushing
+			// 刷新前需要调用update
 			if (!updated) return;
 
-			// kcp only stack allocates a segment here for performance, leaving
-			// its data buffer null because this segment's data buffer is never
-			// used. that's fine in C, but in C# our segment is a class so we
-			// need to allocate and most importantly, not forget to deallocate
-			// it before returning.
+			// kcp只在这里堆栈分配一个段以提高性能，留下
+			// 它的数据缓冲区为空，因为这个段的数据缓冲区从未
+			// 被使用。这在C语言中是可以的，但在C#中我们的段是一个类，
+			// 所以我们需要分配它，最重要的是，在返回之前不要忘记释放它。
 			SegmentStruct seg = new SegmentStruct((int)this.mtu, this.kcpSegmentArrayPool);
-			seg.SegHead.Conv = conv;
-			seg.SegHead.Cmd = CMD_ACK;
-			seg.SegHead.Wnd = WndUnused();
-			seg.SegHead.Una = rcv_nxt;
+			seg.SegHead.Conv = conv; // 设置会话ID
+			seg.SegHead.Cmd = CMD_ACK; // 设置命令为ACK
+			seg.SegHead.Wnd = WndUnused(); // 设置窗口大小
+			seg.SegHead.Una = rcv_nxt; // 设置未确认的序列号
 
-			// flush acknowledges
+
+			// 刷新确认
 #if NET7_0_OR_GREATER
             foreach (ref AckItem ack  in CollectionsMarshal.AsSpan(acklist))
 #else
@@ -1084,102 +1140,108 @@ namespace ET
 #endif
 			{
 				MakeSpace(ref size, OVERHEAD);
-				// ikcp_ack_get assigns ack[i] to seg.sn, seg.ts
-				seg.SegHead.Sn = ack.serialNumber;
-				seg.SegHead.Ts = ack.timestamp;
-				seg.Encode(buffers.AsSpan(size + RESERVED_BYTE), ref size);
+				// ikcp_ack_get 将 ack[i] 分配给 seg.sn 和 seg.ts
+				seg.SegHead.Sn = ack.serialNumber; // 设置段的序列号
+				seg.SegHead.Ts = ack.timestamp; // 设置段的时间戳
+				seg.Encode(buffers.AsSpan(size + RESERVED_BYTE), ref size); // 编码段并将其放入缓冲区
 			}
-			ackList.Clear();
+			ackList.Clear(); // 清空确认列表
 
-			// probe window size (if remote window size equals zero)
+
+			// 探测窗口大小（如果远程窗口大小等于零）
 			if (rmt_wnd == 0)
 			{
 				if (probe_wait == 0)
 				{
-					probe_wait = PROBE_INIT;
-					ts_probe = current + probe_wait;
+					probe_wait = PROBE_INIT; // 初始化探测等待时间
+					ts_probe = current + probe_wait; // 设置下次探测时间
 				}
 				else
 				{
 					if (Utils.TimeDiff(current, ts_probe) >= 0)
 					{
 						if (probe_wait < PROBE_INIT)
-							probe_wait = PROBE_INIT;
-						probe_wait += probe_wait / 2;
+							probe_wait = PROBE_INIT; // 确保探测等待时间不小于初始值
+						probe_wait += probe_wait / 2; // 增加探测等待时间
 						if (probe_wait > PROBE_LIMIT)
-							probe_wait = PROBE_LIMIT;
-						ts_probe = current + probe_wait;
-						probe |= ASK_SEND;
+							probe_wait = PROBE_LIMIT; // 确保探测等待时间不超过限制
+						ts_probe = current + probe_wait; // 设置下次探测时间
+						probe |= ASK_SEND; // 设置探测标志
 					}
 				}
 			}
 			else
 			{
-				ts_probe = 0;
-				probe_wait = 0;
+				ts_probe = 0; // 重置探测时间
+				probe_wait = 0; // 重置探测等待时间
 			}
 
-			// flush window probing commands
+
+			// 刷新窗口探测命令
 			if ((probe & ASK_SEND) != 0)
 			{
-				seg.SegHead.Cmd = CMD_WASK;
-				MakeSpace(ref size, OVERHEAD);
-				seg.Encode(buffers.AsSpan(size + RESERVED_BYTE), ref size);
+				seg.SegHead.Cmd = CMD_WASK; // 设置命令为窗口探测请求
+				MakeSpace(ref size, OVERHEAD); // 为新的数据段腾出空间
+				seg.Encode(buffers.AsSpan(size + RESERVED_BYTE), ref size); // 编码段并将其放入缓冲区
 			}
 
-			// flush window probing commands
+			// 刷新窗口探测命令
 			if ((probe & ASK_TELL) != 0)
 			{
-				seg.SegHead.Cmd = CMD_WINS;
-				MakeSpace(ref size, OVERHEAD);
-				seg.Encode(buffers.AsSpan(size + RESERVED_BYTE), ref size);
+				seg.SegHead.Cmd = CMD_WINS; // 设置命令为窗口探测响应
+				MakeSpace(ref size, OVERHEAD); // 为新的数据段腾出空间
+				seg.Encode(buffers.AsSpan(size + RESERVED_BYTE), ref size); // 编码段并将其放入缓冲区
 			}
 
-			probe = 0;
+			probe = 0; // 重置探测标志
 
-			// calculate the window size which is currently safe to send.
-			// it's send window, or remote window, whatever is smaller.
-			// for our max
+
+			// 计算当前安全发送的窗口大小。
+			// 取发送窗口和远程窗口中较小的值。
+			// 作为我们的最大值
 			uint cwnd_ = Math.Min(snd_wnd, rmt_wnd);
 
-			// double negative: if congestion window is enabled:
-			// limit window size to cwnd.
+			// 双重否定：如果启用了拥塞窗口：
+			// 将窗口大小限制为cwnd。
 			//
-			// note this may heavily limit window sizes.
-			// for our max message size test with super large windows of 32k,
-			// 'congestion window' limits it down from 32.000 to 2.
+			// 注意，这可能会严重限制窗口大小。
+			// 在我们的最大消息大小测试中，使用超大窗口32k，
+			// '拥塞窗口'将其从32,000限制到2。
 			if (!nocwnd) cwnd_ = Math.Min(cwnd, cwnd_);
 
-			// move cwnd_ 'window size' messages from snd_queue to snd_buf
-			//   'snd_nxt' is what we want to send.
-			//   'snd_una' is what hasn't been acked yet.
-			//   copy up to 'cwnd_' difference between them (sliding window)
+
+			// 将cwnd_ '窗口大小'的消息从snd_queue移动到snd_buf
+			//   'snd_nxt' 是我们想要发送的序列号。
+			//   'snd_una' 是尚未被确认的序列号。
+			//   复制它们之间最多 'cwnd_' 的差异（滑动窗口）
 			while (Utils.TimeDiff(snd_nxt, snd_una + cwnd_) < 0)
 			{
-				if (snd_Queue.Count == 0) break;
+				if (snd_Queue.Count == 0) break; // 如果发送队列为空，则退出循环
 
-				SegmentStruct newseg = snd_Queue.Dequeue();
+				SegmentStruct newseg = snd_Queue.Dequeue(); // 从发送队列中取出一个新的段
 
-				newseg.SegHead.Conv = conv;
-				newseg.SegHead.Cmd = CMD_PUSH;
-				newseg.SegHead.Wnd = seg.SegHead.Wnd;
-				newseg.SegHead.Ts = current;
-				newseg.SegHead.Sn = snd_nxt;
-				snd_nxt += 1; // increase sequence number for next segment
-				newseg.SegHead.Una = rcv_nxt;
-				newseg.Resendts = current;
-				newseg.Rto = rx_rto;
-				newseg.Fastack = 0;
-				newseg.Xmit = 0;
-				snd_bufList.Add(newseg);
+				newseg.SegHead.Conv = conv; // 设置会话ID
+				newseg.SegHead.Cmd = CMD_PUSH; // 设置命令为推送数据
+				newseg.SegHead.Wnd = seg.SegHead.Wnd; // 设置窗口大小
+				newseg.SegHead.Ts = current; // 设置当前时间戳
+				newseg.SegHead.Sn = snd_nxt; // 设置段的序列号
+				snd_nxt += 1; // 增加下一个段的序列号
+				newseg.SegHead.Una = rcv_nxt; // 设置未确认的序列号
+				newseg.Resendts = current; // 设置重传时间戳
+				newseg.Rto = rx_rto; // 设置重传超时时间
+				newseg.Fastack = 0; // 初始化快速确认计数
+				newseg.Xmit = 0; // 初始化传输计数
+				snd_bufList.Add(newseg); // 将新段添加到发送缓冲区列表
 			}
 
-			// calculate resent
-			uint resent = fastresend > 0 ? (uint)fastresend : 0xffffffff;
-			uint rtomin = nodelay == 0 ? (uint)rx_rto >> 3 : 0;
 
-			// flush data segments
-			int change = 0;
+			// 计算重传次数
+			uint resent = fastresend > 0 ? (uint)fastresend : 0xffffffff; // 如果设置了快速重传次数，则使用该值，否则使用最大值
+			uint rtomin = nodelay == 0 ? (uint)rx_rto >> 3 : 0; // 如果未启用无延迟模式，则最小重传时间为rx_rto的八分之一
+
+			// 刷新数据段
+			int change = 0; // 初始化变化计数
+
 #if NET7_0_OR_GREATER
             var sndBufArr = CollectionsMarshal.AsSpan(this.snd_buf);
             for (int i = 0; i < sndBufArr.Length; i++)
@@ -1190,338 +1252,373 @@ namespace ET
 			{
 				SegmentStruct segment = this.snd_bufList[i];
 #endif
-				bool needsend = false;
+				bool needsend = false; // 是否需要发送
 
-				// initial transmit
+				// 初始传输
 				if (segment.Xmit == 0)
 				{
-					needsend = true;
-					segment.Xmit++;
-					segment.Rto = this.rx_rto;
-					segment.Resendts = this.current + (uint)segment.Rto + rtomin;
+					needsend = true; // 需要发送
+					segment.Xmit++; // 增加传输计数
+					segment.Rto = this.rx_rto; // 设置重传超时时间
+					segment.Resendts = this.current + (uint)segment.Rto + rtomin; // 设置重传时间戳
 				}
-				// RTO
+				// 重传超时
 				else if (Utils.TimeDiff(this.current, segment.Resendts) >= 0)
 				{
-					needsend = true;
-					segment.Xmit++;
-					this.xmit++;
+					needsend = true; // 需要发送
+					segment.Xmit++; // 增加传输计数
+					this.xmit++; // 增加全局传输计数
 					if (this.nodelay == 0)
 					{
-						segment.Rto += Math.Max(segment.Rto, this.rx_rto);
+						segment.Rto += Math.Max(segment.Rto, this.rx_rto); // 增加重传超时时间
 					}
 					else
 					{
 						int step = (this.nodelay < 2) ? segment.Rto : this.rx_rto;
-						segment.Rto += step / 2;
+						segment.Rto += step / 2; // 增加重传超时时间
 					}
 
-					segment.Resendts = this.current + (uint)segment.Rto;
-					lost = true;
+					segment.Resendts = this.current + (uint)segment.Rto; // 更新重传时间戳
+					lost = true; // 标记为丢失
 				}
-				// fast retransmit
+				// 快速重传
 				else if (segment.Fastack >= resent)
 				{
 					if (segment.Xmit <= this.fastlimit || this.fastlimit <= 0)
 					{
-						needsend = true;
-						segment.Xmit++;
-						segment.Fastack = 0;
-						segment.Resendts = this.current + (uint)segment.Rto;
-						change++;
+						needsend = true; // 需要发送
+						segment.Xmit++; // 增加传输计数
+						segment.Fastack = 0; // 重置快速确认计数
+						segment.Resendts = this.current + (uint)segment.Rto; // 更新重传时间戳
+						change++; // 增加变化计数
 					}
 				}
 
 				if (needsend)
 				{
-					segment.SegHead.Ts = this.current;
-					segment.SegHead.Wnd = seg.SegHead.Wnd;
-					segment.SegHead.Una = this.rcv_nxt;
+					segment.SegHead.Ts = this.current; // 设置时间戳
+					segment.SegHead.Wnd = seg.SegHead.Wnd; // 设置窗口大小
+					segment.SegHead.Una = this.rcv_nxt; // 设置未确认的序列号
 
-					int need = OVERHEAD + segment.WrittenCount;
-					this.MakeSpace(ref size, need);
+					int need = OVERHEAD + segment.WrittenCount; // 计算需要的空间
+					this.MakeSpace(ref size, need); // 为数据段腾出空间
 
-					segment.Encode(this.buffers.AsSpan(size + RESERVED_BYTE), ref size);
+					segment.Encode(this.buffers.AsSpan(size + RESERVED_BYTE), ref size); // 编码数据段
 
 					if (segment.WrittenCount > 0)
 					{
-						segment.WrittenBuffer.CopyTo(this.buffers.AsSpan(size + RESERVED_BYTE));
+						segment.WrittenBuffer.CopyTo(this.buffers.AsSpan(size + RESERVED_BYTE)); // 复制数据到缓冲区
 
-						size += segment.WrittenCount;
+						size += segment.WrittenCount; // 更新缓冲区大小
 					}
 
-					// dead link happens if a message was resent N times, but an
-					// ack was still not received.
+					// 如果消息被重传了N次，但仍未收到确认，则发生死链
 					if (segment.Xmit >= this.dead_link)
 					{
-						this.state = -1;
+						this.state = -1; // 设置状态为-1表示死链
 					}
 				}
 #if !NET7_0_OR_GREATER
-				this.snd_bufList[i] = segment;
+				this.snd_bufList[i] = segment; // 更新发送缓冲区列表中的段
 #endif
 			}
 
-			// kcp stackallocs 'seg'. our C# segment is a class though, so we
-			// need to properly delete and return it to the pool now that we are
-			// done with it.
+
+			// kcp 使用 stackalloc 分配 'seg'。我们的 C# 段是一个类，
+			// 因此我们需要在完成后正确删除并将其返回到池中。
 			// SegmentDelete(seg);
 
-			seg.Dispose();
+			seg.Dispose(); // 释放段的资源
 
-			// flush remaining segments
-			FlushBuffer(size);
+			// 刷新剩余的段
+			FlushBuffer(size); // 刷新缓冲区中的剩余数据段
 
-			// update ssthresh
-			// rate halving, https://tools.ietf.org/html/rfc6937
+
+			// 更新慢启动阈值
+			// 速率减半，参考 https://tools.ietf.org/html/rfc6937
 			if (change > 0)
 			{
-				uint inflight = snd_nxt - snd_una;
-				ssthresh = inflight / 2;
+				uint inflight = snd_nxt - snd_una; // 计算在途数据量
+				ssthresh = inflight / 2; // 将慢启动阈值设置为在途数据量的一半
 				if (ssthresh < THRESH_MIN)
-					ssthresh = THRESH_MIN;
-				cwnd = ssthresh + resent;
-				incr = cwnd * mss;
+					ssthresh = THRESH_MIN; // 如果慢启动阈值小于最小阈值，则设置为最小阈值
+				cwnd = ssthresh + resent; // 更新拥塞窗口大小
+				incr = cwnd * mss; // 更新增量
 			}
 
-			// congestion control, https://tools.ietf.org/html/rfc5681
+
+			// 拥塞控制，参考 https://tools.ietf.org/html/rfc5681
 			if (lost)
 			{
-				// original C uses 'cwnd', not kcp->cwnd!
-				ssthresh = cwnd_ / 2;
+				// 原始 C 代码使用 'cwnd'，而不是 kcp->cwnd！
+				ssthresh = cwnd_ / 2; // 将慢启动阈值设置为当前拥塞窗口的一半
 				if (ssthresh < THRESH_MIN)
-					ssthresh = THRESH_MIN;
-				cwnd = 1;
-				incr = mss;
+					ssthresh = THRESH_MIN; // 如果慢启动阈值小于最小阈值，则设置为最小阈值
+				cwnd = 1; // 将拥塞窗口大小设置为1
+				incr = mss; // 将增量设置为最大报文段大小
 			}
 
 			if (cwnd < 1)
 			{
-				cwnd = 1;
-				incr = mss;
+				cwnd = 1; // 如果拥塞窗口大小小于1，则将其设置为1
+				incr = mss; // 将增量设置为最大报文段大小
 			}
+
 		}
 
 		// ikcp_update
-		// update state (call it repeatedly, every 10ms-100ms), or you can ask
-		// Check() when to call it again (without Input/Send calling).
+		// 更新状态（需要反复调用，每10ms-100ms调用一次），或者你可以通过调用 Check() 来确定何时再次调用（不需要 Input/Send 调用）。
 		//
-		// 'current' - current timestamp in millisec. pass it to Kcp so that
-		// Kcp doesn't have to do any stopwatch/deltaTime/etc. code
+		// 'current' - 当前的时间戳（毫秒）。将其传递给 Kcp，这样 Kcp 就不需要执行任何秒表/时间差等代码。
 		//
-		// time as uint, likely to minimize bandwidth.
-		// uint.max = 4294967295 ms = 1193 hours = 49 days
+		// 使用 uint 类型的时间，可能是为了最小化带宽。
+		// uint.max = 4294967295 毫秒 = 1193 小时 = 49 天
 		/// <summary>
 		/// 更新
 		/// </summary>
 		public void Update(uint currentTimeMilliSeconds)
 		{
-			current = currentTimeMilliSeconds;
+			current = currentTimeMilliSeconds; // 更新当前时间戳
 
-			// not updated yet? then set updated and last flush time.
+			// 如果尚未更新，则设置 updated 标志并记录最后一次刷新时间
 			if (!updated)
 			{
 				updated = true;
 				ts_flush = current;
 			}
 
-			// slap is time since last flush in milliseconds
+			// slap 是自上次刷新以来的时间（毫秒）
 			int slap = Utils.TimeDiff(current, ts_flush);
 
-			// hard limit: if 10s elapsed, always flush no matter what
+			// 硬限制：如果已经过去了10秒，则无论如何都要刷新
 			if (slap >= 10000 || slap < -10000)
 			{
 				ts_flush = current;
 				slap = 0;
 			}
 
-			// last flush is increased by 'interval' each time.
-			// so slap >= is a strange way to check if interval has elapsed yet.
+			// 每次最后一次刷新时间增加一个 'interval'。
+			// 因此 slap >= 是一种检查间隔时间是否已经过去的奇怪方式。
 			if (slap >= 0)
 			{
-				// increase last flush time by one interval
+				// 将最后一次刷新时间增加一个间隔
 				ts_flush += interval;
 
-				// if last flush is still behind, increase it to current + interval
-				// if (Utils.TimeDiff(current, ts_flush) >= 0) // original kcp.c
-				if (current >= ts_flush)                       // less confusing
+				// 如果最后一次刷新时间仍然落后，则将其增加到当前时间 + 间隔
+				// if (Utils.TimeDiff(current, ts_flush) >= 0) // 原始 kcp.c
+				if (current >= ts_flush)                       // 更不容易混淆
 				{
 					ts_flush = current + interval;
 				}
-				Flush();
+				Flush(); // 刷新
 			}
 		}
 
+
 		// ikcp_check
-		// Determine when should you invoke update
-		// Returns when you should invoke update in millisec, if there is no
-		// input/send calling. you can call update in that time, instead of
-		// call update repeatly.
+		// 确定何时应该调用 update
+		// 返回你应该在多少毫秒后调用 update，如果没有输入/发送调用。你可以在那个时间调用 update，而不是反复调用 update。
 		//
-		// Important to reduce unnecessary update invoking. use it to schedule
-		// update (e.g. implementing an epoll-like mechanism, or optimize update
-		// when handling massive kcp connections).
+		// 重要的是减少不必要的 update 调用。使用它来安排 update（例如，实现一个类似 epoll 的机制，或者在处理大量 kcp 连接时优化 update）。
 		/// <summary>
 		/// 检查
 		/// </summary>
 		public uint Check(uint current_)
 		{
 			uint ts_flush_ = ts_flush;
-			// int tm_flush = 0x7fffffff; original kcp: useless assignment
+			// int tm_flush = 0x7fffffff; 原始 kcp: 无用的赋值
 			int tm_packet = 0x7fffffff;
 
 			if (!updated)
 			{
-				return current_;
+				return current_; // 如果尚未更新，则返回当前时间
 			}
 
 			if (Utils.TimeDiff(current_, ts_flush_) >= 10000 ||
 				Utils.TimeDiff(current_, ts_flush_) < -10000)
 			{
-				ts_flush_ = current_;
+				ts_flush_ = current_; // 如果时间差超过10秒或小于-10秒，则将最后一次刷新时间设置为当前时间
 			}
 
 			if (Utils.TimeDiff(current_, ts_flush_) >= 0)
 			{
-				return current_;
+				return current_; // 如果时间差大于等于0，则返回当前时间
 			}
 
-			int tm_flush = Utils.TimeDiff(ts_flush_, current_);
+			int tm_flush = Utils.TimeDiff(ts_flush_, current_); // 计算到下次刷新时间的时间差
 #if NET7_0_OR_GREATER
-            foreach (ref SegmentStruct seg in CollectionsMarshal.AsSpan(this.snd_buf))
+    foreach (ref SegmentStruct seg in CollectionsMarshal.AsSpan(this.snd_buf))
 #else
 			foreach (SegmentStruct seg in snd_bufList)
 #endif
 			{
-				int diff = Utils.TimeDiff(seg.Resendts, current_);
+				int diff = Utils.TimeDiff(seg.Resendts, current_); // 计算到下次重发时间的时间差
 				if (diff <= 0)
 				{
-					return current_;
+					return current_; // 如果时间差小于等于0，则返回当前时间
 				}
-				if (diff < tm_packet) tm_packet = diff;
+				if (diff < tm_packet) tm_packet = diff; // 更新最小的时间差
 			}
 
-			uint minimal = (uint)(tm_packet < tm_flush ? tm_packet : tm_flush);
-			if (minimal >= interval) minimal = interval;
+			uint minimal = (uint)(tm_packet < tm_flush ? tm_packet : tm_flush); // 取最小的时间差
+			if (minimal >= interval) minimal = interval; // 如果最小时间差大于等于间隔时间，则设置为间隔时间
 
-			return current_ + minimal;
+			return current_ + minimal; // 返回当前时间加上最小时间差
 		}
 
-		// ikcp_setmtu
-		// Change MTU (Maximum Transmission Unit) size.
+
 		/// <summary>
-		/// 设置MTU
+		/// 设置MTU（最大传输单元）大小。
 		/// </summary>
+		/// <param name="mtu">新的MTU值</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void SetMtu(uint mtu)
 		{
+			// 如果传入的MTU值小于50或小于OVERHEAD（开销），则抛出MTU异常
 			if (mtu < 50 || mtu < OVERHEAD)
 				this.ThrowMTUException();
 
+			// 根据新的MTU值重新分配缓冲区大小
+			// 缓冲区大小 = (MTU + OVERHEAD) * 3 + RESERVED_BYTE
 			buffers = new byte[(mtu + OVERHEAD) * 3 + RESERVED_BYTE];
+
+			// 设置新的MTU值
 			this.mtu = mtu;
+
+			// 计算并设置MSS（最大报文段大小），MSS = MTU - OVERHEAD
 			mss = mtu - OVERHEAD;
 		}
 
-		// ikcp_interval
+
 		/// <summary>
-		/// 设置间隔
+		/// 设置更新间隔时间。
 		/// </summary>
+		/// <param name="interval">新的间隔时间（毫秒）</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void SetInterval(uint interval)
 		{
-			// clamp interval between 10 and 5000
-			if (interval > 5000) interval = 5000;
-			else if (interval < 10) interval = 10;
+			// 将间隔时间限制在10到5000毫秒之间
+			if (interval > 5000)
+				interval = 5000;
+			else if (interval < 10)
+				interval = 10;
+
+			// 设置新的间隔时间
 			this.interval = interval;
 		}
 
+
 		// ikcp_nodelay
-		// configuration: https://github.com/skywind3000/kcp/blob/master/README.en.md#protocol-configuration
-		//   nodelay : Whether nodelay mode is enabled, 0 is not enabled; 1 enabled.
-		//   interval ：Protocol internal work interval, in milliseconds, such as 10 ms or 20 ms.
-		//   resend ：Fast retransmission mode, 0 represents off by default, 2 can be set (2 ACK spans will result in direct retransmission)
-		//   nc ：Whether to turn off flow control, 0 represents “Do not turn off” by default, 1 represents “Turn off”.
-		// Normal Mode: ikcp_nodelay(kcp, 0, 40, 0, 0);
-		// Turbo Mode： ikcp_nodelay(kcp, 1, 10, 2, 1);
+		// 配置: https://github.com/skywind3000/kcp/blob/master/README.en.md#protocol-configuration
+		//   nodelay : 是否启用无延迟模式，0 表示不启用；1 表示启用。
+		//   interval ：协议内部工作间隔时间，单位为毫秒，例如 10 毫秒或 20 毫秒。
+		//   resend ：快速重传模式，0 表示默认关闭，可以设置为 2（2 个 ACK 间隔将导致直接重传）。
+		//   nc ：是否关闭流量控制，0 表示默认不关闭，1 表示关闭。
+		// 普通模式: ikcp_nodelay(kcp, 0, 40, 0, 0);
+		// 极速模式： ikcp_nodelay(kcp, 1, 10, 2, 1);
+
 		/// <summary>
-		/// 设置无延迟
+		/// 设置无延迟模式的参数。
 		/// </summary>
+		/// <param name="nodelay">是否启用无延迟模式，0 表示不启用，1 表示启用。</param>
+		/// <param name="interval">协议内部工作间隔时间，单位为毫秒，默认值为 INTERVAL。</param>
+		/// <param name="resend">快速重传模式，0 表示关闭，2 表示 2 个 ACK 间隔将导致直接重传，默认值为 0。</param>
+		/// <param name="nocwnd">是否关闭流量控制，false 表示不关闭，true 表示关闭，默认值为 false。</param>
 		public void SetNoDelay(uint nodelay, uint interval = INTERVAL, int resend = 0, bool nocwnd = false)
 		{
+			// 设置无延迟模式
 			this.nodelay = nodelay;
+
+			// 根据无延迟模式设置最小重传超时时间
 			if (nodelay != 0)
 			{
-				rx_minrto = RTO_NDL;
+				rx_minrto = RTO_NDL; // 无延迟模式下的最小重传超时时间
 			}
 			else
 			{
-				rx_minrto = RTO_MIN;
+				rx_minrto = RTO_MIN; // 普通模式下的最小重传超时时间
 			}
 
-			// clamp interval between 10 and 5000
-			if (interval > 5000) interval = 5000;
-			else if (interval < 10) interval = 10;
+			// 将间隔时间限制在 10 到 5000 毫秒之间
+			if (interval > 5000)
+				interval = 5000;
+			else if (interval < 10)
+				interval = 10;
 			this.interval = interval;
 
+			// 设置快速重传模式
 			if (resend >= 0)
 			{
 				fastresend = resend;
 			}
 
+			// 设置是否关闭流量控制
 			this.nocwnd = nocwnd;
 		}
 
-		// ikcp_wndsize
+
 		/// <summary>
-		/// 设置窗口大小
+		/// 设置发送和接收窗口大小。
 		/// </summary>
+		/// <param name="sendWindow">发送窗口大小。</param>
+		/// <param name="receiveWindow">接收窗口大小。</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void SetWindowSize(uint sendWindow, uint receiveWindow)
 		{
+			// 如果发送窗口大小大于 0，则设置发送窗口大小
 			if (sendWindow > 0)
 			{
 				snd_wnd = sendWindow;
 			}
 
+			// 如果接收窗口大小大于 0，则设置接收窗口大小
 			if (receiveWindow > 0)
 			{
-				// must >= max fragment size
+				// 接收窗口大小必须大于等于最大分片大小
 				rcv_wnd = Math.Max(receiveWindow, WND_RCV);
 			}
 		}
+
 		/// <summary>
-		/// 设置最小RTO
+		/// 设置最小重传超时时间（RTO）。
 		/// </summary>
-		/// <param name="minrto"></param>
+		/// <param name="minrto">最小重传超时时间。</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void SetMinrto(int minrto)
 		{
 			this.rx_minrto = minrto;
 		}
+
 		/// <summary>
-		/// 设置最大传输单元
+		/// 设置字节数组池。
 		/// </summary>
-		/// <param name="arrayPool"></param>
+		/// <param name="arrayPool">字节数组池。</param>
 		public void SetArrayPool(ArrayPool<byte> arrayPool)
 		{
 			this.kcpSegmentArrayPool = arrayPool;
 		}
+
 		/// <summary>
-		/// 设置最大传输单元
+		/// 抛出 MTU 异常。
 		/// </summary>
+		/// <exception cref="ArgumentException">当 MTU 小于等于 50 或小于等于 OVERHEAD 时抛出。</exception>
 		[DoesNotReturn]
 		private void ThrowMTUException()
 		{
-			throw new ArgumentException("MTU must be higher than 50 and higher than OVERHEAD");
+			throw new ArgumentException("MTU 必须大于 50 且大于 OVERHEAD");
 		}
+
 		/// <summary>
-		/// 设置窗口大小
+		/// 抛出分片数量异常。
 		/// </summary>
+		/// <param name="len">发送数据的长度。</param>
+		/// <param name="count">所需的分片数量。</param>
+		/// <exception cref="Exception">当所需分片数量超过 FRG_MAX 时抛出。</exception>
 		[DoesNotReturn]
 		private void ThrowFrgCountException(int len, int count)
 		{
-			throw new Exception($"Send len={len} requires {count} fragments, but kcp can only handle up to {FRG_MAX} fragments.");
+			throw new Exception($"发送长度为 {len} 的数据需要 {count} 个分片，但 KCP 只能处理最多 {FRG_MAX} 个分片。");
 		}
+
 	}
 }

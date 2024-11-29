@@ -60,6 +60,7 @@ namespace WorldTree.Analyzer
 			new StackDiagnosticConfig(),
 
 			new RuleDiagnosticConfig(),
+			new CodeNodeDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
 			new ProjectBanDiagnosticConfig(),
 			new ObjectDiagnosticConfig()
