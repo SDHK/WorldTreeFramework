@@ -1,8 +1,4 @@
-
-using System.Runtime.CompilerServices;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace WorldTree
 {
@@ -62,7 +58,24 @@ namespace WorldTree
 
 	}
 
-
+	/// <summary>
+	/// 按键码
+	/// </summary>
+	public enum KeyCode : ushort //0~65535
+	{
+		/// <summary>
+		/// A
+		/// </summary>
+		A = 0,
+		/// <summary>
+		/// b
+		/// </summary>
+		B = 1,
+		/// <summary>
+		/// c
+		/// </summary>
+		C = 2,
+	}
 
 
 
@@ -84,6 +97,11 @@ namespace WorldTree
 		/// 年龄
 		/// </summary>
 		public int Age;
+
+		/// <summary>
+		/// 按键码
+		/// </summary>
+		public KeyCode KeyCode;
 
 		/// <summary>
 		/// 测试节点数据2
@@ -124,47 +142,57 @@ namespace WorldTree
 
 
 
-	//public partial class TreeDataTest
+	//public partial class TreeDataNodeDataTest1
 	//{
-	//	class TreeDataSerialize1 : TreeDataSerializeRule<TreeDataTest>
+	//	class TreeDataSerialize1 : TreeDataSerializeRule<TreeDataNodeDataTest1>
 	//	{
 	//		protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 	//		{
-	//			if (self.TryWriteDataHead(value, nameCode, 3, out TreeDataTest obj)) return;
-	//			self.WriteUnmanaged(1869094581);
-	//			self.WriteValue(obj.treeData);
+	//			if (self.TryWriteDataHead(value, nameCode, 7, out TreeDataNodeDataTest1 obj, false)) return;
+	//			self.WriteUnmanaged(266367750);
+	//			self.WriteValue(obj.Name);
+	//			self.WriteUnmanaged(-1899241156);
+	//			self.WriteValue(obj.Age);
+	//			self.WriteUnmanaged(1953212297);
+	//			self.WriteValue((int)obj.KeyCode);
+	//			self.WriteUnmanaged(1644898394);
+	//			self.WriteValue(obj.NodeRef);
+	//			self.WriteUnmanaged(921221376);
+	//			self.WriteValue(obj.Id);
 	//			self.WriteUnmanaged(-306726429);
 	//			self.WriteValue(obj.ActiveToggle);
 	//			self.WriteUnmanaged(-2120054343);
 	//			self.WriteValue(obj.BranchDict);
 	//		}
 	//	}
-	//	class TreeDataDeserialize1 : TreeDataDeserializeRule<TreeDataTest>
+	//	class TreeDataDeserialize1 : TreeDataDeserializeRule<TreeDataNodeDataTest1>
 	//	{
 	//		protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 	//		{
-	//			if (self.TryReadClassHead(typeof(TreeDataTest), ref value, out int count)) return;
-
-	//			if (value is not TreeDataTest obj)
+	//			if (self.TryReadClassHead(typeof(TreeDataNodeDataTest1), ref value, out int count)) return;
+	//			if (value is not TreeDataNodeDataTest1 obj)
 	//			{
-	//				value = obj = self.Core.PoolGetNode<TreeDataTest>();
-	//				obj.IsSerialize = true;
+	//				value = obj = self.Core.PoolGetNode<TreeDataNodeDataTest1>(true);
 	//			}
 	//			for (int i = 0; i < count; i++)
 	//			{
 	//				self.ReadUnmanaged(out nameCode);
-	//				SwitchRead1(self, ref value, nameCode);
+	//				SwitchRead(self, ref value, nameCode);
 	//			}
 	//		}
 	//		/// <summary>
 	//		/// 字段读取
 	//		/// </summary>
-	//		private static void SwitchRead1(TreeDataByteSequence self, ref object value, int nameCode)
+	//		private static void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)
 	//		{
-	//			if (value is not TreeDataTest obj) return;
+	//			if (value is not TreeDataNodeDataTest1 obj) return;
 	//			switch (nameCode)
 	//			{
-	//				case 1869094581: self.ReadValue(ref obj.treeData); break;
+	//				case 266367750: self.ReadValue(ref obj.Name); break;
+	//				case -1899241156: self.ReadValue(ref obj.Age); break;
+	//				case 1953212297: obj.KeyCode = (KeyCode)self.ReadValue<int>(); break;
+	//				case 1644898394: self.ReadValue(ref obj.NodeRef); break;
+	//				case 921221376: obj.Id = self.ReadValue<long>(); break;
 	//				case -306726429: obj.ActiveToggle = self.ReadValue<bool>(); break;
 	//				case -2120054343: obj.BranchDict = self.ReadValue<BranchGroup>(); break;
 	//				default: self.SkipData(); break;

@@ -8,7 +8,6 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree
@@ -658,6 +657,8 @@ namespace WorldTree
 			//是基础类型直接跳跃
 			if (type != null)
 			{
+				//type.GetEnumUnderlyingType();？？枚举类型的基础类型优化
+
 				if (TreeDataType.TypeSizeDict.TryGetValue(type, out int byteCount))
 				{
 					ReadSkip(byteCount);

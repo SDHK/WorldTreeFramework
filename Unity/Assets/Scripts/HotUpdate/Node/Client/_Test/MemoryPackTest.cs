@@ -1,10 +1,5 @@
 ﻿using MemoryPack;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WorldTree
 {
@@ -23,7 +18,7 @@ namespace WorldTree
 	/// 测试数据
 	/// </summary>
 	[MemoryPackable(GenerateType.Object)]
-	public partial class NodeDataTest1: INodeDataTest
+	public partial class NodeDataTest1 : INodeDataTest
 	{
 		/// <summary>
 		/// 测试
@@ -116,6 +111,24 @@ namespace WorldTree
 
 	}
 
+	/// <summary>
+	/// 按键码
+	/// </summary>
+	public enum KeyCode
+	{
+		/// <summary>
+		/// A
+		/// </summary>
+		A = 0,
+		/// <summary>
+		/// b
+		/// </summary>
+		B = 1,
+		/// <summary>
+		/// c
+		/// </summary>
+		C = 2,
+	}
 
 	/// <summary>
 	/// A
@@ -127,6 +140,11 @@ namespace WorldTree
 		/// 测试泛型
 		/// </summary>
 		public T Test;
+
+		/// <summary>
+		/// 按键码
+		/// </summary>
+		public KeyCode KeyCode;
 
 		/// <summary>
 		/// ce
@@ -145,7 +163,7 @@ namespace WorldTree
 		/// <summary>
 		/// c
 		/// </summary>
-		public int UID { set {  } }
+		public int UID { set { } }
 
 		/// <summary>
 		/// 测试3
@@ -155,7 +173,7 @@ namespace WorldTree
 		/// <summary>
 		/// 测试4
 		/// </summary>
-		public UnitDictionary<int,float> NodeDataDict;
+		public UnitDictionary<int, float> NodeDataDict;
 	}
 
 	/// <summary>

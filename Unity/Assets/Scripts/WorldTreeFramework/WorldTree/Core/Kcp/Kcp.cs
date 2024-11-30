@@ -302,20 +302,21 @@ namespace ET
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Kcp(uint conv, Action<byte[], int> output)
 		{
-			this.conv = conv;
-			this.output = output;
-			snd_wnd = WND_SND;
-			rcv_wnd = WND_RCV;
-			rmt_wnd = WND_RCV;
-			mtu = MTU_DEF;
-			mss = mtu - OVERHEAD;
-			rx_rto = RTO_DEF;
-			rx_minrto = RTO_MIN;
-			interval = INTERVAL;
-			ts_flush = INTERVAL;
-			ssthresh = THRESH_INIT;
-			fastlimit = FASTACK_LIMIT;
-			dead_link = DEADLINK;
+			this.conv = conv; // 设置会话标识符（conv）。
+			this.output = output; // 设置输出回调函数。
+			snd_wnd = WND_SND; // 设置发送窗口大小为默认值。
+			rcv_wnd = WND_RCV; // 设置接收窗口大小为默认值。
+			rmt_wnd = WND_RCV; // 设置远程窗口大小为默认值。
+			mtu = MTU_DEF; // 设置最大传输单元（MTU）为默认值。
+			mss = mtu - OVERHEAD; // 设置最大分段大小（MSS），减去协议开销。
+			rx_rto = RTO_DEF; // 设置默认的重传超时时间（RTO）。
+			rx_minrto = RTO_MIN; // 设置最小的重传超时时间（RTO）。
+			interval = INTERVAL; // 设置更新间隔时间。
+			ts_flush = INTERVAL; // 设置刷新时间戳为更新间隔时间。
+			ssthresh = THRESH_INIT; // 设置慢启动阈值为初始值。
+			fastlimit = FASTACK_LIMIT; // 设置快速确认的限制次数。
+			dead_link = DEADLINK; // 设置死链路检测的阈值。
+
 
 			//乘以 3 的原因是为了确保在处理数据包时有足够的缓冲区空间。
 			//这个缓冲区需要同时容纳以下几种数据：发送的数据包 接收的数据包 可能的重传数据包
@@ -389,6 +390,10 @@ namespace ET
 			if (peeksize > len)
 				return -3;
 
+			//是否需要快速恢复
+			//快速恢复通常用于网络协议中，
+			//当接收方的接收缓冲区已满时，
+			//发送方需要采取措施来调整发送速率或进行其他恢复操作，以确保数据传输的顺畅。
 			bool recover = rcv_Queue.Count >= rcv_wnd;
 
 			// 合并片段。

@@ -7,7 +7,6 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
 
@@ -79,7 +78,14 @@ namespace WorldTree.SourceGenerator
 		}
 
 
-
+		private static string GetEnumUnderlyingType(ITypeSymbol enumType)
+		{
+			if (enumType is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.EnumUnderlyingType != null)
+			{
+				return namedTypeSymbol.EnumUnderlyingType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			}
+			return "int"; // 默认返回 int 类型
+		}
 
 		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount)
 		{
@@ -101,7 +107,22 @@ namespace WorldTree.SourceGenerator
 				{
 					int hash = symbol.Name.GetFNV1aHash32();
 					Code.AppendLine($"				self.WriteUnmanaged({hash});");
-					Code.AppendLine($"				self.WriteValue(obj.{symbol.Name});");
+					// 判断是否是枚举
+					if (symbol is IPropertySymbol propertySymbol && propertySymbol.Type.TypeKind == TypeKind.Enum)
+					{
+						// 获取枚举的基础类型
+						string enumUnderlyingType = GetEnumUnderlyingType(propertySymbol.Type);
+						Code.AppendLine($"                self.WriteValue(({enumUnderlyingType})obj.{symbol.Name});");
+					}
+					else if (symbol is IFieldSymbol fieldSymbol && fieldSymbol.Type.TypeKind == TypeKind.Enum)
+					{
+						string enumUnderlyingType = GetEnumUnderlyingType(fieldSymbol.Type);
+						Code.AppendLine($"                self.WriteValue(({enumUnderlyingType})obj.{symbol.Name});");
+					}
+					else
+					{
+						Code.AppendLine($"                self.WriteValue(obj.{symbol.Name});");
+					}
 				}
 				if (baseName != null)
 				{
@@ -198,11 +219,28 @@ namespace WorldTree.SourceGenerator
 					if (symbol is IPropertySymbol propertySymbol)
 					{
 						string symbolName = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-						Code.AppendLine($"					case {hash}: obj.{symbol.Name} = self.ReadValue<{symbolName}>(); break;");
+						if (propertySymbol.Type.TypeKind == TypeKind.Enum)
+						{
+							string enumUnderlyingType = GetEnumUnderlyingType(propertySymbol.Type);
+							Code.AppendLine($"					case {hash}: obj.{symbol.Name} = ({symbolName})self.ReadValue<{enumUnderlyingType}>(); break;");
+						}
+						else
+						{
+							Code.AppendLine($"					case {hash}: obj.{symbol.Name} = self.ReadValue<{symbolName}>(); break;");
+						}
 					}
-					else
+					else if (symbol is IFieldSymbol fieldSymbol)
 					{
-						Code.AppendLine($"					case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
+						if (fieldSymbol.Type.TypeKind == TypeKind.Enum)
+						{
+							string symbolName = fieldSymbol.Type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+							string enumUnderlyingType = GetEnumUnderlyingType(fieldSymbol.Type);
+							Code.AppendLine($"					case {hash}: obj.{symbol.Name} = ({symbolName})self.ReadValue<{enumUnderlyingType}>(); break;");
+						}
+						else
+						{
+							Code.AppendLine($"					case {hash}: self.ReadValue(ref obj.{symbol.Name}); break;");
+						}
 					}
 				}
 
@@ -215,7 +253,7 @@ namespace WorldTree.SourceGenerator
 					Code.AppendLine($"					default: self.SkipData(); break;");
 				}
 				Code.AppendLine("				}");
-				if(classSymbol.TypeKind == TypeKind.Struct)
+				if (classSymbol.TypeKind == TypeKind.Struct)
 				{
 					Code.AppendLine("				value = obj;");
 				}

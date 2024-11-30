@@ -22,11 +22,13 @@ namespace WorldTree
 			self.AddChild(out self.treeData);
 			self.treeData.Name = "测试123";
 			self.treeData.Age = 18789;
+			self.treeData.KeyCode = KeyCode.C;
 
 
 			self.treeData.AddChild(out TreeDataNodeDataTest2 child);
 			child.Name = "测试4658";
 			child.Age = 788723;
+
 
 			self.treeData.NodeRef = child;
 
@@ -50,7 +52,7 @@ namespace WorldTree
 
 			self.treeData = node;
 
-			self.Log($"反序列化引用还原测试！！！{self.treeData.NodeRef} ： {self.treeData.NodeRef.Value.Age}");
+			self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} ： {self.treeData.NodeRef.Value.Age}");
 
 			self.Log($"反序列化！！!!?{bytes.Length}");
 			self.Log(NodeRule.ToStringDrawTree(self));

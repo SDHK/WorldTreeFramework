@@ -27,6 +27,8 @@ namespace WorldTree.TreeDataFormatters
 				self.WriteDynamic(obj.Length);
 				if (obj.Length == 0) return;
 
+				//type.GetEnumUnderlyingType();？？枚举类型的基础类型优化
+
 				//判断是否为基础类型
 				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
 				{
@@ -67,7 +69,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				int typePoint = self.ReadPoint; 
+				int typePoint = self.ReadPoint;
 
 				if (self.TryReadArrayHead(typeof(T[]), ref value, 1)) return;
 
