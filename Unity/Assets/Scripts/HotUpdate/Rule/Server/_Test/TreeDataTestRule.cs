@@ -22,7 +22,7 @@ namespace WorldTree
 			self.AddChild(out self.treeData);
 			self.treeData.Name = "测试123";
 			self.treeData.Age = 18789;
-			self.treeData.KeyCode = KeyCode.C;
+			self.treeData.KeyCode = KeyCodeTest.C;
 
 
 			self.treeData.AddChild(out TreeDataNodeDataTest2 child);

@@ -61,7 +61,7 @@ namespace WorldTree
 	/// <summary>
 	/// 按键码
 	/// </summary>
-	public enum KeyCode : ushort //0~65535
+	public enum KeyCodeTest : ushort //0~65535
 	{
 		/// <summary>
 		/// A
@@ -101,7 +101,7 @@ namespace WorldTree
 		/// <summary>
 		/// 按键码
 		/// </summary>
-		public KeyCode KeyCode;
+		public KeyCodeTest KeyCode;
 
 		/// <summary>
 		/// 测试节点数据2

@@ -111,24 +111,6 @@ namespace WorldTree
 
 	}
 
-	/// <summary>
-	/// 按键码
-	/// </summary>
-	public enum KeyCode
-	{
-		/// <summary>
-		/// A
-		/// </summary>
-		A = 0,
-		/// <summary>
-		/// b
-		/// </summary>
-		B = 1,
-		/// <summary>
-		/// c
-		/// </summary>
-		C = 2,
-	}
 
 	/// <summary>
 	/// A
@@ -140,11 +122,6 @@ namespace WorldTree
 		/// 测试泛型
 		/// </summary>
 		public T Test;
-
-		/// <summary>
-		/// 按键码
-		/// </summary>
-		public KeyCode KeyCode;
 
 		/// <summary>
 		/// ce
