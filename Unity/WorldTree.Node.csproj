@@ -60,6 +60,7 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputManager.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\KeyboardKey.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\MouseKey.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
