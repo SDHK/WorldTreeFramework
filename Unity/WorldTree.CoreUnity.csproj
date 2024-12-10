@@ -62,7 +62,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowLostFocusRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteVector2.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Item\MonoObject.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Input\InputEventData.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\EditorRunTime\UnityWorldTreeNodeView\UnityWorldTreeNodeViewBuilder.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteBool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\Base\GUIBase.cs" />
@@ -91,7 +90,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteDouble.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\SqlitePrefs.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowFocusRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Input\InputManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIBeginVertical.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIRepeatButton.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\Extension\TransformExtension.cs" />

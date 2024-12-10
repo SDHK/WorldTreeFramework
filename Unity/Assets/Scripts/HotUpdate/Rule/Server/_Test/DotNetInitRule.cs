@@ -152,10 +152,10 @@ namespace WorldTree
 			stopwatch.Start();
 			for (int i = 0; i < iterations; i++)
 			{
-				Fixed result = fixedA / fixedB;
+				Fixed result = fixedA - fixedB;
 			}
 			stopwatch.Stop();
-			Fixed result1 = fixedA / fixedB;
+			Fixed result1 = fixedA - fixedB;
 
 			Console.WriteLine($"定点数除法耗时: {stopwatch.ElapsedMilliseconds} 毫秒 {(float)result1}");
 
@@ -163,10 +163,10 @@ namespace WorldTree
 			stopwatch.Restart();
 			for (int i = 0; i < iterations; i++)
 			{
-				float result = floatA / floatB;
+				float result = floatA - floatB;
 			}
 			stopwatch.Stop();
-			float result2 = floatA / floatB;
+			float result2 = floatA - floatB;
 
 			Console.WriteLine($"浮点数除法耗时: {stopwatch.ElapsedMilliseconds} 毫秒 {result2}");
 		}

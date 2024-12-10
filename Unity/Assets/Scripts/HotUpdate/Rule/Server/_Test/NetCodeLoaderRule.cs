@@ -33,7 +33,7 @@ namespace WorldTree
 					return;
 				}
 
-				if(self.AssemblyLoadContext is AssemblyLoadContext assembly) assembly.Unload();
+				if (self.AssemblyLoadContext is AssemblyLoadContext assembly) assembly.Unload();
 				GC.Collect();
 				AssemblyLoadContext assemblyLoadContext = new AssemblyLoadContext("Rule", true);
 				byte[] dllBytes = File.ReadAllBytes("./HotReload/Rule.dll");

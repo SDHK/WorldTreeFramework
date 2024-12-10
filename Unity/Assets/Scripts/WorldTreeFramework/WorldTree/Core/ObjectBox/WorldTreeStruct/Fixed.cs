@@ -8,7 +8,6 @@
 */
 using System;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
@@ -40,11 +39,11 @@ namespace WorldTree
 		/// <summary>
 		/// 最大值
 		/// </summary>
-		public static readonly Fixed MaxValue = new Fixed(MAX_VALUE - 1);
+		public static readonly Fixed MaxValue = new Fixed(MAX_VALUE - 1);//为了在某些运算（如加法）中留出安全的空间，防止加法运算直接溢出到负数区域
 		/// <summary>
 		/// 最小值
 		/// </summary>
-		public static readonly Fixed MinValue = new Fixed(MIN_VALUE + 2);
+		public static readonly Fixed MinValue = new Fixed(MIN_VALUE + 2);//为了在减法等运算中避免极端溢出，给负数运算留出一些安全边界
 
 		/// <summary>
 		/// 值位数
@@ -55,66 +54,65 @@ namespace WorldTree
 		/// 1
 		/// </summary>
 		public const long ONE = 1L << FRACTIONAL_PLACES;
-
 		/// <summary>
-		/// 低位掩码
+		/// 10
 		/// </summary>
-		public const long LOW_MASK = ONE - 1;
+		public const long TEN = 10L << FRACTIONAL_PLACES;
 
 		public Fixed(long value) => Value = value;
 
 		#region 转换
 
-		public static implicit operator Fixed(byte value) => new Fixed(value << FRACTIONAL_PLACES);
+		public static implicit operator Fixed(byte value) => new(value << FRACTIONAL_PLACES);
 		public static implicit operator byte(Fixed value) => (byte)(value.Value >> FRACTIONAL_PLACES);
 
-		public static implicit operator Fixed(short value) => new Fixed(value << FRACTIONAL_PLACES);
+		public static implicit operator Fixed(short value) => new(value << FRACTIONAL_PLACES);
 		public static implicit operator short(Fixed value) => (short)(value.Value >> FRACTIONAL_PLACES);
 
-		public static implicit operator Fixed(int value) => new Fixed(value << FRACTIONAL_PLACES);
+		public static implicit operator Fixed(int value) => new(value << FRACTIONAL_PLACES);
 		public static implicit operator int(Fixed value) => (int)(value.Value >> FRACTIONAL_PLACES);
 
-		public static implicit operator Fixed(long value) => new Fixed(value << FRACTIONAL_PLACES);
+		public static implicit operator Fixed(long value) => new(value << FRACTIONAL_PLACES);
 		public static implicit operator long(Fixed value) => value.Value >> FRACTIONAL_PLACES;
 
-		public static implicit operator Fixed(float value) => new Fixed((long)Math.Round(value * ONE));
+		public static implicit operator Fixed(float value) => new((long)(value * ONE));
 		public static implicit operator float(Fixed value) => (float)value.Value / ONE;
 
-		public static implicit operator Fixed(double value) => new Fixed((long)Math.Round(value * ONE));
+		public static implicit operator Fixed(double value) => new((long)(value * ONE));
 		public static implicit operator double(Fixed value) => (double)value.Value / ONE;
 
-		public static implicit operator Fixed(decimal value) => new Fixed((long)Math.Round(value * ONE));
+		public static implicit operator Fixed(decimal value) => new((long)(value * ONE));
 		public static implicit operator decimal(Fixed value) => (decimal)value.Value / ONE;
 
 		#endregion
 
-		#region 计算
+		#region 运算符
 
-		public static Fixed operator +(Fixed a, Fixed b) => new Fixed(a.Value + b.Value);
-		public static Fixed operator -(Fixed a, Fixed b) => new Fixed(a.Value - b.Value);
-		public static Fixed operator *(Fixed a, Fixed b)
+		public static Fixed operator +(Fixed a, Fixed b) => new Fixed(a.Value + b.Value);//3倍
+		public static Fixed operator -(Fixed a, Fixed b) => new Fixed(a.Value - b.Value);//3倍
+		public static Fixed operator *(Fixed a, Fixed b)//7倍
 		{
 			// 分成高位和低位部分
+			ulong aLow = (ulong)(a.Value & 0x00000000FFFFFFFF);
 			long aHigh = a.Value >> FRACTIONAL_PLACES;
-			long aLow = a.Value & LOW_MASK;
+			ulong bLow = (ulong)(b.Value & 0x00000000FFFFFFFF);
 			long bHigh = b.Value >> FRACTIONAL_PLACES;
-			long bLow = b.Value & LOW_MASK;
 
 			// 计算高位和低位的乘积
 			long highProduct = aHigh * bHigh;
-			long crossProduct1 = aHigh * bLow;
-			long crossProduct2 = aLow * bHigh;
-			long lowProduct = aLow * bLow;
+			long crossProduct1 = aHigh * (long)bLow;
+			long crossProduct2 = (long)aLow * bHigh;
+			ulong lowProduct = aLow * bLow;
 
 			// 将结果合并
 			long resultHigh = highProduct << FRACTIONAL_PLACES;
+			ulong resultLow = lowProduct >> FRACTIONAL_PLACES;
 			long resultCross = crossProduct1 + crossProduct2;
-			long resultLow = lowProduct >> FRACTIONAL_PLACES;
-			long result = resultHigh + resultCross + resultLow;
+			long result = resultHigh + resultCross + (long)resultLow;
 			return new Fixed(result);
 		}
 
-		public static Fixed operator /(Fixed a, Fixed b)
+		public static Fixed operator /(Fixed a, Fixed b)//20倍
 		{
 			var dividend = a.Value;
 			var divisor = b.Value;
@@ -195,36 +193,15 @@ namespace WorldTree
 			return resultFixed; // 返回结果
 		}
 
-
-
-		/// <summary>
-		/// 计算无符号长整型数值的前导零的数量,更快的方法 BitOperations.LeadingZeroCount
-		/// </summary>
-		/// <param name="x">无符号长整型数值</param>
-		/// <returns>前导零的数量</returns>
-		[MethodImplAttribute(MethodImplOptions.AggressiveInlining)]
-		public static int CountLeadingZeroes(ulong x)
+		public static Fixed operator %(Fixed a, Fixed b)
 		{
-			int result = 0;
-			// 快速统计连续4位都是0的情况
-			// 每次检查最高的4位，如果它们都是0，则将结果增加4，并将x左移4位
-			while ((x & 0xF000000000000000) == 0)
-			{
-				result += 4;
-				x <<= 4;
-			}
-			// 统计剩余的位数
-			// 每次检查最高的一位，如果它是0，则将结果增加1，并将x左移1位
-			while ((x & 0x8000000000000000) == 0)
-			{
-				result += 1;
-				x <<= 1;
-			}
+			Fixed result;
+			result.Value = a.Value == MIN_VALUE & b.Value == -1 ? 0 : a.Value % b.Value;
 			return result;
 		}
 
+		public static Fixed operator -(Fixed a) => a.Value == MIN_VALUE ? MaxValue : new Fixed(-a.Value);
 
-		public static Fixed operator %(Fixed a, Fixed b) => new Fixed(a.Value % b.Value);
 		public static Fixed operator ++(Fixed a)
 		{
 			a.Value += ONE;
@@ -236,6 +213,116 @@ namespace WorldTree
 			a.Value -= ONE;
 			return a;
 		}
+
+		#endregion
+
+		#region 比较符
+
+		public static bool operator ==(Fixed a, Fixed b) => a.Value == b.Value;
+		public static bool operator !=(Fixed a, Fixed b) => a.Value != b.Value;
+		public static bool operator >(Fixed a, Fixed b) => a.Value > b.Value;
+		public static bool operator <(Fixed a, Fixed b) => a.Value < b.Value;
+		public static bool operator >=(Fixed a, Fixed b) => a.Value >= b.Value;
+		public static bool operator <=(Fixed a, Fixed b) => a.Value <= b.Value;
+
+		#endregion
+
+		#region 计算方法
+
+		/// <summary>
+		/// 开平方
+		/// </summary>
+		public static Fixed Sqrt(Fixed value)
+		{
+			var numValue = value.Value;
+
+			// 如果值为负数，抛出异常
+			if (numValue < 0) throw new ArithmeticException("负数不能开平方");
+			// 如果值为0，直接返回0
+			if (numValue == 0) return 0;
+
+			// 将值转换为无符号长整型
+			ulong num = (ulong)numValue;
+			ulong result = 0UL;
+			// 初始化bit为次高位
+			var bit = 1UL << (NUM_BITS - 2);
+
+			// 找到合适的初始bit位置
+			while (bit > num) bit >>= 2;
+
+			// 主循环部分执行两次，以避免使用128位的值进行计算
+			for (var i = 0; i < 2; ++i)
+			{
+				// 首先获取答案的高48位，逐步逼近平方根的值
+				while (bit != 0)
+				{
+					// 如果 num 大于等于 result + bit
+					if (num >= result + bit)
+					{
+						// 从 num 中减去 result + bit
+						num -= result + bit;
+						// 将 result 右移一位并加上 bit
+						result = (result >> 1) + bit;
+					}
+					else
+					{
+						// 否则，仅将 result 右移一位
+						result = result >> 1;
+					}
+					// 将 bit 右移两位
+					bit >>= 2;
+				}
+
+
+				if (i == 0)
+				{
+					// 然后再次处理以获得最低的16位
+					if (num > (1UL << (NUM_BITS / 2)) - 1)
+					{
+						// 如果余数太大，无法左移32位，则手动加1并调整余数
+						num -= result;
+						num = (num << (NUM_BITS / 2)) - 0x80000000UL;
+						result = (result << (NUM_BITS / 2)) + 0x80000000UL;
+					}
+					else
+					{
+						// 否则，直接将 num 和 result 左移32位
+						num <<= (NUM_BITS / 2);
+						result <<= (NUM_BITS / 2);
+					}
+
+					// 将 bit 设置为次高位
+					bit = 1UL << (NUM_BITS / 2 - 2);
+				}
+			}
+
+			// 最后，如果下一个bit是1，则将结果向上舍入
+			if (num > result) ++result;
+
+			Fixed r;
+			r.Value = (long)result;
+			return r;
+		}
+
+
+		/// <summary>
+		/// 返回一个绝对值。
+		/// 注意：Abs(Fixed.MinValue) == Fixed.MaxValue。
+		/// </summary>
+		public static Fixed Abs(Fixed value)
+		{
+			// 如果值等于最小值，返回最大值
+			if (value.Value == MIN_VALUE) return MaxValue;
+
+			// 无分支实现，参考 http://www.strchr.com/optimized_abs_function
+			// 计算掩码，右移63位，相当于取符号位
+			var mask = value.Value >> 63;
+			Fixed result;
+			// 计算绝对值：如果是负数，(value.Value + mask) ^ mask 会将其取反；如果是正数，结果不变
+			result.Value = (value.Value + mask) ^ mask;
+			return result;
+		}
+
 
 
 		#endregion

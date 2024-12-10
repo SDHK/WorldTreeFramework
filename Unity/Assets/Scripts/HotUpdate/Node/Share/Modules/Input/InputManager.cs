@@ -1,5 +1,27 @@
 ﻿namespace WorldTree
 {
+	/// <summary>
+	/// 按键状态
+	/// </summary>
+	public enum InputState
+	{
+		/// <summary>
+		/// 无
+		/// </summary>
+		None = 0,
+		/// <summary>
+		/// 按下
+		/// </summary>
+		Down,
+		/// <summary>
+		/// 抬起
+		/// </summary>
+		Up,
+		/// <summary>
+		/// 按住
+		/// </summary>
+		Hold,
+	}
 
 
 	/// <summary>
@@ -7,6 +29,12 @@
 	/// </summary>
 	public class InputManager : Node
 	{
+		/// <summary>
+		/// 输入队列
+		/// </summary>
+		public UnitQueue<InputState> inputQueue;
+
+
 		/// <summary>
 		/// 输入控制集合
 		/// </summary>
@@ -28,8 +56,29 @@
 		/// </summary>
 		public int[] InputValues;
 
+		/// <summary>
+		/// 输入状态集合
+		/// </summary>
+		public InputState[] InputStates;
+
 
 		//(T)System.Convert.ChangeType(Value, typeof(T));
+	}
+
+
+	/// <summary>
+	/// 输入数据
+	/// </summary>
+	public struct InputData
+	{
+		/// <summary>
+		/// 输入状态
+		/// </summary>
+		public InputState InputState;
+
+
+
+
 	}
 
 
