@@ -16,6 +16,8 @@ Shader "Unlit/EdgeShader"
         _RimSmooth ("Rim Smooth", Range(0, 1)) = 0.6
     }
 
+
+
     SubShader
     {
         Tags 
@@ -44,6 +46,9 @@ Shader "Unlit/EdgeShader"
             #include "Lighting.cginc"
 
             #include "AutoLight.cginc"
+
+            #include "NoiseLib.hlsl" //引用我们的“噪声库”
+
 
 
             sampler2D _MainTex;
@@ -106,6 +111,8 @@ Shader "Unlit/EdgeShader"
             {
                 //half 其实是16位的float
 
+               float a=  FBMvalueNoise(i.uv*10);
+
                 half4 col = 0;
                 //_WorldSpaceCameraPos 是 Unity 中的内置变量，表示摄像机的世界空间位置。
                 //normalize是归一化
@@ -134,11 +141,14 @@ Shader "Unlit/EdgeShader"
                 //获取纹理颜色
                 half4 col2 = tex2D(_MainTex, i.uv);
                 //_LightColor0 是 Unity 中的一个内置变量，表示第一个光源的颜色。它通常用于前向渲染路径中的光照计算。
-                col.rgb =saturate( rimColor * _LightColor0.rgb  + col2);
-                col.a = 0.5;
+                col.rgb =saturate( rimColor * _LightColor0.rgb  + col2*a);
+                col.a = a;
                 // col.a = 0.5 + 0.5 * sin(_Time.w);
 
                 return col;
+
+                Vector _PerlinController = (1, 1, 10,10);
+                Vector _PerlinInt = (1, 1, 1, 1);
             }
 
             ENDCG
