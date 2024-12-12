@@ -128,16 +128,18 @@
 
             | 名称 | 说明 | 
             | ---- | ---- | 
+            | Off|（默认）关闭混合。|
             | Zero | 零。所有颜色分量都为0。 | 
             | One | 一。所有颜色分量都为1。 | 
             | DstColor | 目标颜色。使用当前帧缓冲区中的颜色值。 | 
             | SrcColor | 源颜色。使用当前绘制的片段颜色值。 | 
             | OneMinusDstColor | 1-目标颜色。使用1减去当前帧缓冲区中的颜色值。 | 
-            | OneMinusSrcColor | 1-源颜色。使用1减去当前绘制的片段颜色值。 | 
-            | DstAlpha | 目标Alpha。使用当前帧缓冲区中的Alpha值。 | 
-            | SrcAlpha | 源Alpha。使用当前绘制的片段Alpha值。 | 
+            | OneMinusSrcColor | 1-源颜色。使用1减去当前绘制的片段颜色值。 |
             | OneMinusDstAlpha | 1-目标Alpha。使用1减去当前帧缓冲区中的Alpha值。 | 
             | OneMinusSrcAlpha | 1-源Alpha。使用1减去当前绘制的片段Alpha值。 |
+            | DstAlpha | 目标Alpha。使用当前帧缓冲区中的Alpha值。 | 
+            | SrcAlpha | 源Alpha。使用当前绘制的片段Alpha值。 | 
+           
             </details>
 
         + 
@@ -244,9 +246,39 @@
         </details>
 
 
-
-
     </details>
+
++ 
+    <details><summary> 变量 </summary>
+
+    |名称|类型|值|
+    |----|----|----|
+    |_WorldSpaceCameraPos|float3|世界空间中的相机位置。|
+    |_ProjectionParams|float4|投影参数。|
+    |_ScreenParams|float4|屏幕参数。|
+    |_ZBufferParams|float4|Z缓冲区参数。|
+    |unity_OrthoParams|float4|正交参数。|
+    |unity_CameraProjection|float4x4|相机投影矩阵。|
+    |unity_CameraInvProjection|float4x4|相机投影矩阵的逆。|
+    |unity_CameraProjectionParams[6]|float4|相机投影参数。|
+    |UNITY_MATRIX_MVP|float4x4|模型视图投影矩阵。|
+    |UNITY_MATRIX_MV|float4x4|模型视图矩阵。|
+    |UNITY_MATRIX_V|float4x4|视图矩阵。|
+    |UNITY_MATRIX_P|float4x4|投影矩阵。|
+    |UNITY_MATRIX_VP|float4x4|视图投影矩阵。|
+    |UNITY_MATRIX_T_MV|float4x4|模型视图矩阵的转置。|
+    |UNITY_MATRIX_IT_MV|float4x4|模型视图矩阵的逆转置。|
+    |unity_ObjectToWorld|float4x4|对象到世界矩阵。|
+    |unity_WorldToObject|float4x4|世界到对象矩阵。|
+    |_Time|float4|当前时间。x:时间/20，y:时间，z:时间x2，w:时间x3。|
+    |_SinTime|float4|当前时间的正弦值。x:sin(时间)，y:sin(时间/20)，z:sin(时间/200)，w:sin(时间x2)。|
+    |_CosTime|float4|当前时间的余弦值。x:cos(时间)，y:cos(时间/20)，z:cos(时间/200)，w:cos(时间x2)。|
+    |_DeltaTime|float4|上一帧的时间间隔。x:帧间隔时间，y:帧间隔时间/20，z:帧间隔时间/200，w:帧间隔时间x2。|
+    </details>
+
+
+
+    
 
 
 
