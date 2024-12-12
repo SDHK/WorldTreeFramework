@@ -99,6 +99,27 @@ float voronoiNoise(float2 uv)
     return dist;
 }
 
+float worleyNoise2(float2 uv)//泰森多边形
+{
+    float2 index = floor(uv);
+    float2 pos = frac(uv);
+    float2 d = float2(1.5, 1.5);
+    for (int i = -1; i < 2; i++)
+        for (int j = -1; j < 2; j++)
+        {
+            float2 p = hash22(index + float2(i, j));
+            float dist = length(p + float2(i, j) - pos);
+            if (dist < d.x)
+            {
+                d.y = d.x;
+                d.x = dist;
+            }
+            else
+                d.y = min(dist, d.y);
+        }
+    return d.y - d.x;
+}
+
 //分形布朗运动
 float FBMvalueNoise(float2 uv)
 {
