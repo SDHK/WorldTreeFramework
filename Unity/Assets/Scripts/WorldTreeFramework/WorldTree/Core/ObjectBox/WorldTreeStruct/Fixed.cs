@@ -7,7 +7,6 @@
 
 */
 using System;
-using System.Numerics;
 
 namespace WorldTree
 {
@@ -112,6 +111,17 @@ namespace WorldTree
 			return new Fixed(result);
 		}
 
+		/// <summary>
+		/// 前导零计数
+		/// </summary>
+		public static int CountLeadingZeroes(ulong x)
+		{
+			int result = 0;
+			while ((x & 0xF000000000000000) == 0) { result += 4; x <<= 4; }
+			while ((x & 0x8000000000000000) == 0) { result += 1; x <<= 1; }
+			return result;
+		}
+
 		public static Fixed operator /(Fixed a, Fixed b)//20倍
 		{
 			var dividend = a.Value;
@@ -147,7 +157,7 @@ namespace WorldTree
 			while (absDividend != 0 && offset >= 0)
 			{
 				// 计算除数前导零的数量
-				int shift = BitOperations.LeadingZeroCount(absDividend);
+				int shift = CountLeadingZeroes(absDividend);
 
 				// 如果前导零数量大于位移量，前导零数设置为位移量
 				if (shift > offset) shift = offset;

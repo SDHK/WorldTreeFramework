@@ -17,15 +17,15 @@ namespace WorldTree
 		/// <summary>
 		/// 球体半径
 		/// </summary>
-		public int bottomY = 0;
+		public int BottomY = 0;
 		/// <summary>
 		/// 顶部Y坐标
 		/// </summary>
-		public int topY = 10;
+		public int TopY = 10;
 		/// <summary>
 		/// 生成数量
 		/// </summary>
-		public int spawnCount = 1000;
+		public int SpawnCount = 1000;
 		/// <summary>
 		/// 球体
 		/// </summary>

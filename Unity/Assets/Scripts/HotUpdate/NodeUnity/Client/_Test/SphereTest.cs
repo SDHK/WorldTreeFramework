@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace WorldTree
 {
@@ -9,28 +7,28 @@ namespace WorldTree
 	/// </summary>
 	public class SphereTest : Node
 		, AsAwake
-		,NumberNodeOf<SphereManagerTest>
+		, NumberNodeOf<SphereManagerTest>
 	{
 		/// <summary>
 		/// 球体
 		/// </summary>
-		public GameObject gameObject;
+		public GameObject GameObject;
 		/// <summary>
 		/// 球体管理器
 		/// </summary>
-		public SphereManagerTest manager;
+		public SphereManagerTest Manager;
 		/// <summary>
 		/// 球体数据
 		/// </summary>
-		public float mass;
+		public float Mass;
 		/// <summary>
 		/// 球体数据
 		/// </summary>
-		public float delay;
+		public float Delay;
 		/// <summary>
 		/// 球体数据
 		/// </summary>
-		public float velocity;
+		public float Velocity;
 
 	}
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace WorldTree
 {
@@ -45,14 +43,14 @@ namespace WorldTree
 			//await self.AsyncDelay(1);
 			TreeTaskToken taskTokenCatch = await self.TreeTaskTokenCatch();
 			self.Log($"A！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
-			while (taskTokenCatch.taskState != TokenState.Cancel)
+			while (taskTokenCatch.State != TokenState.Cancel)
 			{
 				await self.AsyncDelay(6);
-				if (taskTokenCatch.taskState == TokenState.Cancel) return;
+				if (taskTokenCatch.State == TokenState.Cancel) return;
 
 				await self.TestB();
 
-				if (taskTokenCatch.taskState == TokenState.Cancel) return;
+				if (taskTokenCatch.State == TokenState.Cancel) return;
 				await self.TaskD();
 			}
 		}

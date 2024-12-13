@@ -9,22 +9,22 @@ namespace WorldTree
 		{
 			protected override void Execute(SphereTest self, TimeSpan deltaTime)
 			{
-				if (self.delay > 0)
+				if (self.Delay > 0)
 				{
-					self.delay -= (float)deltaTime.TotalSeconds;
+					self.Delay -= (float)deltaTime.TotalSeconds;
 				}
 				else
 				{
-					Vector3 pos = self.gameObject.transform.position;
-					float v = self.velocity + self.manager.G * self.mass * (float)deltaTime.TotalSeconds;
+					Vector3 pos = self.GameObject.transform.position;
+					float v = self.Velocity + self.Manager.G * self.Mass * (float)deltaTime.TotalSeconds;
 					pos.y += v;
-					if (pos.y < self.manager.bottomY)
+					if (pos.y < self.Manager.BottomY)
 					{
-						pos.y = self.manager.topY;
-						self.velocity = 0f;
-						self.delay = UnityEngine.Random.Range(0, 3f);
+						pos.y = self.Manager.TopY;
+						self.Velocity = 0f;
+						self.Delay = UnityEngine.Random.Range(0, 3f);
 					}
-					self.gameObject.transform.position = pos;
+					self.GameObject.transform.position = pos;
 				}
 			}
 		}

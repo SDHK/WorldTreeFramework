@@ -1,9 +1,16 @@
-#ifndef NOISE_LIB // 这个宏的作用是防止重复引用
-#define NOISE_LIB
+#ifndef NOISE // 这个宏的作用是防止重复引用
+#define NOISE
 
-#include "HashLib.hlsl" //引用Hash库
+#include "Hash.hlsl" //引用Hash库
+
+//白噪声
+float NoiseWhite(float2 uv)
+{
+    return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453123);
+}
+
 //值噪声
-float valueNoise(float2 uv)
+float NoiseValue(float2 uv)
 {
     float2 intPos = floor(uv); //uv晶格化, 取 uv 整数值，相当于晶格id
     float2 fracPos = frac(uv); //取 uv 小数值，相当于晶格内局部坐标，取值区间：(0,1)
@@ -28,7 +35,7 @@ float valueNoise(float2 uv)
     return value;
 }
 //柏林噪声
-float perlinNoise(float2 uv)
+float NoisePerlin(float2 uv)
 {
     float2 intPos = floor(uv);
     float2 fracPos = frac(uv);
@@ -47,10 +54,10 @@ float perlinNoise(float2 uv)
 
     float value = va + u.x * (vb - va) + u.y * (vc - va) + u.x * u.y * (va - vb - vc + vd); //插值
 
-    return 1-value;
+    return 1 - value;
 }
 //简单噪声
-float simpleNoise(float2 uv)
+float NoiseSimple(float2 uv)
 {
     //transform from triangle to quad
     const float K1 = 0.366025404; // (sqrt(3)-1)/2; //quad 转 2个正三角形 的公式参数
@@ -75,10 +82,11 @@ float simpleNoise(float2 uv)
 
     float3 simplexGradient = float3(dot(vecFromA, ga), dot(vecFromB, gb), dot(vecFromC, gc));
     float3 n = falloff * falloff * falloff * falloff * simplexGradient;
-    return 1-dot(n, float3(70, 70, 70));
+    return 1 - dot(n, float3(70, 70, 70));
 }
-//泰森多边形法噪声
-float voronoiNoise(float2 uv)
+
+//泰森多边形
+float NoiseVoronoi(float2 uv)
 {
     float dist = 16;
     float2 intPos = floor(uv);
@@ -99,7 +107,8 @@ float voronoiNoise(float2 uv)
     return dist;
 }
 
-float worleyNoise2(float2 uv)//泰森多边形
+//泰森多边形
+float NoiseWorley(float2 uv)
 {
     float2 index = floor(uv);
     float2 pos = frac(uv);
@@ -121,7 +130,7 @@ float worleyNoise2(float2 uv)//泰森多边形
 }
 
 //分形布朗运动
-float FBMvalueNoise(float2 uv)
+float NoiseFBMvalue(float2 uv)
 {
     float value = 0;
     float amplitude = 0.5;
@@ -129,11 +138,43 @@ float FBMvalueNoise(float2 uv)
 
     for (int i = 0; i < 8; i++)
     {
-        value += amplitude * valueNoise(uv); //使用最简单的value噪声做分形，其余同理。
+        value += amplitude * NoiseValue(uv); //使用最简单的value噪声做分形，其余同理。
         uv *= 2.0;
         amplitude *= .5;
     }
     return value;
+}
+
+
+
+// 高斯模糊
+// _MainTex: 输入的纹理
+// uv: 输入的UV坐标
+// blur: 模糊的程度
+float4 BlurGaussian(sampler2D _MainTex, float2 uv, float blur)
+{
+    // 1 / 16
+    float offset = blur * 0.0625f;
+    // 左上
+    float4 color = tex2D(_MainTex, float2(uv.x - offset, uv.y - offset)) * 0.0947416f;
+    // 上
+    color += tex2D(_MainTex, float2(uv.x, uv.y - offset)) * 0.118318f;
+    // 右上
+    color += tex2D(_MainTex, float2(uv.x + offset, uv.y + offset)) * 0.0947416f;
+    // 左
+    color += tex2D(_MainTex, float2(uv.x - offset, uv.y)) * 0.118318f;
+    // 中
+    color += tex2D(_MainTex, float2(uv.x, uv.y)) * 0.147761f;
+    // 右
+    color += tex2D(_MainTex, float2(uv.x + offset, uv.y)) * 0.118318f;
+    // 左下
+    color += tex2D(_MainTex, float2(uv.x - offset, uv.y + offset)) * 0.0947416f;
+    // 下
+    color += tex2D(_MainTex, float2(uv.x, uv.y + offset)) * 0.118318f;
+    // 右下
+    color += tex2D(_MainTex, float2(uv.x + offset, uv.y - offset)) * 0.0947416f;
+    color.rgb *= color.a;
+    return color;
 }
 
 #endif

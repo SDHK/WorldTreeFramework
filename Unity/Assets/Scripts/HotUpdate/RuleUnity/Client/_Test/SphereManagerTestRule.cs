@@ -25,21 +25,21 @@ namespace WorldTree
 			GameObject rootGo = new GameObject("SphereManagerTest");
 			rootGo.transform.position = Vector3.zero;
 
-			for (int i = 0; i < self.spawnCount; ++i)
+			for (int i = 0; i < self.SpawnCount; ++i)
 			{
 				var go = UnityEngine.Object.Instantiate(self.balls);
 				go.name = "Drop_" + i;
 
 				self.AddNumberNode(i, out SphereTest dropComponent);
-				dropComponent.manager = self;
-				dropComponent.gameObject = go;
+				dropComponent.Manager = self;
+				dropComponent.GameObject = go;
 
-				dropComponent.delay = 0.02f * i;
-				dropComponent.mass = UnityEngine.Random.Range(0.5f, 3f);
+				dropComponent.Delay = 0.02f * i;
+				dropComponent.Mass = UnityEngine.Random.Range(0.5f, 3f);
 
 				Vector3 pos = UnityEngine.Random.insideUnitSphere * 40;
 				go.transform.parent = rootGo.transform;
-				pos.y = self.topY;
+				pos.y = self.TopY;
 				go.transform.position = pos;
 			}
 		}

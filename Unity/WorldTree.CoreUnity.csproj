@@ -126,7 +126,13 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\SqliteTool\Extension\SqliteFloat.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Vortex.shader" />
+    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\EdgeShader.shader" />
+    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Tools\Hash.hlsl" />
+    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Tools\Noise.hlsl" />
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\WorldTree.CoreUnity.asmdef" />
+    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Tools\Distort.hlsl" />
+    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\GaussianBlur.Shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

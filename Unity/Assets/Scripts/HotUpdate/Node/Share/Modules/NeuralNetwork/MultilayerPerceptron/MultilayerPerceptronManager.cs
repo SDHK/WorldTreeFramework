@@ -20,6 +20,6 @@ namespace WorldTree
 		/// <summary>
 		/// 感知器层
 		/// </summary>
-		public TreeList<PerceptronLayer> layerList;
+		public TreeList<PerceptronLayer> LayerList;
 	}
 }

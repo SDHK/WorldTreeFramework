@@ -1,5 +1,5 @@
-#ifndef HASH_LIB // 这个宏的作用是防止重复引用
-#define HASH_LIB
+#ifndef HASH // 这个宏的作用是防止重复引用
+#define HASH
 
 float hash11(float p)
 {

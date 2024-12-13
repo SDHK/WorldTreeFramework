@@ -2,9 +2,7 @@
 Shader "Unlit/EdgeShader"
 {
     Properties
-
     {
-
         _MainTex ("MainTex", 2D) = "white" {}
 
         _RimColor ("Rim Color", Color) = (0.0, 0.7, 0.7,1)
@@ -22,7 +20,7 @@ Shader "Unlit/EdgeShader"
     {
         Tags 
         {
-            "LightMode" ="ForwardBase"
+            // "LightMode" ="ForwardBase"
             "Queue" = "Transparent"
             "RenderType" = "Transparent"
         }
@@ -43,11 +41,10 @@ Shader "Unlit/EdgeShader"
 
             #include "UnityCG.cginc"
 
-            #include "Lighting.cginc"
+            // #include "Lighting.cginc"
+            // #include "AutoLight.cginc"
 
-            #include "AutoLight.cginc"
-
-            #include "NoiseLib.hlsl" //引用我们的“噪声库”
+            #include "Tools/Noise.hlsl" //引用我们的“噪声库”
 
 
 
@@ -91,12 +88,14 @@ Shader "Unlit/EdgeShader"
 
             v2f vert (a2v v) //顶点着色器，控制定点位置
             {
-
                 v2f o = (v2f)0;
 
-                o.pos = UnityObjectToClipPos(v.vertex);//顶点设置
-
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);//纹理设置,v.uv应用_MainTex的变换 赋值给 o.uv
+
+                // float a=  FBMvalueNoise(o.uv*10);
+
+                // o.pos = UnityObjectToClipPos(v.vertex+v.vertex *a);//顶点设置
+                o.pos = UnityObjectToClipPos(v.vertex);//顶点设置
 
                 //局部转世界，将对象空间中的法线向量转换为世界空间中的法线向量。
                 o.worldNormal = UnityObjectToWorldNormal(v.normal);
@@ -110,8 +109,7 @@ Shader "Unlit/EdgeShader"
             half4 frag (v2f i) : SV_Target //片元着色器，控制像素颜色
             {
                 //half 其实是16位的float
-
-               float a=  FBMvalueNoise(i.uv*10);
+                float a=  NoiseFBMvalue(i.uv*10);
 
                 half4 col = 0;
                 //_WorldSpaceCameraPos 是 Unity 中的内置变量，表示摄像机的世界空间位置。
@@ -139,16 +137,14 @@ Shader "Unlit/EdgeShader"
                 half3 rimColor = rim * _RimColor.rgb *  _RimColor.a;
 
                 //获取纹理颜色
-                half4 col2 = tex2D(_MainTex, i.uv);
+             
+                half4 col2 = tex2D(_MainTex,  i.uv);
                 //_LightColor0 是 Unity 中的一个内置变量，表示第一个光源的颜色。它通常用于前向渲染路径中的光照计算。
-                col.rgb =saturate( rimColor * _LightColor0.rgb  + col2*a);
+                col.rgb = saturate( rimColor   + col2*a);
                 col.a = a;
                 // col.a = 0.5 + 0.5 * sin(_Time.w);
 
                 return col;
-
-                Vector _PerlinController = (1, 1, 10,10);
-                Vector _PerlinInt = (1, 1, 1, 1);
             }
 
             ENDCG
