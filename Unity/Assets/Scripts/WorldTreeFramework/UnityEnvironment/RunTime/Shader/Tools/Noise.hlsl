@@ -143,9 +143,9 @@ float NoiseSimple(float2 uv, float offset = 0)
 
 
 //泰森多边形
-float NoiseVoronoi(float2 uv)
+float NoiseVoronoi(float2 uv, float time = 0)
 {
-    float dist = 16;
+    float dist= 16;
     float2 intPos = floor(uv); //取整
     float2 fracPos = frac(uv); //取小数
     
@@ -154,28 +154,31 @@ float NoiseVoronoi(float2 uv)
     {
         for (int y = -1; y <= 1; y++)
         {
-            //hash22(intPos + float2(x,y)) 相当于offset，定义为在周围9个格子中的某一个特征点
-            //float2(x,y) 相当于周围九格子root
-            //如没有 offset，那么格子是规整的距离场
-            //如果没有 root，相当于在自己的晶格范围内生成特征点，一个格子就有九个“球球”
-            float d = distance(hash22(intPos + float2(x, y)) + float2(x, y), fracPos); //fracPos作为采样点，hash22(intPos)作为生成点，来计算dist
+            float2 offset = float2(x, y); //周围的偏移
+            float2 pos = hash22(intPos + offset); //生成随机特征点
+            pos = sin(time + 6.2831 * pos) * 0.5 + 0.5; //特征点随时间变化
+            float d = distance(pos + float2(x, y), fracPos); //fracPos作为采样点，hash22(intPos)作为生成点，来计算dist
             dist = min(dist, d);
         }
     }
     return dist;
+
+
 }
 
+
 //泰森多边形
-float NoiseWorley(float2 uv)
+float NoiseWorley(float2 uv, float time = 0)
 {
     float2 index = floor(uv);
-    float2 pos = frac(uv);
+    float2 fracPos = frac(uv);
     float2 d = float2(1.5, 1.5);
     for (int i = -1; i < 2; i++)
         for (int j = -1; j < 2; j++)
         {
-            float2 p = hash22(index + float2(i, j));
-            float dist = length(p + float2(i, j) - pos);
+            float2 pos = hash22(index + float2(i, j));
+            pos = sin(time + 6.2831 * pos) * 0.5 + 0.5; //特征点随时间变化
+            float dist = distance(pos + float2(i, j), fracPos);
             if (dist < d.x)
             {
                 d.y = d.x;

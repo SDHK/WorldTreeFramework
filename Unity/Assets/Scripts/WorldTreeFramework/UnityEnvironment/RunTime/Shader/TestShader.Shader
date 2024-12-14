@@ -88,7 +88,7 @@
                 // float n = curlNoise(float3( i.uv,1)*5+_Time.x);
 
 
-                col.rgb *= NoiseFBMvalue(i.uv);
+                col.rgb *= NoiseWorley(i.uv,time);
                 return col;
             }
 
