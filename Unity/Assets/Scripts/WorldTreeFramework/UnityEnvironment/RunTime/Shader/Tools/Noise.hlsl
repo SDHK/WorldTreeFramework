@@ -65,9 +65,9 @@ float NoiseLerp(float x)
 
 
 //白噪声
-float NoiseWhite(float2 uv, float offset = 0)
+float NoiseWhite(float2 uv, float time = 0)
 {
-    return frac(sin(dot(uv, float2(12.9898, 78.233) + offset)) * 43758.5453123);
+    return frac(sin(dot(uv, float2(12.9898, 78.233) + time)) * 43758.5453123);
 }
 
 //值噪声
@@ -124,13 +124,13 @@ float NoisePerlin(float2 uv)
 }
 
 //简单噪声
-float NoiseSimple(float2 uv, float offset = 0)
+float NoiseSimple(float2 uv, float time = 0)
 {
     const float K1 = 0.366025404; // (sqrt(3)-1)/2;
     const float K2 = 0.211324865; // (3-sqrt(3))/6;
 
     // 使用时间参数扰动 uv
-    float2 i = floor(uv + (uv.x + uv.y + offset) * K1); // 使用 float2 替换 vec2，并将 p 替换为 uv
+    float2 i = floor(uv + (uv.x + uv.y + time) * K1); // 使用 float2 替换 vec2，并将 p 替换为 uv
     float2 a = uv - (i - (i.x + i.y) * K2); // 使用 float2 替换 vec2，并将 p 替换为 uv
     float2 o = (a.x < a.y) ? float2(0.0, 1.0) : float2(1.0, 0.0); // 使用 float2 替换 vec2
     float2 b = a - o + K2;
