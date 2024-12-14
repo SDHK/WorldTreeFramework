@@ -3,29 +3,91 @@
 
 #include "Hash.hlsl" //引用Hash库
 
-//白噪声
-float NoiseWhite(float2 uv)
+//根据角度计算半径为的圆上的点 0~1
+float2 AngleToUV(float angle)
 {
-    return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453123);
+    angle %= 360;
+    return frac(float2(cos(angle) + 1, sin(angle) + 1) * 0.5);
+}
+
+float3 Random3(float3 c)
+{
+    float j = 4096.0 * sin(dot(c, float3(17.0, 59.4, 15.0)));
+    float3 r;
+    r.z = frac(512.0 * j);
+    j *= .125;
+    r.x = frac(512.0 * j);
+    j *= .125;
+    r.y = frac(512.0 * j);
+    return r - 0.5;
+}
+
+float2 Random2(float2 c)
+{
+    float j = 4096.0 * sin(dot(c, float2(17.0, 59.4)));
+    float2 r;
+    r.x = frac(512.0 * j);
+    j *= .125;
+    r.y = frac(512.0 * j);
+    return r - 0.5;
+}
+
+float Random(float c)
+{
+    float j = 4096.0 * sin(dot(c, 17.0));
+    float r;
+    r = frac(512.0 * j);
+    j *= .125;
+    return r - 0.5;
+}
+
+//一维噪声
+float Noise1D(float x)
+{
+    return frac(sin(x) * 1000);
+}
+
+//栅格噪声
+float NoiseGrid(float x)
+{
+    return noise(floor(x));
+}
+
+//平滑噪声
+float NoiseLerp(float x)
+{
+    float t = frac(x);
+    float u = t * t * (3 - 2 * t);
+    return lerp(noise(floor(x)), noise(floor(x + 1)), u);
+    //return lerp(noise(floor(x)), noise(floor(x + 1)), frac(x));
+}
+
+
+
+//白噪声
+float NoiseWhite(float2 uv, float offset = 0)
+{
+    return frac(sin(dot(uv, float2(12.9898, 78.233) + offset)) * 43758.5453123);
 }
 
 //值噪声
 float NoiseValue(float2 uv)
 {
-    float2 intPos = floor(uv); //uv晶格化, 取 uv 整数值，相当于晶格id
-    float2 fracPos = frac(uv); //取 uv 小数值，相当于晶格内局部坐标，取值区间：(0,1)
+    // 将时间参数引入到 uv 的计算中
+    float2 intPos = floor(uv); // uv 晶格化, 取 uv 整数值，相当于晶格id
+    float2 fracPos = frac(uv); // 取 uv 小数值，相当于晶格内局部坐标，取值区间：(0,1)
 
-    //二维插值权重，一个类似smoothStep的函数，叫Hermit插值函数，也叫S曲线：S(x) = -2 x^3 + 3 x^2
-    //利用Hermit插值特性：可以在保证函数输出的基础上保证插值函数的导数在插值点上为0，这样就提供了平滑性
+    // 二维插值权重，一个类似 smoothStep 的函数，叫 Hermit 插值函数，也叫 S 曲线：S(x) = -2 x^3 + 3 x^2
+    // 利用 Hermit 插值特性：可以在保证函数输出的基础上保证插值函数的导数在插值点上为 0，这样就提供了平滑性
     float2 u = fracPos * fracPos * (3.0 - 2.0 * fracPos);
 
-    //四方取点，由于intPos是固定的，所以栅格化了（同一晶格内四点值相同，只是小数部分不同拿来插值）
-    float va = hash2to1(intPos + float2(0.0, 0.0)); //hash2to1 二维输入，映射到1维输出
+    // 四方取点，由于 intPos 是固定的，所以栅格化了（同一晶格内四点值相同，只是小数部分不同拿来插值）
+    float va = hash2to1(intPos + float2(0.0, 0.0)); // hash2to1 二维输入，映射到 1 维输出
     float vb = hash2to1(intPos + float2(1.0, 0.0));
     float vc = hash2to1(intPos + float2(0.0, 1.0));
     float vd = hash2to1(intPos + float2(1.0, 1.0));
 
-    //lerp的展开形式，完全可以用lerp(a,b,c)嵌套实现
+    // lerp 的展开形式，完全可以用 lerp(a, b, c) 嵌套实现
     float k0 = va;
     float k1 = vb - va;
     float k2 = vc - va;
@@ -34,6 +96,10 @@ float NoiseValue(float2 uv)
 
     return value;
 }
+
+
+
+
 //柏林噪声
 float NoisePerlin(float2 uv)
 {
@@ -54,43 +120,35 @@ float NoisePerlin(float2 uv)
 
     float value = va + u.x * (vb - va) + u.y * (vc - va) + u.x * u.y * (va - vb - vc + vd); //插值
 
-    return 1 - value;
+    return value;
 }
+
 //简单噪声
-float NoiseSimple(float2 uv)
+float NoiseSimple(float2 uv, float offset = 0)
 {
-    //transform from triangle to quad
-    const float K1 = 0.366025404; // (sqrt(3)-1)/2; //quad 转 2个正三角形 的公式参数
-    //transform from quad to triangle
-    const float K2 = 0.211324865; // (3 - sqrt(3))/6;
+    const float K1 = 0.366025404; // (sqrt(3)-1)/2;
+    const float K2 = 0.211324865; // (3-sqrt(3))/6;
 
-    float2 quadIntPos = floor(uv + (uv.x + uv.y) * K1);
-    float2 vecFromA = uv - quadIntPos + (quadIntPos.x + quadIntPos.y) * K2;
-
-    float IsLeftHalf = step(vecFromA.y, vecFromA.x); //判断左右
-    float2 quadVertexOffset = float2(IsLeftHalf, 1.0 - IsLeftHalf);
-
-    float2 vecFromB = vecFromA - quadVertexOffset + K2;
-    float2 vecFromC = vecFromA - 1.0 + 2.0 * K2;
-
-    //衰减计算
-    float3 falloff = max(0.5 - float3(dot(vecFromA, vecFromA), dot(vecFromB, vecFromB), dot(vecFromC, vecFromC)), 0.0);
-
-    float2 ga = hash22(quadIntPos + 0.0);
-    float2 gb = hash22(quadIntPos + quadVertexOffset);
-    float2 gc = hash22(quadIntPos + 1.0);
-
-    float3 simplexGradient = float3(dot(vecFromA, ga), dot(vecFromB, gb), dot(vecFromC, gc));
-    float3 n = falloff * falloff * falloff * falloff * simplexGradient;
-    return 1 - dot(n, float3(70, 70, 70));
+    // 使用时间参数扰动 uv
+    float2 i = floor(uv + (uv.x + uv.y + offset) * K1); // 使用 float2 替换 vec2，并将 p 替换为 uv
+    float2 a = uv - (i - (i.x + i.y) * K2); // 使用 float2 替换 vec2，并将 p 替换为 uv
+    float2 o = (a.x < a.y) ? float2(0.0, 1.0) : float2(1.0, 0.0); // 使用 float2 替换 vec2
+    float2 b = a - o + K2;
+    float2 c = a - 1.0 + 2.0 * K2;
+    float3 h = max(0.5 - float3(dot(a, a), dot(b, b), dot(c, c)), 0.0); // 使用 float3 替换 vec3
+    float3 n = h * h * h * h * float3(dot(a, hash22(i)), dot(b, hash22(i + o)), dot(c, hash22(i + 1.0))); // 使用 float3 替换 vec3
+    return dot(float3(70.0, 70.0, 70.0), n); // 使用 float3 替换 vec3
 }
+
+
 
 //泰森多边形
 float NoiseVoronoi(float2 uv)
 {
     float dist = 16;
-    float2 intPos = floor(uv);
-    float2 fracPos = frac(uv);
+    float2 intPos = floor(uv); //取整
+    float2 fracPos = frac(uv); //取小数
+    
 
     for (int x = -1; x <= 1; x++) //3x3九宫格采样
     {
@@ -145,7 +203,20 @@ float NoiseFBMvalue(float2 uv)
     return value;
 }
 
+//云雾噪声
+float NoiseSmoke(float2 uv, float time = 0)
+{
+    float2 q = float2(0.0, 0.0);
+    q.x = NoiseFBMvalue(uv + 0.00 * time);
+    q.y = NoiseFBMvalue(uv + float2(1.0, 0.0));
 
+    float2 r = float2(0.0, 0.0);
+    r.x = NoiseFBMvalue(uv + 1.0 * q + float2(1.7, 9.2) + 0.15 * time);
+    r.y = NoiseFBMvalue(uv + 1.0 * q + float2(8.3, 2.8) + 0.126 * time);
+    
+    float f = NoiseFBMvalue(uv + r);
+    return (f * f * f + 0.6 * f * f + 0.5 * f);
+}
 
 // 高斯模糊
 // _MainTex: 输入的纹理

@@ -109,7 +109,7 @@ Shader "Unlit/EdgeShader"
             half4 frag (v2f i) : SV_Target //片元着色器，控制像素颜色
             {
                 //half 其实是16位的float
-                float a=  NoiseFBMvalue(i.uv*10);
+                float a=  NoiseWorley(i.uv*10);
 
                 half4 col = 0;
                 //_WorldSpaceCameraPos 是 Unity 中的内置变量，表示摄像机的世界空间位置。
