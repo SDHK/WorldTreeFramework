@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\AOT\Plugins\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\GameObjectAssetReference.cs" />
     <Compile Include="Assets\Scripts\AOT\Plugins\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\AssetOperationHandleExtension.cs" />
     <Compile Include="Assets\Scripts\AOT\Plugins\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\LoadAssetsByTagOperation.cs" />
+    <Compile Include="Assets\Scenes\CustomRenderPassFeature.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\AOT\Plugins\LiteDB\LiteDB.dll" />

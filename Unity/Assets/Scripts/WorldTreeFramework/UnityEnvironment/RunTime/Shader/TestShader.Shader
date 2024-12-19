@@ -18,6 +18,8 @@
             "Queue" = "Transparent"
             "RenderType" = "Transparent"
         }
+        // Blend SrcAlpha OneMinusSrcAlpha
+        // ZWrite Off
 
         Pass
         {
@@ -85,11 +87,11 @@
                 fixed4 col = tex2D(_MainTex, i.uv);
                 float time = _Time.y;
 
-                // float n = curlNoise(float3( i.uv,1)*5+_Time.x);
+                return Noise1(i.uv,time);
 
 
-                col.rgb *= NoiseWorley(i.uv,time);
-                return col;
+                // col *= NoiseWorley(i.uv,time);
+                // return col;
             }
 
             ENDCG

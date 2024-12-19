@@ -134,6 +134,7 @@
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\WorldTree.CoreUnity.asmdef" />
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Tools\Distort.hlsl" />
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\GaussianBlur.Shader" />
+    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\TestRenderShader.Shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
