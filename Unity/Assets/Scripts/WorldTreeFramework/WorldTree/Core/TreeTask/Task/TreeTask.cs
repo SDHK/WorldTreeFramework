@@ -7,10 +7,8 @@
 * 
 */
 
-using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using WorldTree.Internal;
 
 namespace WorldTree
@@ -100,29 +98,6 @@ namespace WorldTree
 
 	public static class TreeTaskRule
 	{
-
-		///// <summary>
-		///// 在await的同时可以换一个新的cancellationToken
-		///// </summary>
-		//[DebuggerHidden]
-		//public static async TreeTask NewToken(this TreeTask self, TreeTaskToken treeTaskToken)
-		//{
-		//	self.SetToken(treeTaskToken);
-		//	self.FindSyncTaskSetCompleted();
-		//	await self;
-		//}
-
-		///// <summary>
-		///// 在await的同时可以换一个新的cancellationToken
-		///// </summary>
-		//[DebuggerHidden]
-		//public static async TreeTask<T> NewToken<T>(this TreeTask<T> self, TreeTaskToken treeTaskToken)
-		//{
-		//	self.SetToken(treeTaskToken);
-		//	self.FindSyncTaskSetCompleted();
-		//	return await self;
-		//}
-
 		/// <summary>
 		/// 插入新令牌：可以用新令牌取消，也能被老令牌取消
 		/// </summary>

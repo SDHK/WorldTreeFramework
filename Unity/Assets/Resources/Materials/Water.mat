@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Render
-  m_Shader: {fileID: 4800000, guid: eff62700b0bf9f4498b3ec018006a56c, type: 3}
+  m_Name: Water
+  m_Shader: {fileID: 4800000, guid: 1f49d4e1c1ba6bf46a947685575a56b3, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -24,6 +24,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _CausticsTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -36,12 +44,29 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ReflectionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Distort: 1
     - _EnableExternalAlpha: 0
-    - _Offs: 0.37
+    - _FoamNoise: 3
+    - _FoamRange: 5
+    - _WaterSpeed: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularBase: {r: 0.6, g: 10, b: 0.5, a: 1}
+    - _SpecularColor: {r: 0, g: 0.9820709, b: 1, a: 1}
+    - _WaterBase: {r: 2.03, g: 3.22, b: 2.1, a: 1.49}
+    - _WaterColor1: {r: 0, g: 0.15382911, b: 0.20754719, a: 1}
+    - _WaterColor2: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

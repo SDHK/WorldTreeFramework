@@ -19,6 +19,7 @@
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
+            #include "Tools/Noise.hlsl"
 
             struct appdata
             {
@@ -52,8 +53,11 @@
                 fixed4 col = tex2D(_MainTex, i.uv);
                 col.r=tex2D(_MainTex, i.uv-float2(_Offs,0)).r;
                 col.b=tex2D(_MainTex, i.uv+float2(_Offs,0)).b;
+
+             
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
+                // // col.a = NoiseWorley(i.uv,_Time.z);
                 return col;
             }
             ENDCG

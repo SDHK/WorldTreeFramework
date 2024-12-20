@@ -13,8 +13,8 @@ namespace WorldTree
 					self.Log($"异步启动:！！！！！");
 
 					self.AddChild(out self.treeTaskToken).Continue();
-
 					self.Test().Coroutine(self.treeTaskToken);
+
 				}
 				if (Input.GetKeyDown(KeyCode.W))
 				{
@@ -40,9 +40,12 @@ namespace WorldTree
 		/// </summary>
 		public static async TreeTask Test(this TaskTest self)
 		{
-			//await self.AsyncDelay(1);
 			TreeTaskToken taskTokenCatch = await self.TreeTaskTokenCatch();
+
+
+
 			self.Log($"A！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
+
 			while (taskTokenCatch.State != TokenState.Cancel)
 			{
 				await self.AsyncDelay(6);

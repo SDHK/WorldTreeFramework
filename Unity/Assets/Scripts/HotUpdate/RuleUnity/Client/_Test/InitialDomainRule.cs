@@ -23,6 +23,7 @@ namespace WorldTree
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
 
+
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
 				self.AddComponent(out TreeDataTest _);
 
