@@ -1,11 +1,14 @@
-﻿namespace WorldTree
+﻿using System.Collections.Generic;
+
+namespace WorldTree
 {
 
+	//(T)System.Convert.ChangeType(Value, typeof(T));
 
 	/// <summary>
 	/// 设备类型
 	/// </summary>
-	public enum InputEquipType : byte
+	public enum InputDeviceType : byte
 	{
 		/// <summary>
 		/// 鼠标
@@ -35,41 +38,69 @@
 	public enum InputType : byte
 	{
 		/// <summary>
-		/// 一维数值
+		/// 0~1区间型，如键盘按键、扳机、踏板
 		/// </summary>
-		One,
+		Press,
+
 		/// <summary>
-		/// 二维数值
+		/// -1~1区间型，如方向盘、单轴摇杆
 		/// </summary>
-		Two,
+		Axis,
+
 		/// <summary>
-		/// 三维数值
+		/// XY轴区间型，如摇杆
 		/// </summary>
-		Three
+		Axis2,
+
+		/// <summary>
+		/// XYZ轴区间型
+		/// </summary>
+		Axis3,
+
+		/// <summary>
+		/// 差值型，如鼠标滚轮、旋钮
+		/// </summary>
+		Delta,
+
+		/// <summary>
+		/// XY轴差值型，如鼠标移动
+		/// </summary>
+		Delta2,
+
+		/// <summary>
+		/// XYZ轴差值型
+		/// </summary>
+		Delta3,
 	}
 
 	/// <summary>
-	/// 按键状态
+	/// 输入状态
 	/// </summary>
-	public enum InputState
+	public enum InputState : byte
 	{
 		/// <summary>
 		/// 无
 		/// </summary>
 		None = 0,
 		/// <summary>
-		/// 按下
+		/// 开始
 		/// </summary>
-		Down,
+		Start,
 		/// <summary>
-		/// 抬起
+		/// 结束
 		/// </summary>
-		Up,
+		End,
 		/// <summary>
-		/// 按住
+		/// 活跃中
 		/// </summary>
-		Hold,
+		Active,
 	}
+
+
+	/// <summary>
+	/// 输入配置
+	/// </summary>
+	public struct InputConfig { }
 
 
 	/// <summary>
@@ -78,87 +109,15 @@
 	public class InputManager : Node
 	{
 		/// <summary>
-		/// 输入队列
+		/// 输入设备集合
 		/// </summary>
-		public UnitQueue<InputState> inputQueue;
+		public Dictionary<InputDeviceType, List<InputDevice>> InputDeviceDict;
 
-
-		/// <summary>
-		/// 输入控制集合，下标是设备类型
-		/// </summary>
-		public InputControlGroup[] inputControlGroups;
-	}
-
-	/// <summary>
-	/// 输入控制集合
-	/// </summary>
-	public class InputControlGroup : Node
-	{
-		/// <summary>
-		/// 设备类型
-		/// </summary>
-		public InputEquipType InputType;
-		/// <summary>
-		/// 设备码
-		/// </summary>
-		public int InputId;
-
-		/// <summary>
-		/// 输入数据集合，下标是按键码
-		/// </summary>
-		public InputData[] inputDatas;
-
-		//(T)System.Convert.ChangeType(Value, typeof(T));
 	}
 
 
-	/// <summary>
-	/// 输入数据
-	/// </summary>
-	public struct InputData
-	{
-		/// <summary>
-		/// 输入状态
-		/// </summary>
-		public InputState InputState;
-
-		/// <summary>
-		/// 按键类型
-		/// </summary>
-		public InputType InputType;
-
-		/// <summary>
-		/// 按键码
-		/// </summary>
-		public byte KeyCode;
-
-		/// <summary>
-		/// 主输入值 - 使用int存储，可以根据需要转换为float
-		/// 对于摇杆，可以存储-100到100的值表示百分比
-		/// 对于鼠标，可以直接存储像素位置或移动距离
-		/// </summary>
-		public int Value { get; private set; }
-
-		/// <summary>
-		/// 辅助输入值 - 用于需要两个维度的输入（如摇杆的Y轴）
-		/// </summary>
-		public int Value2 { get; private set; }
-
-		/// <summary>
-		/// 时间戳（毫秒）
-		/// </summary>
-		public long Timestamp;
-	}
 
 
-	/// <summary>
-	/// 输入配置
-	/// </summary>
-	public struct InputConfig
-	{
-
-
-	}
 
 
 }
