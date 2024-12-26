@@ -1,0 +1,20 @@
+﻿extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： %CreationYear%/%CreationMonth%/%CreationDay% %CreationTime%
+
+* 描述： 
+
+*/
+extensions: .aspx .ascx
+<%-- 
+Copyright (c) 2011 rubicon IT GmbH
+--%>
+extensions: .vb
+'Sample license text.
+extensions:  .xml .config .xsd
+<!--
+Sample license text.
+-->

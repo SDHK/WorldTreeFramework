@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{87D7A9A4-9501-ED3F-257D-B606468CC860}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -60,9 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\YooAssetTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\Modules\Input\InputDriverMouse.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\UtcTimeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\MultilayerPerceptronTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\InitialDomain.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\Modules\Input\InputDriverKeyboard.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\SqliteToolTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\LiteDBTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\NodeUnity\Client\_Test\TaskTest.cs" />

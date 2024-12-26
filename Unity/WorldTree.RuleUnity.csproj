@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\SerializeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\LiteDBTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\UnityCodeLoaderRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\Modules\Input\InpuDrivertMouseRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\UtcTimeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\MultilayerPerceptronTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\InitialDomainRule.cs" />

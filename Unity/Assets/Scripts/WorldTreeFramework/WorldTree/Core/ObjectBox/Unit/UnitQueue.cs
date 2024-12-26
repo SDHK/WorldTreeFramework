@@ -18,11 +18,30 @@ namespace WorldTree
 	/// 单元队列：可由对象池管理回收
 	/// </summary>
 	public class UnitQueue<T> : Queue<T>, IUnit
-    {
-        public WorldTreeCore Core { get; set; }
-        public long Type { get; set; }
-        public bool IsFromPool { get; set; }
-        public bool IsDisposed { get; set; }
+	{
+		public WorldTreeCore Core { get; set; }
+		public long Type { get; set; }
+		public bool IsFromPool { get; set; }
+		public bool IsDisposed { get; set; }
+		public void Dispose()
+		{
+			Core.PoolRecycle(this);
+		}
+		public void OnCreate() { }
+
+		public virtual void OnDispose() => Clear();
+
+	}
+
+	/// <summary>
+	/// 单元并发队列：可由对象池管理回收
+	/// </summary>
+	public class UnitConcurrentQueue<T> : Queue<T>, IUnit
+	{
+		public WorldTreeCore Core { get; set; }
+		public long Type { get; set; }
+		public bool IsFromPool { get; set; }
+		public bool IsDisposed { get; set; }
 		public void Dispose()
 		{
 			Core.PoolRecycle(this);
