@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{ED3E2C28-BFB8-82E2-44AE-BA5579F582B9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -60,10 +59,10 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Input\InputDriverRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\NeuralNetwork\MultilayerPerceptron\PerceptronLineRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\DataBase\DataBaseProxyRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Input\InputDriverRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Client\_Test\MemoryPackTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\DataBase\LiteDB\LiteDBManagerRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
