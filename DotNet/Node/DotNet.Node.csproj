@@ -36,6 +36,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!--<Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Node\Client\**\*.cs">
+      <Link>Client\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Compile>-->
     <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Node\Server\**\*.cs">
       <Link>Server\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Compile>

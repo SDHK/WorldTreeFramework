@@ -129,25 +129,25 @@ namespace WorldTree
 		/// </summary>
 		public int Z;
 
-		public InputDriverInfo(int x)
+		public InputDriverInfo(bool isInput, int x)
 		{
-			IsInput = true;
+			IsInput = isInput;
 			X = x;
 			Y = 0;
 			Z = 0;
 		}
 
-		public InputDriverInfo(int x, int y)
+		public InputDriverInfo(bool isInput, int x, int y)
 		{
-			IsInput = true;
+			IsInput = isInput;
 			X = x;
 			Y = y;
 			Z = 0;
 		}
 
-		public InputDriverInfo(int x, int y, int z)
+		public InputDriverInfo(bool isInput, int x, int y, int z)
 		{
-			IsInput = true;
+			IsInput = isInput;
 			X = x;
 			Y = y;
 			Z = z;

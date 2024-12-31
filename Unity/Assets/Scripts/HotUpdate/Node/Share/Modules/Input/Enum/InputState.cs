@@ -1,25 +1,25 @@
-﻿namespace WorldTree
+﻿using System;
+
+namespace WorldTree
 {
 	/// <summary>
 	/// 输入状态
 	/// </summary>
+	[Flags]
 	public enum InputState : byte
 	{
-		/// <summary>
-		/// 无
-		/// </summary>
-		None,
-		/// <summary>
-		/// 开始
-		/// </summary>
-		Start,
 		/// <summary>
 		/// 结束
 		/// </summary>
 		End,
 		/// <summary>
+		/// 开始
+		/// </summary>
+		Start = 1,
+
+		/// <summary>
 		/// 活跃中
 		/// </summary>
-		Active,
+		Active = 1 << 1,
 	}
 }

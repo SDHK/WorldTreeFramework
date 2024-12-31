@@ -16,6 +16,8 @@ namespace WorldTree
 	/// </summary>
 	public class InputDeviceManager : Node
 		, ComponentOf<WorldTreeRoot>
+		, AsComponentBranch
+		, AsChildBranch
 		, AsAwake
 		, AsUpdate
 	{

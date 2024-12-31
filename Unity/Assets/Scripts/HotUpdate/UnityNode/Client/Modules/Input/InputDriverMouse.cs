@@ -13,6 +13,7 @@ namespace WorldTree
 	/// 鼠标输入驱动器
 	/// </summary>
 	public class InputDriverMouse : InputDriver
+		, AsAwake<InputDeviceManager>
 		, AsUpdate
 	{
 

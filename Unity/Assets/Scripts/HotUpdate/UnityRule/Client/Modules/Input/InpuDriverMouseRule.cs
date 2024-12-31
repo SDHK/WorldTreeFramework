@@ -43,36 +43,39 @@ namespace WorldTree
 		{
 			protected override void Execute(InputDriverMouse self)
 			{
-				self.IsExists[0] = Input.mousePresent;
-				self.InputData(0, (byte)MouseKey.Mouse, GetAxis2(Input.mousePosition));
-				self.InputData(0, (byte)MouseKey.MouseLeft, GetPress(Input.GetMouseButton(0)));
-				self.InputData(0, (byte)MouseKey.MouseRight, GetPress(Input.GetMouseButton(1)));
-				self.InputData(0, (byte)MouseKey.MouseMiddle, GetPress(Input.GetMouseButton(2)));
-				self.InputData(0, (byte)MouseKey.Mouse0, GetPress(Input.GetMouseButton(3)));
-				self.InputData(0, (byte)MouseKey.Mouse1, GetPress(Input.GetMouseButton(4)));
-				self.InputData(0, (byte)MouseKey.Mouse2, GetPress(Input.GetMouseButton(5)));
-				self.InputData(0, (byte)MouseKey.Mouse3, GetPress(Input.GetMouseButton(6)));
-				self.InputData(0, (byte)MouseKey.Mouse4, GetPress(Input.GetMouseButton(7)));
-				self.InputData(0, (byte)MouseKey.Mouse5, GetPress(Input.GetMouseButton(8)));
-				self.InputData(0, (byte)MouseKey.Mouse6, GetPress(Input.GetMouseButton(9)));
-				self.InputData(0, (byte)MouseKey.MouseWheel, GetDelta2(Input.mouseScrollDelta));
+				self.InputDriver(0);
 			}
+		}
+
+		/// <summary>
+		/// 鼠标控件检测
+		/// </summary>
+		private static void InputDriver(this InputDriverMouse self, byte deviceId)
+		{
+			self.IsExists[deviceId] = Input.mousePresent;
+			self.InputData(deviceId, (byte)MouseKey.Mouse, GetAxis2(Input.mousePosition));
+			self.InputData(deviceId, (byte)MouseKey.MouseLeft, GetPress(Input.GetMouseButton(0)));
+			self.InputData(deviceId, (byte)MouseKey.MouseRight, GetPress(Input.GetMouseButton(1)));
+			self.InputData(deviceId, (byte)MouseKey.MouseMiddle, GetPress(Input.GetMouseButton(2)));
+			self.InputData(deviceId, (byte)MouseKey.Mouse0, GetPress(Input.GetMouseButton(3)));
+			self.InputData(deviceId, (byte)MouseKey.Mouse1, GetPress(Input.GetMouseButton(4)));
+			self.InputData(deviceId, (byte)MouseKey.MouseWheel, GetDelta2(Input.mouseScrollDelta));
 		}
 
 		/// <summary>
 		/// 获取鼠标按键
 		/// </summary>
-		private static InputDriverInfo GetPress(bool isPress) => Input.mousePresent && isPress ? new(1) : default;
+		private static InputDriverInfo GetPress(bool isPress) => Input.mousePresent && isPress ? new(true, 1) : default;
 
 		/// <summary>
 		/// 获取鼠标位置
 		/// </summary>
-		private static InputDriverInfo GetAxis2(Vector2 vector2) => Input.mousePresent ? new((int)vector2.x, (int)vector2.y) : default;
+		private static InputDriverInfo GetAxis2(Vector2 vector2) => Input.mousePresent ? new(true, (int)vector2.x, (int)vector2.y) : new(false, (int)vector2.x, (int)vector2.y);
 
 		/// <summary>
 		/// 获取滚轮数据
 		/// </summary>
-		private static InputDriverInfo GetDelta2(Vector2 vector2) => Input.mousePresent && vector2 != Vector2.zero ? new((int)vector2.x, (int)vector2.y) : default;
+		private static InputDriverInfo GetDelta2(Vector2 vector2) => Input.mousePresent && vector2 != Vector2.zero ? new(true, (int)vector2.x, (int)vector2.y) : default;
 
 	}
 }

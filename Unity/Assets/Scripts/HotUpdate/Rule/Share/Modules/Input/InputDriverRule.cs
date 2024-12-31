@@ -45,9 +45,10 @@ namespace WorldTree
 			if (oldInfo.IsInput == false && info.IsInput == false) return;
 			if (oldInfo == info) return;
 
+			// 计算组合状态
 			InputState inputState = oldInfo.IsInput
-			? (info.IsInput ? InputState.Active : InputState.End)
-			: (info.IsInput ? InputState.Start : InputState.None);
+				? (info.IsInput ? InputState.Active : InputState.End)
+				: (info.IsInput ? (InputState.Active | InputState.Start) : InputState.End);
 
 			self.InputInfosList[deviceId][keyCode] = info;
 
