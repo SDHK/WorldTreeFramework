@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{ED3E2C28-BFB8-82E2-44AE-BA5579F582B9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -534,9 +533,9 @@
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="WorldTree.CoreUnity.csproj">
-      <Project>{CCAAEB54-E5BE-7998-5D51-E704B3DB0E9A}</Project>
-      <Name>WorldTree.CoreUnity</Name>
+    <ProjectReference Include="WorldTree.UnityCore.csproj">
+      <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>
+      <Name>WorldTree.UnityCore</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.Node.csproj">
       <Project>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</Project>

@@ -79,12 +79,12 @@ namespace WorldTree.Analyzer
 
 			//前端限制
 			{ "WorldTree.Core",CoreConfigs},
-			{ "WorldTree.CoreUnity",CoreConfigs},
+			{ "WorldTree.UnityCore",CoreConfigs},
 
 			{ "WorldTree.Node",NodeConfigs},
-			{ "WorldTree.NodeUnity",NodeConfigs},
 			{ "WorldTree.Rule",RuleConfigs},
-			{ "WorldTree.RuleUnity",RuleConfigs},
+			{ "WorldTree.UnityNode",NodeConfigs},
+			{ "WorldTree.UnityRule",RuleConfigs},
 		};
 
 

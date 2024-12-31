@@ -1,5 +1,5 @@
 {
-    "name": "WorldTree.RuleUnity",
+    "name": "WorldTree.UnityRule",
     "rootNamespace": "",
     "references": [
         "GUID:104971acd352de048964cb7f7b53027b",

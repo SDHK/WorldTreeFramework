@@ -1,13 +1,13 @@
 {
-    "name": "WorldTree.EditorUnity",
+    "name": "WorldTree.UnityEditor",
     "rootNamespace": "",
     "references": [
         "WorldTree.Core",
-        "WorldTree.CoreUnity",
         "HybridCLR.Runtime",
         "HybridCLR.Editor",
         "YooAsset.Editor",
-        "YooAsset"
+        "YooAsset",
+        "WorldTree.UnityCore"
     ],
     "includePlatforms": [
         "Editor"

@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -60,7 +59,6 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDriver.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBManager.cs" />
@@ -73,6 +71,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputState.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronNode.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDeviceManager.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDriver.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputDeviceType.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBCollection.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Client\_Test\TreeDataTest.cs" />
@@ -543,9 +542,9 @@
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="WorldTree.CoreUnity.csproj">
-      <Project>{CCAAEB54-E5BE-7998-5D51-E704B3DB0E9A}</Project>
-      <Name>WorldTree.CoreUnity</Name>
+    <ProjectReference Include="WorldTree.UnityCore.csproj">
+      <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>
+      <Name>WorldTree.UnityCore</Name>
     </ProjectReference>
     <ProjectReference Include="MemoryPack.csproj">
       <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>

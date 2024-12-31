@@ -9,10 +9,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{10EDEBF6-0383-482E-16B3-BB558877F9B0}</ProjectGuid>
+    <ProjectGuid>{AFC8BDA7-7341-72BD-61AC-17E095FA5EA2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>WorldTree.EditorUnity</AssemblyName>
+    <AssemblyName>WorldTree.UnityRule</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -48,7 +48,7 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
     <UnityProjectGeneratorVersion>2.0.16</UnityProjectGeneratorVersion>
-    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2021.3.16f1</UnityVersion>
   </PropertyGroup>
@@ -59,59 +59,24 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector4ViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityWorldTreeEditor.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\EntityBindMonoTool.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ThirdParty\HybridCLR\Generate\AOTGenericReferences.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\ScriptableSingleton.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\UnityNodeFieldViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\EditorAssetField.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\CharViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\MonoEditorGUIWindow.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListAssetBase.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ComponentBindItem.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\LongViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\SystemBase\EditorWindowSystem.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ManualScriptCompiler.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\IntViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\ToolKitWindow.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\UIFormEditor.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\CreateAssetClassFile.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector2ViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindItem.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\ViewTypeManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\EnumViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeFrameworkWindow\EditorHomePage.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityWorldTreeNodeView\UnityWorldTreeNodeViewEditor.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindGroup.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Addressables\AddressablesEditorTool.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\ColorViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\RectViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\FloatViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\FilePathAttribute.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ComponentEventItem.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\NodeFieldViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\EditorAssetClass.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Addressables\AddressRepetitionAnalyzeRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\AnimationCurveViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\ListDictionary.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptInitSetting\Editor\ScriptInitSettings.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorGUI\EditorGUIWindow.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\StringViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\BoolViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\DoubleViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeFrameworkWindow\WorldTreeFrameworkWindow.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\UnityNodeFieldView.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\Vector3ViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\GuidePage\Editor\GuidePage.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ThirdParty\HybridCLR\HybridCLREditor.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\ScriptableEditor.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\DateTimeViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\BoundsViewRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SqliteToolTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TaskTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SphereManagerTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SerializeTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\LiteDBTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\UnityCodeLoaderRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\Input\InpuDriverMouseRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\UtcTimeTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MultilayerPerceptronTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\InitialDomainRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\EntryRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TreeDataTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TreeValueTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\YooAssetTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SphereTestRule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ThirdParty\HybridCLR\Generate\link.xml" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\WorldTree.EditorUnity.asmdef" />
+    <None Include="Assets\Scripts\HotUpdate\UnityRule\WorldTree.UnityRule.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -188,9 +153,6 @@
     </Reference>
     <Reference Include="UnityEngine.LocalizationModule">
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.LocalizationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.NVIDIAModule">
-      <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.NVIDIAModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.ParticleSystemModule.dll</HintPath>
@@ -443,9 +405,6 @@
     </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
@@ -828,15 +787,6 @@
     <Reference Include="System.Xml.XPath.XDocument">
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
-    <Reference Include="HybridCLR.Runtime">
-      <HintPath>Library\ScriptAssemblies\HybridCLR.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="HybridCLR.Editor">
-      <HintPath>Library\ScriptAssemblies\HybridCLR.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="YooAsset.Editor">
-      <HintPath>Library\ScriptAssemblies\YooAsset.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="YooAsset">
       <HintPath>Library\ScriptAssemblies\YooAsset.dll</HintPath>
     </Reference>
@@ -845,12 +795,6 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.TestRunner">
-      <HintPath>Library\ScriptAssemblies\UnityEditor.TestRunner.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TestRunner">
-      <HintPath>Library\ScriptAssemblies\UnityEngine.TestRunner.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -861,6 +805,22 @@
     <ProjectReference Include="WorldTree.UnityCore.csproj">
       <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>
       <Name>WorldTree.UnityCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.UnityNode.csproj">
+      <Project>{9B5D3FD1-5D41-F836-C69B-328AEC1FB79D}</Project>
+      <Name>WorldTree.UnityNode</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.Rule.csproj">
+      <Project>{ED3E2C28-BFB8-82E2-44AE-BA5579F582B9}</Project>
+      <Name>WorldTree.Rule</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.Node.csproj">
+      <Project>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</Project>
+      <Name>WorldTree.Node</Name>
+    </ProjectReference>
+    <ProjectReference Include="MemoryPack.csproj">
+      <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
+      <Name>MemoryPack</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
