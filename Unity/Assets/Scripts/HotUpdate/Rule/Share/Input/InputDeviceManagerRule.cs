@@ -39,7 +39,8 @@ namespace WorldTree
 		/// </summary>
 		public static void AddData(this InputDeviceManager self, InputData inputData)
 		{
-			self.DataQueue.Enqueue(inputData);
+			self.Log($"{inputData.Device.InputDeviceType}:{inputData.Device.InputType}:{inputData.Device.InputCode}:{inputData.Info.InputState}:({inputData.Info.X},{inputData.Info.Y},{inputData.Info.Z})");
+			//self.DataQueue.Enqueue(inputData);
 		}
 	}
 }

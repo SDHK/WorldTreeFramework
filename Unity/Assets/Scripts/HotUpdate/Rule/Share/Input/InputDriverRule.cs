@@ -13,13 +13,16 @@ namespace WorldTree
 	public static class InputDriverRule
 	{
 		/// <summary>
-		/// 添加一个设备
+		/// 注册设备
 		/// </summary>
-		public static void AddDevice<T>(this InputDriver self)
+		public static void RegisterDevice<T>(this InputDriver self, int deviceCount)
 			where T : Enum
 		{
 			int count = Enum.GetNames(typeof(T)).Length;
-			self.InputInfosList.Add(new InputInfo[count]);
+			for (int i = 0; i < deviceCount; i++)
+			{
+				self.InputInfosList.Add(new InputDriverInfo[count]);
+			}
 			self.InputTypes = new InputType[count];
 		}
 
@@ -36,33 +39,34 @@ namespace WorldTree
 		/// <summary>
 		/// 创建数据
 		/// </summary>
-		public static void CreateData(this InputDriver self, byte deviceId, byte keyCode, InputInfo info)
+		public static void InputData(this InputDriver self, byte deviceId, byte keyCode, InputDriverInfo info)
 		{
-			var oldInfo = self.InputInfosList[deviceId][keyCode];
+			InputDriverInfo oldInfo = self.InputInfosList[deviceId][keyCode];
+			if (oldInfo.IsInput == false && info.IsInput == false) return;
 			if (oldInfo == info) return;
 
-			//info.InputState = info.InputState switch
-			//{
-			//	InputState.Active => oldInfo.InputState == InputState.Active ? InputState.Active : InputState.Down,
-			//	InputState.Down => oldInfo.InputState == InputState.Active ? InputState.Up : InputState.Down,
-			//	InputState.Up => oldInfo.InputState == InputState.Up ? InputState.Up : InputState.Down,
-			//	_ => throw new NotImplementedException(),
-			//};
+			InputState inputState = oldInfo.IsInput
+			? (info.IsInput ? InputState.Active : InputState.End)
+			: (info.IsInput ? InputState.Start : InputState.None);
 
-			if (self.InputInfosList[deviceId][keyCode] == info) return;
+			self.InputInfosList[deviceId][keyCode] = info;
 
-
-
-			var data = new InputData
+			InputData data = new()
 			{
-				Device = new InpuDeviceInfo
+				Device = new()
 				{
 					InputDeviceType = self.DeviceType,
 					InputDeviceId = deviceId,
 					InputType = self.InputTypes[keyCode],
 					InputCode = keyCode,
 				},
-				Info = info,
+				Info = new()
+				{
+					InputState = inputState,
+					X = info.X,
+					Y = info.Y,
+					Z = info.Z,
+				},
 				TimeStamp = self.Core.RealTimeManager.GetUtcNow(),
 			};
 

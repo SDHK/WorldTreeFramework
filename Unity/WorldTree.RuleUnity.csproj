@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{C5203975-51CB-FD0D-CE85-3FB4249C96BC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -65,7 +66,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\SerializeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\LiteDBTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\UnityCodeLoaderRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\Modules\Input\InpuDrivertMouseRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\Modules\Input\InpuDriverMouseRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\UtcTimeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\MultilayerPerceptronTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\RuleUnity\Client\_Test\InitialDomainRule.cs" />
