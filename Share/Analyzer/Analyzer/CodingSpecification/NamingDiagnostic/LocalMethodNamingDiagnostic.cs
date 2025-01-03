@@ -43,7 +43,7 @@ namespace WorldTree.Analyzer
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(localFunction.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
 							//检查方法名
-							if (!codeDiagnostic.Check.Invoke(localFunction.Identifier.Text))
+							if (!codeDiagnostic.Check.Invoke(semanticModel, localFunction.Identifier))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localFunction.GetLocation(), localFunction.Identifier.Text));
 							}

@@ -42,7 +42,7 @@ namespace WorldTree.Analyzer
 			//	UnKeywordKinds = new() { SyntaxKind.ProtectedKeyword, SyntaxKind.OverrideKeyword },
 			//	Check = s => false,
 			//});
-			
+
 
 		}
 

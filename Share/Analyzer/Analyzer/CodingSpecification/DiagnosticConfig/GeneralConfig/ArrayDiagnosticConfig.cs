@@ -30,7 +30,7 @@ namespace WorldTree.Analyzer
 				Title = "Array类型字段命名",
 				MessageFormat = "Array类型字段 命名要加s后戳",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
-				Check = s => Regex.IsMatch(s, ".*s$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*s$"),
 				FixCode = s => s + "s",
 				NeedComment = false,
 			});
@@ -39,7 +39,7 @@ namespace WorldTree.Analyzer
 				Title = "Array类型属性命名",
 				MessageFormat = "Array类型属性 命名要加s后戳",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
-				Check = s => Regex.IsMatch(s, ".*s$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*s$"),
 				FixCode = s => s + "s",
 				NeedComment = false,
 			});
@@ -48,11 +48,11 @@ namespace WorldTree.Analyzer
 				Title = "Array类型局部变量命名",
 				MessageFormat = "Array类型局部变量 命名要加s后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*s$") || s == "obj",
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*s$") || identifier.Text == "obj",
 				FixCode = s => s + "s",
 				NeedComment = false,
 			});
 		}
-		
+
 	}
 }

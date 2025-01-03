@@ -8,6 +8,7 @@
 */
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text.RegularExpressions;
 
 namespace WorldTree.Analyzer
@@ -17,6 +18,23 @@ namespace WorldTree.Analyzer
 	/// </summary>
 	public class StaticRuleDiagnosticConfig : DiagnosticConfigGroup
 	{
+		public bool IsRuleDelegateType(SemanticModel semanticModel, SyntaxToken identifier)
+		{
+			if (identifier.Parent is VariableDeclaratorSyntax variableDeclarator)
+			{
+				if (variableDeclarator.Parent is VariableDeclarationSyntax parentVariableDeclarator)
+				{
+					ITypeSymbol fieldTypeSymbol = semanticModel.GetTypeInfo(parentVariableDeclarator.Type).Type;
+					if (fieldTypeSymbol.TypeKind == TypeKind.Delegate)
+					{
+						//判断类型名称是否以On开头
+						return Regex.IsMatch(fieldTypeSymbol.Name, "^On.*$");
+					}
+				}
+			}
+			return false;
+		}
+
 		public StaticRuleDiagnosticConfig()
 		{
 			Screen = (Symbol) =>
@@ -28,79 +46,79 @@ namespace WorldTree.Analyzer
 				return Regex.IsMatch(typeName, "Rule$");
 			};
 
+
 			SetConfig(DiagnosticKey.ClassNaming, new DiagnosticConfig()
 			{
 				Title = "类型命名",
 				MessageFormat = "类型命名开头要大写",
 				DeclarationKind = SyntaxKind.ClassDeclaration,
-				NeedComment = false
-			});
-
-			SetConfig(DiagnosticKey.ConstNaming, new DiagnosticConfig()
-			{
-				Title = "Rule静态类型常量字段禁止",
-				MessageFormat = "Rule静态类型禁止声明常量字段",
-				DeclarationKind = SyntaxKind.FieldDeclaration,
-				KeywordKinds = new() { SyntaxKind.ConstKeyword },
-				Check = s => false,
+				Check = (semanticModel, identifier) =>
+				{
+					if (IsRuleDelegateType(semanticModel, identifier)) return true;
+					return Regex.IsMatch(identifier.Text, "^[A-Z].*$");
+				},
 				NeedComment = false,
 			});
 
+
 			SetConfig(DiagnosticKey.PublicFieldNaming, new DiagnosticConfig()
 			{
-				Title = "Rule静态类型公开字段禁止",
-				MessageFormat = "Rule静态类型禁止声明公开字段",
+				Title = "Rule静态类型公开字段命名",
+				MessageFormat = "公开字段命名开头要大写",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.PublicKeyword, },
 				UnKeywordKinds = new() { SyntaxKind.ConstKeyword },
-				Check = s => false,
+				Check = (semanticModel, identifier) =>
+				{
+					if (IsRuleDelegateType(semanticModel, identifier)) return true;
+					return Regex.IsMatch(identifier.Text, "^[A-Z].*$");
+				},
 				NeedComment = false,
 			});
 
 			SetConfig(DiagnosticKey.PrivateFieldNaming, new DiagnosticConfig()
 			{
 				Title = "Rule静态类型私有字段命名",
-				MessageFormat = "Rule私有字段命名开头要大写",
+				MessageFormat = "私有字段命名开头要小写",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.PrivateKeyword, },
 				UnKeywordKinds = new() { SyntaxKind.ConstKeyword, },
+				Check = (semanticModel, identifier) =>
+				{
+					if (IsRuleDelegateType(semanticModel, identifier)) return true;
+					return Regex.IsMatch(identifier.Text, "^[a-z].*$");
+
+				},
+				FixCode = s => char.ToLower(s[0]) + s.Substring(1),
 				NeedComment = false,
 			});
 
 			SetConfig(DiagnosticKey.PublicPropertyNaming, new DiagnosticConfig()
 			{
-				Title = "Rule静态类型公开属性禁止",
-				MessageFormat = "Rule静态类型禁止声明公开属性",
+				Title = "Rule静态类型公开属性命名",
+				MessageFormat = "公开属性命名开头要大写",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				KeywordKinds = new() { SyntaxKind.PublicKeyword, },
-				Check = s => false,
+				Check = (semanticModel, identifier) =>
+				{
+					if (IsRuleDelegateType(semanticModel, identifier)) return true;
+					return Regex.IsMatch(identifier.Text, "^[A-Z].*$");
+				},
 				NeedComment = false,
 			});
 			SetConfig(DiagnosticKey.PrivatePropertyNaming, new DiagnosticConfig()
 			{
-				Title = "Rule静态类型私有属性禁止",
-				MessageFormat = "Rule静态类型禁止声明私有属性",
+				Title = "Rule静态类型私有属性命名",
+				MessageFormat = "私有属性命名开头要大写",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				KeywordKinds = new() { SyntaxKind.PrivateKeyword },
-				Check = s => false,
+				Check = (semanticModel, identifier) =>
+				{
+					if (IsRuleDelegateType(semanticModel, identifier)) return true;
+					return Regex.IsMatch(identifier.Text, "^[A-Z].*$");
+				},
 				NeedComment = false,
 			});
-			SetConfig(DiagnosticKey.MethodNaming, new DiagnosticConfig()
-			{
-				Title = "方法命名",
-				MessageFormat = "方法命名开头要大写",
-				DeclarationKind = SyntaxKind.MethodDeclaration,
-			});
-			SetConfig(DiagnosticKey.ParameterNaming, new DiagnosticConfig()
-			{
-				Title = "方法参数命名",
-				MessageFormat = "方法参数命名开头要小写",
-				DeclarationKind = SyntaxKind.Parameter,
-				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
-				FixCode = s => char.ToLower(s[0]) + s.Substring(1),
-				NeedComment = false,
-			});
-
 		}
 	}
 

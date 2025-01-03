@@ -45,7 +45,7 @@ namespace WorldTree.Analyzer
 						// 不需要检查的修饰符
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(parameter.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
-							if (!codeDiagnostic.Check.Invoke(parameter.Identifier.Text))
+							if (!codeDiagnostic.Check.Invoke(semanticModel, parameter.Identifier))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, parameter.Identifier.GetLocation(), parameter.Identifier.Text));
 							}

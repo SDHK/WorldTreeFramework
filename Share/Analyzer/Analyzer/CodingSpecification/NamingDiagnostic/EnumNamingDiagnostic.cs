@@ -51,7 +51,7 @@ namespace WorldTree.Analyzer
 						// 不需要检查的修饰符
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(enumDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
-							if (!codeDiagnostic.Check.Invoke(enumDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(enumDeclaration)))
+							if (!codeDiagnostic.Check.Invoke(semanticModel, enumDeclaration.Identifier) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(enumDeclaration)))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, enumDeclaration.Identifier.GetLocation(), enumDeclaration.Identifier.Text));
 							}

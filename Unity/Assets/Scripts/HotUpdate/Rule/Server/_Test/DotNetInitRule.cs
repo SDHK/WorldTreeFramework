@@ -13,12 +13,12 @@ using System.Diagnostics;
 namespace WorldTree
 {
 
-
-	/// <summary>
-	/// DotNetTestNodeRule
-	/// </summary>
 	public static partial class DotNetInitRule
 	{
+
+		private static int a = 1;
+
+
 		private static OnEnable<DotNetInit> Enable1 = (self) =>
 		{
 			self.TestRule(1.0f, "字符串");

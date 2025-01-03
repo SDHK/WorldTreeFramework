@@ -34,7 +34,7 @@ namespace WorldTree.Analyzer
 				Title = "Stack类型字段命名",
 				MessageFormat = "Stack类型字段 命名要加Stack后戳",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
-				Check = s => Regex.IsMatch(s, ".*Stack$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Stack$"),
 				FixCode = s => s + "Stack",
 				NeedComment = false,
 			});
@@ -43,7 +43,7 @@ namespace WorldTree.Analyzer
 				Title = "Stack类型属性命名",
 				MessageFormat = "Stack类型属性 命名要加Stack后戳",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
-				Check = s => Regex.IsMatch(s, ".*Stack$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Stack$"),
 				FixCode = s => s + "Stack",
 				NeedComment = false,
 			});
@@ -52,7 +52,7 @@ namespace WorldTree.Analyzer
 				Title = "Stack类型局部变量命名",
 				MessageFormat = "Stack类型局部变量 命名要加Stack后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*Stack$") || s == "obj",
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Stack$") || identifier.Text == "obj",
 				FixCode = s => s + "Stack",
 				NeedComment = false,
 			});

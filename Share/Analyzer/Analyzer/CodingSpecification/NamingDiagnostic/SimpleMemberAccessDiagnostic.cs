@@ -10,7 +10,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -46,7 +45,7 @@ namespace WorldTree.Analyzer
 					//检测是否有对应的诊断配置
 					if (DiagnosticGroup.Diagnostics.TryGetValue(DiagnosticKey.SimpleMemberAccess, out DiagnosticConfig codeDiagnostic))
 					{
-						if (codeDiagnostic.Check.Invoke(memberAccess.Name.Identifier.Text))
+						if (codeDiagnostic.Check.Invoke(semanticModel, memberAccess.Name.Identifier))
 						{
 							if (CheckMemberAccess(context, isProtected))
 							{

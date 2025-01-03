@@ -42,11 +42,13 @@ namespace WorldTree.Analyzer
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.StructNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符
-					if (TreeSyntaxHelper.SyntaxKindContains(structDeclaration.Modifiers, codeDiagnostic.KeywordKinds)){
+					if (TreeSyntaxHelper.SyntaxKindContains(structDeclaration.Modifiers, codeDiagnostic.KeywordKinds))
+					{
 						// 不需要检查的修饰符
-						if (!TreeSyntaxHelper.SyntaxKindContainsAny(structDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) {
+						if (!TreeSyntaxHelper.SyntaxKindContainsAny(structDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
+						{
 
-							if (!codeDiagnostic.Check.Invoke(structDeclaration.Identifier.Text))
+							if (!codeDiagnostic.Check.Invoke(semanticModel, structDeclaration.Identifier))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, structDeclaration.GetLocation(), structDeclaration.Identifier.Text));
 							}

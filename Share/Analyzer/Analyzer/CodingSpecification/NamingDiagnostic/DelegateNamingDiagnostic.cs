@@ -45,7 +45,7 @@ namespace WorldTree.Analyzer
 						// 不需要检查的修饰符
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(delegateDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
-							if (!codeDiagnostic.Check.Invoke(delegateDeclaration.Identifier.Text) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(delegateDeclaration)))
+							if (!codeDiagnostic.Check.Invoke(semanticModel, delegateDeclaration.Identifier) || (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(delegateDeclaration)))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, delegateDeclaration.Identifier.GetLocation(), delegateDeclaration.Identifier.Text));
 							}

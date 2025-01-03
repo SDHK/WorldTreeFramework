@@ -49,7 +49,7 @@ namespace WorldTree.Analyzer
 					{
 						foreach (var variable in fieldDeclaration.Declaration.Variables)
 						{
-							if (!DiagnosticConfig.Check.Invoke(variable.Identifier.Text))
+							if (!DiagnosticConfig.Check.Invoke(semanticModel, variable.Identifier))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(DiagnosticConfig.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
 							}
@@ -84,9 +84,12 @@ namespace WorldTree.Analyzer
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(fieldDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
 							// 检查属性名是否符合规范
-							foreach (var variable in fieldDeclaration.Declaration.Variables)
+							foreach (VariableDeclaratorSyntax variable in fieldDeclaration.Declaration.Variables)
 							{
-								if (!codeDiagnostic.Check.Invoke(variable.Identifier.Text))
+								//获取字段类型名称
+
+
+								if (!codeDiagnostic.Check.Invoke(semanticModel, variable.Identifier))
 								{
 									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
 								}

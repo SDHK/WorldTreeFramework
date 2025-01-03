@@ -30,7 +30,7 @@ namespace WorldTree.Analyzer
 				Title = "项目禁止声明Unit类型",
 				MessageFormat = "项目禁止声明Unit类型",
 				DeclarationKind = SyntaxKind.ClassDeclaration,
-				Check = s => false,
+				Check = (semanticModel, identifier) => false,
 				NeedComment = false,
 			});
 		}

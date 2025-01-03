@@ -41,6 +41,7 @@ namespace WorldTree.Analyzer
 			new HashSetDiagnosticConfig(),
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
+			new RuleDelegateDiagnosticConfig(),
 
 			new NodeDiagnosticConfig(),
 			new CodeNodeDiagnosticConfig(),
@@ -58,11 +59,12 @@ namespace WorldTree.Analyzer
 			new HashSetDiagnosticConfig(),
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
+			new RuleDelegateDiagnosticConfig(),
 
-			new RuleDiagnosticConfig(),
 			new CodeNodeDiagnosticConfig(),
+			new RuleDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
-			new ProjectBanDiagnosticConfig(),
+			//new ProjectBanDiagnosticConfig(),
 			new ObjectDiagnosticConfig()
 		};
 
@@ -85,6 +87,9 @@ namespace WorldTree.Analyzer
 			{ "WorldTree.Rule",RuleConfigs},
 			{ "WorldTree.UnityNode",NodeConfigs},
 			{ "WorldTree.UnityRule",RuleConfigs},
+
+			//编辑限制
+			{ "DotNet.NodeRuleEditor",NodeConfigs},
 		};
 
 

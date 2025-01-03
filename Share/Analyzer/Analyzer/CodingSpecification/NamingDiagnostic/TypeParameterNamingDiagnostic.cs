@@ -35,7 +35,7 @@ namespace WorldTree.Analyzer
 			{
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.TypeParameterNaming, out DiagnosticConfig codeDiagnostic))
 				{
-					if (!codeDiagnostic.Check.Invoke(typeParameter.Identifier.Text))
+					if (!codeDiagnostic.Check.Invoke(semanticModel, typeParameter.Identifier))
 					{
 						context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, typeParameter.GetLocation(), typeParameter.Identifier.Text));
 					}

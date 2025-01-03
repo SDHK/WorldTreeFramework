@@ -32,7 +32,7 @@ namespace WorldTree.Analyzer
 				Title = "Queue类型字段命名",
 				MessageFormat = "Queue类型字段 命名要加Queue后戳",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
-				Check = s => Regex.IsMatch(s, ".*Queue$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Queue$"),
 				FixCode = s => s + "Queue",
 				NeedComment = false,
 			});
@@ -41,7 +41,7 @@ namespace WorldTree.Analyzer
 				Title = "Queue类型属性命名",
 				MessageFormat = "Queue类型属性 命名要加Queue后戳",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
-				Check = s => Regex.IsMatch(s, ".*Queue$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Queue$"),
 				FixCode = s => s + "Queue",
 				NeedComment = false,
 			});
@@ -50,7 +50,7 @@ namespace WorldTree.Analyzer
 				Title = "Queue类型局部变量命名",
 				MessageFormat = "Queue类型局部变量 命名要加Queue后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*Queue$") || s == "obj",
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Queue$") || identifier.Text == "obj",
 				FixCode = s => s + "Queue",
 				NeedComment = false,
 			});

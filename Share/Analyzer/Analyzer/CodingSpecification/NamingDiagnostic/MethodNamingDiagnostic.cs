@@ -68,7 +68,7 @@ namespace WorldTree.Analyzer
 									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));
 								}
 
-								if (!codeDiagnostic.Check.Invoke(methodDeclaration.Identifier.Text))
+								if (!codeDiagnostic.Check.Invoke(semanticModel, methodDeclaration.Identifier))
 								{
 									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));
 								}

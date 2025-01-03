@@ -38,7 +38,7 @@ namespace WorldTree.Analyzer
 				MessageFormat = "Node类禁止声明方法",
 				DeclarationKind = SyntaxKind.MethodDeclaration,
 				UnKeywordKinds = new List<SyntaxKind> { SyntaxKind.AbstractKeyword },
-				Check = s => false,
+				Check = (semanticModel, identifier) => false,
 				NeedComment = false,
 			});
 		}

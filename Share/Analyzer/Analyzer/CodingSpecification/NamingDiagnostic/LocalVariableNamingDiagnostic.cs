@@ -48,7 +48,7 @@ namespace WorldTree.Analyzer
 					{
 						foreach (var variable in localVariableDeclaration.Declaration.Variables)
 						{
-							if (!DiagnosticConfig.Check.Invoke(variable.Identifier.Text))
+							if (!DiagnosticConfig.Check.Invoke(semanticModel, variable.Identifier))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(DiagnosticConfig.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
 							}
@@ -77,7 +77,7 @@ namespace WorldTree.Analyzer
 							//检查变量名
 							foreach (VariableDeclaratorSyntax variable in localDeclaration.Declaration.Variables)
 							{
-								if (!codeDiagnostic.Check.Invoke(variable.Identifier.Text))
+								if (!codeDiagnostic.Check.Invoke(semanticModel, variable.Identifier))
 								{
 									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
 								}

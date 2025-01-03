@@ -67,7 +67,7 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 检查规则
 		/// </summary>
-		public Func<string, bool> Check = s => Regex.IsMatch(s, "^[A-Z].*$");
+		public Func<SemanticModel, SyntaxToken, bool> Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[A-Z].*$");
 
 		/// <summary>
 		/// 修复规则
@@ -79,7 +79,7 @@ namespace WorldTree.Analyzer
 		/// </summary>
 		public DiagnosticDescriptor Diagnostic = null;
 
-		public DiagnosticConfig() {}
+		public DiagnosticConfig() { }
 
 		/// <summary>
 		/// 初始化配置

@@ -37,7 +37,7 @@ namespace WorldTree.Analyzer
 				Title = "Node公开字段命名",
 				MessageFormat = "公开字段命名",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
-				Check = s => true,
+				Check = (semanticModel, identifier) => true,
 				KeywordKinds = new() { SyntaxKind.PublicKeyword, },
 				UnKeywordKinds = new() { SyntaxKind.ConstKeyword, },
 			});
@@ -45,7 +45,7 @@ namespace WorldTree.Analyzer
 			{
 				Title = "Node公开属性命名",
 				MessageFormat = "公开属性命名",
-				Check = s => true,
+				Check = (semanticModel, identifier) => true,
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				KeywordKinds = new() { SyntaxKind.PublicKeyword, },
 			});
@@ -54,7 +54,7 @@ namespace WorldTree.Analyzer
 				Title = "Node成员访问限制",
 				MessageFormat = "不可访问:小写为私有,[Protected]为受保护",
 				NeedComment = false,
-				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[a-z].*$"),
 				DeclarationKind = SyntaxKind.SimpleMemberAccessExpression,
 				UnKeywordKinds = new() { SyntaxKind.PropertyKeyword, },
 			});

@@ -47,7 +47,7 @@ namespace WorldTree.Analyzer
 				{
 					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassPropertyNaming, out DiagnosticConfig diagnosticConfig))
 					{
-						if (!diagnosticConfig.Check.Invoke(propertyDeclaration.Identifier.Text))
+						if (!diagnosticConfig.Check.Invoke(semanticModel, propertyDeclaration.Identifier))
 						{
 							context.ReportDiagnostic(Diagnostic.Create(diagnosticConfig.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
 						}
@@ -82,7 +82,7 @@ namespace WorldTree.Analyzer
 						if (!TreeSyntaxHelper.SyntaxKindContainsAny(propertyDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
 						{
 							// 检查属性名是否符合规范
-							if (!codeDiagnostic.Check.Invoke(propertyDeclaration.Identifier.Text))
+							if (!codeDiagnostic.Check.Invoke(semanticModel, propertyDeclaration.Identifier))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
 							}

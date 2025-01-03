@@ -32,7 +32,7 @@ namespace WorldTree.Analyzer
 				Title = "List类型字段命名",
 				MessageFormat = "List类型字段 命名要加List后戳",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
-				Check = s => Regex.IsMatch(s, ".*List$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*List$"),
 				FixCode = s => s + "List",
 				NeedComment = false,
 			});
@@ -41,7 +41,7 @@ namespace WorldTree.Analyzer
 				Title = "List类型属性命名",
 				MessageFormat = "List类型属性 命名要加List后戳",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
-				Check = s => Regex.IsMatch(s, ".*List$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*List$"),
 				FixCode = s => s + "List",
 				NeedComment = false,
 			});
@@ -50,7 +50,7 @@ namespace WorldTree.Analyzer
 				Title = "List类型局部变量命名",
 				MessageFormat = "List类型局部变量 命名要加List后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*List$") || s == "obj",
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*List$") || identifier.Text == "obj",
 				FixCode = s => s + "List",
 				NeedComment = false,
 			});

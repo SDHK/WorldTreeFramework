@@ -32,7 +32,7 @@ namespace WorldTree.Analyzer
 				Title = "HashSet类型字段命名",
 				MessageFormat = "HashSet类型字段 命名要加Hash后戳",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
-				Check = s => Regex.IsMatch(s, ".*Hash$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Hash$"),
 				FixCode = s => s + "Hash",
 				NeedComment = false,
 			});
@@ -41,7 +41,7 @@ namespace WorldTree.Analyzer
 				Title = "HashSet类型属性命名",
 				MessageFormat = "HashSet类型属性 命名要加Hash后戳",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
-				Check = s => Regex.IsMatch(s, ".*Hash$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Hash$"),
 				FixCode = s => s + "Hash",
 				NeedComment = false,
 			});
@@ -50,7 +50,7 @@ namespace WorldTree.Analyzer
 				Title = "HashSet类型局部变量命名",
 				MessageFormat = "HashSet类型局部变量 命名要加Hash后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, ".*Hash$") || s == "obj",
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Hash$") || identifier.Text == "obj",
 				FixCode = s => s + "Hash",
 				NeedComment = false,
 			});

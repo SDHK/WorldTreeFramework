@@ -70,7 +70,7 @@ namespace WorldTree.Analyzer
 				MessageFormat = "常量命名都要大写",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.ConstKeyword, },
-				Check = s => Regex.IsMatch(s, "^[A-Z0-9]+(_[A-Z0-9]+)*$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[A-Z0-9]+(_[A-Z0-9]+)*$"),
 				FixCode = s => Regex.Replace(s, "([a-z])([A-Z])", "$1_$2").ToUpper()
 			});
 
@@ -89,7 +89,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.PrivateKeyword, },
 				UnKeywordKinds = new() { SyntaxKind.ConstKeyword, },
-				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[a-z].*$"),
 				FixCode = s => char.ToLower(s[0]) + s.Substring(1)
 			});
 			SetConfig(DiagnosticKey.ProtectedFieldNaming, new DiagnosticConfig()
@@ -99,7 +99,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				KeywordKinds = new() { SyntaxKind.ProtectedKeyword, },
 				UnKeywordKinds = new() { SyntaxKind.ConstKeyword, },
-				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[a-z].*$"),
 				FixCode = s => char.ToLower(s[0]) + s.Substring(1)
 			});
 			SetConfig(DiagnosticKey.PublicPropertyNaming, new DiagnosticConfig()
@@ -136,7 +136,7 @@ namespace WorldTree.Analyzer
 				Title = "方法参数命名",
 				MessageFormat = "方法参数命名开头要小写",
 				DeclarationKind = SyntaxKind.Parameter,
-				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[a-z].*$"),
 				FixCode = s => char.ToLower(s[0]) + s.Substring(1)
 			});
 
@@ -146,7 +146,7 @@ namespace WorldTree.Analyzer
 				MessageFormat = "泛型参数命名开头要大写",
 				DeclarationKind = SyntaxKind.TypeParameter,
 				NeedComment = false,
-				Check = s => Regex.IsMatch(s, "^[A-Z].*$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[A-Z].*$"),
 				FixCode = s => char.ToUpper(s[0]) + s.Substring(1)
 			});
 
@@ -155,7 +155,7 @@ namespace WorldTree.Analyzer
 				Title = "局部变量命名",
 				MessageFormat = "局部变量命名开头要小写",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = s => Regex.IsMatch(s, "^[a-z].*$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[a-z].*$"),
 				FixCode = s => char.ToLower(s[0]) + s.Substring(1),
 				NeedComment = false
 			});
@@ -165,7 +165,7 @@ namespace WorldTree.Analyzer
 				Title = "局部方法命名",
 				MessageFormat = "局部方法命名开头要大写",
 				DeclarationKind = SyntaxKind.LocalFunctionStatement,
-				Check = s => Regex.IsMatch(s, "^[A-Z].*$"),
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[A-Z].*$"),
 				FixCode = s => char.ToUpper(s[0]) + s.Substring(1)
 			});
 

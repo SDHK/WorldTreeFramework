@@ -39,6 +39,7 @@ namespace WorldTree.Analyzer
 			//context.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
 			context.RegisterCompilationStartAction(analysisContext =>
 					{
+
 						if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(analysisContext.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
 						analysisContext.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
 					}
