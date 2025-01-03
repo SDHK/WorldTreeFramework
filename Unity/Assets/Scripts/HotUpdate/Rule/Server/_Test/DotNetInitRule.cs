@@ -10,29 +10,17 @@ using System;
 using System.Diagnostics;
 
 
-namespace WorldTree
+namespace WorldTree.Server
 {
 
 	public static partial class DotNetInitRule
 	{
-
-		private static int a = 1;
-
-
 		private static OnEnable<DotNetInit> Enable1 = (self) =>
 		{
-			self.TestRule(1.0f, "字符串");
-
-
 			self.Log($"激活！！");
-			MainTime();
+			//self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse mouse, manager);
+			//MainTime();
 			//TestDivisionPrecision();
-		};
-
-
-		private static OnTestRule<DotNetInit> TestRule = (self, f, s) =>
-		{
-			self.Log($"测试法则{f} {s}");
 		};
 
 
@@ -40,9 +28,6 @@ namespace WorldTree
 		{
 			//self.AddComponent(out SerializeTest _);
 			//self.AddComponent(out TreeDataTest _);
-
-
-
 		};
 
 		private static OnUpdateTime<DotNetInit> UpdateTime = (self, timeSpan) =>

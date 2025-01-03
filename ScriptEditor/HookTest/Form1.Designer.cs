@@ -28,7 +28,10 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			components = new System.ComponentModel.Container();
 			label1 = new Label();
+			toolTip1 = new ToolTip(components);
+			textBox1 = new TextBox();
 			SuspendLayout();
 			// 
 			// label1
@@ -41,11 +44,20 @@
 			label1.Text = "label1";
 			label1.Click += label1_Click;
 			// 
+			// textBox1
+			// 
+			textBox1.Location = new Point(61, 12);
+			textBox1.Multiline = true;
+			textBox1.Name = "textBox1";
+			textBox1.Size = new Size(716, 513);
+			textBox1.TabIndex = 1;
+			// 
 			// Form1
 			// 
 			AutoScaleDimensions = new SizeF(7F, 17F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(171, 37);
+			ClientSize = new Size(789, 537);
+			Controls.Add(textBox1);
 			Controls.Add(label1);
 			Name = "Form1";
 			Text = "Form1";
@@ -57,5 +69,7 @@
 		#endregion
 
 		private Label label1;
+		private ToolTip toolTip1;
+		private TextBox textBox1;
 	}
 }

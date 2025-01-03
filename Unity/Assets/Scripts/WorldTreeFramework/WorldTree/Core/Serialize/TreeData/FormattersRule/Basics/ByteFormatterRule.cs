@@ -16,7 +16,7 @@ namespace WorldTree.TreeDataFormatters
 		/// <summary>
 		/// 转换表
 		/// </summary>
-		private static Dictionary<Type, Func<TreeDataByteSequence, byte>> TypeDict = new()
+		private static Dictionary<Type, Func<TreeDataByteSequence, byte>> typeDict = new()
 		{
 			[typeof(bool)] = (self) => (byte)(self.ReadUnmanaged<bool>() ? 1 : 0),
 			[typeof(byte)] = (self) => self.ReadUnmanaged<byte>(),
@@ -46,7 +46,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
-				if (self.TryReadType(out Type dataType) && TypeDict.TryGetValue(dataType, out var func))
+				if (self.TryReadType(out Type dataType) && typeDict.TryGetValue(dataType, out var func))
 				{
 					obj = func(self);
 				}

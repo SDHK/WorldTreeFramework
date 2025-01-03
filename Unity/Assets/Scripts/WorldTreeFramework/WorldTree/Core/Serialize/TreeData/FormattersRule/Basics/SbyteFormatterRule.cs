@@ -13,7 +13,7 @@ namespace WorldTree.TreeDataFormatters
 {
 	public static class SbyteFormatterRule
 	{
-		private static Dictionary<Type, Func<TreeDataByteSequence, sbyte>> TypeDict = new()
+		private static Dictionary<Type, Func<TreeDataByteSequence, sbyte>> typeDict = new()
 		{
 			[typeof(bool)] = (self) => (sbyte)(self.ReadUnmanaged<bool>() ? 1 : 0),
 			[typeof(byte)] = (self) => (sbyte)self.ReadUnmanaged<byte>(),
@@ -44,7 +44,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
-				if (self.TryReadType(out Type dataType) && TypeDict.TryGetValue(dataType, out var func))
+				if (self.TryReadType(out Type dataType) && typeDict.TryGetValue(dataType, out var func))
 				{
 					obj = func(self);
 				}

@@ -3,9 +3,19 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+  
+  
+  <ItemGroup>
+
+    <ProjectReference Include="..\..\DotNet\Core\DotNet.Core.csproj" />
+    <ProjectReference Include="..\..\DotNet\Node\DotNet.Node.csproj" />
+    <ProjectReference Include="..\..\DotNet\Rule\DotNet.Rule.csproj" />
+
+  </ItemGroup>
+
 
 </Project>

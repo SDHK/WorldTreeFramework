@@ -39,7 +39,7 @@ namespace WorldTree.Analyzer
 					{
 						if (variableDeclarator.Parent.Parent is FieldDeclarationSyntax fieldDeclaration)
 						{
-							if (TreeSyntaxHelper.SyntaxKindContains(fieldDeclaration.Modifiers, syntaxKinds))
+							if (!fieldDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword) && fieldDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
 							{
 								return Regex.IsMatch(identifier.Text, "^[A-Z].*$");
 							}

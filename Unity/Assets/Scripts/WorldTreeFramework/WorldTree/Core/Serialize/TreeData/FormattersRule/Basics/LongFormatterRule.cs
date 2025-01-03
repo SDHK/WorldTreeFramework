@@ -13,7 +13,7 @@ namespace WorldTree.TreeDataFormatters
 {
 	public static class LongFormatterRule
 	{
-		private static Dictionary<Type, Func<TreeDataByteSequence, long>> TypeDict = new()
+		private static Dictionary<Type, Func<TreeDataByteSequence, long>> typeDict = new()
 		{
 			[typeof(bool)] = (self) => (long)(self.ReadUnmanaged<bool>() ? 1 : 0),
 			[typeof(byte)] = (self) => self.ReadUnmanaged<byte>(),
@@ -44,7 +44,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
-				if (self.TryReadType(out Type dataType) && TypeDict.TryGetValue(dataType, out var func))
+				if (self.TryReadType(out Type dataType) && typeDict.TryGetValue(dataType, out var func))
 					obj = func(self);
 				else
 					self.SkipData(dataType);
