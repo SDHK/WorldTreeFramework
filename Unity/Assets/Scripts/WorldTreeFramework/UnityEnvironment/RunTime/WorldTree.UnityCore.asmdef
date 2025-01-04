@@ -2,9 +2,7 @@
     "name": "WorldTree.UnityCore",
     "rootNamespace": "WorldTree",
     "references": [
-        "GUID:e34a5702dd353724aa315fb8011f08c3",
-        "GUID:104971acd352de048964cb7f7b53027b",
-        "GUID:756335c0388f7114790e504ed368ae1d"
+        "GUID:104971acd352de048964cb7f7b53027b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

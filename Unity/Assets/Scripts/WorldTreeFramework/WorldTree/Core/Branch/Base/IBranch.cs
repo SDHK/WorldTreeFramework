@@ -115,10 +115,21 @@ namespace WorldTree
 
 
 	/// <summary>
-	/// 节点限制
+	/// 父节点限制
+	/// </summary>
+	/// <typeparam name="P">父节点</typeparam>
+	public interface NodeOf<in P> : INode
+		where P : class, INode
+	{
+
+	}
+	/// <summary>
+	/// 父节点分支限制
 	/// </summary>
 	/// <typeparam name="P">父节点</typeparam>
 	/// <typeparam name="B">分支</typeparam>
-	public interface NodeOf<in P, in B> : INode where P : class, INode where B : class, IBranch
+	public interface NodeOf<in P, in B> : NodeOf<P>
+		where P : class, INode
+		where B : class, IBranch
 	{ }
 }

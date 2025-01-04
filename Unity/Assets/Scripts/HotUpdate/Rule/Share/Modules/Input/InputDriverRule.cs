@@ -1,13 +1,11 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2024/12/26 17:31
+* 作者：闪电黑客
+* 日期：2024/12/31 15:47
 
-* 描述： 
+* 描述：
 
 */
-using System;
-
 namespace WorldTree
 {
 	public static class InputDriverRule
@@ -15,26 +13,16 @@ namespace WorldTree
 		/// <summary>
 		/// 注册设备
 		/// </summary>
-		public static void RegisterDevice<T>(this InputDriver self, int deviceCount)
-			where T : Enum
+		/// <param name="deviceCount">设备数量</param>
+		/// <param name="keyCount">每个设备的控件数量</param>
+		public static void RegisterDevice(this InputDriver self, int deviceCount, int keyCount)
 		{
-			int count = Enum.GetNames(typeof(T)).Length;
+			self.IsExists = new bool[deviceCount];
 			for (int i = 0; i < deviceCount; i++)
 			{
-				self.InputInfosList.Add(new InputDriverInfo[count]);
+				self.InputInfosList.Add(new InputDriverInfo[keyCount]);
 			}
-			self.InputTypes = new InputType[count];
 		}
-
-		/// <summary>
-		/// 设置输入类型
-		/// </summary>
-		public static void SetInputType<T>(this InputDriver self, T key, InputType type)
-			where T : Enum
-		{
-			self.InputTypes[Convert.ToInt32(key)] = type;
-		}
-
 
 		/// <summary>
 		/// 创建数据
@@ -58,7 +46,7 @@ namespace WorldTree
 				{
 					InputDeviceType = self.DeviceType,
 					InputDeviceId = deviceId,
-					InputType = self.InputTypes[keyCode],
+					InputType = info.InputType,
 					InputCode = keyCode,
 				},
 				Info = new()

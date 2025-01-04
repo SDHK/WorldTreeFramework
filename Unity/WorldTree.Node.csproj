@@ -64,8 +64,8 @@
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBManager.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputType.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\MouseKey.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\KeyboardKey.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputMouseKey.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputKeyboardKey.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDevice.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\IDataBase.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputState.cs" />
@@ -74,10 +74,8 @@
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDriver.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputDeviceType.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBCollection.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Client\_Test\TreeDataTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\Proxy\DataBaseProxy.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InpuDeviceInfo.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Client\_Test\MemoryPackTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\Node\WorldTree.Node.asmdef" />

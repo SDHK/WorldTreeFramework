@@ -1,12 +1,11 @@
 ﻿/****************************************
 
 * 作者：闪电黑客
-* 日期：2024/12/23 17:26
+* 日期：2024/12/31 15:47
 
 * 描述：
 
 */
-
 namespace WorldTree
 {
 	public static class InputDeviceManagerRule

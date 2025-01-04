@@ -1,13 +1,11 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2024/01/10 02:44:15
+* 作者：闪电黑客
+* 日期：2024/5/14 17:47
 
-* 描述：Unity的MonoBehaviour线程
-* 用于驱动框架运行
+* 描述：
 
 */
-
 using System;
 using UnityEngine;
 using UnityEngine.Profiling;

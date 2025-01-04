@@ -1,19 +1,14 @@
-﻿
-/****************************************
+﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2023/2/9 14:34
+* 作者：闪电黑客
+* 日期：2024/6/17 10:23
 
-* 描述： 世界树异步任务基类
-* 
-* 内联令牌的异步Task基类
+* 描述：
 
 */
-
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
-using System.Threading.Tasks;
 
 namespace WorldTree
 {

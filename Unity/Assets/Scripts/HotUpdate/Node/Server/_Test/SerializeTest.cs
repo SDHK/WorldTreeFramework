@@ -1,6 +1,11 @@
-using System;
-using System.Collections.Generic;
+/****************************************
 
+* 作者：闪电黑客
+* 日期：2024/8/27 15:15
+
+* 描述：
+
+*/
 namespace WorldTree
 {
 	/// <summary>
@@ -46,7 +51,7 @@ namespace WorldTree
 	/// </summary>
 	[TreePackSerializable]
 	public partial struct NodeClassDataTest1<T1, T2>
-		//where T1 : unmanaged
+	//where T1 : unmanaged
 	{
 		/// <summary>
 		/// 测试整数

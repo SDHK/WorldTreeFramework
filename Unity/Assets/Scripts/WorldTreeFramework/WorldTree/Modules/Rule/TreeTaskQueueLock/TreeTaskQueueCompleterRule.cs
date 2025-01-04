@@ -1,12 +1,11 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2023/7/25 21:08
+* 作者：闪电黑客
+* 日期：2024/5/14 17:47
 
-* 描述： 
+* 描述：
 
 */
-
 namespace WorldTree
 {
     public static partial class TreeTaskQueueCompleterRule

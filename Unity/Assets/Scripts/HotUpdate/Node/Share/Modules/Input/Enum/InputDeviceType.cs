@@ -1,4 +1,12 @@
-﻿namespace WorldTree
+﻿/****************************************
+
+* 作者：闪电黑客
+* 日期：2024/12/23 16:41
+
+* 描述：
+
+*/
+namespace WorldTree
 {
 	//(T)System.Convert.ChangeType(Value, typeof(T));
 

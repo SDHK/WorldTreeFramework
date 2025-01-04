@@ -1,4 +1,12 @@
-﻿using System;
+﻿/****************************************
+
+* 作者：闪电黑客
+* 日期：2024/12/21 18:09
+
+* 描述：
+
+*/
+using System;
 
 namespace WorldTree
 {
@@ -110,6 +118,11 @@ namespace WorldTree
 	public struct InputDriverInfo : IEquatable<InputDriverInfo>
 	{
 		/// <summary>
+		/// 控件类型
+		/// </summary>
+		public InputType InputType;
+
+		/// <summary>
 		/// 是否输入中
 		/// </summary>
 		public bool IsInput;
@@ -129,24 +142,27 @@ namespace WorldTree
 		/// </summary>
 		public int Z;
 
-		public InputDriverInfo(bool isInput, int x)
+		public InputDriverInfo(InputType inputType, bool isInput, int x)
 		{
+			InputType = inputType;
 			IsInput = isInput;
 			X = x;
 			Y = 0;
 			Z = 0;
 		}
 
-		public InputDriverInfo(bool isInput, int x, int y)
+		public InputDriverInfo(InputType inputType, bool isInput, int x, int y)
 		{
+			InputType = inputType;
 			IsInput = isInput;
 			X = x;
 			Y = y;
 			Z = 0;
 		}
 
-		public InputDriverInfo(bool isInput, int x, int y, int z)
+		public InputDriverInfo(InputType inputType, bool isInput, int x, int y, int z)
 		{
+			InputType = inputType;
 			IsInput = isInput;
 			X = x;
 			Y = y;

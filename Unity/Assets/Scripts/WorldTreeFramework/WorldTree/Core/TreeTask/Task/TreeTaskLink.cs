@@ -1,19 +1,12 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2023/6/13 19:30
+* 作者：闪电黑客
+* 日期：2024/6/18 14:44
 
-* 描述： 树任务令牌捕获任务
-*
-* 这是一个和TreeTaskCompleted一样的同步任务，
-*
-* 它可以从异步流中捕获到令牌
-*
+* 描述：
 
 */
-
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace WorldTree.Internal

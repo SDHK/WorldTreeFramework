@@ -1,12 +1,11 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2023/7/25 20:45
+* 作者：闪电黑客
+* 日期：2024/12/31 15:47
 
-* 描述： 
+* 描述：
 
 */
-
 namespace WorldTree
 {
     public static partial class PerceptronLayerRule

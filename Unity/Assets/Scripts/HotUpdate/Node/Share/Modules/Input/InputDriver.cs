@@ -1,9 +1,9 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2024/12/31 11:37
+* 作者：闪电黑客
+* 日期：2024/12/31 11:37
 
-* 描述： 
+* 描述：
 
 */
 namespace WorldTree
@@ -12,7 +12,7 @@ namespace WorldTree
 	/// 输入设备驱动器
 	/// </summary>
 	public abstract class InputDriver : Node, ComponentOf<InputDeviceManager>
-		, AsAwake<InputDeviceManager>
+		, AsAwake
 	{
 		/// <summary>
 		/// 输入设备管理器
@@ -28,11 +28,6 @@ namespace WorldTree
 		/// 设备是否存在
 		/// </summary>
 		public bool[] IsExists;
-
-		/// <summary>
-		/// 输入控件类型
-		/// </summary>
-		public InputType[] InputTypes;
 
 		/// <summary>
 		/// 输入信息缓存

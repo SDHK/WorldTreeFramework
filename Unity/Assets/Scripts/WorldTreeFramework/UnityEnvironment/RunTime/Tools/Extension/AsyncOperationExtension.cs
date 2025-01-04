@@ -1,15 +1,12 @@
-﻿
-/****************************************
+﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2023/2/17 17:13
+* 作者：闪电黑客
+* 日期：2024/5/14 17:47
 
-* 描述： 异步操作类的扩展
+* 描述：
 
 */
-
 using UnityEngine;
-using YooAsset;
 
 namespace WorldTree
 {
@@ -28,15 +25,6 @@ namespace WorldTree
 			return asyncTask;
 		}
 
-		/// <summary>
-		/// 获取异步等待
-		/// </summary>
-		public static TreeTask<T> GetAwaiter<T>(this INode self, T handle)
-			where T : AsyncOperationBase
-		{
-			self.AddTemp(out TreeTask<T> asyncTask);
-			handle.Completed += (a) => asyncTask.SetResult(a as T);
-			return asyncTask;
-		}
+
 	}
 }

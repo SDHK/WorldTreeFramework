@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/****************************************
+
+* 作者：闪电黑客
+* 日期：2024/6/13 20:30
+
+* 描述：
+
+*/
+using System;
 
 namespace WorldTree
 {
 	/// <summary>
 	/// Utc时间测试
 	/// </summary>
-	public class UtcTimeTest:Node
-		,ComponentOf<InitialDomain>
-		,AsAwake
-		,AsGuiUpdateTime
+	public class UtcTimeTest : Node
+		, ComponentOf<InitialDomain>
+		, AsAwake
+		, AsGuiUpdateTime
 	{
 		/// <summary>
 		/// 开始时间

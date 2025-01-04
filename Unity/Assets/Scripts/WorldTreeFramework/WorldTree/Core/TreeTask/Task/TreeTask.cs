@@ -1,12 +1,11 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2022/6/27 9:47
+* 作者：闪电黑客
+* 日期：2024/6/17 10:23
 
-* 描述： 异步任务
-* 
+* 描述：
+
 */
-
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using WorldTree.Internal;

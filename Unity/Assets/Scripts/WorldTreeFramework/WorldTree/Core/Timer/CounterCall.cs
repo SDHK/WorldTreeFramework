@@ -1,20 +1,17 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2022/8/18 12:07
+* 作者：闪电黑客
+* 日期：2024/6/17 10:23
 
-* 描述： 计数器组件，计数结束后回调
+* 描述：
 
 */
-
-using System;
-
 namespace WorldTree
 {
 	/// <summary>
 	/// 计数器
 	/// </summary>
-	public class CounterCall : Node, ComponentOf<INode>,TempOf<INode>
+	public class CounterCall : Node, ComponentOf<INode>, TempOf<INode>
 		, AsChildBranch
 		, AsAwake<int>
 		, AsTreeTaskTokenEvent

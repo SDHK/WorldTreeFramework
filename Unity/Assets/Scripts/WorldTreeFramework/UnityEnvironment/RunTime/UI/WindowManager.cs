@@ -1,15 +1,11 @@
-﻿
-/****************************************
+﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2022/10/19 10:24
+* 作者：闪电黑客
+* 日期：2024/5/14 17:47
 
-* 描述： UI 窗口栈管理器
-* 
-* 缺少非栈窗口的管理方法
+* 描述：
 
 */
-
 using System;
 using System.Collections.Generic;
 
@@ -63,7 +59,7 @@ namespace WorldTree
 				{
 					outNode = windowStack.Pop();
 					windowDict.Remove(outNode.Type);
-					outNode.ParentTo<GameObjectNode>()?.Dispose();
+					if (outNode.TryGetParent(out GameObjectNode gameObjectNode)) gameObjectNode.Dispose();
 				}
 				NodeRuleHelper.TrySendRule(node, default(WindowFocus));
 
@@ -104,7 +100,7 @@ namespace WorldTree
 					if (topNode.Id == targetNode.Id)
 					{
 						windowDict.Remove(topNode.Type);
-						topNode.ParentTo<GameObjectNode>()?.Dispose();
+						if (topNode.TryGetParent(out GameObjectNode node)) node.Dispose();
 						break;
 					}
 				}
@@ -128,7 +124,7 @@ namespace WorldTree
 				{
 					NodeRuleHelper.TrySendRule(topNode, default(WindowFocus));
 				}
-				outNode.ParentTo<GameObjectNode>()?.Dispose();
+				if (outNode.TryGetParent(out GameObjectNode gameObjectNode)) gameObjectNode.Dispose();
 			}
 		}
 		/// <summary>
@@ -142,7 +138,7 @@ namespace WorldTree
 			}
 			while (windowStack.TryPop(out topNode))
 			{
-				topNode.ParentTo<GameObjectNode>()?.Dispose();
+				if (topNode.TryGetParent(out GameObjectNode gameObjectNode)) gameObjectNode.Dispose();
 			}
 		}
 

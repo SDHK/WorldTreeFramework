@@ -24,22 +24,7 @@ namespace WorldTree.Server
 				self.inputManager = manager;
 				self.Core.PoolGetUnit(out self.InputInfosList);
 
-				self.IsExists = new bool[256];
 
-				self.RegisterDevice<MouseKey>(1);
-
-				self.SetInputType(MouseKey.Mouse, InputType.Axis2);
-				self.SetInputType(MouseKey.MouseLeft, InputType.Press);
-				self.SetInputType(MouseKey.MouseRight, InputType.Press);
-				self.SetInputType(MouseKey.MouseMiddle, InputType.Press);
-				self.SetInputType(MouseKey.MouseWheel, InputType.Delta2);
-				self.SetInputType(MouseKey.Mouse0, InputType.Press);
-				self.SetInputType(MouseKey.Mouse1, InputType.Press);
-				self.SetInputType(MouseKey.Mouse2, InputType.Press);
-				self.SetInputType(MouseKey.Mouse3, InputType.Press);
-				self.SetInputType(MouseKey.Mouse4, InputType.Press);
-				self.SetInputType(MouseKey.Mouse5, InputType.Press);
-				self.SetInputType(MouseKey.Mouse6, InputType.Press);
 			}
 		}
 		class Remove : RemoveRule<InputDriverMouse>
@@ -90,10 +75,6 @@ namespace WorldTree.Server
 			return CallNextHookEx(self.mouseHookID, nCode, wParam, lParam);
 		}
 
-		/// <summary>
-		/// 获取鼠标按键
-		/// </summary>
-		private static InputDriverInfo GetPress(bool isPress) => isPress ? new(true, 1) : default;
 
 		/// <summary>
 		/// 设置钩子

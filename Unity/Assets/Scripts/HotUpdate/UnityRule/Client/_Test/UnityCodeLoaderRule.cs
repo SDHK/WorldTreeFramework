@@ -1,4 +1,12 @@
-﻿using System;
+﻿/****************************************
+
+* 作者：闪电黑客
+* 日期：2024/8/27 18:11
+
+* 描述：
+
+*/
+using System;
 using System.IO;
 using System.Reflection;
 

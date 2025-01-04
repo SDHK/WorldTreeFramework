@@ -48,7 +48,7 @@ namespace WorldTree.SourceGenerator
 			return NamedSymbolHelper.GetAllMembers(classSymbol)
 					.Where(f =>
 					{
-						if (f is IFieldSymbol fieldSymbol && !fieldSymbol.IsStatic && !fieldSymbol.IsReadOnly && !fieldSymbol.IsConst )
+						if (f is IFieldSymbol fieldSymbol && !fieldSymbol.IsStatic && !fieldSymbol.IsReadOnly && !fieldSymbol.IsConst)
 						{
 							if (fieldSymbol.AssociatedSymbol is IPropertySymbol) return false;
 							if (NamedSymbolHelper.CheckAttribute(f, GeneratorHelper.TreePackIgnoreAttribute)) return false;
@@ -75,7 +75,7 @@ namespace WorldTree.SourceGenerator
 
 			if (SubList != null && SubList.Count != 0)
 			{
-				Code.AppendLine($"			static readonly System.Collections.Generic.Dictionary<Type, short> m_typeToMarkDict = new({SubList.Count})");
+				Code.AppendLine($"			static readonly System.Collections.Generic.Dictionary<System.Type, short> m_typeToMarkDict = new({SubList.Count})");
 				Code.AppendLine("			{");
 				Code.AppendLine($"				{{typeof({className}), ValueMarkCode.THIS_OBJECT }},");
 				for (int i = 0; i < SubList.Count; i++)

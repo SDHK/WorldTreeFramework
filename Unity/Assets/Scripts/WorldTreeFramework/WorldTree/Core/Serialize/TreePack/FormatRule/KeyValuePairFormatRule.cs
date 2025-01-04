@@ -1,4 +1,12 @@
-﻿using System.Collections.Generic;
+﻿/****************************************
+
+* 作者：闪电黑客
+* 日期：2024/8/15 14:17
+
+* 描述：
+
+*/
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree.TreePackFormats

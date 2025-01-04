@@ -1,5 +1,11 @@
-﻿using System;
+﻿/****************************************
 
+* 作者：闪电黑客
+* 日期：2024/8/12 11:49
+
+* 描述：
+
+*/
 namespace WorldTree
 {
 	public static partial class SerializeTestRule

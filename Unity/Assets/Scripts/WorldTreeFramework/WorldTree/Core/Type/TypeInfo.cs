@@ -1,13 +1,11 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2023/8/9 14:57
+* 作者：闪电黑客
+* 日期：2024/11/15 10:10
 
-* 描述： 类型信息：用于类型明确时的信息获取
-*
+* 描述：
 
 */
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

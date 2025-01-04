@@ -13,8 +13,6 @@
 */
 
 using System;
-using System.Reflection;
-using WorldTree.Internal;
 
 namespace WorldTree
 {

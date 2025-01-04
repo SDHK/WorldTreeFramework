@@ -1,15 +1,13 @@
 ﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2023/12/28 03:56:05
+* 作者：闪电黑客
+* 日期：2024/5/14 17:47
 
-* 描述： 世界之心：Unity线程
+* 描述：
 
 */
-
 using System;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace WorldTree
 {

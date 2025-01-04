@@ -1,20 +1,11 @@
-﻿
-/****************************************
+﻿/****************************************
 
-* 作者： 闪电黑客
-* 日期： 2022/11/10 10:12
+* 作者：闪电黑客
+* 日期：2024/6/17 10:23
 
-* 描述： 异步任务构建器
-* 
-* 实现了内联传递令牌功能
-* 
-* 将会在 AwaitUnsafeOnCompleted 方法中将Task进行互相关联，并设置令牌。
-* 
-* 实现通过 await TreeTaskTokenCatch 在异步方法中凭空获取到令牌。
-* 
+* 描述：
 
 */
-
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;

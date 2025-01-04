@@ -39,14 +39,17 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 父节点转换为
+		/// 获取父节点
 		/// </summary>
-		public static T ParentTo<T>(this INode self) where T : class, INode => self.Parent as T;
+		public static P GetParent<N, P>(this N self, out P parent)
+			where P : class, INode
+			where N : NodeOf<P>
+			=> parent = self.Parent as P;
 
 		/// <summary>
-		/// 尝试转换父节点
+		/// 尝试获取转换父节点,无约束
 		/// </summary>
-		public static bool TryParentTo<T>(this INode self, out T node)
+		public static bool TryGetParent<T>(this INode self, out T node)
 		where T : class, INode
 		{
 			node = self.Parent as T;

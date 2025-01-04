@@ -1,3 +1,11 @@
+/****************************************
+
+* 作者：闪电黑客
+* 日期：2024/8/21 19:56
+
+* 描述：
+
+*/
 using UnityEngine;
 
 namespace WorldTree
@@ -27,7 +35,7 @@ namespace WorldTree
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
 				//self.AddComponent(out TreeDataTest _);
 
-				self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse _, manager);
+				self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse _);
 			}
 		};
 

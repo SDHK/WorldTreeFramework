@@ -55,7 +55,6 @@
   <ItemGroup>
     <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.Analyzer.dll" />
-    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
@@ -738,12 +737,6 @@
     <Reference Include="System.Xml.XPath.XDocument">
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="MemoryPack.csproj">
-      <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
-      <Name>MemoryPack</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
