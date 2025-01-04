@@ -90,6 +90,8 @@ namespace WorldTree.Analyzer
 
 			//编辑限制
 			{ "DotNet.NodeRuleEditor",NodeConfigs},
+			{ "Unity.NodeRuleEditor",NodeConfigs},
+
 		};
 
 

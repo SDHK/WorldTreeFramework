@@ -11,7 +11,6 @@ using UnityEngine;
 namespace WorldTree
 {
 	public static class InputDriverMouseRule
-
 	{
 		private class Awake : AwakeRule<InputDriverMouse>
 		{

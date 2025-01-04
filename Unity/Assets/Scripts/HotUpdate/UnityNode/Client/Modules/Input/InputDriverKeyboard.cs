@@ -6,12 +6,19 @@
 * 描述：
 
 */
+using UnityEngine;
+
 namespace WorldTree
 {
 	/// <summary>
 	/// 键盘输入驱动器
 	/// </summary>
 	public class InputDriverKeyboard : InputDriver
+		, AsUpdate
 	{
+		/// <summary>
+		/// 键盘控件码
+		/// </summary>
+		public TreeArray<KeyCode> keyCodes;
 	}
 }

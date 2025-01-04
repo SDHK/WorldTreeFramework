@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -33,15 +33,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Node\Client\**\*.cs">
+      <Link>Client\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Rule\Client\**\*.cs">
+      <Link>Client\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Compile>
+
+    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Node\Share\**\*.cs">
+      <Link>Share\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Rule\Share\**\*.cs">
+      <Link>Share\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Compile>
     <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\UnityNode\Client\**\*.cs">
-        <Link>Unity\%(RecursiveDir)%(FileName)%(Extension)</Link>
-      </Compile>
-      <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\UnityRule\Client\**\*.cs">
-        <Link>Unity\%(RecursiveDir)%(FileName)%(Extension)</Link>
-      </Compile>
+      <Link>Unity\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\UnityRule\Client\**\*.cs">
+      <Link>Unity\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Compile>
   </ItemGroup>
-
-
 
 
   <ItemGroup>
@@ -69,3 +80,4 @@
 
 
 </Project>
+  

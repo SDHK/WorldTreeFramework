@@ -574,7 +574,7 @@ namespace WorldTree
 		/// </summary>
 		/// <typeparam name="T">节点类型</typeparam>
 		/// <param name="ruleTypeDefinition">法则类型</param>
-		public void SupportGenericParameterNodeRule(Type nodeType,Type ruleTypeDefinition)
+		public void SupportGenericParameterNodeRule(Type nodeType, Type ruleTypeDefinition)
 		{
 			if (SupportNodeGenericParameterTypeHashDict.TryGetValue(ruleTypeDefinition, out HashSet<long> typeHash))
 			{

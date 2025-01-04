@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\YooAssetTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SphereTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MemoryPackTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\Input\InputDriverKeyboardRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\UnityRule\WorldTree.UnityRule.asmdef" />

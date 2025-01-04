@@ -90,7 +90,7 @@ namespace WorldTree.SourceGenerator
 					attribute.ConstructorArguments[0].Value is int intValue)
 				{
 					var baseType = classSymbol.BaseType;
-					if (baseType != null  && baseType.TypeArguments.Length > 1)//&& baseType.Name == "TreeDataSerializeRule"
+					if (baseType != null && baseType.TypeArguments.Length > 1)//&& baseType.Name == "TreeDataSerializeRule"
 					{
 						var genericType = baseType.TypeArguments[0] as INamedTypeSymbol;
 						if (genericType != null)

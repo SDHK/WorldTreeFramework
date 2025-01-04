@@ -53,4 +53,4 @@
     <ProjectReference Include="..\Core\DotNet.Core.csproj" />
   </ItemGroup>
 </Project>
-                           
+                            
