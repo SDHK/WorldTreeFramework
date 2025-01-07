@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TaskTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\Input\InputDriverKeyboardRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SphereManagerTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SerializeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\LiteDBTestRule.cs" />
@@ -71,10 +72,9 @@
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\EntryRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TreeDataTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TreeValueTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MemoryPackTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\YooAssetTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SphereTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MemoryPackTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\Input\InputDriverKeyboardRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\UnityRule\WorldTree.UnityRule.asmdef" />

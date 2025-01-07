@@ -27,6 +27,6 @@ namespace WorldTree
 		/// <summary>
 		/// 输入数据集合，下标是按键码
 		/// </summary>
-		public InpuDeviceInfo[] InputDatas;
+		public InputData[] InputDatas;
 	}
 }

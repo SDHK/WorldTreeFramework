@@ -24,7 +24,7 @@ namespace WorldTree
 		Axis,
 
 		/// <summary>
-		/// XY轴区间型，如摇杆
+		/// XY轴区间型，如摇杆，鼠标移动
 		/// </summary>
 		Axis2,
 
@@ -39,7 +39,7 @@ namespace WorldTree
 		Delta,
 
 		/// <summary>
-		/// XY轴差值型，如鼠标移动
+		/// XY轴差值型，如特别的鼠标滚轮
 		/// </summary>
 		Delta2,
 

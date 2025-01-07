@@ -23,17 +23,18 @@ namespace WorldTree
 		{
 			protected override void Execute(InputDeviceManager self)
 			{
-				//while (self.DataQueue.TryDequeue(out var inputData))
-				//{
-				//	if (self.InputDeviceDict.TryGetValue(inputData.InputDeviceType, out var inputDeviceList))
-				//	{
-				//		inputDeviceList[inputData.InputDeviceId].InputDatas[inputData.InputCode] = inputData;
-				//	}
-				//}
+				while (self.DataQueue.TryDequeue(out var inputData))
+				{
+					//不存在则添加
+					if (self.InputDeviceDict.TryGetValue(inputData.Device.InputDeviceType, out var inputDeviceList))
+					{
+						inputDeviceList[inputData.Device.InputDeviceId].InputDatas[inputData.Device.InputCode] = inputData;
+					}
+				}
 			}
 		}
 
-		/// <summary>
+		/// <summary>	
 		/// 添加输入数据
 		/// </summary>
 		public static void AddData(this InputDeviceManager self, InputData inputData)

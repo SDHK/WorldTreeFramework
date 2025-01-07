@@ -12,13 +12,15 @@ namespace WorldTree
 {
 	public static class InputDriverMouseRule
 	{
+		private class ManagerAdd : NodeAddRule<InputDeviceManager, InputDriverMouse> { }
+
 		private class Awake : AwakeRule<InputDriverMouse>
 		{
 			protected override void Execute(InputDriverMouse self)
 			{
 				self.GetParent(out self.inputManager);
 				self.Core.PoolGetUnit(out self.InputInfosList);
-
+				self.DeviceType = InputDeviceType.Mouse;
 				self.RegisterDevice(1, 12);
 			}
 		}

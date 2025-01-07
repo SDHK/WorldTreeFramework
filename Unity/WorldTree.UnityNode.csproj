@@ -66,13 +66,13 @@
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\MultilayerPerceptronTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\InitialDomain.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\Input\InputDriverKeyboard.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\MemoryPackTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\LiteDBTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\TaskTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\TreeValueTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\SphereManagerTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\SerializeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\SphereTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\MemoryPackTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\UnityNode\WorldTree.UnityNode.asmdef" />

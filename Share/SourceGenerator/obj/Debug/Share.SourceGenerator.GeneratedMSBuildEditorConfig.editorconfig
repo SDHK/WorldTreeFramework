@@ -10,6 +10,3 @@ build_property.RootNamespace = WorldTree.SourceGenerator
 build_property.ProjectDir = E:\Project\GitHub\WorldTree\Share\SourceGenerator\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
-build_property.CsWinRTUseWindowsUIXamlProjections = false
-build_property.EffectiveAnalysisLevelStyle = 
-build_property.EnableCodeStyleSeverity = 

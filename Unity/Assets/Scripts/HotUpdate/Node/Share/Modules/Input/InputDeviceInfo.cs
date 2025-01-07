@@ -18,7 +18,7 @@ namespace WorldTree
 		/// <summary>
 		/// 输入设备信息
 		/// </summary>
-		public InpuDeviceInfo Device;
+		public InputDeviceInfo Device;
 
 		/// <summary>
 		/// 输入状态信息
@@ -34,7 +34,7 @@ namespace WorldTree
 	/// <summary>
 	/// 输入设备信息
 	/// </summary>
-	public struct InpuDeviceInfo
+	public struct InputDeviceInfo
 	{
 		/// <summary>
 		/// 设备类型

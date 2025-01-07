@@ -11,7 +11,7 @@ namespace WorldTree
 	/// <summary>
 	/// 键盘控件码
 	/// </summary>
-	public enum InputKeyboardKey : byte
+	public enum InputBoardKey : byte
 	{
 		#region 功能键
 
@@ -137,32 +137,32 @@ namespace WorldTree
 		/// <summary>
 		/// 小键盘回车
 		/// </summary>
-		NumpadEnter,
+		NumEnter,
 
 		/// <summary>
 		/// 小键盘+
 		/// </summary>
-		Add,
+		NumPlus,
 
 		/// <summary>
 		/// 小键盘-
 		/// </summary>
-		Subtract,
+		KeyMinus,
 
 		/// <summary>
 		/// 小键盘*
 		/// </summary>
-		Multiply,
+		NumMultiply,
 
 		/// <summary>
 		/// 小键盘/
 		/// </summary>
-		Divide,
+		NumDivide,
 
 		/// <summary>
 		/// 小键盘.
 		/// </summary>
-		Del,
+		NumPeriod,
 
 		/// <summary>
 		/// 小键盘NumLock
@@ -172,52 +172,52 @@ namespace WorldTree
 		/// <summary>
 		/// 数字0
 		/// </summary>
-		NumPad0,
+		Num0,
 
 		/// <summary>
 		/// 数字1
 		/// </summary>
-		NumPad1,
+		Num1,
 
 		/// <summary>
 		/// 数字2
 		/// </summary>
-		NumPad2,
+		Num2,
 
 		/// <summary>
 		/// 数字3
 		/// </summary>
-		NumPad3,
+		Num3,
 
 		/// <summary>
 		/// 数字4
 		/// </summary>
-		NumPad4,
+		Num4,
 
 		/// <summary>
 		/// 数字5
 		/// </summary>
-		NumPad5,
+		Num5,
 
 		/// <summary>
 		/// 数字6
 		/// </summary>
-		NumPad6,
+		Num6,
 
 		/// <summary>
 		/// 数字7
 		/// </summary>
-		NumPad7,
+		Num7,
 
 		/// <summary>
 		/// 数字8
 		/// </summary>
-		NumPad8,
+		Num8,
 
 		/// <summary>
 		/// 数字9
 		/// </summary>
-		NumPad9,
+		Num9,
 
 		#endregion
 
@@ -226,52 +226,52 @@ namespace WorldTree
 		/// <summary>
 		/// 0
 		/// </summary>
-		Num0,
+		Digit0,
 
 		/// <summary>
 		/// 1
 		/// </summary>
-		Num1,
+		Digit1,
 
 		/// <summary>
 		/// 2
 		/// </summary>
-		Num2,
+		Digit2,
 
 		/// <summary>
 		/// 3
 		/// </summary>
-		Num3,
+		Digit3,
 
 		/// <summary>
 		/// 4
 		/// </summary>
-		Num4,
+		Digit4,
 
 		/// <summary>
 		/// 5
 		/// </summary>
-		Num5,
+		Digit5,
 
 		/// <summary>
 		/// 6
 		/// </summary>
-		Num6,
+		Digit6,
 
 		/// <summary>
 		/// 7
 		/// </summary>
-		Num7,
+		Digit7,
 
 		/// <summary>
 		/// 8
 		/// </summary>
-		Num8,
+		Digit8,
 
 		/// <summary>
 		/// 9
 		/// </summary>
-		Num9,
+		Digit9,
 
 		#endregion
 
@@ -564,5 +564,6 @@ namespace WorldTree
 		PageDown,
 
 		#endregion
+
 	}
 }

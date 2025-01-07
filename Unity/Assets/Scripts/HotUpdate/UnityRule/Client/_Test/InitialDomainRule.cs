@@ -18,6 +18,8 @@ namespace WorldTree
 		{
 			self.Log($"初始域热更部分！！!");
 
+			self.Root.AddComponent(out InputDeviceManager _);
+
 			//添加宏测试成功，应该在编辑器下才能添加
 			//string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone);
 			//if (!currentDefines.Contains("MY_NEW_DEFINE")) currentDefines += ";MY_NEW_DEFINE";
@@ -30,12 +32,8 @@ namespace WorldTree
 
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
-
-
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
 				//self.AddComponent(out TreeDataTest _);
-
-				self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse _);
 			}
 		};
 
@@ -59,5 +57,11 @@ namespace WorldTree
 		{
 			self.Log($"初始域关闭！！");
 		};
+
+		static OnGuiUpdate<InitialDomain> OnGuiUpdate = (self) =>
+		{
+
+		};
+
 	}
 }

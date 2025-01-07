@@ -89,8 +89,8 @@ namespace WorldTree.Analyzer
 			{ "WorldTree.UnityRule",RuleConfigs},
 
 			//编辑限制
-			{ "DotNet.NodeRuleEditor",NodeConfigs},
-			{ "Unity.NodeRuleEditor",NodeConfigs},
+			//{ "DotNet.NodeRuleEditor",NodeConfigs},
+			//{ "Unity.NodeRuleEditor",NodeConfigs}
 
 		};
 

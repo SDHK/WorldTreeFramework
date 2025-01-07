@@ -25,7 +25,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 创建数据
+		/// 创建数据发送到管理器
 		/// </summary>
 		public static void InputData(this InputDriver self, byte deviceId, byte keyCode, InputDriverInfo info)
 		{
