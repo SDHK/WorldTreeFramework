@@ -43,6 +43,7 @@ namespace EditorTool
 				foreach (FieldInfo fieldInfo in fields)
 				{
 					Type type = fieldInfo.FieldType;
+					if (type.IsEnum) type = typeof(Enum);
 
 					//通过字段类型拿到预注册的绘制节点类型
 					if (View?.Root != null && View.Root.AddComponent(out ViewTypeManager _).types.TryGetValue(type, out Type nodeType))

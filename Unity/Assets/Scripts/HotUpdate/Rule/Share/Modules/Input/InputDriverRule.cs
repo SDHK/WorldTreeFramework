@@ -42,14 +42,14 @@ namespace WorldTree
 
 			InputData data = new()
 			{
-				Device = new()
+				Info = new()
 				{
 					InputDeviceType = self.DeviceType,
 					InputDeviceId = deviceId,
 					InputType = info.InputType,
 					InputCode = keyCode,
 				},
-				Info = new()
+				Value = new()
 				{
 					InputState = inputState,
 					X = info.X,

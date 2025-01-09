@@ -8,11 +8,11 @@
 */
 namespace WorldTree
 {
+
 	/// <summary>
-	/// 输入设备
+	/// 输入设备信息
 	/// </summary>
-	public class InputDevice : Node, ChildOf<InputDeviceManager>
-		, AsAwake<InputDeviceType, byte>
+	public struct InputInfo
 	{
 		/// <summary>
 		/// 设备类型
@@ -20,13 +20,18 @@ namespace WorldTree
 		public InputDeviceType InputDeviceType;
 
 		/// <summary>
-		/// 设备码
+		/// 设备索引号
 		/// </summary>
-		public byte DeviceId;
+		public byte InputDeviceId;
 
 		/// <summary>
-		/// 输入数据集合，下标是按键码
+		/// 控件类型
 		/// </summary>
-		public InputData[] InputDatas;
+		public InputType InputType;
+
+		/// <summary>
+		/// 控件码
+		/// </summary>
+		public byte InputCode;
 	}
 }

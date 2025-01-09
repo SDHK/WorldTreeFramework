@@ -16,6 +16,7 @@ namespace WorldTree
 			{
 				self.Core.PoolGetUnit(out self.InputDeviceDict);
 				self.Core.PoolGetUnit(out self.DataQueue);
+				self.Core.GetOrNewGlobalRuleActuator(out self.InputDataEvent);
 			}
 		}
 
@@ -23,13 +24,21 @@ namespace WorldTree
 		{
 			protected override void Execute(InputDeviceManager self)
 			{
+				//输入数据塞入到设备
 				while (self.DataQueue.TryDequeue(out var inputData))
 				{
-					//不存在则添加
-					if (self.InputDeviceDict.TryGetValue(inputData.Device.InputDeviceType, out var inputDeviceList))
+					//不存在设备类型则添加
+					if (!self.InputDeviceDict.TryGetValue(inputData.Info.InputDeviceType, out var deviceList))
 					{
-						inputDeviceList[inputData.Device.InputDeviceId].InputDatas[inputData.Device.InputCode] = inputData;
+						self.InputDeviceDict[inputData.Info.InputDeviceType] = self.Core.PoolGetUnit(out deviceList);
 					}
+					// 补全数量不够的设备
+					while (deviceList.Count <= inputData.Info.InputDeviceId)
+					{
+						deviceList.Add(self.AddChild(out InputDevice _, inputData.Info.InputDeviceType, (byte)deviceList.Count));
+					}
+					deviceList[inputData.Info.InputDeviceId].SetData(inputData.Info.InputCode, inputData);
+					self.InputDataEvent.Send(inputData);
 				}
 			}
 		}
@@ -39,8 +48,24 @@ namespace WorldTree
 		/// </summary>
 		public static void AddData(this InputDeviceManager self, InputData inputData)
 		{
-			self.Log($"{inputData.Device.InputDeviceType}:{inputData.Device.InputType}:{inputData.Device.InputCode}:{inputData.Info.InputState}:({inputData.Info.X},{inputData.Info.Y},{inputData.Info.Z})");
-			//self.DataQueue.Enqueue(inputData);
+			self.Log($"{inputData.Info.InputDeviceType}:{inputData.Info.InputType}:{inputData.Info.InputCode}:{inputData.Value.InputState}:({inputData.Value.X},{inputData.Value.Y},{inputData.Value.Z})");
+			self.DataQueue.Enqueue(inputData);
 		}
+
+	}
+
+	//4p=1d 组合+转换器
+	//InputControlEvent通过代码生成
+
+	public static class InputControlRule
+	{
+		class InputDataEvent : InputDataEventRule<InputControl>
+		{
+			protected override void Execute(InputControl self, InputData arg1)
+			{
+
+			}
+		}
+
 	}
 }
