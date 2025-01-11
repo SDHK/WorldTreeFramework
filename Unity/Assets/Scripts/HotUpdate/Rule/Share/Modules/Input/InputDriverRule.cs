@@ -21,6 +21,7 @@ namespace WorldTree
 			for (int i = 0; i < deviceCount; i++)
 			{
 				self.InputInfosList.Add(new InputDriverInfo[keyCount]);
+				self.InputAllowFlagsList.Add(new bool[keyCount]);
 			}
 		}
 
@@ -30,13 +31,19 @@ namespace WorldTree
 		public static void InputData(this InputDriver self, byte deviceId, byte keyCode, InputDriverInfo info)
 		{
 			InputDriverInfo oldInfo = self.InputInfosList[deviceId][keyCode];
-			if (oldInfo.IsInput == false && info.IsInput == false) return;
-			if (oldInfo == info) return;
+
+			bool isRepeat = (oldInfo.IsInput == false && info.IsInput == false) || oldInfo == info;
+
+			if (!isRepeat) self.InputAllowFlagsList[deviceId][keyCode] = true;
+			else if (!self.InputAllowFlagsList[deviceId][keyCode]) return;
 
 			// 计算组合状态
 			InputState inputState = oldInfo.IsInput
-				? (info.IsInput ? InputState.Active : InputState.End)
-				: (info.IsInput ? (InputState.Active | InputState.Start) : InputState.End);
+				? (info.IsInput ? InputState.Active : (InputState.Active | InputState.End))
+				: (info.IsInput ? (InputState.Active | InputState.Start) : InputState.None);
+
+
+			if (isRepeat) self.InputAllowFlagsList[deviceId][keyCode] = false;
 
 			self.InputInfosList[deviceId][keyCode] = info;
 

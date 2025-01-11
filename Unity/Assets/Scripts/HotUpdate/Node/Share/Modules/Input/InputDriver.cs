@@ -34,5 +34,10 @@ namespace WorldTree
 		/// </summary>
 		public UnitList<InputDriverInfo[]> InputInfosList;
 
+		/// <summary>
+		/// 输入信息重复
+		/// </summary>
+		public UnitList<bool[]> InputAllowFlagsList;
+
 	}
 }

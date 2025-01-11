@@ -44,9 +44,9 @@ namespace WorldTree
 
 	//===============
 	/// <summary>
-	/// 输入适配器配置
+	/// 输入检测器配置
 	/// </summary>
-	public struct InputAdapterConfig
+	public struct InputDetectorConfig
 	{
 		/// <summary>
 		/// 是否可改变
@@ -59,52 +59,4 @@ namespace WorldTree
 		public List<InputInfo> InfoList;
 
 	}
-
-	/// <summary>
-	/// 输入适配器
-	/// </summary>
-	public class InputAdapter : Node
-	{
-		/// <summary>
-		/// 输入适配器配置
-		/// </summary>
-		public InputAdapterConfig config;
-
-		/// <summary>
-		/// 输入信息列表
-		/// </summary>
-		public List<InputInfo> InfoList;
-	}
-
-	/// <summary>
-	/// 区间按键适配器
-	/// </summary>
-	public class InputAxisPress2Adapter : InputAdapter
-	{
-
-
-	}
-
-
-
-
-	/// <summary>
-	/// 输入控件
-	/// </summary>
-	public class InputControl : Node
-		, AsAwake
-		, AsInputDataEvent
-	{
-		/// <summary>
-		/// 输入适配器
-		/// </summary>
-		public InputAdapter InputAdapter;
-
-		/// <summary>
-		/// 行为事件
-		/// </summary>
-		public long InputType;
-
-	}
-
 }

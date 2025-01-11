@@ -10,7 +10,7 @@ namespace WorldTree
 {
 	//(T)System.Convert.ChangeType(Value, typeof(T));
 
-	//设备序号 + 设备类型 + 控件码 + 控件类型
+	//设备类型 + 设备序号 + 控件类型 + 控件码 
 
 	/// <summary>
 	/// 设备类型

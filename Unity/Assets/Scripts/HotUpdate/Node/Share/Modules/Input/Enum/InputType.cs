@@ -14,37 +14,53 @@ namespace WorldTree
 	public enum InputType : byte
 	{
 		/// <summary>
-		/// 0~1区间型，如键盘按键、扳机、踏板
+		/// 0~1区间型：键盘按键、扳机、踏板
 		/// </summary>
-		Press,
+		Press = 0,
 
 		/// <summary>
-		/// -1~1区间型，如方向盘、单轴摇杆
+		/// X轴向量型：方向盘、单轴摇杆
 		/// </summary>
-		Axis,
+		Vector = 10,
 
 		/// <summary>
-		/// XY轴区间型，如摇杆，鼠标移动
+		/// XY向量型：摇杆
 		/// </summary>
-		Axis2,
+		Vector2,
 
 		/// <summary>
-		/// XYZ轴区间型
+		/// XYZ向量型
 		/// </summary>
-		Axis3,
+		Vector3,
+
 
 		/// <summary>
-		/// 差值型，如鼠标滚轮、旋钮
+		/// X轴坐标型
 		/// </summary>
-		Delta,
+		Position = 20,
+		/// <summary>
+		/// XY轴坐标型：鼠标坐标
+		/// </summary>
+		Position2,
 
 		/// <summary>
-		/// XY轴差值型，如特别的鼠标滚轮
+		/// XYZ轴坐标型：动捕追踪器
+		/// </summary>
+		Position3,
+
+
+		/// <summary>
+		/// X轴差值型：鼠标滚轮、旋钮
+		/// </summary>
+		Delta = 30,
+
+		/// <summary>
+		/// XY轴差值型：特别的鼠标滚轮
 		/// </summary>
 		Delta2,
 
 		/// <summary>
-		/// XYZ轴差值型
+		/// XYZ轴差值型：陀螺仪
 		/// </summary>
 		Delta3,
 	}

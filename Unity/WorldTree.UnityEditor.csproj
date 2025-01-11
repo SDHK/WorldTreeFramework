@@ -80,12 +80,14 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindItem.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\ViewTypeManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\EnumViewRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\ShortViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\WorldTreeFrameworkWindow\EditorHomePage.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityWorldTreeNodeView\UnityWorldTreeNodeViewEditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ObjectBindGroup.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\Addressables\AddressablesEditorTool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\ColorViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\RectViewRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\ByteViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\FloatViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\Editor\FilePathAttribute.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\EntityBindMono\Editor\ComponentEventItem.cs" />
@@ -107,8 +109,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\EditorTool\EditorToolKitWindow\ToolPages\ScriptableEditor\Editor\ScriptableEditor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\DateTimeViewRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\BoundsViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\ShortViewRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\UnityNodeFieldView\RuleBase\SubRule\ByteViewRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\Editor\ThirdParty\HybridCLR\Generate\link.xml" />

@@ -17,17 +17,23 @@ namespace WorldTree
 	public enum InputState : byte
 	{
 		/// <summary>
-		/// 结束
+		/// 无状态
 		/// </summary>
-		End,
-		/// <summary>
-		/// 开始
-		/// </summary>
-		Start = 1,
+		None = 0,
 
 		/// <summary>
 		/// 活跃中
 		/// </summary>
-		Active = 1 << 1,
+		Active = 1,
+
+		/// <summary>
+		/// 开始
+		/// </summary>
+		Start = 1 << 1,
+
+		/// <summary>
+		/// 结束
+		/// </summary>
+		End = 1 << 2,
 	}
 }

@@ -15,116 +15,7 @@
           <dir
             name="HybridCLRGenerate"/>
           <dir
-            name="Plugins">
-            <dir
-              name="MemoryPack">
-              <dir
-                name="Runtime">
-                <dir
-                  name="MemoryPack.Core">
-                  <dir
-                    name="Compression"/>
-                  <dir
-                    name="Formatters"/>
-                  <dir
-                    name="Internal"/>
-                </dir>
-                <dir
-                  name="MemoryPack.Unity"/>
-              </dir>
-            </dir>
-            <dir
-              name="Sirenix">
-              <dir
-                name="Odin Inspector">
-                <dir
-                  name="Modules">
-                  <dir
-                    name="Unity.Mathematics"/>
-                </dir>
-                <dir
-                  name="Scripts">
-                  <dir
-                    name="Editor"/>
-                </dir>
-              </dir>
-            </dir>
-          </dir>
-          <dir
-            name="Samples">
-            <dir
-              name="YooAsset">
-              <dir
-                name="2.1.1">
-                <dir
-                  name="Extension Sample">
-                  <dir
-                    name="Scripts">
-                    <dir
-                      name="Editor">
-                      <dir
-                        name="PackageComparator"/>
-                      <dir
-                        name="PackageImporter"/>
-                      <dir
-                        name="ShaderVariantCollector"/>
-                    </dir>
-                    <dir
-                      name="Runtime"/>
-                  </dir>
-                </dir>
-                <dir
-                  name="Space Shooter">
-                  <dir
-                    name="GameScript">
-                    <dir
-                      name="Editor"/>
-                    <dir
-                      name="Runtime">
-                      <dir
-                        name="BattleLogic"/>
-                      <dir
-                        name="Behaviour"/>
-                      <dir
-                        name="EventDefine"/>
-                      <dir
-                        name="GameLogic"/>
-                      <dir
-                        name="PatchLogic">
-                        <dir
-                          name="FsmNode"/>
-                      </dir>
-                      <dir
-                        name="WindowLogic"/>
-                    </dir>
-                  </dir>
-                  <dir
-                    name="ThirdParty">
-                    <dir
-                      name="StreamingAssetsHelper"/>
-                    <dir
-                      name="UniFramework">
-                      <dir
-                        name="UniEvent">
-                        <dir
-                          name="Runtime"/>
-                      </dir>
-                      <dir
-                        name="UniMachine">
-                        <dir
-                          name="Runtime"/>
-                      </dir>
-                      <dir
-                        name="UniUtility">
-                        <dir
-                          name="Runtime"/>
-                      </dir>
-                    </dir>
-                  </dir>
-                </dir>
-              </dir>
-            </dir>
-          </dir>
+            name="Scenes"/>
           <dir
             name="Scripts">
             <dir
@@ -138,13 +29,72 @@
                   <dir
                     name="Service"/>
                 </dir>
+                <dir
+                  name="_MonoTest">
+                  <dir
+                    name="ECS"/>
+                  <dir
+                    name="ETTask"/>
+                </dir>
               </dir>
               <dir
-                name="_MonoTest">
+                name="Plugins">
                 <dir
-                  name="ECS"/>
+                  name="MemoryPack">
+                  <dir
+                    name="Runtime">
+                    <dir
+                      name="MemoryPack.Core">
+                      <dir
+                        name="Compression"/>
+                      <dir
+                        name="Formatters"/>
+                      <dir
+                        name="Internal"/>
+                    </dir>
+                    <dir
+                      name="MemoryPack.Unity"/>
+                  </dir>
+                </dir>
                 <dir
-                  name="ETTask"/>
+                  name="Sirenix">
+                  <dir
+                    name="Odin Inspector">
+                    <dir
+                      name="Modules">
+                      <dir
+                        name="Unity.Mathematics"/>
+                    </dir>
+                    <dir
+                      name="Scripts">
+                      <dir
+                        name="Editor"/>
+                    </dir>
+                  </dir>
+                </dir>
+                <dir
+                  name="YooAsset">
+                  <dir
+                    name="2.1.1">
+                    <dir
+                      name="Extension Sample">
+                      <dir
+                        name="Scripts">
+                        <dir
+                          name="Editor">
+                          <dir
+                            name="PackageComparator"/>
+                          <dir
+                            name="PackageImporter"/>
+                          <dir
+                            name="ShaderVariantCollector"/>
+                        </dir>
+                        <dir
+                          name="Runtime"/>
+                      </dir>
+                    </dir>
+                  </dir>
+                </dir>
               </dir>
             </dir>
             <dir
@@ -152,22 +102,81 @@
               <dir
                 name="Node">
                 <dir
-                  name="_Test"/>
-              </dir>
-              <dir
-                name="NodeUnity">
-                <dir
-                  name="_Test"/>
+                  name="Share">
+                  <dir
+                    name="Modules">
+                    <dir
+                      name="DataBase">
+                      <dir
+                        name="LiteDB"/>
+                      <dir
+                        name="Proxy"/>
+                    </dir>
+                    <dir
+                      name="Input">
+                      <dir
+                        name="Data"/>
+                      <dir
+                        name="Enum"/>
+                      <dir
+                        name="KeyCode"/>
+                    </dir>
+                    <dir
+                      name="NeuralNetwork">
+                      <dir
+                        name="MultilayerPerceptron"/>
+                    </dir>
+                  </dir>
+                </dir>
               </dir>
               <dir
                 name="Rule">
                 <dir
-                  name="_Test"/>
+                  name="Share">
+                  <dir
+                    name="Modules">
+                    <dir
+                      name="DataBase">
+                      <dir
+                        name="LiteDB"/>
+                      <dir
+                        name="Proxy"/>
+                    </dir>
+                    <dir
+                      name="Input"/>
+                    <dir
+                      name="NeuralNetwork">
+                      <dir
+                        name="MultilayerPerceptron"/>
+                    </dir>
+                  </dir>
+                </dir>
               </dir>
               <dir
-                name="RuleUnity">
+                name="UnityNode">
                 <dir
-                  name="_Test"/>
+                  name="Client">
+                  <dir
+                    name="Modules">
+                    <dir
+                      name="Input"/>
+                  </dir>
+                  <dir
+                    name="_Test"/>
+                </dir>
+              </dir>
+              <dir
+                name="UnityRule">
+                <dir
+                  name="Client">
+                  <dir
+                    name="Modules">
+                    <dir
+                      name="Input"/>
+                  </dir>
+                  <dir
+                    name="_Test"/>
+                </dir>
               </dir>
             </dir>
             <dir
@@ -215,7 +224,7 @@
                     </dir>
                   </dir>
                   <dir
-                    name="Plugins">
+                    name="ThirdParty">
                     <dir
                       name="HybridCLR">
                       <dir
@@ -231,9 +240,9 @@
                     </dir>
                   </dir>
                   <dir
-                    name="WorldTreeFrameworkWindow"/>
+                    name="UnityWorldTreeNodeView"/>
                   <dir
-                    name="WorldTreeNodeMonoView"/>
+                    name="WorldTreeFrameworkWindow"/>
                 </dir>
                 <dir
                   name="RunTime">
@@ -252,7 +261,7 @@
                   <dir
                     name="EditorRunTime">
                     <dir
-                      name="WorldTreeNodeUnityView"/>
+                      name="UnityWorldTreeNodeView"/>
                   </dir>
                   <dir
                     name="GUI">
@@ -266,8 +275,6 @@
                         name="SystemBase"/>
                     </dir>
                   </dir>
-                  <dir
-                    name="Input"/>
                   <dir
                     name="LifeCycle">
                     <dir
@@ -302,7 +309,7 @@
                       name="Pool"/>
                   </dir>
                   <dir
-                    name="Plugins">
+                    name="ThirdParty">
                     <dir
                       name="Addressables"/>
                     <dir
@@ -314,11 +321,6 @@
                       name="Extension"/>
                     <dir
                       name="Mathf"/>
-                    <dir
-                      name="SqliteTool">
-                      <dir
-                        name="Extension"/>
-                    </dir>
                   </dir>
                   <dir
                     name="UI">
@@ -340,16 +342,7 @@
                     <dir
                       name="RuleMethod"/>
                     <dir
-                      name="Sub">
-                      <dir
-                        name="ChildBranch"/>
-                      <dir
-                        name="ComponentBranch"/>
-                      <dir
-                        name="IdNodeBranch"/>
-                      <dir
-                        name="TypeNodeBranch"/>
-                    </dir>
+                      name="Sub"/>
                   </dir>
                   <dir
                     name="Core">
@@ -365,16 +358,13 @@
                   <dir
                     name="DynamicNodeQueue"/>
                   <dir
+                    name="Kcp"/>
+                  <dir
                     name="Node">
                     <dir
                       name="NodeBase"/>
                     <dir
-                      name="RuleMethod">
-                      <dir
-                        name="InvokeRule"/>
-                      <dir
-                        name="InvokeRuleGeneral"/>
-                    </dir>
+                      name="RuleMethod"/>
                   </dir>
                   <dir
                     name="ObjectBox">
@@ -412,10 +402,7 @@
                     <dir
                       name="GenericPool"/>
                     <dir
-                      name="NodePool">
-                      <dir
-                        name="RuleBaseLifecycle"/>
-                    </dir>
+                      name="NodePool"/>
                     <dir
                       name="PoolBase"/>
                     <dir
@@ -455,15 +442,9 @@
                     <dir
                       name="RuleBaseUniversal"/>
                     <dir
-                      name="RuleGroup">
-                      <dir
-                        name="Rule"/>
-                    </dir>
+                      name="RuleGroup"/>
                     <dir
-                      name="RuleList">
-                      <dir
-                        name="Rule"/>
-                    </dir>
+                      name="RuleList"/>
                     <dir
                       name="RuleManager"/>
                   </dir>
@@ -478,9 +459,31 @@
                     <dir
                       name="ListenerRuleActuator"/>
                     <dir
-                      name="Rule"/>
-                    <dir
                       name="RuleActuator"/>
+                  </dir>
+                  <dir
+                    name="Serialize">
+                    <dir
+                      name="ByteSequence"/>
+                    <dir
+                      name="TreeData">
+                      <dir
+                        name="FormattersRule">
+                        <dir
+                          name="Basics"/>
+                        <dir
+                          name="Special"/>
+                      </dir>
+                      <dir
+                        name="RuleBase"/>
+                    </dir>
+                    <dir
+                      name="TreePack">
+                      <dir
+                        name="FormatRule"/>
+                      <dir
+                        name="RuleBase"/>
+                    </dir>
                   </dir>
                   <dir
                     name="Time"/>
@@ -512,11 +515,6 @@
                   <dir
                     name="Node">
                     <dir
-                      name="NeuralNetwork">
-                      <dir
-                        name="MultilayerPerceptron"/>
-                    </dir>
-                    <dir
                       name="TreeTaskQueueLock"/>
                     <dir
                       name="TreeTween">
@@ -539,11 +537,6 @@
                   </dir>
                   <dir
                     name="Rule">
-                    <dir
-                      name="NeuralNetwork">
-                      <dir
-                        name="MultilayerPerceptron"/>
-                    </dir>
                     <dir
                       name="TreeTaskQueueLock"/>
                   </dir>

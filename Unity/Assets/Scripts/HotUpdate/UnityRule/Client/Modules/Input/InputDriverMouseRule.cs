@@ -20,6 +20,7 @@ namespace WorldTree
 			{
 				self.GetParent(out self.inputManager);
 				self.Core.PoolGetUnit(out self.InputInfosList);
+				self.Core.PoolGetUnit(out self.InputAllowFlagsList);
 				self.DeviceType = InputDeviceType.Mouse;
 				self.RegisterDevice(1, 12);
 			}
@@ -39,7 +40,7 @@ namespace WorldTree
 		private static void InputDriver(this InputDriverMouse self, byte deviceId)
 		{
 			self.IsExists[deviceId] = Input.mousePresent;
-			self.InputData(deviceId, (byte)InputMouseKey.Mouse, GetAxis2(Input.mousePosition));
+			self.InputData(deviceId, (byte)InputMouseKey.Mouse, GetPosition2(Input.mousePosition));
 			self.InputData(deviceId, (byte)InputMouseKey.MouseLeft, GetPress(Input.GetMouseButton(0)));
 			self.InputData(deviceId, (byte)InputMouseKey.MouseRight, GetPress(Input.GetMouseButton(1)));
 			self.InputData(deviceId, (byte)InputMouseKey.MouseMiddle, GetPress(Input.GetMouseButton(2)));
@@ -57,8 +58,8 @@ namespace WorldTree
 		/// <summary>
 		/// 获取鼠标位置
 		/// </summary>
-		private static InputDriverInfo GetAxis2(Vector2 vector2)
-			=> Input.mousePresent ? new(InputType.Axis2, true, (int)vector2.x, (int)vector2.y) : new(InputType.Axis2, false, (int)vector2.x, (int)vector2.y);
+		private static InputDriverInfo GetPosition2(Vector2 vector2)
+			=> Input.mousePresent ? new(InputType.Position2, true, (int)vector2.x, (int)vector2.y) : new(InputType.Vector2, false, (int)vector2.x, (int)vector2.y);
 
 		/// <summary>
 		/// 获取滚轮数据

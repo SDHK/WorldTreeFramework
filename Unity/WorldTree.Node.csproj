@@ -60,15 +60,16 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputData.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputDriverInfo.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputValue.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDetector.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputControl.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBManager.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputValue.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputType.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\KeyCode\InputMouseKey.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputDriverInfo.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\KeyCode\InputBoardKey.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDevice.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\IDataBase.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBCollection.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\Proxy\DataBaseProxy.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputInfo.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\Node\WorldTree.Node.asmdef" />
@@ -553,7 +555,6 @@
       <Name>MemoryPack</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
