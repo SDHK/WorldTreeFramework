@@ -6,14 +6,15 @@
 * 描述：
 
 */
-using System.Collections.Generic;
-
 namespace WorldTree
 {
+
+
 	/// <summary>
-	/// 输入事件法则
+	/// 全局输入事件法则
 	/// </summary>
-	public interface InputDataEvent : ISendRule<InputData> { }
+	public interface InputGlobal : ISendRule<InputData>, IGlobalRule { }
+
 
 
 	/// <summary>
@@ -39,24 +40,8 @@ namespace WorldTree
 		/// <summary>
 		/// 输入数据全局广播
 		/// </summary>
-		public GlobalRuleActuator<InputDataEvent> InputDataEvent;
+		public GlobalRuleActuator<InputGlobal> InputDataEvent;
 	}
 
-	//===============
-	/// <summary>
-	/// 输入检测器配置
-	/// </summary>
-	public struct InputDetectorConfig
-	{
-		/// <summary>
-		/// 是否可改变
-		/// </summary>
-		public bool IsChange;
 
-		/// <summary>
-		/// 输入信息列表
-		/// </summary>
-		public List<InputInfo> InfoList;
-
-	}
 }

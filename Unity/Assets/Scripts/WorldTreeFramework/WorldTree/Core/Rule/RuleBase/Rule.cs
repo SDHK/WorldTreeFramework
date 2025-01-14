@@ -81,9 +81,14 @@ namespace WorldTree
 	{ }
 
 	/// <summary>
+	/// 全局法则
+	/// </summary>
+	public interface IGlobalRule : IRule { }
+
+	/// <summary>
 	/// 生命周期法则标记(暂时无用)
 	/// </summary>
-	public interface ILifeCycleRule : IRule
+	public interface ILifeCycleRule : IGlobalRule
 	{
 	}
 

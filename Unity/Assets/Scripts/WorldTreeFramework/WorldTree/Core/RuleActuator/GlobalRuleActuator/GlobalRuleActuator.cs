@@ -18,7 +18,7 @@ namespace WorldTree
 	public class GlobalRuleActuator<R> : RuleGroupActuatorBase, INodeListener, IRuleActuator<R>
 		, ComponentOf<GlobalRuleActuatorManager>
 		, AsAwake
-		where R : IRule
+		where R : IGlobalRule
 	{
 		public override string ToString()
 		{
@@ -29,7 +29,7 @@ namespace WorldTree
 	public static class GlobalRuleActuatorRule
 	{
 		class ListenerAddRule<R> : ListenerAddRule.Rule<GlobalRuleActuator<R>, R>
-			where R : IRule
+			where R : IGlobalRule
 		{
 			protected override void Execute(GlobalRuleActuator<R> self, INode node)
 			{
@@ -38,7 +38,7 @@ namespace WorldTree
 		}
 
 		class Add<R> : AddRule<GlobalRuleActuator<R>>
-			where R : IRule
+			where R : IGlobalRule
 		{
 			protected override void Execute(GlobalRuleActuator<R> self)
 			{
@@ -52,7 +52,7 @@ namespace WorldTree
 		/// 填装全局节点
 		/// </summary>
 		public static void LoadGlobalNode<R>(this GlobalRuleActuator<R> self)
-			where R : IRule
+			where R : IGlobalRule
 		{
 			foreach (var item in self.ruleGroupDict)
 			{

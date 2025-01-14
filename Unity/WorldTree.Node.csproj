@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -60,13 +59,12 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDetector.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputControl.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBManager.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputValue.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputMapper.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputType.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\KeyCode\InputMouseKey.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputDriverInfo.cs" />
@@ -82,6 +80,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\Proxy\DataBaseProxy.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputInfo.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputData.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\Node\WorldTree.Node.asmdef" />

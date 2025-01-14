@@ -51,21 +51,5 @@ namespace WorldTree
 			self.Log($"{inputData.Info.InputDeviceType}:{inputData.Info.InputType}:{inputData.Info.InputCode}:{inputData.Value.InputState}:({inputData.Value.X},{inputData.Value.Y},{inputData.Value.Z})");
 			self.DataQueue.Enqueue(inputData);
 		}
-
-	}
-
-	//4p=1d 组合+转换器
-	//InputControlEvent通过代码生成
-
-	public static class InputControlRule
-	{
-		class InputDataEvent : InputDataEventRule<InputControl>
-		{
-			protected override void Execute(InputControl self, InputData arg1)
-			{
-
-			}
-		}
-
 	}
 }

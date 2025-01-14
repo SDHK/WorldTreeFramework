@@ -18,7 +18,7 @@ namespace WorldTree
 		/// 强制获取全局节点法则执行器
 		/// </summary>
 		public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this WorldTreeCore self, out GlobalRuleActuator<R> globalRuleActuator)
-		where R : IRule
+		where R : IGlobalRule
 		{
 			return self.AddComponent(out GlobalRuleActuatorManager _).AddComponent(out globalRuleActuator);
 		}

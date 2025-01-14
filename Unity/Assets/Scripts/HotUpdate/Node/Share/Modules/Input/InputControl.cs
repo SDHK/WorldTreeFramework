@@ -13,7 +13,6 @@ namespace WorldTree
 	/// </summary>
 	public class InputControl : Node
 		, AsAwake
-		, AsInputDataEvent
 	{
 		/// <summary>
 		/// 输入类型
@@ -23,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 输入检测器
 		/// </summary>
-		public InputDetector InputAdapter;
+		public InputMapper InputAdapter;
 
 		/// <summary>
 		/// 行为事件

@@ -18,7 +18,7 @@ namespace WorldTree
 		/// </summary>
 		public static void SetGlobalRuleActuator<T, R>(this TreeValueBase<T> self, R defaultRule = default)
 			where T : IEquatable<T>
-			where R : ISendRule<T>
+			where R : ISendRule<T>, IGlobalRule
 		{
 			self.globalValueChange = (IRuleActuator<ISendRule<T>>)self.Core.GetOrNewGlobalRuleActuator<R>(out _);
 		}
