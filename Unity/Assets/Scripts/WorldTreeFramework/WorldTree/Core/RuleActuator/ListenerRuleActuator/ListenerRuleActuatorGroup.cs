@@ -48,31 +48,21 @@ namespace WorldTree
 		public static void TryAddListener(this ReferencedPoolManager self, INodeListener listener)
 		{
 			//判断是否为监听器
-			if (self.Core.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary))
+			if (!self.Core.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary)) return;
+			foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
 			{
-				foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
+				//判断监听法则集合 是否有这个 监听器节点类型
+				if (!ruleGroup.Value.ContainsKey(listener.Type)) continue;
+				foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
 				{
-					//判断监听法则集合 是否有这个 监听器节点类型
-					if (ruleGroup.Value.ContainsKey(listener.Type))
-					{
-						foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
-						{
-							//是否有这个目标缓存池
-							if (self.TryGetPool(ruleList.Key, out ReferencedPool nodePool))
-							{
-								//是否有监听器集合组件
-								if (nodePool.TryGetComponent(out ListenerRuleActuatorGroup ListenerRuleActuatorGroup))
-								{
-									//是否有这个监听类型的执行器
-									if (ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out ListenerRuleActuator listenerRuleActuator))
-									{
-										//监听器添加到执行器
-										listenerRuleActuator.TryAdd(listener);
-									}
-								}
-							}
-						}
-					}
+					//是否有这个目标缓存池
+					if (!self.TryGetPool(ruleList.Key, out ReferencedPool nodePool)) continue;
+					//是否有监听器集合组件
+					if (!nodePool.TryGetComponent(out ListenerRuleActuatorGroup ListenerRuleActuatorGroup)) continue;
+					//是否有这个监听类型的执行器
+					if (!ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out ListenerRuleActuator listenerRuleActuator)) continue;
+					//监听器添加到执行器
+					listenerRuleActuator.TryAdd(listener);
 				}
 			}
 		}
@@ -84,36 +74,24 @@ namespace WorldTree
 		public static void RemoveListener(this ReferencedPoolManager self, INodeListener listener)
 		{
 			//判断是否为监听器
-			if (self.Core.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary))
+			if (!self.Core.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary)) return;
+			foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
 			{
-				foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
+				//判断监听法则集合 是否有这个 监听器节点类型
+				if (!ruleGroup.Value.ContainsKey(listener.Type)) continue;
+				foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
 				{
-					//判断监听法则集合 是否有这个 监听器节点类型
-					if (ruleGroup.Value.ContainsKey(listener.Type))
-					{
-						foreach (var ruleList in ruleGroup.Value)//遍历法则集合获取目标类型
-						{
-							//是否有这个目标池
-							if (self.TryGetPool(ruleList.Key, out ReferencedPool nodePool))
-							{
-								//是否有监听器集合组件
-								if (nodePool.TryGetComponent(out ListenerRuleActuatorGroup ListenerRuleActuatorGroup))
-								{
-									//是否有这个监听类型的执行器
-									if (ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out ListenerRuleActuator listenerRuleActuator))
-									{
-										//监听器添加到执行器
-										listenerRuleActuator.Remove(listener);
-									}
-								}
-							}
-						}
-					}
+					//是否有这个目标池
+					if (!self.TryGetPool(ruleList.Key, out ReferencedPool nodePool)) continue;
+					//是否有监听器集合组件
+					if (!nodePool.TryGetComponent(out ListenerRuleActuatorGroup ListenerRuleActuatorGroup)) continue;
+					//是否有这个监听类型的执行器
+					if (!ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out ListenerRuleActuator listenerRuleActuator)) continue;
+					//监听器移除
+					listenerRuleActuator.Remove(listener);
 				}
 			}
 		}
-
-
 		#endregion
 
 	}

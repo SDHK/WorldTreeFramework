@@ -42,14 +42,9 @@ namespace WorldTree
 			foreach (var listenerType in self.ruleGroupDict)
 			{
 				//从池里拿到已存在的监听器
-				if (self.Core.ReferencedPoolManager.TryGetPool(listenerType.Key, out ReferencedPool listenerPool))
-				{
-					//全部注入到执行器
-					foreach (var listener in listenerPool.NodeDict)
-					{
-						self.TryAdd(listener.Value);
-					}
-				}
+				if (!self.Core.ReferencedPoolManager.TryGetPool(listenerType.Key, out ReferencedPool listenerPool)) continue;
+				//全部注入到执行器
+				foreach (var listener in listenerPool.NodeDict) self.TryAdd(listener.Value);
 			}
 		}
 	}

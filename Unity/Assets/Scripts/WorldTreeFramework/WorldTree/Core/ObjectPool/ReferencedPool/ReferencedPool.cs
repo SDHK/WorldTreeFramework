@@ -7,7 +7,6 @@
 
 */
 
-using System;
 using System.Collections.Generic;
 
 namespace WorldTree
@@ -51,7 +50,7 @@ namespace WorldTree
 		public long ReferencedType;
 		public override string ToString()
 		{
-			return $"ReferencedPool<{GetType()}>:[{nodeDict.Count}]";
+			return $"ReferencedPool<{this.CodeToType(ReferencedType)}>:[{nodeDict.Count}]";
 		}
 	}
 }

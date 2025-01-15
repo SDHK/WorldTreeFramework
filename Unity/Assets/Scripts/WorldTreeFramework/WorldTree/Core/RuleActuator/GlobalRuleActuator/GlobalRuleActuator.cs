@@ -16,7 +16,7 @@ namespace WorldTree
 	/// 全局法则执行器
 	/// </summary>
 	public class GlobalRuleActuator<R> : RuleGroupActuatorBase, INodeListener, IRuleActuator<R>
-		, ComponentOf<GlobalRuleActuatorManager>
+		, TypeNodeOf<GlobalRuleActuatorManager>
 		, AsAwake
 		where R : IGlobalRule
 	{
