@@ -19,7 +19,7 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static GlobalRuleActuator<R> GetOrNewGlobalRuleActuator<R>(this WorldTreeCore self, out GlobalRuleActuator<R> globalRuleActuator)
+		public static GlobalRuleActuator<R> GetGlobalRuleActuator<R>(this WorldTreeCore self, out GlobalRuleActuator<R> globalRuleActuator)
 		where R : IGlobalRule
 		{
 			return self.AddComponent(out GlobalRuleActuatorManager _).AddTypeNode(self.TypeToCode<R>(), out globalRuleActuator);
@@ -28,14 +28,14 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static RuleGroupActuatorBase GetOrNewGlobalRuleActuator(this WorldTreeCore self, long typeCpde)
+		public static RuleGroupActuatorBase GetGlobalRuleActuator(this WorldTreeCore self, long genericTypeCpde)
 		{
-			Type type = self.CodeToType(typeCpde);
-			Type type1 = typeof(GlobalRuleActuator<>);
-			Type type2 = type1.MakeGenericType(type);
-			long typeCpde2 = self.TypeToCode(type2);
 			self.AddComponent(out GlobalRuleActuatorManager manager);
-			NodeBranchHelper.AddNode<TypeNodeBranch, long>(manager, typeCpde, typeCpde2, out INode node);
+			INode node = NodeBranchHelper.GetBranch<TypeNodeBranch>(manager)?.GetNode(genericTypeCpde);
+			if (node != null) return node as RuleGroupActuatorBase;
+
+			Type type = typeof(GlobalRuleActuator<>).MakeGenericType(self.CodeToType(genericTypeCpde));
+			NodeBranchHelper.AddNode<TypeNodeBranch, long>(manager, genericTypeCpde, self.TypeToCode(type), out node);
 			return node as RuleGroupActuatorBase;
 		}
 	}

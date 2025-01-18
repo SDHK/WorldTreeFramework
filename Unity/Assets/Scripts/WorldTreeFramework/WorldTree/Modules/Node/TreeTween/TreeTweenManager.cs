@@ -29,7 +29,7 @@ namespace WorldTree
     {
         protected override void Execute(TreeTweenManager self)
         {
-            self.Core.GetOrNewGlobalRuleActuator(out self.ruleActuator);
+            self.Core.GetGlobalRuleActuator(out self.ruleActuator);
         }
     }
 
