@@ -24,9 +24,79 @@
         <!-- 自定义标题栏 -->
         <Grid Grid.Row="0" Background="#FF282828">
             <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
-                     Margin="10,0,0,0"
+                     Margin="10,0,586,0"
                      VerticalAlignment="Center"
                      Foreground="#FFC4C4C4"/>
+            <!--//-->
+
+            <!-- 窗口按钮 -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <!-- 最小化按钮 -->
+                <Button  Click="MinimizeButton_Click" BorderBrush="#00707070" Background="#00DDDDDD" >
+                    <Path Data="M 0,0 H 10"
+                          Stroke="#FFC4C4C4"
+                          StrokeThickness="2"
+                          Width="10"
+                          Height="1"
+                          Stretch="None"
+                          VerticalAlignment="Center"/>
+                </Button>
+
+                <!-- 最大化/还原按钮 -->
+                <Button x:Name="MaximizeButton" Click="MaximizeButton_Click" Background="#00DDDDDD" BorderBrush="#00707070" >
+                    <Grid>
+                        <!-- 最大化图标 -->
+                        <Path x:Name="MaximizeIcon"
+                              Data="M 0,0 H 10 V 10 H 0 Z"
+                              Stroke="#FFC4C4C4"
+                              StrokeThickness="2"
+                              Width="10"
+                              Height="10"
+                              Stretch="None"/>
+
+                        <!-- 还原图标 -->
+                        <Grid x:Name="RestoreIcon" Visibility="Collapsed">
+                            <Path Data="M 2,2 H 10 V 10 H 2 Z"
+                                  Stroke="#FFC4C4C4"
+                                  StrokeThickness="2"
+                                  Width="10"
+                                  Height="10"
+                                  Stretch="None"/>
+                            <Path Data="M 0,0 H 8 V 8 H 0 Z"
+                                  Stroke="#FFC4C4C4"
+                                  StrokeThickness="2"
+                                  Width="8"
+                                  Height="8"
+                                  Stretch="None"/>
+                        </Grid>
+                    </Grid>
+                </Button>
+
+                <!-- 关闭按钮 -->
+                <Button Click="CloseButton_Click" Background="#00DDDDDD" BorderBrush="#00707070"  >
+                    <Path Data="M 0,0 L 10,10 M 10,0 L 0,10"
+                          Stroke="#FFC4C4C4"
+                          StrokeThickness="2"
+                          Width="10"
+                          Height="10"
+                          Stretch="None"/>
+                </Button>
+            </StackPanel>
+
+
+
+
+            <!--//-->
+            
+            
+            <!--<Button Content="X" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="#FFC4C4C4">
+                <Button.BorderBrush>
+                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                </Button.BorderBrush>
+                <Button.Background>
+                    <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
+                </Button.Background>
+            </Button>-->
         </Grid>
 
         <!-- 窗口内容 -->

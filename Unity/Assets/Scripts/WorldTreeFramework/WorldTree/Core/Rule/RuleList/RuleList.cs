@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -22,7 +20,7 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 法则列表
+	/// 法则多播列表
 	/// </summary>
 	/// <remarks>储存相同节点类型，法则类型，的法则</remarks>
 	public class RuleList : List<IRule>, IRuleList<IRule>

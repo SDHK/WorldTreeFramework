@@ -40,6 +40,11 @@ namespace WorldTree
 		long RuleType { get; set; }
 
 		/// <summary>
+		/// 法则多态类型标记
+		/// </summary>
+		long PolymType { get; set; }
+
+		/// <summary>
 		/// 法则执行顺序下标
 		/// </summary>
 		/// <remarks>由框架自动赋值，只读</remarks>
@@ -62,6 +67,8 @@ namespace WorldTree
 	{
 		public virtual long NodeType { get; set; }
 		public virtual long RuleType { get; set; }
+		public virtual long PolymType { get; set; }
+
 		public int RuleIndex { get; set; }
 		public int RuleCount { get; set; }
 
