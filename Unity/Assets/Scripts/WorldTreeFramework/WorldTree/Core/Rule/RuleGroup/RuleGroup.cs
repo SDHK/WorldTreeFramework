@@ -43,14 +43,4 @@ namespace WorldTree
 		/// </summary>
 		public long RuleType;
 	}
-
-
-	/// <summary>
-	/// 法则多态
-	/// </summary>
-	public class RulePolym : Dictionary<long, RuleList>
-	{
-
-	}
-
 }

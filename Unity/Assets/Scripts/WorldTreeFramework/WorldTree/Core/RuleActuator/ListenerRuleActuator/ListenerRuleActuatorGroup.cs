@@ -10,7 +10,7 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 混合型监听器法则执行器组
+	/// 监听器法则执行器组
 	/// </summary>
 	public class ListenerRuleActuatorGroup : Node, IListenerIgnorer, ComponentOf<ReferencedPool>
 		, AsComponentBranch
@@ -22,7 +22,7 @@ namespace WorldTree
 		public UnitDictionary<long, ListenerRuleActuator> ActuatorDict = new();
 	}
 
-	public static class HybridListenerRuleActuatorGroupRule
+	public static class ListenerRuleActuatorGroupRule
 	{
 		/// <summary>
 		/// 添加监听执行器,并自动填装监听器
