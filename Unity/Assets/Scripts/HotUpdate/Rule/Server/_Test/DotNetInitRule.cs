@@ -27,7 +27,7 @@ namespace WorldTree.Server
 		private static OnAdd<DotNetInit> Add = (self) =>
 		{
 			//self.AddComponent(out SerializeTest _);
-			//self.AddComponent(out TreeDataTest _);
+			self.AddComponent(out TreeDataTest _);
 		};
 
 		private static OnUpdateTime<DotNetInit> UpdateTime = (self, timeSpan) =>

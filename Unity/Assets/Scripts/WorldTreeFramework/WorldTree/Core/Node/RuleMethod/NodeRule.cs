@@ -97,7 +97,7 @@ namespace WorldTree
 			string t1 = "\t" + t;
 			string str = "";
 
-			str += t1 + $"[{self.Id:0}] " + self.ToString() + "\n";
+			str += t1 + $"[{self.Id:0}] {self}\n";
 
 			if (self.BranchDict != null)
 			{

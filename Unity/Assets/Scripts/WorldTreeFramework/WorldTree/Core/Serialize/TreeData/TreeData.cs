@@ -6,9 +6,6 @@
 * 描述：
 
 */
-using System;
-using System.Collections.Generic;
-
 namespace WorldTree
 {
 
@@ -49,19 +46,34 @@ namespace WorldTree
 			sequence.Dispose();
 			return treeSpade as N;
 		}
+
+
+		/// <summary>
+		/// 反序列化节点
+		/// </summary>
+		public static TreeData GetTreeData(INode self, byte[] bytes)
+		{
+			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
+			TreeData treeData = sequence.GetTreeData();
+			sequence.Dispose();
+			return treeData;
+		}
 	}
 
 	/// <summary>
 	/// 树数据节点
 	/// </summary>
 	public class TreeData : Node
-		, StringNodeOf<TreeData>
 		, NumberNodeOf<TreeData>
 		, TempOf<INode>
 		, AsNumberNodeBranch
-		, AsStringNodeBranch
 		, AsAwake
 	{
+		/// <summary>
+		/// 是否为数组
+		/// </summary>
+		public bool IsArray = false;
+
 		/// <summary>
 		/// 类型名称
 		/// </summary>
@@ -70,7 +82,12 @@ namespace WorldTree
 		/// <summary>
 		/// 是否默认值
 		/// </summary>
-		public bool IsDefault = true;
+		public bool IsDefault = false;
+
+		public override string ToString()
+		{
+			return $"[TreeData] [{(IsArray ? "Array" : "Class")}: {this.TypeName}] -";
+		}
 	}
 
 	/// <summary>
@@ -82,51 +99,24 @@ namespace WorldTree
 		/// 数据
 		/// </summary>
 		public object Value;
+
+		public override string ToString()
+		{
+			return $"{base.ToString()} Value: {Value}";
+		}
 	}
 
-
-
-	/// <summary>
-	/// 树数据节点
-	/// </summary>
-	public class TreeDataClass : Node
-		, TempOf<INode>
-		, AsNumberNodeBranch
-		, AsStringNodeBranch
-		, AsAwake
+	public static class TreeDataRule
 	{
-
-		/// <summary>
-		/// 类型名称
-		/// </summary>
-		public string TypeName;
-
-		/// <summary>
-		/// 是否默认值
-		/// </summary>
-		public bool IsDefault = true;
-
-		/// <summary>
-		/// 字段名称
-		/// </summary>
-		public List<string> NameList;
-
-		/// <summary>
-		/// 字段
-		/// </summary>
-		public List<TreeDataClass> TupleList;
+		class Remove : RemoveRule<TreeData>
+		{
+			protected override void Execute(TreeData self)
+			{
+				self.IsArray = false;
+				self.TypeName = null;
+				self.IsDefault = false;
+			}
+		}
 	}
-
-	/// <summary>
-	/// 树数据节点
-	/// </summary>
-	public class TreeDataArray : Node
-	{
-		/// <summary>
-		/// 数组项
-		/// </summary>
-		public List<TreeDataClass> TupleList;
-	}
-
 
 }

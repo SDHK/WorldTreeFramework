@@ -19,14 +19,20 @@ namespace WorldTree
 	/// <summary>
 	/// 输入映射管理器
 	/// </summary>
-	public class InputMapperManager : Node
+	public class InputMapperManager : NodeData
+		, AsNumberNodeBranch
+		, ComponentOf<InputDeviceManager>
 	{
+
 	}
 
 	/// <summary>
 	/// 输入映射组
 	/// </summary>
-	public class InputMapperGroup : Node
+	public class InputMapperGroup : NodeData
+		, NumberNodeOf<InputMapperManager>
+		, NumberNodeOf<InputMapperGroup>
+		, AsNumberNodeBranch
 		, AsChildBranch
 		, AsAwake
 	{
@@ -35,7 +41,7 @@ namespace WorldTree
 	/// <summary>
 	/// 输入映射器
 	/// </summary>
-	public class InputMapper : Node
+	public class InputMapper : NodeData
 		, ChildOf<InputMapperGroup>
 		, AsInputGlobal
 	{
@@ -49,12 +55,6 @@ namespace WorldTree
 		/// </summary>
 		public List<InputInfo> InfoList;
 
-
-		/// <summary>
-		/// 全局执行器Type
-		/// </summary>
-		public long InputRuleType;
-
 		/// <summary>
 		/// 全局输入事件法则
 		/// </summary>
@@ -62,11 +62,18 @@ namespace WorldTree
 	}
 
 
+
+
 	/// <summary>
 	/// 输入检测器配置
 	/// </summary>
 	public struct InputMapperConfig
 	{
+		/// <summary>
+		/// 全局事件Type
+		/// </summary>
+		public long InputRuleType;
+
 		/// <summary>
 		/// 是否可改变
 		/// </summary>
@@ -76,6 +83,5 @@ namespace WorldTree
 		/// 输入信息列表
 		/// </summary>
 		public List<InputInfo> InfoList;
-
 	}
 }

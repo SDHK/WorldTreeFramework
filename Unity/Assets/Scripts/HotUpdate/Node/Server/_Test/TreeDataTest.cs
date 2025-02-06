@@ -91,7 +91,7 @@ namespace WorldTree
 	/// 测试节点数据1
 	/// </summary>
 	[TreeDataSerializable]
-	public partial class TreeDataNodeDataTest1 : Node
+	public partial class TreeDataNodeDataTest1 : NodeData
 		, ChildOf<TreeDataTest>
 		, AsAwake
 		, AsChildBranch
