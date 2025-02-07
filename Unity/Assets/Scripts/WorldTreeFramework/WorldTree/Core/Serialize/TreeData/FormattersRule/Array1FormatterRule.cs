@@ -21,6 +21,10 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
+				//判断是否为基础类型，基础类型需要写入完整数组类型
+				if (nameCode == -2 && TreeDataTypeHelper.TypeSizeDict.ContainsKey(typeof(T)))
+					nameCode = -1;
+
 				if (self.TryWriteDataHead(value, nameCode, ~1, out T[] obj)) return;
 
 				//写入数组数据长度
@@ -30,24 +34,19 @@ namespace WorldTree.TreeDataFormatters
 				//type.GetEnumUnderlyingType();？？枚举类型的基础类型优化
 
 				//判断是否为基础类型
-				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(typeof(T), out int size))
 				{
 					//获取数组数据长度
 					var srcLength = size * obj.Length;
 
-					//包含数组数量的总长度
-					var allocSize = srcLength + Unsafe.SizeOf<int>();
-
 					//获取写入操作跨度
-					ref byte spanRef = ref self.GetWriteRefByte(allocSize);
+					ref byte spanRef = ref self.GetWriteRefByte(srcLength);
 
 					//获取数组数据的指针
 					ref var src = ref Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(obj.AsSpan()));
 
-					//写入数组长度
-					Unsafe.WriteUnaligned(ref spanRef, obj.Length);
 					//写入数组数据
-					Unsafe.CopyBlockUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<int>()), ref src, (uint)srcLength);
+					Unsafe.CopyBlockUnaligned(ref spanRef, ref src, (uint)srcLength);
 
 				}
 				else //当成托管类型处理
@@ -69,8 +68,6 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				int typePoint = self.ReadPoint;
-
 				if (self.TryReadArrayHead(typeof(T[]), ref value, 1)) return;
 
 				self.ReadDynamic(out int length);
@@ -83,7 +80,7 @@ namespace WorldTree.TreeDataFormatters
 				//假如数组为空或长度不一致，那么重新分配
 				if (value == null || ((T[])value).Length != length) value = new T[length];
 
-				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(typeof(T), out int size))
 				{
 					var byteCount = length * size;
 					ref byte spanRef = ref self.GetReadRefByte(byteCount);

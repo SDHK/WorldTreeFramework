@@ -19,18 +19,22 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
+				//判断是否为基础类型，基础类型需要写入完整数组类型
+				if (nameCode == -2 && TreeDataTypeHelper.TypeSizeDict.ContainsKey(typeof(T)))
+					nameCode = -1;
+
 				if (self.TryWriteDataHead(value, nameCode, ~3, out T[,,] obj)) return;
 
 				// 写入数组维度
 				int dim1 = obj.GetLength(0);
 				int dim2 = obj.GetLength(1);
 				int dim3 = obj.GetLength(2);
-				self.WriteUnmanaged(dim1);
-				self.WriteUnmanaged(dim2);
-				self.WriteUnmanaged(dim3);
+				self.WriteDynamic(dim1);
+				self.WriteDynamic(dim2);
+				self.WriteDynamic(dim3);
 
 				//判断是否为基础类型
-				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(typeof(T), out int size))
 				{
 					int elementSize = dim3 * size;
 					long totalSize = (long)dim1 * dim2 * elementSize;
@@ -92,7 +96,7 @@ namespace WorldTree.TreeDataFormatters
 					value = new T[dim1, dim2, dim3];
 				}
 
-				if (TreeDataType.TypeSizeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(typeof(T), out int size))
 				{
 					int elementSize = dim3 * size;
 					long totalSize = (long)dim1 * dim2 * elementSize;

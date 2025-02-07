@@ -31,7 +31,10 @@ namespace WorldTree
 			self.treeData.Name = "测试123";
 			self.treeData.Age = 18789;
 			self.treeData.KeyCode = KeyCodeTest.C;
-
+			self.treeData.Ints = new int[][,,]{
+				new int[2,2,5]{ { { 1, 2, 30, 4, 5 }, { 20, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }, { 2, 5, 9, 5, 2 } } },
+				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },
+			};
 
 			self.treeData.AddChild(out TreeDataNodeDataTest2 child);
 			child.Name = "测试4658";

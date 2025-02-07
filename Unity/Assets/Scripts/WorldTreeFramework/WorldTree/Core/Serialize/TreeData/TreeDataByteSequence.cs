@@ -7,7 +7,6 @@
 
 */
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree
@@ -24,106 +23,9 @@ namespace WorldTree
 		public const short NULL_OBJECT = -1;
 
 		/// <summary>
-		/// 自动
+		/// 自动适配类型
 		/// </summary>
 		public const short AUTO = 0;
-
-
-	}
-
-	/// <summary>
-	/// 树数据类型
-	/// </summary>
-	public static class TreeDataType
-	{
-		/// <summary>
-		/// 基础值类型,字节长度
-		/// </summary>
-		public static Dictionary<Type, int> TypeSizeDict = new()
-		{
-			[typeof(bool)] = 1,
-			[typeof(byte)] = 1,
-			[typeof(sbyte)] = 1,
-			[typeof(short)] = 2,
-			[typeof(ushort)] = 2,
-			[typeof(int)] = 4,
-			[typeof(uint)] = 4,
-			[typeof(long)] = 8,
-			[typeof(ulong)] = 8,
-			[typeof(float)] = 4,
-			[typeof(double)] = 8,
-			[typeof(char)] = 4,
-			[typeof(decimal)] = 16,
-		};
-
-		/// <summary>
-		/// 默认类型码，类型不会记录到数据里，以下标为键，用于最小化类型码，128个内为 1 Btye 长度
-		/// </summary>
-		public static Type[] TypeCodes = new Type[]
-		{
-			typeof(object),
-			typeof(bool),
-			typeof(byte),
-			typeof(sbyte),
-			typeof(short),
-			typeof(ushort),
-			typeof(int),
-			typeof(uint),
-			typeof(long),
-			typeof(ulong),
-			typeof(float),
-			typeof(double),
-			typeof(char),
-			typeof(decimal),
-			typeof(string),
-		};
-
-
-		/// <summary>
-		/// 基础值类型哈希表，这些类型序列化是直接写入数据的，用于跳跃数据过滤
-		/// </summary>
-		public static HashSet<Type> BasicsTypeHash = new()
-		{
-			typeof(bool),
-			typeof(byte),
-			typeof(sbyte),
-			typeof(short),
-			typeof(ushort),
-			typeof(int),
-			typeof(uint),
-			typeof(long),
-			typeof(ulong),
-			typeof(float),
-			typeof(double),
-			typeof(char),
-			typeof(decimal),
-			typeof(string),//string有特别判断，所以可以加入
-		};
-
-
-
-		/// <summary>
-		/// 基础类型对应类型码
-		/// </summary>
-		private static Dictionary<Type, byte> typeCodeDict;
-
-		/// <summary>
-		/// 基础类型对应类型码
-		/// </summary>
-		public static Dictionary<Type, byte> TypeCodeDict
-		{
-			get
-			{
-				if (typeCodeDict == null)
-				{
-					typeCodeDict = new();
-					for (int i = 0; i < TypeCodes.Length; i++)
-						typeCodeDict.Add(TypeCodes[i], (byte)i);
-				}
-				return typeCodeDict;
-			}
-		}
-
 	}
 
 	public static class TreeDataByteSequenceRule
@@ -186,7 +88,8 @@ namespace WorldTree
 		/// </summary>
 		private long GetTypeCode(Type type, bool isIgnoreName = false)
 		{
-			if (TreeDataType.TypeCodeDict.TryGetValue(type, out byte typeByteCode)) return typeByteCode;
+			if (TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte typeByteCode)) return typeByteCode;
+
 			if (!TypeToCodeDict.TryGetValue(type, out long typeCode))
 			{
 				typeCode = this.TypeToCode(type);
@@ -201,9 +104,9 @@ namespace WorldTree
 		/// </summary>
 		private bool TryGetType(long typeCode, out Type type)
 		{
-			if (TreeDataType.TypeCodes.Length > typeCode && typeCode >= 0)
+			if (TreeDataTypeHelper.TypeCodes.Length > typeCode && typeCode >= 0)
 			{
-				type = TreeDataType.TypeCodes[typeCode];
+				type = TreeDataTypeHelper.TypeCodes[typeCode];
 				return true;
 			}
 
@@ -557,7 +460,7 @@ namespace WorldTree
 			}
 
 			//数据类型不存在 ，判断目标类型是否非基础类型
-			if (!TreeDataType.BasicsTypeHash.Contains(targetType))
+			if (!TreeDataTypeHelper.BasicsTypeHash.Contains(targetType))
 			{
 				countPoint = readPoint;
 				//不是基础类型则尝试读取
@@ -578,7 +481,7 @@ namespace WorldTree
 			if (type != null)
 			{
 				//判断是否为基础类型，直接跳跃数据。
-				if (TreeDataType.BasicsTypeHash.Contains(type))
+				if (TreeDataTypeHelper.BasicsTypeHash.Contains(type))
 				{
 					SkipData(type);
 					return true;
@@ -659,7 +562,7 @@ namespace WorldTree
 			{
 				//type.GetEnumUnderlyingType();？？枚举类型的基础类型优化
 
-				if (TreeDataType.TypeSizeDict.TryGetValue(type, out int byteCount))
+				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int byteCount))
 				{
 					ReadSkip(byteCount);
 					return;
@@ -699,7 +602,7 @@ namespace WorldTree
 				}
 				//为0的情况下，是数组，但是数组长度为0
 				if (totalLength == 0) return;
-				if (type != null && type.IsArray && TreeDataType.TypeSizeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
+				if (type != null && type.IsArray && TreeDataTypeHelper.TypeSizeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
 				{
 					//基础数组类型，直接跳跃
 					ReadSkip(arrayByteCount * totalLength);
@@ -735,7 +638,7 @@ namespace WorldTree
 			int startPoint = this.readPoint;
 			this.ReadDynamic(out long typeCode);
 			//判断是否是基础类型，或是字符串
-			if (this.TryGetType(typeCode, out Type type) && (type == typeof(string) || TreeDataType.TypeSizeDict.TryGetValue(type, out _)))
+			if (this.TryGetType(typeCode, out Type type) && (type == typeof(string) || TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out _)))
 			{
 				data = node.AddNumberNode(number, out TreeValue treeValue);
 				treeValue.TypeName = type.Name;
@@ -805,9 +708,12 @@ namespace WorldTree
 				//为0的情况下，是数组，但是数组长度为0
 				if (totalLength == 0) return data;
 				//判断这个类型是否是基础数组类型
-				if (type?.GetElementType() != null && TreeDataType.TypeSizeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
+				if (type?.GetElementType() != null && TreeDataTypeHelper.TypeSizeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
 				{
 					this.ReadJump(startPoint);
+
+					//动态支持多维数组
+					if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
 
 					//基础类型取值
 					if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
@@ -816,9 +722,10 @@ namespace WorldTree
 						object obj = null;
 						((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref obj, ref namecode);
 						Array array = (obj as Array);
+						int i = 0;
 						foreach (var item in array)
 						{
-							data.AddNumberNode(number, out TreeValue treeValue);
+							data.AddNumberNode(i++, out TreeValue treeValue);
 							treeValue.TypeName = type.GetElementType().Name;
 							treeValue.Value = item;
 						}
@@ -839,7 +746,7 @@ namespace WorldTree
 				}
 			}
 
-			return null;
+			return data;
 		}
 
 		#endregion
