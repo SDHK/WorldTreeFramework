@@ -300,6 +300,7 @@ namespace WorldTree
 		/// </summary>
 		public void WriteValue(Type type, in object value, int nameCode = -1)
 		{
+			Layer++;
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 
@@ -316,6 +317,7 @@ namespace WorldTree
 				this.WriteType(typeof(object));
 				this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
 			}
+			Layer--;
 		}
 
 		#endregion
@@ -560,37 +562,24 @@ namespace WorldTree
 			//是基础类型直接跳跃
 			if (type != null)
 			{
-				//type.GetEnumUnderlyingType();？？枚举类型的基础类型优化
-
 				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int byteCount))
 				{
 					ReadSkip(byteCount);
 					return;
 				}
-				//string类型需要特殊处理
 				else if (type == typeof(string))
 				{
 					SkipString();
 					return;
 				}
 			}
-
 			//读取字段数量
 			this.ReadDynamic(out int count);
 			//空对象判断
 			if (count == ValueMarkCode.NULL_OBJECT) return;
 
 			//Type可能不存在的情况下，负数为数组类型
-			if (count >= 0)
-			{
-				for (int i = 0; i < count; i++)
-				{
-					//读取字段名称码
-					ReadSkip(4);
-					SkipData();
-				}
-			}
-			else
+			if (count < 0)
 			{
 				count = ~count;
 				//此时Count是维度，直接累乘计算总长度，一般来说数量不会超过int极限。
@@ -611,6 +600,15 @@ namespace WorldTree
 				{
 					//非基础数组类型，递归跳跃
 					for (int i = 0; i < totalLength; i++) SkipData();
+				}
+			}
+			else
+			{
+				for (int i = 0; i < count; i++)
+				{
+					//读取字段名称码
+					ReadSkip(4);
+					SkipData();
 				}
 			}
 		}
@@ -653,7 +651,6 @@ namespace WorldTree
 				}
 				else
 				{
-					//不支持的类型，跳跃数据
 					SkipData(type);
 				}
 
@@ -738,11 +735,8 @@ namespace WorldTree
 				}
 				else
 				{
-					//非基础数组类型，递归跳跃
-					for (int i = 0; i < totalLength; i++)
-					{
-						GetTreeData(data, i);
-					}
+					//非基础数组类型，递归
+					for (int i = 0; i < totalLength; i++) GetTreeData(data, i);
 				}
 			}
 

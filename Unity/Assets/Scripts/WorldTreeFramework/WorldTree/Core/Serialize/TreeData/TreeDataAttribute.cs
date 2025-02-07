@@ -11,7 +11,7 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 树节点数据标记，默认为非恒定类型，恒定类型将不会记录类名到数据
+	/// 树节点数据标记，默认为非恒定类型，恒定类型将不会记录类名到数据中，减少数据体积
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
 	public class TreeDataSerializableAttribute : Attribute
