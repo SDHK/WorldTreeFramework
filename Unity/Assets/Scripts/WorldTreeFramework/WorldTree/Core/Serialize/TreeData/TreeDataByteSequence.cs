@@ -687,7 +687,7 @@ namespace WorldTree
 			if (this.TryGetType(typeCode, out Type type) && TreeDataTypeHelper.BasicsTypeHash.Contains(type))
 			{
 				data = node is TreeData treeData ? treeData.AddNumberNode(number, out TreeDataValue treeValue) : node.AddTemp(out treeValue);
-				data.TypeName = type.Name;
+				data.TypeName = type.ToString();
 				//获取真实类型码
 				long typeHashCode = this.Core.TypeToCode(type);
 				//基础类型取值
@@ -705,7 +705,7 @@ namespace WorldTree
 			if (count == ValueMarkCode.NULL_OBJECT)
 			{
 				data = node is TreeData treeData ? treeData.AddNumberNode(number, out TreeData _) : node.AddTemp(out TreeData _);
-				data.TypeName = type?.Name;
+				data.TypeName = type?.ToString();
 				data.IsDefault = true;
 				return data;
 			}
@@ -722,7 +722,7 @@ namespace WorldTree
 				{
 					data = node.AddTemp(out treeArray);
 				}
-				data.TypeName = type?.Name;
+				data.TypeName = type?.ToString();
 
 
 				count = ~count;
@@ -754,7 +754,7 @@ namespace WorldTree
 						foreach (var item in array)
 						{
 							data.AddNumberNode(i++, out TreeDataValue treeValue);
-							treeValue.TypeName = type.GetElementType().Name;
+							treeValue.TypeName = type.GetElementType().ToString();
 							treeValue.Value = item;
 						}
 					}
@@ -767,7 +767,7 @@ namespace WorldTree
 			else
 			{
 				data = node is TreeData treeData ? treeData.AddNumberNode(number, out TreeData _) : node.AddTemp(out TreeData _);
-				data.TypeName = type?.Name;
+				data.TypeName = type?.ToString();
 
 				for (int i = 0; i < count; i++)
 				{
