@@ -70,11 +70,6 @@ namespace WorldTree
 		, AsAwake
 	{
 		/// <summary>
-		/// 是否为数组
-		/// </summary>
-		public bool IsArray = false;
-
-		/// <summary>
 		/// 类型名称
 		/// </summary>
 		public string TypeName;
@@ -86,23 +81,39 @@ namespace WorldTree
 
 		public override string ToString()
 		{
-			return $"[TreeData] [{(IsArray ? "Array" : "Class")}: {this.TypeName}] -";
+			return $"[TreeData:{this.TypeName}]";
 		}
 	}
 
 	/// <summary>
-	/// 树数值
+	/// 树数据数组节点
 	/// </summary>
-	public class TreeValue : TreeData
+	public class TreeDataArray : TreeData
 	{
 		/// <summary>
-		/// 数据
+		/// 维度长度列表
+		/// </summary>
+		public TreeList<int> LengthList;
+
+		public override string ToString()
+		{
+			return $"[TreeArray:{this.TypeName}]:[{string.Join(",", LengthList)}]";
+		}
+	}
+
+	/// <summary>
+	/// 树数据数值
+	/// </summary>
+	public class TreeDataValue : TreeData
+	{
+		/// <summary>
+		/// 数值
 		/// </summary>
 		public object Value;
 
 		public override string ToString()
 		{
-			return $"{base.ToString()} Value: {Value}";
+			return $"[TreeValue:{this.TypeName}] : {Value}";
 		}
 	}
 
@@ -112,9 +123,16 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeData self)
 			{
-				self.IsArray = false;
 				self.TypeName = null;
 				self.IsDefault = false;
+			}
+		}
+
+		class Add : AddRule<TreeDataArray>
+		{
+			protected override void Execute(TreeDataArray self)
+			{
+				self.AddTemp(out self.LengthList);
 			}
 		}
 	}

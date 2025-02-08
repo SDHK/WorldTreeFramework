@@ -61,6 +61,11 @@ namespace WorldTree
 	public interface IBranch<K> : IBranch
 	{
 		/// <summary>
+		/// 获取节点键值枚举器
+		/// </summary>
+		public IEnumerable<KeyValuePair<K, INode>> GetEnumerable();
+
+		/// <summary>
 		/// 节点键值包含判断
 		/// </summary>
 		public bool Contains(K key);

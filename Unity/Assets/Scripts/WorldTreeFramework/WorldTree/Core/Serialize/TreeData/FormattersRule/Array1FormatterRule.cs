@@ -21,8 +21,6 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				//type.GetEnumUnderlyingType();？？枚举类型的基础类型优化??
-
 				//判断是否为基础类型，基础类型需要写入完整数组类型
 				if (nameCode == -2 && TreeDataTypeHelper.TypeSizeDict.ContainsKey(typeof(T)))
 					nameCode = -1;
@@ -33,7 +31,7 @@ namespace WorldTree.TreeDataFormatters
 				self.WriteDynamic(obj.Length);
 				if (obj.Length == 0) return;
 
-				//type.GetEnumUnderlyingType();？？枚举类型的基础类型优化
+				//type.GetEnumUnderlyingType();？？枚举类型的基础类型优化,如果有则跳跃数据也需要
 
 				//判断是否为基础类型
 				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(typeof(T), out int size))

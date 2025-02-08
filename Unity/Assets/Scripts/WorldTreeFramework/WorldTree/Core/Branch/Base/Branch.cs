@@ -10,7 +10,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-
 namespace WorldTree
 {
 	/// <summary>
@@ -92,6 +91,9 @@ namespace WorldTree
 		public IEnumerator<INode> GetEnumerator() => nodeDict.Values.GetEnumerator();
 
 		IEnumerator IEnumerable.GetEnumerator() => nodeDict.Values.GetEnumerator();
+
+		public IEnumerable<KeyValuePair<K, INode>> GetEnumerable() => nodeDict;
+
 
 		public override void OnDispose()
 		{

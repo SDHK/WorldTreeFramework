@@ -97,7 +97,7 @@ namespace WorldTree
 			string t1 = "\t" + t;
 			string str = "";
 
-			str += t1 + $"[{self.Id:0}] {self}\n";
+			str += $"{t1}[{self.Id:0}] {self} \n";
 
 			if (self.BranchDict != null)
 			{
@@ -105,11 +105,10 @@ namespace WorldTree
 				{
 					if (branchs.Value == null)
 					{
-						str += t1 + $"   Null:\n";
+						str += $"{t1}   Null: \n";
 						continue;
 					}
-					str += t1 + $"   {branchs.Value.GetType().Name}:\n";
-
+					str += $"{t1}   {branchs.Value.GetType().Name}: \n";
 					foreach (INode node in branchs.Value)
 					{
 						if (branchs.Value.Type == node.BranchType)

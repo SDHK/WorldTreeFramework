@@ -655,10 +655,7 @@ namespace WorldTree
 		{
 			if (ReadUnmanaged(out int length) == ValueMarkCode.NULL_OBJECT) return;
 			else if (length == 0) return;
-			if (Utf8)
-				ReadSkip(length);
-			else
-				ReadSkip(length);
+			ReadSkip(length);
 		}
 
 		/// <summary>

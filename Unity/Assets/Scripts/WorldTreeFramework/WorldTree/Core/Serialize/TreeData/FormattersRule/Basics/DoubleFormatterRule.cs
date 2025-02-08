@@ -44,6 +44,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
 			{
+				if (nameCode != -1) { obj = self.ReadUnmanaged<double>(); return; }
 				if (self.TryReadType(out Type dataType) && typeDict.TryGetValue(dataType, out var func))
 					obj = func(self);
 				else

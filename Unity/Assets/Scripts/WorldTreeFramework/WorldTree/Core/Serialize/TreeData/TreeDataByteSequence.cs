@@ -615,59 +615,88 @@ namespace WorldTree
 
 
 
-		#region TreeData测试
+		#region TreeData
+
+		/// <summary>
+		/// 设置
+		/// </summary>
+		public void SetTreeData(TreeData treeData)
+		{
+			Layer = 0;
+			//判断是否是数组
+			if (treeData is TreeDataArray treeDataArray)
+			{
+				//int count = NodeBranchHelper.GetBranch<NumberNodeBranch>(treeData)?.Count ?? 0;
+				//写入类型码
+				//this.WriteString(treeDataArray.TypeName);//特别处理！！！
+
+				//写入数组维度
+				this.WriteDynamic(~treeDataArray.LengthList.Count);
+				foreach (var item in treeDataArray.LengthList)
+				{
+					this.WriteDynamic(item);
+				}
+				//判断这个类型是否是基础数组类型
+				//if (treeData.TypeName != null && TreeDataTypeHelper.TypeSizeDict.ContainsKey(treeData.TypeName.GetHash64()))
+				//{
+				//	//基础数组类型取值
+				//	if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(this.Core.TypeToCode(Type.GetType(treeData.TypeName)), out RuleList ruleList))
+				//	{
+				//		((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref treeData.Value, ref treeData.NameCode);
+				//	}
+				//}
+				//else //非基础数组类型，递归
+				//{
+				//	foreach (var item in NodeBranchHelper.GetBranch<NumberNodeBranch>(treeData))
+				//	{
+				//		SetTreeData(item as TreeData);
+				//	}
+				//}
+			}
+			else
+			{
+				//写入类型码
+				//this.WriteDynamic(this.Core.TypeToCode(Type.GetType(treeData.TypeName)));
+				//写入字段数量
+				var branch = NodeBranchHelper.GetBranch<NumberNodeBranch>(treeData);
+				this.WriteDynamic(branch.Count);
+				foreach (var item in branch.GetEnumerable())
+				{
+					//写入字段名称码
+					this.WriteUnmanaged(item.Key);
+					SetTreeData(item.Value as TreeData);
+				}
+			}
+		}
 
 		/// <summary>
 		/// 获取
 		/// </summary>
-		public TreeData GetTreeData()
-		{
-			this.Parent.AddTemp(out TreeData data);
-			GetTreeData(data, -1);
-			return data;
-		}
+		public TreeData GetTreeData() => GetTreeData(this.Parent);
 
 		/// <summary>
 		/// 获取TreeData
 		/// </summary>
-		private TreeData GetTreeData(TreeData node, int number)
+		private TreeData GetTreeData(INode node, int number = 0)
 		{
-			TreeData data = null;
+			TreeData data;
 			int startPoint = this.readPoint;
+			//读取类型码
 			this.ReadDynamic(out long typeCode);
-			//判断是否是基础类型，或是字符串
-			if (this.TryGetType(typeCode, out Type type) && (type == typeof(string) || TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out _)))
+			//判断是否是基础类型
+			if (this.TryGetType(typeCode, out Type type) && TreeDataTypeHelper.BasicsTypeHash.Contains(type))
 			{
-				data = node.AddNumberNode(number, out TreeValue treeValue);
-				treeValue.TypeName = type.Name;
-
+				data = node is TreeData treeData ? treeData.AddNumberNode(number, out TreeDataValue treeValue) : node.AddTemp(out treeValue);
+				data.TypeName = type.Name;
+				//获取真实类型码
 				long typeHashCode = this.Core.TypeToCode(type);
 				//基础类型取值
-				if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeHashCode, out RuleList ruleList) && ruleList.NodeType == typeHashCode)
+				if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeHashCode, out RuleList ruleList))
 				{
-					this.ReadJump(startPoint);
-					int namecode = -1;
-					((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref treeValue.Value, ref namecode);
+					int nameCode = 0;
+					((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref treeValue.Value, ref nameCode);
 				}
-				else
-				{
-					SkipData(type);
-				}
-
 				return data;
-			}
-			else
-			{
-				//不是基础类型获取类型名称
-				node.AddNumberNode(number, out data);
-				if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
-				{
-					data.TypeName = typeName;
-				}
-				else if (type != null)
-				{
-					data.TypeName = type.Name;
-				}
 			}
 
 			//读取字段数量
@@ -675,24 +704,26 @@ namespace WorldTree
 			//空对象判断
 			if (count == ValueMarkCode.NULL_OBJECT)
 			{
+				data = node is TreeData treeData ? treeData.AddNumberNode(number, out TreeData _) : node.AddTemp(out TreeData _);
+				data.TypeName = type?.Name;
 				data.IsDefault = true;
 				return data;
 			}
-			data.IsDefault = false;
 
-			//Type不存在的情况下，负数为数组类型
-			if (count >= 0)
+			//Type可能不存在的情况下，负数为数组类型
+			if (count < 0)
 			{
-				for (int i = 0; i < count; i++)
+				TreeDataArray treeArray;
+				if (node is TreeData treeData)
 				{
-					//读取字段名称码
-					this.ReadUnmanaged(out int nameCode);
-					GetTreeData(data, nameCode);
+					data = treeData.AddNumberNode(number, out treeArray);
 				}
-			}
-			else
-			{
-				data.IsArray = true;
+				else
+				{
+					data = node.AddTemp(out treeArray);
+				}
+				data.TypeName = type?.Name;
+
 
 				count = ~count;
 				//此时Count是维度，直接累乘计算总长度，一般来说数量不会超过int极限。
@@ -700,19 +731,19 @@ namespace WorldTree
 				for (int i = 0; i < count; i++)
 				{
 					this.ReadDynamic(out int length);
+					treeArray.LengthList.Add(length);
 					totalLength *= length;
 				}
 				//为0的情况下，是数组，但是数组长度为0
 				if (totalLength == 0) return data;
 				//判断这个类型是否是基础数组类型
-				if (type?.GetElementType() != null && TreeDataTypeHelper.TypeSizeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
+				if (type?.GetElementType() != null && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type.GetElementType()))
 				{
+					//跳跃回类型开头
 					this.ReadJump(startPoint);
-
 					//动态支持多维数组
 					if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
-
-					//基础类型取值
+					//基础数组类型取值
 					if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 					{
 						int namecode = -1;
@@ -722,29 +753,32 @@ namespace WorldTree
 						int i = 0;
 						foreach (var item in array)
 						{
-							data.AddNumberNode(i++, out TreeValue treeValue);
+							data.AddNumberNode(i++, out TreeDataValue treeValue);
 							treeValue.TypeName = type.GetElementType().Name;
 							treeValue.Value = item;
 						}
 					}
-					else
-					{
-						//不支持的类型，跳跃数据
-						SkipData(type);
-					}
 				}
-				else
+				else //非基础数组类型，递归
 				{
-					//非基础数组类型，递归
 					for (int i = 0; i < totalLength; i++) GetTreeData(data, i);
 				}
 			}
+			else
+			{
+				data = node is TreeData treeData ? treeData.AddNumberNode(number, out TreeData _) : node.AddTemp(out TreeData _);
+				data.TypeName = type?.Name;
 
+				for (int i = 0; i < count; i++)
+				{
+					//读取字段名称码
+					this.ReadUnmanaged(out int nameCode);
+					GetTreeData(data, nameCode);
+				}
+			}
 			return data;
 		}
-
 		#endregion
-
 	}
 
 }

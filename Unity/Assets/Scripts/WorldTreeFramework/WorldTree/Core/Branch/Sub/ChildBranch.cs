@@ -58,10 +58,9 @@ namespace WorldTree
 		{
 			nodeDict.Clear();
 		}
-
 		public IEnumerator<INode> GetEnumerator() => nodeDict.Values.GetEnumerator();
-
 		IEnumerator IEnumerable.GetEnumerator() => nodeDict.Values.GetEnumerator();
+		public IEnumerable<KeyValuePair<long, INode>> GetEnumerable() => nodeDict;
 
 		public override void OnDispose()
 		{
