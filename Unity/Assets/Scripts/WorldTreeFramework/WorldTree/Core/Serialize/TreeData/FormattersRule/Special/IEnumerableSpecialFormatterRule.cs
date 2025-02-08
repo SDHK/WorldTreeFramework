@@ -1,9 +1,9 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2024/11/4 10:07
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2024/11/4 10:07
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 using System.Collections.Generic;
@@ -12,18 +12,18 @@ namespace WorldTree.TreeDataFormatters
 {
 
 	/// <summary>
-	/// Ã¶¾ÙÀàĞÍÌØÊâ¸ñÊ½»¯Æ÷
+	/// è¿­ä»£å™¨ç±»å‹ç‰¹æ®Šæ ¼å¼åŒ–å™¨
 	/// </summary>
 	public static class IEnumerableSpecialFormatterRule
 	{
 		/// <summary>
-		/// Ã¶¾ÙÀàĞÍÌØÊâĞòÁĞ»¯·¨Ôò»ùÀà
+		/// è¿­ä»£å™¨ç±»å‹ç‰¹æ®Šåºåˆ—åŒ–æ³•åˆ™åŸºç±»
 		/// </summary>
 		public abstract class SerializeBase<T, ItemT> : TreeDataSerializeRule<T>
 			where T : class, IEnumerable<ItemT>, new()
 		{
 			/// <summary>
-			/// ±éÀúĞ´Èë·½·¨
+			/// éå†å†™å…¥æ–¹æ³•
 			/// </summary>
 			public abstract void ForeachWrite(TreeDataByteSequence self, T obj);
 
@@ -31,24 +31,24 @@ namespace WorldTree.TreeDataFormatters
 			{
 				if (self.TryWriteDataHead(value, nameCode, 1, out T obj)) return;
 
-				//¼ÙÉè×ÖµäÓĞÒ»¸öÊı×é×Ö¶Î
+				//å‡è®¾å­—å…¸æœ‰ä¸€ä¸ªæ•°ç»„å­—æ®µ
 				self.WriteUnmanaged(1683726967);
-				//ĞòÁĞ»¯Êı×é×Ö¶Î
+				//åºåˆ—åŒ–æ•°ç»„å­—æ®µ
 				self.WriteType(typeof(object));
-				//Ğ´ÈëÊı×éÎ¬¶ÈÊıÁ¿
+				//å†™å…¥æ•°ç»„ç»´åº¦æ•°é‡
 				self.WriteDynamic(~1);
 				ForeachWrite(self, obj);
 			}
 		}
 
 		/// <summary>
-		/// Ã¶¾ÙÀàĞÍÌØÊâ·´ĞòÁĞ»¯·¨Ôò»ùÀà
+		/// è¿­ä»£å™¨ç±»å‹ç‰¹æ®Šååºåˆ—åŒ–æ³•åˆ™åŸºç±»
 		/// </summary>
 		public abstract class DeserializeBase<T, ItemT> : TreeDataDeserializeRule<T>
 			where T : class, IEnumerable<ItemT>, new()
 		{
 			/// <summary>
-			/// ±éÀú¶ÁÈ¡·½·¨
+			/// éå†è¯»å–æ–¹æ³•
 			/// </summary>
 			public abstract void ForeachRead(TreeDataByteSequence self, T obj);
 
@@ -70,7 +70,7 @@ namespace WorldTree.TreeDataFormatters
 			}
 
 			/// <summary>
-			/// ×Ö¶Î¶ÁÈ¡
+			/// å­—æ®µè¯»å–
 			/// </summary>
 			private void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)
 			{
@@ -79,7 +79,7 @@ namespace WorldTree.TreeDataFormatters
 				{
 					case 1683726967:
 						{
-							//·´ĞòÁĞ»¯Êı×é
+							//ååºåˆ—åŒ–æ•°ç»„
 							if (self.TryReadArrayHead(typeof(ItemT[]), ref value, 1)) return;
 							ForeachRead(self, obj);
 						}
