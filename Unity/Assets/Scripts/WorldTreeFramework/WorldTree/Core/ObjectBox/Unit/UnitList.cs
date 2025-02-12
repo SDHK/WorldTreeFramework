@@ -14,17 +14,20 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 单位列表：可由对象池管理回收
-    /// </summary>
+	/// <summary>
+	/// 单位列表：可由对象池管理回收
+	/// </summary>
 	[TreeDataSerializable()]
 	public partial class UnitList<T> : List<T>, IUnit
-    {
+	{
 		[TreeDataIgnore]
 		public WorldTreeCore Core { get; set; }
-        public long Type { get; set; }
-        public bool IsFromPool { get; set; }
-        public bool IsDisposed { get; set; }
+		[TreeDataIgnore]
+		public long Type { get; set; }
+		[TreeDataIgnore]
+		public bool IsFromPool { get; set; }
+		[TreeDataIgnore]
+		public bool IsDisposed { get; set; }
 
 		public void Dispose()
 		{

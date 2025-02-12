@@ -12,24 +12,24 @@ using System.Text;
 
 namespace WorldTree
 {
-    /// <summary>
-    /// 哈希码计算
-    /// </summary>
-    public static class HashCodeHelper
-    {
-		
+	/// <summary>
+	/// 哈希码计算
+	/// </summary>
+	public static class HashCodeHelper
+	{
+
 		/// <summary>
 		/// SHA256
 		/// </summary>
 		private readonly static SHA256CryptoServiceProvider sha256 = new();
 
-        /// <summary>
-        /// 获取64位的哈希码
-        /// </summary>
-        public static long GetHash64(this string str)
-        {
-            return BitConverter.ToInt64(sha256.ComputeHash(Encoding.UTF8.GetBytes(str)), 0);
-        }
+		/// <summary>
+		/// 获取64位的哈希码
+		/// </summary>
+		public static long GetHash64(this string str)
+		{
+			return BitConverter.ToInt64(sha256.ComputeHash(Encoding.UTF8.GetBytes(str)), 0);
+		}
 
 
 		/// <summary>

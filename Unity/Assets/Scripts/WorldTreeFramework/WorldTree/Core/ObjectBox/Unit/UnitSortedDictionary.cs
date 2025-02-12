@@ -17,18 +17,23 @@ namespace WorldTree
 	/// <summary>
 	/// 单位排序字典：可由对象池管理回收: SortedDictionary在Add的时候会产生56B的GC
 	/// </summary>
-	public class UnitSortedDictionary<TKey, TValue> : SortedDictionary<TKey, TValue>, IUnit
-    {
-        public WorldTreeCore Core { get; set; }
-        public long Type { get; set; }
-        public bool IsFromPool { get; set; }
-        public bool IsDisposed { get; set; }
+	[TreeDataSerializable]
+	public partial class UnitSortedDictionary<TKey, TValue> : SortedDictionary<TKey, TValue>, IUnit
+	{
+		[TreeDataIgnore]
+		public WorldTreeCore Core { get; set; }
+		[TreeDataIgnore]
+		public long Type { get; set; }
+		[TreeDataIgnore]
+		public bool IsFromPool { get; set; }
+		[TreeDataIgnore]
+		public bool IsDisposed { get; set; }
 
 		public void Dispose()
 		{
 			Core.PoolRecycle(this);
 		}
-        public void OnCreate() { }
+		public void OnCreate() { }
 		public virtual void OnDispose() => Clear();
 	}
 }

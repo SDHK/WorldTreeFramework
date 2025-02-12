@@ -31,7 +31,7 @@ namespace WorldTree.TreeDataFormatters
 			{
 				if (self.TryWriteDataHead(value, nameCode, 1, out T obj)) return;
 
-				//假设字典有一个数组字段
+				//迭代器类型可能有字段，所以不能当做数组类型储存，而是只能假设自己有一个数组字段进行储存
 				self.WriteUnmanaged(1683726967);
 				//序列化数组字段
 				self.WriteType(typeof(object));

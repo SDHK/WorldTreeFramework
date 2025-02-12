@@ -10,7 +10,6 @@ using System.Collections.Generic;
 
 namespace WorldTree.TreeDataFormatters
 {
-
 	public static class DictionaryFormatterRule
 	{
 		[TreeDataSpecial(1)]

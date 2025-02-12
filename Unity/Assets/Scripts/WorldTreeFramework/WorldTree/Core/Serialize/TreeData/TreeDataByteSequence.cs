@@ -617,6 +617,27 @@ namespace WorldTree
 
 		#region TreeData
 
+		///// <summary>
+		///// 获取数组
+		///// </summary>
+		//private static object GetTreeArray(this TreeDataArray self, Type type)
+		//{
+		//	if (self.IsDefault) return null;
+		//	NumberNodeBranch nodes = NodeBranchHelper.GetBranch<NumberNodeBranch>(self);
+		//	int count = nodes?.Count ?? 0;
+		//	Array array = Array.CreateInstance(type, self.LengthList.ToArray());
+
+		//	//self.Core.PoolGetUnit(out UnitList<object> list);
+
+		//	foreach (var node in nodes.GetEnumerable())
+		//	{
+
+		//	}
+
+
+		//	return array;
+		//}
+
 		/// <summary>
 		/// 设置
 		/// </summary>
@@ -628,35 +649,60 @@ namespace WorldTree
 			{
 				//int count = NodeBranchHelper.GetBranch<NumberNodeBranch>(treeData)?.Count ?? 0;
 				//写入类型码
-				//this.WriteString(treeDataArray.TypeName);//特别处理！！！
+				long typeCode = treeDataArray.TypeName.GetHash64();
+				//判断是否为基础类型
+				if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value)) typeCode = value;
+				this.WriteDynamic(typeCode);
+				//录入类型名称
 
 				//写入数组维度
 				this.WriteDynamic(~treeDataArray.LengthList.Count);
-				foreach (var item in treeDataArray.LengthList)
-				{
-					this.WriteDynamic(item);
-				}
+				//写入数组长度
+				foreach (var item in treeDataArray.LengthList) this.WriteDynamic(item);
+
+
+
+
+				if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
+
 				//判断这个类型是否是基础数组类型
-				//if (treeData.TypeName != null && TreeDataTypeHelper.TypeSizeDict.ContainsKey(treeData.TypeName.GetHash64()))
-				//{
-				//	//基础数组类型取值
-				//	if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(this.Core.TypeToCode(Type.GetType(treeData.TypeName)), out RuleList ruleList))
-				//	{
-				//		((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref treeData.Value, ref treeData.NameCode);
-				//	}
-				//}
-				//else //非基础数组类型，递归
-				//{
-				//	foreach (var item in NodeBranchHelper.GetBranch<NumberNodeBranch>(treeData))
-				//	{
-				//		SetTreeData(item as TreeData);
-				//	}
-				//}
+				if (type != null && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type.GetElementType()))
+				{
+					//基础数组类型取值
+					if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList))
+					{
+						//((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref treeDataArray, ref typeCode);//???
+					}
+				}
+				else //非基础数组类型，递归
+				{
+					foreach (var item in NodeBranchHelper.GetBranch<NumberNodeBranch>(treeData))
+					{
+						SetTreeData(item as TreeData);
+					}
+				}
+
+			}
+			else if (treeData is TreeDataValue treeDataValue)
+			{
+				long typeCode = treeDataValue.TypeName.GetHash64();
+				if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value)) typeCode = value;
+				//写入数值
+				if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+				{
+					int nameCode = -1;
+					((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(treeDataValue.Value), ref nameCode);
+				}
 			}
 			else
 			{
 				//写入类型码
-				//this.WriteDynamic(this.Core.TypeToCode(Type.GetType(treeData.TypeName)));
+				long typeCode = treeData.TypeName.GetHash64();
+				//判断是否为基础类型
+				if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value)) typeCode = value;
+				this.WriteDynamic(typeCode);
+				//录入类型名称
+
 				//写入字段数量
 				var branch = NodeBranchHelper.GetBranch<NumberNodeBranch>(treeData);
 				this.WriteDynamic(branch.Count);

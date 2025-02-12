@@ -11,6 +11,10 @@ using UnityEngine;
 
 namespace WorldTree
 {
+	/// <summary>
+	/// 测试事件法则
+	/// </summary>
+	public interface TestEvent : ISendRule<float, int, string> { }
 
 	/// <summary>
 	/// 测试节点
@@ -36,6 +40,7 @@ namespace WorldTree
 		, AsGuiUpdateTime
 		, AsRule<IRule>
 		, AsCurveEvaluate
+		, AsTestEvent
 	{
 		/// <summary>
 		/// 测试动画曲线

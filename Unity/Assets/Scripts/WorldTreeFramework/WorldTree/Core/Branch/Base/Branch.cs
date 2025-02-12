@@ -110,4 +110,84 @@ namespace WorldTree
 			foreach (var item in nodeDict) keyDict.TryAdd(item.Value.Id, item.Key);
 		}
 	}
+
+	/// <summary>
+	/// 有序世界树分支基类: 以键值排序，此添加项时有56B的GC
+	/// </summary>
+	public abstract class SortedBranch<K> : Unit, IBranch<K>, ISerializable
+	{
+		public int Count => nodeDict == null ? 0 : nodeDict.Count;
+
+		/// <summary>
+		/// 节点集合
+		/// </summary>
+		/// <remarks>键值，节点</remarks>
+		protected UnitSortedDictionary<K, INode> nodeDict;
+
+		/// <summary>
+		/// 键值集合
+		/// </summary>
+		/// <remarks>节点Id，键值</remarks>
+		[TreeDataIgnore]
+		protected UnitDictionary<long, K> keyDict;
+
+		public override void OnCreate()
+		{
+			Core.PoolGetUnit(out nodeDict);
+			Core.PoolGetUnit(out keyDict);
+		}
+
+		public bool Contains(K key) => nodeDict.ContainsKey(key);
+
+		public bool ContainsId(long id) => keyDict.ContainsKey(id);
+
+		public virtual bool TryAddNode<N>(K key, N node) where N : class, INode => nodeDict.TryAdd(key, node) && keyDict.TryAdd(node.Id, key);
+
+		public bool TryGetNodeKey(long nodeId, out K key) => keyDict.TryGetValue(nodeId, out key);
+
+		public bool TryGetNode(K key, out INode node) => this.nodeDict.TryGetValue(key, out node);
+
+		public bool TryGetNodeById(long id, out INode node) => (node = this.keyDict.TryGetValue(id, out K key) && this.nodeDict.TryGetValue(key, out node) ? node : null) != null;
+
+		public INode GetNode(K key) => this.nodeDict.TryGetValue(key, out INode node) ? node : null;
+
+		public INode GetNodeById(long id) => this.keyDict.TryGetValue(id, out K key) && this.nodeDict.TryGetValue(key, out INode node) ? node : null;
+
+		public void RemoveNode(long nodeId)
+		{
+			if (keyDict.TryGetValue(nodeId, out K key))
+			{
+				keyDict.Remove(nodeId);
+				nodeDict.Remove(key);
+			}
+		}
+
+		public void Clear()
+		{
+			nodeDict.Clear();
+			keyDict.Clear();
+		}
+
+		public IEnumerator<INode> GetEnumerator() => nodeDict.Values.GetEnumerator();
+
+		IEnumerator IEnumerable.GetEnumerator() => nodeDict.Values.GetEnumerator();
+
+		public IEnumerable<KeyValuePair<K, INode>> GetEnumerable() => nodeDict;
+
+
+		public override void OnDispose()
+		{
+			this.nodeDict.Dispose();
+			this.keyDict.Dispose();
+			this.nodeDict = null;
+			this.keyDict = null;
+		}
+		public virtual void OnSerialize() { }
+
+		public virtual void OnDeserialize()
+		{
+			keyDict.Clear();
+			foreach (var item in nodeDict) keyDict.TryAdd(item.Value.Id, item.Key);
+		}
+	}
 }

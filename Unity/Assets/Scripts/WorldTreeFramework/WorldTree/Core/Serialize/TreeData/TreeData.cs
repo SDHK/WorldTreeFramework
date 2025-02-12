@@ -65,8 +65,10 @@ namespace WorldTree
 	/// </summary>
 	public class TreeData : Node
 		, NumberNodeOf<TreeData>
+		, ChildOf<TreeData>
 		, TempOf<INode>
 		, AsNumberNodeBranch
+		, AsChildBranch
 		, AsAwake
 	{
 		/// <summary>
@@ -79,6 +81,8 @@ namespace WorldTree
 		/// </summary>
 		public bool IsDefault = false;
 
+
+
 		public override string ToString()
 		{
 			return $"[TreeData:{this.TypeName}]";
@@ -86,19 +90,35 @@ namespace WorldTree
 	}
 
 	/// <summary>
+	/// 树数据类型节点
+	/// </summary>
+	public class TreeDataClass : TreeData
+	{
+		/// <summary>
+		/// 节点ID列表
+		/// </summary>
+		public TreeList<long> nodeNumList;
+
+	}
+
+	/// <summary>
 	/// 树数据数组节点
 	/// </summary>
-	public class TreeDataArray : TreeData
+	public class TreeDataArray : TreeDataClass
 	{
 		/// <summary>
 		/// 维度长度列表
 		/// </summary>
 		public TreeList<int> LengthList;
 
+
+
 		public override string ToString()
 		{
 			return $"[TreeArray:{this.TypeName}]:[{string.Join(",", LengthList)}]";
 		}
+
+
 	}
 
 	/// <summary>
