@@ -58,15 +58,17 @@ namespace WorldTree
 
 			//读取桌面文件
 			bytes = File.ReadAllBytes(filePath);
-			var a = TreeDataHelper.GetTreeData(self, bytes);
-			//TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, bytes);
-			//node.SetParent(self);
+			TreeData treeData = TreeDataHelper.DeserializeTreeData(self, bytes);
+			byte[] treeDataBytes = TreeDataHelper.SerializeTreeData(treeData);
 
-			//self.treeData = node;
+			//====
+			TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, treeDataBytes);
+			node.SetParent(self);
+			self.treeData = node;
+			self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} ： {self.treeData.NodeRef.Value.Age}");
+			//====
 
-			//self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} ： {self.treeData.NodeRef.Value.Age}");
-
-			//self.Log($"反序列化！！!!?{bytes.Length}");
+			self.Log($"反序列化！！!!?{bytes.Length} : {treeDataBytes.Length}");
 			self.Log(NodeRule.ToStringDrawTree(self));
 		};
 
@@ -74,7 +76,7 @@ namespace WorldTree
 
 		static unsafe OnUpdate<TreeDataNodeDataTest2> OnUpdate = (self) =>
 		{
-			self.Log($"TreeDataNodeDataTest{self.Name}:{self.Age}");
+			//self.Log($"TreeDataNodeDataTest{self.Name}:{self.Age}");
 		};
 
 

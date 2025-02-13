@@ -640,6 +640,8 @@ namespace WorldTree
 		/// </summary>
 		public void SerializeTreeData(TreeData treeData)
 		{
+			Core.TypeInfo.Add(typeof(object));
+
 			Layer = 0;
 			SetTreeData(treeData);
 			WriteDataInfo();
@@ -661,18 +663,18 @@ namespace WorldTree
 				}
 				else //非基础类型，写入名称
 				{
-					codeToTypeNameDict.Add(typeCode, treeData.TypeName);
+					codeToTypeNameDict.TryAdd(typeCode, treeData.TypeName);
 				}
 				this.WriteDynamic(typeCode);
 
 				//写入数组维度
 				this.WriteDynamic(~treeDataArray.LengthList.Count);
 
-				if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
-
 				//判断这个类型是否是基础数组类型
-				if (type != null && TreeDataTypeHelper.TypeSizeDict.TryGetValue(type.GetElementType(), out int size))
+				if (type != null && type.IsArray && TreeDataTypeHelper.TypeSizeDict.TryGetValue(type.GetElementType(), out int size))
 				{
+					Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
+
 					int count = 1;
 					//写入数组长度
 					foreach (var item in treeDataArray.LengthList)
@@ -709,7 +711,7 @@ namespace WorldTree
 			else if (treeData is TreeDataValue treeDataValue)
 			{
 				long typeCode = treeDataValue.TypeName.GetHash64();
-				if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value)) typeCode = value;
+				//if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value)) typeCode = value;
 				//写入数值
 				if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 				{
@@ -728,17 +730,25 @@ namespace WorldTree
 				}
 				else //非基础类型，写入名称
 				{
-					codeToTypeNameDict.Add(typeCode, treeData.TypeName);
+					codeToTypeNameDict.TryAdd(typeCode, treeData.TypeName);
 				}
 				this.WriteDynamic(typeCode);
 
+				//空对象判断
+				if (treeData.IsDefault)
+				{
+					this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
+					return;
+				}
+
 				//写入字段数量
-				var branch = NodeBranchHelper.GetBranch<NumberNodeBranch>(treeData);
+				NumberNodeBranch branch = treeData.NumberNodeBranch();
+				//if (branch == null) return;
 				this.WriteDynamic(branch.Count);
 				foreach (var item in branch.GetEnumerable())
 				{
 					//写入字段名称码
-					this.WriteUnmanaged(item.Key);
+					this.WriteUnmanaged((int)item.Key);
 					SetTreeData(item.Value as TreeData);
 				}
 			}

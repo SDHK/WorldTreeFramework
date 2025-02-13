@@ -24,10 +24,10 @@ namespace WorldTree
 
 			self.AddTemp(out TreeDataByteSequence sequence);
 			if (self?.Parent == null) return null;
-			if (NodeBranchHelper.TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
-			{
-				branch.RemoveNode(self.Id);
-			}
+			//if (NodeBranchHelper.TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
+			//{
+			//	branch.RemoveNode(self.Id);
+			//}
 			sequence.Serialize(self);
 			byte[] bytes = sequence.ToBytes();
 			sequence.Dispose();
@@ -49,9 +49,21 @@ namespace WorldTree
 
 
 		/// <summary>
+		/// 序列化树数据
+		/// </summary>
+		public static byte[] SerializeTreeData(TreeData treeData)
+		{
+			treeData.Parent.AddTemp(out TreeDataByteSequence sequence);
+			sequence.SerializeTreeData(treeData);
+			byte[] bytes = sequence.ToBytes();
+			sequence.Dispose();
+			return bytes;
+		}
+
+		/// <summary>
 		/// 反序列化节点
 		/// </summary>
-		public static TreeData GetTreeData(INode self, byte[] bytes)
+		public static TreeData DeserializeTreeData(INode self, byte[] bytes)
 		{
 			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
 			TreeData treeData = sequence.DeserializeTreeData();
@@ -87,7 +99,7 @@ namespace WorldTree
 
 		public override string ToString()
 		{
-			return $"[TreeData:{this.TypeName}]";
+			return $"[TreeData:{this.TypeName}] {(IsDefault ? ": Null" : "")}";
 		}
 	}
 
