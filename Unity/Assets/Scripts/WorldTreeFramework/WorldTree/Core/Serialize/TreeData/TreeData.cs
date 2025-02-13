@@ -15,7 +15,7 @@ namespace WorldTree
 	public static class TreeDataHelper
 	{
 		/// <summary>
-		/// 序列化节点
+		/// 序列化数据节点类型
 		/// </summary>
 		public static byte[] SerializeNode(INode self)
 		{
@@ -24,10 +24,6 @@ namespace WorldTree
 
 			self.AddTemp(out TreeDataByteSequence sequence);
 			if (self?.Parent == null) return null;
-			//if (NodeBranchHelper.TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
-			//{
-			//	branch.RemoveNode(self.Id);
-			//}
 			sequence.Serialize(self);
 			byte[] bytes = sequence.ToBytes();
 			sequence.Dispose();
@@ -35,7 +31,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 反序列化节点
+		/// 反序列化数据节点类型
 		/// </summary>
 		public static N DeseralizeNode<N>(INode self, byte[] bytes)
 			where N : class, INode
@@ -61,7 +57,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 反序列化节点
+		/// 反序列化为通用数据结构
 		/// </summary>
 		public static TreeData DeserializeTreeData(INode self, byte[] bytes)
 		{

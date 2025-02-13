@@ -100,6 +100,8 @@ namespace WorldTree.SourceGenerator
 
 			Code.AppendLine($"				if (self.TryWriteDataHead(value, nameCode, {membersCount}, out {className} obj, {(isConstant ? "true" : "false")})) return;");
 
+			if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.ISerializable, out _))
+				Code.AppendLine($"				obj?.OnSerialize();");
 
 			if (fieldSymbols != null)
 			{

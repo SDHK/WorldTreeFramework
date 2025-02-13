@@ -200,11 +200,11 @@ namespace WorldTree
 			readBytePoint = 0;
 			readSegmentPoint = 0;
 
-			this.Log($"TypeCount: {codeToTypeNameDict.Count}");
-			foreach (var item in this.codeToTypeNameDict)
-			{
-				this.Log($"Type: {item.Value}");
-			}
+			//this.Log($"TypeCount: {codeToTypeNameDict.Count}");
+			//foreach (var item in this.codeToTypeNameDict)
+			//{
+			//	this.Log($"Type: {item.Value}");
+			//}
 		}
 
 		#endregion

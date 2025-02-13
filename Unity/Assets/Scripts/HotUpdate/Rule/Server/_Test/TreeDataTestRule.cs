@@ -23,52 +23,59 @@ namespace WorldTree
 
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
-			//self.Log($"测试数据更新！！!{typeof(OnAdd<TreeDataTest>).ToString()}");
-
-			//if (self != null) return;
-
 			self.AddChild(out self.treeData);
 			self.treeData.Name = "测试123";
 			self.treeData.Age = 18789;
+			//枚举
 			self.treeData.KeyCode = KeyCodeTest.C;
+			//多维数组
 			self.treeData.Ints = new int[][,,]{
-				new int[2,2,5]{ { { 1, 2, 30, 4, 5 }, { 20, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }, { 2, 5, 9, 5, 2 } } },
+				new int[2,2,5]{
+					{ { 1, 2, 30, 4, 5 }, { 20, 45, 90, 75, 23 } },
+					{ { 1, 23, 360, 84, 5 }, { 2, 5, 9, 5, 2 } }
+				},
 				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },
 			};
 
+			//子节点数据
 			self.treeData.AddChild(out TreeDataNodeDataTest2 child);
 			child.Name = "测试4658";
 			child.Age = 788723;
 
-
 			self.treeData.NodeRef = child;
 
+			//======================================
+
+			//实例 -> bytes
 			byte[] bytes = TreeDataHelper.SerializeNode(self.treeData);
 			string filePath = "C:\\Users\\admin\\Desktop\\新建文件夹\\TreeDataTest.bytes";
 
 			self.Log($"序列化字节长度{bytes.Length}\n");
 
+			self.treeData.Dispose();
+			self.treeData = null;
+
 			//保存到桌面文件
 			File.WriteAllBytes(filePath, bytes);
 			self.Log($"序列化保存！！!");
 
-			self.treeData.Dispose();
-			self.treeData = null;
-
-
 			//读取桌面文件
 			bytes = File.ReadAllBytes(filePath);
+
+			//bytes -> TreeData
 			TreeData treeData = TreeDataHelper.DeserializeTreeData(self, bytes);
+			//TreeData -> bytes
 			byte[] treeDataBytes = TreeDataHelper.SerializeTreeData(treeData);
 
-			//====
+			//bytes -> 实例
 			TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, treeDataBytes);
 			node.SetParent(self);
 			self.treeData = node;
-			self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} ： {self.treeData.NodeRef.Value.Age}");
 			//====
 
-			self.Log($"反序列化！！!!?{bytes.Length} : {treeDataBytes.Length}");
+			self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} ： {self.treeData.NodeRef.Value.Age}");
+
+			self.Log("\n通用结构打印：\n");
 			self.Log(NodeRule.ToStringDrawTree(self));
 		};
 
