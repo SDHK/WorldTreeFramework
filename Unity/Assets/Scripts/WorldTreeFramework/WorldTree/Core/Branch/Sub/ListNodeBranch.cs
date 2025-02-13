@@ -14,7 +14,7 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 	/// <summary>
-	/// 列表分支，Key为-1添加到末尾
+	/// 列表分支，Key是-1或Count，为添加到末尾
 	/// </summary>
 	[TreeDataSerializable]
 	public partial class ListNodeBranch : Unit, IBranch<int>, ISerializable
@@ -46,7 +46,7 @@ namespace WorldTree
 
 		public virtual bool TryAddNode<N>(int key, N node) where N : class, INode
 		{
-			if (key == -1)
+			if (key == -1 || key == nodeList.Count)
 			{
 				nodeList.Add(node);
 				return keyDict.TryAdd(node.Id, key);

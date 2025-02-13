@@ -45,6 +45,19 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 获取数组对象
+		/// </summary>
+		public static Array PoolGetArray(this WorldTreeCore self, Type type, int length)
+		{
+			if (self.ArrayPoolManager != null)
+			{
+				return self.ArrayPoolManager.Get(type, length);
+			}
+			return Array.CreateInstance(type, length);
+		}
+
+
+		/// <summary>
 		/// 回收数组
 		/// </summary>
 		public static void PoolRecycle(this WorldTreeCore self, Array obj, bool clearArray = false)

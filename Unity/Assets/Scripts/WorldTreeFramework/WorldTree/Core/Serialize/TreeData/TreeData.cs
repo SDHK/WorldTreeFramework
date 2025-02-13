@@ -54,7 +54,7 @@ namespace WorldTree
 		public static TreeData GetTreeData(INode self, byte[] bytes)
 		{
 			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
-			TreeData treeData = sequence.GetTreeData();
+			TreeData treeData = sequence.DeserializeTreeData();
 			sequence.Dispose();
 			return treeData;
 		}
@@ -65,10 +65,12 @@ namespace WorldTree
 	/// </summary>
 	public class TreeData : Node
 		, NumberNodeOf<TreeData>
+		, ListNodeOf<TreeData>
 		, ChildOf<TreeData>
 		, TempOf<INode>
 		, AsNumberNodeBranch
 		, AsChildBranch
+		, AsListNodeBranch
 		, AsAwake
 	{
 		/// <summary>
