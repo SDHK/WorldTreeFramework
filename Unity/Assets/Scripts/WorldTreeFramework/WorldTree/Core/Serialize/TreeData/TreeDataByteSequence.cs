@@ -28,6 +28,11 @@ namespace WorldTree
 		/// 自动适配类型
 		/// </summary>
 		public const int AUTO_OBJECT = 0;
+
+		/// <summary>
+		/// 反序列化自身类型模式
+		/// </summary>
+		public const int DESERIALIZE_SELF_MODE = -1;
 	}
 
 	/// <summary>
@@ -303,7 +308,8 @@ namespace WorldTree
 			{
 				typeMode = SerializedTypeMode.ObjectType;
 			}
-
+			//假如是枚举类型，则获取枚举基础类型
+			if (type.IsEnum) type = type.GetEnumUnderlyingType();
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 
@@ -329,6 +335,8 @@ namespace WorldTree
 		public void WriteValue(Type type, in object value, SerializedTypeMode typeMode = SerializedTypeMode.DataType)
 		{
 			Layer++;
+			//假如是枚举类型，则获取枚举基础类型
+			if (type.IsEnum) type = type.GetEnumUnderlyingType();
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 
@@ -455,7 +463,7 @@ namespace WorldTree
 		/// <summary>
 		/// 指定类型读取值
 		/// </summary>
-		public void ReadValue(Type type, ref object value, int nameCode = -1)
+		public void ReadValue(Type type, ref object value, int fieldNameCode = TreeDataCode.DESERIALIZE_SELF_MODE)
 		{
 			Layer++;
 			if (Layer > LayerMax)
@@ -463,15 +471,18 @@ namespace WorldTree
 				this.LogError("反序列化超出最大层级");
 				return;
 			}
+			//假如是枚举类型，则获取枚举基础类型
+			if (type.IsEnum) type = type.GetEnumUnderlyingType();
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 
 			//动态支持多维数组
 			if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
+			//if(type.IsEnum)
 
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
-				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value, ref nameCode);
+				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value, ref fieldNameCode);
 			}
 			else
 			{
@@ -644,7 +655,6 @@ namespace WorldTree
 			}
 		}
 
-
 		/// <summary>
 		/// 读取字符串
 		/// </summary>
@@ -672,7 +682,6 @@ namespace WorldTree
 			ref byte src = ref GetReadRefByte(length);
 			return new string(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.As<byte, char>(ref src), (int)(length * 0.5f)));
 		}
-
 
 		/// <summary>
 		/// 读取字符串
@@ -921,8 +930,8 @@ namespace WorldTree
 				//基础类型取值
 				if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeHashCode, out RuleList ruleList))
 				{
-					int nameCode = 0;
-					((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref treeValue.Value, ref nameCode);
+					int fieldNameCode = 0;
+					((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref treeValue.Value, ref fieldNameCode);
 				}
 				return data;
 			}
@@ -966,9 +975,9 @@ namespace WorldTree
 					//基础数组类型取值
 					if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 					{
-						int namecode = -1;
+						int fieldNameCode = TreeDataCode.DESERIALIZE_SELF_MODE;
 						object obj = null;
-						((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref obj, ref namecode);
+						((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref obj, ref fieldNameCode);
 						Array array = (obj as Array);
 						int i = 0;
 						foreach (var item in array)

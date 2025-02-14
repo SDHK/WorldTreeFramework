@@ -42,9 +42,9 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize : TreeDataDeserializeRule<short>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj, ref int fieldNameCode)
 			{
-				if (nameCode != -1) { obj = self.ReadUnmanaged<short>(); return; }
+				if (fieldNameCode != TreeDataCode.DESERIALIZE_SELF_MODE) { obj = self.ReadUnmanaged<short>(); return; }
 				if (self.TryReadType(out Type dataType) && typeDict.TryGetValue(dataType, out var func))
 					obj = func(self);
 				else

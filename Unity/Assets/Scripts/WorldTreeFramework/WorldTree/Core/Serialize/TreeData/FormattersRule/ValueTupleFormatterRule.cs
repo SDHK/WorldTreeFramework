@@ -23,7 +23,7 @@ namespace WorldTree.TreeDataFormatters
 		}
 		class Deserialize<T> : TreeDataDeserializeRule<ValueTuple<T>>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (self.TryReadArrayHead(typeof(ValueTuple<T>), ref value, 1)) return;
 				self.ReadUnmanaged(out int _);
@@ -50,7 +50,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize<T1, T2> : TreeDataDeserializeRule<ValueTuple<T1, T2>>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2>)))
 				{
@@ -89,7 +89,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize<T1, T2, T3> : TreeDataDeserializeRule<ValueTuple<T1, T2, T3>>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3>)))
 				{
@@ -130,7 +130,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize<T1, T2, T3, T4> : TreeDataDeserializeRule<ValueTuple<T1, T2, T3, T4>>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4>)))
 				{
@@ -173,7 +173,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize<T1, T2, T3, T4, T5> : TreeDataDeserializeRule<ValueTuple<T1, T2, T3, T4, T5>>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4, T5>)))
 				{
@@ -218,7 +218,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize<T1, T2, T3, T4, T5, T6> : TreeDataDeserializeRule<ValueTuple<T1, T2, T3, T4, T5, T6>>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4, T5, T6>)))
 				{
@@ -265,7 +265,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize<T1, T2, T3, T4, T5, T6, T7> : TreeDataDeserializeRule<ValueTuple<T1, T2, T3, T4, T5, T6, T7>>
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7>)))
 				{
@@ -316,7 +316,7 @@ namespace WorldTree.TreeDataFormatters
 		class Deserialize<T1, T2, T3, T4, T5, T6, T7, TRest> : TreeDataDeserializeRule<ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>>
 			where TRest : struct
 		{
-			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>)))
 				{

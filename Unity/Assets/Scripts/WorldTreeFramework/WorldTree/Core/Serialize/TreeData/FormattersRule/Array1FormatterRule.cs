@@ -12,6 +12,21 @@ using System.Runtime.InteropServices;
 
 namespace WorldTree.TreeDataFormatters
 {
+	/// <summary>
+	/// ces 
+	/// </summary>
+	public enum SerializedTypeMode1
+	{
+		/// <summary>
+		/// a
+		/// </summary>
+		ObjectType,
+		/// <summary>
+		/// b
+		/// </summary>
+		DataType,
+	}
+
 	public static class Array1FormatterRule
 	{
 		/// <summary>
@@ -21,8 +36,10 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
+				Type type = typeof(T);
+				//if (type.IsEnum) type = Enum.GetUnderlyingType(type);
 				//判断是否为基础类型，基础类型需要写入完整数组类型
-				if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(typeof(T)))
+				if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type))
 					typeMode = SerializedTypeMode.DataType;
 
 				if (self.TryWriteDataHead(value, typeMode, ~1, out T[] obj)) return;
@@ -31,10 +48,8 @@ namespace WorldTree.TreeDataFormatters
 				self.WriteDynamic(obj.Length);
 				if (obj.Length == 0) return;
 
-				//type.GetEnumUnderlyingType();？？枚举类型的基础类型优化,如果有则跳跃数据也需要
-
 				//判断是否为基础类型
-				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int size))
 				{
 					//获取数组数据长度
 					var srcLength = size * obj.Length;
@@ -66,7 +81,7 @@ namespace WorldTree.TreeDataFormatters
 		/// </summary>
 		private class Deserialize<T> : TreeDataDeserializeRule<T[]>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (self.TryReadArrayHead(typeof(T[]), ref value, 1)) return;
 
@@ -80,7 +95,9 @@ namespace WorldTree.TreeDataFormatters
 				//假如数组为空或长度不一致，那么重新分配
 				if (value == null || ((T[])value).Length != length) value = new T[length];
 
-				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(typeof(T), out int size))
+				Type type = typeof(T);
+				//if (type.IsEnum) type = Enum.GetUnderlyingType(type);
+				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int size))
 				{
 					var byteCount = length * size;
 					ref byte spanRef = ref self.GetReadRefByte(byteCount);

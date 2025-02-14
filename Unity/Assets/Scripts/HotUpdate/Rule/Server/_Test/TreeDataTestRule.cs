@@ -36,6 +36,7 @@ namespace WorldTree
 				},
 				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },
 			};
+			self.treeData.KeyCodes = [KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B];
 
 			//子节点数据
 			self.treeData.AddChild(out TreeDataNodeDataTest2 child);

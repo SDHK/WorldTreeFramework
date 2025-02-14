@@ -52,11 +52,11 @@ namespace WorldTree.TreeDataFormatters
 			/// </summary>
 			public abstract void ForeachRead(TreeDataByteSequence self, T obj);
 
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (nameCode != -1)
+				if (fieldNameCode != TreeDataCode.DESERIALIZE_SELF_MODE)
 				{
-					SwitchRead(self, ref value, nameCode);
+					SwitchRead(self, ref value, fieldNameCode);
 					return;
 				}
 				if (self.TryReadClassHead(typeof(T), ref value, out int count)) return;
@@ -64,18 +64,18 @@ namespace WorldTree.TreeDataFormatters
 				if (value is not T) value = new T();
 				for (int i = 0; i < count; i++)
 				{
-					self.ReadUnmanaged(out nameCode);
-					SwitchRead(self, ref value, nameCode);
+					self.ReadUnmanaged(out fieldNameCode);
+					SwitchRead(self, ref value, fieldNameCode);
 				}
 			}
 
 			/// <summary>
 			/// 字段读取
 			/// </summary>
-			private void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)
+			private void SwitchRead(TreeDataByteSequence self, ref object value, int fieldNameCode)
 			{
 				if (value is not T obj) return;
-				switch (nameCode)
+				switch (fieldNameCode)
 				{
 					case 1683726967:
 						{

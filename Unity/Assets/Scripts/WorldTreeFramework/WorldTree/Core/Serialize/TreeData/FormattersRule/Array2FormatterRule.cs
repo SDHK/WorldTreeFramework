@@ -6,6 +6,7 @@
 * 描述：
 
 */
+using System;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree.TreeDataFormatters
@@ -19,8 +20,10 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
+				Type type = typeof(T);
+				//if (type.IsEnum) type = Enum.GetUnderlyingType(type);
 				//判断是否为基础类型，基础类型需要写入完整数组类型
-				if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(typeof(T)))
+				if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type))
 					typeMode = SerializedTypeMode.DataType;
 
 				if (self.TryWriteDataHead(value, typeMode, ~2, out T[,] obj)) return;
@@ -32,7 +35,7 @@ namespace WorldTree.TreeDataFormatters
 				self.WriteDynamic(dim2);
 
 				//判断是否为基础类型
-				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(typeof(T), out int size))
+				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int size))
 				{
 					int elementSize = dim2 * size;
 					long totalSize = (long)dim1 * elementSize;
@@ -75,7 +78,7 @@ namespace WorldTree.TreeDataFormatters
 		/// </summary>
 		private class Deserialize<T> : TreeDataDeserializeRule<T[,]>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (self.TryReadArrayHead(typeof(T[,]), ref value, 2)) return;
 
@@ -88,7 +91,9 @@ namespace WorldTree.TreeDataFormatters
 					value = new T[dim1, dim2];
 				}
 
-				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(typeof(T), out int size))
+				Type type = typeof(T);
+				//if (type.IsEnum) type = Enum.GetUnderlyingType(type);
+				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int size))
 				{
 					int elementSize = dim2 * size;
 					long totalSize = (long)dim1 * elementSize;

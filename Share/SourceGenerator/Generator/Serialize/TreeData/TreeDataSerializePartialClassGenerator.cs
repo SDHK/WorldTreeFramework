@@ -141,13 +141,13 @@ namespace WorldTree.SourceGenerator
 
 			Code.AppendLine($"		class TreeDataDeserialize : TreeDataDeserializeRule<{className}>");
 			Code.AppendLine("		{");
-			Code.AppendLine("			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)");
+			Code.AppendLine("			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)");
 			Code.AppendLine("			{");
 			if (baseName != null)
 			{
-				Code.AppendLine("				if (nameCode != -1)");
+				Code.AppendLine("				if (fieldNameCode != TreeDataCode.DESERIALIZE_SELF_MODE)");
 				Code.AppendLine("				{");
-				Code.AppendLine("					SwitchRead(self, ref value, nameCode);");
+				Code.AppendLine("					SwitchRead(self, ref value, fieldNameCode);");
 				Code.AppendLine("					return;");
 				Code.AppendLine("				}");
 			}
@@ -191,8 +191,8 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("				for (int i = 0; i < count; i++)");
 				Code.AppendLine("				{");
 
-				Code.AppendLine("					self.ReadUnmanaged(out nameCode);");
-				Code.AppendLine("					SwitchRead(self, ref value, nameCode);");
+				Code.AppendLine("					self.ReadUnmanaged(out fieldNameCode);");
+				Code.AppendLine("					SwitchRead(self, ref value, fieldNameCode);");
 				Code.AppendLine("				}");
 			}
 
@@ -209,10 +209,10 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("			/// <summary>");
 				Code.AppendLine("			/// 字段读取");
 				Code.AppendLine("			/// </summary>");
-				Code.AppendLine($"			private static void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)");
+				Code.AppendLine($"			private static void SwitchRead(TreeDataByteSequence self, ref object value, int fieldNameCode)");
 				Code.AppendLine("			{");
 				Code.AppendLine($"				if (value is not {className} obj) return;");
-				Code.AppendLine("				switch (nameCode)");
+				Code.AppendLine("				switch (fieldNameCode)");
 				Code.AppendLine("				{");
 
 				foreach (ISymbol symbol in fieldSymbols)
@@ -248,7 +248,7 @@ namespace WorldTree.SourceGenerator
 
 				if (baseName != null)
 				{
-					Code.AppendLine($"					default: self.ReadValue(typeof({baseName}), ref value, nameCode); break;");
+					Code.AppendLine($"					default: self.ReadValue(typeof({baseName}), ref value, fieldNameCode); break;");
 				}
 				else
 				{

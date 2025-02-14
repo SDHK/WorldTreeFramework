@@ -28,7 +28,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Deserialize<TKey, TValue> : TreeDataDeserializeRule<KeyValuePair<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (self.TryReadClassHead(typeof(KeyValuePair<TKey, TValue>), ref value, out int count)) return;
 
@@ -36,9 +36,9 @@ namespace WorldTree.TreeDataFormatters
 				TValue val = default;
 				for (int i = 0; i < count; i++)
 				{
-					self.ReadUnmanaged(out nameCode);
+					self.ReadUnmanaged(out fieldNameCode);
 
-					switch (nameCode)
+					switch (fieldNameCode)
 					{
 						case -853882612: key = self.ReadValue<TKey>(); break;
 						case -783812246: val = self.ReadValue<TValue>(); break;

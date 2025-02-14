@@ -117,6 +117,11 @@ namespace WorldTree
 		public int[][,,] Ints;
 
 		/// <summary>
+		/// 测试枚举数组
+		/// </summary>
+		public KeyCodeTest[] KeyCodes;
+
+		/// <summary>
 		/// 测试节点数据2
 		/// </summary>
 		public NodeRef<TreeDataNodeDataTest2> NodeRef;

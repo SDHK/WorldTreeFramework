@@ -88,11 +88,6 @@ namespace WorldTree
 			where T1 : unmanaged
 			where T2 : unmanaged;
 
-		/// <summary>
-		/// 危险写入非托管数组
-		/// </summary>
-		public void DangerousWriteUnmanagedArray<T>(T[] value);
-
 		#endregion
 
 
@@ -114,11 +109,6 @@ namespace WorldTree
 		public void ReadUnmanaged<T1, T2>(out T1 value1, out T2 value2)
 			where T1 : unmanaged
 			where T2 : unmanaged;
-
-		/// <summary>
-		/// 危险读取非托管数组
-		/// </summary>
-		public unsafe void DangerousReadUnmanagedArray<T>(ref T[] value);
 
 		#endregion
 

@@ -25,7 +25,7 @@ namespace WorldTree
 		/// <summary>
 		/// 字符串编码
 		/// </summary>
-		public bool Utf8 = false;
+		public bool Utf8 = true;
 
 		/// <summary>
 		/// 序列段列表
