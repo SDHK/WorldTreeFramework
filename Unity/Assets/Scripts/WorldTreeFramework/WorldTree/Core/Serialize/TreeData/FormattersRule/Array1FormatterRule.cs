@@ -19,13 +19,13 @@ namespace WorldTree.TreeDataFormatters
 		/// </summary>
 		private class Serialize<T> : TreeDataSerializeRule<T[]>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				//判断是否为基础类型，基础类型需要写入完整数组类型
-				if (nameCode == -2 && TreeDataTypeHelper.TypeSizeDict.ContainsKey(typeof(T)))
-					nameCode = -1;
+				if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(typeof(T)))
+					typeMode = SerializedTypeMode.DataType;
 
-				if (self.TryWriteDataHead(value, nameCode, ~1, out T[] obj)) return;
+				if (self.TryWriteDataHead(value, typeMode, ~1, out T[] obj)) return;
 
 				//写入数组数据长度
 				self.WriteDynamic(obj.Length);

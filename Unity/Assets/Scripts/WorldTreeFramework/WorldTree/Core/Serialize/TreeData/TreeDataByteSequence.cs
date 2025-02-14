@@ -8,6 +8,8 @@
 */
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace WorldTree
 {
@@ -18,14 +20,30 @@ namespace WorldTree
 	public static class TreeDataCode
 	{
 		/// <summary>
-		/// 空对象
+		/// 空对象标记
 		/// </summary>
-		public const short NULL_OBJECT = -1;
+		public const int NULL_OBJECT = -1;
 
 		/// <summary>
 		/// 自动适配类型
 		/// </summary>
-		public const short AUTO = 0;
+		public const int AUTO_OBJECT = 0;
+	}
+
+	/// <summary>
+	/// 数据写入类型模式
+	/// </summary>
+	public enum SerializedTypeMode
+	{
+		/// <summary>
+		/// 写入真实类型
+		/// </summary>
+		DataType = -1,
+
+		/// <summary>
+		/// 写入Object类型
+		/// </summary>
+		ObjectType = -2,
 	}
 
 	public static class TreeDataByteSequenceRule
@@ -34,7 +52,6 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self)
 			{
-
 				self.GetBaseRule<TreeDataByteSequence, ByteSequence, Add>().Send(self);
 				self.Core.PoolGetUnit(out self.TypeToCodeDict);
 				self.Core.PoolGetUnit(out self.codeToTypeNameDict);
@@ -216,19 +233,19 @@ namespace WorldTree
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="value">类型</param>
-		/// <param name="nameCode">字段码</param>
+		/// <param name="typeMode">字段码</param>
 		/// <param name="count">字段数或数组维度</param>
 		/// <param name="obj">返回对象</param>
 		/// <returns>是否为Null退出</returns>
-		public bool TryWriteDataHead<T>(in object value, int nameCode, int count, out T obj, bool isIgnoreName = false)
+		public bool TryWriteDataHead<T>(in object value, SerializedTypeMode typeMode, int count, out T obj, bool isIgnoreName = false)
 		{
-			switch (nameCode)
+			switch (typeMode)
 			{
-				case -2:
+				case SerializedTypeMode.ObjectType:
 					this.WriteType(typeof(object));
 					if (this.WriteCheckNull(value, count, out obj)) return true;
 					break;
-				case -1:
+				case SerializedTypeMode.DataType:
 					this.WriteType(typeof(T), isIgnoreName);
 					if (this.WriteCheckNull(value, count, out obj)) return true;
 					break;
@@ -236,8 +253,6 @@ namespace WorldTree
 			obj = (T)value;
 			return false;
 		}
-
-
 
 
 		/// <summary>
@@ -255,23 +270,20 @@ namespace WorldTree
 				}
 			}
 			obj = default;
-			this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
+			this.WriteDynamic(TreeDataCode.NULL_OBJECT);
 			return true;
 		}
 
 		/// <summary>
 		/// 写入类型，默认写入类型名称
 		/// </summary>
-		public void WriteType(Type type, bool isIgnoreName = false)
-		{
-			this.WriteDynamic(GetTypeCode(type, isIgnoreName));
-		}
+		public void WriteType(Type type, bool isIgnoreName = false) => this.WriteDynamic(GetTypeCode(type, isIgnoreName));
 
 		/// <summary>
 		/// 写入值
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteValue<T>(in T value, int nameCode = -1)
+		public void WriteValue<T>(in T value, SerializedTypeMode typeMode = SerializedTypeMode.DataType)
 		{
 			Layer++;
 			if (Layer > LayerMax)
@@ -281,15 +293,15 @@ namespace WorldTree
 			}
 			Type originalType = typeof(T);
 			Type type = value?.GetType();
-			//如果类型为空，或者类型和原始类型一致，则标记为0，不写入类型。
+			//如果类型为空，或者类型和原始类型一致，写入Object类型。
 			if (type == null)
 			{
 				type = originalType;
-				nameCode = -2;
+				typeMode = SerializedTypeMode.ObjectType;
 			}
 			else if (type == originalType)
 			{
-				nameCode = -2;
+				typeMode = SerializedTypeMode.ObjectType;
 			}
 
 			long typeCode = this.Core.TypeToCode(type);
@@ -300,22 +312,21 @@ namespace WorldTree
 
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
-				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value), ref nameCode);
+				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value), ref typeMode);
 			}
 			else
 			{
 				//不支持的类型，写入空对象
-				this.WriteType(typeof(object), false);
-				this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
+				this.WriteType(typeof(object));
+				this.WriteDynamic(TreeDataCode.NULL_OBJECT);
 			}
 			Layer--;
 		}
 
-
 		/// <summary>
 		/// 指定类型写入值
 		/// </summary>
-		public void WriteValue(Type type, in object value, int nameCode = -1)
+		public void WriteValue(Type type, in object value, SerializedTypeMode typeMode = SerializedTypeMode.DataType)
 		{
 			Layer++;
 			long typeCode = this.Core.TypeToCode(type);
@@ -326,21 +337,100 @@ namespace WorldTree
 
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
-				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value), ref nameCode);
+				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value), ref typeMode);
 			}
 			else
 			{
 				//不支持的类型，写入空对象
 				this.WriteType(typeof(object));
-				this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
+				this.WriteDynamic(TreeDataCode.NULL_OBJECT);
 			}
 			Layer--;
+		}
+
+		/// <summary>
+		/// 写入字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteString(string value)
+		{
+			if (Utf8)
+				WriteUtf8(value);
+			else
+				WriteUtf16(value);
+		}
+
+		/// <summary>
+		/// 写入字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteUtf16(string value)
+		{
+			if (value == null)
+			{
+				WriteUnmanaged(TreeDataCode.NULL_OBJECT);
+				return;
+			}
+			if (value.Length == 0)
+			{
+				WriteUnmanaged(0);
+				return;
+			}
+
+			//获取字符串长度,因为 UTF-16 编码的每个字符占用 2 个字节，checked 防止溢出int值
+			var copyByteCount = checked(value.Length * 2);
+			//这行代码获取一个引用，指向一个足够大的缓冲区，以容纳字符串的字节数和额外的 4 个字节。
+			ref byte dest = ref GetWriteRefByte(copyByteCount + 4);
+			//这行代码将字符串的长度（以字节为单位）写入缓冲区的前 4 个字节
+			Unsafe.WriteUnaligned(ref dest, value.Length * 2);
+			//这行代码将字符串的实际字节数据复制到缓冲区中，跳过前 4 个字节
+			MemoryMarshal.AsBytes(value.AsSpan()).CopyTo(MemoryMarshal.CreateSpan(ref Unsafe.Add(ref dest, 4), copyByteCount));
+		}
+
+		/// <summary>
+		/// 写入字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void WriteUtf8(string value)
+		{
+			if (value == null)
+			{
+				WriteUnmanaged(TreeDataCode.NULL_OBJECT);
+				return;
+			}
+			if (value.Length == 0)
+			{
+				WriteUnmanaged(0);
+				return;
+			}
+
+			// (int utf16-length, int utf8-byte-count, utf8-bytes)
+			ReadOnlySpan<char> source = value.AsSpan();
+
+			// 由于不知道空间大小，所以字符数*3只是获取一个可能的最大空间，字符最小可能是只占1个字节
+			int maxByteCount = (source.Length + 1) * 3;
+
+			//申请总空间，包含utf8长度和数据
+
+			// 头部需要写入byte真实长度，int长度偏移+4
+			ref byte destPointer = ref GetWriteRefByte(maxByteCount + 4);
+
+			//申请数据空间，byte长度int要写到头部，所以要偏移4
+			Span<byte> dest = MemoryMarshal.CreateSpan(ref Unsafe.Add(ref destPointer, 4), maxByteCount);
+
+			// 数据写入到dest，此时拿到了byte的真实长度
+			int bytesWritten = Encoding.UTF8.GetBytes(value, dest);
+
+			//~0 的结果是 -1，但前面if挡住了，所以不会出现-1，所以可以用来区分8位和16位
+			Unsafe.WriteUnaligned(ref destPointer, bytesWritten);
+
+			// 重新定位指针，裁剪空间
+			WriteBack(maxByteCount - bytesWritten);
 		}
 
 		#endregion
 
 		#region 读取
-
 
 		/// <summary>
 		/// 读取值
@@ -394,11 +484,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试读取类型
 		/// </summary>
-		public bool TryReadType(out Type type)
-		{
-			this.ReadDynamic(out long typeCode);
-			return TryGetType(typeCode, out type);
-		}
+		public bool TryReadType(out Type type) => TryGetType(this.ReadDynamic(out long _), out type);
 
 		/// <summary>
 		/// 尝试读取类型数据头部
@@ -446,7 +532,7 @@ namespace WorldTree
 			{
 				countPoint = readPoint;
 				this.ReadDynamic(out count);
-				if (count != ValueMarkCode.NULL_OBJECT) return false;
+				if (count != TreeDataCode.NULL_OBJECT) return false;
 				value = default;
 				return true;
 			}
@@ -459,7 +545,7 @@ namespace WorldTree
 				{
 					countPoint = readPoint;
 					this.ReadDynamic(out count);
-					if (count != ValueMarkCode.NULL_OBJECT) return false;
+					if (count != TreeDataCode.NULL_OBJECT) return false;
 					value = default;
 					return true;
 				}
@@ -468,7 +554,7 @@ namespace WorldTree
 				{
 					countPoint = readPoint;
 					this.ReadDynamic(out count);
-					if (count != ValueMarkCode.NULL_OBJECT) return false;
+					if (count != TreeDataCode.NULL_OBJECT) return false;
 					value = default;
 					return true;
 				}
@@ -484,13 +570,12 @@ namespace WorldTree
 				countPoint = readPoint;
 				//不是基础类型则尝试读取
 				this.ReadDynamic(out count);
-				if (count != ValueMarkCode.NULL_OBJECT) return false;
+				if (count != TreeDataCode.NULL_OBJECT) return false;
 			}
 			//数据跳跃
 			SkipData(dataType);
 			return true;
 		}
-
 
 		/// <summary>
 		/// 尝试以子类型读取
@@ -559,6 +644,51 @@ namespace WorldTree
 			}
 		}
 
+
+		/// <summary>
+		/// 读取字符串
+		/// </summary>
+		public string ReadString()
+		{
+			if (ReadUnmanaged(out int length) == TreeDataCode.NULL_OBJECT) return null;
+			else if (length == 0) return string.Empty;
+			if (Utf8)
+				return ReadUtf8(length);
+			else
+				return ReadUtf16(length);
+		}
+
+		/// <summary>
+		/// 读取字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public string ReadUtf16(int length)
+		{
+			if (ReadRemain < length)
+			{
+				this.LogError($"字符串长度超出数据长度: {length}.");
+				return null;
+			}
+			ref byte src = ref GetReadRefByte(length);
+			return new string(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.As<byte, char>(ref src), (int)(length * 0.5f)));
+		}
+
+
+		/// <summary>
+		/// 读取字符串
+		/// </summary>
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public string ReadUtf8(int length)
+		{
+			if (ReadRemain < length)
+			{
+				this.LogError($"字符串长度超出数据长度: {length}.");
+				return null;
+			}
+			ref var spanRef = ref GetReadRefByte(length);
+			return Encoding.UTF8.GetString(MemoryMarshal.CreateReadOnlySpan(ref spanRef, length));
+		}
+
 		#endregion
 
 		#region 跳跃
@@ -594,7 +724,7 @@ namespace WorldTree
 			//读取字段数量
 			this.ReadDynamic(out int count);
 			//空对象判断
-			if (count == ValueMarkCode.NULL_OBJECT) return;
+			if (count == TreeDataCode.NULL_OBJECT) return;
 
 			//Type可能不存在的情况下，负数为数组类型
 			if (count < 0)
@@ -629,6 +759,16 @@ namespace WorldTree
 					SkipData();
 				}
 			}
+		}
+
+		/// <summary>
+		/// 跳过字符串
+		/// </summary>
+		public void SkipString()
+		{
+			if (ReadUnmanaged(out int length) == TreeDataCode.NULL_OBJECT) return;
+			else if (length == 0) return;
+			ReadSkip(length);
 		}
 
 		#endregion
@@ -711,12 +851,11 @@ namespace WorldTree
 			else if (treeData is TreeDataValue treeDataValue)
 			{
 				long typeCode = treeDataValue.TypeName.GetHash64();
-				//if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value)) typeCode = value;
 				//写入数值
 				if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 				{
-					int nameCode = -1;
-					((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(treeDataValue.Value), ref nameCode);
+					SerializedTypeMode typeMode = SerializedTypeMode.DataType;
+					((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(treeDataValue.Value), ref typeMode);
 				}
 			}
 			else
@@ -737,13 +876,12 @@ namespace WorldTree
 				//空对象判断
 				if (treeData.IsDefault)
 				{
-					this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
+					this.WriteDynamic(TreeDataCode.NULL_OBJECT);
 					return;
 				}
 
 				//写入字段数量
 				NumberNodeBranch branch = treeData.NumberNodeBranch();
-				//if (branch == null) return;
 				this.WriteDynamic(branch.Count);
 				foreach (var item in branch.GetEnumerable())
 				{
@@ -792,7 +930,7 @@ namespace WorldTree
 			//读取字段数量
 			this.ReadDynamic(out int count);
 			//空对象判断
-			if (count == ValueMarkCode.NULL_OBJECT)
+			if (count == TreeDataCode.NULL_OBJECT)
 			{
 				data = AddTreeData(node, out TreeData _, number, isArray);
 				data.TypeName = type?.ToString();

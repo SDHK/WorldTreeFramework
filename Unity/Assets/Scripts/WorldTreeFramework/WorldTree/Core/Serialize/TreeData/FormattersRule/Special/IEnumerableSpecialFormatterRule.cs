@@ -27,9 +27,9 @@ namespace WorldTree.TreeDataFormatters
 			/// </summary>
 			public abstract void ForeachWrite(TreeDataByteSequence self, T obj);
 
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				if (self.TryWriteDataHead(value, nameCode, 1, out T obj)) return;
+				if (self.TryWriteDataHead(value, typeMode, 1, out T obj)) return;
 
 				//迭代器类型可能有字段，所以不能当做数组类型储存，而是只能假设自己有一个数组字段进行储存
 				self.WriteUnmanaged(1683726967);

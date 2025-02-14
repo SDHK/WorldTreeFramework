@@ -33,7 +33,7 @@ namespace WorldTree.TreeDataFormatters
 
 		class Serialize : TreeDataSerializeRule<double>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object obj, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object obj, ref SerializedTypeMode typeMode)
 			{
 				self.WriteType(typeof(double));
 				self.WriteUnmanaged((double)obj);

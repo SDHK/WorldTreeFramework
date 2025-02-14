@@ -120,6 +120,10 @@ namespace WorldTree
 		/// 测试节点数据2
 		/// </summary>
 		public NodeRef<TreeDataNodeDataTest2> NodeRef;
+		/// <summary>
+		/// a
+		/// </summary>
+		public SerializedTypeMode typeMode;
 	}
 
 	/// <summary>

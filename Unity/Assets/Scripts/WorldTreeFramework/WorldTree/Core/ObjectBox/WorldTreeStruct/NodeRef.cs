@@ -15,9 +15,9 @@ namespace WorldTree
 	{
 		class TreeDataSerialize : TreeDataSerializeRule<NodeRef<N>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				if (self.TryWriteDataHead(value, nameCode, 1, out NodeRef<N> obj, false)) return;
+				if (self.TryWriteDataHead(value, typeMode, 1, out NodeRef<N> obj, false)) return;
 				self.WriteUnmanaged(921221376);
 				self.WriteValue(obj.Id);
 			}

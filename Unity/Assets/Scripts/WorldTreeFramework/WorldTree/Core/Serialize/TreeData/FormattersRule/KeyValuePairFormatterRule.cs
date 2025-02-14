@@ -9,7 +9,6 @@
 
 
 using System.Collections.Generic;
-using System;
 
 namespace WorldTree.TreeDataFormatters
 {
@@ -17,9 +16,9 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<TKey, TValue> : TreeDataSerializeRule<KeyValuePair<TKey, TValue>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				if (self.TryWriteDataHead(value, nameCode, 2, out KeyValuePair<TKey, TValue> obj)) return;
+				if (self.TryWriteDataHead(value, typeMode, 2, out KeyValuePair<TKey, TValue> obj)) return;
 				self.WriteUnmanaged(-853882612);
 				self.WriteValue(obj.Key);
 				self.WriteUnmanaged(-783812246);

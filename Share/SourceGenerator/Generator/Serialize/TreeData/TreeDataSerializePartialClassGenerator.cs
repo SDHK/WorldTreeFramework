@@ -95,10 +95,10 @@ namespace WorldTree.SourceGenerator
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			Code.AppendLine($"		class TreeDataSerialize : TreeDataSerializeRule<{className}>");
 			Code.AppendLine("		{");
-			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)");
+			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)");
 			Code.AppendLine("			{");
 
-			Code.AppendLine($"				if (self.TryWriteDataHead(value, nameCode, {membersCount}, out {className} obj, {(isConstant ? "true" : "false")})) return;");
+			Code.AppendLine($"				if (self.TryWriteDataHead(value, typeMode, {membersCount}, out {className} obj, {(isConstant ? "true" : "false")})) return;");
 
 			if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.ISerializable, out _))
 				Code.AppendLine($"				obj?.OnSerialize();");

@@ -66,6 +66,7 @@ namespace WorldTree
 			TreeData treeData = TreeDataHelper.DeserializeTreeData(self, bytes);
 			//TreeData -> bytes
 			byte[] treeDataBytes = TreeDataHelper.SerializeTreeData(treeData);
+			self.Log($"TreeData序列化字节长度{treeDataBytes.Length}\n");
 
 			//bytes -> 实例
 			TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, treeDataBytes);
@@ -130,6 +131,7 @@ namespace WorldTree
 				{
 					logText += $"{item1} ";
 				}
+
 				//logText += $"{item} ";
 			}
 			if (data2.DataDict != null)

@@ -14,9 +14,9 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<T> : TreeDataSerializeRule<ValueTuple<T>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				if (self.TryWriteDataHead(value, nameCode, ~1, out ValueTuple<T> obj)) return;
+				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T> obj)) return;
 				self.WriteUnmanaged(1);
 				self.WriteValue(obj.Item1);
 			}
@@ -39,9 +39,9 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<T1, T2> : TreeDataSerializeRule<ValueTuple<T1, T2>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				if (self.TryWriteDataHead(value, nameCode, ~1, out ValueTuple<T1, T2> obj)) return;
+				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T1, T2> obj)) return;
 				self.WriteUnmanaged(2);
 				self.WriteValue(obj.Item1);
 				self.WriteValue(obj.Item2);
@@ -76,7 +76,7 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<T1, T2, T3> : TreeDataSerializeRule<ValueTuple<T1, T2, T3>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				self.WriteType(typeof(ValueTuple<T1, T2, T3>));
 				if (value is not ValueTuple<T1, T2, T3> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
@@ -116,7 +116,7 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<T1, T2, T3, T4> : TreeDataSerializeRule<ValueTuple<T1, T2, T3, T4>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4>));
 				if (value is not ValueTuple<T1, T2, T3, T4> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
@@ -158,7 +158,7 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<T1, T2, T3, T4, T5> : TreeDataSerializeRule<ValueTuple<T1, T2, T3, T4, T5>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4, T5>));
 				if (value is not ValueTuple<T1, T2, T3, T4, T5> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
@@ -202,7 +202,7 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<T1, T2, T3, T4, T5, T6> : TreeDataSerializeRule<ValueTuple<T1, T2, T3, T4, T5, T6>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4, T5, T6>));
 				if (value is not ValueTuple<T1, T2, T3, T4, T5, T6> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
@@ -248,7 +248,7 @@ namespace WorldTree.TreeDataFormatters
 	{
 		class Serialize<T1, T2, T3, T4, T5, T6, T7> : TreeDataSerializeRule<ValueTuple<T1, T2, T3, T4, T5, T6, T7>>
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7>));
 				if (value is not ValueTuple<T1, T2, T3, T4, T5, T6, T7> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
@@ -297,7 +297,7 @@ namespace WorldTree.TreeDataFormatters
 		class Serialize<T1, T2, T3, T4, T5, T6, T7, TRest> : TreeDataSerializeRule<ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>>
 			where TRest : struct
 		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>));
 				if (value is not ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
