@@ -102,6 +102,11 @@ namespace WorldTree
 		public KeyCodeTest[] KeyCodes;
 
 		/// <summary>
+		/// 元组测试
+		/// </summary>
+		public (int, float) Tuple;
+
+		/// <summary>
 		/// 数组
 		/// </summary>
 		public int[][,,] Ints;

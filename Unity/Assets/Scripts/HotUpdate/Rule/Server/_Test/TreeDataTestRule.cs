@@ -29,6 +29,7 @@ namespace WorldTree
 			self.KeyCodes = null;
 			self.NodeRef = null;
 			self.Ints = null;
+			self.Tuple = default;
 		};
 
 
@@ -50,6 +51,8 @@ namespace WorldTree
 			self.treeData.KeyCodes = [KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
 				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
 				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B];
+
+			self.treeData.Tuple = (125, 41.1f);
 
 			//子节点数据
 			self.treeData.AddChild(out TreeDataNodeDataTest2 child);
@@ -88,7 +91,7 @@ namespace WorldTree
 			self.treeData = node;
 			//====
 
-			self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} => {self.treeData.KeyCodes[2]} ： {self.treeData.NodeRef.Value.Age}");
+			self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} => {self.treeData.KeyCodes[2]},{self.treeData.Tuple.Item2} ： {self.treeData.NodeRef.Value.Age}");
 
 			self.Log("\n通用结构打印：\n");
 			self.Log(NodeRule.ToStringDrawTree(self));
