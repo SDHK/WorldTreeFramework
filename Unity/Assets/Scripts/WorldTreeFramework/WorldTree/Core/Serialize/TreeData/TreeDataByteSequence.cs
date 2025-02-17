@@ -57,6 +57,11 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self)
 			{
+				//Core.TypeInfo.Add(typeof(object));
+
+				TreeDataTypeHelper.InitTypes(self);
+
+
 				self.GetBaseRule<TreeDataByteSequence, ByteSequence, Add>().Send(self);
 				self.Core.PoolGetUnit(out self.TypeToCodeDict);
 				self.Core.PoolGetUnit(out self.codeToTypeNameDict);
@@ -239,10 +244,12 @@ namespace WorldTree
 		/// <typeparam name="T"></typeparam>
 		/// <param name="value">类型</param>
 		/// <param name="typeMode">字段码</param>
-		/// <param name="count">字段数或数组维度</param>
-		/// <param name="obj">返回对象</param>
+		/// <param name="count">字段数或数组维度>/param>
+		/// <param name="obj">希望返回的对象类型</param>
+		/// <param name="isIgnoreName">是否忽略写入名称</param>
+		/// <param name="writeType">写入类型，为null则写入泛型</param>
 		/// <returns>是否为Null退出</returns>
-		public bool TryWriteDataHead<T>(in object value, SerializedTypeMode typeMode, int count, out T obj, bool isIgnoreName = false)
+		public bool TryWriteDataHead<T>(in object value, SerializedTypeMode typeMode, int count, out T obj, bool isIgnoreName = false, Type writeType = null)
 		{
 			switch (typeMode)
 			{
@@ -251,7 +258,7 @@ namespace WorldTree
 					if (this.WriteCheckNull(value, count, out obj)) return true;
 					break;
 				case SerializedTypeMode.DataType:
-					this.WriteType(typeof(T), isIgnoreName);
+					this.WriteType(writeType ?? typeof(T), isIgnoreName);
 					if (this.WriteCheckNull(value, count, out obj)) return true;
 					break;
 			}
@@ -478,7 +485,6 @@ namespace WorldTree
 
 			//动态支持多维数组
 			if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
-			//if(type.IsEnum)
 
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
@@ -789,7 +795,6 @@ namespace WorldTree
 		/// </summary>
 		public void SerializeTreeData(TreeData treeData)
 		{
-			Core.TypeInfo.Add(typeof(object));
 
 			Layer = 0;
 			SetTreeData(treeData);
@@ -810,7 +815,8 @@ namespace WorldTree
 				{
 					typeCode = value;
 				}
-				else //非基础类型，写入名称
+				else if (!(type != null && type.IsArray && TreeDataTypeHelper.TypeCodeDict.ContainsKey(type.GetElementType())))
+				//非基础类型，写入名称
 				{
 					codeToTypeNameDict.TryAdd(typeCode, treeData.TypeName);
 				}

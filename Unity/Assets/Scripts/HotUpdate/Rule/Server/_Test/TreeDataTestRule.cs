@@ -21,6 +21,17 @@ namespace WorldTree
 		static int Value = nameof(Value).GetFNV1aHash32();
 
 
+		static OnRemove<TreeDataNodeDataTest1> OnRemove = (self) =>
+		{
+			self.Name = null;
+			self.Age = 0;
+			self.KeyCode = KeyCodeTest.A;
+			self.KeyCodes = null;
+			self.NodeRef = null;
+			self.Ints = null;
+		};
+
+
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
 			self.AddChild(out self.treeData);
@@ -36,7 +47,9 @@ namespace WorldTree
 				},
 				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },
 			};
-			self.treeData.KeyCodes = [KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B];
+			self.treeData.KeyCodes = [KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
+				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
+				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B];
 
 			//子节点数据
 			self.treeData.AddChild(out TreeDataNodeDataTest2 child);
@@ -75,7 +88,7 @@ namespace WorldTree
 			self.treeData = node;
 			//====
 
-			self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} ： {self.treeData.NodeRef.Value.Age}");
+			self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} {self.treeData.KeyCodes[0]} ： {self.treeData.NodeRef.Value.Age}");
 
 			self.Log("\n通用结构打印：\n");
 			self.Log(NodeRule.ToStringDrawTree(self));

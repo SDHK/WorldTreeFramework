@@ -103,6 +103,22 @@ namespace WorldTree
 			}
 		}
 
+		/// <summary>
+		/// 初始化注册类型
+		/// </summary>
+		public static void InitTypes(INode self)
+		{
+			if (typeCodeDict != null) return;
+			var getDict = TypeCodeDict;
+			foreach (var type in TypeCodes)
+			{
+				self.Core.TypeInfo.Add(type);
+				self.Core.TypeInfo.Add(type.MakeArrayType());
+				self.Core.TypeInfo.Add(type.MakeArrayType(2));
+				self.Core.TypeInfo.Add(type.MakeArrayType(3));
+			}
+		}
+
 	}
 
 }

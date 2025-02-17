@@ -96,6 +96,14 @@ namespace WorldTree
 		, AsAwake
 		, AsChildBranch
 	{
+
+
+		/// <summary>
+		/// 数组
+		/// </summary>
+		public int[][,,] Ints;
+
+
 		/// <summary>
 		/// 名称
 		/// </summary>
@@ -111,10 +119,6 @@ namespace WorldTree
 		/// </summary>
 		public KeyCodeTest KeyCode;
 
-		/// <summary>
-		/// 数组
-		/// </summary>
-		public int[][,,] Ints;
 
 		/// <summary>
 		/// 测试枚举数组

@@ -21,12 +21,23 @@ namespace WorldTree.TreeDataFormatters
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				Type type = typeof(T);
-				//if (type.IsEnum) type = Enum.GetUnderlyingType(type);
+				T[,] obj;
+				//判断是否是枚举类型
+				if (type.IsEnum)
+				{
+					type = Enum.GetUnderlyingType(type);
+					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~2, out obj, true, type.MakeArrayType(2))) return;
+				}
 				//判断是否为基础类型，基础类型需要写入完整数组类型
-				if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type))
-					typeMode = SerializedTypeMode.DataType;
-
-				if (self.TryWriteDataHead(value, typeMode, ~2, out T[,] obj)) return;
+				else if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type))
+				{
+					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~2, out obj, true)) return;
+				}
+				else
+				{
+					//写入为数组类型
+					if (self.TryWriteDataHead(value, typeMode, ~2, out obj)) return;
+				}
 
 				// 写入数组维度长度
 				int dim1 = obj.GetLength(0);
@@ -92,7 +103,7 @@ namespace WorldTree.TreeDataFormatters
 				}
 
 				Type type = typeof(T);
-				//if (type.IsEnum) type = Enum.GetUnderlyingType(type);
+				if (type.IsEnum) type = Enum.GetUnderlyingType(type);
 				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int size))
 				{
 					int elementSize = dim2 * size;
