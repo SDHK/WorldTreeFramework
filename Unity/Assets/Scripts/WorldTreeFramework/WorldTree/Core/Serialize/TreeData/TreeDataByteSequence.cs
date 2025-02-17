@@ -49,6 +49,11 @@ namespace WorldTree
 		/// 写入Object类型
 		/// </summary>
 		ObjectType = -2,
+
+		/// <summary>
+		/// 只写入值，不写入类型
+		/// </summary>
+		Value = -3,
 	}
 
 	public static class TreeDataByteSequenceRule
@@ -57,8 +62,6 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self)
 			{
-				//Core.TypeInfo.Add(typeof(object));
-
 				TreeDataTypeHelper.InitTypes(self);
 
 
@@ -810,6 +813,7 @@ namespace WorldTree
 			{
 				//写入类型码
 				long typeCode = treeDataArray.TypeName.GetHash64();
+
 				//判断是否为基础类型
 				if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value))
 				{
@@ -838,18 +842,16 @@ namespace WorldTree
 						this.WriteDynamic(item);
 					}
 
+					long elementTypeCodeHash = this.Core.TypeToCode(type.GetElementType());
 					//基础数组类型取值
-					if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList))
+					if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(elementTypeCodeHash, out RuleList ruleList))
 					{
-						Array array = Array.CreateInstance(type.GetElementType(), count);
+						SerializedTypeMode typeMode = SerializedTypeMode.Value;
+						//一个个往里写
 						foreach (var item in treeDataArray.ListNodeBranch().GetEnumerable())
-							array.SetValue((item.Value as TreeDataValue).Value, item.Key);
-
-						size *= count;
-						//一次性写入整个数组数据
-						ref byte spanRef = ref this.GetWriteRefByte(size);
-						ref byte src = ref Unsafe.As<Array, byte>(ref array);
-						Unsafe.CopyBlockUnaligned(ref spanRef, ref src, (uint)size);
+						{
+							((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>((item.Value as TreeDataValue).Value), ref typeMode);
+						}
 					}
 				}
 				else //非基础数组类型，递归
@@ -865,9 +867,9 @@ namespace WorldTree
 			}
 			else if (treeData is TreeDataValue treeDataValue)
 			{
-				long typeCode = treeDataValue.TypeName.GetHash64();
+				long typeCodeHash = treeDataValue.TypeName.GetHash64();
 				//写入数值
-				if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+				if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCodeHash, out RuleList ruleList) && ruleList.NodeType == typeCodeHash)
 				{
 					SerializedTypeMode typeMode = SerializedTypeMode.DataType;
 					((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(treeDataValue.Value), ref typeMode);
@@ -926,20 +928,23 @@ namespace WorldTree
 			int startPoint = this.readPoint;
 			//读取类型码
 			this.ReadDynamic(out long typeCode);
-			//判断是否是基础类型
-			if (this.TryGetType(typeCode, out Type type) && TreeDataTypeHelper.BasicsTypeHash.Contains(type))
+			if (this.TryGetType(typeCode, out Type type))
 			{
-				data = AddTreeData(node, out TreeDataValue treeValue, number, isArray);
-				data.TypeName = type.ToString();
 				//获取真实类型码
-				long typeHashCode = this.Core.TypeToCode(type);
-				//基础类型取值
-				if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeHashCode, out RuleList ruleList))
+				if (TreeDataTypeHelper.TypeCodeDict.ContainsKey(type)) typeCode = this.Core.TypeToCode(type);
+				//判断是否是基础类型
+				if (TreeDataTypeHelper.BasicsTypeHash.Contains(type))
 				{
-					int fieldNameCode = 0;
-					((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref treeValue.Value, ref fieldNameCode);
+					data = AddTreeData(node, out TreeDataValue treeValue, number, isArray);
+					data.TypeName = type.ToString();
+					//基础类型取值
+					if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
+					{
+						int fieldNameCode = 0;
+						((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref treeValue.Value, ref fieldNameCode);
+					}
+					return data;
 				}
-				return data;
 			}
 
 			//读取字段数量

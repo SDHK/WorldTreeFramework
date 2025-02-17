@@ -60,12 +60,14 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 默认类型码，类型不会记录到数据里，以下标为键，用于最小化类型码，128个内为 1 Btye 长度
+		/// 默认类型码，最多128个：类型将以下标当做哈希码。
+		/// 用于将类型码占用空间由 9 变成 1 Btye 长度，而 0-127基本不会发生哈希冲突。
 		/// </summary>
 		public static Type[] TypeCodes = new Type[]
 		{
+#region 基础数值类型
 			typeof(object),//0,object代表任何类型
-			typeof(string),//1.字符串为常用类型
+			typeof(string),//1.字符串为特别处理类型
 			typeof(bool),
 			typeof(byte),
 			typeof(sbyte),
@@ -78,7 +80,65 @@ namespace WorldTree
 			typeof(float),
 			typeof(double),
 			typeof(char),
-			typeof(decimal),
+			typeof(decimal),//14
+#region 一维数组
+			typeof(object[]),//15
+			typeof(string[]),
+			typeof(bool[]),
+			typeof(byte[]),
+			typeof(sbyte[]),
+			typeof(short[]),
+			typeof(ushort[]),
+			typeof(int[]),
+			typeof(uint[]),
+			typeof(long[]),
+			typeof(ulong[]),
+			typeof(float[]),
+			typeof(double[]),
+			typeof(char[]),
+			typeof(decimal[]),//29
+#endregion
+#region 二维数组
+			typeof(object[,]),//30
+			typeof(string[,]),
+			typeof(bool[,]),
+			typeof(byte[,]),
+			typeof(sbyte[,]),
+			typeof(short[,]),
+			typeof(ushort[,]),
+			typeof(int[,]),
+			typeof(uint[,]),
+			typeof(long[,]),
+			typeof(ulong[,]),
+			typeof(float[,]),
+			typeof(double[,]),
+			typeof(char[,]),
+			typeof(decimal[,]),//44
+#endregion
+#region 三维数组
+			typeof(object[,,]),//45
+			typeof(string[,,]),
+			typeof(bool[,,]),
+			typeof(byte[,,]),
+			typeof(sbyte[,,]),
+			typeof(short[,,]),
+			typeof(ushort[,,]),
+			typeof(int[,,]),
+			typeof(uint[,,]),
+			typeof(long[,,]),
+			typeof(ulong[,,]),
+			typeof(float[,,]),
+			typeof(double[,,]),
+			typeof(char[,,]),
+			typeof(decimal[,,]),//59
+#endregion
+#endregion
+#region 常用类型
+			typeof(DateTime),//60
+			typeof(TimeSpan),
+			typeof(Guid),//62
+#endregion
+
 		};
 
 		/// <summary>

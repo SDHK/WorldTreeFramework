@@ -96,13 +96,15 @@ namespace WorldTree
 		, AsAwake
 		, AsChildBranch
 	{
-
+		/// <summary>
+		/// 测试枚举数组
+		/// </summary>
+		public KeyCodeTest[] KeyCodes;
 
 		/// <summary>
 		/// 数组
 		/// </summary>
 		public int[][,,] Ints;
-
 
 		/// <summary>
 		/// 名称
@@ -119,11 +121,6 @@ namespace WorldTree
 		/// </summary>
 		public KeyCodeTest KeyCode;
 
-
-		/// <summary>
-		/// 测试枚举数组
-		/// </summary>
-		public KeyCodeTest[] KeyCodes;
 
 		/// <summary>
 		/// 测试节点数据2

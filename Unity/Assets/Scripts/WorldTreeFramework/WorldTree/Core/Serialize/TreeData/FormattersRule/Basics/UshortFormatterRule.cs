@@ -35,7 +35,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object obj, ref SerializedTypeMode typeMode)
 			{
-				self.WriteType(typeof(ushort));
+				if (typeMode != SerializedTypeMode.Value) self.WriteType(typeof(ushort));
 				self.WriteUnmanaged((ushort)obj);
 			}
 		}
