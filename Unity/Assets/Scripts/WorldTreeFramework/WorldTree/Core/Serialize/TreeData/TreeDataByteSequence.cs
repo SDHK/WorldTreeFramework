@@ -830,7 +830,7 @@ namespace WorldTree
 				this.WriteDynamic(~treeDataArray.LengthList.Count);
 
 				//判断这个类型是否是基础数组类型
-				if (type != null && type.IsArray && TreeDataTypeHelper.TypeSizeDict.TryGetValue(type.GetElementType(), out int size))
+				if (type != null && type.IsArray && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type.GetElementType()))
 				{
 					Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
 

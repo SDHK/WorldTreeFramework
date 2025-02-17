@@ -17,7 +17,7 @@ namespace WorldTree.TreeDataFormatters
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T> obj)) return;
-				self.WriteUnmanaged(1);
+				self.WriteDynamic(1);
 				self.WriteValue(obj.Item1);
 			}
 		}
@@ -26,7 +26,7 @@ namespace WorldTree.TreeDataFormatters
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
 				if (self.TryReadArrayHead(typeof(ValueTuple<T>), ref value, 1)) return;
-				self.ReadUnmanaged(out int _);
+				self.ReadDynamic(out int _);
 				ValueTuple<T> obj = (ValueTuple<T>)value;
 				self.ReadValue(ref obj.Item1);
 				value = obj;
@@ -42,7 +42,7 @@ namespace WorldTree.TreeDataFormatters
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
 				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T1, T2> obj)) return;
-				self.WriteUnmanaged(2);
+				self.WriteDynamic(2);
 				self.WriteValue(obj.Item1);
 				self.WriteValue(obj.Item2);
 			}
@@ -52,18 +52,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2>)))
-				{
-					self.SkipData(dataType);
-					return;
-				}
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = default;
-					return;
-				}
-				self.ReadUnmanaged(out int _);
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2>), ref value, 1)) return;
+				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2> obj = (ValueTuple<T1, T2>)value;
 				self.ReadValue(ref obj.Item1);
 				self.ReadValue(ref obj.Item2);
@@ -78,9 +68,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				self.WriteType(typeof(ValueTuple<T1, T2, T3>));
-				if (value is not ValueTuple<T1, T2, T3> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
-				self.WriteUnmanaged(~1, 3);
+				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T1, T2, T3> obj)) return;
+				self.WriteDynamic(3);
 				self.WriteValue(obj.Item1);
 				self.WriteValue(obj.Item2);
 				self.WriteValue(obj.Item3);
@@ -91,18 +80,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3>)))
-				{
-					self.SkipData(dataType);
-					return;
-				}
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = default;
-					return;
-				}
-				self.ReadUnmanaged(out int _);
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3>), ref value, 1)) return;
+				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3> obj = (ValueTuple<T1, T2, T3>)value;
 				self.ReadValue(ref obj.Item1);
 				self.ReadValue(ref obj.Item2);
@@ -118,9 +97,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4>));
-				if (value is not ValueTuple<T1, T2, T3, T4> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
-				self.WriteUnmanaged(~1, 4);
+				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T1, T2, T3, T4> obj)) return;
+				self.WriteDynamic(4);
 				self.WriteValue(obj.Item1);
 				self.WriteValue(obj.Item2);
 				self.WriteValue(obj.Item3);
@@ -132,18 +110,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4>)))
-				{
-					self.SkipData(dataType);
-					return;
-				}
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = default;
-					return;
-				}
-				self.ReadUnmanaged(out int _);
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4>), ref value, 1)) return;
+				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3, T4> obj = (ValueTuple<T1, T2, T3, T4>)value;
 				self.ReadValue(ref obj.Item1);
 				self.ReadValue(ref obj.Item2);
@@ -160,9 +128,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4, T5>));
-				if (value is not ValueTuple<T1, T2, T3, T4, T5> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
-				self.WriteUnmanaged(~1, 5);
+				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T1, T2, T3, T4, T5> obj)) return;
+				self.WriteDynamic(5);
 				self.WriteValue(obj.Item1);
 				self.WriteValue(obj.Item2);
 				self.WriteValue(obj.Item3);
@@ -175,18 +142,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4, T5>)))
-				{
-					self.SkipData(dataType);
-					return;
-				}
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = default;
-					return;
-				}
-				self.ReadUnmanaged(out int _);
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5>), ref value, 1)) return;
+				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3, T4, T5> obj = (ValueTuple<T1, T2, T3, T4, T5>)value;
 				self.ReadValue(ref obj.Item1);
 				self.ReadValue(ref obj.Item2);
@@ -204,9 +161,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4, T5, T6>));
-				if (value is not ValueTuple<T1, T2, T3, T4, T5, T6> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
-				self.WriteUnmanaged(~1, 6);
+				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T1, T2, T3, T4, T5, T6> obj)) return;
+				self.WriteDynamic(6);
 				self.WriteValue(obj.Item1);
 				self.WriteValue(obj.Item2);
 				self.WriteValue(obj.Item3);
@@ -220,18 +176,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4, T5, T6>)))
-				{
-					self.SkipData(dataType);
-					return;
-				}
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = default;
-					return;
-				}
-				self.ReadUnmanaged(out int _);
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5, T6>), ref value, 1)) return;
+				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3, T4, T5, T6> obj = (ValueTuple<T1, T2, T3, T4, T5, T6>)value;
 				self.ReadValue(ref obj.Item1);
 				self.ReadValue(ref obj.Item2);
@@ -250,9 +196,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7>));
-				if (value is not ValueTuple<T1, T2, T3, T4, T5, T6, T7> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
-				self.WriteUnmanaged(~1, 7);
+				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T1, T2, T3, T4, T5, T6, T7> obj)) return;
+				self.WriteDynamic(7);
 				self.WriteValue(obj.Item1);
 				self.WriteValue(obj.Item2);
 				self.WriteValue(obj.Item3);
@@ -267,18 +212,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7>)))
-				{
-					self.SkipData(dataType);
-					return;
-				}
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = default;
-					return;
-				}
-				self.ReadUnmanaged(out int _);
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7>), ref value, 1)) return;
+				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3, T4, T5, T6, T7> obj = (ValueTuple<T1, T2, T3, T4, T5, T6, T7>)value;
 				self.ReadValue(ref obj.Item1);
 				self.ReadValue(ref obj.Item2);
@@ -299,9 +234,8 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				self.WriteType(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>));
-				if (value is not ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> obj) { self.WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT); return; }
-				self.WriteUnmanaged(~1, 8);
+				if (self.TryWriteDataHead(value, typeMode, ~1, out ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> obj)) return;
+				self.WriteDynamic(8);
 				self.WriteValue(obj.Item1);
 				self.WriteValue(obj.Item2);
 				self.WriteValue(obj.Item3);
@@ -318,18 +252,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (!(self.TryReadType(out Type dataType) && dataType == typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>)))
-				{
-					self.SkipData(dataType);
-					return;
-				}
-				self.ReadUnmanaged(out int count);
-				if (count == ValueMarkCode.NULL_OBJECT)
-				{
-					value = default;
-					return;
-				}
-				self.ReadUnmanaged(out int _);
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>), ref value, 1)) return;
 				ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> obj = (ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>)value;
 				self.ReadValue(ref obj.Item1);
 				self.ReadValue(ref obj.Item2);

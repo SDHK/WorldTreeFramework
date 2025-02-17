@@ -12,21 +12,6 @@ using System.Runtime.InteropServices;
 
 namespace WorldTree.TreeDataFormatters
 {
-	/// <summary>
-	/// ces 
-	/// </summary>
-	public enum SerializedTypeMode1
-	{
-		/// <summary>
-		/// a
-		/// </summary>
-		ObjectType,
-		/// <summary>
-		/// b
-		/// </summary>
-		DataType,
-	}
-
 	public static class Array1FormatterRule
 	{
 		/// <summary>
