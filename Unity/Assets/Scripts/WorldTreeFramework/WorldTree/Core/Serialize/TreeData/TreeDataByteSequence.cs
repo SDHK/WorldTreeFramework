@@ -798,11 +798,11 @@ namespace WorldTree
 		/// </summary>
 		public void SerializeTreeData(TreeData treeData)
 		{
-
 			Layer = 0;
 			SetTreeData(treeData);
 			WriteDataInfo();
 		}
+
 		/// <summary>
 		/// 序列化TreeData
 		/// </summary>

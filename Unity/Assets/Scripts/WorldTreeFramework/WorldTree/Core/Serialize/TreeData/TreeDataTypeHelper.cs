@@ -138,7 +138,6 @@ namespace WorldTree
 			typeof(TimeSpan),
 			typeof(Guid),//62
 #endregion
-
 		};
 
 		/// <summary>
@@ -173,12 +172,10 @@ namespace WorldTree
 			foreach (var type in TypeCodes)
 			{
 				self.Core.TypeInfo.Add(type);
-				self.Core.TypeInfo.Add(type.MakeArrayType());
+				self.Core.TypeInfo.Add(type.MakeArrayType());//1是向量数组 int[*]
 				self.Core.TypeInfo.Add(type.MakeArrayType(2));
 				self.Core.TypeInfo.Add(type.MakeArrayType(3));
 			}
 		}
-
 	}
-
 }
