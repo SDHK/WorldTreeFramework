@@ -70,7 +70,7 @@ namespace WorldTree.SourceGenerator
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-			Code.AppendLine($"		class TreePackSerialize : TreePackSerializeRule<TreePackByteSequence, {className}>");
+			Code.AppendLine($"		class TreePackSerialize : TreePackSerializeRule<{className}>");
 			Code.AppendLine("		{");
 
 			if (SubList != null && SubList.Count != 0)
@@ -134,9 +134,9 @@ namespace WorldTree.SourceGenerator
 						if (fieldSymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
 						{
 							if (arrayTypeSymbol.ElementType.IsUnmanagedType)
-								Code.AppendLine($"				self.WriteUnmanagedArray(value.{symbol.Name});");
+								Code.AppendLine($"				self.WriteValue(value.{symbol.Name});");//WriteUnmanagedArray
 							else
-								Code.AppendLine($"				self.WriteArray(value.{symbol.Name});");
+								Code.AppendLine($"				self.WriteValue(value.{symbol.Name});");//WriteArray
 						}
 						else
 						{
@@ -151,9 +151,9 @@ namespace WorldTree.SourceGenerator
 						if (propertySymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
 						{
 							if (arrayTypeSymbol.ElementType.IsUnmanagedType)
-								Code.AppendLine($"				self.WriteUnmanagedArray(value.{symbol.Name});");
+								Code.AppendLine($"				self.WriteValue(value.{symbol.Name});");//WriteUnmanagedArray
 							else
-								Code.AppendLine($"				self.WriteArray(value.{symbol.Name});");
+								Code.AppendLine($"				self.WriteValue(value.{symbol.Name});");//WriteArray
 						}
 						else
 						{
@@ -173,7 +173,7 @@ namespace WorldTree.SourceGenerator
 		private static void GeneratorDeserialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, List<INamedTypeSymbol> SubList)
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-			Code.AppendLine($"		class TreePackDeserialize : TreePackDeserializeRule<TreePackByteSequence, {className}>");
+			Code.AppendLine($"		class TreePackDeserialize : TreePackDeserializeRule<{className}>");
 			Code.AppendLine("		{");
 			Code.AppendLine($"			protected override void Execute(TreePackByteSequence self, ref {className} value)");
 			Code.AppendLine("			{");
@@ -218,9 +218,9 @@ namespace WorldTree.SourceGenerator
 						if (fieldSymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
 						{
 							if (arrayTypeSymbol.ElementType.IsUnmanagedType)
-								Code.AppendLine($"				self.ReadUnmanagedArray(ref value.{symbol.Name});");
+								Code.AppendLine($"				self.ReadValue(ref value.{symbol.Name});");//ReadUnmanagedArray
 							else
-								Code.AppendLine($"				self.ReadArray(ref value.{symbol.Name});");
+								Code.AppendLine($"				self.ReadValue(ref value.{symbol.Name});");//ReadArray
 						}
 						else
 						{
@@ -238,9 +238,9 @@ namespace WorldTree.SourceGenerator
 						if (propertySymbol.Type is IArrayTypeSymbol arrayTypeSymbol)
 						{
 							if (arrayTypeSymbol.ElementType.IsUnmanagedType)
-								Code.AppendLine($"				self.ReadUnmanagedArray(ref m{symbol.Name});");
+								Code.AppendLine($"				self.ReadValue(ref m{symbol.Name});");//ReadUnmanagedArray
 							else
-								Code.AppendLine($"				self.ReadArray(ref m{symbol.Name});");
+								Code.AppendLine($"				self.ReadValue(ref m{symbol.Name});");//ReadArray
 						}
 						else
 						{

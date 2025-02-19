@@ -12,7 +12,7 @@ namespace WorldTree.TreePackFormats
 {
 	public static class DictionaryFormatRule
 	{
-		class Serialize<TKey, TValue> : TreePackSerializeRule<TreePackByteSequence, IDictionary<TKey, TValue>>
+		class Serialize<TKey, TValue> : TreePackSerializeRule<IDictionary<TKey, TValue>>
 		{
 			protected override void Execute(TreePackByteSequence self, ref IDictionary<TKey, TValue> value)
 			{
@@ -28,7 +28,7 @@ namespace WorldTree.TreePackFormats
 				foreach (KeyValuePair<TKey, TValue> item in value) self.WriteValue(item);
 			}
 		}
-		class Deserialize<TKey, TValue> : TreePackDeserializeRule<TreePackByteSequence, IDictionary<TKey, TValue>>
+		class Deserialize<TKey, TValue> : TreePackDeserializeRule<IDictionary<TKey, TValue>>
 		{
 			protected override void Execute(TreePackByteSequence self, ref IDictionary<TKey, TValue> value)
 			{

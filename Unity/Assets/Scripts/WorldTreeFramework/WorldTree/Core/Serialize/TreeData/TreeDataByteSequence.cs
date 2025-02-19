@@ -326,6 +326,7 @@ namespace WorldTree
 			//动态支持多维数组
 			if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
 
+			//优化：可存住RuleGroup，减少查找次数
 			if (this.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
 				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value), ref typeMode);

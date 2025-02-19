@@ -24,7 +24,7 @@ namespace WorldTree
 		public const string IBranchTypeKey = "WorldTree.IBranchTypeKey";
 
 		public const string IBranchUnConstraint = "WorldTree.IBranchUnConstraint";
-		
+
 		public const string IMethodRule = "WorldTree.IMethodRule";
 
 
@@ -76,11 +76,6 @@ namespace WorldTree
 		/// 树节点数据包特性标记
 		/// </summary>
 		public const string TreePackSerializableAttribute = "TreePackSerializableAttribute";
-
-		/// <summary>
-		/// 树节点数据包子类转换特性标记
-		/// </summary>
-		public const string TreePackSubAttribute = "TreePackSubAttribute";
 
 		/// <summary>
 		/// 树节点数据忽略特性标记

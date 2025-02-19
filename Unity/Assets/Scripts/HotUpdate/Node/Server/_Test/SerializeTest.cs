@@ -69,13 +69,31 @@ namespace WorldTree
 		public UnitDictionary<int, string> ValueT4Dict;
 	}
 
+	/// <summary>
+	/// 测试数据3
+	/// </summary>
+	[TreePackSerializable]
+	public partial struct NodeClassDataTest2<T1, T2>
+	where T1 : unmanaged
+	where T2 : unmanaged
+	{
+		/// <summary>
+		/// 测试整数
+		/// </summary>
+		public T1 TestInts { get; set; }
+
+		/// <summary>
+		/// 测试浮点
+		/// </summary>
+		public T2 TestT2 { get; set; }
+
+	}
+
 
 	/// <summary>
 	/// 测试数据3
 	/// </summary>
 	[TreePackSerializable]
-	[TreePackSub(typeof(NodeClassDataSub1<int>))]
-	[TreePackSub(typeof(NodeClassDataSub2))]
 	public partial class NodeClassDataBase
 	{
 		/// <summary>
@@ -111,6 +129,18 @@ namespace WorldTree
 		/// 测试整数
 		/// </summary>
 		public float TestFloat_T;
+	}
+
+	/// <summary>
+	/// 测试数据4
+	/// </summary>
+	[TreePackSerializable]
+	public partial class NodeClassDataSub3<T> : NodeClassDataSub1<T>
+	{
+		/// <summary>
+		/// 测试整数
+		/// </summary>
+		public float TestFloat_T1;
 	}
 
 

@@ -22,13 +22,33 @@ namespace WorldTree.SourceGenerator
 	{
 		public Dictionary<INamedTypeSymbol, List<INamedTypeSymbol>> TypeSubDict = new();
 
+		public HashSet<INamedTypeSymbol> TypeSet = new();
+
 
 		public void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindTreePackSyntaxReceiver());
 		}
 
-
+		/// <summary>
+		/// 收集类型的子类
+		/// </summary>
+		public List<INamedTypeSymbol>? GetTypeSub(GeneratorExecutionContext context, INamedTypeSymbol baseNamedType)
+		{
+			if (!TypeSubDict.TryGetValue(baseNamedType, out List<INamedTypeSymbol>? SubList))
+			{
+				SubList = new();
+				TypeSubDict.Add(baseNamedType, SubList);
+			}
+			foreach (var type in TypeSet)
+			{
+				if (NamedSymbolHelper.IsDerivedFrom(type, baseNamedType, TypeCompareOptions.CompareToGenericTypeDefinition))
+				{
+					SubList.Add(type);
+				}
+			}
+			return SubList;
+		}
 
 		public void Execute(GeneratorExecutionContext context)
 		{
@@ -54,27 +74,12 @@ namespace WorldTree.SourceGenerator
 
 				foreach (TypeDeclarationSyntax typeDeclaration in TypeListItem.Value)
 				{
-					INamedTypeSymbol? baseNamedType = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
-					if (!TypeSubDict.TryGetValue(baseNamedType, out var SubList))
-					{
-						SubList = new();
-						TypeSubDict.Add(baseNamedType, SubList);
-					}
-					// 获取所有标记在类型上的特性
-					var attributes = baseNamedType.GetAttributes();
-					// 查找特定的 TreePackSubAttribute 特性
-					attributes.Where(attr => attr.AttributeClass?.Name == GeneratorHelper.TreePackSubAttribute).ToList()
-					.ForEach(attr =>
-					{
-						// 获取特性参数
-						var typeArgument = attr.ConstructorArguments.FirstOrDefault();
-						if (typeArgument.Kind == TypedConstantKind.Type && typeArgument.Value is INamedTypeSymbol namedTypeSymbol)
-						{
-							SubList.Add(namedTypeSymbol);
-							var typeName = namedTypeSymbol.ToDisplayString();
-						}
-					});
+					TypeSet.Add(context.Compilation.ToINamedTypeSymbol(typeDeclaration));
+				}
 
+				foreach (TypeDeclarationSyntax typeDeclaration in TypeListItem.Value)
+				{
+					var SubList = GetTypeSub(context, context.Compilation.ToINamedTypeSymbol(typeDeclaration));
 					TreePackSerializePartialClassGenerator.Execute(context, ClassCode, typeDeclaration, SubList);
 				}
 

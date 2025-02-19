@@ -13,7 +13,7 @@ namespace WorldTree.TreePackFormats
 {
 	public static class KeyValuePairFormatRule
 	{
-		class Serialize<TKey, TValue> : TreePackSerializeRule<TreePackByteSequence, KeyValuePair<TKey, TValue>>
+		class Serialize<TKey, TValue> : TreePackSerializeRule<KeyValuePair<TKey, TValue>>
 		{
 			protected override void Execute(TreePackByteSequence self, ref KeyValuePair<TKey, TValue> value)
 			{
@@ -26,7 +26,7 @@ namespace WorldTree.TreePackFormats
 				self.WriteValue(value.Value);
 			}
 		}
-		class Deserialize<TKey, TValue> : TreePackDeserializeRule<TreePackByteSequence, KeyValuePair<TKey, TValue>>
+		class Deserialize<TKey, TValue> : TreePackDeserializeRule<KeyValuePair<TKey, TValue>>
 		{
 			protected override void Execute(TreePackByteSequence self, ref KeyValuePair<TKey, TValue> value)
 			{

@@ -11,12 +11,12 @@ namespace WorldTree
 	/// <summary>
 	/// 树包序列化法则接口：用于序列化未知泛型，解除AsRule的法则限制
 	/// </summary>
-	public interface ITreePackSerialize : IRule { }
+	public interface ITreePackSerialize : ISendRefRule { }
 
 	/// <summary>
 	/// 树包反序列化法则接口：用于反序列化未知泛型，解除AsRule的法则限制
 	/// </summary>
-	public interface ITreePackDeserialize : IRule { }
+	public interface ITreePackDeserialize : ISendRefRule { }
 
 	/// <summary>
 	/// 树包序列化非托管法则
@@ -31,46 +31,45 @@ namespace WorldTree
 	/// <summary>
 	/// 树包序列化非托管法则
 	/// </summary>
-	public abstract class TreePackSerializeUnmanagedRule<N, T> : SendRefRule<N, TreePackSerializeUnmanaged<T>, T> where N : class, INode, AsRule<TreePackSerializeUnmanaged<T>> { }
+	public abstract class TreePackSerializeUnmanagedRule<T> : SendRefRule<TreePackByteSequence, TreePackSerializeUnmanaged<T>, T> { }
 
 	/// <summary>
 	/// 树包反序列化非托管法则
 	/// </summary>
-	public abstract class TreePackDeserializeUnmanagedRule<N, T> : SendRefRule<N, TreePackDeserializeUnmanaged<T>, T> where N : class, INode, AsRule<TreePackDeserializeUnmanaged<T>> { }
+	public abstract class TreePackDeserializeUnmanagedRule<T> : SendRefRule<TreePackByteSequence, TreePackDeserializeUnmanaged<T>, T> { }
 
 	#region 非常规法则
 
 	/// <summary>
-	/// 树包序列化法则基类
+	/// 树包序列化法则
 	/// </summary>
 	/// <remarks>打破常规写法，以参数类型为主，支持继承法则</remarks>
-	public abstract class TreePackSerializeRuleBase<N, R, T1> : Rule<T1, R>, ISendRefRule<T1>
-		where N : class, INode, AsRule<R>
-		where R : IRule
+	public abstract class TreePackSerializeRule<GT> : Rule<GT, ITreePackSerialize>, ISendRefRule<GT>
 	{
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(INode self, ref T1 arg1) => Execute(self as N, ref arg1);
+		public virtual void Invoke(INode self, ref GT arg1) => Execute(self as TreePackByteSequence, ref arg1);
 		/// <summary>
 		/// 执行
 		/// </summary>
-		protected abstract void Execute(N self, ref T1 arg1);
+		protected abstract void Execute(TreePackByteSequence self, ref GT arg1);
 	}
-
-	/// <summary>
-	/// 树包序列化法则
-	/// </summary>
-	public abstract class TreePackSerializeRule<N, GT> : TreePackSerializeRuleBase<N, ITreePackSerialize, GT>
-			where N : class, INode, AsRule<ITreePackSerialize>
-	{}
 
 	/// <summary>
 	/// 树包反序列化法则
 	/// </summary>
-	public abstract class TreePackDeserializeRule<N, GT> : TreePackSerializeRuleBase<N, ITreePackDeserialize, GT>
-			where N : class, INode, AsRule<ITreePackDeserialize>
-	{}
-
+	/// <remarks>打破常规写法，以参数类型为主，支持继承法则</remarks>
+	public abstract class TreePackDeserializeRule<GT> : Rule<GT, ITreePackDeserialize>, ISendRefRule<GT>
+	{
+		/// <summary>
+		/// 调用
+		/// </summary>
+		public virtual void Invoke(INode self, ref GT arg1) => Execute(self as TreePackByteSequence, ref arg1);
+		/// <summary>
+		/// 执行
+		/// </summary>
+		protected abstract void Execute(TreePackByteSequence self, ref GT arg1);
+	}
 	#endregion
 }

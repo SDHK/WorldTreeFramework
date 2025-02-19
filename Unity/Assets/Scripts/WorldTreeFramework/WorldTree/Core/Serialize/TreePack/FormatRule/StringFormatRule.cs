@@ -10,14 +10,14 @@ namespace WorldTree.TreePackFormats
 {
 	public static class StringFormatRule
 	{
-		class Serialize : TreePackSerializeRule<TreePackByteSequence, string>
+		class Serialize : TreePackSerializeRule<string>
 		{
 			protected override void Execute(TreePackByteSequence self, ref string value)
 			{
 				self.WriteString(value);
 			}
 		}
-		class Deserialize : TreePackDeserializeRule<TreePackByteSequence, string>
+		class Deserialize : TreePackDeserializeRule<string>
 		{
 			protected override void Execute(TreePackByteSequence self, ref string value)
 			{

@@ -9,10 +9,10 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System;
 
 namespace WorldTree
 {
@@ -133,7 +133,7 @@ namespace WorldTree
 				// 获取两个类型的原始定义
 				var originalDef1 = type1.OriginalDefinition;
 				var originalDef2 = type2.OriginalDefinition;
-				
+
 				// 比较原始定义是否相同
 				return SymbolEqualityComparer.Default.Equals(originalDef1, originalDef2);
 			}
@@ -180,20 +180,20 @@ namespace WorldTree
 		/// <summary>
 		/// 检查类型是否派生自指定基类或接口
 		/// </summary>
-		public static bool IsDerivedFrom(INamedTypeSymbol type, INamedTypeSymbol baseType)
+		public static bool IsDerivedFrom(INamedTypeSymbol type, INamedTypeSymbol baseType, TypeCompareOptions options = TypeCompareOptions.None)
 		{
 			// 排除基类本身
-			if (SymbolEqualityComparer.Default.Equals(type, baseType)) return false;
+			if (IsTypeSymbolEqual(type, baseType, options)) return false;
 
 			// 接口判断
 			if (baseType.TypeKind == TypeKind.Interface)
-				return type.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, baseType));
+				return type.AllInterfaces.Any(i => IsTypeSymbolEqual(i, baseType, options));
 
 			// 遍历基类
 			var currentType = type;
 			while (currentType != null)
 			{
-				if (SymbolEqualityComparer.Default.Equals(currentType, baseType))
+				if (IsTypeSymbolEqual(currentType, baseType, options))
 				{
 					return true;
 				}

@@ -17,6 +17,7 @@ namespace WorldTree
 	[MemoryPackable()]
 	[MemoryPackUnion(0, typeof(NodeDataTest1))]
 	[MemoryPackUnion(1, typeof(NodeDataTest2))]
+	[MemoryPackUnion(2, typeof(NodeDataTest2<int>))]
 	public partial interface INodeDataTest
 	{
 
@@ -97,7 +98,7 @@ namespace WorldTree
 	/// </summary>
 	//[MemoryPackable]
 	[MemoryPackable(GenerateType.VersionTolerant)]
-	public partial class NodeDataTest2<T>
+	public partial class NodeDataTest2<T> : INodeDataTest
 	{
 		/// <summary>
 		/// 测试

@@ -71,6 +71,124 @@ namespace WorldTree
 		public RuleGroup deserializeRuleDict;
 
 
+		/// <summary>
+		/// 类型对应类型码字典，64哈希码对应
+		/// </summary>
+		public UnitDictionary<Type, long> TypeToCodeDict;
+
+		/// <summary>
+		/// 类型码对应类型名称字典，64哈希码对应
+		/// </summary>
+		public UnitDictionary<long, string> codeToTypeNameDict;
+
+
+		#region 映射表
+
+		/// <summary>
+		/// 添加类型
+		/// </summary>
+		private long GetTypeCode(Type type, bool isIgnoreName = false)
+		{
+			if (TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte typeByteCode)) return typeByteCode;
+
+			if (!TypeToCodeDict.TryGetValue(type, out long typeCode))
+			{
+				typeCode = this.TypeToCode(type);
+				if (!isIgnoreName) TypeToCodeDict.Add(type, typeCode);
+			}
+			return typeCode;
+		}
+
+		/// <summary>
+		/// 尝试获取类型
+		/// </summary>
+		private bool TryGetType(long typeCode, out Type type)
+		{
+			if (TreeDataTypeHelper.TypeCodes.Length > typeCode && typeCode >= 0)
+			{
+				type = TreeDataTypeHelper.TypeCodes[typeCode];
+				return true;
+			}
+
+			if (this.TryCodeToType(typeCode, out type)) return true;
+			if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
+			{
+				type = System.Type.GetType(typeName);
+				if (type != null)
+				{
+					this.TypeToCode(type);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		#endregion
+
+		#region 序列化
+
+
+		/// <summary>
+		/// 写入数据信息
+		/// </summary>
+		private void WriteDataInfo()
+		{
+			//记录映射表起始位置
+			int startPoint = Length;
+			//写入类型数量
+			WriteUnmanaged(codeToTypeNameDict.Count);
+			foreach (var item in codeToTypeNameDict)
+			{
+				//写入类型码
+				WriteUnmanaged(item.Key);
+				//写入类型名称
+				WriteString(item.Value);
+			}
+			WriteUnmanaged(startPoint);
+		}
+
+		/// <summary>
+		/// 读取数据信息
+		/// </summary>
+		private void ReadDataInfo()
+		{
+			//读取指针定位到最后
+			readPoint = length;
+			readBytePoint = 0;
+			readSegmentPoint = segmentList.Count;
+			//回退4位
+			ReadJump(readPoint - 4);
+			//读取映射表起始位置距离
+			ReadUnmanaged(out int startPoint);
+			//回退到映射表起始位置
+			ReadJump(startPoint);
+
+			//读取类型数量
+			ReadUnmanaged(out int typeCount);
+			for (int i = 0; i < typeCount; i++)
+			{
+				//读取类型码
+				ReadUnmanaged(out long typeCode);
+				//读取类型名称
+				string typeName = ReadString();
+				codeToTypeNameDict.Add(typeCode, typeName);
+			}
+
+			//读取指针定位到数据起始位置
+			readPoint = 0;
+			readBytePoint = 0;
+			readSegmentPoint = 0;
+
+			//this.Log($"TypeCount: {codeToTypeNameDict.Count}");
+			//foreach (var item in this.codeToTypeNameDict)
+			//{
+			//	this.Log($"Type: {item.Value}");
+			//}
+		}
+
+		#endregion
+
+
 		#region 写入
 
 		/// <summary>
@@ -79,73 +197,22 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void WriteValue<T>(in T value)
 		{
+			Type type = typeof(T);
 			long typeCode = Core.TypeToCode<T>();
-			Core.RuleManager.SupportNodeRule(typeCode);
+			Core.RuleManager.SupportNodeRule(typeCode);//数组不需要支持
+			if (type.IsArray)
+				this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(ITreePackSerialize));
 			if (serializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
-				foreach (IRule rule in ruleList)
-				{
-					Unsafe.As<TreePackSerializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref Unsafe.AsRef(value));
-				}
+				foreach (IRule rule in ruleList) Unsafe.As<TreePackSerializeRule<T>>(rule).Invoke(this, ref Unsafe.AsRef(value));
 				return;
 			}
-
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
 			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackSerializeUnmanaged<T>>(), out ruleList))
 				((IRuleList<TreePackSerializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
 
-
-		/// <summary>
-		/// 写入数组
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteArray<T>(T[] value)
-		{
-			if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
-			{
-				DangerousWriteUnmanagedArray(value);
-				return;
-			}
-			if (value == null)
-			{
-				WriteUnmanaged(ValueMarkCode.NULL_OBJECT);
-				return;
-			}
-
-			WriteUnmanaged(value.Length);
-
-			long typeCode = Core.TypeToCode<T>();
-			Core.RuleManager.SupportNodeRule(typeCode);
-			if (serializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
-			{
-				for (int i = 0; i < value.Length; i++)
-				{
-					foreach (IRule rule in ruleList)
-					{
-						Unsafe.As<TreePackSerializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref value[i]);
-					}
-				}
-				return;
-			}
-
-			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
-			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackSerializeUnmanaged<T>>(), out ruleList))
-			{
-				IRuleList<TreePackSerializeUnmanaged<T>> ruleListT = ruleList;
-				for (int i = 0; i < value.Length; i++) ruleListT.SendRef(this, ref value[i]);
-			}
-		}
-
-		/// <summary>
-		/// 写入非托管数组
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteUnmanagedArray<T>(T[] value)
-			where T : unmanaged
-		{
-			DangerousWriteUnmanagedArray(value);
-		}
+		//类型码读取，子类转换
 
 		/// <summary>
 		/// 写入字符串
@@ -227,40 +294,6 @@ namespace WorldTree
 			WriteBack(maxByteCount - bytesWritten);
 		}
 
-		/// <summary>
-		/// 危险写入非托管数组
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void DangerousWriteUnmanagedArray<T>(T[] value)
-		{
-			if (value == null)
-			{
-				WriteUnmanaged((int)ValueMarkCode.NULL_OBJECT);
-				return;
-			}
-			if (value.Length == 0)
-			{
-				WriteUnmanaged(0);
-				return;
-			}
-
-			//获取数组数据长度
-			var srcLength = Unsafe.SizeOf<T>() * value.Length;
-			//包含数组数量的总长度
-			var allocSize = srcLength + Unsafe.SizeOf<int>();
-
-			//获取写入操作跨度
-			ref byte spanRef = ref GetWriteRefByte(allocSize);
-
-			//获取数组数据的指针
-			ref var src = ref Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(value.AsSpan()));
-
-			//写入数组长度
-			Unsafe.WriteUnaligned(ref spanRef, value.Length);
-			//写入数组数据
-			Unsafe.CopyBlockUnaligned(ref Unsafe.Add(ref spanRef, Unsafe.SizeOf<int>()), ref src, (uint)srcLength);
-		}
-
 		#endregion
 
 
@@ -272,14 +305,14 @@ namespace WorldTree
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void ReadValue<T>(ref T value)
 		{
+			Type type = typeof(T);
 			long typeCode = Core.TypeToCode<T>();
 			Core.RuleManager.SupportNodeRule(typeCode);
+			if (type.IsArray)
+				this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(ITreePackDeserialize));
 			if (deserializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
-				foreach (IRule rule in ruleList)
-				{
-					Unsafe.As<TreePackDeserializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref value);
-				}
+				foreach (IRule rule in ruleList) Unsafe.As<TreePackDeserializeRule<T>>(rule).Invoke(this, ref value);
 				return;
 			}
 
@@ -299,72 +332,73 @@ namespace WorldTree
 			return value;
 		}
 
-
 		/// <summary>
-		/// 读取数组
+		/// 尝试以子类型读取
 		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void ReadArray<T>(ref T[] value)
+		private bool SubTypeReadValue(Type type, Type targetType, ref object value, int typePoint)
 		{
-			if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+			if (type != null)
 			{
-				DangerousReadUnmanagedArray(ref value);
-				return;
-			}
-
-			if (ReadUnmanaged(out int length) == ValueMarkCode.NULL_OBJECT)
-			{
-				value = null;
-				return;
-			}
-			else if (length == 0)
-			{
-				value = Array.Empty<T>();
-				return;
-			}
-			else if (ReadRemain < length)
-			{
-				this.LogError($"数组长度超出数据长度: {length}.");
-				value = null;
-				return;
-			}
-
-			//假如数组为空或长度不一致，那么重新分配
-			if (value == null || value.Length != length)
-			{
-				value = new T[length];
-			}
-			long typeCode = Core.TypeToCode<T>();
-			Core.RuleManager.SupportNodeRule(typeCode);
-			if (deserializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
-			{
-				for (int i = 0; i < value.Length; i++)
+				//判断是否为基础类型，直接跳跃数据。
+				if (TreeDataTypeHelper.BasicsTypeHash.Contains(type))
 				{
-					foreach (IRule rule in ruleList)
+					//SkipData(type);
+					return true;
+				}
+			}
+			else
+			{
+				//类型不存在直接跳跃数据
+				//SkipData(type);
+				return true;
+			}
+
+			bool isSubType = false;
+			Type baseType = type?.BaseType;
+			if (targetType.IsInterface)
+			{
+				Type[] interfaces = type.GetInterfaces();
+				foreach (var interfaceType in interfaces)
+				{
+					if (interfaceType == targetType)
 					{
-						Unsafe.As<TreePackDeserializeRule<TreePackByteSequence, T>>(rule).Invoke(this, ref value[i]);
+						isSubType = true;
+						break;
 					}
 				}
-				return;
 			}
-
-			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
-			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackDeserializeUnmanaged<T>>(), out ruleList))
+			else if (targetType.IsClass)
 			{
-				IRuleList<TreePackDeserializeUnmanaged<T>> ruleListT = ruleList;
-				for (int i = 0; i < length; i++) ruleListT.SendRef(this, ref value[i]);
+				while (baseType != null && baseType != typeof(object))
+				{
+					if (baseType == targetType)
+					{
+						isSubType = true;
+						break;
+					}
+					baseType = baseType.BaseType;
+				}
+			}
+			else //不是接口也不是类型，直接跳跃数据
+			{
+				//SkipData(type);
+				return true;
+			}
+
+			if (isSubType)//是子类型
+			{
+				//读取指针回退到类型码
+				ReadJump(typePoint);
+				//子类型读取
+				//ReadValue(type, ref value);
+				return true;
+			}
+			else //不是子类型，返回去尝试读取。
+			{
+				return false;
 			}
 		}
 
-		/// <summary>
-		/// 读取非托管数组
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void ReadUnmanagedArray<T>(ref T[] value)
-			where T : unmanaged
-		{
-			DangerousReadUnmanagedArray(ref value);
-		}
 
 
 		/// <summary>
@@ -395,7 +429,6 @@ namespace WorldTree
 			return new string(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.As<byte, char>(ref src), (int)(length * 0.5f)));
 		}
 
-
 		/// <summary>
 		/// 读取字符串
 		/// </summary>
@@ -410,40 +443,6 @@ namespace WorldTree
 			ref var spanRef = ref GetReadRefByte(length);
 			return Encoding.UTF8.GetString(MemoryMarshal.CreateReadOnlySpan(ref spanRef, length));
 		}
-
-		/// <summary>
-		/// 危险读取非托管数组
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public unsafe void DangerousReadUnmanagedArray<T>(ref T[] value)
-		{
-			if (ReadUnmanaged(out int length) == ValueMarkCode.NULL_OBJECT)
-			{
-				value = null;
-				return;
-			}
-			else if (length == 0)
-			{
-				value = Array.Empty<T>();
-				return;
-			}
-			else if (ReadRemain < length)
-			{
-				this.LogError($"数组长度超出数据长度: {length}.");
-				value = null;
-				return;
-			}
-
-			var byteCount = length * Unsafe.SizeOf<T>();
-			ref byte spanRef = ref GetReadRefByte(byteCount);
-
-			//假如数组为空或长度不一致，那么重新分配
-			if (value == null || value.Length != length) value = new T[length];
-
-			ref var src = ref Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(value.AsSpan()));
-			Unsafe.CopyBlockUnaligned(ref src, ref spanRef, (uint)byteCount);
-		}
-
 		#endregion
 	}
 

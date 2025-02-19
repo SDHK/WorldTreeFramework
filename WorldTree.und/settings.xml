@@ -476,6 +476,8 @@
                       </dir>
                       <dir
                         name="RuleBase"/>
+                      <dir
+                        name="TreeData"/>
                     </dir>
                     <dir
                       name="TreePack">

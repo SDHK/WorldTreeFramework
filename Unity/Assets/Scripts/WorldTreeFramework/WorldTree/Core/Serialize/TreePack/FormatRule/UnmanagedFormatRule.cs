@@ -12,14 +12,14 @@ namespace WorldTree.TreePackFormats
 {
 	public static class UnmanagedFormatRule
 	{
-		class Serialize<T> : TreePackSerializeUnmanagedRule<TreePackByteSequence, T>
+		class Serialize<T> : TreePackSerializeUnmanagedRule<T>
 		{
 			protected override void Execute(TreePackByteSequence self, ref T value)
 			{
 				Unsafe.WriteUnaligned(ref self.GetWriteRefByte(Unsafe.SizeOf<T>()), value);
 			}
 		}
-		class Deserialize<T> : TreePackDeserializeUnmanagedRule<TreePackByteSequence, T>
+		class Deserialize<T> : TreePackDeserializeUnmanagedRule<T>
 		{
 			protected override void Execute(TreePackByteSequence self, ref T value)
 			{
