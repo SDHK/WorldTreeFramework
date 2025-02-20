@@ -53,6 +53,10 @@ namespace WorldTree
 	//HybridListenerRuleActuatorGroup
 
 
+	// 序列化 ：	
+	// 类型码用正数下标 ：127个内为：1byte，
+	// 引用码用负数下标 ：-120个内为：1byte
+
 
 
 	/// <summary>

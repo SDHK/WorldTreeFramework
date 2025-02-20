@@ -81,6 +81,11 @@ namespace WorldTree
 		/// </summary>
 		public UnitDictionary<long, string> codeToTypeNameDict;
 
+		/// <summary>
+		/// 类型码顺序列表
+		/// </summary>
+		public UnitList<long> CodeList;
+
 
 		#region 映射表
 
@@ -330,6 +335,64 @@ namespace WorldTree
 			T value = default;
 			ReadValue(ref value);
 			return value;
+		}
+
+
+		/// <summary>
+		/// 尝试读取类型数据头部
+		/// </summary>
+		private bool TryReadDataHead(Type targetType, ref object value, out int count, out int countPoint)
+		{
+			countPoint = readPoint;
+			count = 0;
+			this.ReadDynamic(out long typeCode);
+			if (typeCode == 0)//判断如果是0，则为原类型
+			{
+				countPoint = readPoint;
+				this.ReadDynamic(out count);
+				if (count != TreeDataCode.NULL_OBJECT) return false;
+				value = default;
+				return true;
+			}
+
+			//尝试获取类型
+			if (TryGetType(typeCode, out Type dataType))
+			{
+				//类型一样直接读取
+				if (dataType == targetType)
+				{
+					countPoint = readPoint;
+					this.ReadDynamic(out count);
+					if (count != TreeDataCode.NULL_OBJECT) return false;
+					value = default;
+					return true;
+				}
+				//不一样,判断多态类型，不是则尝试读取
+				else if (!SubTypeReadValue(dataType, targetType, ref value, countPoint))
+				{
+					countPoint = readPoint;
+					this.ReadDynamic(out count);
+					if (count != TreeDataCode.NULL_OBJECT) return false;
+					value = default;
+					return true;
+				}
+				else
+				{
+					return true;
+				}
+			}
+
+			//数据类型不存在 ，判断目标类型是否非基础类型
+			if (!TreeDataTypeHelper.BasicsTypeHash.Contains(targetType))
+			{
+				countPoint = readPoint;
+				//不是基础类型则尝试读取
+				this.ReadDynamic(out count);
+				if (count != TreeDataCode.NULL_OBJECT) return false;
+			}
+			//数据跳跃
+			//SkipData(dataType);
+			return true;
 		}
 
 		/// <summary>

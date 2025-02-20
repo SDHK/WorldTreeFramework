@@ -53,8 +53,9 @@ namespace WorldTree
 	/// <summary>
 	/// 测试数据
 	/// </summary>
-	[MemoryPackable(GenerateType.Object)]
-	public partial class NodeDataTest2 : INodeDataTest
+	[MemoryPackable(GenerateType.CircularReference)]
+	//[MemoryPackable()]
+	public partial struct NodeDataTest2 : INodeDataTest
 	{
 		/// <summary>
 		/// 测试
@@ -78,7 +79,7 @@ namespace WorldTree
 		/// 测试双精度
 		/// </summary>
 		[MemoryPackOrder(4)]
-		public string TestString = "7.123456";
+		public string TestString;
 
 	}
 
