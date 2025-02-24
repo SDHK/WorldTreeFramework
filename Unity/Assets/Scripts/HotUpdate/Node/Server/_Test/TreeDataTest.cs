@@ -85,8 +85,6 @@ namespace WorldTree
 		C = 2,
 	}
 
-
-
 	/// <summary>
 	/// 测试节点数据1
 	/// </summary>
@@ -100,6 +98,11 @@ namespace WorldTree
 		/// 测试枚举数组
 		/// </summary>
 		public KeyCodeTest[] KeyCodes;
+
+		/// <summary>
+		/// 测试枚举数组
+		/// </summary>
+		public KeyCodeTest[] KeyCodeRefs;
 
 		/// <summary>
 		/// 元组测试
@@ -131,10 +134,12 @@ namespace WorldTree
 		/// 测试节点数据2
 		/// </summary>
 		public NodeRef<TreeDataNodeDataTest2> NodeRef;
+
 		/// <summary>
-		/// a
+		/// 测试节点数据2
 		/// </summary>
-		public SerializedTypeMode typeMode;
+		public TreeDataNodeDataTest2 NodeRef2;
+
 	}
 
 	/// <summary>
@@ -154,6 +159,11 @@ namespace WorldTree
 		/// 年龄
 		/// </summary>
 		public int Age;
+
+		/// <summary>
+		/// 测试
+		/// </summary>
+		public TreeDataNodeDataTest2 Node;
 	}
 
 

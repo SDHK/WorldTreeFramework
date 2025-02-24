@@ -56,6 +56,7 @@ namespace WorldTree
 	// 序列化 ：	
 	// 类型码用正数下标 ：127个内为：1byte，
 	// 引用码用负数下标 ：-120个内为：1byte
+	// 负数0~120 标记引用列表， 后续跟标记类型码
 
 
 
@@ -80,11 +81,6 @@ namespace WorldTree
 		, AsAwake
 	{
 		#region 字段
-
-		/// <summary>
-		/// 程序集
-		/// </summary>
-		//public Assembly[] Assemblys;
 
 		/// <summary>
 		/// 主核心

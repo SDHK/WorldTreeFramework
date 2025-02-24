@@ -27,17 +27,17 @@ namespace WorldTree.TreeDataFormatters
 				if (type.IsEnum)
 				{
 					type = Enum.GetUnderlyingType(type);
-					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~1, out obj, true, type.MakeArrayType())) return;
+					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~1, out obj, true, true, type.MakeArrayType())) return;
 				}
 				//判断是否为基础类型，基础类型需要写入完整数组类型
 				else if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type))
 				{
-					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~1, out obj, true)) return;
+					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~1, out obj, true, true)) return;
 				}
 				else
 				{
 					//写入为数组类型
-					if (self.TryWriteDataHead(value, typeMode, ~1, out obj)) return;
+					if (self.TryWriteDataHead(value, typeMode, ~1, out obj, false, true)) return;
 				}
 
 				//写入数组数据长度
@@ -80,7 +80,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(T[]), ref value, 1)) return;
+				if (self.TryReadArrayHead(typeof(T[]), ref value, 1, out int objId)) return;
 
 				self.ReadDynamic(out int length);
 				if (length == 0)
@@ -91,6 +91,7 @@ namespace WorldTree.TreeDataFormatters
 
 				//假如数组为空或长度不一致，那么重新分配
 				if (value == null || ((T[])value).Length != length) value = new T[length];
+				if (objId != TreeDataCode.NULL_OBJECT) self.IdToObjectDict.Add(objId, value);
 
 				Type type = typeof(T);
 				if (type.IsEnum) type = Enum.GetUnderlyingType(type);

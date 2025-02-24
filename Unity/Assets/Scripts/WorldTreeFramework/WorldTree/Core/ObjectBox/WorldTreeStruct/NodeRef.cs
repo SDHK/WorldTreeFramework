@@ -17,8 +17,8 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
 			{
-				if (self.TryWriteDataHead(value, typeMode, 1, out NodeRef<N> obj, false)) return;
-				self.WriteUnmanaged(921221376);
+				if (self.TryWriteDataHead(value, typeMode, ~1, out NodeRef<N> obj, false)) return;
+				self.WriteDynamic(1);
 				self.WriteValue(obj.Id);
 			}
 		}
@@ -26,26 +26,11 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				if (self.TryReadClassHead(typeof(NodeRef<N>), ref value, out int count)) return;
-				for (int i = 0; i < count; i++)
-				{
-					self.ReadUnmanaged(out nameCode);
-					SwitchRead(self, ref value, nameCode);
-				}
-			}
-			/// <summary>
-			/// 字段读取
-			/// </summary>
-			private static void SwitchRead(TreeDataByteSequence self, ref object value, int nameCode)
-			{
-				if (value is not NodeRef<N> obj) return;
-				obj.Core = self.Core;
-				switch (nameCode)
-				{
-					case 921221376: self.ReadValue(ref obj.Id); break;
-					default: self.SkipData(); break;
-				}
-				value = obj;
+				if (self.TryReadArrayHead(typeof(NodeRef<N>), ref value, 1, out int _)) return;
+				self.ReadDynamic(out int _);
+				value = new NodeRef<N>() { Core = self.Core, Id = self.ReadValue<long>() };
+
+
 			}
 		}
 	}

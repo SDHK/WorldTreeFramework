@@ -51,7 +51,6 @@ namespace WorldTree
 	/// </summary>
 	[TreePackSerializable]
 	public partial struct NodeClassDataTest1<T1, T2>
-	//where T1 : unmanaged
 	{
 		/// <summary>
 		/// 测试整数
@@ -111,7 +110,7 @@ namespace WorldTree
 	/// 测试数据3
 	/// </summary>
 	[TreePackSerializable]
-	public partial class NodeClassDataSub1<T> : NodeClassDataBase
+	public partial class NodeClassDataSub1 : NodeClassDataBase
 	{
 		/// <summary>
 		/// 测试整数
@@ -135,7 +134,7 @@ namespace WorldTree
 	/// 测试数据4
 	/// </summary>
 	[TreePackSerializable]
-	public partial class NodeClassDataSub3<T> : NodeClassDataSub1<T>
+	public partial class NodeClassDataSub3<T>
 	{
 		/// <summary>
 		/// 测试整数

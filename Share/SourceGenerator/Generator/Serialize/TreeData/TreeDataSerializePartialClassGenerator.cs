@@ -38,7 +38,7 @@ namespace WorldTree.SourceGenerator
 			int membersCount = 0;
 
 			// 获取类的完整名称，包括泛型参数
-			ClassGenerator(Code, classSymbol, out bool isAbstract);
+			ClassGenerator(Code, classSymbol, out bool isAbstract, out bool isClass);
 
 			List<ISymbol>? fieldSymbols = null;
 			if (!isAbstract) fieldSymbols = GetAllMembers(classSymbol, TreeDataSerializeGenerator.TypeFieldsCountDict, out baseSymbol, out membersCount);
@@ -46,7 +46,7 @@ namespace WorldTree.SourceGenerator
 
 
 			Code.AppendLine("	{");
-			GeneratorSerialize(Code, classSymbol, fieldSymbols, isAbstract, baseName, membersCount);
+			GeneratorSerialize(Code, classSymbol, fieldSymbols, isAbstract, baseName, membersCount, isClass);
 			GeneratorDeserialize(Code, classSymbol, fieldSymbols, isAbstract, baseName, membersCount);
 			Code.AppendLine("	}");
 		}
@@ -87,7 +87,7 @@ namespace WorldTree.SourceGenerator
 			return "int"; // 默认返回 int 类型
 		}
 
-		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount)
+		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount, bool isClass)
 		{
 
 			bool isConstant = GetIsConstantFromAttributes(classSymbol);
@@ -98,7 +98,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine($"			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)");
 			Code.AppendLine("			{");
 
-			Code.AppendLine($"				if (self.TryWriteDataHead(value, typeMode, {membersCount}, out {className} obj, {(isConstant ? "true" : "false")})) return;");
+			Code.AppendLine($"				if (self.TryWriteDataHead(value, typeMode, {membersCount}, out {className} obj, {(isConstant ? "true" : "false")} ,{(isClass ? "true" : "false")})) return;");
 
 			if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.ISerializable, out _))
 				Code.AppendLine($"				obj?.OnSerialize();");
@@ -158,7 +158,7 @@ namespace WorldTree.SourceGenerator
 			}
 
 
-			Code.AppendLine($"				if (self.TryReadClassHead(typeof({className}), ref value, out int count)) return;");
+			Code.AppendLine($"				if (self.TryReadClassHead(typeof({className}), ref value, out int count, out int objId)) return;");
 			if (!isAbstract)
 			{
 				if (classSymbol.TypeKind == TypeKind.Class)//类型新建
@@ -178,6 +178,7 @@ namespace WorldTree.SourceGenerator
 					{
 						Code.AppendLine($"				if (value is not {className} obj)value = obj = new {className}();");
 					}
+					Code.AppendLine(@$"				if (objId != TreeDataCode.NULL_OBJECT) self.IdToObjectDict.Add(objId, value);");
 				}
 			}
 			else //是抽象直接跳过
@@ -266,9 +267,10 @@ namespace WorldTree.SourceGenerator
 		}
 
 
-		private static void ClassGenerator(StringBuilder Code, INamedTypeSymbol typeNamedTypeSymbol, out bool isAbstract)
+		private static void ClassGenerator(StringBuilder Code, INamedTypeSymbol typeNamedTypeSymbol, out bool isAbstract, out bool isClass)
 		{
 			isAbstract = false;
+			isClass = false;
 			string className = typeNamedTypeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 			if (typeNamedTypeSymbol.TypeKind == TypeKind.Interface)
 			{
@@ -288,6 +290,7 @@ namespace WorldTree.SourceGenerator
 				}
 				else
 				{
+					isClass = true;
 					Code.AppendLine($"	public partial class {className}");
 				}
 			}

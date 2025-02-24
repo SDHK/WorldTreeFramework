@@ -27,9 +27,19 @@ namespace WorldTree
 			self.Age = 0;
 			self.KeyCode = KeyCodeTest.A;
 			self.KeyCodes = null;
+			self.KeyCodeRefs = null;
 			self.NodeRef = null;
+			self.NodeRef2 = null;
 			self.Ints = null;
 			self.Tuple = default;
+		};
+
+
+		static OnRemove<TreeDataNodeDataTest2> OnRemove2 = (self) =>
+		{
+			self.Name = null;
+			self.Age = 0;
+			self.Node = null;
 		};
 
 
@@ -38,7 +48,7 @@ namespace WorldTree
 			self.AddChild(out self.treeData);
 			self.treeData.Name = "测试123";
 			self.treeData.Age = 18789;
-			//枚举
+			////枚举
 			self.treeData.KeyCode = KeyCodeTest.C;
 			//多维数组
 			self.treeData.Ints = new int[][,,]{
@@ -52,14 +62,17 @@ namespace WorldTree
 				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
 				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B];
 
+			self.treeData.KeyCodeRefs = self.treeData.KeyCodes;
+
 			self.treeData.Tuple = (125, 41.1f);
 
 			//子节点数据
 			self.treeData.AddChild(out TreeDataNodeDataTest2 child);
 			child.Name = "测试4658";
 			child.Age = 788723;
-
 			self.treeData.NodeRef = child;
+			self.treeData.NodeRef2 = child;
+			child.Node = child;
 
 			//======================================
 
@@ -79,19 +92,21 @@ namespace WorldTree
 			//读取桌面文件
 			bytes = File.ReadAllBytes(filePath);
 
-			//bytes -> TreeData
-			TreeData treeData = TreeDataHelper.DeserializeTreeData(self, bytes);
-			//TreeData -> bytes
-			byte[] treeDataBytes = TreeDataHelper.SerializeTreeData(treeData);
-			self.Log($"TreeData序列化字节长度{treeDataBytes.Length}\n");
+			////bytes -> TreeData
+			//TreeData treeData = TreeDataHelper.DeserializeTreeData(self, bytes);
+			////TreeData -> bytes
+			//byte[] treeDataBytes = TreeDataHelper.SerializeTreeData(treeData);
+			//self.Log($"TreeData序列化字节长度{treeDataBytes.Length}\n");
 
 			//bytes -> 实例
-			TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, treeDataBytes);
+			TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, bytes);
 			node.SetParent(self);
 			self.treeData = node;
 			//====
+			self.Log($"反序列化引用还原测试！！！{self.treeData.NodeRef2 == self.treeData.NodeRef} || {self.treeData.NodeRef2 == self.treeData.NodeRef2.Node}");
+			self.Log($"反序列化引用还原测试！！！{self.treeData.NodeRef2.Node.Name}");
 
-			self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} => {self.treeData.KeyCodes[2]},{self.treeData.Tuple.Item2} ： {self.treeData.NodeRef.Value.Age}");
+			//self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} => {self.treeData.KeyCodes[2]},{self.treeData.Tuple} ： {self.treeData.NodeRef.Value.Age}");
 
 			self.Log("\n通用结构打印：\n");
 			self.Log(NodeRule.ToStringDrawTree(self));
