@@ -80,12 +80,13 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(T[]), ref value, 1, out int objId)) return;
+				if (self.TryReadArrayHead(typeof(T[]), ref value, 1, out int objId, out int jumpReadPoint)) return;
 
 				self.ReadDynamic(out int length);
 				if (length == 0)
 				{
 					value = Array.Empty<T>();
+					if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
 					return;
 				}
 
@@ -111,6 +112,7 @@ namespace WorldTree.TreeDataFormatters
 						self.ReadValue(ref ((T[])value)[i]);
 					}
 				}
+				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
 			}
 		}
 	}

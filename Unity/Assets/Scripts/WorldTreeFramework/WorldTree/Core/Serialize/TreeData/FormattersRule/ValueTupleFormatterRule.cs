@@ -25,7 +25,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(ValueTuple<T>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(ValueTuple<T>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				ValueTuple<T> obj = (ValueTuple<T>)value;
 				self.ReadValue(ref obj.Item1);
@@ -52,7 +52,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2> obj = (ValueTuple<T1, T2>)value;
 				self.ReadValue(ref obj.Item1);
@@ -80,7 +80,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3> obj = (ValueTuple<T1, T2, T3>)value;
 				self.ReadValue(ref obj.Item1);
@@ -110,7 +110,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3, T4> obj = (ValueTuple<T1, T2, T3, T4>)value;
 				self.ReadValue(ref obj.Item1);
@@ -142,7 +142,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3, T4, T5> obj = (ValueTuple<T1, T2, T3, T4, T5>)value;
 				self.ReadValue(ref obj.Item1);
@@ -176,7 +176,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5, T6>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5, T6>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3, T4, T5, T6> obj = (ValueTuple<T1, T2, T3, T4, T5, T6>)value;
 				self.ReadValue(ref obj.Item1);
@@ -212,7 +212,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				ValueTuple<T1, T2, T3, T4, T5, T6, T7> obj = (ValueTuple<T1, T2, T3, T4, T5, T6, T7>)value;
 				self.ReadValue(ref obj.Item1);
@@ -252,7 +252,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>), ref value, 1, out _, out _)) return;
 				ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> obj = (ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>)value;
 				self.ReadValue(ref obj.Item1);
 				self.ReadValue(ref obj.Item2);

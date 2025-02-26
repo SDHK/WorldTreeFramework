@@ -23,15 +23,15 @@ namespace WorldTree
 
 		static OnRemove<TreeDataNodeDataTest1> OnRemove = (self) =>
 		{
-			self.Name = null;
-			self.Age = 0;
+			//self.Name = null;
+			//self.Age = 0;
 			self.KeyCode = KeyCodeTest.A;
-			self.KeyCodes = null;
-			self.KeyCodeRefs = null;
-			self.NodeRef = null;
+			//self.KeyCodes = null;
+			//self.KeyCodeRefs = null;
+			//self.NodeRef = null;
 			self.NodeRef2 = null;
-			self.Ints = null;
-			self.Tuple = default;
+			//self.Ints = null;
+			//self.Tuple = default;
 		};
 
 
@@ -45,35 +45,36 @@ namespace WorldTree
 
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
-			self.AddChild(out self.treeData);
-			self.treeData.Name = "测试123";
-			self.treeData.Age = 18789;
-			////枚举
-			self.treeData.KeyCode = KeyCodeTest.C;
+			self.treeData = self.AddChild(out TreeDataNodeDataTest1 treeData);
+			treeData.Name = "测试123";
+			treeData.Age = 18789;
+
 			//多维数组
-			self.treeData.Ints = new int[][,,]{
+			treeData.Ints = new int[][,,]{
 				new int[2,2,5]{
 					{ { 1, 2, 30, 4, 5 }, { 20, 45, 90, 75, 23 } },
 					{ { 1, 23, 360, 84, 5 }, { 2, 5, 9, 5, 2 } }
 				},
 				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },
 			};
-			self.treeData.KeyCodes = [KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
+			treeData.KeyCodes = [KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
 				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
 				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B];
 
-			self.treeData.KeyCodeRefs = self.treeData.KeyCodes;
+			treeData.KeyCodeRefs = treeData.KeyCodes;
 
-			self.treeData.Tuple = (125, 41.1f);
+			treeData.Tuple = (125, 41.1f);
 
 			//子节点数据
-			self.treeData.AddChild(out TreeDataNodeDataTest2 child);
+			treeData.AddChild(out TreeDataNodeDataTest2 child);
 			child.Name = "测试4658";
 			child.Age = 788723;
-			self.treeData.NodeRef = child;
-			self.treeData.NodeRef2 = child;
+			treeData.NodeRef = child;
+			treeData.NodeRef2 = child;
 			child.Node = child;
 
+			////枚举
+			treeData.KeyCode = KeyCodeTest.C;
 			//======================================
 
 			//实例 -> bytes
@@ -99,14 +100,15 @@ namespace WorldTree
 			//self.Log($"TreeData序列化字节长度{treeDataBytes.Length}\n");
 
 			//bytes -> 实例
-			TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, bytes);
+			TreeDataNodeDataTest10 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest10>(self, bytes);
 			node.SetParent(self);
-			self.treeData = node;
+			self.treeData10 = node;
 			//====
-			self.Log($"反序列化引用还原测试！！！{self.treeData.NodeRef2 == self.treeData.NodeRef} || {self.treeData.NodeRef2 == self.treeData.NodeRef2.Node}");
-			self.Log($"反序列化引用还原测试！！！{self.treeData.NodeRef2.Node.Name}");
+			self.Log($"反序列化引用还原测试！！！ {node.NodeRef.Value == node.NodeRef.Value.Node}");
+			//self.Log($"反序列化引用还原测试！！！{node.NodeRef.Value.Node.Name}");
 
 			//self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} => {self.treeData.KeyCodes[2]},{self.treeData.Tuple} ： {self.treeData.NodeRef.Value.Age}");
+			self.Log($"反序列化引用还原测试！！！{self.treeData10.KeyCode} => {self.treeData10.KeyCodes[2]},{self.treeData10.Tuple} ： {self.treeData10.NodeRef.Value.Age}");
 
 			self.Log("\n通用结构打印：\n");
 			self.Log(NodeRule.ToStringDrawTree(self));

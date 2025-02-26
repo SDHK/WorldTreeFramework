@@ -25,7 +25,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(Tuple<T>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(Tuple<T>), ref value, 1, out _, out _)) return;
 				self.ReadUnmanaged(out int _);
 				value = new Tuple<T>(self.ReadValue<T>());
 			}
@@ -48,7 +48,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(Tuple<T1, T2>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(Tuple<T1, T2>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				value = new Tuple<T1, T2>(
 					self.ReadValue<T1>(),
@@ -75,7 +75,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				value = new Tuple<T1, T2, T3>(
 					self.ReadValue<T1>(),
@@ -104,7 +104,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				value = new Tuple<T1, T2, T3, T4>(
 					self.ReadValue<T1>(),
@@ -135,7 +135,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4, T5>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4, T5>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				value = new Tuple<T1, T2, T3, T4, T5>(
 					self.ReadValue<T1>(),
@@ -168,7 +168,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4, T5, T6>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4, T5, T6>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				value = new Tuple<T1, T2, T3, T4, T5, T6>(
 					self.ReadValue<T1>(),
@@ -203,7 +203,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4, T5, T6, T7>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4, T5, T6, T7>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				value = new Tuple<T1, T2, T3, T4, T5, T6, T7>(
 					self.ReadValue<T1>(),
@@ -240,7 +240,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				value = new Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>(
 					self.ReadValue<T1>(),

@@ -26,11 +26,9 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int nameCode)
 			{
-				if (self.TryReadArrayHead(typeof(NodeRef<N>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(NodeRef<N>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				value = new NodeRef<N>() { Core = self.Core, Id = self.ReadValue<long>() };
-
-
 			}
 		}
 	}

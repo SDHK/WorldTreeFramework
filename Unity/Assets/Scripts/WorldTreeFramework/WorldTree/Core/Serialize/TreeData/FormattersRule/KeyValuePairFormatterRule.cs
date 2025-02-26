@@ -32,7 +32,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (self.TryReadArrayHead(typeof(KeyValuePair<TKey, TValue>), ref value, 1, out int _)) return;
+				if (self.TryReadArrayHead(typeof(KeyValuePair<TKey, TValue>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				value = new KeyValuePair<TKey, TValue>(
 					self.ReadValue<TKey>(),

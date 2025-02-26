@@ -24,6 +24,11 @@ namespace WorldTree
 		/// data
 		/// </summary>
 		public TreeDataNodeDataTest1 treeData;
+
+		/// <summary>
+		/// data
+		/// </summary>
+		public TreeDataNodeDataTest10 treeData10;
 	}
 
 
@@ -140,6 +145,56 @@ namespace WorldTree
 		/// </summary>
 		public TreeDataNodeDataTest2 NodeRef2;
 
+	}
+
+	/// <summary>
+	/// 测试节点数据1
+	/// </summary>
+	[TreeDataSerializable]
+	public partial class TreeDataNodeDataTest10 : NodeData
+		, ChildOf<TreeDataTest>
+		, AsAwake
+		, AsChildBranch
+	{
+		/// <summary>
+		/// 测试枚举数组
+		/// </summary>
+		public KeyCodeTest[] KeyCodes;
+
+		/// <summary>
+		/// 测试枚举数组
+		/// </summary>
+		public KeyCodeTest[] KeyCodeRefs;
+
+		/// <summary>
+		/// 元组测试
+		/// </summary>
+		public (int, float) Tuple;
+
+		/// <summary>
+		/// 数组
+		/// </summary>
+		public int[][,,] Ints;
+
+		/// <summary>
+		/// 名称
+		/// </summary>
+		public string Name;
+
+		/// <summary>
+		/// 年龄
+		/// </summary>
+		public int Age;
+
+		/// <summary>
+		/// 按键码
+		/// </summary>
+		public KeyCodeTest KeyCode;
+
+		/// <summary>
+		/// 测试节点数据2
+		/// </summary>
+		public NodeRef<TreeDataNodeDataTest2> NodeRef;
 	}
 
 	/// <summary>

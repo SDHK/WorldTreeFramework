@@ -59,7 +59,7 @@ namespace WorldTree.TreeDataFormatters
 					SwitchRead(self, ref value, fieldNameCode);
 					return;
 				}
-				if (self.TryReadClassHead(typeof(T), ref value, out int count, out int objId)) return;
+				if (self.TryReadClassHead(typeof(T), ref value, out int count, out int objId, out int jumpReadPoint)) return;
 
 				if (value is not T) value = new T();
 				if (objId != TreeDataCode.NULL_OBJECT) self.IdToObjectDict.Add(objId, value);
@@ -69,6 +69,7 @@ namespace WorldTree.TreeDataFormatters
 					self.ReadUnmanaged(out fieldNameCode);
 					SwitchRead(self, ref value, fieldNameCode);
 				}
+				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
 			}
 
 			/// <summary>
@@ -82,7 +83,7 @@ namespace WorldTree.TreeDataFormatters
 					case 1683726967:
 						{
 							//反序列化数组
-							if (self.TryReadArrayHead(typeof(ItemT[]), ref value, 1, out _)) return;
+							if (self.TryReadArrayHead(typeof(ItemT[]), ref value, 1, out _, out _)) return;
 							ForeachRead(self, obj);
 						}
 						break;

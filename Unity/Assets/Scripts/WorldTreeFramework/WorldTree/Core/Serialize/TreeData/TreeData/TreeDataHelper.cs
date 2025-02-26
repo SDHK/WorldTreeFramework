@@ -36,10 +36,10 @@ namespace WorldTree
 			where N : class, INode
 		{
 			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
-			INode treeSpade = null;
+			N treeSpade = null;
 			sequence.Deserialize(ref treeSpade);
 			sequence.Dispose();
-			return treeSpade as N;
+			return treeSpade;
 		}
 
 

@@ -158,7 +158,7 @@ namespace WorldTree.SourceGenerator
 			}
 
 
-			Code.AppendLine($"				if (self.TryReadClassHead(typeof({className}), ref value, out int count, out int objId)) return;");
+			Code.AppendLine($"				if (self.TryReadClassHead(typeof({className}), ref value, out int count, out int objId, out int jumpReadPoint)) return;");
 			if (!isAbstract)
 			{
 				if (classSymbol.TypeKind == TypeKind.Class)//类型新建
@@ -196,7 +196,7 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("					SwitchRead(self, ref value, fieldNameCode);");
 				Code.AppendLine("				}");
 			}
-
+			Code.AppendLine("				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);");
 			if (!isAbstract)
 			{
 				if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.ISerializable, out _))
