@@ -67,6 +67,7 @@ namespace WorldTree
 
 				self.GetBaseRule<TreeDataByteSequence, ByteSequence, Add>().Send(self);
 				self.Core.PoolGetUnit(out self.TypeToTypeIdDict);
+				self.Core.PoolGetUnit(out self.TypeNameToTypeIdDict);
 				self.Core.PoolGetUnit(out self.codeToTypeNameDict);
 				self.Core.PoolGetUnit(out self.TypeIdToCodeList);
 				self.Core.PoolGetUnit(out self.IdToTypeIdList);
@@ -82,6 +83,7 @@ namespace WorldTree
 			{
 				self.Clear();
 				self.TypeToTypeIdDict.Dispose();
+				self.TypeNameToTypeIdDict.Dispose();
 				self.codeToTypeNameDict.Dispose();
 				self.TypeIdToCodeList.Dispose();
 				self.IdToTypeIdList.Dispose();
@@ -117,6 +119,11 @@ namespace WorldTree
 		/// 类型对应类型Id字典
 		/// </summary>
 		public UnitDictionary<Type, int> TypeToTypeIdDict;
+
+		/// <summary>
+		/// 类型名称对应类型Id字典
+		/// </summary>
+		public UnitDictionary<string, int> TypeNameToTypeIdDict;
 
 
 		/// <summary>
@@ -156,6 +163,40 @@ namespace WorldTree
 		#endregion
 
 		#region 映射表
+
+		/// <summary>
+		/// 添加类型
+		/// </summary>
+		private int GetTypeId(string typeName, bool isIgnoreName = false)
+		{
+			Type type = System.Type.GetType(typeName);
+			if (!TypeNameToTypeIdDict.TryGetValue(typeName, out int typeId))
+			{
+				long typeCode;
+				if (type != null)
+				{
+					typeCode = TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte typeByteCode) ? typeByteCode : this.TypeToCode(type);
+				}
+				else
+				{
+					typeCode = typeName.GetHash64();
+				}
+				typeId = TypeIdToCodeList.Count;
+				TypeIdToCodeList.Add(typeCode);
+				TypeNameToTypeIdDict.Add(typeName, typeId);
+			}
+
+			if (!isIgnoreName)
+			{
+				if (type != null && TreeDataTypeHelper.TypeCodeDict.ContainsKey(type)) return typeId;
+				long typeCode = TypeIdToCodeList[typeId];
+				if (!codeToTypeNameDict.ContainsKey(typeCode))
+				{
+					codeToTypeNameDict.Add(typeCode, typeName);
+				}
+			}
+			return typeId;
+		}
 
 
 		/// <summary>
@@ -1039,9 +1080,15 @@ namespace WorldTree
 		/// </summary>
 		private void SetTreeData(TreeData treeData)
 		{
-			//判断是否是数组
-			if (treeData is TreeDataArray treeDataArray)
+			//判断是否是引用
+			if (treeData is TreeDataRef treeDataRef)
 			{
+				ObjectToIdDict.TryGetValue(treeDataRef.Data, out int objId);
+				this.WriteDynamic(objId);
+			}
+			else if (treeData is TreeDataArray treeDataArray)
+			{
+
 				//写入类型码
 				long typeCode = treeDataArray.TypeName.GetHash64();
 
@@ -1055,7 +1102,28 @@ namespace WorldTree
 				{
 					codeToTypeNameDict.TryAdd(typeCode, treeData.TypeName);
 				}
-				this.WriteDynamic(typeCode);
+
+				if (treeDataArray.IsRef && !treeDataArray.IsDefault)
+				{
+					//负数Id为新对象
+					int id = ~IdToObjectDict.Count;
+					ObjectToIdDict.Add(treeData, id);
+					IdToObjectDict.Add(id, treeData);
+					IdToTypeIdList.Add(GetTypeId(treeData.TypeName));
+					this.WriteDynamic(id);
+					IdToReadList.Add(Length);//记录数据读取位置
+				}
+				else
+				{
+					this.WriteDynamic(typeCode);
+				}
+
+				//空对象判断
+				if (treeDataArray.IsDefault)
+				{
+					this.WriteDynamic(TreeDataCode.NULL_OBJECT);
+					return;
+				}
 
 				//写入数组维度
 				this.WriteDynamic(~treeDataArray.LengthList.Count);
@@ -1110,6 +1178,7 @@ namespace WorldTree
 			{
 				//写入类型码
 				long typeCode = treeData.TypeName.GetHash64();
+
 				//判断是否为基础类型
 				if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value))
 				{
@@ -1119,7 +1188,21 @@ namespace WorldTree
 				{
 					codeToTypeNameDict.TryAdd(typeCode, treeData.TypeName);
 				}
-				this.WriteDynamic(typeCode);
+
+				if (treeData.IsRef && !treeData.IsDefault)
+				{
+					//负数Id为新对象
+					int id = ~IdToObjectDict.Count;
+					ObjectToIdDict.Add(treeData, id);
+					IdToObjectDict.Add(id, treeData);
+					IdToTypeIdList.Add(GetTypeId(treeData.TypeName));
+					this.WriteDynamic(id);
+					IdToReadList.Add(Length);//记录数据读取位置
+				}
+				else
+				{
+					this.WriteDynamic(typeCode);
+				}
 
 				//空对象判断
 				if (treeData.IsDefault)

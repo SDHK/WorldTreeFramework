@@ -95,12 +95,12 @@ namespace WorldTree
 
 			//bytes -> TreeData
 			TreeData treeData = TreeDataHelper.DeserializeTreeData(self, bytes);
-			////TreeData -> bytes
-			//byte[] treeDataBytes = TreeDataHelper.SerializeTreeData(treeData);
-			//self.Log($"TreeData序列化字节长度{treeDataBytes.Length}\n");
+			//TreeData -> bytes
+			byte[] treeDataBytes = TreeDataHelper.SerializeTreeData(treeData);
+			self.Log($"TreeData序列化字节长度{treeDataBytes.Length}\n");
 
 			//bytes -> 实例
-			TreeDataNodeDataTest10 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest10>(self, bytes);
+			TreeDataNodeDataTest10 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest10>(self, treeDataBytes);
 			node.SetParent(self);
 			self.treeData10 = node;
 			//====
