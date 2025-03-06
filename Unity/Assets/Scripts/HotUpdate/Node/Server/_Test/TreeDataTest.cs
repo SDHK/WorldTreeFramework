@@ -176,6 +176,12 @@ namespace WorldTree
 		/// </summary>
 		public int[][,,] Ints;
 
+
+		/// <summary>
+		/// 名称1
+		/// </summary>
+		public string Name1;
+
 		/// <summary>
 		/// 名称
 		/// </summary>
@@ -195,6 +201,8 @@ namespace WorldTree
 		/// 测试节点数据2
 		/// </summary>
 		public NodeRef<TreeDataNodeDataTest2> NodeRef;
+
+
 	}
 
 	/// <summary>

@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/7/29 11:51
@@ -10,6 +10,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -79,7 +81,7 @@ namespace WorldTree.SourceGenerator
 
 				foreach (TypeDeclarationSyntax typeDeclaration in TypeListItem.Value)
 				{
-					var SubList = GetTypeSub(context, context.Compilation.ToINamedTypeSymbol(typeDeclaration));
+					List<INamedTypeSymbol> SubList = GetTypeSub(context, context.Compilation.ToINamedTypeSymbol(typeDeclaration));
 					TreePackSerializePartialClassGenerator.Execute(context, ClassCode, typeDeclaration, SubList);
 				}
 

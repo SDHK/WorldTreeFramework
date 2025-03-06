@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/4/9 20:41
@@ -8,6 +8,7 @@
 */
 
 using Microsoft.CodeAnalysis;
+using System;
 
 namespace WorldTree.SourceGenerator
 {

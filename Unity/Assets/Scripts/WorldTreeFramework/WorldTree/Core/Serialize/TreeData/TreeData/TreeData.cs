@@ -8,20 +8,23 @@
 */
 namespace WorldTree
 {
-
 	/// <summary>
 	/// 树数据节点
 	/// </summary>
 	public class TreeData : Node
 		, NumberNodeOf<TreeData>
 		, ListNodeOf<TreeData>
-		, ChildOf<TreeData>
 		, TempOf<INode>
 		, AsNumberNodeBranch
-		, AsChildBranch
 		, AsListNodeBranch
 		, AsAwake
 	{
+
+		/// <summary>
+		/// 是否可引用类型
+		/// </summary>
+		public bool IsRef = false;
+
 		/// <summary>
 		/// 类型名称
 		/// </summary>
@@ -37,6 +40,21 @@ namespace WorldTree
 			return $"[TreeData:{this.TypeName}] {(IsDefault ? ": Null" : "")}";
 		}
 	}
+
+
+	/// <summary>
+	/// 树数据节点引用
+	/// </summary>
+	public class TreeDataRef : Node
+		, NumberNodeOf<TreeData>
+		, ListNodeOf<TreeData>
+	{
+		/// <summary>
+		/// 引用数据
+		/// </summary>
+		public TreeData Data;
+	}
+
 
 	public static class TreeDataRule
 	{

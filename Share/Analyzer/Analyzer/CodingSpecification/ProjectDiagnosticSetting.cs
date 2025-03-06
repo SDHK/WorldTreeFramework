@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/6/18 16:42
@@ -41,6 +41,7 @@ namespace WorldTree.Analyzer
 			new HashSetDiagnosticConfig(),
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
+
 			new RuleDelegateDiagnosticConfig(),
 
 			new NodeDiagnosticConfig(),
@@ -59,6 +60,7 @@ namespace WorldTree.Analyzer
 			new HashSetDiagnosticConfig(),
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
+
 			new RuleDelegateDiagnosticConfig(),
 
 			new CodeNodeDiagnosticConfig(),

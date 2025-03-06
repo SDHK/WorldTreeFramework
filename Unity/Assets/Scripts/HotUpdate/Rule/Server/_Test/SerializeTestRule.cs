@@ -1,9 +1,9 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2024/8/27 15:17
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2024/8/27 15:17
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 using System;
@@ -17,7 +17,7 @@ namespace WorldTree
 		static unsafe Action<SerializeTest> OnAddSerializeTest1 = (self) =>
 		{
 
-			//Ëæ±ãĞ´µã²»Ò»ÑùµÄÊı¾İ
+			//éšä¾¿å†™ç‚¹ä¸ä¸€æ ·çš„æ•°æ®
 			NodeClassDataTest<int, float, int> testData = new();
 			testData.ValueT1 = 987;
 			testData.ValueT2 = 45.321f;
@@ -34,23 +34,23 @@ namespace WorldTree
 	{
 		static OnAdd<SerializeTest> OnAddSerializeTest = (self) =>
 		{
-			self.Log($"Ç¶Ì×ĞòÁĞ»¯²âÊÔ£¡£¡£¡£¡£¡");
-			//Ëæ±ãĞ´µã²»Ò»ÑùµÄÊı¾İ
+			self.Log($"åµŒå¥—åºåˆ—åŒ–æµ‹è¯•ï¼ï¼ï¼ï¼ï¼");
+			//éšä¾¿å†™ç‚¹ä¸ä¸€æ ·çš„æ•°æ®
 			NodeClassDataTest<int, float, int> testData = new();
 			testData.ValueT1 = 987;
 			testData.ValueT2 = 45.321f;
 			testData.ValueT3 = 1234567;
 
 
-			//Ç¶Ì×ÀàĞÍ
+			//åµŒå¥—ç±»å‹
 			testData.DataTest1 = new NodeClassDataTest1<int, float>();
 			testData.DataTest1.TestInts = new[] { 1, 3, 5, 88 };
 			testData.DataTest1.TestT2 = 5.789456f;
 			testData.DataTest1.ValueT4Dict = new UnitDictionary<int, string>()
 			{
-					{ 1, "A1.145fÀ­°ÇÀ­°ÍÀ­" },
-					{ 2, "A2.278f²Á" },
-					{ 3, "A3.312f´ï" },
+					{ 1, "A1.145fæ‹‰æ‰’æ‹‰å·´æ‹‰" },
+					{ 2, "A2.278fæ“¦" },
+					{ 3, "A3.312fè¾¾" },
 			};
 
 			testData.DataTestBase = new NodeClassDataBase()
@@ -62,19 +62,19 @@ namespace WorldTree
 
 
 
-			// ĞòÁĞ»¯
+			// åºåˆ—åŒ–
 			self.AddTemp(out TreePackByteSequence sequenceWrite).Serialize(testData);
 			byte[] bytes = sequenceWrite.ToBytes();
 
-			self.Log($"ĞòÁĞ»¯×Ö½Ú³¤¶È{bytes.Length}");
+			self.Log($"åºåˆ—åŒ–å­—èŠ‚é•¿åº¦{bytes.Length}");
 
-			// ·´ĞòÁĞ»¯
+			// ååºåˆ—åŒ–
 			self.AddTemp(out TreePackByteSequence sequenceRead).SetBytes(bytes);
 			NodeClassDataTest<int, float, int> testData2 = null;
 			sequenceRead.Deserialize(ref testData2);
-			string logText = $"·´ĞòÁĞ»¯{testData2.ValueT1} {testData2.ValueT2}  ·ºĞÍ×Ö¶Î£º{testData2.ValueT3}  Ç¶Ì×Àà×Ö¶Î£º {testData2.DataTest1.TestT2}  ";
+			string logText = $"ååºåˆ—åŒ–{testData2.ValueT1} {testData2.ValueT2}  æ³›å‹å­—æ®µï¼š{testData2.ValueT3}  åµŒå¥—ç±»å­—æ®µï¼š {testData2.DataTest1.TestT2}  ";
 
-			logText += $"\n×Öµä£º";
+			logText += $"\nå­—å…¸ï¼š";
 			if (testData2.DataTest1.ValueT4Dict == null)
 			{
 				logText += $"null !!, ";
@@ -88,7 +88,7 @@ namespace WorldTree
 			}
 
 
-			logText += $"\nÊı×é£º";
+			logText += $"\næ•°ç»„ï¼š";
 			if (testData2.DataTest1.TestInts == null)
 			{
 				logText += $"null !!, ";
@@ -102,7 +102,7 @@ namespace WorldTree
 			}
 
 
-			logText += $"\n»ùÀàÊı×é£º";
+			logText += $"\nåŸºç±»æ•°ç»„ï¼š";
 			NodeClassDataBase nodeClassDataSub = testData2.DataTestBase as NodeClassDataBase;
 			//logText += $" {nodeClassDataSub.TestFloat_T} ";
 			foreach (var item in nodeClassDataSub.TestInts)

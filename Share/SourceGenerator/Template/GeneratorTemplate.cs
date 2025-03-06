@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/6/6 11:12
@@ -6,7 +6,7 @@
 * 描述：
 
 */
-using System.Reflection;
+using System.Collections.Generic;
 using System.Text;
 
 namespace WorldTree.SourceGenerator

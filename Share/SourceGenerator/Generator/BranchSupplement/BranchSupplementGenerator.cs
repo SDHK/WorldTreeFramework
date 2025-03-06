@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/5/20 15:39
@@ -9,6 +9,9 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Security;
 using System.Text;
 
@@ -28,6 +31,7 @@ namespace WorldTree.SourceGenerator
 		public void Execute(GeneratorExecutionContext context)
 		{
 			if (!(context.SyntaxReceiver is FindSubClassSyntaxReceiver receiver)) return;
+
 			if (receiver.ClassDeclarations.Count == 0) return;
 
 			BranchSupplementHelper.Init(context.Compilation);

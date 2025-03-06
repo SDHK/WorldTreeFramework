@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/6/25 14:36
@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 
 namespace WorldTree
 {
@@ -48,7 +47,7 @@ namespace WorldTree
 		/// 尝试获取指定的特性
 		/// </summary>
 		/// <returns></returns>
-		public static bool TryGetAttribute(MemberDeclarationSyntax node, string attributeName,out AttributeSyntax? attributeSyntax)
+		public static bool TryGetAttribute(MemberDeclarationSyntax node, string attributeName, out AttributeSyntax? attributeSyntax)
 		{
 			attributeSyntax = null;
 			if (node.AttributeLists.Count == 0) return false;

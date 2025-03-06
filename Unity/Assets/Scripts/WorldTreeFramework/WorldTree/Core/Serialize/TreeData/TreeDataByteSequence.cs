@@ -939,9 +939,10 @@ namespace WorldTree
 		{
 			if (this.ReadDynamic(out int typeId) < 0)
 			{
+				typeId = ~typeId;
 				//判断位置不一致，说明这里是引用地址，后续没有数据，直接跳跃
-				if (IdToReadList[~typeId] != readPoint) return;
-				typeId = IdToTypeIdList[~typeId];
+				if (IdToReadList[typeId] != readPoint) return;
+				typeId = IdToTypeIdList[typeId];
 			}
 			TryIdGetType(typeId, out Type type);
 
@@ -1156,8 +1157,21 @@ namespace WorldTree
 		{
 			TreeData data;
 			int startPoint = this.readPoint;
-			//读取类型码
-			this.ReadDynamic(out long typeCode);
+
+			//读取类型Id
+			if (this.ReadDynamic(out int typeId) < 0)
+			{
+				typeId = ~typeId;
+				//判断位置不一致，说明这里是引用地址，后续没有数据。
+				if (IdToReadList[typeId] != readPoint)
+				{
+
+
+				}
+				typeId = IdToTypeIdList[typeId];
+			}
+
+			this.TryGetTypeCode(typeId, out long typeCode);
 			if (this.TryCodeGetType(typeCode, out Type type))
 			{
 				//获取真实类型码

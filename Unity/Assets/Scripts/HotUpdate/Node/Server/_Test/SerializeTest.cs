@@ -1,15 +1,15 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2024/8/27 15:15
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2024/8/27 15:15
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 namespace WorldTree
 {
 	/// <summary>
-	/// ²âÊÔÊı¾İ
+	/// æµ‹è¯•æ•°æ®
 	/// </summary>
 	[TreePackSerializable]
 	public partial class NodeClassDataTest<T1, T2, T3>
@@ -18,58 +18,58 @@ namespace WorldTree
 
 	{
 		/// <summary>
-		/// ²âÊÔ·ºĞÍ1
+		/// æµ‹è¯•æ³›å‹1
 		/// </summary>
 		public T1 ValueT1 = default;
 
 		/// <summary>
-		/// ²âÊÔ·ºĞÍ2
+		/// æµ‹è¯•æ³›å‹2
 		/// </summary>
 		public T2 ValueT2 = default;
 
 
 		/// <summary>
-		/// ²âÊÔ·ºĞÍ3
+		/// æµ‹è¯•æ³›å‹3
 		/// </summary>
 		public T3 ValueT3 { get; set; } = default;
 
 		/// <summary>
-		/// ²âÊÔclass
+		/// æµ‹è¯•class
 		/// </summary>
 		public NodeClassDataTest1<T1, T2> DataTest1 = default;
 
 
 		/// <summary>
-		/// ²âÊÔclass
+		/// æµ‹è¯•class
 		/// </summary>
 		public NodeClassDataBase DataTestBase;
 
 	}
 
 	/// <summary>
-	/// ²âÊÔÊı¾İ2
+	/// æµ‹è¯•æ•°æ®2
 	/// </summary>
 	[TreePackSerializable]
 	public partial struct NodeClassDataTest1<T1, T2>
 	{
 		/// <summary>
-		/// ²âÊÔÕûÊı
+		/// æµ‹è¯•æ•´æ•°
 		/// </summary>
 		public T1[] TestInts { get; set; }
 
 		/// <summary>
-		/// ²âÊÔ¸¡µã
+		/// æµ‹è¯•æµ®ç‚¹
 		/// </summary>
 		public T2 TestT2 { get; set; }
 
 		/// <summary>
-		/// ²âÊÔ×Öµä
+		/// æµ‹è¯•å­—å…¸
 		/// </summary>
 		public UnitDictionary<int, string> ValueT4Dict;
 	}
 
 	/// <summary>
-	/// ²âÊÔÊı¾İ3
+	/// æµ‹è¯•æ•°æ®3
 	/// </summary>
 	[TreePackSerializable]
 	public partial struct NodeClassDataTest2<T1, T2>
@@ -77,12 +77,12 @@ namespace WorldTree
 	where T2 : unmanaged
 	{
 		/// <summary>
-		/// ²âÊÔÕûÊı
+		/// æµ‹è¯•æ•´æ•°
 		/// </summary>
 		public T1 TestInts { get; set; }
 
 		/// <summary>
-		/// ²âÊÔ¸¡µã
+		/// æµ‹è¯•æµ®ç‚¹
 		/// </summary>
 		public T2 TestT2 { get; set; }
 
@@ -90,61 +90,61 @@ namespace WorldTree
 
 
 	/// <summary>
-	/// ²âÊÔÊı¾İ3
+	/// æµ‹è¯•æ•°æ®3
 	/// </summary>
 	[TreePackSerializable]
 	public partial class NodeClassDataBase
 	{
 		/// <summary>
-		/// ²âÊÔÕûÊı
+		/// æµ‹è¯•æ•´æ•°
 		/// </summary>
 		public int[] TestInts { get; set; }
 
 		/// <summary>
-		/// ²âÊÔ¸¡µã
+		/// æµ‹è¯•æµ®ç‚¹
 		/// </summary>
 		public int TestT2 { get; set; }
 	}
 
 	/// <summary>
-	/// ²âÊÔÊı¾İ3
+	/// æµ‹è¯•æ•°æ®3
 	/// </summary>
 	[TreePackSerializable]
 	public partial class NodeClassDataSub1 : NodeClassDataBase
 	{
 		/// <summary>
-		/// ²âÊÔÕûÊı
+		/// æµ‹è¯•æ•´æ•°
 		/// </summary>
 		public int TestInt_T;
 	}
 
 	/// <summary>
-	/// ²âÊÔÊı¾İ4
+	/// æµ‹è¯•æ•°æ®4
 	/// </summary>
 	[TreePackSerializable]
 	public partial class NodeClassDataSub2 : NodeClassDataBase
 	{
 		/// <summary>
-		/// ²âÊÔÕûÊı
+		/// æµ‹è¯•æ•´æ•°
 		/// </summary>
 		public float TestFloat_T;
 	}
 
 	/// <summary>
-	/// ²âÊÔÊı¾İ4
+	/// æµ‹è¯•æ•°æ®4
 	/// </summary>
 	[TreePackSerializable]
 	public partial class NodeClassDataSub3<T>
 	{
 		/// <summary>
-		/// ²âÊÔÕûÊı
+		/// æµ‹è¯•æ•´æ•°
 		/// </summary>
 		public float TestFloat_T1;
 	}
 
 
 	/// <summary>
-	/// ĞòÁĞ»¯²âÊÔ
+	/// åºåˆ—åŒ–æµ‹è¯•
 	/// </summary>
 	public class SerializeTest : Node
 		, ComponentOf<INode>
