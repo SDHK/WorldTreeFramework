@@ -409,7 +409,7 @@ namespace WorldTree
 				obj = (T)value;
 				if (typeMode == SerializedTypeMode.DataType)
 				{
-					Type type = typeof(T);
+					Type type = writeType ?? typeof(T);
 					long typeCode = TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte typeByteCode) ? typeByteCode : this.TypeToCode(type);
 					int typeId = this.IdToTypeIdList[~id];
 					if (this.TypeIdToCodeList[typeId] == typeCode) return true;
@@ -749,15 +749,15 @@ namespace WorldTree
 			{
 				//为负数则为对象Id
 				objId = ~typeId;
-				if (TryGetObject(objId, out value)) { return true; }
-				//拿到类型Id
-				TryGetTypeId(objId, out typeId);
 				int dataPoint = IdToReadList[objId];
 				if (dataPoint != readPoint)
 				{
+					if (TryGetObject(objId, out value)) { return true; }
 					jumpReadPoint = readPoint;
 					ReadJump(dataPoint);
 				}
+				//拿到类型Id
+				TryGetTypeId(objId, out typeId);
 			}
 			else
 			{
@@ -1158,19 +1158,25 @@ namespace WorldTree
 			TreeData data;
 			int startPoint = this.readPoint;
 
+			bool isRef = false;
+			int objId = 0;
+
 			//读取类型Id
 			if (this.ReadDynamic(out int typeId) < 0)
 			{
-				typeId = ~typeId;
+				objId = ~typeId;
 				//判断位置不一致，说明这里是引用地址，后续没有数据。
-				if (IdToReadList[typeId] != readPoint)
+				if (IdToReadList[objId] != readPoint)
 				{
-
-
+					IdToObjectDict.TryGetValue(objId, out object obj);
+					data = AddTreeData(node, out TreeDataRef treeRef, number, isArray);
+					treeRef.Data = obj as TreeData;
+					return data;
 				}
-				typeId = IdToTypeIdList[typeId];
+				typeId = IdToTypeIdList[objId];
+				isRef = true;
 			}
-
+			//拿到类型码
 			this.TryGetTypeCode(typeId, out long typeCode);
 			if (this.TryCodeGetType(typeCode, out Type type))
 			{
@@ -1179,7 +1185,8 @@ namespace WorldTree
 				//判断是否是基础类型
 				if (TreeDataTypeHelper.BasicsTypeHash.Contains(type))
 				{
-					data = AddTreeData(node, out TreeDataValue treeValue, number, isArray);
+					data = AddTreeData(node, out TreeDataValue treeValue, number, isArray, isRef, objId);
+					data.IsRef = isRef;
 					data.TypeName = type.ToString();
 					//基础类型取值
 					if (this.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
@@ -1233,6 +1240,13 @@ namespace WorldTree
 						int fieldNameCode = TreeDataCode.DESERIALIZE_SELF_MODE;
 						object obj = null;
 						((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref obj, ref fieldNameCode);
+						if (isRef)
+						{
+							data.IsRef = true;
+							ObjectToIdDict.Add(data, objId);
+							IdToObjectDict[objId] = data;
+						}
+
 						Array array = (obj as Array);
 						int i = 0;
 						foreach (var item in array)
@@ -1250,7 +1264,7 @@ namespace WorldTree
 			}
 			else
 			{
-				data = AddTreeData(node, out TreeData _, number, isArray);
+				data = AddTreeData(node, out TreeData _, number, isArray, isRef, objId);
 				data.TypeName = type?.ToString();
 
 				for (int i = 0; i < count; i++)
@@ -1266,7 +1280,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加TreeData结构
 		/// </summary>
-		private T AddTreeData<T>(INode node, out T treeValue, int number, bool isArray)
+		private T AddTreeData<T>(INode node, out T treeValue, int number, bool isArray, bool isRef = false, int id = 0)
 			where T : TreeData
 		{
 			if (node is TreeData treeData)
@@ -1277,6 +1291,12 @@ namespace WorldTree
 			else
 			{
 				node.AddTemp(out treeValue);
+			}
+			if (isRef)
+			{
+				treeValue.IsRef = true;
+				ObjectToIdDict.Add(treeValue, id);
+				IdToObjectDict.Add(id, treeValue);
 			}
 			return treeValue;
 		}

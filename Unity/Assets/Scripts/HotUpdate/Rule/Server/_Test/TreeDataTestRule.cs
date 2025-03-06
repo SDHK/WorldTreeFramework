@@ -45,36 +45,36 @@ namespace WorldTree
 
 		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
 		{
-			self.treeData = self.AddChild(out TreeDataNodeDataTest1 treeData);
-			treeData.Name = "测试123";
-			treeData.Age = 18789;
+			self.treeData = self.AddChild(out TreeDataNodeDataTest1 treeNode);
+			treeNode.Name = "测试123";
+			treeNode.Age = 18789;
 
 			//多维数组
-			treeData.Ints = new int[][,,]{
+			treeNode.Ints = new int[][,,]{
 				new int[2,2,5]{
 					{ { 1, 2, 30, 4, 5 }, { 20, 45, 90, 75, 23 } },
 					{ { 1, 23, 360, 84, 5 }, { 2, 5, 9, 5, 2 } }
 				},
 				new int[2,1,5]{ { { 1220, 45, 90, 75, 23 } }, { { 1, 23, 360, 84, 5 }} },
 			};
-			treeData.KeyCodes = [KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
+			treeNode.KeyCodes = [KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
 				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B,
 				KeyCodeTest.A, KeyCodeTest.C, KeyCodeTest.B];
 
-			treeData.KeyCodeRefs = treeData.KeyCodes;
+			treeNode.KeyCodeRefs = treeNode.KeyCodes;
 
-			treeData.Tuple = (125, 41.1f);
+			treeNode.Tuple = (125, 41.1f);
 
 			//子节点数据
-			treeData.AddChild(out TreeDataNodeDataTest2 child);
+			treeNode.AddChild(out TreeDataNodeDataTest2 child);
 			child.Name = "测试4658";
 			child.Age = 788723;
-			treeData.NodeRef = child;
-			treeData.NodeRef2 = child;
+			treeNode.NodeRef = child;
+			treeNode.NodeRef2 = child;
 			child.Node = child;
 
 			////枚举
-			treeData.KeyCode = KeyCodeTest.C;
+			treeNode.KeyCode = KeyCodeTest.C;
 			//======================================
 
 			//实例 -> bytes
@@ -93,8 +93,8 @@ namespace WorldTree
 			//读取桌面文件
 			bytes = File.ReadAllBytes(filePath);
 
-			////bytes -> TreeData
-			//TreeData treeData = TreeDataHelper.DeserializeTreeData(self, bytes);
+			//bytes -> TreeData
+			TreeData treeData = TreeDataHelper.DeserializeTreeData(self, bytes);
 			////TreeData -> bytes
 			//byte[] treeDataBytes = TreeDataHelper.SerializeTreeData(treeData);
 			//self.Log($"TreeData序列化字节长度{treeDataBytes.Length}\n");

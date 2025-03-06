@@ -41,21 +41,6 @@ namespace WorldTree
 		}
 	}
 
-
-	/// <summary>
-	/// 树数据节点引用
-	/// </summary>
-	public class TreeDataRef : Node
-		, NumberNodeOf<TreeData>
-		, ListNodeOf<TreeData>
-	{
-		/// <summary>
-		/// 引用数据
-		/// </summary>
-		public TreeData Data;
-	}
-
-
 	public static class TreeDataRule
 	{
 		class Remove : RemoveRule<TreeData>
