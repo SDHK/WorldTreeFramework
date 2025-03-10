@@ -338,7 +338,11 @@ namespace WorldTree
 							foreach (var arg in genericArguments)
 							{
 								// 泛型参数是泛型的情况
-								if (!arg.IsGenericType) continue;
+								if (!arg.IsGenericType)
+								{
+									genericType = arg;
+									continue;
+								}
 								//判断这个泛型参数，不是法则标记，才是泛型参数。
 								if (arg != ruleKeyType)
 								{

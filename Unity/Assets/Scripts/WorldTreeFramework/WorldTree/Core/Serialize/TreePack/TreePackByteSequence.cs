@@ -70,130 +70,6 @@ namespace WorldTree
 		/// </summary>
 		public RuleGroup deserializeRuleDict;
 
-
-		/// <summary>
-		/// 类型对应类型码字典，64哈希码对应
-		/// </summary>
-		public UnitDictionary<Type, long> TypeToCodeDict;
-
-		/// <summary>
-		/// 类型码对应类型名称字典，64哈希码对应
-		/// </summary>
-		public UnitDictionary<long, string> codeToTypeNameDict;
-
-		/// <summary>
-		/// 类型码顺序列表
-		/// </summary>
-		public UnitList<long> CodeList;
-
-
-		#region 映射表
-
-		/// <summary>
-		/// 添加类型
-		/// </summary>
-		private long GetTypeCode(Type type, bool isIgnoreName = false)
-		{
-			if (TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte typeByteCode)) return typeByteCode;
-
-			if (!TypeToCodeDict.TryGetValue(type, out long typeCode))
-			{
-				typeCode = this.TypeToCode(type);
-				if (!isIgnoreName) TypeToCodeDict.Add(type, typeCode);
-			}
-			return typeCode;
-		}
-
-		/// <summary>
-		/// 尝试获取类型
-		/// </summary>
-		private bool TryGetType(long typeCode, out Type type)
-		{
-			if (TreeDataTypeHelper.TypeCodes.Length > typeCode && typeCode >= 0)
-			{
-				type = TreeDataTypeHelper.TypeCodes[typeCode];
-				return true;
-			}
-
-			if (this.TryCodeToType(typeCode, out type)) return true;
-			if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
-			{
-				type = System.Type.GetType(typeName);
-				if (type != null)
-				{
-					this.TypeToCode(type);
-					return true;
-				}
-			}
-			return false;
-		}
-
-		#endregion
-
-		#region 序列化
-
-
-		/// <summary>
-		/// 写入数据信息
-		/// </summary>
-		private void WriteDataInfo()
-		{
-			//记录映射表起始位置
-			int startPoint = Length;
-			//写入类型数量
-			WriteUnmanaged(codeToTypeNameDict.Count);
-			foreach (var item in codeToTypeNameDict)
-			{
-				//写入类型码
-				WriteUnmanaged(item.Key);
-				//写入类型名称
-				WriteString(item.Value);
-			}
-			WriteUnmanaged(startPoint);
-		}
-
-		/// <summary>
-		/// 读取数据信息
-		/// </summary>
-		private void ReadDataInfo()
-		{
-			//读取指针定位到最后
-			readPoint = length;
-			readBytePoint = 0;
-			readSegmentPoint = segmentList.Count;
-			//回退4位
-			ReadJump(readPoint - 4);
-			//读取映射表起始位置距离
-			ReadUnmanaged(out int startPoint);
-			//回退到映射表起始位置
-			ReadJump(startPoint);
-
-			//读取类型数量
-			ReadUnmanaged(out int typeCount);
-			for (int i = 0; i < typeCount; i++)
-			{
-				//读取类型码
-				ReadUnmanaged(out long typeCode);
-				//读取类型名称
-				string typeName = ReadString();
-				codeToTypeNameDict.Add(typeCode, typeName);
-			}
-
-			//读取指针定位到数据起始位置
-			readPoint = 0;
-			readBytePoint = 0;
-			readSegmentPoint = 0;
-
-			//this.Log($"TypeCount: {codeToTypeNameDict.Count}");
-			//foreach (var item in this.codeToTypeNameDict)
-			//{
-			//	this.Log($"Type: {item.Value}");
-			//}
-		}
-
-		#endregion
-
-
 		#region 写入
 
 		/// <summary>
@@ -217,7 +93,6 @@ namespace WorldTree
 				((IRuleList<TreePackSerializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
 
-		//类型码读取，子类转换
 
 		/// <summary>
 		/// 写入字符串
@@ -239,13 +114,18 @@ namespace WorldTree
 		{
 			if (value == null)
 			{
-				WriteUnmanaged(ValueMarkCode.NULL_OBJECT);
+				this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
 				return;
 			}
 			if (value.Length == 0)
 			{
-				WriteUnmanaged(0);
+				this.WriteDynamic(0);
 				return;
+			}
+			else
+			{
+				// utf8无法预先获取byte长度，写入1表示这个字符串不是空或0，只是一个占位数据
+				this.WriteDynamic(1);
 			}
 
 			//获取字符串长度,因为 UTF-16 编码的每个字符占用 2 个字节，checked 防止溢出int值
@@ -266,13 +146,18 @@ namespace WorldTree
 		{
 			if (value == null)
 			{
-				WriteUnmanaged(ValueMarkCode.NULL_OBJECT);
+				this.WriteDynamic((int)ValueMarkCode.NULL_OBJECT);
 				return;
 			}
 			if (value.Length == 0)
 			{
-				WriteUnmanaged(0);
+				this.WriteDynamic((int)0);
 				return;
+			}
+			else
+			{
+				// utf8无法预先获取byte长度，写入1表示这个字符串不是空或0，只是一个占位数据
+				this.WriteDynamic((int)1);
 			}
 
 			// (int utf16-length, int utf8-byte-count, utf8-bytes)
@@ -337,140 +222,15 @@ namespace WorldTree
 			return value;
 		}
 
-
-		/// <summary>
-		/// 尝试读取类型数据头部
-		/// </summary>
-		private bool TryReadDataHead(Type targetType, ref object value, out int count, out int countPoint)
-		{
-			countPoint = readPoint;
-			count = 0;
-			this.ReadDynamic(out long typeCode);
-			if (typeCode == 0)//判断如果是0，则为原类型
-			{
-				countPoint = readPoint;
-				this.ReadDynamic(out count);
-				if (count != TreeDataCode.NULL_OBJECT) return false;
-				value = default;
-				return true;
-			}
-
-			//尝试获取类型
-			if (TryGetType(typeCode, out Type dataType))
-			{
-				//类型一样直接读取
-				if (dataType == targetType)
-				{
-					countPoint = readPoint;
-					this.ReadDynamic(out count);
-					if (count != TreeDataCode.NULL_OBJECT) return false;
-					value = default;
-					return true;
-				}
-				//不一样,判断多态类型，不是则尝试读取
-				else if (!SubTypeReadValue(dataType, targetType, ref value, countPoint))
-				{
-					countPoint = readPoint;
-					this.ReadDynamic(out count);
-					if (count != TreeDataCode.NULL_OBJECT) return false;
-					value = default;
-					return true;
-				}
-				else
-				{
-					return true;
-				}
-			}
-
-			//数据类型不存在 ，判断目标类型是否非基础类型
-			if (!TreeDataTypeHelper.BasicsTypeHash.Contains(targetType))
-			{
-				countPoint = readPoint;
-				//不是基础类型则尝试读取
-				this.ReadDynamic(out count);
-				if (count != TreeDataCode.NULL_OBJECT) return false;
-			}
-			//数据跳跃
-			//SkipData(dataType);
-			return true;
-		}
-
-		/// <summary>
-		/// 尝试以子类型读取
-		/// </summary>
-		private bool SubTypeReadValue(Type type, Type targetType, ref object value, int typePoint)
-		{
-			if (type != null)
-			{
-				//判断是否为基础类型，直接跳跃数据。
-				if (TreeDataTypeHelper.BasicsTypeHash.Contains(type))
-				{
-					//SkipData(type);
-					return true;
-				}
-			}
-			else
-			{
-				//类型不存在直接跳跃数据
-				//SkipData(type);
-				return true;
-			}
-
-			bool isSubType = false;
-			Type baseType = type?.BaseType;
-			if (targetType.IsInterface)
-			{
-				Type[] interfaces = type.GetInterfaces();
-				foreach (var interfaceType in interfaces)
-				{
-					if (interfaceType == targetType)
-					{
-						isSubType = true;
-						break;
-					}
-				}
-			}
-			else if (targetType.IsClass)
-			{
-				while (baseType != null && baseType != typeof(object))
-				{
-					if (baseType == targetType)
-					{
-						isSubType = true;
-						break;
-					}
-					baseType = baseType.BaseType;
-				}
-			}
-			else //不是接口也不是类型，直接跳跃数据
-			{
-				//SkipData(type);
-				return true;
-			}
-
-			if (isSubType)//是子类型
-			{
-				//读取指针回退到类型码
-				ReadJump(typePoint);
-				//子类型读取
-				//ReadValue(type, ref value);
-				return true;
-			}
-			else //不是子类型，返回去尝试读取。
-			{
-				return false;
-			}
-		}
-
-
-
 		/// <summary>
 		/// 读取字符串
 		/// </summary>
 		public string ReadString()
 		{
-			if (ReadUnmanaged(out int length) == ValueMarkCode.NULL_OBJECT) return null;
+			if (this.ReadDynamic(out int length) == ValueMarkCode.NULL_OBJECT) return null;
 			else if (length == 0) return string.Empty;
+
+			this.ReadUnmanaged(out length);
 			if (Utf8)
 				return ReadUtf8(length);
 			else

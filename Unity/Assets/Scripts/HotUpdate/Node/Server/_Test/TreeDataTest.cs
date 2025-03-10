@@ -52,8 +52,6 @@ namespace WorldTree
 		/// </summary>
 		public long AInt1 = 1;
 
-
-
 		/// <summary>
 		/// 测试int
 		/// </summary>

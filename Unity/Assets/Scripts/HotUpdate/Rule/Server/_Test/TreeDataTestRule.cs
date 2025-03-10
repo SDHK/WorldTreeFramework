@@ -108,7 +108,7 @@ namespace WorldTree
 			//self.Log($"反序列化引用还原测试！！！{node.NodeRef.Value.Node.Name}");
 
 			//self.Log($"反序列化引用还原测试！！！{self.treeData.KeyCode} => {self.treeData.KeyCodes[2]},{self.treeData.Tuple} ： {self.treeData.NodeRef.Value.Age}");
-			self.Log($"反序列化引用还原测试！！！{self.treeData10.KeyCode} => {self.treeData10.KeyCodes[2]},{self.treeData10.Tuple} ： {self.treeData10.NodeRef.Value.Age}");
+			self.Log($"反序列化引用还原测试！！！{self.treeData10.KeyCode} => {self.treeData10.KeyCodes[2]},{self.treeData10.Tuple} ： {self.treeData10.NodeRef.Value.Name}");
 
 			self.Log("\n通用结构打印：\n");
 			self.Log(NodeRule.ToStringDrawTree(self));
