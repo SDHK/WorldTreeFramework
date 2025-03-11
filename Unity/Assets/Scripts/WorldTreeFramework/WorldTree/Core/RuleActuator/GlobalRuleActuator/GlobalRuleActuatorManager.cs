@@ -36,7 +36,8 @@ namespace WorldTree
 
 			Type type = typeof(GlobalRuleActuator<>).MakeGenericType(self.CodeToType(genericTypeCpde));
 			NodeBranchHelper.AddNode<TypeNodeBranch, long>(manager, genericTypeCpde, self.TypeToCode(type), out node);
-			return node as RuleGroupActuatorBase;
+			RuleGroupActuatorBase actuator = node as RuleGroupActuatorBase;
+			return actuator;
 		}
 	}
 

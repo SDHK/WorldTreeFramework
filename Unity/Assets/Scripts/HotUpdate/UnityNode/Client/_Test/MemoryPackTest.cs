@@ -55,7 +55,7 @@ namespace WorldTree
 	/// </summary>
 	[MemoryPackable(GenerateType.CircularReference)]
 	//[MemoryPackable()]
-	public partial struct NodeDataTest2 : INodeDataTest
+	public partial class NodeDataTest2 : INodeDataTest
 	{
 		/// <summary>
 		/// 测试

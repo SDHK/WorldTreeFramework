@@ -1,11 +1,11 @@
-﻿<Window x:Class="InputMapperTool.MainWindow"
+﻿<Window x:Class="InputMapperTool.Controls.BaseWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:InputMapperTool"
+        xmlns:local="clr-namespace:InputMapperTool.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Background="#FF282828" BorderBrush="#FF282828" BorderThickness="2,2,2,2" Foreground="#FFC4C4C4">
+        Title="BaseWindow" Height="450" Width="800" Background="#FF282828" BorderBrush="#FF282828" BorderThickness="2,2,2,2" Foreground="#FFC4C4C4">
     <WindowChrome.WindowChrome>
         <!-- CaptionHeight是拖动高度 -->
         <WindowChrome 
@@ -21,7 +21,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <!-- 自定义标题栏 -->
         <Grid Grid.Row="0" Background="#FF282828" IsHitTestVisible="True" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid.RowDefinitions>
@@ -37,8 +37,7 @@
             <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Grid.RowSpan="2" HorizontalAlignment="Right" Width="90" IsHitTestVisible="True">
 
                 <!--最小化按钮-->
-
-                <Button  Click="MinimizeButton_Click" BorderBrush="#00707070" Background="#00DDDDDD" Width="30" >
+                <Button Click="MinimizeButton_Click" BorderBrush="#00707070" Background="#00DDDDDD" Width="30" >
                     <Path Data="M 0,0 H 10"
                           Stroke="#FFC4C4C4"
                           StrokeThickness="2"
@@ -49,10 +48,8 @@
                 </Button>
 
                 <!--最大化/还原按钮-->
-
                 <Button x:Name="MaximizeButton" Click="MaximizeButton_Click" Background="#00DDDDDD" BorderBrush="#00707070" Width="30" >
                     <Grid>
-
                         <!--最大化图标-->
                         <Path x:Name="MaximizeIcon"
                               Data="M 0,0 H 10 V 10 H 0 Z"
@@ -79,9 +76,7 @@
                     </Grid>
                 </Button>
 
-
                 <!--关闭按钮-->
-
                 <Button Click="CloseButton_Click" Background="#00DDDDDD" BorderBrush="#00707070"  Width="30" >
                     <Path Data="M 0,0 L 10,10 M 10,0 L 0,10"
                           Stroke="#FFC4C4C4"
@@ -93,14 +88,9 @@
             </StackPanel>
         </Grid>
 
-        <!-- 窗口内容 -->
-        <Grid Grid.Row="1" Background="#FF313131">
-            <!-- 你的应用内容放这里 -->
-
-
-        </Grid>
-
+        <!-- 窗口内容区域，这是一个模板 -->
+        <ContentControl Grid.Row="1" Background="#FF313131">
+            <ContentPresenter Content="{TemplateBinding Content}"/>
+        </ContentControl>
     </Grid>
-    
-    
 </Window>

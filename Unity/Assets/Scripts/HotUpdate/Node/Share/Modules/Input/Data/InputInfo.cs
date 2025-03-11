@@ -14,7 +14,8 @@ namespace WorldTree
 	/// <summary>
 	/// 输入设备信息
 	/// </summary>
-	public struct InputInfo : IEquatable<InputInfo>
+	[TreeDataSerializable]
+	public partial struct InputInfo : IEquatable<InputInfo>
 	{
 		/// <summary>
 		/// 设备类型

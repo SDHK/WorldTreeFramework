@@ -306,6 +306,17 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 反序列化
+		/// </summary>
+		public unsafe void Deserialize(Type type, ref object value)
+		{
+			ReadDataInfo();
+			Layer = 0;
+			//读取数据
+			ReadValue(type, ref value);
+		}
+
+		/// <summary>
 		/// 写入数据信息
 		/// </summary>
 		private void WriteDataInfo()

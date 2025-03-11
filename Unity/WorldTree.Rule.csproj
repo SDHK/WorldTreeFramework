@@ -59,16 +59,16 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputDevice\InputDeviceRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLineRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\DataBase\Proxy\DataBaseProxyRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputDriverRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputMapperRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputDevice\InputDeviceManagerRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputMapper\InputMapperRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputDevice\InputDriverRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\DataBase\LiteDB\LiteDBManagerRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputDeviceManagerRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputDeviceRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\DataBase\LiteDB\LiteDBCollectionRule.cs" />
   </ItemGroup>
   <ItemGroup>

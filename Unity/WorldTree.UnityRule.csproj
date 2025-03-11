@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\UtcTimeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MultilayerPerceptronTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\InitialDomainRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\InputMapperTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\EntryRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TreeDataTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TreeValueTestRule.cs" />

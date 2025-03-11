@@ -182,6 +182,10 @@ namespace WorldTree.SourceGenerator
 					}
 					Code.AppendLine(@$"				if (objId != TreeDataCode.NULL_OBJECT) self.IdToObjectDict.Add(objId, value);");
 				}
+				else if (classSymbol.TypeKind == TypeKind.Struct)
+				{
+					Code.AppendLine($"				if (value is not {className})value = new {className}();");
+				}
 			}
 			else //是抽象直接跳过
 			{

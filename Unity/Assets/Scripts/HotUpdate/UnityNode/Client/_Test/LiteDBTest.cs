@@ -35,8 +35,8 @@ namespace WorldTree
 	/// </summary>
 	[TreeDataSerializable]
 	public partial class TestClass : NodeData
-		,ChildOf<INode>
-		,AsAwake
+		, ChildOf<INode>
+		, AsAwake
 	{
 		/// <summary>
 		/// 名称

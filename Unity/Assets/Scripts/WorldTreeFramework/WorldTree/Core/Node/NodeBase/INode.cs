@@ -57,7 +57,10 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树数据节点接口
 	/// </summary>
-	public partial interface INodeData : INode { }
+	public partial interface INodeData : INode
+		, AsSerialize
+		, AsDeserialize
+	{ }
 
 	/// <summary>
 	/// 世界树节点接口

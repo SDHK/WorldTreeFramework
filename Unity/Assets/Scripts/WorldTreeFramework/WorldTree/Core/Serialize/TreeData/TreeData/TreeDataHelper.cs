@@ -6,6 +6,8 @@
 * 描述：
 
 */
+using System;
+
 namespace WorldTree
 {
 	/// <summary>
@@ -30,16 +32,43 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 反序列化数据节点类型
+		/// 反序列化数据类型
 		/// </summary>
-		public static N DeseralizeNode<N>(INode self, byte[] bytes)
-			where N : class, INode
+		public static T DeseralizeNode<T>(INode self, byte[] bytes)
+		{
+			T obj = default;
+			return DeseralizeNode(self, bytes, ref obj);
+		}
+
+
+		/// <summary>
+		/// 反序列化数据类型
+		/// </summary>
+		public static T DeseralizeNode<T>(INode self, byte[] bytes, ref T obj)
 		{
 			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
-			N treeSpade = null;
-			sequence.Deserialize(ref treeSpade);
+			sequence.Deserialize(ref obj);
 			sequence.Dispose();
-			return treeSpade;
+			return obj;
+		}
+		/// <summary>
+		/// 反序列化数据类型
+		/// </summary>
+		public static T DeseralizeNode<T>(INode self, Type type, byte[] bytes)
+		{
+			object obj = default;
+			return DeseralizeNode<T>(self, type, bytes, ref obj);
+		}
+
+		/// <summary>
+		/// 反序列化数据类型
+		/// </summary>
+		public static T DeseralizeNode<T>(INode self, Type type, byte[] bytes, ref object obj)
+		{
+			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
+			sequence.Deserialize(type, ref obj);
+			sequence.Dispose();
+			return (T)obj;
 		}
 
 
