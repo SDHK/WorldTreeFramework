@@ -856,30 +856,10 @@ namespace WorldTree
 			}
 
 			bool isSubType = false;
-			Type baseType = type?.BaseType;
-			if (targetType.IsInterface)
+
+			if (targetType.IsInterface || targetType.IsClass)
 			{
-				Type[] interfaces = type.GetInterfaces();
-				foreach (var interfaceType in interfaces)
-				{
-					if (interfaceType == targetType)
-					{
-						isSubType = true;
-						break;
-					}
-				}
-			}
-			else if (targetType.IsClass)
-			{
-				while (baseType != null && baseType != typeof(object))
-				{
-					if (baseType == targetType)
-					{
-						isSubType = true;
-						break;
-					}
-					baseType = baseType.BaseType;
-				}
+				if (targetType.IsAssignableFrom(type)) isSubType = true;
 			}
 			else //不是接口也不是类型，直接跳跃数据
 			{
