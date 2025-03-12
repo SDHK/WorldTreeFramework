@@ -23,8 +23,7 @@ namespace WorldTree
 			protected override void Execute(InputMapper self)
 			{
 				self.Core.PoolGetUnit(out self.InfoList);
-				self.InputEvent = self.Core.GetGlobalRuleActuator(self.Config.InputRuleType);
-
+				self.Core.GetGlobalRuleActuator(self.Config.InputRuleType, out self.InputEvent);
 			}
 		}
 
@@ -67,7 +66,7 @@ namespace WorldTree
 					else if (self.Config.InfoList[self.InfoList.Count] == data.Info)
 					{
 						//消息广播
-						RuleActuatorHelper.TrySendRule(self.InputEvent, data);
+						self.InputEvent.Send(data);
 					}
 					//不等于则清空队列
 					else
@@ -93,31 +92,6 @@ namespace WorldTree
 						}
 						if (isEnd) self.InfoList.Remove(data.Info);
 					}
-				}
-			}
-		}
-	}
-
-	/// <summary>
-	/// 法则执行器帮助类
-	/// </summary>
-	public static class RuleActuatorHelper
-	{
-		/// <summary>
-		/// 执行器尝试执行通知法则
-		/// </summary>
-		public static void TrySendRule<T1>(IRuleActuatorBase selfActuator, T1 arg1)
-		{
-			if (!selfActuator.IsActive) return;
-			IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)selfActuator;
-			self.RefreshTraversalCount();
-			for (int i = 0; i < self.TraversalCount; i++)
-			{
-				if (!self.TryDequeue(out INode node, out RuleList ruleList)) continue;
-				for (int j = 0; j < ruleList.Count; j++)
-				{
-					if (ruleList[i] is ISendRule<T1> rule)
-						rule.Invoke(node, arg1);
 				}
 			}
 		}

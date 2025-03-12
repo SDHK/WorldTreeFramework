@@ -40,7 +40,7 @@ namespace WorldTree
 		/// <summary>
 		/// 输入数据全局广播
 		/// </summary>
-		public GlobalRuleActuator<InputGlobal> InputDataEvent;
+		public IRuleActuator<InputGlobal> InputDataEvent;
 	}
 
 

@@ -48,19 +48,19 @@ namespace WorldTree
 		/// <summary>
 		/// 全局事件法则 Enable
 		/// </summary>
-		public GlobalRuleActuator<Enable> enable;
+		public IRuleActuator<Enable> enable;
 		/// <summary>
 		/// 全局事件法则 Disable
 		/// </summary>
-		public GlobalRuleActuator<Disable> disable;
+		public IRuleActuator<Disable> disable;
 		/// <summary>
 		/// 全局事件法则 Update
 		/// </summary>
-		public GlobalRuleActuator<Update> update;
+		public IRuleActuator<Update> update;
 		/// <summary>
 		/// 全局事件法则 UpdateTime
 		/// </summary>
-		public GlobalRuleActuator<UpdateTime> updateTime;
+		public IRuleActuator<UpdateTime> updateTime;
 
 		#endregion
 

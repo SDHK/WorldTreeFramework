@@ -58,51 +58,51 @@ namespace WorldTree
 		/// <summary>
 		/// 启用
 		/// </summary>
-		public GlobalRuleActuator<Enable> enable;
+		public IRuleActuator<Enable> enable;
 		/// <summary>
 		/// 禁用
 		/// </summary>
-		public GlobalRuleActuator<Disable> disable;
+		public IRuleActuator<Disable> disable;
 		/// <summary>
 		/// 更新
 		/// </summary>
-		public GlobalRuleActuator<Update> update;
+		public IRuleActuator<Update> update;
 		/// <summary>
 		/// 更新时间
 		/// </summary>
-		public GlobalRuleActuator<UpdateTime> updateTime;
+		public IRuleActuator<UpdateTime> updateTime;
 		/// <summary>
 		/// 晚更新
 		/// </summary>
-		public GlobalRuleActuator<LateUpdate> lateUpdate;
+		public IRuleActuator<LateUpdate> lateUpdate;
 		/// <summary>
 		/// 晚更新时间
 		/// </summary>
-		public GlobalRuleActuator<LateUpdateTime> lateUpdateTime;
+		public IRuleActuator<LateUpdateTime> lateUpdateTime;
 		/// <summary>
 		/// 固定更新
 		/// </summary>
-		public GlobalRuleActuator<FixedUpdate> fixedUpdate;
+		public IRuleActuator<FixedUpdate> fixedUpdate;
 		/// <summary>
 		/// 固定更新时间
 		/// </summary>
-		public GlobalRuleActuator<FixedUpdateTime> fixedUpdateTime;
+		public IRuleActuator<FixedUpdateTime> fixedUpdateTime;
 		/// <summary>
 		/// GUI更新
 		/// </summary>
-		public GlobalRuleActuator<GuiUpdate> onGUI;
+		public IRuleActuator<GuiUpdate> onGUI;
 		/// <summary>
 		/// GUI更新时间
 		/// </summary>
-		public GlobalRuleActuator<GuiUpdateTime> onGUIUpdateTime;
+		public IRuleActuator<GuiUpdateTime> onGUIUpdateTime;
 		/// <summary>
 		/// 绘制Gizmos更新
 		/// </summary>
-		public GlobalRuleActuator<DrawGizmosUpdate> drawGizmos;
+		public IRuleActuator<DrawGizmosUpdate> drawGizmos;
 		/// <summary>
 		/// 绘制Gizmos更新时间
 		/// </summary>
-		public GlobalRuleActuator<DrawGizmosUpdateTime> drawGizmosUpdateTime;
+		public IRuleActuator<DrawGizmosUpdateTime> drawGizmosUpdateTime;
 
 		#endregion
 

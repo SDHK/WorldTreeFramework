@@ -44,6 +44,6 @@ namespace WorldTree
 		/// 全局输入事件法则
 		/// </summary>
 		[TreeDataIgnore]
-		public RuleGroupActuatorBase InputEvent;
+		public IRuleActuator<InputEvent> InputEvent;
 	}
 }

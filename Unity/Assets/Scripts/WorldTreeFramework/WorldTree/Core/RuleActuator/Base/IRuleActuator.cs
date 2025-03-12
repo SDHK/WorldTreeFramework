@@ -8,10 +8,13 @@
 
 */
 
-using System;
-
 namespace WorldTree
 {
+	/// <summary>
+	/// 法则执行器接口基类
+	/// </summary>
+	public interface IRuleActuatorBase : INode { }
+
 	/// <summary>
 	/// 法则执行器的逆变泛型限制接口
 	/// </summary>
@@ -22,14 +25,9 @@ namespace WorldTree
 	public interface IRuleActuator<in T> : IRuleActuatorBase where T : IRule { }
 
 	/// <summary>
-	/// 法则执行器接口基类
-	/// </summary>
-	public interface IRuleActuatorBase : INode { }
-
-	/// <summary>
 	/// 法则执行器遍历接口
 	/// </summary>
-	/// <remarks>让执行器可以遍历执行</remarks>
+	/// <remarks>让执行器可以遍历</remarks>
 	public interface IRuleActuatorEnumerable : IRuleActuatorBase
 	{
 		/// <summary>
@@ -55,28 +53,6 @@ namespace WorldTree
 
 	}
 
-	/// <summary>
-	/// 法则列表执行器接口
-	/// </summary>
-	public interface IRuleGroupActuator : IRuleActuator
-	{
-		/// <summary>
-		/// 尝试添加节点
-		/// </summary>
-		public bool TryAdd(INode node);
-	}
-
-	/// <summary>
-	/// 法则列表执行器接口
-	/// </summary>
-	public interface IRuleListActuator : IRuleActuator
-	{
-		/// <summary>
-		/// 尝试添加节点与对应法则
-		/// </summary>
-		public bool TryAdd(INode node, RuleList ruleList);
-	
-	}
 
 	/// <summary>
 	/// 法则执行器接口
@@ -97,5 +73,27 @@ namespace WorldTree
 		/// 清除
 		/// </summary>
 		public void Clear();
+	}
+
+	/// <summary>
+	/// 法则集合执行器接口
+	/// </summary>
+	public interface IRuleGroupActuator : IRuleActuator
+	{
+		/// <summary>
+		/// 尝试添加节点
+		/// </summary>
+		public bool TryAdd(INode node);
+	}
+
+	/// <summary>
+	/// 法则列表执行器接口
+	/// </summary>
+	public interface IRuleListActuator : IRuleActuator
+	{
+		/// <summary>
+		/// 尝试添加节点与对应法则
+		/// </summary>
+		public bool TryAdd(INode node, RuleList ruleList);
 	}
 }
