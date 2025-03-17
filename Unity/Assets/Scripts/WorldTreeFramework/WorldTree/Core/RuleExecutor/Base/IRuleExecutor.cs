@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则执行器接口基类
 	/// </summary>
-	public interface IRuleActuatorBase : INode { }
+	public interface IRuleExecutorBase : IWorldTreeBasic { }
 
 	/// <summary>
 	/// 法则执行器的逆变泛型限制接口
@@ -22,13 +22,13 @@ namespace WorldTree
 	/// <remarks>
 	/// <para>主要作用是通过法则类型逆变提示可填写参数</para>
 	/// </remarks>
-	public interface IRuleActuator<in T> : IRuleActuatorBase where T : IRule { }
+	public interface IRuleExecutor<in T> : IRuleExecutorBase where T : IRule { }
 
 	/// <summary>
 	/// 法则执行器遍历接口
 	/// </summary>
 	/// <remarks>让执行器可以遍历</remarks>
-	public interface IRuleActuatorEnumerable : IRuleActuatorBase
+	public interface IRuleExecutorEnumerable : IRuleExecutorBase, INode
 	{
 		/// <summary>
 		/// 动态的遍历数量
@@ -57,7 +57,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则执行器接口
 	/// </summary>
-	public interface IRuleActuator : IRuleActuatorBase
+	public interface IRuleExecutor : IRuleExecutorBase, INode
 	{
 		/// <summary>
 		/// 移除节点
@@ -78,7 +78,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则集合执行器接口
 	/// </summary>
-	public interface IRuleGroupActuator : IRuleActuator
+	public interface IRuleGroupExecutor : IRuleExecutor
 	{
 		/// <summary>
 		/// 尝试添加节点
@@ -89,7 +89,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则列表执行器接口
 	/// </summary>
-	public interface IRuleListActuator : IRuleActuator
+	public interface IRuleListExecutor : IRuleExecutor
 	{
 		/// <summary>
 		/// 尝试添加节点与对应法则

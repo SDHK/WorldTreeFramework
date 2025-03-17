@@ -12,7 +12,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal class RuleActuatorCallRuleGenerator
+	internal class RuleExecutorCallRuleGenerator
 	{
 		public static void Execute(GeneratorExecutionContext context)
 		{
@@ -26,7 +26,7 @@ namespace WorldTree.SourceGenerator
 );
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
-			Code.AppendLine("	public static class RuleActuatorCallRule");
+			Code.AppendLine("	public static class RuleExecutorCallRule");
 			Code.Append("	{");
 
 			for (int i = 0; i <= argumentCount; i++)
@@ -35,18 +35,18 @@ namespace WorldTree.SourceGenerator
 				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
 				string genericParameter = GeneratorTemplate.GenericsParameter[i];
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
-			
+
 				Code.AppendLine(
 					$$"""
 							/// <summary>
 							/// 执行器执行调用法则
 							/// </summary>
-							public static OutT Call<R{{genericsType}}, OutT>(this IRuleActuator<R> selfActuator{{genericTypeParameter}}, out OutT outT)
+							public static OutT Call<R{{genericsType}}, OutT>(this IRuleExecutor<R> selfExecutor{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
 								outT = default;
-								if (!selfActuator.IsActive) return outT;
-								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)selfActuator;
+								IRuleExecutorEnumerable self = (IRuleExecutorEnumerable)selfExecutor;
+								if (!self.IsActive) return outT;
 								self.RefreshTraversalCount();
 								for (int i = 0; i < self.TraversalCount; i++)
 								{
@@ -61,19 +61,19 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 执行器执行异步调用法则
 							/// </summary>
-							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleActuator<R> selfActuator{{genericTypeParameter}}, OutT defaultOutT)
+							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleExecutor<R> selfExecutor{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
-								if (!selfActuator.IsActive) 
+								IRuleExecutorEnumerable self = (IRuleExecutorEnumerable)selfExecutor;
+								if (!self.IsActive) 
 								{
-									await selfActuator.TreeTaskCompleted(); 
+									await self.TreeTaskCompleted(); 
 									return defaultOutT;
 								}
-								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)selfActuator;
 								self.RefreshTraversalCount();
 								if (self.TraversalCount == 0) 
 								{
-									await selfActuator.TreeTaskCompleted(); 
+									await self.TreeTaskCompleted(); 
 									return defaultOutT;
 								}
 								for (int i = 0; i < self.TraversalCount; i++)
@@ -85,7 +85,7 @@ namespace WorldTree.SourceGenerator
 									}
 									else
 									{
-										await selfActuator.TreeTaskCompleted();
+										await self.TreeTaskCompleted();
 										return defaultOutT;
 									}
 								}
@@ -96,7 +96,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("	}");
 			Code.Append("}");
 
-			context.AddSource("RuleActuatorCallRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+			context.AddSource("RuleExecutorCallRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
 
 	}

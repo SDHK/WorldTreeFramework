@@ -58,51 +58,51 @@ namespace WorldTree
 		/// <summary>
 		/// 启用
 		/// </summary>
-		public IRuleActuator<Enable> enable;
+		public IRuleExecutor<Enable> enable;
 		/// <summary>
 		/// 禁用
 		/// </summary>
-		public IRuleActuator<Disable> disable;
+		public IRuleExecutor<Disable> disable;
 		/// <summary>
 		/// 更新
 		/// </summary>
-		public IRuleActuator<Update> update;
+		public IRuleExecutor<Update> update;
 		/// <summary>
 		/// 更新时间
 		/// </summary>
-		public IRuleActuator<UpdateTime> updateTime;
+		public IRuleExecutor<UpdateTime> updateTime;
 		/// <summary>
 		/// 晚更新
 		/// </summary>
-		public IRuleActuator<LateUpdate> lateUpdate;
+		public IRuleExecutor<LateUpdate> lateUpdate;
 		/// <summary>
 		/// 晚更新时间
 		/// </summary>
-		public IRuleActuator<LateUpdateTime> lateUpdateTime;
+		public IRuleExecutor<LateUpdateTime> lateUpdateTime;
 		/// <summary>
 		/// 固定更新
 		/// </summary>
-		public IRuleActuator<FixedUpdate> fixedUpdate;
+		public IRuleExecutor<FixedUpdate> fixedUpdate;
 		/// <summary>
 		/// 固定更新时间
 		/// </summary>
-		public IRuleActuator<FixedUpdateTime> fixedUpdateTime;
+		public IRuleExecutor<FixedUpdateTime> fixedUpdateTime;
 		/// <summary>
 		/// GUI更新
 		/// </summary>
-		public IRuleActuator<GuiUpdate> onGUI;
+		public IRuleExecutor<GuiUpdate> onGUI;
 		/// <summary>
 		/// GUI更新时间
 		/// </summary>
-		public IRuleActuator<GuiUpdateTime> onGUIUpdateTime;
+		public IRuleExecutor<GuiUpdateTime> onGUIUpdateTime;
 		/// <summary>
 		/// 绘制Gizmos更新
 		/// </summary>
-		public IRuleActuator<DrawGizmosUpdate> drawGizmos;
+		public IRuleExecutor<DrawGizmosUpdate> drawGizmos;
 		/// <summary>
 		/// 绘制Gizmos更新时间
 		/// </summary>
-		public IRuleActuator<DrawGizmosUpdateTime> drawGizmosUpdateTime;
+		public IRuleExecutor<DrawGizmosUpdateTime> drawGizmosUpdateTime;
 
 		#endregion
 
@@ -133,18 +133,18 @@ namespace WorldTree
 			{
 				self.frameTime = frameTime;
 
-				self.Core.GetGlobalRuleActuator(out self.enable);
-				self.Core.GetGlobalRuleActuator(out self.update);
-				self.Core.GetGlobalRuleActuator(out self.updateTime);
-				self.Core.GetGlobalRuleActuator(out self.disable);
-				self.Core.GetGlobalRuleActuator(out self.lateUpdate);
-				self.Core.GetGlobalRuleActuator(out self.lateUpdateTime);
-				self.Core.GetGlobalRuleActuator(out self.fixedUpdate);
-				self.Core.GetGlobalRuleActuator(out self.fixedUpdateTime);
-				self.Core.GetGlobalRuleActuator(out self.onGUI);
-				self.Core.GetGlobalRuleActuator(out self.onGUIUpdateTime);
-				self.Core.GetGlobalRuleActuator(out self.drawGizmos);
-				self.Core.GetGlobalRuleActuator(out self.drawGizmosUpdateTime);
+				self.Core.GetGlobalRuleExecutor(out self.enable);
+				self.Core.GetGlobalRuleExecutor(out self.update);
+				self.Core.GetGlobalRuleExecutor(out self.updateTime);
+				self.Core.GetGlobalRuleExecutor(out self.disable);
+				self.Core.GetGlobalRuleExecutor(out self.lateUpdate);
+				self.Core.GetGlobalRuleExecutor(out self.lateUpdateTime);
+				self.Core.GetGlobalRuleExecutor(out self.fixedUpdate);
+				self.Core.GetGlobalRuleExecutor(out self.fixedUpdateTime);
+				self.Core.GetGlobalRuleExecutor(out self.onGUI);
+				self.Core.GetGlobalRuleExecutor(out self.onGUIUpdateTime);
+				self.Core.GetGlobalRuleExecutor(out self.drawGizmos);
+				self.Core.GetGlobalRuleExecutor(out self.drawGizmosUpdateTime);
 
 				self.AddComponent(out self.worldUpdate, frameTime).Run();
 				self.AddComponent(out self.worldLateUpdate, frameTime).Run();

@@ -15,11 +15,6 @@ namespace WorldTree
 	public interface InputEvent : ISendRule<InputData>, IGlobalRule { }
 
 	/// <summary>
-	/// 输入测试事件
-	/// </summary>
-	public interface InputTestEvent : InputEvent { }
-
-	/// <summary>
 	/// 输入映射器
 	/// </summary>
 	[TreeDataSerializable]
@@ -44,6 +39,6 @@ namespace WorldTree
 		/// 全局输入事件法则
 		/// </summary>
 		[TreeDataIgnore]
-		public IRuleActuator<InputEvent> InputEvent;
+		public IRuleExecutor<InputEvent> InputEvent;
 	}
 }

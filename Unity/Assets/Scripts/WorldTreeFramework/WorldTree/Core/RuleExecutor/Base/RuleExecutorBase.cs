@@ -22,7 +22,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则执行器基类
 	/// </summary>
-	public abstract class RuleActuatorBase : Node, IRuleListActuator, IRuleActuatorEnumerable
+	public abstract class RuleExecutorBase : Node, IRuleListExecutor, IRuleExecutorEnumerable
 		, AsChildBranch
 	{
 
@@ -180,11 +180,11 @@ namespace WorldTree
 		}
 	}
 
-	public static class RuleActuatorBaseRule
+	public static class RuleExecutorBaseRule
 	{
-		private class Add : AddRule<RuleActuatorBase>
+		private class Add : AddRule<RuleExecutorBase>
 		{
-			protected override void Execute(RuleActuatorBase self)
+			protected override void Execute(RuleExecutorBase self)
 			{
 				self.Core.PoolGetUnit(out self.nodeList);
 				self.Core.PoolGetUnit(out self.nodeNextList);
@@ -196,9 +196,9 @@ namespace WorldTree
 		}
 
 
-		private class RemoveRule : RemoveRule<RuleActuatorBase>
+		private class RemoveRule : RemoveRule<RuleExecutorBase>
 		{
-			protected override void Execute(RuleActuatorBase self)
+			protected override void Execute(RuleExecutorBase self)
 			{
 				self.nodeIndex = 0;
 				self.nodeList.Dispose();

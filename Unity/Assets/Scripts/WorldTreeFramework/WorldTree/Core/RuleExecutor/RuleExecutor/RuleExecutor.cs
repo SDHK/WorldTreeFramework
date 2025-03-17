@@ -8,29 +8,38 @@
 
 */
 
-using System;
-
 namespace WorldTree
 {
 	/// <summary>
+	/// 全局法则数据
+	/// </summary>
+	public class GlobalRuleExecutorData : Unit, IRuleExecutor<IRule>
+	{
+		/// <summary>
+		/// 法则类型码
+		/// </summary>
+		public long RuleTypeCode;
+	}
+
+	/// <summary>
 	/// 泛型法则执行器
 	/// </summary>
-	public class RuleActuator<R> : RuleActuatorBase, ChildOf<INode>, IRuleActuator<R>
+	public class RuleExecutor<R> : RuleExecutorBase, ChildOf<INode>, IRuleExecutor<R>
 		, AsAwake
 		where R : IRule
 	{
 		public override string ToString()
 		{
-			return $"RuleActuator<{typeof(R)}>";
+			return $"RuleExecutor<{typeof(R)}>";
 		}
 	}
 
-	public static class RuleActuatorRule
+	public static class RuleExecutorRule
 	{
 		/// <summary>
 		/// 添加节点法则：指定法则
 		/// </summary>
-		public static void Add<R, N, NR>(this RuleActuator<R> self, N node, NR defaultRule = default)
+		public static void Add<R, N, NR>(this RuleExecutor<R> self, N node, NR defaultRule = default)
 			where R : IRule
 			where N : class, INode, AsRule<NR>
 			where NR : R
@@ -48,7 +57,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加节点法则：默认法则
 		/// </summary>
-		public static void Add<R, N>(this RuleActuator<R> self, N node)
+		public static void Add<R, N>(this RuleExecutor<R> self, N node)
 			where R : IRule
 			where N : class, INode, AsRule<R>
 		{

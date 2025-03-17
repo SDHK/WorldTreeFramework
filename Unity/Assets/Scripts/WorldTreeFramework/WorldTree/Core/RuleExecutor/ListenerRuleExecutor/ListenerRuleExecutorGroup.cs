@@ -12,30 +12,30 @@ namespace WorldTree
 	/// <summary>
 	/// 监听器法则执行器组
 	/// </summary>
-	public class ListenerRuleActuatorGroup : Node, IListenerIgnorer, ComponentOf<ReferencedPool>
+	public class ListenerRuleExecutorGroup : Node, IListenerIgnorer, ComponentOf<ReferencedPool>
 		, AsComponentBranch
 		, AsAwake
 	{
 		/// <summary>
 		/// 监听器执行器字典集合
 		/// </summary>
-		public UnitDictionary<long, ListenerRuleActuator> ActuatorDict = new();
+		public UnitDictionary<long, ListenerRuleExecutor> ExecutorDict = new();
 	}
 
-	public static class ListenerRuleActuatorGroupRule
+	public static class ListenerRuleExecutorGroupRule
 	{
 		/// <summary>
 		/// 添加监听执行器,并自动填装监听器
 		/// </summary>
-		public static IRuleActuator AddRuleActuator(this ListenerRuleActuatorGroup self, RuleGroup ruleGroup)
+		public static IRuleExecutor AddRuleExecutor(this ListenerRuleExecutorGroup self, RuleGroup ruleGroup)
 		{
-			if (!self.ActuatorDict.TryGetValue(ruleGroup.RuleType, out ListenerRuleActuator ruleActuator))
+			if (!self.ExecutorDict.TryGetValue(ruleGroup.RuleType, out ListenerRuleExecutor ruleExecutor))
 			{
-				self.AddComponent(out ruleActuator, ruleGroup);
-				ruleActuator.RuleActuatorAddListener();
-				self.ActuatorDict.Add(ruleGroup.RuleType, ruleActuator);
+				self.AddComponent(out ruleExecutor, ruleGroup);
+				ruleExecutor.RuleExecutorAddListener();
+				self.ExecutorDict.Add(ruleGroup.RuleType, ruleExecutor);
 			}
-			return ruleActuator;
+			return ruleExecutor;
 		}
 
 
@@ -58,11 +58,11 @@ namespace WorldTree
 					//是否有这个目标缓存池
 					if (!self.TryGetPool(ruleList.Key, out ReferencedPool nodePool)) continue;
 					//是否有监听器集合组件
-					if (!nodePool.TryGetComponent(out ListenerRuleActuatorGroup ListenerRuleActuatorGroup)) continue;
+					if (!nodePool.TryGetComponent(out ListenerRuleExecutorGroup ListenerRuleExecutorGroup)) continue;
 					//是否有这个监听类型的执行器
-					if (!ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out ListenerRuleActuator listenerRuleActuator)) continue;
+					if (!ListenerRuleExecutorGroup.ExecutorDict.TryGetValue(ruleGroup.Key, out ListenerRuleExecutor listenerRuleExecutor)) continue;
 					//监听器添加到执行器
-					listenerRuleActuator.TryAdd(listener);
+					listenerRuleExecutor.TryAdd(listener);
 				}
 			}
 		}
@@ -84,11 +84,11 @@ namespace WorldTree
 					//是否有这个目标池
 					if (!self.TryGetPool(ruleList.Key, out ReferencedPool nodePool)) continue;
 					//是否有监听器集合组件
-					if (!nodePool.TryGetComponent(out ListenerRuleActuatorGroup ListenerRuleActuatorGroup)) continue;
+					if (!nodePool.TryGetComponent(out ListenerRuleExecutorGroup ListenerRuleExecutorGroup)) continue;
 					//是否有这个监听类型的执行器
-					if (!ListenerRuleActuatorGroup.ActuatorDict.TryGetValue(ruleGroup.Key, out ListenerRuleActuator listenerRuleActuator)) continue;
+					if (!ListenerRuleExecutorGroup.ExecutorDict.TryGetValue(ruleGroup.Key, out ListenerRuleExecutor listenerRuleExecutor)) continue;
 					//监听器移除
-					listenerRuleActuator.Remove(listener);
+					listenerRuleExecutor.Remove(listener);
 				}
 			}
 		}

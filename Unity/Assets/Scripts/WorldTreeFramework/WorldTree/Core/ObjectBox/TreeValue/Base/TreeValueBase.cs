@@ -30,12 +30,12 @@ namespace WorldTree
 		/// <summary>
 		/// 全局法则执行器
 		/// </summary>
-		public IRuleActuator<ValueChangeEvent<T>> globalValueChange;
+		public IRuleExecutor<ValueChangeEvent<T>> globalValueChange;
 
 		/// <summary>
 		/// 法则执行器
 		/// </summary>
-		public RuleActuator<ValueChangeEvent<T>> valueChange;
+		public RuleExecutor<ValueChangeEvent<T>> valueChange;
 
 		/// <summary>
 		/// 值

@@ -49,6 +49,6 @@ namespace WorldTree
 		/// <summary>
 		/// 完成回调
 		/// </summary>
-		public RuleActuator<ISendRule> OnCompleted;
+		public RuleExecutor<ISendRule> OnCompleted;
 	}
 }

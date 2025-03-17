@@ -8,6 +8,13 @@
 */
 namespace WorldTree
 {
+
+	/// <summary>
+	/// 输入测试事件
+	/// </summary>
+	public interface InputTestEvent : InputEvent { }
+
+
 	/// <summary>
 	/// 测试
 	/// </summary>

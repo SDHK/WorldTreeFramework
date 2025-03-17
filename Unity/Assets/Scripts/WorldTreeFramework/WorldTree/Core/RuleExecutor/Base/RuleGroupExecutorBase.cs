@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则集合执行器基类
 	/// </summary>
-	public abstract class RuleGroupActuatorBase : Node, IRuleGroupActuator, IRuleActuatorEnumerable
+	public abstract class RuleGroupExecutorBase : Node, IRuleGroupExecutor, IRuleExecutorEnumerable
 		, AsChildBranch
 	{
 		/// <summary>
@@ -77,7 +77,7 @@ namespace WorldTree
 
 		public override string ToString()
 		{
-			return $"RuleGroupActuator : {(ruleGroupDict == null ? null : Core.CodeToType(ruleGroupDict.RuleType))}";
+			return $"RuleGroupExecutor : {(ruleGroupDict == null ? null : Core.CodeToType(ruleGroupDict.RuleType))}";
 		}
 
 		public void Clear()
@@ -192,11 +192,11 @@ namespace WorldTree
 
 	}
 
-	public static class RuleGroupActuatorBaseRule
+	public static class RuleGroupExecutorBaseRule
 	{
-		private class Add : AddRule<RuleGroupActuatorBase>
+		private class Add : AddRule<RuleGroupExecutorBase>
 		{
-			protected override void Execute(RuleGroupActuatorBase self)
+			protected override void Execute(RuleGroupExecutorBase self)
 			{
 				self.Core.PoolGetUnit(out self.nodeList);
 				self.Core.PoolGetUnit(out self.nodeNextList);
@@ -207,9 +207,9 @@ namespace WorldTree
 			}
 		}
 
-		class RemoveRule : RemoveRule<RuleGroupActuatorBase>
+		class RemoveRule : RemoveRule<RuleGroupExecutorBase>
 		{
-			protected override void Execute(RuleGroupActuatorBase self)
+			protected override void Execute(RuleGroupExecutorBase self)
 			{
 				self.nodeIndex = 0;
 				self.nodeList.Dispose();

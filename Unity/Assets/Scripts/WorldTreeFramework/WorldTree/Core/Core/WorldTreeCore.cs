@@ -365,7 +365,7 @@ namespace WorldTree
 			this.RemoveComponent<WorldTreeCore, WorldTreeRoot>();
 			this.RemoveComponent<WorldTreeCore, GameTimeManager>();
 			this.RemoveComponent<WorldTreeCore, RealTimeManager>();
-			this.RemoveComponent<WorldTreeCore, GlobalRuleActuatorManager>();
+			this.RemoveComponent<WorldTreeCore, GlobalRuleExecutorManager>();
 			this.RemoveComponent<WorldTreeCore, ArrayPoolManager>();
 			this.RemoveComponent<WorldTreeCore, NodePoolManager>();
 			this.RemoveComponent<WorldTreeCore, UnitPoolManager>();

@@ -48,19 +48,19 @@ namespace WorldTree
 		/// <summary>
 		/// 全局事件法则 Enable
 		/// </summary>
-		public IRuleActuator<Enable> enable;
+		public IRuleExecutor<Enable> enable;
 		/// <summary>
 		/// 全局事件法则 Disable
 		/// </summary>
-		public IRuleActuator<Disable> disable;
+		public IRuleExecutor<Disable> disable;
 		/// <summary>
 		/// 全局事件法则 Update
 		/// </summary>
-		public IRuleActuator<Update> update;
+		public IRuleExecutor<Update> update;
 		/// <summary>
 		/// 全局事件法则 UpdateTime
 		/// </summary>
-		public IRuleActuator<UpdateTime> updateTime;
+		public IRuleExecutor<UpdateTime> updateTime;
 
 		#endregion
 
@@ -114,10 +114,10 @@ namespace WorldTree
 			{
 				self.frameTime = frameTime;
 
-				self.Core.GetGlobalRuleActuator(out self.enable);
-				self.Core.GetGlobalRuleActuator(out self.update);
-				self.Core.GetGlobalRuleActuator(out self.updateTime);
-				self.Core.GetGlobalRuleActuator(out self.disable);
+				self.Core.GetGlobalRuleExecutor(out self.enable);
+				self.Core.GetGlobalRuleExecutor(out self.update);
+				self.Core.GetGlobalRuleExecutor(out self.updateTime);
+				self.Core.GetGlobalRuleExecutor(out self.disable);
 
 				self.AddComponent(out self.worldUpdate, frameTime).Run();
 

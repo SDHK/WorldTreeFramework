@@ -22,14 +22,14 @@ namespace WorldTree
 		/// <summary>
 		/// 全局法则执行器
 		/// </summary>
-		public IRuleActuator<TweenUpdate> ruleActuator;
+		public IRuleExecutor<TweenUpdate> ruleActuator;
 	}
 
 	class TreeTweenManagerAddRule : AddRule<TreeTweenManager>
 	{
 		protected override void Execute(TreeTweenManager self)
 		{
-			self.Core.GetGlobalRuleActuator(out self.ruleActuator);
+			self.Core.GetGlobalRuleExecutor(out self.ruleActuator);
 		}
 	}
 

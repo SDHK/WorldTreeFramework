@@ -45,6 +45,7 @@ namespace WorldTree
 						}
 					}
 				};
+				//mapper.InputEvent = new RuleData();
 
 				self.Root.AddComponent(out LiteDBTestProxy liteDB);
 				liteDB.Insert(manager);

@@ -13,21 +13,21 @@ namespace WorldTree
 	/// <summary>
 	/// 监听器法则执行器
 	/// </summary>
-	public class ListenerRuleActuator : RuleGroupActuatorBase, IListenerIgnorer, IRuleActuator<IRule>
-		, ComponentOf<ListenerRuleActuatorGroup>
+	public class ListenerRuleExecutor : RuleGroupExecutorBase, IListenerIgnorer, IRuleExecutor<IRule>
+		, ComponentOf<ListenerRuleExecutorGroup>
 		, AsAwake<RuleGroup>
 	{
 		public override string ToString()
 		{
-			return $"ListenerRuleActuator : {(ruleGroupDict == null ? null : Core.CodeToType(ruleGroupDict.RuleType))}";
+			return $"ListenerRuleExecutor : {(ruleGroupDict == null ? null : Core.CodeToType(ruleGroupDict.RuleType))}";
 		}
 	}
 
-	public static class ListenerRuleActuatorRule
+	public static class ListenerRuleExecutorRule
 	{
-		class AwakeRule : AwakeRule<ListenerRuleActuator, RuleGroup>
+		class AwakeRule : AwakeRule<ListenerRuleExecutor, RuleGroup>
 		{
-			protected override void Execute(ListenerRuleActuator self, RuleGroup arg1)
+			protected override void Execute(ListenerRuleExecutor self, RuleGroup arg1)
 			{
 				self.ruleGroupDict = arg1;
 			}
@@ -36,7 +36,7 @@ namespace WorldTree
 		/// <summary>
 		/// 执行器填装监听器
 		/// </summary>
-		public static void RuleActuatorAddListener(this ListenerRuleActuator self)
+		public static void RuleExecutorAddListener(this ListenerRuleExecutor self)
 		{
 			//遍历法则集合获取监听器类型
 			foreach (var listenerType in self.ruleGroupDict)

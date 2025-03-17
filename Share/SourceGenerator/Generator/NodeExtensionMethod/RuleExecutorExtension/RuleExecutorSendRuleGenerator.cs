@@ -13,7 +13,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal class RuleActuatorSendRuleGenerator
+	internal class RuleExecutorSendRuleGenerator
 	{
 		public static void Execute(GeneratorExecutionContext context)
 		{
@@ -27,7 +27,7 @@ namespace WorldTree.SourceGenerator
 );
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
-			Code.AppendLine("	public static class RuleActuatorSendRule");
+			Code.AppendLine("	public static class RuleExecutorSendRule");
 			Code.Append("	{");
 
 			for (int i = 0; i <= argumentCount; i++)
@@ -42,11 +42,11 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 执行器执行通知法则
 							/// </summary>
-							public static void Send<R{{genericsType}}>(this IRuleActuator<R> selfActuator{{genericTypeParameter}})
+							public static void Send<R{{genericsType}}>(this IRuleExecutor<R> selfExecutor{{genericTypeParameter}})
 								where R : ISendRule{{genericsTypeAngle}}
 							{
-								if (!selfActuator.IsActive) return;
-								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)selfActuator;
+								IRuleExecutorEnumerable self = (IRuleExecutorEnumerable)selfExecutor;
+								if (!self.IsActive) return;
 								self.RefreshTraversalCount();
 								for (int i = 0; i < self.TraversalCount; i++)
 								{
@@ -60,19 +60,19 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 执行器执行异步通知法则
 							/// </summary>
-							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleActuator<R> selfActuator{{genericTypeParameter}})
+							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleExecutor<R> selfExecutor{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
-								if (!selfActuator.IsActive)
+								IRuleExecutorEnumerable self = (IRuleExecutorEnumerable)selfExecutor;
+								if (!self.IsActive)
 								{
-									await selfActuator.TreeTaskCompleted();
+									await self.TreeTaskCompleted();
 									return;
 								}
-								IRuleActuatorEnumerable self = (IRuleActuatorEnumerable)selfActuator;
 								self.RefreshTraversalCount();
 								if (self.TraversalCount == 0)
 								{
-									await selfActuator.TreeTaskCompleted();
+									await self.TreeTaskCompleted();
 									return;			
 								}
 								for (int i = 0; i < self.TraversalCount; i++)
@@ -83,7 +83,7 @@ namespace WorldTree.SourceGenerator
 									}
 									else
 									{
-										await selfActuator.TreeTaskCompleted();
+										await self.TreeTaskCompleted();
 									}
 								}
 							}
@@ -92,7 +92,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("	}");
 			Code.Append("}");
 
-			context.AddSource("RuleActuatorSendRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+			context.AddSource("RuleExecutorSendRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
 	}
 }

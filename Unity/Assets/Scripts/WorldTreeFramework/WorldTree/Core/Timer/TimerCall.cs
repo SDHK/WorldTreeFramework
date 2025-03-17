@@ -34,7 +34,7 @@ namespace WorldTree
 		/// <summary>
 		/// 计时结束回调
 		/// </summary>
-		public RuleActuator<ISendRule> Callback;
+		public RuleExecutor<ISendRule> Callback;
 
 		
 

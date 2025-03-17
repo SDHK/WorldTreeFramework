@@ -34,7 +34,7 @@ namespace WorldTree
 		/// <summary>
 		/// 计数结束回调
 		/// </summary>
-		public RuleActuator<ISendRule> Callback;
+		public RuleExecutor<ISendRule> Callback;
 
 		public override string ToString()
 		{
