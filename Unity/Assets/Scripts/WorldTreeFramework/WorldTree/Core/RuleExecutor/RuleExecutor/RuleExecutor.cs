@@ -10,16 +10,7 @@
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 全局法则数据
-	/// </summary>
-	public class GlobalRuleExecutorData : Unit, IRuleExecutor<IRule>
-	{
-		/// <summary>
-		/// 法则类型码
-		/// </summary>
-		public long RuleTypeCode;
-	}
+
 
 	/// <summary>
 	/// 泛型法则执行器

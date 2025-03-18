@@ -45,7 +45,8 @@ namespace WorldTree
 						}
 					}
 				};
-				//mapper.InputEvent = new RuleData();
+				mapper.InputEvent = self.Core.PoolGetUnit(out GlobalRuleExecutorData data);
+				data.RuleTypeCode = self.TypeToCode<InputTestEvent>();
 
 				self.Root.AddComponent(out LiteDBTestProxy liteDB);
 				liteDB.Insert(manager);
@@ -61,7 +62,7 @@ namespace WorldTree
 				//if (self != null) return;
 
 				self.Root.AddComponent(out LiteDBTestProxy liteDB);
-				var node = liteDB.Find<InputMapperManager>(1826298614775808);
+				var node = liteDB.Find<InputMapperManager>(1826937017204736);
 				node.CutSelf()?.TryGraftSelfToTree<ComponentBranch, long>(self.Type, self.Root);
 				if (node.TryGetNumberNode(0, out InputMapperGroup group))
 				{

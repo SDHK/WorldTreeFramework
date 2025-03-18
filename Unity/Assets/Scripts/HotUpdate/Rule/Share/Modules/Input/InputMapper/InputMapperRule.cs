@@ -23,7 +23,7 @@ namespace WorldTree
 			protected override void Execute(InputMapper self)
 			{
 				self.Core.PoolGetUnit(out self.InfoList);
-				self.Core.GetGlobalRuleExecutor(self.Config.InputRuleType, out self.InputEvent);
+				//self.Core.GetGlobalRuleExecutor(self.Config.InputRuleType, out self.InputEvent);
 			}
 		}
 

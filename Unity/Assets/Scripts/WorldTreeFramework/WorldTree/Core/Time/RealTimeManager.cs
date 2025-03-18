@@ -181,7 +181,6 @@ namespace WorldTree
 		/// <summary>
 		/// 获取累计时间
 		/// </summary>
-		/// <returns>相差的时间刻度</returns>
 		private void CumulativeTime()
 		{
 			long offsetTicks;

@@ -15,7 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 全局法则执行器
 	/// </summary>
-	public class GlobalRuleExecutor<R> : RuleGroupExecutorBase, INodeListener, IRuleExecutor<IRule>
+	public partial class GlobalRuleExecutor<R> : RuleGroupExecutorBase, INodeListener, IRuleExecutor<IRule>
 		, TypeNodeOf<GlobalRuleExecutorManager>
 		, AsAwake
 		where R : IGlobalRule
@@ -76,4 +76,30 @@ namespace WorldTree
 			}
 		}
 	}
+
+
+	public partial class GlobalRuleExecutor<R>
+	{
+		class TreeDataSerialize : TreeDataSerializeRule<GlobalRuleExecutor<R>>
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
+			{
+				if (self.TryWriteDataHead(value, typeMode, ~1, out GlobalRuleExecutor<R> obj, false, writeType: typeof(GlobalRuleExecutorData))) return;
+				self.WriteDynamic(1);
+				self.WriteValue(obj.TypeToCode<R>());
+			}
+		}
+		class TreeDataDeserialize : TreeDataDeserializeRule<GlobalRuleExecutor<R>>
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
+			{
+				if (self.TryReadArrayHead(typeof(GlobalRuleExecutorData), ref value, 1, out _, out _)) return;
+				self.ReadDynamic(out int _);
+				long ruleTypeCode = self.ReadValue<long>();
+				value = self.Core.GetGlobalRuleExecutor(ruleTypeCode);
+			}
+		}
+
+	}
+
 }

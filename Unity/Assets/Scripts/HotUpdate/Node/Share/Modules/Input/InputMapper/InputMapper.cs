@@ -38,7 +38,6 @@ namespace WorldTree
 		/// <summary>
 		/// 全局输入事件法则
 		/// </summary>
-		[TreeDataIgnore]
 		public IRuleExecutor<InputEvent> InputEvent;
 	}
 }

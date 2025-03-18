@@ -11,24 +11,48 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 法则执行器接口基类
+	/// 法则执行器调用接口，逆变泛型限制
 	/// </summary>
-	public interface IRuleExecutorBase : IWorldTreeBasic { }
-
-	/// <summary>
-	/// 法则执行器的逆变泛型限制接口
-	/// </summary>
-	/// <typeparam name="T">法则类型</typeparam>
+	/// <typeparam name="R">法则类型</typeparam>
 	/// <remarks>
 	/// <para>主要作用是通过法则类型逆变提示可填写参数</para>
 	/// </remarks>
-	public interface IRuleExecutor<in T> : IRuleExecutorBase where T : IRule { }
+
+	public interface IRuleExecutor<in R> : IWorldTreeBasic where R : IRule { }
+
+	/// <summary>
+	/// 格式化器 
+	/// </summary>
+	public static class IRuleExecutorFormatterRule
+	{
+		class TreeDataSerialize<R> : TreeDataSerializeRule<IRuleExecutor<R>>
+			where R : IRule
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
+			{
+				if (self.TryWriteDataHead(value, typeMode, 0, out IRuleExecutor<R> obj, false, false)) return;
+			}
+		}
+		class TreeDataDeserialize<R> : TreeDataDeserializeRule<IRuleExecutor<R>>
+			where R : IRule
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
+			{
+				int typePoint = self.ReadPoint;
+				if (self.TryReadClassHead(typeof(IRuleExecutor<R>), ref value, out int count, out int objId, out int jumpReadPoint)) return;
+				self.ReadJump(typePoint);
+				self.SkipData();
+				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
+			}
+		}
+	}
+
 
 	/// <summary>
 	/// 法则执行器遍历接口
 	/// </summary>
 	/// <remarks>让执行器可以遍历</remarks>
-	public interface IRuleExecutorEnumerable : IRuleExecutorBase, INode
+	public interface IRuleExecutorEnumerable : INode
 	{
 		/// <summary>
 		/// 动态的遍历数量
@@ -53,11 +77,10 @@ namespace WorldTree
 
 	}
 
-
 	/// <summary>
 	/// 法则执行器接口
 	/// </summary>
-	public interface IRuleExecutor : IRuleExecutorBase, INode
+	public interface IRuleExecutor : INode
 	{
 		/// <summary>
 		/// 移除节点

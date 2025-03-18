@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\NodePool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\File\PathHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\RuleMethod\NodeBranchHelper.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\GlobalRuleExecutor\GlobalRuleExecutorData.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTaskQueueLock\TreeTaskQueueCompleterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\KeyValuePairFormatRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\BeforeRemoveRule.cs" />

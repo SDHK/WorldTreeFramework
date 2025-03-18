@@ -32,7 +32,7 @@ namespace WorldTree
 		where R : IGlobalRule
 		{
 			self.AddComponent(out GlobalRuleExecutorManager _).AddTypeNode(self.TypeToCode<R>(), out GlobalRuleExecutor<R> globalRuleExecutor);
-			ruleExecutor = (IRuleExecutor<R>)globalRuleExecutor;
+			ruleExecutor = globalRuleExecutor as IRuleExecutor<R>;
 			return ruleExecutor;
 		}
 
@@ -45,7 +45,8 @@ namespace WorldTree
 			INode node = NodeBranchHelper.GetBranch<TypeNodeBranch>(manager)?.GetNode(genericTypeCpde);
 			if (node != null) return node as RuleGroupExecutorBase;
 
-			Type type = typeof(GlobalRuleExecutor<>).MakeGenericType(self.CodeToType(genericTypeCpde));
+			if (!self.TryCodeToType(genericTypeCpde, out Type genericType)) return null;
+			Type type = typeof(GlobalRuleExecutor<>).MakeGenericType(genericType);
 			NodeBranchHelper.AddNode<TypeNodeBranch, long>(manager, genericTypeCpde, self.TypeToCode(type), out node);
 			RuleGroupExecutorBase executor = node as RuleGroupExecutorBase;
 			return executor;
@@ -59,7 +60,7 @@ namespace WorldTree
 			where R : IGlobalRule
 		{
 			var executor = self.GetGlobalRuleExecutor(genericTypeCpde);
-			ruleExecutor = (IRuleExecutor<R>)executor;
+			ruleExecutor = executor as IRuleExecutor<R>;
 			return ruleExecutor;
 		}
 	}
