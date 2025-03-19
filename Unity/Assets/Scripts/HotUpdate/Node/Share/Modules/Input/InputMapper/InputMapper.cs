@@ -6,6 +6,8 @@
 * 描述：
 
 */
+using System.Collections.Generic;
+
 namespace WorldTree
 {
 
@@ -25,19 +27,24 @@ namespace WorldTree
 		, AsAwake
 	{
 		/// <summary>
-		/// 输入检测器配置
+		/// 是否可改变
 		/// </summary>
-		public InputMapperConfig Config;
+		public bool IsChange;
+
+		/// <summary>
+		/// 输入信息列表
+		/// </summary>
+		public List<InputInfo> ConfigInfoList;
+
+		/// <summary>
+		/// 全局输入事件法则
+		/// </summary>
+		public IRuleExecutor<InputEvent> InputEvent;
 
 		/// <summary>
 		/// 输入信息队列
 		/// </summary>
 		[TreeDataIgnore]
 		public UnitList<InputInfo> InfoList;
-
-		/// <summary>
-		/// 全局输入事件法则
-		/// </summary>
-		public IRuleExecutor<InputEvent> InputEvent;
 	}
 }

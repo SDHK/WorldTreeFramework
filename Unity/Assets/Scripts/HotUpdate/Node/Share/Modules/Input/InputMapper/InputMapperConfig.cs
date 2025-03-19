@@ -17,16 +17,6 @@ namespace WorldTree
 	public partial struct InputMapperConfig
 	{
 		/// <summary>
-		/// 全局事件Type
-		/// </summary>
-		public long InputRuleType;
-
-		/// <summary>
-		/// 是否可改变
-		/// </summary>
-		public bool IsChange;
-
-		/// <summary>
 		/// 输入信息列表
 		/// </summary>
 		public List<InputInfo> InfoList;

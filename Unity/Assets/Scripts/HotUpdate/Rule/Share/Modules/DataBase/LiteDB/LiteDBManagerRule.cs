@@ -16,7 +16,11 @@ namespace WorldTree
 		{
 			protected override void Execute(LiteDBManager self, string path)
 			{
-				self.database = new LiteDatabase(path);
+				self.database = new LiteDatabase(new ConnectionString
+				{
+					Filename = path,
+					Connection = ConnectionType.Shared
+				});
 			}
 		}
 

@@ -5,44 +5,99 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfTest"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Background="#FF323232">
-    <Window.Style>
-        <Style TargetType="{x:Type Window}">
-            <Setter Property="WindowChrome.WindowChrome">
-                <Setter.Value>
-                    <WindowChrome CaptionHeight="30"
-CornerRadius="0"
-GlassFrameThickness="0"
-NonClientFrameEdges="None"
-ResizeBorderThickness="5"
-UseAeroCaptionButtons="False" />
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Window}">
-                        <Border Background="#FF323232">
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="5"
-ShadowDepth="0"
-Opacity="0.8" />
-                            </Border.Effect>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="30" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Border Grid.Row="0" Background="#FF323232" />
-                                <ContentPresenter Grid.Row="1" />
-                            </Grid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Style>
+        Title="MainWindow" Height="450" Width="800" Background="#FF1F1F1F">
+    <WindowChrome.WindowChrome>
+        <!-- CaptionHeight是拖动高度 -->
+        <WindowChrome 
+         CaptionHeight="0" 
+         ResizeBorderThickness="5"
+         GlassFrameThickness="50"
+         CornerRadius="0"
+         UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 自定义标题栏 -->
+        <Grid Grid.Row="0" Background="#FF282828" IsHitTestVisible="True" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                  Margin="10,0,0,0"
+                  VerticalAlignment="Center"
+                  Foreground="#FFC4C4C4" HorizontalAlignment="Left" Width="200" Grid.Row="1" IsHitTestVisible="False"/>
+
+            <!--窗口按钮-->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Grid.RowSpan="2" HorizontalAlignment="Right" Width="90" IsHitTestVisible="True">
+
+                <!--最小化按钮-->
+
+                <Button  Click="MinimizeButton_Click" BorderBrush="#00707070" Background="#00DDDDDD" Width="30" >
+                    <Path Data="M 0,0 H 10"
+                       Stroke="#FFC4C4C4"
+                       StrokeThickness="2"
+                       Width="10"
+                       Height="1"
+                       Stretch="None"
+                       VerticalAlignment="Center"/>
+                </Button>
+
+                <!--最大化/还原按钮-->
+
+                <Button x:Name="MaximizeButton" Click="MaximizeButton_Click" Background="#00DDDDDD" BorderBrush="#00707070" Width="30" >
+                    <Grid>
+
+                        <!--最大化图标-->
+                        <Path x:Name="MaximizeIcon"
+                           Data="M 0,0 H 10 V 10 H 0 Z"
+                           Stroke="#FFC4C4C4"
+                           StrokeThickness="2"
+                           Width="10"
+                           Height="10"
+                           Stretch="None"/>
+                        <!--还原图标-->
+                        <Grid x:Name="RestoreIcon" Visibility="Collapsed">
+                            <Path Data="M 0,2 H 7 V 9 H 0 Z"
+                            Stroke="#FFC4C4C4"
+                            StrokeThickness="2"
+                            Width="10"
+                            Height="10"
+                            Stretch="None"/>
+                            <Path Data="M 2,0 H 9 V 7"
+                            Stroke="#FFC4C4C4"
+                            StrokeThickness="2"
+                            Width="10"
+                            Height="10"
+                            Stretch="None"/>
+                        </Grid>
+                    </Grid>
+                </Button>
 
 
+                <!--关闭按钮-->
+
+                <Button Click="CloseButton_Click" Background="#00DDDDDD" BorderBrush="#00707070"  Width="30" >
+                    <Path Data="M 0,0 L 10,10 M 10,0 L 0,10"
+                       Stroke="#FFC4C4C4"
+                       StrokeThickness="2"
+                       Width="10"
+                       Height="10"
+                       Stretch="None"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- 窗口内容 -->
+        <Grid Grid.Row="1" Background="#FF313131">
+            <!-- 你的应用内容放这里 -->
 
 
+        </Grid>
+
+    </Grid>
 </Window>

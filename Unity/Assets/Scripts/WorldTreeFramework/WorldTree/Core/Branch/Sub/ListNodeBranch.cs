@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 列表分支，Key是-1或Count，为添加到末尾
 	/// </summary>
-	[TreeDataSerializable]
+	[TreeDataSerializable(true)]
 	public partial class ListNodeBranch : Unit, IBranch<int>, ISerializable
 	{
 		public int Count => nodeList == null ? 0 : nodeList.Count;

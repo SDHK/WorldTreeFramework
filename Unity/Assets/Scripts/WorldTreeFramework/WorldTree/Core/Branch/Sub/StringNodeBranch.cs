@@ -14,6 +14,6 @@ namespace WorldTree
 	/// <summary>
 	/// 字符串节点分支
 	/// </summary>
-	[TreeDataSerializable]
+	[TreeDataSerializable(true)]
 	public partial class StringNodeBranch : Branch<string> { }
 }

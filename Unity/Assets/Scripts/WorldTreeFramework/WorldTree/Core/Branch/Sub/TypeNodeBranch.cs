@@ -15,6 +15,6 @@ namespace WorldTree
 	/// <summary>
 	/// 类型节点分支
 	/// </summary>
-	[TreeDataSerializable]
+	[TreeDataSerializable(true)]
 	public partial class TypeNodeBranch : Branch<long> { }
 }

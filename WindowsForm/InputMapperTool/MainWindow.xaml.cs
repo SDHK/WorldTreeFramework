@@ -54,16 +54,6 @@ namespace InputMapperTool
 			}
 			else
 			{
-				////判断当前是否是最大化状态
-				//if (WindowState == WindowState.Maximized)
-				//{
-				//	// 如果是最大化状态，还原窗口
-				//	WindowState = WindowState.Normal;
-				//	// 设置鼠标相对于窗口的位置
-				//	this.Left = Mouse.GetPosition(this).X - this.ActualWidth / 2;
-				//	this.Top = Mouse.GetPosition(this).Y;
-				//}
-				// 单击开始拖动
 				this.DragMove();
 			}
 		}

@@ -14,6 +14,6 @@ namespace WorldTree
 	/// <summary>
 	/// 号码节点分支
 	/// </summary>
-	[TreeDataSerializable]
+	[TreeDataSerializable(true)]
 	public partial class NumberNodeBranch : Branch<long> { }
 }

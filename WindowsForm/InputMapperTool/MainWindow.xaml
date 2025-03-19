@@ -21,7 +21,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <!-- 自定义标题栏 -->
         <Grid Grid.Row="0" Background="#FF282828" IsHitTestVisible="True" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid.RowDefinitions>
