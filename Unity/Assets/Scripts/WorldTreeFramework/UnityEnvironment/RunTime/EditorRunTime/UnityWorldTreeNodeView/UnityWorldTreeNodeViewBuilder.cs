@@ -16,7 +16,7 @@ namespace WorldTree
 	/// </summary>
 	/// <remarks>负责Node映射显示的gameObjcet生成</remarks>
 	public class UnityWorldTreeNodeViewBuilder : Node, IWorldTreeNodeViewBuilder
-		, ChildOf<WorldTreeRoot>
+		, ChildOf<INode>
 		, AsAwake<INode, INode>
 	{
 		/// <summary>

@@ -16,7 +16,7 @@ namespace WorldTree
 	/// 入口节点
 	/// </summary>
 	public class Entry : Node
-		, ComponentOf<WorldTreeRoot>
+		, ComponentOf<World>
 		, AsAwake
 		, AsComponentBranch
 	{ }

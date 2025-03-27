@@ -18,7 +18,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取颜色图片
 		/// </summary>
-		public static Texture2D GetColorTexture(WorldTreeRoot self, Color color)
+		public static Texture2D GetColorTexture(World self, Color color)
 		{
 			return self.AddComponent(out ColorTexture2DManager _).Get(color);
 		}
@@ -26,7 +26,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取黑白图片
 		/// </summary>
-		public static Texture2D GetColorTexture(WorldTreeRoot self, float color, float alpha = 1)
+		public static Texture2D GetColorTexture(World self, float color, float alpha = 1)
 		{
 			return self.AddComponent(out ColorTexture2DManager _).Get(new Color(color, color, color, alpha));
 		}
@@ -35,7 +35,7 @@ namespace WorldTree
 	/// <summary>
 	/// 颜色图片管理器
 	/// </summary>
-	public class ColorTexture2DManager : Node, ComponentOf<WorldTreeRoot>
+	public class ColorTexture2DManager : Node, ComponentOf<World>
 		, AsAwake
 	{
 		/// <summary>

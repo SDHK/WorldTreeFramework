@@ -9,12 +9,12 @@
 namespace WorldTree
 {
 
-	class CurveManagerRootAddRule : RootAddRule<CurveManager> { }
+	class CurveManagerRootAddRule : NodeAddRule<World, CurveManager> { }
 
 	/// <summary>
 	/// 曲线管理器
 	/// </summary>
-	public class CurveManager : Node, ComponentOf<WorldTreeRoot>
+	public class CurveManager : Node, ComponentOf<World>
 		, AsComponentBranch
 		, AsAwake
 	{

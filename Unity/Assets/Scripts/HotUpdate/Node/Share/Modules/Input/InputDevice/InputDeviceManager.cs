@@ -21,7 +21,7 @@ namespace WorldTree
 	/// 输入设备管理器
 	/// </summary>
 	public class InputDeviceManager : Node
-		, ComponentOf<WorldTreeRoot>
+		, ComponentOf<World>
 		, AsComponentBranch
 		, AsChildBranch
 		, AsAwake

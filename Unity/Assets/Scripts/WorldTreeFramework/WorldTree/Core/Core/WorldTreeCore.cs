@@ -17,6 +17,8 @@ using System;
 namespace WorldTree
 {
 	//TODO 计划
+	//GF的Debug面板 
+
 	//UI 安全区 Screen.safeArea
 
 	//藤蔓网状结构
@@ -53,13 +55,6 @@ namespace WorldTree
 	//HybridListenerRuleActuatorGroup
 
 
-	// 序列化 ：	
-	// 类型码用正数下标 ：127个内为：1byte，
-	// 引用码用负数下标 ：-120个内为：1byte
-	// 负数0~120 标记引用列表， 后续跟标记类型码
-
-
-
 	/// <summary>
 	/// 世界树核心接口
 	/// </summary>
@@ -68,13 +63,15 @@ namespace WorldTree
 		/// <summary>
 		/// 框架启动
 		/// </summary>
-		public void Awake();
+		public void Init(Type heartType, int frameTime);
 	}
+
 
 	/// <summary>
 	/// 世界树核心
 	/// </summary>
 	public class WorldTreeCore : Node, IWorldTreeCore, IListenerIgnorer
+		, AsCoreManagerBranch
 		, AsComponentBranch
 		, AsWorldBranch
 		, WorldOf<WorldTreeCore>
@@ -85,7 +82,7 @@ namespace WorldTree
 		/// <summary>
 		/// 主核心
 		/// </summary>
-		private WorldTreeCore rootCore;
+		private WorldTreeCore mainCore;
 
 		/// <summary>
 		/// 打印日志
@@ -155,16 +152,9 @@ namespace WorldTree
 		public IdManager IdManager;
 
 		/// <summary>
-		/// 代码加载器
-		/// </summary>
-		public CodeLoader CodeLoader;
-
-		/// <summary>
 		/// 类型信息
 		/// </summary>
 		public TypeInfo TypeInfo;
-
-
 
 		/// <summary>
 		/// 真实时间管理器
@@ -202,9 +192,19 @@ namespace WorldTree
 		public ArrayPoolManager ArrayPoolManager;
 
 		/// <summary>
-		/// 世界环境
+		/// 全局法则执行器管理器
 		/// </summary>
-		public WorldContext WorldContext;
+		public GlobalRuleExecutorManager GlobalRuleExecutorManager;
+
+		/// <summary>
+		/// 世界之心
+		/// </summary>
+		public WorldHeartBase WorldHeart;
+
+		/// <summary>
+		/// 世界线：线程上下文
+		/// </summary>
+		public WorldLine WorldLine;
 
 		#endregion
 
@@ -213,21 +213,20 @@ namespace WorldTree
 		/// <summary>
 		/// 框架启动
 		/// </summary>
-		public virtual void Awake()
+		public virtual void Init(Type heartType, int frameTime)
 		{
 			SetActive(false);
 
 			//根节点初始化
 			Core = this;
-			Domain = this;
-			Root = null;
+			World = null;
 
 			//框架核心启动组件新建初始化
 
 			//类型信息初始化
 			TypeInfo = Activator.CreateInstance(typeof(TypeInfo), true) as TypeInfo;
 			TypeInfo.Core = this;
-			TypeInfo.Root = this.Root;
+			TypeInfo.World = this.World;
 			TypeInfo.Type = TypeInfo.TypeToCode(typeof(TypeInfo));
 			TypeInfo.OnCreate();
 
@@ -248,10 +247,9 @@ namespace WorldTree
 			//法则管理器初始化
 			this.PoolGetNode(out RuleManager);
 
-			BeforeRemoveRuleGroup = RuleManager.GetOrNewRuleGroup<BeforeRemove>();
-
 			AddRuleGroup = RuleManager.GetOrNewRuleGroup<Add>();
 			RemoveRuleGroup = RuleManager.GetOrNewRuleGroup<Remove>();
+			BeforeRemoveRuleGroup = RuleManager.GetOrNewRuleGroup<BeforeRemove>();
 			EnableRuleGroup = RuleManager.GetOrNewRuleGroup<Enable>();
 			DisableRuleGroup = RuleManager.GetOrNewRuleGroup<Disable>();
 			GraftRuleGroup = RuleManager.GetOrNewRuleGroup<Graft>();
@@ -263,17 +261,18 @@ namespace WorldTree
 			this.PoolGetNode(out ReferencedPoolManager);
 
 			//组件添加到树
-			this.TryGraftComponent(ReferencedPoolManager);
-			this.TryGraftComponent(IdManager);
-			this.TryGraftComponent(TypeInfo);
-			this.TryGraftComponent(RuleManager);
+			this.TryGraftCoreManager(ReferencedPoolManager);
+			this.TryGraftCoreManager(IdManager);
+			this.TryGraftCoreManager(TypeInfo);
+			this.TryGraftCoreManager(RuleManager);
 
 			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
-			UnitPoolManager = this.AddComponent(out UnitPoolManager _);
-			NodePoolManager = this.AddComponent(out NodePoolManager _);
-			ArrayPoolManager = this.AddComponent(out ArrayPoolManager _);
+			UnitPoolManager = this.AddCoreManager(out UnitPoolManager _);
+			NodePoolManager = this.AddCoreManager(out NodePoolManager _);
+			ArrayPoolManager = this.AddCoreManager(out ArrayPoolManager _);
 
 			UnitPoolManager.TryGet(this.TypeToCode<ChildBranch>(), out _);
+
 
 			//嫁接节点需要手动激活
 			ReferencedPoolManager.SetActive(true);
@@ -285,15 +284,21 @@ namespace WorldTree
 			SetActive(true);
 			IsCoreActive = true;
 
+			//全局法则执行器管理器
+			GlobalRuleExecutorManager = this.AddCoreManager(out GlobalRuleExecutorManager _);
+
 			//真实时间管理器
-			RealTimeManager = this.AddComponent(out RealTimeManager _);
+			RealTimeManager = this.AddCoreManager(out RealTimeManager _);
 
 			//游戏时间管理器
-			GameTimeManager = this.AddComponent(out GameTimeManager _);
+			GameTimeManager = this.AddCoreManager(out GameTimeManager _);
 
-			Root = this.AddComponent(out WorldTreeRoot _);
-			Root.Root = Root;
-			WorldContext = Root.AddComponent(out WorldContext _);
+			World = this.AddComponent(out World _);
+			World.World = World;
+			long typeCode = this.TypeToCode(heartType);
+			WorldHeart = NodeBranchHelper.AddNode<CoreManagerBranch, long, int>(this, typeCode, typeCode, out _, frameTime) as WorldHeartBase;
+			WorldLine = this.AddCoreManager(out WorldLine _);
+			WorldHeart.Run();
 		}
 
 		#endregion
@@ -309,9 +314,8 @@ namespace WorldTree
 				BranchType = Core.TypeToCode<B>();
 				Parent = parent;
 				Core = parent.Core ?? this;
-				Root = null;
-				Domain = null;
-				rootCore = parent.Core.rootCore ?? this;
+				World = null;
+				mainCore = parent.Core.mainCore ?? this;
 				SetActive(true);//激活节点
 				return true;
 			}
@@ -360,22 +364,23 @@ namespace WorldTree
 		{
 			Core.BeforeRemoveRuleGroup?.Send(this);
 
-			//需要提前按顺序移除
+			//有严格的移除顺序
+			this.RemoveAllTemp();
 			this.RemoveAllWorld();
-			this.RemoveComponent<WorldTreeCore, WorldTreeRoot>();
-			this.RemoveComponent<WorldTreeCore, GameTimeManager>();
-			this.RemoveComponent<WorldTreeCore, RealTimeManager>();
-			this.RemoveComponent<WorldTreeCore, GlobalRuleExecutorManager>();
-			this.RemoveComponent<WorldTreeCore, ArrayPoolManager>();
-			this.RemoveComponent<WorldTreeCore, NodePoolManager>();
-			this.RemoveComponent<WorldTreeCore, UnitPoolManager>();
-			this.RemoveComponent<WorldTreeCore, RuleManager>();
-			this.RemoveComponent<WorldTreeCore, IdManager>();
-			this.RemoveComponent<WorldTreeCore, TypeInfo>();
-			this.RemoveComponent<WorldTreeCore, ReferencedPoolManager>();
-
-
-			RemoveAllNode();
+			this.RemoveAllComponent();
+			WorldHeart?.Dispose();
+			WorldLine?.Dispose();
+			World.Dispose();
+			GameTimeManager?.Dispose();
+			RealTimeManager?.Dispose();
+			GlobalRuleExecutorManager?.Dispose();
+			ArrayPoolManager?.Dispose();
+			NodePoolManager?.Dispose();
+			UnitPoolManager?.Dispose();
+			RuleManager?.Dispose();
+			IdManager?.Dispose();
+			TypeInfo?.Dispose();
+			ReferencedPoolManager?.Dispose();
 		}
 
 		/// <summary>
@@ -394,13 +399,15 @@ namespace WorldTree
 			this.PoolRecycle(this);//回收到池
 
 			ReferencedPoolManager = null;
+			TypeInfo = null;
 			IdManager = null;
-			RealTimeManager = null;
 			RuleManager = null;
 			UnitPoolManager = null;
 			NodePoolManager = null;
 			ArrayPoolManager = null;
-			Root = null;
+			RealTimeManager = null;
+			GameTimeManager = null;
+			World = null;
 
 			AddRuleGroup = null;
 			RemoveRuleGroup = null;
@@ -456,20 +463,5 @@ namespace WorldTree
 		#endregion
 
 		#endregion
-	}
-
-	public static partial class WorldTreeCoreRule
-	{
-		private class AddRule1 : AddRule<WorldTreeCore>
-		{
-			protected override void Execute(WorldTreeCore self)
-			{
-				self.Log = self.Core.Log;
-				self.LogWarning = self.Core.LogWarning;
-				self.LogError = self.Core.LogError;
-				self.Awake();
-				self.Log($"核心启动{self.Id}");
-			}
-		}
 	}
 }

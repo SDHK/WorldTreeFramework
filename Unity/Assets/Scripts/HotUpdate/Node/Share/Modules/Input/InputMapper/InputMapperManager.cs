@@ -14,7 +14,7 @@ namespace WorldTree
 	[TreeDataSerializable]
 	public partial class InputMapperManager : NodeData
 		, AsNumberNodeBranch
-		, ComponentOf<WorldTreeRoot>
+		, ComponentOf<World>
 		, AsAwake
 	{
 

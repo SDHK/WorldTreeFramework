@@ -27,7 +27,7 @@ namespace WorldTree
 		{
 			node = Activator.CreateInstance(type, true) as INode;
 			node.Core = self;
-			node.Root = self.Root;
+			node.World = self.World;
 			node.Type = node.TypeToCode(type);
 			node.IsSerialize = isSerialize;
 			node.OnCreate();

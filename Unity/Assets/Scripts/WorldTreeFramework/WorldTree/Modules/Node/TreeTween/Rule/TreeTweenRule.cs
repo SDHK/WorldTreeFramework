@@ -67,7 +67,7 @@ namespace WorldTree
 		public static TreeTweenBase SetCurve<C>(this TreeTweenBase self)
 			where C : CurveBase
 		{
-			self.curve = self.Root.AddComponent(out CurveManager _).AddComponent(out C _);
+			self.curve = self.World.AddComponent(out CurveManager _).AddComponent(out C _);
 			return self;
 		}
 
@@ -76,7 +76,7 @@ namespace WorldTree
 		/// </summary>
 		public static TreeTweenBase Run(this TreeTweenBase self)
 		{
-			if (self.curve == null) self.Root.AddComponent(out CurveManager _).AddComponent(out self.curve);
+			if (self.curve == null) self.World.AddComponent(out CurveManager _).AddComponent(out self.curve);
 			self.time = TimeSpan.Zero;
 			self.isRun = true;
 			self.isReverse = false;

@@ -35,11 +35,9 @@ namespace WorldTree
 		/// 节点复数状态
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		protected NodeState state;
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public bool IsFromPool
 		{
 			get => (state & NodeState.IsFromPool) == NodeState.IsFromPool;
@@ -56,7 +54,6 @@ namespace WorldTree
 			}
 		}
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public bool IsDisposed
 		{
 			get => (state & NodeState.IsDisposed) == NodeState.IsDisposed;
@@ -73,7 +70,6 @@ namespace WorldTree
 			}
 		}
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public bool IsSerialize
 		{
 			get => (state & NodeState.IsSerialize) == NodeState.IsSerialize;
@@ -90,35 +86,24 @@ namespace WorldTree
 			}
 		}
 
-
 		public virtual long Id { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public long InstanceId { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public long Type { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public WorldTreeCore Core { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
-		public WorldTreeRoot Root { get; set; }
+		public World World { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
-		public INode Domain { get; set; }//接口标记域节点
-
-		[TreeDataIgnore]
-		[TreePackIgnore]
 		public INode Parent { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public IWorldTreeNodeViewBuilder View { get; set; }
 
 		#region Active
@@ -127,11 +112,9 @@ namespace WorldTree
 		public bool ActiveToggle { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public bool IsActive { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public bool activeEventMark { get; set; }
 
 		public void SetActive(bool value)
@@ -183,11 +166,9 @@ namespace WorldTree
 		#region Rattan
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public UnitDictionary<long, IRattan> GetRattanDict { get; }
 
 		#endregion
@@ -198,14 +179,12 @@ namespace WorldTree
 		/// 此节点挂载到父级的分支类型
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public long BranchType { get; set; }
 
 
 		public BranchGroup BranchDict { get; set; }
 
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public BranchGroup GetBranchDict => BranchDict ??= Core.PoolGetUnit<BranchGroup>();
 
 		#endregion
@@ -243,8 +222,7 @@ namespace WorldTree
 				BranchType = Core.TypeToCode<B>();
 				Parent = parent;
 				Core = parent.Core;
-				Root = parent.Root;
-				if (Domain != this) Domain = parent.Domain;
+				World = parent.World;
 				SetActive(true);//激活节点
 				AddNodeView();
 				return true;
@@ -379,8 +357,7 @@ namespace WorldTree
 			BranchType = branch.Type;
 			Parent = parent;
 			Core = parent.Core;
-			Root = parent.Root;
-			if (Domain != this) Domain = parent.Domain;
+			World = parent.World;
 
 			RefreshActive();
 			NodeBranchTraversalHelper.TraversalPrePostOrder(this, current => current.OnBeforeGraftSelfToTree(), current => current.OnGraftSelfToTree());
@@ -390,8 +367,7 @@ namespace WorldTree
 		public virtual void OnBeforeGraftSelfToTree()
 		{
 			this.Core = this.Parent.Core;
-			this.Root = this.Parent.Root;
-			if (Domain != this) Domain = this.Parent.Domain;
+			this.World = this.Parent.World;
 			//序列化时，需要重新设置所有节点的父节点
 			if (IsSerialize)
 			{

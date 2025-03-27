@@ -46,11 +46,11 @@ namespace EditorTool
 					if (type.IsEnum) type = typeof(Enum);
 
 					//通过字段类型拿到预注册的绘制节点类型
-					if (View?.Root != null && View.Root.AddComponent(out ViewTypeManager _).types.TryGetValue(type, out Type nodeType))
+					if (View?.World != null && View.World.AddComponent(out ViewTypeManager _).types.TryGetValue(type, out Type nodeType))
 					{
 						//通过绘制类型拿到绘制节点实例
 						long typeCode = View.TypeToCode(nodeType);
-						NodeBranchHelper.AddNode<ComponentBranch, long>(View.Root, typeCode, typeCode, out INode viewNode);
+						NodeBranchHelper.AddNode<ComponentBranch, long>(View.World, typeCode, typeCode, out INode viewNode);
 
 						//View.Root.AddComponent(nodeType.TypeToCode(), out INode viewNode, isPool: false);//通过绘制类型拿到绘制节点实例
 						NodeRuleHelper.TrySendRule(viewNode, default(INodeFieldViewRule), node, fieldInfo);//调用绘制法则

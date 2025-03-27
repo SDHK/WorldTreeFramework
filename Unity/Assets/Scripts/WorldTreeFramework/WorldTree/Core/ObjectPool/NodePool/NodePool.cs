@@ -74,7 +74,7 @@ namespace WorldTree
 		{
 			INode obj = Activator.CreateInstance(ObjectType, true) as INode;
 			obj.Core = Core;
-			obj.Root = Core.Root;
+			obj.World = Core.World;
 			obj.Type = ObjectTypeCode;
 			return obj;
 		}

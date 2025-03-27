@@ -27,7 +27,7 @@ namespace WorldTree
 		/// <summary>
 		/// 可视化生成器
 		/// </summary>
-		private UnityWorldTreeNodeViewBuilder treeView;
+		private UnityWorldTreeNodeViewBuilder viewBuilder;
 
 		/// <summary>
 		/// 启动
@@ -42,9 +42,8 @@ namespace WorldTree
 				ViewCore.Log = Debug.Log;
 				ViewCore.LogWarning = Debug.LogWarning;
 				ViewCore.LogError = Debug.LogError;
-				ViewCore.Awake(); //可视化框架初始化
-
-				ViewCore.Root.AddChild(out treeView, (INode)Core, default(INode));
+				ViewCore.Init(typeof(UnityWorldHeart), 0); //可视化框架初始化
+				ViewCore.World.AddChild(out viewBuilder, (INode)Core, default(INode));
 			}
 
 			Core.Log = Debug.Log;
@@ -52,16 +51,13 @@ namespace WorldTree
 			Core.LogError = Debug.LogError;
 
 			//可视化生成器赋值给主框架
-			Core.View = treeView;
+			Core.View = viewBuilder;
 
-			//主框架初始化
-			Core.Awake();
-
-			//主框架添加Unity世界心跳，间隔毫秒为0
-			Core.Root.AddComponent(out UnityWorldHeart _, 0).Run();
+			//主框架初始化，添加Unity世界心跳，间隔毫秒为0
+			Core.Init(typeof(UnityWorldHeart), 0);
 
 			//主框架添加入口节点
-			Core.Root.AddComponent(out Entry _);
+			Core.World.AddComponent(out Entry _);
 		}
 
 		/// <summary>
@@ -81,7 +77,7 @@ namespace WorldTree
 			ViewCore?.Dispose();
 			Core = null;
 			ViewCore = null;
-			treeView = null;
+			viewBuilder = null;
 		}
 
 		/// <summary>
@@ -93,7 +89,7 @@ namespace WorldTree
 			ViewCore?.Dispose();
 			Core = null;
 			ViewCore = null;
-			treeView = null;
+			viewBuilder = null;
 		}
 	}
 }

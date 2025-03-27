@@ -13,7 +13,7 @@ namespace WorldTree
     /// <summary>
     /// 游戏对象池管理器
     /// </summary>
-    public class GameObjectPoolManager : Node, ComponentOf<WorldTreeRoot>
+    public class GameObjectPoolManager : Node, ComponentOf<World>
         , AsChildBranch
         , AsAwake
     {

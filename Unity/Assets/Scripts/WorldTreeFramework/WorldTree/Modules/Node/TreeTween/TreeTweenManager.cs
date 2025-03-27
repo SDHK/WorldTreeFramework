@@ -10,13 +10,13 @@ using System;
 
 namespace WorldTree
 {
-	class TreeTweenManagerRootAddRule : RootAddRule<TreeTweenManager> { }
+	class TreeTweenManagerRootAddRule : NodeAddRule<World, TreeTweenManager> { }
 
 
 	/// <summary>
 	/// 树渐变管理器
 	/// </summary>
-	public class TreeTweenManager : Node, ComponentOf<WorldTreeRoot>
+	public class TreeTweenManager : Node, ComponentOf<World>
 		, AsAwake
 	{
 		/// <summary>

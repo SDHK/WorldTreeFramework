@@ -20,7 +20,7 @@ namespace WorldTree
 	/// </summary>
 	public class RealTimeManager : Node
 		, AsAwake
-		, ComponentOf<WorldTreeCore>
+		, CoreManagerOf<WorldTreeCore>
 	{
 		/// <summary>
 		/// NTP服务器地址列表

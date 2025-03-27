@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\ETTask.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\Define.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\IAwaiter.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\EntryConfig.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\FileStreamDecryption.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\GameEntry.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\StateMachineWrap.cs" />

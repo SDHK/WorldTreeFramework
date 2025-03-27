@@ -28,7 +28,7 @@ namespace WorldTree
 			protected override void Execute(LiteDBTest self)
 			{
 				//获取数据库代理
-				self.Root.AddComponent(out LiteDBTestProxy liteDB);
+				self.World.AddComponent(out LiteDBTestProxy liteDB);
 
 				long id;
 

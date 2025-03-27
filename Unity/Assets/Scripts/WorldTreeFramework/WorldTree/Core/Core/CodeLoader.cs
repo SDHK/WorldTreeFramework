@@ -21,7 +21,7 @@ namespace WorldTree
 	/// 代码加载器
 	/// </summary>
 	public class CodeLoader : Node
-		, ComponentOf<WorldTreeRoot>
+		, ComponentOf<World>
 		, AsAwake
 		, AsHotReload
 	{

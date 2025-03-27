@@ -23,7 +23,7 @@ namespace WorldTree
 			protected override void Execute(InputMapperTest self)
 			{
 				if (self != null) return;
-				self.Root.AddComponent(out InputMapperManager manager);
+				self.World.AddComponent(out InputMapperManager manager);
 				manager.AddNumberNode(0, out InputMapperGroup group);
 				group.AddChild(out InputMapper mapper);
 				mapper.ConfigInfoList = new() {
@@ -45,7 +45,7 @@ namespace WorldTree
 				mapper.InputEvent = self.Core.PoolGetUnit(out GlobalRuleExecutorData data);
 				data.RuleTypeCode = self.TypeToCode<InputTestEvent>();
 
-				self.Root.AddComponent(out LiteDBTestProxy liteDB);
+				self.World.AddComponent(out LiteDBTestProxy liteDB);
 				liteDB.Insert(manager);
 			}
 		}
@@ -58,9 +58,9 @@ namespace WorldTree
 			{
 				//if (self != null) return;
 
-				self.Root.AddComponent(out LiteDBTestProxy liteDB);
+				self.World.AddComponent(out LiteDBTestProxy liteDB);
 				var node = liteDB.Find<InputMapperManager>(1827001676595200);
-				node.CutSelf()?.TryGraftSelfToTree<ComponentBranch, long>(self.Type, self.Root);
+				node.CutSelf()?.TryGraftSelfToTree<ComponentBranch, long>(self.Type, self.World);
 				if (node.TryGetNumberNode(0, out InputMapperGroup group))
 				{
 					if (group.TryGetChild(1826293313175552, out InputMapper mapper))

@@ -28,7 +28,7 @@ namespace WorldTree
 	{
 		protected override void Execute(GUIBeginVertical self)
 		{
-			self.Texture = ColorTexture2DManagerHelper.GetColorTexture(self.Root, 0.1f);
+			self.Texture = ColorTexture2DManagerHelper.GetColorTexture(self.World, 0.1f);
 
 			self.Padding = new RectOffset(5, 5, 5, 5);
 		}

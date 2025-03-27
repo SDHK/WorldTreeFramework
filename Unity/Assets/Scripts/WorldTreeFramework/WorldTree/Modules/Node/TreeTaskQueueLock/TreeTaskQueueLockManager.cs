@@ -11,7 +11,7 @@ namespace WorldTree
 	/// <summary>
 	/// 异步任务队列锁
 	/// </summary>
-	public class TreeTaskQueueLockManager : Node, ComponentOf<WorldTreeRoot>
+	public class TreeTaskQueueLockManager : Node, ComponentOf<World>
 		, AsChildBranch
 		, AsAwake
 	{

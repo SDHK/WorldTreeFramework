@@ -7,6 +7,7 @@
 
 */
 
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using YooAsset;
@@ -120,6 +121,15 @@ namespace WorldTree.AOT
 				long totalDownloadBytes = downloader.TotalDownloadBytes;
 				Debug.Log($"发现新更新文件! 总共{totalDownloadCount}个文件，总共{totalDownloadBytes}字节");
 
+				// 检测磁盘空间
+				long freeSpace = GetAvailableDiskSpace();
+				if (freeSpace < totalDownloadBytes)
+				{
+					Debug.LogError("磁盘空间不足，无法下载更新文件！");
+					return;
+				}
+
+
 				downloader.OnDownloadErrorCallback += (fileName, error) =>
 				{
 					Debug.Log($"下载失败! {fileName}: {error}");
@@ -150,6 +160,19 @@ namespace WorldTree.AOT
 					ClearPackageCache();
 				}
 			}
+		}
+
+		/// <summary>
+		/// 获取可用磁盘空间
+		/// </summary>
+		/// <returns></returns>
+		public static long GetAvailableDiskSpace()
+		{
+			// 获取当前应用程序所在磁盘的驱动器信息
+			DriveInfo drive = new DriveInfo(Path.GetPathRoot(Application.dataPath));
+
+			// 返回可用的空闲空间（以字节为单位）
+			return drive.AvailableFreeSpace;
 		}
 
 		/// <summary>

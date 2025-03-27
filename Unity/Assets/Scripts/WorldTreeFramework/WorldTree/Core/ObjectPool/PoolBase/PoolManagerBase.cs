@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using WorldTree.Internal;
 
 namespace WorldTree
 {
@@ -7,7 +6,6 @@ namespace WorldTree
 	/// 对象池管理器基类
 	/// </summary>
 	public abstract class PoolManagerBase : Node, IListenerIgnorer
-		, ComponentOf<WorldTreeCore>
 		, AsAwake
 	{
 		/// <summary>

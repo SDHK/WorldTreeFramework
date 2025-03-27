@@ -23,7 +23,7 @@ namespace WorldTree
 			where N : class, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
-			GameObject prefab = await self.Root.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
+			GameObject prefab = await self.World.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
 			return self.AddChild(out GameObjectNode _).Instantiate(prefab).AddComponent(out T _);
 		}
 
@@ -34,7 +34,7 @@ namespace WorldTree
 			where N : class, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
-			GameObject prefab = await self.Root.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
+			GameObject prefab = await self.World.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
 			return self.AddChild(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
 		}
 
@@ -45,7 +45,7 @@ namespace WorldTree
 			where N : class, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
-			GameObject prefab = await self.Root.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
+			GameObject prefab = await self.World.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
 			return self.AddChild(out GameObjectNode _).Instantiate(prefab, parent).AddComponent(out T _);
 		}
 	}

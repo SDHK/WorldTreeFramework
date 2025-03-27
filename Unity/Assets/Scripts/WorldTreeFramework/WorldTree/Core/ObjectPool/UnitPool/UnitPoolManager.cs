@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/11/11 11:05
@@ -8,31 +7,30 @@
 
 */
 
-using System;
-
 namespace WorldTree
 {
-    /// <summary>
-    /// 单位对象池管理器
-    /// </summary>
-    public class UnitPoolManager : PoolManagerBase<UnitPool>,ComponentOf<WorldTreeCore>
-        , AsAwake
-    {
-        /// <summary>
-        /// 尝试获取单位
-        /// </summary>
-        public bool TryGet(long type, out IUnit unit)
-        {
-            if (TryGet(type, out object obj))
-            {
-                unit = obj as IUnit;
-                return true;
-            }
-            else
-            {
-                unit = null;
-                return false;
-            }
-        }
-    }
+	/// <summary>
+	/// 单位对象池管理器
+	/// </summary>
+	public class UnitPoolManager : PoolManagerBase<UnitPool>
+		, CoreManagerOf<WorldTreeCore>
+		, AsAwake
+	{
+		/// <summary>
+		/// 尝试获取单位
+		/// </summary>
+		public bool TryGet(long type, out IUnit unit)
+		{
+			if (TryGet(type, out object obj))
+			{
+				unit = obj as IUnit;
+				return true;
+			}
+			else
+			{
+				unit = null;
+				return false;
+			}
+		}
+	}
 }

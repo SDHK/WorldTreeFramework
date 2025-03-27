@@ -15,7 +15,8 @@ namespace WorldTree
 	/// <summary>
 	/// 一维数组对象池管理器
 	/// </summary>
-	public class ArrayPoolManager : Node, IListenerIgnorer, ComponentOf<WorldTreeCore>
+	public class ArrayPoolManager : Node, IListenerIgnorer
+		, CoreManagerOf<WorldTreeCore>
 		, AsChildBranch
 		, AsAwake
 	{

@@ -17,7 +17,7 @@ namespace WorldTree
 	/// </summary>
 	public class ViewTypeManager : Node
 		, AsAwake
-		, ComponentOf<WorldTreeRoot>
+		, ComponentOf<World>
 	{
 		/// <summary>
 		/// 字段类型，可视化节点类型

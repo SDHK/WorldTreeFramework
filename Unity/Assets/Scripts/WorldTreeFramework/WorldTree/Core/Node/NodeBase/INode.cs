@@ -70,7 +70,6 @@ namespace WorldTree
 	/// <para>部分类型直接继承INode接口，将会生成对应的Copy Node内容的部分类</para>
 	/// </remarks>
 	[TreeDataSerializable]
-	[TreePackSerializable]
 	public partial interface INode : IWorldTreeBasic
 		, AsRule<Enable>
 		, AsRule<Add>
@@ -93,30 +92,19 @@ namespace WorldTree
 		/// </summary>
 		/// <remarks>递增ID，只在每个框架实例内唯一</remarks>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public long InstanceId { get; set; }
 
 		/// <summary>
-		/// 树根节点
+		/// 世界
 		/// </summary>
-		/// <remarks>挂载核心启动后的管理器组件</remarks>
 		[TreeDataIgnore]
-		[TreePackIgnore]
-		public WorldTreeRoot Root { get; set; }
-
-		/// <summary>
-		/// 树枝节点
-		/// </summary>
-		/// <remarks>用于划分作用域</remarks>
-		[TreeDataIgnore]
-		[TreePackIgnore]
-		public INode Domain { get; set; }
+		/// <remarks>节点所属的世界</remarks>
+		public World World { get; set; }
 
 		/// <summary>
 		/// 父节点，禁止修改，只能通过方法设置
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public INode Parent { get; set; }
 
 
@@ -124,14 +112,12 @@ namespace WorldTree
 		/// 是否序列化创建
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public bool IsSerialize { get; set; }
 
 		/// <summary>
 		/// 可视化生成器
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public IWorldTreeNodeViewBuilder View { get; set; }
 
 		#region Active
@@ -145,14 +131,12 @@ namespace WorldTree
 		/// 活跃状态(设定为只读，禁止修改)
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public bool IsActive { get; set; }
 
 		/// <summary>
 		/// 活跃事件标记，这个由框架内部调用设置，禁止修改
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public bool activeEventMark { get; set; }
 
 		/// <summary>
@@ -173,14 +157,12 @@ namespace WorldTree
 		/// 树藤分支
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
 		/// <summary>
 		/// 树藤分支,假如没有则创建
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public UnitDictionary<long, IRattan> GetRattanDict { get; }
 
 		#endregion
@@ -191,7 +173,6 @@ namespace WorldTree
 		/// 此节点挂载到父级的分支类型
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public long BranchType { get; set; }
 
 		/// <summary>
@@ -203,7 +184,6 @@ namespace WorldTree
 		/// 树分支,假如没有则创建
 		/// </summary>
 		[TreeDataIgnore]
-		[TreePackIgnore]
 		public BranchGroup GetBranchDict { get; }
 
 		#endregion
