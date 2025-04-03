@@ -22,6 +22,12 @@ namespace WorldTree
 		, AsAwake
 		, CoreManagerOf<WorldTreeCore>
 	{
+
+		/// <summary>
+		/// 线程锁
+		/// </summary>
+		private readonly object lockObject = new object();
+
 		/// <summary>
 		/// NTP服务器地址列表
 		/// </summary>
@@ -67,7 +73,7 @@ namespace WorldTree
 		/// 是否直接使用机器时间
 		/// </summary>
 		/// <remarks>默认为false, 可内部维护时间，单机可以防止玩家改时间</remarks>
-		public bool isLocal = false;
+		public bool isLocal = true;
 
 		/// <summary>
 		/// 网络请求超时时间 毫秒
@@ -148,34 +154,37 @@ namespace WorldTree
 		/// <remarks>若检测出时间跳跃，则开始使用内部累计时间，并尝试请求网络</remarks>
 		public DateTime GetUtcNow()
 		{
-			//如果是，直接使用机器时间
-			if (isLocal) return cumulativeUtcTime = DateTime.UtcNow;
-
-			//计算时间偏差
-			CumulativeTime();
-
-			//如果触发了网络请求，则不用机器时间
-			if (!isRequest)
+			lock (lockObject)
 			{
-				//计算 机器时间 和 累计时间 的偏差
-				//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 阈值，那么判为时间跳跃。
-				long offsetTicks = (DateTime.UtcNow - cumulativeUtcTime).Ticks;
-				if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * TimeHelper.MILLI_TICK))
+				//如果是，直接使用机器时间
+				if (isLocal) return cumulativeUtcTime = DateTime.UtcNow;
+
+				//计算时间偏差
+				CumulativeTime();
+
+				//如果触发了网络请求，则不用机器时间
+				if (!isRequest)
 				{
-					//如果时间相差在 阈值 以内，那么就使用机器时间。
-					return cumulativeUtcTime = DateTime.UtcNow;
+					//计算 机器时间 和 累计时间 的偏差
+					//如果时间相差小于0，那么判为时间倒流。如果时间相差大于 阈值，那么判为时间跳跃。
+					long offsetTicks = (DateTime.UtcNow - cumulativeUtcTime).Ticks;
+					if (offsetTicks >= 0 && offsetTicks <= (localThresholdTime * TimeHelper.MILLI_TICK))
+					{
+						//如果时间相差在 阈值 以内，那么就使用机器时间。
+						return cumulativeUtcTime = DateTime.UtcNow;
+					}
 				}
-			}
 
-			//到了这里 机器时间不可信。假如请求计时器超过了请求时间，那么就尝试异步请求一次网络时间
-			if (timeRequestClock > timeRequestTime * TimeHelper.MILLI_TICK)
-			{
-				timeRequestClock = 0;
+				//到了这里 机器时间不可信。假如请求计时器超过了请求时间，那么就尝试异步请求一次网络时间
+				if (timeRequestClock > timeRequestTime * TimeHelper.MILLI_TICK)
+				{
+					timeRequestClock = 0;
 
-				//请求网络时间刷新
-				RequestUtcDateTime();
+					//请求网络时间刷新
+					RequestUtcDateTime();
+				}
+				return cumulativeUtcTime;
 			}
-			return cumulativeUtcTime;
 		}
 
 		/// <summary>
@@ -238,7 +247,7 @@ namespace WorldTree
 		/// <para>相差在 阈值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
 		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
-		public void RequestUtcDateTime() => RequestUtcDateTimeAsync().Coroutine();
+		private void RequestUtcDateTime() => RequestUtcDateTimeAsync().Coroutine();
 
 		/// <summary>
 		/// 异步请求获取网络时间刷新
@@ -286,7 +295,7 @@ namespace WorldTree
 		/// <summary>
 		/// 异步获取网络时间
 		/// </summary>
-		public async TreeTask<DateTime> GetNetworkUtcDateTimeAsync()
+		private async TreeTask<DateTime> GetNetworkUtcDateTimeAsync()
 		{
 			return await this.TreeTaskLink(Task.Run(GetNetworkUtcDateTime));
 		}

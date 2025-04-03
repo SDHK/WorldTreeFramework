@@ -22,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 可视化框架
 		/// </summary>
-		public WorldTreeCore ViewCore;
+		public WorldTreeCore View;
 
 		/// <summary>
 		/// 可视化生成器
@@ -38,12 +38,12 @@ namespace WorldTree
 
 			if (Define.IsEditor)
 			{
-				ViewCore = new();//调试用的可视化框架
-				ViewCore.Log = Debug.Log;
-				ViewCore.LogWarning = Debug.LogWarning;
-				ViewCore.LogError = Debug.LogError;
-				ViewCore.Init(typeof(UnityWorldHeart), 0); //可视化框架初始化
-				ViewCore.World.AddChild(out viewBuilder, (INode)Core, default(INode));
+				View = new();//调试用的可视化框架
+				View.Log = Debug.Log;
+				View.LogWarning = Debug.LogWarning;
+				View.LogError = Debug.LogError;
+				View.Init(typeof(UnityWorldHeart), 0); //可视化框架初始化
+				View.World.AddChild(out viewBuilder, (INode)Core, default(INode));
 			}
 
 			Core.Log = Debug.Log;
@@ -74,9 +74,9 @@ namespace WorldTree
 		private void OnApplicationQuit()
 		{
 			Core?.Dispose();
-			ViewCore?.Dispose();
+			View?.Dispose();
 			Core = null;
-			ViewCore = null;
+			View = null;
 			viewBuilder = null;
 		}
 
@@ -86,9 +86,9 @@ namespace WorldTree
 		private void OnDestroy()
 		{
 			Core?.Dispose();
-			ViewCore?.Dispose();
+			View?.Dispose();
 			Core = null;
-			ViewCore = null;
+			View = null;
 			viewBuilder = null;
 		}
 	}

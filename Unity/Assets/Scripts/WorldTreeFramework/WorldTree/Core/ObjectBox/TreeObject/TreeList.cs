@@ -185,8 +185,6 @@ namespace WorldTree
 
 		#endregion
 
-
-
 		#region 查询
 
 
@@ -728,10 +726,6 @@ namespace WorldTree
 
 		#endregion
 
-
-
-
-
 		#region 排序
 		/// <summary>
 		/// 反向排序
@@ -885,7 +879,6 @@ namespace WorldTree
 
 		#endregion
 
-
 	}
 
 	public static class TreeListRule
@@ -955,7 +948,7 @@ namespace WorldTree
 
 	}
 
-	
+
 
 
 

@@ -10,10 +10,9 @@ namespace WorldTree
 {
 	public static partial class SerializeTestRule
 	{
+
 		static OnAdd<SerializeTest> OnAdd = (self) =>
 		{
-			int? a = null;
-
 			self.Log($"序列化测试！！！！！");
 
 			NodeClassDataTest<int, float> testData = new();

@@ -55,11 +55,14 @@ namespace WorldTree
 		{
 			if (self.IsCoreActive)
 			{
-				if (self.NodePoolManager.TryGet(type, out INode node))
+				lock (self.NodePoolManager)
 				{
-					node.IsSerialize = isSerialize;
-					node.OnCreate();
-					return node;
+					if (self.NodePoolManager.TryGet(type, out INode node))
+					{
+						node.IsSerialize = isSerialize;
+						node.OnCreate();
+						return node;
+					}
 				}
 			}
 			return self.NewNode(self.CodeToType(type), out _, isSerialize);
@@ -72,7 +75,10 @@ namespace WorldTree
 		{
 			if (self.IsCoreActive && obj.IsFromPool)
 			{
-				if (self.NodePoolManager.TryRecycle(obj)) return;
+				lock (self.NodePoolManager)
+				{
+					if (self.NodePoolManager.TryRecycle(obj)) return;
+				}
 			}
 			obj.IsDisposed = true;
 			obj.Id = 0;

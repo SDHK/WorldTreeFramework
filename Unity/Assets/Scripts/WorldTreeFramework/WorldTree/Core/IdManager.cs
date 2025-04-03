@@ -6,6 +6,8 @@
 * 描述：
 
 */
+using System.Threading;
+
 namespace WorldTree
 {
 
@@ -14,6 +16,24 @@ namespace WorldTree
 	/// </summary>
 	public class IdManager : Node, IListenerIgnorer, CoreManagerOf<WorldTreeCore>
 	{
+		/// <summary>
+		/// 14位为16384个进程
+		/// </summary>
+		public const int MASK_BIT14 = 0x3fff;
+		/// <summary>
+		/// 30位时间为34年
+		/// </summary>
+		public const int MASK_BIT30 = 0x3fffffff;
+		/// <summary>
+		/// 20位偏移支持每秒并发1048576个UID（100万）
+		/// </summary>
+		public const int MASK_BIT20 = 0xfffff;
+
+		/// <summary>
+		/// UID获取锁
+		/// </summary>
+		private readonly object uIDLock = new object();
+
 		/// <summary>
 		/// 进程Id
 		/// </summary>
@@ -40,7 +60,7 @@ namespace WorldTree
 		/// </summary>
 		public long GetId()
 		{
-			return currentId++;
+			return Interlocked.Increment(ref currentId);
 		}
 
 		/// <summary>
@@ -48,30 +68,33 @@ namespace WorldTree
 		/// </summary>
 		public long GetUID()
 		{
-			var time = Core.RealTimeManager.GetUtcTimeSeconds();
-			if (time > currentUIDTime)
+			lock (uIDLock)
 			{
-				currentUIDTime = time;
-				uIDTimeOffset = 0;
-			}
-			else
-			{
-				uIDTimeOffset++;
-				if (uIDTimeOffset > ushort.MaxValue - 1)//超过最大值
+				var time = Core.RealTimeManager.GetUtcTimeSeconds();
+				if (time > currentUIDTime)
 				{
+					currentUIDTime = time;
 					uIDTimeOffset = 0;
-					currentUIDTime++; // 借用下一秒
-					this.LogError($"溢出的UID计数: {time} {currentUIDTime}");
 				}
+				else
+				{
+					uIDTimeOffset++;
+					if (uIDTimeOffset > MASK_BIT20 - 1)//超过最大值
+					{
+						uIDTimeOffset = 0;
+						currentUIDTime++; // 借用下一秒
+						this.LogError($"溢出的UID计数: {time} {currentUIDTime}");
+					}
+				}
+
+				//14位为16384个进程
+				//30位时间为34年,20位偏移支持每秒并发1048576个UID（100万）
+
+				//雪花算法 生成UID ：14位进程ID  30位秒级时间戳 20位时间偏移 三部分组成
+				var uid = (ProcessId << 50) | (currentUIDTime << 20) | uIDTimeOffset;
+
+				return uid;
 			}
-
-			//14位为16384个进程
-			//30位时间为34年,20位偏移支持每秒并发1048576个UID（100万）
-
-			//雪花算法 生成UID ：14位进程ID  30位秒级时间戳 20位时间偏移 三部分组成
-			var uid = (ProcessId << 50) | (currentUIDTime << 20) | uIDTimeOffset;
-
-			return uid;
 		}
 
 		//31位时间为68年,19位偏移支持每秒并发524288个UID（50万）

@@ -107,28 +107,25 @@ namespace WorldTree
 		/// </summary>
 		public T DequeueOrNewObject()
 		{
-			lock (objectPoolQueue)
-			{
-				T obj = null;
+			T obj = null;
 
-				while (obj == null)
+			while (obj == null)
+			{
+				if (objectPoolQueue.Count != 0)
 				{
-					if (objectPoolQueue.Count != 0)
-					{
-						obj = objectPoolQueue.Dequeue();
-					}
-					else
-					{
-						if (NewObject != null)
-						{
-							obj = NewObject(this);
-							objectOnNew?.Invoke(obj);
-						}
-						return obj;
-					}
+					obj = objectPoolQueue.Dequeue();
 				}
-				return obj;
+				else
+				{
+					if (NewObject != null)
+					{
+						obj = NewObject(this);
+						objectOnNew?.Invoke(obj);
+					}
+					return obj;
+				}
 			}
+			return obj;
 		}
 
 
@@ -152,64 +149,52 @@ namespace WorldTree
 
 		public override void Recycle(object recycleObject)
 		{
-			lock (objectPoolQueue)
+			if (recycleObject != null)
 			{
-				if (recycleObject != null)
+				T obj = recycleObject as T;
+				if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
 				{
-					T obj = recycleObject as T;
-					if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
-					{
-						//对象没有回收的标记，所以只能由池自己判断，比较耗时
-						if (!objectPoolQueue.Contains(obj))
-						{
-							objectOnRecycle?.Invoke(obj);
-							objectPoolQueue.Enqueue(obj);
-						}
-					}
-					else
+					//对象没有回收的标记，所以只能由池自己判断，比较耗时
+					if (!objectPoolQueue.Contains(obj))
 					{
 						objectOnRecycle?.Invoke(obj);
-						objectOnDestroy?.Invoke(obj);
-						DestroyObject?.Invoke(obj);
+						objectPoolQueue.Enqueue(obj);
 					}
+				}
+				else
+				{
+					objectOnRecycle?.Invoke(obj);
+					objectOnDestroy?.Invoke(obj);
+					DestroyObject?.Invoke(obj);
 				}
 			}
 		}
 		public override void DisposeOne()
 		{
-			lock (objectPoolQueue)
+			if (objectPoolQueue.Count > 0)
 			{
-				if (objectPoolQueue.Count > 0)
-				{
-					var obj = objectPoolQueue.Dequeue();
-					objectOnDestroy?.Invoke(obj);
-					DestroyObject?.Invoke(obj);
-				}
+				var obj = objectPoolQueue.Dequeue();
+				objectOnDestroy?.Invoke(obj);
+				DestroyObject?.Invoke(obj);
 			}
 		}
 		public override void DisposeAll()
 		{
-			lock (objectPoolQueue)
+			while (objectPoolQueue.Count > 0)
 			{
-				while (objectPoolQueue.Count > 0)
-				{
-					var obj = objectPoolQueue.Dequeue();
-					objectOnDestroy?.Invoke(obj);
-					DestroyObject?.Invoke(obj);
-				}
+				var obj = objectPoolQueue.Dequeue();
+				objectOnDestroy?.Invoke(obj);
+				DestroyObject?.Invoke(obj);
 			}
 		}
 
 		public override void Preload()
 		{
-			lock (objectPoolQueue)
+			while (objectPoolQueue.Count < minLimit)
 			{
-				while (objectPoolQueue.Count < minLimit)
-				{
-					T obj = NewObject(this);
-					objectOnNew?.Invoke(obj);
-					objectPoolQueue.Enqueue(obj);
-				}
+				T obj = NewObject(this);
+				objectOnNew?.Invoke(obj);
+				objectPoolQueue.Enqueue(obj);
 			}
 		}
 	}

@@ -14,8 +14,8 @@
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 世界分支
-	/// </summary>
-	public class WorldBranch : ComponentBranch { }
+	///// <summary>
+	///// 世界分支
+	///// </summary>
+	//public class WorldBranch : ComponentBranch { }
 }

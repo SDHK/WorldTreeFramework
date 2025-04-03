@@ -7,7 +7,7 @@
 
 */
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -58,7 +58,7 @@ namespace WorldTree
 		/// 自身拥有的非委托类型法则列表集合
 		/// </summary>
 		/// <remarks> RuleTypeCode, 法则列表 </remarks>
-		public Dictionary<long, RuleList> unmanagedRuleDict;
+		public ConcurrentDictionary<long, RuleList> unmanagedRuleDict;
 
 		/// <summary>
 		/// 不同类型序列化法则列表集合
@@ -85,7 +85,11 @@ namespace WorldTree
 				this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(ITreePackSerialize));
 			if (serializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
-				foreach (IRule rule in ruleList) Unsafe.As<TreePackSerializeRule<T>>(rule).Invoke(this, ref Unsafe.AsRef(value));
+				for (int i = 0; i < ruleList.Count; i++)
+				{
+					IRule rule = ruleList[i];
+					Unsafe.As<TreePackSerializeRule<T>>(rule).Invoke(this, ref Unsafe.AsRef(value));
+				}
 				return;
 			}
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
@@ -202,10 +206,13 @@ namespace WorldTree
 				this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(ITreePackDeserialize));
 			if (deserializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
-				foreach (IRule rule in ruleList) Unsafe.As<TreePackDeserializeRule<T>>(rule).Invoke(this, ref value);
+				for (int i = 0; i < ruleList.Count; i++)
+				{
+					IRule rule = ruleList[i];
+					Unsafe.As<TreePackDeserializeRule<T>>(rule).Invoke(this, ref value);
+				}
 				return;
 			}
-
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
 			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackDeserializeUnmanaged<T>>(), out ruleList))
 				((IRuleList<TreePackDeserializeUnmanaged<T>>)ruleList).SendRef(this, ref value);

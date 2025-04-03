@@ -32,11 +32,16 @@ namespace WorldTree.SourceGenerator
 
 			for (int i = 0; i <= argumentCount; i++)
 			{
-				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypes = GeneratorTemplate.GenericsTypes[i];
 				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericsTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
 
 				Code.Append(
 					$$"""
+						/// <summary>
+						/// 初始化法则
+						/// </summary>
+						public interface Awake{{genericsTypeAngle}} : ISendRule{{genericsTypeAngle}} {}
 
 						/// <summary>
 						/// 法则约束：初始化法则
@@ -46,12 +51,13 @@ namespace WorldTree.SourceGenerator
 						/// <summary>
 						/// 初始化法则
 						/// </summary>
-						public interface Awake{{genericsTypeAngle}} : ISendRule{{genericsTypeAngle}} {}
-
+						public abstract class AwakeRule<N{{genericsTypes}}> : SendRule<N, Awake{{genericsTypeAngle}}{{genericsTypes}}> where N : class, INode, AsRule<Awake{{genericsTypeAngle}}> {}
+						
 						/// <summary>
 						/// 初始化法则
 						/// </summary>
-						public abstract class AwakeRule<N{{genericsType}}> : SendRule<N, Awake{{genericsTypeAngle}}{{genericsType}}> where N : class, INode, AsRule<Awake{{genericsTypeAngle}}> {}
+						public delegate void OnAwake<N{{genericsTypes}}>(N self{{genericsTypeParameter}}) where N : class, INode, AsRule<Awake{{genericsTypeAngle}}> ;
+
 					""");
 			}
 			Code.Append("}");

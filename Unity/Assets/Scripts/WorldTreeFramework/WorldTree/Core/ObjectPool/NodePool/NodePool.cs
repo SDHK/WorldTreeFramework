@@ -49,21 +49,18 @@ namespace WorldTree
 		/// </summary>
 		public void Recycle(INode obj)
 		{
-			lock (objectPoolQueue)
+			if (obj != null)
 			{
-				if (obj != null)
+				if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
 				{
-					if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
-					{
-						if (obj.IsDisposed) return;
+					if (obj.IsDisposed) return;
 
-						objectOnRecycle.Invoke(obj);
-						objectPoolQueue.Enqueue(obj);
-					}
-					else
-					{
-						objectOnRecycle.Invoke(obj);
-					}
+					objectOnRecycle.Invoke(obj);
+					objectPoolQueue.Enqueue(obj);
+				}
+				else
+				{
+					objectOnRecycle.Invoke(obj);
 				}
 			}
 		}
@@ -98,7 +95,6 @@ namespace WorldTree
 			obj.InstanceId = 0;
 		}
 	}
-
 
 	public static partial class NodePoolRule
 	{

@@ -56,9 +56,9 @@ namespace WorldTree
 
 
 	/// <summary>
-	/// 世界树核心接口
+	/// 世界核心接口
 	/// </summary>
-	public interface IWorldTreeCore : INode
+	public interface IWorldCore : INode
 	{
 		/// <summary>
 		/// 框架启动
@@ -67,22 +67,18 @@ namespace WorldTree
 	}
 
 
+
 	/// <summary>
 	/// 世界树核心
 	/// </summary>
-	public class WorldTreeCore : Node, IWorldTreeCore, IListenerIgnorer
+	public class WorldTreeCore : Node, IWorldCore, IListenerIgnorer
 		, AsCoreManagerBranch
 		, AsComponentBranch
-		, AsWorldBranch
-		, WorldOf<WorldTreeCore>
 		, AsAwake
 	{
 		#region 字段
 
-		/// <summary>
-		/// 主核心
-		/// </summary>
-		private WorldTreeCore mainCore;
+		#region 日志
 
 		/// <summary>
 		/// 打印日志
@@ -98,6 +94,10 @@ namespace WorldTree
 		/// 打印错误日志
 		/// </summary>
 		public Action<object> LogError;
+
+		#endregion
+
+		#region 基础生命周期
 
 		/// <summary>
 		/// 添加法则组
@@ -140,6 +140,7 @@ namespace WorldTree
 		/// 反序列化法则组
 		/// </summary>
 		public IRuleGroup<Deserialize> DeserializeRuleGroup;
+		#endregion
 
 		/// <summary>
 		/// 核心激活标记
@@ -162,7 +163,7 @@ namespace WorldTree
 		public RealTimeManager RealTimeManager;
 
 		/// <summary>
-		/// 游戏时间管理器
+		/// 游戏时间管理器???
 		/// </summary>
 		public GameTimeManager GameTimeManager;
 
@@ -182,19 +183,24 @@ namespace WorldTree
 		public NodePoolManager NodePoolManager;
 
 		/// <summary>
+		/// 数组对象池管理器
+		/// </summary>
+		public ArrayPoolManager ArrayPoolManager;
+
+
+
+
+		/// <summary>
 		/// 节点引用池管理器
 		/// </summary>
 		public ReferencedPoolManager ReferencedPoolManager;
 
 		/// <summary>
-		/// 数组对象池管理器
-		/// </summary>
-		public ArrayPoolManager ArrayPoolManager;
-
-		/// <summary>
 		/// 全局法则执行器管理器
 		/// </summary>
 		public GlobalRuleExecutorManager GlobalRuleExecutorManager;
+
+
 
 		/// <summary>
 		/// 世界之心
@@ -204,7 +210,7 @@ namespace WorldTree
 		/// <summary>
 		/// 世界线：线程上下文
 		/// </summary>
-		public WorldLine WorldLine;
+		public WorldContext WorldContext;
 
 		#endregion
 
@@ -297,7 +303,7 @@ namespace WorldTree
 			World.World = World;
 			long typeCode = this.TypeToCode(heartType);
 			WorldHeart = NodeBranchHelper.AddNode<CoreManagerBranch, long, int>(this, typeCode, typeCode, out _, frameTime) as WorldHeartBase;
-			WorldLine = this.AddCoreManager(out WorldLine _);
+			WorldContext = this.AddCoreManager(out WorldContext _);
 			WorldHeart.Run();
 		}
 
@@ -315,7 +321,7 @@ namespace WorldTree
 				Parent = parent;
 				Core = parent.Core ?? this;
 				World = null;
-				mainCore = parent.Core.mainCore ?? this;
+				//mainCore = parent.Core.mainCore ?? this;
 				SetActive(true);//激活节点
 				return true;
 			}
@@ -366,10 +372,9 @@ namespace WorldTree
 
 			//有严格的移除顺序
 			this.RemoveAllTemp();
-			this.RemoveAllWorld();
 			this.RemoveAllComponent();
 			WorldHeart?.Dispose();
-			WorldLine?.Dispose();
+			WorldContext?.Dispose();
 			World.Dispose();
 			GameTimeManager?.Dispose();
 			RealTimeManager?.Dispose();

@@ -6,8 +6,6 @@
 * 描述：
 
 */
-using System.Collections.Generic;
-
 namespace WorldTree
 {
 	/// <summary>
@@ -54,6 +52,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试数据
 	/// </summary>
+	[TreePackSerializable]
 	public partial struct NodeDataTest
 	{
 		/// <summary>

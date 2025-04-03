@@ -14,7 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界环境的工作请求数据
 	/// </summary>
-	public struct WorldLineWorkRequest
+	public struct WorldContextWorkRequest
 	{
 		/// <summary>
 		/// 委托回调
@@ -26,7 +26,7 @@ namespace WorldTree
 		/// </summary>
 		private readonly object delagateState;
 
-		public WorldLineWorkRequest(SendOrPostCallback callback, object state)
+		public WorldContextWorkRequest(SendOrPostCallback callback, object state)
 		{
 			delagateCallback = callback;
 			delagateState = state;
@@ -42,10 +42,10 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 世界线
+	/// 世界环境上下文
 	/// </summary>
 	/// <remarks>线程的上下文</remarks>
-	public partial class WorldLine : SynchronizationContext, INode, IListenerIgnorer
+	public partial class WorldContext : SynchronizationContext, INode, IListenerIgnorer
 		, AsChildBranch
 		, CoreManagerOf<WorldTreeCore>
 		, AsAwake
@@ -53,7 +53,7 @@ namespace WorldTree
 		/// <summary>
 		/// 请求队列
 		/// </summary>
-		public TreeConcurrentQueue<WorldLineWorkRequest> queue;
+		public TreeConcurrentQueue<WorldContextWorkRequest> queue;
 
 		public override void Post(SendOrPostCallback callback, object state)
 		{
@@ -65,27 +65,27 @@ namespace WorldTree
 		/// </summary>
 		public void Post(Action action)
 		{
-			this.queue.Enqueue(new WorldLineWorkRequest((x) => action(), null));
+			this.queue.Enqueue(new WorldContextWorkRequest((x) => action(), null));
 		}
 	}
 
 	public static class WorldContextRule
 	{
-		class AddRule : AddRule<WorldLine>
+		class AddRule : AddRule<WorldContext>
 		{
-			protected override void Execute(WorldLine self)
+			protected override void Execute(WorldContext self)
 			{
 				self.AddChild(out self.queue);
 			}
 		}
 
-		class UpdateRule : UpdateRule<WorldLine>
+		class UpdateRule : UpdateRule<WorldContext>
 		{
-			protected override void Execute(WorldLine self)
+			protected override void Execute(WorldContext self)
 			{
 				while (true)
 				{
-					if (!self.queue.TryDequeue(out WorldLineWorkRequest workRequest)) return;
+					if (!self.queue.TryDequeue(out WorldContextWorkRequest workRequest)) return;
 					try
 					{
 						workRequest.Invoke();

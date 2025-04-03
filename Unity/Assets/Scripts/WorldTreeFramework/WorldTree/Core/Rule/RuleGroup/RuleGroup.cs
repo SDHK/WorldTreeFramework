@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/8/1 9:47
@@ -8,7 +7,7 @@
 
 */
 
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace WorldTree
 {
@@ -36,7 +35,7 @@ namespace WorldTree
 	/// <para>Key是节点类型，Value是类型的法则列表</para>
 	/// <para>法则集合储存了 不同节点类型 对应的 同种法则</para>
 	/// </remarks>
-	public class RuleGroup : Dictionary<long, RuleList>, IRuleGroup<IRule>
+	public class RuleGroup : ConcurrentDictionary<long, RuleList>, IRuleGroup<IRule>
 	{
 		/// <summary>
 		/// 法则的类型

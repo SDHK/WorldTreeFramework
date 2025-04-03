@@ -23,9 +23,11 @@
 */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace WorldTree
 {
@@ -35,10 +37,15 @@ namespace WorldTree
 	public class RuleManager : Node, IListenerIgnorer, CoreManagerOf<WorldTreeCore>
 	{
 		/// <summary>
+		/// 线程锁
+		/// </summary>
+		public ReaderWriterLockSlim LockSlim = new ReaderWriterLockSlim();
+
+		/// <summary>
 		/// 法则字典
 		/// </summary>
 		/// <remarks> 法则类型《节点类型,法则》</remarks>
-		public Dictionary<long, RuleGroup> RuleGroupDict = new();
+		public ConcurrentDictionary<long, RuleGroup> RuleGroupDict = new();
 
 		/// <summary>
 		/// 节点法则字典
@@ -47,7 +54,7 @@ namespace WorldTree
 		/// <para> 节点类型《法则类型，法则列表》</para>
 		/// <para> 记录节点拥有的法则类型，也用于法则多态化的查询</para>
 		/// </remarks>
-		public Dictionary<long, Dictionary<long, RuleList>> NodeTypeRulesDict = new();
+		public ConcurrentDictionary<long, ConcurrentDictionary<long, RuleList>> NodeTypeRulesDict = new();
 
 		#region 监听法则
 
@@ -59,7 +66,7 @@ namespace WorldTree
 		/// <summary>
 		/// 监听目标为 法则 的 ，监听器法则 字典
 		/// </summary>
-		public Dictionary<long, HashSet<IListenerRule>> TargetRuleListenerRuleHashDict = new();
+		private ConcurrentDictionary<long, HashSet<IListenerRule>> targetRuleListenerRuleHashDict = new();
 
 		/// <summary>
 		/// 监听法则字典 目标节点类型
@@ -68,7 +75,7 @@ namespace WorldTree
 		/// <para>目标节点类型 法则类型 《监听器类型,监听法则列表》</para>
 		/// <para>这个是真正被使用的</para>
 		/// </remarks>
-		public Dictionary<long, Dictionary<long, RuleGroup>> TargetRuleListenerGroupDict = new();
+		public ConcurrentDictionary<long, ConcurrentDictionary<long, RuleGroup>> TargetRuleListenerGroupDict = new();
 
 		/// <summary>
 		/// 监听法则字典 监听器类型
@@ -77,7 +84,7 @@ namespace WorldTree
 		/// <para>监听器类型 法则类型 《目标节点类型,监听法则列表》</para>
 		/// <para>这个是用来查询关系的</para>
 		/// </remarks>
-		public Dictionary<long, Dictionary<long, RuleGroup>> ListenerRuleTargetGroupDict = new();
+		public ConcurrentDictionary<long, ConcurrentDictionary<long, RuleGroup>> ListenerRuleTargetGroupDict = new();
 
 		#endregion
 
@@ -88,33 +95,33 @@ namespace WorldTree
 		/// 已支持的节点泛型参数类型哈希名单，这是手动支持的名单
 		/// </summary>
 		/// <remarks>法则类型定义，节点泛型类型 </remarks>
-		public Dictionary<Type, HashSet<long>> SupportNodeGenericParameterTypeHashDict = new();
+		private ConcurrentDictionary<Type, HashSet<long>> supportNodeGenericParameterTypeHashDict = new();
 
 		/// <summary>
 		/// 已支持的类型哈希名单，这是自动支持的名单
 		/// </summary>
-		public HashSet<long> SupportNodeGenericTypeHash = new();
+		private HashSet<long> supportNodeGenericTypeHash = new();
 
 
 		/// <summary>
 		/// 已存在的法则类型哈希名单
 		/// </summary>
 		/// <remarks>法则类型，节点类型，用于记录已存在的法则，防止泛型动态支持覆盖已有法则</remarks>
-		public Dictionary<long, HashSet<long>> RuleTypeHashDict = new();
+		private ConcurrentDictionary<long, HashSet<long>> ruleTypeHashDict = new();
 
 
 		/// <summary>
 		/// 泛型节点 泛型法则哈希表字典
 		/// </summary>
 		/// <remarks>泛型节点类型，泛型法则类型哈希表</remarks>
-		public Dictionary<Type, HashSet<Type>> NodeGenericRuleTypeHashDict = new();
+		private ConcurrentDictionary<Type, HashSet<Type>> nodeGenericRuleTypeHashDict = new();
 
 
 		/// <summary>
 		/// 未知泛型节点类型 泛型法则哈希表字典, 增加法则键值
 		/// </summary>
 		/// <remarks>法则类型，泛型法则类型哈希表</remarks>
-		public Dictionary<Type, HashSet<Type>> NodeGenericParameterRuleTypeHashDict = new();
+		private ConcurrentDictionary<Type, HashSet<Type>> nodeGenericParameterRuleTypeHashDict = new();
 
 		//===
 
@@ -122,26 +129,26 @@ namespace WorldTree
 		/// 已支持的泛型参数类型哈希名单
 		/// </summary>
 		/// <remarks>法则类型定义，泛型类型 </remarks>
-		public Dictionary<Type, HashSet<long>> SupportParameterGenericTypeHashDict = new();
+		private ConcurrentDictionary<Type, HashSet<long>> supportParameterGenericTypeHashDict = new();
 
 
 		/// <summary>
 		/// 泛型参数类型 泛型法则哈希表字典, 增加法则键值
 		/// </summary>
 		/// <remarks>法则类型，泛型类型定义，泛型法则类型哈希表</remarks>
-		public Dictionary<Type, Dictionary<Type, HashSet<Type>>> ParameterGenericRuleTypeHashDict = new();
+		private ConcurrentDictionary<Type, ConcurrentDictionary<Type, HashSet<Type>>> parameterGenericRuleTypeHashDict = new();
 
 		/// <summary>
 		/// 未知泛型参数类型 泛型法则哈希表字典, 增加法则键值
 		/// </summary>
 		/// <remarks>法则类型，泛型法则类型</remarks>
-		public Dictionary<Type, HashSet<Type>> ParameterGenericParameterRuleTypeHashDict = new();
+		private ConcurrentDictionary<Type, HashSet<Type>> parameterGenericParameterRuleTypeHashDict = new();
 
 		/// <summary>
 		/// 泛型参数法则目标节点子类型哈希名单
 		/// </summary>
 		/// <remarks>节点类型，子类型集合。用于泛型参数法则子类继承支持</remarks>
-		public Dictionary<long, HashSet<long>> ParameterGenericNodeSubTypeDict = new();
+		private ConcurrentDictionary<long, HashSet<long>> parameterGenericNodeSubTypeDict = new();
 
 		#endregion
 
@@ -210,9 +217,9 @@ namespace WorldTree
 				}
 			}
 
-			NodeGenericRuleTypeHashDict.Clear();
+			nodeGenericRuleTypeHashDict.Clear();
 
-			TargetRuleListenerRuleHashDict.Clear();
+			targetRuleListenerRuleHashDict.Clear();
 
 
 			foreach (var ListenerRuleGroup in TargetRuleListenerGroupDict)
@@ -237,13 +244,13 @@ namespace WorldTree
 				}
 			}
 
-			RuleTypeHashDict.Clear();
-			SupportNodeGenericTypeHash.Clear();
-			NodeGenericRuleTypeHashDict.Clear();
-			SupportParameterGenericTypeHashDict.Clear();
-			ParameterGenericRuleTypeHashDict.Clear();
-			ParameterGenericParameterRuleTypeHashDict.Clear();
-			ParameterGenericNodeSubTypeDict.Clear();
+			ruleTypeHashDict.Clear();
+			supportNodeGenericTypeHash.Clear();
+			nodeGenericRuleTypeHashDict.Clear();
+			supportParameterGenericTypeHashDict.Clear();
+			parameterGenericRuleTypeHashDict.Clear();
+			parameterGenericParameterRuleTypeHashDict.Clear();
+			parameterGenericNodeSubTypeDict.Clear();
 		}
 
 		/// <summary>
@@ -257,18 +264,18 @@ namespace WorldTree
 			NodeTypeRulesDict.Clear();
 
 			//DynamicListenerTypeHash.Clear();
-			NodeGenericRuleTypeHashDict.Clear();
-			TargetRuleListenerRuleHashDict.Clear();
+			nodeGenericRuleTypeHashDict.Clear();
+			targetRuleListenerRuleHashDict.Clear();
 
 			TargetRuleListenerGroupDict.Clear();
 			ListenerRuleTargetGroupDict.Clear();
 
-			SupportNodeGenericTypeHash.Clear();
-			NodeGenericRuleTypeHashDict.Clear();
-			SupportParameterGenericTypeHashDict.Clear();
-			ParameterGenericRuleTypeHashDict.Clear();
-			ParameterGenericParameterRuleTypeHashDict.Clear();
-			ParameterGenericNodeSubTypeDict.Clear();
+			supportNodeGenericTypeHash.Clear();
+			nodeGenericRuleTypeHashDict.Clear();
+			supportParameterGenericTypeHashDict.Clear();
+			parameterGenericRuleTypeHashDict.Clear();
+			parameterGenericParameterRuleTypeHashDict.Clear();
+			parameterGenericNodeSubTypeDict.Clear();
 
 			IsDisposed = true;
 		}
@@ -281,9 +288,17 @@ namespace WorldTree
 		/// </summary>
 		public void AddRuleTypes(Type[] ruleTypes)
 		{
-			foreach (Type ruleType in ruleTypes)
+			LockSlim.EnterWriteLock();
+			try
 			{
-				AddRuleType(ruleType);
+				foreach (Type ruleType in ruleTypes)
+				{
+					AddRuleType(ruleType);
+				}
+			}
+			finally
+			{
+				LockSlim.ExitWriteLock();
 			}
 		}
 
@@ -292,88 +307,96 @@ namespace WorldTree
 		/// </summary>
 		public void AddRuleType(Type ruleType)
 		{
-			if (ruleType == null) return;
-
-			if (ruleType.IsGenericType) //判断法则类型是泛型
+			LockSlim.EnterWriteLock();
+			try
 			{
-				var baseType = ruleType.BaseType;
+				if (ruleType == null) return;
 
-				//遍历获取一路查到最底层Rule<N,R>法则基类
-				while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>)) baseType = baseType.BaseType;
+				if (ruleType.IsGenericType) //判断法则类型是泛型
+				{
+					var baseType = ruleType.BaseType;
 
-				//Rule<,> 的第一个是节点标记第二个是法则标记。
-				Type nodeKeyType = baseType.GetGenericArguments()[0];
-				Type ruleKeyType = baseType.GetGenericArguments()[1];
+					//遍历获取一路查到最底层Rule<N,R>法则基类
+					while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>)) baseType = baseType.BaseType;
 
-				var genericArguments = baseType.GetGenericArguments();
-				//Rule<N,R> 第一个泛型参数就是法则负责的目标节点
-				if (genericArguments[0].IsGenericType)
-				{
-					NodeGenericRuleTypeHashDict.GetOrNewValue(genericArguments[0].GetGenericTypeDefinition()).Add(ruleType);
-				}
-				// 目标节点本身就是泛型的情况
-				else if (genericArguments[0].IsGenericParameter)
-				{
-					//NodeGenericParameterRuleTypeHashDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
-					NodeGenericParameterRuleTypeHashDict.GetOrNewValue(ruleKeyType).Add(ruleType);
-				}
-				else if (genericArguments[0].IsArray)
-				{
-					NodeGenericParameterRuleTypeHashDict.GetOrNewValue(ruleKeyType).Add(ruleType);
+					//Rule<,> 的第一个是节点标记第二个是法则标记。
+					Type nodeKeyType = baseType.GetGenericArguments()[0];
+					Type ruleKeyType = baseType.GetGenericArguments()[1];
 
-				}
-				//假如Node不是泛型，那么就是参数是泛型的情况
-				else
-				{
-					baseType = ruleType.BaseType;
-					Type genericType = null;
-					//重新遍历，查找泛型参数
-					while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>))
+					var genericArguments = baseType.GetGenericArguments();
+					//Rule<N,R> 第一个泛型参数就是法则负责的目标节点
+					if (genericArguments[0].IsGenericType)
 					{
-						// 父类是泛型的情况
-						if (baseType.IsGenericType)
+						nodeGenericRuleTypeHashDict.GetOrAdd(genericArguments[0].GetGenericTypeDefinition()).Add(ruleType);
+					}
+					// 目标节点本身就是泛型的情况
+					else if (genericArguments[0].IsGenericParameter)
+					{
+						//NodeGenericParameterRuleTypeHashDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
+						nodeGenericParameterRuleTypeHashDict.GetOrAdd(ruleKeyType).Add(ruleType);
+					}
+					else if (genericArguments[0].IsArray)
+					{
+						nodeGenericParameterRuleTypeHashDict.GetOrAdd(ruleKeyType).Add(ruleType);
+
+					}
+					//假如Node不是泛型，那么就是参数是泛型的情况
+					else
+					{
+						baseType = ruleType.BaseType;
+						Type genericType = null;
+						//重新遍历，查找泛型参数
+						while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>))
 						{
-							//获取泛型参数数组
-							genericArguments = baseType.GetGenericArguments();
-							foreach (var arg in genericArguments)
+							// 父类是泛型的情况
+							if (baseType.IsGenericType)
 							{
-								// 泛型参数是泛型的情况
-								if (!arg.IsGenericType)
+								//获取泛型参数数组
+								genericArguments = baseType.GetGenericArguments();
+								foreach (var arg in genericArguments)
 								{
-									genericType = arg;
-									continue;
-								}
-								//判断这个泛型参数，不是法则标记，才是泛型参数。
-								if (arg != ruleKeyType)
-								{
-									genericType = arg;
-									break;
+									// 泛型参数是泛型的情况
+									if (!arg.IsGenericType)
+									{
+										genericType = arg;
+										continue;
+									}
+									//判断这个泛型参数，不是法则标记，才是泛型参数。
+									if (arg != ruleKeyType)
+									{
+										genericType = arg;
+										break;
+									}
 								}
 							}
+							if (genericType != null) break;
+							baseType = baseType.BaseType;
 						}
-						if (genericType != null) break;
-						baseType = baseType.BaseType;
-					}
-					//如果找到了泛型参数
-					if (genericType == null) return;
-					if (genericType.IsGenericType)
-					{
-						ParameterGenericRuleTypeHashDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).GetOrNewValue(genericType.GetGenericTypeDefinition()).Add(ruleType);
-						ParameterGenericNodeSubTypeDict.GetOrNewValue(Core.TypeToCode(nodeKeyType));
-					}
-					//泛型参数是泛型本身的情况
-					else if (genericType.IsGenericParameter)
-					{
-						ParameterGenericParameterRuleTypeHashDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
-						ParameterGenericNodeSubTypeDict.GetOrNewValue(Core.TypeToCode(nodeKeyType));
+						//如果找到了泛型参数
+						if (genericType == null) return;
+						if (genericType.IsGenericType)
+						{
+							parameterGenericRuleTypeHashDict.GetOrAdd(ruleKeyType.GetGenericTypeDefinition()).GetOrAdd(genericType.GetGenericTypeDefinition()).Add(ruleType);
+							parameterGenericNodeSubTypeDict.GetOrAdd(Core.TypeToCode(nodeKeyType));
+						}
+						//泛型参数是泛型本身的情况
+						else if (genericType.IsGenericParameter)
+						{
+							parameterGenericParameterRuleTypeHashDict.GetOrAdd(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
+							parameterGenericNodeSubTypeDict.GetOrAdd(Core.TypeToCode(nodeKeyType));
+						}
 					}
 				}
+				else
+				{
+					//实例化法则类
+					IRule rule = Core.NewUnit(ruleType, out _) as IRule;
+					AddRule(rule);
+				}
 			}
-			else
+			finally
 			{
-				//实例化法则类
-				IRule rule = Core.NewUnit(ruleType, out _) as IRule;
-				AddRule(rule);
+				LockSlim.ExitWriteLock();
 			}
 		}
 
@@ -401,7 +424,7 @@ namespace WorldTree
 			if (listenerRule.TargetNodeType == Core.TypeToCode<INode>() && listenerRule.TargetRuleType != Core.TypeToCode<IRule>())
 			{
 				//监听目标为法则的
-				TargetRuleListenerRuleHashDict.GetOrNewValue(listenerRule.TargetRuleType).Add(listenerRule);
+				targetRuleListenerRuleHashDict.GetOrAdd(listenerRule.TargetRuleType).Add(listenerRule);
 
 				//获取 监听法则 目标法则类型，当前的法则组。
 				if (RuleGroupDict.TryGetValue(listenerRule.TargetRuleType, out RuleGroup ruleGroup))
@@ -430,22 +453,22 @@ namespace WorldTree
 		/// </summary>
 		private void AddNodeRule(IRule rule)
 		{
-			var groupDict = RuleGroupDict.GetOrNewValue(rule.RuleType);
-			var ruleList = groupDict.GetOrNewValue(rule.NodeType);
+			var groupDict = RuleGroupDict.GetOrAdd(rule.RuleType);
+			var ruleList = groupDict.GetOrAdd(rule.NodeType);
 			ruleList.NodeType = rule.NodeType;
 			ruleList.RuleType = rule.RuleType;
 			groupDict.RuleType = rule.RuleType;
 			ruleList.AddRule(rule);
 
 			//记录已存在的法则类型
-			var typeHash = RuleTypeHashDict.GetOrNewValue(rule.RuleType);
+			var typeHash = ruleTypeHashDict.GetOrAdd(rule.RuleType);
 			if (!typeHash.Contains(rule.NodeType)) typeHash.Add(rule.NodeType);
 
 
-			NodeTypeRulesDict.GetOrNewValue(rule.NodeType).TryAdd(rule.RuleType, ruleList);
+			NodeTypeRulesDict.GetOrAdd(rule.NodeType).TryAdd(rule.RuleType, ruleList);
 
 			//监听器法则补齐
-			if (TargetRuleListenerRuleHashDict.TryGetValue(rule.NodeType, out var listenerRuleHash))
+			if (targetRuleListenerRuleHashDict.TryGetValue(rule.NodeType, out var listenerRuleHash))
 			{
 				foreach (var listenerRule in listenerRuleHash)
 				{
@@ -459,15 +482,15 @@ namespace WorldTree
 		/// </summary>
 		private void DictionaryAddNodeRule(long targetNodeType, IListenerRule listenerRule)
 		{
-			var listenerRuleGroupDict = ListenerRuleTargetGroupDict.GetOrNewValue(listenerRule.NodeType).GetOrNewValue(listenerRule.RuleType);
-			var listenerRuleList = listenerRuleGroupDict.GetOrNewValue(targetNodeType);
+			var listenerRuleGroupDict = ListenerRuleTargetGroupDict.GetOrAdd(listenerRule.NodeType).GetOrAdd(listenerRule.RuleType);
+			var listenerRuleList = listenerRuleGroupDict.GetOrAdd(targetNodeType);
 			listenerRuleList.AddRule(listenerRule);
 			listenerRuleList.NodeType = listenerRule.NodeType;
 			listenerRuleList.RuleType = listenerRule.RuleType;
 			listenerRuleGroupDict.RuleType = listenerRule.RuleType;
 
-			var targetRuleGroupDict = TargetRuleListenerGroupDict.GetOrNewValue(targetNodeType).GetOrNewValue(listenerRule.RuleType);
-			var targetRuleList = targetRuleGroupDict.GetOrNewValue(listenerRule.NodeType);
+			var targetRuleGroupDict = TargetRuleListenerGroupDict.GetOrAdd(targetNodeType).GetOrAdd(listenerRule.RuleType);
+			var targetRuleList = targetRuleGroupDict.GetOrAdd(listenerRule.NodeType);
 			targetRuleList.AddRule(listenerRule);
 			targetRuleList.NodeType = listenerRule.NodeType;
 			targetRuleList.RuleType = listenerRule.RuleType;
@@ -483,12 +506,21 @@ namespace WorldTree
 		/// </summary>
 		public void SupportNodeRule(long nodeType)
 		{
-			if (!SupportNodeGenericTypeHash.Contains(nodeType))
+			LockSlim.EnterWriteLock();
+			try
 			{
-				SupportGenericNodeRule(nodeType);//支持泛型法则
-				SupportPolymorphicListenerRule(nodeType);//支撑继承监听法则
-				SupportPolymorphicRule(nodeType);//支撑继承法则
-				SupportNodeGenericTypeHash.Add(nodeType);//已支持名单
+
+				if (!supportNodeGenericTypeHash.Contains(nodeType))
+				{
+					SupportGenericNodeRule(nodeType);//支持泛型法则
+					SupportPolymorphicListenerRule(nodeType);//支撑继承监听法则
+					SupportPolymorphicRule(nodeType);//支撑继承法则
+					supportNodeGenericTypeHash.Add(nodeType);//已支持名单
+				}
+			}
+			finally
+			{
+				LockSlim.ExitWriteLock();
 			}
 		}
 
@@ -500,77 +532,86 @@ namespace WorldTree
 		/// <remarks>用于参数是泛型的情况</remarks>
 		public void SupportGenericRule<T>(Type ruleTypeDefinition)
 		{
-			if (SupportParameterGenericTypeHashDict.TryGetValue(ruleTypeDefinition, out HashSet<long> typeHash))
+			LockSlim.EnterWriteLock();
+			try
 			{
-				if (typeHash.Contains(Core.TypeToCode<T>())) return;
-			}
-			else
-			{
-				typeHash = SupportParameterGenericTypeHashDict.GetOrNewValue(ruleTypeDefinition);
-			}
-
-			Type genericType = typeof(T);
-			if (genericType.IsGenericType)
-			{
-				//获取泛型本体类型
-				Type genericDefinition = genericType.GetGenericTypeDefinition();
-				//获取泛型参数数组
-				Type[] genericTypes = genericType.GetGenericArguments();
-
-				if (ParameterGenericRuleTypeHashDict.TryGetValue(ruleTypeDefinition, out var RuleTypeDict))
+				if (supportParameterGenericTypeHashDict.TryGetValue(ruleTypeDefinition, out HashSet<long> typeHash))
 				{
-					if (RuleTypeDict.TryGetValue(genericDefinition, out var RuleTypeHash))
+					if (typeHash.Contains(Core.TypeToCode<T>())) return;
+				}
+				else
+				{
+					typeHash = supportParameterGenericTypeHashDict.GetOrAdd(ruleTypeDefinition);
+				}
+
+				Type genericType = typeof(T);
+				if (genericType.IsGenericType)
+				{
+					//获取泛型本体类型
+					Type genericDefinition = genericType.GetGenericTypeDefinition();
+					//获取泛型参数数组
+					Type[] genericTypes = genericType.GetGenericArguments();
+
+					if (parameterGenericRuleTypeHashDict.TryGetValue(ruleTypeDefinition, out var RuleTypeDict))
 					{
-						UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
-						foreach (var RuleType in RuleTypeHash)
+						if (RuleTypeDict.TryGetValue(genericDefinition, out var RuleTypeHash))
 						{
-							//填入对应的泛型参数，实例化泛型监听系统
+							//从池里拿会造成线程递归问题
+							//UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
+							UnitList<IRule> ruleList = new();
+							foreach (var RuleType in RuleTypeHash)
+							{
+								//填入对应的泛型参数，实例化泛型监听系统
 
-							IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericTypes), out _);
-							//添加法则，泛型动态支持不可覆盖已有定义
-							if (!(RuleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
-								ruleList.Add(rule);
-						}
-						foreach (var rule in ruleList) AddRule(rule);
-						foreach (var rule in ruleList)
-						{
-							if (!ParameterGenericNodeSubTypeDict.TryGetValue(rule.NodeType, out var subTypeHash)) continue;
-							foreach (long nodeType in subTypeHash) SupportPolymorphicRule(nodeType);
-						}
-						ruleList.Dispose();
+								IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericTypes), out _);
+								//添加法则，泛型动态支持不可覆盖已有定义
+								if (!(ruleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
+									ruleList.Add(rule);
+							}
+							foreach (var rule in ruleList) AddRule(rule);
+							foreach (var rule in ruleList)
+							{
+								if (!parameterGenericNodeSubTypeDict.TryGetValue(rule.NodeType, out var subTypeHash)) continue;
+								foreach (long nodeType in subTypeHash) SupportPolymorphicRule(nodeType);
+							}
+							ruleList.Dispose();
 
-						typeHash.Add(Core.TypeToCode<T>());//已支持名单
-						return;
+							typeHash.Add(Core.TypeToCode<T>());//已支持名单
+							return;
+						}
 					}
 				}
-			}
 
-			// 走到这里说明 这个泛型参数其实是未知的，需要动态支持
-			if (ParameterGenericParameterRuleTypeHashDict.TryGetValue(ruleTypeDefinition, out var ruleTypeHash))
+				// 走到这里说明 这个泛型参数其实是未知的，需要动态支持
+				if (parameterGenericParameterRuleTypeHashDict.TryGetValue(ruleTypeDefinition, out var ruleTypeHash))
+				{
+					//UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
+					UnitList<IRule> ruleList = new();
+					Type genericDefinition = genericType;
+					foreach (var RuleType in ruleTypeHash)
+					{
+						//填入对应的泛型参数，实例化泛型监听系统
+						IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericDefinition), out _);
+						//添加法则，泛型动态支持不可覆盖已有定义
+						if (!(ruleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
+							ruleList.Add(rule);
+					}
+					foreach (var rule in ruleList) AddRule(rule);
+					foreach (var rule in ruleList)
+					{
+						if (!parameterGenericNodeSubTypeDict.TryGetValue(rule.NodeType, out var subTypeHash)) continue;
+						foreach (long nodeType in subTypeHash) SupportPolymorphicRule(nodeType);
+					}
+
+					ruleList.Dispose();
+				}
+				typeHash.Add(Core.TypeToCode<T>());//已支持名单
+			}
+			finally
 			{
-				UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
-				Type genericDefinition = genericType;
-				foreach (var RuleType in ruleTypeHash)
-				{
-					//填入对应的泛型参数，实例化泛型监听系统
-					IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericDefinition), out _);
-					//添加法则，泛型动态支持不可覆盖已有定义
-					if (!(RuleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
-						ruleList.Add(rule);
-				}
-				foreach (var rule in ruleList) AddRule(rule);
-				foreach (var rule in ruleList)
-				{
-					if (!ParameterGenericNodeSubTypeDict.TryGetValue(rule.NodeType, out var subTypeHash)) continue;
-					foreach (long nodeType in subTypeHash) SupportPolymorphicRule(nodeType);
-				}
-
-				ruleList.Dispose();
+				LockSlim.ExitWriteLock();
 			}
-			typeHash.Add(Core.TypeToCode<T>());//已支持名单
 		}
-
-
 
 
 		/// <summary>
@@ -580,31 +621,40 @@ namespace WorldTree
 		/// <param name="ruleTypeDefinition">法则类型</param>
 		public void SupportGenericParameterNodeRule(Type nodeType, Type ruleTypeDefinition)
 		{
-			if (SupportNodeGenericParameterTypeHashDict.TryGetValue(ruleTypeDefinition, out HashSet<long> typeHash))
+			LockSlim.EnterWriteLock();
+			try
 			{
-				if (typeHash.Contains(Core.TypeToCode(nodeType))) return;
-			}
-			else
-			{
-				typeHash = SupportNodeGenericParameterTypeHashDict.GetOrNewValue(ruleTypeDefinition);
-			}
-
-			if (NodeGenericParameterRuleTypeHashDict.TryGetValue(ruleTypeDefinition, out HashSet<Type> ruleTypeHash))
-			{
-				UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
-				Type genericDefinition = nodeType;
-				foreach (var RuleType in ruleTypeHash)
+				if (supportNodeGenericParameterTypeHashDict.TryGetValue(ruleTypeDefinition, out HashSet<long> typeHash))
 				{
-					//填入对应的泛型参数，实例化泛型监听系统
-					IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericDefinition), out _);
-					//添加法则，泛型动态支持不可覆盖已有定义
-					if (!(RuleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
-						ruleList.Add(rule);
+					if (typeHash.Contains(Core.TypeToCode(nodeType))) return;
 				}
-				foreach (var rule in ruleList) AddRule(rule);
-				ruleList.Dispose();
+				else
+				{
+					typeHash = supportNodeGenericParameterTypeHashDict.GetOrAdd(ruleTypeDefinition);
+				}
+
+				if (nodeGenericParameterRuleTypeHashDict.TryGetValue(ruleTypeDefinition, out HashSet<Type> ruleTypeHash))
+				{
+					//UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
+					UnitList<IRule> ruleList = new();
+					Type genericDefinition = nodeType;
+					foreach (var RuleType in ruleTypeHash)
+					{
+						//填入对应的泛型参数，实例化泛型监听系统
+						IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericDefinition), out _);
+						//添加法则，泛型动态支持不可覆盖已有定义
+						if (!(ruleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
+							ruleList.Add(rule);
+					}
+					foreach (var rule in ruleList) AddRule(rule);
+					ruleList.Dispose();
+				}
+				typeHash.Add(Core.TypeToCode(nodeType));//已支持名单
 			}
-			typeHash.Add(Core.TypeToCode(nodeType));//已支持名单
+			finally
+			{
+				LockSlim.ExitWriteLock();
+			}
 		}
 
 
@@ -628,7 +678,7 @@ namespace WorldTree
 				//泛型参数法则子类继承支持记录
 				//检测类型父类是否有泛型参数法则，有则记录
 				long typeCode = Core.TypeToCode(type);
-				if (ParameterGenericNodeSubTypeDict.TryGetValue(typeCode, out var nodeSubTypeHash))
+				if (parameterGenericNodeSubTypeDict.TryGetValue(typeCode, out var nodeSubTypeHash))
 				{
 					if (!nodeSubTypeHash.Contains(nodeType)) nodeSubTypeHash.Add(nodeType);
 				}
@@ -640,7 +690,7 @@ namespace WorldTree
 			{
 				CreateGenericNodeRule(interfaceType);
 				long typeCode = Core.TypeToCode(interfaceType);
-				if (ParameterGenericNodeSubTypeDict.TryGetValue(typeCode, out var nodeSubTypeHash))
+				if (parameterGenericNodeSubTypeDict.TryGetValue(typeCode, out var nodeSubTypeHash))
 				{
 					if (!nodeSubTypeHash.Contains(nodeType)) nodeSubTypeHash.Add(nodeType);
 				}
@@ -658,16 +708,16 @@ namespace WorldTree
 				Type genericNodeType = type.GetGenericTypeDefinition();
 				//获取泛型参数数组
 				Type[] genericTypes = type.GetGenericArguments();
-				if (NodeGenericRuleTypeHashDict.TryGetValue(genericNodeType, out var RuleTypeHash))
+				if (nodeGenericRuleTypeHashDict.TryGetValue(genericNodeType, out var RuleTypeHash))
 				{
-					UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
-
+					//UnitList<IRule> ruleList = this.Core.PoolGetUnit(out UnitList<IRule> _);
+					UnitList<IRule> ruleList = new();
 					foreach (var RuleType in RuleTypeHash)
 					{
 						//填入对应的泛型参数，实例化泛型监听系统
 						IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericTypes), out _);
 						//添加法则，泛型动态支持不可覆盖已有定义
-						if (!(RuleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
+						if (!(ruleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
 							ruleList.Add(rule);
 					}
 					foreach (var rule in ruleList) AddRule(rule);
@@ -713,7 +763,7 @@ namespace WorldTree
 			if (!ListenerRuleTargetGroupDict.TryGetValue(listenerBaseTypeCodeKey, out var RuleType_TargerGroupDictionary)) return;
 
 			//拿到节点自身的：法则类型 《目标节点类型,监听法则》
-			Dictionary<long, RuleGroup> nodeRuleType_TargerGroupDict = ListenerRuleTargetGroupDict.GetOrNewValue(listenerNodeType);
+			ConcurrentDictionary<long, RuleGroup> nodeRuleType_TargerGroupDict = ListenerRuleTargetGroupDict.GetOrAdd(listenerNodeType);
 
 			///动态监听法则多态记录
 			//if (DynamicListenerTypeHash.Contains(listenerBaseTypeCodeKey))
@@ -729,7 +779,7 @@ namespace WorldTree
 				if (nodeRuleType_TargerGroupDict.ContainsKey(RuleType_TargetGroupKV.Key)) continue;
 
 				//父类的监听法则添加到自身，也就是继承法则功能
-				nodeRuleType_TargerGroupDict.Add(RuleType_TargetGroupKV.Key, RuleType_TargetGroupKV.Value);
+				nodeRuleType_TargerGroupDict.TryAdd(RuleType_TargetGroupKV.Key, RuleType_TargetGroupKV.Value);
 
 				//接下来补齐 ListenerRuleTargetGroupDictionary 对应的 TargetRuleListenerGroupDictionary
 				//K:目标节点类型 , V:监听法则列表
@@ -783,7 +833,7 @@ namespace WorldTree
 			if (!NodeTypeRulesDict.TryGetValue(baseTypeCodeKey, out var BaseRuleHash)) return;
 
 			//拿到节点类型的法则哈希表
-			Dictionary<long, RuleList> ruleTypeDict = NodeTypeRulesDict.GetOrNewValue(nodeType);
+			ConcurrentDictionary<long, RuleList> ruleTypeDict = NodeTypeRulesDict.GetOrAdd(nodeType);
 
 			//遍历父类型法则
 			foreach (var ruleType in BaseRuleHash)
@@ -815,13 +865,21 @@ namespace WorldTree
 		public bool TryGetTargetRuleGroup<LR>(long targetType, out IRuleGroup<LR> ruleGroup)
 			where LR : IListenerRule
 		{
-			if (TryGetTargetRuleGroup(Core.TypeToCode<LR>(), targetType, out var RuleGroup))
+			LockSlim.EnterReadLock();
+			try
 			{
-				ruleGroup = RuleGroup as IRuleGroup<LR>;
-				return true;
+				if (TryGetTargetRuleGroup(Core.TypeToCode<LR>(), targetType, out var RuleGroup))
+				{
+					ruleGroup = RuleGroup as IRuleGroup<LR>;
+					return true;
+				}
+				ruleGroup = default;
+				return false;
 			}
-			ruleGroup = default;
-			return false;
+			finally
+			{
+				LockSlim.ExitReadLock();
+			}
 		}
 
 		/// <summary>
@@ -830,7 +888,15 @@ namespace WorldTree
 		public bool TryGetTargetRuleGroup<LR>(long targetType, out RuleGroup ruleGroup)
 			where LR : IListenerRule
 		{
-			return TryGetTargetRuleGroup(Core.TypeToCode<LR>(), targetType, out ruleGroup);
+			LockSlim.EnterReadLock();
+			try
+			{
+				return TryGetTargetRuleGroup(Core.TypeToCode<LR>(), targetType, out ruleGroup);
+			}
+			finally
+			{
+				LockSlim.ExitReadLock();
+			}
 		}
 
 		/// <summary>
@@ -838,12 +904,20 @@ namespace WorldTree
 		/// </summary>
 		public bool TryGetTargetRuleGroup(long ruleType, long targetType, out RuleGroup ruleGroup)
 		{
-			if (TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
+			LockSlim.EnterReadLock();
+			try
 			{
-				return ruleGroupDictionary.TryGetValue(ruleType, out ruleGroup);
+				if (TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
+				{
+					return ruleGroupDictionary.TryGetValue(ruleType, out ruleGroup);
+				}
+				ruleGroup = null;
+				return false;
 			}
-			ruleGroup = null;
-			return false;
+			finally
+			{
+				LockSlim.ExitReadLock();
+			}
 		}
 
 		/// <summary>
@@ -852,7 +926,15 @@ namespace WorldTree
 		public RuleGroup GetOrNewTargetRuleGroup<LR>(long targetType)
 			where LR : IListenerRule
 		{
-			return GetOrNewTargetRuleGroup(Core.TypeToCode<LR>(), targetType);
+			LockSlim.EnterWriteLock();
+			try
+			{
+				return GetOrNewTargetRuleGroup(Core.TypeToCode<LR>(), targetType);
+			}
+			finally
+			{
+				LockSlim.ExitWriteLock();
+			}
 		}
 
 		/// <summary>
@@ -860,25 +942,33 @@ namespace WorldTree
 		/// </summary>
 		public RuleGroup GetOrNewTargetRuleGroup(long ruleType, long targetType)
 		{
-			if (TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
+			LockSlim.EnterWriteLock();
+			try
 			{
-				if (ruleGroupDictionary.TryGetValue(ruleType, out var ruleGroup))
+				if (TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
 				{
-					return ruleGroup;
+					if (ruleGroupDictionary.TryGetValue(ruleType, out var ruleGroup))
+					{
+						return ruleGroup;
+					}
+					else
+					{
+						ruleGroup = ruleGroupDictionary.GetOrAdd(ruleType);
+						ruleGroup.RuleType = ruleType;
+						return ruleGroup;
+					}
 				}
 				else
 				{
-					ruleGroup = ruleGroupDictionary.GetOrNewValue(ruleType);
-					ruleGroup.RuleType = ruleType;
-					return ruleGroup;
+					ruleGroupDictionary = TargetRuleListenerGroupDict.GetOrAdd(targetType);
+					RuleGroup ruleGroupDict = ruleGroupDictionary.GetOrAdd(ruleType);
+					ruleGroupDict.RuleType = ruleType;
+					return ruleGroupDict;
 				}
 			}
-			else
+			finally
 			{
-				ruleGroupDictionary = TargetRuleListenerGroupDict.GetOrNewValue(targetType);
-				RuleGroup ruleGroupDict = ruleGroupDictionary.GetOrNewValue(ruleType);
-				ruleGroupDict.RuleType = ruleType;
-				return ruleGroupDict;
+				LockSlim.ExitWriteLock();
 			}
 		}
 
@@ -892,19 +982,27 @@ namespace WorldTree
 		public bool TryGetTargetRuleList<LR>(long targetType, out IRuleList<LR> ruleList)
 			where LR : IListenerRule
 		{
-			if (TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
+			LockSlim.EnterReadLock();
+			try
 			{
-				if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var ruleGroup))
+				if (TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
 				{
-					if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
+					if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var ruleGroup))
 					{
-						ruleList = RuleList as IRuleList<LR>;
-						return true;
+						if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
+						{
+							ruleList = RuleList as IRuleList<LR>;
+							return true;
+						}
 					}
 				}
+				ruleList = null;
+				return false;
 			}
-			ruleList = null;
-			return false;
+			finally
+			{
+				LockSlim.ExitReadLock();
+			}
 		}
 
 		#endregion
@@ -917,16 +1015,24 @@ namespace WorldTree
 		public bool TryGetListenerRuleGroup<LR>(long listenerType, out IRuleGroup<LR> ruleGroup)
 			where LR : IListenerRule
 		{
-			if (ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
+			LockSlim.EnterReadLock();
+			try
 			{
-				if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var RuleGroup))
+				if (ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
 				{
-					ruleGroup = RuleGroup as IRuleGroup<LR>;
-					return true;
+					if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var RuleGroup))
+					{
+						ruleGroup = RuleGroup as IRuleGroup<LR>;
+						return true;
+					}
 				}
+				ruleGroup = null;
+				return false;
 			}
-			ruleGroup = null;
-			return false;
+			finally
+			{
+				LockSlim.ExitReadLock();
+			}
 		}
 
 		/// <summary>
@@ -935,19 +1041,27 @@ namespace WorldTree
 		public bool TryGetListenerRuleList<LR>(long listenerType, long targetType, out IRuleList<LR> ruleList)
 			where LR : IListenerRule
 		{
-			if (ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
+			LockSlim.EnterReadLock();
+			try
 			{
-				if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var ruleGroup))
+				if (ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
 				{
-					if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
+					if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var ruleGroup))
 					{
-						ruleList = RuleList as IRuleList<LR>;
-						return true;
+						if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
+						{
+							ruleList = RuleList as IRuleList<LR>;
+							return true;
+						}
 					}
 				}
+				ruleList = default;
+				return false;
 			}
-			ruleList = default;
-			return false;
+			finally
+			{
+				LockSlim.ExitReadLock();
+			}
 		}
 
 		#endregion
@@ -960,13 +1074,21 @@ namespace WorldTree
 		public bool TryGetRuleGroup<R>(out IRuleGroup<R> ruleGroup)
 		 where R : IRule
 		{
-			if (TryGetRuleGroup(Core.TypeToCode<R>(), out var RuleGroup))
+			LockSlim.EnterReadLock();
+			try
 			{
-				ruleGroup = (IRuleGroup<R>)RuleGroup;
-				return true;
+				if (TryGetRuleGroup(Core.TypeToCode<R>(), out var RuleGroup))
+				{
+					ruleGroup = (IRuleGroup<R>)RuleGroup;
+					return true;
+				}
+				ruleGroup = default;
+				return false;
 			}
-			ruleGroup = default;
-			return false;
+			finally
+			{
+				LockSlim.ExitReadLock();
+			}
 		}
 
 		/// <summary>
@@ -983,7 +1105,15 @@ namespace WorldTree
 		/// </summary>
 		public bool TryGetRuleGroup(long ruleType, out RuleGroup ruleGroup)
 		{
-			return RuleGroupDict.TryGetValue(ruleType, out ruleGroup);
+			LockSlim.EnterReadLock();
+			try
+			{
+				return RuleGroupDict.TryGetValue(ruleType, out ruleGroup);
+			}
+			finally
+			{
+				LockSlim.ExitReadLock();
+			}
 		}
 
 		/// <summary>
@@ -1000,9 +1130,17 @@ namespace WorldTree
 		/// </summary>
 		public RuleGroup GetOrNewRuleGroup(long ruleType)
 		{
-			var groupDict = RuleGroupDict.GetOrNewValue(ruleType);
-			groupDict.RuleType = ruleType;
-			return groupDict;
+			LockSlim.EnterWriteLock();
+			try
+			{
+				var groupDict = RuleGroupDict.GetOrAdd(ruleType);
+				groupDict.RuleType = ruleType;
+				return groupDict;
+			}
+			finally
+			{
+				LockSlim.ExitWriteLock();
+			}
 		}
 
 		#endregion
@@ -1032,14 +1170,22 @@ namespace WorldTree
 		/// </summary>
 		public bool TryGetRuleList(long nodeType, long ruleType, out RuleList ruleList)
 		{
-			if (RuleGroupDict.TryGetValue(ruleType, out RuleGroup ruleGroup))
+			LockSlim.EnterReadLock();
+			try
 			{
-				return ruleGroup.TryGetValue(nodeType, out ruleList);
+				if (RuleGroupDict.TryGetValue(ruleType, out RuleGroup ruleGroup))
+				{
+					return ruleGroup.TryGetValue(nodeType, out ruleList);
+				}
+				else
+				{
+					ruleList = null;
+					return false;
+				}
 			}
-			else
+			finally
 			{
-				ruleList = null;
-				return false;
+				LockSlim.ExitReadLock();
 			}
 		}
 
@@ -1049,14 +1195,22 @@ namespace WorldTree
 		public bool TryGetRuleList<R>(long nodeType, out RuleList ruleList)
 		 where R : IRule
 		{
-			if (RuleGroupDict.TryGetValue(Core.TypeToCode<R>(), out RuleGroup ruleGroup))
+			LockSlim.EnterReadLock();
+			try
 			{
-				return ruleGroup.TryGetValue(nodeType, out ruleList);
+				if (RuleGroupDict.TryGetValue(Core.TypeToCode<R>(), out RuleGroup ruleGroup))
+				{
+					return ruleGroup.TryGetValue(nodeType, out ruleList);
+				}
+				else
+				{
+					ruleList = null;
+					return false;
+				}
 			}
-			else
+			finally
 			{
-				ruleList = null;
-				return false;
+				LockSlim.ExitReadLock();
 			}
 		}
 
@@ -1074,28 +1228,36 @@ namespace WorldTree
 		/// </summary>
 		public RuleList GetOrNewRuleList(long nodeType, long ruleType)
 		{
-			if (RuleGroupDict.TryGetValue(ruleType, out RuleGroup ruleGroup))
+			LockSlim.EnterWriteLock();
+			try
 			{
-				if (ruleGroup.TryGetValue(nodeType, out RuleList ruleList))
+				if (RuleGroupDict.TryGetValue(ruleType, out RuleGroup ruleGroup))
 				{
-					return ruleList;
+					if (ruleGroup.TryGetValue(nodeType, out RuleList ruleList))
+					{
+						return ruleList;
+					}
+					else
+					{
+						ruleList = ruleGroup.GetOrAdd(nodeType);
+						ruleList.NodeType = nodeType;
+						ruleList.RuleType = ruleType;
+						return ruleList;
+					}
 				}
 				else
 				{
-					ruleList = ruleGroup.GetOrNewValue(nodeType);
+					ruleGroup = RuleGroupDict.GetOrAdd(ruleType);
+					ruleGroup.RuleType = ruleType;
+					var ruleList = ruleGroup.GetOrAdd(nodeType);
 					ruleList.NodeType = nodeType;
 					ruleList.RuleType = ruleType;
 					return ruleList;
 				}
 			}
-			else
+			finally
 			{
-				ruleGroup = RuleGroupDict.GetOrNewValue(ruleType);
-				ruleGroup.RuleType = ruleType;
-				var ruleList = ruleGroup.GetOrNewValue(nodeType);
-				ruleList.NodeType = nodeType;
-				ruleList.RuleType = ruleType;
-				return ruleList;
+				LockSlim.ExitWriteLock();
 			}
 		}
 

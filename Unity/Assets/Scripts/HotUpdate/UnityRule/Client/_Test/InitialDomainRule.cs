@@ -14,6 +14,13 @@ namespace WorldTree
 
 	public static partial class InitialDomainRule
 	{
+		static OnAwake<InitialDomain> OnAwake = (self) =>
+		{
+			self.TestFloat = 1;
+
+			self.Log($"初始域唤醒！！!");
+		};
+
 		static OnAdd<InitialDomain> OnAdd = (self) =>
 		{
 			self.Log($"初始域热更部分！！!");

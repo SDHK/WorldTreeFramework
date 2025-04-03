@@ -30,7 +30,7 @@ namespace WorldTree
 				if (key.Key == ConsoleKey.A)
 				{
 					self.Log($"键盘输入 'A' 键 , 热重载！！！");
-					self.Root.AddComponent(out CodeLoader _).HotReload();
+					self.World.AddComponent(out CodeLoader _).HotReload();
 				}
 			}
 			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");

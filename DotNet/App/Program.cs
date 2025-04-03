@@ -20,7 +20,7 @@ namespace WorldTree
             core.Init(typeof(WorldHeart), 1000);
 
             //启动世界心跳 设定间隔为1000ms
-            core.Root.AddComponent(out Entry _);
+            core.World.AddComponent(out Entry _);
 
             Type ruleType = typeof(EntryRule);//防止程序集被优化掉
             Type nodeType = typeof(DotNetInit);

@@ -27,7 +27,6 @@ namespace WorldTree
 		/// </summary>
 		public Color color = Color.red;
 	}
-
 	/// <summary>
 	/// 初始域
 	/// </summary>

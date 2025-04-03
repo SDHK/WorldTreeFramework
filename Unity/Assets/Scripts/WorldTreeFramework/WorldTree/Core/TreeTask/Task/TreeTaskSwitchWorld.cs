@@ -15,14 +15,14 @@ namespace WorldTree
 	/// 切换世界线任务
 	/// </summary>
 	public class TreeTaskSwitchWorld : AwaiterBase
-		, ChildOf<WorldLine>
-		, AsAwake<WorldLine>
+		, ChildOf<WorldContext>
+		, AsAwake<WorldContext>
 		, AsTreeTaskSetResuIt
 	{
 		/// <summary>
 		/// 世界上下文
 		/// </summary>
-		public WorldLine worldContext;
+		public WorldContext worldContext;
 
 		/// <summary>
 		/// 内部协程
@@ -60,9 +60,9 @@ namespace WorldTree
 
 	public static class TreeTaskSwitchWorldRule
 	{
-		class AwakeRule : AwakeRule<TreeTaskSwitchWorld, WorldLine>
+		class AwakeRule : AwakeRule<TreeTaskSwitchWorld, WorldContext>
 		{
-			protected override void Execute(TreeTaskSwitchWorld self, WorldLine worldContext)
+			protected override void Execute(TreeTaskSwitchWorld self, WorldContext worldContext)
 			{
 				self.worldContext = worldContext;
 			}
