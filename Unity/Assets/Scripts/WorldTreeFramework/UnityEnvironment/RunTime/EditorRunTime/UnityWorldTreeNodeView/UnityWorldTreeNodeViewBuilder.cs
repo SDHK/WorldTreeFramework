@@ -54,7 +54,7 @@ namespace WorldTree
 				}
 				if (parent != null)
 				{
-					UnityWorldTreeNodeViewBuilder parentView = parent.View as UnityWorldTreeNodeViewBuilder;
+					UnityWorldTreeNodeViewBuilder parentView = parent.ViewBuilder as UnityWorldTreeNodeViewBuilder;
 					GameObject parentObj = parentView.gameObject;
 					if (!parentView.branchObjDict.TryGetValue(node.BranchType, out self.parentBranchObj))
 					{

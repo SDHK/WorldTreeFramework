@@ -17,7 +17,7 @@ namespace WorldTree
 	/// 类型信息：用于类型的信息获取
 	/// </summary>
 	public class TypeInfo : Node
-		, CoreManagerOf<WorldTreeCore>
+		, CoreManagerOf<WorldLine>
 		, AsAwake
 	{
 		/// <summary>

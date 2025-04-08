@@ -52,6 +52,10 @@
             "LiteDB": {
               "target": "Package",
               "version": "[5.0.21, )"
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[5.4.0, )"
             }
           },
           "imports": [

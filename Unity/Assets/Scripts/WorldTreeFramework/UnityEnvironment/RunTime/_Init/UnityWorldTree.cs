@@ -11,6 +11,20 @@ using UnityEngine;
 namespace WorldTree
 {
 	/// <summary>
+	/// Unity世界线启动设置
+	/// </summary>
+	public class UnityWorldLineSetting : WorldLineSetting
+	{
+		public UnityWorldLineSetting()
+		{
+			HeartType = typeof(UnityWorldHeart);
+			LogType = typeof(UnityWorldLog);
+			FrameTime = 0;
+		}
+	}
+
+
+	/// <summary>
 	/// 世界树框架驱动器，一切从这里开始
 	/// </summary>
 	public class UnityWorldTree : MonoBehaviour
@@ -18,11 +32,11 @@ namespace WorldTree
 		/// <summary>
 		/// 主框架
 		/// </summary>
-		public WorldTreeCore Core;
+		public WorldLine MainLine;
 		/// <summary>
 		/// 可视化框架
 		/// </summary>
-		public WorldTreeCore View;
+		public WorldLine ViewLine;
 
 		/// <summary>
 		/// 可视化生成器
@@ -34,30 +48,24 @@ namespace WorldTree
 		/// </summary>
 		public void Start()
 		{
-			Core = new();//主框架
+			MainLine = new();//主框架
 
 			if (Define.IsEditor)
 			{
-				View = new();//调试用的可视化框架
-				View.Log = Debug.Log;
-				View.LogWarning = Debug.LogWarning;
-				View.LogError = Debug.LogError;
-				View.Init(typeof(UnityWorldHeart), 0); //可视化框架初始化
-				View.World.AddChild(out viewBuilder, (INode)Core, default(INode));
+				ViewLine = new();
+				//可视化框架初始化
+				MainLine.LogLevel = LogLevel.All;
+				ViewLine.Init(new UnityWorldLineSetting());
+				ViewLine.World.AddChild(out viewBuilder, (INode)MainLine, default(INode));
 			}
 
-			Core.Log = Debug.Log;
-			Core.LogWarning = Debug.LogWarning;
-			Core.LogError = Debug.LogError;
-
-			//可视化生成器赋值给主框架
-			Core.View = viewBuilder;
-
+			MainLine.ViewBuilder = viewBuilder;
+			MainLine.LogLevel = LogLevel.All;
 			//主框架初始化，添加Unity世界心跳，间隔毫秒为0
-			Core.Init(typeof(UnityWorldHeart), 0);
+			MainLine.Init(new UnityWorldLineSetting());
 
 			//主框架添加入口节点
-			Core.World.AddComponent(out Entry _);
+			MainLine.World.AddComponent(out Entry _);
 		}
 
 		/// <summary>
@@ -65,7 +73,7 @@ namespace WorldTree
 		/// </summary>
 		private void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(NodeRule.ToStringDrawTree(Core));
+			if (Input.GetKeyDown(KeyCode.Return)) Debug.Log(NodeRule.ToStringDrawTree(MainLine));
 		}
 
 		/// <summary>
@@ -73,10 +81,10 @@ namespace WorldTree
 		/// </summary>
 		private void OnApplicationQuit()
 		{
-			Core?.Dispose();
-			View?.Dispose();
-			Core = null;
-			View = null;
+			MainLine?.Dispose();
+			ViewLine?.Dispose();
+			MainLine = null;
+			ViewLine = null;
 			viewBuilder = null;
 		}
 
@@ -85,10 +93,10 @@ namespace WorldTree
 		/// </summary>
 		private void OnDestroy()
 		{
-			Core?.Dispose();
-			View?.Dispose();
-			Core = null;
-			View = null;
+			MainLine?.Dispose();
+			ViewLine?.Dispose();
+			MainLine = null;
+			ViewLine = null;
 			viewBuilder = null;
 		}
 	}

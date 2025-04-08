@@ -20,7 +20,7 @@ namespace WorldTree
 	/// </summary>
 	public class RealTimeManager : Node
 		, AsAwake
-		, CoreManagerOf<WorldTreeCore>
+		, CoreManagerOf<WorldLine>
 	{
 
 		/// <summary>

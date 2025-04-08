@@ -17,13 +17,13 @@ namespace WorldTree
 		/// <summary>
 		/// 新建节点对象
 		/// </summary>
-		public static T NewNode<T>(this WorldTreeCore self, out T node, bool isSerialize = false) where T : class, INode
+		public static T NewNode<T>(this WorldLine self, out T node, bool isSerialize = false) where T : class, INode
 			=> node = self.NewNode(typeof(T), out _, isSerialize) as T;
 
 		/// <summary>
 		/// 新建节点对象
 		/// </summary>
-		public static INode NewNode(this WorldTreeCore self, Type type, out INode node, bool isSerialize = false)
+		public static INode NewNode(this WorldLine self, Type type, out INode node, bool isSerialize = false)
 		{
 			node = Activator.CreateInstance(type, true) as INode;
 			node.Core = self;
@@ -38,20 +38,20 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static T PoolGetNode<T>(this WorldTreeCore self, out T outT, bool isSerialize = false)
+		public static T PoolGetNode<T>(this WorldLine self, out T outT, bool isSerialize = false)
 			where T : class, INode
 		=> outT = self.PoolGetNode<T>(isSerialize);
 
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static T PoolGetNode<T>(this WorldTreeCore self, bool isSerialize = false) where T : class, INode
+		public static T PoolGetNode<T>(this WorldLine self, bool isSerialize = false) where T : class, INode
 			=> self.PoolGetNode(self.TypeToCode<T>(), isSerialize) as T;
 
 		/// <summary>
 		/// 从池中获取节点对象
 		/// </summary>
-		public static INode PoolGetNode(this WorldTreeCore self, long type, bool isSerialize = false)
+		public static INode PoolGetNode(this WorldLine self, long type, bool isSerialize = false)
 		{
 			if (self.IsCoreActive)
 			{
@@ -71,7 +71,7 @@ namespace WorldTree
 		/// <summary>
 		/// 回收节点
 		/// </summary>
-		public static void PoolRecycle(this WorldTreeCore self, INode obj)
+		public static void PoolRecycle(this WorldLine self, INode obj)
 		{
 			if (self.IsCoreActive && obj.IsFromPool)
 			{

@@ -47,7 +47,7 @@ namespace WorldTree
 	/// <remarks>线程的上下文</remarks>
 	public partial class WorldContext : SynchronizationContext, INode, IListenerIgnorer
 		, AsChildBranch
-		, CoreManagerOf<WorldTreeCore>
+		, CoreManagerOf<WorldLine>
 		, AsAwake
 	{
 		/// <summary>

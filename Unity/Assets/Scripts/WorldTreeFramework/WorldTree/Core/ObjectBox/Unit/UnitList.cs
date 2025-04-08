@@ -21,7 +21,7 @@ namespace WorldTree
 	public partial class UnitList<T> : List<T>, IUnit
 	{
 		[TreeDataIgnore]
-		public WorldTreeCore Core { get; set; }
+		public WorldLine Core { get; set; }
 		[TreeDataIgnore]
 		public long Type { get; set; }
 		[TreeDataIgnore]

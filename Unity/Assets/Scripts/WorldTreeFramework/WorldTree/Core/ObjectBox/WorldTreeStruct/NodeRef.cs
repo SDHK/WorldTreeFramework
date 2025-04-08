@@ -44,7 +44,7 @@ namespace WorldTree
 		/// 世界树核心
 		/// </summary>
 		[TreeDataIgnore]
-		public WorldTreeCore Core;
+		public WorldLine Core;
 
 		/// <summary>
 		/// 节点数据ID，普通节点为0

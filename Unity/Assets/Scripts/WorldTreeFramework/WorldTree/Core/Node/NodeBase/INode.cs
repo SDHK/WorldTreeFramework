@@ -118,7 +118,7 @@ namespace WorldTree
 		/// 可视化生成器
 		/// </summary>
 		[TreeDataIgnore]
-		public IWorldTreeNodeViewBuilder View { get; set; }
+		public IWorldTreeNodeViewBuilder ViewBuilder { get; set; }
 
 		#region Active
 

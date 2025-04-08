@@ -19,7 +19,7 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static GlobalRuleExecutor<R> GetGlobalRuleExecutor<R>(this WorldTreeCore self, out GlobalRuleExecutor<R> globalRuleExecutor)
+		public static GlobalRuleExecutor<R> GetGlobalRuleExecutor<R>(this WorldLine self, out GlobalRuleExecutor<R> globalRuleExecutor)
 		where R : IGlobalRule
 		{
 			return self.GlobalRuleExecutorManager.AddTypeNode(self.TypeToCode<R>(), out globalRuleExecutor);
@@ -28,7 +28,7 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static IRuleExecutor<R> GetGlobalRuleExecutor<R>(this WorldTreeCore self, out IRuleExecutor<R> ruleExecutor)
+		public static IRuleExecutor<R> GetGlobalRuleExecutor<R>(this WorldLine self, out IRuleExecutor<R> ruleExecutor)
 		where R : IGlobalRule
 		{
 			self.GlobalRuleExecutorManager.AddTypeNode(self.TypeToCode<R>(), out GlobalRuleExecutor<R> globalRuleExecutor);
@@ -39,7 +39,7 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static RuleGroupExecutorBase GetGlobalRuleExecutor(this WorldTreeCore self, long genericTypeCpde)
+		public static RuleGroupExecutorBase GetGlobalRuleExecutor(this WorldLine self, long genericTypeCpde)
 		{
 			INode node = NodeBranchHelper.GetBranch<TypeNodeBranch>(self.GlobalRuleExecutorManager)?.GetNode(genericTypeCpde);
 			if (node != null) return node as RuleGroupExecutorBase;
@@ -55,7 +55,7 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static IRuleExecutor<R> GetGlobalRuleExecutor<R>(this WorldTreeCore self, long genericTypeCpde, out IRuleExecutor<R> ruleExecutor)
+		public static IRuleExecutor<R> GetGlobalRuleExecutor<R>(this WorldLine self, long genericTypeCpde, out IRuleExecutor<R> ruleExecutor)
 			where R : IGlobalRule
 		{
 			var executor = self.GetGlobalRuleExecutor(genericTypeCpde);
@@ -67,7 +67,7 @@ namespace WorldTree
 	/// <summary>
 	/// 全局法则执行器管理器
 	/// </summary>
-	public class GlobalRuleExecutorManager : Node, CoreManagerOf<WorldTreeCore>
+	public class GlobalRuleExecutorManager : Node, CoreManagerOf<WorldLine>
 		, AsTypeNodeBranch
 		, AsAwake
 	{ }

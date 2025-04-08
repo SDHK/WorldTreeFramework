@@ -13,7 +13,7 @@ namespace WorldTree
 	/// 单位对象池管理器
 	/// </summary>
 	public class UnitPoolManager : PoolManagerBase<UnitPool>
-		, CoreManagerOf<WorldTreeCore>
+		, CoreManagerOf<WorldLine>
 		, AsAwake
 	{
 		/// <summary>

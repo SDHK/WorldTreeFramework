@@ -26,7 +26,7 @@ namespace EditorTool
 		, AsRule<IEditorWindowInspectorUpdateSystem>
 
 	{
-		public static WorldTreeCore root;
+		public static WorldLine root;
 
 		[MenuItem("WorldTree/Window")]
 		static void ShowWindow()

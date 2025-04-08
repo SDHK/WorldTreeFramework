@@ -14,7 +14,7 @@ namespace WorldTree
 	/// 游戏时间管理器
 	/// </summary>
 	public class GameTimeManager : Node
-		, CoreManagerOf<WorldTreeCore>
+		, CoreManagerOf<WorldLine>
 		, AsAwake
 	{
 		/// <summary>

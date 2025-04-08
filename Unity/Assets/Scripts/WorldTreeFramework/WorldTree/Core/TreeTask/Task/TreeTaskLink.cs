@@ -62,7 +62,7 @@ namespace WorldTree.Internal
 			}
 			catch (Exception e)
 			{
-				this.Core.WorldContext.Post(this.LogError, e);
+				this.Core.WorldContext.Post((e) => this.LogError((Exception)e), e);
 			}
 		}
 
@@ -127,7 +127,7 @@ namespace WorldTree.Internal
 			}
 			catch (Exception e)
 			{
-				this.Core.WorldContext.Post(this.LogError, e);
+				this.Core.WorldContext.Post((o) => this.LogError((Exception)o), e);
 			}
 		}
 	}

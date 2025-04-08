@@ -14,7 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// id管理器
 	/// </summary>
-	public class IdManager : Node, IListenerIgnorer, CoreManagerOf<WorldTreeCore>
+	public class IdManager : Node, IListenerIgnorer, CoreManagerOf<WorldLine>
 	{
 		/// <summary>
 		/// 14位为16384个进程

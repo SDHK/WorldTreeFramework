@@ -34,7 +34,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界法则管理器
 	/// </summary>
-	public class RuleManager : Node, IListenerIgnorer, CoreManagerOf<WorldTreeCore>
+	public class RuleManager : Node, IListenerIgnorer, CoreManagerOf<WorldLine>
 	{
 		/// <summary>
 		/// 线程锁

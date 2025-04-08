@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界
 	/// </summary>
-	public class World : Node, ComponentOf<WorldTreeCore>
+	public class World : Node, ComponentOf<WorldLine>
 		, AsComponentBranch
 		, AsChildBranch
 		, AsAwake

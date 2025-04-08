@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "miLMlBVcRKTLXW6OoZGGTJo3ho+T+9WSvdW+pmTQzHimZfTidpuLJp7lRPLvLpsHqBguzj1QVUDKRHgLFuqaWA==",
+  "dgSpecHash": "R3Sm8FJyx70dabLt3HWhcWjaDQO8xXPt4R/ouUVWjg8/flw+0sCJZazBDRLe8WUzirAm3U7mGlcc6wAi6Vk9VA==",
   "success": true,
   "projectFilePath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\App\\DotNet.App.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\litedb\\5.0.21\\litedb.5.0.21.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\nlog\\5.4.0\\nlog.5.4.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512"
   ],
   "logs": []

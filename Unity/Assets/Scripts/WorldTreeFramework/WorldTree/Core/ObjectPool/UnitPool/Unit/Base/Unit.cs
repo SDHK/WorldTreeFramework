@@ -25,7 +25,7 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public bool IsFromPool { get; set; }
 		[TreeDataIgnore]
-		public WorldTreeCore Core { get; set; }
+		public WorldLine Core { get; set; }
 
 		public virtual void OnCreate() { }
 

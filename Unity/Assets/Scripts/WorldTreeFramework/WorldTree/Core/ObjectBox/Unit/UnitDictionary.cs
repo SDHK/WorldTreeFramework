@@ -21,7 +21,7 @@ namespace WorldTree
 	public partial class UnitDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IUnit
 	{
 		[TreeDataIgnore]
-		public WorldTreeCore Core { get; set; }
+		public WorldLine Core { get; set; }
 		[TreeDataIgnore]
 		public long Type { get; set; }
 		[TreeDataIgnore]

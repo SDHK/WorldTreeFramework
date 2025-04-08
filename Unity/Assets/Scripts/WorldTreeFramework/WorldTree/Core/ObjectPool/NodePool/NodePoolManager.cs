@@ -11,7 +11,7 @@ namespace WorldTree
 	/// <summary>
 	/// 节点对象池管理器
 	/// </summary>
-	public class NodePoolManager : PoolManagerBase<NodePool>, CoreManagerOf<WorldTreeCore>
+	public class NodePoolManager : PoolManagerBase<NodePool>, CoreManagerOf<WorldLine>
 	{
 		/// <summary>
 		/// 尝试获取节点

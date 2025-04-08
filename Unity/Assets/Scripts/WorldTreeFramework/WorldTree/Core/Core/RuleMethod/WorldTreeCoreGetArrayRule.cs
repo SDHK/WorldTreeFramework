@@ -17,7 +17,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取数组对象
 		/// </summary>
-		public static T[] PoolGetArray<T>(this WorldTreeCore self, out T[] outT, int length)
+		public static T[] PoolGetArray<T>(this WorldLine self, out T[] outT, int length)
 		{
 			Type type = typeof(T);
 			if (self.ArrayPoolManager != null)
@@ -37,7 +37,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取数组对象
 		/// </summary>
-		public static T[] PoolGetArray<T>(this WorldTreeCore self, int length)
+		public static T[] PoolGetArray<T>(this WorldLine self, int length)
 		{
 			Type type = typeof(T);
 			if (self.ArrayPoolManager != null)
@@ -53,7 +53,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取数组对象
 		/// </summary>
-		public static Array PoolGetArray(this WorldTreeCore self, Type type, int length)
+		public static Array PoolGetArray(this WorldLine self, Type type, int length)
 		{
 			if (self.ArrayPoolManager != null)
 			{
@@ -69,7 +69,7 @@ namespace WorldTree
 		/// <summary>
 		/// 回收数组
 		/// </summary>
-		public static void PoolRecycle(this WorldTreeCore self, Array obj, bool clearArray = false)
+		public static void PoolRecycle(this WorldLine self, Array obj, bool clearArray = false)
 		{
 			if (self.ArrayPoolManager != null)
 			{

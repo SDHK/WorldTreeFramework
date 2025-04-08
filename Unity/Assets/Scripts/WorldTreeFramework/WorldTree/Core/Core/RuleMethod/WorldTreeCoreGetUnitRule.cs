@@ -17,13 +17,13 @@ namespace WorldTree
 		/// <summary>
 		/// 新建单位对象
 		/// </summary>
-		public static T NewUnit<T>(this WorldTreeCore self, out T unit) where T : class, IUnit
+		public static T NewUnit<T>(this WorldLine self, out T unit) where T : class, IUnit
 			=> unit = self.NewUnit(typeof(T), out _) as T;
 
 		/// <summary>
 		/// 新建单位对象
 		/// </summary>
-		public static IUnit NewUnit(this WorldTreeCore self, Type type, out IUnit unit)
+		public static IUnit NewUnit(this WorldLine self, Type type, out IUnit unit)
 		{
 			unit = Activator.CreateInstance(type, true) as IUnit;
 			unit.Core = self;
@@ -36,12 +36,12 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
-		public static T PoolGetUnit<T>(this WorldTreeCore self, out T unit) where T : class, IUnit => unit = self.PoolGetUnit<T>();
+		public static T PoolGetUnit<T>(this WorldLine self, out T unit) where T : class, IUnit => unit = self.PoolGetUnit<T>();
 
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
-		public static T PoolGetUnit<T>(this WorldTreeCore self)
+		public static T PoolGetUnit<T>(this WorldLine self)
 		where T : class, IUnit
 		{
 			if (self != null && self.IsCoreActive)
@@ -60,7 +60,7 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
-		public static IUnit PoolGetUnit(this WorldTreeCore self, long type)
+		public static IUnit PoolGetUnit(this WorldLine self, long type)
 		{
 			if (self != null && self.IsCoreActive)
 			{
@@ -78,7 +78,7 @@ namespace WorldTree
 		/// <summary>
 		/// 回收单位
 		/// </summary>
-		public static void PoolRecycle(this WorldTreeCore self, IUnit obj)
+		public static void PoolRecycle(this WorldLine self, IUnit obj)
 		{
 			if (self != null && self.IsCoreActive && obj.IsFromPool)
 			{

@@ -17,7 +17,7 @@ namespace WorldTree
 	/// 引用池管理器
 	/// </summary>
 	public class ReferencedPoolManager : Node, IListenerIgnorer
-		, CoreManagerOf<WorldTreeCore>
+		, CoreManagerOf<WorldLine>
 	{
 		/// <summary>
 		/// 全部节点
