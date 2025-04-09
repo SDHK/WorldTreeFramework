@@ -19,7 +19,7 @@ namespace WorldTree
 
 		public void Debug(string msg) => UnityEngine.Debug.Log(msg);
 
-		public void Todo(string msg) => UnityEngine.Debug.Log("TODO: " + msg);
+		public void Todo(string msg) => UnityEngine.Debug.LogWarning("TODO: " + msg);
 
 		public void Info(string msg) => UnityEngine.Debug.Log(msg);
 

@@ -58,9 +58,14 @@ namespace WorldTree
 	public class LogManager : Unit, ILog
 	{
 		/// <summary>
-		/// 日志插件
+		/// 日志组件
 		/// </summary>
 		private ILog log;
+
+		/// <summary>
+		/// 日志等级
+		/// </summary>
+		public LogLevel LogLevel;
 
 
 		static LogManager()
@@ -71,50 +76,55 @@ namespace WorldTree
 			NLog.LogManager.Configuration.Variables["currentDir"] = Environment.CurrentDirectory;
 		}
 
-		public override void OnCreate()
+		/// <summary>
+		/// 初始化
+		/// </summary>
+		public void Init(Type logType, LogLevel logLevel)
 		{
-			log = (ILog)Core.PoolGetUnit(this.TypeToCode(Core.Setting.LogType));
+			//设置日志等级
+			LogLevel = logLevel;
+			log = (ILog)Core.PoolGetUnit(this.TypeToCode(logType));
 		}
 
 		public void Trace(string message)
 		{
-			if ((Core.LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
+			if ((LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
 			log.Trace(message);
 		}
 
 		public void Debug(string message)
 		{
-			if ((Core.LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
+			if ((LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
 			log.Debug(message);
 		}
 
 		public void Error(string message)
 		{
-			if ((Core.LogLevel & LogLevel.Error) != LogLevel.Error) return;
+			if ((LogLevel & LogLevel.Error) != LogLevel.Error) return;
 			log.Error(message);
 		}
 
 		public void Error(Exception e)
 		{
-			if ((Core.LogLevel & LogLevel.Error) != LogLevel.Error) return;
+			if ((LogLevel & LogLevel.Error) != LogLevel.Error) return;
 			log.Error(e);
 		}
 
 		public void Info(string message)
 		{
-			if ((Core.LogLevel & LogLevel.Info) != LogLevel.Info) return;
+			if ((LogLevel & LogLevel.Info) != LogLevel.Info) return;
 			log.Info(message);
 		}
 
 		public void Todo(string message)
 		{
-			if ((Core.LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
+			if ((LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
 			log.Todo(message);
 		}
 
 		public void Warning(string message)
 		{
-			if ((Core.LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
+			if ((LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
 			log.Warning(message);
 		}
 	}

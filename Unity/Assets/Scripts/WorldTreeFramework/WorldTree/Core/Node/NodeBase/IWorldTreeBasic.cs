@@ -45,7 +45,7 @@ namespace WorldTree
 		/// <summary>
 		/// 世界线
 		/// </summary>
-		/// <remarks>框架的核心</remarks>
+		/// <remarks>框架实例的核心</remarks>
 		[TreeDataIgnore]
 		public WorldLine Core { get; set; }
 

@@ -132,6 +132,7 @@ namespace WorldTree
 			protected override void Execute(WorldHeart self)
 			{
 				self.isExit = true;
+				self.m_Thread.Join();
 				self.m_Thread = null;
 
 				self.worldUpdate = null;

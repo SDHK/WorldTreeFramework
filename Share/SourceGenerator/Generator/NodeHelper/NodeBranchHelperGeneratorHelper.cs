@@ -43,32 +43,32 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 节点加入树结构，框架内部使用
 							/// </summary>
-							public static INode AddSelfToTree<B, K{{genericsType}}>(INode self, K key, INode parent{{genericTypeParameter}})
+							public static INode AddNodeToTree<B, K{{genericsType}}>(INode self, B nullBranch, K key, INode node{{genericTypeParameter}})
 								where B : class, IBranch<K>
 							{
-								if (self.TryAddSelfToTree<B, K>(key, parent))
+								if (node.TryAddSelfToTree<B, K>(key, self))
 								{
-									NodeRuleHelper.TrySendRule(self, default(Awake{{genericsTypeAngle}}){{genericParameter}});
-									self.OnAddSelfToTree();
+									NodeRuleHelper.TrySendRule(node, default(Awake{{genericsTypeAngle}}){{genericParameter}});
+									node.OnAddSelfToTree();
 								}
-								return self;
+								return node;
 							}
 
 							/// <summary>
 							/// 添加节点，无约束
 							/// </summary>
-							public static INode AddNode<B, K{{genericsType}}>(INode self, K key, long type, out INode node{{genericTypeParameter}})
+							public static INode AddNode<B, K{{genericsType}}>(INode self, B nullBranch, K key, long type, out INode node{{genericTypeParameter}})
 								where B : class, IBranch<K>
-							=> node = GetBranch<B>(self)?.GetNode(key) ?? AddSelfToTree<B, K{{genericsType}}>(self.Core.PoolGetNode(type),key, self{{genericParameter}});
+							=> node = GetBranch<B>(self)?.GetNode(key) ?? AddNodeToTree(self, nullBranch, key, self.Core.PoolGetNode(type){{genericParameter}});
 
 							/// <summary>
 							/// 添加泛型节点
 							/// </summary>
-							public static T AddNode<N, B, K, T{{genericsType}}>(N self, K key, out T node{{genericTypeParameter}})
+							public static T AddNode<N, B, K, T{{genericsType}}>(N self, B nullBranch, K key, out T node{{genericTypeParameter}})
 								where N : class, INode, AsBranch<B>
 								where B : class, IBranch<K>
 								where T : class, INode, NodeOf<N, B>, AsRule<Awake{{genericsTypeAngle}}>
-							=> node = (T)(GetBranch<B>(self)?.GetNode(key) ?? AddSelfToTree<B, K{{genericsType}}>(self.Core.PoolGetNode<T>(),key, self{{genericParameter}}));
+							=> node = (T)(GetBranch<B>(self)?.GetNode(key) ?? AddNodeToTree(self, nullBranch, key, self.Core.PoolGetNode<T>(){{genericParameter}}));
 					""");
 			}
 			Code.AppendLine("	}");

@@ -1,4 +1,3 @@
-using NLog;
 using System;
 
 namespace WorldTree
@@ -15,8 +14,9 @@ namespace WorldTree
         {
             WorldLine mainLine = new WorldLine();
 
+            mainLine.LogType = typeof(WorldLog);
             mainLine.LogLevel = LogLevel.All;
-            mainLine.Init(new WorldLineSetting());
+            mainLine.Init(typeof(WorldHeart), 1000);
 
             //启动世界心跳 设定间隔为1000ms
             mainLine.World.AddComponent(out Entry _);
@@ -24,7 +24,6 @@ namespace WorldTree
             //防止程序集被优化掉
             Type ruleType = typeof(EntryRule);
             Type nodeType = typeof(DotNetInit);
-            Type logType = typeof(Logger);
         }
     }
 }

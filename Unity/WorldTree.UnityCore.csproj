@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIWindow\GUIGeneralWindow.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\UnityWorldHeart.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Manager\GameObjectPoolManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\_Init\UnityWorldLineSetting.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowFocusUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\Mathf\MathfVector2.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\LateUpdate\LateUpdateRule.cs" />

@@ -356,7 +356,7 @@ namespace WorldTree.SourceGenerator
 				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{genericsType}>(this N self, {genericType} key, out T node{genericTypeParameter})
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsTypeAngle}>
-		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, key, out node{genericParameter});");
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, default({ClassFullName}), key, out node{genericParameter});");
 			}
 		}
 
@@ -426,7 +426,7 @@ namespace WorldTree.SourceGenerator
 			where T : class, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsTypeAngle}>
 		{{
 			node = self.Core.PoolGetNode<T>();
-			return (T)NodeBranchHelper.AddSelfToTree<{ClassFullName}, {genericType}{genericsType}>(node, node.Id, self{genericParameter});
+			return (T)NodeBranchHelper.AddNodeToTree(self, default({ClassFullName}), node.Id, node{genericParameter});
 		}}");
 
 			}
@@ -499,7 +499,7 @@ namespace WorldTree.SourceGenerator
 				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T{genericsType}>(this N self, out T node{genericTypeParameter})
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where T : class, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsTypeAngle}>
-		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, self.TypeToCode<T>(), out node{genericParameter});");
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, T{genericsType}>(self, default({ClassFullName}), self.TypeToCode<T>(), out node{genericParameter});");
 			}
 		}
 
@@ -520,7 +520,7 @@ namespace WorldTree.SourceGenerator
 				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<N, T, SubT{genericsType}>(this N self,T defaultBaseT, out SubT node{genericTypeParameter})
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 			where SubT : class, T, NodeOf<N,{ClassFullName}> , AsRule<Awake{genericsTypeAngle}>
-		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, SubT{genericsType}>(self, self.TypeToCode<T>(), out node{genericParameter});");
+		=> NodeBranchHelper.AddNode<N, {ClassFullName}, {genericType}, SubT{genericsType}>(self, default({ClassFullName}), self.TypeToCode<T>(), out node{genericParameter});");
 			}
 		}
 		#endregion

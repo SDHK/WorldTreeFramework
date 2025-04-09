@@ -8,6 +8,7 @@ obj/
 /.vs
 Bin/
 bin/
+Logs/
 /Unity/.vs/
 
 /Unity/UserSettings

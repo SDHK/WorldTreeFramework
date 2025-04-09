@@ -266,7 +266,10 @@
                       name="ColorTexture2D"/>
                   </dir>
                   <dir
-                    name="Core"/>
+                    name="Core">
+                    <dir
+                      name="Log"/>
+                  </dir>
                   <dir
                     name="EditorRunTime">
                     <dir
@@ -360,14 +363,16 @@
                     <dir
                       name="RuleMethod"/>
                     <dir
-                      name="WorldHeart"/>
+                      name="WorldContext"/>
                     <dir
-                      name="WorldLine"/>
+                      name="WorldHeart"/>
                   </dir>
                   <dir
                     name="DynamicNodeQueue"/>
                   <dir
                     name="Kcp"/>
+                  <dir
+                    name="Log"/>
                   <dir
                     name="Node">
                     <dir
@@ -377,6 +382,8 @@
                   </dir>
                   <dir
                     name="ObjectBox">
+                    <dir
+                      name="Concurrent"/>
                     <dir
                       name="TreeObject"/>
                     <dir

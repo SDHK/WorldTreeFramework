@@ -50,7 +50,7 @@ namespace EditorTool
 					{
 						//通过绘制类型拿到绘制节点实例
 						long typeCode = View.TypeToCode(nodeType);
-						NodeBranchHelper.AddNode<ComponentBranch, long>(View.World, typeCode, typeCode, out INode viewNode);
+						NodeBranchHelper.AddNode(View.World, default(ComponentBranch), typeCode, typeCode, out INode viewNode);
 
 						//View.Root.AddComponent(nodeType.TypeToCode(), out INode viewNode, isPool: false);//通过绘制类型拿到绘制节点实例
 						NodeRuleHelper.TrySendRule(viewNode, default(INodeFieldViewRule), node, fieldInfo);//调用绘制法则

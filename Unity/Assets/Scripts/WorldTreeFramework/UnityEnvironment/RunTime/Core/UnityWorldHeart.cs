@@ -23,6 +23,7 @@ namespace WorldTree
 		, AsGuiUpdateTime
 		, AsDrawGizmosUpdateTime
 	{
+
 		/// <summary>
 		/// 运行线程
 		/// </summary>

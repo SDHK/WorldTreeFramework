@@ -63,7 +63,7 @@ namespace WorldTree
 		/// <summary>
 		/// 框架启动
 		/// </summary>
-		public void Init(WorldLineSetting setting);
+		public void Init(Type heartType, int frameTime);
 	}
 
 
@@ -78,17 +78,12 @@ namespace WorldTree
 		#region 字段
 
 		/// <summary>
-		/// 框架设置
+		/// 世界线管理器
 		/// </summary>
-		public WorldLineSetting Setting;
+		public WorldLineManager WorldLineManager;
+
 
 		#region 日志
-
-		/// <summary>
-		/// 日志等级设置
-		/// </summary>
-		public LogLevel LogLevel;
-
 		/// <summary>
 		/// 日志管理器
 		/// </summary>
@@ -187,8 +182,6 @@ namespace WorldTree
 		public ArrayPoolManager ArrayPoolManager;
 
 
-
-
 		/// <summary>
 		/// 节点引用池管理器
 		/// </summary>
@@ -205,7 +198,7 @@ namespace WorldTree
 		public WorldHeartBase WorldHeart;
 
 		/// <summary>
-		/// 世界线：线程上下文
+		/// 世界环境：线程上下文
 		/// </summary>
 		public WorldContext WorldContext;
 
@@ -216,10 +209,8 @@ namespace WorldTree
 		/// <summary>
 		/// 框架启动
 		/// </summary>
-		public virtual void Init(WorldLineSetting setting)
+		public virtual void Init(Type heartType, int frameTime)
 		{
-			this.Setting = setting;
-
 			SetActive(false);
 
 			//设置日志
@@ -253,6 +244,7 @@ namespace WorldTree
 			TypeInfo.Id = TypeInfo.InstanceId;
 
 			this.PoolGetUnit(out LogManager);
+			LogManager.Init(WorldLineManager.LogType, WorldLineManager.LogLevel);
 
 			//法则管理器初始化
 			this.PoolGetNode(out RuleManager);
@@ -305,8 +297,8 @@ namespace WorldTree
 
 			World = this.AddComponent(out World _);
 			World.World = World;
-			long typeCode = this.TypeToCode(Setting.HeartType);
-			WorldHeart = NodeBranchHelper.AddNode<CoreManagerBranch, long, int>(this, typeCode, typeCode, out _, Setting.FrameTime) as WorldHeartBase;
+			long typeCode = this.TypeToCode(heartType);
+			WorldHeart = NodeBranchHelper.AddNode(this, default(CoreManagerBranch), typeCode, typeCode, out _, frameTime) as WorldHeartBase;
 			WorldContext = this.AddCoreManager(out WorldContext _);
 			WorldHeart.Run();
 		}
