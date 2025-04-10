@@ -8,11 +8,11 @@
 */
 namespace WorldTree
 {
-	public static class EntryRule
+	public static class MainWorldRule
 	{
-		class Add : AddRule<Entry>
+		class Add : AddRule<MainWorld>
 		{
-			protected override void Execute(Entry self)
+			protected override void Execute(MainWorld self)
 			{
 				self.Log("Èë¿Ú£¡£¡£¡");
 				self.AddComponent(out DotNetInit _);

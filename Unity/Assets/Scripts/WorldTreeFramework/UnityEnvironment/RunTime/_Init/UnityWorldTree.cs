@@ -16,40 +16,23 @@ namespace WorldTree
 	public class UnityWorldTree : MonoBehaviour
 	{
 		/// <summary>
-		/// 主框架
+		/// 世界线管理器
 		/// </summary>
-		public WorldLine MainLine;
-		/// <summary>
-		/// 可视化框架
-		/// </summary>
-		public WorldLine ViewLine;
-
-		/// <summary>
-		/// 可视化生成器
-		/// </summary>
-		private UnityWorldTreeNodeViewBuilder viewBuilder;
+		public WorldLineManager WorldLineManager;
 
 		/// <summary>
 		/// 启动
 		/// </summary>
 		public void Start()
 		{
-			MainLine = new();//主框架
-
+			WorldLineManager = new();
+			WorldLineManager.LogType = typeof(UnityWorldLog);
+			WorldLineManager.LogLevel = LogLevel.All;
 			if (Define.IsEditor)
 			{
-				ViewLine = new();
-				//可视化框架初始化
-				ViewLine.Init(typeof(UnityWorldHeart), 0);
-				ViewLine.World.AddChild(out viewBuilder, (INode)MainLine, default(INode));
+				WorldLineManager.SetView(typeof(UnityWorldHeart), typeof(UnityViewBuilderWorld), typeof(UnityWorldTreeNodeViewBuilder));
 			}
-
-			MainLine.ViewBuilder = viewBuilder;
-			//主框架初始化，添加Unity世界心跳，间隔毫秒为0
-			MainLine.Init(typeof(UnityWorldHeart), 0);
-
-			//主框架添加入口节点
-			MainLine.World.AddComponent(out Entry _);
+			WorldLineManager.Create(0, typeof(UnityWorldHeart), 0, typeof(MainWorld));
 		}
 
 		/// <summary>
@@ -65,11 +48,8 @@ namespace WorldTree
 		/// </summary>
 		private void OnApplicationQuit()
 		{
-			MainLine?.Dispose();
-			ViewLine?.Dispose();
-			MainLine = null;
-			ViewLine = null;
-			viewBuilder = null;
+			WorldLineManager?.Dispose();
+			WorldLineManager = null;
 		}
 
 		/// <summary>
@@ -77,11 +57,8 @@ namespace WorldTree
 		/// </summary>
 		private void OnDestroy()
 		{
-			MainLine?.Dispose();
-			ViewLine?.Dispose();
-			MainLine = null;
-			ViewLine = null;
-			viewBuilder = null;
+			WorldLineManager?.Dispose();
+			WorldLineManager = null;
 		}
 	}
 }

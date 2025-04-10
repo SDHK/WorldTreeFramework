@@ -12,17 +12,14 @@ namespace WorldTree
         /// </summary>
         private static void Main(string[] args)
         {
-            WorldLine mainLine = new WorldLine();
+            WorldLineManager lineManager = new WorldLineManager();
+            lineManager.LogType = typeof(WorldLog);
+            lineManager.LogLevel = LogLevel.All;
 
-            mainLine.LogType = typeof(WorldLog);
-            mainLine.LogLevel = LogLevel.All;
-            mainLine.Init(typeof(WorldHeart), 1000);
-
-            //启动世界心跳 设定间隔为1000ms
-            mainLine.World.AddComponent(out Entry _);
+            lineManager.Create(0, typeof(WorldHeart), 1000, typeof(MainWorld));
 
             //防止程序集被优化掉
-            Type ruleType = typeof(EntryRule);
+            Type ruleType = typeof(MainWorldRule);
             Type nodeType = typeof(DotNetInit);
         }
     }

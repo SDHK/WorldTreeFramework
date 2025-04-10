@@ -63,7 +63,7 @@ namespace WorldTree
 		/// <summary>
 		/// 框架启动
 		/// </summary>
-		public void Init(Type heartType, int frameTime);
+		public void Init(Type heartType, int frameTime, Type worldType);
 	}
 
 
@@ -209,7 +209,7 @@ namespace WorldTree
 		/// <summary>
 		/// 框架启动
 		/// </summary>
-		public virtual void Init(Type heartType, int frameTime)
+		public virtual void Init(Type heartType, int frameTime, Type worldType)
 		{
 			SetActive(false);
 
@@ -295,8 +295,9 @@ namespace WorldTree
 			//游戏时间管理器
 			GameTimeManager = this.AddCoreManager(out GameTimeManager _);
 
-			World = this.AddComponent(out World _);
-			World.World = World;
+			long worldTypeCode = this.TypeToCode(worldType);
+			World = NodeBranchHelper.AddNode(this, default(ComponentBranch), worldTypeCode, worldTypeCode, out _) as World;
+
 			long typeCode = this.TypeToCode(heartType);
 			WorldHeart = NodeBranchHelper.AddNode(this, default(CoreManagerBranch), typeCode, typeCode, out _, frameTime) as WorldHeartBase;
 			WorldContext = this.AddCoreManager(out WorldContext _);

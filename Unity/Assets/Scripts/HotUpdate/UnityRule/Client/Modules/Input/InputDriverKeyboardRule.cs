@@ -12,7 +12,7 @@ namespace WorldTree
 {
 	public static class InputDriverKeyboardRule
 	{
-		private class ManagerAdd : NodeAddRule<InputDeviceManager, InputDriverKeyboard> { }
+		private class ManagerAdd : NodeAddComponentRule<InputDeviceManager, InputDriverKeyboard> { }
 
 		private class Awake : AwakeRule<InputDriverKeyboard>
 		{

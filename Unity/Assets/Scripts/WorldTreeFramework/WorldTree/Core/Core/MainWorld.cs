@@ -13,11 +13,8 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 入口节点
+	/// 主世界
 	/// </summary>
-	public class Entry : Node
-		, ComponentOf<World>
-		, AsAwake
-		, AsComponentBranch
+	public class MainWorld : World
 	{ }
 }

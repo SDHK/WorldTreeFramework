@@ -17,17 +17,6 @@ namespace WorldTree
 	public interface TestEvent : ISendRule<float, int, string> { }
 
 	/// <summary>
-	/// 测试节点
-	/// </summary>
-	public class TestNode : Node, ChildOf<InitialDomain>
-		, AsAwake
-	{
-		/// <summary>
-		/// 测试数据
-		/// </summary>
-		public Color color = Color.red;
-	}
-	/// <summary>
 	/// 初始域
 	/// </summary>
 	public class InitialDomain : Node, ComponentOf<INode>

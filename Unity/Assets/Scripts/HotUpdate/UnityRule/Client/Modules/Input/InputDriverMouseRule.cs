@@ -12,7 +12,7 @@ namespace WorldTree
 {
 	public static class InputDriverMouseRule
 	{
-		private class ManagerAdd : NodeAddRule<InputDeviceManager, InputDriverMouse> { }
+		private class ManagerAdd : NodeAddComponentRule<InputDeviceManager, InputDriverMouse> { }
 
 		private class Awake : AwakeRule<InputDriverMouse>
 		{

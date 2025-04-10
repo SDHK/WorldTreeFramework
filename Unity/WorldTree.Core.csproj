@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
@@ -283,18 +283,18 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTaskQueueLock\TreeTaskQueueLockManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\CharFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Log\ILog.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\Entry.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\MainWorld.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskSwitchWorld.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\ValueTupleFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Base\Unit.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\TreeDataTypeHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Matrix4x4Float.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\NodeAddRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\File\StringHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Math\MathFloat.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\RuleGroup.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\SbyteFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\GameTimeManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\NodeAddComponentRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\WorldTree\WorldTree.Core.asmdef" />
@@ -767,3 +767,4 @@
   </Target>
   -->
 </Project>
+ 

@@ -29,8 +29,6 @@ namespace WorldTree
 
 	public static partial class TreeTaskQueueLockManagerRule
 	{
-		class RootAddRule : NodeAddRule<World, TreeTaskQueueLockManager> { }
-
 
 		class AddRule : AddRule<TreeTaskQueueLockManager>
 		{

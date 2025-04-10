@@ -59,22 +59,33 @@ namespace WorldTree
 		/// <summary>
 		/// 设置可视化
 		/// </summary>
-		public void SetView(Type heartType, Type viewBuilderType)
+		public void SetView(Type heartType, Type worldType, Type viewBuilderType)
 		{
 			viewHeartType = heartType;
 			this.viewBuilderType = viewBuilderType;
+			viewLine = new WorldLine();
+			viewLine.WorldLineManager = this;
+			viewLine.Init(viewHeartType, 0, worldType);
 		}
 
 		/// <summary>
 		/// 创建世界线
 		/// </summary>
-		public void Create(int id, Type heartType, int frameTime)
+		public void Create(int id, Type heartType, int frameTime, Type worldType)
 		{
 			if (!lineDict.TryGetValue(id, out WorldLine line))
 			{
 				line = new WorldLine();
+
+				if (viewLine != null)
+				{
+					//可视化世界线添加可视化生成器
+					INode nodeView = viewLine.PoolGetNode(viewLine.TypeToCode(viewBuilderType));
+					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(viewLine.World, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
+				}
+
 				line.WorldLineManager = this;
-				line.Init(heartType, frameTime);
+				line.Init(heartType, frameTime, worldType);
 				lineDict.TryAdd(id, line);
 			}
 			else
@@ -114,7 +125,13 @@ namespace WorldTree
 				mainLine.Dispose();
 			});
 
+			viewLine?.WorldContext.Post(() =>
+			{
+				viewLine.Dispose();
+			});
+
 			mainLine = null;
+			viewLine = null;
 		}
 
 		/// <summary>

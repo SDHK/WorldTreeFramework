@@ -13,10 +13,23 @@ namespace WorldTree
 	/// <summary>
 	/// 世界
 	/// </summary>
-	public class World : Node, ComponentOf<WorldLine>
+	public abstract class World : Node, ComponentOf<WorldLine>
 		, AsComponentBranch
 		, AsChildBranch
 		, AsAwake
 	{
+	}
+
+	public static partial class WorldRule
+	{
+		class Awake : AwakeRule<World>
+		{
+			protected override void Execute(World self)
+			{
+				self.World = self;
+			}
+		}
+
+
 	}
 }

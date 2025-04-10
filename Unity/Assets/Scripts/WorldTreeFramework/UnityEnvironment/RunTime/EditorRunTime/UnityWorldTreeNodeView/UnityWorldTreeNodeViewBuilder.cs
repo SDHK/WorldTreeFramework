@@ -12,6 +12,13 @@ using UnityEngine;
 namespace WorldTree
 {
 	/// <summary>
+	/// Unity可视化绑定器世界
+	/// </summary>
+	public class UnityViewBuilderWorld : World
+	{
+	}
+
+	/// <summary>
 	/// Unity的世界树节点可视化生成器
 	/// </summary>
 	/// <remarks>负责Node映射显示的gameObjcet生成</remarks>

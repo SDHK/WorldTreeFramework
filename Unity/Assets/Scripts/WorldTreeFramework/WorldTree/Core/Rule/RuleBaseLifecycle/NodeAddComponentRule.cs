@@ -20,7 +20,7 @@ namespace WorldTree
 	/// <typeparam name="N">节点</typeparam>
 	/// <typeparam name="C">组件</typeparam>
 	/// <remarks>用于节点的饿汉单例</remarks>
-	public abstract class NodeAddRule<N, C> : AddRule<N>
+	public abstract class NodeAddComponentRule<N, C> : AddRule<N>
 		where N : class, INode, AsRule<Add>, AsComponentBranch
 		where C : class, INode, ComponentOf<N>, AsRule<Awake>
 	{

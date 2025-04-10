@@ -10,7 +10,6 @@ using System;
 
 namespace WorldTree
 {
-	class TreeTweenManagerRootAddRule : NodeAddRule<World, TreeTweenManager> { }
 
 
 	/// <summary>
