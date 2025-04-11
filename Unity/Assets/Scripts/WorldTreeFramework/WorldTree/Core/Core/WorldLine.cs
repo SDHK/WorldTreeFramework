@@ -244,7 +244,6 @@ namespace WorldTree
 			TypeInfo.Id = TypeInfo.InstanceId;
 
 			this.PoolGetUnit(out LogManager);
-			LogManager.Init(WorldLineManager.LogType, WorldLineManager.LogLevel);
 
 			//法则管理器初始化
 			this.PoolGetNode(out RuleManager);

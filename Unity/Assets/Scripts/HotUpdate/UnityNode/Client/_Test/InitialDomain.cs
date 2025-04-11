@@ -7,6 +7,7 @@
 
 */
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace WorldTree
@@ -99,5 +100,30 @@ namespace WorldTree
 		/// 测试
 		/// </summary>
 		public TreeList<int> ValueList;
+		/// <summary>
+		/// 测试
+		/// </summary>
+		public TreeDictionary<int, int> ValueDict;
+	}
+
+
+	/// <summary>
+	/// 测试数据
+	/// </summary>
+	public class StartWorldConfig : Node
+	{
+		/// <summary>
+		/// 数据
+		/// </summary>
+		public List<string> stringList = new();
+	}
+
+	class Add : AddRule<StartWorldConfig>
+	{
+		protected override void Execute(StartWorldConfig self)
+		{
+			self.stringList.Add("1");
+			self.stringList.Add("2");
+		}
 	}
 }

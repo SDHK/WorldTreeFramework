@@ -11,7 +11,7 @@ using UnityEngine;
 namespace WorldTree
 {
 	/// <summary>
-	/// 世界树框架驱动器，一切从这里开始
+	/// 世界树框架启动器，一切从这里开始
 	/// </summary>
 	public class UnityWorldTree : MonoBehaviour
 	{
@@ -28,19 +28,10 @@ namespace WorldTree
 			WorldLineManager = new();
 			WorldLineManager.LogType = typeof(UnityWorldLog);
 			WorldLineManager.LogLevel = LogLevel.All;
-			if (Define.IsEditor)
-			{
-				WorldLineManager.SetView(typeof(UnityWorldHeart), typeof(UnityViewBuilderWorld), typeof(UnityWorldTreeNodeViewBuilder));
-			}
+
+			if (Define.IsEditor) WorldLineManager.SetView(typeof(UnityWorldHeart), typeof(UnityViewBuilderWorld), typeof(UnityWorldTreeNodeViewBuilder));
+
 			WorldLineManager.Create(0, typeof(UnityWorldHeart), 0, typeof(MainWorld));
-		}
-
-		/// <summary>
-		/// 更新
-		/// </summary>
-		private void Update()
-		{
-
 		}
 
 		/// <summary>

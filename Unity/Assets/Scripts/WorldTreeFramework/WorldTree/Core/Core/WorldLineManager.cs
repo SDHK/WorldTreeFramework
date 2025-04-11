@@ -3,8 +3,9 @@
 * 作者： 闪电黑客
 * 日期： 2022/7/18 9:35
 
-* 描述： 世界线程
-*
+* 描述： 世界线程管理器
+* 
+
 
 */
 
@@ -31,15 +32,16 @@ namespace WorldTree
 		public LogLevel LogLevel;
 
 		/// <summary>
-		/// 世界线集合
-		/// </summary>
-		private ConcurrentDictionary<int, WorldLine> lineDict = new();
-
-		/// <summary>
 		/// 主世界线
 		/// </summary>
 		private WorldLine mainLine;
 
+		/// <summary>
+		/// 世界线集合
+		/// </summary>
+		private ConcurrentDictionary<int, WorldLine> lineDict = new();
+
+		#region 可视化
 
 		/// <summary>
 		/// 可视化世界线
@@ -68,6 +70,8 @@ namespace WorldTree
 			viewLine.Init(viewHeartType, 0, worldType);
 		}
 
+		#endregion
+
 		/// <summary>
 		/// 创建世界线
 		/// </summary>
@@ -84,6 +88,7 @@ namespace WorldTree
 					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(viewLine.World, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
 				}
 
+				mainLine ??= line;
 				line.WorldLineManager = this;
 				line.Init(heartType, frameTime, worldType);
 				lineDict.TryAdd(id, line);

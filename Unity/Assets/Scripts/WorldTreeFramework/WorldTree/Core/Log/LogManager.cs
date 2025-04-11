@@ -62,12 +62,6 @@ namespace WorldTree
 		/// </summary>
 		private ILog log;
 
-		/// <summary>
-		/// 日志等级
-		/// </summary>
-		public LogLevel LogLevel;
-
-
 		static LogManager()
 		{
 			//获得配置
@@ -76,55 +70,50 @@ namespace WorldTree
 			NLog.LogManager.Configuration.Variables["currentDir"] = Environment.CurrentDirectory;
 		}
 
-		/// <summary>
-		/// 初始化
-		/// </summary>
-		public void Init(Type logType, LogLevel logLevel)
+		public override void OnCreate()
 		{
-			//设置日志等级
-			LogLevel = logLevel;
-			log = (ILog)Core.PoolGetUnit(this.TypeToCode(logType));
+			log = (ILog)Core.PoolGetUnit(this.TypeToCode(Core.WorldLineManager.LogType));
 		}
 
 		public void Trace(string message)
 		{
-			if ((LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
+			if ((Core.WorldLineManager.LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
 			log.Trace(message);
 		}
 
 		public void Debug(string message)
 		{
-			if ((LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
+			if ((Core.WorldLineManager.LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
 			log.Debug(message);
 		}
 
 		public void Error(string message)
 		{
-			if ((LogLevel & LogLevel.Error) != LogLevel.Error) return;
+			if ((Core.WorldLineManager.LogLevel & LogLevel.Error) != LogLevel.Error) return;
 			log.Error(message);
 		}
 
 		public void Error(Exception e)
 		{
-			if ((LogLevel & LogLevel.Error) != LogLevel.Error) return;
+			if ((Core.WorldLineManager.LogLevel & LogLevel.Error) != LogLevel.Error) return;
 			log.Error(e);
 		}
 
 		public void Info(string message)
 		{
-			if ((LogLevel & LogLevel.Info) != LogLevel.Info) return;
+			if ((Core.WorldLineManager.LogLevel & LogLevel.Info) != LogLevel.Info) return;
 			log.Info(message);
 		}
 
 		public void Todo(string message)
 		{
-			if ((LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
+			if ((Core.WorldLineManager.LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
 			log.Todo(message);
 		}
 
 		public void Warning(string message)
 		{
-			if ((LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
+			if ((Core.WorldLineManager.LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
 			log.Warning(message);
 		}
 	}
