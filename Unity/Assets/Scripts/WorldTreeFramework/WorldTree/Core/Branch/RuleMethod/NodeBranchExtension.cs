@@ -14,9 +14,18 @@ namespace WorldTree
 	/// </summary>
 	public static partial class NodeBranchExtension
 	{
-		#region 获取
 
-		
-		#endregion
+
+		/// <summary>
+		/// 获取键值
+		/// </summary>
+		public static long GetNumberKey<N>(this N self)
+			where N : class, AsNumberNodeBranch
+		{
+
+			if (!NodeBranchHelper.TryGetKey(self, out NumberNodeBranch branch)) return default;
+			if (!branch.TryGetNodeKey(self.Id, out long key)) return default;
+			return key;
+		}
 	}
 }

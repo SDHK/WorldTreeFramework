@@ -44,10 +44,10 @@ namespace WorldTree
 		/// 移除分支中的节点
 		/// </summary>
 		public static void RemoveNode(INode self)
-		{ 
+		{
 			if (self?.Parent == null) return;
 			if (TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
-			{ 
+			{
 				branch.RemoveNode(self.Id);
 				if (branch.Count == 0)
 				{
@@ -96,6 +96,31 @@ namespace WorldTree
 		/// </summary>
 		public static B GetBranch<B>(INode self) where B : class, IBranch
 			=> (self.BranchDict != null && self.BranchDict.TryGetValue(self.TypeToCode<B>(), out IBranch iBranch)) ? iBranch as B : null;
+
+		/// <summary>
+		/// 尝试获取键值
+		/// </summary>
+		public static bool TryGetKey<K>(this INode self, out K key)
+		{
+			key = default;
+			if (self.Parent != null) return false;
+			if (!TryGetBranch(self.Parent, self.BranchType, out IBranch branch)) return false;
+			if (branch is not IBranch<K> branchKey) return false;
+			return branchKey.TryGetNodeKey(self.Id, out key);
+		}
+
+		/// <summary>
+		/// 获取键值
+		/// </summary>
+		public static K GetKey<K>(this INode self)
+		{
+			if (self.Parent != null) return default;
+			if (!TryGetBranch(self.Parent, self.BranchType, out IBranch branch)) return default;
+			if (branch is not IBranch<K> keyBranch) return default;
+			if (!keyBranch.TryGetNodeKey(self.Id, out K key)) return default;
+			return key;
+		}
+
 		#endregion
 	}
 }

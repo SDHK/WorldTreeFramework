@@ -123,6 +123,4 @@ namespace WorldTree
 
 		public static implicit operator bool(NodeRef<N> nodeRef) => nodeRef.node is not null;
 	}
-
-	//public struct Fixed
 }

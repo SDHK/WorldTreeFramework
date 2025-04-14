@@ -58,6 +58,10 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Config\Config.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Config\ConfigGroup.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Config\ConfigManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Config\ConfigRef.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\UnmanagedFormatRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTweenManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValue.cs" />

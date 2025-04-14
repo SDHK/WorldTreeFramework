@@ -107,10 +107,24 @@ namespace WorldTree
 	}
 
 
+
+
+
 	/// <summary>
 	/// 测试数据
 	/// </summary>
-	public class StartWorldConfig : Node
+	public class StartWorldConfigGroup : ConfigGroup
+	{
+		/// <summary>
+		/// 数据
+		/// </summary>
+		public List<StartWorldConfig> ConfigList = new();
+	}
+
+	/// <summary>
+	/// 测试数据
+	/// </summary>
+	public class StartWorldConfig : Config
 	{
 		/// <summary>
 		/// 数据
