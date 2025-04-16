@@ -19,7 +19,7 @@ namespace WorldTree.Analyzer
 	{
 		public QueueDiagnosticConfig()
 		{
-			Screen = (Symbol) =>
+			Screen = (Compilation, Symbol) =>
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;

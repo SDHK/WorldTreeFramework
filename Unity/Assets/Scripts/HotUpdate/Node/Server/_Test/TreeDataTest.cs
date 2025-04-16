@@ -33,6 +33,13 @@ namespace WorldTree
 
 
 
+	/// <summary>
+	/// a
+	/// </summary>
+	public partial class ADataSub : AData
+	{
+
+	}
 
 
 	/// <summary>
@@ -66,6 +73,10 @@ namespace WorldTree
 		/// 测试字典
 		/// </summary>
 		public Dictionary<int, string> DataDict;
+		/// <summary>
+		/// a
+		/// </summary>
+		public Dictionary<int, string> data1Dict;
 
 	}
 

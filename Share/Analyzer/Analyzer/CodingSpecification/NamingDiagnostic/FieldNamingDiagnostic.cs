@@ -43,7 +43,7 @@ namespace WorldTree.Analyzer
 			ITypeSymbol fieldTypeSymbol = semanticModel.GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (objectDiagnostic.Screen(fieldTypeSymbol))
+				if (objectDiagnostic.Screen(context.Compilation, fieldTypeSymbol))
 				{
 					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassFieldNaming, out DiagnosticConfig DiagnosticConfig))
 					{
@@ -74,7 +74,7 @@ namespace WorldTree.Analyzer
 			INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (!objectDiagnostic.Screen(typeSymbol)) continue;
+				if (!objectDiagnostic.Screen(context.Compilation, typeSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(diagnosticKey, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符

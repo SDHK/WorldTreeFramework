@@ -12,10 +12,10 @@ namespace WorldTree
 	/// 树数据节点
 	/// </summary>
 	public class TreeData : Node
-		, NumberNodeOf<TreeData>
+		, TypeNodeOf<long, TreeData>
 		, ListNodeOf<TreeData>
 		, TempOf<INode>
-		, AsNumberNodeBranch
+		, AsTypeNodeBranch<long>
 		, AsListNodeBranch
 		, AsAwake
 	{

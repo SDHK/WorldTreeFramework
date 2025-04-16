@@ -37,7 +37,7 @@ namespace WorldTree.Analyzer
 
 		public StaticRuleDiagnosticConfig()
 		{
-			Screen = (Symbol) =>
+			Screen = (Compilation, Symbol) =>
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;

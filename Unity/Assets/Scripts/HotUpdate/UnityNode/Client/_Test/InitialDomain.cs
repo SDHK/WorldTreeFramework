@@ -15,7 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试事件法则
 	/// </summary>
-	public interface TestEvent : ISendRule<float, int, string> { }
+	public interface TestEvent : ICallRule<float, int, string> { }
 
 	/// <summary>
 	/// 初始域
@@ -25,6 +25,7 @@ namespace WorldTree
 		, AsChildBranch
 		, AsAwake
 		, AsFixedUpdateTime
+		, AsUpdateTime
 		, AsLateUpdateTime
 		, AsGuiUpdateTime
 		, AsRule<IRule>
@@ -108,12 +109,13 @@ namespace WorldTree
 
 
 
-
+	//泛型分支
 
 	/// <summary>
 	/// 测试数据
 	/// </summary>
-	public class StartWorldConfigGroup : ConfigGroup
+	public class StartWorldConfigGroup : ConfigGroup<StartWorldConfig>
+		, AsTypeNodeBranch<string>
 	{
 		/// <summary>
 		/// 数据
@@ -121,23 +123,35 @@ namespace WorldTree
 		public List<StartWorldConfig> ConfigList = new();
 	}
 
+	public static class StartWorldConfigGroupRule
+	{
+		class Add : AddRule<StartWorldConfigGroup>
+		{
+			protected override void Execute(StartWorldConfigGroup self)
+			{
+				self.AddTypeNode("", out StartWorldConfig cs, 1L);
+
+				self.AddTypeNode(1L, out StartWorldConfig c, 1L);
+				self.TryGetTypeNode(1L, out StartWorldConfig c1);
+			}
+		}
+	}
+
 	/// <summary>
 	/// 测试数据
 	/// </summary>
-	public class StartWorldConfig : Config
+	public class StartWorldConfig : Config<long>
+		, TypeNodeOf<string, StartWorldConfigGroup>
+		, TypeNodeOf<int, StartWorldConfigGroup>
 	{
+		/// <summary>
+		/// 测试整数
+		/// </summary>
+		public int TestInt = 1;
+
 		/// <summary>
 		/// 数据
 		/// </summary>
 		public List<string> stringList = new();
-	}
-
-	class Add : AddRule<StartWorldConfig>
-	{
-		protected override void Execute(StartWorldConfig self)
-		{
-			self.stringList.Add("1");
-			self.stringList.Add("2");
-		}
 	}
 }

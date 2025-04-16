@@ -36,17 +36,24 @@ namespace WorldTree
 
 		static OnUpdate<InitialDomain> OnUpdate = (self) =>
 		{
-			//self.Log($"初始域更新！！!");
-
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
-
-
-
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
 				//self.AddComponent(out TreeDataTest _);
+
+				//NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
+
 			}
+
 		};
+
+		class TestEvent1 : TestEventRule<InitialDomain>
+		{
+			protected override string Execute(InitialDomain self, float arg1, int arg2)
+			{
+				return "返回字符串";
+			}
+		}
 
 		static OnEnable<InitialDomain> OnEnable = (self) =>
 		{

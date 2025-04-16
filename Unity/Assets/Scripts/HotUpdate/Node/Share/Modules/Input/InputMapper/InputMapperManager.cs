@@ -13,7 +13,7 @@ namespace WorldTree
 	/// </summary>
 	[TreeDataSerializable]
 	public partial class InputMapperManager : NodeData
-		, AsNumberNodeBranch
+		, AsTypeNodeBranch<long>
 		, ComponentOf<World>
 		, AsAwake
 	{

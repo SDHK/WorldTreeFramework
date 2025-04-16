@@ -86,8 +86,8 @@ namespace WorldTree.SourceGenerator
 				NamedSymbolHelper.CheckInterfaceName(namedType, GeneratorHelper.ISendRuleAsync, out _) ||
 				NamedSymbolHelper.CheckInterfaceName(namedType, GeneratorHelper.ICallRuleAsync, out _))) return;
 
-			if (NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.ISourceGeneratorIgnore, out _)) return;
 
+			if (NamedSymbolHelper.IsDerivedFrom(namedType, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.ISourceGeneratorIgnore), out _)) return;
 
 			string fileName = Path.GetFileNameWithoutExtension(interfaceDeclaration.SyntaxTree.FilePath);
 			if (!fileClassDict.TryGetValue(fileName, out List<INamedTypeSymbol> set))

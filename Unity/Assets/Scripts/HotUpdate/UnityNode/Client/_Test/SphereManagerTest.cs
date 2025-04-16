@@ -15,7 +15,7 @@ namespace WorldTree
 	/// </summary>
 	public class SphereManagerTest : Node
 		, ComponentOf<InitialDomain>
-		, AsNumberNodeBranch
+		, AsTypeNodeBranch<long>
 		, AsAwake
 	{
 		/// <summary>

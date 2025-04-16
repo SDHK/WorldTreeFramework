@@ -18,11 +18,12 @@ namespace WorldTree.Analyzer
 	{
 		public ProjectBanUnitDiagnosticConfig()
 		{
-			Screen = (Symbol) =>
+			Screen = (Compilation, Symbol) =>
 			{
-				if (Symbol is not ITypeSymbol TypeSymbol) return false;
+				if (Symbol is not INamedTypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				return NamedSymbolHelper.CheckInterface(TypeSymbol, GeneratorHelper.IUnit, out _);
+
+				return NamedSymbolHelper.IsDerivedFrom(TypeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(Compilation, GeneratorHelper.IUnit), out _);
 			};
 
 			SetConfig(DiagnosticKey.ClassNaming, new DiagnosticConfig()

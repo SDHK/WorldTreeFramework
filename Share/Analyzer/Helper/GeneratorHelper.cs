@@ -18,6 +18,8 @@ namespace WorldTree
 		public const string IUnit = "WorldTree.IUnit";
 
 		public const string IBranch = "WorldTree.IBranch";
+		public const string IBranch_1 = "WorldTree.IBranch`1";
+
 
 		public const string IBranchIdKey = "WorldTree.IBranchIdKey";
 
@@ -30,9 +32,9 @@ namespace WorldTree
 
 		public const string IRule = "WorldTree.IRule";
 
-		public const string IDictonary = "System.Collections.Generic.IDictionary";
+		public const string IDictonary = "System.Collections.IDictionary";
 
-		public const string IList = "System.Collections.Generic.IList";
+		public const string IList = "System.Collections.IList";
 
 		/// <summary>
 		/// 数据序列化接口

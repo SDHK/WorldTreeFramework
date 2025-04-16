@@ -19,12 +19,13 @@ namespace WorldTree.Analyzer
 	{
 		public NodeDiagnosticConfig()
 		{
-			Screen = (Symbol) =>
+			Screen = (Compilation, Symbol) =>
 			{
-				if (Symbol is not ITypeSymbol TypeSymbol) return false;
+				if (Symbol is not INamedTypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind == TypeKind.Class)
 				{
-					return TypeSymbol.Name == "INode" ? true : NamedSymbolHelper.CheckInterface(TypeSymbol, GeneratorHelper.INode, out _);
+					return TypeSymbol.Name == "INode" ? true :
+					NamedSymbolHelper.IsDerivedFrom(TypeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(Compilation, GeneratorHelper.INode), out _);
 				}
 				else
 				{

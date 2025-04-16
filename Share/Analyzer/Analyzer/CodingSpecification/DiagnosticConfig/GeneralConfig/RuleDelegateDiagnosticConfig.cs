@@ -20,7 +20,7 @@ namespace WorldTree.Analyzer
 
 		public RuleDelegateDiagnosticConfig()
 		{
-			Screen = (Symbol) =>
+			Screen = (Compilation, Symbol) =>
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Delegate) return false;

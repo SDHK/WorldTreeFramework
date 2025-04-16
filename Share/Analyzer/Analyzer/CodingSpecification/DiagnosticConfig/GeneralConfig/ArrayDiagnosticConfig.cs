@@ -19,7 +19,7 @@ namespace WorldTree.Analyzer
 	{
 		public ArrayDiagnosticConfig()
 		{
-			Screen = (Symbol) =>
+			Screen = (Compilation, Symbol) =>
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				return TypeSymbol.TypeKind == TypeKind.Array;

@@ -36,7 +36,7 @@ namespace WorldTree.Analyzer
 			INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(delegateDeclaration);
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (!objectDiagnostic.Screen(typeSymbol)) continue;
+				if (!objectDiagnostic.Screen(context.Compilation, typeSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.DelegateNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符

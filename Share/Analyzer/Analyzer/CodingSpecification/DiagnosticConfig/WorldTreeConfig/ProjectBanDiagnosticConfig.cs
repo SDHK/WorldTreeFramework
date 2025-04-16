@@ -17,7 +17,7 @@ namespace WorldTree.Analyzer
 	{
 		public ProjectBanDiagnosticConfig()
 		{
-			Screen = (Symbol) => true;
+			Screen = (Compilation, Symbol) => true;
 
 			SetConfig(DiagnosticKey.ClassNaming, new DiagnosticConfig()
 			{

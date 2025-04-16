@@ -29,18 +29,18 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
+			Compilation compilation = context.Compilation;
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
-
 			ClassDeclarationSyntax classDeclaration = (ClassDeclarationSyntax)context.Node;
 
 			foreach (DiagnosticConfigGroup DiagnosticGroup in DiagnosticGroups)
 			{
 				//获取当前类的类型
 				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
-				if (!DiagnosticGroup.Screen(typeSymbol)) continue;
+				if (!DiagnosticGroup.Screen(compilation, typeSymbol)) continue;
 				if (DiagnosticGroup.Diagnostics.TryGetValue(DiagnosticKey.ClassNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符

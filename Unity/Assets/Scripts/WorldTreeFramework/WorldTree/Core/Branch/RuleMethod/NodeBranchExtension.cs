@@ -15,17 +15,5 @@ namespace WorldTree
 	public static partial class NodeBranchExtension
 	{
 
-
-		/// <summary>
-		/// 获取键值
-		/// </summary>
-		public static long GetNumberKey<N>(this N self)
-			where N : class, AsNumberNodeBranch
-		{
-
-			if (!NodeBranchHelper.TryGetKey(self, out NumberNodeBranch branch)) return default;
-			if (!branch.TryGetNodeKey(self.Id, out long key)) return default;
-			return key;
-		}
 	}
 }

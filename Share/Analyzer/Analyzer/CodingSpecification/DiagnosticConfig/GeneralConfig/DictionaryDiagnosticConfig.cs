@@ -19,11 +19,12 @@ namespace WorldTree.Analyzer
 	{
 		public DictionaryDiagnosticConfig()
 		{
-			Screen = (Symbol) =>
+			Screen = (Compilation, Symbol) =>
 			{
-				if (Symbol is not ITypeSymbol TypeSymbol) return false;
+				if (Symbol is not INamedTypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				return NamedSymbolHelper.CheckInterface(TypeSymbol, GeneratorHelper.IDictonary, out _);
+
+				return NamedSymbolHelper.IsDerivedFrom(TypeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(Compilation, GeneratorHelper.IDictonary), out _, TypeCompareOptions.None);
 			};
 
 			SetConfig(DiagnosticKey.ClassFieldNaming, new DiagnosticConfig()

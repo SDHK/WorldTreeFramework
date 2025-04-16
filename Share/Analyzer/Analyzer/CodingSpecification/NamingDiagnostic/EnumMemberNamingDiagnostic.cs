@@ -38,7 +38,7 @@ namespace WorldTree.Analyzer
 			ISymbol? symbol = semanticModel.GetDeclaredSymbol(enumMemberDeclaration);
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (!objectDiagnostic.Screen(symbol)) continue;
+				if (!objectDiagnostic.Screen(context.Compilation, symbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.EnumMemberNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符

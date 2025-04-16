@@ -21,7 +21,7 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 筛选
 		/// </summary>
-		public Func<ISymbol, bool> Screen = null;
+		public Func<Compilation, ISymbol, bool> Screen = null;
 
 		/// <summary>
 		/// 诊断配置集合

@@ -42,7 +42,7 @@ namespace WorldTree.Analyzer
 			ITypeSymbol localVariableSymbol = semanticModel.GetTypeInfo(localVariableDeclaration.Declaration.Type).Type;
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (objectDiagnostic.Screen(localVariableSymbol))
+				if (objectDiagnostic.Screen(context.Compilation, localVariableSymbol))
 				{
 					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassLocalVariableNaming, out DiagnosticConfig DiagnosticConfig))
 					{

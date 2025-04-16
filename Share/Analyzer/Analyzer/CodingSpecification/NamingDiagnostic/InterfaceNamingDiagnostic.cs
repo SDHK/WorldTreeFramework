@@ -37,7 +37,7 @@ namespace WorldTree.Analyzer
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
 				//获取当前接口的类型
-				if (!objectDiagnostic.Screen(typeSymbol)) continue;
+				if (!objectDiagnostic.Screen(context.Compilation, typeSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.InterfaceNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符

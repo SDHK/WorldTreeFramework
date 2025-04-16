@@ -36,7 +36,7 @@ namespace WorldTree.Analyzer
 			{
 				//获取当前参数的类型
 				ISymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parameter);
-				if (!objectDiagnostic.Screen(typeSymbol)) continue;
+				if (!objectDiagnostic.Screen(context.Compilation, typeSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ParameterNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符

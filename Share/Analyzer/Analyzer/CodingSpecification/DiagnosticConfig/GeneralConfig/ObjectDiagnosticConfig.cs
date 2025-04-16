@@ -20,7 +20,7 @@ namespace WorldTree.Analyzer
 	{
 		public ObjectDiagnosticConfig()
 		{
-			Screen = (s) => true;
+			Screen = (Compilation, s) => true;
 
 			SetConfig(DiagnosticKey.ClassNaming, new DiagnosticConfig()
 			{

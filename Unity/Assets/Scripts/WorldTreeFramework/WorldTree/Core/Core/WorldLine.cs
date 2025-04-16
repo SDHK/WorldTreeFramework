@@ -54,6 +54,8 @@ namespace WorldTree
 	//HybridListenerRuleActuator
 	//HybridListenerRuleActuatorGroup
 
+	//泛型Branch
+	//分析器helper方法整理
 
 	/// <summary>
 	/// 世界线接口

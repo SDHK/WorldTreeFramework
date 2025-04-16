@@ -37,7 +37,7 @@ namespace WorldTree.Analyzer
 				BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(methodDeclaration);
 				IMethodSymbol? methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
 				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
-				if (!diagnosticConfigGroup.Screen(typeSymbol)) continue;
+				if (!diagnosticConfigGroup.Screen(context.Compilation, typeSymbol)) continue;
 				if (diagnosticConfigGroup.Diagnostics.TryGetValue(DiagnosticKey.MethodNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符

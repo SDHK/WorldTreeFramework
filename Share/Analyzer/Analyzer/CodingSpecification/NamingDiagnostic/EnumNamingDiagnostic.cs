@@ -42,7 +42,7 @@ namespace WorldTree.Analyzer
 			INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(enumDeclaration);
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (!objectDiagnostic.Screen(typeSymbol)) continue;
+				if (!objectDiagnostic.Screen(context.Compilation, typeSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.EnumNaming, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符

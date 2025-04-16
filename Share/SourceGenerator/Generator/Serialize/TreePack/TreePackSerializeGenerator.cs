@@ -44,7 +44,7 @@ namespace WorldTree.SourceGenerator
 			}
 			foreach (var type in TypeSet)
 			{
-				if (NamedSymbolHelper.IsDerivedFrom(type, baseNamedType, TypeCompareOptions.CompareToGenericTypeDefinition))
+				if (NamedSymbolHelper.IsDerivedFrom(type, baseNamedType, out _, TypeCompareOptions.CompareToGenericTypeDefinition))
 				{
 					SubList.Add(type);
 				}

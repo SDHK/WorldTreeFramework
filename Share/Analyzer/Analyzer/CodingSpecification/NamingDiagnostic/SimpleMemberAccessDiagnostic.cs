@@ -37,7 +37,7 @@ namespace WorldTree.Analyzer
 				foreach (DiagnosticConfigGroup DiagnosticGroup in DiagnosticGroups)
 				{
 					//检测字段来源类型是否符合要求
-					if (!DiagnosticGroup.Screen(filedSymbol.ContainingType)) continue;
+					if (!DiagnosticGroup.Screen(context.Compilation, filedSymbol.ContainingType)) continue;
 
 					// 假设 filedSymbol 是一个 IFieldSymbol 实例
 					bool isProtected = filedSymbol.DeclaredAccessibility == Accessibility.Protected || filedSymbol.GetAttributes().Any(attr => attr.AttributeClass?.Name == "ProtectedAttribute");

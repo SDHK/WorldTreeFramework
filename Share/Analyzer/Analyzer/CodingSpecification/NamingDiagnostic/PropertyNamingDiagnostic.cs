@@ -42,7 +42,7 @@ namespace WorldTree.Analyzer
 			ITypeSymbol propertyTypeSymbol = semanticModel.GetTypeInfo(propertyDeclaration.Type).Type;
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (objectDiagnostic.Screen(propertyTypeSymbol))
+				if (objectDiagnostic.Screen(context.Compilation, propertyTypeSymbol))
 				{
 					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.ClassPropertyNaming, out DiagnosticConfig diagnosticConfig))
 					{
@@ -71,7 +71,7 @@ namespace WorldTree.Analyzer
 			ITypeSymbol propertyTypeSymbol = semanticModel.GetTypeInfo(propertyDeclaration.Type).Type;
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (!objectDiagnostic.Screen(propertyParentSymbol)) continue;
+				if (!objectDiagnostic.Screen(context.Compilation, propertyParentSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(diagnosticKey, out DiagnosticConfig codeDiagnostic))
 				{
 					// 需要的修饰符

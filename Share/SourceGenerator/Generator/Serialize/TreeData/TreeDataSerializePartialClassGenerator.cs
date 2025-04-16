@@ -48,8 +48,8 @@ namespace WorldTree.SourceGenerator
 
 
 			Code.AppendLine("	{");
-			GeneratorSerialize(Code, classSymbol, fieldSymbols, isAbstract, baseName, membersCount, isClass);
-			GeneratorDeserialize(Code, classSymbol, fieldSymbols, isAbstract, baseName, membersCount);
+			GeneratorSerialize(Code, context.Compilation, classSymbol, fieldSymbols, isAbstract, baseName, membersCount, isClass);
+			GeneratorDeserialize(Code, context.Compilation, classSymbol, fieldSymbols, isAbstract, baseName, membersCount);
 			Code.AppendLine("	}");
 		}
 
@@ -89,7 +89,7 @@ namespace WorldTree.SourceGenerator
 			return "int"; // 默认返回 int 类型
 		}
 
-		private static void GeneratorSerialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount, bool isClass)
+		private static void GeneratorSerialize(StringBuilder Code, Compilation compilation, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount, bool isClass)
 		{
 
 			bool isConstant = GetIsConstantFromAttributes(classSymbol);
@@ -102,7 +102,7 @@ namespace WorldTree.SourceGenerator
 
 			Code.AppendLine($"				if (self.TryWriteDataHead(value, typeMode, {membersCount}, out {className} obj, {(isConstant ? "true" : "false")} ,{(isClass ? "true" : "false")})) return;");
 
-			if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.ISerializable, out _))
+			if (NamedSymbolHelper.IsDerivedFrom(classSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.ISerializable), out _))
 				Code.AppendLine($"				obj?.OnSerialize();");
 
 			if (fieldSymbols != null)
@@ -137,7 +137,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("		}");
 		}
 
-		private static void GeneratorDeserialize(StringBuilder Code, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount)
+		private static void GeneratorDeserialize(StringBuilder Code, Compilation compilation, INamedTypeSymbol classSymbol, List<ISymbol>? fieldSymbols, bool isAbstract, string baseName, int membersCount)
 		{
 			string className = classSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
@@ -165,14 +165,14 @@ namespace WorldTree.SourceGenerator
 			{
 				if (classSymbol.TypeKind == TypeKind.Class)//类型新建
 				{
-					if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.INode, out _))
+					if (NamedSymbolHelper.IsDerivedFrom(classSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.INode), out _))
 					{
 						Code.AppendLine(@$"				if (value is not {className} obj)");
 						Code.AppendLine("				{");
 						Code.AppendLine($"					value = obj = self.Core.PoolGetNode<{className}>(true);");
 						Code.AppendLine("				}");
 					}
-					else if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.IUnit, out _))
+					else if (NamedSymbolHelper.IsDerivedFrom(classSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IUnit), out _))
 					{
 						Code.AppendLine($"				if (value is not {className} obj)value = obj = self.Core.PoolGetUnit<{className}>();");
 					}
@@ -205,7 +205,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);");
 			if (!isAbstract)
 			{
-				if (NamedSymbolHelper.CheckInterface(classSymbol, GeneratorHelper.ISerializable, out _))
+				if (NamedSymbolHelper.IsDerivedFrom(classSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.ISerializable), out _))
 					Code.AppendLine($"				obj.OnDeserialize();");
 			}
 

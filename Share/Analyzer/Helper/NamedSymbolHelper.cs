@@ -43,6 +43,18 @@ namespace WorldTree
 	/// </summary>
 	internal static class NamedSymbolHelper
 	{
+
+
+		/// <summary>
+		/// 类型名称转换为命名类型符号
+		/// </summary>
+		/// <param name="compilation">编译类</param>
+		/// <param name="typeFullName">带命名空间全名</param>
+		public static INamedTypeSymbol ToINamedTypeSymbol(this Compilation compilation, string typeFullName)
+		{
+			return compilation.GetTypeByMetadataName(typeFullName);
+		}
+
 		/// <summary>
 		/// 获取继承了指定基类或接口的所有子类
 		/// </summary>
@@ -51,7 +63,7 @@ namespace WorldTree
 		/// <returns>继承了指定基类或接口的所有子类</returns>
 		public static IEnumerable<INamedTypeSymbol> GetDerivedTypes(this Compilation compilation, string baseTypeName)
 		{
-			INamedTypeSymbol? baseTypeSymbol = compilation.GetTypeByMetadataName(baseTypeName);
+			INamedTypeSymbol baseTypeSymbol = compilation.GetTypeByMetadataName(baseTypeName);
 			return compilation.GetDerivedTypes(baseTypeSymbol);
 		}
 
@@ -84,7 +96,7 @@ namespace WorldTree
 				name => true, // 获取所有命名类型符号
 				SymbolFilter.Type
 			).OfType<INamedTypeSymbol>()
-			 .Where(type => IsDerivedFrom(type, baseTypeSymbol));
+			 .Where(type => IsDerivedFrom(type, baseTypeSymbol, out _));
 		}
 
 
@@ -112,7 +124,7 @@ namespace WorldTree
 				foreach (var typeDeclaration in typeDeclarations)
 				{
 					var typeSymbol = model.GetDeclaredSymbol(typeDeclaration) as INamedTypeSymbol;
-					if (typeSymbol != null && IsDerivedFrom(typeSymbol, baseTypeSymbol))
+					if (typeSymbol != null && IsDerivedFrom(typeSymbol, baseTypeSymbol, out _))
 					{
 						derivedTypes.Add(typeDeclaration);
 					}
@@ -180,14 +192,26 @@ namespace WorldTree
 		/// <summary>
 		/// 检查类型是否派生自指定基类或接口
 		/// </summary>
-		public static bool IsDerivedFrom(INamedTypeSymbol type, INamedTypeSymbol baseType, TypeCompareOptions options = TypeCompareOptions.None)
+		public static bool IsDerivedFrom(INamedTypeSymbol type, INamedTypeSymbol baseType, out INamedTypeSymbol typeBaseType, TypeCompareOptions options = TypeCompareOptions.None)
 		{
+			typeBaseType = null;
 			// 排除基类本身
 			if (IsTypeSymbolEqual(type, baseType, options)) return false;
 
 			// 接口判断
 			if (baseType.TypeKind == TypeKind.Interface)
-				return type.AllInterfaces.Any(i => IsTypeSymbolEqual(i, baseType, options));
+			{
+				foreach (var i in type.AllInterfaces)
+				{
+					if (IsTypeSymbolEqual(i, baseType, options))
+					{
+						typeBaseType = i;
+						return true;
+					}
+				}
+				return false;
+
+			}
 
 			// 遍历基类
 			var currentType = type;
@@ -195,6 +219,7 @@ namespace WorldTree
 			{
 				if (IsTypeSymbolEqual(currentType, baseType, options))
 				{
+					typeBaseType = currentType;
 					return true;
 				}
 				currentType = currentType.BaseType;
@@ -228,36 +253,13 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 获取字段类型
-		/// </summary>
-		public static ITypeSymbol? ToITypeSymbol(this Compilation compilation, FieldDeclarationSyntax fieldDeclaration)
-		{
-			return compilation.GetSemanticModel(fieldDeclaration.SyntaxTree).GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
-		}
-
-
-
-		/// <summary>
 		/// 将类声明语法转换为命名类型符号
 		/// </summary>
 		/// <param name="typeDecl">类声明语法</param>
 		/// <param name="compilation">编译类</param>
-		public static INamedTypeSymbol? ToINamedTypeSymbol(this Compilation compilation, TypeDeclarationSyntax typeDecl)
+		public static INamedTypeSymbol ToINamedTypeSymbol(this Compilation compilation, TypeDeclarationSyntax typeDecl)
 		{
 			return compilation.GetSemanticModel(typeDecl.SyntaxTree).GetDeclaredSymbol(typeDecl) as INamedTypeSymbol;
-		}
-
-		/// <summary>
-		/// 判断字段是否为未托管类型
-		/// </summary>
-		public static bool IsFieldUnmanaged(ITypeSymbol typeInfo)
-		{
-			// 检查类型是否是未托管类型
-			if (typeInfo is ITypeParameterSymbol typeParameterSymbol)
-			{
-				return typeParameterSymbol.ConstraintTypes.Any(constraint => constraint.SpecialType == SpecialType.System_ValueType);
-			}
-			return false;
 		}
 
 		/// <summary>
@@ -269,17 +271,6 @@ namespace WorldTree
 		}
 
 
-
-		/// <summary>
-		/// 类型名称转换为命名类型符号
-		/// </summary>
-		/// <param name="compilation">编译类</param>
-		/// <param name="typeFullName">带命名空间全名</param>
-		public static INamedTypeSymbol? ToINamedTypeSymbol(this Compilation compilation, string typeFullName)
-		{
-			return compilation.GetTypeByMetadataName(typeFullName);
-		}
-
 		/// <summary>
 		/// 检查类是否继承了指定接口
 		/// </summary>
@@ -290,43 +281,6 @@ namespace WorldTree
 			return namedTypeSymbol.AllInterfaces.Contains(interfaceSymbol);
 		}
 
-		/// <summary>
-		/// 检查类 声明时自身写的，是否含有指定接口
-		/// </summary>
-		/// <param name="namedTypeSymbol">命名符号</param>
-		/// <param name="interfaceSymbol">接口</param>
-		public static bool CheckSelfInterface(this INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol interfaceSymbol)
-		{
-			return namedTypeSymbol.Interfaces.Contains(interfaceSymbol);
-		}
-
-		/// <summary>
-		/// 迭代检查类及其基类(包括抽象类)是否继承了指定接口,如果是泛型，名称需一一对应
-		/// </summary>
-		/// <param name="typeSymbol">类声明语法</param>
-		/// <param name="interfaceSymbol">接口名称(包括命名空间)</param>
-		/// <param name="CheckSelf">是否检查类型自身</param>
-		public static bool CheckBaseExtendInterface(this INamedTypeSymbol typeSymbol, INamedTypeSymbol interfaceSymbol, bool CheckSelf = true)
-		{
-			// 使用队列存储需要检查的类型符号
-			Queue<INamedTypeSymbol> typeSymbolQueue = new Queue<INamedTypeSymbol>();
-			typeSymbolQueue.Enqueue(typeSymbol);
-
-			while (typeSymbolQueue.Count != 0)
-			{
-				INamedTypeSymbol currentTypeSymbol = typeSymbolQueue.Dequeue();
-				if (!CheckSelf && (currentTypeSymbol == typeSymbol)) continue;
-
-				// 检查当前类型符号是否实现了接口
-				if (currentTypeSymbol.AllInterfaces.Contains(interfaceSymbol)) return true;
-
-				// 将基类符号加入队列
-				INamedTypeSymbol? baseTypeSymbol = currentTypeSymbol.BaseType;
-				if (baseTypeSymbol != null) typeSymbolQueue.Enqueue(baseTypeSymbol);
-			}
-
-			return false;
-		}
 
 		/// <summary>
 		/// 检测是否接口实现 的 属性或方法节点
@@ -362,32 +316,6 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 检测是否继承接口（只对比接口带命名空间名称，不包括泛型）
-		/// </summary>
-		/// <param name="typeSymbol">子接口</param>
-		/// <param name="InterfaceName">接口名称</param>
-		/// <param name="Interface">基类接口符号</param>
-		/// <returns></returns>
-		public static bool CheckInterface(ITypeSymbol typeSymbol, string InterfaceName, out INamedTypeSymbol? Interface)
-		{
-			Interface = null;
-			foreach (var Interfaces in typeSymbol.AllInterfaces)
-			{
-				//剔除掉泛型参数
-				string name = Interfaces.ToDisplayString();
-				int index = name.IndexOf('<');
-				if (index != -1) name = name.Remove(index);
-				if (name != InterfaceName)
-				{
-					continue;
-				}
-				Interface = Interfaces;
-				return true;
-			}
-			return false;
-		}
-
-		/// <summary>
 		/// 检测是否继承接口（只对比接口名称，不包括泛型和命名空间）
 		/// </summary>
 		/// <param name="typeSymbol">子接口</param>
@@ -408,25 +336,6 @@ namespace WorldTree
 			}
 			return false;
 		}
-
-
-		///// <summary>
-		///// 检测是否继承类型
-		///// </summary>
-		//public static bool CheckBase(ITypeSymbol typeSymbol, ITypeSymbol baseSymbol)
-		//{
-		//	var currentBaseType = typeSymbol.BaseType;
-		//	while (currentBaseType != null)
-		//	{
-		//		if (SymbolEqualityComparer.Default.Equals(currentBaseType, baseSymbol) ||
-		//			SymbolEqualityComparer.Default.Equals(currentBaseType.OriginalDefinition, baseSymbol.OriginalDefinition))
-		//		{
-		//			return true;
-		//		}
-		//		currentBaseType = currentBaseType.BaseType;
-		//	}
-		//	return false;
-		//}
 
 		/// <summary>
 		/// 检测是否继承类型，支持泛型检测
@@ -666,7 +575,7 @@ namespace WorldTree
 			var syntaxReference = declaringSyntaxReferences.First();
 
 			// 获取语法树
-			SyntaxTree? syntaxTree = syntaxReference.SyntaxTree;
+			SyntaxTree syntaxTree = syntaxReference.SyntaxTree;
 
 			// 检查语法树是否为 null
 			if (syntaxTree == null)
@@ -675,7 +584,7 @@ namespace WorldTree
 			}
 
 			// 获取类型声明的语法节点
-			SyntaxNode? typeNode = syntaxReference.GetSyntax();
+			SyntaxNode typeNode = syntaxReference.GetSyntax();
 
 			// 检查语法节点是否为 null
 			if (typeNode == null)

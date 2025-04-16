@@ -1168,7 +1168,7 @@ namespace WorldTree
 				}
 
 				//写入字段数量
-				NumberNodeBranch branch = treeData.NumberNodeBranch();
+				var branch = treeData.TypeNodeBranch<long, TreeData>();
 				this.WriteDynamic(branch.Count);
 				foreach (var item in branch.GetEnumerable())
 				{
@@ -1286,9 +1286,9 @@ namespace WorldTree
 							IdToObjectDict[objId] = data;
 						}
 
-						Array array = (obj as Array);
+						Array arrayList = (obj as Array);
 						int i = 0;
-						foreach (var item in array)
+						foreach (var item in arrayList)
 						{
 							data.AddListNode(i++, out TreeDataValue treeValue);
 							treeValue.TypeName = type.GetElementType().ToString();
@@ -1325,7 +1325,7 @@ namespace WorldTree
 			if (node is TreeData treeData)
 			{
 				if (isArray) treeData.AddListNode(number, out treeValue);
-				else treeData.AddNumberNode(number, out treeValue);
+				else treeData.AddTypeNode((long)number, out treeValue);
 			}
 			else
 			{

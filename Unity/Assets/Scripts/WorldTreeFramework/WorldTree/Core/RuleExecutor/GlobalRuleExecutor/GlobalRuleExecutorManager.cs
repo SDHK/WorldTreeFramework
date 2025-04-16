@@ -41,12 +41,12 @@ namespace WorldTree
 		/// </summary>
 		public static RuleGroupExecutorBase GetGlobalRuleExecutor(this WorldLine self, long genericTypeCpde)
 		{
-			INode node = NodeBranchHelper.GetBranch<TypeNodeBranch>(self.GlobalRuleExecutorManager)?.GetNode(genericTypeCpde);
+			INode node = NodeBranchHelper.GetBranch<TypeNodeBranch<long>>(self.GlobalRuleExecutorManager)?.GetNode(genericTypeCpde);
 			if (node != null) return node as RuleGroupExecutorBase;
 
 			if (!self.TryCodeToType(genericTypeCpde, out Type genericType)) return null;
 			Type type = typeof(GlobalRuleExecutor<>).MakeGenericType(genericType);
-			NodeBranchHelper.AddNode(self.GlobalRuleExecutorManager, default(TypeNodeBranch), genericTypeCpde, self.TypeToCode(type), out node);
+			NodeBranchHelper.AddNode(self.GlobalRuleExecutorManager, default(TypeNodeBranch<long>), genericTypeCpde, self.TypeToCode(type), out node);
 			RuleGroupExecutorBase executor = node as RuleGroupExecutorBase;
 			return executor;
 		}
@@ -68,7 +68,7 @@ namespace WorldTree
 	/// 全局法则执行器管理器
 	/// </summary>
 	public class GlobalRuleExecutorManager : Node, CoreManagerOf<WorldLine>
-		, AsTypeNodeBranch
+		, AsTypeNodeBranch<long>
 		, AsAwake
 	{ }
 }

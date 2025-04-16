@@ -30,6 +30,7 @@ namespace WorldTree.SourceGenerator
 
 		public void Execute(GeneratorExecutionContext context)
 		{
+
 			if (!(context.SyntaxReceiver is FindSubClassSyntaxReceiver receiver)) return;
 
 			if (receiver.ClassDeclarations.Count == 0) return;
@@ -75,14 +76,21 @@ namespace WorldTree.SourceGenerator
 
 		public static void Add(ClassDeclarationSyntax classDeclarationSyntax, Compilation compilation)
 		{
-			INamedTypeSymbol? namedType = compilation.ToINamedTypeSymbol(classDeclarationSyntax);
+			INamedTypeSymbol namedType = compilation.ToINamedTypeSymbol(classDeclarationSyntax);
 			if (namedType == null) return;
-			if (namedType.Name == "Branch") return;
+			//抽象类型忽略
+			if (namedType.IsAbstract) return;
+			//泛型忽略
+			//if (namedType.IsGenericType) return;
 
 			//检测是否继承分支基类
-			if (!NamedSymbolHelper.CheckInterface(namedType, GeneratorHelper.IBranch, out _)) return;
-			if (namedType.IsGenericType) return;
 
+			INamedTypeSymbol IBranchTypeSymbol = NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranch);
+			if (!NamedSymbolHelper.IsDerivedFrom(namedType, IBranchTypeSymbol, out _, TypeCompareOptions.CompareToGenericTypeDefinition)) return;
+
+
+
+			//获取文件名
 			string fileName = Path.GetFileNameWithoutExtension(classDeclarationSyntax.SyntaxTree.FilePath);
 			if (!fileClassDict.TryGetValue(fileName, out List<INamedTypeSymbol> set))
 			{
@@ -95,14 +103,13 @@ namespace WorldTree.SourceGenerator
 			if (set.Any(a => a.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) == className)) return;
 			set.Add(namedType);
 			classSyntax.Add(className, classDeclarationSyntax);
-
-
 		}
 
 		public static void Execute(GeneratorExecutionContext context)
 		{
-			var ISourceGeneratorIgnore = context.Compilation.ToINamedTypeSymbol("WorldTree.ISourceGeneratorIgnore");
-			var IMethodRule = context.Compilation.ToINamedTypeSymbol("WorldTree.IMethodRule");
+			Compilation compilation = context.Compilation;
+			var ISourceGeneratorIgnore = compilation.ToINamedTypeSymbol(GeneratorHelper.ISourceGeneratorIgnore);
+			var IMethodRule = compilation.ToINamedTypeSymbol(GeneratorHelper.IMethodRule);
 
 			if (ISourceGeneratorIgnore == null) return;
 			if (IMethodRule == null) return;
@@ -117,24 +124,26 @@ namespace WorldTree.SourceGenerator
 
 					if (NamedSymbolHelper.CheckAllInterface(fileClass, ISourceGeneratorIgnore)) continue;
 
-					//bool isMethodRule = NamedSymbolHelper.CheckAllInterface(fileClass, IMethodRule);
+					INamedTypeSymbol IBranchTypeSymbol = NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranch_1);
+					if (!NamedSymbolHelper.IsDerivedFrom(fileClass, IBranchTypeSymbol, out INamedTypeSymbol baseTypeSymbol, TypeCompareOptions.CompareToGenericTypeDefinition)) continue;
+					//找到分支基类INamedTypeSymbol
 
-					if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.IBranch, out var baseInterface))
+					BranchClass(ClassCode, compilation, fileClass, baseTypeSymbol);
+					if (NamedSymbolHelper.IsDerivedFrom(fileClass, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranchIdKey), out _, TypeCompareOptions.None))
 					{
-						BranchClass(ClassCode, fileClass, baseInterface);
-
-						if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.IBranchIdKey, out _))
-						{
-							GetMethodIdKey(MethodCode, fileClass, baseInterface);
-						}
-						else if (NamedSymbolHelper.CheckInterface(fileClass, GeneratorHelper.IBranchTypeKey, out _))
-						{
-							GetMethodTypeKey(MethodCode, fileClass, baseInterface);
-						}
-						else
-						{
-							GetMethod(MethodCode, fileClass, baseInterface);
-						}
+						GetMethodIdKey(MethodCode, compilation, fileClass, baseTypeSymbol);
+					}
+					else if (NamedSymbolHelper.IsDerivedFrom(fileClass, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranchTypeKey), out _, TypeCompareOptions.None))
+					{
+						GetMethodTypeKey(MethodCode, compilation, fileClass, baseTypeSymbol);
+					}
+					else if (fileClass.IsGenericType)
+					{
+						GetMethodGenericTypeKey(MethodCode, compilation, fileClass, baseTypeSymbol);
+					}
+					else
+					{
+						GetMethod(MethodCode, compilation, fileClass, baseTypeSymbol);
 					}
 				}
 
@@ -164,7 +173,7 @@ namespace WorldTree.SourceGenerator
 			}
 		}
 
-		private static void BranchClass(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseClass)
+		private static void BranchClass(StringBuilder Code, Compilation compilation, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseClass)
 		{
 			if (baseClass == null) return;
 
@@ -182,18 +191,28 @@ namespace WorldTree.SourceGenerator
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 
 			//As约束接口
-			if (!NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.IBranchUnConstraint, out _))
+			if (!NamedSymbolHelper.IsDerivedFrom(typeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranchUnConstraint), out _, TypeCompareOptions.None))
 			{
 				AddComment(Code, "分支约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 				Code.AppendLine(@$"	public interface As{ClassFullName} : AsBranch<{ClassFullName}>, INode {{}}");
 			}
 
 			AddComment(Code, "父节点约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"	public interface {ClassNameUnBranch}Of<in P> : NodeOf<P,{ClassFullName}>, INode where P : class, INode {{}}");
+			if (typeSymbol.IsGenericType)
+			{
+				ClassNameUnBranch = ClassNameUnBranch.Split('<')[0];
+				string genericType = baseClass.IsGenericType ? baseClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
+				Code.AppendLine(@$"	public interface {ClassNameUnBranch}Of<{genericType}, in P> : NodeOf<P,{ClassFullName}>, INode where P : class, INode {{}}");
+			}
+			else
+			{
+				Code.AppendLine(@$"	public interface {ClassNameUnBranch}Of<in P> : NodeOf<P,{ClassFullName}>, INode where P : class, INode {{}}");
+			}
+
 
 		}
 
-		public static void GetMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
+		public static void GetMethodGenericTypeKey(StringBuilder Code, Compilation compilation, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
 		{
 			if (baseInterface == null) return;
 			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
@@ -202,7 +221,27 @@ namespace WorldTree.SourceGenerator
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.IBranchUnConstraint, out _);
+			bool isUnConstraint = NamedSymbolHelper.IsDerivedFrom(typeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranchUnConstraint), out _, TypeCompareOptions.None);
+
+			BranchTypeNodeGetBranch(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchTypeTryGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchTypeCutNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchTypeGraftNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchRemoveNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+			BranchRemoveAllNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
+			BranchTypeAddNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
+		}
+
+		public static void GetMethod(StringBuilder Code, Compilation compilation, INamedTypeSymbol typeSymbol, INamedTypeSymbol baseInterface)
+		{
+			if (baseInterface == null) return;
+			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
+			string ClassFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseFullName = baseInterface.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t\t");
+			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
+
+			bool isUnConstraint = NamedSymbolHelper.IsDerivedFrom(typeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranchUnConstraint), out _, TypeCompareOptions.None);
 
 			NodeGetBranch(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
 			BranchTryGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
@@ -214,7 +253,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 
-		public static void GetMethodIdKey(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
+		public static void GetMethodIdKey(StringBuilder Code, Compilation compilation, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
 		{
 			if (baseInterface == null) return;
 			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
@@ -225,7 +264,7 @@ namespace WorldTree.SourceGenerator
 			//拿到键值泛型类型
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.IBranchUnConstraint, out _);
+			bool isUnConstraint = NamedSymbolHelper.IsDerivedFrom(typeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranchUnConstraint), out _, TypeCompareOptions.None);
 
 			NodeGetBranch(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
 			BranchIdKeyTryGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, genericType, isUnConstraint);
@@ -237,7 +276,7 @@ namespace WorldTree.SourceGenerator
 		}
 
 
-		public static void GetMethodTypeKey(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
+		public static void GetMethodTypeKey(StringBuilder Code, Compilation compilation, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)
 		{
 			if (baseInterface == null) return;
 			string ClassFullNameAndNameSpace = typeSymbol.ToDisplayString();
@@ -248,7 +287,7 @@ namespace WorldTree.SourceGenerator
 			//拿到键值泛型类型
 			string genericType = baseInterface.IsGenericType ? baseInterface.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) : "";
 
-			bool isUnConstraint = NamedSymbolHelper.CheckInterface(typeSymbol, GeneratorHelper.IBranchUnConstraint, out _);
+			bool isUnConstraint = NamedSymbolHelper.IsDerivedFrom(typeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranchUnConstraint), out _, TypeCompareOptions.None);
 
 			NodeGetBranch(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
 			BranchTypeKeyTryGetNode(Code, ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara, isUnConstraint);
@@ -291,6 +330,69 @@ namespace WorldTree.SourceGenerator
 			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
 		=> NodeBranchHelper.GetBranch<{ClassFullName}>(self);");
 		}
+
+		#region 泛型分支
+
+		private static void BranchTypeNodeGetBranch(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnGeneric = ClassFullName.Split('<')[0];
+
+			AddComment(stringBuilder, "尝试获取分支", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static {ClassFullName} {ClassNameUnGeneric}<{genericType}, N>(this N self)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+		=> NodeBranchHelper.GetBranch<{ClassFullName}>(self);");
+		}
+
+		private static void BranchTypeTryGetNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Split('<')[0].Replace("Branch", "");
+			AddComment(stringBuilder, "尝试获取节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryGet{ClassNameUnBranch}<{genericType}, N, T>(this N self, {genericType} key, out T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, NodeOf<N,{ClassFullName}>
+		=> (node = NodeBranchHelper.GetBranch<{ClassFullName}>(self)?.GetNode(key) as T) != null;");
+		}
+
+		private static void BranchTypeCutNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Split('<')[0].Replace("Branch", "");
+			AddComment(stringBuilder, "尝试裁剪节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryCut{ClassNameUnBranch}<{genericType}, N, T>(this N self, {genericType} key, out T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, NodeOf<N,{ClassFullName}>
+		=> (node = NodeBranchHelper.GetBranch<{ClassFullName}>(self)?.GetNode(key)?.CutSelf() as T) != null;");
+		}
+		private static void BranchTypeGraftNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Split('<')[0].Replace("Branch", "");
+			AddComment(stringBuilder, "尝试嫁接节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			stringBuilder.AppendLine(@$"		public static bool TryGraft{ClassNameUnBranch}<{genericType}, N, T>(this N self, {genericType} key, T node)
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, NodeOf<N,{ClassFullName}>
+		=> node.TryGraftSelfToTree<{ClassFullName},{genericType}>(key, self);");
+		}
+
+		private static void BranchTypeAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
+		{
+			string ClassNameUnBranch = ClassFullName.Split('<')[0].Replace("Branch", "");
+
+			int argumentCount = GeneratorSetting.argumentCount;
+			for (int i = 0; i <= argumentCount; i++)
+			{
+				string genericsType = GeneratorTemplate.GenericsTypes[i];
+				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
+				string genericParameter = GeneratorTemplate.GenericsParameter[i];
+				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
+
+				AddComment(stringBuilder, "添加节点", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+				stringBuilder.AppendLine(@$"		public static T Add{ClassNameUnBranch}<{genericType}, N, T{genericsType}>(this N self, {genericType} key, out T node{genericTypeParameter})
+			where N : class, {(isUnConstraint ? "INode" : $"As{ClassFullName}")}
+			where T : class, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsTypeAngle}>
+		=> NodeBranchHelper.AddNode(self, default({ClassFullName}), key, out node{genericParameter});");
+			}
+		}
+
+		#endregion
 
 		#region 普通分支
 
