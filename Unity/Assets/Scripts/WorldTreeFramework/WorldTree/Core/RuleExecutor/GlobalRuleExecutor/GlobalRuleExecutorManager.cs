@@ -22,7 +22,7 @@ namespace WorldTree
 		public static GlobalRuleExecutor<R> GetGlobalRuleExecutor<R>(this WorldLine self, out GlobalRuleExecutor<R> globalRuleExecutor)
 		where R : IGlobalRule
 		{
-			return self.GlobalRuleExecutorManager.AddTypeNode(self.TypeToCode<R>(), out globalRuleExecutor);
+			return self.GlobalRuleExecutorManager.AddGeneric(self.TypeToCode<R>(), out globalRuleExecutor);
 		}
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace WorldTree
 		public static IRuleExecutor<R> GetGlobalRuleExecutor<R>(this WorldLine self, out IRuleExecutor<R> ruleExecutor)
 		where R : IGlobalRule
 		{
-			self.GlobalRuleExecutorManager.AddTypeNode(self.TypeToCode<R>(), out GlobalRuleExecutor<R> globalRuleExecutor);
+			self.GlobalRuleExecutorManager.AddGeneric(self.TypeToCode<R>(), out GlobalRuleExecutor<R> globalRuleExecutor);
 			ruleExecutor = globalRuleExecutor as IRuleExecutor<R>;
 			return ruleExecutor;
 		}
@@ -41,12 +41,12 @@ namespace WorldTree
 		/// </summary>
 		public static RuleGroupExecutorBase GetGlobalRuleExecutor(this WorldLine self, long genericTypeCpde)
 		{
-			INode node = NodeBranchHelper.GetBranch<TypeNodeBranch<long>>(self.GlobalRuleExecutorManager)?.GetNode(genericTypeCpde);
+			INode node = NodeBranchHelper.GetBranch<GenericBranch<long>>(self.GlobalRuleExecutorManager)?.GetNode(genericTypeCpde);
 			if (node != null) return node as RuleGroupExecutorBase;
 
 			if (!self.TryCodeToType(genericTypeCpde, out Type genericType)) return null;
 			Type type = typeof(GlobalRuleExecutor<>).MakeGenericType(genericType);
-			NodeBranchHelper.AddNode(self.GlobalRuleExecutorManager, default(TypeNodeBranch<long>), genericTypeCpde, self.TypeToCode(type), out node);
+			NodeBranchHelper.AddNode(self.GlobalRuleExecutorManager, default(GenericBranch<long>), genericTypeCpde, self.TypeToCode(type), out node);
 			RuleGroupExecutorBase executor = node as RuleGroupExecutorBase;
 			return executor;
 		}
@@ -68,7 +68,7 @@ namespace WorldTree
 	/// 全局法则执行器管理器
 	/// </summary>
 	public class GlobalRuleExecutorManager : Node, CoreManagerOf<WorldLine>
-		, AsTypeNodeBranch<long>
+		, AsGenericBranch<long>
 		, AsAwake
 	{ }
 }

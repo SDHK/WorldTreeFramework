@@ -7,7 +7,6 @@
 
 */
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace WorldTree
@@ -109,19 +108,31 @@ namespace WorldTree
 
 
 
-	//泛型分支
 
 	/// <summary>
 	/// 测试数据
 	/// </summary>
 	public class StartWorldConfigGroup : ConfigGroup<StartWorldConfig>
-		, AsTypeNodeBranch<string>
+		, AsGenericBranch<int>  //键值：泛型
+
+	{
+	}
+
+
+
+	/// <summary>
+	/// 测试数据
+	/// </summary>
+	public class StartWorldConfig : Config<int>
+		, GenericOf<int, StartWorldConfigGroup>
+
 	{
 		/// <summary>
-		/// 数据
+		/// 测试整数
 		/// </summary>
-		public List<StartWorldConfig> ConfigList = new();
+		public int TestInt = 1;
 	}
+
 
 	public static class StartWorldConfigGroupRule
 	{
@@ -129,29 +140,8 @@ namespace WorldTree
 		{
 			protected override void Execute(StartWorldConfigGroup self)
 			{
-				self.AddTypeNode("", out StartWorldConfig cs, 1L);
-
-				self.AddTypeNode(1L, out StartWorldConfig c, 1L);
-				self.TryGetTypeNode(1L, out StartWorldConfig c1);
+				self.AddGeneric(1, out StartWorldConfig _);
 			}
 		}
-	}
-
-	/// <summary>
-	/// 测试数据
-	/// </summary>
-	public class StartWorldConfig : Config<long>
-		, TypeNodeOf<string, StartWorldConfigGroup>
-		, TypeNodeOf<int, StartWorldConfigGroup>
-	{
-		/// <summary>
-		/// 测试整数
-		/// </summary>
-		public int TestInt = 1;
-
-		/// <summary>
-		/// 数据
-		/// </summary>
-		public List<string> stringList = new();
 	}
 }

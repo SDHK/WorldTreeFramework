@@ -24,7 +24,7 @@ namespace WorldTree
 			{
 				if (self != null) return;
 				self.World.AddComponent(out InputMapperManager manager);
-				manager.TryGetTypeNode(0L, out InputMapperGroup group);
+				manager.TryGetGeneric(0L, out InputMapperGroup group);
 				group.AddChild(out InputMapper mapper);
 				mapper.ConfigInfoList = new() {
 						new InputInfo() {
@@ -61,7 +61,7 @@ namespace WorldTree
 				self.World.AddComponent(out LiteDBTestProxy liteDB);
 				var node = liteDB.Find<InputMapperManager>(1827001676595200);
 				node.CutSelf()?.TryGraftSelfToTree<ComponentBranch, long>(self.Type, self.World);
-				if (node.TryGetTypeNode(0L, out InputMapperGroup group))
+				if (node.TryGetGeneric(0L, out InputMapperGroup group))
 				{
 					if (group.TryGetChild(1826293313175552, out InputMapper mapper))
 					{

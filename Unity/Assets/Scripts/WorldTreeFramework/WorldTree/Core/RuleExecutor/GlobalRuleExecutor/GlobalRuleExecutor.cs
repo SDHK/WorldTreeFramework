@@ -16,7 +16,7 @@ namespace WorldTree
 	/// 全局法则执行器
 	/// </summary>
 	public partial class GlobalRuleExecutor<R> : RuleGroupExecutorBase, INodeListener, IRuleExecutor<IRule>
-		, TypeNodeOf<long, GlobalRuleExecutorManager>
+		, GenericOf<long, GlobalRuleExecutorManager>
 		, AsAwake
 		where R : IGlobalRule
 	{

@@ -1168,7 +1168,7 @@ namespace WorldTree
 				}
 
 				//写入字段数量
-				var branch = treeData.TypeNodeBranch<long, TreeData>();
+				var branch = treeData.GenericBranch<long, TreeData>();
 				this.WriteDynamic(branch.Count);
 				foreach (var item in branch.GetEnumerable())
 				{
@@ -1325,7 +1325,7 @@ namespace WorldTree
 			if (node is TreeData treeData)
 			{
 				if (isArray) treeData.AddListNode(number, out treeValue);
-				else treeData.AddTypeNode((long)number, out treeValue);
+				else treeData.AddGeneric((long)number, out treeValue);
 			}
 			else
 			{

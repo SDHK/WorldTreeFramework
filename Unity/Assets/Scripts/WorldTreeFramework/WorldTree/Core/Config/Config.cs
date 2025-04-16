@@ -4,7 +4,6 @@
 	/// 配置
 	/// </summary>
 	public abstract class Config : Node
-		, TypeNodeOf<int, ConfigGroup>
 	{
 
 	}
@@ -13,8 +12,8 @@
 	/// 配置
 	/// </summary>
 	public abstract class Config<K> : Config
-		, AsAwake<K>
-		, TypeNodeOf<long, ConfigGroup>
+		, AsAwake
+		, GenericOf<K, ConfigGroup>
 	{
 		/// <summary>
 		/// 配置ID
@@ -24,11 +23,11 @@
 
 	public static class ConfigRule
 	{
-		class Awake<K> : AwakeRule<Config<K>, K>
+		class Awake<K> : AwakeRule<Config<K>>
 		{
-			protected override void Execute(Config<K> self, K key)
+			protected override void Execute(Config<K> self)
 			{
-				self.ConfigId = key;
+				self.ConfigId = self.GetKey<K>();
 			}
 		}
 	}

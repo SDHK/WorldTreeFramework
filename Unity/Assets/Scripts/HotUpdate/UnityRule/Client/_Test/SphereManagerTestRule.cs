@@ -38,7 +38,7 @@ namespace WorldTree
 				var go = UnityEngine.Object.Instantiate(self.balls);
 				go.name = "Drop_" + i;
 
-				self.TryGetTypeNode((long)i, out SphereTest dropComponent);
+				self.TryGetGeneric((long)i, out SphereTest dropComponent);
 				dropComponent.Manager = self;
 				dropComponent.GameObject = go;
 

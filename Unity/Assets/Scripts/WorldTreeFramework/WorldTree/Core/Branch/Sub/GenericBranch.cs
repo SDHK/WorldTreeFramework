@@ -15,5 +15,5 @@ namespace WorldTree
 	/// 泛型分支
 	/// </summary>
 	[TreeDataSerializable]
-	public partial class TypeNodeBranch<K> : Branch<K> { }
+	public partial class GenericBranch<K> : Branch<K> { }
 }

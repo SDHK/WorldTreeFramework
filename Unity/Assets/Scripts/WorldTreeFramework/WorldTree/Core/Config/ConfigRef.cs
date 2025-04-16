@@ -3,8 +3,8 @@
 	/// <summary>
 	/// 配置引用
 	/// </summary>
-	public struct ConfigRef<C>
-		where C : Config
+	public struct ConfigRef<C, K>
+		where C : Config<K>
 	{
 		/// <summary>
 		/// 核心
@@ -19,7 +19,7 @@
 		/// <summary>
 		/// 配置ID
 		/// </summary>
-		public long Id;
+		public K Id;
 	}
 
 }

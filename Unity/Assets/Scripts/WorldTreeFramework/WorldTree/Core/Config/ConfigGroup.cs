@@ -6,7 +6,6 @@
 	public abstract class ConfigGroup : Node
 		, AsAwake
 		, ComponentOf<ConfigManager>
-		, AsTypeNodeBranch<long>
 	{
 
 	}

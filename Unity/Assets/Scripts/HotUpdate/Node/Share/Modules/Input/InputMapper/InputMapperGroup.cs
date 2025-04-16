@@ -13,9 +13,9 @@ namespace WorldTree
 	/// </summary>
 	[TreeDataSerializable]
 	public partial class InputMapperGroup : NodeData
-		, TypeNodeOf<long, InputMapperManager>
-		, TypeNodeOf<long, InputMapperGroup>
-		, AsTypeNodeBranch<long>
+		, GenericOf<long, InputMapperManager>
+		, GenericOf<long, InputMapperGroup>
+		, AsGenericBranch<long>
 		, AsChildBranch
 		, AsAwake
 	{
