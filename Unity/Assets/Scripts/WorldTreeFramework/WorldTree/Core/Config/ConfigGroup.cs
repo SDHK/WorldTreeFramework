@@ -13,9 +13,12 @@
 	/// <summary>
 	/// 配置集合
 	/// </summary>
-	public abstract class ConfigGroup<C> : ConfigGroup
-		where C : Config
+	public abstract class ConfigGroup<K, C> : ConfigGroup
+		, AsGenericBranch<K>
+
+		where C : Config<K>
 	{
+
 
 	}
 

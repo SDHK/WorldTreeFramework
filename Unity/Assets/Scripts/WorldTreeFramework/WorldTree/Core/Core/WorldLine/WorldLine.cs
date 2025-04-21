@@ -17,7 +17,7 @@ using System;
 namespace WorldTree
 {
 	//TODO 计划
-	//GF的Debug面板 
+	//GF的Debug面板 ，UI管理器
 
 	//UI 安全区 Screen.safeArea
 
@@ -54,8 +54,6 @@ namespace WorldTree
 	//HybridListenerRuleActuator
 	//HybridListenerRuleActuatorGroup
 
-	//泛型Branch
-	//分析器helper方法整理
 
 	/// <summary>
 	/// 世界线接口

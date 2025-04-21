@@ -123,6 +123,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "CommandLineParser": {
+              "target": "Package",
+              "version": "[2.9.1, )"
+            },
             "LiteDB": {
               "target": "Package",
               "version": "[5.0.21, )"

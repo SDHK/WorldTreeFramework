@@ -28,43 +28,43 @@ namespace WorldTree
 
 		public void Trace(string message)
 		{
-			if ((Core.WorldLineManager.LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
+			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
 			logger.Trace(message);
 		}
 
 		public void Debug(string message)
 		{
-			if ((Core.WorldLineManager.LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
+			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
 			logger.Debug(message);
 		}
 
 		public void Error(string message)
 		{
-			if ((Core.WorldLineManager.LogLevel & LogLevel.Error) != LogLevel.Error) return;
+			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
 			logger.Error(message);
 		}
 
 		public void Error(Exception e)
 		{
-			if ((Core.WorldLineManager.LogLevel & LogLevel.Error) != LogLevel.Error) return;
+			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
 			logger.Error(e);
 		}
 
 		public void Info(string message)
 		{
-			if ((Core.WorldLineManager.LogLevel & LogLevel.Info) != LogLevel.Info) return;
+			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Info) != LogLevel.Info) return;
 			logger.Info(message);
 		}
 
 		public void Todo(string message)
 		{
-			if ((Core.WorldLineManager.LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
+			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
 			logger.Warn(message);
 		}
 
 		public void Warning(string message)
 		{
-			if ((Core.WorldLineManager.LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
+			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
 			logger.Warn(message);
 		}
 	}

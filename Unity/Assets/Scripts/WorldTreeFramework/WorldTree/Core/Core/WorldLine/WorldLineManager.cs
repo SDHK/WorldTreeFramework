@@ -22,14 +22,14 @@ namespace WorldTree
 	public class WorldLineManager : IDisposable
 	{
 		/// <summary>
+		/// 启动选项
+		/// </summary>
+		public Options Options;
+
+		/// <summary>
 		/// 日志类型
 		/// </summary>
 		public Type LogType;
-
-		/// <summary>
-		/// 日志等级
-		/// </summary>
-		public LogLevel LogLevel;
 
 		/// <summary>
 		/// 主世界线

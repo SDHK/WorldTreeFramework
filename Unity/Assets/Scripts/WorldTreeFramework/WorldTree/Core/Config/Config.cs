@@ -1,4 +1,6 @@
-﻿namespace WorldTree
+﻿using System;
+
+namespace WorldTree
 {
 	/// <summary>
 	/// 配置
@@ -29,6 +31,22 @@
 			{
 				self.ConfigId = self.GetKey<K>();
 			}
+		}
+	}
+
+
+	/// <summary>
+	/// 树节点数据标记，默认为非恒定类型，恒定类型将不会记录类名到数据中，减少数据体积
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+	public class ConfigMemberAttribute : Attribute
+	{
+		/// <summary>
+		/// 是否为恒定类型
+		/// </summary>
+		public bool IsConstant = false;
+		public ConfigMemberAttribute(Type type, string name, bool isServer = false)
+		{
 		}
 	}
 }

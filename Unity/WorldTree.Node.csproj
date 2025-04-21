@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBManager.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Client\Config\CreateWorldConfig.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputValue.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputMapper\InputMapper.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDevice\InputDriver.cs" />
@@ -97,6 +98,9 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.IonicZip">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandLine">
+      <HintPath>Assets\Plugins\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Pdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>

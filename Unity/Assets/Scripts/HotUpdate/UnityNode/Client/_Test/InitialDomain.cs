@@ -105,43 +105,4 @@ namespace WorldTree
 		/// </summary>
 		public TreeDictionary<int, int> ValueDict;
 	}
-
-
-
-
-	/// <summary>
-	/// 测试数据
-	/// </summary>
-	public class StartWorldConfigGroup : ConfigGroup<StartWorldConfig>
-		, AsGenericBranch<int>  //键值：泛型
-
-	{
-	}
-
-
-
-	/// <summary>
-	/// 测试数据
-	/// </summary>
-	public class StartWorldConfig : Config<int>
-		, GenericOf<int, StartWorldConfigGroup>
-
-	{
-		/// <summary>
-		/// 测试整数
-		/// </summary>
-		public int TestInt = 1;
-	}
-
-
-	public static class StartWorldConfigGroupRule
-	{
-		class Add : AddRule<StartWorldConfigGroup>
-		{
-			protected override void Execute(StartWorldConfigGroup self)
-			{
-				self.AddGeneric(1, out StartWorldConfig _);
-			}
-		}
-	}
 }

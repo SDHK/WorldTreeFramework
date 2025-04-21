@@ -1,3 +1,4 @@
+using CommandLine;
 using System;
 
 namespace WorldTree
@@ -12,9 +13,16 @@ namespace WorldTree
         /// </summary>
         private static void Main(string[] args)
         {
-            WorldLineManager lineManager = new WorldLineManager();
+            Options options = new();
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) => Console.WriteLine(e.ExceptionObject.ToString());
+            // 命令行参数接收
+            Parser.Default.ParseArguments<Options>(System.Environment.GetCommandLineArgs())
+                       .WithNotParsed(error => throw new Exception($"命令行格式错误! {error}"))
+                       .WithParsed((o) => options = o);
+
+            WorldLineManager lineManager = new();
+            lineManager.Options = options;
             lineManager.LogType = typeof(WorldLog);
-            lineManager.LogLevel = LogLevel.All;
 
             lineManager.Create(0, typeof(WorldHeart), 1000, typeof(MainWorld));
 

@@ -80,6 +80,7 @@ namespace WorldTree.Analyzer
 			{ "Core",CoreConfigs},
 			{ "Node",NodeConfigs},
 			{ "Rule",RuleConfigs},
+			{ "Config",RuleConfigs},
 
 			//前端限制
 			{ "WorldTree.Core",CoreConfigs},

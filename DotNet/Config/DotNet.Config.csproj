@@ -5,7 +5,7 @@
     <Nullable>disable</Nullable>
     <RootNamespace>WorldTree</RootNamespace>
     <LangVersion>12</LangVersion>
-    <AssemblyName>Node</AssemblyName>
+    <AssemblyName>Config</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,7 +15,6 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
-
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -35,23 +34,20 @@
     <!--<NoWarn>0169,0649,3021,8981,CS9193,CS9192</NoWarn>-->
   </PropertyGroup>
 
+
   <ItemGroup>
-    <!--<Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Node\Client\**\*.cs">
-      <Link>Client\%(RecursiveDir)%(FileName)%(Extension)</Link>
-    </Compile>-->
-    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Node\Server\**\*.cs">
+    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Config\Server\**\*.cs">
       <Link>Server\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Compile>
-    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Node\Share\**\*.cs">
-      <Link>Share\%(RecursiveDir)%(FileName)%(Extension)</Link>
-    </Compile>
   </ItemGroup>
-  
+
+
   <ItemGroup>
     <ProjectReference Include="..\..\Share\Analyzer\Share.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\Share\SourceGenerator\Share.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Core\DotNet.Core.csproj" />
+    <ProjectReference Include="..\Node\DotNet.Node.csproj" />
   </ItemGroup>
+
 </Project>
-                  
-                
+ 

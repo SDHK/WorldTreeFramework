@@ -41,7 +41,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HookTest", "WindowsForm\Hoo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfTest", "WindowsForm\WpfTest\WpfTest.csproj", "{DDABE539-3A35-4733-97AF-F93FB531F185}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputMapperTool", "WindowsForm\InputMapperTool\InputMapperTool.csproj", "{A607E1A2-1DAC-4B82-BDD8-C1ABA881C3B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputMapperTool", "WindowsForm\InputMapperTool\InputMapperTool.csproj", "{A607E1A2-1DAC-4B82-BDD8-C1ABA881C3B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.Config", "DotNet\Config\DotNet.Config.csproj", "{484256C0-0C60-464E-A0FD-595D7EF86D5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -213,6 +215,18 @@ Global
 		{A607E1A2-1DAC-4B82-BDD8-C1ABA881C3B0}.Release|arm64.Build.0 = Release|Any CPU
 		{A607E1A2-1DAC-4B82-BDD8-C1ABA881C3B0}.Release|x86.ActiveCfg = Release|Any CPU
 		{A607E1A2-1DAC-4B82-BDD8-C1ABA881C3B0}.Release|x86.Build.0 = Release|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Debug|arm64.Build.0 = Debug|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Debug|x86.Build.0 = Debug|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Release|arm64.ActiveCfg = Release|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Release|arm64.Build.0 = Release|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Release|x86.ActiveCfg = Release|Any CPU
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -232,6 +246,7 @@ Global
 		{775621F0-B73F-479A-967F-1D5C42F171EC} = {A05C4BCE-E237-4DCC-BFA8-B85953AE9FEB}
 		{DDABE539-3A35-4733-97AF-F93FB531F185} = {A05C4BCE-E237-4DCC-BFA8-B85953AE9FEB}
 		{A607E1A2-1DAC-4B82-BDD8-C1ABA881C3B0} = {A05C4BCE-E237-4DCC-BFA8-B85953AE9FEB}
+		{484256C0-0C60-464E-A0FD-595D7EF86D5B} = {EB55D71D-570E-4DF7-A2EE-6EB78CD90BCA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EA45D023-D6E4-4130-8C5A-3BC632A4BF55}
