@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -21,7 +21,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>DOTNET</DefineConstants>
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>..\Bin\</OutputPath>
     <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
     <Optimize>false</Optimize>
   </PropertyGroup>
@@ -30,7 +30,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>DOTNET</DefineConstants>
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>..\Bin\</OutputPath>
     <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
     <Optimize>true</Optimize>
   </PropertyGroup>

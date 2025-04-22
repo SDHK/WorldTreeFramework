@@ -15,14 +15,8 @@ namespace HookTest
 
 			form1.labelT.Text = $"启动:{a++}";
 
-			mainLine.Init(new WorldLineSetting());
 
-			mainLine.World.AddComponent(out Entry _);
-
-			Type ruleType = typeof(EntryRule);//防止程序集被优化掉
-			Type nodeType = typeof(DotNetInit);
-
-			form1.TextBox.Text = NodeRule.ToStringDrawTree(mainLine);
+			//form1.TextBox.Text = NodeRule.ToStringDrawTree(mainLine);
 			Application.Run(form1);
 		}
 	}

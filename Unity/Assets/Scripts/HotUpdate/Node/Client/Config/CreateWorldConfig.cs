@@ -5,25 +5,6 @@ namespace WorldTree
 	/// </summary>
 	public class CreateWorldConfigGroup : ConfigGroup<int, CreateWorldConfig>
 	{
-		/// <summary>
-		/// 进程
-		/// </summary>
-		public static int Process;
-
-		/// <summary>
-		/// 区
-		/// </summary>
-		public static int Zone;
-
-		/// <summary>
-		/// 主世界
-		/// </summary>
-		public static string WorldType;
-
-		/// <summary>
-		/// 世界名称
-		/// </summary>
-		public static string WorldName;
 	}
 
 	/// <summary>

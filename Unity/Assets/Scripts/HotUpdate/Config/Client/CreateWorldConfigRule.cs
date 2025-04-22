@@ -6,7 +6,8 @@ namespace WorldTree
 		{
 			protected override void Execute(CreateWorldConfigGroup self)
 			{
-				self.AddGeneric(1, out CreateWorldConfig config);
+				int id = 0;
+				self.AddGeneric(id++, out CreateWorldConfig config);
 				config.Process = 1;
 				config.Zone = 1;
 				config.WorldType = "GameWorld";
