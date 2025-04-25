@@ -22,4 +22,27 @@ namespace WorldTree
 		/// </summary>
 		public Action Action;
 	}
+
+
+
+
+
+	/// <summary>
+	/// ≤‚ ‘
+	/// </summary>
+	public class Test : Node
+		, AsTestNodeEvent<DotNetInit>
+	{
+		/// <summary>
+		/// ◊÷∂Œ
+		/// </summary>
+		public int ConfigId;
+
+		/// <summary>
+		///  Ù–‘
+		/// </summary>
+		public long ConfigName => ConfigId;
+	}
+
+
 }

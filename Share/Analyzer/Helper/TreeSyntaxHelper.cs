@@ -47,7 +47,7 @@ namespace WorldTree
 		/// 尝试获取指定的特性
 		/// </summary>
 		/// <returns></returns>
-		public static bool TryGetAttribute(MemberDeclarationSyntax node, string attributeName, out AttributeSyntax? attributeSyntax)
+		public static bool TryGetAttribute(MemberDeclarationSyntax node, string attributeName, out AttributeSyntax attributeSyntax)
 		{
 			attributeSyntax = null;
 			if (node.AttributeLists.Count == 0) return false;

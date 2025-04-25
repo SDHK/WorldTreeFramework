@@ -1,4 +1,3 @@
-using NLog;
 using WorldTree;
 
 namespace InputMapperTool
@@ -18,15 +17,12 @@ namespace InputMapperTool
 			// see https://aka.ms/applicationconfiguration.
 
 			ApplicationConfiguration.Initialize();
-
 			WorldLineManager lineManager = new();
 			lineManager.Options = new();
 			lineManager.LogType = typeof(WorldLog);
 			lineManager.Create(0, typeof(WorldHeart), 1000, typeof(MainWorld));
 
 			Application.Run(form);
-
-			Type loggerType = typeof(Logger);
 
 		}
 	}

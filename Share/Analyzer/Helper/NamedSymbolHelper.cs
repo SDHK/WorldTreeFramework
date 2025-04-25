@@ -270,6 +270,24 @@ namespace WorldTree
 			return fieldSymbol.GetAttributes().Any(attr => attr.AttributeClass?.ToDisplayString().Contains(attributeName) == true);
 		}
 
+		/// <summary>
+		/// 检查是否有指定特性
+		/// </summary>
+		public static bool CheckAttribute(INamedTypeSymbol fieldSymbol, string attributeName, out AttributeData attributeData)
+		{
+			attributeData = null;
+			var attributes = fieldSymbol.GetAttributes();
+			foreach (var attr in attributes)
+			{
+				if (attr.AttributeClass?.ToDisplayString().Contains(attributeName) == true)
+				{
+					attributeData = attr;
+					return true;
+				}
+			}
+			return false;
+		}
+
 
 		/// <summary>
 		/// 检查类是否继承了指定接口

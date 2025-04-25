@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <RootNamespace>WorldTree</RootNamespace>
     <AnalysisLevel>6.0</AnalysisLevel>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <AssemblyName>Core</AssemblyName>
   </PropertyGroup>
 

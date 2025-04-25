@@ -9,6 +9,17 @@
 namespace WorldTree
 {
 	/// <summary>
+	/// 法则基类枚举码
+	/// </summary>
+	public enum RuleBaseEnum
+	{
+		ISendRule,
+		ISendRuleAsync,
+		ICallRule,
+		ICallRuleAsync,
+	}
+
+	/// <summary>
 	/// 生成器帮助类
 	/// </summary>
 	internal static class GeneratorHelper
@@ -101,11 +112,22 @@ namespace WorldTree
 
 
 
+		/// <summary>
+		/// 法则分流类型特性标记
+		/// </summary>
+		public const string RuleSwitchAttribute = "RuleSwitchAttribute";
+
+		/// <summary>
+		/// 法则简写委托类型特性标记
+		/// </summary>
+		public const string RuleDelegateMarkAttribute = "RuleDelegateMarkAttribute";
 
 		/// <summary>
 		/// 法则类型预注册数组生成特性标记，暂时无用
 		/// </summary>
 		public const string RuleTypesGeneratorAttribute = "RuleTypesGeneratorAttribute";
+
+
 
 	}
 

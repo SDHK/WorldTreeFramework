@@ -7,11 +7,13 @@
 
 */
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 
 namespace WorldTree.Server
 {
+
 
 	public static partial class DotNetInitRule
 	{
@@ -156,6 +158,33 @@ namespace WorldTree.Server
 			Console.WriteLine($"浮点数除法耗时: {stopwatch.ElapsedMilliseconds} 毫秒 {result2}");
 		}
 
+
+		[RuleSwitch(nameof(Test.ConfigName), 1011)]
+		partial class AddSub : TestNodeEventRule<Test, DotNetInit>
+		{
+			protected override void Execute(Test self, TestEnum arg1, DotNetInit arg2, List<int> arg3)
+			{
+			}
+		}
+
+		//[RuleSwitch(nameof(Test.ConfigName), 1012)]
+		static OnTestNodeEvent<Test, DotNetInit> AddSub1 = (self, id, io, i) =>
+		{
+		};
+		//partial class RuleSwitch_Test_ConfigName_TestNodeEventRule_Test_ : TestNodeEventRule<Test>
+		//{
+		//	static AddSub _AddSub = new();
+		//	protected override void Execute(Test self, TestEnum id, List<int> i)
+		//	{
+		//		switch (self.ConfigName)
+		//		{
+		//			case 1011L: _AddSub.Invoke(self, id, i); break;
+		//			case 1012L: AddSub1.Invoke(self, id, i); break;
+		//		}
+		//	}
+		//}
+
+		//class AddSub1RuleExecute1 : TestNodeEventRule<Test> { protected override void Execute(WorldTree.Test self, WorldTree.TestEnum arg1, System.Collections.Generic.List<System.Int32> arg2) => AddSub1(self, arg1, arg2); }
 
 	}
 

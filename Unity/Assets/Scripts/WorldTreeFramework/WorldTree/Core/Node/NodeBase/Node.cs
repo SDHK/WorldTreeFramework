@@ -6,8 +6,54 @@
 
 ****************************************/
 
+using System.Collections.Generic;
+
 namespace WorldTree
 {
+
+	/// <summary>
+	/// a
+	/// </summary>
+
+	public interface TestNodeEvent<X> : ISendRule<TestEnum, X, List<int>>
+	//, ISourceGeneratorIgnore
+	{
+	}
+
+	/// <summary>
+	/// a
+	/// </summary>
+	/// <remarks>
+	/// <Para>
+	/// 通知法则委托: <see cref="WorldTree.TestNodeEvent"/> : <see cref="ISendRule&lt;TestEnum, int&gt;"/>
+	/// </Para>
+	/// <para>
+	/// ISendRule&lt;<see cref="TestEnum"/>, <see cref="int"/>&gt;
+	/// </para>
+	/// </remarks>
+	//[RuleDelegateMark(nameof(ISendRule), 0)]
+	//public delegate void OnTestNodeEvent<N>(N self, TestEnum arg1, List<int> arg2) where N : class, INode, AsRule<TestNodeEvent>;
+
+
+
+
+	/// <summary>
+	/// 测试枚举
+	/// </summary>
+	public enum TestEnum
+	{
+		/// <summary>
+		/// 测试1
+		/// </summary>
+		Test1,
+		/// <summary>
+		/// 测试2
+		/// </summary>
+		Test2,
+	}
+
+
+
 	/// <summary>
 	/// 世界树数据节点基类，ID由雪花算法生成
 	/// </summary>

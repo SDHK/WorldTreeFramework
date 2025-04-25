@@ -6,7 +6,10 @@
     <Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>WorldTree</RootNamespace>
     <AssemblyName>App</AssemblyName>
+    <LangVersion>12</LangVersion>
+    <AnalysisLevel>6.0</AnalysisLevel>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -32,6 +35,8 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\..\DotNet\Core\DotNet.Core.csproj" />
+    <ProjectReference Include="..\..\..\Share\Analyzer\Share.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\..\Share\SourceGenerator\Share.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>

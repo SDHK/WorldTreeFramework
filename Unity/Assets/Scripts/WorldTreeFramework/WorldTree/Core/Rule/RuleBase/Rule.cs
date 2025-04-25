@@ -102,8 +102,30 @@ namespace WorldTree
 
 
 	/// <summary>
+	/// 法则分流
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)]
+	public class RuleSwitchAttribute : Attribute
+	{
+		public RuleSwitchAttribute(string keyName, object key, int argIndex = 0) { }
+		public RuleSwitchAttribute(string ruleName, string keyName, object key, int argIndex = 0) { }
+	}
+
+	/// <summary>
+	/// 法则简写委托类型标记
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Delegate, AllowMultiple = false, Inherited = false)]
+	public class RuleDelegateMarkAttribute : Attribute
+	{
+		public RuleDelegateMarkAttribute(string ruleBaseType, int genericsTypeCount) { }
+	}
+
+	/// <summary>
 	/// 法则类型数组生成标记
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 	public class RuleTypesGeneratorAttribute : Attribute { }
+
+
+
 }
