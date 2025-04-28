@@ -12,29 +12,19 @@ namespace WorldTree
 {
 
 	/// <summary>
-	/// a
+	/// 测试法则
 	/// </summary>
-
 	public interface TestNodeEvent<X> : ISendRule<TestEnum, X, List<int>>
-	//, ISourceGeneratorIgnore
 	{
 	}
-
 	/// <summary>
-	/// a
+	/// 测试法则异步
 	/// </summary>
-	/// <remarks>
-	/// <Para>
-	/// 通知法则委托: <see cref="WorldTree.TestNodeEvent"/> : <see cref="ISendRule&lt;TestEnum, int&gt;"/>
-	/// </Para>
-	/// <para>
-	/// ISendRule&lt;<see cref="TestEnum"/>, <see cref="int"/>&gt;
-	/// </para>
-	/// </remarks>
-	//[RuleDelegateMark(nameof(ISendRule), 0)]
-	//public delegate void OnTestNodeEvent<N>(N self, TestEnum arg1, List<int> arg2) where N : class, INode, AsRule<TestNodeEvent>;
-
-
+	public interface TestNodeEventAsync<X> : ISendRuleAsync<TestEnum, X, List<int>> { }
+	/// <summary>
+	/// 测试调用法则
+	/// </summary>
+	public interface TestNodeEventCall<X> : ICallRule<TestEnum, X, List<int>, string> { }
 
 
 	/// <summary>

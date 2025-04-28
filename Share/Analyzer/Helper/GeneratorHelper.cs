@@ -13,10 +13,10 @@ namespace WorldTree
 	/// </summary>
 	public enum RuleBaseEnum
 	{
-		ISendRule,
-		ISendRuleAsync,
-		ICallRule,
-		ICallRuleAsync,
+		SendRule,
+		SendRuleAsync,
+		CallRule,
+		CallRuleAsync,
 	}
 
 	/// <summary>
@@ -62,7 +62,6 @@ namespace WorldTree
 		/// 通知法则接口：引用参数
 		/// </summary>
 		public const string ISendRefRule = "ISendRefRule";
-
 		/// <summary>
 		/// 调用法则接口
 		/// </summary>
@@ -75,6 +74,28 @@ namespace WorldTree
 		/// 调用法则异步接口
 		/// </summary>
 		public const string ICallRuleAsync = "ICallRuleAsync";
+
+
+		/// <summary>
+		/// 通知法则基类
+		/// </summary>
+		public const string SendRule = "SendRule";
+		/// <summary>
+		/// 通知法则基类：引用参数
+		/// </summary>
+		public const string SendRefRule = "SendRefRule";
+		/// <summary>
+		/// 调用法则基类
+		/// </summary>
+		public const string CallRule = "CallRule";
+		/// <summary>
+		/// 通知法则异步基类
+		/// </summary>
+		public const string SendRuleAsync = "SendRuleAsync";
+		/// <summary>
+		/// 调用法则异步基类
+		/// </summary>
+		public const string CallRuleAsync = "CallRuleAsync";
 
 		#endregion
 
@@ -118,9 +139,9 @@ namespace WorldTree
 		public const string RuleSwitchAttribute = "RuleSwitchAttribute";
 
 		/// <summary>
-		/// 法则简写委托类型特性标记
+		/// 法则简写方法特性标记
 		/// </summary>
-		public const string RuleDelegateMarkAttribute = "RuleDelegateMarkAttribute";
+		public const string NodeRuleAttribute = "NodeRuleAttribute";
 
 		/// <summary>
 		/// 法则类型预注册数组生成特性标记，暂时无用

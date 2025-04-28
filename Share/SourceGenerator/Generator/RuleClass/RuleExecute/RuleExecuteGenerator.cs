@@ -129,13 +129,13 @@ namespace WorldTree.SourceGenerator
 					RuleBaseEnum ruleTypeCode = ruleTypeData.Item3;
 					string[] types = null;
 					types = GetReflectionRuleType(delegateType.Item2, ruleType, baseInterface);
-					bool isCall = ruleTypeCode is RuleBaseEnum.ICallRule or RuleBaseEnum.ICallRuleAsync;
+					bool isCall = ruleTypeCode is RuleBaseEnum.CallRule or RuleBaseEnum.CallRuleAsync;
 					string genericTypeParameter = GetRuleTypeParameter(types, isCall, out string outType);
 					string genericParameter = GetRuleParameter(types, isCall, out _);
 
 					switch (ruleTypeCode)
 					{
-						case RuleBaseEnum.ISendRule:
+						case RuleBaseEnum.SendRule:
 
 							ClassCode.AppendLine(
 							$$"""
@@ -144,7 +144,7 @@ namespace WorldTree.SourceGenerator
 							);
 							break;
 
-						case RuleBaseEnum.ISendRuleAsync:
+						case RuleBaseEnum.SendRuleAsync:
 
 							ClassCode.AppendLine(
 							$$"""
@@ -153,7 +153,7 @@ namespace WorldTree.SourceGenerator
 							);
 							break;
 
-						case RuleBaseEnum.ICallRule:
+						case RuleBaseEnum.CallRule:
 							ClassCode.AppendLine(
 							$$"""
 									class {{delegateFieldName}}RuleExecute : {{RuleFullName}} { protected override {{outType}} Execute({{genericTypeParameter}}) => {{delegateFieldName}}({{genericParameter}}); }
@@ -161,7 +161,7 @@ namespace WorldTree.SourceGenerator
 							);
 							break;
 
-						case RuleBaseEnum.ICallRuleAsync:
+						case RuleBaseEnum.CallRuleAsync:
 
 							ClassCode.AppendLine(
 							$$"""
@@ -181,9 +181,7 @@ namespace WorldTree.SourceGenerator
 
 					fileCode.AppendLine($"	public static partial class {className}");
 					fileCode.AppendLine("	{");
-
 					fileCode.Append(ClassCode);
-
 					fileCode.AppendLine("	}");
 					fileCode.Append("}");
 
@@ -191,10 +189,6 @@ namespace WorldTree.SourceGenerator
 				}
 			}
 		}
-
-
-		//需要通过委托特性标记查找法则接口定义！！！！！！！！
-
 		/// <summary>
 		/// 收集所有静态兄弟类中的 静态字段
 		/// </summary>
@@ -216,7 +210,7 @@ namespace WorldTree.SourceGenerator
 					//忽略掉法则分流的委托
 					if (TreeSyntaxHelper.TryGetAttribute(fieldDeclaration, GeneratorHelper.RuleSwitchAttribute, out AttributeSyntax attributeSyntax))
 					{
-						continue;
+						//continue;
 					}
 					foreach (var modifier in fieldDeclaration.Modifiers)
 					{
@@ -244,14 +238,6 @@ namespace WorldTree.SourceGenerator
 					}
 				}
 			}
-
-			//if (NamedSymbolHelper.CheckAttribute(delegateType, GeneratorHelper.RuleDelegateMarkAttribute, out AttributeData attributeData))
-			//var delegateClassName = delegateType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-
-			//foreach (var argument in attributeData.ConstructorArguments)
-			//{
-			//	ClassCode.AppendLine(@$"//{argument.Value}");
-			//}
 		}
 
 		/// <summary>
@@ -264,10 +250,10 @@ namespace WorldTree.SourceGenerator
 				//检测是否继承4大法则接口
 				INamedTypeSymbol baseInterface;
 				RuleBaseEnum ruleBaseEnum;
-				if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRule, out baseInterface)) ruleBaseEnum = RuleBaseEnum.ISendRule;
-				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRule, out baseInterface)) ruleBaseEnum = RuleBaseEnum.ICallRule;
-				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRuleAsync, out baseInterface)) ruleBaseEnum = RuleBaseEnum.ISendRuleAsync;
-				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRuleAsync, out baseInterface)) ruleBaseEnum = RuleBaseEnum.ICallRuleAsync;
+				if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRule, out baseInterface)) ruleBaseEnum = RuleBaseEnum.SendRule;
+				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRule, out baseInterface)) ruleBaseEnum = RuleBaseEnum.CallRule;
+				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRuleAsync, out baseInterface)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
+				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRuleAsync, out baseInterface)) ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
 				else continue;
 
 				string DelegateName = $"On{item.Name}";
@@ -299,8 +285,8 @@ namespace WorldTree.SourceGenerator
 		{
 			//假设：
 
-			// DelegateType 是实例	OnTestEvent<TestClass, int>	定义是：OnTestEvent<N, X>
-			// IRuleClass	是定义	TestNodeEvent<X>			比 OnTestEvent<N, X> 少个 N，其余一致
+			// DelegateType 是实例	OnTestEvent<TestClass, int>	定义是：OnTestEvent<N, X> ，其中 TestClass 是目标不是参数
+			// IRuleClass	是定义	TestNodeEvent<X>			比 OnTestEvent<N, X> 少个目标 N，其余一致
 			// IRuleBase	是定义	ISendRule<TestEnum, X, List<int>>。而IRuleClass一定继承IRuleBase
 
 			//功能是
@@ -320,8 +306,11 @@ namespace WorldTree.SourceGenerator
 			// 获取 delegateType 的实例 泛型类型
 			string[] delegateTypeArgs = DelegateType.TypeArguments.Select(t => t.ToDisplayString(customFormat)).ToArray();
 
-			var types = new List<string>();
-			types.Add(delegateTypeArgs[0]);//0号一定是this 的 类型
+			var types = new List<string>
+			{
+				//0号是目标，不是法则参数，不需要映射，直接添加。
+				delegateTypeArgs[0]
+			};
 
 			// 获取 IRuleBase 的泛型参数定义符号和类型。
 			// 这里面同时存 泛型符号 和 类型，其中泛型符号能在IRuleClass中找到。

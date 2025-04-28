@@ -17,6 +17,9 @@ namespace WorldTree.Server
 
 	public static partial class DotNetInitRule
 	{
+
+
+
 		private static OnEnable<DotNetInit> Enable1 = (self) =>
 		{
 			self.Log($"激活！！");
@@ -25,6 +28,14 @@ namespace WorldTree.Server
 			//TestDivisionPrecision();
 		};
 
+
+		class Add1 : AddRule<DotNetInit>
+		{
+			protected override void Execute(DotNetInit self)
+			{
+
+			}
+		}
 
 		private static OnAdd<DotNetInit> Add = (self) =>
 		{
@@ -159,34 +170,36 @@ namespace WorldTree.Server
 		}
 
 
-		[RuleSwitch(nameof(Test.ConfigName), 1011)]
-		partial class AddSub : TestNodeEventRule<Test, DotNetInit>
+
+		/// <summary>
+		/// a
+		/// </summary>
+		//[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>), nameof(self.Id), 1013)]
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
+		static void AddSub4<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
 		{
-			protected override void Execute(Test self, TestEnum arg1, DotNetInit arg2, List<int> arg3)
+
+		}
+
+
+		partial class RuleSwitch_Test_ConfigName_TestNodeEventRule_Test_<T> : TestNodeEventRule<Test<T>, int>
+		{
+			//static AddSub _AddSub = new();
+
+			protected override void Execute(Test<T> self, TestEnum arg1, int arg2, List<int> arg3)
 			{
 			}
 		}
 
-		//[RuleSwitch(nameof(Test.ConfigName), 1012)]
-		static OnTestNodeEvent<Test, DotNetInit> AddSub1 = (self, id, io, i) =>
-		{
-		};
-		//partial class RuleSwitch_Test_ConfigName_TestNodeEventRule_Test_ : TestNodeEventRule<Test>
-		//{
-		//	static AddSub _AddSub = new();
-		//	protected override void Execute(Test self, TestEnum id, List<int> i)
-		//	{
-		//		switch (self.ConfigName)
-		//		{
-		//			case 1011L: _AddSub.Invoke(self, id, i); break;
-		//			case 1012L: AddSub1.Invoke(self, id, i); break;
-		//		}
-		//	}
-		//}
 
-		//class AddSub1RuleExecute1 : TestNodeEventRule<Test> { protected override void Execute(WorldTree.Test self, WorldTree.TestEnum arg1, System.Collections.Generic.List<System.Int32> arg2) => AddSub1(self, arg1, arg2); }
 
 	}
-
+	public static partial class DotNetInitRule
+	{
+		class AddSub4_RuleMethod<T> : WorldTree.SendRule<WorldTree.Test<T>, WorldTree.TestNodeEvent<WorldTree.DotNetInit>, WorldTree.TestEnum, WorldTree.DotNetInit, System.Collections.Generic.List<int>>
+		{
+			protected override void Execute(WorldTree.Test<T> self, WorldTree.TestEnum arg1, WorldTree.DotNetInit arg2, System.Collections.Generic.List<int> arg3) => AddSub4(self, arg1, arg2, arg3);
+		}
+	}
 
 }

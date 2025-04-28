@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 
 namespace WorldTree
@@ -440,7 +441,7 @@ namespace WorldTree
 		/// <param name="typeSymbol">子类</param>
 		/// <param name="BaseName">父类全名称</param>
 		/// <param name="baseSymbol">基类符号</param>
-		public static bool CheckBase(ITypeSymbol typeSymbol, string BaseName, out ITypeSymbol? baseSymbol)
+		public static bool CheckBase(ITypeSymbol typeSymbol, string BaseName, out ITypeSymbol baseSymbol)
 		{
 			baseSymbol = null;
 			var currentBaseType = typeSymbol;
@@ -467,7 +468,6 @@ namespace WorldTree
 			if (!typeSymbol.IsGenericType) return "";
 			StringBuilder sb = new StringBuilder();
 			StringBuilder sbType = new StringBuilder();
-
 			sb.AppendLine($"{tab}/// <para>");
 			sb.Append($"{tab}/// {typeSymbol.Name}");
 			int index = 1;
@@ -478,11 +478,11 @@ namespace WorldTree
 				//不是泛型
 				if (typeSymbol.TypeArguments[i].TypeKind != TypeKind.TypeParameter)
 				{
-					sbType.Append($", <see cref=\"{name}\"/>");
+					sbType.Append($", <see cref=\"{SecurityElement.Escape(name)}\"/>");
 				}
 				else //是泛型参数
 				{
-					sbType.Append($", <typeparamref name= \"{name}\"/>");
+					sbType.Append($", <typeparamref name= \"{SecurityElement.Escape(name)}\"/>");
 				}
 				index++;
 			}

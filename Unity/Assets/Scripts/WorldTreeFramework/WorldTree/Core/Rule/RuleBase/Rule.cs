@@ -102,23 +102,28 @@ namespace WorldTree
 
 
 	/// <summary>
+	/// 节点法则
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method)]
+	public class NodeRuleAttribute : Attribute
+	{
+		public NodeRuleAttribute(string ruleBaseName) { }
+		public NodeRuleAttribute(Type ruleBaseName) { }
+		public NodeRuleAttribute(string ruleBaseName, string keyName, object key) { }
+		public NodeRuleAttribute(string ruleName, string ruleBaseName, string keyName, object key) { }
+	}
+
+
+	/// <summary>
 	/// 法则分流
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)]
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Method)]
 	public class RuleSwitchAttribute : Attribute
 	{
 		public RuleSwitchAttribute(string keyName, object key, int argIndex = 0) { }
 		public RuleSwitchAttribute(string ruleName, string keyName, object key, int argIndex = 0) { }
 	}
 
-	/// <summary>
-	/// 法则简写委托类型标记
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Delegate, AllowMultiple = false, Inherited = false)]
-	public class RuleDelegateMarkAttribute : Attribute
-	{
-		public RuleDelegateMarkAttribute(string ruleBaseType, int genericsTypeCount) { }
-	}
 
 	/// <summary>
 	/// 法则类型数组生成标记
