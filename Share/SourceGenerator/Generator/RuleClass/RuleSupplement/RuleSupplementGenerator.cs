@@ -232,9 +232,15 @@ namespace WorldTree.SourceGenerator
 		public static string GetTypeArguments(INamedTypeSymbol typeSymbol)
 		{
 			if (!typeSymbol.IsGenericType) return "";
-			string typeArguments = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat).Replace(typeSymbol.Name, "");
-			return ", " + typeArguments.Trim('<', '>');
+
+			// 获取泛型参数列表
+			var typeArguments = typeSymbol.TypeArguments
+				.Select(arg => arg.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
+
+			// 拼接为逗号分隔的字符串
+			return ", " + string.Join(", ", typeArguments);
 		}
+
 
 		/// <summary>
 		/// 获取泛型参数 , T1 arg1, T2 arg2

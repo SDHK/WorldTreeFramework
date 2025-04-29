@@ -175,31 +175,12 @@ namespace WorldTree.Server
 		/// a
 		/// </summary>
 		//[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>), nameof(self.Id), 1013)]
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
-		static void AddSub4<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
+		static void AddSub4<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
 		{
 
 		}
-
-
-		partial class RuleSwitch_Test_ConfigName_TestNodeEventRule_Test_<T> : TestNodeEventRule<Test<T>, int>
-		{
-			//static AddSub _AddSub = new();
-
-			protected override void Execute(Test<T> self, TestEnum arg1, int arg2, List<int> arg3)
-			{
-			}
-		}
-
 
 
 	}
-	public static partial class DotNetInitRule
-	{
-		class AddSub4_RuleMethod<T> : WorldTree.SendRule<WorldTree.Test<T>, WorldTree.TestNodeEvent<WorldTree.DotNetInit>, WorldTree.TestEnum, WorldTree.DotNetInit, System.Collections.Generic.List<int>>
-		{
-			protected override void Execute(WorldTree.Test<T> self, WorldTree.TestEnum arg1, WorldTree.DotNetInit arg2, System.Collections.Generic.List<int> arg3) => AddSub4(self, arg1, arg2, arg3);
-		}
-	}
-
 }

@@ -10,21 +10,20 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-
 	/// <summary>
 	/// 测试法则
 	/// </summary>
 	public interface TestNodeEvent<X> : ISendRule<TestEnum, X, List<int>>
 	{
 	}
-	/// <summary>
-	/// 测试法则异步
-	/// </summary>
-	public interface TestNodeEventAsync<X> : ISendRuleAsync<TestEnum, X, List<int>> { }
-	/// <summary>
-	/// 测试调用法则
-	/// </summary>
-	public interface TestNodeEventCall<X> : ICallRule<TestEnum, X, List<int>, string> { }
+	///// <summary>
+	///// 测试法则异步
+	///// </summary>
+	//public interface TestNodeEventAsync<X> : ISendRuleAsync<TestEnum, X, List<int>> { }
+	///// <summary>
+	///// 测试调用法则
+	///// </summary>
+	//public interface TestNodeEventCall<X> : ICallRule<TestEnum, X, List<int>, string> { }
 
 
 	/// <summary>

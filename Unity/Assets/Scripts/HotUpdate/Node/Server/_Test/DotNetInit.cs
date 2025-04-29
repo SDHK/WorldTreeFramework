@@ -30,8 +30,6 @@ namespace WorldTree
 	/// </summary>
 	public class Test<T> : Node
 		, AsTestNodeEvent<DotNetInit>
-		, AsTestNodeEventAsync<DotNetInit>
-		, AsTestNodeEventCall<DotNetInit>
 		, AsRule<IRule>
 	{
 		/// <summary>
