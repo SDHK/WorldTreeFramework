@@ -170,17 +170,38 @@ namespace WorldTree.Server
 		}
 
 
-
 		/// <summary>
-		/// a
+		/// AddSub
 		/// </summary>
-		//[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>), nameof(self.Id), 1013)]
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
-		static void AddSub4<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
+		static void AddSub<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
 		{
 
 		}
 
+		/// <summary>
+		/// AddSub1
+		/// </summary>
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>), nameof(self.ConfigId), 100)]
+		static void AddSub1<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
+		{
+		}
+
+		/// <summary>
+		/// AddSub2
+		/// </summary>
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>), nameof(self.ConfigId), 102)]
+		static void AddSub2<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
+		{
+		}
+
+		/// <summary>
+		/// AddSub3
+		/// </summary>
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>), nameof(self.ConfigId), 103)]
+		static void AddSub3<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
+		{
+		}
 
 	}
 }

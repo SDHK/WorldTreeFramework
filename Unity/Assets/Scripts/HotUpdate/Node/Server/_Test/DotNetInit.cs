@@ -18,6 +18,10 @@ namespace WorldTree
 		, AsAwake
 	{
 		/// <summary>
+		/// a
+		/// </summary>
+		public int ConfigId;
+		/// <summary>
 		/// ≤‚ ‘
 		/// </summary>
 		public Action Action;

@@ -108,7 +108,6 @@ namespace WorldTree
 	public class NodeRuleAttribute : Attribute
 	{
 		public NodeRuleAttribute(string ruleBaseName) { }
-		public NodeRuleAttribute(Type ruleBaseName) { }
 		public NodeRuleAttribute(string ruleBaseName, string keyName, object key) { }
 		public NodeRuleAttribute(string ruleName, string ruleBaseName, string keyName, object key) { }
 	}
