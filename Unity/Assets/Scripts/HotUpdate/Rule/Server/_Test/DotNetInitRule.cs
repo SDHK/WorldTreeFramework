@@ -17,9 +17,6 @@ namespace WorldTree.Server
 
 	public static partial class DotNetInitRule
 	{
-
-
-
 		private static OnEnable<DotNetInit> Enable1 = (self) =>
 		{
 			self.Log($"激活！！");
@@ -62,7 +59,7 @@ namespace WorldTree.Server
 		/// <summary>
 		/// a
 		/// </summary>
-		public static void TestDivisionPrecision()
+		public static void TestDivisionPrecision(this DotNetInit self)
 		{
 			// 测试一系列不同的数值组合
 			double[] testNumerators = {
@@ -132,7 +129,55 @@ namespace WorldTree.Server
 			Console.WriteLine($"测试用例数: {testCount}");
 			Console.WriteLine($"平均绝对误差: {totalError / testCount}");
 			Console.WriteLine($"最大绝对误差: {maxError}");
+
+
+
+
+
+
+			//事件派发
+			NodeRuleHelper.SendRule(self, default(UpdateTime), new TimeSpan(123));
 		}
+
+
+
+		//事件接收
+		class UpdateTimeRule : UpdateTimeRule<DotNetInit>
+		{
+			protected override void Execute(DotNetInit self, TimeSpan arg1)
+			{
+			}
+		}
+
+		/// <summary>
+		/// UpdateTime1 
+		/// </summary>
+		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
+		static void UpdateTime0(this DotNetInit self, TimeSpan arg1)
+		{
+
+		}
+
+		/// <summary>
+		/// UpdateTime1 ：分发接收
+		/// </summary>
+		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
+		[RuleSwitch(nameof(ADCET), nameof(arg1.Hours), 1)]
+
+		static void UpdateTime1(this DotNetInit self, TimeSpan arg1)
+		{
+
+		}
+		/// <summary>
+		/// UpdateTime2：分发接收
+		/// </summary>
+		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
+		[RuleSwitch(nameof(ADCET), nameof(arg1.Hours), 2)]
+		static void UpdateTime2(this DotNetInit self, TimeSpan arg1)
+		{
+
+		}
+
 
 		/// <summary>
 		/// 耗时测试
@@ -170,35 +215,42 @@ namespace WorldTree.Server
 		}
 
 
+
+
+
 		/// <summary>
 		/// AddSub
 		/// </summary>
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
 		static void AddSub<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
 		{
+			NodeRuleHelper.SendRule(self, default(TestNodeEvent<I>), TestEnum.Test1, io, new List<int>());
 
 		}
 
 		/// <summary>
 		/// AddSub1
 		/// </summary>
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>), nameof(self.ConfigId), 100)]
-		static void AddSub1<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
+		[RuleSwitch(nameof(self.ConfigId), 101)]
+		static void AddSub1<T>(this Test<T> self, TestEnum idrs, DotNetInit io, List<int> i)
 		{
 		}
 
 		/// <summary>
 		/// AddSub2
 		/// </summary>
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>), nameof(self.ConfigId), 102)]
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
+		[RuleSwitch(nameof(self.ConfigId), 102)]
 		static void AddSub2<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
 		{
 		}
 
 		/// <summary>
-		/// AddSub3
+		/// a
 		/// </summary>
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>), nameof(self.ConfigId), 103)]
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
+		[RuleSwitch(nameof(self.ConfigId), 103)]
 		static void AddSub3<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
 		{
 		}

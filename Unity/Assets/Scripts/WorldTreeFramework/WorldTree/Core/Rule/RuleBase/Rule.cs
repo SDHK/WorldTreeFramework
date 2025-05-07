@@ -107,20 +107,18 @@ namespace WorldTree
 	[AttributeUsage(AttributeTargets.Method)]
 	public class NodeRuleAttribute : Attribute
 	{
-		public NodeRuleAttribute(string ruleBaseName) { }
-		public NodeRuleAttribute(string ruleBaseName, string keyName, object key) { }
-		public NodeRuleAttribute(string ruleName, string ruleBaseName, string keyName, object key) { }
+		public NodeRuleAttribute(string rule) { }
 	}
 
 
 	/// <summary>
 	/// 法则分流
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Method)]
+	[AttributeUsage(AttributeTargets.Method)]
 	public class RuleSwitchAttribute : Attribute
 	{
-		public RuleSwitchAttribute(string keyName, object key, int argIndex = 0) { }
-		public RuleSwitchAttribute(string ruleName, string keyName, object key, int argIndex = 0) { }
+		public RuleSwitchAttribute(string switchValue, object caseKey) { }
+		public RuleSwitchAttribute(string ruleName, string switchValue, object caseKey) { }
 	}
 
 

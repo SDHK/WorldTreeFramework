@@ -3,7 +3,7 @@
 * 作者：闪电黑客
 * 日期：2025/4/24 14:30
 
-* 描述：法则分流类型补充生成器
+* 描述：法则分发类型补充生成器
 
 */
 using Microsoft.CodeAnalysis;
@@ -36,7 +36,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 模式
 		/// </summary>
-		public int mode;
+		public bool isSwitch;
 
 		public List<RuleMethodData> Methods = new();
 
@@ -89,14 +89,75 @@ namespace WorldTree.SourceGenerator
 				var methodDeclarations = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>();
 				foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
 				{
-					if (!TreeSyntaxHelper.TryGetAttribute(methodDeclaration, GeneratorHelper.NodeRuleAttribute, out AttributeSyntax attributeSyntax)) continue;
-					int count = attributeSyntax.ArgumentList.Arguments.Count;
-					if (count == 0) continue;
+					if (!TreeSyntaxHelper.TryGetAttribute(methodDeclaration, GeneratorHelper.NodeRuleAttribute, out AttributeSyntax attributeNodeRule)) continue;
+					if (attributeNodeRule.ArgumentList.Arguments.Count == 0) continue;
 
-					//一个参数则是简写方法
-					if (count == 1)
+					//如果有RuleSwitch特性，则是分发方法
+					if (TreeSyntaxHelper.TryGetAttribute(methodDeclaration, GeneratorHelper.RuleSwitchAttribute, out AttributeSyntax attributeRuleSwitch))
 					{
-						if (!TryGetRuleType(semanticModel, attributeSyntax.ArgumentList.Arguments[0], out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+						int count = attributeRuleSwitch.ArgumentList.Arguments.Count;
+						if (count == 0) continue;
+
+						AttributeArgumentSyntax argumentRule = attributeNodeRule.ArgumentList.Arguments[0];
+
+						AttributeArgumentSyntax argumentName = count == 3 ? attributeRuleSwitch.ArgumentList.Arguments[0] : null;
+
+
+						if (!TryGetRuleType(semanticModel, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+							continue;
+						AttributeArgumentSyntax argumentSwitch = attributeRuleSwitch.ArgumentList.Arguments[count == 2 ? 0 : 1];
+						AttributeArgumentSyntax argumentCase = attributeRuleSwitch.ArgumentList.Arguments[count == 2 ? 1 : 2];
+
+						//如果是分发方法，则需要获取Switch值
+						if (!TryGetSwitchValue(context, semanticModel, methodDeclaration, argumentSwitch, argumentCase, out string switchValueType, out string switchValue, out string caseValue))
+							continue;
+
+						//因为分发方法会有多个，所以使用方法标记的法则类型组合作为文件名
+						var classSyntax = methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
+
+						//string ruleName1 = null;
+						string ruleName1 = GetRuleName(semanticModel, argumentName);
+
+						string ruleName = ruleTypeSymbol.ToDisplayString();
+						ruleName = System.Text.RegularExpressions.Regex.Replace(ruleName, @"[^a-zA-Z0-9_]", "_");
+						string fileName = $"{classSyntax.Identifier.Text}_{ruleName}_RuleMethod";
+						if (!fileDatas.TryGetValue(fileName, out RuleFileData ruleFileData))
+						{
+							ruleFileData = new();
+							ruleFileData.FileName = fileName;
+							ruleFileData.StaticRuleName = classSyntax.Identifier.Text;
+							//ruleFileData.Usings = TreeSyntaxHelper.GetUsings(classSyntax);
+							ruleFileData.Namespace = TreeSyntaxHelper.GetNamespace(classSyntax);
+							fileDatas.Add(fileName, ruleFileData);
+						}
+
+						//将switchValue 中的特殊字符替换为下划线
+						string switchValueName = System.Text.RegularExpressions.Regex.Replace(switchValue, @"[^a-zA-Z0-9_]", "_");
+						string className = ruleName1 ?? $"{ruleName}_{switchValueName}_RuleMethod";
+						if (!ruleFileData.Class.TryGetValue(className, out RuleClassData ruleClassData))
+						{
+							ruleClassData = new();
+							ruleClassData.ClassName = className;
+							ruleClassData.isSwitch = true;
+							ruleClassData.ruleTypeSymbol = ruleTypeSymbol;
+							ruleClassData.baseTypeSymbol = baseTypeSymbol;
+							ruleClassData.ruleBaseEnum = ruleBaseEnum;
+							ruleClassData.switchValueType = switchValueType;
+							ruleClassData.switchValue = switchValue;
+							ruleFileData.Class.Add(className, ruleClassData);
+						}
+						ruleClassData.Methods.Add(new RuleMethodData()
+						{
+							attributeSyntax = attributeNodeRule,
+							Method = methodDeclaration,
+
+							caseValue = caseValue
+						});
+					}
+					//简写方法
+					else
+					{
+						if (!TryGetRuleType(semanticModel, attributeNodeRule.ArgumentList.Arguments[0], out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 							continue;
 						//因为是简写方法，所以直接使用方法所在的文件名
 						string fileName = Path.GetFileNameWithoutExtension(methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First().SyntaxTree.FilePath);
@@ -122,7 +183,7 @@ namespace WorldTree.SourceGenerator
 						{
 							ruleClassData = new();
 							ruleClassData.ClassName = className;
-							ruleClassData.mode = count;
+							ruleClassData.isSwitch = false;
 							ruleClassData.ruleTypeSymbol = ruleTypeSymbol;
 							ruleClassData.baseTypeSymbol = baseTypeSymbol;
 							ruleClassData.ruleBaseEnum = ruleBaseEnum;
@@ -130,60 +191,8 @@ namespace WorldTree.SourceGenerator
 						}
 						ruleClassData.Methods.Add(new RuleMethodData()
 						{
-							attributeSyntax = attributeSyntax,
+							attributeSyntax = attributeNodeRule,
 							Method = methodDeclaration
-						});
-					}
-					else
-					{
-						AttributeArgumentSyntax argumentSyntax = attributeSyntax.ArgumentList.Arguments[count == 3 ? 0 : 1];
-
-						if (!TryGetRuleType(semanticModel, argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
-							continue;
-						AttributeArgumentSyntax argumentSwitch = attributeSyntax.ArgumentList.Arguments[count == 3 ? 1 : 2];
-						AttributeArgumentSyntax argumentCase = attributeSyntax.ArgumentList.Arguments[count == 3 ? 2 : 3];
-
-						//如果是分发方法，则需要获取Switch值
-						if (!TryGetSwitchValue(context, semanticModel, methodDeclaration, argumentSwitch, argumentCase, out string switchValueType, out string switchValue, out string caseValue))
-							continue;
-
-						//因为分发方法会有多个，所以使用方法标记的法则类型组合作为文件名
-						var classSyntax = methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
-
-						string ruleName = ruleTypeSymbol.ToDisplayString();
-						ruleName = System.Text.RegularExpressions.Regex.Replace(ruleName, @"[^a-zA-Z0-9_]", "_");
-						string fileName = $"{classSyntax.Identifier.Text}_{ruleName}_RuleMethod";
-						if (!fileDatas.TryGetValue(fileName, out RuleFileData ruleFileData))
-						{
-							ruleFileData = new();
-							ruleFileData.FileName = fileName;
-							ruleFileData.StaticRuleName = classSyntax.Identifier.Text;
-							//ruleFileData.Usings = TreeSyntaxHelper.GetUsings(classSyntax);
-							ruleFileData.Namespace = TreeSyntaxHelper.GetNamespace(classSyntax);
-							fileDatas.Add(fileName, ruleFileData);
-						}
-
-						//将switchValue 中的特殊字符替换为下划线
-						string switchValueName = System.Text.RegularExpressions.Regex.Replace(switchValue, @"[^a-zA-Z0-9_]", "_");
-						string className = $"{ruleName}_{switchValueName}_RuleMethod";
-						if (!ruleFileData.Class.TryGetValue(className, out RuleClassData ruleClassData))
-						{
-							ruleClassData = new();
-							ruleClassData.ClassName = className;
-							ruleClassData.mode = count;
-							ruleClassData.ruleTypeSymbol = ruleTypeSymbol;
-							ruleClassData.baseTypeSymbol = baseTypeSymbol;
-							ruleClassData.ruleBaseEnum = ruleBaseEnum;
-							ruleClassData.switchValueType = switchValueType;
-							ruleClassData.switchValue = switchValue;
-							ruleFileData.Class.Add(className, ruleClassData);
-						}
-						ruleClassData.Methods.Add(new RuleMethodData()
-						{
-							attributeSyntax = attributeSyntax,
-							Method = methodDeclaration,
-
-							caseValue = caseValue
 						});
 					}
 				}
@@ -198,7 +207,7 @@ namespace WorldTree.SourceGenerator
 
 				foreach (var classData in fileData.Class.Values)
 				{
-					if (classData.mode != 1)
+					if (classData.isSwitch)
 					{
 						AddClassMode3(ClassCode, classData);
 					}
@@ -212,6 +221,8 @@ namespace WorldTree.SourceGenerator
 				{
 					fileCode.AppendLine(@$"//对于法则方法简写的调用生成");
 					//fileCode.AppendLine(fileData.Usings);
+					fileCode.AppendLine($"using System;");
+					fileCode.AppendLine($"using System.Collections.Generic;");
 					fileCode.AppendLine($"namespace {fileData.Namespace}");
 					fileCode.AppendLine("{");
 					fileCode.AppendLine($"	public static partial class {fileData.StaticRuleName}");
@@ -304,7 +315,7 @@ namespace WorldTree.SourceGenerator
 			classCode.AppendLine($"		sealed class {classData.ClassName}{typeTName} : {classData.ruleTypeSymbol.ToDisplayString()}");
 			classCode.AppendLine($"		{{");
 			classCode.AppendLine($"			/// <summary>");
-			classCode.AppendLine($"			/// 法则分流字典");
+			classCode.AppendLine($"			/// 法则分发字典");
 			classCode.AppendLine($"			/// </summary>");
 
 			switch (classData.ruleBaseEnum)
@@ -400,6 +411,33 @@ namespace WorldTree.SourceGenerator
 			}
 
 			classCode.AppendLine($"		}}");
+		}
+
+		/// <summary>
+		/// 获取法则名称
+		/// </summary>
+		private string GetRuleName(SemanticModel semanticModel, AttributeArgumentSyntax argumentRuleName)
+		{
+			if (argumentRuleName == null) return null;
+			string ruleName = null;
+			// 检查是否是 nameof 表达式
+			if (argumentRuleName.Expression is InvocationExpressionSyntax invocation && invocation.Expression.ToString() == "nameof")
+			{
+				// 获取 nameof 参数的表达式
+				var nameofArgument = invocation.ArgumentList.Arguments.FirstOrDefault()?.Expression;
+				if (nameofArgument == null) return null;
+
+				// 原来的逻辑处理简单属性
+				//var symbolInfo = semanticModel.GetSymbolInfo(nameofArgument);
+				//ruleName = symbolInfo.Symbol.ToDisplayString();
+				ruleName = nameofArgument.ToString();
+			}
+			else if (argumentRuleName.Expression is LiteralExpressionSyntax literalExpression)
+			{
+				// 使用 Token.ValueText 获取字符串的实际值（不包含引号）
+				ruleName = literalExpression.Token.ValueText;
+			}
+			return ruleName;
 		}
 
 		/// <summary>

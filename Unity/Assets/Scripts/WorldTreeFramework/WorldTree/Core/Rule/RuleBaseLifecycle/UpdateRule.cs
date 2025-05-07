@@ -14,6 +14,11 @@ namespace WorldTree
 	/// <summary>
 	/// 刷新法则
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	///  <see cref="TimeSpan"/> 是间隔时间
+	/// </para>
+	/// </remarks>
 	public interface UpdateTime : ISendRule<TimeSpan>, ILifeCycleRule
 	{ }
 
