@@ -39,30 +39,7 @@ namespace WorldTree.Analyzer
 
 			// 检查特性是否标记在方法上
 			var targetNode = attributeSyntax.Parent?.Parent;
-			if (targetNode is MethodDeclarationSyntax methodDeclaration)
-			{
-				// 获取特性列表
-				var attributeListSyntax = attributeSyntax.Parent as AttributeListSyntax;
-				// 获取方法前的所有Trivia
-				var leadingTrivia = methodDeclaration.GetLeadingTrivia();
-				// 检查前导Trivia是否包含至少两个空行
-				int emptyLineCount = 0;
-				foreach (var trivia in leadingTrivia)
-				{
-					// 检查是否是空白Trivia且包含换行符
-					if (trivia.ToString().Contains("\n"))
-					{
-						emptyLineCount++;
-					}
-					// 如果发现至少两个空行，直接退出循环
-					if (emptyLineCount >= 2)
-					{
-						break;
-					}
-				}
-				// 如果有两个或更多空行，则报错
-				if (emptyLineCount >= 2) return;
-			}
+			if (targetNode is MethodDeclarationSyntax) return;
 
 			// 如果特性没有标记在方法上，或者有空行，报告诊断错误
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
@@ -82,7 +59,7 @@ namespace WorldTree.Analyzer
 		private List<string> typeTNames = new();
 
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
-		protected override async Task<Microsoft.CodeAnalysis.Document> CodeFix(DiagnosticConfig codeDiagnostic, Microsoft.CodeAnalysis.Document document, AttributeSyntax attributeSyntax, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, AttributeSyntax attributeSyntax, CancellationToken cancellationToken)
 		{
 			if (attributeSyntax.ArgumentList.Arguments.Count == 0) return null;
 
@@ -130,6 +107,7 @@ namespace WorldTree.Analyzer
 					$$"""
 							private static async TreeTask {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
 							{ 
+								await self.TreeTaskCompleted();
 							}
 					"""
 					);
@@ -148,6 +126,8 @@ namespace WorldTree.Analyzer
 					$$"""
 							private static async TreeTask<{{outType}}> {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
 							{ 
+								await self.TreeTaskCompleted();
+								return default;
 							}
 					"""
 					);

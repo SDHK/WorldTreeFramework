@@ -237,7 +237,7 @@ namespace WorldTree.Server
 		/// </summary>
 		[NodeRule(nameof(SendRuleAsync<Test<T>, ISendRuleAsync>))]
 		[RuleSwitch(nameof(self.ConfigId), 103)]
-		private static async TreeTask OnSendAsync<T>(this Test<T> self)
+		private static async TreeTask OnSendAsync1<T>(this Test<T> self)
 		{
 			await self.TreeTaskCompleted();
 		}
@@ -260,18 +260,6 @@ namespace WorldTree.Server
 		{
 			await self.TreeTaskCompleted();
 		}
-
-
-		/// <summary>
-		/// OnAdd
-		/// </summary>
-		[NodeRule(nameof(AddRule<DotNetInit>))]
-		private static void OnAdd(this DotNetInit self)
-		{
-		}
-
-
-
 
 	}
 
