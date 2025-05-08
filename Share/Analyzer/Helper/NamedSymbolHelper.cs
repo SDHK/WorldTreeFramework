@@ -278,7 +278,7 @@ namespace WorldTree
 		{
 			attributeData = null;
 			var attributes = fieldSymbol.GetAttributes();
-			foreach (var attr in attributes)
+			foreach (AttributeData attr in attributes)
 			{
 				if (attr.AttributeClass?.ToDisplayString().Contains(attributeName) == true)
 				{

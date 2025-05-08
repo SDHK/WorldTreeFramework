@@ -131,5 +131,10 @@ namespace WorldTree.Analyzer
 
 
 
+		/// <summary>
+		/// 特性命名规范诊断
+		/// </summary>
+		AttributeNaming,
+
 	}
 }

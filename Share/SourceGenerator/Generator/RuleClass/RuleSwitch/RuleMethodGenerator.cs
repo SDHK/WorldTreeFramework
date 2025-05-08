@@ -115,25 +115,38 @@ namespace WorldTree.SourceGenerator
 						//因为分发方法会有多个，所以使用方法标记的法则类型组合作为文件名
 						var classSyntax = methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
 
-						//string ruleName1 = null;
-						string ruleName1 = GetRuleName(semanticModel, argumentName);
+						string ruleName = System.Text.RegularExpressions.Regex.Replace(ruleTypeSymbol.ToDisplayString(), @"[^a-zA-Z0-9_]", "_");
 
-						string ruleName = ruleTypeSymbol.ToDisplayString();
-						ruleName = System.Text.RegularExpressions.Regex.Replace(ruleName, @"[^a-zA-Z0-9_]", "_");
-						string fileName = $"{classSyntax.Identifier.Text}_{ruleName}_RuleMethod";
+						string ruleNameNew = GetRuleName(semanticModel, argumentName);
+
+						//string fileName = $"{classSyntax.Identifier.Text}_{ruleName}";
+						string fileName = $"{classSyntax.Identifier.Text}";
+
+						string className;
+
+						//将switchValue 中的特殊字符替换为下划线
+						string switchValueName = System.Text.RegularExpressions.Regex.Replace(switchValue, @"[^a-zA-Z0-9_]", "_");
+						if (ruleNameNew != null)
+						{
+							ruleNameNew = System.Text.RegularExpressions.Regex.Replace(ruleNameNew, @"[^a-zA-Z0-9_]", "_");
+							className = $"{ruleName}_{switchValueName}_RuleMethod_{ruleNameNew}";
+						}
+						else
+						{
+							className = $"{ruleName}_{switchValueName}_RuleMethod";
+						}
+
+
 						if (!fileDatas.TryGetValue(fileName, out RuleFileData ruleFileData))
 						{
 							ruleFileData = new();
 							ruleFileData.FileName = fileName;
 							ruleFileData.StaticRuleName = classSyntax.Identifier.Text;
-							//ruleFileData.Usings = TreeSyntaxHelper.GetUsings(classSyntax);
 							ruleFileData.Namespace = TreeSyntaxHelper.GetNamespace(classSyntax);
 							fileDatas.Add(fileName, ruleFileData);
 						}
 
-						//将switchValue 中的特殊字符替换为下划线
-						string switchValueName = System.Text.RegularExpressions.Regex.Replace(switchValue, @"[^a-zA-Z0-9_]", "_");
-						string className = ruleName1 ?? $"{ruleName}_{switchValueName}_RuleMethod";
+
 						if (!ruleFileData.Class.TryGetValue(className, out RuleClassData ruleClassData))
 						{
 							ruleClassData = new();
@@ -155,10 +168,8 @@ namespace WorldTree.SourceGenerator
 						});
 					}
 					//简写方法
-					else
+					else if (TryGetRuleType(semanticModel, attributeNodeRule.ArgumentList.Arguments[0], out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 					{
-						if (!TryGetRuleType(semanticModel, attributeNodeRule.ArgumentList.Arguments[0], out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
-							continue;
 						//因为是简写方法，所以直接使用方法所在的文件名
 						string fileName = Path.GetFileNameWithoutExtension(methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First().SyntaxTree.FilePath);
 
@@ -168,16 +179,11 @@ namespace WorldTree.SourceGenerator
 							var classSyntax = methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
 							ruleFileData.FileName = fileName;
 							ruleFileData.StaticRuleName = classSyntax.Identifier.Text;
-							//ruleFileData.Usings = TreeSyntaxHelper.GetUsings(classSyntax);
 							ruleFileData.Namespace = TreeSyntaxHelper.GetNamespace(classSyntax);
 							fileDatas.Add(fileName, ruleFileData);
 						}
 						//获取方法名称
 						string methodName = methodDeclaration.Identifier.Text;
-
-						//使用正则表达式替换所有非字母、数字和下划线的字符为下划线
-						//string ruleName = ruleTypeSymbol.ToDisplayString();
-						//ruleName = System.Text.RegularExpressions.Regex.Replace(ruleName, @"[^a-zA-Z0-9_]", "_");
 						string className = $"{methodName}_RuleMethod";
 						if (!ruleFileData.Class.TryGetValue(className, out RuleClassData ruleClassData))
 						{
@@ -209,18 +215,17 @@ namespace WorldTree.SourceGenerator
 				{
 					if (classData.isSwitch)
 					{
-						AddClassMode3(ClassCode, classData);
+						AddClassSwitch(ClassCode, classData);
 					}
 					else
 					{
-						AddClassMode1(ClassCode, classData);
+						AddClass(ClassCode, classData);
 					}
 				}
 
 				if (ClassCode.ToString() != "")
 				{
-					fileCode.AppendLine(@$"//对于法则方法简写的调用生成");
-					//fileCode.AppendLine(fileData.Usings);
+					fileCode.AppendLine("//对于法则方法简写的调用生成");
 					fileCode.AppendLine($"using System;");
 					fileCode.AppendLine($"using System.Collections.Generic;");
 					fileCode.AppendLine($"namespace {fileData.Namespace}");
@@ -231,14 +236,14 @@ namespace WorldTree.SourceGenerator
 					fileCode.AppendLine("	}");
 					fileCode.Append("}");
 
-					context.AddSource($"{fileData.FileName}RuleMethod.cs", SourceText.From(fileCode.ToString(), Encoding.UTF8));
+					context.AddSource($"{fileData.FileName}_RuleMethod.cs", SourceText.From(fileCode.ToString(), Encoding.UTF8));
 				}
 			}
 		}
 
 
 
-		private void AddClassMode1(StringBuilder classCode, RuleClassData classData)
+		private void AddClass(StringBuilder classCode, RuleClassData classData)
 		{
 			if (classData.Methods.Count == 0) return;
 
@@ -264,35 +269,35 @@ namespace WorldTree.SourceGenerator
 				case RuleBaseEnum.SendRule:
 					classCode.AppendLine(
 					$$"""
-							class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override void Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override void Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 					);
 					break;
 				case RuleBaseEnum.SendRuleAsync:
 					classCode.AppendLine(
 					$$"""
-							class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 					);
 					break;
 				case RuleBaseEnum.CallRule:
 					classCode.AppendLine(
 					$$"""
-							class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override {{outType}} Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override {{outType}} Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 					);
 					break;
 				case RuleBaseEnum.CallRuleAsync:
 					classCode.AppendLine(
 					$$"""
-							class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 					);
 					break;
 			}
 		}
 
-		private void AddClassMode3(StringBuilder classCode, RuleClassData classData)
+		private void AddClassSwitch(StringBuilder classCode, RuleClassData classData)
 		{
 			if (classData.Methods.Count == 0) return;
 			typeNames.Clear();
@@ -359,7 +364,7 @@ namespace WorldTree.SourceGenerator
 				case RuleBaseEnum.SendRuleAsync:
 					classCode.AppendLine(
 					$$"""
-								protected override TreeTask Execute({{genericTypeParameter}})
+								protected override async TreeTask Execute({{genericTypeParameter}})
 								{
 									if (methodDict.TryGetValue({{classData.switchValue}}, out var method))
 									{
@@ -393,7 +398,7 @@ namespace WorldTree.SourceGenerator
 				case RuleBaseEnum.CallRuleAsync:
 					classCode.AppendLine(
 					$$"""
-								protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}})
+								protected override async TreeTask<{{outType}}> Execute({{genericTypeParameter}})
 								{
 									if (methodDict.TryGetValue({{classData.switchValue}}, out var method))
 									{
@@ -420,7 +425,7 @@ namespace WorldTree.SourceGenerator
 		{
 			if (argumentRuleName == null) return null;
 			string ruleName = null;
-			// 检查是否是 nameof 表达式
+
 			if (argumentRuleName.Expression is InvocationExpressionSyntax invocation && invocation.Expression.ToString() == "nameof")
 			{
 				// 获取 nameof 参数的表达式
@@ -428,15 +433,19 @@ namespace WorldTree.SourceGenerator
 				if (nameofArgument == null) return null;
 
 				// 原来的逻辑处理简单属性
-				//var symbolInfo = semanticModel.GetSymbolInfo(nameofArgument);
-				//ruleName = symbolInfo.Symbol.ToDisplayString();
 				ruleName = nameofArgument.ToString();
 			}
 			else if (argumentRuleName.Expression is LiteralExpressionSyntax literalExpression)
 			{
-				// 使用 Token.ValueText 获取字符串的实际值（不包含引号）
+				// 直接处理字面量表达式
 				ruleName = literalExpression.Token.ValueText;
 			}
+			else if (semanticModel.GetConstantValue(argumentRuleName.Expression) is { HasValue: true, Value: string constantString })
+			{
+				// 处理常量表达式
+				ruleName = constantString;
+			}
+
 			return ruleName;
 		}
 

@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace WorldTree.Analyzer
 {
+
 	/// <summary>
 	/// 委托命名规范诊断器
 	/// </summary>

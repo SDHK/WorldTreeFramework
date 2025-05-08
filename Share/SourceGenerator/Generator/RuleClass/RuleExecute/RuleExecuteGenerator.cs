@@ -18,7 +18,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	[Generator]
+	//[Generator]
 	public class RuleExecuteGenerator : ISourceGenerator
 	{
 		private List<FieldDeclarationSyntax> delegateInstances = new();

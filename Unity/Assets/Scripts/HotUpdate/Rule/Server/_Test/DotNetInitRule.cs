@@ -17,43 +17,56 @@ namespace WorldTree.Server
 
 	public static partial class DotNetInitRule
 	{
-		private static OnEnable<DotNetInit> Enable1 = (self) =>
+
+		/// <summary>
+		/// a
+		/// </summary>
+		[NodeRule(nameof(EnableRule<DotNetInit>))]
+		private static void Enable1(this DotNetInit self)
 		{
 			self.Log($"激活！！");
 			//self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse mouse, manager);
 			//MainTime();
 			//TestDivisionPrecision();
-		};
-
-
-		class Add1 : AddRule<DotNetInit>
-		{
-			protected override void Execute(DotNetInit self)
-			{
-
-			}
 		}
 
-		private static OnAdd<DotNetInit> Add = (self) =>
+		/// <summary>
+		/// Add
+		/// </summary>
+		[NodeRule(nameof(AddRule<DotNetInit>))]
+		private static void Add(this DotNetInit self)
 		{
 			self.AddComponent(out SerializeTest _);
 			//self.AddComponent(out TreeDataTest _);
-		};
+		}
 
-		private static OnUpdateTime<DotNetInit> UpdateTime = (self, timeSpan) =>
+		/// <summary>
+		/// UpdateTime
+		/// </summary>
+		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
+		private static void UpdateTime(this DotNetInit self, TimeSpan timeSpan)
 		{
 			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
-		};
+		}
 
-		private static OnDisable<DotNetInit> Disable = (self) =>
+		/// <summary>
+		/// Disable
+		/// </summary>
+		[NodeRule(nameof(DisableRule<DotNetInit>))]
+		private static void Disable(this DotNetInit self)
 		{
 			self.Log("失活！！");
-		};
+		}
 
-		private static OnRemove<DotNetInit> Remove = (self) =>
+		/// <summary>
+		/// Remove
+		/// </summary>
+		[NodeRule(nameof(RemoveRule<DotNetInit>))]
+		private static void Remove(this DotNetInit self)
 		{
 			self.Log($"初始关闭！！");
-		};
+		}
+
 
 
 		/// <summary>
@@ -130,53 +143,14 @@ namespace WorldTree.Server
 			Console.WriteLine($"平均绝对误差: {totalError / testCount}");
 			Console.WriteLine($"最大绝对误差: {maxError}");
 
-
-
-
-
-
-			//事件派发
-			NodeRuleHelper.SendRule(self, default(UpdateTime), new TimeSpan(123));
 		}
 
 
 
-		//事件接收
-		class UpdateTimeRule : UpdateTimeRule<DotNetInit>
-		{
-			protected override void Execute(DotNetInit self, TimeSpan arg1)
-			{
-			}
-		}
 
-		/// <summary>
-		/// UpdateTime1 
-		/// </summary>
-		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		static void UpdateTime0(this DotNetInit self, TimeSpan arg1)
-		{
 
-		}
 
-		/// <summary>
-		/// UpdateTime1 ：分发接收
-		/// </summary>
-		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		[RuleSwitch(nameof(ADCET), nameof(arg1.Hours), 1)]
 
-		static void UpdateTime1(this DotNetInit self, TimeSpan arg1)
-		{
-
-		}
-		/// <summary>
-		/// UpdateTime2：分发接收
-		/// </summary>
-		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		[RuleSwitch(nameof(ADCET), nameof(arg1.Hours), 2)]
-		static void UpdateTime2(this DotNetInit self, TimeSpan arg1)
-		{
-
-		}
 
 
 		/// <summary>
@@ -246,14 +220,59 @@ namespace WorldTree.Server
 		{
 		}
 
+
+
 		/// <summary>
 		/// a
 		/// </summary>
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
 		[RuleSwitch(nameof(self.ConfigId), 103)]
-		static void AddSub3<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
+		private static void OnTestNodeEvent<T>(this Test<T> self, TestEnum arg1, DotNetInit arg2, List<int> arg3)
+		{
+
+		}
+
+		/// <summary>
+		/// a
+		/// </summary>
+		[NodeRule(nameof(SendRuleAsync<Test<T>, ISendRuleAsync>))]
+		[RuleSwitch(nameof(self.ConfigId), 103)]
+		private static async TreeTask OnSendAsync<T>(this Test<T> self)
+		{
+			await self.TreeTaskCompleted();
+		}
+
+		/// <summary>
+		/// a
+		/// </summary>
+		[NodeRule(nameof(SendRuleAsync<Test<T>, ISendRuleAsync>))]
+		[RuleSwitch(nameof(self.ConfigId), 104)]
+		private static async TreeTask OnSendAsync2<T>(this Test<T> self)
+		{
+			await self.TreeTaskCompleted();
+		}
+
+		/// <summary>
+		/// a
+		/// </summary>
+		[NodeRule(nameof(SendRuleAsync<Test<T>, ISendRuleAsync>))]
+		private static async TreeTask OnSendAsync3<T>(this Test<T> self)
+		{
+			await self.TreeTaskCompleted();
+		}
+
+
+		/// <summary>
+		/// OnAdd
+		/// </summary>
+		[NodeRule(nameof(AddRule<DotNetInit>))]
+		private static void OnAdd(this DotNetInit self)
 		{
 		}
 
+
+
+
 	}
+
 }

@@ -72,7 +72,7 @@ namespace WorldTree.Analyzer
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(projectName, out _)) return;
 
 			// 找到需要修复的委托声明
-			T? declaration = null;
+			T declaration = null;
 			IEnumerable<SyntaxNode>? SyntaxNodes = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()?.OfType<T>();
 			foreach (SyntaxNode node in SyntaxNodes)
 			{
