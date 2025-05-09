@@ -145,7 +145,7 @@ namespace WorldTree.Analyzer
 				Title = "泛型参数命名",
 				MessageFormat = "泛型参数命名开头要大写",
 				DeclarationKind = SyntaxKind.TypeParameter,
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[A-Z].*$"),
 				FixCode = s => char.ToUpper(s[0]) + s.Substring(1)
 			});
@@ -157,7 +157,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
 				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[a-z].*$"),
 				FixCode = s => char.ToLower(s[0]) + s.Substring(1),
-				NeedComment = false
+				NeedComment = (semanticModel, identifier) => false,
 			});
 
 			SetConfig(DiagnosticKey.LocalMethodNaming, new DiagnosticConfig()

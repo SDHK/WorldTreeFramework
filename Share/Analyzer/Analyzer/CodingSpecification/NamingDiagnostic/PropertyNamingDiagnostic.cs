@@ -86,7 +86,7 @@ namespace WorldTree.Analyzer
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, propertyDeclaration.GetLocation(), propertyDeclaration.Identifier.Text));
 							}
 							//是否需要注释
-							if (codeDiagnostic.NeedComment)
+							if (codeDiagnostic.NeedComment.Invoke(semanticModel, propertyDeclaration.Identifier))
 							{
 								// 检查属性是否为重写的
 								bool isOverride = propertySymbol.IsOverride;

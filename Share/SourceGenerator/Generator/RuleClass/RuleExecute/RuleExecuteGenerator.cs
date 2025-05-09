@@ -7,17 +7,19 @@
 
 */
 
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
+
+	using Microsoft.CodeAnalysis;
+	using Microsoft.CodeAnalysis.CSharp;
+	using Microsoft.CodeAnalysis.CSharp.Syntax;
+	using Microsoft.CodeAnalysis.Text;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
+
 	//[Generator]
 	public class RuleExecuteGenerator : ISourceGenerator
 	{
@@ -48,6 +50,7 @@ namespace WorldTree.SourceGenerator
 
 		public void Execute(GeneratorExecutionContext context)
 		{
+
 			delegateInstances.Clear();
 			RuleTypes.Clear();
 			fileClassDict.Clear();
@@ -437,6 +440,10 @@ namespace WorldTree.SourceGenerator
 
 			return splitContent.ToArray();
 		}
+
+
+
+
 
 	}
 }

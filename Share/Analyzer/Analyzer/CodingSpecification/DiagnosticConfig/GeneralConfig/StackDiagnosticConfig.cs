@@ -36,7 +36,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Stack$"),
 				FixCode = s => s + "Stack",
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 			SetConfig(DiagnosticKey.ClassPropertyNaming, new DiagnosticConfig()
 			{
@@ -45,7 +45,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Stack$"),
 				FixCode = s => s + "Stack",
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 			SetConfig(DiagnosticKey.ClassLocalVariableNaming, new DiagnosticConfig()
 			{
@@ -54,7 +54,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
 				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Stack$") || identifier.Text == "obj",
 				FixCode = s => s + "Stack",
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 		}
 	}

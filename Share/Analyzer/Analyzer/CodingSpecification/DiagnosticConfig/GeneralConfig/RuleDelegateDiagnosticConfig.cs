@@ -47,7 +47,7 @@ namespace WorldTree.Analyzer
 					}
 					return false;
 				},
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 			SetConfig(DiagnosticKey.ClassPropertyNaming, new DiagnosticConfig()
 			{
@@ -56,7 +56,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				Check = (semanticModel, identifier) => false,
 				FixCode = s => string.Empty,
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 			SetConfig(DiagnosticKey.ClassLocalVariableNaming, new DiagnosticConfig()
 			{
@@ -65,7 +65,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
 				Check = (semanticModel, identifier) => false,
 				FixCode = s => string.Empty,
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 
 

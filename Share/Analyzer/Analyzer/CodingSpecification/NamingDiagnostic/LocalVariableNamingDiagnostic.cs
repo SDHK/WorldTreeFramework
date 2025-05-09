@@ -82,7 +82,7 @@ namespace WorldTree.Analyzer
 									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
 								}
 							}
-							if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckComment(localDeclaration))
+							if (codeDiagnostic.NeedComment.Invoke(semanticModel, default) && !TreeSyntaxHelper.CheckComment(localDeclaration))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localDeclaration.GetLocation()));
 							}

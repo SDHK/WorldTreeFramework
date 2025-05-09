@@ -53,7 +53,7 @@ namespace WorldTree.Analyzer
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, structDeclaration.GetLocation(), structDeclaration.Identifier.Text));
 							}
 							//检查是否需要添加注释
-							else if (codeDiagnostic.NeedComment)
+							else if (codeDiagnostic.NeedComment.Invoke(semanticModel, structDeclaration.Identifier))
 							{
 								//判断是否是部分结构体
 								if (structDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))

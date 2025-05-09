@@ -35,6 +35,29 @@ namespace WorldTree.Analyzer
 			return false;
 		}
 
+		public bool IsNodeRuleAttributeMethod(SemanticModel semanticModel, SyntaxToken identifier)
+		{
+			if (identifier.Parent is not MethodDeclarationSyntax methodDeclaration)
+				return false;
+
+			if (methodDeclaration.AttributeLists.Count == 0)
+				return false;
+
+			foreach (var attributeList in methodDeclaration.AttributeLists)
+			{
+				foreach (var attribute in attributeList.Attributes)
+				{
+					if (attribute.Name.ToString().Contains("NodeRule"))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+
 		public StaticRuleDiagnosticConfig()
 		{
 			Screen = (Compilation, Symbol) =>
@@ -57,7 +80,7 @@ namespace WorldTree.Analyzer
 					if (IsRuleDelegateType(semanticModel, identifier)) return true;
 					return Regex.IsMatch(identifier.Text, "^[A-Z].*$");
 				},
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false
 			});
 
 
@@ -73,7 +96,7 @@ namespace WorldTree.Analyzer
 					if (IsRuleDelegateType(semanticModel, identifier)) return true;
 					return Regex.IsMatch(identifier.Text, "^[A-Z].*$");
 				},
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false
 			});
 
 			SetConfig(DiagnosticKey.PrivateFieldNaming, new DiagnosticConfig()
@@ -90,7 +113,7 @@ namespace WorldTree.Analyzer
 
 				},
 				FixCode = s => char.ToLower(s[0]) + s.Substring(1),
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false
 			});
 
 			SetConfig(DiagnosticKey.PublicPropertyNaming, new DiagnosticConfig()
@@ -104,7 +127,7 @@ namespace WorldTree.Analyzer
 					if (IsRuleDelegateType(semanticModel, identifier)) return true;
 					return Regex.IsMatch(identifier.Text, "^[A-Z].*$");
 				},
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false
 			});
 			SetConfig(DiagnosticKey.PrivatePropertyNaming, new DiagnosticConfig()
 			{
@@ -117,7 +140,19 @@ namespace WorldTree.Analyzer
 					if (IsRuleDelegateType(semanticModel, identifier)) return true;
 					return Regex.IsMatch(identifier.Text, "^[A-Z].*$");
 				},
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false
+			});
+
+			SetConfig(DiagnosticKey.MethodNaming, new DiagnosticConfig()
+			{
+				Title = "Rule静态类型方法命名",
+				MessageFormat = "方法命名开头要大写",
+				DeclarationKind = SyntaxKind.MethodDeclaration,
+				UnKeywordKinds = new() { SyntaxKind.OverrideKeyword, },
+				NeedComment = (semanticModel, identifier) =>
+				{
+					return !IsNodeRuleAttributeMethod(semanticModel, identifier);
+				}
 			});
 		}
 	}

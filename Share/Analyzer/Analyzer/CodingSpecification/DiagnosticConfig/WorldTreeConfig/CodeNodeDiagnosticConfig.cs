@@ -54,7 +54,7 @@ namespace WorldTree.Analyzer
 			{
 				Title = "Node成员访问限制",
 				MessageFormat = "不可访问:小写为私有,[Protected]为受保护",
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, "^[a-z].*$"),
 				DeclarationKind = SyntaxKind.SimpleMemberAccessExpression,
 				UnKeywordKinds = new() { SyntaxKind.PropertyKeyword, },

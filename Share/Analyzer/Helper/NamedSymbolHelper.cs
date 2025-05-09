@@ -544,6 +544,18 @@ namespace WorldTree
 
 			return allInterfaces;
 		}
+		/// <summary>
+		/// 查找所有方法，包括引用的程序集中的方法的调用
+		/// </summary>
+		/// <param name="compilation"></param>
+		/// <returns></returns>
+		public static void CollectAllMethods(Compilation compilation)
+		{
+
+
+
+
+		}
 
 		/// <summary>
 		/// 获取命名空间下的所有类型

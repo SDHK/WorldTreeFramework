@@ -47,7 +47,7 @@ namespace WorldTree.Analyzer
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localFunction.GetLocation(), localFunction.Identifier.Text));
 							}
-							else if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckComment(localFunction))
+							else if (codeDiagnostic.NeedComment.Invoke(semanticModel, localFunction.Identifier) && !TreeSyntaxHelper.CheckComment(localFunction))
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, localFunction.GetLocation(), localFunction.Identifier.Text));
 							}

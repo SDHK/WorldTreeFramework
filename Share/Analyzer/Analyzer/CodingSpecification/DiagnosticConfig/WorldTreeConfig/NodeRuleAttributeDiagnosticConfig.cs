@@ -28,7 +28,7 @@ namespace WorldTree.Analyzer
 				MessageFormat = "NodeRule只能标记在方法上",
 				DeclarationKind = SyntaxKind.Attribute,
 				Check = (semanticModel, identifier) => false,
-				NeedComment = false
+				NeedComment = (semanticModel, identifier) => false,
 			});
 		}
 

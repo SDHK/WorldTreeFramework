@@ -54,7 +54,7 @@ namespace WorldTree.Analyzer
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
 							}
 							//检查是否需要添加注释
-							else if (codeDiagnostic.NeedComment)
+							else if (codeDiagnostic.NeedComment.Invoke(semanticModel, classDeclaration.Identifier))
 							{
 								//判断是否是部分类
 								if (classDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))

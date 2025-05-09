@@ -9,6 +9,8 @@
 
 */
 
+using System;
+
 namespace WorldTree
 {
 	/// <summary>
@@ -44,4 +46,15 @@ namespace WorldTree
 	/// </Para>
 	/// </remarks>
 	public delegate void OnEnable<N>(N self) where N : class, INode, AsRule<Enable>;
+
+
+	/// <summary>
+	/// a
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method)]
+	public class OnEnable1Attribute<N> : Attribute
+		 where N : class, IRule
+	{
+	}
+
 }

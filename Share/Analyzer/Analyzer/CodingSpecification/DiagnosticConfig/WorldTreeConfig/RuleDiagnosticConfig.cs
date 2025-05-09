@@ -31,7 +31,7 @@ namespace WorldTree.Analyzer
 				Title = "Rule类型命名",
 				MessageFormat = "类型命名开头要大写",
 				DeclarationKind = SyntaxKind.ClassDeclaration,
-				NeedComment = false
+				NeedComment = (semanticModel, identifier) => false
 			});
 
 			//SetConfig(DiagnosticKey.MethodNaming, new DiagnosticConfig()

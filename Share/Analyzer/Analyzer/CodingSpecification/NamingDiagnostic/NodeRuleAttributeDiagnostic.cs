@@ -3,7 +3,7 @@
 * 作者：闪电黑客
 * 日期：2024/6/24 14:49
 
-* 描述：
+* 描述：法则类型特性标记分析
 
 */
 using Microsoft.CodeAnalysis;
@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace WorldTree.Analyzer
 {
+
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class NodeRuleAttributeDiagnostic : NamingDiagnosticBase
 	{
@@ -117,6 +118,7 @@ namespace WorldTree.Analyzer
 					$$"""
 							private static {{outType}} {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
 							{ 
+								return default;
 							}
 					"""
 					);

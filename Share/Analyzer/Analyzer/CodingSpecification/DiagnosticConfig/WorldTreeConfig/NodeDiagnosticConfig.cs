@@ -40,7 +40,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.MethodDeclaration,
 				UnKeywordKinds = new List<SyntaxKind> { SyntaxKind.AbstractKeyword },
 				Check = (semanticModel, identifier) => false,
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 		}
 	}

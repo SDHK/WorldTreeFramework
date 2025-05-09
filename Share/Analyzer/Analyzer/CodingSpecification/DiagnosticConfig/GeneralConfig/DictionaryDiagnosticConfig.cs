@@ -34,7 +34,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.FieldDeclaration,
 				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Dict$"),
 				FixCode = s => s + "Dict",
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 			SetConfig(DiagnosticKey.ClassPropertyNaming, new DiagnosticConfig()
 			{
@@ -43,7 +43,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
 				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Dict$"),
 				FixCode = s => s + "Dict",
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 			SetConfig(DiagnosticKey.ClassLocalVariableNaming, new DiagnosticConfig()
 			{
@@ -52,7 +52,7 @@ namespace WorldTree.Analyzer
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
 				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Dict$") || identifier.Text == "obj",
 				FixCode = s => s + "Dict",
-				NeedComment = false,
+				NeedComment = (semanticModel, identifier) => false,
 			});
 		}
 	}

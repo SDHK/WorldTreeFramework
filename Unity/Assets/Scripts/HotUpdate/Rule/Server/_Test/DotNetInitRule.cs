@@ -17,12 +17,8 @@ namespace WorldTree.Server
 
 	public static partial class DotNetInitRule
 	{
-
-		/// <summary>
-		/// a
-		/// </summary>
 		[NodeRule(nameof(EnableRule<DotNetInit>))]
-		private static void Enable1(this DotNetInit self)
+		private static void Enable(this DotNetInit self)
 		{
 			self.Log($"激活！！");
 			//self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse mouse, manager);
@@ -30,9 +26,6 @@ namespace WorldTree.Server
 			//TestDivisionPrecision();
 		}
 
-		/// <summary>
-		/// Add
-		/// </summary>
 		[NodeRule(nameof(AddRule<DotNetInit>))]
 		private static void Add(this DotNetInit self)
 		{
@@ -40,37 +33,37 @@ namespace WorldTree.Server
 			//self.AddComponent(out TreeDataTest _);
 		}
 
-		/// <summary>
-		/// UpdateTime
-		/// </summary>
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		private static void UpdateTime(this DotNetInit self, TimeSpan timeSpan)
+		private static void UpdateTime1(this DotNetInit self, TimeSpan timeSpan)
 		{
 			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		}
 
-		/// <summary>
-		/// Disable
-		/// </summary>
+
+
 		[NodeRule(nameof(DisableRule<DotNetInit>))]
 		private static void Disable(this DotNetInit self)
 		{
 			self.Log("失活！！");
 		}
 
-		/// <summary>
-		/// Remove
-		/// </summary>
+
 		[NodeRule(nameof(RemoveRule<DotNetInit>))]
 		private static void Remove(this DotNetInit self)
 		{
 			self.Log($"初始关闭！！");
 		}
 
+		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
+		private static void OnUpdateTime(this DotNetInit self, TimeSpan arg1)
+		{
+		}
+
+
 
 
 		/// <summary>
-		/// a
+		/// 测试定点数除法的精度
 		/// </summary>
 		public static void TestDivisionPrecision(this DotNetInit self)
 		{
@@ -146,13 +139,6 @@ namespace WorldTree.Server
 		}
 
 
-
-
-
-
-
-
-
 		/// <summary>
 		/// 耗时测试
 		/// </summary>
@@ -192,9 +178,7 @@ namespace WorldTree.Server
 
 
 
-		/// <summary>
-		/// AddSub
-		/// </summary>
+
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
 		static void AddSub<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
 		{
@@ -202,18 +186,14 @@ namespace WorldTree.Server
 
 		}
 
-		/// <summary>
-		/// AddSub1
-		/// </summary>
+
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
 		[RuleSwitch(nameof(self.ConfigId), 101)]
 		static void AddSub1<T>(this Test<T> self, TestEnum idrs, DotNetInit io, List<int> i)
 		{
 		}
 
-		/// <summary>
-		/// AddSub2
-		/// </summary>
+
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
 		[RuleSwitch(nameof(self.ConfigId), 102)]
 		static void AddSub2<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
@@ -221,10 +201,6 @@ namespace WorldTree.Server
 		}
 
 
-
-		/// <summary>
-		/// a
-		/// </summary>
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
 		[RuleSwitch(nameof(self.ConfigId), 103)]
 		private static void OnTestNodeEvent<T>(this Test<T> self, TestEnum arg1, DotNetInit arg2, List<int> arg3)
@@ -232,34 +208,31 @@ namespace WorldTree.Server
 
 		}
 
-		/// <summary>
-		/// a
-		/// </summary>
-		[NodeRule(nameof(SendRuleAsync<Test<T>, ISendRuleAsync>))]
+		[NodeRule(nameof(CallRuleAsync<Test<T>, ICallRuleAsync<int>, int>))]
 		[RuleSwitch(nameof(self.ConfigId), 103)]
-		private static async TreeTask OnSendAsync1<T>(this Test<T> self)
+		private static async TreeTask<int> OnCallAsync1<T>(this Test<T> self)
 		{
 			await self.TreeTaskCompleted();
+			return default;
 		}
 
-		/// <summary>
-		/// a
-		/// </summary>
-		[NodeRule(nameof(SendRuleAsync<Test<T>, ISendRuleAsync>))]
+
+		[NodeRule(nameof(CallRule<Test<T>, ICallRule<int>, int>))]
 		[RuleSwitch(nameof(self.ConfigId), 104)]
-		private static async TreeTask OnSendAsync2<T>(this Test<T> self)
+		private static int OnCall1<T>(this Test<T> self)
 		{
-			await self.TreeTaskCompleted();
+			return default;
 		}
 
-		/// <summary>
-		/// a
-		/// </summary>
-		[NodeRule(nameof(SendRuleAsync<Test<T>, ISendRuleAsync>))]
-		private static async TreeTask OnSendAsync3<T>(this Test<T> self)
+
+		[NodeRule(nameof(CallRule<Test<T>, ICallRule<int>, int>))]
+		private static int OnCall<T>(this Test<T> self)
 		{
-			await self.TreeTaskCompleted();
+			return default;
 		}
+
+
+
 
 	}
 

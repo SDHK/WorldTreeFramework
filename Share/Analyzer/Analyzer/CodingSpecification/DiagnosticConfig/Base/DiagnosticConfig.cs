@@ -48,7 +48,7 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 是否需要注释
 		/// </summary>
-		public bool NeedComment = true;
+		public Func<SemanticModel, SyntaxToken, bool> NeedComment = (semanticModel, identifier) => true;
 
 		/// <summary>
 		/// 声明语法形式筛选
@@ -87,7 +87,7 @@ namespace WorldTree.Analyzer
 		/// <param name="key">键值</param>
 		public DiagnosticConfig Init(string key)
 		{
-			if (NeedComment) MessageFormat += "【需要注释】";
+			//if (NeedComment) MessageFormat += "【需要注释】";
 
 			// 生成唯一诊断名称
 			this.Key = key;

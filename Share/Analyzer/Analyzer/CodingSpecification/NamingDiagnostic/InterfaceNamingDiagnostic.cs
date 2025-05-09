@@ -50,7 +50,7 @@ namespace WorldTree.Analyzer
 							{
 								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, interfaceDeclaration.Identifier.GetLocation(), interfaceDeclaration.Identifier.Text));
 							}
-							else if (codeDiagnostic.NeedComment)
+							else if (codeDiagnostic.NeedComment.Invoke(semanticModel, interfaceDeclaration.Identifier))
 							{
 								//判断是否是部分接口
 								if (interfaceDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))

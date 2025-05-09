@@ -63,7 +63,7 @@ namespace WorldTree.Analyzer
 							//是否为原声明的方法，而不是重写的方法，或者是实现的接口方法
 							if (!isOverride)
 							{
-								if (codeDiagnostic.NeedComment && !TreeSyntaxHelper.CheckSummaryComment(methodDeclaration))
+								if (codeDiagnostic.NeedComment.Invoke(semanticModel, methodDeclaration.Identifier) && !TreeSyntaxHelper.CheckSummaryComment(methodDeclaration))
 								{
 									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, methodDeclaration.GetLocation(), methodDeclaration.Identifier.Text));
 								}
