@@ -123,18 +123,29 @@ namespace WorldTree.Analyzer
 		ClassLocalVariableNaming,
 
 
+
+
+
 		/// <summary>
 		/// 实例的简单成员访问诊断
 		/// </summary>
 		/// <remarks>字段，属性，事件字段</remarks>
 		SimpleMemberAccess,
 
-
+		/// <summary>
+		/// 节点法则特性诊断
+		/// </summary>
+		NodeRuleAttributeAnalysis,
 
 		/// <summary>
-		/// 特性命名规范诊断
+		/// 节点法则类型诊断
 		/// </summary>
-		AttributeNaming,
+		NodeRuleClassAnalysis,
+
+		/// <summary>
+		/// 节点法则方法诊断
+		/// </summary>
+		NodeRuleMethodAnalysis,
 
 	}
 }

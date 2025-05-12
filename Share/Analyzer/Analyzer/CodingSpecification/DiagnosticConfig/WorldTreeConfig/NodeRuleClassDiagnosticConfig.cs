@@ -10,24 +10,23 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace WorldTree.Analyzer
 {
-	/// <summary>
-	/// NodeRule特性诊断
-	/// </summary>
-	public class NodeRuleAttributeDiagnosticConfig : DiagnosticConfigGroup
+
+
+	public class NodeRuleClassDiagnosticConfig : DiagnosticConfigGroup
 	{
-		public NodeRuleAttributeDiagnosticConfig()
+		public NodeRuleClassDiagnosticConfig()
 		{
 			Screen = (Compilation, Symbol) =>
 			{
 				return true;
 			};
 
-			SetConfig(DiagnosticKey.NodeRuleAttributeAnalysis, new DiagnosticConfig()
+			SetConfig(DiagnosticKey.NodeRuleClassAnalysis, new DiagnosticConfig()
 			{
-				Title = "NodeRule特性标记分析",
+				Title = "NodeRule孤立类型分析",
 				MessageFormat = "NodeRule法则方法补全",
 				CodeFixTitle = "【补全法则方法】",
-				DeclarationKind = SyntaxKind.Attribute,
+				DeclarationKind = SyntaxKind.GenericName,
 				Check = (semanticModel, identifier) => false,
 				NeedComment = (semanticModel, identifier) => false,
 			});

@@ -31,12 +31,12 @@ namespace WorldTree.Analyzer
 			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> diagnosticConfigGroups)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
-			MethodDeclarationSyntax? methodDeclaration = context.Node as MethodDeclarationSyntax;
+			MethodDeclarationSyntax methodDeclaration = context.Node as MethodDeclarationSyntax;
 			foreach (DiagnosticConfigGroup diagnosticConfigGroup in diagnosticConfigGroups)
 			{
 				BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(methodDeclaration);
-				IMethodSymbol? methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
-				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
+				IMethodSymbol methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
+				INamedTypeSymbol typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 				if (!diagnosticConfigGroup.Screen(context.Compilation, typeSymbol)) continue;
 				if (diagnosticConfigGroup.Diagnostics.TryGetValue(DiagnosticKey.MethodNaming, out DiagnosticConfig codeDiagnostic))
 				{
@@ -51,7 +51,7 @@ namespace WorldTree.Analyzer
 							if (!isOverride)
 							{
 								// 检查方法是否直接声明在当前类中
-								INamedTypeSymbol? parentTypeSymbol = semanticModel.GetDeclaredSymbol(parentType);
+								INamedTypeSymbol parentTypeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 								isOverride = !methodSymbol.ContainingType.Equals(parentTypeSymbol, SymbolEqualityComparer.Default);
 								if (!isOverride)
 								{

@@ -42,6 +42,7 @@ namespace WorldTree.Analyzer
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
 
+			new NodeRuleClassDiagnosticConfig(),
 			new NodeRuleAttributeDiagnosticConfig(),
 			new RuleDelegateDiagnosticConfig(),
 
@@ -62,6 +63,8 @@ namespace WorldTree.Analyzer
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
 
+			new NodeRuleMethodDiagnosticConfig(),
+			new NodeRuleClassDiagnosticConfig(),
 			new NodeRuleAttributeDiagnosticConfig(),
 			new RuleDelegateDiagnosticConfig(),
 

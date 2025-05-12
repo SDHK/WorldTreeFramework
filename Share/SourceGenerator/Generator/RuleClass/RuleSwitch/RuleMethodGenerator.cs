@@ -98,7 +98,7 @@ namespace WorldTree.SourceGenerator
 						int count = attributeRuleSwitch.ArgumentList.Arguments.Count;
 						if (count == 0) continue;
 
-						AttributeArgumentSyntax argumentRule = attributeNodeRule.ArgumentList.Arguments[0];
+						AttributeArgumentSyntax argumentRule = attributeNodeRule.ArgumentList.Arguments.FirstOrDefault();
 
 						AttributeArgumentSyntax argumentName = count == 3 ? attributeRuleSwitch.ArgumentList.Arguments[0] : null;
 

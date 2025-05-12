@@ -45,9 +45,10 @@ namespace WorldTree.Analyzer
 			// 如果特性没有标记在方法上，或者有空行，报告诊断错误
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
-				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.AttributeNaming, out DiagnosticConfig codeDiagnostic))
+				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.NodeRuleAttributeAnalysis, out DiagnosticConfig codeDiagnostic))
 				{
 					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, attributeSyntax.GetLocation(), attributeSyntax.ToString()));
+					return;
 				}
 			}
 		}
@@ -244,8 +245,4 @@ namespace WorldTree.Analyzer
 		}
 
 	}
-
-
-
-
 }

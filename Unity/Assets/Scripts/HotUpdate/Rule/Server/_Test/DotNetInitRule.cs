@@ -17,9 +17,11 @@ namespace WorldTree.Server
 
 	public static partial class DotNetInitRule
 	{
+
 		[NodeRule(nameof(EnableRule<DotNetInit>))]
 		private static void Enable(this DotNetInit self)
 		{
+
 			self.Log($"激活！！");
 			//self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse mouse, manager);
 			//MainTime();
@@ -55,7 +57,7 @@ namespace WorldTree.Server
 		}
 
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		private static void OnUpdateTime(this DotNetInit self, TimeSpan arg1)
+		private static void OnUpdateTime1(this DotNetInit self, TimeSpan arg1)
 		{
 		}
 
@@ -185,55 +187,19 @@ namespace WorldTree.Server
 			NodeRuleHelper.SendRule(self, default(TestNodeEvent<I>), TestEnum.Test1, io, new List<int>());
 
 		}
-
-
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
-		[RuleSwitch(nameof(self.ConfigId), 101)]
-		static void AddSub1<T>(this Test<T> self, TestEnum idrs, DotNetInit io, List<int> i)
-		{
-		}
-
-
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
-		[RuleSwitch(nameof(self.ConfigId), 102)]
-		static void AddSub2<T>(this Test<T> self, TestEnum id, DotNetInit io, List<int> i)
-		{
-		}
-
-
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, DotNetInit>))]
-		[RuleSwitch(nameof(self.ConfigId), 103)]
-		private static void OnTestNodeEvent<T>(this Test<T> self, TestEnum arg1, DotNetInit arg2, List<int> arg3)
-		{
-
-		}
-
-		[NodeRule(nameof(CallRuleAsync<Test<T>, ICallRuleAsync<int>, int>))]
-		[RuleSwitch(nameof(self.ConfigId), 103)]
-		private static async TreeTask<int> OnCallAsync1<T>(this Test<T> self)
-		{
-			await self.TreeTaskCompleted();
-			return default;
-		}
-
-
-		[NodeRule(nameof(CallRule<Test<T>, ICallRule<int>, int>))]
-		[RuleSwitch(nameof(self.ConfigId), 104)]
-		private static int OnCall1<T>(this Test<T> self)
-		{
-			return default;
-		}
-
-
-		[NodeRule(nameof(CallRule<Test<T>, ICallRule<int>, int>))]
-		private static int OnCall<T>(this Test<T> self)
-		{
-			return default;
-		}
-
-
-
-
 	}
 
+	public static partial class DotNetInitRule
+	{
+		[NodeRule(nameof(UpdateRule<DotNetInit>))]
+		private static void OnUpdate(this DotNetInit self)
+		{
+		}
+
+		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
+		private static void OnUpdateTime(this DotNetInit self, TimeSpan arg1)
+		{
+		}
+
+	}
 }
