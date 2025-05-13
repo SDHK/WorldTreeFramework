@@ -35,13 +35,12 @@ namespace WorldTree.Server
 			//self.AddComponent(out TreeDataTest _);
 		}
 
+
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
 		private static void UpdateTime1(this DotNetInit self, TimeSpan timeSpan)
 		{
 			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		}
-
-
 
 		[NodeRule(nameof(DisableRule<DotNetInit>))]
 		private static void Disable(this DotNetInit self)
@@ -50,9 +49,14 @@ namespace WorldTree.Server
 		}
 
 
+
+
+
+
 		[NodeRule(nameof(RemoveRule<DotNetInit>))]
 		private static void Remove(this DotNetInit self)
 		{
+
 			self.Log($"初始关闭！！");
 		}
 
@@ -177,10 +181,6 @@ namespace WorldTree.Server
 		}
 
 
-
-
-
-
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
 		static void AddSub<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
 		{
@@ -191,14 +191,22 @@ namespace WorldTree.Server
 
 	public static partial class DotNetInitRule
 	{
+
 		[NodeRule(nameof(UpdateRule<DotNetInit>))]
 		private static void OnUpdate(this DotNetInit self)
 		{
 		}
 
+
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		private static void OnUpdateTime(this DotNetInit self, TimeSpan arg1)
+		private static void OnUpdateTime(this DotNetInit self, TimeSpan arg1qwe)
 		{
+			//asdada
+			//巴拉巴拉方法内容
+			self.Log("方法内容1");
+			self.LogInfo("方法内容2");
+			self.CodeToType(12312L);
+
 		}
 
 	}

@@ -61,6 +61,8 @@ namespace WorldTree.Analyzer
 
 		public override sealed FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
+		public virtual bool CheckCodeFix(DiagnosticConfig codeDiagnostic, Document document) => true;
+
 		public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
@@ -73,7 +75,7 @@ namespace WorldTree.Analyzer
 
 			// 找到需要修复的委托声明
 			T declaration = null;
-			IEnumerable<SyntaxNode>? SyntaxNodes = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()?.OfType<T>();
+			IEnumerable<SyntaxNode> SyntaxNodes = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()?.OfType<T>();
 			foreach (SyntaxNode node in SyntaxNodes)
 			{
 				declaration = node as T;
@@ -85,6 +87,8 @@ namespace WorldTree.Analyzer
 			// 根据不同的诊断类型注册不同的代码修复
 			if (ProjectDiagnosticSetting.TryFindDiagnosticDescriptor(diagnostic.Id, out DiagnosticConfig codeDiagnostic))
 			{
+				if (!CheckCodeFix(codeDiagnostic, context.Document)) return;
+
 				context.RegisterCodeFix(
 				CodeAction.Create(title: codeDiagnostic.CodeFixTitle,
 				createChangedDocument: c => CodeFix(codeDiagnostic, context.Document, declaration, c),

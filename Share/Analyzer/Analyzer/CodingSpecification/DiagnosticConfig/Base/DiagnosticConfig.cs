@@ -20,6 +20,12 @@ namespace WorldTree.Analyzer
 	/// </summary>
 	public struct DiagnosticConfig
 	{
+
+		/// <summary>
+		/// 诊断键值
+		/// </summary>
+		public DiagnosticKey DiagnosticKey;
+
 		/// <summary>
 		/// 诊断标题
 		/// </summary>

@@ -86,6 +86,13 @@ namespace WorldTree.Analyzer
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.MethodDeclaration;
 
+		public override bool CheckCodeFix(DiagnosticConfig codeDiagnostic, Document document)
+		{
+			return codeDiagnostic.DiagnosticKey == DiagnosticKey.MethodNaming;
+
+		}
+
+
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, MethodDeclarationSyntax decl, CancellationToken cancellationToken)
 		{
 			var fieldName = decl.Identifier.Text;

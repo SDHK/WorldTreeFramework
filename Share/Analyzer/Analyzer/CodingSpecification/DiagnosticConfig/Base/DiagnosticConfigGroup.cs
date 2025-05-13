@@ -34,6 +34,7 @@ namespace WorldTree.Analyzer
 		public void SetConfig(DiagnosticKey diagnosticKey, DiagnosticConfig namingRule)
 		{
 			namingRule.Init(GetType().Name.Replace("DiagnosticConfig", ""));
+			namingRule.DiagnosticKey = diagnosticKey;
 			if (!Diagnostics.ContainsKey(diagnosticKey))
 			{
 				Diagnostics.Add(diagnosticKey, namingRule);

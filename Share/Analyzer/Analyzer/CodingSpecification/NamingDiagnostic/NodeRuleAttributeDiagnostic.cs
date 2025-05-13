@@ -40,7 +40,10 @@ namespace WorldTree.Analyzer
 
 			// 检查特性是否标记在方法上
 			var targetNode = attributeSyntax.Parent?.Parent;
-			if (targetNode is MethodDeclarationSyntax) return;
+			if (targetNode is MethodDeclarationSyntax methodDeclaration)
+			{
+				return;
+			}
 
 			// 如果特性没有标记在方法上，或者有空行，报告诊断错误
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
@@ -93,50 +96,7 @@ namespace WorldTree.Analyzer
 			var ruleTypeName = "On" + ruleTypeSymbol.Name.Replace("Rule", "");
 
 			StringBuilder classCode = new();
-			switch (ruleBaseEnum)
-			{
-				case RuleBaseEnum.SendRule:
-					classCode.AppendLine(
-					$$"""
-							private static void {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
-							{ 
-							}
-					"""
-					);
-					break;
-				case RuleBaseEnum.SendRuleAsync:
-					classCode.AppendLine(
-					$$"""
-							private static async TreeTask {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
-							{ 
-								await self.TreeTaskCompleted();
-							}
-					"""
-					);
-					break;
-				case RuleBaseEnum.CallRule:
-					classCode.AppendLine(
-					$$"""
-							private static {{outType}} {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
-							{ 
-								return default;
-							}
-					"""
-					);
-					break;
-				case RuleBaseEnum.CallRuleAsync:
-					classCode.AppendLine(
-					$$"""
-							private static async TreeTask<{{outType}}> {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
-							{ 
-								await self.TreeTaskCompleted();
-								return default;
-							}
-					"""
-					);
-					break;
-			}
-
+			classCode.AppendLine(GetRuleMethod(ruleBaseEnum, ruleTypeName, typeTName, genericTypeParameter, outType));
 
 			// 将 classCode 的代码插入到 attributeSyntax 的下面
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
@@ -158,6 +118,43 @@ namespace WorldTree.Analyzer
 
 		}
 
+
+		/// <summary>
+		/// 获取法则方法
+		/// </summary>
+		public string GetRuleMethod(RuleBaseEnum ruleBaseEnum, string ruleTypeName, string typeTName, string genericTypeParameter, string outType)
+		=> ruleBaseEnum switch
+		{
+			RuleBaseEnum.SendRule =>
+			$$"""
+					private static void {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
+					{ 
+					}
+			""",
+			RuleBaseEnum.SendRuleAsync =>
+			$$"""
+					private static async TreeTask {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
+					{ 
+						await self.TreeTaskCompleted();
+					}
+			""",
+			RuleBaseEnum.CallRule =>
+			$$"""
+					private static {{outType}} {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
+					{ 
+						return default;
+					}
+			""",
+			RuleBaseEnum.CallRuleAsync =>
+			$$"""
+					private static async TreeTask<{{outType}}> {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
+					{ 
+						await self.TreeTaskCompleted();
+						return default;
+					}
+			""",
+			_ => null
+		};
 
 		/// <summary>
 		/// 尝试获取法则类型
