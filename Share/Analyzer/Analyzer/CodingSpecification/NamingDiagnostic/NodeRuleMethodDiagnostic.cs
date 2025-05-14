@@ -67,7 +67,7 @@ namespace WorldTree.Analyzer
 				{
 					// 获取完全限定的类型名称
 					MethodTypeNames.Add(typeSymbol);
-					ParseTypeSymbol(typeSymbol, MethodTypeTNames);
+
 				}
 			}
 
@@ -78,12 +78,27 @@ namespace WorldTree.Analyzer
 				if (returnTypeSymbol != null)
 				{
 					MethodTypeNames.Add(returnTypeSymbol);
-					ParseTypeSymbol(returnTypeSymbol, MethodTypeTNames);
+
 				}
 			}
+			// 获取方法的泛型参数类型
+			if (methodDeclaration.TypeParameterList != null)
+			{
+				foreach (var typeParameter in methodDeclaration.TypeParameterList.Parameters)
+				{
+					ITypeSymbol typeSymbol = semanticModel.GetDeclaredSymbol(typeParameter);
+					if (typeSymbol != null)
+					{
+						MethodTypeTNames.Add(typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
+					}
+				}
+			}
+
 			bool isError = false;
+			//拿到方法名称 ，判断是否是On开头
+			if (!methodDeclaration.Identifier.Text.StartsWith("On")) isError = true;
 			// 比较特性参数类型和方法参数类型 顺序和类型是否一致
-			if (AttributeTypeNames.Count != MethodTypeNames.Count)
+			if (AttributeTypeNames.Count != MethodTypeNames.Count || AttributeTypeTNames.Count != MethodTypeTNames.Count)
 			{
 				isError = true;
 			}
@@ -91,8 +106,14 @@ namespace WorldTree.Analyzer
 			{
 				for (int i = 0; i < AttributeTypeNames.Count; i++)
 				{
-					if (AttributeTypeNames[i].ToDisplayString() == MethodTypeNames[i].ToDisplayString()) continue;
-					isError = true; break;
+					if (AttributeTypeNames[i].ToDisplayString() != MethodTypeNames[i].ToDisplayString())
+					{
+						isError = true; break;
+					}
+					//else if (AttributeTypeTNames[i] != MethodTypeTNames[i])
+					//{
+					//	isError = true; break;
+					//}
 				}
 			}
 
@@ -234,7 +255,9 @@ namespace WorldTree.Analyzer
 			// 保留原方法的特性和方法体
 			var updatedMethod = methodDeclaration
 				.WithIdentifier(newMethodDeclaration.Identifier) // 替换方法名
-				.WithParameterList(newMethodDeclaration.ParameterList); // 替换参数列表
+				.WithParameterList(newMethodDeclaration.ParameterList) // 替换参数列表
+				.WithTypeParameterList(newMethodDeclaration.TypeParameterList); // 替换泛型参数列表
+
 
 			// 替换原有的方法节点
 			var newRoot = root.ReplaceNode(methodDeclaration, updatedMethod);

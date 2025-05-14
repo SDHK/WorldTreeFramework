@@ -19,7 +19,7 @@ namespace WorldTree.Server
 	{
 
 		[NodeRule(nameof(EnableRule<DotNetInit>))]
-		private static void Enable(this DotNetInit self)
+		private static void OnEnable(this DotNetInit self)
 		{
 
 			self.Log($"激活！！");
@@ -29,7 +29,7 @@ namespace WorldTree.Server
 		}
 
 		[NodeRule(nameof(AddRule<DotNetInit>))]
-		private static void Add(this DotNetInit self)
+		private static void OnAdd(this DotNetInit self)
 		{
 			self.AddComponent(out SerializeTest _);
 			//self.AddComponent(out TreeDataTest _);
@@ -37,24 +37,21 @@ namespace WorldTree.Server
 
 
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		private static void UpdateTime1(this DotNetInit self, TimeSpan timeSpan)
+		private static void OnUpdateTime(this DotNetInit self, TimeSpan timeSpan)
 		{
 			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		}
 
 		[NodeRule(nameof(DisableRule<DotNetInit>))]
-		private static void Disable(this DotNetInit self)
+		private static void OnDisable(this DotNetInit self)
 		{
 			self.Log("失活！！");
 		}
 
 
 
-
-
-
 		[NodeRule(nameof(RemoveRule<DotNetInit>))]
-		private static void Remove(this DotNetInit self)
+		private static void OnRemove(this DotNetInit self)
 		{
 
 			self.Log($"初始关闭！！");
@@ -182,9 +179,16 @@ namespace WorldTree.Server
 
 
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
-		static void AddSub<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
+		static void OnTestNodeEvent1<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
 		{
 			NodeRuleHelper.SendRule(self, default(TestNodeEvent<I>), TestEnum.Test1, io, new List<int>());
+
+		}
+
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>))]
+		[RuleSwitch(nameof(io), typeof(Type))]
+		static void OnTestNodeEvent<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
+		{
 
 		}
 	}
@@ -199,15 +203,15 @@ namespace WorldTree.Server
 
 
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		private static void OnUpdateTime(this DotNetInit self, TimeSpan arg1qwe)
+		private static void OnUpdateTime21(this DotNetInit self, TimeSpan arg1qwe)
 		{
 			//asdada
 			//巴拉巴拉方法内容
 			self.Log("方法内容1");
 			self.LogInfo("方法内容2");
 			self.CodeToType(12312L);
-
 		}
+
 
 	}
 }

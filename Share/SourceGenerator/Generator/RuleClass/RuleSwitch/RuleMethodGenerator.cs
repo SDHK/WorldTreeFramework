@@ -546,7 +546,17 @@ namespace WorldTree.SourceGenerator
 				caseValue = memberAccess1.ToString();
 				return true;
 			}
-
+			else if (argumentCase.Expression is TypeOfExpressionSyntax typeOfExpression)
+			{
+				// 处理 typeof 表达式
+				var typeSymbol = semanticModel.GetTypeInfo(typeOfExpression.Type).Type;
+				if (typeSymbol != null)
+				{
+					// 获取类型的全限定名
+					caseValue = $"typeof({typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)})";
+					return true;
+				}
+			}
 			return false;
 		}
 

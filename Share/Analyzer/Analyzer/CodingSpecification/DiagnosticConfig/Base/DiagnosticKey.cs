@@ -138,6 +138,11 @@ namespace WorldTree.Analyzer
 		NodeRuleAttributeAnalysis,
 
 		/// <summary>
+		/// 法则分流特性诊断
+		/// </summary>
+		RuleSwitchAttributeAnalysis,
+
+		/// <summary>
 		/// 节点法则类型诊断
 		/// </summary>
 		NodeRuleClassAnalysis,

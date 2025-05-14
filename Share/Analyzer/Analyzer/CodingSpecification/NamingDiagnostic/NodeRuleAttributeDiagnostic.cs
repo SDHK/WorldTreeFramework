@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 namespace WorldTree.Analyzer
 {
 
+
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class NodeRuleAttributeDiagnostic : NamingDiagnosticBase
 	{
@@ -64,6 +65,12 @@ namespace WorldTree.Analyzer
 		private List<string> typeTNames = new();
 
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
+
+		public override bool CheckCodeFix(DiagnosticConfig codeDiagnostic, Document document)
+		{
+			return codeDiagnostic.DiagnosticKey == DiagnosticKey.NodeRuleAttributeAnalysis;
+		}
+
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, AttributeSyntax attributeSyntax, CancellationToken cancellationToken)
 		{
 			if (attributeSyntax.ArgumentList.Arguments.Count == 0) return null;

@@ -21,8 +21,6 @@ using System.Threading.Tasks;
 namespace WorldTree.Analyzer
 {
 
-
-
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class NodeRuleClassDiagnostic : NamingDiagnosticBase
 	{

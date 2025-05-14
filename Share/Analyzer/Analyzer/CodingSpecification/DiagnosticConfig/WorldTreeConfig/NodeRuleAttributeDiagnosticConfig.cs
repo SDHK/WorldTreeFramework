@@ -10,6 +10,28 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace WorldTree.Analyzer
 {
+	public class RuleSwitchAttributeDiagnosticConfig : DiagnosticConfigGroup
+	{
+		public RuleSwitchAttributeDiagnosticConfig()
+		{
+			Screen = (Compilation, Symbol) =>
+			{
+				return true;
+			};
+
+			SetConfig(DiagnosticKey.RuleSwitchAttributeAnalysis, new DiagnosticConfig()
+			{
+				Title = "RuleSwitch特性标记分析",
+				MessageFormat = "RuleSwitch键值修复",
+				CodeFixTitle = "【键值修复】",
+				DeclarationKind = SyntaxKind.Attribute,
+				Check = (semanticModel, identifier) => false,
+				NeedComment = (semanticModel, identifier) => false,
+			});
+		}
+	}
+
+
 	/// <summary>
 	/// NodeRule特性诊断
 	/// </summary>
