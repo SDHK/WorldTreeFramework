@@ -26,7 +26,6 @@ namespace WorldTree.SourceGenerator
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(RuleSupplementHelper.classInterfaceSyntax[ClassFullName]);
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t");
 			RuleSupplementHelper.AddComment(Code, "通知法则委托", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			//Code.AppendLine($@"	[RuleDelegateMark(nameof({ClassName}Rule<N{TypeArguments}>))]");
 			Code.AppendLine(@$"	public delegate void On{ClassName}<N{TypeArguments}>(N self{genericTypeParameter}) where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments};");
 		}
 		public static void GetMethod(StringBuilder Code, INamedTypeSymbol typeSymbol, INamedTypeSymbol? baseInterface)

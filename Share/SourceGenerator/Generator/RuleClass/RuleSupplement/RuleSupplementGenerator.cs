@@ -199,22 +199,22 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
 
 			//法则委托
-			if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ISendRule, out _))
-			{
-				SendRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
-			}
-			else if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ISendRuleAsync, out _))
-			{
-				SendRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
-			}
-			else if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ICallRule, out _))
-			{
-				CallRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
-			}
-			else if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ICallRuleAsync, out _))
-			{
-				CallRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
-			}
+			//if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ISendRule, out _))
+			//{
+			//	SendRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
+			//}
+			//else if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ISendRuleAsync, out _))
+			//{
+			//	SendRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
+			//}
+			//else if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ICallRule, out _))
+			//{
+			//	CallRuleSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
+			//}
+			//else if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ICallRuleAsync, out _))
+			//{
+			//	CallRuleAsyncSupplementHelper.GetDelegate(Code, typeSymbol, baseInterface);
+			//}
 		}
 
 		/// <summary>
