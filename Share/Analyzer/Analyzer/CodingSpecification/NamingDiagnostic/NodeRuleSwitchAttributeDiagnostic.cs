@@ -97,7 +97,6 @@ namespace WorldTree.Analyzer
 
 			bool typeMatch = false;
 			// 检查常量类型与目标类型是否匹配
-			//var constantValue = semanticModel.GetConstantValue(argumentKey.Expression);
 			var constantType = semanticModel.GetTypeInfo(argumentKey.Expression).Type;
 			if (targetType != null && constantType != null)
 			{
@@ -207,7 +206,18 @@ namespace WorldTree.Analyzer
 			}
 
 			// 生成一个特性字符串，但不包括特性名称，只包括参数部分
-			string attributeArgsString = $"({argumentArg.Expression}, default({targetType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}))";
+			string attributeArgsString;
+			// 判断目标类型是否是Type
+			if (targetType != null && targetType.Equals(semanticModel.Compilation.GetTypeByMetadataName("System.Type"), SymbolEqualityComparer.Default))
+			{
+				// 如果目标类型是 System.Type，则无需进一步处理
+				attributeArgsString = $"({argumentArg.Expression}, typeof(object))";
+			}
+			else
+			{
+				attributeArgsString = $"({argumentArg.Expression}, default({targetType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}))";
+
+			}
 
 			// 解析属性参数列表
 			AttributeArgumentListSyntax newArgumentList = SyntaxFactory.ParseAttributeArgumentList(attributeArgsString);
