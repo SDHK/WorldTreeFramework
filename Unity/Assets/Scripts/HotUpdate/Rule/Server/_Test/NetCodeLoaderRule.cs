@@ -11,7 +11,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace WorldTree
+namespace WorldTree.Server
 {
 	public static class NetCodeLoaderRule
 	{

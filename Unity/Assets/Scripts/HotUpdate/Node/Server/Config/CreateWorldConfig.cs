@@ -1,4 +1,4 @@
-namespace WorldTree
+namespace WorldTree.Server
 {
 	/// <summary>
 	/// 测试数据

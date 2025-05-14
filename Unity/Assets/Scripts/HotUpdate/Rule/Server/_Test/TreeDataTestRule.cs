@@ -8,7 +8,7 @@
 */
 using System.IO;
 
-namespace WorldTree
+namespace WorldTree.Server
 {
 
 

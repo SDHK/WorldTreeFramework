@@ -8,7 +8,7 @@
 */
 using System;
 
-namespace WorldTree
+namespace WorldTree.Server
 {
 	/// <summary>
 	/// ²âÊÔ½Úµã

@@ -6,7 +6,7 @@
 * 描述：
 
 */
-namespace WorldTree
+namespace WorldTree.Server
 {
 	/// <summary>
 	/// 热重载测试

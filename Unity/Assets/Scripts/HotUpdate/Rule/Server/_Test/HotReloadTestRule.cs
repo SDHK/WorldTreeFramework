@@ -8,7 +8,7 @@
 */
 using System;
 
-namespace WorldTree
+namespace WorldTree.Server
 {
 	public static partial class HotReloadTestRule
 	{

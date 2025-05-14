@@ -6,7 +6,7 @@
 * ÃèÊö£º
 
 */
-namespace WorldTree
+namespace WorldTree.Server
 {
 	public static class MainWorldRule
 	{

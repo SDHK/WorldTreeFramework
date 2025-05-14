@@ -8,7 +8,7 @@
 */
 using System.Collections.Generic;
 
-namespace WorldTree
+namespace WorldTree.Server
 {
 	/// <summary>
 	/// 序列化测试
