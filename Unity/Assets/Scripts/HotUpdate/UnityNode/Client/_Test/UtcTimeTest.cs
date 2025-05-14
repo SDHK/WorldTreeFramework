@@ -17,6 +17,7 @@ namespace WorldTree
 		, ComponentOf<InitialDomain>
 		, AsAwake
 		, AsGuiUpdateTime
+		, AsGuiUpdate
 	{
 		/// <summary>
 		/// 开始时间

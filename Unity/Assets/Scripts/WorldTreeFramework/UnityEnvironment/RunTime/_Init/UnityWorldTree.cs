@@ -6,7 +6,6 @@
 * 描述：
 
 */
-using CommandLine;
 using System;
 using UnityEngine;
 
@@ -34,9 +33,9 @@ namespace WorldTree
 		{
 			AppDomain.CurrentDomain.UnhandledException += (sender, e) => Debug.LogError(e.ExceptionObject.ToString());
 			// 命令行参数接收
-			Parser.Default.ParseArguments<Options>(System.Environment.GetCommandLineArgs())
-					   .WithNotParsed(error => throw new Exception($"命令行格式错误! {error}"))
-					   .WithParsed((o) => Options = o);
+			//Parser.Default.ParseArguments<Options>(System.Environment.GetCommandLineArgs())
+			//		   .WithNotParsed(error => throw new Exception($"命令行格式错误! {error}"))
+			//		   .WithParsed((o) => Options = o);
 
 			WorldLineManager = new();
 			WorldLineManager.Options = Options;

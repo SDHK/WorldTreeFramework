@@ -14,14 +14,16 @@ namespace WorldTree
 
 	public static partial class InitialDomainRule
 	{
-		static OnAwake<InitialDomain> OnAwake = (self) =>
+		[NodeRule(nameof(AwakeRule<InitialDomain>))]
+		private static void OnAwake(this InitialDomain self)
 		{
 			self.TestFloat = 1;
 
 			self.Log($"初始域唤醒！！!");
-		};
+		}
 
-		static OnAdd<InitialDomain> OnAdd = (self) =>
+		[NodeRule(nameof(AddRule<InitialDomain>))]
+		private static void OnAdd(this InitialDomain self)
 		{
 			self.Log($"初始域热更部分！！!");
 			self.TypeToCode<InputDeviceManager>();
@@ -32,9 +34,10 @@ namespace WorldTree
 			//string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone);
 			//if (!currentDefines.Contains("MY_NEW_DEFINE")) currentDefines += ";MY_NEW_DEFINE";
 			//PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, currentDefines);
-		};
+		}
 
-		static OnUpdate<InitialDomain> OnUpdate = (self) =>
+		[NodeRule(nameof(UpdateRule<InitialDomain>))]
+		private static void OnUpdate(this InitialDomain self)
 		{
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
@@ -44,8 +47,7 @@ namespace WorldTree
 				//NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
 
 			}
-
-		};
+		}
 
 		class TestEvent1 : TestEventRule<InitialDomain>
 		{
@@ -55,31 +57,28 @@ namespace WorldTree
 			}
 		}
 
-		static OnEnable<InitialDomain> OnEnable = (self) =>
+		[NodeRule(nameof(EnableRule<InitialDomain>))]
+		private static void OnEnable(this InitialDomain self)
 		{
 			self.Log($"初始域激活！！");
-		};
-
-		static OnDisable<InitialDomain> OnDisable = (self) =>
+		}
+		[NodeRule(nameof(DisableRule<InitialDomain>))]
+		private static void OnDisable(this InitialDomain self)
 		{
+
 			self.Log($"初始域失活！！");
-		};
+		}
 
-
-		static OnGuiUpdateTime<InitialDomain> OnGui = (self, timeSpan) =>
+		[NodeRule(nameof(GuiUpdateRule<InitialDomain>))]
+		private static void OnGuiUpdate(this InitialDomain self)
 		{
 			//GUILayout.Label($@"    {timeSpan.TotalMilliseconds} !  ", new GUIStyle() { fontSize = 60 });
-		};
+		}
 
-		static OnRemove<InitialDomain> OnRemove = (self) =>
+		[NodeRule(nameof(RemoveRule<InitialDomain>))]
+		private static void OnRemove(this InitialDomain self)
 		{
 			self.Log($"初始域关闭！！");
-		};
-
-		static OnGuiUpdate<InitialDomain> OnGuiUpdate = (self) =>
-		{
-
-		};
-
+		}
 	}
 }

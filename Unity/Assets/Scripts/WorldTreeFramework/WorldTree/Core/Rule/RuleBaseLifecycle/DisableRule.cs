@@ -36,15 +36,4 @@ namespace WorldTree
 			}
 		}
 	}
-
-	/// <summary>
-	/// 失活法则
-	/// </summary>
-	/// <remarks>
-	/// <Para>
-	/// 通知法则委托: <see cref="WorldTree.Disable"/> : <see cref="ISendRule"/>
-	/// </Para>
-	/// </remarks>
-	public delegate void OnDisable<N>(N self) where N : class, INode, AsRule<Disable>;
-
 }

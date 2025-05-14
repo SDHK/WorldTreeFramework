@@ -21,8 +21,17 @@ namespace WorldTree
 		/// </summary>
 		private Logger logger;
 
+		static WorldLog()
+		{
+			//获得配置
+			NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("../ProjectConfig/NLog/NLog.config");
+			//获得当前目录
+			NLog.LogManager.Configuration.Variables["currentDir"] = Environment.CurrentDirectory;
+		}
+
 		public override void OnCreate()
 		{
+
 			this.logger = NLog.LogManager.GetLogger($"{(uint)this.Core.Id:000000}.{this.GetType()}");
 		}
 

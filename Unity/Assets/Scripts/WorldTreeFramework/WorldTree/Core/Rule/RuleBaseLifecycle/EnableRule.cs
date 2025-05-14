@@ -9,8 +9,6 @@
 
 */
 
-using System;
-
 namespace WorldTree
 {
 	/// <summary>
@@ -37,24 +35,4 @@ namespace WorldTree
 			}
 		}
 	}
-	/// <summary>
-	/// 激活法则
-	/// </summary>
-	/// <remarks>
-	/// <Para>
-	/// 通知法则委托: <see cref="WorldTree.Enable"/> : <see cref="ISendRule"/>
-	/// </Para>
-	/// </remarks>
-	public delegate void OnEnable<N>(N self) where N : class, INode, AsRule<Enable>;
-
-
-	/// <summary>
-	/// a
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method)]
-	public class OnEnable1Attribute<N> : Attribute
-		 where N : class, IRule
-	{
-	}
-
 }

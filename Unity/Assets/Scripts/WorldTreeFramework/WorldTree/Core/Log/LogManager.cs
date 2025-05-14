@@ -62,14 +62,6 @@ namespace WorldTree
 		/// </summary>
 		private ILog log;
 
-		static LogManager()
-		{
-			//获得配置
-			NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("../ProjectConfig/NLog/NLog.config");
-			//获得当前目录
-			NLog.LogManager.Configuration.Variables["currentDir"] = Environment.CurrentDirectory;
-		}
-
 		public override void OnCreate()
 		{
 			log = (ILog)Core.PoolGetUnit(this.TypeToCode(Core.WorldLineManager.LogType));

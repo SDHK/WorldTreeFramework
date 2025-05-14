@@ -13,13 +13,14 @@ namespace WorldTree
 {
 	public static partial class TreeDataTestRule
 	{
-		static OnAdd<TreeDataTest> OnAdd = (self) =>
+		[NodeRule(nameof(AddRule<TreeDataTest>))]
+		private static void OnAdd(this TreeDataTest self)
 		{
 
+		}
 
-		};
-
-		static OnUpdate<TreeDataTest> OnUpdate = (self) =>
+		[NodeRule(nameof(UpdateRule<TreeDataTest>))]
+		private static void OnUpdate(this TreeDataTest self)
 		{
 			//self.Log($"初始域更新！！!");
 
@@ -57,16 +58,18 @@ namespace WorldTree
 				TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, bytes).SetParent(self);
 				self.Log($"反序列化！！!{bytes.Length}");
 			}
-		};
+		}
 
-		static OnUpdate<TreeDataNodeDataTest1> OnUpdate1 = (self) =>
+		[NodeRule(nameof(UpdateRule<TreeDataNodeDataTest1>))]
+		private static void OnUpdate(this TreeDataNodeDataTest1 self)
 		{
 			self.Log($"测试数据更新1！！!{self.Name}:{self.Age}");
-		};
+		}
 
-		static OnUpdate<TreeDataNodeDataTest2> OnUpdate2 = (self) =>
+		[NodeRule(nameof(UpdateRule<TreeDataNodeDataTest2>))]
+		private static void OnUpdate(this TreeDataNodeDataTest2 self)
 		{
 			self.Log($"测试数据更新2！！!{self.Name}:{self.Age}");
-		};
+		}
 	}
 }

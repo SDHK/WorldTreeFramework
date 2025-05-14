@@ -11,7 +11,8 @@ namespace WorldTree
 	public static partial class SerializeTestRule
 	{
 
-		static OnAdd<SerializeTest> OnAdd = (self) =>
+		[NodeRule(nameof(AddRule<SerializeTest>))]
+		private static void OnAdd(this SerializeTest self)
 		{
 			self.Log($"序列化测试！！！！！");
 
@@ -38,6 +39,6 @@ namespace WorldTree
 
 			self.Log($"测试结果： {testData2.TestFloat}:{testData2.TestInt}:{testData2.TestLong}" +
 				$":{testData2.TestDouble}:{testData2.TestBool}:{testData2.ValueT1}:{testData2.ValueT2}");
-		};
+		}
 	}
 }

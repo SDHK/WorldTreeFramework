@@ -10,12 +10,13 @@ namespace WorldTree
 {
 	public static partial class MainWorldRule
 	{
-		static OnAdd<MainWorld> Add = self =>
+		[NodeRule(nameof(AddRule<MainWorld>))]
+		private static void OnAdd(this MainWorld self)
 		{
 			self.AddComponent(out CurveManager _);
 			self.AddComponent(out TreeTweenManager _);
 			self.AddComponent(out TreeTaskQueueLockManager _);
 			self.AddComponent(out InitialDomain _);
-		};
+		}
 	}
 }

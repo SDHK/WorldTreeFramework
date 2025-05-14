@@ -53,11 +53,6 @@ namespace WorldTree.SourceGenerator
 						/// </summary>
 						public abstract class AwakeRule<N{{genericsTypes}}> : SendRule<N, Awake{{genericsTypeAngle}}{{genericsTypes}}> where N : class, INode, AsRule<Awake{{genericsTypeAngle}}> {}
 						
-						/// <summary>
-						/// 初始化法则
-						/// </summary>
-						public delegate void OnAwake<N{{genericsTypes}}>(N self{{genericsTypeParameter}}) where N : class, INode, AsRule<Awake{{genericsTypeAngle}}> ;
-
 					""");
 			}
 			Code.Append("}");

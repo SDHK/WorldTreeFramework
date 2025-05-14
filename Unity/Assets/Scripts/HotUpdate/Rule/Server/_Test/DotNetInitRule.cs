@@ -18,28 +18,27 @@ namespace WorldTree.Server
 	public static partial class DotNetInitRule
 	{
 
+		[NodeRule(nameof(AddRule<DotNetInit>))]
+		private static void OnAdd(this DotNetInit self)
+		{
+			self.Log($"启动！！");
+			self.AddComponent(out SerializeTest _);
+			//self.AddComponent(out TreeDataTest _);
+		}
+
 		[NodeRule(nameof(EnableRule<DotNetInit>))]
 		private static void OnEnable(this DotNetInit self)
 		{
-
 			self.Log($"激活！！");
 			//self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse mouse, manager);
 			//MainTime();
 			//TestDivisionPrecision();
 		}
 
-		[NodeRule(nameof(AddRule<DotNetInit>))]
-		private static void OnAdd(this DotNetInit self)
-		{
-			self.AddComponent(out SerializeTest _);
-			//self.AddComponent(out TreeDataTest _);
-		}
-
-
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
 		private static void OnUpdateTime(this DotNetInit self, TimeSpan timeSpan)
 		{
-			self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
+			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		}
 
 		[NodeRule(nameof(DisableRule<DotNetInit>))]
@@ -172,7 +171,6 @@ namespace WorldTree.Server
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
 		static void OnTestNodeEvent1<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
 		{
-			NodeRuleHelper.SendRule(self, default(TestNodeEvent<I>), TestEnum.Test1, io, new List<int>());
 
 		}
 
