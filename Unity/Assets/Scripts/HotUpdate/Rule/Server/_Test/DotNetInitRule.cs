@@ -39,7 +39,7 @@ namespace WorldTree.Server
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
 		private static void OnUpdateTime(this DotNetInit self, TimeSpan timeSpan)
 		{
-			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
+			self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		}
 
 		[NodeRule(nameof(DisableRule<DotNetInit>))]
@@ -48,20 +48,11 @@ namespace WorldTree.Server
 			self.Log("失活！！");
 		}
 
-
-
 		[NodeRule(nameof(RemoveRule<DotNetInit>))]
 		private static void OnRemove(this DotNetInit self)
 		{
-
 			self.Log($"初始关闭！！");
 		}
-
-		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		private static void OnUpdateTime1(this DotNetInit self, TimeSpan arg1)
-		{
-		}
-
 
 
 
@@ -193,25 +184,5 @@ namespace WorldTree.Server
 		}
 	}
 
-	public static partial class DotNetInitRule
-	{
 
-		[NodeRule(nameof(UpdateRule<DotNetInit>))]
-		private static void OnUpdate(this DotNetInit self)
-		{
-		}
-
-
-		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		private static void OnUpdateTime21(this DotNetInit self, TimeSpan arg1qwe)
-		{
-			//asdada
-			//巴拉巴拉方法内容
-			self.Log("方法内容1");
-			self.LogInfo("方法内容2");
-			self.CodeToType(12312L);
-		}
-
-
-	}
 }

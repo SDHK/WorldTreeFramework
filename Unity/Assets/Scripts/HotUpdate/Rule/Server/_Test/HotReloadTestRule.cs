@@ -12,17 +12,22 @@ namespace WorldTree
 {
 	public static partial class HotReloadTestRule
 	{
-		private static OnAdd<HotReloadTest> Add = (self) =>
+		[NodeRule(nameof(AddRule<HotReloadTest>))]
+		private static void OnAdd(this HotReloadTest self)
 		{
 			self.Log($" 热重载测试！！！");
-		};
 
-		private static OnUpdate<HotReloadTest> Update = (self) =>
+		}
+
+		[NodeRule(nameof(UpdateRule<HotReloadTest>))]
+		private static void OnUpdate(this HotReloadTest self)
 		{
 			self.Log($"热重载2");
-		};
 
-		private static OnUpdateTime<HotReloadTest> UpdateTime = (self, timeSpan) =>
+		}
+
+		[NodeRule(nameof(UpdateTimeRule<HotReloadTest>))]
+		private static void OnUpdateTime(this HotReloadTest self, TimeSpan arg1)
 		{
 			if (Console.KeyAvailable)
 			{
@@ -34,8 +39,7 @@ namespace WorldTree
 				}
 			}
 			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
-		};
-
+		}
 	}
 
 }

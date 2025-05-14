@@ -20,8 +20,8 @@ namespace WorldTree
 		static int Key = nameof(Key).GetFNV1aHash32();
 		static int Value = nameof(Value).GetFNV1aHash32();
 
-
-		static OnRemove<TreeDataNodeDataTest1> OnRemove = (self) =>
+		[NodeRule(nameof(RemoveRule<TreeDataNodeDataTest1>))]
+		private static void OnRemove(this TreeDataNodeDataTest1 self)
 		{
 			//self.Name = null;
 			//self.Age = 0;
@@ -32,18 +32,18 @@ namespace WorldTree
 			self.NodeRef2 = null;
 			//self.Ints = null;
 			//self.Tuple = default;
-		};
+		}
 
-
-		static OnRemove<TreeDataNodeDataTest2> OnRemove2 = (self) =>
+		[NodeRule(nameof(RemoveRule<TreeDataNodeDataTest2>))]
+		private static void OnRemove(this TreeDataNodeDataTest2 self)
 		{
 			self.Name = null;
 			self.Age = 0;
 			self.Node = null;
-		};
+		}
 
-
-		static unsafe OnAdd<TreeDataTest> OnAdd = (self) =>
+		[NodeRule(nameof(AddRule<TreeDataTest>))]
+		private static void OnAdd(this TreeDataTest self)
 		{
 			self.treeData = self.AddChild(out TreeDataNodeDataTest1 treeNode);
 			treeNode.Name = "测试123";
@@ -112,18 +112,18 @@ namespace WorldTree
 
 			self.Log("\n通用结构打印：\n");
 			self.Log(NodeRule.ToStringDrawTree(self));
-		};
+		}
 
-
-
-		static unsafe OnUpdate<TreeDataNodeDataTest2> OnUpdate = (self) =>
+		[NodeRule(nameof(UpdateRule<TreeDataNodeDataTest2>))]
+		private static void OnUpdate(this TreeDataNodeDataTest2 self)
 		{
 			//self.Log($"TreeDataNodeDataTest{self.Name}:{self.Age}");
-		};
+		}
 
 
 
-		static unsafe OnAdd<TreeDataTest> OnAdd1 = (self) =>
+		[NodeRule(nameof(AddRule<TreeDataTest>))]
+		private static void OnAdd1(this TreeDataTest self)
 		{
 			if (self != null) return;
 			AData data = self.AddComponent(out AData _);
@@ -181,7 +181,7 @@ namespace WorldTree
 
 			self.Log(NodeRule.ToStringDrawTree(self));
 
-		};
+		}
 	}
 
 
