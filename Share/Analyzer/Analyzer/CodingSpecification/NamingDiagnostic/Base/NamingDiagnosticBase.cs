@@ -39,8 +39,9 @@ namespace WorldTree.Analyzer
 			//context.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
 			context.RegisterCompilationStartAction(analysisContext =>
 					{
+						// 获取 MSBuild 属性
+						if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(analysisContext.Compilation.AssemblyName, out _)) return;
 
-						if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(analysisContext.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
 						analysisContext.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
 					}
 				);
@@ -71,7 +72,7 @@ namespace WorldTree.Analyzer
 			var diagnosticSpan = diagnostic.Location.SourceSpan;
 
 			var projectName = context.Document.Project.AssemblyName;
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(projectName, out _)) return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(projectName, out _)) return;
 
 			// 找到需要修复的委托声明
 			T declaration = null;
@@ -81,7 +82,6 @@ namespace WorldTree.Analyzer
 				declaration = node as T;
 				break;
 			}
-			//T? declaration = root?.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()?.OfType<T>()?.First();
 			if (declaration == null) return;
 
 			// 根据不同的诊断类型注册不同的代码修复

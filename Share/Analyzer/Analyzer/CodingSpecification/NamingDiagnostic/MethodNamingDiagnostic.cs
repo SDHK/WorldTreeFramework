@@ -28,11 +28,11 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> diagnosticConfigGroups)) return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			MethodDeclarationSyntax methodDeclaration = context.Node as MethodDeclarationSyntax;
-			foreach (DiagnosticConfigGroup diagnosticConfigGroup in diagnosticConfigGroups)
+			foreach (DiagnosticConfigGroup diagnosticConfigGroup in DiagnosticGroups)
 			{
 				BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(methodDeclaration);
 				IMethodSymbol methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);

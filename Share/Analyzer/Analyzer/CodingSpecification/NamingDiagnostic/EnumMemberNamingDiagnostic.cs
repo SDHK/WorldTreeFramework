@@ -28,7 +28,7 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
@@ -36,7 +36,7 @@ namespace WorldTree.Analyzer
 			EnumMemberDeclarationSyntax enumMemberDeclaration = (EnumMemberDeclarationSyntax)context.Node;
 			//获取当前枚举成员的类型
 			ISymbol? symbol = semanticModel.GetDeclaredSymbol(enumMemberDeclaration);
-			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				if (!objectDiagnostic.Screen(context.Compilation, symbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.EnumMemberNaming, out DiagnosticConfig codeDiagnostic))

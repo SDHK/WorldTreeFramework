@@ -28,14 +28,14 @@ namespace WorldTree.Analyzer
 		public override SyntaxKind DeclarationKind => SyntaxKind.DelegateDeclaration;
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			DelegateDeclarationSyntax delegateDeclaration = (DelegateDeclarationSyntax)context.Node;
 			//获取当前委托的类型
-			INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(delegateDeclaration);
-			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			INamedTypeSymbol typeSymbol = semanticModel.GetDeclaredSymbol(delegateDeclaration);
+			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				if (!objectDiagnostic.Screen(context.Compilation, typeSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.DelegateNaming, out DiagnosticConfig codeDiagnostic))

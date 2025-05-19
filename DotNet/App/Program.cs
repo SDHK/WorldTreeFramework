@@ -1,7 +1,7 @@
 using CommandLine;
 using System;
 
-namespace WorldTree
+namespace WorldTree.Server
 {
     /// <summary>
     /// 世界树框架驱动器，一切从这里开始
@@ -28,7 +28,7 @@ namespace WorldTree
 
             //防止程序集被优化掉
             Type ruleType = typeof(MainWorldRule);
-            Type nodeType = typeof(DotNetInit);
+            Type nodeType = typeof(MainWorld);
         }
     }
 }

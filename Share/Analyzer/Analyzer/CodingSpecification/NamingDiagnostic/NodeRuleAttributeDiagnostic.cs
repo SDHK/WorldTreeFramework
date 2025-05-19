@@ -29,7 +29,7 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
@@ -47,7 +47,7 @@ namespace WorldTree.Analyzer
 			}
 
 			// 如果特性没有标记在方法上，或者有空行，报告诊断错误
-			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.NodeRuleAttributeAnalysis, out DiagnosticConfig codeDiagnostic))
 				{

@@ -169,7 +169,7 @@ namespace WorldTree.Server
 
 
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
-		static void OnTestNodeEvent1<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
+		static void OnTestNodeEvent<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
 		{
 
 		}

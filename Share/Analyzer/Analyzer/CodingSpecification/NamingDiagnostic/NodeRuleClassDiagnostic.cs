@@ -29,8 +29,7 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics))
-				return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 这可能是一个孤立的泛型类型标识符
 			if (context.Node is not GenericNameSyntax standaloneGeneric) return;
@@ -41,7 +40,7 @@ namespace WorldTree.Analyzer
 
 			if (!NamedSymbolHelper.IsDerivedFrom(namedTypeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(context.Compilation, GeneratorHelper.IRule), out _)) return;
 
-			foreach (var objectDiagnostic in objectDiagnostics)
+			foreach (var objectDiagnostic in DiagnosticGroups)
 			{
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.NodeRuleClassAnalysis, out DiagnosticConfig codeDiagnostic))
 				{

@@ -28,11 +28,11 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
-			DiagnosticProperty(context, DiagnosticKey.PublicPropertyNaming, objectDiagnostics);
-			DiagnosticProperty(context, DiagnosticKey.PrivatePropertyNaming, objectDiagnostics);
-			DiagnosticProperty(context, DiagnosticKey.ProtectedPropertyNaming, objectDiagnostics);
-			DiagnosticClassName(context, objectDiagnostics);
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			DiagnosticProperty(context, DiagnosticKey.PublicPropertyNaming, DiagnosticGroups);
+			DiagnosticProperty(context, DiagnosticKey.PrivatePropertyNaming, DiagnosticGroups);
+			DiagnosticProperty(context, DiagnosticKey.ProtectedPropertyNaming, DiagnosticGroups);
+			DiagnosticClassName(context, DiagnosticGroups);
 		}
 
 		private void DiagnosticClassName(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> objectDiagnostics)

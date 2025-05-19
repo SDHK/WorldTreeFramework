@@ -1,4 +1,4 @@
-namespace WorldTree
+namespace WorldTree.Server
 {
 	public static class CreateWorldConfigGroupRule
 	{

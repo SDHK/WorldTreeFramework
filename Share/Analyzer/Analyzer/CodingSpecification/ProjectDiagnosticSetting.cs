@@ -42,9 +42,6 @@ namespace WorldTree.Analyzer
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
 
-			new NodeRuleClassDiagnosticConfig(),
-			new NodeRuleAttributeDiagnosticConfig(),
-			new RuleDelegateDiagnosticConfig(),
 
 			new NodeDiagnosticConfig(),
 			new CodeNodeDiagnosticConfig(),
@@ -64,10 +61,7 @@ namespace WorldTree.Analyzer
 			new StackDiagnosticConfig(),
 
 			new RuleSwitchAttributeDiagnosticConfig(),
-			new NodeRuleMethodDiagnosticConfig(),
-			new NodeRuleClassDiagnosticConfig(),
 			new NodeRuleAttributeDiagnosticConfig(),
-			new RuleDelegateDiagnosticConfig(),
 
 			new CodeNodeDiagnosticConfig(),
 			new RuleDiagnosticConfig(),
@@ -102,6 +96,19 @@ namespace WorldTree.Analyzer
 			//{ "Unity.NodeRuleEditor",NodeConfigs}
 
 		};
+
+
+		/// <summary>
+		/// 尝试获取诊断配置组
+		/// </summary>
+		public static bool TryGetDiagnosticConfigGroup(string AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)
+		{
+			DiagnosticGroups = null;
+			//if (!options.AnalyzerConfigOptionsProvider.GlobalOptions.TryGetValue("build_property.AssemblyName", out var AnalysisName)) return false;
+			//if (string.IsNullOrEmpty(AnalysisName)) return false;
+			if (!ProjectDiagnostics.TryGetValue(AssemblyName, out DiagnosticGroups)) return false;
+			return true;
+		}
 
 
 		/// <summary>

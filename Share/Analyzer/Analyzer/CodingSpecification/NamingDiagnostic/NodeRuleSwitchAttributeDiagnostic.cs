@@ -25,7 +25,7 @@ namespace WorldTree.Analyzer
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
@@ -122,7 +122,7 @@ namespace WorldTree.Analyzer
 			if (!typeMatch)
 			{
 				// 报告诊断错误
-				foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+				foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 				{
 					if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.RuleSwitchAttributeAnalysis, out DiagnosticConfig codeDiagnostic))
 					{

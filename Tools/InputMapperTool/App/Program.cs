@@ -2,9 +2,18 @@ using WorldTree;
 
 namespace InputMapperTool
 {
+	/// <summary>
+	/// a
+	/// </summary>
 	internal static class Program
 	{
+		/// <summary>
+		/// a
+		/// </summary>
 		private static InputMapperForm form = new InputMapperForm();
+		/// <summary>
+		/// a
+		/// </summary>
 		private static WorldLine mainLine = new WorldLine();
 
 		/// <summary>

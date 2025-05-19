@@ -149,7 +149,6 @@ namespace WorldTree
 		public const string RuleTypesGeneratorAttribute = "RuleTypesGeneratorAttribute";
 
 
-
 	}
 
 }

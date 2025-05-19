@@ -29,12 +29,13 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			InterfaceDeclarationSyntax interfaceDeclaration = (InterfaceDeclarationSyntax)context.Node;
 			INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(interfaceDeclaration);
-			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				//获取当前接口的类型
 				if (!objectDiagnostic.Screen(context.Compilation, typeSymbol)) continue;

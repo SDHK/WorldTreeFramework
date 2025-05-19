@@ -27,8 +27,7 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics))
-				return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			SemanticModel semanticModel = context.SemanticModel;
 			MethodDeclarationSyntax methodDeclaration = context.Node as MethodDeclarationSyntax;
@@ -118,7 +117,7 @@ namespace WorldTree.Analyzer
 			}
 
 
-			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.NodeRuleMethodAnalysis, out DiagnosticConfig codeDiagnostic))
 				{

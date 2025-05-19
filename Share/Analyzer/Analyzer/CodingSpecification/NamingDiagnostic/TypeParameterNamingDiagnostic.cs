@@ -27,11 +27,11 @@ namespace WorldTree.Analyzer
 		public override SyntaxKind DeclarationKind => SyntaxKind.TypeParameter;
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			TypeParameterSyntax typeParameter = (TypeParameterSyntax)context.Node;
-			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.TypeParameterNaming, out DiagnosticConfig codeDiagnostic))
 				{

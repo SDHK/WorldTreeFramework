@@ -29,8 +29,10 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+
+			// 获取当前项目的诊断组
 			Compilation compilation = context.Compilation;
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
@@ -39,7 +41,7 @@ namespace WorldTree.Analyzer
 			foreach (DiagnosticConfigGroup DiagnosticGroup in DiagnosticGroups)
 			{
 				//获取当前类的类型
-				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
+				INamedTypeSymbol typeSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
 				if (!DiagnosticGroup.Screen(compilation, typeSymbol)) continue;
 				if (DiagnosticGroup.Diagnostics.TryGetValue(DiagnosticKey.ClassNaming, out DiagnosticConfig codeDiagnostic))
 				{

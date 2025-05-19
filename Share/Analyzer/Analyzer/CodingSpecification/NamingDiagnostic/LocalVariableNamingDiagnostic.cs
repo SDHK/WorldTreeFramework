@@ -30,17 +30,17 @@ namespace WorldTree.Analyzer
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.ProjectDiagnostics.TryGetValue(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> objectDiagnostics)) return;
-			DiagnosticLocalVariable(context, objectDiagnostics);
-			DiagnosticClassName(context, objectDiagnostics);
+			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			DiagnosticLocalVariable(context, DiagnosticGroups);
+			DiagnosticClassName(context, DiagnosticGroups);
 		}
 
-		private void DiagnosticClassName(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> objectDiagnostics)
+		private void DiagnosticClassName(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> DiagnosticGroups)
 		{
 			SemanticModel semanticModel = context.SemanticModel;
 			LocalDeclarationStatementSyntax localVariableDeclaration = (LocalDeclarationStatementSyntax)context.Node;
 			ITypeSymbol localVariableSymbol = semanticModel.GetTypeInfo(localVariableDeclaration.Declaration.Type).Type;
-			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				if (objectDiagnostic.Screen(context.Compilation, localVariableSymbol))
 				{
@@ -59,12 +59,12 @@ namespace WorldTree.Analyzer
 		}
 
 
-		private void DiagnosticLocalVariable(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> objectDiagnostics)
+		private void DiagnosticLocalVariable(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> DiagnosticGroups)
 		{
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			LocalDeclarationStatementSyntax? localDeclaration = context.Node as LocalDeclarationStatementSyntax;
-			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
+			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.LocalVariableNaming, out DiagnosticConfig codeDiagnostic))
 				{
