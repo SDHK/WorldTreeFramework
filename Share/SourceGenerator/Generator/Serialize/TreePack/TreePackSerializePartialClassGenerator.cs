@@ -3,7 +3,7 @@
 * 作者：闪电黑客
 * 日期：2024/8/12 11:49
 
-* 描述：
+* 描述：网络包数据序列化代码生成
 
 */
 using Microsoft.CodeAnalysis;
@@ -263,12 +263,12 @@ namespace WorldTree.SourceGenerator
 		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration, List<INamedTypeSymbol> SubList)
 		{
 			// 将 ClassDeclarationSyntax 转换为 INamedTypeSymbol
-			INamedTypeSymbol? classSymbol = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
+			INamedTypeSymbol classSymbol = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
 
 			// 获取类的完整名称，包括泛型参数
 			ClassGenerator(Code, classSymbol, out bool isBase);
 
-			List<ISymbol>? fieldSymbols = null;
+			List<ISymbol> fieldSymbols = null;
 			if (!isBase) fieldSymbols = FindField(classSymbol);
 
 			Code.AppendLine("	{");

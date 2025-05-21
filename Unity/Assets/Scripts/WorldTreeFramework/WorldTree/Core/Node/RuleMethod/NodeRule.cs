@@ -11,6 +11,16 @@ namespace WorldTree
 {
 	public static partial class NodeRule
 	{
+
+		/// <summary>
+		/// 节点Id刷新
+		/// </summary>
+		public static void NodeId(INode self)
+		{
+
+		}
+
+
 		/// <summary>
 		/// 获取指定父类型法则列表
 		/// </summary>

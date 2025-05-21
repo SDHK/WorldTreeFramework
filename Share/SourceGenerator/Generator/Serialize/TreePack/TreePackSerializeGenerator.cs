@@ -35,7 +35,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 收集类型的子类
 		/// </summary>
-		public List<INamedTypeSymbol>? GetTypeSub(GeneratorExecutionContext context, INamedTypeSymbol baseNamedType)
+		public List<INamedTypeSymbol> GetTypeSub(GeneratorExecutionContext context, INamedTypeSymbol baseNamedType)
 		{
 			if (!TypeSubDict.TryGetValue(baseNamedType, out List<INamedTypeSymbol>? SubList))
 			{
@@ -63,8 +63,8 @@ namespace WorldTree.SourceGenerator
 			{
 				Code.Clear();
 				ClassCode.Clear();
-				string? Namespace = null;
-				string? Usings = null;
+				string Namespace = null;
+				string Usings = null;
 				string fileName = TypeListItem.Key;
 
 				if (TypeListItem.Value.Count != 0)

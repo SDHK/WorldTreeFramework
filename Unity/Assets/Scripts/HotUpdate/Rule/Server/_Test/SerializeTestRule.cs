@@ -16,6 +16,8 @@ namespace WorldTree.Server
 
 		static unsafe Action<SerializeTest> OnAddSerializeTest1 = (self) =>
 		{
+			NodeClassDataBase value = null;
+			NodeClassDataSub1 a = System.Runtime.CompilerServices.Unsafe.As<NodeClassDataBase, NodeClassDataSub1>(ref value);
 
 			//随便写点不一样的数据
 			NodeClassDataTest<int, float, int> testData = new();

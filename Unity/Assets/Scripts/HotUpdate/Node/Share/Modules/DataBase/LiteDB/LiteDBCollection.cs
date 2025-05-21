@@ -16,42 +16,42 @@ namespace WorldTree
 	/// </summary>
 	public class LiteDBCollection<T> : Node, IDataCollection<T>
 		, AsAwake<ILiteCollection<BsonDocument>>
-		where T : class, INodeData
 	{
 		/// <summary>
 		/// 数据集合
 		/// </summary>
 		public ILiteCollection<BsonDocument> collection;
 
-		public void Insert(T data)
+
+		public void Insert(long id, T data)
 		{
 			collection.Insert(new BsonDocument
 			{
-				["_id"] = data.Id,
-				["D"] = TreeDataHelper.SerializeNode(data)
+				["_id"] = id,
+				["D"] = TreeDataHelper.Serialize(this, data)
 			});
 		}
 
 		public T Find(long id)
 		{
 			BsonDocument aDict = collection.FindById(id);
-			return aDict != null ? TreeDataHelper.DeseralizeNode<T>(this, aDict["D"].AsBinary) : null;
+			return aDict != null ? TreeDataHelper.Deseralize<T>(this, aDict["D"].AsBinary) : default;
 		}
 
 		public IEnumerable<T> FindAll()
 		{
 			foreach (BsonDocument data in collection.FindAll())
 			{
-				yield return TreeDataHelper.DeseralizeNode<T>(this, data["D"].AsBinary);
+				yield return TreeDataHelper.Deseralize<T>(this, data["D"].AsBinary);
 			}
 		}
 
-		public bool Update(T data)
+		public bool Update(long id, T data)
 		{
 			return collection.Update(new BsonDocument
 			{
-				["_id"] = data.Id,
-				["D"] = TreeDataHelper.SerializeNode(data)
+				["_id"] = id,
+				["D"] = TreeDataHelper.Serialize(this, data)
 			});
 		}
 

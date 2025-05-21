@@ -47,4 +47,44 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public UnitList<InputInfo> InfoList;
 	}
+
+
+
+	/// <summary>
+	/// 输入映射器数据管理器
+	/// </summary>
+	public class InputMapperDataManager
+	{
+		/// <summary>
+		/// a
+		/// </summary>
+		public Dictionary<string, InputMapperGroupData> KeyDict;
+
+	}
+
+	/// <summary>
+	/// 输入映射器组
+	/// </summary>
+	public partial class InputMapperGroupData
+	{
+
+
+	}
+
+	/// <summary>
+	/// 输入映射器数据
+	/// </summary>
+	[TreeDataSerializable]
+	public partial class InputMapperData
+	{
+		/// <summary>
+		/// 是否可改变
+		/// </summary>
+		public bool IsChange;
+
+		/// <summary>
+		/// 输入信息列表
+		/// </summary>
+		public List<InputInfo> ConfigInfoList;
+	}
 }

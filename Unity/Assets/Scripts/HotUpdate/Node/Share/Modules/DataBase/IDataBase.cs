@@ -6,7 +6,6 @@
 * 描述：
 
 */
-using System;
 using System.Collections.Generic;
 
 namespace WorldTree
@@ -37,12 +36,11 @@ namespace WorldTree
 	/// </summary>
 	public interface IDataCollection<T> : IDataCollection
 		, ComponentOf<IDataBase>
-		where T : class, INodeData
 	{
 		/// <summary>
 		/// 插入
 		/// </summary>
-		public void Insert(T data);
+		public void Insert(long id, T data);
 
 		/// <summary>
 		/// 根据Id查找
@@ -57,7 +55,7 @@ namespace WorldTree
 		/// <summary>
 		/// 更新
 		/// </summary>
-		public bool Update(T data);
+		public bool Update(long id, T data);
 
 	}
 
@@ -70,12 +68,12 @@ namespace WorldTree
 		/// <summary>
 		/// 获取集合
 		/// </summary>
-		public abstract IDataCollection<T> GetCollection<T>() where T : class, INodeData;
+		public abstract IDataCollection<T> GetCollection<T>();
 
 		/// <summary>
 		/// 尝试获取集合
 		/// </summary>
-		public abstract bool TryGetCollection<T>(out IDataCollection<T> collection) where T : class, INodeData;
+		public abstract bool TryGetCollection<T>(out IDataCollection<T> collection);
 	}
 
 }

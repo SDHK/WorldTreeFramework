@@ -24,7 +24,6 @@ namespace WorldTree
 		public LiteDatabase database;
 
 		public IDataCollection<T> GetCollection<T>()
-			where T : class, INodeData
 		{
 			if (!this.TryGetComponent(out LiteDBCollection<T> node))
 			{
@@ -51,7 +50,6 @@ namespace WorldTree
 		}
 
 		public bool TryGetCollection<T>(out IDataCollection<T> collection)
-			where T : class, INodeData
 		{
 			if (!this.TryGetComponent(out collection))
 			{

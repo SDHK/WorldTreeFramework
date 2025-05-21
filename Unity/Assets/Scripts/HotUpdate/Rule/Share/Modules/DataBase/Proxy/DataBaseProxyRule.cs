@@ -46,7 +46,7 @@ namespace WorldTree
 		public static void Insert<T>(this DataBaseProxy self, T data)
 			where T : class, INodeData
 		{
-			self.DataBase.GetCollection<T>().Insert(data);
+			self.DataBase.GetCollection<T>().Insert(data.Id, data);
 		}
 
 		/// <summary>
@@ -73,7 +73,7 @@ namespace WorldTree
 		public static bool Update<T>(this DataBaseProxy self, T data)
 			where T : class, INodeData
 		{
-			return self.DataBase.GetCollection<T>().Update(data);
+			return self.DataBase.GetCollection<T>().Update(data.Id, data);
 		}
 
 		/// <summary>

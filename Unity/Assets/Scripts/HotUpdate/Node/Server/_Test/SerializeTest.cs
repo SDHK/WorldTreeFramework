@@ -50,6 +50,18 @@ namespace WorldTree.Server
 	/// 测试数据2
 	/// </summary>
 	[TreePackSerializable]
+	public partial struct NodeClassDataTest0
+	{
+		/// <summary>
+		/// 测试
+		/// </summary>
+		public int ValueT0 { get; set; }
+	}
+
+	/// <summary>
+	/// 测试数据2
+	/// </summary>
+	[TreePackSerializable]
 	public partial struct NodeClassDataTest1<T1, T2>
 	{
 		/// <summary>

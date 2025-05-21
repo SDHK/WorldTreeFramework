@@ -32,19 +32,35 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 序列化数据类型
+		/// </summary>
+		public static byte[] Serialize<T>(INode self, T data)
+		{
+			if (self.IsDisposed) return null;
+			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.SerializeRuleGroup.Send(current));
+
+			self.AddTemp(out TreeDataByteSequence sequence);
+			if (self?.Parent == null) return null;
+			sequence.Serialize(data);
+			byte[] bytes = sequence.ToBytes();
+			sequence.Dispose();
+			return bytes;
+		}
+
+		/// <summary>
 		/// 反序列化数据类型
 		/// </summary>
-		public static T DeseralizeNode<T>(INode self, byte[] bytes)
+		public static T Deseralize<T>(INode self, byte[] bytes)
 		{
 			T obj = default;
-			return DeseralizeNode(self, bytes, ref obj);
+			return Deseralize(self, bytes, ref obj);
 		}
 
 
 		/// <summary>
 		/// 反序列化数据类型
 		/// </summary>
-		public static T DeseralizeNode<T>(INode self, byte[] bytes, ref T obj)
+		public static T Deseralize<T>(INode self, byte[] bytes, ref T obj)
 		{
 			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
 			sequence.Deserialize(ref obj);
@@ -54,16 +70,16 @@ namespace WorldTree
 		/// <summary>
 		/// 反序列化数据类型
 		/// </summary>
-		public static T DeseralizeNode<T>(INode self, Type type, byte[] bytes)
+		public static T Deseralize<T>(INode self, Type type, byte[] bytes)
 		{
 			object obj = default;
-			return DeseralizeNode<T>(self, type, bytes, ref obj);
+			return Deseralize<T>(self, type, bytes, ref obj);
 		}
 
 		/// <summary>
 		/// 反序列化数据类型
 		/// </summary>
-		public static T DeseralizeNode<T>(INode self, Type type, byte[] bytes, ref object obj)
+		public static T Deseralize<T>(INode self, Type type, byte[] bytes, ref object obj)
 		{
 			self.AddTemp(out TreeDataByteSequence sequence).SetBytes(bytes);
 			sequence.Deserialize(type, ref obj);
