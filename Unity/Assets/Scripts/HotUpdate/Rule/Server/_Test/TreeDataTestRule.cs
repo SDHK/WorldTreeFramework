@@ -100,7 +100,7 @@ namespace WorldTree.Server
 			self.Log($"TreeData序列化字节长度{treeDataBytes.Length}\n");
 
 			//bytes -> 实例
-			TreeDataNodeDataTest10 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest10>(self, treeDataBytes);
+			TreeDataNodeDataTest10 node = TreeDataHelper.Deseralize<TreeDataNodeDataTest10>(self, treeDataBytes);
 			node.SetParent(self);
 			self.treeData10 = node;
 			//====
@@ -149,7 +149,7 @@ namespace WorldTree.Server
 			self.Log($"序列化字节长度{bytes.Length}\n");
 
 
-			TreeDataNodeDataTest1 node = TreeDataHelper.DeseralizeNode<TreeDataNodeDataTest1>(self, bytes);
+			TreeDataNodeDataTest1 node = TreeDataHelper.Deseralize<TreeDataNodeDataTest1>(self, bytes);
 			self.treeData = node;
 			node.SetParent(self);
 

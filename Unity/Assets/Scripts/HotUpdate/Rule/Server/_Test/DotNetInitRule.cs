@@ -22,8 +22,9 @@ namespace WorldTree.Server
 		private static void OnAdd(this DotNetInit self)
 		{
 			self.Log($"启动！！");
-			self.AddComponent(out SerializeTest _);
+			//self.AddComponent(out SerializeTest _);
 			//self.AddComponent(out TreeDataTest _);
+			self.AddComponent(out DeepCopyTest _);
 		}
 
 		[NodeRule(nameof(EnableRule<DotNetInit>))]

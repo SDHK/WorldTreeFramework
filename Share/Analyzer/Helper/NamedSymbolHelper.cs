@@ -544,17 +544,75 @@ namespace WorldTree
 
 			return allInterfaces;
 		}
+
+
 		/// <summary>
-		/// 查找所有方法，包括引用的程序集中的方法的调用
+		/// 获取所有类，包括引用的程序集中的类（统一使用符号遍历）
 		/// </summary>
-		/// <param name="compilation"></param>
-		/// <returns></returns>
-		public static void CollectAllMethods(Compilation compilation)
+		public static List<INamedTypeSymbol> CollectAllClass(Compilation compilation)
 		{
+			List<INamedTypeSymbol> allClasses = new List<INamedTypeSymbol>();
 
+			// 遍历当前编译上下文中的所有类型（使用符号遍历）
+			IEnumerable<INamedTypeSymbol> currentAssemblyTypes = GetAllNamedType(compilation.Assembly.GlobalNamespace);
+			IEnumerable<INamedTypeSymbol> currentAssemblyClasses = currentAssemblyTypes.Where(t => t.TypeKind == TypeKind.Class);
+			allClasses.AddRange(currentAssemblyClasses);
 
+			// 遍历引用的程序集中的所有类型
+			foreach (var referencedAssembly in compilation.References)
+			{
+				var assemblySymbol = compilation.GetAssemblyOrModuleSymbol(referencedAssembly) as IAssemblySymbol;
+				if (assemblySymbol != null)
+				{
+					IEnumerable<INamedTypeSymbol> typesInAssembly = GetAllNamedType(assemblySymbol.GlobalNamespace);
+					IEnumerable<INamedTypeSymbol> classesInAssembly = typesInAssembly.Where(t => t.TypeKind == TypeKind.Class);
+					allClasses.AddRange(classesInAssembly);
+				}
+			}
+			return allClasses;
+		}
 
+		/// <summary>
+		/// 递归获取命名空间下的所有类型（包括嵌套类型）
+		/// </summary>
+		private static IEnumerable<INamedTypeSymbol> GetAllNamedType(INamespaceSymbol namespaceSymbol)
+		{
+			foreach (var type in namespaceSymbol.GetTypeMembers())
+			{
+				yield return type;
 
+				// 递归获取嵌套类型
+				foreach (var nestedType in GetNestedTypes(type))
+				{
+					yield return nestedType;
+				}
+			}
+
+			// 递归处理子命名空间
+			foreach (var childNamespace in namespaceSymbol.GetNamespaceMembers())
+			{
+				foreach (var type in GetAllNamedType(childNamespace))
+				{
+					yield return type;
+				}
+			}
+		}
+
+		/// <summary>
+		/// 递归获取类型的所有嵌套类型
+		/// </summary>
+		private static IEnumerable<INamedTypeSymbol> GetNestedTypes(INamedTypeSymbol typeSymbol)
+		{
+			foreach (var nestedType in typeSymbol.GetTypeMembers())
+			{
+				yield return nestedType;
+
+				// 递归获取更深层的嵌套类型
+				foreach (var deeperNestedType in GetNestedTypes(nestedType))
+				{
+					yield return deeperNestedType;
+				}
+			}
 		}
 
 		/// <summary>

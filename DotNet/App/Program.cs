@@ -29,6 +29,7 @@ namespace WorldTree.Server
             //防止程序集被优化掉
             Type ruleType = typeof(MainWorldRule);
             Type nodeType = typeof(MainWorld);
+            Type dotNetInit = typeof(DotNetInit);
         }
     }
 }

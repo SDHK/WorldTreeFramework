@@ -9,93 +9,131 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 深拷贝标记
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
-	public class TreeCopyableAttribute : Attribute { }
-
-	/// <summary>
-	/// 深拷贝成员忽略特性标记
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-	public class TreeCopyIgnoreAttribute : Attribute { }
-
-
-
-	/// <summary>
-	/// 树深拷贝法则接口：用于序列化未知泛型，解除AsRule的法则限制
-	/// </summary>
-	public interface ITreeCopy : ISendRefRule { }
-
-	///// <summary>
-	///// 树深拷贝非托管法则
-	///// </summary>
-	//public interface TreeCopyUnmanaged<T> : ISendRefRule<T, T>, ITreeCopy, ISourceGeneratorIgnore { }
-	///// <summary>
-	///// 树深拷贝非托管法则
-	///// </summary>
-	//public abstract class TreeCopyUnmanagedRule<T> : SendRefRule<TreeCopyExecutor, TreeCopyUnmanaged<T>, T, T> { }
-
-
-	/// <summary>
-	/// 树深拷贝法则
-	/// </summary>
-	public interface TreeCopy : ISendRefRule<object, object>, ITreeCopy, ISourceGeneratorIgnore { }
-	/// <summary>
-	/// 树深拷贝法则
-	/// </summary>
-	public abstract class TreeCopyRule<GT> : Rule<GT, TreeCopy>, ISendRefRule<object, object>
+	public static partial class TreeCopyExecutorRule
 	{
-		/// <summary>
-		/// 调用
-		/// </summary>
-		public virtual void Invoke(INode self, ref object source, ref object target) => Execute(self as TreeCopyExecutor, ref source, ref target);
-		/// <summary>
-		/// 执行
-		/// </summary>
-		protected abstract void Execute(TreeCopyExecutor self, ref object source, ref object target);
+		class AddRule : AddRule<TreeCopyExecutor>
+		{
+			protected override void Execute(TreeCopyExecutor self)
+			{
+				// 获取节点的法则集
+				self.Core.RuleManager.TryGetRuleGroup<TreeCopyStruct>(out self.copyStructRuleDict);
+				self.Core.PoolGetUnit(out self.ObjectToObjectDict);
+			}
+		}
+
+		class RemoveRule : RemoveRule<TreeCopyExecutor>
+		{
+			protected override void Execute(TreeCopyExecutor self)
+			{
+				self.ObjectToObjectDict.Dispose();
+			}
+		}
 	}
 
 	/// <summary>
 	/// 树深拷贝执行器
 	/// </summary>
-	public class TreeCopyExecutor : Node, ICloneable
+	public class TreeCopyExecutor : Node
+		, TempOf<INode>
 		, AsRule<ITreeCopy>
+		, AsAwake
 	{
 		/// <summary>
-		/// 对象对应Id
+		/// 对象对应对象字典
 		/// </summary>
-		public UnitDictionary<object, int> ObjectToIdDict;
+		public UnitDictionary<object, object> ObjectToObjectDict;
 
 		/// <summary>
-		/// Id对应对象
+		/// 不同类型序列化法则列表集合
 		/// </summary>
-		public UnitDictionary<int, object> IdToObjectDict;
+		public RuleGroup copyStructRuleDict;
 
-		public object Clone()
+		/// <summary>
+		/// 拷贝对象
+		/// </summary>
+		public T CopyTo<T>(T source, ref T target) => CloneObject(source, ref target, true);
+
+		/// <summary>
+		/// 拷贝对象
+		/// </summary>
+		public T Copy<T>(T source)
 		{
-			return null;
+			T target = default;
+			return CloneObject(source, ref target);
 		}
 
 		/// <summary>
 		/// 拷贝对象
 		/// </summary>
-		public void CopyTo<T>(in T source, ref T target)
+		public T CloneObject<T>(T source, ref T target, bool isClear = false)
 		{
+			if (isClear) ObjectToObjectDict.Clear();
+
+			if (EqualityComparer<T>.Default.Equals(source, default))
+			{
+				// 如果是默认值，直接赋值并返回
+				target = source;
+				return target;
+			}
+
+			// 如果是纯值类型（不包含引用字段），直接赋值并返回
 			if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
 			{
 				target = source;
-				return;
+				return target;
 			}
 
+			Type type = source.GetType();
+			long typeCode = this.Core.TypeToCode(type);
+			this.Core.RuleManager.SupportNodeRule(typeCode);
 
+			// 前面 纯值类型挡住了，这里是判断 包含引用的结构体
+			if (type.IsValueType)
+			{
+				if (copyStructRuleDict.TryGetValue(typeCode, out RuleList ruleList))
+				{
+					for (int i = 0; i < ruleList.Count; i++)
+					{
+						Unsafe.As<TreeCopyStructRule<T>>(ruleList[i]).Invoke(this, ref source, ref target);
+					}
+				}
+			}
+			// 不是结构体，就是类型
+			else if (this.Core.RuleManager.TryGetRuleList<TreeCopy>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+			{
+				object sourceObj = source;
+				object targetObj = null;
+
+				// 尝试获取目标对象
+				if (!ObjectToObjectDict.TryGetValue(sourceObj, out targetObj))
+				{
+					// 不存在则拷贝
+					targetObj = target;
+					((IRuleList<TreeCopy>)ruleList).SendRef(this, ref sourceObj, ref targetObj);
+				}
+
+				target = (T)targetObj;
+
+				// 记录引用类型
+				if (sourceObj != null && targetObj != null)
+					ObjectToObjectDict.TryAdd(sourceObj, targetObj);
+			}
+			return target;
+		}
+
+		/// <summary>
+		/// 危险指定类型拷贝对象
+		/// </summary>
+		public void TypeCloneObject(Type type, object source, ref object target)
+		{
+			long typeCode = this.TypeToCode(type);
+			if (Core.RuleManager.TryGetRuleList<TreeCopy>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+				((IRuleList<TreeCopy>)ruleList).SendRef(this, ref source, ref target);
 		}
 	}
-
-
 }

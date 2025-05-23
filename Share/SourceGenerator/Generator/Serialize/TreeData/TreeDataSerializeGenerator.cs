@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace WorldTree.SourceGenerator
@@ -22,25 +21,20 @@ namespace WorldTree.SourceGenerator
 
 		public static Dictionary<INamedTypeSymbol, int> TypeFieldsCountDict = new Dictionary<INamedTypeSymbol, int>();
 
-
 		public void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindTreeDataSyntaxReceiver());
 		}
+
+
+
 		public void Execute(GeneratorExecutionContext context)
 		{
 			TypeFieldsCountDict.Clear();
-			foreach (var tree in context.Compilation.SyntaxTrees)
+
+			foreach (INamedTypeSymbol classSymbol in NamedSymbolHelper.CollectAllClass(context.Compilation))
 			{
-				var semanticModel = context.Compilation.GetSemanticModel(tree);
-				var root = tree.GetRoot();
-				var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
-				foreach (var classDeclaration in classDeclarations)
-				{
-					var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration) as INamedTypeSymbol;
-					// 查找特性并获取类型的 INamedTypeSymbol 和 int 值
-					FindTreeDataSpecialAttribute(classSymbol);
-				}
+				FindTreeDataSpecialAttribute(classSymbol);
 			}
 
 			if (!(context.SyntaxReceiver is FindTreeDataSyntaxReceiver receiver and not null)) return;
@@ -50,8 +44,8 @@ namespace WorldTree.SourceGenerator
 			{
 				Code.Clear();
 				ClassCode.Clear();
-				string? Namespace = null;
-				string? Usings = null;
+				string Namespace = null;
+				string Usings = null;
 				string fileName = TypeListItem.Key;
 				if (TypeListItem.Value.Count != 0)
 				{
@@ -86,14 +80,14 @@ namespace WorldTree.SourceGenerator
 		private static void FindTreeDataSpecialAttribute(INamedTypeSymbol classSymbol)
 		{
 			// 1. 直接查找类上的特性
-			foreach (var attribute in classSymbol.GetAttributes())
+			foreach (AttributeData attribute in classSymbol.GetAttributes())
 			{
 				if (attribute.AttributeClass?.Name == GeneratorHelper.TreeDataSpecialAttribute &&
 					attribute.ConstructorArguments.Length == 1 &&
 					attribute.ConstructorArguments[0].Value is int intValue)
 				{
 					var baseType = classSymbol.BaseType;
-					if (baseType != null && baseType.TypeArguments.Length > 1)//&& baseType.Name == "TreeDataSerializeRule"
+					if (baseType != null && baseType.TypeArguments.Length > 1)
 					{
 						var genericType = baseType.TypeArguments[0] as INamedTypeSymbol;
 						if (genericType != null)

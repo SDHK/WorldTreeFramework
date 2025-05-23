@@ -137,6 +137,10 @@ namespace WorldTree
 		/// </summary>
 		public const string TreeCopyableAttribute = "TreeCopyableAttribute";
 
+		/// <summary>
+		/// 深拷贝特别处理特性标记
+		/// </summary>
+		public const string TreeCopySpecialAttribute = "TreeCopySpecialAttribute";
 
 		/// <summary>
 		/// 深拷贝忽略特性标记

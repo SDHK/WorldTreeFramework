@@ -34,17 +34,17 @@ namespace WorldTree.SourceGenerator
 
 		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration)
 		{
-			INamedTypeSymbol? classSymbol = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
+			INamedTypeSymbol classSymbol = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
 
-			INamedTypeSymbol? baseSymbol = null;
+			INamedTypeSymbol baseSymbol = null;
 			int membersCount = 0;
 
 			// 获取类的完整名称，包括泛型参数
 			ClassGenerator(Code, classSymbol, out bool isAbstract, out bool isClass);
 
-			List<ISymbol>? fieldSymbols = null;
+			List<ISymbol> fieldSymbols = null;
 			if (!isAbstract) fieldSymbols = GetAllMembers(classSymbol, TreeDataSerializeGenerator.TypeFieldsCountDict, out baseSymbol, out membersCount);
-			string? baseName = baseSymbol?.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string baseName = baseSymbol?.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 
 			Code.AppendLine("	{");
@@ -307,10 +307,10 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 获取类型所有符合条件的字段和属性成员，遇到指定基类停止搜索
 		/// </summary>
-		public static List<ISymbol> GetAllMembers(INamedTypeSymbol classSymbol, Dictionary<INamedTypeSymbol, int> ignoreBaseSymbols, out INamedTypeSymbol? baseSymbol, out int membersCount)
+		public static List<ISymbol> GetAllMembers(INamedTypeSymbol classSymbol, Dictionary<INamedTypeSymbol, int> ignoreBaseSymbols, out INamedTypeSymbol baseSymbol, out int membersCount)
 		{
 			int baseMembersCount = 0;
-			INamedTypeSymbol? baseTypeSymbol = null;
+			INamedTypeSymbol baseTypeSymbol = null;
 
 			// 成员过滤条件
 			static bool FilterMember(ISymbol symbol)
@@ -352,8 +352,7 @@ namespace WorldTree.SourceGenerator
 			bool CollectMembers(INamedTypeSymbol type)
 			{
 				// 避免重复处理
-				if (!processedTypes.Add(type))
-					return false;
+				if (!processedTypes.Add(type)) return false;
 
 				// 检查是否达到了需要忽略的基类
 				if (ignoreBaseSymbols != null)

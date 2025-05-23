@@ -1,43 +1,40 @@
-
-
-using System;
-
 namespace WorldTree.Server
 {
 
 	public static partial class DeepCopyTestRule
 	{
-		public class TreeDeepCopyRule1 : TreeCopyRule<CopyTest1>
+		[NodeRule(nameof(AddRule<DeepCopyTest>))]
+		private static void OnAdd(this DeepCopyTest self)
 		{
-			protected override void Execute(TreeCopyExecutor self, ref object source, ref object target)
+			CopyTest1 copyTest1 = new CopyTest1();
+			copyTest1.Value2 = new CopyTestStruct1()
 			{
-				if (source == null)
-				{
-					target = null;
-					return;
-				}
+				Value1 = 123,
+				Value2 = 456f,
+				Value3 = "789"
+			};
 
-				//类型对不上
-				if (source is not CopyTest1 sourceValue) return;
+			CopyTestDict1 testDict = new CopyTestDict1();
 
-				if (target is not CopyTest1 targetValue)
-				{
-					//目标类型不对，尝试释放，并重新创建
-					if (target is IDisposable disposable) disposable.Dispose();
-					target = targetValue = new CopyTest1();
-				}
 
-				//值类型直接赋值
-				targetValue.Value1 = sourceValue.Value1;
-				targetValue.Value11 = sourceValue.Value11;
 
-				self.CopyTo(sourceValue.Value1, ref targetValue.Value1);
-				self.CopyTo(sourceValue.Value2, ref targetValue.Value2);
+			copyTest1.ValueDict = testDict;
 
-				//引用类型属性
+			testDict.Value1 = 123987;
+			testDict.Value11 = "字典子类";
+			testDict.Add(1, 100);
+			testDict.Add(2, 200);
 
-				//self.CopyTo(sourceValue.Value11, ref targetValue.Value11);
-			}
+			self.AddTemp(out TreeCopyExecutor treeCopy);
+			CopyTest1 copyTest2 = null;
+			treeCopy.CloneObject(copyTest1, ref copyTest2);
+
+			self.Log($"copyTest1.Value2.Value1 = {copyTest1.Value2.Value2}");
+			self.Log($"copyTest2.Value2.Value1 = {copyTest2.Value2.Value2}");
+
+
+			self.Log($"字典深拷贝验证 {copyTest1.ValueDict == copyTest2.ValueDict}");
+			self.Log($"copyTest2.ValueDict.Value11 = {((CopyTestDict1)copyTest2.ValueDict).Value11}");
 		}
 	}
 }
