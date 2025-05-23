@@ -6,19 +6,18 @@ namespace WorldTree.Server
 		[NodeRule(nameof(AddRule<DeepCopyTest>))]
 		private static void OnAdd(this DeepCopyTest self)
 		{
-			CopyTest1 copyTest1 = new CopyTest1();
-			copyTest1.Value2 = new CopyTestStruct1()
-			{
-				Value1 = 123,
-				Value2 = 456f,
-				Value3 = "789"
-			};
+			CopyTest copySource = new CopyTest();
+			copySource.CopyA = new CopyTestA();
+			copySource.CopyARef = copySource.CopyA;
+			copySource.CopyA.CopyTestB = new CopyTestB();
+			copySource.CopyA.CopyTestB.ValueString = "测试字符串";
+
 
 			CopyTestDict1 testDict = new CopyTestDict1();
 
 
 
-			copyTest1.ValueDict = testDict;
+			copySource.ValueDict = testDict;
 
 			testDict.Value1 = 123987;
 			testDict.Value11 = "字典子类";
@@ -26,15 +25,15 @@ namespace WorldTree.Server
 			testDict.Add(2, 200);
 
 			self.AddTemp(out TreeCopyExecutor treeCopy);
-			CopyTest1 copyTest2 = null;
-			treeCopy.CloneObject(copyTest1, ref copyTest2);
-
-			self.Log($"copyTest1.Value2.Value1 = {copyTest1.Value2.Value2}");
-			self.Log($"copyTest2.Value2.Value1 = {copyTest2.Value2.Value2}");
+			CopyTest copyTarget = null;
+			treeCopy.CloneObject(copySource, ref copyTarget);
 
 
-			self.Log($"字典深拷贝验证 {copyTest1.ValueDict == copyTest2.ValueDict}");
-			self.Log($"copyTest2.ValueDict.Value11 = {((CopyTestDict1)copyTest2.ValueDict).Value11}");
+			self.Log($"对比字段A {copySource.CopyA == copyTarget.CopyA}");
+			self.Log($"对比字段ARef {copySource.CopyARef == copyTarget.CopyARef}");
+
+			self.Log($"原类型引用比较 {copySource.CopyA == copySource.CopyARef}");
+			self.Log($"目标类型还原引用 {copyTarget.CopyA == copyTarget.CopyARef}");
 		}
 	}
 }

@@ -54,7 +54,7 @@ namespace WorldTree.SourceGenerator
 				if (ClassCode.Length == 0) return;
 				Code.AppendLine(
 @$"/****************************************
-* 生成序列化部分
+* 生成克隆法则部分类
 */
 "
 	);
@@ -115,8 +115,6 @@ namespace WorldTree.SourceGenerator
 			{
 				return;
 			}
-
-			//List<ISymbol> fieldSymbols = FindField(classSymbol);
 
 			INamedTypeSymbol baseSymbol = null;
 			List<ISymbol> fieldSymbols = GetAllMembers(classSymbol, TreeCopyGenerator.TypeFieldsDict, out baseSymbol);

@@ -16,16 +16,13 @@ namespace WorldTree.Server
 	/// ≤‚ ‘ ˝æ›
 	/// </summary>
 	[TreeCopyable]
-	public partial class CopyTest1
+	public partial class CopyTest
 	{
+
 		/// <summary>
 		/// ≤‚ ‘
 		/// </summary>
-		public int Value1 = 1;
-		/// <summary>
-		/// ≤‚ ‘
-		/// </summary>
-		public CopyTestStruct1 Value2 = default;
+		public CopyTestStruct ValuetStruct = default;
 
 		/// <summary>
 		/// ≤‚ ‘
@@ -33,21 +30,47 @@ namespace WorldTree.Server
 		public IDictionary ValueDict = null;
 
 		/// <summary>
-		/// a
+		/// ≤‚ ‘
 		/// </summary>
-		public int Value11 { get => Value1; set => Value1 = value; }
-
+		public CopyTestA CopyA = null;
 		/// <summary>
-		/// a
+		/// ≤‚ ‘“˝”√ªπ‘≠
 		/// </summary>
-		public CopyTestStruct1 Value21 { get => Value2; set => Value2 = value; }
+		public CopyTestA CopyARef = null;
+
 	}
+
+	/// <summary>
+	/// ≤‚ ‘
+	/// </summary>
+	[TreeCopyable]
+	public partial class CopyTestA
+	{
+		/// <summary>
+		/// ≤‚ ‘
+		/// </summary>
+		public CopyTestB CopyTestB = null;
+
+	}
+
+	/// <summary>
+	/// ≤‚ ‘
+	/// </summary>
+	[TreeCopyable]
+	public partial class CopyTestB
+	{
+		/// <summary>
+		/// ◊÷∑˚¥Æ
+		/// </summary>
+		public string ValueString = "ABC";
+	}
+
 
 	/// <summary>
 	/// ≤‚ ‘Ω·ππÃÂ
 	/// </summary>
 	[TreeCopyable]
-	public partial struct CopyTestStruct1
+	public partial struct CopyTestStruct
 	{
 		/// <summary>
 		/// ≤‚ ‘
@@ -60,7 +83,7 @@ namespace WorldTree.Server
 		/// <summary>
 		/// ≤‚ ‘
 		/// </summary>
-		public string Value3 = "f";
+		public string ValueString = "f";
 
 		/// <summary>
 		/// a
@@ -72,36 +95,11 @@ namespace WorldTree.Server
 		/// </summary>
 		public float Value21 { get => Value2; set => Value2 = value; }
 
-		public CopyTestStruct1()
+		public CopyTestStruct()
 		{
 		}
 
 	}
-
-	/// <summary>
-	/// ≤‚ ‘ ˝æ›
-	/// </summary>
-	[TreeCopyable]
-	public partial class CopyTest1Sub : CopyTest1
-	{
-		/// <summary>
-		/// ≤‚ ‘
-		/// </summary>
-		public int ValueSub1 = 1;
-	}
-
-
-
-	/// <summary>
-	/// …ÓøΩ±¥≤‚ ‘
-	/// </summary>
-	public class DeepCopyTest : Node
-		, ComponentOf<INode>
-		, AsAwake
-	{ }
-
-
-
 
 	/// <summary>
 	/// ≤‚ ‘◊÷µ‰◊”¿‡
@@ -119,4 +117,22 @@ namespace WorldTree.Server
 		/// </summary>
 		public string Value11 { get; set; }
 	}
+
+
+
+
+
+
+	/// <summary>
+	/// …ÓøΩ±¥≤‚ ‘
+	/// </summary>
+	public class DeepCopyTest : Node
+		, ComponentOf<INode>
+		, AsAwake
+	{ }
+
+
+
+
+
 }
