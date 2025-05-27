@@ -10,7 +10,7 @@ namespace WorldTree.TreeCopys
 		[TreeCopySpecial]
 		private class Copy<TKey, TValue> : IEnumerableSpecialCopyRule.CopyRuleBase<Dictionary<TKey, TValue>, KeyValuePair<TKey, TValue>>
 		{
-			public override void ForeachCopy(TreeCopyExecutor self, Dictionary<TKey, TValue> source, Dictionary<TKey, TValue> target)
+			public override void ForeachCopy(TreeCopier self, Dictionary<TKey, TValue> source, Dictionary<TKey, TValue> target)
 			{
 				foreach (var item in target)
 				{

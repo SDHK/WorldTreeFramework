@@ -37,11 +37,11 @@ namespace WorldTree
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(INode self, ref object source, ref object target) => Execute(self as TreeCopyExecutor, ref source, ref target);
+		public virtual void Invoke(INode self, ref object source, ref object target) => Execute(self as TreeCopier, ref source, ref target);
 		/// <summary>
 		/// 执行
 		/// </summary>
-		protected abstract void Execute(TreeCopyExecutor self, ref object source, ref object target);
+		protected abstract void Execute(TreeCopier self, ref object source, ref object target);
 	}
 
 	#region 非常规法则
@@ -61,11 +61,11 @@ namespace WorldTree
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(INode self, ref GT arg1, ref GT arg2) => Execute(self as TreeCopyExecutor, ref arg1, ref arg2);
+		public virtual void Invoke(INode self, ref GT arg1, ref GT arg2) => Execute(self as TreeCopier, ref arg1, ref arg2);
 		/// <summary>
 		/// 执行
 		/// </summary>
-		protected abstract void Execute(TreeCopyExecutor self, ref GT arg1, ref GT arg2);
+		protected abstract void Execute(TreeCopier self, ref GT arg1, ref GT arg2);
 	}
 
 	#endregion

@@ -126,14 +126,14 @@ namespace WorldTree.SourceGenerator
 			{
 				Code.AppendLine($"		class TreeCopy : TreeCopyStructRule<{className}>");
 				Code.AppendLine("		{");
-				Code.AppendLine($"			protected override void Execute(TreeCopyExecutor self, ref {className} source, ref {className} target)");
+				Code.AppendLine($"			protected override void Execute(TreeCopier self, ref {className} source, ref {className} target)");
 				Code.AppendLine("			{");
 			}
 			else
 			{
 				Code.AppendLine($"		class TreeCopy : TreeCopyRule<{className}>");
 				Code.AppendLine("		{");
-				Code.AppendLine($"			protected override void Execute(TreeCopyExecutor self, ref object sourceObj, ref object targetObj)");
+				Code.AppendLine($"			protected override void Execute(TreeCopier self, ref object sourceObj, ref object targetObj)");
 				Code.AppendLine("			{");
 				Code.AppendLine("				if (sourceObj == null)");
 				Code.AppendLine("				{");
@@ -160,7 +160,7 @@ namespace WorldTree.SourceGenerator
 					if (fieldSymbol.Type.IsUnmanagedType || fieldSymbol.Type.SpecialType == SpecialType.System_String)
 						Code.AppendLine($"				target.{fieldName} = source.{fieldName};");
 					else
-						Code.AppendLine($"				self.CloneObject(source.{fieldName}, ref target.{fieldName});");
+						Code.AppendLine($"				self.InternalCopy(source.{fieldName}, ref target.{fieldName});");
 				}
 				else if (symbol is IPropertySymbol propertySymbol)
 				{
@@ -172,14 +172,14 @@ namespace WorldTree.SourceGenerator
 					else
 					{
 						Code.AppendLine($"				var m{fieldName} = target.{fieldName};");
-						Code.AppendLine($"				target.{fieldName} = self.CloneObject(source.{fieldName}, ref m{fieldName});");
+						Code.AppendLine($"				target.{fieldName} = self.InternalCopy(source.{fieldName}, ref m{fieldName});");
 					}
 				}
 			}
 
 			if (classSymbol.TypeKind != TypeKind.Struct && baseName != null)
 			{
-				Code.AppendLine($"				self.TypeCloneObject(typeof({baseName}), sourceObj, ref targetObj);");
+				Code.AppendLine($"				self.InternalTypeCopy(typeof({baseName}), sourceObj, ref targetObj);");
 			}
 
 			//要考虑继承了字典的子类情况

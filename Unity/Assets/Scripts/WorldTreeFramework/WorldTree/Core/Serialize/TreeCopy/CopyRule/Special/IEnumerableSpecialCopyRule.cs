@@ -15,9 +15,9 @@ namespace WorldTree.TreeCopys
 			/// <summary>
 			/// ±éÀú¿½±´·½·¨
 			/// </summary>
-			public abstract void ForeachCopy(TreeCopyExecutor self, T source, T target);
+			public abstract void ForeachCopy(TreeCopier self, T source, T target);
 
-			protected override void Execute(TreeCopyExecutor self, ref object sourceObj, ref object targetObj)
+			protected override void Execute(TreeCopier self, ref object sourceObj, ref object targetObj)
 			{
 				if (sourceObj == null)
 				{

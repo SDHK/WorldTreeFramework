@@ -24,9 +24,9 @@ namespace WorldTree.Server
 			testDict.Add(1, 100);
 			testDict.Add(2, 200);
 
-			self.AddTemp(out TreeCopyExecutor treeCopy);
+			self.AddTemp(out TreeCopier treeCopy);
 			CopyTest copyTarget = null;
-			treeCopy.CloneObject(copySource, ref copyTarget);
+			treeCopy.CopyTo(copySource, ref copyTarget);
 
 
 			self.Log($"¶Ô±È×Ö¶ÎA {copySource.CopyA == copyTarget.CopyA}");

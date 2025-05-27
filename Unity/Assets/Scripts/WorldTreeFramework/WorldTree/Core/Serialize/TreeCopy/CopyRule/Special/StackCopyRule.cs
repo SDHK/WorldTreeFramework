@@ -10,7 +10,7 @@ namespace WorldTree.TreeCopys
 		[TreeCopySpecial]
 		private class Copy<T> : IEnumerableSpecialCopyRule.CopyRuleBase<Stack<T>, T>
 		{
-			public override void ForeachCopy(TreeCopyExecutor self, Stack<T> source, Stack<T> target)
+			public override void ForeachCopy(TreeCopier self, Stack<T> source, Stack<T> target)
 			{
 				foreach (var item in target)
 				{

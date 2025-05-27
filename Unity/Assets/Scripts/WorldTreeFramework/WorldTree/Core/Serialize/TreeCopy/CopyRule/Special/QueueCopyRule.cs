@@ -10,7 +10,7 @@ namespace WorldTree.TreeCopys
 		[TreeCopySpecial]
 		private class Copy<T> : IEnumerableSpecialCopyRule.CopyRuleBase<Queue<T>, T>
 		{
-			public override void ForeachCopy(TreeCopyExecutor self, Queue<T> source, Queue<T> target)
+			public override void ForeachCopy(TreeCopier self, Queue<T> source, Queue<T> target)
 			{
 				foreach (var item in target)
 				{

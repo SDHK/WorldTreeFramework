@@ -14,11 +14,11 @@ using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
-	public static partial class TreeCopyExecutorRule
+	public static partial class TreeCopierRule
 	{
-		class AddRule : AddRule<TreeCopyExecutor>
+		class AddRule : AddRule<TreeCopier>
 		{
-			protected override void Execute(TreeCopyExecutor self)
+			protected override void Execute(TreeCopier self)
 			{
 				// 获取节点的法则集
 				self.Core.RuleManager.TryGetRuleGroup<TreeCopyStruct>(out self.copyStructRuleDict);
@@ -26,19 +26,21 @@ namespace WorldTree
 			}
 		}
 
-		class RemoveRule : RemoveRule<TreeCopyExecutor>
+		class RemoveRule : RemoveRule<TreeCopier>
 		{
-			protected override void Execute(TreeCopyExecutor self)
+			protected override void Execute(TreeCopier self)
 			{
 				self.ObjectToObjectDict.Dispose();
 			}
 		}
 	}
 
+
+
 	/// <summary>
 	/// 树深拷贝执行器
 	/// </summary>
-	public class TreeCopyExecutor : Node
+	public class TreeCopier : Node
 		, TempOf<INode>
 		, AsRule<ITreeCopy>
 		, AsAwake
@@ -56,7 +58,7 @@ namespace WorldTree
 		/// <summary>
 		/// 拷贝对象
 		/// </summary>
-		public T CopyTo<T>(T source, ref T target) => CloneObject(source, ref target, true);
+		public T CopyTo<T>(T source, ref T target) => InternalCopy(source, ref target, true);
 
 		/// <summary>
 		/// 拷贝对象
@@ -64,13 +66,13 @@ namespace WorldTree
 		public T Copy<T>(T source)
 		{
 			T target = default;
-			return CloneObject(source, ref target);
+			return InternalCopy(source, ref target);
 		}
 
 		/// <summary>
-		/// 拷贝对象
+		/// 内部使用拷贝对象
 		/// </summary>
-		public T CloneObject<T>(T source, ref T target, bool isClear = false)
+		public T InternalCopy<T>(T source, ref T target, bool isClear = false)
 		{
 			if (isClear) ObjectToObjectDict.Clear();
 
@@ -127,9 +129,9 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 危险指定类型拷贝对象
+		/// 内部使用危险指定类型拷贝对象
 		/// </summary>
-		public void TypeCloneObject(Type type, object source, ref object target)
+		public void InternalTypeCopy(Type type, object source, ref object target)
 		{
 			long typeCode = this.TypeToCode(type);
 			if (Core.RuleManager.TryGetRuleList<TreeCopy>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
