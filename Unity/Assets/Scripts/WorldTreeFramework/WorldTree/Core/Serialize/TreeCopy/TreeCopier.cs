@@ -1,9 +1,9 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2025/5/20 20:14
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2025/5/20 20:14
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 
@@ -20,7 +20,7 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeCopier self)
 			{
-				// »ñÈ¡½ÚµãµÄ·¨Ôò¼¯
+				// è·å–èŠ‚ç‚¹çš„æ³•åˆ™é›†
 				self.Core.RuleManager.TryGetRuleGroup<TreeCopyStruct>(out self.copyStructRuleDict);
 				self.Core.PoolGetUnit(out self.ObjectToObjectDict);
 			}
@@ -35,10 +35,8 @@ namespace WorldTree
 		}
 	}
 
-
-
 	/// <summary>
-	/// Ê÷Éî¿½±´Ö´ĞĞÆ÷
+	/// æ ‘æ·±æ‹·è´æ‰§è¡Œå™¨
 	/// </summary>
 	public class TreeCopier : Node
 		, TempOf<INode>
@@ -46,22 +44,22 @@ namespace WorldTree
 		, AsAwake
 	{
 		/// <summary>
-		/// ¶ÔÏó¶ÔÓ¦¶ÔÏó×Öµä
+		/// å¯¹è±¡å¯¹åº”å¯¹è±¡å­—å…¸
 		/// </summary>
 		public UnitDictionary<object, object> ObjectToObjectDict;
 
 		/// <summary>
-		/// ²»Í¬ÀàĞÍĞòÁĞ»¯·¨ÔòÁĞ±í¼¯ºÏ
+		/// ä¸åŒç±»å‹åºåˆ—åŒ–æ³•åˆ™åˆ—è¡¨é›†åˆ
 		/// </summary>
 		public RuleGroup copyStructRuleDict;
 
 		/// <summary>
-		/// ¿½±´¶ÔÏó
+		/// æ‹·è´å¯¹è±¡
 		/// </summary>
 		public T CopyTo<T>(T source, ref T target) => InternalCopy(source, ref target, true);
 
 		/// <summary>
-		/// ¿½±´¶ÔÏó
+		/// æ‹·è´å¯¹è±¡
 		/// </summary>
 		public T Copy<T>(T source)
 		{
@@ -70,7 +68,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ÄÚ²¿Ê¹ÓÃ¿½±´¶ÔÏó
+		/// å†…éƒ¨ä½¿ç”¨æ‹·è´å¯¹è±¡
 		/// </summary>
 		public T InternalCopy<T>(T source, ref T target, bool isClear = false)
 		{
@@ -78,12 +76,12 @@ namespace WorldTree
 
 			if (EqualityComparer<T>.Default.Equals(source, default))
 			{
-				// Èç¹ûÊÇÄ¬ÈÏÖµ£¬Ö±½Ó¸³Öµ²¢·µ»Ø
+				// å¦‚æœæ˜¯é»˜è®¤å€¼ï¼Œç›´æ¥èµ‹å€¼å¹¶è¿”å›
 				target = source;
 				return target;
 			}
 
-			// Èç¹ûÊÇ´¿ÖµÀàĞÍ£¨²»°üº¬ÒıÓÃ×Ö¶Î£©£¬Ö±½Ó¸³Öµ²¢·µ»Ø
+			// å¦‚æœæ˜¯çº¯å€¼ç±»å‹ï¼ˆä¸åŒ…å«å¼•ç”¨å­—æ®µï¼‰ï¼Œç›´æ¥èµ‹å€¼å¹¶è¿”å›
 			if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
 			{
 				target = source;
@@ -94,7 +92,7 @@ namespace WorldTree
 			long typeCode = this.Core.TypeToCode(type);
 			this.Core.RuleManager.SupportNodeRule(typeCode);
 
-			// Ç°Ãæ ´¿ÖµÀàĞÍµ²×¡ÁË£¬ÕâÀïÊÇÅĞ¶Ï °üº¬ÒıÓÃµÄ½á¹¹Ìå
+			// å‰é¢ çº¯å€¼ç±»å‹æŒ¡ä½äº†ï¼Œè¿™é‡Œæ˜¯åˆ¤æ–­ åŒ…å«å¼•ç”¨çš„ç»“æ„ä½“
 			if (type.IsValueType)
 			{
 				if (copyStructRuleDict.TryGetValue(typeCode, out RuleList ruleList))
@@ -105,23 +103,23 @@ namespace WorldTree
 					}
 				}
 			}
-			// ²»ÊÇ½á¹¹Ìå£¬¾ÍÊÇÀàĞÍ
+			// ä¸æ˜¯ç»“æ„ä½“ï¼Œå°±æ˜¯ç±»å‹
 			else if (this.Core.RuleManager.TryGetRuleList<TreeCopy>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
 				object sourceObj = source;
 				object targetObj = null;
 
-				// ³¢ÊÔ»ñÈ¡Ä¿±ê¶ÔÏó
+				// å°è¯•è·å–ç›®æ ‡å¯¹è±¡
 				if (!ObjectToObjectDict.TryGetValue(sourceObj, out targetObj))
 				{
-					// ²»´æÔÚÔò¿½±´
+					// ä¸å­˜åœ¨åˆ™æ‹·è´
 					targetObj = target;
 					((IRuleList<TreeCopy>)ruleList).SendRef(this, ref sourceObj, ref targetObj);
 				}
 
 				target = (T)targetObj;
 
-				// ¼ÇÂ¼ÒıÓÃÀàĞÍ
+				// è®°å½•å¼•ç”¨ç±»å‹
 				if (sourceObj != null && targetObj != null)
 					ObjectToObjectDict.TryAdd(sourceObj, targetObj);
 			}
@@ -129,7 +127,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ÄÚ²¿Ê¹ÓÃÎ£ÏÕÖ¸¶¨ÀàĞÍ¿½±´¶ÔÏó
+		/// å†…éƒ¨ä½¿ç”¨å±é™©æŒ‡å®šç±»å‹æ‹·è´å¯¹è±¡
 		/// </summary>
 		public void InternalTypeCopy(Type type, object source, ref object target)
 		{

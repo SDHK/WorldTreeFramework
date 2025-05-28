@@ -182,8 +182,6 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine($"				self.InternalTypeCopy(typeof({baseName}), sourceObj, ref targetObj);");
 			}
 
-			//要考虑继承了字典的子类情况
-			//要考虑引用还原的情况
 			Code.AppendLine("			}");
 			Code.AppendLine("		}");
 			Code.AppendLine("	}");
