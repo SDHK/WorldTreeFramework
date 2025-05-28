@@ -103,26 +103,23 @@ namespace WorldTree
 					}
 				}
 			}
-			// 不是结构体，就是类型
-			else
+			// 不是结构体，就是引用类型，查找是否存在引用拷贝
+			else if (ObjectToObjectDict.TryGetValue(source, out object targetObj))
+			{
+				target = (T)targetObj;
+			}
+			else // 不存在则尝试拷贝
 			{
 				//动态支持多维数组
 				if (type.IsArray) this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeCopy));
 				if (this.Core.RuleManager.TryGetRuleList<TreeCopy>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 				{
 					object sourceObj = source;
-					object targetObj = null;
 
-					// 尝试获取目标对象
-					if (!ObjectToObjectDict.TryGetValue(sourceObj, out targetObj))
-					{
-						// 不存在则拷贝
-						targetObj = target;
-						((IRuleList<TreeCopy>)ruleList).SendRef(this, ref sourceObj, ref targetObj);
-					}
-
+					// 不存在则拷贝
+					targetObj = target;
+					((IRuleList<TreeCopy>)ruleList).SendRef(this, ref sourceObj, ref targetObj);
 					target = (T)targetObj;
-
 					// 记录引用类型
 					if (sourceObj != null && targetObj != null)
 						ObjectToObjectDict.TryAdd(sourceObj, targetObj);
