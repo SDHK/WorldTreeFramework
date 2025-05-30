@@ -15,8 +15,6 @@ namespace WorldTree.Server
 
 			CopyTestDict1 testDict = new CopyTestDict1();
 
-
-
 			copySource.ValueDict = testDict;
 
 			testDict.Value1 = 123987;

@@ -9,14 +9,12 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 输入映射组
+	/// 输入映射存档
 	/// </summary>
 	[TreeDataSerializable]
-	public partial class InputMapperGroup : NodeData
-		, GenericOf<long, InputMapperManager>
-		, GenericOf<long, InputMapperGroup>
+	public partial class InputArchive : NodeData
+		, GenericOf<long, InputManager>
 		, AsGenericBranch<long>
-		, AsChildBranch
 		, AsAwake
 	{
 	}

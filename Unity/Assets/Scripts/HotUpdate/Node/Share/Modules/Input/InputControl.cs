@@ -22,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 输入检测器
 		/// </summary>
-		public InputMapper InputAdapter;
+		public InputBind InputAdapter;
 
 		/// <summary>
 		/// 行为事件

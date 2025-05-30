@@ -38,7 +38,7 @@ namespace WorldTree
 				id = testClass.Id;
 
 				//插入数据
-				liteDB.Insert(testClass);
+				liteDB.Insert(testClass.Id, testClass);
 
 				//销毁类型
 				testClass.Dispose();

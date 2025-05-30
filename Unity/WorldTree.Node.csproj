@@ -66,18 +66,16 @@
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Client\Config\CreateWorldConfig.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputValue.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputMapper\InputMapper.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputBind.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDevice\InputDriver.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputType.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\KeyCode\InputMouseKey.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputDriverInfo.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\KeyCode\InputBoardKey.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputMapper\InputMapperGroup.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputGroup.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\IDataBase.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputState.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronNode.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputMapper\InputMapperManager.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputMapper\InputMapperConfig.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputDeviceType.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBCollection.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDevice\InputDevice.cs" />
@@ -86,6 +84,9 @@
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputInfo.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputData.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputControl.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputLayer.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputArchive.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\Node\WorldTree.Node.asmdef" />

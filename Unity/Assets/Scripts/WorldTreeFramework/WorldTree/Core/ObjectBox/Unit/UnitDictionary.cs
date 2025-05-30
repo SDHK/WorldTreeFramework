@@ -18,15 +18,20 @@ namespace WorldTree
 	/// 单位字典：可由对象池管理回收
 	/// </summary>
 	[TreeDataSerializable]
+	[TreeCopyable]
 	public partial class UnitDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IUnit
 	{
 		[TreeDataIgnore]
+		[TreeCopyIgnore]
 		public WorldLine Core { get; set; }
 		[TreeDataIgnore]
+		[TreeCopyIgnore]
 		public long Type { get; set; }
 		[TreeDataIgnore]
+		[TreeCopyIgnore]
 		public bool IsFromPool { get; set; }
 		[TreeDataIgnore]
+		[TreeCopyIgnore]
 		public bool IsDisposed { get; set; }
 
 		public void OnCreate() { }

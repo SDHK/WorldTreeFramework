@@ -64,7 +64,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLineRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\DataBase\Proxy\DataBaseProxyRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputDevice\InputDeviceManagerRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputMapper\InputMapperRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputBind\InputBindRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\Input\InputDevice\InputDriverRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\DataBase\LiteDB\LiteDBManagerRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Rule\Share\Modules\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />

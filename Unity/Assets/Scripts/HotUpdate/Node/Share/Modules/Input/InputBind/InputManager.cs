@@ -9,10 +9,9 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 输入映射管理器
+	/// 输入管理器
 	/// </summary>
-	[TreeDataSerializable]
-	public partial class InputMapperManager : NodeData
+	public partial class InputManager : NodeData
 		, AsGenericBranch<long>
 		, ComponentOf<World>
 		, AsAwake

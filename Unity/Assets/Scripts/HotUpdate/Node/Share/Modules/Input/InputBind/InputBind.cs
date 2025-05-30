@@ -20,12 +20,17 @@ namespace WorldTree
 	/// 输入映射器
 	/// </summary>
 	[TreeDataSerializable]
-	public partial class InputMapper : NodeData
-		, ChildOf<InputMapperGroup>
-
+	public partial class InputBind : NodeData
+		, ChildOf<InputGroup>
 		, AsInputGlobal
 		, AsAwake
 	{
+
+		/// <summary>
+		/// 按键名称
+		/// </summary>
+		public string Key;
+
 		/// <summary>
 		/// 是否可改变
 		/// </summary>
@@ -42,49 +47,15 @@ namespace WorldTree
 		public IRuleExecutor<InputEvent> InputEvent;
 
 		/// <summary>
+		/// 冲突项(一层内)
+		/// </summary>
+		public List<NodeRef<InputBind>> ConflictList;
+
+		/// <summary>
 		/// 输入信息队列
 		/// </summary>
 		[TreeDataIgnore]
 		public UnitList<InputInfo> InfoList;
 	}
 
-
-
-	/// <summary>
-	/// 输入映射器数据管理器
-	/// </summary>
-	public class InputMapperDataManager
-	{
-		/// <summary>
-		/// a
-		/// </summary>
-		public Dictionary<string, InputMapperGroupData> KeyDict;
-
-	}
-
-	/// <summary>
-	/// 输入映射器组
-	/// </summary>
-	public partial class InputMapperGroupData
-	{
-
-
-	}
-
-	/// <summary>
-	/// 输入映射器数据
-	/// </summary>
-	[TreeDataSerializable]
-	public partial class InputMapperData
-	{
-		/// <summary>
-		/// 是否可改变
-		/// </summary>
-		public bool IsChange;
-
-		/// <summary>
-		/// 输入信息列表
-		/// </summary>
-		public List<InputInfo> ConfigInfoList;
-	}
 }

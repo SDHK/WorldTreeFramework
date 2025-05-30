@@ -8,27 +8,27 @@
 */
 namespace WorldTree
 {
-	public static class InputMapperRule
+	public static class InputBindRule
 	{
-		class Add : AddRule<InputMapper>
+		class Add : AddRule<InputBind>
 		{
-			protected override void Execute(InputMapper self)
+			protected override void Execute(InputBind self)
 			{
 				self.Core.PoolGetUnit(out self.InfoList);
 			}
 		}
 
-		class Deserialize : DeserializeRule<InputMapper>
+		class Deserialize : DeserializeRule<InputBind>
 		{
-			protected override void Execute(InputMapper self)
+			protected override void Execute(InputBind self)
 			{
 				self.Core.PoolGetUnit(out self.InfoList);
 			}
 		}
 
-		class Remove : RemoveRule<InputMapper>
+		class Remove : RemoveRule<InputBind>
 		{
-			protected override void Execute(InputMapper self)
+			protected override void Execute(InputBind self)
 			{
 				self.InfoList.Dispose();
 				self.InfoList = null;
@@ -36,9 +36,9 @@ namespace WorldTree
 		}
 
 
-		class InputGlobal : InputGlobalRule<InputMapper>
+		class InputGlobal : InputGlobalRule<InputBind>
 		{
-			protected override void Execute(InputMapper self, InputData data)
+			protected override void Execute(InputBind self, InputData data)
 			{
 				if (self.InfoList == null) return;
 

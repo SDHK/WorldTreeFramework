@@ -6,19 +6,18 @@
 * 描述：
 
 */
-using System.Collections.Generic;
-
 namespace WorldTree
 {
+
 	/// <summary>
-	/// 输入检测器配置
+	/// 输入映射组
 	/// </summary>
 	[TreeDataSerializable]
-	public partial struct InputMapperConfig
+	public partial class InputGroup : NodeData
+		, GenericOf<long, InputLayer>
+		, AsGenericBranch<long>
+		, AsChildBranch
+		, AsAwake
 	{
-		/// <summary>
-		/// 输入信息列表
-		/// </summary>
-		public List<InputInfo> InfoList;
 	}
 }

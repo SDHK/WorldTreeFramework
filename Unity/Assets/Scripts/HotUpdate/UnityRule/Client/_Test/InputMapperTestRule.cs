@@ -25,11 +25,15 @@ namespace WorldTree
 		private static void OnAwake(this InputMapperTest self)
 		{
 			//新建一个输入映射管理器
-			self.World.AddComponent(out InputMapperManager manager);
-			//添加一个输入映射组
-			manager.AddGeneric(0L, out InputMapperGroup group);
-			//添加一个输入映射器
-			group.AddChild(out InputMapper mapper);
+			self.World.AddComponent(out InputManager manager);
+			//添加一个输入存档
+			manager.AddGeneric(0L, out InputArchive archive);
+			//添加一个输入层
+			archive.AddGeneric(0L, out InputLayer layer);
+			//添加一个输入组
+			layer.AddGeneric(0L, out InputGroup group);
+			//添加一个输入绑定
+			group.AddChild(out InputBind mapper);
 			//添加一个输入信息配置
 			mapper.ConfigInfoList = new() {
 						new InputInfo() {
@@ -52,7 +56,7 @@ namespace WorldTree
 			//data.RuleTypeCode = self.TypeToCode<InputTestEvent>();
 
 			//获取一个数据库代理，保存到数据库
-			self.World.AddComponent(out LiteDBTestProxy _).Insert(manager);
+			self.World.AddComponent(out LiteDBTestProxy _).Insert(0, archive);
 		}
 
 		/// <summary>
@@ -66,30 +70,31 @@ namespace WorldTree
 			self.World.AddComponent(out LiteDBTestProxy liteDB);
 
 			//反序列化
-			var node = liteDB.Find<InputMapperManager>(1827001676595200);
+			var archive = liteDB.Find<InputArchive>(0);
 
 			//将管理器 嫁接到 世界节点组件分支 上
-			node.TryGraftSelfToTree<ComponentBranch, long>(self.Type, self.World);
-
-
+			archive.TryGraftSelfToTree<ComponentBranch, long>(self.Type, self.World);
 
 			//数据获取测试：
-			if (node.TryGetGeneric(0L, out InputMapperGroup group))
+			if (archive.TryGetGeneric(0L, out InputLayer layer))
 			{
-				if (group.TryGetChild(1826293313175552, out InputMapper mapper))
+				if (layer.TryGetGeneric(0L, out InputGroup group))
 				{
-					self.Log($"mapper:{mapper.InfoList == null}");
+					if (group.TryGetChild(1826293313175552, out InputBind mapper))
+					{
+						self.Log($"mapper:{mapper.InfoList == null}");
+					}
 				}
 			}
 		}
-
-		class Update : UpdateRule<InputMapperTest>
-		{
-			protected override void Execute(InputMapperTest self)
-			{
-
-			}
-		}
-
 	}
+
+	class Update : UpdateRule<InputMapperTest>
+	{
+		protected override void Execute(InputMapperTest self)
+		{
+
+		}
+	}
+
 }

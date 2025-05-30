@@ -103,6 +103,8 @@ namespace WorldTree
 		}
 	}
 
+	//因为要关联Task。Task写成结构体 需要用指针才能实现
+
 	/// <summary>
 	/// 树任务基类
 	/// </summary>
