@@ -22,6 +22,7 @@ namespace WorldTree
 	[TreeDataSerializable]
 	public partial class InputBind : NodeData
 		, ChildOf<InputGroup>
+		, GenericOf<long, InputGroup>
 		, AsInputGlobal
 		, AsAwake
 	{

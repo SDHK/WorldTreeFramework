@@ -25,12 +25,12 @@ namespace WorldTree
 		/// 启动进程
 		/// </summary>
 		[Option("Process", Required = false, Default = 1)]
-		public int Process { get; set; }
+		public int Process { get; set; } = 1;
 
 		/// <summary>
 		/// 日志等级
 		/// </summary>
 		[Option("LogLevel", Required = false, Default = LogLevel.All)]
-		public LogLevel LogLevel { get; set; }
+		public LogLevel LogLevel { get; set; } = LogLevel.All;
 	}
 }

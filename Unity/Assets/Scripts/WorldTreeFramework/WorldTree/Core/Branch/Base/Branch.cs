@@ -107,7 +107,11 @@ namespace WorldTree
 		public virtual void OnDeserialize()
 		{
 			keyDict.Clear();
-			foreach (var item in nodeDict) keyDict.TryAdd(item.Value.Id, item.Key);
+			foreach (var item in nodeDict)
+			{
+				item.Value.BranchType = this.Type;
+				keyDict.TryAdd(item.Value.Id, item.Key);
+			}
 		}
 	}
 
@@ -187,7 +191,11 @@ namespace WorldTree
 		public virtual void OnDeserialize()
 		{
 			keyDict.Clear();
-			foreach (var item in nodeDict) keyDict.TryAdd(item.Value.Id, item.Key);
+			foreach (var item in nodeDict)
+			{
+				item.Value.BranchType = this.Type;
+				keyDict.TryAdd(item.Value.Id, item.Key);
+			}
 		}
 	}
 }

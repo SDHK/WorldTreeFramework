@@ -21,7 +21,7 @@ namespace WorldTree
 		/// <summary>
 		/// 序列化流程
 		/// </summary>
-		[NodeRule(nameof(AwakeRule<InputMapperTest>))]
+		//[NodeRule(nameof(AwakeRule<InputMapperTest>))]
 		private static void OnAwake(this InputMapperTest self)
 		{
 			//新建一个输入映射管理器
@@ -33,7 +33,7 @@ namespace WorldTree
 			//添加一个输入组
 			layer.AddGeneric(0L, out InputGroup group);
 			//添加一个输入绑定
-			group.AddChild(out InputBind mapper);
+			group.AddGeneric(0L, out InputBind mapper);
 			//添加一个输入信息配置
 			mapper.ConfigInfoList = new() {
 						new InputInfo() {
@@ -52,11 +52,12 @@ namespace WorldTree
 			mapper.IsChange = true;
 
 			//全局事件保存
-			//mapper.InputEvent = self.Core.PoolGetUnit(out GlobalRuleExecutorData data);
-			//data.RuleTypeCode = self.TypeToCode<InputTestEvent>();
+			mapper.InputEvent = self.Core.PoolGetUnit(out GlobalRuleExecutorData data);
+			data.RuleTypeCode = self.TypeToCode<InputTestEvent>();
+
 
 			//获取一个数据库代理，保存到数据库
-			self.World.AddComponent(out LiteDBTestProxy _).Insert(0, archive);
+			self.World.AddComponent(out LiteDBTestProxy _).Update(archive.GetKey<long>(), archive);
 		}
 
 		/// <summary>
@@ -70,19 +71,21 @@ namespace WorldTree
 			self.World.AddComponent(out LiteDBTestProxy liteDB);
 
 			//反序列化
-			var archive = liteDB.Find<InputArchive>(0);
+			InputArchive archive = liteDB.Find<InputArchive>(0L);
 
 			//将管理器 嫁接到 世界节点组件分支 上
-			archive.TryGraftSelfToTree<ComponentBranch, long>(self.Type, self.World);
+			//archive.TryGraftSelfToTree<ComponentBranch, long>(self.Type, self.World);
+			self.World.AddComponent(out InputManager manager);
+			archive.TryGraftSelfToTree<GenericBranch<long>, long>(0L, manager);
 
 			//数据获取测试：
 			if (archive.TryGetGeneric(0L, out InputLayer layer))
 			{
 				if (layer.TryGetGeneric(0L, out InputGroup group))
 				{
-					if (group.TryGetChild(1826293313175552, out InputBind mapper))
+					if (group.TryGetGeneric(0L, out InputBind mapper))
 					{
-						self.Log($"mapper:{mapper.InfoList == null}");
+						self.Log($"mapper!!!!:{mapper.InfoList == null}");
 					}
 				}
 			}
