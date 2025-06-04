@@ -74,9 +74,9 @@ namespace WorldTree
 			InputArchive archive = liteDB.Find<InputArchive>(0L);
 
 			//将管理器 嫁接到 世界节点组件分支 上
-			//archive.TryGraftSelfToTree<ComponentBranch, long>(self.Type, self.World);
 			self.World.AddComponent(out InputManager manager);
-			archive.TryGraftSelfToTree<GenericBranch<long>, long>(0L, manager);
+
+			archive.TryGraftSelfToTree(self.TypeToCode<GenericBranch<long>>(), 0L, manager);
 
 			//数据获取测试：
 			if (archive.TryGetGeneric(0L, out InputLayer layer))

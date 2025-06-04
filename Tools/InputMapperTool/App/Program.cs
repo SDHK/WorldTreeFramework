@@ -11,10 +11,6 @@ namespace InputMapperTool
 		/// a
 		/// </summary>
 		private static InputMapperForm form = new InputMapperForm();
-		/// <summary>
-		/// a
-		/// </summary>
-		private static WorldLine mainLine = new WorldLine();
 
 		/// <summary>
 		///  The main entry point for the application.
@@ -30,9 +26,7 @@ namespace InputMapperTool
 			lineManager.Options = new();
 			lineManager.LogType = typeof(WorldLog);
 			lineManager.Create(0, typeof(WorldHeart), 1000, typeof(MainWorld));
-
 			Application.Run(form);
-
 		}
 	}
 

@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>WorldTree</RootNamespace>
-    <AssemblyName>App</AssemblyName>
+    <AssemblyName>InputApp</AssemblyName>
     <LangVersion>12</LangVersion>
     <AnalysisLevel>6.0</AnalysisLevel>
   </PropertyGroup>

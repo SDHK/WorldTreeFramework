@@ -28,17 +28,32 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			treeView1 = new TreeView();
 			SuspendLayout();
-			
+			// 
+			// treeView1
+			// 
+			treeView1.Location = new Point(78, 45);
+			treeView1.Name = "treeView1";
+			treeView1.Size = new Size(121, 97);
+			treeView1.TabIndex = 0;
+			treeView1.AfterSelect += treeView1_AfterSelect;
+			// 
+			// InputMapperForm
+			// 
 			AutoScaleDimensions = new SizeF(7F, 17F);
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = Color.FromArgb(30, 30, 30);
 			ClientSize = new Size(800, 450);
-			Name = "InputMapperTool";
+			Controls.Add(treeView1);
+			Name = "InputMapperForm";
 			Text = "InputMapperTool";
+			Load += InputMapperForm_Load;
 			ResumeLayout(false);
 		}
 
 		#endregion
+
+		private TreeView treeView1;
 	}
 }

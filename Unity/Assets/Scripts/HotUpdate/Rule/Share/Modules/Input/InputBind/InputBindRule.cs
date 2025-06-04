@@ -40,6 +40,9 @@ namespace WorldTree
 		{
 			protected override void Execute(InputBind self, InputData data)
 			{
+				//或许可以改为裁剪!!!!
+				if (!self.IsActive) return;
+
 				if (self.InfoList == null) return;
 
 				//输入开始状态
