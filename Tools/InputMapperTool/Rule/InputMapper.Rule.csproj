@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>WorldTree</RootNamespace>
-    <AssemblyName>InputApp</AssemblyName>
-    <LangVersion>12</LangVersion>
     <AnalysisLevel>6.0</AnalysisLevel>
+    <LangVersion>12</LangVersion>
+    <RootNamespace>WorldTree</RootNamespace>
+    <AssemblyName>Rule</AssemblyName>
   </PropertyGroup>
-
+  
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
@@ -32,13 +32,13 @@
     <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
     <Optimize>true</Optimize>
   </PropertyGroup>
-  
+
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\DotNet\Core\DotNet.Core.csproj" />
     <ProjectReference Include="..\..\..\Share\Analyzer\Share.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\..\Share\SourceGenerator\Share.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Node\InputMapper.Node.csproj" />
-    <ProjectReference Include="..\Rule\InputMapper.Rule.csproj" />
   </ItemGroup>
-
+  
 </Project>

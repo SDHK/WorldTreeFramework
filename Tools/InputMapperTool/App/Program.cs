@@ -25,11 +25,14 @@ namespace InputMapperTool
 			WorldLineManager lineManager = new();
 			lineManager.Options = new();
 			lineManager.LogType = typeof(WorldLog);
-			lineManager.Create(0, typeof(WorldHeart), 1000, typeof(MainWorld));
+			lineManager.Create(0, typeof(WinFormWorldHeart), 1000, typeof(MainWorld));
 			Application.Run(form);
+
+			while (true)
+			{
+				lineManager.MainUpdate?.Invoke();
+				Thread.Sleep(1000); ;
+			}
 		}
 	}
-
-	// ¥Êµµµÿ÷∑ ∂¡»° ±£¥Ê
-	// 
 }

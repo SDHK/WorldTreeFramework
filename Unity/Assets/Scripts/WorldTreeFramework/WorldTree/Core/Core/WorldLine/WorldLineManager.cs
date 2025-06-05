@@ -59,6 +59,11 @@ namespace WorldTree
 		private Type viewBuilderType;
 
 		/// <summary>
+		/// 外部主线程更新方法
+		/// </summary>
+		public Action<TimeSpan> MainUpdate;
+
+		/// <summary>
 		/// 设置可视化
 		/// </summary>
 		public void SetView(Type heartType, Type worldType, Type viewBuilderType)
