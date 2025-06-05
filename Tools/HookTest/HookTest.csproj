@@ -10,8 +10,6 @@
   
   
   <ItemGroup>
-
-    <ProjectReference Include="..\..\DotNet\Core\DotNet.Core.csproj" />
     <ProjectReference Include="..\..\DotNet\Node\DotNet.Node.csproj" />
     <ProjectReference Include="..\..\DotNet\Rule\DotNet.Rule.csproj" />
 

@@ -197,8 +197,8 @@
     },
     "Core/1.0.0": {
       "type": "project",
-      "path": "../Core/DotNet.Core.csproj",
-      "msbuildProject": "../Core/DotNet.Core.csproj"
+      "path": "../../Framework/Core/WorldTree.Core.csproj",
+      "msbuildProject": "../../Framework/Core/WorldTree.Core.csproj"
     },
     "Node/1.0.0": {
       "type": "project",
@@ -250,14 +250,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "E:\\Project\\GitHub\\WorldTree\\DotNet\\Core\\DotNet.Core.csproj": {
-              "projectPath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Core\\DotNet.Core.csproj"
-            },
             "E:\\Project\\GitHub\\WorldTree\\DotNet\\Node\\DotNet.Node.csproj": {
               "projectPath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Node\\DotNet.Node.csproj"
             },
             "E:\\Project\\GitHub\\WorldTree\\DotNet\\Rule\\DotNet.Rule.csproj": {
               "projectPath": "E:\\Project\\GitHub\\WorldTree\\DotNet\\Rule\\DotNet.Rule.csproj"
+            },
+            "E:\\Project\\GitHub\\WorldTree\\Framework\\Core\\WorldTree.Core.csproj": {
+              "projectPath": "E:\\Project\\GitHub\\WorldTree\\Framework\\Core\\WorldTree.Core.csproj"
             }
           }
         }
