@@ -7,7 +7,7 @@ namespace InputBind
 		/// <summary>
 		/// 窗口
 		/// </summary>
-		private static Form1 form = new Form1();
+		private static InputBindForm form = new InputBindForm();
 
 		/// <summary>
 		/// 世界更新时间
@@ -23,20 +23,20 @@ namespace InputBind
 			ApplicationConfiguration.Initialize();
 			WorldLineManager lineManager = new();
 			lineManager.Options = new();
-			lineManager.LogType = typeof(WinFormWorldLog);
+			lineManager.LogType = typeof(WorldLog);
 			lineManager.Create(0, typeof(WinFormWorldHeart), 1000, typeof(MainWorld));
 			Application.Run(form);
 
+			//添加节点，节点接收事件拿到From
+
 			UpdateTime = DateTime.Now;
 
-			while (true)
+			while (form.IsOpen)
 			{
 				Thread.Sleep(1000);
 				lineManager.MainUpdate?.Invoke(DateTime.Now - UpdateTime);
 				UpdateTime = DateTime.Now;
 			}
-
-
 		}
 	}
 }

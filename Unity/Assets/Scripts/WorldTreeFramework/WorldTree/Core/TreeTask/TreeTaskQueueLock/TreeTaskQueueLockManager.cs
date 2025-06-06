@@ -8,6 +8,20 @@
 */
 namespace WorldTree
 {
+	/// <summary>
+	/// 异步任务队列锁
+	/// </summary>
+	public class TreeTaskQueueLockManager : Node, ComponentOf<World>
+		, AsChildBranch
+		, AsAwake
+	{
+		/// <summary>
+		/// 锁的字典
+		/// </summary>
+		public TreeDictionary<long, DynamicNodeQueue> nodeQueueDict;
+	}
+
+
 	public static partial class NodeRule
 	{
 		/// <summary>

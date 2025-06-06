@@ -13,7 +13,6 @@
 		[NodeRule(nameof(AddRule<WinFormWorldHeart>))]
 		private static void OnAdd(this WinFormWorldHeart self)
 		{
-			MessageBox.Show($"世界之心启动！");
 			self.Core.WorldLineManager.MainUpdate += self.worldUpdate.Update;
 		}
 
@@ -24,6 +23,15 @@
 		}
 
 
-
+		private class UpdateTime : UpdateTimeRule<WinFormWorldHeart>
+		{
+			protected override void Execute(WinFormWorldHeart self, TimeSpan deltaTime)
+			{
+				self.enable?.Send();
+				self.update?.Send();
+				self.updateTime?.Send(deltaTime);
+				self.disable?.Send();
+			}
+		}
 	}
 }

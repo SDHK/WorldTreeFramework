@@ -5,7 +5,7 @@ namespace WorldTree
 		[NodeRule(nameof(AddRule<MainWorld>))]
 		private static void OnAdd(this MainWorld self)
 		{
-			MessageBox.Show($"Æô¶¯£¡");
+			self.Log("Æô¶¯£¡");
 		}
 	}
 }

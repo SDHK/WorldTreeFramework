@@ -1,6 +1,6 @@
-﻿namespace HookTest
+﻿namespace InputBind
 {
-	partial class Form1
+	partial class InputBindForm
 	{
 		/// <summary>
 		///  Required designer variable.
@@ -28,48 +28,34 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			components = new System.ComponentModel.Container();
-			label1 = new Label();
-			toolTip1 = new ToolTip(components);
-			textBox1 = new TextBox();
+			button1 = new Button();
 			SuspendLayout();
 			// 
-			// label1
+			// button1
 			// 
-			label1.AutoSize = true;
-			label1.Location = new Point(12, 9);
-			label1.Name = "label1";
-			label1.Size = new Size(43, 17);
-			label1.TabIndex = 0;
-			label1.Text = "label1";
-			label1.Click += label1_Click;
+			button1.Location = new Point(496, 73);
+			button1.Name = "button1";
+			button1.Size = new Size(75, 23);
+			button1.TabIndex = 0;
+			button1.Text = "button1";
+			button1.UseVisualStyleBackColor = true;
+			button1.Click += button1_Click;
 			// 
-			// textBox1
-			// 
-			textBox1.Location = new Point(61, 12);
-			textBox1.Multiline = true;
-			textBox1.Name = "textBox1";
-			textBox1.Size = new Size(716, 513);
-			textBox1.TabIndex = 1;
-			// 
-			// Form1
+			// InputBindForm
 			// 
 			AutoScaleDimensions = new SizeF(7F, 17F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(789, 537);
-			Controls.Add(textBox1);
-			Controls.Add(label1);
-			Name = "Form1";
-			Text = "Form1";
+			BackColor = Color.FromArgb(30, 30, 30);
+			ClientSize = new Size(800, 450);
+			Controls.Add(button1);
+			Name = "InputBindForm";
+			Text = "InputBindForm";
 			Load += Form1_Load;
 			ResumeLayout(false);
-			PerformLayout();
 		}
 
 		#endregion
 
-		private Label label1;
-		private ToolTip toolTip1;
-		private TextBox textBox1;
+		private Button button1;
 	}
 }

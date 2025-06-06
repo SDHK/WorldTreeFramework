@@ -40,7 +40,7 @@ namespace WorldTree.SourceGenerator
 				CSharpCompilation compilation = (CSharpCompilation)context.Compilation;
 
 				// 遍历所有的语法树
-				foreach (var tree in compilation.SyntaxTrees)
+				foreach (SyntaxTree tree in compilation.SyntaxTrees)
 				{
 					// 获取根节点
 					var root = (CompilationUnitSyntax)tree.GetRoot();

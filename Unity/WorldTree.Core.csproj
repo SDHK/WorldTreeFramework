@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\UnmanagedFormatRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTweenManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TreeTweenManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValue.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolGroup.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\RuleBase\TreePackSerializeRule.cs" />
@@ -81,11 +81,10 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\File\PathHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\RuleMethod\NodeBranchHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\GlobalRuleExecutor\GlobalRuleExecutorData.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTaskQueueLock\TreeTaskQueueCompleterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\KeyValuePairFormatRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\BeforeRemoveRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\IntTweenUpdateRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Extension\TreeValueRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TweenUpdateRule\IntTweenUpdateRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\Extension\TreeValueRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Extension\DictionaryExtension.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\UnitPoolManager.cs" />
@@ -98,7 +97,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\TimerCycle.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\TupleFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\ListenerRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Rule\TreeTweenRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\Rule\TreeTweenRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\Base\IRuleExecutor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Node\NodeBase\INodeListener.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleList\RuleList.cs" />
@@ -134,7 +133,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Triangle.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\StringFormatRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Log\WorldLog.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\StringTweenUpdateRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TweenUpdateRule\StringTweenUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Array3FormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Log\LogManager.cs" />
@@ -144,9 +143,9 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\ListCopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\StackCopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CounterCall.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\Curve.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\Curve\Curve.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\IdManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTaskQueueLock\TreeTaskQueueLockManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\TreeTaskQueueLock\TreeTaskQueueLockManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ReferencedPool\ReferencedPoolManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\ByteFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldLine\World.cs" />
@@ -154,7 +153,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\TimeHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\StringValueChangeRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TweenUpdateRule\FloatTweenUpdateRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TweenUpdateRule\FloatTweenUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Config\Config.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\RuleMethod\NodeBranchExtension.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rattan\RuleMethod\NodeRattanExtension.cs" />
@@ -180,8 +179,8 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Fixed.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\QueueCopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeConcurrentQueue.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\CurveManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Curve\RuleBase\CurveEvaluateRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\Curve\CurveManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\Curve\RuleBase\CurveEvaluateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\Array1CopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\RuleExecutor\RuleExecutor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskMethodBuilder.cs" />
@@ -197,7 +196,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Kcp\Kcp.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Special\IEnumerableSpecialFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\RuleBase\TreeTaskSetResuItRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\RuleBase\TweenUpdateRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\RuleBase\TweenUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleManager\RuleManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\Base\RuleGroupExecutorBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\ListenerRuleExecutor\ListenerRuleExecutorGroup.cs" />
@@ -206,7 +205,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\GlobalRuleExecutor\GlobalRuleExecutorManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\Serialized\Serialized.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Tools\File\DirectoryHelper.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTaskQueueLock\TreeTaskQueueCompleter.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\TreeTaskQueueLock\TreeTaskQueueCompleter.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Special\ICollectionSpecialFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTask.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Kcp\KcpPatial.cs" />
@@ -217,7 +216,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\Array1FormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\TimeDomain.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\Sub\ChildBranch.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTween.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TreeTween.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeStack.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\GenericPool\GenericPool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteSequence\IByteSequence.cs" />
@@ -264,7 +263,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rattan\RuleMethod\NodeRattanHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\BoolFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Special\DictionaryFormatterRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\Base\TreeTweenBase.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\Base\TreeTweenBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\WorldTreeStruct\Vector4Float.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleMethod\TreeValueBaseRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\Lifecycle\StringLifecycleRule.cs" />
@@ -293,7 +292,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Kcp\Segment.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\DictionaryCopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskVoid.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTaskQueueLock\TreeTaskQueueLockManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\CharFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Log\ILog.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\MainWorld.cs" />
@@ -774,6 +772,9 @@
     <Reference Include="System.Xml.XPath.XDocument">
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
