@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,14 +19,13 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 字段命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class FieldNamingDiagnostic : NamingDiagnosticBase
+	public abstract class FieldNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.FieldDeclaration;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 			DiagnosticField(context, DiagnosticKey.PublicFieldNaming, DiagnosticGroups);
 			DiagnosticField(context, DiagnosticKey.PrivateFieldNaming, DiagnosticGroups);
 			DiagnosticField(context, DiagnosticKey.ProtectedFieldNaming, DiagnosticGroups);
@@ -106,8 +103,7 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(FieldNamingCodeFixProvider)), Shared]
-	public class FieldNamingCodeFixProvider : NamingCodeFixProviderBase<VariableDeclaratorSyntax>
+	public abstract class FieldNamingProvider : NamingCodeFixProviderBase<VariableDeclaratorSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.FieldDeclaration;
 

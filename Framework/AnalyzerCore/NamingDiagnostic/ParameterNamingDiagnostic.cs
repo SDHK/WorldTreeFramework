@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,14 +19,13 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 方法参数命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class ParameterNamingDiagnostic : NamingDiagnosticBase
+	public abstract class ParameterNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Parameter;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			ParameterSyntax parameter = (ParameterSyntax)context.Node;
@@ -55,8 +52,7 @@ namespace WorldTree.Analyzer
 			}
 		}
 	}
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ParameterNamingCodeFixProvider)), Shared]
-	public class ParameterNamingCodeFixProvider : NamingCodeFixProviderBase<ParameterSyntax>
+	public abstract class ParameterNamingProvider : NamingCodeFixProviderBase<ParameterSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Parameter;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, ParameterSyntax decl, CancellationToken cancellationToken)

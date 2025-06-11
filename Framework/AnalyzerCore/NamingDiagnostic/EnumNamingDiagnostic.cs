@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,15 +22,14 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 枚举命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class EnumNamingDiagnostic : NamingDiagnosticBase
+	public abstract class EnumNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.EnumDeclaration;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
 
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
@@ -64,8 +61,7 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(EnumNamingCodeFixProvider)), Shared]
-	public class EnumNamingCodeFixProvider : NamingCodeFixProviderBase<EnumDeclarationSyntax>
+	public abstract class EnumNamingProvider : NamingCodeFixProviderBase<EnumDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.EnumDeclaration;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, EnumDeclarationSyntax decl, CancellationToken cancellationToken)

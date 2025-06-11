@@ -42,7 +42,7 @@ namespace WorldTree
 	/// <summary>
 	/// 命名符号帮助类
 	/// </summary>
-	internal static class NamedSymbolHelper
+	public static class NamedSymbolHelper
 	{
 
 

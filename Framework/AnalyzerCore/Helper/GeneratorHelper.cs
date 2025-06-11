@@ -22,7 +22,7 @@ namespace WorldTree
 	/// <summary>
 	/// 生成器帮助类
 	/// </summary>
-	internal static class GeneratorHelper
+	public static class GeneratorHelper
 	{
 		public const string INode = "WorldTree.INode";
 

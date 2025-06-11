@@ -13,45 +13,44 @@ using System.Text.RegularExpressions;
 namespace WorldTree.Analyzer
 {
 	/// <summary>
-	/// Queue类型诊断
+	/// HashSet类型诊断
 	/// </summary>
-	public class QueueDiagnosticConfig : DiagnosticConfigGroup
+	public class HashSetDiagnosticConfig : DiagnosticConfigGroup
 	{
-		public QueueDiagnosticConfig()
+		public HashSetDiagnosticConfig()
 		{
 			Screen = (Compilation, Symbol) =>
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				return NamedSymbolHelper.CheckBase(TypeSymbol, "Queue", out _);
-				//return Regex.IsMatch(typeName, "^System.Collections.Generic.Queue<.*>$");
+				return NamedSymbolHelper.CheckBase(TypeSymbol, "HashSet", out _);
 			};
 
 			SetConfig(DiagnosticKey.ClassFieldNaming, new DiagnosticConfig()
 			{
-				Title = "Queue类型字段命名",
-				MessageFormat = "Queue类型字段 命名要加Queue后戳",
+				Title = "HashSet类型字段命名",
+				MessageFormat = "HashSet类型字段 命名要加Hash后戳",
 				DeclarationKind = SyntaxKind.FieldDeclaration,
-				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Queue$"),
-				FixCode = s => s + "Queue",
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Hash$"),
+				FixCode = s => s + "Hash",
 				NeedComment = (semanticModel, identifier) => false,
 			});
 			SetConfig(DiagnosticKey.ClassPropertyNaming, new DiagnosticConfig()
 			{
-				Title = "Queue类型属性命名",
-				MessageFormat = "Queue类型属性 命名要加Queue后戳",
+				Title = "HashSet类型属性命名",
+				MessageFormat = "HashSet类型属性 命名要加Hash后戳",
 				DeclarationKind = SyntaxKind.PropertyDeclaration,
-				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Queue$"),
-				FixCode = s => s + "Queue",
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Hash$"),
+				FixCode = s => s + "Hash",
 				NeedComment = (semanticModel, identifier) => false,
 			});
 			SetConfig(DiagnosticKey.ClassLocalVariableNaming, new DiagnosticConfig()
 			{
-				Title = "Queue类型局部变量命名",
-				MessageFormat = "Queue类型局部变量 命名要加Queue后戳",
+				Title = "HashSet类型局部变量命名",
+				MessageFormat = "HashSet类型局部变量 命名要加Hash后戳",
 				DeclarationKind = SyntaxKind.LocalDeclarationStatement,
-				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Queue$") || identifier.Text == "obj",
-				FixCode = s => s + "Queue",
+				Check = (semanticModel, identifier) => Regex.IsMatch(identifier.Text, ".*Hash$") || identifier.Text == "obj",
+				FixCode = s => s + "Hash",
 				NeedComment = (semanticModel, identifier) => false,
 			});
 		}

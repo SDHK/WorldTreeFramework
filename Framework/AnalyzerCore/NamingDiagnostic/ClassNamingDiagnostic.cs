@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,14 +20,14 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 类型命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class ClassNamingDiagnostic : NamingDiagnosticBase
+	//[DiagnosticAnalyzer(LanguageNames.CSharp)]
+	public abstract class ClassNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.ClassDeclaration;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取当前项目的诊断组
 			Compilation compilation = context.Compilation;
@@ -92,8 +90,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ClassNamingCodeFixProvider)), Shared]
-	public class ClassNamingCodeFixProvider : NamingCodeFixProviderBase<ClassDeclarationSyntax>
+	//[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ClassNamingCodeFixProvider)), Shared]
+	public abstract class ClassNamingProvider : NamingCodeFixProviderBase<ClassDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.ClassDeclaration;
 

@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,14 +21,13 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 局部变量命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class LocalVariableNamingDiagnostic : NamingDiagnosticBase
+	public abstract class LocalVariableNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.LocalDeclarationStatement;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 			DiagnosticLocalVariable(context, DiagnosticGroups);
 			DiagnosticClassName(context, DiagnosticGroups);
 		}
@@ -93,8 +90,7 @@ namespace WorldTree.Analyzer
 			}
 		}
 	}
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(LocalVariableNamingCodeFixProvider)), Shared]
-	public class LocalVariableNamingCodeFixProvider : NamingCodeFixProviderBase<LocalDeclarationStatementSyntax>
+	public abstract class LocalVariableNamingProvider : NamingCodeFixProviderBase<LocalDeclarationStatementSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.LocalDeclarationStatement;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, LocalDeclarationStatementSyntax decl, CancellationToken cancellationToken)

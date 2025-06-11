@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,13 +19,12 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 泛型类型参数命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class TypeParameterNamingDiagnostic : NamingDiagnosticBase
+	public abstract class TypeParameterNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.TypeParameter;
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			TypeParameterSyntax typeParameter = (TypeParameterSyntax)context.Node;
@@ -43,8 +40,7 @@ namespace WorldTree.Analyzer
 			}
 		}
 	}
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(TypeParameterNamingCodeFixProvider)), Shared]
-	public class TypeParameterNamingCodeFixProvider : NamingCodeFixProviderBase<TypeParameterSyntax>
+	public abstract class TypeParameterNamingProvider : NamingCodeFixProviderBase<TypeParameterSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.TypeParameter;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, TypeParameterSyntax decl, CancellationToken cancellationToken)

@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,13 +20,13 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 委托命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class DelegateNamingDiagnostic : NamingDiagnosticBase
+	//[DiagnosticAnalyzer(LanguageNames.CSharp)]
+	public abstract class DelegateNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.DelegateDeclaration;
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
@@ -58,8 +56,7 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(DelegateNamingCodeFixProvider)), Shared]
-	public class DelegateNamingCodeFixProvider : NamingCodeFixProviderBase<DelegateDeclarationSyntax>
+	public abstract class DelegateNamingProvider : NamingCodeFixProviderBase<DelegateDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.DelegateDeclaration;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, DelegateDeclarationSyntax delegateDecl, CancellationToken cancellationToken)

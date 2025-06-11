@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,14 +20,13 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 接口命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class InterfaceNamingDiagnostic : NamingDiagnosticBase
+	public abstract class InterfaceNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.InterfaceDeclaration;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
@@ -86,8 +83,7 @@ namespace WorldTree.Analyzer
 		}
 
 	}
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(InterfaceNamingCodeFixProvider)), Shared]
-	public class InterfaceNamingCodeFixProvider : NamingCodeFixProviderBase<InterfaceDeclarationSyntax>
+	public abstract class InterfaceNamingProvider : NamingCodeFixProviderBase<InterfaceDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.InterfaceDeclaration;
 

@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,21 +19,20 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 枚举成员命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class EnumMemberNamingDiagnostic : NamingDiagnosticBase
+	public abstract class EnumMemberNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.EnumMemberDeclaration;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 
 			EnumMemberDeclarationSyntax enumMemberDeclaration = (EnumMemberDeclarationSyntax)context.Node;
 			//获取当前枚举成员的类型
-			ISymbol? symbol = semanticModel.GetDeclaredSymbol(enumMemberDeclaration);
+			ISymbol symbol = semanticModel.GetDeclaredSymbol(enumMemberDeclaration);
 			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				if (!objectDiagnostic.Screen(context.Compilation, symbol)) continue;
@@ -58,8 +55,7 @@ namespace WorldTree.Analyzer
 			}
 		}
 	}
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(EnumMemberNamingCodeFixProvider)), Shared]
-	public class EnumMemberNamingCodeFixProvider : NamingCodeFixProviderBase<EnumMemberDeclarationSyntax>
+	public abstract class EnumMemberNamingProvider : NamingCodeFixProviderBase<EnumMemberDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.EnumMemberDeclaration;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, EnumMemberDeclarationSyntax decl, CancellationToken cancellationToken)

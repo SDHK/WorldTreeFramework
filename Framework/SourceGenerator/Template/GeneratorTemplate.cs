@@ -16,17 +16,17 @@ namespace WorldTree.SourceGenerator
 	/// </summary>
 	public static partial class GeneratorTemplate
 	{
-		private static Dictionary<int, string>? genericsTypes;
-		private static Dictionary<int, string>? genericsTypesAfter;
-		private static Dictionary<int, string>? genericsTypesAngle;
-		private static Dictionary<int, string>? genericsParameter;
-		private static Dictionary<int, string>? genericsTypeParameter;
-		private static Dictionary<int, string>? genericsRefParameter;
-		private static Dictionary<int, string>? genericsRefTypeParameter;
+		private static Dictionary<int, string> genericsTypes;
+		private static Dictionary<int, string> genericsTypesAfter;
+		private static Dictionary<int, string> genericsTypesAngle;
+		private static Dictionary<int, string> genericsParameter;
+		private static Dictionary<int, string> genericsTypeParameter;
+		private static Dictionary<int, string> genericsRefParameter;
+		private static Dictionary<int, string> genericsRefTypeParameter;
 
 
-		private static Dictionary<int, string>? genericsInTypes;
-		private static Dictionary<int, string>? genericsInTypesAngle;
+		private static Dictionary<int, string> genericsInTypes;
+		private static Dictionary<int, string> genericsInTypesAngle;
 
 
 

@@ -20,7 +20,7 @@ namespace WorldTree
 	/// <summary>
 	/// 语法树帮助类
 	/// </summary>
-	internal static class TreeSyntaxHelper
+	public static class TreeSyntaxHelper
 	{
 		/// <summary>
 		/// 检查是否有指定的特性

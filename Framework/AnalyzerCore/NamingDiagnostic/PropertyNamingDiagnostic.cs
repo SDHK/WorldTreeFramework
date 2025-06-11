@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,14 +19,13 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 属性命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class PropertyNamingDiagnostic : NamingDiagnosticBase
+	public abstract class PropertyNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.PropertyDeclaration;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 			DiagnosticProperty(context, DiagnosticKey.PublicPropertyNaming, DiagnosticGroups);
 			DiagnosticProperty(context, DiagnosticKey.PrivatePropertyNaming, DiagnosticGroups);
 			DiagnosticProperty(context, DiagnosticKey.ProtectedPropertyNaming, DiagnosticGroups);
@@ -118,8 +115,7 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(PropertyNamingCodeFixProvider)), Shared]
-	public class PropertyNamingCodeFixProvider : NamingCodeFixProviderBase<PropertyDeclarationSyntax>
+	public abstract class PropertyNamingProvider : NamingCodeFixProviderBase<PropertyDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.PropertyDeclaration;
 

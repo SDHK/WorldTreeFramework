@@ -23,10 +23,7 @@ namespace WorldTree.Analyzer
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				//if (TypeSymbol.DeclaredAccessibility != Accessibility.Public) return false;
 				return NamedSymbolHelper.CheckBase(TypeSymbol, "Stack", out _);
-				//string typeName = TypeSymbol?.ToDisplayString() ?? string.Empty;
-				//return Regex.IsMatch(typeName, "^System.Collections.Generic.Stack<.*>$");
 			};
 
 			SetConfig(DiagnosticKey.ClassFieldNaming, new DiagnosticConfig()

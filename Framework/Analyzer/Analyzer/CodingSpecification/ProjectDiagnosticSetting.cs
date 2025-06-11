@@ -8,9 +8,10 @@
 */
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using System;
+using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
+using System.Composition;
 
 namespace WorldTree.Analyzer
 {
@@ -75,7 +76,7 @@ namespace WorldTree.Analyzer
 		/// <summary>
 		/// 项目诊断配置
 		/// </summary>
-		public static Dictionary<string, List<DiagnosticConfigGroup>> ProjectDiagnostics = new()
+		public static ProjectDiagnostics Configs = new()
 		{
 			//后端配置
 			{ "App",CoreConfigs},
@@ -100,92 +101,81 @@ namespace WorldTree.Analyzer
 		};
 
 
-		/// <summary>
-		/// 尝试获取诊断配置组
-		/// </summary>
-		public static bool TryGetDiagnosticConfigGroup(string AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)
-		{
-			DiagnosticGroups = null;
-			//if (!options.AnalyzerConfigOptionsProvider.GlobalOptions.TryGetValue("build_property.AssemblyName", out var AnalysisName)) return false;
-			//if (string.IsNullOrEmpty(AnalysisName)) return false;
-			if (!ProjectDiagnostics.TryGetValue(AssemblyName, out DiagnosticGroups)) return false;
-			return true;
-		}
+
+		#region 基本
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class ClassNamingDiagnosticConfig : ClassNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ClassNamingProviderConfig)), Shared]
+		public class ClassNamingProviderConfig : ClassNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class NodeRuleClassDiagnosticConfig : NodeRuleClassDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NodeRuleClassCodeFixProviderConfig)), Shared]
+		public class NodeRuleClassCodeFixProviderConfig : NodeRuleClassCodeFixProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class DelegateNamingDiagnosticConfig : DelegateNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(DelegateNamingProviderConfig)), Shared]
+		public class DelegateNamingProviderConfig : DelegateNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class EnumMemberNamingDiagnosticConfig : EnumMemberNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(EnumMemberNamingProviderConfig)), Shared]
+		public class EnumMemberNamingProviderConfig : EnumMemberNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class EnumNamingDiagnosticConfig : EnumNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(EnumNamingProviderConfig)), Shared]
+		public class EnumNamingProviderConfig : EnumNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class FieldNamingDiagnosticConfig : FieldNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(FieldNamingProviderConfig)), Shared]
+		public class FieldNamingProviderConfig : FieldNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class InterfaceNamingDiagnosticConfig : InterfaceNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(InterfaceNamingProviderConfig)), Shared]
+		public class InterfaceNamingProviderConfig : InterfaceNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class LocalMethodNamingDiagnosticConfig : LocalMethodNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(LocalMethodNamingProviderConfig)), Shared]
+		public class LocalMethodNamingProviderConfig : LocalMethodNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class LocalVariableNamingDiagnosticConfig : LocalVariableNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(LocalVariableNamingProviderConfig)), Shared]
+		public class LocalVariableNamingProviderConfig : LocalVariableNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class MethodNamingDiagnosticConfig : MethodNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MethodNamingProviderConfig)), Shared]
+		public class MethodNamingProviderConfig : MethodNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class ParameterNamingDiagnosticConfig : ParameterNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ParameterNamingProviderConfig)), Shared]
+		public class ParameterNamingProviderConfig : ParameterNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class PropertyNamingDiagnosticConfig : PropertyNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(PropertyNamingProviderConfig)), Shared]
+		public class PropertyNamingProviderConfig : PropertyNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class StructNamingDiagnosticConfig : StructNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(StructNamingProviderConfig)), Shared]
+		public class StructNamingProviderConfig : StructNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		[DiagnosticAnalyzer(LanguageNames.CSharp)]
+		public class TypeParameterNamingDiagnosticConfig : TypeParameterNamingDiagnostic { public override ProjectDiagnostics Configs => Configs; }
+		[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(TypeParameterNamingProviderConfig)), Shared]
+		public class TypeParameterNamingProviderConfig : TypeParameterNamingProvider { public override ProjectDiagnostics Configs => Configs; }
+
+		#endregion
 
 
-		/// <summary>
-		/// 获取诊断描述
-		/// </summary>
-		public static DiagnosticDescriptor[] GetDiagnosticDescriptors(SyntaxKind declarationKind)
-		{
-			List<DiagnosticDescriptor> descriptors = new();
-			HashSet<Type> types = new();
-			foreach (List<DiagnosticConfigGroup> objectDiagnosticList in ProjectDiagnostics.Values)
-			{
-				foreach (DiagnosticConfigGroup diagnosticConfig in objectDiagnosticList)
-				{
-					if (types.Contains(diagnosticConfig.GetType())) continue;
-					types.Add(diagnosticConfig.GetType());
-
-					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
-					{
-						if (codeDiagnosticConfig.DeclarationKind == declarationKind)
-						{
-							descriptors.Add(codeDiagnosticConfig.Diagnostic);
-						}
-					}
-				}
-			}
-			return descriptors.ToArray();
-		}
-
-		/// <summary>
-		/// 获取诊断描述Id
-		/// </summary>
-		public static string[] GetDiagnosticDescriptorsId(SyntaxKind declarationKind)
-		{
-			List<string> descriptors = new();
-			HashSet<Type> types = new();
-			foreach (List<DiagnosticConfigGroup> objectDiagnosticList in ProjectDiagnostics.Values)
-			{
-				foreach (DiagnosticConfigGroup diagnosticConfig in objectDiagnosticList)
-				{
-					if (types.Contains(diagnosticConfig.GetType())) continue;
-					types.Add(diagnosticConfig.GetType());
-
-					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
-					{
-						if (codeDiagnosticConfig.DeclarationKind == declarationKind)
-						{
-							descriptors.Add(codeDiagnosticConfig.Diagnostic.Id);
-						}
-					}
-				}
-			}
-			return descriptors.ToArray();
-		}
-
-		/// <summary>
-		/// 尝试查找诊断配置
-		/// </summary>
-		public static bool TryFindDiagnosticDescriptor(string id, out DiagnosticConfig codeDiagnostic)
-		{
-			foreach (List<DiagnosticConfigGroup> objectDiagnosticList in ProjectDiagnostics.Values)
-			{
-				foreach (DiagnosticConfigGroup diagnosticConfig in objectDiagnosticList)
-				{
-					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
-					{
-						if (codeDiagnosticConfig.Diagnostic.Id == id)
-						{
-							codeDiagnostic = codeDiagnosticConfig;
-							return true;
-						}
-					}
-				}
-			}
-			codeDiagnostic = default;
-			return false;
-		}
 	}
 }

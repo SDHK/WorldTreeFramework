@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,14 +19,13 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 方法命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class MethodNamingDiagnostic : NamingDiagnosticBase
+	public abstract class MethodNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.MethodDeclaration;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			MethodDeclarationSyntax methodDeclaration = context.Node as MethodDeclarationSyntax;
@@ -81,8 +78,7 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MethodNamingCodeFixProvider)), Shared]
-	public class MethodNamingCodeFixProvider : NamingCodeFixProviderBase<MethodDeclarationSyntax>
+	public abstract class MethodNamingProvider : NamingCodeFixProviderBase<MethodDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.MethodDeclaration;
 

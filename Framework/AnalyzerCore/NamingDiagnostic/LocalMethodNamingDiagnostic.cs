@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,14 +19,13 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 局部方法命名规范诊断器
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class LocalMethodNamingDiagnostic : NamingDiagnosticBase
+	public abstract class LocalMethodNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.LocalFunctionStatement;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
-			if (!ProjectDiagnosticSetting.TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
+			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			LocalFunctionStatementSyntax? localFunction = context.Node as LocalFunctionStatementSyntax;
@@ -59,8 +56,7 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(LocalMethodNamingCodeFixProvider)), Shared]
-	public class LocalMethodNamingCodeFixProvider : NamingCodeFixProviderBase<LocalFunctionStatementSyntax>
+	public abstract class LocalMethodNamingProvider : NamingCodeFixProviderBase<LocalFunctionStatementSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.LocalFunctionStatement;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, LocalFunctionStatementSyntax decl, CancellationToken cancellationToken)
