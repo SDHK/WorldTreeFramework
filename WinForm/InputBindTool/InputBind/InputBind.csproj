@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>WorldTree</RootNamespace>
+    <LangVersion>12</LangVersion>
+    <AnalysisLevel>6.0</AnalysisLevel>
+  </PropertyGroup>
+  
+    <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>DOTNET</DefineConstants>
+    <OutputPath>..\Bin\</OutputPath>
+    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>DOTNET</DefineConstants>
+    <OutputPath>..\Bin\</OutputPath>
+    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\Core\WorldTree.Core.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Analyzer\WorldTree.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\..\Framework\SourceGenerator\WorldTree.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Node\InputBind.Node.csproj" />
+    <ProjectReference Include="..\Rule\InputBind.Rule.csproj" />
+  </ItemGroup>
+
+</Project>
