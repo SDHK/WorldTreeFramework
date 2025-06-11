@@ -17,8 +17,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Analyzer\WorldTree.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\..\Framework\SourceGenerator\WorldTree.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\..\Framework\Core\WorldTree.Core.csproj" />
+    <ProjectReference Include="..\..\..\Framework\SourceGenerator\WorldTree.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\Core\WinForm.Core.csproj" />
     <ProjectReference Include="..\Node\InputBind.Node.csproj" />
   </ItemGroup>
   

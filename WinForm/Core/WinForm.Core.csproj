@@ -1,20 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>disable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>disable</ImplicitUsings>
-    <RootNamespace>WorldTree</RootNamespace>
-    <LangVersion>12</LangVersion>
+    <Nullable>disable</Nullable>
     <AnalysisLevel>6.0</AnalysisLevel>
+    <LangVersion>12</LangVersion>
+    <RootNamespace>WorldTree</RootNamespace>
+    <AssemblyName>WinFormCore</AssemblyName>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
-  
-    <PropertyGroup>
+
+  <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>DOTNET</DefineConstants>
@@ -33,12 +33,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\Core\WorldTree.Core.csproj" />
-    <ProjectReference Include="..\..\..\Framework\Analyzer\WorldTree.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\..\Framework\SourceGenerator\WorldTree.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\Core\WinForm.Core.csproj" />
-    <ProjectReference Include="..\Node\InputBind.Node.csproj" />
-    <ProjectReference Include="..\Rule\InputBind.Rule.csproj" />
+    <ProjectReference Include="..\..\Framework\Core\WorldTree.Core.csproj" />
+    <ProjectReference Include="..\..\Framework\Analyzer\WorldTree.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\Framework\SourceGenerator\WorldTree.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
-
+  
 </Project>
+   
