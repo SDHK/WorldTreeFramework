@@ -34,7 +34,7 @@ namespace WorldTree
 		/// <summary>
 		/// 主世界线
 		/// </summary>
-		private WorldLine mainLine;
+		public WorldLine MainLine;
 
 		/// <summary>
 		/// 世界线集合
@@ -93,7 +93,7 @@ namespace WorldTree
 					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(viewLine.World, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
 				}
 
-				mainLine ??= line;
+				MainLine ??= line;
 				line.WorldLineManager = this;
 				line.Init(heartType, frameTime, worldType);
 				lineDict.TryAdd(id, line);
@@ -122,7 +122,7 @@ namespace WorldTree
 		{
 			foreach (var line in lineDict.Values)
 			{
-				if (mainLine == line) continue;
+				if (MainLine == line) continue;
 				line.WorldContext.Post(() =>
 				{
 					line.Dispose();
@@ -130,9 +130,9 @@ namespace WorldTree
 			}
 			lineDict.Clear();
 
-			mainLine?.WorldContext.Post(() =>
+			MainLine?.WorldContext.Post(() =>
 			{
-				mainLine.Dispose();
+				MainLine.Dispose();
 			});
 
 			viewLine?.WorldContext.Post(() =>
@@ -140,7 +140,7 @@ namespace WorldTree
 				viewLine.Dispose();
 			});
 
-			mainLine = null;
+			MainLine = null;
 			viewLine = null;
 		}
 

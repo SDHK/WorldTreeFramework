@@ -1,4 +1,7 @@
-﻿namespace WorldTree
+﻿using System;
+using Timer = System.Windows.Forms.Timer;
+
+namespace WorldTree
 {
 	public static partial class WinFormWorldHeartRule
 	{
@@ -6,22 +9,42 @@
 		private static void OnAwake(this WinFormWorldHeart self, int frameTime)
 		{
 			self.frameTime = frameTime;
-			self.Core.GetGlobalRuleExecutor(out self.updateTime);
-			self.AddComponent(out self.worldUpdate, frameTime).Run();
-		}
 
-		[NodeRule(nameof(AddRule<WinFormWorldHeart>))]
-		private static void OnAdd(this WinFormWorldHeart self)
-		{
-			self.Core.WorldLineManager.MainUpdate += self.worldUpdate.Update;
+			self.Core.GetGlobalRuleExecutor(out self.enable);
+			self.Core.GetGlobalRuleExecutor(out self.update);
+			self.Core.GetGlobalRuleExecutor(out self.updateTime);
+			self.Core.GetGlobalRuleExecutor(out self.disable);
+
+			self.AddComponent(out self.worldUpdate, frameTime).Run();
+
+			self.afterTime = DateTime.Now;
+			self.m_Thread = new Timer();
+			self.m_Thread.Interval = frameTime;
+			self.m_Thread.Tick += (s, e) =>
+			{
+				if (self.isRun)
+				{
+					self.worldUpdate.Update(DateTime.Now - self.afterTime);
+				}
+				self.afterTime = DateTime.Now;
+			};
+			self.m_Thread.Start();
 		}
 
 		[NodeRule(nameof(RemoveRule<WinFormWorldHeart>))]
 		private static void OnRemove(this WinFormWorldHeart self)
 		{
-			self.Core.WorldLineManager.MainUpdate -= self.worldUpdate.Update;
-		}
+			self.m_Thread?.Stop();
+			self.m_Thread?.Dispose();
+			self.m_Thread = null;
 
+			self.worldUpdate = null;
+
+			self.enable = null;
+			self.update = null;
+			self.updateTime = null;
+			self.disable = null;
+		}
 
 		private class UpdateTime : UpdateTimeRule<WinFormWorldHeart>
 		{

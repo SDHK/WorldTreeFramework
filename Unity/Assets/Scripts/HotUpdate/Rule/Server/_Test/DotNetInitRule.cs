@@ -24,6 +24,7 @@ namespace WorldTree.Server
 			self.Log($"启动！！");
 			//self.AddComponent(out SerializeTest _);
 			//self.AddComponent(out TreeDataTest _);
+
 			self.AddComponent(out DeepCopyTest _);
 		}
 

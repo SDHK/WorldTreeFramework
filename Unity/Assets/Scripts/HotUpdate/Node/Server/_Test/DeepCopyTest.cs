@@ -128,6 +128,7 @@ namespace WorldTree.Server
 	/// </summary>
 	public class DeepCopyTest : Node
 		, ComponentOf<INode>
+		, ChildOf<INode>
 		, AsAwake
 	{ }
 

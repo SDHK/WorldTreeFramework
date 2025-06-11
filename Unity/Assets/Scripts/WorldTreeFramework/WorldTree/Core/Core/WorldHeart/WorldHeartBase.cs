@@ -19,7 +19,7 @@ namespace WorldTree
 		/// <summary>
 		/// 是否运行
 		/// </summary>
-		public bool isRun;
+		[Protected] public bool isRun;
 
 		/// <summary>
 		/// 单帧时间 (毫秒)

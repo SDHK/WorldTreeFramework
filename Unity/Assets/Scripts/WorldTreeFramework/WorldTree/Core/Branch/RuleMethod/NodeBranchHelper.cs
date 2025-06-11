@@ -8,6 +8,7 @@
 */
 
 namespace WorldTree
+
 {
 	/// <summary>
 	/// 节点分支处理帮助类

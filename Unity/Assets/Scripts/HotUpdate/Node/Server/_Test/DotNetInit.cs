@@ -15,6 +15,7 @@ namespace WorldTree.Server
 	/// </summary>
 	public partial class DotNetInit : Node, ComponentOf<INode>
 		, AsComponentBranch
+		, AsChildBranch
 		, AsAwake
 	{
 		/// <summary>

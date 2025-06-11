@@ -25,7 +25,8 @@ namespace WorldTree
 			if (node.Core.ReferencedPoolManager == null) return null;
 			if (!node.Core.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool)) return null;
 			if (!node.Core.RuleManager.TryGetTargetRuleGroup(node.TypeToCode<R>(), node.Type, out RuleGroup ruleGroup)) return null;
-			return nodePool.AddComponent(out ListenerRuleExecutorGroup _).AddRuleExecutor(ruleGroup) as IRuleExecutor<R>;
+			if (!nodePool.TryGetComponent(out ListenerRuleExecutorGroup executorGroup)) nodePool.AddComponent(out executorGroup);
+			return executorGroup.AddRuleExecutor(ruleGroup) as IRuleExecutor<R>;
 		}
 	}
 }

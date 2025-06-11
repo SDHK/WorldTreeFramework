@@ -5,7 +5,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <RootNamespace>WorldTree</RootNamespace>
     <LangVersion>12</LangVersion>
     <AnalysisLevel>6.0</AnalysisLevel>

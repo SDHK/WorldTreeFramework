@@ -1,4 +1,7 @@
-﻿namespace WorldTree
+﻿using System;
+using Timer = System.Windows.Forms.Timer;
+
+namespace WorldTree
 {
 	/// <summary>
 	/// 世界之心：WinForm线程
@@ -8,6 +11,12 @@
 		, CoreManagerOf<WorldLine>
 		, AsAwake<int>
 	{
+
+		/// <summary>
+		/// From主线程
+		/// </summary>
+		public Timer m_Thread;
+
 		/// <summary>
 		/// 上一次运行时间
 		/// </summary>
