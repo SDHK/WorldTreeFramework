@@ -37,7 +37,7 @@ namespace WorldTree.Analyzer
 		/// </summary>
 		public abstract SyntaxKind DeclarationKind { get; }
 
-		public virtual ProjectDiagnostics Configs { get; }
+		public abstract ProjectDiagnostics Configs { get; }
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
 			=> ImmutableArray.Create(GetDiagnosticDescriptors(DeclarationKind));
@@ -99,7 +99,7 @@ namespace WorldTree.Analyzer
 		where T : SyntaxNode
 	{
 
-		public virtual ProjectDiagnostics Configs => null;
+		public abstract ProjectDiagnostics Configs { get; }
 
 		public abstract SyntaxKind DeclarationKind { get; }
 		public override sealed ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(GetFixableDiagnosticIds(DeclarationKind));

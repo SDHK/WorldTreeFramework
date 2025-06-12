@@ -21,15 +21,14 @@ namespace WorldTree.SourceGenerator
 	/// <summary>
 	/// 法则类型补充生成器
 	/// </summary>
-	[Generator]
-	internal class RuleSupplementGenerator : ISourceGenerator
+	public abstract class RuleSupplementGenerator : SourceGeneratorBase
 	{
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindSubInterfaceSyntaxReceiver());
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			if (!(context.SyntaxReceiver is FindSubInterfaceSyntaxReceiver receiver)) return;
 			if (receiver.InterfaceDeclarations.Count == 0) return;
@@ -40,7 +39,6 @@ namespace WorldTree.SourceGenerator
 				RuleSupplementHelper.Add(interfaceDeclaration, context.Compilation);
 			}
 			RuleSupplementHelper.Execute(context);
-
 		}
 	}
 

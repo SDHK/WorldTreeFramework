@@ -12,28 +12,27 @@ using System;
 
 namespace WorldTree.SourceGenerator
 {
-	[Generator]
-	internal class NodeExtensionMethodGenerator : ISourceGenerator
+	public abstract class NodeExtensionMethodGenerator : SourceGeneratorBase
 	{
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindCoreSyntaxReceiver());
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			try
 			{
 				if (!(context.SyntaxReceiver is FindCoreSyntaxReceiver receiver and not null)) return;
 				if (receiver.isGenerator == false) return;
 
-				NodeSendRuleGenerator.Execute(context);
-				NodeSendRuleAsyncGenerator.Execute(context);
-				NodeCallRuleGenerator.Execute(context);
-				NodeCallRuleAsyncGenerator.Execute(context);
+				NodeSendRuleGeneratorHelper.Execute(context);
+				NodeSendRuleAsyncGeneratorHelper.Execute(context);
+				NodeCallRuleGeneratorHelper.Execute(context);
+				NodeCallRuleAsyncGeneratorHelper.Execute(context);
 
-				RuleExecutorSendRuleGenerator.Execute(context);
-				RuleExecutorCallRuleGenerator.Execute(context);
+				RuleExecutorSendRuleGeneratorHelper.Execute(context);
+				RuleExecutorCallRuleGeneratorHelper.Execute(context);
 			}
 			catch (Exception e)
 			{

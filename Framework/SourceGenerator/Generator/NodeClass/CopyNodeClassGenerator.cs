@@ -19,22 +19,21 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	[Generator]
-	internal class CopyNodeClassGenerator : ISourceGenerator
+	public abstract class CopyNodeClassGenerator : SourceGeneratorBase
 	{
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindINodeSubSyntaxReceiver());
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			try
 			{
 				if (!(context.SyntaxReceiver is FindINodeSubSyntaxReceiver receiver)) return;
 				if (receiver.ClassDeclarations.Count == 0) return;
 
-				ClassDeclarationSyntax? NodeClassDeclaration = null;
+				ClassDeclarationSyntax NodeClassDeclaration = null;
 
 				// 获取当前编译器实例
 				CSharpCompilation compilation = (CSharpCompilation)context.Compilation;

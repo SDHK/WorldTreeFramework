@@ -17,20 +17,20 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
+
 	/// <summary>
 	/// 分支类型补充生成器
 	/// </summary>
-	[Generator]
-	internal class BranchSupplementGenerator : ISourceGenerator
+	//[Generator]
+	internal abstract class BranchSupplementGenerator : SourceGeneratorBase
 	{
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindSubClassSyntaxReceiver());
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
-
 			if (!(context.SyntaxReceiver is FindSubClassSyntaxReceiver receiver)) return;
 
 			if (receiver.ClassDeclarations.Count == 0) return;
@@ -64,8 +64,6 @@ namespace WorldTree.SourceGenerator
 		public static Dictionary<string, ClassDeclarationSyntax> classSyntax = new();
 
 
-
-
 		public static void Init(Compilation compilation)
 		{
 			fileClassDict.Clear();
@@ -80,15 +78,11 @@ namespace WorldTree.SourceGenerator
 			if (namedType == null) return;
 			//抽象类型忽略
 			if (namedType.IsAbstract) return;
-			//泛型忽略
-			//if (namedType.IsGenericType) return;
 
 			//检测是否继承分支基类
 
 			INamedTypeSymbol IBranchTypeSymbol = NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IBranch);
 			if (!NamedSymbolHelper.IsDerivedFrom(namedType, IBranchTypeSymbol, out _, TypeCompareOptions.CompareToGenericTypeDefinition)) return;
-
-
 
 			//获取文件名
 			string fileName = Path.GetFileNameWithoutExtension(classDeclarationSyntax.SyntaxTree.FilePath);
@@ -534,7 +528,6 @@ namespace WorldTree.SourceGenerator
 			}
 		}
 		#endregion
-
 
 		#region 类型键值分支
 

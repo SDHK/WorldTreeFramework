@@ -32,7 +32,7 @@
 
   <ItemGroup>
 
-    <Compile Include="../AnalyzerCore/Helper/*.cs">
+    <Compile Include="../AnalyzerCore/Core/Helper/*.cs">
       <Link>Helper\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Compile>
 

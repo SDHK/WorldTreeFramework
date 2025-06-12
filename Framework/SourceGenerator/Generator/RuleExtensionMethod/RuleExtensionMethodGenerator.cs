@@ -12,34 +12,33 @@ using System;
 
 namespace WorldTree.SourceGenerator
 {
-	[Generator]
-	internal class RuleExtensionMethodGenerator : ISourceGenerator
+	public abstract class RuleExtensionMethodGenerator : SourceGeneratorBase
 	{
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindCoreSyntaxReceiver());
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			try
 			{
 				if (!(context.SyntaxReceiver is FindCoreSyntaxReceiver receiver and not null)) return;
 				if (receiver.isGenerator == false) return;
 
-				RuleListSendRuleGenerator.Execute(context);
-				RuleListSendAsyncRuleGenerator.Execute(context);
-				RuleListCallRuleGenerator.Execute(context);
-				RuleListCallAsyncRuleGenerator.Execute(context);
+				RuleListSendRuleGeneratorHelper.Execute(context);
+				RuleListSendAsyncRuleGeneratorHelper.Execute(context);
+				RuleListCallRuleGeneratorHelper.Execute(context);
+				RuleListCallAsyncRuleGeneratorHelper.Execute(context);
 
-				RuleListSendRefRuleGenerator.Execute(context);
+				RuleListSendRefRuleGeneratorHelper.Execute(context);
 
-				RuleGroupSendRuleGenerator.Execute(context);
-				RuleGroupSendAsyncRuleGenerator.Execute(context);
-				RuleGroupCallRuleGenerator.Execute(context);
-				RuleGroupCallAsyncRuleGenerator.Execute(context);
+				RuleGroupSendRuleGeneratorHelper.Execute(context);
+				RuleGroupSendAsyncRuleGeneratorHelper.Execute(context);
+				RuleGroupCallRuleGeneratorHelper.Execute(context);
+				RuleGroupCallAsyncRuleGeneratorHelper.Execute(context);
 
-				RuleGroupSendRefRuleGenerator.Execute(context);
+				RuleGroupSendRefRuleGeneratorHelper.Execute(context);
 			}
 			catch (Exception e)
 			{

@@ -11,15 +11,14 @@ using System;
 
 namespace WorldTree.SourceGenerator
 {
-	[Generator]
-	internal class NodeBranchHelperGenerator : ISourceGenerator
+	public abstract class NodeBranchHelperGenerator : SourceGeneratorBase
 	{
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindCoreSyntaxReceiver());
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			try
 			{

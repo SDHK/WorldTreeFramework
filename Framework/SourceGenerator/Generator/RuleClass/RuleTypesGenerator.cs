@@ -14,15 +14,14 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	[Generator]
-	public class RuleTypesGenerator : ISourceGenerator
+	public abstract class RuleTypesGenerator : SourceGeneratorBase
 	{
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindRuleTypesSyntaxReceiver());
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			if (!(context.SyntaxReceiver is FindRuleTypesSyntaxReceiver receiver and not null)) return;
 

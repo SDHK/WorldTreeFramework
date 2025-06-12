@@ -13,7 +13,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal class NodeSendRuleAsyncGenerator
+	internal static class NodeSendRuleAsyncGeneratorHelper
 	{
 		public static void Execute(GeneratorExecutionContext context)
 		{

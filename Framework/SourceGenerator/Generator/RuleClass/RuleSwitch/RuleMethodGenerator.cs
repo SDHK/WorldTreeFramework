@@ -55,8 +55,7 @@ namespace WorldTree.SourceGenerator
 		public string caseValue;
 	}
 
-	[Generator]
-	internal class RuleMethodGenerator : ISourceGenerator
+	public abstract class RuleMethodGenerator : SourceGeneratorBase
 	{
 		public Dictionary<string, RuleFileData> fileDatas = new();
 
@@ -72,11 +71,11 @@ namespace WorldTree.SourceGenerator
 		typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
 		genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
 
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			fileDatas.Clear();
 

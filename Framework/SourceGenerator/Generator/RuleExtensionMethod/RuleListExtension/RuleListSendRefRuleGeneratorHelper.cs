@@ -1,7 +1,7 @@
 ﻿/****************************************
 
 * 作者：闪电黑客
-* 日期：2024/7/25 20:42
+* 日期：2024/7/25 20:38
 
 * 描述：
 
@@ -12,7 +12,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal class RuleGroupSendRefRuleGenerator
+	public static class RuleListSendRefRuleGeneratorHelper
 	{
 		public static void Execute(GeneratorExecutionContext context)
 		{
@@ -20,51 +20,42 @@ namespace WorldTree.SourceGenerator
 			StringBuilder Code = new StringBuilder();
 			Code.AppendLine(
 @$"/****************************************
-* 通知法则集合执行
+* 通知法则列表执行
 */
 "
 );
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
-			Code.AppendLine("	public static class RuleGroupSendRefRule");
+			Code.AppendLine("	public static class RuleListSendRefRule");
 			Code.Append("	{");
-
 			for (int i = 0; i <= argumentCount; i++)
 			{
 				string genericsType = GeneratorTemplate.GenericsTypes[i];
 				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
 				string genericRefParameter = GeneratorTemplate.GenericsRefParameter[i];
 				string genericRefTypeParameter = GeneratorTemplate.GenericsRefTypeParameter[i];
-
 				Code.AppendLine(
 					$$"""
 
 							/// <summary>
-							/// 尝试通知法则集合执行
+							/// 法则列表通知执行
 							/// </summary>
-							public static bool TrySendRef<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericRefTypeParameter}})
+							public static void SendRef<R{{genericsType}}>(this IRuleList<R> iRuleList, INode node{{genericRefTypeParameter}})
 								where R : ISendRefRule{{genericsTypeAngle}}
 							{
-								if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) return false;
-								((IRuleList<R>)ruleList).SendRef(node{{genericRefParameter}});
-								return true;
-							}
-
-							/// <summary>
-							/// 通知法则集合执行
-							/// </summary>
-							public static void SendRef<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericRefTypeParameter}})
-								where R : ISendRefRule{{genericsTypeAngle}}
-							{
-								group.TrySendRef(node{{genericRefParameter}});
+								RuleList ruleList = (RuleList)iRuleList;
+								for(int i = 0; i < ruleList.Count; i++)
+								{
+									 ((ISendRefRule{{genericsTypeAngle}})ruleList[i]).Invoke(node{{genericRefParameter}});
+								}
 							}
 					""");
 			}
-
 			Code.AppendLine("	}");
 			Code.Append("}");
 
-			context.AddSource("RuleGroupSendRefRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
+			context.AddSource("RuleListSendRefRule.cs", SourceText.From(Code.ToString(), Encoding.UTF8));
 		}
+
 	}
 }

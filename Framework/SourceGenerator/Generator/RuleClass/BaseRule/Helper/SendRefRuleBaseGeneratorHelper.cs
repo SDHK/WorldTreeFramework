@@ -12,7 +12,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal static class SendRefRuleBaseGenerator
+	public static class SendRefRuleBaseGeneratorHelper
 	{
 
 		public static void Execute(GeneratorExecutionContext context)

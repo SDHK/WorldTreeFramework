@@ -13,7 +13,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal class AwakeRuleGenerator
+	public class AwakeRuleGeneratorHelper
 	{
 		public static void Execute(GeneratorExecutionContext context)
 		{

@@ -14,7 +14,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal static class TreePackSerializePartialClassGenerator
+	public static class TreePackSerializePartialClassGeneratorHelper
 	{
 		private static void ClassGenerator(StringBuilder Code, INamedTypeSymbol typeNamedTypeSymbol, out bool isBase)
 		{

@@ -1,9 +1,9 @@
 ﻿/****************************************
 
 * 作者：闪电黑客
-* 日期：2024/4/3 11:58
+* 日期：2024/4/7 16:40
 
-* 描述：通知法则基类 生成器
+* 描述：异步通知法则基类 生成器帮助类
 
 */
 
@@ -13,27 +13,30 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal static class SendRuleBaseGenerator
+	public static class SendRuleAsyncBaseGeneratorHelper
 	{
 		public static void Execute(GeneratorExecutionContext context)
 		{
 			int argumentCount = GeneratorSetting.argumentCount;
+
 			StringBuilder Code = new StringBuilder();
+
 			Code.AppendLine(
 @$"/****************************************
-* 可以理解为Node的无返回值扩展方法
+* 可以理解为Node的无返回值异步方法
 *
-* ISendRule 继承 IRule
+* ISendRuleAsync 继承 IRule
 * 主要作用：统一 调用方法 Invoke(INode self,T1 arg1, ...);
 *
-* SendRule 则继承 Rule
-* 同时还继承了 ISendRule 可以转换为 ISendRule 进行统一调用。
+* SendRuleAsync 则继承 Rule
+* 同时还继承了 ISendRuleAsync 可以转换为 ISendRuleAsync 进行统一调用。
 *
 * 主要作用：确定Node的类型并转换，并统一 Invoke 中转调用 Execute 的过程。
 * 其中 Invoke 设定为虚方法方便子类写特殊的中转调用。
 */
 "
 );
+
 			Code.AppendLine("namespace WorldTree");
 			Code.Append("{");
 
@@ -48,54 +51,55 @@ namespace WorldTree.SourceGenerator
 					$$"""
 
 						/// <summary>
-						/// 通知法则基类接口
+						/// 异步通知系统基类接口
 						/// </summary>
-						public interface ISendRule{{genericsTypeAngle}} : IRule
+						public interface ISendRuleAsync{{genericsTypeAngle}} : IRule
 						{
 							/// <summary>
 							/// 调用
 							/// </summary>
-							void Invoke(INode self{{genericTypeParameter}});
+							TreeTask Invoke(INode self{{genericTypeParameter}});
 						}
 
 						/// <summary>
-						/// 通知法则基类
+						/// 异步通知法则基类
 						/// </summary>
-						public abstract class SendRule<N, R{{genericsType}}> : Rule<N, R>, ISendRule{{genericsTypeAngle}}
+						public abstract class SendRuleAsync<N, R{{genericsType}}> : Rule<N, R>, ISendRuleAsync{{genericsTypeAngle}}
 							where N : class, INode, AsRule<R>
-							where R : ISendRule{{genericsTypeAngle}}
+							where R : ISendRuleAsync{{genericsTypeAngle}}
 						{
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual void Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							public virtual TreeTask Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>
-							protected abstract void Execute(N self{{genericTypeParameter}});
+							protected abstract TreeTask Execute(N self{{genericTypeParameter}});
 						}
 
 						/// <summary>
-						/// 通知法则基类实现
+						/// 异步通知法则基类实现
 						/// </summary>
-						public abstract class SendRuleDefault<R{{genericsType}}> : Rule<INode, R>, ISendRule{{genericsTypeAngle}}
-							where R : ISendRule{{genericsTypeAngle}}
+						public abstract class SendRuleAsyncDefault< R{{genericsType}}> : Rule<Node, R>, ISendRuleAsync{{genericsTypeAngle}}
+							where R : ISendRuleAsync{{genericsTypeAngle}}
 						{
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual void Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							public virtual TreeTask Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>
-							protected abstract void Execute(INode self{{genericTypeParameter}});
+							protected abstract TreeTask Execute(INode self{{genericTypeParameter}});
 						}
+
 					""");
 			}
 
 			Code.Append("}");
 
-			context.AddSource("SendRule.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));//生成代码
+			context.AddSource("SendRuleAsync.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));//生成代码
 		}
 	}
 }

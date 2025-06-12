@@ -17,17 +17,14 @@ using System.Text;
 namespace WorldTree.SourceGenerator
 {
 
-
-
-	[Generator]
-	internal class TreePackSerializeGenerator : ISourceGenerator
+	public abstract class TreePackSerializeGenerator : SourceGeneratorBase
 	{
 		public Dictionary<INamedTypeSymbol, List<INamedTypeSymbol>> TypeSubDict = new();
 
 		public HashSet<INamedTypeSymbol> TypeSet = new();
 
 
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindTreePackSyntaxReceiver());
 		}
@@ -52,7 +49,7 @@ namespace WorldTree.SourceGenerator
 			return SubList;
 		}
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			if (!(context.SyntaxReceiver is FindTreePackSyntaxReceiver receiver and not null)) return;
 
@@ -82,7 +79,7 @@ namespace WorldTree.SourceGenerator
 				foreach (TypeDeclarationSyntax typeDeclaration in TypeListItem.Value)
 				{
 					List<INamedTypeSymbol> SubList = GetTypeSub(context, context.Compilation.ToINamedTypeSymbol(typeDeclaration));
-					TreePackSerializePartialClassGenerator.Execute(context, ClassCode, typeDeclaration, SubList);
+					TreePackSerializePartialClassGeneratorHelper.Execute(context, ClassCode, typeDeclaration, SubList);
 				}
 
 

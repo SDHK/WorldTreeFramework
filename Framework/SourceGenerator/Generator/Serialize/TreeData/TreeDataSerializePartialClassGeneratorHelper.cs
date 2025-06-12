@@ -14,7 +14,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal static class TreeDataSerializePartialClassGenerator
+	public static class TreeDataSerializePartialClassGeneratorHelper
 	{
 		/// <summary>
 		/// 快速获取32位的哈希码

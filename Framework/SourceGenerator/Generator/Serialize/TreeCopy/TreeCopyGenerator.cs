@@ -8,19 +8,18 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	[Generator]
-	internal class TreeCopyGenerator : ISourceGenerator
+	public abstract class TreeCopyGenerator : SourceGeneratorBase
 	{
 
 		public static HashSet<INamedTypeSymbol> TypeFieldsDict = new HashSet<INamedTypeSymbol>();
 
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindTreeCopySyntaxReceiver());
 		}
 
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			TypeFieldsDict.Clear();
 			foreach (INamedTypeSymbol classSymbol in NamedSymbolHelper.CollectAllClass(context.Compilation))

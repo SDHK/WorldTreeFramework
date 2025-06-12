@@ -13,7 +13,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal class NodeSendRuleGenerator
+	internal static class NodeSendRuleGeneratorHelper
 	{
 		public static void Execute(GeneratorExecutionContext context)
 		{
@@ -39,7 +39,7 @@ namespace WorldTree.SourceGenerator
 				string genericsTypeAngle = GeneratorTemplate.GenericsTypesAngle[i];
 				string genericParameter = GeneratorTemplate.GenericsParameter[i];
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
-			
+
 				Code.AppendLine(
 				$$"""
 

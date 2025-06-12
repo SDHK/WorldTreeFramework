@@ -13,7 +13,7 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	internal class RuleGroupCallRuleGenerator
+	public static class RuleGroupCallRuleGeneratorHelper
 	{
 		public static void Execute(GeneratorExecutionContext context)
 		{
@@ -37,7 +37,7 @@ namespace WorldTree.SourceGenerator
 				string genericsTypeAfter = GeneratorTemplate.GenericsTypesAfter[i];
 				string genericParameter = GeneratorTemplate.GenericsParameter[i];
 				string genericTypeParameter = GeneratorTemplate.GenericsTypeParameter[i];
-			
+
 				Code.AppendLine(
 					$$"""
 

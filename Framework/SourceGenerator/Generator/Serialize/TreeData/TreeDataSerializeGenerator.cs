@@ -15,20 +15,19 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	[Generator]
-	internal class TreeDataSerializeGenerator : ISourceGenerator
+	public abstract class TreeDataSerializeGenerator : SourceGeneratorBase
 	{
 
 		public static Dictionary<INamedTypeSymbol, int> TypeFieldsCountDict = new Dictionary<INamedTypeSymbol, int>();
 
-		public void Initialize(GeneratorInitializationContext context)
+		public override void Initialize(GeneratorInitializationContext context)
 		{
 			context.RegisterForSyntaxNotifications(() => new FindTreeDataSyntaxReceiver());
 		}
 
 
 
-		public void Execute(GeneratorExecutionContext context)
+		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			TypeFieldsCountDict.Clear();
 
@@ -56,7 +55,7 @@ namespace WorldTree.SourceGenerator
 
 				foreach (TypeDeclarationSyntax typeDeclaration in TypeListItem.Value)
 				{
-					TreeDataSerializePartialClassGenerator.Execute(context, ClassCode, typeDeclaration);
+					TreeDataSerializePartialClassGeneratorHelper.Execute(context, ClassCode, typeDeclaration);
 				}
 				if (ClassCode.Length == 0) return;
 				Code.AppendLine(
