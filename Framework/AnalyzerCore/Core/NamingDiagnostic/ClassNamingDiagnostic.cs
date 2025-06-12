@@ -20,7 +20,6 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 类型命名规范诊断器
 	/// </summary>
-	//[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public abstract class ClassNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.ClassDeclaration;
@@ -41,56 +40,47 @@ namespace WorldTree.Analyzer
 				//获取当前类的类型
 				INamedTypeSymbol typeSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
 				if (!DiagnosticGroup.Screen(compilation, typeSymbol)) continue;
-				if (DiagnosticGroup.Diagnostics.TryGetValue(DiagnosticKey.ClassNaming, out DiagnosticConfig codeDiagnostic))
-				{
-					// 需要的修饰符
-					if (TreeSyntaxHelper.SyntaxKindContains(classDeclaration.Modifiers, codeDiagnostic.KeywordKinds))
-					{
-						// 不需要检查的修饰符
-						if (!TreeSyntaxHelper.SyntaxKindContainsAny(classDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false))
-						{
-							if (!codeDiagnostic.Check.Invoke(semanticModel, classDeclaration.Identifier))
-							{
-								context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
-							}
-							//检查是否需要添加注释
-							else if (codeDiagnostic.NeedComment.Invoke(semanticModel, classDeclaration.Identifier))
-							{
-								//判断是否是部分类
-								if (classDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))
-								{
-									// 获取所有部分类的语法声明
-									IEnumerable<ClassDeclarationSyntax> partialDeclarations = typeSymbol.DeclaringSyntaxReferences.Select(syntaxRef => syntaxRef.GetSyntax()).OfType<ClassDeclarationSyntax>();
-									bool isComment = false;
+				if (!DiagnosticGroup.Diagnostics.TryGetValue(DiagnosticKey.ClassNaming, out DiagnosticConfig codeDiagnostic)) continue;
+				// 需要的修饰符
+				if (!TreeSyntaxHelper.SyntaxKindContains(classDeclaration.Modifiers, codeDiagnostic.KeywordKinds)) return;
+				// 不需要检查的修饰符
+				if (TreeSyntaxHelper.SyntaxKindContainsAny(classDeclaration.Modifiers, codeDiagnostic.UnKeywordKinds, false)) return;
 
-									// 遍历所有部分类
-									foreach (ClassDeclarationSyntax partialDecl in partialDeclarations)
-									{
-										if (TreeSyntaxHelper.CheckSummaryComment(partialDecl))
-										{
-											isComment = true;
-											break;
-										}
-									}
-									if (!isComment)
-									{
-										context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
-									}
-								}
-								else if (!TreeSyntaxHelper.CheckSummaryComment(classDeclaration))
-								{
-									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
-								}
-							}
+				if (!codeDiagnostic.Check.Invoke(semanticModel, classDeclaration.Identifier))
+				{
+					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
+				}
+				//检查是否需要添加注释
+				else if (codeDiagnostic.NeedComment.Invoke(semanticModel, classDeclaration.Identifier))
+				{
+					//判断是否是部分类
+					if (classDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))
+					{
+						// 获取所有部分类的语法声明
+						IEnumerable<ClassDeclarationSyntax> partialDeclarations = typeSymbol.DeclaringSyntaxReferences.Select(syntaxRef => syntaxRef.GetSyntax()).OfType<ClassDeclarationSyntax>();
+						bool isComment = false;
+						// 遍历所有部分类
+						foreach (ClassDeclarationSyntax partialDecl in partialDeclarations)
+						{
+							if (!TreeSyntaxHelper.CheckSummaryComment(partialDecl)) continue;
+							isComment = true;
+							break;
+						}
+						if (!isComment)
+						{
+							context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
 						}
 					}
-					return;
+					else if (!TreeSyntaxHelper.CheckSummaryComment(classDeclaration))
+					{
+						context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, classDeclaration.GetLocation(), classDeclaration.Identifier.Text));
+					}
 				}
+				return;
 			}
 		}
 	}
 
-	//[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ClassNamingCodeFixProvider)), Shared]
 	public abstract class ClassNamingProvider : NamingCodeFixProviderBase<ClassDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.ClassDeclaration;

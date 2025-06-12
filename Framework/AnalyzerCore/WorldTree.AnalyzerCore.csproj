@@ -8,28 +8,17 @@
 
     <RootNamespace>WorldTree.AnalyzerCore</RootNamespace>
 
-    <!--执行扩展分析器规则-->
-    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <!--用于控制构建输出是否应复制到发布文件夹。-->
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <!--设置包是否为开发依赖项。true表示开发依赖,它只会用于项目开发和编译,但不会流入发布的部署包中。-->
-    <DevelopmentDependency>true</DevelopmentDependency>
-    <!--控制发布文件夹是否包含符号文件(.pdb)。false表示不包含符号文件,可以减小发布大小。-->
-    <IncludeSymbols>false</IncludeSymbols>
-    <!--是否将目标框架 appending 到输出路径。false表示不添加,输出与框架无关。-->
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-
     <NoWarn> RS2008</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <NoWarn>1701;1702;RS2008</NoWarn>
-    <OutputPath>./obj</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoWarn>1701;1702;RS2008</NoWarn>
-    <OutputPath>./obj</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,12 +28,11 @@
 
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
-      <!--PrivateAssets=all 同样表示包的所有资产都是私有的。-->
-      <PrivateAssets>all</PrivateAssets>
-
     </PackageReference>
 
   </ItemGroup>
+  
+
 
 </Project>
  

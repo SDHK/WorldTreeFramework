@@ -7,12 +7,10 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,8 +20,7 @@ namespace WorldTree.Analyzer
 {
 
 
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class NodeRuleAttributeDiagnostic : NamingDiagnosticBase
+	public abstract class NodeRuleAttributeDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
 
@@ -58,8 +55,7 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NodeRuleAttributeNamingCodeFixProvider)), Shared]
-	public class NodeRuleAttributeNamingCodeFixProvider : NamingCodeFixProviderBase<AttributeSyntax>
+	public abstract class NodeRuleAttributeCodeFixProvider : NamingCodeFixProviderBase<AttributeSyntax>
 	{
 		private List<string> typeNames = new();
 		private List<string> typeTNames = new();

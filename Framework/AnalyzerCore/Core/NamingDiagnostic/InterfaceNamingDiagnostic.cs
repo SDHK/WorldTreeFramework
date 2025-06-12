@@ -81,8 +81,8 @@ namespace WorldTree.Analyzer
 				}
 			}
 		}
-
 	}
+
 	public abstract class InterfaceNamingProvider : NamingCodeFixProviderBase<InterfaceDeclarationSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.InterfaceDeclaration;

@@ -54,9 +54,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.Analyzer.dll" />
+    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\WorldTree.SourceGenerator.dll" />
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
-    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
+    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\WorldTree.Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AOT\Plugins\YooAsset\2.1.1\Extension Sample\Scripts\Editor\ShaderVariantCollector\ShaderVariantCollectorSetting.cs" />
@@ -333,9 +333,6 @@
     <Reference Include="LZ4">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\LZ4.dll</HintPath>
     </Reference>
-    <Reference Include="WorldTree.SourceGenerator">
-      <HintPath>Assets\Plugins\WorldTree.SourceGenerator.dll</HintPath>
-    </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
       <HintPath>Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
     </Reference>
@@ -392,9 +389,6 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="WorldTree.Analyzer">
-      <HintPath>Assets\Plugins\WorldTree.Analyzer.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>

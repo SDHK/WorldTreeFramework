@@ -16,8 +16,6 @@ using System.Threading.Tasks;
 
 namespace WorldTree.Analyzer
 {
-
-
 	/// <summary>
 	/// 局部变量命名规范诊断器
 	/// </summary>
@@ -55,7 +53,6 @@ namespace WorldTree.Analyzer
 			}
 		}
 
-
 		private void DiagnosticLocalVariable(SyntaxNodeAnalysisContext context, List<DiagnosticConfigGroup> DiagnosticGroups)
 		{
 			// 获取语义模型
@@ -90,6 +87,7 @@ namespace WorldTree.Analyzer
 			}
 		}
 	}
+
 	public abstract class LocalVariableNamingProvider : NamingCodeFixProviderBase<LocalDeclarationStatementSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.LocalDeclarationStatement;
@@ -111,5 +109,4 @@ namespace WorldTree.Analyzer
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}
-
 }

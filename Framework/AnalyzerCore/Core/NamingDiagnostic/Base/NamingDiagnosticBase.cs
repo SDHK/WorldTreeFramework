@@ -37,23 +37,19 @@ namespace WorldTree.Analyzer
 		/// </summary>
 		public abstract SyntaxKind DeclarationKind { get; }
 
-		public virtual ProjectDiagnostics Configs => null;
+		public virtual ProjectDiagnostics Configs { get; }
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
 			=> ImmutableArray.Create(GetDiagnosticDescriptors(DeclarationKind));
-
 
 
 		public override void Initialize(AnalysisContext context)
 		{
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.EnableConcurrentExecution();
-			//context.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
 			context.RegisterCompilationStartAction(analysisContext =>
 					{
-						// 获取 MSBuild 属性
 						if (!TryGetDiagnosticConfigGroup(analysisContext.Compilation.AssemblyName, out _)) return;
-
 						analysisContext.RegisterSyntaxNodeAction(DiagnosticAction, DeclarationKind);
 					}
 				);
@@ -85,13 +81,10 @@ namespace WorldTree.Analyzer
 				{
 					if (types.Contains(diagnosticConfig.GetType())) continue;
 					types.Add(diagnosticConfig.GetType());
-
 					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
 					{
-						if (codeDiagnosticConfig.DeclarationKind == declarationKind)
-						{
-							descriptors.Add(codeDiagnosticConfig.Diagnostic);
-						}
+						if (codeDiagnosticConfig.DeclarationKind != declarationKind) continue;
+						descriptors.Add(codeDiagnosticConfig.Diagnostic);
 					}
 				}
 			}
@@ -111,8 +104,6 @@ namespace WorldTree.Analyzer
 		public abstract SyntaxKind DeclarationKind { get; }
 		public override sealed ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(GetFixableDiagnosticIds(DeclarationKind));
 
-
-
 		/// <summary>
 		/// 获取诊断描述Id
 		/// </summary>
@@ -129,10 +120,8 @@ namespace WorldTree.Analyzer
 
 					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
 					{
-						if (codeDiagnosticConfig.DeclarationKind == declarationKind)
-						{
+						if (codeDiagnosticConfig.DeclarationKind != declarationKind)
 							descriptors.Add(codeDiagnosticConfig.Diagnostic.Id);
-						}
 					}
 				}
 			}
@@ -150,11 +139,9 @@ namespace WorldTree.Analyzer
 				{
 					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
 					{
-						if (codeDiagnosticConfig.Diagnostic.Id == id)
-						{
-							codeDiagnostic = codeDiagnosticConfig;
-							return true;
-						}
+						if (codeDiagnosticConfig.Diagnostic.Id != id) continue;
+						codeDiagnostic = codeDiagnosticConfig;
+						return true;
 					}
 				}
 			}
@@ -178,13 +165,14 @@ namespace WorldTree.Analyzer
 
 		public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
-			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+			var projectName = context.Document.Project.AssemblyName;
+			if (!TryGetDiagnosticConfigGroup(projectName, out _)) return;
+
 			if (context.Diagnostics.Length == 0) return;
 			Diagnostic diagnostic = context.Diagnostics[0];
 			var diagnosticSpan = diagnostic.Location.SourceSpan;
 
-			var projectName = context.Document.Project.AssemblyName;
-			if (!TryGetDiagnosticConfigGroup(projectName, out _)) return;
+			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
 			// 找到需要修复的委托声明
 			T declaration = null;

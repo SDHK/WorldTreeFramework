@@ -34,7 +34,7 @@ namespace WorldTree.Analyzer
 			foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
 			{
 				//获取当前类的类型
-				INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(structDeclaration);
+				INamedTypeSymbol typeSymbol = semanticModel.GetDeclaredSymbol(structDeclaration);
 				if (!objectDiagnostic.Screen(context.Compilation, typeSymbol)) continue;
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.StructNaming, out DiagnosticConfig codeDiagnostic))
 				{

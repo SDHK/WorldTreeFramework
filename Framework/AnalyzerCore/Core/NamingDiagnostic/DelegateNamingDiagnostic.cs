@@ -20,7 +20,6 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 委托命名规范诊断器
 	/// </summary>
-	//[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public abstract class DelegateNamingDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.DelegateDeclaration;

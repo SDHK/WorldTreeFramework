@@ -18,8 +18,7 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 实例字段访问限制诊断
 	/// </summary>
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class SimpleMemberAccessDiagnostic : NamingDiagnosticBase
+	public abstract class SimpleMemberAccessDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.SimpleMemberAccessExpression;
 

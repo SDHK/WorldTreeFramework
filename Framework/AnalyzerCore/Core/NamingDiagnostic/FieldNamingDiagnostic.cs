@@ -84,8 +84,6 @@ namespace WorldTree.Analyzer
 							foreach (VariableDeclaratorSyntax variable in fieldDeclaration.Declaration.Variables)
 							{
 								//获取字段类型名称
-
-
 								if (!codeDiagnostic.Check.Invoke(semanticModel, variable.Identifier))
 								{
 									context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, variable.GetLocation(), variable.Identifier.Text));

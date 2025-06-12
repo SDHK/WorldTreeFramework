@@ -29,16 +29,20 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <NoWarn>1701;1702;RS2008</NoWarn>
-    <OutputPath>./obj</OutputPath>
+    <OutputPath>bin\</OutputPath>
+    <!--<OutputPath>..\Bin\</OutputPath>-->
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoWarn>1701;1702;RS2008</NoWarn>
-    <OutputPath>./obj</OutputPath>
+    <OutputPath>bin\</OutputPath>
+    <!--<OutputPath>..\Bin\</OutputPath>-->
   </PropertyGroup>
 
   <ItemGroup>
     <!--只有3.9.0才对Unity起效-->
+    <!-- require to support SyntaxValueProvider.ForAttributeWithMetadataName(Roslyn 4.3.0, VS2022 17.3) -->
+    <!-- Unity 2022.3.12f1 or newer supports 4.3.0 -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
 
@@ -48,16 +52,18 @@
       <PrivateAssets>all</PrivateAssets>
 
     </PackageReference>
-    
-    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AnalyzerCore\WorldTree.AnalyzerCore.csproj" />
   </ItemGroup>
 
-  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+
+  <ItemGroup>
+    <Compile Include="..\AnalyzerCore\Core\**\*.cs">
+      <Link>Core\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetDir)/$(TargetName).dll" DestinationFolder="$(ProjectDir)/../../Unity/Assets/Plugins/" ContinueOnError="false" />
-  </Target>-->
+  </Target>
 
 </Project>
- 

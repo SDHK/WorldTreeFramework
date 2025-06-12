@@ -7,20 +7,17 @@
 
 */
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
 
 namespace WorldTree.Analyzer
 {
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class NodeRuleSwitchAttributeDiagnostic : NamingDiagnosticBase
+	public abstract class NodeRuleSwitchAttributeDiagnostic : NamingDiagnosticBase
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
@@ -134,8 +131,7 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NodeRuleSwitchAttributeNamingCodeFixProvider)), Shared]
-	public class NodeRuleSwitchAttributeNamingCodeFixProvider : NamingCodeFixProviderBase<AttributeSyntax>
+	public abstract class NodeRuleSwitchAttributeCodeFixProvider : NamingCodeFixProviderBase<AttributeSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
 		public override bool CheckCodeFix(DiagnosticConfig codeDiagnostic, Document document)

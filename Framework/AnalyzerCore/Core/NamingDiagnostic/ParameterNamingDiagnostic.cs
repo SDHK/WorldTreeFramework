@@ -52,6 +52,7 @@ namespace WorldTree.Analyzer
 			}
 		}
 	}
+
 	public abstract class ParameterNamingProvider : NamingCodeFixProviderBase<ParameterSyntax>
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Parameter;

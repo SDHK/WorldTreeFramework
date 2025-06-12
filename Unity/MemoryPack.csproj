@@ -54,9 +54,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.Analyzer.dll" />
+    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\WorldTree.SourceGenerator.dll" />
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
-    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Share.SourceGenerator.dll" />
+    <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\WorldTree.Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Core\Internal\PreserveAttribute.cs" />

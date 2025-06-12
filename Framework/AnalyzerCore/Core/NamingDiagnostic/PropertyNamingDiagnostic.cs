@@ -54,7 +54,6 @@ namespace WorldTree.Analyzer
 
 		private void DiagnosticProperty(SyntaxNodeAnalysisContext context, DiagnosticKey diagnosticKey, List<DiagnosticConfigGroup> objectDiagnostics)
 		{
-
 			// 获取语义模型
 			SemanticModel semanticModel = context.SemanticModel;
 			PropertyDeclarationSyntax propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
@@ -111,7 +110,6 @@ namespace WorldTree.Analyzer
 					return;
 				}
 			}
-
 		}
 	}
 

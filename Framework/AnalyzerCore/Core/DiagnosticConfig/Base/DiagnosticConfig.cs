@@ -20,7 +20,6 @@ namespace WorldTree.Analyzer
 	/// </summary>
 	public struct DiagnosticConfig
 	{
-
 		/// <summary>
 		/// 诊断键值
 		/// </summary>
@@ -62,11 +61,12 @@ namespace WorldTree.Analyzer
 		public SyntaxKind DeclarationKind = SyntaxKind.None;
 
 		/// <summary>
-		/// 有修饰符语的法形式筛选
+		/// 有修饰符语的法形式筛选??
 		/// </summary>
 		public List<SyntaxKind> KeywordKinds = new();
+
 		/// <summary>
-		/// 没有修饰符的语法形式筛选
+		/// 没有修饰符的语法形式筛选??
 		/// </summary>
 		public List<SyntaxKind> UnKeywordKinds = new();
 
@@ -93,14 +93,11 @@ namespace WorldTree.Analyzer
 		/// <param name="key">键值</param>
 		public DiagnosticConfig Init(string key)
 		{
-			//if (NeedComment) MessageFormat += "【需要注释】";
-
 			// 生成唯一诊断名称
 			this.Key = key;
 			this.Key += DeclarationKind.ToString().Replace("Declaration", "");
 			foreach (SyntaxKind item in KeywordKinds) this.Key += item.ToString().Replace("Keyword", "");
 			foreach (SyntaxKind item in UnKeywordKinds) this.Key += item.ToString().Replace("Keyword", "");
-
 			Diagnostic = new DiagnosticDescriptor(this.Key, Title, MessageFormat, "CodingSpecification", DiagnosticSeverity.Error, true, Description);
 			return this;
 		}

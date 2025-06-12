@@ -88,7 +88,6 @@ namespace WorldTree.Analyzer
 
 		}
 
-
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, MethodDeclarationSyntax decl, CancellationToken cancellationToken)
 		{
 			var fieldName = decl.Identifier.Text;
@@ -103,5 +102,4 @@ namespace WorldTree.Analyzer
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}
-
 }
