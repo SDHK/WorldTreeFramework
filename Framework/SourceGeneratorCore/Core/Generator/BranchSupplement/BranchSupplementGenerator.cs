@@ -21,8 +21,8 @@ namespace WorldTree.SourceGenerator
 	/// <summary>
 	/// 分支类型补充生成器
 	/// </summary>
-	//[Generator]
-	internal abstract class BranchSupplementGenerator : SourceGeneratorBase
+	public abstract class BranchSupplementGenerator<C> : SourceGeneratorBase<C>
+		where C : ProjectGeneratorsConfig, new()
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{

@@ -21,7 +21,8 @@ namespace WorldTree.SourceGenerator
 	/// <summary>
 	/// 法则类型补充生成器
 	/// </summary>
-	public abstract class RuleSupplementGenerator : SourceGeneratorBase
+	public abstract class RuleSupplementGenerator<C> : SourceGeneratorBase<C>
+		where C : ProjectGeneratorsConfig, new()
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{

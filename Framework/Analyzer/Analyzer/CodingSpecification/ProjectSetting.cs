@@ -29,14 +29,13 @@ namespace WorldTree.Analyzer
 			new QueueDiagnosticConfig(),
 			new StackDiagnosticConfig(),
 
-
 			new CodeNodeDiagnosticConfig(),
 			new RuleDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
 			new ObjectDiagnosticConfig()
 		};
 
-		private static List<DiagnosticConfigGroup> NodeConfigs = new()
+		public static List<DiagnosticConfigGroup> NodeConfigs = new()
 		{
 			new ListDiagnosticConfig(),
 			new ArrayDiagnosticConfig(),
@@ -54,7 +53,7 @@ namespace WorldTree.Analyzer
 			new ObjectDiagnosticConfig()
 		};
 
-		private static List<DiagnosticConfigGroup> RuleConfigs = new()
+		public static List<DiagnosticConfigGroup> RuleConfigs = new()
 		{
 			new ListDiagnosticConfig(),
 			new ArrayDiagnosticConfig(),
@@ -72,123 +71,121 @@ namespace WorldTree.Analyzer
 			//new ProjectBanDiagnosticConfig(),
 			new ObjectDiagnosticConfig()
 		};
-
-		/// <summary>
-		/// 项目诊断配置
-		/// </summary>
-		public static ProjectDiagnostics Configs = new()
-		{
-			//后端配置
-			{ "App",CoreConfigs},
-			{ "Core",CoreConfigs},
-			{ "Node",NodeConfigs},
-			{ "Rule",RuleConfigs},
-			{ "Config",RuleConfigs},
-
-			//前端限制
-			{ "WorldTree.Core",CoreConfigs},
-			{ "WorldTree.UnityCore",CoreConfigs},
-
-			{ "WorldTree.Node",NodeConfigs},
-			{ "WorldTree.Rule",RuleConfigs},
-			{ "WorldTree.UnityNode",NodeConfigs},
-			{ "WorldTree.UnityRule",RuleConfigs},
-		};
 	}
+
+	public class ProjectConfig : ProjectDiagnosticsConfig
+	{
+		public ProjectConfig()
+		{
+			Add("Core", ProjectSetting.CoreConfigs);
+			Add("Node", ProjectSetting.NodeConfigs);
+			Add("Rule", ProjectSetting.RuleConfigs);
+			Add("Config", ProjectSetting.CoreConfigs);
+
+			Add("WorldTree.Core", ProjectSetting.CoreConfigs);
+			Add("WorldTree.UnityCore", ProjectSetting.CoreConfigs);
+
+			Add("WorldTree.Node", ProjectSetting.NodeConfigs);
+			Add("WorldTree.Rule", ProjectSetting.RuleConfigs);
+			Add("WorldTree.UnityNode", ProjectSetting.NodeConfigs);
+			Add("WorldTree.UnityRule", ProjectSetting.RuleConfigs);
+		}
+	}
+
 
 	#region 基本诊断
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class ClassNamingDiagnosticRun : ClassNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class ClassNamingDiagnosticRun : ClassNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ClassNamingProviderRun)), Shared]
-	public class ClassNamingProviderRun : ClassNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class ClassNamingProviderRun : ClassNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class DelegateNamingDiagnosticRun : DelegateNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class DelegateNamingDiagnosticRun : DelegateNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(DelegateNamingProviderRun)), Shared]
-	public class DelegateNamingProviderRun : DelegateNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class DelegateNamingProviderRun : DelegateNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class EnumMemberNamingDiagnosticRun : EnumMemberNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class EnumMemberNamingDiagnosticRun : EnumMemberNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(EnumMemberNamingProviderRun)), Shared]
-	public class EnumMemberNamingProviderRun : EnumMemberNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class EnumMemberNamingProviderRun : EnumMemberNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class EnumNamingDiagnosticRun : EnumNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class EnumNamingDiagnosticRun : EnumNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(EnumNamingProviderRun)), Shared]
-	public class EnumNamingProviderRun : EnumNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class EnumNamingProviderRun : EnumNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class FieldNamingDiagnosticRun : FieldNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class FieldNamingDiagnosticRun : FieldNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(FieldNamingProviderRun)), Shared]
-	public class FieldNamingProviderRun : FieldNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class FieldNamingProviderRun : FieldNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class InterfaceNamingDiagnosticRun : InterfaceNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class InterfaceNamingDiagnosticRun : InterfaceNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(InterfaceNamingProviderRun)), Shared]
-	public class InterfaceNamingProviderRun : InterfaceNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class InterfaceNamingProviderRun : InterfaceNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class LocalMethodNamingDiagnosticRun : LocalMethodNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class LocalMethodNamingDiagnosticRun : LocalMethodNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(LocalMethodNamingProviderRun)), Shared]
-	public class LocalMethodNamingProviderRun : LocalMethodNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class LocalMethodNamingProviderRun : LocalMethodNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class LocalVariableNamingDiagnosticRun : LocalVariableNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class LocalVariableNamingDiagnosticRun : LocalVariableNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(LocalVariableNamingProviderRun)), Shared]
-	public class LocalVariableNamingProviderRun : LocalVariableNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class LocalVariableNamingProviderRun : LocalVariableNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class MethodNamingDiagnosticRun : MethodNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class MethodNamingDiagnosticRun : MethodNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MethodNamingProviderRun)), Shared]
-	public class MethodNamingProviderRun : MethodNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class MethodNamingProviderRun : MethodNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class ParameterNamingDiagnosticRun : ParameterNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class ParameterNamingDiagnosticRun : ParameterNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ParameterNamingProviderRun)), Shared]
-	public class ParameterNamingProviderRun : ParameterNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class ParameterNamingProviderRun : ParameterNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class PropertyNamingDiagnosticRun : PropertyNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class PropertyNamingDiagnosticRun : PropertyNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(PropertyNamingProviderRun)), Shared]
-	public class PropertyNamingProviderRun : PropertyNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class PropertyNamingProviderRun : PropertyNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class StructNamingDiagnosticRun : StructNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class StructNamingDiagnosticRun : StructNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(StructNamingProviderRun)), Shared]
-	public class StructNamingProviderRun : StructNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class StructNamingProviderRun : StructNamingProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class TypeParameterNamingDiagnosticRun : TypeParameterNamingDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class TypeParameterNamingDiagnosticRun : TypeParameterNamingDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(TypeParameterNamingProviderRun)), Shared]
-	public class TypeParameterNamingProviderRun : TypeParameterNamingProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class TypeParameterNamingProviderRun : TypeParameterNamingProvider<ProjectConfig> { }
 
 	#endregion
 
 	#region 框架诊断
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class NodeRuleAttributeDiagnosticRun : NodeRuleAttributeDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class NodeRuleAttributeDiagnosticRun : NodeRuleAttributeDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NodeRuleAttributeCodeFixProviderRun)), Shared]
-	public class NodeRuleAttributeCodeFixProviderRun : NodeRuleAttributeCodeFixProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class NodeRuleAttributeCodeFixProviderRun : NodeRuleAttributeCodeFixProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class NodeRuleClassDiagnosticRun : NodeRuleClassDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class NodeRuleClassDiagnosticRun : NodeRuleClassDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NodeRuleClassCodeFixProviderRun)), Shared]
-	public class NodeRuleClassCodeFixProviderRun : NodeRuleClassCodeFixProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class NodeRuleClassCodeFixProviderRun : NodeRuleClassCodeFixProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class NodeRuleMethodDiagnosticRun : NodeRuleMethodDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class NodeRuleMethodDiagnosticRun : NodeRuleMethodDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NodeRuleMethodCodeFixProviderRun)), Shared]
-	public class NodeRuleMethodCodeFixProviderRun : NodeRuleMethodCodeFixProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class NodeRuleMethodCodeFixProviderRun : NodeRuleMethodCodeFixProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class NodeRuleSwitchAttributeDiagnosticRun : NodeRuleSwitchAttributeDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class NodeRuleSwitchAttributeDiagnosticRun : NodeRuleSwitchAttributeDiagnostic<ProjectConfig> { }
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NodeRuleSwitchAttributeCodeFixProviderRun)), Shared]
-	public class NodeRuleSwitchAttributeCodeFixProviderRun : NodeRuleSwitchAttributeCodeFixProvider { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class NodeRuleSwitchAttributeCodeFixProviderRun : NodeRuleSwitchAttributeCodeFixProvider<ProjectConfig> { }
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class SimpleMemberAccessDiagnosticRun : SimpleMemberAccessDiagnostic { public override ProjectDiagnostics Configs => ProjectSetting.Configs; }
+	public class SimpleMemberAccessDiagnosticRun : SimpleMemberAccessDiagnostic<ProjectConfig> { }
 
 	#endregion
 }

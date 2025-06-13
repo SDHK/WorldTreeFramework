@@ -17,7 +17,8 @@ using System.Threading.Tasks;
 
 namespace WorldTree.Analyzer
 {
-	public abstract class NodeRuleSwitchAttributeDiagnostic : NamingDiagnosticBase
+	public abstract class NodeRuleSwitchAttributeDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
@@ -131,7 +132,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class NodeRuleSwitchAttributeCodeFixProvider : NamingCodeFixProviderBase<AttributeSyntax>
+	public abstract class NodeRuleSwitchAttributeCodeFixProvider<C> : NamingCodeFixProviderBase<AttributeSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
 		public override bool CheckCodeFix(DiagnosticConfig codeDiagnostic, Document document)

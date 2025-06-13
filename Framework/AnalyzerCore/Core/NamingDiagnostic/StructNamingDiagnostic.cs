@@ -20,7 +20,8 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 结构体命名规范诊断器
 	/// </summary>
-	public abstract class StructNamingDiagnostic : NamingDiagnosticBase
+	public abstract class StructNamingDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.StructDeclaration;
 
@@ -85,7 +86,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class StructNamingProvider : NamingCodeFixProviderBase<StructDeclarationSyntax>
+	public abstract class StructNamingProvider<C> : NamingCodeFixProviderBase<StructDeclarationSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.StructDeclaration;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, StructDeclarationSyntax decl, CancellationToken cancellationToken)

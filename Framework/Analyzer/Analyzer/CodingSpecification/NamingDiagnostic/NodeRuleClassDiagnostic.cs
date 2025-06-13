@@ -19,7 +19,8 @@ using System.Threading.Tasks;
 namespace WorldTree.Analyzer
 {
 
-	public abstract class NodeRuleClassDiagnostic : NamingDiagnosticBase
+	public abstract class NodeRuleClassDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		// 更改为处理字段声明
 		public override SyntaxKind DeclarationKind => SyntaxKind.GenericName;
@@ -49,7 +50,8 @@ namespace WorldTree.Analyzer
 	}
 
 
-	public abstract class NodeRuleClassCodeFixProvider : NamingCodeFixProviderBase<GenericNameSyntax>
+	public abstract class NodeRuleClassCodeFixProvider<C> : NamingCodeFixProviderBase<GenericNameSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		private List<string> typeNames = new();
 		private List<string> typeTNames = new();

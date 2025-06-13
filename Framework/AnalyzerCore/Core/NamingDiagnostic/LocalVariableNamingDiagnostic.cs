@@ -19,7 +19,8 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 局部变量命名规范诊断器
 	/// </summary>
-	public abstract class LocalVariableNamingDiagnostic : NamingDiagnosticBase
+	public abstract class LocalVariableNamingDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.LocalDeclarationStatement;
 
@@ -88,7 +89,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class LocalVariableNamingProvider : NamingCodeFixProviderBase<LocalDeclarationStatementSyntax>
+	public abstract class LocalVariableNamingProvider<C> : NamingCodeFixProviderBase<LocalDeclarationStatementSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.LocalDeclarationStatement;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, LocalDeclarationStatementSyntax decl, CancellationToken cancellationToken)

@@ -24,20 +24,24 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 项目诊断配置集合
 	/// </summary>
-	public class ProjectDiagnostics : Dictionary<string, List<DiagnosticConfigGroup>> { }
+	public class ProjectDiagnosticsConfig : Dictionary<string, List<DiagnosticConfigGroup>> { }
 
 
 	/// <summary>
 	/// 命名规范的诊断基类
 	/// </summary>
-	public abstract class NamingDiagnosticBase : DiagnosticAnalyzer
+	public abstract class NamingDiagnosticBase<ConfigT> : DiagnosticAnalyzer
+		where ConfigT : ProjectDiagnosticsConfig, new()
 	{
 		/// <summary>
 		/// 命名规范的诊断描述
 		/// </summary>
 		public abstract SyntaxKind DeclarationKind { get; }
 
-		public abstract ProjectDiagnostics Configs { get; }
+		/// <summary>
+		/// 项目诊断配置集合
+		/// </summary>
+		public ConfigT Configs = new();
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
 			=> ImmutableArray.Create(GetDiagnosticDescriptors(DeclarationKind));
@@ -95,13 +99,20 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 命名规范代码修复基类
 	/// </summary>
-	public abstract class NamingCodeFixProviderBase<T> : CodeFixProvider
+	public abstract class NamingCodeFixProviderBase<T, ConfigT> : CodeFixProvider
 		where T : SyntaxNode
+		where ConfigT : ProjectDiagnosticsConfig, new()
 	{
-
-		public abstract ProjectDiagnostics Configs { get; }
-
+		/// <summary>
+		/// 命名规范的诊断描述
+		/// </summary>
 		public abstract SyntaxKind DeclarationKind { get; }
+
+		/// <summary>
+		/// 项目诊断配置集合
+		/// </summary>
+		public ConfigT Configs = new();
+
 		public override sealed ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(GetFixableDiagnosticIds(DeclarationKind));
 
 		/// <summary>

@@ -19,7 +19,8 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 枚举命名规范诊断器
 	/// </summary>
-	public abstract class EnumNamingDiagnostic : NamingDiagnosticBase
+	public abstract class EnumNamingDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.EnumDeclaration;
 
@@ -58,7 +59,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class EnumNamingProvider : NamingCodeFixProviderBase<EnumDeclarationSyntax>
+	public abstract class EnumNamingProvider<C> : NamingCodeFixProviderBase<EnumDeclarationSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.EnumDeclaration;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, EnumDeclarationSyntax decl, CancellationToken cancellationToken)

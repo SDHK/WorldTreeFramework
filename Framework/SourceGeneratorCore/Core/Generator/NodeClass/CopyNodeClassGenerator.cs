@@ -19,7 +19,8 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	public abstract class CopyNodeClassGenerator : SourceGeneratorBase
+	public abstract class CopyNodeClassGenerator<C> : SourceGeneratorBase<C>
+		where C : ProjectGeneratorsConfig, new()
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{

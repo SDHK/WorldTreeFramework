@@ -19,7 +19,8 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 泛型类型参数命名规范诊断器
 	/// </summary>
-	public abstract class TypeParameterNamingDiagnostic : NamingDiagnosticBase
+	public abstract class TypeParameterNamingDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.TypeParameter;
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
@@ -40,7 +41,8 @@ namespace WorldTree.Analyzer
 			}
 		}
 	}
-	public abstract class TypeParameterNamingProvider : NamingCodeFixProviderBase<TypeParameterSyntax>
+	public abstract class TypeParameterNamingProvider<C> : NamingCodeFixProviderBase<TypeParameterSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.TypeParameter;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, TypeParameterSyntax decl, CancellationToken cancellationToken)

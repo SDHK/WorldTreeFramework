@@ -18,6 +18,8 @@ namespace WorldTree.Server
 	public static partial class DotNetInitRule
 	{
 
+
+
 		[NodeRule(nameof(AddRule<DotNetInit>))]
 		private static void OnAdd(this DotNetInit self)
 		{

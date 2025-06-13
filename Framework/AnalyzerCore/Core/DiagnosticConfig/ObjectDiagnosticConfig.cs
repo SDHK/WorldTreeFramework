@@ -25,7 +25,7 @@ namespace WorldTree.Analyzer
 			SetConfig(DiagnosticKey.ClassNaming, new DiagnosticConfig()
 			{
 				Title = "类型命名",
-				MessageFormat = "类型命名开头要大写!!!!",
+				MessageFormat = "类型命名开头要大写",
 				DeclarationKind = SyntaxKind.ClassDeclaration,
 			});
 

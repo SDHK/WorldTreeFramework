@@ -32,7 +32,7 @@ namespace WorldTree.SourceGenerator
 			return hash;
 		}
 
-		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration)
+		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration, Dictionary<INamedTypeSymbol, int> TypeFieldsCountDict)
 		{
 			INamedTypeSymbol classSymbol = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
 
@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 			ClassGenerator(Code, classSymbol, out bool isAbstract, out bool isClass);
 
 			List<ISymbol> fieldSymbols = null;
-			if (!isAbstract) fieldSymbols = GetAllMembers(classSymbol, TreeDataSerializeGenerator.TypeFieldsCountDict, out baseSymbol, out membersCount);
+			if (!isAbstract) fieldSymbols = GetAllMembers(classSymbol, TypeFieldsCountDict, out baseSymbol, out membersCount);
 			string baseName = baseSymbol?.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 

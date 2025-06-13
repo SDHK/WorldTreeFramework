@@ -20,7 +20,8 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 委托命名规范诊断器
 	/// </summary>
-	public abstract class DelegateNamingDiagnostic : NamingDiagnosticBase
+	public abstract class DelegateNamingDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.DelegateDeclaration;
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
@@ -55,7 +56,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class DelegateNamingProvider : NamingCodeFixProviderBase<DelegateDeclarationSyntax>
+	public abstract class DelegateNamingProvider<C> : NamingCodeFixProviderBase<DelegateDeclarationSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.DelegateDeclaration;
 		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, DelegateDeclarationSyntax delegateDecl, CancellationToken cancellationToken)

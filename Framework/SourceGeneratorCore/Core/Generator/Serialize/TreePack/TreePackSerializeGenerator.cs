@@ -16,8 +16,11 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-
-	public abstract class TreePackSerializeGenerator : SourceGeneratorBase
+	/// <summary>
+	/// 树包序列化生成器
+	/// </summary>
+	public abstract class TreePackSerializeGenerator<C> : SourceGeneratorBase<C>
+		where C : ProjectGeneratorsConfig, new()
 	{
 		public Dictionary<INamedTypeSymbol, List<INamedTypeSymbol>> TypeSubDict = new();
 

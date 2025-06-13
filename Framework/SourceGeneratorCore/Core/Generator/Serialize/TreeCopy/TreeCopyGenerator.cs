@@ -8,7 +8,11 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	public abstract class TreeCopyGenerator : SourceGeneratorBase
+	/// <summary>
+	/// 深拷贝法则生成器
+	/// </summary>
+	public abstract class TreeCopyGenerator<C> : SourceGeneratorBase<C>
+		where C : ProjectGeneratorsConfig, new()
 	{
 
 		public static HashSet<INamedTypeSymbol> TypeFieldsDict = new HashSet<INamedTypeSymbol>();
@@ -47,7 +51,7 @@ namespace WorldTree.SourceGenerator
 
 				foreach (TypeDeclarationSyntax typeDeclaration in TypeListItem.Value)
 				{
-					TreeCopyPartialClassGenerator.Execute(context, ClassCode, typeDeclaration);
+					TreeCopyPartialClassGenerator.Execute(context, ClassCode, typeDeclaration, TypeFieldsDict);
 				}
 
 				if (ClassCode.Length == 0) return;
@@ -93,7 +97,7 @@ namespace WorldTree.SourceGenerator
 
 	public static class TreeCopyPartialClassGenerator
 	{
-		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration)
+		public static void Execute(GeneratorExecutionContext context, StringBuilder Code, TypeDeclarationSyntax typeDeclaration, HashSet<INamedTypeSymbol> TypeFieldsDict)
 		{
 			INamedTypeSymbol classSymbol = context.Compilation.ToINamedTypeSymbol(typeDeclaration);
 
@@ -116,7 +120,7 @@ namespace WorldTree.SourceGenerator
 			}
 
 			INamedTypeSymbol baseSymbol = null;
-			List<ISymbol> fieldSymbols = GetAllMembers(classSymbol, TreeCopyGenerator.TypeFieldsDict, out baseSymbol);
+			List<ISymbol> fieldSymbols = GetAllMembers(classSymbol, TypeFieldsDict, out baseSymbol);
 			string baseName = baseSymbol?.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
 			Code.AppendLine("	{");

@@ -20,7 +20,8 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 接口命名规范诊断器
 	/// </summary>
-	public abstract class InterfaceNamingDiagnostic : NamingDiagnosticBase
+	public abstract class InterfaceNamingDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.InterfaceDeclaration;
 
@@ -83,7 +84,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class InterfaceNamingProvider : NamingCodeFixProviderBase<InterfaceDeclarationSyntax>
+	public abstract class InterfaceNamingProvider<C> : NamingCodeFixProviderBase<InterfaceDeclarationSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.InterfaceDeclaration;
 

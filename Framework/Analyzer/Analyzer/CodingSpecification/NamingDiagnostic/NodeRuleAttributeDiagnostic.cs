@@ -20,7 +20,8 @@ namespace WorldTree.Analyzer
 {
 
 
-	public abstract class NodeRuleAttributeDiagnostic : NamingDiagnosticBase
+	public abstract class NodeRuleAttributeDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
 
@@ -55,7 +56,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class NodeRuleAttributeCodeFixProvider : NamingCodeFixProviderBase<AttributeSyntax>
+	public abstract class NodeRuleAttributeCodeFixProvider<C> : NamingCodeFixProviderBase<AttributeSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		private List<string> typeNames = new();
 		private List<string> typeTNames = new();

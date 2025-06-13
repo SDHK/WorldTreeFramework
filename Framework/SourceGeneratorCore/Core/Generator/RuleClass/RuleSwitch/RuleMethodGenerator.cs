@@ -55,7 +55,11 @@ namespace WorldTree.SourceGenerator
 		public string caseValue;
 	}
 
-	public abstract class RuleMethodGenerator : SourceGeneratorBase
+	/// <summary>
+	/// 法则简写方法调用生成器
+	/// </summary>
+	public abstract class RuleMethodGenerator<C> : SourceGeneratorBase<C>
+		where C : ProjectGeneratorsConfig, new()
 	{
 		public Dictionary<string, RuleFileData> fileDatas = new();
 
@@ -64,7 +68,6 @@ namespace WorldTree.SourceGenerator
 		private List<string> typeTNames = new();
 
 		// 创建一个 SymbolDisplayFormat 对象，用于自定义显示格式
-		//因为委托简写可以省略写类型，导致原文件不需要写参数的命名空间，
 		//所以这里要获取到泛型参数的类型全名，包括命名空间。
 		SymbolDisplayFormat customFormat = new SymbolDisplayFormat(
 		globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,

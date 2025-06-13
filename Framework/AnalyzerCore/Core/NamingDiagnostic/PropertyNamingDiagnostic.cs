@@ -19,7 +19,8 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 属性命名规范诊断器
 	/// </summary>
-	public abstract class PropertyNamingDiagnostic : NamingDiagnosticBase
+	public abstract class PropertyNamingDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.PropertyDeclaration;
 
@@ -113,7 +114,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class PropertyNamingProvider : NamingCodeFixProviderBase<PropertyDeclarationSyntax>
+	public abstract class PropertyNamingProvider<C> : NamingCodeFixProviderBase<PropertyDeclarationSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.PropertyDeclaration;
 

@@ -14,7 +14,8 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
-	public abstract class RuleTypesGenerator : SourceGeneratorBase
+	public abstract class RuleTypesGenerator<C> : SourceGeneratorBase<C>
+		where C : ProjectGeneratorsConfig, new()
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{

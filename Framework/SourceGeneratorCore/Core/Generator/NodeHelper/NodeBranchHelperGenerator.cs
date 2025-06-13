@@ -1,18 +1,21 @@
 /****************************************
 
 * 作者：闪电黑客
-* 日期：2024/4/15 14:45
+* 日期：2024/4/15 17:10
 
 * 描述：
 
 */
-
 using Microsoft.CodeAnalysis;
 using System;
 
 namespace WorldTree.SourceGenerator
 {
-	public abstract class NodeExtensionMethodGenerator : SourceGeneratorBase
+	/// <summary>
+	/// 节点添加到分支帮助方法生成器
+	/// </summary>
+	public abstract class NodeBranchHelperGenerator<C> : SourceGeneratorBase<C>
+		where C : ProjectGeneratorsConfig, new()
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{
@@ -26,13 +29,7 @@ namespace WorldTree.SourceGenerator
 				if (!(context.SyntaxReceiver is FindCoreSyntaxReceiver receiver and not null)) return;
 				if (receiver.isGenerator == false) return;
 
-				NodeSendRuleGeneratorHelper.Execute(context);
-				NodeSendRuleAsyncGeneratorHelper.Execute(context);
-				NodeCallRuleGeneratorHelper.Execute(context);
-				NodeCallRuleAsyncGeneratorHelper.Execute(context);
-
-				RuleExecutorSendRuleGeneratorHelper.Execute(context);
-				RuleExecutorCallRuleGeneratorHelper.Execute(context);
+				NodeBranchExtensionGeneratorHelper.Execute(context);
 			}
 			catch (Exception e)
 			{

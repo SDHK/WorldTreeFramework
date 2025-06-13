@@ -18,7 +18,8 @@ using System.Threading.Tasks;
 
 namespace WorldTree.Analyzer
 {
-	public abstract class NodeRuleMethodDiagnostic : NamingDiagnosticBase
+	public abstract class NodeRuleMethodDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.MethodDeclaration;
 
@@ -181,7 +182,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class NodeRuleMethodCodeFixProvider : NamingCodeFixProviderBase<MethodDeclarationSyntax>
+	public abstract class NodeRuleMethodCodeFixProvider<C> : NamingCodeFixProviderBase<MethodDeclarationSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		private List<string> typeNames = new();
 		private List<string> typeTNames = new();

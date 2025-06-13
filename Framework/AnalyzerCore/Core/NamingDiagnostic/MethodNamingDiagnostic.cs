@@ -19,7 +19,8 @@ namespace WorldTree.Analyzer
 	/// <summary>
 	/// 方法命名规范诊断器
 	/// </summary>
-	public abstract class MethodNamingDiagnostic : NamingDiagnosticBase
+	public abstract class MethodNamingDiagnostic<C> : NamingDiagnosticBase<C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.MethodDeclaration;
 
@@ -78,7 +79,8 @@ namespace WorldTree.Analyzer
 		}
 	}
 
-	public abstract class MethodNamingProvider : NamingCodeFixProviderBase<MethodDeclarationSyntax>
+	public abstract class MethodNamingProvider<C> : NamingCodeFixProviderBase<MethodDeclarationSyntax, C>
+		where C : ProjectDiagnosticsConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.MethodDeclaration;
 

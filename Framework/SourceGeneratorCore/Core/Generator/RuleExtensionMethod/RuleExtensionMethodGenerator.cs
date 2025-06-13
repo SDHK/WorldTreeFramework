@@ -12,7 +12,11 @@ using System;
 
 namespace WorldTree.SourceGenerator
 {
-	public abstract class RuleExtensionMethodGenerator : SourceGeneratorBase
+	/// <summary>
+	/// 法则集合扩展调用方法生成器
+	/// </summary>
+	public abstract class RuleExtensionMethodGenerator<C> : SourceGeneratorBase<C>
+		where C : ProjectGeneratorsConfig, new()
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{
