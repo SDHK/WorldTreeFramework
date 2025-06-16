@@ -131,8 +131,8 @@ namespace WorldTree.Analyzer
 
 					foreach (DiagnosticConfig codeDiagnosticConfig in diagnosticConfig.Diagnostics.Values)
 					{
-						if (codeDiagnosticConfig.DeclarationKind != declarationKind)
-							descriptors.Add(codeDiagnosticConfig.Diagnostic.Id);
+						if (codeDiagnosticConfig.DeclarationKind != declarationKind) continue;
+						descriptors.Add(codeDiagnosticConfig.Diagnostic.Id);
 					}
 				}
 			}

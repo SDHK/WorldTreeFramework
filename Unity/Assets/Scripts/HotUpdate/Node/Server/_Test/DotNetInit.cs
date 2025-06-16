@@ -7,6 +7,7 @@
 
 */
 using System;
+using System.Collections.Generic;
 
 namespace WorldTree.Server
 {
@@ -26,6 +27,11 @@ namespace WorldTree.Server
 		/// ≤‚ ‘
 		/// </summary>
 		public Action Action;
+
+		/// <summary>
+		/// a
+		/// </summary>
+		public List<int> intsList;
 
 
 	}
