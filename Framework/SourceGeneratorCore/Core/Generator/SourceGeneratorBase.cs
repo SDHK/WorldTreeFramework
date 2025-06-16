@@ -40,13 +40,13 @@ namespace WorldTree.SourceGenerator
 	/// <summary>
 	/// 项目生成配置集合
 	/// </summary>
-	public class ProjectGeneratorsConfig
+	public abstract class ProjectGeneratorsConfig
 		: Dictionary<string, HashSet<Type>>
 	{
 		/// <summary>
 		/// 生成器的参数数量
 		/// </summary>
-		public int argumentCount = 5;
+		public static int ArgumentCount = 0;
 	}
 
 }

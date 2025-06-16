@@ -50,7 +50,7 @@ namespace WorldTree.SourceGenerator
 	{
 		public ProjectGeneratorSetting()
 		{
-			argumentCount = 5;
+			ArgumentCount = 5;
 
 			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
 			Add("WorldTree.UnityCore", ProjectConfigHelper.CoreConfigs);

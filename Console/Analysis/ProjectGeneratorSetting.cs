@@ -43,11 +43,14 @@ namespace WorldTree.SourceGenerator
 		};
 	}
 
+	/// <summary>
+	/// 控制台环境生成器配置
+	/// </summary>
 	public class ProjectGeneratorSetting : ProjectGeneratorsConfig
 	{
 		public ProjectGeneratorSetting()
 		{
-			argumentCount = 5;
+			ArgumentCount = 5;
 			Add("Core", ProjectConfigHelper.CoreConfigs);
 			Add("Node", ProjectConfigHelper.NodeConfigs);
 			Add("Rule", ProjectConfigHelper.RuleConfigs);

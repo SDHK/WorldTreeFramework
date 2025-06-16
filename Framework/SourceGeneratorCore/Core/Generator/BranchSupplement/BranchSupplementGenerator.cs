@@ -370,7 +370,7 @@ namespace WorldTree.SourceGenerator
 		{
 			string ClassNameUnBranch = ClassFullName.Split('<')[0].Replace("Branch", "");
 
-			int argumentCount = GeneratorSetting.argumentCount;
+			int argumentCount = ProjectGeneratorSetting.ArgumentCount;
 			for (int i = 0; i <= argumentCount; i++)
 			{
 				string genericsType = GeneratorTemplate.GenericsTypes[i];
@@ -440,7 +440,7 @@ namespace WorldTree.SourceGenerator
 		{
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 
-			int argumentCount = GeneratorSetting.argumentCount;
+			int argumentCount = ProjectGeneratorSetting.ArgumentCount;
 			for (int i = 0; i <= argumentCount; i++)
 			{
 				string genericsType = GeneratorTemplate.GenericsTypes[i];
@@ -508,7 +508,7 @@ namespace WorldTree.SourceGenerator
 		{
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
 
-			int argumentCount = GeneratorSetting.argumentCount;
+			int argumentCount = ProjectGeneratorSetting.ArgumentCount;
 			for (int i = 0; i <= argumentCount; i++)
 			{
 				string genericsType = GeneratorTemplate.GenericsTypes[i];
@@ -582,7 +582,7 @@ namespace WorldTree.SourceGenerator
 		private static void BranchTypeKeyAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
 		{
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
-			int argumentCount = GeneratorSetting.argumentCount;
+			int argumentCount = ProjectGeneratorSetting.ArgumentCount;
 			for (int i = 0; i <= argumentCount; i++)
 			{
 				string genericsType = GeneratorTemplate.GenericsTypes[i];
@@ -603,7 +603,7 @@ namespace WorldTree.SourceGenerator
 		private static void BranchBaseTypeKeyAddNode(StringBuilder stringBuilder, string ClassFullNameAndNameSpace, string ClassFullName, string BaseFullName, string BaseTypePara, string genericType, bool isUnConstraint)
 		{
 			string ClassNameUnBranch = ClassFullName.Replace("Branch", "");
-			int argumentCount = GeneratorSetting.argumentCount;
+			int argumentCount = ProjectGeneratorSetting.ArgumentCount;
 			for (int i = 0; i <= argumentCount; i++)
 			{
 				string genericsType = GeneratorTemplate.GenericsTypes[i];

@@ -16,7 +16,7 @@ namespace WorldTree.SourceGenerator
 	{
 		public static void Execute(GeneratorExecutionContext context)
 		{
-			int argumentCount = GeneratorSetting.argumentCount;
+			int argumentCount = ProjectGeneratorSetting.ArgumentCount;
 			StringBuilder Code = new StringBuilder();
 			Code.AppendLine(
 @$"/****************************************

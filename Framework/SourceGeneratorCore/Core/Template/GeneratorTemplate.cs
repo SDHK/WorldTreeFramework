@@ -41,7 +41,7 @@ namespace WorldTree.SourceGenerator
 				{
 					genericsInTypes = new Dictionary<int, string>();
 					StringBuilder generics = new StringBuilder();
-					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					for (int index = 0; index <= ProjectGeneratorSetting.ArgumentCount; index++)
 					{
 						for (int i = 0; i < index; i++)
 						{
@@ -68,7 +68,7 @@ namespace WorldTree.SourceGenerator
 				{
 					genericsInTypesAngle = new Dictionary<int, string>();
 					StringBuilder generics = new StringBuilder();
-					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					for (int index = 0; index <= ProjectGeneratorSetting.ArgumentCount; index++)
 					{
 						for (int i = 0; i < index; i++)
 						{
@@ -105,7 +105,7 @@ namespace WorldTree.SourceGenerator
 				{
 					genericsTypes = new Dictionary<int, string>();
 					StringBuilder generics = new StringBuilder();
-					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					for (int index = 0; index <= ProjectGeneratorSetting.ArgumentCount; index++)
 					{
 						for (int i = 0; i < index; i++)
 						{
@@ -133,7 +133,7 @@ namespace WorldTree.SourceGenerator
 					genericsTypesAfter = new Dictionary<int, string>();
 					StringBuilder generics = new StringBuilder();
 
-					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					for (int index = 0; index <= ProjectGeneratorSetting.ArgumentCount; index++)
 					{
 						for (int i = 0; i < index; i++)
 						{
@@ -158,7 +158,7 @@ namespace WorldTree.SourceGenerator
 				{
 					genericsTypesAngle = new Dictionary<int, string>();
 					StringBuilder generics = new StringBuilder();
-					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					for (int index = 0; index <= ProjectGeneratorSetting.ArgumentCount; index++)
 					{
 						for (int i = 0; i < index; i++)
 						{
@@ -192,7 +192,7 @@ namespace WorldTree.SourceGenerator
 				{
 					genericsParameter = new Dictionary<int, string>();
 					StringBuilder generics = new StringBuilder();
-					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					for (int index = 0; index <= ProjectGeneratorSetting.ArgumentCount; index++)
 					{
 						for (int i = 0; i < index; i++)
 						{
@@ -216,7 +216,7 @@ namespace WorldTree.SourceGenerator
 				{
 					genericsTypeParameter = new Dictionary<int, string>();
 					StringBuilder generics = new StringBuilder();
-					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					for (int index = 0; index <= ProjectGeneratorSetting.ArgumentCount; index++)
 					{
 						for (int i = 0; i < index; i++)
 						{
@@ -241,7 +241,7 @@ namespace WorldTree.SourceGenerator
 				{
 					genericsRefParameter = new Dictionary<int, string>();
 					StringBuilder generics = new StringBuilder();
-					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					for (int index = 0; index <= ProjectGeneratorSetting.ArgumentCount; index++)
 					{
 						for (int i = 0; i < index; i++)
 						{
@@ -266,7 +266,7 @@ namespace WorldTree.SourceGenerator
 				{
 					genericsRefTypeParameter = new Dictionary<int, string>();
 					StringBuilder generics = new StringBuilder();
-					for (int index = 0; index <= GeneratorSetting.argumentCount; index++)
+					for (int index = 0; index <= ProjectGeneratorSetting.ArgumentCount; index++)
 					{
 						for (int i = 0; i < index; i++)
 						{
