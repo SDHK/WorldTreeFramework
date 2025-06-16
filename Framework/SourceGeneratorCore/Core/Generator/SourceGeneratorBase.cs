@@ -40,7 +40,8 @@ namespace WorldTree.SourceGenerator
 	/// <summary>
 	/// 项目生成配置集合
 	/// </summary>
-	public class ProjectGeneratorsConfig : Dictionary<string, HashSet<Type>>
+	public class ProjectGeneratorsConfig
+		: Dictionary<string, HashSet<Type>>
 	{
 		/// <summary>
 		/// 生成器的参数数量

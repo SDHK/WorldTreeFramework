@@ -7,6 +7,8 @@ namespace WorldTree
 	/// </summary>
 	public interface INodeFieldViewRule : ISendRule<INode, FieldInfo> { }
 
+	public interface AsINodeFieldViewRule : AsRule<INodeFieldViewRule> { }
+
 	/// <summary>
 	/// 世界树节点字段信息可视化法则
 	/// </summary>
