@@ -51,7 +51,6 @@ namespace WorldTree.SourceGenerator
 		public ProjectGeneratorSetting()
 		{
 			ArgumentCount = 5;
-			Add("Core", ProjectConfigHelper.CoreConfigs);
 			Add("Node", ProjectConfigHelper.NodeConfigs);
 			Add("Rule", ProjectConfigHelper.RuleConfigs);
 			Add("Config", ProjectConfigHelper.CoreConfigs);

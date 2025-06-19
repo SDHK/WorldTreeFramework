@@ -57,7 +57,7 @@ namespace WorldTree
 
 
 			//获取一个数据库代理，保存到数据库
-			self.World.AddComponent(out LiteDBTestProxy _).Update(archive.GetKey<long>(), archive);
+			self.World.AddComponent(out DataBaseTestProxy _).Update(archive.GetKey<long>(), archive);
 		}
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace WorldTree
 		{
 
 			//添加一个数据库代理
-			self.World.AddComponent(out LiteDBTestProxy liteDB);
+			self.World.AddComponent(out DataBaseTestProxy liteDB);
 
 			//反序列化
 			InputArchive archive = liteDB.Find<InputArchive>(0L);

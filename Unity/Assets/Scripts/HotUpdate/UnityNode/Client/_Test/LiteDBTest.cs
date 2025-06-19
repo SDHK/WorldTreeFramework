@@ -9,9 +9,9 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// LiteDB测试
+	/// 数据库代理
 	/// </summary>
-	public class LiteDBTestProxy : DataBaseProxy
+	public class DataBaseTestProxy : DataBaseProxy
 		, AsAwake
 	{
 

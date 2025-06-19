@@ -30,13 +30,6 @@ namespace WorldTree.SourceGenerator
 			typeof(TreeDataSerializeGeneratorRun),
 			typeof(TreePackSerializeGeneratorRun),
 		};
-		public static HashSet<Type> UnityCoreConfigs = new() {
-			typeof(RuleSupplementGeneratorRun),
-			typeof(RuleMethodGeneratorRun),
-			typeof(TreeCopyGeneratorRun),
-			typeof(TreeDataSerializeGeneratorRun),
-			typeof(TreePackSerializeGeneratorRun),
-		};
 		public static HashSet<Type> NodeConfigs = new()
 		{
 			typeof(RuleSupplementGeneratorRun),
@@ -51,21 +44,17 @@ namespace WorldTree.SourceGenerator
 	}
 
 	/// <summary>
-	/// Unity环境配置
+	/// 控制台环境生成器配置
 	/// </summary>
 	public class ProjectGeneratorSetting : ProjectGeneratorsConfig
 	{
 		public ProjectGeneratorSetting()
 		{
 			ArgumentCount = 5;
-
-			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
-			Add("WorldTree.UnityCore", ProjectConfigHelper.UnityCoreConfigs);
-
-			Add("WorldTree.Node", ProjectConfigHelper.NodeConfigs);
-			Add("WorldTree.Rule", ProjectConfigHelper.RuleConfigs);
-			Add("WorldTree.UnityNode", ProjectConfigHelper.NodeConfigs);
-			Add("WorldTree.UnityRule", ProjectConfigHelper.RuleConfigs);
+			Add("Avalonia.Core", ProjectConfigHelper.CoreConfigs);
+			Add("Node", ProjectConfigHelper.NodeConfigs);
+			Add("Rule", ProjectConfigHelper.RuleConfigs);
+			Add("Config", ProjectConfigHelper.CoreConfigs);
 		}
 	}
 }

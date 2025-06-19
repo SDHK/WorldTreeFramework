@@ -76,6 +76,7 @@ namespace WorldTree.Analyzer
 	{
 		public ProjectAnalyzerSetting()
 		{
+			Add("Avalonia.Core", ProjectConfigHelper.CoreConfigs);
 			Add("Node", ProjectConfigHelper.NodeConfigs);
 			Add("Rule", ProjectConfigHelper.RuleConfigs);
 			Add("Config", ProjectConfigHelper.CoreConfigs);

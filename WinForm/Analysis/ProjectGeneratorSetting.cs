@@ -17,15 +17,15 @@ namespace WorldTree.SourceGenerator
 	public static class ProjectConfigHelper
 	{
 		public static HashSet<Type> CoreConfigs = new() {
-			typeof(BranchSupplementGeneratorRun) ,
-			typeof(CopyNodeClassGeneratorRun),
-			typeof(NodeExtensionMethodGeneratorRun),
-			typeof(NodeBranchHelperGeneratorRun),
-			typeof(RuleClassGeneratorRun),
+			//typeof(BranchSupplementGeneratorRun) ,
+			//typeof(CopyNodeClassGeneratorRun),
+			//typeof(NodeExtensionMethodGeneratorRun),
+			//typeof(NodeBranchHelperGeneratorRun),
+			//typeof(RuleClassGeneratorRun),
 
 			typeof(RuleSupplementGeneratorRun),
 			typeof(RuleMethodGeneratorRun),
-			typeof(RuleExtensionMethodGeneratorRun),
+			//typeof(RuleExtensionMethodGeneratorRun),
 			typeof(TreeCopyGeneratorRun),
 			typeof(TreeDataSerializeGeneratorRun),
 			typeof(TreePackSerializeGeneratorRun),

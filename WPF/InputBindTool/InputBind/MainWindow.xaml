@@ -1,0 +1,34 @@
+﻿<Window x:Class="InputBind.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InputBind"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Background="#FF1E1E1E">
+    <Grid>
+        <TabControl Background="#FF323232" BorderBrush="#FF3C3C3C" Margin="0,0,370,0">
+            <TabItem Header="TabItem" Margin="2,-2,-2,0" BorderBrush="#FF3C3C3C">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FF282828"/>
+                        <GradientStop Color="#FF282828" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid Background="#FF282828"/>
+            </TabItem>
+            <TabItem Header="TabItem" Margin="-2,-2,-2,2">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FF282828"/>
+                        <GradientStop Color="#FF3C3C3C" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid Background="#FF282828"/>
+            </TabItem>
+        </TabControl>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="629,139,0,0" VerticalAlignment="Top" Background="#FF3C3C3C" Click="Button_Click"/>
+        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Name="ListBox001" Background="#FF282828" Margin="430,0,176,0" BorderBrush="#FF3C3C3C" SelectionChanged="ListBox_SelectionChanged"/>
+
+    </Grid>
+</Window>

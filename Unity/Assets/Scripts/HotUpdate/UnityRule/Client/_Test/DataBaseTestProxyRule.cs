@@ -8,11 +8,11 @@
 */
 namespace WorldTree
 {
-	public static class LiteDBTestProxyRule
+	public static class DataBaseTestProxyRule
 	{
-		private class AwakeRule : AwakeRule<LiteDBTestProxy>
+		private class AwakeRule : AwakeRule<DataBaseTestProxy>
 		{
-			protected override void Execute(LiteDBTestProxy self)
+			protected override void Execute(DataBaseTestProxy self)
 			{
 				string path = "C:\\Users\\admin\\Desktop\\新建文件夹\\LiteDBTest.db";
 				self.DataBase = self.AddComponent(out LiteDBManager _, path);
@@ -28,7 +28,7 @@ namespace WorldTree
 			protected override void Execute(LiteDBTest self)
 			{
 				//获取数据库代理
-				self.World.AddComponent(out LiteDBTestProxy liteDB);
+				self.World.AddComponent(out DataBaseTestProxy dataBaseProxy);
 
 				long id;
 
@@ -38,13 +38,13 @@ namespace WorldTree
 				id = testClass.Id;
 
 				//插入数据
-				liteDB.Insert(testClass.Id, testClass);
+				dataBaseProxy.Insert(testClass.Id, testClass);
 
 				//销毁类型
 				testClass.Dispose();
 
 				//查询数据
-				TestClass result = liteDB.Find<TestClass>(id);
+				TestClass result = dataBaseProxy.Find<TestClass>(id);
 
 				result.SetParent(self);//设置父节点
 
