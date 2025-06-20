@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AnalysisLevel>6.0</AnalysisLevel>
+    <LangVersion>12</LangVersion>
+    <RootNamespace>WorldTree</RootNamespace>
+    <AssemblyName>Rule</AssemblyName>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\Core\WorldTree.Core.csproj" />
+    <ProjectReference Include="..\..\Analysis\Avalonia.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\..\Core\Avalonia.Core.csproj" />
+    <ProjectReference Include="..\Node\InputBind.Node.csproj" />
+  </ItemGroup>
+
+
+
+</Project>

@@ -46,6 +46,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Core\WorldTree.Core.csproj" />
     <ProjectReference Include="..\..\Core\Avalonia.Core.csproj" />
+    <ProjectReference Include="..\Node\InputBind.Node.csproj" />
+    <ProjectReference Include="..\Rule\InputBind.Rule.csproj" />
   </ItemGroup>
 </Project>
  

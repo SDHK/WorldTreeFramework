@@ -121,15 +121,13 @@ namespace WorldTree
 			self.disable = null;
 		}
 
-		private class UpdateTime : UpdateTimeRule<AvaloniaWorldHeart>
+		[NodeRule(nameof(UpdateTimeRule<AvaloniaWorldHeart>))]
+		private static void OnUpdateTime(this AvaloniaWorldHeart self, TimeSpan deltaTime)
 		{
-			protected override void Execute(AvaloniaWorldHeart self, TimeSpan deltaTime)
-			{
-				self.enable?.Send();
-				self.update?.Send();
-				self.updateTime?.Send(deltaTime);
-				self.disable?.Send();
-			}
+			self.enable?.Send();
+			self.update?.Send();
+			self.updateTime?.Send(deltaTime);
+			self.disable?.Send();
 		}
 	}
 }
