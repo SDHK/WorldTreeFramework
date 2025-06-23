@@ -16,5 +16,6 @@ namespace WorldTree
 	/// 主世界
 	/// </summary>
 	public class MainWorld : World
+		, AsRule<IRule>
 	{ }
 }

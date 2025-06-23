@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using WorldTree;
 
 namespace InputBind
 {
@@ -15,9 +14,6 @@ namespace InputBind
 		[STAThread]
 		static void Main()
 		{
-			Type ruleType = typeof(MainWorldRule);
-			Type nodeType = typeof(MainWorld);
-
 			ApplicationConfiguration.Initialize();
 			Application.Run(form);
 		}

@@ -5,10 +5,9 @@ namespace WorldTree
 {
 	public static partial class MainFromRule
 	{
-		[NodeRule(nameof(WinFromEntryRule<MainFrom>))]
-		private static void OnWinFromEntry(this MainFrom self, Form arg1)
+		[NodeRule(nameof(AwakeRule<MainWorldWinForm, Form>))]
+		private static void OnAwake(this MainWorldWinForm self, Form arg1)
 		{
-
 			// 创建 TabControl 实例
 			TabControl1 tabControl1 = new();
 

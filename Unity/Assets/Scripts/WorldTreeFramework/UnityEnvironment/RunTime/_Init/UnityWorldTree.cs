@@ -41,9 +41,14 @@ namespace WorldTree
 			WorldLineManager.Options = Options;
 			WorldLineManager.LogType = typeof(UnityWorldLog);
 
-			if (Define.IsEditor) WorldLineManager.SetView(typeof(UnityWorldHeart), typeof(UnityViewBuilderWorld), typeof(UnityWorldTreeNodeViewBuilder));
 
-			WorldLineManager.Create(0, typeof(UnityWorldHeart), 0, typeof(MainWorld));
+			if (Define.IsEditor) WorldLineManager.SetView(typeof(UnityViewBuilderWorld), typeof(UnityWorldHeart), typeof(UnityWorldTreeNodeViewBuilder));
+
+			var line = WorldLineManager.Create(0, typeof(UnityWorldHeart));
+			line.WorldContext.Post(() =>
+			{
+				line.AddComponent(out MainWorld _);
+			});
 		}
 
 		/// <summary>

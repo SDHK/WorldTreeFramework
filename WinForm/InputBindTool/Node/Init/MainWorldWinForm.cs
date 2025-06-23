@@ -5,23 +5,14 @@ using System.Windows.Forms;
 
 namespace WorldTree
 {
-
 	/// <summary>
-	/// WinForm入口法则
+	/// winform 主世界
 	/// </summary>
-	public interface WinFromEntry : ISendRule<Form>, IGlobalRule { }
-
-
-	/// <summary>
-	/// 窗口根节点
-	/// </summary>
-	public class MainFrom : Node
+	public class MainWorldWinForm : Node
 		, AsComponentBranch
-		, ComponentOf<MainWorld>
-		, AsAwake
-		, AsWinFromEntry
+		, ComponentOf<WorldLine>
+		, AsAwake<Form>
 	{
-
 
 	}
 

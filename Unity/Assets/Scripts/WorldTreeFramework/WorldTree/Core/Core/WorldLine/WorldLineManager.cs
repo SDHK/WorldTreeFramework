@@ -66,13 +66,18 @@ namespace WorldTree
 		/// <summary>
 		/// 设置可视化
 		/// </summary>
-		public void SetView(Type heartType, Type worldType, Type viewBuilderType)
+		public void SetView(Type worldType, Type heartType, Type viewBuilderType)
 		{
-			viewHeartType = heartType;
+			this.viewHeartType = heartType;
 			this.viewBuilderType = viewBuilderType;
 			viewLine = new WorldLine();
 			viewLine.WorldLineManager = this;
-			viewLine.Init(viewHeartType, 0, worldType);
+			viewLine.Init(heartType, 10);
+			viewLine.WorldContext.Post(() =>
+			{
+				long worldTypeCode = viewLine.TypeToCode(worldType);
+				NodeBranchHelper.AddNode(viewLine, default(ComponentBranch), worldTypeCode, worldTypeCode, out _);
+			});
 		}
 
 		#endregion
@@ -80,7 +85,7 @@ namespace WorldTree
 		/// <summary>
 		/// 创建世界线
 		/// </summary>
-		public void Create(int id, Type heartType, int frameTime, Type worldType)
+		public WorldLine Create(int id, Type heartType, int frameTime = 0)
 		{
 			if (!lineDict.TryGetValue(id, out WorldLine line))
 			{
@@ -95,8 +100,9 @@ namespace WorldTree
 
 				MainLine ??= line;
 				line.WorldLineManager = this;
-				line.Init(heartType, frameTime, worldType);
+				line.Init(heartType, frameTime);
 				lineDict.TryAdd(id, line);
+				return line;
 			}
 			else
 			{

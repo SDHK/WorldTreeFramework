@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIButton.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\UnityMonoBehaviourThread.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\FixedUpdate\FixedUpdateRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\MainWorld.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Vortex.shader" />

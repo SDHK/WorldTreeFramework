@@ -55,7 +55,7 @@ namespace WorldTree
 		public override void Update(TimeSpan deltaTime)
 		{
 			time += deltaTime;
-			if (time.TotalMilliseconds >= frameTime * 0.001)
+			if (time.TotalMilliseconds >= frameTime)
 			{
 				if (isRun) ruleList?.Send(Parent, time);
 				time = TimeSpan.Zero;

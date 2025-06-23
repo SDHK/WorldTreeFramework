@@ -24,7 +24,12 @@ namespace WorldTree.Server
             lineManager.Options = options;
             lineManager.LogType = typeof(WorldLog);
 
-            lineManager.Create(0, typeof(WorldHeart), 1000, typeof(MainWorld));
+            var line = lineManager.Create(0, typeof(WorldHeart), 1000);
+            line.WorldContext.Post(() =>
+            {
+                line.AddComponent(out MainWorld _);
+            });
+
 
             //防止程序集被优化掉
             Type ruleType = typeof(MainWorldRule);

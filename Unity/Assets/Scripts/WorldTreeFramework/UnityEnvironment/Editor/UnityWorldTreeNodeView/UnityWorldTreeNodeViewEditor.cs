@@ -45,23 +45,30 @@ namespace EditorTool
 					Type type = fieldInfo.FieldType;
 					if (type.IsEnum) type = typeof(Enum);
 
-					//通过字段类型拿到预注册的绘制节点类型
-					if (View?.World != null && View.World.AddComponent(out ViewTypeManager _).types.TryGetValue(type, out Type nodeType))
+					if (View?.World == null) continue;
+					if (!View.World.TryGetComponent(out ViewTypeManager viewTypeManager))
 					{
-						//通过绘制类型拿到绘制节点实例
-						long typeCode = View.TypeToCode(nodeType);
-						NodeBranchHelper.AddNode(View.World, default(ComponentBranch), typeCode, typeCode, out INode viewNode);
-
-						//View.Root.AddComponent(nodeType.TypeToCode(), out INode viewNode, isPool: false);//通过绘制类型拿到绘制节点实例
-						NodeRuleHelper.TrySendRule(viewNode, default(INodeFieldViewRule), node, fieldInfo);//调用绘制法则
+						View.World.AddComponent(out viewTypeManager);
 					}
+
+					//通过字段类型拿到预注册的绘制节点类型
+					if (!viewTypeManager.types.TryGetValue(type, out Type nodeType)) continue;
+
+					//通过绘制类型拿到绘制节点实例
+					long typeCode = View.TypeToCode(nodeType);
+
+					if (!View.World.ComponentBranch().TryGetNode(typeCode, out INode viewNode))
+					{
+						NodeBranchHelper.AddNode(View.World, default(ComponentBranch), typeCode, typeCode, out viewNode);
+					}
+					NodeRuleHelper.TrySendRule(viewNode, default(INodeFieldViewRule), node, fieldInfo);//调用绘制法则
 				}
 
 				EditorGUILayout.EndVertical();
 			}
 			catch (Exception e)
 			{
-				Debug.Log($"Node View error: {node.GetType().FullName} {e}");
+				Debug.LogError($"Node View error: {node.GetType().FullName} {e}");
 			}
 		}
 	}

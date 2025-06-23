@@ -19,9 +19,11 @@ namespace InputBind
 			WorldLineManager lineManager = new();
 			lineManager.Options = new();
 			lineManager.LogType = typeof(WorldLog);
-			lineManager.Create(0, typeof(WinFormWorldHeart), 1000, typeof(MainWorld));
-			lineManager.MainLine.GetGlobalRuleExecutor(out IRuleExecutor<WinFromEntry> globalRuleExecutor);
-			globalRuleExecutor.Send((Form)this); //发送窗口到全局法则
+			var line = lineManager.Create(0, typeof(WinFormWorldHeart), 1000);
+			line.WorldContext.Post(() =>
+			{
+				line.AddComponent(out MainWorldWinForm _, (Form)this);
+			});
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
