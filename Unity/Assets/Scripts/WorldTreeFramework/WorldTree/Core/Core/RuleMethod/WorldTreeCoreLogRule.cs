@@ -22,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 打印日志
 		/// </summary>
-		public static void Log(this IWorldTreeBasic self, string message) => self.Core.LogManager?.Debug(message);
+		public static void Log(this IWorldTreeBasic self, string message) => self.Core.LogManager?.Log(message);
 
 		/// <summary>
 		/// 打印警告日志

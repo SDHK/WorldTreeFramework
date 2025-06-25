@@ -64,49 +64,50 @@ namespace WorldTree
 
 		public override void OnCreate()
 		{
+			if (Core.WorldLineManager.LogType == null) return;
 			log = (ILog)Core.PoolGetUnit(this.TypeToCode(Core.WorldLineManager.LogType));
 		}
 
 		public void Trace(string message)
 		{
 			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
-			log.Trace(message);
+			log?.Trace(message);
 		}
 
-		public void Debug(string message)
+		public void Log(string message)
 		{
 			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
-			log.Debug(message);
+			log?.Log(message);
 		}
 
 		public void Error(string message)
 		{
 			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
-			log.Error(message);
+			log?.Error(message);
 		}
 
 		public void Error(Exception e)
 		{
 			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
-			log.Error(e);
+			log?.Error(e);
 		}
 
 		public void Info(string message)
 		{
 			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Info) != LogLevel.Info) return;
-			log.Info(message);
+			log?.Info(message);
 		}
 
 		public void Todo(string message)
 		{
 			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
-			log.Todo(message);
+			log?.Todo(message);
 		}
 
 		public void Warning(string message)
 		{
 			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
-			log.Warning(message);
+			log?.Warning(message);
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace WorldTree
 		/// <summary>
 		/// 序列化流程
 		/// </summary>
-		//[NodeRule(nameof(AwakeRule<InputMapperTest>))]
+		[NodeRule(nameof(AwakeRule<InputMapperTest>))]
 		private static void OnAwake(this InputMapperTest self)
 		{
 			//新建一个输入映射管理器
@@ -63,7 +63,7 @@ namespace WorldTree
 		/// <summary>
 		/// 反序列化流程
 		/// </summary>
-		[NodeRule(nameof(AwakeRule<InputMapperTest>))]
+		//[NodeRule(nameof(AwakeRule<InputMapperTest>))]
 		private static void OnAwake2(this InputMapperTest self)
 		{
 

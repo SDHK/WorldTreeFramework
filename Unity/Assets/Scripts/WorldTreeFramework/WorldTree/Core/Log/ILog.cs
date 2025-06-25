@@ -22,7 +22,7 @@ namespace WorldTree
 		/// <summary>
 		/// 记录日志
 		/// </summary>
-		void Debug(string message);
+		void Log(string message);
 		/// <summary>
 		/// 警告
 		/// </summary>

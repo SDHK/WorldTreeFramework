@@ -1,5 +1,5 @@
 ﻿using Avalonia.Controls;
-using System.Diagnostics;
+using Node;
 
 namespace WorldTree
 {
@@ -8,15 +8,16 @@ namespace WorldTree
 		[NodeRule(nameof(AwakeRule<MainWorld, Window>))]
 		private static void OnAwake(this MainWorld self, Window window)
 		{
-			//self.Log("Avalonia入口！！");
-			Debug.WriteLine("Avalonia入口！！");
+			self.Log("Avalonia入口！！");
+			self.Window = window as MainWindow;
+			self.Window.TestText.Text = "Hello World!";
 		}
 
 		[NodeRule(nameof(UpdateRule<MainWorld>))]
 		private static void OnUpdate(this MainWorld self)
 		{
-			//self.Log("Avalonia更新！！");
-			Debug.WriteLine("Avalonia更新！！");
+			self.Window.TestText.Text = $"{self.Core.RealTimeManager.UtcNow}";
+			self.Log($"{self.Window.TestText.Text}");
 		}
 	}
 }
