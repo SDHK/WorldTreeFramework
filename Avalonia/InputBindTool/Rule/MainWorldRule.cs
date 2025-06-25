@@ -1,15 +1,13 @@
-﻿using Avalonia.Controls;
-using Node;
-
+﻿
 namespace WorldTree
 {
 	public static partial class MainWorldRule
 	{
-		[NodeRule(nameof(AwakeRule<MainWorld, Window>))]
-		private static void OnAwake(this MainWorld self, Window window)
+		[NodeRule(nameof(AwakeRule<MainWorld, MainWindow>))]
+		private static void OnAwake(this MainWorld self, MainWindow window)
 		{
 			self.Log("Avalonia入口！！");
-			self.Window = window as MainWindow;
+			self.Window = window;
 			self.Window.TestText.Text = "Hello World!";
 		}
 

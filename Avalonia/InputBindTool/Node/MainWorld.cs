@@ -1,6 +1,4 @@
-﻿using Avalonia.Controls;
-using Node;
-
+﻿
 namespace WorldTree
 {
 	/// <summary>
@@ -9,12 +7,11 @@ namespace WorldTree
 	public class MainWorld : World
 		, AsComponentBranch
 		, ComponentOf<World>
-		, AsAwake<Window>
+		, AsAwake<MainWindow>
 	{
 		/// <summary>
 		/// 窗口
 		/// </summary>
 		public MainWindow Window;
-
 	}
 }

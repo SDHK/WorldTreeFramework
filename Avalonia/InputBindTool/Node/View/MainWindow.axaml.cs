@@ -1,7 +1,6 @@
 using Avalonia.Controls;
-using WorldTree;
 
-namespace Node
+namespace WorldTree
 {
 	/// <summary>
 	/// Ö÷´°¿Ú
@@ -21,7 +20,7 @@ namespace Node
 			var line = lineManager.Create(0, typeof(AvaloniaWorldHeart), 1000);
 			line.WorldContext.Post(() =>
 			{
-				line.AddComponent(out MainWorld _, (Window)this);
+				line.AddComponent(out MainWorld _, this);
 			});
 		}
 	}

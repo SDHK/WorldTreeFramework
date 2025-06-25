@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-namespace Node
+namespace WorldTree
 {
 	/// <summary>
 	/// avalonia应用程序入口
