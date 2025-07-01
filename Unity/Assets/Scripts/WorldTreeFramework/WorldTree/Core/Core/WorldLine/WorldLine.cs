@@ -21,32 +21,6 @@ namespace WorldTree
 
 	//UI 安全区 Screen.safeArea
 
-	//藤蔓网状结构
-
-	//管理器改为分支 整理
-
-	//世界线程，界程
-
-	//切线程，同步上下文
-
-	//邮箱组件需要管理器Update
-	//节点邮箱组件，只有SendMail<1,2,3,4,5>
-
-	//域节点接口标记
-
-	//代码表格
-
-	//YooAsset管理器
-
-
-	//真实与游戏时间双法则
-
-	//时域与时间轮
-
-	//TaskBox改名
-
-	//代码生成Destroy，让引用=null 
-
 
 	//不需要池的对象
 	//GlobalRuleActuatorManager

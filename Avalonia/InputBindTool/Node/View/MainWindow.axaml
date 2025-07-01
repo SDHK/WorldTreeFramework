@@ -2,13 +2,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:titlebars="clr-namespace:WorldTree;assembly=Node"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="WorldTree.MainWindow"
-        Title="InputBind">
-  <!--ExtendClientAreaToDecorationsHint="True"
-  ExtendClientAreaChromeHints="NoChrome"
-  ExtendClientAreaTitleBarHeightHint="-1"-->
-  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-    <TextBlock x:Name="TestText" Text="123456" />
-  </StackPanel>
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        Title="InputBind"
+  >
+   
+<Window.Styles >
+  <StyleInclude Source="avares://Node/View/Style/DarkTheme.axaml"/>
+</Window.Styles>
+
+  <DockPanel HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Name="ContentWrapper">
+
+    <titlebars:WindowTitleBar  Name="titleBar"   Background="rgb(10,10,10)" BorderBrush="rgb(196,230,255)"> </titlebars:WindowTitleBar>
+
+    <DockPanel Background="Transparent">
+      <StackPanel HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Spacing="10">
+        <ToggleButton Name="DarkThemeToggleButton"
+                      HorizontalAlignment="Center"
+                      Content="Dark Theme"></ToggleButton>
+        <TextBlock x:Name="TestText" Text="123456" />
+      </StackPanel>
+
+    </DockPanel>
+  </DockPanel>
 </Window>

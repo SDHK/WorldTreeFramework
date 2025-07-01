@@ -103,6 +103,7 @@ namespace WorldTree.Analyzer
 		where T : SyntaxNode
 		where ConfigT : ProjectDiagnosticConfig, new()
 	{
+
 		/// <summary>
 		/// 命名规范的诊断描述
 		/// </summary>

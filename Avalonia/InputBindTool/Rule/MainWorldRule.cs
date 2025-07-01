@@ -1,4 +1,7 @@
 ﻿
+using Avalonia.Markup.Xaml.Styling;
+using System;
+
 namespace WorldTree
 {
 	public static partial class MainWorldRule
@@ -6,9 +9,20 @@ namespace WorldTree
 		[NodeRule(nameof(AwakeRule<MainWorld, MainWindow>))]
 		private static void OnAwake(this MainWorld self, MainWindow window)
 		{
+
+			StyleInclude darkTheme;
+			darkTheme = new StyleInclude(new Uri("avares://Node"))
+			{
+				Source = new Uri("avares://Node/View/Style/DarkTheme.axaml")
+			};
+			//window.Styles.Add(darkTheme);
+
+
 			self.Log("Avalonia入口！！");
+
 			self.Window = window;
 			self.Window.TestText.Text = "Hello World!";
+
 		}
 
 		[NodeRule(nameof(UpdateRule<MainWorld>))]
