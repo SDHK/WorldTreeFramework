@@ -9,8 +9,8 @@
     <Setter Property="Background" Value="#1E1E1E"/>
     <Setter Property="Foreground" Value="#C2C2C2"/>
   </Style>
-  
-  
+
+
   <Design.PreviewWith>
     <Border Padding="20">
       <!-- Add Controls for Previewer Here -->

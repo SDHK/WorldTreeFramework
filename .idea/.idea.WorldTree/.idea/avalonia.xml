@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Avalonia/InputBindTool/InputBind/InputBind/Views/MainView.axaml" value="Avalonia/InputBindTool/InputBind/InputBind.Browser/InputBind.Browser.csproj" />
+        <entry key="Avalonia/InputBindTool/Node/View/MainWindow.axaml" value="Avalonia/InputBindTool/App/InputBind.App.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

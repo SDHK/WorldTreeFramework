@@ -26,10 +26,28 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.0">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
   
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Core\WorldTree.Core.csproj" />
     <ProjectReference Include="..\Analysis\Avalonia.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <Compile Update="View\Control\WindowTitleBar.axaml.cs">
+      <DependentUpon>WindowTitleBar.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

@@ -70,10 +70,15 @@ namespace WorldTree
 		public DateTime UtcNow => GetUtcNow();
 
 		/// <summary>
+		/// 时间获取 Utc时间 + 时区偏差
+		/// </summary>
+		public DateTime Now => GetUtcNow().AddHours(TimeZone);
+
+		/// <summary>
 		/// 是否直接使用机器时间
 		/// </summary>
-		/// <remarks>默认为false, 可内部维护时间，单机可以防止玩家改时间</remarks>
-		public bool isLocal = true;
+		/// <remarks>默认为true。 可内部维护时间，单机可以防止玩家改时间</remarks>
+		public bool IsLocal = true;
 
 		/// <summary>
 		/// 网络请求超时时间 毫秒
@@ -157,7 +162,7 @@ namespace WorldTree
 			lock (lockObject)
 			{
 				//如果是，直接使用机器时间
-				if (isLocal) return cumulativeUtcTime = DateTime.UtcNow;
+				if (IsLocal) return cumulativeUtcTime = DateTime.UtcNow;
 
 				//计算时间偏差
 				CumulativeTime();
