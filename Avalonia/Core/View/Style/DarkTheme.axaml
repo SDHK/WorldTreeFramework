@@ -1,15 +1,24 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:titlebars="clr-namespace:WorldTree;assembly=Avalonia.Core"
+        >
+  
 
   <Style Selector="Window">
     <Setter Property="Background" Value="#1E1E1E"/>
-    <Setter Property="Foreground" Value="#C2C2C2"/>
+    <Setter Property="Foreground" Value="#88C2C2C2"/>
   </Style>
   <Style Selector="TextBlock">
-    <Setter Property="Background" Value="#1E1E1E"/>
-    <Setter Property="Foreground" Value="#C2C2C2"/>
+    <Setter Property="Background" Value="#001E1E1E"/>
+    <Setter Property="Foreground" Value="#88C2C2C2"/>
+  <!--#1E1E1E-->
   </Style>
 
+  <Style Selector=":is(titlebars|WindowTitleBar)">
+      <Setter Property="Background" Value="#1E1E1E"/>
+      <Setter Property="Foreground" Value="#88C2C2C2"/>
+  </Style>
+  
 
   <Design.PreviewWith>
     <Border Padding="20">

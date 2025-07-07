@@ -25,7 +25,8 @@ namespace WorldTree
 
 			self.Core.RealTimeManager.TimeZone = 8; // 设置时区为东八区
 
-			self.Window.titleBar.Name = "Avalonia Input Bind Tool";
+
+			self.Window.titleBar.Title = "测试标题";
 		}
 
 		[NodeRule(nameof(UpdateRule<MainWorld>))]

@@ -10,16 +10,17 @@
         ExtendClientAreaTitleBarHeightHint="-1"
         Title="InputBind"
   >
-   
-<!--<Window.Styles >
-  <StyleInclude Source="avares://Avalonia.Core/View/Style/DarkTheme.axaml"/>
-</Window.Styles>-->
+
+
+  <Window.Styles>
+    <StyleInclude Source="avares://Avalonia.Core/View/Style/DarkTheme.axaml"/>
+  </Window.Styles>
 
   <DockPanel HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              Name="ContentWrapper">
 
-    <titlebars:WindowTitleBar  Name="titleBar"  BorderBrush="rgb(196,230,255)"> </titlebars:WindowTitleBar>
+    <titlebars:WindowTitleBar  Name="titleBar" ></titlebars:WindowTitleBar>
 
     <DockPanel Background="Transparent">
       <StackPanel HorizontalAlignment="Center"
@@ -31,6 +32,8 @@
         <TextBlock x:Name="TestText" Text="123456" />
       </StackPanel>
 
+    
+      
     </DockPanel>
   </DockPanel>
 </Window>

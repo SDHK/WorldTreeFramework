@@ -69,7 +69,7 @@ namespace WorldTree.Analyzer
 
 			//获取当前字段所在的类型名称
 			BaseTypeDeclarationSyntax parentType = TreeSyntaxHelper.GetParentType(fieldDeclaration);
-			INamedTypeSymbol? typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
+			INamedTypeSymbol typeSymbol = semanticModel.GetDeclaredSymbol(parentType);
 			foreach (DiagnosticConfigGroup objectDiagnostic in objectDiagnostics)
 			{
 				if (!objectDiagnostic.Screen(context.Compilation, typeSymbol)) continue;

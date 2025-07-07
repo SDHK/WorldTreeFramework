@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 
 namespace WorldTree.Server
@@ -23,10 +24,12 @@ namespace WorldTree.Server
 		private static void OnAdd(this DotNetInit self)
 		{
 			self.Log($"启动！！");
+
+			//self.TestStringConcatPerformance();
 			//self.AddComponent(out SerializeTest _);
 			//self.AddComponent(out TreeDataTest _);
 
-			self.AddComponent(out DeepCopyTest _);
+			//self.AddComponent(out DeepCopyTest _);
 		}
 
 		[NodeRule(nameof(EnableRule<DotNetInit>))]
@@ -183,6 +186,70 @@ namespace WorldTree.Server
 		{
 
 		}
+
+
+		/// <summary>
+		/// a
+		/// </summary>
+		/// <param name="self"></param>
+		public static void TestStringConcatPerformance(this DotNetInit self)
+		{
+			const int iterations = 100_00000;
+			const int concatCount = 10;
+			string[] values = new string[concatCount];
+			for (int i = 0; i < concatCount; i++)
+				values[i] = i.ToString();
+
+			//a
+			void Test(string name, Action action)
+			{
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+				long gc0 = GC.CollectionCount(0);
+
+				var sw = Stopwatch.StartNew();
+				action();
+				sw.Stop();
+
+				long gc0After = GC.CollectionCount(0);
+
+				Console.WriteLine($"{name,-18} | Time: {sw.ElapsedMilliseconds,6} ms | GC0: {gc0After - gc0}");
+			}
+
+			// 1. + 拼接
+			Test("String +", () =>
+			{
+				for (int i = 0; i < iterations; i++)
+				{
+					string s = "";
+					for (int j = 0; j < concatCount; j++)
+						s = s + values[j];
+				}
+			});
+
+			// 2. 字符串插值
+			Test("String { }", () =>
+			{
+				for (int i = 0; i < iterations; i++)
+				{
+					string s = $"{values[0]}{values[1]}{values[2]}{values[3]}{values[4]}{values[5]}{values[6]}{values[7]}{values[8]}{values[9]}";
+				}
+			});
+
+			// 3. StringBuilder
+			Test("StringBuilder", () =>
+			{
+				for (int i = 0; i < iterations; i++)
+				{
+					var sb = new StringBuilder();
+					for (int j = 0; j < concatCount; j++)
+						sb.Append(values[j]);
+					string s = sb.ToString();
+				}
+			});
+		}
+
 
 	}
 

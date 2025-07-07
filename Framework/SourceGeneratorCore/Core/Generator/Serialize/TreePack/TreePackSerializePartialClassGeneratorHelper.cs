@@ -42,6 +42,8 @@ namespace WorldTree.SourceGenerator
 				}
 			}
 
+
+
 		}
 
 		private static List<ISymbol>? FindField(INamedTypeSymbol classSymbol)

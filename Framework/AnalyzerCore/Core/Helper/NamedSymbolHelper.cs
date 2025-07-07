@@ -260,7 +260,7 @@ namespace WorldTree
 		/// <param name="compilation">编译类</param>
 		public static INamedTypeSymbol ToINamedTypeSymbol(this Compilation compilation, TypeDeclarationSyntax typeDecl)
 		{
-			return compilation.GetSemanticModel(typeDecl.SyntaxTree).GetDeclaredSymbol(typeDecl) as INamedTypeSymbol;
+			return compilation.GetSemanticModel(typeDecl.SyntaxTree).GetDeclaredSymbol(typeDecl);
 		}
 
 		/// <summary>
@@ -268,7 +268,7 @@ namespace WorldTree
 		/// </summary>
 		public static bool CheckAttribute(ISymbol fieldSymbol, string attributeName)
 		{
-			return fieldSymbol.GetAttributes().Any(attr => attr.AttributeClass?.ToDisplayString().Contains(attributeName) == true);
+			return fieldSymbol.GetAttributes().Any(attr => attr.AttributeClass.ToDisplayString().Contains(attributeName));
 		}
 
 		/// <summary>
@@ -280,7 +280,7 @@ namespace WorldTree
 			var attributes = fieldSymbol.GetAttributes();
 			foreach (AttributeData attr in attributes)
 			{
-				if (attr.AttributeClass?.ToDisplayString().Contains(attributeName) == true)
+				if (attr.AttributeClass.ToDisplayString().Contains(attributeName))
 				{
 					attributeData = attr;
 					return true;
