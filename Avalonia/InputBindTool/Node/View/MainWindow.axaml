@@ -9,6 +9,8 @@
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
         Title="InputBind"
+        Width="800"
+        Height="450"
   >
 
 
@@ -22,18 +24,29 @@
 
     <titlebars:WindowTitleBar  Name="titleBar" ></titlebars:WindowTitleBar>
 
-    <DockPanel Background="Transparent">
-      <StackPanel HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Spacing="10">
-        <ToggleButton Name="DarkThemeToggleButton"
-                      HorizontalAlignment="Center"
-                      Content="Dark Theme"></ToggleButton>
+      <StackPanel HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Spacing="10"
+                  Margin="10,10,10,10"
+                  >
+        <Grid ColumnDefinitions="*,10,Auto">
+          <TextBox Grid.Column="0" Height="30" Watermark="请输入数据路径"/>
+          <Button Grid.Column="2"  Width="100"  Content="加载"  />
+        </Grid>
+
+        <!--<TabStrip Items="{Binding PageNumbers}"
+                  SelectedItem="{Binding CurrentPage, Mode=TwoWay}">
+          <TabStrip.ItemTemplate>
+            <DataTemplate>
+              <TabStripItem Header="{Binding}" />
+            </DataTemplate>
+          </TabStrip.ItemTemplate>
+        </TabStrip>-->
+
         <TextBlock x:Name="TestText" Text="123456" />
       </StackPanel>
 
     
       
-    </DockPanel>
   </DockPanel>
 </Window>

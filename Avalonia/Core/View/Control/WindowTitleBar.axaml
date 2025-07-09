@@ -43,7 +43,7 @@
 
         
         
-        <Button Width="50"
+        <Button Width="45"
   VerticalAlignment="Stretch"
         HorizontalContentAlignment="Center"
         BorderThickness="0"
@@ -59,7 +59,7 @@
               <Setter Property="Background" Value="Transparent"/>
             </Style>
           </Button.Styles>
-          <Path Margin="10,0,10,0"
+          <Path Margin="11,0,11,0"
                 Stretch="Uniform"
         VerticalAlignment="Center"
                 Fill="White"
@@ -68,7 +68,7 @@
 
         
         
-        <Button Width="50"
+        <Button Width="45"
                 VerticalAlignment="Stretch"
                 BorderThickness="0"
                 Name="MaximizeButton"
@@ -86,7 +86,7 @@
               <Setter Property="Background" Value="Transparent"/>
             </Style>
           </Button.Styles>
-          <Path Margin="12.5,5,0,5"
+          <Path Margin="12,0,12,0"
                 Stretch="Uniform"
                 Fill="White"
                 Name="MaximizeIcon"
@@ -95,7 +95,7 @@
 
         
         
-        <Button Width="50"
+        <Button Width="45"
                    VerticalAlignment="Stretch"
                    BorderThickness="0"
                    Name="CloseButton"
@@ -118,7 +118,7 @@
               <Setter Property="Fill" Value="White"/>
             </Style>
           </Button.Styles>
-          <Path Margin="12.5,5,0,5"
+          <Path Margin="12,0,12,0"
                 Stretch="Uniform"
                 Data="{StaticResource CloseIconGeometry}"></Path>
         </Button>

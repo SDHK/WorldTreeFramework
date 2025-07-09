@@ -253,10 +253,10 @@ namespace WorldTree.SourceGenerator
 				//检测是否继承4大法则接口
 				INamedTypeSymbol baseInterface;
 				RuleBaseEnum ruleBaseEnum;
-				if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRule, out baseInterface)) ruleBaseEnum = RuleBaseEnum.SendRule;
-				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRule, out baseInterface)) ruleBaseEnum = RuleBaseEnum.CallRule;
-				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ISendRuleAsync, out baseInterface)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
-				else if (NamedSymbolHelper.CheckInterfaceName(item, GeneratorHelper.ICallRuleAsync, out baseInterface)) ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
+				if (NamedSymbolHelper.TryGetInterfaceName(item, GeneratorHelper.ISendRule, out baseInterface)) ruleBaseEnum = RuleBaseEnum.SendRule;
+				else if (NamedSymbolHelper.TryGetInterfaceName(item, GeneratorHelper.ICallRule, out baseInterface)) ruleBaseEnum = RuleBaseEnum.CallRule;
+				else if (NamedSymbolHelper.TryGetInterfaceName(item, GeneratorHelper.ISendRuleAsync, out baseInterface)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
+				else if (NamedSymbolHelper.TryGetInterfaceName(item, GeneratorHelper.ICallRuleAsync, out baseInterface)) ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
 				else continue;
 
 				string DelegateName = $"On{item.Name}";

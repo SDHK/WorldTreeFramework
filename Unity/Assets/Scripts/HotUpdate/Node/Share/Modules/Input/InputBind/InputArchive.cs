@@ -18,4 +18,9 @@ namespace WorldTree
 		, AsAwake
 	{
 	}
+
+	/// <remarks>
+	/// a
+	/// </remarks>
+	public partial class InputArchive;
 }

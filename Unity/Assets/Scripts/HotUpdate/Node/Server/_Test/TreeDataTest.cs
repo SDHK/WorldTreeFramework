@@ -15,7 +15,7 @@ namespace WorldTree.Server
 	/// </summary>
 	[TreeDataSerializable]
 	public partial class TreeDataTest : Node
-		, ComponentOf<INode>
+		, ComponentOf<MainWorld>
 		, AsComponentBranch
 		, AsChildBranch
 		, AsAwake

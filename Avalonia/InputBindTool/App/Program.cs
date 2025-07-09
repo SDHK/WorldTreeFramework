@@ -24,4 +24,7 @@ namespace WorldTree
 				.WithInterFont()
 				.LogToTrace();
 	}
+
+	//======代码生成部分类追加注释======
+
 }

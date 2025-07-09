@@ -2,18 +2,37 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:titlebars="clr-namespace:WorldTree;assembly=Avalonia.Core"
         >
-  
+  <Styles.Resources>
+    <Color x:Key="BackgroundColor">#1E1E1E</Color>
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{DynamicResource WindowBackgroundColor}" />
+    <SolidColorBrush x:Key="WindowForegroundBrush" Color="#88C2C2C2" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#424242" />
+  </Styles.Resources>
 
   <Style Selector="Window">
     <Setter Property="Background" Value="#1E1E1E"/>
     <Setter Property="Foreground" Value="#88C2C2C2"/>
   </Style>
   <Style Selector="TextBlock">
-    <Setter Property="Background" Value="#001E1E1E"/>
+    <Setter Property="Background" Value="#1E1E1E"/>
     <Setter Property="Foreground" Value="#88C2C2C2"/>
-  <!--#1E1E1E-->
   </Style>
-
+  <Style Selector="TextBox">
+    <Setter Property="Background" Value="#1E1E1E"/>
+    <Setter Property="Foreground" Value="#88C2C2C2"/>
+    <Setter Property="BorderBrush" Value="#424242"/>
+    <Setter Property="Height" Value="30"/>
+  </Style>
+  <Style Selector="Button">
+    <Setter Property="Background" Value="#1E1E1E"/>
+    <Setter Property="Foreground" Value="#88C2C2C2"/>
+    <Setter Property="BorderBrush" Value="#424242"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Height" Value="30"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="5,2"/>
+  </Style>
   <Style Selector=":is(titlebars|WindowTitleBar)">
       <Setter Property="Background" Value="#1E1E1E"/>
       <Setter Property="Foreground" Value="#88C2C2C2"/>
@@ -21,10 +40,10 @@
   
 
   <Design.PreviewWith>
-    <Border Padding="20">
-      <!-- Add Controls for Previewer Here -->
-      <TextBlock Text="预览效果" />
-    </Border>
+    <StackPanel>
+      <TextBlock Text="预览效果"/>
+      <Button Content="预览按钮"/>
+    </StackPanel>
   </Design.PreviewWith>
 
   <!-- Add Styles Here -->

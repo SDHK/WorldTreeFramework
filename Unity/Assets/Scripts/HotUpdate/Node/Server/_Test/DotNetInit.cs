@@ -14,7 +14,8 @@ namespace WorldTree.Server
 	/// <summary>
 	/// ≤‚ ‘Ω⁄µ„
 	/// </summary>
-	public partial class DotNetInit : Node, ComponentOf<INode>
+	public partial class DotNetInit : Node
+		, ComponentOf<MainWorld>
 		, AsComponentBranch
 		, AsChildBranch
 		, AsAwake
@@ -38,10 +39,12 @@ namespace WorldTree.Server
 
 
 
+
 	/// <summary>
 	/// ≤‚ ‘
 	/// </summary>
-	public class Test<T> : Node
+	public partial class Test<T> : Node
+		, ComponentOf<DotNetInit>
 		, AsTestNodeEvent<DotNetInit>
 		, AsRule<IRule>
 	{

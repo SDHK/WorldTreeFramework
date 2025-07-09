@@ -7,6 +7,8 @@ namespace WorldTree.SourceGenerator
 	[Generator]
 	public class CopyNodeClassGeneratorRun : CopyNodeClassGenerator<ProjectGeneratorSetting> { }
 	[Generator]
+	public class NodeLinkRemarksGeneratorRun : NodeLinkRemarksGenerator<ProjectGeneratorSetting> { }
+	[Generator]
 	public class NodeExtensionMethodGeneratorRun : NodeExtensionMethodGenerator<ProjectGeneratorSetting> { }
 	[Generator]
 	public class NodeBranchHelperGeneratorRun : NodeBranchHelperGenerator<ProjectGeneratorSetting> { }

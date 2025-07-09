@@ -341,7 +341,7 @@ namespace WorldTree
 		/// <param name="InterfaceName">接口名称</param>
 		/// <param name="Interface">基类接口符号</param>
 		/// <returns></returns>
-		public static bool CheckInterfaceName(ITypeSymbol typeSymbol, string InterfaceName, out INamedTypeSymbol? Interface)
+		public static bool TryGetInterfaceName(ITypeSymbol typeSymbol, string InterfaceName, out INamedTypeSymbol Interface)
 		{
 			Interface = null;
 			foreach (var Interfaces in typeSymbol.AllInterfaces)
@@ -354,6 +354,24 @@ namespace WorldTree
 				return true;
 			}
 			return false;
+		}
+
+		/// <summary>
+		/// 检测是否继承接口（只对比接口名称，不包括泛型和命名空间）
+		/// </summary>
+		/// <param name="typeSymbol">子接口</param>
+		/// <param name="InterfaceName">接口名称</param>
+		/// <param name="Interface">基类接口符号</param>
+		/// <returns></returns>
+		public static bool TryGetInterfacesName(ITypeSymbol typeSymbol, string InterfaceName, out List<INamedTypeSymbol> Interface)
+		{
+			Interface = new();
+			foreach (var Interfaces in typeSymbol.AllInterfaces)
+			{
+				if (Interfaces.Name != InterfaceName) continue;
+				Interface.Add(Interfaces);
+			}
+			return Interface.Count != 0;
 		}
 
 		/// <summary>

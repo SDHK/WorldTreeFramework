@@ -18,7 +18,7 @@ namespace WorldTree.SourceGenerator
 	/// <summary>
 	/// 查找直接继承了INode的类
 	/// </summary>
-	public class FindINodeSubSyntaxReceiver : ISyntaxReceiver
+	public class FindPartialINodeSubSyntaxReceiver : ISyntaxReceiver
 	{
 		public List<ClassDeclarationSyntax> ClassDeclarations = new();
 

@@ -47,6 +47,9 @@ namespace WorldTree
 
 		public const string IList = "System.Collections.IList";
 
+
+		public const string NodeOf = "WorldTree.NodeOf";
+
 		/// <summary>
 		/// 数据序列化接口
 		/// </summary>

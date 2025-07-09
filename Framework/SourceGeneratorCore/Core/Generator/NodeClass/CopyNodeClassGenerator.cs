@@ -24,14 +24,14 @@ namespace WorldTree.SourceGenerator
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{
-			context.RegisterForSyntaxNotifications(() => new FindINodeSubSyntaxReceiver());
+			context.RegisterForSyntaxNotifications(() => new FindPartialINodeSubSyntaxReceiver());
 		}
 
 		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			try
 			{
-				if (!(context.SyntaxReceiver is FindINodeSubSyntaxReceiver receiver)) return;
+				if (!(context.SyntaxReceiver is FindPartialINodeSubSyntaxReceiver receiver)) return;
 				if (receiver.ClassDeclarations.Count == 0) return;
 
 				ClassDeclarationSyntax NodeClassDeclaration = null;
