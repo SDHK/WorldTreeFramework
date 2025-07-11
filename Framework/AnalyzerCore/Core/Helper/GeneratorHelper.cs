@@ -25,6 +25,7 @@ namespace WorldTree
 	public static class GeneratorHelper
 	{
 		public const string INode = "WorldTree.INode";
+		public const string Node = "WorldTree.Node";
 
 		public const string IUnit = "WorldTree.IUnit";
 
@@ -102,12 +103,16 @@ namespace WorldTree
 
 		#endregion
 
-
-
 		/// <summary>
 		/// 生成忽略接口
 		/// </summary>
 		public const string ISourceGeneratorIgnore = "WorldTree.ISourceGeneratorIgnore";
+
+		/// <summary>
+		/// INode接口代理实现特性标记
+		/// </summary>
+		public const string INodeProxyAttribute = "INodeProxyAttribute";
+
 
 		/// <summary>
 		/// 树节点数据包特性标记
@@ -118,6 +123,7 @@ namespace WorldTree
 		/// 树节点数据忽略特性标记
 		/// </summary>
 		public const string TreePackIgnoreAttribute = "TreePackIgnoreAttribute";
+
 
 		/// <summary>
 		/// 树节点数据特性标记

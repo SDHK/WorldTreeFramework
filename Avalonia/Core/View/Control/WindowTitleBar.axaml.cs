@@ -20,11 +20,6 @@ namespace WorldTree
 		/// <summary>
 		/// a
 		/// </summary>
-		private ToolTip maximizeToolTip;
-
-		/// <summary>
-		/// a
-		/// </summary>
 		public static readonly StyledProperty<IBrush> ForegroundProperty =
 	AvaloniaProperty.Register<WindowTitleBar, IBrush>(nameof(Foreground));
 
@@ -52,7 +47,7 @@ namespace WorldTree
 			InitializeComponent();
 
 			this.maximizeIcon = this.MaximizeButton.FindControl<Path>("MaximizeIcon");
-			this.maximizeToolTip = this.MaximizeButton.FindControl<ToolTip>("MaximizeToolTip");
+			//this.maximizeToolTip = this.MaximizeButton.FindControl<ToolTip>("MaximizeToolTip");
 
 			this.CloseButton.Click += CloseWindow;
 			this.MaximizeButton.Click += MaximizeWindow;
@@ -127,13 +122,13 @@ namespace WorldTree
 				{
 					maximizeIcon.Data = this.FindResource("MaximizeIconGeometry") as Geometry;
 					hostWindow.Padding = new Thickness(0, 0, 0, 0);
-					maximizeToolTip.Content = "最大化";
+					//maximizeToolTip.Content = "最大化";
 				}
 				if (s == WindowState.Maximized)
 				{
 					maximizeIcon.Data = this.FindResource("RestoreIconGeometry") as Geometry;
 					hostWindow.Padding = new Thickness(7, 7, 7, 7);
-					maximizeToolTip.Content = "还原";
+					//maximizeToolTip.Content = "还原";
 				}
 			}));
 		}

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="30" 
              x:Class="WorldTree.WindowTitleBar"
-             DockPanel.Dock="Top"
              >
 
   <UserControl.Styles >
@@ -44,11 +43,10 @@
         
         
         <Button Width="45"
-  VerticalAlignment="Stretch"
+        VerticalAlignment="Stretch"
         HorizontalContentAlignment="Center"
         BorderThickness="0"
         Name="MinimizeButton"
-        ToolTip.Tip="Minimize"
         CornerRadius="0"
                 >
           <Button.Styles>
@@ -74,10 +72,6 @@
                 Name="MaximizeButton"
                 CornerRadius="0"
                 >
-          <ToolTip.Tip>
-            <ToolTip Content="Maximize"
-                     Name="MaximizeToolTip"></ToolTip>
-          </ToolTip.Tip>
           <Button.Styles>
             <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
               <Setter Property="Background" Value="#44AAAAAA"/>
@@ -99,7 +93,6 @@
                    VerticalAlignment="Stretch"
                    BorderThickness="0"
                    Name="CloseButton"
-                   ToolTip.Tip="Close"
                   CornerRadius="0"
                   >
  

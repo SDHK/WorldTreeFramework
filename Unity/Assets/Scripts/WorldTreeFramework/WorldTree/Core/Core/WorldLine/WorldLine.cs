@@ -297,7 +297,7 @@ namespace WorldTree
 
 		public override void OnAddSelfToTree()
 		{
-			AddNodeView();
+			INodeProxyRule.AddNodeView(this);
 
 			//核心独立，不入上级引用池，也不用广播
 			if (IsActive != activeEventMark)//激活变更
@@ -403,7 +403,7 @@ namespace WorldTree
 		}
 		public override void OnBeforeGraftSelfToTree()
 		{
-			AddNodeView();
+			INodeProxyRule.AddNodeView(this);
 		}
 		public override void OnGraftSelfToTree()
 		{

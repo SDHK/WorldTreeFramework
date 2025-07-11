@@ -14,6 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 树并发队列
 	/// </summary>
+	[INodeProxy]
 	public partial class TreeConcurrentQueue<T> : ConcurrentQueue<T>, INode
 		, ChildOf<INode>, ComponentOf<INode>
 		, AsAwake

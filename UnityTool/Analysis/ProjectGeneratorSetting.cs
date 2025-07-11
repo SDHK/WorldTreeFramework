@@ -18,7 +18,7 @@ namespace WorldTree.SourceGenerator
 	{
 		public static HashSet<Type> CoreConfigs = new() {
 			typeof(BranchSupplementGeneratorRun) ,
-			typeof(CopyNodeClassGeneratorRun),
+			typeof(INodeProxyGeneratorRun),
 			typeof(NodeExtensionMethodGeneratorRun),
 			typeof(NodeBranchHelperGeneratorRun),
 			typeof(RuleClassGeneratorRun),
@@ -31,6 +31,7 @@ namespace WorldTree.SourceGenerator
 			typeof(TreePackSerializeGeneratorRun),
 		};
 		public static HashSet<Type> UnityCoreConfigs = new() {
+			typeof(INodeProxyGeneratorRun),
 			typeof(RuleSupplementGeneratorRun),
 			typeof(RuleMethodGeneratorRun),
 			typeof(TreeCopyGeneratorRun),
@@ -39,6 +40,7 @@ namespace WorldTree.SourceGenerator
 		};
 		public static HashSet<Type> NodeConfigs = new()
 		{
+			typeof(INodeProxyGeneratorRun),
 			typeof(RuleSupplementGeneratorRun),
 			typeof(TreeCopyGeneratorRun),
 			typeof(TreeDataSerializeGeneratorRun),

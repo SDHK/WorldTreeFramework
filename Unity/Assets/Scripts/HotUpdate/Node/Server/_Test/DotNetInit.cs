@@ -11,6 +11,17 @@ using System.Collections.Generic;
 
 namespace WorldTree.Server
 {
+
+	/// <summary>
+	/// a
+	/// </summary>
+	[INodeProxy]
+
+	public partial class TestList<T> : List<T>, INode
+	{
+
+	}
+
 	/// <summary>
 	/// ²âÊÔ½Úµã
 	/// </summary>

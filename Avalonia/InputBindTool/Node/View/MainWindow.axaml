@@ -3,8 +3,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:titlebars="clr-namespace:WorldTree;assembly=Avalonia.Core"
+        xmlns:inputBindPage="clr-namespace:WorldTree;assembly=Node"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:local="clr-namespace:WorldTree"
         x:Class="WorldTree.MainWindow"
+        x:DataType="local:MainWorld"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
@@ -18,35 +21,73 @@
     <StyleInclude Source="avares://Avalonia.Core/View/Style/DarkTheme.axaml"/>
   </Window.Styles>
 
-  <DockPanel HorizontalAlignment="Stretch"
+  <StackPanel HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              Name="ContentWrapper">
 
     <titlebars:WindowTitleBar  Name="titleBar" ></titlebars:WindowTitleBar>
+    
+    <!--<inputBindPage:InputBindPage  Name="InputBindPage" ></inputBindPage:InputBindPage>-->
 
       <StackPanel HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   Spacing="10"
                   Margin="10,10,10,10"
                   >
-        <Grid ColumnDefinitions="*,10,Auto">
-          <TextBox Grid.Column="0" Height="30" Watermark="请输入数据路径"/>
-          <Button Grid.Column="2"  Width="100"  Content="加载"  />
-        </Grid>
 
-        <!--<TabStrip Items="{Binding PageNumbers}"
-                  SelectedItem="{Binding CurrentPage, Mode=TwoWay}">
-          <TabStrip.ItemTemplate>
+        <TabControl x:Name="MyTabControl"  TabStripPlacement="Left"/>
+
+        <!-- 第一层 TabControl 绑定到 PageNameList -->
+        <TabControl ItemsSource="{Binding PageNameList}" 
+                    Height="400"
+                    HorizontalAlignment="Stretch"
+                    TabStripPlacement="Left"
+                    Name="MainTabControl">
+          <TabControl.ItemTemplate>
             <DataTemplate>
-              <TabStripItem Header="{Binding}" />
+              <TextBlock Text="{Binding}"   Margin="0,0"   FontSize="12" />
             </DataTemplate>
-          </TabStrip.ItemTemplate>
-        </TabStrip>-->
+          </TabControl.ItemTemplate>
+          <TabControl.ContentTemplate>
+            <DataTemplate>
+                <StackPanel Margin="0,0,0,0">
+                <Separator Background="#555555" Height="1" Margin="0,0"/> 
+                  <!-- 第二层页签区域 -->
+                  <TabControl 
+                              ItemsSource="{Binding $parent[Window].DataContext.PageName2List}"
+                              Height="100"
+                              Margin="0,0,0,0">
+                    <TabControl.ItemTemplate>
+                      <DataTemplate>
+                        <TextBlock Text="{Binding}"    Margin="0,0"    FontSize="12"/>
+                      </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                      <DataTemplate>
+                          <StackPanel  Margin="0,0,0,0">
+                            <Separator Background="#555555" Height="1" Margin="0,0"/> 
+                            <!-- 示例内容区域 -->
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,*" Margin="0,10,0,0">
+                            <TextBlock Text="{Binding, StringFormat='二级页面: {0}'}" 
+                                           FontSize="12" 
+                                           FontWeight="SemiBold"/>
+                            </Grid>
+                          </StackPanel>
+                      </DataTemplate>
+                    </TabControl.ContentTemplate>
+                  </TabControl>
+                </StackPanel>
+            </DataTemplate>
+          </TabControl.ContentTemplate>
+        </TabControl>
 
+      
+    
         <TextBlock x:Name="TestText" Text="123456" />
       </StackPanel>
 
     
+    
       
-  </DockPanel>
+  </StackPanel>
 </Window>

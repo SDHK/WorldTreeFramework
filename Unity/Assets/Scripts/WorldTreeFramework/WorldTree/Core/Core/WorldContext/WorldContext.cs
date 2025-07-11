@@ -45,6 +45,7 @@ namespace WorldTree
 	/// 世界环境
 	/// </summary>
 	/// <remarks>线程的上下文</remarks>
+	[INodeProxy]
 	public partial class WorldContext : SynchronizationContext, INode
 		, AsChildBranch
 		, CoreManagerOf<WorldLine>

@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="WorldTree.InputBindPage"
+             >
+
+  <UserControl.Styles >
+    <StyleInclude Source="avares://Avalonia.Core/View/Style/DarkTheme.axaml"/>
+  </UserControl.Styles>
+
+  <StackPanel HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" >
+    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+        Spacing="10"
+        Margin="10,10,10,10"    
+      >
+    <Grid ColumnDefinitions="*,10,Auto">
+      <TextBox Grid.Column="0" Height="30" Watermark="请输入数据路径"/>
+      <Button Grid.Column="2"  Width="100"  Content="加载"  />
+    </Grid>
+
+
+    </StackPanel>
+  </StackPanel>
+  
+</UserControl>

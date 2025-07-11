@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIFoldoutButton.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIWindow\GUIGeneralWindow.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\UnityWorldHeart.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\MainWorld.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Manager\GameObjectPoolManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowFocusUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\Mathf\MathfVector2.cs" />
@@ -99,7 +100,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIButton.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\UnityMonoBehaviourThread.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\FixedUpdate\FixedUpdateRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\MainWorld.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Vortex.shader" />

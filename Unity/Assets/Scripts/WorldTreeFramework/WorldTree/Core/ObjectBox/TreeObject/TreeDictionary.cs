@@ -14,6 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 树字典泛型类
 	/// </summary>
+	[INodeProxy]
 	public partial class TreeDictionary<Key, V> : Dictionary<Key, V>, INode
 		, ComponentOf<INode>
 		, ChildOf<INode>

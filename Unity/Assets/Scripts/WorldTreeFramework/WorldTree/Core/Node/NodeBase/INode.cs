@@ -55,6 +55,12 @@ namespace WorldTree
 	public class ProtectedAttribute : Attribute { }
 
 	/// <summary>
+	/// INode接口代理实现
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Class)]
+	public class INodeProxyAttribute : Attribute { }
+
+	/// <summary>
 	/// 世界树数据节点接口
 	/// </summary>
 	public partial interface INodeData : INode
@@ -159,12 +165,6 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
-		/// <summary>
-		/// 树藤分支,假如没有则创建
-		/// </summary>
-		[TreeDataIgnore]
-		public UnitDictionary<long, IRattan> GetRattanDict { get; }
-
 		#endregion
 
 		#region Branch
@@ -179,12 +179,6 @@ namespace WorldTree
 		/// 树分支
 		/// </summary>
 		public BranchGroup BranchDict { get; set; }
-
-		/// <summary>
-		/// 树分支,假如没有则创建
-		/// </summary>
-		[TreeDataIgnore]
-		public BranchGroup GetBranchDict { get; }
 
 		#endregion
 

@@ -17,8 +17,8 @@ namespace WorldTree.SourceGenerator
 	public static class ProjectConfigHelper
 	{
 		public static HashSet<Type> CoreConfigs = new() {
+			typeof(INodeProxyGeneratorRun),
 			typeof(BranchSupplementGeneratorRun) ,
-			typeof(CopyNodeClassGeneratorRun),
 			typeof(NodeExtensionMethodGeneratorRun),
 			typeof(NodeBranchHelperGeneratorRun),
 			typeof(RuleClassGeneratorRun),
@@ -32,6 +32,7 @@ namespace WorldTree.SourceGenerator
 		};
 		public static HashSet<Type> NodeConfigs = new()
 		{
+			typeof(INodeProxyGeneratorRun),
 			typeof(RuleSupplementGeneratorRun),
 			typeof(TreeCopyGeneratorRun),
 			typeof(TreeDataSerializeGeneratorRun),

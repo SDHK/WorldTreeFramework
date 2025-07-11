@@ -14,6 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 树泛型HashSet
 	/// </summary>
+	[INodeProxy]
 	public partial class TreeHashSet<T> : HashSet<T>, INode
 		, ChildOf<INode>
 		, AsAwake

@@ -8,9 +8,10 @@ namespace WorldTree.SourceGenerator
 	/// </summary>
 	public static class ProjectConfigHelper
 	{
-		public static HashSet<Type> CoreConfigs = new() {
+		public static HashSet<Type> CoreConfigs = new()
+		{
+			typeof(INodeProxyGeneratorRun),
 			typeof(BranchSupplementGeneratorRun) ,
-			typeof(CopyNodeClassGeneratorRun),
 			typeof(NodeExtensionMethodGeneratorRun),
 			typeof(NodeBranchHelperGeneratorRun),
 			typeof(RuleClassGeneratorRun),

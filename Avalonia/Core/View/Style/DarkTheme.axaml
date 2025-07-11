@@ -13,14 +13,19 @@
     <Setter Property="Background" Value="#1E1E1E"/>
     <Setter Property="Foreground" Value="#88C2C2C2"/>
   </Style>
+  <Style Selector="StackPanel">
+    <Setter Property="Background" Value="#1E1E1E"/>
+  </Style>
   <Style Selector="TextBlock">
     <Setter Property="Background" Value="#1E1E1E"/>
     <Setter Property="Foreground" Value="#88C2C2C2"/>
+    <Setter Property="FontSize" Value="12"/>
   </Style>
   <Style Selector="TextBox">
     <Setter Property="Background" Value="#1E1E1E"/>
     <Setter Property="Foreground" Value="#88C2C2C2"/>
     <Setter Property="BorderBrush" Value="#424242"/>
+    <Setter Property="FontSize" Value="12"/>
     <Setter Property="Height" Value="30"/>
   </Style>
   <Style Selector="Button">

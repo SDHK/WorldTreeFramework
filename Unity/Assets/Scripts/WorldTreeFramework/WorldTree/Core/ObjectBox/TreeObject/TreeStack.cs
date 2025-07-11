@@ -8,7 +8,6 @@
 
 */
 
-using System;
 using System.Collections.Generic;
 
 namespace WorldTree
@@ -16,6 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 实体泛型栈
 	/// </summary>
+	[INodeProxy]
 	public partial class TreeStack<T> : Stack<T>, INode, ChildOf<INode>
 		, AsAwake
 	{

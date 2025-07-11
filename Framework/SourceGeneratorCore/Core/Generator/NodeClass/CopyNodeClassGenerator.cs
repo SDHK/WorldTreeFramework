@@ -4,6 +4,8 @@
 * 日期：2024/4/16 17:05
 
 * 描述：Node复制兄弟类 生成器
+* 
+* 由 INodeProxyGenerator 代替功能，暂时无用
 
 */
 
@@ -19,6 +21,8 @@ using System.Text;
 
 namespace WorldTree.SourceGenerator
 {
+
+
 	public abstract class CopyNodeClassGenerator<C> : SourceGeneratorBase<C>
 		where C : ProjectGeneratorsConfig, new()
 	{
