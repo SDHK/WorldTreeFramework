@@ -16,14 +16,6 @@ namespace WorldTree
 	public interface TestNodeEvent<X> : ISendRule<TestEnum, X, List<int>>
 	{
 	}
-	///// <summary>
-	///// 测试法则异步
-	///// </summary>
-	//public interface TestNodeEventAsync<X> : ISendRuleAsync<TestEnum, X, List<int>> { }
-	///// <summary>
-	///// 测试调用法则
-	///// </summary>
-	//public interface TestNodeEventCall<X> : ICallRule<TestEnum, X, List<int>, string> { }
 
 
 	/// <summary>
@@ -159,7 +151,6 @@ namespace WorldTree
 		public BranchGroup BranchDict { get; set; }
 
 
-
 		#endregion
 
 		#region Active
@@ -227,9 +218,12 @@ namespace WorldTree
 
 		#endregion
 
+		#region 裁剪
 
 		public virtual INode CutSelf() => INodeProxyRule.CutSelf(this);
 
 		public virtual void OnCutSelf() => INodeProxyRule.OnCutSelf(this);
+
+		#endregion
 	}
 }

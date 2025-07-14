@@ -1,53 +1,134 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:titlebars="clr-namespace:WorldTree;assembly=Avalonia.Core"
+        xmlns:Core="clr-namespace:WorldTree;assembly=Avalonia.Core"
         >
   <Styles.Resources>
+    <Color x:Key="Transparent">Transparent</Color>
     <Color x:Key="BackgroundColor">#1E1E1E</Color>
-    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{DynamicResource WindowBackgroundColor}" />
-    <SolidColorBrush x:Key="WindowForegroundBrush" Color="#88C2C2C2" />
-    <SolidColorBrush x:Key="BorderBrush" Color="#424242" />
+    <Color x:Key="SelectedColor">#161616</Color>
+    <Color x:Key="PointeroverColor">#2E2E2E</Color>
+    <Color x:Key="ForegroundColor">#88C2C2C2</Color>
+    <Color x:Key="BorderColor">#424242</Color>
   </Styles.Resources>
 
+
+  <!-- 标题样式 -->
+  <Style Selector=":is(Core|WindowTitleBar)">
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
+  </Style>
+
   <Style Selector="Window">
-    <Setter Property="Background" Value="#1E1E1E"/>
-    <Setter Property="Foreground" Value="#88C2C2C2"/>
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
   </Style>
   <Style Selector="StackPanel">
-    <Setter Property="Background" Value="#1E1E1E"/>
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
   </Style>
+  
   <Style Selector="TextBlock">
-    <Setter Property="Background" Value="#1E1E1E"/>
-    <Setter Property="Foreground" Value="#88C2C2C2"/>
+    <Setter Property="Background" Value="{DynamicResource Transparent}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
     <Setter Property="FontSize" Value="12"/>
   </Style>
+  
+  <!--TextBox-->
   <Style Selector="TextBox">
-    <Setter Property="Background" Value="#1E1E1E"/>
-    <Setter Property="Foreground" Value="#88C2C2C2"/>
-    <Setter Property="BorderBrush" Value="#424242"/>
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+    <Setter Property="BorderThickness" Value="1"/>
     <Setter Property="FontSize" Value="12"/>
     <Setter Property="Height" Value="30"/>
   </Style>
+
+  <!-- 悬停状态 -->
+  <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+  </Style>
+
+  <!-- 焦点状态 -->
+  <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+  </Style>
+
+
+  <!--Button-->
   <Style Selector="Button">
-    <Setter Property="Background" Value="#1E1E1E"/>
-    <Setter Property="Foreground" Value="#88C2C2C2"/>
-    <Setter Property="BorderBrush" Value="#424242"/>
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
     <Setter Property="BorderThickness" Value="1"/>
     <Setter Property="Height" Value="30"/>
     <Setter Property="HorizontalContentAlignment" Value="Center"/>
     <Setter Property="VerticalContentAlignment" Value="Center"/>
-    <Setter Property="Padding" Value="5,2"/>
+    <Setter Property="Padding" Value="5"/>
   </Style>
-  <Style Selector=":is(titlebars|WindowTitleBar)">
-      <Setter Property="Background" Value="#1E1E1E"/>
-      <Setter Property="Foreground" Value="#88C2C2C2"/>
+  <Style Selector="Button:pressed">
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+    <Setter Property="BorderThickness" Value="1"/>
   </Style>
-  
+  <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource PointeroverColor}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource SelectedColor}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <!--TabControl-->
+  <Style Selector="TabControl">
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
+  </Style>
+  <Style Selector="TabItem">
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
+    <Setter Property="FontSize" Value="12"/>
+  </Style>
+  <Style Selector="TabItem /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="TextBlock.Foreground" Value="{DynamicResource ForegroundColor}"/>
+  </Style>
+  <Style Selector="TabItem:pointerover /template/ Border">
+    <Setter Property="Background" Value="{DynamicResource PointeroverColor}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="TabItem:selected /template/ Border">
+    <Setter Property="Background" Value="{DynamicResource SelectedColor}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+
 
   <Design.PreviewWith>
     <StackPanel>
       <TextBlock Text="预览效果"/>
       <Button Content="预览按钮"/>
+
+      <TabControl TabStripPlacement="Left" >
+        <TabItem Header="设置">
+          <StackPanel Margin="20">
+            <TextBlock Text="这是设置页面" FontSize="16"/>
+            <CheckBox Content="启用某个功能" Margin="0,10"/>
+            <TextBox Grid.Column="0" Height="30" Watermark="请输入数据路径"/>
+          </StackPanel>
+        </TabItem>
+        <TabItem Header="设置2">
+          <StackPanel Margin="20">
+            <TextBlock Text="这是设置页面" FontSize="16"/>
+            <CheckBox Content="启用某个功能" Margin="0,10"/>
+          </StackPanel>
+        </TabItem>
+      </TabControl>
     </StackPanel>
   </Design.PreviewWith>
 

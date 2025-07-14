@@ -1,6 +1,4 @@
-﻿
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml.Styling;
+﻿using Avalonia.Markup.Xaml.Styling;
 using System;
 
 namespace WorldTree
@@ -29,23 +27,7 @@ namespace WorldTree
 
 
 			self.Window.titleBar.Title = "测试标题";
-
-			var tab = new TabItem
-			{
-				Header = new TextBlock { Text = "Tab1" },
-				Content = new InputBindPage()
-			};
-
-			var tab2 = new TabItem
-			{
-				Header = new TextBlock { Text = "Tab2" },
-				Content = new InputBindPage()
-			};
-
-			self.Window.MyTabControl.Items.Add(tab);
-			self.Window.MyTabControl.Items.Add(tab2);
-
-
+			self.AddComponent(out InputBindPageViewModel _, window.InputBindPage);
 
 		}
 

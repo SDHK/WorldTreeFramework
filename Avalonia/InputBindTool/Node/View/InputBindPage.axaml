@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="WorldTree.InputBindPage"
+             xmlns:local="clr-namespace:WorldTree"
+             x:DataType="local:InputBindPageViewModel"
              >
 
   <UserControl.Styles >
@@ -19,6 +21,26 @@
       <TextBox Grid.Column="0" Height="30" Watermark="请输入数据路径"/>
       <Button Grid.Column="2"  Width="100"  Content="加载"  />
     </Grid>
+      
+      <TabControl TabStripPlacement="Top"
+                  ItemsSource="{Binding PageNameList}"
+                  >
+        <!--绘制tab-->
+        <TabControl.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding}"   Margin="0,0"   FontSize="12" />
+          </DataTemplate>
+        </TabControl.ItemTemplate>
+        
+        <TabControl.ContentTemplate>
+          <DataTemplate>
+            <StackPanel>
+              <Separator Background="#555555" Height="1" Margin="0,0"/>
+              <TextBlock Text="{Binding}" Margin="10,5" FontSize="14" FontWeight="Bold"/>
+           </StackPanel>
+          </DataTemplate>
+        </TabControl.ContentTemplate>
+      </TabControl>
 
 
     </StackPanel>
