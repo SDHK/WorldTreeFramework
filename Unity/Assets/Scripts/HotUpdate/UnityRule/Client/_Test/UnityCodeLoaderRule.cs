@@ -36,19 +36,25 @@ namespace WorldTree
 				self.Log("热重载！！！");
 				string hotPath = "Temp/Bin/Debug";
 
+				byte[] ruleModuleDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.ModuleRule.dll"));
+				byte[] ruleModulePdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.ModuleRule.pdb"));
+
 				byte[] ruleDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.Rule.dll"));
 				byte[] rulePdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.Rule.pdb"));
 
 				byte[] ruleUnityDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.RuleUnity.dll"));
 				byte[] ruleUnityPdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.RuleUnity.pdb"));
 
+				Assembly hotfixModuleAssembly = Assembly.Load(ruleModuleDllBytes, ruleModulePdbBytes);
+
 				Assembly hotfixAssembly = Assembly.Load(ruleDllBytes, rulePdbBytes);
 				Assembly hotfixUnityAssembly = Assembly.Load(ruleUnityDllBytes, ruleUnityPdbBytes);
 
+				self.assemblyDict[hotfixModuleAssembly.GetName().Name] = hotfixModuleAssembly;
 				self.assemblyDict[hotfixAssembly.GetName().Name] = hotfixAssembly;
 				self.assemblyDict[hotfixUnityAssembly.GetName().Name] = hotfixUnityAssembly;
 
-				Core.TypeInfo.LoadAssembly(new[] { hotfixAssembly, hotfixUnityAssembly });
+				Core.TypeInfo.LoadAssembly(new[] { hotfixModuleAssembly, hotfixAssembly, hotfixUnityAssembly });
 				Core.RuleManager.LoadRule();
 			}
 		}
