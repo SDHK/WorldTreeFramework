@@ -58,34 +58,7 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\UnitBsonDocument.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBManager.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\Node\Client\Config\CreateWorldConfig.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputValue.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputBind.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDevice\InputDriver.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputType.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputArchive.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\KeyCode\InputMouseKey.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputDriverInfo.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\KeyCode\InputBoardKey.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputGroup.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\IDataBase.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputState.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronNode.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputLayer.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputBind\InputManager.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Enum\InputDeviceType.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\LiteDB\LiteDBCollection.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDevice\InputDevice.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\DataBase\Proxy\DataBaseProxy.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputDevice\InputDeviceManager.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputInfo.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\Data\InputData.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Share\Modules\Input\InputControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\Node\WorldTree.Node.asmdef" />
@@ -555,6 +528,10 @@
     <ProjectReference Include="WorldTree.Core.csproj">
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="WorldTree.ModuleNode.csproj">
+      <Project>{F983B468-F32D-CC73-C59F-1417FAB8CA7E}</Project>
+      <Name>WorldTree.ModuleNode</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.UnityCore.csproj">
       <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>

@@ -25,6 +25,7 @@ namespace WorldTree.SourceGenerator
 		};
 		public static HashSet<Type> NodeConfigs = new()
 		{
+			typeof(INodeProxyGeneratorRun),
 			typeof(RuleSupplementGeneratorRun),
 			typeof(TreeCopyGeneratorRun),
 			typeof(TreeDataSerializeGeneratorRun),
@@ -42,6 +43,8 @@ namespace WorldTree.SourceGenerator
 		{
 			ArgumentCount = 5;
 			Add("Core", ProjectConfigHelper.CoreConfigs);
+			Add("ModuleNode", ProjectConfigHelper.NodeConfigs);
+			Add("ModuleRule", ProjectConfigHelper.RuleConfigs);
 		}
 	}
 }

@@ -19,6 +19,8 @@ MonoBehaviour:
   hotUpdateAssemblyDefinitions: []
   hotUpdateAssemblies:
   - WorldTree.Core
+  - WorldTree.Modules.Node
+  - WorldTree.Modules.Rule
   - WorldTree.UnityCore
   - WorldTree.Node
   - WorldTree.UnityNode

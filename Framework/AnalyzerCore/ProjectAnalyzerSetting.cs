@@ -65,6 +65,8 @@ namespace WorldTree.Analyzer
 		public ProjectAnalyzerSetting()
 		{
 			Add("Core", ProjectConfigHelper.CoreConfigs);
+			Add("ModuleNode", ProjectConfigHelper.NodeConfigs);
+			Add("ModuleRule", ProjectConfigHelper.RuleConfigs);
 		}
 	}
 }

@@ -77,6 +77,9 @@ namespace WorldTree.Analyzer
 		public ProjectAnalyzerSetting()
 		{
 			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
+			Add("WorldTree.ModuleNode", ProjectConfigHelper.NodeConfigs);
+			Add("WorldTree.ModuleRule", ProjectConfigHelper.RuleConfigs);
+
 			Add("WorldTree.UnityCore", ProjectConfigHelper.CoreConfigs);
 
 			Add("WorldTree.Node", ProjectConfigHelper.NodeConfigs);

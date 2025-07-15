@@ -62,7 +62,11 @@ namespace WorldTree.SourceGenerator
 			ArgumentCount = 5;
 
 			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
+			Add("WorldTree.ModuleNode", ProjectConfigHelper.NodeConfigs);
+			Add("WorldTree.ModuleRule", ProjectConfigHelper.RuleConfigs);
+
 			Add("WorldTree.UnityCore", ProjectConfigHelper.UnityCoreConfigs);
+
 
 			Add("WorldTree.Node", ProjectConfigHelper.NodeConfigs);
 			Add("WorldTree.Rule", ProjectConfigHelper.RuleConfigs);

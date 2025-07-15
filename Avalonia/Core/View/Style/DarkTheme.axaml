@@ -2,6 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Core="clr-namespace:WorldTree;assembly=Avalonia.Core"
         >
+  
+  <!--主题色-->
   <Styles.Resources>
     <Color x:Key="Transparent">Transparent</Color>
     <Color x:Key="BackgroundColor">#1E1E1E</Color>
@@ -10,7 +12,6 @@
     <Color x:Key="ForegroundColor">#88C2C2C2</Color>
     <Color x:Key="BorderColor">#424242</Color>
   </Styles.Resources>
-
 
   <!-- 标题样式 -->
   <Style Selector=":is(Core|WindowTitleBar)">
@@ -22,9 +23,19 @@
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
     <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
   </Style>
+  
   <Style Selector="StackPanel">
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
   </Style>
+  
+  <!-- 横线样式 -->
+  <Style Selector="Separator">
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="Margin" Value="0,0"/>
+  </Style>
+  
+
   
   <Style Selector="TextBlock">
     <Setter Property="Background" Value="{DynamicResource Transparent}"/>
@@ -32,7 +43,7 @@
     <Setter Property="FontSize" Value="12"/>
   </Style>
   
-  <!--TextBox-->
+  <!--输入框样式-->
   <Style Selector="TextBox">
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
     <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
@@ -55,7 +66,7 @@
   </Style>
 
 
-  <!--Button-->
+  <!--按钮样式-->
   <Style Selector="Button">
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
     <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
@@ -84,7 +95,7 @@
     <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
     <Setter Property="BorderThickness" Value="1"/>
   </Style>
-  <!--TabControl-->
+  <!--标签栏样式-->
   <Style Selector="TabControl">
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
     <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
@@ -108,7 +119,7 @@
     <Setter Property="BorderThickness" Value="0"/>
   </Style>
 
-
+  <!--预览-->
   <Design.PreviewWith>
     <StackPanel>
       <TextBlock Text="预览效果"/>
