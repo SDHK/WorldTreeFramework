@@ -1,5 +1,4 @@
-﻿
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/5/15 15:57
@@ -9,8 +8,6 @@
 * 
 
 */
-
-using System;
 
 namespace WorldTree
 {
@@ -24,9 +21,9 @@ namespace WorldTree
 	/// 节点监听器接口
 	/// </summary>
 	public interface INodeListener : INode
-	    , AsListenerAddRule
+		, AsListenerAddRule
 		, AsListenerRemoveRule
 	{ }
 
-	
+
 }

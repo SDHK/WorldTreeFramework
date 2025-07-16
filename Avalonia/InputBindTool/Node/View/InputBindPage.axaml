@@ -22,24 +22,7 @@
       <Button Grid.Column="2"  Width="100"  Content="加载"  />
     </Grid>
       
-      <TabControl TabStripPlacement="Top"
-                  ItemsSource="{Binding PageNameList}"
-                  >
-        <!--绘制tab-->
-        <TabControl.ItemTemplate>
-          <DataTemplate>
-            <TextBlock Text="{Binding}"   Margin="0,0"   FontSize="12" />
-          </DataTemplate>
-        </TabControl.ItemTemplate>
-        
-        <TabControl.ContentTemplate>
-          <DataTemplate>
-            <StackPanel>
-              <Separator Background="#555555" Height="1" Margin="0,0"/>
-              <TextBlock Text="{Binding}" Margin="10,5" FontSize="14" FontWeight="Bold"/>
-           </StackPanel>
-          </DataTemplate>
-        </TabControl.ContentTemplate>
+      <TabControl TabStripPlacement="Top" >
       </TabControl>
 
 

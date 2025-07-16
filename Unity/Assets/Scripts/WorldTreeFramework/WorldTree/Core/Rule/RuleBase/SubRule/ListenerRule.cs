@@ -50,10 +50,10 @@ namespace WorldTree
 	/// 节点监听法则抽象基类
 	/// </summary>
 	/// <remarks>目标为INode和IRule时为动态监听</remarks>
-	public abstract class ListenerRule<LN, LR, TN, TR> : Rule<LN, LR>, IListenerRule
-	where LN : class, INode, AsRule<LR>
+	public abstract class ListenerRule<N, R, TN, TR> : Rule<N, R>, IListenerRule
+	where N : class, INode, AsRule<R>
 	where TN : class, INode
-	where LR : IListenerRule
+	where R : IListenerRule
 	where TR : IRule
 	{
 		public virtual long TargetNodeType { get; set; }
@@ -61,44 +61,36 @@ namespace WorldTree
 
 		override public void OnCreate()
 		{
-			NodeType = Core.TypeToCode(typeof(LN));
-			RuleType = Core.TypeToCode(typeof(LR));
+			NodeType = Core.TypeToCode(typeof(N));
+			RuleType = Core.TypeToCode(typeof(R));
 			TargetNodeType = Core.TypeToCode(typeof(TN));
 			TargetRuleType = Core.TypeToCode(typeof(TR));
 		}
 
-		public virtual void Invoke(INode self, INode node) => Execute(self as LN, node as TN);
+		public virtual void Invoke(INode self, INode node) => Execute(self as N, node as TN);
 		/// <summary>
 		/// 执行
 		/// </summary>
 		/// <param name="self">自身</param>
 		/// <param name="node">监听目标</param>
-		protected abstract void Execute(LN self, TN node);
+		protected abstract void Execute(N self, TN node);
 	}
 
 	/// <summary>
-	/// 【动态】节点监听法则抽象基类
+	/// 节点监听法则抽象基类
 	/// </summary>
-	public abstract class NodeRuleListenerRule<LN, LR> : ListenerRule<LN, LR, INode, IRule>
-		where LN : class, INode, AsRule<LR>
-		where LR : IListenerRule
-	{ }
-
-	/// <summary>
-	/// 【静态】节点监听法则抽象基类
-	/// </summary>
-	public abstract class NodeListenerRuleBase<LN, LR, TN> : ListenerRule<LN, LR, TN, IRule>
-		where LN : class, INode, AsRule<LR>
-		where LR : IListenerRule
+	public abstract class NodeListenerRule<N, R, TN> : ListenerRule<N, R, TN, IRule>
+		where N : class, INode, AsRule<R>
+		where R : IListenerRule
 		where TN : class, INode
 	{ }
 
 	/// <summary>
-	/// 【静态】节点法则监听法则抽象基类
+	/// 节点法则监听法则抽象基类
 	/// </summary>
-	public abstract class RuleListenerRuleBase<LN, LR, TR> : ListenerRule<LN, LR, INode, TR>
-		where LN : class, INode, AsRule<LR>
-		where LR : IListenerRule
+	public abstract class RuleListenerRule<N, R, TR> : ListenerRule<N, R, INode, TR>
+		where N : class, INode, AsRule<R>
+		where R : IListenerRule
 		where TR : IRule
 	{ }
 

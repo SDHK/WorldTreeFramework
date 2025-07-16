@@ -126,7 +126,7 @@ namespace WorldTree
 			self.Core.ReferencedPoolManager.TryAdd(self);//添加到引用池
 			if (self is not IListenerIgnorer)//广播给全部监听器
 			{
-				IRuleExecutor<IListenerAddRule> ruleActuator = NodeListenerExecutorHelper.GetListenerExecutor<IListenerAddRule>(self);
+				IRuleExecutor<ListenerAdd> ruleActuator = NodeListenerExecutorHelper.GetListenerExecutor<ListenerAdd>(self);
 				ruleActuator?.Send(self);
 			}
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//检测自身是否为监听器
@@ -236,7 +236,7 @@ namespace WorldTree
 			self.Core.RemoveRuleGroup?.Send(self); // 移除事件通知
 			if (self is not IListenerIgnorer) // 广播给全部监听器通知
 			{
-				NodeListenerExecutorHelper.GetListenerExecutor<IListenerRemoveRule>(self)?.Send(self);
+				NodeListenerExecutorHelper.GetListenerExecutor<ListenerRemove>(self)?.Send(self);
 			}
 			self.Core.ReferencedPoolManager.Remove(self); // 引用池移除
 
@@ -309,7 +309,7 @@ namespace WorldTree
 			self.Core.ReferencedPoolManager.TryAdd(self);//添加到引用池
 			if (self is not IListenerIgnorer)//广播给全部监听器
 			{
-				IRuleExecutor<IListenerAddRule> ruleActuator = NodeListenerExecutorHelper.GetListenerExecutor<IListenerAddRule>(self);
+				IRuleExecutor<ListenerAdd> ruleActuator = NodeListenerExecutorHelper.GetListenerExecutor<ListenerAdd>(self);
 				ruleActuator?.Send(self);
 			}
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//检测添加静态监听
@@ -368,7 +368,7 @@ namespace WorldTree
 			self.Core.CutRuleGroup?.Send(self); // 裁剪事件通知
 			if (self is not IListenerIgnorer) // 广播给全部监听器通知
 			{
-				NodeListenerExecutorHelper.GetListenerExecutor<IListenerRemoveRule>(self)?.Send(self);
+				NodeListenerExecutorHelper.GetListenerExecutor<ListenerRemove>(self)?.Send(self);
 			}
 			self.Core.ReferencedPoolManager.Remove(self); // 引用池移除
 			self.Parent = null; // 清除父节点

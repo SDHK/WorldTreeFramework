@@ -104,7 +104,7 @@ namespace WorldTree
 		public static bool TryGetKey<K>(this INode self, out K key)
 		{
 			key = default;
-			if (self.Parent != null) return false;
+			if (self.Parent == null) return false;
 			if (!TryGetBranch(self.Parent, self.BranchType, out IBranch branch)) return false;
 			if (branch is not IBranch<K> branchKey) return false;
 			return branchKey.TryGetNodeKey(self.Id, out key);
@@ -115,7 +115,7 @@ namespace WorldTree
 		/// </summary>
 		public static K GetKey<K>(this INode self)
 		{
-			if (self.Parent != null) return default;
+			if (self.Parent == null) return default;
 			if (!TryGetBranch(self.Parent, self.BranchType, out IBranch branch)) return default;
 			if (branch is not IBranch<K> keyBranch) return default;
 			if (!keyBranch.TryGetNodeKey(self.Id, out K key)) return default;

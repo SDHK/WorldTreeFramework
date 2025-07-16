@@ -12,7 +12,7 @@ namespace WorldTree
 	/// 输入管理器
 	/// </summary>
 	public partial class InputManager : NodeData
-		, AsGenericBranch<long>
+		, AsGenericBranch<string>
 		, ComponentOf<World>
 		, AsAwake
 	{

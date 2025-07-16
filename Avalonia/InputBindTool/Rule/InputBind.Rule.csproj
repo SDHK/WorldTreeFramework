@@ -41,6 +41,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Core\WorldTree.Core.csproj" />
+    <ProjectReference Include="..\..\..\Framework\ModuleNode\WorldTree.ModuleNode.csproj" />
+    <ProjectReference Include="..\..\..\Framework\ModuleRule\WorldTree.ModuleRule.csproj" />
     <ProjectReference Include="..\..\Analysis\Avalonia.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\Core\Avalonia.Core.csproj" />
     <ProjectReference Include="..\Node\InputBind.Node.csproj" />

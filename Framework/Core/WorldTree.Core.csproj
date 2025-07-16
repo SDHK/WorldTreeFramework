@@ -35,7 +35,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <Compile Include="..\..\Unity\Assets\Scripts\WorldTreeFramework\WorldTree\**\*.cs">
+    <Compile Include="..\..\Unity\Assets\Scripts\WorldTreeFramework\WorldTree\Core\**\*.cs">
       <Link>WorldTree\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
   </ItemGroup>
@@ -52,4 +52,4 @@
   </ItemGroup>
 
 </Project>
-                                                                                                                                                                                  
+                                                                                                                                                                                   

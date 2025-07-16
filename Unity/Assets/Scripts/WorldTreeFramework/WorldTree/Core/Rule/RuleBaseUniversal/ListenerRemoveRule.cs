@@ -12,32 +12,26 @@ namespace WorldTree
 	/// <summary>
 	/// 法则约束 : 监听节点移除法则
 	/// </summary>
-	public interface AsListenerRemoveRule : AsRule<IListenerRemoveRule>
+	public interface AsListenerRemoveRule : AsRule<ListenerRemove>
 	{ }
 
+
 	/// <summary>
-	/// 监听节点移除法则接口
+	/// 监听节点法则移除法则
 	/// </summary>
-	public interface IListenerRemoveRule : IListenerRule
+	public interface ListenerRemove : IListenerRule
 	{ }
 
+
 	/// <summary>
-	/// 监听节点移除法则
+	/// 监听节点添加法则
 	/// </summary>
-	/// <remarks>目标为INode和IRule时为动态监听</remarks>
-	public static class ListenerRemoveRule
-	{
+	public abstract class NodeListenerRemoveRule<LN, TN> : NodeListenerRule<LN, ListenerRemove, TN> where LN : class, INodeListener, AsRule<ListenerRemove> where TN : class, INode { }
 
-		/// <summary>
-		/// 监听节点移除法则
-		/// </summary>
-		public abstract class Node<LN, TN> : NodeListenerRuleBase<LN, IListenerRemoveRule, TN> where LN : class, INodeListener, AsRule<IListenerRemoveRule> where TN : class, INode
-		{ }
 
-		/// <summary>
-		/// 监听节点移除法则
-		/// </summary>
-		public abstract class Rule<LN, TR> : RuleListenerRuleBase<LN, IListenerRemoveRule, TR> where LN : class, INodeListener, AsRule<IListenerRemoveRule> where TR : IRule
-		{ }
-	}
+	/// <summary>
+	/// 监听节点法则添加法则
+	/// </summary>
+	public abstract class RuleListenerRemvoeRule<LN, TR> : RuleListenerRule<LN, ListenerRemove, TR> where LN : class, INodeListener, AsRule<ListenerRemove> where TR : IRule { }
+
 }

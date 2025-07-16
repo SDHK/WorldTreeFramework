@@ -14,8 +14,8 @@ namespace WorldTree
 	/// </summary>
 	[TreeDataSerializable]
 	public partial class InputGroup : NodeData
-		, GenericOf<long, InputLayer>
-		, AsGenericBranch<long>
+		, GenericOf<string, InputLayer>
+		, AsGenericBranch<string>
 		, AsChildBranch
 		, AsAwake
 	{

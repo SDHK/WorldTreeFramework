@@ -27,8 +27,13 @@ namespace WorldTree
 
 
 			self.Window.titleBar.Title = "测试标题";
-			self.AddComponent(out InputBindPageViewModel _, window.InputBindPage);
+			self.World.AddComponent(out InputManager inputManager);
+			self.AddComponent(out InputBindPageViewModel vm, window.InputBindPage);
 
+			inputManager.AddGeneric("第一页", out InputArchive inputArchive);
+
+
+			inputManager.AddGeneric("第二页", out InputArchive _);
 		}
 
 		[NodeRule(nameof(UpdateRule<MainWorld>))]

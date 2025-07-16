@@ -18,6 +18,7 @@ namespace WorldTree
 	public partial class GlobalRuleExecutor<R> : RuleGroupExecutorBase, INodeListener, IRuleExecutor<IRule>
 		, GenericOf<long, GlobalRuleExecutorManager>
 		, AsAwake
+		, AsListenerAddRule
 		where R : IGlobalRule
 	{
 		public override string ToString()
@@ -28,7 +29,7 @@ namespace WorldTree
 
 	public static class GlobalRuleExecutorRule
 	{
-		class ListenerAddRule<R> : ListenerAddRule.Rule<GlobalRuleExecutor<R>, R>
+		class ListenerAddRule<R> : RuleListenerAddRule<GlobalRuleExecutor<R>, R>
 			where R : IGlobalRule
 		{
 			protected override void Execute(GlobalRuleExecutor<R> self, INode node)

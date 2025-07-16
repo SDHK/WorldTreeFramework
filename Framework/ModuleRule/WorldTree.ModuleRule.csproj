@@ -38,7 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AnalyzerCore\WorldTree.AnalyzerCore.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\AnalyzerCore\WorldTree.AnalyzerCore.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\ModuleNode\WorldTree.ModuleNode.csproj" />
     <ProjectReference Include="..\SourceGeneratorCore\WorldTree.SourceGeneratorCore.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
