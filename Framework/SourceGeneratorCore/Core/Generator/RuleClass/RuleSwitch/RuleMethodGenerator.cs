@@ -251,8 +251,10 @@ namespace WorldTree.SourceGenerator
 
 			typeNames.Clear();
 			typeTNames.Clear();
-			var types = classData.baseTypeSymbol.TypeArguments;
-			for (int i = 0; i < types.Length; i++)
+			List<ITypeSymbol> types = classData.baseTypeSymbol.TypeArguments.ToList();
+			//监听法则最后一个泛型参数是Rule类型，直接忽略
+			if (classData.ruleBaseEnum == RuleBaseEnum.ListenerRule) types.RemoveAt(types.Count - 1);
+			for (int i = 0; i < types.Count; i++)
 			{
 				//基类第二个泛型参数是Rule类型，直接忽略
 				if (i == 1) continue;
@@ -269,6 +271,7 @@ namespace WorldTree.SourceGenerator
 			switch (classData.ruleBaseEnum)
 			{
 				case RuleBaseEnum.SendRule:
+				case RuleBaseEnum.ListenerRule:
 					classCode.AppendLine(
 					$$"""
 							sealed class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override void Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
@@ -304,8 +307,10 @@ namespace WorldTree.SourceGenerator
 			if (classData.Methods.Count == 0) return;
 			typeNames.Clear();
 			typeTNames.Clear();
-			var types = classData.baseTypeSymbol.TypeArguments;
-			for (int i = 0; i < types.Length; i++)
+			List<ITypeSymbol> types = classData.baseTypeSymbol.TypeArguments.ToList();
+			//监听法则最后一个泛型参数是Rule类型，直接忽略
+			if (classData.ruleBaseEnum == RuleBaseEnum.ListenerRule) types.RemoveAt(types.Count - 1);
+			for (int i = 0; i < types.Count; i++)
 			{
 				//基类第二个泛型参数是Rule类型，直接忽略
 				if (i == 1) continue;
@@ -328,6 +333,7 @@ namespace WorldTree.SourceGenerator
 			switch (classData.ruleBaseEnum)
 			{
 				case RuleBaseEnum.SendRule:
+				case RuleBaseEnum.ListenerRule:
 
 					classCode.AppendLine($"			private Dictionary<{classData.switchValueType},Action<{genericType}>> methodDict = new()");
 					break;
@@ -353,6 +359,7 @@ namespace WorldTree.SourceGenerator
 			switch (classData.ruleBaseEnum)
 			{
 				case RuleBaseEnum.SendRule:
+				case RuleBaseEnum.ListenerRule:
 					classCode.AppendLine(
 					$$"""
 								protected override void Execute({{genericTypeParameter}}) 
@@ -588,6 +595,7 @@ namespace WorldTree.SourceGenerator
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRule;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
+			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.ListenerRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.ListenerRule;
 			else return false;
 
 			baseTypeSymbol = typeSymbol as INamedTypeSymbol;

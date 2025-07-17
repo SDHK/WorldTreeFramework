@@ -9,12 +9,15 @@
 		}
 
 
-		class NodeListenerAdd : NodeListenerAddRule<InputBindPageViewModel, InputArchive>
+		[NodeRule(nameof(ListenerNodeAddRule<InputBindPageViewModel, InputArchive>))]
+		private static void OnListenerNodeAdd(this InputBindPageViewModel self, InputArchive arg1)
 		{
-			protected override void Execute(InputBindPageViewModel self, InputArchive node)
-			{
-				self.Log($"监听添加：{node.GetKey<string>()}");
-			}
+			self.Log($"监听添加：{arg1.GetKey<string>()}");
 		}
+
+
+
+
+
 	}
 }

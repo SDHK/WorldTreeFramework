@@ -26,12 +26,12 @@ namespace WorldTree
 	/// <summary>
 	/// 监听节点添加法则
 	/// </summary>
-	public abstract class NodeListenerRemoveRule<LN, TN> : NodeListenerRule<LN, ListenerRemove, TN> where LN : class, INodeListener, AsRule<ListenerRemove> where TN : class, INode { }
+	public abstract class ListenerNodeRemoveRule<LN, TN> : ListenerRule<LN, ListenerRemove, TN, IRule> where LN : class, INodeListener, AsRule<ListenerRemove> where TN : class, INode { }
 
 
 	/// <summary>
 	/// 监听节点法则添加法则
 	/// </summary>
-	public abstract class RuleListenerRemvoeRule<LN, TR> : RuleListenerRule<LN, ListenerRemove, TR> where LN : class, INodeListener, AsRule<ListenerRemove> where TR : IRule { }
+	public abstract class ListenerRuleRemvoeRule<LN, TR> : ListenerRule<LN, ListenerRemove, INode, TR> where LN : class, INodeListener, AsRule<ListenerRemove> where TR : IRule { }
 
 }

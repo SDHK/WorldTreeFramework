@@ -24,11 +24,11 @@ namespace WorldTree
 	/// <summary>
 	/// 监听节点添加法则
 	/// </summary>
-	public abstract class NodeListenerAddRule<LN, TN> : NodeListenerRule<LN, ListenerAdd, TN> where LN : class, INodeListener, AsRule<ListenerAdd> where TN : class, INode { }
+	public abstract class ListenerNodeAddRule<LN, TN> : ListenerRule<LN, ListenerAdd, TN, IRule> where LN : class, INodeListener, AsRule<ListenerAdd> where TN : class, INode { }
 
 	/// <summary>
 	/// 监听节点法则添加法则
 	/// </summary>
-	public abstract class RuleListenerAddRule<LN, TR> : RuleListenerRule<LN, ListenerAdd, TR> where LN : class, INodeListener, AsRule<ListenerAdd> where TR : IRule { }
+	public abstract class ListenerRuleAddRule<LN, TR> : ListenerRule<LN, ListenerAdd, INode, TR> where LN : class, INodeListener, AsRule<ListenerAdd> where TR : IRule { }
 
 }

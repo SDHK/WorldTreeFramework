@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -84,11 +85,14 @@ namespace WorldTree.Analyzer
 
 			typeNames.Clear();
 			typeTNames.Clear();
-			var types = baseTypeSymbol.TypeArguments;
-			for (int i = 0; i < types.Length; i++)
+			List<ITypeSymbol> types = baseTypeSymbol.TypeArguments.ToList();
+			//监听法则最后一个泛型参数是Rule类型，直接忽略
+			if (ruleBaseEnum == RuleBaseEnum.ListenerRule) types.RemoveAt(types.Count - 1);
+			for (int i = 0; i < types.Count; i++)
 			{
 				//基类第二个泛型参数是Rule类型，直接忽略
 				if (i == 1) continue;
+
 				typeNames.Add(types[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
 				ParseTypeSymbol(types[i], typeTNames);
 			}
@@ -130,7 +134,7 @@ namespace WorldTree.Analyzer
 		public string GetRuleMethod(RuleBaseEnum ruleBaseEnum, string ruleTypeName, string typeTName, string genericTypeParameter, string outType)
 		=> ruleBaseEnum switch
 		{
-			RuleBaseEnum.SendRule =>
+			RuleBaseEnum.SendRule or RuleBaseEnum.ListenerRule =>
 			$$"""
 					private static void {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
 					{ 
@@ -187,6 +191,7 @@ namespace WorldTree.Analyzer
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRule;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
+			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.ListenerRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.ListenerRule;
 			else return false;
 
 			baseTypeSymbol = typeSymbol as INamedTypeSymbol;

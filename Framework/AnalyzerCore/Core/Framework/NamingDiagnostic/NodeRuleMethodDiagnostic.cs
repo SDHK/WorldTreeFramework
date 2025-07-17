@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,14 +41,16 @@ namespace WorldTree.Analyzer
 			if (!TryGetRuleType(semanticModel, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 				return;
 
-			var types = baseTypeSymbol.TypeArguments;
-			if (types.Length == 0) return;
+			List<ITypeSymbol> types = baseTypeSymbol.TypeArguments.ToList();
+			//监听法则最后一个泛型参数是Rule类型，直接忽略
+			if (ruleBaseEnum == RuleBaseEnum.ListenerRule) types.RemoveAt(types.Count - 1);
+			if (types.Count == 0) return;
 
 			List<ITypeSymbol> AttributeTypeNames = new();
 			List<string> AttributeTypeTNames = new();
 			List<ITypeSymbol> MethodTypeNames = new();
 			List<string> MethodTypeTNames = new();
-			for (int i = 0; i < types.Length; i++)
+			for (int i = 0; i < types.Count; i++)
 			{
 				//基类第二个泛型参数是Rule类型，直接忽略
 				if (i == 1) continue;
@@ -64,12 +67,11 @@ namespace WorldTree.Analyzer
 				{
 					// 获取完全限定的类型名称
 					MethodTypeNames.Add(typeSymbol);
-
 				}
 			}
 
 			// 获取方法的返回值类型
-			if (ruleBaseEnum is not RuleBaseEnum.SendRule)
+			if (!(ruleBaseEnum == RuleBaseEnum.SendRule || ruleBaseEnum == RuleBaseEnum.ListenerRule))
 			{
 				var returnTypeSymbol = semanticModel.GetTypeInfo(methodDeclaration.ReturnType).Type;
 				if (returnTypeSymbol != null)
@@ -174,6 +176,7 @@ namespace WorldTree.Analyzer
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRule;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
+			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.ListenerRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.ListenerRule;
 			else return false;
 
 			baseTypeSymbol = typeSymbol as INamedTypeSymbol;
@@ -212,11 +215,15 @@ namespace WorldTree.Analyzer
 			typeNames.Clear();
 			typeTNames.Clear();
 			typeArgNames.Clear();
-			var types = baseTypeSymbol.TypeArguments;
-			for (int i = 0; i < types.Length; i++)
+			List<ITypeSymbol> types = baseTypeSymbol.TypeArguments.ToList();
+			//监听法则最后一个泛型参数是Rule类型，直接忽略
+			if (ruleBaseEnum == RuleBaseEnum.ListenerRule) types.RemoveAt(types.Count - 1);
+
+			for (int i = 0; i < types.Count; i++)
 			{
 				//基类第二个泛型参数是Rule类型，直接忽略
 				if (i == 1) continue;
+
 				typeNames.Add(types[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
 				ParseTypeSymbol(types[i], typeTNames);
 
@@ -224,6 +231,8 @@ namespace WorldTree.Analyzer
 			// 收集参数变量名称
 			for (int i = 0; i < methodDeclaration.ParameterList.Parameters.Count; i++)
 			{
+				//如果是监听法则，且是最后一个泛型参数，则直接跳过，不添加
+				if (ruleBaseEnum == RuleBaseEnum.ListenerRule && i == types.Count - 1) continue;
 				var parameter = methodDeclaration.ParameterList.Parameters[i];
 				typeArgNames.Add(parameter.Identifier.Text); // 获取参数变量名称
 			}
@@ -268,7 +277,7 @@ namespace WorldTree.Analyzer
 		public string GetRuleMethod(RuleBaseEnum ruleBaseEnum, string ruleTypeName, string typeTName, string genericTypeParameter, string outType)
 		=> ruleBaseEnum switch
 		{
-			RuleBaseEnum.SendRule =>
+			RuleBaseEnum.SendRule or RuleBaseEnum.ListenerRule =>
 			$$"""
 					private static void {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
 					{ 
@@ -325,6 +334,7 @@ namespace WorldTree.Analyzer
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRule;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
+			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.ListenerRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.ListenerRule;
 			else return false;
 
 			baseTypeSymbol = typeSymbol as INamedTypeSymbol;

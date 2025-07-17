@@ -17,6 +17,8 @@ namespace WorldTree
 		SendRuleAsync,
 		CallRule,
 		CallRuleAsync,
+		ListenerRule,
+
 	}
 
 	/// <summary>
@@ -100,6 +102,11 @@ namespace WorldTree
 		/// 调用法则异步基类
 		/// </summary>
 		public const string CallRuleAsync = "CallRuleAsync";
+
+		/// <summary>
+		/// 节点监听法则
+		/// </summary>
+		public const string ListenerRule = "ListenerRule";
 
 		#endregion
 

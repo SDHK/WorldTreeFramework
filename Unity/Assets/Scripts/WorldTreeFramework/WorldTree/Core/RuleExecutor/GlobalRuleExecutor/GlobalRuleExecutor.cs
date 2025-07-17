@@ -29,7 +29,7 @@ namespace WorldTree
 
 	public static class GlobalRuleExecutorRule
 	{
-		class ListenerAddRule<R> : RuleListenerAddRule<GlobalRuleExecutor<R>, R>
+		class ListenerAddRule<R> : ListenerRuleAddRule<GlobalRuleExecutor<R>, R>
 			where R : IGlobalRule
 		{
 			protected override void Execute(GlobalRuleExecutor<R> self, INode node)

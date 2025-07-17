@@ -75,24 +75,4 @@ namespace WorldTree
 		/// <param name="node">监听目标</param>
 		protected abstract void Execute(N self, TN node);
 	}
-
-	/// <summary>
-	/// 节点监听法则抽象基类
-	/// </summary>
-	public abstract class NodeListenerRule<N, R, TN> : ListenerRule<N, R, TN, IRule>
-		where N : class, INode, AsRule<R>
-		where R : IListenerRule
-		where TN : class, INode
-	{ }
-
-	/// <summary>
-	/// 节点法则监听法则抽象基类
-	/// </summary>
-	public abstract class RuleListenerRule<N, R, TR> : ListenerRule<N, R, INode, TR>
-		where N : class, INode, AsRule<R>
-		where R : IListenerRule
-		where TR : IRule
-	{ }
-
-
 }

@@ -59,21 +59,21 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputDevice\InputDeviceRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeTweenRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLineRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TweenUpdateRule\IntTweenUpdateRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeTweenManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\DataBase\Proxy\DataBaseProxyRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TweenUpdateRule\StringTweenUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputDevice\InputDeviceManagerRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TweenUpdateRule\FloatTweenUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputBind\InputBindRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputDevice\InputDriverRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\DataBase\LiteDB\LiteDBManagerRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeValueRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\DataBase\LiteDB\LiteDBCollectionRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeTweenManagerRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeTweenRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeValueRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TweenUpdateRule\FloatTweenUpdateRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TweenUpdateRule\IntTweenUpdateRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TweenUpdateRule\StringTweenUpdateRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\WorldTree.ModuleRule.asmdef" />
@@ -549,7 +549,6 @@
       <Name>WorldTree.ModuleNode</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
