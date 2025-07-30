@@ -20,7 +20,7 @@ namespace WorldTree
 			where T : IEquatable<T>
 			where R : ISendRule<T>, IGlobalRule
 		{
-			self.globalValueChange = (IRuleExecutor<ISendRule<T>>)self.Core.GetGlobalRuleExecutor(out IRuleExecutor<R> _);
+			//self.globalValueChange = (IRuleExecutor<ISendRule<T>>)self.Core.GetGlobalRuleExecutor(out IRuleExecutor<R> _);
 		}
 
 		/// <summary>

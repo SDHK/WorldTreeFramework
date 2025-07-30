@@ -175,14 +175,32 @@ namespace WorldTree.Server
 
 
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
+
 		static void OnTestNodeEvent<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
 		{
 
 		}
 
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>))]
-		[RuleSwitch(nameof(io), typeof(object))]
-		static void OnTestNodeEvent<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
+		[RuleSwitch(nameof(OnTestNodeEvent1), nameof(id), TestEnum.Test1)]
+		static void OnTestNodeEvent1<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
+		{
+
+
+		}
+
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>))]
+		[RuleSwitch(nameof(OnTestNodeEvent1), nameof(id), TestEnum.Test1)]
+		static void OnTestNodeEvent2<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
+		{
+
+		}
+
+
+		/// <summary>
+		/// a
+		/// </summary>
+		static void OnTestNodeEvent2()
 		{
 
 		}

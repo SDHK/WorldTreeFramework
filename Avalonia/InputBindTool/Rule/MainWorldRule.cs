@@ -31,9 +31,11 @@ namespace WorldTree
 			self.AddComponent(out InputBindPageViewModel vm, window.InputBindPage);
 
 			inputManager.AddGeneric("第一页", out InputArchive inputArchive);
-
-
 			inputManager.AddGeneric("第二页", out InputArchive _);
+
+
+			NodeRuleHelper.SendRule(self, default(UpdateTest));
+			NodeRuleHelper.SendRule(self, default(Update));
 		}
 
 		[NodeRule(nameof(UpdateRule<MainWorld>))]
@@ -41,6 +43,22 @@ namespace WorldTree
 		{
 			self.Window.TestText.Text = $"{self.Core.RealTimeManager.Now}";
 			self.Log($"{self.Window.TestText.Text}");
+		}
+
+
+		public class UpdateTest : UpdateRule<MainWorld>
+		{
+			public override void OnCreate()
+			{
+				NodeType = Core.TypeToCode(typeof(MainWorld));
+				RuleType = Core.TypeToCode(typeof(UpdateTest));
+			}
+			protected override void Execute(MainWorld self)
+			{
+				self.Update();
+				self.Log($"精确执行Rule");
+
+			}
 		}
 	}
 }

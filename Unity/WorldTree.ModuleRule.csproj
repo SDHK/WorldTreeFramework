@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputBind\InputBindRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputDevice\InputDriverRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\DataBase\LiteDB\LiteDBManagerRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Window\WindowManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeValueRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />

@@ -45,6 +45,11 @@ namespace WorldTree
 			if (Define.IsEditor) WorldLineManager.SetView(typeof(UnityViewBuilderWorld), typeof(UnityWorldHeart), typeof(UnityWorldTreeNodeViewBuilder));
 
 			var line = WorldLineManager.Create(0, typeof(UnityWorldHeart));
+
+
+
+
+
 			line.WorldContext.Post(() =>
 			{
 				line.AddComponent(out MainWorld _);

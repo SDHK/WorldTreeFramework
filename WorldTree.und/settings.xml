@@ -100,65 +100,16 @@
             <dir
               name="HotUpdate">
               <dir
-                name="Node">
+                name="Config">
                 <dir
-                  name="Share">
-                  <dir
-                    name="Modules">
-                    <dir
-                      name="DataBase">
-                      <dir
-                        name="LiteDB"/>
-                      <dir
-                        name="Proxy"/>
-                    </dir>
-                    <dir
-                      name="Input">
-                      <dir
-                        name="Data"/>
-                      <dir
-                        name="Enum"/>
-                      <dir
-                        name="InputDevice"/>
-                      <dir
-                        name="InputMapper"/>
-                      <dir
-                        name="KeyCode"/>
-                    </dir>
-                    <dir
-                      name="NeuralNetwork">
-                      <dir
-                        name="MultilayerPerceptron"/>
-                    </dir>
-                  </dir>
-                </dir>
+                  name="Client"/>
               </dir>
               <dir
-                name="Rule">
+                name="Node">
                 <dir
-                  name="Share">
+                  name="Client">
                   <dir
-                    name="Modules">
-                    <dir
-                      name="DataBase">
-                      <dir
-                        name="LiteDB"/>
-                      <dir
-                        name="Proxy"/>
-                    </dir>
-                    <dir
-                      name="Input">
-                      <dir
-                        name="InputDevice"/>
-                      <dir
-                        name="InputMapper"/>
-                    </dir>
-                    <dir
-                      name="NeuralNetwork">
-                      <dir
-                        name="MultilayerPerceptron"/>
-                    </dir>
-                  </dir>
+                    name="Config"/>
                 </dir>
               </dir>
               <dir
@@ -357,6 +308,8 @@
                       name="Sub"/>
                   </dir>
                   <dir
+                    name="Config"/>
+                  <dir
                     name="Core">
                     <dir
                       name="Branch"/>
@@ -366,6 +319,8 @@
                       name="WorldContext"/>
                     <dir
                       name="WorldHeart"/>
+                    <dir
+                      name="WorldLine"/>
                   </dir>
                   <dir
                     name="DynamicNodeQueue"/>
@@ -482,6 +437,16 @@
                     <dir
                       name="ByteSequence"/>
                     <dir
+                      name="TreeCopy">
+                      <dir
+                        name="CopyRule">
+                        <dir
+                          name="Special"/>
+                      </dir>
+                      <dir
+                        name="RuleBase"/>
+                    </dir>
+                    <dir
                       name="TreeData">
                       <dir
                         name="FormattersRule">
@@ -511,6 +476,17 @@
                       name="Extension"/>
                   </dir>
                   <dir
+                    name="Tools">
+                    <dir
+                      name="Encipherment"/>
+                    <dir
+                      name="Extension"/>
+                    <dir
+                      name="File"/>
+                    <dir
+                      name="Math"/>
+                  </dir>
+                  <dir
                     name="TreeTask">
                     <dir
                       name="Base"/>
@@ -524,6 +500,8 @@
                       name="StateMachine"/>
                     <dir
                       name="Task"/>
+                    <dir
+                      name="TreeTaskQueueLock"/>
                   </dir>
                   <dir
                     name="Type"/>
@@ -533,7 +511,30 @@
                   <dir
                     name="Node">
                     <dir
-                      name="TreeTaskQueueLock"/>
+                      name="DataBase">
+                      <dir
+                        name="LiteDB"/>
+                      <dir
+                        name="Proxy"/>
+                    </dir>
+                    <dir
+                      name="Input">
+                      <dir
+                        name="Data"/>
+                      <dir
+                        name="Enum"/>
+                      <dir
+                        name="InputBind"/>
+                      <dir
+                        name="InputDevice"/>
+                      <dir
+                        name="KeyCode"/>
+                    </dir>
+                    <dir
+                      name="NeuralNetwork">
+                      <dir
+                        name="MultilayerPerceptron"/>
+                    </dir>
                     <dir
                       name="TreeTween">
                       <dir
@@ -544,33 +545,40 @@
                           name="RuleBase"/>
                       </dir>
                       <dir
-                        name="Extension"/>
-                      <dir
-                        name="Rule"/>
-                      <dir
                         name="RuleBase"/>
-                      <dir
-                        name="TweenUpdateRule"/>
                     </dir>
+                    <dir
+                      name="Window"/>
                   </dir>
                   <dir
                     name="Rule">
                     <dir
-                      name="TreeTaskQueueLock"/>
+                      name="DataBase">
+                      <dir
+                        name="LiteDB"/>
+                      <dir
+                        name="Proxy"/>
+                    </dir>
+                    <dir
+                      name="Input">
+                      <dir
+                        name="InputBind"/>
+                      <dir
+                        name="InputDevice"/>
+                    </dir>
+                    <dir
+                      name="NeuralNetwork">
+                      <dir
+                        name="MultilayerPerceptron"/>
+                    </dir>
+                    <dir
+                      name="TreeTween">
+                      <dir
+                        name="TweenUpdateRule"/>
+                    </dir>
+                    <dir
+                      name="Window"/>
                   </dir>
-                </dir>
-                <dir
-                  name="Tools">
-                  <dir
-                    name="Encipherment"/>
-                  <dir
-                    name="Extension"/>
-                  <dir
-                    name="File"/>
-                  <dir
-                    name="Math"/>
-                  <dir
-                    name="Serialized"/>
                 </dir>
               </dir>
             </dir>

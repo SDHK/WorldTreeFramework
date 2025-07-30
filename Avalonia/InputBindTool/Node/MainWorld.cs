@@ -9,6 +9,7 @@ namespace WorldTree
 		, AsComponentBranch
 		, ComponentOf<World>
 		, AsAwake<MainWindow>
+		, AsUpdate
 	{
 		/// <summary>
 		/// 窗口

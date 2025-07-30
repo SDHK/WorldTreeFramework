@@ -12,14 +12,6 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 
-	//class InitialDomain1 : AddNodeRule<InitialDomain>
-	//{
-	//    protected override void OnEvent(InitialDomain self)
-	//    {
-	//        self.Core.AddComponent<WindowManager>();
-	//    }
-	//}
-
 	/// <summary>
 	/// UI 栈窗口管理器
 	/// </summary>

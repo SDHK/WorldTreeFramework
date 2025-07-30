@@ -45,12 +45,10 @@ namespace WorldTree
 				{
 					setCallBack(bindObject, value);
 					valueChange?.Send(value);
-					globalValueChange?.Send(value);
 				}
 			}
 		}
 	}
-
 
 	public static class TreeValueDelegateRule
 	{

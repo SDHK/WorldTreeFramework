@@ -27,10 +27,6 @@ namespace WorldTree
 		, AsRule<IValueChangeEvent>
 		where T : IEquatable<T>
 	{
-		/// <summary>
-		/// 全局法则执行器
-		/// </summary>
-		public IRuleExecutor<ValueChangeEvent<T>> globalValueChange;
 
 		/// <summary>
 		/// 法则执行器

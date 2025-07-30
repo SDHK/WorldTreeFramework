@@ -187,7 +187,6 @@ namespace WorldTree
 		{
 			SetActive(false);
 
-			//设置日志
 
 			//根节点初始化
 			Core = this;

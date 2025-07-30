@@ -27,4 +27,20 @@ namespace WorldTree
 	/// </summary>
 	public interface Update : ISendRule, ILifeCycleRule
 	{ }
+
+	/// <summary>
+	/// UpdateRule补充类
+	/// </summary>
+	public static class UpdateRuleSupplement
+	{
+		/// <summary>
+		/// 刷新法则
+		/// </summary>
+		/// <remarks>
+		/// <Para>
+		/// 执行通知法则: <see cref="WorldTree.Update"/> : <see cref="ISendRule"/>
+		/// </Para>
+		/// </remarks>
+		public static void Update<N>(this N self) where N : class, INode, AsRule<Update> => NodeRuleHelper.SendRule(self, default(Update));
+	}
 }

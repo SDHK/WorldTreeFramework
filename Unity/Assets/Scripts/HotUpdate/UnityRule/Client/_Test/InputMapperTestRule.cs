@@ -27,13 +27,13 @@ namespace WorldTree
 			//新建一个输入映射管理器
 			self.World.AddComponent(out InputManager manager);
 			//添加一个输入存档
-			manager.AddGeneric(0L, out InputArchive archive);
+			manager.AddGeneric("0", out InputArchive archive);
 			//添加一个输入层
-			archive.AddGeneric(0L, out InputLayer layer);
+			archive.AddGeneric("0", out InputLayer layer);
 			//添加一个输入组
-			layer.AddGeneric(0L, out InputGroup group);
+			layer.AddGeneric("0", out InputGroup group);
 			//添加一个输入绑定
-			group.AddGeneric(0L, out InputBind mapper);
+			group.AddGeneric("0", out InputBind mapper);
 			//添加一个输入信息配置
 			mapper.ConfigInfoList = new() {
 						new InputInfo() {
@@ -76,14 +76,14 @@ namespace WorldTree
 			//将管理器 嫁接到 世界节点组件分支 上
 			self.World.AddComponent(out InputManager manager);
 
-			archive.TryGraftSelfToTree(self.TypeToCode<GenericBranch<long>>(), 0L, manager);
+			archive.TryGraftSelfToTree(self.TypeToCode<GenericBranch<string>>(), "0", manager);
 
 			//数据获取测试：
-			if (archive.TryGetGeneric(0L, out InputLayer layer))
+			if (archive.TryGetGeneric("0", out InputLayer layer))
 			{
-				if (layer.TryGetGeneric(0L, out InputGroup group))
+				if (layer.TryGetGeneric("0", out InputGroup group))
 				{
-					if (group.TryGetGeneric(0L, out InputBind mapper))
+					if (group.TryGetGeneric("0", out InputBind mapper))
 					{
 						self.Log($"mapper!!!!:{mapper.InfoList == null}");
 					}

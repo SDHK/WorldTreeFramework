@@ -39,7 +39,7 @@ namespace WorldTree
 				{
 					this.value = value;
 					valueChange?.Send(value);
-					globalValueChange?.Send(value);
+					//globalValueChange?.Send(value);
 				}
 			}
 		}

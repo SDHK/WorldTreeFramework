@@ -16,6 +16,12 @@ namespace WorldTree
 	public interface TestNodeEvent<X> : ISendRule<TestEnum, X, List<int>>
 	{
 	}
+	/// <summary>
+	/// 测试法则2
+	/// </summary>
+	public interface TestNodeEvent2<X> : ISendRule<TestEnum, X, List<int>>
+	{
+	}
 
 
 	/// <summary>

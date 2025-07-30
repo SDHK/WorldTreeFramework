@@ -102,13 +102,13 @@ namespace WorldTree.SourceGenerator
 
 						AttributeArgumentSyntax argumentRule = attributeNodeRule.ArgumentList.Arguments.FirstOrDefault();
 
-						AttributeArgumentSyntax argumentName = count == 3 ? attributeRuleSwitch.ArgumentList.Arguments[0] : null;
+						AttributeArgumentSyntax argumentName = attributeRuleSwitch.ArgumentList.Arguments[0];
 
 
 						if (!TryGetRuleType(semanticModel, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 							continue;
-						AttributeArgumentSyntax argumentSwitch = attributeRuleSwitch.ArgumentList.Arguments[count == 2 ? 0 : 1];
-						AttributeArgumentSyntax argumentCase = attributeRuleSwitch.ArgumentList.Arguments[count == 2 ? 1 : 2];
+						AttributeArgumentSyntax argumentSwitch = attributeRuleSwitch.ArgumentList.Arguments[1];
+						AttributeArgumentSyntax argumentCase = attributeRuleSwitch.ArgumentList.Arguments[2];
 
 						//如果是分发方法，则需要获取Switch值
 						if (!TryGetSwitchValue(context, semanticModel, methodDeclaration, argumentSwitch, argumentCase, out string switchValueType, out string switchValue, out string caseValue))
@@ -117,26 +117,16 @@ namespace WorldTree.SourceGenerator
 						//因为分发方法会有多个，所以使用方法标记的法则类型组合作为文件名
 						var classSyntax = methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
 
-						string ruleName = System.Text.RegularExpressions.Regex.Replace(ruleTypeSymbol.ToDisplayString(), @"[^a-zA-Z0-9_]", "_");
-
 						string ruleNameNew = GetRuleName(semanticModel, argumentName);
 
-						//string fileName = $"{classSyntax.Identifier.Text}_{ruleName}";
 						string fileName = $"{classSyntax.Identifier.Text}";
 
 						string className;
 
-						//将switchValue 中的特殊字符替换为下划线
-						string switchValueName = System.Text.RegularExpressions.Regex.Replace(switchValue, @"[^a-zA-Z0-9_]", "_");
-						if (ruleNameNew != null)
-						{
-							ruleNameNew = System.Text.RegularExpressions.Regex.Replace(ruleNameNew, @"[^a-zA-Z0-9_]", "_");
-							className = $"{ruleName}_{switchValueName}_RuleMethod_{ruleNameNew}";
-						}
-						else
-						{
-							className = $"{ruleName}_{switchValueName}_RuleMethod";
-						}
+						if (ruleNameNew == null) continue;
+
+						ruleNameNew = System.Text.RegularExpressions.Regex.Replace(ruleNameNew, @"[^a-zA-Z0-9_]", "_");
+						className = $"{ruleNameNew}Rule";
 
 
 						if (!fileDatas.TryGetValue(fileName, out RuleFileData ruleFileData))
@@ -186,7 +176,7 @@ namespace WorldTree.SourceGenerator
 						}
 						//获取方法名称
 						string methodName = methodDeclaration.Identifier.Text;
-						string className = $"{methodName}_RuleMethod";
+						string className = $"{methodName}Rule";
 						if (!ruleFileData.Class.TryGetValue(className, out RuleClassData ruleClassData))
 						{
 							ruleClassData = new();
@@ -435,16 +425,18 @@ namespace WorldTree.SourceGenerator
 			if (argumentRuleName == null) return null;
 			string ruleName = null;
 
-			if (argumentRuleName.Expression is InvocationExpressionSyntax invocation && invocation.Expression.ToString() == "nameof")
-			{
-				// 获取 nameof 参数的表达式
-				var nameofArgument = invocation.ArgumentList.Arguments.FirstOrDefault()?.Expression;
-				if (nameofArgument == null) return null;
+			//if (argumentRuleName.Expression is InvocationExpressionSyntax invocation && invocation.Expression.ToString() == "nameof")
+			//{
+			//	// 获取 nameof 参数的表达式
+			//	var nameofArgument = invocation.ArgumentList.Arguments.FirstOrDefault()?.Expression;
+			//	if (nameofArgument == null) return null;
 
-				// 原来的逻辑处理简单属性
-				ruleName = nameofArgument.ToString();
-			}
-			else if (argumentRuleName.Expression is LiteralExpressionSyntax literalExpression)
+			//	// 原来的逻辑处理简单属性
+			//	ruleName = nameofArgument.ToString();
+			//}
+			//else 
+
+			if (argumentRuleName.Expression is LiteralExpressionSyntax literalExpression)
 			{
 				// 直接处理字面量表达式
 				ruleName = literalExpression.Token.ValueText;

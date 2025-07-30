@@ -107,7 +107,7 @@ namespace WorldTree
 	[AttributeUsage(AttributeTargets.Method)]
 	public class NodeRuleAttribute : Attribute
 	{
-		public NodeRuleAttribute(string rule) { }
+		public NodeRuleAttribute(string rule, bool ruleType = false) { }
 	}
 
 
@@ -117,10 +117,8 @@ namespace WorldTree
 	[AttributeUsage(AttributeTargets.Method)]
 	public class RuleSwitchAttribute : Attribute
 	{
-		public RuleSwitchAttribute(string switchValue, object caseKey) { }
 		public RuleSwitchAttribute(string ruleName, string switchValue, object caseKey) { }
 	}
-
 
 	/// <summary>
 	/// 法则类型数组生成标记
