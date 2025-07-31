@@ -7,6 +7,7 @@
 
 */
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
@@ -36,7 +37,9 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 模式
 		/// </summary>
-		public bool isSwitch;
+		public bool isSwitch = false;
+
+		public bool isRuleType = false;
 
 		public List<RuleMethodData> Methods = new();
 
@@ -94,6 +97,8 @@ namespace WorldTree.SourceGenerator
 					if (!TreeSyntaxHelper.TryGetAttribute(methodDeclaration, GeneratorHelper.NodeRuleAttribute, out AttributeSyntax attributeNodeRule)) continue;
 					if (attributeNodeRule.ArgumentList.Arguments.Count == 0) continue;
 
+					AttributeArgumentSyntax argumentRuleType = attributeNodeRule.ArgumentList.Arguments.Count == 2 ? attributeNodeRule.ArgumentList.Arguments[1] : null;
+					bool isRuleType = argumentRuleType?.Expression is LiteralExpressionSyntax literalExpr && literalExpr.Token.IsKind(SyntaxKind.TrueKeyword);
 					//如果有RuleSwitch特性，则是分发方法
 					if (TreeSyntaxHelper.TryGetAttribute(methodDeclaration, GeneratorHelper.RuleSwitchAttribute, out AttributeSyntax attributeRuleSwitch))
 					{
@@ -101,6 +106,7 @@ namespace WorldTree.SourceGenerator
 						if (count == 0) continue;
 
 						AttributeArgumentSyntax argumentRule = attributeNodeRule.ArgumentList.Arguments.FirstOrDefault();
+
 
 						AttributeArgumentSyntax argumentName = attributeRuleSwitch.ArgumentList.Arguments[0];
 
@@ -122,6 +128,8 @@ namespace WorldTree.SourceGenerator
 						string fileName = $"{classSyntax.Identifier.Text}";
 
 						string className;
+
+
 
 						if (ruleNameNew == null) continue;
 
@@ -151,6 +159,7 @@ namespace WorldTree.SourceGenerator
 							ruleClassData.switchValue = switchValue;
 							ruleFileData.Class.Add(className, ruleClassData);
 						}
+						if (!ruleClassData.isRuleType && isRuleType) ruleClassData.isRuleType = true;
 						ruleClassData.Methods.Add(new RuleMethodData()
 						{
 							attributeSyntax = attributeNodeRule,
@@ -187,6 +196,7 @@ namespace WorldTree.SourceGenerator
 							ruleClassData.ruleBaseEnum = ruleBaseEnum;
 							ruleFileData.Class.Add(className, ruleClassData);
 						}
+						if (!ruleClassData.isRuleType && isRuleType) ruleClassData.isRuleType = true;
 						ruleClassData.Methods.Add(new RuleMethodData()
 						{
 							attributeSyntax = attributeNodeRule,
@@ -345,6 +355,18 @@ namespace WorldTree.SourceGenerator
 			}
 			classCode.AppendLine($"			}};");
 
+			if (classData.isRuleType)
+			{
+				classCode.AppendLine(
+					$$"""
+								public override void OnCreate() 
+								{
+									base.OnCreate();
+									RuleType = Core.TypeToCode(typeof({{classData.ClassName}}{{typeTName}}));
+								}
+					"""
+				);
+			}
 
 			switch (classData.ruleBaseEnum)
 			{

@@ -11,6 +11,28 @@
 namespace WorldTree
 {
 	/// <summary>
+	/// 法则执行器操作方法接口
+	/// </summary>
+	public interface IRuleExecutor : INode
+	{
+		/// <summary>
+		/// 移除节点
+		/// </summary>
+		public void Remove(long id);
+
+		/// <summary>
+		/// 移除节点
+		/// </summary>
+		public void Remove(INode node);
+
+		/// <summary>
+		/// 清除
+		/// </summary>
+		public void Clear();
+	}
+
+
+	/// <summary>
 	/// 法则执行器调用接口，逆变泛型限制
 	/// </summary>
 	/// <typeparam name="R">法则类型</typeparam>
@@ -18,35 +40,7 @@ namespace WorldTree
 	/// <para>主要作用是通过法则类型逆变提示可填写参数</para>
 	/// </remarks>
 
-	public interface IRuleExecutor<in R> : IWorldTreeBasic where R : IRule { }
-
-	/// <summary>
-	/// 格式化器 
-	/// </summary>
-	public static class IRuleExecutorFormatterRule
-	{
-		class TreeDataSerialize<R> : TreeDataSerializeRule<IRuleExecutor<R>>
-			where R : IRule
-		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
-			{
-				if (self.TryWriteDataHead(value, typeMode, 0, out IRuleExecutor<R> obj, false, false)) return;
-			}
-		}
-		class TreeDataDeserialize<R> : TreeDataDeserializeRule<IRuleExecutor<R>>
-			where R : IRule
-		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
-			{
-				int typePoint = self.ReadPoint;
-				if (self.TryReadClassHead(typeof(IRuleExecutor<R>), ref value, out int count, out int objId, out int jumpReadPoint)) return;
-				self.ReadJump(typePoint);
-				self.SkipData();
-				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
-			}
-		}
-	}
-
+	public interface IRuleExecutor<in R> : IRuleExecutor where R : IRule { }
 
 	/// <summary>
 	/// 法则执行器遍历接口
@@ -77,29 +71,40 @@ namespace WorldTree
 
 	}
 
+
+
 	/// <summary>
-	/// 法则执行器接口
+	/// 格式化器 
 	/// </summary>
-	public interface IRuleExecutor : INode
+	public static class IRuleExecutorFormatterRule
 	{
-		/// <summary>
-		/// 移除节点
-		/// </summary>
-		public void Remove(long id);
-
-		/// <summary>
-		/// 移除节点
-		/// </summary>
-		public void Remove(INode node);
-
-		/// <summary>
-		/// 清除
-		/// </summary>
-		public void Clear();
+		class TreeDataSerialize<R> : TreeDataSerializeRule<IRuleExecutor<R>>
+			where R : IRule
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
+			{
+				if (self.TryWriteDataHead(value, typeMode, 0, out IRuleExecutor<R> obj, false, false)) return;
+			}
+		}
+		class TreeDataDeserialize<R> : TreeDataDeserializeRule<IRuleExecutor<R>>
+			where R : IRule
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
+			{
+				int typePoint = self.ReadPoint;
+				if (self.TryReadClassHead(typeof(IRuleExecutor<R>), ref value, out int count, out int objId, out int jumpReadPoint)) return;
+				self.ReadJump(typePoint);
+				self.SkipData();
+				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
+			}
+		}
 	}
 
+
+	//======================================
+
 	/// <summary>
-	/// 法则集合执行器接口
+	/// 法则集合执行器基类接口
 	/// </summary>
 	public interface IRuleGroupExecutor : IRuleExecutor
 	{
@@ -110,7 +115,7 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 法则列表执行器接口
+	/// 法则列表执行器基类接口
 	/// </summary>
 	public interface IRuleListExecutor : IRuleExecutor
 	{

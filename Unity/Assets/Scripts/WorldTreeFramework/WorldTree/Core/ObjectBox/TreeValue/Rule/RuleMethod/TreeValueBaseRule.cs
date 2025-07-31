@@ -30,7 +30,7 @@ namespace WorldTree
 			where T1 : IEquatable<T1>
 			where N : class, INode, AsRule<ISendRule<T1>>
 		{
-			if (self.valueChange is null) self.AddChild(out self.valueChange);
+			if (self.valueChange is null) self.valueChange = self.AddChild(out RuleExecutor<ValueChangeEvent<T1>> _);
 			self.valueChange.Add(eventNode);
 		}
 

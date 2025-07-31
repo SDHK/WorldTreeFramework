@@ -181,12 +181,10 @@ namespace WorldTree.Server
 
 		}
 
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>))]
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>), true)]
 		[RuleSwitch(nameof(OnTestNodeEvent1), nameof(id), TestEnum.Test1)]
 		static void OnTestNodeEvent1<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
 		{
-
-
 		}
 
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>))]
@@ -196,6 +194,27 @@ namespace WorldTree.Server
 
 		}
 
+		/// <summary>
+		/// 动态获取到Rule类型
+		/// </summary>
+		public static Type GetRuleType<T>(this Test<T> self)
+		{
+			return typeof(OnTestNodeEvent1Rule<Test<T>>);
+		}
+
+
+		class Add : AddRule<DotNetInit>
+		{
+			public override void OnCreate()
+			{
+				base.OnCreate();
+				RuleType = Core.TypeToCode(typeof(Add));
+			}
+			protected override void Execute(DotNetInit self)
+			{
+
+			}
+		}
 
 		/// <summary>
 		/// a
@@ -204,7 +223,6 @@ namespace WorldTree.Server
 		{
 
 		}
-
 
 		/// <summary>
 		/// a

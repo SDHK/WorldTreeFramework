@@ -96,7 +96,8 @@ namespace WorldTree.Analyzer
 			}
 			bool nodeRuleMatch = false;
 			bool methodSwitchValueMatch = false;
-			//检查方法类型与目标方法的Switch的第二个参数switchValue是否匹配
+			bool isTargetMethodSelf = true; // 新增：检查目标方法是否是自己
+											//检查方法类型与目标方法的Switch的第二个参数switchValue是否匹配
 			if (methodArg.Expression is InvocationExpressionSyntax methodInvocation)
 			{
 				// 检查是否是 nameof 表达式
@@ -118,7 +119,6 @@ namespace WorldTree.Analyzer
 
 							if (targetMethod != null)
 							{
-
 								// 查找当前方法上的 NodeRule 特性
 								var currentNodeRuleAttribute = methodDeclaration.AttributeLists
 									.SelectMany(al => al.Attributes)
@@ -129,18 +129,40 @@ namespace WorldTree.Analyzer
 									.SelectMany(al => al.Attributes)
 									.FirstOrDefault(attr => attr.Name.ToString().Contains("NodeRule"));
 
-								// 直接比较 NodeRule 特性的完整字符串
+								// 比较 NodeRule 特性的第一个参数
 								if (currentNodeRuleAttribute != null && targetNodeRuleAttribute != null)
 								{
-									string currentNodeRuleText = currentNodeRuleAttribute.ToString();
-									string targetNodeRuleText = targetNodeRuleAttribute.ToString();
+									// 获取当前方法 NodeRule 的第一个参数
+									string currentFirstArg = null;
+									if (currentNodeRuleAttribute.ArgumentList?.Arguments.Count > 0)
+									{
+										currentFirstArg = currentNodeRuleAttribute.ArgumentList.Arguments[0].Expression.ToString();
+									}
 
-									if (currentNodeRuleText == targetNodeRuleText)
+									// 获取目标方法 NodeRule 的第一个参数
+									string targetFirstArg = null;
+									if (targetNodeRuleAttribute.ArgumentList?.Arguments.Count > 0)
+									{
+										targetFirstArg = targetNodeRuleAttribute.ArgumentList.Arguments[0].Expression.ToString();
+									}
+
+									// 比较第一个参数
+									if (currentFirstArg != null && targetFirstArg != null && currentFirstArg == targetFirstArg)
 									{
 										nodeRuleMatch = true;
 									}
 								}
 
+								string currentMethodName = methodDeclaration.Identifier.ValueText;
+								string targetMethodName = targetMethod.Identifier.ValueText;
+
+								// 如果目标方法不是自己，但当前方法的 NodeRule 只有一个参数（没有true参数），则认为是合法的
+								if (currentMethodName != targetMethodName)
+								{
+									// 检查 NodeRule 特性是否只有一个参数（没有第二个true参数）
+									if (currentNodeRuleAttribute.ArgumentList?.Arguments.Count == 2)
+										isTargetMethodSelf = false;
+								}
 
 								// 查找目标方法上的 RuleSwitch 特性
 								var targetRuleSwitchAttribute = targetMethod.AttributeLists
@@ -165,7 +187,7 @@ namespace WorldTree.Analyzer
 				}
 			}
 
-			if (!methodSwitchValueMatch || !nodeRuleMatch)
+			if (!methodSwitchValueMatch || !nodeRuleMatch || !isTargetMethodSelf)
 			{
 				// 报告诊断错误
 				foreach (DiagnosticConfigGroup objectDiagnostic in DiagnosticGroups)
@@ -219,7 +241,7 @@ namespace WorldTree.Analyzer
 	}
 
 	public abstract class NodeRuleSwitchAttributeCodeFixProvider<C> : NamingCodeFixProviderBase<AttributeSyntax, C>
-		where C : ProjectDiagnosticConfig, new()
+	where C : ProjectDiagnosticConfig, new()
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.Attribute;
 		public override bool CheckCodeFix(DiagnosticConfig codeDiagnostic, Document document)
@@ -256,6 +278,10 @@ namespace WorldTree.Analyzer
 					if (methodNameExpression is IdentifierNameSyntax methodNameIdentifier)
 					{
 						string methodName = methodNameIdentifier.Identifier.ValueText;
+						string currentMethodName = currentMethod.Identifier.ValueText;
+
+						// 检查目标方法是否是自己
+						bool isTargetMethodSelf = (methodName == currentMethodName);
 
 						// 在当前类中查找目标方法
 						var currentClass = currentMethod.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -293,7 +319,7 @@ namespace WorldTree.Analyzer
 									// 替换 RuleSwitch 特性
 									var newRoot = root.ReplaceNode(attributeSyntax, newRuleSwitchAttributeSyntax);
 
-									// 同时修复 NodeRule 特性（如果存在且不匹配）
+									// 同时修复 NodeRule 特性（如果存在且第一个参数不匹配）
 									if (targetNodeRuleAttribute != null)
 									{
 										// 查找当前方法上的 NodeRule 特性
@@ -303,16 +329,59 @@ namespace WorldTree.Analyzer
 
 										if (currentNodeRuleAttribute != null)
 										{
-											// 直接复制目标方法的完整 NodeRule 特性文本
-											string targetNodeRuleText = targetNodeRuleAttribute.ToString();
-											string currentNodeRuleText = currentNodeRuleAttribute.ToString();
+											// 比较第一个参数是否匹配
+											bool needNodeRuleFix = false;
 
-											if (currentNodeRuleText != targetNodeRuleText)
+											// 获取当前方法 NodeRule 的第一个参数
+											string currentFirstArg = null;
+											if (currentNodeRuleAttribute.ArgumentList?.Arguments.Count > 0)
 											{
-												// 直接复制目标特性的名称和参数列表
-												AttributeSyntax newNodeRuleAttribute = currentNodeRuleAttribute
-													.WithName(targetNodeRuleAttribute.Name)
-													.WithArgumentList(targetNodeRuleAttribute.ArgumentList);
+												currentFirstArg = currentNodeRuleAttribute.ArgumentList.Arguments[0].Expression.ToString();
+											}
+
+											// 获取目标方法 NodeRule 的第一个参数
+											string targetFirstArg = null;
+											if (targetNodeRuleAttribute.ArgumentList?.Arguments.Count > 0)
+											{
+												targetFirstArg = targetNodeRuleAttribute.ArgumentList.Arguments[0].Expression.ToString();
+											}
+
+											// 如果第一个参数不匹配，需要修复
+											if (currentFirstArg != targetFirstArg)
+											{
+												needNodeRuleFix = true;
+											}
+
+											// 如果目标方法不是自己，还需要检查当前方法的 NodeRule 是否需要去掉 true 参数
+											if (!isTargetMethodSelf && currentNodeRuleAttribute.ArgumentList?.Arguments.Count >= 2)
+											{
+												var secondArg = currentNodeRuleAttribute.ArgumentList.Arguments[1];
+												if (secondArg.Expression is LiteralExpressionSyntax literalExpr &&
+													literalExpr.Token.IsKind(SyntaxKind.TrueKeyword))
+												{
+													needNodeRuleFix = true;
+												}
+											}
+
+											if (needNodeRuleFix)
+											{
+												// 创建新的 NodeRule 特性：只复制第一个参数，如果目标方法不是自己则不添加第二个参数
+												AttributeSyntax newNodeRuleAttribute;
+
+												if (!isTargetMethodSelf)
+												{
+													// 引用其他方法时，只保留第一个参数
+													string newNodeRuleArgsString = $"({targetFirstArg})";
+													AttributeArgumentListSyntax newNodeRuleArgumentList = SyntaxFactory.ParseAttributeArgumentList(newNodeRuleArgsString);
+													newNodeRuleAttribute = currentNodeRuleAttribute.WithArgumentList(newNodeRuleArgumentList);
+												}
+												else
+												{
+													// 引用自己时，完全复制目标方法的 NodeRule 特性
+													newNodeRuleAttribute = currentNodeRuleAttribute
+														.WithName(targetNodeRuleAttribute.Name)
+														.WithArgumentList(targetNodeRuleAttribute.ArgumentList);
+												}
 
 												// 在新的根节点中查找对应的 NodeRule 特性并替换
 												var updatedCurrentMethod = newRoot.DescendantNodes()
@@ -424,6 +493,5 @@ namespace WorldTree.Analyzer
 			// 返回修改后的文档
 			return Task.FromResult(document.WithSyntaxRoot(newRoot2));
 		}
-
 	}
 }
