@@ -14,7 +14,7 @@ namespace WorldTree
 	/// </summary>
 	public class ListenerRuleExecutorGroup : Node, IListenerIgnorer, ComponentOf<ReferencedPool>
 		, AsComponentBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 监听器执行器字典集合

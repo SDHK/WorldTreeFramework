@@ -17,7 +17,7 @@ namespace WorldTree
 		, GenericOf<string, InputLayer>
 		, AsGenericBranch<string>
 		, AsChildBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 	}
 }

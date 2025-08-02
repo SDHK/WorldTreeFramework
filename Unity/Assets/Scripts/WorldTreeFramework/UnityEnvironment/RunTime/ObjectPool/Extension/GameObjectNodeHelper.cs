@@ -19,8 +19,8 @@ namespace WorldTree
 		/// <summary>
 		/// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
 		/// </summary>
-		public static async TreeTask<T> AddGameObjectNode<N, T>( N self)
-			where N : class, AsChildBranch
+		public static async TreeTask<T> AddGameObjectNode<N, T>(N self)
+			where N : class, INode, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
 			GameObject prefab = await self.World.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
@@ -30,8 +30,8 @@ namespace WorldTree
 		/// <summary>
 		/// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
 		/// </summary>
-		public static async TreeTask<T> AddGameObjectNode<N, T>( N self, Transform parent)
-			where N : class, AsChildBranch
+		public static async TreeTask<T> AddGameObjectNode<N, T>(N self, Transform parent)
+			where N : class, INode, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
 			GameObject prefab = await self.World.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();
@@ -41,8 +41,8 @@ namespace WorldTree
 		/// <summary>
 		/// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
 		/// </summary>
-		public static async TreeTask<T> AddGameObjectNode<N, T>( N self, GameObjectNode parent)
-			where N : class, AsChildBranch
+		public static async TreeTask<T> AddGameObjectNode<N, T>(N self, GameObjectNode parent)
+			where N : class, INode, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
 			GameObject prefab = await self.World.AddComponent(out AddressablesManager _).LoadAssetAsync<GameObject, T>();

@@ -123,7 +123,7 @@ namespace WorldTree
 	/// 父节点限制
 	/// </summary>
 	/// <typeparam name="P">父节点</typeparam>
-	public interface NodeOf<in P> : INode
+	public interface NodeOf<in P>
 		where P : class, INode
 	{
 

@@ -21,8 +21,8 @@ namespace WorldTree
 	/// 节点监听器接口
 	/// </summary>
 	public interface INodeListener : INode
-		, AsListenerAddRule
-		, AsListenerRemoveRule
+		, AsRule<ListenerAdd>
+		, AsRule<ListenerRemove>
 	{ }
 
 

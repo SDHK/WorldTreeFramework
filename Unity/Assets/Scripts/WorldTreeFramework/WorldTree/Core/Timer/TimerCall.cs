@@ -15,8 +15,8 @@ namespace WorldTree
 	/// </summary>
 	public class TimerCall : Node, ComponentOf<INode>, TempOf<INode>
 		, AsChildBranch
-		, AsAwake<float>
-		, AsTreeTaskTokenEvent
+		, AsRule<Awake<float>>
+		, AsRule<TreeTaskTokenEvent>
 	{
 		/// <summary>
 		/// 是否运行
@@ -36,7 +36,7 @@ namespace WorldTree
 		/// </summary>
 		public RuleExecutor<ISendRule> Callback;
 
-		
+
 
 		public override string ToString()
 		{

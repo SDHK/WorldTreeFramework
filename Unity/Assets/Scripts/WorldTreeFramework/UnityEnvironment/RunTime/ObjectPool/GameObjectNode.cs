@@ -15,7 +15,7 @@ namespace WorldTree
 	/// </summary>
 	public class GameObjectNode : Node, ComponentOf<INode>, ChildOf<INode>
 		, AsComponentBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 对象池

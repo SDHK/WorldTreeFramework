@@ -12,7 +12,7 @@ namespace WorldTree
 	/// 输入控件
 	/// </summary>
 	public class InputControl : Node
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 输入类型

@@ -15,9 +15,9 @@ namespace WorldTree
 	/// 泛型树值类型
 	/// </summary>
 	public partial class TreeValue<T> : TreeValueBase<T>
-		, AsAwake
-		, AsAwake<T>
 		, ChildOf<INode>
+		, AsRule<Awake>
+		, AsRule<Awake<T>>
 		where T : IEquatable<T>
 	{
 		/// <summary>

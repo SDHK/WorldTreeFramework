@@ -11,7 +11,7 @@ namespace WorldTree
 	public class MainWorldWinForm : Node
 		, AsComponentBranch
 		, ComponentOf<WorldLine>
-		, AsAwake<Form>
+		, AsRule<Awake<Form>>
 	{
 
 	}

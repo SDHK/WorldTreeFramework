@@ -15,7 +15,7 @@ namespace WorldTree
 	/// </summary>
 	public class AssetManager : Node
 		, ComponentOf<World>
-		, AsLoadAssetAsync
+		, AsRule<LoadAssetAsync>
 	{
 		/// <summary>
 		/// 资源字典

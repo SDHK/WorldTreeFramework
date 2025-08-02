@@ -15,7 +15,7 @@ namespace WorldTree
 	/// </summary>
 	public class GameTimeManager : Node
 		, CoreManagerOf<WorldLine>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 时间缩放比例

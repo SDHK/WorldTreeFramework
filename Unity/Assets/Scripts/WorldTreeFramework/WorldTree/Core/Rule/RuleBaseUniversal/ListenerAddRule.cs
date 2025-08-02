@@ -9,11 +9,6 @@
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 法则约束 : 监听节点添加法则
-	/// </summary>
-	public interface AsListenerAddRule : AsRule<ListenerAdd> { }
-
 
 	/// <summary>
 	/// 监听节点法则添加法则

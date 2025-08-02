@@ -17,7 +17,7 @@ namespace WorldTree
 	[INodeProxy]
 	public partial class TreeHashSet<T> : HashSet<T>, INode
 		, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 	}
 

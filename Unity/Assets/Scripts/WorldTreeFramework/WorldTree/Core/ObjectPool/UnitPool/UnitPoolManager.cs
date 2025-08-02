@@ -14,7 +14,7 @@ namespace WorldTree
 	/// </summary>
 	public class UnitPoolManager : PoolManagerBase<UnitPool>
 		, CoreManagerOf<WorldLine>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 尝试获取单位

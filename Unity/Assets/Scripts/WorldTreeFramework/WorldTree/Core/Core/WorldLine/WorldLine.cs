@@ -47,7 +47,7 @@ namespace WorldTree
 	public class WorldLine : World, IWorldLine, IListenerIgnorer
 		, AsCoreManagerBranch
 		, AsComponentBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		#region 字段
 

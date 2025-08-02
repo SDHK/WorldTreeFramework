@@ -8,7 +8,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -16,8 +15,8 @@ namespace WorldTree
 	/// 数组对象池集合
 	/// </summary>
 	public class ArrayPoolGroup : Node, ChildOf<ArrayPoolManager>
-		, AsAwake<Type>
 		, AsChildBranch
+		, AsRule<Awake<Type>>
 	{
 		/// <summary>
 		/// 数组类型

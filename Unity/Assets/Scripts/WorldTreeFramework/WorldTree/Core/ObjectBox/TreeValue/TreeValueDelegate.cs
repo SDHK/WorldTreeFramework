@@ -15,8 +15,8 @@ namespace WorldTree
 	/// 绑定委托式泛型树值类型
 	/// </summary>
 	public partial class TreeValueDelegate<T> : TreeValueBase<T>
-		, AsAwake<object, Func<object, T>, Action<object, T>>
 		, ChildOf<INode>
+		, AsRule<Awake<object, Func<object, T>, Action<object, T>>>
 	where T : IEquatable<T>
 	{
 		/// <summary>

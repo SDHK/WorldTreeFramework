@@ -164,7 +164,8 @@ namespace WorldTree
 		/// <summary>
 		/// 交换两个下标的节点：不触发任何生命周期
 		/// </summary>
-		public static bool Swap(this AsListNodeBranch self, int index1, int index2)
+		public static bool Swap<N>(this N self, int index1, int index2)
+			where N : class, AsListNodeBranch, INode
 			=> self.ListNodeBranch()?.Swap(index1, index2) ?? false;
 	}
 }

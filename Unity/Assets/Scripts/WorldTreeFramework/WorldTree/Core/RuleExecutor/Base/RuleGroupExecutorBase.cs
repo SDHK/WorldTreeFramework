@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则集合执行器基类
 	/// </summary>
-	public abstract class RuleGroupExecutorBase : Node, IRuleGroupExecutor, IRuleExecutorEnumerable
+	public abstract class RuleGroupExecutorBase : Node, IGlobalRuleExecutor, IRuleExecutorEnumerable
 		, AsChildBranch
 	{
 		/// <summary>

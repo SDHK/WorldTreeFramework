@@ -14,7 +14,7 @@ namespace WorldTree
 	/// 树渐变基类
 	/// </summary>
 	public class TreeTweenBase : Node
-		, AsTreeTaskTokenEvent
+		, AsRule<TreeTaskTokenEvent>
 	{
 		/// <summary>
 		/// 启动标记

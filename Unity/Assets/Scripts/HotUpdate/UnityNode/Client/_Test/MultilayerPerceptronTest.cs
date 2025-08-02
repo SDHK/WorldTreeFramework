@@ -15,7 +15,7 @@ namespace WorldTree
 	/// </summary>
 	public class MultilayerPerceptronTest : Node, ComponentOf<InitialDomain>
 		, AsComponentBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 多层感知机管理器

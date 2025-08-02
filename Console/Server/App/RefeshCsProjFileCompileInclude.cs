@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 //using static WorldTree.RefeshCsProjFileCompileInclude;
@@ -9,7 +9,7 @@ namespace WorldTree
 	/// 刷新
 	/// </summary>
 	public class RefeshCsProjFileCompileInclude : Node, ComponentOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 窗口

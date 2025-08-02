@@ -14,7 +14,7 @@ namespace WorldTree
 	public class TaskTest : Node, ComponentOf<InitialDomain>
 		, AsComponentBranch
 		, AsChildBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 树任务

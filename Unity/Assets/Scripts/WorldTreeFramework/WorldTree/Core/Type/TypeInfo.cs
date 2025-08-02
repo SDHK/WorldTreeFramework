@@ -18,7 +18,7 @@ namespace WorldTree
 	/// </summary>
 	public class TypeInfo : Node
 		, CoreManagerOf<WorldLine>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 类型名称哈希码表

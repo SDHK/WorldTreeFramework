@@ -26,8 +26,8 @@ namespace WorldTree.Internal
 	/// </summary>
 	public class TreeTaskStateMachine : Node, ITreeTaskStateMachine
 		, TempOf<INode>
-		, AsAwake
-		, AsTreeTaskTokenEvent
+		, AsRule<Awake>
+		, AsRule<TreeTaskTokenEvent>
 	{
 		/// <summary>
 		/// 当前状态机任务
@@ -48,7 +48,7 @@ namespace WorldTree.Internal
 		/// </summary>
 		public void MoveNext()
 		{
-			 m_StateMachine?.MoveNext();
+			m_StateMachine?.MoveNext();
 		}
 	}
 

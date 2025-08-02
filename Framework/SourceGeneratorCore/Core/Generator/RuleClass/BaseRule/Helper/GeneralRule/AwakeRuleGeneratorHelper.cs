@@ -42,11 +42,7 @@ namespace WorldTree.SourceGenerator
 						/// 初始化法则
 						/// </summary>
 						public interface Awake{{genericsTypeAngle}} : ISendRule{{genericsTypeAngle}} {}
-
-						/// <summary>
-						/// 法则约束：初始化法则
-						/// </summary>
-						public interface AsAwake{{genericsTypeAngle}} : AsRule<Awake{{genericsTypeAngle}}>, INode {}
+						
 
 						/// <summary>
 						/// 初始化法则
@@ -56,6 +52,13 @@ namespace WorldTree.SourceGenerator
 					""");
 			}
 			Code.Append("}");
+
+			/*
+						/// <summary>
+						/// 法则约束：初始化法则
+						/// </summary>
+						public interface AsAwake{{genericsTypeAngle}} : AsRule<Awake{{genericsTypeAngle}}>, INode {}
+			 */
 
 			context.AddSource("AwakeRule.cs", SourceText.From(Code.ToString(), System.Text.Encoding.UTF8));
 		}

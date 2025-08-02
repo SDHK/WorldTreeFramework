@@ -16,6 +16,8 @@ namespace WorldTree.Server
 {
 
 
+
+
 	public static partial class DotNetInitRule
 	{
 
@@ -39,7 +41,22 @@ namespace WorldTree.Server
 			//self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse mouse, manager);
 			//MainTime();
 			//TestDivisionPrecision();
+			self.AddComponent(out Test<int> _);
 		}
+		/// <summary>
+		/// a
+		/// </summary>
+		/// <typeparam name="N"></typeparam>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="self"></param>
+		/// <param name="node"></param>
+		/// <returns></returns>
+
+		public static T AddComponent1<N, T>(this N self, out T node)
+			where N : class, INode, AsBranch<ComponentBranch>
+			where T : class, NodeOf<N, ComponentBranch>, AsRule<Awake>, INode
+		=> NodeBranchHelper.AddNode<N, ComponentBranch, long, T>(self, default(ComponentBranch), self.TypeToCode<T>(), out node);
+
 
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
 		private static void OnUpdateTime(this DotNetInit self, TimeSpan timeSpan)
@@ -185,6 +202,7 @@ namespace WorldTree.Server
 		[RuleSwitch(nameof(OnTestNodeEvent1), nameof(id), TestEnum.Test1)]
 		static void OnTestNodeEvent1<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
 		{
+			NodeRuleHelper.SendRule(self, default(TestNodeEventRule<Test<T>, Type>), id, io, arg3);
 		}
 
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>))]

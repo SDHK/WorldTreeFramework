@@ -6,7 +6,6 @@
 * 描述：
 
 */
-using System;
 using UnityEngine;
 
 
@@ -21,10 +20,11 @@ namespace WorldTree
 	/// <summary>
 	/// GUIWindow
 	/// </summary>
-	public class GUIWindow : GUIBase, ComponentOf<GUIGeneralWindow>
-        , AsAwake
-        , AsGuiUpdate
-    {
+	public class GUIWindow : GUIBase
+		, ComponentOf<GUIGeneralWindow>
+		, AsRule<Awake>
+		, AsRule<GuiUpdate>
+	{
 		/// <summary>
 		/// 标题
 		/// </summary>
@@ -42,39 +42,39 @@ namespace WorldTree
 		/// 样式
 		/// </summary>
 		public void Window(int id)
-        {
-            group?.Send(Parent);
-            if (isDrag)
-            {
-                GUI.DragWindow();
-            }
-        }
-    }
+		{
+			group?.Send(Parent);
+			if (isDrag)
+			{
+				GUI.DragWindow();
+			}
+		}
+	}
 
-    class GUIWindowAddSystem : AddRule<GUIWindow>
-    {
-        protected override void Execute(GUIWindow self)
-        {
-            //self.group = self.Core.RuleManager.GetRuleGroup<IGUIDrawSystem>();
-        }
-    }
+	class GUIWindowAddSystem : AddRule<GUIWindow>
+	{
+		protected override void Execute(GUIWindow self)
+		{
+			//self.group = self.Core.RuleManager.GetRuleGroup<IGUIDrawSystem>();
+		}
+	}
 
-    class GUIWindowOnGUISystem : GuiUpdateRule<GUIWindow>
-    {
-        protected override void Execute(GUIWindow self)
-        {
-            self.rect = GUILayout.Window(self.GetHashCode(), self.rect, self.Window, default(string), self.Style);
-        }
-    }
+	class GUIWindowOnGUISystem : GuiUpdateRule<GUIWindow>
+	{
+		protected override void Execute(GUIWindow self)
+		{
+			self.rect = GUILayout.Window(self.GetHashCode(), self.rect, self.Window, default(string), self.Style);
+		}
+	}
 
-    class GUIWindowRemoveRule : RemoveRule<GUIWindow>
-    {
-        protected override void Execute(GUIWindow self)
-        {
-            //self.PoolRecycle(self.style);
-            self.style = null;
-        }
-    }
+	class GUIWindowRemoveRule : RemoveRule<GUIWindow>
+	{
+		protected override void Execute(GUIWindow self)
+		{
+			//self.PoolRecycle(self.style);
+			self.style = null;
+		}
+	}
 
 
 }

@@ -15,9 +15,9 @@ namespace WorldTree
 	/// </summary>
 	public class UtcTimeTest : Node
 		, ComponentOf<InitialDomain>
-		, AsAwake
-		, AsGuiUpdateTime
-		, AsGuiUpdate
+		, AsRule<Awake>
+		, AsRule<GuiUpdateTime>
+		, AsRule<GuiUpdate>
 	{
 		/// <summary>
 		/// 开始时间

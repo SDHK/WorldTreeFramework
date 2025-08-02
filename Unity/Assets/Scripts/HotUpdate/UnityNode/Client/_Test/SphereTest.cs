@@ -14,7 +14,7 @@ namespace WorldTree
 	///	球体测试
 	/// </summary>
 	public class SphereTest : Node
-		, AsAwake
+		, AsRule<Awake>
 		, GenericOf<long, SphereManagerTest>
 	{
 		/// <summary>

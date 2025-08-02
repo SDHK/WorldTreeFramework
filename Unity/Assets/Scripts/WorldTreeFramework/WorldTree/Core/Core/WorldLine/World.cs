@@ -16,7 +16,7 @@ namespace WorldTree
 	public abstract class World : Node, ComponentOf<WorldLine>
 		, AsComponentBranch
 		, AsChildBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 	}
 

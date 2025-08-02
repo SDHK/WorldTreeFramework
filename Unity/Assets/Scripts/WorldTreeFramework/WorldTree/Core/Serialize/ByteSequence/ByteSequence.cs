@@ -17,7 +17,7 @@ namespace WorldTree
 	/// Byte序列
 	/// </summary>
 	public class ByteSequence : Node, IByteSequence
-		, AsAwake
+		, AsRule<Awake>
 		, AsComponentBranch
 		, TempOf<INode>
 	{

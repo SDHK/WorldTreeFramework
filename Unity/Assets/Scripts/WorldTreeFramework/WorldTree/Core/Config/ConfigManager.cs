@@ -5,7 +5,7 @@
 	/// </summary>
 	public class ConfigManager : Node
 		, CoreManagerOf<WorldLine>
-		, AsAwake
+		, AsRule<Awake>
 		, AsComponentBranch
 	{ }
 

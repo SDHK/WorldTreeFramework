@@ -17,11 +17,11 @@ namespace WorldTree
 	public class UnityWorldHeart : WorldHeartBase
 		, ComponentOf<WorldLine>
 		, AsComponentBranch
-		, AsAwake<int>
-		, AsLateUpdateTime
-		, AsFixedUpdateTime
-		, AsGuiUpdateTime
-		, AsDrawGizmosUpdateTime
+		, AsRule<Awake<int>>
+		, AsRule<LateUpdateTime>
+		, AsRule<FixedUpdateTime>
+		, AsRule<GuiUpdateTime>
+		, AsRule<DrawGizmosUpdateTime>
 	{
 
 		/// <summary>

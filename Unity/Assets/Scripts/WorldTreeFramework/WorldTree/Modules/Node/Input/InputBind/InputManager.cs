@@ -14,7 +14,7 @@ namespace WorldTree
 	public partial class InputManager : NodeData
 		, AsGenericBranch<string>
 		, ComponentOf<World>
-		, AsAwake
+		, AsRule<Awake>
 	{
 
 	}

@@ -18,7 +18,7 @@ namespace WorldTree
 	public class WindowManager : Node
 		, AsChildBranch
 		, AsComponentBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 全部窗口

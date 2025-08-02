@@ -14,7 +14,8 @@ namespace WorldTree
 	/// <summary>
 	/// 引用池
 	/// </summary>
-	public class ReferencedPool : Node, IListenerIgnorer, ChildOf<ReferencedPoolManager>
+	public class ReferencedPool : Node, IListenerIgnorer
+		, ChildOf<ReferencedPoolManager>
 		, AsComponentBranch
 	{
 		/// <summary>

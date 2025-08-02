@@ -17,8 +17,8 @@ namespace WorldTree
 	/// </summary>
 	public partial class GlobalRuleExecutor<R> : RuleGroupExecutorBase, INodeListener, IRuleExecutor<IRule>
 		, GenericOf<long, GlobalRuleExecutorManager>
-		, AsAwake
-		, AsListenerAddRule
+		, AsRule<Awake>
+		, AsRule<ListenerAdd>
 		where R : IGlobalRule
 	{
 		public override string ToString()

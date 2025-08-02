@@ -39,8 +39,7 @@ namespace WorldTree
 	/// <remarks>
 	/// <para>主要作用是通过法则类型逆变提示可填写参数</para>
 	/// </remarks>
-
-	public interface IRuleExecutor<in R> : IRuleExecutor where R : IRule { }
+	public interface IRuleExecutor<in R> : IWorldTreeBasic where R : IRule { }
 
 	/// <summary>
 	/// 法则执行器遍历接口
@@ -106,7 +105,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则集合执行器基类接口
 	/// </summary>
-	public interface IRuleGroupExecutor : IRuleExecutor
+	public interface IGlobalRuleExecutor : IRuleExecutor
 	{
 		/// <summary>
 		/// 尝试添加节点

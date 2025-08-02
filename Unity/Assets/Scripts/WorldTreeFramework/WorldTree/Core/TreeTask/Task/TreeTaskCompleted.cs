@@ -13,6 +13,6 @@ namespace WorldTree.Internal
 	/// </summary>
 	public class TreeTaskCompleted : AwaiterBase, ISyncTask
 		, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
     {  }
 }

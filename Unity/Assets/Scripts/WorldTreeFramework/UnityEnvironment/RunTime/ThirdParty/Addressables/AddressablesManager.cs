@@ -16,7 +16,7 @@ namespace WorldTree
 	/// Addressables 资源加载管理器
 	/// </summary>
 	public class AddressablesManager : Node, ComponentOf<World>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 资源字典

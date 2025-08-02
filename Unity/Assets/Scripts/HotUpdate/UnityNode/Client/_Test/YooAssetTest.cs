@@ -14,7 +14,7 @@ namespace WorldTree
 	///	YooAsset测试
 	/// </summary>
 	public class YooAssetTest : Node, ComponentOf<InitialDomain>
-	, AsAwake
+	, AsRule<Awake>
 	{
 		/// <summary>
 		/// 资源包

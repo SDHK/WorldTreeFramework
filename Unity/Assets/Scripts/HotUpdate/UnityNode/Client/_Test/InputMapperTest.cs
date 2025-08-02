@@ -22,8 +22,8 @@ namespace WorldTree
 	, AsComponentBranch
 	, AsChildBranch
 	, ComponentOf<InitialDomain>
-	, AsAwake
-	, AsInputTestEvent
+	, AsRule<Awake>
+	, AsRule<InputTestEvent>
 	{
 
 	}

@@ -4,7 +4,7 @@
 	/// 配置集合
 	/// </summary>
 	public abstract class ConfigGroup : Node
-		, AsAwake
+		, AsRule<Awake>
 		, ComponentOf<ConfigManager>
 	{
 

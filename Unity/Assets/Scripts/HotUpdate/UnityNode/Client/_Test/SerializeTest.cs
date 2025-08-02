@@ -109,7 +109,7 @@ namespace WorldTree
 	/// </summary>
 	public partial class SerializeTest : Node
 		, ComponentOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 测试浮点

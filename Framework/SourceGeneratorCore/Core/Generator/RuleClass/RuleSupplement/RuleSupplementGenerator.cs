@@ -189,13 +189,14 @@ namespace WorldTree.SourceGenerator
 			string WhereTypeArguments = TreeSyntaxHelper.GetWhereTypeArguments(classInterfaceSyntax[ClassFullName]);
 			string BaseTypePara = NamedSymbolHelper.GetRuleParametersTypeCommentPara(baseInterface, "\t");
 
-			//As约束接口
-			AddComment(Code, "法则约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{ClassFullName}>, INode {WhereTypeArguments}{{}}");
+			//As约束接口(不再生成法则约束简写)
+			//AddComment(Code, "法则约束", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
+			//Code.AppendLine(@$"	public interface As{ClassFullName} : AsRule<{ClassFullName}>, INode {WhereTypeArguments}{{}}");
 
 			//抽象基类
 			AddComment(Code, "法则基类", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}>, {ClassFullName} where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
+			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
+
 
 			//法则委托
 			//if (NamedSymbolHelper.CheckInterfaceName(typeSymbol, GeneratorHelper.ISendRule, out _))

@@ -35,7 +35,6 @@ namespace WorldTree
 
 
 			NodeRuleHelper.SendRule(self, default(UpdateTest));
-			NodeRuleHelper.SendRule(self, default(Update));
 		}
 
 		[NodeRule(nameof(UpdateRule<MainWorld>))]

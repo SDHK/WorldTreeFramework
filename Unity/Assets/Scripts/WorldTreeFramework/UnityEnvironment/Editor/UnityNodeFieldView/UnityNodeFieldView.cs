@@ -6,7 +6,7 @@
 	/// <typeparam name="T"></typeparam>
 	public class UnityNodeFieldView<T> : Node, IWorldTreeNodeViewBuilder
 		, ComponentOf<World>
-		, AsAwake
+		, AsRule<Awake>
 		, AsINodeFieldViewRule
 	{ }
 

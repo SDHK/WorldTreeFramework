@@ -13,7 +13,7 @@ namespace WorldTree.Internal
 	/// </summary>
 	public class TreeTaskTokenCatch : AwaiterBase<TreeTaskToken>, ISyncTask
 		, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 
 	{
 		public override TreeTaskToken GetResult()

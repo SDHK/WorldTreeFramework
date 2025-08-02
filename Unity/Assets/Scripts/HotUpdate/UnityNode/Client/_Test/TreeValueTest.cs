@@ -13,7 +13,7 @@ namespace WorldTree
 	/// </summary>
 	public class TreeValueTest : Node, ComponentOf<InitialDomain>
 		, AsChildBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 树值

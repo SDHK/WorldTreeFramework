@@ -21,20 +21,20 @@ namespace WorldTree
 	/// 树泛型列表
 	/// </summary>
 	/// <remarks>默认初始容量为2</remarks>
-	public class TreeList<T> : Node,
-		IList<T>,
-		ICollection<T>,
-		IEnumerable<T>,
-		IEnumerable,
-		IList,
-		ICollection,
-		IReadOnlyList<T>,
-		IReadOnlyCollection<T>,
-		ChildOf<INode>,
-		ComponentOf<INode>,
-		AsAwake,
-		AsAwake<int>,
-		AsAwake<IEnumerable<T>>
+	public class TreeList<T> : Node
+		, IList<T>
+		, ICollection<T>
+		, IEnumerable<T>
+		, IEnumerable
+		, IList
+		, ICollection
+		, IReadOnlyList<T>
+		, IReadOnlyCollection<T>
+		, ChildOf<INode>
+		, ComponentOf<INode>
+		, AsRule<Awake>
+		, AsRule<Awake<int>>
+		, AsRule<Awake<IEnumerable<T>>>
 	{
 		/// <summary>
 		/// 默认容量

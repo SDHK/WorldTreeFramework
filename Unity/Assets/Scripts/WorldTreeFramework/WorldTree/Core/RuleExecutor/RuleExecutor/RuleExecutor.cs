@@ -30,6 +30,9 @@ namespace WorldTree
 
 		public int TraversalCount => TargetNode.Value != null ? 1 : 0;
 
+		/// <summary>
+		/// a
+		/// </summary>
 		public void Clear()
 		{
 			TargetNode = default;
@@ -41,6 +44,9 @@ namespace WorldTree
 			return TraversalCount;
 		}
 
+		/// <summary>
+		/// a
+		/// </summary>
 		public void Remove(long id)
 		{
 			if (TargetNode == null) return;
@@ -49,6 +55,9 @@ namespace WorldTree
 			RuleList = default;
 		}
 
+		/// <summary>
+		/// a
+		/// </summary>
 		public void Remove(INode node)
 		{
 			if (TargetNode != node) return;
@@ -89,7 +98,7 @@ namespace WorldTree
 	/// </summary>
 	public class RuleExecutor<R> : RuleExecutorBase, IRuleExecutor<R>
 		, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 		where R : IRule
 	{
 		public override string ToString()

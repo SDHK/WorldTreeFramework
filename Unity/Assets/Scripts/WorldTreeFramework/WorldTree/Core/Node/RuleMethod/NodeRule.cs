@@ -44,7 +44,7 @@ namespace WorldTree
 		/// </summary>
 		public static P GetParent<N, P>(this N self, out P parent)
 			where P : class, INode
-			where N : NodeOf<P>
+			where N : NodeOf<P>, INode
 			=> parent = self.Parent as P;
 
 		/// <summary>

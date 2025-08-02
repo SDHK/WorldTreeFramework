@@ -23,8 +23,9 @@ namespace WorldTree
 	public partial class InputBind : NodeData
 		, ChildOf<InputGroup>
 		, GenericOf<string, InputGroup>
-		, AsInputGlobal
-		, AsAwake
+		, AsRule<InputGlobal>
+		, AsRule<Awake>
+
 	{
 
 		/// <summary>

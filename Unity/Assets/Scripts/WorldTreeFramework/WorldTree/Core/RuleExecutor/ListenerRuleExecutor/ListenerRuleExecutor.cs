@@ -15,7 +15,7 @@ namespace WorldTree
 	/// </summary>
 	public class ListenerRuleExecutor : RuleGroupExecutorBase, IListenerIgnorer, IRuleExecutor<IRule>
 		, ComponentOf<ListenerRuleExecutorGroup>
-		, AsAwake<RuleGroup>
+		, AsRule<Awake<RuleGroup>>
 	{
 		public override string ToString()
 		{

@@ -17,7 +17,7 @@ namespace WorldTree.Internal
 	public class TreeTaskLink : AwaiterBase, ISyncTask
 
 		, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 任务
@@ -79,7 +79,7 @@ namespace WorldTree.Internal
 	/// </summary>
 	public class TreeTaskLink<T> : AwaiterBase<T>, ISyncTask
 		, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 任务

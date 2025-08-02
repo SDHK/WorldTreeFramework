@@ -18,7 +18,7 @@ namespace WorldTree
 	public class ArrayPoolManager : Node, IListenerIgnorer
 		, CoreManagerOf<WorldLine>
 		, AsChildBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 数组对象池组字典

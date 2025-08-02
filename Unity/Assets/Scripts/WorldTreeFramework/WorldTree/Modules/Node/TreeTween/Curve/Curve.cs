@@ -12,8 +12,8 @@ namespace WorldTree
 	/// 曲线节点基类
 	/// </summary>
 	public class CurveBase : Node, ComponentOf<CurveManager>
-		, AsAwake
-		, AsCurveEvaluate
+		, AsRule<Awake>
+		, AsRule<CurveEvaluate>
 	{ }
 
 

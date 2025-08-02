@@ -13,7 +13,7 @@ namespace WorldTree
 	/// </summary>
 	public class PerceptronLayer : Node, ChildOf<INode>
 		, AsChildBranch
-		, AsAwake<int>
+		, AsRule<Awake<int>>
 	{
 		/// <summary>
 		/// 感知器节点

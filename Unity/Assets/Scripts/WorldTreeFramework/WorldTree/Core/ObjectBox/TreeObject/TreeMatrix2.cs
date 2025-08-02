@@ -17,7 +17,7 @@ namespace WorldTree
 	public class TreeMatrix2<T> : Node
 		, ChildOf<INode>
 		, AsChildBranch
-		, AsAwake<int, int>
+		, AsRule<Awake<int, int>>
 	{
 		/// <summary>
 		/// x轴长度

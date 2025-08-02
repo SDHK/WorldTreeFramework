@@ -48,8 +48,7 @@ namespace WorldTree.Server
 	/// Êó±êÊäÈëÇı¶¯Æ÷
 	/// </summary>
 	public class InputDriverMouse : InputDriver
-		, AsAwake<InputDeviceManager>
-		, AsUpdate
+		, AsRule<Awake<InputDeviceManager>>
 	{
 
 		/// <summary>

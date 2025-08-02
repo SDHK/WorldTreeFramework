@@ -27,9 +27,10 @@ namespace WorldTree.Server
 	/// </summary>
 	public partial class DotNetInit : Node
 		, ComponentOf<MainWorld>
-		, AsComponentBranch
-		, AsChildBranch
-		, AsAwake
+		//, AsBranch<IBranch>
+		//, AsComponentBranch
+		//, AsChildBranch
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// ≤‚ ‘
@@ -55,9 +56,9 @@ namespace WorldTree.Server
 	/// ≤‚ ‘
 	/// </summary>
 	public partial class Test<T> : Node
-		, ComponentOf<DotNetInit>
-		, AsTestNodeEvent<DotNetInit>
-		, AsRule<IRule>
+	, ComponentOf<DotNetInit>
+	, AsRule<TestNodeEvent<DotNetInit>>
+	, AsRule<TestNodeEvent<Type>>
 	{
 		/// <summary>
 		/// ◊÷∂Œ
@@ -69,6 +70,4 @@ namespace WorldTree.Server
 		/// </summary>
 		public long ConfigName => ConfigId;
 	}
-
-
 }

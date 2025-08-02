@@ -13,8 +13,8 @@ namespace WorldTree
 	/// </summary>
 	public class CounterCall : Node, ComponentOf<INode>, TempOf<INode>
 		, AsChildBranch
-		, AsAwake<int>
-		, AsTreeTaskTokenEvent
+		, AsRule<Awake<int>>
+		, AsRule<TreeTaskTokenEvent>
 
 	{
 		/// <summary>

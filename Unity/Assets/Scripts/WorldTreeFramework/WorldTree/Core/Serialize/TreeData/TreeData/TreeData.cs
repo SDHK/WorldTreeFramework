@@ -17,7 +17,7 @@ namespace WorldTree
 		, TempOf<INode>
 		, AsGenericBranch<long>
 		, AsListNodeBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 
 		/// <summary>

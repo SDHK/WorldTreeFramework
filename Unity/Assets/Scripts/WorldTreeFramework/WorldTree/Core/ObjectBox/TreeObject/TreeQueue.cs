@@ -16,7 +16,7 @@ namespace WorldTree
 	/// </summary>
 	[INodeProxy]
 	public partial class TreeQueue<T> : Queue<T>, INode, ChildOf<INode>, ComponentOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 	}
 

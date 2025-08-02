@@ -12,7 +12,7 @@ namespace WorldTree
 	/// 输入设备
 	/// </summary>
 	public class InputDevice : Node, ChildOf<InputDeviceManager>
-		, AsAwake<InputDeviceType, byte>
+		, AsRule<Awake<InputDeviceType, byte>>
 	{
 		/// <summary>
 		/// 设备类型

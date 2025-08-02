@@ -14,7 +14,7 @@ namespace WorldTree
 	public class MultilayerPerceptronManager : Node, ChildOf<INode>, ComponentOf<INode>
 		, AsComponentBranch
 		, AsChildBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 感知器层

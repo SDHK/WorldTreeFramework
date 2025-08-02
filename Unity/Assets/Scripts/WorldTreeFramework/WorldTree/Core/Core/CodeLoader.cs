@@ -22,8 +22,8 @@ namespace WorldTree
 	/// </summary>
 	public class CodeLoader : Node
 		, ComponentOf<World>
-		, AsAwake
-		, AsHotReload
+		, AsRule<Awake>
+		, AsRule<HotReload>
 	{
 		/// <summary>
 		/// 程序集加载上下文

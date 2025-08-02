@@ -19,8 +19,8 @@ namespace WorldTree
 	/// 真实时间管理器
 	/// </summary>
 	public class RealTimeManager : Node
-		, AsAwake
 		, CoreManagerOf<WorldLine>
+		, AsRule<Awake>
 	{
 
 		/// <summary>

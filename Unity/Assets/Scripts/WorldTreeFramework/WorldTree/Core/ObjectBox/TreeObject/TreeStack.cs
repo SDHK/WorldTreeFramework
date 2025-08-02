@@ -17,7 +17,7 @@ namespace WorldTree
 	/// </summary>
 	[INodeProxy]
 	public partial class TreeStack<T> : Stack<T>, INode, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 	}
 

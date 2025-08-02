@@ -41,7 +41,7 @@ namespace WorldTree
 	public class TreeCopier : Node
 		, TempOf<INode>
 		, AsRule<ITreeCopy>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 对象对应对象字典

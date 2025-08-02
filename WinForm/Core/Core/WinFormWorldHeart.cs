@@ -9,7 +9,7 @@ namespace WorldTree
 	public class WinFormWorldHeart : WorldHeartBase
 		, AsComponentBranch
 		, CoreManagerOf<WorldLine>
-		, AsAwake<int>
+		, AsRule<Awake<int>>
 	{
 
 		/// <summary>

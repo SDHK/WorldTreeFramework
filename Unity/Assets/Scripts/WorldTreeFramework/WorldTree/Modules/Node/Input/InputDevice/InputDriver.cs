@@ -12,7 +12,7 @@ namespace WorldTree
 	/// 输入设备驱动器
 	/// </summary>
 	public abstract class InputDriver : Node, ComponentOf<InputDeviceManager>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 输入设备管理器

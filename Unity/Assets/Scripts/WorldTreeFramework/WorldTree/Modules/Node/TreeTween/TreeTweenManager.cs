@@ -14,7 +14,7 @@ namespace WorldTree
 	/// 树渐变管理器
 	/// </summary>
 	public class TreeTweenManager : Node, ComponentOf<World>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 全局法则执行器

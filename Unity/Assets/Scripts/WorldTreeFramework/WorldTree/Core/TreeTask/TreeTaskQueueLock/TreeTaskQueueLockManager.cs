@@ -13,7 +13,7 @@ namespace WorldTree
 	/// </summary>
 	public class TreeTaskQueueLockManager : Node, ComponentOf<World>
 		, AsChildBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 锁的字典

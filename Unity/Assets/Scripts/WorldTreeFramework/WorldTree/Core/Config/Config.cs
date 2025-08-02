@@ -14,7 +14,7 @@ namespace WorldTree
 	/// 配置
 	/// </summary>
 	public abstract class Config<K> : Config
-		, AsAwake
+		, AsRule<Awake>
 		, GenericOf<K, ConfigGroup>
 	{
 		/// <summary>

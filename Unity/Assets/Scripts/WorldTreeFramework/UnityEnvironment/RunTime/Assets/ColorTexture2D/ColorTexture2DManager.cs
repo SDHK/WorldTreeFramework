@@ -36,7 +36,7 @@ namespace WorldTree
 	/// 颜色图片管理器
 	/// </summary>
 	public class ColorTexture2DManager : Node, ComponentOf<World>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 颜色图片字典

@@ -160,7 +160,7 @@ namespace WorldTree.Server
 	/// </summary>
 	public class SerializeTest : Node
 		, ComponentOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{ }
 
 }

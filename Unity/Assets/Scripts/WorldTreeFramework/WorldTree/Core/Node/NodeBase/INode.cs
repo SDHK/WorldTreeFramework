@@ -64,8 +64,8 @@ namespace WorldTree
 	/// 世界树数据节点接口
 	/// </summary>
 	public partial interface INodeData : INode
-		, AsSerialize
-		, AsDeserialize
+		, AsRule<Serialize>
+		, AsRule<Deserialize>
 	{ }
 
 	/// <summary>
@@ -77,6 +77,16 @@ namespace WorldTree
 	/// </remarks>
 	[TreeDataSerializable]
 	public partial interface INode : IWorldTreeBasic
+#if DEBUG
+		// 万能约束接口：Release模式下解除所有约束限制
+		// 父级约束解除
+		, NodeOf<INode, IBranch>
+		// 分支约束解除
+		, AsBranch<IBranch>
+		// 法则约束解除
+		, AsRule<IRule>
+#endif
+
 		, AsRule<Enable>
 		, AsRule<Add>
 		, AsRule<Graft>

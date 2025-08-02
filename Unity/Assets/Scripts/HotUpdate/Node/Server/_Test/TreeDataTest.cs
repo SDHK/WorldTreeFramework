@@ -18,7 +18,7 @@ namespace WorldTree.Server
 		, ComponentOf<MainWorld>
 		, AsComponentBranch
 		, AsChildBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// data
@@ -49,7 +49,7 @@ namespace WorldTree.Server
 	public partial class AData : Node
 		, ComponentOf<TreeDataTest>
 		, ChildOf<TreeDataTest>
-		, AsAwake
+		, AsRule<Awake>
 		, AsComponentBranch
 		, AsChildBranch
 	{
@@ -105,7 +105,7 @@ namespace WorldTree.Server
 	[TreeDataSerializable]
 	public partial class TreeDataNodeDataTest1 : NodeData
 		, ChildOf<TreeDataTest>
-		, AsAwake
+		, AsRule<Awake>
 		, AsChildBranch
 	{
 		/// <summary>
@@ -162,7 +162,7 @@ namespace WorldTree.Server
 	[TreeDataSerializable]
 	public partial class TreeDataNodeDataTest10 : NodeData
 		, ChildOf<TreeDataTest>
-		, AsAwake
+		, AsRule<Awake>
 		, AsChildBranch
 	{
 		/// <summary>
@@ -220,7 +220,7 @@ namespace WorldTree.Server
 	[TreeDataSerializable]
 	public partial class TreeDataNodeDataTest2 : NodeData
 		, ChildOf<TreeDataNodeDataTest1>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 名称

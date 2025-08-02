@@ -17,7 +17,7 @@ namespace WorldTree
 	[INodeProxy]
 	public partial class TreeConcurrentQueue<T> : ConcurrentQueue<T>, INode
 		, ChildOf<INode>, ComponentOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 	}
 

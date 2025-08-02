@@ -19,8 +19,8 @@ namespace WorldTree
 	[AsyncMethodBuilder(typeof(TreeTaskMethodBuilder))]
 	public class TreeTask : AwaiterBase
 		, TempOf<INode>
-		, AsAwake
-		, AsTreeTaskSetResuIt
+		, AsRule<Awake>
+		, AsRule<TreeTaskSetResuIt>
 	{
 		/// <summary>
 		/// 内部协程
@@ -62,8 +62,8 @@ namespace WorldTree
 	[AsyncMethodBuilder(typeof(TreeTaskMethodBuilder<>))]
 	public class TreeTask<T> : AwaiterBase<T>
 		, TempOf<INode>
-		, AsAwake
-		, AsTreeTaskSetResuIt<T>
+		, AsRule<Awake>
+		, AsRule<TreeTaskSetResuIt<T>>
 	{
 		/// <summary>
 		/// 内部协程

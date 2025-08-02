@@ -129,7 +129,7 @@ namespace WorldTree.Server
 	public class DeepCopyTest : Node
 		, ComponentOf<INode>
 		, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{ }
 
 

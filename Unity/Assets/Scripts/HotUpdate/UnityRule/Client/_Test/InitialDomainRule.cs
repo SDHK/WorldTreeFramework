@@ -75,8 +75,8 @@ namespace WorldTree
 			//GUILayout.Label($@"    {timeSpan.TotalMilliseconds} !  ", new GUIStyle() { fontSize = 60 });
 		}
 
+
 		[NodeRule(nameof(RemoveRule<InitialDomain>))]
-		[RuleSwitch(nameof(self.Id), 10)]
 		private static void OnRemove(this InitialDomain self)
 		{
 			self.Log($"初始域关闭！！");

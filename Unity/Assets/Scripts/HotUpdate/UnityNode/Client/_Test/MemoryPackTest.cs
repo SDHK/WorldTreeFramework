@@ -168,7 +168,7 @@ namespace WorldTree
 	/// </summary>
 	public class MemoryPackTest : Node
 		, ComponentOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 测试数据

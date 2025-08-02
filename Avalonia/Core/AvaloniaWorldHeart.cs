@@ -9,7 +9,7 @@ namespace WorldTree
 	public class AvaloniaWorldHeart : WorldHeartBase
 		, AsComponentBranch
 		, CoreManagerOf<WorldLine>
-		, AsAwake<int>
+		, AsRule<Awake<int>>
 	{
 
 		/// <summary>

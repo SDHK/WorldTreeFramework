@@ -16,7 +16,7 @@ namespace WorldTree
 	public class SphereManagerTest : Node
 		, ComponentOf<InitialDomain>
 		, AsGenericBranch<long>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 重力

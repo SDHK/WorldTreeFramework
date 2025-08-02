@@ -16,7 +16,7 @@ namespace WorldTree
     /// GameObject对象池
     /// </summary>
     public class GameObjectPool : GenericPool<GameObject>, ChildOf<GameObjectPoolManager>
-        , AsAwake
+        , AsRule<Awake>
     {
         /// <summary>
         /// 预制体

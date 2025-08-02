@@ -12,7 +12,7 @@ namespace WorldTree
 	/// 数据库代理
 	/// </summary>
 	public class DataBaseTestProxy : DataBaseProxy
-		, AsAwake
+		, AsRule<Awake>
 	{
 
 	}
@@ -25,7 +25,7 @@ namespace WorldTree
 	, AsComponentBranch
 	, AsChildBranch
 	, ComponentOf<InitialDomain>
-	, AsAwake
+	, AsRule<Awake>
 	{
 
 	}
@@ -36,7 +36,7 @@ namespace WorldTree
 	[TreeDataSerializable]
 	public partial class TestClass : NodeData
 		, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 名称

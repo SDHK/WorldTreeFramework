@@ -15,7 +15,7 @@ namespace WorldTree
     /// </summary>
     public class PerceptronNode : Node, ChildOf<INode>
         , AsChildBranch
-        , AsAwake
+        , AsRule<Awake>
     {
         /// <summary>
         /// 上连接

@@ -22,14 +22,13 @@ namespace WorldTree
 	public class InitialDomain : Node, ComponentOf<INode>
 		, AsComponentBranch
 		, AsChildBranch
-		, AsAwake
-		, AsFixedUpdateTime
-		, AsUpdateTime
-		, AsLateUpdateTime
-		, AsGuiUpdateTime
+		, AsRule<Awake>
+		, AsRule<FixedUpdateTime>
+		, AsRule<LateUpdateTime>
+		, AsRule<GuiUpdateTime>
 		, AsRule<IRule>
-		, AsCurveEvaluate
-		, AsTestEvent
+		, AsRule<CurveEvaluate>
+		, AsRule<TestEvent>
 	{
 		/// <summary>
 		/// 测试动画曲线

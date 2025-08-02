@@ -6,7 +6,7 @@ namespace WorldTree
 	/// 对象池管理器基类
 	/// </summary>
 	public abstract class PoolManagerBase : Node, IListenerIgnorer
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 忽略类型名单

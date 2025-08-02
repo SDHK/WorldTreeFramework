@@ -18,7 +18,7 @@ namespace EditorTool
     /// 编辑器窗体组件
     /// </summary>
     public class EditorGUIWindow : Node, ComponentOf<INode>
-        , AsAwake
+        , AsRule<Awake>
     {
         public MonoEditorGUIWindow window;
     }

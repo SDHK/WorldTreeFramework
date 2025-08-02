@@ -8,8 +8,7 @@ namespace WorldTree
 	public partial class MainWorld : World
 		, AsComponentBranch
 		, ComponentOf<World>
-		, AsAwake<MainWindow>
-		, AsUpdate
+		, AsRule<Awake<MainWindow>>
 	{
 		/// <summary>
 		/// 窗口

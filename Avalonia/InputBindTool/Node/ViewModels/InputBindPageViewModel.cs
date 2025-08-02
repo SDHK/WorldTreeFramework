@@ -9,8 +9,8 @@ namespace WorldTree
 	public class InputBindPageViewModel : Node, INodeListener
 		, AsComponentBranch
 		, ComponentOf<MainWorld>
-		, AsAwake<InputBindPage>
-		, AsListenerAddRule
+		, AsRule<Awake<InputBindPage>>
+		, AsRule<ListenerAdd>
 	{
 
 		/// <summary>

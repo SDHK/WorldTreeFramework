@@ -15,7 +15,7 @@ namespace WorldTree
 	/// </summary>
 	public class CurveManager : Node, ComponentOf<World>
 		, AsComponentBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 
 	}

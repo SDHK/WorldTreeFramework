@@ -49,7 +49,7 @@ namespace WorldTree
 	public partial class WorldContext : SynchronizationContext, INode
 		, AsChildBranch
 		, CoreManagerOf<WorldLine>
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 请求队列

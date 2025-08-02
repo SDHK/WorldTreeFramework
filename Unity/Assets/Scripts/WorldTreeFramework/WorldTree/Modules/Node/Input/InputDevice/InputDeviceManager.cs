@@ -24,8 +24,7 @@ namespace WorldTree
 		, ComponentOf<World>
 		, AsComponentBranch
 		, AsChildBranch
-		, AsAwake
-		, AsUpdate
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 输入设备集合

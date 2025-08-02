@@ -14,7 +14,7 @@ namespace WorldTree
 	/// 感知器连线
 	/// </summary>
 	public class PerceptronLine : Node, ChildOf<PerceptronNode>
-		, AsAwake<PerceptronNode, PerceptronNode>
+		, AsRule<Awake<PerceptronNode, PerceptronNode>>
 	{
 		/// <summary>
 		/// 随机数

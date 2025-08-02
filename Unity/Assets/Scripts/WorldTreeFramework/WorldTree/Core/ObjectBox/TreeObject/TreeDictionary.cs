@@ -18,7 +18,7 @@ namespace WorldTree
 	public partial class TreeDictionary<Key, V> : Dictionary<Key, V>, INode
 		, ComponentOf<INode>
 		, ChildOf<INode>
-		, AsAwake
+		, AsRule<Awake>
 	{
 	}
 

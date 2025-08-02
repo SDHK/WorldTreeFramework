@@ -20,7 +20,7 @@ namespace WorldTree
 	/// </summary>
 	public class DynamicNodeQueue : Node, ComponentOf<INode>, ChildOf<INode>, IEnumerable<INode>
 		, AsChildBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 节点id队列

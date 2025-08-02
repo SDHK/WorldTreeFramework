@@ -17,7 +17,7 @@ namespace WorldTree
 	public partial class InputLayer : NodeData
 		, GenericOf<string, InputArchive>
 		, AsGenericBranch<string>
-		, AsAwake
+		, AsRule<Awake>
 	{
 	}
 }

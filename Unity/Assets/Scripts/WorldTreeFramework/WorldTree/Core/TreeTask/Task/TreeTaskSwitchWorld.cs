@@ -16,8 +16,8 @@ namespace WorldTree
 	/// </summary>
 	public class TreeTaskSwitchWorld : AwaiterBase
 		, ChildOf<WorldContext>
-		, AsAwake<WorldContext>
-		, AsTreeTaskSetResuIt
+		, AsRule<Awake<WorldContext>>
+		, AsRule<TreeTaskSetResuIt>
 	{
 		/// <summary>
 		/// 世界上下文

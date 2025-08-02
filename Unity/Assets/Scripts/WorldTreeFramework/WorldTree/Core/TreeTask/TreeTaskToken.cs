@@ -34,8 +34,8 @@ namespace WorldTree
 	/// </summary>
 	public class TreeTaskToken : Node, ChildOf<INode>, ComponentOf<INode>
 		, AsChildBranch
-		, AsAwake
-		, AsTreeTaskTokenEvent
+		, AsRule<Awake>
+		, AsRule<TreeTaskTokenEvent>
 	{
 		/// <summary>
 		/// 任务状态

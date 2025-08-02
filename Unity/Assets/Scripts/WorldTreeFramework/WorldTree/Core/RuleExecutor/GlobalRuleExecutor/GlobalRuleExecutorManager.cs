@@ -69,6 +69,6 @@ namespace WorldTree
 	/// </summary>
 	public class GlobalRuleExecutorManager : Node, CoreManagerOf<WorldLine>
 		, AsGenericBranch<long>
-		, AsAwake
+		, AsRule<Awake>
 	{ }
 }

@@ -18,7 +18,7 @@ namespace WorldTree
 	public class WorldHeart : WorldHeartBase
 		, AsComponentBranch
 		, CoreManagerOf<WorldLine>
-		, AsAwake<int>
+		, AsRule<Awake<int>>
 	{
 		/// <summary>
 		/// 线程退出标记

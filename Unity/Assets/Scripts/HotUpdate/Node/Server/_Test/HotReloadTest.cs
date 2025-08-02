@@ -14,7 +14,7 @@ namespace WorldTree.Server
 	public class HotReloadTest : Node
 		, ComponentOf<INode>
 		, AsComponentBranch
-		, AsAwake
+		, AsRule<Awake>
 	{
 	}
 }
