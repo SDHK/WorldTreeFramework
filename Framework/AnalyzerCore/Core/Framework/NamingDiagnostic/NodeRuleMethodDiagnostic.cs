@@ -96,6 +96,8 @@ namespace WorldTree.Analyzer
 			bool isError = false;
 			//拿到方法名称 ，判断是否是On开头
 			if (!methodDeclaration.Identifier.Text.StartsWith("On")) isError = true;
+			//判断是否是Rule结尾
+			if (!methodDeclaration.Identifier.Text.EndsWith("Rule")) isError = true;
 			// 比较特性参数类型和方法参数类型 顺序和类型是否一致
 			if (AttributeTypeNames.Count != MethodTypeNames.Count || AttributeTypeTNames.Count != MethodTypeTNames.Count)
 			{
@@ -246,7 +248,7 @@ namespace WorldTree.Analyzer
 
 
 			// 获取 ruleTypeSymbol 的类型名称（不带命名空间和泛型）
-			var ruleTypeName = "On" + ruleTypeSymbol.Name.Replace("Rule", "");
+			var ruleTypeName = "On" + ruleTypeSymbol.Name;
 
 			StringBuilder classCode = new();
 			classCode.AppendLine(GetRuleMethod(ruleBaseEnum, ruleTypeName, typeTName, genericTypeParameter, outType));

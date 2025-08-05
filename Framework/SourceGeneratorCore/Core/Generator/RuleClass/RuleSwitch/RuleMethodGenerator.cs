@@ -41,6 +41,8 @@ namespace WorldTree.SourceGenerator
 
 		public bool isRuleType = false;
 
+		public string Comment = string.Empty;
+
 		public List<RuleMethodData> Methods = new();
 
 		public INamedTypeSymbol ruleTypeSymbol;
@@ -99,6 +101,10 @@ namespace WorldTree.SourceGenerator
 
 					AttributeArgumentSyntax argumentRuleType = attributeNodeRule.ArgumentList.Arguments.Count == 2 ? attributeNodeRule.ArgumentList.Arguments[1] : null;
 					bool isRuleType = argumentRuleType?.Expression is LiteralExpressionSyntax literalExpr && literalExpr.Token.IsKind(SyntaxKind.TrueKeyword);
+					string Comment = string.Empty;
+					//methodDeclaration 换为 IMethodSymbol
+					var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
+
 					//如果有RuleSwitch特性，则是分发方法
 					if (TreeSyntaxHelper.TryGetAttribute(methodDeclaration, GeneratorHelper.RuleSwitchAttribute, out AttributeSyntax attributeRuleSwitch))
 					{
@@ -120,6 +126,19 @@ namespace WorldTree.SourceGenerator
 						if (!TryGetSwitchValue(context, semanticModel, methodDeclaration, argumentSwitch, argumentCase, out string switchValueType, out string switchValue, out string caseValue))
 							continue;
 
+						if (isRuleType)
+						{
+							if (methodSymbol != null)
+							{
+								Comment = NamedSymbolHelper.GetDocumentationComment(methodSymbol, "		");
+							}
+							if (string.IsNullOrEmpty(Comment))
+							{
+								Comment = NamedSymbolHelper.GetDocumentationComment(ruleTypeSymbol, "		");
+							}
+						}
+
+
 						//因为分发方法会有多个，所以使用方法标记的法则类型组合作为文件名
 						var classSyntax = methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
 
@@ -134,7 +153,7 @@ namespace WorldTree.SourceGenerator
 						if (ruleNameNew == null) continue;
 
 						ruleNameNew = System.Text.RegularExpressions.Regex.Replace(ruleNameNew, @"[^a-zA-Z0-9_]", "_");
-						className = $"{ruleNameNew}Rule";
+						className = $"{ruleNameNew}";
 
 
 						if (!fileDatas.TryGetValue(fileName, out RuleFileData ruleFileData))
@@ -159,7 +178,11 @@ namespace WorldTree.SourceGenerator
 							ruleClassData.switchValue = switchValue;
 							ruleFileData.Class.Add(className, ruleClassData);
 						}
-						if (!ruleClassData.isRuleType && isRuleType) ruleClassData.isRuleType = true;
+						if (!ruleClassData.isRuleType && isRuleType)
+						{
+							ruleClassData.isRuleType = true;
+							ruleClassData.Comment = Comment;
+						}
 						ruleClassData.Methods.Add(new RuleMethodData()
 						{
 							attributeSyntax = attributeNodeRule,
@@ -171,6 +194,18 @@ namespace WorldTree.SourceGenerator
 					//简写方法
 					else if (TryGetRuleType(semanticModel, attributeNodeRule.ArgumentList.Arguments[0], out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 					{
+						if (isRuleType)
+						{
+							if (methodSymbol != null)
+							{
+								Comment = NamedSymbolHelper.GetDocumentationComment(methodSymbol, "		");
+							}
+							if (string.IsNullOrEmpty(Comment))
+							{
+								Comment = NamedSymbolHelper.GetDocumentationComment(ruleTypeSymbol, "		");
+							}
+						}
+
 						//因为是简写方法，所以直接使用方法所在的文件名
 						string fileName = Path.GetFileNameWithoutExtension(methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First().SyntaxTree.FilePath);
 
@@ -185,7 +220,7 @@ namespace WorldTree.SourceGenerator
 						}
 						//获取方法名称
 						string methodName = methodDeclaration.Identifier.Text;
-						string className = $"{methodName}Rule";
+						string className = $"{methodName}";
 						if (!ruleFileData.Class.TryGetValue(className, out RuleClassData ruleClassData))
 						{
 							ruleClassData = new();
@@ -196,7 +231,11 @@ namespace WorldTree.SourceGenerator
 							ruleClassData.ruleBaseEnum = ruleBaseEnum;
 							ruleFileData.Class.Add(className, ruleClassData);
 						}
-						if (!ruleClassData.isRuleType && isRuleType) ruleClassData.isRuleType = true;
+						if (!ruleClassData.isRuleType && isRuleType)
+						{
+							ruleClassData.isRuleType = true;
+							ruleClassData.Comment = Comment;
+						}
 						ruleClassData.Methods.Add(new RuleMethodData()
 						{
 							attributeSyntax = attributeNodeRule,
@@ -268,37 +307,104 @@ namespace WorldTree.SourceGenerator
 			string genericParameter = GetRuleParameter(typeNames, isCall, out _);
 			string methodName = classData.Methods[0].Method.Identifier.Text;
 
-			switch (classData.ruleBaseEnum)
+			if (classData.isRuleType)
 			{
-				case RuleBaseEnum.SendRule:
-				case RuleBaseEnum.ListenerRule:
-					classCode.AppendLine(
+				// 检查类型是否符合规则
+				if (!NamedSymbolHelper.CheckBase(classData.ruleTypeSymbol, GeneratorHelper.Rule, out ITypeSymbol typeSymbol)) return;
+
+				// 获取typeSymbol 类型的第二个泛型参数类型
+				ITypeSymbol ruleTypeSymbol = (typeSymbol as INamedTypeSymbol).TypeArguments[1];
+				string ClassName = classData.ClassName.Replace("Rule", "");
+				classCode.AppendLine(classData.Comment);
+				classCode.AppendLine($"		public interface {ClassName}{typeTName} : {ruleTypeSymbol.Name}{typeTName} {{}}");
+			}
+
+
+			if (classData.isRuleType)
+			{
+				classCode.AppendLine($"		sealed class {classData.ClassName}_RuleMethod{typeTName} : {classData.ruleTypeSymbol.ToDisplayString()}");
+				classCode.AppendLine($"		{{");
+				string ClassName = classData.ClassName.Replace("Rule", "");
+				classCode.AppendLine(
 					$$"""
-							sealed class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override void Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+								public override void OnCreate() 
+								{
+									base.OnCreate();
+									RuleType = Core.TypeToCode(typeof({{ClassName}}{{typeTName}}));
+								}
 					"""
-					);
-					break;
-				case RuleBaseEnum.SendRuleAsync:
-					classCode.AppendLine(
+				);
+
+				switch (classData.ruleBaseEnum)
+				{
+					case RuleBaseEnum.SendRule:
+					case RuleBaseEnum.ListenerRule:
+						classCode.AppendLine(
 					$$"""
-							sealed class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+								protected override void Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); 
 					"""
-					);
-					break;
-				case RuleBaseEnum.CallRule:
-					classCode.AppendLine(
+						);
+						break;
+					case RuleBaseEnum.SendRuleAsync:
+						classCode.AppendLine(
 					$$"""
-							sealed class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override {{outType}} Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+								protected override TreeTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); 
 					"""
-					);
-					break;
-				case RuleBaseEnum.CallRuleAsync:
-					classCode.AppendLine(
+						);
+						break;
+					case RuleBaseEnum.CallRule:
+						classCode.AppendLine(
 					$$"""
-							sealed class {{classData.ClassName}}{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+								protected override {{outType}} Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); 
 					"""
-					);
-					break;
+						);
+						break;
+					case RuleBaseEnum.CallRuleAsync:
+						classCode.AppendLine(
+					$$"""
+								protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}});
+					"""
+						);
+						break;
+				}
+
+
+				classCode.AppendLine($"		}}");
+			}
+			else
+			{
+				switch (classData.ruleBaseEnum)
+				{
+					case RuleBaseEnum.SendRule:
+					case RuleBaseEnum.ListenerRule:
+						classCode.AppendLine(
+						$$"""
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override void Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+					"""
+						);
+						break;
+					case RuleBaseEnum.SendRuleAsync:
+						classCode.AppendLine(
+						$$"""
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+					"""
+						);
+						break;
+					case RuleBaseEnum.CallRule:
+						classCode.AppendLine(
+						$$"""
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override {{outType}} Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+					"""
+						);
+						break;
+					case RuleBaseEnum.CallRuleAsync:
+						classCode.AppendLine(
+						$$"""
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+					"""
+						);
+						break;
+				}
 			}
 		}
 
@@ -324,7 +430,19 @@ namespace WorldTree.SourceGenerator
 			string genericParameter = GetRuleParameter(typeNames, isCall, out _);
 			string genericType = GetRuleType(typeNames, isCall, out _);
 
-			classCode.AppendLine($"		sealed class {classData.ClassName}{typeTName} : {classData.ruleTypeSymbol.ToDisplayString()}");
+			if (classData.isRuleType)
+			{
+				// 检查类型是否符合规则
+				if (!NamedSymbolHelper.CheckBase(classData.ruleTypeSymbol, GeneratorHelper.Rule, out ITypeSymbol typeSymbol)) return;
+
+				// 获取typeSymbol 类型的第二个泛型参数类型
+				ITypeSymbol ruleTypeSymbol = (typeSymbol as INamedTypeSymbol).TypeArguments[1];
+				string ClassName = classData.ClassName.Replace("Rule", "");
+				classCode.AppendLine(classData.Comment);
+				classCode.AppendLine($"		public interface {ClassName}{typeTName} : {ruleTypeSymbol.Name}{typeTName} {{}}");
+			}
+
+			classCode.AppendLine($"		sealed class {classData.ClassName}_RuleMethod{typeTName} : {classData.ruleTypeSymbol.ToDisplayString()}");
 			classCode.AppendLine($"		{{");
 			classCode.AppendLine($"			/// <summary>");
 			classCode.AppendLine($"			/// 法则分发字典");
@@ -357,12 +475,13 @@ namespace WorldTree.SourceGenerator
 
 			if (classData.isRuleType)
 			{
+				string ClassName = classData.ClassName.Replace("Rule", "");
 				classCode.AppendLine(
 					$$"""
 								public override void OnCreate() 
 								{
 									base.OnCreate();
-									RuleType = Core.TypeToCode(typeof({{classData.ClassName}}{{typeTName}}));
+									RuleType = Core.TypeToCode(typeof({{ClassName}}{{typeTName}}));
 								}
 					"""
 				);
@@ -438,6 +557,8 @@ namespace WorldTree.SourceGenerator
 
 			classCode.AppendLine($"		}}");
 		}
+
+
 
 		/// <summary>
 		/// 获取法则名称
@@ -579,6 +700,12 @@ namespace WorldTree.SourceGenerator
 					caseValue = $"typeof({typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)})";
 					return true;
 				}
+			}
+			else if (argumentCase.Expression is DefaultExpressionSyntax defaultExpression)
+			{
+				// 处理 default(T) 表达式
+				caseValue = defaultExpression.ToString();
+				return true;
 			}
 			return false;
 		}

@@ -83,6 +83,11 @@ namespace WorldTree
 
 
 		/// <summary>
+		/// 法则基类
+		/// </summary>
+		public const string Rule = "Rule";
+
+		/// <summary>
 		/// 通知法则基类
 		/// </summary>
 		public const string SendRule = "SendRule";

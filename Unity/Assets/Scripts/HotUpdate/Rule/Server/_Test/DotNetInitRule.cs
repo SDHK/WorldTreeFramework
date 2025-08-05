@@ -20,10 +20,8 @@ namespace WorldTree.Server
 
 	public static partial class DotNetInitRule
 	{
-
-
 		[NodeRule(nameof(AddRule<DotNetInit>))]
-		private static void OnAdd(this DotNetInit self)
+		private static void OnAddRule(this DotNetInit self)
 		{
 			self.Log($"启动！！");
 
@@ -35,7 +33,7 @@ namespace WorldTree.Server
 		}
 
 		[NodeRule(nameof(EnableRule<DotNetInit>))]
-		private static void OnEnable(this DotNetInit self)
+		private static void OnEnableRule(this DotNetInit self)
 		{
 			self.Log($"激活！！");
 			//self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse mouse, manager);
@@ -59,19 +57,19 @@ namespace WorldTree.Server
 
 
 		[NodeRule(nameof(UpdateTimeRule<DotNetInit>))]
-		private static void OnUpdateTime(this DotNetInit self, TimeSpan timeSpan)
+		private static void OnUpdateTimeRule(this DotNetInit self, TimeSpan timeSpan)
 		{
 			//self.Log($"初始更新！！！{timeSpan.TotalSeconds}");
 		}
 
 		[NodeRule(nameof(DisableRule<DotNetInit>))]
-		private static void OnDisable(this DotNetInit self)
+		private static void OnDisableRule(this DotNetInit self)
 		{
 			self.Log("失活！！");
 		}
 
 		[NodeRule(nameof(RemoveRule<DotNetInit>))]
-		private static void OnRemove(this DotNetInit self)
+		private static void OnRemoveRule(this DotNetInit self)
 		{
 			self.Log($"初始关闭！！");
 		}
@@ -191,25 +189,21 @@ namespace WorldTree.Server
 		}
 
 
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, I>))]
-
-		static void OnTestNodeEvent<T, I>(this Test<T> self, TestEnum id, I io, List<int> i)
+		/// <summary>
+		/// 按钮方法
+		/// </summary>
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>), true)]
+		[RuleSwitch(nameof(OnTestNodeEventRule), nameof(id), TestEnum.Test2)]
+		static void OnTestNodeEventRule<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
 		{
-
+			//NodeRuleHelper.SendRule(self, default(OnTestNodeEvent<Type>), id, io, arg3);
 		}
+
 
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>), true)]
-		[RuleSwitch(nameof(OnTestNodeEvent1), nameof(id), TestEnum.Test1)]
-		static void OnTestNodeEvent1<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
+		[RuleSwitch(nameof(OnTestNodeEvent2Rule), nameof(id), default(TestEnum))]
+		static void OnTestNodeEvent2Rule<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
 		{
-			NodeRuleHelper.SendRule(self, default(TestNodeEventRule<Test<T>, Type>), id, io, arg3);
-		}
-
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>))]
-		[RuleSwitch(nameof(OnTestNodeEvent1), nameof(id), TestEnum.Test1)]
-		static void OnTestNodeEvent2<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
-		{
-
 		}
 
 		/// <summary>
@@ -217,7 +211,7 @@ namespace WorldTree.Server
 		/// </summary>
 		public static Type GetRuleType<T>(this Test<T> self)
 		{
-			return typeof(OnTestNodeEvent1Rule<Test<T>>);
+			return typeof(OnTestNodeEvent<Test<T>>);
 		}
 
 

@@ -44,6 +44,10 @@ namespace WorldTree
 			self.Log($"{self.Window.TestText.Text}");
 		}
 
+		/// <summary>
+		/// cce
+		/// </summary>
+		public interface Update : WorldTree.Update { }
 
 		public class UpdateTest : UpdateRule<MainWorld>
 		{
@@ -54,7 +58,7 @@ namespace WorldTree
 			}
 			protected override void Execute(MainWorld self)
 			{
-				self.Update();
+				//self.Update();
 				self.Log($"精确执行Rule");
 
 			}

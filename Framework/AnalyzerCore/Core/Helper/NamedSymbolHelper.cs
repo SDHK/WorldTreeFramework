@@ -657,6 +657,40 @@ namespace WorldTree
 
 
 		/// <summary>
+		/// 获取类型的文档注释字符串（包括XML标签）
+		/// </summary>
+		/// <param name="symbol">类型符号</param>
+		/// <param name="tabPrefix">每行的缩进前缀，默认为空</param>
+		/// <returns>返回包含XML标签的完整文档注释字符串，如果没有注释则返回空字符串</returns>
+		public static string GetDocumentationComment(ISymbol symbol, string tabPrefix = "")
+		{
+			if (symbol == null) return string.Empty;
+
+			// 获取XML文档注释
+			string xmlDocumentation = symbol.GetDocumentationCommentXml();
+
+			if (string.IsNullOrWhiteSpace(xmlDocumentation))
+				return string.Empty;
+
+			// 如果需要添加缩进前缀
+
+			var lines = xmlDocumentation.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+			StringBuilder result = new StringBuilder();
+			foreach (var line in lines)
+			{
+				var trimmedLine = line.Trim();
+
+				if (!string.IsNullOrEmpty(trimmedLine))
+				{
+					if (trimmedLine.Contains("member")) continue;
+					result.AppendLine($"{tabPrefix}/// {trimmedLine}");
+				}
+			}
+			return result.ToString().TrimEnd();
+		}
+
+
+		/// <summary>
 		/// 源码获取(能获取到但是会导致生成的代码文件无法被项目收集编译)
 		/// </summary>
 		/// <param name="typeSymbol">命名符号</param>

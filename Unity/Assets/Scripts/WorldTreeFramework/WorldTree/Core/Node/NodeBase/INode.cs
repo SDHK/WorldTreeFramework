@@ -77,7 +77,7 @@ namespace WorldTree
 	/// </remarks>
 	[TreeDataSerializable]
 	public partial interface INode : IWorldTreeBasic
-#if DEBUG
+#if !DEBUG
 		// 万能约束接口：Release模式下解除所有约束限制
 		// 父级约束解除
 		, NodeOf<INode, IBranch>
