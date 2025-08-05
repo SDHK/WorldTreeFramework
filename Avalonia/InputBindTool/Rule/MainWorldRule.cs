@@ -5,8 +5,14 @@ namespace WorldTree
 {
 	public static partial class MainWorldRule
 	{
+
+		/// <summary>
+		/// 刷新法则
+		/// </summary>
+		public interface OnUpdateTest1 : Update { }
+
 		[NodeRule(nameof(AwakeRule<MainWorld, MainWindow>))]
-		private static void OnAwake(this MainWorld self, MainWindow window)
+		private static void OnAwakeRule(this MainWorld self, MainWindow window)
 		{
 			window.DataContext = self;
 
@@ -34,34 +40,22 @@ namespace WorldTree
 			inputManager.AddGeneric("第二页", out InputArchive _);
 
 
-			NodeRuleHelper.SendRule(self, default(UpdateTest));
+			NodeRuleHelper.SendRule(self, default(OnUpdateTest));
 		}
 
+
 		[NodeRule(nameof(UpdateRule<MainWorld>))]
-		private static void OnUpdate(this MainWorld self)
+		private static void OnUpdateRule(this MainWorld self)
 		{
 			self.Window.TestText.Text = $"{self.Core.RealTimeManager.Now}";
 			self.Log($"{self.Window.TestText.Text}");
 		}
 
-		/// <summary>
-		/// cce
-		/// </summary>
-		public interface Update : WorldTree.Update { }
-
-		public class UpdateTest : UpdateRule<MainWorld>
+		[NodeRule(nameof(UpdateRule<MainWorld>), true)]
+		private static void OnUpdateTestRule(this MainWorld self)
 		{
-			public override void OnCreate()
-			{
-				NodeType = Core.TypeToCode(typeof(MainWorld));
-				RuleType = Core.TypeToCode(typeof(UpdateTest));
-			}
-			protected override void Execute(MainWorld self)
-			{
-				//self.Update();
-				self.Log($"精确执行Rule");
 
-			}
+			self.Log($"精确执行！：{self.Window.TestText.Text}");
 		}
 	}
 }

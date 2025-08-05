@@ -82,7 +82,7 @@ namespace WorldTree
 	public static partial class AvaloniaWorldHeartRule
 	{
 		[NodeRule(nameof(AwakeRule<AvaloniaWorldHeart, int>))]
-		private static void OnAwake(this AvaloniaWorldHeart self, int frameTime)
+		private static void OnAwakeRule(this AvaloniaWorldHeart self, int frameTime)
 		{
 			self.frameTime = frameTime;
 
@@ -108,7 +108,7 @@ namespace WorldTree
 		}
 
 		[NodeRule(nameof(RemoveRule<AvaloniaWorldHeart>))]
-		private static void OnRemove(this AvaloniaWorldHeart self)
+		private static void OnRemoveRule(this AvaloniaWorldHeart self)
 		{
 			self.m_Thread?.Stop();
 			self.m_Thread = null;
@@ -122,7 +122,7 @@ namespace WorldTree
 		}
 
 		[NodeRule(nameof(UpdateTimeRule<AvaloniaWorldHeart>))]
-		private static void OnUpdateTime(this AvaloniaWorldHeart self, TimeSpan deltaTime)
+		private static void OnUpdateTimeRule(this AvaloniaWorldHeart self, TimeSpan deltaTime)
 		{
 			self.enable?.Send();
 			self.update?.Send();

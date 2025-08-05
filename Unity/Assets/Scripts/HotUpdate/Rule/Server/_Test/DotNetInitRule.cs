@@ -39,7 +39,6 @@ namespace WorldTree.Server
 			//self.Root.AddComponent(out InputDeviceManager manager).AddComponent(out InputDriverMouse mouse, manager);
 			//MainTime();
 			//TestDivisionPrecision();
-			self.AddComponent(out Test<int> _);
 		}
 		/// <summary>
 		/// a
@@ -226,14 +225,6 @@ namespace WorldTree.Server
 			{
 
 			}
-		}
-
-		/// <summary>
-		/// a
-		/// </summary>
-		static void OnTestNodeEvent2()
-		{
-
 		}
 
 		/// <summary>
