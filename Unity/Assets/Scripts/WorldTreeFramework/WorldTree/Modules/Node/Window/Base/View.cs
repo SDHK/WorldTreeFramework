@@ -54,6 +54,9 @@
 	/// </summary>
 	public class Button : View<ViewBind>
 	{
-
+		/// <summary>
+		/// 点击事件
+		/// </summary>
+		public RuleInvoker<ISendRule> OnClick;
 	}
 }

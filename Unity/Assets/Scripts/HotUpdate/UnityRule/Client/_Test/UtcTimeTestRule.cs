@@ -16,14 +16,14 @@ namespace WorldTree
 	public static partial class UtcTimeTestRule
 	{
 		[NodeRule(nameof(AddRule<UtcTimeTest>))]
-		private static void OnAdd(this UtcTimeTest self)
+		private static void OnAddRule(this UtcTimeTest self)
 		{
 			self.StartTime = DateTime.UtcNow;
 			self.OneTime = DateTime.UtcNow;
 		}
 
 		[NodeRule(nameof(GuiUpdateRule<UtcTimeTest>))]
-		private static void OnGuiUpdate(this UtcTimeTest self)
+		private static void OnGuiUpdateRule(this UtcTimeTest self)
 		{
 
 			// 需要确保 RealTimeManager 提供了 UtcNow 属性

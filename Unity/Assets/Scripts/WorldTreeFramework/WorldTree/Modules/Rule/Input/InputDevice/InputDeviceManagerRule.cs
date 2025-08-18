@@ -16,7 +16,7 @@ namespace WorldTree
 			{
 				self.Core.PoolGetUnit(out self.InputDeviceDict);
 				self.Core.PoolGetUnit(out self.DataQueue);
-				self.Core.GetGlobalRuleExecutor(out self.InputDataEvent);
+				self.Core.GetRuleBroadcast(out self.InputDataEvent);
 			}
 		}
 

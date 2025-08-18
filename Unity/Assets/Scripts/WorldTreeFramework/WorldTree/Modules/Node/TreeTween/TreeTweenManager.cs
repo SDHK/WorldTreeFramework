@@ -19,6 +19,6 @@ namespace WorldTree
 		/// <summary>
 		/// 全局法则执行器
 		/// </summary>
-		public IRuleExecutor<TweenUpdate> ruleActuator;
+		public RuleBroadcast<TweenUpdate> ruleActuator;
 	}
 }

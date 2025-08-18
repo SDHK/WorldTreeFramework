@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 监听器法则执行器
 	/// </summary>
-	public class ListenerRuleExecutor : RuleGroupExecutorBase, IListenerIgnorer, IRuleExecutor<IRule>
+	public class ListenerRuleExecutor : RuleGroupExecutor, IListenerIgnorer, IRuleExecutor<IRule>
 		, ComponentOf<ListenerRuleExecutorGroup>
 		, AsRule<Awake<RuleGroup>>
 	{

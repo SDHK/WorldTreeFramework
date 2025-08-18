@@ -86,16 +86,16 @@ Shader "Unlit/EdgeShader"
                 float3 worldPos : TEXCOORD2;
             };
 
-            v2f vert (a2v v) //顶点着色器，控制定点位置
+            v2f vert (a2v v) //顶点着色器，控制顶点位置
             {
                 v2f o = (v2f)0;
 
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);//纹理设置,v.uv应用_MainTex的变换 赋值给 o.uv
 
-                // float a=  FBMvalueNoise(o.uv*10);
+                float a=  NoiseSmoke(o.uv*1,_Time.y);
 
-                // o.pos = UnityObjectToClipPos(v.vertex+v.vertex *a);//顶点设置
-                o.pos = UnityObjectToClipPos(v.vertex);//顶点设置
+                o.pos = UnityObjectToClipPos(v.vertex *a);//顶点设置
+                // o.pos = UnityObjectToClipPos(v.vertex);//顶点设置
 
                 //局部转世界，将对象空间中的法线向量转换为世界空间中的法线向量。
                 o.worldNormal = UnityObjectToWorldNormal(v.normal);

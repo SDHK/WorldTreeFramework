@@ -11,7 +11,7 @@ namespace WorldTree
 	public static partial class MainWorldRule
 	{
 		[NodeRule(nameof(AddRule<MainWorld>))]
-		private static void OnAdd(this MainWorld self)
+		private static void OnAddRule(this MainWorld self)
 		{
 			self.AddComponent(out CurveManager _);
 			self.AddComponent(out TreeTweenManager _);

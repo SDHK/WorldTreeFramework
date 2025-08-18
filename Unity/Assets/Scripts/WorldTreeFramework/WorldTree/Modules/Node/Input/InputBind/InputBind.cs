@@ -25,7 +25,6 @@ namespace WorldTree
 		, GenericOf<string, InputGroup>
 		, AsRule<InputGlobal>
 		, AsRule<Awake>
-
 	{
 
 		/// <summary>
@@ -46,7 +45,7 @@ namespace WorldTree
 		/// <summary>
 		/// 全局输入事件法则
 		/// </summary>
-		public IRuleExecutor<InputEvent> InputEvent;
+		public RuleBroadcast<InputEvent> InputEvent;
 
 		/// <summary>
 		/// 冲突项(一层内)

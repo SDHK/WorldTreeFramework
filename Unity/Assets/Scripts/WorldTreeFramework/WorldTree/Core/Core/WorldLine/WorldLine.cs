@@ -164,7 +164,7 @@ namespace WorldTree
 		/// <summary>
 		/// 全局法则执行器管理器
 		/// </summary>
-		public GlobalRuleExecutorManager GlobalRuleExecutorManager;
+		public RuleBroadcastManager GlobalRuleExecutorManager;
 
 		/// <summary>
 		/// 世界之心
@@ -259,7 +259,7 @@ namespace WorldTree
 			IsCoreActive = true;
 
 			//全局法则执行器管理器
-			GlobalRuleExecutorManager = this.AddCoreManager(out GlobalRuleExecutorManager _);
+			GlobalRuleExecutorManager = this.AddCoreManager(out RuleBroadcastManager _);
 
 			//真实时间管理器
 			RealTimeManager = this.AddCoreManager(out RealTimeManager _);

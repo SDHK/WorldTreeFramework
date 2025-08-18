@@ -10,93 +10,10 @@
 
 namespace WorldTree
 {
-
-	/// <summary>
-	/// 单法则调用器
-	/// </summary>
-	public class RuleInvoker<R> : Node, IRuleExecutor<R>, IRuleExecutorEnumerable
-		, ChildOf<INode>
-		where R : IRule
-	{
-		/// <summary>
-		/// 目标节点
-		/// </summary>
-		public NodeRef<INode> TargetNode;
-
-		/// <summary>
-		/// 法则列表
-		/// </summary>
-		public RuleList RuleList;
-
-		public int TraversalCount => TargetNode.Value != null ? 1 : 0;
-
-		/// <summary>
-		/// a
-		/// </summary>
-		public void Clear()
-		{
-			TargetNode = default;
-			RuleList = default;
-		}
-
-		public int RefreshTraversalCount()
-		{
-			return TraversalCount;
-		}
-
-		/// <summary>
-		/// a
-		/// </summary>
-		public void Remove(long id)
-		{
-			if (TargetNode == null) return;
-			if (TargetNode.Id != id) return;
-			TargetNode = default;
-			RuleList = default;
-		}
-
-		/// <summary>
-		/// a
-		/// </summary>
-		public void Remove(INode node)
-		{
-			if (TargetNode != node) return;
-			TargetNode = default;
-			RuleList = default;
-		}
-
-
-		public bool TryDequeue(out INode node, out RuleList ruleList)
-		{
-			if (TargetNode.Value != null)
-			{
-				node = TargetNode.Value;
-				ruleList = RuleList;
-				return true;
-			}
-			node = null;
-			ruleList = default;
-			return false;
-		}
-
-		public bool TryPeek(out INode node, out RuleList ruleList)
-		{
-			if (TargetNode.Value != null)
-			{
-				node = TargetNode.Value;
-				ruleList = RuleList;
-				return true;
-			}
-			node = null;
-			ruleList = default;
-			return false;
-		}
-	}
-
 	/// <summary>
 	/// 泛型法则执行器
 	/// </summary>
-	public class RuleExecutor<R> : RuleExecutorBase, IRuleExecutor<R>
+	public class RuleExecutor<R> : RuleListExecutor, IRuleExecutor<R>
 		, ChildOf<INode>
 		, AsRule<Awake>
 		where R : IRule

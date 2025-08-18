@@ -8,8 +8,7 @@
 * 这是一个可以在遍历时，增加和移除节点的队列遍历器。
 * 在遍历时，如果增加了节点，那么会在下一次遍历时执行。
 *
-* 如果移除了节点，那么就会被抵消跳过，不会执行。
-* 如果节点被意外回收了，那么也会被跳过，不会执行。
+* 如果节点被意外回收了，那么会被跳过，不会执行。
 * 
 
 */
@@ -20,9 +19,9 @@ namespace WorldTree
 {
 
 	/// <summary>
-	/// 法则执行器基类
+	/// 法则执行器抽象基类
 	/// </summary>
-	public abstract class RuleExecutorBase : Node, IRuleListExecutor, IRuleExecutorEnumerable
+	public abstract class RuleListExecutor : Node, IRuleExecutorOperate, IRuleExecutorEnumerable
 		, AsChildBranch
 	{
 
@@ -52,11 +51,6 @@ namespace WorldTree
 		public UnitDictionary<long, int> IdIndexDict;
 
 		/// <summary>
-		/// 节点Id下一个索引字典
-		/// </summary>
-		public UnitDictionary<long, int> IdIndexNextDict;
-
-		/// <summary>
 		/// 遍历下标
 		/// </summary>
 		public int nodeIndex;
@@ -70,7 +64,6 @@ namespace WorldTree
 			delegateList?.Clear();
 			delegateNextList?.Clear();
 			IdIndexDict?.Clear();
-			IdIndexNextDict?.Clear();
 			nodeIndex = 0;
 		}
 
@@ -80,25 +73,24 @@ namespace WorldTree
 			nodeIndex = 0;
 			(nodeList, nodeNextList) = (nodeNextList, nodeList);
 			(delegateList, delegateNextList) = (delegateNextList, delegateList);
-			(IdIndexDict, IdIndexNextDict) = (IdIndexNextDict, IdIndexDict);
 			nodeNextList.Clear();
 			delegateNextList.Clear();
-			IdIndexNextDict.Clear();
 			return nodeList.Count;
 		}
 
-
+		/// <summary>
+		/// 尝试添加节点和法则
+		/// </summary>
 		public bool TryAdd(INode node, RuleList func)
 		{
 			if (IdIndexDict != null && IdIndexDict.ContainsKey(node.InstanceId)) return false;
-			if (IdIndexNextDict != null && IdIndexNextDict.ContainsKey(node.InstanceId)) return false;
 			nodeNextList.Add(new NodeRef<INode>(node, false));
 			delegateNextList.Add(func);
-			IdIndexNextDict.Add(node.InstanceId, nodeNextList.Count - 1);
+			IdIndexDict.Add(node.InstanceId, nodeNextList.Count - 1);
 			return true;
 		}
 
-		public bool TryDequeue(out INode node, out RuleList func)
+		public bool TryDequeue(out INode node, out RuleList ruleList)
 		{
 			NodeRef<INode> nodeRef;
 			while (nodeList.Count > nodeIndex)
@@ -111,21 +103,23 @@ namespace WorldTree
 				}
 				else // 节点存在
 				{
-					func = delegateList[nodeIndex];
+					// 值已经拿到，列表内部作废，清除引用
+					nodeList[nodeIndex].Clear();
+					ruleList = delegateList[nodeIndex];
 					nodeIndex++;
+					// 更新索引字典
+					IdIndexDict[node.InstanceId] = nodeNextList.Count - 1;
 					nodeNextList.Add(nodeRef); // 塞回队列用于下次遍历
-					delegateNextList.Add(func);
-					IdIndexDict.Remove(node.InstanceId);//索引字典移动
-					IdIndexNextDict.Add(node.InstanceId, nodeNextList.Count - 1);
+					delegateNextList.Add(ruleList);
 					return true;
 				}
 			}
 			node = null;
-			func = null;
+			ruleList = null;
 			return false;
 		}
 
-		public bool TryPeek(out INode node, out RuleList func)
+		public bool TryPeek(out INode node, out RuleList ruleList)
 		{
 			while (nodeList.Count > nodeIndex)
 			{
@@ -136,12 +130,12 @@ namespace WorldTree
 				}
 				else // 节点存在
 				{
-					func = delegateList[nodeIndex];
+					ruleList = delegateList[nodeIndex];
 					return true;
 				}
 			}
 			node = null;
-			func = null;
+			ruleList = null;
 			return false;
 		}
 
@@ -152,19 +146,29 @@ namespace WorldTree
 
 		public void Remove(long id)
 		{
-			//下一次遍历列表
-			if (IdIndexNextDict.TryGetValue(id, out int index))
-			{
-				//不是遍历列表，直接快速移除
-				RemoveAtSwapBack(nodeNextList, index);
-				RemoveAtSwapBack(delegateNextList, index);
-				IdIndexNextDict.Remove(id);
-			}
-			//正在遍历的列表
-			else if (IdIndexDict.TryGetValue(id, out index))
+			if (IdIndexDict.TryGetValue(id, out int index))
 			{
 				IdIndexDict.Remove(id);
-				nodeList[index].Clear();//清除引用，让其变成意外回收
+				// 优先检查 nodeNextList
+				if (nodeNextList.Count > index)
+				{
+					if (nodeNextList[index].InstanceId == id)
+					{
+						//清除引用，让其变成意外回收
+						nodeNextList[index].Clear();
+						return;
+					}
+				}
+
+				// 再检查 nodeList
+				if (nodeList.Count > index)
+				{
+					if (nodeList[index].InstanceId == id)
+					{
+						//清除引用，让其变成意外回收
+						nodeList[index].Clear();
+					}
+				}
 			}
 		}
 
@@ -182,23 +186,23 @@ namespace WorldTree
 
 	public static class RuleExecutorBaseRule
 	{
-		private class Add : AddRule<RuleExecutorBase>
+
+		private class Add : AddRule<RuleListExecutor>
 		{
-			protected override void Execute(RuleExecutorBase self)
+			protected override void Execute(RuleListExecutor self)
 			{
 				self.Core.PoolGetUnit(out self.nodeList);
 				self.Core.PoolGetUnit(out self.nodeNextList);
 				self.Core.PoolGetUnit(out self.delegateList);
 				self.Core.PoolGetUnit(out self.delegateNextList);
 				self.Core.PoolGetUnit(out self.IdIndexDict);
-				self.Core.PoolGetUnit(out self.IdIndexNextDict);
 			}
 		}
 
 
-		private class RemoveRule : RemoveRule<RuleExecutorBase>
+		private class RemoveRule : RemoveRule<RuleListExecutor>
 		{
-			protected override void Execute(RuleExecutorBase self)
+			protected override void Execute(RuleListExecutor self)
 			{
 				self.nodeIndex = 0;
 				self.nodeList.Dispose();
@@ -206,13 +210,11 @@ namespace WorldTree
 				self.delegateList.Dispose();
 				self.delegateNextList.Dispose();
 				self.IdIndexDict.Dispose();
-				self.IdIndexNextDict.Dispose();
 				self.nodeList = null;
 				self.nodeNextList = null;
 				self.delegateList = null;
 				self.delegateNextList = null;
 				self.IdIndexDict = null;
-				self.IdIndexNextDict = null;
 			}
 		}
 	}

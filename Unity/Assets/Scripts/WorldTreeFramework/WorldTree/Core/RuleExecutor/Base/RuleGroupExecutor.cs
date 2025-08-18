@@ -14,11 +14,16 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 	/// <summary>
-	/// 法则集合执行器基类
+	/// 法则集合执行器抽象基类
 	/// </summary>
-	public abstract class RuleGroupExecutorBase : Node, IGlobalRuleExecutor, IRuleExecutorEnumerable
+	public abstract class RuleGroupExecutor : Node, IRuleExecutorOperate, IRuleExecutorEnumerable
 		, AsChildBranch
 	{
+		/// <summary>
+		/// 法则类型
+		/// </summary>
+		public long RuleType => ruleGroupDict.RuleType;
+
 		/// <summary>
 		/// 单法则集合
 		/// </summary>
@@ -50,11 +55,6 @@ namespace WorldTree
 		public UnitDictionary<long, int> IdIndexDict;
 
 		/// <summary>
-		/// 节点Id下一个索引字典
-		/// </summary>
-		public UnitDictionary<long, int> IdIndexNextDict;
-
-		/// <summary>
 		/// 遍历下标
 		/// </summary>
 		public int nodeIndex;
@@ -67,10 +67,8 @@ namespace WorldTree
 			nodeIndex = 0;
 			(nodeList, nodeNextList) = (nodeNextList, nodeList);
 			(delegateList, delegateNextList) = (delegateNextList, delegateList);
-			(IdIndexDict, IdIndexNextDict) = (IdIndexNextDict, IdIndexDict);
 			nodeNextList.Clear();
 			delegateNextList.Clear();
-			IdIndexNextDict.Clear();
 			return nodeList.Count;
 		}
 
@@ -87,44 +85,54 @@ namespace WorldTree
 			delegateList?.Clear();
 			delegateNextList?.Clear();
 			IdIndexDict?.Clear();
-			IdIndexNextDict?.Clear();
 			nodeIndex = 0;
 		}
 
+		/// <summary>
+		/// 尝试添加节点到执行器
+		/// </summary>
 		public bool TryAdd(INode node)
 		{
-			//节点存在则不允许重复添加。
-			//如果节点是意外回收了，那么Id是递增的不再出现，也就是那个回收的Id已经被永久销毁了，同样禁止添加。
+			//节点不允许重复添加。
 			if (IdIndexDict != null && IdIndexDict.ContainsKey(node.InstanceId)) return false;
-			if (IdIndexNextDict != null && IdIndexNextDict.ContainsKey(node.InstanceId)) return false;
 			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(node.Type, out RuleList ruleList)) return false;
 			nodeNextList.Add(new NodeRef<INode>(node, false));
 			delegateNextList.Add(ruleList);
-			IdIndexNextDict.Add(node.InstanceId, nodeNextList.Count - 1);
+			IdIndexDict.Add(node.InstanceId, nodeNextList.Count - 1);
 			return true;
 		}
 
+		public void Remove(INode node) => Remove(node.InstanceId);
 
 
 		public void Remove(long id)
 		{
-			//下一次遍历列表
-			if (IdIndexNextDict.TryGetValue(id, out int index))
-			{
-				//不是遍历列表，直接快速移除
-				RemoveAtSwapBack(nodeNextList, index);
-				RemoveAtSwapBack(delegateNextList, index);
-				IdIndexNextDict.Remove(id);
-			}
-			//正在遍历的列表
-			else if (IdIndexDict.TryGetValue(id, out index))
+			if (IdIndexDict.TryGetValue(id, out int index))
 			{
 				IdIndexDict.Remove(id);
-				nodeList[index].Clear();//清除引用，让其变成意外回收
+				// 优先检查 nodeNextList
+				if (nodeNextList.Count > index)
+				{
+					if (nodeNextList[index].InstanceId == id)
+					{
+						//清除引用，让其变成意外回收
+						nodeNextList[index].Clear();
+						return;
+					}
+				}
+
+				// 再检查 nodeList
+				if (nodeList.Count > index)
+				{
+					if (nodeList[index].InstanceId == id)
+					{
+						//清除引用，让其变成意外回收
+						nodeList[index].Clear();
+					}
+				}
 			}
 		}
 
-		public void Remove(INode node) => Remove(node.Id);
 		/// <summary>
 		/// 移动到最后并删除
 		/// </summary>
@@ -176,12 +184,14 @@ namespace WorldTree
 				}
 				else // 节点存在
 				{
+					// 值已经拿到，列表内部作废，清除引用
+					nodeList[nodeIndex].Clear();
 					ruleList = delegateList[nodeIndex];
 					nodeIndex++;
+					// 更新索引字典
+					IdIndexDict[nodeRef.InstanceId] = nodeNextList.Count - 1;
 					nodeNextList.Add(nodeRef); // 塞回队列用于下次遍历
 					delegateNextList.Add(ruleList);
-					IdIndexDict.Remove(node.InstanceId);//索引字典移动
-					IdIndexNextDict.Add(node.InstanceId, nodeNextList.Count - 1);
 					return true;
 				}
 			}
@@ -194,22 +204,21 @@ namespace WorldTree
 
 	public static class RuleGroupExecutorBaseRule
 	{
-		private class Add : AddRule<RuleGroupExecutorBase>
+		private class Add : AddRule<RuleGroupExecutor>
 		{
-			protected override void Execute(RuleGroupExecutorBase self)
+			protected override void Execute(RuleGroupExecutor self)
 			{
 				self.Core.PoolGetUnit(out self.nodeList);
 				self.Core.PoolGetUnit(out self.nodeNextList);
 				self.Core.PoolGetUnit(out self.delegateList);
 				self.Core.PoolGetUnit(out self.delegateNextList);
 				self.Core.PoolGetUnit(out self.IdIndexDict);
-				self.Core.PoolGetUnit(out self.IdIndexNextDict);
 			}
 		}
 
-		class RemoveRule : RemoveRule<RuleGroupExecutorBase>
+		class RemoveRule : RemoveRule<RuleGroupExecutor>
 		{
-			protected override void Execute(RuleGroupExecutorBase self)
+			protected override void Execute(RuleGroupExecutor self)
 			{
 				self.nodeIndex = 0;
 				self.nodeList.Dispose();
@@ -217,13 +226,32 @@ namespace WorldTree
 				self.delegateList.Dispose();
 				self.delegateNextList.Dispose();
 				self.IdIndexDict.Dispose();
-				self.IdIndexNextDict.Dispose();
 				self.nodeList = null;
 				self.nodeNextList = null;
 				self.delegateList = null;
 				self.delegateNextList = null;
 				self.IdIndexDict = null;
-				self.IdIndexNextDict = null;
+			}
+		}
+
+
+		class TreeDataSerialize : TreeDataSerializeRule<RuleGroupExecutor>
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
+			{
+				if (self.TryWriteDataHead(value, typeMode, ~1, out RuleGroupExecutor obj, false)) return;
+				self.WriteDynamic(1);
+				self.WriteValue(obj.RuleType);
+			}
+		}
+		class TreeDataDeserialize : TreeDataDeserializeRule<RuleGroupExecutor>
+		{
+			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
+			{
+				if (self.TryReadArrayHead(typeof(RuleGroupExecutor), ref value, 1, out _, out _)) return;
+				self.ReadDynamic(out int _);
+				long ruleTypeCode = self.ReadValue<long>();
+				value = self.Core.GetRuleBroadcast(ruleTypeCode);
 			}
 		}
 	}

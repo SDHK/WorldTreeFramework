@@ -39,7 +39,7 @@ namespace WorldTree
 		/// <summary>
 		/// 输入数据全局广播
 		/// </summary>
-		public IRuleExecutor<InputGlobal> InputDataEvent;
+		public RuleBroadcast<InputGlobal> InputDataEvent;
 	}
 
 

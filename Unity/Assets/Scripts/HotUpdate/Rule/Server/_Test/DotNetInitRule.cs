@@ -233,7 +233,7 @@ namespace WorldTree.Server
 		/// <param name="self"></param>
 		public static void TestStringConcatPerformance(this DotNetInit self)
 		{
-			const int iterations = 100_00000;
+			const int iterations = 1000_0000;
 			const int concatCount = 10;
 			string[] values = new string[concatCount];
 			for (int i = 0; i < concatCount; i++)

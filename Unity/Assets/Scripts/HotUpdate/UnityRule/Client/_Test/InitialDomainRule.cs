@@ -15,7 +15,7 @@ namespace WorldTree
 	public static partial class InitialDomainRule
 	{
 		[NodeRule(nameof(AwakeRule<InitialDomain>))]
-		private static void OnAwake(this InitialDomain self)
+		private static void OnAwakeRule(this InitialDomain self)
 		{
 			self.TestFloat = 1;
 
@@ -23,7 +23,7 @@ namespace WorldTree
 		}
 
 		[NodeRule(nameof(AddRule<InitialDomain>))]
-		private static void OnAdd(this InitialDomain self)
+		private static void OnAddRule(this InitialDomain self)
 		{
 			self.Log($"初始域热更部分！！!");
 			self.TypeToCode<InputDeviceManager>();
@@ -37,7 +37,7 @@ namespace WorldTree
 		}
 
 		[NodeRule(nameof(UpdateRule<InitialDomain>))]
-		private static void OnUpdate(this InitialDomain self)
+		private static void OnUpdateRule(this InitialDomain self)
 		{
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
@@ -58,26 +58,26 @@ namespace WorldTree
 		}
 
 		[NodeRule(nameof(EnableRule<InitialDomain>))]
-		private static void OnEnable(this InitialDomain self)
+		private static void OnEnableRule(this InitialDomain self)
 		{
 			self.Log($"初始域激活！！");
 		}
 		[NodeRule(nameof(DisableRule<InitialDomain>))]
-		private static void OnDisable(this InitialDomain self)
+		private static void OnDisableRule(this InitialDomain self)
 		{
 
 			self.Log($"初始域失活！！");
 		}
 
 		[NodeRule(nameof(GuiUpdateRule<InitialDomain>))]
-		private static void OnGuiUpdate(this InitialDomain self)
+		private static void OnGuiUpdateRule(this InitialDomain self)
 		{
 			//GUILayout.Label($@"    {timeSpan.TotalMilliseconds} !  ", new GUIStyle() { fontSize = 60 });
 		}
 
 
 		[NodeRule(nameof(RemoveRule<InitialDomain>))]
-		private static void OnRemove(this InitialDomain self)
+		private static void OnRemoveRule(this InitialDomain self)
 		{
 			self.Log($"初始域关闭！！");
 		}

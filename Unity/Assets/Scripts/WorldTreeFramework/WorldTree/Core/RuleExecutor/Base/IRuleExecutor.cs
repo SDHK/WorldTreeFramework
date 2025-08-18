@@ -11,9 +11,14 @@
 namespace WorldTree
 {
 	/// <summary>
+	/// 法则执行器接口：设计子类有 执行器INode 和 数据IUnit 两种类型，所以只能继承IWorldTreeBasic
+	/// </summary>
+	public interface IRuleExecutor : IWorldTreeBasic { }
+
+	/// <summary>
 	/// 法则执行器操作方法接口
 	/// </summary>
-	public interface IRuleExecutor : INode
+	public interface IRuleExecutorOperate : IRuleExecutor
 	{
 		/// <summary>
 		/// 移除节点
@@ -31,7 +36,6 @@ namespace WorldTree
 		public void Clear();
 	}
 
-
 	/// <summary>
 	/// 法则执行器调用接口，逆变泛型限制
 	/// </summary>
@@ -39,7 +43,7 @@ namespace WorldTree
 	/// <remarks>
 	/// <para>主要作用是通过法则类型逆变提示可填写参数</para>
 	/// </remarks>
-	public interface IRuleExecutor<in R> : IWorldTreeBasic where R : IRule { }
+	public interface IRuleExecutor<in R> : IRuleExecutor where R : IRule { }
 
 	/// <summary>
 	/// 法则执行器遍历接口
@@ -102,25 +106,25 @@ namespace WorldTree
 
 	//======================================
 
-	/// <summary>
-	/// 法则集合执行器基类接口
-	/// </summary>
-	public interface IGlobalRuleExecutor : IRuleExecutor
-	{
-		/// <summary>
-		/// 尝试添加节点
-		/// </summary>
-		public bool TryAdd(INode node);
-	}
+	///// <summary>
+	///// 法则集合执行器基类接口
+	///// </summary>
+	//public interface IGlobalRuleExecutor : IRuleExecutorOperate, INode
+	//{
+	//	/// <summary>
+	//	/// 尝试添加节点
+	//	/// </summary>
+	//	public bool TryAdd(INode node);
+	//}
 
-	/// <summary>
-	/// 法则列表执行器基类接口
-	/// </summary>
-	public interface IRuleListExecutor : IRuleExecutor
-	{
-		/// <summary>
-		/// 尝试添加节点与对应法则
-		/// </summary>
-		public bool TryAdd(INode node, RuleList ruleList);
-	}
+	///// <summary>
+	///// 法则列表执行器基类接口
+	///// </summary>
+	//public interface IRuleListExecutor : IRuleExecutorOperate, INode
+	//{
+	//	/// <summary>
+	//	/// 尝试添加节点与对应法则
+	//	/// </summary>
+	//	public bool TryAdd(INode node, RuleList ruleList);
+	//}
 }

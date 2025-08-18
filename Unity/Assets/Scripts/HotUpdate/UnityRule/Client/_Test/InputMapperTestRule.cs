@@ -22,7 +22,7 @@ namespace WorldTree
 		/// 序列化流程
 		/// </summary>
 		[NodeRule(nameof(AwakeRule<InputMapperTest>))]
-		private static void OnAwake(this InputMapperTest self)
+		private static void OnAwakeRule(this InputMapperTest self)
 		{
 			//新建一个输入映射管理器
 			self.World.AddComponent(out InputManager manager);
@@ -52,8 +52,8 @@ namespace WorldTree
 			mapper.IsChange = true;
 
 			//全局事件保存
-			mapper.InputEvent = self.Core.PoolGetUnit(out GlobalRuleExecutorData data);
-			data.RuleTypeCode = self.TypeToCode<InputTestEvent>();
+			mapper.InputEvent = self.Core.PoolGetUnit(out RuleBroadcastData data);
+			data.RuleType = self.TypeToCode<InputTestEvent>();
 
 
 			//获取一个数据库代理，保存到数据库

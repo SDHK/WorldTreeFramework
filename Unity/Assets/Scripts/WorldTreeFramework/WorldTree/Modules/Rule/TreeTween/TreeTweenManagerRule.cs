@@ -7,7 +7,7 @@ namespace WorldTree
 		[NodeRule(nameof(AddRule<TreeTweenManager>))]
 		private static void OnAddRule(this TreeTweenManager self)
 		{
-			self.Core.GetGlobalRuleExecutor(out self.ruleActuator);
+			self.Core.GetRuleBroadcast(out self.ruleActuator);
 		}
 
 		[NodeRule(nameof(UpdateTimeRule<TreeTweenManager>))]

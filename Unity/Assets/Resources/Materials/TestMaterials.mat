@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TestMaterials
-  m_Shader: {fileID: 4800000, guid: a50bf99ac724640499409a8aef7e7762, type: 3}
+  m_Shader: {fileID: 4800000, guid: 1f49d4e1c1ba6bf46a947685575a56b3, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -24,6 +24,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _CausticsTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 10, y: 10}
@@ -36,17 +44,30 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ReflectionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - PixelSnap: 0
     - _Angle: 0
     - _Blur: 0
+    - _Distort: 0.051
     - _EnableExternalAlpha: 0
+    - _FoamNoise: 1.58
+    - _FoamRange: 1.61
+    - _Offs: 0.5
     - _RimMax: 1
     - _RimMin: 0
     - _RimSmooth: 1
     - _Scale: 10
     - _Value1: -5
+    - _WaterSpeed: 0.404
     m_Colors:
     - _Center: {r: 0.18, g: 0.5, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -55,7 +76,13 @@ Material:
     - _Color3: {r: 0.14117648, g: 0, b: 0.13809802, a: 1}
     - _Color4: {r: 0.666667, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _FoamColor: {r: 0, g: 0.64053285, b: 0.8301887, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularBase: {r: 0.6, g: 10, b: 0.5, a: 1}
+    - _SpecularColor: {r: 0.0031594948, g: 0.22328265, b: 0.6698113, a: 1}
     - _TexSize: {r: 100.75, g: 100, b: 0, a: 0}
+    - _WaterBase: {r: 1, g: 1, b: 1, a: 1}
+    - _WaterColor1: {r: 0, g: 0.8431506, b: 1, a: 1}
+    - _WaterColor2: {r: 0, g: 0.4141431, b: 0.6415094, a: 1}
   m_BuildTextureStacks: []
