@@ -133,8 +133,7 @@ namespace WorldTree
 			if (this._items.Length >= min)
 				return;
 			int num = this._items.Length == 0 ? 4 : this._items.Length * 2;
-			if ((uint)num > 2146435071U)
-				num = 2146435071;
+			if ((uint)num > 2146435071U) num = 2146435071;
 			if (num < min)
 				num = min;
 			this.Capacity = num;
