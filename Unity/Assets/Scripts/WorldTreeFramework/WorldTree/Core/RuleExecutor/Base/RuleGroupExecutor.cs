@@ -6,12 +6,37 @@
 * 描述： 法则集合执行器基类
 *
 * 执行拥有指定法则的节点
+*
+* 核心思想：
+* 对稳定数据使用+1间隔的连续访问获得极致性能，
+* 对动态数据使用+2间隔的奇偶交替访问保证稳定性，
+* 同时在遍历过程中进行渐进式空洞压缩，实现零开销的内存整理。
+*
+* 技术特点：
+* 1. 双模式遍历：前半段+1连续，后半段+2奇偶
+* 2. 奇偶切换点：switchPoint = traversalCount - lastVacuityCount
+* 3. 奇偶轮换：当前轮避开新增数据，遍历上轮的奇偶数据
+* 4. 渐进式压缩：边遍历边整理，无突发性能开销
+* 5. 最好情况：数据没有增删时，只有连续访问单个操作，没有写入操作
+* 6. 遍历时添加新增数据完全隔离在后面的奇偶区域，不会打乱原有遍历顺序。
+* 
+* 
+* Queue循环数组的缺点：
+* - 每次都有读和写两个操作
+* - 指针跳跃访问模式
+* - 无法利用数组连续访问的硬件优化
+* - 遍历时添加节点会立即插入，打乱原有顺序
+*  
+* 双List轮换方式的缺点：
+* - 每次都有读和写两个操作
+* - 始终使用固定间隔访问，无法享受连续访问的极致性能
+* - 需要维护两套完整的数组，内存占用翻倍
+* - 遍历时添加节点会立即插入，打乱原有顺序
 
  */
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
@@ -32,17 +57,10 @@ namespace WorldTree
 		/// </summary>
 		[Protected] public RuleGroup ruleGroupDict;
 
-
 		/// <summary>
 		/// 节点列表
 		/// </summary>
 		public RuleExecutorPair[] nodes;
-
-
-		/// <summary>
-		/// 节点Id索引字典
-		/// </summary>
-		public UnitDictionary<long, int> IdIndexDict;
 
 		/// <summary>
 		/// 出队指针
@@ -67,21 +85,51 @@ namespace WorldTree
 
 		public int TraversalCount => traversalCount;
 
+
+		/// <summary>
+		/// 奇偶新增标记
+		/// </summary>
+		private bool isOdd;
+
+		/// <summary>
+		/// 奇偶切换点
+		/// </summary>
+		private int switchPoint;
+
+		/// <summary>
+		/// 上次新节点数量
+		/// </summary>
+		private int lastNewCount;
+
+		/// <summary>
+		/// 当前新节点数量
+		/// </summary>
+		private int nowNewCount;
+
+		/// <summary>
+		/// 当前起始添加位置
+		/// </summary>
+		private int addStartIndex;
+
+
+		/// <summary>
+		/// 上次空节点数量
+		/// </summary>
+		private int lastVacuityCount;
+
 		/// <summary>
 		/// 尝试添加节点和法则
 		/// </summary>
 		public bool TryAdd(INode node, RuleList rule)
 		{
 			if (node == null || rule == null) return false;
-
-			if (IdIndexDict != null && IdIndexDict.ContainsKey(node.InstanceId)) return false;
+			//计算添加位置= 当前添加起始点 + 奇偶校正 + 新节点数量 * 2 
+			int addIndex = addStartIndex + (isOdd ? 1 : 0) + nowNewCount * 2;
 			// 判断扩容
-			if (size == nodes.Length) Capacity();
-
-			nodes[size] = new RuleExecutorPair(node, rule);
-			// 下标字典添加
-			IdIndexDict.Add(node.InstanceId, size);
-			size++;
+			if (addIndex == nodes.Length) Capacity();
+			nodes[addIndex] = new RuleExecutorPair(node, rule);
+			nowNewCount++;
+			size = Math.Max(size, addIndex + 1);
 			return true;
 		}
 
@@ -117,33 +165,78 @@ namespace WorldTree
 
 		public int RefreshTraversalCount()
 		{
+			//空洞数量是上次读取位置 - 写入位置
+			lastVacuityCount = readPoint - writePoint;
+			//奇偶切换点是上次遍历的数量- 上次空洞数量
+			switchPoint = traversalCount - lastVacuityCount;
+			//上次新节点数量
+			lastNewCount = nowNewCount;
+
+			addStartIndex = switchPoint + lastNewCount;
+			//如果添加位置是偶数
+			if (addStartIndex != 0 && addStartIndex % 2 == 1)
+			{
+				addStartIndex++;//校正为偶数
+			}
+
+			// 清空当前新节点数量
+			nowNewCount = 0;
+
 			// 清空读指针
 			readPoint = 0;
+
 			// 清空写指针
 			writePoint = 0;
+
 			traversalCount = size;
+
+			//切换奇偶添加标记
+			isOdd = !isOdd;
 			return traversalCount;
 		}
 
 
 		public bool TryDequeue(out INode node, out RuleList ruleList)
 		{
+			//遍历间隔
+			int indexInterval = 1;
+
 			// 如果遍历数量小于读指针，说明没有可遍历的节点
 			while (traversalCount > readPoint)
 			{
+				// 切换到奇偶遍历状态
+				if (indexInterval == 1 && readPoint == switchPoint)
+				{
+					//切换点是偶数
+					if (readPoint == 0 || readPoint % 2 == 0)
+					{
+						//当前标记是偶数,那么上次就是奇数，读取指针偏移到正确位置
+						if (!isOdd) readPoint++;
+					}
+					//切换点是奇数
+					else
+					{
+						//当前标记是奇数,那么上次就是偶数，读取指针偏移到正确位置
+						if (isOdd) readPoint++;
+					}
+					// 接下来读取间隔为2
+					indexInterval = 2;
+				}
+
 				// 使用引用类型来避免结构体复制
 				ref RuleExecutorPair pair = ref nodes[readPoint];
 
 				node = pair.Node;
-				ruleList = pair.Rule;
 
 				if (node == null) // 节点意外回收
 				{
-					readPoint++;
+					readPoint += indexInterval;
 					continue; // 继续下一个节点
 				}
 
-				// 如果读写指针不相等，说明有节点被移除，这时需要将当前节点移到写入点
+				ruleList = pair.Rule;
+
+				// 空洞压缩：如果读写指针不相等，说明有节点被移除，这时需要将当前节点移到写入点。
 				if (readPoint != writePoint)
 				{
 					// 将当前节点放到写入点
@@ -151,43 +244,13 @@ namespace WorldTree
 
 					// 为了安全，清除引用，因为节点已经移动到写入点
 					pair.Clear();
-
-					// 更新索引字典
-					IdIndexDict[node.InstanceId] = writePoint;
 				}
 				writePoint++;
-				readPoint++;
+
+				readPoint += indexInterval;
 				return true;
 			}
 
-			// 在遍历结束后进行 空洞压缩
-			if (readPoint == traversalCount)
-			{
-				// 有新增节点
-				if (size > traversalCount)
-				{
-					// 将新增节点移到压缩后的位置
-					int newNodeCount = size - traversalCount;
-					// 使用最快的复制方法
-					unsafe
-					{
-						fixed (RuleExecutorPair* src = &nodes[traversalCount])
-						fixed (RuleExecutorPair* dst = &nodes[writePoint])
-						{
-							Unsafe.CopyBlock(dst, src, (uint)(newNodeCount * Unsafe.SizeOf<RuleExecutorPair>()));
-						}
-					}
-					size = writePoint + newNodeCount;
-					// 更新新增节点的索引
-					for (int i = writePoint; i < size; i++) IdIndexDict[nodes[i].InstanceId] = i;
-				}
-				// 没有新增节点
-				else
-				{
-					//直接截断
-					size = writePoint;
-				}
-			}
 			node = null;
 			ruleList = null;
 			return false;
@@ -216,27 +279,17 @@ namespace WorldTree
 			writePoint = 0;
 			size = 0;
 			traversalCount = 0;
-			IdIndexDict.Clear();
 		}
 
 
 		public void Remove(long id)
 		{
-			if (IdIndexDict.TryGetValue(id, out int index))
-			{
-				IdIndexDict.Remove(id);
-				if (index < size && nodes[index].InstanceId == id)
-				{
-					//清除引用，让其变成意外回收
-					nodes[index].Clear();
-				}
-			}
+			//生命周期走意外丢失移除，不能手动移除
 		}
 
 		public void Remove(INode node)
 		{
-			if (node == null) return;
-			Remove(node.InstanceId);
+			//生命周期走意外丢失移除，不能手动移除
 		}
 
 	}
