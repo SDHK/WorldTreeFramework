@@ -14,12 +14,12 @@
 *
 * 特点：
 * 1. 双模式遍历：前半段+1连续，后半段+2奇偶
-* 2. 奇偶切换点：switchPoint = traversalCount - lastVacuityCount
-* 3. 奇偶轮换：当前轮避开新增数据，遍历上轮的奇偶数据
-* 4. 渐进式压缩：边遍历边整理，无突发性能开销
-* 5. 最好情况：数据没有增删时，只有连续访问单个操作，没有写入操作
-* 6. 遍历时添加新增数据完全隔离在后面的奇偶区域，不会打乱原有遍历顺序。
-* 
+* 2. 奇偶时空切换点：switchPoint = traversalCount - lastVacuityCount
+* 3. 空洞填充点：addStartIndex = switchPoint + nowNewCount
+* 4. 奇偶轮换：当前轮避开新增数据，遍历上轮的奇偶数据
+* 5. 渐进式压缩：边遍历边整理，遍历和添加同时在压缩空洞，无突发性能开销。
+* 6. 最好情况：数据没有增删时，只有连续访问单个操作，没有写入操作
+* 7. 遍历时添加新增数据完全隔离在后面的奇偶区域，不会打乱原有遍历顺序。
 * 
 * Queue循环数组的缺点：
 * - 每次都有读和写两个操作
@@ -31,18 +31,21 @@
 * - 始终使用固定间隔访问，无法享受连续访问的极致性能
 * - 需要维护两套完整的数组，内存占用翻倍
 * - 遍历时添加节点会立即插入，打乱原有顺序
+* 
+* 时间，空间全都要！
+* 我找到了免费的午餐！
+* 
 
  */
 
 using System;
-using System.Collections.Generic;
 
 namespace WorldTree
 {
 	/// <summary>
 	/// 法则集合执行器抽象基类
 	/// </summary>
-	public abstract class RuleGroupExecutor1 : Node, IRuleExecutorOperate, IRuleExecutorEnumerable
+	public abstract class RuleGroupExecutor : Node, IRuleExecutorOperate, IRuleExecutorEnumerable
 		, AsChildBranch
 	{
 
@@ -64,71 +67,86 @@ namespace WorldTree
 		/// <summary>
 		/// 出队指针
 		/// </summary>
-		private int readPoint;
+		public int readPoint;
 
 		/// <summary>
 		/// 入队指针
 		/// </summary>
-		private int writePoint;
+		public int writePoint;
 
 		/// <summary>
-		/// 节点总数
+		/// 下一次遍历数量
 		/// </summary>
-		private int size;
+		public int nextTraversalCount;
 
 		/// <summary>
 		/// 每次遍历数量
 		/// </summary>
-		private int traversalCount;
-
-
-		public int TraversalCount => traversalCount;
-
+		public int traversalCount;
 
 		/// <summary>
-		/// 奇偶新增标记
+		/// 新增数据奇偶标记
 		/// </summary>
-		private bool isOdd;
-
-		/// <summary>
-		/// 奇偶切换点
-		/// </summary>
-		private int switchPoint;
-
-		/// <summary>
-		/// 上次新节点数量
-		/// </summary>
-		private int lastNewCount;
+		public bool isAddOdd;
 
 		/// <summary>
 		/// 当前新节点数量
 		/// </summary>
-		private int nowNewCount;
+		public int nowNewCount;
+
+		/// <summary>
+		/// 奇偶切换点
+		/// </summary>
+		public int switchPoint;
 
 		/// <summary>
 		/// 当前起始添加位置
 		/// </summary>
-		private int addStartIndex;
+		public int addStartIndex;
+
+		/// <summary>
+		/// 初始化状态
+		/// </summary>
+		public bool isInit = true;
+
+		public int TraversalCount => traversalCount;
+
 
 
 		/// <summary>
-		/// 上次空节点数量
+		/// 尝试添加节点
 		/// </summary>
-		private int lastVacuityCount;
-
-		/// <summary>
-		/// 尝试添加节点和法则
-		/// </summary>
-		public bool TryAdd(INode node, RuleList rule)
+		public bool TryAdd(INode node)
 		{
-			if (node == null || rule == null) return false;
-			//计算添加位置= 当前添加起始点 + 奇偶校正 + 新节点数量 * 2 
-			int addIndex = addStartIndex + (isOdd ? 1 : 0) + nowNewCount * 2;
-			// 判断扩容
+			if (node == null) return false;
+			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(node.Type, out RuleList rule)) return false;
+
+			int addIndex = 0;
+
+			// 如果是初始化状态，直接从0开始添加，模拟已经遍历完毕
+			if (isInit)
+			{
+				addIndex = nowNewCount;
+				switchPoint = nowNewCount + 1;
+				traversalCount = switchPoint;
+				readPoint = switchPoint;
+
+				writePoint = switchPoint;
+				nextTraversalCount = switchPoint;
+				isAddOdd = false;
+				addStartIndex = 0;
+			}
+			else
+			{
+				//计算添加位置 = 当前添加起始点 + 奇偶校正 + 新节点数量 * 2 
+				addIndex = addStartIndex + (isAddOdd ? 1 : 0) + nowNewCount * 2;
+			}
+
+			// 判断自动扩容
 			if (addIndex == nodes.Length) Capacity();
 			nodes[addIndex] = new RuleExecutorPair(node, rule);
 			nowNewCount++;
-			size = Math.Max(size, addIndex + 1);
+			nextTraversalCount = Math.Max(nextTraversalCount, addIndex + 1);
 			return true;
 		}
 
@@ -139,14 +157,14 @@ namespace WorldTree
 		{
 			// 如果目标容量小于当前节点数量，则设置为当前节点数量的两倍,为0则设置为4
 			int num = this.nodes.Length != 0 ? this.nodes.Length * 2 : 4;
-			if (num < this.size) this.LogError("下标小于当前大小");
+			if (num < this.nextTraversalCount) this.LogError("下标小于当前大小");
 			if (num == this.nodes.Length) return;
 			if (num > 0)
 			{
 				var newNodes = this.Core.PoolGetArray<RuleExecutorPair>(num);
-				if (this.size > 0)
+				if (this.nextTraversalCount > 0)
 				{
-					Array.Copy(this.nodes, 0, newNodes, 0, this.size);
+					Array.Copy(this.nodes, 0, newNodes, 0, this.nextTraversalCount);
 				}
 				this.Core.PoolRecycle(this.nodes);
 				this.nodes = newNodes;
@@ -164,21 +182,22 @@ namespace WorldTree
 
 		public int RefreshTraversalCount()
 		{
-			//空洞数量是上次读取位置 - 写入位置
-			lastVacuityCount = readPoint - writePoint;
-			//奇偶切换点是上次遍历的数量- 上次空洞数量
-			switchPoint = traversalCount - lastVacuityCount;
-			//上次新节点数量
-			lastNewCount = nowNewCount;
+			//标记为非初始化状态
+			isInit = false;
 
-			addStartIndex = switchPoint + lastNewCount;
-			//如果添加位置是偶数
-			if (addStartIndex != 0 && addStartIndex % 2 == 1)
+			//奇偶切换点是上次遍历的数量 - 上次空洞数量
+			switchPoint = traversalCount - (readPoint - writePoint);
+
+			//新增位置是切换点 + 上次新节点数量
+			addStartIndex = switchPoint + nowNewCount;
+
+			//如果添加位置是奇数
+			if (addStartIndex != 0 && (addStartIndex & 1) == 1)
 			{
 				addStartIndex++;//校正为偶数
 			}
 
-			// 清空当前新节点数量
+			// 清空新节点数量
 			nowNewCount = 0;
 
 			// 清空读指针
@@ -187,10 +206,10 @@ namespace WorldTree
 			// 清空写指针
 			writePoint = 0;
 
-			traversalCount = size;
+			traversalCount = nextTraversalCount;
 
 			//切换奇偶添加标记
-			isOdd = !isOdd;
+			isAddOdd = !isAddOdd;
 			return traversalCount;
 		}
 
@@ -203,20 +222,20 @@ namespace WorldTree
 			// 如果遍历数量小于读指针，说明没有可遍历的节点
 			while (traversalCount > readPoint)
 			{
-				// 切换到奇偶遍历状态
+				// 切换到奇偶遍历状态，读取上一轮添加的新数据
 				if (indexInterval == 1 && readPoint == switchPoint)
 				{
 					//切换点是偶数
-					if (readPoint == 0 || readPoint % 2 == 0)
+					if (readPoint == 0 || (readPoint & 1) == 0)
 					{
-						//当前标记是偶数,那么上次就是奇数，读取指针偏移到正确位置
-						if (!isOdd) readPoint++;
+						//判断如果当前添加标记是偶数，那么上次添加位置就是奇数，读取指针偏移到奇数位置
+						if (!isAddOdd) readPoint++;
 					}
 					//切换点是奇数
 					else
 					{
-						//当前标记是奇数,那么上次就是偶数，读取指针偏移到正确位置
-						if (isOdd) readPoint++;
+						//判断当前添加标记是奇数,那么上次添加位置就是偶数，读取指针偏移到偶数位置
+						if (isAddOdd) readPoint++;
 					}
 					// 接下来读取间隔为2
 					indexInterval = 2;
@@ -250,6 +269,14 @@ namespace WorldTree
 				return true;
 			}
 
+			if (nowNewCount == 0)
+			{
+				// 直接裁剪掉所有的空洞
+				nextTraversalCount = writePoint;
+				// 判断如果遍历数量为0，说明没有可遍历的节点，当前数组为空，直接恢复为初始化状态
+				if (nextTraversalCount == 0) isInit = true;
+			}
+
 			node = null;
 			ruleList = null;
 			return false;
@@ -257,7 +284,7 @@ namespace WorldTree
 
 		public bool TryPeek(out INode node, out RuleList ruleList)
 		{
-			// 如果遍历数量小于读指针，说明没有可遍历的节点
+			// 如果遍历数量小于读指针，说明没有可遍历的节点，需要奇偶切换！！！！？？？
 			while (traversalCount > readPoint)
 			{
 				// 使用引用类型来避免结构体复制
@@ -276,262 +303,38 @@ namespace WorldTree
 		{
 			readPoint = 0;
 			writePoint = 0;
-			size = 0;
+			nextTraversalCount = 0;
 			traversalCount = 0;
+			isAddOdd = false;
+			nowNewCount = 0;
+			switchPoint = 0;
+			addStartIndex = 0;
+			isInit = true;
+			if (nodes != null)
+			{
+				this.Core.PoolRecycle(nodes);
+				nodes = null;
+			}
 		}
-
 
 		public void Remove(long id)
 		{
-			//生命周期走意外丢失移除，不能手动移除
+			//全局事件的对象是释放移除，不能手动移除
 		}
 
 		public void Remove(INode node)
 		{
-			//生命周期走意外丢失移除，不能手动移除
+			//全局事件的对象是释放移除，不能手动移除
 		}
-
 	}
 
-	/// <summary>
-	/// 法则集合执行器抽象基类
-	/// </summary>
-	public abstract class RuleGroupExecutor : Node, IRuleExecutorOperate, IRuleExecutorEnumerable
-		, AsChildBranch
+	public static class RuleGroupExecutorRule
 	{
-		/// <summary>
-		/// 法则类型
-		/// </summary>
-		public long RuleType => ruleGroupDict.RuleType;
-
-		/// <summary>
-		/// 单法则集合
-		/// </summary>
-		[Protected] public RuleGroup ruleGroupDict;
-
-		/// <summary>
-		/// 节点列表
-		/// </summary>
-		public UnitList<NodeRef<INode>> nodeList;
-
-		/// <summary>
-		/// 节点下一个列表
-		/// </summary>
-		public UnitList<NodeRef<INode>> nodeNextList;
-
-		/// <summary>
-		/// 委托列表
-		/// </summary>
-		public UnitList<RuleList> delegateList;
-
-		/// <summary>
-		/// 委托下一个列表
-		/// </summary>
-		public UnitList<RuleList> delegateNextList;
-
-		/// <summary>
-		/// 节点Id索引字典
-		/// </summary>
-		public UnitDictionary<long, int> IdIndexDict;
-
-		/// <summary>
-		/// 遍历下标
-		/// </summary>
-		public int nodeIndex;
-
-		public int TraversalCount => nodeList.Count;
-
-		public int RefreshTraversalCount()
-		{
-			//交换列表
-			nodeIndex = 0;
-			(nodeList, nodeNextList) = (nodeNextList, nodeList);
-			(delegateList, delegateNextList) = (delegateNextList, delegateList);
-			nodeNextList.Clear();
-			delegateNextList.Clear();
-			return nodeList.Count;
-		}
-
-
-		public override string ToString()
-		{
-			return $"RuleGroupExecutor : {(ruleGroupDict == null ? null : Core.CodeToType(ruleGroupDict.RuleType))}";
-		}
-
-		public void Clear()
-		{
-			nodeList?.Clear();
-			nodeNextList?.Clear();
-			delegateList?.Clear();
-			delegateNextList?.Clear();
-			IdIndexDict?.Clear();
-			nodeIndex = 0;
-		}
-
-		/// <summary>
-		/// 尝试添加节点到执行器
-		/// </summary>
-		public bool TryAdd(INode node)
-		{
-			//节点不允许重复添加。
-			if (IdIndexDict != null && IdIndexDict.ContainsKey(node.InstanceId)) return false;
-			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(node.Type, out RuleList ruleList)) return false;
-			nodeNextList.Add(new NodeRef<INode>(node, false));
-			delegateNextList.Add(ruleList);
-			IdIndexDict.Add(node.InstanceId, nodeNextList.Count - 1);
-			return true;
-		}
-
-		public void Remove(INode node) => Remove(node.InstanceId);
-
-
-		public void Remove(long id)
-		{
-			if (IdIndexDict.TryGetValue(id, out int index))
-			{
-				IdIndexDict.Remove(id);
-				// 优先检查 nodeNextList
-				if (nodeNextList.Count > index)
-				{
-					if (nodeNextList[index].InstanceId == id)
-					{
-						//清除引用，让其变成意外回收
-						nodeNextList[index].Clear();
-						return;
-					}
-				}
-
-				// 再检查 nodeList
-				if (nodeList.Count > index)
-				{
-					if (nodeList[index].InstanceId == id)
-					{
-						//清除引用，让其变成意外回收
-						nodeList[index].Clear();
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// 移动到最后并删除
-		/// </summary>
-		public void RemoveAtSwapBack<T>(List<T> list, int index)
-		{
-			int tail = list.Count - 1;
-			if (index != tail)
-				list[index] = list[tail];
-			list.RemoveAt(tail);
-		}
-
-
-		/// <summary>
-		/// 尝试获取队顶
-		/// </summary>
-		public bool TryPeek(out INode node, out RuleList ruleList)
-		{
-			while (nodeList.Count > nodeIndex)
-			{
-				node = nodeList[nodeIndex].Value;
-				if (node == null) // 节点意外回收
-				{
-					nodeIndex++;
-				}
-				else // 节点存在
-				{
-					ruleList = delegateList[nodeIndex];
-					return true;
-				}
-			}
-			node = null;
-			ruleList = null;
-			return false;
-		}
-
-		/// <summary>
-		/// 尝试出列
-		/// </summary>
-		public bool TryDequeue(out INode node, out RuleList ruleList)
-		{
-			NodeRef<INode> nodeRef;
-			while (nodeList.Count > nodeIndex)
-			{
-				nodeRef = nodeList[nodeIndex];
-				node = nodeRef.Value;
-				if (node == null) // 节点意外回收
-				{
-					nodeIndex++;
-				}
-				else // 节点存在
-				{
-					// 值已经拿到，列表内部作废，清除引用
-					nodeList[nodeIndex].Clear();
-					ruleList = delegateList[nodeIndex];
-					nodeIndex++;
-					// 更新索引字典
-					IdIndexDict[nodeRef.InstanceId] = nodeNextList.Count - 1;
-					nodeNextList.Add(nodeRef); // 塞回队列用于下次遍历
-					delegateNextList.Add(ruleList);
-					return true;
-				}
-			}
-			node = null;
-			ruleList = null;
-			return false;
-		}
-
-	}
-
-	public static class RuleGroupExecutorBaseRule
-	{
-		private class Add : AddRule<RuleGroupExecutor>
-		{
-			protected override void Execute(RuleGroupExecutor self)
-			{
-				self.Core.PoolGetUnit(out self.nodeList);
-				self.Core.PoolGetUnit(out self.nodeNextList);
-				self.Core.PoolGetUnit(out self.delegateList);
-				self.Core.PoolGetUnit(out self.delegateNextList);
-				self.Core.PoolGetUnit(out self.IdIndexDict);
-			}
-		}
-
 		class RemoveRule : RemoveRule<RuleGroupExecutor>
 		{
 			protected override void Execute(RuleGroupExecutor self)
 			{
-				self.nodeIndex = 0;
-				self.nodeList.Dispose();
-				self.nodeNextList.Dispose();
-				self.delegateList.Dispose();
-				self.delegateNextList.Dispose();
-				self.IdIndexDict.Dispose();
-				self.nodeList = null;
-				self.nodeNextList = null;
-				self.delegateList = null;
-				self.delegateNextList = null;
-				self.IdIndexDict = null;
-			}
-		}
-
-
-		class TreeDataSerialize : TreeDataSerializeRule<RuleGroupExecutor>
-		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref SerializedTypeMode typeMode)
-			{
-				if (self.TryWriteDataHead(value, typeMode, ~1, out RuleGroupExecutor obj, false)) return;
-				self.WriteDynamic(1);
-				self.WriteValue(obj.RuleType);
-			}
-		}
-		class TreeDataDeserialize : TreeDataDeserializeRule<RuleGroupExecutor>
-		{
-			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
-			{
-				if (self.TryReadArrayHead(typeof(RuleGroupExecutor), ref value, 1, out _, out _)) return;
-				self.ReadDynamic(out int _);
-				long ruleTypeCode = self.ReadValue<long>();
-				value = self.Core.GetRuleBroadcast(ruleTypeCode);
+				self.Clear();
 			}
 		}
 	}
