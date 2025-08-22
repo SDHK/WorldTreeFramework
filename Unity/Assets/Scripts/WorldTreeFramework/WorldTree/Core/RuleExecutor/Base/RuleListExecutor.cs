@@ -15,7 +15,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
@@ -154,54 +153,9 @@ namespace WorldTree
 				return true;
 			}
 
-			// 在遍历结束后进行 空洞压缩
-			if (readPoint == traversalCount)
-			{
-				// 有新增节点
-				if (size > traversalCount)
-				{
-					// 将新增节点移到压缩后的位置
-					int newNodeCount = size - traversalCount;
-					// 使用最快的复制方法
-					unsafe
-					{
-						fixed (RuleExecutorPair* src = &nodes[traversalCount])
-						fixed (RuleExecutorPair* dst = &nodes[writePoint])
-						{
-							Unsafe.CopyBlock(dst, src, (uint)(newNodeCount * Unsafe.SizeOf<RuleExecutorPair>()));
-						}
-					}
-					size = writePoint + newNodeCount;
-					// 更新新增节点的索引
-					for (int i = writePoint; i < size; i++) IdIndexDict[nodes[i].InstanceId] = i;
-				}
-				// 没有新增节点
-				else
-				{
-					//直接截断
-					size = writePoint;
-				}
-			}
 			node = null;
 			ruleList = null;
 			return false;
-		}
-
-		public bool TryPeek(out INode node, out RuleList ruleList)
-		{
-			// 如果遍历数量小于读指针，说明没有可遍历的节点
-			while (traversalCount > readPoint)
-			{
-				// 使用引用类型来避免结构体复制
-				ref RuleExecutorPair pair = ref nodes[readPoint];
-				node = pair.Node;
-				ruleList = pair.Rule;
-				if (node != null) return true; // 找到有效节点
-				readPoint++;
-			}
-			node = null;
-			ruleList = null;
-			return false; // 没有有效节点
 		}
 
 		public void Clear()
@@ -338,27 +292,6 @@ namespace WorldTree
 			ruleList = null;
 			return false;
 		}
-
-		public bool TryPeek(out INode node, out RuleList ruleList)
-		{
-			while (nodeList.Count > nodeIndex)
-			{
-				node = nodeList[nodeIndex].Value;
-				if (node == null) // 节点意外回收
-				{
-					nodeIndex++;
-				}
-				else // 节点存在
-				{
-					ruleList = delegateList[nodeIndex];
-					return true;
-				}
-			}
-			node = null;
-			ruleList = null;
-			return false;
-		}
-
 
 		public void Remove(INode node) => Remove(node.InstanceId);
 

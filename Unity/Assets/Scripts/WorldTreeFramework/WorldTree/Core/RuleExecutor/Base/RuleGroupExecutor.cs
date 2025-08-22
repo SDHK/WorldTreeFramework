@@ -95,12 +95,12 @@ namespace WorldTree
 		public int nowNewCount;
 
 		/// <summary>
-		/// 奇偶切换点
+		/// 奇偶切换点：在这点后的空间是二维的，新增和旧数据将会交替叠加在一起。
 		/// </summary>
 		public int switchPoint;
 
 		/// <summary>
-		/// 当前起始添加位置
+		/// 当前起始添加位置：这是切换点之后，理论上绝对安全的添加位置。
 		/// </summary>
 		public int addStartIndex;
 
@@ -139,7 +139,7 @@ namespace WorldTree
 			else
 			{
 				//计算添加位置 = 当前添加起始点 + 奇偶校正 + 新节点数量 * 2 
-				addIndex = addStartIndex + (isAddOdd ? 1 : 0) + nowNewCount * 2;
+				addIndex = addStartIndex + (isAddOdd ? 1 : 0) + (nowNewCount << 1);
 			}
 
 			// 判断自动扩容
@@ -245,13 +245,11 @@ namespace WorldTree
 				ref RuleExecutorPair pair = ref nodes[readPoint];
 
 				node = pair.Node;
-
 				if (node == null) // 节点意外回收
 				{
 					readPoint += indexInterval;
 					continue; // 继续下一个节点
 				}
-
 				ruleList = pair.Rule;
 
 				// 空洞压缩：如果读写指针不相等，说明有节点被移除，这时需要将当前节点移到写入点。
@@ -259,12 +257,10 @@ namespace WorldTree
 				{
 					// 将当前节点放到写入点
 					nodes[writePoint] = pair;
-
 					// 为了安全，清除引用，因为节点已经移动到写入点
 					pair.Clear();
 				}
 				writePoint++;
-
 				readPoint += indexInterval;
 				return true;
 			}
@@ -276,27 +272,9 @@ namespace WorldTree
 				// 判断如果遍历数量为0，说明没有可遍历的节点，当前数组为空，直接恢复为初始化状态
 				if (nextTraversalCount == 0) isInit = true;
 			}
-
 			node = null;
 			ruleList = null;
 			return false;
-		}
-
-		public bool TryPeek(out INode node, out RuleList ruleList)
-		{
-			// 如果遍历数量小于读指针，说明没有可遍历的节点，需要奇偶切换！！！！？？？
-			while (traversalCount > readPoint)
-			{
-				// 使用引用类型来避免结构体复制
-				ref RuleExecutorPair pair = ref nodes[readPoint];
-				node = pair.Node;
-				ruleList = pair.Rule;
-				if (node != null) return true; // 找到有效节点
-				readPoint++;
-			}
-			node = null;
-			ruleList = null;
-			return false; // 没有有效节点
 		}
 
 		public void Clear()

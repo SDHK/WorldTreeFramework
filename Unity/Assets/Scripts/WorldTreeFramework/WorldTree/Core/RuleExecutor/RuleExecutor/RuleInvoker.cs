@@ -77,19 +77,6 @@ namespace WorldTree
 			ruleList = default;
 			return false;
 		}
-
-		public bool TryPeek(out INode node, out RuleList ruleList)
-		{
-			if (TargetNode.Value != null)
-			{
-				node = TargetNode.Value;
-				ruleList = RuleList;
-				return true;
-			}
-			node = null;
-			ruleList = default;
-			return false;
-		}
 	}
 
 	public static class RuleInvokerRule

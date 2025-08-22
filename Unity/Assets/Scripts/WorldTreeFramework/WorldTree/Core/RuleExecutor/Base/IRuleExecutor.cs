@@ -67,11 +67,6 @@ namespace WorldTree
 		/// </summary>
 		public bool TryDequeue(out INode node, out RuleList ruleList);
 
-		/// <summary>
-		/// 尝试获取队顶
-		/// </summary>
-		public bool TryPeek(out INode node, out RuleList ruleList);
-
 	}
 
 
