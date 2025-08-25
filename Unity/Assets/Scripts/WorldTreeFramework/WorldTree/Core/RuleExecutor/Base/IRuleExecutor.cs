@@ -97,29 +97,4 @@ namespace WorldTree
 			}
 		}
 	}
-
-
-	//======================================
-
-	///// <summary>
-	///// 法则集合执行器基类接口
-	///// </summary>
-	//public interface IGlobalRuleExecutor : IRuleExecutorOperate, INode
-	//{
-	//	/// <summary>
-	//	/// 尝试添加节点
-	//	/// </summary>
-	//	public bool TryAdd(INode node);
-	//}
-
-	///// <summary>
-	///// 法则列表执行器基类接口
-	///// </summary>
-	//public interface IRuleListExecutor : IRuleExecutorOperate, INode
-	//{
-	//	/// <summary>
-	//	/// 尝试添加节点与对应法则
-	//	/// </summary>
-	//	public bool TryAdd(INode node, RuleList ruleList);
-	//}
 }

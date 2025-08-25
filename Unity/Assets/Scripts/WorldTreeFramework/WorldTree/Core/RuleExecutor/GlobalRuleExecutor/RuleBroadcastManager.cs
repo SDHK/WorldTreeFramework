@@ -30,15 +30,15 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static RuleGroupExecutor GetRuleBroadcast(this WorldLine self, long genericTypeCpde)
+		public static RuleBroadcaster GetRuleBroadcast(this WorldLine self, long genericTypeCpde)
 		{
 			INode node = NodeBranchHelper.GetBranch<GenericBranch<long>>(self.GlobalRuleExecutorManager)?.GetNode(genericTypeCpde);
-			if (node != null) return node as RuleGroupExecutor;
+			if (node != null) return node as RuleBroadcaster;
 
 			if (!self.TryCodeToType(genericTypeCpde, out Type genericType)) return null;
 			Type type = typeof(RuleBroadcaster<>).MakeGenericType(genericType);
 			NodeBranchHelper.AddNode(self.GlobalRuleExecutorManager, default(GenericBranch<long>), genericTypeCpde, self.TypeToCode(type), out node);
-			RuleGroupExecutor executor = node as RuleGroupExecutor;
+			RuleBroadcaster executor = node as RuleBroadcaster;
 			return executor;
 		}
 

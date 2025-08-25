@@ -18,7 +18,6 @@ namespace WorldTree
 		/// 法则类型码
 		/// </summary>
 		public long RuleType;
-
 	}
 
 	public partial class RuleBroadcastData
