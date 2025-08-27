@@ -20,11 +20,13 @@ namespace WorldTree
 		/// <summary>
 		/// 法则类型
 		/// </summary>
+		[TreeDataIgnore]
 		public long RuleType => ruleGroupDict.RuleType;
 
 		/// <summary>
 		/// 单法则集合
 		/// </summary>
+		[TreeDataIgnore]
 		[Protected] public RuleGroup ruleGroupDict;
 
 		/// <summary>

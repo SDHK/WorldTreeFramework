@@ -44,6 +44,8 @@ namespace WorldTree
 	/// </summary>
 	public abstract class NodeData : Node, INodeData
 	{
+		public override long Id { get; set; }
+
 		/// <summary>
 		/// 创建时：NodeData的UID获取和法则支持
 		/// </summary>
@@ -119,7 +121,11 @@ namespace WorldTree
 			}
 		}
 
-		public virtual long Id { get; set; }
+		public virtual long Id
+		{
+			get => InstanceId;
+			set => InstanceId = value;
+		}
 
 		[TreeDataIgnore]
 		public long InstanceId { get; set; }

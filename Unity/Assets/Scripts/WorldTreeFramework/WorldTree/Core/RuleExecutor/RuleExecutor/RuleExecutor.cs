@@ -22,6 +22,9 @@ namespace WorldTree
 		{
 			return $"RuleExecutor<{typeof(R)}>";
 		}
+
+
+
 	}
 
 	public static class RuleExecutorRule
@@ -60,5 +63,8 @@ namespace WorldTree
 				self.Log($"空法则{typeof(R)}");
 			}
 		}
+
+
+
 	}
 }

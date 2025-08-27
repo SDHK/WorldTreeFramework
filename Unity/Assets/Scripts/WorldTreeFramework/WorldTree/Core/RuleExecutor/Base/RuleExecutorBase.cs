@@ -56,46 +56,55 @@ namespace WorldTree
 		/// <summary>
 		/// 出队指针
 		/// </summary>
+		[TreeDataIgnore]
 		public int readPoint;
 
 		/// <summary>
 		/// 入队指针
 		/// </summary>
+		[TreeDataIgnore]
 		public int writePoint;
 
 		/// <summary>
 		/// 下一次遍历数量
 		/// </summary>
+		[TreeDataIgnore]
 		public int nextTraversalCount;
 
 		/// <summary>
 		/// 每次遍历数量
 		/// </summary>
+		[TreeDataIgnore]
 		public int traversalCount;
 
 		/// <summary>
 		/// 新增数据奇偶标记
 		/// </summary>
+		[TreeDataIgnore]
 		public bool isAddOdd;
 
 		/// <summary>
 		/// 当前新节点数量
 		/// </summary>
+		[TreeDataIgnore]
 		public int nowNewCount;
 
 		/// <summary>
 		/// 奇偶切换点：在这点后的空间是二维的，新增和旧数据将会交替叠加在一起。
 		/// </summary>
+		[TreeDataIgnore]
 		public int switchPoint;
 
 		/// <summary>
 		/// 当前起始添加位置：这是切换点之后，理论上绝对安全的添加位置。
 		/// </summary>
+		[TreeDataIgnore]
 		public int addStartIndex;
 
 		/// <summary>
 		/// 初始化状态
 		/// </summary>
+		[TreeDataIgnore]
 		public bool isInit = true;
 
 		public int TraversalCount => traversalCount;
