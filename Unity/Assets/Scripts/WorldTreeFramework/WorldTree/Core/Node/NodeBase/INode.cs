@@ -101,6 +101,7 @@ namespace WorldTree
 		/// 节点ID 、数据ID 
 		/// </summary>
 		/// <remarks>普通类型为实例ID、数据类型则为雪花ID</remarks>
+		[TreeDataIgnore]
 		public long Id { get; set; }
 
 		/// <summary>

@@ -18,6 +18,15 @@ namespace WorldTree
 		/// 法则类型码
 		/// </summary>
 		public long RuleType;
+
+		public void Clear()
+		{
+		}
+
+		public bool TryAdd(INode node)
+		{
+			return false;
+		}
 	}
 
 	public partial class RuleBroadcastData

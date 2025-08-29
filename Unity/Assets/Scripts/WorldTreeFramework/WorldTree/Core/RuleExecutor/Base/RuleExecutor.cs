@@ -45,7 +45,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则执行器抽象基类
 	/// </summary>
-	public abstract class RuleExecutorBase : Node, IRuleExecutorOperate, IRuleExecutorEnumerable
+	public abstract class RuleExecutor : Node, IRuleExecutorEnumerable, IRuleExecutor
 		, AsChildBranch
 	{
 		/// <summary>
@@ -288,25 +288,21 @@ namespace WorldTree
 			addStartIndex = 0;
 			isInit = true;
 		}
-
-		public abstract void Remove(long id);
-
-		public abstract void Remove(INode node);
 	}
 
 	public static class RuleExecutorBaseRule
 	{
-		private class AddRule : AddRule<RuleExecutorBase>
+		private class AddRule : AddRule<RuleExecutor>
 		{
-			protected override void Execute(RuleExecutorBase self)
+			protected override void Execute(RuleExecutor self)
 			{
 				self.nodes = self.Core.PoolGetArray<RuleExecutorPair>(4);
 			}
 		}
 
-		private class RemoveRule : RemoveRule<RuleExecutorBase>
+		private class RemoveRule : RemoveRule<RuleExecutor>
 		{
-			protected override void Execute(RuleExecutorBase self)
+			protected override void Execute(RuleExecutor self)
 			{
 				self.Clear();
 				Array.Clear(self.nodes, 0, self.nodes.Length);

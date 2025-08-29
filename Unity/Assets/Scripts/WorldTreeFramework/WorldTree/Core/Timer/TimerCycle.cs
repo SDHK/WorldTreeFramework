@@ -26,7 +26,7 @@ namespace WorldTree
 		/// <summary>
 		/// 计时结束回调
 		/// </summary>
-		public RuleExecutor<ISendRule> Callback;
+		public RuleMulticaster<ISendRule> Callback;
 
     }
 

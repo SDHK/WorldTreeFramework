@@ -10,26 +10,15 @@
 
 namespace WorldTree
 {
+	//RuleBroadcast
+	//RuleMulticast
+	//RuleUnicast
+
 	/// <summary>
 	/// 法则执行器接口：设计子类有 执行器INode 和 数据IUnit 两种类型，所以只能继承IWorldTreeBasic
 	/// </summary>
-	public interface IRuleExecutor : IWorldTreeBasic { }
-
-	/// <summary>
-	/// 法则执行器操作方法接口
-	/// </summary>
-	public interface IRuleExecutorOperate : IRuleExecutor
+	public interface IRuleExecutor : IWorldTreeBasic
 	{
-		/// <summary>
-		/// 移除节点
-		/// </summary>
-		public void Remove(long id);
-
-		/// <summary>
-		/// 移除节点
-		/// </summary>
-		public void Remove(INode node);
-
 		/// <summary>
 		/// 清除
 		/// </summary>
@@ -73,7 +62,7 @@ namespace WorldTree
 
 
 	/// <summary>
-	/// 格式化器 
+	/// 格式化器 XXXX!!!!!
 	/// </summary>
 	public static class IRuleExecutorFormatterRule
 	{

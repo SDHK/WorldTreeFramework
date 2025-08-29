@@ -10,28 +10,52 @@
 
 namespace WorldTree
 {
+
+	/// <summary>
+	/// 法则单播
+	/// </summary>
+	public interface RuleUnicast : IRuleExecutor
+	{
+		/// <summary>
+		/// 目标节点
+		/// </summary>
+		public NodeRef<INode> TargetNode { get; set; }
+
+		/// <summary>
+		/// 法则列表
+		/// </summary>
+		public RuleList RuleList { get; set; }
+
+		/// <summary>
+		/// 尝试添加节点法则
+		/// </summary>
+		public bool TryAdd(INode node, RuleList rule);
+	}
+
+	/// <summary>
+	/// 法则单播
+	/// </summary>
+	public interface RuleUnicast<in R> : IRuleExecutor<R>, RuleUnicast where R : IRule { }
+
 	/// <summary>
 	/// 单法则调用器
 	/// </summary>
-	public class RuleInvoker<R> : Node, IRuleExecutor<R>, IRuleExecutorEnumerable
+	public class RuleUnicaster<R> : Node, RuleUnicast<R>, IRuleExecutorEnumerable
 		, ChildOf<INode>
 		where R : IRule
 	{
 		/// <summary>
 		/// 目标节点
 		/// </summary>
-		public NodeRef<INode> TargetNode;
+		public NodeRef<INode> TargetNode { get; set; }
 
 		/// <summary>
 		/// 法则列表
 		/// </summary>
-		public RuleList RuleList;
+		public RuleList RuleList { get; set; }
 
 		public int TraversalCount => TargetNode.Value != null ? 1 : 0;
 
-		/// <summary>
-		/// a
-		/// </summary>
 		public void Clear()
 		{
 			TargetNode = default;
@@ -43,28 +67,12 @@ namespace WorldTree
 			return TraversalCount;
 		}
 
-		/// <summary>
-		/// a
-		/// </summary>
-		public void Remove(long id)
+		public bool TryAdd(INode node, RuleList rule)
 		{
-			if (TargetNode == null) return;
-			if (TargetNode.Id != id) return;
-			TargetNode = default;
-			RuleList = default;
+			TargetNode = new NodeRef<INode>(node);
+			RuleList = rule;
+			return true;
 		}
-
-		/// <summary>
-		/// a
-		/// </summary>
-		public void Remove(INode node)
-		{
-			if (TargetNode != node) return;
-			TargetNode = default;
-			RuleList = default;
-		}
-
-
 		public bool TryDequeue(out INode node, out RuleList ruleList)
 		{
 			if (TargetNode.Value != null)
@@ -79,12 +87,12 @@ namespace WorldTree
 		}
 	}
 
-	public static class RuleInvokerRule
+	public static class RuleUnicastRule
 	{
 		/// <summary>
 		/// 添加节点法则：指定法则
 		/// </summary>
-		public static void Add<R, N, NR>(this RuleInvoker<R> self, N node, NR defaultRule = default)
+		public static void Add<R, N, NR>(this RuleUnicast<R> self, N node, NR defaultRule = default)
 			where R : IRule
 			where N : class, INode, AsRule<NR>
 			where NR : R
@@ -104,7 +112,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加节点法则：默认法则
 		/// </summary>
-		public static void Add<R, N>(this RuleInvoker<R> self, N node)
+		public static void Add<R, N>(this RuleUnicast<R> self, N node)
 			where R : IRule
 			where N : class, INode, AsRule<R>
 		{

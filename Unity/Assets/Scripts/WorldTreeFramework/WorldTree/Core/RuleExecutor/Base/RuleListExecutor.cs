@@ -15,7 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 法则列表执行器抽象基类
 	/// </summary>
-	public abstract class RuleListExecutor : RuleExecutorBase, IRuleExecutorOperate, IRuleExecutorEnumerable
+	public abstract class RuleListExecutor : RuleExecutor, IRuleExecutorEnumerable
 		, AsChildBranch
 	{
 		/// <summary>
@@ -141,8 +141,10 @@ namespace WorldTree
 			IdIndexDict.Clear();
 		}
 
-
-		public override void Remove(long id)
+		/// <summary>
+		/// 移除
+		/// </summary>
+		public virtual void Remove(long id)
 		{
 			if (IdIndexDict.TryGetValue(id, out int index))
 			{
@@ -155,7 +157,10 @@ namespace WorldTree
 			}
 		}
 
-		public override void Remove(INode node)
+		/// <summary>
+		/// 移除
+		/// </summary>
+		public virtual void Remove(INode node)
 		{
 			if (node == null) return;
 			Remove(node.InstanceId);
@@ -170,7 +175,7 @@ namespace WorldTree
 			protected override void Execute(RuleListExecutor self)
 			{
 				self.Core.PoolGetUnit(out self.IdIndexDict);
-				self.GetBaseRule<RuleListExecutor, RuleExecutorBase, Add>().Send(self);
+				self.GetBaseRule<RuleListExecutor, RuleExecutor, Add>().Send(self);
 			}
 		}
 
@@ -178,7 +183,7 @@ namespace WorldTree
 		{
 			protected override void Execute(RuleListExecutor self)
 			{
-				self.GetBaseRule<RuleListExecutor, RuleExecutorBase, Remove>().Send(self);
+				self.GetBaseRule<RuleListExecutor, RuleExecutor, Remove>().Send(self);
 				self.IdIndexDict.Dispose();
 				self.IdIndexDict = null;
 			}

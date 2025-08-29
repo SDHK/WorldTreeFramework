@@ -111,6 +111,7 @@ namespace WorldTree
 		/// </summary>
 		public void Clear() => node = null;
 
+
 		public static implicit operator NodeRef<N>(N node) => new(node);
 
 		public static implicit operator N(NodeRef<N> nodeRef) => nodeRef.Value;

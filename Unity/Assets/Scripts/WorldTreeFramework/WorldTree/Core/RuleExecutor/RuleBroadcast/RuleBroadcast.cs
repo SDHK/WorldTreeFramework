@@ -14,7 +14,18 @@ namespace WorldTree
 	/// <summary>
 	/// 法则全局广播
 	/// </summary>
-	public interface RuleBroadcast<in R> : IRuleExecutor<R> where R : IGlobalRule { }
+	public interface RuleBroadcast : IRuleExecutor
+	{
+		/// <summary>
+		/// 尝试添加节点
+		/// </summary>
+		public bool TryAdd(INode node);
+	}
+
+	/// <summary>
+	/// 法则全局广播
+	/// </summary>
+	public interface RuleBroadcast<in R> : IRuleExecutor<R>, RuleBroadcast where R : IGlobalRule { }
 
 	/// <summary>
 	/// 全局广播法则执行器：请使用 RuleBroadcast<R>
@@ -29,7 +40,7 @@ namespace WorldTree
 	/// <summary>
 	/// 全局广播法则执行器基类
 	/// </summary>
-	public abstract class RuleBroadcaster : RuleExecutorBase, IRuleExecutorOperate, IRuleExecutorEnumerable
+	public abstract class RuleBroadcaster : RuleExecutor, RuleBroadcast, IRuleExecutorEnumerable
 		, AsChildBranch
 	{
 		/// <summary>
@@ -55,16 +66,6 @@ namespace WorldTree
 			if (node == null) return false;
 			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(node.Type, out RuleList rule)) return false;
 			return this.TryAdd(node, rule);
-		}
-
-		public override void Remove(long id)
-		{
-			//全局事件的对象是释放移除，不能手动移除
-		}
-
-		public override void Remove(INode node)
-		{
-			//全局事件的对象是释放移除，不能手动移除
 		}
 	}
 
@@ -109,7 +110,7 @@ namespace WorldTree
 		{
 			protected override void Execute(RuleBroadcaster<R> self)
 			{
-				self.GetBaseRule<RuleBroadcaster, RuleExecutorBase, Add>().Send(self);
+				self.GetBaseRule<RuleBroadcaster, RuleExecutor, Add>().Send(self);
 				self.ruleGroupDict = self.Core.RuleManager.GetOrNewRuleGroup<R>();
 				self.LoadGlobalNode();
 			}

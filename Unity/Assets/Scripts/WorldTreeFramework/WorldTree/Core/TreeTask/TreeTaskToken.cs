@@ -50,7 +50,7 @@ namespace WorldTree
 		/// <summary>
 		/// 任务令牌事件
 		/// </summary>
-		public RuleExecutor<TreeTaskTokenEvent> TokenEvent;
+		public RuleMulticaster<TreeTaskTokenEvent> TokenEvent;
 
 		/// <summary>
 		/// 任务状态

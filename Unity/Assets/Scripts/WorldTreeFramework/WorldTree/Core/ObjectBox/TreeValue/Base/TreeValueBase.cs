@@ -31,7 +31,7 @@ namespace WorldTree
 		/// <summary>
 		/// 法则执行器
 		/// </summary>
-		public RuleExecutor<ValueChangeEvent<T>> valueChange;
+		public RuleMulticaster<ValueChangeEvent<T>> valueChange;
 
 		/// <summary>
 		/// 值

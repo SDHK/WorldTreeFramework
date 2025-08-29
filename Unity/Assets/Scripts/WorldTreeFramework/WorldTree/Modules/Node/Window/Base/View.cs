@@ -57,6 +57,6 @@
 		/// <summary>
 		/// 点击事件
 		/// </summary>
-		public RuleInvoker<ISendRule> OnClick;
+		public RuleUnicaster<ISendRule> OnClick;
 	}
 }
