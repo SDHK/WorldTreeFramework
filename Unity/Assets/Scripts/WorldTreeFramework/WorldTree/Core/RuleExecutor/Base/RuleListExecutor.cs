@@ -61,7 +61,7 @@ namespace WorldTree
 			return true;
 		}
 
-		public override bool TryDequeue(out INode node, out RuleList ruleList)
+		public override bool TryGetNext(out INode node, out RuleList ruleList)
 		{
 			//遍历间隔
 			int indexInterval = 1;

@@ -57,6 +57,6 @@
 		/// <summary>
 		/// 点击事件
 		/// </summary>
-		public RuleUnicaster<ISendRule> OnClick;
+		public RuleUnicast<ISendRule> OnClick;
 	}
 }

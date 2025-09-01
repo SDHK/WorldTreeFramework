@@ -213,7 +213,7 @@ namespace WorldTree
 			return traversalCount;
 		}
 
-		public virtual bool TryDequeue(out INode node, out RuleList ruleList)
+		public virtual bool TryGetNext(out INode node, out RuleList ruleList)
 		{
 			//遍历间隔
 			int indexInterval = 1;

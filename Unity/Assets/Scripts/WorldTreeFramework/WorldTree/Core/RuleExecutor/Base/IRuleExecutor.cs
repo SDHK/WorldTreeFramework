@@ -52,17 +52,18 @@ namespace WorldTree
 		/// </summary>
 		public int RefreshTraversalCount();
 
+
 		/// <summary>
-		/// 尝试出列
+		/// 尝试获取下一个
 		/// </summary>
-		public bool TryDequeue(out INode node, out RuleList ruleList);
+		public bool TryGetNext(out INode node, out RuleList ruleList);
 
 	}
 
 
 
 	/// <summary>
-	/// 格式化器 XXXX!!!!!
+	/// 格式化器
 	/// </summary>
 	public static class IRuleExecutorFormatterRule
 	{

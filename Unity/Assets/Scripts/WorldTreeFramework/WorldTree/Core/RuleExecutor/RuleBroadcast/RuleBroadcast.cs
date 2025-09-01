@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/5/26 11:11
 
-* 描述： 泛型全局广播法则执行器
+* 描述： 法则广播执行器
 
 */
 
@@ -12,7 +12,7 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 法则全局广播
+	/// 法则广播接口
 	/// </summary>
 	public interface RuleBroadcast : IRuleExecutor
 	{
@@ -23,12 +23,12 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 法则全局广播
+	/// 法则广播执行器
 	/// </summary>
 	public interface RuleBroadcast<in R> : IRuleExecutor<R>, RuleBroadcast where R : IGlobalRule { }
 
 	/// <summary>
-	/// 全局广播法则执行器：请使用 RuleBroadcast<R>
+	/// 全局广播法则执行器：请使用接口 RuleBroadcast<R>
 	/// </summary>
 	public partial class RuleBroadcaster<R> : RuleBroadcaster, INodeListener, RuleBroadcast<IGlobalRule>
 		, GenericOf<long, RuleBroadcastManager>
@@ -38,7 +38,7 @@ namespace WorldTree
 	{ }
 
 	/// <summary>
-	/// 全局广播法则执行器基类
+	/// 法则广播执行器基类
 	/// </summary>
 	public abstract class RuleBroadcaster : RuleExecutor, RuleBroadcast, IRuleExecutorEnumerable
 		, AsChildBranch

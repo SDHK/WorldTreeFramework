@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2022/9/16 22:03
 
-* 描述： 泛型法则执行器
+* 描述： 法则多播执行器
 *
 
 */
@@ -11,9 +11,9 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 法则多播
+	/// 法则多播接口
 	/// </summary>
-	public interface RuleMulticast : IRuleExecutor
+	public interface IRuleMulticast : IRuleExecutor
 	{
 		/// <summary>
 		/// 尝试添加节点法则
@@ -22,16 +22,14 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 法则多播
+	/// 法则多播接口
 	/// </summary>
-	public interface RuleMulticast<in R> : IRuleExecutor<R>, RuleMulticast where R : IRule
-	{
-	}
+	public interface IRuleMulticast<in R> : IRuleExecutor<R>, IRuleMulticast where R : IRule { }
 
 	/// <summary>
-	/// 泛型法则执行器
+	/// 法则多播执行器
 	/// </summary>
-	public class RuleMulticaster<R> : RuleListExecutor, RuleMulticast<R>
+	public class RuleMulticast<R> : RuleListExecutor, IRuleExecutor<R>, IRuleMulticast
 		, ChildOf<INode>
 		, AsRule<Awake>
 		where R : IRule
@@ -47,7 +45,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加节点法则：指定法则
 		/// </summary>
-		public static void Add<R, N, NR>(this RuleMulticaster<R> self, N node, NR defaultRule = default)
+		public static void Add<R, N, NR>(this RuleMulticast<R> self, N node, NR defaultRule = default)
 			where R : IRule
 			where N : class, INode, AsRule<NR>
 			where NR : R
@@ -65,7 +63,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加节点法则：默认法则
 		/// </summary>
-		public static void Add<R, N>(this RuleMulticaster<R> self, N node)
+		public static void Add<R, N>(this RuleMulticast<R> self, N node)
 			where R : IRule
 			where N : class, INode, AsRule<R>
 		{

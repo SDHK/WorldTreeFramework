@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2022/9/16 22:03
 
-* 描述： 泛型法则执行器
+* 描述： 法则单播执行器
 *
 
 */
@@ -12,9 +12,9 @@ namespace WorldTree
 {
 
 	/// <summary>
-	/// 法则单播
+	/// 法则单播接口
 	/// </summary>
-	public interface RuleUnicast : IRuleExecutor
+	public interface IRuleUnicast : IRuleExecutor
 	{
 		/// <summary>
 		/// 目标节点
@@ -33,14 +33,14 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 法则单播
+	/// 法则单播接口
 	/// </summary>
-	public interface RuleUnicast<in R> : IRuleExecutor<R>, RuleUnicast where R : IRule { }
+	public interface IRuleUnicast<in R> : IRuleExecutor<R>, IRuleUnicast where R : IRule { }
 
 	/// <summary>
-	/// 单法则调用器
+	/// 法则单播执行器
 	/// </summary>
-	public class RuleUnicaster<R> : Node, RuleUnicast<R>, IRuleExecutorEnumerable
+	public class RuleUnicast<R> : Node, IRuleUnicast<R>, IRuleExecutorEnumerable
 		, ChildOf<INode>
 		where R : IRule
 	{
@@ -73,7 +73,7 @@ namespace WorldTree
 			RuleList = rule;
 			return true;
 		}
-		public bool TryDequeue(out INode node, out RuleList ruleList)
+		public bool TryGetNext(out INode node, out RuleList ruleList)
 		{
 			if (TargetNode.Value != null)
 			{
@@ -92,7 +92,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加节点法则：指定法则
 		/// </summary>
-		public static void Add<R, N, NR>(this RuleUnicast<R> self, N node, NR defaultRule = default)
+		public static void Add<R, N, NR>(this IRuleUnicast<R> self, N node, NR defaultRule = default)
 			where R : IRule
 			where N : class, INode, AsRule<NR>
 			where NR : R
@@ -112,7 +112,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加节点法则：默认法则
 		/// </summary>
-		public static void Add<R, N>(this RuleUnicast<R> self, N node)
+		public static void Add<R, N>(this IRuleUnicast<R> self, N node)
 			where R : IRule
 			where N : class, INode, AsRule<R>
 		{

@@ -3,14 +3,14 @@
 * 作者： 闪电黑客
 * 日期： 2023/5/26 11:11
 
-* 描述： 法则全局广播数据：设计用于编辑器在法则不存在时，也能编辑保存全局事件
+* 描述： 法则广播执行器数据：设计用于编辑器在法则不存在时，也能编辑保存全局事件
 
 */
 
 namespace WorldTree
 {
 	/// <summary>
-	/// 法则全局广播
+	/// 法则广播执行器数据
 	/// </summary>
 	public partial class RuleBroadcastData : Unit, RuleBroadcast<IGlobalRule>
 	{
@@ -19,9 +19,7 @@ namespace WorldTree
 		/// </summary>
 		public long RuleType;
 
-		public void Clear()
-		{
-		}
+		public void Clear() { }
 
 		public bool TryAdd(INode node)
 		{
