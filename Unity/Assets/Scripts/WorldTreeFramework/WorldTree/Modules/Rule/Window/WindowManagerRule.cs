@@ -13,12 +13,11 @@ namespace WorldTree
 		/// <summary>
 		/// 打开窗口
 		/// </summary>
-		public static void Open<VM>(this WindowManager windowManager, VM vm)
-			where VM : class, IView
+		public static void Open<V>(this WindowManager windowManager, V v)
+			where V : class, IView
 		{
-			//vm.ViewType
 
-
+			//v.ViewBindType
 		}
 	}
 }

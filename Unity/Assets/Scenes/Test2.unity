@@ -432,10 +432,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1572827485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92107d8fc49cfae43a78f14f011fa135, type: 3}
+  m_Script: {fileID: 11500000, guid: 9720b9a2ef2cfb24abcbbbb4a92140b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObj: {fileID: 1301395769}
-  Count: 10000
-  offset: 0.1
-  radius: 5

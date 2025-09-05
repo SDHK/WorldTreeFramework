@@ -57,10 +57,13 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\VirtualMachineCore.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\TestLine4.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\AsyncETVoidMethodBuilder.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\CodeSyntaxParser.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\ETTask.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\Define.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\Mathematical.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\IAwaiter.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\EntryConfig.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\FileStreamDecryption.cs" />
@@ -78,14 +81,20 @@
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\AsyncTaskTest.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\ETTaskHelper.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\ETVoid.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\VMInstruction.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\CodeGenASTNode.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\YooAssetsHelper.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\VarValue.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MonoComponentTest.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\AssetsLoadHelper.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\TestGC.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MonoTest.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\TaskExecutorExample.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\YooAssets\Service\RemoteServices.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\MoveAreaLimiter.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\TaskExecutor\TaskExecutor.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ECS\MailTest.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\CodeTokenizer.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\GamePlayMode.cs" />
   </ItemGroup>
   <ItemGroup>

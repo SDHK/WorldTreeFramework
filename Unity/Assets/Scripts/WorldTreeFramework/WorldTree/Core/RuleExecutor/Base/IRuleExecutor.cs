@@ -10,10 +10,6 @@
 
 namespace WorldTree
 {
-	//RuleBroadcast
-	//RuleMulticast
-	//RuleUnicast
-
 	/// <summary>
 	/// 法则执行器接口：设计子类有 执行器INode 和 数据IUnit 两种类型，所以只能继承IWorldTreeBasic
 	/// </summary>
