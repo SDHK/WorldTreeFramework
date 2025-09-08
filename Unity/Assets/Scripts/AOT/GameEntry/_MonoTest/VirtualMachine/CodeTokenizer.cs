@@ -165,13 +165,15 @@ namespace VM
 			return true;
 		}
 		/// <summary>
-		/// 尝试读取空白符
+		/// 尝试读取空白符（空格、制表符等，排除换行符）
 		/// </summary>
 		private bool TryReadWhitespace(out string whitespace)
 		{
 			whitespace = "";
-			if (!char.IsWhiteSpace(currentChar)) return false;
-			while (char.IsWhiteSpace(currentChar))
+			if (currentChar != ' ' && currentChar != '\t' && currentChar != '\v' && currentChar != '\f')
+				return false;
+
+			while (currentChar == ' ' || currentChar == '\t' || currentChar == '\v' || currentChar == '\f')
 			{
 				whitespace += currentChar;
 				Advance();

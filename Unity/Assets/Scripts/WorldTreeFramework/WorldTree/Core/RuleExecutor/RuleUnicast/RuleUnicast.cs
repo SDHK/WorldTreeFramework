@@ -10,7 +10,6 @@
 
 namespace WorldTree
 {
-
 	/// <summary>
 	/// 法则单播接口
 	/// </summary>

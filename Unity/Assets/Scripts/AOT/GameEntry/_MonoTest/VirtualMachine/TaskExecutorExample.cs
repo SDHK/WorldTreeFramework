@@ -1,13 +1,32 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace VM
 {
 	public class TaskExecutorExample : MonoBehaviour
 	{
-		public TaskExecutor executor = new TaskExecutor();
-		private void Start()
+		/// <summary>
+		/// 虚拟机
+		/// </summary>
+		TaskExecutor executor = new TaskExecutor();
+
+		/// <summary>
+		/// 汇编语法解析器
+		/// </summary>
+		AssemblySyntaxParser syntaxParser = new();
+
+		/// <summary>
+		/// 源代码
+		/// </summary>
+		[TextArea(10, 40)]
+		public string code;
+
+		[Button("Run")]
+		private void Run()
 		{
-			RunSimpleExample();
+			executor.Clear();
+			syntaxParser.Parse(executor, code);
+			executor.Run();
 		}
 
 		public void Update()
@@ -15,9 +34,12 @@ namespace VM
 			executor.Update();
 		}
 
+
+		/// <summary>
+		/// 直接使用虚拟机执行器编写简单示例
+		/// </summary>
 		public void RunSimpleExample()
 		{
-
 			// 构建嵌套方法调用: a = Add(1, Add(2, 3))
 
 			executor
@@ -35,7 +57,6 @@ namespace VM
 					})
 					.PushVariable("result")
 				.MethodEnd()
-
 				.MethodDefine("AddB", "x", "y")
 					.Event(() =>
 					{
@@ -53,15 +74,14 @@ namespace VM
 				// 执行嵌套调用 - 使用隐式转换简化代码
 				.PushValue(1)     // int -> VarValue 隐式转换
 				.PushValue(2)     // int -> VarValue 隐式转换  
-				.PushValue(3)     // int -> VarValue 隐式转换
-				.MethodCall("Add", 2)  // Add(2, 3) -> 5
-				.MethodCall("AddB", 2)  // Add(1, 5) -> 6
-
+				.PushValue(7)     // int -> VarValue 隐式转换
+				.MethodCall("Add")  // Add(2, 3) -> 5
+				.MethodCall("AddB")  // Add(1, 5) -> 6
+				.PopVariable("result")
 				// 将结果赋值给变量a
 				.Event(() =>
 				{
-					var result = executor.PopParameter();
-					executor.SetVariable("a", result);
+					var result = executor.GetVariable("result");
 					Debug.Log($"a = {result}"); // 输出: a = 6
 				});
 
@@ -69,4 +89,5 @@ namespace VM
 			executor.Run();
 		}
 	}
+
 }

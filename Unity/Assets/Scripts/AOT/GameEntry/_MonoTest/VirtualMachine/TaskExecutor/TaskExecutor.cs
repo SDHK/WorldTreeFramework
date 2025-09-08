@@ -1,3 +1,13 @@
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2025/9/3 11:10
+
+* 描述： 任务执行器
+* 
+* 作用是将一系列任务按设定执行
+
+*/
 using System;
 using System.Collections.Generic;
 
@@ -6,10 +16,12 @@ namespace VM
 	#region 核心
 
 	/// <summary>
-	/// 任务执行器 - 负责调度和执行任务
+	/// 任务执行器 - 负责执行任务
 	/// </summary>
-	public partial class TaskExecutor
+	public partial class TaskExecutor : IDisposable
 	{
+
+
 		/// <summary>
 		/// 解析地址储存器
 		/// </summary>
@@ -81,6 +93,45 @@ namespace VM
 				isRun = false;
 			}
 		}
+
+
+		public void Dispose()
+		{
+			Clear();
+		}
+
+		public void Clear()
+		{
+			Stop();
+			ParserPaths.Clear();
+			TaskPaths.Clear();
+			TaskEvents.Clear();
+			TaskTimes.Clear();
+			Task_IFs.Clear();
+			Task_Loops.Clear();
+			Loop_Address.Clear();
+			IF_Address.Clear();
+			_methodCallTasks.Clear();
+			_methodDefineEndTasks.Clear();
+			_methodParameterNames.Clear();
+			Method_ReturnAddress.Clear();
+			Method_Address.Clear();
+			Method_NameAddress.Clear();
+			_parameterStack.Clear();
+			_pushTasks.Clear();
+			_PopPushVariableTasks.Clear();
+
+			memory.Clear();
+			TaskValues.Clear();
+			_scopeStack.Clear();
+			_scopeParent.Clear();
+			_currentScopeId = 0;
+			_nextScopeId = 1;
+			Pointer = -1;
+			isRun = false;
+			isEnd = false;
+
+		}
 	}
 
 	#endregion
@@ -114,6 +165,11 @@ namespace VM
 		/// 虚拟内存：作用域，变量名，变量值
 		/// </summary>
 		private Dictionary<int, Dictionary<string, VarValue>> memory = new();
+
+		/// <summary>
+		/// 设置变量值列表（调试用）
+		/// </summary>
+		private List<(string, VarValue)> TaskValues = new List<(string, VarValue)>();
 
 		/// <summary>
 		/// 进入新作用域
@@ -211,6 +267,58 @@ namespace VM
 			}
 
 			return false;
+		}
+
+
+		/// <summary>
+		/// 解析器：[设置变量]
+		/// </summary>
+		/// <param name="TaskPath"></param>
+		public void Parser_SetVariableEvent(int TaskPath)
+		{
+			var (name, value) = TaskValues[TaskPath];
+			SetVariable(name, value);
+			this.Pointer++;
+		}
+
+		/// <summary>
+		/// 任务：[设置变量] 
+		/// </summary>
+		public TaskExecutor SetVariableEvent(string name, VarValue value)
+		{
+			TaskAdd(Parser_SetVariableEvent, TaskValues.Count);
+			TaskValues.Add((name, value));
+			SetVariable(name, value);
+			return this;
+		}
+
+		/// <summary>
+		/// 解析器：[移动变量] 
+		/// </summary>
+		public void Parser_MoveVariableEvent(int TaskPath)
+		{
+			var (fromName, toName) = TaskValues[TaskPath];
+			if (HasVariable(fromName))
+			{
+				var value = GetVariable(fromName);
+				SetVariable((string)toName, value);
+			}
+			this.Pointer++;
+		}
+
+		/// <summary>
+		/// 任务：[移动变量] 
+		/// </summary>
+		public TaskExecutor MoveVariableEvent(string fromName, string toName)
+		{
+			TaskAdd(Parser_MoveVariableEvent, TaskValues.Count);
+			TaskValues.Add((fromName, toName));
+			if (HasVariable(fromName))
+			{
+				var value = GetVariable(fromName);
+				SetVariable((string)toName, value);
+			}
+			return this;
 		}
 	}
 
@@ -545,22 +653,20 @@ namespace VM
 
 	public partial class TaskExecutor
 	{
-		/// <summary>
-		/// 方法调用任务结构
-		/// </summary>
-		private class MethodCallTask
-		{
-			public string MethodName;
-			public int ParameterCount;  // 从栈中取多少个参数
-		}
 
 		/// <summary>
 		/// 嵌套调用深度限制，防止无限递归
 		/// </summary>
 		public const int MAX_CALL_DEPTH = 100;
 
-		private List<MethodCallTask> _methodCallTasks = new List<MethodCallTask>();
+		/// <summary>
+		/// 方法调用任务
+		/// </summary>
+		private List<string> _methodCallTasks = new List<string>();
 
+		/// <summary>
+		/// 方法定义结束任务
+		/// </summary>
 		private List<int> _methodDefineEndTasks = new List<int>();
 
 		/// <summary>
@@ -590,7 +696,7 @@ namespace VM
 		/// </summary>
 		private void Parser_MethodCall(int TaskPath)
 		{
-			MethodCallTask callTask = _methodCallTasks[TaskPath];
+			string callTaskName = _methodCallTasks[TaskPath];
 
 			// 递归深度检查
 			if (Method_ReturnAddress.Count > MAX_CALL_DEPTH)
@@ -598,20 +704,19 @@ namespace VM
 				throw new StackOverflowException($"方法调用深度超限: {MAX_CALL_DEPTH}");
 			}
 
-
-			if (Method_NameAddress.TryGetValue(callTask.MethodName, out int jumpAddress))
+			if (Method_NameAddress.TryGetValue(callTaskName, out int jumpAddress))
 			{
 				// 进入新作用域
 				EnterScope();
 
 				// 从参数栈弹出参数并设置到作用域变量
-				if (_methodParameterNames.TryGetValue(callTask.MethodName, out List<string> paramNames))
+				if (_methodParameterNames.TryGetValue(callTaskName, out List<string> paramNames))
 				{
 					// 创建临时数组存储参数（因为栈是LIFO）
-					VarValue[] parameters = new VarValue[callTask.ParameterCount];
-					for (int i = callTask.ParameterCount - 1; i >= 0; i--)
+					VarValue[] parameters = new VarValue[paramNames.Count];
+					for (int i = paramNames.Count - 1; i >= 0; i--)
 					{
-						parameters[i] = PopParameter();
+						parameters[i] = _parameterStack.Pop();
 					}
 
 					// 按正确顺序设置参数
@@ -623,9 +728,9 @@ namespace VM
 				else
 				{
 					// 没有参数定义，直接弹出参数
-					for (int i = 0; i < callTask.ParameterCount; i++)
+					for (int i = 0; i < paramNames.Count; i++)
 					{
-						PopParameter();
+						_parameterStack.Pop();
 					}
 				}
 
@@ -634,12 +739,7 @@ namespace VM
 			}
 			else
 			{
-				// 方法不存在，弹出参数
-				for (int i = 0; i < callTask.ParameterCount; i++)
-				{
-					PopParameter();
-				}
-				this.Pointer++;
+				throw new InvalidOperationException($"方法 '{callTaskName}' 未定义");
 			}
 		}
 
@@ -667,7 +767,7 @@ namespace VM
 		/// </summary>
 		private void Parser_MethodDefine(int TaskPath)
 		{
-			MethodCallTask defineTask = _methodCallTasks[TaskPath];
+			string CallName = _methodCallTasks[TaskPath];
 			int endAddress = _methodDefineEndTasks[TaskPath];
 
 			// 如果方法结束地址已设置，直接跳转到方法结束后
@@ -678,23 +778,17 @@ namespace VM
 			else
 			{
 				// 如果方法结束地址未设置，说明还没有遇到MethodEnd，跳过当前指令
-				throw new InvalidOperationException($"方法 '{defineTask.MethodName}' 定义错误：缺少 MethodEnd 标记");
+				throw new InvalidOperationException($"方法 '{CallName}' 定义错误：缺少 MethodEnd 标记");
 			}
 		}
 
 		/// <summary>
 		/// 任务：[方法调用] - 支持参数栈
 		/// </summary>
-		public TaskExecutor MethodCall(string methodName, int parameterCount)
+		public TaskExecutor MethodCall(string methodName)
 		{
-			MethodCallTask callTask = new MethodCallTask
-			{
-				MethodName = methodName,
-				ParameterCount = parameterCount
-			};
-
 			TaskAdd(Parser_MethodCall, _methodCallTasks.Count);
-			_methodCallTasks.Add(callTask);
+			_methodCallTasks.Add(methodName);
 			return this;
 		}
 
@@ -743,22 +837,24 @@ namespace VM
 	public partial class TaskExecutor
 	{
 		/// <summary>
-		/// 参数栈 - 用于传递匿名参数
+		/// 传递参数栈 - 用于传递匿名参数
 		/// </summary>
 		private Stack<VarValue> _parameterStack = new Stack<VarValue>();
 
 		/// <summary>
-		/// 推送变量值任务存储
-		/// </summary>
-		private List<string> _pushVariableTasks = new List<string>();
-
-		/// <summary>
-		/// 推送任务存储
+		/// 推送字面量存储
 		/// </summary>
 		private List<VarValue> _pushTasks = new List<VarValue>();
 
 		/// <summary>
-		/// 推送参数到栈
+		/// 推送弹出变量值任务存储
+		/// </summary>
+		private List<string> _PopPushVariableTasks = new List<string>();
+
+
+
+		/// <summary>
+		/// 推送字面量参数到栈
 		/// </summary>
 		public TaskExecutor PushValue(VarValue value)
 		{
@@ -773,18 +869,20 @@ namespace VM
 		/// <param name="variableName">变量名</param>
 		public TaskExecutor PushVariable(string variableName)
 		{
-			TaskAdd(Parser_PushVariables, _pushVariableTasks.Count);
-			_pushVariableTasks.Add(variableName);
+			TaskAdd(Parser_PushVariables, _PopPushVariableTasks.Count);
+			_PopPushVariableTasks.Add(variableName);
 			return this;
 		}
 
 
 		/// <summary>
-		/// 弹出参数从栈
+		/// 从栈弹出参数到变量
 		/// </summary>
-		public VarValue PopParameter()
+		public TaskExecutor PopVariable(string variableName)
 		{
-			return _parameterStack.Count > 0 ? _parameterStack.Pop() : new VarValue();
+			TaskAdd(Parser_PopVariables, _PopPushVariableTasks.Count);
+			_PopPushVariableTasks.Add(variableName);
+			return this;
 		}
 
 
@@ -802,13 +900,26 @@ namespace VM
 		/// </summary>
 		private void Parser_PushVariables(int taskPath)
 		{
-			string variableName = _pushVariableTasks[taskPath];
+			string variableName = _PopPushVariableTasks[taskPath];
 			// 推送所有指定的变量到参数栈
 			VarValue value = GetVariable(variableName);
 			_parameterStack.Push(value);
 			this.Pointer++;
 		}
+
+
+		/// <summary>
+		/// 弹出变量值解析器
+		/// </summary>
+		private void Parser_PopVariables(int taskPath)
+		{
+			var value = _parameterStack.Count > 0 ? _parameterStack.Pop() : new VarValue();
+			string variableName = _PopPushVariableTasks[taskPath];
+			SetVariable(variableName, value);
+			this.Pointer++;
+		}
 	}
+
 
 	#endregion
 }
