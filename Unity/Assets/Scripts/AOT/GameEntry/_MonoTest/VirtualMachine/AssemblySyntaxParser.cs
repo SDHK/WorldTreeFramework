@@ -88,6 +88,9 @@ namespace VM
 						case "FUNC_CALL":
 							ParserMethodCall();
 							break;
+						case "FUNC_RUN":
+							ParserMethodRun();
+							break;
 
 						case "PUSH":
 							ParserPushValue();
@@ -409,6 +412,23 @@ namespace VM
 			else
 			{
 				throw new InvalidOperationException("FUNC_CALL 需要一个函数名");
+			}
+		}
+
+		/// <summary>
+		/// 解析 Method 运行指令 
+		/// </summary>
+		public void ParserMethodRun()
+		{
+			if (currentToken.Type == CodeTokenType.Identifier)
+			{
+				string methodName = (string)currentToken.Value;
+				ConsumeToken(CodeTokenType.Identifier);
+				executor.MethodRun(methodName);
+			}
+			else
+			{
+				throw new InvalidOperationException("FUNC_RUN 需要一个函数名");
 			}
 		}
 

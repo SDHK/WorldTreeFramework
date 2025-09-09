@@ -20,8 +20,6 @@ namespace VM
 	/// </summary>
 	public partial class TaskExecutor : IDisposable
 	{
-
-
 		/// <summary>
 		/// 解析地址储存器
 		/// </summary>
@@ -120,6 +118,8 @@ namespace VM
 			_parameterStack.Clear();
 			_pushTasks.Clear();
 			_PopPushVariableTasks.Clear();
+			_methodRunTasks.Clear();
+			methodRegister.Clear();
 
 			memory.Clear();
 			TaskValues.Clear();
@@ -649,11 +649,107 @@ namespace VM
 	}
 	#endregion
 
+	#region 外部方法
+
+	public partial class TaskExecutor
+	{
+		/// <summary>
+		/// 方法调用任务
+		/// </summary>
+		private List<string> _methodRunTasks = new();
+
+
+		private Dictionary<string, (Delegate, int)> methodRegister = new();
+
+		/// <summary>
+		/// 方法调用解析器 - 支持参数栈
+		/// </summary>
+		private void Parser_MethodRun(int TaskPath)
+		{
+			string methodTaskName = _methodRunTasks[TaskPath];
+			if (methodRegister.TryGetValue(methodTaskName, out var methodData))
+			{
+				VarValue var1, var2, var3, var4, var5;
+				var1 = methodData.Item2 > 0 ? Pop() : default;
+				var2 = methodData.Item2 > 1 ? Pop() : default;
+				var3 = methodData.Item2 > 2 ? Pop() : default;
+				var4 = methodData.Item2 > 3 ? Pop() : default;
+				var5 = methodData.Item2 > 4 ? Pop() : default;
+				switch (methodData.Item2)
+				{
+					case 0:
+						if (methodData.Item1 is Action action)
+							action.Invoke();
+						else
+							Push(((Func<VarValue>)methodData.Item1).Invoke());
+						break;
+					case 1:
+						if (methodData.Item1 is Action<VarValue> action1)
+							action1.Invoke(var1);
+						else
+							Push(((Func<VarValue, VarValue>)methodData.Item1).Invoke(var1));
+						break;
+					case 2:
+						if (methodData.Item1 is Action<VarValue, VarValue> action2)
+							action2.Invoke(var1, var2);
+						else
+							Push(((Func<VarValue, VarValue, VarValue>)methodData.Item1).Invoke(var1, var2));
+						break;
+					case 3:
+						if (methodData.Item1 is Action<VarValue, VarValue, VarValue> action3)
+							action3.Invoke(var1, var2, var3);
+						else
+							Push(((Func<VarValue, VarValue, VarValue, VarValue>)methodData.Item1).Invoke(var1, var2, var3));
+						break;
+					case 4:
+						if (methodData.Item1 is Action<VarValue, VarValue, VarValue, VarValue> action4)
+							action4.Invoke(var1, var2, var3, var4);
+						else
+							Push(((Func<VarValue, VarValue, VarValue, VarValue, VarValue>)methodData.Item1).Invoke(var1, var2, var3, var4));
+						break;
+					case 5:
+						if (methodData.Item1 is Action<VarValue, VarValue, VarValue, VarValue, VarValue> action5)
+							action5.Invoke(var1, var2, var3, var4, var5);
+						else
+							Push(((Func<VarValue, VarValue, VarValue, VarValue, VarValue, VarValue>)methodData.Item1).Invoke(var1, var2, var3, var4, var5));
+						break;
+					default:
+						throw new InvalidOperationException($"方法 '{methodTaskName}' 参数数量:{methodData.Item2}");
+				}
+				this.Pointer++;
+			}
+			else
+			{
+				throw new InvalidOperationException($"方法 '{methodTaskName}' 未定义");
+			}
+		}
+
+		/// <summary>
+		/// 方法注册 - 支持参数栈 
+		/// </summary>
+		public TaskExecutor MethodRegister(Delegate method)
+		{
+			methodRegister[method.Method.Name] = (method, method.Method.GetParameters().Length);
+			return this;
+		}
+
+		/// <summary>
+		/// 任务：[方法调用] - 支持参数栈 
+		/// </summary>
+		public TaskExecutor MethodRun(string methodName)
+		{
+			TaskAdd(Parser_MethodRun, _methodRunTasks.Count);
+			_methodRunTasks.Add(methodName);
+			return this;
+		}
+	}
+
+	#endregion
+
 	#region 方法
 
 	public partial class TaskExecutor
 	{
-
 		/// <summary>
 		/// 嵌套调用深度限制，防止无限递归
 		/// </summary>
@@ -712,17 +808,10 @@ namespace VM
 				// 从参数栈弹出参数并设置到作用域变量
 				if (_methodParameterNames.TryGetValue(callTaskName, out List<string> paramNames))
 				{
-					// 创建临时数组存储参数（因为栈是LIFO）
-					VarValue[] parameters = new VarValue[paramNames.Count];
+					// 按正确顺序设置参数
 					for (int i = paramNames.Count - 1; i >= 0; i--)
 					{
-						parameters[i] = _parameterStack.Pop();
-					}
-
-					// 按正确顺序设置参数
-					for (int i = 0; i < Math.Min(paramNames.Count, parameters.Length); i++)
-					{
-						SetVariable(paramNames[i], parameters[i]);
+						SetVariable(paramNames[i], Pop());
 					}
 				}
 				else

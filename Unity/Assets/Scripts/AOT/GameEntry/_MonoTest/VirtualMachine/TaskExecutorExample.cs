@@ -1,4 +1,5 @@
 ﻿using Sirenix.OdinInspector;
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -21,11 +22,17 @@ namespace VM
 		/// </summary>
 		public string FilePath;
 
+		private void Start1()
+		{
+			Debug.Log("外部函数调用");
+		}
+
 		[Button("Run")]
 		private void Run()
 		{
 			string code = File.ReadAllText(FilePath);
 			executor.Clear();
+			executor.MethodRegister((Action)Start1);
 			syntaxParser.Parse(executor, code);
 			executor.Run();
 		}
