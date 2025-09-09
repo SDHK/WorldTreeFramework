@@ -435,8 +435,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9720b9a2ef2cfb24abcbbbb4a92140b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: "FUNC_DEF Add x y\r\n    ADD result x y\r\n    PRINT result\r\n    PUSH_VAR
-    result\r\nFUNC_END\r\n\nFUNC_DEF DIV x y\r\n    DIV result x y\r\n    PRINT result\r\n   
-    PUSH_VAR result\r\nFUNC_END\r\n\n\rVAR testString \"\u6D4B\u8BD5\u5B57\u7B26\u4E32\u8D4B\u503C\"\n\nPUSH
-    1\r\nPUSH 2\r\nPUSH 7\r\nFUNC_CALL Add\r\nFUNC_CALL DIV\r\nPOP_VAR result\r\n\nPRINT
-    result\nDELAY 1000\n\nPRINT testString"
+  FilePath: "C:\\Users\\admin\\Desktop\\\u65B0\u5EFA\u6587\u672C\u6587\u6863.txt"

@@ -767,7 +767,6 @@ namespace VM
 		/// </summary>
 		private void Parser_MethodDefine(int TaskPath)
 		{
-			string CallName = _methodCallTasks[TaskPath];
 			int endAddress = _methodDefineEndTasks[TaskPath];
 
 			// 如果方法结束地址已设置，直接跳转到方法结束后
@@ -778,7 +777,7 @@ namespace VM
 			else
 			{
 				// 如果方法结束地址未设置，说明还没有遇到MethodEnd，跳过当前指令
-				throw new InvalidOperationException($"方法 '{CallName}' 定义错误：缺少 MethodEnd 标记");
+				throw new InvalidOperationException($"方法 定义错误：缺少 MethodEnd 标记");
 			}
 		}
 
@@ -805,10 +804,10 @@ namespace VM
 			}
 
 			// 将当前方法定义任务索引压入栈，用于后续MethodEnd匹配
-			Method_Address.Push(_methodCallTasks.Count);
+			Method_Address.Push(_methodDefineEndTasks.Count);
 
 			// 添加方法定义解析器，用于跳过方法体
-			TaskAdd(Parser_MethodDefine, _methodCallTasks.Count);
+			TaskAdd(Parser_MethodDefine, _methodDefineEndTasks.Count);
 
 			//定义方法结束地址初始为-1，表示未设置
 			_methodDefineEndTasks.Add(-1);
@@ -851,7 +850,15 @@ namespace VM
 		/// </summary>
 		private List<string> _PopPushVariableTasks = new List<string>();
 
+		public VarValue Pop()
+		{
+			return _parameterStack.Count > 0 ? _parameterStack.Pop() : new VarValue();
+		}
 
+		public void Push(VarValue varValue)
+		{
+			_parameterStack.Push(varValue);
+		}
 
 		/// <summary>
 		/// 推送字面量参数到栈

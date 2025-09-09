@@ -409,7 +409,7 @@ namespace VM
 		String,
 
 		/// <summary>
-		/// 对象类型
+		/// 对象字符串类型
 		/// </summary>
 		Object,
 	}

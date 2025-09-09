@@ -53,11 +53,8 @@ namespace VM
 					JumpWhiteSpaceAndLineBreak();
 					switch (instruction.ToUpper())
 					{
-						case "VAR":
-							ParserVar();
-							break;
-						case "MOVE":
-							ParserMove();
+						case "SET":
+							ParserSet();
 							break;
 						case "IF":
 							ParserIFEvent();
@@ -95,10 +92,7 @@ namespace VM
 						case "PUSH":
 							ParserPushValue();
 							break;
-						case "PUSH_VAR":
-							ParserPushVariable();
-							break;
-						case "POP_VAR":
+						case "POP":
 							ParserPopVariable();
 							break;
 
@@ -115,11 +109,78 @@ namespace VM
 							ParserDiv();
 							break;
 
+						case "AND":
+							ParserAnd();
+							break;
+						case "OR":
+							ParserOr();
+							break;
+						case "NOT":
+							ParserNot();
+							break;
+						case "XOR":
+							ParserXor();
+							break;
+						case "EQUAL":
+							ParserEqual();
+							break;
+						case "NOT_EQUAL":
+							ParserNotEqual();
+							break;
+						case "GREATER":
+							ParserGreaterThan();
+							break;
+						case "LESS":
+							ParserLessThan();
+							break;
+						case "GREATER_EQUAL":
+							ParserGreaterEqual();
+							break;
+						case "LESS_EQUAL":
+							ParserLessEqual();
+							break;
+
 						case "PRINT":
 							ParserPrint();
 							break;
 						default:
 							throw new InvalidOperationException($"未知指令: {instruction}");
+					}
+				}
+				// 支持行内注释，以 # 开头和结尾的内容视为注释
+				else if (currentToken.Type == CodeTokenType.Symbol)
+				{
+					string instruction = (string)currentToken.Value;
+					ConsumeToken(CodeTokenType.Symbol);
+					if (instruction == "#")
+					{
+						while (currentToken.Type != CodeTokenType.EOF)
+						{
+							if (currentToken.Type == CodeTokenType.Symbol && currentToken.Value.ToString() == "#")
+							{
+								break;
+							}
+						}
+					}
+					else if (instruction == "/")
+					{
+						instruction = (string)currentToken.Value;
+						ConsumeToken(CodeTokenType.Symbol);
+						if (instruction == "/")
+						{
+							while (currentToken.Type != CodeTokenType.EOF && currentToken.Type != CodeTokenType.LineBreak)
+							{
+								currentToken = Tokenizer.GetNextToken();
+							}
+						}
+						else
+						{
+							throw new InvalidOperationException($"意外的符号: {instruction}");
+						}
+					}
+					else
+					{
+						throw new InvalidOperationException($"意外的符号: {instruction}");
 					}
 				}
 				else
@@ -176,7 +237,6 @@ namespace VM
 		public VarValue ParserGetVarValue()
 		{
 			JumpWhiteSpace();
-
 			// 解析字符串字面量（用双引号包裹）
 			if (currentToken.Type == CodeTokenType.Symbol && currentToken.Value.ToString() == "\"")
 			{
@@ -225,73 +285,33 @@ namespace VM
 					return new VarValue { Type = VarType.Bool, BoolValue = false };
 				}
 
-				// 否则作为普通标识符处理
+				// 否则作为变量名称处理
 				ConsumeToken(CodeTokenType.Identifier);
+				identifierValue.Type = VarType.Object;
 				return identifierValue;
 			}
 			throw new InvalidOperationException($"期望数字或字符串字面量，但得到 {currentToken.Type}");
 		}
 
 		/// <summary>
-		/// 解析 Var 指令 
-		/// </summary>
-		public void ParserVar()
-		{
-			if (currentToken.Type == CodeTokenType.Identifier)
-			{
-				string varName = (string)currentToken.Value;
-				ConsumeToken(CodeTokenType.Identifier);
-				var var = ParserGetVarValue();
-				executor.SetVariableEvent(varName, var);
-			}
-			else
-			{
-				throw new InvalidOperationException("VAR 需要一个变量名");
-			}
-		}
-		/// <summary>
 		/// 解析 Move 指令  
 		/// </summary>
-		public void ParserMove()
+		public void ParserSet()
 		{
-			if (currentToken.Type == CodeTokenType.Identifier)
+			GetString2(out string varName, out var var1);
+			executor.Event(() =>
 			{
-				string varName = (string)currentToken.Value;
-				ConsumeToken(CodeTokenType.Identifier);
-				JumpWhiteSpaceAndLineBreak();
-				if (currentToken.Type == CodeTokenType.Identifier)
-				{
-					string var = (string)currentToken.Value;
-					executor.MoveVariableEvent(varName, var);
-					ConsumeToken(CodeTokenType.Identifier);
-				}
-				else
-				{
-					throw new InvalidOperationException("Move 需要一个目标变量名");
-				}
-			}
-			else
-			{
-				throw new InvalidOperationException("Move 需要一个变量名");
-			}
+				SetResult(varName, ResolveOperand(var1));
+			});
 		}
-
 
 		/// <summary>
 		/// 解析 IF 指令 
 		/// </summary>
 		public void ParserIFEvent()
 		{
-			if (currentToken.Type == CodeTokenType.Identifier)
-			{
-				string varName = (string)currentToken.Value;
-				ConsumeToken(CodeTokenType.Identifier);
-				executor.IF_Event(() => (bool)executor.GetVariable(varName));
-			}
-			else
-			{
-				throw new InvalidOperationException("IF 需要一个变量名");
-			}
+			var var1 = ParserGetVarValue();
+			executor.IF_Event(() => (bool)ResolveOperand(var1));
 		}
 
 		/// <summary>
@@ -307,19 +327,10 @@ namespace VM
 		/// <summary>
 		/// 解析 LOOP 指令 
 		/// </summary>
-		/// <exception cref="InvalidOperationException"></exception>
 		public void ParserLoopEnter()
 		{
-			if (currentToken.Type == CodeTokenType.Identifier)
-			{
-				string varName = (string)currentToken.Value;
-				ConsumeToken(CodeTokenType.Identifier);
-				executor.Loop_Enter(() => (bool)executor.GetVariable(varName));
-			}
-			else
-			{
-				throw new InvalidOperationException("LOOP 需要一个变量名");
-			}
+			var var1 = ParserGetVarValue();
+			executor.Loop_Enter(() => (bool)ResolveOperand(var1));
 		}
 
 		/// <summary>
@@ -332,17 +343,8 @@ namespace VM
 		/// </summary>
 		public void ParserLoopEndDo()
 		{
-
-			if (currentToken.Type == CodeTokenType.Identifier)
-			{
-				string varName = (string)currentToken.Value;
-				ConsumeToken(CodeTokenType.Identifier);
-				executor.Loop_End(() => (bool)executor.GetVariable(varName));
-			}
-			else
-			{
-				throw new InvalidOperationException("LOOP_END_DO 需要一个变量名");
-			}
+			var var1 = ParserGetVarValue();
+			executor.Loop_End(() => (bool)ResolveOperand(var1));
 		}
 
 		/// <summary>
@@ -350,12 +352,7 @@ namespace VM
 		/// </summary>
 		public void ParserDelay()
 		{
-			var delay = ParserGetVarValue();
-			if (delay.Type != VarType.Long)
-			{
-				throw new InvalidOperationException("DELAY 需要一个数字");
-			}
-			executor.Delay((int)delay);
+			executor.Delay((int)ResolveOperand(ParserGetVarValue()));
 		}
 
 		/// <summary>
@@ -418,8 +415,15 @@ namespace VM
 		/// </summary>
 		public void ParserPushValue()
 		{
-			var var = ParserGetVarValue();
-			executor.PushValue(var);
+			var value = ParserGetVarValue();
+			if (value.Type == VarType.Object)
+			{
+				executor.PushVariable((string)value);
+			}
+			else
+			{
+				executor.PushValue(value);
+			}
 		}
 
 		/// <summary>
@@ -456,42 +460,74 @@ namespace VM
 			}
 		}
 
+		#region 算术运算
+
 
 		/// <summary>
-		/// 获取三个字符串变量名 
+		/// 获取三个值
 		/// </summary>
-		public void GetString3(out string varName, out string var1, out string var2)
+		public void GetString3(out string varName, out VarValue var1, out VarValue var2)
 		{
 			if (currentToken.Type == CodeTokenType.Identifier)
 			{
 				varName = (string)currentToken.Value;
 				ConsumeToken(CodeTokenType.Identifier);
 				JumpWhiteSpaceAndLineBreak();
-				if (currentToken.Type == CodeTokenType.Identifier)
-				{
-					var1 = (string)currentToken.Value;
-					ConsumeToken(CodeTokenType.Identifier);
-					JumpWhiteSpaceAndLineBreak();
-					if (currentToken.Type == CodeTokenType.Identifier)
-					{
-						var2 = (string)currentToken.Value;
-						ConsumeToken(CodeTokenType.Identifier);
-					}
-					else
-					{
-						throw new InvalidOperationException("需要一个变量名2");
-					}
-				}
-				else
-				{
-					throw new InvalidOperationException("需要一个变量名1");
-				}
+				var1 = ParserGetVarValue();
+				var2 = ParserGetVarValue();
 			}
 			else
 			{
 				throw new InvalidOperationException("需要一个目标变量名");
 			}
 		}
+
+		/// <summary>
+		/// 获取两个值
+		/// </summary>
+		public void GetString2(out string varName, out VarValue var1)
+		{
+			if (currentToken.Type == CodeTokenType.Identifier)
+			{
+				varName = (string)currentToken.Value;
+				ConsumeToken(CodeTokenType.Identifier);
+				JumpWhiteSpaceAndLineBreak();
+				var1 = ParserGetVarValue();
+			}
+			else
+			{
+				throw new InvalidOperationException("需要一个目标变量名");
+			}
+		}
+
+		/// <summary>
+		/// 解析操作数值（支持字面量、变量、POP）
+		/// </summary>
+		private VarValue ResolveOperand(VarValue operand)
+		{
+			if (operand.Type == VarType.Object)
+			{
+				string operandStr = (string)operand;
+				return operandStr == "POP" ? executor.Pop() : executor.GetVariable(operandStr);
+			}
+			return operand;
+		}
+
+		/// <summary>
+		/// 设置结果（支持变量或PUSH）
+		/// </summary>
+		private void SetResult(string target, VarValue value)
+		{
+			if (target == "PUSH")
+			{
+				executor.Push(value);
+			}
+			else
+			{
+				executor.SetVariable(target, value);
+			}
+		}
+
 
 		/// <summary>
 		/// 解析 ADD 指令，变量相加 
@@ -501,7 +537,7 @@ namespace VM
 			GetString3(out var varName, out var var1, out var var2);
 			executor.Event(() =>
 			{
-				executor.SetVariable(varName, executor.GetVariable(var1) + executor.GetVariable(var2));
+				SetResult(varName, ResolveOperand(var1) + ResolveOperand(var2));
 			});
 		}
 
@@ -513,7 +549,7 @@ namespace VM
 			GetString3(out var varName, out var var1, out var var2);
 			executor.Event(() =>
 			{
-				executor.SetVariable(varName, executor.GetVariable(var1) - executor.GetVariable(var2));
+				SetResult(varName, ResolveOperand(var1) - ResolveOperand(var2));
 			});
 		}
 
@@ -525,7 +561,7 @@ namespace VM
 			GetString3(out var varName, out var var1, out var var2);
 			executor.Event(() =>
 			{
-				executor.SetVariable(varName, executor.GetVariable(var1) * executor.GetVariable(var2));
+				SetResult(varName, ResolveOperand(var1) * ResolveOperand(var2));
 			});
 		}
 
@@ -537,28 +573,141 @@ namespace VM
 			GetString3(out var varName, out var var1, out var var2);
 			executor.Event(() =>
 			{
-				executor.SetVariable(varName, executor.GetVariable(var1) / executor.GetVariable(var2));
+				SetResult(varName, ResolveOperand(var1) / ResolveOperand(var2));
+			});
+		}
+
+		#endregion
+
+		#region 逻辑运算
+
+
+		/// <summary>
+		/// 解析 AND 指令，逻辑与运算
+		/// </summary>
+		public void ParserAnd()
+		{
+			GetString3(out var varName, out var var1, out var var2);
+			executor.Event(() =>
+			{
+				SetResult(varName, (ResolveOperand(var1).ToBool() && ResolveOperand(var2).ToBool()));
 			});
 		}
 
 		/// <summary>
-		/// 解析 PRINT 指令，打印变量值 
+		/// 解析 OR 指令，逻辑或运算
 		/// </summary>
-		public void ParserPrint()
+		public void ParserOr()
+		{
+			GetString3(out var varName, out var var1, out var var2);
+			executor.Event(() =>
+			{
+				SetResult(varName, (ResolveOperand(var1).ToBool() || ResolveOperand(var2).ToBool()));
+			});
+		}
+
+		public void ParserXor()
+		{
+			GetString3(out var varName, out var var1, out var var2);
+			executor.Event(() =>
+			{
+				SetResult(varName, (ResolveOperand(var1).ToBool() ^ ResolveOperand(var2).ToBool()));
+			});
+		}
+
+		/// <summary>
+		/// 解析 NOT 指令，逻辑非运算
+		/// </summary>
+		public void ParserNot()
 		{
 			if (currentToken.Type == CodeTokenType.Identifier)
 			{
 				string varName = (string)currentToken.Value;
 				ConsumeToken(CodeTokenType.Identifier);
+				JumpWhiteSpaceAndLineBreak();
+				var var1 = ParserGetVarValue();
 				executor.Event(() =>
 				{
-					Debug.Log(executor.GetVariable(varName));
+					SetResult(varName, !ResolveOperand(var1).ToBool());
 				});
 			}
 			else
 			{
-				throw new InvalidOperationException("PRINT 需要一个变量名");
+				throw new InvalidOperationException("NOT 需要一个结果变量名");
 			}
+		}
+		#endregion
+
+		#region 比较运算
+		/// <summary>
+		/// 解析 EQ 指令，等于比较
+		/// </summary>
+		public void ParserEqual()
+		{
+			GetString3(out var varName, out var var1, out var var2);
+			executor.Event(() =>
+			{
+				SetResult(varName, ResolveOperand(var1) == ResolveOperand(var2));
+			});
+		}
+
+		public void ParserNotEqual()
+		{
+			GetString3(out var varName, out var var1, out var var2);
+			executor.Event(() =>
+			{
+				SetResult(varName, ResolveOperand(var1) != ResolveOperand(var2));
+			});
+		}
+
+		public void ParserGreaterThan()
+		{
+			GetString3(out var varName, out var var1, out var var2);
+			executor.Event(() =>
+			{
+				SetResult(varName, ResolveOperand(var1) > ResolveOperand(var2));
+			});
+		}
+
+		public void ParserLessThan()
+		{
+			GetString3(out var varName, out var var1, out var var2);
+			executor.Event(() =>
+			{
+				SetResult(varName, ResolveOperand(var1) < ResolveOperand(var2));
+			});
+		}
+
+		public void ParserGreaterEqual()
+		{
+			GetString3(out var varName, out var var1, out var var2);
+			executor.Event(() =>
+			{
+				SetResult(varName, ResolveOperand(var1) >= ResolveOperand(var2));
+			});
+		}
+
+		public void ParserLessEqual()
+		{
+			GetString3(out var varName, out var var1, out var var2);
+			executor.Event(() =>
+			{
+				SetResult(varName, ResolveOperand(var1) <= ResolveOperand(var2));
+			});
+		}
+		#endregion
+
+		/// <summary>
+		/// 解析 PRINT 指令，打印变量值或字面量 
+		/// </summary>
+		public void ParserPrint()
+		{
+			var var = ParserGetVarValue();
+
+			executor.Event(() =>
+			{
+				Debug.Log(ResolveOperand(var));
+			});
 		}
 
 		#endregion

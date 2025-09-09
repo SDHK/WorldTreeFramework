@@ -1,4 +1,5 @@
 ﻿using Sirenix.OdinInspector;
+using System.IO;
 using UnityEngine;
 
 namespace VM
@@ -16,14 +17,14 @@ namespace VM
 		AssemblySyntaxParser syntaxParser = new();
 
 		/// <summary>
-		/// 源代码
+		/// 代码文件路径
 		/// </summary>
-		[TextArea(10, 40)]
-		public string code;
+		public string FilePath;
 
 		[Button("Run")]
 		private void Run()
 		{
+			string code = File.ReadAllText(FilePath);
 			executor.Clear();
 			syntaxParser.Parse(executor, code);
 			executor.Run();
