@@ -36,6 +36,8 @@ namespace VM
 		}
 
 
+
+
 		/// <summary>
 		/// 直接使用虚拟机执行器编写简单示例
 		/// </summary>

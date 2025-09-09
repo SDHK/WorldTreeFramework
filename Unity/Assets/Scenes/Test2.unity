@@ -435,4 +435,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9720b9a2ef2cfb24abcbbbb4a92140b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FilePath: "C:\\Users\\admin\\Desktop\\\u65B0\u5EFA\u6587\u672C\u6587\u6863.txt"
+  FilePath: "C:\\Users\\admin\\Desktop\\\u65B0\u5EFA\u6587\u672C\u6587\u6863.cs"

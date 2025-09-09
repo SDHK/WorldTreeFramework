@@ -158,8 +158,10 @@ namespace VM
 						{
 							if (currentToken.Type == CodeTokenType.Symbol && currentToken.Value.ToString() == "#")
 							{
+								ConsumeToken(CodeTokenType.Symbol);
 								break;
 							}
+							currentToken = Tokenizer.GetNextToken();
 						}
 					}
 					else if (instruction == "/")
