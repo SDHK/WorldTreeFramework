@@ -51,99 +51,105 @@ namespace VM
 					string instruction = (string)currentToken.Value;
 					ConsumeToken(CodeTokenType.Identifier);
 					JumpWhiteSpaceAndLineBreak();
-					switch (instruction.ToUpper())
+					switch (instruction)
 					{
-						case "SET":
+						case "var":
 							ParserSet();
 							break;
-						case "IF":
+						case "if":
 							ParserIFEvent();
 							break;
-						case "ELSE":
+						case "else":
 							ParserIFElse();
 							break;
-						case "IF_END":
+						case "endIf":
 							ParserIFEnd();
 							break;
 
-						case "LOOP":
+						case "loop":
 							ParserLoopEnter();
 							break;
-						case "LOOP_END":
+						case "endLoop":
 							ParserLoopEnd();
 							break;
-						case "LOOP_END_DO":
+						case "endLoopDo":
 							ParserLoopEndDo();
 							break;
-						case "DELAY":
+						case "break":
+							ParserLoopBreak();
+							break;
+						case "continue":
+							ParserLoopContinue();
+							break;
+						case "Delay":
 							ParserDelay();
 							break;
 
-						case "FUNC_DEF":
+						case "FuncDef":
 							ParserMethodDefine();
 							break;
-						case "FUNC_END":
+						case "FuncEnd":
 							ParserMethodEnd();
 							break;
-						case "FUNC_CALL":
+						case "Call":
 							ParserMethodCall();
 							break;
-						case "FUNC_RUN":
-							ParserMethodRun();
+						case "return":
+							ParserMethodReturn();
 							break;
 
-						case "PUSH":
+						case "Push":
 							ParserPushValue();
 							break;
-						case "POP":
+						case "Pop":
 							ParserPopVariable();
 							break;
 
-						case "ADD":
+						case "add":
 							ParserAdd();
 							break;
-						case "SUB":
+						case "sub":
 							ParserSub();
 							break;
-						case "MUL":
+						case "mul":
 							ParserMul();
 							break;
-						case "DIV":
+						case "div":
 							ParserDiv();
 							break;
 
-						case "AND":
+						case "and":
 							ParserAnd();
 							break;
-						case "OR":
+						case "or":
 							ParserOr();
 							break;
-						case "NOT":
+						case "not":
 							ParserNot();
 							break;
-						case "XOR":
+						case "xor":
 							ParserXor();
 							break;
-						case "EQUAL":
+						case "equal":
 							ParserEqual();
 							break;
-						case "NOT_EQUAL":
+						case "nEqual":
 							ParserNotEqual();
 							break;
-						case "GREATER":
+						case "greater":
 							ParserGreaterThan();
 							break;
-						case "LESS":
+						case "less":
 							ParserLessThan();
 							break;
-						case "GREATER_EQUAL":
+						case "greaterEqual":
 							ParserGreaterEqual();
 							break;
-						case "LESS_EQUAL":
+						case "lessEqual":
 							ParserLessEqual();
 							break;
 
-						case "PRINT":
+						case "Print":
 							ParserPrint();
 							break;
 						default:
@@ -353,6 +359,16 @@ namespace VM
 		}
 
 		/// <summary>
+		/// 解析 LOOP_BREAK 指令 
+		/// </summary>
+		public void ParserLoopBreak() => executor.Loop_Break();
+
+		/// <summary>
+		/// 解析 LOOP_CONTINUE 指令 
+		/// </summary>
+		public void ParserLoopContinue() => executor.Loop_Continue();
+
+		/// <summary>
 		/// 解析 DELAY 指令 
 		/// </summary>
 		public void ParserDelay()
@@ -393,10 +409,9 @@ namespace VM
 		/// <summary>
 		/// 解析 Method 结束指令 
 		/// </summary>
-		public void ParserMethodEnd()
-		{
-			executor.MethodEnd();
-		}
+		public void ParserMethodEnd() => executor.MethodEnd();
+
+		public void ParserMethodReturn() => executor.MethodReturn();
 
 		/// <summary>
 		/// 解析 Method 调用指令 
@@ -415,22 +430,6 @@ namespace VM
 			}
 		}
 
-		/// <summary>
-		/// 解析 Method 运行指令 
-		/// </summary>
-		public void ParserMethodRun()
-		{
-			if (currentToken.Type == CodeTokenType.Identifier)
-			{
-				string methodName = (string)currentToken.Value;
-				ConsumeToken(CodeTokenType.Identifier);
-				executor.MethodRun(methodName);
-			}
-			else
-			{
-				throw new InvalidOperationException("FUNC_RUN 需要一个函数名");
-			}
-		}
 
 		/// <summary>
 		/// 解析 Push 值指令 
@@ -530,7 +529,7 @@ namespace VM
 			if (operand.Type == VarType.Object)
 			{
 				string operandStr = (string)operand;
-				return operandStr == "POP" ? executor.Pop() : executor.GetVariable(operandStr);
+				return operandStr == "Pop" ? executor.Pop() : executor.GetVariable(operandStr);
 			}
 			return operand;
 		}
@@ -540,7 +539,7 @@ namespace VM
 		/// </summary>
 		private void SetResult(string target, VarValue value)
 		{
-			if (target == "PUSH")
+			if (target == "Push")
 			{
 				executor.Push(value);
 			}

@@ -118,7 +118,6 @@ namespace VM
 			_parameterStack.Clear();
 			_pushTasks.Clear();
 			_PopPushVariableTasks.Clear();
-			_methodRunTasks.Clear();
 			methodRegister.Clear();
 
 			memory.Clear();
@@ -576,6 +575,22 @@ namespace VM
 		}
 
 		/// <summary>
+		/// 任务解析器：[Loop_Continue] 
+		/// </summary>
+		private void Parser_Loop_Continue(int TaskPath)
+		{
+			this.Pointer = Task_Loops[TaskPath].Loop_Enter;
+		}
+
+		/// <summary>
+		/// 任务解析器：[Loop_Break] 
+		/// </summary>
+		private void Parser_Loop_Break(int TaskPath)
+		{
+			this.Pointer = Task_Loops[TaskPath].Loop_End + 1;
+		}
+
+		/// <summary>
 		/// 任务：[Loop_Enter标记]                                  
 		/// 注：写入时会更具内部地址栈，匹配最近的Loop_End循环                                  
 		/// </summary>
@@ -646,6 +661,32 @@ namespace VM
 			TaskAdd(Parser_LoopEnd, Address);
 			return this;
 		}
+
+		/// <summary>
+		/// 任务：[Loop_Continue] 
+		/// </summary>
+		public TaskExecutor Loop_Continue()
+		{
+			if (Loop_Address.Count != 0)
+			{
+				int Address = Loop_Address.Peek();
+				TaskAdd(Parser_Loop_Continue, Address);
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// 任务：[Loop_Break] 
+		/// </summary>
+		public TaskExecutor Loop_Break()
+		{
+			if (Loop_Address.Count != 0)
+			{
+				int Address = Loop_Address.Peek();
+				TaskAdd(Parser_Loop_Break, Address);
+			}
+			return this;
+		}
 	}
 	#endregion
 
@@ -653,20 +694,10 @@ namespace VM
 
 	public partial class TaskExecutor
 	{
-		/// <summary>
-		/// 方法调用任务
-		/// </summary>
-		private List<string> _methodRunTasks = new();
-
-
 		private Dictionary<string, (Delegate, int)> methodRegister = new();
 
-		/// <summary>
-		/// 方法调用解析器 - 支持参数栈
-		/// </summary>
-		private void Parser_MethodRun(int TaskPath)
+		private void TryMethodRun(string methodTaskName)
 		{
-			string methodTaskName = _methodRunTasks[TaskPath];
 			if (methodRegister.TryGetValue(methodTaskName, out var methodData))
 			{
 				VarValue var1, var2, var3, var4, var5;
@@ -730,16 +761,6 @@ namespace VM
 		public TaskExecutor MethodRegister(Delegate method)
 		{
 			methodRegister[method.Method.Name] = (method, method.Method.GetParameters().Length);
-			return this;
-		}
-
-		/// <summary>
-		/// 任务：[方法调用] - 支持参数栈 
-		/// </summary>
-		public TaskExecutor MethodRun(string methodName)
-		{
-			TaskAdd(Parser_MethodRun, _methodRunTasks.Count);
-			_methodRunTasks.Add(methodName);
 			return this;
 		}
 	}
@@ -814,21 +835,13 @@ namespace VM
 						SetVariable(paramNames[i], Pop());
 					}
 				}
-				else
-				{
-					// 没有参数定义，直接弹出参数
-					for (int i = 0; i < paramNames.Count; i++)
-					{
-						_parameterStack.Pop();
-					}
-				}
 
 				Method_ReturnAddress.Push(this.Pointer + 1);
 				this.Pointer = jumpAddress + 1;
 			}
 			else
 			{
-				throw new InvalidOperationException($"方法 '{callTaskName}' 未定义");
+				TryMethodRun(callTaskName);
 			}
 		}
 
@@ -913,6 +926,15 @@ namespace VM
 			// 设置对应方法定义的结束地址
 			_methodDefineEndTasks[Address] = this.ParserPaths.Count;
 			// 添加方法结束解析器
+			TaskAdd(Parser_MethodEnd, 0);
+			return this;
+		}
+
+		/// <summary>
+		/// 任务：[方法返回]
+		/// </summary>
+		public TaskExecutor MethodReturn()
+		{
 			TaskAdd(Parser_MethodEnd, 0);
 			return this;
 		}
