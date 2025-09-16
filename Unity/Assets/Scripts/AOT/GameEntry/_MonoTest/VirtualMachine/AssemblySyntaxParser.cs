@@ -373,7 +373,8 @@ namespace VM
 		/// </summary>
 		public void ParserDelay()
 		{
-			executor.Delay((int)ResolveOperand(ParserGetVarValue()));
+			var var = ParserGetVarValue();
+			executor.Delay(() => (int)ResolveOperand(var));
 		}
 
 		/// <summary>

@@ -369,7 +369,7 @@ namespace VM
 		/// <summary>
 		/// 任务储存器：[时间]
 		/// </summary>
-		private List<int> TaskTimes = new List<int>();
+		private List<Func<int>> TaskTimes = new List<Func<int>>();
 
 		/// <summary>
 		/// 时钟：因为是单线程，所以只需要一个时钟就行了
@@ -384,7 +384,7 @@ namespace VM
 		{
 			if (Clock == DateTime.MinValue)
 			{
-				Clock = DateTime.Now.AddMilliseconds(TaskTimes[TaskPath]);
+				Clock = DateTime.Now.AddMilliseconds(TaskTimes[TaskPath].Invoke());
 			}
 			else
 			{
@@ -397,7 +397,7 @@ namespace VM
 		/// <summary>
 		/// 任务：[延时]                                  
 		/// </summary>
-		public TaskExecutor Delay(int ms)
+		public TaskExecutor Delay(Func<int> ms)
 		{
 			TaskAdd(Parser_Delay, TaskTimes.Count);
 			TaskTimes.Add(ms);//委托写入任务储存器

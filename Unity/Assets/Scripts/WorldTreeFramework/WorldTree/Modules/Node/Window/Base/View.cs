@@ -1,4 +1,6 @@
-﻿namespace WorldTree
+﻿using System.Collections.Generic;
+
+namespace WorldTree
 {
 	/// <summary>
 	/// 视图接口：作为UI打开的初始数据
@@ -92,9 +94,14 @@
 	//=====================
 
 	/// <summary>
+	/// 按钮绑定
+	/// </summary>
+	public class ButtonBind : ViewBind { }
+
+	/// <summary>
 	/// 按钮
 	/// </summary>
-	public class Button : View<ViewBind>
+	public class Button : View<ButtonBind>
 	{
 		/// <summary>
 		/// 点击事件
@@ -132,5 +139,17 @@
 		/// 改变事件
 		/// </summary>
 		public RuleUnicast<ISendRule> OnChange;
+	}
+
+	/// <summary>
+	/// 窗口组
+	/// </summary>
+	public class ViewGroup : View<ViewBind>
+		, AsBranch<ChildBranch>
+	{
+		/// <summary>
+		/// 子窗口数据集合
+		/// </summary>
+		public HashSet<NodeRef<IView>> nodeHash;
 	}
 }

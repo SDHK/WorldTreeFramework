@@ -13,7 +13,7 @@ namespace WorldTree
 		/// <summary>
 		/// 打开窗口
 		/// </summary>
-		public static void Open<V>(this WindowManager windowManager, V v)
+		public static void Open<V>(this IViewBind viewBind, V v)
 			where V : class, IView
 		{
 
