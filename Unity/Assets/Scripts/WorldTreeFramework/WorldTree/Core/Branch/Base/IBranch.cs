@@ -16,13 +16,44 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 	/// <summary>
+	/// 世界树分支接口基类
+	/// </summary>
+	public partial interface IBranchBase : IUnit
+	{
+
+	}
+
+	/// <summary>
+	/// 世界树分支组接口 
+	/// </summary>
+	public partial interface IBranchGroup : IBranchBase, IEnumerable<IBranch>
+	{
+		/// <summary>
+		/// 分支数量
+		/// </summary>
+		public int BranchCount { get; }
+		/// <summary>
+		/// 分支Id包含判断
+		/// </summary>
+		public bool ContainsId(long id);
+		/// <summary>
+		/// 尝试通过id获取分支
+		/// </summary>
+		public bool TryGetBranchById(long id, out IBranch branch);
+		/// <summary>
+		/// 通过id获取分支
+		/// </summary>
+		public IBranch GetBranchById(long id);
+	}
+
+	/// <summary>
 	/// 世界树分支接口
 	/// </summary>
 	/// <remarks>
 	/// <para>世界树节点的结构组织接口基类</para>
 	/// </remarks>
 	[TreeDataSerializable]
-	public partial interface IBranch : IUnit, IEnumerable<INode>
+	public partial interface IBranch : IBranchBase, IEnumerable<INode>
 	{
 		/// <summary>
 		/// 节点数量
@@ -53,6 +84,7 @@ namespace WorldTree
 		/// 清空分支
 		/// </summary>
 		public void Clear();
+
 	}
 
 	/// <summary>

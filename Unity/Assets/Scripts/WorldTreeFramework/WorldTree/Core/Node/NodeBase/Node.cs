@@ -151,7 +151,7 @@ namespace WorldTree
 		/// <summary>
 		/// 此节点挂载到父级的分支类型
 		/// </summary>
-		//[TreeDataIgnore]
+		[TreeDataIgnore]
 		public long BranchType { get; set; }
 
 		public BranchGroup BranchDict { get; set; }

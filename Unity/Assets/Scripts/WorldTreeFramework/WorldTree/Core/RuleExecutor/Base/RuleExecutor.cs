@@ -157,18 +157,18 @@ namespace WorldTree
 			if (num > 0)
 			{
 				var newNodes = this.Core.PoolGetArray<RuleExecutorPair>(num);
-				if (this.nextTraversalCount > 0)
+				if (this.nodes.Length != 0)
 				{
-					Array.Copy(this.nodes, 0, newNodes, 0, this.nextTraversalCount);
+					Array.Copy(this.nodes, 0, newNodes, 0, this.nodes.Length);
 				}
-				this.Core.PoolRecycle(this.nodes);
+				this.Core.PoolRecycle(this.nodes, true);
 				this.nodes = newNodes;
 			}
 			else
 			{
 				if (this.nodes != null)
 				{
-					this.Core.PoolRecycle(this.nodes);
+					this.Core.PoolRecycle(this.nodes, true);
 				}
 				this.nodes = this.Core.PoolGetArray<RuleExecutorPair>(4);
 			}
@@ -176,8 +176,8 @@ namespace WorldTree
 
 		public int RefreshTraversalCount()
 		{
-			//标记为非初始化状态
-			isInit = false;
+			// 判断如果下一次遍历数量为0，说明没有可遍历的节点，当前数组为空，直接恢复为初始化状态
+			isInit = nextTraversalCount == 0;
 
 			//奇偶切换点是上次遍历的数量 - 上次空洞数量
 			switchPoint = traversalCount - (readPoint - writePoint);
@@ -209,6 +209,7 @@ namespace WorldTree
 			writePoint = 0;
 
 			traversalCount = nextTraversalCount;
+
 
 			return traversalCount;
 		}
@@ -305,8 +306,7 @@ namespace WorldTree
 			protected override void Execute(RuleExecutor self)
 			{
 				self.Clear();
-				Array.Clear(self.nodes, 0, self.nodes.Length);
-				self.Core.PoolRecycle(self.nodes);
+				self.Core.PoolRecycle(self.nodes, true);
 				self.nodes = null;
 			}
 		}

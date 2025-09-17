@@ -6,6 +6,7 @@
 * 描述：
 
 */
+using System;
 using UnityEngine;
 
 namespace WorldTree
@@ -26,9 +27,10 @@ namespace WorldTree
 		private static void OnAddRule(this InitialDomain self)
 		{
 			self.Log($"初始域热更部分！！!");
-			self.TypeToCode<InputDeviceManager>();
-			self.World.AddComponent(out InputDeviceManager _);
-			self.AddComponent(out InputMapperTest _);
+
+			//self.TypeToCode<InputDeviceManager>();
+			//self.World.AddComponent(out InputDeviceManager _);
+			//self.AddComponent(out InputMapperTest _);
 
 			//添加宏测试成功，应该在编辑器下才能添加
 			//string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone);
@@ -75,11 +77,18 @@ namespace WorldTree
 			//GUILayout.Label($@"    {timeSpan.TotalMilliseconds} !  ", new GUIStyle() { fontSize = 60 });
 		}
 
-
 		[NodeRule(nameof(RemoveRule<InitialDomain>))]
 		private static void OnRemoveRule(this InitialDomain self)
 		{
 			self.Log($"初始域关闭！！");
 		}
+
+		[NodeRule(nameof(GuiUpdateTimeRule<InitialDomain>))]
+		private static void OnGuiUpdateTimeRule(this InitialDomain self, TimeSpan timeSpan)
+		{
+			GUILayout.Label($@"    {timeSpan.Ticks} !  ", new GUIStyle() { fontSize = 60 });
+		}
+
+
 	}
 }
