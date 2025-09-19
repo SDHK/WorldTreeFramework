@@ -154,7 +154,7 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public long BranchType { get; set; }
 
-		public BranchGroup BranchDict { get; set; }
+		public IBranchBase BranchDict { get; set; }
 
 
 		#endregion

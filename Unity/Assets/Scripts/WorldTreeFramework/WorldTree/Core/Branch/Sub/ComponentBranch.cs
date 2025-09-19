@@ -20,6 +20,6 @@ namespace WorldTree
 	[TreeDataSerializable(true)]
 	public partial class ComponentBranch : Branch<long>, IBranchTypeKey
 	{
-		public override bool TryAddNode<N>(long key, N node) => nodeDict.TryAdd(node.Type, node) && keyDict.TryAdd(node.Id, node.Type);
+		public override bool TryAddNode<N>(long key, N node) => this.TryAdd(node.Type, node) && keyDict.TryAdd(node.Id, node.Type);
 	}
 }

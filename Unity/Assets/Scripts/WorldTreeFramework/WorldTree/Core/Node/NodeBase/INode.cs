@@ -189,7 +189,7 @@ namespace WorldTree
 		/// <summary>
 		/// 树分支
 		/// </summary>
-		public BranchGroup BranchDict { get; set; }
+		public IBranchBase BranchDict { get; set; }
 
 		#endregion
 

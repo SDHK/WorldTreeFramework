@@ -6,6 +6,8 @@
 * 描述：
 
 */
+using System.Collections.Generic;
+
 namespace WorldTree
 {
 
@@ -102,17 +104,17 @@ namespace WorldTree
 
 			if (self.BranchDict != null)
 			{
-				foreach (var branchs in self.BranchDict)
+				foreach (var branch in self.BranchDict)
 				{
-					if (branchs.Value == null)
+					if (branch == null)
 					{
 						str += $"{t1}   Null: \n";
 						continue;
 					}
-					str += $"{t1}   {branchs.Value.GetType().Name}: \n";
-					foreach (INode node in branchs.Value)
+					str += $"{t1}   {branch.GetType().Name}: \n";
+					foreach (INode node in (IEnumerable<INode>)branch)
 					{
-						if (branchs.Value.Type == node.BranchType)
+						if (branch.Type == node.BranchType)
 						{
 							str += ToStringDrawTree(node, t1);
 						}

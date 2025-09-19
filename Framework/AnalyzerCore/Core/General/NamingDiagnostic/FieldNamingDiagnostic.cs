@@ -52,6 +52,7 @@ namespace WorldTree.Analyzer
 								context.ReportDiagnostic(Diagnostic.Create(DiagnosticConfig.Diagnostic, variable.GetLocation(), variable.Identifier.Text));
 							}
 						}
+						return;
 					}
 				}
 			}

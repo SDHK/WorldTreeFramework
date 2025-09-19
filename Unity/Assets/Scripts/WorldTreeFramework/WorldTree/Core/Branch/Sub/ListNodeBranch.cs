@@ -19,7 +19,10 @@ namespace WorldTree
 	[TreeDataSerializable(true)]
 	public partial class ListNodeBranch : Unit, IBranch<int>, ISerializable
 	{
+		[TreeDataIgnore]
 		public int Count => nodeList == null ? 0 : nodeList.Count;
+		[TreeDataIgnore]
+		public int BranchCount => 1;
 
 		/// <summary>
 		/// 节点集合
@@ -121,7 +124,7 @@ namespace WorldTree
 			return true;
 		}
 
-		public void Clear()
+		public void ClearAll()
 		{
 			nodeList.Clear();
 			keyDict.Clear();
@@ -156,6 +159,28 @@ namespace WorldTree
 				keyDict.TryAdd(nodeList[i].Id, i);
 			}
 		}
+
+		#region 伪装分支集合
+		IEnumerator<IBranch> IEnumerable<IBranch>.GetEnumerator() => new SingleBranchEnumerator(this);
+
+		public bool ContainsBranch(long typeCode) => typeCode == Type;
+
+		public bool TryGetBranch(long typeCode, out IBranch branch)
+		{
+			if (typeCode == Type)
+			{
+				branch = this;
+				return true;
+			}
+			branch = null;
+			return false;
+		}
+
+		public IBranch GetBranch(long typeCode) => typeCode == Type ? this : null;
+
+		bool IBranchBase.TryAddBranch(long typeCode, IBranch branch) => throw new BranchOperationException();
+		void IBranchBase.RemoveBranch(long typeCode) => throw new BranchOperationException();
+		#endregion
 	}
 
 

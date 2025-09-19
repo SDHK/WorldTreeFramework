@@ -11,39 +11,46 @@
 
 */
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace WorldTree
 {
+
 	/// <summary>
 	/// 世界树分支接口基类
 	/// </summary>
-	public partial interface IBranchBase : IUnit
-	{
-
-	}
-
-	/// <summary>
-	/// 世界树分支组接口 
-	/// </summary>
-	public partial interface IBranchGroup : IBranchBase, IEnumerable<IBranch>
+	public partial interface IBranchBase : IUnit, IEnumerable<IBranch>
 	{
 		/// <summary>
 		/// 分支数量
 		/// </summary>
+		[TreeDataIgnore]
 		public int BranchCount { get; }
+
 		/// <summary>
-		/// 分支Id包含判断
+		/// 尝试添加分支 
 		/// </summary>
-		public bool ContainsId(long id);
+		public bool TryAddBranch(long typeCode, IBranch branch);
+
+		/// <summary>
+		/// 分支Type包含判断
+		/// </summary>
+		public bool ContainsBranch(long typeCode);
 		/// <summary>
 		/// 尝试通过id获取分支
 		/// </summary>
-		public bool TryGetBranchById(long id, out IBranch branch);
+		public bool TryGetBranch(long typeCode, out IBranch branch);
 		/// <summary>
 		/// 通过id获取分支
 		/// </summary>
-		public IBranch GetBranchById(long id);
+		public IBranch GetBranch(long typeCode);
+
+		/// <summary>
+		/// 将分支从集合中移除 
+		/// </summary>
+		public void RemoveBranch(long typeCode);
 	}
 
 	/// <summary>
@@ -83,7 +90,7 @@ namespace WorldTree
 		/// <summary>
 		/// 清空分支
 		/// </summary>
-		public void Clear();
+		public void ClearAll();
 
 	}
 
@@ -169,4 +176,59 @@ namespace WorldTree
 		where P : class, INode
 		where B : class, IBranch
 	{ }
+
+	/// <summary>
+	/// 单元素分支枚举器
+	/// </summary>
+	public struct SingleBranchEnumerator : IEnumerator<IBranch>
+	{
+		/// <summary>
+		/// 分支
+		/// </summary>
+		private readonly IBranch branch;
+		/// <summary>
+		/// 是否有值 
+		/// </summary>
+		private readonly bool hasValue;
+		/// <summary>
+		/// 是否已移动 
+		/// </summary>
+		private bool moved;
+
+		public SingleBranchEnumerator(IBranch branch)
+		{
+			this.branch = branch;
+			hasValue = branch != null;
+			moved = false;
+		}
+
+		public IBranch Current => hasValue && moved ? branch : null;
+
+		object IEnumerator.Current => Current;
+
+		public bool MoveNext()
+		{
+			if (hasValue && !moved)
+			{
+				moved = true;
+				return true;
+			}
+			return false;
+		}
+
+		public void Reset()
+		{
+			moved = false;
+		}
+
+		public void Dispose() { }
+	}
+
+	/// <summary>
+	/// 世界树分支操作异常
+	/// </summary>
+	public class BranchOperationException : Exception
+	{
+		public BranchOperationException() : base("分支类型不包含分支，不能操作") { }
+	}
 }

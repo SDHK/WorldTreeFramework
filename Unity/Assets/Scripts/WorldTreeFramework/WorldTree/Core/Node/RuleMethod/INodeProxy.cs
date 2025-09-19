@@ -9,6 +9,8 @@
 
 */
 
+using System.Collections.Generic;
+
 namespace WorldTree
 {
 
@@ -53,11 +55,11 @@ namespace WorldTree
 
 						if (current.BranchDict != null)
 						{
-							foreach (var branchs in current.BranchDict)
+							foreach (var branch in current.BranchDict)
 							{
-								foreach (INode node in branchs.Value)
+								foreach (INode node in (IEnumerable<INode>)branch)
 								{
-									if (node.BranchType == branchs.Value.Type)
+									if (node.BranchType == branch.Type)
 									{
 										queue.Enqueue(node);
 									}
@@ -159,12 +161,12 @@ namespace WorldTree
 			if (self.BranchDict == null) return;
 			using (self.Core.PoolGetUnit(out UnitStack<IBranch> branchs))
 			{
-				foreach (var item in self.BranchDict) branchs.Push(item.Value);
+				foreach (var branch in self.BranchDict) branchs.Push(branch);
 				while (branchs.Count != 0) self.RemoveAllNode(branchs.Pop().Type);
 			}
 
 			//假如在分支移除过程中，节点又添加了新的分支。那么就是错误的，新增分支将无法回收。
-			if (self.BranchDict.Count != 0)
+			if (self.BranchDict.BranchCount != 0)
 			{
 				foreach (var item in self.BranchDict)
 				{
@@ -186,14 +188,14 @@ namespace WorldTree
 					// 迭代器无法一边迭代一边删除，这里用栈存储需要删除的节点
 					using (self.Core.PoolGetUnit(out UnitStack<INode> nodes))
 					{
-						foreach (var item in branch) nodes.Push(item);
+						foreach (var item in (IEnumerable<INode>)branch) nodes.Push(item);
 						while (nodes.Count != 0) nodes.Pop().Dispose();
 					}
 
 					// 如果在节点移除过程中又添加了新节点，将无法回收
 					if (branch.Count != 0)
 					{
-						foreach (var item in branch)
+						foreach (var item in (IEnumerable<INode>)branch)
 						{
 							self.LogError($"移除节点出错，意外的新节点，父级:{self.GetType()} 分支: {branch.GetType()} 节点:{item.GetType()}:{item.Id}");
 						}
@@ -287,13 +289,13 @@ namespace WorldTree
 			{
 				if (self.BranchDict != null)
 				{
-					foreach (var brancItem in self.BranchDict)
+					foreach (var branch in self.BranchDict)
 					{
-						if (brancItem.Value == null) continue;
-						foreach (var nodeItem in brancItem.Value)
+						if (branch == null) continue;
+						foreach (var nodeItem in (IEnumerable<INode>)branch)
 						{
 							nodeItem.Parent = self;
-							nodeItem.BranchType = brancItem.Value.Type;
+							nodeItem.BranchType = branch.Type;
 						}
 					}
 				}

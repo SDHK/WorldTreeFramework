@@ -18,6 +18,7 @@ namespace WorldTree.Analyzer
 	{
 		public static List<DiagnosticConfigGroup> CoreConfigs = new()
 		{
+			new BranchDiagnosticConfig(),
 			new ListDiagnosticConfig(),
 			new ArrayDiagnosticConfig(),
 			new DictionaryDiagnosticConfig(),
@@ -33,6 +34,7 @@ namespace WorldTree.Analyzer
 
 		public static List<DiagnosticConfigGroup> NodeConfigs = new()
 		{
+			new BranchDiagnosticConfig(),
 			new ListDiagnosticConfig(),
 			new ArrayDiagnosticConfig(),
 			new DictionaryDiagnosticConfig(),
@@ -51,6 +53,7 @@ namespace WorldTree.Analyzer
 
 		public static List<DiagnosticConfigGroup> RuleConfigs = new()
 		{
+			new BranchDiagnosticConfig(),
 			new ListDiagnosticConfig(),
 			new ArrayDiagnosticConfig(),
 			new DictionaryDiagnosticConfig(),

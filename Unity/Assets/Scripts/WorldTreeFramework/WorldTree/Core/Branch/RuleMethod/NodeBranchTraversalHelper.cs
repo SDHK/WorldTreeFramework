@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -13,7 +14,7 @@ namespace WorldTree
 		public static INode TraversalPreorder(INode self, Action<INode> action)
 		{
 			//自己没有分支
-			if (self.BranchDict == null || self.BranchDict.Count == 0)
+			if (self.BranchDict == null || self.BranchDict.BranchCount == 0)
 			{
 				action(self);
 				return self;
@@ -30,9 +31,9 @@ namespace WorldTree
 				action(current);
 				if (current.BranchDict != null)
 				{
-					foreach (var branchs in current.BranchDict)
+					foreach (var branch in current.BranchDict)
 					{
-						foreach (INode node in branchs.Value)
+						foreach (INode node in (IEnumerable<INode>)branch)
 						{
 							nodeStack.Push(node);
 						}
@@ -49,7 +50,7 @@ namespace WorldTree
 		public static INode TraversalLevel(INode self, Action<INode> action)
 		{
 			//自己没有分支
-			if (self.BranchDict == null || self.BranchDict.Count == 0)
+			if (self.BranchDict == null || self.BranchDict.BranchCount == 0)
 			{
 				action(self);
 				return self;
@@ -68,9 +69,9 @@ namespace WorldTree
 
 				if (current.BranchDict != null)
 				{
-					foreach (var branchs in current.BranchDict)
+					foreach (var branch in current.BranchDict)
 					{
-						foreach (INode node in branchs.Value)
+						foreach (INode node in (IEnumerable<INode>)branch)
 						{
 							nodeQueue.Enqueue(node);
 						}
@@ -87,7 +88,7 @@ namespace WorldTree
 		public static INode TraversalPostorder(INode self, Action<INode> action)
 		{
 			//自己没有分支
-			if (self.BranchDict == null || self.BranchDict.Count == 0)
+			if (self.BranchDict == null || self.BranchDict.BranchCount == 0)
 			{
 				action(self);
 				return self;
@@ -105,9 +106,9 @@ namespace WorldTree
 				allStack.Push(current);
 				if (current.BranchDict != null)
 				{
-					foreach (var branchs in current.BranchDict)
+					foreach (var branch in current.BranchDict)
 					{
-						foreach (INode node in branchs.Value)
+						foreach (INode node in (IEnumerable<INode>)branch)
 						{
 							nodeStack.Push(node);
 						}
@@ -129,7 +130,7 @@ namespace WorldTree
 		public static INode TraversalPrePostOrder(INode self, Action<INode> preAction, Action<INode> postAction)
 		{
 			//自己没有分支
-			if (self.BranchDict == null || self.BranchDict.Count == 0)
+			if (self.BranchDict == null || self.BranchDict.BranchCount == 0)
 			{
 				preAction(self);
 				postAction(self);
@@ -149,9 +150,9 @@ namespace WorldTree
 				allStack.Push(current);
 				if (current.BranchDict != null)
 				{
-					foreach (var branchs in current.BranchDict)
+					foreach (var branch in current.BranchDict)
 					{
-						foreach (INode node in branchs.Value)
+						foreach (INode node in (IEnumerable<INode>)branch)
 						{
 							nodeStack.Push(node);
 						}

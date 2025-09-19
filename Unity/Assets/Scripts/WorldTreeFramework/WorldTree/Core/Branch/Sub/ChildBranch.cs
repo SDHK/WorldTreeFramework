@@ -21,53 +21,34 @@ namespace WorldTree
 	/// 子分支
 	/// </summary>
 	[TreeDataSerializable(true)]
-	public partial class ChildBranch : Unit, IBranchIdKey, ISerializable
+	public partial class ChildBranch : UnitDictionary<long, INode>, IBranchIdKey, ISerializable
 	{
-		public int Count => nodeDict.Count;
+		[TreeDataIgnore]
+		public int BranchCount => 1;
 
-		/// <summary>
-		/// 节点集合
-		/// </summary>
-		protected UnitDictionary<long, INode> nodeDict;
+		public bool Contains(long key) => this.ContainsKey(key);
 
-		public override void OnCreate()
-		{
-			Core.PoolGetUnit(out nodeDict);
-		}
+		public bool ContainsId(long id) => this.ContainsKey(id);
 
-		public bool Contains(long key) => nodeDict.ContainsKey(key);
-
-		public bool ContainsId(long id) => nodeDict.ContainsKey(id);
-
-		public bool TryAddNode<N>(long key, N node) where N : class, INode => nodeDict.TryAdd(node.Id, node);
+		public bool TryAddNode<N>(long key, N node) where N : class, INode => this.TryAdd(node.Id, node);
 
 		public bool TryGetNodeKey(long nodeId, out long key)
 		{ key = nodeId; return true; }
 
-		public bool TryGetNode(long key, out INode node) => this.nodeDict.TryGetValue(key, out node);
+		public bool TryGetNode(long key, out INode node) => this.TryGetValue(key, out node);
 
-		public bool TryGetNodeById(long id, out INode node) => this.nodeDict.TryGetValue(id, out node);
+		public bool TryGetNodeById(long id, out INode node) => this.TryGetValue(id, out node);
 
-		public INode GetNode(long key) => this.nodeDict.TryGetValue(key, out INode node) ? node : null;
+		public INode GetNode(long key) => this.TryGetValue(key, out INode node) ? node : null;
 
-		public INode GetNodeById(long id) => this.nodeDict.TryGetValue(id, out INode node) ? node : null;
+		public INode GetNodeById(long id) => this.TryGetValue(id, out INode node) ? node : null;
 
-		public void RemoveNode(long nodeId) => nodeDict.Remove(nodeId);
+		public void RemoveNode(long nodeId) => this.Remove(nodeId);
+		public void ClearAll() => this.Clear();
 
-		public void Clear()
-		{
-			nodeDict.Clear();
-		}
-		public IEnumerator<INode> GetEnumerator() => nodeDict.Values.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => nodeDict.Values.GetEnumerator();
-		public IEnumerable<KeyValuePair<long, INode>> GetEnumerable() => nodeDict;
-
-		public override void OnDispose()
-		{
-			this.nodeDict.Dispose();
-			this.nodeDict = null;
-		}
-
+		IEnumerator<INode> IEnumerable<INode>.GetEnumerator() => this.Values.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => this.Values.GetEnumerator();
+		public IEnumerable<KeyValuePair<long, INode>> GetEnumerable() => this;
 
 		public void OnSerialize()
 		{
@@ -76,9 +57,32 @@ namespace WorldTree
 		public void OnDeserialize()
 		{
 			using UnitList<INode> nodeList = Core.PoolGetUnit<UnitList<INode>>();
-			foreach (var item in nodeDict) nodeList.Add(item.Value);
-			nodeDict.Clear();
-			foreach (var item in nodeList) nodeDict.TryAdd(item.Id, item);
+			foreach (var item in this) nodeList.Add(item.Value);
+			this.Clear();
+			foreach (var item in nodeList) this.TryAdd(item.Id, item);
 		}
+
+		#region 伪装分支集合
+
+		IEnumerator<IBranch> IEnumerable<IBranch>.GetEnumerator() => new SingleBranchEnumerator(this);
+
+		public bool ContainsBranch(long typeCode) => typeCode == Type;
+
+		public bool TryGetBranch(long typeCode, out IBranch branch)
+		{
+			if (typeCode == Type)
+			{
+				branch = this;
+				return true;
+			}
+			branch = null;
+			return false;
+		}
+
+		public IBranch GetBranch(long typeCode) => typeCode == Type ? this : null;
+		bool IBranchBase.TryAddBranch(long typeCode, IBranch branch) => throw new BranchOperationException();
+		void IBranchBase.RemoveBranch(long typeCode) => throw new BranchOperationException();
+
+		#endregion
 	}
 }

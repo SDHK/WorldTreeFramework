@@ -105,7 +105,7 @@ namespace WorldTree
 		/// 初始化状态
 		/// </summary>
 		[TreeDataIgnore]
-		public bool isInit = true;
+		public bool isInit = false;
 
 		public int TraversalCount => traversalCount;
 
@@ -139,7 +139,7 @@ namespace WorldTree
 			}
 
 			// 判断自动扩容
-			if (addIndex + 1 == nodes.Length) Capacity();
+			if (addIndex + 1 >= nodes.Length) Capacity();
 			nodes[addIndex] = new RuleExecutorPair(node, rule);
 			nextTraversalCount = addIndex + 1;
 			return true;
@@ -264,6 +264,8 @@ namespace WorldTree
 				readPoint += indexInterval;
 				return true;
 			}
+			// 遍历完毕后，读指针可能跨步2大于遍历数量，这时需要矫正读指针
+			readPoint = traversalCount;
 
 			if (nowNewCount == 0)
 			{

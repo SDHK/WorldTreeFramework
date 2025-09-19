@@ -44,7 +44,7 @@ namespace WorldTree.SourceGenerator
 
 			List<ISymbol> fieldSymbols = null;
 			if (!isAbstract) fieldSymbols = GetAllMembers(classSymbol, TypeFieldsCountDict, out baseSymbol, out membersCount);
-			string baseName = baseSymbol?.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+			string baseName = baseSymbol?.ToDisplayString();
 
 
 			Code.AppendLine("	{");

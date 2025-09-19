@@ -28,13 +28,35 @@ namespace WorldTree
 		/// </summary>
 		public static IBranch AddBranch(INode self, long type)
 		{
-			// 拿到分支字典
-			var branchDict = self.BranchDict ??= self.Core.PoolGetUnit<BranchGroup>();
-			if (!branchDict.TryGetValue(type, out IBranch iBranch))
+			//// 拿到分支字典
+			//var branchDict = self.BranchDict ??= self.Core.PoolGetUnit<BranchGroup>();
+			//if (!branchDict.TryGetBranch(type, out IBranch iBranch))
+			//	branchDict.TryAddBranch(type, iBranch = self.Core.PoolGetUnit(type) as IBranch);
+			//return iBranch;
+
+
+			IBranch branch = null;
+			// 第一个分支，直接创建单个分支
+			if (self.BranchDict == null)
 			{
-				branchDict.Add(type, iBranch = self.Core.PoolGetUnit(type) as IBranch);
+				branch = self.Core.PoolGetUnit(type) as IBranch;
+				self.BranchDict = branch;
+				return branch;
 			}
-			return iBranch;
+
+			// 已经是分支集合了,查找是否存在
+			if (self.BranchDict.TryGetBranch(type, out branch)) return branch;
+
+			// 需要添加第二个分支，升级为 BranchGroup
+			if (self.BranchDict is not BranchGroup)
+			{
+				IBranch oldBranch = self.BranchDict as IBranch;
+				self.BranchDict = self.Core.PoolGetUnit<BranchGroup>();
+				self.BranchDict.TryAddBranch(oldBranch.Type, oldBranch);
+			}
+			branch = self.Core.PoolGetUnit(type) as IBranch;
+			self.BranchDict.TryAddBranch(type, branch);
+			return branch;
 		}
 
 		#endregion
@@ -46,17 +68,51 @@ namespace WorldTree
 		/// </summary>
 		public static void RemoveNode(INode self)
 		{
+			//if (self?.Parent == null) return;
+			//if (TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
+			//{
+			//	branch.RemoveNode(self.Id);
+			//	if (branch.Count == 0)
+			//	{
+			//		//移除分支
+			//		self.Parent.BranchDict.RemoveBranch(self.BranchType);
+			//		if (self.Parent.BranchDict.BranchCount == 0)
+			//		{
+			//			self.Parent.BranchDict.Dispose();
+			//			self.Parent.BranchDict = null;
+			//		}
+			//		//释放分支
+			//		branch.Dispose();
+			//	}
+			//}
 			if (self?.Parent == null) return;
 			if (TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
 			{
 				branch.RemoveNode(self.Id);
 				if (branch.Count == 0)
 				{
-					//移除分支
-					self.Parent.BranchDict.Remove(self.BranchType);
-					if (self.Parent.BranchDict.Count == 0)
+					if (self.Parent.BranchDict is BranchGroup branchGroup)
 					{
-						self.Parent.BranchDict.Dispose();
+						//移除分支
+						self.Parent.BranchDict.RemoveBranch(self.BranchType);
+						if (self.Parent.BranchDict.BranchCount == 0)
+						{
+							self.Parent.BranchDict.Dispose();
+							self.Parent.BranchDict = null;
+						}
+						else if (self.Parent.BranchDict.BranchCount == 1)
+						{
+							//如果只剩一个分支了，就把分支集合给释放掉，节省内存
+							var enumerator = self.Parent.BranchDict.GetEnumerator();
+							enumerator.MoveNext();
+							var lastBranch = enumerator.Current;
+							self.Parent.BranchDict.Dispose();
+							self.Parent.BranchDict = null;
+							self.Parent.BranchDict = lastBranch;
+						}
+					}
+					else
+					{
 						self.Parent.BranchDict = null;
 					}
 					//释放分支
@@ -78,25 +134,25 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取分支
 		/// </summary>
-		public static bool TryGetBranch(INode self, long branchType, out IBranch branch) => (branch = (self.BranchDict != null && self.BranchDict.TryGetValue(branchType, out branch)) ? branch : null) != null;
+		public static bool TryGetBranch(INode self, long branchType, out IBranch branch) => (branch = (self.BranchDict != null && self.BranchDict.TryGetBranch(branchType, out branch)) ? branch : null) != null;
 
 		/// <summary>
 		/// 获取分支
 		/// </summary>
-		public static IBranch GetBranch(INode self, long branchType) => (self.BranchDict != null && self.BranchDict.TryGetValue(branchType, out IBranch iBranch)) ? iBranch : null;
+		public static IBranch GetBranch(INode self, long branchType) => (self.BranchDict != null && self.BranchDict.TryGetBranch(branchType, out IBranch iBranch)) ? iBranch : null;
 
 
 		/// <summary>
 		/// 尝试获取分支
 		/// </summary>
 		public static bool TryGetBranch<B>(INode self, out B branch) where B : class, IBranch
-			=> (branch = (self.BranchDict != null && self.BranchDict.TryGetValue(self.TypeToCode<B>(), out IBranch Ibranch)) ? Ibranch as B : null) != null;
+			=> (branch = (self.BranchDict != null && self.BranchDict.TryGetBranch(self.TypeToCode<B>(), out IBranch Ibranch)) ? Ibranch as B : null) != null;
 
 		/// <summary>
 		/// 获取分支
 		/// </summary>
 		public static B GetBranch<B>(INode self) where B : class, IBranch
-			=> (self.BranchDict != null && self.BranchDict.TryGetValue(self.TypeToCode<B>(), out IBranch iBranch)) ? iBranch as B : null;
+			=> (self.BranchDict != null && self.BranchDict.TryGetBranch(self.TypeToCode<B>(), out IBranch iBranch)) ? iBranch as B : null;
 
 		/// <summary>
 		/// 尝试获取键值

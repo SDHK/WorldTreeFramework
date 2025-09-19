@@ -34,7 +34,7 @@ namespace WorldTree
 		[TreeCopyIgnore]
 		public bool IsDisposed { get; set; }
 
-		public void OnCreate() { }
+		public virtual void OnCreate() { }
 
 		public void Dispose()
 		{
