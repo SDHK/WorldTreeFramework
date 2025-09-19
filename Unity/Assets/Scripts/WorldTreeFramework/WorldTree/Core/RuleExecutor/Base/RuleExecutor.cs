@@ -180,7 +180,8 @@ namespace WorldTree
 			isInit = nextTraversalCount == 0;
 
 			//奇偶切换点是上次遍历的数量 - 上次空洞数量
-			switchPoint = traversalCount - (readPoint - writePoint);
+			//上次遍历完毕后，读指针可能跨步为2，大于遍历数量，包含了不属于它的空间，所以只能用traversalCount
+			switchPoint = traversalCount - (traversalCount - writePoint);
 
 			//新增位置是切换点 + 上次新节点数量
 			addStartIndex = switchPoint + nowNewCount;
@@ -264,8 +265,6 @@ namespace WorldTree
 				readPoint += indexInterval;
 				return true;
 			}
-			// 遍历完毕后，读指针可能跨步2大于遍历数量，这时需要矫正读指针
-			readPoint = traversalCount;
 
 			if (nowNewCount == 0)
 			{
