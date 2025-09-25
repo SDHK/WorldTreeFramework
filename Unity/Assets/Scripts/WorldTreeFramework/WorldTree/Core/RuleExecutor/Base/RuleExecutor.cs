@@ -179,9 +179,8 @@ namespace WorldTree
 			// 判断如果下一次遍历数量为0，说明没有可遍历的节点，当前数组为空，直接恢复为初始化状态
 			isInit = nextTraversalCount == 0;
 
-			//奇偶切换点是上次遍历的数量 - 上次空洞数量
-			//上次遍历完毕后，读指针可能跨步为2，大于遍历数量，包含了不属于它的空间，所以只能用traversalCount
-			switchPoint = traversalCount - (traversalCount - writePoint);
+			//奇偶切换点是读取指针最后停下的位置
+			switchPoint = writePoint;
 
 			//新增位置是切换点 + 上次新节点数量
 			addStartIndex = switchPoint + nowNewCount;

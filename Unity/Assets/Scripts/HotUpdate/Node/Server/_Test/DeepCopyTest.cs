@@ -63,6 +63,7 @@ namespace WorldTree.Server
 		/// ×Ö·û´®
 		/// </summary>
 		public string ValueString = "ABC";
+
 	}
 
 
@@ -94,7 +95,10 @@ namespace WorldTree.Server
 		/// a
 		/// </summary>
 		public float Value21 { get => Value2; set => Value2 = value; }
-
+		/// <summary>
+		/// ²âÊÔ
+		/// </summary>
+		public float Value3 = 1f;
 		public CopyTestStruct()
 		{
 		}
