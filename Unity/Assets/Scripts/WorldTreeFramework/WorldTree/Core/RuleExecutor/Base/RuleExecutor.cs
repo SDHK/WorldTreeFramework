@@ -17,7 +17,7 @@
 * 1. 双模式遍历：前半段+1连续，后半段+2奇偶。
 * 2. 奇偶时空切换点：switchPoint = traversalCount - lastVacuityCount
 * 3. 空洞填充点：addStartIndex = switchPoint + nowNewCount
-* 4. 渐进式压缩：边遍历边整理，遍历和添加同时在压缩空洞，无突发性能开销。
+* 4. 双模式压缩：边遍历边整理，遍历和添加同时在压缩空洞。
 * 5. 最好情况：数据没有增删时，只有连续访问单个操作，没有写入操作
 * 6. 遍历时删除和新增数据，顺序稳定不变，这是其它方案绝对做不到的，难得的时序稳定能力。
 * 
@@ -152,8 +152,8 @@ namespace WorldTree
 		{
 			// 如果目标容量小于当前节点数量，则设置为当前节点数量的两倍,为0则设置为4
 			int num = this.nodes.Length != 0 ? this.nodes.Length * 2 : 4;
-			if (num < this.nextTraversalCount) this.LogError("下标小于当前大小");
 			if (num == this.nodes.Length) return;
+			if (num < this.nextTraversalCount) this.LogError("下标小于当前大小");
 			if (num > 0)
 			{
 				var newNodes = this.Core.PoolGetArray<RuleExecutorPair>(num);

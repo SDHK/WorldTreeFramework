@@ -28,13 +28,6 @@ namespace WorldTree
 		/// </summary>
 		public static IBranch AddBranch(INode self, long type)
 		{
-			//// 拿到分支字典
-			//var branchDict = self.BranchDict ??= self.Core.PoolGetUnit<BranchGroup>();
-			//if (!branchDict.TryGetBranch(type, out IBranch iBranch))
-			//	branchDict.TryAddBranch(type, iBranch = self.Core.PoolGetUnit(type) as IBranch);
-			//return iBranch;
-
-
 			IBranch branch = null;
 			// 第一个分支，直接创建单个分支
 			if (self.BranchDict == null)
@@ -68,23 +61,6 @@ namespace WorldTree
 		/// </summary>
 		public static void RemoveNode(INode self)
 		{
-			//if (self?.Parent == null) return;
-			//if (TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
-			//{
-			//	branch.RemoveNode(self.Id);
-			//	if (branch.Count == 0)
-			//	{
-			//		//移除分支
-			//		self.Parent.BranchDict.RemoveBranch(self.BranchType);
-			//		if (self.Parent.BranchDict.BranchCount == 0)
-			//		{
-			//			self.Parent.BranchDict.Dispose();
-			//			self.Parent.BranchDict = null;
-			//		}
-			//		//释放分支
-			//		branch.Dispose();
-			//	}
-			//}
 			if (self?.Parent == null) return;
 			if (TryGetBranch(self.Parent, self.BranchType, out IBranch branch))
 			{
