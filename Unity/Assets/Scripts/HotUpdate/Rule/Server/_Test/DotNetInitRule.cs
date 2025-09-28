@@ -192,17 +192,17 @@ namespace WorldTree.Server
 		/// 按钮方法
 		/// </summary>
 		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>), true)]
-		[RuleSwitch(nameof(OnTestNodeEventRule), nameof(id), TestEnum.Test2)]
+		[RuleSwitch(nameof(OnTestNodeEventRule), nameof(self.ConfigId), 1)]
 		static void OnTestNodeEventRule<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
 		{
-			//NodeRuleHelper.SendRule(self, default(OnTestNodeEvent<Type>), id, io, arg3);
 		}
 
 
-		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>), true)]
-		[RuleSwitch(nameof(OnTestNodeEvent2Rule), nameof(id), default(TestEnum))]
+		[NodeRule(nameof(TestNodeEventRule<Test<T>, Type>))]
+		[RuleSwitch(nameof(OnTestNodeEventRule), nameof(self.ConfigId), 2)]
 		static void OnTestNodeEvent2Rule<T>(this Test<T> self, TestEnum id, Type io, List<int> arg3)
 		{
+
 		}
 
 		/// <summary>

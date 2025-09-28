@@ -107,6 +107,11 @@ namespace WorldTree
 	[AttributeUsage(AttributeTargets.Method)]
 	public class NodeRuleAttribute : Attribute
 	{
+		/// <summary>
+		/// 节点法则
+		/// </summary>
+		/// <param name="rule">法则类型</param>
+		/// <param name="ruleType">生成方法名称的法则接口</param>
 		public NodeRuleAttribute(string rule, bool ruleType = false) { }
 	}
 
@@ -117,6 +122,12 @@ namespace WorldTree
 	[AttributeUsage(AttributeTargets.Method)]
 	public class RuleSwitchAttribute : Attribute
 	{
+		/// <summary>
+		/// 法则分流
+		/// </summary>
+		/// <param name="ruleName">分流的名称</param>
+		/// <param name="switchValue">判断值</param>
+		/// <param name="caseKey">匹配键值</param>
 		public RuleSwitchAttribute(string ruleName, string switchValue, object caseKey) { }
 	}
 

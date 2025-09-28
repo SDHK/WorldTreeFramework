@@ -270,7 +270,15 @@ namespace WorldTree.SourceGenerator
 				{
 					if (classData.isSwitch)
 					{
-						AddClassSwitch(ClassCode, classData);
+						// 根据分支数量或类型选择实现方式
+						if (classData.Methods.Count <= 10)
+						{
+							AddClassSwitch(ClassCode, classData);  // 使用 Switch 实现
+						}
+						else
+						{
+							AddClassSwitchDict(ClassCode, classData);  // 使用 Dictionary 实现
+						}
 					}
 					else
 					{
@@ -423,7 +431,7 @@ namespace WorldTree.SourceGenerator
 			}
 		}
 
-		private void AddClassSwitch(StringBuilder classCode, RuleClassData classData)
+		private void AddClassSwitchDict(StringBuilder classCode, RuleClassData classData)
 		{
 			if (classData.Methods.Count == 0) return;
 			typeNames.Clear();
@@ -573,6 +581,174 @@ namespace WorldTree.SourceGenerator
 			classCode.AppendLine($"		}}");
 		}
 
+
+		/// <summary>
+		/// 使用 Switch 语句生成法则分发类（性能优化版本）
+		/// </summary>
+		private void AddClassSwitch(StringBuilder classCode, RuleClassData classData)
+		{
+			if (classData.Methods.Count == 0) return;
+
+			typeNames.Clear();
+			typeTNames.Clear();
+			List<ITypeSymbol> types = classData.baseTypeSymbol.TypeArguments.ToList();
+
+			//监听法则最后一个泛型参数是Rule类型，直接忽略
+			if (classData.ruleBaseEnum == RuleBaseEnum.ListenerRule) types.RemoveAt(types.Count - 1);
+
+			for (int i = 0; i < types.Count; i++)
+			{
+				//基类第二个泛型参数是Rule类型，直接忽略
+				if (i == 1) continue;
+				typeNames.Add(types[i].ToDisplayString());
+				ParseTypeSymbol(types[i], typeTNames);
+			}
+
+			string typeTName = typeTNames.Count == 0 ? "" : $"<{string.Join(", ", typeTNames)}>";
+			bool isCall = classData.ruleBaseEnum is RuleBaseEnum.CallRule or RuleBaseEnum.CallRuleAsync;
+			string genericTypeParameter = GetRuleTypeParameter(typeNames, isCall, out string outType);
+			string genericParameter = GetRuleParameter(typeNames, isCall, out _);
+
+			// 生成接口（如果需要）
+			if (classData.isRuleType)
+			{
+				// 检查类型是否符合规则
+				if (!NamedSymbolHelper.CheckBase(classData.ruleTypeSymbol, GeneratorHelper.Rule, out ITypeSymbol typeSymbol)) return;
+
+				// 获取typeSymbol 类型的第二个泛型参数类型
+				ITypeSymbol ruleTypeSymbol = (typeSymbol as INamedTypeSymbol).TypeArguments[1];
+				string ClassName = classData.ClassName.Replace("Rule", "");
+				classCode.AppendLine(classData.Comment);
+				classCode.AppendLine($"		public interface {ClassName}{typeTName} : {ruleTypeSymbol.Name}{typeTName} {{}}");
+			}
+
+			// 生成类声明
+			classCode.AppendLine($"		sealed class {classData.ClassName}_RuleMethod{typeTName} : {classData.ruleTypeSymbol.ToDisplayString()}");
+			classCode.AppendLine($"		{{");
+
+			// 生成 OnCreate 方法（如果需要）
+			if (classData.isRuleType)
+			{
+				string ClassName = classData.ClassName.Replace("Rule", "");
+				classCode.AppendLine(
+					$$"""
+								public override void OnCreate() 
+								{
+									base.OnCreate();
+									RuleType = Core.TypeToCode(typeof({{ClassName}}{{typeTName}}));
+								}
+					"""
+				);
+			}
+
+			// 生成 Switch 语句的 Execute 方法
+			GenerateSwitchExecuteMethod(classCode, classData, genericTypeParameter, genericParameter, outType);
+
+			classCode.AppendLine($"		}}");
+		}
+
+		/// <summary>
+		/// 生成基于 Switch 语句的 Execute 方法
+		/// </summary>
+		private void GenerateSwitchExecuteMethod(StringBuilder classCode, RuleClassData classData,
+			string genericTypeParameter, string genericParameter, string outType)
+		{
+			switch (classData.ruleBaseEnum)
+			{
+				case RuleBaseEnum.SendRule:
+				case RuleBaseEnum.ListenerRule:
+					classCode.AppendLine(
+					$$"""
+								protected override void Execute({{genericTypeParameter}}) 
+								{
+									switch ({{classData.switchValue}})
+									{
+					""");
+
+					foreach (var methodData in classData.Methods)
+					{
+						string methodName = methodData.Method.Identifier.Text;
+						classCode.AppendLine($"					case {methodData.caseValue}: {methodName}({genericParameter}); break;");
+					}
+
+					classCode.AppendLine(
+					"""
+									}
+								}
+					""");
+					break;
+
+				case RuleBaseEnum.SendRuleAsync:
+					classCode.AppendLine(
+					$$"""
+								protected override TreeTask Execute({{genericTypeParameter}})
+								{
+									switch ({{classData.switchValue}})
+									{
+					""");
+
+					foreach (var methodData in classData.Methods)
+					{
+						string methodName = methodData.Method.Identifier.Text;
+						classCode.AppendLine($"					case {methodData.caseValue}: return {methodName}({genericParameter});");
+					}
+
+					classCode.AppendLine(
+					"""
+									}
+									return self.TreeTaskCompleted();
+								}
+					""");
+					break;
+
+				case RuleBaseEnum.CallRule:
+					classCode.AppendLine(
+					$$"""
+								protected override {{outType}} Execute({{genericTypeParameter}}) 
+								{
+									switch ({{classData.switchValue}})
+									{
+					""");
+
+					foreach (var methodData in classData.Methods)
+					{
+						string methodName = methodData.Method.Identifier.Text;
+						classCode.AppendLine($"					case {methodData.caseValue}: return {methodName}({genericParameter});");
+					}
+
+					classCode.AppendLine(
+					$$"""
+									}
+									return default({{outType}});
+								}
+					""");
+					break;
+
+				case RuleBaseEnum.CallRuleAsync:
+					classCode.AppendLine(
+					$$"""
+								protected override async TreeTask<{{outType}}> Execute({{genericTypeParameter}})
+								{
+									switch ({{classData.switchValue}})
+									{
+					""");
+
+					foreach (var methodData in classData.Methods)
+					{
+						string methodName = methodData.Method.Identifier.Text;
+						classCode.AppendLine($"					case {methodData.caseValue}: return await {methodName}({genericParameter});");
+					}
+
+					classCode.AppendLine(
+					$$"""
+									}
+									await self.TreeTaskCompleted();
+									return default({{outType}});
+								}
+					""");
+					break;
+			}
+		}
 
 
 		/// <summary>
