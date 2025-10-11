@@ -17,6 +17,7 @@ namespace WorldTree
 	{ }
 
 
+
 	class CurveBaseCurveEvaluateRule : CurveEvaluateRule<CurveBase>
 	{
 		protected override float Execute(CurveBase self, float arg1)

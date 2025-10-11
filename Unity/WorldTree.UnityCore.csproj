@@ -57,7 +57,6 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowLostFocusRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Item\MonoObject.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\EditorRunTime\UnityWorldTreeNodeView\UnityWorldTreeNodeViewBuilder.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\Base\GUIBase.cs" />
@@ -67,29 +66,24 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\UnityWorldHeart.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\MainWorld.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Manager\GameObjectPoolManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowFocusUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\Mathf\MathfVector2.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\LateUpdate\LateUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIBox.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectBox\WorldTreeStruct\Vector3FloatConversion.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\DrawGizmosUpdate\DrawGizmosUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\Extension\AsyncOperationExtension.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowCloseRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WindowFocusRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIBeginVertical.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIRepeatButton.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Tools\Extension\TransformExtension.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ThirdParty\YooAsset\YooAssetManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\_Init\UnityWorldTree.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Assets\AssetBundle\AssetManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\Rule\WIndowUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Core\Log\UnityWorldLog.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIComponent\GUIBeginScrollView.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\GUI\GUIWindow\GUIWindow.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Assets\AssetBundle\RuleBase\LoadAssetAsyncRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\EditorRunTime\UnityWorldTreeNodeView\UnityWorldTreeNodeView.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Extension\GameObjectNodeHelper.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\UI\WindowManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ObjectPool\Pool\GameObjectPool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\ThirdParty\Addressables\AddressablesManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Assets\ColorTexture2D\ColorTexture2DManager.cs" />

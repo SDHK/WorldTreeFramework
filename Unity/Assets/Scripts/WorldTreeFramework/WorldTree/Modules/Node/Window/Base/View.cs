@@ -2,26 +2,20 @@
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 视图接口：作为UI打开的初始数据
-	/// </summary>
-	public interface IView : INode
-	{
-
-		/// <summary>
-		/// 视图绑定类型
-		/// </summary>
-		public long ViewBindType { get; set; }
-	}
 
 	/// <summary>
-	/// 视图适配绑定接口：桥接具体的UI组件
+	/// 打开
 	/// </summary>
-	public interface IViewBind : INode
-	{
+	public interface Open : ISendRule { }
+
+	/// <summary>
+	/// 关闭
+	/// </summary>
+	public interface Close : ISendRule { }
 
 
-	}
+
+	//=========
 
 	//IWidget
 	/// <summary>
@@ -33,28 +27,74 @@ namespace WorldTree
 	}
 
 
+	//V和VB都是纯数据，V是初始化数据，VB负责桥接具体UI组件。
+
+	//Register子级组件> Open，Refresh，Close> UnRegister子级组件，方法写到View里。
+	//Close融入Dispose
+
+
+
 	/// <summary>
-	/// 视图基类
+	/// 视图基类：作为UI打开的初始数据
 	/// </summary>
-	public abstract class View<VB> : Node, IView
-		, ComponentOf<WindowManager>
+	public abstract class View : Node
 		, AsComponentBranch
-		where VB : class, IViewBind
+		, ChildOf<ViewBind>
+		, AsRule<Awake>
+		, AsRule<Open>
 	{
 		/// <summary>
 		/// 组件
 		/// </summary>
-		public NodeRef<IViewBind> ViewBind;
+		public NodeRef<ViewBind> Bind { get; set; }
+		/// <summary>
+		/// 视图绑定类型
+		/// </summary>
 		public long ViewBindType { get; set; }
+
+
+		/// <summary>
+		/// 是否打开
+		/// </summary>
+		public bool IsOpen;
+
+		/// <summary>
+		/// 是否显示？？？
+		/// </summary>
+		public bool IsShow;
+
+
+
+
 	}
 
+
 	/// <summary>
-	/// 视图适配绑定基类, 反找IView,反映到具体的UI组件
+	/// 视图泛型基类
 	/// </summary>
-	public abstract class ViewBind : Node, IViewBind
+	public abstract class View<VB> : View
 		, ComponentOf<WindowManager>
-		, ComponentOf<IView>
 		, AsComponentBranch
+		where VB : ViewBind
+	{
+		/// <summary>
+		/// 视图绑定
+		/// </summary>
+		public VB ViewBind => Bind.Value as VB;
+
+
+	}
+
+
+	/// <summary>
+	/// 视图适配绑定基类, 桥接具体的UI组件
+	/// </summary>
+	public abstract class ViewBind : Node
+		, ComponentOf<WindowManager>
+		, ComponentOf<View>
+		, AsComponentBranch
+		, AsChildBranch
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// UI实例
@@ -86,7 +126,10 @@ namespace WorldTree
 	/// </summary>
 	public class ViewTest : View<ViewTestBind>
 	{
-
+		/// <summary>
+		/// 名称
+		/// </summary>
+		public string Name;
 
 	}
 
@@ -141,15 +184,21 @@ namespace WorldTree
 		public RuleUnicast<ISendRule> OnChange;
 	}
 
+
+	/// <summary>
+	/// 按钮绑定
+	/// </summary>
+	public class ViewGroupBind : ViewBind { }
+
 	/// <summary>
 	/// 窗口组
 	/// </summary>
-	public class ViewGroup : View<ViewBind>
+	public class ViewGroup : View<ViewGroupBind>
 		, AsBranch<ChildBranch>
 	{
 		/// <summary>
 		/// 子窗口数据集合
 		/// </summary>
-		public HashSet<NodeRef<IView>> nodeHash;
+		public HashSet<NodeRef<View>> nodeHash;
 	}
 }

@@ -42,8 +42,8 @@ namespace WorldTree
 				byte[] ruleDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.Rule.dll"));
 				byte[] rulePdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.Rule.pdb"));
 
-				byte[] ruleUnityDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.RuleUnity.dll"));
-				byte[] ruleUnityPdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.RuleUnity.pdb"));
+				byte[] ruleUnityDllBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.UnityRule.dll"));
+				byte[] ruleUnityPdbBytes = File.ReadAllBytes(Path.Combine(hotPath, "WorldTree.UnityRule.pdb"));
 
 				Assembly hotfixModuleAssembly = Assembly.Load(ruleModuleDllBytes, ruleModulePdbBytes);
 
