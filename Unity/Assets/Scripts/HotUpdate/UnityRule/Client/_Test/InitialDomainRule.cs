@@ -47,7 +47,7 @@ namespace WorldTree
 			{
 				self.Log($"初始域热更测试！！!");
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
-				//self.AddComponent(out TreeDataTest _);
+				self.AddComponent(out TreeDataTest _);
 
 				//NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
 			}

@@ -2,21 +2,6 @@
 
 namespace WorldTree
 {
-
-	/// <summary>
-	/// 打开
-	/// </summary>
-	public interface Open : ISendRule { }
-
-	/// <summary>
-	/// 关闭
-	/// </summary>
-	public interface Close : ISendRule { }
-
-
-
-	//=========
-
 	//IWidget
 	/// <summary>
 	/// 视图元素：具体平台实现的UI组件接口，自动反向绑定到IViewBind
@@ -26,45 +11,80 @@ namespace WorldTree
 
 	}
 
-
 	//V和VB都是纯数据，V是初始化数据，VB负责桥接具体UI组件。
 
 	//Register子级组件> Open，Refresh，Close> UnRegister子级组件，方法写到View里。
 	//Close融入Dispose
+	//show融入IsActive
 
 
+	/// <summary>
+	/// 视图接口
+	/// </summary>
+	public interface IView
+	{
+		/// <summary>
+		/// 打开
+		/// </summary>
+		public void Open();
+		/// <summary>
+		///  关闭
+		/// </summary>
+		public void Close();
+	}
 
 	/// <summary>
 	/// 视图基类：作为UI打开的初始数据
 	/// </summary>
-	public abstract class View : Node
+	public abstract class View : Node, IView
 		, AsComponentBranch
 		, ChildOf<ViewBind>
 		, AsRule<Awake>
 		, AsRule<Open>
+		, AsRule<ViewRegister>
+		, AsRule<Close>
+		, AsRule<ViewUnRegister>
 	{
 		/// <summary>
 		/// 组件
 		/// </summary>
 		public NodeRef<ViewBind> Bind { get; set; }
+
 		/// <summary>
 		/// 视图绑定类型
 		/// </summary>
 		public long ViewBindType { get; set; }
 
-
 		/// <summary>
 		/// 是否打开
 		/// </summary>
-		public bool IsOpen;
+		public bool IsOpen => Bind != null;
 
 		/// <summary>
-		/// 是否显示？？？
+		/// 是否显示 
 		/// </summary>
-		public bool IsShow;
+		public bool IsShow
+		{
+			get => Bind != null && Bind.Value.IsActive;
+			set => Bind.Value?.SetActive(value);
+		}
 
+		public void Open()
+		{
+			if (IsOpen) return;
 
+			if (this.Bind == null)
+			{
+				this.Bind = new(NodeBranchHelper.AddNode(this, default(ComponentBranch), this.ViewBindType, out ViewBind _));
+			}
+		}
 
+		public void Close()
+		{
+			if (!IsOpen) return;
+			this.Bind.Value.Dispose();
+			this.Bind = null;
+		}
 
 	}
 
@@ -81,27 +101,11 @@ namespace WorldTree
 		/// 视图绑定
 		/// </summary>
 		public VB ViewBind => Bind.Value as VB;
-
-
 	}
 
 
-	/// <summary>
-	/// 视图适配绑定基类, 桥接具体的UI组件
-	/// </summary>
-	public abstract class ViewBind : Node
-		, ComponentOf<WindowManager>
-		, ComponentOf<View>
-		, AsComponentBranch
-		, AsChildBranch
-		, AsRule<Awake>
-	{
-		/// <summary>
-		/// UI实例
-		/// </summary>
-		public IViewElement ui;
 
-	}
+
 	//========
 
 	/// <summary>

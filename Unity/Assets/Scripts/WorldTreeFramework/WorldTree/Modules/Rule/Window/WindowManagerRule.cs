@@ -10,11 +10,7 @@ namespace WorldTree
 {
 	public static class WindowManagerRule
 	{
-		//V和VB都是纯数据，V是初始化数据，VB负责桥接具体UI组件。
-		//Open，Close是V是否拥有VB。
-		//Show,Hide是VB的显示隐藏，融入激活。
-		//融入Dispose
-		//普通组件没有show,hide
+
 
 		/// <summary>
 		/// 添加视图数据
@@ -40,13 +36,6 @@ namespace WorldTree
 		/// </summary>
 		public static void OpenView(this View self)
 		{
-			if (self.Bind.Value == null)
-			{
-				self.Bind = new(NodeBranchHelper.AddNode(self, default(ComponentBranch), self.ViewBindType, out ViewBind _));
-				NodeRuleHelper.SendRule(self, default(Open));
-			}
-			//UI组件加载
-			//Open UI
 		}
 
 		/// <summary>
@@ -55,7 +44,6 @@ namespace WorldTree
 		public static void Test()
 		{
 			ViewGroup viewGroup = new();
-
 			viewGroup.AddView(out ViewTest view);
 			view.Name = "测试窗口";
 			view.OpenView();

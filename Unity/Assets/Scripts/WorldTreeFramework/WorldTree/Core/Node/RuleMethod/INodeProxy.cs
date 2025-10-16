@@ -1,11 +1,11 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2025/7/10 11:42
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2025/7/10 11:42
 
-* ÃèÊö£ºINode½Ó¿Ú´úÀíÊµÏÖ
+* æè¿°ï¼šINodeæ¥å£ä»£ç†å®ç°
 
-* ´úÀíÊµÏÖINode½Ó¿Ú·½·¨£¬ÎªÁË·½±ãÉú³ÉNode²¿·ÖÀà´úÂë
+* ä»£ç†å®ç°INodeæ¥å£æ–¹æ³•ï¼Œä¸ºäº†æ–¹ä¾¿ç”ŸæˆNodeéƒ¨åˆ†ç±»ä»£ç 
 
 */
 
@@ -17,12 +17,12 @@ namespace WorldTree
 
 
 	/// <summary>
-	/// INode½Ó¿Ú´úÀíÊµÏÖ
+	/// INodeæ¥å£ä»£ç†å®ç°
 	/// </summary>
 	public static partial class INodeProxyRule
 	{
 		/// <summary>
-		/// ÉèÖÃ¼¤»î
+		/// è®¾ç½®æ¿€æ´»
 		/// </summary>
 		public static void SetActive(INode self, bool value)
 		{
@@ -34,20 +34,20 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// Ë¢ĞÂµ±Ç°½Úµã¼¤»î×´Ì¬£º²ãĞò±éÀúÉèÖÃ×Ó½Úµã
+		/// åˆ·æ–°å½“å‰èŠ‚ç‚¹æ¿€æ´»çŠ¶æ€ï¼šå±‚åºéå†è®¾ç½®å­èŠ‚ç‚¹
 		/// </summary>
 		public static void RefreshActive(INode self)
 		{
-			//Èç¹û×´Ì¬ÏàÍ¬£¬²»ĞèÒªË¢ĞÂ
+			//å¦‚æœçŠ¶æ€ç›¸åŒï¼Œä¸éœ€è¦åˆ·æ–°
 			if (self.IsActive == ((self.Parent == null) ? self.ActiveToggle : self.Parent.IsActive && self.ActiveToggle)) return;
 
-			//²ãĞò±éÀúÉèÖÃ×Ó½Úµã
+			//å±‚åºéå†è®¾ç½®å­èŠ‚ç‚¹
 			using (self.Core.PoolGetUnit(out UnitQueue<INode> queue))
 			{
 				queue.Enqueue(self);
 				while (queue.Count != 0)
 				{
-					// ¹ã¶ÈÓÅÏÈ£¬³ö¶Ó
+					// å¹¿åº¦ä¼˜å…ˆï¼Œå‡ºé˜Ÿ
 					var current = queue.Dequeue();
 					if (current.IsActive != ((current.Parent == null) ? current.ActiveToggle : current.Parent.IsActive && current.ActiveToggle))
 					{
@@ -73,19 +73,19 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// ×Ö·û´®»¯µ±Ç°½Úµã
+		/// å­—ç¬¦ä¸²åŒ–å½“å‰èŠ‚ç‚¹
 		/// </summary>
 		public static string ToString(INode self)
 		{
 			return self.GetType().ToString();
 		}
 
-		#region ½Úµã´¦Àí
+		#region èŠ‚ç‚¹å¤„ç†
 
-		#region ´´½¨
+		#region åˆ›å»º
 
 		/// <summary>
-		/// ´´½¨Ê±£ºNodeµÄId»ñÈ¡ºÍ·¨ÔòÖ§³Ö
+		/// åˆ›å»ºæ—¶ï¼šNodeçš„Idè·å–å’Œæ³•åˆ™æ”¯æŒ
 		/// </summary>
 		public static void OnCreate(INode self)
 		{
@@ -96,10 +96,10 @@ namespace WorldTree
 
 		#endregion
 
-		#region Ìí¼Ó
+		#region æ·»åŠ 
 
 		/// <summary>
-		/// ³¢ÊÔ½«×ÔÉíÌí¼Óµ½Ê÷½á¹¹£¨´úÀí·½·¨£©
+		/// å°è¯•å°†è‡ªèº«æ·»åŠ åˆ°æ ‘ç»“æ„ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static bool TryAddSelfToTree<B, K>(this INode self, K key, INode parent)
 			where B : class, IBranch<K>
@@ -110,7 +110,7 @@ namespace WorldTree
 				self.Parent = parent;
 				self.Core = parent.Core;
 				self.World = parent.World;
-				self.SetActive(true);//¼¤»î½Úµã
+				self.SetActive(true);//æ¿€æ´»èŠ‚ç‚¹
 				AddNodeView(self);
 				return true;
 			}
@@ -118,43 +118,43 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// Ìí¼ÓÊ±
+		/// æ·»åŠ æ—¶
 		/// </summary>
 		/// <summary>
-		/// ½Úµã¼ÓÈëÊ÷½á¹¹Ê±µÄ´¦Àí£¨´úÀí·½·¨£©
+		/// èŠ‚ç‚¹åŠ å…¥æ ‘ç»“æ„æ—¶çš„å¤„ç†ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static void OnAddSelfToTree(this INode self)
 		{
-			self.Core.ReferencedPoolManager.TryAdd(self);//Ìí¼Óµ½ÒıÓÃ³Ø
-			if (self is not IListenerIgnorer)//¹ã²¥¸øÈ«²¿¼àÌıÆ÷
+			self.Core.ReferencedPoolManager.TryAdd(self);//æ·»åŠ åˆ°å¼•ç”¨æ± 
+			if (self is not IListenerIgnorer)//å¹¿æ’­ç»™å…¨éƒ¨ç›‘å¬å™¨
 			{
 				IRuleExecutor<ListenerAdd> ruleActuator = NodeListenerExecutorHelper.GetListenerExecutor<ListenerAdd>(self);
 				ruleActuator?.Send(self);
 			}
-			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//¼ì²â×ÔÉíÊÇ·ñÎª¼àÌıÆ÷
+			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//æ£€æµ‹è‡ªèº«æ˜¯å¦ä¸ºç›‘å¬å™¨
 			{
 				self.Core.ReferencedPoolManager.TryAddListener(nodeListener);
 			}
-			if (self.IsActive != self.activeEventMark)//¼¤»î±ä¸ü
+			if (self.IsActive != self.activeEventMark)//æ¿€æ´»å˜æ›´
 			{
 				if (self.IsActive)
 				{
-					self.Core.EnableRuleGroup?.Send(self);//¼¤»îÊÂ¼şÍ¨Öª
+					self.Core.EnableRuleGroup?.Send(self);//æ¿€æ´»äº‹ä»¶é€šçŸ¥
 				}
 				else
 				{
-					self.Core.DisableRuleGroup?.Send(self); //½ûÓÃÊÂ¼şÍ¨Öª
+					self.Core.DisableRuleGroup?.Send(self); //ç¦ç”¨äº‹ä»¶é€šçŸ¥
 				}
 			}
-			self.Core.AddRuleGroup?.Send(self);//½ÚµãÌí¼ÓÊÂ¼şÍ¨Öª
+			self.Core.AddRuleGroup?.Send(self);//èŠ‚ç‚¹æ·»åŠ äº‹ä»¶é€šçŸ¥
 		}
 
 		#endregion
 
-		#region ÒÆ³ı
+		#region ç§»é™¤
 
 		/// <summary>
-		/// ÊÍ·ÅËùÓĞ·ÖÖ§µÄËùÓĞ½Úµã£¨´úÀí·½·¨£©
+		/// é‡Šæ”¾æ‰€æœ‰åˆ†æ”¯çš„æ‰€æœ‰èŠ‚ç‚¹ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static void RemoveAllNode(INode self)
 		{
@@ -165,19 +165,19 @@ namespace WorldTree
 				while (branchs.Count != 0) self.RemoveAllNode(branchs.Pop().Type);
 			}
 
-			//¼ÙÈçÔÚ·ÖÖ§ÒÆ³ı¹ı³ÌÖĞ£¬½ÚµãÓÖÌí¼ÓÁËĞÂµÄ·ÖÖ§¡£ÄÇÃ´¾ÍÊÇ´íÎóµÄ£¬ĞÂÔö·ÖÖ§½«ÎŞ·¨»ØÊÕ¡£
+			//å‡å¦‚åœ¨åˆ†æ”¯ç§»é™¤è¿‡ç¨‹ä¸­ï¼ŒèŠ‚ç‚¹åˆæ·»åŠ äº†æ–°çš„åˆ†æ”¯ã€‚é‚£ä¹ˆå°±æ˜¯é”™è¯¯çš„ï¼Œæ–°å¢åˆ†æ”¯å°†æ— æ³•å›æ”¶ã€‚
 			if (self.BranchDict.BranchCount != 0)
 			{
 				foreach (var item in self.BranchDict)
 				{
-					self.Log($"ÒÆ³ı·ÖÖ§³ö´í£¬ÒâÍâµÄĞÂ·ÖÖ§£¬½Úµã£º{self} ·ÖÖ§:{item.GetType()}");
+					self.Log($"ç§»é™¤åˆ†æ”¯å‡ºé”™ï¼Œæ„å¤–çš„æ–°åˆ†æ”¯ï¼ŒèŠ‚ç‚¹ï¼š{self} åˆ†æ”¯:{item.GetType()}");
 				}
 			}
 		}
 
 
 		/// <summary>
-		/// ÊÍ·ÅÖ¸¶¨·ÖÖ§ÀàĞÍµÄËùÓĞ½Úµã£¨´úÀí·½·¨£©
+		/// é‡Šæ”¾æŒ‡å®šåˆ†æ”¯ç±»å‹çš„æ‰€æœ‰èŠ‚ç‚¹ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static void RemoveAllNode(INode self, long branchType)
 		{
@@ -185,19 +185,19 @@ namespace WorldTree
 			{
 				if (branch.Count != 0)
 				{
-					// µü´úÆ÷ÎŞ·¨Ò»±ßµü´úÒ»±ßÉ¾³ı£¬ÕâÀïÓÃÕ»´æ´¢ĞèÒªÉ¾³ıµÄ½Úµã
+					// è¿­ä»£å™¨æ— æ³•ä¸€è¾¹è¿­ä»£ä¸€è¾¹åˆ é™¤ï¼Œè¿™é‡Œç”¨æ ˆå­˜å‚¨éœ€è¦åˆ é™¤çš„èŠ‚ç‚¹
 					using (self.Core.PoolGetUnit(out UnitStack<INode> nodes))
 					{
 						foreach (var item in (IEnumerable<INode>)branch) nodes.Push(item);
 						while (nodes.Count != 0) nodes.Pop().Dispose();
 					}
 
-					// Èç¹ûÔÚ½ÚµãÒÆ³ı¹ı³ÌÖĞÓÖÌí¼ÓÁËĞÂ½Úµã£¬½«ÎŞ·¨»ØÊÕ
+					// å¦‚æœåœ¨èŠ‚ç‚¹ç§»é™¤è¿‡ç¨‹ä¸­åˆæ·»åŠ äº†æ–°èŠ‚ç‚¹ï¼Œå°†æ— æ³•å›æ”¶
 					if (branch.Count != 0)
 					{
 						foreach (var item in (IEnumerable<INode>)branch)
 						{
-							self.LogError($"ÒÆ³ı½Úµã³ö´í£¬ÒâÍâµÄĞÂ½Úµã£¬¸¸¼¶:{self.GetType()} ·ÖÖ§: {branch.GetType()} ½Úµã:{item.GetType()}:{item.Id}");
+							self.LogError($"ç§»é™¤èŠ‚ç‚¹å‡ºé”™ï¼Œæ„å¤–çš„æ–°èŠ‚ç‚¹ï¼Œçˆ¶çº§:{self.GetType()} åˆ†æ”¯: {branch.GetType()} èŠ‚ç‚¹:{item.GetType()}:{item.Id}");
 						}
 					}
 				}
@@ -205,54 +205,66 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ÊÍ·Å½Úµã
+		/// é‡Šæ”¾èŠ‚ç‚¹
 		/// </summary>
 		public static void Dispose(INode self)
 		{
-			//ÊÇ·ñÒÑ¾­ÊÍ·Å
+			//æ˜¯å¦å·²ç»é‡Šæ”¾
 			if (self.IsDisposed) return;
 
-			//½ÚµãÊÍ·ÅÇ°Ğò±éÀú´¦Àí,½ÚµãÊÍ·ÅºóĞø±éÀú´¦Àí
-			NodeBranchTraversalHelper.TraversalPrePostOrder(self, current => current.OnBeforeDispose(), current => current.OnDispose());
+			//èŠ‚ç‚¹é‡Šæ”¾å‰åºéå†å¤„ç†,èŠ‚ç‚¹é‡Šæ”¾åç»­éå†å¤„ç†
+			NodeBranchTraversalHelper.TraversalPrePostOrder(self, OnBeforeDispose, OnDispose);
 		}
 
 		/// <summary>
-		/// ÊÍ·ÅÇ°µÄ´¦Àí£¨´úÀí·½·¨£©
+		/// é‡Šæ”¾å‰çš„å¤„ç†ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static void OnBeforeDispose(INode self) => self.Core.BeforeRemoveRuleGroup?.Send(self);
 
 
+
 		/// <summary>
-		/// ½ÚµãÊÍ·ÅÊ±µÄ´¦Àí£¨´úÀí·½·¨£©
+		/// èŠ‚ç‚¹é‡Šæ”¾æ—¶çš„å¤„ç†ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
-		public static void OnDispose(INode self)
+		public static void OnDispose(this INode self)
 		{
+			self.SetActive(false); // æ¿€æ´»å˜æ›´
+			if (self.IsActive != self.activeEventMark)//æ¿€æ´»å˜æ›´
+			{
+				if (self.IsActive)
+				{
+					self.Core.EnableRuleGroup?.Send(self);//æ¿€æ´»äº‹ä»¶é€šçŸ¥
+				}
+				else
+				{
+					self.Core.DisableRuleGroup?.Send(self); //ç¦ç”¨äº‹ä»¶é€šçŸ¥
+				}
+			}
+
 			self.ViewBuilder?.Core.WorldContext.Post(self.ViewBuilderDispose);
-			NodeBranchHelper.RemoveNode(self); // ´Ó¸¸½Úµã·ÖÖ§ÒÆ³ı
-			self.SetActive(false); // ¼¤»î±ä¸ü
-			self.Core.DisableRuleGroup?.Send(self); // ½ûÓÃÊÂ¼şÍ¨Öª
-			if (self is INodeListener nodeListener && self is not IListenerIgnorer) // ¼ì²â×ÔÉíÎª¼àÌıÆ÷
+			NodeBranchHelper.RemoveNode(self); // ä»çˆ¶èŠ‚ç‚¹åˆ†æ”¯ç§»é™¤
+			if (self is INodeListener nodeListener && self is not IListenerIgnorer) // æ£€æµ‹è‡ªèº«ä¸ºç›‘å¬å™¨
 			{
 				self.Core.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
-			self.Core.RemoveRuleGroup?.Send(self); // ÒÆ³ıÊÂ¼şÍ¨Öª
-			if (self is not IListenerIgnorer) // ¹ã²¥¸øÈ«²¿¼àÌıÆ÷Í¨Öª
+			self.Core.RemoveRuleGroup?.Send(self); // ç§»é™¤äº‹ä»¶é€šçŸ¥
+			if (self is not IListenerIgnorer) // å¹¿æ’­ç»™å…¨éƒ¨ç›‘å¬å™¨é€šçŸ¥
 			{
 				NodeListenerExecutorHelper.GetListenerExecutor<ListenerRemove>(self)?.Send(self);
 			}
-			self.Core.ReferencedPoolManager.Remove(self); // ÒıÓÃ³ØÒÆ³ı
+			self.Core.ReferencedPoolManager.Remove(self); // å¼•ç”¨æ± ç§»é™¤
 
-			//self.DisposeDomain(); //Çå³ıÓò½Úµã
-			self.Parent = null; // Çå³ı¸¸½Úµã
-			self.Core.PoolRecycle(self); // »ØÊÕµ½³Ø
+			//self.DisposeDomain(); //æ¸…é™¤åŸŸèŠ‚ç‚¹
+			self.Parent = null; // æ¸…é™¤çˆ¶èŠ‚ç‚¹
+			self.Core.PoolRecycle(self); // å›æ”¶åˆ°æ± 
 		}
 
 		#endregion
 
-		#region ¼Ş½Ó
+		#region å«æ¥
 
 		/// <summary>
-		/// ½Úµã¼Ş½Óµ½Ê÷½á¹¹£¨´úÀí·½·¨£©
+		/// èŠ‚ç‚¹å«æ¥åˆ°æ ‘ç»“æ„ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static bool TryGraftSelfToTree<B, K>(INode self, K key, INode parent)
 			where B : class, IBranch<K>
@@ -260,7 +272,7 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// ½Úµã¼Ş½Óµ½Ê÷½á¹¹£¬ÎŞÔ¼ÊøÌõ¼ş£¨´úÀí·½·¨£©
+		/// èŠ‚ç‚¹å«æ¥åˆ°æ ‘ç»“æ„ï¼Œæ— çº¦æŸæ¡ä»¶ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static bool TryGraftSelfToTree<K>(this INode self, long branchType, K key, INode parent)
 		{
@@ -273,18 +285,18 @@ namespace WorldTree
 			self.World = parent.World;
 
 			self.RefreshActive();
-			NodeBranchTraversalHelper.TraversalPrePostOrder(self, current => current.OnBeforeGraftSelfToTree(), current => current.OnGraftSelfToTree());
+			NodeBranchTraversalHelper.TraversalPrePostOrder(self, OnBeforeGraftSelfToTree, OnGraftSelfToTree);
 			return true;
 		}
 
 		/// <summary>
-		/// ½Úµã¼Ş½ÓÇ°µÄ´¦Àí£¨´úÀí·½·¨£©
+		/// èŠ‚ç‚¹å«æ¥å‰çš„å¤„ç†ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static void OnBeforeGraftSelfToTree(this INode self)
 		{
 			self.Core = self.Parent.Core;
 			self.World = self.Parent.World;
-			// ĞòÁĞ»¯Ê±£¬ĞèÒªÖØĞÂÉèÖÃËùÓĞ½ÚµãµÄ¸¸½Úµã
+			// åºåˆ—åŒ–æ—¶ï¼Œéœ€è¦é‡æ–°è®¾ç½®æ‰€æœ‰èŠ‚ç‚¹çš„çˆ¶èŠ‚ç‚¹
 			if (self.IsSerialize)
 			{
 				if (self.BranchDict != null)
@@ -304,59 +316,59 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ½Úµã¼Ş½ÓµÄ´¦Àí£¨´úÀí·½·¨£©
+		/// èŠ‚ç‚¹å«æ¥çš„å¤„ç†ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static void OnGraftSelfToTree(this INode self)
 		{
-			self.Core.ReferencedPoolManager.TryAdd(self);//Ìí¼Óµ½ÒıÓÃ³Ø
-			if (self is not IListenerIgnorer)//¹ã²¥¸øÈ«²¿¼àÌıÆ÷
+			self.Core.ReferencedPoolManager.TryAdd(self);//æ·»åŠ åˆ°å¼•ç”¨æ± 
+			if (self is not IListenerIgnorer)//å¹¿æ’­ç»™å…¨éƒ¨ç›‘å¬å™¨
 			{
 				IRuleExecutor<ListenerAdd> ruleActuator = NodeListenerExecutorHelper.GetListenerExecutor<ListenerAdd>(self);
 				ruleActuator?.Send(self);
 			}
-			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//¼ì²âÌí¼Ó¾²Ì¬¼àÌı
+			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//æ£€æµ‹æ·»åŠ é™æ€ç›‘å¬
 			{
 				self.Core.ReferencedPoolManager.TryAddListener(nodeListener);
 			}
 
 			if (self.IsSerialize)
 			{
-				self.Core.DeserializeRuleGroup?.Send(self);//·´ĞòÁĞ»¯ÊÂ¼şÍ¨Öª
+				self.Core.DeserializeRuleGroup?.Send(self);//ååºåˆ—åŒ–äº‹ä»¶é€šçŸ¥
 				self.IsSerialize = false;
 			}
 
-			if (self.IsActive != self.activeEventMark)//¼¤»î±ä¸ü
+			if (self.IsActive != self.activeEventMark)//æ¿€æ´»å˜æ›´
 			{
 				if (self.IsActive)
 				{
-					self.Core.EnableRuleGroup?.Send(self);//¼¤»îÊÂ¼şÍ¨Öª
+					self.Core.EnableRuleGroup?.Send(self);//æ¿€æ´»äº‹ä»¶é€šçŸ¥
 				}
 				else
 				{
-					self.Core.DisableRuleGroup?.Send(self); //½ûÓÃÊÂ¼şÍ¨Öª
+					self.Core.DisableRuleGroup?.Send(self); //ç¦ç”¨äº‹ä»¶é€šçŸ¥
 				}
 			}
-			if (!self.IsSerialize) self.Core.GraftRuleGroup?.Send(self);//¼Ş½ÓÊÂ¼şÍ¨Öª
+			if (!self.IsSerialize) self.Core.GraftRuleGroup?.Send(self);//å«æ¥äº‹ä»¶é€šçŸ¥
 		}
 
 		#endregion
 
-		#region ²Ã¼ô
+		#region è£å‰ª
 
 		/// <summary>
-		/// ´ÓÊ÷ÉÏ½«×Ô¼º²Ã¼ôÏÂÀ´£¨´úÀí·½·¨£©
+		/// ä»æ ‘ä¸Šå°†è‡ªå·±è£å‰ªä¸‹æ¥ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static INode CutSelf(this INode self)
 		{
-			if (self.IsDisposed) return null; // ÊÇ·ñÒÑ¾­»ØÊÕ
+			if (self.IsDisposed) return null; // æ˜¯å¦å·²ç»å›æ”¶
 			if (self.Parent == null) return self;
-			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.OnCutSelf());
-			NodeBranchHelper.RemoveNode(self); // ´Ó¸¸½Úµã·ÖÖ§ÒÆ³ı
+			NodeBranchTraversalHelper.TraversalPostorder(self, OnCutSelf);
+			NodeBranchHelper.RemoveNode(self); // ä»çˆ¶èŠ‚ç‚¹åˆ†æ”¯ç§»é™¤
 			return self;
 		}
 
 		/// <summary>
-		/// ´ÓÊ÷ÉÏ½«×Ô¼º²Ã¼ôÏÂÀ´Ê±µÄ´¦Àí£¨´úÀí·½·¨£©
+		/// ä»æ ‘ä¸Šå°†è‡ªå·±è£å‰ªä¸‹æ¥æ—¶çš„å¤„ç†ï¼ˆä»£ç†æ–¹æ³•ï¼‰
 		/// </summary>
 		public static void OnCutSelf(this INode self)
 		{
@@ -364,22 +376,22 @@ namespace WorldTree
 			self.ViewBuilder = null;
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer)
 			{
-				// ¼ì²âÒÆ³ı¾²Ì¬¼àÌı
+				// æ£€æµ‹ç§»é™¤é™æ€ç›‘å¬
 				self.Core.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
-			self.Core.CutRuleGroup?.Send(self); // ²Ã¼ôÊÂ¼şÍ¨Öª
-			if (self is not IListenerIgnorer) // ¹ã²¥¸øÈ«²¿¼àÌıÆ÷Í¨Öª
+			self.Core.CutRuleGroup?.Send(self); // è£å‰ªäº‹ä»¶é€šçŸ¥
+			if (self is not IListenerIgnorer) // å¹¿æ’­ç»™å…¨éƒ¨ç›‘å¬å™¨é€šçŸ¥
 			{
 				NodeListenerExecutorHelper.GetListenerExecutor<ListenerRemove>(self)?.Send(self);
 			}
-			self.Core.ReferencedPoolManager.Remove(self); // ÒıÓÃ³ØÒÆ³ı
-			self.Parent = null; // Çå³ı¸¸½Úµã
+			self.Core.ReferencedPoolManager.Remove(self); // å¼•ç”¨æ± ç§»é™¤
+			self.Parent = null; // æ¸…é™¤çˆ¶èŠ‚ç‚¹
 		}
 
 		#endregion
 
 		/// <summary>
-		/// Ìí¼Ó½Úµã¿ÉÊÓ»¯
+		/// æ·»åŠ èŠ‚ç‚¹å¯è§†åŒ–
 		/// </summary>
 		public static void AddNodeView(INode self)
 		{
@@ -388,7 +400,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ´´½¨½Úµã¿ÉÊÓ»¯
+		/// åˆ›å»ºèŠ‚ç‚¹å¯è§†åŒ–
 		/// </summary>
 		private static void ViewBuilderCreate(this INode self)
 		{
@@ -397,18 +409,18 @@ namespace WorldTree
 				self.ViewBuilder = null;
 				return;
 			}
-			// ÄÃµ½¸¸½ÚµãµÄ¿ÉÊÓ»¯Éú³ÉÆ÷µÄ¸¸¼¶½Úµã
+			// æ‹¿åˆ°çˆ¶èŠ‚ç‚¹çš„å¯è§†åŒ–ç”Ÿæˆå™¨çš„çˆ¶çº§èŠ‚ç‚¹
 			INode viewParent = self.Parent.ViewBuilder.Parent;
 
-			// Éú³É×ÔÉíµÄ¿ÉÊÓ»¯Éú³ÉÆ÷
+			// ç”Ÿæˆè‡ªèº«çš„å¯è§†åŒ–ç”Ÿæˆå™¨
 			INode nodeView = viewParent.Core.PoolGetNode(self.Parent.ViewBuilder.Type);
 
-			// ½«×ÔÉíÌí¼Óµ½¸¸½ÚµãµÄ¿ÉÊÓ»¯Éú³ÉÆ÷ÖĞ£¬¶ø¿ÉÊÓ»¯Ôò¹Òµ½¿ÉÊÓ»¯¸¸¼¶½ÚµãÉÏ
+			// å°†è‡ªèº«æ·»åŠ åˆ°çˆ¶èŠ‚ç‚¹çš„å¯è§†åŒ–ç”Ÿæˆå™¨ä¸­ï¼Œè€Œå¯è§†åŒ–åˆ™æŒ‚åˆ°å¯è§†åŒ–çˆ¶çº§èŠ‚ç‚¹ä¸Š
 			self.ViewBuilder = NodeBranchHelper.AddNodeToTree(viewParent, default(ChildBranch), nodeView.Id, nodeView, (INode)self, (INode)self.Parent) as IWorldTreeNodeViewBuilder;
 		}
 
 		/// <summary>
-		/// ÊÍ·Å½Úµã¿ÉÊÓ»¯
+		/// é‡Šæ”¾èŠ‚ç‚¹å¯è§†åŒ–
 		/// </summary>
 		private static void ViewBuilderDispose(this INode self)
 		{
