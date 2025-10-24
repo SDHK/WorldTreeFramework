@@ -26,17 +26,14 @@ namespace WorldTree
 		/// </summary>
 		public static View AddView(this View self, long viewType, out View subView)
 		{
+			subView = null;
+			if (!self.IsOpen) return null;
 			subView = self.Core.PoolGetNode(viewType) as View;
 			NodeBranchHelper.AddNodeToTree(self.Bind.Value, default(ChildBranch), subView.Id, subView);
 			return subView;
 		}
 
-		/// <summary>
-		/// 打开视图
-		/// </summary>
-		public static void OpenView(this View self)
-		{
-		}
+
 
 		/// <summary>
 		/// 测试
@@ -46,7 +43,6 @@ namespace WorldTree
 			ViewGroup viewGroup = new();
 			viewGroup.AddView(out ViewTest view);
 			view.Name = "测试窗口";
-			view.OpenView();
 		}
 	}
 }

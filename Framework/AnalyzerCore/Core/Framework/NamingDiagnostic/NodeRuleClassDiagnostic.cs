@@ -89,7 +89,7 @@ namespace WorldTree.Analyzer
 
 
 			// 获取 ruleTypeSymbol 的类型名称（不带命名空间和泛型）
-			var ruleTypeName = "On" + ruleTypeSymbol.Name.Replace("Rule", "");
+			var ruleTypeName = "On" + ruleTypeSymbol.Name;
 
 			StringBuilder classCode = new();
 			classCode.AppendLine($"		[NodeRule(nameof({genericNameText}))]");

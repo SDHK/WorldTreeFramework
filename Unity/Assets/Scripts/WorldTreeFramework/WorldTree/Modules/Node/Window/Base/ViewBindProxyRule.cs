@@ -8,7 +8,8 @@
 		/// <summary>
 		/// 添加时
 		/// </summary>
-		public static void OnAddSelfToTree(this INode self)
+		[INodeThis]
+		public static void OnAddSelfToTree(INode self)
 		{
 			self.Core.ReferencedPoolManager.TryAdd(self);//添加到引用池
 			if (self is not IListenerIgnorer)//广播给全部监听器
@@ -21,13 +22,16 @@
 				self.Core.ReferencedPoolManager.TryAddListener(nodeListener);
 			}
 
-			NodeRuleHelper.TrySendRule(self.Parent, default(ViewRegister));
+			NodeRuleHelper.TrySendRule(self, default(ViewElementLoad));
+			NodeRuleHelper.TrySendRule(self, default(ViewRegister));
+
 			NodeRuleHelper.TrySendRule(self.Parent, default(Open));
+
 			if (self.IsActive != self.activeEventMark)//激活变更
 			{
 				if (self.IsActive)
 				{
-					self.Core.EnableRuleGroup?.Send(self);//激活事件通知
+					self.Core.EnableRuleGroup?.Send(self); //激活事件通知
 					NodeRuleHelper.TrySendRule(self.Parent, default(Show));
 				}
 				else
@@ -84,9 +88,11 @@
 		/// <summary>
 		/// 销毁时调用 
 		/// </summary>
-		public static void OnDispose(this INode self)
+		[INodeThis]
+		public static void OnDispose(INode self)
 		{
-			NodeRuleHelper.TrySendRule(self.Parent, default(ViewUnRegister));
+			NodeRuleHelper.TrySendRule(self, default(ViewUnRegister));
+			NodeRuleHelper.TrySendRule(self, default(ViewElementUnLoad));
 			self.ViewBuilder?.Core.WorldContext.Post(self.ViewBuilderDispose);
 			NodeBranchHelper.RemoveNode(self); // 从父节点分支移除
 

@@ -15,6 +15,7 @@ namespace WorldTree
 		, ComponentOf<World>
 		, AsComponentBranch
 		, AsChildBranch
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 全部窗口

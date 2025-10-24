@@ -2,21 +2,20 @@
 
 namespace WorldTree
 {
-	//IWidget
 	/// <summary>
 	/// 视图元素：具体平台实现的UI组件接口，自动反向绑定到IViewBind
 	/// </summary>
-	public interface IViewElement
-	{
-
-	}
+	public interface IViewElement { }
 
 	//V和VB都是纯数据，V是初始化数据，VB负责桥接具体UI组件。
 
 	//Register子级组件> Open，Refresh，Close> UnRegister子级组件，方法写到View里。
 	//Close融入Dispose
 	//show融入IsActive
+	//由于视图都有层级概念，所以分支考虑使用ListNode？
+	//父级需要知道子级的Open事件
 
+	//容器组件需要知道子组件的Open事件
 
 	/// <summary>
 	/// 视图接口
@@ -24,13 +23,13 @@ namespace WorldTree
 	public interface IView
 	{
 		/// <summary>
-		/// 打开
+		/// 视图打开
 		/// </summary>
-		public void Open();
+		public int Open();
 		/// <summary>
-		///  关闭
+		/// 视图关闭
 		/// </summary>
-		public void Close();
+		public int Close();
 	}
 
 	/// <summary>
@@ -39,14 +38,18 @@ namespace WorldTree
 	public abstract class View : Node, IView
 		, AsComponentBranch
 		, ChildOf<ViewBind>
+		, ListNodeOf<ViewLayerBind>
 		, AsRule<Awake>
 		, AsRule<Open>
-		, AsRule<ViewRegister>
 		, AsRule<Close>
-		, AsRule<ViewUnRegister>
 	{
 		/// <summary>
-		/// 组件
+		/// 视图层级 
+		/// </summary>
+		public int Layer;
+
+		/// <summary>
+		/// 视图绑定
 		/// </summary>
 		public NodeRef<ViewBind> Bind { get; set; }
 
@@ -56,12 +59,12 @@ namespace WorldTree
 		public long ViewBindType { get; set; }
 
 		/// <summary>
-		/// 是否打开
+		/// 视图是否打开
 		/// </summary>
 		public bool IsOpen => Bind != null;
 
 		/// <summary>
-		/// 是否显示 
+		/// 视图显隐
 		/// </summary>
 		public bool IsShow
 		{
@@ -69,21 +72,34 @@ namespace WorldTree
 			set => Bind.Value?.SetActive(value);
 		}
 
-		public void Open()
+		public virtual int Open()
 		{
-			if (IsOpen) return;
+			if (IsOpen) return 0;
+
+			if (NodeRuleHelper.TryCallRule(this.Parent.Parent, default(SubViewOpen), out int code))
+			{
+				if (code != 0) return code;
+			}
 
 			if (this.Bind == null)
 			{
 				this.Bind = new(NodeBranchHelper.AddNode(this, default(ComponentBranch), this.ViewBindType, out ViewBind _));
 			}
+			return 0;
 		}
 
-		public void Close()
+		public virtual int Close()
 		{
-			if (!IsOpen) return;
+			if (!IsOpen) return 0;
+
+			if (NodeRuleHelper.TryCallRule(this.Parent.Parent, default(SubViewClose), out int code))
+			{
+				if (code != 0) return code;
+			}
+
 			this.Bind.Value.Dispose();
 			this.Bind = null;
+			return 0;
 		}
 
 	}
@@ -137,24 +153,7 @@ namespace WorldTree
 
 	}
 
-
 	//=====================
-
-	/// <summary>
-	/// 按钮绑定
-	/// </summary>
-	public class ButtonBind : ViewBind { }
-
-	/// <summary>
-	/// 按钮
-	/// </summary>
-	public class Button : View<ButtonBind>
-	{
-		/// <summary>
-		/// 点击事件
-		/// </summary>
-		public RuleUnicast<ISendRule> OnClick;
-	}
 
 	/// <summary>
 	/// 文本

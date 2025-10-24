@@ -61,12 +61,20 @@ namespace WorldTree
 	public class INodeProxyAttribute : Attribute { }
 
 	/// <summary>
+	/// 节点方法访问标记
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method)]
+	public class INodeThisAttribute : Attribute { }
+
+	/// <summary>
 	/// 世界树数据节点接口
 	/// </summary>
 	public partial interface INodeData : INode
 		, AsRule<Serialize>
 		, AsRule<Deserialize>
 	{ }
+
+
 
 	/// <summary>
 	/// 世界树节点接口

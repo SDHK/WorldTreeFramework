@@ -226,7 +226,8 @@ namespace WorldTree
 		/// <summary>
 		/// 节点释放时的处理（代理方法）
 		/// </summary>
-		public static void OnDispose(this INode self)
+		[INodeThis]
+		public static void OnDispose(INode self)
 		{
 			self.SetActive(false); // 激活变更
 			if (self.IsActive != self.activeEventMark)//激活变更
@@ -274,7 +275,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点嫁接到树结构，无约束条件（代理方法）
 		/// </summary>
-		public static bool TryGraftSelfToTree<K>(this INode self, long branchType, K key, INode parent)
+		public static bool TryGraftSelfToTree<K>(INode self, long branchType, K key, INode parent)
 		{
 			if (NodeBranchHelper.AddBranch(parent, branchType) is not IBranch<K> branch) return false;
 			if (!branch.TryAddNode(key, self)) return false;
@@ -292,7 +293,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点嫁接前的处理（代理方法）
 		/// </summary>
-		public static void OnBeforeGraftSelfToTree(this INode self)
+		public static void OnBeforeGraftSelfToTree(INode self)
 		{
 			self.Core = self.Parent.Core;
 			self.World = self.Parent.World;
@@ -318,7 +319,8 @@ namespace WorldTree
 		/// <summary>
 		/// 节点嫁接的处理（代理方法）
 		/// </summary>
-		public static void OnGraftSelfToTree(this INode self)
+		[INodeThis]
+		public static void OnGraftSelfToTree(INode self)
 		{
 			self.Core.ReferencedPoolManager.TryAdd(self);//添加到引用池
 			if (self is not IListenerIgnorer)//广播给全部监听器
@@ -358,7 +360,7 @@ namespace WorldTree
 		/// <summary>
 		/// 从树上将自己裁剪下来（代理方法）
 		/// </summary>
-		public static INode CutSelf(this INode self)
+		public static INode CutSelf(INode self)
 		{
 			if (self.IsDisposed) return null; // 是否已经回收
 			if (self.Parent == null) return self;
@@ -370,7 +372,7 @@ namespace WorldTree
 		/// <summary>
 		/// 从树上将自己裁剪下来时的处理（代理方法）
 		/// </summary>
-		public static void OnCutSelf(this INode self)
+		public static void OnCutSelf(INode self)
 		{
 			self.ViewBuilder?.Dispose();
 			self.ViewBuilder = null;

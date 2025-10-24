@@ -125,6 +125,11 @@ namespace WorldTree
 		/// </summary>
 		public const string INodeProxyAttribute = "INodeProxyAttribute";
 
+		/// <summary>
+		/// 节点方法访问标记
+		/// </summary>
+		public const string INodeThisAttribute = "INodeThisAttribute";
+
 
 		/// <summary>
 		/// 树节点数据包特性标记

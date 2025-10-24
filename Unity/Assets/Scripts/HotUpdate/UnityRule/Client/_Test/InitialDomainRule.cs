@@ -92,7 +92,5 @@ namespace WorldTree
 		{
 			GUILayout.Label($@"    {timeSpan.Ticks} !  ", new GUIStyle() { fontSize = 60 });
 		}
-
-
 	}
 }

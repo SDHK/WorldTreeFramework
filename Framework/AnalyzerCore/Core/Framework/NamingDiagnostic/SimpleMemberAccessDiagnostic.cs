@@ -103,8 +103,9 @@ namespace WorldTree.Analyzer
 					ITypeSymbol? firstParameterTypeSymbol = semanticModel.GetSymbolInfo(firstParameterSyntax.Type).Symbol as ITypeSymbol;
 					if (firstParameterTypeSymbol == null) return true;
 
-					// 检查方法的第一个参数是否使用了 this 关键字
-					if (firstParameterSyntax.Modifiers.Any(SyntaxKind.ThisKeyword))
+
+					// 检查方法的第一个参数是否使用了 this 关键字,或者标记了INodeThis属性
+					if (firstParameterSyntax.Modifiers.Any(SyntaxKind.ThisKeyword) || TreeSyntaxHelper.TryGetAttribute(parentMethodSyntax, GeneratorHelper.INodeThisAttribute, out _))
 					{
 						//判断扩展类型是否是来源类型，是则跳过
 						if (SymbolEqualityComparer.Default.Equals(memberAccessSymbol.ContainingType.OriginalDefinition, firstParameterTypeSymbol.OriginalDefinition)) return false;

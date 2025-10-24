@@ -49,7 +49,6 @@ namespace WorldTree
 	/// <summary>
 	/// 节点监听法则抽象基类
 	/// </summary>
-	/// <remarks>目标为INode和IRule时为动态监听</remarks>
 	public abstract class ListenerRule<N, R, TN, TR> : Rule<N, R>, IListenerRule
 	where N : class, INode, AsRule<R>
 	where TN : class, INode
