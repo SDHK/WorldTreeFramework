@@ -7,6 +7,7 @@
 
 */
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -20,6 +21,8 @@ namespace EditorTool
 	[CustomEditor(typeof(UnityWorldTreeNodeView))]
 	public class UnityWorldTreeNodeViewEditor : Editor
 	{
+		static List<MemberInfo> members = new();
+
 		public override void OnInspectorGUI()
 		{
 			UnityWorldTreeNodeView monoView = (UnityWorldTreeNodeView)target;
@@ -39,10 +42,42 @@ namespace EditorTool
 					monoView.gameObject.SetActive(node.IsActive);
 				}
 
-				FieldInfo[] fields = monoView.Node.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-				foreach (FieldInfo fieldInfo in fields)
+				members.Clear();
+				var type = monoView.Node.GetType();
+				var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+				var properties = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+				foreach (var field in fields)
 				{
-					Type type = fieldInfo.FieldType;
+					if (field.Name.Contains("k__BackingField")) continue;
+					members.Add(field);
+				}
+				foreach (var property in properties)
+				{
+					members.Add(property);
+				}
+
+				// 按声明顺序排序
+				//members.Sort((a, b) => a.MetadataToken.CompareTo(b.MetadataToken));
+
+				foreach (MemberInfo memberInfo in members)
+				{
+					type = null;
+
+					if (memberInfo is FieldInfo fieldInfo)
+					{
+						type = fieldInfo.FieldType;
+					}
+					else if (memberInfo is PropertyInfo propertyInfo)
+					{
+						type = propertyInfo.PropertyType;
+					}
+					else
+					{
+						continue;
+					}
+
+
 					if (type.IsEnum) type = typeof(Enum);
 
 					if (View?.World == null) continue;
@@ -61,7 +96,7 @@ namespace EditorTool
 					{
 						NodeBranchHelper.AddNode(View.World, default(ComponentBranch), typeCode, typeCode, out viewNode);
 					}
-					NodeRuleHelper.TrySendRule(viewNode, default(INodeFieldViewRule), node, fieldInfo);//调用绘制法则
+					NodeRuleHelper.TrySendRule(viewNode, default(INodeFieldViewRule), node, memberInfo);//调用绘制法则
 				}
 
 				EditorGUILayout.EndVertical();

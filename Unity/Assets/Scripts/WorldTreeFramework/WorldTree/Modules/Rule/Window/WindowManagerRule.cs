@@ -41,8 +41,6 @@ namespace WorldTree
 		public static void Test()
 		{
 			ViewGroup viewGroup = new();
-			viewGroup.AddView(out ViewTest view);
-			view.Name = "测试窗口";
 		}
 	}
 }

@@ -25,11 +25,16 @@ namespace WorldTree
 		/// <summary>
 		/// 视图打开
 		/// </summary>
-		public int Open();
+		public int OnOpen();
 		/// <summary>
 		/// 视图关闭
 		/// </summary>
-		public int Close();
+		public int OnClose();
+
+		/// <summary>
+		/// 视图层级改变 
+		/// </summary>
+		public void LayerChange();
 	}
 
 	/// <summary>
@@ -42,11 +47,70 @@ namespace WorldTree
 		, AsRule<Awake>
 		, AsRule<Open>
 		, AsRule<Close>
+		, AsRule<LayerChange>
+		, AsRule<ViewRegister>
+		, AsRule<ViewUnRegister>
 	{
 		/// <summary>
-		/// 视图层级 
+		/// 父级视图层组件
 		/// </summary>
-		public int Layer;
+		public ViewLayer ParentLayer;
+
+		/// <summary>
+		/// 视图层级
+		/// </summary>
+		public byte Layer;
+
+		/// <summary>
+		/// 顶层层数 
+		/// </summary>
+		public byte LayerTop => (ParentLayer == null) ? (byte)0 : (byte)(ParentLayer.LayerCount);
+
+		public override INode Parent
+		{
+			get => base.Parent;
+
+			set
+			{
+				base.Parent = value;
+				// 设置父级时自动更新ParentLayer
+				if (value?.Parent is ViewLayer parentViewLayer)
+				{
+					this.ParentLayer = parentViewLayer;
+				}
+				else if (value?.Parent is View parentView)
+				{
+					this.ParentLayer = parentView.ParentLayer;
+				}
+				else // 非视图父级，清空ParentLayer 和 Layer
+				{
+					this.ParentLayer = null;
+					this.Layer = 0;
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// 视图深度：（0-7），自动根据父级计算
+		/// </summary>
+		public virtual byte Depth => (ParentLayer == null) ? (byte)0 : (byte)(ParentLayer.Depth + 1);
+
+
+		/// <summary>
+		/// 视图排序：自动计算的排序值，值越大越靠前显示
+		/// </summary>
+		public virtual int Order
+		{
+			get
+			{
+				byte depth = Depth;
+				int mask = depth == 0 ? 0x07 : 0x0F;  // 掩码限制，防止用户设置错误的Layer值
+				int currentLayerOrder = (Layer & mask) << (28 - depth * 4);// 28是4*7深度，统一计算位移
+				return ParentLayer == null ? currentLayerOrder : ParentLayer.Order | currentLayerOrder;
+			}
+		}
+
 
 		/// <summary>
 		/// 视图绑定
@@ -56,60 +120,77 @@ namespace WorldTree
 		/// <summary>
 		/// 视图绑定类型
 		/// </summary>
-		public long ViewBindType { get; set; }
+		public virtual long ViewBindType { get; }
 
 		/// <summary>
 		/// 视图是否打开
 		/// </summary>
-		public bool IsOpen => Bind != null;
+		public bool IsOpen => !Bind.IsNull;
 
 		/// <summary>
 		/// 视图显隐
 		/// </summary>
 		public bool IsShow
 		{
-			get => Bind != null && Bind.Value.IsActive;
+			get => !Bind.IsNull && Bind.Value.IsActive;
 			set => Bind.Value?.SetActive(value);
 		}
 
-		public virtual int Open()
+
+		public virtual int OnOpen()
 		{
 			if (IsOpen) return 0;
 
-			if (NodeRuleHelper.TryCallRule(this.Parent.Parent, default(SubViewOpen), out int code))
+			if (this.Bind.IsNull)
 			{
-				if (code != 0) return code;
-			}
-
-			if (this.Bind == null)
-			{
-				this.Bind = new(NodeBranchHelper.AddNode(this, default(ComponentBranch), this.ViewBindType, out ViewBind _));
+				this.Bind = new(NodeBranchHelper.AddNode(this, default(ComponentBranch), this.ViewBindType, this.ViewBindType, out INode _) as ViewBind);
 			}
 			return 0;
 		}
 
-		public virtual int Close()
+		public virtual int OnClose()
 		{
 			if (!IsOpen) return 0;
-
-			if (NodeRuleHelper.TryCallRule(this.Parent.Parent, default(SubViewClose), out int code))
-			{
-				if (code != 0) return code;
-			}
 
 			this.Bind.Value.Dispose();
 			this.Bind = null;
 			return 0;
 		}
 
+		public virtual void LayerChange() => ViewProxyRule.LayerChanged(this);
 	}
+
+	/// <summary>
+	/// 视图主体基类 
+	/// </summary>
+	public abstract class ViewObject : View
+		, ComponentOf<ViewLayerBind>
+	{
+
+	}
+
+	/// <summary>
+	/// 视图主体基类 
+	/// </summary>
+	public abstract class ViewObject<VB> : ViewObject
+		, AsComponentBranch
+		where VB : ViewBind
+	{
+		public override long ViewBindType => this.TypeToCode<VB>();
+
+	}
+
+
+	/// <summary>
+	/// 视图组件基类 
+	/// </summary>
+	public abstract class ViewWidget : View { }
 
 
 	/// <summary>
 	/// 视图泛型基类
 	/// </summary>
 	public abstract class View<VB> : View
-		, ComponentOf<WindowManager>
 		, AsComponentBranch
 		where VB : ViewBind
 	{
@@ -117,6 +198,8 @@ namespace WorldTree
 		/// 视图绑定
 		/// </summary>
 		public VB ViewBind => Bind.Value as VB;
+
+		public override long ViewBindType => this.TypeToCode<VB>();
 	}
 
 
@@ -144,7 +227,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试视图
 	/// </summary>
-	public class ViewTest : View<ViewTestBind>
+	public class ViewTestWindow : ViewObject<ViewTestBind>
 	{
 		/// <summary>
 		/// 名称
@@ -153,7 +236,7 @@ namespace WorldTree
 
 	}
 
-	//=====================
+	//================================
 
 	/// <summary>
 	/// 文本

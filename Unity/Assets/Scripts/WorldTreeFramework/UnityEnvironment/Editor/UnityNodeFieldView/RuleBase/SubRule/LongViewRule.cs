@@ -7,19 +7,39 @@ namespace WorldTree
 	{
 		class LongViewRule : GenericsViewRule<long>
 		{
-			protected override void Execute(UnityNodeFieldView<long> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<long> self, INode node, MemberInfo arg1)
 			{
-				arg1.SetValue(node, EditorGUILayout.LongField(arg1.Name, (long)arg1.GetValue(node)));
+				if (arg1 is FieldInfo fieldInfo)
+				{
+					var value = EditorGUILayout.LongField(fieldInfo.Name, (long)fieldInfo.GetValue(node));
+					fieldInfo.SetValue(node, value);
+				}
+				else if (arg1 is PropertyInfo propertyInfo)
+				{
+					if (!propertyInfo.CanRead) return;
+					var value = EditorGUILayout.LongField(propertyInfo.Name, (long)propertyInfo.GetValue(node));
+					if (propertyInfo.CanWrite) propertyInfo.SetValue(node, value);
+				}
 			}
 		}
 
 		class ULongViewRule : GenericsViewRule<ulong>
 		{
-			protected override void Execute(UnityNodeFieldView<ulong> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<ulong> self, INode node, MemberInfo arg1)
 			{
-				// 将输入限制在 ulong 范围
-				ulong ulongValue = (ulong)EditorGUILayout.LongField(arg1.Name, (long)arg1.GetValue(node));
-				arg1.SetValue(node, ulongValue);
+				if (arg1 is FieldInfo fieldInfo)
+				{
+					long longValue = EditorGUILayout.LongField(fieldInfo.Name, (long)fieldInfo.GetValue(node));
+					ulong ulongValue = (ulong)System.Math.Clamp(longValue, (long)ulong.MinValue, long.MaxValue);
+					fieldInfo.SetValue(node, ulongValue);
+				}
+				else if (arg1 is PropertyInfo propertyInfo)
+				{
+					if (!propertyInfo.CanRead) return;
+					long longValue = EditorGUILayout.LongField(propertyInfo.Name, (long)propertyInfo.GetValue(node));
+					ulong ulongValue = (ulong)System.Math.Clamp(longValue, (long)ulong.MinValue, long.MaxValue);
+					if (propertyInfo.CanWrite) propertyInfo.SetValue(node, ulongValue);
+				}
 			}
 		}
 	}

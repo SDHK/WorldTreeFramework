@@ -41,13 +41,13 @@ namespace WorldTree
 		[NodeRule(nameof(UpdateRule<InitialDomain>))]
 		private static void OnUpdateRule(this InitialDomain self)
 		{
-			self.Log($"测试Update！！!");
+			//self.Log($"测试Update！！!");
 
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
-				self.Log($"初始域热更测试！！!");
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
-				self.AddComponent(out TreeDataTest _);
+				//self.AddComponent(out TreeDataTest _);
+				self.AddComponent(out ViewTest _);
 
 				//NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
 			}
@@ -76,7 +76,7 @@ namespace WorldTree
 		[NodeRule(nameof(GuiUpdateRule<InitialDomain>))]
 		private static void OnGuiUpdateRule(this InitialDomain self)
 		{
-			self.Log($"测试OnGuiUpdateRule！！!");
+			//self.Log($"测试OnGuiUpdateRule！！!");
 
 			//GUILayout.Label($@"    {timeSpan.TotalMilliseconds} !  ", new GUIStyle() { fontSize = 60 });
 		}

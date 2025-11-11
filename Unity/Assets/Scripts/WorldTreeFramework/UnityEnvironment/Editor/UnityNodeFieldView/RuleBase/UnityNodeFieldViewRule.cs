@@ -10,5 +10,5 @@
 		public abstract class GenericsViewRule<T> : NodeFieldViewRule<UnityNodeFieldView<T>>
 		{ }
 	}
-	
+
 }

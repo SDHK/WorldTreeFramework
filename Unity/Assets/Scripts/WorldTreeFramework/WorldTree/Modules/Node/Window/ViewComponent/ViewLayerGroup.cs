@@ -4,6 +4,7 @@
 	/// 视图层组 
 	/// </summary>
 	public class ViewLayerGroup : View<ViewLayerGroupBind>
+		, ComponentOf<INode>
 	{
 		/// <summary>
 		/// 层级间隔
@@ -16,7 +17,5 @@
 	/// </summary>
 	public class ViewLayerGroupBind : ViewBind
 		, AsGenericBranch<int>
-	{
-
-	}
+	{ }
 }

@@ -284,9 +284,9 @@ namespace WorldTree
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
 				BranchType = Core.TypeToCode<B>();
-				Parent = parent;
 				Core = parent.Core ?? this;
 				World = null;
+				Parent = parent;
 				//mainCore = parent.Core.mainCore ?? this;
 				SetActive(true);//激活节点
 				return true;

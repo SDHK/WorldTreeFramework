@@ -5,17 +5,17 @@
 		/// <summary>
 		/// 获取层级
 		/// </summary>
-		public static ViewLayer GetLayer(ViewLayerGroup self, int layer)
+		public static ViewLayer GetLayer(this ViewLayerGroup self, int layer)
 		{
 			if (!self.ViewBind.TryGetGeneric(layer, out ViewLayer viewLayer))
 			{
 				self.ViewBind.AddGeneric(layer, out viewLayer);
-				viewLayer.Layer = layer * self.Interval + self.Layer;
-				viewLayer.Open();
+				viewLayer.Layer = (byte)layer;
+				viewLayer.OnOpen();
 			}
 			else if (!viewLayer.IsOpen)
 			{
-				viewLayer.Open();
+				viewLayer.OnOpen();
 			}
 			return viewLayer;
 		}

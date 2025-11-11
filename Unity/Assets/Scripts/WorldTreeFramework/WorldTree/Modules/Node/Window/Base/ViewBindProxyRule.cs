@@ -1,5 +1,6 @@
 ﻿namespace WorldTree
 {
+
 	/// <summary>
 	/// 视图接口代理 
 	/// </summary>
@@ -26,6 +27,8 @@
 			NodeRuleHelper.TrySendRule(self, default(ViewRegister));
 
 			NodeRuleHelper.TrySendRule(self.Parent, default(Open));
+			NodeRuleHelper.TrySendRule(self.Parent, default(LayerChange));
+
 
 			if (self.IsActive != self.activeEventMark)//激活变更
 			{
@@ -51,9 +54,9 @@
 			//是否已经释放
 			if (self.IsDisposed) return;
 			//后序遍历处理节点激活
-			NodeBranchTraversalHelper.TraversalPostorder(self, OnBeforeDisposeActive);
+			NodeBranchTraversalHelper.TraversalPostorder(self, node => node.OnBeforeDisposeActive());
 			//节点释放前序遍历处理,节点释放后续遍历处理
-			NodeBranchTraversalHelper.TraversalPrePostOrder(self, OnBeforeDispose, OnDispose);
+			NodeBranchTraversalHelper.TraversalPrePostOrder(self, node => node.OnBeforeDispose(), node => node.OnDispose());
 		}
 
 		/// <summary>
@@ -82,6 +85,7 @@
 		/// </summary>
 		public static void OnBeforeDispose(INode self)
 		{
+			NodeRuleHelper.TrySendRule(self.Parent, default(SubViewClose), self);
 			self.OnBeforeDispose();
 			NodeRuleHelper.TrySendRule(self.Parent, default(Close));
 		}

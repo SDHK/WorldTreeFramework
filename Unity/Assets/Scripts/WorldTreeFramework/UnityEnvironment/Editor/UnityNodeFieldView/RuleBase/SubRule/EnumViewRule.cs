@@ -9,15 +9,18 @@ namespace WorldTree
 	{
 		class EnumViewRule : GenericsViewRule<Enum>
 		{
-			protected override void Execute(UnityNodeFieldView<Enum> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<Enum> self, INode node, MemberInfo arg1)
 			{
-				if (arg1.FieldType.IsDefined(typeof(FlagsAttribute), false))
+				if (arg1 is FieldInfo fieldInfo)
 				{
-					arg1.SetValue(node, EditorGUILayout.EnumFlagsField(arg1.Name, (Enum)arg1.GetValue(node)));
+					var value = EditorGUILayout.EnumPopup(fieldInfo.Name, (Enum)fieldInfo.GetValue(node));
+					fieldInfo.SetValue(node, value);
 				}
-				else
+				else if (arg1 is PropertyInfo propertyInfo)
 				{
-					arg1.SetValue(node, EditorGUILayout.EnumPopup(arg1.Name, (Enum)arg1.GetValue(node)));
+					if (!propertyInfo.CanRead) return;
+					var value = EditorGUILayout.EnumPopup(propertyInfo.Name, (Enum)propertyInfo.GetValue(node));
+					if (propertyInfo.CanWrite) propertyInfo.SetValue(node, value);
 				}
 			}
 		}

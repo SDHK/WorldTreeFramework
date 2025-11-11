@@ -11,12 +11,12 @@ namespace WorldTree
 		/// <summary>
 		/// 前序遍历
 		/// </summary>
-		public static INode TraversalPreorder(INode self, Action<INode> action)
+		public static INode TraversalPreorder(INode self, Action<INode> action, bool isSelf = true)
 		{
 			//自己没有分支
 			if (self.BranchDict == null || self.BranchDict.BranchCount == 0)
 			{
-				action(self);
+				if (isSelf) action(self);
 				return self;
 			}
 
@@ -24,7 +24,7 @@ namespace WorldTree
 			INode current;
 			// 从对象池拿栈
 			UnitStack<INode> nodeStack = self.Core.PoolGetUnit<UnitStack<INode>>();
-			nodeStack.Push(self);
+			if (isSelf) nodeStack.Push(self);
 			while (nodeStack.Count != 0)
 			{
 				current = nodeStack.Pop();
@@ -47,18 +47,18 @@ namespace WorldTree
 		/// <summary>
 		/// 层序遍历
 		/// </summary>
-		public static INode TraversalLevel(INode self, Action<INode> action)
+		public static INode TraversalLevel(INode self, Action<INode> action, bool isSelf = true)
 		{
 			//自己没有分支
 			if (self.BranchDict == null || self.BranchDict.BranchCount == 0)
 			{
-				action(self);
+				if (isSelf) action(self);
 				return self;
 			}
 
 			// 从对现场拿队列
 			UnitQueue<INode> nodeQueue = self.Core.PoolGetUnit<UnitQueue<INode>>();
-			nodeQueue.Enqueue(self);
+			if (isSelf) nodeQueue.Enqueue(self);
 
 			while (nodeQueue.Count != 0)
 			{
@@ -85,12 +85,12 @@ namespace WorldTree
 		/// <summary>
 		/// 后序遍历
 		/// </summary>
-		public static INode TraversalPostorder(INode self, Action<INode> action)
+		public static INode TraversalPostorder(INode self, Action<INode> action, bool isSelf = true)
 		{
 			//自己没有分支
 			if (self.BranchDict == null || self.BranchDict.BranchCount == 0)
 			{
-				action(self);
+				if (isSelf) action(self);
 				return self;
 			}
 			// 当前节点
@@ -99,7 +99,7 @@ namespace WorldTree
 			UnitStack<INode> nodeStack = self.Core.PoolGetUnit<UnitStack<INode>>();
 			// 从对象池拿栈，用于存放所有节点
 			UnitStack<INode> allStack = self.Core.PoolGetUnit<UnitStack<INode>>();
-			nodeStack.Push(self);
+			if (isSelf) nodeStack.Push(self);
 			while (nodeStack.Count != 0)
 			{
 				current = nodeStack.Pop();
@@ -127,13 +127,16 @@ namespace WorldTree
 		/// <summary>
 		/// 前后双序遍历
 		/// </summary>
-		public static INode TraversalPrePostOrder(INode self, Action<INode> preAction, Action<INode> postAction)
+		public static INode TraversalPrePostOrder(INode self, Action<INode> preAction, Action<INode> postAction, bool isSelf = true)
 		{
 			//自己没有分支
 			if (self.BranchDict == null || self.BranchDict.BranchCount == 0)
 			{
-				preAction(self);
-				postAction(self);
+				if (isSelf)
+				{
+					preAction(self);
+					postAction(self);
+				}
 				return self;
 			}
 			// 当前节点
@@ -142,7 +145,7 @@ namespace WorldTree
 			UnitStack<INode> nodeStack = self.Core.PoolGetUnit<UnitStack<INode>>();
 			// 从对象池拿栈，用于存放所有节点
 			UnitStack<INode> allStack = self.Core.PoolGetUnit<UnitStack<INode>>();
-			nodeStack.Push(self);
+			if (isSelf) nodeStack.Push(self);
 			while (nodeStack.Count != 0)
 			{
 				current = nodeStack.Pop();

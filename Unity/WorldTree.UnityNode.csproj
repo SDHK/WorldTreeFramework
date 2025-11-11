@@ -58,6 +58,7 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\ViewTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\YooAssetTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\Input\InputDriverMouse.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\TreeDataTest.cs" />

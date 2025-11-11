@@ -1,5 +1,4 @@
-﻿
-using System.Reflection;
+﻿using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,9 +8,19 @@ namespace WorldTree
 	{
 		class RectViewRule : GenericsViewRule<Rect>
 		{
-			protected override void Execute(UnityNodeFieldView<Rect> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<Rect> self, INode node, MemberInfo arg1)
 			{
-				arg1.SetValue(node, EditorGUILayout.RectField(arg1.Name, (Rect)arg1.GetValue(node)));
+				if (arg1 is FieldInfo fieldInfo)
+				{
+					var value = EditorGUILayout.RectField(fieldInfo.Name, (Rect)fieldInfo.GetValue(node));
+					fieldInfo.SetValue(node, value);
+				}
+				else if (arg1 is PropertyInfo propertyInfo)
+				{
+					if (!propertyInfo.CanRead) return;
+					var value = EditorGUILayout.RectField(propertyInfo.Name, (Rect)propertyInfo.GetValue(node));
+					if (propertyInfo.CanWrite) propertyInfo.SetValue(node, value);
+				}
 			}
 		}
 	}

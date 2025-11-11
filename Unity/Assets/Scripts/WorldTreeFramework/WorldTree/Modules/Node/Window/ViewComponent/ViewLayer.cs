@@ -4,8 +4,16 @@
 	/// 视图层绑定 
 	/// </summary>
 	public class ViewLayerBind : ViewBind
-		, AsListNodeBranch
+		, AsComponentBranch
 	{
+		/// 节点列表 
+		/// </summary>
+		public UnitList<NodeRef<View>> ViewList;
+
+		/// <summary>
+		/// ID索引 
+		/// </summary>
+		public UnitDictionary<long, int> IdIndexDict;
 	}
 
 	/// <summary>
@@ -13,15 +21,13 @@
 	/// </summary>
 	public class ViewLayer : View<ViewLayerBind>
 		, GenericOf<int, ViewLayerGroupBind>
+		, AsComponentBranch
 		, AsRule<Awake>
+
 	{
 		/// <summary>
-		/// 节点列表 
+		/// 层级数量 
 		/// </summary>
-		public UnitList<NodeRef<INode>> NodeList;
-
-
-
+		public byte LayerCount => (byte)(ViewBind == null ? 0 : ViewBind.ViewList.Count);
 	}
-
 }

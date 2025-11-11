@@ -41,26 +41,14 @@
 	/// </summary>
 	public interface Hide : ISendRule { }
 
-
+	/// <summary>
+	/// 层级变更
+	/// </summary>
+	public interface LayerChange : ISendRule { }
 
 	/// <summary>
-	/// 子视图打开 
+	/// 子视图关闭   
 	/// </summary>
-	public interface SubViewOpen : ICallRule<int> { }
-
-	/// <summary>
-	/// 子视图关闭 
-	/// </summary>
-	public interface SubViewClose : ICallRule<int> { }
-
-	/// <summary>
-	/// 子视图显示 
-	/// </summary>
-	public interface SubViewShow : ISendRule { }
-
-	/// <summary>
-	/// 子视图隐藏 
-	/// </summary>
-	public interface SubViewHide : ISendRule { }
+	public interface SubViewClose : ISendRule<INode> { }
 
 }

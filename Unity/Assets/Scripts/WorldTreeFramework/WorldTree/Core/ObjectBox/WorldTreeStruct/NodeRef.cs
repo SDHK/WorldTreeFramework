@@ -101,6 +101,12 @@ namespace WorldTree
 			InstanceId = node.InstanceId;
 			this.node = node;
 		}
+
+		/// <summary>
+		/// 是否为空引用 
+		/// </summary>
+		public bool IsNull => Value is null;
+
 		/// <summary>
 		/// 尝试获取节点
 		/// </summary>

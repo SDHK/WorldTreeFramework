@@ -7,9 +7,19 @@ namespace WorldTree
 	{
 		class BoolViewRule : GenericsViewRule<bool>
 		{
-			protected override void Execute(UnityNodeFieldView<bool> self, INode node, FieldInfo arg1)
+			protected override void Execute(UnityNodeFieldView<bool> self, INode node, MemberInfo arg1)
 			{
-				arg1.SetValue(node, EditorGUILayout.Toggle(arg1.Name, (bool)arg1.GetValue(node)));
+				if (arg1 is FieldInfo fieldInfo)
+				{
+					var value = EditorGUILayout.Toggle(fieldInfo.Name, (bool)fieldInfo.GetValue(node));
+					fieldInfo.SetValue(node, value);
+				}
+				else if (arg1 is PropertyInfo propertyInfo)
+				{
+					if (!propertyInfo.CanRead) return;
+					var value = EditorGUILayout.Toggle(propertyInfo.Name, (bool)propertyInfo.GetValue(node));
+					if (propertyInfo.CanWrite) propertyInfo.SetValue(node, value);
+				}
 			}
 		}
 	}

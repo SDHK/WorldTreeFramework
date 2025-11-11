@@ -134,7 +134,7 @@ namespace WorldTree
 		public World World { get; set; }
 
 		[TreeDataIgnore]
-		public INode Parent { get; set; }
+		public virtual INode Parent { get; set; }
 
 		[TreeDataIgnore]
 		public IWorldTreeNodeViewBuilder ViewBuilder { get; set; }

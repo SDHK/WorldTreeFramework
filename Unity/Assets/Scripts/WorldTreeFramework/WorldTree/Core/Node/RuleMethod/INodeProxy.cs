@@ -107,9 +107,9 @@ namespace WorldTree
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, self))
 			{
 				self.BranchType = self.Core.TypeToCode<B>();
-				self.Parent = parent;
 				self.Core = parent.Core;
 				self.World = parent.World;
+				self.Parent = parent;
 				self.SetActive(true);//激活节点
 				AddNodeView(self);
 				return true;
@@ -213,7 +213,7 @@ namespace WorldTree
 			if (self.IsDisposed) return;
 
 			//节点释放前序遍历处理,节点释放后续遍历处理
-			NodeBranchTraversalHelper.TraversalPrePostOrder(self, OnBeforeDispose, OnDispose);
+			NodeBranchTraversalHelper.TraversalPrePostOrder(self, node => node.OnBeforeDispose(), node => node.OnDispose());
 		}
 
 		/// <summary>
@@ -286,7 +286,7 @@ namespace WorldTree
 			self.World = parent.World;
 
 			self.RefreshActive();
-			NodeBranchTraversalHelper.TraversalPrePostOrder(self, OnBeforeGraftSelfToTree, OnGraftSelfToTree);
+			NodeBranchTraversalHelper.TraversalPrePostOrder(self, node => node.OnBeforeGraftSelfToTree(), node => node.OnGraftSelfToTree());
 			return true;
 		}
 
@@ -364,7 +364,7 @@ namespace WorldTree
 		{
 			if (self.IsDisposed) return null; // 是否已经回收
 			if (self.Parent == null) return self;
-			NodeBranchTraversalHelper.TraversalPostorder(self, OnCutSelf);
+			NodeBranchTraversalHelper.TraversalPostorder(self, node => node.OnCutSelf());
 			NodeBranchHelper.RemoveNode(self); // 从父节点分支移除
 			return self;
 		}
