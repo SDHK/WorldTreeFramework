@@ -19,6 +19,42 @@
 			self.IdIndexDict = null;
 		}
 
+		[NodeRule(nameof(CloseRule<ViewLayer>))]
+		private static void OnCloseRule(this ViewLayer self)
+		{
+			// 关闭时清理所有视图
+			self.CloseAllView();
+		}
+
+
+		[NodeRule(nameof(SubViewCloseRule<ViewLayer>))]
+		private static void OnSubViewCloseRule(this ViewLayer self, View view)
+		{
+			// 自动清理 ViewList 和 IdIndexDict
+			if (self.ViewBind.IdIndexDict.Remove(view.Id, out int index))
+			{
+				self.ViewBind.ViewList[index].Value.Layer = 0;
+				self.ViewBind.ViewList.RemoveAt(index);
+
+				// 更新后续View的Layer
+				for (int i = index; i < self.ViewBind.ViewList.Count; i++)
+				{
+					var nodeRef = self.ViewBind.ViewList[i];
+					if (nodeRef.IsNull)
+					{
+						self.ViewBind.IdIndexDict.Remove(nodeRef.InstanceId);
+						self.ViewBind.ViewList.RemoveAt(i);
+						i--; // 移除后需要回退索引
+						continue;
+					}
+					var v = nodeRef.Value;
+					self.ViewBind.IdIndexDict[v.Id] = i;
+					v.Layer = (byte)(i + 1);
+					v.LayerChange();
+				}
+			}
+		}
+
 		/// <summary>
 		/// 尝试添加视图:类型码
 		/// </summary>
@@ -80,28 +116,30 @@
 			if (node is not ViewObject view) return;
 
 			view.OnClose();
-			if (self.ViewBind.IdIndexDict.Remove(view.Id, out int index))
-			{
-				self.ViewBind.ViewList[index].Value.Layer = 0;
-				self.ViewBind.ViewList.RemoveAt(index);
+			// ViewBind 销毁时会自动触发 SubViewClose 事件
+		}
 
-				// 顺序更新 index 以上的层级，并移除空项
-				for (int i = index; i < self.ViewBind.ViewList.Count; i++)
+		/// <summary>
+		/// 关闭所有视图 
+		/// </summary>
+		public static void CloseAllView(this ViewLayer self)
+		{
+			if (self?.ViewBind?.ViewList == null || self.ViewBind.ViewList.Count == 0) return;
+			// 从顶层向下关闭，并移除空项
+			for (int i = self.ViewBind.ViewList.Count - 1; i >= 0; i--)
+			{
+				var nodeRef = self.ViewBind.ViewList[i];
+				if (nodeRef.IsNull)
 				{
-					var nodeRef = self.ViewBind.ViewList[i];
-					if (nodeRef.IsNull)
-					{
-						self.ViewBind.IdIndexDict.Remove(nodeRef.InstanceId);
-						self.ViewBind.ViewList.RemoveAt(i);
-						i--; // 移除后需要回退索引
-						continue;
-					}
-					var v = nodeRef.Value;
-					self.ViewBind.IdIndexDict[nodeRef.Id] = i;
-					v.Layer = (byte)(i + 1);
-					v.LayerChange();
+					self.ViewBind.IdIndexDict.Remove(nodeRef.InstanceId);
+					self.ViewBind.ViewList.RemoveAt(i);
+					continue;
 				}
+				var view = nodeRef.Value;
+				view.OnClose();
 			}
+			self.ViewBind.ViewList.Clear();
+			self.ViewBind.IdIndexDict.Clear();
 		}
 
 		/// <summary>

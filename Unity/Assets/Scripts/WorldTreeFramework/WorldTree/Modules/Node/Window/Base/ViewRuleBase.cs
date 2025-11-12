@@ -49,6 +49,6 @@
 	/// <summary>
 	/// 子视图关闭   
 	/// </summary>
-	public interface SubViewClose : ISendRule<INode> { }
+	public interface SubViewClose : ISendRule<View> { }
 
 }

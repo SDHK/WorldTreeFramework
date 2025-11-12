@@ -210,7 +210,7 @@ namespace WorldTree
 	/// <summary>
 	/// 视图绑定
 	/// </summary>
-	public class ViewTestBind : ViewBind
+	public class ViewTestWindowBind : ViewBind
 	{
 		/// <summary>
 		/// 测试文本
@@ -227,7 +227,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试视图
 	/// </summary>
-	public class ViewTestWindow : ViewObject<ViewTestBind>
+	public class ViewTestWindow : ViewObject<ViewTestWindowBind>
 	{
 		/// <summary>
 		/// 名称

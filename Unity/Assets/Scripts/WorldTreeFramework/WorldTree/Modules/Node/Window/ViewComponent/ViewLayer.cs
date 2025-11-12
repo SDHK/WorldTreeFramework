@@ -22,6 +22,7 @@
 	public class ViewLayer : View<ViewLayerBind>
 		, GenericOf<int, ViewLayerGroupBind>
 		, AsComponentBranch
+		, AsRule<SubViewClose>
 		, AsRule<Awake>
 
 	{

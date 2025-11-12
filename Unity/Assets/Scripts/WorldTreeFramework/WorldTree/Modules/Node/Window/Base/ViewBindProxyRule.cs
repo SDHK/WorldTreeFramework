@@ -85,7 +85,7 @@
 		/// </summary>
 		public static void OnBeforeDispose(INode self)
 		{
-			NodeRuleHelper.TrySendRule(self.Parent, default(SubViewClose), self);
+			NodeRuleHelper.TrySendRule(self.Parent, default(SubViewClose), self as View);
 			self.OnBeforeDispose();
 			NodeRuleHelper.TrySendRule(self.Parent, default(Close));
 		}
