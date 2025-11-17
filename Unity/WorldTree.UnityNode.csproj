@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{9B5D3FD1-5D41-F836-C69B-328AEC1FB79D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -58,6 +59,7 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\View\ViewLayerElement.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\ViewTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\YooAssetTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\Input\InputDriverMouse.cs" />

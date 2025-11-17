@@ -60,6 +60,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\TreeTween\TreeTweenManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\Window\ViewComponent\TreeLoader.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\Window\ViewComponent\ViewLayer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\DataBase\LiteDB\UnitBsonDocument.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\Window\ViewComponent\Button.cs" />

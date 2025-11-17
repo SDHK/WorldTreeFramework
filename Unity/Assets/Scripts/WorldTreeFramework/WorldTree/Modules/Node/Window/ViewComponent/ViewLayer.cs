@@ -1,6 +1,14 @@
 ﻿namespace WorldTree
 {
 	/// <summary>
+	/// 视图层级元素接口 
+	/// </summary>
+	public interface IViewLayerElement : IViewElement
+	{
+
+	}
+
+	/// <summary>
 	/// 视图层绑定 
 	/// </summary>
 	public class ViewLayerBind : ViewBind
