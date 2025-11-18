@@ -229,6 +229,13 @@ namespace WorldTree
 		[INodeThis]
 		public static void OnDispose(INode self)
 		{
+			if (self.ViewBuilder != null)
+			{
+				var builder = self.ViewBuilder;
+				self.ViewBuilder.Core.WorldContext.Post(builder.Dispose);
+				self.ViewBuilder = null;
+			}
+
 			self.SetActive(false); // 激活变更
 			if (self.IsActive != self.activeEventMark)//激活变更
 			{
@@ -242,7 +249,6 @@ namespace WorldTree
 				}
 			}
 
-			self.ViewBuilder?.Core.WorldContext.Post(self.ViewBuilderDispose);
 			NodeBranchHelper.RemoveNode(self); // 从父节点分支移除
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer) // 检测自身为监听器
 			{
@@ -374,8 +380,12 @@ namespace WorldTree
 		/// </summary>
 		public static void OnCutSelf(INode self)
 		{
-			self.ViewBuilder?.Dispose();
-			self.ViewBuilder = null;
+			if (self.ViewBuilder != null)
+			{
+				var builder = self.ViewBuilder;
+				self.ViewBuilder.Core.WorldContext.Post(builder.Dispose);
+				self.ViewBuilder = null;
+			}
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer)
 			{
 				// 检测移除静态监听
@@ -397,37 +407,32 @@ namespace WorldTree
 		/// </summary>
 		public static void AddNodeView(INode self)
 		{
-			self.ViewBuilder?.Core.WorldContext.Post(self.ViewBuilderDispose);
-			self.Core.ViewBuilder?.Core.WorldContext.Post(self.ViewBuilderCreate);
+			if (self.ViewBuilder != null)
+			{
+				var builder = self.ViewBuilder;
+				self.ViewBuilder.Core.WorldContext.Post(builder.Dispose);
+			}
+			self.ViewBuilder = null;
+			self.Core?.ViewBuilder?.Core.WorldContext.Post(ViewBuilderCreate, new(self, self.Id));
 		}
 
 		/// <summary>
 		/// 创建节点可视化
 		/// </summary>
-		private static void ViewBuilderCreate(this INode self)
+		private static void ViewBuilderCreate(WorldContextData data)
 		{
-			if (self.Parent?.ViewBuilder == null)
-			{
-				self.ViewBuilder = null;
-				return;
-			}
-			// 拿到父节点的可视化生成器的父级节点
-			INode viewParent = self.Parent.ViewBuilder.Parent;
+			INode self = (INode)data.Object;
+			long id = data.Long;
+			if (self.IsDisposed || self.Id != id) return;
+
+			// 拿到核心的可视化生成器的父级节点
+			INode viewBuilderParent = self.Core.ViewBuilder.Parent;
 
 			// 生成自身的可视化生成器
-			INode nodeView = viewParent.Core.PoolGetNode(self.Parent.ViewBuilder.Type);
+			INode nodeView = viewBuilderParent.Core.PoolGetNode(self.Core.ViewBuilder.Type);
 
 			// 将自身添加到父节点的可视化生成器中，而可视化则挂到可视化父级节点上
-			self.ViewBuilder = NodeBranchHelper.AddNodeToTree(viewParent, default(ChildBranch), nodeView.Id, nodeView, (INode)self, (INode)self.Parent) as IWorldTreeNodeViewBuilder;
-		}
-
-		/// <summary>
-		/// 释放节点可视化
-		/// </summary>
-		private static void ViewBuilderDispose(this INode self)
-		{
-			self.ViewBuilder.Dispose();
-			self.ViewBuilder = null;
+			self.ViewBuilder = NodeBranchHelper.AddNodeToTree(viewBuilderParent, default(ChildBranch), nodeView.Id, nodeView, (INode)self, (INode)self.Parent) as IWorldTreeNodeViewBuilder;
 		}
 
 		#endregion

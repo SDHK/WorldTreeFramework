@@ -46,7 +46,7 @@ namespace WorldTree
 		/// <summary>
 		/// 可视化世界线
 		/// </summary>
-		private WorldLine viewLine;
+		public WorldLine ViewLine;
 
 		/// <summary>
 		/// 可视化世界之心类型
@@ -70,13 +70,13 @@ namespace WorldTree
 		{
 			this.viewHeartType = heartType;
 			this.viewBuilderType = viewBuilderType;
-			viewLine = new WorldLine();
-			viewLine.WorldLineManager = this;
-			viewLine.Init(heartType, 10);
-			viewLine.WorldContext.Post(() =>
+			ViewLine = new WorldLine();
+			ViewLine.WorldLineManager = this;
+			ViewLine.Init(heartType, 10);
+			ViewLine.WorldContext.Post(() =>
 			{
-				long worldTypeCode = viewLine.TypeToCode(worldType);
-				NodeBranchHelper.AddNode(viewLine, default(ComponentBranch), worldTypeCode, worldTypeCode, out _);
+				long worldTypeCode = ViewLine.TypeToCode(worldType);
+				NodeBranchHelper.AddNode(ViewLine, default(ComponentBranch), worldTypeCode, worldTypeCode, out _);
 			});
 		}
 
@@ -91,11 +91,11 @@ namespace WorldTree
 			{
 				line = new WorldLine();
 
-				if (viewLine != null)
+				if (ViewLine != null)
 				{
 					//可视化世界线添加可视化生成器
-					INode nodeView = viewLine.PoolGetNode(viewLine.TypeToCode(viewBuilderType));
-					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(viewLine.World, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
+					INode nodeView = ViewLine.PoolGetNode(ViewLine.TypeToCode(viewBuilderType));
+					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(ViewLine.World, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
 				}
 
 				MainLine ??= line;
@@ -141,13 +141,13 @@ namespace WorldTree
 				MainLine.Dispose();
 			});
 
-			viewLine?.WorldContext.Post(() =>
+			ViewLine?.WorldContext.Post(() =>
 			{
-				viewLine.Dispose();
+				ViewLine.Dispose();
 			});
 
 			MainLine = null;
-			viewLine = null;
+			ViewLine = null;
 		}
 
 		/// <summary>

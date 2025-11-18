@@ -29,7 +29,6 @@
 			NodeRuleHelper.TrySendRule(self.Parent, default(Open));
 			NodeRuleHelper.TrySendRule(self.Parent, default(LayerChange));
 
-
 			if (self.IsActive != self.activeEventMark)//激活变更
 			{
 				if (self.IsActive)
@@ -97,7 +96,8 @@
 		{
 			NodeRuleHelper.TrySendRule(self, default(ViewUnRegister));
 			NodeRuleHelper.TrySendRule(self, default(ViewElementUnLoad));
-			self.ViewBuilder?.Core.WorldContext.Post(self.ViewBuilderDispose);
+			self.ViewBuilder?.Core.WorldContext.Post(self.ViewBuilder.Dispose);
+			self.ViewBuilder = null;
 			NodeBranchHelper.RemoveNode(self); // 从父节点分支移除
 
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer) // 检测自身为监听器
@@ -115,15 +115,5 @@
 			self.Parent = null; // 清除父节点
 			self.Core.PoolRecycle(self); // 回收到池
 		}
-
-		/// <summary>
-		/// 释放节点可视化
-		/// </summary>
-		private static void ViewBuilderDispose(this INode self)
-		{
-			self.ViewBuilder.Dispose();
-			self.ViewBuilder = null;
-		}
-
 	}
 }

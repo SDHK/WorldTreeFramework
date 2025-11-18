@@ -29,7 +29,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点
 		/// </summary>
-		public INode node;
+		public NodeRef<INode> node;
 		/// <summary>
 		/// 游戏对象
 		/// </summary>
@@ -50,8 +50,7 @@ namespace WorldTree
 		{
 			protected override void Execute(UnityWorldTreeNodeViewBuilder self, INode node, INode parent)
 			{
-				self.node = node;
-
+				self.node = new(node);
 				self.gameObject ??= new GameObject(node.GetType().Name);
 				if (self.gameObject != null)
 				{
@@ -69,6 +68,12 @@ namespace WorldTree
 						self.parentBranchObj.transform.SetParent(parentObj.transform);
 						parentView.branchObjDict.Add(node.BranchType, self.parentBranchObj);
 					}
+					else if (self.parentBranchObj == null)
+					{
+						self.parentBranchObj = new GameObject(node.CodeToType(node.BranchType).Name);
+						self.parentBranchObj.transform.SetParent(parentObj.transform);
+						parentView.branchObjDict[node.BranchType] = self.parentBranchObj;
+					}
 
 					if (self.gameObject != null)
 					{
@@ -85,10 +90,10 @@ namespace WorldTree
 		{
 			protected override void Execute(UnityWorldTreeNodeViewBuilder self)
 			{
-				if (self.gameObject != null) GameObject.Destroy(self.gameObject);
+				if (self.gameObject != null) GameObject.DestroyImmediate(self.gameObject);
 				if (self.parentBranchObj != null && self.parentBranchObj.transform.childCount == 0)
 				{
-					GameObject.Destroy(self.parentBranchObj.gameObject);
+					GameObject.DestroyImmediate(self.parentBranchObj);
 				}
 				self.branchObjDict.Clear();
 				self.node = null;

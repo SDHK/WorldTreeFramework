@@ -49,21 +49,25 @@ namespace WorldTree
 		public static async TreeTask Test(this TaskTest self)
 		{
 			TreeTaskToken taskTokenCatch = await self.TreeTaskTokenCatch();
+			//taskTokenCatch.TimeOut(8).Coroutine();
 
 
 
-			self.Log($"A！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
+			//self.Log($"A！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
 
-			while (taskTokenCatch.State != TokenState.Cancel)
-			{
-				await self.AsyncDelay(6);
-				if (taskTokenCatch.State == TokenState.Cancel) return;
+			//while (taskTokenCatch.State != TokenState.Cancel)
+			//{
+			await self.TestB();
+			await self.AsyncDelay(6);
 
-				await self.TestB();
+			if (taskTokenCatch.State == TokenState.Cancel) return;
 
-				if (taskTokenCatch.State == TokenState.Cancel) return;
-				await self.TaskD();
-			}
+			await self.TaskC();
+			//await self.AsyncDelay(6);
+
+			if (taskTokenCatch.State == TokenState.Cancel) return;
+			await self.TaskD();
+			//}
 		}
 
 		/// <summary>
@@ -71,8 +75,8 @@ namespace WorldTree
 		/// </summary>
 		public static async TreeTask TestB(this TaskTest self)
 		{
-			await self.TaskC();
-			await self.AsyncDelay(4);
+			//await self.TaskC();
+			//await self.AsyncDelay(4);
 
 			TreeTaskToken taskTokenCatch = await self.TreeTaskTokenCatch();
 			self.Log($"B！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");

@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{AFC8BDA7-7341-72BD-61AC-17E095FA5EA2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -59,7 +58,6 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\View\ViewLayerElementRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TaskTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\Input\InputDriverKeyboardRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SphereManagerTestRule.cs" />
@@ -70,6 +68,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\UtcTimeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MultilayerPerceptronTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\InitialDomainRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\View\ViewLayerElementRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\InputMapperTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MainWorldRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TreeDataTestRule.cs" />

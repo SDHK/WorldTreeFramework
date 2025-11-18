@@ -56,13 +56,13 @@ namespace WorldTree.Internal
 
 				this.Core.WorldContext.Post((selfObj) =>
 				{
-					var self = (TreeTaskLink)selfObj;
+					var self = (TreeTaskLink)selfObj.Object;
 					base.SetCompleted();
-				}, this);
+				}, new(this));
 			}
 			catch (Exception e)
 			{
-				this.Core.WorldContext.Post((e) => this.LogError((Exception)e), e);
+				this.Core.WorldContext.Post((e) => this.LogError((Exception)e.Object), new(e));
 			}
 		}
 
@@ -121,13 +121,13 @@ namespace WorldTree.Internal
 				}
 				this.Core.WorldContext.Post((selfObj) =>
 				{
-					var self = (TreeTaskLink<T>)selfObj;
+					var self = (TreeTaskLink<T>)selfObj.Object;
 					base.SetCompleted();
-				}, this);
+				}, new(this));
 			}
 			catch (Exception e)
 			{
-				this.Core.WorldContext.Post((o) => this.LogError((Exception)o), e);
+				this.Core.WorldContext.Post((o) => this.LogError((Exception)o.Object), new(e));
 			}
 		}
 	}

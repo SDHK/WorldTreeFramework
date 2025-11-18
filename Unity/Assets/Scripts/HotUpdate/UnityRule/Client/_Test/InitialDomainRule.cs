@@ -36,6 +36,7 @@ namespace WorldTree
 			//string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone);
 			//if (!currentDefines.Contains("MY_NEW_DEFINE")) currentDefines += ";MY_NEW_DEFINE";
 			//PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, currentDefines);
+			self.AddComponent(out TaskTest _);
 		}
 
 		[NodeRule(nameof(UpdateRule<InitialDomain>))]
@@ -47,7 +48,7 @@ namespace WorldTree
 			{
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
 				//self.AddComponent(out TreeDataTest _);
-				self.AddComponent(out ViewTest _);
+				//self.AddComponent(out ViewTest _);
 
 				//NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
 			}
