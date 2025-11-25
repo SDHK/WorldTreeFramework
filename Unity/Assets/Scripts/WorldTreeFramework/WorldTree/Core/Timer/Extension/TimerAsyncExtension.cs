@@ -47,7 +47,6 @@ namespace WorldTree
 			{
 				taskToken.TokenEvent.Add(counter);
 			}
-			self.Log($"计时器任务 ： {asyncTask.Id}");
 			//组件的任务完成回调注册
 			counter.Callback.Add(asyncTask, default(TreeTaskSetResuIt));
 			//等待异步执行

@@ -55,19 +55,19 @@ namespace WorldTree
 
 			//self.Log($"A！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
 
-			//while (taskTokenCatch.State != TokenState.Cancel)
-			//{
-			await self.TestB();
-			await self.AsyncDelay(6);
+			while (taskTokenCatch.State != TokenState.Cancel)
+			{
+				await self.TestB();
+				await self.AsyncDelay(6);
 
-			if (taskTokenCatch.State == TokenState.Cancel) return;
+				if (taskTokenCatch.State == TokenState.Cancel) return;
 
-			await self.TaskC();
-			//await self.AsyncDelay(6);
+				await self.TaskC();
+				await self.AsyncDelay(6);
 
-			if (taskTokenCatch.State == TokenState.Cancel) return;
-			await self.TaskD();
-			//}
+				if (taskTokenCatch.State == TokenState.Cancel) return;
+				await self.TaskD();
+			}
 		}
 
 		/// <summary>

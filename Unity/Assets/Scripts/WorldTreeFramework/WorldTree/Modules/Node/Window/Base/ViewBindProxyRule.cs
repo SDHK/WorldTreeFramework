@@ -94,10 +94,16 @@
 		[INodeThis]
 		public static void OnDispose(INode self)
 		{
+			if (self.ViewBuilder != null)
+			{
+				var builder = self.ViewBuilder;
+				self.ViewBuilder.Core.WorldContext.Post(builder.Dispose);
+				self.ViewBuilder = null;
+			}
+
 			NodeRuleHelper.TrySendRule(self, default(ViewUnRegister));
 			NodeRuleHelper.TrySendRule(self, default(ViewElementUnLoad));
-			self.ViewBuilder?.Core.WorldContext.Post(self.ViewBuilder.Dispose);
-			self.ViewBuilder = null;
+
 			NodeBranchHelper.RemoveNode(self); // 从父节点分支移除
 
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer) // 检测自身为监听器
