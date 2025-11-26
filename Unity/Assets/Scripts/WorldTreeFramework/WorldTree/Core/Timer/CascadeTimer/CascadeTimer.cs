@@ -26,7 +26,7 @@ namespace WorldTree
 		public long TimeStamp;
 
 		/// <summary>
-		/// 精度掩码
+		/// 精度掩码：一般不需要设置，0为最高精度。
 		/// </summary>
 		public long PrecisionMask;
 
@@ -67,32 +67,25 @@ namespace WorldTree
 			protected override void Execute(CascadeTimer self)
 			{
 				//去掉精度位,只遍历高于精度的槽位
-				self.TimeStamp &= (~(self.PrecisionMask));
-
+				if (self.PrecisionMask != 0) self.TimeStamp &= (~(self.PrecisionMask));
 				//没有占用槽位则直接返回
 				if (self.OccupiedSlotMask == 0) return;
-
+   				//时间回退不处理，等待时间追上LastTimeStamp后自然恢复
+				if (self.TimeStamp < self.LastTimeStamp) return;
 				//获取时间戳变化差异
 				var timeDiff = self.TimeStamp ^ self.LastTimeStamp;
 				//没有变化就直接返回
 				if (timeDiff == 0) return;
 				//获取占用槽位的最低位置
 				var minSlot = MathBit.GetLowestBitIndex(self.OccupiedSlotMask);
-				//如果最低占用槽位比时间变化大，说明本次时间变化不影响任何已占用槽位，无需处理，直接返回。
+				//如果最低槽位比时间变化大，说明没有到时的要处理，直接返回。
 				if (minSlot == -1 || (1L << minSlot) > timeDiff) return;
-
-				//如果变化的时间大于已占用槽位，直接遍历所有槽位，否则只遍历本次变化最高位涉及的槽位。
+				//如果变化的时间大于已占用槽位，直接遍历所有槽位，否则只遍历本次时间变化内涉及的槽位。
 				var clampDiffSlot = timeDiff > self.OccupiedSlotMask ? self.OccupiedSlotMask : timeDiff;
 				var max = MathBit.GetHighestBitIndex(clampDiffSlot);
 				var min = minSlot;
-
 				//时间前进时正序遍历，避免重复处理下移的定时器
-				if (self.TimeStamp > self.LastTimeStamp)
-					for (int i = min; i <= max; i++) self.SlotUpdate(i);
-				//时间回退时倒序遍历，避免重复处理上移的定时器。
-				//一般不会有时间回退的情况，这里只是做个完整性处理。
-				else for (int i = max; i >= min; i--) self.SlotUpdate(i);
-
+				for (int i = min; i <= max; i++) self.SlotUpdate(i);
 				//时间戳更新
 				self.LastTimeStamp = self.TimeStamp;
 			}
@@ -110,7 +103,6 @@ namespace WorldTree
 			for (int j = slot.TimerDataList.Count - 1; j >= 0; j--)
 			{
 				var timerData = slot.TimerDataList[j].Value;
-
 				//移除空定时器
 				if (timerData == null || timerData.IsNull)
 				{
@@ -118,7 +110,6 @@ namespace WorldTree
 					timerData?.Dispose();
 					continue;
 				}
-
 				//时间到达，执行定时器
 				if (self.TimeStamp >= timerData.TimeStamp)
 				{
@@ -167,12 +158,8 @@ namespace WorldTree
 
 			//算出槽位位置，TimeStamp 与 clockTimeStamp 的异或后的最高位1所在的位置
 			int slotIndex = MathBit.GetHighestBitIndex(self.TimeStamp ^ clockTimeStamp);
-			self.AddChild(out CascadeTimerData timerData);
-			timerData.TimeStamp = clockTimeStamp;
-			timerData.Node = new NodeRef<INode>(node);
-			timerData.RuleType = ruleType;
+			self.AddChild(out CascadeTimerData timerData, clockTimeStamp, node, ruleType);
 			self.SlotList[slotIndex].Add(timerData);
-
 			//标记槽位已占用
 			self.OccupiedSlotMask |= 1L << slotIndex;
 			return timerData.Id;

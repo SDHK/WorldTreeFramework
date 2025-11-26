@@ -3,6 +3,8 @@
 using System.Numerics;
 #endif
 
+using System.Runtime.CompilerServices;
+
 namespace WorldTree
 {
 	/// <summary>
@@ -13,6 +15,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取最高位1的位置（-1~63），全0的话返回-1
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int GetHighestBitIndex(long value)
 		{
 			if (value == 0) return -1;
@@ -22,6 +25,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取最低位1的位置（-1~63），全0的话返回-1
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int GetLowestBitIndex(long value)
 		{
 			if (value == 0) return -1;
@@ -31,6 +35,7 @@ namespace WorldTree
 		/// <summary>
 		/// 计算前导零的个数（0~64）
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int LeadingZeroCount(ulong value)
 		{
 #if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
@@ -52,6 +57,7 @@ namespace WorldTree
 		/// <summary>
 		/// 计算尾部零的个数（0~64）
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int TrailingZeroCount(ulong value)
 		{
 #if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER

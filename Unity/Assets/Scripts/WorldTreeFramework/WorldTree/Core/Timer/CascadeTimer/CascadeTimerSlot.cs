@@ -8,37 +8,6 @@
 */
 namespace WorldTree
 {
-
-	/// <summary>
-	/// 级联定时器数据
-	/// </summary>
-	public class CascadeTimerData : Node
-		, ChildOf<CascadeTimer>
-		, AsRule<Awake>
-	{
-		/// <summary>
-		/// 定时时间戳 
-		/// </summary>
-		public long TimeStamp;
-
-		/// <summary>
-		/// 执行节点 
-		/// </summary>
-		public NodeRef<INode> Node;
-
-		/// <summary>
-		/// 事件规则类型 
-		/// </summary>
-		public long RuleType;
-
-		/// <summary>
-		/// 是否为空 
-		/// </summary>
-		public bool IsNull => Node.IsNull;
-	}
-
-
-
 	/// <summary>
 	/// 槽位节点
 	/// </summary>
@@ -71,6 +40,4 @@ namespace WorldTree
 			self.TimerDataList.Add(data);
 		}
 	}
-
-
 }
