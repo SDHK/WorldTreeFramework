@@ -4,6 +4,10 @@
 * 日期： 2025/11/19 15:59
 
 * 描述： 级联定时器
+* 
+* 时间戳是long，它可以是DateTime.Ticks，也可以是自定义的时钟时间戳,也可以是帧。
+* 本身会自动根据Update频率适应精度，而PrecisionMask可以用来固定精度。
+* 通过二分降级均摊传统降级排序开销，避免雪崩消耗。
 
 */
 namespace WorldTree
@@ -26,7 +30,7 @@ namespace WorldTree
 		public long TimeStamp;
 
 		/// <summary>
-		/// 精度掩码：一般不需要设置，0为最高精度。
+		/// 精度掩码：用来强制对齐的，一般不需要设置，0为最高精度。
 		/// </summary>
 		public long PrecisionMask;
 
@@ -66,11 +70,11 @@ namespace WorldTree
 		{
 			protected override void Execute(CascadeTimer self)
 			{
-				//去掉精度位,只遍历高于精度的槽位
-				if (self.PrecisionMask != 0) self.TimeStamp &= (~(self.PrecisionMask));
 				//没有占用槽位则直接返回
 				if (self.OccupiedSlotMask == 0) return;
-   				//时间回退不处理，等待时间追上LastTimeStamp后自然恢复
+				//去掉精度位,只遍历高于精度的槽位
+				if (self.PrecisionMask != 0) self.TimeStamp &= (~(self.PrecisionMask));
+				//时间回退不处理，等待时间追上LastTimeStamp后自然恢复
 				if (self.TimeStamp < self.LastTimeStamp) return;
 				//获取时间戳变化差异
 				var timeDiff = self.TimeStamp ^ self.LastTimeStamp;
@@ -88,6 +92,9 @@ namespace WorldTree
 				for (int i = min; i <= max; i++) self.SlotUpdate(i);
 				//时间戳更新
 				self.LastTimeStamp = self.TimeStamp;
+				//执行定时器, 然后清空执行器
+				self.RuleMulticast.Send();
+				self.RuleMulticast.Clear();
 			}
 		}
 
@@ -99,14 +106,17 @@ namespace WorldTree
 			//槽位未占用则跳过
 			if ((self.OccupiedSlotMask & (1L << i)) == 0) return;
 			var slot = self.SlotList[i];
-			//倒序遍历槽位内的定时器
-			for (int j = slot.TimerDataList.Count - 1; j >= 0; j--)
+
+			//遍历槽位内的定时器
+			slot.TimerIterator.RefreshTraversalCount();
+			for (int j = 0; j < slot.TimerIterator.TraversalCount; j++)
 			{
-				var timerData = slot.TimerDataList[j].Value;
+				if (!slot.TimerIterator.TryGetNext(out var nodeRef)) continue;
+				var timerData = nodeRef.Value;
 				//移除空定时器
 				if (timerData == null || timerData.IsNull)
 				{
-					slot.TimerDataList.RemoveAt(j);
+					slot.TimerIterator.DequeueCurrent();
 					timerData?.Dispose();
 					continue;
 				}
@@ -120,7 +130,8 @@ namespace WorldTree
 					}
 					//从槽位移除
 					timerData.Dispose();
-					slot.TimerDataList.RemoveAt(j);
+					slot.TimerIterator.DequeueCurrent();
+
 				}
 				//时间未到达，重新计算槽位位置
 				else
@@ -132,13 +143,13 @@ namespace WorldTree
 					//移到新的槽位
 					self.SlotList[slotIndex].Add(timerData);
 					//从当前槽位移除
-					slot.TimerDataList.RemoveAt(j);
+					slot.TimerIterator.DequeueCurrent();
 					//标记槽位已占用
 					self.OccupiedSlotMask |= 1L << slotIndex;
 				}
 			}
 			//槽位已空，清除占用标记
-			if (slot.TimerDataList.Count == 0) self.OccupiedSlotMask &= ~(1L << i);
+			if (slot.TimerIterator.TraversalCount == 0) self.OccupiedSlotMask &= ~(1L << i);
 		}
 
 

@@ -18,7 +18,7 @@ namespace WorldTree
 		/// <summary>
 		/// 锁的字典
 		/// </summary>
-		public TreeDictionary<long, DynamicNodeQueue> nodeQueueDict;
+		public TreeDictionary<long, DynamicQueueNode> nodeQueueDict;
 	}
 
 
@@ -68,7 +68,7 @@ namespace WorldTree
 		public static async TreeTask<TreeTaskQueueCompleter> Lock(this TreeTaskQueueLockManager self, INode node, long key)
 		{
 			//判断如果没有这个键值
-			if (!self.nodeQueueDict.TryGetValue(key, out DynamicNodeQueue TaskQueue))
+			if (!self.nodeQueueDict.TryGetValue(key, out DynamicQueueNode TaskQueue))
 			{
 				//新建动态节点队列
 				self.nodeQueueDict.AddTemp(out TaskQueue);
@@ -88,7 +88,7 @@ namespace WorldTree
 
 			//节点添加任务锁
 			_ = node.AddTemp(out TreeTask<TreeTaskQueueCompleter> treeTask);
-			TaskQueue.TryEnqueue(treeTask);
+			TaskQueue.TryAdd(treeTask);
 
 			//返回一个任务锁
 			return await treeTask;
@@ -100,10 +100,10 @@ namespace WorldTree
 		public static void RunNext(this TreeTaskQueueLockManager self, long key)
 		{
 			if (self.nodeQueueDict != null)
-				if (self.nodeQueueDict.TryGetValue(key, out DynamicNodeQueue nodeQueue))
+				if (self.nodeQueueDict.TryGetValue(key, out DynamicQueueNode nodeQueue))
 				{
 					//获取第一个任务
-					if (nodeQueue.TryDequeue(out var task))
+					if (nodeQueue.TryGetNext(out var task))
 					{
 						TreeTaskQueueCompleter taskQueueCompleter;
 						if (nodeQueue.TryPeek(out var nextTask))
@@ -114,14 +114,14 @@ namespace WorldTree
 						else
 						{
 							//下一个任务不存在，意味着已是最后一个，解锁器挂最后节点身上
-							task.Parent.AddTemp(out taskQueueCompleter, key, self);
+							task.Value.Parent.AddTemp(out taskQueueCompleter, key, self);
 						}
 
 						//启动下一个任务，塞入任务解锁器
-						task.As<TreeTask<TreeTaskQueueCompleter>>().SetResult(taskQueueCompleter);
+						task.Value.As<TreeTask<TreeTaskQueueCompleter>>().SetResult(taskQueueCompleter);
 					}
 					//队列空了则删掉键值
-					if (nodeQueue.Count == 0)
+					if (nodeQueue.TraversalCount == 0)
 					{
 						self.nodeQueueDict.Remove(key);
 						nodeQueue.Dispose();

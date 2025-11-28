@@ -1,11 +1,11 @@
 ﻿/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2023/6/1 19:44
+* 日期： 2023/3/3 16:21
 
-* 描述： 法则执行器基类
-*
-* 执行拥有指定法则的节点
+* 描述： 自由迭代器
+* 
+* 支持动态添加和删除数据的迭代器
 *
 * 核心思想：
 * 对稳定数据使用+1间隔的连续访问获得极致性能，
@@ -24,13 +24,13 @@
 * Queue循环数组的缺点：
 * - 每次都有读和写两个操作
 * - 指针跳跃访问模式
-* - 遍历时添加节点会立即插入，打乱原有顺序时序混乱
+* - 遍历时添加数据会立即插入，打乱原有顺序时序混乱
 *  
 * 双List轮换方式的缺点：
 * - 每次都有读和写两个操作
 * - 指针跳跃访问模式
 * - 需要维护两套完整的数组，内存占用翻倍
-* - 遍历时添加节点会立即插入，打乱原有顺序时序混乱
+* - 遍历时添加数据会立即插入，打乱原有顺序时序混乱
 * 
 * 时间，空间，时序，全都要！
 * 
@@ -41,15 +41,27 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 法则执行器抽象基类
+	/// 节点迭代器:支持动态添加和删除数据的迭代器。 
 	/// </summary>
-	public abstract class RuleExecutor : Node, IRuleExecutorEnumerable, IRuleExecutor
+	public class IteratorNodeRef<T> : FreeIterator<NodeRef<T>>
+		where T : class, INode
+	{
+		public override bool CheckNull(NodeRef<T> data) => data == default || data.IsNull;
+	}
+
+
+	/// <summary>
+	/// 自由迭代器:支持动态添加和删除数据的迭代器。
+	/// </summary>
+	public abstract class FreeIterator<T> : Node
+		, ComponentOf<INode>, ChildOf<INode>
 		, AsChildBranch
+		, AsRule<Awake>
 	{
 		/// <summary>
-		/// 节点列表
+		/// 数据列表
 		/// </summary>
-		public RuleExecutorPair[] nodes;
+		public T[] nodes;
 
 		/// <summary>
 		/// 出队指针
@@ -82,7 +94,7 @@ namespace WorldTree
 		public bool isAddOdd;
 
 		/// <summary>
-		/// 当前新节点数量
+		/// 当前新数据数量
 		/// </summary>
 		[TreeDataIgnore]
 		public int nowNewCount;
@@ -105,14 +117,17 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public bool isInit = false;
 
+		/// <summary>
+		/// 动态遍历数量 
+		/// </summary>
 		public int TraversalCount => traversalCount;
 
 		/// <summary>
-		/// 尝试添加节点
+		/// 尝试添加数据
 		/// </summary>
-		public virtual bool TryAdd(INode node, RuleList rule)
+		public virtual bool TryAdd(T data)
 		{
-			if (node == null || rule == null) return false;
+			if (CheckNull(data)) return false;
 
 			int addIndex = 0;
 
@@ -131,14 +146,14 @@ namespace WorldTree
 			}
 			else
 			{
-				//计算添加位置 = 当前添加起始点 + 新节点数量 * 2 
+				//计算添加位置 = 当前添加起始点 + 新数据数量 * 2 
 				addIndex = addStartIndex + (nowNewCount << 1);
 				nowNewCount++;
 			}
 
 			// 判断自动扩容
 			if (addIndex + 1 >= nodes.Length) Capacity();
-			nodes[addIndex] = new RuleExecutorPair(node, rule);
+			nodes[addIndex] = data;
 			nextTraversalCount = addIndex + 1;
 			return true;
 		}
@@ -148,13 +163,13 @@ namespace WorldTree
 		/// </summary>
 		protected void Capacity()
 		{
-			// 如果目标容量小于当前节点数量，则设置为当前节点数量的两倍,为0则设置为4
+			// 如果目标容量小于当前数据数量，则设置为当前数据数量的两倍,为0则设置为4
 			int num = this.nodes.Length != 0 ? this.nodes.Length * 2 : 4;
 			if (num == this.nodes.Length) return;
 			if (num < this.nextTraversalCount) this.LogError("下标小于当前大小");
 			if (num > 0)
 			{
-				var newNodes = this.Core.PoolGetArray<RuleExecutorPair>(num);
+				var newNodes = this.Core.PoolGetArray<T>(num);
 				if (this.nodes.Length != 0)
 				{
 					Array.Copy(this.nodes, 0, newNodes, 0, this.nodes.Length);
@@ -168,24 +183,23 @@ namespace WorldTree
 				{
 					this.Core.PoolRecycle(this.nodes, true);
 				}
-				this.nodes = this.Core.PoolGetArray<RuleExecutorPair>(4);
+				this.nodes = this.Core.PoolGetArray<T>(4);
 			}
 		}
 
+		/// <summary>
+		/// 刷新遍历数量 
+		/// </summary>
 		public int RefreshTraversalCount()
 		{
-			// 判断如果下一次遍历数量为0，说明没有可遍历的节点，当前数组为空，直接恢复为初始化状态
+			// 判断如果下一次遍历数量为0，说明没有可遍历的数据，当前数组为空，直接恢复为初始化状态
 			isInit = nextTraversalCount == 0;
-
 			//奇偶切换点是读取指针最后停下的位置
 			switchPoint = writePoint;
-
-			//新增位置是切换点 + 上次新节点数量
+			//新增位置是切换点 + 上次新数据数量
 			addStartIndex = switchPoint + nowNewCount;
-
 			//切换奇偶添加标记
 			isAddOdd = !isAddOdd;
-
 			//如果是奇数位置，矫正为奇数
 			if (isAddOdd)
 			{
@@ -196,28 +210,25 @@ namespace WorldTree
 			{
 				addStartIndex++;
 			}
-
-			// 清空新节点数量
+			// 清空新数据数量
 			nowNewCount = 0;
-
 			// 清空读指针
 			readPoint = 0;
-
 			// 清空写指针
 			writePoint = 0;
-
 			traversalCount = nextTraversalCount;
-
-
 			return traversalCount;
 		}
 
-		public virtual bool TryGetNext(out INode node, out RuleList ruleList)
+		/// <summary>
+		/// 获取下一个
+		/// </summary>
+		public virtual bool TryGetNext(out T pair)
 		{
 			//遍历间隔
 			int indexInterval = 1;
 
-			// 如果遍历数量小于读指针，说明没有可遍历的节点
+			// 如果遍历数量小于读指针，说明没有可遍历的数据
 			while (traversalCount > readPoint)
 			{
 				// 切换到奇偶遍历状态，读取上一轮添加的新数据
@@ -240,24 +251,23 @@ namespace WorldTree
 				}
 
 				// 使用引用类型来避免结构体复制
-				ref RuleExecutorPair pair = ref nodes[readPoint];
+				pair = nodes[readPoint];
 
-				node = pair.Node;
-				if (node == null) // 节点意外回收
+				if (CheckNull(pair)) // 数据为空判断
 				{
 					readPoint += indexInterval;
-					continue; // 继续下一个节点
+					continue; // 继续下一个数据
 				}
-				ruleList = pair.Rule;
 
-				// 空洞压缩：如果读写指针不相等，说明有节点被移除，这时需要将当前节点移到写入点。
+				// 空洞压缩：如果读写指针不相等，说明有数据被移除，这时需要将当前数据移到写入点。
 				if (readPoint != writePoint)
 				{
-					// 将当前节点放到写入点
+					// 将当前数据放到写入点
 					nodes[writePoint] = pair;
-					// 为了安全，清除引用，因为节点已经移动到写入点
-					pair.Clear();
+					// 清除当前读取点
+					nodes[readPoint] = default;
 				}
+
 				writePoint++;
 				readPoint += indexInterval;
 				return true;
@@ -267,14 +277,33 @@ namespace WorldTree
 			{
 				// 直接裁剪掉所有的空洞
 				nextTraversalCount = writePoint;
-				// 判断如果遍历数量为0，说明没有可遍历的节点，当前数组为空，直接恢复为初始化状态
+				// 判断如果遍历数量为0，说明没有可遍历的数据，当前数组为空，直接恢复为初始化状态
 				if (nextTraversalCount == 0) isInit = true;
 			}
-			node = null;
-			ruleList = null;
+			pair = default;
 			return false;
 		}
 
+
+		/// <summary>
+		/// 检查数据是否为空 
+		/// </summary>
+		public abstract bool CheckNull(T data);
+
+		/// <summary>
+		/// 出队当前数据 
+		/// </summary>
+		public void DequeueCurrent()
+		{
+			if (writePoint == 0) return;
+			writePoint--;
+			nodes[writePoint] = default;
+		}
+
+
+		/// <summary>
+		/// 清空队列 
+		/// </summary>
 		public virtual void Clear()
 		{
 			readPoint = 0;
@@ -289,19 +318,11 @@ namespace WorldTree
 		}
 	}
 
-	public static class RuleExecutorBaseRule
+	public static class FreeIteratorRule
 	{
-		private class AddRule : AddRule<RuleExecutor>
+		class Remove<T> : RemoveRule<FreeIterator<T>>
 		{
-			protected override void Execute(RuleExecutor self)
-			{
-				self.nodes = self.Core.PoolGetArray<RuleExecutorPair>(4);
-			}
-		}
-
-		private class RemoveRule : RemoveRule<RuleExecutor>
-		{
-			protected override void Execute(RuleExecutor self)
+			protected override void Execute(FreeIterator<T> self)
 			{
 				self.Clear();
 				self.Core.PoolRecycle(self.nodes, true);

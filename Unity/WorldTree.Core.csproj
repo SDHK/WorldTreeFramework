@@ -57,6 +57,7 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\DynamicNodeQueue\DynamicQueueNode.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\UnmanagedFormatRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValue.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolGroup.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CascadeTimer\CascadeTimer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CascadeTimer\CascadeTimerData.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CascadeTimer\CascadeTimerSlot.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\Extension\ListExtension.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\Math\MathBit.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Base\TreeTaskBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\CRC32Algorithm.cs" />
@@ -275,7 +277,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\CodeLoader.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldHeart.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\Sub\GenericBranch.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\DynamicNodeQueue\DynamicNodeQueue.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\DynamicNodeQueue\FreeIterator.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rattan\Base\Rattan.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\RuleBase\ValueChangeRuleEvent.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Config\ConfigRef.cs" />

@@ -38,7 +38,7 @@ namespace WorldTree
 		/// <summary>
 		/// 进程Id
 		/// </summary>
-		public long ProcessId;
+		public long ProcessId = 1;
 
 		/// <summary>
 		/// 当前递增的id值
@@ -61,6 +61,9 @@ namespace WorldTree
 		/// </summary>
 		public long GetId()
 		{
+			//因为Id从0开始，所以当currentId等于1<<50时，下一个Id就是1<<50，刚好是UID的起始值，不会冲突
+			//1<<50大概是1千万亿，按理说UID会比实例Id更早用完，但都能用到34年后了，应该够用了。
+			if (currentId == 1 << 50) this.LogError($"实例Id溢出: {currentId}");
 			return Interlocked.Increment(ref currentId);
 		}
 

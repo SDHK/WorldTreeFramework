@@ -106,7 +106,7 @@ namespace WorldTree
 		, AsRule<Remove>
 	{
 		/// <summary>
-		/// 节点ID 、数据ID 
+		/// 节点ID 、数据ID， 混合标识。实例Id从0开始递增。而数据Id为雪花ID，但起点是1<<50（1千万亿），不会和实例Id冲突。
 		/// </summary>
 		/// <remarks>普通类型为实例ID、数据类型则为雪花ID</remarks>
 		[TreeDataIgnore]

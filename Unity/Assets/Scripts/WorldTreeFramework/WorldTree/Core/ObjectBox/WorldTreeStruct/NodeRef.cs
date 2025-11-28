@@ -47,7 +47,7 @@ namespace WorldTree
 		public WorldLine Core;
 
 		/// <summary>
-		/// 节点数据ID，普通节点为0
+		/// 节点ID
 		/// </summary>
 		public long Id;
 
@@ -96,8 +96,16 @@ namespace WorldTree
 				Core = null;
 				return;
 			}
-			Core = isDataRef ? node.Core : null;
-			Id = node is INodeData ? node.Id : 0;
+
+			Id = node.Id;
+			if (node is INodeData)
+			{
+				Core = isDataRef ? node.Core : null;
+			}
+			else
+			{
+				Core = null;
+			}
 			InstanceId = node.InstanceId;
 			this.node = node;
 		}
