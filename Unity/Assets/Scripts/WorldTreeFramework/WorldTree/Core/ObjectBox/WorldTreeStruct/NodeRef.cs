@@ -47,13 +47,16 @@ namespace WorldTree
 		public WorldLine Core;
 
 		/// <summary>
-		/// 节点ID
+		/// 节点ID：数据和实例混合标识
 		/// </summary>
 		public long Id;
 
 		/// <summary>
-		/// 节点实例ID
+		/// 节点实例ID：建议使用Id来判断唯一性，InstanceId仅作节点生成顺序标识
 		/// </summary>
+		/// <remarks>
+		/// 实例id只在一个世界树实例内唯一。
+		/// </remarks>
 		[TreeDataIgnore]
 		public long InstanceId;
 

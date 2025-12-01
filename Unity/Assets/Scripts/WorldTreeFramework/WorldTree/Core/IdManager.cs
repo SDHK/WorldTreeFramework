@@ -38,7 +38,7 @@ namespace WorldTree
 		/// <summary>
 		/// 进程Id
 		/// </summary>
-		public long ProcessId = 1;
+		public long ProcessId = 0;
 
 		/// <summary>
 		/// 当前递增的id值
@@ -61,10 +61,11 @@ namespace WorldTree
 		/// </summary>
 		public long GetId()
 		{
-			//因为Id从0开始，所以当currentId等于1<<50时，下一个Id就是1<<50，刚好是UID的起始值，不会冲突
-			//1<<50大概是1千万亿，按理说UID会比实例Id更早用完，但都能用到34年后了，应该够用了。
-			if (currentId == 1 << 50) this.LogError($"实例Id溢出: {currentId}");
-			return Interlocked.Increment(ref currentId);
+
+			//1<<50大概是1千万亿，按理说UID会比实例Id更早用完，但都能用到34年后了。
+			if (currentId == -(1 << 50)) this.LogError($"实例Id溢出: {currentId}");
+			//return Interlocked.Increment(ref currentId);
+			return (ProcessId << 50) | Interlocked.Decrement(ref currentId);
 		}
 
 		/// <summary>
@@ -91,7 +92,7 @@ namespace WorldTree
 					}
 				}
 
-				//14位为16384个进程
+				//13位为8191个进程
 				//30位时间为34年,20位偏移支持每秒并发1048576个UID（100万）
 
 				//雪花算法 生成UID ：14位进程ID  30位秒级时间戳 20位时间偏移 三部分组成

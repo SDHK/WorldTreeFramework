@@ -277,7 +277,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\CodeLoader.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldHeart.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\Sub\GenericBranch.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\DynamicNodeQueue\FreeIterator.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\DynamicNodeQueue\ZipperIterator.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rattan\Base\Rattan.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\RuleBase\ValueChangeRuleEvent.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Config\ConfigRef.cs" />

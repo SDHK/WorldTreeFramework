@@ -16,9 +16,9 @@ namespace WorldTree
 		, AsRule<Awake>
 	{
 		/// <summary>
-		/// 定时器迭代器
+		/// 定序器迭代器
 		/// </summary>
-		public IteratorNodeRef<CascadeTimerData> TimerIterator;
+		public IteratorNodeRef<CascadeTimerData> NumberIterator;
 	}
 
 	public static class CascadeTimerSlotRule
@@ -27,7 +27,7 @@ namespace WorldTree
 		{
 			protected override void Execute(CascadeTimerSlot self)
 			{
-				self.AddTemp(out self.TimerIterator);
+				self.AddTemp(out self.NumberIterator);
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace WorldTree
 		/// </summary>
 		public static void Add(this CascadeTimerSlot self, CascadeTimerData data)
 		{
-			self.TimerIterator.TryAdd(data);
+			self.NumberIterator.TryAdd(data);
 		}
 	}
 }

@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2023/3/3 16:21
 
-* 描述： 自由迭代器
+* 描述： 拉链迭代器
 * 
 * 支持动态添加和删除数据的迭代器
 *
@@ -43,7 +43,7 @@ namespace WorldTree
 	/// <summary>
 	/// 节点迭代器:支持动态添加和删除数据的迭代器。 
 	/// </summary>
-	public class IteratorNodeRef<T> : FreeIterator<NodeRef<T>>
+	public class IteratorNodeRef<T> : ZipperIterator<NodeRef<T>>
 		where T : class, INode
 	{
 		public override bool CheckNull(NodeRef<T> data) => data == default || data.IsNull;
@@ -51,9 +51,9 @@ namespace WorldTree
 
 
 	/// <summary>
-	/// 自由迭代器:支持动态添加和删除数据的迭代器。
+	/// 拉链迭代器:支持动态添加和删除数据的迭代器。
 	/// </summary>
-	public abstract class FreeIterator<T> : Node
+	public abstract class ZipperIterator<T> : Node
 		, ComponentOf<INode>, ChildOf<INode>
 		, AsChildBranch
 		, AsRule<Awake>
@@ -320,9 +320,9 @@ namespace WorldTree
 
 	public static class FreeIteratorRule
 	{
-		class Remove<T> : RemoveRule<FreeIterator<T>>
+		class Remove<T> : RemoveRule<ZipperIterator<T>>
 		{
-			protected override void Execute(FreeIterator<T> self)
+			protected override void Execute(ZipperIterator<T> self)
 			{
 				self.Clear();
 				self.Core.PoolRecycle(self.nodes, true);

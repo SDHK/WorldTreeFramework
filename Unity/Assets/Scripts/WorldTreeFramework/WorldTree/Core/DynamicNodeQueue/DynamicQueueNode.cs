@@ -14,7 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 动态数据队列
 	/// </summary>
-	public class DynamicQueueNode : FreeIterator<NodeRef<INode>>
+	public class DynamicQueueNode : ZipperIterator<NodeRef<INode>>
 	{
 		public override bool CheckNull(NodeRef<INode> data)
 		{
