@@ -16,6 +16,7 @@ namespace WorldTree
 	/// </summary>
 	public class DynamicQueueNode : ZipperIterator<NodeRef<INode>>
 	{
+
 		public override bool CheckNull(NodeRef<INode> data)
 		{
 			return data.IsNull;
