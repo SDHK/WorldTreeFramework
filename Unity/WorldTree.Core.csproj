@@ -64,9 +64,9 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\RuleBase\TreePackSerializeRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\Concurrent\ConcurrentList.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\DoubleFormatterRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CascadeTimer\CascadeTimer.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CascadeTimer\CascadeTimerData.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CascadeTimer\CascadeTimerSlot.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CascadeTicker\CascadeTicker.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CascadeTicker\CascadeTickerData.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Timer\CascadeTicker\CascadeTickerSlot.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\Extension\ListExtension.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\Math\MathBit.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Base\TreeTaskBase.cs" />
