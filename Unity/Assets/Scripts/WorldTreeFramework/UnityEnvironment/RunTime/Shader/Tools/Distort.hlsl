@@ -1,4 +1,7 @@
-﻿#ifndef DISTORT // 这个宏的作用是防止重复引用
+﻿// 判断是否已经定义宏 DISTORT
+#ifndef DISTORT 
+
+// 定义宏 DISTORT，防止重复引用
 #define DISTORT
 
 //极坐标扭曲 

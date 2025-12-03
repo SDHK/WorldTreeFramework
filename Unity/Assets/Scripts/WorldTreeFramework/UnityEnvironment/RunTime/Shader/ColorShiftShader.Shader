@@ -1,4 +1,4 @@
-﻿Shader "Unlit/TestRenderShader"
+﻿Shader "Unlit/ColorShiftShader"
 {
      Properties
     {

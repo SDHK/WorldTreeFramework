@@ -8,9 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TestMaterials
-  m_Shader: {fileID: 4800000, guid: 34630f9830157504ca2cb71a2ffe53e7, type: 3}
+  m_Shader: {fileID: 4800000, guid: 901077aabb103f8409afa0b80dfe2ed1, type: 3}
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - ENABLE_ANIM
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -33,8 +34,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 17035c204825f6340a252046ab6476fd, type: 3}
-        m_Scale: {x: 10.06, y: 10}
+        m_Texture: {fileID: 2800000, guid: b326b938f5f56af4ab76deec7d4cb522, type: 3}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
         m_Texture: {fileID: 0}
@@ -48,6 +49,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _PosTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ReflectionTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -57,28 +62,48 @@ Material:
     - PixelSnap: 0
     - _Angle: 8.24
     - _Blur: 0
+    - _CullMode: 0
+    - _DT: 1.64
     - _Distort: 0.051
+    - _EnableAnim: 1
     - _EnableExternalAlpha: 0
     - _FoamNoise: 1.58
     - _FoamRange: 1.61
+    - _FrozenTime: 0
+    - _Length: 1
+    - _Loop: 0
     - _Offs: 0.5
+    - _Offset: 0.21
+    - _OutlineWidth: 10
+    - _Paused: 0
     - _RimMax: 1
     - _RimMin: 0
     - _RimSmooth: 1
     - _Scale: 0.3
+    - _ShadowRange: 0.682
+    - _ShadowSmooth: 0.126
+    - _Speed: 3.56
     - _Value1: -5
     - _WaterSpeed: 0.404
     m_Colors:
     - _Center: {r: 0.55, g: 0.26, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 0.101961, g: 0.619608, b: 0.666667, a: 1}
-    - _Color2: {r: 0.6366156, g: 0.6666667, b: 0.49803922, a: 1}
+    - _Color0: {r: 0.101961, g: 0.619608, b: 0.666667, a: 1}
+    - _Color1: {r: 0, g: 0.38050306, b: 0.41509432, a: 1}
+    - _Color2: {r: 0.6226415, g: 0.27901387, b: 0.38200948, a: 1}
     - _Color3: {r: 0.14117648, g: 0, b: 0.13809802, a: 1}
     - _Color4: {r: 0.666667, g: 1, b: 1, a: 1}
+    - _Color5: {r: 0.666667, g: 1, b: 1, a: 1}
+    - _Color6: {r: 0.666667, g: 1, b: 1, a: 1}
+    - _Color7: {r: 0.666667, g: 1, b: 1, a: 1}
+    - _ColorTint: {r: 1, g: 1, b: 1, a: 1}
+    - _FinalColor: {r: 0, g: 0.21628597, b: 0.41509432, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _FoamColor: {r: 0, g: 0.64053285, b: 0.8301887, a: 1}
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowColor: {r: 1, g: 0, b: 0, a: 1}
     - _SpecularBase: {r: 0.6, g: 10, b: 0.5, a: 1}
     - _SpecularColor: {r: 0.0031594948, g: 0.22328265, b: 0.6698113, a: 1}
     - _TexSize: {r: 100.75, g: 100, b: 0, a: 0}

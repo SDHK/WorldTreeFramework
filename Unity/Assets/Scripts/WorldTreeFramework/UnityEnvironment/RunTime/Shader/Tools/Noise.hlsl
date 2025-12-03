@@ -98,8 +98,6 @@ float NoiseValue(float2 uv)
 }
 
 
-
-
 //柏林噪声
 float NoisePerlin(float2 uv)
 {
@@ -148,8 +146,6 @@ float NoiseVoronoi(float2 uv, float time = 0)
     float dist= 16;
     float2 intPos = floor(uv); //取整
     float2 fracPos = frac(uv); //取小数
-    
-
     for (int x = -1; x <= 1; x++) //3x3九宫格采样
     {
         for (int y = -1; y <= 1; y++)
@@ -162,8 +158,6 @@ float NoiseVoronoi(float2 uv, float time = 0)
         }
     }
     return dist;
-
-
 }
 
 
@@ -207,15 +201,24 @@ float NoiseFBMvalue(float2 uv)
 }
 
 //云雾噪声
-float NoiseSmoke(float2 uv, float time = 0)
+// uv: 输入的UV坐标
+// time: 时间参数，用于动画效果
+// uvSpeed: UV移动速度
+// scale: 缩放
+// dir: 扰动方向
+// 返回值: 生成的云雾噪声值,当色彩权重用
+float NoiseSmoke(float2 uv, float time = 0, float uvSpeed=10, float scale =1, float2 dir = float2(0.0, 0.10))
 {
     float2 q = float2(0.0, 0.0);
-    q.x = NoiseFBMvalue(uv + 0.00 * time);
+    uv += dir * time * uvSpeed;
+    //水面流动效果
+    q.x = NoiseFBMvalue(uv + time * dir);
     q.y = NoiseFBMvalue(uv + float2(1.0, 0.0));
 
+    //云雾细节效果
     float2 r = float2(0.0, 0.0);
-    r.x = NoiseFBMvalue(uv + 1.0 * q + float2(1.7, 9.2) + 0.15 * time);
-    r.y = NoiseFBMvalue(uv + 1.0 * q + float2(8.3, 2.8) + 0.126 * time);
+    r.x = NoiseFBMvalue(uv + q * scale + time * dir ); // + float2(1.7, 9.2)
+    r.y = NoiseFBMvalue(uv + q * scale + time * dir ); // + float2(8.3, 2.8)
     
     float f = NoiseFBMvalue(uv + r);
     return (f * f * f + 0.6 * f * f + 0.5 * f);

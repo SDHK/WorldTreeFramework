@@ -6,7 +6,10 @@ public class CustomRenderPassFeature : ScriptableRendererFeature
 {
 	TestRenderPass testRenderPass;
 
-	CustomRenderPassCreateMesh m_ScriptablePassCreateMesh;
+	CustomRenderShaderPostPass m_ScriptablePassCreateMesh;
+
+	CustomRenderPassCreateMesh createMesh;
+
 	public Material material;
 	public Shader shaderMesh;
 
@@ -18,9 +21,13 @@ public class CustomRenderPassFeature : ScriptableRendererFeature
 		testRenderPass = new TestRenderPass(RenderPassEvent.BeforeRenderingPostProcessing);
 
 
-		m_ScriptablePassCreateMesh = new CustomRenderPassCreateMesh();
+		m_ScriptablePassCreateMesh = new CustomRenderShaderPostPass();
 		m_ScriptablePassCreateMesh._Material = new Material(shaderMesh);
 		m_ScriptablePassCreateMesh.renderPassEvent = RenderPassEvent.AfterRenderingOpaques;
+
+		createMesh = new CustomRenderPassCreateMesh();
+		createMesh._Material = new Material(shaderMesh);
+		createMesh.renderPassEvent = RenderPassEvent.AfterRenderingOpaques;
 	}
 
 	//在这里，您可以在渲染器中注入一个或多个渲染通道。
@@ -31,8 +38,11 @@ public class CustomRenderPassFeature : ScriptableRendererFeature
 
 		testRenderPass.material = this.material;
 		testRenderPass.Setup(renderer);
+
+
 		renderer.EnqueuePass(testRenderPass);
 		renderer.EnqueuePass(m_ScriptablePassCreateMesh);
+		renderer.EnqueuePass(createMesh);
 	}
 }
 
