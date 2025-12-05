@@ -1,12 +1,18 @@
 /****************************************
-
+*
 * 作者： 闪电黑客
 * 日期： 2025/12/4 14:16
-
-* 描述： Unity 着色器库引用
-
+*
+* 说明： Unity 引擎的 Iris Shader 库入口
+* 
+* 功能：
+* - 加载 Unity 环境参数映射
+* - 加载 Iris 核心库
+* - 可选加载 Unity URP/CG 库
+*
 */
-#ifndef IrisCoreUnity // 这个宏的作用是防止重复引用
+
+#ifndef IrisCoreUnity
 #define IrisCoreUnity
 
 // 引用 Unity 着色器环境变量定义

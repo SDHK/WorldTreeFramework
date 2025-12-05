@@ -1,11 +1,17 @@
 /****************************************
-
+*
 * 作者： 闪电黑客
 * 日期： 2025/12/4 20:33
-
-* 描述： Unity着色器环境变量宏
-
+*
+* 说明： Unity 引擎的 Iris 环境参数映射实现
+* 
+* 功能：
+* - 将 Unity 内置变量映射到统一的 Env_ 命名空间
+* - 按照 IrisParams.hlsl 接口规范实现
+* - 使 Shader 代码可以跨引擎使用统一的参数名
+* 
 */
+
 #ifndef IrisParamsUnity
 #define IrisParamsUnity
 
