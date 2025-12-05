@@ -66,16 +66,16 @@
   <ItemGroup>
     <None Include="Assets\Shaders\Iris\Tools\IrisMath.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\LiteDB\LiteDB.dll" />
-    <None Include="Assets\Shaders\Unity\UnityShaderParams.hlsl" />
+    <None Include="Assets\Shaders\Unity\IrisParamsUnity.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
     <None Include="Assets\Scripts\AOT\Plugins\LiteDB\LiteDB.xml" />
-    <None Include="Assets\Shaders\Unity\UnityShaderLibrary.hlsl" />
+    <None Include="Assets\Shaders\Unity\IrisCoreUnity.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.xml" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.xml" />
     <None Include="Assets\Shaders\Unity\Test\GaussianBlur.Shader" />
-    <None Include="Assets\Shaders\Iris\IrisShaderLibrary.hlsl" />
+    <None Include="Assets\Shaders\Iris\IrisCore.hlsl" />
     <None Include="Assets\Shaders\Unity\Test\EdgeShader.shader" />
     <None Include="Assets\Shaders\Unity\Test\OutlineShader.shader" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Serialization.dll" />
@@ -98,7 +98,7 @@
     <None Include="Assets\Shaders\Unity\Test\WaterShader.Shader" />
     <None Include="Assets\Shaders\Iris\Tools\IrisDistort.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll" />
-    <None Include="Assets\Shaders\Iris\IrisShaderParams.hlsl" />
+    <None Include="Assets\Shaders\Iris\IrisParams.hlsl" />
     <None Include="Assets\Shaders\Unity\Test\Vortex.shader" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.xml" />

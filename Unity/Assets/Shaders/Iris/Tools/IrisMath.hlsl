@@ -1,20 +1,19 @@
 /****************************************
 
-* ×÷Õß£º ÉÁµçºÚ¿Í
-* ÈÕÆÚ£º 2025/12/2 19:50
+* ä½œè€…ï¼š é—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š 2025/12/2 19:50
 
-* ÃèÊö£º ¸÷ÖÖÊıÑ§º¯ÊıºÏ¼¯ 
+* æè¿°ï¼š å„ç§æ•°å­¦å‡½æ•°åˆé›† 
 
 */
 #ifndef IrisMath
 #define IrisMath
 
-
-//Ç¯ÖÆÓ³Éä
-//½«value´Ómin-maxÓ³Éäµ½targetMin-targetMaxÖ®¼ä£¬²¢½øĞĞÇ¯ÖÆ
+//é’³åˆ¶æ˜ å°„
+//å°†valueä»min-maxæ˜ å°„åˆ°targetMin-targetMaxä¹‹é—´ï¼Œå¹¶è¿›è¡Œé’³åˆ¶
 float ClampMap(float value, float min, float max, float targetMin = 0, float targetMax = 1)
 {
-    //¼ÙÉèÒª0.5µ½0.8Ö®¼äµÄÖµ£¬ÄÇÃ´¾ÍÓÃvalue-0.5£¬È»ºóÔÙ¼õÈ¥0.8-0.5=0.3
+    //å‡è®¾è¦0.5åˆ°0.8ä¹‹é—´çš„å€¼ï¼Œé‚£ä¹ˆå°±ç”¨value-0.5ï¼Œç„¶åå†å‡å»0.8-0.5=0.3
     value -= min;
     max -= min;
     value = clamp(value, 0.0, max);
@@ -23,10 +22,10 @@ float ClampMap(float value, float min, float max, float targetMin = 0, float tar
     return value;
 }
 
-// ÑÕÉ«Ó³Éä
+// é¢œè‰²æ˜ å°„
 float4 MapColor(float colorWeight, float4 colors[8], int colorCount = 8)
 {
-    float step = 1.0 / (colorCount - 1); // Ã¿¶ÎµÄÈ¨ÖØ·¶Î§
+    float step = 1.0 / (colorCount - 1); // æ¯æ®µçš„æƒé‡èŒƒå›´
     for (int i = 0; i < colorCount - 1; i++)
     {
         float minWeight = i * step;
@@ -36,30 +35,30 @@ float4 MapColor(float colorWeight, float4 colors[8], int colorCount = 8)
             return lerp(colors[i], colors[i + 1], ClampMap(colorWeight, minWeight, maxWeight));
         }
     }
-    return colors[colorCount - 1]; // ³¬³ö·¶Î§·µ»Ø×îºóÒ»¸öÑÕÉ«
+    return colors[colorCount - 1]; // è¶…å‡ºèŒƒå›´è¿”å›æœ€åä¸€ä¸ªé¢œè‰²
 }
 
-// ÑÕÉ«Ó³ÉäÍ¸Ã÷¶È»®·Ö£¿£¿£¿
+// é¢œè‰²æ˜ å°„é€æ˜åº¦åˆ’åˆ†ï¼Ÿï¼Ÿï¼Ÿ
 float4 MapColorByAlpha(float colorWeight, float4 colors[8], int colorCount = 8)
 {
-    // 1. ¼ÆËã×ÜÍ¸Ã÷¶È
+    // 1. è®¡ç®—æ€»é€æ˜åº¦
     float totalAlpha = 0.0;
     for (int i = 0; i < colorCount; i++)
     {
-        totalAlpha += colors[i].a; // ÀÛ¼ÓÃ¿¸öÑÕÉ«µÄ alpha Öµ
+        totalAlpha += colors[i].a; // ç´¯åŠ æ¯ä¸ªé¢œè‰²çš„ alpha å€¼
     }
 
-    // 2. ¼ÆËãÃ¿¸öÑÕÉ«µÄÍ¸Ã÷¶È°Ù·Ö±È
+    // 2. è®¡ç®—æ¯ä¸ªé¢œè‰²çš„é€æ˜åº¦ç™¾åˆ†æ¯”
     float alphaPercentages[4];
     float cumulativePercentage = 0.0;
     for (int i = 0; i < colorCount; i++)
     {
-        alphaPercentages[i] = colors[i].a / totalAlpha; // µ±Ç°ÑÕÉ«µÄÍ¸Ã÷¶È°Ù·Ö±È
-        cumulativePercentage += alphaPercentages[i]; // ÀÛ¼Æ°Ù·Ö±È
-        alphaPercentages[i] = cumulativePercentage; // ÀÛ¼Æ·¶Î§
+        alphaPercentages[i] = colors[i].a / totalAlpha; // å½“å‰é¢œè‰²çš„é€æ˜åº¦ç™¾åˆ†æ¯”
+        cumulativePercentage += alphaPercentages[i]; // ç´¯è®¡ç™¾åˆ†æ¯”
+        alphaPercentages[i] = cumulativePercentage; // ç´¯è®¡èŒƒå›´
     }
 
-    // 3. ¸ù¾İÍ¸Ã÷¶È°Ù·Ö±È»®·Ö·¶Î§²¢Ó³ÉäÑÕÉ«
+    // 3. æ ¹æ®é€æ˜åº¦ç™¾åˆ†æ¯”åˆ’åˆ†èŒƒå›´å¹¶æ˜ å°„é¢œè‰²
     for (int i = 0; i < colorCount - 1; i++)
     {
         if (colorWeight < alphaPercentages[i])
@@ -70,7 +69,7 @@ float4 MapColorByAlpha(float colorWeight, float4 colors[8], int colorCount = 8)
         }
     }
 
-    // 4. ³¬³ö·¶Î§·µ»Ø×îºóÒ»¸öÑÕÉ«
+    // 4. è¶…å‡ºèŒƒå›´è¿”å›æœ€åä¸€ä¸ªé¢œè‰²
     return colors[colorCount - 1];
 }
 

@@ -10,13 +10,13 @@ Shader "Unlit/Vortex"
 
     SubShader 
     {
-         //Ò»Ğ©ĞÔÄÜ´¦Àí
+         //ä¸€äº›æ€§èƒ½å¤„ç†
         Cull Off
-        //µÆ¹â
+        //ç¯å…‰
         Lighting Off
-        //Éî¶È
+        //æ·±åº¦
         ZWrite Off
-        //Îí
+        //é›¾
         Fog { Mode Off }
 
         Pass 
@@ -28,7 +28,7 @@ Shader "Unlit/Vortex"
             #include "UnityCG.cginc"
 
             #define Use_IrisDistort
-            #include "../UnityShaderLibrary.hlsl"
+            #include "../IrisCoreUnity.hlsl"
 
             sampler2D _MainTex;
             float _Angle;
@@ -41,18 +41,18 @@ Shader "Unlit/Vortex"
                 float2 uv : TEXCOORD0;
             };
 
-            // ¶¥µã×ÅÉ«Æ÷
+            // é¡¶ç‚¹ç€è‰²å™¨
             v2f vert(appdata_full v)
             {
                 v2f o;
-                //Ä£ĞÍ¿Õ¼ä×ª²Ã¼ô¿Õ¼ä
+                //æ¨¡å‹ç©ºé—´è½¬è£å‰ªç©ºé—´
                 o.position = UnityObjectToClipPos (v.vertex);
-                //»ñÈ¡uv
+                //è·å–uv
                 o.uv = v.texcoord;
                 return o;
             }
 
-            //Æ¬¶Î×ÅÉ«Æ÷
+            //ç‰‡æ®µç€è‰²å™¨
             float4 frag (v2f o) : SV_Target
             {
                 return tex2D(_MainTex,DistortVortex(o.uv,_Angle,_Scale,_Center ));

@@ -36,7 +36,7 @@
             #include "UnityCG.cginc"
 
             #define Use_IrisNoise
-            #include "../UnityShaderLibrary.hlsl"
+            #include "../IrisCoreUnity.hlsl"
 
             struct appdata_t
             {

@@ -21,7 +21,7 @@
 
             #define Use_IrisNoise
             #define Use_UnityCG
-            #include "../UnityShaderLibrary.hlsl"
+            #include "../IrisCoreUnity.hlsl"
 
             struct appdata
             {

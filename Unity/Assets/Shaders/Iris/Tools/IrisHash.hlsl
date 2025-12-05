@@ -6,7 +6,7 @@
 * 描述： 各种哈希函数合集 
 
 */
-#ifndef IrisHash 
+#ifndef IrisHash
 #define IrisHash
 
 float hash11(float p)

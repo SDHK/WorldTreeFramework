@@ -47,7 +47,7 @@
 
             #define Use_IrisNoise
             #define Use_IrisMath
-            #include "../UnityShaderLibrary.hlsl"
+            #include "../IrisCoreUnity.hlsl"
 
 
 

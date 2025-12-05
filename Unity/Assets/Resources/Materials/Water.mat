@@ -61,6 +61,9 @@ Material:
     - _FoamRange: 5
     - _Offs: 0.5
     - _Offset: 0.1
+    - _RimMax: 0.6
+    - _RimMin: 0.6
+    - _RimSmooth: 0.6
     - _Value1: 5
     - _WaterSpeed: 1
     m_Colors:

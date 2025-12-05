@@ -3,7 +3,7 @@ Shader "Unlit/OutlineShader"
     Properties
     {
         _MainTex ("MainTex", 2D) = "white" {}
-        _Color1 ("Pass 1 Color", Color) = (1, 0, 0, 1)  // ºìÉ«
+        _Color1 ("Pass 1 Color", Color) = (1, 0, 0, 1)  // çº¢è‰²
         _Offset ("Outline Offset", Float) = 0.1
     }
 
@@ -20,7 +20,7 @@ Shader "Unlit/OutlineShader"
         HLSLINCLUDE
 
         #define Use_UniversalShaderLibraryCore
-        #include "../UnityShaderLibrary.hlsl"
+        #include "../IrisCoreUnity.hlsl"
 
         // CBUFFER_START(UnityPerMaterial)
 
@@ -31,12 +31,12 @@ Shader "Unlit/OutlineShader"
         ENDHLSL
 
 
-        // ========== µÚÒ»¸öPass£ºÃè±ß£¨ºìÉ«£© ==========
+        // ========== ç¬¬ä¸€ä¸ªPassï¼šæè¾¹ï¼ˆçº¢è‰²ï¼‰ ==========
         Pass
         {
             Name "OUTLINE"
-            Tags { "LightMode" = "SRPDefaultUnlit" }  // URP±ØĞë£¡
-            Cull Front  // Ö»äÖÈ¾±³Ãæ
+            Tags { "LightMode" = "SRPDefaultUnlit" }  // URPå¿…é¡»ï¼
+            Cull Front  // åªæ¸²æŸ“èƒŒé¢
             
             HLSLPROGRAM
             #pragma vertex vert
@@ -60,23 +60,23 @@ Shader "Unlit/OutlineShader"
             {
                 Varyings output;
                 
-                // ÑØ·¨Ïß·½ÏòÀ©Õ¹¶¥µã
+                // æ²¿æ³•çº¿æ–¹å‘æ‰©å±•é¡¶ç‚¹
                 float3 positionOS = input.positionOS.xyz + input.normalOS * _Offset;
                 
-                // ÊÖ¶¯¼ÆËã²Ã¼ô¿Õ¼äÎ»ÖÃ
+                // æ‰‹åŠ¨è®¡ç®—è£å‰ªç©ºé—´ä½ç½®
                 output.positionCS = mul(Env_Matrix_MVP, float4(positionOS, 1.0));           
                 return output;
             }
             
             half4 frag(Varyings input) : SV_Target
             {
-                return _Color1;  // ·µ»ØºìÉ«
+                return _Color1;  // è¿”å›çº¢è‰²
             }
             
             ENDHLSL
         }
 
-        // ========== µÚ¶ş¸öPass£ºÕı³£äÖÈ¾ ==========
+        // ========== ç¬¬äºŒä¸ªPassï¼šæ­£å¸¸æ¸²æŸ“ ==========
         Pass
         {
             Name "FORWARD"
@@ -91,7 +91,7 @@ Shader "Unlit/OutlineShader"
             #pragma vertex vert
             #pragma fragment frag
 
-            //¶¥µãÊı¾İ½á¹¹
+            //é¡¶ç‚¹æ•°æ®ç»“æ„
                struct VertexInput
             {
                 float4 vertex : POSITION;
