@@ -1,7 +1,15 @@
-#ifndef NOISE // 这个宏的作用是防止重复引用
-#define NOISE
+/****************************************
 
-#include "Hash.hlsl" //引用Hash库
+* 作者： 闪电黑客
+* 日期： 2024/12/12 20:27
+
+* 描述： 各种噪声函数合集 
+
+*/
+#ifndef IrisNoise
+#define IrisNoise
+
+#include "IrisHash.hlsl" //引用Hash库
 
 //根据角度计算半径为的圆上的点 0~1
 float2 AngleToUV(float angle)

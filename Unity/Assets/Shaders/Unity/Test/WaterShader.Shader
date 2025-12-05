@@ -50,12 +50,17 @@
             // Pragmas
             #pragma target 2.0
 
+
             // Includes
+          
+
+            #define Use_IrisNoise
+            #define UniversalShaderLibraryCore
+            #include "../UnityShaderLibrary.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Input.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-            #include "Tools/Noise.hlsl"
+            
 
             CBUFFER_START(UnityPerMaterial)
                 half4 _WaterColor1;

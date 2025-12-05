@@ -1,5 +1,5 @@
 ﻿extensions: designer.cs generated.cs
-extensions: .cs .cpp .h
+extensions: .cs .cpp .h .hlsl
 /****************************************
 
 * 作者： 闪电黑客

@@ -34,7 +34,9 @@
             #pragma fragment frag
             #pragma multi_compile _ PIXELSNAP_ON
             #include "UnityCG.cginc"
-            #include "Tools/Noise.hlsl"
+
+            #define Use_IrisNoise
+            #include "../UnityShaderLibrary.hlsl"
 
             struct appdata_t
             {

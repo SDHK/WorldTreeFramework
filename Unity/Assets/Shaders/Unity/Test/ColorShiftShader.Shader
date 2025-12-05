@@ -18,8 +18,10 @@
             // make fog work
             #pragma multi_compile_fog
 
-            #include "UnityCG.cginc"
-            #include "Tools/Noise.hlsl"
+
+            #define Use_IrisNoise
+            #define Use_UnityCG
+            #include "../UnityShaderLibrary.hlsl"
 
             struct appdata
             {

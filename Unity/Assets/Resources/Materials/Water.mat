@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water
-  m_Shader: {fileID: 4800000, guid: a50bf99ac724640499409a8aef7e7762, type: 3}
+  m_Shader: {fileID: 4800000, guid: 5d61170df5efea448bfe93e8bd40e4df, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -60,6 +60,7 @@ Material:
     - _FoamNoise: 3
     - _FoamRange: 5
     - _Offs: 0.5
+    - _Offset: 0.1
     - _Value1: 5
     - _WaterSpeed: 1
     m_Colors:

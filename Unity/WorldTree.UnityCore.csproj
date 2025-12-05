@@ -96,20 +96,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\LifeCycle\Runtime\Main\FixedUpdate\FixedUpdateRule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Tools\Math.hlsl" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\OutlineShader.shader" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\SimpleDoublePassShader.shader" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Role.shader" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Vortex.shader" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\EdgeShader.shader" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\TestShader.Shader" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Tools\Hash.hlsl" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Tools\Noise.hlsl" />
     <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\WorldTree.UnityCore.asmdef" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\Tools\Distort.hlsl" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\GaussianBlur.Shader" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\WaterShader.Shader" />
-    <None Include="Assets\Scripts\WorldTreeFramework\UnityEnvironment\RunTime\Shader\ColorShiftShader.Shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -1,5 +1,13 @@
-#ifndef HASH // 这个宏的作用是防止重复引用
-#define HASH
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2024/12/12 20:27
+
+* 描述： 各种哈希函数合集 
+
+*/
+#ifndef IrisHash 
+#define IrisHash
 
 float hash11(float p)
 {

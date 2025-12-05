@@ -1,8 +1,13 @@
-﻿// 判断是否已经定义宏 DISTORT
-#ifndef DISTORT 
+﻿/****************************************
 
-// 定义宏 DISTORT，防止重复引用
-#define DISTORT
+* 作者： 闪电黑客
+* 日期： 2024/12/13 19:01
+
+* 描述： 各种扭曲函数合集 
+
+*/
+#ifndef IrisDistort 
+#define IrisDistort
 
 //极坐标扭曲 
 float2 DistortPolar(float2 uv, float distortAngle, float scale = 1)

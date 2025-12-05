@@ -1,11 +1,9 @@
-Shader "Custom/SimpleDoublePass"
+Shader "Unlit/OutlineShader"
 {
     Properties
     {
         _MainTex ("MainTex", 2D) = "white" {}
-
         _Color1 ("Pass 1 Color", Color) = (1, 0, 0, 1)  // 红色
-        _Color2 ("Pass 2 Color", Color) = (0, 1, 0, 1)  // 绿色
         _Offset ("Outline Offset", Float) = 0.1
     }
 
@@ -20,15 +18,18 @@ Shader "Custom/SimpleDoublePass"
             "RenderPipeline" = "UniversalPipeline"
         }
         HLSLINCLUDE
-        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-        CBUFFER_START(UnityPerMaterial)
+        #define Use_UniversalShaderLibraryCore
+        #include "../UnityShaderLibrary.hlsl"
+
+        // CBUFFER_START(UnityPerMaterial)
 
         sampler2D _MainTex;
         float4 _MainTex_ST;
-        CBUFFER_END
+        // CBUFFER_END
 
         ENDHLSL
+
 
         // ========== 第一个Pass：描边（红色） ==========
         Pass
@@ -40,7 +41,6 @@ Shader "Custom/SimpleDoublePass"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            
             
             float4 _Color1;
             float _Offset;
@@ -62,8 +62,9 @@ Shader "Custom/SimpleDoublePass"
                 
                 // 沿法线方向扩展顶点
                 float3 positionOS = input.positionOS.xyz + input.normalOS * _Offset;
-                output.positionCS = TransformObjectToHClip(positionOS);
                 
+                // 手动计算裁剪空间位置
+                output.positionCS = mul(Env_Matrix_MVP, float4(positionOS, 1.0));           
                 return output;
             }
             
@@ -105,9 +106,12 @@ Shader "Custom/SimpleDoublePass"
 
             VertexOutput vert(VertexInput v)
             {
+
                 VertexOutput o;
-                o.pos = TransformObjectToHClip(v.vertex);
+                o.pos = mul(Env_Matrix_VP, mul(UNITY_MATRIX_M, v.vertex));
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                
+
                 return o;
             }
 
