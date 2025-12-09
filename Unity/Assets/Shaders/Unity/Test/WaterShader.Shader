@@ -54,9 +54,9 @@
             // Includes
           
 
-            #define Use_IrisNoise
+            #define As_IrisNoise
             #define UniversalShaderLibraryCore
-            #include "../IrisCoreUnity.hlsl"
+            #include "../IrisEntryUnity.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Input.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"

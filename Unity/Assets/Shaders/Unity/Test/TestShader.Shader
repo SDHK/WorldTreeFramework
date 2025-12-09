@@ -45,10 +45,9 @@
             #include "UnityCG.cginc"
 
 
-            #define Use_IrisNoise
-            #define Use_IrisMath
-            #include "../IrisCoreUnity.hlsl"
-
+            #define As_IrisMath
+            #define As_IrisNoise
+            #include "../IrisEntryUnity.hlsl"
 
 
             //顶点数据结构
@@ -114,7 +113,7 @@
             fixed4 frag(Data data) : SV_Target //片元着色器，控制像素颜色
             {
                 fixed4 color = tex2D(_MainTex, data.uv);
-                float time = Env_Time.y;
+                float time = Iris_Time.y;
                 color = fragTest1(data.uv,time);
 
                 return color;

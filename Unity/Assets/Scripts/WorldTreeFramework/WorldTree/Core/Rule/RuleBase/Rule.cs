@@ -77,7 +77,10 @@ namespace WorldTree
 	/// 法则约束
 	/// </summary>
 	/// <typeparam name="R">法则类型</typeparam>
-	/// <remarks>节点拥有的法则，和Where约束搭配形成法则调用限制</remarks>
+	/// <remarks>
+	/// <para>和Where约束搭配形成法则调用限制。</para>
+	/// <para>用于泛型约束，表示节点作为拥有某种法则的节点。</para>
+	/// </remarks>
 	public interface AsRule<in R> where R : IRule { }
 
 	/// <summary>

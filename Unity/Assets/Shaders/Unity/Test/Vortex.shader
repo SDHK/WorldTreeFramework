@@ -27,8 +27,8 @@ Shader "Unlit/Vortex"
             #pragma fragment frag
             #include "UnityCG.cginc"
 
-            #define Use_IrisDistort
-            #include "../IrisCoreUnity.hlsl"
+            #define As_IrisDistort
+            #include "../IrisEntryUnity.hlsl"
 
             sampler2D _MainTex;
             float _Angle;

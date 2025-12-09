@@ -6,8 +6,8 @@
 * 描述： 各种扭曲函数合集 
 
 */
-#ifndef IrisDistort 
-#define IrisDistort
+#ifndef Def_IrisDistort 
+#define Def_IrisDistort
 
 //极坐标扭曲 
 float2 DistortPolar(float2 uv, float distortAngle, float scale = 1)

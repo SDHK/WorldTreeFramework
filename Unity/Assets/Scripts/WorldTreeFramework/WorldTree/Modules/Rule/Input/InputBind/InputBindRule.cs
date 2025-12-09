@@ -35,7 +35,6 @@ namespace WorldTree
 			}
 		}
 
-
 		class InputGlobal : InputGlobalRule<InputBind>
 		{
 			protected override void Execute(InputBind self, InputData data)

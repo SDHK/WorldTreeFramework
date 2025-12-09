@@ -25,6 +25,7 @@ namespace WorldTree
 		, GenericOf<string, InputGroup>
 		, AsRule<InputGlobal>
 		, AsRule<Awake>
+
 	{
 
 		/// <summary>

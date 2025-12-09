@@ -18,10 +18,9 @@
             // make fog work
             #pragma multi_compile_fog
 
-
-            #define Use_IrisNoise
-            #define Use_UnityCG
-            #include "../IrisCoreUnity.hlsl"
+            #define As_IrisNoise
+            #define As_UnityCG
+            #include "../IrisEntryUnity.hlsl"
 
             struct appdata
             {

@@ -11,7 +11,6 @@ Shader "Unlit/OutlineShader"
     {
         Tags 
         { 
-            
             // "RenderType" = "Opaque" 
             "Queue" = "Transparent"
             "RenderType" = "Transparent"
@@ -19,8 +18,12 @@ Shader "Unlit/OutlineShader"
         }
         HLSLINCLUDE
 
-        #define Use_UniversalShaderLibraryCore
-        #include "../IrisCoreUnity.hlsl"
+
+        #define As_UniversalShaderLibraryCore
+        #define As_IrisMatrix
+        #define As_IrisMath
+
+        #include "../IrisEntryUnity.hlsl"
 
         // CBUFFER_START(UnityPerMaterial)
 
@@ -45,30 +48,28 @@ Shader "Unlit/OutlineShader"
             float4 _Color1;
             float _Offset;
             
-            struct Attributes
+            struct VertData 
             {
-                float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
+                float4 position : POSITION;
+                float3 normal : NORMAL;
             };
             
-            struct Varyings
+            struct FragData
             {
-                float4 positionCS : SV_POSITION;
+                float4  SV_position : SV_POSITION;
             };
             
-            Varyings vert(Attributes input)
+            FragData vert(VertData vertData)
             {
-                Varyings output;
-                
+                FragData fragData;
                 // 沿法线方向扩展顶点
-                float3 positionOS = input.positionOS.xyz + input.normalOS * _Offset;
-                
+                float3 position = Scale(vertData.position.xyz, vertData.normal, _Offset);
                 // 手动计算裁剪空间位置
-                output.positionCS = mul(Env_Matrix_MVP, float4(positionOS, 1.0));           
-                return output;
+                fragData.SV_position =  WorldToCamera(position);
+                return fragData;
             }
             
-            half4 frag(Varyings input) : SV_Target
+            half4 frag(FragData fragData) : SV_Target
             {
                 return _Color1;  // 返回红色
             }
@@ -92,32 +93,30 @@ Shader "Unlit/OutlineShader"
             #pragma fragment frag
 
             //顶点数据结构
-               struct VertexInput
+            struct VertData
             {
-                float4 vertex : POSITION;
+                float4 position : POSITION;
+                float2 uv : TEXCOORD0; // 第一个纹理坐标
+            };
+
+            //片元数据结构
+            struct FragData
+            {
+                float4 sv_pos : SV_POSITION;
                 float2 uv : TEXCOORD0;
             };
 
-            struct VertexOutput
+            FragData vert(VertData vertData)
             {
-                float4 pos : SV_POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            VertexOutput vert(VertexInput v)
-            {
-
-                VertexOutput o;
-                o.pos = mul(Env_Matrix_VP, mul(UNITY_MATRIX_M, v.vertex));
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                
-
-                return o;
+                FragData fragData;
+                fragData.sv_pos =  mul(Iris_Matrix_MVP, vertData.position);
+                fragData.uv = TRANSFORM_TEX(vertData.uv, _MainTex);
+                return fragData;
             }
 
-            half4 frag(VertexOutput i) : SV_Target
+            half4 frag(FragData fragData) : SV_Target
             {
-                return tex2D(_MainTex, i.uv);
+                return tex2D(_MainTex, fragData.uv);
             }
             ENDHLSL
         }

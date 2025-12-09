@@ -30,8 +30,8 @@ public class CustomRenderPassFeature : ScriptableRendererFeature
 		createMesh.renderPassEvent = RenderPassEvent.AfterRenderingOpaques;
 	}
 
-	//ÔÚÕâÀï£¬Äú¿ÉÒÔÔÚäÖÈ¾Æ÷ÖĞ×¢ÈëÒ»¸ö»ò¶à¸öäÖÈ¾Í¨µÀ¡£
-	//µ±ÎªÃ¿¸öÉãÏñ»úÉèÖÃÒ»´ÎäÖÈ¾Æ÷Ê±£¬½«µ÷ÓÃ´Ë·½·¨¡£
+	//åœ¨è¿™é‡Œï¼Œæ‚¨å¯ä»¥åœ¨æ¸²æŸ“å™¨ä¸­æ³¨å…¥ä¸€ä¸ªæˆ–å¤šä¸ªæ¸²æŸ“é€šé“ã€‚
+	//å½“ä¸ºæ¯ä¸ªæ‘„åƒæœºè®¾ç½®ä¸€æ¬¡æ¸²æŸ“å™¨æ—¶ï¼Œå°†è°ƒç”¨æ­¤æ–¹æ³•ã€‚
 	public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
 	{
 		if (material == null) return;
@@ -61,45 +61,45 @@ public class TestRenderPass : ScriptableRenderPass
 	}
 	public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
 	{
-		// Èç¹ûµ±Ç°Ïà»úÃ»ÓĞÆôÓÃºó´¦ÀíĞ§¹û£¬ÔòÖ±½Ó·µ»Ø
+		// å¦‚æœå½“å‰ç›¸æœºæ²¡æœ‰å¯ç”¨åå¤„ç†æ•ˆæœï¼Œåˆ™ç›´æ¥è¿”å›
 		if (!renderingData.cameraData.postProcessEnabled) return;
 
 
-		// »ñÈ¡µ±Ç°µÄ Volume ¶ÑÕ»
+		// è·å–å½“å‰çš„ Volume å †æ ˆ
 		var stack = VolumeManager.instance.stack;
 
-		// ´Ó¶ÑÕ»ÖĞ»ñÈ¡ TestVolume ×é¼ş
+		// ä»å †æ ˆä¸­è·å– TestVolume ç»„ä»¶
 		volume = stack.GetComponent<TestVolume>();
-		// Èç¹ûÃ»ÓĞÕÒµ½ TestVolume ×é¼ş£¬»òÕß×é¼şÎ´¼¤»î£¬ÔòÖ±½Ó·µ»Ø
+		// å¦‚æœæ²¡æœ‰æ‰¾åˆ° TestVolume ç»„ä»¶ï¼Œæˆ–è€…ç»„ä»¶æœªæ¿€æ´»ï¼Œåˆ™ç›´æ¥è¿”å›
 		if (volume == null) return;
 		if (!volume.IsActive()) return;
 
-		// ÉèÖÃ²ÄÖÊµÄ²ÎÊı
+		// è®¾ç½®æè´¨çš„å‚æ•°
 		material.SetFloat("_Offs", volume.offset.value);
 
-		// ´´½¨Ò»¸öÃüÁî»º³åÇø£¬ÓÃÓÚ´æ´¢äÖÈ¾ÃüÁî
+		// åˆ›å»ºä¸€ä¸ªå‘½ä»¤ç¼“å†²åŒºï¼Œç”¨äºå­˜å‚¨æ¸²æŸ“å‘½ä»¤
 		CommandBuffer cmd = CommandBufferPool.Get("TestRenderPass");
 
-		// »ñÈ¡µ±Ç°Ïà»úµÄÑÕÉ«äÖÈ¾Ä¿±ê
+		// è·å–å½“å‰ç›¸æœºçš„é¢œè‰²æ¸²æŸ“ç›®æ ‡
 		var source = currentTarget.cameraColorTarget;
-		// ´´½¨Ò»¸öÁÙÊ±ÎÆÀíµÄ ID
+		// åˆ›å»ºä¸€ä¸ªä¸´æ—¶çº¹ç†çš„ ID
 		int temTextureID = Shader.PropertyToID("_TestTex");
 
-		// »ñÈ¡µ±Ç°Ïà»úµÄäÖÈ¾Ä¿±êÃèÊö·û
+		// è·å–å½“å‰ç›¸æœºçš„æ¸²æŸ“ç›®æ ‡æè¿°ç¬¦
 		RenderTextureDescriptor descriptor = renderingData.cameraData.cameraTargetDescriptor;
-		// ·ÖÅäÒ»¸öÁÙÊ±äÖÈ¾Ä¿±ê£¬Ê¹ÓÃÇ°Ãæ»ñÈ¡µÄÃèÊö·û
+		// åˆ†é…ä¸€ä¸ªä¸´æ—¶æ¸²æŸ“ç›®æ ‡ï¼Œä½¿ç”¨å‰é¢è·å–çš„æè¿°ç¬¦
 		cmd.GetTemporaryRT(temTextureID, descriptor);
 
-		// ÉèÖÃ²ÄÖÊµÄ _Offs ÊôĞÔÎª 0.5
+		// è®¾ç½®æè´¨çš„ _Offs å±æ€§ä¸º 0.5
 
-		// ½« source äÖÈ¾Ä¿±êµÄÄÚÈİ¿½±´µ½ temTextureID£¬²¢Ó¦ÓÃ²ÄÖÊµÄµÚÒ»¸ö pass£¨Ë÷ÒıÎª 0£©
+		// å°† source æ¸²æŸ“ç›®æ ‡çš„å†…å®¹æ‹·è´åˆ° temTextureIDï¼Œå¹¶åº”ç”¨æè´¨çš„ç¬¬ä¸€ä¸ª passï¼ˆç´¢å¼•ä¸º 0ï¼‰
 		cmd.Blit(source, temTextureID, material, 0);
-		// ½« temTextureID µÄÄÚÈİ¿½±´»Ø source äÖÈ¾Ä¿±ê
+		// å°† temTextureID çš„å†…å®¹æ‹·è´å› source æ¸²æŸ“ç›®æ ‡
 		cmd.Blit(temTextureID, source);
 
-		// Ö´ĞĞÃüÁî»º³åÇøÖĞµÄËùÓĞÃüÁî
+		// æ‰§è¡Œå‘½ä»¤ç¼“å†²åŒºä¸­çš„æ‰€æœ‰å‘½ä»¤
 		context.ExecuteCommandBuffer(cmd);
-		// ÊÍ·ÅÃüÁî»º³åÇø
+		// é‡Šæ”¾å‘½ä»¤ç¼“å†²åŒº
 		CommandBufferPool.Release(cmd);
 	}
 }
@@ -123,11 +123,11 @@ public class TestVolume : VolumeComponent, IPostProcessComponent
 }
 
 /// <summary>
-/// ºó´¦ÀíĞ§¹û
+/// åå¤„ç†æ•ˆæœ
 /// </summary>
 class CustomRenderShaderPostPass : ScriptableRenderPass
 {
-	//¶¨ÒåäÖÈ¾²ÄÖÊ£¬Í¨¹ıCreate·½·¨¸³Öµ
+	//å®šä¹‰æ¸²æŸ“æè´¨ï¼Œé€šè¿‡Createæ–¹æ³•èµ‹å€¼
 	public Material _Material;
 
 
@@ -136,43 +136,43 @@ class CustomRenderShaderPostPass : ScriptableRenderPass
 		_Material = material;
 	}
 
-	//ÔÚÖ´ĞĞäÖÈ¾Í¨µÀÖ®Ç°µ÷ÓÃ´Ë·½·¨¡£
-	//Ëü¿ÉÓÃÓÚÅäÖÃäÖÈ¾Ä¿±ê¼°ÆäÇå³ı×´Ì¬¡£´ËÍâ£¬»¹¿ÉÒÔ´´½¨ÁÙÊ±äÖÈ¾Ä¿±êÎÆÀí¡£
-	//Èç¹ûÎª¿Õ£¬Ôò´ËäÖÈ¾Í¨µÀ½«äÖÈ¾µ½»î¶¯µÄÉãÏñ»úäÖÈ¾Ä¿±ê¡£
-	//ÇĞÎğµ÷ÓÃ Command Buffer.Set Render Target¡£Çë¸ÄÎªµ÷ÓÃ <c>Configure Target</c> ºÍ <c>Configure Clear</c>¡£
-	//äÖÈ¾¹ÜµÀ½«È·±£ÒÔ¸ßĞÔÄÜ·½Ê½½øĞĞÄ¿±êÉèÖÃºÍÇå³ı¡£
+	//åœ¨æ‰§è¡Œæ¸²æŸ“é€šé“ä¹‹å‰è°ƒç”¨æ­¤æ–¹æ³•ã€‚
+	//å®ƒå¯ç”¨äºé…ç½®æ¸²æŸ“ç›®æ ‡åŠå…¶æ¸…é™¤çŠ¶æ€ã€‚æ­¤å¤–ï¼Œè¿˜å¯ä»¥åˆ›å»ºä¸´æ—¶æ¸²æŸ“ç›®æ ‡çº¹ç†ã€‚
+	//å¦‚æœä¸ºç©ºï¼Œåˆ™æ­¤æ¸²æŸ“é€šé“å°†æ¸²æŸ“åˆ°æ´»åŠ¨çš„æ‘„åƒæœºæ¸²æŸ“ç›®æ ‡ã€‚
+	//åˆ‡å‹¿è°ƒç”¨ Command Buffer.Set Render Targetã€‚è¯·æ”¹ä¸ºè°ƒç”¨ <c>Configure Target</c> å’Œ <c>Configure Clear</c>ã€‚
+	//æ¸²æŸ“ç®¡é“å°†ç¡®ä¿ä»¥é«˜æ€§èƒ½æ–¹å¼è¿›è¡Œç›®æ ‡è®¾ç½®å’Œæ¸…é™¤ã€‚
 	public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
 	{
 	}
 
 
-	// ÔÚÕâÀï£¬Äú¿ÉÒÔÊµÏÖäÖÈ¾Âß¼­¡£
-	// Ê¹ÓÃ <c>Scriptable Render Context</c> ·¢³ö»æÖÆÃüÁî»òÖ´ĞĞÃüÁî»º³åÇø
+	// åœ¨è¿™é‡Œï¼Œæ‚¨å¯ä»¥å®ç°æ¸²æŸ“é€»è¾‘ã€‚
+	// ä½¿ç”¨ <c>Scriptable Render Context</c> å‘å‡ºç»˜åˆ¶å‘½ä»¤æˆ–æ‰§è¡Œå‘½ä»¤ç¼“å†²åŒº
 	// https://docs.unity3d.com/ScriptReference/Rendering.ScriptableRenderContext.html
-	// Äú²»±Øµ÷ÓÃ Scriptable Render Context.submit£¬äÖÈ¾¹ÜÏß½«ÔÚ¹ÜÏßÖĞµÄÌØ¶¨µãµ÷ÓÃËü¡£
+	// æ‚¨ä¸å¿…è°ƒç”¨ Scriptable Render Context.submitï¼Œæ¸²æŸ“ç®¡çº¿å°†åœ¨ç®¡çº¿ä¸­çš„ç‰¹å®šç‚¹è°ƒç”¨å®ƒã€‚
 
 	public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
 	{
-		//´´½¨Ò»¸öCommandBuffer
+		//åˆ›å»ºä¸€ä¸ªCommandBuffer
 		CommandBuffer cmd = CommandBufferPool.Get("TestRenderShader");
 
-		//ÉèÖÃäÖÈ¾Ä¿±êÎªÏà»úµÄÑÕÉ«»º³åÇø
+		//è®¾ç½®æ¸²æŸ“ç›®æ ‡ä¸ºç›¸æœºçš„é¢œè‰²ç¼“å†²åŒº
 		cmd.Blit(colorAttachment, RenderTargetHandle.CameraTarget.Identifier(), _Material);
-		//Ö´ĞĞCommandBuffer
+		//æ‰§è¡ŒCommandBuffer
 		context.ExecuteCommandBuffer(cmd);
-		////»ØÊÕCommandBuffer
+		////å›æ”¶CommandBuffer
 		//CommandBufferPool.Release(cmd);
 		cmd.Clear();
 	}
 
-	// ÇåÀíÔÚÖ´ĞĞ´ËäÖÈ¾Í¨µÀÆÚ¼ä´´½¨µÄÈÎºÎÒÑ·ÖÅä×ÊÔ´¡£
+	// æ¸…ç†åœ¨æ‰§è¡Œæ­¤æ¸²æŸ“é€šé“æœŸé—´åˆ›å»ºçš„ä»»ä½•å·²åˆ†é…èµ„æºã€‚
 	public override void OnCameraCleanup(CommandBuffer cmd)
 	{
 	}
 }
 
 
-//»æÖÆÍø¸ñ
+//ç»˜åˆ¶ç½‘æ ¼
 class CustomRenderPassCreateMesh : ScriptableRenderPass
 {
 	public Material _Material;
@@ -180,17 +180,17 @@ class CustomRenderPassCreateMesh : ScriptableRenderPass
 	{
 		CommandBuffer cmd = CommandBufferPool.Get("CreateMesh");
 		cmd.DrawMesh(CreateMesh(), Matrix4x4.identity, _Material);
-		//ÕâÀïºÍºó´¦ÀíÒ»ÑùµÄ²Ù×÷
+		//è¿™é‡Œå’Œåå¤„ç†ä¸€æ ·çš„æ“ä½œ
 		context.ExecuteCommandBuffer(cmd);
 		CommandBufferPool.Release(cmd);
 	}
-	//´´½¨Íø¸ñ
+	//åˆ›å»ºç½‘æ ¼
 	Mesh CreateMesh()
 	{
 		Mesh mesh = new Mesh();
 		mesh.vertices = new Vector3[4] { new Vector3(1, 1, 1), new Vector3(-1, 1, 1), new Vector3(-1, 1, -1), new Vector3(1, 1, -1) };
 		int[] indices = new int[8] { 0, 1, 1, 2, 2, 3, 3, 0 };
-		//´´½¨¼òµ¥µÄÏßÍø¸ñ
+		//åˆ›å»ºç®€å•çš„çº¿ç½‘æ ¼
 		mesh.SetIndices(indices, MeshTopology.Lines, 0);
 		return mesh;
 	}

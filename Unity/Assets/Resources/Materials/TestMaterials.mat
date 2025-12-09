@@ -485,7 +485,7 @@ Material:
     - _Metallic: 0
     - _MonochromeLighting: 0
     - _Offs: 0.5
-    - _Offset: 0.21
+    - _Offset: 0.01
     - _OffsetFactor: 0
     - _OffsetUnits: 0
     - _OutlineAlphaToMask: 0
@@ -708,7 +708,7 @@ Material:
     - _Center: {r: 0.55, g: 0.26, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color0: {r: 0.101961, g: 0.619608, b: 0.666667, a: 1}
-    - _Color1: {r: 0, g: 0.38050306, b: 0.41509432, a: 1}
+    - _Color1: {r: 0, g: 0, b: 0, a: 1}
     - _Color2: {r: 0.6226415, g: 0.27901387, b: 0.38200948, a: 1}
     - _Color2nd: {r: 1, g: 1, b: 1, a: 1}
     - _Color3: {r: 0.14117648, g: 0, b: 0.13809802, a: 1}

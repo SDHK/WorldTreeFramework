@@ -47,9 +47,9 @@ Shader "Unlit/EdgeShader"
 
             #include "AutoLight.cginc"
 
-            #define Use_IrisNoise
-            #define Use_IrisMath
-            #include "../IrisCoreUnity.hlsl"
+            #define As_IrisNoise
+            #define As_IrisMath
+            #include "../IrisEntryUnity.hlsl"
 
 
             sampler2D _MainTex;
@@ -172,8 +172,8 @@ Shader "Unlit/EdgeShader"
 
             #include "AutoLight.cginc"
 
-            #define Use_IrisNoise
-            #include "../IrisCoreUnity.hlsl"
+            #define As_IrisNoise
+            #include "../IrisEntryUnity.hlsl"
 
 
             sampler2D _MainTex;

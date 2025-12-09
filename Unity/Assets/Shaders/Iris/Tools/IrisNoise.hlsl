@@ -6,8 +6,8 @@
 * 描述： 各种噪声函数合集 
 
 */
-#ifndef IrisNoise
-#define IrisNoise
+#ifndef Def_IrisNoise
+#define Def_IrisNoise
 
 #include "IrisHash.hlsl" //引用Hash库
 
