@@ -22,7 +22,12 @@
 #define Def_IrisEntry
 
 // 加载参数接口
-#include "IrisParams.hlsl"
+#include "Params/IrisParams.hlsl"
+
+#ifdef As_IrisVertex
+#include "Tools/IrisVertex.hlsl"
+#endif
+
 
 #ifdef As_IrisDistort 
 #include "Tools/IrisDistort.hlsl" 
@@ -43,5 +48,7 @@
 #ifdef As_IrisMatrix
 #include "Tools/IrisMatrix.hlsl"
 #endif
+
+
 
 #endif

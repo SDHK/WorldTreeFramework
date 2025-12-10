@@ -10,7 +10,7 @@
 #ifndef Def_IrisMatrix
 #define Def_IrisMatrix
 
-#include "../IrisParams.hlsl"
+#include "../Params/IrisParams.hlsl"
 
 // 转换坐标系：从空间坐标转到摄像机坐标系
 float4 WorldToCamera(float3 worldPos)

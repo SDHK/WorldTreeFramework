@@ -1,6 +1,6 @@
 /****************************************
 *
-* 作者： 
+* 作者： 闪电黑客
 * 日期： 2025/12/4 19:42
 *
 * 说明： Iris Shader环境参数接口规范/模板
@@ -14,12 +14,14 @@
 * 1. 每个 #define 必须映射到对应引擎的内置变量
 * 2. 变量类型必须匹配（float3/float4/float4x4等）
 * 3. 参数语义需保持一致
-* 
-* 注意：本文件只包含接口定义，不包含实际实现
 *
 */
 #ifndef Def_IrisParams
 #define Def_IrisParams
+
+#include "IrisVertData.hlsl"
+#include "IrisFragData.hlsl"
+
 
 //===[常量]===
 
@@ -135,3 +137,4 @@
 #endif
 
 #endif
+//设想委托替换方案是否可以代替宏定义引用库？

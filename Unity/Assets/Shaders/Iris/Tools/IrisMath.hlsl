@@ -9,7 +9,7 @@
 #ifndef Def_IrisMath
 #define Def_IrisMath
 
-#include "../IrisParams.hlsl"
+#include "../Params/IrisParams.hlsl"
 
 
 //钳制映射

@@ -77,10 +77,11 @@
     <None Include="Assets\Shaders\Unity\Test\GaussianBlur.Shader" />
     <None Include="Assets\Shaders\Iris\IrisEntry.hlsl" />
     <None Include="Assets\Shaders\Unity\Test\EdgeShader.shader" />
-    <None Include="Assets\Shaders\Unity\Test\OutlineShader.shader" />
+    <None Include="Assets\Shaders\Unity\Shader\IrisOutline.shader" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Serialization.dll" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.xml" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll" />
+    <None Include="Assets\Shaders\Iris\Params\IrisVertData.hlsl" />
     <None Include="Assets\Shaders\Iris\Tools\IrisHash.hlsl" />
     <None Include="Assets\Shaders\Unity\Test\Role.shader" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Utilities.xml" />
@@ -89,6 +90,7 @@
     <None Include="Assets\Scripts\AOT\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll" />
     <None Include="Assets\Shaders\Iris\Tools\IrisMatrix.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Utilities.dll" />
+    <None Include="Assets\Shaders\Iris\Params\IrisFragData.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sqlite\sqlite3.dll" />
     <None Include="Assets\Shaders\Iris\Tools\IrisNoise.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\link.xml" />
@@ -99,9 +101,9 @@
     <None Include="Assets\Shaders\Unity\Test\WaterShader.Shader" />
     <None Include="Assets\Shaders\Iris\Tools\IrisDistort.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll" />
-    <None Include="Assets\Shaders\Iris\IrisParams.hlsl" />
+    <None Include="Assets\Shaders\Iris\Params\IrisParams.hlsl" />
     <None Include="Assets\Shaders\Unity\Test\Vortex.shader" />
-    <None Include="Assets\Shaders\Iris\Effect\Vert\IrisVertScale.hlsl" />
+    <None Include="Assets\Shaders\Iris\Tools\IrisVertex.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.xml" />
   </ItemGroup>
