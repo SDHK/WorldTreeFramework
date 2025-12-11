@@ -10,7 +10,7 @@
 * - 内部工具文件之间使用直接路径引用
 * 
 * 使用方法：
-* 通过条件编译宏（As_IrisXXX）控制工具模块的加载
+* 通过条件编译宏（Use_IrisXXX）控制工具模块的加载
 * 
 * 注意：
 * - 本文件是给外部 Shader 文件使用的
@@ -24,28 +24,28 @@
 // 加载参数接口
 #include "Params/IrisParams.hlsl"
 
-#ifdef As_IrisVertex
+#ifdef Use_IrisVertex
 #include "Tools/IrisVertex.hlsl"
 #endif
 
 
-#ifdef As_IrisDistort 
+#ifdef Use_IrisDistort 
 #include "Tools/IrisDistort.hlsl" 
 #endif
 
-#ifdef As_IrisHash
+#ifdef Use_IrisHash
 #include "Tools/IrisHash.hlsl"
 #endif
 
-#ifdef As_IrisMath
+#ifdef Use_IrisMath
 #include "Tools/IrisMath.hlsl"
 #endif
 
-#ifdef As_IrisNoise
+#ifdef Use_IrisNoise
 #include "Tools/IrisNoise.hlsl"
 #endif
 
-#ifdef As_IrisMatrix
+#ifdef Use_IrisMatrix
 #include "Tools/IrisMatrix.hlsl"
 #endif
 

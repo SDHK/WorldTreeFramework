@@ -15,11 +15,15 @@
 #ifndef Def_IrisEntryUnity
 #define Def_IrisEntryUnity
 
-#ifdef As_UniversalShaderLibraryCore
+#ifdef Use_UniversalShaderLibraryCore
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #endif
 
-#ifdef As_UnityCG
+#ifdef Use_UniversalShaderLibraryLighting
+    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+#endif
+
+#ifdef Use_UnityCG
     #include "UnityCG.cginc"
 #endif
 

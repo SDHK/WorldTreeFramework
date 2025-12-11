@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 929015426e66db84fa68ba7ebf7e9130, type: 3}
   m_Name: CustomRenderPassFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   material: {fileID: 2100000, guid: f210f9a58617f0d40a51e6d94a8fd79b, type: 2}
-  shaderMesh: {fileID: 4800000, guid: eff62700b0bf9f4498b3ec018006a56c, type: 3}
+  shaderMesh: {fileID: 4800000, guid: 884dcaff39a32f445800d4214cece453, type: 3}
   renderPassEvent: 500

@@ -20,7 +20,6 @@ public class CustomRenderPassFeature : ScriptableRendererFeature
 	{
 		testRenderPass = new TestRenderPass(RenderPassEvent.BeforeRenderingPostProcessing);
 
-
 		m_ScriptablePassCreateMesh = new CustomRenderShaderPostPass();
 		m_ScriptablePassCreateMesh._Material = new Material(shaderMesh);
 		m_ScriptablePassCreateMesh.renderPassEvent = RenderPassEvent.AfterRenderingOpaques;

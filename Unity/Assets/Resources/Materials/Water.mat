@@ -59,7 +59,7 @@ Material:
     - _EnableExternalAlpha: 0
     - _FoamNoise: 3
     - _FoamRange: 5
-    - _Offs: 0.5
+    - _Offs: 1
     - _Offset: 0.1
     - _RimMax: 0.6
     - _RimMin: 0.6

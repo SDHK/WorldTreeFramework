@@ -19,9 +19,7 @@
 #ifndef Def_IrisParams
 #define Def_IrisParams
 
-#include "IrisVertData.hlsl"
-#include "IrisFragData.hlsl"
-
+#include "IrisStructFields.hlsl"
 
 //===[常量]===
 
@@ -137,4 +135,3 @@
 #endif
 
 #endif
-//设想委托替换方案是否可以代替宏定义引用库？

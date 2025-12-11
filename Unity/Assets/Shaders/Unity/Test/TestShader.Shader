@@ -45,8 +45,8 @@
             #include "UnityCG.cginc"
 
 
-            #define As_IrisMath
-            #define As_IrisNoise
+            #define Use_IrisMath
+            #define Use_IrisNoise
             #include "../IrisEntryUnity.hlsl"
 
 
