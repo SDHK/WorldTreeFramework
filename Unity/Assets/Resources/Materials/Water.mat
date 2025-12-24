@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water
-  m_Shader: {fileID: 4800000, guid: 5d61170df5efea448bfe93e8bd40e4df, type: 3}
+  m_Shader: {fileID: 4800000, guid: d5b7b8867cd1b3147b874c2d50b20619, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -24,6 +24,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _CausticsTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -33,7 +37,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: b326b938f5f56af4ab76deec7d4cb522, type: 3}
+        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -64,10 +68,12 @@ Material:
     - _RimMax: 0.6
     - _RimMin: 0.6
     - _RimSmooth: 0.6
+    - _Scale: 0.01
     - _Value1: 5
     - _WaterSpeed: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 0, b: 0, a: 1}
     - _Color0: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 1}
     - _Color1: {r: 0.3066038, g: 1, b: 0.9667169, a: 1}
     - _Color2: {r: 0.3066038, g: 0.7307989, b: 1, a: 1}

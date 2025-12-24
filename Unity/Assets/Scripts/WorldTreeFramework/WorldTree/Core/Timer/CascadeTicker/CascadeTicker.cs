@@ -39,9 +39,14 @@ namespace WorldTree
 		public long advanceTick;
 
 		/// <summary>
-		/// 追赶精度:用于限制每次追赶的最小单位,0表示不限制。
+		/// 指针刻度掩码:用于自适应追赶时序的刻度。  
 		/// </summary>
-		public long Precision = 0;
+		public long precisionMask;
+
+		/// <summary>
+		/// 指针刻度掩码:用于自适应追赶时序的刻度。  
+		/// </summary>
+		public long PrecisionMask => precisionMask;
 
 		/// <summary>
 		/// 最小时序记录
@@ -88,6 +93,24 @@ namespace WorldTree
 				self.Slots = null;
 				self.RuleMulticast = null;
 			}
+		}
+
+		/// <summary>
+		/// 设置指针每帧最大跨越刻度：0表示不限制。1~64（也就是2的幂）
+		/// </summary>
+		public static void SetPrecision(this CascadeTicker self, int precision)
+		{
+			if (precision <= 0)
+			{
+				self.precisionMask = 0;
+				return;
+			}
+			else if (precision > 64)
+			{
+				self.precisionMask = 0;
+				return;
+			}
+			self.precisionMask = (1L << (precision - 1));
 		}
 
 		/// <summary>
@@ -146,8 +169,8 @@ namespace WorldTree
 			//前进追赶
 			do
 			{
-				//按照精度推进，选择较小的推进
-				self.advanceTick = self.Precision == 0 ? self.CurrentTick : Math.Min(self.advanceTick + self.Precision, self.CurrentTick);
+				//选择较小的推进,精度刻度推进
+				self.advanceTick = (self.precisionMask == 0) ? self.CurrentTick : Math.Min((self.advanceTick + self.precisionMask) & ~(self.precisionMask - 1), self.CurrentTick);
 				//按记录的最小时序进行自适应追赶
 				self.advanceTick = Math.Min(self.advanceTick, self.minTick);
 				//重置最小时序记录
