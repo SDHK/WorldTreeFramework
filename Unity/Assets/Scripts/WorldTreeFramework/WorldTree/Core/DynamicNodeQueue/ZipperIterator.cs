@@ -123,6 +123,11 @@ namespace WorldTree
 		public int TraversalCount => traversalCount;
 
 		/// <summary>
+		/// 遍历后的剩余数量 
+		/// </summary>
+		public int RemainCount => writePoint + nowNewCount;
+
+		/// <summary>
 		/// 尝试添加数据
 		/// </summary>
 		public virtual bool TryAdd(T data)
@@ -192,7 +197,7 @@ namespace WorldTree
 		/// </summary>
 		public int RefreshTraversalCount()
 		{
-			// 判断如果下一次遍历数量为0，说明没有可遍历的数据，当前数组为空，直接恢复为初始化状态
+			//判断如果下一次遍历数量为0，说明没有可遍历的数据，当前数组为空，直接恢复为初始化状态
 			isInit = nextTraversalCount == 0;
 			//奇偶切换点是读取指针最后停下的位置
 			switchPoint = writePoint;
@@ -250,7 +255,6 @@ namespace WorldTree
 					indexInterval = 2;
 				}
 
-				// 使用引用类型来避免结构体复制
 				pair = nodes[readPoint];
 
 				if (CheckNull(pair)) // 数据为空判断

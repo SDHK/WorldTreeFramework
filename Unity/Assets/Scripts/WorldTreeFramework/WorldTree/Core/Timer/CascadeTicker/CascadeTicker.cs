@@ -208,7 +208,7 @@ namespace WorldTree
 			//前进追赶
 			do
 			{
-				//选择较小的推进,精度刻度推进
+				//选择较小的推进,刻度推进
 				self.advanceTick = (self.precisionMask == 0) ? self.CurrentTick : Math.Min((self.advanceTick + self.precisionMask) & ~(self.precisionMask - 1), self.CurrentTick);
 				//按记录的最小时序进行自适应追赶
 				self.advanceTick = Math.Min(self.advanceTick, self.minTick);
@@ -243,7 +243,7 @@ namespace WorldTree
 			for (int i = min; i <= max; i++) self.SlotUpdate(i);
 			//时序更新
 			self.LastTick = adviceTick;
-			//执行定, 然后清空执行器
+			//执行, 然后清空执行器
 			self.RuleMulticast.Send();
 			self.RuleMulticast.Clear();
 		}
@@ -273,13 +273,11 @@ namespace WorldTree
 				//时序到达，执行定序器
 				if (self.advanceTick >= tickerData.Tick)
 				{
-
 					//添加到执行器
 					self.RuleMulticast.TryAdd(tickerData.Node.Value, tickerData.RuleList);
 					//从槽位移除
 					tickerData.Dispose();
 					slot.TickIterator.DequeueCurrent();
-
 				}
 				//时序未到达，重新计算槽位位置
 				else
@@ -297,7 +295,7 @@ namespace WorldTree
 				}
 			}
 			//槽位已空，清除占用标记
-			if (slot.TickIterator.TraversalCount == 0) self.OccupiedSlotMask &= ~(1L << i);
+			if (slot.TickIterator.RemainCount == 0) self.OccupiedSlotMask &= ~(1L << i);
 		}
 
 		/// <summary>

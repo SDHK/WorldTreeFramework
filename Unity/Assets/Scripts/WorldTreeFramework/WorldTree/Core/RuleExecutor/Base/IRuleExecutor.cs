@@ -44,6 +44,12 @@ namespace WorldTree
 		public int TraversalCount { get; }
 
 		/// <summary>
+		/// 遍历后的剩余数量 
+		/// </summary>
+		[TreeDataIgnore]
+		public int RemainCount { get; }
+
+		/// <summary>
 		/// 刷新遍历数量
 		/// </summary>
 		public int RefreshTraversalCount();

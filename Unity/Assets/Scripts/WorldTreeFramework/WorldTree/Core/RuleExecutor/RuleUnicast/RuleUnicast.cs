@@ -55,6 +55,8 @@ namespace WorldTree
 
 		public int TraversalCount => TargetNode.Value != null ? 1 : 0;
 
+		public int RemainCount => TargetNode.Value != null ? 1 : 0;
+
 		public void Clear()
 		{
 			TargetNode = default;

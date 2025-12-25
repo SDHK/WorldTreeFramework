@@ -108,6 +108,11 @@ namespace WorldTree
 		public int TraversalCount => traversalCount;
 
 		/// <summary>
+		/// 遍历后的剩余数量 
+		/// </summary>
+		public int RemainCount => writePoint + nowNewCount;
+
+		/// <summary>
 		/// 尝试添加节点
 		/// </summary>
 		public virtual bool TryAdd(INode node, RuleList rule)
