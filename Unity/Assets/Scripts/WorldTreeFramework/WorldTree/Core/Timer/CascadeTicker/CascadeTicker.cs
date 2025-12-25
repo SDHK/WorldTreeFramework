@@ -5,11 +5,50 @@
 
 * 描述： 级联定序器
 * 
-* Tick是long。
-* 它可以是DateTime.Ticks,也可以是帧,也可以是自定义的时钟时间戳。
-* 本身会自动根据Update频率适应精度，Precision 可以用来限制每次追赶的最小单位。
-* 通过二分降级均摊传统降级排序开销，避免雪崩遍历。
+* 在级联定序器中，时间是以一个递增的long来表示的。
+* 默认会自动根据Update频率适应精度。
+* 而 Precision 可以用来限制每次追赶的最小单位。
 * 
+* 时间单位可以自定义：
+* 它可以表示 DateTime.Ticks、帧数，或者任何自定义的时间戳。
+* 
+* 核心设计原则：
+* 1. 事件的执行是由时间差异的位级结构变化所触发的，
+*    而非通过计数节拍或旋转轮盘来实现。
+*    通过位运算 GetHighestBitIndex(advanceTick ^ clockTick) 直接定位槽位，无需分层查找或递归。
+*    
+* 2. 进程能够安全地跳过空闲时间。
+*    没有待处理事件的长时间段会在 O(1) 时间内被跳过，
+*    不会出现空循环或逐帧推进的情况。
+*    通过位运算计算变化范围，只处理实际变化的槽位，避免全部遍历。
+*    
+* 3. 位级结构。
+*    事件按照层级进行组织和降级处理，这些层级由当前时间与目标时间之间差异的最高位所决定。
+*    64个槽位按位划分（槽位i对应2^i到2^(i+1)的范围），单层覆盖从 2^0 到 2^63 的无限时间范围。
+*    相比传统时间轮的分层递归，本设计通过位运算实现单层无限范围覆盖。
+*	 
+* 4. Precision精度（0, 1~64）。
+*    启用时（precision > 0），通过位对齐操作将时间推进与 2^(precision-1) 的倍数对齐，
+*    强制执行执行顺序和帧级别的确定性。
+*    禁用为0时，直接追赶到当前时间，只保证事件不会被跳过，但不保证事件的执行顺序。
+*    示例： 使用C#的DateTime.Ticks作为时间单位，那么：
+*    		precision = 0 时，直接追赶到当前时间，只保证事件不会被跳过，但不保证事件的执行顺序。
+*			precision = 13 对应 2^14 = 8192 Ticks ≈ 1 毫秒精度。
+*          	precision = 18 对应 2^19 = 262114 Ticks ≈ 25 毫秒精度（游戏引擎帧级）。
+*			precision = 23 对应 2^23 = 8388608 Ticks ≈ 1 秒精度。
+*    
+* 5. 该程序的设计中运算操作极为精简。
+*    除了用于边界移动的基本加法和减法运算外，
+*    所有结构方面的决策都依赖于位运算。
+*    不存在除法、取模运算或循环索引计算。
+*    相比传统时间轮的除法、取模、堆操作，本设计通过位运算实现 O(1) 定位。
+*    
+* 性能特点：
+* - 添加：O(1) 位运算定位，无需分层查找
+* - 槽位定位：O(1) 位运算，无需递归或堆操作
+* - 任务降级：O(1) 位运算重新定位，无需重新排序
+* - 更新处理：O(1) 位运算定位变化的槽位，避免全部遍历。
+* - 相比传统时间轮：避免除法、取模、堆操作的开销，性能提升显著
 
 */
 using System;
@@ -49,7 +88,7 @@ namespace WorldTree
 		public long PrecisionMask => precisionMask;
 
 		/// <summary>
-		/// 最小时序记录
+		/// 最小时序记录：保证事件不会被跳过
 		/// </summary>
 		public long minTick = long.MaxValue;
 
@@ -87,7 +126,7 @@ namespace WorldTree
 				self.LastTick = 0;
 				self.CurrentTick = 0;
 				self.advanceTick = 0;
-				self.OccupiedSlotMask = 0;
+				self.precisionMask = 0;
 				self.minTick = long.MaxValue;
 				self.OccupiedSlotMask = 0;
 				self.Slots = null;
@@ -100,12 +139,7 @@ namespace WorldTree
 		/// </summary>
 		public static void SetPrecision(this CascadeTicker self, int precision)
 		{
-			if (precision <= 0)
-			{
-				self.precisionMask = 0;
-				return;
-			}
-			else if (precision > 64)
+			if (precision <= 0 || precision > 64)
 			{
 				self.precisionMask = 0;
 				return;
@@ -164,7 +198,12 @@ namespace WorldTree
 			//获取占用槽位的最低位置
 			var minSlot = MathBit.GetLowestBitIndex(self.OccupiedSlotMask);
 			//如果最低槽位比当前变化大，说明没有要处理的，直接返回。
-			if (minSlot == -1 || (1L << minSlot) > numberDiff) return;
+			if (minSlot == -1 || (1L << minSlot) > numberDiff)
+			{
+				//同步推进时序，越过空闲时序段，避免无效追赶。
+				self.advanceTick = self.CurrentTick;
+				return;
+			}
 
 			//前进追赶
 			do
