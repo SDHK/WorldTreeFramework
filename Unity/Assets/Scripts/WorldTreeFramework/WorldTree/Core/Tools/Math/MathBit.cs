@@ -19,7 +19,7 @@ namespace WorldTree
 		public static int GetHighestBitIndex(long value)
 		{
 			if (value == 0) return -1;
-			return 63 - LeadingZeroCount((ulong)value);
+			return 64 - LeadingZeroCount((ulong)value);
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace WorldTree
 		public static int GetLowestBitIndex(long value)
 		{
 			if (value == 0) return -1;
-			return TrailingZeroCount((ulong)value);
+			return TrailingZeroCount((ulong)value) - 1;
 		}
 
 		/// <summary>

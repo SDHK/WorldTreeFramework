@@ -162,7 +162,7 @@ namespace WorldTree
 			}
 
 			//记录添加的最小时序,用于自适应追赶
-			if (self.minTick == 0 || clockTick < self.minTick || self.advanceTick >= self.minTick)
+			if (self.minTick == long.MaxValue || clockTick < self.minTick || self.advanceTick >= self.minTick)
 			{
 				self.minTick = clockTick;
 			}
@@ -188,13 +188,23 @@ namespace WorldTree
 		{
 			self.CurrentTick = currentTick;
 			//没有占用槽位则直接返回
-			if (self.OccupiedSlotMask == 0) return;
+			if (self.OccupiedSlotMask == 0)
+			{
+				self.advanceTick = self.CurrentTick;
+				self.LastTick = self.advanceTick;
+				return;
+			}
 			//回退不处理，等待CurrentTick追上LastTick后自然恢复
 			if (self.CurrentTick < self.LastTick) return;
 			//获取时序变化差异
 			var numberDiff = self.CurrentTick ^ self.LastTick;
 			//没有变化就直接返回
-			if (numberDiff == 0) return;
+			if (numberDiff == 0)
+			{
+				self.advanceTick = self.CurrentTick;
+				self.LastTick = self.advanceTick;
+				return;
+			}
 			//获取占用槽位的最低位置
 			var minSlot = MathBit.GetLowestBitIndex(self.OccupiedSlotMask);
 			//如果最低槽位比当前变化大，说明没有要处理的，直接返回。
@@ -202,11 +212,24 @@ namespace WorldTree
 			{
 				//同步推进时序，越过空闲时序段，避免无效追赶。
 				self.advanceTick = self.CurrentTick;
+				self.LastTick = self.advanceTick;
 				return;
 			}
 
-			//前进追赶
-			do
+			//MinTick记录了每帧添加的最小时序，所以这一次推进是绝对安全的，越过空闲时序段，避免无效追赶。
+			else if (self.minTick <= self.CurrentTick)
+			{
+				self.advanceTick = self.minTick;
+				//重置最小时序记录
+				self.minTick = long.MaxValue;
+				//追赶时序
+				self.Advance(self.advanceTick);
+				//时序更新
+				self.LastTick = self.advanceTick;
+			}
+
+			//前进追赶，原因是MinTick不知道第二个及以后的时序，所以只能逐步追赶。
+			while (self.advanceTick < self.CurrentTick && self.OccupiedSlotMask != 0)
 			{
 				//选择较小的推进,刻度推进
 				self.advanceTick = (self.precisionMask == 0) ? self.CurrentTick : Math.Min((self.advanceTick + self.precisionMask) & ~(self.precisionMask - 1), self.CurrentTick);
@@ -215,37 +238,42 @@ namespace WorldTree
 				//重置最小时序记录
 				self.minTick = long.MaxValue;
 				//追赶时序
-				self.Advance(self.advanceTick);
-				//没有占用槽位则直接返回
-				if (self.OccupiedSlotMask == 0) return;
-			} while (self.advanceTick < self.CurrentTick);
+				long safeDiff = self.Advance(self.advanceTick);
+				//安全推进
+				if (safeDiff != -1) self.advanceTick += safeDiff;
+				//时序更新
+				self.LastTick = self.advanceTick;
+			}
 			self.advanceTick = self.CurrentTick;
+			self.LastTick = self.advanceTick;
 		}
 
 		/// <summary>
 		/// 推进追赶
 		/// </summary>
-		private static void Advance(this CascadeTicker self, long adviceTick)
+		private static long Advance(this CascadeTicker self, long advanceTick)
 		{
 			//获取时序变化差异
-			var numberDiff = adviceTick ^ self.LastTick;
+			var numberDiff = advanceTick ^ self.LastTick;
 			//没有变化就直接返回
-			if (numberDiff == 0) return;
+			if (numberDiff == 0) return -1;
 			//获取占用槽位的最低位置
 			var minSlot = MathBit.GetLowestBitIndex(self.OccupiedSlotMask);
-			//如果最低槽位比当前变化大，说明没有要处理的，直接返回。
-			if (minSlot == -1 || (1L << minSlot) > numberDiff) return;
+			//如果最低槽位比当前变化大，说明没有要处理的，返回一个安全推进值。
+			if ((1L << minSlot) > numberDiff)
+			{
+				return (1L << minSlot) - (advanceTick & ((1L << minSlot) - 1)) - 1;
+			}
 			//如果变化的时序大于已占用槽位，直接遍历所有槽位，否则只遍历本次时序变化内涉及的槽位。
 			var clampDiffSlot = numberDiff > self.OccupiedSlotMask ? self.OccupiedSlotMask : numberDiff;
 			var max = MathBit.GetHighestBitIndex(clampDiffSlot);
 			var min = minSlot;
 			//时序推进正序遍历，避免重复处理下移的定序器
 			for (int i = min; i <= max; i++) self.SlotUpdate(i);
-			//时序更新
-			self.LastTick = adviceTick;
 			//执行, 然后清空执行器
 			self.RuleMulticast.Send();
 			self.RuleMulticast.Clear();
+			return -1;
 		}
 
 		/// <summary>
