@@ -3,67 +3,67 @@ namespace WorldTree
 {
 
 	/// <summary>
-	/// Éî¿½±´±ê¼Ç
+	/// æ·±æ‹·è´æ ‡è®°
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
 	public class TreeCopyableAttribute : Attribute { }
 
 	/// <summary>
-	/// Éî¿½±´ÌØ±ğ´¦Àí±ê¼Ç
+	/// æ·±æ‹·è´ç‰¹åˆ«å¤„ç†æ ‡è®°
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
 	public class TreeCopySpecialAttribute : Attribute { }
 
 	/// <summary>
-	/// Éî¿½±´³ÉÔ±ºöÂÔÌØĞÔ±ê¼Ç
+	/// æ·±æ‹·è´æˆå‘˜å¿½ç•¥ç‰¹æ€§æ ‡è®°
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public class TreeCopyIgnoreAttribute : Attribute { }
 
 	/// <summary>
-	/// Ê÷Éî¿½±´·¨Ôò½Ó¿Ú£ºÓÃÓÚĞòÁĞ»¯Î´Öª·ºĞÍ£¬½â³ıAsRuleµÄ·¨ÔòÏŞÖÆ
+	/// æ ‘æ·±æ‹·è´æ³•åˆ™æ¥å£ï¼šç”¨äºåºåˆ—åŒ–æœªçŸ¥æ³›å‹ï¼Œè§£é™¤AsRuleçš„æ³•åˆ™é™åˆ¶
 	/// </summary>
 	public interface ITreeCopy : IRule { }
 
 	/// <summary>
-	/// Ê÷Éî¿½±´·¨Ôò
+	/// æ ‘æ·±æ‹·è´æ³•åˆ™
 	/// </summary>
 	public interface TreeCopy : ISendRefRule<object, object>, ITreeCopy, ISourceGeneratorIgnore { }
 	/// <summary>
-	/// Ê÷Éî¿½±´·¨Ôò
+	/// æ ‘æ·±æ‹·è´æ³•åˆ™
 	/// </summary>
 	public abstract class TreeCopyRule<GT> : Rule<GT, TreeCopy>, ISendRefRule<object, object>
 	{
 		/// <summary>
-		/// µ÷ÓÃ
+		/// è°ƒç”¨
 		/// </summary>
 		public virtual void Invoke(INode self, ref object source, ref object target) => Execute(self as TreeCopier, ref source, ref target);
 		/// <summary>
-		/// Ö´ĞĞ
+		/// æ‰§è¡Œ
 		/// </summary>
 		protected abstract void Execute(TreeCopier self, ref object source, ref object target);
 	}
 
-	#region ·Ç³£¹æ·¨Ôò
+	#region éå¸¸è§„æ³•åˆ™
 
 	/// <summary>
-	/// ½á¹¹Ìå¿½±´½Ó¿Ú£ºÓÃÓÚ·´ĞòÁĞ»¯Î´Öª·ºĞÍ£¬½â³ıAsRuleµÄ·¨ÔòÏŞÖÆ
+	/// ç»“æ„ä½“æ‹·è´æ¥å£ï¼šç”¨äºååºåˆ—åŒ–æœªçŸ¥æ³›å‹ï¼Œè§£é™¤AsRuleçš„æ³•åˆ™é™åˆ¶
 	/// </summary>
 	public interface TreeCopyStruct : ISendRefRule, ISourceGeneratorIgnore { }
 
 
 	/// <summary>
-	/// ½á¹¹Ìå¿½±´·¨Ôò
+	/// ç»“æ„ä½“æ‹·è´æ³•åˆ™
 	/// </summary>
-	/// <remarks>´òÆÆ³£¹æĞ´·¨£¬ÒÔ²ÎÊıÀàĞÍÎªÖ÷</remarks>
+	/// <remarks>æ‰“ç ´å¸¸è§„å†™æ³•ï¼Œä»¥å‚æ•°ç±»å‹ä¸ºä¸»</remarks>
 	public abstract class TreeCopyStructRule<GT> : Rule<GT, TreeCopyStruct>, ISendRefRule<GT, GT>
 	{
 		/// <summary>
-		/// µ÷ÓÃ
+		/// è°ƒç”¨
 		/// </summary>
 		public virtual void Invoke(INode self, ref GT arg1, ref GT arg2) => Execute(self as TreeCopier, ref arg1, ref arg2);
 		/// <summary>
-		/// Ö´ĞĞ
+		/// æ‰§è¡Œ
 		/// </summary>
 		protected abstract void Execute(TreeCopier self, ref GT arg1, ref GT arg2);
 	}

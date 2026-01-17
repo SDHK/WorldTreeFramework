@@ -9,33 +9,33 @@ namespace ET
 {
 	// KCP Segment Definition
 	/// <summary>
-	/// KCPÆ¬¶Î¶¨Òå
+	/// KCPç‰‡æ®µå®šä¹‰
 	/// </summary>
 	internal struct SegmentStruct:IDisposable
     {
 		/// <summary>
-		/// KCPÆ¬¶ÎÍ·²¿
+		/// KCPç‰‡æ®µå¤´éƒ¨
 		/// </summary>
 		public Kcp.SegmentHead SegHead;
 		/// <summary>
-		/// ÖØ´«Ê±¼ä´Á
+		/// é‡ä¼ æ—¶é—´æˆ³
 		/// </summary>
 		public uint Resendts;
 		/// <summary>
-		/// ³¬Ê±ÖØ´«Ê±¼ä
+		/// è¶…æ—¶é‡ä¼ æ—¶é—´
 		/// </summary>
 		public int  Rto;
 		/// <summary>
-		/// ¿ìËÙÖØ´«
+		/// å¿«é€Ÿé‡ä¼ 
 		/// </summary>
 		public uint Fastack;
 		/// <summary>
-		/// ÖØ´«´ÎÊı
+		/// é‡ä¼ æ¬¡æ•°
 		/// </summary>
 		public uint Xmit;
 
 		/// <summary>
-		/// »º³åÇø
+		/// ç¼“å†²åŒº
 		/// </summary>
 		private byte[] buffers;
 
@@ -45,12 +45,12 @@ namespace ET
 		private ArrayPool<byte> arrayPool;
 
 		/// <summary>
-		/// ÊÇ·ñÎª¿Õ
+		/// æ˜¯å¦ä¸ºç©º
 		/// </summary>
 		public bool IsNull => this.buffers == null;
 
 		/// <summary>
-		/// Ğ´ÈëÊıÁ¿
+		/// å†™å…¥æ•°é‡
 		/// </summary>
 		public int WrittenCount
         {
@@ -59,12 +59,12 @@ namespace ET
         }
 
 		/// <summary>
-		/// ÒÑĞ´Èë»º³åÇø
+		/// å·²å†™å…¥ç¼“å†²åŒº
 		/// </summary>
 		public Span<byte> WrittenBuffer => this.buffers.AsSpan(0, (int) this.SegHead.Len);
 
 		/// <summary>
-		/// ¿ÕÏĞ»º³åÇø
+		/// ç©ºé—²ç¼“å†²åŒº
 		/// </summary>
 		public Span<byte> FreeBuffer => this.buffers.AsSpan(WrittenCount);
 
@@ -81,7 +81,7 @@ namespace ET
         }
 
 		/// <summary>
-		/// ´Ó»º³åÇø¶ÁÈ¡Êı¾İ
+		/// ä»ç¼“å†²åŒºè¯»å–æ•°æ®
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Encode(Span<byte> data, ref int size)
@@ -91,7 +91,7 @@ namespace ET
         }
 
 		/// <summary>
-		/// ´Ó»º³åÇø¶ÁÈ¡Êı¾İ
+		/// ä»ç¼“å†²åŒºè¯»å–æ•°æ®
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Advance(int count)

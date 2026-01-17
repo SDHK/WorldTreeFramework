@@ -1,9 +1,9 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2024/5/14 17:47
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2024/5/14 17:47
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 using System.Collections;
@@ -12,12 +12,12 @@ using System.Collections.Generic;
 namespace WorldTree
 {
 	/// <summary>
-	/// ×ÊÔ´¹ÜÀíÆ÷
+	/// èµ„æºç®¡ç†å™¨
 	/// </summary>
 	public class YooAssetManager : Node
 	{
-		//Ä¬ÈÏ°üĞèÒª³õÊ¼»¯
-		//ResourcePackage °ü
-		//AssetHandle ×ÊÔ´¾ä±ú£¬ĞèÒªÊÍ·Å
+		//é»˜è®¤åŒ…éœ€è¦åˆå§‹åŒ–
+		//ResourcePackage åŒ…
+		//AssetHandle èµ„æºå¥æŸ„ï¼Œéœ€è¦é‡Šæ”¾
 	}
 }

@@ -7,7 +7,7 @@ namespace WorldTree.TreeCopys
 	public static class ICollectionSpecialCopyRule
 	{
 		/// <summary>
-		/// µü´úÆ÷ÀàĞÍÌØÊâ¿½±´·¨Ôò»ùÀà
+		/// è¿­ä»£å™¨ç±»å‹ç‰¹æ®Šæ‹·è´æ³•åˆ™åŸºç±»
 		/// </summary>
 		public abstract class CopyRuleBase<T, ItemT> : IEnumerableSpecialCopyRule.CopyRuleBase<T, ItemT>
 			where T : class, ICollection<ItemT>, new()

@@ -10,7 +10,8 @@ Material:
   m_Name: TestMaterials
   m_Shader: {fileID: 4800000, guid: d5b7b8867cd1b3147b874c2d50b20619, type: 3}
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _ENABLEGLOWPASS_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -112,6 +113,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _EmissionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _FoamTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -197,6 +202,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -334,6 +343,9 @@ Material:
     - _BlendOpAlpha: 0
     - _BlendOpAlphaFA: 4
     - _BlendOpFA: 4
+    - _BloomBlurSize: 0.01
+    - _BloomIntensity: 1
+    - _BloomThreshold: 1
     - _Blur: 0
     - _Bump2ndMap_UVMode: 0
     - _Bump2ndScale: 1
@@ -353,6 +365,7 @@ Material:
     - _DstBlendAlphaFA: 1
     - _DstBlendFA: 1
     - _DummyProperty: 0
+    - _EdgeSoftness: 0.2
     - _Emission2ndBlend: 1
     - _Emission2ndBlendMode: 1
     - _Emission2ndFluorescence: 0
@@ -365,17 +378,21 @@ Material:
     - _EmissionBlendMode: 1
     - _EmissionFluorescence: 0
     - _EmissionGradSpeed: 1
+    - _EmissionIntensity: 1
     - _EmissionMainStrength: 0
     - _EmissionMap_UVMode: 0
     - _EmissionParallaxDepth: 0
+    - _EmissionPower: 2
     - _EmissionUseGrad: 0
     - _EnableAnim: 1
     - _EnableExternalAlpha: 0
+    - _EnableGlowPass: 1
     - _EnvRimBlur: 0.35
     - _EnvRimBorder: 3
     - _FlipNormal: 0
     - _FoamNoise: 1.58
     - _FoamRange: 1.61
+    - _FresnelPower: 2
     - _FrozenTime: 0
     - _GSAAStrength: 0
     - _GlitterAngleRandomize: 0
@@ -392,6 +409,9 @@ Material:
     - _GlitterShadowMask: 0
     - _GlitterUVMode: 0
     - _GlitterVRParallaxStrength: 0
+    - _GlowEdgeFade: 2
+    - _GlowIntensity: 1
+    - _GlowSize: 0.01
     - _IDMask1: 0
     - _IDMask2: 0
     - _IDMask3: 0
@@ -484,6 +504,7 @@ Material:
     - _MatCapZRotCancel: 1
     - _Metallic: 0
     - _MonochromeLighting: 0
+    - _NormalScale: 1
     - _Offs: 0.5
     - _Offset: 0.01
     - _OffsetFactor: 0
@@ -560,11 +581,13 @@ Material:
     - _PreZClip: 1
     - _PreZTest: 4
     - _PreZWrite: 1
+    - _ReferenceDistance: 10
     - _Reflectance: 0.04
     - _ReflectionApplyTransparency: 1
     - _ReflectionBlendMode: 1
     - _ReflectionCubeEnableLighting: 1
     - _ReflectionCubeOverride: 0
+    - _ReflectionIntensity: 1
     - _ReflectionNormalStrength: 1
     - _RimApplyTransparency: 1
     - _RimBackfaceMask: 1
@@ -706,7 +729,7 @@ Material:
     - _BacklightColor: {r: 0.85, g: 0.8, b: 0.7, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Center: {r: 0.55, g: 0.26, b: 0, a: 0}
-    - _Color: {r: 1, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color0: {r: 0.101961, g: 0.619608, b: 0.666667, a: 1}
     - _Color1: {r: 0, g: 0, b: 0, a: 1}
     - _Color2: {r: 0.6226415, g: 0.27901387, b: 0.38200948, a: 1}

@@ -1,9 +1,9 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2024/10/31 20:53
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2024/10/31 20:53
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 using System.Collections;
@@ -12,12 +12,12 @@ using System.Collections.Generic;
 namespace WorldTree.TreeDataFormatters
 {
 	/// <summary>
-	/// ÊÕ¼¯ÀàĞÍÌØÊâ¸ñÊ½»¯Æ÷
+	/// æ”¶é›†ç±»å‹ç‰¹æ®Šæ ¼å¼åŒ–å™¨
 	/// </summary>
 	public static class ICollectionSpecialFormatterRule
 	{
 		/// <summary>
-		/// ÊÕ¼¯ÀàĞÍÌØÊâĞòÁĞ»¯·¨Ôò»ùÀà
+		/// æ”¶é›†ç±»å‹ç‰¹æ®Šåºåˆ—åŒ–æ³•åˆ™åŸºç±»
 		/// </summary>
 		public abstract class SerializeBase<T, ItemT> : IEnumerableSpecialFormatterRule.SerializeBase<T, ItemT>
 			where T : class, ICollection<ItemT>, new()
@@ -30,7 +30,7 @@ namespace WorldTree.TreeDataFormatters
 		}
 
 		/// <summary>
-		/// ÊÕ¼¯ÀàĞÍÌØÊâ·´ĞòÁĞ»¯·¨Ôò»ùÀà
+		/// æ”¶é›†ç±»å‹ç‰¹æ®Šååºåˆ—åŒ–æ³•åˆ™åŸºç±»
 		/// </summary>
 		public abstract class DeserializeBase<T, ItemT> : IEnumerableSpecialFormatterRule.DeserializeBase<T, ItemT>
 			where T : class, ICollection<ItemT>, new()

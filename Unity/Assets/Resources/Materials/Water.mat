@@ -8,9 +8,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water
-  m_Shader: {fileID: 4800000, guid: d5b7b8867cd1b3147b874c2d50b20619, type: 3}
+  m_Shader: {fileID: 4800000, guid: 859f3f89d96f7714d8b6f5799ed731fc, type: 3}
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _ALPHATEST_ON
+  - _RECEIVESHADOWS_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -28,7 +30,15 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _CausticsTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -37,7 +47,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -56,24 +66,69 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AlphaClip: 0
+    - _AlphaTest: 1
     - _Angle: 4.53
+    - _Blend: 0
+    - _BumpScale: 1
+    - _Cull: 2
+    - _CustomNormalBias: 0.005
+    - _CustomShadowBias: 0.01
+    - _Cutoff: 0.5
     - _Distort: 1
+    - _DstBlend: 0
     - _EnableExternalAlpha: 0
     - _FoamNoise: 3
     - _FoamRange: 5
+    - _Gloss: 20
+    - _GlossinessSource: 0
+    - _Metallic: 0
+    - _NormalBias: 0.005
     - _Offs: 1
     - _Offset: 0.1
+    - _QueueOffset: 0
+    - _RampSmooth: 0.01
+    - _RampThreshold: 0.5
+    - _ReceiveShadows: 1
     - _RimMax: 0.6
     - _RimMin: 0.6
+    - _RimPower: 3.84
     - _RimSmooth: 0.6
-    - _Scale: 0.01
+    - _Scale: 0
+    - _ShadowBias: 0.01
+    - _Shininess: 0
+    - _Smoothness: 0.614
+    - _SmoothnessSource: 0
+    - _SpecSmooth: 0.02
+    - _SpecSource: 0
+    - _SpecThreshold: 0.5
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _Surface: 0
     - _Value1: 5
     - _WaterSpeed: 1
+    - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color0: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 1}
     - _Color1: {r: 0.3066038, g: 1, b: 0.9667169, a: 1}
     - _Color2: {r: 0.3066038, g: 0.7307989, b: 1, a: 1}
@@ -83,13 +138,30 @@ Material:
     - _Color6: {r: 0, g: 0.07569363, b: 0.5849056, a: 1}
     - _Color7: {r: 0.0023637395, g: 0, b: 0.066037714, a: 1}
     - _Color8: {r: 1, g: 0, b: 0.6946564, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 0, g: 0.7, b: 0.7, a: 1}
+    - _ShadowColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
+    - _SpecColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+    - _Specular: {r: 1, g: 1, b: 1, a: 1}
     - _SpecularBase: {r: 0.6, g: 10, b: 0.5, a: 1}
     - _SpecularColor: {r: 0, g: 0.9820709, b: 1, a: 1}
     - _WaterBase: {r: 2.03, g: 3.22, b: 2.1, a: 1.49}
     - _WaterColor1: {r: 0, g: 0.15382911, b: 0.20754719, a: 1}
     - _WaterColor2: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
+--- !u!114 &2007079977433256468
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5

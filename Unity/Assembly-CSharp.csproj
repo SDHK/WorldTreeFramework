@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{CD8C9303-404B-FB8D-6B9B-21988D5CAC0A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -65,58 +64,87 @@
     <Compile Include="Assets\Scenes\CustomRenderPassFeature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\IrisShader\Iris\Tools\IrisMath.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonMath.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\LiteDB\LiteDB.dll" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Shader\TestShadowHLSL.shader" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Macro\IrisParamsUnity.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Library\IonLinkLibrary.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Pass\ShadowCaster\IonPassShadowCaster.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Library\IonLinkLibrary.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Test\TestShadowBRP.shader" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonLight.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\IonBindCore.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Pass\IrisOutlineDefaultPass.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\LiteDB\LiteDB.xml" />
-    <None Include="Assets\Shaders\IrisShader\Unity\IrisEntryUnity.hlsl" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Macro\IrisMethod.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Pass\Main\IonLinkMain.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Pass\Outline\IonLinkOutline.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\IonCore.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Map\IonLinkMap.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.xml" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.xml" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Test\GaussianBlur.Shader" />
-    <None Include="Assets\Shaders\IrisShader\Iris\IrisEntry.hlsl" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Test\EdgeShader.shader" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Shader\TestShadowURP.shader" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Shader\IrisOutline.shader" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Define\IonConst.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Pass\Main\IonPassMainSimple.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Map\IonKey.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\IonCore.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Test\TestShadowURP.shader" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Pass\ShadowCaster\IonLinkShadowCaster.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Shader\IonOutline.shader" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Serialization.dll" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Bind\IonParam.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Library\IonBase.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.xml" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Tools\IrisHash.hlsl" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Macro\IrisMacro.hlsl" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Test\Role.shader" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Pass\IrisOutlineForwardPass.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonLinkTool.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonHash.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Library\IonBase.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Bind\Method\IonLight.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Pass\Outline\IonPassOutline.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Utilities.xml" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Shader\TestShadow.shader" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Pass\IonPass.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Bind\Method\IonBase.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Macro\IrisConst.hlsl" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Tools\IrisMatrix.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Bind\IonLinkBind.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Bind\Param\IonParam.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Bind\Param\IonParam.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonMatrix.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Utilities.dll" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Macro\IrisStruct.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Pass\ShadowCaster\IonPassShadowCaster.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Bind\IonLinkBind.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Map\IonSet.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Bind\Method\IonLight.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Bind\Method\IonBase.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Pass\ShadowCaster\IonLinkShadowCaster.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Pass\Outline\IonLinkOutline.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sqlite\sqlite3.dll" />
-    <None Include="Assets\Shaders\IrisShader\Iris\IrisEntryPass.hlsl" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Tools\IrisNoise.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonNoise.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\IonEdit.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Define\IonLinkDefine.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\link.xml" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Macro\IrisMethodUnity.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Library\IonLight.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Map\IonKey.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Map\IonLinkMap.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Define\IonStruct.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Pass\Main\IonPassMainSimple.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Map\IonSet.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\IonBindCore.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sqlite\Mono.Data.Sqlite.dll" />
+    <None Include="Assets\Shaders\IonShader\Ion\IonMacro.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.xml" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Pass\IrisOutlineShadowPass.hlsl" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Test\TestShader.Shader" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Test\WaterShader.Shader" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Tools\IrisDistort.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\IonCoreUnity.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Bind\IonLinkBind.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Pass\IonPass.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Library\IonLight.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Pass\Outline\IonPassOutline.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonDistort.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Macro\IrisParams.hlsl" />
-    <None Include="Assets\Shaders\IrisShader\Unity\Test\Vortex.shader" />
-    <None Include="Assets\Shaders\IrisShader\Iris\Tools\IrisVertex.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonVertex.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\IonCore.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.xml" />
-    <None Include="Assets\Shaders\IrisConfig.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Pass\Main\IonLinkMain.hlsl" />
+    <None Include="Assets\Shaders\IonShader\IonConfig.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1012,9 +1040,6 @@
       <Project>{D4C64E87-992D-156B-D2B4-A12B236B4D8B}</Project>
       <Name>GameEntry</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\Shaders\IrisShader\Unity\Macro\Method\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

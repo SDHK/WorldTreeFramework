@@ -1,2 +1,0 @@
-
-#define IrisShader_URP

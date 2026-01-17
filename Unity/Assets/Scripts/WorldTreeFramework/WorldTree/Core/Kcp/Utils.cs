@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace ET
 {
     /// <summary>
-    /// ¹¤¾ß
+    /// å·¥å…·
     /// </summary>
     public static partial class Utils
     {
@@ -23,7 +23,7 @@ namespace ET
 
 		// timediff was a macro in original Kcp. let's inline it if possible.
 		/// <summary>
-		/// Ê±¼ä²î
+		/// æ—¶é—´å·®
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int TimeDiff(uint later, uint earlier)

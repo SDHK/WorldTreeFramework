@@ -7,13 +7,13 @@ namespace WorldTree.TreeCopys
 	public static class IEnumerableSpecialCopyRule
 	{
 		/// <summary>
-		/// µü´úÆ÷ÀàĞÍÌØÊâ¿½±´·¨Ôò»ùÀà
+		/// è¿­ä»£å™¨ç±»å‹ç‰¹æ®Šæ‹·è´æ³•åˆ™åŸºç±»
 		/// </summary>
 		public abstract class CopyRuleBase<T, ItemT> : TreeCopyRule<T>
 			where T : class, IEnumerable<ItemT>, new()
 		{
 			/// <summary>
-			/// ±éÀú¿½±´·½·¨
+			/// éå†æ‹·è´æ–¹æ³•
 			/// </summary>
 			public abstract void ForeachCopy(TreeCopier self, T source, T target);
 

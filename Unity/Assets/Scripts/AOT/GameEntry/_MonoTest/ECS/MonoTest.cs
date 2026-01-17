@@ -25,8 +25,8 @@ namespace ECSTest
 
 		private void Awake()
 		{
-			QualitySettings.vSyncCount = 0;//¹Ø±Õ´¹Ö±Í¬²½
-			Application.targetFrameRate = -1;//½â³ıÖ¡ÂÊÏŞÖÆ
+			QualitySettings.vSyncCount = 0;//å…³é—­å‚ç›´åŒæ­¥
+			Application.targetFrameRate = -1;//è§£é™¤å¸§ç‡é™åˆ¶
 		}
 
 		// Start is called before the first frame update
@@ -38,7 +38,7 @@ namespace ECSTest
 
 			System.Random rand = new System.Random();
 
-			//Æ½¾ù·Ö²¼³ÉÒ»¸öÔ²ĞÎ
+			//å¹³å‡åˆ†å¸ƒæˆä¸€ä¸ªåœ†å½¢
 			for (int i = 0; i < Count; i++)
 			{
 				float randRadius = (float)(rand.NextDouble() * (radius - 1) + 1);
@@ -65,12 +65,12 @@ namespace ECSTest
 			}
 			Profiler.EndSample();
 
-			frameNumber += 1;//Ã¿ÃëÖ¡ÊıÀÛ¼Æ
+			frameNumber += 1;//æ¯ç§’å¸§æ•°ç´¯è®¡
 			float time = Time.realtimeSinceStartup - lastShowFPSTime;
-			if (time >= 1)//´óÓÚÒ»Ãëºó
+			if (time >= 1)//å¤§äºä¸€ç§’å
 			{
-				fps = (int)(frameNumber / time);//¼ÆËãÖ¡Êı
-				frameNumber = 0;//¹éÁã
+				fps = (int)(frameNumber / time);//è®¡ç®—å¸§æ•°
+				frameNumber = 0;//å½’é›¶
 				lastShowFPSTime = Time.realtimeSinceStartup;
 			}
 		}
@@ -82,12 +82,12 @@ namespace ECSTest
 		}
 
 		/// <summary>
-		/// ½Ç¶È×ªÏòÁ¿
+		/// è§’åº¦è½¬å‘é‡
 		/// </summary>
 		public Vector2 ToVector2(float angle) => new Vector2(Mathf.Sin(angle / Mathf.Rad2Deg), Mathf.Cos(angle / Mathf.Rad2Deg));
 
 		/// <summary>
-		/// ÏòÁ¿×ª½Ç¶È +-180
+		/// å‘é‡è½¬è§’åº¦ +-180
 		/// </summary>
 		public float ToAngle(Vector2 vector) => Mathf.Atan2(vector.x, vector.y) * Mathf.Rad2Deg;
 	}
