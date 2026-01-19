@@ -92,6 +92,7 @@
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Serialization.dll" />
     <None Include="Assets\Shaders\IonShader\Ion\Core\Bind\IonParam.hlsl" />
     <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Library\IonBase.hlsl" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Pass\Main\IonPassMainAdd.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.xml" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll" />
     <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonLinkTool.hlsl" />
@@ -109,6 +110,7 @@
     <None Include="Assets\Shaders\IonShader\Unity\Pipeline\BRP\Core\Bind\Param\IonParam.hlsl" />
     <None Include="Assets\Shaders\IonShader\Ion\Core\Tool\IonMatrix.hlsl" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\NoEditor\Sirenix.Utilities.dll" />
+    <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Pass\Main\IonPassMain.hlsl" />
     <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Pass\ShadowCaster\IonPassShadowCaster.hlsl" />
     <None Include="Assets\Shaders\IonShader\Ion\Core\Bind\IonLinkBind.hlsl" />
     <None Include="Assets\Shaders\IonShader\Unity\Pipeline\URP\Core\Map\IonSet.hlsl" />

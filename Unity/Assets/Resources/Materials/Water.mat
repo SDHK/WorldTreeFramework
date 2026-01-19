@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water
-  m_Shader: {fileID: 4800000, guid: 859f3f89d96f7714d8b6f5799ed731fc, type: 3}
+  m_Shader: {fileID: 4800000, guid: d5b7b8867cd1b3147b874c2d50b20619, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords:
   - _ALPHATEST_ON
@@ -112,7 +112,7 @@ Material:
     - _RimMin: 0.6
     - _RimPower: 3.84
     - _RimSmooth: 0.6
-    - _Scale: 0
+    - _Scale: 0.05
     - _ShadowBias: 0.01
     - _Shininess: 0
     - _Smoothness: 0.614
