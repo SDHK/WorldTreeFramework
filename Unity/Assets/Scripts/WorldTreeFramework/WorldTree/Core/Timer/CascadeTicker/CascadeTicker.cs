@@ -59,6 +59,8 @@ namespace WorldTree
 	/// 级联定序器
 	/// </summary>
 	public class CascadeTicker : Node
+		, ChildOf<RealTimeManager>
+		, ChildOf<GameTimeManager>
 		, AsChildBranch
 		, AsRule<Awake>
 	{

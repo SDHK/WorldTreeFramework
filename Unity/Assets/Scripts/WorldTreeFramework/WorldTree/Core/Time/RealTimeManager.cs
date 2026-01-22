@@ -20,6 +20,7 @@ namespace WorldTree
 	/// </summary>
 	public class RealTimeManager : Node
 		, CoreManagerOf<WorldLine>
+		, AsChildBranch
 		, AsRule<Awake>
 	{
 
@@ -27,6 +28,16 @@ namespace WorldTree
 		/// 线程锁
 		/// </summary>
 		private readonly object lockObject = new object();
+
+		/// <summary>
+		/// Utc定时器 （主要定时器：游戏时间相关功能）
+		/// </summary>
+		public CascadeTicker Timer;
+
+		/// <summary>
+		/// 时区定时器 （特殊场景：单机本地时间相关功能）
+		/// </summary>
+		public CascadeTicker ZoneTimer;
 
 		/// <summary>
 		/// NTP服务器地址列表
@@ -383,6 +394,8 @@ namespace WorldTree
 			{
 				self.DateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 				self.UtcDateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+				self.AddChild(out self.Timer);
+				self.AddChild(out self.ZoneTimer);
 			}
 		}
 
@@ -391,6 +404,8 @@ namespace WorldTree
 			protected override void Execute(RealTimeManager self, TimeSpan arg1)
 			{
 				self.GetUtcNow();
+				self.Timer.Update(self.UtcNow.Ticks);
+				self.ZoneTimer.Update(self.Now.Ticks);
 			}
 		}
 
