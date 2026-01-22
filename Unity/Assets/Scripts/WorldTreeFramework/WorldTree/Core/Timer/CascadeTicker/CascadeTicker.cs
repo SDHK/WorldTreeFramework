@@ -44,11 +44,11 @@
 *    相比传统时间轮的除法、取模、堆操作，本设计通过位运算实现 O(1) 定位。
 *    
 * 性能特点：
-* - 添加：O(1) 位运算定位，无需分层查找
-* - 槽位定位：O(1) 位运算，无需递归或堆操作
-* - 任务降级：O(1) 位运算重新定位，无需重新排序
+* - 添加：O(1) 位运算定位，无需分层查找。
+* - 槽位定位：O(1) 位运算，无需递归或堆操作。
+* - 任务降级：O(1) 位运算重新定位，无需重新排序。
 * - 更新处理：O(1) 位运算定位变化的槽位，避免全部遍历。
-* - 相比传统时间轮：避免除法、取模、堆操作的开销，性能提升显著
+* - 相比传统时间轮：避免除法、取模、堆操作的开销。
 
 */
 using System;
@@ -115,7 +115,7 @@ namespace WorldTree
 		{
 			protected override void Execute(CascadeTicker self)
 			{
-				self.Core.PoolGetArray(out self.Slots, 64);
+				self.Core.PoolGetArray(out self.Slots, 2);
 			}
 		}
 		class RemoveRule : RemoveRule<CascadeTicker>
@@ -132,6 +132,41 @@ namespace WorldTree
 				self.Slots = null;
 				self.RuleMulticast = null;
 			}
+		}
+
+		/// <summary>
+		/// 确保槽位数组容量足够（动态扩容）
+		/// </summary>
+		private static void EnsureSlotsCapacity(this CascadeTicker self, int index)
+		{
+			if (index >= self.Slots.Length)
+			{
+				// 计算新的容量（按2的幂次扩容）
+				int newCapacity = self.Slots.Length;
+				while (newCapacity <= index)
+				{
+					newCapacity *= 2;
+				}
+
+				// 扩容数组
+				var newSlots = self.Core.PoolGetArray<CascadeTickerSlot>(newCapacity);
+
+				// 复制旧数据
+				Array.Copy(self.Slots, 0, newSlots, 0, self.Slots.Length);
+				self.Core.PoolRecycle(self.Slots, true);
+				self.Slots = newSlots;
+			}
+		}
+
+		/// <summary>
+		/// 获取槽位（不存在则创建）
+		/// </summary>
+		private static CascadeTickerSlot GetOrNewSlot(this CascadeTicker self, int slotIndex)
+		{
+			// 防御性检查：理论上不应该出现负数，但为了安全起见
+			if (slotIndex < 0) slotIndex = 0;
+			self.EnsureSlotsCapacity(slotIndex);
+			return self.Slots[slotIndex] ??= self.AddChild(out CascadeTickerSlot slot);
 		}
 
 		/// <summary>
@@ -325,10 +360,5 @@ namespace WorldTree
 			//槽位已空，清除占用标记
 			if (slot.TickIterator.RemainCount == 0) self.OccupiedSlotMask &= ~(1L << i);
 		}
-
-		/// <summary>
-		/// 获取槽位 
-		/// </summary>
-		private static CascadeTickerSlot GetOrNewSlot(this CascadeTicker self, int slotIndex) => self.Slots[slotIndex] ??= self.AddChild(out CascadeTickerSlot slot);
 	}
 }

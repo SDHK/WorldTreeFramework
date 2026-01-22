@@ -50,17 +50,40 @@ namespace WorldTree
 				//self.AddComponent(out TreeDataTest _);
 				//self.AddComponent(out ViewTest _);
 
-				//NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
+				NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
+
+				////获取一个ICallRule通用委托unicast
+				//self.AddTemp(out RuleUnicast<ICallRule<float, int, string>> unicast);
+
+				////unicat是委托
+				//unicast.Add(self, default(TestEvent));
+
+				////调用委托
+				//unicast.Call(2.5f, 2, out string str2);
+
+				////全局广播调用
+				//self.Core.GetRuleBroadcast(out RuleBroadcast<TestEvent> ruleBroadcast);
+				//ruleBroadcast.Call(2.5f, 2, out str2);
 			}
 		}
 
-		class TestEvent1 : TestEventRule<InitialDomain>
+		[NodeRule(nameof(TestEventRule<InitialDomain>))]
+		private static string OnTestEventRule(this InitialDomain self, float arg1, int arg2)
 		{
-			protected override string Execute(InitialDomain self, float arg1, int arg2)
-			{
-				return "返回字符串";
-			}
+			return "返回字符串";
+
 		}
+
+
+
+
+		[NodeRule(nameof(RemoveRule<InitialDomain>))]
+		private static void OnRemoveRule(this InitialDomain self)
+		{
+			self.Log($"初始域关闭！！");
+		}
+
+
 
 		[NodeRule(nameof(EnableRule<InitialDomain>))]
 		private static void OnEnableRule(this InitialDomain self)
@@ -81,13 +104,6 @@ namespace WorldTree
 
 			//GUILayout.Label($@"    {timeSpan.TotalMilliseconds} !  ", new GUIStyle() { fontSize = 60 });
 		}
-
-		[NodeRule(nameof(RemoveRule<InitialDomain>))]
-		private static void OnRemoveRule(this InitialDomain self)
-		{
-			self.Log($"初始域关闭！！");
-		}
-
 		[NodeRule(nameof(GuiUpdateTimeRule<InitialDomain>))]
 		private static void OnGuiUpdateTimeRule(this InitialDomain self, TimeSpan timeSpan)
 		{

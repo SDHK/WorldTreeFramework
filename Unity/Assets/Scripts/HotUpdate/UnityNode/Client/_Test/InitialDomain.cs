@@ -14,7 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 测试事件法则
 	/// </summary>
-	public interface TestEvent : ICallRule<float, int, string> { }
+	public interface TestEvent : ICallRule<float, int, string>, IGlobalRule { }
 
 	/// <summary>
 	/// 初始域
