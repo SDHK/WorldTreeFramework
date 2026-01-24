@@ -57,6 +57,15 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeTokenizer\CodeToken.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeTokenizer\CodeTokenizer.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeTokenizer\CodeTokenType.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\MathParser\MathParser.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\VarValue\VarType.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\VarValue\VarValue.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\VarValue\VarValueCheckType.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\VarValue\VarValueOperator.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\VarValue\VarValueToType.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\UnmanagedFormatRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValue.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolGroup.cs" />
@@ -771,6 +780,7 @@
       <HintPath>E:\allApps\Unity\2021.3.16f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

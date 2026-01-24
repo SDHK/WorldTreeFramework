@@ -1,83 +1,48 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
-* 日期： 2025/9/3 18:05
+* 日期： 2026/1/24 14:45
 
-* 描述： 代码词法令牌分析器
-* 
-* 作用是将源代码字符串翻译为一系列的代码令牌（tokens），可以用于后续的语法分析
-* 
+* 描述： 
 
 */
 using System;
 using System.Globalization;
 
-namespace VM
+namespace WorldTree
 {
-
-	/// <summary>
-	/// 代码词法令牌类型
-	/// </summary>
-	[Flags]
-	public enum CodeTokenType
-	{
-		/// <summary>
-		/// 数字字面量
-		/// </summary>
-		Number,
-		/// <summary>
-		/// 标识符（包括所有文本内容：变量、关键字、字符串等）
-		/// </summary>
-		Identifier,
-		/// <summary>
-		/// 符号（所有非字母数字的符号）
-		/// </summary>
-		Symbol,
-		/// <summary>
-		/// 空白符（可能某些语言需要）
-		/// </summary>
-		Whitespace,
-		/// <summary>
-		/// 换行符（可能某些语言需要）
-		/// </summary>
-		LineBreak,
-		/// <summary>
-		/// 结束符
-		/// </summary>
-		EOF,
-	}
-
-	/// <summary>
-	/// 代码令牌
-	/// </summary>
-	public struct CodeToken
-	{
-		public CodeTokenType Type { get; set; }
-		public VarValue Value { get; set; }
-		public int Line { get; set; }
-		public int Column { get; set; }
-
-		public CodeToken(CodeTokenType type, VarValue value, int line = 0, int column = 0)
-		{
-			Type = type;
-			Line = line;
-			Column = column;
-			Value = value;
-		}
-	}
-
 	/// <summary>
 	/// 代码词法分析器
 	/// </summary>
-	public class CodeTokenizer
+	public class CodeTokenizer : Node
+		, ChildOf<INode>
+		, AsRule<Awake>
 	{
+		/// <summary>
+		/// 源代码 
+		/// </summary>
 		private string sourceCode;
+		/// <summary>
+		/// 当前字符位置 
+		/// </summary>
 		private int chatPoint;
+		/// <summary>
+		/// 当前行号 
+		/// </summary>
 		private int linePoint;
+		/// <summary>
+		/// 当前列号 
+		/// </summary>
 		private int columnPoint;
+		/// <summary>
+		/// 当前字符 
+		/// </summary>
 		private char currentChar;
 
-		public CodeTokenizer(string source)
+		/// <summary>
+		/// 设置源代码 
+		/// </summary>
+		public void SetCode(string source)
 		{
 			sourceCode = source;
 			chatPoint = 0;
@@ -158,11 +123,11 @@ namespace VM
 		/// <summary>
 		/// 尝试读取符号
 		/// </summary>
-		private bool TryReadSymbol(out string symbol)
+		private bool TryReadSymbol(out char symbol)
 		{
-			symbol = "";
+			symbol = '\0';
 			if (!char.IsSymbol(currentChar) && !char.IsPunctuation(currentChar)) return false;
-			symbol += currentChar;
+			symbol = currentChar;
 			Advance();
 			return true;
 		}
@@ -212,7 +177,7 @@ namespace VM
 				// 标识符
 				if (TryReadIdentifier(out string identifier)) return new CodeToken(CodeTokenType.Identifier, identifier, linePoint, columnPoint);
 				// 符号
-				if (TryReadSymbol(out string symbol)) return new CodeToken(CodeTokenType.Symbol, symbol, linePoint, columnPoint);
+				if (TryReadSymbol(out char symbol)) return new CodeToken(CodeTokenType.Symbol, (long)symbol, linePoint, columnPoint);
 				// 空白符
 				if (TryReadWhitespace(out string whitespace)) return new CodeToken(CodeTokenType.Whitespace, whitespace, linePoint, columnPoint);
 				// 换行符
@@ -222,5 +187,15 @@ namespace VM
 		}
 	}
 
-
+	public static class CodeTokenizerRule
+	{
+		class Awake : AwakeRule<CodeTokenizer>
+		{
+			protected override void Execute(CodeTokenizer self)
+			{
+				//默认空代码
+				self.SetCode(string.Empty);
+			}
+		}
+	}
 }
