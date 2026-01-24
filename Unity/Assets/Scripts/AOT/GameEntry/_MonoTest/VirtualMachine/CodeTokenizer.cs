@@ -14,6 +14,7 @@ using System.Globalization;
 
 namespace VM
 {
+
 	/// <summary>
 	/// 代码词法令牌类型
 	/// </summary>
@@ -69,7 +70,7 @@ namespace VM
 	/// </summary>
 	public class CodeTokenizer
 	{
-		private readonly string sourceCode;
+		private string sourceCode;
 		private int chatPoint;
 		private int linePoint;
 		private int columnPoint;
@@ -219,4 +220,6 @@ namespace VM
 			return new CodeToken(CodeTokenType.EOF, "", linePoint, columnPoint);
 		}
 	}
+
+
 }

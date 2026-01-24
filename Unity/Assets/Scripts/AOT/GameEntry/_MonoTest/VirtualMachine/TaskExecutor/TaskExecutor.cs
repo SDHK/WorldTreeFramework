@@ -8,11 +8,13 @@
 * 作用是将一系列任务按设定执行
 
 */
+using ET;
 using System;
 using System.Collections.Generic;
 
 namespace VM
 {
+
 	#region 核心
 
 	/// <summary>
@@ -55,12 +57,45 @@ namespace VM
 		}
 
 		/// <summary>
+		/// 执行器任务暂停 
+		/// </summary>
+		public void Pause()
+		{
+			isRun = false;
+		}
+
+		/// <summary>
+		/// 执行器任务继续 
+		/// </summary>
+		public void Resume()
+		{
+			isRun = true;
+		}
+
+		/// <summary>
 		/// 执行器任务终止
 		/// </summary>
 		public void Stop()
 		{
 			Pointer = -1;
 			isRun = false;
+		}
+
+		/// <summary>
+		/// 执行器单步运行（运行一条指令） 
+		/// </summary>
+		public void Step()
+		{
+			isRun = false;
+			if (Pointer != -1 && Pointer < ParserPaths.Count)
+			{
+				//通过 指令指针 提取 任务解析器 和 任务地址 让解析器运行任务
+				ParserPaths[Pointer](TaskPaths[Pointer]);
+			}
+			else if (Pointer >= ParserPaths.Count)
+			{
+				Pointer = -1;
+			}
 		}
 
 		/// <summary>
@@ -711,38 +746,134 @@ namespace VM
 					case 0:
 						if (methodData.Item1 is Action action)
 							action.Invoke();
-						else
+						else if (methodData.Item1 is Func<VarValue> func)
 							Push(((Func<VarValue>)methodData.Item1).Invoke());
+						else if (methodData.Item1 is Func<ETTask> funcTask)
+						{
+							RunFuncVoid().Coroutine();
+							async ETTask RunFuncVoid()
+							{
+								this.Pause(); await ((Func<ETTask>)methodData.Item1).Invoke(); this.Resume();
+							}
+						}
+						else if (methodData.Item1 is Func<ETTask<VarValue>> funcTaskValue)
+						{
+							RunFuncValue().Coroutine();
+							async ETTask RunFuncValue()
+							{
+								this.Pause(); this.Push(await ((Func<ETTask<VarValue>>)methodData.Item1).Invoke()); this.Resume();
+							}
+						}
 						break;
 					case 1:
 						if (methodData.Item1 is Action<VarValue> action1)
 							action1.Invoke(var1);
-						else
+						else if (methodData.Item1 is Func<VarValue, VarValue> func1)
 							Push(((Func<VarValue, VarValue>)methodData.Item1).Invoke(var1));
+						else if (methodData.Item1 is Func<VarValue, ETTask> funcTask1)
+						{
+							RunFuncVoid1().Coroutine();
+							async ETTask RunFuncVoid1()
+							{
+								this.Pause(); await ((Func<VarValue, ETTask>)methodData.Item1).Invoke(var1); this.Resume();
+							}
+						}
+						else if (methodData.Item1 is Func<VarValue, ETTask<VarValue>> funcTaskValue1)
+						{
+							RunFuncValue1().Coroutine();
+							async ETTask RunFuncValue1()
+							{
+								this.Pause(); this.Push(await ((Func<VarValue, ETTask<VarValue>>)methodData.Item1).Invoke(var1)); this.Resume();
+							}
+						}
 						break;
 					case 2:
 						if (methodData.Item1 is Action<VarValue, VarValue> action2)
 							action2.Invoke(var1, var2);
-						else
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue> func2)
 							Push(((Func<VarValue, VarValue, VarValue>)methodData.Item1).Invoke(var1, var2));
+						else if (methodData.Item1 is Func<VarValue, VarValue, ETTask> funcTask2)
+						{
+							RunFuncVoid2().Coroutine();
+							async ETTask RunFuncVoid2()
+							{
+								this.Pause(); await ((Func<VarValue, VarValue, ETTask>)methodData.Item1).Invoke(var1, var2); this.Resume();
+							}
+						}
+						else if (methodData.Item1 is Func<VarValue, VarValue, ETTask<VarValue>> funcTaskValue2)
+						{
+							RunFuncValue2().Coroutine();
+							async ETTask RunFuncValue2()
+							{
+								this.Pause(); this.Push(await ((Func<VarValue, VarValue, ETTask<VarValue>>)methodData.Item1).Invoke(var1, var2)); this.Resume();
+							}
+						}
 						break;
 					case 3:
 						if (methodData.Item1 is Action<VarValue, VarValue, VarValue> action3)
 							action3.Invoke(var1, var2, var3);
-						else
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue, VarValue> func3)
 							Push(((Func<VarValue, VarValue, VarValue, VarValue>)methodData.Item1).Invoke(var1, var2, var3));
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue, ETTask> funcTask3)
+						{
+							RunFuncVoid3().Coroutine();
+							async ETTask RunFuncVoid3()
+							{
+								this.Pause(); await ((Func<VarValue, VarValue, VarValue, ETTask>)methodData.Item1).Invoke(var1, var2, var3); this.Resume();
+							}
+						}
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue, ETTask<VarValue>> funcTaskValue3)
+						{
+							RunFuncValue3().Coroutine();
+							async ETTask RunFuncValue3()
+							{
+								this.Pause(); this.Push(await ((Func<VarValue, VarValue, VarValue, ETTask<VarValue>>)methodData.Item1).Invoke(var1, var2, var3)); this.Resume();
+							}
+						}
 						break;
 					case 4:
 						if (methodData.Item1 is Action<VarValue, VarValue, VarValue, VarValue> action4)
 							action4.Invoke(var1, var2, var3, var4);
-						else
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue, VarValue, VarValue> func4)
 							Push(((Func<VarValue, VarValue, VarValue, VarValue, VarValue>)methodData.Item1).Invoke(var1, var2, var3, var4));
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue, VarValue, ETTask> funcTask4)
+						{
+							RunFuncVoid4().Coroutine();
+							async ETTask RunFuncVoid4()
+							{
+								this.Pause(); await ((Func<VarValue, VarValue, VarValue, VarValue, ETTask>)methodData.Item1).Invoke(var1, var2, var3, var4); this.Resume();
+							}
+						}
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue, VarValue, ETTask<VarValue>> funcTaskValue4)
+						{
+							RunFuncValue4().Coroutine();
+							async ETTask RunFuncValue4()
+							{
+								this.Pause(); this.Push(await ((Func<VarValue, VarValue, VarValue, VarValue, ETTask<VarValue>>)methodData.Item1).Invoke(var1, var2, var3, var4)); this.Resume();
+							}
+						}
 						break;
 					case 5:
 						if (methodData.Item1 is Action<VarValue, VarValue, VarValue, VarValue, VarValue> action5)
 							action5.Invoke(var1, var2, var3, var4, var5);
-						else
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue, VarValue, VarValue, VarValue> func5)
 							Push(((Func<VarValue, VarValue, VarValue, VarValue, VarValue, VarValue>)methodData.Item1).Invoke(var1, var2, var3, var4, var5));
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue, VarValue, VarValue, ETTask> funcTask5)
+						{
+							RunFuncVoid5().Coroutine();
+							async ETTask RunFuncVoid5()
+							{
+								this.Pause(); await ((Func<VarValue, VarValue, VarValue, VarValue, VarValue, ETTask>)methodData.Item1).Invoke(var1, var2, var3, var4, var5); this.Resume();
+							}
+						}
+						else if (methodData.Item1 is Func<VarValue, VarValue, VarValue, VarValue, VarValue, ETTask<VarValue>> funcTaskValue5)
+						{
+							RunFuncValue5().Coroutine();
+							async ETTask RunFuncValue5()
+							{
+								this.Pause(); this.Push(await ((Func<VarValue, VarValue, VarValue, VarValue, VarValue, ETTask<VarValue>>)methodData.Item1).Invoke(var1, var2, var3, var4, var5)); this.Resume();
+							}
+						}
 						break;
 					default:
 						throw new InvalidOperationException($"方法 '{methodTaskName}' 参数数量:{methodData.Item2}");
@@ -1033,11 +1164,12 @@ namespace VM
 		{
 			var value = _parameterStack.Count > 0 ? _parameterStack.Pop() : new VarValue();
 			string variableName = _PopPushVariableTasks[taskPath];
-			SetVariable(variableName, value);
+			if (variableName != "void") SetVariable(variableName, value);
 			this.Pointer++;
 		}
 	}
 
 
 	#endregion
+
 }

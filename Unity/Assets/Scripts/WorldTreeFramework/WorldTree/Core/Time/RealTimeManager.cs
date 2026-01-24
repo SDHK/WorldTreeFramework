@@ -35,7 +35,7 @@ namespace WorldTree
 		public CascadeTicker Timer;
 
 		/// <summary>
-		/// 时区定时器 （特殊场景：单机本地时间相关功能）
+		/// 时区定时器（特殊场景：单机本地时间相关功能）
 		/// </summary>
 		public CascadeTicker ZoneTimer;
 

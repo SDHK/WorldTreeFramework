@@ -29,11 +29,6 @@ namespace WorldTree
 		public CascadeTicker Framer;
 
 		/// <summary>
-		/// 时间缩放比例
-		/// </summary>
-		public float timeScale = 1;
-
-		/// <summary>
 		/// 累计帧数 
 		/// </summary>
 		public long TotalFrames => totalFrames;
@@ -48,20 +43,6 @@ namespace WorldTree
 		/// </summary>
 		public TimeSpan TotalTime => totalTime;
 
-		/// <summary>
-		/// 无缩放的当前帧时间
-		/// </summary>
-		public TimeSpan UnscaleFrameTime => unscaleFrameTime;
-
-		/// <summary>
-		/// 无缩放的累计游戏时间
-		/// </summary>
-		public TimeSpan UnscaleTotalTimeTime => unscaleTotalTime;
-
-		/// <summary>
-		/// 累计帧数 
-		/// </summary>
-		private long totalFrames;
 
 		/// <summary>
 		/// 当前帧时间
@@ -74,19 +55,14 @@ namespace WorldTree
 		private TimeSpan totalTime;
 
 		/// <summary>
-		/// 无缩放的当前帧时间
+		/// 累计帧数 
 		/// </summary>
-		private TimeSpan unscaleFrameTime;
+		private long totalFrames;
 
-		/// <summary>
-		/// 无缩放的累计游戏时间
-		/// </summary>
-		private TimeSpan unscaleTotalTime;
 
 		public GameTimeManager()
 		{
 			totalTime = TimeSpan.MinValue;
-			unscaleTotalTime = TimeSpan.MinValue;
 		}
 
 		/// <summary>
@@ -96,16 +72,13 @@ namespace WorldTree
 		public void UpdateTime(TimeSpan deltaTime)
 		{
 			totalFrames++;
-			unscaleFrameTime = deltaTime;
-			unscaleTotalTime += deltaTime;
-			frameTime = deltaTime * timeScale;
+			frameTime = deltaTime;
 			totalTime += frameTime;
 		}
 	}
 
 	public static partial class GameTimeManagerRule
 	{
-
 		private class AwakeRule : AwakeRule<GameTimeManager>
 		{
 			protected override void Execute(GameTimeManager self)

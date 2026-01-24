@@ -118,6 +118,7 @@ namespace WorldTree
 			protected override void Execute(CascadeTicker self)
 			{
 				self.Core.PoolGetArray(out self.Slots, 2);
+				self.AddChild(out self.RuleMulticast);
 			}
 		}
 		class RemoveRule : RemoveRule<CascadeTicker>
@@ -187,7 +188,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加定序器 
 		/// </summary>
-		public static long AddTimer(this CascadeTicker self, long clockTick, INode node, long ruleType)
+		public static long AddTicker(this CascadeTicker self, long clockTick, INode node, long ruleType)
 		{
 			if (!self.Core.RuleManager.TryGetRuleList(node.Id, ruleType, out var ruleList)) return -1;
 
@@ -216,7 +217,7 @@ namespace WorldTree
 		/// <summary>
 		/// 移除定序器 
 		/// </summary>
-		public static void RemoveTimer(this CascadeTicker self, long tickerId) => self.RemoveChild(tickerId);
+		public static void RemoveTicker(this CascadeTicker self, long tickerId) => self.RemoveChild(tickerId);
 
 		/// <summary>
 		/// 更新 

@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{D4C64E87-992D-156B-D2B4-A12B236B4D8B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -57,10 +58,8 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\VirtualMachineCore.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\TestLine4.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\AsyncETVoidMethodBuilder.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\VirtualMachine\CodeSyntaxParser.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\ETTask\ETTask.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\Define.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\Mathematical.cs" />

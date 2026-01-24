@@ -14,8 +14,7 @@ using UnityEngine;
 
 
 namespace VM
-{
-	/// <summary>
+{   /// <summary>
 	/// 虚拟机汇编语法解析器
 	/// </summary>
 	public class AssemblySyntaxParser
@@ -93,6 +92,9 @@ namespace VM
 							break;
 						case "Call":
 							ParserMethodCall();
+							break;
+						case "CallPop":
+							ParserMethodCallPop();
 							break;
 						case "return":
 							ParserMethodReturn();
@@ -196,7 +198,7 @@ namespace VM
 				}
 				else
 				{
-					throw new InvalidOperationException($"意外的令牌: {currentToken.Type}");
+					throw new InvalidOperationException($"意外的令牌: {currentToken.Type}: {currentToken.Value} [{currentToken.Line}, {currentToken.Column}] ");
 				}
 				JumpWhiteSpaceAndLineBreak();
 			}
@@ -414,6 +416,20 @@ namespace VM
 
 		public void ParserMethodReturn() => executor.MethodReturn();
 
+		public void ParserMethodCallPop()
+		{
+			var value = ParserGetVarValue();
+			if (value.Type == VarType.Object)
+			{
+				executor.MethodCall((string)value);
+				executor.PopVariable("void");
+			}
+			else
+			{
+				throw new InvalidOperationException("FUNC_CALL_POP 需要一个函数名");
+			}
+		}
+
 		/// <summary>
 		/// 解析 Method 调用指令 
 		/// </summary>
@@ -433,18 +449,29 @@ namespace VM
 
 
 		/// <summary>
-		/// 解析 Push 值指令 
+		/// 解析 Push 值指令
 		/// </summary>
 		public void ParserPushValue()
 		{
-			var value = ParserGetVarValue();
-			if (value.Type == VarType.Object)
+			bool first = true;
+			while (true)
 			{
-				executor.PushVariable((string)value);
-			}
-			else
-			{
-				executor.PushValue(value);
+				if (!first)
+				{
+					JumpWhiteSpace();
+					if (currentToken.Type != CodeTokenType.Symbol || (string)currentToken.Value != ",") break;
+					ConsumeToken(CodeTokenType.Symbol);
+				}
+				else
+				{
+					first = false;
+				}
+
+				var value = ParserGetVarValue();
+				if (value.Type == VarType.Object)
+					executor.PushVariable((string)value);
+				else
+					executor.PushValue(value);
 			}
 		}
 
@@ -728,10 +755,11 @@ namespace VM
 
 			executor.Event(() =>
 			{
-				Debug.Log(ResolveOperand(var));
+				Debug.Log("虚拟机: " + ResolveOperand(var));
 			});
 		}
 
 		#endregion
 	}
+
 }
