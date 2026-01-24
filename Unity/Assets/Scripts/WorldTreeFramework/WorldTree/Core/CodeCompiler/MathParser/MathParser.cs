@@ -20,6 +20,11 @@ namespace WorldTree
 		private CodeTokenizer codeTokenizer;
 
 		/// <summary>
+		/// 抽象语法树根节点 
+		/// </summary>
+		private ExprNode ast;
+
+		/// <summary>
 		/// 解析并计算数学表达式的值 
 		/// </summary>
 		public double Parse(string expression)
@@ -31,7 +36,7 @@ namespace WorldTree
 			Advance();
 
 			// 3. 语法分析 + 求值
-			var ast = ParseExpression();
+			ast = ParseExpression();
 
 			// 4. 执行求值
 			return ast.Evaluate();
