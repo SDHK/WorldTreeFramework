@@ -1,9 +1,9 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2025/5/21 15:45
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2025/5/21 15:45
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 
@@ -13,54 +13,54 @@ using System.Collections.Generic;
 namespace WorldTree.Server
 {
 	/// <summary>
-	/// ²âÊÔÊı¾İ
+	/// æµ‹è¯•æ•°æ®
 	/// </summary>
 	[TreeCopyable]
 	public partial class CopyTest
 	{
 
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public CopyTestStruct ValuetStruct = default;
 
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public IDictionary ValueDict = null;
 
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public CopyTestA CopyA = null;
 		/// <summary>
-		/// ²âÊÔÒıÓÃ»¹Ô­
+		/// æµ‹è¯•å¼•ç”¨è¿˜åŸ
 		/// </summary>
 		public CopyTestA CopyARef = null;
 
 	}
 
 	/// <summary>
-	/// ²âÊÔ
+	/// æµ‹è¯•
 	/// </summary>
 	[TreeCopyable]
 	public partial class CopyTestA
 	{
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public CopyTestB CopyTestB = null;
 
 	}
 
 	/// <summary>
-	/// ²âÊÔ
+	/// æµ‹è¯•
 	/// </summary>
 	[TreeCopyable]
 	public partial class CopyTestB
 	{
 		/// <summary>
-		/// ×Ö·û´®
+		/// å­—ç¬¦ä¸²
 		/// </summary>
 		public string ValueString = "ABC";
 
@@ -68,21 +68,21 @@ namespace WorldTree.Server
 
 
 	/// <summary>
-	/// ²âÊÔ½á¹¹Ìå
+	/// æµ‹è¯•ç»“æ„ä½“
 	/// </summary>
 	[TreeCopyable]
 	public partial struct CopyTestStruct
 	{
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public int Value1 = 1;
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public float Value2 = 1f;
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public string ValueString = "f";
 
@@ -96,7 +96,7 @@ namespace WorldTree.Server
 		/// </summary>
 		public float Value21 { get => Value2; set => Value2 = value; }
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public float Value3 = 1f;
 		public CopyTestStruct()
@@ -106,18 +106,18 @@ namespace WorldTree.Server
 	}
 
 	/// <summary>
-	/// ²âÊÔ×Öµä×ÓÀà
+	/// æµ‹è¯•å­—å…¸å­ç±»
 	/// </summary>
 	[TreeCopyable]
 	public partial class CopyTestDict1 : Dictionary<int, int>
 	{
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public int Value1 = 1;
 
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public string Value11 { get; set; }
 	}
@@ -128,7 +128,7 @@ namespace WorldTree.Server
 
 
 	/// <summary>
-	/// Éî¿½±´²âÊÔ
+	/// æ·±æ‹·è´æµ‹è¯•
 	/// </summary>
 	public class DeepCopyTest : Node
 		, ComponentOf<INode>

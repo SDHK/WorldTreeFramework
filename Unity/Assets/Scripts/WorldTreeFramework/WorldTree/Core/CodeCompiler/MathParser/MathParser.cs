@@ -7,6 +7,7 @@ namespace WorldTree
 	/// </summary>
 	public class MathParser : Node
 		, ChildOf<INode>
+		, AsChildBranch
 		, AsRule<Awake>
 	{
 		/// <summary>
@@ -17,12 +18,12 @@ namespace WorldTree
 		/// <summary>
 		/// 代码词法分析器 
 		/// </summary>
-		private CodeTokenizer codeTokenizer;
+		public CodeTokenizer codeTokenizer;
 
 		/// <summary>
 		/// 抽象语法树根节点 
 		/// </summary>
-		private ExprNode ast;
+		public ExprNode ast;
 
 		/// <summary>
 		/// 解析并计算数学表达式的值 
@@ -137,6 +138,17 @@ namespace WorldTree
 		}
 	}
 
+	public static class MathParserRule
+	{
+		class AwakeRule : AwakeRule<MathParser>
+		{
+			protected override void Execute(MathParser self)
+			{
+				self.AddChild(out self.codeTokenizer);
+				//self.AddChild(out self.ast);
+			}
+		}
+	}
 
 
 	/// <summary>
@@ -219,7 +231,6 @@ namespace WorldTree
 		{
 			return Operator == '-' ? -Operand.Evaluate() : Operand.Evaluate();
 		}
-
 		public override string ToString() => $"{Operator}{Operand}";
 	}
 }

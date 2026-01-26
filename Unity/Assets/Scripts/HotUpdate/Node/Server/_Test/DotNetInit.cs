@@ -1,9 +1,9 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2024/8/27 11:53
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2024/8/27 11:53
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 using System;
@@ -23,21 +23,21 @@ namespace WorldTree.Server
 	}
 
 	/// <summary>
-	/// ²âÊÔ½Úµã
+	/// æµ‹è¯•èŠ‚ç‚¹
 	/// </summary>
 	public partial class DotNetInit : Node
 		, ComponentOf<MainWorld>
 		//, AsBranch<IBranch>
-		//, AsComponentBranch
+		, AsComponentBranch
 		//, AsChildBranch
 		, AsRule<Awake>
 	{
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public int ConfigId;
 		/// <summary>
-		/// ²âÊÔ
+		/// æµ‹è¯•
 		/// </summary>
 		public Action Action;
 
@@ -53,7 +53,7 @@ namespace WorldTree.Server
 
 
 	/// <summary>
-	/// ²âÊÔ
+	/// æµ‹è¯•
 	/// </summary>
 	public partial class Test<T> : Node
 	, ComponentOf<DotNetInit>
@@ -61,12 +61,12 @@ namespace WorldTree.Server
 	, AsRule<TestNodeEvent<Type>>
 	{
 		/// <summary>
-		/// ×Ö¶Î
+		/// å­—æ®µ
 		/// </summary>
 		public int ConfigId;
 
 		/// <summary>
-		/// ÊôĞÔ
+		/// å±æ€§
 		/// </summary>
 		public long ConfigName => ConfigId;
 	}

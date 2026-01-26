@@ -13,21 +13,21 @@ namespace WorldTree.Server
 	public static partial class HotReloadTestRule
 	{
 		[NodeRule(nameof(AddRule<HotReloadTest>))]
-		private static void OnAdd(this HotReloadTest self)
+		private static void OnAddRule(this HotReloadTest self)
 		{
 			self.Log($" 热重载测试！！！");
 
 		}
 
 		[NodeRule(nameof(UpdateRule<HotReloadTest>))]
-		private static void OnUpdate(this HotReloadTest self)
+		private static void OnUpdateRule(this HotReloadTest self)
 		{
 			self.Log($"热重载2");
 
 		}
 
 		[NodeRule(nameof(UpdateTimeRule<HotReloadTest>))]
-		private static void OnUpdateTime(this HotReloadTest self, TimeSpan arg1)
+		private static void OnUpdateTimeRule(this HotReloadTest self, TimeSpan arg1)
 		{
 			if (Console.KeyAvailable)
 			{

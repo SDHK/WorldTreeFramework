@@ -21,7 +21,7 @@ namespace WorldTree.Server
 		static int Value = nameof(Value).GetFNV1aHash32();
 
 		[NodeRule(nameof(RemoveRule<TreeDataNodeDataTest1>))]
-		private static void OnRemove(this TreeDataNodeDataTest1 self)
+		private static void OnRemoveRule(this TreeDataNodeDataTest1 self)
 		{
 			//self.Name = null;
 			//self.Age = 0;
@@ -35,7 +35,7 @@ namespace WorldTree.Server
 		}
 
 		[NodeRule(nameof(RemoveRule<TreeDataNodeDataTest2>))]
-		private static void OnRemove(this TreeDataNodeDataTest2 self)
+		private static void OnRemoveRule(this TreeDataNodeDataTest2 self)
 		{
 			self.Name = null;
 			self.Age = 0;
@@ -43,7 +43,7 @@ namespace WorldTree.Server
 		}
 
 		[NodeRule(nameof(AddRule<TreeDataTest>))]
-		private static void OnAdd(this TreeDataTest self)
+		private static void OnAddRule(this TreeDataTest self)
 		{
 			self.treeData = self.AddChild(out TreeDataNodeDataTest1 treeNode);
 			treeNode.Name = "测试123";
@@ -115,7 +115,7 @@ namespace WorldTree.Server
 		}
 
 		[NodeRule(nameof(UpdateRule<TreeDataNodeDataTest2>))]
-		private static void OnUpdate(this TreeDataNodeDataTest2 self)
+		private static void OnUpdateRule(this TreeDataNodeDataTest2 self)
 		{
 			//self.Log($"TreeDataNodeDataTest{self.Name}:{self.Age}");
 		}
@@ -123,7 +123,7 @@ namespace WorldTree.Server
 
 
 		[NodeRule(nameof(AddRule<TreeDataTest>))]
-		private static void OnAdd1(this TreeDataTest self)
+		private static void OnAdd1Rule(this TreeDataTest self)
 		{
 			if (self != null) return;
 			AData data = self.AddComponent(out AData _);

@@ -4,13 +4,13 @@ namespace WorldTree.Server
 	public static partial class DeepCopyTestRule
 	{
 		[NodeRule(nameof(AddRule<DeepCopyTest>))]
-		private static void OnAdd(this DeepCopyTest self)
+		private static void OnAddRule(this DeepCopyTest self)
 		{
 			CopyTest copySource = new CopyTest();
 			copySource.CopyA = new CopyTestA();
 			copySource.CopyARef = copySource.CopyA;
 			copySource.CopyA.CopyTestB = new CopyTestB();
-			copySource.CopyA.CopyTestB.ValueString = "²âÊÔ×Ö·û´®";
+			copySource.CopyA.CopyTestB.ValueString = "æµ‹è¯•å­—ç¬¦ä¸²";
 
 
 			CopyTestDict1 testDict = new CopyTestDict1();
@@ -18,7 +18,7 @@ namespace WorldTree.Server
 			copySource.ValueDict = testDict;
 
 			testDict.Value1 = 123987;
-			testDict.Value11 = "×Öµä×ÓÀà";
+			testDict.Value11 = "å­—å…¸å­ç±»";
 			testDict.Add(1, 100);
 			testDict.Add(2, 200);
 
@@ -27,11 +27,11 @@ namespace WorldTree.Server
 			treeCopy.CopyTo(copySource, ref copyTarget);
 
 
-			self.Log($"¶Ô±È×Ö¶ÎA {copySource.CopyA == copyTarget.CopyA}");
-			self.Log($"¶Ô±È×Ö¶ÎARef {copySource.CopyARef == copyTarget.CopyARef}");
+			self.Log($"å¯¹æ¯”å­—æ®µA {copySource.CopyA == copyTarget.CopyA}");
+			self.Log($"å¯¹æ¯”å­—æ®µARef {copySource.CopyARef == copyTarget.CopyARef}");
 
-			self.Log($"Ô­ÀàĞÍÒıÓÃ±È½Ï {copySource.CopyA == copySource.CopyARef}");
-			self.Log($"Ä¿±êÀàĞÍ»¹Ô­ÒıÓÃ {copyTarget.CopyA == copyTarget.CopyARef}");
+			self.Log($"åŸç±»å‹å¼•ç”¨æ¯”è¾ƒ {copySource.CopyA == copySource.CopyARef}");
+			self.Log($"ç›®æ ‡ç±»å‹è¿˜åŸå¼•ç”¨ {copyTarget.CopyA == copyTarget.CopyARef}");
 		}
 	}
 }

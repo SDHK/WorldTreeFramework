@@ -73,7 +73,7 @@ namespace WorldTree
 		public static int LeadingZeroCount(ulong value)
 		{
 #if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-            return BitOperations.LeadingZeroCount(value);
+			return BitOperations.LeadingZeroCount(value);
 #else
 			return LeadingZeroCountDeBruijn(value);
 #endif
@@ -86,11 +86,13 @@ namespace WorldTree
 		public static int TrailingZeroCount(ulong value)
 		{
 #if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-            return BitOperations.TrailingZeroCount(value);
+			return BitOperations.TrailingZeroCount(value);
 #else
 			return TrailingZeroCountDeBruijn(value);
 #endif
 		}
+
+#if !(NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER)
 
 		/// <summary>
 		/// 计算尾部零的个数（0~64）- 等价于 GetLowestBitIndex
@@ -135,6 +137,7 @@ namespace WorldTree
 			int index = (int)(hash >> 58);
 			return leadingDeBruijnPositions[index];
 		}
+#endif
 
 
 		/// <summary>
