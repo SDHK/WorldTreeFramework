@@ -32,6 +32,10 @@ namespace WorldTree.Server
 			//self.AddComponent(out TreeDataTest _);
 
 			//self.AddComponent(out DeepCopyTest _);
+
+			//打印结构
+
+			self.Log(NodeRule.ToStringDrawTree(self));
 		}
 
 		[NodeRule(nameof(EnableRule<DotNetInit>))]

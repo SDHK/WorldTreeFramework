@@ -24,7 +24,7 @@ namespace WorldTree
 	/// 节点状态
 	/// </summary>
 	[Flags]
-	public enum NodeState
+	public enum NodeState : byte
 	{
 		/// <summary>
 		/// 无状态
@@ -176,15 +176,15 @@ namespace WorldTree
 
 		#endregion
 
-		#region Rattan
+		//#region Rattan
 
-		/// <summary>
-		/// 树藤分支
-		/// </summary>
-		[TreeDataIgnore]
-		public UnitDictionary<long, IRattan> RattanDict { get; set; }
+		///// <summary>
+		///// 树藤分支
+		///// </summary>
+		//[TreeDataIgnore]
+		//public UnitDictionary<long, IRattan> RattanDict { get; set; }
 
-		#endregion
+		//#endregion
 
 		#region Branch
 

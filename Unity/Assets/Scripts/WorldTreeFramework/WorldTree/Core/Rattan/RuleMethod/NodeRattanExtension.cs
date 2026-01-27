@@ -14,20 +14,20 @@ namespace WorldTree.Internal
 	/// </summary>
 	public static class NodeRattanExtension
 	{
-		#region 获取
+		//#region 获取
 
-		/// <summary>
-		/// 尝试获取藤分支
-		/// </summary>
-		public static bool TryGetRattan<R>(this INode self, out R rattan) where R : class, IRattan
-			=> (rattan = (self.RattanDict != null && self.RattanDict.TryGetValue(self.TypeToCode<R>(), out IRattan IRattan)) ? IRattan as R : null) != null;
+		///// <summary>
+		///// 尝试获取藤分支
+		///// </summary>
+		//public static bool TryGetRattan<R>(this INode self, out R rattan) where R : class, IRattan
+		//	=> (rattan = (self.RattanDict != null && self.RattanDict.TryGetValue(self.TypeToCode<R>(), out IRattan IRattan)) ? IRattan as R : null) != null;
 
-		/// <summary>
-		/// 获取藤分支
-		/// </summary>
-		public static R GetRattan<R>(this INode self) where R : class, IRattan
-			=> (self.RattanDict != null && self.RattanDict.TryGetValue(self.TypeToCode<R>(), out IRattan iRattan)) ? iRattan as R : null;
+		///// <summary>
+		///// 获取藤分支
+		///// </summary>
+		//public static R GetRattan<R>(this INode self) where R : class, IRattan
+		//	=> (self.RattanDict != null && self.RattanDict.TryGetValue(self.TypeToCode<R>(), out IRattan iRattan)) ? iRattan as R : null;
 
-		#endregion
+		//#endregion
 	}
 }

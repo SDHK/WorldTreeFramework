@@ -139,13 +139,6 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public IWorldTreeNodeViewBuilder ViewBuilder { get; set; }
 
-		#region Rattan
-
-		[TreeDataIgnore]
-		public UnitDictionary<long, IRattan> RattanDict { get; set; }
-
-		#endregion
-
 		#region Branch
 
 		/// <summary>
@@ -153,9 +146,7 @@ namespace WorldTree
 		/// </summary>
 		[TreeDataIgnore]
 		public long BranchType { get; set; }
-
 		public IBranchBase BranchDict { get; set; }
-
 
 		#endregion
 

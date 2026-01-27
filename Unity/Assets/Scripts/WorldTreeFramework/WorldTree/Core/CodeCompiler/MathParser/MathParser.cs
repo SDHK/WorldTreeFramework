@@ -23,7 +23,7 @@ namespace WorldTree
 		/// <summary>
 		/// 抽象语法树根节点 
 		/// </summary>
-		public ExprNode ast;
+		public IMathParserSyntaxTree ast;
 
 		/// <summary>
 		/// 解析并计算数学表达式的值 
@@ -46,7 +46,7 @@ namespace WorldTree
 		/// <summary>
 		/// 解析表达式 (处理 + -)
 		/// </summary>
-		private ExprNode ParseExpression()
+		private IMathParserSyntaxTree ParseExpression()
 		{
 			var left = ParseTerm();
 
@@ -57,7 +57,11 @@ namespace WorldTree
 
 				Advance();
 				var right = ParseTerm();
-				left = new BinaryOpNode { Left = left, Operator = op, Right = right };
+				this.AddChild(out MathParserBinaryOp newLeft);
+				newLeft.Left = left;
+				newLeft.Operator = op;
+				newLeft.Right = right;
+				left = newLeft;
 			}
 
 			return left;
@@ -66,7 +70,7 @@ namespace WorldTree
 		/// <summary>
 		/// 解析项 (处理 * /)
 		/// </summary>
-		private ExprNode ParseTerm()
+		private IMathParserSyntaxTree ParseTerm()
 		{
 			var left = ParseFactor();
 
@@ -77,7 +81,11 @@ namespace WorldTree
 
 				Advance();
 				var right = ParseFactor();
-				left = new BinaryOpNode { Left = left, Operator = op, Right = right };
+				this.AddChild(out MathParserBinaryOp newLeft);
+				newLeft.Left = left;
+				newLeft.Operator = op;
+				newLeft.Right = right;
+				left = newLeft;
 			}
 
 			return left;
@@ -86,14 +94,17 @@ namespace WorldTree
 		/// <summary>
 		/// 解析因子 (处理数字、括号、负号)
 		/// </summary>
-		private ExprNode ParseFactor()
+		private IMathParserSyntaxTree ParseFactor()
 		{
 			// 处理负号
 			if (currentToken.Type == CodeTokenType.Symbol && currentToken.Value.ToChar() == '-')
 			{
 				Advance();
 				var operand = ParseFactor();
-				return new UnaryOpNode { Operator = '-', Operand = operand };
+				this.AddChild(out MathParserUnaryOp unaryNode);
+				unaryNode.Operator = '-';
+				unaryNode.Operand = operand;
+				return unaryNode;
 			}
 
 			// 处理括号
@@ -120,7 +131,9 @@ namespace WorldTree
 				};
 
 				Advance();
-				return new NumberNode { Value = value };
+				this.AddChild(out MathParserNumber numberNode);
+				numberNode.Value = value;
+				return numberNode;
 			}
 
 			throw new InvalidOperationException($"意外的令牌: {currentToken.Type}");
@@ -145,92 +158,7 @@ namespace WorldTree
 			protected override void Execute(MathParser self)
 			{
 				self.AddChild(out self.codeTokenizer);
-				//self.AddChild(out self.ast);
 			}
 		}
-	}
-
-
-	/// <summary>
-	/// 表达式节点基类
-	/// </summary>
-	public abstract class ExprNode
-	{
-		/// <summary>
-		/// 计算表达式值 
-		/// </summary>
-		public abstract double Evaluate();
-	}
-
-	/// <summary>
-	/// 数字字面量节点
-	/// </summary>
-	public class NumberNode : ExprNode
-	{
-		/// <summary>
-		/// 数字值 
-		/// </summary>
-		public double Value { get; set; }
-
-		public override double Evaluate() => Value;
-
-		public override string ToString() => Value.ToString();
-	}
-
-	/// <summary>
-	/// 二元运算节点
-	/// </summary>
-	public class BinaryOpNode : ExprNode
-	{
-		/// <summary>
-		/// 左操作数 
-		/// </summary>
-		public ExprNode Left { get; set; }
-		/// <summary>
-		/// 右操作数 
-		/// </summary>
-		public ExprNode Right { get; set; }
-		/// <summary>
-		/// 运算符 
-		/// </summary>
-		public char Operator { get; set; } // +, -, *, /
-
-		public override double Evaluate()
-		{
-			double left = Left.Evaluate();
-			double right = Right.Evaluate();
-
-			return Operator switch
-			{
-				'+' => left + right,
-				'-' => left - right,
-				'*' => left * right,
-				'/' => right != 0 ? left / right : throw new DivideByZeroException(),
-				_ => throw new InvalidOperationException($"未知运算符: {Operator}")
-			};
-		}
-
-		public override string ToString() => $"({Left} {Operator} {Right})";
-	}
-
-	/// <summary>
-	/// 一元运算节点 (负号)
-	/// </summary>
-	public class UnaryOpNode : ExprNode
-	{
-		/// <summary>
-		/// 操作数 
-		/// </summary>
-		public ExprNode Operand { get; set; }
-		/// <summary>
-		/// 运算符 
-		/// </summary>
-		public char Operator { get; set; } // -
-
-		public override double Evaluate()
-		{
-			return Operator == '-' ? -Operand.Evaluate() : Operand.Evaluate();
-		}
-		public override string ToString() => $"{Operator}{Operand}";
 	}
 }
