@@ -49,7 +49,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点列表
 		/// </summary>
-		public RuleExecutorPair[] nodes;
+		public NodeRuleRef[] nodes;
 
 		/// <summary>
 		/// 出队指针
@@ -143,7 +143,7 @@ namespace WorldTree
 
 			// 判断自动扩容
 			if (addIndex + 1 >= nodes.Length) Capacity();
-			nodes[addIndex] = new RuleExecutorPair(node, rule);
+			nodes[addIndex] = new NodeRuleRef(node, rule);
 			nextTraversalCount = addIndex + 1;
 			return true;
 		}
@@ -159,7 +159,7 @@ namespace WorldTree
 			if (num < this.nextTraversalCount) this.LogError("下标小于当前大小");
 			if (num > 0)
 			{
-				var newNodes = this.Core.PoolGetArray<RuleExecutorPair>(num);
+				var newNodes = this.Core.PoolGetArray<NodeRuleRef>(num);
 				if (this.nodes.Length != 0)
 				{
 					Array.Copy(this.nodes, 0, newNodes, 0, this.nodes.Length);
@@ -173,7 +173,7 @@ namespace WorldTree
 				{
 					this.Core.PoolRecycle(this.nodes, true);
 				}
-				this.nodes = this.Core.PoolGetArray<RuleExecutorPair>(4);
+				this.nodes = this.Core.PoolGetArray<NodeRuleRef>(4);
 			}
 		}
 
@@ -245,7 +245,7 @@ namespace WorldTree
 				}
 
 				// 使用引用类型来避免结构体复制
-				ref RuleExecutorPair pair = ref nodes[readPoint];
+				ref NodeRuleRef pair = ref nodes[readPoint];
 
 				node = pair.Node;
 				if (node == null) // 节点意外回收
@@ -300,7 +300,7 @@ namespace WorldTree
 		{
 			protected override void Execute(RuleExecutor self)
 			{
-				self.nodes = self.Core.PoolGetArray<RuleExecutorPair>(4);
+				self.nodes = self.Core.PoolGetArray<NodeRuleRef>(4);
 			}
 		}
 

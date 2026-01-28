@@ -473,11 +473,9 @@ namespace VM
 		private void Parser_IF(int TaskPath)
 		{
 			if (Task_IFs[TaskPath].IF()) this.Pointer++;
-			else
-			if (Task_IFs[TaskPath].IF_Else != -1)
+			else if (Task_IFs[TaskPath].IF_Else != -1)
 				this.Pointer = Task_IFs[TaskPath].IF_Else + 1;
-			else
-			if (Task_IFs[TaskPath].IF_End != -1)
+			else if (Task_IFs[TaskPath].IF_End != -1)
 				this.Pointer = Task_IFs[TaskPath].IF_End;
 			else
 				this.Pointer += 2;

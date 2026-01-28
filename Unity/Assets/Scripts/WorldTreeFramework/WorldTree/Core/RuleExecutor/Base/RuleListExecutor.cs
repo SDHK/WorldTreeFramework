@@ -55,7 +55,7 @@ namespace WorldTree
 
 			// 判断扩容
 			if (addIndex == nodes.Length) Capacity();
-			nodes[addIndex] = new RuleExecutorPair(node, rule);
+			nodes[addIndex] = new NodeRuleRef(node, rule);
 			IdIndexDict.Add(node.InstanceId, addIndex);
 			nextTraversalCount = addIndex + 1;
 			return true;
@@ -89,7 +89,7 @@ namespace WorldTree
 				}
 
 				// 使用引用类型来避免结构体复制
-				ref RuleExecutorPair pair = ref nodes[readPoint];
+				ref NodeRuleRef pair = ref nodes[readPoint];
 
 				node = pair.Node;
 				if (node == null) // 节点意外回收

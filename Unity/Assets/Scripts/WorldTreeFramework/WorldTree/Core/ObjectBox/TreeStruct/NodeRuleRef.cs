@@ -3,9 +3,11 @@
 * 作者： 闪电黑客
 * 日期： 2023/6/1 19:44
 
-* 描述： 法则集合执行器基类
-*
-* 执行拥有指定法则的节点
+* 描述： 节点法则引用 
+* 
+* 用于执行器中的节点和法则的绑定存储。
+* 这个结构是不可被序列化的，也不能找回数据节点。
+* 
 
  */
 
@@ -14,11 +16,11 @@ using System.Runtime.InteropServices;
 namespace WorldTree
 {
 	/// <summary>
-	/// 节点法则执行对:只用于法则执行器
+	/// 节点法则引用
 	/// </summary>
 	// 针对缓存优化的紧凑结构体
 	[StructLayout(LayoutKind.Sequential, Pack = 8)]
-	public struct RuleExecutorPair
+	public struct NodeRuleRef
 	{
 		/// <summary>
 		/// 节点实例ID
@@ -35,7 +37,7 @@ namespace WorldTree
 		/// </summary>
 		public RuleList Rule;
 
-		public RuleExecutorPair(INode node, RuleList rule)
+		public NodeRuleRef(INode node, RuleList rule)
 		{
 			this.node = node;
 			this.Rule = rule;
