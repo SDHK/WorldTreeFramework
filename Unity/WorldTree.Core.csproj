@@ -57,10 +57,14 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeMachine\CodeData.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeMachine\CodeMachine.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeMachine\Component\CodeParserIfElse.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeMachine\Component\CodeParserStep.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorMath.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorStackParam.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\StepData.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\StepMachine.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorIfElse.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorLoop.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorEvent.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\Base\StepProcessor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeTokenizer\CodeToken.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeTokenizer\CodeTokenizer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeTokenizer\CodeTokenType.cs" />

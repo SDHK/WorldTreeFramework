@@ -247,5 +247,97 @@ namespace WorldTree
 
 		#endregion
 
+		#region 逻辑与位运算
+
+		/// <summary>
+		/// 按位与 / 逻辑与运算符
+		/// </summary>
+		public static VarValue operator &(VarValue left, VarValue right)
+		{
+			// 整数类型执行位运算
+			if (left.Type == VarType.Long && right.Type == VarType.Long)
+			{
+				return (VarValue)(left.LongValue & right.LongValue);
+			}
+
+			// 布尔类型执行逻辑与(非短路)
+			if (left.Type == VarType.Bool && right.Type == VarType.Bool)
+			{
+				return (VarValue)(left.BoolValue & right.BoolValue);
+			}
+
+			// 其他类型转为布尔执行逻辑运算
+			return (VarValue)(left.ToBool() & right.ToBool());
+		}
+
+		/// <summary>
+		/// 按位或 / 逻辑或运算符
+		/// </summary>
+		public static VarValue operator |(VarValue left, VarValue right)
+		{
+			// 整数类型执行位运算
+			if (left.Type == VarType.Long && right.Type == VarType.Long)
+			{
+				return (VarValue)(left.LongValue | right.LongValue);
+			}
+
+			// 布尔类型执行逻辑或(非短路)
+			if (left.Type == VarType.Bool && right.Type == VarType.Bool)
+			{
+				return (VarValue)(left.BoolValue | right.BoolValue);
+			}
+
+			// 其他类型转为布尔执行逻辑运算
+			return (VarValue)(left.ToBool() | right.ToBool());
+		}
+
+		/// <summary>
+		/// 按位异或 / 逻辑异或运算符
+		/// </summary>
+		public static VarValue operator ^(VarValue left, VarValue right)
+		{
+			// 整数类型执行位运算
+			if (left.Type == VarType.Long && right.Type == VarType.Long)
+			{
+				return (VarValue)(left.LongValue ^ right.LongValue);
+			}
+
+			// 布尔类型执行逻辑异或
+			if (left.Type == VarType.Bool && right.Type == VarType.Bool)
+			{
+				return (VarValue)(left.BoolValue ^ right.BoolValue);
+			}
+
+			// 其他类型转为布尔执行逻辑运算
+			return (VarValue)(left.ToBool() ^ right.ToBool());
+		}
+
+		/// <summary>
+		/// 按位取反运算符
+		/// </summary>
+		public static VarValue operator ~(VarValue value)
+		{
+			if (value.Type == VarType.Long)
+			{
+				return (VarValue)(~value.LongValue);
+			}
+			else if (value.Type == VarType.Bool)
+			{
+				return (VarValue)(!value.BoolValue);
+			}
+
+			throw new InvalidOperationException($"不能对 {value.Type} 执行按位取反运算");
+		}
+
+		/// <summary>
+		/// 逻辑非运算符
+		/// </summary>
+		public static VarValue operator !(VarValue value)
+		{
+			return (VarValue)(!value.ToBool());
+		}
+
+		#endregion
+
 	}
 }

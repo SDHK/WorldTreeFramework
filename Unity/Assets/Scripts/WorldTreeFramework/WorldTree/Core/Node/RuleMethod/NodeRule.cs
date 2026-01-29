@@ -27,6 +27,15 @@ namespace WorldTree
 		}
 
 		/// <summary>
+		/// 获取指定父类型法则列表
+		/// </summary>
+		public static IRuleList<R> GetBaseRule<N, B, R>(this N self, B defaultBase, R defaultRule)
+			where R : IRule
+			where N : class, B, INode
+			where B : class, INode, AsRule<R>
+			=> self.GetBaseRule<N, B, R>();
+
+		/// <summary>
 		/// 类型转换为
 		/// </summary>
 		public static T As<T>(this INode self) where T : class, INode => self as T;

@@ -46,7 +46,7 @@ namespace WorldTree
 		{
 			protected override void Execute(RuleGroupExecutor self)
 			{
-				self.GetBaseRule<RuleGroupExecutor, RuleListExecutor, Remove>().Send(self);
+				self.GetBaseRule(default(RuleListExecutor), default(Remove)).Send(self);
 				self.ruleGroupDict = null;
 			}
 		}

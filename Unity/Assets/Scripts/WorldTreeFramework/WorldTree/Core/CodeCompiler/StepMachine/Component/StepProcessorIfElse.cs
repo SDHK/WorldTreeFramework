@@ -2,17 +2,17 @@
 
 namespace WorldTree
 {
+
 	/// <summary>
-	/// 代码解析器：条件分支 
+	/// 步骤处理器：条件分支 
 	/// </summary>
-	public class CodeParserIfElse : Node
-		, ComponentOf<CodeMachine>
+	public class StepProcessorIfElse : StepProcessor
 		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 条件结构体 
 		/// </summary>
-		public struct IfElseData
+		public struct StepDataIfElse
 		{
 			/// <summary>
 			/// 条件判断事件 
@@ -27,16 +27,10 @@ namespace WorldTree
 			/// </summary>
 			public int End;
 		}
-
-		/// <summary>
-		/// 所属代码执行机 
-		/// </summary>
-		public CodeMachine machine;
-
 		/// <summary>
 		/// 条件数据列表
 		/// </summary>
-		public UnitList<IfElseData> dataList;
+		public UnitList<StepDataIfElse> dataList;
 
 		/// <summary>
 		/// IF地址栈 
@@ -44,11 +38,11 @@ namespace WorldTree
 		public UnitStack<int> AddressStack;
 
 		/// <summary>
-		/// 解析If指令 
+		/// 执行If步骤 
 		/// </summary>
-		private int ParserIf(int pointer, int address)
+		private int ExecuteIf(int pointer, int address)
 		{
-			IfElseData data = dataList[address];
+			StepDataIfElse data = dataList[address];
 			if (data.Check.Invoke())
 				return pointer + 1;
 			else if (data.Else != 0)
@@ -56,26 +50,22 @@ namespace WorldTree
 			else if (data.End != 0)
 				return data.End;
 			else
-				this.LogError("If指令解析错误，缺少Else或End地址");
+				this.LogError("If步骤执行错误，缺少Else或End地址");
 			return pointer + 1;
 		}
 
 		/// <summary>
-		/// 解析Else指令 
+		/// 执行Else步骤 
 		/// </summary>
-		private int ParserElse(int pointer, int address) => dataList[address].End;
+		private int ExecuteElse(int pointer, int address) => dataList[address].End;//跳转到End地址
 
-		/// <summary>
-		/// 解析End指令 
-		/// </summary>
-		private int ParserEnd(int pointer, int address) => pointer + 1;
 
 		/// <summary>
 		/// 获取IF代码数据 
 		/// </summary>
-		public CodeData GetIF(Func<bool> check)
+		public void AddIF(Func<bool> check)
 		{
-			IfElseData data = new()
+			StepDataIfElse data = new()
 			{
 				Check = check,
 				Else = 0,
@@ -83,73 +73,66 @@ namespace WorldTree
 			};
 			dataList.Add(data);
 			AddressStack.Push(dataList.Count - 1);
-			return new CodeData()
+			AddStep(new StepData()
 			{
-				Parser = ParserIf,
+				Execute = ExecuteIf,
 				Address = dataList.Count - 1,
-			};
+			});
 		}
 		/// <summary>
-		/// 获取Else代码数据 
+		/// 添加Else步骤 
 		/// </summary>
-		public CodeData GetElse()
+		public void AddElse()
 		{
 			if (AddressStack.Count == 0)
-				this.LogError("Else指令获取错误，缺少对应的If指令");
+				this.LogError("Else步骤获取错误，缺少对应的If步骤");
 			// 获取If地址
 			int ifAddress = AddressStack.Peek();
 			// 设置If的Else地址
-			IfElseData data = dataList[ifAddress];
-			data.Else = machine.CodeDataList.Count - 1;
+			StepDataIfElse data = dataList[ifAddress];
+			data.Else = GetStepCount() - 1;
 			dataList[ifAddress] = data;
-			return new CodeData()
+			AddStep(new StepData()
 			{
-				Parser = ParserElse,
+				Execute = ExecuteElse,
 				Address = ifAddress,
-			};
+			});
 		}
 
 		/// <summary>
-		/// 获取End代码数据 
+		/// 添加End步骤 
 		/// </summary>
-		public CodeData GetEnd()
+		public void AddEnd()
 		{
 			if (AddressStack.Count == 0)
-				this.LogError("End指令获取错误，缺少对应的If指令");
+				this.LogError("End步骤获取错误，缺少对应的If步骤");
 			// 获取If地址
 			int ifAddress = AddressStack.Pop();
 			// 设置If的End地址
-			IfElseData data = dataList[ifAddress];
-			data.End = machine.CodeDataList.Count;
+			StepDataIfElse data = dataList[ifAddress];
+			data.End = GetStepCount();
 			dataList[ifAddress] = data;
-			return new CodeData()
-			{
-				Parser = ParserEnd,
-				Address = ifAddress,
-			};
 		}
 	}
 
-	public static class CodeParserIfElseRule
+	public static class StepProcessorIfElseRule
 	{
-		class Awake : AwakeRule<CodeParserIfElse>
+		class Add : AddRule<StepProcessorIfElse>
 		{
-			protected override void Execute(CodeParserIfElse self)
+			protected override void Execute(StepProcessorIfElse self)
 			{
-				self.GetParent(out self.machine);
 				self.Core.PoolGetUnit(out self.dataList);
 				self.Core.PoolGetUnit(out self.AddressStack);
 			}
 		}
-		class Remove : RemoveRule<CodeParserIfElse>
+		class Remove : RemoveRule<StepProcessorIfElse>
 		{
-			protected override void Execute(CodeParserIfElse self)
+			protected override void Execute(StepProcessorIfElse self)
 			{
 				self.dataList.Dispose();
 				self.dataList = null;
 				self.AddressStack.Dispose();
 				self.AddressStack = null;
-				self.machine = null;
 			}
 		}
 	}
