@@ -337,6 +337,30 @@ namespace WorldTree
 			return (VarValue)(!value.ToBool());
 		}
 
+		/// <summary>
+		/// 左移位运算符 
+		/// </summary>
+		public static VarValue operator <<(VarValue left, int shift)
+		{
+			if (left.Type == VarType.Long)
+			{
+				return (VarValue)(left.LongValue << shift);
+			}
+			throw new InvalidOperationException($"不能对 {left.Type} 执行左移位运算");
+		}
+
+		/// <summary>
+		/// 右移位运算符 
+		/// </summary>
+		public static VarValue operator >>(VarValue left, int shift)
+		{
+			if (left.Type == VarType.Long)
+			{
+				return (VarValue)(left.LongValue >> shift);
+			}
+			throw new InvalidOperationException($"不能对 {left.Type} 执行右移位运算");
+		}
+
 		#endregion
 
 	}
