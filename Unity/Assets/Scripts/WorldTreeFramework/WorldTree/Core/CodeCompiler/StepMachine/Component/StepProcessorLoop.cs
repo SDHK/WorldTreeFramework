@@ -2,6 +2,28 @@
 
 namespace WorldTree
 {
+
+	public partial class StepMachine
+	{
+		/// <summary> 步骤处理器：循环 </summary>
+		public StepProcessorLoop ProcessorLoop;
+		/// <summary> 组装处理器：循环 </summary>
+		public void AddStepProcessorLoop() => this.AddComponent(out ProcessorLoop);
+
+		/// <summary> 循环开始 </summary>
+		public void LoopEnter() => ProcessorLoop.AddLoopEnter();
+		/// <summary> 循环结束 </summary>
+		public void LoopEnd() => ProcessorLoop.AddLoopEnd();
+		/// <summary> 循环检测开始 </summary>
+		public void LoopEnter(Func<bool> check) => ProcessorLoop.AddLoopEnter(check);
+		/// <summary> 循环检测结束 </summary>
+		public void LoopEnd(Func<bool> check) => ProcessorLoop.AddLoopEnd(check);
+		/// <summary> Continue步骤 </summary>
+		public void Continue() => ProcessorLoop.AddContinue();
+		/// <summary> Break步骤 </summary>
+		public void Break() => ProcessorLoop.AddBreak();
+	}
+
 	/// <summary>
 	/// 步骤处理器：循环 
 	/// </summary>
@@ -68,7 +90,7 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 添加循环结构 
+		/// 添加循环开始
 		/// </summary>
 		public void AddLoopEnter()
 		{
@@ -77,7 +99,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 添加循环结构结束 
+		/// 添加循环结束 
 		/// </summary>
 		public void AddLoopEnd()
 		{
@@ -89,7 +111,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 添加LoopEnter步骤 
+		/// 添加循环检测开始 
 		/// </summary>
 		public void AddLoopEnter(Func<bool> check)
 		{
@@ -106,7 +128,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 添加LoopEnd步骤 
+		/// 添加循环检测结束 
 		/// </summary>
 		public void AddLoopEnd(Func<bool> check)
 		{

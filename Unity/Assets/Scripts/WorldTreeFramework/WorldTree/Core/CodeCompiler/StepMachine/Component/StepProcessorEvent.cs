@@ -2,6 +2,17 @@
 
 namespace WorldTree
 {
+	public partial class StepMachine
+	{
+		/// <summary> 步骤处理器：执行 </summary>
+		public StepProcessorEvent ProcessorEvent;
+		/// <summary> 组装处理器：执行 </summary>
+		public void AddStepProcessorEvent() => this.AddComponent(out ProcessorEvent);
+
+		/// <summary> 执行步骤 </summary>
+		public void Event(Action callBack) => ProcessorEvent.AddEvent(callBack);
+	}
+
 	/// <summary>
 	/// 步骤处理器：执行
 	/// </summary>

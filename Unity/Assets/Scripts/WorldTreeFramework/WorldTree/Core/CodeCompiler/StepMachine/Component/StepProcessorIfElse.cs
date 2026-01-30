@@ -2,6 +2,20 @@
 
 namespace WorldTree
 {
+	public partial class StepMachine
+	{
+		/// <summary> 步骤处理器：条件分支 </summary>
+		public StepProcessorIfElse ProcessorIfElse;
+		/// <summary> 组装处理器：条件分支 </summary>
+		public void AddStepProcessorIfElse() => this.AddComponent(out ProcessorIfElse);
+
+		/// <summary> If步骤 </summary>
+		public void If(Func<bool> check) => ProcessorIfElse.AddIF(check);
+		/// <summary> Else步骤 </summary>
+		public void Else() => ProcessorIfElse.AddElse();
+		/// <summary> IfEnd步骤 </summary>
+		public void IfEnd() => ProcessorIfElse.AddIFEnd();
+	}
 
 	/// <summary>
 	/// 步骤处理器：条件分支 
@@ -102,7 +116,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加End步骤 
 		/// </summary>
-		public void AddEnd()
+		public void AddIFEnd()
 		{
 			if (AddressStack.Count == 0)
 				this.LogError("End步骤获取错误，缺少对应的If步骤");

@@ -1,6 +1,13 @@
 ﻿namespace WorldTree
 {
 	//这个需要作用域支持，暂停实现
+
+	public partial class StepMachine
+	{
+		/// <summary> 步骤处理器：栈参数  </summary>
+		public StepProcessorStackParam ProcessorStackParam;
+	}
+
 	/// <summary>
 	/// 步骤处理器：栈参数 
 	/// </summary>

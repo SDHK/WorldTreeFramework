@@ -5,7 +5,7 @@ namespace WorldTree
 	/// <summary>
 	/// 步骤执行器 
 	/// </summary>
-	public class StepMachine : Node
+	public partial class StepMachine : Node
 		, AsComponentBranch
 		, ChildOf<INode>
 		, AsRule<Awake>

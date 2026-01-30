@@ -15,7 +15,7 @@
 	/// <summary>
 	/// 步骤操作类型 
 	/// </summary>
-	public enum StepOperationType : byte
+	public enum StepOpType : byte
 	{
 		/// <summary> 无操作 </summary>
 		None = 0,
@@ -38,7 +38,7 @@
 	/// <summary> 
 	/// 步骤操作码
 	/// </summary>
-	public enum StepOperationCode : byte
+	public enum StepOpCode : byte
 	{
 		/// <summary> 无操作  </summary>
 		None = 0,
@@ -48,7 +48,7 @@
 		#region 算术运算
 
 		/// <summary> 加法 </summary>
-		Add = StepOperationType.Math,
+		Add = StepOpType.Math,
 		/// <summary> 减法 </summary>
 		Sub,
 		/// <summary> 乘法 </summary>
@@ -63,7 +63,7 @@
 		#region 比较运算
 
 		/// <summary> 等于 </summary>
-		Eq = StepOperationType.Compare,
+		Eq = StepOpType.Compare,
 		/// <summary> 不等于 </summary>
 		NotEq,
 		/// <summary> 大于 </summary>
@@ -80,7 +80,7 @@
 		#region 逻辑运算
 
 		/// <summary> 与 </summary>
-		And = StepOperationType.Logic,
+		And = StepOpType.Logic,
 		/// <summary> 或 </summary>
 		Or,
 		/// <summary> 非(一元) </summary>
@@ -91,7 +91,7 @@
 		#region 位运算（可选）
 
 		/// <summary> 按位与 </summary>
-		BitAnd = StepOperationType.Bit,
+		BitAnd = StepOpType.Bit,
 		/// <summary> 按位或 </summary>
 		BitOr,
 		/// <summary> 按位异或 </summary>	
@@ -112,7 +112,7 @@
 		#region 栈操作
 
 		/// <summary> 压入 </summary>
-		Push = StepOperationType.Stack,
+		Push = StepOpType.Stack,
 		/// <summary> 弹出 </summary>
 		Pop,
 		/// <summary> 压入变量值 </summary>
@@ -127,7 +127,7 @@
 		#region 分支操作
 
 		/// <summary> If </summary>
-		IfPop = StepOperationType.Branch,
+		IfPop = StepOpType.Branch,
 		/// <summary> Else </summary>
 		Else,
 		/// <summary> EndIf </summary>
@@ -142,7 +142,7 @@
 		#region 循环操作
 
 		///<summary> 循环开始检测</summary>
-		LoopPop = StepOperationType.Loop,
+		LoopPop = StepOpType.Loop,
 		///<summary> 循环结束检测</summary>
 		LoopEndPop,
 		/// <summary> 循环开始 </summary>

@@ -57,7 +57,8 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepOperationCode.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\StepMachineAssembler.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\StepOpCode.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorMath.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorStackParam.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\StepData.cs" />
