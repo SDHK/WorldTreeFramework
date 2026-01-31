@@ -15,12 +15,22 @@
 		/// <summary>
 		/// 压入参数  
 		/// </summary>
-		public void Push(VarValue param) => Machine.Push(param);
+		public int PushParam() => Machine.PushParam();
 
 		/// <summary>
 		/// 弹出参数 
 		/// </summary>
-		public VarValue Pop() => Machine.Pop();
+		public int PopParam() => Machine.PopParam();
+
+		/// <summary>
+		/// 获取参数 
+		/// </summary>
+		public VarValue GetParam(int address) => Machine.GetParam(address);
+
+		/// <summary>
+		/// 设置参数 
+		/// </summary>
+		public void SetParam(int address, VarValue value) => Machine.SetParam(address, value);
 
 		/// <summary>
 		/// 添加步骤 

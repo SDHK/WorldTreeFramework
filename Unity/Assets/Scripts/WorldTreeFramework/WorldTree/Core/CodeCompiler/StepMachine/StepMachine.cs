@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -10,10 +11,21 @@ namespace WorldTree
 		, ChildOf<INode>
 		, AsRule<Awake>
 	{
+
 		/// <summary>
-		/// 参数栈 
+		/// 参数寄存器
 		/// </summary>
-		public UnitStack<VarValue> ParamStack;
+		public UnitList<VarValue> ParamList;
+
+		/// <summary>
+		/// 参数地址
+		/// </summary>
+		public int ParamAddress;
+
+		/// <summary>
+		/// 参数最大容量记录
+		/// </summary>
+		public int MaxCapacity;
 
 		/// <summary>
 		/// 步骤列表
@@ -31,14 +43,30 @@ namespace WorldTree
 		public bool isRun = false;
 
 		/// <summary>
-		/// 弹出参数
+		/// 压入参数地址 
 		/// </summary>
-		public VarValue Pop() => ParamStack.Count > 0 ? ParamStack.Pop() : new VarValue();
+		public int PushParam()
+		{
+			MaxCapacity = Math.Max(MaxCapacity, ParamAddress + 1);
+			return ParamAddress++;
+		}
 
 		/// <summary>
-		/// 压入参数 
+		/// 弹出参数地址 
 		/// </summary>
-		public void Push(VarValue value) => ParamStack.Push(value);
+		public int PopParam() => ParamAddress--;
+
+		/// <summary>
+		/// 获取参数 
+		/// </summary>
+		public VarValue GetParam(int address) => ParamList[address];
+
+		/// <summary>
+		/// 设置参数 
+		/// </summary>
+		public void SetParam(int address, VarValue value) => ParamList[address] = value;
+
+
 
 		/// <summary>
 		/// 添加步骤

@@ -28,7 +28,6 @@ namespace WorldTree
 	/// 步骤处理器：循环 
 	/// </summary>
 	public class StepProcessorLoop : StepProcessor
-		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 循环结构体 

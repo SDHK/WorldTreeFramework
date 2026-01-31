@@ -39,6 +39,7 @@ namespace WorldTree
 			self.AddComponent(out TaskTest _);
 		}
 
+
 		[NodeRule(nameof(UpdateRule<InitialDomain>))]
 		private static void OnUpdateRule(this InitialDomain self)
 		{

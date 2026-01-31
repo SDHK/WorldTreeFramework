@@ -17,20 +17,18 @@ namespace WorldTree
 	/// 步骤处理器：执行
 	/// </summary>
 	public class StepProcessorEvent : StepProcessor
-		, ComponentOf<StepMachine>
-		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 执行列表 
 		/// </summary>
-		public UnitList<Action> eventList;
+		public UnitList<Action> dataList;
 
 		/// <summary>
 		/// 执行
 		/// </summary>
 		private int ExecuteEvent(int address, int pointer)
 		{
-			eventList[address].Invoke();
+			dataList[address].Invoke();
 			return pointer + 1;
 		}
 
@@ -39,11 +37,11 @@ namespace WorldTree
 		/// </summary>
 		public void AddEvent(Action callback)
 		{
-			eventList.Add(callback);
+			dataList.Add(callback);
 			AddStep(new()
 			{
 				Execute = ExecuteEvent,
-				Address = eventList.Count - 1,
+				Address = dataList.Count - 1,
 			});
 		}
 	}
@@ -55,7 +53,7 @@ namespace WorldTree
 			protected override void Execute(StepProcessorEvent self)
 			{
 				self.GetBaseRule(default(StepProcessor), default(Add)).Send(self);
-				self.Core.PoolGetUnit(out self.eventList);
+				self.Core.PoolGetUnit(out self.dataList);
 			}
 		}
 
@@ -63,8 +61,8 @@ namespace WorldTree
 		{
 			protected override void Execute(StepProcessorEvent self)
 			{
-				self.eventList.Dispose();
-				self.eventList = null;
+				self.dataList.Dispose();
+				self.dataList = null;
 			}
 		}
 	}

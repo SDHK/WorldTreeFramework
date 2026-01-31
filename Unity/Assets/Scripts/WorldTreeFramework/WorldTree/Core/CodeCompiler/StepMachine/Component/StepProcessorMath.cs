@@ -18,23 +18,40 @@
 	public class StepProcessorMath : StepProcessor
 	{
 		/// <summary>
+		/// 数学运算数据结构体 
+		/// </summary>
+		public struct StepDataMath
+		{
+			/// <summary> 运算操作码 </summary>
+			public StepOpCode OpCode;
+			/// <summary> 结果地址 </summary>
+			public int ResultAddress;
+			/// <summary> 参数地址1 </summary>
+			public int ParamAddress1;
+			/// <summary> 参数地址2 </summary>
+			public int ParamAddress2;
+			/// <summary> 参数地址3 </summary>
+			public int ParamAddress3;
+		}
+
+		/// <summary>
 		/// 运算操作列表
 		/// </summary>
-		public UnitList<StepOpCode> operationList;
+		public UnitList<StepDataMath> dataList;
 
 		/// <summary>
 		/// 执行数学运算步骤
 		/// </summary>
 		private int ExecuteMath(int address, int pointer)
 		{
-			StepOpCode op = operationList[address];
+			StepDataMath data = dataList[address];
 			// 根据运算类型执行
-			switch (op)
+			switch (data.OpCode)
 			{
 				case StepOpCode.Not:
 				case StepOpCode.BitNot:
-					ExecuteUnaryOp(op, pointer); break;
-				default: ExecuteBinaryOp(op, pointer); break;
+					ExecuteUnaryOp(data, pointer); break;
+				default: ExecuteBinaryOp(data, pointer); break;
 			}
 			return pointer + 1;
 		}
@@ -42,13 +59,13 @@
 		/// <summary>
 		/// 执行二元运算
 		/// </summary>
-		private void ExecuteBinaryOp(StepOpCode op, int pointer)
+		private void ExecuteBinaryOp(StepDataMath data, int pointer)
 		{
 			// 注意：栈顶是右操作数
-			VarValue right = Machine.Pop();
-			VarValue left = Machine.Pop();
+			VarValue right = GetParam(data.ParamAddress1);
+			VarValue left = GetParam(data.ParamAddress2);
 			VarValue result = new VarValue();
-			switch (op)
+			switch (data.OpCode)
 			{
 				case StepOpCode.Add: result = left + right; break;
 				case StepOpCode.Sub: result = left - right; break;
@@ -71,22 +88,22 @@
 				case StepOpCode.BitShiftLeft: result = left << right.ToInt(); break;
 				case StepOpCode.BitShiftRight: result = left >> right.ToInt(); break;
 			}
-			Machine.Push(result);
+			SetParam(data.ResultAddress, result);
 		}
 
 		/// <summary>
 		/// 执行一元运算
 		/// </summary>
-		private void ExecuteUnaryOp(StepOpCode op, int pointer)
+		private void ExecuteUnaryOp(StepDataMath data, int pointer)
 		{
-			VarValue operand = Machine.Pop();
+			VarValue operand = GetParam(data.ParamAddress1);
 			VarValue result = new VarValue();
-			switch (op)
+			switch (data.OpCode)
 			{
 				case StepOpCode.Not: result = !operand.ToBool(); break;
 				case StepOpCode.BitNot: result = ~operand; break;
 			}
-			Machine.Push(result);
+			SetParam(data.ResultAddress, result);
 		}
 
 		/// <summary>
@@ -94,8 +111,23 @@
 		/// </summary>
 		public void AddMathOp(StepOpCode op)
 		{
-			operationList.Add(op);
-			AddStep(new StepData(ExecuteMath, operationList.Count - 1));
+			StepDataMath opData = new();
+			opData.OpCode = op;
+			switch (op)
+			{
+				case StepOpCode.Not:
+				case StepOpCode.BitNot:
+					opData.ParamAddress1 = PopParam();
+					opData.ResultAddress = PushParam();
+					break;
+				default:
+					opData.ParamAddress1 = PopParam();
+					opData.ParamAddress2 = PopParam();
+					opData.ResultAddress = PushParam();
+					break;
+			}
+			dataList.Add(opData);
+			AddStep(new StepData(ExecuteMath, dataList.Count - 1));
 		}
 	}
 
@@ -105,7 +137,7 @@
 		{
 			protected override void Execute(StepProcessorMath self)
 			{
-				self.Core.PoolGetUnit(out self.operationList);
+				self.Core.PoolGetUnit(out self.dataList);
 			}
 		}
 
@@ -113,8 +145,8 @@
 		{
 			protected override void Execute(StepProcessorMath self)
 			{
-				self.operationList.Dispose();
-				self.operationList = null;
+				self.dataList.Dispose();
+				self.dataList = null;
 			}
 		}
 	}
