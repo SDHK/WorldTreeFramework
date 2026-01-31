@@ -48,11 +48,11 @@
 			// 根据运算类型执行
 			switch (data.OpCode)
 			{
+				case StepOpCode.Conditional:
+					ExecuteTrinaryOp(data, pointer); break;
 				case StepOpCode.Not:
 				case StepOpCode.BitNot:
 					ExecuteUnaryOp(data, pointer); break;
-				case StepOpCode.Conditional:
-					ExecuteTrinaryOp(data, pointer); break;
 				default: ExecuteBinaryOp(data, pointer); break;
 			}
 			return pointer + 1;
@@ -134,14 +134,14 @@
 			opData.OpCode = op;
 			switch (op)
 			{
-				case StepOpCode.Not:
-				case StepOpCode.BitNot:
-					opData.ParamAddress1 = PopParam();
-					opData.ResultAddress = PushParam();
-					break;
 				case StepOpCode.Conditional:
 					opData.ParamAddress3 = PopParam();
 					opData.ParamAddress2 = PopParam();
+					opData.ParamAddress1 = PopParam();
+					opData.ResultAddress = PushParam();
+					break;
+				case StepOpCode.Not:
+				case StepOpCode.BitNot:
 					opData.ParamAddress1 = PopParam();
 					opData.ResultAddress = PushParam();
 					break;
