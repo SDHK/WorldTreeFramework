@@ -9,7 +9,7 @@
 		public void AddStepProcessorMath() => this.AddComponent(out ProcessorMath);
 
 		/// <summary> 执行数学运算步骤 </summary>
-		public void MathOp(StepOpCode op) => ProcessorMath.AddMathOp(op);
+		public void MathOp(StepOpCode op) => ProcessorMath.AddMathOpCode(op);
 	}
 
 	/// <summary>
@@ -51,9 +51,28 @@
 				case StepOpCode.Not:
 				case StepOpCode.BitNot:
 					ExecuteUnaryOp(data, pointer); break;
+				case StepOpCode.Conditional:
+					ExecuteTrinaryOp(data, pointer); break;
 				default: ExecuteBinaryOp(data, pointer); break;
 			}
 			return pointer + 1;
+		}
+
+		/// <summary>
+		/// 执行三元运算 
+		/// </summary>
+		private void ExecuteTrinaryOp(StepDataMath data, int pointer)
+		{
+			// 注意：栈顶是右操作数
+			VarValue third = GetParam(data.ParamAddress1);
+			VarValue second = GetParam(data.ParamAddress2);
+			VarValue first = GetParam(data.ParamAddress3);
+			VarValue result = new VarValue();
+			switch (data.OpCode)
+			{
+				case StepOpCode.Conditional: result = first.ToBool() ? second : third; break;
+			}
+			SetParam(data.ResultAddress, result);
 		}
 
 		/// <summary>
@@ -109,7 +128,7 @@
 		/// <summary>
 		/// 添加数学运算步骤
 		/// </summary>
-		public void AddMathOp(StepOpCode op)
+		public void AddMathOpCode(StepOpCode op)
 		{
 			StepDataMath opData = new();
 			opData.OpCode = op;
@@ -117,6 +136,12 @@
 			{
 				case StepOpCode.Not:
 				case StepOpCode.BitNot:
+					opData.ParamAddress1 = PopParam();
+					opData.ResultAddress = PushParam();
+					break;
+				case StepOpCode.Conditional:
+					opData.ParamAddress3 = PopParam();
+					opData.ParamAddress2 = PopParam();
 					opData.ParamAddress1 = PopParam();
 					opData.ResultAddress = PushParam();
 					break;

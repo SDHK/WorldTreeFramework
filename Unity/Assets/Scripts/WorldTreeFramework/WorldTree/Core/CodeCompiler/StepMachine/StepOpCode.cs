@@ -74,7 +74,8 @@
 		Less,
 		/// <summary> 小于等于 </summary>
 		LessEq,
-
+		/// <summary> 三元条件运算 </summary>
+		Conditional,
 		#endregion
 
 		#region 逻辑运算
