@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorldTree
+﻿namespace WorldTree
 {
 	public partial class StepMachine
 	{
@@ -8,9 +6,8 @@ namespace WorldTree
 		public StepProcessorIfElse ProcessorIfElse;
 		/// <summary> 组装处理器：条件分支 </summary>
 		public void AddStepProcessorIfElse() => this.AddComponent(out ProcessorIfElse);
-
 		/// <summary> If步骤 </summary>
-		public void If(Func<bool> check) => ProcessorIfElse.AddIF(check);
+		public void IfPop() => ProcessorIfElse.AddIfPop();
 		/// <summary> Else步骤 </summary>
 		public void Else() => ProcessorIfElse.AddElse();
 		/// <summary> IfEnd步骤 </summary>
@@ -29,9 +26,9 @@ namespace WorldTree
 		public struct StepDataIfElse
 		{
 			/// <summary>
-			/// 条件判断事件 
+			/// 判断地址
 			/// </summary>
-			public Func<bool> Check;
+			public int CheckAddress;
 			/// <summary>
 			/// Else地址 
 			/// </summary>
@@ -57,7 +54,9 @@ namespace WorldTree
 		private int ExecuteIf(int pointer, int address)
 		{
 			StepDataIfElse data = dataList[address];
-			if (data.Check.Invoke())
+
+			VarValue check = GetParam(data.CheckAddress);
+			if (check.ToBool())
 				return pointer + 1;
 			else if (data.Else != 0)
 				return data.Else + 1;
@@ -77,17 +76,17 @@ namespace WorldTree
 		/// <summary>
 		/// 获取IF代码数据 
 		/// </summary>
-		public void AddIF(Func<bool> check)
+		public void AddIfPop()
 		{
 			StepDataIfElse data = new()
 			{
-				Check = check,
+				CheckAddress = PopParam(),
 				Else = 0,
 				End = 0,
 			};
 			dataList.Add(data);
 			AddressStack.Push(dataList.Count - 1);
-			AddStep(new StepData()
+			AddStep(new StepExecuteData()
 			{
 				Execute = ExecuteIf,
 				Address = dataList.Count - 1,
@@ -106,7 +105,7 @@ namespace WorldTree
 			StepDataIfElse data = dataList[ifAddress];
 			data.Else = GetStepCount() - 1;
 			dataList[ifAddress] = data;
-			AddStep(new StepData()
+			AddStep(new StepExecuteData()
 			{
 				Execute = ExecuteElse,
 				Address = ifAddress,

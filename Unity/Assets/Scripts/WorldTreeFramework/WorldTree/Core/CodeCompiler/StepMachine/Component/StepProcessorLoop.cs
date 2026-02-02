@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorldTree
+﻿namespace WorldTree
 {
 
 	public partial class StepMachine
@@ -14,10 +12,8 @@ namespace WorldTree
 		public void LoopEnter() => ProcessorLoop.AddLoopEnter();
 		/// <summary> 循环结束 </summary>
 		public void LoopEnd() => ProcessorLoop.AddLoopEnd();
-		/// <summary> 循环检测开始 </summary>
-		public void LoopEnter(Func<bool> check) => ProcessorLoop.AddLoopEnter(check);
-		/// <summary> 循环检测结束 </summary>
-		public void LoopEnd(Func<bool> check) => ProcessorLoop.AddLoopEnd(check);
+		/// <summary> 循环检测 </summary>
+		public void LoopCheckPop() => ProcessorLoop.AddLoopCheckPop();
 		/// <summary> Continue步骤 </summary>
 		public void Continue() => ProcessorLoop.AddContinue();
 		/// <summary> Break步骤 </summary>
@@ -35,9 +31,9 @@ namespace WorldTree
 		public struct StepDataLoop
 		{
 			/// <summary>
-			/// 循环判断事件 
+			/// 循环检测地址
 			/// </summary>
-			public Func<bool> Check;
+			public int CheckAddress;
 			/// <summary>
 			/// 循环开始地址   
 			/// </summary>
@@ -60,22 +56,20 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 执行Loop步骤
+		/// 执行Loop检测步骤
 		/// </summary>
-		private int ExecuteLoopEnter(int pointer, int address)
+		private int ExecuteLoopCheck(int pointer, int address)
 		{
 			StepDataLoop data = dataList[address];
-			return (data.Check() ? pointer : data.End) + 1;
+			VarValue check = GetParam(data.CheckAddress);
+			return check.ToBool() ? data.Enter : data.End;
 		}
 
 		/// <summary>
 		/// 执行LoopEnd步骤 
 		/// </summary>
-		private int ExecuteLoopEnd(int pointer, int address)
-		{
-			StepDataLoop data = dataList[address];
-			return data.Check() ? data.Enter : pointer + 1;
-		}
+		private int ExecuteLoopEnd(int pointer, int address) => dataList[address].Enter;
+
 
 		/// <summary>
 		/// 执行Continue步骤 
@@ -85,8 +79,7 @@ namespace WorldTree
 		/// <summary>
 		/// 执行Break步骤 
 		/// </summary>
-		private int ExecuteBreak(int pointer, int address) => dataList[address].End + 1;
-
+		private int ExecuteBreak(int pointer, int address) => dataList[address].End;
 
 		/// <summary>
 		/// 添加循环开始
@@ -104,43 +97,23 @@ namespace WorldTree
 		{
 			int address = AddressStack.Pop();
 			StepDataLoop data = dataList[address];
-			data.End = GetStepCount();
+			data.End = GetStepCount() + 1;
 			dataList[address] = data;
 			AddStep(new(ExecuteLoopEnd, address));
 		}
 
 		/// <summary>
-		/// 添加循环检测开始 
+		/// 添加循环检测
 		/// </summary>
-		public void AddLoopEnter(Func<bool> check)
+		public void AddLoopCheckPop()
 		{
-			// 地址栈添加当前任务地址
-			AddressStack.Push(dataList.Count);
-			// 新建循环结构数据
-			dataList.Add(new()
-			{
-				Check = check,
-				Enter = GetStepCount()
-			});
-			// 添加LoopEnter步骤
-			AddStep(new(ExecuteLoopEnter, dataList.Count - 1));
-		}
-
-		/// <summary>
-		/// 添加循环检测结束 
-		/// </summary>
-		public void AddLoopEnd(Func<bool> check)
-		{
-			// 获取LoopEnter地址
-			int address = AddressStack.Pop();
-			// 设置LoopEnter的End地址
+			int address = AddressStack.Peek();
 			StepDataLoop data = dataList[address];
-			data.Check = check;
-			data.End = GetStepCount();
+			data.CheckAddress = PopParam();
 			dataList[address] = data;
-			// 添加LoopEnd
-			AddStep(new(ExecuteLoopEnd, address));
+			AddStep(new(ExecuteLoopCheck, address));
 		}
+
 
 		/// <summary>
 		/// 添加Continue步骤 

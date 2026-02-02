@@ -3,9 +3,9 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 步骤数据
+	/// 步骤执行数据
 	/// </summary>
-	public struct StepData
+	public struct StepExecuteData
 	{
 		/// <summary>
 		/// 处理器执行委托
@@ -17,7 +17,7 @@ namespace WorldTree
 		/// </summary>
 		public int Address;
 
-		public StepData(Func<int, int, int> execute, int address)
+		public StepExecuteData(Func<int, int, int> execute, int address)
 		{
 			Execute = execute;
 			Address = address;

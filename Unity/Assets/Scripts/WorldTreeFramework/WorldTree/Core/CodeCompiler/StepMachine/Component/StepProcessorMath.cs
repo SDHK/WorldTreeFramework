@@ -80,6 +80,7 @@
 		/// </summary>
 		private void ExecuteBinaryOp(StepDataMath data, int pointer)
 		{
+
 			// 注意：栈顶是右操作数
 			VarValue right = GetParam(data.ParamAddress1);
 			VarValue left = GetParam(data.ParamAddress2);
@@ -152,7 +153,7 @@
 					break;
 			}
 			dataList.Add(opData);
-			AddStep(new StepData(ExecuteMath, dataList.Count - 1));
+			AddStep(new StepExecuteData(ExecuteMath, dataList.Count - 1));
 		}
 	}
 

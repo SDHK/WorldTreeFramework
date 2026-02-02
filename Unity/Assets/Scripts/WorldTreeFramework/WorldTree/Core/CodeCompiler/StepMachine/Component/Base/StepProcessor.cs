@@ -31,21 +31,14 @@
 		/// 设置参数 
 		/// </summary>
 		public void SetParam(int address, VarValue value) => Machine.SetParam(address, value);
-
 		/// <summary>
 		/// 添加步骤 
 		/// </summary>
-		public void AddStep(StepData codeData)
-		{
-			Machine.AddStep(codeData);
-		}
+		public void AddStep(StepExecuteData codeData) => Machine.AddStep(codeData);
 		/// <summary>
 		/// 获取步骤数量
 		/// </summary>
-		public int GetStepCount()
-		{
-			return Machine.StepList.Count;
-		}
+		public int GetStepCount() => Machine.StepList.Count;
 	}
 
 	public static class StepProcessorRule

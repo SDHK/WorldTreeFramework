@@ -112,10 +112,13 @@
 
 		#region 栈操作
 
-		/// <summary> 压入 </summary>
-		Push = StepOpType.Stack,
-		/// <summary> 弹出 </summary>
-		Pop,
+		/// <summary> 压入字面量 </summary>
+		PushLiteral = StepOpType.Stack,
+		/// <summary> 
+		/// 回收寄存器地址
+		/// <para>用于释放不再使用的临时寄存器地址，使其可以被后续操作重用</para>
+		/// </summary>
+		PopRecycle,
 		/// <summary> 压入变量值 </summary>
 		PushVar,
 		/// <summary> 弹出到变量 </summary>
@@ -131,8 +134,8 @@
 		IfPop = StepOpType.Branch,
 		/// <summary> Else </summary>
 		Else,
-		/// <summary> EndIf </summary>
-		EndIf,
+		/// <summary> IfEnd </summary>
+		IfEnd,
 		/// <summary> 跳转标记 </summary>
 		JumpLabel,
 		/// <summary> 跳转 </summary>
@@ -142,14 +145,12 @@
 
 		#region 循环操作
 
-		///<summary> 循环开始检测</summary>
-		LoopPop = StepOpType.Loop,
-		///<summary> 循环结束检测</summary>
-		LoopEndPop,
-		/// <summary> 循环开始 </summary>
-		Loop,
-		/// <summary> 循环结束 </summary>
+		///<summary> 循环开始</summary>
+		LoopEnter = StepOpType.Loop,
+		///<summary> 循环结束</summary>
 		LoopEnd,
+		/// <summary> 循环检测 </summary>
+		LoopCheckPop,
 		/// <summary> Break </summary>
 		Break,
 		/// <summary> Continue </summary>

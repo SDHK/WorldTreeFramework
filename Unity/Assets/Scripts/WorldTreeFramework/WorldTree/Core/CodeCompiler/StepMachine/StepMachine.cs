@@ -30,7 +30,7 @@ namespace WorldTree
 		/// <summary>
 		/// 步骤列表
 		/// </summary>
-		public List<StepData> StepList = new();
+		public List<StepExecuteData> StepList = new();
 
 		/// <summary>
 		/// 步骤指针
@@ -71,7 +71,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加步骤
 		/// </summary>
-		public void AddStep(StepData stepData)
+		public void AddStep(StepExecuteData stepData)
 		{
 			StepList.Add(stepData);
 		}
