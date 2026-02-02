@@ -50,8 +50,6 @@
 						break;
 					case StepOpCode.PopVar:
 						break;
-					case StepOpCode.Dup:
-						break;
 					case StepOpCode.IfPop:
 						stepMachine.IfPop();
 						break;

@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\StepAssemblyData.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\StepMachineAssembler.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Assembler\StepMachineAssembler.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\StepOpCode.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorMath.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorLiteral.cs" />
