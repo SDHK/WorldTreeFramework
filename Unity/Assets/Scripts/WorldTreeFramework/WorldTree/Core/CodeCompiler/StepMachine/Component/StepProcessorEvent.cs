@@ -52,7 +52,6 @@ namespace WorldTree
 		{
 			protected override void Execute(StepProcessorEvent self)
 			{
-				self.GetBaseRule(default(StepProcessor), default(Add)).Send(self);
 				self.Core.PoolGetUnit(out self.dataList);
 			}
 		}

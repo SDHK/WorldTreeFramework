@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Sirenix.Utilities;
+using System;
 
 namespace WorldTree
 {
@@ -30,7 +30,7 @@ namespace WorldTree
 		/// <summary>
 		/// 步骤列表
 		/// </summary>
-		public List<StepExecuteData> StepList = new();
+		public UnitList<StepExecuteData> StepList;
 
 		/// <summary>
 		/// 步骤指针
@@ -54,7 +54,7 @@ namespace WorldTree
 		/// <summary>
 		/// 弹出参数地址 
 		/// </summary>
-		public int PopParam() => ParamAddress--;
+		public int PopParam() => --ParamAddress;
 
 		/// <summary>
 		/// 获取参数 
@@ -64,7 +64,10 @@ namespace WorldTree
 		/// <summary>
 		/// 设置参数 
 		/// </summary>
-		public void SetParam(int address, VarValue value) => ParamList[address] = value;
+		public void SetParam(int address, VarValue value)
+		{
+			ParamList[address] = value;
+		}
 
 
 
@@ -74,6 +77,18 @@ namespace WorldTree
 		public void AddStep(StepExecuteData stepData)
 		{
 			StepList.Add(stepData);
+		}
+
+
+		/// <summary>
+		/// 启动
+		/// </summary>
+		public void Run()
+		{
+			//List扩容到最大参数容量
+			ParamList.SetLength(MaxCapacity + 1);
+			Pointer = 0;
+			isRun = true;
 		}
 
 		/// <summary>
@@ -89,6 +104,20 @@ namespace WorldTree
 			{
 				Pointer = -1;
 				isRun = false;
+			}
+		}
+	}
+
+	public static class StepMachineRule
+	{
+		class Awake : AwakeRule<StepMachine>
+		{
+			protected override void Execute(StepMachine self)
+			{
+				self.Core.PoolGetUnit(out self.ParamList);
+				self.Core.PoolGetUnit(out self.StepList);
+				self.ParamAddress = 0;
+				self.MaxCapacity = 0;
 			}
 		}
 	}

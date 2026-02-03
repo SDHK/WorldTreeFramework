@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\TreeDataTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\UtcTimeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\MultilayerPerceptronTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\StepMachineTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\InitialDomain.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\InputMapperTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\Input\InputDriverKeyboard.cs" />

@@ -34,7 +34,7 @@
 		/// <summary>
 		///  执行步骤：压入字面量到参数栈
 		/// </summary>
-		private int ExecutePushLiteral(int pointer, int address)
+		private int ExecutePushLiteral(int address, int pointer)
 		{
 			StepDataLiteral data = dataList[address];
 			SetParam(data.LiteralAddress, data.LiteralValue);
@@ -56,4 +56,24 @@
 		}
 
 	}
+
+	public static class StepProcessorLiteralRule
+	{
+		class AddRule : AddRule<StepProcessorLiteral>
+		{
+			protected override void Execute(StepProcessorLiteral self)
+			{
+				self.Core.PoolGetUnit(out self.dataList);
+			}
+		}
+		class RemoveRule : RemoveRule<StepProcessorLiteral>
+		{
+			protected override void Execute(StepProcessorLiteral self)
+			{
+				self.dataList.Dispose();
+				self.dataList = null;
+			}
+		}
+	}
+
 }

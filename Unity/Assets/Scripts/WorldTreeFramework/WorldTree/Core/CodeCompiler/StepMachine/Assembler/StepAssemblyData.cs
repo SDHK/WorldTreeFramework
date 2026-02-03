@@ -9,5 +9,11 @@
 		public StepOpCode OpCode;
 		/// <summary> 字面量 </summary>
 		public VarValue Literal;
+
+		public StepAssemblyData(StepOpCode opCode, VarValue literal = default)
+		{
+			OpCode = opCode;
+			Literal = literal;
+		}
 	}
 }

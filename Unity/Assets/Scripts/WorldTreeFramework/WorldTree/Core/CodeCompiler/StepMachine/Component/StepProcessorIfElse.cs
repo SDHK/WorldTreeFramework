@@ -51,7 +51,7 @@
 		/// <summary>
 		/// 执行If步骤 
 		/// </summary>
-		private int ExecuteIf(int pointer, int address)
+		private int ExecuteIf(int address, int pointer)
 		{
 			StepDataIfElse data = dataList[address];
 
@@ -70,7 +70,7 @@
 		/// <summary>
 		/// 执行Else步骤 
 		/// </summary>
-		private int ExecuteElse(int pointer, int address) => dataList[address].End;//跳转到End地址
+		private int ExecuteElse(int address, int pointer) => dataList[address].End;
 
 
 		/// <summary>

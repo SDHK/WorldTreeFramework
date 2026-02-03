@@ -58,7 +58,7 @@
 		/// <summary>
 		/// 执行Loop检测步骤
 		/// </summary>
-		private int ExecuteLoopCheck(int pointer, int address)
+		private int ExecuteLoopCheck(int address, int pointer)
 		{
 			StepDataLoop data = dataList[address];
 			VarValue check = GetParam(data.CheckAddress);
@@ -68,18 +68,18 @@
 		/// <summary>
 		/// 执行LoopEnd步骤 
 		/// </summary>
-		private int ExecuteLoopEnd(int pointer, int address) => dataList[address].Enter;
+		private int ExecuteLoopEnd(int address, int pointer) => dataList[address].Enter;
 
 
 		/// <summary>
 		/// 执行Continue步骤 
 		/// </summary>
-		private int ExecuteContinue(int pointer, int address) => dataList[address].Enter;
+		private int ExecuteContinue(int address, int pointer) => dataList[address].Enter;
 
 		/// <summary>
 		/// 执行Break步骤 
 		/// </summary>
-		private int ExecuteBreak(int pointer, int address) => dataList[address].End;
+		private int ExecuteBreak(int address, int pointer) => dataList[address].End;
 
 		/// <summary>
 		/// 添加循环开始

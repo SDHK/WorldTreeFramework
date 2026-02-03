@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TaskTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\StepMachineTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\Input\InputDriverKeyboardRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SphereManagerTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SerializeTestRule.cs" />
