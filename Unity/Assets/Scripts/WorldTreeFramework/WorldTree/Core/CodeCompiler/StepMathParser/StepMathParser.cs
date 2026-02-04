@@ -3,9 +3,9 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 数学表达式解析器
+	/// 步骤数学表达式解析器
 	/// </summary>
-	public class MathParser : Node
+	public class StepMathParser : Node
 		, ChildOf<INode>
 		, AsChildBranch
 		, AsRule<Awake>
@@ -23,12 +23,12 @@ namespace WorldTree
 		/// <summary>
 		/// 抽象语法树根节点 
 		/// </summary>
-		public IMathParserSyntaxTree ast;
+		public IStepCodeGenerator ast;
 
 		/// <summary>
-		/// 解析并计算数学表达式的值 
+		/// 解析数学表达式并生成步骤汇编数据
 		/// </summary>
-		public double Parse(string expression)
+		public void Parse(string expression, UnitList<StepAssemblyData> output)
 		{
 			// 1. 初始化词法分析器
 			codeTokenizer.SetCode(expression);
@@ -36,17 +36,17 @@ namespace WorldTree
 			// 2. 获取第一个有效令牌（跳过空白）
 			Advance();
 
-			// 3. 语法分析 + 求值
+			// 3. 语法分析
 			ast = ParseExpression();
 
-			// 4. 执行求值
-			return ast.Evaluate();
+			// 4. 生成代码
+			ast.GenerateCode(output);
 		}
 
 		/// <summary>
 		/// 解析表达式 (处理 + -)
 		/// </summary>
-		private IMathParserSyntaxTree ParseExpression()
+		private IStepCodeGenerator ParseExpression()
 		{
 			var left = ParseTerm();
 
@@ -57,7 +57,7 @@ namespace WorldTree
 
 				Advance();
 				var right = ParseTerm();
-				this.AddChild(out MathParserBinaryOp newLeft);
+				this.AddChild(out StepMathParserBinaryOp newLeft);
 				newLeft.Left = left;
 				newLeft.Operator = op;
 				newLeft.Right = right;
@@ -68,20 +68,20 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 解析项 (处理 * /)
+		/// 解析项 (处理 * / %)
 		/// </summary>
-		private IMathParserSyntaxTree ParseTerm()
+		private IStepCodeGenerator ParseTerm()
 		{
 			var left = ParseFactor();
 
 			while (currentToken.Type == CodeTokenType.Symbol)
 			{
 				char op = currentToken.Value.ToChar();
-				if (op != '*' && op != '/') break;
+				if (op != '*' && op != '/' && op != '%') break;
 
 				Advance();
 				var right = ParseFactor();
-				this.AddChild(out MathParserBinaryOp newLeft);
+				this.AddChild(out StepMathParserBinaryOp newLeft);
 				newLeft.Left = left;
 				newLeft.Operator = op;
 				newLeft.Right = right;
@@ -94,14 +94,14 @@ namespace WorldTree
 		/// <summary>
 		/// 解析因子 (处理数字、括号、负号)
 		/// </summary>
-		private IMathParserSyntaxTree ParseFactor()
+		private IStepCodeGenerator ParseFactor()
 		{
 			// 处理负号
 			if (currentToken.Type == CodeTokenType.Symbol && currentToken.Value.ToChar() == '-')
 			{
 				Advance();
 				var operand = ParseFactor();
-				this.AddChild(out MathParserUnaryOp unaryNode);
+				this.AddChild(out StepMathParserUnaryOp unaryNode);
 				unaryNode.Operator = '-';
 				unaryNode.Operand = operand;
 				return unaryNode;
@@ -123,21 +123,16 @@ namespace WorldTree
 			// 处理数字
 			if (currentToken.Type == CodeTokenType.Number)
 			{
-				double value = currentToken.Value.Type switch
-				{
-					VarType.Long => (long)currentToken.Value,
-					VarType.Double => (double)currentToken.Value,
-					_ => throw new InvalidOperationException("不支持的数字类型")
-				};
-
+				VarValue value = currentToken.Value;
 				Advance();
-				this.AddChild(out MathParserNumber numberNode);
+				this.AddChild(out StepMathParserNumber numberNode);
 				numberNode.Value = value;
 				return numberNode;
 			}
 
 			throw new InvalidOperationException($"意外的令牌: {currentToken.Type}");
 		}
+
 		/// <summary>
 		/// 推进到下一个令牌（跳过空白符）
 		/// </summary>
@@ -151,11 +146,11 @@ namespace WorldTree
 		}
 	}
 
-	public static class MathParserRule
+	public static class StepMathParserRule
 	{
-		class AwakeRule : AwakeRule<MathParser>
+		class AwakeRule : AwakeRule<StepMathParser>
 		{
-			protected override void Execute(MathParser self)
+			protected override void Execute(StepMathParser self)
 			{
 				self.AddChild(out self.codeTokenizer);
 			}
