@@ -57,6 +57,11 @@ namespace WorldTree
 		public int PopParam() => --ParamAddress;
 
 		/// <summary>
+		/// 查看栈顶参数地址
+		/// </summary> 
+		public int PeekParam() => ParamAddress - 1;
+
+		/// <summary>
 		/// 获取参数 
 		/// </summary>
 		public VarValue GetParam(int address) => ParamList[address];
@@ -86,7 +91,7 @@ namespace WorldTree
 		public void Run()
 		{
 			//List扩容到最大参数容量
-			ParamList.SetLength(MaxCapacity + 1);
+			ParamList.SetLength(MaxCapacity);
 			Pointer = 0;
 			isRun = true;
 		}

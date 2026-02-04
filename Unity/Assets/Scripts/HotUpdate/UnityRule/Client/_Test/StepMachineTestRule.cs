@@ -14,29 +14,84 @@
 				self.stepMachine.AddStepProcessorMath();
 
 				self.Core.PoolGetUnit(out UnitList<StepAssemblyData> datas);
-				// 计算: (10 + 5) * 2 - 3 = 27
-				// 使用后缀表达式(逆波兰表示法): 10 5 + 2 * 3 -
 
-				// 步骤 1: 压入 10
-				datas.Add(new(StepOpCode.PushLiteral, (VarValue)10L));
-
-				// 步骤 2: 压入 5
-				datas.Add(new(StepOpCode.PushLiteral, (VarValue)5L));
-
-				// 步骤 3: 执行加法 (10 + 5 = 15)
+				//表达式：(100 + 50) / 3 * 2 - 10 % 3
+				// 1. 计算 100 + 50 = 150
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)100L));
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)50L));
 				datas.Add(new(StepOpCode.Add));
 
-				// 步骤 4: 压入 2
-				datas.Add(new(StepOpCode.PushLiteral, (VarValue)2L));
+				// 2. 除以 3: 150 / 3 = 50
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)3.0));
+				datas.Add(new(StepOpCode.Div));
 
-				// 步骤 5: 执行乘法 (15 * 2 = 30)
+				// 3. 乘以 2: 50 * 2 = 100
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)2L));
 				datas.Add(new(StepOpCode.Mul));
 
-				// 步骤 6: 压入 3
+				// 4. 计算 10 % 3 = 1
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)10L));
 				datas.Add(new(StepOpCode.PushLiteral, (VarValue)3L));
+				datas.Add(new(StepOpCode.Mod));
 
-				// 步骤 7: 执行减法 (30 - 3 = 27)
+				// 5. 减法: 100 - 1 = 99
 				datas.Add(new(StepOpCode.Sub));
+
+				//if (result > 50) { result = result * 2 } else { result = result + 10 }
+
+				self.Log("=== 条件分支计算 ===");
+				self.Log("if (result > 50) { result = result * 2 } else { result = result + 10 }");
+
+				// 6. 复制栈顶值用于比较
+				datas.Add(new(StepOpCode.Dup));
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)50L));
+				datas.Add(new(StepOpCode.Greater)); // 判断 result > 50
+
+				// 7. If 分支开始
+				datas.Add(new(StepOpCode.IfPop));
+
+				// 8. True 分支: result * 2
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)2L));
+				datas.Add(new(StepOpCode.Mul)); // result = 99 * 2 = 198
+
+				// 9. Else 分支
+				datas.Add(new(StepOpCode.Else));
+
+				// 10. False 分支: result + 10 (不会执行)
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)10L));
+				datas.Add(new(StepOpCode.Add));
+
+				// 11. If 结束
+				datas.Add(new(StepOpCode.IfEnd));
+
+				// ===== 位运算示例 =====
+				// result = result & 255 (保留低8位)
+				self.Log("=== 位运算 ===");
+				self.Log("result = result & 255");
+
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)255L));
+				datas.Add(new(StepOpCode.BitAnd)); // 198 & 255 = 198
+
+				// ===== 逻辑运算示例 =====
+				// isValid = (result > 100) && (result < 300)
+				self.Log("=== 逻辑运算 ===");
+				self.Log("isValid = (result > 100) && (result < 300)");
+
+				// 计算 result > 100
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)100L));
+				datas.Add(new(StepOpCode.Greater)); // 198 > 100 = true
+
+				// 计算 result < 300 (需要重新压入result值)
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)198L)); // 手动压入当前结果
+				datas.Add(new(StepOpCode.PushLiteral, (VarValue)300L));
+				datas.Add(new(StepOpCode.Less)); // 198 < 300 = true
+
+				// 逻辑与运算
+				datas.Add(new(StepOpCode.And)); // true && true = true
+
+
+
+				// 组装虚拟机
 				StepMachineAssembler.Assemble(self.stepMachine, datas);
 				self.stepMachine.Run();
 			}
@@ -46,7 +101,7 @@
 		private static void OnUpdateRule(this StepMachineTest self)
 		{
 			self.stepMachine.Update();
-			string log = "StepMachineTest Update:";
+			string log = $"StepMachineTest Update [{self.stepMachine.Pointer - 1}]:";
 			for (int i = 0; i < self.stepMachine.ParamList.Count; i++)
 			{
 				log += $" {self.stepMachine.ParamList[i].ToLong()}";

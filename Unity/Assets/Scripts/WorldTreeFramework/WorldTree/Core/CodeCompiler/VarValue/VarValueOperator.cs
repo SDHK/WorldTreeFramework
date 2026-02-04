@@ -250,84 +250,26 @@ namespace WorldTree
 		#region 逻辑与位运算
 
 		/// <summary>
-		/// 按位与 / 逻辑与运算符
+		/// 按位与 
 		/// </summary>
-		public static VarValue operator &(VarValue left, VarValue right)
-		{
-			// 整数类型执行位运算
-			if (left.Type == VarType.Long && right.Type == VarType.Long)
-			{
-				return (VarValue)(left.LongValue & right.LongValue);
-			}
-
-			// 布尔类型执行逻辑与(非短路)
-			if (left.Type == VarType.Bool && right.Type == VarType.Bool)
-			{
-				return (VarValue)(left.BoolValue & right.BoolValue);
-			}
-
-			// 其他类型转为布尔执行逻辑运算
-			return (VarValue)(left.ToBool() & right.ToBool());
-		}
+		public static VarValue operator &(VarValue left, VarValue right) => (VarValue)(left.ToLong() & right.ToLong());
 
 		/// <summary>
-		/// 按位或 / 逻辑或运算符
+		/// 按位或 
 		/// </summary>
-		public static VarValue operator |(VarValue left, VarValue right)
-		{
-			// 整数类型执行位运算
-			if (left.Type == VarType.Long && right.Type == VarType.Long)
-			{
-				return (VarValue)(left.LongValue | right.LongValue);
-			}
+		public static VarValue operator |(VarValue left, VarValue right) => (VarValue)(left.ToLong() | right.ToLong());
 
-			// 布尔类型执行逻辑或(非短路)
-			if (left.Type == VarType.Bool && right.Type == VarType.Bool)
-			{
-				return (VarValue)(left.BoolValue | right.BoolValue);
-			}
-
-			// 其他类型转为布尔执行逻辑运算
-			return (VarValue)(left.ToBool() | right.ToBool());
-		}
 
 		/// <summary>
-		/// 按位异或 / 逻辑异或运算符
+		/// 按位异或 
 		/// </summary>
-		public static VarValue operator ^(VarValue left, VarValue right)
-		{
-			// 整数类型执行位运算
-			if (left.Type == VarType.Long && right.Type == VarType.Long)
-			{
-				return (VarValue)(left.LongValue ^ right.LongValue);
-			}
-
-			// 布尔类型执行逻辑异或
-			if (left.Type == VarType.Bool && right.Type == VarType.Bool)
-			{
-				return (VarValue)(left.BoolValue ^ right.BoolValue);
-			}
-
-			// 其他类型转为布尔执行逻辑运算
-			return (VarValue)(left.ToBool() ^ right.ToBool());
-		}
+		public static VarValue operator ^(VarValue left, VarValue right) => (VarValue)(left.ToLong() ^ right.ToLong());
 
 		/// <summary>
 		/// 按位取反运算符
 		/// </summary>
-		public static VarValue operator ~(VarValue value)
-		{
-			if (value.Type == VarType.Long)
-			{
-				return (VarValue)(~value.LongValue);
-			}
-			else if (value.Type == VarType.Bool)
-			{
-				return (VarValue)(!value.BoolValue);
-			}
+		public static VarValue operator ~(VarValue value) => (VarValue)(~value.ToLong());
 
-			throw new InvalidOperationException($"不能对 {value.Type} 执行按位取反运算");
-		}
 
 		/// <summary>
 		/// 逻辑非运算符
@@ -340,26 +282,14 @@ namespace WorldTree
 		/// <summary>
 		/// 左移位运算符 
 		/// </summary>
-		public static VarValue operator <<(VarValue left, int shift)
-		{
-			if (left.Type == VarType.Long)
-			{
-				return (VarValue)(left.LongValue << shift);
-			}
-			throw new InvalidOperationException($"不能对 {left.Type} 执行左移位运算");
-		}
+		public static VarValue operator <<(VarValue left, int shift) => (VarValue)(left.ToLong() << shift);
+
 
 		/// <summary>
 		/// 右移位运算符 
 		/// </summary>
-		public static VarValue operator >>(VarValue left, int shift)
-		{
-			if (left.Type == VarType.Long)
-			{
-				return (VarValue)(left.LongValue >> shift);
-			}
-			throw new InvalidOperationException($"不能对 {left.Type} 执行右移位运算");
-		}
+		public static VarValue operator >>(VarValue left, int shift) => (VarValue)(left.ToLong() >> shift);
+
 
 		#endregion
 

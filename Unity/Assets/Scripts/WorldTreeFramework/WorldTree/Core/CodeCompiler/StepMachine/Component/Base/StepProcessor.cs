@@ -23,6 +23,11 @@
 		public int PopParam() => Machine.PopParam();
 
 		/// <summary>
+		/// 查看栈顶参数地址
+		/// </summary> 
+		public int PeekParam() => Machine.PeekParam();
+
+		/// <summary>
 		/// 获取参数 
 		/// </summary>
 		public VarValue GetParam(int address) => Machine.GetParam(address);

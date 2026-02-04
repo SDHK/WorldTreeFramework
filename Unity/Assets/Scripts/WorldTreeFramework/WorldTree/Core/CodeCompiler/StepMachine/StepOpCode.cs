@@ -123,6 +123,8 @@
 		PushVar,
 		/// <summary> 弹出到变量 </summary>
 		PopVar,
+		/// <summary> 复制栈顶值 </summary>
+		Dup,
 
 
 		#endregion

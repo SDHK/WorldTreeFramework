@@ -8,6 +8,8 @@
 		public void AddStepProcessorLiteral() => this.AddComponent(out ProcessorLiteral);
 		/// <summary> 压入字面量 </summary>
 		public void PushLiteral(VarValue value) => ProcessorLiteral.AddPushLiteral(value);
+		/// <summary> 复制栈顶值 </summary>
+		public void Dup() => ProcessorLiteral.AddDup();
 	}
 
 	/// <summary>
@@ -42,6 +44,17 @@
 		}
 
 		/// <summary>
+		/// 执行步骤：复制栈顶值 
+		/// </summary>
+		private int ExecuteDup(int address, int pointer)
+		{
+			StepDataLiteral data = dataList[address];
+			VarValue value = GetParam(data.LiteralValue.ToInt());
+			SetParam(data.LiteralAddress, value);
+			return pointer + 1;
+		}
+
+		/// <summary>
 		/// 添加压入字面量步骤 
 		/// </summary>
 		public void AddPushLiteral(VarValue value)
@@ -55,6 +68,19 @@
 			AddStep(new(ExecutePushLiteral, dataList.Count - 1));
 		}
 
+		/// <summary>
+		/// 添加复制栈顶值步骤
+		/// </summary>
+		public void AddDup()
+		{
+			StepDataLiteral data = new()
+			{
+				LiteralValue = PeekParam(),
+				LiteralAddress = PushParam(),
+			};
+			dataList.Add(data);
+			AddStep(new(ExecuteDup, dataList.Count - 1));
+		}
 	}
 
 	public static class StepProcessorLiteralRule
