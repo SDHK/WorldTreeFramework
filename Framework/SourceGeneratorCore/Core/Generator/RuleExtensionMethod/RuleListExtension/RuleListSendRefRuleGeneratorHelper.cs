@@ -25,6 +25,7 @@ namespace WorldTree.SourceGenerator
 */
 "
 );
+			Code.AppendLine("using System.Runtime.CompilerServices;");
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
 			Code.AppendLine("	public static class RuleListSendRefRule");
@@ -41,10 +42,16 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 法则列表通知执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static void SendRef<R{{genericsType}}>(this IRuleList<R> iRuleList, INode node{{genericRefTypeParameter}})
 								where R : ISendRefRule{{genericsTypeAngle}}
 							{
 								RuleList ruleList = (RuleList)iRuleList;
+								if(ruleList.Count == 1)
+								{
+									 ((ISendRefRule{{genericsTypeAngle}})ruleList[0]).Invoke(node{{genericRefParameter}});
+									 return;
+								}
 								for(int i = 0; i < ruleList.Count; i++)
 								{
 									 ((ISendRefRule{{genericsTypeAngle}})ruleList[i]).Invoke(node{{genericRefParameter}});

@@ -25,6 +25,7 @@ namespace WorldTree.SourceGenerator
 */
 "
 );
+			Code.AppendLine("using System.Runtime.CompilerServices;");
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
 			Code.AppendLine("	public static class RuleGroupSendRefRule");
@@ -43,6 +44,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 尝试通知法则集合执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static bool TrySendRef<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericRefTypeParameter}})
 								where R : ISendRefRule{{genericsTypeAngle}}
 							{
@@ -54,6 +56,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 通知法则集合执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static void SendRef<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericRefTypeParameter}})
 								where R : ISendRefRule{{genericsTypeAngle}}
 							{

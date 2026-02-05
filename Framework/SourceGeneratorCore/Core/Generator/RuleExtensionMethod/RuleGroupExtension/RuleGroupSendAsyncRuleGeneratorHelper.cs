@@ -26,6 +26,7 @@ namespace WorldTree.SourceGenerator
 */
 "
 );
+			Code.AppendLine("using System.Runtime.CompilerServices;");
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
 			Code.AppendLine("	public static class RuleGroupSendAsyncRule");
@@ -44,6 +45,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 尝试通知法则集合异步执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static async TreeTask<bool> TrySendAsync<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
@@ -59,6 +61,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 通知法则集合异步执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{

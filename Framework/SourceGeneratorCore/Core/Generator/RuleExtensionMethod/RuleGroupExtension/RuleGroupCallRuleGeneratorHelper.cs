@@ -26,6 +26,7 @@ namespace WorldTree.SourceGenerator
 */
 "
 );
+			Code.AppendLine("using System.Runtime.CompilerServices;");
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
 			Code.AppendLine("	public static class RuleGroupCallRule");
@@ -45,6 +46,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 尝试调用法则集合执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static bool TryCall<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
@@ -60,6 +62,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用法则集合执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static OutT Call<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
@@ -70,6 +73,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 尝试调用法则集合执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static bool TryCalls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
@@ -84,6 +88,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用法则集合执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{

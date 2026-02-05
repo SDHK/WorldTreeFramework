@@ -1,5 +1,4 @@
-﻿using Sirenix.Utilities;
-using System;
+﻿using System;
 
 namespace WorldTree
 {
@@ -75,7 +74,6 @@ namespace WorldTree
 		}
 
 
-
 		/// <summary>
 		/// 添加步骤
 		/// </summary>
@@ -84,14 +82,16 @@ namespace WorldTree
 			StepList.Add(stepData);
 		}
 
-
 		/// <summary>
 		/// 启动
 		/// </summary>
 		public void Run()
 		{
 			//List扩容到最大参数容量
-			ParamList.SetLength(MaxCapacity);
+			for (int i = ParamList.Count; i < MaxCapacity; i++)
+			{
+				ParamList.Add(new VarValue());
+			}
 			Pointer = 0;
 			isRun = true;
 		}

@@ -26,6 +26,7 @@ namespace WorldTree.SourceGenerator
 */
 "
 );
+			Code.AppendLine("using System.Runtime.CompilerServices;");
 			Code.AppendLine("namespace WorldTree");
 			Code.AppendLine("{");
 			Code.AppendLine("	public static class RuleListCallAsyncRule");
@@ -44,10 +45,16 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 法则列表异步调用执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								RuleList ruleList = (RuleList)iRuleList;
+								if(ruleList.Count == 1)
+								{
+									defaultOutT = await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(node{{genericParameter}});
+									return defaultOutT;
+								}
 								for(int i = 0 ; i < ruleList.Count; i++)
 								{
 									defaultOutT = await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(node{{genericParameter}});
@@ -58,10 +65,16 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 法则列表异步调用执行
 							/// </summary>
+							[MethodImpl(MethodImplOptions.AggressiveInlining)]
 							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								RuleList ruleList = (RuleList)iRuleList;
+								if(ruleList.Count == 1)
+								{
+									outTList.Add(await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(node{{genericParameter}}));
+									return outTList;
+								}
 								for(int i = 0 ; i < ruleList.Count; i++)
 								{
 									outTList.Add(await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(node{{genericParameter}}));
