@@ -29,30 +29,3 @@ namespace WorldTree
 		public int Run(int pointer) => Execute.Invoke(Address, pointer);
 	}
 }
-
-
-//namespace WorldTree
-//{
-//	/// <summary>
-//	/// 步骤执行数据
-//	/// <para>纯数据结构，不绑定到特定实例，可序列化和复用</para>
-//	/// </summary>
-//	public struct StepExecuteData
-//	{
-//		/// <summary>
-//		/// 操作码
-//		/// </summary>
-//		public StepOpCode OpCode;
-
-//		/// <summary>
-//		/// 数据地址
-//		/// </summary>
-//		public int DataAddress;
-
-//		public StepExecuteData(StepOpCode opCode, int dataAddress = 0)
-//		{
-//			OpCode = opCode;
-//			DataAddress = dataAddress;
-//		}
-//	}
-//}

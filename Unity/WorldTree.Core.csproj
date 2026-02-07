@@ -57,6 +57,8 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\CycleCronMap.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\CycleCronParser.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\UnmanagedFormatRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValue.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeTokenizer\CodeToken.cs" />
@@ -185,9 +187,11 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeStruct\Fixed.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\QueueCopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeConcurrentQueue.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\IStepCodeGenerator.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\Array1CopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\RuleMulticast\RuleMulticast.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\StepMachine.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParserBinaryOp.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\Math\MathMatrix4x4Float.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Config\ConfigManager.cs" />
@@ -249,6 +253,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\Math\MathTriangle.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\TreePackByteSequence.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\FloatFormatterRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CronTickResolver.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Base\TreeValueBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteSequence\ByteSequence.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeList.cs" />
@@ -283,18 +288,21 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\TreeTaskQueueLock\TreeTaskQueueCompleter.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleMethod\TreeValueBaseRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\Lifecycle\StringLifecycleRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CronBitmap.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\Math\MathInt.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\Sub\ComponentBranch.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\PoolBase\PoolBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Type\TypeInfo.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\DisableRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\KeyValuePairFormatterRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParserUnaryOp.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rattan\Base\IRattan.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\Branch\CoreManagerBranch.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\NodeAddComponentRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorLiteral.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\CodeLoader.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldHeart.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParser.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\Sub\GenericBranch.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\DynamicNodeQueue\ZipperIterator.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rattan\Base\Rattan.cs" />
@@ -310,6 +318,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\DictionaryCopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskVoid.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\CharFormatterRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParserNumber.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Log\ILog.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskSwitchWorld.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\ValueTupleFormatterRule.cs" />
@@ -325,11 +334,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\RuleGroup.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\SbyteFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\GameTimeManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParserNumber.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParserUnaryOp.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\IStepCodeGenerator.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParserBinaryOp.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\WorldTree.Core.asmdef" />

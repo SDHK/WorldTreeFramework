@@ -13,7 +13,6 @@
 			for (int i = 0; i < datas.Count; i++)
 			{
 				StepAssemblyData data = datas[i];
-
 				switch (data.OpCode)
 				{
 					case StepOpCode.None:
