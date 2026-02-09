@@ -22,7 +22,7 @@ namespace WorldTree
 			map.Hours = (uint)hours;
 
 			// 解析星期字段 (1-7, 支持#/L特殊符号)
-			if (!CycleCronExpressionPart.ParseDate(parts[3], false, out map.Days, out map.DayOffset)) return false;
+			if (!CycleCronExpressionPart.ParseDate(parts[3], false, out map.Dates, out map.DateOffset)) return false;
 
 			// 解析星期轮位图 (1-56)
 			if (!CycleCronExpressionPart.Parse(parts[4], 1, 56, out ulong cyclesBitmap)) return false;

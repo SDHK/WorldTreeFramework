@@ -22,7 +22,7 @@
 			map.Hours = (uint)hours;
 
 			// 解析日期字段 (1-31, 支持L/W/LW特殊符号)
-			if (!CycleCronExpressionPart.ParseDate(parts[3], true, out map.Days, out map.DayOffset)) return false;
+			if (!CycleCronExpressionPart.ParseDate(parts[3], true, out map.Dates, out map.DateOffset)) return false;
 
 			// 解析月 (1-12)
 			if (!CycleCronExpressionPart.Parse(parts[4], 1, 12, out ulong months)) return false;

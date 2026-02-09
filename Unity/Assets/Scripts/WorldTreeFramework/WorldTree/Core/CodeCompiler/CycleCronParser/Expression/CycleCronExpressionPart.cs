@@ -31,20 +31,20 @@ namespace WorldTree
 			return bitmap != 0;
 		}
 
-		/// <summary>
-		/// 解析日期/星期字段（支持L/W/#特殊符号）
-		/// 特殊符号只能出现一次，可以和普通值组合
-		/// 例如："1,15,L" ✅  "L,15,W" ❌（两个特殊符号）
-		/// </summary>
-		/// <param name="field">字段字符串（如 "15W", "1,15,L", "5#3"）</param>
-		/// <param name="isDate">true=日期模式(1-31), false=星期模式(1-7)</param>
-		/// <param name="daysBitmap">输出：日期/星期位图</param>
-		/// <param name="dayOffset">输出：特殊符号编码</param>
-		/// <returns>解析是否成功</returns>
-		public static bool ParseDate(string field, bool isDate, out uint daysBitmap, out byte dayOffset)
+	/// <summary>
+	/// 解析日期/星期字段（支持L/W/#特殊符号）
+	/// 特殊符号只能出现一次，可以和普通值组合
+	/// 例如："1,15,L" ✅  "L,15,W" ❌（两个特殊符号）
+	/// </summary>
+	/// <param name="field">字段字符串（如 "15W", "1,15,L", "5#3"）</param>
+	/// <param name="isDate">true=日历日期模式(1-31), false=星期模式(1-7)</param>
+	/// <param name="datesBitmap">输出：日期/星期位图 (对应CycleCronMap.Dates字段)</param>
+	/// <param name="dateOffset">输出：特殊符号编码 (对应CycleCronMap.DateOffset字段)</param>
+	/// <returns>解析是否成功</returns>
+	public static bool ParseDate(string field, bool isDate, out uint datesBitmap, out byte dateOffset)
 		{
-			daysBitmap = 0;
-			dayOffset = 0;
+			datesBitmap = 0;
+			dateOffset = 0;
 			if (string.IsNullOrWhiteSpace(field)) return false;
 
 			int min = 1;
@@ -66,7 +66,7 @@ namespace WorldTree
 					// 如果已经有特殊符号了，返回false（只允许一个特殊符号）
 					if (hasSpecial) return false;
 
-					// 解析特殊符号（只设置 dayOffset，不设置位图）
+					// 解析特殊符号（只设置 dateOffset，不设置位图）
 					byte specialOffset;
 
 					bool success = isDate
@@ -75,7 +75,7 @@ namespace WorldTree
 
 					if (!success) return false;
 
-					dayOffset = specialOffset;
+					dateOffset = specialOffset;
 					hasSpecial = true;
 				}
 				else
@@ -85,23 +85,23 @@ namespace WorldTree
 				}
 			}
 
-			daysBitmap = (uint)bitmap;
+			datesBitmap = (uint)bitmap;
 			return true;
 		}
 
 
 		/// <summary>
 		/// 解析日期特殊符号（L/W/LW）
-		/// 注意：特殊符号不设置位图，只设置 dayOffset 编码
+		/// 注意：特殊符号不设置位图，只设置 dateOffset 编码
 		/// </summary>
-		private static bool ParseDateSpecial(string field, out byte dayOffset)
+		private static bool ParseDateSpecial(string field, out byte dateOffset)
 		{
-			dayOffset = 0;
+			dateOffset = 0;
 
 			// 处理 "LW" - 月末最后一个工作日
 			if (field == "LW" || field == "WL")
 			{
-				dayOffset = 3 << 6; // bit7-6 = 11 (LW)
+				dateOffset = 3 << 6; // bit7-6 = 11 (LW)
 				return true;
 			}
 
@@ -123,18 +123,18 @@ namespace WorldTree
 					}
 				}
 				// bit6=1(L), bit5-0 = offset
-				dayOffset = (byte)(1 << 6 | offset);
+				dateOffset = (byte)(1 << 6 | offset);
 				return true;
 			}
 
 			// 处理 "NW" - N号最近的工作日
 			if (field.EndsWith("W"))
 			{
-				string dayStr = field.Substring(0, field.Length - 1);
-				if (!int.TryParse(dayStr, out int day)) return false;
-				if (day < 1 || day > 31) return false;
-				// bit7=1(W), bit5-0 = day
-				dayOffset = (byte)(2 << 6 | day);
+				string dateStr = field.Substring(0, field.Length - 1);
+				if (!int.TryParse(dateStr, out int date)) return false;
+				if (date < 1 || date > 31) return false;
+				// bit7=1(W), bit5-0 = date
+				dateOffset = (byte)(2 << 6 | date);
 				return true;
 			}
 
@@ -143,37 +143,36 @@ namespace WorldTree
 
 		/// <summary>
 		/// 解析星期特殊符号（L/#）
-		/// 注意：特殊符号不设置位图，只设置 dayOffset 编码
+		/// 注意：特殊符号不设置位图，只设置 dateOffset 编码
 		/// </summary>
-		private static bool ParseWeekSpecial(string field, out byte dayOffset)
+		private static bool ParseWeekSpecial(string field, out byte dateOffset)
 		{
-			dayOffset = 0;
+			dateOffset = 0;
 			// 处理 "N#M" - 第M个星期N
 			if (field.Contains("#"))
 			{
 				string[] parts = field.Split('#');
 				if (parts.Length != 2) return false;
-				if (!int.TryParse(parts[0], out int weekday)) return false;
+				if (!int.TryParse(parts[0], out int weekdate)) return false;
 				if (!int.TryParse(parts[1], out int nth)) return false;
-				if (weekday < 1 || weekday > 7) return false;
+				if (weekdate < 1 || weekdate > 7) return false;
 				// nth必须是1-5，表示第1-5个星期N（第5个表示最后一个星期N）
 				if (nth < 1 || nth > 5) return false;
-				// bit7=1(#), bit6=0, bit5-3=nth, bit2-0=weekday
-				dayOffset = (byte)(2 << 6 | (nth << 3) | weekday);
+				// bit7=1(#), bit6=0, bit5-3=nth, bit2-0=weekdate
+				dateOffset = (byte)(2 << 6 | (nth << 3) | weekdate);
 				return true;
 			}
 
 			// 处理 "NL" - 最后一个星期N
 			if (field.EndsWith("L"))
 			{
-				string weekdayStr = field.Substring(0, field.Length - 1);
-				if (!int.TryParse(weekdayStr, out int weekday)) return false;
-				if (weekday < 1 || weekday > 7) return false;
-				// bit7=0, bit6=1(L), bit5-3=0(未用), bit2-0=weekday
-				dayOffset = (byte)(1 << 6 | (weekday));
+				string weekdateStr = field.Substring(0, field.Length - 1);
+				if (!int.TryParse(weekdateStr, out int weekdate)) return false;
+				if (weekdate < 1 || weekdate > 7) return false;
+				// bit7=0, bit6=1(L), bit5-3=0(未用), bit2-0=weekdate
+				dateOffset = (byte)(1 << 6 | (weekdate));
 				return true;
 			}
-
 			return false;
 		}
 

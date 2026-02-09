@@ -42,9 +42,9 @@ namespace WorldTree
 			map.Cycles = ((ulong)cycleRange << 56) | cyclesBitmap;
 
 			// Day模式下不使用日期、星期、月份字段，设置为全部
-			map.Days = 0xFFFFFFFF;
+			map.Dates = 0xFFFFFFFF;
 			map.Months = 0xFFFF;
-			map.DayOffset = 0;
+			map.DateOffset = 0;
 
 			return true;
 		}
