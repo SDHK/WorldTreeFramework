@@ -1,99 +1,34 @@
-using System;
-
 namespace WorldTree
 {
-
 	/// <summary>
-	/// 周期Cron表达式解析器 
+	/// 周期Cron表达式分段解析
 	/// </summary>
-	public class CycleCronParser
+	public static class CycleCronExpressionPart
 	{
 		/// <summary>
-		/// 尝试解析周期Cron表达式，成功返回true，并输出CronBitmap；失败返回false，输出默认CronBitmap 
+		/// 解析单个字段为位图
 		/// </summary>
-		public static bool TryParse(string cronExpression, CycleCronMap map, CycleCronMode mode = CycleCronMode.DateMonthYear)
+		public static bool Parse(string field, int min, int max, out ulong bitmap)
 		{
-			// 如果是空字符串或仅包含空白字符，则解析失败
-			if (string.IsNullOrWhiteSpace(cronExpression)) return false;
-			// 分割Cron表达式为6个部分,每个部分之间用空格分割。RemoveEmptyEntries是要去掉空字符串。
-			string[] parts = cronExpression.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-			if (parts.Length < 3) return false;
+			bitmap = 0;
 
-			// 解析秒 (0-59)
-			if (!ParseField(parts[0], 0, 59, out map.Seconds)) return false;
+			if (string.IsNullOrWhiteSpace(field)) return false;
 
-			// 解析分 (0-59)
-			if (!ParseField(parts[1], 0, 59, out map.Minutes)) return false;
-
-			// 解析时 (0-23)
-			if (!ParseField(parts[2], 0, 23, out ulong hours)) return false;
-			map.Hours = (uint)hours;
-
-			bool bit = false;
-			switch (mode)
+			// 处理 * 通配符，直接设置所有位
+			if (field == "*")
 			{
-				case CycleCronMode.DateMonthYear:
-					bit = TryParseDateMonthYear(parts, map);
-					break;
-				case CycleCronMode.WeekMonthYear:
-					break;
-				case CycleCronMode.Week:
-					break;
-				case CycleCronMode.Day:
-					break;
-				default:
-					break;
-			}
-			return bit;
-		}
-
-		/// <summary>
-		/// 尝试解析DateMonthYear模式 (模式1)
-		/// 格式：秒 分 时 日期 月份 年轮 轮次范围 (7个字段)
-		/// </summary>
-		public static bool TryParseDateMonthYear(string[] parts, CycleCronMap map)
-		{
-			// 检查字段数量
-			if (parts.Length != 7) return false;
-
-			// 解析秒 (0-59)
-			if (!ParseField(parts[0], 0, 59, out map.Seconds)) return false;
-
-			// 解析分 (0-59)
-			if (!ParseField(parts[1], 0, 59, out map.Minutes)) return false;
-
-			// 解析时 (0-23)
-			if (!ParseField(parts[2], 0, 23, out ulong hours)) return false;
-			map.Hours = (uint)hours;
-
-			// 解析日期字段 (1-31, 支持L/W/LW特殊符号)
-			if (!ParseFieldDay(parts[3], true, out map.Days, out map.DayOffset)) return false;
-
-			// 解析月 (1-12)
-			if (!ParseField(parts[4], 1, 12, out ulong months)) return false;
-			map.Months = (ushort)months;
-
-			// 解析年轮位图 (1-56)
-			if (!ParseField(parts[5], 1, 56, out ulong cyclesBitmap)) return false;
-
-			// 解析周期范围 (1-56, * = 56)
-			byte cycleRange;
-			if (parts[6] == "*")
-			{
-				cycleRange = 56; // * 表示全范围56
-			}
-			else
-			{
-				if (!byte.TryParse(parts[6], out cycleRange)) return false;
-				if (cycleRange < 1 || cycleRange > 56) return false;
+				bitmap = ~0UL;
+				return true;
 			}
 
-			// 组装Cycles字段：
-			// 位63-56: 周期范围 (8位)
-			// 位55-0:  轮次位图 (56位)
-			map.Cycles = ((ulong)cycleRange << 56) | cyclesBitmap;
-
-			return true;
+			// 处理逗号分隔的多个值，复用 ParseFieldSegment
+			string[] segments = field.Split(',');
+			foreach (string segment in segments)
+			{
+				if (string.IsNullOrWhiteSpace(segment)) continue;
+				if (!ParseSegment(segment, min, max, ref bitmap)) return false;
+			}
+			return bitmap != 0;
 		}
 
 		/// <summary>
@@ -106,7 +41,7 @@ namespace WorldTree
 		/// <param name="daysBitmap">输出：日期/星期位图</param>
 		/// <param name="dayOffset">输出：特殊符号编码</param>
 		/// <returns>解析是否成功</returns>
-		private static bool ParseFieldDay(string field, bool isDate, out uint daysBitmap, out byte dayOffset)
+		public static bool ParseDate(string field, bool isDate, out uint daysBitmap, out byte dayOffset)
 		{
 			daysBitmap = 0;
 			dayOffset = 0;
@@ -146,7 +81,7 @@ namespace WorldTree
 				else
 				{
 					// 普通值，复用 ParseFieldSegment
-					if (!ParseFieldSegment(segment, min, max, ref bitmap)) return false;
+					if (!ParseSegment(segment, min, max, ref bitmap)) return false;
 				}
 			}
 
@@ -166,7 +101,7 @@ namespace WorldTree
 			// 处理 "LW" - 月末最后一个工作日
 			if (field == "LW" || field == "WL")
 			{
-				dayOffset = 0x60; // bit7-5 = 011 (LW)
+				dayOffset = 3 << 6; // bit7-6 = 11 (LW)
 				return true;
 			}
 
@@ -187,7 +122,8 @@ namespace WorldTree
 						return false; // 格式错误
 					}
 				}
-				dayOffset = (byte)(0x20 | offset); // bit7-5 = 001 (L), bit4-0 = offset
+				// bit6=1(L), bit5-0 = offset
+				dayOffset = (byte)(1 << 6 | offset);
 				return true;
 			}
 
@@ -197,7 +133,8 @@ namespace WorldTree
 				string dayStr = field.Substring(0, field.Length - 1);
 				if (!int.TryParse(dayStr, out int day)) return false;
 				if (day < 1 || day > 31) return false;
-				dayOffset = (byte)(0x40 | day); // bit7-5 = 010 (W), bit4-0 = day
+				// bit7=1(W), bit5-0 = day
+				dayOffset = (byte)(2 << 6 | day);
 				return true;
 			}
 
@@ -211,7 +148,6 @@ namespace WorldTree
 		private static bool ParseWeekSpecial(string field, out byte dayOffset)
 		{
 			dayOffset = 0;
-
 			// 处理 "N#M" - 第M个星期N
 			if (field.Contains("#"))
 			{
@@ -222,9 +158,8 @@ namespace WorldTree
 				if (weekday < 1 || weekday > 7) return false;
 				// nth必须是1-5，表示第1-5个星期N（第5个表示最后一个星期N）
 				if (nth < 1 || nth > 5) return false;
-
-				// bit7=0, bit6=1(#), bit5-3=weekday, bit2-0=nth
-				dayOffset = (byte)(0x40 | (weekday << 3) | nth);
+				// bit7=1(#), bit6=0, bit5-3=nth, bit2-0=weekday
+				dayOffset = (byte)(2 << 6 | (nth << 3) | weekday);
 				return true;
 			}
 
@@ -234,41 +169,13 @@ namespace WorldTree
 				string weekdayStr = field.Substring(0, field.Length - 1);
 				if (!int.TryParse(weekdayStr, out int weekday)) return false;
 				if (weekday < 1 || weekday > 7) return false;
-
-				// bit7=1(L), bit6=0, bit5-3=weekday, bit2-0=0
-				dayOffset = (byte)(0x80 | (weekday << 3));
+				// bit7=0, bit6=1(L), bit5-3=0(未用), bit2-0=weekday
+				dayOffset = (byte)(1 << 6 | (weekday));
 				return true;
 			}
 
 			return false;
 		}
-
-		/// <summary>
-		/// 解析单个字段为位图
-		/// </summary>
-		private static bool ParseField(string field, int min, int max, out ulong bitmap)
-		{
-			bitmap = 0;
-
-			if (string.IsNullOrWhiteSpace(field)) return false;
-
-			// 处理 * 通配符，直接设置所有位
-			if (field == "*")
-			{
-				bitmap = ~0UL;
-				return true;
-			}
-
-			// 处理逗号分隔的多个值，复用 ParseFieldSegment
-			string[] segments = field.Split(',');
-			foreach (string segment in segments)
-			{
-				if (string.IsNullOrWhiteSpace(segment)) continue;
-				if (!ParseFieldSegment(segment, min, max, ref bitmap)) return false;
-			}
-			return bitmap != 0;
-		}
-
 
 		/// <summary>
 		/// 解析单个segment为位图（处理范围、步长、单值）
@@ -279,7 +186,7 @@ namespace WorldTree
 		/// <param name="max">最大值</param>
 		/// <param name="bitmap">位图引用（会累加结果）</param>
 		/// <returns>解析是否成功</returns>
-		private static bool ParseFieldSegment(string segment, int min, int max, ref ulong bitmap)
+		private static bool ParseSegment(string segment, int min, int max, ref ulong bitmap)
 		{
 			// 处理范围 (例如: 1-5)
 			if (segment.Contains("-"))
