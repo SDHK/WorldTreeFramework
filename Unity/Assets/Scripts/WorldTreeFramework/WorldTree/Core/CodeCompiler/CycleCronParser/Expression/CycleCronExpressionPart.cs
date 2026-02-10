@@ -8,11 +8,10 @@ namespace WorldTree
 		/// <summary>
 		/// 解析单个字段为位图
 		/// </summary>
-		public static bool Parse(string field, int min, int max, out ulong bitmap)
+		public static bool Parse(string[] parts, int index, int min, int max, out ulong bitmap)
 		{
 			bitmap = 0;
-
-			if (string.IsNullOrWhiteSpace(field)) return false;
+			string field = parts.Length > index ? parts[index] : "*";
 
 			// 处理 * 通配符，直接设置所有位
 			if (field == "*")
@@ -31,21 +30,21 @@ namespace WorldTree
 			return bitmap != 0;
 		}
 
-	/// <summary>
-	/// 解析日期/星期字段（支持L/W/#特殊符号）
-	/// 特殊符号只能出现一次，可以和普通值组合
-	/// 例如："1,15,L" ✅  "L,15,W" ❌（两个特殊符号）
-	/// </summary>
-	/// <param name="field">字段字符串（如 "15W", "1,15,L", "5#3"）</param>
-	/// <param name="isDate">true=日历日期模式(1-31), false=星期模式(1-7)</param>
-	/// <param name="datesBitmap">输出：日期/星期位图 (对应CycleCronMap.Dates字段)</param>
-	/// <param name="dateOffset">输出：特殊符号编码 (对应CycleCronMap.DateOffset字段)</param>
-	/// <returns>解析是否成功</returns>
-	public static bool ParseDate(string field, bool isDate, out uint datesBitmap, out byte dateOffset)
+		/// <summary>
+		/// 解析日期/星期字段（支持L/W/#特殊符号）
+		/// 特殊符号只能出现一次，可以和普通值组合
+		/// 例如："1,15,L" ✅  "L,15,W" ❌（两个特殊符号）
+		/// </summary>
+		public static bool ParseDate(string[] parts, int index, bool isDate, out uint datesBitmap, out byte dateOffset)
 		{
 			datesBitmap = 0;
 			dateOffset = 0;
-			if (string.IsNullOrWhiteSpace(field)) return false;
+			string field = parts.Length > index ? parts[index] : "*";
+			if (field == "*")
+			{
+				datesBitmap = ~0U;
+				return true;
+			}
 
 			int min = 1;
 			int max = isDate ? 31 : 7;
@@ -89,6 +88,41 @@ namespace WorldTree
 			return true;
 		}
 
+		/// <summary>
+		/// 解析周期轮字段为位图 (1-56)  
+		/// </summary>
+		public static bool ParseCycle(string[] parts, int index, out ulong bitmap)
+		{
+			bitmap = 0;
+			string field = parts.Length > index ? parts[index] : "*";
+			// 处理 * 通配符，直接设置所有位
+			if (field == "*")
+			{
+				bitmap = ~0UL;
+				return true;
+			}
+			// 处理逗号分隔的多个值，复用 ParseFieldSegment
+			string[] segments = field.Split(',');
+			foreach (string segment in segments)
+			{
+				if (string.IsNullOrWhiteSpace(segment)) continue;
+				if (!ParseSegment(segment, 1, 56, ref bitmap)) return false;
+			}
+			byte cycleRange;
+			string range = parts.Length > index + 1 ? parts[index + 1] : "*";
+
+			if (range == "*")
+			{
+				cycleRange = 56; // * 表示全范围56
+			}
+			else
+			{
+				if (!byte.TryParse(range, out cycleRange)) return false;
+				if (cycleRange < 1 || cycleRange > 56) return false;
+			}
+			bitmap |= (ulong)cycleRange << 56;
+			return bitmap != 0;
+		}
 
 		/// <summary>
 		/// 解析日期特殊符号（L/W/LW）

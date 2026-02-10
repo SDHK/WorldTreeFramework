@@ -10,7 +10,6 @@ namespace WorldTree
 		, ChildOf<INode>
 		, AsRule<Awake>
 	{
-
 		/// <summary>
 		/// 参数寄存器
 		/// </summary>
