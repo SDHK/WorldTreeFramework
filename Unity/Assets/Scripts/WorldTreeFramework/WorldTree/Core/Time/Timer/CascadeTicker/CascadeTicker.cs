@@ -206,7 +206,7 @@ namespace WorldTree
 			}
 
 			//算出槽位位置，AdvanceTick 与 clockTick 的异或后的最高位1所在的位置
-			int slotIndex = MathBit.GetHighestBitIndex(self.advanceTick ^ clockTick);
+			int slotIndex = MathBit.GetHighestBitIndex((ulong)(self.advanceTick ^ clockTick));
 			self.AddChild(out CascadeTickerData tickerData, clockTick, node, ruleList);
 			self.GetOrNewSlot(slotIndex).Add(tickerData);
 			//标记槽位已占用
@@ -244,7 +244,7 @@ namespace WorldTree
 				return;
 			}
 			//获取占用槽位的最低位置
-			var minSlot = MathBit.GetLowestBitIndex(self.OccupiedSlotMask);
+			var minSlot = MathBit.GetLowestBitIndex((ulong)self.OccupiedSlotMask);
 			//如果最低槽位比当前变化大，说明没有要处理的，直接返回。
 			if (minSlot == -1 || (1L << minSlot) > numberDiff)
 			{
@@ -296,7 +296,7 @@ namespace WorldTree
 			//没有变化就直接返回
 			if (numberDiff == 0) return -1;
 			//获取占用槽位的最低位置
-			var minSlot = MathBit.GetLowestBitIndex(self.OccupiedSlotMask);
+			var minSlot = MathBit.GetLowestBitIndex((ulong)self.OccupiedSlotMask);
 			//如果最低槽位比当前变化大，说明没有要处理的，返回一个安全推进值。
 			if ((1L << minSlot) > numberDiff)
 			{
@@ -304,7 +304,7 @@ namespace WorldTree
 			}
 			//如果变化的时序大于已占用槽位，直接遍历所有槽位，否则只遍历本次时序变化内涉及的槽位。
 			var clampDiffSlot = numberDiff > self.OccupiedSlotMask ? self.OccupiedSlotMask : numberDiff;
-			var max = MathBit.GetHighestBitIndex(clampDiffSlot);
+			var max = MathBit.GetHighestBitIndex((ulong)clampDiffSlot);
 			var min = minSlot;
 			//时序推进正序遍历，避免重复处理下移的定序器
 			for (int i = min; i <= max; i++) self.SlotUpdate(i);
@@ -349,7 +349,7 @@ namespace WorldTree
 				else
 				{
 					//重新计算槽位位置
-					int slotIndex = MathBit.GetHighestBitIndex(self.advanceTick ^ tickerData.Tick);
+					int slotIndex = MathBit.GetHighestBitIndex((ulong)(self.advanceTick ^ tickerData.Tick));
 					//槽位未变更则跳过
 					if (slotIndex == i) continue;
 					//移到新的槽位

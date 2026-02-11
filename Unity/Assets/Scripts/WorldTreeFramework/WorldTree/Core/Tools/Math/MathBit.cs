@@ -50,20 +50,20 @@ namespace WorldTree
 		/// 获取最高位1的位置（-1~63），全0的话返回-1
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static int GetHighestBitIndex(long value)
+		public static int GetHighestBitIndex(ulong value)
 		{
 			if (value == 0) return -1;
-			return 63 - LeadingZeroCount((ulong)value);
+			return 63 - LeadingZeroCount(value);
 		}
 
 		/// <summary>
 		/// 获取最低位1的位置（-1~63），全0的话返回-1
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static int GetLowestBitIndex(long value)
+		public static int GetLowestBitIndex(ulong value)
 		{
 			if (value == 0) return -1;
-			return TrailingZeroCount((ulong)value);
+			return TrailingZeroCount(value);
 		}
 
 		/// <summary>

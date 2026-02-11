@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
@@ -57,15 +57,9 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Map\CycleCronMap.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\CycleCronExpression.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\CycleCronExpressionPart.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\Mode\CronModeDateMonthYear.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\Mode\CronModeDay.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\Mode\CronModeWeek.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\Mode\CronModeWeekMonthYear.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Map\CycleCronMode.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\UnmanagedFormatRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Matcher\Mode\CycleCronMatcherWeek.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\CycleCronExample.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValue.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CodeTokenizer\CodeToken.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ArrayPool\ArrayPoolGroup.cs" />
@@ -84,6 +78,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Builder\TreeTaskVoidMethodBuilder.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\PoolBase\PoolManagerBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeStruct\Vector2Float.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Map\CycleCronMap.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\NodePool\NodePool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\File\PathHelper.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\RuleMethod\NodeBranchHelper.cs" />
@@ -101,6 +96,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\TreeTaskToken.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\Lifecycle\GenericsLifecycleRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\Timer\TimerCycle.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\Mode\CronModeDay.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\TupleFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\ListenerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\Base\IRuleExecutor.cs" />
@@ -125,6 +121,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\ListenerRuleExecutor\ListenerRuleExecutor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskCompleted.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\VarValue\VarValue.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\Mode\CronModeWeek.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreGetArrayRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeDomainRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\Math\TileTool.cs" />
@@ -156,6 +153,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\ReferencedPool\ReferencedPoolManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\ByteFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\VarValue\VarValueCheckType.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\CycleCronExpressionPart.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldLine\World.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\ShortFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\TimeHelper.cs" />
@@ -163,6 +161,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Node\RuleMethod\NodeRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Config\Config.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\RuleMethod\NodeBranchExtension.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Matcher\Mode\CycleCronMatcherDateMonthYear.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\Base\RuleExecutor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeStruct\NodeRuleRef.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rattan\RuleMethod\NodeRattanExtension.cs" />
@@ -205,6 +204,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Assembler\StepAssemblyData.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldContext\WorldContextRequest.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreGetUnitRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\CycleCronExpression.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\DictionaryFormatRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteSequence\ValueTypeCode.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Special\StackFormatterRule.cs" />
@@ -235,14 +235,17 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\Timer\TimeDomain.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\Sub\ChildBranch.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeObject\TreeStack.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Matcher\Mode\CycleCronMatcherWeekMonthYear.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\GenericPool\GenericPool.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteSequence\IByteSequence.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\RuleMethod\WorldTreeCoreGetNodeRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\ByteSequence\ByteSequenceDynamicValueRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\Timer\CascadeTicker\CascadeTicker.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\GraftRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Matcher\CycleCronMatcher.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\Array3CopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorEvent.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\Mode\CronModeDateMonthYear.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Tools\Math\MathBit.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\Base\RuleListExecutor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeStruct\QuaternionFloat.cs" />
@@ -306,6 +309,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\Branch\CoreManagerBranch.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBaseLifecycle\NodeAddComponentRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMachine\Component\StepProcessorLiteral.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\Mode\CronModeWeekMonthYear.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\CodeLoader.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldHeart.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParser.cs" />
@@ -320,12 +324,14 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\Unit\UnitList.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\Rule\RuleHandler\ValueChangeRuleEvent\GenericsValueChangeRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\ICollectionSpecialCopyRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Matcher\Mode\CycleCronMatcherDay.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Kcp\Segment.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeCopy\CopyRule\Special\DictionaryCopyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskVoid.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\CharFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\StepMathParser\StepMathParserNumber.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Log\ILog.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Map\CycleCronMode.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\TreeTask\Task\TreeTaskSwitchWorld.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\ValueTupleFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectPool\UnitPool\Unit\Base\Unit.cs" />
