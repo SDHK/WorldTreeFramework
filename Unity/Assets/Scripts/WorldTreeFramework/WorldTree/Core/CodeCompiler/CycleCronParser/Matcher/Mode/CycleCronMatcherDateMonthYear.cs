@@ -4,24 +4,21 @@ namespace WorldTree
 {
 	public static partial class CycleCronMatcher
 	{
+
+
 		/// <summary>
-		/// 匹配 DateMonthYear 模式 (模式1)
-		/// 格式：秒 分 时 日期 月份 年轮 轮次范围
+		/// 获取当前时间与Cron位图的差异位
 		/// </summary>
-		private static bool MatchDateMonthYear(DateTime time, CycleCronMap map)
+		private static int MatchDateMonthYear(DateTime time, DateTime startTime, CycleCronMap map)
 		{
-			// 匹配月份
-			if ((map.Months & (1U << time.Month)) == 0)
-				return false;
-
-			// 匹配日期（需要考虑特殊符号）
-			if (!MatchDate(time, map))
-				return false;
-
-			// TODO: 匹配年轮和轮次
-			// 需要基准时间来计算轮次
-			// 暂时简化处理：匹配所有年份
-			return true;
+			int timeDiff = 0;
+			if (((map.Seconds >> time.Second) & 1) == 0) timeDiff = 1;
+			if (((map.Minutes >> time.Minute) & 1) == 0) timeDiff = 3;
+			if (((map.Hours >> time.Hour) & 1) == 0) timeDiff = 7;
+			if (!MatchDate(time, map)) timeDiff = 15;
+			if (((map.Months >> time.Month) & 1) == 0) timeDiff = 31;
+			if (((map.Cycles >> (time.Year - startTime.Year)) & 1) == 0) timeDiff = 63;
+			return timeDiff;
 		}
 
 		/// <summary>
@@ -30,13 +27,9 @@ namespace WorldTree
 		private static bool MatchDate(DateTime time, CycleCronMap map)
 		{
 			// 如果有特殊符号
-			if (map.DateOffset != 0)
-			{
-				return MatchDateSpecial(time, map.DateOffset);
-			}
-
+			if (map.DateOffset != 0)return MatchDateSpecial(time, map.DateOffset);
 			// 普通日期匹配
-			return (map.Dates & (1U << time.Day)) != 0;
+			return (map.Dates>> time.Day & 1) != 0;
 		}
 
 		/// <summary>
@@ -68,9 +61,7 @@ namespace WorldTree
 		/// </summary>
 		private static bool MatchLastDayOfMonth(DateTime time, int offset)
 		{
-			int daysInMonth = DateTime.DaysInMonth(time.Year, time.Month);
-			int targetDay = daysInMonth - offset;
-			return time.Day == targetDay;
+			return time.Day == DateTime.DaysInMonth(time.Year, time.Month) - offset;
 		}
 
 		/// <summary>
@@ -78,41 +69,29 @@ namespace WorldTree
 		/// </summary>
 		private static bool MatchNearestWeekday(DateTime time, int targetDay)
 		{
-			// 检查目标日期
-			DateTime target = new DateTime(time.Year, time.Month, Math.Min(targetDay, DateTime.DaysInMonth(time.Year, time.Month)));
-			DayOfWeek targetDayOfWeek = target.DayOfWeek;
+			int daysInMonth = DateTime.DaysInMonth(time.Year, time.Month);
+			// 限制目标日期在当月范围内
+			if (targetDay > daysInMonth)targetDay = daysInMonth;
 
-			// 如果目标日期是工作日
-			if (targetDayOfWeek != DayOfWeek.Saturday && targetDayOfWeek != DayOfWeek.Sunday)
+			// 计算目标日期的星期几(蔡勒公式或直接用 DateTime)
+			DayOfWeek targetDayOfWeek = new DateTime(time.Year, time.Month, targetDay).DayOfWeek;
+			int actualDay; // 实际触发的日期
+			if (targetDayOfWeek == DayOfWeek.Sunday) 
 			{
-				return time.Day == target.Day;
+				// 周日 → 优先取周一(+1),如果周一超出当月则取周五(-2)
+				actualDay = (targetDay + 1 <= daysInMonth) ? targetDay + 1 : targetDay - 2;
 			}
-
-			// 如果是周六，取周五
-			if (targetDayOfWeek == DayOfWeek.Saturday)
+			else if (targetDayOfWeek == DayOfWeek.Saturday) 
 			{
-				DateTime friday = target.AddDays(-1);
-				// 如果周五在上个月，取周一
-				if (friday.Month != target.Month)
-				{
-					return time.Day == target.AddDays(2).Day;
-				}
-				return time.Day == friday.Day;
+				// 周六 → 优先取周五(-1),如果周五小于1则取周一(+2)
+				actualDay = (targetDay - 1 >= 1) ? targetDay - 1 : targetDay + 2;
 			}
-
-			// 如果是周日，取周一
-			if (targetDayOfWeek == DayOfWeek.Sunday)
+			else
 			{
-				DateTime monday = target.AddDays(1);
-				// 如果周一在下个月，取周五
-				if (monday.Month != target.Month)
-				{
-					return time.Day == target.AddDays(-2).Day;
-				}
-				return time.Day == monday.Day;
+				// 工作日 → 不偏移
+				actualDay = targetDay;
 			}
-
-			return false;
+			return time.Day == actualDay;
 		}
 
 		/// <summary>
@@ -121,15 +100,14 @@ namespace WorldTree
 		private static bool MatchLastWeekdayOfMonth(DateTime time)
 		{
 			int daysInMonth = DateTime.DaysInMonth(time.Year, time.Month);
-			DateTime lastDay = new DateTime(time.Year, time.Month, daysInMonth);
+			DayOfWeek lastDayOfWeek = new DateTime(time.Year, time.Month, daysInMonth).DayOfWeek;
 
-			// 从月末往前找第一个工作日
-			while (lastDay.DayOfWeek == DayOfWeek.Saturday || lastDay.DayOfWeek == DayOfWeek.Sunday)
-			{
-				lastDay = lastDay.AddDays(-1);
-			}
+			// 计算需要往前偏移的天数
+			int offset = lastDayOfWeek == DayOfWeek.Saturday ? 1   // 周六 → 往前1天到周五
+					   : lastDayOfWeek == DayOfWeek.Sunday ? 2     // 周日 → 往前2天到周五
+					   : 0;                                         // 工作日 → 不偏移
 
-			return time.Day == lastDay.Day;
+			return time.Day == daysInMonth - offset;
 		}
 	}
 }
