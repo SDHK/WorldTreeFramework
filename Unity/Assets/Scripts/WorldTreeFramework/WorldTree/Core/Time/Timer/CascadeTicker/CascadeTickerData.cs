@@ -21,11 +21,6 @@ namespace WorldTree
 		public long Tick;
 
 		/// <summary>
-		/// 循环时序 
-		/// </summary>
-		public long LoopTick;
-
-		/// <summary>
 		/// 执行节点 
 		/// </summary>
 		public NodeRef<INode> Node;
