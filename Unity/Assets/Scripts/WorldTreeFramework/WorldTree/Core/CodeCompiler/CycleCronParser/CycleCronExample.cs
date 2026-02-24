@@ -20,7 +20,7 @@ namespace WorldTree
 			{
 				// 检查当前时间是否匹配
 				DateTime now = DateTime.Now;
-				bool isMatch = CycleCronMatcher.IsMatch(now, map);
+				//bool isMatch = CycleCronMatcher.IsMatch(now, map);
 				
 				Console.WriteLine($"当前时间 {now} 是否匹配: {isMatch}");
 
@@ -46,10 +46,10 @@ namespace WorldTree
 				DateTime now = DateTime.Now;
 				
 				// 检查匹配
-				if (CycleCronMatcher.IsMatch(now, map))
-				{
-					Console.WriteLine("现在是1号或15号的9点！");
-				}
+				//if (CycleCronMatcher.IsMatch(now, map))
+				//{
+				//	Console.WriteLine("现在是1号或15号的9点！");
+				//}
 
 				// 获取未来10次触发时间
 				DateTime current = now;

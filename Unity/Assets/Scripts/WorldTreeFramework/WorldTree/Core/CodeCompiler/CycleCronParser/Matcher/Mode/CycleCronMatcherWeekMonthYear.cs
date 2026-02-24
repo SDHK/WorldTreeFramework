@@ -5,40 +5,23 @@ namespace WorldTree
 	public static partial class CycleCronMatcher
 	{
 		/// <summary>
-		/// 匹配 WeekMonthYear 模式 (模式2)
-		/// 格式：秒 分 时 星期 月份 年轮 轮次范围
+		/// 获取下一个触发时间 (周月年模式)
 		/// </summary>
-		private static int MatchWeekMonthYear(DateTime time, DateTime startTime, CycleCronMap map)
+		private static DateTime GetNextWeekMonthYear(DateTime from, DateTime startTime, CycleCronMap map)
 		{
-			int timeDiff = 0;
-			if (((map.Seconds >> time.Second) & 1) == 0) timeDiff = 1;
-			if (((map.Minutes >> time.Minute) & 1) == 0) timeDiff = 3;
-			if (((map.Hours >> time.Hour) & 1) == 0) timeDiff = 7;
-			if (MatchWeekday(time, map)) timeDiff = 15;
-			if (((map.Months >> time.Month) & 1) == 0) timeDiff = 31;
-			if (((map.Cycles >> (time.Year - startTime.Year)) & 1) == 0) timeDiff = 63;
-			return timeDiff;
-		}
-
-		/// <summary>
-		/// 获取下一个触发时间
-		/// </summary>
-		private static DateTime GetNext(DateTime from, DateTime startTime, CycleCronMap map)
-		{
-
 			// 从下一秒开始计算
 			DateTime current = from.AddSeconds(1);
 			int nextSecond;
 			int nextMinute;
 			int nextHour;
 			int nextDay;
-			int nextMonth ;
+			int nextMonth;
 			int nextYear;
-			int mod = MatchWeekMonthYear(current, startTime, map);
-			switch (mod)
+			int mask = MaskWeekMonthYear(current, startTime, map);
+			switch (mask)
 			{
 				case 1: // 秒不匹配
-					ulong secondMask = ~0UL << current.Second; // 屏蔽当前秒之前的位
+					ulong secondMask = ~0UL << current.Second; // 屏蔽当前秒之前的位，未完
 					ulong maskedSeconds = map.Seconds & secondMask;
 					nextSecond = MathBit.GetLowestBitIndex(maskedSeconds);
 					return new DateTime(current.Year, current.Month, current.Day, current.Hour, current.Minute, nextSecond);
@@ -76,6 +59,7 @@ namespace WorldTree
 				case 63: // 年轮不匹配
 					ulong cycleMask = ~0UL << (current.Year - startTime.Year);
 					ulong maskedCycles = map.Cycles & cycleMask;
+					if (maskedCycles == 0) maskedCycles = map.Cycles;
 					nextYear = MathBit.GetLowestBitIndex(maskedCycles) + startTime.Year;
 					nextMonth = MathBit.GetLowestBitIndex(map.Months);
 					nextDay = MathBit.GetLowestBitIndex(ComputeMonthWeekdayBitmap(nextYear, nextMonth, map));
@@ -90,6 +74,25 @@ namespace WorldTree
 		}
 
 		#region 匹配判断
+
+		/// <summary>
+		/// 匹配标记 WeekMonthYear 模式 (模式2)
+		/// 格式：秒 分 时 星期 月份 年轮 轮次范围
+		/// </summary>
+		private static int MaskWeekMonthYear(DateTime time, DateTime startTime, CycleCronMap map)
+		{
+			int timeDiff = 0;
+			int dayMap = (int)ComputeMonthWeekdayBitmap(time.Year, time.Month, map);
+			if (((map.Seconds >> time.Second) & 1) == 0) timeDiff = 1;
+			if (((map.Minutes >> time.Minute) & 1) == 0 || ((map.Seconds >> time.Second + 1) == 0 && timeDiff == 1)) timeDiff = 3;
+			if (((map.Hours >> time.Hour) & 1) == 0 || ((map.Minutes >> time.Minute + 1) == 0 && timeDiff == 3)) timeDiff = 7;
+			if (((dayMap >> time.Day) & 1) == 0 || ((map.Hours >> time.Hour + 1) == 0 && timeDiff == 7)) timeDiff = 15;
+			if (((map.Months >> time.Month) & 1) == 0 || ((dayMap >> time.Day + 1) == 0 && timeDiff == 15)) timeDiff = 31;
+			if (((map.Cycles >> (time.Year - startTime.Year)) & 1) == 0 || ((map.Months >> time.Month + 1) == 0 && timeDiff == 31)) timeDiff = 63;
+			return timeDiff;
+		}
+
+		#region 星期
 
 		/// <summary>
 		/// 匹配星期字段（支持#/L特殊符号）
@@ -169,9 +172,12 @@ namespace WorldTree
 
 			return weekCount == nth;
 		}
+
 		#endregion
 
-		#region 星期转换日期
+		#endregion
+
+		#region 动态计算日期
 
 		/// <summary>
 		/// 计算指定年月的实际星期日期位图
