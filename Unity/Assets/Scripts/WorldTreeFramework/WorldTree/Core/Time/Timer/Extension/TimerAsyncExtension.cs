@@ -6,6 +6,9 @@
 * 描述：
 
 */
+using Codice.Client.Common;
+using System;
+
 namespace WorldTree
 {
 	/// <summary>
@@ -16,21 +19,14 @@ namespace WorldTree
 		/// <summary>
 		/// 异步延迟帧
 		/// </summary>
-		public static async TreeTask AsyncYield(this INode self, int count = 0)
+		public static async TreeTask AsyncYield(this INode self, int delayFrame = 0)
 		{
-			self.AddTemp(out CounterCall counter, count);
 			TreeTask asyncTask = self.AddTemp(out TreeTask _);
-
-			//令牌是否为空,不为空则将组件挂入令牌
-			if (await self.TreeTaskTokenCatch() is TreeTaskToken taskToken)
-			{
-				taskToken.TokenEvent.Add(counter);
-			}
-
-			//组件的任务完成回调注册
-			counter.Callback.Add(asyncTask, default(TreeTaskSetResuIt));
-
-			//等待异步执行
+			// 捕获令牌
+			var token = await self.TreeTaskTokenCatch();
+			// 添加定帧器
+			self.Core.GameTimeManager.AddFramerDelay<TreeTaskSetResuIt>(delayFrame, asyncTask, token);
+			// 等待异步执行
 			await asyncTask;
 		}
 
@@ -38,18 +34,14 @@ namespace WorldTree
 		/// <summary>
 		/// 异步延迟秒
 		/// </summary>
-		public static async TreeTask AsyncDelay(this INode self, float time)
+		public static async TreeTask AsyncDelay(this INode self, TimeSpan time)
 		{
-			self.AddTemp(out TimerCall counter, time);
 			TreeTask asyncTask = self.AddTemp(out TreeTask _);
-			//令牌是否为空,不为空则将组件挂入令牌
-			if (await self.TreeTaskTokenCatch() is TreeTaskToken taskToken)
-			{
-				taskToken.TokenEvent.Add(counter);
-			}
-			//组件的任务完成回调注册
-			counter.Callback.Add(asyncTask, default(TreeTaskSetResuIt));
-			//等待异步执行
+			// 捕获令牌
+			var token = await self.TreeTaskTokenCatch();
+			// 添加定时器
+			self.Core.RealTimeManager.AddTimerDelay<TreeTaskSetResuIt>(time.Ticks, asyncTask, token);
+			// 等待异步执行
 			await asyncTask;
 		}
 	}

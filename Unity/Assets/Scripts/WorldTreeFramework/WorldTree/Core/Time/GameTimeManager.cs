@@ -97,5 +97,23 @@ namespace WorldTree
 				self.Framer.Update(self.TotalFrames);
 			}
 		}
+
+		/// <summary>
+		/// 添加定帧器 
+		/// </summary>
+		public static long AddFramer<R>(this GameTimeManager self, long frame, INode node, TreeTaskToken token = null)
+			where R : ISendRule
+		{
+			return self.Framer.AddTicker<R>(frame, node, token);
+		}
+
+		/// <summary>
+		/// 添加定时器 
+		/// </summary>
+		public static long AddFramerDelay<R>(this GameTimeManager self, long delayFrame, INode node, TreeTaskToken token = null)
+			where R : ISendRule
+		{
+			return self.Framer.AddTicker<R>(self.TotalFrames + delayFrame, node, token);
+		}
 	}
 }

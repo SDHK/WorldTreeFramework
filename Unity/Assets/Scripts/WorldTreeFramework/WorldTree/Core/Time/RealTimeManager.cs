@@ -30,14 +30,9 @@ namespace WorldTree
 		private readonly object lockObject = new object();
 
 		/// <summary>
-		/// Utc定时器 （主要定时器：游戏时间相关功能）
+		/// Utc定时器
 		/// </summary>
 		public CascadeTicker Timer;
-
-		/// <summary>
-		/// 时区定时器（特殊场景：单机本地时间相关功能）
-		/// </summary>
-		public CascadeTicker ZoneTimer;
 
 		/// <summary>
 		/// NTP服务器地址列表
@@ -395,7 +390,6 @@ namespace WorldTree
 				self.DateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 				self.UtcDateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 				self.AddChild(out self.Timer);
-				self.AddChild(out self.ZoneTimer);
 			}
 		}
 
@@ -405,7 +399,6 @@ namespace WorldTree
 			{
 				self.GetUtcNow();
 				self.Timer.Update(self.UtcNow.Ticks);
-				self.ZoneTimer.Update(self.Now.Ticks);
 			}
 		}
 
@@ -481,6 +474,24 @@ namespace WorldTree
 		public static bool CheckTimeoutByDays(this RealTimeManager self, long startTicks, int days)
 		{
 			return TimeHelper.GetTimeSpanDays(startTicks, self.UtcNow.Ticks) > days;
+		}
+
+		/// <summary>
+		/// 添加一个定时器  
+		/// </summary>
+		public static long AddTimer<R>(this RealTimeManager self, long clockTick, INode node, TreeTaskToken token = null)
+			where R : ISendRule
+		{
+			return self.Timer.AddTicker<R>(clockTick, node, token);
+		}
+
+		/// <summary>
+		/// 添加一个定时器，延迟delayTicks后触发 
+		/// </summary>
+		public static long AddTimerDelay<R>(this RealTimeManager self, long delayTicks, INode node, TreeTaskToken token = null)
+			where R : ISendRule
+		{
+			return self.Timer.AddTicker<R>(self.UtcNow.Ticks + delayTicks, node, token);
 		}
 
 		#endregion

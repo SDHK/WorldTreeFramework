@@ -6,6 +6,7 @@
 * 描述：
 
 */
+using System;
 using UnityEngine;
 
 namespace WorldTree
@@ -58,12 +59,12 @@ namespace WorldTree
 			while (taskTokenCatch.State != TokenState.Cancel)
 			{
 				await self.TestB();
-				await self.AsyncDelay(6);
+				await self.AsyncDelay(TimeSpan.FromSeconds(1));
 
 				if (taskTokenCatch.State == TokenState.Cancel) return;
 
 				await self.TaskC();
-				await self.AsyncDelay(6);
+				await self.AsyncDelay(TimeSpan.FromSeconds(6));
 
 				if (taskTokenCatch.State == TokenState.Cancel) return;
 				await self.TaskD();

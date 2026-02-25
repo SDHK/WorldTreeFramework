@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2025/11/19 15:59
 
-* 描述： 级联定序器槽位
+* 描述： 级联定时器槽位
 
 */
 namespace WorldTree
@@ -16,7 +16,7 @@ namespace WorldTree
 		, AsRule<Awake>
 	{
 		/// <summary>
-		/// 定序器迭代器
+		/// 定时器迭代器
 		/// </summary>
 		public IteratorNodeRef<CascadeTickerData> TickIterator;
 	}
@@ -32,7 +32,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 添加定序器数据 
+		/// 添加定时器数据 
 		/// </summary>
 		public static void Add(this CascadeTickerSlot self, CascadeTickerData data)
 		{

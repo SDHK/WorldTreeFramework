@@ -3,9 +3,9 @@
 * 作者： 闪电黑客
 * 日期： 2025/11/19 15:59
 
-* 描述： 级联定序器
+* 描述： 级联定时器
 * 
-* 在级联定序器中，时间是以一个递增的long来表示的。
+* 在级联定时器中，时间是以一个递增的long来表示的。
 * 默认会自动根据Update频率适应精度。
 * 而 Precision 可以用来限制每次追赶的最小单位。
 * 
@@ -56,7 +56,7 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 级联定序器
+	/// 级联定时器
 	/// </summary>
 	public class CascadeTicker : Node
 		, ChildOf<RealTimeManager>
@@ -146,10 +146,7 @@ namespace WorldTree
 			{
 				// 计算新的容量（按2的幂次扩容）
 				int newCapacity = self.Slots.Length;
-				while (newCapacity <= index)
-				{
-					newCapacity *= 2;
-				}
+				while (newCapacity <= index) newCapacity *= 2;
 
 				// 扩容数组
 				var newSlots = self.Core.PoolGetArray<CascadeTickerSlot>(newCapacity);
@@ -186,9 +183,18 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 添加定序器 
+		/// 添加定时 
 		/// </summary>
-		public static long AddTicker(this CascadeTicker self, long clockTick, INode node, long ruleType)
+		public static long AddTicker<R>(this CascadeTicker self, long clockTick, INode node, TreeTaskToken token = null)
+			where R : ISendRule
+		{
+			return self.AddTicker(self.CurrentTick, node, self.TypeToCode<R>(), token);
+		}
+
+		/// <summary>
+		/// 添加定时 
+		/// </summary>
+		public static long AddTicker(this CascadeTicker self, long clockTick, INode node, long ruleType, TreeTaskToken token = null)
 		{
 			if (!self.Core.RuleManager.TryGetRuleList(node.Id, ruleType, out var ruleList)) return -1;
 
@@ -211,11 +217,12 @@ namespace WorldTree
 			self.GetOrNewSlot(slotIndex).Add(tickerData);
 			//标记槽位已占用
 			self.OccupiedSlotMask |= 1L << slotIndex;
+			token?.TokenEvent.Add(tickerData);
 			return tickerData.Id;
 		}
 
 		/// <summary>
-		/// 移除定序器 
+		/// 移除定时
 		/// </summary>
 		public static void RemoveTicker(this CascadeTicker self, long tickerId) => self.RemoveChild(tickerId);
 
@@ -306,7 +313,7 @@ namespace WorldTree
 			var clampDiffSlot = numberDiff > self.OccupiedSlotMask ? self.OccupiedSlotMask : numberDiff;
 			var max = MathBit.GetHighestBitIndex((ulong)clampDiffSlot);
 			var min = minSlot;
-			//时序推进正序遍历，避免重复处理下移的定序器
+			//时序推进正序遍历，避免重复处理下移的定时器
 			for (int i = min; i <= max; i++) self.SlotUpdate(i);
 			//执行, 然后清空执行器
 			self.RuleMulticast.Send();
@@ -323,20 +330,20 @@ namespace WorldTree
 			if ((self.OccupiedSlotMask & (1L << i)) == 0) return;
 			var slot = self.GetOrNewSlot(i);
 
-			//遍历槽位内的定序器
+			//遍历槽位内的定时器
 			slot.TickIterator.RefreshTraversalCount();
 			for (int j = 0; j < slot.TickIterator.TraversalCount; j++)
 			{
 				if (!slot.TickIterator.TryGetNext(out var nodeRef)) continue;
 				var tickerData = nodeRef.Value;
-				//移除空定序器
+				//移除空定时器
 				if (tickerData == null || tickerData.IsNull)
 				{
 					slot.TickIterator.DequeueCurrent();
 					tickerData?.Dispose();
 					continue;
 				}
-				//时序到达，执行定序器
+				//时序到达，执行定时器
 				if (self.advanceTick >= tickerData.Tick)
 				{
 					//添加到执行器

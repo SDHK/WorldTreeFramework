@@ -6,6 +6,7 @@
 * 描述：
 
 */
+using System;
 using System.Threading.Tasks;
 using WorldTree.Internal;
 
@@ -105,7 +106,7 @@ namespace WorldTree
 				await self.TreeTaskCompleted();
 			}
 
-			await self.AsyncDelay(timeOut);
+			await self.AsyncDelay(TimeSpan.FromSeconds(timeOut));
 
 			if (self.State == TokenState.Cancel) return;
 
@@ -113,7 +114,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 超时任务
+		/// 超时任务 （秒）
 		/// </summary>
 
 		public static async TreeTask TimeOut(this TreeTask self, float timeOut)
@@ -124,7 +125,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 超时任务
+		/// 超时任务 （秒）
 		/// </summary>
 		public static async TreeTask<T> TimeOut<T>(this TreeTask<T> self, float timeOut)
 		{
