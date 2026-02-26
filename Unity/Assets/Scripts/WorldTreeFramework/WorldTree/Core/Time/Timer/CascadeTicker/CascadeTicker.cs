@@ -67,12 +67,12 @@ namespace WorldTree
 		/// <summary>
 		/// 上次时序  
 		/// </summary>
-		public long LastTick;
+		public long lastTick;
 
 		/// <summary>
 		/// 当前时序
 		/// </summary>
-		public long CurrentTick;
+		public long currentTick;
 
 		/// <summary>
 		/// 推进时序(内部) 
@@ -97,19 +97,18 @@ namespace WorldTree
 		/// <summary>
 		/// 已占用槽位掩码 
 		/// </summary>
-		public long OccupiedSlotMask;
+		public long occupiedSlotMask;
 
 		/// <summary>
 		/// 槽位数组 
 		/// </summary>
-		public CascadeTickerSlot[] Slots;
+		public CascadeTickerSlot[] slots;
 
 		/// <summary>
 		/// 执行器 
 		/// </summary>
-		public RuleMulticast<ISendRule> RuleMulticast;
+		public RuleMulticast<ISendRule> ruleMulticast;
 	}
-
 
 	public static class CascadeTickerRule
 	{
@@ -117,23 +116,23 @@ namespace WorldTree
 		{
 			protected override void Execute(CascadeTicker self)
 			{
-				self.Core.PoolGetArray(out self.Slots, 2);
-				self.AddChild(out self.RuleMulticast);
+				self.Core.PoolGetArray(out self.slots, 2);
+				self.AddChild(out self.ruleMulticast);
 			}
 		}
 		class RemoveRule : RemoveRule<CascadeTicker>
 		{
 			protected override void Execute(CascadeTicker self)
 			{
-				self.Core.PoolRecycle(self.Slots, true);
-				self.LastTick = 0;
-				self.CurrentTick = 0;
+				self.Core.PoolRecycle(self.slots, true);
+				self.lastTick = 0;
+				self.currentTick = 0;
 				self.advanceTick = 0;
 				self.precisionMask = 0;
 				self.minTick = long.MaxValue;
-				self.OccupiedSlotMask = 0;
-				self.Slots = null;
-				self.RuleMulticast = null;
+				self.occupiedSlotMask = 0;
+				self.slots = null;
+				self.ruleMulticast = null;
 			}
 		}
 
@@ -142,19 +141,19 @@ namespace WorldTree
 		/// </summary>
 		private static void EnsureSlotsCapacity(this CascadeTicker self, int index)
 		{
-			if (index >= self.Slots.Length)
+			if (index >= self.slots.Length)
 			{
 				// 计算新的容量（按2的幂次扩容）
-				int newCapacity = self.Slots.Length;
+				int newCapacity = self.slots.Length;
 				while (newCapacity <= index) newCapacity *= 2;
 
 				// 扩容数组
 				var newSlots = self.Core.PoolGetArray<CascadeTickerSlot>(newCapacity);
 
 				// 复制旧数据
-				Array.Copy(self.Slots, 0, newSlots, 0, self.Slots.Length);
-				self.Core.PoolRecycle(self.Slots, true);
-				self.Slots = newSlots;
+				Array.Copy(self.slots, 0, newSlots, 0, self.slots.Length);
+				self.Core.PoolRecycle(self.slots, true);
+				self.slots = newSlots;
 			}
 		}
 
@@ -166,7 +165,7 @@ namespace WorldTree
 			// 防御性检查：理论上不应该出现负数，但为了安全起见
 			if (slotIndex < 0) slotIndex = 0;
 			self.EnsureSlotsCapacity(slotIndex);
-			return self.Slots[slotIndex] ??= self.AddChild(out CascadeTickerSlot slot);
+			return self.slots[slotIndex] ??= self.AddChild(out CascadeTickerSlot slot);
 		}
 
 		/// <summary>
@@ -201,7 +200,7 @@ namespace WorldTree
 			//大小比较，过时了就直接执行
 			if (self.advanceTick >= clockTick)
 			{
-				self.RuleMulticast.TryAdd(node, ruleList);
+				self.ruleMulticast.TryAdd(node, ruleList);
 				return -1;
 			}
 
@@ -217,7 +216,7 @@ namespace WorldTree
 			self.AddChild(out CascadeTickerData tickerData, clockTick, node, ruleList);
 			self.GetOrNewSlot(slotIndex).Add(tickerData);
 			//标记槽位已占用
-			self.OccupiedSlotMask |= 1L << slotIndex;
+			self.occupiedSlotMask |= 1L << slotIndex;
 			token?.Add(tickerData);
 			return tickerData.Id;
 		}
@@ -232,38 +231,38 @@ namespace WorldTree
 		/// </summary>
 		public static void Update(this CascadeTicker self, long currentTick)
 		{
-			self.CurrentTick = currentTick;
+			self.currentTick = currentTick;
 			//没有占用槽位则直接返回
-			if (self.OccupiedSlotMask == 0)
+			if (self.occupiedSlotMask == 0)
 			{
-				self.advanceTick = self.CurrentTick;
-				self.LastTick = self.advanceTick;
+				self.advanceTick = self.currentTick;
+				self.lastTick = self.advanceTick;
 				return;
 			}
 			//回退不处理，等待CurrentTick追上LastTick后自然恢复
-			if (self.CurrentTick < self.LastTick) return;
+			if (self.currentTick < self.lastTick) return;
 			//获取时序变化差异
-			var numberDiff = self.CurrentTick ^ self.LastTick;
+			var numberDiff = self.currentTick ^ self.lastTick;
 			//没有变化就直接返回
 			if (numberDiff == 0)
 			{
-				self.advanceTick = self.CurrentTick;
-				self.LastTick = self.advanceTick;
+				self.advanceTick = self.currentTick;
+				self.lastTick = self.advanceTick;
 				return;
 			}
 			//获取占用槽位的最低位置
-			var minSlot = MathBit.GetLowestBitIndex((ulong)self.OccupiedSlotMask);
+			var minSlot = MathBit.GetLowestBitIndex((ulong)self.occupiedSlotMask);
 			//如果最低槽位比当前变化大，说明没有要处理的，直接返回。
 			if (minSlot == -1 || (1L << minSlot) > numberDiff)
 			{
 				//同步推进时序，越过空闲时序段，避免无效追赶。
-				self.advanceTick = self.CurrentTick;
-				self.LastTick = self.advanceTick;
+				self.advanceTick = self.currentTick;
+				self.lastTick = self.advanceTick;
 				return;
 			}
 
 			//MinTick记录了每帧添加的最小时序，所以这一次推进是绝对安全的，越过空闲时序段，避免无效追赶。
-			else if (self.minTick <= self.CurrentTick)
+			else if (self.minTick <= self.currentTick)
 			{
 				self.advanceTick = self.minTick;
 				//重置最小时序记录
@@ -271,14 +270,14 @@ namespace WorldTree
 				//追赶时序
 				self.Advance(self.advanceTick);
 				//时序更新
-				self.LastTick = self.advanceTick;
+				self.lastTick = self.advanceTick;
 			}
 
 			//前进追赶，原因是MinTick不知道第二个及以后的时序，所以只能逐步追赶。
-			while (self.advanceTick < self.CurrentTick && self.OccupiedSlotMask != 0)
+			while (self.advanceTick < self.currentTick && self.occupiedSlotMask != 0)
 			{
 				//选择较小的推进,刻度推进
-				self.advanceTick = (self.precisionMask == 0) ? self.CurrentTick : Math.Min((self.advanceTick + self.precisionMask) & ~(self.precisionMask - 1), self.CurrentTick);
+				self.advanceTick = (self.precisionMask == 0) ? self.currentTick : Math.Min((self.advanceTick + self.precisionMask) & ~(self.precisionMask - 1), self.currentTick);
 				//按记录的最小时序进行自适应追赶
 				self.advanceTick = Math.Min(self.advanceTick, self.minTick);
 				//重置最小时序记录
@@ -288,10 +287,10 @@ namespace WorldTree
 				//安全推进
 				if (safeDiff != -1) self.advanceTick += safeDiff;
 				//时序更新
-				self.LastTick = self.advanceTick;
+				self.lastTick = self.advanceTick;
 			}
-			self.advanceTick = self.CurrentTick;
-			self.LastTick = self.advanceTick;
+			self.advanceTick = self.currentTick;
+			self.lastTick = self.advanceTick;
 		}
 
 		/// <summary>
@@ -300,25 +299,25 @@ namespace WorldTree
 		private static long Advance(this CascadeTicker self, long advanceTick)
 		{
 			//获取时序变化差异
-			var numberDiff = advanceTick ^ self.LastTick;
+			var numberDiff = advanceTick ^ self.lastTick;
 			//没有变化就直接返回
 			if (numberDiff == 0) return -1;
 			//获取占用槽位的最低位置
-			var minSlot = MathBit.GetLowestBitIndex((ulong)self.OccupiedSlotMask);
+			var minSlot = MathBit.GetLowestBitIndex((ulong)self.occupiedSlotMask);
 			//如果最低槽位比当前变化大，说明没有要处理的，返回一个安全推进值。
 			if ((1L << minSlot) > numberDiff)
 			{
 				return (1L << minSlot) - (advanceTick & ((1L << minSlot) - 1)) - 1;
 			}
 			//如果变化的时序大于已占用槽位，直接遍历所有槽位，否则只遍历本次时序变化内涉及的槽位。
-			var clampDiffSlot = numberDiff > self.OccupiedSlotMask ? self.OccupiedSlotMask : numberDiff;
+			var clampDiffSlot = numberDiff > self.occupiedSlotMask ? self.occupiedSlotMask : numberDiff;
 			var max = MathBit.GetHighestBitIndex((ulong)clampDiffSlot);
 			var min = minSlot;
 			//时序推进正序遍历，避免重复处理下移的定时器
 			for (int i = min; i <= max; i++) self.SlotUpdate(i);
 			//执行, 然后清空执行器
-			self.RuleMulticast.Send();
-			self.RuleMulticast.Clear();
+			self.ruleMulticast.Send();
+			self.ruleMulticast.Clear();
 			return -1;
 		}
 
@@ -328,7 +327,7 @@ namespace WorldTree
 		private static void SlotUpdate(this CascadeTicker self, int i)
 		{
 			//槽位未占用则跳过
-			if ((self.OccupiedSlotMask & (1L << i)) == 0) return;
+			if ((self.occupiedSlotMask & (1L << i)) == 0) return;
 			var slot = self.GetOrNewSlot(i);
 
 			//遍历槽位内的定时器
@@ -348,7 +347,7 @@ namespace WorldTree
 				if (self.advanceTick >= tickerData.Tick)
 				{
 					//添加到执行器
-					self.RuleMulticast.TryAdd(tickerData.Node.Value, tickerData.RuleList);
+					self.ruleMulticast.TryAdd(tickerData.Node.Value, tickerData.RuleList);
 					//从槽位移除
 					slot.TickIterator.DequeueCurrent();
 					tickerData.Dispose();
@@ -365,11 +364,11 @@ namespace WorldTree
 					//从当前槽位移除
 					slot.TickIterator.DequeueCurrent();
 					//标记槽位已占用
-					self.OccupiedSlotMask |= 1L << slotIndex;
+					self.occupiedSlotMask |= 1L << slotIndex;
 				}
 			}
 			//槽位已空，清除占用标记
-			if (slot.TickIterator.RemainCount == 0) self.OccupiedSlotMask &= ~(1L << i);
+			if (slot.TickIterator.RemainCount == 0) self.occupiedSlotMask &= ~(1L << i);
 		}
 	}
 }
