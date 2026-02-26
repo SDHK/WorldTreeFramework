@@ -53,7 +53,7 @@
     <UnityVersion>2021.3.16f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="E:\allApps\VisualStudio\VS2022\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="E:\allApps\VisualStudio\VS2026\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SerializeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\DataBaseTestProxyRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\UnityCodeLoaderRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\CascadeTickerTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\Input\InputDriverMouseRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\UtcTimeTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MultilayerPerceptronTestRule.cs" />

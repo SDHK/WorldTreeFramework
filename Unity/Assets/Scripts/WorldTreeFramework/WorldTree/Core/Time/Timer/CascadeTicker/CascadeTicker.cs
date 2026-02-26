@@ -188,7 +188,7 @@ namespace WorldTree
 		public static long AddTicker<R>(this CascadeTicker self, long clockTick, INode node, TreeTaskToken token = null)
 			where R : ISendRule
 		{
-			return self.AddTicker(self.CurrentTick, node, self.TypeToCode<R>(), token);
+			return self.AddTicker(clockTick, node, self.TypeToCode<R>(), token);
 		}
 
 		/// <summary>
@@ -196,7 +196,7 @@ namespace WorldTree
 		/// </summary>
 		public static long AddTicker(this CascadeTicker self, long clockTick, INode node, long ruleType, TreeTaskToken token = null)
 		{
-			if (!self.Core.RuleManager.TryGetRuleList(node.Id, ruleType, out var ruleList)) return -1;
+			if (!self.Core.RuleManager.TryGetRuleList(node.Type, ruleType, out var ruleList)) return -1;
 
 			//大小比较，过时了就直接执行
 			if (self.advanceTick >= clockTick)
@@ -213,11 +213,12 @@ namespace WorldTree
 
 			//算出槽位位置，AdvanceTick 与 clockTick 的异或后的最高位1所在的位置
 			int slotIndex = MathBit.GetHighestBitIndex((ulong)(self.advanceTick ^ clockTick));
+
 			self.AddChild(out CascadeTickerData tickerData, clockTick, node, ruleList);
 			self.GetOrNewSlot(slotIndex).Add(tickerData);
 			//标记槽位已占用
 			self.OccupiedSlotMask |= 1L << slotIndex;
-			token?.TokenEvent.Add(tickerData);
+			token?.Add(tickerData);
 			return tickerData.Id;
 		}
 
@@ -349,8 +350,8 @@ namespace WorldTree
 					//添加到执行器
 					self.RuleMulticast.TryAdd(tickerData.Node.Value, tickerData.RuleList);
 					//从槽位移除
-					tickerData.Dispose();
 					slot.TickIterator.DequeueCurrent();
+					tickerData.Dispose();
 				}
 				//时序未到达，重新计算槽位位置
 				else

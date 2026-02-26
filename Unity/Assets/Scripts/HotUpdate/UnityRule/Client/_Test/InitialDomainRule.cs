@@ -36,8 +36,9 @@ namespace WorldTree
 			//string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone);
 			//if (!currentDefines.Contains("MY_NEW_DEFINE")) currentDefines += ";MY_NEW_DEFINE";
 			//PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, currentDefines);
-			//self.AddComponent(out TaskTest _);
-			self.AddComponent(out StepMachineTest _);
+			//self.AddComponent(out CascadeTickerTest _);
+			//self.AddComponent(out StepMachineTest _);
+			self.AddComponent(out TaskTest _);
 		}
 
 
@@ -52,7 +53,7 @@ namespace WorldTree
 				//self.AddComponent(out TreeDataTest _);
 				//self.AddComponent(out ViewTest _);
 
-				NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
+				//NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
 
 				////获取一个ICallRule通用委托unicast
 				//self.AddTemp(out RuleUnicast<ICallRule<float, int, string>> unicast);
@@ -64,8 +65,8 @@ namespace WorldTree
 				//unicast.Call(2.5f, 2, out string str2);
 
 				//全局广播调用
-				self.Core.GetRuleBroadcast(out RuleBroadcast<TestEvent> ruleBroadcast);
-				ruleBroadcast.Call(2.5f, 2, out string str2);
+				//self.Core.GetRuleBroadcast(out RuleBroadcast<TestEvent> ruleBroadcast);
+				//ruleBroadcast.Call(2.5f, 2, out string str2);
 			}
 		}
 

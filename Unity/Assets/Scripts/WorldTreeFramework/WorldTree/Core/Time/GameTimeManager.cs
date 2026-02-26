@@ -62,7 +62,7 @@ namespace WorldTree
 
 		public GameTimeManager()
 		{
-			totalTime = TimeSpan.MinValue;
+			totalTime = TimeSpan.Zero;
 		}
 
 		/// <summary>

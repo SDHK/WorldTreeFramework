@@ -22,7 +22,7 @@ namespace WorldTree
 				DateTime now = DateTime.Now;
 				//bool isMatch = CycleCronMatcher.IsMatch(now, map);
 				
-				Console.WriteLine($"当前时间 {now} 是否匹配: {isMatch}");
+				//Console.WriteLine($"当前时间 {now} 是否匹配: {isMatch}");
 
 				// 获取下一个触发时间
 				DateTime? next = CycleCronMatcher.GetNext(now, map);
@@ -80,9 +80,9 @@ namespace WorldTree
 			if (CycleCronExpression.TryParse("0 0", map))
 			{
 				DateTime now = DateTime.Now;
-				bool isMatch = CycleCronMatcher.IsMatch(now, map);
+				//bool isMatch = CycleCronMatcher.IsMatch(now, map);
 				
-				Console.WriteLine($"每小时触发，当前是否匹配: {isMatch}");
+				//Console.WriteLine($"每小时触发，当前是否匹配: {isMatch}");
 			}
 		}
 
@@ -97,9 +97,9 @@ namespace WorldTree
 			if (CycleCronExpression.TryParse("0 0 9 L", map))
 			{
 				DateTime now = DateTime.Now;
-				bool isMatch = CycleCronMatcher.IsMatch(now, map);
+				//bool isMatch = CycleCronMatcher.IsMatch(now, map);
 				
-				Console.WriteLine($"月末触发，当前是否匹配: {isMatch}");
+				//Console.WriteLine($"月末触发，当前是否匹配: {isMatch}");
 			}
 		}
 
@@ -114,9 +114,9 @@ namespace WorldTree
 			if (CycleCronExpression.TryParse("0 0 9 1-5", map))
 			{
 				DateTime now = DateTime.Now;
-				bool isMatch = CycleCronMatcher.IsMatch(now, map);
+				//bool isMatch = CycleCronMatcher.IsMatch(now, map);
 				
-				Console.WriteLine($"工作日9点触发，当前是否匹配: {isMatch}");
+				//Console.WriteLine($"工作日9点触发，当前是否匹配: {isMatch}");
 			}
 		}
 
@@ -131,9 +131,9 @@ namespace WorldTree
 			if (CycleCronExpression.TryParse("0 0 12 7 28", map))
 			{
 				DateTime now = DateTime.Now;
-				bool isMatch = CycleCronMatcher.IsMatch(now, map);
+				//bool isMatch = CycleCronMatcher.IsMatch(now, map);
 				
-				Console.WriteLine($"每7天触发，当前是否匹配: {isMatch}");
+				//Console.WriteLine($"每7天触发，当前是否匹配: {isMatch}");
 				// 注意：完整的Day模式匹配需要基准时间（开服时间）
 			}
 		}
@@ -154,10 +154,10 @@ namespace WorldTree
 			
 			for (int i = 0; i < 1000000; i++)
 			{
-				if (CycleCronMatcher.IsMatch(testTime, map))
-				{
-					matchCount++;
-				}
+				//if (CycleCronMatcher.IsMatch(testTime, map))
+				//{
+				//	matchCount++;
+				//}
 			}
 			
 			sw.Stop();

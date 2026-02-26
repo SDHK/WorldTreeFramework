@@ -324,6 +324,14 @@ namespace WorldTree
 
 	public static class FreeIteratorRule
 	{
+		class Add<T> :AddRule<ZipperIterator<T>>
+		{
+			protected override void Execute(ZipperIterator<T> self)
+			{
+				self.nodes = self.Core.PoolGetArray<T>(4);
+			}
+		}
+
 		class Remove<T> : RemoveRule<ZipperIterator<T>>
 		{
 			protected override void Execute(ZipperIterator<T> self)

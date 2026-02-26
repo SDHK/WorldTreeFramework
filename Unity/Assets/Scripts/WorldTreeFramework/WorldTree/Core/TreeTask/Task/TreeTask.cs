@@ -103,7 +103,7 @@ namespace WorldTree
 		public static async TreeTask AddToken(this TreeTask self, TreeTaskToken treeTaskToken)
 		{
 			var token = await self.Parent.TreeTaskTokenCatch();
-			token.TokenEvent.Add(treeTaskToken);
+			token.Add(treeTaskToken);
 			self.SetToken(treeTaskToken);
 			await self;
 		}
@@ -114,7 +114,7 @@ namespace WorldTree
 		public static async TreeTask<T> AddToken<T>(this TreeTask<T> self, TreeTaskToken treeTaskToken)
 		{
 			var token = await self.Parent.TreeTaskTokenCatch();
-			token.TokenEvent.Add(treeTaskToken);
+			token.Add(treeTaskToken);
 			self.SetToken(treeTaskToken);
 			return await self;
 		}
