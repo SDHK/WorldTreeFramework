@@ -9,11 +9,11 @@
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 节点分支处理扩展类
-	/// </summary>
-	public static partial class NodeBranchExtension
-	{
+    /// <summary>
+    /// 节点分支处理扩展类
+    /// </summary>
+    public static partial class NodeBranchExtension
+    {
 
-	}
+    }
 }

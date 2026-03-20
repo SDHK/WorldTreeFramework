@@ -994,6 +994,10 @@
       <Project>{686145E0-A51B-685E-EF99-A1034C8B63AB}</Project>
       <Name>Sirenix.OdinInspector.CompatibilityLayer.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="UnityMCP.Editor.csproj">
+      <Project>{49786BB5-1BEF-16C4-30FE-0B6F877BAF75}</Project>
+      <Name>UnityMCP.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="MemoryPack.csproj">
       <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
       <Name>MemoryPack</Name>

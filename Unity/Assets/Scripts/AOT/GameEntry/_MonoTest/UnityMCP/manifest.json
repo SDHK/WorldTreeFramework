@@ -1,0 +1,16 @@
+{
+  "name": "Unity MCP Integration",
+  "version": "1.0.0",
+  "documentationUrl": "https://github.com/anthropic/unity-mcp",
+  "changelogUrl": "https://github.com/anthropic/unity-mcp/changelog.md",
+  "licensesUrl": "https://github.com/anthropic/unity-mcp/license.md",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  },
+  "keywords": [
+    "claude",
+    "ai",
+    "mcp",
+    "editor"
+  ]
+}
