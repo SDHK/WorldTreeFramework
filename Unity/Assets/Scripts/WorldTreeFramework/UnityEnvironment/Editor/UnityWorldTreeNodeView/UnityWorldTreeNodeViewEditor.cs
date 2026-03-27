@@ -34,13 +34,7 @@ namespace EditorTool
 
 				EditorGUILayout.LabelField("Type", node.ToString());
 				EditorGUILayout.LongField("Id", node.Id);
-				EditorGUILayout.Toggle("IsActive", node.IsActive);
 				EditorGUILayout.Space();
-				node.SetActive(EditorGUILayout.Toggle("ActiveToggle", node.ActiveToggle));
-				if (node.IsActive != monoView.gameObject.activeSelf)
-				{
-					monoView.gameObject.SetActive(node.IsActive);
-				}
 
 				members.Clear();
 				var type = monoView.Node.GetType();

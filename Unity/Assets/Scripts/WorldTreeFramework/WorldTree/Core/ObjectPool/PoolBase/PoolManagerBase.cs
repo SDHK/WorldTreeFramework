@@ -17,7 +17,6 @@ namespace WorldTree
 		{
 			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
 			IsDisposed = true;
-			SetActive(false);
 			base.Dispose();
 		}
 	}
@@ -62,7 +61,6 @@ namespace WorldTree
 			pool.ObjectTypeCode = type;
 			poolDict.Add(pool.ObjectTypeCode, pool);
 			pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, this);
-			pool.SetActive(true);
 			return pool;
 		}
 

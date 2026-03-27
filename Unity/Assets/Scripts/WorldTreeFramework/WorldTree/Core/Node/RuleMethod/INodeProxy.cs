@@ -22,57 +22,6 @@ namespace WorldTree
 	public static partial class INodeProxyRule
 	{
 		/// <summary>
-		/// 设置激活
-		/// </summary>
-		public static void SetActive(INode self, bool value)
-		{
-			if (self.ActiveToggle != value)
-			{
-				self.ActiveToggle = value;
-				self.RefreshActive();
-			}
-		}
-
-		/// <summary>
-		/// 刷新当前节点激活状态：层序遍历设置子节点
-		/// </summary>
-		public static void RefreshActive(INode self)
-		{
-			//如果状态相同，不需要刷新
-			if (self.IsActive == ((self.Parent == null) ? self.ActiveToggle : self.Parent.IsActive && self.ActiveToggle)) return;
-
-			//层序遍历设置子节点
-			using (self.Core.PoolGetUnit(out UnitQueue<INode> queue))
-			{
-				queue.Enqueue(self);
-				while (queue.Count != 0)
-				{
-					// 广度优先，出队
-					var current = queue.Dequeue();
-					if (current.IsActive != ((current.Parent == null) ? current.ActiveToggle : current.Parent.IsActive && current.ActiveToggle))
-					{
-						current.IsActive = !current.IsActive;
-
-						if (current.BranchDict != null)
-						{
-							foreach (var branch in current.BranchDict)
-							{
-								foreach (INode node in (IEnumerable<INode>)branch)
-								{
-									if (node.BranchType == branch.Type)
-									{
-										queue.Enqueue(node);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-
-		/// <summary>
 		/// 字符串化当前节点
 		/// </summary>
 		public static string ToString(INode self)
@@ -110,7 +59,6 @@ namespace WorldTree
 				self.Core = parent.Core;
 				self.World = parent.World;
 				self.Parent = parent;
-				self.SetActive(true);//激活节点
 				AddNodeView(self);
 				return true;
 			}
@@ -134,17 +82,6 @@ namespace WorldTree
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//检测自身是否为监听器
 			{
 				self.Core.ReferencedPoolManager.TryAddListener(nodeListener);
-			}
-			if (self.IsActive != self.activeEventMark)//激活变更
-			{
-				if (self.IsActive)
-				{
-					self.Core.EnableRuleGroup?.Send(self);//激活事件通知
-				}
-				else
-				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
-				}
 			}
 			self.Core.AddRuleGroup?.Send(self);//节点添加事件通知
 		}
@@ -236,19 +173,6 @@ namespace WorldTree
 				self.ViewBuilder = null;
 			}
 
-			self.SetActive(false); // 激活变更
-			if (self.IsActive != self.activeEventMark)//激活变更
-			{
-				if (self.IsActive)
-				{
-					self.Core.EnableRuleGroup?.Send(self);//激活事件通知
-				}
-				else
-				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
-				}
-			}
-
 			NodeBranchHelper.RemoveNode(self); // 从父节点分支移除
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer) // 检测自身为监听器
 			{
@@ -291,7 +215,6 @@ namespace WorldTree
 			self.Core = parent.Core;
 			self.World = parent.World;
 
-			self.RefreshActive();
 			NodeBranchTraversalHelper.TraversalPrePostOrder(self, node => node.OnBeforeGraftSelfToTree(), node => node.OnGraftSelfToTree());
 			return true;
 		}
@@ -345,17 +268,6 @@ namespace WorldTree
 				self.IsSerialize = false;
 			}
 
-			if (self.IsActive != self.activeEventMark)//激活变更
-			{
-				if (self.IsActive)
-				{
-					self.Core.EnableRuleGroup?.Send(self);//激活事件通知
-				}
-				else
-				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
-				}
-			}
 			if (!self.IsSerialize) self.Core.GraftRuleGroup?.Send(self);//嫁接事件通知
 		}
 

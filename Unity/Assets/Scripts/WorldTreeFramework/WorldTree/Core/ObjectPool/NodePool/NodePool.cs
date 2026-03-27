@@ -82,7 +82,6 @@ namespace WorldTree
 		{
 			obj.IsFromPool = true;
 			obj.IsSerialize = false;
-			obj.IsActive = false;
 			obj.IsDisposed = false;
 		}
 		/// <summary>

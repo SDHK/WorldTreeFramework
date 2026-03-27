@@ -29,19 +29,19 @@
 			NodeRuleHelper.TrySendRule(self.Parent, default(Open));
 			NodeRuleHelper.TrySendRule(self.Parent, default(LayerChange));
 
-			if (self.IsActive != self.activeEventMark)//激活变更
-			{
-				if (self.IsActive)
-				{
-					self.Core.EnableRuleGroup?.Send(self); //激活事件通知
-					NodeRuleHelper.TrySendRule(self.Parent, default(Show));
-				}
-				else
-				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
-					NodeRuleHelper.TrySendRule(self.Parent, default(Hide));
-				}
-			}
+			//if (self.IsActive != self.activeEventMark)//激活变更
+			//{
+			//	if (self.IsActive)
+			//	{
+			//		self.Core.EnableRuleGroup?.Send(self); //激活事件通知
+			//		NodeRuleHelper.TrySendRule(self.Parent, default(Show));
+			//	}
+			//	else
+			//	{
+			//		self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
+			//		NodeRuleHelper.TrySendRule(self.Parent, default(Hide));
+			//	}
+			//}
 			self.Core.AddRuleGroup?.Send(self);//节点添加事件通知
 		}
 
@@ -63,21 +63,21 @@
 		/// </summary>
 		private static void OnBeforeDisposeActive(this INode self)
 		{
-			self.SetActive(false); // 激活变更
+			//self.SetActive(false); // 激活变更
 
-			if (self.IsActive != self.activeEventMark)//激活变更
-			{
-				if (self.IsActive)
-				{
-					self.Core.EnableRuleGroup?.Send(self);//激活事件通知
-					NodeRuleHelper.TrySendRule(self.Parent, default(Show));
-				}
-				else
-				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
-					NodeRuleHelper.TrySendRule(self.Parent, default(Hide));
-				}
-			}
+			//if (self.IsActive != self.activeEventMark)//激活变更
+			//{
+			//	if (self.IsActive)
+			//	{
+			//		self.Core.EnableRuleGroup?.Send(self);//激活事件通知
+			//		NodeRuleHelper.TrySendRule(self.Parent, default(Show));
+			//	}
+			//	else
+			//	{
+			//		self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
+			//		NodeRuleHelper.TrySendRule(self.Parent, default(Hide));
+			//	}
+			//}
 		}
 		/// <summary>
 		/// 销毁前调用 

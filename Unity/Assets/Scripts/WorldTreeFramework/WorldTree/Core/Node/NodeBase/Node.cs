@@ -150,21 +150,7 @@ namespace WorldTree
 
 		#endregion
 
-		#region Active
 
-		public bool ActiveToggle { get; set; }
-
-		[TreeDataIgnore]
-		public bool IsActive { get; set; }
-
-		[TreeDataIgnore]
-		public bool activeEventMark { get; set; }
-
-		public void SetActive(bool value) => INodeProxyRule.SetActive(this, value);
-
-		public void RefreshActive() => INodeProxyRule.RefreshActive(this);
-
-		#endregion
 
 		public override string ToString() => INodeProxyRule.ToString(this);
 

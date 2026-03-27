@@ -46,14 +46,6 @@ namespace WorldTree
 		#region 全局事件法则
 
 		/// <summary>
-		/// 全局事件法则 Enable
-		/// </summary>
-		public RuleBroadcast<Enable> enable;
-		/// <summary>
-		/// 全局事件法则 Disable
-		/// </summary>
-		public RuleBroadcast<Disable> disable;
-		/// <summary>
 		/// 全局事件法则 Update
 		/// </summary>
 		public RuleBroadcast<Update> update;
@@ -114,10 +106,8 @@ namespace WorldTree
 			{
 				self.frameTime = frameTime;
 
-				self.Core.GetRuleBroadcast(out self.enable);
 				self.Core.GetRuleBroadcast(out self.update);
 				self.Core.GetRuleBroadcast(out self.updateTime);
-				self.Core.GetRuleBroadcast(out self.disable);
 
 				self.AddComponent(out self.worldUpdate, frameTime).Run();
 
@@ -137,10 +127,8 @@ namespace WorldTree
 
 				self.worldUpdate = null;
 
-				self.enable = null;
 				self.update = null;
 				self.updateTime = null;
-				self.disable = null;
 			}
 		}
 
@@ -148,10 +136,8 @@ namespace WorldTree
 		{
 			protected override void Execute(WorldHeart self, TimeSpan deltaTime)
 			{
-				self.enable?.Send();
 				self.update?.Send();
 				self.updateTime?.Send(deltaTime);
-				self.disable?.Send();
 			}
 		}
 	}

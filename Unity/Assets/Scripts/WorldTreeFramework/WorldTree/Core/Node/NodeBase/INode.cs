@@ -95,14 +95,12 @@ namespace WorldTree
 		, AsRule<IRule>
 #endif
 
-		, AsRule<Enable>
 		, AsRule<Add>
 		, AsRule<Graft>
 		, AsRule<Update>
 		, AsRule<UpdateTime>
 		, AsRule<Cut>
 		, AsRule<BeforeRemove>
-		, AsRule<Disable>
 		, AsRule<Remove>
 	{
 		/// <summary>
@@ -145,46 +143,6 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public IWorldTreeNodeViewBuilder ViewBuilder { get; set; }
 
-		#region Active
-
-		/// <summary>
-		/// 活跃开关
-		/// </summary>
-		public bool ActiveToggle { get; set; }
-
-		/// <summary>
-		/// 活跃状态(设定为只读，禁止修改)
-		/// </summary>
-		[TreeDataIgnore]
-		public bool IsActive { get; set; }
-
-		/// <summary>
-		/// 活跃事件标记，这个由框架内部调用设置，禁止修改
-		/// </summary>
-		[TreeDataIgnore]
-		public bool activeEventMark { get; set; }
-
-		/// <summary>
-		/// 设置当前节点激活状态
-		/// </summary>
-		public void SetActive(bool value);
-
-		/// <summary>
-		/// 刷新当前节点激活状态：层序遍历设置子节点
-		/// </summary>
-		public void RefreshActive();
-
-		#endregion
-
-		//#region Rattan
-
-		///// <summary>
-		///// 树藤分支
-		///// </summary>
-		//[TreeDataIgnore]
-		//public UnitDictionary<long, IRattan> RattanDict { get; set; }
-
-		//#endregion
 
 		#region Branch
 

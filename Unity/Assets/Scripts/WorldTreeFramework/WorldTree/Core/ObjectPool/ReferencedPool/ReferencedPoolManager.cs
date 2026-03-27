@@ -83,7 +83,6 @@ namespace WorldTree
 				pool.ReferencedType = type;
 				poolDict.Add(type, pool);
 				pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, this);
-				pool.SetActive(true);
 			}
 			return pool;
 		}

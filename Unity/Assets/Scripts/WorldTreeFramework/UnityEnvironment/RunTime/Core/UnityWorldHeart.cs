@@ -57,14 +57,6 @@ namespace WorldTree
 		#region 全局事件法则
 
 		/// <summary>
-		/// 启用
-		/// </summary>
-		public RuleBroadcast<Enable> enable;
-		/// <summary>
-		/// 禁用
-		/// </summary>
-		public RuleBroadcast<Disable> disable;
-		/// <summary>
 		/// 更新
 		/// </summary>
 		public RuleBroadcast<Update> update;
@@ -134,10 +126,8 @@ namespace WorldTree
 			{
 				self.frameTime = frameTime;
 
-				self.Core.GetRuleBroadcast(out self.enable);
 				self.Core.GetRuleBroadcast(out self.update);
 				self.Core.GetRuleBroadcast(out self.updateTime);
-				self.Core.GetRuleBroadcast(out self.disable);
 				self.Core.GetRuleBroadcast(out self.lateUpdate);
 				self.Core.GetRuleBroadcast(out self.lateUpdateTime);
 				self.Core.GetRuleBroadcast(out self.fixedUpdate);
@@ -176,10 +166,8 @@ namespace WorldTree
 				self.worldGuiUpdate = null;
 				self.worldDrawGizmosUpdate = null;
 
-				self.enable = null;
 				self.update = null;
 				self.updateTime = null;
-				self.disable = null;
 				self.lateUpdate = null;
 				self.lateUpdateTime = null;
 				self.fixedUpdate = null;
@@ -195,10 +183,8 @@ namespace WorldTree
 		{
 			protected override void Execute(UnityWorldHeart self, TimeSpan deltaTime)
 			{
-				self.enable?.Send();
 				self.update?.Send();
 				self.updateTime?.Send(deltaTime);
-				self.disable?.Send();
 			}
 		}
 

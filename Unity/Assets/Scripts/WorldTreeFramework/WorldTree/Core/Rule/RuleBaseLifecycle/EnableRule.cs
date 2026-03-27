@@ -11,28 +11,28 @@
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 激活法则
-	/// </summary>
-	public interface Enable : ISendRule, ILifeCycleRule, ISourceGeneratorIgnore
-	{ }
+	///// <summary>
+	///// 激活法则
+	///// </summary>
+	//public interface Enable : ISendRule, ILifeCycleRule, ISourceGeneratorIgnore
+	//{ }
 
-	/// <summary>
-	/// 激活法则
-	/// </summary>
-	public abstract class EnableRule<N> : SendRule<N, Enable>
-	where N : class, INode, AsRule<Enable>
-	{
-		public override void Invoke(INode self)
-		{
-			if (self.IsActive != self.activeEventMark)
-			{
-				if (self.IsActive)
-				{
-					if (this.RuleIndex == this.RuleCount - 1) { self.activeEventMark = self.IsActive; }
-					Execute(self as N);
-				}
-			}
-		}
-	}
+	///// <summary>
+	///// 激活法则
+	///// </summary>
+	//public abstract class EnableRule<N> : SendRule<N, Enable>
+	//where N : class, INode, AsRule<Enable>
+	//{
+	//	public override void Invoke(INode self)
+	//	{
+	//		//if (self.IsActive != self.activeEventMark)
+	//		//{
+	//		//	if (self.IsActive)
+	//		//	{
+	//		//		if (this.RuleIndex == this.RuleCount - 1) { self.activeEventMark = self.IsActive; }
+	//		//		Execute(self as N);
+	//		//	}
+	//		//}
+	//	}
+	//}
 }
