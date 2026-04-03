@@ -59,6 +59,83 @@ namespace WorldTree
 	}
 
 	/// <summary>
+	/// 指针
+	/// </summary>
+	public class ObjectPoint
+	{
+		/// <summary>
+		/// 管理器 
+		/// </summary>
+		public object Manager;
+
+		/// <summary>
+		/// 管理器指针地址（动态可变）
+		/// </summary>
+		public int Address;
+		/// <summary>
+		/// 版本号 
+		/// </summary>
+		public int Version;
+		/// <summary>
+		/// 引用类型
+		/// </summary>
+		public object Value;
+	}
+
+
+
+	/// <summary>
+	/// 轻量化新设计
+	/// </summary>
+	public abstract class NewNode
+	{
+		/// <summary>
+		/// 核心 主要位置
+		/// </summary>
+		[TreeDataIgnore]
+		public WorldLine Core { get; set; }
+
+		/// <summary>
+		/// 节点状态 
+		/// </summary>
+		[TreeDataIgnore]
+		protected NodeState state;
+
+		/// <summary>
+		/// 类型码=>manager 定位事件
+		/// </summary>
+		[TreeDataIgnore]
+		public long Type { get; set; }
+
+		/// <summary>
+		/// 雪花id \实例Id? 定位实例
+		/// </summary>
+		[TreeDataIgnore]
+		public virtual long Id { get; set; }
+
+
+		//组织结构，主要作用于自动回收，序列化
+
+
+		/// <summary>
+		/// 父级 ？
+		/// </summary>
+		[TreeDataIgnore]
+		public virtual INode Parent { get; set; }
+
+		/// <summary>
+		/// 父级地址
+		/// </summary>
+		[TreeDataIgnore]
+		public int ParentPath;
+
+		/// <summary>
+		/// 节点列表 
+		/// </summary>
+		public UnitList<INode> NodeList { get; set; }
+	}
+
+	/// <summary>
 	/// 世界树节点基类
 	/// </summary>
 	public abstract class Node : INode
@@ -150,6 +227,20 @@ namespace WorldTree
 
 		#endregion
 
+		#region Nodes
+
+		/// <summary>
+		/// 拥有者索引
+		/// </summary>
+		[TreeDataIgnore]
+		public int OwnedIndex { get; set; }
+
+		/// <summary>
+		/// 节点列表 
+		/// </summary>
+		public UnitList<INode> OwnedNodeList { get; set; }
+
+		#endregion
 
 
 		public override string ToString() => INodeProxyRule.ToString(this);

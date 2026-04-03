@@ -14,6 +14,29 @@ using System.Reflection;
 namespace WorldTree
 {
 	/// <summary>
+	/// 类型哈希码 
+	/// </summary>
+	public static class TypeCode<T>
+	{
+		/// <summary>
+		/// 类型哈希码  
+		/// </summary>
+		private static long code = 0;
+
+		/// <summary>
+		///  类型哈希码
+		/// </summary>
+		public static long Code
+		{
+			get
+			{
+				if (code == 0) code = typeof(T).ToString().GetHash64();
+				return code;
+			}
+		}
+	}
+
+	/// <summary>
 	/// 类型信息：用于类型的信息获取
 	/// </summary>
 	public class TypeInfo : Node

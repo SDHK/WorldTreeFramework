@@ -138,7 +138,7 @@ namespace WorldTree
 		public bool IsSerialize { get; set; }
 
 		/// <summary>
-		/// 可视化生成器
+		/// 可视化生成器？
 		/// </summary>
 		[TreeDataIgnore]
 		public IWorldTreeNodeViewBuilder ViewBuilder { get; set; }
@@ -156,6 +156,21 @@ namespace WorldTree
 		/// 树分支
 		/// </summary>
 		public IBranchBase BranchDict { get; set; }
+
+		#endregion
+
+		#region Nodes
+
+		/// <summary>
+		/// 拥有者地址  
+		/// </summary>
+		[TreeDataIgnore]
+		public int OwnedIndex { get; set; }
+
+		/// <summary>
+		/// 节点列表 
+		/// </summary>
+		public UnitList<INode> OwnedNodeList { get; set; }
 
 		#endregion
 
