@@ -44,7 +44,6 @@ namespace WorldTree.SourceGenerator
 								where R : ISendRule{{genericsTypeAngle}}
 							{
 								IRuleExecutorEnumerable self = (IRuleExecutorEnumerable)selfExecutor;
-								if (!self.IsActive) return;
 								self.RefreshTraversalCount();
 								for (int i = 0; i < self.TraversalCount; i++)
 								{
@@ -62,11 +61,6 @@ namespace WorldTree.SourceGenerator
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
 								IRuleExecutorEnumerable self = (IRuleExecutorEnumerable)selfExecutor;
-								if (!self.IsActive)
-								{
-									await self.TreeTaskCompleted();
-									return;
-								}
 								self.RefreshTraversalCount();
 								if (self.TraversalCount == 0)
 								{
