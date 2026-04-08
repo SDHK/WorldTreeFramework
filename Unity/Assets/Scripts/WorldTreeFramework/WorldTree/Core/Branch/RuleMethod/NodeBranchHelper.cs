@@ -21,10 +21,34 @@ namespace WorldTree
 		/// <summary>
 		/// 添加分支
 		/// </summary>
-		public static B AddBranch<B>(INode self) where B : class, IBranch => AddBranch(self, self.TypeToCode<B>()) as B;
+		public static B AddBranch<B>(INode self) where B : class, IBranch
+		{
+			B branch = null;
+			// 第一个分支，直接创建单个分支
+			if (self.BranchDict == null)
+			{
+				branch = self.Core.PoolGetUnit<B>();
+				self.BranchDict = branch;
+				return branch;
+			}
+
+			// 已经是分支集合了,查找是否存在
+			if (self.BranchDict.TryGetBranch(TypeInfo<B>.Code, out var branchBase)) return branch = branchBase as B;
+
+			// 需要添加第二个分支，升级为 BranchGroup
+			if (self.BranchDict is not BranchGroup)
+			{
+				IBranch oldBranch = self.BranchDict as IBranch;
+				self.BranchDict = self.Core.PoolGetUnit<BranchGroup>();
+				self.BranchDict.TryAddBranch(oldBranch.Type, oldBranch);
+			}
+			branch = self.Core.PoolGetUnit<B>();
+			self.BranchDict.TryAddBranch(TypeInfo<B>.Code, branch);
+			return branch;
+		}
 
 		/// <summary>
-		/// 添加分支
+		/// 添加分支:不安全
 		/// </summary>
 		public static IBranch AddBranch(INode self, long type)
 		{
@@ -101,7 +125,7 @@ namespace WorldTree
 		/// 释放分支的所有节点
 		/// </summary>
 		public static void RemoveAllNode<B>(INode self) where B : class, IBranch
-			=> self.RemoveAllNode(self.TypeToCode<B>());
+			=> self.RemoveAllNode(TypeInfo<B>.Code);
 
 		#endregion
 
@@ -122,13 +146,13 @@ namespace WorldTree
 		/// 尝试获取分支
 		/// </summary>
 		public static bool TryGetBranch<B>(INode self, out B branch) where B : class, IBranch
-			=> (branch = (self.BranchDict != null && self.BranchDict.TryGetBranch(self.TypeToCode<B>(), out IBranch Ibranch)) ? Ibranch as B : null) != null;
+			=> (branch = (self.BranchDict != null && self.BranchDict.TryGetBranch(TypeInfo<B>.Code, out IBranch Ibranch)) ? Ibranch as B : null) != null;
 
 		/// <summary>
 		/// 获取分支
 		/// </summary>
 		public static B GetBranch<B>(INode self) where B : class, IBranch
-			=> (self.BranchDict != null && self.BranchDict.TryGetBranch(self.TypeToCode<B>(), out IBranch iBranch)) ? iBranch as B : null;
+			=> (self.BranchDict != null && self.BranchDict.TryGetBranch(TypeInfo<B>.Code, out IBranch iBranch)) ? iBranch as B : null;
 
 		/// <summary>
 		/// 尝试获取键值
@@ -154,6 +178,21 @@ namespace WorldTree
 			return key;
 		}
 
+		#endregion
+
+		#region 判断
+
+		/// <summary>
+		/// 判断是否包含分支节点 
+		/// </summary>
+		public static bool Contains<B, K>(INode self, K key)
+		{
+			if (self.BranchDict.TryGetBranch(TypeInfo<B>.Code, out IBranch branch))
+			{
+				if (branch is IBranch<K> keyBranch) return keyBranch.Contains(key);
+			}
+			return false;
+		}
 		#endregion
 	}
 }

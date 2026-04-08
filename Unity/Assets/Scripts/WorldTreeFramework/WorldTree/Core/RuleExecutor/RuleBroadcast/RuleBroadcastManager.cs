@@ -22,7 +22,7 @@ namespace WorldTree
 		public static RuleBroadcast<R> GetRuleBroadcast<R>(this WorldLine self, out RuleBroadcast<R> ruleExecutor)
 		where R : IGlobalRule
 		{
-			self.GlobalRuleExecutorManager.AddGeneric(self.TypeToCode<R>(), out RuleBroadcaster<R> globalRuleExecutor);
+			self.GlobalRuleExecutorManager.AddGeneric(TypeInfo<R>.Code, out RuleBroadcaster<R> globalRuleExecutor);
 			ruleExecutor = globalRuleExecutor as RuleBroadcast<R>;
 			return ruleExecutor;
 		}

@@ -106,7 +106,7 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, self))
 			{
-				self.BranchType = self.Core.TypeToCode<B>();
+				self.BranchType = TypeInfo<B>.Code;
 				self.Core = parent.Core;
 				self.World = parent.World;
 				self.Parent = parent;
@@ -275,11 +275,23 @@ namespace WorldTree
 		/// </summary>
 		public static bool TryGraftSelfToTree<B, K>(INode self, K key, INode parent)
 			where B : class, IBranch<K>
-			=> self.TryGraftSelfToTree(self.TypeToCode<B>(), key, parent);
+		{
+			if (NodeBranchHelper.AddBranch<B>(parent) is not IBranch<K> branch) return false;
+			if (!branch.TryAddNode(key, self)) return false;
+
+			self.BranchType = branch.Type;
+			self.Parent = parent;
+			self.Core = parent.Core;
+			self.World = parent.World;
+
+			self.RefreshActive();
+			NodeBranchTraversalHelper.TraversalPrePostOrder(self, node => node.OnBeforeGraftSelfToTree(), node => node.OnGraftSelfToTree());
+			return true;
+		}
 
 
 		/// <summary>
-		/// 节点嫁接到树结构，无约束条件（代理方法）
+		/// 节点嫁接到树结构: 不安全，无约束条件（代理方法）
 		/// </summary>
 		public static bool TryGraftSelfToTree<K>(INode self, long branchType, K key, INode parent)
 		{

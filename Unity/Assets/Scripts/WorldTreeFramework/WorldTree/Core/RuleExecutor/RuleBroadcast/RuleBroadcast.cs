@@ -78,7 +78,7 @@ namespace WorldTree
 			{
 				if (self.TryWriteDataHead(value, typeMode, ~1, out RuleBroadcaster<R> obj, false, writeType: typeof(RuleBroadcastData))) return;
 				self.WriteDynamic(1);
-				self.WriteValue(obj.TypeToCode<R>());
+				self.WriteValue(TypeInfo<R>.Code);
 			}
 		}
 		class TreeDataDeserialize : TreeDataDeserializeRule<RuleBroadcaster<R>>

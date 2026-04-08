@@ -421,7 +421,7 @@ namespace WorldTree
 		/// </summary>
 		private void AddListenerRule(IListenerRule listenerRule)
 		{
-			if (listenerRule.TargetNodeType == Core.TypeToCode<INode>() && listenerRule.TargetRuleType != Core.TypeToCode<IRule>())
+			if (listenerRule.TargetNodeType == TypeInfo<INode>.Code && listenerRule.TargetRuleType != TypeInfo<IRule>.Code)
 			{
 				//监听目标为法则的
 				targetRuleListenerRuleHashDict.GetOrAdd(listenerRule.TargetRuleType).Add(listenerRule);
@@ -537,7 +537,7 @@ namespace WorldTree
 			{
 				if (supportParameterGenericTypeHashDict.TryGetValue(ruleTypeDefinition, out HashSet<long> typeHash))
 				{
-					if (typeHash.Contains(Core.TypeToCode<T>())) return;
+					if (typeHash.Contains(TypeInfo<T>.Code)) return;
 				}
 				else
 				{
@@ -868,7 +868,7 @@ namespace WorldTree
 			LockSlim.EnterReadLock();
 			try
 			{
-				if (TryGetTargetRuleGroup(Core.TypeToCode<LR>(), targetType, out var RuleGroup))
+				if (TryGetTargetRuleGroup(TypeInfo<LR>.Code, targetType, out var RuleGroup))
 				{
 					ruleGroup = RuleGroup as IRuleGroup<LR>;
 					return true;
@@ -891,7 +891,7 @@ namespace WorldTree
 			LockSlim.EnterReadLock();
 			try
 			{
-				return TryGetTargetRuleGroup(Core.TypeToCode<LR>(), targetType, out ruleGroup);
+				return TryGetTargetRuleGroup(TypeInfo<LR>.Code, targetType, out ruleGroup);
 			}
 			finally
 			{
@@ -987,7 +987,7 @@ namespace WorldTree
 			{
 				if (TargetRuleListenerGroupDict.TryGetValue(targetType, out var ruleGroupDictionary))
 				{
-					if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var ruleGroup))
+					if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.Code, out var ruleGroup))
 					{
 						if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
 						{
@@ -1020,7 +1020,7 @@ namespace WorldTree
 			{
 				if (ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
 				{
-					if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var RuleGroup))
+					if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.Code, out var RuleGroup))
 					{
 						ruleGroup = RuleGroup as IRuleGroup<LR>;
 						return true;
@@ -1046,7 +1046,7 @@ namespace WorldTree
 			{
 				if (ListenerRuleTargetGroupDict.TryGetValue(listenerType, out var ruleGroupDictionary))
 				{
-					if (ruleGroupDictionary.TryGetValue(Core.TypeToCode<LR>(), out var ruleGroup))
+					if (ruleGroupDictionary.TryGetValue(TypeInfo<LR>.Code, out var ruleGroup))
 					{
 						if (ruleGroup.TryGetValue(targetType, out RuleList RuleList))
 						{
@@ -1198,7 +1198,7 @@ namespace WorldTree
 			LockSlim.EnterReadLock();
 			try
 			{
-				if (RuleGroupDict.TryGetValue(Core.TypeToCode<R>(), out RuleGroup ruleGroup))
+				if (RuleGroupDict.TryGetValue(TypeInfo<R>.Code, out RuleGroup ruleGroup))
 				{
 					return ruleGroup.TryGetValue(nodeType, out ruleList);
 				}

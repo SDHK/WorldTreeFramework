@@ -176,16 +176,6 @@ namespace WorldTree
 
 		#endregion
 
-		//#region Rattan
-
-		///// <summary>
-		///// 树藤分支
-		///// </summary>
-		//[TreeDataIgnore]
-		//public UnitDictionary<long, IRattan> RattanDict { get; set; }
-
-		//#endregion
-
 		#region Branch
 
 		/// <summary>

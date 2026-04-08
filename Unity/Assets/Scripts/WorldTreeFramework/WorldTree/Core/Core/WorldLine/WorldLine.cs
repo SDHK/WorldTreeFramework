@@ -283,7 +283,7 @@ namespace WorldTree
 		{
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
-				BranchType = Core.TypeToCode<B>();
+				BranchType = TypeInfo<B>.Code;
 				Core = parent.Core ?? this;
 				World = null;
 				Parent = parent;
@@ -394,7 +394,7 @@ namespace WorldTree
 		{
 			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
 
-			BranchType = Core.TypeToCode<B>();
+			BranchType = TypeInfo<B>.Code;
 			Parent = parent;
 			RefreshActive();
 			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());

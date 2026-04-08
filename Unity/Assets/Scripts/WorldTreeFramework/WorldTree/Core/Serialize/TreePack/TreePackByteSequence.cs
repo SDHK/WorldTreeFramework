@@ -217,7 +217,7 @@ namespace WorldTree
 			//判断是否是非托管类型
 			if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) return;
 			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
-			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackDeserializeUnmanaged<T>>(), out ruleList))
+			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.Code, out ruleList))
 				((IRuleList<TreePackDeserializeUnmanaged<T>>)ruleList).SendRef(this, ref value);
 		}
 

@@ -53,7 +53,7 @@ namespace WorldTree
 
 			//全局事件保存
 			mapper.InputEvent = self.Core.PoolGetUnit(out RuleBroadcastData data);
-			data.RuleType = self.TypeToCode<InputTestEvent>();
+			data.RuleType = TypeInfo<InputTestEvent>.Code;
 
 
 			//获取一个数据库代理，保存到数据库
@@ -76,7 +76,7 @@ namespace WorldTree
 			//将管理器 嫁接到 世界节点组件分支 上
 			self.World.AddComponent(out InputManager manager);
 
-			archive.TryGraftSelfToTree(self.TypeToCode<GenericBranch<string>>(), "0", manager);
+			archive.TryGraftSelfToTree<GenericBranch<string>, string>("0", manager);
 
 			//数据获取测试：
 			if (archive.TryGetGeneric("0", out InputLayer layer))

@@ -187,7 +187,7 @@ namespace WorldTree
 		public static long AddTicker<R>(this CascadeTicker self, long clockTick, INode node, TreeTaskToken token = null)
 			where R : ISendRule
 		{
-			return self.AddTicker(clockTick, node, self.TypeToCode<R>(), token);
+			return self.AddTicker(clockTick, node, TypeInfo<R>.Code, token);
 		}
 
 		/// <summary>

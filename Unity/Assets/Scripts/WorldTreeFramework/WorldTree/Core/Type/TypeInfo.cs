@@ -14,6 +14,22 @@ using System.Reflection;
 namespace WorldTree
 {
 	/// <summary>
+	/// 类型信息静态类：用于获取类型的相关信息
+	/// </summary>
+	public static class TypeInfo<T>
+	{
+		/// <summary>
+		/// 类型码 
+		/// </summary>
+		public static readonly long Code = typeof(T).ToString().GetHash64();
+
+		/// <summary>
+		/// 类型名称
+		/// </summary>
+		public static readonly string Name = typeof(T).ToString();
+	}
+
+	/// <summary>
 	/// 类型信息：用于类型的信息获取
 	/// </summary>
 	public class TypeInfo : Node
@@ -148,7 +164,7 @@ namespace WorldTree
 		public static long TypeToCode(this IWorldTreeBasic self) => self.Core.TypeInfo.TypeToCode(self.GetType());
 
 		/// <summary>
-		/// 获取泛型类型码
+		/// 注册并获取泛型类型码
 		/// </summary>
 		public static long TypeToCode<T>(this IWorldTreeBasic self) => self.Core.TypeInfo.TypeToCode(typeof(T));
 
