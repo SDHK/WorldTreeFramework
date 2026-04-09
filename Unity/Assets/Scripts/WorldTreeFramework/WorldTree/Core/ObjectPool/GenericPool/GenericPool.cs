@@ -141,10 +141,7 @@ namespace WorldTree
 		}
 
 
-		public override object GetObject()
-		{
-			return Get();
-		}
+		public override object GetObject() => Get();
 
 
 		public override void Recycle(object recycleObject)

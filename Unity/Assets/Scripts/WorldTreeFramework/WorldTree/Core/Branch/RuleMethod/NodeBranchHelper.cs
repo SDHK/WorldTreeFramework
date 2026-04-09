@@ -7,6 +7,8 @@
 
 */
 
+using System;
+
 namespace WorldTree
 
 {
@@ -50,7 +52,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加分支:不安全
 		/// </summary>
-		public static IBranch AddBranch(INode self, long type)
+		public static IBranch AddBranch(INode self, Type type)
 		{
 			IBranch branch = null;
 			// 第一个分支，直接创建单个分支
@@ -60,9 +62,9 @@ namespace WorldTree
 				self.BranchDict = branch;
 				return branch;
 			}
-
+			var typeCode = self.TypeToCode(type);
 			// 已经是分支集合了,查找是否存在
-			if (self.BranchDict.TryGetBranch(type, out branch)) return branch;
+			if (self.BranchDict.TryGetBranch(typeCode, out branch)) return branch;
 
 			// 需要添加第二个分支，升级为 BranchGroup
 			if (self.BranchDict is not BranchGroup)
@@ -72,7 +74,7 @@ namespace WorldTree
 				self.BranchDict.TryAddBranch(oldBranch.Type, oldBranch);
 			}
 			branch = self.Core.PoolGetUnit(type) as IBranch;
-			self.BranchDict.TryAddBranch(type, branch);
+			self.BranchDict.TryAddBranch(typeCode, branch);
 			return branch;
 		}
 

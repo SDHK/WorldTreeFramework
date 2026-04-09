@@ -20,7 +20,7 @@ namespace WorldTree
 	/// 单位对象池
 	/// </summary>
 	public class UnitPool : GenericPool<IUnit>
-		, ChildOf<PoolManagerBase<UnitPool>>
+		, ChildOf<UnitPoolManager>
 	{
 		public UnitPool() : base()
 		{

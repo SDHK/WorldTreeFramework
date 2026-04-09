@@ -213,7 +213,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点嫁接到树结构，无约束条件
 		/// </summary>
-		public bool TryGraftSelfToTree<K>(long branchType, K key, INode parent);
+		public bool TryGraftSelfToTree<K>(Type branchType, K key, INode parent);
 
 		/// <summary>
 		/// 节点嫁接到树结构

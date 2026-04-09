@@ -11,23 +11,9 @@ namespace WorldTree
 	/// <summary>
 	/// 节点对象池管理器
 	/// </summary>
-	public class NodePoolManager : PoolManagerBase<NodePool>, CoreManagerOf<WorldLine>
+	public class NodePoolManager : PoolManagerBase<NodePool>
+		, CoreManagerOf<WorldLine>
+		, AsRule<Awake>
 	{
-		/// <summary>
-		/// 尝试获取节点
-		/// </summary>
-		public bool TryGet(long type, out INode node)
-		{
-			if (TryGet(type, out object obj))
-			{
-				node = obj as INode;
-				return true;
-			}
-			else
-			{
-				node = null;
-				return false;
-			}
-		}
 	}
 }

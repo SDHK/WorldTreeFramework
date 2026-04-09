@@ -65,7 +65,7 @@ namespace WorldTree
 		public override void OnCreate()
 		{
 			if (Core.WorldLineManager.LogType == null) return;
-			log = (ILog)Core.PoolGetUnit(this.TypeToCode(Core.WorldLineManager.LogType));
+			log = (ILog)Core.PoolGetUnit(Core.WorldLineManager.LogType);
 		}
 
 		public void Trace(string message)

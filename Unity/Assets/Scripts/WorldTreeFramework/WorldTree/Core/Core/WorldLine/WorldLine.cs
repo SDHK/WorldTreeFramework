@@ -245,7 +245,8 @@ namespace WorldTree
 			NodePoolManager = this.AddCoreManager(out NodePoolManager _);
 			ArrayPoolManager = this.AddCoreManager(out ArrayPoolManager _);
 
-			UnitPoolManager.TryGet(this.TypeToCode<ChildBranch>(), out _);
+			//??浪费？？
+			UnitPoolManager.TryGet<ChildBranch>(out _);
 
 
 			//嫁接节点需要手动激活
@@ -268,7 +269,7 @@ namespace WorldTree
 			GameTimeManager = this.AddCoreManager(out GameTimeManager _);
 
 			long typeCode = this.TypeToCode(heartType);
-			WorldHeart = NodeBranchHelper.AddNode(this, default(CoreManagerBranch), typeCode, typeCode, out _, frameTime) as WorldHeartBase;
+			WorldHeart = NodeBranchHelper.AddNode(this, default(CoreManagerBranch), typeCode, heartType, out _, frameTime) as WorldHeartBase;
 			WorldContext = this.AddCoreManager(out WorldContext _);
 			WorldHeart.Run();
 		}

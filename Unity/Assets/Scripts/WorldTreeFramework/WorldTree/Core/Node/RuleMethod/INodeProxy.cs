@@ -9,6 +9,7 @@
 
 */
 
+using System;
 using System.Collections.Generic;
 
 namespace WorldTree
@@ -293,7 +294,7 @@ namespace WorldTree
 		/// <summary>
 		/// 节点嫁接到树结构: 不安全，无约束条件（代理方法）
 		/// </summary>
-		public static bool TryGraftSelfToTree<K>(INode self, long branchType, K key, INode parent)
+		public static bool TryGraftSelfToTree<K>(INode self, Type branchType, K key, INode parent)
 		{
 			if (NodeBranchHelper.AddBranch(parent, branchType) is not IBranch<K> branch) return false;
 			if (!branch.TryAddNode(key, self)) return false;
@@ -441,7 +442,7 @@ namespace WorldTree
 			INode viewBuilderParent = self.Core.ViewBuilder.Parent;
 
 			// 生成自身的可视化生成器
-			INode nodeView = viewBuilderParent.Core.PoolGetNode(self.Core.ViewBuilder.Type);
+			INode nodeView = viewBuilderParent.Core.PoolGetNode(self.Core.ViewBuilder.GetType());
 
 			// 将自身添加到父节点的可视化生成器中，而可视化则挂到可视化父级节点上
 			self.ViewBuilder = NodeBranchHelper.AddNodeToTree(viewBuilderParent, default(ChildBranch), nodeView.Id, nodeView, (INode)self, (INode)self.Parent) as IWorldTreeNodeViewBuilder;

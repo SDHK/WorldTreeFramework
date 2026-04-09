@@ -48,9 +48,9 @@ namespace WorldTree
 			{
 				lock (self.UnitPoolManager)
 				{
-					if (self.UnitPoolManager.TryGet(self.TypeToCode<T>(), out IUnit unit))
+					if (self.UnitPoolManager.TryGet(out T unit))
 					{
-						return unit as T;
+						return unit;
 					}
 				}
 			}
@@ -60,19 +60,19 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
-		public static IUnit PoolGetUnit(this WorldLine self, long type)
+		public static IUnit PoolGetUnit(this WorldLine self, Type type)
 		{
 			if (self != null && self.IsCoreActive)
 			{
 				lock (self.UnitPoolManager)
 				{
-					if (self.UnitPoolManager.TryGet(type, out IUnit unit))
+					if (self.UnitPoolManager.TryGet(type, out object unit))
 					{
-						return unit;
+						return unit as IUnit;
 					}
 				}
 			}
-			return self.NewUnit(self.CodeToType(type), out _);
+			return self.NewUnit(type, out _);
 		}
 
 		/// <summary>

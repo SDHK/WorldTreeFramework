@@ -1,4 +1,6 @@
-﻿namespace WorldTree
+﻿using System;
+
+namespace WorldTree
 {
 
 	public static partial class ViewLayerRule
@@ -58,13 +60,14 @@
 		}
 
 		/// <summary>
-		/// 尝试添加视图:类型码
+		/// 尝试添加视图:类型
 		/// </summary>
-		public static bool TryAddView(this ViewLayer self, long typeCode, out ViewObject view)
+		public static bool TryAddView(this ViewLayer self, Type type, out ViewObject view)
 		{
 			view = null;
+			long typeCode = self.TypeToCode(type);
 			if (NodeBranchHelper.TryGetBranch(self.ViewBind, out ComponentBranch branch) && branch.Contains(typeCode)) return false;
-			NodeBranchHelper.AddNode(self.ViewBind, default(ComponentBranch), typeCode, typeCode, out INode node);
+			NodeBranchHelper.AddNode(self.ViewBind, default(ComponentBranch), typeCode, type, out INode node);
 			view = (ViewObject)node;
 			return true;
 		}

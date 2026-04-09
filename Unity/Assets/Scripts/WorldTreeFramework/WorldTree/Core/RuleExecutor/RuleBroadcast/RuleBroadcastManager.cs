@@ -36,8 +36,8 @@ namespace WorldTree
 			if (node != null) return node as RuleBroadcaster;
 
 			if (!self.TryCodeToType(genericTypeCpde, out Type genericType)) return null;
-			Type type = typeof(RuleBroadcaster<>).MakeGenericType(genericType);
-			NodeBranchHelper.AddNode(self.GlobalRuleExecutorManager, default(GenericBranch<long>), genericTypeCpde, self.TypeToCode(type), out node);
+			Type broadcasterType = typeof(RuleBroadcaster<>).MakeGenericType(genericType);
+			NodeBranchHelper.AddNode(self.GlobalRuleExecutorManager, default(GenericBranch<long>), genericTypeCpde, broadcasterType, out node);
 			RuleBroadcaster executor = node as RuleBroadcaster;
 			return executor;
 		}

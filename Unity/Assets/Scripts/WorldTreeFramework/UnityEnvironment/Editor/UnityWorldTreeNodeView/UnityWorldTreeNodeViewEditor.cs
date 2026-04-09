@@ -94,7 +94,7 @@ namespace EditorTool
 
 					if (!View.World.ComponentBranch().TryGetNode(typeCode, out INode viewNode))
 					{
-						NodeBranchHelper.AddNode(View.World, default(ComponentBranch), typeCode, typeCode, out viewNode);
+						NodeBranchHelper.AddNode(View.World, default(ComponentBranch), typeCode, nodeType, out viewNode);
 					}
 					NodeRuleHelper.TrySendRule(viewNode, default(INodeFieldViewRule), node, memberInfo);//调用绘制法则
 				}

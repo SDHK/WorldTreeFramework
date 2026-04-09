@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -26,7 +27,7 @@ namespace WorldTree
 	/// 对象池管理器泛型基类
 	/// </summary>
 	public abstract class PoolManagerBase<T> : PoolManagerBase
-		where T : PoolBase, ChildOf<PoolManagerBase<T>>
+		where T : PoolBase
 	{
 		/// <summary>
 		/// 池集合字典
@@ -36,6 +37,26 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试新建或获取对象池
 		/// </summary>
+		public virtual bool TryNewOrGetPool<Obj>(out T pool)
+		{
+			long typeCode = TypeInfo<Obj>.Code;
+			//忽略类型表检测
+			if (!ignoreTypeHash.Contains(typeCode))
+			{
+				//不存在则新建
+				if (!poolDict.TryGetValue(typeCode, out pool))
+				{
+					pool = NewPool(typeof(Obj));
+				}
+				return true;
+			}
+			pool = null;
+			return false;
+		}
+
+		/// <summary>
+		/// 尝试新建或获取对象池：不安全
+		/// </summary>
 		public virtual bool TryNewOrGetPool(long type, out T pool)
 		{
 			//忽略类型表检测
@@ -44,7 +65,7 @@ namespace WorldTree
 				//不存在则新建
 				if (!poolDict.TryGetValue(type, out pool))
 				{
-					pool = NewPool(type);
+					pool = NewPool(Core.CodeToType(type));
 				}
 				return true;
 			}
@@ -55,11 +76,11 @@ namespace WorldTree
 		/// <summary>
 		/// 新建池
 		/// </summary>
-		private T NewPool(long type)
+		private T NewPool(Type type)
 		{
 			Core.NewNode(out T pool);
-			pool.ObjectType = Core.CodeToType(type);
-			pool.ObjectTypeCode = type;
+			pool.ObjectType = type;
+			pool.ObjectTypeCode = this.TypeToCode(type);
 			poolDict.Add(pool.ObjectTypeCode, pool);
 			pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, this);
 			pool.SetActive(true);
@@ -69,9 +90,28 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取对象
 		/// </summary>
-		public bool TryGet(long type, out object obj)
+		public bool TryGet<Obj>(out Obj obj)
+			where Obj : class
 		{
-			if (TryNewOrGetPool(type, out T pool))
+			if (TryNewOrGetPool<Obj>(out T pool))
+			{
+				obj = pool.GetObject() as Obj;
+				return true;
+			}
+			else
+			{
+				obj = null;
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// 尝试获取对象
+		/// </summary>
+		public bool TryGet(Type type, out object obj)
+		{
+			long typeCode = this.TypeToCode(type);
+			if (TryNewOrGetPool(typeCode, out T pool))
 			{
 				obj = pool.GetObject();
 				return true;

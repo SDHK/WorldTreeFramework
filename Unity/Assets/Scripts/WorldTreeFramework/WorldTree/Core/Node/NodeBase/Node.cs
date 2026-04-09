@@ -6,6 +6,7 @@
 
 ****************************************/
 
+using System;
 using System.Collections.Generic;
 
 namespace WorldTree
@@ -205,7 +206,7 @@ namespace WorldTree
 
 		public virtual bool TryGraftSelfToTree<B, K>(K key, INode parent) where B : class, IBranch<K> => INodeProxyRule.TryGraftSelfToTree<B, K>(this, key, parent);
 
-		public virtual bool TryGraftSelfToTree<K>(long branchType, K key, INode parent) => INodeProxyRule.TryGraftSelfToTree(this, branchType, key, parent);
+		public virtual bool TryGraftSelfToTree<K>(Type branchType, K key, INode parent) => INodeProxyRule.TryGraftSelfToTree(this, branchType, key, parent);
 
 		public virtual void OnBeforeGraftSelfToTree() => INodeProxyRule.OnBeforeGraftSelfToTree(this);
 

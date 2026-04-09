@@ -16,21 +16,6 @@ namespace WorldTree
 		, CoreManagerOf<WorldLine>
 		, AsRule<Awake>
 	{
-		/// <summary>
-		/// 尝试获取单位
-		/// </summary>
-		public bool TryGet(long type, out IUnit unit)
-		{
-			if (TryGet(type, out object obj))
-			{
-				unit = obj as IUnit;
-				return true;
-			}
-			else
-			{
-				unit = null;
-				return false;
-			}
-		}
+
 	}
 }

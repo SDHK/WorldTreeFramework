@@ -56,7 +56,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 添加节点，无约束
 							/// </summary>
-							public static INode AddNode<B, K{{genericsType}}>(INode self, B nullBranch, K key, long type, out INode node{{genericTypeParameter}})
+							public static INode AddNode<B, K{{genericsType}}>(INode self, B nullBranch, K key, Type type, out INode node{{genericTypeParameter}})
 								where B : class, IBranch<K>
 							{
 								if (TryGetBranch(self, out B branch) && branch.Contains(key))

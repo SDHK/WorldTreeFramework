@@ -6,6 +6,8 @@
 * 描述： 
 
 */
+using System;
+
 namespace WorldTree
 {
 	public static class WindowManagerRule
@@ -24,7 +26,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加视图数据
 		/// </summary>
-		public static View AddView(this View self, long viewType, out View subView)
+		public static View AddView(this View self, Type viewType, out View subView)
 		{
 			subView = null;
 			if (!self.IsOpen) return null;

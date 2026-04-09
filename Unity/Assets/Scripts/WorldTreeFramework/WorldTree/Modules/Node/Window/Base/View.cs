@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace WorldTree
 {
@@ -144,7 +145,8 @@ namespace WorldTree
 
 			if (this.Bind.IsNull)
 			{
-				this.Bind = new(NodeBranchHelper.AddNode(this, default(ComponentBranch), this.ViewBindType, this.ViewBindType, out INode _) as ViewBind);
+				Type viewBindType = this.CodeToType(this.ViewBindType);
+				this.Bind = new(NodeBranchHelper.AddNode(this, default(ComponentBranch), this.ViewBindType, viewBindType, out INode _) as ViewBind);
 			}
 			return 0;
 		}

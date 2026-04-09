@@ -20,7 +20,7 @@ namespace WorldTree
 	/// 实体对象池
 	/// </summary>
 	public class NodePool : GenericPool<INode>
-		, ChildOf<PoolManagerBase<NodePool>>
+		, ChildOf<NodePoolManager>
 	{
 		public NodePool() : base()
 		{

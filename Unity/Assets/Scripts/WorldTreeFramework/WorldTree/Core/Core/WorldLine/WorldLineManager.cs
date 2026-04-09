@@ -76,7 +76,7 @@ namespace WorldTree
 			ViewLine.WorldContext.Post(() =>
 			{
 				long worldTypeCode = ViewLine.TypeToCode(worldType);
-				NodeBranchHelper.AddNode(ViewLine, default(ComponentBranch), worldTypeCode, worldTypeCode, out _);
+				NodeBranchHelper.AddNode(ViewLine, default(ComponentBranch), worldTypeCode, worldType, out _);
 			});
 		}
 
@@ -94,7 +94,7 @@ namespace WorldTree
 				if (ViewLine != null)
 				{
 					//可视化世界线添加可视化生成器
-					INode nodeView = ViewLine.PoolGetNode(ViewLine.TypeToCode(viewBuilderType));
+					INode nodeView = ViewLine.PoolGetNode(viewBuilderType);
 					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(ViewLine.World, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
 				}
 

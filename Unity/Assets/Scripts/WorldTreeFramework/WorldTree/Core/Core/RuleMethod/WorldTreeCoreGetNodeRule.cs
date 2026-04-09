@@ -46,18 +46,12 @@ namespace WorldTree
 		/// 从池中获取节点对象
 		/// </summary>
 		public static T PoolGetNode<T>(this WorldLine self, bool isSerialize = false) where T : class, INode
-			=> self.PoolGetNode(self.TypeToCode<T>(), isSerialize) as T;
-
-		/// <summary>
-		/// 从池中获取节点对象
-		/// </summary>
-		public static INode PoolGetNode(this WorldLine self, long type, bool isSerialize = false)
 		{
 			if (self.IsCoreActive)
 			{
 				lock (self.NodePoolManager)
 				{
-					if (self.NodePoolManager.TryGet(type, out INode node))
+					if (self.NodePoolManager.TryGet(out T node))
 					{
 						node.IsSerialize = isSerialize;
 						node.OnCreate();
@@ -65,7 +59,28 @@ namespace WorldTree
 					}
 				}
 			}
-			return self.NewNode(self.CodeToType(type), out _, isSerialize);
+			return self.NewNode<T>(out _, isSerialize);
+		}
+
+		/// <summary>
+		/// 从池中获取节点对象
+		/// </summary>
+		public static INode PoolGetNode(this WorldLine self, Type type, bool isSerialize = false)
+		{
+			if (self.IsCoreActive)
+			{
+				lock (self.NodePoolManager)
+				{
+					if (self.NodePoolManager.TryGet(type, out object nodeObj))
+					{
+						INode node = nodeObj as INode;
+						node.IsSerialize = isSerialize;
+						node.OnCreate();
+						return node;
+					}
+				}
+			}
+			return self.NewNode(type, out _, isSerialize);
 		}
 
 		/// <summary>
