@@ -24,12 +24,17 @@ namespace WorldTree
 		/// <summary>
 		/// 启动选项
 		/// </summary>
-		public Options Options;
+		public Options Options = new();
 
 		/// <summary>
 		/// 日志类型
 		/// </summary>
 		public Type LogType;
+
+		/// <summary>
+		/// 类型信息 
+		/// </summary>
+		public TypeInfo TypeInfo = new();
 
 		/// <summary>
 		/// 主世界线
@@ -71,6 +76,7 @@ namespace WorldTree
 			this.viewHeartType = heartType;
 			this.viewBuilderType = viewBuilderType;
 			ViewLine = new WorldLine();
+			if (MainLine == null) TypeInfo.Core = ViewLine;
 			ViewLine.WorldLineManager = this;
 			ViewLine.Init(heartType, 10);
 			ViewLine.WorldContext.Post(() =>
@@ -81,6 +87,16 @@ namespace WorldTree
 		}
 
 		#endregion
+
+		/// <summary>
+		/// 设置启动项
+		/// </summary>
+		public void SetOptions(Options options) => Options = options;
+
+		/// <summary>
+		/// 设置日志类型
+		/// </summary>
+		public void SetLog<T>() where T : class, ILog, new() => LogType = typeof(T);
 
 		/// <summary>
 		/// 创建世界线
@@ -97,11 +113,11 @@ namespace WorldTree
 					INode nodeView = ViewLine.PoolGetNode(viewBuilderType);
 					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(ViewLine.World, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
 				}
-
 				MainLine ??= line;
 				line.WorldLineManager = this;
 				line.Init(heartType, frameTime);
 				lineDict.TryAdd(id, line);
+				if (MainLine != null) TypeInfo.Core = MainLine;
 				return line;
 			}
 			else

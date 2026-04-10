@@ -3,7 +3,7 @@
 * 作者： 闪电黑客
 * 日期： 2025/4/17 14:45
 
-* 描述： 启动选项
+* 描述： 启动项
 
 */
 using CommandLine;
@@ -11,7 +11,7 @@ using CommandLine;
 namespace WorldTree
 {
 	/// <summary>
-	/// 启动选项
+	/// 启动项
 	/// </summary>
 	public class Options
 	{

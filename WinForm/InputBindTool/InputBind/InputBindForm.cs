@@ -7,7 +7,7 @@ namespace InputBind
 	{
 
 		/// <summary>
-		/// 世界更新时间
+		/// 涓栫晫鏇存柊鏃堕棿
 		/// </summary>
 		public static DateTime UpdateTime;
 
@@ -17,8 +17,7 @@ namespace InputBind
 			InitializeComponent();
 
 			WorldLineManager lineManager = new();
-			lineManager.Options = new();
-			lineManager.LogType = typeof(WorldLog);
+			lineManager.SetLog<WorldLog>();
 			var line = lineManager.Create(0, typeof(WinFormWorldHeart), 1000);
 			line.WorldContext.Post(() =>
 			{

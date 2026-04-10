@@ -121,11 +121,6 @@ namespace WorldTree
 		public IdManager IdManager;
 
 		/// <summary>
-		/// 类型信息
-		/// </summary>
-		public TypeInfo TypeInfo;
-
-		/// <summary>
 		/// 真实时间管理器
 		/// </summary>
 		public RealTimeManager RealTimeManager;
@@ -187,23 +182,12 @@ namespace WorldTree
 		{
 			SetActive(false);
 
-
 			//根节点初始化
 			Core = this;
 			World = this;
 
 			//框架核心启动组件新建初始化
-
-			//类型信息初始化
-			TypeInfo = Activator.CreateInstance(typeof(TypeInfo), true) as TypeInfo;
-			TypeInfo.Core = this;
-			TypeInfo.World = this.World;
-			TypeInfo.Type = TypeInfo.TypeToCode(typeof(TypeInfo));
-			TypeInfo.OnCreate();
-
-
 			Type = this.TypeToCode();
-
 
 			//Id管理器初始化
 			this.PoolGetNode(out IdManager);
@@ -213,9 +197,7 @@ namespace WorldTree
 				Id = InstanceId;
 			}
 
-			TypeInfo.InstanceId = IdManager.GetId();
-			TypeInfo.Id = TypeInfo.InstanceId;
-
+			//日志管理器初始化
 			this.PoolGetUnit(out LogManager);
 
 			//法则管理器初始化
@@ -237,7 +219,6 @@ namespace WorldTree
 			//组件添加到树
 			this.TryGraftCoreManager(ReferencedPoolManager);
 			this.TryGraftCoreManager(IdManager);
-			this.TryGraftCoreManager(TypeInfo);
 			this.TryGraftCoreManager(RuleManager);
 
 			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
@@ -245,14 +226,9 @@ namespace WorldTree
 			NodePoolManager = this.AddCoreManager(out NodePoolManager _);
 			ArrayPoolManager = this.AddCoreManager(out ArrayPoolManager _);
 
-			//??浪费？？
-			UnitPoolManager.TryGet<ChildBranch>(out _);
-
-
 			//嫁接节点需要手动激活
 			ReferencedPoolManager.SetActive(true);
 			IdManager.SetActive(true);
-			TypeInfo.SetActive(true);
 			RuleManager.SetActive(true);
 
 			//核心激活
@@ -350,8 +326,8 @@ namespace WorldTree
 			NodePoolManager?.Dispose();
 			UnitPoolManager?.Dispose();
 			RuleManager?.Dispose();
+			LogManager?.Dispose();
 			IdManager?.Dispose();
-			TypeInfo?.Dispose();
 			ReferencedPoolManager?.Dispose();
 		}
 
@@ -371,7 +347,6 @@ namespace WorldTree
 			this.PoolRecycle(this);//回收到池
 
 			ReferencedPoolManager = null;
-			TypeInfo = null;
 			IdManager = null;
 			RuleManager = null;
 			UnitPoolManager = null;

@@ -22,7 +22,7 @@ namespace WorldTree
 		public WorldLineManager WorldLineManager;
 
 		/// <summary>
-		/// 启动选项
+		/// 启动项
 		/// </summary>
 		public Options Options = new();
 
@@ -38,17 +38,10 @@ namespace WorldTree
 			//		   .WithParsed((o) => Options = o);
 
 			WorldLineManager = new();
-			WorldLineManager.Options = Options;
-			WorldLineManager.LogType = typeof(UnityWorldLog);
-
+			WorldLineManager.SetLog<UnityWorldLog>();
 
 			if (Define.IsEditor) WorldLineManager.SetView(typeof(UnityViewBuilderWorld), typeof(UnityWorldHeart), typeof(UnityWorldTreeNodeViewBuilder));
-
 			var line = WorldLineManager.Create(0, typeof(UnityWorldHeart));
-
-
-
-
 
 			line.WorldContext.Post(() =>
 			{

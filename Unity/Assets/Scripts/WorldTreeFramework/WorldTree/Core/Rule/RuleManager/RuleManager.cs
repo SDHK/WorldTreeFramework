@@ -180,7 +180,7 @@ namespace WorldTree
 		{
 			//反射获取全局继承IRule的法则类型列表
 			List<Type> ruleTypeList = new();
-			foreach (Type type in Core.TypeInfo.TypeHash64Dict.Keys)
+			foreach (Type type in Core.WorldLineManager.TypeInfo.TypeHash64Dict.Keys)
 			{
 				if (type.GetInterfaces().Contains(typeof(IRule)) && !type.IsAbstract && !type.IsInterface)
 					ruleTypeList.Add(type);

@@ -171,10 +171,10 @@ namespace WorldTree
 			var getDict = TypeCodeDict;
 			foreach (var type in TypeCodes)
 			{
-				self.Core.TypeInfo.Add(type);
-				self.Core.TypeInfo.Add(type.MakeArrayType());//1是向量数组 int[*]
-				self.Core.TypeInfo.Add(type.MakeArrayType(2));
-				self.Core.TypeInfo.Add(type.MakeArrayType(3));
+				self.TypeToCode(type);
+				self.TypeToCode(type.MakeArrayType());//1是向量数组 int[*]
+				self.TypeToCode(type.MakeArrayType(2));
+				self.TypeToCode(type.MakeArrayType(3));
 			}
 		}
 	}

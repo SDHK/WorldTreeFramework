@@ -32,9 +32,7 @@ namespace WorldTree
 	/// <summary>
 	/// 类型信息：用于类型的信息获取
 	/// </summary>
-	public class TypeInfo : Node
-		, CoreManagerOf<WorldLine>
-		, AsRule<Awake>
+	public class TypeInfo : Unit
 	{
 		/// <summary>
 		/// 类型名称哈希码表
@@ -49,9 +47,7 @@ namespace WorldTree
 		/// </summary>
 		public readonly ConcurrentDictionary<long, Type> Hash64TypeDict = new();
 
-		public override void OnCreate()
-		{
-		}
+
 
 		/// <summary>
 		/// 清除
@@ -161,27 +157,27 @@ namespace WorldTree
 		/// <summary>
 		/// 获取自身类型码
 		/// </summary>
-		public static long TypeToCode(this IWorldTreeBasic self) => self.Core.TypeInfo.TypeToCode(self.GetType());
+		public static long TypeToCode(this IWorldTreeBasic self) => self.Core.WorldLineManager.TypeInfo.TypeToCode(self.GetType());
 
 		/// <summary>
 		/// 注册并获取泛型类型码
 		/// </summary>
-		public static long TypeToCode<T>(this IWorldTreeBasic self) => self.Core.TypeInfo.TypeToCode(typeof(T));
+		public static long TypeToCode<T>(this IWorldTreeBasic self) => self.Core.WorldLineManager.TypeInfo.TypeToCode(typeof(T));
 
 		/// <summary>
 		/// 获取类型码
-		/// </summary>
-		public static long TypeToCode(this IWorldTreeBasic self, Type type) => self.Core.TypeInfo.TypeToCode(type);
+		/// </summary>	
+		public static long TypeToCode(this IWorldTreeBasic self, Type type) => self.Core.WorldLineManager.TypeInfo.TypeToCode(type);
 
 		/// <summary>
 		/// 获取类型
 		/// </summary>
-		public static Type CodeToType(this IWorldTreeBasic self, long typeCode) => self.Core.TypeInfo.CodeToType(typeCode);
+		public static Type CodeToType(this IWorldTreeBasic self, long typeCode) => self.Core.WorldLineManager.TypeInfo.CodeToType(typeCode);
 
 		/// <summary>
 		/// 尝试获取类型
 		/// </summary>
-		public static bool TryCodeToType(this IWorldTreeBasic self, long typeCode, out Type type) => self.Core.TypeInfo.TryCodeToType(typeCode, out type);
+		public static bool TryCodeToType(this IWorldTreeBasic self, long typeCode, out Type type) => self.Core.WorldLineManager.TypeInfo.TryCodeToType(typeCode, out type);
 
 	}
 }

@@ -21,8 +21,8 @@ namespace WorldTree.Server
                        .WithParsed((o) => options = o);
 
             WorldLineManager lineManager = new();
-            lineManager.Options = options;
-            lineManager.LogType = typeof(WorldLog);
+            lineManager.SetOptions(options);
+            lineManager.SetLog<WorldLog>();
 
             var line = lineManager.Create(0, typeof(WorldHeart), 1000);
             line.WorldContext.Post(() =>
