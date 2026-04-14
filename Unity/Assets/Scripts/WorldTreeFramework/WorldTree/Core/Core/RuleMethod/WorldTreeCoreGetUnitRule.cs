@@ -46,10 +46,12 @@ namespace WorldTree
 		{
 			if (self != null && self.IsCoreActive)
 			{
-				lock (self.UnitPoolManager)
+				lock (self.WorldLineManager.UnitPoolManager)
 				{
-					if (self.UnitPoolManager.TryGet(out T unit))
+					if (self.WorldLineManager.UnitPoolManager.TryGet(out T unit))
 					{
+						unit.Core = self;
+						unit.OnCreate();
 						return unit;
 					}
 				}
@@ -64,11 +66,14 @@ namespace WorldTree
 		{
 			if (self != null && self.IsCoreActive)
 			{
-				lock (self.UnitPoolManager)
+				lock (self.WorldLineManager.UnitPoolManager)
 				{
-					if (self.UnitPoolManager.TryGet(type, out object unit))
+					if (self.WorldLineManager.UnitPoolManager.TryGet(type, out object obj))
 					{
-						return unit as IUnit;
+						IUnit unit = obj as IUnit;
+						unit.Core = self;
+						unit.OnCreate();
+						return unit;
 					}
 				}
 			}
@@ -82,9 +87,9 @@ namespace WorldTree
 		{
 			if (self != null && self.IsCoreActive && obj.IsFromPool)
 			{
-				lock (self.UnitPoolManager)
+				lock (self.WorldLineManager.UnitPoolManager)
 				{
-					if (self.UnitPoolManager.TryRecycle(obj)) return;
+					if (self.WorldLineManager.UnitPoolManager.TryRecycle(obj)) return;
 				}
 			}
 			obj.IsDisposed = true;

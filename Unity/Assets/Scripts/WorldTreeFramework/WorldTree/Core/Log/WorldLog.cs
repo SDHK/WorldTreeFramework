@@ -15,7 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界日志 （NLog插件）
 	/// </summary>
-	public class WorldLog : Unit, ILog
+	public class WorldLog : LogBase
 	{
 		/// <summary>
 		/// 日志插件
@@ -34,60 +34,53 @@ namespace WorldTree
 			}
 		}
 
-		public override void OnCreate()
+		public override void Init(string name)
 		{
 			if (System.IO.Directory.Exists("../ProjectConfig/NLog"))
 			{
-				this.logger = NLog.LogManager.GetLogger($"{(uint)this.Core.Id:000000}.{this.GetType()}");
+				logger = NLog.LogManager.GetLogger(name);
 			}
 		}
 
-		public void Trace(string message)
+		public override void Trace(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
-			logger?.Trace(message);
+			logger.Trace(message);
 			Debug.WriteLine(message);
 		}
 
-		public void Log(string message)
+		public override void Log(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
-			logger?.Debug(message);
+			logger.Debug(message);
 			Debug.WriteLine(message);
 		}
 
-		public void Error(string message)
+		public override void Error(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
-			logger?.Error(message);
+			logger.Error(message);
 			Debug.WriteLine(message);
 		}
 
-		public void Error(Exception e)
+		public override void Error(Exception e)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
-			logger?.Error(e);
+			logger.Error(e);
 			Debug.WriteLine(e);
 		}
 
-		public void Info(string message)
+		public override void Info(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Info) != LogLevel.Info) return;
-			logger?.Info(message);
+			logger.Info(message);
 			Debug.WriteLine(message);
 		}
 
-		public void Todo(string message)
+		public override void Todo(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
-			logger?.Warn(message);
-			Debug.WriteLine(message);
+			logger.Warn("[TODO]" + message);
+			Debug.WriteLine("[TODO]" + message);
 		}
 
-		public void Warning(string message)
+		public override void Warning(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
-			logger?.Warn(message);
+			logger.Warn(message);
 			Debug.WriteLine(message);
 		}
 	}

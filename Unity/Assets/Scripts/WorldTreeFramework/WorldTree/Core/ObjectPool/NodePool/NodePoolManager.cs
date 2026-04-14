@@ -11,9 +11,5 @@ namespace WorldTree
 	/// <summary>
 	/// 节点对象池管理器
 	/// </summary>
-	public class NodePoolManager : PoolManagerBase<NodePool>
-		, CoreManagerOf<WorldLine>
-		, AsRule<Awake>
-	{
-	}
+	public class NodePoolManager : PoolManagerBase<NodePool> { }
 }

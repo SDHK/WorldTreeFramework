@@ -1,90 +1,64 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace WorldTree
 {
 	/// <summary>
-	/// 对象池管理器基类
+	/// 对象池管理器泛型基类
 	/// </summary>
-	public abstract class PoolManagerBase : Node, IListenerIgnorer
-		, AsRule<Awake>
+	public abstract class PoolManagerBase<T> : CoreObjectBase
+		where T : PoolBase, new()
 	{
 		/// <summary>
 		/// 忽略类型名单
 		/// </summary>
-		public HashSet<long> ignoreTypeHash = new HashSet<long>();
+		public ConcurrentDictionary<long, bool> IgnoreTypeHashDict = new();
 
-		public override void Dispose()
-		{
-			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
-			IsDisposed = true;
-			SetActive(false);
-			base.Dispose();
-		}
-	}
-
-	/// <summary>
-	/// 对象池管理器泛型基类
-	/// </summary>
-	public abstract class PoolManagerBase<T> : PoolManagerBase
-		where T : PoolBase
-	{
 		/// <summary>
 		/// 池集合字典
 		/// </summary>
-		public Dictionary<long, T> poolDict = new Dictionary<long, T>();
+		public ConcurrentDictionary<long, T> PoolDict = new ConcurrentDictionary<long, T>();
 
 		/// <summary>
-		/// 尝试新建或获取对象池
+		/// 新建池委托
 		/// </summary>
-		public virtual bool TryNewOrGetPool<Obj>(out T pool)
-		{
-			long typeCode = TypeInfo<Obj>.Code;
-			//忽略类型表检测
-			if (!ignoreTypeHash.Contains(typeCode))
-			{
-				//不存在则新建
-				if (!poolDict.TryGetValue(typeCode, out pool))
-				{
-					pool = NewPool(typeof(Obj));
-				}
-				return true;
-			}
-			pool = null;
-			return false;
-		}
+		private Func<long, Type, T> newPoolFunc;
 
-		/// <summary>
-		/// 尝试新建或获取对象池：不安全
-		/// </summary>
-		public virtual bool TryNewOrGetPool(long type, out T pool)
+		public PoolManagerBase()
 		{
-			//忽略类型表检测
-			if (!ignoreTypeHash.Contains(type))
-			{
-				//不存在则新建
-				if (!poolDict.TryGetValue(type, out pool))
-				{
-					pool = NewPool(Core.CodeToType(type));
-				}
-				return true;
-			}
-			pool = null;
-			return false;
+			newPoolFunc = NewPool;
 		}
 
 		/// <summary>
 		/// 新建池
 		/// </summary>
-		private T NewPool(Type type)
+		protected T NewPool(long typeCode, Type type)
 		{
-			Core.NewNode(out T pool);
+			T pool = new T();
+			pool.Core = Core;
 			pool.ObjectType = type;
-			pool.ObjectTypeCode = this.TypeToCode(type);
-			poolDict.Add(pool.ObjectTypeCode, pool);
-			pool.TryGraftSelfToTree<ChildBranch, long>(pool.Id, this);
-			pool.SetActive(true);
+			pool.ObjectTypeCode = Core.TypeInfo.TypeToCode(type);
 			return pool;
+		}
+
+		/// <summary>
+		/// 尝试新建或获取对象池
+		/// </summary>
+		protected virtual bool TryNewOrGetPool<Obj>(out T pool) => TryNewOrGetPool(typeof(Obj), TypeInfo<Obj>.Code, out pool);
+
+		/// <summary>
+		/// 尝试新建或获取对象池
+		/// </summary>
+		protected virtual bool TryNewOrGetPool(Type type, long typeCode, out T pool)
+		{
+			//忽略类型表检测
+			if (!IgnoreTypeHashDict.ContainsKey(typeCode))
+			{
+				pool = PoolDict.GetOrAdd(typeCode, newPoolFunc, type);
+				return true;
+			}
+			pool = null;
+			return false;
 		}
 
 		/// <summary>
@@ -110,8 +84,8 @@ namespace WorldTree
 		/// </summary>
 		public bool TryGet(Type type, out object obj)
 		{
-			long typeCode = this.TypeToCode(type);
-			if (TryNewOrGetPool(typeCode, out T pool))
+			long typeCode = Core.TypeInfo.TypeToCode(type);
+			if (TryNewOrGetPool(type, typeCode, out T pool))
 			{
 				obj = pool.GetObject();
 				return true;
@@ -128,14 +102,10 @@ namespace WorldTree
 		/// </summary>
 		public bool TryRecycle(IWorldTreeBasic obj)
 		{
-			if (TryNewOrGetPool(obj.Type, out T pool))
+			if (TryGetPool(obj.Type, out T pool))
 			{
 				pool.Recycle(obj);
 				return true;
-			}
-			else if (obj is T Tpool)
-			{
-				poolDict.Remove(Tpool.ObjectTypeCode);
 			}
 			return false;
 		}
@@ -145,7 +115,7 @@ namespace WorldTree
 		/// </summary>
 		public virtual bool TryGetPool(long type, out T pool)
 		{
-			return poolDict.TryGetValue(type, out pool);
+			return PoolDict.TryGetValue(type, out pool);
 		}
 
 		/// <summary>
@@ -153,10 +123,14 @@ namespace WorldTree
 		/// </summary>
 		public virtual void DisposePool(long type)
 		{
-			if (poolDict.TryGetValue(type, out T pool))
-			{
-				pool.Dispose();
-			}
+			if (PoolDict.TryRemove(type, out T pool)) pool.Dispose();
+		}
+
+		public override void OnDispose()
+		{
+			foreach (var pool in PoolDict.Values) pool.Dispose();
+			PoolDict.Clear();
+			IgnoreTypeHashDict.Clear();
 		}
 	}
 

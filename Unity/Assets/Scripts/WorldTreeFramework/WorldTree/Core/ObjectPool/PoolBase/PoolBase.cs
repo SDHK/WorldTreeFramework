@@ -1,101 +1,27 @@
 ﻿/****************************************
 
- * 作者：闪电黑客
- * 日期: 2021/12/13 13:35:32 （第5次重写）
- 
- * 描述:  
- * 对原先对象池工具的重写，
- * 增加计时销毁设定，并抽象大部分方法
- * 所有对象池的最基类
-
-*/
-/****************************************
-
- * 作者： 闪电黑客
- * 日期： 2022/5/17 10:34 （第6次大修改）
-
- * 描述:  
- * 改为继承Unit统一了销毁功能
- * 重命名类由 ObjectPoolBase 改为 PoolBase
- * 分离计时功能
-*/
-/****************************************
-
 * 作者： 闪电黑客
-* 日期： 2022/7/15 9:32
+* 日期： 2026/4/13 14:25
 
-* 描述： 
-* 为了扩展性再抽出一层IPool接口作为基础
-
-*/
-
-/****************************************
-
-* 作者： 闪电黑客
-* 日期： 2022/8/5 10:32
-
-* 描述： 对象池抽象基类 （第7次大修改）
-* 
-* 从oop单例改为组合模式 并入Node树 
+* 描述： 多线程对象池基类
 
 */
-
 
 using System;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace WorldTree
 {
 	/// <summary>
-	/// 对象池接口
+	/// 对象池抽象基类
 	/// </summary>
-	public interface IPool : IListenerIgnorer
+	public abstract class PoolBase : CoreObjectBase
 	{
 		/// <summary>
 		/// 对象类型
 		/// </summary>
-		public Type ObjectType { get; set; }
-
-		/// <summary>
-		/// 当前保留对象数量
-		/// </summary>
-		public int Count { get; }
-
-		/// <summary>
-		/// 获取对象
-		/// </summary>
-		public object GetObject();
-
-		/// <summary>
-		/// 回收对象
-		/// </summary>
-		public void Recycle(object obj);
-
-		/// <summary>
-		/// 释放全部对象
-		/// </summary>
-		public void DisposeAll();
-
-		/// <summary>
-		/// 释放一个对象
-		/// </summary>
-		public void DisposeOne();
-
-		/// <summary>
-		/// 预加载
-		/// </summary>
-		public void Preload();
-
-	}
-
-
-
-	/// <summary>
-	/// 对象池抽象基类
-	/// </summary>
-	public abstract class PoolBase : Node, IPool
-	{
-		public Type ObjectType { get; set; }
-		public abstract int Count { get; }
+		public Type ObjectType;
 
 		/// <summary>
 		/// 对象类型码
@@ -103,25 +29,101 @@ namespace WorldTree
 		public long ObjectTypeCode;
 
 		/// <summary>
-		/// 预加载数量
+		/// 当前对象数量
 		/// </summary>
-		public int minLimit = 0;
+		public int Count => objectCount;
+
+		/// <summary>
+		/// 热对象 
+		/// </summary>
+		public object HotObject;
+
+		/// <summary>
+		/// 对象池
+		/// </summary>
+		protected ConcurrentQueue<object> objectPoolQueue = new ConcurrentQueue<object>();
+
+
+
+		/// <summary>
+		/// 对象数量 
+		/// </summary>
+		protected int objectCount;
 
 		/// <summary>
 		/// 对象回收数量限制
 		/// </summary>
-		public int maxLimit = -1;
+		public int MaxLimit = -1;
 
+		/// <summary>
+		/// 对象新建 
+		/// </summary>
+		protected virtual object NewObject()
+		{
+			return Activator.CreateInstance(ObjectType);
+		}
+		/// <summary>
+		/// 获取对象
+		/// </summary>
+		public virtual object GetObject()
+		{
+			object obj = HotObject;
+			if (obj == null || Interlocked.CompareExchange(ref HotObject, null, obj) != obj)
+			{
+				if (objectPoolQueue.TryDequeue(out obj))
+				{
+					//ConcurrentQueue 的 Count 属性不是 O(1)，它需要遍历内部所有分段累加
+					Interlocked.Decrement(ref objectCount);
+					return obj;
+				}
+				return NewObject();
+			}
+			return obj;
+		}
 
-		public abstract object GetObject();
+		/// <summary>
+		/// 回收对象
+		/// </summary>
+		public virtual void Recycle(object obj)
+		{
+			if (HotObject != null || Interlocked.CompareExchange(ref HotObject, obj, null) != null)
+			{
+				// 数量+1，假如超过限制则数量-1并丢弃对象，否则入队
+				if (Interlocked.Increment(ref objectCount) <= MaxLimit || MaxLimit == -1)
+				{
+					objectPoolQueue.Enqueue(obj);
+					return;
+				}
+				Interlocked.Decrement(ref objectCount);
+			}
+		}
 
-		public abstract void Recycle(object obj);
+		/// <summary>
+		/// 释放全部对象
+		/// </summary>
+		public virtual void DisposeAll()
+		{
+			Interlocked.Exchange(ref HotObject, null);   // 直接清 HotObject
+			while (objectPoolQueue.TryDequeue(out _))    // 逐一清队列
+				Interlocked.Decrement(ref objectCount);
+		}
 
-		public abstract void DisposeAll();
+		/// <summary>
+		/// 释放一个对象
+		/// </summary>
+		public virtual void DisposeOne()
+		{
+			object obj = HotObject;
+			if (obj == null || Interlocked.CompareExchange(ref HotObject, null, obj) != obj)
+			{
+				if (objectPoolQueue.TryDequeue(out _))
+					Interlocked.Decrement(ref objectCount);
+			}
+		}
 
-		public abstract void DisposeOne();
-
-		public abstract void Preload();
+		public override void OnDispose()
+		{
+			DisposeAll();
+		}
 	}
-
 }

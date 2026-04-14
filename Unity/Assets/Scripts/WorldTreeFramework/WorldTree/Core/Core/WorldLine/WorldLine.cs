@@ -56,6 +56,21 @@ namespace WorldTree
 		/// </summary>
 		public WorldLineManager WorldLineManager;
 
+		/// <summary>
+		/// Id管理器
+		/// </summary>
+		public IdManager IdManager;
+
+		/// <summary>
+		/// 真实时间管理器
+		/// </summary>
+		public RealTimeManager RealTimeManager;
+
+		/// <summary>
+		/// 法则管理器
+		/// </summary>
+		public RuleManager RuleManager;
+
 
 		#region 日志
 		/// <summary>
@@ -115,40 +130,11 @@ namespace WorldTree
 		/// </summary>
 		public bool IsCoreActive = false;
 
-		/// <summary>
-		/// Id管理器
-		/// </summary>
-		public IdManager IdManager;
-
-		/// <summary>
-		/// 真实时间管理器
-		/// </summary>
-		public RealTimeManager RealTimeManager;
 
 		/// <summary>
 		/// 游戏时间管理器
 		/// </summary>
 		public GameTimeManager GameTimeManager;
-
-		/// <summary>
-		/// 法则管理器
-		/// </summary>
-		public RuleManager RuleManager;
-
-		/// <summary>
-		/// 单位对象池管理器
-		/// </summary>
-		public UnitPoolManager UnitPoolManager;
-
-		/// <summary>
-		/// 节点对象池管理器
-		/// </summary>
-		public NodePoolManager NodePoolManager;
-
-		/// <summary>
-		/// 数组对象池管理器
-		/// </summary>
-		public ArrayPoolManager ArrayPoolManager;
 
 
 		/// <summary>
@@ -198,7 +184,8 @@ namespace WorldTree
 			}
 
 			//日志管理器初始化
-			this.PoolGetUnit(out LogManager);
+			this.WorldLineManager.NewCoreObject(out LogManager);
+			LogManager.Init(Id.ToString());
 
 			//法则管理器初始化
 			this.PoolGetNode(out RuleManager);
@@ -221,10 +208,6 @@ namespace WorldTree
 			this.TryGraftCoreManager(IdManager);
 			this.TryGraftCoreManager(RuleManager);
 
-			//对象池组件。 out 会在执行完之前就赋值 ，但这时候对象池并没有准备好
-			UnitPoolManager = this.AddCoreManager(out UnitPoolManager _);
-			NodePoolManager = this.AddCoreManager(out NodePoolManager _);
-			ArrayPoolManager = this.AddCoreManager(out ArrayPoolManager _);
 
 			//嫁接节点需要手动激活
 			ReferencedPoolManager.SetActive(true);
@@ -322,13 +305,10 @@ namespace WorldTree
 			GameTimeManager?.Dispose();
 			RealTimeManager?.Dispose();
 			GlobalRuleExecutorManager?.Dispose();
-			ArrayPoolManager?.Dispose();
-			NodePoolManager?.Dispose();
-			UnitPoolManager?.Dispose();
 			RuleManager?.Dispose();
-			LogManager?.Dispose();
 			IdManager?.Dispose();
 			ReferencedPoolManager?.Dispose();
+			LogManager?.Dispose();
 		}
 
 		/// <summary>
@@ -349,9 +329,6 @@ namespace WorldTree
 			ReferencedPoolManager = null;
 			IdManager = null;
 			RuleManager = null;
-			UnitPoolManager = null;
-			NodePoolManager = null;
-			ArrayPoolManager = null;
 			RealTimeManager = null;
 			GameTimeManager = null;
 			World = null;

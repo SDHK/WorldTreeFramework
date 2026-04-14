@@ -23,27 +23,27 @@ namespace WorldTree
 		/// <summary>
 		/// 异常
 		/// </summary>
-		Error,
+		Error = 1,
 		/// <summary>
 		/// 警告
 		/// </summary>
-		Warning,
+		Warning = 2,
 		/// <summary>
 		/// 调试
 		/// </summary>
-		Debug,
+		Debug = 4,
 		/// <summary>
 		/// 信息
 		/// </summary>
-		Info,
+		Info = 8,
 		/// <summary>
 		/// 跟踪
 		/// </summary>
-		Trace,
+		Trace = 16,
 		/// <summary>
 		/// 待办
 		/// </summary>
-		TODO,
+		TODO = 32,
 
 		/// <summary>
 		/// 所有日志
@@ -55,58 +55,62 @@ namespace WorldTree
 	/// <summary>
 	/// 日志管理器
 	/// </summary>
-	public class LogManager : Unit, ILog
+	public class LogManager : CoreObjectBase, ILog
 	{
 		/// <summary>
 		/// 日志组件
 		/// </summary>
-		private ILog log;
+		private LogBase log;
 
-		public override void OnCreate()
+		/// <summary>
+		/// 初始化
+		/// </summary>
+		public void Init(string name)
 		{
-			if (Core.WorldLineManager.LogType == null) return;
-			log = (ILog)Core.PoolGetUnit(Core.WorldLineManager.LogType);
+			if (Core.LogType == null) return;
+			log = (LogBase)this.NewCoreObject(Core.LogType);
+			log.Init(name);
 		}
 
 		public void Trace(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
+			if ((Core.Options.LogLevel & LogLevel.Trace) != LogLevel.Trace) return;
 			log?.Trace(message);
 		}
 
 		public void Log(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
+			if ((Core.Options.LogLevel & LogLevel.Debug) != LogLevel.Debug) return;
 			log?.Log(message);
 		}
 
 		public void Error(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
+			if ((Core.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
 			log?.Error(message);
 		}
 
 		public void Error(Exception e)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
+			if ((Core.Options.LogLevel & LogLevel.Error) != LogLevel.Error) return;
 			log?.Error(e);
 		}
 
 		public void Info(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Info) != LogLevel.Info) return;
+			if ((Core.Options.LogLevel & LogLevel.Info) != LogLevel.Info) return;
 			log?.Info(message);
 		}
 
 		public void Todo(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
+			if ((Core.Options.LogLevel & LogLevel.TODO) != LogLevel.TODO) return;
 			log?.Todo(message);
 		}
 
 		public void Warning(string message)
 		{
-			if ((Core.WorldLineManager.Options.LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
+			if ((Core.Options.LogLevel & LogLevel.Warning) != LogLevel.Warning) return;
 			log?.Warning(message);
 		}
 	}

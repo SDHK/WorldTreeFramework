@@ -32,21 +32,68 @@
 
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace WorldTree
 {
 
 	/// <summary>
+	/// 视图对象池 
+	/// </summary>
+	public abstract class ViewPool : Node
+	{
+		/// <summary>
+		/// 当前保留对象数量
+		/// </summary>
+		public abstract int Count { get; }
+
+		/// <summary>
+		/// 类型 
+		/// </summary>
+		public Type ObjectType { get; protected set; }
+
+		/// <summary>
+		/// 约束数量
+		/// </summary>
+		public int MaxLimit;
+
+		/// <summary>
+		/// 预加载数量
+		/// </summary>
+		public int minLimit;
+
+		/// <summary>
+		/// 获取对象 
+		/// </summary>
+		public abstract object GetObject();
+		/// <summary>
+		/// 回收对象 
+		/// </summary>
+		public abstract void Recycle(object recycleObject);
+		/// <summary>
+		/// 释放一个
+		/// </summary>
+		public abstract void DisposeOne();
+		/// <summary>
+		/// 释放所有
+		/// </summary>
+		public abstract void DisposeAll();
+		/// <summary>
+		/// 预加载
+		/// </summary>
+		public abstract void Preload();
+	}
+
+	/// <summary>
 	/// 泛型通用对象池
 	/// </summary>
-	public class GenericPool<T> : PoolBase
+	public class GenericPool<T> : ViewPool
 		where T : class
 	{
 		/// <summary>
 		/// 对象池
 		/// </summary>
-		[Protected] public Queue<T> objectPoolQueue = new Queue<T>();
+		[Protected] public ConcurrentQueue<T> objectPoolQueue = new ConcurrentQueue<T>();
 
 		/// <summary>
 		/// 当前保留对象数量
@@ -56,7 +103,7 @@ namespace WorldTree
 		/// <summary>
 		/// 实例化对象的方法
 		/// </summary>
-		public Func<PoolBase, T> NewObject;
+		public Func<ViewPool, T> NewObject;
 		/// <summary>
 		/// 销毁对象的方法
 		/// </summary>
@@ -90,7 +137,7 @@ namespace WorldTree
 		/// <summary>
 		/// 对象池构造 （实例化对象的委托，销毁对象的委托）
 		/// </summary>
-		public GenericPool(Func<PoolBase, T> objectNew, Action<T> objectDestroy = null)
+		public GenericPool(Func<ViewPool, T> objectNew, Action<T> objectDestroy = null)
 		{
 			ObjectType = typeof(T);
 			this.NewObject = objectNew;
@@ -108,22 +155,18 @@ namespace WorldTree
 		public T DequeueOrNewObject()
 		{
 			T obj = null;
-
-			while (obj == null)
+			if (objectPoolQueue.Count != 0)
 			{
-				if (objectPoolQueue.Count != 0)
+				objectPoolQueue.TryDequeue(out obj);
+			}
+			else
+			{
+				if (NewObject != null)
 				{
-					obj = objectPoolQueue.Dequeue();
+					obj = NewObject(this);
+					objectOnNew?.Invoke(obj);
 				}
-				else
-				{
-					if (NewObject != null)
-					{
-						obj = NewObject(this);
-						objectOnNew?.Invoke(obj);
-					}
-					return obj;
-				}
+				return obj;
 			}
 			return obj;
 		}
@@ -134,6 +177,7 @@ namespace WorldTree
 		/// </summary>
 		public virtual T Get()
 		{
+
 			T obj = DequeueOrNewObject();
 			objectOnGet?.Invoke(obj);
 			Preload();
@@ -149,14 +193,11 @@ namespace WorldTree
 			if (recycleObject != null)
 			{
 				T obj = recycleObject as T;
-				if (maxLimit == -1 || objectPoolQueue.Count < maxLimit)
+				if (MaxLimit == -1 || objectPoolQueue.Count < MaxLimit)
 				{
-					//对象没有回收的标记，所以只能由池自己判断，比较耗时
-					if (!objectPoolQueue.Contains(obj))
-					{
-						objectOnRecycle?.Invoke(obj);
-						objectPoolQueue.Enqueue(obj);
-					}
+					//对象没有回收的标记。无法判断对象是否已经被回收。
+					objectOnRecycle?.Invoke(obj);
+					objectPoolQueue.Enqueue(obj);
 				}
 				else
 				{
@@ -170,18 +211,22 @@ namespace WorldTree
 		{
 			if (objectPoolQueue.Count > 0)
 			{
-				var obj = objectPoolQueue.Dequeue();
-				objectOnDestroy?.Invoke(obj);
-				DestroyObject?.Invoke(obj);
+				if (objectPoolQueue.TryDequeue(out T obj))
+				{
+					objectOnDestroy?.Invoke(obj);
+					DestroyObject?.Invoke(obj);
+				}
 			}
 		}
 		public override void DisposeAll()
 		{
 			while (objectPoolQueue.Count > 0)
 			{
-				var obj = objectPoolQueue.Dequeue();
-				objectOnDestroy?.Invoke(obj);
-				DestroyObject?.Invoke(obj);
+				if (objectPoolQueue.TryDequeue(out T obj))
+				{
+					objectOnDestroy?.Invoke(obj);
+					DestroyObject?.Invoke(obj);
+				}
 			}
 		}
 

@@ -13,20 +13,28 @@ namespace WorldTree
 	/// <summary>
 	/// Unity世界日志
 	/// </summary>
-	public class UnityWorldLog : Unit, ILog
+	public class UnityWorldLog : LogBase
 	{
-		public void Trace(string msg) => UnityEngine.Debug.Log(msg);
+		/// <summary>
+		/// 日志名称 
+		/// </summary>
+		private string name;
+		public override void Init(string name)
+		{
+			this.name = name;
+		}
 
-		public void Log(string msg) => UnityEngine.Debug.Log(msg);
+		public override void Trace(string msg) => UnityEngine.Debug.Log($"[{name}]: {msg}");
 
-		public void Todo(string msg) => UnityEngine.Debug.LogWarning("TODO: " + msg);
+		public override void Log(string msg) => UnityEngine.Debug.Log($"[{name}]: {msg}");
 
-		public void Info(string msg) => UnityEngine.Debug.Log(msg);
+		public override void Todo(string msg) => UnityEngine.Debug.LogWarning($"[{name}]: [TODO] {msg}");
+		public override void Info(string msg) => UnityEngine.Debug.Log($"[{name}]: {msg}");
 
-		public void Warning(string msg) => UnityEngine.Debug.LogWarning(msg);
+		public override void Warning(string msg) => UnityEngine.Debug.LogWarning($"[{name}]: {msg}");
 
-		public void Error(string msg) => UnityEngine.Debug.LogError(msg);
+		public override void Error(string msg) => UnityEngine.Debug.LogError($"[{name}]: {msg}");
 
-		public void Error(Exception e) => UnityEngine.Debug.LogException(e);
+		public override void Error(Exception e) => UnityEngine.Debug.LogException(e);
 	}
 }

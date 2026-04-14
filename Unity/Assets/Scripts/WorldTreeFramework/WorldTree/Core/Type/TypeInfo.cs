@@ -32,7 +32,7 @@ namespace WorldTree
 	/// <summary>
 	/// 类型信息：用于类型的信息获取
 	/// </summary>
-	public class TypeInfo : Unit
+	public class TypeInfo : CoreObjectBase
 	{
 		/// <summary>
 		/// 类型名称哈希码表
@@ -62,17 +62,17 @@ namespace WorldTree
 		/// <summary>
 		/// 重新加载程序集类型
 		/// </summary>
-		public void LoadAssembly(Assembly[] assemblies)
+		public void LoadAssembly(WorldLine core, Assembly[] assemblies)
 		{
 			int typeCount = 0;
 			foreach (Assembly assembly in assemblies)
 			{
 				var types = assembly.GetTypes();
 				foreach (Type type in types) OverlayType(type);
-				this.Log($"重载程序集 {assembly.FullName}, 类型数量 {types.Length}");
+				core.Log($"重载程序集 {assembly.FullName}, 类型数量 {types.Length}");
 				typeCount += types.Length;
 			}
-			this.Log($"加载程序集数量 {assemblies.Length}, 类型数量 {typeCount}");
+			core.Log($"加载程序集数量 {assemblies.Length}, 类型数量 {typeCount}");
 		}
 
 		/// <summary>

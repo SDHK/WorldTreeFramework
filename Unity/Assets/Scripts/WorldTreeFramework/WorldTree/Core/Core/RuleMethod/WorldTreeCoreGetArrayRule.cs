@@ -8,7 +8,7 @@
 
 */
 
-using System;
+using System.Buffers;
 
 namespace WorldTree
 {
@@ -18,71 +18,18 @@ namespace WorldTree
 		/// 获取数组对象
 		/// </summary>
 		public static T[] PoolGetArray<T>(this WorldLine self, out T[] outT, int length)
-		{
-			Type type = typeof(T);
-			if (self.ArrayPoolManager != null)
-			{
-				lock (self.ArrayPoolManager)
-				{
-					outT = self.ArrayPoolManager.Get(type, length) as T[];
-				}
-			}
-			else
-			{
-				outT = Array.CreateInstance(type, length) as T[];
-			}
-			return outT;
-		}
+			 => outT = ArrayPool<T>.Shared.Rent(length);
 
 		/// <summary>
 		/// 获取数组对象
 		/// </summary>
 		public static T[] PoolGetArray<T>(this WorldLine self, int length)
-		{
-			Type type = typeof(T);
-			if (self.ArrayPoolManager != null)
-			{
-				lock (self.ArrayPoolManager)
-				{
-					return self.ArrayPoolManager.Get(type, length) as T[];
-				}
-			}
-			return Array.CreateInstance(type, length) as T[];
-		}
-
-		/// <summary>
-		/// 获取数组对象
-		/// </summary>
-		public static Array PoolGetArray(this WorldLine self, Type type, int length)
-		{
-			if (self.ArrayPoolManager != null)
-			{
-				lock (self.ArrayPoolManager)
-				{
-					return self.ArrayPoolManager.Get(type, length);
-				}
-			}
-			return Array.CreateInstance(type, length);
-		}
-
+		 => ArrayPool<T>.Shared.Rent(length);
 
 		/// <summary>
 		/// 回收数组
 		/// </summary>
-		public static void PoolRecycle(this WorldLine self, Array obj, bool clearArray = false)
-		{
-			if (self.ArrayPoolManager != null)
-			{
-				lock (self.ArrayPoolManager)
-				{
-					self.ArrayPoolManager.Recycle(obj, clearArray);
-				}
-			}
-			else if (clearArray)
-			{
-				Array.Clear(obj, 0, obj.Length);
-			}
-		}
-
+		public static void PoolRecycle<T>(this WorldLine self, T[] array, bool clearArray = false)
+		 => ArrayPool<T>.Shared.Return(array, clearArray);
 	}
 }

@@ -16,6 +16,11 @@ namespace WorldTree
 	public interface ILog
 	{
 		/// <summary>
+		/// 初始化
+		/// </summary>
+		public void Init(string name);
+
+		/// <summary>
 		/// 跟踪
 		/// </summary>
 		public void Trace(string message);
@@ -45,8 +50,20 @@ namespace WorldTree
 		/// 待办
 		/// </summary>
 		void Todo(string message);
+	}
 
-
-
+	/// <summary>
+	/// 日志基类 
+	/// </summary>
+	public abstract class LogBase : CoreObjectBase, ILog
+	{
+		public abstract void Init(string name);
+		public abstract void Trace(string message);
+		public abstract void Log(string message);
+		public abstract void Warning(string message);
+		public abstract void Error(string message);
+		public abstract void Error(Exception e);
+		public abstract void Info(string message);
+		public abstract void Todo(string message);
 	}
 }

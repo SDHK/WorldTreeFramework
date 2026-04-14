@@ -19,7 +19,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界线管理器
 	/// </summary>
-	public class WorldLineManager : IDisposable
+	public class WorldLineManager : CoreObjectBase
 	{
 		/// <summary>
 		/// 启动选项
@@ -32,9 +32,24 @@ namespace WorldTree
 		public Type LogType;
 
 		/// <summary>
+		/// 日志管理器
+		/// </summary>
+		public LogManager LogManager;
+
+		/// <summary>
 		/// 类型信息 
 		/// </summary>
 		public TypeInfo TypeInfo = new();
+
+		/// <summary>
+		/// 单位对象池管理器
+		/// </summary>
+		public UnitPoolManager UnitPoolManager;
+
+		/// <summary>
+		/// 节点对象池管理器
+		/// </summary>
+		public NodePoolManager NodePoolManager;
 
 		/// <summary>
 		/// 主世界线
@@ -68,6 +83,17 @@ namespace WorldTree
 		/// </summary>
 		public Action<TimeSpan> MainUpdate;
 
+
+		public WorldLineManager()
+		{
+			Core = this;
+			this.NewCoreObject(out LogManager);
+			LogManager.Init("Core");
+			this.NewCoreObject(out TypeInfo);
+			this.NewCoreObject(out UnitPoolManager);
+			this.NewCoreObject(out NodePoolManager);
+		}
+
 		/// <summary>
 		/// 设置可视化
 		/// </summary>
@@ -76,7 +102,6 @@ namespace WorldTree
 			this.viewHeartType = heartType;
 			this.viewBuilderType = viewBuilderType;
 			ViewLine = new WorldLine();
-			if (MainLine == null) TypeInfo.Core = ViewLine;
 			ViewLine.WorldLineManager = this;
 			ViewLine.Init(heartType, 10);
 			ViewLine.WorldContext.Post(() =>
@@ -117,7 +142,6 @@ namespace WorldTree
 				line.WorldLineManager = this;
 				line.Init(heartType, frameTime);
 				lineDict.TryAdd(id, line);
-				if (MainLine != null) TypeInfo.Core = MainLine;
 				return line;
 			}
 			else
@@ -179,10 +203,42 @@ namespace WorldTree
 		/// <summary>
 		/// 释放
 		/// </summary>
-		public void Dispose()
+		public override void OnDispose()
 		{
 			DestroyAll();
 		}
 	}
 
+	public static class WorldLineManagerRule
+	{
+		/// <summary>
+		/// 新建核心对象
+		/// </summary>
+		public static CoreObjectBase NewCoreObject(this CoreObjectBase self, Type type)
+		{
+			CoreObjectBase obj = (CoreObjectBase)Activator.CreateInstance(type);
+			obj.Core = self.Core;
+			return obj;
+		}
+
+		/// <summary>
+		/// 新建核心对象
+		/// </summary>
+		public static T NewCoreObject<T>(this CoreObjectBase self, out T newObj) where T : CoreObjectBase, new()
+		{
+			newObj = new T();
+			newObj.Core = self.Core;
+			return newObj;
+		}
+
+		/// <summary>
+		/// 新建核心对象
+		/// </summary>
+		public static T NewCoreObject<T>(this CoreObjectBase self) where T : CoreObjectBase, new()
+		{
+			T newObj = new T();
+			newObj.Core = self.Core;
+			return newObj;
+		}
+	}
 }

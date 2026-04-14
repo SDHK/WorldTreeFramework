@@ -178,20 +178,28 @@ namespace WorldTree
 		/// </summary>
 		public void LoadRule()
 		{
-			//反射获取全局继承IRule的法则类型列表
-			List<Type> ruleTypeList = new();
-			foreach (Type type in Core.WorldLineManager.TypeInfo.TypeHash64Dict.Keys)
+			LockSlim.EnterWriteLock();
+			try
 			{
-				if (type.GetInterfaces().Contains(typeof(IRule)) && !type.IsAbstract && !type.IsInterface)
-					ruleTypeList.Add(type);
-			}
+				//反射获取全局继承IRule的法则类型列表
+				List<Type> ruleTypeList = new();
+				foreach (Type type in Core.WorldLineManager.TypeInfo.TypeHash64Dict.Keys)
+				{
+					if (type.GetInterfaces().Contains(typeof(IRule)) && !type.IsAbstract && !type.IsInterface)
+						ruleTypeList.Add(type);
+				}
 
-			Clear();
-			//将按照法则类名进行排序，规范执行顺序
-			ruleTypeList.Sort((rule1, rule2) => rule1.Name.CompareTo(rule2.Name));
-			foreach (var RuleType in ruleTypeList)//遍历类型列表
+				Clear();
+				//将按照法则类名进行排序，规范执行顺序
+				ruleTypeList.Sort((rule1, rule2) => rule1.Name.CompareTo(rule2.Name));
+				foreach (var RuleType in ruleTypeList)//遍历类型列表
+				{
+					AddRuleType(RuleType);
+				}
+			}
+			finally
 			{
-				AddRuleType(RuleType);
+				LockSlim.ExitWriteLock();
 			}
 		}
 
@@ -305,98 +313,90 @@ namespace WorldTree
 		/// <summary>
 		/// 添加法则类型
 		/// </summary>
-		public void AddRuleType(Type ruleType)
+		private void AddRuleType(Type ruleType)
 		{
-			LockSlim.EnterWriteLock();
-			try
+			if (ruleType == null) return;
+
+			if (ruleType.IsGenericType) //判断法则类型是泛型
 			{
-				if (ruleType == null) return;
+				var baseType = ruleType.BaseType;
 
-				if (ruleType.IsGenericType) //判断法则类型是泛型
+				//遍历获取一路查到最底层Rule<N,R>法则基类
+				while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>)) baseType = baseType.BaseType;
+
+				//Rule<,> 的第一个是节点标记第二个是法则标记。
+				Type nodeKeyType = baseType.GetGenericArguments()[0];
+				Type ruleKeyType = baseType.GetGenericArguments()[1];
+
+				var genericArguments = baseType.GetGenericArguments();
+				//Rule<N,R> 第一个泛型参数就是法则负责的目标节点
+				if (genericArguments[0].IsGenericType)
 				{
-					var baseType = ruleType.BaseType;
-
-					//遍历获取一路查到最底层Rule<N,R>法则基类
-					while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>)) baseType = baseType.BaseType;
-
-					//Rule<,> 的第一个是节点标记第二个是法则标记。
-					Type nodeKeyType = baseType.GetGenericArguments()[0];
-					Type ruleKeyType = baseType.GetGenericArguments()[1];
-
-					var genericArguments = baseType.GetGenericArguments();
-					//Rule<N,R> 第一个泛型参数就是法则负责的目标节点
-					if (genericArguments[0].IsGenericType)
-					{
-						nodeGenericRuleTypeHashDict.GetOrAdd(genericArguments[0].GetGenericTypeDefinition()).Add(ruleType);
-					}
-					// 目标节点本身就是泛型的情况
-					else if (genericArguments[0].IsGenericParameter)
-					{
-						//NodeGenericParameterRuleTypeHashDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
-						nodeGenericParameterRuleTypeHashDict.GetOrAdd(ruleKeyType).Add(ruleType);
-					}
-					else if (genericArguments[0].IsArray)
-					{
-						nodeGenericParameterRuleTypeHashDict.GetOrAdd(ruleKeyType).Add(ruleType);
-
-					}
-					//假如Node不是泛型，那么就是参数是泛型的情况
-					else
-					{
-						baseType = ruleType.BaseType;
-						Type genericType = null;
-						//重新遍历，查找泛型参数
-						while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>))
-						{
-							// 父类是泛型的情况
-							if (baseType.IsGenericType)
-							{
-								//获取泛型参数数组
-								genericArguments = baseType.GetGenericArguments();
-								foreach (var arg in genericArguments)
-								{
-									// 泛型参数是泛型的情况
-									if (!arg.IsGenericType)
-									{
-										genericType = arg;
-										continue;
-									}
-									//判断这个泛型参数，不是法则标记，才是泛型参数。
-									if (arg != ruleKeyType)
-									{
-										genericType = arg;
-										break;
-									}
-								}
-							}
-							if (genericType != null) break;
-							baseType = baseType.BaseType;
-						}
-						//如果找到了泛型参数
-						if (genericType == null) return;
-						if (genericType.IsGenericType)
-						{
-							parameterGenericRuleTypeHashDict.GetOrAdd(ruleKeyType.GetGenericTypeDefinition()).GetOrAdd(genericType.GetGenericTypeDefinition()).Add(ruleType);
-							parameterGenericNodeSubTypeDict.GetOrAdd(Core.TypeToCode(nodeKeyType));
-						}
-						//泛型参数是泛型本身的情况
-						else if (genericType.IsGenericParameter)
-						{
-							parameterGenericParameterRuleTypeHashDict.GetOrAdd(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
-							parameterGenericNodeSubTypeDict.GetOrAdd(Core.TypeToCode(nodeKeyType));
-						}
-					}
+					nodeGenericRuleTypeHashDict.GetOrAdd(genericArguments[0].GetGenericTypeDefinition()).Add(ruleType);
 				}
+				// 目标节点本身就是泛型的情况
+				else if (genericArguments[0].IsGenericParameter)
+				{
+					//NodeGenericParameterRuleTypeHashDict.GetOrNewValue(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
+					nodeGenericParameterRuleTypeHashDict.GetOrAdd(ruleKeyType).Add(ruleType);
+				}
+				else if (genericArguments[0].IsArray)
+				{
+					nodeGenericParameterRuleTypeHashDict.GetOrAdd(ruleKeyType).Add(ruleType);
+
+				}
+				//假如Node不是泛型，那么就是参数是泛型的情况
 				else
 				{
-					//实例化法则类
-					IRule rule = Core.NewUnit(ruleType, out _) as IRule;
-					AddRule(rule);
+					baseType = ruleType.BaseType;
+					Type genericType = null;
+					//重新遍历，查找泛型参数
+					while (baseType.GetGenericTypeDefinition() != typeof(Rule<,>))
+					{
+						// 父类是泛型的情况
+						if (baseType.IsGenericType)
+						{
+							//获取泛型参数数组
+							genericArguments = baseType.GetGenericArguments();
+							foreach (var arg in genericArguments)
+							{
+								// 泛型参数是泛型的情况
+								if (!arg.IsGenericType)
+								{
+									genericType = arg;
+									continue;
+								}
+								//判断这个泛型参数，不是法则标记，才是泛型参数。
+								if (arg != ruleKeyType)
+								{
+									genericType = arg;
+									break;
+								}
+							}
+						}
+						if (genericType != null) break;
+						baseType = baseType.BaseType;
+					}
+					//如果找到了泛型参数
+					if (genericType == null) return;
+					if (genericType.IsGenericType)
+					{
+						parameterGenericRuleTypeHashDict.GetOrAdd(ruleKeyType.GetGenericTypeDefinition()).GetOrAdd(genericType.GetGenericTypeDefinition()).Add(ruleType);
+						parameterGenericNodeSubTypeDict.GetOrAdd(Core.TypeToCode(nodeKeyType));
+					}
+					//泛型参数是泛型本身的情况
+					else if (genericType.IsGenericParameter)
+					{
+						parameterGenericParameterRuleTypeHashDict.GetOrAdd(ruleKeyType.GetGenericTypeDefinition()).Add(ruleType);
+						parameterGenericNodeSubTypeDict.GetOrAdd(Core.TypeToCode(nodeKeyType));
+					}
 				}
 			}
-			finally
+			else
 			{
-				LockSlim.ExitWriteLock();
+				//实例化法则类
+				IRule rule = Core.NewUnit(ruleType, out _) as IRule;
+				AddRule(rule);
 			}
 		}
 
