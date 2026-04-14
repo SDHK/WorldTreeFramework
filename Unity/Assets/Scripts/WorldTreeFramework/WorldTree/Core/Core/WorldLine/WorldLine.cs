@@ -184,7 +184,7 @@ namespace WorldTree
 			}
 
 			//日志管理器初始化
-			this.WorldLineManager.NewCoreObject(out LogManager);
+			this.WorldLineManager.CreateCoreObject(out LogManager);
 			LogManager.Init(Id.ToString());
 
 			//法则管理器初始化

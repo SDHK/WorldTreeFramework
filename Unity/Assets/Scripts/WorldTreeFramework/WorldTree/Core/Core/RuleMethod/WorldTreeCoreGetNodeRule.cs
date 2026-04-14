@@ -49,16 +49,13 @@ namespace WorldTree
 		{
 			if (self.IsCoreActive)
 			{
-				lock (self.WorldLineManager.NodePoolManager)
+				if (self.WorldLineManager.NodePoolManager.TryGet(out T node))
 				{
-					if (self.WorldLineManager.NodePoolManager.TryGet(out T node))
-					{
-						node.Core = self;
-						node.World = self.World;
-						node.IsSerialize = isSerialize;
-						node.OnCreate();
-						return node;
-					}
+					node.Core = self;
+					node.World = self.World;
+					node.IsSerialize = isSerialize;
+					node.OnCreate();
+					return node;
 				}
 			}
 			return self.NewNode<T>(out _, isSerialize);
@@ -71,17 +68,14 @@ namespace WorldTree
 		{
 			if (self.IsCoreActive)
 			{
-				lock (self.WorldLineManager.NodePoolManager)
+				if (self.WorldLineManager.NodePoolManager.TryGet(type, out object nodeObj))
 				{
-					if (self.WorldLineManager.NodePoolManager.TryGet(type, out object nodeObj))
-					{
-						INode node = nodeObj as INode;
-						node.Core = self;
-						node.World = self.World;
-						node.IsSerialize = isSerialize;
-						node.OnCreate();
-						return node;
-					}
+					INode node = nodeObj as INode;
+					node.Core = self;
+					node.World = self.World;
+					node.IsSerialize = isSerialize;
+					node.OnCreate();
+					return node;
 				}
 			}
 			return self.NewNode(type, out _, isSerialize);
@@ -94,10 +88,7 @@ namespace WorldTree
 		{
 			if (self.IsCoreActive && obj.IsFromPool)
 			{
-				lock (self.WorldLineManager.NodePoolManager)
-				{
-					if (self.WorldLineManager.NodePoolManager.TryRecycle(obj)) return;
-				}
+				if (self.WorldLineManager.NodePoolManager.TryRecycle(obj)) return;
 			}
 			obj.IsDisposed = true;
 			obj.Id = 0;

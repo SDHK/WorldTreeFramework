@@ -32,7 +32,6 @@ namespace WorldTree
 			return unit;
 		}
 
-
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
@@ -46,14 +45,11 @@ namespace WorldTree
 		{
 			if (self != null && self.IsCoreActive)
 			{
-				lock (self.WorldLineManager.UnitPoolManager)
+				if (self.WorldLineManager.UnitPoolManager.TryGet(out T unit))
 				{
-					if (self.WorldLineManager.UnitPoolManager.TryGet(out T unit))
-					{
-						unit.Core = self;
-						unit.OnCreate();
-						return unit;
-					}
+					unit.Core = self;
+					unit.OnCreate();
+					return unit;
 				}
 			}
 			return self.NewUnit<T>(out _);
@@ -66,15 +62,12 @@ namespace WorldTree
 		{
 			if (self != null && self.IsCoreActive)
 			{
-				lock (self.WorldLineManager.UnitPoolManager)
+				if (self.WorldLineManager.UnitPoolManager.TryGet(type, out object obj))
 				{
-					if (self.WorldLineManager.UnitPoolManager.TryGet(type, out object obj))
-					{
-						IUnit unit = obj as IUnit;
-						unit.Core = self;
-						unit.OnCreate();
-						return unit;
-					}
+					IUnit unit = obj as IUnit;
+					unit.Core = self;
+					unit.OnCreate();
+					return unit;
 				}
 			}
 			return self.NewUnit(type, out _);
@@ -87,10 +80,7 @@ namespace WorldTree
 		{
 			if (self != null && self.IsCoreActive && obj.IsFromPool)
 			{
-				lock (self.WorldLineManager.UnitPoolManager)
-				{
-					if (self.WorldLineManager.UnitPoolManager.TryRecycle(obj)) return;
-				}
+				if (self.WorldLineManager.UnitPoolManager.TryRecycle(obj)) return;
 			}
 			obj.IsDisposed = true;
 			obj.OnDispose();

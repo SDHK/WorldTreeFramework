@@ -87,11 +87,11 @@ namespace WorldTree
 		public WorldLineManager()
 		{
 			Core = this;
-			this.NewCoreObject(out LogManager);
+			this.CreateCoreObject(out LogManager);
 			LogManager.Init("Core");
-			this.NewCoreObject(out TypeInfo);
-			this.NewCoreObject(out UnitPoolManager);
-			this.NewCoreObject(out NodePoolManager);
+			this.CreateCoreObject(out TypeInfo);
+			this.CreateCoreObject(out UnitPoolManager);
+			this.CreateCoreObject(out NodePoolManager);
 		}
 
 		/// <summary>
@@ -214,7 +214,7 @@ namespace WorldTree
 		/// <summary>
 		/// 新建核心对象
 		/// </summary>
-		public static CoreObjectBase NewCoreObject(this CoreObjectBase self, Type type)
+		public static CoreObjectBase CreateCoreObject(this CoreObjectBase self, Type type)
 		{
 			CoreObjectBase obj = (CoreObjectBase)Activator.CreateInstance(type);
 			obj.Core = self.Core;
@@ -224,7 +224,7 @@ namespace WorldTree
 		/// <summary>
 		/// 新建核心对象
 		/// </summary>
-		public static T NewCoreObject<T>(this CoreObjectBase self, out T newObj) where T : CoreObjectBase, new()
+		public static T CreateCoreObject<T>(this CoreObjectBase self, out T newObj) where T : CoreObjectBase, new()
 		{
 			newObj = new T();
 			newObj.Core = self.Core;
@@ -234,7 +234,7 @@ namespace WorldTree
 		/// <summary>
 		/// 新建核心对象
 		/// </summary>
-		public static T NewCoreObject<T>(this CoreObjectBase self) where T : CoreObjectBase, new()
+		public static T CreateCoreObject<T>(this CoreObjectBase self) where T : CoreObjectBase, new()
 		{
 			T newObj = new T();
 			newObj.Core = self.Core;

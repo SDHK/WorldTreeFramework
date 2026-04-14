@@ -68,7 +68,7 @@ namespace WorldTree
 		public void Init(string name)
 		{
 			if (Core.LogType == null) return;
-			log = (LogBase)this.NewCoreObject(Core.LogType);
+			log = (LogBase)this.CreateCoreObject(Core.LogType);
 			log.Init(name);
 		}
 
