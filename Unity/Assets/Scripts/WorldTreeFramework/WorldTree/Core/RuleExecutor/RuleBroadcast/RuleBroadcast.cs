@@ -111,7 +111,7 @@ namespace WorldTree
 			protected override void Execute(RuleBroadcaster<R> self)
 			{
 				self.GetBaseRule<RuleBroadcaster, RuleExecutor, Add>().Send(self);
-				self.ruleGroupDict = self.Core.RuleManager.GetOrNewRuleGroup<R>();
+				self.ruleGroupDict = self.Core.WorldLineManager.RuleManager.GetOrNewRuleGroup<R>();
 				self.LoadGlobalNode();
 			}
 		}

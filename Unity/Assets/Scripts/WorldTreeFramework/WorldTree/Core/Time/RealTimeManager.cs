@@ -18,10 +18,7 @@ namespace WorldTree
 	/// <summary>
 	/// 真实时间管理器
 	/// </summary>
-	public class RealTimeManager : Node
-		, CoreManagerOf<WorldLine>
-		, AsChildBranch
-		, AsRule<Awake>
+	public class RealTimeManager : CoreObject
 	{
 
 		/// <summary>
@@ -29,15 +26,15 @@ namespace WorldTree
 		/// </summary>
 		private readonly object lockObject = new object();
 
-		/// <summary>
-		/// Utc定时器
-		/// </summary>
-		public CascadeTicker Timer;
+		///// <summary>
+		///// Utc定时器
+		///// </summary>
+		//public CascadeTicker Timer;
 
 		/// <summary>
 		/// NTP服务器地址列表
 		/// </summary>
-		public List<string> ntpServerList = new() { "cn.ntp.org.cn", "pool.ntp.org", "cn.pool.ntp.org", "edu.ntp.org.cn", "time.windows.com", "time.nist.gov" };
+		public List<string> NtpServerList = new() { "cn.ntp.org.cn", "pool.ntp.org", "cn.pool.ntp.org", "edu.ntp.org.cn", "time.windows.com", "time.nist.gov" };
 
 		/// <summary>
 		/// 时区偏差
@@ -89,30 +86,30 @@ namespace WorldTree
 		/// <summary>
 		/// 网络请求超时时间 毫秒
 		/// </summary>
-		public int receiveTimeout = 1000;
+		private int receiveTimeout = 1000;
 
 		/// <summary>
 		/// Utc时间请求更新间隔时间（毫秒）
 		/// </summary>
-		public long timeRequestTime = 60000;//1分钟
+		private long timeRequestTime = 60000;//1分钟
 
 		/// <summary>
 		/// 机器时间和网络时间的阈值 毫秒
 		/// </summary>
 		/// <remarks>机器时间与网络时间差距在阈值内则不校准</remarks>
-		public long networkThresholdTime = 2000;//2秒
+		private long networkThresholdTime = 2000;//2秒
 
 		/// <summary>
 		/// 机器当前时间和累计时间的阈值 毫秒
 		/// </summary>
 		/// <remarks>机器时间比累计时间快过阈值，则使用累计时间，并尝试请求网络</remarks>
-		public long localThresholdTime = 1000;//1秒
+		private long localThresholdTime = 1000;//1秒
 
 		/// <summary>
 		/// 机器计时器和累计计时器的阈值 毫秒
 		/// </summary>
 		/// <remarks>当两个累加计时器差距超过阈值，尝试请求网络</remarks>
-		public long clockThresholdTime = 1000;//1秒
+		private long clockThresholdTime = 1000;//1秒
 
 		/// <summary>
 		/// 网络请求计时器
@@ -146,7 +143,8 @@ namespace WorldTree
 
 		public override void OnCreate()
 		{
-			base.OnCreate();
+			DateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			UtcDateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
 			// NTP消息大小 - 16字节（RFC 2030）
 			ntpDatas = new byte[48];
@@ -258,7 +256,7 @@ namespace WorldTree
 		/// <para>相差在 阈值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
 		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
-		private void RequestUtcDateTime() => RequestUtcDateTimeAsync().Coroutine();
+		private void RequestUtcDateTime() => RequestUtcDateTimeAsync().RunSynchronously();
 
 		/// <summary>
 		/// 异步请求获取网络时间刷新
@@ -268,7 +266,7 @@ namespace WorldTree
 		/// <para>相差在 阈值 内 或者 所有请求都失败，那么就继续使用累计时间</para>
 		/// <para>如果获得的 网络时间 比 累计时间 慢，则不校准</para>
 		/// </remarks>
-		private async TreeTask RequestUtcDateTimeAsync()
+		private async Task RequestUtcDateTimeAsync()
 		{
 			DateTime netTime = await GetNetworkUtcDateTimeAsync();
 			if (netTime != default)
@@ -306,9 +304,9 @@ namespace WorldTree
 		/// <summary>
 		/// 异步获取网络时间
 		/// </summary>
-		private async TreeTask<DateTime> GetNetworkUtcDateTimeAsync()
+		private async Task<DateTime> GetNetworkUtcDateTimeAsync()
 		{
-			return await this.TreeTaskLink(Task.Run(GetNetworkUtcDateTime));
+			return await Task.Run(GetNetworkUtcDateTime);
 		}
 
 		/// <summary>
@@ -316,7 +314,7 @@ namespace WorldTree
 		/// </summary>
 		private DateTime GetNetworkUtcDateTime()
 		{
-			foreach (string ntpServer in ntpServerList)
+			foreach (string ntpServer in NtpServerList)
 			{
 				if (TryGetNetworkUtcDateTime(ntpServer, out DateTime networkDateTime)) return networkDateTime;
 			}
@@ -383,24 +381,24 @@ namespace WorldTree
 
 	public static partial class RealTimeManagerRule
 	{
-		private class Add : AddRule<RealTimeManager>
-		{
-			protected override void Execute(RealTimeManager self)
-			{
-				self.DateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-				self.UtcDateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-				self.AddChild(out self.Timer);
-			}
-		}
+		//private class Add : AddRule<RealTimeManager>
+		//{
+		//	protected override void Execute(RealTimeManager self)
+		//	{
+		//		self.DateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+		//		self.UtcDateTime1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+		//		self.AddChild(out self.Timer);
+		//	}
+		//}
 
-		private class UpdateTime : UpdateTimeRule<RealTimeManager>
-		{
-			protected override void Execute(RealTimeManager self, TimeSpan arg1)
-			{
-				self.GetUtcNow();
-				self.Timer.Update(self.UtcNow.Ticks);
-			}
-		}
+		//private class UpdateTime : UpdateTimeRule<RealTimeManager>
+		//{
+		//	protected override void Execute(RealTimeManager self, TimeSpan arg1)
+		//	{
+		//		self.GetUtcNow();
+		//		self.Timer.Update(self.UtcNow.Ticks);
+		//	}
+		//}
 
 		/// <summary>
 		/// 获取毫秒时间戳，从1970年到当前的总毫秒数
@@ -476,23 +474,23 @@ namespace WorldTree
 			return TimeHelper.GetTimeSpanDays(startTicks, self.UtcNow.Ticks) > days;
 		}
 
-		/// <summary>
-		/// 添加一个定时器  
-		/// </summary>
-		public static long AddTimer<R>(this RealTimeManager self, long clockTick, INode node, TreeTaskToken token = null)
-			where R : ISendRule
-		{
-			return self.Timer.AddTicker<R>(clockTick, node, token);
-		}
+		///// <summary>
+		///// 添加一个定时器  
+		///// </summary>
+		//public static long AddTimer<R>(this RealTimeManager self, long clockTick, INode node, TreeTaskToken token = null)
+		//	where R : ISendRule
+		//{
+		//	return self.Timer.AddTicker<R>(clockTick, node, token);
+		//}
 
-		/// <summary>
-		/// 添加一个定时器，延迟delayTicks后触发 
-		/// </summary>
-		public static long AddTimerDelay<R>(this RealTimeManager self, long delayTicks, INode node, TreeTaskToken token = null)
-			where R : ISendRule
-		{
-			return self.Timer.AddTicker<R>(self.UtcNow.Ticks + delayTicks, node, token);
-		}
+		///// <summary>
+		///// 添加一个定时器，延迟delayTicks后触发 
+		///// </summary>
+		//public static long AddTimerDelay<R>(this RealTimeManager self, long delayTicks, INode node, TreeTaskToken token = null)
+		//	where R : ISendRule
+		//{
+		//	return self.Timer.AddTicker<R>(self.UtcNow.Ticks + delayTicks, node, token);
+		//}
 
 		#endregion
 	}

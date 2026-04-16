@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace WorldTree
 {
@@ -18,7 +13,7 @@ namespace WorldTree
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
 				self.Log("添加定时器，3秒后触发");
-				self.Core.RealTimeManager.AddTimerDelay<TestTickerCall>(TimeSpan.FromSeconds(3).Ticks, self);
+				//self.Core.RealTimeManager.AddTimerDelay<TestTickerCall>(TimeSpan.FromSeconds(3).Ticks, self);
 			}
 		}
 
@@ -28,6 +23,6 @@ namespace WorldTree
 			self.Log("定时触发！！！");
 		}
 
-	
+
 	}
 }

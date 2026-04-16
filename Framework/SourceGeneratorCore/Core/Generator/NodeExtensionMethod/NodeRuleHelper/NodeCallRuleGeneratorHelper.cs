@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 						public static bool TryCallRule<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, out OutT outT)
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
-							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								ruleList.Call(self{{genericParameter}}, out outT);
 								return true;
@@ -59,7 +59,7 @@ namespace WorldTree.SourceGenerator
 							where N : class, INode, AsRule<R>
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
-							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								ruleList.Call(self{{genericParameter}}, out outT);
 								return outT;
@@ -74,7 +74,7 @@ namespace WorldTree.SourceGenerator
 						public static bool TryCallsRule<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
-							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								ruleList.Calls(self{{genericParameter}}, outTList);
 								return true;
@@ -89,7 +89,7 @@ namespace WorldTree.SourceGenerator
 							where N : class, INode, AsRule<R>
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
-							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								ruleList.Calls(self{{genericParameter}}, outTList);
 								return outTList;

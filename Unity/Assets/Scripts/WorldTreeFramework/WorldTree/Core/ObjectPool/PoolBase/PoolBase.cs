@@ -16,7 +16,7 @@ namespace WorldTree
 	/// <summary>
 	/// 对象池抽象基类
 	/// </summary>
-	public abstract class PoolBase : CoreObjectBase
+	public abstract class PoolBase : CoreObject
 	{
 		/// <summary>
 		/// 对象类型

@@ -14,7 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// id管理器
 	/// </summary>
-	public class IdManager : Node, IListenerIgnorer
+	public class IdManager : CoreObject
 		, CoreManagerOf<WorldLine>
 	{
 		/// <summary>
@@ -104,20 +104,5 @@ namespace WorldTree
 
 		//31位时间为68年,19位偏移支持每秒并发524288个UID（50万）
 		//32位时间为136年,18位偏移支持每秒并发262144个UID（20万）
-
-		public override void OnCreate()
-		{
-			InstanceId = GetId();
-			Id = InstanceId;
-		}
-
-		/// <summary>
-		/// 释放后
-		/// </summary>
-		public override void OnDispose()
-		{
-			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
-			IsDisposed = true;
-		}
 	}
 }

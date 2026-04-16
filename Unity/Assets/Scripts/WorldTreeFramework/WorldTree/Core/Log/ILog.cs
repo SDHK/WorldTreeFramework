@@ -55,7 +55,7 @@ namespace WorldTree
 	/// <summary>
 	/// 日志基类 
 	/// </summary>
-	public abstract class LogBase : CoreObjectBase, ILog
+	public abstract class LogBase : CoreObject, ILog
 	{
 		public abstract void Init(string name);
 		public abstract void Trace(string message);

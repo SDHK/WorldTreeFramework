@@ -39,7 +39,7 @@ namespace WorldTree
 			// 捕获令牌
 			var token = await self.TreeTaskTokenCatch();
 			// 添加定时器
-			self.Core.RealTimeManager.AddTimerDelay<TreeTaskSetResuIt>(time.Ticks, asyncTask, token);
+			//self.Core.RealTimeManager.AddTimerDelay<TreeTaskSetResuIt>(time.Ticks, asyncTask, token);
 			// 等待异步执行
 			await asyncTask;
 		}

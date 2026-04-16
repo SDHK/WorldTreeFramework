@@ -84,7 +84,7 @@ namespace WorldTree
 	/// <para>部分类型直接继承INode接口，将会生成对应的Copy Node内容的部分类</para>
 	/// </remarks>
 	[TreeDataSerializable]
-	public partial interface INode : IWorldTreeBasic
+	public partial interface INode : IBasic
 #if !DEBUG
 		// 万能约束接口：Release模式下解除所有约束限制
 		// 父级约束解除

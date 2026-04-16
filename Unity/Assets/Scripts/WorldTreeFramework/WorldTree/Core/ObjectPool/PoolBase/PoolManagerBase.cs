@@ -6,7 +6,7 @@ namespace WorldTree
 	/// <summary>
 	/// 对象池管理器泛型基类
 	/// </summary>
-	public abstract class PoolManagerBase<T> : CoreObjectBase
+	public abstract class PoolManagerBase<T> : CoreObject
 		where T : PoolBase, new()
 	{
 		/// <summary>
@@ -24,7 +24,7 @@ namespace WorldTree
 		/// </summary>
 		private Func<long, Type, T> newPoolFunc;
 
-		public PoolManagerBase()
+		public override void OnCreate()
 		{
 			newPoolFunc = NewPool;
 		}
@@ -100,7 +100,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试回收对象
 		/// </summary>
-		public bool TryRecycle(IWorldTreeBasic obj)
+		public bool TryRecycle(IBasic obj)
 		{
 			if (TryGetPool(obj.Type, out T pool))
 			{

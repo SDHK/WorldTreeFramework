@@ -22,7 +22,7 @@ namespace WorldTree
 			where N : class, B, INode
 			where B : class, INode, AsRule<R>
 		{
-			self.Core.RuleManager.TryGetRuleList(TypeInfo<B>.Code, out IRuleList<R> rulelist);
+			self.Core.WorldLineManager.RuleManager.TryGetRuleList(TypeInfo<B>.Code, out IRuleList<R> rulelist);
 			return rulelist;
 		}
 

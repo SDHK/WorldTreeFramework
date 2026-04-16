@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 						public static async TreeTask<bool> TrySendRuleAsync<R{{genericsType}}>(INode self, R nullRule{{(i == 0 ? " = null" : string.Empty)}}{{genericTypeParameter}})
 							where R : class, ISendRuleAsync{{genericsTypeAngle}}
 						{
-							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								await ruleList.SendAsync(self{{genericParameter}});
 								return true;
@@ -59,7 +59,7 @@ namespace WorldTree.SourceGenerator
 							where N : class, INode, AsRule<R>
 							where R : class, ISendRuleAsync{{genericsTypeAngle}}
 						{
-							if (self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								await ruleList.SendAsync(self{{genericParameter}});
 							}

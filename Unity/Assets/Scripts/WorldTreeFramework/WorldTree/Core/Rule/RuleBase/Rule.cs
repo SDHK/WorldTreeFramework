@@ -27,8 +27,12 @@ namespace WorldTree
 	/// <para>所有法则的最底层接口</para>
 	/// <para>主要作用是可以让所有法则统一类型获取标记</para>
 	/// </remarks>
-	public interface IRule : IUnit
+	public interface IRule : ICoreObject
 	{
+		/// <summary>
+		/// 自身类型 
+		/// </summary>
+		long Type { get; set; }
 		/// <summary>
 		/// 节点类型标记
 		/// </summary>
@@ -58,16 +62,18 @@ namespace WorldTree
 	/// <para>法则的最底层基类</para>
 	/// <para>主要作用是通过泛型给标记赋值</para>
 	/// </remarks>
-	public abstract class Rule<N, R> : Unit, IRule
+	public abstract class Rule<N, R> : CoreObject, IRule
 	{
+		public long Type { get; set; }
 		public virtual long NodeType { get; set; }
 		public virtual long RuleType { get; set; }
 
 		public int RuleIndex { get; set; }
 		public int RuleCount { get; set; }
 
-		override public void OnCreate()
+		public override void OnCreate()
 		{
+			Type = this.TypeToCode();
 			NodeType = Core.TypeToCode(typeof(N));
 			RuleType = Core.TypeToCode(typeof(R));
 		}

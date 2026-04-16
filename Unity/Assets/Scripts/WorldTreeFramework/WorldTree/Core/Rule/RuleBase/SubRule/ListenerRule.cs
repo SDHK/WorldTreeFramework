@@ -58,13 +58,15 @@ namespace WorldTree
 		public virtual long TargetNodeType { get; set; }
 		public virtual long TargetRuleType { get; set; }
 
-		override public void OnCreate()
+		public override void OnCreate()
 		{
+			Type = this.TypeToCode();
 			NodeType = Core.TypeToCode(typeof(N));
 			RuleType = Core.TypeToCode(typeof(R));
 			TargetNodeType = Core.TypeToCode(typeof(TN));
 			TargetRuleType = Core.TypeToCode(typeof(TR));
 		}
+
 
 		public virtual void Invoke(INode self, INode node) => Execute(self as N, node as TN);
 		/// <summary>

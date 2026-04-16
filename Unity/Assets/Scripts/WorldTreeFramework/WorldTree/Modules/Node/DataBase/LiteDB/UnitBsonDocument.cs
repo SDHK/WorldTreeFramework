@@ -16,7 +16,7 @@ namespace WorldTree
 	public class UnitBsonDocument : BsonDocument, IUnit
 	{
 		[TreeDataIgnore]
-		long IWorldTreeBasic.Type { get; set; }
+		long IBasic.Type { get; set; }
 		[TreeDataIgnore]
 		public bool IsDisposed { get; set; }
 		[TreeDataIgnore]

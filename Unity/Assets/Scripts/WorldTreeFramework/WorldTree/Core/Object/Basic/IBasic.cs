@@ -10,7 +10,7 @@
 
  * 描述:  
   
-    框架最底层基础对象的接口
+    框架基础层对象接口
 	给实现接口的类一个统一的销毁标记，和方法
 
 ******************************/
@@ -19,38 +19,11 @@ using System;
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 框架核心层对象抽象类 
-	/// </summary>
-	public abstract class CoreObjectBase : IDisposable
-	{
-		/// <summary>
-		/// 世界线管理器 
-		/// </summary>
-		public WorldLineManager Core;
-
-		/// <summary>
-		/// 释放标记
-		/// </summary>
-		public bool IsDisposed;
-
-		public void Dispose()
-		{
-			IsDisposed = true;
-			OnDispose();
-			Core = null;
-		}
-
-		/// <summary>
-		/// 对象释放时的处理
-		/// </summary>
-		public virtual void OnDispose() { }
-	}
 
 	/// <summary>
-	/// 框架最底层基础对象接口
+	/// 框架基础层对象接口
 	/// </summary>
-	public interface IWorldTreeBasic : IDisposable
+	public interface IBasic : IDisposable
 	{
 		/// <summary>
 		/// 类型码

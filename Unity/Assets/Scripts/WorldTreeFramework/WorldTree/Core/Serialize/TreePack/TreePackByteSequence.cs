@@ -40,9 +40,9 @@ namespace WorldTree
 				self.GetBaseRule<TreePackByteSequence, ByteSequence, Add>().Send(self);
 
 				// 获取节点的法则集
-				self.Core.RuleManager.NodeTypeRulesDict.TryGetValue(self.Type, out self.unmanagedRuleDict);
-				self.Core.RuleManager.TryGetRuleGroup<ITreePackSerialize>(out self.serializeRuleDict);
-				self.Core.RuleManager.TryGetRuleGroup<ITreePackDeserialize>(out self.deserializeRuleDict);
+				self.Core.WorldLineManager.RuleManager.NodeTypeRulesDict.TryGetValue(self.Type, out self.unmanagedRuleDict);
+				self.Core.WorldLineManager.RuleManager.TryGetRuleGroup<ITreePackSerialize>(out self.serializeRuleDict);
+				self.Core.WorldLineManager.RuleManager.TryGetRuleGroup<ITreePackDeserialize>(out self.deserializeRuleDict);
 			}
 		}
 	}
@@ -80,9 +80,9 @@ namespace WorldTree
 		{
 			Type type = typeof(T);
 			long typeCode = Core.TypeToCode<T>();
-			Core.RuleManager.SupportNodeRule(typeCode);//数组不需要支持
+			Core.WorldLineManager.RuleManager.SupportNodeRule(typeCode);//数组不需要支持
 			if (type.IsArray)
-				this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(ITreePackSerialize));
+				this.Core.WorldLineManager.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(ITreePackSerialize));
 			if (serializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
 				for (int i = 0; i < ruleList.Count; i++)
@@ -93,7 +93,7 @@ namespace WorldTree
 				return;
 			}
 			if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) return;
-			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
+			Core.WorldLineManager.RuleManager.SupportGenericRule<T>(typeof(TreePackSerializeUnmanaged<>));
 			if (unmanagedRuleDict.TryGetValue(Core.TypeToCode<TreePackSerializeUnmanaged<T>>(), out ruleList))
 				((IRuleList<TreePackSerializeUnmanaged<T>>)ruleList).SendRef(this, ref Unsafe.AsRef(value));
 		}
@@ -202,9 +202,9 @@ namespace WorldTree
 		{
 			Type type = typeof(T);
 			long typeCode = Core.TypeToCode<T>();
-			Core.RuleManager.SupportNodeRule(typeCode);
+			Core.WorldLineManager.RuleManager.SupportNodeRule(typeCode);
 			if (type.IsArray)
-				this.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(ITreePackDeserialize));
+				this.Core.WorldLineManager.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(ITreePackDeserialize));
 			if (deserializeRuleDict.TryGetValue(typeCode, out RuleList ruleList))
 			{
 				for (int i = 0; i < ruleList.Count; i++)
@@ -216,7 +216,7 @@ namespace WorldTree
 			}
 			//判断是否是非托管类型
 			if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) return;
-			Core.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
+			Core.WorldLineManager.RuleManager.SupportGenericRule<T>(typeof(TreePackDeserializeUnmanaged<>));
 			if (unmanagedRuleDict.TryGetValue(TypeInfo<TreePackDeserializeUnmanaged<T>>.Code, out ruleList))
 				((IRuleList<TreePackDeserializeUnmanaged<T>>)ruleList).SendRef(this, ref value);
 		}

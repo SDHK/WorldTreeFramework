@@ -19,7 +19,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界线管理器
 	/// </summary>
-	public class WorldLineManager : CoreObjectBase
+	public class WorldLineManager : CoreObject
 	{
 		/// <summary>
 		/// 启动选项
@@ -35,6 +35,22 @@ namespace WorldTree
 		/// 日志管理器
 		/// </summary>
 		public LogManager LogManager;
+
+		/// <summary>
+		/// 真实时间管理器
+		/// </summary>
+		public RealTimeManager RealTimeManager;
+
+		/// <summary>
+		/// 法则管理器
+		/// </summary>
+		public RuleManager RuleManager;
+
+
+		/// <summary>
+		/// Id管理器
+		/// </summary>
+		public IdManager IdManager;
 
 		/// <summary>
 		/// 类型信息 
@@ -69,11 +85,6 @@ namespace WorldTree
 		public WorldLine ViewLine;
 
 		/// <summary>
-		/// 可视化世界之心类型
-		/// </summary>
-		private Type viewHeartType;
-
-		/// <summary>
 		/// 可视化生成器类型
 		/// </summary>
 		private Type viewBuilderType;
@@ -90,6 +101,9 @@ namespace WorldTree
 			this.CreateCoreObject(out LogManager);
 			LogManager.Init("Core");
 			this.CreateCoreObject(out TypeInfo);
+			this.CreateCoreObject(out RuleManager);
+			this.CreateCoreObject(out RealTimeManager);
+			this.CreateCoreObject(out IdManager);
 			this.CreateCoreObject(out UnitPoolManager);
 			this.CreateCoreObject(out NodePoolManager);
 		}
@@ -99,7 +113,6 @@ namespace WorldTree
 		/// </summary>
 		public void SetView(Type worldType, Type heartType, Type viewBuilderType)
 		{
-			this.viewHeartType = heartType;
 			this.viewBuilderType = viewBuilderType;
 			ViewLine = new WorldLine();
 			ViewLine.WorldLineManager = this;
@@ -206,6 +219,12 @@ namespace WorldTree
 		public override void OnDispose()
 		{
 			DestroyAll();
+			NodePoolManager.Dispose();
+			UnitPoolManager.Dispose();
+			IdManager.Dispose();
+			RealTimeManager.Dispose();
+			RuleManager.Dispose();
+			TypeInfo.Dispose();
 		}
 	}
 
@@ -214,30 +233,33 @@ namespace WorldTree
 		/// <summary>
 		/// 新建核心对象
 		/// </summary>
-		public static CoreObjectBase CreateCoreObject(this CoreObjectBase self, Type type)
+		public static CoreObject CreateCoreObject(this CoreObject self, Type type)
 		{
-			CoreObjectBase obj = (CoreObjectBase)Activator.CreateInstance(type);
+			CoreObject obj = (CoreObject)Activator.CreateInstance(type);
 			obj.Core = self.Core;
+			obj.OnCreate();
 			return obj;
 		}
 
 		/// <summary>
 		/// 新建核心对象
 		/// </summary>
-		public static T CreateCoreObject<T>(this CoreObjectBase self, out T newObj) where T : CoreObjectBase, new()
+		public static T CreateCoreObject<T>(this CoreObject self, out T newObj) where T : CoreObject, new()
 		{
 			newObj = new T();
 			newObj.Core = self.Core;
+			newObj.OnCreate();
 			return newObj;
 		}
 
 		/// <summary>
 		/// 新建核心对象
 		/// </summary>
-		public static T CreateCoreObject<T>(this CoreObjectBase self) where T : CoreObjectBase, new()
+		public static T CreateCoreObject<T>(this CoreObject self) where T : CoreObject, new()
 		{
 			T newObj = new T();
 			newObj.Core = self.Core;
+			newObj.OnCreate();
 			return newObj;
 		}
 	}

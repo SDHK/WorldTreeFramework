@@ -34,7 +34,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界法则管理器
 	/// </summary>
-	public class RuleManager : Node, IListenerIgnorer, CoreManagerOf<WorldLine>
+	public class RuleManager : CoreObject
 	{
 		/// <summary>
 		/// 线程锁
@@ -154,7 +154,6 @@ namespace WorldTree
 
 		public override void OnCreate()
 		{
-			base.OnCreate();
 			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 			List<Type> ruleTypeList = new();
 			foreach (Assembly assembly in assemblies)
@@ -183,7 +182,7 @@ namespace WorldTree
 			{
 				//反射获取全局继承IRule的法则类型列表
 				List<Type> ruleTypeList = new();
-				foreach (Type type in Core.WorldLineManager.TypeInfo.TypeHash64Dict.Keys)
+				foreach (Type type in Core.TypeInfo.TypeHash64Dict.Keys)
 				{
 					if (type.GetInterfaces().Contains(typeof(IRule)) && !type.IsAbstract && !type.IsInterface)
 						ruleTypeList.Add(type);
@@ -266,7 +265,6 @@ namespace WorldTree
 		/// </summary>
 		public override void OnDispose()
 		{
-			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
 
 			RuleGroupDict.Clear();
 			NodeTypeRulesDict.Clear();
@@ -395,7 +393,7 @@ namespace WorldTree
 			else
 			{
 				//实例化法则类
-				IRule rule = Core.NewUnit(ruleType, out _) as IRule;
+				IRule rule = Core.CreateCoreObject(ruleType) as IRule;
 				AddRule(rule);
 			}
 		}
@@ -563,7 +561,7 @@ namespace WorldTree
 							{
 								//填入对应的泛型参数，实例化泛型监听系统
 
-								IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericTypes), out _);
+								IRule rule = (IRule)Core.CreateCoreObject(RuleType.MakeGenericType(genericTypes));
 								//添加法则，泛型动态支持不可覆盖已有定义
 								if (!(ruleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
 									ruleList.Add(rule);
@@ -591,7 +589,7 @@ namespace WorldTree
 					foreach (var RuleType in ruleTypeHash)
 					{
 						//填入对应的泛型参数，实例化泛型监听系统
-						IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericDefinition), out _);
+						IRule rule = (IRule)Core.CreateCoreObject(RuleType.MakeGenericType(genericDefinition));
 						//添加法则，泛型动态支持不可覆盖已有定义
 						if (!(ruleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
 							ruleList.Add(rule);
@@ -641,7 +639,7 @@ namespace WorldTree
 					foreach (var RuleType in ruleTypeHash)
 					{
 						//填入对应的泛型参数，实例化泛型监听系统
-						IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericDefinition), out _);
+						IRule rule = (IRule)Core.CreateCoreObject(RuleType.MakeGenericType(genericDefinition));
 						//添加法则，泛型动态支持不可覆盖已有定义
 						if (!(ruleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
 							ruleList.Add(rule);
@@ -715,7 +713,7 @@ namespace WorldTree
 					foreach (var RuleType in RuleTypeHash)
 					{
 						//填入对应的泛型参数，实例化泛型监听系统
-						IRule rule = (IRule)Core.NewUnit(RuleType.MakeGenericType(genericTypes), out _);
+						IRule rule = (IRule)Core.CreateCoreObject(RuleType.MakeGenericType(genericTypes));
 						//添加法则，泛型动态支持不可覆盖已有定义
 						if (!(ruleTypeHashDict.TryGetValue(rule.RuleType, out var ruleGroup) && ruleGroup.Contains(rule.NodeType)))
 							ruleList.Add(rule);

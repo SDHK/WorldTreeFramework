@@ -56,20 +56,6 @@ namespace WorldTree
 		/// </summary>
 		public WorldLineManager WorldLineManager;
 
-		/// <summary>
-		/// Id管理器
-		/// </summary>
-		public IdManager IdManager;
-
-		/// <summary>
-		/// 真实时间管理器
-		/// </summary>
-		public RealTimeManager RealTimeManager;
-
-		/// <summary>
-		/// 法则管理器
-		/// </summary>
-		public RuleManager RuleManager;
 
 
 		#region 日志
@@ -130,12 +116,10 @@ namespace WorldTree
 		/// </summary>
 		public bool IsCoreActive = false;
 
-
 		/// <summary>
 		/// 游戏时间管理器
 		/// </summary>
 		public GameTimeManager GameTimeManager;
-
 
 		/// <summary>
 		/// 节点引用池管理器
@@ -175,44 +159,31 @@ namespace WorldTree
 			//框架核心启动组件新建初始化
 			Type = this.TypeToCode();
 
-			//Id管理器初始化
-			this.PoolGetNode(out IdManager);
-			if (Id == 0)
-			{
-				InstanceId = IdManager.GetId();
-				Id = InstanceId;
-			}
 
 			//日志管理器初始化
 			this.WorldLineManager.CreateCoreObject(out LogManager);
 			LogManager.Init(Id.ToString());
 
-			//法则管理器初始化
-			this.PoolGetNode(out RuleManager);
 
-			AddRuleGroup = RuleManager.GetOrNewRuleGroup<Add>();
-			RemoveRuleGroup = RuleManager.GetOrNewRuleGroup<Remove>();
-			BeforeRemoveRuleGroup = RuleManager.GetOrNewRuleGroup<BeforeRemove>();
-			EnableRuleGroup = RuleManager.GetOrNewRuleGroup<Enable>();
-			DisableRuleGroup = RuleManager.GetOrNewRuleGroup<Disable>();
-			GraftRuleGroup = RuleManager.GetOrNewRuleGroup<Graft>();
-			CutRuleGroup = RuleManager.GetOrNewRuleGroup<Cut>();
-			SerializeRuleGroup = RuleManager.GetOrNewRuleGroup<Serialize>();
-			DeserializeRuleGroup = RuleManager.GetOrNewRuleGroup<Deserialize>();
+			AddRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Add>();
+			RemoveRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Remove>();
+			BeforeRemoveRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<BeforeRemove>();
+			EnableRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Enable>();
+			DisableRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Disable>();
+			GraftRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Graft>();
+			CutRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Cut>();
+			SerializeRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Serialize>();
+			DeserializeRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Deserialize>();
 
 			//引用池管理器初始化
 			this.PoolGetNode(out ReferencedPoolManager);
 
 			//组件添加到树
 			this.TryGraftCoreManager(ReferencedPoolManager);
-			this.TryGraftCoreManager(IdManager);
-			this.TryGraftCoreManager(RuleManager);
 
 
 			//嫁接节点需要手动激活
 			ReferencedPoolManager.SetActive(true);
-			IdManager.SetActive(true);
-			RuleManager.SetActive(true);
 
 			//核心激活
 			SetActive(true);
@@ -220,9 +191,6 @@ namespace WorldTree
 
 			//全局法则执行器管理器
 			GlobalRuleExecutorManager = this.AddCoreManager(out RuleBroadcastManager _);
-
-			//真实时间管理器
-			RealTimeManager = this.AddCoreManager(out RealTimeManager _);
 
 			//游戏时间管理器
 			GameTimeManager = this.AddCoreManager(out GameTimeManager _);
@@ -303,10 +271,7 @@ namespace WorldTree
 			WorldContext?.Dispose();
 			World.Dispose();
 			GameTimeManager?.Dispose();
-			RealTimeManager?.Dispose();
 			GlobalRuleExecutorManager?.Dispose();
-			RuleManager?.Dispose();
-			IdManager?.Dispose();
 			ReferencedPoolManager?.Dispose();
 			LogManager?.Dispose();
 		}
@@ -327,9 +292,6 @@ namespace WorldTree
 			this.PoolRecycle(this);//回收到池
 
 			ReferencedPoolManager = null;
-			IdManager = null;
-			RuleManager = null;
-			RealTimeManager = null;
 			GameTimeManager = null;
 			World = null;
 

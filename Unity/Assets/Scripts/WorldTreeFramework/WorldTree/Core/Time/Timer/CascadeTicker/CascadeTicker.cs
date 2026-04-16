@@ -59,7 +59,6 @@ namespace WorldTree
 	/// 级联定时器
 	/// </summary>
 	public class CascadeTicker : Node
-		, ChildOf<RealTimeManager>
 		, ChildOf<GameTimeManager>
 		, AsChildBranch
 		, AsRule<Awake>
@@ -195,7 +194,7 @@ namespace WorldTree
 		/// </summary>
 		public static long AddTicker(this CascadeTicker self, long clockTick, INode node, long ruleType, TreeTaskToken token = null)
 		{
-			if (!self.Core.RuleManager.TryGetRuleList(node.Type, ruleType, out var ruleList)) return -1;
+			if (!self.Core.WorldLineManager.RuleManager.TryGetRuleList(node.Type, ruleType, out var ruleList)) return -1;
 
 			//大小比较，过时了就直接执行
 			if (self.advanceTick >= clockTick)

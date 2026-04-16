@@ -90,9 +90,10 @@ namespace WorldTree
 		/// </summary>
 		public static void OnCreate(INode self)
 		{
-			self.InstanceId = self.Core.IdManager.GetId();
+
+			self.InstanceId = self.Core.WorldLineManager.IdManager.GetId();
 			self.Id = self.InstanceId;
-			self.Core.RuleManager?.SupportNodeRule(self.Type);
+			self.Core.WorldLineManager.RuleManager?.SupportNodeRule(self.Type);
 		}
 
 		#endregion

@@ -47,7 +47,7 @@ namespace WorldTree.SourceGenerator
 						public static bool TrySendRule<R{{genericsType}}>(INode self, R nullRule{{(i == 0 ? " = null" : genericTypeParameter)}})
 							where R : class, ISendRule{{genericsTypeAngle}}
 						{
-							if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return false;
+							if (!self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return false;
 							ruleList.Send(self{{genericParameter}});
 							return true;
 						}
@@ -59,7 +59,7 @@ namespace WorldTree.SourceGenerator
 							where N : class, INode, AsRule<R>
 							where R : class, ISendRule{{genericsTypeAngle}}
 						{
-							if (!self.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return;
+							if (!self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList)) return;
 							ruleList.Send(self{{genericParameter}});
 						}
 				""");

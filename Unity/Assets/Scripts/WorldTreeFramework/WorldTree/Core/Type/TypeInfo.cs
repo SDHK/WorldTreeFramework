@@ -32,7 +32,7 @@ namespace WorldTree
 	/// <summary>
 	/// 类型信息：用于类型的信息获取
 	/// </summary>
-	public class TypeInfo : CoreObjectBase
+	public class TypeInfo : CoreObject
 	{
 		/// <summary>
 		/// 类型名称哈希码表
@@ -150,34 +150,6 @@ namespace WorldTree
 		/// 尝试获取类型
 		/// </summary>
 		public bool TryCodeToType(long hash64, out Type type) => Hash64TypeDict.TryGetValue(hash64, out type);
-
-	}
-	public static class TypeInfoRule
-	{
-		/// <summary>
-		/// 获取自身类型码
-		/// </summary>
-		public static long TypeToCode(this IWorldTreeBasic self) => self.Core.WorldLineManager.TypeInfo.TypeToCode(self.GetType());
-
-		/// <summary>
-		/// 注册并获取泛型类型码
-		/// </summary>
-		public static long TypeToCode<T>(this IWorldTreeBasic self) => self.Core.WorldLineManager.TypeInfo.TypeToCode(typeof(T));
-
-		/// <summary>
-		/// 获取类型码
-		/// </summary>	
-		public static long TypeToCode(this IWorldTreeBasic self, Type type) => self.Core.WorldLineManager.TypeInfo.TypeToCode(type);
-
-		/// <summary>
-		/// 获取类型
-		/// </summary>
-		public static Type CodeToType(this IWorldTreeBasic self, long typeCode) => self.Core.WorldLineManager.TypeInfo.CodeToType(typeCode);
-
-		/// <summary>
-		/// 尝试获取类型
-		/// </summary>
-		public static bool TryCodeToType(this IWorldTreeBasic self, long typeCode, out Type type) => self.Core.WorldLineManager.TypeInfo.TryCodeToType(typeCode, out type);
 
 	}
 }

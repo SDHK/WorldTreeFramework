@@ -13,29 +13,29 @@ namespace WorldTree
 {
 
 
-    public static partial class UtcTimeTestRule
-    {
-        [NodeRule(nameof(AddRule<UtcTimeTest>))]
-        private static void OnAddRule(this UtcTimeTest self)
-        {
-            self.StartTime = DateTime.UtcNow;
-            self.OneTime = DateTime.UtcNow;
-        }
+	public static partial class UtcTimeTestRule
+	{
+		[NodeRule(nameof(AddRule<UtcTimeTest>))]
+		private static void OnAddRule(this UtcTimeTest self)
+		{
+			self.StartTime = DateTime.UtcNow;
+			self.OneTime = DateTime.UtcNow;
+		}
 
 
-        [NodeRule(nameof(GuiUpdateRule<UtcTimeTest>))]
-        private static void OnGuiUpdateRule(this UtcTimeTest self)
-        {
+		[NodeRule(nameof(GuiUpdateRule<UtcTimeTest>))]
+		private static void OnGuiUpdateRule(this UtcTimeTest self)
+		{
 
-            // 需要确保 RealTimeManager 提供了 UtcNow 属性
-            DateTime realTimeManagerUtcNow = self.Core.RealTimeManager.UtcNow; // 假设这是从 RealTimeManager 获取的 UTC 时间
-            DateTime systemUtcNow = DateTime.UtcNow;
+			// 需要确保 RealTimeManager 提供了 UtcNow 属性
+			DateTime realTimeManagerUtcNow = self.Core.WorldLineManager.RealTimeManager.UtcNow; // 假设这是从 RealTimeManager 获取的 UTC 时间
+			DateTime systemUtcNow = DateTime.UtcNow;
 
-            TimeSpan difference = systemUtcNow - realTimeManagerUtcNow;
+			TimeSpan difference = systemUtcNow - realTimeManagerUtcNow;
 
-            TimeSpan differenceOne = systemUtcNow - realTimeManagerUtcNow.Add(self.offset);
+			TimeSpan differenceOne = systemUtcNow - realTimeManagerUtcNow.Add(self.offset);
 
-            GUILayout.Label($@" 
+			GUILayout.Label($@" 
 
     累加时间：{realTimeManagerUtcNow}
 
@@ -53,18 +53,18 @@ namespace WorldTree
 ", new GUIStyle() { fontSize = 60 });
 
 
-            //当前偏移时间
-            if (TimeHelper.GetTimeSpanMinutes(self.OneTime, DateTime.UtcNow) >= 1)
-            {
-                self.OneTime = DateTime.UtcNow;
-                self.offset = difference;
-                self.difference = differenceOne;
-            }
+			//当前偏移时间
+			if (TimeHelper.GetTimeSpanMinutes(self.OneTime, DateTime.UtcNow) >= 1)
+			{
+				self.OneTime = DateTime.UtcNow;
+				self.offset = difference;
+				self.difference = differenceOne;
+			}
 
-        }
-
-
+		}
 
 
-    }
+
+
+	}
 }
