@@ -43,14 +43,11 @@ namespace WorldTree
 		public static T PoolGetUnit<T>(this WorldLine self)
 		where T : class, IUnit
 		{
-			if (self != null && self.IsCoreActive)
+			if (self.WorldLineManager.UnitPoolManager.TryGet(out T unit))
 			{
-				if (self.WorldLineManager.UnitPoolManager.TryGet(out T unit))
-				{
-					unit.Core = self;
-					unit.OnCreate();
-					return unit;
-				}
+				unit.Core = self;
+				unit.OnCreate();
+				return unit;
 			}
 			return self.NewUnit<T>(out _);
 		}
@@ -60,15 +57,12 @@ namespace WorldTree
 		/// </summary>
 		public static IUnit PoolGetUnit(this WorldLine self, Type type)
 		{
-			if (self != null && self.IsCoreActive)
+			if (self.WorldLineManager.UnitPoolManager.TryGet(type, out object obj))
 			{
-				if (self.WorldLineManager.UnitPoolManager.TryGet(type, out object obj))
-				{
-					IUnit unit = obj as IUnit;
-					unit.Core = self;
-					unit.OnCreate();
-					return unit;
-				}
+				IUnit unit = obj as IUnit;
+				unit.Core = self;
+				unit.OnCreate();
+				return unit;
 			}
 			return self.NewUnit(type, out _);
 		}
@@ -78,7 +72,7 @@ namespace WorldTree
 		/// </summary>
 		public static void PoolRecycle(this WorldLine self, IUnit obj)
 		{
-			if (self != null && self.IsCoreActive && obj.IsFromPool)
+			if (obj.IsFromPool)
 			{
 				if (self.WorldLineManager.UnitPoolManager.TryRecycle(obj)) return;
 			}

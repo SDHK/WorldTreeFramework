@@ -21,7 +21,6 @@ namespace WorldTree
 		public static IRuleExecutor<R> GetListenerExecutor<R>(INode node)
 		   where R : IListenerRule
 		{
-			if (!node.Core.IsCoreActive) return null;
 			if (node.Core.ReferencedPoolManager == null) return null;
 			if (!node.Core.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool)) return null;
 			if (!node.Core.WorldLineManager.RuleManager.TryGetTargetRuleGroup(TypeInfo<R>.Code, node.Type, out RuleGroup ruleGroup)) return null;

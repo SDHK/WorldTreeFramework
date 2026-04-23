@@ -21,7 +21,7 @@ namespace WorldTree
 		public static byte[] SerializeNode(INode self)
 		{
 			if (self.IsDisposed) return null;
-			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.SerializeRuleGroup.Send(current));
+			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.WorldLineManager.SerializeRuleGroup.Send(current));
 
 			self.AddTemp(out TreeDataByteSequence sequence);
 			if (self?.Parent == null) return null;
@@ -37,7 +37,7 @@ namespace WorldTree
 		public static byte[] Serialize<T>(INode self, T data)
 		{
 			if (self.IsDisposed) return null;
-			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.SerializeRuleGroup.Send(current));
+			NodeBranchTraversalHelper.TraversalPostorder(self, current => current.Core.WorldLineManager.SerializeRuleGroup.Send(current));
 
 			self.AddTemp(out TreeDataByteSequence sequence);
 			if (self?.Parent == null) return null;

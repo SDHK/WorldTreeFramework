@@ -15,11 +15,10 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-
 	/// <summary>
-	/// 世界线管理器
+	/// 世界树核心
 	/// </summary>
-	public class WorldLineManager : CoreObject
+	public class WorldTreeCore : CoreObject
 	{
 		/// <summary>
 		/// 启动选项
@@ -95,7 +94,7 @@ namespace WorldTree
 		public Action<TimeSpan> MainUpdate;
 
 
-		public WorldLineManager()
+		public WorldTreeCore()
 		{
 			Core = this;
 			this.CreateCoreObject(out LogManager);
@@ -106,6 +105,17 @@ namespace WorldTree
 			this.CreateCoreObject(out IdManager);
 			this.CreateCoreObject(out UnitPoolManager);
 			this.CreateCoreObject(out NodePoolManager);
+
+
+			AddRuleGroup = RuleManager.GetOrNewRuleGroup<Add>();
+			RemoveRuleGroup = RuleManager.GetOrNewRuleGroup<Remove>();
+			BeforeRemoveRuleGroup = RuleManager.GetOrNewRuleGroup<BeforeRemove>();
+			EnableRuleGroup = RuleManager.GetOrNewRuleGroup<Enable>();
+			DisableRuleGroup = RuleManager.GetOrNewRuleGroup<Disable>();
+			GraftRuleGroup = RuleManager.GetOrNewRuleGroup<Graft>();
+			CutRuleGroup = RuleManager.GetOrNewRuleGroup<Cut>();
+			SerializeRuleGroup = RuleManager.GetOrNewRuleGroup<Serialize>();
+			DeserializeRuleGroup = RuleManager.GetOrNewRuleGroup<Deserialize>();
 		}
 
 		/// <summary>
@@ -116,13 +126,54 @@ namespace WorldTree
 			this.viewBuilderType = viewBuilderType;
 			ViewLine = new WorldLine();
 			ViewLine.WorldLineManager = this;
-			ViewLine.Init(heartType, 10);
-			ViewLine.WorldContext.Post(() =>
-			{
-				long worldTypeCode = ViewLine.TypeToCode(worldType);
-				NodeBranchHelper.AddNode(ViewLine, default(ComponentBranch), worldTypeCode, worldType, out _);
-			});
+			ViewLine.Init(worldType, heartType, 10);
 		}
+
+		#endregion
+
+		#region 基础生命周期
+
+		/// <summary>
+		/// 添加法则组
+		/// </summary>
+		public IRuleGroup<Add> AddRuleGroup;
+		/// <summary>
+		/// 移除前法则组
+		/// </summary>
+		public IRuleGroup<BeforeRemove> BeforeRemoveRuleGroup;
+		/// <summary>
+		/// 移除法则组
+		/// </summary>
+		public IRuleGroup<Remove> RemoveRuleGroup;
+
+		/// <summary>
+		/// 嫁接法则组
+		/// </summary>
+		public IRuleGroup<Graft> GraftRuleGroup;
+
+		/// <summary>
+		/// 裁剪法则组
+		/// </summary>
+		public IRuleGroup<Cut> CutRuleGroup;
+
+		/// <summary>
+		/// 激活法则组
+		/// </summary>
+		public IRuleGroup<Enable> EnableRuleGroup;
+		/// <summary>
+		/// 禁用法则组
+		/// </summary>
+		public IRuleGroup<Disable> DisableRuleGroup;
+
+		/// <summary>
+		/// 序列化法则组
+		/// </summary>
+		public IRuleGroup<Serialize> SerializeRuleGroup;
+
+		/// <summary>
+		/// 反序列化法则组
+		/// </summary>
+		public IRuleGroup<Deserialize> DeserializeRuleGroup;
 
 		#endregion
 
@@ -139,7 +190,7 @@ namespace WorldTree
 		/// <summary>
 		/// 创建世界线
 		/// </summary>
-		public WorldLine Create(int id, Type heartType, int frameTime = 0)
+		public WorldLine Create(int id, Type worldType, Type heartType, int frameTime = 0)
 		{
 			if (!lineDict.TryGetValue(id, out WorldLine line))
 			{
@@ -149,11 +200,12 @@ namespace WorldTree
 				{
 					//可视化世界线添加可视化生成器
 					INode nodeView = ViewLine.PoolGetNode(viewBuilderType);
-					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(ViewLine.World, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
+					//ViewLine.World
+					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(ViewLine, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
 				}
 				MainLine ??= line;
 				line.WorldLineManager = this;
-				line.Init(heartType, frameTime);
+				line.Init(worldType, heartType, frameTime);
 				lineDict.TryAdd(id, line);
 				return line;
 			}

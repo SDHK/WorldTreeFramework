@@ -37,14 +37,13 @@ namespace WorldTree
 		/// <summary>
 		/// 框架启动
 		/// </summary>
-		public void Init(Type heartType, int frameTime);
+		public void Init(Type worldType, Type heartType, int frameTime);
 	}
-
 
 	/// <summary>
 	/// 世界线
 	/// </summary>
-	public class WorldLine : World, IWorldLine, IListenerIgnorer
+	public class WorldLine : Node, IWorldLine, IListenerIgnorer
 		, AsCoreManagerBranch
 		, AsComponentBranch
 		, AsRule<Awake>
@@ -52,74 +51,31 @@ namespace WorldTree
 		#region 字段
 
 		/// <summary>
-		/// 世界线管理器
+		/// 世界树核心
 		/// </summary>
-		public WorldLineManager WorldLineManager;
+		public WorldTreeCore WorldLineManager;
 
-
-
-		#region 日志
 		/// <summary>
 		/// 日志管理器
 		/// </summary>
 		public LogManager LogManager;
 
-		#endregion
-
-		#region 基础生命周期
-
 		/// <summary>
-		/// 添加法则组
+		/// 世界之心
 		/// </summary>
-		public IRuleGroup<Add> AddRuleGroup;
-		/// <summary>
-		/// 移除前法则组
-		/// </summary>
-		public IRuleGroup<BeforeRemove> BeforeRemoveRuleGroup;
-		/// <summary>
-		/// 移除法则组
-		/// </summary>
-		public IRuleGroup<Remove> RemoveRuleGroup;
+		public WorldHeartBase WorldHeart;
 
 		/// <summary>
-		/// 嫁接法则组
+		/// 世界环境：线程上下文
 		/// </summary>
-		public IRuleGroup<Graft> GraftRuleGroup;
+		public WorldContext WorldContext;
 
 		/// <summary>
-		/// 裁剪法则组
-		/// </summary>
-		public IRuleGroup<Cut> CutRuleGroup;
-
-		/// <summary>
-		/// 激活法则组
-		/// </summary>
-		public IRuleGroup<Enable> EnableRuleGroup;
-		/// <summary>
-		/// 禁用法则组
-		/// </summary>
-		public IRuleGroup<Disable> DisableRuleGroup;
-
-		/// <summary>
-		/// 序列化法则组
-		/// </summary>
-		public IRuleGroup<Serialize> SerializeRuleGroup;
-
-		/// <summary>
-		/// 反序列化法则组
-		/// </summary>
-		public IRuleGroup<Deserialize> DeserializeRuleGroup;
-		#endregion
-
-		/// <summary>
-		/// 核心激活标记
-		/// </summary>
-		public bool IsCoreActive = false;
-
-		/// <summary>
-		/// 游戏时间管理器
+		/// 世界时间管理器
 		/// </summary>
 		public GameTimeManager GameTimeManager;
+
+		//真实时间定时器
 
 		/// <summary>
 		/// 节点引用池管理器
@@ -132,14 +88,9 @@ namespace WorldTree
 		public RuleBroadcastManager GlobalRuleExecutorManager;
 
 		/// <summary>
-		/// 世界之心
+		/// 主世界 
 		/// </summary>
-		public WorldHeartBase WorldHeart;
-
-		/// <summary>
-		/// 世界环境：线程上下文
-		/// </summary>
-		public WorldContext WorldContext;
+		public World MainWorld;
 
 		#endregion
 
@@ -148,13 +99,12 @@ namespace WorldTree
 		/// <summary>
 		/// 框架启动
 		/// </summary>
-		public virtual void Init(Type heartType, int frameTime)
+		public virtual void Init(Type worldType, Type heartType, int frameTime)
 		{
 			SetActive(false);
 
 			//根节点初始化
 			Core = this;
-			World = this;
 
 			//框架核心启动组件新建初始化
 			Type = this.TypeToCode();
@@ -164,30 +114,17 @@ namespace WorldTree
 			this.WorldLineManager.CreateCoreObject(out LogManager);
 			LogManager.Init(Id.ToString());
 
-
-			AddRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Add>();
-			RemoveRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Remove>();
-			BeforeRemoveRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<BeforeRemove>();
-			EnableRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Enable>();
-			DisableRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Disable>();
-			GraftRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Graft>();
-			CutRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Cut>();
-			SerializeRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Serialize>();
-			DeserializeRuleGroup = WorldLineManager.RuleManager.GetOrNewRuleGroup<Deserialize>();
-
 			//引用池管理器初始化
 			this.PoolGetNode(out ReferencedPoolManager);
 
 			//组件添加到树
 			this.TryGraftCoreManager(ReferencedPoolManager);
 
-
 			//嫁接节点需要手动激活
 			ReferencedPoolManager.SetActive(true);
 
 			//核心激活
 			SetActive(true);
-			IsCoreActive = true;
 
 			//全局法则执行器管理器
 			GlobalRuleExecutorManager = this.AddCoreManager(out RuleBroadcastManager _);
@@ -199,6 +136,11 @@ namespace WorldTree
 			WorldHeart = NodeBranchHelper.AddNode(this, default(CoreManagerBranch), typeCode, heartType, out _, frameTime) as WorldHeartBase;
 			WorldContext = this.AddCoreManager(out WorldContext _);
 			WorldHeart.Run();
+
+			WorldContext.Post(() =>
+			{
+				NodeBranchHelper.AddNode(this, default(ComponentBranch), this.TypeToCode(worldType), worldType, out _);
+			});
 		}
 
 		#endregion
@@ -231,14 +173,14 @@ namespace WorldTree
 			{
 				if (IsActive)
 				{
-					Core.EnableRuleGroup?.Send(this);//激活事件通知
+					WorldLineManager.EnableRuleGroup?.Send(this);//激活事件通知
 				}
 				else
 				{
-					Core.DisableRuleGroup?.Send(this); //禁用事件通知
+					WorldLineManager.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			Core.AddRuleGroup?.Send(this);//节点添加事件通知
+			WorldLineManager.AddRuleGroup?.Send(this);//节点添加事件通知
 		}
 
 		#endregion
@@ -250,9 +192,6 @@ namespace WorldTree
 		/// </summary>
 		public override void Dispose()
 		{
-			//核心激活关闭
-			IsCoreActive = false;
-
 			//是否已经回收
 			if (IsDisposed) return;
 
@@ -262,7 +201,7 @@ namespace WorldTree
 
 		public override void OnBeforeDispose()
 		{
-			Core.BeforeRemoveRuleGroup?.Send(this);
+			WorldLineManager.BeforeRemoveRuleGroup?.Send(this);
 
 			//有严格的移除顺序
 			this.RemoveAllTemp();
@@ -285,8 +224,8 @@ namespace WorldTree
 			ViewBuilder = null;
 			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
 			SetActive(false);
-			Core.DisableRuleGroup?.Send(this); //禁用事件通知
-			Core.RemoveRuleGroup?.Send(this);//移除事件通知
+			WorldLineManager.DisableRuleGroup?.Send(this); //禁用事件通知
+			WorldLineManager.RemoveRuleGroup?.Send(this);//移除事件通知
 			Parent = null;//清除父节点
 
 			this.PoolRecycle(this);//回收到池
@@ -294,56 +233,6 @@ namespace WorldTree
 			ReferencedPoolManager = null;
 			GameTimeManager = null;
 			World = null;
-
-			AddRuleGroup = null;
-			RemoveRuleGroup = null;
-			EnableRuleGroup = null;
-			DisableRuleGroup = null;
-		}
-
-		#endregion
-
-		#region 嫁接
-
-		public override bool TryGraftSelfToTree<B, K>(K key, INode parent)
-		{
-			if (!NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this)) return false;
-
-			BranchType = TypeInfo<B>.Code;
-			Parent = parent;
-			RefreshActive();
-			NodeBranchTraversalHelper.TraversalLevel(this, current => current.OnGraftSelfToTree());
-			return true;
-		}
-		public override void OnBeforeGraftSelfToTree()
-		{
-			INodeProxyRule.AddNodeView(this);
-		}
-		public override void OnGraftSelfToTree()
-		{
-			if (IsActive != activeEventMark)//激活变更
-			{
-				if (IsActive)
-				{
-					Core.EnableRuleGroup?.Send(this);//激活事件通知
-				}
-				else
-				{
-					Core.DisableRuleGroup?.Send(this); //禁用事件通知
-				}
-			}
-			NodeRuleHelper.SendRule(this, default(Graft));//节点嫁接事件通知
-		}
-
-		#endregion
-
-		#region 裁剪
-
-		public override void OnCutSelf()
-		{
-			ViewBuilder?.Dispose();
-			ViewBuilder = null;
-			NodeRuleHelper.SendRule(this, default(Cut));
 		}
 
 		#endregion

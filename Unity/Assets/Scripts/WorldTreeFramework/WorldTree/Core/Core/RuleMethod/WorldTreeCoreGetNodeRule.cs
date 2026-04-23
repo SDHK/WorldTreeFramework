@@ -47,16 +47,13 @@ namespace WorldTree
 		/// </summary>
 		public static T PoolGetNode<T>(this WorldLine self, bool isSerialize = false) where T : class, INode
 		{
-			if (self.IsCoreActive)
+			if (self.WorldLineManager.NodePoolManager.TryGet(out T node))
 			{
-				if (self.WorldLineManager.NodePoolManager.TryGet(out T node))
-				{
-					node.Core = self;
-					node.World = self.World;
-					node.IsSerialize = isSerialize;
-					node.OnCreate();
-					return node;
-				}
+				node.Core = self;
+				node.World = self.World;
+				node.IsSerialize = isSerialize;
+				node.OnCreate();
+				return node;
 			}
 			return self.NewNode<T>(out _, isSerialize);
 		}
@@ -66,17 +63,14 @@ namespace WorldTree
 		/// </summary>
 		public static INode PoolGetNode(this WorldLine self, Type type, bool isSerialize = false)
 		{
-			if (self.IsCoreActive)
+			if (self.WorldLineManager.NodePoolManager.TryGet(type, out object nodeObj))
 			{
-				if (self.WorldLineManager.NodePoolManager.TryGet(type, out object nodeObj))
-				{
-					INode node = nodeObj as INode;
-					node.Core = self;
-					node.World = self.World;
-					node.IsSerialize = isSerialize;
-					node.OnCreate();
-					return node;
-				}
+				INode node = nodeObj as INode;
+				node.Core = self;
+				node.World = self.World;
+				node.IsSerialize = isSerialize;
+				node.OnCreate();
+				return node;
 			}
 			return self.NewNode(type, out _, isSerialize);
 		}
@@ -86,7 +80,7 @@ namespace WorldTree
 		/// </summary>
 		public static void PoolRecycle(this WorldLine self, INode obj)
 		{
-			if (self.IsCoreActive && obj.IsFromPool)
+			if (obj.IsFromPool)
 			{
 				if (self.WorldLineManager.NodePoolManager.TryRecycle(obj)) return;
 			}

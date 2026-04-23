@@ -145,6 +145,7 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public IWorldTreeNodeViewBuilder ViewBuilder { get; set; }
 
+
 		#region Active
 
 		/// <summary>

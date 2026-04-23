@@ -226,7 +226,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\ObjectBox\TreeValue\TreeValueDelegate.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\TreeDataByteSequence.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldHeart\WorldHeartBase.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldLine\WorldLineManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Core\WorldLine\WorldTreeCore.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreePack\FormatRule\Array1FormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Branch\Sub\ChildBranch.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Object\Basic\RuleMethod\BasicTypeInfoRule.cs" />

@@ -33,16 +33,16 @@
 			{
 				if (self.IsActive)
 				{
-					self.Core.EnableRuleGroup?.Send(self); //激活事件通知
+					self.Core.WorldLineManager.EnableRuleGroup?.Send(self); //激活事件通知
 					NodeRuleHelper.TrySendRule(self.Parent, default(Show));
 				}
 				else
 				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
 					NodeRuleHelper.TrySendRule(self.Parent, default(Hide));
 				}
 			}
-			self.Core.AddRuleGroup?.Send(self);//节点添加事件通知
+			self.Core.WorldLineManager.AddRuleGroup?.Send(self);//节点添加事件通知
 		}
 
 		/// <summary>
@@ -69,12 +69,12 @@
 			{
 				if (self.IsActive)
 				{
-					self.Core.EnableRuleGroup?.Send(self);//激活事件通知
+					self.Core.WorldLineManager.EnableRuleGroup?.Send(self);//激活事件通知
 					NodeRuleHelper.TrySendRule(self.Parent, default(Show));
 				}
 				else
 				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
 					NodeRuleHelper.TrySendRule(self.Parent, default(Hide));
 				}
 			}
@@ -110,7 +110,7 @@
 			{
 				self.Core.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
-			self.Core.RemoveRuleGroup?.Send(self); // 移除事件通知
+			self.Core.WorldLineManager.RemoveRuleGroup?.Send(self); // 移除事件通知
 
 			if (self is not IListenerIgnorer) // 广播给全部监听器通知
 			{

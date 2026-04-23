@@ -21,7 +21,7 @@ namespace WorldTree
 		/// <summary>
 		/// 世界线管理器 
 		/// </summary>
-		public WorldLineManager Core { get; set; }
+		public WorldTreeCore Core { get; set; }
 		/// <summary>
 		/// 释放标记
 		/// </summary>
@@ -40,7 +40,7 @@ namespace WorldTree
 		/// <summary>
 		/// 世界线管理器 
 		/// </summary>
-		public WorldLineManager Core { get; set; }
+		public WorldTreeCore Core { get; set; }
 
 		/// <summary>
 		/// 释放标记

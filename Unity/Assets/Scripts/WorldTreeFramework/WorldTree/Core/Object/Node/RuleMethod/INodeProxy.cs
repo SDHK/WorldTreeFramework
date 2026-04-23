@@ -141,14 +141,14 @@ namespace WorldTree
 			{
 				if (self.IsActive)
 				{
-					self.Core.EnableRuleGroup?.Send(self);//激活事件通知
+					self.Core.WorldLineManager.EnableRuleGroup?.Send(self);//激活事件通知
 				}
 				else
 				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
 				}
 			}
-			self.Core.AddRuleGroup?.Send(self);//节点添加事件通知
+			self.Core.WorldLineManager.AddRuleGroup?.Send(self);//节点添加事件通知
 		}
 
 		#endregion
@@ -221,7 +221,7 @@ namespace WorldTree
 		/// <summary>
 		/// 释放前的处理（代理方法）
 		/// </summary>
-		public static void OnBeforeDispose(INode self) => self.Core.BeforeRemoveRuleGroup?.Send(self);
+		public static void OnBeforeDispose(INode self) => self.Core.WorldLineManager.BeforeRemoveRuleGroup?.Send(self);
 
 
 
@@ -243,11 +243,11 @@ namespace WorldTree
 			{
 				if (self.IsActive)
 				{
-					self.Core.EnableRuleGroup?.Send(self);//激活事件通知
+					self.Core.WorldLineManager.EnableRuleGroup?.Send(self);//激活事件通知
 				}
 				else
 				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
 				}
 			}
 
@@ -256,7 +256,7 @@ namespace WorldTree
 			{
 				self.Core.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
-			self.Core.RemoveRuleGroup?.Send(self); // 移除事件通知
+			self.Core.WorldLineManager.RemoveRuleGroup?.Send(self); // 移除事件通知
 			if (self is not IListenerIgnorer) // 广播给全部监听器通知
 			{
 				NodeListenerExecutorHelper.GetListenerExecutor<ListenerRemove>(self)?.Send(self);
@@ -355,7 +355,7 @@ namespace WorldTree
 
 			if (self.IsSerialize)
 			{
-				self.Core.DeserializeRuleGroup?.Send(self);//反序列化事件通知
+				self.Core.WorldLineManager.DeserializeRuleGroup?.Send(self);//反序列化事件通知
 				self.IsSerialize = false;
 			}
 
@@ -363,14 +363,14 @@ namespace WorldTree
 			{
 				if (self.IsActive)
 				{
-					self.Core.EnableRuleGroup?.Send(self);//激活事件通知
+					self.Core.WorldLineManager.EnableRuleGroup?.Send(self);//激活事件通知
 				}
 				else
 				{
-					self.Core.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
 				}
 			}
-			if (!self.IsSerialize) self.Core.GraftRuleGroup?.Send(self);//嫁接事件通知
+			if (!self.IsSerialize) self.Core.WorldLineManager.GraftRuleGroup?.Send(self);//嫁接事件通知
 		}
 
 		#endregion
@@ -405,7 +405,7 @@ namespace WorldTree
 				// 检测移除静态监听
 				self.Core.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
-			self.Core.CutRuleGroup?.Send(self); // 裁剪事件通知
+			self.Core.WorldLineManager.CutRuleGroup?.Send(self); // 裁剪事件通知
 			if (self is not IListenerIgnorer) // 广播给全部监听器通知
 			{
 				NodeListenerExecutorHelper.GetListenerExecutor<ListenerRemove>(self)?.Send(self);

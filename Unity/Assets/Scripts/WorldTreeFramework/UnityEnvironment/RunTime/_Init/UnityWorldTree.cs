@@ -17,9 +17,9 @@ namespace WorldTree
 	public class UnityWorldTree : MonoBehaviour
 	{
 		/// <summary>
-		/// 世界线管理器
+		/// 世界树核心
 		/// </summary>
-		public WorldLineManager WorldLineManager;
+		public WorldTreeCore WorldTreeCore;
 
 		/// <summary>
 		/// 启动项
@@ -37,25 +37,21 @@ namespace WorldTree
 			//		   .WithNotParsed(error => throw new Exception($"命令行格式错误! {error}"))
 			//		   .WithParsed((o) => Options = o);
 
-			WorldLineManager = new();
-			WorldLineManager.SetLog<UnityWorldLog>();
+			WorldTreeCore = new();
+			WorldTreeCore.SetLog<UnityWorldLog>();
 
-			if (Define.IsEditor) WorldLineManager.SetView(typeof(UnityViewBuilderWorld), typeof(UnityWorldHeart), typeof(UnityWorldTreeNodeViewBuilder));
-			var line = WorldLineManager.Create(0, typeof(UnityWorldHeart));
-
-			line.WorldContext.Post(() =>
-			{
-				line.AddComponent(out MainWorld _);
-			});
+			if (Define.IsEditor) WorldTreeCore.SetView(typeof(UnityViewBuilderWorld), typeof(UnityWorldHeart), typeof(UnityWorldTreeNodeViewBuilder));
+			WorldTreeCore.Create(0, typeof(MainWorld), typeof(UnityWorldHeart));
 		}
+
 
 		/// <summary>
 		/// 退出
 		/// </summary>
 		private void OnApplicationQuit()
 		{
-			WorldLineManager?.Dispose();
-			WorldLineManager = null;
+			WorldTreeCore?.Dispose();
+			WorldTreeCore = null;
 		}
 
 		/// <summary>
@@ -63,8 +59,8 @@ namespace WorldTree
 		/// </summary>
 		private void OnDestroy()
 		{
-			WorldLineManager?.Dispose();
-			WorldLineManager = null;
+			WorldTreeCore?.Dispose();
+			WorldTreeCore = null;
 		}
 	}
 }
