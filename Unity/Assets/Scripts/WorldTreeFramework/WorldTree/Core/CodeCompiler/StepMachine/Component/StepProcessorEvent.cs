@@ -52,7 +52,7 @@ namespace WorldTree
 		{
 			protected override void Execute(StepProcessorEvent self)
 			{
-				self.Core.PoolGetUnit(out self.dataList);
+				self.World.PoolGetUnit(out self.dataList);
 			}
 		}
 

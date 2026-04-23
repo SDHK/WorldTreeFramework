@@ -11,16 +11,12 @@ namespace WorldTree
 		{
 			InitializeComponent();
 
-			WorldLineManager lineManager = new();
+			WorldTreeCore worldTree = new();
 
 			//判断是否为设计模式，如果是，则不使用日志。
-			if (!Design.IsDesignMode) lineManager.SetLog<WorldLog>();
+			if (!Design.IsDesignMode) worldTree.SetLog<WorldLog>();
 
-			var line = lineManager.Create(0, typeof(AvaloniaWorldHeart), 1000);
-			line.WorldContext.Post(() =>
-			{
-				line.AddComponent(out MainWorld _, this);
-			});
+			worldTree.Create(0, typeof(MainWorld), typeof(AvaloniaWorldHeart), 1000);
 		}
 	}
 }

@@ -88,7 +88,7 @@ namespace WorldTree
 				if (self.TryReadArrayHead(typeof(RuleBroadcastData), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				long ruleTypeCode = self.ReadValue<long>();
-				value = self.Core.GetRuleBroadcast(ruleTypeCode);
+				value = self.World.GetRuleBroadcast(ruleTypeCode);
 			}
 		}
 	}
@@ -111,7 +111,7 @@ namespace WorldTree
 			protected override void Execute(RuleBroadcaster<R> self)
 			{
 				self.GetBaseRule<RuleBroadcaster, RuleExecutor, Add>().Send(self);
-				self.ruleGroupDict = self.Core.WorldLineManager.RuleManager.GetOrNewRuleGroup<R>();
+				self.ruleGroupDict = self.World.Line.Core.RuleManager.GetOrNewRuleGroup<R>();
 				self.LoadGlobalNode();
 			}
 		}
@@ -136,7 +136,7 @@ namespace WorldTree
 
 				if (!isListenerIgnorer)
 				{
-					if (self.Core.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
+					if (self.World.Line.ReferencedPoolManager.TryGetPool(item.Key, out ReferencedPool pool))
 					{
 						foreach (var node in pool.NodeDict) self.TryAdd(node.Value);
 					}

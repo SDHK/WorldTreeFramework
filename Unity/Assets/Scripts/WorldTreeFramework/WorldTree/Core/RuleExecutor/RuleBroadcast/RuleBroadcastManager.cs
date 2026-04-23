@@ -19,10 +19,10 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static RuleBroadcast<R> GetRuleBroadcast<R>(this WorldLine self, out RuleBroadcast<R> ruleExecutor)
+		public static RuleBroadcast<R> GetRuleBroadcast<R>(this World self, out RuleBroadcast<R> ruleExecutor)
 		where R : IGlobalRule
 		{
-			self.GlobalRuleExecutorManager.AddGeneric(TypeInfo<R>.Code, out RuleBroadcaster<R> globalRuleExecutor);
+			self.Line.GlobalRuleExecutorManager.AddGeneric(TypeInfo<R>.Code, out RuleBroadcaster<R> globalRuleExecutor);
 			ruleExecutor = globalRuleExecutor as RuleBroadcast<R>;
 			return ruleExecutor;
 		}
@@ -30,14 +30,14 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static RuleBroadcaster GetRuleBroadcast(this WorldLine self, long genericTypeCpde)
+		public static RuleBroadcaster GetRuleBroadcast(this World self, long genericTypeCpde)
 		{
-			INode node = NodeBranchHelper.GetBranch<GenericBranch<long>>(self.GlobalRuleExecutorManager)?.GetNode(genericTypeCpde);
+			INode node = NodeBranchHelper.GetBranch<GenericBranch<long>>(self.Line.GlobalRuleExecutorManager)?.GetNode(genericTypeCpde);
 			if (node != null) return node as RuleBroadcaster;
 
 			if (!self.TryCodeToType(genericTypeCpde, out Type genericType)) return null;
 			Type broadcasterType = typeof(RuleBroadcaster<>).MakeGenericType(genericType);
-			NodeBranchHelper.AddNode(self.GlobalRuleExecutorManager, default(GenericBranch<long>), genericTypeCpde, broadcasterType, out node);
+			NodeBranchHelper.AddNode(self.Line.GlobalRuleExecutorManager, default(GenericBranch<long>), genericTypeCpde, broadcasterType, out node);
 			RuleBroadcaster executor = node as RuleBroadcaster;
 			return executor;
 		}
@@ -46,7 +46,7 @@ namespace WorldTree
 		/// <summary>
 		/// 强制获取全局节点法则执行器
 		/// </summary>
-		public static RuleBroadcast<R> GetRuleBroadcast<R>(this WorldLine self, long genericTypeCpde, out RuleBroadcast<R> ruleExecutor)
+		public static RuleBroadcast<R> GetRuleBroadcast<R>(this World self, long genericTypeCpde, out RuleBroadcast<R> ruleExecutor)
 			where R : IGlobalRule
 		{
 			var executor = self.GetRuleBroadcast(genericTypeCpde);

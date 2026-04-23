@@ -54,7 +54,7 @@ namespace WorldTree.Internal
 					await Task;
 				}
 
-				this.Core.WorldContext.Post((selfObj) =>
+				this.World.Line.WorldContext.Post((selfObj) =>
 				{
 					var self = (TreeTaskLink)selfObj.Object;
 					base.SetCompleted();
@@ -62,7 +62,7 @@ namespace WorldTree.Internal
 			}
 			catch (Exception e)
 			{
-				this.Core.WorldContext.Post((e) => this.LogError((Exception)e.Object), new(e));
+				this.World.Line.WorldContext.Post((e) => this.LogError((Exception)e.Object), new(e));
 			}
 		}
 
@@ -119,7 +119,7 @@ namespace WorldTree.Internal
 				{
 					await Task;
 				}
-				this.Core.WorldContext.Post((selfObj) =>
+				this.World.Line.WorldContext.Post((selfObj) =>
 				{
 					var self = (TreeTaskLink<T>)selfObj.Object;
 					base.SetCompleted();
@@ -127,7 +127,7 @@ namespace WorldTree.Internal
 			}
 			catch (Exception e)
 			{
-				this.Core.WorldContext.Post((o) => this.LogError((Exception)o.Object), new(e));
+				this.World.Line.WorldContext.Post((o) => this.LogError((Exception)o.Object), new(e));
 			}
 		}
 	}

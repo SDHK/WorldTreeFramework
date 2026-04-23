@@ -30,7 +30,7 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeDataArray self)
 			{
-				self.Core.PoolGetUnit(out self.LengthList);
+				self.World.PoolGetUnit(out self.LengthList);
 			}
 		}
 

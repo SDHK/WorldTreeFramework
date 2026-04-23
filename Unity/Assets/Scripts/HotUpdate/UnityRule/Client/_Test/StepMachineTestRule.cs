@@ -13,7 +13,8 @@
 				self.stepMachine.AddStepProcessorLoop();
 				self.stepMachine.AddStepProcessorMath();
 
-				self.Core.PoolGetUnit(out UnitList<StepAssemblyData> datas);
+
+				self.World.PoolGetUnit(out UnitList<StepAssemblyData> datas);
 
 				//表达式：(100 + 50) / 3 * 2 - 10 % 3
 				// 1. 计算 100 + 50 = 150

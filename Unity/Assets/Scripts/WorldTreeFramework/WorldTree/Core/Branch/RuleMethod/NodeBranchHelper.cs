@@ -29,7 +29,7 @@ namespace WorldTree
 			// 第一个分支，直接创建单个分支
 			if (self.BranchDict == null)
 			{
-				branch = self.Core.PoolGetUnit<B>();
+				branch = self.World.PoolGetUnit<B>();
 				self.BranchDict = branch;
 				return branch;
 			}
@@ -41,10 +41,10 @@ namespace WorldTree
 			if (self.BranchDict is not BranchGroup)
 			{
 				IBranch oldBranch = self.BranchDict as IBranch;
-				self.BranchDict = self.Core.PoolGetUnit<BranchGroup>();
+				self.BranchDict = self.World.PoolGetUnit<BranchGroup>();
 				self.BranchDict.TryAddBranch(oldBranch.Type, oldBranch);
 			}
-			branch = self.Core.PoolGetUnit<B>();
+			branch = self.World.PoolGetUnit<B>();
 			self.BranchDict.TryAddBranch(TypeInfo<B>.Code, branch);
 			return branch;
 		}
@@ -58,7 +58,7 @@ namespace WorldTree
 			// 第一个分支，直接创建单个分支
 			if (self.BranchDict == null)
 			{
-				branch = self.Core.PoolGetUnit(type) as IBranch;
+				branch = self.World.PoolGetUnit(type) as IBranch;
 				self.BranchDict = branch;
 				return branch;
 			}
@@ -70,10 +70,10 @@ namespace WorldTree
 			if (self.BranchDict is not BranchGroup)
 			{
 				IBranch oldBranch = self.BranchDict as IBranch;
-				self.BranchDict = self.Core.PoolGetUnit<BranchGroup>();
+				self.BranchDict = self.World.PoolGetUnit<BranchGroup>();
 				self.BranchDict.TryAddBranch(oldBranch.Type, oldBranch);
 			}
-			branch = self.Core.PoolGetUnit(type) as IBranch;
+			branch = self.World.PoolGetUnit(type) as IBranch;
 			self.BranchDict.TryAddBranch(typeCode, branch);
 			return branch;
 		}

@@ -174,7 +174,7 @@ namespace WorldTree
 		{
 			protected override void Execute(RuleListExecutor self)
 			{
-				self.Core.PoolGetUnit(out self.IdIndexDict);
+				self.World.PoolGetUnit(out self.IdIndexDict);
 				self.GetBaseRule<RuleListExecutor, RuleExecutor, Add>().Send(self);
 			}
 		}

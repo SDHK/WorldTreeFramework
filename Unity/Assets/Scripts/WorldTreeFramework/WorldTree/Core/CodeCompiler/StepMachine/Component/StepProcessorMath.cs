@@ -163,7 +163,7 @@
 		{
 			protected override void Execute(StepProcessorMath self)
 			{
-				self.Core.PoolGetUnit(out self.dataList);
+				self.World.PoolGetUnit(out self.dataList);
 			}
 		}
 

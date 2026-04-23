@@ -495,7 +495,7 @@ namespace WorldTree
 		{
 			protected override void Execute(ByteSequence self)
 			{
-				self.Core.PoolGetUnit(out self.segmentList);
+				self.World.PoolGetUnit(out self.segmentList);
 			}
 		}
 

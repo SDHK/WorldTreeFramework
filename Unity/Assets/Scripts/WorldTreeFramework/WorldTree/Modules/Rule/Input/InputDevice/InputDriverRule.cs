@@ -63,7 +63,7 @@ namespace WorldTree
 					Y = info.Y,
 					Z = info.Z,
 				},
-				TimeStamp = self.Core.WorldLineManager.RealTimeManager.GetUtcNow(),
+				TimeStamp = self.World.Line.Core.RealTimeManager.GetUtcNow(),
 			};
 
 			self.inputManager.AddData(data);

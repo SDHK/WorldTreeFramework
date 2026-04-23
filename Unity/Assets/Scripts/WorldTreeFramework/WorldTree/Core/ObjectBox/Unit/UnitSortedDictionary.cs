@@ -21,7 +21,7 @@ namespace WorldTree
 	public partial class UnitSortedDictionary<TKey, TValue> : SortedDictionary<TKey, TValue>, IUnit
 	{
 		[TreeDataIgnore]
-		public WorldLine Core { get; set; }
+		public World World { get; set; }
 		[TreeDataIgnore]
 		public long Type { get; set; }
 		[TreeDataIgnore]
@@ -31,7 +31,7 @@ namespace WorldTree
 
 		public void Dispose()
 		{
-			Core.PoolRecycle(this);
+			World.PoolRecycle(this);
 		}
 		public void OnCreate() { }
 		public virtual void OnDispose() => Clear();

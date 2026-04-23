@@ -30,7 +30,7 @@ namespace WorldTree
 		{
 			subView = null;
 			if (!self.IsOpen) return null;
-			subView = self.Core.PoolGetNode(viewType) as View;
+			subView = self.World.PoolGetNode(viewType) as View;
 			NodeBranchHelper.AddNodeToTree(self.Bind.Value, default(ChildBranch), subView.Id, subView);
 			return subView;
 		}

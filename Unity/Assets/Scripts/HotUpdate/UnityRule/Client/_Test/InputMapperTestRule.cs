@@ -52,7 +52,7 @@ namespace WorldTree
 			mapper.IsChange = true;
 
 			//全局事件保存
-			mapper.InputEvent = self.Core.PoolGetUnit(out RuleBroadcastData data);
+			mapper.InputEvent = self.World.PoolGetUnit(out RuleBroadcastData data);
 			data.RuleType = TypeInfo<InputTestEvent>.Code;
 
 

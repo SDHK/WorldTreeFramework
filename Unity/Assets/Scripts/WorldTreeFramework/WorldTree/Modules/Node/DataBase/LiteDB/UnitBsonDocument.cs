@@ -22,11 +22,11 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public bool IsFromPool { get; set; }
 		[TreeDataIgnore]
-		public WorldLine Core { get; set; }
+		public World World { get; set; }
 
 		public void Dispose()
 		{
-			Core.PoolRecycle(this);
+			World.PoolRecycle(this);
 		}
 
 		public void OnCreate()

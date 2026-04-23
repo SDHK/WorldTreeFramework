@@ -17,36 +17,36 @@ namespace WorldTree
 		/// <summary>
 		/// 打印跟踪日志
 		/// </summary>
-		public static void LogTrace(this IBasic self, string message) => self.Core.LogManager?.Trace(message);
+		public static void LogTrace(this IBasic self, string message) => self.World.Line.LogManager?.Trace(message);
 
 		/// <summary>
 		/// 打印日志
 		/// </summary>
-		public static void Log(this IBasic self, string message) => self.Core.LogManager?.Log(message);
+		public static void Log(this IBasic self, string message) => self.World.Line.LogManager?.Log(message);
 
 		/// <summary>
 		/// 打印警告日志
 		/// </summary>
-		public static void LogWarning(this IBasic self, string message) => self.Core.LogManager?.Warning(message);
+		public static void LogWarning(this IBasic self, string message) => self.World.Line.LogManager?.Warning(message);
 		/// <summary>
 		/// 打印异常
 		/// </summary>
-		public static void LogError(this IBasic self, string message) => self.Core.LogManager?.Error(message);
+		public static void LogError(this IBasic self, string message) => self.World.Line.LogManager?.Error(message);
 
 		/// <summary>
 		/// 打印异常
 		/// </summary>
-		public static void LogError(this IBasic self, Exception e) => self.Core.LogManager?.Error(e);
+		public static void LogError(this IBasic self, Exception e) => self.World.Line.LogManager?.Error(e);
 
 		/// <summary>
 		/// 打印信息日志
 		/// </summary>
-		public static void LogInfo(this IBasic self, string message) => self.Core.LogManager?.Info(message);
+		public static void LogInfo(this IBasic self, string message) => self.World.Line.LogManager?.Info(message);
 
 		/// <summary>
 		/// 打印待办日志
 		/// </summary>
-		public static void LogTodo(this IBasic self, string message) => self.Core.LogManager?.Todo(message);
+		public static void LogTodo(this IBasic self, string message) => self.World.Line.LogManager?.Todo(message);
 
 	}
 }

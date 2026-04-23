@@ -19,17 +19,17 @@ namespace WorldTree
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class UnitHashSet<T> : HashSet<T>, IUnit
-    {
-        public WorldLine Core { get; set; }
-        public long Type { get; set; }
-        public bool IsFromPool { get; set; }
-        public bool IsDisposed { get; set; }
+	{
+		public World World { get; set; }
+		public long Type { get; set; }
+		public bool IsFromPool { get; set; }
+		public bool IsDisposed { get; set; }
 
 		public void OnCreate() { }
 
 		public void Dispose()
 		{
-			Core.PoolRecycle(this);
+			World.PoolRecycle(this);
 		}
 		public virtual void OnDispose() => Clear();
 	}

@@ -174,21 +174,21 @@ namespace WorldTree
 			if (num < this.nextTraversalCount) this.LogError("下标小于当前大小");
 			if (num > 0)
 			{
-				var newNodes = this.Core.PoolGetArray<T>(num);
+				var newNodes = this.World.PoolGetArray<T>(num);
 				if (this.nodes.Length != 0)
 				{
 					Array.Copy(this.nodes, 0, newNodes, 0, this.nodes.Length);
 				}
-				this.Core.PoolRecycle(this.nodes, true);
+				this.World.PoolRecycle(this.nodes, true);
 				this.nodes = newNodes;
 			}
 			else
 			{
 				if (this.nodes != null)
 				{
-					this.Core.PoolRecycle(this.nodes, true);
+					this.World.PoolRecycle(this.nodes, true);
 				}
-				this.nodes = this.Core.PoolGetArray<T>(4);
+				this.nodes = this.World.PoolGetArray<T>(4);
 			}
 		}
 
@@ -324,11 +324,11 @@ namespace WorldTree
 
 	public static class FreeIteratorRule
 	{
-		class Add<T> :AddRule<ZipperIterator<T>>
+		class Add<T> : AddRule<ZipperIterator<T>>
 		{
 			protected override void Execute(ZipperIterator<T> self)
 			{
-				self.nodes = self.Core.PoolGetArray<T>(4);
+				self.nodes = self.World.PoolGetArray<T>(4);
 			}
 		}
 
@@ -337,7 +337,7 @@ namespace WorldTree
 			protected override void Execute(ZipperIterator<T> self)
 			{
 				self.Clear();
-				self.Core.PoolRecycle(self.nodes, true);
+				self.World.PoolRecycle(self.nodes, true);
 				self.nodes = null;
 			}
 		}

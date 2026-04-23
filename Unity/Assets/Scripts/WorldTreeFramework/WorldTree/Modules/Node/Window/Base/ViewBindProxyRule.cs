@@ -12,7 +12,7 @@
 		[INodeThis]
 		public static void OnAddSelfToTree(INode self)
 		{
-			self.Core.ReferencedPoolManager.TryAdd(self);//添加到引用池
+			self.World.Line.ReferencedPoolManager.TryAdd(self);//添加到引用池
 			if (self is not IListenerIgnorer)//广播给全部监听器
 			{
 				IRuleExecutor<ListenerAdd> ruleActuator = NodeListenerExecutorHelper.GetListenerExecutor<ListenerAdd>(self);
@@ -20,7 +20,7 @@
 			}
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//检测自身是否为监听器
 			{
-				self.Core.ReferencedPoolManager.TryAddListener(nodeListener);
+				self.World.Line.ReferencedPoolManager.TryAddListener(nodeListener);
 			}
 
 			NodeRuleHelper.TrySendRule(self, default(ViewElementLoad));
@@ -33,16 +33,16 @@
 			{
 				if (self.IsActive)
 				{
-					self.Core.WorldLineManager.EnableRuleGroup?.Send(self); //激活事件通知
+					self.World.Line.Core.EnableRuleGroup?.Send(self); //激活事件通知
 					NodeRuleHelper.TrySendRule(self.Parent, default(Show));
 				}
 				else
 				{
-					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.World.Line.Core.DisableRuleGroup?.Send(self); //禁用事件通知
 					NodeRuleHelper.TrySendRule(self.Parent, default(Hide));
 				}
 			}
-			self.Core.WorldLineManager.AddRuleGroup?.Send(self);//节点添加事件通知
+			self.World.Line.Core.AddRuleGroup?.Send(self);//节点添加事件通知
 		}
 
 		/// <summary>
@@ -69,12 +69,12 @@
 			{
 				if (self.IsActive)
 				{
-					self.Core.WorldLineManager.EnableRuleGroup?.Send(self);//激活事件通知
+					self.World.Line.Core.EnableRuleGroup?.Send(self);//激活事件通知
 					NodeRuleHelper.TrySendRule(self.Parent, default(Show));
 				}
 				else
 				{
-					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.World.Line.Core.DisableRuleGroup?.Send(self); //禁用事件通知
 					NodeRuleHelper.TrySendRule(self.Parent, default(Hide));
 				}
 			}
@@ -97,7 +97,7 @@
 			if (self.ViewBuilder != null)
 			{
 				var builder = self.ViewBuilder;
-				self.ViewBuilder.Core.WorldContext.Post(builder.Dispose);
+				self.ViewBuilder.World.Line.WorldContext.Post(builder.Dispose);
 				self.ViewBuilder = null;
 			}
 
@@ -108,18 +108,18 @@
 
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer) // 检测自身为监听器
 			{
-				self.Core.ReferencedPoolManager.RemoveListener(nodeListener);
+				self.World.Line.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
-			self.Core.WorldLineManager.RemoveRuleGroup?.Send(self); // 移除事件通知
+			self.World.Line.Core.RemoveRuleGroup?.Send(self); // 移除事件通知
 
 			if (self is not IListenerIgnorer) // 广播给全部监听器通知
 			{
 				NodeListenerExecutorHelper.GetListenerExecutor<ListenerRemove>(self)?.Send(self);
 			}
-			self.Core.ReferencedPoolManager.Remove(self); // 引用池移除
+			self.World.Line.ReferencedPoolManager.Remove(self); // 引用池移除
 
 			self.Parent = null; // 清除父节点
-			self.Core.PoolRecycle(self); // 回收到池
+			self.World.PoolRecycle(self); // 回收到池
 		}
 	}
 }

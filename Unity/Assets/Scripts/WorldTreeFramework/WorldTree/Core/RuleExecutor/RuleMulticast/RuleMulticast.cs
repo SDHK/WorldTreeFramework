@@ -50,7 +50,7 @@ namespace WorldTree
 			where N : class, INode, AsRule<NR>
 			where NR : R
 		{
-			if (self.Core.WorldLineManager.RuleManager.TryGetRuleList<NR>(node.Type, out RuleList ruleList))
+			if (self.World.Line.Core.RuleManager.TryGetRuleList<NR>(node.Type, out RuleList ruleList))
 			{
 				self.TryAdd(node, ruleList);
 			}
@@ -67,7 +67,7 @@ namespace WorldTree
 			where R : IRule
 			where N : class, INode, AsRule<R>
 		{
-			if (self.Core.WorldLineManager.RuleManager.TryGetRuleList<R>(node.Type, out RuleList ruleList))
+			if (self.World.Line.Core.RuleManager.TryGetRuleList<R>(node.Type, out RuleList ruleList))
 			{
 				self.TryAdd(node, ruleList);
 			}

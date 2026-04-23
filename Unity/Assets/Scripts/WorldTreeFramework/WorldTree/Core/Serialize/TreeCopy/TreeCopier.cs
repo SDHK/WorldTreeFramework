@@ -21,8 +21,8 @@ namespace WorldTree
 			protected override void Execute(TreeCopier self)
 			{
 				// 获取节点的法则集
-				self.Core.WorldLineManager.RuleManager.TryGetRuleGroup<TreeCopyStruct>(out self.copyStructRuleDict);
-				self.Core.PoolGetUnit(out self.ObjectToObjectDict);
+				self.World.Line.Core.RuleManager.TryGetRuleGroup<TreeCopyStruct>(out self.copyStructRuleDict);
+				self.World.PoolGetUnit(out self.ObjectToObjectDict);
 			}
 		}
 
@@ -89,8 +89,8 @@ namespace WorldTree
 			}
 
 			Type type = source.GetType();
-			long typeCode = this.Core.TypeToCode(type);
-			this.Core.WorldLineManager.RuleManager.SupportNodeRule(typeCode);
+			long typeCode = this.World.TypeToCode(type);
+			this.World.Line.Core.RuleManager.SupportNodeRule(typeCode);
 
 			// 前面 纯值类型挡住了，这里是判断 包含引用的结构体
 			if (type.IsValueType)
@@ -111,8 +111,8 @@ namespace WorldTree
 			else // 不存在则尝试拷贝
 			{
 				//动态支持多维数组
-				if (type.IsArray) this.Core.WorldLineManager.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeCopy));
-				if (this.Core.WorldLineManager.RuleManager.TryGetRuleList<TreeCopy>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+				if (type.IsArray) this.World.Line.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeCopy));
+				if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeCopy>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 				{
 					object sourceObj = source;
 
@@ -134,7 +134,7 @@ namespace WorldTree
 		public void InternalTypeCopy(Type type, object source, ref object target)
 		{
 			long typeCode = this.TypeToCode(type);
-			if (Core.WorldLineManager.RuleManager.TryGetRuleList<TreeCopy>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+			if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeCopy>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 				((IRuleList<TreeCopy>)ruleList).SendRef(this, ref source, ref target);
 		}
 	}

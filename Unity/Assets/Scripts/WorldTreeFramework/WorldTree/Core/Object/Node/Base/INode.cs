@@ -119,12 +119,12 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public long InstanceId { get; set; }
 
-		/// <summary>
-		/// 世界
-		/// </summary>
-		[TreeDataIgnore]
-		/// <remarks>节点所属的世界</remarks>
-		public World World { get; set; }
+		///// <summary>
+		///// 世界
+		///// </summary>
+		//[TreeDataIgnore]
+		///// <remarks>节点所属的世界</remarks>
+		//public World World { get; set; }
 
 		/// <summary>
 		/// 父节点，禁止修改，只能通过方法设置

@@ -19,13 +19,13 @@ namespace WorldTree
 	/// </summary>
 	public class UnitQueue<T> : Queue<T>, IUnit
 	{
-		public WorldLine Core { get; set; }
+		public World World { get; set; }
 		public long Type { get; set; }
 		public bool IsFromPool { get; set; }
 		public bool IsDisposed { get; set; }
 		public void Dispose()
 		{
-			Core.PoolRecycle(this);
+			World.PoolRecycle(this);
 		}
 		public void OnCreate() { }
 
@@ -38,13 +38,13 @@ namespace WorldTree
 	/// </summary>
 	public class UnitConcurrentQueue<T> : Queue<T>, IUnit
 	{
-		public WorldLine Core { get; set; }
+		public World World { get; set; }
 		public long Type { get; set; }
 		public bool IsFromPool { get; set; }
 		public bool IsDisposed { get; set; }
 		public void Dispose()
 		{
-			Core.PoolRecycle(this);
+			World.PoolRecycle(this);
 		}
 		public void OnCreate() { }
 

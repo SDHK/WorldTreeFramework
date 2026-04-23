@@ -67,7 +67,7 @@ namespace WorldTree
 				TreeTask treeTask = self.AddTemp(out TreeTask _);
 				task.GetAwaiter().OnCompleted(() =>
 				{
-					treeTask.Core.WorldContext.Post(treeTask.SetResult);
+					treeTask.World.Line.WorldContext.Post(treeTask.SetResult);
 				});
 
 				await treeTask;
@@ -89,7 +89,7 @@ namespace WorldTree
 				TreeTask<T> treeTask = self.AddTemp(out TreeTask<T> _);
 				task.GetAwaiter().OnCompleted(() =>
 				{
-					treeTask.Core.WorldContext.Post((x) => treeTask.SetResult((T)x.Object), new(task.Result));
+					treeTask.World.Line.WorldContext.Post((x) => treeTask.SetResult((T)x.Object), new(task.Result));
 				});
 
 				return await treeTask;

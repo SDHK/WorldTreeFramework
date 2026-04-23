@@ -89,7 +89,7 @@
 		{
 			protected override void Execute(StepProcessorLiteral self)
 			{
-				self.Core.PoolGetUnit(out self.dataList);
+				self.World.PoolGetUnit(out self.dataList);
 			}
 		}
 		class RemoveRule : RemoveRule<StepProcessorLiteral>

@@ -21,7 +21,7 @@ namespace WorldTree
 		public void OnDeserialize()
 		{
 			//清除值为空的分支
-			UnitList<long> keyList = Core.PoolGetUnit<UnitList<long>>();
+			UnitList<long> keyList = World.PoolGetUnit<UnitList<long>>();
 			foreach (var item in this) if (item.Value == null) keyList.Add(item.Key);
 			foreach (var key in keyList) Remove(key);
 		}

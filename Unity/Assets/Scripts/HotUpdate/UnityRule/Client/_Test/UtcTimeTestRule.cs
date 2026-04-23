@@ -28,7 +28,7 @@ namespace WorldTree
 		{
 
 			// 需要确保 RealTimeManager 提供了 UtcNow 属性
-			DateTime realTimeManagerUtcNow = self.Core.WorldLineManager.RealTimeManager.UtcNow; // 假设这是从 RealTimeManager 获取的 UTC 时间
+			DateTime realTimeManagerUtcNow = self.World.Line.Core.RealTimeManager.UtcNow; // 假设这是从 RealTimeManager 获取的 UTC 时间
 			DateTime systemUtcNow = DateTime.UtcNow;
 
 			TimeSpan difference = systemUtcNow - realTimeManagerUtcNow;

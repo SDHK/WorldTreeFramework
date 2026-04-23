@@ -56,7 +56,7 @@ namespace WorldTree
 
 		public void OnDeserialize()
 		{
-			using UnitList<INode> nodeList = Core.PoolGetUnit<UnitList<INode>>();
+			using UnitList<INode> nodeList = World.PoolGetUnit<UnitList<INode>>();
 			foreach (var item in this) nodeList.Add(item.Value);
 			this.Clear();
 			foreach (var item in nodeList) this.TryAdd(item.Id, item);

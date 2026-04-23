@@ -23,7 +23,7 @@ namespace WorldTree
 	{
 		[TreeDataIgnore]
 		[TreeCopyIgnore]
-		public WorldLine Core { get; set; }
+		public World World { get; set; }
 		[TreeDataIgnore]
 		[TreeCopyIgnore]
 		public long Type { get; set; }
@@ -38,7 +38,7 @@ namespace WorldTree
 
 		public void Dispose()
 		{
-			Core.PoolRecycle(this);
+			World.PoolRecycle(this);
 		}
 
 		public virtual void OnDispose() => Clear();

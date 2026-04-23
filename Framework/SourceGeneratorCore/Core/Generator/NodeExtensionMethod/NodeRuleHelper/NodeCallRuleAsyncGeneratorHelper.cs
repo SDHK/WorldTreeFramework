@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 						public static async TreeTask<OutT> TryCallRuleAsync<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, OutT defaultOutT)
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
-							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								return await ruleList.CallAsync(self{{genericParameter}}, defaultOutT);
 							}
@@ -58,7 +58,7 @@ namespace WorldTree.SourceGenerator
 							where N : class, INode, AsRule<R>
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
-							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								return await ruleList.CallAsync(self{{genericParameter}}, defaultOutT);
 							}
@@ -72,7 +72,7 @@ namespace WorldTree.SourceGenerator
 						public static async TreeTask<TreeList<OutT>> TryCallsRuleAsync<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
-							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								return await ruleList.CallsAsync(self{{genericParameter}}, outTList);
 							}
@@ -87,7 +87,7 @@ namespace WorldTree.SourceGenerator
 							where N : class, INode, AsRule<R>
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
-							if (self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
+							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								return await ruleList.CallsAsync(self{{genericParameter}}, outTList);
 							}

@@ -118,8 +118,8 @@ namespace WorldTree
 		{
 			protected override void Execute(StepMachine self)
 			{
-				self.Core.PoolGetUnit(out self.ParamList);
-				self.Core.PoolGetUnit(out self.StepList);
+				self.World.PoolGetUnit(out self.ParamList);
+				self.World.PoolGetUnit(out self.StepList);
 				self.ParamAddress = 0;
 				self.MaxCapacity = 0;
 			}

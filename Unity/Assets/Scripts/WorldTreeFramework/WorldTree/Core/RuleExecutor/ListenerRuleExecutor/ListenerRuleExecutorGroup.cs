@@ -48,7 +48,7 @@ namespace WorldTree
 		public static void TryAddListener(this ReferencedPoolManager self, INodeListener listener)
 		{
 			//判断是否为监听器
-			if (!self.Core.WorldLineManager.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary)) return;
+			if (!self.World.Line.Core.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary)) return;
 			foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
 			{
 				//判断监听法则集合 是否有这个 监听器节点类型
@@ -74,7 +74,7 @@ namespace WorldTree
 		public static void RemoveListener(this ReferencedPoolManager self, INodeListener listener)
 		{
 			//判断是否为监听器
-			if (!self.Core.WorldLineManager.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary)) return;
+			if (!self.World.Line.Core.RuleManager.ListenerRuleTargetGroupDict.TryGetValue(listener.Type, out var ruleGroupDictionary)) return;
 			foreach (var ruleGroup in ruleGroupDictionary)//遍历法则集合集合获取系统类型
 			{
 				//判断监听法则集合 是否有这个 监听器节点类型

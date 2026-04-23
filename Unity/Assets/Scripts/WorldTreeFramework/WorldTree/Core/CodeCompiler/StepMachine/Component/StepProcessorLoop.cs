@@ -146,8 +146,8 @@
 		{
 			protected override void Execute(StepProcessorLoop self)
 			{
-				self.Core.PoolGetUnit(out self.dataList);
-				self.Core.PoolGetUnit(out self.AddressStack);
+				self.World.PoolGetUnit(out self.dataList);
+				self.World.PoolGetUnit(out self.AddressStack);
 			}
 		}
 		class Remove : RemoveRule<StepProcessorLoop>

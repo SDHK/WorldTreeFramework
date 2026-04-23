@@ -20,16 +20,11 @@ namespace WorldTree.Server
                        .WithNotParsed(error => throw new Exception($"命令行格式错误! {error}"))
                        .WithParsed((o) => options = o);
 
-            WorldLineManager lineManager = new();
-            lineManager.SetOptions(options);
-            lineManager.SetLog<WorldLog>();
+            WorldTreeCore worldTree = new();
+            worldTree.SetOptions(options);
+            worldTree.SetLog<WorldLog>();
 
-            var line = lineManager.Create(0, typeof(WorldHeart), 1000);
-            line.WorldContext.Post(() =>
-            {
-                line.AddComponent(out MainWorld _);
-            });
-
+            var line = worldTree.Create(0, typeof(MainWorld), typeof(WorldHeart), 1000);
 
             //防止程序集被优化掉
             Type ruleType = typeof(MainWorldRule);

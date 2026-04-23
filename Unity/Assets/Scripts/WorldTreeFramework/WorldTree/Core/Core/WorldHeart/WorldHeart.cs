@@ -114,10 +114,10 @@ namespace WorldTree
 			{
 				self.frameTime = frameTime;
 
-				self.Core.GetRuleBroadcast(out self.enable);
-				self.Core.GetRuleBroadcast(out self.update);
-				self.Core.GetRuleBroadcast(out self.updateTime);
-				self.Core.GetRuleBroadcast(out self.disable);
+				self.World.GetRuleBroadcast(out self.enable);
+				self.World.GetRuleBroadcast(out self.update);
+				self.World.GetRuleBroadcast(out self.updateTime);
+				self.World.GetRuleBroadcast(out self.disable);
 
 				self.AddComponent(out self.worldUpdate, frameTime).Run();
 

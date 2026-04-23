@@ -50,7 +50,7 @@ namespace WorldTree
 	{
 		protected override void Execute(TreeArray<T> self, int length)
 		{
-			self.arrays = self.Core.PoolGetArray<T>(length);
+			self.arrays = self.World.PoolGetArray<T>(length);
 		}
 	}
 
@@ -59,7 +59,7 @@ namespace WorldTree
 	{
 		protected override void Execute(TreeArray<T> self)
 		{
-			self.Core.PoolRecycle(self.arrays);
+			self.World.PoolRecycle(self.arrays);
 			self.arrays = null;
 		}
 	}

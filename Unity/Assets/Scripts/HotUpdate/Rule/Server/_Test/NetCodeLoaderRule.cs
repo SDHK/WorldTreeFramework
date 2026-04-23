@@ -53,7 +53,7 @@ namespace WorldTree.Server
 				self.assemblyDict[hotfixAssembly.GetName().Name] = hotfixAssembly;
 
 
-				Core.WorldLineManager.TypeInfo.LoadAssembly([hotfixAssembly]);
+				Core.TypeInfo.LoadAssembly(self.World.WorldLine, [hotfixAssembly]);
 				Core.RuleManager.LoadRule();
 			}
 		}

@@ -535,7 +535,7 @@ namespace WorldTree.SourceGenerator
 			where N : class, {(isUnConstraint ? "INode" : $"INode, AsBranch<{ClassFullName}>")}
 			where T : class, INode, NodeOf<N,{ClassFullName}>, AsRule<Awake{genericsTypeAngle}>
 		{{
-			node = self.Core.PoolGetNode<T>();
+			node = self.World.PoolGetNode<T>();
 			return (T)NodeBranchHelper.AddNodeToTree(self, default({ClassFullName}), node.Id, node{genericParameter});
 		}}");
 

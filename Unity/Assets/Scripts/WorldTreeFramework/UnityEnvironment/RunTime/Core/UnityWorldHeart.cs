@@ -134,19 +134,18 @@ namespace WorldTree
 			{
 				self.frameTime = frameTime;
 
-				self.Core.GetRuleBroadcast(out self.enable);
-				self.Core.GetRuleBroadcast(out self.update);
-				self.Core.GetRuleBroadcast(out self.updateTime);
-				self.Core.GetRuleBroadcast(out self.disable);
-				self.Core.GetRuleBroadcast(out self.lateUpdate);
-				self.Core.GetRuleBroadcast(out self.lateUpdateTime);
-				self.Core.GetRuleBroadcast(out self.fixedUpdate);
-				self.Core.GetRuleBroadcast(out self.fixedUpdateTime);
-				self.Core.GetRuleBroadcast(out self.onGUI);
-				self.Core.GetRuleBroadcast(out self.onGUIUpdateTime);
-				self.Core.GetRuleBroadcast(out self.drawGizmos);
-				self.Core.GetRuleBroadcast(out self.drawGizmosUpdateTime);
-
+				self.World.GetRuleBroadcast(out self.enable);
+				self.World.GetRuleBroadcast(out self.update);
+				self.World.GetRuleBroadcast(out self.updateTime);
+				self.World.GetRuleBroadcast(out self.disable);
+				self.World.GetRuleBroadcast(out self.lateUpdate);
+				self.World.GetRuleBroadcast(out self.lateUpdateTime);
+				self.World.GetRuleBroadcast(out self.fixedUpdate);
+				self.World.GetRuleBroadcast(out self.fixedUpdateTime);
+				self.World.GetRuleBroadcast(out self.onGUI);
+				self.World.GetRuleBroadcast(out self.onGUIUpdateTime);
+				self.World.GetRuleBroadcast(out self.drawGizmos);
+				self.World.GetRuleBroadcast(out self.drawGizmosUpdateTime);
 				self.AddComponent(out self.worldUpdate, frameTime).Run();
 				self.AddComponent(out self.worldLateUpdate, frameTime).Run();
 				self.AddComponent(out self.worldFixedUpdate, frameTime).Run();

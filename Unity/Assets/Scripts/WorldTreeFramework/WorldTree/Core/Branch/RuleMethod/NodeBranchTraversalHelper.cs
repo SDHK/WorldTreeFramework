@@ -23,7 +23,7 @@ namespace WorldTree
 			// 当前节点
 			INode current;
 			// 从对象池拿栈
-			UnitStack<INode> nodeStack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> nodeStack = self.World.PoolGetUnit<UnitStack<INode>>();
 			if (isSelf) nodeStack.Push(self);
 			while (nodeStack.Count != 0)
 			{
@@ -57,7 +57,7 @@ namespace WorldTree
 			}
 
 			// 从对现场拿队列
-			UnitQueue<INode> nodeQueue = self.Core.PoolGetUnit<UnitQueue<INode>>();
+			UnitQueue<INode> nodeQueue = self.World.PoolGetUnit<UnitQueue<INode>>();
 			if (isSelf) nodeQueue.Enqueue(self);
 
 			while (nodeQueue.Count != 0)
@@ -96,9 +96,9 @@ namespace WorldTree
 			// 当前节点
 			INode current;
 			// 从对象池拿栈，用于存放一个分支的节点
-			UnitStack<INode> nodeStack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> nodeStack = self.World.PoolGetUnit<UnitStack<INode>>();
 			// 从对象池拿栈，用于存放所有节点
-			UnitStack<INode> allStack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> allStack = self.World.PoolGetUnit<UnitStack<INode>>();
 			if (isSelf) nodeStack.Push(self);
 			while (nodeStack.Count != 0)
 			{
@@ -142,9 +142,9 @@ namespace WorldTree
 			// 当前节点
 			INode current;
 			// 从对象池拿栈，用于存放一个分支的节点
-			UnitStack<INode> nodeStack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> nodeStack = self.World.PoolGetUnit<UnitStack<INode>>();
 			// 从对象池拿栈，用于存放所有节点
-			UnitStack<INode> allStack = self.Core.PoolGetUnit<UnitStack<INode>>();
+			UnitStack<INode> allStack = self.World.PoolGetUnit<UnitStack<INode>>();
 			if (isSelf) nodeStack.Push(self);
 			while (nodeStack.Count != 0)
 			{

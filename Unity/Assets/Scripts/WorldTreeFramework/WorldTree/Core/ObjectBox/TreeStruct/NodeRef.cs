@@ -28,7 +28,7 @@ namespace WorldTree
 			{
 				if (self.TryReadArrayHead(typeof(NodeRef<N>), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
-				value = new NodeRef<N>() { Core = self.Core, Id = self.ReadValue<long>() };
+				value = new NodeRef<N>() { World = self.World, Id = self.ReadValue<long>() };
 			}
 		}
 	}
@@ -41,10 +41,10 @@ namespace WorldTree
 		where N : class, INode
 	{
 		/// <summary>
-		/// 世界树核心
+		/// 世界
 		/// </summary>
 		[TreeDataIgnore]
-		public WorldLine Core;
+		public World World;
 
 		/// <summary>
 		/// 节点ID：数据和实例混合标识
@@ -75,7 +75,7 @@ namespace WorldTree
 			{
 				if (node is null || InstanceId != node.InstanceId)
 				{
-					if (Core == null || Id == 0 || !Core.ReferencedPoolManager.AllNodeDataDict.TryGetValue(Id, out INodeData nodeData))
+					if (World == null || Id == 0 || !World.Line.ReferencedPoolManager.AllNodeDataDict.TryGetValue(Id, out INodeData nodeData))
 					{
 						node = null;
 					}
@@ -96,18 +96,18 @@ namespace WorldTree
 				Id = 0;
 				InstanceId = 0;
 				this.node = null;
-				Core = null;
+				World = null;
 				return;
 			}
 
 			Id = node.Id;
 			if (node is INodeData)
 			{
-				Core = isDataRef ? node.Core : null;
+				World = isDataRef ? node.World : null;
 			}
 			else
 			{
-				Core = null;
+				World = null;
 			}
 			InstanceId = node.InstanceId;
 			this.node = node;

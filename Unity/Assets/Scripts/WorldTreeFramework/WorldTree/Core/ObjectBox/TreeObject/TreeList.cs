@@ -108,19 +108,19 @@ namespace WorldTree
 				if (value == this._items.Length) return;
 				if (value > 0)
 				{
-					var destinations = this.Core.PoolGetArray<T>(value);
+					var destinations = this.World.PoolGetArray<T>(value);
 					if (this._size > 0)
 						Array.Copy(this._items, 0, destinations, 0, this._size);
-					this.Core.PoolRecycle(this._items);
+					this.World.PoolRecycle(this._items);
 					this._items = destinations;
 				}
 				else
 				{
 					if (this._items != null)
 					{
-						this.Core.PoolRecycle(this._items);
+						this.World.PoolRecycle(this._items);
 					}
-					this._items = this.Core.PoolGetArray<T>(_defaultCapacity);
+					this._items = this.World.PoolGetArray<T>(_defaultCapacity);
 				}
 			}
 		}
@@ -886,7 +886,7 @@ namespace WorldTree
 		{
 			protected override void Execute(TreeList<T> self)
 			{
-				self._items = self.Core.PoolGetArray<T>(self._defaultCapacity);
+				self._items = self.World.PoolGetArray<T>(self._defaultCapacity);
 			}
 		}
 
@@ -899,7 +899,7 @@ namespace WorldTree
 				if (capacity == 0)
 					self.LogError("容量为0");
 				else
-					self._items = self.Core.PoolGetArray<T>(capacity);
+					self._items = self.World.PoolGetArray<T>(capacity);
 			}
 		}
 
@@ -914,11 +914,11 @@ namespace WorldTree
 					int count = objs.Count;
 					if (count == 0)
 					{
-						self._items = self.Core.PoolGetArray<T>(self._defaultCapacity);
+						self._items = self.World.PoolGetArray<T>(self._defaultCapacity);
 					}
 					else
 					{
-						self._items = self.Core.PoolGetArray<T>(count);
+						self._items = self.World.PoolGetArray<T>(count);
 						objs.CopyTo(self._items, 0);
 						self._size = count;
 					}
@@ -926,7 +926,7 @@ namespace WorldTree
 				else
 				{
 					self._size = self._defaultCapacity;
-					self._items = self.Core.PoolGetArray<T>(self._defaultCapacity);
+					self._items = self.World.PoolGetArray<T>(self._defaultCapacity);
 					foreach (T obj in collection)
 						self.Add(obj);
 				}
@@ -938,7 +938,7 @@ namespace WorldTree
 			protected override void Execute(TreeList<T> self)
 			{
 				self.Clear();
-				self.Core.PoolRecycle(self._items);
+				self.World.PoolRecycle(self._items);
 				self._items = null;
 				self._size = 0;
 				self._version = 0;

@@ -115,7 +115,7 @@ namespace WorldTree
 		{
 			protected override void Execute(CascadeTicker self)
 			{
-				self.Core.PoolGetArray(out self.slots, 2);
+				self.World.PoolGetArray(out self.slots, 2);
 				self.AddChild(out self.ruleMulticast);
 			}
 		}
@@ -123,7 +123,7 @@ namespace WorldTree
 		{
 			protected override void Execute(CascadeTicker self)
 			{
-				self.Core.PoolRecycle(self.slots, true);
+				self.World.PoolRecycle(self.slots, true);
 				self.lastTick = 0;
 				self.currentTick = 0;
 				self.advanceTick = 0;
@@ -147,11 +147,11 @@ namespace WorldTree
 				while (newCapacity <= index) newCapacity *= 2;
 
 				// 扩容数组
-				var newSlots = self.Core.PoolGetArray<CascadeTickerSlot>(newCapacity);
+				var newSlots = self.World.PoolGetArray<CascadeTickerSlot>(newCapacity);
 
 				// 复制旧数据
 				Array.Copy(self.slots, 0, newSlots, 0, self.slots.Length);
-				self.Core.PoolRecycle(self.slots, true);
+				self.World.PoolRecycle(self.slots, true);
 				self.slots = newSlots;
 			}
 		}
@@ -194,7 +194,7 @@ namespace WorldTree
 		/// </summary>
 		public static long AddTicker(this CascadeTicker self, long clockTick, INode node, long ruleType, TreeTaskToken token = null)
 		{
-			if (!self.Core.WorldLineManager.RuleManager.TryGetRuleList(node.Type, ruleType, out var ruleList)) return -1;
+			if (!self.World.Line.Core.RuleManager.TryGetRuleList(node.Type, ruleType, out var ruleList)) return -1;
 
 			//大小比较，过时了就直接执行
 			if (self.advanceTick >= clockTick)

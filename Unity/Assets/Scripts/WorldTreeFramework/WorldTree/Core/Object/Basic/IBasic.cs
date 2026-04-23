@@ -44,11 +44,11 @@ namespace WorldTree
 		public bool IsFromPool { get; set; }
 
 		/// <summary>
-		/// 世界线
+		/// 世界
 		/// </summary>
-		/// <remarks>框架实例的核心</remarks>
+		/// <remarks>对象所属世界</remarks>
 		[TreeDataIgnore]
-		public WorldLine Core { get; set; }
+		public World World { get; set; }
 
 		/// <summary>
 		/// 对象创建时的处理

@@ -19,8 +19,8 @@ namespace WorldTree
 			protected override void Execute(InputDriverKeyboard self)
 			{
 				self.GetParent(out self.inputManager);
-				self.Core.PoolGetUnit(out self.InputInfosList);
-				self.Core.PoolGetUnit(out self.InputAllowFlagsList);
+				self.World.PoolGetUnit(out self.InputInfosList);
+				self.World.PoolGetUnit(out self.InputAllowFlagsList);
 				self.DeviceType = InputDeviceType.Keyboard;
 				self.RegisterDevice(1, 104);
 			}

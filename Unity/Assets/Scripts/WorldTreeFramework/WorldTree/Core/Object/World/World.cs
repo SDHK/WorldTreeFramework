@@ -17,7 +17,7 @@ namespace WorldTree
 		/// <summary>
 		/// 世界线
 		/// </summary>
-		public WorldLine WorldLine { get; set; }
+		public WorldLine Line { get; set; }
 	}
 
 	/// <summary>
@@ -29,11 +29,10 @@ namespace WorldTree
 		, AsChildBranch
 		, AsRule<Awake>
 	{
-
 		/// <summary>
 		/// 世界线
 		/// </summary>
-		public WorldLine WorldLine { get; set; }
+		public WorldLine Line { get; set; }
 	}
 
 	public static partial class WorldRule
@@ -44,15 +43,14 @@ namespace WorldTree
 			{
 				if (self.Parent is WorldLine)
 				{
-					self.WorldLine = (WorldLine)self.Parent;
+					self.Line = (WorldLine)self.Parent;
 				}
 				else
 				{
-					self.WorldLine = self.Parent.World.WorldLine;
+					self.Line = self.Parent.World.Line;
 				}
 				self.World = self;
 			}
 		}
-
 	}
 }

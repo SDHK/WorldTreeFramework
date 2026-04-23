@@ -125,7 +125,7 @@ namespace WorldTree
 		{
 			this.viewBuilderType = viewBuilderType;
 			ViewLine = new WorldLine();
-			ViewLine.WorldLineManager = this;
+			ViewLine.Core = this;
 			ViewLine.Init(worldType, heartType, 10);
 		}
 
@@ -204,7 +204,7 @@ namespace WorldTree
 					line.ViewBuilder = NodeBranchHelper.AddNodeToTree(ViewLine, default(ChildBranch), nodeView.Id, nodeView, (INode)line, default(INode)) as IWorldTreeNodeViewBuilder;
 				}
 				MainLine ??= line;
-				line.WorldLineManager = this;
+				line.Core = this;
 				line.Init(worldType, heartType, frameTime);
 				lineDict.TryAdd(id, line);
 				return line;

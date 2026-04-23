@@ -10,8 +10,8 @@ namespace WorldTree
 		{
 			//启动一个ViewElement 的加载任务
 
-			self.Core.PoolGetUnit(out self.ViewList);
-			self.Core.PoolGetUnit(out self.IdIndexDict);
+			self.World.PoolGetUnit(out self.ViewList);
+			self.World.PoolGetUnit(out self.IdIndexDict);
 		}
 
 		[NodeRule(nameof(ViewUnRegisterRule<ViewLayerBind>))]

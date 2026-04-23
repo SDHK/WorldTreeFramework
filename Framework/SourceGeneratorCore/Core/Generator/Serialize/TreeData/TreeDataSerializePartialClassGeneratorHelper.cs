@@ -169,12 +169,12 @@ namespace WorldTree.SourceGenerator
 					{
 						Code.AppendLine(@$"				if (value is not {className} obj)");
 						Code.AppendLine("				{");
-						Code.AppendLine($"					value = obj = self.Core.PoolGetNode<{className}>(true);");
+						Code.AppendLine($"					value = obj = self.World.PoolGetNode<{className}>(true);");
 						Code.AppendLine("				}");
 					}
 					else if (NamedSymbolHelper.IsDerivedFrom(classSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.IUnit), out _))
 					{
-						Code.AppendLine($"				if (value is not {className} obj)value = obj = self.Core.PoolGetUnit<{className}>();");
+						Code.AppendLine($"				if (value is not {className} obj)value = obj = self.World.PoolGetUnit<{className}>();");
 					}
 					else
 					{

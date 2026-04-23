@@ -14,9 +14,9 @@ namespace WorldTree
 		{
 			protected override void Execute(InputDeviceManager self)
 			{
-				self.Core.PoolGetUnit(out self.InputDeviceDict);
-				self.Core.PoolGetUnit(out self.DataQueue);
-				self.Core.GetRuleBroadcast(out self.InputDataEvent);
+				self.World.PoolGetUnit(out self.InputDeviceDict);
+				self.World.PoolGetUnit(out self.DataQueue);
+				self.World.GetRuleBroadcast(out self.InputDataEvent);
 			}
 		}
 
@@ -30,7 +30,7 @@ namespace WorldTree
 					//不存在设备类型则添加
 					if (!self.InputDeviceDict.TryGetValue(inputData.Info.InputDeviceType, out var deviceList))
 					{
-						self.InputDeviceDict[inputData.Info.InputDeviceType] = self.Core.PoolGetUnit(out deviceList);
+						self.InputDeviceDict[inputData.Info.InputDeviceType] = self.World.PoolGetUnit(out deviceList);
 					}
 					// 补全数量不够的设备
 					while (deviceList.Count <= inputData.Info.InputDeviceId)

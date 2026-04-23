@@ -45,7 +45,7 @@ namespace WorldTree
 				if (self.TryReadArrayHead(typeof(RuleBroadcastData), ref value, 1, out _, out _)) return;
 				self.ReadDynamic(out int _);
 				long ruleTypeCode = self.ReadValue<long>();
-				value = self.Core.GetRuleBroadcast(ruleTypeCode);
+				value = self.World.GetRuleBroadcast(ruleTypeCode);
 			}
 		}
 	}

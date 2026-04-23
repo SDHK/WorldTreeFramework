@@ -31,7 +31,7 @@ namespace WorldTree
 			protected override void Execute(ViewTypeManager self)
 			{
 				//收集所有实现了INodeFieldViewRule的法则的节点 
-				if (self.Core.WorldLineManager.RuleManager.TryGetRuleGroup(self.TypeToCode(typeof(INodeFieldViewRule)), out RuleGroup ruleGroup))
+				if (self.World.Line.Core.RuleManager.TryGetRuleGroup(self.TypeToCode(typeof(INodeFieldViewRule)), out RuleGroup ruleGroup))
 				{
 					foreach (var NodeTypeRuleType in ruleGroup)
 					{

@@ -16,13 +16,13 @@ namespace InputBind
 
 			InitializeComponent();
 
-			WorldLineManager lineManager = new();
+			WorldTreeCore lineManager = new();
 			lineManager.SetLog<WorldLog>();
-			var line = lineManager.Create(0, typeof(WinFormWorldHeart), 1000);
-			line.WorldContext.Post(() =>
-			{
-				line.AddComponent(out MainWorldWinForm _, (Form)this);
-			});
+			var line = lineManager.Create(0, typeof(MainWorldWinForm), typeof(WinFormWorldHeart), 1000);
+			//line.WorldContext.Post(() =>
+			//{
+			//	line.TryGetComponent(out MainWorldWinForm form); (Form)this
+			//});
 		}
 
 		private void Form1_Load(object sender, EventArgs e)

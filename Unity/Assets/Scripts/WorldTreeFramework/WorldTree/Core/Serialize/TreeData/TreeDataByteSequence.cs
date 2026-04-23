@@ -66,14 +66,14 @@ namespace WorldTree
 
 
 				self.GetBaseRule<TreeDataByteSequence, ByteSequence, Add>().Send(self);
-				self.Core.PoolGetUnit(out self.TypeToTypeIdDict);
-				self.Core.PoolGetUnit(out self.TypeNameToTypeIdDict);
-				self.Core.PoolGetUnit(out self.codeToTypeNameDict);
-				self.Core.PoolGetUnit(out self.TypeIdToCodeList);
-				self.Core.PoolGetUnit(out self.IdToTypeIdList);
-				self.Core.PoolGetUnit(out self.ObjectToIdDict);
-				self.Core.PoolGetUnit(out self.IdToObjectDict);
-				self.Core.PoolGetUnit(out self.IdToReadList);
+				self.World.PoolGetUnit(out self.TypeToTypeIdDict);
+				self.World.PoolGetUnit(out self.TypeNameToTypeIdDict);
+				self.World.PoolGetUnit(out self.codeToTypeNameDict);
+				self.World.PoolGetUnit(out self.TypeIdToCodeList);
+				self.World.PoolGetUnit(out self.IdToTypeIdList);
+				self.World.PoolGetUnit(out self.ObjectToIdDict);
+				self.World.PoolGetUnit(out self.IdToObjectDict);
+				self.World.PoolGetUnit(out self.IdToReadList);
 			}
 		}
 
@@ -522,14 +522,14 @@ namespace WorldTree
 			}
 			//假如是枚举类型，则获取枚举基础类型
 			if (type.IsEnum) type = type.GetEnumUnderlyingType();
-			long typeCode = this.Core.TypeToCode(type);
-			this.Core.WorldLineManager.RuleManager.SupportNodeRule(typeCode);
+			long typeCode = this.World.TypeToCode(type);
+			this.World.Line.Core.RuleManager.SupportNodeRule(typeCode);
 
 			//动态支持多维数组
-			if (type.IsArray) this.Core.WorldLineManager.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
+			if (type.IsArray) this.World.Line.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
 
 			//优化：可存住RuleGroup，减少查找次数
-			if (this.Core.WorldLineManager.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+			if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
 				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value), ref typeMode);
 			}
@@ -550,13 +550,13 @@ namespace WorldTree
 			Layer++;
 			//假如是枚举类型，则获取枚举基础类型
 			if (type.IsEnum) type = type.GetEnumUnderlyingType();
-			long typeCode = this.Core.TypeToCode(type);
-			this.Core.WorldLineManager.RuleManager.SupportNodeRule(typeCode);
+			long typeCode = this.World.TypeToCode(type);
+			this.World.Line.Core.RuleManager.SupportNodeRule(typeCode);
 
 			//动态支持多维数组
-			if (type.IsArray) this.Core.WorldLineManager.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
+			if (type.IsArray) this.World.Line.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
 
-			if (this.Core.WorldLineManager.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+			if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
 				((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(value), ref typeMode);
 			}
@@ -696,12 +696,12 @@ namespace WorldTree
 			}
 			//假如是枚举类型，则获取枚举基础类型
 			if (type.IsEnum) type = type.GetEnumUnderlyingType();
-			long typeCode = this.Core.TypeToCode(type);
-			this.Core.WorldLineManager.RuleManager.SupportNodeRule(typeCode);
+			long typeCode = this.World.TypeToCode(type);
+			this.World.Line.Core.RuleManager.SupportNodeRule(typeCode);
 
 			//动态支持多维数组
-			if (type.IsArray) this.Core.WorldLineManager.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
-			if (this.Core.WorldLineManager.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+			if (type.IsArray) this.World.Line.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
+			if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 			{
 				((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref value, ref fieldNameCode);
 			}
@@ -1049,7 +1049,7 @@ namespace WorldTree
 				long typeCode = treeData.TypeName.GetHash64();
 
 				//判断是否为基础类型
-				if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value))
+				if (World.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value))
 				{
 					typeCode = value;
 				}
@@ -1087,7 +1087,7 @@ namespace WorldTree
 				//判断这个类型是否是基础数组类型
 				if (type != null && type.IsArray && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type.GetElementType()))
 				{
-					Core.WorldLineManager.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
+					this.World.Line.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
 
 					int count = 1;
 					//写入数组长度
@@ -1097,9 +1097,9 @@ namespace WorldTree
 						this.WriteDynamic(item);
 					}
 
-					long elementTypeCodeHash = this.Core.TypeToCode(type.GetElementType());
+					long elementTypeCodeHash = this.World.TypeToCode(type.GetElementType());
 					//基础数组类型取值
-					if (this.Core.WorldLineManager.RuleManager.TryGetRuleList<TreeDataSerialize>(elementTypeCodeHash, out RuleList ruleList))
+					if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(elementTypeCodeHash, out RuleList ruleList))
 					{
 						SerializedTypeMode typeMode = SerializedTypeMode.Value;
 						//一个个往里写
@@ -1124,7 +1124,7 @@ namespace WorldTree
 			{
 				long typeCodeHash = treeDataValue.TypeName.GetHash64();
 				//写入数值
-				if (this.Core.WorldLineManager.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCodeHash, out RuleList ruleList) && ruleList.NodeType == typeCodeHash)
+				if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCodeHash, out RuleList ruleList) && ruleList.NodeType == typeCodeHash)
 				{
 					SerializedTypeMode typeMode = SerializedTypeMode.DataType;
 					((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(treeDataValue.Value), ref typeMode);
@@ -1136,7 +1136,7 @@ namespace WorldTree
 				long typeCode = treeData.TypeName.GetHash64();
 
 				//判断是否为基础类型
-				if (Core.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value))
+				if (World.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value))
 				{
 					typeCode = value;
 				}
@@ -1220,7 +1220,7 @@ namespace WorldTree
 			if (this.TryCodeGetType(typeCode, out Type type))
 			{
 				//获取真实类型码
-				if (TreeDataTypeHelper.TypeCodeDict.ContainsKey(type)) typeCode = this.Core.TypeToCode(type);
+				if (TreeDataTypeHelper.TypeCodeDict.ContainsKey(type)) typeCode = this.World.TypeToCode(type);
 				//判断是否是基础类型
 				if (TreeDataTypeHelper.BasicsTypeHash.Contains(type))
 				{
@@ -1228,7 +1228,7 @@ namespace WorldTree
 					data.IsRef = isRef;
 					data.TypeName = type.ToString();
 					//基础类型取值
-					if (this.Core.WorldLineManager.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
+					if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
 					{
 						int fieldNameCode = 0;
 						((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref treeValue.Value, ref fieldNameCode);
@@ -1272,9 +1272,9 @@ namespace WorldTree
 					//跳跃回类型开头
 					this.ReadJump(startPoint);
 					//动态支持多维数组
-					if (type.IsArray) this.Core.WorldLineManager.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
+					if (type.IsArray) this.World.Line.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
 					//基础数组类型取值
-					if (this.Core.WorldLineManager.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
+					if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 					{
 						int fieldNameCode = TreeDataCode.DESERIALIZE_SELF_MODE;
 						object obj = null;

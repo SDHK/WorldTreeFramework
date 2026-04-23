@@ -53,9 +53,9 @@ namespace WorldTree
 		{
 			//如果是新创建的节点，需要获取一个新的UID
 			//如果是反序列化的节点，不需要获取新的UID
-			if (!IsSerialize) Id = Core.WorldLineManager.IdManager.GetUID();
-			InstanceId = Core.WorldLineManager.IdManager.GetId();
-			Core.WorldLineManager.RuleManager.SupportNodeRule(Type);
+			if (!IsSerialize) Id = World.Line.Core.IdManager.GetUID();
+			InstanceId = World.Line.Core.IdManager.GetId();
+			World.Line.Core.RuleManager.SupportNodeRule(Type);
 		}
 	}
 
@@ -127,9 +127,6 @@ namespace WorldTree
 
 		[TreeDataIgnore]
 		public long Type { get; set; }
-
-		[TreeDataIgnore]
-		public WorldLine Core { get; set; }
 
 		[TreeDataIgnore]
 		public World World { get; set; }

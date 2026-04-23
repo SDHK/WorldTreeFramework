@@ -65,7 +65,7 @@ namespace WorldTree.SourceGenerator
 								}
 								else
 								{
-									return node = AddNodeToTree(self, nullBranch, key, self.Core.PoolGetNode(type){{genericParameter}});
+									return node = AddNodeToTree(self, nullBranch, key, self.World.PoolGetNode(type){{genericParameter}});
 								}
 							}
 
@@ -83,7 +83,7 @@ namespace WorldTree.SourceGenerator
 								}
 								else
 								{
-									return node = (T)AddNodeToTree(self, nullBranch, key, self.Core.PoolGetNode<T>(){{genericParameter}});
+									return node = (T)AddNodeToTree(self, nullBranch, key, self.World.PoolGetNode<T>(){{genericParameter}});
 								}
 							}
 					""");
@@ -105,7 +105,7 @@ namespace WorldTree.SourceGenerator
 							/// </summary>
 							public static INode AddNode<B, K{{genericsType}}>(INode self, B nullBranch, K key, long type, out INode node{{genericTypeParameter}})
 								where B : class, IBranch<K>
-							=> node = GetBranch<B>(self)?.GetNode(key) ?? AddNodeToTree(self, nullBranch, key, self.Core.PoolGetNode(type){{genericParameter}});
+							=> node = GetBranch<B>(self)?.GetNode(key) ?? AddNodeToTree(self, nullBranch, key, self.World.PoolGetNode(type){{genericParameter}});
 
 
 
@@ -116,7 +116,7 @@ namespace WorldTree.SourceGenerator
 								where N : class, INode, AsBranch<B>
 								where B : class, IBranch<K>
 								where T : class, INode, NodeOf<N, B>, AsRule<Awake{{genericsTypeAngle}}>
-							=> node = (T)(GetBranch<B>(self)?.GetNode(key) ?? AddNodeToTree(self, nullBranch, key, self.Core.PoolGetNode<T>(){{genericParameter}}));
+							=> node = (T)(GetBranch<B>(self)?.GetNode(key) ?? AddNodeToTree(self, nullBranch, key, self.World.PoolGetNode<T>(){{genericParameter}}));
  
 
  */

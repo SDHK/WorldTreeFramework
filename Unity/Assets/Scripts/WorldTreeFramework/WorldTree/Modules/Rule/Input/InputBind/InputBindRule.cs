@@ -14,7 +14,7 @@ namespace WorldTree
 		{
 			protected override void Execute(InputBind self)
 			{
-				self.Core.PoolGetUnit(out self.InfoList);
+				self.World.PoolGetUnit(out self.InfoList);
 			}
 		}
 
@@ -22,7 +22,7 @@ namespace WorldTree
 		{
 			protected override void Execute(InputBind self)
 			{
-				self.Core.PoolGetUnit(out self.InfoList);
+				self.World.PoolGetUnit(out self.InfoList);
 			}
 		}
 

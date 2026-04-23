@@ -11,22 +11,22 @@ using System;
 
 namespace WorldTree
 {
-	public static partial class WorldTreeCoreRule
+	public static partial class WorldRule
 	{
 
 		/// <summary>
 		/// 新建单位对象
 		/// </summary>
-		public static T NewUnit<T>(this WorldLine self, out T unit) where T : class, IUnit
+		public static T NewUnit<T>(this World self, out T unit) where T : class, IUnit
 			=> unit = self.NewUnit(typeof(T), out _) as T;
 
 		/// <summary>
 		/// 新建单位对象
 		/// </summary>
-		public static IUnit NewUnit(this WorldLine self, Type type, out IUnit unit)
+		public static IUnit NewUnit(this World self, Type type, out IUnit unit)
 		{
 			unit = Activator.CreateInstance(type, true) as IUnit;
-			unit.Core = self;
+			unit.World = self;
 			unit.Type = unit.TypeToCode(type);
 			unit.OnCreate();
 			return unit;
@@ -35,17 +35,17 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
-		public static T PoolGetUnit<T>(this WorldLine self, out T unit) where T : class, IUnit => unit = self.PoolGetUnit<T>();
+		public static T PoolGetUnit<T>(this World self, out T unit) where T : class, IUnit => unit = self.PoolGetUnit<T>();
 
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
-		public static T PoolGetUnit<T>(this WorldLine self)
+		public static T PoolGetUnit<T>(this World self)
 		where T : class, IUnit
 		{
-			if (self.WorldLineManager.UnitPoolManager.TryGet(out T unit))
+			if (self.Line.Core.UnitPoolManager.TryGet(out T unit))
 			{
-				unit.Core = self;
+				unit.World = self;
 				unit.OnCreate();
 				return unit;
 			}
@@ -55,12 +55,12 @@ namespace WorldTree
 		/// <summary>
 		/// 从池中获取单位对象
 		/// </summary>
-		public static IUnit PoolGetUnit(this WorldLine self, Type type)
+		public static IUnit PoolGetUnit(this World self, Type type)
 		{
-			if (self.WorldLineManager.UnitPoolManager.TryGet(type, out object obj))
+			if (self.Line.Core.UnitPoolManager.TryGet(type, out object obj))
 			{
 				IUnit unit = obj as IUnit;
-				unit.Core = self;
+				unit.World = self;
 				unit.OnCreate();
 				return unit;
 			}
@@ -70,11 +70,11 @@ namespace WorldTree
 		/// <summary>
 		/// 回收单位
 		/// </summary>
-		public static void PoolRecycle(this WorldLine self, IUnit obj)
+		public static void PoolRecycle(this World self, IUnit obj)
 		{
 			if (obj.IsFromPool)
 			{
-				if (self.WorldLineManager.UnitPoolManager.TryRecycle(obj)) return;
+				if (self.Line.Core.UnitPoolManager.TryRecycle(obj)) return;
 			}
 			obj.IsDisposed = true;
 			obj.OnDispose();

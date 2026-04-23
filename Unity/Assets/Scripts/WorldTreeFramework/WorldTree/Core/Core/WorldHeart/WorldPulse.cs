@@ -71,7 +71,7 @@ namespace WorldTree
 			protected override void Execute(WorldPulse<R> self, int frameTime)
 			{
 				self.frameTime = frameTime;
-				self.Core.WorldLineManager.RuleManager.TryGetRuleList(self.Parent.Type, out self.ruleList);
+				self.World.Line.Core.RuleManager.TryGetRuleList(self.Parent.Type, out self.ruleList);
 			}
 		}
 

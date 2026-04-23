@@ -43,7 +43,7 @@ namespace WorldTree
 			if (self.IsActive == ((self.Parent == null) ? self.ActiveToggle : self.Parent.IsActive && self.ActiveToggle)) return;
 
 			//层序遍历设置子节点
-			using (self.Core.PoolGetUnit(out UnitQueue<INode> queue))
+			using (self.World.PoolGetUnit(out UnitQueue<INode> queue))
 			{
 				queue.Enqueue(self);
 				while (queue.Count != 0)
@@ -91,9 +91,9 @@ namespace WorldTree
 		public static void OnCreate(INode self)
 		{
 
-			self.InstanceId = self.Core.WorldLineManager.IdManager.GetId();
+			self.InstanceId = self.World.Line.Core.IdManager.GetId();
 			self.Id = self.InstanceId;
-			self.Core.WorldLineManager.RuleManager?.SupportNodeRule(self.Type);
+			self.World.Line.Core.RuleManager?.SupportNodeRule(self.Type);
 		}
 
 		#endregion
@@ -109,7 +109,7 @@ namespace WorldTree
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, self))
 			{
 				self.BranchType = TypeInfo<B>.Code;
-				self.Core = parent.Core;
+				self.World = parent.World;
 				self.World = parent.World;
 				self.Parent = parent;
 				self.SetActive(true);//激活节点
@@ -127,7 +127,7 @@ namespace WorldTree
 		/// </summary>
 		public static void OnAddSelfToTree(this INode self)
 		{
-			self.Core.ReferencedPoolManager.TryAdd(self);//添加到引用池
+			self.World.Line.ReferencedPoolManager.TryAdd(self);//添加到引用池
 			if (self is not IListenerIgnorer)//广播给全部监听器
 			{
 				IRuleExecutor<ListenerAdd> ruleActuator = NodeListenerExecutorHelper.GetListenerExecutor<ListenerAdd>(self);
@@ -135,20 +135,20 @@ namespace WorldTree
 			}
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//检测自身是否为监听器
 			{
-				self.Core.ReferencedPoolManager.TryAddListener(nodeListener);
+				self.World.Line.ReferencedPoolManager.TryAddListener(nodeListener);
 			}
 			if (self.IsActive != self.activeEventMark)//激活变更
 			{
 				if (self.IsActive)
 				{
-					self.Core.WorldLineManager.EnableRuleGroup?.Send(self);//激活事件通知
+					self.World.Line.Core.EnableRuleGroup?.Send(self);//激活事件通知
 				}
 				else
 				{
-					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.World.Line.Core.DisableRuleGroup?.Send(self); //禁用事件通知
 				}
 			}
-			self.Core.WorldLineManager.AddRuleGroup?.Send(self);//节点添加事件通知
+			self.World.Line.Core.AddRuleGroup?.Send(self);//节点添加事件通知
 		}
 
 		#endregion
@@ -161,7 +161,7 @@ namespace WorldTree
 		public static void RemoveAllNode(INode self)
 		{
 			if (self.BranchDict == null) return;
-			using (self.Core.PoolGetUnit(out UnitStack<IBranch> branchs))
+			using (self.World.PoolGetUnit(out UnitStack<IBranch> branchs))
 			{
 				foreach (var branch in self.BranchDict) branchs.Push(branch);
 				while (branchs.Count != 0) self.RemoveAllNode(branchs.Pop().Type);
@@ -188,7 +188,7 @@ namespace WorldTree
 				if (branch.Count != 0)
 				{
 					// 迭代器无法一边迭代一边删除，这里用栈存储需要删除的节点
-					using (self.Core.PoolGetUnit(out UnitStack<INode> nodes))
+					using (self.World.PoolGetUnit(out UnitStack<INode> nodes))
 					{
 						foreach (var item in (IEnumerable<INode>)branch) nodes.Push(item);
 						while (nodes.Count != 0) nodes.Pop().Dispose();
@@ -221,7 +221,7 @@ namespace WorldTree
 		/// <summary>
 		/// 释放前的处理（代理方法）
 		/// </summary>
-		public static void OnBeforeDispose(INode self) => self.Core.WorldLineManager.BeforeRemoveRuleGroup?.Send(self);
+		public static void OnBeforeDispose(INode self) => self.World.Line.Core.BeforeRemoveRuleGroup?.Send(self);
 
 
 
@@ -234,7 +234,7 @@ namespace WorldTree
 			if (self.ViewBuilder != null)
 			{
 				var builder = self.ViewBuilder;
-				self.ViewBuilder.Core.WorldContext.Post(builder.Dispose);
+				self.ViewBuilder.World.Line.WorldContext.Post(builder.Dispose);
 				self.ViewBuilder = null;
 			}
 
@@ -243,29 +243,29 @@ namespace WorldTree
 			{
 				if (self.IsActive)
 				{
-					self.Core.WorldLineManager.EnableRuleGroup?.Send(self);//激活事件通知
+					self.World.Line.Core.EnableRuleGroup?.Send(self);//激活事件通知
 				}
 				else
 				{
-					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.World.Line.Core.DisableRuleGroup?.Send(self); //禁用事件通知
 				}
 			}
 
 			NodeBranchHelper.RemoveNode(self); // 从父节点分支移除
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer) // 检测自身为监听器
 			{
-				self.Core.ReferencedPoolManager.RemoveListener(nodeListener);
+				self.World.Line.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
-			self.Core.WorldLineManager.RemoveRuleGroup?.Send(self); // 移除事件通知
+			self.World.Line.Core.RemoveRuleGroup?.Send(self); // 移除事件通知
 			if (self is not IListenerIgnorer) // 广播给全部监听器通知
 			{
 				NodeListenerExecutorHelper.GetListenerExecutor<ListenerRemove>(self)?.Send(self);
 			}
-			self.Core.ReferencedPoolManager.Remove(self); // 引用池移除
+			self.World.Line.ReferencedPoolManager.Remove(self); // 引用池移除
 
 			//self.DisposeDomain(); //清除域节点
 			self.Parent = null; // 清除父节点
-			self.Core.PoolRecycle(self); // 回收到池
+			self.World.PoolRecycle(self); // 回收到池
 		}
 
 		#endregion
@@ -283,7 +283,7 @@ namespace WorldTree
 
 			self.BranchType = branch.Type;
 			self.Parent = parent;
-			self.Core = parent.Core;
+			self.World = parent.World;
 			self.World = parent.World;
 
 			self.RefreshActive();
@@ -302,7 +302,7 @@ namespace WorldTree
 
 			self.BranchType = branch.Type;
 			self.Parent = parent;
-			self.Core = parent.Core;
+			self.World = parent.World;
 			self.World = parent.World;
 
 			self.RefreshActive();
@@ -315,7 +315,7 @@ namespace WorldTree
 		/// </summary>
 		public static void OnBeforeGraftSelfToTree(INode self)
 		{
-			self.Core = self.Parent.Core;
+			self.World = self.Parent.World;
 			self.World = self.Parent.World;
 			// 序列化时，需要重新设置所有节点的父节点
 			if (self.IsSerialize)
@@ -342,7 +342,7 @@ namespace WorldTree
 		[INodeThis]
 		public static void OnGraftSelfToTree(INode self)
 		{
-			self.Core.ReferencedPoolManager.TryAdd(self);//添加到引用池
+			self.World.Line.ReferencedPoolManager.TryAdd(self);//添加到引用池
 			if (self is not IListenerIgnorer)//广播给全部监听器
 			{
 				IRuleExecutor<ListenerAdd> ruleActuator = NodeListenerExecutorHelper.GetListenerExecutor<ListenerAdd>(self);
@@ -350,12 +350,12 @@ namespace WorldTree
 			}
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer)//检测添加静态监听
 			{
-				self.Core.ReferencedPoolManager.TryAddListener(nodeListener);
+				self.World.Line.ReferencedPoolManager.TryAddListener(nodeListener);
 			}
 
 			if (self.IsSerialize)
 			{
-				self.Core.WorldLineManager.DeserializeRuleGroup?.Send(self);//反序列化事件通知
+				self.World.Line.Core.DeserializeRuleGroup?.Send(self);//反序列化事件通知
 				self.IsSerialize = false;
 			}
 
@@ -363,14 +363,14 @@ namespace WorldTree
 			{
 				if (self.IsActive)
 				{
-					self.Core.WorldLineManager.EnableRuleGroup?.Send(self);//激活事件通知
+					self.World.Line.Core.EnableRuleGroup?.Send(self);//激活事件通知
 				}
 				else
 				{
-					self.Core.WorldLineManager.DisableRuleGroup?.Send(self); //禁用事件通知
+					self.World.Line.Core.DisableRuleGroup?.Send(self); //禁用事件通知
 				}
 			}
-			if (!self.IsSerialize) self.Core.WorldLineManager.GraftRuleGroup?.Send(self);//嫁接事件通知
+			if (!self.IsSerialize) self.World.Line.Core.GraftRuleGroup?.Send(self);//嫁接事件通知
 		}
 
 		#endregion
@@ -397,20 +397,20 @@ namespace WorldTree
 			if (self.ViewBuilder != null)
 			{
 				var builder = self.ViewBuilder;
-				self.ViewBuilder.Core.WorldContext.Post(builder.Dispose);
+				self.ViewBuilder.World.Line.WorldContext.Post(builder.Dispose);
 				self.ViewBuilder = null;
 			}
 			if (self is INodeListener nodeListener && self is not IListenerIgnorer)
 			{
 				// 检测移除静态监听
-				self.Core.ReferencedPoolManager.RemoveListener(nodeListener);
+				self.World.Line.ReferencedPoolManager.RemoveListener(nodeListener);
 			}
-			self.Core.WorldLineManager.CutRuleGroup?.Send(self); // 裁剪事件通知
+			self.World.Line.Core.CutRuleGroup?.Send(self); // 裁剪事件通知
 			if (self is not IListenerIgnorer) // 广播给全部监听器通知
 			{
 				NodeListenerExecutorHelper.GetListenerExecutor<ListenerRemove>(self)?.Send(self);
 			}
-			self.Core.ReferencedPoolManager.Remove(self); // 引用池移除
+			self.World.Line.ReferencedPoolManager.Remove(self); // 引用池移除
 			self.Parent = null; // 清除父节点
 		}
 
@@ -424,10 +424,10 @@ namespace WorldTree
 			if (self.ViewBuilder != null)
 			{
 				var builder = self.ViewBuilder;
-				self.ViewBuilder.Core.WorldContext.Post(builder.Dispose);
+				self.ViewBuilder.World.Line.WorldContext.Post(builder.Dispose);
 			}
 			self.ViewBuilder = null;
-			self.Core?.ViewBuilder?.Core.WorldContext.Post(ViewBuilderCreate, new(self, self.Id));
+			self.World?.Line?.ViewBuilder?.World.Line.WorldContext.Post(ViewBuilderCreate, new(self, self.Id));
 		}
 
 		/// <summary>
@@ -438,12 +438,16 @@ namespace WorldTree
 			INode self = (INode)data.Object;
 			long id = data.Long;
 			if (self.IsDisposed || self.Id != id) return;
+			INode viewBuilderParent = null;
+			Type viewBuilderType = null;
 
 			// 拿到核心的可视化生成器的父级节点
-			INode viewBuilderParent = self.Core.ViewBuilder.Parent;
+			viewBuilderParent = self.World.Line.ViewBuilder.Parent;
+			viewBuilderType = self.World.Line.ViewBuilder.GetType();
+
 
 			// 生成自身的可视化生成器
-			INode nodeView = viewBuilderParent.Core.PoolGetNode(self.Core.ViewBuilder.GetType());
+			INode nodeView = viewBuilderParent.World.PoolGetNode(viewBuilderType);
 
 			// 将自身添加到父节点的可视化生成器中，而可视化则挂到可视化父级节点上
 			self.ViewBuilder = NodeBranchHelper.AddNodeToTree(viewBuilderParent, default(ChildBranch), nodeView.Id, nodeView, (INode)self, (INode)self.Parent) as IWorldTreeNodeViewBuilder;

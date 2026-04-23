@@ -43,7 +43,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界线
 	/// </summary>
-	public class WorldLine : Node, IWorldLine, IListenerIgnorer
+	public class WorldLine : World, IWorldLine, IListenerIgnorer
 		, AsCoreManagerBranch
 		, AsComponentBranch
 		, AsRule<Awake>
@@ -53,7 +53,7 @@ namespace WorldTree
 		/// <summary>
 		/// 世界树核心
 		/// </summary>
-		public WorldTreeCore WorldLineManager;
+		public WorldTreeCore Core;
 
 		/// <summary>
 		/// 日志管理器
@@ -104,14 +104,14 @@ namespace WorldTree
 			SetActive(false);
 
 			//根节点初始化
-			Core = this;
-
+			World = this;
+			Line = this;
 			//框架核心启动组件新建初始化
 			Type = this.TypeToCode();
 
 
 			//日志管理器初始化
-			this.WorldLineManager.CreateCoreObject(out LogManager);
+			this.Core.CreateCoreObject(out LogManager);
 			LogManager.Init(Id.ToString());
 
 			//引用池管理器初始化
@@ -154,8 +154,7 @@ namespace WorldTree
 			if (NodeBranchHelper.AddBranch<B>(parent).TryAddNode(key, this))
 			{
 				BranchType = TypeInfo<B>.Code;
-				Core = parent.Core ?? this;
-				World = null;
+				World = parent.World ?? this;
 				Parent = parent;
 				//mainCore = parent.Core.mainCore ?? this;
 				SetActive(true);//激活节点
@@ -173,14 +172,14 @@ namespace WorldTree
 			{
 				if (IsActive)
 				{
-					WorldLineManager.EnableRuleGroup?.Send(this);//激活事件通知
+					Core.EnableRuleGroup?.Send(this);//激活事件通知
 				}
 				else
 				{
-					WorldLineManager.DisableRuleGroup?.Send(this); //禁用事件通知
+					Core.DisableRuleGroup?.Send(this); //禁用事件通知
 				}
 			}
-			WorldLineManager.AddRuleGroup?.Send(this);//节点添加事件通知
+			Core.AddRuleGroup?.Send(this);//节点添加事件通知
 		}
 
 		#endregion
@@ -201,7 +200,7 @@ namespace WorldTree
 
 		public override void OnBeforeDispose()
 		{
-			WorldLineManager.BeforeRemoveRuleGroup?.Send(this);
+			Core.BeforeRemoveRuleGroup?.Send(this);
 
 			//有严格的移除顺序
 			this.RemoveAllTemp();
@@ -224,11 +223,11 @@ namespace WorldTree
 			ViewBuilder = null;
 			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
 			SetActive(false);
-			WorldLineManager.DisableRuleGroup?.Send(this); //禁用事件通知
-			WorldLineManager.RemoveRuleGroup?.Send(this);//移除事件通知
+			Core.DisableRuleGroup?.Send(this); //禁用事件通知
+			Core.RemoveRuleGroup?.Send(this);//移除事件通知
 			Parent = null;//清除父节点
 
-			this.PoolRecycle(this);//回收到池
+			World.PoolRecycle(this);//回收到池
 
 			ReferencedPoolManager = null;
 			GameTimeManager = null;

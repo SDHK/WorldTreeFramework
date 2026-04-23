@@ -34,8 +34,8 @@ namespace WorldTree
 
 		public override void OnCreate()
 		{
-			Core.PoolGetUnit(out nodeDict);
-			Core.PoolGetUnit(out nodeKeyDict);
+			World.PoolGetUnit(out nodeDict);
+			World.PoolGetUnit(out nodeKeyDict);
 		}
 
 		public bool Contains(K key) => TryGetNode(key, out _);
