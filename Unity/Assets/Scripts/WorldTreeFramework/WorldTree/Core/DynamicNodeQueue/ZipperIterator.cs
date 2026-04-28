@@ -322,7 +322,7 @@ namespace WorldTree
 		}
 	}
 
-	public static class FreeIteratorRule
+	public static class ZipperIteratorRule
 	{
 		class Add<T> : AddRule<ZipperIterator<T>>
 		{

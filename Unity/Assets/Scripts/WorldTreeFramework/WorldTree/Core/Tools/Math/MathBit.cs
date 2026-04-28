@@ -19,7 +19,7 @@ namespace WorldTree
 		public static int GetHighestBitIndex(ulong value)
 		{
 			if (value == 0) return -1;
-			if (value == ulong.MaxValue) return -1;
+			if (value == ulong.MaxValue) return 63;
 			return 63 - LeadingZeroCount(value);
 		}
 
@@ -30,7 +30,7 @@ namespace WorldTree
 		public static int GetLowestBitIndex(ulong value)
 		{
 			if (value == 0) return -1;
-			if (value == ulong.MaxValue) return -1;
+			if (value == ulong.MaxValue) return 0;
 			return TrailingZeroCount(value);
 		}
 

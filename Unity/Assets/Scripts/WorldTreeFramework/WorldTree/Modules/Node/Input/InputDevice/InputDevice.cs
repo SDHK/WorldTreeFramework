@@ -8,25 +8,25 @@
 */
 namespace WorldTree
 {
-	/// <summary>
-	/// 输入设备
-	/// </summary>
-	public class InputDevice : Node, ChildOf<InputDeviceManager>
-		, AsRule<Awake<InputDeviceType, byte>>
-	{
-		/// <summary>
-		/// 设备类型
-		/// </summary>
-		public InputDeviceType InputDeviceType;
+    /// <summary>
+    /// 输入设备
+    /// </summary>
+    public class InputDevice : Node, ChildOf<InputDeviceManager>
+        , AsRule<Awake<InputDeviceType, byte>>
+    {
+        /// <summary>
+        /// 设备类型
+        /// </summary>
+        public InputDeviceType InputDeviceType;
 
-		/// <summary>
-		/// 设备码
-		/// </summary>
-		public byte DeviceId;
+        /// <summary>
+        /// 设备码
+        /// </summary>
+        public byte DeviceId;
 
-		/// <summary>
-		/// 输入数据集合，下标是按键码
-		/// </summary>
-		public InputData[] InputDatas;
-	}
+        /// <summary>
+        /// 输入数据集合，下标是按键码
+        /// </summary>
+        public InputData[] InputDatas;
+    }
 }

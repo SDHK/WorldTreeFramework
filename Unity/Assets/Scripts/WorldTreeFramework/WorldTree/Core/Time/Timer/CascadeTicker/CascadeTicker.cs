@@ -27,14 +27,14 @@
 *    64个槽位按位划分（槽位i对应2^i到2^(i+1)的范围），单层覆盖从 2^0 到 2^63 的无限时间范围。
 *    相比传统时间轮的分层递归，本设计通过位运算实现单层无限范围覆盖。
 *	 
-* 4. Precision精度（0, 1~64）。
-*    启用时（precision > 0），通过位对齐操作将时间推进与 2^(precision-1) 的倍数对齐，
+* 4. Precision精度（-1表示不限制，0~63）。
+*    启用时通过位对齐操作将时间推进与 2^precision 的倍数对齐，
 *    强制执行执行顺序和帧级别的确定性。
-*    禁用为0时，直接追赶到当前时间，只保证事件不会被跳过，但不保证事件的执行顺序。
+*    禁用为-1时，直接追赶到当前时间，只保证事件不会被跳过，但不保证事件的执行顺序。
 *    示例： 使用C#的DateTime.Ticks作为时间单位，那么：
-*    		precision = 0 时，直接追赶到当前时间，只保证事件不会被跳过，但不保证事件的执行顺序。
-*			precision = 13 对应 2^14 = 8192 Ticks ≈ 1 毫秒精度。
-*          	precision = 18 对应 2^19 = 262114 Ticks ≈ 25 毫秒精度（游戏引擎帧级）。
+*    		precision = -1 时，直接追赶到当前时间，只保证事件不会被跳过，但不保证事件的执行顺序。
+*			precision = 13 对应 2^13 = 8192 Ticks ≈ 1 毫秒精度。
+*          	precision = 18 对应 2^18 = 262114 Ticks ≈ 25 毫秒精度（游戏引擎帧级）。
 *			precision = 23 对应 2^23 = 8388608 Ticks ≈ 1 秒精度。
 *    
 * 5. 该程序的设计中运算操作极为精简。
@@ -59,7 +59,7 @@ namespace WorldTree
 	/// 级联定时器
 	/// </summary>
 	public class CascadeTicker : Node
-		, ChildOf<GameTimeManager>
+		, ChildOf<WorldTimeManager>
 		, AsChildBranch
 		, AsRule<Awake>
 	{
@@ -168,16 +168,16 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 设置指针每帧最大跨越刻度：0表示不限制。1~64（也就是2的幂）
+		/// 设置指针每帧最大跨越刻度：-1表示不限制。0~63（也就是2的幂）
 		/// </summary>
 		public static void SetPrecision(this CascadeTicker self, int precision)
 		{
-			if (precision <= 0 || precision > 64)
+			if (precision < 0 || precision > 63)
 			{
 				self.precisionMask = 0;
 				return;
 			}
-			self.precisionMask = (1L << (precision - 1));
+			self.precisionMask = 1L << precision;
 		}
 
 		/// <summary>
@@ -196,11 +196,12 @@ namespace WorldTree
 		{
 			if (!self.World.Line.Core.RuleManager.TryGetRuleList(node.Type, ruleType, out var ruleList)) return -1;
 
-			//大小比较，过时了就直接执行
+			//大小比较，过时了就放到下一帧再执行
 			if (self.advanceTick >= clockTick)
 			{
-				self.ruleMulticast.TryAdd(node, ruleList);
-				return -1;
+				// advanceTick是过时的时间
+				// +1改为下一次最小时序，保证事件不会被跳过
+				clockTick = self.advanceTick + 1;
 			}
 
 			//记录添加的最小时序,用于自适应追赶

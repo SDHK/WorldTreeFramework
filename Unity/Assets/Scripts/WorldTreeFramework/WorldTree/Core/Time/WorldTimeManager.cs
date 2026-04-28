@@ -11,17 +11,22 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 游戏时间管理器
+	/// 世界时间管理器
 	/// </summary>
-	public class GameTimeManager : Node
+	public class WorldTimeManager : Node
 		, CoreManagerOf<WorldLine>
 		, AsChildBranch
 		, AsRule<Awake>
 	{
 		/// <summary>
-		/// 定时器 
+		/// 真实时间定时器 
 		/// </summary>
 		public CascadeTicker Timer;
+
+		/// <summary>
+		/// 世界时间定时器 
+		/// </summary>
+		public CascadeTicker WorldTimer;
 
 		/// <summary>
 		/// 定帧器 
@@ -59,8 +64,7 @@ namespace WorldTree
 		/// </summary>
 		private long totalFrames;
 
-
-		public GameTimeManager()
+		public WorldTimeManager()
 		{
 			totalTime = TimeSpan.Zero;
 		}
@@ -77,23 +81,25 @@ namespace WorldTree
 		}
 	}
 
-	public static partial class GameTimeManagerRule
+	public static partial class WorldTimeManagerRule
 	{
-		private class AwakeRule : AwakeRule<GameTimeManager>
+		private class AwakeRule : AwakeRule<WorldTimeManager>
 		{
-			protected override void Execute(GameTimeManager self)
+			protected override void Execute(WorldTimeManager self)
 			{
 				self.AddChild(out self.Timer);
+				self.AddChild(out self.WorldTimer);
 				self.AddChild(out self.Framer);
 			}
 		}
 
-		private class UpdateTime : UpdateTimeRule<GameTimeManager>
+		private class UpdateTime : UpdateTimeRule<WorldTimeManager>
 		{
-			protected override void Execute(GameTimeManager self, TimeSpan arg1)
+			protected override void Execute(WorldTimeManager self, TimeSpan arg1)
 			{
 				self.UpdateTime(arg1);
-				self.Timer.Update(self.TotalTime.Ticks);
+				self.Timer.Update(self.World.Line.Core.RealTimeManager.UtcNow.Ticks);
+				self.WorldTimer.Update(self.TotalTime.Ticks);
 				self.Framer.Update(self.TotalFrames);
 			}
 		}
@@ -101,7 +107,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加定帧器 
 		/// </summary>
-		public static long AddFramer<R>(this GameTimeManager self, long frame, INode node, TreeTaskToken token = null)
+		public static long AddFramer<R>(this WorldTimeManager self, long frame, INode node, TreeTaskToken token = null)
 			where R : ISendRule
 		{
 			return self.Framer.AddTicker<R>(frame, node, token);
@@ -110,7 +116,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加定时器 
 		/// </summary>
-		public static long AddFramerDelay<R>(this GameTimeManager self, long delayFrame, INode node, TreeTaskToken token = null)
+		public static long AddFramerDelay<R>(this WorldTimeManager self, long delayFrame, INode node, TreeTaskToken token = null)
 			where R : ISendRule
 		{
 			return self.Framer.AddTicker<R>(self.TotalFrames + delayFrame, node, token);

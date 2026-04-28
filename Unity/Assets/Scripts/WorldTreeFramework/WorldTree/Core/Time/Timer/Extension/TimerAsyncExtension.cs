@@ -24,7 +24,7 @@ namespace WorldTree
 			// 捕获令牌
 			var token = await self.TreeTaskTokenCatch();
 			// 添加定帧器
-			self.World.Line.GameTimeManager.AddFramerDelay<TreeTaskSetResuIt>(delayFrame, asyncTask, token);
+			self.World.Line.WorldTimeManager.AddFramerDelay<TreeTaskSetResuIt>(delayFrame, asyncTask, token);
 			// 等待异步执行
 			await asyncTask;
 		}
