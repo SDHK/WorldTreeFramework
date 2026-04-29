@@ -14,8 +14,8 @@
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 核心管理器分支
-	/// </summary>
-	public class CoreManagerBranch : ComponentBranch { }
+	///// <summary>
+	///// 核心管理器分支
+	///// </summary>
+	//public class CoreManagerBranch : ComponentBranch { }
 }

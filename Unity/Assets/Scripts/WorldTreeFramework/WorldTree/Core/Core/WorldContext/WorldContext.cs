@@ -18,7 +18,7 @@ namespace WorldTree
 	[INodeProxy]
 	public partial class WorldContext : SynchronizationContext, INode
 		, AsChildBranch
-		, CoreManagerOf<WorldLine>
+		, ComponentOf<WorldLine>
 		, AsRule<Awake>
 	{
 		/// <summary>

@@ -4,7 +4,7 @@
 	/// 配置管理器
 	/// </summary>
 	public class ConfigManager : Node
-		, CoreManagerOf<WorldLine>
+		, ComponentOf<WorldLine>
 		, AsRule<Awake>
 		, AsComponentBranch
 	{ }

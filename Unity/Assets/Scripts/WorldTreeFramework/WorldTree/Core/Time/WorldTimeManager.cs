@@ -14,7 +14,7 @@ namespace WorldTree
 	/// 世界时间管理器
 	/// </summary>
 	public class WorldTimeManager : Node
-		, CoreManagerOf<WorldLine>
+		, ComponentOf<WorldLine>
 		, AsChildBranch
 		, AsRule<Awake>
 	{
