@@ -59,21 +59,6 @@ namespace WorldTree
 		public LogManager LogManager;
 
 		/// <summary>
-		/// 世界之心
-		/// </summary>
-		public WorldHeartBase WorldHeart;
-
-		/// <summary>
-		/// 世界环境：线程上下文
-		/// </summary>
-		public WorldContext WorldContext;
-
-		/// <summary>
-		/// 世界时间管理器
-		/// </summary>
-		public WorldTimeManager WorldTimeManager;
-
-		/// <summary>
 		/// 节点引用池管理器
 		/// </summary>
 		public ReferencedPoolManager ReferencedPoolManager;
@@ -82,6 +67,21 @@ namespace WorldTree
 		/// 全局法则执行器管理器
 		/// </summary>
 		public RuleBroadcastManager GlobalRuleExecutorManager;
+
+		/// <summary>
+		/// 世界时间管理器
+		/// </summary>
+		public WorldTimeManager WorldTimeManager;
+
+		/// <summary>
+		/// 世界之心
+		/// </summary>
+		public WorldHeartBase WorldHeart;
+
+		/// <summary>
+		/// 世界环境：线程上下文
+		/// </summary>
+		public WorldContext WorldContext;
 
 		/// <summary>
 		/// 主世界 
