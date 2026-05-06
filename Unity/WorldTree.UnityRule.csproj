@@ -58,28 +58,7 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TaskTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\StepMachineTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\Input\InputDriverKeyboardRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\StepMathParserTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SphereManagerTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SerializeTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\DataBaseTestProxyRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\UnityCodeLoaderRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\CascadeTickerTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\Input\InputDriverMouseRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\UtcTimeTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MultilayerPerceptronTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\InitialDomainRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\Modules\View\ViewLayerElementRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\InputMapperTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MainWorldRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TreeDataTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\TreeValueTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\ViewTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\MemoryPackTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\YooAssetTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityRule\Client\_Test\SphereTestRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\HotUpdate\UnityRule\WorldTree.UnityRule.asmdef" />
@@ -826,9 +805,9 @@
       <Project>{9B5D3FD1-5D41-F836-C69B-328AEC1FB79D}</Project>
       <Name>WorldTree.UnityNode</Name>
     </ProjectReference>
-    <ProjectReference Include="WorldTree.Node.csproj">
-      <Project>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</Project>
-      <Name>WorldTree.Node</Name>
+    <ProjectReference Include="WorldTree.HotFix.csproj">
+      <Project>{C61C92E9-69A5-D4AD-C7FD-530DB03BCE3E}</Project>
+      <Name>WorldTree.HotFix</Name>
     </ProjectReference>
     <ProjectReference Include="MemoryPack.csproj">
       <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>

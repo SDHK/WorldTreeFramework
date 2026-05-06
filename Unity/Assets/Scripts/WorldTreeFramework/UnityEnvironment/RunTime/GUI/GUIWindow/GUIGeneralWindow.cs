@@ -14,9 +14,9 @@ namespace WorldTree
 	/// GUI通用窗体
 	/// </summary>
 	public class GUIGeneralWindow : Node
-        , AsComponentBranch
-        , AsRule<GUIDraw>
-    {
+		, AsComponentBranch
+		, AsRule<GUIDraw>
+	{
 		/// <summary>
 		/// 绘制法则组
 		/// </summary>
@@ -32,27 +32,26 @@ namespace WorldTree
 		public GUIBeginHorizontal HorizontalBox;
 
 
-    }
+	}
 
-    class GUIGeneralWindowAddSystem : AddRule<GUIGeneralWindow>
-    {
-        protected override void Execute(GUIGeneralWindow self)
-        {
-            //self.group = self.Core.RuleManager.GetRuleGroup<IGUIDrawSystem>();
-            self.AddComponent(out GUIWindow _);
-        }
-    }
+	class GUIGeneralWindowAddSystem : AddRule<GUIGeneralWindow>
+	{
+		protected override void Execute(GUIGeneralWindow self)
+		{
+			//self.group = self.Core.RuleManager.GetRuleGroup<IGUIDrawSystem>();
+			self.AddComponent(out GUIWindow _);
+		}
+	}
+	class GUIGeneralWindowOnGUISystem : GUIDrawRule<GUIGeneralWindow>
+	{
+		protected override void Execute(GUIGeneralWindow self)
+		{
+			self.VerticalBox.Draw();
 
-    class GUIGeneralWindowOnGUISystem : GUIDrawRule<GUIGeneralWindow>
-    {
-        protected override void Execute(GUIGeneralWindow self)
-        {
-            self.VerticalBox.Draw();
+			self.group?.Send(self.Parent);
 
-            self.group?.Send(self.Parent);
+			GUILayout.EndVertical();
 
-            GUILayout.EndVertical();
-
-        }
-    }
+		}
+	}
 }

@@ -31,6 +31,7 @@ namespace WorldTree
 		/// </summary>
 		public void Start()
 		{
+
 			AppDomain.CurrentDomain.UnhandledException += (sender, e) => Debug.LogError(e.ExceptionObject.ToString());
 			// 命令行参数接收
 			//Parser.Default.ParseArguments<Options>(System.Environment.GetCommandLineArgs())

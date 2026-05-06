@@ -790,9 +790,9 @@
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="WorldTree.Node.csproj">
-      <Project>{1022309A-A609-51BF-E1EC-4DF4D148FD42}</Project>
-      <Name>WorldTree.Node</Name>
+    <ProjectReference Include="WorldTree.HotFix.csproj">
+      <Project>{C61C92E9-69A5-D4AD-C7FD-530DB03BCE3E}</Project>
+      <Name>WorldTree.HotFix</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

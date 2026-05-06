@@ -115,7 +115,7 @@ namespace WorldTree.AOT
 
 			Debug.Log("启动框架!");
 
-			Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "WorldTree.UnityCore");
+			Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "WorldTree.CoreUnity");
 			gameObject.AddComponent(assembly.GetType("WorldTree.UnityWorldTree"));
 		}
 	}

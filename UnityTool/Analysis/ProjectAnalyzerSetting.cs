@@ -84,7 +84,7 @@ namespace WorldTree.Analyzer
 		public ProjectAnalyzerSetting()
 		{
 			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
-			Add("WorldTree.UnityCore", ProjectConfigHelper.CoreConfigs);
+			Add("WorldTree.CoreUnity", ProjectConfigHelper.CoreConfigs);
 
 			Add("WorldTree.ModuleNode", ProjectConfigHelper.NodeConfigs);
 			Add("WorldTree.ModuleRule", ProjectConfigHelper.RuleConfigs);
@@ -92,14 +92,13 @@ namespace WorldTree.Analyzer
 			Add("WorldTree.Node", ProjectConfigHelper.NodeConfigs);
 			Add("WorldTree.Rule", ProjectConfigHelper.RuleConfigs);
 
-
 			Add("WorldTree.UnityNode", ProjectConfigHelper.NodeConfigs);
 			Add("WorldTree.UnityRule", ProjectConfigHelper.RuleConfigs);
 
 
 			Add("WorldTree.Module", ProjectConfigHelper.NodeConfigs);
 			Add("WorldTree.HotFix", ProjectConfigHelper.NodeConfigs);
-			Add("WorldTree.UnityHotFix", ProjectConfigHelper.NodeConfigs);
+			Add("WorldTree.HotFixUnity", ProjectConfigHelper.NodeConfigs);
 
 		}
 	}

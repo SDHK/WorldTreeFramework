@@ -66,7 +66,7 @@ namespace WorldTree.SourceGenerator
 			Add("WorldTree.ModuleNode", ProjectConfigHelper.NodeConfigs);
 			Add("WorldTree.ModuleRule", ProjectConfigHelper.RuleConfigs);
 
-			Add("WorldTree.UnityCore", ProjectConfigHelper.UnityCoreConfigs);
+			Add("WorldTree.CoreUnity", ProjectConfigHelper.UnityCoreConfigs);
 
 
 			Add("WorldTree.Node", ProjectConfigHelper.NodeConfigs);
@@ -77,7 +77,7 @@ namespace WorldTree.SourceGenerator
 
 			Add("WorldTree.Module", ProjectConfigHelper.NodeConfigs);
 			Add("WorldTree.HotFix", ProjectConfigHelper.NodeConfigs);
-			Add("WorldTree.UnityHotFix", ProjectConfigHelper.NodeConfigs);
+			Add("WorldTree.HotFixUnity", ProjectConfigHelper.NodeConfigs);
 
 		}
 	}
