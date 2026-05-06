@@ -144,8 +144,4 @@ namespace WorldTree
 			}
 		}
 	}
-
-
-
-
 }

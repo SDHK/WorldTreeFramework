@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -22,8 +21,13 @@ namespace WorldTree.SourceGenerator
 	{
 		public string FileName;
 		public string Namespace;
-		public string StaticRuleName;
+		public string ClassName;
+		public string ClassModifiers;   // 新增：记录 "public static partial" 或 "public partial" 等
 
+		/// <summary>
+		/// 包含的泛型参数列表中外部类型的参数名
+		/// </summary>
+		public HashSet<string> OuterTypeParams = new();
 		/// <summary>
 		/// 类名
 		/// </summary>
@@ -66,8 +70,8 @@ namespace WorldTree.SourceGenerator
 	public abstract class RuleMethodGenerator<C> : SourceGeneratorBase<C>
 		where C : ProjectGeneratorsConfig, new()
 	{
-		public Dictionary<string, RuleFileData> fileDatas = new();
-
+		// 文件名，类名，方法列表
+		public Dictionary<string, Dictionary<string, RuleFileData>> fileDatas = new();
 
 		private List<string> typeNames = new();
 		private List<string> typeTNames = new();
@@ -163,13 +167,34 @@ namespace WorldTree.SourceGenerator
 						className = $"{ruleNameNew}";
 
 
-						if (!fileDatas.TryGetValue(fileName, out RuleFileData ruleFileData))
+
+						string sourceFileName = System.IO.Path.GetFileNameWithoutExtension(classSyntax.SyntaxTree.FilePath);
+						string staticClassName = classSyntax.Identifier.Text + (classSyntax.TypeParameterList?.ToString() ?? string.Empty);
+
+						if (!fileDatas.TryGetValue(sourceFileName, out var innerDict))
+						{
+							innerDict = new Dictionary<string, RuleFileData>();
+							fileDatas.Add(sourceFileName, innerDict);
+						}
+						if (!innerDict.TryGetValue(staticClassName, out RuleFileData ruleFileData))
 						{
 							ruleFileData = new();
-							ruleFileData.FileName = fileName;
-							ruleFileData.StaticRuleName = classSyntax.Identifier.Text;
+							ruleFileData.FileName = sourceFileName;
+							ruleFileData.ClassName = staticClassName;
 							ruleFileData.Namespace = TreeSyntaxHelper.GetNamespace(classSyntax);
-							fileDatas.Add(fileName, ruleFileData);
+
+							// 提取原始修饰符，确保包含 partial
+							var modifiers = classSyntax.Modifiers;
+							bool hasPartial = modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
+							string modifierStr = string.Join(" ", modifiers.Select(m => m.Text));
+							// 若原类没有 partial，自动补上
+							ruleFileData.ClassModifiers = hasPartial ? modifierStr : modifierStr + " partial";
+							// 收集外层类型参数名
+							if (classSyntax.TypeParameterList != null)
+								foreach (var tp in classSyntax.TypeParameterList.Parameters)
+									ruleFileData.OuterTypeParams.Add(tp.Identifier.Text);
+
+							innerDict.Add(staticClassName, ruleFileData);
 						}
 
 
@@ -213,24 +238,45 @@ namespace WorldTree.SourceGenerator
 								//{
 								//	// 获取typeSymbol 类型的第二个泛型参数类型
 								//	ITypeSymbol ruleTypeSymbol1 = (typeSymbol as INamedTypeSymbol).TypeArguments[1];
-								//	//获取法则类型的注释
+								//	//获取法則类型的注释
 								//	if (ruleTypeSymbol1 != null) Comment = NamedSymbolHelper.GetDocumentationComment(ruleTypeSymbol1, "		");
 								//}
 								Comment = NamedSymbolHelper.GetDocumentationComment(ruleTypeSymbol, "		");
 							}
 						}
 
-						//因为是简写方法，所以直接使用方法所在的文件名
-						string fileName = Path.GetFileNameWithoutExtension(methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First().SyntaxTree.FilePath);
+						var classSyntax = methodDeclaration.AncestorsAndSelf()
+							.OfType<ClassDeclarationSyntax>().First();
+						string sourceFileName = System.IO.Path.GetFileNameWithoutExtension(
+							classSyntax.SyntaxTree.FilePath);
+						// 类型名称是静态类名称 + 泛型参数列表（如果有的话）
+						string staticClassName = classSyntax.Identifier.Text + (classSyntax.TypeParameterList?.ToString() ?? string.Empty);
 
-						if (!fileDatas.TryGetValue(fileName, out RuleFileData ruleFileData))
+
+						if (!fileDatas.TryGetValue(sourceFileName, out var innerDict))
+						{
+							innerDict = new Dictionary<string, RuleFileData>();
+							fileDatas.Add(sourceFileName, innerDict);
+						}
+						if (!innerDict.TryGetValue(staticClassName, out RuleFileData ruleFileData))
 						{
 							ruleFileData = new();
-							var classSyntax = methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
-							ruleFileData.FileName = fileName;
-							ruleFileData.StaticRuleName = classSyntax.Identifier.Text;
+							ruleFileData.FileName = sourceFileName;
+							ruleFileData.ClassName = staticClassName;
 							ruleFileData.Namespace = TreeSyntaxHelper.GetNamespace(classSyntax);
-							fileDatas.Add(fileName, ruleFileData);
+							// 提取原始修饰符，确保包含 partial
+							var modifiers = classSyntax.Modifiers;
+							bool hasPartial = modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
+							string modifierStr = string.Join(" ", modifiers.Select(m => m.Text));
+							// 若原类没有 partial，自动补上
+							ruleFileData.ClassModifiers = hasPartial ? modifierStr : modifierStr + " partial";
+
+							// 收集外层类型参数名
+							if (classSyntax.TypeParameterList != null)
+								foreach (var tp in classSyntax.TypeParameterList.Parameters)
+									ruleFileData.OuterTypeParams.Add(tp.Identifier.Text);
+
+							innerDict.Add(staticClassName, ruleFileData);
 						}
 						//获取方法名称
 						string methodName = methodDeclaration.Identifier.Text;
@@ -261,53 +307,61 @@ namespace WorldTree.SourceGenerator
 
 
 			// 生成代码
-			foreach (var fileData in fileDatas.Values)
+			foreach (var outerEntry in fileDatas)
 			{
 				StringBuilder fileCode = new();
-				StringBuilder ClassCode = new();
+				bool hasAnyContent = false;
 
-				foreach (var classData in fileData.Class.Values)
+				foreach (var innerEntry in outerEntry.Value)
 				{
-					if (classData.isSwitch)
+					RuleFileData fileData = innerEntry.Value;
+					StringBuilder ClassCode = new();
+
+					foreach (var classData in fileData.Class.Values)
 					{
-						// 根据分支数量或类型选择实现方式
-						if (classData.Methods.Count <= 10)
+						if (classData.isSwitch)
 						{
-							AddClassSwitch(ClassCode, classData);  // 使用 Switch 实现
+							if (classData.Methods.Count <= 10) AddClassSwitch(ClassCode, classData, fileData.OuterTypeParams);
+							else AddClassSwitchDict(ClassCode, classData, fileData.OuterTypeParams);
 						}
 						else
 						{
-							AddClassSwitchDict(ClassCode, classData);  // 使用 Dictionary 实现
+							AddClass(ClassCode, classData, fileData.OuterTypeParams);
 						}
 					}
-					else
+
+					if (ClassCode.ToString() != "")
 					{
-						AddClass(ClassCode, classData);
+						if (!hasAnyContent)
+						{
+							fileCode.AppendLine("// <auto-generated>");
+							fileCode.AppendLine("// 对于法则方法简写的调用生成");
+							fileCode.AppendLine($"using System;");
+							fileCode.AppendLine($"using System.Collections.Generic;");
+							hasAnyContent = true;
+						}
+						// 每个静态类独立的 namespace + partial class 块
+						fileCode.AppendLine($"namespace {fileData.Namespace}");
+						fileCode.AppendLine("{");
+						fileCode.AppendLine($"	{fileData.ClassModifiers} class {fileData.ClassName}");
+						fileCode.AppendLine("	{");
+						fileCode.Append(ClassCode);
+						fileCode.AppendLine("	}");
+						fileCode.AppendLine("}");
 					}
 				}
 
-				if (ClassCode.ToString() != "")
+				if (hasAnyContent)
 				{
-					fileCode.AppendLine("// <auto-generated>");
-					fileCode.AppendLine("// 对于法则方法简写的调用生成");
-					fileCode.AppendLine($"using System;");
-					fileCode.AppendLine($"using System.Collections.Generic;");
-					fileCode.AppendLine($"namespace {fileData.Namespace}");
-					fileCode.AppendLine("{");
-					fileCode.AppendLine($"	public static partial class {fileData.StaticRuleName}");
-					fileCode.AppendLine("	{");
-					fileCode.Append(ClassCode);
-					fileCode.AppendLine("	}");
-					fileCode.Append("}");
-
-					context.AddSource($"{fileData.FileName}_RuleMethod.cs", SourceText.From(fileCode.ToString(), Encoding.UTF8));
+					context.AddSource($"{outerEntry.Key}_RuleMethod.cs",
+						SourceText.From(fileCode.ToString(), Encoding.UTF8));
 				}
 			}
 		}
 
 
 
-		private void AddClass(StringBuilder classCode, RuleClassData classData)
+		private void AddClass(StringBuilder classCode, RuleClassData classData, HashSet<string> outerTypeParams)
 		{
 			if (classData.Methods.Count == 0) return;
 
@@ -323,7 +377,8 @@ namespace WorldTree.SourceGenerator
 				typeNames.Add(types[i].ToDisplayString());
 				ParseTypeSymbol(types[i], typeTNames);
 			}
-			string typeTName = typeTNames.Count == 0 ? "" : $"<{string.Join(", ", typeTNames)}>";
+			var innerTypeNames = typeTNames.Where(t => !outerTypeParams.Contains(t)).ToList();
+			string typeTName = innerTypeNames.Count == 0 ? "" : $"<{string.Join(", ", innerTypeNames)}>";
 
 			bool isCall = classData.ruleBaseEnum is RuleBaseEnum.CallRule or RuleBaseEnum.CallRuleAsync;
 			string genericTypeParameter = GetRuleTypeParameter(typeNames, isCall, out string outType);
@@ -431,7 +486,7 @@ namespace WorldTree.SourceGenerator
 			}
 		}
 
-		private void AddClassSwitchDict(StringBuilder classCode, RuleClassData classData)
+		private void AddClassSwitchDict(StringBuilder classCode, RuleClassData classData, HashSet<string> outerTypeParams)
 		{
 			if (classData.Methods.Count == 0) return;
 			typeNames.Clear();
@@ -446,7 +501,8 @@ namespace WorldTree.SourceGenerator
 				typeNames.Add(types[i].ToDisplayString());
 				ParseTypeSymbol(types[i], typeTNames);
 			}
-			string typeTName = typeTNames.Count == 0 ? "" : $"<{string.Join(", ", typeTNames)}>";
+			var innerTypeNames = typeTNames.Where(t => !outerTypeParams.Contains(t)).ToList();
+			string typeTName = innerTypeNames.Count == 0 ? "" : $"<{string.Join(", ", innerTypeNames)}>";
 
 			bool isCall = classData.ruleBaseEnum is RuleBaseEnum.CallRule or RuleBaseEnum.CallRuleAsync;
 			string genericTypeParameter = GetRuleTypeParameter(typeNames, isCall, out string outType);
@@ -585,7 +641,7 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 使用 Switch 语句生成法则分发类（性能优化版本）
 		/// </summary>
-		private void AddClassSwitch(StringBuilder classCode, RuleClassData classData)
+		private void AddClassSwitch(StringBuilder classCode, RuleClassData classData, HashSet<string> outerTypeParams)
 		{
 			if (classData.Methods.Count == 0) return;
 
@@ -604,7 +660,9 @@ namespace WorldTree.SourceGenerator
 				ParseTypeSymbol(types[i], typeTNames);
 			}
 
-			string typeTName = typeTNames.Count == 0 ? "" : $"<{string.Join(", ", typeTNames)}>";
+			var innerTypeNames = typeTNames.Where(t => !outerTypeParams.Contains(t)).ToList();
+			string typeTName = innerTypeNames.Count == 0 ? "" : $"<{string.Join(", ", innerTypeNames)}>";
+
 			bool isCall = classData.ruleBaseEnum is RuleBaseEnum.CallRule or RuleBaseEnum.CallRuleAsync;
 			string genericTypeParameter = GetRuleTypeParameter(typeNames, isCall, out string outType);
 			string genericParameter = GetRuleParameter(typeNames, isCall, out _);

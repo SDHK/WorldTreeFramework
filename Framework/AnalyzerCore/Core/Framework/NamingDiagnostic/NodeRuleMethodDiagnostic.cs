@@ -93,13 +93,21 @@ namespace WorldTree.Analyzer
 				}
 			}
 
+			// 获取外层类的泛型参数，过滤掉已在外层类声明的类型参数
+			var outerClassSyntax = methodDeclaration.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+			var outerTypeParams = new HashSet<string>();
+			if (outerClassSyntax?.TypeParameterList != null)
+				foreach (var tp in outerClassSyntax.TypeParameterList.Parameters)
+					outerTypeParams.Add(tp.Identifier.Text);
+			List<string> filteredAttributeTypeTNames = AttributeTypeTNames.Where(t => !outerTypeParams.Contains(t)).ToList();
+
 			bool isError = false;
 			//拿到方法名称 ，判断是否是On开头
 			if (!methodDeclaration.Identifier.Text.StartsWith("On")) isError = true;
 			//判断是否是Rule结尾
 			if (!methodDeclaration.Identifier.Text.EndsWith("Rule")) isError = true;
 			// 比较特性参数类型和方法参数类型 顺序和类型是否一致
-			if (AttributeTypeNames.Count != MethodTypeNames.Count || AttributeTypeTNames.Count != MethodTypeTNames.Count)
+			if (AttributeTypeNames.Count != MethodTypeNames.Count || filteredAttributeTypeTNames.Count != MethodTypeTNames.Count)
 			{
 				isError = true;
 			}
@@ -239,9 +247,17 @@ namespace WorldTree.Analyzer
 				typeArgNames.Add(parameter.Identifier.Text); // 获取参数变量名称
 			}
 
+			// 获取外层类的泛型参数，过滤掉已在外层类声明的类型参数
+			var outerClassSyntax = methodDeclaration.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+			var outerTypeParams = new HashSet<string>();
+			if (outerClassSyntax?.TypeParameterList != null)
+				foreach (var tp in outerClassSyntax.TypeParameterList.Parameters)
+					outerTypeParams.Add(tp.Identifier.Text);
+			List<string> filteredTypeTNames = typeTNames.Where(t => !outerTypeParams.Contains(t)).ToList();
+
 			bool isCall = ruleBaseEnum is RuleBaseEnum.CallRule or RuleBaseEnum.CallRuleAsync;
 			string genericTypeParameter = GetRuleTypeParameter(typeNames, isCall, out string outType, typeArgNames);
-			string typeTName = typeTNames.Count == 0 ? "" : $"<{string.Join(", ", typeTNames)}>";
+			string typeTName = filteredTypeTNames.Count == 0 ? "" : $"<{string.Join(", ", filteredTypeTNames)}>";
 
 			//拿到genericNameSyntax 的代码文字
 			var genericNameText = genericNameSyntax.ToFullString().TrimStart().TrimEnd();

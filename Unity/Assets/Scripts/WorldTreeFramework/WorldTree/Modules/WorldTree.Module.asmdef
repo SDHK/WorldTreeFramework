@@ -1,9 +1,8 @@
 {
-    "name": "WorldTree.ModuleRule",
+    "name": "WorldTree.Module",
     "rootNamespace": "WorldTree",
     "references": [
-        "GUID:104971acd352de048964cb7f7b53027b",
-        "GUID:fa13e42cdd837fa43b77399db2df9204"
+        "GUID:104971acd352de048964cb7f7b53027b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

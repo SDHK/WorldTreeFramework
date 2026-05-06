@@ -57,28 +57,7 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputDevice\InputDeviceRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeTweenRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronLineRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TweenUpdateRule\IntTweenUpdateRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeTweenManagerRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\DataBase\Proxy\DataBaseProxyRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TweenUpdateRule\StringTweenUpdateRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Window\ViewComponent\ViewLayerGroupRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputDevice\InputDeviceManagerRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TweenUpdateRule\FloatTweenUpdateRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputBind\InputBindRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Input\InputDevice\InputDriverRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Window\ViewComponent\ViewLayerRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Loader\TreeLoaderRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\DataBase\LiteDB\LiteDBManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Window\WindowManagerRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\TreeTween\TreeValueRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\Window\ViewComponent\ViewWindowRule.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\DataBase\LiteDB\LiteDBCollectionRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Rule\WorldTree.ModuleRule.asmdef" />
@@ -549,9 +528,9 @@
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="WorldTree.ModuleNode.csproj">
-      <Project>{F983B468-F32D-CC73-C59F-1417FAB8CA7E}</Project>
-      <Name>WorldTree.ModuleNode</Name>
+    <ProjectReference Include="WorldTree.Module.csproj">
+      <Project>{79EE3AB6-1CA3-99E6-68E4-420843573353}</Project>
+      <Name>WorldTree.Module</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

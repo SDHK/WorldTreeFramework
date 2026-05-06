@@ -45,6 +45,7 @@ namespace WorldTree.SourceGenerator
 			typeof(TreeCopyGeneratorRun),
 			typeof(TreeDataSerializeGeneratorRun),
 			typeof(TreePackSerializeGeneratorRun),
+			typeof(RuleMethodGeneratorRun),
 		};
 		public static HashSet<Type> RuleConfigs = new()
 		{
@@ -72,6 +73,12 @@ namespace WorldTree.SourceGenerator
 			Add("WorldTree.Rule", ProjectConfigHelper.RuleConfigs);
 			Add("WorldTree.UnityNode", ProjectConfigHelper.NodeConfigs);
 			Add("WorldTree.UnityRule", ProjectConfigHelper.RuleConfigs);
+
+
+			Add("WorldTree.Module", ProjectConfigHelper.NodeConfigs);
+			Add("WorldTree.HotFix", ProjectConfigHelper.NodeConfigs);
+			Add("WorldTree.UnityHotFix", ProjectConfigHelper.NodeConfigs);
+
 		}
 	}
 }

@@ -529,9 +529,9 @@
       <Project>{5E34D762-F009-1C9B-3359-DA8578BC2462}</Project>
       <Name>WorldTree.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="WorldTree.ModuleNode.csproj">
-      <Project>{F983B468-F32D-CC73-C59F-1417FAB8CA7E}</Project>
-      <Name>WorldTree.ModuleNode</Name>
+    <ProjectReference Include="WorldTree.Module.csproj">
+      <Project>{79EE3AB6-1CA3-99E6-68E4-420843573353}</Project>
+      <Name>WorldTree.Module</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.UnityCore.csproj">
       <Project>{F18C6E41-A03A-7A67-EAF1-3B6FCFF3E74A}</Project>

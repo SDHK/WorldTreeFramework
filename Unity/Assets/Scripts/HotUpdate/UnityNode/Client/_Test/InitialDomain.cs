@@ -16,6 +16,19 @@ namespace WorldTree
 	/// </summary>
 	public interface TestEvent : ICallRule<float, int, string>, IGlobalRule { }
 
+	///// <summary>
+	///// 测试
+	///// </summary>
+	//public partial class InitialTest<T> : Node
+	//	, ComponentOf<INode>
+	//	, AsComponentBranch
+	//	, AsChildBranch
+	//	, AsRule<Awake>
+	//	, AsRule<GuiUpdateTime>
+	//{
+
+	//}
+
 	/// <summary>
 	/// 初始域
 	/// </summary>

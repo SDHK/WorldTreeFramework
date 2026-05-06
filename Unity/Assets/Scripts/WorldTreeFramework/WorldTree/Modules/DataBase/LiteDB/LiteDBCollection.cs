@@ -16,6 +16,7 @@ namespace WorldTree
 	/// </summary>
 	public class LiteDBCollection<T> : Node, IDataCollection<T>
 		, AsRule<Awake<ILiteCollection<BsonDocument>>>
+		, AsRule<Awake>
 	{
 		/// <summary>
 		/// 数据集合
