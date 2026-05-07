@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 数据库管理器
 	/// </summary>
-	public class LiteDBManager : Node, IDataBase
+	public partial class LiteDBManager : Node, IDataBase
 		, AsComponentBranch
 		, ComponentOf<DataBaseProxy>
 		, AsRule<Awake<string>>
@@ -22,6 +22,25 @@ namespace WorldTree
 		/// 数据库
 		/// </summary>
 		public LiteDatabase database;
+
+
+		[NodeRule(nameof(AwakeRule<LiteDBManager, string>))]
+		private static void OnAwakeRule(LiteDBManager self, string path)
+		{
+			self.database = new LiteDatabase(new ConnectionString
+			{
+				Filename = path,
+				Connection = ConnectionType.Shared
+			});
+		}
+
+		[NodeRule(nameof(RemoveRule<LiteDBManager>))]
+		private static void OnRemoveRule(LiteDBManager self)
+		{
+			self.database.Dispose();
+			self.database = null;
+		}
+
 
 		public IDataCollection<T> GetCollection<T>()
 		{

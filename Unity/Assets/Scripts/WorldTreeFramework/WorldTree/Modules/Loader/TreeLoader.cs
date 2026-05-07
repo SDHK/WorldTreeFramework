@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 树加载器
 	/// </summary>
-	public class TreeLoader : Node
+	public partial class TreeLoader : Node
 	{
 		/// <summary>
 		/// 等待加载视图 ??? 事件传递？
@@ -30,5 +30,11 @@ namespace WorldTree
 		/// 对象池 
 		/// </summary>
 		public PoolBase pool;
+
+		[NodeRule(nameof(AddRule<TreeLoader>))]
+		private static void OnAddRule(TreeLoader self)
+		{
+			//self.pool.GetObject();
+		}
 	}
 }

@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 球体管理器测试
 	/// </summary>
-	public class SphereManagerTest : Node
+	public partial class SphereManagerTest : Node
 		, ComponentOf<InitialDomain>
 		, AsGenericBranch<long>
 		, AsRule<Awake>
@@ -38,5 +38,44 @@ namespace WorldTree
 		/// 球体
 		/// </summary>
 		public GameObject balls;
+
+
+		[NodeRule(nameof(UpdateRule<SphereManagerTest>))]
+		private static void OnUpdateRule(SphereManagerTest self)
+		{
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				self.Log($"SphereManagerTestRule！！!");
+				self.Run();
+			}
+		}
+
+		/// <summary>
+		/// 运行
+		/// </summary>
+		private void Run()
+		{
+			this.balls = GameObject.Find("Sphere");
+			GameObject rootGo = new GameObject("SphereManagerTest");
+			rootGo.transform.position = Vector3.zero;
+
+			for (int i = 0; i < this.SpawnCount; ++i)
+			{
+				var go = UnityEngine.Object.Instantiate(this.balls);
+				go.name = "Drop_" + i;
+
+				this.TryGetGeneric((long)i, out SphereTest dropComponent);
+				dropComponent.Manager = this;
+				dropComponent.GameObject = go;
+
+				dropComponent.Delay = 0.02f * i;
+				dropComponent.Mass = UnityEngine.Random.Range(0.5f, 3f);
+
+				Vector3 pos = UnityEngine.Random.insideUnitSphere * 40;
+				go.transform.parent = rootGo.transform;
+				pos.y = this.TopY;
+				go.transform.position = pos;
+			}
+		}
 	}
 }

@@ -59,18 +59,14 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLayer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\InputDevice\InputDeviceRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TreeTweenManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\ViewComponent\ViewLayer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\DataBase\LiteDB\UnitBsonDocument.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLayerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TreeTweenRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\ViewComponent\Button.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLineRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\WindowManager.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TweenUpdateRule\IntTweenUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\DataBase\LiteDB\LiteDBManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TreeTweenManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronLine.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\DataBase\Proxy\DataBaseProxyRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\Data\InputValue.cs" />
@@ -78,20 +74,17 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TweenUpdateRule\StringTweenUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\ViewComponent\ViewLayerGroupRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\Curve\Curve.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\InputDevice\InputDeviceManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TweenUpdateRule\FloatTweenUpdateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\InputBind\InputBindRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\InputDevice\InputDriverRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\ViewComponent\ViewLayerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\InputDevice\InputDriver.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\Curve\CurveManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Loader\TreeLoaderRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\Enum\InputType.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\InputBind\InputArchive.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\Curve\RuleBase\CurveEvaluateRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\KeyCode\InputMouseKey.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\Base\View.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\DataBase\LiteDB\LiteDBManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\Data\InputDriverInfo.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\KeyCode\InputBoardKey.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\ViewComponent\ViewLayerGroup.cs" />
@@ -102,11 +95,9 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\DataBase\IDataBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TreeValueRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\Enum\InputState.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\NeuralNetwork\MultilayerPerceptron\MultilayerPerceptronManagerRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\Base\ViewBind.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronNode.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\TreeTween\TreeTween.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\NeuralNetwork\MultilayerPerceptron\PerceptronNodeRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\ViewComponent\ViewWindowRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\InputBind\InputLayer.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\InputBind\InputManager.cs" />
@@ -120,7 +111,6 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\Data\InputInfo.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\Base\ViewRuleBase.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\Data\InputData.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\DataBase\LiteDB\LiteDBCollectionRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Input\InputControl.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Window\Base\ViewBindProxyRule.cs" />
   </ItemGroup>

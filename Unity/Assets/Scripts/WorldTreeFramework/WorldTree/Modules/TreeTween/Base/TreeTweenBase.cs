@@ -13,7 +13,7 @@ namespace WorldTree
 	/// <summary>
 	/// 树渐变基类
 	/// </summary>
-	public class TreeTweenBase : Node
+	public partial class TreeTweenBase : Node
 		, AsRule<TreeTaskTokenEvent>
 	{
 		/// <summary>
@@ -50,5 +50,78 @@ namespace WorldTree
 		/// 完成回调
 		/// </summary>
 		public RuleMulticast<ISendRule> OnCompleted;
+
+		[NodeRule(nameof(TreeTaskTokenEventRule<TreeTweenBase>))]
+		private static void OnTreeTaskTokenEventRule(TreeTweenBase self, TokenState state)
+		{
+			switch (state)
+			{
+				case TokenState.Running:
+					self.isRun = true;
+					break;
+				case TokenState.Stop:
+					self.isRun = false;
+					break;
+				case TokenState.Cancel:
+					self.isRun = false;
+					self.OnCompleted.Send();
+					break;
+			}
+		}
+
+
+		/// <summary>
+		/// 设置曲线 
+		/// </summary>
+		public TreeTweenBase SetCurve<C>()
+			where C : CurveBase
+		{
+			this.curve = this.World.AddComponent(out CurveManager _).AddComponent(out C _);
+			return this;
+		}
+
+		/// <summary>
+		/// 启动
+		/// </summary>
+		public TreeTweenBase Run()
+		{
+			if (this.curve == null) this.World.AddComponent(out CurveManager _).AddComponent(out this.curve);
+			this.time = TimeSpan.Zero;
+			this.isRun = true;
+			this.isReverse = false;
+			return this;
+		}
+
+
+		/// <summary>
+		/// 曲线计算
+		/// </summary>
+		public float GetCurveEvaluate(TimeSpan deltaTime)
+		{
+			return this.curve.CurveEvaluate(this.GetTimeScale(deltaTime));
+		}
+
+		/// <summary>
+		/// 时间尺度计算
+		/// </summary>
+		public float GetTimeScale(TimeSpan deltaTime)
+		{
+
+			this.time += deltaTime * (this.isReverse ? -1 : 1);
+
+			if (this.isReverse && this.time < TimeSpan.Zero)
+			{
+				this.time = TimeSpan.Zero;
+				this.isRun = false;
+			}
+
+			this.timeScale = (float)this.time.TotalSeconds / this.clock;
+			this.timeScale = MathFloat.Clamp01(this.timeScale);
+
+
+			return this.timeScale;
+		}
+
+
 	}
 }

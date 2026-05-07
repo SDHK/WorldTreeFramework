@@ -245,8 +245,7 @@ namespace WorldTree.SourceGenerator
 							}
 						}
 
-						var classSyntax = methodDeclaration.AncestorsAndSelf()
-							.OfType<ClassDeclarationSyntax>().First();
+						var classSyntax = methodDeclaration.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
 						string sourceFileName = System.IO.Path.GetFileNameWithoutExtension(
 							classSyntax.SyntaxTree.FilePath);
 						// 类型名称是静态类名称 + 泛型参数列表（如果有的话）

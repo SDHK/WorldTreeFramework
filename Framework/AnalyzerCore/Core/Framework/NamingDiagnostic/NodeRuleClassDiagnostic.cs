@@ -23,7 +23,6 @@ namespace WorldTree.Analyzer
 	public abstract class NodeRuleClassDiagnostic<C> : NamingDiagnosticBase<C>
 		where C : ProjectDiagnosticConfig, new()
 	{
-		// 更改为处理字段声明
 		public override SyntaxKind DeclarationKind => SyntaxKind.GenericName;
 
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
@@ -66,6 +65,10 @@ namespace WorldTree.Analyzer
 			if (!TryGetRuleType(semanticModel, genericNameSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 				return null;
 
+			//获取包含该泛型名称的类声明
+			ClassDeclarationSyntax classSyntax = genericNameSyntax.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
+			string strThis = NodeRuleHelper.GetStrThis(semanticModel, classSyntax);
+
 			//拿到genericNameSyntax 的代码文字
 			var genericNameText = genericNameSyntax.ToFullString().TrimStart().TrimEnd();
 			// 删除 genericNameText 末尾的任何标点符号
@@ -81,19 +84,18 @@ namespace WorldTree.Analyzer
 				//基类第二个泛型参数是Rule类型，直接忽略
 				if (i == 1) continue;
 				typeNames.Add(types[i].ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
-				ParseTypeSymbol(types[i], typeTNames);
+				NodeRuleHelper.ParseTypeSymbol(types[i], typeTNames);
 			}
 			bool isCall = ruleBaseEnum is RuleBaseEnum.CallRule or RuleBaseEnum.CallRuleAsync;
-			string genericTypeParameter = GetRuleTypeParameter(typeNames, isCall, out string outType);
-			string typeTName = typeTNames.Count == 0 ? "" : $"<{string.Join(", ", typeTNames)}>";
-
+			string genericTypeParameter = NodeRuleHelper.GetRuleTypeParameter(typeNames, isCall, out string outType);
+			string typeTName = NodeRuleHelper.GetTypeTName(typeTNames, classSyntax);
 
 			// 获取 ruleTypeSymbol 的类型名称（不带命名空间和泛型）
 			var ruleTypeName = "On" + ruleTypeSymbol.Name;
 
 			StringBuilder classCode = new();
 			classCode.AppendLine($"		[NodeRule(nameof({genericNameText}))]");
-			classCode.AppendLine(GetRuleMethod(ruleBaseEnum, ruleTypeName, typeTName, genericTypeParameter, outType));
+			classCode.AppendLine(NodeRuleHelper.GetRuleMethod(ruleBaseEnum, ruleTypeName, typeTName, genericTypeParameter, outType, strThis));
 			// 生成代码，并替换原有的泛型代码
 			var root = await document.GetSyntaxRootAsync(cancellationToken);
 			var newMethod = SyntaxFactory.ParseMemberDeclaration(classCode.ToString())
@@ -106,43 +108,6 @@ namespace WorldTree.Analyzer
 		}
 
 		/// <summary>
-		/// 获取法则方法
-		/// </summary>
-		public string GetRuleMethod(RuleBaseEnum ruleBaseEnum, string ruleTypeName, string typeTName, string genericTypeParameter, string outType)
-		=> ruleBaseEnum switch
-		{
-			RuleBaseEnum.SendRule or RuleBaseEnum.ListenerRule =>
-			$$"""
-					private static void {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
-					{ 
-					}
-			""",
-			RuleBaseEnum.SendRuleAsync =>
-			$$"""
-					private static async TreeTask {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
-					{ 
-						await self.TreeTaskCompleted();
-					}
-			""",
-			RuleBaseEnum.CallRule =>
-			$$"""
-					private static {{outType}} {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
-					{ 
-						return default;
-					}
-			""",
-			RuleBaseEnum.CallRuleAsync =>
-			$$"""
-					private static async TreeTask<{{outType}}> {{ruleTypeName}}{{typeTName}}(this {{genericTypeParameter}})
-					{ 
-						await self.TreeTaskCompleted();
-						return default;
-					}
-			""",
-			_ => null
-		};
-
-		/// <summary>
 		/// 尝试获取法则类型
 		/// </summary>
 		private bool TryGetRuleType(SemanticModel semanticModel, GenericNameSyntax standaloneIdentifier, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
@@ -151,12 +116,10 @@ namespace WorldTree.Analyzer
 			ruleTypeSymbol = null;
 			baseTypeSymbol = null;
 
-			// 获取符号信息
 			var symbolInfo = semanticModel.GetSymbolInfo(standaloneIdentifier);
 			if (symbolInfo.Symbol is not INamedTypeSymbol namedTypeSymbol) return false;
 
 			ITypeSymbol typeSymbol;
-			// 检查类型是否符合规则
 			if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRule;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRule;
 			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
@@ -168,59 +131,6 @@ namespace WorldTree.Analyzer
 			ruleTypeSymbol = namedTypeSymbol;
 			return true;
 		}
-
-		/// <summary>
-		/// 转换 泛型参数 ：T0, T1, T2, T3 =&gt; T0 self, T1 arg1, T2 arg2, T3 arg3
-		/// </summary>
-		private string GetRuleTypeParameter(List<string> Types, bool isCall, out string outType)
-		{
-			var result = new StringBuilder();
-			for (int i = 0; i < Types.Count; i++)
-			{
-				if (i == 0)
-				{
-					result.Append($"{Types[i]} self");
-				}
-				else if (!(isCall && i == Types.Count - 1))
-				{
-					result.Append($", {Types[i]} arg{i}");
-				}
-			}
-			if (isCall)
-			{
-				outType = Types[Types.Count - 1];
-				return result.ToString();
-			}
-			else
-			{
-				outType = "void";
-				return result.ToString();
-			}
-		}
-
-		private void ParseTypeSymbol(ITypeSymbol typeSymbol, List<string> typeTNames)
-		{
-			// 如果是命名类型（如 List<int> 或 Dictionary<string, List<T>>）
-			if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
-			{
-				if (namedTypeSymbol.TypeKind == TypeKind.Error)
-				{
-					typeTNames.Add(typeSymbol.ToDisplayString());
-					return;
-				}
-				// 递归解析其泛型参数
-				foreach (var typeArgument in namedTypeSymbol.TypeArguments)
-				{
-					ParseTypeSymbol(typeArgument, typeTNames);
-				}
-			}
-			// 如果是泛型符号（如 T、U）
-			else
-			{
-				typeTNames.Add(typeSymbol.ToDisplayString());
-			}
-		}
-
 	}
 
 }

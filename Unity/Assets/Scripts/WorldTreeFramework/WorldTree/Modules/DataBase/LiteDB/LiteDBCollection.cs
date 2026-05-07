@@ -14,7 +14,7 @@ namespace WorldTree
 	/// <summary>
 	/// 数据集合
 	/// </summary>
-	public class LiteDBCollection<T> : Node, IDataCollection<T>
+	public partial class LiteDBCollection<T> : Node, IDataCollection<T>
 		, AsRule<Awake<ILiteCollection<BsonDocument>>>
 		, AsRule<Awake>
 	{
@@ -22,6 +22,12 @@ namespace WorldTree
 		/// 数据集合
 		/// </summary>
 		public ILiteCollection<BsonDocument> collection;
+
+		[NodeRule(nameof(AwakeRule<LiteDBCollection<T>, ILiteCollection<BsonDocument>>))]
+		private static void OnAwakeRule(LiteDBCollection<T> self, ILiteCollection<BsonDocument> collection)
+		{
+			self.collection = collection;
+		}
 
 
 		public void Insert(long id, T data)

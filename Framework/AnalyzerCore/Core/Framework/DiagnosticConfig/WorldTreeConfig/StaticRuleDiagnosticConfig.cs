@@ -3,7 +3,7 @@
 * 作者：闪电黑客
 * 日期：2024/6/24 17:58
 
-* 描述：
+* 描述：Rule后缀静态类型和Node类型内部诊断
 
 */
 using Microsoft.CodeAnalysis;
@@ -64,8 +64,12 @@ namespace WorldTree.Analyzer
 			{
 				if (Symbol is not ITypeSymbol TypeSymbol) return false;
 				if (TypeSymbol.TypeKind != TypeKind.Class) return false;
-				if (!TypeSymbol.IsStatic) return false;
 				string typeName = TypeSymbol?.ToDisplayString() ?? string.Empty;
+
+				if (!TypeSymbol.IsStatic)
+				{
+					return NamedSymbolHelper.CheckInterface(TypeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(Compilation, GeneratorHelper.INode));
+				}
 				return Regex.IsMatch(typeName, "Rule$");
 			};
 

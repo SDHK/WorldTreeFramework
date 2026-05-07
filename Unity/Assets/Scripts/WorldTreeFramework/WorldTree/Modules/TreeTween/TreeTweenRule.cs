@@ -12,26 +12,6 @@ namespace WorldTree
 {
 	public static partial class TreeTweenRule
 	{
-		class TreeTaskTokenEventRule : TreeTaskTokenEventRule<TreeTweenBase>
-		{
-			protected override void Execute(TreeTweenBase self, TokenState state)
-			{
-				switch (state)
-				{
-					case TokenState.Running:
-						self.isRun = true;
-						break;
-					case TokenState.Stop:
-						self.isRun = false;
-						break;
-					case TokenState.Cancel:
-						self.isRun = false;
-						self.OnCompleted.Send();
-						break;
-				}
-			}
-		}
-
 
 		/// <summary>
 		/// 获取渐变
@@ -61,56 +41,6 @@ namespace WorldTree
 			return self;
 		}
 
-		/// <summary>
-		/// 设置曲线 
-		/// </summary>
-		public static TreeTweenBase SetCurve<C>(this TreeTweenBase self)
-			where C : CurveBase
-		{
-			self.curve = self.World.AddComponent(out CurveManager _).AddComponent(out C _);
-			return self;
-		}
 
-		/// <summary>
-		/// 启动
-		/// </summary>
-		public static TreeTweenBase Run(this TreeTweenBase self)
-		{
-			if (self.curve == null) self.World.AddComponent(out CurveManager _).AddComponent(out self.curve);
-			self.time = TimeSpan.Zero;
-			self.isRun = true;
-			self.isReverse = false;
-			return self;
-		}
-
-
-		/// <summary>
-		/// 曲线计算
-		/// </summary>
-		public static float GetCurveEvaluate(this TreeTweenBase self, TimeSpan deltaTime)
-		{
-			return self.curve.CurveEvaluate(self.GetTimeScale(deltaTime));
-		}
-
-		/// <summary>
-		/// 时间尺度计算
-		/// </summary>
-		public static float GetTimeScale(this TreeTweenBase self, TimeSpan deltaTime)
-		{
-
-			self.time += deltaTime * (self.isReverse ? -1 : 1);
-
-			if (self.isReverse && self.time < TimeSpan.Zero)
-			{
-				self.time = TimeSpan.Zero;
-				self.isRun = false;
-			}
-
-			self.timeScale = (float)self.time.TotalSeconds / self.clock;
-			self.timeScale = MathFloat.Clamp01(self.timeScale);
-
-
-			return self.timeScale;
-		}
 	}
 }
