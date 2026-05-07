@@ -38,10 +38,8 @@
  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Core\WorldTree.Core.csproj" />
-    <ProjectReference Include="..\..\Analysis\Console.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
-    <ProjectReference Include="..\Node\Server.Node.csproj" />
-    <ProjectReference Include="..\Rule\Server.Rule.csproj" />
-
+    <ProjectReference Include="..\..\Analysis\Console.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\HotFix\Server.HotFix.csproj" />
   </ItemGroup>
 
  

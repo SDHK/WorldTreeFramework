@@ -32,7 +32,7 @@ namespace WorldTree.Analyzer
 			new ObjectDiagnosticConfig()
 		};
 
-		public static List<DiagnosticConfigGroup> NodeConfigs = new()
+		public static List<DiagnosticConfigGroup> HotFixConfigs = new()
 		{
 			new BranchDiagnosticConfig(),
 			new ListDiagnosticConfig(),
@@ -54,26 +54,6 @@ namespace WorldTree.Analyzer
 			//new ProjectBanUnitDiagnosticConfig(), //由于Rule也继承了Unit，所以这里不再需要
 			new ObjectDiagnosticConfig()
 		};
-
-		public static List<DiagnosticConfigGroup> RuleConfigs = new()
-		{
-			new BranchDiagnosticConfig(),
-			new ListDiagnosticConfig(),
-			new ArrayDiagnosticConfig(),
-			new DictionaryDiagnosticConfig(),
-			new HashSetDiagnosticConfig(),
-			new QueueDiagnosticConfig(),
-			new StackDiagnosticConfig(),
-
-			new RuleSwitchAttributeDiagnosticConfig(),
-			new NodeRuleAttributeDiagnosticConfig(),
-
-			new CodeNodeDiagnosticConfig(),
-			new RuleDiagnosticConfig(),
-			new StaticRuleDiagnosticConfig(),
-			//new ProjectBanDiagnosticConfig(),
-			new ObjectDiagnosticConfig()
-		};
 	}
 
 	/// <summary>
@@ -86,19 +66,9 @@ namespace WorldTree.Analyzer
 			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
 			Add("WorldTree.CoreUnity", ProjectConfigHelper.CoreConfigs);
 
-			Add("WorldTree.ModuleNode", ProjectConfigHelper.NodeConfigs);
-			Add("WorldTree.ModuleRule", ProjectConfigHelper.RuleConfigs);
-
-			Add("WorldTree.Node", ProjectConfigHelper.NodeConfigs);
-			Add("WorldTree.Rule", ProjectConfigHelper.RuleConfigs);
-
-			Add("WorldTree.UnityNode", ProjectConfigHelper.NodeConfigs);
-			Add("WorldTree.UnityRule", ProjectConfigHelper.RuleConfigs);
-
-
-			Add("WorldTree.Module", ProjectConfigHelper.NodeConfigs);
-			Add("WorldTree.HotFix", ProjectConfigHelper.NodeConfigs);
-			Add("WorldTree.HotFixUnity", ProjectConfigHelper.NodeConfigs);
+			Add("WorldTree.Module", ProjectConfigHelper.HotFixConfigs);
+			Add("WorldTree.HotFix", ProjectConfigHelper.HotFixConfigs);
+			Add("WorldTree.HotFixUnity", ProjectConfigHelper.HotFixConfigs);
 
 		}
 	}

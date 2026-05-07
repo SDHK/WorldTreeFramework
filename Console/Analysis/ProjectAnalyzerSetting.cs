@@ -31,25 +31,7 @@ namespace WorldTree.Analyzer
 			new ObjectDiagnosticConfig()
 		};
 
-		public static List<DiagnosticConfigGroup> NodeConfigs = new()
-		{
-			new ListDiagnosticConfig(),
-			new ArrayDiagnosticConfig(),
-			new DictionaryDiagnosticConfig(),
-			new HashSetDiagnosticConfig(),
-			new QueueDiagnosticConfig(),
-			new StackDiagnosticConfig(),
-
-
-			new NodeDiagnosticConfig(),
-			new CodeNodeDiagnosticConfig(),
-			new RuleDiagnosticConfig(),
-			new StaticRuleDiagnosticConfig(),
-			//new ProjectBanUnitDiagnosticConfig(), //由于Rule也继承了Unit，所以这里不再需要
-			new ObjectDiagnosticConfig()
-		};
-
-		public static List<DiagnosticConfigGroup> RuleConfigs = new()
+		public static List<DiagnosticConfigGroup> HotFixConfigs = new()
 		{
 			new ListDiagnosticConfig(),
 			new ArrayDiagnosticConfig(),
@@ -64,7 +46,6 @@ namespace WorldTree.Analyzer
 			new CodeNodeDiagnosticConfig(),
 			new RuleDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
-			//new ProjectBanDiagnosticConfig(),
 			new ObjectDiagnosticConfig()
 		};
 	}
@@ -76,9 +57,8 @@ namespace WorldTree.Analyzer
 	{
 		public ProjectAnalyzerSetting()
 		{
-			Add("Node", ProjectConfigHelper.NodeConfigs);
-			Add("Rule", ProjectConfigHelper.RuleConfigs);
 			Add("Config", ProjectConfigHelper.CoreConfigs);
+			Add("HotFix", ProjectConfigHelper.HotFixConfigs);
 		}
 	}
 }

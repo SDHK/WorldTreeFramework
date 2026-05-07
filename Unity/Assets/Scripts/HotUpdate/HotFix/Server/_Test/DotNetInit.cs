@@ -13,16 +13,6 @@ namespace WorldTree.Server
 {
 
 	/// <summary>
-	/// a
-	/// </summary>
-	[INodeProxy]
-
-	public partial class TestList<T> : List<T>, INode
-	{
-
-	}
-
-	/// <summary>
 	/// 测试节点
 	/// </summary>
 	public partial class DotNetInit : Node

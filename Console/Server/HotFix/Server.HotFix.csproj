@@ -5,7 +5,7 @@
     <Nullable>disable</Nullable>
     <RootNamespace>WorldTree</RootNamespace>
     <LangVersion>12</LangVersion>
-    <AssemblyName>Node</AssemblyName>
+    <AssemblyName>HotFix</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -36,23 +36,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\Node\Client\**\*.cs">
+    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\HotFix\Client\**\*.cs">
       <Link>Client\%(RecursiveDir)%(FileName)%(Extension)</Link>
-    </Compile>-->
-    <Compile Include="..\..\..\Unity\Assets\Scripts\HotUpdate\Node\Server\**\*.cs">
-      <Link>Server\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Compile>
-    <Compile Include="..\..\..\Unity\Assets\Scripts\HotUpdate\Node\Share\**\*.cs">
-      <Link>Share\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    <Compile Include="..\..\..\Unity\Assets\Scripts\HotUpdate\HotFix\Server\**\*.cs">
+      <Link>Server\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Compile>
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Core\WorldTree.Core.csproj" />
-    <ProjectReference Include="..\..\..\Framework\ModuleNode\WorldTree.ModuleNode.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Module\WorldTree.Module.csproj" />
     <ProjectReference Include="..\..\Analysis\Console.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 
   </ItemGroup>
 </Project>
                   
-                     
+                       

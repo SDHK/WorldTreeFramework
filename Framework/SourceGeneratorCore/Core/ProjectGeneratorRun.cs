@@ -6,8 +6,8 @@ namespace WorldTree.SourceGenerator
 	public class BranchSupplementGeneratorRun : BranchSupplementGenerator<ProjectGeneratorSetting> { }
 	[Generator]
 	public class INodeProxyGeneratorRun : INodeProxyGenerator<ProjectGeneratorSetting> { }
-	[Generator]
-	public class NodeLinkRemarksGeneratorRun : NodeLinkRemarksGenerator<ProjectGeneratorSetting> { }
+	//[Generator]
+	//public class NodeLinkRemarksGeneratorRun : NodeLinkRemarksGenerator<ProjectGeneratorSetting> { }
 	[Generator]
 	public class NodeExtensionMethodGeneratorRun : NodeExtensionMethodGenerator<ProjectGeneratorSetting> { }
 	[Generator]

@@ -11,7 +11,6 @@ namespace WorldTree.SourceGenerator
 		public static HashSet<Type> CoreConfigs = new()
 		{
 			typeof(INodeProxyGeneratorRun),
-			typeof(NodeLinkRemarksGeneratorRun),
 			typeof(BranchSupplementGeneratorRun) ,
 			typeof(NodeExtensionMethodGeneratorRun),
 			typeof(NodeBranchHelperGeneratorRun),
@@ -24,19 +23,16 @@ namespace WorldTree.SourceGenerator
 			typeof(TreeDataSerializeGeneratorRun),
 			typeof(TreePackSerializeGeneratorRun),
 		};
-		public static HashSet<Type> NodeConfigs = new()
+		public static HashSet<Type> ModuleConfigs = new()
 		{
 			typeof(INodeProxyGeneratorRun),
-			typeof(NodeLinkRemarksGeneratorRun),
 			typeof(RuleSupplementGeneratorRun),
 			typeof(TreeCopyGeneratorRun),
 			typeof(TreeDataSerializeGeneratorRun),
 			typeof(TreePackSerializeGeneratorRun),
-		};
-		public static HashSet<Type> RuleConfigs = new()
-		{
 			typeof(RuleMethodGeneratorRun),
 		};
+
 	}
 
 	public class ProjectGeneratorSetting : ProjectGeneratorsConfig
@@ -45,8 +41,7 @@ namespace WorldTree.SourceGenerator
 		{
 			ArgumentCount = 5;
 			Add("Core", ProjectConfigHelper.CoreConfigs);
-			Add("ModuleNode", ProjectConfigHelper.NodeConfigs);
-			Add("ModuleRule", ProjectConfigHelper.RuleConfigs);
+			Add("Module", ProjectConfigHelper.ModuleConfigs);
 		}
 	}
 }

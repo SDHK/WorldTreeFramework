@@ -58,10 +58,10 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\Node\Client\Config\CreateWorldConfig.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFix\Client\Config\CreateWorldConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\HotUpdate\Node\WorldTree.HotFix.asmdef" />
+    <None Include="Assets\Scripts\HotUpdate\HotFix\WorldTree.HotFix.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="LZ4">

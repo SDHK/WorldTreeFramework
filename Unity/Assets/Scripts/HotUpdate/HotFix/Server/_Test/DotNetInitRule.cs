@@ -211,13 +211,13 @@ namespace WorldTree.Server
 
 		}
 
-		/// <summary>
-		/// 动态获取到Rule类型
-		/// </summary>
-		public static Type GetRuleType<T>(this Test<T> self)
-		{
-			return typeof(OnTestNodeEvent<Test<T>>);
-		}
+		///// <summary>
+		///// 动态获取到Rule类型
+		///// </summary>
+		//public static Type GetRuleType<T>(this Test<T> self)
+		//{
+		//	return typeof(OnTestNodeEvent<Test<T>>);
+		//}
 
 
 		class Add : AddRule<DotNetInit>

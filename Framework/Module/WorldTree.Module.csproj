@@ -5,7 +5,7 @@
     <Nullable>disable</Nullable>
     <RootNamespace>WorldTree</RootNamespace>
     <LangVersion>12</LangVersion>
-    <AssemblyName>ModuleNode</AssemblyName>
+    <AssemblyName>Module</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -27,8 +27,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Unity\Assets\Scripts\WorldTreeFramework\WorldTree\Modules\Node\**\*.cs">
-      <Link>Modules\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    <Compile Include="..\..\Unity\Assets\Scripts\WorldTreeFramework\WorldTree\Module\**\*.cs">
+      <Link>Module\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
   </ItemGroup>
   

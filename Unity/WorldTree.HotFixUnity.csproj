@@ -58,35 +58,35 @@
     <Analyzer Include="E:\Project\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\ViewTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\View\ViewLayerElement.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\YooAssetTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\Input\InputDriverKeyboardRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\Input\InputDriverMouse.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\TreeDataTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\StepMathParserTestRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\UtcTimeTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\DataBaseTestProxyRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\UnityCodeLoaderRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\MultilayerPerceptronTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\StepMachineTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\CascadeTickerTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\InitialDomain.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\Input\InputDriverMouseRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\InputMapperTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\Input\InputDriverKeyboard.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\MemoryPackTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\LiteDBTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\TaskTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\TreeValueTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\Modules\View\ViewLayerElementRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\MainWorldRule.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\SphereManagerTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\SerializeTest.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\UnityNode\Client\_Test\SphereTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\ViewTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\Modules\View\ViewLayerElement.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\YooAssetTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\Modules\Input\InputDriverKeyboardRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\Modules\Input\InputDriverMouse.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TreeDataTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\StepMathParserTestRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\UtcTimeTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\DataBaseTestProxyRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\UnityCodeLoaderRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\MultilayerPerceptronTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\StepMachineTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\CascadeTickerTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\InitialDomain.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\Modules\Input\InputDriverMouseRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\InputMapperTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\Modules\Input\InputDriverKeyboard.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\MemoryPackTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\LiteDBTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TaskTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TreeValueTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\Modules\View\ViewLayerElementRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\MainWorldRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\SphereManagerTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\SerializeTest.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\SphereTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\HotUpdate\UnityNode\WorldTree.HotFixUnity.asmdef" />
+    <None Include="Assets\Scripts\HotUpdate\HotFixUnity\WorldTree.HotFixUnity.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
