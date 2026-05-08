@@ -7,13 +7,13 @@
 
 */
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace WorldTree
 {
-
 	/// <summary>
 	/// 树数据标记编码
 	/// </summary>
@@ -97,7 +97,7 @@ namespace WorldTree
 	/// <summary>
 	/// 树数据字节序列
 	/// </summary>
-	public class TreeDataByteSequence : ByteSequence
+	public partial class TreeDataByteSequence : ByteSequence
 		, AsRule<ITreeDataSerialize>
 		, AsRule<ITreeDataDeserialize>
 	{
@@ -113,17 +113,10 @@ namespace WorldTree
 		/// </summary>
 		public int LayerMax = 1000;
 
-
 		/// <summary>
 		/// 类型对应类型Id字典
 		/// </summary>
 		public UnitDictionary<Type, int> TypeToTypeIdDict;
-
-		/// <summary>
-		/// 类型名称对应类型Id字典
-		/// </summary>
-		public UnitDictionary<string, int> TypeNameToTypeIdDict;
-
 
 		/// <summary>
 		/// 类型码对应类型名称字典，64哈希码对应
@@ -137,23 +130,21 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 对象Id对应类型Id
+		/// 对象实例Id对应类型Id
 		/// </summary>
 		public UnitList<int> IdToTypeIdList;
-
 		/// <summary>
-		/// 对象Id对应类型Id
+		/// 对象实例Id对应类型Id位置
 		/// </summary>
 		public UnitList<int> IdToReadList;
 
 
 		/// <summary>
-		/// 对象对应Id
+		/// 对象实例对应Id
 		/// </summary>
 		public UnitDictionary<object, int> ObjectToIdDict;
-
 		/// <summary>
-		/// Id对应对象
+		/// Id对应对象实例
 		/// </summary>
 		public UnitDictionary<int, object> IdToObjectDict;
 
@@ -163,55 +154,29 @@ namespace WorldTree
 		#region 映射表
 
 		/// <summary>
-		/// 添加类型获取TypeId
+		/// 获取或添加类型TypeId
 		/// </summary>
-		private int GetTypeId(string typeName, bool isIgnoreName = false)
+		private int GetOrAddTypeId(Type type, bool isIgnoreName = false)
 		{
-			Type type = System.Type.GetType(typeName);
-			if (!TypeNameToTypeIdDict.TryGetValue(typeName, out int typeId))
-			{
-				long typeCode = type != null
-					? TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte typeByteCode) ? typeByteCode : this.TypeToCode(type)
-					: typeName.GetHash64();
-				typeId = TypeIdToCodeList.Count;
-				TypeIdToCodeList.Add(typeCode);
-				TypeNameToTypeIdDict.Add(typeName, typeId);
-			}
-
-			if (!isIgnoreName)
-			{
-				if (type != null && TreeDataTypeHelper.TypeCodeDict.ContainsKey(type)) return typeId;
-				long typeCode = TypeIdToCodeList[typeId];
-				if (!codeToTypeNameDict.ContainsKey(typeCode))
-				{
-					codeToTypeNameDict.Add(typeCode, typeName);
-				}
-			}
-			return typeId;
-		}
-
-		/// <summary>
-		/// 添加类型获取TypeId
-		/// </summary>
-		private int GetTypeId(Type type, bool isIgnoreName = false)
-		{
+			long typeCode;
 			if (!TypeToTypeIdDict.TryGetValue(type, out int typeId))
 			{
-				long typeCode = TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte typeByteCode) ? typeByteCode : this.TypeToCode(type);
+				if (TreeDataTypeHelper.TryGetTypeCode(type, out byte typeByteCode))
+					typeCode = typeByteCode;
+				else
+					typeCode = this.TypeToCode(type);
 				typeId = TypeIdToCodeList.Count;
 				TypeIdToCodeList.Add(typeCode);
 				TypeToTypeIdDict.Add(type, typeId);
 			}
 
-			if (!isIgnoreName)
-			{
-				if (TreeDataTypeHelper.TypeCodeDict.ContainsKey(type)) return typeId;
-				long typeCode = TypeIdToCodeList[typeId];
-				if (!codeToTypeNameDict.ContainsKey(typeCode))
-				{
-					codeToTypeNameDict.Add(typeCode, type.ToString());
-				}
-			}
+			// 忽略则不写入类型名称
+			if (isIgnoreName) return typeId;
+			// 如果类型是基础类型，则不写入类型名称
+			if (TreeDataTypeHelper.ContainsType(type)) return typeId;
+			// 拿到类型码，写入类型名称
+			typeCode = TypeIdToCodeList[typeId];
+			codeToTypeNameDict.TryAdd(typeCode, type.ToString());
 			return typeId;
 		}
 
@@ -220,12 +185,9 @@ namespace WorldTree
 		/// </summary>
 		private bool TryIdGetType(int typeId, out Type type)
 		{
-			if (typeId < TypeIdToCodeList.Count)
-			{
-				return TryCodeGetType(TypeIdToCodeList[typeId], out type);
-			}
 			type = null;
-			return false;
+			if (typeId >= TypeIdToCodeList.Count) return false;
+			return TryCodeGetType(TypeIdToCodeList[typeId], out type);
 		}
 
 		/// <summary>
@@ -233,51 +195,40 @@ namespace WorldTree
 		/// </summary>
 		private bool TryCodeGetType(long typeCode, out Type type)
 		{
-			if (TreeDataTypeHelper.TypeCodes.Length > typeCode && typeCode >= 0)
-			{
-				type = TreeDataTypeHelper.TypeCodes[typeCode];
-				return true;
-			}
-
+			// 先尝试获取基础类型
+			if (TreeDataTypeHelper.TryGetType(typeCode, out type)) return true;
+			// 再尝试获取已经存在的类型
 			if (this.TryCodeToType(typeCode, out type)) return true;
-			if (codeToTypeNameDict.TryGetValue(typeCode, out string typeName))
-			{
-				type = System.Type.GetType(typeName);
-				if (type != null)
-				{
-					this.TypeToCode(type);
-					return true;
-				}
-			}
-			return false;
+			// 最后尝试通过类型名称获取类型，拿到类型后写入映射表
+			if (!codeToTypeNameDict.TryGetValue(typeCode, out string typeName)) return false;
+			type = System.Type.GetType(typeName);
+			// 如果类型不存在，当前环境没有这个类型，无法反序列化，返回false
+			if (type == null) return false;
+			// 写入映射表
+			this.TypeToCode(type);
+			return true;
 		}
 
 		/// <summary>
-		/// 尝试获取类型Id
+		/// 尝试用对象实例Id获取类型Id
 		/// </summary>
 		private bool TryGetTypeId(int objId, out int typeId)
 		{
-			if (objId < IdToTypeIdList.Count)
-			{
-				typeId = IdToTypeIdList[objId];
-				return true;
-			}
 			typeId = 0;
-			return false;
+			if (objId >= IdToTypeIdList.Count) return false;
+			typeId = IdToTypeIdList[objId];
+			return true;
 		}
 
 		/// <summary>
-		/// 尝试获取类型码
+		/// 尝试用类型Id获取类型码
 		/// </summary>
 		private bool TryGetTypeCode(int typeId, out long typeCode)
 		{
-			if (typeId < TypeIdToCodeList.Count)
-			{
-				typeCode = TypeIdToCodeList[typeId];
-				return true;
-			}
 			typeCode = 0;
-			return false;
+			if (typeId >= TypeIdToCodeList.Count) return false;
+			typeCode = TypeIdToCodeList[typeId];
+			return true;
 		}
 		#endregion
 
@@ -289,7 +240,6 @@ namespace WorldTree
 		public void Serialize<T>(in T value)
 		{
 			Layer = 0;
-			//写入数据
 			WriteValue(value, SerializedTypeMode.ObjectType);
 			WriteDataInfo();
 		}
@@ -301,7 +251,6 @@ namespace WorldTree
 		{
 			ReadDataInfo();
 			Layer = 0;
-			//读取数据
 			ReadValue(ref value);
 		}
 
@@ -312,7 +261,6 @@ namespace WorldTree
 		{
 			ReadDataInfo();
 			Layer = 0;
-			//读取数据
 			ReadValue(type, ref value);
 		}
 
@@ -413,58 +361,57 @@ namespace WorldTree
 		/// <returns>是否为Null退出</returns>
 		public bool TryWriteDataHead<T>(in object value, SerializedTypeMode typeMode, int count, out T obj, bool isIgnoreName = false, bool isRef = false, Type writeType = null)
 		{
+			//isRef 表示这个类型是可引用类型，并且不是抽象和接口。
+			//否则即使是引用类型也当做值类型处理，不进行引用检测。
 			if (!isRef || value == null)
 			{
 				switch (typeMode)
 				{
 					case SerializedTypeMode.ObjectType:
 						this.WriteType(typeof(object));
-						if (this.WriteCheckNull(value, count, out obj)) return true;
-						break;
+						if (this.WriteCheckNull(value, count, out obj)) return true; break;
 					case SerializedTypeMode.DataType:
 						this.WriteType(writeType ?? typeof(T), isIgnoreName);
-						if (this.WriteCheckNull(value, count, out obj)) return true;
-						break;
+						if (this.WriteCheckNull(value, count, out obj)) return true; break;
 				}
 			}
-			//检测是否已经写入过
-			else if (ObjectToIdDict.TryGetValue(value, out int id))
+			// 引用类型实例判断，检测是否已经写入过
+			else if (ObjectToIdDict.TryGetValue(value, out int refId))
 			{
-				this.WriteDynamic(id);
+				// 这个实例写入过，写入对象Id
+				this.WriteDynamic(refId);
 				obj = (T)value;
+				// 如果写入类型模式为DataType，写入类型Id。
+				// 可能先被写为Object，后出现多态字段引用需要写入真实类型Id。
 				if (typeMode == SerializedTypeMode.DataType)
 				{
 					Type type = writeType ?? typeof(T);
-					long typeCode = TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte typeByteCode) ? typeByteCode : this.TypeToCode(type);
-					int typeId = this.IdToTypeIdList[~id];
-					if (this.TypeIdToCodeList[typeId] == typeCode) return true;
-					this.IdToTypeIdList[~id] = this.TypeIdToCodeList.Count;
-					this.TypeIdToCodeList.Add(typeCode);
-					codeToTypeNameDict[typeCode] = type.ToString();
+					int newTypeId = GetOrAddTypeId(type, isIgnoreName);
+					int oldTypeId = this.IdToTypeIdList[~refId];
+					if (oldTypeId != newTypeId) IdToTypeIdList[~refId] = newTypeId;
 				}
 				return true;
 			}
+			// 没有写入过，写入对象Id和类型Id
 			else
 			{
-				//负数Id为新对象
-				id = ~IdToObjectDict.Count;
-				ObjectToIdDict.Add(value, id);
-				IdToObjectDict.Add(id, value);
-
+				// 负数Id为新对象
+				refId = ~IdToObjectDict.Count;
+				// 记录引用类型映射
+				ObjectToIdDict.Add(value, refId);
+				IdToObjectDict.Add(refId, value);
 				switch (typeMode)
 				{
 					case SerializedTypeMode.ObjectType:
-						IdToTypeIdList.Add(GetTypeId(typeof(object)));
-						this.WriteDynamic(id);
+						IdToTypeIdList.Add(GetOrAddTypeId(typeof(object)));
+						this.WriteDynamic(refId);
 						IdToReadList.Add(Length);//记录数据读取位置
-						if (this.WriteCheckNull(value, count, out obj)) return true;
-						break;
+						if (this.WriteCheckNull(value, count, out obj)) return true; break;
 					case SerializedTypeMode.DataType:
-						IdToTypeIdList.Add(GetTypeId(writeType ?? typeof(T), isIgnoreName));
-						this.WriteDynamic(id);
+						IdToTypeIdList.Add(GetOrAddTypeId(writeType ?? typeof(T), isIgnoreName));
+						this.WriteDynamic(refId);
 						IdToReadList.Add(Length);//记录数据读取位置
-						if (this.WriteCheckNull(value, count, out obj)) return true;
-						break;
+						if (this.WriteCheckNull(value, count, out obj)) return true; break;
 				}
 			}
 			obj = (T)value;
@@ -473,18 +420,17 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 写入字段数量或空标记
+		/// 写入字段数量或value为空值标记
 		/// </summary>
+		/// <returns> value为Null返回True提前退出 </returns>
 		private bool WriteCheckNull<T>(in object value, int count, out T obj)
 		{
-			if (value is T objValue)
+			// 判断如果对象不是Null，并且不等于默认值，则写入字段数量，否则写入Null标记
+			if (value is T objValue && !EqualityComparer<T>.Default.Equals(objValue, default))
 			{
-				if (!objValue.Equals(default))
-				{
-					obj = objValue;
-					this.WriteDynamic(count);
-					return false;
-				}
+				obj = objValue;
+				this.WriteDynamic(count);
+				return false;
 			}
 			obj = default;
 			this.WriteDynamic(TreeDataCode.NULL_OBJECT);
@@ -494,7 +440,7 @@ namespace WorldTree
 		/// <summary>
 		/// 写入类型，默认写入类型名称
 		/// </summary>
-		public void WriteType(Type type, bool isIgnoreName = false) => this.WriteDynamic(GetTypeId(type, isIgnoreName));
+		public void WriteType(Type type, bool isIgnoreName = false) => this.WriteDynamic(GetOrAddTypeId(type, isIgnoreName));
 
 		/// <summary>
 		/// 写入值
@@ -1019,327 +965,5 @@ namespace WorldTree
 		}
 
 		#endregion
-
-		#region TreeData
-
-		/// <summary>
-		/// 序列化TreeData
-		/// </summary>
-		public void SerializeTreeData(TreeData treeData)
-		{
-			Layer = 0;
-			SetTreeData(treeData);
-			WriteDataInfo();
-		}
-
-		/// <summary>
-		/// 序列化TreeData
-		/// </summary>
-		private void SetTreeData(TreeData treeData)
-		{
-			//判断是否是引用
-			if (treeData is TreeDataRef treeDataRef)
-			{
-				ObjectToIdDict.TryGetValue(treeDataRef.Data, out int objId);
-				this.WriteDynamic(objId);
-			}
-			else if (treeData is TreeDataArray treeDataArray)
-			{
-				//写入类型码
-				long typeCode = treeData.TypeName.GetHash64();
-
-				//判断是否为基础类型
-				if (World.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value))
-				{
-					typeCode = value;
-				}
-				else if (!(type != null && type.IsArray && TreeDataTypeHelper.TypeCodeDict.ContainsKey(type.GetElementType())))
-				//非基础类型，写入名称
-				{
-					codeToTypeNameDict.TryAdd(typeCode, treeData.TypeName);
-				}
-
-				if (treeData.IsRef && !treeData.IsDefault)
-				{
-					//负数Id为新对象
-					int id = ~IdToObjectDict.Count;
-					ObjectToIdDict.Add(treeData, id);
-					IdToObjectDict.Add(id, treeData);
-					IdToTypeIdList.Add(GetTypeId(treeData.TypeName));
-					this.WriteDynamic(id);
-					IdToReadList.Add(Length);//记录数据读取位置
-				}
-				else
-				{
-					this.WriteDynamic(typeCode);
-				}
-
-				//空对象判断
-				if (treeData.IsDefault)
-				{
-					this.WriteDynamic(TreeDataCode.NULL_OBJECT);
-					return;
-				}
-
-				//写入数组维度
-				this.WriteDynamic(~treeDataArray.LengthList.Count);
-
-				//判断这个类型是否是基础数组类型
-				if (type != null && type.IsArray && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type.GetElementType()))
-				{
-					this.World.Line.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
-
-					int count = 1;
-					//写入数组长度
-					foreach (var item in treeDataArray.LengthList)
-					{
-						count *= item;
-						this.WriteDynamic(item);
-					}
-
-					long elementTypeCodeHash = this.World.TypeToCode(type.GetElementType());
-					//基础数组类型取值
-					if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(elementTypeCodeHash, out RuleList ruleList))
-					{
-						SerializedTypeMode typeMode = SerializedTypeMode.Value;
-						//一个个往里写
-						foreach (var item in treeDataArray.ListNodeBranch().GetEnumerable())
-						{
-							((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>((item.Value as TreeDataValue).Value), ref typeMode);
-						}
-					}
-				}
-				else //非基础数组类型，递归
-				{
-					//写入数组长度
-					foreach (var item in treeDataArray.LengthList) this.WriteDynamic(item);
-
-					foreach (var item in treeData.ListNodeBranch())
-					{
-						SetTreeData(item as TreeData);
-					}
-				}
-			}
-			else if (treeData is TreeDataValue treeDataValue)
-			{
-				long typeCodeHash = treeDataValue.TypeName.GetHash64();
-				//写入数值
-				if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataSerialize>(typeCodeHash, out RuleList ruleList) && ruleList.NodeType == typeCodeHash)
-				{
-					SerializedTypeMode typeMode = SerializedTypeMode.DataType;
-					((IRuleList<TreeDataSerialize>)ruleList).SendRef(this, ref Unsafe.AsRef<object>(treeDataValue.Value), ref typeMode);
-				}
-			}
-			else
-			{
-				//写入类型码
-				long typeCode = treeData.TypeName.GetHash64();
-
-				//判断是否为基础类型
-				if (World.TryCodeToType(typeCode, out Type type) && TreeDataTypeHelper.TypeCodeDict.TryGetValue(type, out byte value))
-				{
-					typeCode = value;
-				}
-				else //非基础类型，写入名称
-				{
-					codeToTypeNameDict.TryAdd(typeCode, treeData.TypeName);
-				}
-
-				if (treeData.IsRef && !treeData.IsDefault)
-				{
-					//负数Id为新对象
-					int id = ~IdToObjectDict.Count;
-					ObjectToIdDict.Add(treeData, id);
-					IdToObjectDict.Add(id, treeData);
-					IdToTypeIdList.Add(GetTypeId(treeData.TypeName));
-					this.WriteDynamic(id);
-					IdToReadList.Add(Length);//记录数据读取位置
-				}
-				else
-				{
-					this.WriteDynamic(typeCode);
-				}
-
-				//空对象判断
-				if (treeData.IsDefault)
-				{
-					this.WriteDynamic(TreeDataCode.NULL_OBJECT);
-					return;
-				}
-
-				//写入字段数量
-				var branch = treeData.GenericBranch<long, TreeData>();
-				this.WriteDynamic(branch.Count);
-				foreach (var item in branch.GetEnumerable())
-				{
-					//写入字段名称码
-					this.WriteUnmanaged((int)item.Key);
-					SetTreeData(item.Value as TreeData);
-				}
-			}
-		}
-
-		/// <summary>
-		/// 反序列化出TreeData
-		/// </summary>
-		public TreeData DeserializeTreeData()
-		{
-			ReadDataInfo();
-			Layer = 0;
-			return GetTreeData(this.Parent);
-		}
-
-		/// <summary>
-		/// 反序列化出TreeData
-		/// </summary>
-		private TreeData GetTreeData(INode node, int number = 0, bool isArray = false)
-		{
-			TreeData data;
-			int startPoint = this.readPoint;
-
-			bool isRef = false;
-			int objId = 0;
-
-			//读取类型Id
-			if (this.ReadDynamic(out int typeId) < 0)
-			{
-				objId = ~typeId;
-				//判断位置不一致，说明这里是引用地址，后续没有数据。
-				if (IdToReadList[objId] != readPoint)
-				{
-					IdToObjectDict.TryGetValue(objId, out object obj);
-					data = AddTreeData(node, out TreeDataRef treeRef, number, isArray);
-					treeRef.Data = obj as TreeData;
-					return data;
-				}
-				typeId = IdToTypeIdList[objId];
-				isRef = true;
-			}
-			//拿到类型码
-			this.TryGetTypeCode(typeId, out long typeCode);
-			if (this.TryCodeGetType(typeCode, out Type type))
-			{
-				//获取真实类型码
-				if (TreeDataTypeHelper.TypeCodeDict.ContainsKey(type)) typeCode = this.World.TypeToCode(type);
-				//判断是否是基础类型
-				if (TreeDataTypeHelper.BasicsTypeHash.Contains(type))
-				{
-					data = AddTreeData(node, out TreeDataValue treeValue, number, isArray, isRef, objId);
-					data.IsRef = isRef;
-					data.TypeName = type.ToString();
-					//基础类型取值
-					if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList))
-					{
-						int fieldNameCode = 0;
-						((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref treeValue.Value, ref fieldNameCode);
-					}
-					return data;
-				}
-			}
-
-			//读取字段数量
-			this.ReadDynamic(out int count);
-			//空对象判断
-			if (count == TreeDataCode.NULL_OBJECT)
-			{
-				data = AddTreeData(node, out TreeData _, number, isArray);
-				data.TypeName = type?.ToString();
-				data.IsDefault = true;
-				return data;
-			}
-
-			//Type可能不存在的情况下，负数为数组类型
-			if (count < 0)
-			{
-				data = AddTreeData(node, out TreeDataArray treeArray, number, isArray);
-				data.TypeName = type?.ToString();
-
-
-				count = ~count;
-				//此时Count是维度，直接累乘计算总长度，一般来说数量不会超过int极限。
-				int totalLength = 1;
-				for (int i = 0; i < count; i++)
-				{
-					this.ReadDynamic(out int length);
-					treeArray.LengthList.Add(length);
-					totalLength *= length;
-				}
-				//为0的情况下，是数组，但是数组长度为0
-				if (totalLength == 0) return data;
-				//判断这个类型是否是基础数组类型
-				if (type?.GetElementType() != null && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type.GetElementType()))
-				{
-					//跳跃回类型开头
-					this.ReadJump(startPoint);
-					//动态支持多维数组
-					if (type.IsArray) this.World.Line.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataDeserialize));
-					//基础数组类型取值
-					if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
-					{
-						int fieldNameCode = TreeDataCode.DESERIALIZE_SELF_MODE;
-						object obj = null;
-						((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref obj, ref fieldNameCode);
-						if (isRef)
-						{
-							data.IsRef = true;
-							ObjectToIdDict.Add(data, objId);
-							IdToObjectDict[objId] = data;
-						}
-
-						Array arrayList = (obj as Array);
-						int i = 0;
-						foreach (var item in arrayList)
-						{
-							data.AddListNode(i++, out TreeDataValue treeValue);
-							treeValue.TypeName = type.GetElementType().ToString();
-							treeValue.Value = item;
-						}
-					}
-				}
-				else //非基础数组类型，递归
-				{
-					for (int i = 0; i < totalLength; i++) GetTreeData(data, i, true);
-				}
-			}
-			else
-			{
-				data = AddTreeData(node, out TreeData _, number, isArray, isRef, objId);
-				data.TypeName = type?.ToString();
-
-				for (int i = 0; i < count; i++)
-				{
-					//读取字段名称码
-					this.ReadUnmanaged(out int nameCode);
-					GetTreeData(data, nameCode);
-				}
-			}
-			return data;
-		}
-
-		/// <summary>
-		/// 添加TreeData结构
-		/// </summary>
-		private T AddTreeData<T>(INode node, out T treeValue, int number, bool isArray, bool isRef = false, int id = 0)
-			where T : TreeData
-		{
-			if (node is TreeData treeData)
-			{
-				if (isArray) treeData.AddListNode(number, out treeValue);
-				else treeData.AddGeneric((long)number, out treeValue);
-			}
-			else
-			{
-				node.AddTemp(out treeValue);
-			}
-			if (isRef)
-			{
-				treeValue.IsRef = true;
-				ObjectToIdDict.Add(treeValue, id);
-				IdToObjectDict.Add(id, treeValue);
-			}
-			return treeValue;
-		}
-		#endregion
 	}
-
 }

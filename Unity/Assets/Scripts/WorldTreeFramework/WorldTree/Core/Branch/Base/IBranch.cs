@@ -21,6 +21,7 @@ namespace WorldTree
 	/// <summary>
 	/// 世界树分支接口基类
 	/// </summary>
+	[TreeDataSerializable]
 	public partial interface IBranchBase : IUnit, IEnumerable<IBranch>
 	{
 		/// <summary>

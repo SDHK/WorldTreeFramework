@@ -139,7 +139,7 @@ namespace WorldTree
 			//PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, currentDefines);
 			//self.AddComponent(out CascadeTickerTest _);
 			//self.AddComponent(out StepMachineTest _);
-			self.AddComponent(out ViewTest _);
+			//self.AddComponent(out ViewTest _);
 		}
 
 		[NodeRule(nameof(UpdateRule<InitialDomain>))]
@@ -150,7 +150,7 @@ namespace WorldTree
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
-				//self.AddComponent(out TreeDataTest _);
+				self.AddComponent(out TreeDataTest _);
 				//self.AddComponent(out ViewTest _);
 
 				//NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);

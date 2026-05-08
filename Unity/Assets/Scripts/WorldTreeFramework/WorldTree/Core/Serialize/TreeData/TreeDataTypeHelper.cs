@@ -8,6 +8,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace WorldTree
 {
@@ -56,8 +57,6 @@ namespace WorldTree
 			typeof(char),
 			typeof(decimal),
 		};
-
-
 
 		/// <summary>
 		/// 默认类型码，最多128个：类型将以下标当做哈希码。
@@ -160,6 +159,36 @@ namespace WorldTree
 				}
 				return typeCodeDict;
 			}
+		}
+		/// <summary>
+		/// 尝试获取基础类型  
+		/// </summary>
+		public static bool TryGetType(long typeCode, out Type type)
+		{
+			if (typeCode < 0 || typeCode >= TypeCodes.Length)
+			{
+				type = null;
+				return false;
+			}
+			type = TypeCodes[typeCode];
+			return true;
+		}
+
+		/// <summary>
+		/// 尝试获取类型码
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool TryGetTypeCode(Type type, out byte typeCode)
+		{
+			return TypeCodeDict.TryGetValue(type, out typeCode);
+		}
+
+		/// <summary>
+		/// 判断是否包含类型 
+		/// </summary>
+		public static bool ContainsType(Type type)
+		{
+			return TypeCodeDict.ContainsKey(type);
 		}
 
 		/// <summary>

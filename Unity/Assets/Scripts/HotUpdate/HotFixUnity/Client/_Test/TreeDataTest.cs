@@ -45,7 +45,7 @@ namespace WorldTree
 				child.Age = 788789;
 
 				byte[] bytes = TreeDataHelper.SerializeNode(self.treeData);
-				string filePath = "C:\\Users\\SDHK\\Desktop\\TreeDataTest.bytes";
+				string filePath = "C:\\Users\\admin\\Desktop\\TreeDataTest.bytes";
 
 				//保存到桌面文件
 				File.WriteAllBytes(filePath, bytes);
@@ -61,7 +61,7 @@ namespace WorldTree
 			if (Input.GetKeyDown(KeyCode.R))
 			{
 				//读取桌面文件
-				string filePath = "C:\\Users\\SDHK\\Desktop\\TreeDataTest.bytes";
+				string filePath = "C:\\Users\\admin\\Desktop\\TreeDataTest.bytes";
 				byte[] bytes = File.ReadAllBytes(filePath);
 				TreeDataHelper.Deseralize<TreeDataNodeDataTest1>(self, bytes).SetParent(self);
 				self.Log($"反序列化！！!{bytes.Length}");
