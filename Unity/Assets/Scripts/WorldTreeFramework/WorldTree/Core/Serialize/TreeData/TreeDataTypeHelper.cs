@@ -18,9 +18,9 @@ namespace WorldTree
 	public static class TreeDataTypeHelper
 	{
 		/// <summary>
-		/// 基础值类型的字节长度
+		/// 基础非托管值类型的字节长度
 		/// </summary>
-		public static Dictionary<Type, int> TypeSizeDict = new()
+		public static Dictionary<Type, int> UnmanagedTypeSizeDict = new()
 		{
 			[typeof(bool)] = 1,
 			[typeof(byte)] = 1,
@@ -42,7 +42,8 @@ namespace WorldTree
 		/// </summary>
 		public static HashSet<Type> BasicsTypeHash = new()
 		{
-			typeof(string),//string有特别处理可以直接写入数据，所以列为值类型
+			typeof(string),//string有特别处理可以直接写入数据，所以列为基础类型
+
 			typeof(bool),
 			typeof(byte),
 			typeof(sbyte),
@@ -186,9 +187,35 @@ namespace WorldTree
 		/// <summary>
 		/// 判断是否包含类型 
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool ContainsType(Type type)
 		{
 			return TypeCodeDict.ContainsKey(type);
+		}
+
+		/// <summary>
+		/// 判断是否为基础类型。 
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool CheckBasicsType(Type type)
+		{
+			return BasicsTypeHash.Contains(type);
+		}
+
+		/// <summary>
+		/// 判断是否为非托管类型。指的是固定长度且可以直接写入数据的类型。  
+		/// </summary>
+		public static bool CheckUnmanagedType(Type type)
+		{
+			return UnmanagedTypeSizeDict.ContainsKey(type);
+		}
+
+		/// <summary>
+		/// 尝试获取非托管类型字节长度
+		/// </summary>
+		public static bool TryGetUnmanagedTypeSize(Type type, out int size)
+		{
+			return UnmanagedTypeSizeDict.TryGetValue(type, out size);
 		}
 
 		/// <summary>

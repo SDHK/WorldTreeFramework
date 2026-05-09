@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\CodeCompiler\CycleCronParser\Expression\Mode\CronModeDay.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\TupleFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleBase\SubRule\ListenerRule.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\TreeDataByteSequence_TreeData.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\RuleExecutor\Base\IRuleExecutor.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Object\Node\Base\INodeListener.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleList\RuleList.cs" />
@@ -342,7 +343,7 @@
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Rule\RuleGroup\RuleGroup.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\FormattersRule\Basics\SbyteFormatterRule.cs" />
     <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Time\WorldTimeManager.cs" />
-    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\TreeDataByteSequence_TreeData.cs" />
+    <Compile Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\Serialize\TreeData\TreeDataByteSequence_String.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\WorldTreeFramework\WorldTree\Core\WorldTree.Core.asmdef" />

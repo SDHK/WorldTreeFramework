@@ -29,7 +29,7 @@ namespace WorldTree.TreeDataFormatters
 					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~2, out obj, true, true, type.MakeArrayType(2))) return;
 				}
 				//判断是否为基础类型，基础类型需要写入完整数组类型
-				else if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type))
+				else if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.CheckUnmanagedType(type))
 				{
 					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~2, out obj, true, true)) return;
 				}
@@ -46,7 +46,7 @@ namespace WorldTree.TreeDataFormatters
 				self.WriteDynamic(dim2);
 
 				//判断是否为基础类型
-				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int size))
+				if (TreeDataTypeHelper.TryGetUnmanagedTypeSize(type, out int size))
 				{
 					int elementSize = dim2 * size;
 					long totalSize = (long)dim1 * elementSize;
@@ -101,11 +101,11 @@ namespace WorldTree.TreeDataFormatters
 				{
 					value = new T[dim1, dim2];
 				}
-				if (objId != TreeDataCode.NULL_OBJECT) self.IdToObjectDict.Add(objId, value);
+				if (objId != TreeDataCode.UnRefObject) self.IdToObjectDict.Add(objId, value);
 
 				Type type = typeof(T);
 				if (type.IsEnum) type = Enum.GetUnderlyingType(type);
-				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int size))
+				if (TreeDataTypeHelper.TryGetUnmanagedTypeSize(type, out int size))
 				{
 					int elementSize = dim2 * size;
 					long totalSize = (long)dim1 * elementSize;
@@ -139,7 +139,7 @@ namespace WorldTree.TreeDataFormatters
 						}
 					}
 				}
-				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
+				if (jumpReadPoint != TreeDataCode.NullObject) self.ReadJump(jumpReadPoint);
 			}
 		}
 	}

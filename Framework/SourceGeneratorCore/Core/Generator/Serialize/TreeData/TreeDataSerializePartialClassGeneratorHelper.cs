@@ -147,7 +147,7 @@ namespace WorldTree.SourceGenerator
 			Code.AppendLine("			{");
 			if (baseName != null)
 			{
-				Code.AppendLine("				if (fieldNameCode != TreeDataCode.DESERIALIZE_SELF_MODE)");
+				Code.AppendLine("				if (fieldNameCode != TreeDataCode.DeserializeSelfMode)");
 				Code.AppendLine("				{");
 				Code.AppendLine("					SwitchRead(self, ref value, fieldNameCode);");
 				Code.AppendLine("					return;");
@@ -180,7 +180,7 @@ namespace WorldTree.SourceGenerator
 					{
 						Code.AppendLine($"				if (value is not {className} obj)value = obj = new {className}();");
 					}
-					Code.AppendLine(@$"				if (objId != TreeDataCode.NULL_OBJECT) self.IdToObjectDict.Add(objId, value);");
+					Code.AppendLine(@$"				if (objId != TreeDataCode.UnRefObject) self.IdToObjectDict.Add(objId, value);");
 				}
 				else if (classSymbol.TypeKind == TypeKind.Struct)
 				{
@@ -202,7 +202,7 @@ namespace WorldTree.SourceGenerator
 				Code.AppendLine("					SwitchRead(self, ref value, fieldNameCode);");
 				Code.AppendLine("				}");
 			}
-			Code.AppendLine("				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);");
+			Code.AppendLine("				if (jumpReadPoint != TreeDataCode.NullObject) self.ReadJump(jumpReadPoint);");
 			if (!isAbstract)
 			{
 				if (NamedSymbolHelper.IsDerivedFrom(classSymbol, NamedSymbolHelper.ToINamedTypeSymbol(compilation, GeneratorHelper.ISerializable), out _))

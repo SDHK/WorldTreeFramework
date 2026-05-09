@@ -86,7 +86,7 @@ namespace WorldTree
 				if (self.TryReadClassHead(typeof(IRuleExecutor<R>), ref value, out int count, out int objId, out int jumpReadPoint)) return;
 				self.ReadJump(typePoint);
 				self.SkipData();
-				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
+				if (jumpReadPoint != TreeDataCode.NullObject) self.ReadJump(jumpReadPoint);
 			}
 		}
 	}

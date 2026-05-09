@@ -30,7 +30,7 @@ namespace WorldTree.TreeDataFormatters
 					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~1, out obj, true, true, type.MakeArrayType())) return;
 				}
 				//判断是否为基础类型，基础类型需要写入完整数组类型
-				else if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type))
+				else if (typeMode == SerializedTypeMode.ObjectType && TreeDataTypeHelper.CheckUnmanagedType(type))
 				{
 					if (self.TryWriteDataHead(value, SerializedTypeMode.DataType, ~1, out obj, true, true)) return;
 				}
@@ -45,7 +45,7 @@ namespace WorldTree.TreeDataFormatters
 				if (obj.Length == 0) return;
 
 				//判断是否为基础类型
-				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int size))
+				if (TreeDataTypeHelper.TryGetUnmanagedTypeSize(type, out int size))
 				{
 					//获取数组数据长度
 					var srcLength = size * obj.Length;
@@ -86,17 +86,17 @@ namespace WorldTree.TreeDataFormatters
 				if (length == 0)
 				{
 					value = Array.Empty<T>();
-					if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
+					if (jumpReadPoint != TreeDataCode.NullObject) self.ReadJump(jumpReadPoint);
 					return;
 				}
 
 				//假如数组为空或长度不一致，那么重新分配
 				if (value == null || ((T[])value).Length != length) value = new T[length];
-				if (objId != TreeDataCode.NULL_OBJECT) self.IdToObjectDict.Add(objId, value);
+				if (objId != TreeDataCode.UnRefObject) self.IdToObjectDict.Add(objId, value);
 
 				Type type = typeof(T);
 				if (type.IsEnum) type = Enum.GetUnderlyingType(type);
-				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int size))
+				if (TreeDataTypeHelper.TryGetUnmanagedTypeSize(type, out int size))
 				{
 					var byteCount = length * size;
 					ref byte spanRef = ref self.GetReadRefByte(byteCount);
@@ -112,7 +112,7 @@ namespace WorldTree.TreeDataFormatters
 						self.ReadValue(ref ((T[])value)[i]);
 					}
 				}
-				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
+				if (jumpReadPoint != TreeDataCode.NullObject) self.ReadJump(jumpReadPoint);
 			}
 		}
 	}

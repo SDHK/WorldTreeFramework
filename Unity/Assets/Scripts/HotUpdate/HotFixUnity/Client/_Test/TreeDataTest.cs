@@ -191,6 +191,22 @@ namespace WorldTree
 		}
 	}
 
+	/// <summary>
+	/// 结构体测试
+	/// </summary>
+	[TreeDataSerializable]
+	public partial struct TreeDataNodeDataTest3
+	{
+		/// <summary>
+		/// 名称
+		/// </summary>
+		public string Name;
+
+		/// <summary>
+		/// 年龄
+		/// </summary>
+		public int Age;
+	}
 
 
 	/// <summary>

@@ -43,7 +43,7 @@ namespace WorldTree.TreeDataFormatters
 		{
 			protected override unsafe void Execute(TreeDataByteSequence self, ref object obj, ref int fieldNameCode)
 			{
-				if (fieldNameCode != TreeDataCode.DESERIALIZE_SELF_MODE) { obj = self.ReadUnmanaged<bool>(); return; }
+				if (fieldNameCode != TreeDataCode.DeserializeSelfMode) { obj = self.ReadUnmanaged<bool>(); return; }
 				if (self.TryReadType(out Type dataType) && typeDict.TryGetValue(dataType, out var func))
 					obj = func(self);
 				else

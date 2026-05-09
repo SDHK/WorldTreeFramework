@@ -54,7 +54,7 @@ namespace WorldTree.TreeDataFormatters
 
 			protected override void Execute(TreeDataByteSequence self, ref object value, ref int fieldNameCode)
 			{
-				if (fieldNameCode != TreeDataCode.DESERIALIZE_SELF_MODE)
+				if (fieldNameCode != TreeDataCode.DeserializeSelfMode)
 				{
 					SwitchRead(self, ref value, fieldNameCode);
 					return;
@@ -62,14 +62,14 @@ namespace WorldTree.TreeDataFormatters
 				if (self.TryReadClassHead(typeof(T), ref value, out int count, out int objId, out int jumpReadPoint)) return;
 
 				if (value is not T) value = new T();
-				if (objId != TreeDataCode.NULL_OBJECT) self.IdToObjectDict.Add(objId, value);
+				if (objId != TreeDataCode.UnRefObject) self.IdToObjectDict.Add(objId, value);
 
 				for (int i = 0; i < count; i++)
 				{
 					self.ReadUnmanaged(out fieldNameCode);
 					SwitchRead(self, ref value, fieldNameCode);
 				}
-				if (jumpReadPoint != TreeDataCode.NULL_OBJECT) self.ReadJump(jumpReadPoint);
+				if (jumpReadPoint != TreeDataCode.NullObject) self.ReadJump(jumpReadPoint);
 			}
 
 			/// <summary>

@@ -9,8 +9,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace WorldTree
 {
@@ -22,17 +20,22 @@ namespace WorldTree
 		/// <summary>
 		/// 空对象标记
 		/// </summary>
-		public const int NULL_OBJECT = -1;
+		public const int NullObject = -1;
 
 		/// <summary>
 		/// 自动适配类型
 		/// </summary>
-		public const int AUTO_OBJECT = 0;
+		public const int AutoObject = 0;
 
 		/// <summary>
 		/// 反序列化自身类型模式
 		/// </summary>
-		public const int DESERIALIZE_SELF_MODE = -1;
+		public const int DeserializeSelfMode = -1;
+
+		/// <summary>
+		/// 非引用对象标记
+		/// </summary>
+		public const int UnRefObject = -1;
 	}
 
 	/// <summary>
@@ -51,7 +54,7 @@ namespace WorldTree
 		ObjectType = -2,
 
 		/// <summary>
-		/// 只写入值，不写入类型
+		/// 只写入值，不写入类型（用于数组类型的元素写入）
 		/// </summary>
 		Value = -3,
 	}
@@ -64,7 +67,6 @@ namespace WorldTree
 			{
 				TreeDataTypeHelper.InitTypes(self);
 
-
 				self.GetBaseRule<TreeDataByteSequence, ByteSequence, Add>().Send(self);
 				self.World.PoolGetUnit(out self.TypeToTypeIdDict);
 				self.World.PoolGetUnit(out self.TypeNameToTypeIdDict);
@@ -73,7 +75,7 @@ namespace WorldTree
 				self.World.PoolGetUnit(out self.IdToTypeIdList);
 				self.World.PoolGetUnit(out self.ObjectToIdDict);
 				self.World.PoolGetUnit(out self.IdToObjectDict);
-				self.World.PoolGetUnit(out self.IdToReadList);
+				self.World.PoolGetUnit(out self.IdToDataPointList);
 			}
 		}
 
@@ -89,7 +91,7 @@ namespace WorldTree
 				self.IdToTypeIdList.Dispose();
 				self.ObjectToIdDict.Dispose();
 				self.IdToObjectDict.Dispose();
-				self.IdToReadList.Dispose();
+				self.IdToDataPointList.Dispose();
 			}
 		}
 	}
@@ -134,9 +136,9 @@ namespace WorldTree
 		/// </summary>
 		public UnitList<int> IdToTypeIdList;
 		/// <summary>
-		/// 对象实例Id对应类型Id位置
+		/// 对象实例引用Id 对应在流中的起始位置
 		/// </summary>
-		public UnitList<int> IdToReadList;
+		public UnitList<int> IdToDataPointList;
 
 
 		/// <summary>
@@ -293,7 +295,7 @@ namespace WorldTree
 				//写入类型Id
 				this.WriteDynamic(IdToTypeIdList[i]);
 				//写入读取位置
-				this.WriteDynamic(IdToReadList[i]);
+				this.WriteDynamic(IdToDataPointList[i]);
 			}
 			WriteUnmanaged(startPoint);
 		}
@@ -334,7 +336,7 @@ namespace WorldTree
 				//读取读取位置
 				this.ReadDynamic(out int readPoint);
 				IdToTypeIdList.Add(typeId);
-				IdToReadList.Add(readPoint);
+				IdToDataPointList.Add(readPoint);
 			}
 
 			//读取指针定位到数据起始位置
@@ -361,6 +363,15 @@ namespace WorldTree
 		/// <returns>是否为Null退出</returns>
 		public bool TryWriteDataHead<T>(in object value, SerializedTypeMode typeMode, int count, out T obj, bool isIgnoreName = false, bool isRef = false, Type writeType = null)
 		{
+			if (typeMode == SerializedTypeMode.Value)
+			{
+				obj = default;
+				this.WriteType(typeof(object));
+				this.WriteDynamic(TreeDataCode.NullObject);
+				this.LogError("错误，TryWriteDataHead不支持Value模式写入");
+				return true;
+			}
+
 			//isRef 表示这个类型是可引用类型，并且不是抽象和接口。
 			//否则即使是引用类型也当做值类型处理，不进行引用检测。
 			if (!isRef || value == null)
@@ -376,46 +387,53 @@ namespace WorldTree
 				}
 			}
 			// 引用类型实例判断，检测是否已经写入过
-			else if (ObjectToIdDict.TryGetValue(value, out int refId))
+			else if (ObjectToIdDict.TryGetValue(value, out int objId))
 			{
 				// 这个实例写入过，写入对象Id
-				this.WriteDynamic(refId);
+				this.WriteDynamic(objId);
 				obj = (T)value;
 				// 如果写入类型模式为DataType，写入类型Id。
-				// 可能先被写为Object，后出现多态字段引用需要写入真实类型Id。
 				if (typeMode == SerializedTypeMode.DataType)
 				{
-					Type type = writeType ?? typeof(T);
-					int newTypeId = GetOrAddTypeId(type, isIgnoreName);
-					int oldTypeId = this.IdToTypeIdList[~refId];
-					if (oldTypeId != newTypeId) IdToTypeIdList[~refId] = newTypeId;
+					// 可能先被写为Object，后出现多态字段引用需要覆盖写入真实类型Id。
+					int newTypeId = GetOrAddTypeId(writeType ?? typeof(T), isIgnoreName);
+					if (this.IdToTypeIdList[~objId] != newTypeId) IdToTypeIdList[~objId] = newTypeId;
 				}
 				return true;
 			}
 			// 没有写入过，写入对象Id和类型Id
 			else
 			{
-				// 负数Id为新对象
-				refId = ~IdToObjectDict.Count;
-				// 记录引用类型映射
-				ObjectToIdDict.Add(value, refId);
-				IdToObjectDict.Add(refId, value);
+				// 负数Id为新对象实例引用Id
+				objId = ~IdToDataPointList.Count;
 				switch (typeMode)
 				{
 					case SerializedTypeMode.ObjectType:
-						IdToTypeIdList.Add(GetOrAddTypeId(typeof(object)));
-						this.WriteDynamic(refId);
-						IdToReadList.Add(Length);//记录数据读取位置
+						AddNewObjectMap(GetOrAddTypeId(typeof(object)), value, objId);
 						if (this.WriteCheckNull(value, count, out obj)) return true; break;
 					case SerializedTypeMode.DataType:
-						IdToTypeIdList.Add(GetOrAddTypeId(writeType ?? typeof(T), isIgnoreName));
-						this.WriteDynamic(refId);
-						IdToReadList.Add(Length);//记录数据读取位置
+						AddNewObjectMap(GetOrAddTypeId(writeType ?? typeof(T), isIgnoreName), value, objId);
 						if (this.WriteCheckNull(value, count, out obj)) return true; break;
 				}
 			}
 			obj = (T)value;
 			return false;
+		}
+
+		/// <summary>
+		/// 添加新对象映射
+		/// </summary>
+		private void AddNewObjectMap(int typeId, object value, int objId)
+		{
+			// 写入对象实例引用Id
+			this.WriteDynamic(objId);
+			// 记录类型Id
+			IdToTypeIdList.Add(typeId);
+			// 记录引用类型映射
+			ObjectToIdDict.Add(value, objId);
+			IdToObjectDict.Add(objId, value);
+			// 记录实例数据读取位置
+			IdToDataPointList.Add(Length);
 		}
 
 
@@ -433,7 +451,7 @@ namespace WorldTree
 				return false;
 			}
 			obj = default;
-			this.WriteDynamic(TreeDataCode.NULL_OBJECT);
+			this.WriteDynamic(TreeDataCode.NullObject);
 			return true;
 		}
 
@@ -483,7 +501,7 @@ namespace WorldTree
 			{
 				//不支持的类型，写入空对象
 				this.WriteType(typeof(object));
-				this.WriteDynamic(TreeDataCode.NULL_OBJECT);
+				this.WriteDynamic(TreeDataCode.NullObject);
 			}
 			Layer--;
 		}
@@ -510,99 +528,9 @@ namespace WorldTree
 			{
 				//不支持的类型，写入空对象
 				this.WriteType(typeof(object));
-				this.WriteDynamic(TreeDataCode.NULL_OBJECT);
+				this.WriteDynamic(TreeDataCode.NullObject);
 			}
 			Layer--;
-		}
-
-		/// <summary>
-		/// 写入字符串
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteString(string value)
-		{
-			if (Utf8)
-				WriteUtf8(value);
-			else
-				WriteUtf16(value);
-		}
-
-		/// <summary>
-		/// 写入字符串
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteUtf16(string value)
-		{
-			if (value == null)
-			{
-				this.WriteDynamic((int)TreeDataCode.NULL_OBJECT);
-				return;
-			}
-			if (value.Length == 0)
-			{
-				this.WriteDynamic(0);
-				return;
-			}
-			else
-			{
-				// utf8无法预先获取byte长度，写入1表示这个字符串不是空或0，只是一个占位数据
-				this.WriteDynamic((int)1);
-			}
-
-			//获取字符串长度,因为 UTF-16 编码的每个字符占用 2 个字节，checked 防止溢出int值
-			var copyByteCount = checked(value.Length * 2);
-			//这行代码获取一个引用，指向一个足够大的缓冲区，以容纳字符串的字节数和额外的 4 个字节。
-			ref byte dest = ref GetWriteRefByte(copyByteCount + 4);
-			//这行代码将字符串的长度（以字节为单位）写入缓冲区的前 4 个字节
-			Unsafe.WriteUnaligned(ref dest, value.Length * 2);
-			//这行代码将字符串的实际字节数据复制到缓冲区中，跳过前 4 个字节
-			MemoryMarshal.AsBytes(value.AsSpan()).CopyTo(MemoryMarshal.CreateSpan(ref Unsafe.Add(ref dest, 4), copyByteCount));
-		}
-
-		/// <summary>
-		/// 写入字符串
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WriteUtf8(string value)
-		{
-			if (value == null)
-			{
-				this.WriteDynamic((int)TreeDataCode.NULL_OBJECT);
-				return;
-			}
-			if (value.Length == 0)
-			{
-				this.WriteDynamic(0);
-				return;
-			}
-			else
-			{
-				// utf8无法预先获取byte长度，写入1表示这个字符串不是空或0，只是一个占位数据
-				this.WriteDynamic(1);
-			}
-
-			// (int utf16-length, int utf8-byte-count, utf8-bytes)
-			ReadOnlySpan<char> source = value.AsSpan();
-
-			// 由于不知道空间大小，所以字符数*3只是获取一个可能的最大空间，字符最小可能是只占1个字节
-			int maxByteCount = (source.Length + 1) * 3;
-
-			//申请总空间，包含utf8长度和数据
-
-			// 头部需要写入byte真实长度，int长度偏移+4
-			ref byte destPointer = ref GetWriteRefByte(maxByteCount + 4);
-
-			//申请数据空间，byte长度int要写到头部，所以要偏移4
-			Span<byte> dest = MemoryMarshal.CreateSpan(ref Unsafe.Add(ref destPointer, 4), maxByteCount);
-
-			// 数据写入到dest，此时拿到了byte的真实长度
-			int bytesWritten = Encoding.UTF8.GetBytes(value, dest);
-
-			//~0 的结果是 -1，但前面if挡住了，所以不会出现-1，所以可以用来区分8位和16位
-			Unsafe.WriteUnaligned(ref destPointer, bytesWritten);
-
-			// 重新定位指针，裁剪空间
-			WriteBack(maxByteCount - bytesWritten);
 		}
 
 		#endregion
@@ -632,7 +560,7 @@ namespace WorldTree
 		/// <summary>
 		/// 指定类型读取值
 		/// </summary>
-		public void ReadValue(Type type, ref object value, int fieldNameCode = TreeDataCode.DESERIALIZE_SELF_MODE)
+		public void ReadValue(Type type, ref object value, int fieldNameCode = TreeDataCode.DeserializeSelfMode)
 		{
 			Layer++;
 			if (Layer > LayerMax)
@@ -711,35 +639,41 @@ namespace WorldTree
 			jumpReadPoint = -1;//-f表示不需要跳跃
 			if (typeId < 0)
 			{
-				//为负数则为对象Id
+				// 为负数则为对象实例Id
 				objId = ~typeId;
-				int dataPoint = IdToReadList[objId];
+				int dataPoint = IdToDataPointList[objId];
+				// 判断位置不一致，说明这里是引用地址
 				if (dataPoint != readPoint)
 				{
+					// 判断如果这个引用Id已经被读取过，拿到实例返回，否则跳跃到数据位置读取
 					if (IdToObjectDict.TryGetValue(objId, out value)) { return true; }
+					// 记录当前数据起始点
 					jumpReadPoint = readPoint;
+					// 跳跃到数据位置读取（也就是ObjId后的Count数据）
 					ReadJump(dataPoint);
 				}
-				//拿到类型Id
+				// 拿到类型Id
 				TryGetTypeId(objId, out typeId);
 			}
 			else
 			{
-				//不是引用实例
-				objId = TreeDataCode.NULL_OBJECT;
+				// 非引用实例标记，供上层判断是否登记 IdToObjectDict。
+				// 同时防止结构体读为类型的情况，进行标记。
+				objId = TreeDataCode.UnRefObject;
 			}
 
+			// 拿到类型Id尝试获取类型码
 			TryGetTypeCode(typeId, out long typeCode);
-
-			if (typeCode == 0)//判断如果是0，则为原类型
+			//判断如果是0,对应object的类型码，则为原类型
+			if (typeCode == TreeDataCode.AutoObject)
 			{
 				countPoint = readPoint;
 				this.ReadDynamic(out count);
-				if (count != TreeDataCode.NULL_OBJECT) return false;
+				// 如果count是null标记那么直接返回null。
+				if (count != TreeDataCode.NullObject) return false;
 				value = default;
 				return true;
 			}
-
 			//尝试获取类型
 			if (TryCodeGetType(typeCode, out Type dataType))
 			{
@@ -748,7 +682,7 @@ namespace WorldTree
 				{
 					countPoint = readPoint;
 					this.ReadDynamic(out count);
-					if (count != TreeDataCode.NULL_OBJECT) return false;
+					if (count != TreeDataCode.NullObject) return false;
 					value = default;
 					return true;
 				}
@@ -757,7 +691,7 @@ namespace WorldTree
 				{
 					countPoint = readPoint;
 					this.ReadDynamic(out count);
-					if (count != TreeDataCode.NULL_OBJECT) return false;
+					if (count != TreeDataCode.NullObject) return false;
 					value = default;
 					return true;
 				}
@@ -768,12 +702,12 @@ namespace WorldTree
 			}
 
 			//数据类型不存在 ，判断目标类型是否非基础类型
-			if (!TreeDataTypeHelper.BasicsTypeHash.Contains(targetType))
+			if (!TreeDataTypeHelper.CheckBasicsType(targetType))
 			{
 				countPoint = readPoint;
 				//不是基础类型则尝试读取
 				this.ReadDynamic(out count);
-				if (count != TreeDataCode.NULL_OBJECT) return false;
+				if (count != TreeDataCode.NullObject) return false;
 			}
 			//数据跳跃
 			SkipData(dataType);
@@ -788,7 +722,7 @@ namespace WorldTree
 			if (type != null)
 			{
 				//判断是否为基础类型，直接跳跃数据。
-				if (TreeDataTypeHelper.BasicsTypeHash.Contains(type))
+				if (TreeDataTypeHelper.CheckBasicsType(type))
 				{
 					SkipData(type);
 					return true;
@@ -801,8 +735,8 @@ namespace WorldTree
 				return true;
 			}
 
+			// 如果目标类型是接口或者类，判断类型是否为目标类型的子类型
 			bool isSubType = false;
-
 			if (targetType.IsInterface || targetType.IsClass)
 			{
 				if (targetType.IsAssignableFrom(type)) isSubType = true;
@@ -813,64 +747,20 @@ namespace WorldTree
 				return true;
 			}
 
-			if (isSubType)//是子类型
+			if (isSubType)// 是子类型
 			{
-				//读取指针回退到类型码
+				// 读取指针回退到类型码
 				ReadJump(typePoint);
-				//子类型读取
+				// 子类型读取
 				ReadValue(type, ref value);
 				return true;
 			}
-			else //不是子类型，返回去尝试读取。
+			else // 不是子类型，返回去尝试读取。
 			{
 				return false;
 			}
 		}
 
-		/// <summary>
-		/// 读取字符串
-		/// </summary>
-		public string ReadString()
-		{
-			if (this.ReadDynamic(out int length) == TreeDataCode.NULL_OBJECT) return null;
-			else if (length == 0) return string.Empty;
-
-			this.ReadUnmanaged(out length);
-			if (Utf8)
-				return ReadUtf8(length);
-			else
-				return ReadUtf16(length);
-		}
-
-		/// <summary>
-		/// 读取字符串
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public string ReadUtf16(int length)
-		{
-			if (ReadRemain < length)
-			{
-				this.LogError($"字符串长度超出数据长度: {length}.");
-				return null;
-			}
-			ref byte src = ref GetReadRefByte(length);
-			return new string(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.As<byte, char>(ref src), (int)(length * 0.5f)));
-		}
-
-		/// <summary>
-		/// 读取字符串
-		/// </summary>
-		[MethodImpl(MethodImplOptions.NoInlining)]
-		public string ReadUtf8(int length)
-		{
-			if (ReadRemain < length)
-			{
-				this.LogError($"字符串长度超出数据长度: {length}.");
-				return null;
-			}
-			ref var spanRef = ref GetReadRefByte(length);
-			return Encoding.UTF8.GetString(MemoryMarshal.CreateReadOnlySpan(ref spanRef, length));
-		}
 
 		#endregion
 
@@ -885,12 +775,10 @@ namespace WorldTree
 			{
 				typeId = ~typeId;
 				//判断位置不一致，说明这里是引用地址，后续没有数据，直接跳跃
-				if (IdToReadList[typeId] != readPoint) return;
+				if (IdToDataPointList[typeId] != readPoint) return;
 				typeId = IdToTypeIdList[typeId];
 			}
 			TryIdGetType(typeId, out Type type);
-
-			//TryReadType(out Type type);
 			SkipData(type);
 		}
 
@@ -902,7 +790,7 @@ namespace WorldTree
 			//是基础类型直接跳跃
 			if (type != null)
 			{
-				if (TreeDataTypeHelper.TypeSizeDict.TryGetValue(type, out int byteCount))
+				if (TreeDataTypeHelper.TryGetUnmanagedTypeSize(type, out int byteCount))
 				{
 					ReadSkip(byteCount);
 					return;
@@ -916,7 +804,7 @@ namespace WorldTree
 			//读取字段数量
 			this.ReadDynamic(out int count);
 			//空对象判断
-			if (count == TreeDataCode.NULL_OBJECT) return;
+			if (count == TreeDataCode.NullObject) return;
 
 			//Type可能不存在的情况下，负数为数组类型
 			if (count < 0)
@@ -931,7 +819,7 @@ namespace WorldTree
 				}
 				//为0的情况下，是数组，但是数组长度为0
 				if (totalLength == 0) return;
-				if (type != null && type.IsArray && TreeDataTypeHelper.TypeSizeDict.TryGetValue(type.GetElementType(), out int arrayByteCount))
+				if (type != null && type.IsArray && TreeDataTypeHelper.TryGetUnmanagedTypeSize(type.GetElementType(), out int arrayByteCount))
 				{
 					//基础数组类型，直接跳跃
 					ReadSkip(arrayByteCount * totalLength);
@@ -958,7 +846,7 @@ namespace WorldTree
 		/// </summary>
 		public void SkipString()
 		{
-			if (this.ReadDynamic(out int length) == TreeDataCode.NULL_OBJECT) return;
+			if (this.ReadDynamic(out int length) == TreeDataCode.NullObject) return;
 			else if (length == 0) return;
 			this.ReadUnmanaged(out length);
 			ReadSkip(length);

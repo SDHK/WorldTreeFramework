@@ -98,7 +98,7 @@ namespace WorldTree
 					IdToObjectDict.Add(id, treeData);
 					IdToTypeIdList.Add(GetOrAddTypeId(treeData.TypeName));
 					this.WriteDynamic(id);
-					IdToReadList.Add(Length);//记录数据读取位置
+					IdToDataPointList.Add(Length);//记录数据读取位置
 				}
 				else
 				{
@@ -108,7 +108,7 @@ namespace WorldTree
 				//空对象判断
 				if (treeData.IsDefault)
 				{
-					this.WriteDynamic(TreeDataCode.NULL_OBJECT);
+					this.WriteDynamic(TreeDataCode.NullObject);
 					return;
 				}
 
@@ -116,7 +116,7 @@ namespace WorldTree
 				this.WriteDynamic(~treeDataArray.LengthList.Count);
 
 				//判断这个类型是否是基础数组类型
-				if (type != null && type.IsArray && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type.GetElementType()))
+				if (type != null && type.IsArray && TreeDataTypeHelper.CheckUnmanagedType(type.GetElementType()))
 				{
 					this.World.Line.Core.RuleManager.SupportGenericParameterNodeRule(type.GetElementType(), typeof(TreeDataSerialize));
 
@@ -184,7 +184,7 @@ namespace WorldTree
 					IdToObjectDict.Add(id, treeData);
 					IdToTypeIdList.Add(GetOrAddTypeId(treeData.TypeName));
 					this.WriteDynamic(id);
-					IdToReadList.Add(Length);//记录数据读取位置
+					IdToDataPointList.Add(Length);//记录数据读取位置
 				}
 				else
 				{
@@ -194,7 +194,7 @@ namespace WorldTree
 				//空对象判断
 				if (treeData.IsDefault)
 				{
-					this.WriteDynamic(TreeDataCode.NULL_OBJECT);
+					this.WriteDynamic(TreeDataCode.NullObject);
 					return;
 				}
 
@@ -236,7 +236,7 @@ namespace WorldTree
 			{
 				objId = ~typeId;
 				//判断位置不一致，说明这里是引用地址，后续没有数据。
-				if (IdToReadList[objId] != readPoint)
+				if (IdToDataPointList[objId] != readPoint)
 				{
 					IdToObjectDict.TryGetValue(objId, out object obj);
 					data = AddTreeData(node, out TreeDataRef treeRef, number, isArray);
@@ -253,7 +253,7 @@ namespace WorldTree
 				//获取真实类型码
 				if (TreeDataTypeHelper.TypeCodeDict.ContainsKey(type)) typeCode = this.World.TypeToCode(type);
 				//判断是否是基础类型
-				if (TreeDataTypeHelper.BasicsTypeHash.Contains(type))
+				if (TreeDataTypeHelper.CheckBasicsType(type))
 				{
 					data = AddTreeData(node, out TreeDataValue treeValue, number, isArray, isRef, objId);
 					data.IsRef = isRef;
@@ -271,7 +271,7 @@ namespace WorldTree
 			//读取字段数量
 			this.ReadDynamic(out int count);
 			//空对象判断
-			if (count == TreeDataCode.NULL_OBJECT)
+			if (count == TreeDataCode.NullObject)
 			{
 				data = AddTreeData(node, out TreeData _, number, isArray);
 				data.TypeName = type?.ToString();
@@ -298,7 +298,7 @@ namespace WorldTree
 				//为0的情况下，是数组，但是数组长度为0
 				if (totalLength == 0) return data;
 				//判断这个类型是否是基础数组类型
-				if (type?.GetElementType() != null && TreeDataTypeHelper.TypeSizeDict.ContainsKey(type.GetElementType()))
+				if (type?.GetElementType() != null && TreeDataTypeHelper.CheckUnmanagedType(type.GetElementType()))
 				{
 					//跳跃回类型开头
 					this.ReadJump(startPoint);
@@ -307,7 +307,7 @@ namespace WorldTree
 					//基础数组类型取值
 					if (this.World.Line.Core.RuleManager.TryGetRuleList<TreeDataDeserialize>(typeCode, out RuleList ruleList) && ruleList.NodeType == typeCode)
 					{
-						int fieldNameCode = TreeDataCode.DESERIALIZE_SELF_MODE;
+						int fieldNameCode = TreeDataCode.DeserializeSelfMode;
 						object obj = null;
 						((IRuleList<TreeDataDeserialize>)ruleList).SendRef(this, ref obj, ref fieldNameCode);
 						if (isRef)
