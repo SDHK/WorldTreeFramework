@@ -54,7 +54,7 @@ namespace WorldTree
 		ObjectType = -2,
 
 		/// <summary>
-		/// 只写入值，不写入类型（用于数组类型的元素写入）
+		/// 只写入值，不写入类型（用于数组类型元素、TreeDataSpecial转父类Rule写入）
 		/// </summary>
 		Value = -3,
 	}
@@ -71,6 +71,7 @@ namespace WorldTree
 				self.World.PoolGetUnit(out self.TypeToTypeIdDict);
 				self.World.PoolGetUnit(out self.TypeNameToTypeIdDict);
 				self.World.PoolGetUnit(out self.codeToTypeNameDict);
+				self.World.PoolGetUnit(out self.codeToMemberNameDict);
 				self.World.PoolGetUnit(out self.TypeIdToCodeList);
 				self.World.PoolGetUnit(out self.IdToTypeIdList);
 				self.World.PoolGetUnit(out self.ObjectToIdDict);
@@ -87,6 +88,7 @@ namespace WorldTree
 				self.TypeToTypeIdDict.Dispose();
 				self.TypeNameToTypeIdDict.Dispose();
 				self.codeToTypeNameDict.Dispose();
+				self.codeToMemberNameDict.Dispose();
 				self.TypeIdToCodeList.Dispose();
 				self.IdToTypeIdList.Dispose();
 				self.ObjectToIdDict.Dispose();
@@ -116,6 +118,11 @@ namespace WorldTree
 		public int LayerMax = 1000;
 
 		/// <summary>
+		/// 是否包含成员名称映射表  
+		/// </summary>
+		public bool HasMemberName;
+
+		/// <summary>
 		/// 类型对应类型Id字典
 		/// </summary>
 		public UnitDictionary<Type, int> TypeToTypeIdDict;
@@ -124,6 +131,10 @@ namespace WorldTree
 		/// 类型码对应类型名称字典，64哈希码对应
 		/// </summary>
 		public UnitDictionary<long, string> codeToTypeNameDict;
+		/// <summary>
+		/// 类型码对应字段成员名称字典，32哈希码对应
+		/// </summary>
+		public UnitDictionary<int, string> codeToMemberNameDict;
 
 		/// <summary>
 		/// 正数Id对应类型码
@@ -154,6 +165,14 @@ namespace WorldTree
 		#endregion
 
 		#region 映射表
+
+		/// <summary>
+		/// 添加成员名称映射 
+		/// </summary>
+		private void AddMemberName(int code, string name)
+		{
+			codeToMemberNameDict.TryAdd(code, name);
+		}
 
 		/// <summary>
 		/// 获取或添加类型TypeId
@@ -289,6 +308,7 @@ namespace WorldTree
 					WriteString(null);
 				}
 			}
+			//写入对象Id数量
 			this.WriteDynamic(IdToTypeIdList.Count);
 			for (int i = 0; i < IdToTypeIdList.Count; i++)
 			{
@@ -296,6 +316,15 @@ namespace WorldTree
 				this.WriteDynamic(IdToTypeIdList[i]);
 				//写入读取位置
 				this.WriteDynamic(IdToDataPointList[i]);
+			}
+			//写入成员名称数量
+			this.WriteDynamic(codeToMemberNameDict.Count);
+			foreach (var item in codeToMemberNameDict)
+			{
+				//写入成员名称码
+				this.WriteDynamic(item.Key);
+				//写入成员名称
+				WriteString(item.Value);
 			}
 			WriteUnmanaged(startPoint);
 		}
@@ -338,7 +367,19 @@ namespace WorldTree
 				IdToTypeIdList.Add(typeId);
 				IdToDataPointList.Add(readPoint);
 			}
-
+			this.ReadDynamic(out int memberNameCount);
+			// 判断是否需要读取成员名称映射表。
+			if (HasMemberName)
+			{
+				for (int i = 0; i < memberNameCount; i++)
+				{
+					//读取成员名称码
+					this.ReadDynamic(out int memberNameCode);
+					//读取成员名称
+					string memberName = ReadString();
+					if (memberName != null) codeToMemberNameDict.Add(memberNameCode, memberName);
+				}
+			}
 			//读取指针定位到数据起始位置
 			readPoint = 0;
 			readBytePoint = 0;
@@ -365,11 +406,9 @@ namespace WorldTree
 		{
 			if (typeMode == SerializedTypeMode.Value)
 			{
-				obj = default;
-				this.WriteType(typeof(object));
-				this.WriteDynamic(TreeDataCode.NullObject);
-				this.LogError("错误，TryWriteDataHead不支持Value模式写入");
-				return true;
+				// 这个模式用于TreeDataSpecial情况转接到父类Rule写入字段。
+				obj = (T)value;
+				return false;
 			}
 
 			//isRef 表示这个类型是可引用类型，并且不是抽象和接口。

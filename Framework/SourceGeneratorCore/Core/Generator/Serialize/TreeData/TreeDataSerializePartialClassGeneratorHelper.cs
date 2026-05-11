@@ -130,10 +130,29 @@ namespace WorldTree.SourceGenerator
 				}
 				if (baseName != null)
 				{
-					Code.AppendLine($"				self.WriteValue(typeof({baseName}), value, 0);");
+					Code.AppendLine($"				self.WriteValue(typeof({baseName}), value, SerializedTypeMode.Value);");
+				}
+				if (fieldSymbols.Count != 0)
+				{
+					Code.AppendLine("				if(self.HasMemberName)AddMemberName(self);");
 				}
 			}
 			Code.AppendLine("			}");
+
+			if (fieldSymbols != null && fieldSymbols.Count != 0)
+			{
+				Code.AppendLine("			/// <summary>");
+				Code.AppendLine("			/// 字段名称记录");
+				Code.AppendLine("			/// </summary>");
+				Code.AppendLine($"			private static void AddMemberName(TreeDataByteSequence self)");
+				Code.AppendLine("			{");
+				foreach (ISymbol symbol in fieldSymbols)
+				{
+					int hash = symbol.Name.GetFNV1aHash32();
+					Code.AppendLine($"				self.AddMemberName({hash}, \"{symbol.Name}\");");
+				}
+				Code.AppendLine("			}");
+			}
 			Code.AppendLine("		}");
 		}
 
