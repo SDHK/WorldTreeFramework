@@ -125,12 +125,12 @@ namespace WorldTree
 		/// <summary>
 		/// 任务状态
 		/// </summary>
-		public AwaiterState state;
+		public AwaiterState awaiterState;
 
 		/// <summary>
 		/// 是否完成
 		/// </summary>
-		public virtual bool IsCompleted => state != AwaiterState.Pending;
+		public virtual bool IsCompleted => awaiterState != AwaiterState.Pending;
 
 		/// <summary>
 		/// 延续执行内容：委托 或 异常
@@ -157,16 +157,16 @@ namespace WorldTree
 						token.StopTask = this;
 						return;
 					case TokenState.Cancel:
-						state = AwaiterState.Canceled;
+						awaiterState = AwaiterState.Canceled;
 						break;
 					case TokenState.Running:
-						state = AwaiterState.Succeeded;
+						awaiterState = AwaiterState.Succeeded;
 						break;
 				}
 			}
 			else
 			{
-				state = AwaiterState.Succeeded;
+				awaiterState = AwaiterState.Succeeded;
 			}
 
 			//设置为成功完成状态
@@ -183,7 +183,7 @@ namespace WorldTree
 			if (IsDisposed || IsCompleted) throw new InvalidOperationException($"[{Id}]({this.GetType().Name})当前任务早已完成，但出了异常{e}");
 
 			//设置为失败完成状态
-			this.state = AwaiterState.Faulted;
+			this.awaiterState = AwaiterState.Faulted;
 			Action c = this.m_Continuation as Action;
 			this.m_Continuation = ExceptionDispatchInfo.Capture(e);
 			c?.Invoke();
@@ -194,7 +194,7 @@ namespace WorldTree
 		/// </summary>
 		protected virtual void OnGetResult()
 		{
-			switch (this.state)
+			switch (this.awaiterState)
 			{
 				case AwaiterState.Canceled:
 				//取消的任务也是完成的任务，取消逻辑交给业务判断
@@ -215,7 +215,7 @@ namespace WorldTree
 
 		public override void OnDispose()
 		{
-			state = AwaiterState.Pending;
+			awaiterState = AwaiterState.Pending;
 			RelevanceTask = default;
 			TreeTaskToken = default;
 			m_Continuation = null;

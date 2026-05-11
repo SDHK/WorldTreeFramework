@@ -169,7 +169,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加成员名称映射 
 		/// </summary>
-		private void AddMemberName(int code, string name)
+		public void AddMemberName(int code, string name)
 		{
 			codeToMemberNameDict.TryAdd(code, name);
 		}

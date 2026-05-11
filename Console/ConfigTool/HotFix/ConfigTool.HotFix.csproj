@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -24,7 +24,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <!--元素用于控制编译器是否对生成的代码进行优化。-->
     <Optimize>false</Optimize>
-    <!--<NoWarn>0169,0649,3021,8981,CS9193,CS9192</NoWarn>-->
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -32,18 +31,9 @@
     <DefineConstants>DOTNET</DefineConstants>
     <OutputPath>..\..\Bin\</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <!--<NoWarn>0169,0649,3021,8981,CS9193,CS9192</NoWarn>-->
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\..\Unity\Assets\Scripts\HotUpdate\HotFix\Client\**\*.cs">
-      <Link>Client\%(RecursiveDir)%(FileName)%(Extension)</Link>
-    </Compile>
-    <Compile Include="..\..\..\Unity\Assets\Scripts\HotUpdate\HotFix\Server\**\*.cs">
-      <Link>Server\%(RecursiveDir)%(FileName)%(Extension)</Link>
-    </Compile>
-  </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Core\WorldTree.Core.csproj" />
     <ProjectReference Include="..\..\..\Framework\Module\WorldTree.Module.csproj" />
@@ -51,5 +41,4 @@
 
   </ItemGroup>
 </Project>
-                  
-                         
+
