@@ -15,7 +15,7 @@ namespace WorldTree
 	/// <summary>
 	/// 主世界
 	/// </summary>
-	public class MainWorld : World
-		, AsRule<IRule>
-	{ }
+	//public class MainWorld : World
+	//	, AsRule<IRule>
+	//{ }
 }

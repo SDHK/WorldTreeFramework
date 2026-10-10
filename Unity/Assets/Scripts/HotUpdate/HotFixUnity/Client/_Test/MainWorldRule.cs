@@ -19,5 +19,6 @@ namespace WorldTree
 			self.AddComponent(out WindowManager _);
 			self.AddComponent(out InitialDomain _);
 		}
+
 	}
 }

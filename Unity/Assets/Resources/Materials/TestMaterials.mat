@@ -21,6 +21,34 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - IvyArg_EnvMapTex:
+        m_Texture: {fileID: 2800000, guid: b326b938f5f56af4ab76deec7d4cb522, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - IvyArg_FilmMaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - IvyArg_MatCapTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - IvyArg_SkinMask0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - IvyArg_SkinMask1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - IvyArg_SkinMask2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - IvyArg_SkinMask3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AlphaMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -291,6 +319,89 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - IvyArg_AudioBand: 0
+    - IvyArg_AudioPulse: 0
+    - IvyArg_BackLightRimSoftness: 0
+    - IvyArg_BackRimIntensity: 0
+    - IvyArg_Cutoff: 0
+    - IvyArg_Effect2DMap: 0
+    - IvyArg_EffectInside: 0
+    - IvyArg_EffectIntensity00: 0
+    - IvyArg_EffectIntensity01: 1
+    - IvyArg_EffectIntensity10: 0
+    - IvyArg_EffectIntensity11: 1
+    - IvyArg_EffectIntensity20: 0
+    - IvyArg_EffectIntensity21: 1
+    - IvyArg_EffectIntensity30: 0
+    - IvyArg_EffectIntensity31: 1
+    - IvyArg_EffectMap: 0
+    - IvyArg_EmissiveIntensity: 0
+    - IvyArg_EnvLightInfluence: 1
+    - IvyArg_EnvMapInfluence: 0.5
+    - IvyArg_Film00: 0
+    - IvyArg_Film01: 0.212
+    - IvyArg_Film10: 0
+    - IvyArg_Film11: 0.232
+    - IvyArg_Film20: 0
+    - IvyArg_Film21: 0.212
+    - IvyArg_Film30: 0
+    - IvyArg_Film31: 0.232
+    - IvyArg_Glitter00: 0
+    - IvyArg_Glitter01: 0
+    - IvyArg_Glitter10: 0
+    - IvyArg_Glitter11: 0
+    - IvyArg_Glitter20: 0
+    - IvyArg_Glitter21: 0
+    - IvyArg_Glitter30: 0
+    - IvyArg_Glitter31: 0
+    - IvyArg_IridescenceHue: 0.55
+    - IvyArg_IridescenceRingWidth: 0.5
+    - IvyArg_IridescenceRings: 0
+    - IvyArg_LightInfluence: 0.2
+    - IvyArg_LightMax: 0.339
+    - IvyArg_LightMin: 0.1
+    - IvyArg_LightRampSoftness: 0.232
+    - IvyArg_LightRampThreshold: 0.365
+    - IvyArg_LightRimSoftness: 0
+    - IvyArg_LightShadowMin: 0.292
+    - IvyArg_MatCapInfluence: 0.5
+    - IvyArg_PressDepth: -1
+    - IvyArg_PressRadius: 0.3
+    - IvyArg_ReflectIntensity00: 0
+    - IvyArg_ReflectIntensity01: 0
+    - IvyArg_ReflectIntensity10: 0
+    - IvyArg_ReflectIntensity11: 0
+    - IvyArg_ReflectIntensity20: 0
+    - IvyArg_ReflectIntensity21: 0
+    - IvyArg_ReflectIntensity30: 0
+    - IvyArg_ReflectIntensity31: 0
+    - IvyArg_ReflectSmoothness00: 1
+    - IvyArg_ReflectSmoothness01: 1
+    - IvyArg_ReflectSmoothness10: 1
+    - IvyArg_ReflectSmoothness11: 1
+    - IvyArg_ReflectSmoothness20: 1
+    - IvyArg_ReflectSmoothness21: 1
+    - IvyArg_ReflectSmoothness30: 1
+    - IvyArg_ReflectSmoothness31: 1
+    - IvyArg_RimIntensity: 0
+    - IvyArg_Scale: 0
+    - IvyArg_SkinObjRampSoftness: 0.153
+    - IvyArg_SkinObjRampThreshold0: 0.3
+    - IvyArg_SkinObjRampThreshold1: 0.1
+    - IvyArg_SkinRampToggle: 0
+    - IvyArg_SkinViewRampSoftness: 0.179
+    - IvyArg_SkinViewRampThreshold0: 0.5
+    - IvyArg_SkinViewRampThreshold1: 0.1
+    - IvyArg_TessFactor: 5
+    - IvyArg_Transmit00: 0
+    - IvyArg_Transmit01: 0
+    - IvyArg_Transmit10: 0
+    - IvyArg_Transmit11: 0
+    - IvyArg_Transmit20: 0
+    - IvyArg_Transmit21: 0
+    - IvyArg_Transmit30: 0
+    - IvyArg_Transmit31: 0
+    - IvyArg_VecMap0: 0
     - PixelSnap: 0
     - _AAStrength: 1
     - _AlphaBoostFA: 10
@@ -717,6 +828,22 @@ Material:
     - _lilShadowCasterBias: 0
     - _lilToonVersion: 45
     m_Colors:
+    - IvyArg_Color: {r: 0, g: 0, b: 0, a: 0}
+    - IvyArg_PressPos: {r: 0.09, g: 0.51, b: 0.14, a: 0}
+    - IvyArg_RampRgbBase: {r: 0.2, g: 0.2, b: 0.25, a: 1}
+    - IvyArg_SkinObjRampPos: {r: 0, g: 1, b: 0, a: 0}
+    - IvyArg_SkinObjRampRgb0: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+    - IvyArg_SkinObjRampRgb1: {r: 0.745283, g: 0.745283, b: 0.745283, a: 1}
+    - IvyArg_SkinRgb00: {r: 1, g: 1, b: 1, a: 1}
+    - IvyArg_SkinRgb01: {r: 0.8000001, g: 0.8000001, b: 0.8000001, a: 1}
+    - IvyArg_SkinRgb10: {r: 1, g: 1, b: 1, a: 1}
+    - IvyArg_SkinRgb11: {r: 0.8000001, g: 0.8000001, b: 0.8000001, a: 1}
+    - IvyArg_SkinRgb20: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - IvyArg_SkinRgb21: {r: 0.8000001, g: 0.8000001, b: 0.8000001, a: 1}
+    - IvyArg_SkinRgb30: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+    - IvyArg_SkinRgb31: {r: 0.8000001, g: 0.8000001, b: 0.8000001, a: 1}
+    - IvyArg_SkinViewRampRgb0: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
+    - IvyArg_SkinViewRampRgb1: {r: 1, g: 1, b: 1, a: 1}
     - _AudioLinkDefaultValue: {r: 0, g: 0, b: 2, a: 0.75}
     - _AudioLinkLocalMapParams: {r: 120, g: 1, b: 0, a: 0}
     - _AudioLinkMask_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}

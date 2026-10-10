@@ -30,6 +30,15 @@ namespace WorldTree
 	//}
 
 	/// <summary>
+	/// 法则分流
+	/// </summary>
+	public class RuleSwitch1Attribute : Attribute
+	{
+		public RuleSwitch1Attribute(string ruleName) { }
+
+	}
+
+	/// <summary>
 	/// 初始域
 	/// </summary>
 	public partial class InitialDomain : Node, ComponentOf<INode>
@@ -143,6 +152,7 @@ namespace WorldTree
 		}
 
 		[NodeRule(nameof(UpdateRule<InitialDomain>))]
+
 		private static void OnUpdateRule(InitialDomain self)
 		{
 			//self.Log($"测试Update！！!");
@@ -204,10 +214,14 @@ namespace WorldTree
 		}
 
 		[NodeRule(nameof(GuiUpdateTimeRule<InitialDomain>))]
-		private static void OnGuiUpdateTimeRule(InitialDomain self, TimeSpan timeSpan)
+			//[RuleSwitch1(nameof(self))]
+		public static void OnGuiUpdateTimeRule(InitialDomain self, TimeSpan timeSpan)
 		{
+
+
 			GUILayout.Label($@"    {timeSpan.Ticks} !  ", new GUIStyle() { fontSize = 60 });
 		}
+
 
 	}
 }
