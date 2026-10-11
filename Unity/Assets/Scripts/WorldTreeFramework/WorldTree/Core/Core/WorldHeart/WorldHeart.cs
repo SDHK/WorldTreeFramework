@@ -17,7 +17,7 @@ namespace WorldTree
 	/// </summary>
 	public class WorldHeart : WorldHeartBase
 		, AsComponentBranch
-		, ComponentOf<WorldLine>
+		, FieldOf<WorldLine>
 		, AsRule<Awake<int>>
 	{
 		/// <summary>

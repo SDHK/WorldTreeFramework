@@ -14,8 +14,8 @@ namespace WorldTree
 	/// 世界时间管理器
 	/// </summary>
 	public class WorldTimeManager : Node
-		, ComponentOf<WorldLine>
-		, AsChildBranch
+		, FieldOf<WorldLine>
+		, AsFieldBranch
 		, AsRule<Awake>
 	{
 		/// <summary>
@@ -87,9 +87,9 @@ namespace WorldTree
 		{
 			protected override void Execute(WorldTimeManager self)
 			{
-				self.AddChild(out self.Timer);
-				self.AddChild(out self.WorldTimer);
-				self.AddChild(out self.Framer);
+				self.AddField(out self.Timer);
+				self.AddField(out self.WorldTimer);
+				self.AddField(out self.Framer);
 			}
 		}
 

@@ -12,7 +12,7 @@ namespace WorldTree
 	/// 槽位节点
 	/// </summary>
 	public class CascadeTickerSlot : Node
-		, ChildOf<CascadeTicker>
+		, FieldOf<CascadeTicker>
 		, AsRule<Awake>
 	{
 		/// <summary>

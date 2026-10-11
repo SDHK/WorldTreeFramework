@@ -15,7 +15,7 @@ namespace WorldTree
 	/// 世界之心：Unity线程
 	/// </summary>
 	public class UnityWorldHeart : WorldHeartBase
-		, ComponentOf<WorldLine>
+		, FieldOf<WorldLine>
 		, AsComponentBranch
 		, AsRule<Awake<int>>
 		, AsRule<LateUpdateTime>

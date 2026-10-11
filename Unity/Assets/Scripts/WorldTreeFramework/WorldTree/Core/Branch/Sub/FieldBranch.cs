@@ -25,7 +25,7 @@ namespace WorldTree
 		[TreeDataIgnore]
 		public int BranchCount => 1;
 
-		public bool Contains(int key) => this.Count > key;
+		public bool Contains(int key) => key >= 0 && this.Count > key;
 		public bool ContainsId(long id) => this.Find(node => node.Id == id) != null;
 
 

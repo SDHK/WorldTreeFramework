@@ -42,7 +42,6 @@ namespace WorldTree
 	/// 世界线
 	/// </summary>
 	public class WorldLine : World, IWorldLine, IListenerIgnorer
-		, AsComponentBranch
 		, AsFieldBranch
 		, AsRule<Awake>
 	{
@@ -106,25 +105,26 @@ namespace WorldTree
 			this.Core.CreateCoreObject(out LogManager).Init(Id.ToString());
 
 			//引用池管理器
-			this.TryGraftComponent(this.PoolGetNode(out ReferencedPoolManager));
+			//this.TryGraftComponent(this.PoolGetNode(out ReferencedPoolManager));
+			this.TryGraftField(this.PoolGetNode(out ReferencedPoolManager));
 			//嫁接节点需要手动激活
 			ReferencedPoolManager.SetActive(true);
 
 			//全局法则执行器管理器
 			this.AddField(out GlobalRuleExecutorManager);
 			//世界时间管理器
-			this.AddComponent(out WorldTimeManager);
+			this.AddField(out WorldTimeManager);
 
 			// 世界之心
-			WorldHeart = NodeBranchHelper.AddNode(this, default(ComponentBranch), this.TypeToCode(heartType), heartType, out _, frameTime) as WorldHeartBase;
+			WorldHeart = NodeBranchHelper.AddNode(this, default(FieldBranch), -1, heartType, out _, frameTime) as WorldHeartBase;
 			// 世界之心启动
 			WorldHeart.Run();
 			// 世界环境
-			this.AddComponent(out WorldContext);
+			this.AddField(out WorldContext);
 			// 主世界生成
 			WorldContext.Post(() =>
 			{
-				NodeBranchHelper.AddNode(this, default(ComponentBranch), this.TypeToCode(worldType), worldType, out _);
+				NodeBranchHelper.AddNode(this, default(FieldBranch), -1, worldType, out _);
 			});
 		}
 
@@ -145,16 +145,10 @@ namespace WorldTree
 		public override void OnBeforeDispose()
 		{
 			Core.BeforeRemoveRuleGroup?.Send(this);
-
-			//有严格的移除顺序
 			this.RemoveAllTemp();
-			WorldHeart?.Dispose();
-			WorldContext?.Dispose();
-			WorldTimeManager?.Dispose();
-			GlobalRuleExecutorManager?.Dispose();
-			ReferencedPoolManager?.Dispose();
+			this.RemoveAllField();
 			LogManager?.Dispose();
-			MainWorld?.Dispose();
+			//MainWorld?.Dispose();
 			this.RemoveAllComponent();
 		}
 

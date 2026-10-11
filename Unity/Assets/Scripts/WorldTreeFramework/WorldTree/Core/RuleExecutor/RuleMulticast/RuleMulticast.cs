@@ -31,6 +31,7 @@ namespace WorldTree
 	/// </summary>
 	public class RuleMulticast<R> : RuleListExecutor, IRuleExecutor<R>, IRuleMulticast
 		, ChildOf<INode>
+		, FieldOf<INode>
 		, AsRule<Awake>
 		where R : IRule
 	{

@@ -17,10 +17,11 @@ namespace WorldTree
 	/// <remarks>线程的上下文</remarks>
 	[INodeProxy]
 	public partial class WorldContext : SynchronizationContext, INode
-		, AsChildBranch
-		, ComponentOf<WorldLine>
+		, AsFieldBranch
+		, FieldOf<WorldLine>
 		, AsRule<Awake>
 	{
+
 		/// <summary>
 		/// 请求队列
 		/// </summary>
@@ -51,7 +52,7 @@ namespace WorldTree
 		{
 			protected override void Execute(WorldContext self)
 			{
-				self.AddChild(out self.contextQueue);
+				self.AddField(out self.contextQueue);
 			}
 		}
 		class UpdateRule : UpdateRule<WorldContext>

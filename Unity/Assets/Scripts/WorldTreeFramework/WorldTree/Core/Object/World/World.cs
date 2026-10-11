@@ -24,7 +24,8 @@ namespace WorldTree
 	/// 世界
 	/// </summary>
 	public abstract class World : Node, IWorld
-		, ComponentOf<WorldLine>
+		, FieldOf<WorldLine>
+		, AsFieldBranch
 		, AsComponentBranch
 		, AsChildBranch
 		, AsRule<Awake>

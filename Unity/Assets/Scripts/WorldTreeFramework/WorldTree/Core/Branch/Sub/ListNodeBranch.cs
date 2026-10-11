@@ -43,8 +43,7 @@ namespace WorldTree
 			World.PoolGetUnit(out nodeList);
 			World.PoolGetUnit(out keyDict);
 		}
-
-		public bool Contains(int key) => nodeList.Count > key;
+		public bool Contains(int key) => key >= 0 && this.Count > key;
 
 		public bool ContainsId(long id) => keyDict.ContainsKey(id);
 

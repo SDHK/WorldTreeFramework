@@ -59,8 +59,9 @@ namespace WorldTree
 	/// 级联定时器
 	/// </summary>
 	public class CascadeTicker : Node
-		, ChildOf<WorldTimeManager>
+		, FieldOf<WorldTimeManager>
 		, AsChildBranch
+		, AsFieldBranch
 		, AsRule<Awake>
 	{
 		/// <summary>
@@ -116,7 +117,7 @@ namespace WorldTree
 			protected override void Execute(CascadeTicker self)
 			{
 				self.World.PoolGetArray(out self.slots, 2);
-				self.AddChild(out self.ruleMulticast);
+				self.AddField(out self.ruleMulticast);
 			}
 		}
 		class RemoveRule : RemoveRule<CascadeTicker>
@@ -164,7 +165,7 @@ namespace WorldTree
 			// 防御性检查：理论上不应该出现负数，但为了安全起见
 			if (slotIndex < 0) slotIndex = 0;
 			self.EnsureSlotsCapacity(slotIndex);
-			return self.slots[slotIndex] ??= self.AddChild(out CascadeTickerSlot slot);
+			return self.slots[slotIndex] ??= self.AddField(out CascadeTickerSlot slot);
 		}
 
 		/// <summary>
