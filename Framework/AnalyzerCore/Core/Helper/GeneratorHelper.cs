@@ -36,8 +36,8 @@ namespace WorldTree
 
 
 		public const string IBranchIdKey = "WorldTree.IBranchIdKey";
-
 		public const string IBranchTypeKey = "WorldTree.IBranchTypeKey";
+		public const string IBranchIndexKey = "WorldTree.IBranchIndexKey";
 
 		public const string IBranchUnConstraint = "WorldTree.IBranchUnConstraint";
 

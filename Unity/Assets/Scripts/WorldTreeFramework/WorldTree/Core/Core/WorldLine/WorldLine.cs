@@ -111,7 +111,7 @@ namespace WorldTree
 			ReferencedPoolManager.SetActive(true);
 
 			//全局法则执行器管理器
-			this.AddField(-1, out GlobalRuleExecutorManager);
+			this.AddField(out GlobalRuleExecutorManager);
 			//世界时间管理器
 			this.AddComponent(out WorldTimeManager);
 

@@ -18,7 +18,7 @@ namespace WorldTree
 	/// 字段节点分支
 	/// </summary>
 	[TreeDataSerializable(true)]
-	public partial class FieldBranch : UnitList<INode>, IBranch<int>, ISerializable
+	public partial class FieldBranch : UnitList<INode>, IBranchIndexKey, ISerializable
 	{
 		[TreeDataIgnore]
 		public new int Count => base.Count;
