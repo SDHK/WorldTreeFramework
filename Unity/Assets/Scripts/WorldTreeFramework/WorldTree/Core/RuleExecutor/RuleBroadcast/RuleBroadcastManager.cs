@@ -59,7 +59,7 @@ namespace WorldTree
 	/// 全局法则执行器管理器
 	/// </summary>
 	public class RuleBroadcastManager : Node
-		, ComponentOf<WorldLine>
+		, FieldOf<WorldLine>
 		, AsGenericBranch<long>
 		, AsRule<Awake>
 	{ }

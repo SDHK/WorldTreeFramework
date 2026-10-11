@@ -15,7 +15,7 @@ namespace TestProject
 		[Fact]
 		public void Test0()
 		{
-			Assert.Equal(0, MathBit.GetHighestBitIndex(num));
+			Assert.Equal(0, MathBit.GetHighestBitIndex((ulong)num));
 		}
 
 		[Theory]

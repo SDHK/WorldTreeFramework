@@ -22,17 +22,40 @@ namespace WorldTree
 		/// 节点字典
 		/// </summary>
 		private Dictionary<long, INode> nodeDict = new Dictionary<long, INode>();
+		/// <summary>
+		/// 节点数据字典 
+		/// </summary>
+		private Dictionary<long, INodeData> nodeDataDict;
 
 		/// <summary>
 		/// 节点字典
 		/// </summary>
 		public Dictionary<long, INode> NodeDict => nodeDict;
 
+
+		/// <summary>
+		/// 尝试获取节点数据 
+		/// </summary>
+		public bool TryGetData(long uid, out INodeData nodeData)
+		{
+			nodeData = default;
+			if (nodeDataDict == null) return false;
+			if (!nodeDataDict.TryGetValue(uid, out nodeData)) return false;
+			if (nodeData != null) return true;
+			nodeDataDict.Remove(uid);
+			return false;
+		}
+
 		/// <summary>
 		/// 添加节点
 		/// </summary>
 		public bool TryAdd(long id, INode node)
 		{
+			if (node is INodeData nodeData)
+			{
+				nodeDataDict ??= new();
+				nodeDataDict.TryAdd(node.Id, nodeData);
+			}
 			return nodeDict.TryAdd(id, node);
 		}
 
@@ -41,9 +64,9 @@ namespace WorldTree
 		/// </summary>
 		public void Remove(long id)
 		{
+			nodeDataDict?.Remove(id);
 			nodeDict.Remove(id);
 		}
-
 
 		/// <summary>
 		/// 引用池类型

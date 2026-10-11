@@ -21,16 +21,6 @@ namespace WorldTree
 		, AsRule<Awake>
 	{
 		/// <summary>
-		/// 全部节点
-		/// </summary>
-		public UnitDictionary<long, INode> AllNodeDict = new UnitDictionary<long, INode>();
-
-		/// <summary>
-		/// 全部节点数据
-		/// </summary>
-		public UnitDictionary<long, INodeData> AllNodeDataDict = new UnitDictionary<long, INodeData>();
-
-		/// <summary>
 		/// 分类节点
 		/// </summary>
 		public UnitDictionary<long, ReferencedPool> poolDict = new UnitDictionary<long, ReferencedPool>();
@@ -38,9 +28,7 @@ namespace WorldTree
 		public override void OnDispose()
 		{
 			NodeBranchHelper.RemoveNode(this);//从父节点分支移除
-			AllNodeDict.Clear();
 			poolDict.Clear();
-			AllNodeDict = null;
 			poolDict = null;
 			IsDisposed = true;
 		}
@@ -50,13 +38,7 @@ namespace WorldTree
 		/// </summary>
 		public bool TryAdd(INode node)
 		{
-			AllNodeDict.TryAdd(node.InstanceId, node);
-			if (node is INodeData nodeData)
-			{
-
-				AllNodeDataDict.TryAdd(node.Id, nodeData);
-			}
-			return GetPool(node.Type).TryAdd(node.InstanceId, node);
+			return GetPool(node.Type).TryAdd(node.Id, node);
 		}
 
 		/// <summary>
@@ -64,13 +46,28 @@ namespace WorldTree
 		/// </summary>
 		public void Remove(INode node)
 		{
-			AllNodeDict.Remove(node.InstanceId);
-			if (node is INodeData)
-				AllNodeDataDict.Remove(node.Id);
 			if (TryGetPool(node.Type, out ReferencedPool pool))
 			{
-				pool.Remove(node.InstanceId);
+				pool.Remove(node.Id);
 			}
+		}
+
+		/// <summary>
+		/// 获取节点数据对象 
+		/// </summary>
+		public bool TryGetNodeData<N>(long id, out INodeData nodeData)
+		{
+			return TryGetNodeData(this.TypeToCode<N>(), id, out nodeData);
+		}
+
+		/// <summary>
+		/// 获取节点数据对象 
+		/// </summary>
+		public bool TryGetNodeData(long type, long id, out INodeData nodeData)
+		{
+			nodeData = null;
+			if (!poolDict.TryGetValue(type, out ReferencedPool pool)) return false;
+			return pool.TryGetData(id, out nodeData);
 		}
 
 		/// <summary>

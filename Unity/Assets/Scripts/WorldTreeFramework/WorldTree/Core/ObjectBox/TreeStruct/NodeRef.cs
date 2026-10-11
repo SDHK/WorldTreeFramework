@@ -69,13 +69,14 @@ namespace WorldTree
 		/// <summary>
 		/// 获取节点，如果节点被回收，那么会返回null
 		/// </summary>
+		[TreeDataIgnore]
 		public N Value
 		{
 			get
 			{
 				if (node is null || InstanceId != node.InstanceId)
 				{
-					if (World == null || Id == 0 || !World.Line.ReferencedPoolManager.AllNodeDataDict.TryGetValue(Id, out INodeData nodeData))
+					if (World == null || Id == 0 || !World.Line.ReferencedPoolManager.TryGetNodeData<N>(Id, out INodeData nodeData))
 					{
 						node = null;
 					}
@@ -116,6 +117,7 @@ namespace WorldTree
 		/// <summary>
 		/// 是否为空引用 
 		/// </summary>
+		[TreeDataIgnore]
 		public bool IsNull => Value is null;
 
 		/// <summary>
@@ -133,10 +135,23 @@ namespace WorldTree
 
 		public static implicit operator N(NodeRef<N> nodeRef) => nodeRef.Value;
 
-		public static bool operator ==(NodeRef<N> a, N b) => a.InstanceId == b?.InstanceId;
-		public static bool operator !=(NodeRef<N> a, N b) => a.InstanceId != b?.InstanceId;
-
-		public override bool Equals(object obj) => obj is N node ? InstanceId == node.InstanceId : false;
+		public static bool operator ==(NodeRef<N> a, N b) => Same(a.Value, b);
+		public static bool operator !=(NodeRef<N> a, N b) => !(a == b);
+		public override bool Equals(object obj)
+		{
+			if (obj is NodeRef<N> other) return Same(Value, other.Value);
+			if (obj is N node) return Same(Value, node);
+			return false;
+		}
+		/// <summary>
+		/// 同一对象，或同一条非 0 的 Id，视为相等
+		/// </summary>
+		private static bool Same(N value, N other)
+		{
+			if (value == other) return true;
+			if (value is null || other is null) return false;
+			return value.Id != 0 && value.Id == other.Id;
+		}
 		public override int GetHashCode() => node?.GetHashCode() ?? 0;
 
 		public static implicit operator bool(NodeRef<N> nodeRef) => nodeRef.node is not null;
