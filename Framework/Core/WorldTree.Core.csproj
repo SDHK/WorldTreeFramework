@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <RootNamespace>WorldTree</RootNamespace>
     <AnalysisLevel>6.0</AnalysisLevel>
     <LangVersion>12</LangVersion>
-    <AssemblyName>Core</AssemblyName>
+    <AssemblyName>WorldTree.Core</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -35,21 +35,32 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <Compile Include="..\..\Unity\Assets\Scripts\WorldTreeFramework\WorldTree\Core\**\*.cs">
+    <!--<Compile Include="..\..\Unity\Assets\Scripts\WorldTreeFramework\WorldTree\Core\**\*.cs">
       <Link>WorldTree\%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </Compile>
+    </Compile>-->
   </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="LiteDB" Version="5.0.21" />
     <PackageReference Include="NLog" Version="5.4.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\AnalyzerCore\WorldTree.AnalyzerCore.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\SourceGeneratorCore\WorldTree.SourceGeneratorCore.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
+
+  <!-- 构建后自动把 WorldTree.Core.dll/.pdb 拷贝到 Unity 工程 -->
+  <Target Name="CopyToUnity" AfterTargets="Build">
+    <PropertyGroup>
+      <UnityPluginsDir>$(MSBuildThisFileDirectory)..\..\Unity\Assets\Plugins\WorldTree\</UnityPluginsDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(UnityPluginsDir)" />
+    <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(UnityPluginsDir)" SkipUnchangedFiles="true" />
+    <Message Importance="high" Text="[WorldTree.Core] $(TargetName).dll 已拷贝到 $(UnityPluginsDir)" />
+  </Target>
 
 </Project>
                                                                                                                                                                                              

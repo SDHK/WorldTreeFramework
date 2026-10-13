@@ -2,8 +2,11 @@
 <linker>
   <assembly fullname="LiteDB">
     <type fullname="LiteDB.BsonAutoId" preserve="all" />
+    <type fullname="LiteDB.BsonDocument" preserve="all" />
     <type fullname="LiteDB.BsonMapper" preserve="all" />
     <type fullname="LiteDB.BsonValue" preserve="all" />
+    <type fullname="LiteDB.ConnectionString" preserve="all" />
+    <type fullname="LiteDB.ConnectionType" preserve="all" />
     <type fullname="LiteDB.ILiteCollection`1" preserve="all" />
     <type fullname="LiteDB.LiteDatabase" preserve="all" />
   </assembly>
@@ -20,6 +23,7 @@
     <type fullname="MemoryPack.MemoryPackFormatter`1" preserve="all" />
     <type fullname="MemoryPack.MemoryPackOrderAttribute" preserve="all" />
     <type fullname="MemoryPack.MemoryPackReader" preserve="all" />
+    <type fullname="MemoryPack.MemoryPackReaderOptionalState" preserve="all" />
     <type fullname="MemoryPack.MemoryPackSerializationException" preserve="all" />
     <type fullname="MemoryPack.MemoryPackSerializer" preserve="all" />
     <type fullname="MemoryPack.MemoryPackSerializerOptions" preserve="all" />
@@ -28,55 +32,18 @@
     <type fullname="MemoryPack.MemoryPackWriterOptionalState" preserve="all" />
     <type fullname="MemoryPack.MemoryPackableAttribute" preserve="all" />
   </assembly>
-  <assembly fullname="Mono.Data.Sqlite">
-    <type fullname="Mono.Data.Sqlite.SqliteCommand" preserve="all" />
-    <type fullname="Mono.Data.Sqlite.SqliteConnection" preserve="all" />
-    <type fullname="Mono.Data.Sqlite.SqliteDataReader" preserve="all" />
-    <type fullname="Mono.Data.Sqlite.SqliteParameter" preserve="all" />
-    <type fullname="Mono.Data.Sqlite.SqliteParameterCollection" preserve="all" />
-  </assembly>
   <assembly fullname="System">
     <type fullname="System.Collections.Generic.Queue`1" preserve="all" />
-    <type fullname="System.Collections.Generic.SortedDictionary`2" preserve="all" />
-    <type fullname="System.Collections.Generic.Stack`1" preserve="all" />
-    <type fullname="System.ComponentModel.Component" preserve="all" />
     <type fullname="System.Diagnostics.Stopwatch" preserve="all" />
-    <type fullname="System.Net.Dns" preserve="all" />
-    <type fullname="System.Net.EndPoint" preserve="all" />
-    <type fullname="System.Net.IPAddress" preserve="all" />
-    <type fullname="System.Net.IPEndPoint" preserve="all" />
-    <type fullname="System.Net.IPHostEntry" preserve="all" />
-    <type fullname="System.Net.Sockets.AddressFamily" preserve="all" />
-    <type fullname="System.Net.Sockets.ProtocolType" preserve="all" />
-    <type fullname="System.Net.Sockets.Socket" preserve="all" />
-    <type fullname="System.Net.Sockets.SocketType" preserve="all" />
   </assembly>
   <assembly fullname="System.Core">
     <type fullname="System.Collections.Generic.HashSet`1" preserve="all" />
-    <type fullname="System.Collections.Generic.HashSet`1/Enumerator" preserve="all" />
-    <type fullname="System.Linq.Enumerable" preserve="all" />
-    <type fullname="System.Linq.Expressions.BinaryExpression" preserve="all" />
-    <type fullname="System.Linq.Expressions.ConstantExpression" preserve="all" />
-    <type fullname="System.Linq.Expressions.Expression" preserve="all" />
-    <type fullname="System.Linq.Expressions.Expression`1" preserve="all" />
-    <type fullname="System.Linq.Expressions.MemberExpression" preserve="all" />
-    <type fullname="System.Linq.Expressions.ParameterExpression" preserve="all" />
-  </assembly>
-  <assembly fullname="System.Data">
-    <type fullname="System.Data.Common.DbCommand" preserve="all" />
-    <type fullname="System.Data.Common.DbConnection" preserve="all" />
-    <type fullname="System.Data.Common.DbDataReader" preserve="all" />
-    <type fullname="System.Data.Common.DbParameter" preserve="all" />
-    <type fullname="System.Data.ConnectionState" preserve="all" />
-    <type fullname="System.Data.DataReaderExtensions" preserve="all" />
-    <type fullname="System.Data.DbType" preserve="all" />
   </assembly>
   <assembly fullname="System.Runtime.CompilerServices.Unsafe">
     <type fullname="System.Runtime.CompilerServices.Unsafe" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.CoreModule">
     <type fullname="UnityEngine.AnimationCurve" preserve="all" />
-    <type fullname="UnityEngine.Application" preserve="all" />
     <type fullname="UnityEngine.AsyncOperation" preserve="all" />
     <type fullname="UnityEngine.Bounds" preserve="all" />
     <type fullname="UnityEngine.Color" preserve="all" />
@@ -88,7 +55,6 @@
     <type fullname="UnityEngine.Mathf" preserve="all" />
     <type fullname="UnityEngine.MonoBehaviour" preserve="all" />
     <type fullname="UnityEngine.Object" preserve="all" />
-    <type fullname="UnityEngine.Profiling.Profiler" preserve="all" />
     <type fullname="UnityEngine.Quaternion" preserve="all" />
     <type fullname="UnityEngine.Random" preserve="all" />
     <type fullname="UnityEngine.Rect" preserve="all" />
@@ -98,9 +64,7 @@
     <type fullname="UnityEngine.Time" preserve="all" />
     <type fullname="UnityEngine.Transform" preserve="all" />
     <type fullname="UnityEngine.Vector2" preserve="all" />
-    <type fullname="UnityEngine.Vector2Int" preserve="all" />
     <type fullname="UnityEngine.Vector3" preserve="all" />
-    <type fullname="UnityEngine.Vector3Int" preserve="all" />
     <type fullname="UnityEngine.Vector4" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.IMGUIModule">
@@ -128,6 +92,175 @@
     <type fullname="UnityEngine.UI.Toggle" preserve="all" />
     <type fullname="UnityEngine.UI.Toggle/ToggleEvent" preserve="all" />
   </assembly>
+  <assembly fullname="UnityEngine.UIModule">
+    <type fullname="UnityEngine.Canvas" preserve="all" />
+  </assembly>
+  <assembly fullname="WorldTree.Core">
+    <type fullname="WorldTree.Add" preserve="all" />
+    <type fullname="WorldTree.AddRule`1" preserve="all" />
+    <type fullname="WorldTree.AsBranch`1" preserve="all" />
+    <type fullname="WorldTree.AsChildBranch" preserve="all" />
+    <type fullname="WorldTree.AsComponentBranch" preserve="all" />
+    <type fullname="WorldTree.AsGenericBranch`1" preserve="all" />
+    <type fullname="WorldTree.AsRule`1" preserve="all" />
+    <type fullname="WorldTree.AwaiterBase" preserve="all" />
+    <type fullname="WorldTree.AwaiterBase`1" preserve="all" />
+    <type fullname="WorldTree.Awake" preserve="all" />
+    <type fullname="WorldTree.AwakeRule`1" preserve="all" />
+    <type fullname="WorldTree.AwakeRule`2" preserve="all" />
+    <type fullname="WorldTree.AwakeRule`3" preserve="all" />
+    <type fullname="WorldTree.Awake`1" preserve="all" />
+    <type fullname="WorldTree.Awake`2" preserve="all" />
+    <type fullname="WorldTree.BasicLogRule" preserve="all" />
+    <type fullname="WorldTree.BasicTypeInfoRule" preserve="all" />
+    <type fullname="WorldTree.BeforeRemove" preserve="all" />
+    <type fullname="WorldTree.Branch`1" preserve="all" />
+    <type fullname="WorldTree.ByteSequence" preserve="all" />
+    <type fullname="WorldTree.CallRuleAsync`4" preserve="all" />
+    <type fullname="WorldTree.CallRule`4" preserve="all" />
+    <type fullname="WorldTree.CallRule`5" preserve="all" />
+    <type fullname="WorldTree.ChildBranch" preserve="all" />
+    <type fullname="WorldTree.ChildBranchSupplement" preserve="all" />
+    <type fullname="WorldTree.ChildOf`1" preserve="all" />
+    <type fullname="WorldTree.CodeLoader" preserve="all" />
+    <type fullname="WorldTree.ComponentBranch" preserve="all" />
+    <type fullname="WorldTree.ComponentBranchSupplement" preserve="all" />
+    <type fullname="WorldTree.ComponentOf`1" preserve="all" />
+    <type fullname="WorldTree.ConfigGroup`2" preserve="all" />
+    <type fullname="WorldTree.Config`1" preserve="all" />
+    <type fullname="WorldTree.CoreObject" preserve="all" />
+    <type fullname="WorldTree.Cut" preserve="all" />
+    <type fullname="WorldTree.DeserializeRule`1" preserve="all" />
+    <type fullname="WorldTree.Disable" preserve="all" />
+    <type fullname="WorldTree.DisableRule`1" preserve="all" />
+    <type fullname="WorldTree.Enable" preserve="all" />
+    <type fullname="WorldTree.EnableRule`1" preserve="all" />
+    <type fullname="WorldTree.FieldBranch" preserve="all" />
+    <type fullname="WorldTree.FieldOf`1" preserve="all" />
+    <type fullname="WorldTree.GenericBranchSupplement" preserve="all" />
+    <type fullname="WorldTree.GenericBranch`1" preserve="all" />
+    <type fullname="WorldTree.GenericOf`2" preserve="all" />
+    <type fullname="WorldTree.GenericPool`1" preserve="all" />
+    <type fullname="WorldTree.Graft" preserve="all" />
+    <type fullname="WorldTree.HotReloadRule`1" preserve="all" />
+    <type fullname="WorldTree.IBasic" preserve="all" />
+    <type fullname="WorldTree.IBranchBase" preserve="all" />
+    <type fullname="WorldTree.ICallRuleAsync`2" preserve="all" />
+    <type fullname="WorldTree.ICallRule`2" preserve="all" />
+    <type fullname="WorldTree.ICallRule`3" preserve="all" />
+    <type fullname="WorldTree.ICoreObject" preserve="all" />
+    <type fullname="WorldTree.IGlobalRule" preserve="all" />
+    <type fullname="WorldTree.ILifeCycleRule" preserve="all" />
+    <type fullname="WorldTree.IListenerIgnorer" preserve="all" />
+    <type fullname="WorldTree.IMethodRule" preserve="all" />
+    <type fullname="WorldTree.INode" preserve="all" />
+    <type fullname="WorldTree.INodeListener" preserve="all" />
+    <type fullname="WorldTree.INodeThisAttribute" preserve="all" />
+    <type fullname="WorldTree.IRule" preserve="all" />
+    <type fullname="WorldTree.IRuleExecutor`1" preserve="all" />
+    <type fullname="WorldTree.IRuleGroup`1" preserve="all" />
+    <type fullname="WorldTree.ISendRule" preserve="all" />
+    <type fullname="WorldTree.ISendRule`1" preserve="all" />
+    <type fullname="WorldTree.IUnit" preserve="all" />
+    <type fullname="WorldTree.IWorldTreeNodeViewBuilder" preserve="all" />
+    <type fullname="WorldTree.Internal.TreeTaskCompleted" preserve="all" />
+    <type fullname="WorldTree.Internal.TreeTaskMethodBuilder" preserve="all" />
+    <type fullname="WorldTree.Internal.TreeTaskMethodBuilder`1" preserve="all" />
+    <type fullname="WorldTree.Internal.TreeTaskTokenCatch" preserve="all" />
+    <type fullname="WorldTree.ListNodeBranch" preserve="all" />
+    <type fullname="WorldTree.ListNodeOf`1" preserve="all" />
+    <type fullname="WorldTree.ListenerAdd" preserve="all" />
+    <type fullname="WorldTree.ListenerRemove" preserve="all" />
+    <type fullname="WorldTree.ListenerRuleExecutorGroupRule" preserve="all" />
+    <type fullname="WorldTree.LogBase" preserve="all" />
+    <type fullname="WorldTree.MainWorld" preserve="all" />
+    <type fullname="WorldTree.MathFloat" preserve="all" />
+    <type fullname="WorldTree.Node" preserve="all" />
+    <type fullname="WorldTree.NodeAddComponentRule`2" preserve="all" />
+    <type fullname="WorldTree.NodeBranchHelper" preserve="all" />
+    <type fullname="WorldTree.NodeBranchTraversalHelper" preserve="all" />
+    <type fullname="WorldTree.NodeData" preserve="all" />
+    <type fullname="WorldTree.NodeListenerExecutorHelper" preserve="all" />
+    <type fullname="WorldTree.NodeOf`1" preserve="all" />
+    <type fullname="WorldTree.NodeOf`2" preserve="all" />
+    <type fullname="WorldTree.NodeRef`1" preserve="all" />
+    <type fullname="WorldTree.NodeRule" preserve="all" />
+    <type fullname="WorldTree.NodeRuleAttribute" preserve="all" />
+    <type fullname="WorldTree.NodeRuleHelper" preserve="all" />
+    <type fullname="WorldTree.Options" preserve="all" />
+    <type fullname="WorldTree.PoolBase" preserve="all" />
+    <type fullname="WorldTree.ProtectedAttribute" preserve="all" />
+    <type fullname="WorldTree.RealTimeManager" preserve="all" />
+    <type fullname="WorldTree.ReferencedPoolManager" preserve="all" />
+    <type fullname="WorldTree.Remove" preserve="all" />
+    <type fullname="WorldTree.RemoveRule`1" preserve="all" />
+    <type fullname="WorldTree.RuleBroadcastData" preserve="all" />
+    <type fullname="WorldTree.RuleBroadcast`1" preserve="all" />
+    <type fullname="WorldTree.RuleExecutorSendRule" preserve="all" />
+    <type fullname="WorldTree.RuleGroupSendRule" preserve="all" />
+    <type fullname="WorldTree.RuleManager" preserve="all" />
+    <type fullname="WorldTree.RuleMulticastRule" preserve="all" />
+    <type fullname="WorldTree.RuleMulticast`1" preserve="all" />
+    <type fullname="WorldTree.RuleUnicast`1" preserve="all" />
+    <type fullname="WorldTree.SendRule`2" preserve="all" />
+    <type fullname="WorldTree.SendRule`3" preserve="all" />
+    <type fullname="WorldTree.SerializedTypeMode" preserve="all" />
+    <type fullname="WorldTree.StepAssemblyData" preserve="all" />
+    <type fullname="WorldTree.StepMachine" preserve="all" />
+    <type fullname="WorldTree.StepMachineAssembler" preserve="all" />
+    <type fullname="WorldTree.StepOpCode" preserve="all" />
+    <type fullname="WorldTree.TempBranchSupplement" preserve="all" />
+    <type fullname="WorldTree.TimeHelper" preserve="all" />
+    <type fullname="WorldTree.TimerAsyncExtension" preserve="all" />
+    <type fullname="WorldTree.TokenState" preserve="all" />
+    <type fullname="WorldTree.TreeArray`1" preserve="all" />
+    <type fullname="WorldTree.TreeDataByteSequence" preserve="all" />
+    <type fullname="WorldTree.TreeDataDeserializeRule`1" preserve="all" />
+    <type fullname="WorldTree.TreeDataHelper" preserve="all" />
+    <type fullname="WorldTree.TreeDataIgnoreAttribute" preserve="all" />
+    <type fullname="WorldTree.TreeDataSerializableAttribute" preserve="all" />
+    <type fullname="WorldTree.TreeDataSerializeRule`1" preserve="all" />
+    <type fullname="WorldTree.TreeDictionary`2" preserve="all" />
+    <type fullname="WorldTree.TreeList`1" preserve="all" />
+    <type fullname="WorldTree.TreeList`1/Enumerator" preserve="all" />
+    <type fullname="WorldTree.TreePackByteSequence" preserve="all" />
+    <type fullname="WorldTree.TreePackByteSequenceRule" preserve="all" />
+    <type fullname="WorldTree.TreePackDeserializeRule`1" preserve="all" />
+    <type fullname="WorldTree.TreePackSerializableAttribute" preserve="all" />
+    <type fullname="WorldTree.TreePackSerializeRule`1" preserve="all" />
+    <type fullname="WorldTree.TreeTask" preserve="all" />
+    <type fullname="WorldTree.TreeTaskBase" preserve="all" />
+    <type fullname="WorldTree.TreeTaskExtension" preserve="all" />
+    <type fullname="WorldTree.TreeTaskQueueLockManager" preserve="all" />
+    <type fullname="WorldTree.TreeTaskSetResuIt" preserve="all" />
+    <type fullname="WorldTree.TreeTaskToken" preserve="all" />
+    <type fullname="WorldTree.TreeTaskTokenEvent" preserve="all" />
+    <type fullname="WorldTree.TreeTaskTokenEventRule`1" preserve="all" />
+    <type fullname="WorldTree.TreeTask`1" preserve="all" />
+    <type fullname="WorldTree.TreeValueBaseRule" preserve="all" />
+    <type fullname="WorldTree.TreeValueBase`1" preserve="all" />
+    <type fullname="WorldTree.TreeValue`1" preserve="all" />
+    <type fullname="WorldTree.TypeInfo" preserve="all" />
+    <type fullname="WorldTree.TypeInfo`1" preserve="all" />
+    <type fullname="WorldTree.UnitConcurrentQueue`1" preserve="all" />
+    <type fullname="WorldTree.UnitDictionary`2" preserve="all" />
+    <type fullname="WorldTree.UnitList`1" preserve="all" />
+    <type fullname="WorldTree.Update" preserve="all" />
+    <type fullname="WorldTree.UpdateRule`1" preserve="all" />
+    <type fullname="WorldTree.UpdateTime" preserve="all" />
+    <type fullname="WorldTree.UpdateTimeRule`1" preserve="all" />
+    <type fullname="WorldTree.VarValue" preserve="all" />
+    <type fullname="WorldTree.ViewPool" preserve="all" />
+    <type fullname="WorldTree.World" preserve="all" />
+    <type fullname="WorldTree.WorldContext" preserve="all" />
+    <type fullname="WorldTree.WorldHeartBase" preserve="all" />
+    <type fullname="WorldTree.WorldLine" preserve="all" />
+    <type fullname="WorldTree.WorldPulseBase" preserve="all" />
+    <type fullname="WorldTree.WorldPulse`1" preserve="all" />
+    <type fullname="WorldTree.WorldRule" preserve="all" />
+    <type fullname="WorldTree.WorldTreeCore" preserve="all" />
+    <type fullname="WorldTree.WorldTreeCoreExtension" preserve="all" />
+  </assembly>
   <assembly fullname="YooAsset">
     <type fullname="YooAsset.AssetHandle" preserve="all" />
     <type fullname="YooAsset.AsyncOperationBase" preserve="all" />
@@ -144,159 +277,70 @@
   <assembly fullname="mscorlib">
     <type fullname="System.Action" preserve="all" />
     <type fullname="System.Action`1" preserve="all" />
-    <type fullname="System.Action`2" preserve="all" />
-    <type fullname="System.Activator" preserve="all" />
     <type fullname="System.AppDomain" preserve="all" />
-    <type fullname="System.ApplicationException" preserve="all" />
-    <type fullname="System.ArgumentNullException" preserve="all" />
-    <type fullname="System.ArgumentOutOfRangeException" preserve="all" />
     <type fullname="System.Array" preserve="all" />
-    <type fullname="System.AsyncCallback" preserve="all" />
     <type fullname="System.Attribute" preserve="all" />
     <type fullname="System.AttributeTargets" preserve="all" />
     <type fullname="System.AttributeUsageAttribute" preserve="all" />
-    <type fullname="System.BitConverter" preserve="all" />
     <type fullname="System.Boolean" preserve="all" />
-    <type fullname="System.Buffers.ArrayPool`1" preserve="all" />
     <type fullname="System.Buffers.IBufferWriter`1" preserve="all" />
     <type fullname="System.Byte" preserve="all" />
     <type fullname="System.Char" preserve="all" />
-    <type fullname="System.Collections.Concurrent.ConcurrentDictionary`2" preserve="all" />
-    <type fullname="System.Collections.Concurrent.ConcurrentQueue`1" preserve="all" />
-    <type fullname="System.Collections.Generic.CollectionExtensions" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2" preserve="all" />
-    <type fullname="System.Collections.Generic.Dictionary`2/Enumerator" preserve="all" />
-    <type fullname="System.Collections.Generic.Dictionary`2/ValueCollection" preserve="all" />
-    <type fullname="System.Collections.Generic.Dictionary`2/ValueCollection/Enumerator" preserve="all" />
-    <type fullname="System.Collections.Generic.EqualityComparer`1" preserve="all" />
-    <type fullname="System.Collections.Generic.ICollection`1" preserve="all" />
-    <type fullname="System.Collections.Generic.IComparer`1" preserve="all" />
-    <type fullname="System.Collections.Generic.IDictionary`2" preserve="all" />
     <type fullname="System.Collections.Generic.IEnumerable`1" preserve="all" />
     <type fullname="System.Collections.Generic.IEnumerator`1" preserve="all" />
-    <type fullname="System.Collections.Generic.IList`1" preserve="all" />
-    <type fullname="System.Collections.Generic.IReadOnlyCollection`1" preserve="all" />
-    <type fullname="System.Collections.Generic.IReadOnlyList`1" preserve="all" />
-    <type fullname="System.Collections.Generic.KeyValuePair`2" preserve="all" />
     <type fullname="System.Collections.Generic.List`1" preserve="all" />
     <type fullname="System.Collections.Generic.List`1/Enumerator" preserve="all" />
-    <type fullname="System.Collections.ICollection" preserve="all" />
     <type fullname="System.Collections.IEnumerable" preserve="all" />
     <type fullname="System.Collections.IEnumerator" preserve="all" />
-    <type fullname="System.Collections.IList" preserve="all" />
-    <type fullname="System.Comparison`1" preserve="all" />
-    <type fullname="System.Convert" preserve="all" />
-    <type fullname="System.Converter`2" preserve="all" />
     <type fullname="System.DateTime" preserve="all" />
-    <type fullname="System.DateTimeKind" preserve="all" />
-    <type fullname="System.Decimal" preserve="all" />
     <type fullname="System.Delegate" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute/DebuggingModes" preserve="all" />
-    <type fullname="System.Diagnostics.DebuggerBrowsableAttribute" preserve="all" />
-    <type fullname="System.Diagnostics.DebuggerBrowsableState" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerHiddenAttribute" preserve="all" />
-    <type fullname="System.Diagnostics.DebuggerStepThroughAttribute" preserve="all" />
     <type fullname="System.Double" preserve="all" />
     <type fullname="System.Enum" preserve="all" />
+    <type fullname="System.Environment" preserve="all" />
     <type fullname="System.Exception" preserve="all" />
     <type fullname="System.FlagsAttribute" preserve="all" />
-    <type fullname="System.Func`1" preserve="all" />
     <type fullname="System.Func`2" preserve="all" />
-    <type fullname="System.Globalization.CultureInfo" preserve="all" />
-    <type fullname="System.Globalization.NumberFormatInfo" preserve="all" />
-    <type fullname="System.Guid" preserve="all" />
     <type fullname="System.HashCode" preserve="all" />
-    <type fullname="System.IAsyncResult" preserve="all" />
     <type fullname="System.IDisposable" preserve="all" />
     <type fullname="System.IEquatable`1" preserve="all" />
-    <type fullname="System.IFormatProvider" preserve="all" />
-    <type fullname="System.IO.BinaryReader" preserve="all" />
-    <type fullname="System.IO.BinaryWriter" preserve="all" />
-    <type fullname="System.IO.Directory" preserve="all" />
-    <type fullname="System.IO.DirectoryInfo" preserve="all" />
     <type fullname="System.IO.File" preserve="all" />
-    <type fullname="System.IO.FileAccess" preserve="all" />
-    <type fullname="System.IO.FileInfo" preserve="all" />
-    <type fullname="System.IO.FileMode" preserve="all" />
-    <type fullname="System.IO.FileNotFoundException" preserve="all" />
-    <type fullname="System.IO.FileShare" preserve="all" />
-    <type fullname="System.IO.FileStream" preserve="all" />
-    <type fullname="System.IO.FileSystemInfo" preserve="all" />
-    <type fullname="System.IO.MemoryStream" preserve="all" />
     <type fullname="System.IO.Path" preserve="all" />
-    <type fullname="System.IO.SearchOption" preserve="all" />
-    <type fullname="System.IO.Stream" preserve="all" />
-    <type fullname="System.IndexOutOfRangeException" preserve="all" />
-    <type fullname="System.Int16" preserve="all" />
     <type fullname="System.Int32" preserve="all" />
     <type fullname="System.Int64" preserve="all" />
-    <type fullname="System.InvalidOperationException" preserve="all" />
     <type fullname="System.Math" preserve="all" />
-    <type fullname="System.MemoryExtensions" preserve="all" />
-    <type fullname="System.Memory`1" preserve="all" />
-    <type fullname="System.MulticastDelegate" preserve="all" />
-    <type fullname="System.NotImplementedException" preserve="all" />
     <type fullname="System.NotSupportedException" preserve="all" />
-    <type fullname="System.Nullable`1" preserve="all" />
     <type fullname="System.Object" preserve="all" />
     <type fullname="System.ParamArrayAttribute" preserve="all" />
-    <type fullname="System.Predicate`1" preserve="all" />
     <type fullname="System.Random" preserve="all" />
     <type fullname="System.ReadOnlySpan`1" preserve="all" />
     <type fullname="System.Reflection.Assembly" preserve="all" />
     <type fullname="System.Reflection.AssemblyName" preserve="all" />
-    <type fullname="System.Reflection.DefaultMemberAttribute" preserve="all" />
-    <type fullname="System.Reflection.FieldInfo" preserve="all" />
     <type fullname="System.Reflection.MemberInfo" preserve="all" />
-    <type fullname="System.Reflection.MethodBase" preserve="all" />
-    <type fullname="System.Reflection.MethodInfo" preserve="all" />
-    <type fullname="System.Runtime.CompilerServices.AsyncMethodBuilderAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.AsyncStateMachineAttribute" preserve="all" />
-    <type fullname="System.Runtime.CompilerServices.AsyncVoidMethodBuilder" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.CompilationRelaxationsAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.CompilerGeneratedAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.ExtensionAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.IAsyncStateMachine" preserve="all" />
-    <type fullname="System.Runtime.CompilerServices.ICriticalNotifyCompletion" preserve="all" />
-    <type fullname="System.Runtime.CompilerServices.INotifyCompletion" preserve="all" />
-    <type fullname="System.Runtime.CompilerServices.IsReadOnlyAttribute" preserve="all" />
-    <type fullname="System.Runtime.CompilerServices.IsVolatile" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.IteratorStateMachineAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.RuntimeHelpers" preserve="all" />
-    <type fullname="System.Runtime.CompilerServices.TaskAwaiter" preserve="all" />
-    <type fullname="System.Runtime.CompilerServices.TaskAwaiter`1" preserve="all" />
-    <type fullname="System.Runtime.ExceptionServices.ExceptionDispatchInfo" preserve="all" />
-    <type fullname="System.Runtime.InteropServices.InAttribute" preserve="all" />
-    <type fullname="System.Runtime.InteropServices.MemoryMarshal" preserve="all" />
     <type fullname="System.Runtime.InteropServices.UnmanagedType" preserve="all" />
-    <type fullname="System.Runtime.Serialization.Formatters.Binary.BinaryFormatter" preserve="all" />
     <type fullname="System.RuntimeFieldHandle" preserve="all" />
-    <type fullname="System.RuntimeMethodHandle" preserve="all" />
     <type fullname="System.RuntimeTypeHandle" preserve="all" />
-    <type fullname="System.Security.Cryptography.HashAlgorithm" preserve="all" />
-    <type fullname="System.Security.Cryptography.SHA256" preserve="all" />
     <type fullname="System.Security.Permissions.SecurityAction" preserve="all" />
     <type fullname="System.Security.Permissions.SecurityPermissionAttribute" preserve="all" />
-    <type fullname="System.Security.SecuritySafeCriticalAttribute" preserve="all" />
     <type fullname="System.Security.UnverifiableCodeAttribute" preserve="all" />
     <type fullname="System.Single" preserve="all" />
     <type fullname="System.Span`1" preserve="all" />
     <type fullname="System.String" preserve="all" />
-    <type fullname="System.StringSplitOptions" preserve="all" />
-    <type fullname="System.Text.Encoding" preserve="all" />
-    <type fullname="System.Threading.Interlocked" preserve="all" />
-    <type fullname="System.Threading.Monitor" preserve="all" />
-    <type fullname="System.Threading.SendOrPostCallback" preserve="all" />
-    <type fullname="System.Threading.SynchronizationContext" preserve="all" />
-    <type fullname="System.Threading.Tasks.Task" preserve="all" />
-    <type fullname="System.Threading.Tasks.Task`1" preserve="all" />
-    <type fullname="System.Threading.Thread" preserve="all" />
-    <type fullname="System.Threading.ThreadStart" preserve="all" />
     <type fullname="System.TimeSpan" preserve="all" />
     <type fullname="System.Type" preserve="all" />
-    <type fullname="System.UInt32" preserve="all" />
+    <type fullname="System.UnhandledExceptionEventArgs" preserve="all" />
+    <type fullname="System.UnhandledExceptionEventHandler" preserve="all" />
     <type fullname="System.ValueTuple`2" preserve="all" />
     <type fullname="System.ValueType" preserve="all" />
   </assembly>

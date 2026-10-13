@@ -57,8 +57,7 @@
     <Analyzer Include="D:\Projects\GameEngine\Unity\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMCPConnection.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMCPWindow.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\AgentExec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMCP.Editor.asmdef" />

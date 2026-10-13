@@ -40,7 +40,7 @@ namespace WorldTree.SourceGenerator
 		public ProjectGeneratorSetting()
 		{
 			ArgumentCount = 5;
-			Add("Core", ProjectConfigHelper.CoreConfigs);
+			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
 			Add("Module", ProjectConfigHelper.ModuleConfigs);
 		}
 	}

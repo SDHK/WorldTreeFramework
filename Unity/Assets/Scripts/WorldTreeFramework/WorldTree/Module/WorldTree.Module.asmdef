@@ -1,14 +1,15 @@
 {
     "name": "WorldTree.Module",
     "rootNamespace": "WorldTree",
-    "references": [
-        "GUID:104971acd352de048964cb7f7b53027b"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "WorldTree.Core.dll",
+        "LiteDB.dll"
+    ],
     "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],

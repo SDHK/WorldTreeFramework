@@ -18,11 +18,11 @@ MonoBehaviour:
   il2cppPlusRepoURL: https://gitee.com/focus-creative-games/il2cpp_plus
   hotUpdateAssemblyDefinitions: []
   hotUpdateAssemblies:
-  - WorldTree.Core
   - WorldTree.Module
   - WorldTree.CoreUnity
   - WorldTree.HotFix
   - WorldTree.HotFixUnity
+  - WorldTree.Config
   preserveHotUpdateAssemblies: []
   hotUpdateDllCompileOutputRootDir: HybridCLRData/HotUpdateDlls
   externalHotUpdateAssembliyDirs:

@@ -1,0 +1,120 @@
+# AGENTS.md — AI 助手快速上手上下文
+
+> 本文件供 AI 助手（以及协作者）在开启新对话时快速了解框架结构、当前进行中的工作、已做的决策和踩过的坑。**"当前重构"与"决策"两节变化最频繁，请随进展更新，避免过期误导。**
+
+---
+
+## 1. 项目是什么
+
+**WorldTree**：作者"闪电黑客"的个人 C# 游戏框架（2022.5 起）。核心思路——**一切皆节点**、树状结构 + 对象池自动回收、反射自动注册的**接口式事件系统（法则 Rule）**。可跨平台：核心脱离 Unity，也能在纯 .NET / Console / Avalonia / WPF / WinForm 运行。大量依赖 Roslyn 源生成器 + 分析器。
+
+---
+
+## 2. 架构速览
+
+### 对象三层
+- `CoreObject`（框架启动前用，如 LogManager/RuleManager/IdManager/池管理器）
+- `Unit`（可池化对象，Node 可用之前用）
+- `Node`（框架主体，一切业务对象都是 Node，挂树上）
+
+### 引导链
+```
+WorldTreeCore（全局唯一核心）
+ └─ WorldLine（世界线 = 根节点，一条线一个线程）
+     ├─ ReferencedPoolManager / RuleBroadcastManager / WorldTimeManager
+     ├─ WorldHeart（心跳线程，Unity 侧是 UnityWorldHeart）
+     ├─ WorldContext（SynchronizationContext，跨线程投递）
+     └─ MainWorld（业务入口节点）
+```
+
+### 核心概念
+- **Branch 分支**：树的组织结构（Child/Component/Field/Temp/ListNode/Generic）。节点用 `ChildOf<>`/`ComponentOf<>`/`FieldOf<>`/`AsBranch<>`/`AsRule<>` 等**空标记接口**声明约束，源生成器据此生成强类型方法。
+- **Rule 法则**：以接口为键的事件系统，启动时反射扫描 `IRule` 实现类自动注册。支持多播/多态/泛型/逆变/返回值/异步。生命周期（Awake/Enable/Disable/Add/Remove/Graft/Cut/Update/Serialize…）也是法则。
+- **RuleExecutor 法则执行器**：替代委托，双模式遍历（+1 连续 / +2 奇偶），遍历中增删时序稳定。
+- **对象池**：UnitPool（启动前）/ NodePool（启动后）/ ReferencedPool（按 Id 反查节点）。
+- **IdManager**：实例 Id（进程位 + 递减）+ 数据 UID（雪花：14位进程 | 30位秒时间戳 | 20位偏移）。
+- **时间**：RealTimeManager（NTP 校时）、WorldTimeManager（游戏时间/帧）、CascadeTicker（二进制时间轮）。
+- **TreeTask**：自研 async/await（`[AsyncMethodBuilder]` + 自写状态机 + 内联令牌）。
+- **序列化**：TreePack（生成器主导二进制）/ TreeData（自描述、支持循环引用）/ TreeCopy（无反射深拷贝）。
+- **源生成器** `Framework/SourceGeneratorCore` + **分析器** `Framework/AnalyzerCore`（生成 ISendRule/ICallRule 接口、NodeBranchHelper、INodeProxy、序列化/拷贝等）。
+
+### 关键文件地图
+| 路径 | 说明 |
+|---|---|
+| `Framework/Core/` | .NET 侧核心源码（`WorldTree.Core.csproj`，`DOTNET` 宏） |
+| `Framework/Module/` | 模块（csproj 链接 Unity 的 Module 源码）：DataBase(LiteDB)/Input/Loader/NeuralNetwork/TreeTween/Window |
+| `Framework/SourceGeneratorCore/`、`Framework/AnalyzerCore/` | 源生成器 + 分析器 |
+| `Unity/Assets/Scripts/WorldTreeFramework/WorldTree/Module/` | 平台无关模块（被 .NET Module csproj 链接） |
+| `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/` | `WorldTree.CoreUnity`（Unity 运行时环境） |
+| `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/Editor/` | `WorldTree.UnityEditor`（编辑器工具，用 Odin/Sirenix） |
+| `Unity/Assets/Scripts/HotUpdate/{HotFix,HotFixUnity,Config}/` | HybridCLR 热更程序集 |
+| `Unity/Assets/Scripts/AOT/{GameEntry,Plugins}/` | AOT 入口 + 第三方 dll（MemoryPack/Sirenix/LiteDB/Sqlite） |
+| `Console/Server/` | 纯 .NET 服务器示例（`Program.cs` 里 `WorldTreeCore.Create(...)`） |
+| `Unity/ProjectSettings/HybridCLRSettings.asset` | HybridCLR 配置（hotUpdateAssemblies / patchAOTAssemblies） |
+| `Unity/.../Editor/ThirdParty/HybridCLR/` | HybridCLR 自定义脚本（HybridCLREditor / AOTGenericReferences 生成物） |
+| `Unity/.dshexec/` | AgentExec 文件通道（command.json → result.json，Unity 代码执行） |
+| `Unity/Assets/Scripts/AOT/GameEntry/_MonoTest/UnityMCP/Editor/AgentExec.cs` | 文件通道的 Unity 代码执行器 |
+
+---
+
+## 3. 当前重构（进行中）
+
+**目标**：把 Core 程序集从 Unity 移出到外部 `Framework` 程序集，编译成 `WorldTree.Core.dll` 给 Unity 引用（.NET 端与 Unity 端共用一份）。
+
+**已完成 ✅**
+- `Framework/Core/WorldTree.Core.csproj`：`net6.0 → netstandard2.1`；`AssemblyName → WorldTree.Core`；加 `AfterTargets=Build` 的 `CopyToUnity` 目标（拷 dll/pdb 到 `Unity/Assets/Plugins/WorldTree/`）；加 `System.Runtime.CompilerServices.Unsafe` 包。
+- 5 个 asmdef 改为 `overrideReferences: true` 显式引用 `WorldTree.Core.dll`：`Module`(+LiteDB.dll)、`CoreUnity`、`HotFix`、`HotFixUnity`(+Unsafe.dll)、`Config`。
+- `WorldTree.UnityEditor.asmdef` 补 4 个 Sirenix dll（Attributes/Editor/Utilities/Utilities.Editor）。
+- 删除了 Unity 里的 Core 源码目录 `Unity/Assets/Scripts/WorldTreeFramework/WorldTree/Core/`（含 asmdef + meta）。
+- HybridCLR：`WorldTree.Core` 从 `hotUpdateAssemblies` 移除（变 AOT）；`WorldTree.Config` 补进 `hotUpdateAssemblies`。
+- **MyGenAll 全流程通过**：`WorldTree.Core.dll` 已被自动纳入 `AOTGenericReferences` 的 `PatchedAOTAssemblyList`（自动检测，无需手动加）。
+- **Unity 编译 + 启动已验证通过。**
+
+**待办 / 待验证 ⏳**
+- 之后删 MemoryPack 时：**保留 `System.Runtime.CompilerServices.Unsafe.dll`**（挪到 `Assets/Plugins/`），因为 Core.dll 现在运行时依赖它。
+- 把 `System.Runtime.CompilerServices.Unsafe.dll` 从 `AOT/Plugins/MemoryPack/` 移到 `Assets/Plugins/`（与 NLog/CommandLine 放一起）。
+- （可选清理）`patchAOTAssemblies` 里那行 `WorldTree.Core.dll` 冗余，可留可删（本版本自动检测已覆盖）。
+
+---
+
+## 4. 已做的决策
+
+- **目标框架**：`netstandard2.1` 单一目标（注：Unity 工程是 .NET Framework 模式 `apiCompatibilityLevel:3`，但 netstandard2.1 的 Core.dll 实测编译+启动通过）。
+- **程序集名**：统一为 `WorldTree.Core`（与 Unity 生成的 csproj 一致）。
+- **Unity 引用方式**：保留 asmdef 骨架 + `overrideReferences: true` 显式引用 DLL（而非 Auto Reference）。
+- **Core 的 HybridCLR 角色**：AOT（固定不热更）。改 Core 代码需重新出包。
+- **DLL 落点**：`Unity/Assets/Plugins/WorldTree/`。
+
+---
+
+## 5. 踩过的坑（重要）
+
+- **`overrideReferences: true` 会切断对项目里所有预编译 DLL 的自动引用**。凡改成 true 的 asmdef，必须把它（含源生成器生成的那部分代码）直接 `using` 到的每个预编译 dll 都显式列进 `precompiledReferences`。踩过：Sirenix、Unsafe。
+- **netstandard 缺 `System.Runtime.CompilerServices.Unsafe`**（net6.0 内置，netstandard 要引 `System.Runtime.CompilerServices.Unsafe` 包）。Core 编译报错"Unsafe 不存在"就是它。
+- **Core.dll 现在有 3 个外部依赖，Unity 里都得有**：`NLog.dll`、`CommandLine.dll`（已在 Assets/Plugins）、`System.Runtime.CompilerServices.Unsafe.dll`（在 MemoryPack 目录，要挪/保留）。
+- **源生成器/分析器与目标框架无关**（跑在 Roslyn 编译器进程里），netstandard2.1 完全能用它们。
+- **HybridCLR：`AOTGenericReferences.cs` 是自动生成物，别手改**（`GenericReferenceWriter` 生成）。真正生效的 `PatchedAOTAssemblyList` 是**自动检测**热更代码的泛型用法得出的；`patchAOTAssemblies`（设置）在本版本基本没接进生成流程。
+- **HybridCLR 社区版**：预编译 dll 放 Assets = AOT（不可热更）。热更 dll 是 `CompileDll` 从**源码**编译的，光把 dll 丢 `Temp/Bin/Debug` 无效。旗舰版 DHE 才能热更 AOT dll。
+- **HybridCLR：AOT 程序集不能引用热更程序集**。`WorldTree.Config` 一直在 `HotUpdate/` 目录却漏加进 `hotUpdateAssemblies`，MyGenAll 的 IL2CPP 构建报 `Failed to resolve assembly: WorldTree.HotFix`。已把 Config 加进 hotUpdateAssemblies 解决。
+- **环境限制**：本机的 pwsh 命令沙箱无法写盘（`SetNamedSecurityInfoW failed (Win32 5): grantWrite`），所以 `dotnet build`、删文件、`git` 等命令要**用户自己跑**；agent 这边只有 `edit`/`write`/`read` 等能改文件。
+
+---
+
+## 6. 工具链：Unity 代码执行通道（AgentExec）
+
+本机有一条文件通道，可在运行中的 Unity 编辑器里**编译并执行 C# 代码**（注入代码走内存编译，无需 Unity 重编译）。
+
+- **执行器**：`Unity/Assets/Scripts/AOT/GameEntry/_MonoTest/UnityMCP/Editor/AgentExec.cs`（`[InitializeOnLoad]`，`EditorApplication.update` 每 0.5s 轮询）。
+- **命令**（写）：`Unity/.dshexec/command.json` —— `{ "id": "<唯一id>", "code": "<C#代码>" }`。
+- **结果**（读）：`Unity/.dshexec/result.json` —— `{ "id", "success", "result", "error", "logs" }`，用 `id` 对账。
+- **流程**：写 command.json → Unity ~0.5s 后 `CSharpCodeProvider` 内存编译 + 执行 → 写 result.json、删 command.json。
+- **能力**：注入代码可引用所有已加载程序集（含 WorldTree 框架）。
+- **限制**：`CSharpCodeProvider` 是老编译器（别用太新 C# 语法）；遍历程序集引用时要 `if (asm.IsDynamic) continue;` 跳过动态程序集。
+- 注：原 UnityMCP（WebSocket/MCP 通道）已废弃清空，仅保留此文件通道。
+
+## 7. 维护约定
+
+- 架构（第 2 节）相对稳定，重构影响结构时更新。
+- **第 3 节"当前重构"、第 4 节"决策"变化最频繁**，每完成/变更一项就同步。
+- 新踩的坑追加到第 5 节。
+- 保持精炼：目标是 2 分钟内能 re-onboard。

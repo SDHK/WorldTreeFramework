@@ -4,8 +4,8 @@
     "references": [
         "YooAsset",
         "HybridCLR.Runtime",
-        "WorldTree.EditorUnity",
-        "YooAsset.Editor"
+        "YooAsset.Editor",
+        "WorldTree.UnityEditor"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

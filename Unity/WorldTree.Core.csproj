@@ -429,6 +429,9 @@
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
     </Reference>
+    <Reference Include="WorldTree.Core">
+      <HintPath>Assets\Plugins\WorldTree\WorldTree.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>D:\1Make\GameEngine\Unity3D\2021.3.16f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
     </Reference>

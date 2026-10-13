@@ -2,7 +2,6 @@
     "name": "WorldTree.UnityEditor",
     "rootNamespace": "",
     "references": [
-        "WorldTree.Core",
         "HybridCLR.Runtime",
         "HybridCLR.Editor",
         "YooAsset.Editor",
@@ -14,8 +13,14 @@
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "WorldTree.Core.dll",
+        "Sirenix.OdinInspector.Attributes.dll",
+        "Sirenix.OdinInspector.Editor.dll",
+        "Sirenix.Utilities.dll",
+        "Sirenix.Utilities.Editor.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

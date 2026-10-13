@@ -48,7 +48,7 @@ namespace WorldTree.Analyzer
 		public ProjectAnalyzerSetting()
 		{
 			Authors = new HashSet<string>() { "闪电黑客" };
-			Add("Core", ProjectConfigHelper.CoreConfigs);
+			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
 			Add("Module", ProjectConfigHelper.ModuleConfigs);
 		}
 	}

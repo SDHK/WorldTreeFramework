@@ -353,6 +353,9 @@
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>D:\1Make\GameEngine\Unity3D\2021.3.16f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="WorldTree.Core">
+      <HintPath>Assets\Plugins\WorldTree\WorldTree.Core.dll</HintPath>
+    </Reference>
     <Reference Include="LZ4">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@6ffb977ef3\Plugins\LZ4.dll</HintPath>
     </Reference>
@@ -829,6 +832,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="WorldTree.UnityEditor.csproj">
+      <Project>{CE88A4A4-C618-ED9D-444A-4AE005D2FBC6}</Project>
+      <Name>WorldTree.UnityEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
