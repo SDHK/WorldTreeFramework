@@ -86,14 +86,10 @@ namespace WorldTree
 		#region 创建
 
 		/// <summary>
-		/// 创建时：Node的Id获取和法则支持
+		/// 创建时的扩展点。编号和法则补充在 NewNode / PoolGetNode 里完成。
 		/// </summary>
 		public static void OnCreate(INode self)
 		{
-
-			self.InstanceId = self.World.Line.Core.IdManager.GetId();
-			self.Id = self.InstanceId;
-			self.World.Line.Core.RuleManager?.SupportNodeRule(self.Type);
 		}
 
 		#endregion

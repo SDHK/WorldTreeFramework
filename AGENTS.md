@@ -13,9 +13,9 @@
 ## 2. 架构速览
 
 ### 对象三层
-- `CoreObject`（框架启动前用，如 LogManager/RuleManager/IdManager/池管理器）
-- `Unit`（可池化对象，Node 可用之前用）
-- `Node`（框架主体，一切业务对象都是 Node，挂树上）
+- `CoreObject`（启动期对象：LogManager / RuleManager / IdManager / 池管理器。`RuleManager` 在单位池之前建好）
+- `Unit`（池化自由对象，有 `Id` + `InstanceId`，不挂树。容器和 `UnitBsonDocument` 直接实现 `IUnit`）
+- `Node`（挂树上的业务对象。`INode` 还没有继承 `IUnit`）
 
 ### 引导链
 ```
@@ -31,7 +31,7 @@ WorldTreeCore（全局唯一核心）
 - **Branch 分支**：树的组织结构（Child/Component/Field/Temp/ListNode/Generic）。节点用 `ChildOf<>`/`ComponentOf<>`/`FieldOf<>`/`AsBranch<>`/`AsRule<>` 等**空标记接口**声明约束，源生成器据此生成强类型方法。
 - **Rule 法则**：以接口为键的事件系统，启动时反射扫描 `IRule` 实现类自动注册。支持多播/多态/泛型/逆变/返回值/异步。生命周期（Awake/Enable/Disable/Add/Remove/Graft/Cut/Update/Serialize…）也是法则。
 - **RuleExecutor 法则执行器**：替代委托，双模式遍历（+1 连续 / +2 奇偶），遍历中增删时序稳定。
-- **对象池**：UnitPool（启动前）/ NodePool（启动后）/ ReferencedPool（按 Id 反查节点）。
+- **对象池**：UnitPool / NodePool / ReferencedPool（只收 `INodeData`，按雪花 `Id` 反查）。
 - **IdManager**：实例 Id（进程位 + 递减）+ 数据 UID（雪花：14位进程 | 30位秒时间戳 | 20位偏移）。
 - **时间**：RealTimeManager（NTP 校时）、WorldTimeManager（游戏时间/帧）、CascadeTicker（二进制时间轮）。
 - **TreeTask**：自研 async/await（`[AsyncMethodBuilder]` + 自写状态机 + 内联令牌）。
@@ -77,8 +77,20 @@ WorldTreeCore（全局唯一核心）
 - `AsyncDelay` 已修好：`WorldTimeManager` 补了 `AddTimer` / `AddTimerDelay`（真实时间 Utc Ticks），`AsyncDelay` 接上去，`TimeOut` 因此能生效。
 - **TreeTask 测试代码**：`Unity/Assets/Scripts/HotUpdate/HotFix/Server/_Test/TreeTaskTest.cs` + `TreeTaskTestRule.cs`，挂在 `DotNetInitRule.OnAddRule`。7 个用例（嵌套 await / AsyncYield 逐帧 / AsyncDelay / Task 桥接 / TreeTaskLink / 令牌取消 / 异常传播），跑 `Console/Server/Bin/App.exe` 看日志，已实测全绿。
 - TreeTask 仍未处理：BCL `Task` 失败不会 `SetException`（`INode.GetAwaiter(Task)` 一律 `SetResult`，`TreeTaskLink` 只 `LogError` 然后一直 Pending），取消被当成成功（`GetResult` 对 `Canceled` 不抛异常，业务只能自己查令牌）。
-- **WorldTask** 已并列放在 `Framework/Core/WorldTask/`，继承 `Unit`，不挂树。延续、取消、真实时间延迟都走委托（`WorldTimeManager.AddTimerCallback`），不发法则。同步等待（`WorldTaskCompleted` / `WorldTaskTokenCatch`）和状态机在用完后还池；普通任务完成时不还池，避免迟到回调打到下一次取出的实例。顶层要 `.Coroutine()` / `.Coroutine(token)`。生成器仍输出 `TreeTask`。控制台测试 `WorldTaskTest` 已跑过：嵌套 await、Delay、BCL 成功/失败、令牌取消、异常、`SwitchWorld`。
+- **WorldTask** 已并列放在 `Framework/Core/WorldTask/`，继承 `Unit`，不挂树。顶层要 `.Coroutine()` / `.Coroutine(token)`。同步等待和状态机用完还池；普通任务完成时不还池。生成器仍输出 `TreeTask`。控制台测试已跑过。真实时间延迟目前走 `WorldTimeManager.AddTimerCallback`（委托槽位）。这是临时接法：定时器仍应回到 `CascadeTicker`，任务保持轻对象。等 `INode : IUnit`、法则能打到单位之后再接，不要继续加厚这套委托定时器。
 - `patchAOTAssemblies` 当前已是空列表。删 MemoryPack 后编译、MyGenAll、启动已通过。
+
+**编号与法则补充（进行中）**
+
+已完成，`WorldTree.Core` 编译通过：
+- `IUnit` 增加 `Id`、`InstanceId`（`[TreeDataIgnore]`）。属性补在 `Unit`、`UnitDictionary` / `UnitList` / `UnitHashSet` / `UnitQueue` / `UnitConcurrentQueue` / `UnitStack` / `UnitSortedDictionary`、`UnitBsonDocument`。`UnitDictionary` 另加 `[TreeCopyIgnore]`。
+- 单位在 `NewUnit` / `PoolGetUnit` 的 `RefreshUnitId` 里发号，`OnCreate` 之前：`InstanceId = GetId()`，`Id = InstanceId`。直接 `new` 出来的单位不发号，`Id` 为 0。
+- 节点在 `NewNode` / `PoolGetNode` 的 `RefreshNodeId` 里发号并 `SupportNodeRule`，`OnCreate` 之前。每次换 `InstanceId`。普通节点 `Id = InstanceId`。`INodeData` 非反序列化时 `Id = GetUID()`；`IsSerialize` 时不动 `Id`，等字段循环写回存档里的 `Id`。
+- `NodeData` 不再重写 `OnCreate`。`INodeProxy.OnCreate` 留空方法：直接实现 `INode` 的类型会生成对它的转发，签名不能删。
+
+还没做：
+- `INode : IUnit`，并删掉 `INode` 上重复的 `Id` / `InstanceId`。然后 `NodeRuleRef`、`RuleListExecutor` 的存储改成 `IUnit`。生成器只放宽 `SendRule` / `CallRule`（含异步、引用）的下界；`AddNode`、`NodeOf`、分支生成器保持 `INode`。
+- `NodeRef`、`CascadeTicker` 先不动。不引入 `IUnitData`，名字也不对调。
 
 ---
 
@@ -89,6 +101,9 @@ WorldTreeCore（全局唯一核心）
 - **Unity 引用方式**：保留 asmdef 骨架 + `overrideReferences: true` 显式引用 DLL（而非 Auto Reference）。
 - **Core 的 HybridCLR 角色**：AOT（固定不热更）。改 Core 代码需重新出包。
 - **DLL 落点**：`Unity/Assets/Plugins/WorldTree/`。
+- **编号只在 `New` / `PoolGet` 分配，不在 `OnCreate`。** 反序列化是先 `PoolGetNode(true)` 再写字段，`IsSerialize` 在进去之前已经设好。`Branch` / `ListNodeBranch` / `Rattan` 重写了 `OnCreate` 且不调 `base`；容器继承的是 `List` / `Dictionary`，不能再继承 `Unit`。
+- **不单开 `IUnitData`。** 目标继承是 `IUnit` → `INode` → `INodeData`。`INode` 继续表示树上的对象，`IUnit` 继续表示自由对象，不要改名。
+- **节点实例的 `SupportNodeRule` 跟发号走。** 序列化、`TreePack`、`TreeCopier` 里的调用留下：读档要在创建对象之前先补上反序列化法则；`int`、数组、`UnitList` 不走 `PoolGetNode`。`PoolGetUnit` 不要调用它，每次都会拿写锁。
 
 ---
 
@@ -103,6 +118,8 @@ WorldTreeCore（全局唯一核心）
 - **HybridCLR：AOT 程序集不能引用热更程序集**。`WorldTree.Config` 一直在 `HotUpdate/` 目录却漏加进 `hotUpdateAssemblies`，MyGenAll 的 IL2CPP 构建报 `Failed to resolve assembly: WorldTree.HotFix`。已把 Config 加进 hotUpdateAssemblies 解决。
 - **环境限制**：pwsh 沙箱不能写盘（`SetNamedSecurityInfoW failed (Win32 5): grantWrite`）；agent 现在的 shell 是 POSIX 风格（git-bash），`dotnet build`、直接跑 `Console/Server/Bin/App.exe` 都能跑通，反倒是 `Get-ChildItem` 这类 pwsh cmdlet 会 command not found。
 - **BCL `Task` 完成后的恢复要等下一次心跳 tick**。`INode.GetAwaiter(Task)` / `TreeTaskLink` 完成后都走 `WorldContext.Post`，而 `WorldContext.requestQueue` 由 `UpdateRule` 每帧排空一次（整队排空）。心跳 `frameTime=1000ms` 时，一个 300ms 的 `Task` 实测 1003ms 才恢复。别拿它做毫秒级计时。
+- **`INodeProxy.OnCreate` 不能删。** 直接实现 `INode` 的类型由 `INodeProxyGenerator` 生成 `INodeProxyRule.OnCreate(this)`。编号和 `SupportNodeRule` 已不在这里。
+- **`SupportNodeRule` 每次都进写锁**，类型已经支持也一样。热路径（每次 `PoolGetUnit`）不要加。读档的法则查找发生在 `PoolGetNode` 之前，`ReadValue` 里的调用不能省。
 - **生成器静态集合不能跨程序集共享**。`RuleSupplementHelper` 等用静态字典收集再 `AddSource`。MyGenAll 的 IL2CPP Player 构建用 `/shared` 编译器服务器并行编 `CoreUnity`/`Module`/`HotFix`，字典被串台后，Module 的 `InputBindSupplement` 会被写进 CoreUnity（CoreUnity 不引用 Module，CS0246），接着 `GenerateStripedAOTDlls failed`。编辑器/VS 分开编所以能过。`SourceGeneratorBase.Execute` 已加锁串行。改 `Unity.Analysis.dll` 后要重启 Unity，否则旧编译器服务器还握着旧 dll。程序集名单在 `UnityTool/Analysis/ProjectGeneratorSetting.cs`，和 asmdef 是对得上的；`Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs` 是 .NET 侧（`WorldTree.Core` / `Module`），别和 Unity 那份混。
 
 ---

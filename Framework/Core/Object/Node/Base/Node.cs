@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 创 建 者：  闪电黑客
 * 创建时间：  2022/5/6 21:27
@@ -46,17 +46,6 @@ namespace WorldTree
 	public abstract class NodeData : Node, INodeData
 	{
 		public override long Id { get; set; }
-		/// <summary>
-		/// 创建时：NodeData的UID获取和法则支持
-		/// </summary>
-		override public void OnCreate()
-		{
-			//如果是新创建的节点，需要获取一个新的UID
-			//如果是反序列化的节点，不需要获取新的UID
-			if (!IsSerialize) Id = World.Line.Core.IdManager.GetUID();
-			InstanceId = World.Line.Core.IdManager.GetId();
-			World.Line.Core.RuleManager.SupportNodeRule(Type);
-		}
 	}
 
 	/// <summary>

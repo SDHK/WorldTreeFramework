@@ -1,4 +1,4 @@
-﻿
+
 /****************************************
 
 * 作者： 闪电黑客
@@ -30,6 +30,7 @@ namespace WorldTree
 			node.World = self.World;
 			node.Type = node.TypeToCode(type);
 			node.IsSerialize = isSerialize;
+			RefreshNodeId(self, node);
 			node.OnCreate();
 			return node;
 		}
@@ -52,6 +53,7 @@ namespace WorldTree
 				node.World = self;
 				node.World = self.World;
 				node.IsSerialize = isSerialize;
+				RefreshNodeId(self, node);
 				node.OnCreate();
 				return node;
 			}
@@ -69,10 +71,28 @@ namespace WorldTree
 				node.World = self;
 				node.World = self.World;
 				node.IsSerialize = isSerialize;
+				RefreshNodeId(self, node);
 				node.OnCreate();
 				return node;
 			}
 			return self.NewNode(type, out _, isSerialize);
+		}
+
+		/// <summary>
+		/// 取出节点时换一次实例号，并补充这个类型的法则。数据节点在反序列化时保留 Id，等字段读入后再写回。
+		/// </summary>
+		private static void RefreshNodeId(World self, INode node)
+		{
+			node.InstanceId = self.Line.Core.IdManager.GetId();
+			if (node is INodeData)
+			{
+				if (!node.IsSerialize) node.Id = self.Line.Core.IdManager.GetUID();
+			}
+			else
+			{
+				node.Id = node.InstanceId;
+			}
+			self.Line.Core.RuleManager?.SupportNodeRule(node.Type);
 		}
 
 		/// <summary>

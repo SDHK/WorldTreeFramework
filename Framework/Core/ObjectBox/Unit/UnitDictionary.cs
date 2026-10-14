@@ -1,4 +1,4 @@
-﻿
+
 /****************************************
 
 * 作者： 闪电黑客
@@ -33,6 +33,12 @@ namespace WorldTree
 		[TreeDataIgnore]
 		[TreeCopyIgnore]
 		public bool IsDisposed { get; set; }
+		[TreeDataIgnore]
+		[TreeCopyIgnore]
+		public long Id { get; set; }
+		[TreeDataIgnore]
+		[TreeCopyIgnore]
+		public long InstanceId { get; set; }
 
 		public virtual void OnCreate() { }
 

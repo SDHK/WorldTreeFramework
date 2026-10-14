@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/9/11 20:45
@@ -28,6 +28,7 @@ namespace WorldTree
 			unit = Activator.CreateInstance(type, true) as IUnit;
 			unit.World = self;
 			unit.Type = unit.TypeToCode(type);
+			RefreshUnitId(self, unit);
 			unit.OnCreate();
 			return unit;
 		}
@@ -46,6 +47,7 @@ namespace WorldTree
 			if (self.Line.Core.UnitPoolManager.TryGet(out T unit))
 			{
 				unit.World = self;
+				RefreshUnitId(self, unit);
 				unit.OnCreate();
 				return unit;
 			}
@@ -61,10 +63,20 @@ namespace WorldTree
 			{
 				IUnit unit = obj as IUnit;
 				unit.World = self;
+				RefreshUnitId(self, unit);
 				unit.OnCreate();
 				return unit;
 			}
 			return self.NewUnit(type, out _);
+		}
+
+		/// <summary>
+		/// 取出单位时换一次实例号。普通单位的 Id 与 InstanceId 相同。
+		/// </summary>
+		private static void RefreshUnitId(World self, IUnit unit)
+		{
+			unit.InstanceId = self.Line.Core.IdManager.GetId();
+			unit.Id = unit.InstanceId;
 		}
 
 		/// <summary>

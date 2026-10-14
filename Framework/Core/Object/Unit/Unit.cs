@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/5/18 15:07
@@ -26,6 +26,12 @@ namespace WorldTree
 		public bool IsFromPool { get; set; }
 		[TreeDataIgnore]
 		public World World { get; set; }
+
+		[TreeDataIgnore]
+		public long Id { get; set; }
+
+		[TreeDataIgnore]
+		public long InstanceId { get; set; }
 
 		public virtual void OnCreate() { }
 

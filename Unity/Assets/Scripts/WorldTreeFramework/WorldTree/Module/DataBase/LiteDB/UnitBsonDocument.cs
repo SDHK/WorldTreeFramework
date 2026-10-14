@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/11/22 18:11
@@ -23,6 +23,10 @@ namespace WorldTree
 		public bool IsFromPool { get; set; }
 		[TreeDataIgnore]
 		public World World { get; set; }
+		[TreeDataIgnore]
+		public long Id { get; set; }
+		[TreeDataIgnore]
+		public long InstanceId { get; set; }
 
 		public void Dispose()
 		{

@@ -1,4 +1,4 @@
-﻿
+
 /****************************************
 
 * 作者： 闪电黑客
@@ -28,6 +28,10 @@ namespace WorldTree
 		public bool IsFromPool { get; set; }
 		[TreeDataIgnore]
 		public bool IsDisposed { get; set; }
+		[TreeDataIgnore]
+		public long Id { get; set; }
+		[TreeDataIgnore]
+		public long InstanceId { get; set; }
 
 		public void Dispose()
 		{
