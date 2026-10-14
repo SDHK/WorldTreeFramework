@@ -55,7 +55,6 @@
   <ItemGroup>
     <Analyzer Include="D:\1Make\Code\VisualStudio\2026\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="D:\Projects\GameEngine\Unity\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
-    <Analyzer Include="D:\Projects\GameEngine\Unity\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AOT\Plugins\YooAsset\2.1.1\Extension Sample\Scripts\Runtime\GameObjectAssetReference.cs" />
@@ -118,7 +117,6 @@
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Utilities.xml" />
     <None Include="Assets\Scripts\AOT\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll" />
     <None Include="Assets\Shaders\IvyShader\Ivy\Flow\IvyObject\IvyObjectTransparent\IvyFlowShadow.hlsl" />
-    <None Include="Assets\Scripts\AOT\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll" />
     <None Include="Assets\Shaders\IvyShader\Ivy\Core\Stage\IvyTransmit.hlsl" />
     <None Include="Assets\Shaders\IvyShader\Unity\Pipeline\URP\Core\Env\IvyEnvLight.hlsl" />
     <None Include="Assets\Shaders\IvyShader\Ivy\Core\Tool\IvyMatrix.hlsl" />
@@ -460,7 +458,7 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\Scripts\AOT\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Assets\Plugins\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>Assets\Scripts\AOT\Plugins\Sqlite\Mono.Data.Sqlite.dll</HintPath>
@@ -1045,10 +1043,6 @@
     <ProjectReference Include="UnityMCP.Editor.csproj">
       <Project>{49786BB5-1BEF-16C4-30FE-0B6F877BAF75}</Project>
       <Name>UnityMCP.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="MemoryPack.csproj">
-      <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
-      <Name>MemoryPack</Name>
     </ProjectReference>
     <ProjectReference Include="Sirenix.OdinInspector.CompatibilityLayer.csproj">
       <Project>{E387569F-725F-F5C8-517B-584709B7D5D8}</Project>

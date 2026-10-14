@@ -55,6 +55,8 @@ namespace WorldTree.SourceGenerator
 		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			if (!(context.SyntaxReceiver is FindTreePackSyntaxReceiver receiver and not null)) return;
+			TypeSubDict.Clear();
+			TypeSet.Clear();
 
 			StringBuilder Code = new StringBuilder();
 			StringBuilder ClassCode = new StringBuilder();

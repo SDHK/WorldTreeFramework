@@ -10,37 +10,12 @@
     <type fullname="LiteDB.ILiteCollection`1" preserve="all" />
     <type fullname="LiteDB.LiteDatabase" preserve="all" />
   </assembly>
-  <assembly fullname="MemoryPack">
-    <type fullname="MemoryPack.Formatters.ArrayFormatter`1" preserve="all" />
-    <type fullname="MemoryPack.Formatters.ListFormatter`1" preserve="all" />
-    <type fullname="MemoryPack.GenerateType" preserve="all" />
-    <type fullname="MemoryPack.IMemoryPackFormatterRegister" preserve="all" />
-    <type fullname="MemoryPack.IMemoryPackable`1" preserve="all" />
-    <type fullname="MemoryPack.Internal.PreserveAttribute" preserve="all" />
-    <type fullname="MemoryPack.Internal.ReusableLinkedArrayBufferWriter" preserve="all" />
-    <type fullname="MemoryPack.Internal.ReusableLinkedArrayBufferWriterPool" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackFormatterProvider" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackFormatter`1" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackOrderAttribute" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackReader" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackReaderOptionalState" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackSerializationException" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackSerializer" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackSerializerOptions" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackUnionAttribute" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackWriter" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackWriterOptionalState" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackableAttribute" preserve="all" />
-  </assembly>
   <assembly fullname="System">
     <type fullname="System.Collections.Generic.Queue`1" preserve="all" />
     <type fullname="System.Diagnostics.Stopwatch" preserve="all" />
   </assembly>
   <assembly fullname="System.Core">
     <type fullname="System.Collections.Generic.HashSet`1" preserve="all" />
-  </assembly>
-  <assembly fullname="System.Runtime.CompilerServices.Unsafe">
-    <type fullname="System.Runtime.CompilerServices.Unsafe" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.CoreModule">
     <type fullname="UnityEngine.AnimationCurve" preserve="all" />
@@ -280,10 +255,7 @@
     <type fullname="System.AppDomain" preserve="all" />
     <type fullname="System.Array" preserve="all" />
     <type fullname="System.Attribute" preserve="all" />
-    <type fullname="System.AttributeTargets" preserve="all" />
-    <type fullname="System.AttributeUsageAttribute" preserve="all" />
     <type fullname="System.Boolean" preserve="all" />
-    <type fullname="System.Buffers.IBufferWriter`1" preserve="all" />
     <type fullname="System.Byte" preserve="all" />
     <type fullname="System.Char" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2" preserve="all" />
@@ -316,7 +288,6 @@
     <type fullname="System.Object" preserve="all" />
     <type fullname="System.ParamArrayAttribute" preserve="all" />
     <type fullname="System.Random" preserve="all" />
-    <type fullname="System.ReadOnlySpan`1" preserve="all" />
     <type fullname="System.Reflection.Assembly" preserve="all" />
     <type fullname="System.Reflection.AssemblyName" preserve="all" />
     <type fullname="System.Reflection.MemberInfo" preserve="all" />
@@ -335,13 +306,11 @@
     <type fullname="System.Security.Permissions.SecurityPermissionAttribute" preserve="all" />
     <type fullname="System.Security.UnverifiableCodeAttribute" preserve="all" />
     <type fullname="System.Single" preserve="all" />
-    <type fullname="System.Span`1" preserve="all" />
     <type fullname="System.String" preserve="all" />
     <type fullname="System.TimeSpan" preserve="all" />
     <type fullname="System.Type" preserve="all" />
     <type fullname="System.UnhandledExceptionEventArgs" preserve="all" />
     <type fullname="System.UnhandledExceptionEventHandler" preserve="all" />
-    <type fullname="System.ValueTuple`2" preserve="all" />
     <type fullname="System.ValueType" preserve="all" />
   </assembly>
 </linker>

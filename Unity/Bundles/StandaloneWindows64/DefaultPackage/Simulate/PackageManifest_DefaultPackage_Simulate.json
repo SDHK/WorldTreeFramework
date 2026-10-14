@@ -39,15 +39,6 @@
             "BundleID": 1
         },
         {
-            "Address": "MemoryPack.dll",
-            "AssetPath": "Assets/AssetBundles/Dlls/AotDlls/MemoryPack.dll.bytes",
-            "AssetGUID": "",
-            "AssetTags": [
-                "aotDlls"
-            ],
-            "BundleID": 1
-        },
-        {
             "Address": "mscorlib.dll",
             "AssetPath": "Assets/AssetBundles/Dlls/AotDlls/mscorlib.dll.bytes",
             "AssetGUID": "",
@@ -226,7 +217,7 @@
             "UnityCRC": 0,
             "FileHash": "5fb6df9ba430a282481f7181f9716e7e",
             "FileCRC": "00000000",
-            "FileSize": 5333504,
+            "FileSize": 5158400,
             "Encrypted": false,
             "Tags": [],
             "DependIDs": []

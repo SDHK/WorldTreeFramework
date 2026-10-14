@@ -6,7 +6,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	public static readonly IReadOnlyList<string> PatchedAOTAssemblyList = new List<string>
 	{
 		"LiteDB.dll",
-		"MemoryPack.dll",
 		"System.Core.dll",
 		"System.Runtime.CompilerServices.Unsafe.dll",
 		"UnityEngine.CoreModule.dll",
@@ -28,18 +27,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// LiteDB.LiteQueryable.<>c<object>
 	// LiteDB.LiteQueryable.<ToDocuments>d__26<object>
 	// LiteDB.LiteQueryable<object>
-	// MemoryPack.Formatters.ArrayFormatter<WorldTree.MemoryPackDataTest<object>>
-	// MemoryPack.Formatters.ArrayFormatter<object>
-	// MemoryPack.Formatters.ListFormatter<int>
-	// MemoryPack.IMemoryPackFormatter<WorldTree.MemoryPackDataTest<object>>
-	// MemoryPack.IMemoryPackFormatter<int>
-	// MemoryPack.IMemoryPackFormatter<object>
-	// MemoryPack.IMemoryPackable<WorldTree.MemoryPackDataTest<object>>
-	// MemoryPack.IMemoryPackable<object>
-	// MemoryPack.MemoryPackFormatter<System.UIntPtr>
-	// MemoryPack.MemoryPackFormatter<WorldTree.MemoryPackDataTest<object>>
-	// MemoryPack.MemoryPackFormatter<object>
-	// System.Action<MemoryPack.Internal.BufferSegment>
 	// System.Action<System.TimeSpan>
 	// System.Action<UnityEngine.Vector2>
 	// System.Action<WorldTree.ByteSequenceSegment>
@@ -51,17 +38,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Action<int>
 	// System.Action<long>
 	// System.Action<object>
-	// System.ArraySegment.Enumerator<byte>
-	// System.ArraySegment.Enumerator<int>
-	// System.ArraySegment<byte>
-	// System.ArraySegment<int>
-	// System.Buffers.ArrayPool<byte>
-	// System.Buffers.IBufferWriter<byte>
-	// System.Buffers.TlsOverPerCoreLockedStacksArrayPool.LockedStack<byte>
-	// System.Buffers.TlsOverPerCoreLockedStacksArrayPool.PerCoreLockedStacks<byte>
-	// System.Buffers.TlsOverPerCoreLockedStacksArrayPool<byte>
 	// System.ByReference<byte>
-	// System.ByReference<int>
 	// System.Collections.Concurrent.ConcurrentDictionary.<GetEnumerator>d__35<long,byte>
 	// System.Collections.Concurrent.ConcurrentDictionary.<GetEnumerator>d__35<long,object>
 	// System.Collections.Concurrent.ConcurrentDictionary.<GetEnumerator>d__35<object,long>
@@ -85,7 +62,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Concurrent.ConcurrentQueue.<Enumerate>d__28<object>
 	// System.Collections.Concurrent.ConcurrentQueue.Segment<object>
 	// System.Collections.Concurrent.ConcurrentQueue<object>
-	// System.Collections.Generic.ArraySortHelper<MemoryPack.Internal.BufferSegment>
 	// System.Collections.Generic.ArraySortHelper<UnityEngine.Vector2>
 	// System.Collections.Generic.ArraySortHelper<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.ArraySortHelper<WorldTree.InputInfo>
@@ -96,7 +72,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.ArraySortHelper<int>
 	// System.Collections.Generic.ArraySortHelper<long>
 	// System.Collections.Generic.ArraySortHelper<object>
-	// System.Collections.Generic.Comparer<MemoryPack.Internal.BufferSegment>
 	// System.Collections.Generic.Comparer<UnityEngine.Vector2>
 	// System.Collections.Generic.Comparer<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.Comparer<WorldTree.InputInfo>
@@ -107,7 +82,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Comparer<int>
 	// System.Collections.Generic.Comparer<long>
 	// System.Collections.Generic.Comparer<object>
-	// System.Collections.Generic.Comparer<uint>
 	// System.Collections.Generic.Dictionary.Enumerator<UnityEngine.Color,object>
 	// System.Collections.Generic.Dictionary.Enumerator<byte,object>
 	// System.Collections.Generic.Dictionary.Enumerator<int,object>
@@ -116,8 +90,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.Enumerator<long,object>
 	// System.Collections.Generic.Dictionary.Enumerator<object,int>
 	// System.Collections.Generic.Dictionary.Enumerator<object,object>
-	// System.Collections.Generic.Dictionary.Enumerator<object,ushort>
-	// System.Collections.Generic.Dictionary.Enumerator<uint,object>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<UnityEngine.Color,object>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<byte,object>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<int,object>
@@ -126,8 +98,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<long,object>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<object,int>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<object,object>
-	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<object,ushort>
-	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<uint,object>
 	// System.Collections.Generic.Dictionary.KeyCollection<UnityEngine.Color,object>
 	// System.Collections.Generic.Dictionary.KeyCollection<byte,object>
 	// System.Collections.Generic.Dictionary.KeyCollection<int,object>
@@ -136,8 +106,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.KeyCollection<long,object>
 	// System.Collections.Generic.Dictionary.KeyCollection<object,int>
 	// System.Collections.Generic.Dictionary.KeyCollection<object,object>
-	// System.Collections.Generic.Dictionary.KeyCollection<object,ushort>
-	// System.Collections.Generic.Dictionary.KeyCollection<uint,object>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<UnityEngine.Color,object>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<byte,object>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<int,object>
@@ -146,8 +114,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<long,object>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<object,int>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<object,object>
-	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<object,ushort>
-	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<uint,object>
 	// System.Collections.Generic.Dictionary.ValueCollection<UnityEngine.Color,object>
 	// System.Collections.Generic.Dictionary.ValueCollection<byte,object>
 	// System.Collections.Generic.Dictionary.ValueCollection<int,object>
@@ -156,8 +122,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.ValueCollection<long,object>
 	// System.Collections.Generic.Dictionary.ValueCollection<object,int>
 	// System.Collections.Generic.Dictionary.ValueCollection<object,object>
-	// System.Collections.Generic.Dictionary.ValueCollection<object,ushort>
-	// System.Collections.Generic.Dictionary.ValueCollection<uint,object>
 	// System.Collections.Generic.Dictionary<UnityEngine.Color,object>
 	// System.Collections.Generic.Dictionary<byte,object>
 	// System.Collections.Generic.Dictionary<int,object>
@@ -166,8 +130,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary<long,object>
 	// System.Collections.Generic.Dictionary<object,int>
 	// System.Collections.Generic.Dictionary<object,object>
-	// System.Collections.Generic.Dictionary<object,ushort>
-	// System.Collections.Generic.Dictionary<uint,object>
 	// System.Collections.Generic.EqualityComparer<UnityEngine.Color>
 	// System.Collections.Generic.EqualityComparer<WorldTree.InputInfo>
 	// System.Collections.Generic.EqualityComparer<WorldTree.TreeDataNodeDataTest3>
@@ -175,15 +137,12 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.EqualityComparer<int>
 	// System.Collections.Generic.EqualityComparer<long>
 	// System.Collections.Generic.EqualityComparer<object>
-	// System.Collections.Generic.EqualityComparer<uint>
-	// System.Collections.Generic.EqualityComparer<ushort>
 	// System.Collections.Generic.HashSet.Enumerator<long>
 	// System.Collections.Generic.HashSet.Enumerator<object>
 	// System.Collections.Generic.HashSet<long>
 	// System.Collections.Generic.HashSet<object>
 	// System.Collections.Generic.HashSetEqualityComparer<long>
 	// System.Collections.Generic.HashSetEqualityComparer<object>
-	// System.Collections.Generic.ICollection<MemoryPack.Internal.BufferSegment>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<UnityEngine.Color,object>>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<byte,object>>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<int,object>>
@@ -192,8 +151,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<long,object>>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<object,int>>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<object,object>>
-	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<object,ushort>>
-	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<uint,object>>
 	// System.Collections.Generic.ICollection<UnityEngine.Vector2>
 	// System.Collections.Generic.ICollection<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.ICollection<WorldTree.InputInfo>
@@ -204,7 +161,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.ICollection<int>
 	// System.Collections.Generic.ICollection<long>
 	// System.Collections.Generic.ICollection<object>
-	// System.Collections.Generic.IComparer<MemoryPack.Internal.BufferSegment>
 	// System.Collections.Generic.IComparer<UnityEngine.Vector2>
 	// System.Collections.Generic.IComparer<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.IComparer<WorldTree.InputInfo>
@@ -219,8 +175,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IDictionary<long,object>
 	// System.Collections.Generic.IDictionary<object,long>
 	// System.Collections.Generic.IDictionary<object,object>
-	// System.Collections.Generic.IEnumerable<MemoryPack.Internal.BufferSegment>
-	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.UIntPtr,object>>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<UnityEngine.Color,object>>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<byte,object>>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<int,object>>
@@ -231,8 +185,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<object,int>>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<object,long>>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<object,object>>
-	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<object,ushort>>
-	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<uint,object>>
 	// System.Collections.Generic.IEnumerable<UnityEngine.Vector2>
 	// System.Collections.Generic.IEnumerable<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.IEnumerable<WorldTree.InputInfo>
@@ -243,8 +195,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IEnumerable<int>
 	// System.Collections.Generic.IEnumerable<long>
 	// System.Collections.Generic.IEnumerable<object>
-	// System.Collections.Generic.IEnumerator<MemoryPack.Internal.BufferSegment>
-	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<System.UIntPtr,object>>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<UnityEngine.Color,object>>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<byte,object>>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<int,object>>
@@ -255,8 +205,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<object,int>>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<object,long>>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<object,object>>
-	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<object,ushort>>
-	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<uint,object>>
 	// System.Collections.Generic.IEnumerator<UnityEngine.Vector2>
 	// System.Collections.Generic.IEnumerator<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.IEnumerator<WorldTree.InputInfo>
@@ -272,8 +220,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IEqualityComparer<int>
 	// System.Collections.Generic.IEqualityComparer<long>
 	// System.Collections.Generic.IEqualityComparer<object>
-	// System.Collections.Generic.IEqualityComparer<uint>
-	// System.Collections.Generic.IList<MemoryPack.Internal.BufferSegment>
 	// System.Collections.Generic.IList<UnityEngine.Vector2>
 	// System.Collections.Generic.IList<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.IList<WorldTree.InputInfo>
@@ -284,7 +230,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IList<int>
 	// System.Collections.Generic.IList<long>
 	// System.Collections.Generic.IList<object>
-	// System.Collections.Generic.KeyValuePair<System.UIntPtr,object>
 	// System.Collections.Generic.KeyValuePair<UnityEngine.Color,object>
 	// System.Collections.Generic.KeyValuePair<byte,object>
 	// System.Collections.Generic.KeyValuePair<int,object>
@@ -295,9 +240,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.KeyValuePair<object,int>
 	// System.Collections.Generic.KeyValuePair<object,long>
 	// System.Collections.Generic.KeyValuePair<object,object>
-	// System.Collections.Generic.KeyValuePair<object,ushort>
-	// System.Collections.Generic.KeyValuePair<uint,object>
-	// System.Collections.Generic.List.Enumerator<MemoryPack.Internal.BufferSegment>
 	// System.Collections.Generic.List.Enumerator<UnityEngine.Vector2>
 	// System.Collections.Generic.List.Enumerator<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.List.Enumerator<WorldTree.InputInfo>
@@ -308,7 +250,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.List.Enumerator<int>
 	// System.Collections.Generic.List.Enumerator<long>
 	// System.Collections.Generic.List.Enumerator<object>
-	// System.Collections.Generic.List<MemoryPack.Internal.BufferSegment>
 	// System.Collections.Generic.List<UnityEngine.Vector2>
 	// System.Collections.Generic.List<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.List<WorldTree.InputInfo>
@@ -319,7 +260,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.List<int>
 	// System.Collections.Generic.List<long>
 	// System.Collections.Generic.List<object>
-	// System.Collections.Generic.ObjectComparer<MemoryPack.Internal.BufferSegment>
 	// System.Collections.Generic.ObjectComparer<UnityEngine.Vector2>
 	// System.Collections.Generic.ObjectComparer<WorldTree.ByteSequenceSegment>
 	// System.Collections.Generic.ObjectComparer<WorldTree.InputInfo>
@@ -330,7 +270,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.ObjectComparer<int>
 	// System.Collections.Generic.ObjectComparer<long>
 	// System.Collections.Generic.ObjectComparer<object>
-	// System.Collections.Generic.ObjectComparer<uint>
 	// System.Collections.Generic.ObjectEqualityComparer<UnityEngine.Color>
 	// System.Collections.Generic.ObjectEqualityComparer<WorldTree.InputInfo>
 	// System.Collections.Generic.ObjectEqualityComparer<WorldTree.TreeDataNodeDataTest3>
@@ -338,13 +277,10 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.ObjectEqualityComparer<int>
 	// System.Collections.Generic.ObjectEqualityComparer<long>
 	// System.Collections.Generic.ObjectEqualityComparer<object>
-	// System.Collections.Generic.ObjectEqualityComparer<uint>
-	// System.Collections.Generic.ObjectEqualityComparer<ushort>
 	// System.Collections.Generic.Queue.Enumerator<WorldTree.InputData>
 	// System.Collections.Generic.Queue<WorldTree.InputData>
 	// System.Collections.Generic.Stack.Enumerator<object>
 	// System.Collections.Generic.Stack<object>
-	// System.Collections.ObjectModel.ReadOnlyCollection<MemoryPack.Internal.BufferSegment>
 	// System.Collections.ObjectModel.ReadOnlyCollection<UnityEngine.Vector2>
 	// System.Collections.ObjectModel.ReadOnlyCollection<WorldTree.ByteSequenceSegment>
 	// System.Collections.ObjectModel.ReadOnlyCollection<WorldTree.InputInfo>
@@ -355,7 +291,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.ObjectModel.ReadOnlyCollection<int>
 	// System.Collections.ObjectModel.ReadOnlyCollection<long>
 	// System.Collections.ObjectModel.ReadOnlyCollection<object>
-	// System.Comparison<MemoryPack.Internal.BufferSegment>
 	// System.Comparison<UnityEngine.Vector2>
 	// System.Comparison<WorldTree.ByteSequenceSegment>
 	// System.Comparison<WorldTree.InputInfo>
@@ -370,7 +305,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Func<long,byte>
 	// System.Func<long,object,object>
 	// System.Func<long,object>
-	// System.Func<object,byte>
 	// System.Func<object,long,long>
 	// System.Func<object,long>
 	// System.Func<object,object,object>
@@ -379,7 +313,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.IEquatable<WorldTree.InputInfo>
 	// System.IEquatable<WorldTree.InputValue>
 	// System.IEquatable<object>
-	// System.Predicate<MemoryPack.Internal.BufferSegment>
 	// System.Predicate<UnityEngine.Vector2>
 	// System.Predicate<WorldTree.ByteSequenceSegment>
 	// System.Predicate<WorldTree.InputInfo>
@@ -390,15 +323,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Predicate<int>
 	// System.Predicate<long>
 	// System.Predicate<object>
-	// System.ReadOnlySpan.Enumerator<byte>
-	// System.ReadOnlySpan.Enumerator<int>
 	// System.ReadOnlySpan<byte>
-	// System.ReadOnlySpan<int>
-	// System.Span.Enumerator<byte>
-	// System.Span.Enumerator<int>
 	// System.Span<byte>
-	// System.Span<int>
-	// System.ValueTuple<byte,uint>
 	// WorldTree.AsBranch<object>
 	// WorldTree.AsGenericBranch<int>
 	// WorldTree.AsGenericBranch<long>
@@ -482,51 +408,12 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 
 	public void RefMethods()
 	{
-		// byte[] MemoryPack.Internal.MemoryMarshalEx.AllocateUninitializedArray<byte>(int,bool)
-		// byte& MemoryPack.Internal.MemoryMarshalEx.GetArrayDataReference<byte>(byte[])
-		// MemoryPack.MemoryPackFormatter<WorldTree.MemoryPackDataTest<object>> MemoryPack.MemoryPackFormatterProvider.GetFormatter<WorldTree.MemoryPackDataTest<object>>()
-		// MemoryPack.MemoryPackFormatter<object> MemoryPack.MemoryPackFormatterProvider.GetFormatter<object>()
-		// bool MemoryPack.MemoryPackFormatterProvider.IsRegistered<WorldTree.MemoryPackDataTest<object>>()
-		// bool MemoryPack.MemoryPackFormatterProvider.IsRegistered<object>()
-		// System.Void MemoryPack.MemoryPackFormatterProvider.Register<WorldTree.MemoryPackDataTest<object>>(MemoryPack.MemoryPackFormatter<WorldTree.MemoryPackDataTest<object>>)
-		// System.Void MemoryPack.MemoryPackFormatterProvider.Register<object>(MemoryPack.MemoryPackFormatter<object>)
-		// MemoryPack.IMemoryPackFormatter<WorldTree.MemoryPackDataTest<object>> MemoryPack.MemoryPackReader.GetFormatter<WorldTree.MemoryPackDataTest<object>>()
-		// MemoryPack.IMemoryPackFormatter<object> MemoryPack.MemoryPackReader.GetFormatter<object>()
-		// System.Void MemoryPack.MemoryPackReader.ReadPackable<object>(object&)
-		// object MemoryPack.MemoryPackReader.ReadPackable<object>()
-		// System.Void MemoryPack.MemoryPackReader.ReadUnmanaged<float>(float&)
-		// System.Void MemoryPack.MemoryPackReader.ReadUnmanaged<int,int,int>(int&,int&,int&)
-		// System.Void MemoryPack.MemoryPackReader.ReadUnmanaged<int>(int&)
-		// System.Void MemoryPack.MemoryPackReader.ReadUnmanaged<long,int>(long&,int&)
-		// System.Void MemoryPack.MemoryPackReader.ReadUnmanaged<long>(long&)
-		// System.Void MemoryPack.MemoryPackReader.ReadValue<WorldTree.MemoryPackDataTest<object>>(WorldTree.MemoryPackDataTest<object>&)
-		// System.Void MemoryPack.MemoryPackReader.ReadValue<object>(object&)
-		// object MemoryPack.MemoryPackReader.ReadValue<object>()
-		// int MemoryPack.MemoryPackSerializer.Deserialize<WorldTree.MemoryPackDataTest<object>>(System.ReadOnlySpan<byte>,WorldTree.MemoryPackDataTest<object>&,MemoryPack.MemoryPackSerializerOptions)
-		// System.Void MemoryPack.MemoryPackSerializer.Serialize<WorldTree.MemoryPackDataTest<object>>(MemoryPack.MemoryPackWriter&,WorldTree.MemoryPackDataTest<object>&)
-		// byte[] MemoryPack.MemoryPackSerializer.Serialize<WorldTree.MemoryPackDataTest<object>>(WorldTree.MemoryPackDataTest<object>&,MemoryPack.MemoryPackSerializerOptions)
-		// MemoryPack.IMemoryPackFormatter<WorldTree.MemoryPackDataTest<object>> MemoryPack.MemoryPackWriter.GetFormatter<WorldTree.MemoryPackDataTest<object>>()
-		// MemoryPack.IMemoryPackFormatter<object> MemoryPack.MemoryPackWriter.GetFormatter<object>()
-		// System.Void MemoryPack.MemoryPackWriter.WritePackable<object>(object&)
-		// System.Void MemoryPack.MemoryPackWriter.WriteUnmanaged<float>(float&)
-		// System.Void MemoryPack.MemoryPackWriter.WriteUnmanaged<int,int,int>(int&,int&,int&)
-		// System.Void MemoryPack.MemoryPackWriter.WriteUnmanaged<int>(int&)
-		// System.Void MemoryPack.MemoryPackWriter.WriteUnmanaged<long,int>(long&,int&)
-		// System.Void MemoryPack.MemoryPackWriter.WriteUnmanagedWithObjectHeader<int,int,int>(byte,int&,int&,int&)
-		// System.Void MemoryPack.MemoryPackWriter.WriteValue<WorldTree.MemoryPackDataTest<object>>(WorldTree.MemoryPackDataTest<object>&)
-		// System.Void MemoryPack.MemoryPackWriter.WriteValue<object>(object&)
 		// object System.Activator.CreateInstance<object>()
 		// object[] System.Array.Empty<object>()
 		// int System.HashCode.Combine<byte,byte,byte,byte>(byte,byte,byte,byte)
 		// int System.HashCode.Combine<byte,int,int,int>(byte,int,int,int)
-		// System.Span<byte> System.MemoryExtensions.AsSpan<byte>(byte[])
-		// bool System.Runtime.CompilerServices.RuntimeHelpers.IsReferenceOrContainsReferences<WorldTree.MemoryPackDataTest<object>>()
 		// bool System.Runtime.CompilerServices.RuntimeHelpers.IsReferenceOrContainsReferences<object>()
-		// byte& System.Runtime.CompilerServices.Unsafe.Add<byte>(byte&,int)
-		// object& System.Runtime.CompilerServices.Unsafe.As<object,object>(object&)
-		// WorldTree.MemoryPackDataTest<object>& System.Runtime.CompilerServices.Unsafe.AsRef<WorldTree.MemoryPackDataTest<object>>(WorldTree.MemoryPackDataTest<object>&)
 		// object& System.Runtime.CompilerServices.Unsafe.AsRef<object>(object&)
-		// WorldTree.MemoryPackDataTest<object> System.Runtime.CompilerServices.Unsafe.ReadUnaligned<WorldTree.MemoryPackDataTest<object>>(byte&)
 		// byte System.Runtime.CompilerServices.Unsafe.ReadUnaligned<byte>(byte&)
 		// double System.Runtime.CompilerServices.Unsafe.ReadUnaligned<double>(byte&)
 		// float System.Runtime.CompilerServices.Unsafe.ReadUnaligned<float>(byte&)
@@ -534,7 +421,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// long System.Runtime.CompilerServices.Unsafe.ReadUnaligned<long>(byte&)
 		// object System.Runtime.CompilerServices.Unsafe.ReadUnaligned<object>(byte&)
 		// short System.Runtime.CompilerServices.Unsafe.ReadUnaligned<short>(byte&)
-		// int System.Runtime.CompilerServices.Unsafe.SizeOf<WorldTree.MemoryPackDataTest<object>>()
 		// int System.Runtime.CompilerServices.Unsafe.SizeOf<byte>()
 		// int System.Runtime.CompilerServices.Unsafe.SizeOf<double>()
 		// int System.Runtime.CompilerServices.Unsafe.SizeOf<float>()
@@ -542,7 +428,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// int System.Runtime.CompilerServices.Unsafe.SizeOf<long>()
 		// int System.Runtime.CompilerServices.Unsafe.SizeOf<object>()
 		// int System.Runtime.CompilerServices.Unsafe.SizeOf<short>()
-		// System.Void System.Runtime.CompilerServices.Unsafe.WriteUnaligned<WorldTree.MemoryPackDataTest<object>>(byte&,WorldTree.MemoryPackDataTest<object>)
 		// System.Void System.Runtime.CompilerServices.Unsafe.WriteUnaligned<byte>(byte&,byte)
 		// System.Void System.Runtime.CompilerServices.Unsafe.WriteUnaligned<double>(byte&,double)
 		// System.Void System.Runtime.CompilerServices.Unsafe.WriteUnaligned<float>(byte&,float)
@@ -550,8 +435,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void System.Runtime.CompilerServices.Unsafe.WriteUnaligned<long>(byte&,long)
 		// System.Void System.Runtime.CompilerServices.Unsafe.WriteUnaligned<object>(byte&,object)
 		// System.Void System.Runtime.CompilerServices.Unsafe.WriteUnaligned<short>(byte&,short)
-		// byte& System.Runtime.InteropServices.MemoryMarshal.GetReference<byte>(System.ReadOnlySpan<byte>)
-		// byte& System.Runtime.InteropServices.MemoryMarshal.GetReference<byte>(System.Span<byte>)
 		// object UnityEngine.GameObject.AddComponent<object>()
 		// object UnityEngine.Object.Instantiate<object>(object)
 		// long WorldTree.BasicTypeInfoRule.TypeToCode<object>(WorldTree.IBasic)

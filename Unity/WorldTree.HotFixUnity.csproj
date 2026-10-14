@@ -55,7 +55,6 @@
   <ItemGroup>
     <Analyzer Include="D:\1Make\Code\VisualStudio\2026\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="D:\Projects\GameEngine\Unity\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
-    <Analyzer Include="D:\Projects\GameEngine\Unity\GitHub\WorldTree\Unity\Assets\Scripts\AOT\Plugins\MemoryPack\Runtime\MemoryPack.Generator\MemoryPack.Generator.Roslyn3.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\ViewTest.cs" />
@@ -75,7 +74,6 @@
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\Modules\Input\InputDriverMouseRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\InputMapperTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\Modules\Input\InputDriverKeyboard.cs" />
-    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\MemoryPackTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\LiteDBTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TaskTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TreeValueTest.cs" />
@@ -348,7 +346,7 @@
       <HintPath>Assets\Plugins\WorldTree\WorldTree.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\Scripts\AOT\Plugins\MemoryPack\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Assets\Plugins\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>D:\1Make\GameEngine\Unity3D\2021.3.16f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
@@ -749,10 +747,6 @@
     <ProjectReference Include="WorldTree.CoreUnity.csproj">
       <Project>{CCAAEB54-E5BE-7998-5D51-E704B3DB0E9A}</Project>
       <Name>WorldTree.CoreUnity</Name>
-    </ProjectReference>
-    <ProjectReference Include="MemoryPack.csproj">
-      <Project>{D64A24C6-5A8B-12A3-8D20-3509617AE294}</Project>
-      <Name>MemoryPack</Name>
     </ProjectReference>
     <ProjectReference Include="WorldTree.HotFix.csproj">
       <Project>{C61C92E9-69A5-D4AD-C7FD-530DB03BCE3E}</Project>

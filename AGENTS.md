@@ -48,7 +48,7 @@ WorldTreeCore（全局唯一核心）
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/` | `WorldTree.CoreUnity`（Unity 运行时环境） |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/Editor/` | `WorldTree.UnityEditor`（编辑器工具，用 Odin/Sirenix） |
 | `Unity/Assets/Scripts/HotUpdate/{HotFix,HotFixUnity,Config}/` | HybridCLR 热更程序集 |
-| `Unity/Assets/Scripts/AOT/{GameEntry,Plugins}/` | AOT 入口 + 第三方 dll（MemoryPack/Sirenix/LiteDB/Sqlite） |
+| `Unity/Assets/Scripts/AOT/{GameEntry,Plugins}/` | AOT 入口 + 第三方 dll（Sirenix/LiteDB/Sqlite） |
 | `Console/Server/` | 纯 .NET 服务器示例（`Program.cs` 里 `WorldTreeCore.Create(...)`） |
 | `Unity/ProjectSettings/HybridCLRSettings.asset` | HybridCLR 配置（hotUpdateAssemblies / patchAOTAssemblies） |
 | `Unity/.../Editor/ThirdParty/HybridCLR/` | HybridCLR 自定义脚本（HybridCLREditor / AOTGenericReferences 生成物） |
@@ -69,11 +69,11 @@ WorldTreeCore（全局唯一核心）
 - HybridCLR：`WorldTree.Core` 从 `hotUpdateAssemblies` 移除（变 AOT）；`WorldTree.Config` 补进 `hotUpdateAssemblies`。
 - **MyGenAll 全流程通过**：`WorldTree.Core.dll` 已被自动纳入 `AOTGenericReferences` 的 `PatchedAOTAssemblyList`（自动检测，无需手动加）。
 - **Unity 编译 + 启动已验证通过。**
+- 删除 MemoryPack：插件源码、`MemoryPackTest`、`MemoryPack.dll.bytes`、`HotFix`/`HotFixUnity` 的 asmdef 引用、`Unity.sln` / csproj 里的工程引用与生成器。`AOTGenericReferences.cs` 和 `link.xml` 里的 MemoryPack 条目已去掉（下次 MyGenAll 会整文件重写）。
+- `System.Runtime.CompilerServices.Unsafe.dll` 已从 `AOT/Plugins/MemoryPack/` 挪到 `Assets/Plugins/`（与 NLog/CommandLine 放一起）。`AotDlls/System.Runtime.CompilerServices.Unsafe.dll.bytes` 保留。
 
 **待办 / 待验证 ⏳**
-- 之后删 MemoryPack 时：**保留 `System.Runtime.CompilerServices.Unsafe.dll`**（挪到 `Assets/Plugins/`），因为 Core.dll 现在运行时依赖它。
-- 把 `System.Runtime.CompilerServices.Unsafe.dll` 从 `AOT/Plugins/MemoryPack/` 移到 `Assets/Plugins/`（与 NLog/CommandLine 放一起）。
-- （可选清理）`patchAOTAssemblies` 里那行 `WorldTree.Core.dll` 冗余，可留可删（本版本自动检测已覆盖）。
+- 删 MemoryPack 后尚未在 Unity 里再跑一遍编译 / 启动。`patchAOTAssemblies` 当前已是空列表，无需再删 `WorldTree.Core.dll`。
 
 ---
 
@@ -91,12 +91,13 @@ WorldTreeCore（全局唯一核心）
 
 - **`overrideReferences: true` 会切断对项目里所有预编译 DLL 的自动引用**。凡改成 true 的 asmdef，必须把它（含源生成器生成的那部分代码）直接 `using` 到的每个预编译 dll 都显式列进 `precompiledReferences`。踩过：Sirenix、Unsafe。
 - **netstandard 缺 `System.Runtime.CompilerServices.Unsafe`**（net6.0 内置，netstandard 要引 `System.Runtime.CompilerServices.Unsafe` 包）。Core 编译报错"Unsafe 不存在"就是它。
-- **Core.dll 现在有 3 个外部依赖，Unity 里都得有**：`NLog.dll`、`CommandLine.dll`（已在 Assets/Plugins）、`System.Runtime.CompilerServices.Unsafe.dll`（在 MemoryPack 目录，要挪/保留）。
+- **Core.dll 现在有 3 个外部依赖，Unity 里都得有**：`NLog.dll`、`CommandLine.dll`、`System.Runtime.CompilerServices.Unsafe.dll`（都在 `Assets/Plugins/`）。删别的插件时不要把 Unsafe.dll 一起清掉。
 - **源生成器/分析器与目标框架无关**（跑在 Roslyn 编译器进程里），netstandard2.1 完全能用它们。
 - **HybridCLR：`AOTGenericReferences.cs` 是自动生成物，别手改**（`GenericReferenceWriter` 生成）。真正生效的 `PatchedAOTAssemblyList` 是**自动检测**热更代码的泛型用法得出的；`patchAOTAssemblies`（设置）在本版本基本没接进生成流程。
 - **HybridCLR 社区版**：预编译 dll 放 Assets = AOT（不可热更）。热更 dll 是 `CompileDll` 从**源码**编译的，光把 dll 丢 `Temp/Bin/Debug` 无效。旗舰版 DHE 才能热更 AOT dll。
 - **HybridCLR：AOT 程序集不能引用热更程序集**。`WorldTree.Config` 一直在 `HotUpdate/` 目录却漏加进 `hotUpdateAssemblies`，MyGenAll 的 IL2CPP 构建报 `Failed to resolve assembly: WorldTree.HotFix`。已把 Config 加进 hotUpdateAssemblies 解决。
 - **环境限制**：本机的 pwsh 命令沙箱无法写盘（`SetNamedSecurityInfoW failed (Win32 5): grantWrite`），所以 `dotnet build`、删文件、`git` 等命令要**用户自己跑**；agent 这边只有 `edit`/`write`/`read` 等能改文件。
+- **生成器静态集合不能跨程序集共享**。`RuleSupplementHelper` 等用静态字典收集再 `AddSource`。MyGenAll 的 IL2CPP Player 构建用 `/shared` 编译器服务器并行编 `CoreUnity`/`Module`/`HotFix`，字典被串台后，Module 的 `InputBindSupplement` 会被写进 CoreUnity（CoreUnity 不引用 Module，CS0246），接着 `GenerateStripedAOTDlls failed`。编辑器/VS 分开编所以能过。`SourceGeneratorBase.Execute` 已加锁串行。改 `Unity.Analysis.dll` 后要重启 Unity，否则旧编译器服务器还握着旧 dll。程序集名单在 `UnityTool/Analysis/ProjectGeneratorSetting.cs`，和 asmdef 是对得上的；`Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs` 是 .NET 侧（`WorldTree.Core` / `Module`），别和 Unity 那份混。
 
 ---
 
