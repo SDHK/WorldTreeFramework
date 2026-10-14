@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/3/11 16:39
@@ -84,7 +84,7 @@ namespace WorldTree
 	/// <para>部分类型直接继承INode接口，将会生成对应的Copy Node内容的部分类</para>
 	/// </remarks>
 	[TreeDataSerializable]
-	public partial interface INode : IBasic
+	public partial interface INode : IUnit
 #if !DEBUG
 		// 万能约束接口：Release模式下解除所有约束限制
 		// 父级约束解除
@@ -105,27 +105,6 @@ namespace WorldTree
 		, AsRule<Disable>
 		, AsRule<Remove>
 	{
-		/// <summary>
-		/// 节点ID 、数据ID， 混合标识。实例Id从0开始递增。而数据Id为雪花ID，但起点是1<<50（1千万亿），不会和实例Id冲突。
-		/// </summary>
-		/// <remarks>普通类型为实例ID、数据类型则为雪花ID</remarks>
-		[TreeDataIgnore]
-		public long Id { get; set; }
-
-		/// <summary>
-		/// 实例Id
-		/// </summary>
-		/// <remarks>递增ID，只在每个框架实例内唯一</remarks>
-		[TreeDataIgnore]
-		public long InstanceId { get; set; }
-
-		///// <summary>
-		///// 世界
-		///// </summary>
-		//[TreeDataIgnore]
-		///// <remarks>节点所属的世界</remarks>
-		//public World World { get; set; }
-
 		/// <summary>
 		/// 父节点，禁止修改，只能通过方法设置
 		/// </summary>

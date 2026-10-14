@@ -15,7 +15,7 @@
 ### 对象三层
 - `CoreObject`（启动期对象：LogManager / RuleManager / IdManager / 池管理器。`RuleManager` 在单位池之前建好）
 - `Unit`（池化自由对象，有 `Id` + `InstanceId`，不挂树。容器和 `UnitBsonDocument` 直接实现 `IUnit`）
-- `Node`（挂树上的业务对象。`INode` 还没有继承 `IUnit`）
+- `Node`（挂树上的业务对象。`INode : IUnit`，`Id` / `InstanceId` 定义在 `IUnit` 上）
 
 ### 引导链
 ```
@@ -87,10 +87,12 @@ WorldTreeCore（全局唯一核心）
 - 单位在 `NewUnit` / `PoolGetUnit` 的 `RefreshUnitId` 里发号，`OnCreate` 之前：`InstanceId = GetId()`，`Id = InstanceId`。直接 `new` 出来的单位不发号，`Id` 为 0。
 - 节点在 `NewNode` / `PoolGetNode` 的 `RefreshNodeId` 里发号并 `SupportNodeRule`，`OnCreate` 之前。每次换 `InstanceId`。普通节点 `Id = InstanceId`。`INodeData` 非反序列化时 `Id = GetUID()`；`IsSerialize` 时不动 `Id`，等字段循环写回存档里的 `Id`。
 - `NodeData` 不再重写 `OnCreate`。`INodeProxy.OnCreate` 留空方法：直接实现 `INode` 的类型会生成对它的转发，签名不能删。
+- `INode : IUnit`。`Id` / `InstanceId` 只留在 `IUnit` 上。`Node` 自己的属性实现它们。生命周期约束仍在 `INode`。
 
 还没做：
-- `INode : IUnit`，并删掉 `INode` 上重复的 `Id` / `InstanceId`。然后 `NodeRuleRef`、`RuleListExecutor` 的存储改成 `IUnit`。生成器只放宽 `SendRule` / `CallRule`（含异步、引用）的下界；`AddNode`、`NodeOf`、分支生成器保持 `INode`。
+- `NodeRuleRef`、`RuleListExecutor` 的存储改成 `IUnit`。生成器只放宽 `SendRule` / `CallRule`（含异步、引用）的下界；`AddNode`、`NodeOf`、分支生成器保持 `INode`。
 - `NodeRef`、`CascadeTicker` 先不动。不引入 `IUnitData`，名字也不对调。
+- `PoolGetUnit<T>` 的约束现在也能匹配节点。节点仍走 `PoolGetNode`，不要拿单位池去取节点。
 
 ---
 
@@ -102,7 +104,7 @@ WorldTreeCore（全局唯一核心）
 - **Core 的 HybridCLR 角色**：AOT（固定不热更）。改 Core 代码需重新出包。
 - **DLL 落点**：`Unity/Assets/Plugins/WorldTree/`。
 - **编号只在 `New` / `PoolGet` 分配，不在 `OnCreate`。** 反序列化是先 `PoolGetNode(true)` 再写字段，`IsSerialize` 在进去之前已经设好。`Branch` / `ListNodeBranch` / `Rattan` 重写了 `OnCreate` 且不调 `base`；容器继承的是 `List` / `Dictionary`，不能再继承 `Unit`。
-- **不单开 `IUnitData`。** 目标继承是 `IUnit` → `INode` → `INodeData`。`INode` 继续表示树上的对象，`IUnit` 继续表示自由对象，不要改名。
+- **不单开 `IUnitData`。** 继承是 `IUnit` → `INode` → `INodeData`。`INode` 继续表示树上的对象，`IUnit` 继续表示自由对象，不要改名。
 - **节点实例的 `SupportNodeRule` 跟发号走。** 序列化、`TreePack`、`TreeCopier` 里的调用留下：读档要在创建对象之前先补上反序列化法则；`int`、数组、`UnitList` 不走 `PoolGetNode`。`PoolGetUnit` 不要调用它，每次都会拿写锁。
 
 ---

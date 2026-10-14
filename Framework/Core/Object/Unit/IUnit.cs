@@ -24,13 +24,13 @@ namespace WorldTree
 	public partial interface IUnit : IBasic
 	{
 		/// <summary>
-		/// 单位 Id。普通单位与 InstanceId 相同，每次取出都换。
+		/// Id。普通单位和普通节点与 InstanceId 相同。数据节点是雪花 Id，从 1 &lt;&lt; 50 起。
 		/// </summary>
 		[TreeDataIgnore]
 		public long Id { get; set; }
 
 		/// <summary>
-		/// 实例 Id。每次从池中取出都换，用来判断对象是不是已经还池。
+		/// 实例 Id。每次取出都换，用来判断对象是不是已经还池。
 		/// </summary>
 		[TreeDataIgnore]
 		public long InstanceId { get; set; }
