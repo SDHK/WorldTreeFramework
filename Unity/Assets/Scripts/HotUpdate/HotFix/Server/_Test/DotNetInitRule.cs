@@ -27,6 +27,9 @@ namespace WorldTree.Server
 
 			self.AddComponent(out CodeCompilerTest _);
 
+			//TreeTask 异步任务测试
+			self.AddComponent(out TreeTaskTest _);
+
 			//self.TestStringConcatPerformance();
 
 			//self.AddComponent(out TreeDataTest _);

@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/6/17 10:23
@@ -38,8 +38,8 @@ namespace WorldTree
 			TreeTask asyncTask = self.AddTemp(out TreeTask _);
 			// 捕获令牌
 			var token = await self.TreeTaskTokenCatch();
-			// 添加定时器
-			//self.Core.RealTimeManager.AddTimerDelay<TreeTaskSetResuIt>(time.Ticks, asyncTask, token);
+			// 添加真实时间定时器
+			self.World.Line.WorldTimeManager.AddTimerDelay<TreeTaskSetResuIt>(time.Ticks, asyncTask, token);
 			// 等待异步执行
 			await asyncTask;
 		}

@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/5/14 17:47
@@ -114,12 +114,30 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 添加定时器 
+		/// 添加定帧延迟
 		/// </summary>
 		public static long AddFramerDelay<R>(this WorldTimeManager self, long delayFrame, INode node, TreeTaskToken token = null)
 			where R : ISendRule
 		{
 			return self.Framer.AddTicker<R>(self.TotalFrames + delayFrame, node, token);
+		}
+
+		/// <summary>
+		/// 添加真实时间定时器，时序为绝对 Utc Ticks
+		/// </summary>
+		public static long AddTimer<R>(this WorldTimeManager self, long utcTicks, INode node, TreeTaskToken token = null)
+			where R : ISendRule
+		{
+			return self.Timer.AddTicker<R>(utcTicks, node, token);
+		}
+
+		/// <summary>
+		/// 添加真实时间延迟，时序为当前 Utc Ticks 加上延迟
+		/// </summary>
+		public static long AddTimerDelay<R>(this WorldTimeManager self, long delayTicks, INode node, TreeTaskToken token = null)
+			where R : ISendRule
+		{
+			return self.Timer.AddTicker<R>(self.World.Line.Core.RealTimeManager.UtcNow.Ticks + delayTicks, node, token);
 		}
 	}
 }
