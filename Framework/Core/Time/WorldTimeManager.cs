@@ -34,6 +34,37 @@ namespace WorldTree
 		public CascadeTicker Framer;
 
 		/// <summary>
+		/// WorldTask 的委托定时器。和法则定时器分开。
+		/// </summary>
+		private TimerCallback[] timerCallbacks;
+
+		/// <summary>
+		/// 委托定时器数量
+		/// </summary>
+		private int timerCount;
+
+		/// <summary>
+		/// 委托定时器槽位
+		/// </summary>
+		private struct TimerCallback
+		{
+			/// <summary>
+			/// 到期的 Utc Ticks
+			/// </summary>
+			public long DueTicks;
+
+			/// <summary>
+			/// 到期回调
+			/// </summary>
+			public Action Callback;
+
+			/// <summary>
+			/// 是否有效
+			/// </summary>
+			public bool Active;
+		}
+
+		/// <summary>
 		/// 累计帧数 
 		/// </summary>
 		public long TotalFrames => totalFrames;
@@ -79,6 +110,74 @@ namespace WorldTree
 			frameTime = deltaTime;
 			totalTime += frameTime;
 		}
+
+		/// <summary>
+		/// 添加委托定时器，时序为绝对 Utc Ticks。返回槽位，可用来取消。
+		/// </summary>
+		public int AddTimerCallback(long dueTicks, Action callback)
+		{
+			if (timerCallbacks == null)
+			{
+				timerCallbacks = new TimerCallback[4];
+				timerCount = 0;
+			}
+
+			for (int i = 0; i < timerCount; i++)
+			{
+				if (timerCallbacks[i].Active) continue;
+				timerCallbacks[i].DueTicks = dueTicks;
+				timerCallbacks[i].Callback = callback;
+				timerCallbacks[i].Active = true;
+				return i;
+			}
+
+			if (timerCount >= timerCallbacks.Length)
+			{
+				Array.Resize(ref timerCallbacks, timerCallbacks.Length * 2);
+			}
+
+			timerCallbacks[timerCount] = new TimerCallback
+			{
+				DueTicks = dueTicks,
+				Callback = callback,
+				Active = true,
+			};
+			return timerCount++;
+		}
+
+		/// <summary>
+		/// 取消委托定时器
+		/// </summary>
+		public void RemoveTimerCallback(int id)
+		{
+			if (timerCallbacks == null || id < 0 || id >= timerCount) return;
+			timerCallbacks[id].Active = false;
+			timerCallbacks[id].Callback = null;
+		}
+
+		/// <summary>
+		/// 执行已经到期的委托定时器
+		/// </summary>
+		public void UpdateTimerCallbacks(long nowTicks)
+		{
+			if (timerCallbacks == null) return;
+			int count = timerCount;
+			for (int i = 0; i < count; i++)
+			{
+				if (!timerCallbacks[i].Active || timerCallbacks[i].DueTicks > nowTicks) continue;
+				Action callback = timerCallbacks[i].Callback;
+				timerCallbacks[i].Active = false;
+				timerCallbacks[i].Callback = null;
+				try
+				{
+					callback?.Invoke();
+				}
+				catch (Exception e)
+				{
+					this.LogError(e);
+				}
+			}
+		}
 	}
 
 	public static partial class WorldTimeManagerRule
@@ -98,7 +197,9 @@ namespace WorldTree
 			protected override void Execute(WorldTimeManager self, TimeSpan arg1)
 			{
 				self.UpdateTime(arg1);
-				self.Timer.Update(self.World.Line.Core.RealTimeManager.UtcNow.Ticks);
+				long utcTicks = self.World.Line.Core.RealTimeManager.UtcNow.Ticks;
+				self.Timer.Update(utcTicks);
+				self.UpdateTimerCallbacks(utcTicks);
 				self.WorldTimer.Update(self.TotalTime.Ticks);
 				self.Framer.Update(self.TotalFrames);
 			}

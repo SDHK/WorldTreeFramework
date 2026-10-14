@@ -133,6 +133,7 @@ namespace WorldTree
 		public INode Parent { get; set; }
 
 
+
 		/// <summary>
 		/// 是否序列化创建
 		/// </summary>

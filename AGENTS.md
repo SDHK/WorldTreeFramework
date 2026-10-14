@@ -77,6 +77,7 @@ WorldTreeCore（全局唯一核心）
 - `AsyncDelay` 已修好：`WorldTimeManager` 补了 `AddTimer` / `AddTimerDelay`（真实时间 Utc Ticks），`AsyncDelay` 接上去，`TimeOut` 因此能生效。
 - **TreeTask 测试代码**：`Unity/Assets/Scripts/HotUpdate/HotFix/Server/_Test/TreeTaskTest.cs` + `TreeTaskTestRule.cs`，挂在 `DotNetInitRule.OnAddRule`。7 个用例（嵌套 await / AsyncYield 逐帧 / AsyncDelay / Task 桥接 / TreeTaskLink / 令牌取消 / 异常传播），跑 `Console/Server/Bin/App.exe` 看日志，已实测全绿。
 - TreeTask 仍未处理：BCL `Task` 失败不会 `SetException`（`INode.GetAwaiter(Task)` 一律 `SetResult`，`TreeTaskLink` 只 `LogError` 然后一直 Pending），取消被当成成功（`GetResult` 对 `Canceled` 不抛异常，业务只能自己查令牌）。
+- **WorldTask** 已并列放在 `Framework/Core/WorldTask/`，继承 `Unit`，不挂树。延续、取消、真实时间延迟都走委托（`WorldTimeManager.AddTimerCallback`），不发法则。同步等待（`WorldTaskCompleted` / `WorldTaskTokenCatch`）和状态机在用完后还池；普通任务完成时不还池，避免迟到回调打到下一次取出的实例。顶层要 `.Coroutine()` / `.Coroutine(token)`。生成器仍输出 `TreeTask`。控制台测试 `WorldTaskTest` 已跑过：嵌套 await、Delay、BCL 成功/失败、令牌取消、异常、`SwitchWorld`。
 - `patchAOTAssemblies` 当前已是空列表。删 MemoryPack 后编译、MyGenAll、启动已通过。
 
 ---
