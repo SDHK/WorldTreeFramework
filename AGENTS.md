@@ -75,7 +75,7 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 - 源生成器在 `Framework/SourceGeneratorCore`，分析器在 `Framework/AnalyzerCore`。
 
 ### 程序集
-`Framework/Core` 编成 `WorldTree.Core.dll`（`netstandard2.1`），拷到 `Unity/Assets/Plugins/WorldTree/`。Unity 的 asmdef 用 `overrideReferences` 显式引用这份 DLL。HybridCLR 里 Core 是 AOT，不热更。依赖 `NLog.dll`、`CommandLine.dll`、`System.Runtime.CompilerServices.Unsafe.dll`，都在 `Assets/Plugins/`。改 Core 要重新出包。改生成器后重编 `Unity.Analysis.dll`，并重启 Unity。
+`Framework/Core` 编成 `WorldTree.Core.dll`（`netstandard2.1`），拷到 `Unity/Assets/Plugins/WorldTree/`。Unity 的 asmdef 用 `overrideReferences` 显式引用这份 DLL。HybridCLR 里 Core 是 AOT，不热更。依赖 `NLog.dll`（5.4.0，程序集 5.0.0.0）、`CommandLine.dll`（2.9.1，程序集 2.9.1.0）、`System.Runtime.CompilerServices.Unsafe.dll`，都在 `Assets/Plugins/`。改 Core 要重新出包。改生成器后重编 `Unity.Analysis.dll`，并重启 Unity。
 
 ### 关键文件地图
 | 路径 | 说明 |
@@ -108,7 +108,7 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 
 - **`overrideReferences: true` 会切断对项目里所有预编译 DLL 的自动引用**。凡改成 true 的 asmdef，必须把它（含源生成器生成的那部分代码）直接 `using` 到的每个预编译 dll 都显式列进 `precompiledReferences`。踩过：Sirenix、Unsafe。
 - **netstandard 缺 `System.Runtime.CompilerServices.Unsafe`**（net6.0 内置，netstandard 要引 `System.Runtime.CompilerServices.Unsafe` 包）。Core 编译报错"Unsafe 不存在"就是它。
-- **Core.dll 现在有 3 个外部依赖，Unity 里都得有**：`NLog.dll`、`CommandLine.dll`、`System.Runtime.CompilerServices.Unsafe.dll`（都在 `Assets/Plugins/`）。删别的插件时不要把 Unsafe.dll 一起清掉。
+- **Core.dll 现在有 3 个外部依赖，Unity 里都得有**：`NLog.dll`、`CommandLine.dll`、`System.Runtime.CompilerServices.Unsafe.dll`（都在 `Assets/Plugins/`）。删别的插件时不要把 Unsafe.dll 一起清掉。Unity 会按强名称校验：插件必须是 NLog 5.4.0（程序集 `5.0.0.0`）和 CommandLineParser 2.9.1（程序集 `2.9.1.0`），和 `WorldTree.Core.csproj` 的包版本一致。旧的 NLog 4 / CommandLine 2.8 会让 `WorldTree.Core.dll` 拒绝加载。
 - **源生成器/分析器与目标框架无关**（跑在 Roslyn 编译器进程里），netstandard2.1 完全能用它们。
 - **HybridCLR：`AOTGenericReferences.cs` 是自动生成物，别手改**（`GenericReferenceWriter` 生成）。真正生效的 `PatchedAOTAssemblyList` 是**自动检测**热更代码的泛型用法得出的；`patchAOTAssemblies`（设置）在本版本基本没接进生成流程。
 - **HybridCLR 社区版**：预编译 dll 放 Assets = AOT（不可热更）。热更 dll 是 `CompileDll` 从**源码**编译的，光把 dll 丢 `Temp/Bin/Debug` 无效。旗舰版 DHE 才能热更 AOT dll。
