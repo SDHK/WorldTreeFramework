@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/8/27 15:07
@@ -8,6 +8,7 @@
 */
 using System;
 using UnityEngine;
+using WorldTree.Server;
 
 namespace WorldTree
 {
@@ -137,6 +138,9 @@ namespace WorldTree
 		private static void OnAddRule(InitialDomain self)
 		{
 			self.Log($"初始域热更部分！！!");
+
+			// TreeTask 异步任务测试，启动后自己跑完并打日志
+			self.AddComponent(out TreeTaskTest _);
 
 			//self.TypeToCode<InputDeviceManager>();
 			//self.World.AddComponent(out InputDeviceManager _);

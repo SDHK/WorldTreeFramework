@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\UtcTimeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\DataBaseTestProxyRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\UnityCodeLoaderRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TreeTaskTestRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\MultilayerPerceptronTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\StepMachineTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\CascadeTickerTest.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TreeValueTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\Modules\View\ViewLayerElementRule.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\MainWorldRule.cs" />
+    <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TreeTaskTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\SphereManagerTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\SerializeTest.cs" />
     <Compile Include="Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\SphereTest.cs" />

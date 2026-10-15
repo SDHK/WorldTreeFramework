@@ -42,6 +42,12 @@
     <Compile Include="..\..\..\Unity\Assets\Scripts\HotUpdate\HotFix\Server\**\*.cs">
       <Link>Server\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Compile>
+    <Compile Include="..\..\..\Unity\Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TreeTaskTest.cs">
+      <Link>Client\_Test\TreeTaskTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Unity\Assets\Scripts\HotUpdate\HotFixUnity\Client\_Test\TreeTaskTestRule.cs">
+      <Link>Client\_Test\TreeTaskTestRule.cs</Link>
+    </Compile>
   </ItemGroup>
   
   <ItemGroup>

@@ -12,7 +12,7 @@ namespace WorldTree.Server
 	/// TreeTask 异步任务测试
 	/// </summary>
 	public class TreeTaskTest : Node
-		, ComponentOf<DotNetInit>
+		, ComponentOf<INode>
 		, AsRule<Awake>
 	{
 	}

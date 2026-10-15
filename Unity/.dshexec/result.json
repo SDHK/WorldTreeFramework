@@ -1,7 +1,9 @@
 {
-  "id": "cube-002",
+  "id": "omp-probe-20261016-a2",
   "success": true,
-  "result": "创建成功: AgentExecCube",
+  "result": "2021.3.16f1 | playing=False",
   "error": null,
-  "logs": []
+  "logs": [
+    "[Log] [omp-probe] hello from Unity"
+  ]
 }

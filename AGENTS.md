@@ -153,6 +153,10 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 - **能力**：注入代码可引用所有已加载程序集（含 WorldTree 框架）。
 - **限制**：`CSharpCodeProvider` 是老编译器（别用太新 C# 语法）；遍历程序集引用时要 `if (asm.IsDynamic) continue;` 跳过动态程序集。
 - 注：原 UnityMCP（WebSocket/MCP 通道）已废弃清空，仅保留此文件通道。
+- **通道实测（2026-10-16，Unity `2021.3.16f1`）**：最小注入**完全可用** —— `Debug.Log`、返回值、`logs` 捕获都正常，`command.json` 被消费的延迟约 **50ms**。**但有一个隐蔽断崖**：`CSEditorHelper` 把**所有带 `Location` 的非动态程序集**都加进引用，现代 Unity 里 `mscorlib` 与 netstandard/`System.Runtime` 门面互相重复定义，于是 ① 编译固定产生 **~110 条 `CS1685`**（预定义类型重复，仅警告，不影响成败）② **注入代码一旦触碰跨门面可见的类型就 `CS0433` 硬失败** —— 实测 `AppDomain.CurrentDomain.GetAssemblies()` 直接编译失败（`The imported type 'System.AppDomain' is defined multiple times`）。而且错误是把 110 行警告和错误**混成一个字符串**返回，极难读。
+  - **修法**：引用时按 `Assembly.GetName().Name` **去重**，或改白名单，或排除 `System.*` / `netstandard` 门面程序集。
+  - 另注：返回值被 `ret?.ToString()` **拍平成一个字符串**，要结构化数据得自己在注入代码里 `Newtonsoft.Json.JsonConvert.SerializeObject`；**没有超时/看门狗**，注入死循环会让编辑器永久卡死且无法从通道恢复。
+  - 结论：**优先修引用集合与返回结构，而不是换传输**（Unity 里执行 C# 必须在主线程，任何服务器设计都退化成"排队 + 主线程轮询"，也就是这个文件通道的内核）。
 
 ## 7. 维护约定
 
