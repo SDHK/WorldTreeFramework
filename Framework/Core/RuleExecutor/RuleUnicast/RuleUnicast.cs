@@ -74,15 +74,15 @@ namespace WorldTree
 			RuleList = rule;
 			return true;
 		}
-		public bool TryGetNext(out IUnit node, out RuleList ruleList)
+		public bool TryGetNext(out IUnit unit, out RuleList ruleList)
 		{
 			if (TargetNode.Value != null)
 			{
-				node = TargetNode.Value;
+				unit = TargetNode.Value;
 				ruleList = RuleList;
 				return true;
 			}
-			node = null;
+			unit = null;
 			ruleList = default;
 			return false;
 		}

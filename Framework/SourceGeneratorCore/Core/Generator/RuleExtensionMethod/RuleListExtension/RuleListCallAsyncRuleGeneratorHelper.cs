@@ -46,18 +46,18 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表异步调用执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, IUnit node{{genericTypeParameter}}, OutT defaultOutT)
+							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, IUnit unit{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								RuleList ruleList = (RuleList)iRuleList;
 								if(ruleList.Count == 1)
 								{
-									defaultOutT = await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(node{{genericParameter}});
+									defaultOutT = await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(unit{{genericParameter}});
 									return defaultOutT;
 								}
 								for(int i = 0 ; i < ruleList.Count; i++)
 								{
-									defaultOutT = await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(node{{genericParameter}});
+									defaultOutT = await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(unit{{genericParameter}});
 								}
 								return defaultOutT;
 							}
@@ -66,18 +66,18 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表异步调用执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, IUnit node{{genericTypeParameter}}, TreeList<OutT> outTList)
+							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, IUnit unit{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								RuleList ruleList = (RuleList)iRuleList;
 								if(ruleList.Count == 1)
 								{
-									outTList.Add(await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(node{{genericParameter}}));
+									outTList.Add(await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(unit{{genericParameter}}));
 									return outTList;
 								}
 								for(int i = 0 ; i < ruleList.Count; i++)
 								{
-									outTList.Add(await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(node{{genericParameter}}));
+									outTList.Add(await ((ICallRuleAsync<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(unit{{genericParameter}}));
 								}
 								return outTList;
 							}

@@ -16,9 +16,9 @@ namespace WorldTree
 	public interface IRuleMulticast : IRuleExecutor
 	{
 		/// <summary>
-		/// 尝试添加节点法则
+		/// 尝试添加单位法则
 		/// </summary>
-		public bool TryAdd(IUnit node, RuleList rule);
+		public bool TryAdd(IUnit unit, RuleList rule);
 	}
 
 	/// <summary>

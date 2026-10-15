@@ -88,7 +88,7 @@ WorldTreeCore（全局唯一核心）
 - 节点在 `NewNode` / `PoolGetNode` 的 `RefreshNodeId` 里发号并 `SupportNodeRule`，`OnCreate` 之前。每次换 `InstanceId`。普通节点 `Id = InstanceId`。`INodeData` 非反序列化时 `Id = GetUID()`；`IsSerialize` 时不动 `Id`，等字段循环写回存档里的 `Id`。
 - `NodeData` 不再重写 `OnCreate`。`INodeProxy.OnCreate` 留空方法：直接实现 `INode` 的类型会生成对它的转发，签名不能删。
 - `INode : IUnit`。`Id` / `InstanceId` 只留在 `IUnit` 上。`Node` 自己的属性实现它们。生命周期约束仍在 `INode`。
-- `NodeRuleRef` 存 `IUnit`。`RuleExecutor` / `RuleListExecutor` 的 `TryAdd`、`TryGetNext`、`Remove`，以及 `RuleGroupExecutor.TryAdd`、`IRuleMulticast.TryAdd` 都改成 `IUnit`。`RuleUnicast` 只把 `TryGetNext` 的出参改成 `IUnit`，里面的 `NodeRef<INode>` 没动。
+- `UnitRuleRef`（原 `NodeRuleRef`）存 `IUnit`，属性是 `Unit`。`RuleExecutor` / `RuleListExecutor` 的 `TryAdd`、`TryGetNext`、`Remove`，以及 `RuleGroupExecutor.TryAdd`、`IRuleMulticast.TryAdd` 的参数叫 `unit`。`RuleUnicast.TryGetNext` 的出参也是 `unit`，里面的 `NodeRef<INode>` 和 `TryAdd(INode node)` 没动。生成器模板里类型为 `IUnit` 的参数同样叫 `unit`。
 - `NodeRef<N>` 的下界改为 `where N : class, IUnit`，名字不改。`INodeData` 仍按 `Id` 从引用池找回。纯单位不进引用池，构造时 `World` 留空，只对照 `InstanceId`，还池后 `Value` 为空。序列化仍只写 `Id`，纯单位读回来对不上池。
 - Send / Call（含异步、引用）的下界是 `IUnit`：`where N : class, IUnit`，`Invoke(IUnit self)`。默认法则仍挂在 `INode` / `Node` 上，`Invoke` 里 `self as INode`。`Awake`、`AddNode`、`NodeOf`、分支生成器仍是 `INode`。
 - **临时**：没有法则可等时，异步生成代码写 `await ((self as INode) ?? self.World).TreeTaskCompleted()`。因为这些方法仍返回 `TreeTask`，而 `TreeTaskCompleted` 只能 `AddTemp` 挂在节点上；纯单位没有 `AddTemp`，就借 `self.World`。出现在 `NodeCallRuleAsyncGeneratorHelper`、`NodeSendRuleAsyncGeneratorHelper`、`RuleGroupCallAsyncRuleGeneratorHelper`、`RuleGroupSendAsyncRuleGeneratorHelper`。节点上原来的 `await self.TreeTaskCompleted()` 不是这套临时写法。等这些异步帮助方法改成返回 `WorldTask`，空路径改为 `WorldTaskCompleted`，把这行转换删掉。
@@ -110,6 +110,7 @@ WorldTreeCore（全局唯一核心）
 - **编号只在 `New` / `PoolGet` 分配，不在 `OnCreate`。** 反序列化是先 `PoolGetNode(true)` 再写字段，`IsSerialize` 在进去之前已经设好。`Branch` / `ListNodeBranch` / `Rattan` 重写了 `OnCreate` 且不调 `base`；容器继承的是 `List` / `Dictionary`，不能再继承 `Unit`。
 - **不单开 `IUnitData`。** 继承是 `IUnit` → `INode` → `INodeData`。`INode` 继续表示树上的对象，`IUnit` 继续表示自由对象，不要改名。
 - **`NodeRef` 的下界是 `IUnit`，名字不改。** 只有 `INodeData` 按 `Id` 从引用池找回。纯单位是实例壳，还池后引用变空，不能靠序列化的 `Id` 复活。
+- **法则执行这条链的名字跟存储走。** `UnitRuleRef` 替代 `NodeRuleRef`。类型是 `IUnit` 的参数叫 `unit`；类型仍是 `INode` 的参数继续叫 `node`。`NodeRule`、`NodeRuleHelper`、`NodeRef` 不改名。
 - **Send / Call 的下界是 `IUnit`，生命周期仍是 `INode`。** 默认法则不改挂到 `IUnit`，否则节点查找会把默认法则套到所有单位上。
 - **`((self as INode) ?? self.World).TreeTaskCompleted()` 是临时挂法。** 异步帮助方法还在返回 `TreeTask`，空路径才借用节点挂一个已完成任务。改成 `WorldTask` 后删掉，不要在新代码里照抄。
 - **节点实例的 `SupportNodeRule` 跟发号走。** 序列化、`TreePack`、`TreeCopier` 里的调用留下：读档要在创建对象之前先补上反序列化法则；`int`、数组、`UnitList` 不走 `PoolGetNode`。`PoolGetUnit` 不要调用它，每次都会拿写锁。

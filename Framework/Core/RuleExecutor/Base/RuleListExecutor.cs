@@ -24,12 +24,12 @@ namespace WorldTree
 		public UnitDictionary<long, int> IdIndexDict;
 
 		/// <summary>
-		/// 尝试添加节点和法则
+		/// 尝试添加单位和法则
 		/// </summary>
-		public override bool TryAdd(IUnit node, RuleList rule)
+		public override bool TryAdd(IUnit unit, RuleList rule)
 		{
-			if (node == null || rule == null) return false;
-			if (IdIndexDict != null && IdIndexDict.ContainsKey(node.InstanceId)) return false;
+			if (unit == null || rule == null) return false;
+			if (IdIndexDict != null && IdIndexDict.ContainsKey(unit.InstanceId)) return false;
 
 			int addIndex = 0;
 
@@ -55,13 +55,13 @@ namespace WorldTree
 
 			// 判断扩容
 			if (addIndex == nodes.Length) Capacity();
-			nodes[addIndex] = new NodeRuleRef(node, rule);
-			IdIndexDict.Add(node.InstanceId, addIndex);
+			nodes[addIndex] = new UnitRuleRef(unit, rule);
+			IdIndexDict.Add(unit.InstanceId, addIndex);
 			nextTraversalCount = addIndex + 1;
 			return true;
 		}
 
-		public override bool TryGetNext(out IUnit node, out RuleList ruleList)
+		public override bool TryGetNext(out IUnit unit, out RuleList ruleList)
 		{
 			//遍历间隔
 			int indexInterval = 1;
@@ -89,10 +89,10 @@ namespace WorldTree
 				}
 
 				// 使用引用类型来避免结构体复制
-				ref NodeRuleRef pair = ref nodes[readPoint];
+				ref UnitRuleRef pair = ref nodes[readPoint];
 
-				node = pair.Node;
-				if (node == null) // 节点意外回收
+				unit = pair.Unit;
+				if (unit == null) // 单位意外回收
 				{
 					readPoint += indexInterval;
 					IdIndexDict.Remove(pair.InstanceId);
@@ -106,7 +106,7 @@ namespace WorldTree
 					// 将当前节点放到写入点
 					nodes[writePoint] = pair;
 					// 更新索引字典
-					IdIndexDict[node.InstanceId] = writePoint;
+					IdIndexDict[unit.InstanceId] = writePoint;
 					// 为了安全，清除引用，因为节点已经移动到写入点
 					pair.Clear();
 				}
@@ -122,7 +122,7 @@ namespace WorldTree
 				// 判断如果遍历数量为0，说明没有可遍历的节点，当前数组为空，直接恢复为初始化状态
 				if (nextTraversalCount == 0) isInit = true;
 			}
-			node = null;
+			unit = null;
 			ruleList = null;
 			return false;
 		}
@@ -160,10 +160,10 @@ namespace WorldTree
 		/// <summary>
 		/// 移除
 		/// </summary>
-		public virtual void Remove(IUnit node)
+		public virtual void Remove(IUnit unit)
 		{
-			if (node == null) return;
-			Remove(node.InstanceId);
+			if (unit == null) return;
+			Remove(unit.InstanceId);
 		}
 	}
 

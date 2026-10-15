@@ -30,13 +30,13 @@ namespace WorldTree
 		[Protected] public RuleGroup ruleGroupDict;
 
 		/// <summary>
-		/// 尝试添加节点
+		/// 尝试添加单位
 		/// </summary>
-		public virtual bool TryAdd(IUnit node)
+		public virtual bool TryAdd(IUnit unit)
 		{
-			if (node == null) return false;
-			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(node.Type, out RuleList rule)) return false;
-			return base.TryAdd(node, rule);
+			if (unit == null) return false;
+			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(unit.Type, out RuleList rule)) return false;
+			return base.TryAdd(unit, rule);
 		}
 	}
 

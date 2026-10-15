@@ -47,12 +47,12 @@ namespace WorldTree.SourceGenerator
 							/// 尝试调用法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static bool TryCall<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}}, out OutT outT)
+							public static bool TryCall<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
-								if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
+								if (((RuleGroup)group).TryGetValue(unit.Type, out RuleList ruleList))
 								{
-									((IRuleList<R>)ruleList).Call(node{{genericParameter}}, out outT);
+									((IRuleList<R>)ruleList).Call(unit{{genericParameter}}, out outT);
 									return true;
 								}
 								outT = default(OutT);
@@ -63,10 +63,10 @@ namespace WorldTree.SourceGenerator
 							/// 调用法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static OutT Call<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}}, out OutT outT)
+							public static OutT Call<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
-								group.TryCall(node{{genericParameter}}, out outT);
+								group.TryCall(unit{{genericParameter}}, out outT);
 								return outT;
 							}
 
@@ -74,12 +74,12 @@ namespace WorldTree.SourceGenerator
 							/// 尝试调用法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static bool TryCalls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}}, TreeList<OutT> outTList)
+							public static bool TryCalls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
-								if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
+								if ((group as RuleGroup).TryGetValue(unit.Type, out RuleList ruleList))
 								{
-									((IRuleList<R>)ruleList).Calls(node{{genericParameter}}, outTList);
+									((IRuleList<R>)ruleList).Calls(unit{{genericParameter}}, outTList);
 									return true;
 								}
 								return true;
@@ -89,10 +89,10 @@ namespace WorldTree.SourceGenerator
 							/// 调用法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}}, TreeList<OutT> outTList)
+							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
-								group.TryCalls(node{{genericParameter}}, outTList);
+								group.TryCalls(unit{{genericParameter}}, outTList);
 								return outTList;
 							}
 					""");

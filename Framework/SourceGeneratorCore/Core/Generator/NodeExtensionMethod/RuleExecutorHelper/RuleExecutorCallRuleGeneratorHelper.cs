@@ -47,9 +47,9 @@ namespace WorldTree.SourceGenerator
 								self.RefreshTraversalCount();
 								for (int i = 0; i < self.TraversalCount; i++)
 								{
-									if (self.TryGetNext(out IUnit node, out RuleList ruleList))
+									if (self.TryGetNext(out IUnit unit, out RuleList ruleList))
 									{
-										((IRuleList<R>)ruleList).Call(node{{genericParameter}}, out outT);
+										((IRuleList<R>)ruleList).Call(unit{{genericParameter}}, out outT);
 									}
 								}
 								return outT;
@@ -70,10 +70,10 @@ namespace WorldTree.SourceGenerator
 								}
 								for (int i = 0; i < self.TraversalCount; i++)
 								{
-									if (self.TryGetNext(out IUnit node, out RuleList ruleList))
+									if (self.TryGetNext(out IUnit unit, out RuleList ruleList))
 									{				
 					
-										defaultOutT = await ((IRuleList<R>)ruleList).CallAsync(node{{genericParameter}}, defaultOutT);
+										defaultOutT = await ((IRuleList<R>)ruleList).CallAsync(unit{{genericParameter}}, defaultOutT);
 									}
 									else
 									{

@@ -46,18 +46,18 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表异步通知执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleList<R> iRuleList, IUnit node{{genericTypeParameter}})
+							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleList<R> iRuleList, IUnit unit{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
 								RuleList ruleList = (RuleList)iRuleList;
 								if(ruleList.Count == 1)
 								{
-									await ((ISendRuleAsync{{genericsTypeAngle}})ruleList[0]).Invoke(node{{genericParameter}});
+									await ((ISendRuleAsync{{genericsTypeAngle}})ruleList[0]).Invoke(unit{{genericParameter}});
 									return;
 								}
 								for(int i = 0; i < ruleList.Count; i++)
 								{
-									await ((ISendRuleAsync{{genericsTypeAngle}})ruleList[i]).Invoke(node{{genericParameter}});
+									await ((ISendRuleAsync{{genericsTypeAngle}})ruleList[i]).Invoke(unit{{genericParameter}});
 								}
 							}
 					""");

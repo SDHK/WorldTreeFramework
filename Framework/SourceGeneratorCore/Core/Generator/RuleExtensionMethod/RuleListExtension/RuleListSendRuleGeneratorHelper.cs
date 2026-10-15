@@ -44,18 +44,18 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表通知执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static void Send<R{{genericsType}}>(this IRuleList<R> iRuleList, IUnit node{{genericTypeParameter}})
+							public static void Send<R{{genericsType}}>(this IRuleList<R> iRuleList, IUnit unit{{genericTypeParameter}})
 								where R : ISendRule{{genericsTypeAngle}}
 							{
 								RuleList ruleList = (RuleList)iRuleList;
 								if(ruleList.Count == 1)
 								{
-									 ((ISendRule{{genericsTypeAngle}})ruleList[0]).Invoke(node{{genericParameter}});
+									 ((ISendRule{{genericsTypeAngle}})ruleList[0]).Invoke(unit{{genericParameter}});
 									 return;
 								}
 								for(int i = 0; i < ruleList.Count; i++)
 								{
-									 ((ISendRule{{genericsTypeAngle}})ruleList[i]).Invoke(node{{genericParameter}});
+									 ((ISendRule{{genericsTypeAngle}})ruleList[i]).Invoke(unit{{genericParameter}});
 								}
 							}
 					""");
