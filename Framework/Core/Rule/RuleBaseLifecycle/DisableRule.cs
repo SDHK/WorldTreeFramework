@@ -24,7 +24,7 @@ namespace WorldTree
 	public abstract class DisableRule<N> : SendRule<N, Disable>
 		where N : class, INode, AsRule<Disable>
 	{
-		public override void Invoke(IUnit self)
+		public override void Invoke(INode self)
 		{
 			if (self is INode node) InvokeNode(node);
 		}

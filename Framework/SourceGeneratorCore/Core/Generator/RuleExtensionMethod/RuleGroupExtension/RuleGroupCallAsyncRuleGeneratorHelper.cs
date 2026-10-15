@@ -47,14 +47,14 @@ namespace WorldTree.SourceGenerator
 							/// 调用法则集合异步执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, OutT defaultOutT)
+							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
-								if ((group as RuleGroup).TryGetValue(unit.Type, out RuleList ruleList))
+								if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
 								{
-									return await ((IRuleList<R>)ruleList).CallAsync(unit{{genericParameter}}, defaultOutT);
+									return await ((IRuleList<R>)ruleList).CallAsync(node{{genericParameter}}, defaultOutT);
 								}
-								await unit.TreeTaskCompleted();
+								await node.TreeTaskCompleted();
 								return defaultOutT;
 							}
 
@@ -62,14 +62,14 @@ namespace WorldTree.SourceGenerator
 							/// 调用法则集合异步执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, TreeList<OutT> outTList)
+							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
-								if ((group as RuleGroup).TryGetValue(unit.Type, out RuleList ruleList))
+								if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
 								{
-									return await ((IRuleList<R>)ruleList).CallsAsync(unit{{genericParameter}}, outTList);
+									return await ((IRuleList<R>)ruleList).CallsAsync(node{{genericParameter}}, outTList);
 								}
-								await unit.TreeTaskCompleted();
+								await node.TreeTaskCompleted();
 								return outTList;
 							}
 					""");

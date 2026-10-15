@@ -58,7 +58,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取下一个
 		/// </summary>
-		public bool TryGetNext(out IUnit unit, out RuleList ruleList);
+		public bool TryGetNext(out INode node, out RuleList ruleList);
 
 	}
 

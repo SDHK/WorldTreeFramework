@@ -26,7 +26,7 @@ namespace WorldTree.SourceGenerator
 * 可以理解为Node的有返回值扩展方法
 *
 * ICallRule 继承 IRule
-* 主要作用：统一 调用方法  OutT Invoke(IUnit self,T1 arg1, ...);
+* 主要作用：统一 调用方法  OutT Invoke(INode self,T1 arg1, ...);
 *
 * CallRule 则继承 Rule
 * 同时还继承了 ICallRule 可以转换为 ICallRule 进行统一调用。
@@ -58,20 +58,20 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							OutT Invoke(IUnit self{{genericTypeParameter}});
+							OutT Invoke(INode self{{genericTypeParameter}});
 						}
 
 						/// <summary>
 						/// 调用法则基类
 						/// </summary>
 						public abstract class CallRule<N, R{{genericsType}}, OutT> : Rule<N, R>, ICallRule<{{genericsTypeAfter}}OutT>
-							where N : class, IUnit, AsRule<R>
+							where N : class, INode, AsRule<R>
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual OutT Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							public virtual OutT Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>
@@ -88,7 +88,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual OutT Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as INode{{genericParameter}});
+							public virtual OutT Invoke(INode self{{genericTypeParameter}}) => Execute(self as INode{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>

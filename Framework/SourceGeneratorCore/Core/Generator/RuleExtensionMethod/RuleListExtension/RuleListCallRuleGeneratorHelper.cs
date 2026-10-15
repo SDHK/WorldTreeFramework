@@ -46,19 +46,19 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表调用执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static OutT Call<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, IUnit unit{{genericTypeParameter}}, out OutT outT)
+							public static OutT Call<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
 								RuleList ruleList = (RuleList)iRuleList;
 								outT = default(OutT);
 								if(ruleList.Count == 1)
 								{
-									outT = ((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(unit{{genericParameter}});
+									outT = ((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(node{{genericParameter}});
 									return outT;
 								}
 								for(int i = 0; i < ruleList.Count; i++)
 								{
-									outT = ((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(unit{{genericParameter}});
+									outT = ((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(node{{genericParameter}});
 								}
 								return outT;
 							}
@@ -67,18 +67,18 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表调用执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, IUnit unit{{genericTypeParameter}}, TreeList<OutT> outT)
+							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}}, TreeList<OutT> outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
 								RuleList ruleList = (RuleList)iRuleList;
 								if(ruleList.Count == 1)
 								{
-									outT.Add(((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(unit{{genericParameter}}));
+									outT.Add(((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[0]).Invoke(node{{genericParameter}}));
 									return outT;
 								}
 								for(int i = 0; i < ruleList.Count; i++)
 								{
-									outT.Add(((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(unit{{genericParameter}}));
+									outT.Add(((ICallRule<{{genericsTypeAfter}}OutT>)ruleList[i]).Invoke(node{{genericParameter}}));
 								}
 								return outT;
 							}

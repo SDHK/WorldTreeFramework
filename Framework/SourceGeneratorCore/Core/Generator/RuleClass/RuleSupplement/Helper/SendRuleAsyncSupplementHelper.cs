@@ -34,7 +34,7 @@ namespace WorldTree.SourceGenerator
 
 			RuleSupplementHelper.AddComment(Code, "执行异步通知法则", "\t\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
 			//生成调用方法
-			Code.AppendLine(@$"		public static TreeTask {ClassName}<N{TypeArguments}>(this N self{genericTypeParameter})where N : class, IUnit, AsRule<{ClassFullName}> {WhereTypeArguments} => NodeRuleHelper.{BaseName}(self, default({ClassFullName}){genericParameter});");
+			Code.AppendLine(@$"		public static TreeTask {ClassName}<N{TypeArguments}>(this N self{genericTypeParameter})where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments} => NodeRuleHelper.{BaseName}(self, default({ClassFullName}){genericParameter});");
 		}
 	}
 }

@@ -3,56 +3,56 @@
 * 作者： 闪电黑客
 * 日期： 2023/6/1 19:44
 
-* 描述： 单位法则引用
+* 描述： 节点法则引用
 * 
-* 用于执行器中的单位和法则的绑定存储。
+* 用于执行器中的节点和法则的绑定存储。
 * 这个结构是不可被序列化的，也不能找回数据节点。
 * 
 
- */
+*/
 
 using System.Runtime.InteropServices;
 
 namespace WorldTree
 {
 	/// <summary>
-	/// 单位法则引用
+	/// 节点法则引用
 	/// </summary>
 	// 针对缓存优化的紧凑结构体
 	[StructLayout(LayoutKind.Sequential, Pack = 8)]
-	public struct UnitRuleRef
+	public struct NodeRuleRef
 	{
 		/// <summary>
-		/// 单位实例ID
+		/// 节点实例 Id
 		/// </summary>
 		public long InstanceId;
 
 		/// <summary>
-		/// 单位。节点也是单位。
+		/// 节点
 		/// </summary>
-		private IUnit unit;
+		private INode node;
 
 		/// <summary>
 		/// 法则
 		/// </summary>
 		public RuleList Rule;
 
-		public UnitRuleRef(IUnit unit, RuleList rule)
+		public NodeRuleRef(INode node, RuleList rule)
 		{
-			this.unit = unit;
+			this.node = node;
 			this.Rule = rule;
-			this.InstanceId = unit.InstanceId;
+			this.InstanceId = node.InstanceId;
 		}
 
 		/// <summary>
-		/// 获取单位。实例号变了说明已经还池，返回 null。
+		/// 获取节点。实例号变了说明已经还池，返回 null。
 		/// </summary>
-		public IUnit Unit
+		public INode Node
 		{
 			get
 			{
-				if (unit != null && InstanceId != unit.InstanceId) { unit = null; Rule = null; }
-				return unit;
+				if (node != null && InstanceId != node.InstanceId) { node = null; Rule = null; }
+				return node;
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace WorldTree
 		/// </summary>
 		public void Clear()
 		{
-			unit = null;
+			node = null;
 			Rule = null;
 		}
 	}

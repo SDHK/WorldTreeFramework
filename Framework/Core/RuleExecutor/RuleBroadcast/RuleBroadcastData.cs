@@ -21,7 +21,7 @@ namespace WorldTree
 
 		public void Clear() { }
 
-		public bool TryAdd(IUnit unit)
+		public bool TryAdd(INode node)
 		{
 			return false;
 		}

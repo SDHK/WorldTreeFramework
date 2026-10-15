@@ -68,7 +68,7 @@ namespace WorldTree
 		}
 
 
-		public virtual void Invoke(IUnit self, INode node) => Execute(self as N, node as TN);
+		public virtual void Invoke(INode self, INode node) => Execute(self as N, node as TN);
 		/// <summary>
 		/// 执行
 		/// </summary>

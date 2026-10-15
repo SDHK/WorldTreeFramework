@@ -47,9 +47,9 @@ namespace WorldTree
 		, AsChildBranch
 	{
 		/// <summary>
-		/// 单位法则引用列表
+		/// 节点法则引用列表
 		/// </summary>
-		public UnitRuleRef[] nodes;
+		public NodeRuleRef[] nodes;
 
 		/// <summary>
 		/// 出队指针
@@ -113,11 +113,11 @@ namespace WorldTree
 		public int RemainCount => writePoint + nowNewCount;
 
 		/// <summary>
-		/// 尝试添加单位
+		/// 尝试添加节点
 		/// </summary>
-		public virtual bool TryAdd(IUnit unit, RuleList rule)
+		public virtual bool TryAdd(INode node, RuleList rule)
 		{
-			if (unit == null || rule == null) return false;
+			if (node == null || rule == null) return false;
 
 			int addIndex = 0;
 
@@ -143,7 +143,7 @@ namespace WorldTree
 
 			// 判断自动扩容
 			if (addIndex + 1 >= nodes.Length) Capacity();
-			nodes[addIndex] = new UnitRuleRef(unit, rule);
+			nodes[addIndex] = new NodeRuleRef(node, rule);
 			nextTraversalCount = addIndex + 1;
 			return true;
 		}
@@ -159,7 +159,7 @@ namespace WorldTree
 			if (num < this.nextTraversalCount) this.LogError("下标小于当前大小");
 			if (num > 0)
 			{
-				var newNodes = this.World.PoolGetArray<UnitRuleRef>(num);
+				var newNodes = this.World.PoolGetArray<NodeRuleRef>(num);
 				if (this.nodes.Length != 0)
 				{
 					Array.Copy(this.nodes, 0, newNodes, 0, this.nodes.Length);
@@ -173,7 +173,7 @@ namespace WorldTree
 				{
 					this.World.PoolRecycle(this.nodes, true);
 				}
-				this.nodes = this.World.PoolGetArray<UnitRuleRef>(4);
+				this.nodes = this.World.PoolGetArray<NodeRuleRef>(4);
 			}
 		}
 
@@ -217,7 +217,7 @@ namespace WorldTree
 			return traversalCount;
 		}
 
-		public virtual bool TryGetNext(out IUnit unit, out RuleList ruleList)
+		public virtual bool TryGetNext(out INode node, out RuleList ruleList)
 		{
 			//遍历间隔
 			int indexInterval = 1;
@@ -245,10 +245,10 @@ namespace WorldTree
 				}
 
 				// 使用引用类型来避免结构体复制
-				ref UnitRuleRef pair = ref nodes[readPoint];
+				ref NodeRuleRef pair = ref nodes[readPoint];
 
-				unit = pair.Unit;
-				if (unit == null) // 单位意外回收
+				node = pair.Node;
+				if (node == null) // 节点意外回收
 				{
 					readPoint += indexInterval;
 					continue; // 继续下一个节点
@@ -275,7 +275,7 @@ namespace WorldTree
 				// 判断如果遍历数量为0，说明没有可遍历的节点，当前数组为空，直接恢复为初始化状态
 				if (nextTraversalCount == 0) isInit = true;
 			}
-			unit = null;
+			node = null;
 			ruleList = null;
 			return false;
 		}
@@ -300,7 +300,7 @@ namespace WorldTree
 		{
 			protected override void Execute(RuleExecutor self)
 			{
-				self.nodes = self.World.PoolGetArray<UnitRuleRef>(4);
+				self.nodes = self.World.PoolGetArray<NodeRuleRef>(4);
 			}
 		}
 

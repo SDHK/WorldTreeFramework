@@ -30,9 +30,6 @@ namespace WorldTree.Server
 			//TreeTask 异步任务测试
 			self.AddComponent(out TreeTaskTest _);
 
-			//纯单位执行法则
-			//self.AddComponent(out UnitRuleTest _);
-
 			//self.TestStringConcatPerformance();
 
 			//self.AddComponent(out TreeDataTest _);

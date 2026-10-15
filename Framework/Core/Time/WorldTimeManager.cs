@@ -108,37 +108,37 @@ namespace WorldTree
 		/// <summary>
 		/// 添加定帧器 
 		/// </summary>
-		public static long AddFramer<R>(this WorldTimeManager self, long frame, IUnit unit, TreeTaskToken token = null)
+		public static long AddFramer<R>(this WorldTimeManager self, long frame, INode node, TreeTaskToken token = null)
 			where R : ISendRule
 		{
-			return self.Framer.AddTicker<R>(frame, unit, token);
+			return self.Framer.AddTicker<R>(frame, node, token);
 		}
 
 		/// <summary>
 		/// 添加定帧延迟
 		/// </summary>
-		public static long AddFramerDelay<R>(this WorldTimeManager self, long delayFrame, IUnit unit, TreeTaskToken token = null)
+		public static long AddFramerDelay<R>(this WorldTimeManager self, long delayFrame, INode node, TreeTaskToken token = null)
 			where R : ISendRule
 		{
-			return self.Framer.AddTicker<R>(self.TotalFrames + delayFrame, unit, token);
+			return self.Framer.AddTicker<R>(self.TotalFrames + delayFrame, node, token);
 		}
 
 		/// <summary>
 		/// 添加真实时间定时器，时序为绝对 Utc Ticks
 		/// </summary>
-		public static long AddTimer<R>(this WorldTimeManager self, long utcTicks, IUnit unit, TreeTaskToken token = null)
+		public static long AddTimer<R>(this WorldTimeManager self, long utcTicks, INode node, TreeTaskToken token = null)
 			where R : ISendRule
 		{
-			return self.Timer.AddTicker<R>(utcTicks, unit, token);
+			return self.Timer.AddTicker<R>(utcTicks, node, token);
 		}
 
 		/// <summary>
 		/// 添加真实时间延迟，时序为当前 Utc Ticks 加上延迟
 		/// </summary>
-		public static long AddTimerDelay<R>(this WorldTimeManager self, long delayTicks, IUnit unit, TreeTaskToken token = null)
+		public static long AddTimerDelay<R>(this WorldTimeManager self, long delayTicks, INode node, TreeTaskToken token = null)
 			where R : ISendRule
 		{
-			return self.Timer.AddTicker<R>(self.World.Line.Core.RealTimeManager.UtcNow.Ticks + delayTicks, unit, token);
+			return self.Timer.AddTicker<R>(self.World.Line.Core.RealTimeManager.UtcNow.Ticks + delayTicks, node, token);
 		}
 	}
 }

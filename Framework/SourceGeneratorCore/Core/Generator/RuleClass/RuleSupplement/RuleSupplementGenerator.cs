@@ -195,7 +195,7 @@ namespace WorldTree.SourceGenerator
 
 			//抽象基类
 			AddComment(Code, "法则基类", "\t", ClassFullNameAndNameSpace, ClassFullName, BaseFullName, BaseTypePara);
-			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}> where N : class, IUnit, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
+			Code.AppendLine(@$"	public abstract class {ClassName}Rule<N{TypeArguments}> : {BaseName}<N, {ClassFullName}{BaseTypeArguments}> where N : class, INode, AsRule<{ClassFullName}> {WhereTypeArguments}{{}}");
 
 
 			//法则委托

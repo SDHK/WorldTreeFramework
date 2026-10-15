@@ -45,11 +45,11 @@ namespace WorldTree.SourceGenerator
 							/// 尝试通知法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static bool TrySendRef<R{{genericsType}}>(this IRuleGroup<R> group, IUnit unit{{genericRefTypeParameter}})
+							public static bool TrySendRef<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericRefTypeParameter}})
 								where R : ISendRefRule{{genericsTypeAngle}}
 							{
-								if (!((RuleGroup)group).TryGetValue(unit.Type, out RuleList ruleList)) return false;
-								((IRuleList<R>)ruleList).SendRef(unit{{genericRefParameter}});
+								if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) return false;
+								((IRuleList<R>)ruleList).SendRef(node{{genericRefParameter}});
 								return true;
 							}
 
@@ -57,10 +57,10 @@ namespace WorldTree.SourceGenerator
 							/// 通知法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static void SendRef<R{{genericsType}}>(this IRuleGroup<R> group, IUnit unit{{genericRefTypeParameter}})
+							public static void SendRef<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericRefTypeParameter}})
 								where R : ISendRefRule{{genericsTypeAngle}}
 							{
-								group.TrySendRef(unit{{genericRefParameter}});
+								group.TrySendRef(node{{genericRefParameter}});
 							}
 					""");
 			}

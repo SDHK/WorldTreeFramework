@@ -13,7 +13,7 @@ namespace WorldTree
 	/// </summary>
 	public class CascadeTickerData : Node
 		, ChildOf<CascadeTicker>
-		, AsRule<Awake<long, IUnit, RuleList>>
+		, AsRule<Awake<long, INode, RuleList>>
 		, AsRule<TreeTaskTokenEvent>
 	{
 		/// <summary>
@@ -22,9 +22,9 @@ namespace WorldTree
 		public long Tick;
 
 		/// <summary>
-		/// 到期后执行法则的单位。节点也是单位。
+		/// 到期后执行法则的节点。
 		/// </summary>
-		public NodeRef<IUnit> Node;
+		public NodeRef<INode> Node;
 
 		/// <summary>
 		/// 事件规则类型 
@@ -39,12 +39,12 @@ namespace WorldTree
 
 	public static class CascadeTickerDataRule
 	{
-		class AwakeRule : AwakeRule<CascadeTickerData, long, IUnit, RuleList>
+		class AwakeRule : AwakeRule<CascadeTickerData, long, INode, RuleList>
 		{
-			protected override void Execute(CascadeTickerData self, long tick, IUnit unit, RuleList ruleList)
+			protected override void Execute(CascadeTickerData self, long tick, INode node, RuleList ruleList)
 			{
 				self.Tick = tick;
-				self.Node = new(unit);
+				self.Node = new(node);
 				self.RuleList = ruleList;
 			}
 		}

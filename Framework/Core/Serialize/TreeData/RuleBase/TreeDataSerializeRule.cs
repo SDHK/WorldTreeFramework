@@ -37,7 +37,7 @@ namespace WorldTree
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(IUnit self, ref object value, ref SerializedTypeMode typeMode) => Execute(self as TreeDataByteSequence, ref value, ref typeMode);
+		public virtual void Invoke(INode self, ref object value, ref SerializedTypeMode typeMode) => Execute(self as TreeDataByteSequence, ref value, ref typeMode);
 		/// <summary>
 		/// 执行
 		/// </summary>
@@ -52,7 +52,7 @@ namespace WorldTree
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(IUnit self, ref object value, ref int fieldNameCode) => Execute(self as TreeDataByteSequence, ref value, ref fieldNameCode);
+		public virtual void Invoke(INode self, ref object value, ref int fieldNameCode) => Execute(self as TreeDataByteSequence, ref value, ref fieldNameCode);
 		/// <summary>
 		/// 执行
 		/// </summary>
