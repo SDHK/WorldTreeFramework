@@ -28,7 +28,7 @@ namespace WorldTree
 		/// </summary>
 		/// <typeparam name="T">资源类型</typeparam>
 		/// <typeparam name="N">节点类型</typeparam>
-		public async WorldTask<T> LoadAssetAsync<T, N>()
+		public async TreeTask<T> LoadAssetAsync<T, N>()
 			where T : class
 			where N : class, INode
 		{
@@ -40,7 +40,7 @@ namespace WorldTree
 			}
 			else
 			{
-				await this.WorldTaskCompleted();
+				await this.TreeTaskCompleted();
 			}
 			return asset as T;
 		}

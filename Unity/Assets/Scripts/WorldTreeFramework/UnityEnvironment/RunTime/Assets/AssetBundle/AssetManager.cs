@@ -25,7 +25,7 @@ namespace WorldTree
 		/// <summary>
 		/// 异步加载资源
 		/// </summary>
-		public async WorldTask<T> LoadAssetAsync<T, N>()
+		public async TreeTask<T> LoadAssetAsync<T, N>()
 			where T : class
 			where N : class, INode
 		{
@@ -37,7 +37,7 @@ namespace WorldTree
 			}
 			else
 			{
-				await this.WorldTaskCompleted();
+				await this.TreeTaskCompleted();
 			}
 			return asset as T;
 		}

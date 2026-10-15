@@ -18,9 +18,9 @@ namespace WorldTree
 		/// <summary>
 		/// 获取异步等待
 		/// </summary>
-		public static WorldTask<AsyncOperation> GetAwaiter(this INode self, AsyncOperation asyncOperation)
+		public static TreeTask<AsyncOperation> GetAwaiter(this INode self, AsyncOperation asyncOperation)
 		{
-			WorldTask<AsyncOperation> asyncTask = self.World.PoolGetUnit<WorldTask<AsyncOperation>>();
+			TreeTaskManager.Get(self).AddTemp(out TreeTask<AsyncOperation> asyncTask);
 			asyncOperation.completed += asyncTask.SetResult;
 			return asyncTask;
 		}

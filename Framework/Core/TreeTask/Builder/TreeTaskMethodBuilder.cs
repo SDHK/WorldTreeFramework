@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/6/17 10:23
@@ -95,8 +95,8 @@ namespace WorldTree.Internal
 			if (task == null)//发生在异步方法等待的第一个 await TreeTask 时。
 			{
 				//新建一个TreeTask
-				awaiter.Parent.AddTemp(out task);
-				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
+				TreeTaskManager.Get(awaiter).AddTemp(out task);
+				if (treeTaskStateMachine == null) TreeTaskManager.Get(awaiter).AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
 				//任务关联
 				//task.Log($"新建任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 				task.RelevanceTask = awaiter;
@@ -220,8 +220,8 @@ namespace WorldTree.Internal
 			//if (task == null)//发生在异步方法等待的第一个 await TreeTask 时。
 			//{
 			//	//新建一个TreeTask
-			//	awaiter.Parent.AddTemp(out task);
-			//	if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
+			//	TreeTaskManager.Get(awaiter).AddTemp(out task);
+			//	if (treeTaskStateMachine == null) TreeTaskManager.Get(awaiter).AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
 			//	//任务关联
 			//	task.Log($"新建任务[{task.Id}] ，当前状态机：{stateMachine}");
 
@@ -243,8 +243,8 @@ namespace WorldTree.Internal
 			if (task == null)//发生在异步方法等待的第一个 await TreeTask 时。
 			{
 				//新建一个TreeTask
-				awaiter.Parent.AddTemp(out task);
-				if (treeTaskStateMachine == null) awaiter.Parent.AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
+				TreeTaskManager.Get(awaiter).AddTemp(out task);
+				if (treeTaskStateMachine == null) TreeTaskManager.Get(awaiter).AddTemp(out treeTaskStateMachine).SetStateMachine(ref stateMachine);
 				//任务关联
 				//task.Log($"新建任务[{task.Id}] 关联=> Awaiter[{awaiter.Id}]({awaiter.GetType().Name})，当前状态机：{stateMachine}");
 				task.RelevanceTask = awaiter;

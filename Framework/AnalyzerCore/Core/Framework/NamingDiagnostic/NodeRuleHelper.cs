@@ -66,9 +66,9 @@ namespace WorldTree.Analyzer
 			""",
 			RuleBaseEnum.SendRuleAsync =>
 			$$"""
-					private static async WorldTask {{ruleTypeName}}{{typeTName}}({{strThis}}{{genericTypeParameter}})
+					private static async TreeTask {{ruleTypeName}}{{typeTName}}({{strThis}}{{genericTypeParameter}})
 					{ 
-						await self.WorldTaskCompleted();
+						await self.TreeTaskCompleted();
 					}
 			""",
 			RuleBaseEnum.CallRule =>
@@ -80,9 +80,9 @@ namespace WorldTree.Analyzer
 			""",
 			RuleBaseEnum.CallRuleAsync =>
 			$$"""
-					private static async WorldTask<{{outType}}> {{ruleTypeName}}{{typeTName}}({{strThis}}{{genericTypeParameter}})
+					private static async TreeTask<{{outType}}> {{ruleTypeName}}{{typeTName}}({{strThis}}{{genericTypeParameter}})
 					{ 
-						await self.WorldTaskCompleted();
+						await self.TreeTaskCompleted();
 						return default;
 					}
 			""",

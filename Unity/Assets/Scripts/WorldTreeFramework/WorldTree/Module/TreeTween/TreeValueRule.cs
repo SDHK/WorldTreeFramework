@@ -28,35 +28,21 @@ namespace WorldTree
 		/// <summary>
 		/// 等待完成
 		/// </summary>
-		public static async WorldTask WaitForCompletion(this TreeTweenBase self)
+		public static async TreeTask WaitForCompletion(this TreeTweenBase self)
 		{
-			WorldTask asyncTask = self.World.PoolGetUnit<WorldTask>();
-			WorldTaskToken token = await self.WorldTaskTokenCatch();
-			Action<WorldTokenState> onToken = null;
-			if (token != null)
+			TreeTask asyncTask = TreeTaskManager.Get(self).AddTemp(out TreeTask _);
+
+			//令牌是否为空,不为空则将组件挂入令牌
+			if (await self.TreeTaskTokenCatch() is TreeTaskToken taskToken)
 			{
-				onToken = state =>
-				{
-					switch (state)
-					{
-						case WorldTokenState.Running:
-							self.isRun = true;
-							break;
-						case WorldTokenState.Stop:
-							self.isRun = false;
-							break;
-						case WorldTokenState.Cancel:
-							self.isRun = false;
-							self.OnCompleted.Send();
-							break;
-					}
-				};
-				token.Add(onToken);
+				taskToken.Add(self);
 			}
 
-			self.OnCompleted.Add(asyncTask, default(WorldTaskTimeout));
+			//组件的任务完成回调注册
+			self.OnCompleted.Add(asyncTask, default(TreeTaskSetResuIt));
+
+			//等待异步执行
 			await asyncTask;
-			token?.Remove(onToken);
 		}
 	}
 }

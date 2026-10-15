@@ -57,7 +57,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							WorldTask<OutT> Invoke(IUnit self{{genericTypeParameter}});
+							TreeTask<OutT> Invoke(IUnit self{{genericTypeParameter}});
 						}
 
 						/// <summary>
@@ -70,11 +70,11 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual WorldTask<OutT> Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							public virtual TreeTask<OutT> Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>
-							protected abstract WorldTask<OutT> Execute(N self{{genericTypeParameter}});
+							protected abstract TreeTask<OutT> Execute(N self{{genericTypeParameter}});
 						}
 	
 						/// <summary>
@@ -86,11 +86,11 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual WorldTask<OutT> Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as INode{{genericParameter}});
+							public virtual TreeTask<OutT> Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as INode{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>
-							protected abstract WorldTask<OutT> Execute(INode self{{genericTypeParameter}});
+							protected abstract TreeTask<OutT> Execute(INode self{{genericTypeParameter}});
 						}
 					""");
 			}

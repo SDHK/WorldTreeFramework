@@ -46,7 +46,7 @@ namespace WorldTree.SourceGenerator
 							/// 尝试通知法则集合异步执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async WorldTask<bool> TrySendAsync<R{{genericsType}}>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}})
+							public static async TreeTask<bool> TrySendAsync<R{{genericsType}}>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
 								if (((RuleGroup)group).TryGetValue(unit.Type, out RuleList ruleList))
@@ -54,7 +54,7 @@ namespace WorldTree.SourceGenerator
 									await ((IRuleList<R>)ruleList).SendAsync(unit{{genericParameter}});
 									return true;
 								}
-								await unit.WorldTaskCompleted();
+								await unit.TreeTaskCompleted();
 								return false;
 							}
 
@@ -62,10 +62,10 @@ namespace WorldTree.SourceGenerator
 							/// 通知法则集合异步执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async WorldTask SendAsync<R{{genericsType}}>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}})
+							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
-								if (!((RuleGroup)group).TryGetValue(unit.Type, out RuleList ruleList)) await unit.WorldTaskCompleted();
+								if (!((RuleGroup)group).TryGetValue(unit.Type, out RuleList ruleList)) await unit.TreeTaskCompleted();
 								await ((IRuleList<R>)ruleList).SendAsync(unit{{genericParameter}});
 							}
 					""");

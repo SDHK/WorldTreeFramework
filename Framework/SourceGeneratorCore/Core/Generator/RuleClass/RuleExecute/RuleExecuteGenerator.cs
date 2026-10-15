@@ -151,7 +151,7 @@ namespace WorldTree.SourceGenerator
 
 							ClassCode.AppendLine(
 							$$"""
-									class {{delegateFieldName}}RuleExecute : {{RuleFullName}} { protected override WorldTask Execute({{genericTypeParameter}}) => {{delegateFieldName}}({{genericParameter}}); }
+									class {{delegateFieldName}}RuleExecute : {{RuleFullName}} { protected override TreeTask Execute({{genericTypeParameter}}) => {{delegateFieldName}}({{genericParameter}}); }
 							"""
 							);
 							break;
@@ -168,7 +168,7 @@ namespace WorldTree.SourceGenerator
 
 							ClassCode.AppendLine(
 							$$"""
-									class {{delegateFieldName}}RuleExecute : {{RuleFullName}} { protected override WorldTask<{{outType}}> Execute({{genericTypeParameter}}) => {{delegateFieldName}}({{genericParameter}}); }
+									class {{delegateFieldName}}RuleExecute : {{RuleFullName}} { protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{delegateFieldName}}({{genericParameter}}); }
 							"""
 							);
 							break;

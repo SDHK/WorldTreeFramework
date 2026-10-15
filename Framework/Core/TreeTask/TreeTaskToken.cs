@@ -100,7 +100,7 @@ namespace WorldTree
 			where N : class, INode, AsRule<TreeTaskTokenEvent>
 		{
 			if (taskState == TokenState.Cancel) return;
-            tokenEvent?.Add(node);
+			tokenEvent?.Add(node);
 		}
 	}
 

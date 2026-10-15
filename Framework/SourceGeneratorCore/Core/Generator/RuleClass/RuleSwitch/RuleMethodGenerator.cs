@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2025/4/24 14:30
@@ -425,7 +425,7 @@ namespace WorldTree.SourceGenerator
 					case RuleBaseEnum.SendRuleAsync:
 						classCode.AppendLine(
 					$$"""
-								protected override WorldTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); 
+								protected override TreeTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); 
 					"""
 						);
 						break;
@@ -439,7 +439,7 @@ namespace WorldTree.SourceGenerator
 					case RuleBaseEnum.CallRuleAsync:
 						classCode.AppendLine(
 					$$"""
-								protected override WorldTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}});
+								protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}});
 					"""
 						);
 						break;
@@ -463,7 +463,7 @@ namespace WorldTree.SourceGenerator
 					case RuleBaseEnum.SendRuleAsync:
 						classCode.AppendLine(
 						$$"""
-							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override WorldTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 						);
 						break;
@@ -477,7 +477,7 @@ namespace WorldTree.SourceGenerator
 					case RuleBaseEnum.CallRuleAsync:
 						classCode.AppendLine(
 						$$"""
-							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override WorldTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 						);
 						break;
@@ -534,13 +534,13 @@ namespace WorldTree.SourceGenerator
 					classCode.AppendLine($"			private Dictionary<{classData.switchValueType},Action<{genericType}>> methodDict = new()");
 					break;
 				case RuleBaseEnum.SendRuleAsync:
-					classCode.AppendLine($"			private Dictionary<{classData.switchValueType},Func<{genericType}, WorldTask>> methodDict = new()");
+					classCode.AppendLine($"			private Dictionary<{classData.switchValueType},Func<{genericType}, TreeTask>> methodDict = new()");
 					break;
 				case RuleBaseEnum.CallRule:
 					classCode.AppendLine($"			private Dictionary<{classData.switchValueType},Func<{genericType}, {outType}>> methodDict = new()");
 					break;
 				case RuleBaseEnum.CallRuleAsync:
-					classCode.AppendLine($"			private Dictionary<{classData.switchValueType},Func<{genericType}, WorldTask<{outType}>>> methodDict = new()");
+					classCode.AppendLine($"			private Dictionary<{classData.switchValueType},Func<{genericType}, TreeTask<{outType}>>> methodDict = new()");
 					break;
 			}
 			classCode.AppendLine($"			{{");
@@ -582,7 +582,7 @@ namespace WorldTree.SourceGenerator
 				case RuleBaseEnum.SendRuleAsync:
 					classCode.AppendLine(
 					$$"""
-								protected override async WorldTask Execute({{genericTypeParameter}})
+								protected override async TreeTask Execute({{genericTypeParameter}})
 								{
 									if (methodDict.TryGetValue({{classData.switchValue}}, out var method))
 									{
@@ -590,7 +590,7 @@ namespace WorldTree.SourceGenerator
 									}
 									else
 									{
-										await self.WorldTaskCompleted();
+										await self.TreeTaskCompleted();
 									}
 								}
 					"""
@@ -616,7 +616,7 @@ namespace WorldTree.SourceGenerator
 				case RuleBaseEnum.CallRuleAsync:
 					classCode.AppendLine(
 					$$"""
-								protected override async WorldTask<{{outType}}> Execute({{genericTypeParameter}})
+								protected override async TreeTask<{{outType}}> Execute({{genericTypeParameter}})
 								{
 									if (methodDict.TryGetValue({{classData.switchValue}}, out var method))
 									{
@@ -624,7 +624,7 @@ namespace WorldTree.SourceGenerator
 									}
 									else
 									{
-										await self.WorldTaskCompleted();
+										await self.TreeTaskCompleted();
 										return default({{outType}});
 									}
 								}
@@ -738,7 +738,7 @@ namespace WorldTree.SourceGenerator
 				case RuleBaseEnum.SendRuleAsync:
 					classCode.AppendLine(
 					$$"""
-								protected override WorldTask Execute({{genericTypeParameter}})
+								protected override async TreeTask Execute({{genericTypeParameter}})
 								{
 									switch ({{classData.switchValue}})
 									{
@@ -747,13 +747,13 @@ namespace WorldTree.SourceGenerator
 					foreach (var methodData in classData.Methods)
 					{
 						string methodName = methodData.Method.Identifier.Text;
-						classCode.AppendLine($"					case {methodData.caseValue}: return {methodName}({genericParameter});");
+						classCode.AppendLine($"					case {methodData.caseValue}: return await {methodName}({genericParameter});");
 					}
 
 					classCode.AppendLine(
 					"""
 									}
-									return self.WorldTaskCompleted();
+									await self.TreeTaskCompleted();
 								}
 					""");
 					break;
@@ -784,7 +784,7 @@ namespace WorldTree.SourceGenerator
 				case RuleBaseEnum.CallRuleAsync:
 					classCode.AppendLine(
 					$$"""
-								protected override async WorldTask<{{outType}}> Execute({{genericTypeParameter}})
+								protected override async TreeTask<{{outType}}> Execute({{genericTypeParameter}})
 								{
 									switch ({{classData.switchValue}})
 									{
@@ -799,7 +799,7 @@ namespace WorldTree.SourceGenerator
 					classCode.AppendLine(
 					$$"""
 									}
-									await self.WorldTaskCompleted();
+									await self.TreeTaskCompleted();
 									return default({{outType}});
 								}
 					""");

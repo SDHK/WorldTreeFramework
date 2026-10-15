@@ -19,7 +19,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
 		/// </summary>
-		public static async WorldTask<T> AddGameObjectNode<N, T>(N self)
+		public static async TreeTask<T> AddGameObjectNode<N, T>(N self)
 			where N : class, INode, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
@@ -30,7 +30,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
 		/// </summary>
-		public static async WorldTask<T> AddGameObjectNode<N, T>(N self, Transform parent)
+		public static async TreeTask<T> AddGameObjectNode<N, T>(N self, Transform parent)
 			where N : class, INode, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{
@@ -41,7 +41,7 @@ namespace WorldTree
 		/// <summary>
 		/// 添加游戏对象实体:通过类名加载预制体，实例化后添加组件。
 		/// </summary>
-		public static async WorldTask<T> AddGameObjectNode<N, T>(N self, GameObjectNode parent)
+		public static async TreeTask<T> AddGameObjectNode<N, T>(N self, GameObjectNode parent)
 			where N : class, INode, AsChildBranch
 			where T : class, INode, ComponentOf<INode>, AsRule<Awake>
 		{

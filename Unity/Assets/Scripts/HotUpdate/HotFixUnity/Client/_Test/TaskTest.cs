@@ -22,11 +22,11 @@ namespace WorldTree
 		/// <summary>
 		/// 异步任务
 		/// </summary>
-		public WorldTask treeTask;
+		public TreeTask treeTask;
 		/// <summary>
 		/// 任务令牌
 		/// </summary>
-		public WorldTaskToken treeTaskToken;
+		public TreeTaskToken treeTaskToken;
 
 		[NodeRule(nameof(UpdateRule<TaskTest>))]
 		private static void OnUpdateRule(TaskTest self)
@@ -35,7 +35,7 @@ namespace WorldTree
 			{
 				self.Log($"异步启动:！！！！！");
 
-				self.World.PoolGetUnit(out self.treeTaskToken);
+				self.AddTemp(out self.treeTaskToken);
 				self.Test().Coroutine(self.treeTaskToken);
 
 			}
@@ -61,21 +61,21 @@ namespace WorldTree
 		/// <summary>
 		/// 测试
 		/// </summary>
-		public async WorldTask Test()
+		public async TreeTask Test()
 		{
-			WorldTaskToken taskTokenCatch = await this.WorldTaskTokenCatch();
+			TreeTaskToken taskTokenCatch = await this.TreeTaskTokenCatch();
 
-			while (taskTokenCatch.State != WorldTokenState.Cancel)
+			while (taskTokenCatch.State != TokenState.Cancel)
 			{
 				await this.TestB();
 				await this.AsyncDelay(TimeSpan.FromSeconds(1));
 
-				if (taskTokenCatch.State == WorldTokenState.Cancel) return;
+				if (taskTokenCatch.State == TokenState.Cancel) return;
 
 				await this.TaskC();
 				await this.AsyncDelay(TimeSpan.FromSeconds(6));
 
-				if (taskTokenCatch.State == WorldTokenState.Cancel) return;
+				if (taskTokenCatch.State == TokenState.Cancel) return;
 				await this.TaskD();
 			}
 		}
@@ -83,27 +83,27 @@ namespace WorldTree
 		/// <summary>
 		/// 测试B
 		/// </summary>
-		public async WorldTask TestB()
+		public async TreeTask TestB()
 		{
-			WorldTaskToken taskTokenCatch = await this.WorldTaskTokenCatch();
+			TreeTaskToken taskTokenCatch = await this.TreeTaskTokenCatch();
 			this.Log($"B！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
 		}
 
 		/// <summary>
 		/// 测试C
 		/// </summary>
-		public async WorldTask TaskC()
+		public async TreeTask TaskC()
 		{
-			WorldTaskToken taskTokenCatch = await this.WorldTaskTokenCatch();
+			TreeTaskToken taskTokenCatch = await this.TreeTaskTokenCatch();
 			this.Log($"C！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
 		}
 
 		/// <summary>
 		/// 测试C
 		/// </summary>
-		public async WorldTask TaskD()
+		public async TreeTask TaskD()
 		{
-			WorldTaskToken taskTokenCatch = await this.WorldTaskTokenCatch();
+			TreeTaskToken taskTokenCatch = await this.TreeTaskTokenCatch();
 			this.Log($"D！令牌捕获:{(taskTokenCatch == null ? null : taskTokenCatch.Id)}");
 		}
 

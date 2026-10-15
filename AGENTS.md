@@ -44,6 +44,20 @@ WorldTreeCore（全局唯一核心）
 - 查找键是 `self.Type`，不是树上的位置。`Type` 在 `UnitPool.NewObject` 和 `WorldRule.NewUnit` 里写成类型码。直接 `new` 的单位没有 `World` 也没有 `Type`，不能拿去执行法则；走 `PoolGetUnit` / `NewUnit`。
 - 没有法则列表时 `TrySendRule` / `TryCallRule` 返回 false，不抛。`CallRule` 找不到时返回 `default`。生成出来的调用方法直接返回结果；形参里有个占位 `defaultOutT = default`，内部以 `out defaultOutT` 传给 `NodeRuleHelper`。
 
+### 法则基类由接口生成
+声明继承 `ISendRule` / `ISendRuleAsync` / `ICallRule` / `ICallRuleAsync` / `ISendRefRule` 的接口后，`RuleSupplementGenerator`（`Framework/SourceGeneratorCore/.../RuleSupplement/RuleSupplementGenerator.cs` 的 `RuleClass`）在**同一命名空间**生成空的抽象基类，不要手写：
+
+```csharp
+public abstract class 接口名Rule<N, 接口自己的泛型…>
+    : 基类名<N, 接口名, 基接口的泛型…>
+    where N : class, IUnit, AsRule<接口名>
+{ }
+```
+
+基类名是基接口去掉开头的 `I`：`ISendRule` → `SendRule`，`ICallRule` → `CallRule`。例如 `interface TreeTaskSetResuIt : ISendRule` 得到 `TreeTaskSetResuItRule<N> : SendRule<N, TreeTaskSetResuIt>`。业务类继承它，或直接继承 `SendRule<单位, 接口>`，`Execute` 写在父类上。
+
+接口再标 `IMethodRule` 时，同文件还会生成 `{源文件名}Supplement`，里面是 `self.接口名(...)`。标 `ISourceGeneratorIgnore` 的接口不生成。`Awake` 不走这条：接口和 `AwakeRule<N>` 由 `AwakeRuleGeneratorHelper` 按参数个数直接生成。`SendRule` / `CallRule` 这些带 `Invoke` / `Execute` 的泛型基底由 `RuleClassGenerator` 按参数个数生成，不是每个业务接口一份。
+
 ### 关键文件地图
 | 路径 | 说明 |
 |---|---|
@@ -81,9 +95,9 @@ WorldTreeCore（全局唯一核心）
 **待办 / 待验证 ⏳**
 - 下一步接入 Luban（插件已添加）。
 - `AsyncDelay` 已修好：`WorldTimeManager` 补了 `AddTimer` / `AddTimerDelay`（真实时间 Utc Ticks），`AsyncDelay` 接上去，`TimeOut` 因此能生效。
-- **TreeTask 测试代码**：`Unity/Assets/Scripts/HotUpdate/HotFix/Server/_Test/TreeTaskTest.cs` + `TreeTaskTestRule.cs`，挂在 `DotNetInitRule.OnAddRule`。7 个用例（嵌套 await / AsyncYield 逐帧 / AsyncDelay / Task 桥接 / TreeTaskLink / 令牌取消 / 异常传播），跑 `Console/Server/Bin/App.exe` 看日志，已实测全绿。
-- TreeTask 仍未处理：BCL `Task` 失败不会 `SetException`（`INode.GetAwaiter(Task)` 一律 `SetResult`，`TreeTaskLink` 只 `LogError` 然后一直 Pending），取消被当成成功（`GetResult` 对 `Canceled` 不抛异常，业务只能自己查令牌）。
-- **WorldTask** 已并列放在 `Framework/Core/WorldTask/`，继承 `Unit`，不挂树。顶层要 `.Coroutine()` / `.Coroutine(token)`。同步等待和状态机用完还池；普通任务完成时不还池。异步 Send/Call、执行器、法则基类已改出 `WorldTask`；空路径是 `await self.WorldTaskCompleted()`（`IUnit` 扩展，池取，不挂树）。真实时间延迟走 `CascadeTicker`：`AsyncDelay` 把 `WorldTask` 放进 `AddTimerDelay<WorldTaskTimeout>`，`TimeOut` 把 `WorldTaskToken` 放进同一条法则。BCL 等待叫 `GetAwaiter`。`TreeTask` 类型还在：`TreeTaskTest`、`AsyncYield` / `AsyncDelay`、`TreeTaskQueueLock`（标了有问题暂时不用）、`CascadeTicker` 上的 `TreeTaskToken` 参数。`TreeTween` 的 `WaitForCompletion` 已改 `WorldTask`，类上的 `TreeTaskTokenEvent` 仍留给旧令牌。任务若要存进字段，用 `NodeRef<WorldTask>`。
+- **异步已经回到 TreeTask，WorldTask 已删除。** 任务挂在 `TreeTaskManager`（`ComponentOf<World>`，只有 `AsRule<Awake>`，没有自己的逻辑）的临时分支上。构建器、`TreeTaskExtension`、`TimerAsyncExtension`、`AsyncOperationExtension`、`TreeTween.WaitForCompletion`、YooAsset 的 `GetAwaiter` 已改过去。定时器令牌参数恢复为 `TreeTaskToken`。`TreeTaskTest` 在 `DotNetInitRule` 里跑，控制台已通过。节点上直接写 `self.AsyncDelay` / `self.AsyncYield` / `self.GetAwaiter`，绑到 `TreeTask` 扩展。生成器里的异步 Send/Call、法则基类、执行器、`RuleGroup` / `RuleList` 已改回 `TreeTask`，空路径是 `await self.TreeTaskCompleted()`。分析器的命名修复模板同步改了。`GameObjectNodeHelper`、`AssetManager` / `AddressablesManager.LoadAssetAsync` 也改回 `TreeTask`。客户端 `TaskTest` 已改成 `TreeTask`。服务器上的 `WorldTaskTest` 已删除。`Unity.Analysis.dll` 已重新编译进 `Assets/Plugins/`，Unity 要重启后才会加载新生成器。
+- BCL `Task` 的失败和取消已经接到 `TreeTask`：`GetAwaiter` 和 `TreeTaskLink` 都 `SetException`，一层 `AggregateException` 会拆开，取消抛 `TaskCanceledException`。令牌取消仍不抛，`GetResult` 把 `Canceled` 当完成，业务自己看令牌。`TreeTaskTest` 加了令牌传递和衔接：根令牌顺着 `await` 传到中层和内层，`TreeTaskTokenCatch` 对得上；`parent.Add(child)` 后主令牌超时，子令牌一起取消。5 秒等待都在约 1 秒被打断。while 用例：32 次同步等待立刻跑完，后面的 0.3 秒等待靠令牌停，实际等了 2 次、约 1002 毫秒，令牌 `Cancel`。`TreeTaskQueueLock` 也修好了（原来标着「有问题暂时不用」）：入口是 `INode.AsyncLock`，按 key 排队，`TreeTaskLock.Dispose` 放行下一位，排队时令牌取消则这次拿不到锁（返回 null）。测试 [11] 覆盖同键排队、异键并行、取消不占锁，以及拿过锁的等待节点还池后再被取消。等待节点还池前会清掉 `Result`：节点池不抹字段，残留凭证会在取消时把别人的锁放掉。旧的 `Lock`/`TreeTaskQueueCompleter` 删了，换成 `TreeTaskLock` + `TreeTaskQueueLockAsync`（挂 `TreeTaskManager`）。注意 TreeTask 的 `GetResult` 会还池，所以 `Coroutine()` 和 `await` 不能同时用在同一任务上（双重 await 会挂住已回收的任务）；队列锁这类纯同步操作只 `Coroutine` 驱动到底即可。
+- **WorldTask 已删除。** 异步只保留 `TreeTask`。客户端 `TaskTest` 用 `TreeTaskToken` 和 `AsyncDelay`，令牌用 `AddTemp` 挂在测试节点上。
 - **纯单位法则测试已通过**（2026-10-15）。`Unity/Assets/Scripts/HotUpdate/HotFix/Server/_Test/UnitRuleSample.cs`（`UnitEcho` / `UnitAdd` / 无实现的 `UnitMissing`）和 `UnitRuleTest`，挂在 `DotNetInitRule.OnAddRule`。`PoolGetUnit` 之后 `unit.UnitEcho(7)`、`unit.UnitAdd(3, 4)` 命中，`TrySendRule` 对缺失法则返回 false。日志：`UnitRule 通过 Echo=7 Call=7 Missing=False`。这个单位不出现在树打印里。
 - `patchAOTAssemblies` 当前已是空列表。删 MemoryPack 后编译、MyGenAll、启动已通过。
 
@@ -97,7 +111,7 @@ WorldTreeCore（全局唯一核心）
 - `INode : IUnit`。`Id` / `InstanceId` 只留在 `IUnit` 上。`Node` 自己的属性实现它们。生命周期约束仍在 `INode`。
 - 执行器的添加和获取服务统一是 `IUnit`，参数叫 `unit`：`RuleExecutor` / `RuleListExecutor` / `RuleGroupExecutor` / `IRuleMulticast` / `RuleUnicast` / `RuleBroadcast` 的 `TryAdd` 与 `Add`，以及 `GetListenerExecutor`。`RuleUnicast` 的目标是 `NodeRef<IUnit> TargetUnit`。`UnitRuleRef` 存 `IUnit`，属性是 `Unit`。监听法则 `ListenerRuleAddRule` 的 `Execute` 仍是 `INode`，因为它监听的是树上的节点，不是执行器服务。
 - `NodeRef<N>` 的下界改为 `where N : class, IUnit`，名字不改。`INodeData` 仍按 `Id` 从引用池找回。纯单位不进引用池，构造时 `World` 留空，只对照 `InstanceId`，还池后 `Value` 为空。序列化仍只写 `Id`，纯单位读回来对不上池。
-- Send / Call（含异步、引用）的下界是 `IUnit`：`where N : class, IUnit`，`Invoke(IUnit self)`。异步 Send/Call 返回 `WorldTask` / `WorldTask<T>`，没有法则可等时 `await self.WorldTaskCompleted()`。默认法则仍挂在 `INode` / `Node` 上，`Invoke` 里 `self as INode`。`Awake`、`AddNode`、`NodeOf`、分支生成器仍是 `INode`。
+- Send / Call（含异步、引用）的下界是 `IUnit`：`where N : class, IUnit`，`Invoke(IUnit self)`。异步 Send/Call 返回 `TreeTask` / `TreeTask<T>`，没有法则可等时 `await self.TreeTaskCompleted()`。默认法则仍挂在 `INode` / `Node` 上，`Invoke` 里 `self as INode`。`Awake`、`AddNode`、`NodeOf`、分支生成器仍是 `INode`。
 
 还没做：
 - `CascadeTicker` 的目标已是 `IUnit`（`AddTicker` / `CascadeTickerData.Node` 为 `NodeRef<IUnit>`）。不引入 `IUnitData`，名字也不对调。纯单位不进引用池，到期前被还池则 `NodeRef.Value` 为空，槽位更新时丢掉。
@@ -117,7 +131,7 @@ WorldTreeCore（全局唯一核心）
 - **`NodeRef` 的下界是 `IUnit`，名字不改。** 只有 `INodeData` 按 `Id` 从引用池找回。纯单位是实例壳，还池后引用变空，不能靠序列化的 `Id` 复活。
 - **执行器服务的下界是 `IUnit`。** 添加、获取、遍历出参都用 `unit`。生命周期法则仍是 `INode`。`NodeRule`、`NodeRuleHelper`、`NodeRef` 不改名。
 - **Send / Call 的下界是 `IUnit`，生命周期仍是 `INode`。** 默认法则不改挂到 `IUnit`，否则节点查找会把默认法则套到所有单位上。
-- **异步空路径用 `WorldTaskCompleted`。** 扩展在 `IUnit` 上，`PoolGetUnit`，不挂树。不要再写 `((self as INode) ?? self.World).TreeTaskCompleted()`。
+- **异步法则的空路径用 `TreeTaskCompleted`。** 扩展在 `IUnit` 上：节点用自己，纯单位用 `World`，任务挂到 `TreeTaskManager`。
 - **节点实例的 `SupportNodeRule` 跟发号走。** 序列化、`TreePack`、`TreeCopier` 里的调用留下：读档要在创建对象之前先补上反序列化法则；`int`、数组、`UnitList` 不走 `PoolGetNode`。`PoolGetUnit` 不要调用它，每次都会拿写锁。
 
 ---
@@ -155,6 +169,7 @@ WorldTreeCore（全局唯一核心）
 - **控制台必须在 `Console/Server/Bin` 下启动。** `WorldLog` 只在 `../ProjectConfig/NLog` 存在时创建 NLog logger（配置在 `Console/Server/ProjectConfig/NLog/NLog.config`，日志 `Console/Server/Logs/Log.txt`，同时打到控制台）。在仓库根目录跑时 `logger` 为 null，`Log` / `Error` 空引用；心跳线程上 `WorldContext.Update` 捕获异常后再 `LogError`，这个 NRE 会盖住真正的异常。本 shell 不把当前目录当命令路径：`App.exe` 和 `./App.exe` 都是 command not found，要用带目录的路径（`Console/Server/Bin/App.exe`），工作目录仍设为 Bin。`WorldHeart` 不退出，看完日志后 `taskkill /F /IM App.exe`。
 - **`INodeProxy.OnCreate` 不能删。** 直接实现 `INode` 的类型由 `INodeProxyGenerator` 生成 `INodeProxyRule.OnCreate(this)`。编号和 `SupportNodeRule` 已不在这里。
 - **`SupportNodeRule` 每次都进写锁**，类型已经支持也一样。热路径（每次 `PoolGetUnit`）不要加。读档的法则查找发生在 `PoolGetNode` 之前，`ReadValue` 里的调用不能省。
+- **法则接口对应的 `XxxRule<N>` 不要手写。** `RuleSupplementGenerator` 会生成同名抽象基类。再写一个就 CS0101。想跳过生成就给接口标 `ISourceGeneratorIgnore`。
 - **生成器静态集合不能跨程序集共享**。`RuleSupplementHelper` 等用静态字典收集再 `AddSource`。MyGenAll 的 IL2CPP Player 构建用 `/shared` 编译器服务器并行编 `CoreUnity`/`Module`/`HotFix`，字典被串台后，Module 的 `InputBindSupplement` 会被写进 CoreUnity（CoreUnity 不引用 Module，CS0246），接着 `GenerateStripedAOTDlls failed`。编辑器/VS 分开编所以能过。`SourceGeneratorBase.Execute` 已加锁串行。改 `Unity.Analysis.dll` 后要重启 Unity，否则旧编译器服务器还握着旧 dll。程序集名单在 `UnityTool/Analysis/ProjectGeneratorSetting.cs`，和 asmdef 是对得上的；`Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs` 是 .NET 侧（`WorldTree.Core` / `Module`），别和 Unity 那份混。
 
 ---

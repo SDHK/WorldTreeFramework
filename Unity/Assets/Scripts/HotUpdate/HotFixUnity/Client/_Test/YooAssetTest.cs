@@ -17,10 +17,10 @@ namespace WorldTree
 		/// <summary>
 		/// 获取异步等待
 		/// </summary>
-		public static WorldTask<T> GetAwaiter<T>(this INode self, T handle)
+		public static TreeTask<T> GetAwaiter<T>(this INode self, T handle)
 			where T : AsyncOperationBase
 		{
-			WorldTask<T> asyncTask = self.World.PoolGetUnit<WorldTask<T>>();
+			TreeTaskManager.Get(self).AddTemp(out TreeTask<T> asyncTask);
 			handle.Completed += (a) => asyncTask.SetResult(a as T);
 			return asyncTask;
 		}
@@ -28,9 +28,9 @@ namespace WorldTree
 		/// <summary>
 		/// 获取异步等待
 		/// </summary>
-		public static WorldTask<AssetHandle> GetAwaiter(this INode self, AssetHandle asyncOperation)
+		public static TreeTask<AssetHandle> GetAwaiter(this INode self, AssetHandle asyncOperation)
 		{
-			WorldTask<AssetHandle> asyncTask = self.World.PoolGetUnit<WorldTask<AssetHandle>>();
+			TreeTaskManager.Get(self).AddTemp(out TreeTask<AssetHandle> asyncTask);
 			asyncOperation.Completed += asyncTask.SetResult;
 			return asyncTask;
 		}
@@ -66,7 +66,7 @@ namespace WorldTree
 		/// <summary>
 		/// 编辑器模拟模式
 		/// </summary>
-		private async WorldTask InitializeYooAsset()
+		private async TreeTask InitializeYooAsset()
 		{
 			var initParameters = new EditorSimulateModeParameters();
 			var simulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
@@ -82,7 +82,7 @@ namespace WorldTree
 		/// <summary>
 		/// 单机运行模式
 		/// </summary>
-		private async WorldTask InitializeYooAsset1()
+		private async TreeTask InitializeYooAsset1()
 		{
 			var initParameters = new OfflinePlayModeParameters();
 			InitializationOperation a = await this.GetAwaiter(this.package.InitializeAsync(initParameters));
@@ -99,7 +99,7 @@ namespace WorldTree
 		/// <summary>
 		/// 主机运行模式
 		/// </summary>
-		private async WorldTask InitializeYooAsset2()
+		private async TreeTask InitializeYooAsset2()
 		{
 			// 注意：GameQueryServices.cs 太空战机的脚本类，详细见StreamingAssetsHelper.cs
 			string defaultHostServer = "http://127.0.0.1/CDN/Android/v1.0";
@@ -119,7 +119,7 @@ namespace WorldTree
 				Debug.LogError($"资源包初始化失败：{initOperation.Error}");
 			}
 
-			await this.WorldTaskCompleted();
+			await this.TreeTaskCompleted();
 		}
 	}
 }
