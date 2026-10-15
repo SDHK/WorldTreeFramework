@@ -91,8 +91,7 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 | `Console/Server/` | 纯 .NET 服务器示例（`Program.cs` 里 `WorldTreeCore.Create(...)`） |
 | `Unity/ProjectSettings/HybridCLRSettings.asset` | HybridCLR 配置（hotUpdateAssemblies / patchAOTAssemblies） |
 | `Unity/.../Editor/ThirdParty/HybridCLR/` | HybridCLR 自定义脚本（HybridCLREditor / AOTGenericReferences 生成物） |
-| `Unity/.dshexec/` | AgentExec 文件通道（command.json → result.json，Unity 代码执行） |
-| `Unity/Assets/Scripts/AOT/GameEntry/_MonoTest/UnityMCP/Editor/AgentExec.cs` | 文件通道的 Unity 代码执行器 |
+| `Unity/Assets/Scripts/AOT/GameEntry/_MonoTest/UnityMCP/Editor/` | Unity MCP 服务器（`unity_exec` / `unity_refresh` / `unity_logs` / `unity_select`，HTTP `127.0.0.1:8099/mcp`）；客户端配置在 `.omp/mcp.json` |
 
 不单开 `IUnitData`。继承是 `IUnit` → `INode` → `INodeData`，这三个名字和 `NodeRef`、`NodeRule` 都不要改。默认法则不要挂到 `IUnit`。
 
@@ -142,21 +141,58 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 
 ---
 
-## 6. 工具链：Unity 代码执行通道（AgentExec）
+## 6. 工具链：Unity 代码执行（MCP）
 
-本机有一条文件通道，可在运行中的 Unity 编辑器里**编译并执行 C# 代码**（注入代码走内存编译，无需 Unity 重编译）。
+在运行中的 Unity 编辑器里**编译并执行 C# 代码**（注入代码走内存编译，不需要 Unity 重编译，也不需要用户点一下 Unity）。
 
-- **执行器**：`Unity/Assets/Scripts/AOT/GameEntry/_MonoTest/UnityMCP/Editor/AgentExec.cs`（`[InitializeOnLoad]`，`EditorApplication.update` 每 0.5s 轮询）。
-- **命令**（写）：`Unity/.dshexec/command.json` —— `{ "id": "<唯一id>", "code": "<C#代码>" }`。
-- **结果**（读）：`Unity/.dshexec/result.json` —— `{ "id", "success", "result", "error", "logs" }`，用 `id` 对账。
-- **流程**：写 command.json → Unity ~0.5s 后 `CSharpCodeProvider` 内存编译 + 执行 → 写 result.json、删 command.json。
-- **能力**：注入代码可引用所有已加载程序集（含 WorldTree 框架）。
-- **限制**：`CSharpCodeProvider` 是老编译器（别用太新 C# 语法）；遍历程序集引用时要 `if (asm.IsDynamic) continue;` 跳过动态程序集。
-- 注：原 UnityMCP（WebSocket/MCP 通道）已废弃清空，仅保留此文件通道。
-- **通道实测（2026-10-16，Unity `2021.3.16f1`）**：最小注入**完全可用** —— `Debug.Log`、返回值、`logs` 捕获都正常，`command.json` 被消费的延迟约 **50ms**。**但有一个隐蔽断崖**：`CSEditorHelper` 把**所有带 `Location` 的非动态程序集**都加进引用，现代 Unity 里 `mscorlib` 与 netstandard/`System.Runtime` 门面互相重复定义，于是 ① 编译固定产生 **~110 条 `CS1685`**（预定义类型重复，仅警告，不影响成败）② **注入代码一旦触碰跨门面可见的类型就 `CS0433` 硬失败** —— 实测 `AppDomain.CurrentDomain.GetAssemblies()` 直接编译失败（`The imported type 'System.AppDomain' is defined multiple times`）。而且错误是把 110 行警告和错误**混成一个字符串**返回，极难读。
-  - **修法**：引用时按 `Assembly.GetName().Name` **去重**，或改白名单，或排除 `System.*` / `netstandard` 门面程序集。
-  - 另注：返回值被 `ret?.ToString()` **拍平成一个字符串**，要结构化数据得自己在注入代码里 `Newtonsoft.Json.JsonConvert.SerializeObject`；**没有超时/看门狗**，注入死循环会让编辑器永久卡死且无法从通道恢复。
-  - 结论：**优先修引用集合与返回结构，而不是换传输**（Unity 里执行 C# 必须在主线程，任何服务器设计都退化成"排队 + 主线程轮询"，也就是这个文件通道的内核）。
+- **服务端**：`Unity/.../UnityMCP/Editor/UnityMcpServer.cs`（`[InitializeOnLoad]`）：生命周期 + 主线程编组 + 路由分发。
+- **端点**：`http://127.0.0.1:8099/mcp`（JSON-RPC over 手写最小 HTTP，裸 `TcpListener`）。
+- **客户端配置**：仓库 `.omp/mcp.json` → `{"mcpServers":{"unity":{"type":"http","url":"http://127.0.0.1:8099/mcp"}}}`。
+- **鉴权**：默认无（只绑 `127.0.0.1`）。往 `.unitymcp/mcp-token.txt` 写个非空字符串即启用，之后要求 `Authorization: Bearer <token>`。
+- **在 OMP 里**：工具以 `unity_exec` / `unity_refresh` / `unity_logs` / `unity_select` 暴露（路由 `xd://mcp__unity_exec`）。**MCP 在会话启动时加载**：改过 `mcp.json`、或在别的会话里新建过工具，已运行的会话要 `/mcp reload` 才看得到。
+
+### 四个工具
+
+| 工具 | 参数 | 行为 |
+|---|---|---|
+| `unity_exec` | `code`（必填） | 主线程执行一段 C#（填方法体，可 `return`）；返回值 `ToString()` 回传，**本次执行期间**的 `Debug.Log` 一起带上 |
+| `unity_refresh` | 无 | **响应先写回**，再执行 `AssetDatabase.Refresh()`（刷新触发域重载、服务器随之重启，实测 ~3s 回来） |
+| `unity_logs` | `count?`(默认 50) / `type?`(all/log/warning/error) / `clear?` | 读**常驻**环形缓冲（500 条，静态字段）—— 能拿到调用**之前**的日志；**域重载会清空** |
+| `unity_select` | `target`（必填）/ `ping?` | 选中并 Ping 一个 GameObject（名称或层级路径）；`GameObject.Find` 未命中时按名字搜已加载**场景**对象（含未激活） |
+
+### 分层（2026-10-16 拆过）
+
+| 文件（都在 `Unity/.../AOT/GameEntry/_MonoTest/UnityMCP/Editor/`） | 职责 |
+|---|---|
+| `UnityMcpHttpTransport.cs` | 传输：裸 `TcpListener` + 最小 HTTP，**不懂 MCP** |
+| `UnityMcpServer.cs` | 生命周期（域重载停/起）+ 主线程编组 + 协议分发（`initialize`/`ping`/`tools/list`/`tools/call`） |
+| `Tools/UnityMcpToolRegistry.cs` | 工具清单 —— **新增工具在此加一行** |
+| `Tools/UnityMcpTool.cs` | 工具基类（名字/描述/schema/执行 + schema 与取参小工具） |
+| `Tools/UnityExecTool.cs` 等 4 个 | 每个工具一个类 |
+| `CSharpExecutor.cs` | 内存编译 + 执行（`unity_exec` 用；引用集规则见下） |
+| `UnityMcpLogBuffer.cs` | 日志环形缓冲（`unity_logs` 用） |
+| `UnityMcpPaths.cs` | 运行时路径（`.unitymcp/`：`mcp-token.txt`、诊断用 `refs.json`） |
+
+**设计要点**：连接在**后台线程**接收（不依赖编辑器循环），执行**编组回主线程**（`EditorApplication.update` 排队消费，等待上限 120s → 超时回 504 而不是静默）—— 执行必须主线程这点换传输也改不掉，MCP 换来的是**确定性反馈**与工具化。
+
+**`unity_refresh` 的时序**：**响应先写回，再执行 `AssetDatabase.Refresh()`** —— 刷新会触发域重载、服务器随之被杀，靠 `[InitializeOnLoad]` + `AssemblyReloadEvents.beforeAssemblyReload` 停/起，监听在 `EditorApplication.delayCall` 里绑定。实测重载后 **3 秒**恢复监听。
+
+**`unity_select` 的补充**：未命中时按名字搜已加载**场景**对象（含未激活，用 `scene.IsValid()` 排除预制体等资源），命中多个时返回候选路径让调用方改用完整路径；选中后 `EditorGUIUtility.PingObject` 在 Hierarchy 高亮。实测 `Sphere` / `Main Camera`（含空格）/ 嵌套 `Canvas/Background` 均成功，并用 `unity_exec` 读回 `Selection.activeGameObject` 验证真的改了编辑器状态。
+
+**MCP 实测（2026-10-16，全绿）**：`initialize` → `protocolVersion/capabilities.tools/serverInfo`；`tools/list` → **4 工具**，schema 含 `properties` 与 `required`；`unity_exec` → 主线程执行 + 能访问 WorldTree 类型 + `Debug.Log` 捕获；`unity_select` → 命中/未命中两条路径都验过（`isError` 正确）；`unity_logs` → 常驻缓冲能读到调用之前的启动日志；`unity_refresh` → 重载后自动回来，且**删掉 `AgentExec.cs` 后重载仍正常**（`AgentExec` / `CSEditorHelper` 反射扫描命中 0）。协议边界：GET → **405**（让客户端静默禁用 SSE 后台监听）、通知 → **202**、`ping` → `{}`、未知方法 → **-32601**、坏 JSON → **-32700**、未知工具/缺参 → `isError:true`、DELETE → **204**。**OMP 端到端**：新会话挂上并调用成功（路由 `xd://mcp__unity_exec`）。
+
+**`UnityMCPConnection.cs` / `UnityMCPWindow.cs` 是更早的 WebSocket 通道遗产**：Unity 主动连出 `ws://localhost:8080`，协议**自造**（`selectGameObject` / `togglePlayMode` / `executeEditorCommand` + 出站 `{"type":"log"}`），**不是 MCP**，且缺外部那一半（8080 上的桥进程）。**这两个文件已于 2026-10-16 删除**（整文件 `/* */` 注释掉的 733 行死代码，删前确认全仓无引用；`Tools/UnityMCP/Debug Window` 菜单项随之消失）。**已决定不加状态窗口（2026-10-16）**：实测 24 次粗暴断开（空连接 ×5／半个请求头 ×5／谎报 `Content-Length` ×3／在途 RST／延时 RST ×5）**日志一条没多、服务器照旧** —— MCP 是**纯服务端拉取**（无持久连接、无心跳、无重连、不回调客户端），没有"客户端一断就刷屏"的机制。所以不需要窗口；功能上真该补的是**仪表**（请求数／耗时／最近调用 → 做成 `unity_status` 工具 + 每次调用一行 `Debug.Log`），不是 UI。另：`UnityMCP.Editor.asmdef` 是 `overrideReferences: true`，`precompiledReferences` 只有 `Newtonsoft.Json.dll`（**不含 `WorldTree.Core.dll`** —— 注入代码靠运行时动态引用）；它原本引用的 GUID `478a2357cc57436488a56e564b08d223` **全仓任何 `.meta` 里都没有**（含 `Library/PackageCache`）→ 悬空引用，**已于 2026-10-16 删掉**（`"references": []`，删后编译 + 启动正常）。注：这个悬空引用**没有**在 `Editor.log` 里产生任何警告（旧记录写"Unity 会警告"，未复现）。
+
+**限制与坑**：
+
+- **`CSharpCodeProvider` 是老编译器**（Unity 2021 自带）：别用太新 C# 语法；返回值被 `ret?.ToString()` **拍平成一个字符串**，要结构化数据自己在注入代码里 `JsonConvert.SerializeObject`。
+- **引用集规则**（`CSharpExecutor`，2026-10-16 二分定位）：`CSharpCodeProvider` **隐式带了一套核心 BCL**，所以**显式引用 `mscorlib` 会重复定义** —— 症状是 ~105 条 `CS1685` + 一旦触碰跨门面类型就 `CS0433`（`The imported type 'System.AppDomain' is defined multiple times`）。**但 `netstandard` 不能跳** —— `WorldTree.Core` 等 netstandard2.1 程序集的类型要靠它解析身份，跳掉会得到 `CS0012`（`System.IDisposable ... is defined in an assembly that is not referenced`）。最终做法：按**程序集简单名去重** + 跳过 `mscorlib` / `System.Runtime` / `System.Private.CoreLib`（**保留 `netstandard`**），遍历时 `if (asm.IsDynamic) continue;`。修复后验收：`GetAssemblies().Length` → 233、`typeof(WorldTree.WorldTreeCore).FullName` 可解析、LINQ + `Debug.Log` 捕获正常、反射 `RuleManager` 正常，且**警告 0**。
+- **`.unitymcp/refs.json` 是引用白名单**：放一个程序集简单名数组即可临时限制引用集（不用改代码就能二分引用集问题；**用完记得删掉**）。
+- **没有看门狗**：注入死循环会让编辑器永久卡死，通道也救不回来。长任务拆小。
+- **可以自己触发重编译**：`unity_refresh` 之后判据是 `Library/ScriptAssemblies/UnityMCP.Editor.dll` 的 mtime 更新（实测 3~7s）。**编译失败时旧 dll 仍在内存里，服务器照常活着**，改完再刷即可 —— 这是安全的调试姿势。
+- **端口 8099 只绑回环**，无鉴权时也只对本机开放。
+
+**2026-10-16 已删除文件通道**（原 `AgentExec.cs` + `Unity/.dshexec/`）：两条通道共用同一个执行器没必要，MCP 有确定性反馈与工具化；`CSharpExecutor.cs` 就是从它里面提出来的。删前实测：`AgentExec` / `CSEditorHelper` 类型在已加载程序集里命中 **0**，写进 `command.json` 无人消费。
 
 ## 7. 维护约定
 
