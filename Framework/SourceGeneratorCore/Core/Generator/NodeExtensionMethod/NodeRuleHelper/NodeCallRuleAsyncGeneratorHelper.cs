@@ -40,21 +40,21 @@ namespace WorldTree.SourceGenerator
 						/// <summary>
 						/// 尝试执行异步调用法则
 						/// </summary>
-						public static async TreeTask<OutT> TryCallRuleAsync<R{{genericsType}}, OutT>(IUnit self, R nullRule{{genericTypeParameter}}, OutT defaultOutT)
+						public static async WorldTask<OutT> TryCallRuleAsync<R{{genericsType}}, OutT>(IUnit self, R nullRule{{genericTypeParameter}}, OutT defaultOutT)
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
 							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								return await ruleList.CallAsync(self{{genericParameter}}, defaultOutT);
 							}
-							await ((self as INode) ?? self.World).TreeTaskCompleted();
+							await self.WorldTaskCompleted();
 							return defaultOutT;
 						}
 
 						/// <summary>
 						/// 执行异步调用法则
 						/// </summary>
-						public static async TreeTask<OutT> CallRuleAsync<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, OutT defaultOutT)
+						public static async WorldTask<OutT> CallRuleAsync<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, OutT defaultOutT)
 							where N : class, IUnit, AsRule<R>
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
@@ -62,28 +62,28 @@ namespace WorldTree.SourceGenerator
 							{
 								return await ruleList.CallAsync(self{{genericParameter}}, defaultOutT);
 							}
-							await ((self as INode) ?? self.World).TreeTaskCompleted();
+							await self.WorldTaskCompleted();
 							return defaultOutT;
 						}
 
 						/// <summary>
 						/// 尝试执行异步调用法则
 						/// </summary>
-						public static async TreeTask<TreeList<OutT>> TryCallsRuleAsync<R{{genericsType}}, OutT>(IUnit self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
+						public static async WorldTask<TreeList<OutT>> TryCallsRuleAsync<R{{genericsType}}, OutT>(IUnit self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
 							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
 							{
 								return await ruleList.CallsAsync(self{{genericParameter}}, outTList);
 							}
-							await ((self as INode) ?? self.World).TreeTaskCompleted();
+							await self.WorldTaskCompleted();
 							return null;
 						}
 
 						/// <summary>
 						/// 执行异步调用法则
 						/// </summary>
-						public static async TreeTask<TreeList<OutT>> CallsRuleAsync<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
+						public static async WorldTask<TreeList<OutT>> CallsRuleAsync<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
 							where N : class, IUnit, AsRule<R>
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
@@ -91,7 +91,7 @@ namespace WorldTree.SourceGenerator
 							{
 								return await ruleList.CallsAsync(self{{genericParameter}}, outTList);
 							}
-							await ((self as INode) ?? self.World).TreeTaskCompleted();
+							await self.WorldTaskCompleted();
 							return null;
 						}
 				"""

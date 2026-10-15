@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2025/11/19 15:59
@@ -13,7 +13,7 @@ namespace WorldTree
 	/// </summary>
 	public class CascadeTickerData : Node
 		, ChildOf<CascadeTicker>
-		, AsRule<Awake<long, INode, RuleList>>
+		, AsRule<Awake<long, IUnit, RuleList>>
 		, AsRule<TreeTaskTokenEvent>
 	{
 		/// <summary>
@@ -22,9 +22,9 @@ namespace WorldTree
 		public long Tick;
 
 		/// <summary>
-		/// 执行节点 
+		/// 到期后执行法则的单位。节点也是单位。
 		/// </summary>
-		public NodeRef<INode> Node;
+		public NodeRef<IUnit> Node;
 
 		/// <summary>
 		/// 事件规则类型 
@@ -39,12 +39,12 @@ namespace WorldTree
 
 	public static class CascadeTickerDataRule
 	{
-		class AwakeRule : AwakeRule<CascadeTickerData, long, INode, RuleList>
+		class AwakeRule : AwakeRule<CascadeTickerData, long, IUnit, RuleList>
 		{
-			protected override void Execute(CascadeTickerData self, long tick, INode node, RuleList ruleList)
+			protected override void Execute(CascadeTickerData self, long tick, IUnit unit, RuleList ruleList)
 			{
 				self.Tick = tick;
-				self.Node = new(node);
+				self.Node = new(unit);
 				self.RuleList = ruleList;
 			}
 		}

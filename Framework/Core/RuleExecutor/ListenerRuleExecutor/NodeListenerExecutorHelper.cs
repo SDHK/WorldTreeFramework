@@ -15,15 +15,14 @@ namespace WorldTree
 	public static class NodeListenerExecutorHelper
 	{
 		/// <summary>
-		/// 获取节点监听执行器
+		/// 获取监听这个单位的监听器法则执行器
 		/// </summary>
-		/// <remarks>获取监听这个节点的监听器法则执行器</remarks>
-		public static IRuleExecutor<R> GetListenerExecutor<R>(INode node)
+		public static IRuleExecutor<R> GetListenerExecutor<R>(IUnit unit)
 		   where R : IListenerRule
 		{
-			if (node.World.Line.ReferencedPoolManager == null) return null;
-			if (!node.World.Line.ReferencedPoolManager.TryGetPool(node.Type, out ReferencedPool nodePool)) return null;
-			if (!node.World.Line.Core.RuleManager.TryGetTargetRuleGroup(TypeInfo<R>.Code, node.Type, out RuleGroup ruleGroup)) return null;
+			if (unit.World.Line.ReferencedPoolManager == null) return null;
+			if (!unit.World.Line.ReferencedPoolManager.TryGetPool(unit.Type, out ReferencedPool nodePool)) return null;
+			if (!unit.World.Line.Core.RuleManager.TryGetTargetRuleGroup(TypeInfo<R>.Code, unit.Type, out RuleGroup ruleGroup)) return null;
 			if (!nodePool.TryGetComponent(out ListenerRuleExecutorGroup executorGroup)) nodePool.AddComponent(out executorGroup);
 			return executorGroup.AddRuleExecutor(ruleGroup) as IRuleExecutor<R>;
 		}

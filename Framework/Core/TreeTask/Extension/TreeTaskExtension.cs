@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/6/17 10:23
@@ -56,7 +56,7 @@ namespace WorldTree
 		/// <summary>
 		/// 异步等待
 		/// </summary>
-		public static async TreeTask GetAwaiter(this INode self, Task task)
+		public static async TreeTask GetAwaiter(INode self, Task task)
 		{
 			if (task.IsCompleted)
 			{
@@ -77,7 +77,7 @@ namespace WorldTree
 		/// <summary>
 		/// 异步等待
 		/// </summary>
-		public static async TreeTask<T> GetAwaiter<T>(this INode self, Task<T> task)
+		public static async TreeTask<T> GetAwaiter<T>(INode self, Task<T> task)
 		{
 			if (task.IsCompleted)
 			{
@@ -106,7 +106,7 @@ namespace WorldTree
 				await self.TreeTaskCompleted();
 			}
 
-			await self.AsyncDelay(TimeSpan.FromSeconds(timeOut));
+			await TimerAsyncExtension.AsyncDelay(self, TimeSpan.FromSeconds(timeOut));
 
 			if (self.State == TokenState.Cancel) return;
 

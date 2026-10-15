@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/5/14 17:47
@@ -18,9 +18,9 @@ namespace WorldTree
 		/// <summary>
 		/// 获取异步等待
 		/// </summary>
-		public static TreeTask<AsyncOperation> GetAwaiter(this INode self, AsyncOperation asyncOperation)
+		public static WorldTask<AsyncOperation> GetAwaiter(this INode self, AsyncOperation asyncOperation)
 		{
-			self.AddTemp(out TreeTask<AsyncOperation> asyncTask);
+			WorldTask<AsyncOperation> asyncTask = self.World.PoolGetUnit<WorldTask<AsyncOperation>>();
 			asyncOperation.completed += asyncTask.SetResult;
 			return asyncTask;
 		}

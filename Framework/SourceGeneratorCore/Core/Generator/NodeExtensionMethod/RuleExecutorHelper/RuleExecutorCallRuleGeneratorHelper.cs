@@ -58,14 +58,14 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 执行器执行异步调用法则
 							/// </summary>
-							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleExecutor<R> selfExecutor{{genericTypeParameter}}, OutT defaultOutT)
+							public static async WorldTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleExecutor<R> selfExecutor{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								IRuleExecutorEnumerable self = (IRuleExecutorEnumerable)selfExecutor;
 								self.RefreshTraversalCount();
 								if (self.TraversalCount == 0) 
 								{
-									await self.TreeTaskCompleted(); 
+									await self.WorldTaskCompleted(); 
 									return defaultOutT;
 								}
 								for (int i = 0; i < self.TraversalCount; i++)
@@ -77,7 +77,7 @@ namespace WorldTree.SourceGenerator
 									}
 									else
 									{
-										await self.TreeTaskCompleted();
+										await self.WorldTaskCompleted();
 										return defaultOutT;
 									}
 								}

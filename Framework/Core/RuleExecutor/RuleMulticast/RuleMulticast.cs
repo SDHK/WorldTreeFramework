@@ -44,16 +44,16 @@ namespace WorldTree
 	public static class RuleMulticastRule
 	{
 		/// <summary>
-		/// 添加节点法则：指定法则
+		/// 添加单位法则：指定法则
 		/// </summary>
-		public static void Add<R, N, NR>(this RuleMulticast<R> self, N node, NR defaultRule = default)
+		public static void Add<R, N, NR>(this RuleMulticast<R> self, N unit, NR defaultRule = default)
 			where R : IRule
-			where N : class, INode, AsRule<NR>
+			where N : class, IUnit, AsRule<NR>
 			where NR : R
 		{
-			if (self.World.Line.Core.RuleManager.TryGetRuleList<NR>(node.Type, out RuleList ruleList))
+			if (self.World.Line.Core.RuleManager.TryGetRuleList<NR>(unit.Type, out RuleList ruleList))
 			{
-				self.TryAdd(node, ruleList);
+				self.TryAdd(unit, ruleList);
 			}
 			else
 			{
@@ -62,15 +62,15 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 添加节点法则：默认法则
+		/// 添加单位法则：默认法则
 		/// </summary>
-		public static void Add<R, N>(this RuleMulticast<R> self, N node)
+		public static void Add<R, N>(this RuleMulticast<R> self, N unit)
 			where R : IRule
-			where N : class, INode, AsRule<R>
+			where N : class, IUnit, AsRule<R>
 		{
-			if (self.World.Line.Core.RuleManager.TryGetRuleList<R>(node.Type, out RuleList ruleList))
+			if (self.World.Line.Core.RuleManager.TryGetRuleList<R>(unit.Type, out RuleList ruleList))
 			{
-				self.TryAdd(node, ruleList);
+				self.TryAdd(unit, ruleList);
 			}
 			else
 			{

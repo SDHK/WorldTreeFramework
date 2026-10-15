@@ -17,9 +17,9 @@ namespace WorldTree
 	public interface RuleBroadcast : IRuleExecutor
 	{
 		/// <summary>
-		/// 尝试添加节点
+		/// 尝试添加单位
 		/// </summary>
-		public bool TryAdd(INode node);
+		public bool TryAdd(IUnit unit);
 	}
 
 	/// <summary>
@@ -59,13 +59,13 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 尝试添加节点
+		/// 尝试添加单位
 		/// </summary>
-		public bool TryAdd(INode node)
+		public bool TryAdd(IUnit unit)
 		{
-			if (node == null) return false;
-			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(node.Type, out RuleList rule)) return false;
-			return this.TryAdd(node, rule);
+			if (unit == null) return false;
+			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(unit.Type, out RuleList rule)) return false;
+			return this.TryAdd(unit, rule);
 		}
 	}
 

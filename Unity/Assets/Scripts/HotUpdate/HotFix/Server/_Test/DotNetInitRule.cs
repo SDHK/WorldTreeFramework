@@ -25,13 +25,16 @@ namespace WorldTree.Server
 		{
 			self.Log($"启动！！");
 
-			self.AddComponent(out CodeCompilerTest _);
+			//self.AddComponent(out CodeCompilerTest _);
 
 			//TreeTask 异步任务测试
 			//self.AddComponent(out TreeTaskTest _);
 
 			//WorldTask 异步任务测试
 			self.AddComponent(out WorldTaskTest _);
+
+			//纯单位执行法则
+			self.AddComponent(out UnitRuleTest _);
 
 			//self.TestStringConcatPerformance();
 

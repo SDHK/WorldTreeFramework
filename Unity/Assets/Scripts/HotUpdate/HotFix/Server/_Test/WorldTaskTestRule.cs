@@ -33,7 +33,7 @@ namespace WorldTree.Server
 			int sum = await NestedAdd(self, 3, 4);
 			self.Log($"[1] 嵌套 await 结果 {sum}");
 
-			self.Log("---- [2] Delay 真实时间 ----");
+			self.Log("---- [2] AsyncDelay 真实时间 ----");
 			await RealDelay(self, 1.5f);
 
 			self.Log("---- [3] BCL Task 成功与失败 ----");
@@ -66,7 +66,7 @@ namespace WorldTree.Server
 		private static async WorldTask RealDelay(WorldTaskTest self, float seconds)
 		{
 			DateTime startTime = DateTime.UtcNow;
-			await self.Delay(TimeSpan.FromSeconds(seconds));
+			await self.AsyncDelay(TimeSpan.FromSeconds(seconds));
 			double elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
 			self.Log($"[2] 请求 {seconds} 秒，实际耗时 {elapsed:F0} 毫秒");
 		}
@@ -76,12 +76,12 @@ namespace WorldTree.Server
 		/// </summary>
 		private static async WorldTask BridgeTask(WorldTaskTest self)
 		{
-			int value = await self.AwaitTask(Task.FromResult(42));
+			int value = await self.GetAwaiter(Task.FromResult(42));
 			self.Log($"[3] Task.FromResult 结果 {value}");
 
 			try
 			{
-				await self.AwaitTask(Task.FromException(new InvalidOperationException("WorldTask 桥接异常")));
+				await self.GetAwaiter(Task.FromException(new InvalidOperationException("WorldTask 桥接异常")));
 				self.Log("[3] 失败：异常没有抛出");
 			}
 			catch (InvalidOperationException e)
@@ -95,9 +95,9 @@ namespace WorldTree.Server
 		/// </summary>
 		private static async WorldTask CancelWait(WorldTaskTest self, WorldTaskToken token)
 		{
-			token.CancelAfter(self, TimeSpan.FromSeconds(0.5f));
+			token.TimeOut(0.5f);
 			DateTime startTime = DateTime.UtcNow;
-			await self.Delay(TimeSpan.FromSeconds(5));
+			await self.AsyncDelay(TimeSpan.FromSeconds(5));
 			double elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
 			self.Log($"[4] 请求等待 5 秒，实际 {elapsed:F0} 毫秒，令牌状态 {token.State}");
 		}

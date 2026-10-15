@@ -40,7 +40,7 @@ namespace WorldTree.SourceGenerator
 						/// <summary>
 						/// 尝试执行异步通知法则
 						/// </summary>
-						public static async TreeTask<bool> TrySendRuleAsync<R{{genericsType}}>(IUnit self, R nullRule{{(i == 0 ? " = null" : string.Empty)}}{{genericTypeParameter}})
+						public static async WorldTask<bool> TrySendRuleAsync<R{{genericsType}}>(IUnit self, R nullRule{{(i == 0 ? " = null" : string.Empty)}}{{genericTypeParameter}})
 							where R : class, ISendRuleAsync{{genericsTypeAngle}}
 						{
 							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
@@ -48,14 +48,14 @@ namespace WorldTree.SourceGenerator
 								await ruleList.SendAsync(self{{genericParameter}});
 								return true;
 							}
-							await ((self as INode) ?? self.World).TreeTaskCompleted();
+							await self.WorldTaskCompleted();
 							return false;
 						}
 
 						/// <summary>
 						/// 执行异步通知法则
 						/// </summary>
-						public static async TreeTask SendRuleAsync<N, R{{genericsType}}>(N self, R nullRule{{genericTypeParameter}})
+						public static async WorldTask SendRuleAsync<N, R{{genericsType}}>(N self, R nullRule{{genericTypeParameter}})
 							where N : class, IUnit, AsRule<R>
 							where R : class, ISendRuleAsync{{genericsTypeAngle}}
 						{
@@ -63,7 +63,7 @@ namespace WorldTree.SourceGenerator
 							{
 								await ruleList.SendAsync(self{{genericParameter}});
 							}
-							await ((self as INode) ?? self.World).TreeTaskCompleted();
+							await self.WorldTaskCompleted();
 						}
 				""");
 			}

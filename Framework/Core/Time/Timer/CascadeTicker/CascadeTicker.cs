@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2025/11/19 15:59
@@ -184,18 +184,18 @@ namespace WorldTree
 		/// <summary>
 		/// 添加定时 
 		/// </summary>
-		public static long AddTicker<R>(this CascadeTicker self, long clockTick, INode node, TreeTaskToken token = null)
+		public static long AddTicker<R>(this CascadeTicker self, long clockTick, IUnit unit, TreeTaskToken token = null)
 			where R : ISendRule
 		{
-			return self.AddTicker(clockTick, node, TypeInfo<R>.Code, token);
+			return self.AddTicker(clockTick, unit, TypeInfo<R>.Code, token);
 		}
 
 		/// <summary>
 		/// 添加定时 
 		/// </summary>
-		public static long AddTicker(this CascadeTicker self, long clockTick, INode node, long ruleType, TreeTaskToken token = null)
+		public static long AddTicker(this CascadeTicker self, long clockTick, IUnit unit, long ruleType, TreeTaskToken token = null)
 		{
-			if (!self.World.Line.Core.RuleManager.TryGetRuleList(node.Type, ruleType, out var ruleList)) return -1;
+			if (!self.World.Line.Core.RuleManager.TryGetRuleList(unit.Type, ruleType, out var ruleList)) return -1;
 
 			//大小比较，过时了就放到下一帧再执行
 			if (self.advanceTick >= clockTick)
@@ -214,7 +214,7 @@ namespace WorldTree
 			//算出槽位位置，AdvanceTick 与 clockTick 的异或后的最高位1所在的位置
 			int slotIndex = MathBit.GetHighestBitIndex((ulong)(self.advanceTick ^ clockTick));
 
-			self.AddChild(out CascadeTickerData tickerData, clockTick, node, ruleList);
+			self.AddChild(out CascadeTickerData tickerData, clockTick, unit, ruleList);
 			self.GetOrNewSlot(slotIndex).Add(tickerData);
 			//标记槽位已占用
 			self.occupiedSlotMask |= 1L << slotIndex;

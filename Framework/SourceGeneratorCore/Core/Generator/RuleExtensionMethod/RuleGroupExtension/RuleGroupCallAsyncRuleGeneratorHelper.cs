@@ -47,14 +47,14 @@ namespace WorldTree.SourceGenerator
 							/// 调用法则集合异步执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, OutT defaultOutT)
+							public static async WorldTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								if ((group as RuleGroup).TryGetValue(unit.Type, out RuleList ruleList))
 								{
 									return await ((IRuleList<R>)ruleList).CallAsync(unit{{genericParameter}}, defaultOutT);
 								}
-								await ((unit as INode) ?? unit.World).TreeTaskCompleted();
+								await unit.WorldTaskCompleted();
 								return defaultOutT;
 							}
 
@@ -62,14 +62,14 @@ namespace WorldTree.SourceGenerator
 							/// 调用法则集合异步执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, TreeList<OutT> outTList)
+							public static async WorldTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit unit{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								if ((group as RuleGroup).TryGetValue(unit.Type, out RuleList ruleList))
 								{
 									return await ((IRuleList<R>)ruleList).CallsAsync(unit{{genericParameter}}, outTList);
 								}
-								await ((unit as INode) ?? unit.World).TreeTaskCompleted();
+								await unit.WorldTaskCompleted();
 								return outTList;
 							}
 					""");

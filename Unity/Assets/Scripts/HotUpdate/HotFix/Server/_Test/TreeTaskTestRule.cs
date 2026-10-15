@@ -75,7 +75,7 @@ namespace WorldTree.Server
 			{
 				long frame = self.World.Line.WorldTimeManager.TotalFrames;
 				self.Log($"[2] 第 {i + 1} 次等待，当前总帧 {frame}");
-				await self.AsyncYield();
+				await TimerAsyncExtension.AsyncYield(self);
 			}
 		}
 
@@ -85,7 +85,7 @@ namespace WorldTree.Server
 		private static async TreeTask RealDelay(TreeTaskTest self, float seconds)
 		{
 			DateTime startTime = DateTime.UtcNow;
-			await self.AsyncDelay(TimeSpan.FromSeconds(seconds));
+			await TimerAsyncExtension.AsyncDelay(self, TimeSpan.FromSeconds(seconds));
 			double elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
 			self.Log($"[3] 请求 {seconds} 秒，实际耗时 {elapsed:F0} 毫秒");
 		}
@@ -96,10 +96,10 @@ namespace WorldTree.Server
 		private static async TreeTask BridgeTask(TreeTaskTest self)
 		{
 			int lineThread = Environment.CurrentManagedThreadId;
-			await self.GetAwaiter(Task.Run(() => Thread.Sleep(300)));
+			await TreeTaskExtension.GetAwaiter(self, Task.Run(() => Thread.Sleep(300)));
 			self.Log($"[4] Task 完成，线程 {lineThread} -> {Environment.CurrentManagedThreadId}");
 
-			int value = await self.GetAwaiter(Task.FromResult(42));
+			int value = await TreeTaskExtension.GetAwaiter(self, Task.FromResult(42));
 			self.Log($"[4] Task.FromResult 结果 {value}");
 		}
 
@@ -128,7 +128,7 @@ namespace WorldTree.Server
 			token.TimeOut(1f).Coroutine();
 
 			DateTime startTime = DateTime.UtcNow;
-			await self.AsyncDelay(TimeSpan.FromSeconds(5));
+			await TimerAsyncExtension.AsyncDelay(self, TimeSpan.FromSeconds(5));
 			double elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
 			self.Log($"[6] 请求等待 5 秒，实际 {elapsed:F0} 毫秒，令牌状态 {token.State}");
 		}

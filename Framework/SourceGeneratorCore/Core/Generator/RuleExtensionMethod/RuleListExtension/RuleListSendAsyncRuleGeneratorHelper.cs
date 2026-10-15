@@ -46,7 +46,7 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表异步通知执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleList<R> iRuleList, IUnit unit{{genericTypeParameter}})
+							public static async WorldTask SendAsync<R{{genericsType}}>(this IRuleList<R> iRuleList, IUnit unit{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
 								RuleList ruleList = (RuleList)iRuleList;

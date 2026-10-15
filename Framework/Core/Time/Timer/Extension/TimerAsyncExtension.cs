@@ -18,7 +18,7 @@ namespace WorldTree
 		/// <summary>
 		/// 异步延迟帧
 		/// </summary>
-		public static async TreeTask AsyncYield(this INode self, int delayFrame = 0)
+		public static async TreeTask AsyncYield(INode self, int delayFrame = 0)
 		{
 			TreeTask asyncTask = self.AddTemp(out TreeTask _);
 			// 捕获令牌
@@ -33,7 +33,7 @@ namespace WorldTree
 		/// <summary>
 		/// 异步延迟秒
 		/// </summary>
-		public static async TreeTask AsyncDelay(this INode self, TimeSpan time)
+		public static async TreeTask AsyncDelay(INode self, TimeSpan time)
 		{
 			TreeTask asyncTask = self.AddTemp(out TreeTask _);
 			// 捕获令牌

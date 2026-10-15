@@ -34,7 +34,7 @@ namespace WorldTree
 	/// <summary>
 	/// 任务令牌。监听者是委托，不是法则。
 	/// </summary>
-	public class WorldTaskToken : Unit
+	public class WorldTaskToken : Unit, AsRule<WorldTaskTimeout>
 	{
 		/// <summary>
 		/// 当前状态
@@ -113,6 +113,24 @@ namespace WorldTree
 			PausedTask = null;
 			listeners = null;
 			base.OnDispose();
+		}
+	}
+
+	/// <summary>
+	/// 令牌到期取消
+	/// </summary>
+	public static class WorldTaskTokenTimeoutRule
+	{
+		class Timeout : SendRule<WorldTaskToken, WorldTaskTimeout>
+		{
+			/// <summary>
+			/// 到期取消。已经取消的令牌不再处理。
+			/// </summary>
+			protected override void Execute(WorldTaskToken self)
+			{
+				if (self.IsDisposed || self.State == WorldTokenState.Cancel) return;
+				self.Cancel();
+			}
 		}
 	}
 }

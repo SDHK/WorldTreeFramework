@@ -16,9 +16,9 @@ namespace WorldTree
 	public interface IRuleUnicast : IRuleExecutor
 	{
 		/// <summary>
-		/// 目标节点
+		/// 目标单位
 		/// </summary>
-		public NodeRef<INode> TargetNode { get; set; }
+		public NodeRef<IUnit> TargetUnit { get; set; }
 
 		/// <summary>
 		/// 法则列表
@@ -26,9 +26,9 @@ namespace WorldTree
 		public RuleList RuleList { get; set; }
 
 		/// <summary>
-		/// 尝试添加节点法则
+		/// 尝试添加单位法则
 		/// </summary>
-		public bool TryAdd(INode node, RuleList rule);
+		public bool TryAdd(IUnit unit, RuleList rule);
 	}
 
 	/// <summary>
@@ -44,22 +44,22 @@ namespace WorldTree
 		where R : IRule
 	{
 		/// <summary>
-		/// 目标节点
+		/// 目标单位
 		/// </summary>
-		public NodeRef<INode> TargetNode { get; set; }
+		public NodeRef<IUnit> TargetUnit { get; set; }
 
 		/// <summary>
 		/// 法则列表
 		/// </summary>
 		public RuleList RuleList { get; set; }
 
-		public int TraversalCount => TargetNode.Value != null ? 1 : 0;
+		public int TraversalCount => TargetUnit.Value != null ? 1 : 0;
 
-		public int RemainCount => TargetNode.Value != null ? 1 : 0;
+		public int RemainCount => TargetUnit.Value != null ? 1 : 0;
 
 		public void Clear()
 		{
-			TargetNode = default;
+			TargetUnit = default;
 			RuleList = default;
 		}
 
@@ -68,17 +68,17 @@ namespace WorldTree
 			return TraversalCount;
 		}
 
-		public bool TryAdd(INode node, RuleList rule)
+		public bool TryAdd(IUnit unit, RuleList rule)
 		{
-			TargetNode = new NodeRef<INode>(node);
+			TargetUnit = new NodeRef<IUnit>(unit);
 			RuleList = rule;
 			return true;
 		}
 		public bool TryGetNext(out IUnit unit, out RuleList ruleList)
 		{
-			if (TargetNode.Value != null)
+			if (TargetUnit.Value != null)
 			{
-				unit = TargetNode.Value;
+				unit = TargetUnit.Value;
 				ruleList = RuleList;
 				return true;
 			}
@@ -91,18 +91,18 @@ namespace WorldTree
 	public static class RuleUnicastRule
 	{
 		/// <summary>
-		/// 添加节点法则：指定法则
+		/// 添加单位法则：指定法则
 		/// </summary>
-		public static void Add<R, N, NR>(this IRuleUnicast<R> self, N node, NR defaultRule = default)
+		public static void Add<R, N, NR>(this IRuleUnicast<R> self, N unit, NR defaultRule = default)
 			where R : IRule
-			where N : class, INode, AsRule<NR>
+			where N : class, IUnit, AsRule<NR>
 			where NR : R
 		{
-			if (self.World.Line.Core.RuleManager.TryGetRuleList<NR>(node.Type, out RuleList ruleList))
+			if (self.World.Line.Core.RuleManager.TryGetRuleList<NR>(unit.Type, out RuleList ruleList))
 			{
-				self.TargetNode = node;
+				self.TargetUnit = unit;
 				self.RuleList = ruleList;
-				self.Log($"添加法则{typeof(NR)}到{node}");
+				self.Log($"添加法则{typeof(NR)}到{unit}");
 			}
 			else
 			{
@@ -111,15 +111,15 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 添加节点法则：默认法则
+		/// 添加单位法则：默认法则
 		/// </summary>
-		public static void Add<R, N>(this IRuleUnicast<R> self, N node)
+		public static void Add<R, N>(this IRuleUnicast<R> self, N unit)
 			where R : IRule
-			where N : class, INode, AsRule<R>
+			where N : class, IUnit, AsRule<R>
 		{
-			if (self.World.Line.Core.RuleManager.TryGetRuleList<R>(node.Type, out RuleList ruleList))
+			if (self.World.Line.Core.RuleManager.TryGetRuleList<R>(unit.Type, out RuleList ruleList))
 			{
-				self.TargetNode = node;
+				self.TargetUnit = unit;
 				self.RuleList = ruleList;
 			}
 			else

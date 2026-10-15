@@ -20,19 +20,19 @@ namespace WorldTree
 		/// <summary>
 		/// 同步完成的一次 await
 		/// </summary>
-		public static WorldTaskCompleted WorldTaskCompleted(this INode self)
+		public static WorldTaskCompleted WorldTaskCompleted(this IUnit self)
 			=> self.World.PoolGetUnit<WorldTaskCompleted>();
 
 		/// <summary>
 		/// 读取当前异步链上的令牌。链上没有令牌时结果是空。
 		/// </summary>
-		public static WorldTaskTokenCatch WorldTaskTokenCatch(this INode self)
+		public static WorldTaskTokenCatch WorldTaskTokenCatch(this IUnit self)
 			=> self.World.PoolGetUnit<WorldTaskTokenCatch>();
 
 		/// <summary>
 		/// 后续代码改到目标世界线的线程上执行
 		/// </summary>
-		public static WorldTaskSwitchWorld SwitchWorld(this INode self, WorldContext worldContext)
+		public static WorldTaskSwitchWorld SwitchWorld(this IUnit self, WorldContext worldContext)
 		{
 			WorldTaskSwitchWorld task = self.World.PoolGetUnit<WorldTaskSwitchWorld>();
 			task.Target = worldContext;
@@ -40,9 +40,9 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 真实时间延迟。完成回调是委托，不走法则。
+		/// 真实时间延迟。到期由 CascadeTicker 执行 WorldTaskTimeout。
 		/// </summary>
-		public static async WorldTask Delay(this INode self, TimeSpan time)
+		public static async WorldTask AsyncDelay(this IUnit self, TimeSpan time)
 		{
 			if (time <= TimeSpan.Zero)
 			{
@@ -58,11 +58,7 @@ namespace WorldTree
 			}
 
 			WorldTask task = self.World.PoolGetUnit<WorldTask>();
-			long due = self.World.Line.Core.RealTimeManager.UtcNow.Ticks + time.Ticks;
-			int id = self.World.Line.WorldTimeManager.AddTimerCallback(due, () =>
-			{
-				if (!task.IsCompleted) task.SetResult();
-			});
+			long id = self.World.Line.WorldTimeManager.AddTimerDelay<WorldTaskTimeout>(time.Ticks, task);
 
 			Action<WorldTokenState> onToken = null;
 			if (token != null)
@@ -70,7 +66,7 @@ namespace WorldTree
 				onToken = state =>
 				{
 					if (state != WorldTokenState.Cancel) return;
-					self.World.Line.WorldTimeManager.RemoveTimerCallback(id);
+					if (id != -1) self.World.Line.WorldTimeManager.Timer.RemoveTicker(id);
 					if (!task.IsCompleted) task.SetCompleted();
 				};
 				token.Add(onToken);
@@ -81,22 +77,23 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 到时取消令牌
+		/// 到时取消令牌，单位是秒。到期由 CascadeTicker 执行 WorldTaskTimeout。
 		/// </summary>
-		public static void CancelAfter(this WorldTaskToken self, INode node, TimeSpan time)
+		public static void TimeOut(this WorldTaskToken self, float timeOut)
 		{
 			if (self.State == WorldTokenState.Cancel) return;
-			long due = node.World.Line.Core.RealTimeManager.UtcNow.Ticks + time.Ticks;
-			node.World.Line.WorldTimeManager.AddTimerCallback(due, () =>
+			if (timeOut <= 0)
 			{
-				if (self.State != WorldTokenState.Cancel) self.Cancel();
-			});
+				self.Cancel();
+				return;
+			}
+			self.World.Line.WorldTimeManager.AddTimerDelay<WorldTaskTimeout>(TimeSpan.FromSeconds(timeOut).Ticks, self);
 		}
 
 		/// <summary>
 		/// 等待 BCL 任务，完成和异常都回到当前世界线
 		/// </summary>
-		public static async WorldTask AwaitTask(this INode self, Task task)
+		public static async WorldTask GetAwaiter(this IUnit self, Task task)
 		{
 			if (task.IsCompleted)
 			{
@@ -116,7 +113,7 @@ namespace WorldTree
 		/// <summary>
 		/// 等待带返回值的 BCL 任务，完成和异常都回到当前世界线
 		/// </summary>
-		public static async WorldTask<T> AwaitTask<T>(this INode self, Task<T> task)
+		public static async WorldTask<T> GetAwaiter<T>(this IUnit self, Task<T> task)
 		{
 			if (task.IsCompleted)
 			{

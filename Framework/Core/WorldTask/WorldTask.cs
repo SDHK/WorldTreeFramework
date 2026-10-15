@@ -12,15 +12,38 @@ using WorldTree.Internal;
 namespace WorldTree
 {
 	/// <summary>
+	/// 定时到期。任务上是完成，令牌上是取消。
+	/// </summary>
+	public interface WorldTaskTimeout : ISendRule { }
+
+	/// <summary>
 	/// 异步任务
 	/// </summary>
 	[AsyncMethodBuilder(typeof(WorldTaskMethodBuilder))]
-	public class WorldTask : WorldTaskBase
+	public class WorldTask : WorldTaskBase, AsRule<WorldTaskTimeout>
 	{
 		/// <summary>
 		/// 设置成功
 		/// </summary>
 		public void SetResult() => SetCompleted();
+	}
+
+	/// <summary>
+	/// 任务到期完成
+	/// </summary>
+	public static class WorldTaskTimeoutRule
+	{
+		class Timeout : SendRule<WorldTask, WorldTaskTimeout>
+		{
+			/// <summary>
+			/// 到期完成。已经结束的任务不再设置。
+			/// </summary>
+			protected override void Execute(WorldTask self)
+			{
+				if (self.IsDisposed || self.IsCompleted) return;
+				self.SetResult();
+			}
+		}
 	}
 
 	/// <summary>

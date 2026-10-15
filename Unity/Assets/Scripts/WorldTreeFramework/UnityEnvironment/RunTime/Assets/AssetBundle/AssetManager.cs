@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/5/14 17:47
@@ -25,7 +25,7 @@ namespace WorldTree
 		/// <summary>
 		/// 异步加载资源
 		/// </summary>
-		public async TreeTask<T> LoadAssetAsync<T, N>()
+		public async WorldTask<T> LoadAssetAsync<T, N>()
 			where T : class
 			where N : class, INode
 		{
@@ -37,7 +37,7 @@ namespace WorldTree
 			}
 			else
 			{
-				await this.TreeTaskCompleted();
+				await this.WorldTaskCompleted();
 			}
 			return asset as T;
 		}
