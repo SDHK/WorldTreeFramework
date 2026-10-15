@@ -8,7 +8,7 @@ namespace OperateLinkFile
 	{
 
 		/// <summary>
-		/// 回调事件
+		/// 鍥炶皟浜嬩欢
 		/// </summary>
 		public Action<InputFieldControl, bool> callback;
 

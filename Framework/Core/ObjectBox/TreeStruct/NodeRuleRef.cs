@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/6/1 19:44
@@ -28,16 +28,16 @@ namespace WorldTree
 		public long InstanceId;
 
 		/// <summary>
-		/// 节点
+		/// 单位。节点也是单位。
 		/// </summary>
-		private INode node;
+		private IUnit node;
 
 		/// <summary>
 		/// 法则
 		/// </summary>
 		public RuleList Rule;
 
-		public NodeRuleRef(INode node, RuleList rule)
+		public NodeRuleRef(IUnit node, RuleList rule)
 		{
 			this.node = node;
 			this.Rule = rule;
@@ -45,9 +45,9 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 获取节点，如果节点被回收，那么会返回null
+		/// 获取单位。实例号变了说明已经还池，返回 null。
 		/// </summary>
-		public INode Node
+		public IUnit Node
 		{
 			get
 			{

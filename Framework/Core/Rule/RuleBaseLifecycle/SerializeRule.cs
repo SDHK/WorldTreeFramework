@@ -1,13 +1,13 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// ĞòÁĞ»¯·¨Ôò
+	/// åºåˆ—åŒ–æ³•åˆ™
 	/// </summary>
 	public interface Serialize : ISendRule, ILifeCycleRule
 	{ }
 
 	/// <summary>
-	/// ·´ĞòÁĞ»¯·¨Ôò
+	/// ååºåˆ—åŒ–æ³•åˆ™
 	/// </summary>
 	public interface Deserialize : ISendRule, ILifeCycleRule
 	{ }

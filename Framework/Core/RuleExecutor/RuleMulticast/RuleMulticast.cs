@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/9/16 22:03
@@ -18,7 +18,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试添加节点法则
 		/// </summary>
-		public bool TryAdd(INode node, RuleList rule);
+		public bool TryAdd(IUnit node, RuleList rule);
 	}
 
 	/// <summary>

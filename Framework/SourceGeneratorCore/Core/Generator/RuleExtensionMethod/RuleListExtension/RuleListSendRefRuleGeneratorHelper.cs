@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/7/25 20:38
@@ -43,7 +43,7 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表通知执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static void SendRef<R{{genericsType}}>(this IRuleList<R> iRuleList, INode node{{genericRefTypeParameter}})
+							public static void SendRef<R{{genericsType}}>(this IRuleList<R> iRuleList, IUnit node{{genericRefTypeParameter}})
 								where R : ISendRefRule{{genericsTypeAngle}}
 							{
 								RuleList ruleList = (RuleList)iRuleList;

@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/7/18 9:35
@@ -68,7 +68,7 @@ namespace WorldTree
 		}
 
 
-		public virtual void Invoke(INode self, INode node) => Execute(self as N, node as TN);
+		public virtual void Invoke(IUnit self, INode node) => Execute(self as N, node as TN);
 		/// <summary>
 		/// 执行
 		/// </summary>

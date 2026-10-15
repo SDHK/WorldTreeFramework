@@ -8,7 +8,7 @@ using Avalonia.Reactive;
 namespace WorldTree
 {
 	/// <summary>
-	/// ´°¿Ú±êÌâÀ¸
+	/// çª—å£æ ‡é¢˜æ 
 	/// </summary>
 	public partial class WindowTitleBar : StackPanel
 	{
@@ -25,7 +25,7 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// ±êÌâÀ¸ÎÄ±¾
+		/// æ ‡é¢˜æ æ–‡æœ¬
 		/// </summary>
 		public string Title
 		{
@@ -34,7 +34,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ×ÖÌåÑÕÉ«
+		/// å­—ä½“é¢œè‰²
 		/// </summary>
 		public IBrush Foreground
 		{
@@ -57,7 +57,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ¶©ÔÄ´°¿Ú×´Ì¬±ä»¯
+		/// è®¢é˜…çª—å£çŠ¶æ€å˜åŒ–
 		/// </summary>
 		private void OnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
 		{
@@ -65,7 +65,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ±êÌâÀ¸ÍÏ¶¯´°¿Ú
+		/// æ ‡é¢˜æ æ‹–åŠ¨çª—å£
 		/// </summary>
 		private void WindowTitleBar_PointerPressed(object sender, PointerPressedEventArgs e)
 		{
@@ -77,7 +77,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ¹Ø±Õ´°¿Ú
+		/// å…³é—­çª—å£
 		/// </summary>
 		private void CloseWindow(object sender, Avalonia.Interactivity.RoutedEventArgs e)
 		{
@@ -86,7 +86,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ´°¿Ú×î´ó»¯
+		/// çª—å£æœ€å¤§åŒ–
 		/// </summary>
 		private void MaximizeWindow(object sender, Avalonia.Interactivity.RoutedEventArgs e)
 		{
@@ -102,7 +102,7 @@ namespace WorldTree
 			}
 		}
 		/// <summary>
-		/// ´°¿Ú×îĞ¡»¯
+		/// çª—å£æœ€å°åŒ–
 		/// </summary>
 		private void MinimizeWindow(object sender, Avalonia.Interactivity.RoutedEventArgs e)
 		{
@@ -111,7 +111,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// ´°¿Ú×´Ì¬¶©ÔÄ
+		/// çª—å£çŠ¶æ€è®¢é˜…
 		/// </summary>
 		private void SubscribeToWindowState()
 		{
@@ -122,13 +122,13 @@ namespace WorldTree
 				{
 					maximizeIcon.Data = this.FindResource("MaximizeIconGeometry") as Geometry;
 					hostWindow.Padding = new Thickness(0, 0, 0, 0);
-					//maximizeToolTip.Content = "×î´ó»¯";
+					//maximizeToolTip.Content = "æœ€å¤§åŒ–";
 				}
 				if (s == WindowState.Maximized)
 				{
 					maximizeIcon.Data = this.FindResource("RestoreIconGeometry") as Geometry;
 					hostWindow.Padding = new Thickness(7, 7, 7, 7);
-					//maximizeToolTip.Content = "»¹Ô­";
+					//maximizeToolTip.Content = "è¿˜åŸ";
 				}
 			}));
 		}

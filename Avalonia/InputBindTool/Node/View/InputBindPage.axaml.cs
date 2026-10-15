@@ -3,7 +3,7 @@ using Avalonia.Controls;
 namespace WorldTree;
 
 /// <summary>
-/// °´Å¥°ó¶¨Ò³Ãæ
+/// æŒ‰é’®ç»‘å®šé¡µé¢
 /// </summary>
 public partial class InputBindPage : UserControl
 {

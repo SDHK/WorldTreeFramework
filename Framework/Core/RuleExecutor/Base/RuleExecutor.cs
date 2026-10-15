@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/6/1 19:44
@@ -115,7 +115,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试添加节点
 		/// </summary>
-		public virtual bool TryAdd(INode node, RuleList rule)
+		public virtual bool TryAdd(IUnit node, RuleList rule)
 		{
 			if (node == null || rule == null) return false;
 
@@ -217,7 +217,7 @@ namespace WorldTree
 			return traversalCount;
 		}
 
-		public virtual bool TryGetNext(out INode node, out RuleList ruleList)
+		public virtual bool TryGetNext(out IUnit node, out RuleList ruleList)
 		{
 			//遍历间隔
 			int indexInterval = 1;

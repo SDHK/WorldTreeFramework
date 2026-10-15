@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/4/9 10:21
@@ -46,7 +46,7 @@ namespace WorldTree.SourceGenerator
 							/// 尝试通知法则集合异步执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask<bool> TrySendAsync<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
+							public static async TreeTask<bool> TrySendAsync<R{{genericsType}}>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
 								if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
@@ -54,7 +54,7 @@ namespace WorldTree.SourceGenerator
 									await ((IRuleList<R>)ruleList).SendAsync(node{{genericParameter}});
 									return true;
 								}
-								await node.TreeTaskCompleted();
+								await ((node as INode) ?? node.World).TreeTaskCompleted();
 								return false;
 							}
 
@@ -62,10 +62,10 @@ namespace WorldTree.SourceGenerator
 							/// 通知法则集合异步执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
+							public static async TreeTask SendAsync<R{{genericsType}}>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}})
 								where R : ISendRuleAsync{{genericsTypeAngle}}
 							{
-								if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) await node.TreeTaskCompleted();
+								if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) await ((node as INode) ?? node.World).TreeTaskCompleted();
 								await ((IRuleList<R>)ruleList).SendAsync(node{{genericParameter}});
 							}
 					""");

@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/4/9 18:01
@@ -47,7 +47,7 @@ namespace WorldTree.SourceGenerator
 							/// 尝试调用法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static bool TryCall<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, out OutT outT)
+							public static bool TryCall<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
 								if (((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList))
@@ -63,7 +63,7 @@ namespace WorldTree.SourceGenerator
 							/// 调用法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static OutT Call<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, out OutT outT)
+							public static OutT Call<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}}, out OutT outT)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
 								group.TryCall(node{{genericParameter}}, out outT);
@@ -74,7 +74,7 @@ namespace WorldTree.SourceGenerator
 							/// 尝试调用法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static bool TryCalls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
+							public static bool TryCalls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
 								if ((group as RuleGroup).TryGetValue(node.Type, out RuleList ruleList))
@@ -89,7 +89,7 @@ namespace WorldTree.SourceGenerator
 							/// 调用法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
+							public static TreeList<OutT> Calls<R{{genericsType}}, OutT>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRule<{{genericsTypeAfter}}OutT>
 							{
 								group.TryCalls(node{{genericParameter}}, outTList);

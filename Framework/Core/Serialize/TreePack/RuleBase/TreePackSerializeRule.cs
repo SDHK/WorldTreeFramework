@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/8/14 11:59
@@ -50,7 +50,7 @@ namespace WorldTree
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(INode self, ref GT arg1) => Execute(self as TreePackByteSequence, ref arg1);
+		public virtual void Invoke(IUnit self, ref GT arg1) => Execute(self as TreePackByteSequence, ref arg1);
 		/// <summary>
 		/// 执行
 		/// </summary>
@@ -66,7 +66,7 @@ namespace WorldTree
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(INode self, ref GT arg1) => Execute(self as TreePackByteSequence, ref arg1);
+		public virtual void Invoke(IUnit self, ref GT arg1) => Execute(self as TreePackByteSequence, ref arg1);
 		/// <summary>
 		/// 执行
 		/// </summary>

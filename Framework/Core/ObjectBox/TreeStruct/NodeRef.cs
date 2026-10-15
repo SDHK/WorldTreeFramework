@@ -1,9 +1,10 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/12/04 08:19:28
 
-* 描述： 节点引用
+* 描述： 单位引用壳。名字仍叫 NodeRef。
+* 数据节点按 Id 从引用池找回；纯单位只认当前实例，还池后变空。
 
 */
 
@@ -35,10 +36,14 @@ namespace WorldTree
 
 
 	/// <summary>
-	/// 节点引用
+	/// 单位引用壳。节点也是单位，所以节点引用继续用这个类型。
 	/// </summary>
+	/// <remarks>
+	/// 数据节点保留 World，按 Id 从引用池找回。
+	/// 纯单位（例如任务）不进引用池，World 留空，只对照 InstanceId；还池后 Value 为空。
+	/// </remarks>
 	public partial struct NodeRef<N>
-		where N : class, INode
+		where N : class, IUnit
 	{
 		/// <summary>
 		/// 世界
@@ -47,7 +52,7 @@ namespace WorldTree
 		public World World;
 
 		/// <summary>
-		/// 节点ID：数据和实例混合标识
+		/// 单位 Id。数据节点是雪花 Id；普通单位与 InstanceId 相同。
 		/// </summary>
 		public long Id;
 
@@ -61,13 +66,13 @@ namespace WorldTree
 		public long InstanceId;
 
 		/// <summary>
-		/// 节点
+		/// 单位
 		/// </summary>
 		[TreeDataIgnore]
 		private N node;
 
 		/// <summary>
-		/// 获取节点，如果节点被回收，那么会返回null
+		/// 获取单位。实例已还池时，数据节点按 Id 找回，纯单位返回 null。
 		/// </summary>
 		[TreeDataIgnore]
 		public N Value

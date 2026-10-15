@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/12/11 11:52:09
@@ -26,7 +26,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试添加节点和法则
 		/// </summary>
-		public override bool TryAdd(INode node, RuleList rule)
+		public override bool TryAdd(IUnit node, RuleList rule)
 		{
 			if (node == null || rule == null) return false;
 			if (IdIndexDict != null && IdIndexDict.ContainsKey(node.InstanceId)) return false;
@@ -61,7 +61,7 @@ namespace WorldTree
 			return true;
 		}
 
-		public override bool TryGetNext(out INode node, out RuleList ruleList)
+		public override bool TryGetNext(out IUnit node, out RuleList ruleList)
 		{
 			//遍历间隔
 			int indexInterval = 1;
@@ -160,7 +160,7 @@ namespace WorldTree
 		/// <summary>
 		/// 移除
 		/// </summary>
-		public virtual void Remove(INode node)
+		public virtual void Remove(IUnit node)
 		{
 			if (node == null) return;
 			Remove(node.InstanceId);

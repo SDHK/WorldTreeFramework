@@ -5,7 +5,7 @@ using Avalonia.Markup.Xaml;
 namespace WorldTree
 {
 	/// <summary>
-	/// avalonia应用程序入口
+	/// avalonia搴旂敤绋嬪簭鍏ュ彛
 	/// </summary>
 	public partial class App : Application
 	{

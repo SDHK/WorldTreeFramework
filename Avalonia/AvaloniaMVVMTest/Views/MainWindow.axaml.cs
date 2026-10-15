@@ -13,9 +13,9 @@ namespace AvaloniaMVVMTest.Views
 
 		private void Button_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
 		{
-			// ÕâÀïĞ´µã»÷ºóµÄÂß¼­
-			Console.Text = "Button_Click°´Å¥±»µã»÷ÁË£¡";
-			Debug.WriteLine("Button_Click°´Å¥±»µã»÷ÁË!");
+			// è¿™é‡Œå†™ç‚¹å‡»åçš„é€»è¾‘
+			Console.Text = "Button_ClickæŒ‰é’®è¢«ç‚¹å‡»äº†ï¼";
+			Debug.WriteLine("Button_ClickæŒ‰é’®è¢«ç‚¹å‡»äº†!");
 		}
 
 

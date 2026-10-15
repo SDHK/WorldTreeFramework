@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/4/7 17:54
@@ -25,7 +25,7 @@ namespace WorldTree.SourceGenerator
 * 可以理解为Node的有返回值异步方法
 *
 * ICallRuleAsync 继承 IRule
-* 主要作用：统一 调用方法 OutT Invoke(INode self,T1 arg1, ...);
+* 主要作用：统一 调用方法 OutT Invoke(IUnit self,T1 arg1, ...);
 *
 * CallRuleAsync 则继承 Rule
 * 同时还继承了 ICallRuleAsync 可以转换为 ICallRuleAsync 进行统一调用。
@@ -57,20 +57,20 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							TreeTask<OutT> Invoke(INode self{{genericTypeParameter}});
+							TreeTask<OutT> Invoke(IUnit self{{genericTypeParameter}});
 						}
 
 						/// <summary>
 						/// 异步调用法则基类
 						///</summary>
 						public abstract class CallRuleAsync<N, R{{genericsType}}, OutT> : Rule<N, R>, ICallRuleAsync<{{genericsTypeAfter}}OutT>
-							where N : class, INode, AsRule<R>
+							where N : class, IUnit, AsRule<R>
 							where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 						{
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual TreeTask<OutT> Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							public virtual TreeTask<OutT> Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>
@@ -86,7 +86,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual TreeTask<OutT> Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							public virtual TreeTask<OutT> Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as INode{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>

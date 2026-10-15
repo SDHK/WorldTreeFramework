@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/7/25 20:42
@@ -45,7 +45,7 @@ namespace WorldTree.SourceGenerator
 							/// 尝试通知法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static bool TrySendRef<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericRefTypeParameter}})
+							public static bool TrySendRef<R{{genericsType}}>(this IRuleGroup<R> group, IUnit node{{genericRefTypeParameter}})
 								where R : ISendRefRule{{genericsTypeAngle}}
 							{
 								if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) return false;
@@ -57,7 +57,7 @@ namespace WorldTree.SourceGenerator
 							/// 通知法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static void SendRef<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericRefTypeParameter}})
+							public static void SendRef<R{{genericsType}}>(this IRuleGroup<R> group, IUnit node{{genericRefTypeParameter}})
 								where R : ISendRefRule{{genericsTypeAngle}}
 							{
 								group.TrySendRef(node{{genericRefParameter}});

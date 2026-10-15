@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/6/1 19:44
@@ -32,7 +32,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试添加节点
 		/// </summary>
-		public virtual bool TryAdd(INode node)
+		public virtual bool TryAdd(IUnit node)
 		{
 			if (node == null) return false;
 			if (ruleGroupDict == null || !ruleGroupDict.TryGetValue(node.Type, out RuleList rule)) return false;

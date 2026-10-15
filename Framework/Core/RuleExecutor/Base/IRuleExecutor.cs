@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/8/30 19:23
@@ -58,7 +58,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取下一个
 		/// </summary>
-		public bool TryGetNext(out INode node, out RuleList ruleList);
+		public bool TryGetNext(out IUnit node, out RuleList ruleList);
 
 	}
 

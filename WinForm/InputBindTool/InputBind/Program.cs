@@ -6,7 +6,7 @@ namespace InputBind
 	internal static class Program
 	{
 		/// <summary>
-		/// ´°¿Ú
+		/// çª—å£
 		/// </summary>
 		private static InputBindForm form = new InputBindForm();
 

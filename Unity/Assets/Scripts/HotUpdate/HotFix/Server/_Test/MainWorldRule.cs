@@ -1,9 +1,9 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2024/8/27 15:39
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2024/8/27 15:39
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 namespace WorldTree.Server
@@ -14,7 +14,7 @@ namespace WorldTree.Server
 		{
 			protected override void Execute(MainWorld self)
 			{
-				self.Log("Èë¿Ú£¡£¡£¡");
+				self.Log("å…¥å£ï¼ï¼ï¼");
 				self.AddComponent(out DotNetInit _);
 			}
 		}

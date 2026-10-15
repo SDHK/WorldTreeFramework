@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/4/8 14:56
@@ -46,7 +46,7 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表异步调用执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}}, OutT defaultOutT)
+							public static async TreeTask<OutT> CallAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, IUnit node{{genericTypeParameter}}, OutT defaultOutT)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								RuleList ruleList = (RuleList)iRuleList;
@@ -66,7 +66,7 @@ namespace WorldTree.SourceGenerator
 							/// 法则列表异步调用执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, INode node{{genericTypeParameter}}, TreeList<OutT> outTList)
+							public static async TreeTask<TreeList<OutT>> CallsAsync<R{{genericsType}}, OutT>(this IRuleList<R> iRuleList, IUnit node{{genericTypeParameter}}, TreeList<OutT> outTList)
 								where R : ICallRuleAsync<{{genericsTypeAfter}}OutT>
 							{
 								RuleList ruleList = (RuleList)iRuleList;

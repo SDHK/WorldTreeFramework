@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/9/16 22:03
@@ -74,7 +74,7 @@ namespace WorldTree
 			RuleList = rule;
 			return true;
 		}
-		public bool TryGetNext(out INode node, out RuleList ruleList)
+		public bool TryGetNext(out IUnit node, out RuleList ruleList)
 		{
 			if (TargetNode.Value != null)
 			{

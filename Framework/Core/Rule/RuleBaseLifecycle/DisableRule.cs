@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/8/24 17:31
@@ -24,7 +24,15 @@ namespace WorldTree
 	public abstract class DisableRule<N> : SendRule<N, Disable>
 		where N : class, INode, AsRule<Disable>
 	{
-		public override void Invoke(INode self)
+		public override void Invoke(IUnit self)
+		{
+			if (self is INode node) InvokeNode(node);
+		}
+
+		/// <summary>
+		/// 节点失活
+		/// </summary>
+		private void InvokeNode(INode self)
 		{
 			if (self.IsActive != self.activeEventMark)
 			{

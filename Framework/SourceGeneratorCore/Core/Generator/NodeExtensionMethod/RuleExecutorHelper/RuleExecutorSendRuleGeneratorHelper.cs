@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/4/15 19:45
@@ -47,7 +47,7 @@ namespace WorldTree.SourceGenerator
 								self.RefreshTraversalCount();
 								for (int i = 0; i < self.TraversalCount; i++)
 								{
-									if (self.TryGetNext(out INode node, out RuleList ruleList))
+									if (self.TryGetNext(out IUnit node, out RuleList ruleList))
 									{
 										((IRuleList<R>)ruleList).Send(node{{genericParameter}});
 									}
@@ -69,7 +69,7 @@ namespace WorldTree.SourceGenerator
 								}
 								for (int i = 0; i < self.TraversalCount; i++)
 								{
-									if (self.TryGetNext(out INode node, out RuleList ruleList))
+									if (self.TryGetNext(out IUnit node, out RuleList ruleList))
 									{
 										await ((IRuleList<R>)ruleList).SendAsync(node{{genericParameter}});
 									}

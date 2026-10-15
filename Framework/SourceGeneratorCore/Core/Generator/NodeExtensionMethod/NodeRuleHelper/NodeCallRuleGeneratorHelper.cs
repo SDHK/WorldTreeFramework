@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/4/10 19:27
@@ -40,7 +40,7 @@ namespace WorldTree.SourceGenerator
 						/// <summary>
 						/// 尝试执行调用法则
 						/// </summary>
-						public static bool TryCallRule<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, out OutT outT)
+						public static bool TryCallRule<R{{genericsType}}, OutT>(IUnit self, R nullRule{{genericTypeParameter}}, out OutT outT)
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
 							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
@@ -56,7 +56,7 @@ namespace WorldTree.SourceGenerator
 						/// 执行调用法则
 						/// </summary>
 						public static OutT CallRule<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, out OutT outT)
-							where N : class, INode, AsRule<R>
+							where N : class, IUnit, AsRule<R>
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
 							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
@@ -71,7 +71,7 @@ namespace WorldTree.SourceGenerator
 						/// <summary>
 						/// 尝试执行调用法则
 						/// </summary>
-						public static bool TryCallsRule<R{{genericsType}}, OutT>(INode self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
+						public static bool TryCallsRule<R{{genericsType}}, OutT>(IUnit self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
 							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))
@@ -86,7 +86,7 @@ namespace WorldTree.SourceGenerator
 						/// 执行调用法则
 						/// </summary>
 						public static TreeList<OutT> CallsRule<N, R{{genericsType}}, OutT>(N self, R nullRule{{genericTypeParameter}}, TreeList<OutT> outTList)
-							where N : class, INode, AsRule<R>
+							where N : class, IUnit, AsRule<R>
 							where R : ICallRule<{{genericsTypeAfter}}OutT>
 						{
 							if (self.World.Line.Core.RuleManager.TryGetRuleList(self.Type, out IRuleList<R> ruleList))

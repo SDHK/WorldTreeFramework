@@ -1,9 +1,9 @@
 /****************************************
 
-* ×÷Õß£ºÉÁµçºÚ¿Í
-* ÈÕÆÚ£º2025/1/2 17:04
+* ä½œè€…ï¼šé—ªç”µé»‘å®¢
+* æ—¥æœŸï¼š2025/1/2 17:04
 
-* ÃèÊö£º
+* æè¿°ï¼š
 
 */
 using System;
@@ -12,32 +12,32 @@ using System.Runtime.InteropServices;
 namespace WorldTree.Server
 {
 	/// <summary>
-	/// WindowsÊó±êÂë
+	/// Windowsé¼ æ ‡ç 
 	/// </summary>
 	public enum WindowMouseKey : uint
 	{
 		/// <summary>
-		/// Êó±ê×ó¼ü°´ÏÂÊÂ¼şÂë
+		/// é¼ æ ‡å·¦é”®æŒ‰ä¸‹äº‹ä»¶ç 
 		/// </summary>
 		LeftButtonDown = 0x0201,
 		/// <summary>
-		/// Êó±ê×ó¼üÌ§ÆğÊÂ¼şÂë
+		/// é¼ æ ‡å·¦é”®æŠ¬èµ·äº‹ä»¶ç 
 		/// </summary>
 		LeftButtonUp = 0x0202,
 		/// <summary>
-		/// Êó±êÓÒ¼ü°´ÏÂÊÂ¼şÂë
+		/// é¼ æ ‡å³é”®æŒ‰ä¸‹äº‹ä»¶ç 
 		/// </summary>
 		RightButtonDown = 0x0204,
 		/// <summary>
-		/// Êó±êÓÒ¼üÌ§ÆğÊÂ¼şÂë
+		/// é¼ æ ‡å³é”®æŠ¬èµ·äº‹ä»¶ç 
 		/// </summary>
 		RightButtonUp = 0x0205,
 		/// <summary>
-		/// Êó±êÖĞ¼ü°´ÏÂÊÂ¼şÂë
+		/// é¼ æ ‡ä¸­é”®æŒ‰ä¸‹äº‹ä»¶ç 
 		/// </summary>
 		MiddleButtonDown = 0x0207,
 		/// <summary>
-		/// Êó±êÖĞ¼üÌ§ÆğÊÂ¼şÂë
+		/// é¼ æ ‡ä¸­é”®æŠ¬èµ·äº‹ä»¶ç 
 		/// </summary>
 		MiddleButtonUp = 0x0208
 	}
@@ -45,32 +45,32 @@ namespace WorldTree.Server
 
 
 	/// <summary>
-	/// Êó±êÊäÈëÇı¶¯Æ÷
+	/// é¼ æ ‡è¾“å…¥é©±åŠ¨å™¨
 	/// </summary>
 	public class InputDriverMouse : InputDriver
 		, AsRule<Awake<InputDeviceManager>>
 	{
 
 		/// <summary>
-		/// ¶¨ÒåµÍ¼¶Êó±ê¹³×ÓµÄ³£Á¿
+		/// å®šä¹‰ä½çº§é¼ æ ‡é’©å­çš„å¸¸é‡
 		/// </summary>
 		public int WH_MOUSE_LL = 14;
 
 
 		/// <summary>
-		/// ¶¨ÒåÊó±êÏûÏ¢µÄÎ¯ÍĞ
+		/// å®šä¹‰é¼ æ ‡æ¶ˆæ¯çš„å§”æ‰˜
 		/// </summary>
 		public LowLevelMouseProc mouseProc;
 
 		/// <summary>
-		/// ´æ´¢¹³×ÓµÄ¾ä±ú
+		/// å­˜å‚¨é’©å­çš„å¥æŸ„
 		/// </summary>
 		public IntPtr mouseHookID = IntPtr.Zero;
 
 	}
 
 	/// <summary>
-	/// ¶¨ÒåÊó±êÏûÏ¢µÄÎ¯ÍĞ
+	/// å®šä¹‰é¼ æ ‡æ¶ˆæ¯çš„å§”æ‰˜
 	/// </summary>
 	/// <param name="nCode"></param>
 	/// <param name="wParam"></param>
@@ -80,17 +80,17 @@ namespace WorldTree.Server
 
 
 	/// <summary>
-	/// ¶¨Òå POINT ½á¹¹Ìå
+	/// å®šä¹‰ POINT ç»“æ„ä½“
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct POINT
 	{
 		/// <summary>
-		/// X ×ø±ê
+		/// X åæ ‡
 		/// </summary>
 		public int X;
 		/// <summary>
-		/// Y ×ø±ê
+		/// Y åæ ‡
 		/// </summary>
 		public int Y;
 	}

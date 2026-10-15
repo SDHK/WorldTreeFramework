@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/4/8 18:07
@@ -47,7 +47,7 @@ namespace WorldTree.SourceGenerator
 							/// 尝试通知法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static bool TrySend<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
+							public static bool TrySend<R{{genericsType}}>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}})
 								where R : ISendRule{{genericsTypeAngle}}
 							{
 								if (!((RuleGroup)group).TryGetValue(node.Type, out RuleList ruleList)) return false;
@@ -59,7 +59,7 @@ namespace WorldTree.SourceGenerator
 							/// 通知法则集合执行
 							/// </summary>
 							[MethodImpl(MethodImplOptions.AggressiveInlining)]
-							public static void Send<R{{genericsType}}>(this IRuleGroup<R> group, INode node{{genericTypeParameter}})
+							public static void Send<R{{genericsType}}>(this IRuleGroup<R> group, IUnit node{{genericTypeParameter}})
 								where R : ISendRule{{genericsTypeAngle}}
 							{
 								group.TrySend(node{{genericParameter}});

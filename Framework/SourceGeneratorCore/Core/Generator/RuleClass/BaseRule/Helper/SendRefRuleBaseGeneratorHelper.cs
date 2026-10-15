@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/7/25 20:06
@@ -26,7 +26,7 @@ namespace WorldTree.SourceGenerator
 * 可以理解为Node的无返回值扩展方法
 *
 * ISendRule 的引用类型版本 继承 IRule
-* 主要作用：统一 调用方法 Invoke(INode self,ref T1 arg1, ...);
+* 主要作用：统一 调用方法 Invoke(IUnit self,ref T1 arg1, ...);
 *
 * 与 ISendRule 的区别在于参数为引用类型,可用于修改数值类型的参数。
 * 这个版本应该是在特殊情况下使用。
@@ -54,20 +54,20 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							void Invoke(INode self{{genericRefTypeParameter}});
+							void Invoke(IUnit self{{genericRefTypeParameter}});
 						}
 
 						/// <summary>
 						/// 通知法则基类：引用参数
 						/// </summary>
 						public abstract class SendRefRule<N, R{{genericsType}}> : Rule<N, R>, ISendRefRule{{genericsTypeAngle}}
-							where N : class, INode, AsRule<R>
+							where N : class, IUnit, AsRule<R>
 							where R : ISendRefRule{{genericsTypeAngle}}
 						{
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual void Invoke(INode self{{genericRefTypeParameter}}) => Execute(self as N{{genericRefParameter}});
+							public virtual void Invoke(IUnit self{{genericRefTypeParameter}}) => Execute(self as N{{genericRefParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>

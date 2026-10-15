@@ -37,7 +37,7 @@ namespace WorldTree
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(INode self, ref object source, ref object target) => Execute(self as TreeCopier, ref source, ref target);
+		public virtual void Invoke(IUnit self, ref object source, ref object target) => Execute(self as TreeCopier, ref source, ref target);
 		/// <summary>
 		/// 执行
 		/// </summary>
@@ -61,7 +61,7 @@ namespace WorldTree
 		/// <summary>
 		/// 调用
 		/// </summary>
-		public virtual void Invoke(INode self, ref GT arg1, ref GT arg2) => Execute(self as TreeCopier, ref arg1, ref arg2);
+		public virtual void Invoke(IUnit self, ref GT arg1, ref GT arg2) => Execute(self as TreeCopier, ref arg1, ref arg2);
 		/// <summary>
 		/// 执行
 		/// </summary>

@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/4/3 11:58
@@ -26,7 +26,7 @@ namespace WorldTree.SourceGenerator
 * 可以理解为Node的无返回值扩展方法
 *
 * ISendRule 继承 IRule
-* 主要作用：统一 调用方法 Invoke(INode self,T1 arg1, ...);
+* 主要作用：统一 调用方法 Invoke(IUnit self,T1 arg1, ...);
 *
 * SendRule 则继承 Rule
 * 同时还继承了 ISendRule 可以转换为 ISendRule 进行统一调用。
@@ -57,20 +57,20 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							void Invoke(INode self{{genericTypeParameter}});
+							void Invoke(IUnit self{{genericTypeParameter}});
 						}
 
 						/// <summary>
 						/// 通知法则基类
 						/// </summary>
 						public abstract class SendRule<N, R{{genericsType}}> : Rule<N, R>, ISendRule{{genericsTypeAngle}}
-							where N : class, INode, AsRule<R>
+							where N : class, IUnit, AsRule<R>
 							where R : ISendRule{{genericsTypeAngle}}
 						{
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual void Invoke(INode self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
+							public virtual void Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as N{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>
@@ -86,7 +86,7 @@ namespace WorldTree.SourceGenerator
 							/// <summary>
 							/// 调用
 							/// </summary>
-							public virtual void Invoke(INode self{{genericTypeParameter}}) => Execute(self{{genericParameter}});
+							public virtual void Invoke(IUnit self{{genericTypeParameter}}) => Execute(self as INode{{genericParameter}});
 							/// <summary>
 							/// 执行
 							/// </summary>
