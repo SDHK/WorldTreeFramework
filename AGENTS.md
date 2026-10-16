@@ -1,6 +1,25 @@
 # AGENTS.md — AI 助手快速上手上下文
 
-> 供新对话了解框架怎么用。已定下的能力写在第 2 节，写成用法，不写完成记录。进行中的事在第 3 节，坑在第 5 节。
+> 供新对话了解框架怎么用。先看文首「宿主」。已定下的能力写在第 2 节，写成用法，不写完成记录。进行中的事在第 3 节，坑在第 4 节。
+
+---
+
+## 宿主（先读）
+
+你在 **VSCode 的 OMP 控制台**里。OMP 是 oh-my-pi（命令 `omp`）。窗口是 VSCode 集成终端，真正跑命令的是 OMP 自带的 POSIX shell，不是 PowerShell，也不是 git-bash。换外层终端不会改变工具行为。shell 的 shim 和 `rg -c` 坑在第 4.2 节。
+
+这些东西会话启动时自己带上。架构只维护第 2 节，不要再抄一份「始终生效」的规矩。
+
+| 东西 | 放哪 | 干什么 |
+|---|---|---|
+| 上下文 | 仓库根 `AGENTS.md`（本文件）；旁边还可有 `CLAUDE.md`。额外文件名用配置 `contextFiles.extra` | 每会话都读。用法写第 2 节 |
+| MCP | 仓库 `.omp/mcp.json` | 启动时加载。本仓库挂了 Unity：`unity_exec` / `unity_refresh` / `unity_logs` / `unity_select`（`127.0.0.1:8099/mcp`）。改过 json 要 `/mcp reload`。细节在第 5 节 |
+| 技能 | `omp skill`。不加 `-g` 用项目的 `skills.json`，`-g` 用用户全局 | 用到才加载的流程。本仓库没装。不要用技能复述架构。`--no-skills` 关掉 |
+| TTSR 规则 | 项目 `.omp/rules/*.md`，全局 `~/.omp/agent/rules` | 带条件的警告，不是说明书。输出或工具调用对上了才插进来。`/omfg <抱怨>` 从一次失误生成；`omp ttsr test` / `omp ttsr scan` 试。`--no-rules` 关掉。同一种失误重复出现、第 2 节又没拦住，再加一条 |
+| 子代理 | 工具 `task`。`omp agents unpack` 到 `~/.omp/agent/agents`，`--project` 到 `./.omp/agents` | 并行探查。本仓库没有自定义代理 |
+| 配置 | `~/.omp/agent/config.yml` | 模型角色、`bash.patterns`。`git commit*` 已 `deny`，`yolo` 下也生效。模型 / 额度看 `MODEL-PROVIDERS.md`，这里不写 |
+
+常用内建工具：`read` / `edit` / `write` / `grep` / `glob` / `bash`，`ast_grep`（已开，支持 csharp），`task`，`web_search`。`lsp` 在本仓库是空的，见第 4.2 节。不许 `git commit`，见第 6 节。
 
 ---
 
@@ -62,7 +81,7 @@ public abstract class 接口名Rule<N, 接口自己的泛型…>
 
 节点上写 `self.AsyncDelay` / `self.AsyncYield` / `self.GetAwaiter`。延迟走 `CascadeTicker`，`AddTimerDelay` 用真实时间的 Utc Ticks，目标是 `INode`。`CascadeTickerData.Node` 是 `NodeRef<INode>`。
 
-令牌是节点 `TreeTaskToken`。`SetToken` 顺着关联任务下传，遇到已有令牌就停。`await self.TreeTaskTokenCatch()` 取当前令牌。`parent.Add(child)` 后，父令牌取消时子令牌一起取消。令牌取消不抛，`GetResult` 把 `Canceled` 当完成。
+令牌是节点 `TreeTaskToken`，而且是**内联令牌**：不写进方法参数（C# 的 `CancellationToken` 要逐层传参，这里没有）。`async` 方法的构建器在每次 `await` 时，把当前任务的令牌 `SetToken` 到这次等的 awaiter 上。`SetToken` 再顺着 `RelevanceTask` 往下传，遇到已经有令牌的任务就停，所以内层新建的令牌不会被外层盖掉。业务要看当前令牌就 `await self.TreeTaskTokenCatch()`，不要自己加参数。顶层用 `Coroutine(token)` 或 `chain.SetToken(token)` 把令牌放上链。`parent.Add(child)` 后，父令牌取消时子令牌一起取消。`AddToken` 是另一条：新令牌既能取消老令牌，也能被老令牌取消。令牌取消不抛，`GetResult` 把 `Canceled` 当完成。
 
 BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateException` 拆开，取消抛 `TaskCanceledException`。`GetResult` 会把任务还池，所以同一个任务不要既 `Coroutine()` 又 `await`。
 
@@ -99,49 +118,101 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 
 ## 3. 进行中
 
-- 接入 Luban（插件已添加）。
+### Luban
+
+#### 临时记录（本模块结束可删）
+
+阶段 1 的做法已经写在下面。第 1 到 4 步已做：检查和导出都通过。`manager` 必须写 `Tables`，留空会生成没有类名的 `.cs`。第 5 步还没逐项核对产物。业务表内容不用看。
+
+新会话先看这些：
+
+- 本段，然后是下面的阶段表和「阶段 1 步骤」。
+- 本仓库脚本：`ExcelTool/Excel/配置导出.bat`（UTF-8，无 BOM，CRLF，中文注释。每行中文后面空一行，否则 cmd 在代码页 65001 下会把下一行拆开）。模板是 `..\Luban\Templates`，配置路径是 `Excels\_Game.conf`（已写。分组 `c`/`s`，目标 `client`/`server`，`topmodule` 为 `WorldTree`，`schemaFiles` 只挂 `_Tables.xlsx`。探针三张：`ClientProbe` 分组 `c`，`ServerProbe` 分组 `s`，`SharedProbe` 分组 `c,s`。表类用这个名字，记录类加 `Data` 后缀，避免和表类重名），输出根目录是 `..\Output`。只留客户端 `c` 和服务器 `s` 的 Bytes / CSharp。没有 Json，没有 Start、没有 `cs`、没有编辑器。脚本先检查 client 和 server，通过后清空 `Output`，再导出 Bytes、CSharp。失败是 `exit /b 1`，没有 `pause`。`manager` 为 `Tables`。
+- 工具本体：`ExcelTool/Luban/Luban.dll`，`Luban.runtimeconfig.json` 要 net8.0。模板已经在 `ExcelTool/Luban/Templates`（含 `cs-bin`）。
+- 本地不再留 ET 起服副本。原先拼错的 `Execls` 已删，只剩 `Excel/Excels`。对照仍看参照工程里的 `Excel\Excels\StartConfig\<环境>\_Start.conf`。
+- 外壳怎么拉起世界线 0：`Console/Server/App/Program.cs`、`Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/_Init/UnityWorldTree.cs`。同样写死 `Create(0)` 的还有 `Console/ConfigTool`、Avalonia、WinForm。
+- 创建口：`Framework/Core/Core/WorldLine/WorldTreeCore.cs` 的 `Create(int id, Type worldType, Type heartType, int frameTime)`。`Options` 在同目录 `Options.cs`，`ConfigPath` 默认 `StartConfig/Localhost`，`Process` 默认 `1`。现在没有人读这两个值。
+- 配置节点：`Framework/Core/Config/` 下的 `Config`、`ConfigGroup`、`ConfigManager`。`ConfigManager` 是 `ComponentOf<WorldLine>`。只有类型，没有读 bytes 的加载器。
+- 阶段 2 才会用到的编辑器程序集：`Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/Editor/WorldTree.UnityEditor.asmdef`。
+
+参照工程（只看管线）：
+
+- 新导表在 `E:\Storage\Daily\BaiduNetdisk\WX20220921\config\`。入口 `Excel\Excels\_Game.conf`：分组 `c`/`s`/`e`，目标 `client`/`server`/`all`，`topmodule` 为 `ET`，`schemaFiles` 是 `Defines`、`__tables__.xlsx`、`__beans__.xlsx`、`__enums__.xlsx`。起服是 `Excel\Excels\StartConfig\<环境>\_Start.conf`，环境有 Localhost、Publish、Release、Stress、Test。
+- 模板 `Excel\Templates`（`cs-bin`、`cs-editor-json`）。工具 `config\Luban\Luban.dll`（net8.0）。全量脚本 `Excel\导出配置新.bat`：先 `-t all` 检查（`outputSaver=null`），再清 `config\Output`，按 client / server / all 导出。数据在 `Output\Bytes` 与 `Output\Json`，代码在 `Output\CSharp\{c,s,cs}`，编辑器代码在 `Output\Editor`。
+- `Excel\自定义导出\Export.bat` 只拷指定表的 bytes/json。`GitRoot.txt` 当前是 `D:\Projects\ET8.0`，不是 HeadMaster。
+- 游戏工程 `D:\Projects\GameEngine\Unity\HeadMaster_81` 只收结果：`Config\Excel`、`Config\Json`，生成代码在 `Unity\Assets\Scripts\Model\Generate\{Client,Server,ClientServer}\Config`。它自己的 `Tools\Luban`（`Luban.ClientServer.exe` + XML）是上一代，要读的 `Unity\Assets\Config\Excel` 已经不在。不要照那套接。
+
+当前框架和这条管线的差别：外壳一律先拉世界线 0，Start 要等这条线起来之后才当配置读。WorldTree 还没有 ET 那种进程 / 区服 / 场景表，也没有第二条业务世界线。
+
+目标：同一套 Luban 配置能导出**服务器**和**客户端**两套配置。参照上面的新导表，不照 HeadMaster 的旧工具。参照里的 `all` 目标、编辑器代码、起服的多环境，本计划先不做。
+
+Game 和 Start 分成两个入口，现在就把形状定下来。Game 是游戏内容，客户端和服务器按分组各要一份。Start 也是一张配置表，不是启动前的特殊文件。客户端和服务器的外壳都先 `Create(0, MainWorld, …)`，世界线 0 是模型主线程，不进表。主线程起来之后才读 Start，再 `Create` 真正的运行线程。`ConfigManager` 挂在 `WorldLine` 上，没有线就没有配置节点，所以 0 不能由这张表创建。表只描述 0 以外的线，列仍是 `Process`、`LineId`、`WorldType`、`HeartType`、`FrameTime`，不照搬 ET 的机器、区服、场景。Start 只在主线程上读，读完去拉别的线，不要在运行线上再读一遍又去拉线。这一阶段外壳仍写死 `Create(0)`，不真的读表。
+
+| 阶段 | 做什么 | 做到哪算完 | 先不做 |
+|---|---|---|---|
+| 1 | 补齐导表。Game 按 client、server 各导一遍；Start 客户端和服务器都导，但只一份 Localhost，且表里没有世界线 0 | Game 的两套产物，加上 Start 的客户端、服务器产物，都在导出目录里（数据 + C#） | 不拷进 Unity，不写编辑器，外壳不改成读表拉线 |
+| 2 | 在 `WorldTree.UnityEditor` 写扩展编辑器，把**客户端**那套产物拷进 Unity 工程 | 编辑器里能把客户端配置拷到位 | 不在这一阶段改服务器怎么读配置 |
+
+#### 阶段 1 步骤
+
+先定死这几条，做的时候不再改口径：
+
+- 目录保持 `ExcelTool`。模板用已经在的 `ExcelTool/Luban/Templates`，不在 `Excel` 下再复制一份。
+- Game 和 Start 分两个 conf。不把 ET 的起服表拷进仓库，对照看参照工程。
+- 分组只有 `c`（客户端）和 `s`（服务器）。前后端共用的表分组写成 `c,s`，会同时进两套导出。不建名为 `cs` 的分组：它既不是 `c` 也不是 `s`，现有两个目标都不会带上它。参照工程输出目录里的 `cs` 是目标 `all` 的落盘文件夹，客户端专有和服务器专有的表也会进去，本计划不做。不建 `e`。Start 两边都有，行可以不同。
+- 生成代码的命名空间用 `WorldTree`，不用参照里的 `ET`。
+- 探针表只用 `int` / `string`。不搬 `builtin.xml`，不做 Unity 向量映射。
+- 产物只落在 `ExcelTool/Output`。代码目录用 `CSharp`，不用草稿 bat 里的 `Script`。
+
+1. **改导出脚本的路径。（已做）** `配置导出.bat` 里模板改成 `..\Luban\Templates`，配置改成 `Excels\_Game.conf`，输出根目录仍是 `..\Output`。删掉 StartConfig、`cs`、`Editor`、`cs-editor-json` 这几段。失败直接退出，不要 `pause`。检查和导出留到第 4 步，因为 conf 还没有。
+2. **写 `_Game.conf`。（已做）** 放在 `ExcelTool/Excel/Excels/`。`groups` 只有 `c` 和 `s`，`targets` 只有 `client`（分组 `c`）和 `server`（分组 `s`），`manager` 为 `Tables`，`topmodule` 为 `WorldTree`。`schemaFiles` 只挂 `_Tables.xlsx`。
+3. **做一张探针，用来证明两套导出会按分组切开。（已做）** `_Tables.xlsx` 照参照的表头建三行，`read_schema_from_file` 为 true：`ClientProbe` 分组 `c`，`ServerProbe` 分组 `s`，`SharedProbe` 分组 `c,s`。每张表一个 xlsx，字段只有 `Id`（int）和 `Name`（string），各一行数据。表类名就是这三个名字，记录类是 `ClientProbeData` 这种，避免和表类在 `WorldTree` 命名空间里重名。
+4. **检查再导出。（已做）** 本机要有 `Microsoft.NETCore.App` 8（`Luban.runtimeconfig.json` 写的是 net8.0）。先对 `client`、`server` 各跑一次检查：`-d bin -c cs-bin --validationFailAsError true -x forceLoadDatas=1 -x outputSaver=null`。都通过后清掉 `ExcelTool/Output`，再各导一次：
+   - `-t client` → `Output/Bytes/c/GameConfig`、`Output/CSharp/c`
+   - `-t server` → 同上，目录换成 `s`
+5. **看 Game 产物对不对。** 客户端目录里有 `ClientProbe` 和 `SharedProbe`，没有 `ServerProbe`。服务器反过来。bytes、C# 两处都要有。C# 的命名空间是 `WorldTree`。
+6. **另写 Start 入口。** `Excel/Excels/StartConfig/Localhost/_Start.conf`：分组 `c` 和 `s`，目标 `client` 与 `server`，`topmodule` 仍是 `WorldTree`，`schemaFiles` 只挂同目录的 `_Tables.xlsx`。表 `WorldLineConfig`，字段 `Process`（int）、`LineId`（int）、`WorldType`（string）、`HeartType`（string）、`FrameTime`（int）。`LineId` 从 1 起，不写 0，也不写 `MainWorld`。现在没有第二条业务世界线，表可以空着，只把结构导出来。不建 Publish、Release、Stress、Test。
+7. **Start 两边都导。** 检查 `client` 和 `server`，通过后数据写到 `Output/Bytes/{c,s}/StartConfig/Localhost`，C# 写到 `Output/CSharp/{c,s}`。这是主线程将来要读的配置，不是 Game 表。
+8. **确认没有接到运行时。** Unity 工程和 `Console/Server` 里没有新增文件。外壳仍写死 `Create(0, MainWorld, …)`。`Options.ConfigPath` 先只表示将来主线程要读的目录。
+
+做到第 8 步就停，等确认后再进阶段 2。阶段 2 不要照参照里的 `Export.bat` 去拷，改成编辑器扩展。
 
 ---
 
-## 5. 踩过的坑（重要）
+## 4. 踩过的坑（重要）
 
-- **`overrideReferences: true` 会切断对项目里所有预编译 DLL 的自动引用**。凡改成 true 的 asmdef，必须把它（含源生成器生成的那部分代码）直接 `using` 到的每个预编译 dll 都显式列进 `precompiledReferences`。踩过：Sirenix、Unsafe。
-- **netstandard 缺 `System.Runtime.CompilerServices.Unsafe`**（net6.0 内置，netstandard 要引 `System.Runtime.CompilerServices.Unsafe` 包）。Core 编译报错"Unsafe 不存在"就是它。
-- **Core.dll 现在有 3 个外部依赖，Unity 里都得有**：`NLog.dll`、`CommandLine.dll`、`System.Runtime.CompilerServices.Unsafe.dll`（都在 `Assets/Plugins/`）。删别的插件时不要把 Unsafe.dll 一起清掉。Unity 会按强名称校验：插件必须是 NLog 5.4.0（程序集 `5.0.0.0`）和 CommandLineParser 2.9.1（程序集 `2.9.1.0`），和 `WorldTree.Core.csproj` 的包版本一致。旧的 NLog 4 / CommandLine 2.8 会让 `WorldTree.Core.dll` 拒绝加载。
-- **源生成器/分析器与目标框架无关**（跑在 Roslyn 编译器进程里），netstandard2.1 完全能用它们。
-- **HybridCLR：`AOTGenericReferences.cs` 是自动生成物，别手改**（`GenericReferenceWriter` 生成）。真正生效的 `PatchedAOTAssemblyList` 是**自动检测**热更代码的泛型用法得出的；`patchAOTAssemblies`（设置）在本版本基本没接进生成流程。
-- **HybridCLR 社区版**：预编译 dll 放 Assets = AOT（不可热更）。热更 dll 是 `CompileDll` 从**源码**编译的，光把 dll 丢 `Temp/Bin/Debug` 无效。旗舰版 DHE 才能热更 AOT dll。
-- **HybridCLR：AOT 程序集不能引用热更程序集**。`WorldTree.Config` 一直在 `HotUpdate/` 目录却漏加进 `hotUpdateAssemblies`，MyGenAll 的 IL2CPP 构建报 `Failed to resolve assembly: WorldTree.HotFix`。已把 Config 加进 hotUpdateAssemblies 解决。
-- **Agent shell 不是 git-bash，是 OMP 自带的 shell**。`$0` / `$SHELL` 皆空，`uname` 报 `MS/Windows`，`//FI` 这类写法不做路径转换；`Get-ChildItem` 这类 pwsh cmdlet 仍然 command not found。`ls`/`cat`/`sed`/`find`/`rg`/`grep` **全是 shell 内建 shim**，不是真实可执行（`type rg` → "rg is a shell builtin"；`rg --version` 却谎称 `15.1.0`）；`dotnet`/`git`/`python`/`code` 才是真实 exe。`dotnet build`、直接跑 `Console/Server/Bin/App.exe` 都能跑通。
-- **宿主终端只决定继承进来的环境变量，不参与工具行为**。实测对比 VS2026 Developer PowerShell 与 VSCode 集成终端：cwd、shell 身份、`uname`、`rg` 输出、grep 工具命中数**逐字节一致**。差异全在环境变量层：从 VS2026 启动会继承 `VSINSTALLDIR`/`CommandPromptType`（MSVC/MSBuild 在 PATH 上，`dotnet build` 用不到）；从 VSCode 启动则带 `TERM_PROGRAM=vscode`、`VSCODE_INJECTION=1`，且 `TERM=dumb`。**已验证两条：`svg` 代码块渲染成空白**（整块内容连里面的文字一起消失，不是降级成源码文本），**`mermaid` 代码块则正常渲染成 ASCII 方框箭头图**。所以在本终端画图**只用 `mermaid`，不要用 `svg`**；两者都不合适的（精确布局、几何图形）就用表格或文字。这不影响任何工具执行。所以"换终端"不能解释工具行为差异。
-- **写盘无限制（更正旧记录）**：工作区、`%TEMP%`、`C:\` 根、用户目录都实测可写；`dotnet build Framework/Core/WorldTree.Core.csproj` 0 错误，NuGet 也能拉新包。构建时的 `NU1900 无法加载源 …/vulnerability.base.json` 只是漏洞审计源取不到，**不是还原失败**，别当成网络问题。旧记录的 `SetNamedSecurityInfoW failed (Win32 5): grantWrite` 已不适用。
-- **shim `rg -c` 会制造假零，别用它查命中**。`rg -c <pat> <dir>` 走 GNU `grep -rc` 语义：**遍历到的每个文件都打印 `path:0`**（真 ripgrep 只打印有命中的文件）。实测 `rg -c "self as INode" .` 输出 **1978 行，其中 1972 行是 `:0`**，真正命中只有 6 个文件。再叠上 `shellMinimizer` 与输出截断，一屏全是 `:0`，极易被误读成"0 matches"。查命中用 `rg <pat> <path> | wc -l`（同一模式 → 13 行）或 grep 工具。**grep 工具本身正常**：同一模式 + `path: "."` 返回 11 处；`path` 指到被 `.gitignore` 屏蔽的 `Framework/Core/obj` 也能命中；`.gitignore`、`.idea/**` 这类隐藏文件同样会被搜。唯一真会返回 0 的坑是**模式里带了字面引号**（工具和 shim 都 0）。
-- **`lsp` 工具在本仓库空转**：`xd://lsp` 的 `status` → "No language servers configured for this project"。本机没有 `csharp-ls`/`OmniSharp`/`roslyn-ls`，`~/.dotnet/tools` 为空，所以系统提示里"改导出符号前先查 references"在这里只能退回 grep。现成候选：VSCode C# 扩展自带 `~/.vscode/extensions/ms-dotnettools.csharp-*/.roslyn/roslyn-language-server.exe`（Roslyn 5.11.0，需 `Microsoft.NETCore.App 10.0.0`，本机 10.0.11 满足）。实测 stdio 握手能返回合法 initialize 响应（`Content-Length: 3065`），但重复运行不稳定，**尚未接进 OMP**。
-- **`smol` / `slow` 已改接 DeepSeek（2026-10-15 已修）**。原先 `~/.omp/agent/config.yml` 只赋了 `default: cursor/claude-opus-4-7-fast`，`smol` / `slow` 未赋值**却不按文档继承 `default`**，一律 `Cursor PROVIDER_ERROR`，连带废掉 `judge` / `judge_batch` 与 `sonic` 子代理（`task` 正常，因为它走 default 系）。现在（2026-10-15 四改，Copilot 额度一天见底后换回 Cursor）：`default: cursor/claude-sonnet-5-high`（1M，$2/$10）、`smol: deepseek/deepseek-v4-flash`（按 token 直付，不碰任何订阅额度）、`slow: cursor/claude-opus-5-5`（1M，$4/$20）。注意 **Cursor 上 `claude-sonnet-5-5` 只有 200K**，1M 的 Sonnet 得用 effort 变体 `claude-sonnet-5-high`。改完**无需重启**：配置文件有监听，`cfg://modelRoles` 立刻可见，三个角色 + `judge` + `sonic` 实测全通。附带好处是杂活不再消耗 Cursor 的月度配额（DeepSeek 是独立 provider，按 token 直接计费；flash 约 $0.30/$1.20 每 M，错峰半价）。
-- **`omp usage` 的报表能力退化了（2026-10-15 观察，原因不明）**：早先 Cursor 报三个桶（`Cursor Models` 百分比 / `Other Models` $20 / `On-Demand` $1），Copilot 报 `Premium Requests 93 / 1,500`；同一账号后来变成 Cursor 只剩 `gpt-4 requests · 0 used`、Copilot 变成 `OAuth account — no usage data`（Alibaba/Kimi 一直是 no usage data）。**凭据刷新丢用量读取能力、还是账号状态变化，我区分不了。** 后果：**再也无法在 OMP 里核对这些订阅的剩余额度**，只能去各自网页控制台看。别再依赖 `omp usage` 做配额判断。
-- **`claude-opus-5-5` 的首字延迟明显高于 sonnet**：同一探针实测 default(sonnet-5-high) 2.3s / smol(deepseek-flash) 1.9s / **slow(opus-5-5) 6.7s**。放 `slow` 这种低频档是合适的。
-- **写角色值时必须用 `omp models find <id>` 验一下 id 真实存在**：最早 `default` 写的是 `cursor/claude-opus-4-7-fast`，它在 catalog 里**不是真实 id**（`omp models find` 无匹配），只能靠模糊匹配落地；而 opus-4-7 的 `-fast` 变体估价是 $30/$150 每 M，非 fast 的 `high` 是 $5/$25 —— 差 6 倍，选错很贵。另注：改 `default` **不影响已在运行的会话** —— 会话级覆盖优先，要新开会话才用新 default。想知道某会话实际跑在哪个模型上，查 `~/.omp/agent/agent.db` 的 `model_usage` 表（`last_used_at` 最靠前的那个即当前会话模型），`model_perf` 表还有每模型的样本数 / TTFT / 生成耗时。
-- **账号级自动替补：Copilot → Cursor → DeepSeek（2026-10-15 配好）**：`retry.fallbackChains` = `{"github-copilot/*": ["cursor/grok-4.7-fast", "deepseek/deepseek-v4-pro"], "cursor/*": ["deepseek/deepseek-v4-pro"]}`，两跳目标均实测可达。配合已有的 `retry.enabled`、`modelFallback: true`、`fallbackOn: "any"`，**任何** `github-copilot` 模型请求失败（额度耗尽，以及之前那种 `PROVIDER_ERROR`）都会自动按链切到 Cursor，再不行切 DeepSeek；`fallbackRevertPolicy: cooldown-expiry` 到期后回主模型。**撞墙前主动切也已开**：`retry.usageAwareFallback: true` + `retry.usageReservePolicy: "auto"` —— 剩余额度低于 `retry.usageReservePct`（默认 10%）时不再询问，直接静默切走（同 provider 多账号会先换账号）。注意 fallback **条目**写 `"deepseek/*"` 表示"保留失败模型的 id 只换 provider"，会得到不存在的 `deepseek/grok-4.7-fast`，所以条目必须写具体模型名；`"cursor/*"` 只有在**键**位置才表示"所有 cursor 模型"。
-- **`git commit` 有硬拦截，但 `eval` 能绕过（护栏 ≠ 边界）**：`~/.omp/agent/config.yml` 的 `bash.patterns` 把 `git commit*` 与 `git -C * commit*` 设为 `deny`。`deny` 在 `yolo` 下仍然生效，也约束 headless 子代理（两者均实测），且 `true && git commit` 这类复合命令的分段检查同样命中；`git status`/`git log` 等读操作不受影响。**但 `bash.patterns` 管不到 `eval` 里 spawn 的子进程**（实测 `subprocess.run(["git","commit","--dry-run"])` 畅通）。所以"不许自动提交"实际靠 `AGENTS.md` 第 7 节的约定 + 这条工具护栏；要变成真边界需设 `tools.approval.eval: prompt|deny`，代价是每次确认或彻底失去 eval。作者已选护栏方案。
-- **9 个 `.cs` 曾是 GBK 编码，已于 2026-10-15 转成 UTF-8（无 BOM）**。发现途径：`ast_grep` 的 parse issue（`stream did not contain valid UTF-8`，且它会**静默跳过**该文件）。`read` 会直接拒绝非 UTF-8 文件（`Cannot read binary file … not valid UTF-8 text`）。编译器按 UTF-8 处理它们，多数非 ASCII 只在注释里，所以一直没暴露。清单（全仓 720 个 `.cs` 里就这 9 个，其余都是 UTF-8）：`Framework/Core/Rule/RuleBaseLifecycle/SerializeRule.cs`（**core 目录，只有中文注释**）、`Avalonia/AvaloniaMVVMTest/Views/MainWindow.axaml.cs`、`Avalonia/Core/View/Control/WindowTitleBar.axaml.cs`、`Avalonia/InputBindTool/Node/View/App.axaml.cs`、`Avalonia/InputBindTool/Node/View/InputBindPage.axaml.cs`、`Unity/Assets/Scripts/HotUpdate/HotFix/Server/Modules/Input/InputDriverMouse.cs`、`Unity/Assets/Scripts/HotUpdate/HotFix/Server/_Test/MainWorldRule.cs`、`VSPlugin/OperateLinkFile/Windows/InputFieldWindow.cs`、`WinForm/InputBindTool/InputBind/Program.cs`。其中 `MainWindow.axaml.cs`（2 处）与 `MainWorldRule.cs`（1 处）的**字符串字面量里有中文** → 按 UTF-8 读会变 U+FFFD，运行时文案乱码。修复方式：按 gbk 解码、按 UTF-8 **无 BOM** 重写。修后已核对四项：与 HEAD 逐字一致（仅编码变化）、全仓 720 个 `.cs` 非 UTF-8 归零、`read` 能正常打开、Core 编译 0 错误。**另注：仓库里另有 502 个 `.cs` 是 UTF-8 带 BOM**（`.idea/encodings.xml` 的 `addBOMForNewFiles: with BOM`），属既有状态、无碍，不要去"修"。还有 `core.autocrlf=true`：git blob 存 LF、工作区是 CRLF，比对内容前先归一化行尾，否则会把纯编码改动误判成整文件改动。
-- **`github-copilot` 可用，但"目录里的模型"≠"账号能用的模型"（2026-10-15 实测）**。抽测 14 个：12 个真跑通，包括 `claude-haiku-5.5`、`gpt-6-luna`、`gpt-6-luna-1m`、`gpt-5.6-luna(-1m)`、`gpt-5-mini`、`claude-sonnet-5` / `-5.5`（含 1M 变体）；`gpt-5.4-nano`、`raptor-mini`、`gpt-6-astra-1m`、`claude-fable-5` 返回 400 `model_not_supported`（账号未启用该模型；`enableAllGitHubCopilotModels` 会在 `/login` 时发 `POST /models/{id}/policy {state:"enabled"}`，**重新登录可能解锁更多**）。额度是 Premium Requests，两个要点：① **计数器有明显滞后**，别用"立刻重读没变"判断是否消耗（实测 1 → 22 是隔了几分钟才反映的，17 次请求约花 21 次额度）；② `getCopilotPremiumRequests` 对 **agent 发起的轮次计 0**，只有 user 发起的轮次按 multiplier 计——真实 agentic 工作里大量轮次是 agent 发起的，所以 1500 次远比看起来耐用。另有 <1 的倍率（文档例：`gpt-4o: 0`、`grok-code-fast-1: 0.25`、`claude-haiku-4.5: 0.33`、`claude-opus-4.6: 3`），但 `omp models --json` 不暴露 multiplier，挑模型时只能按文档。用法：`omp -p "..." --model github-copilot/<id>` 可以直接验证某个模型能不能用。**完整实测清单（46 可用 / 48 不支持）+ 价格表 + 计费机制 + 重测方法见仓库根目录 `MODEL-PROVIDERS.md`（本地文件，已加进 `.gitignore`，不会随仓库分发）。** **Claude 在两家之间是不对称的（2026-10-15 实测）**：Copilot 上**只有 Haiku 与 Sonnet 可用**（`claude-haiku-4.5`、`claude-haiku-5.5(-1m)`、`claude-sonnet-5(-1m)`、`claude-sonnet-5.5(-1m)`），**全部 Opus（4.5/4.6/4.7/4.8/4.8-1m/4.8-fast/5/5-1m/5.5/5.5-1m）、全部 Fable、sonnet-4/4.5/4.6 都是 400 `model_not_supported`**；而 **Cursor 上 Claude 全系可用（含 Opus）** —— `cursor/claude-opus-5-5-1m` 与 `claude-opus-5-5` **同价 $4/$20**（1M 版等于白送），`claude-opus-5`/`4.8`/`4.7` 是 $5/$25。所以「要 Opus 只能走 Cursor」。另注 `claude-sonnet-5.5` 的思考档支持到 **`max`**，而 `grok-4.7` 最高只到 `xhigh`。
-- **`alibaba-token-plan` 就是阿里官方的千问 Token Plan —— 更正 2026-10-15 早先的误判**。先前我据"域名不是 `aliyuncs.com`、模型里混着 `siliconflow/…`"判定它是"第三方中转站"，**这个结论是错的**，证据不足就下了判断。硬证据：① `qianwenai.com` / `qwencloud.com` / `qianwenaiapi.com` 三个域名**全部**由 `Alibaba Cloud Computing Ltd. d/b/a HiChina`（阿里自有注册商）注册，全部用 `ALIBABADNS` 解析（RDAP 实测）；② `platform.qianwenai.com` 的**用户协议/产品协议/隐私政策托管在 `terms.alicdn.com`**（阿里自有法律条款 CDN）；③ 页面有 **浙ICP备2023034206号-53**；④ 控制台侧边栏与官方国际站 `home.qwencloud.com` **逐项一致**（含相同的 "Token Plan" / 按量付费 / 重复的按量付费条目）。实际端点 `https://maas.qianwenaiapi.com/compatible-mode/v1` 是阿里自有主机（域名建于 2026-04-24，对应"Token Plan 全面升级"）。**结论：没有中转站需要逃离，凭据本来就是官方的。**
-- **但 `token-plan.*.maas.aliyuncs.com` 不是这个产品的端点**：实测把现有 key 发到 `token-plan.cn-beijing.maas.aliyuncs.com` 与 `token-plan.ap-southeast-1.maas.aliyuncs.com` 都是 **401 `InvalidApiKey`**，而它自己的 `maas.qianwenaiapi.com` 返回 200 / 176 个模型。文档里那两个 host 属于 QwenCloud 国际或另一套 Token Plan，**region key 不可互换**。所以 `/login alibaba-token-plan` 时选 region 1/2 可能让现有 key 失效 —— 要重登请选 **3（自定义 URL）**，或干脆沿用现有凭据（key 内嵌的 `baseUrl` 会覆盖目录默认）。凭据形态：`data` = `{"key": "<JSON 字符串>", "source": "login"}`，内层是 `{"token":"sk-ws-H.***","baseUrl":"…"}` —— **baseUrl 嵌在 key 里**，所以同 key 重登换不掉端点。查端点方法：`auth_credentials.data` 里正则抽 `https?://` 片段（**只抽 URL，别打印整个 data，那是密钥**）。
-- **额度不可见 + 价格不可见，两条都可解决**：① 额度追踪要求凭据里带 `cookie`（从 `cs-data.qwencloud.com` 取的浏览器 Cookie）；当前只有 `{token, baseUrl}`，所以永远 "no usage data"。`/login` 会**可选**提示填 Cookie，或直接往 `agent.db` 那条 `data` 里补 `cookie` 字段（需重启 OMP）。② 价格缺失是因为上游 `/models` 只返回 `{id, object, created, owned_by}`，但**官方定价页是公开可查的**（站点自述"API 价格 按量计费，模型价格透明可查"）。从那儿抄数字填进 `~/.omp/agent/models.yml` 的 `providers.alibaba-token-plan.modelOverrides.<id>.cost` —— **已实测有效**（占位价测试后 `pricingStatus` 变 `fixed`，测完已删除占位文件）。**但附 Cookie 这条路对中国站大概率不成立**：OMP 的抓取逻辑写死 `https://home.qwencloud.com/tool/user/info.json` + `https://cs-data.qwencloud.com/data/api.json?product=sfm_bailian&...`；实测 `home.qwencloud.com` 该路径 **200（存在）** 而 `platform.qianwenai.com` 对应路径 **404（不存在）**，两个站后端不同、会话不通用（`cs-data.qianwenai.com` 存在但路径形状不同）。所以拿 `qianwenai.com` 的 Cookie 去问 `qwencloud.com` 的接口基本拿不到数据 —— **额度只在网页控制台看**最省事。另注：Cookie 是会话凭据（等同账号访问权），**不要贴进对话**；真要交，走 `omp browser-relay install` + `omp browser-relay` 让中继直接读取，值不落对话记录。
-- **断开 provider 只能靠会话内 `/logout`**：`omp --help` 的子命令表里**没有 `logout`**（实测 `grep -c logout` → 0）；`omp auth` 只有 `export`/`import`，且 import 是**合并**不是替换 —— 导出一份去掉某 provider 的 JSON 再导入，**删不掉**旧凭据。要删只能：会话内 `/logout` 选 provider，或直接删 `agent.db` 的 `auth_credentials` 行（不推荐，绕过应用层）。
-- **`/login alibaba-token-plan` 的 region 选项**：`1` = 国际（`token-plan.ap-southeast-1.maas.aliyuncs.com`）｜`2` = 中国北京（`token-plan.cn-beijing.maas.aliyuncs.com`）｜`3` = 自定义 URL。**选 1/2 前先确认 key 属于哪一套** —— `qianwenai.com` 那套 Token Plan 的 key 在这两个 host 上实测 401，别盲选。备选千问 provider：`alibaba-coding-plan`（DashScope 编码套餐，`coding-intl.dashscope.aliyuncs.com/v1` / `coding.dashscope.aliyuncs.com/v1`）、`qwen-portal`（`https://portal.qwen.ai/v1`，key 从 `chat.qwen.ai` 拿）。
-- **Python 子进程默认按 cp936 解码，会把非 ASCII 输出读成乱码**：本机 `locale.getpreferredencoding()` = `cp936`，所以 `subprocess.run(..., text=True)` 不加 `encoding` 时，读子进程的 UTF-8 中文会变成乱码 —— 实测模型回 `收到` 而显示成 `鏀跺埌`（`'收到'.encode('utf-8').decode('gbk')` 可还原）。**读子进程输出一律显式 `encoding="utf-8"`**。shell 里的 `cat`/`rg` 不受影响。
-- **`ast_grep` 已启用（2026-10-15）**，原生实现、支持 `csharp`、无需安装。注意它的输出在 hashline 编辑模式下只渲染到模式的字面前缀：`class $N` 的命中行显示成 `*46|class`，不带上下文。所以把它当**定位器**用（拿 file+line），内容再 `read` 看。
-- **BCL `Task` 完成后的恢复要等下一次心跳 tick**。`INode.GetAwaiter(Task)` / `TreeTaskLink` 完成后都走 `WorldContext.Post`，而 `WorldContext.requestQueue` 由 `UpdateRule` 每帧排空一次（整队排空）。心跳 `frameTime=1000ms` 时，一个 300ms 的 `Task` 实测 1003ms 才恢复。别拿它做毫秒级计时。
-- **控制台必须在 `Console/Server/Bin` 下启动。** `WorldLog` 只在 `../ProjectConfig/NLog` 存在时创建 NLog logger（配置在 `Console/Server/ProjectConfig/NLog/NLog.config`，日志 `Console/Server/Logs/Log.txt`，同时打到控制台）。在仓库根目录跑时 `logger` 为 null，`Log` / `Error` 空引用；心跳线程上 `WorldContext.Update` 捕获异常后再 `LogError`，这个 NRE 会盖住真正的异常。本 shell 不把当前目录当命令路径：`App.exe` 和 `./App.exe` 都是 command not found，要用带目录的路径（`Console/Server/Bin/App.exe`），工作目录仍设为 Bin。`WorldHeart` 不退出，看完日志后 `taskkill /F /IM App.exe`。
-- **`INodeProxy.OnCreate` 不能删。** 直接实现 `INode` 的类型由 `INodeProxyGenerator` 生成 `INodeProxyRule.OnCreate(this)`。编号和 `SupportNodeRule` 已不在这里。
-- **`SupportNodeRule` 每次都进写锁**，类型已经支持也一样。热路径（每次 `PoolGetUnit`）不要加。读档的法则查找发生在 `PoolGetNode` 之前，`ReadValue` 里的调用不能省。
-- **法则接口对应的 `XxxRule<N>` 不要手写。** `RuleSupplementGenerator` 会生成同名抽象基类。再写一个就 CS0101。想跳过生成就给接口标 `ISourceGeneratorIgnore`。
-- **生成器静态集合不能跨程序集共享**。`RuleSupplementHelper` 等用静态字典收集再 `AddSource`。MyGenAll 的 IL2CPP Player 构建用 `/shared` 编译器服务器并行编 `CoreUnity`/`Module`/`HotFix`，字典被串台后，Module 的 `InputBindSupplement` 会被写进 CoreUnity（CoreUnity 不引用 Module，CS0246），接着 `GenerateStripedAOTDlls failed`。编辑器/VS 分开编所以能过。`SourceGeneratorBase.Execute` 已加锁串行。改 `Unity.Analysis.dll` 后要重启 Unity，否则旧编译器服务器还握着旧 dll。程序集名单在 `UnityTool/Analysis/ProjectGeneratorSetting.cs`，和 asmdef 是对得上的；`Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs` 是 .NET 侧（`WorldTree.Core` / `Module`），别和 Unity 那份混。
+> 分三段：**4.1 工程与程序集**（仓库结构/依赖/程序集）、**4.2 本机环境与工具用法**（agent shell / 编辑器工具 / 编码约定）、**4.3 运行时与源生成器**。已解决的只留"症状 → 解法"，未解决的留判据。**模型 / provider / 额度 / 凭据相关不在这里**，全部见仓库根 `MODEL-PROVIDERS.md`。
+
+### 4.1 工程与程序集
+
+- **`overrideReferences: true` 会切断项目里所有预编译 DLL 的自动引用**：改成 true 的 asmdef，必须把代码（含源生成器生成的那部分）直接 `using` 到的每个 dll 显式写进 `precompiledReferences`。踩过 Sirenix、Unsafe。
+- **netstandard 少 `System.Runtime.CompilerServices.Unsafe`**（net6.0 才内置）→ 引包即可。Core 报"Unsafe 不存在"就是它。
+- **`WorldTree.Core.dll` 的 3 个外部依赖，Unity 里都得有**：`NLog.dll`、`CommandLine.dll`、`System.Runtime.CompilerServices.Unsafe.dll`（均在 `Assets/Plugins/`）。**Unity 按强名称精确校验版本**——NLog 必须 5.4.0（程序集 `5.0.0.0`）、CommandLineParser 必须 2.9.1（程序集 `2.9.1.0`），与 `WorldTree.Core.csproj` 的包版本一致；旧版会让 Core.dll **拒绝加载**。清插件时别把 Unsafe.dll 一起删。
+- **源生成器/分析器与目标框架无关**（跑在 Roslyn 编译器进程里）→ netstandard2.1 照用。
+- **HybridCLR 三条**：① `AOTGenericReferences.cs` 是自动生成物**别手改**——真正生效的 `PatchedAOTAssemblyList` 由"热更代码的泛型用法"**自动检测**得出，`patchAOTAssemblies` 设置在本版本基本没接进生成流程。② 社区版里 **Assets 下的预编译 dll = AOT，不可热更**；热更 dll 必须由 `CompileDll` 从**源码**编，光把 dll 丢 `Temp/Bin/Debug` 无效（旗舰版 DHE 才有 AOT 热更）。③ **AOT 程序集不能引用热更程序集**——`WorldTree.Config` 曾在 `HotUpdate/` 下却漏进 `hotUpdateAssemblies`，MyGenAll 的 IL2CPP 构建报 `Failed to resolve assembly: WorldTree.HotFix`（已修）。
+### 4.2 本机环境与工具用法
+
+- **agent 的 shell 是 OMP 自带 POSIX 风格 shell**（不是 git-bash、也不是 PowerShell）：`$0`/`$SHELL` 空、`uname` 报 `MS/Windows`、`Get-ChildItem` 等 pwsh cmdlet 不存在；`ls`/`cat`/`sed`/`find`/`rg`/`grep` **全是内建 shim**（`type rg` → "shell builtin"，`rg --version` 却谎称 15.1.0），只有 `dotnet`/`git`/`python`/`code` 是真 exe。**唯一会咬人的 shim 坑：`rg -c <pat> <dir>` 走 GNU 语义，会给每个扫到的文件打印 `path:0`**（实测 `rg -c "self as INode" .` 输出 1978 行、其中 1972 行是 `:0`）→ 极易误读成"0 命中"，叠上输出截断更糟。查命中用 `rg <pat> <path> | wc -l` 或 `grep` 工具（**grep 工具本身正常**：能搜到被 `.gitignore` 屏蔽的 `Framework/Core/obj`，也能搜 `.idea/**` 等隐藏文件；唯一真会返回 0 的情况是**模式里带字面引号**）。
+- **宿主终端只决定继承的环境变量，不参与工具行为**（VS2026 Developer PowerShell 与 VSCode 集成终端实测逐字节一致：cwd / shell 身份 / `uname` / `rg` 输出 / grep 命中数）→ "换终端"解释不了工具行为差异。**渲染只认 `mermaid`**（渲染成 ASCII 方框箭头）：`svg` 代码块渲染成**空白**（整块连文字一起消失，不是降级成源码）→ 本终端画图只用 `mermaid`，精确布局/几何用表格或文字。
+- **写盘无限制**（更正旧记录）：工作区、`%TEMP%`、`C:\` 根、用户目录实测可写；`dotnet build` + NuGet 拉包正常。构建时的 `NU1900 无法加载源 …/vulnerability.base.json` 只是**漏洞审计源**取不到，**不是还原失败**，别当网络问题。旧记录 `SetNamedSecurityInfoW failed (Win32 5): grantWrite` 已不适用。
+- **`xd://lsp` 在本仓库空转**（`No language servers configured`；本机无 `csharp-ls`/`OmniSharp`，`~/.dotnet/tools` 空）→ 系统提示里"改导出符号前先查 references"只能退回 grep。可用候选：VSCode C# 扩展自带的 `~/.vscode/extensions/ms-dotnettools.csharp-*/.roslyn/roslyn-language-server.exe`（stdio 握手实测能返回合法 initialize，但重复运行不稳定，**未接进 OMP**）。
+- **`git commit` 有硬拦截但 `eval` 能绕过（护栏 ≠ 边界）**：`bash.patterns` 把 `git commit*` / `git -C * commit*` 设为 `deny`（`yolo` 下仍生效、也管 headless 子代理、复合命令分段同样命中；`git status`/`log` 等读操作不受影响），但**管不到 `eval` 里 spawn 的子进程**（实测 `subprocess.run(["git","commit","--dry-run"])` 畅通）→ 所以"不许自动提交"实际靠 §6 的约定 + 这条护栏；要变真边界得设 `tools.approval.eval: prompt|deny`（代价是每次确认或彻底失去 eval），作者已选护栏方案。
+- **9 个 `.cs` 曾是 GBK，2026-10-15 已全部转成 UTF-8（无 BOM）**（全仓 720 个 `.cs` 里就这 9 个）。发现途径：`ast_grep` 的 parse issue（`stream did not contain valid UTF-8`，它会**静默跳过**该文件）+ `read` 直接拒收非 UTF-8（`Cannot read binary file … not valid UTF-8 text`）。**有实际影响的只有两个**：`Avalonia/AvaloniaMVVMTest/Views/MainWindow.axaml.cs`、`Unity/Assets/Scripts/HotUpdate/HotFix/Server/_Test/MainWorldRule.cs` —— 它们的**字符串字面量里有中文**，按 UTF-8 读会变 U+FFFD（运行期文案乱码）；其余 7 个的非 ASCII 只在注释里，所以一直没暴露。修法：按 gbk 解码 → 按 UTF-8 **无 BOM** 重写。**另注**：仓库里有 **502 个 `.cs` 是 UTF-8 带 BOM**（`.idea/encodings.xml` 的 `addBOMForNewFiles: with BOM`），属既有状态、**别去"修"**；`core.autocrlf=true`（blob 存 LF、工作区 CRLF）→ **比对内容前先归一化行尾**，否则纯编码改动会被误判成整文件改动。
+- **模型 / provider / 额度 / 凭据的事一律看仓库根 `MODEL-PROVIDERS.md`**（本地文件，已 gitignore，不随仓库分发）：角色配置与坑、Cursor 命名坑、Claude 在 Copilot/Cursor 的不对称、Premium 计费机制与重测法、fallback 链写法、`omp usage` 失效、provider 断开、自定义 provider 写法与 `~/.env` 凭据语义、OpenDesign 订阅通道（§2.1）、DeepSeek 三条通道的经济性（§3）、`alibaba-token-plan`（已禁用）四条坑。**本节不复述**（2026-10-16 从本节挪过去）。
+- **Python 子进程默认按 cp936 解码，会把非 ASCII 读成乱码**：本机 `locale.getpreferredencoding()` = `cp936`，`subprocess.run(..., text=True)` 不加 `encoding` 时读子进程的 UTF-8 中文会变乱码 —— 实测模型回 `收到` 而显示成 `鏀跺埌`（`'收到'.encode('utf-8').decode('gbk')` 可还原）。**读子进程输出一律显式 `encoding="utf-8"`**（shell 里的 `cat`/`rg` 不受影响）。
+- **`ast_grep` 已启用**（原生实现、支持 `csharp`、免安装）。注意它的输出在 hashline 编辑模式下只渲染到模式的字面前缀：`class $N` 的命中行显示成 `*46|class`，不带上下文 → 当**定位器**用（拿 file+line），内容再 `read` 看。
+### 4.3 运行时与源生成器
+
+- **BCL `Task` 完成后的恢复要等下一次心跳 tick**：`INode.GetAwaiter(Task)` / `TreeTaskLink` 完成后都走 `WorldContext.Post`，而该队列由 `UpdateRule` **每帧整队排空**。心跳 `frameTime=1000ms` 时，一个 300ms 的 `Task` 实测 **1003ms** 才恢复 → 别拿它做毫秒级计时。
+- **`Console/Server` 必须在 `Bin` 下启动**：`WorldLog` 只在 `../ProjectConfig/NLog` 存在时才建 NLog logger（配置 `Console/Server/ProjectConfig/NLog/NLog.config`，日志 `Console/Server/Logs/Log.txt`，同时打到控制台）。在仓库根跑时 logger 为 null → `Log`/`Error` 空引用，而心跳线程上这个 NRE 会**盖住真正的异常**。本 shell 不把当前目录当命令路径（`App.exe` / `./App.exe` 都 command not found）→ 用 `Console/Server/Bin/App.exe`（cwd 仍设 Bin）；`WorldHeart` 不退出，看完日志 `taskkill /F /IM App.exe`。
+- **`INodeProxy.OnCreate` 不能删**：直接实现 `INode` 的类型由 `INodeProxyGenerator` 生成 `INodeProxyRule.OnCreate(this)`（编号和 `SupportNodeRule` 已不在这里）。
+- **`SupportNodeRule` 每次都进写锁**（类型已支持也一样）→ 热路径（每次 `PoolGetUnit`）不要加；但读档的法则查找发生在 `PoolGetNode` **之前**，`ReadValue` 里的调用不能省。
+- **法则接口对应的 `XxxRule<N>` 不要手写** —— `RuleSupplementGenerator` 会生成同名抽象基类，再写一个就 CS0101；要跳过生成就给接口标 `ISourceGeneratorIgnore`。
+- **生成器静态集合不能跨程序集共享**：`RuleSupplementHelper` 等用静态字典收集再 `AddSource`，而 MyGenAll 的 IL2CPP 构建用 `/shared` 编译器服务器**并行**编 `CoreUnity`/`Module`/`HotFix`，字典串台后会把 Module 的 `InputBindSupplement` 写进 CoreUnity（CoreUnity 不引用 Module → CS0246），接着 `GenerateStripedAOTDlls failed`（编辑器/VS 分开编所以能过）。已让 `SourceGeneratorBase.Execute` 加锁串行。**改 `Unity.Analysis.dll` 后必须重启 Unity**，否则旧编译器服务器还握着旧 dll。程序集名单：Unity 侧 `UnityTool/Analysis/ProjectGeneratorSetting.cs`（与 asmdef 对得上），.NET 侧 `Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs`（`WorldTree.Core` / `Module`），**别混**。
 
 ---
 
-## 6. 工具链：Unity 代码执行（MCP）
+## 5. 工具链：Unity 代码执行（MCP）
 
 在运行中的 Unity 编辑器里**编译并执行 C# 代码**（注入代码走内存编译，不需要 Unity 重编译，也不需要用户点一下 Unity）。
 
@@ -194,9 +265,10 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 
 **2026-10-16 已删除文件通道**（原 `AgentExec.cs` + `Unity/.dshexec/`）：两条通道共用同一个执行器没必要，MCP 有确定性反馈与工具化；`CSharpExecutor.cs` 就是从它里面提出来的。删前实测：`AgentExec` / `CSEditorHelper` 类型在已加载程序集里命中 **0**，写进 `command.json` 无人消费。
 
-## 7. 维护约定
+## 6. 维护约定
 
 - **模型不许自动提交**：绝不运行 `git commit`（含 `git -C … commit` 等任何等价形式）。改动做完就停下报告，由作者审阅后**手动提交**。硬保险：`~/.omp/agent/config.yml` 的 `bash.patterns` 已把 `git commit*` 设为 `deny`，`yolo` 模式下同样生效。
 - 用法写进第 2 节，写成怎么用，不写完成记录。
-- 还没做完的事写第 3 节。新坑追加到第 5 节。
+- 宿主和 OMP 提供的东西写文首。不要把架构抄进技能或始终生效的规则；TTSR 只在同一种失误重复出现时加。
+- 还没做完的事写第 3 节。新坑追加到第 4 节。
 - 保持精炼：目标是 2 分钟内能 re-onboard。

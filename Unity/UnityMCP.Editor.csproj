@@ -57,17 +57,17 @@
     <Analyzer Include="D:\Projects\GameEngine\Unity\GitHub\WorldTree\Unity\Assets\Plugins\Unity.Analysis.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnityMcpTool.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnityMcpToolRegistry.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMcpLogBuffer.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnitySelectTool.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnityRefreshTool.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMcpPaths.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMcpServer.cs" />
+    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMcpHttpTransport.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnityExecTool.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\CSharpExecutor.cs" />
     <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnityLogsTool.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMcpPaths.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMcpLogBuffer.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnityMcpTool.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnityRefreshTool.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnitySelectTool.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\Tools\UnityMcpToolRegistry.cs" />
-    <Compile Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMcpHttpTransport.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\AOT\GameEntry\_MonoTest\UnityMCP\Editor\UnityMCP.Editor.asmdef" />

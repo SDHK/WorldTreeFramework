@@ -164,7 +164,7 @@ namespace WorldTree
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
 				//self.Root.AddComponent(out CodeLoader _).HotReload();
-				self.AddComponent(out TreeDataTest _);
+				//self.AddComponent(out TreeDataTest _);
 				//self.AddComponent(out ViewTest _);
 
 				//NodeRuleHelper.CallRule(self, default(TestEvent), 1.5f, 1, out string str);
@@ -218,7 +218,7 @@ namespace WorldTree
 		}
 
 		[NodeRule(nameof(GuiUpdateTimeRule<InitialDomain>))]
-			//[RuleSwitch1(nameof(self))]
+		//[RuleSwitch1(nameof(self))]
 		public static void OnGuiUpdateTimeRule(InitialDomain self, TimeSpan timeSpan)
 		{
 
