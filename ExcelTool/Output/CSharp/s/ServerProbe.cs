@@ -12,44 +12,44 @@ using Luban;
 
 namespace WorldTree
 {
-/// <summary>
-/// 服务器探针
-/// </summary>
-public partial class ServerProbe
-{
-    private readonly System.Collections.Generic.Dictionary<int, ServerProbeData> _dataMap;
-    private readonly System.Collections.Generic.List<ServerProbeData> _dataList;
+    /// <summary>
+    /// 服务器探针
+    /// </summary>
+    public partial class ServerProbe
+    {
+        private readonly System.Collections.Generic.Dictionary<int, ServerProbeData> _dataMap;
+        private readonly System.Collections.Generic.List<ServerProbeData> _dataList;
     
-    public ServerProbe(ByteBuf _buf)
-    {
-        int n = _buf.ReadSize();
-        _dataMap = new System.Collections.Generic.Dictionary<int, ServerProbeData>(n);
-        _dataList = new System.Collections.Generic.List<ServerProbeData>(n);
-        for(int i = n ; i > 0 ; --i)
+        public ServerProbe(ByteBuf _buf)
         {
-            ServerProbeData _v;
-            _v = global::WorldTree.ServerProbeData.DeserializeServerProbeData(_buf);
-            _dataList.Add(_v);
-            _dataMap.Add(_v.Id, _v);
+            int n = _buf.ReadSize();
+            _dataMap = new System.Collections.Generic.Dictionary<int, ServerProbeData>(n);
+            _dataList = new System.Collections.Generic.List<ServerProbeData>(n);
+            for(int i = n ; i > 0 ; --i)
+            {
+                ServerProbeData _v;
+                _v = global::WorldTree.ServerProbeData.DeserializeServerProbeData(_buf);
+                _dataList.Add(_v);
+                _dataMap.Add(_v.Id, _v);
+            }
         }
-    }
 
-    public System.Collections.Generic.IReadOnlyDictionary<int, ServerProbeData> DataMap => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<ServerProbeData> DataList => _dataList;
+        public System.Collections.Generic.IReadOnlyDictionary<int, ServerProbeData> DataMap => _dataMap;
+        public System.Collections.Generic.IReadOnlyList<ServerProbeData> DataList => _dataList;
 
-    public ServerProbeData GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
-    public ServerProbeData Get(int key) => _dataMap[key];
-    public ServerProbeData this[int key] => _dataMap[key];
+        public ServerProbeData GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
+        public ServerProbeData Get(int key) => _dataMap[key];
+        public ServerProbeData this[int key] => _dataMap[key];
 
-    public void ResolveRef(Tables tables)
-    {
-        foreach(var _v in _dataList)
+        public void ResolveRef(Tables tables)
         {
-            _v.ResolveRef(tables);
+            foreach(var _v in _dataList)
+            {
+                _v.ResolveRef(tables);
+            }
         }
-    }
 
-}
+    }
 
 }
 

@@ -96,6 +96,20 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 ### 程序集
 `Framework/Core` 编成 `WorldTree.Core.dll`（`netstandard2.1`），拷到 `Unity/Assets/Plugins/WorldTree/`。Unity 的 asmdef 用 `overrideReferences` 显式引用这份 DLL。HybridCLR 里 Core 是 AOT，不热更。依赖 `NLog.dll`（5.4.0，程序集 5.0.0.0）、`CommandLine.dll`（2.9.1，程序集 2.9.1.0）、`System.Runtime.CompilerServices.Unsafe.dll`，都在 `Assets/Plugins/`。改 Core 要重新出包。改生成器后重编 `Unity.Analysis.dll`，并重启 Unity。
 
+### 配置导出
+导表在 `ExcelTool`，跑 `Excel/配置导出.bat`。本机要有 `Microsoft.NETCore.App` 8。脚本先检查 Game 和 Start 的 client、server，四次都通过才清空 `ExcelTool/Output`，再导出。失败是 `exit /b 1`，没有 `pause`。产物不进 Unity，也不进 `Console/Server`。
+
+分组只有 `c`（客户端）和 `s`（服务器）。共用表写成 `c,s`。不建 `cs`、不建 `e`，不导 json，没有编辑器代码。命名空间是 `WorldTree`。数据是 Luban 的 bin（`.bytes`），代码目标是 `cs-bin`。`manager` 不能空：空了会生成没有类名的 `.cs`。
+
+| | 入口 | 聚合类 | 现在有的表 |
+|---|---|---|---|
+| Game | `Excel/Excels/_Game.conf`，登记 `_Tables.xlsx` | `Tables` | `ClientProbe`（`c`）、`ServerProbe`（`s`）、`SharedProbe`（`c,s`）。表类用这个名字，记录类加 `Data`。这是探针，不是业务表 |
+| Start | `Excel/Excels/StartConfig/Localhost/_Start.conf` | `StartTables` | `WorldLineConfig`，记录类 `WorldLineConfigData`，索引 `LineId`。只有 Localhost，表是空的 |
+
+两边的 C# 都写进 `Output/CSharp/{c,s}`，所以聚合类不能同名。Start 导出时 `cleanUpOutputDir=0`，避免清掉已经写出的 Game 代码。bytes 分开：`Output/Bytes/{c,s}/GameConfig` 和 `Output/Bytes/{c,s}/StartConfig/Localhost`。
+
+外壳仍写死 `Create(0, MainWorld, …)`。世界线 0 是模型主线程，不进 Start 表；`LineId` 从 1 起。`Options.ConfigPath` 默认 `StartConfig/Localhost`，只被 `SetOptions` 存下，没有人读。`ConfigManager` 挂在 `WorldLine` 上，还没有读 bytes 的加载器。主线程起来之后才该读 Start，再 `Create` 别的线；Start 只在主线程读一次。
+
 ### 关键文件地图
 | 路径 | 说明 |
 |---|---|
@@ -108,6 +122,7 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 | `Unity/Assets/Scripts/HotUpdate/{HotFix,HotFixUnity,Config}/` | HybridCLR 热更程序集 |
 | `Unity/Assets/Scripts/AOT/{GameEntry,Plugins}/` | AOT 入口 + 第三方 dll（Sirenix/LiteDB/Sqlite） |
 | `Console/Server/` | 纯 .NET 服务器示例（`Program.cs` 里 `WorldTreeCore.Create(...)`） |
+| `ExcelTool/` | Luban 导表。入口 `Excel/配置导出.bat`，产物在 `Output/`。用法见「配置导出」 |
 | `Unity/ProjectSettings/HybridCLRSettings.asset` | HybridCLR 配置（hotUpdateAssemblies / patchAOTAssemblies） |
 | `Unity/.../Editor/ThirdParty/HybridCLR/` | HybridCLR 自定义脚本（HybridCLREditor / AOTGenericReferences 生成物） |
 | `Unity/Assets/Scripts/AOT/GameEntry/_MonoTest/UnityMCP/Editor/` | Unity MCP 服务器（`unity_exec` / `unity_refresh` / `unity_logs` / `unity_select`，HTTP `127.0.0.1:8099/mcp`）；客户端配置在 `.omp/mcp.json` |
@@ -119,63 +134,53 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 ## 3. 进行中
 
 ### Luban
+导表的用法在第 2 节「配置导出」。下一步是阶段 2：在 `WorldTree.UnityEditor`（`Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/Editor/WorldTree.UnityEditor.asmdef`）写扩展，把**客户端**那套产物拷进 Unity。不要照参照工程的 `Export.bat` 去拷。这一阶段不改服务器怎么读配置，外壳也不改成读表拉线。
 
-#### 临时记录（本模块结束可删）
+对照管线只看 `E:\Storage\Daily\BaiduNetdisk\WX20220921\config\`。不要照 HeadMaster 的 `Luban.ClientServer.exe`。
 
-阶段 1 的做法已经写在下面。第 1 到 4 步已做：检查和导出都通过。`manager` 必须写 `Tables`，留空会生成没有类名的 `.cs`。第 5 步还没逐项核对产物。业务表内容不用看。
+#### 项目结构（阶段 2 前设计，暂不搬文件）
 
-新会话先看这些：
+框架、产品、工具拆成四个平级仓库，放同一父目录（可选叫 `WorldTreeWorkspace`）。这是设计蓝图，现在的实际目录还没搬。
 
-- 本段，然后是下面的阶段表和「阶段 1 步骤」。
-- 本仓库脚本：`ExcelTool/Excel/配置导出.bat`（UTF-8，无 BOM，CRLF，中文注释。每行中文后面空一行，否则 cmd 在代码页 65001 下会把下一行拆开）。模板是 `..\Luban\Templates`，配置路径是 `Excels\_Game.conf`（已写。分组 `c`/`s`，目标 `client`/`server`，`topmodule` 为 `WorldTree`，`schemaFiles` 只挂 `_Tables.xlsx`。探针三张：`ClientProbe` 分组 `c`，`ServerProbe` 分组 `s`，`SharedProbe` 分组 `c,s`。表类用这个名字，记录类加 `Data` 后缀，避免和表类重名），输出根目录是 `..\Output`。只留客户端 `c` 和服务器 `s` 的 Bytes / CSharp。没有 Json，没有 Start、没有 `cs`、没有编辑器。脚本先检查 client 和 server，通过后清空 `Output`，再导出 Bytes、CSharp。失败是 `exit /b 1`，没有 `pause`。`manager` 为 `Tables`。
-- 工具本体：`ExcelTool/Luban/Luban.dll`，`Luban.runtimeconfig.json` 要 net8.0。模板已经在 `ExcelTool/Luban/Templates`（含 `cs-bin`）。
-- 本地不再留 ET 起服副本。原先拼错的 `Execls` 已删，只剩 `Excel/Excels`。对照仍看参照工程里的 `Excel\Excels\StartConfig\<环境>\_Start.conf`。
-- 外壳怎么拉起世界线 0：`Console/Server/App/Program.cs`、`Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/_Init/UnityWorldTree.cs`。同样写死 `Create(0)` 的还有 `Console/ConfigTool`、Avalonia、WinForm。
-- 创建口：`Framework/Core/Core/WorldLine/WorldTreeCore.cs` 的 `Create(int id, Type worldType, Type heartType, int frameTime)`。`Options` 在同目录 `Options.cs`，`ConfigPath` 默认 `StartConfig/Localhost`，`Process` 默认 `1`。现在没有人读这两个值。
-- 配置节点：`Framework/Core/Config/` 下的 `Config`、`ConfigGroup`、`ConfigManager`。`ConfigManager` 是 `ComponentOf<WorldLine>`。只有类型，没有读 bytes 的加载器。
-- 阶段 2 才会用到的编辑器程序集：`Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/Editor/WorldTree.UnityEditor.asmdef`。
+```
+（同一父目录）
+WorldTree/                 框架核心仓库，只放纯 C#
+  Framework/
+    Core/                  核心：节点 / 法则 / 异步 / 序列化 / 池
+    AnalyzerCore/          分析器主体
+    SourceGeneratorCore/   源生成器主体
+  Tooling/Luban/           Luban.dll + Templates，唯一一份，共享
 
-参照工程（只看管线）：
+Template/                  模板仓库，也是最好的演示
+  Console/                 控制台宿主
+  Avalonia/                Avalonia 宿主
+  WinForm/                 WinForm 宿主
+  WPF/                     WPF 宿主
+  Godot/                   Godot 宿主（预留，走 .NET 模式）
+  Unity/                   Unity 宿主工程（含 CoreUnity 适配，依赖 UnityEngine）
+  ExcelTool/               导表演示，只有自己的表
+  UnityAnalysis/           分析器打包：配置 asmdef + 拷 Plugins
 
-- 新导表在 `E:\Storage\Daily\BaiduNetdisk\WX20220921\config\`。入口 `Excel\Excels\_Game.conf`：分组 `c`/`s`/`e`，目标 `client`/`server`/`all`，`topmodule` 为 `ET`，`schemaFiles` 是 `Defines`、`__tables__.xlsx`、`__beans__.xlsx`、`__enums__.xlsx`。起服是 `Excel\Excels\StartConfig\<环境>\_Start.conf`，环境有 Localhost、Publish、Release、Stress、Test。
-- 模板 `Excel\Templates`（`cs-bin`、`cs-editor-json`）。工具 `config\Luban\Luban.dll`（net8.0）。全量脚本 `Excel\导出配置新.bat`：先 `-t all` 检查（`outputSaver=null`），再清 `config\Output`，按 client / server / all 导出。数据在 `Output\Bytes` 与 `Output\Json`，代码在 `Output\CSharp\{c,s,cs}`，编辑器代码在 `Output\Editor`。
-- `Excel\自定义导出\Export.bat` 只拷指定表的 bytes/json。`GitRoot.txt` 当前是 `D:\Projects\ET8.0`，不是 HeadMaster。
-- 游戏工程 `D:\Projects\GameEngine\Unity\HeadMaster_81` 只收结果：`Config\Excel`、`Config\Json`，生成代码在 `Unity\Assets\Scripts\Model\Generate\{Client,Server,ClientServer}\Config`。它自己的 `Tools\Luban`（`Luban.ClientServer.exe` + XML）是上一代，要读的 `Unity\Assets\Config\Excel` 已经不在。不要照那套接。
+xxx游戏项目1/              从 Template 复制
+  Tables/                  策划 SVN：xlsx 源表 + conf
+  ExcelTool/               配置导出.bat + Output/（Luban 本体共享）
+  Server/                  控制台服务器
+  Unity/                   Unity 客户端
+  UnityAnalysis/           分析器打包
 
-当前框架和这条管线的差别：外壳一律先拉世界线 0，Start 要等这条线起来之后才当配置读。WorldTree 还没有 ET 那种进程 / 区服 / 场景表，也没有第二条业务世界线。
+InputTool/                 从 Template 复制
+  ExcelTool/               自己的表
+  WPF/                     桌面程序
+```
 
-目标：同一套 Luban 配置能导出**服务器**和**客户端**两套配置。参照上面的新导表，不照 HeadMaster 的旧工具。参照里的 `all` 目标、编辑器代码、起服的多环境，本计划先不做。
+关键约定：
 
-Game 和 Start 分成两个入口，现在就把形状定下来。Game 是游戏内容，客户端和服务器按分组各要一份。Start 也是一张配置表，不是启动前的特殊文件。客户端和服务器的外壳都先 `Create(0, MainWorld, …)`，世界线 0 是模型主线程，不进表。主线程起来之后才读 Start，再 `Create` 真正的运行线程。`ConfigManager` 挂在 `WorldLine` 上，没有线就没有配置节点，所以 0 不能由这张表创建。表只描述 0 以外的线，列仍是 `Process`、`LineId`、`WorldType`、`HeartType`、`FrameTime`，不照搬 ET 的机器、区服、场景。Start 只在主线程上读，读完去拉别的线，不要在运行线上再读一遍又去拉线。这一阶段外壳仍写死 `Create(0)`，不真的读表。
-
-| 阶段 | 做什么 | 做到哪算完 | 先不做 |
-|---|---|---|---|
-| 1 | 补齐导表。Game 按 client、server 各导一遍；Start 客户端和服务器都导，但只一份 Localhost，且表里没有世界线 0 | Game 的两套产物，加上 Start 的客户端、服务器产物，都在导出目录里（数据 + C#） | 不拷进 Unity，不写编辑器，外壳不改成读表拉线 |
-| 2 | 在 `WorldTree.UnityEditor` 写扩展编辑器，把**客户端**那套产物拷进 Unity 工程 | 编辑器里能把客户端配置拷到位 | 不在这一阶段改服务器怎么读配置 |
-
-#### 阶段 1 步骤
-
-先定死这几条，做的时候不再改口径：
-
-- 目录保持 `ExcelTool`。模板用已经在的 `ExcelTool/Luban/Templates`，不在 `Excel` 下再复制一份。
-- Game 和 Start 分两个 conf。不把 ET 的起服表拷进仓库，对照看参照工程。
-- 分组只有 `c`（客户端）和 `s`（服务器）。前后端共用的表分组写成 `c,s`，会同时进两套导出。不建名为 `cs` 的分组：它既不是 `c` 也不是 `s`，现有两个目标都不会带上它。参照工程输出目录里的 `cs` 是目标 `all` 的落盘文件夹，客户端专有和服务器专有的表也会进去，本计划不做。不建 `e`。Start 两边都有，行可以不同。
-- 生成代码的命名空间用 `WorldTree`，不用参照里的 `ET`。
-- 探针表只用 `int` / `string`。不搬 `builtin.xml`，不做 Unity 向量映射。
-- 产物只落在 `ExcelTool/Output`。代码目录用 `CSharp`，不用草稿 bat 里的 `Script`。
-
-1. **改导出脚本的路径。（已做）** `配置导出.bat` 里模板改成 `..\Luban\Templates`，配置改成 `Excels\_Game.conf`，输出根目录仍是 `..\Output`。删掉 StartConfig、`cs`、`Editor`、`cs-editor-json` 这几段。失败直接退出，不要 `pause`。检查和导出留到第 4 步，因为 conf 还没有。
-2. **写 `_Game.conf`。（已做）** 放在 `ExcelTool/Excel/Excels/`。`groups` 只有 `c` 和 `s`，`targets` 只有 `client`（分组 `c`）和 `server`（分组 `s`），`manager` 为 `Tables`，`topmodule` 为 `WorldTree`。`schemaFiles` 只挂 `_Tables.xlsx`。
-3. **做一张探针，用来证明两套导出会按分组切开。（已做）** `_Tables.xlsx` 照参照的表头建三行，`read_schema_from_file` 为 true：`ClientProbe` 分组 `c`，`ServerProbe` 分组 `s`，`SharedProbe` 分组 `c,s`。每张表一个 xlsx，字段只有 `Id`（int）和 `Name`（string），各一行数据。表类名就是这三个名字，记录类是 `ClientProbeData` 这种，避免和表类在 `WorldTree` 命名空间里重名。
-4. **检查再导出。（已做）** 本机要有 `Microsoft.NETCore.App` 8（`Luban.runtimeconfig.json` 写的是 net8.0）。先对 `client`、`server` 各跑一次检查：`-d bin -c cs-bin --validationFailAsError true -x forceLoadDatas=1 -x outputSaver=null`。都通过后清掉 `ExcelTool/Output`，再各导一次：
-   - `-t client` → `Output/Bytes/c/GameConfig`、`Output/CSharp/c`
-   - `-t server` → 同上，目录换成 `s`
-5. **看 Game 产物对不对。** 客户端目录里有 `ClientProbe` 和 `SharedProbe`，没有 `ServerProbe`。服务器反过来。bytes、C# 两处都要有。C# 的命名空间是 `WorldTree`。
-6. **另写 Start 入口。** `Excel/Excels/StartConfig/Localhost/_Start.conf`：分组 `c` 和 `s`，目标 `client` 与 `server`，`topmodule` 仍是 `WorldTree`，`schemaFiles` 只挂同目录的 `_Tables.xlsx`。表 `WorldLineConfig`，字段 `Process`（int）、`LineId`（int）、`WorldType`（string）、`HeartType`（string）、`FrameTime`（int）。`LineId` 从 1 起，不写 0，也不写 `MainWorld`。现在没有第二条业务世界线，表可以空着，只把结构导出来。不建 Publish、Release、Stress、Test。
-7. **Start 两边都导。** 检查 `client` 和 `server`，通过后数据写到 `Output/Bytes/{c,s}/StartConfig/Localhost`，C# 写到 `Output/CSharp/{c,s}`。这是主线程将来要读的配置，不是 Game 表。
-8. **确认没有接到运行时。** Unity 工程和 `Console/Server` 里没有新增文件。外壳仍写死 `Create(0, MainWorld, …)`。`Options.ConfigPath` 先只表示将来主线程要读的目录。
-
-做到第 8 步就停，等确认后再进阶段 2。阶段 2 不要照参照里的 `Export.bat` 去拷，改成编辑器扩展。
+- 依赖不靠目录嵌套，靠 csproj `ProjectReference` 指向 `WorldTree/Framework/Core`（Unity 侧用编好的 `WorldTree.Core.dll`）。框架稳定后再上 NuGet。
+- `Framework/` 只放纯 C#（核心、模块、分析器主体）。依赖具体平台的适配不归框架：CoreUnity 依赖 UnityEngine，是 Unity 适配，跟 `Template/Unity` 宿主走；`Unity.Analysis` 是打包层（配置 asmdef + 拷 Plugins），每个 Unity 项目一份。
+- Luban 本体只一份在 `Tooling/Luban`，各项目 `ExcelTool/` 只放 `conf` / `xlsx` / `bat`。
+- 表代码分离：xlsx 源表归策划（SVN，Excel 二进制 diff 不了，靠 lock 防并发），工具和产物归程序员（git）。个人项目先不建 SVN，但源表目录（`ExcelTool/Excel/Excels/`）和产物目录（`Output/`）保持分开，将来拆就是挪源表 + 改 bat 路径。
+- 命名全英文，`Template` 不叫 `Demo`。
+- 阶段 2 前不搬文件，阶段 2 拷贝目标仍是现在的 `WorldTree/Unity`。
 
 ---
 
@@ -201,6 +206,9 @@ Game 和 Start 分成两个入口，现在就把形状定下来。Game 是游戏
 - **模型 / provider / 额度 / 凭据的事一律看仓库根 `MODEL-PROVIDERS.md`**（本地文件，已 gitignore，不随仓库分发）：角色配置与坑、Cursor 命名坑、Claude 在 Copilot/Cursor 的不对称、Premium 计费机制与重测法、fallback 链写法、`omp usage` 失效、provider 断开、自定义 provider 写法与 `~/.env` 凭据语义、OpenDesign 订阅通道（§2.1）、DeepSeek 三条通道的经济性（§3）、`alibaba-token-plan`（已禁用）四条坑。**本节不复述**（2026-10-16 从本节挪过去）。
 - **Python 子进程默认按 cp936 解码，会把非 ASCII 读成乱码**：本机 `locale.getpreferredencoding()` = `cp936`，`subprocess.run(..., text=True)` 不加 `encoding` 时读子进程的 UTF-8 中文会变乱码 —— 实测模型回 `收到` 而显示成 `鏀跺埌`（`'收到'.encode('utf-8').decode('gbk')` 可还原）。**读子进程输出一律显式 `encoding="utf-8"`**（shell 里的 `cat`/`rg` 不受影响）。
 - **`ast_grep` 已启用**（原生实现、支持 `csharp`、免安装）。注意它的输出在 hashline 编辑模式下只渲染到模式的字面前缀：`class $N` 的命中行显示成 `*46|class`，不带上下文 → 当**定位器**用（拿 file+line），内容再 `read` 看。
+- **`配置导出.bat` 的中文行会吃掉下一行**：文件是 UTF-8、无 BOM、CRLF。代码页 65001 下，一行中文紧挨着下一行时，cmd 会把下一行拆开。每一行中文后面空一行。行尾 `^` 续行，`^` 后面不能有空格。
+- **Luban 的 `manager` 留空会生成 `.cs`**：类声明变成 `public partial class `，文件名也是空的。Game 写 `Tables`，Start 写 `StartTables`。两套 C# 落在同一个 `Output/CSharp/{c,s}`，同名 `partial` 的构造器对不上。Start 导出必须 `cleanUpOutputDir=0`，否则清掉已经写出的 Game 代码。
+- **`cs-bin` 模板里命名空间内的类少一层缩进**：`ExcelTool/Luban/Templates/cs-bin` 的 `tables.sbn`、`table.sbn`、`bean.sbn` 已在命名空间内部整体加了 4 格。换官方模板时这层会丢。
 ### 4.3 运行时与源生成器
 
 - **BCL `Task` 完成后的恢复要等下一次心跳 tick**：`INode.GetAwaiter(Task)` / `TreeTaskLink` 完成后都走 `WorldContext.Post`，而该队列由 `UpdateRule` **每帧整队排空**。心跳 `frameTime=1000ms` 时，一个 300ms 的 `Task` 实测 **1003ms** 才恢复 → 别拿它做毫秒级计时。

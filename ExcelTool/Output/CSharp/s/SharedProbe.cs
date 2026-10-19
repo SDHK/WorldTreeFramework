@@ -12,44 +12,44 @@ using Luban;
 
 namespace WorldTree
 {
-/// <summary>
-/// 前后端共用探针
-/// </summary>
-public partial class SharedProbe
-{
-    private readonly System.Collections.Generic.Dictionary<int, SharedProbeData> _dataMap;
-    private readonly System.Collections.Generic.List<SharedProbeData> _dataList;
+    /// <summary>
+    /// 前后端共用探针
+    /// </summary>
+    public partial class SharedProbe
+    {
+        private readonly System.Collections.Generic.Dictionary<int, SharedProbeData> _dataMap;
+        private readonly System.Collections.Generic.List<SharedProbeData> _dataList;
     
-    public SharedProbe(ByteBuf _buf)
-    {
-        int n = _buf.ReadSize();
-        _dataMap = new System.Collections.Generic.Dictionary<int, SharedProbeData>(n);
-        _dataList = new System.Collections.Generic.List<SharedProbeData>(n);
-        for(int i = n ; i > 0 ; --i)
+        public SharedProbe(ByteBuf _buf)
         {
-            SharedProbeData _v;
-            _v = global::WorldTree.SharedProbeData.DeserializeSharedProbeData(_buf);
-            _dataList.Add(_v);
-            _dataMap.Add(_v.Id, _v);
+            int n = _buf.ReadSize();
+            _dataMap = new System.Collections.Generic.Dictionary<int, SharedProbeData>(n);
+            _dataList = new System.Collections.Generic.List<SharedProbeData>(n);
+            for(int i = n ; i > 0 ; --i)
+            {
+                SharedProbeData _v;
+                _v = global::WorldTree.SharedProbeData.DeserializeSharedProbeData(_buf);
+                _dataList.Add(_v);
+                _dataMap.Add(_v.Id, _v);
+            }
         }
-    }
 
-    public System.Collections.Generic.IReadOnlyDictionary<int, SharedProbeData> DataMap => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<SharedProbeData> DataList => _dataList;
+        public System.Collections.Generic.IReadOnlyDictionary<int, SharedProbeData> DataMap => _dataMap;
+        public System.Collections.Generic.IReadOnlyList<SharedProbeData> DataList => _dataList;
 
-    public SharedProbeData GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
-    public SharedProbeData Get(int key) => _dataMap[key];
-    public SharedProbeData this[int key] => _dataMap[key];
+        public SharedProbeData GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
+        public SharedProbeData Get(int key) => _dataMap[key];
+        public SharedProbeData this[int key] => _dataMap[key];
 
-    public void ResolveRef(Tables tables)
-    {
-        foreach(var _v in _dataList)
+        public void ResolveRef(Tables tables)
         {
-            _v.ResolveRef(tables);
+            foreach(var _v in _dataList)
+            {
+                _v.ResolveRef(tables);
+            }
         }
-    }
 
-}
+    }
 
 }
 

@@ -12,42 +12,42 @@ using Luban;
 
 namespace WorldTree
 {
-public sealed partial class ClientProbeData : Luban.BeanBase
-{
-    public ClientProbeData(ByteBuf _buf) 
+    public sealed partial class ClientProbeData : Luban.BeanBase
     {
-        Id = _buf.ReadInt();
-        Name = _buf.ReadString();
-    }
+        public ClientProbeData(ByteBuf _buf) 
+        {
+            Id = _buf.ReadInt();
+            Name = _buf.ReadString();
+        }
 
-    public static ClientProbeData DeserializeClientProbeData(ByteBuf _buf)
-    {
-        return new ClientProbeData(_buf);
-    }
+        public static ClientProbeData DeserializeClientProbeData(ByteBuf _buf)
+        {
+            return new ClientProbeData(_buf);
+        }
 
-    /// <summary>
-    /// 编号
-    /// </summary>
-    public readonly int Id;
-    /// <summary>
-    /// 名字
-    /// </summary>
-    public readonly string Name;
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public readonly int Id;
+        /// <summary>
+        /// 名字
+        /// </summary>
+        public readonly string Name;
    
-    public const int __ID__ = -1966814257;
-    public override int GetTypeId() => __ID__;
+        public const int __ID__ = -1966814257;
+        public override int GetTypeId() => __ID__;
 
-    public  void ResolveRef(Tables tables)
-    {
-    }
+        public  void ResolveRef(Tables tables)
+        {
+        }
 
-    public override string ToString()
-    {
-        return "{ "
-        + "Id:" + Id + ","
-        + "Name:" + Name + ","
-        + "}";
+        public override string ToString()
+        {
+            return "{ "
+            + "Id:" + Id + ","
+            + "Name:" + Name + ","
+            + "}";
+        }
     }
-}
 }
 

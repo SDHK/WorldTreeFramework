@@ -23,16 +23,19 @@ for %%I in ("%SCRIPT_ROOT%\..\Luban\Luban.dll") do set "LUBAN_DLL=%%~fI"
 for %%I in ("%SCRIPT_ROOT%\..\Luban\Templates") do set "DIR_TEMPLATES=%%~fI"
 for %%I in ("%SCRIPT_ROOT%\..\Output") do set "DIR_OUTPUT=%%~fI"
 
-rem Game 的入口。
+rem Game 的入口。Start 只有 Localhost，没有其它环境。
 
 for %%I in ("%SCRIPT_ROOT%\Excels\_Game.conf") do set "FILE_CONFIG_GAME=%%~fI"
+for %%I in ("%SCRIPT_ROOT%\Excels\StartConfig\Localhost\_Start.conf") do set "FILE_CONFIG_START=%%~fI"
 
-rem 只要客户端 c 和服务器 s。没有名为 cs 的目录，没有 StartConfig，也没有编辑器目录。
+rem 只要客户端 c 和服务器 s。没有名为 cs 的目录，也没有编辑器目录。
 
-rem 代码目录用 CSharp，不用 Script。
+rem 代码目录用 CSharp，不用 Script。Game 和 Start 的 C# 写进同一个目录。
 
 for %%I in ("%DIR_OUTPUT%\Bytes\c\GameConfig") do set "DIR_OUTPUT_BYTES_CLIENT=%%~fI"
 for %%I in ("%DIR_OUTPUT%\Bytes\s\GameConfig") do set "DIR_OUTPUT_BYTES_SERVER=%%~fI"
+for %%I in ("%DIR_OUTPUT%\Bytes\c\StartConfig\Localhost") do set "DIR_OUTPUT_BYTES_START_CLIENT=%%~fI"
+for %%I in ("%DIR_OUTPUT%\Bytes\s\StartConfig\Localhost") do set "DIR_OUTPUT_BYTES_START_SERVER=%%~fI"
 for %%I in ("%DIR_OUTPUT%\CSharp\c") do set "DIR_OUTPUT_CSHARP_CLIENT=%%~fI"
 for %%I in ("%DIR_OUTPUT%\CSharp\s") do set "DIR_OUTPUT_CSHARP_SERVER=%%~fI"
 
@@ -60,54 +63,106 @@ if not exist "%FILE_CONFIG_GAME%" (
     exit /b 1
 )
 
+if not exist "%FILE_CONFIG_START%" (
+    echo 找不到启动表入口：%FILE_CONFIG_START%
+
+    exit /b 1
+)
+
 rem 行尾的 ^ 把下一行接成同一条命令，^ 后面不能有空格。
 
-rem 检查时 outputSaver=null，只验证，不写文件。
+rem 检查时 outputSaver=null，只验证，不写文件。四次检查都通过才清空输出目录。
 
-echo ========================检查 client========================
+echo ========================检查 Game client========================
 dotnet "%LUBAN_DLL%" ^
     -t client --conf "%FILE_CONFIG_GAME%" --customTemplateDir "%DIR_TEMPLATES%" ^
     -d bin -c cs-bin ^
     --validationFailAsError true -x forceLoadDatas=1 -x outputSaver=null
 if errorlevel 1 (
-    echo 客户端检查失败
+    echo 客户端游戏表检查失败
 
     exit /b 1
 )
 
-echo ========================检查 server========================
+echo ========================检查 Game server========================
 dotnet "%LUBAN_DLL%" ^
     -t server --conf "%FILE_CONFIG_GAME%" --customTemplateDir "%DIR_TEMPLATES%" ^
     -d bin -c cs-bin ^
     --validationFailAsError true -x forceLoadDatas=1 -x outputSaver=null
 if errorlevel 1 (
-    echo 服务器检查失败
+    echo 服务器游戏表检查失败
 
     exit /b 1
 )
 
-rem 两次检查都通过后，才清空输出目录。rd /s /q 连子目录一起删，并且不询问。
+echo ========================检查 Start client========================
+dotnet "%LUBAN_DLL%" ^
+    -t client --conf "%FILE_CONFIG_START%" --customTemplateDir "%DIR_TEMPLATES%" ^
+    -d bin -c cs-bin ^
+    --validationFailAsError true -x forceLoadDatas=1 -x outputSaver=null
+if errorlevel 1 (
+    echo 客户端启动表检查失败
+
+    exit /b 1
+)
+
+echo ========================检查 Start server========================
+dotnet "%LUBAN_DLL%" ^
+    -t server --conf "%FILE_CONFIG_START%" --customTemplateDir "%DIR_TEMPLATES%" ^
+    -d bin -c cs-bin ^
+    --validationFailAsError true -x forceLoadDatas=1 -x outputSaver=null
+if errorlevel 1 (
+    echo 服务器启动表检查失败
+
+    exit /b 1
+)
+
+rem 检查都通过后，才清空输出目录。rd /s /q 连子目录一起删，并且不询问。
 
 if exist "%DIR_OUTPUT%" rd /s /q "%DIR_OUTPUT%"
 
-echo ========================导出 client========================
+echo ========================导出 Game client========================
 dotnet "%LUBAN_DLL%" ^
     -t client --conf "%FILE_CONFIG_GAME%" --customTemplateDir "%DIR_TEMPLATES%" ^
     -d bin -x bin.outputDataDir=%DIR_OUTPUT_BYTES_CLIENT% -x outputSaver.bin.cleanUpOutputDir=0 ^
     -c cs-bin -x cs-bin.outputCodeDir=%DIR_OUTPUT_CSHARP_CLIENT% -x outputSaver.cs-bin.cleanUpOutputDir=0
 if errorlevel 1 (
-    echo 客户端导出失败
+    echo 客户端游戏表导出失败
 
     exit /b 1
 )
 
-echo ========================导出 server========================
+echo ========================导出 Game server========================
 dotnet "%LUBAN_DLL%" ^
     -t server --conf "%FILE_CONFIG_GAME%" --customTemplateDir "%DIR_TEMPLATES%" ^
     -d bin -x bin.outputDataDir=%DIR_OUTPUT_BYTES_SERVER% -x outputSaver.bin.cleanUpOutputDir=0 ^
     -c cs-bin -x cs-bin.outputCodeDir=%DIR_OUTPUT_CSHARP_SERVER% -x outputSaver.cs-bin.cleanUpOutputDir=0
 if errorlevel 1 (
-    echo 服务器导出失败
+    echo 服务器游戏表导出失败
+
+    exit /b 1
+)
+
+rem Start 的 C# 和 Game 写进同一个目录。cleanUpOutputDir=0，避免盖掉已经写出的游戏表代码。
+
+echo ========================导出 Start client========================
+dotnet "%LUBAN_DLL%" ^
+    -t client --conf "%FILE_CONFIG_START%" --customTemplateDir "%DIR_TEMPLATES%" ^
+    -d bin -x bin.outputDataDir=%DIR_OUTPUT_BYTES_START_CLIENT% -x outputSaver.bin.cleanUpOutputDir=0 ^
+    -c cs-bin -x cs-bin.outputCodeDir=%DIR_OUTPUT_CSHARP_CLIENT% -x outputSaver.cs-bin.cleanUpOutputDir=0
+if errorlevel 1 (
+    echo 客户端启动表导出失败
+
+    exit /b 1
+)
+
+echo ========================导出 Start server========================
+dotnet "%LUBAN_DLL%" ^
+    -t server --conf "%FILE_CONFIG_START%" --customTemplateDir "%DIR_TEMPLATES%" ^
+    -d bin -x bin.outputDataDir=%DIR_OUTPUT_BYTES_START_SERVER% -x outputSaver.bin.cleanUpOutputDir=0 ^
+    -c cs-bin -x cs-bin.outputCodeDir=%DIR_OUTPUT_CSHARP_SERVER% -x outputSaver.cs-bin.cleanUpOutputDir=0
+if errorlevel 1 (
+    echo 服务器启动表导出失败
 
     exit /b 1
 )

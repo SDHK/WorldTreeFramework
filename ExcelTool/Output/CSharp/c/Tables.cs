@@ -11,29 +11,29 @@ using Luban;
 
 namespace WorldTree
 {
-public partial class Tables
-{
-    /// <summary>
-    /// 客户端探针
-    /// </summary>
-    public ClientProbe ClientProbe {get; }
-    /// <summary>
-    /// 前后端共用探针
-    /// </summary>
-    public SharedProbe SharedProbe {get; }
+    public partial class Tables
+    {
+        /// <summary>
+        /// 客户端探针
+        /// </summary>
+        public ClientProbe ClientProbe {get; }
+        /// <summary>
+        /// 前后端共用探针
+        /// </summary>
+        public SharedProbe SharedProbe {get; }
 
-    public Tables(System.Func<string, ByteBuf> loader)
-    {
-        ClientProbe = new ClientProbe(loader("clientprobe"));
-        SharedProbe = new SharedProbe(loader("sharedprobe"));
-        ResolveRef();
-    }
+        public Tables(System.Func<string, ByteBuf> loader)
+        {
+            ClientProbe = new ClientProbe(loader("clientprobe"));
+            SharedProbe = new SharedProbe(loader("sharedprobe"));
+            ResolveRef();
+        }
     
-    private void ResolveRef()
-    {
-        ClientProbe.ResolveRef(this);
-        SharedProbe.ResolveRef(this);
+        private void ResolveRef()
+        {
+            ClientProbe.ResolveRef(this);
+            SharedProbe.ResolveRef(this);
+        }
     }
-}
 
 }
