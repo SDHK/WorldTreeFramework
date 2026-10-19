@@ -143,44 +143,45 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 框架、产品、工具拆成四个平级仓库，放同一父目录（可选叫 `WorldTreeWorkspace`）。这是设计蓝图，现在的实际目录还没搬。
 
 ```
-（同一父目录）
-WorldTree/                 框架核心仓库，只放纯 C#
-  Framework/
-    Core/                  核心：节点 / 法则 / 异步 / 序列化 / 池
-    AnalyzerCore/          分析器主体
-    SourceGeneratorCore/   源生成器主体
-  Tooling/Luban/           Luban.dll + Templates，唯一一份，共享
+（同一父目录，父目录名随便、不归 git）
+WorldTreeFramework/        框架核心仓库（库 1），只放纯 C#
+  Core/                    核心：节点 / 法则 / 异步 / 序列化 / 池
+  AnalyzerCore/            分析器主体
+  SourceGeneratorCore/     源生成器主体
+  Module/                  平台无关模块
 
-Template/                  模板仓库，也是最好的演示
-  Console/                 控制台宿主
-  Avalonia/                Avalonia 宿主
-  WinForm/                 WinForm 宿主
-  WPF/                     WPF 宿主
-  Godot/                   Godot 宿主（预留，走 .NET 模式）
-  Unity/                   Unity 宿主工程（含 CoreUnity 适配，依赖 UnityEngine）
-  ExcelTool/               导表演示，只有自己的表
-  UnityAnalysis/           分析器打包：配置 asmdef + 拷 Plugins
+Project/                   项目分类目录（不归 git）
+  Template/                演示 + 模板仓库（库 2），各平台平级
+    Console/               控制台宿主
+    Avalonia/              Avalonia 宿主
+    WinForm/               WinForm 宿主
+    WPF/                   WPF 宿主
+    Godot/                 Godot 宿主（预留，走 .NET 模式）
+    Unity/                 Unity 宿主工程（含 CoreUnity 适配，依赖 UnityEngine）
+    ExcelTool/             导表演示
+    UnityAnalysis/         分析器打包：配置 asmdef + 拷 Plugins
+    Luban/                 Luban 引擎（vendor 式，拷入各项目 ExcelTool）
+    InputBindTool/         输入绑定编辑器
+  xxx游戏项目1/            从 Template clone 派生（独立库）
+    Tables/                策划 SVN：xlsx 源表 + conf
+    ExcelTool/             配置导出.bat + Output/
+    Server/                控制台服务器
+    Unity/                 Unity 客户端
+    UnityAnalysis/         分析器打包
 
-xxx游戏项目1/              从 Template 复制
-  Tables/                  策划 SVN：xlsx 源表 + conf
-  ExcelTool/               配置导出.bat + Output/（Luban 本体共享）
-  Server/                  控制台服务器
-  Unity/                   Unity 客户端
-  UnityAnalysis/           分析器打包
-
-InputTool/                 从 Template 复制
-  ExcelTool/               自己的表
-  WPF/                     桌面程序
+ToolProject/               工具分类目录（不归 git）
+  InputTool/               从 Template clone 派生（独立库）
 ```
 
 关键约定：
 
-- 依赖不靠目录嵌套，靠 csproj `ProjectReference` 指向 `WorldTree/Framework/Core`（Unity 侧用编好的 `WorldTree.Core.dll`）。框架稳定后再上 NuGet。
-- `Framework/` 只放纯 C#（核心、模块、分析器主体）。依赖具体平台的适配不归框架：CoreUnity 依赖 UnityEngine，是 Unity 适配，跟 `Template/Unity` 宿主走；`Unity.Analysis` 是打包层（配置 asmdef + 拷 Plugins），每个 Unity 项目一份。
-- Luban 本体只一份在 `Tooling/Luban`，各项目 `ExcelTool/` 只放 `conf` / `xlsx` / `bat`。
-- 表代码分离：xlsx 源表归策划（SVN，Excel 二进制 diff 不了，靠 lock 防并发），工具和产物归程序员（git）。个人项目先不建 SVN，但源表目录（`ExcelTool/Excel/Excels/`）和产物目录（`Output/`）保持分开，将来拆就是挪源表 + 改 bat 路径。
+- 依赖不靠目录嵌套，靠 csproj `ProjectReference` 指向 `WorldTreeFramework/Core`（Unity 侧用编好的 `WorldTree.Core.dll`）。框架稳定后再上 NuGet。
+- `WorldTreeFramework/` 只放纯 C#（核心、模块、分析器主体）。依赖具体平台的适配不归框架：CoreUnity 依赖 UnityEngine，是 Unity 适配，跟 `Project/Template/Unity` 宿主走；`Unity.Analysis` 是打包层（配置 asmdef + 拷 Plugins），每个 Unity 项目一份。
+- Template 里各平台和共享件**平级**（不分 Project/Tool 层），这样复制到项目时相对路径不变（`Unity → Luban` 始终是 `../Luban`）。
+- Luban 引擎在 `Project/Template/Luban`，各项目 `ExcelTool/` 从它 vendor 式拷入，自己放 `conf` / `xlsx` / `bat`。
+- 表代码分离：xlsx 源表归策划（SVN，Excel 二进制 diff 不了，靠 lock 防并发），工具和产物归程序员（git）。个人项目先不建 SVN，但源表目录和产物目录保持分开，将来拆就是挪源表 + 改 bat 路径。
+- git 粒度：`WorldTreeFramework` / `Project/Template` 各一个库；`Project` / `ToolProject` 是分类目录，里面每个项目/工具从 `Project/Template` clone 派生独立库。
 - 命名全英文，`Template` 不叫 `Demo`。
-- 阶段 2 前不搬文件，阶段 2 拷贝目标仍是现在的 `WorldTree/Unity`。
 
 ---
 

@@ -32,7 +32,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiteDB" Version="5.0.21" />
+    <PackageReference Include="LiteDB" Version="5.0.17" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
@@ -48,7 +48,7 @@
   <!-- 构建后自动把 WorldTree.Module.dll/.pdb 拷贝到 Unity 工程 -->
   <Target Name="CopyToUnity" AfterTargets="Build">
     <PropertyGroup>
-      <UnityPluginsDir>$(MSBuildThisFileDirectory)..\..\Unity\Assets\Plugins\WorldTree\</UnityPluginsDir>
+      <UnityPluginsDir>$(MSBuildThisFileDirectory)..\..\..\Template\Project\Unity\Assets\Plugins\WorldTree\</UnityPluginsDir>
     </PropertyGroup>
     <MakeDir Directories="$(UnityPluginsDir)" />
     <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(UnityPluginsDir)" SkipUnchangedFiles="true" />
