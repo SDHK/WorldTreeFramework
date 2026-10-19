@@ -2,7 +2,6 @@
     "name": "WorldTree.HotFixUnity",
     "rootNamespace": "",
     "references": [
-        "GUID:fa13e42cdd837fa43b77399db2df9204",
         "GUID:5d5d5e2d0b2f4f043a69128e7d0ec763",
         "GUID:e34a5702dd353724aa315fb8011f08c3",
         "GUID:d9320a27eb0751748bee47264ab0d5eb"
@@ -13,6 +12,7 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "WorldTree.Core.dll",
+        "WorldTree.Module.dll",
         "System.Runtime.CompilerServices.Unsafe.dll"
     ],
     "autoReferenced": false,

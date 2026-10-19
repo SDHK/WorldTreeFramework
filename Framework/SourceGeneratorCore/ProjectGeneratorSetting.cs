@@ -41,7 +41,7 @@ namespace WorldTree.SourceGenerator
 		{
 			ArgumentCount = 5;
 			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
-			Add("Module", ProjectConfigHelper.ModuleConfigs);
+			Add("WorldTree.Module", ProjectConfigHelper.ModuleConfigs);
 		}
 	}
 }

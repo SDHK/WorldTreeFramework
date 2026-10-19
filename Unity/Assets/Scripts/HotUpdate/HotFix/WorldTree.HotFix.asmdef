@@ -2,7 +2,6 @@
     "name": "WorldTree.HotFix",
     "rootNamespace": "",
     "references": [
-        "GUID:fa13e42cdd837fa43b77399db2df9204",
         "GUID:5d5d5e2d0b2f4f043a69128e7d0ec763"
     ],
     "includePlatforms": [],
@@ -10,7 +9,8 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "WorldTree.Core.dll"
+        "WorldTree.Core.dll",
+        "WorldTree.Module.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

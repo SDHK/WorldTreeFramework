@@ -1,46 +1,58 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <RootNamespace>WorldTree</RootNamespace>
+    <AnalysisLevel>6.0</AnalysisLevel>
     <LangVersion>12</LangVersion>
-    <AssemblyName>Module</AssemblyName>
+    <AssemblyName>WorldTree.Module</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
+    <!--用于控制构建输出路径是否包含目标框架的版本号。-->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>DOTNET</DefineConstants>
     <OutputPath>..\..\Bin\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>DOTNET</DefineConstants>
     <OutputPath>..\..\Bin\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Unity\Assets\Scripts\WorldTreeFramework\WorldTree\Module\**\*.cs">
-      <Link>Module\%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </Compile>
+    <PackageReference Include="LiteDB" Version="5.0.21" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Core\WorldTree.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AnalyzerCore\WorldTree.AnalyzerCore.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\AnalyzerCore\WorldTree.AnalyzerCore.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\SourceGeneratorCore\WorldTree.SourceGeneratorCore.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
+  <!-- 构建后自动把 WorldTree.Module.dll/.pdb 拷贝到 Unity 工程 -->
+  <Target Name="CopyToUnity" AfterTargets="Build">
+    <PropertyGroup>
+      <UnityPluginsDir>$(MSBuildThisFileDirectory)..\..\Unity\Assets\Plugins\WorldTree\</UnityPluginsDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(UnityPluginsDir)" />
+    <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(UnityPluginsDir)" SkipUnchangedFiles="true" />
+    <Message Importance="high" Text="[WorldTree.Module] $(TargetName).dll 已拷贝到 $(UnityPluginsDir)" />
+  </Target>
 
 </Project>
- 
