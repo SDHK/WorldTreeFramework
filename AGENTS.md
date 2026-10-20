@@ -138,9 +138,9 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 
 对照管线只看 `E:\Storage\Daily\BaiduNetdisk\WX20220921\config\`。不要照 HeadMaster 的 `Luban.ClientServer.exe`。
 
-#### 项目结构（阶段 2 前设计，暂不搬文件）
+#### 项目结构（已搬完）
 
-框架、产品、工具拆成四个平级仓库，放同一父目录（可选叫 `WorldTreeWorkspace`）。这是设计蓝图，现在的实际目录还没搬。
+框架、产品、工具拆成平级仓库，放同一父目录（`WorldTreeWorkspace`）。
 
 ```
 （同一父目录，父目录名随便、不归 git）
@@ -166,7 +166,6 @@ Project/                   项目分类目录（不归 git）
     Unity/                 Unity 客户端
 
 ToolProject/               工具分类目录（不归 git）
-  ConfigTool/              配置工具
   OperateLinkFile/         VS 插件
 ```
 
@@ -198,7 +197,7 @@ ToolProject/               工具分类目录（不归 git）
 
 - **agent 的 shell 是 OMP 自带 POSIX 风格 shell**（不是 git-bash、也不是 PowerShell）：`$0`/`$SHELL` 空、`uname` 报 `MS/Windows`、`Get-ChildItem` 等 pwsh cmdlet 不存在；`ls`/`cat`/`sed`/`find`/`rg`/`grep` **全是内建 shim**（`type rg` → "shell builtin"，`rg --version` 却谎称 15.1.0），只有 `dotnet`/`git`/`python`/`code` 是真 exe。**唯一会咬人的 shim 坑：`rg -c <pat> <dir>` 走 GNU 语义，会给每个扫到的文件打印 `path:0`**（实测 `rg -c "self as INode" .` 输出 1978 行、其中 1972 行是 `:0`）→ 极易误读成"0 命中"，叠上输出截断更糟。查命中用 `rg <pat> <path> | wc -l` 或 `grep` 工具（**grep 工具本身正常**：能搜到被 `.gitignore` 屏蔽的 `Framework/Core/obj`，也能搜 `.idea/**` 等隐藏文件；唯一真会返回 0 的情况是**模式里带字面引号**）。
 - **宿主终端只决定继承的环境变量，不参与工具行为**（VS2026 Developer PowerShell 与 VSCode 集成终端实测逐字节一致：cwd / shell 身份 / `uname` / `rg` 输出 / grep 命中数）→ "换终端"解释不了工具行为差异。**渲染只认 `mermaid`**（渲染成 ASCII 方框箭头）：`svg` 代码块渲染成**空白**（整块连文字一起消失，不是降级成源码）→ 本终端画图只用 `mermaid`，精确布局/几何用表格或文字。
-- **写盘无限制**（更正旧记录）：工作区、`%TEMP%`、`C:\` 根、用户目录实测可写；`dotnet build` + NuGet 拉包正常。构建时的 `NU1900 无法加载源 …/vulnerability.base.json` 只是**漏洞审计源**取不到，**不是还原失败**，别当网络问题。旧记录 `SetNamedSecurityInfoW failed (Win32 5): grantWrite` 已不适用。
+- **写盘无限制**：工作区、`%TEMP%`、`C:\` 根、用户目录实测可写；`dotnet build` + NuGet 拉包正常。构建时的 `NU1900 无法加载源 …/vulnerability.base.json` 只是**漏洞审计源**取不到，**不是还原失败**，别当网络问题。
 - **`xd://lsp` 在本仓库空转**（`No language servers configured`；本机无 `csharp-ls`/`OmniSharp`，`~/.dotnet/tools` 空）→ 系统提示里"改导出符号前先查 references"只能退回 grep。可用候选：VSCode C# 扩展自带的 `~/.vscode/extensions/ms-dotnettools.csharp-*/.roslyn/roslyn-language-server.exe`（stdio 握手实测能返回合法 initialize，但重复运行不稳定，**未接进 OMP**）。
 - **`git commit` 有硬拦截但 `eval` 能绕过（护栏 ≠ 边界）**：`bash.patterns` 把 `git commit*` / `git -C * commit*` 设为 `deny`（`yolo` 下仍生效、也管 headless 子代理、复合命令分段同样命中；`git status`/`log` 等读操作不受影响），但**管不到 `eval` 里 spawn 的子进程**（实测 `subprocess.run(["git","commit","--dry-run"])` 畅通）→ 所以"不许自动提交"实际靠 §6 的约定 + 这条护栏；要变真边界得设 `tools.approval.eval: prompt|deny`（代价是每次确认或彻底失去 eval），作者已选护栏方案。
 - **9 个 `.cs` 曾是 GBK，2026-10-15 已全部转成 UTF-8（无 BOM）**（全仓 720 个 `.cs` 里就这 9 个）。发现途径：`ast_grep` 的 parse issue（`stream did not contain valid UTF-8`，它会**静默跳过**该文件）+ `read` 直接拒收非 UTF-8（`Cannot read binary file … not valid UTF-8 text`）。**有实际影响的只有两个**：`Avalonia/AvaloniaMVVMTest/Views/MainWindow.axaml.cs`、`Unity/Assets/Scripts/HotUpdate/HotFix/Server/_Test/MainWorldRule.cs` —— 它们的**字符串字面量里有中文**，按 UTF-8 读会变 U+FFFD（运行期文案乱码）；其余 7 个的非 ASCII 只在注释里，所以一直没暴露。修法：按 gbk 解码 → 按 UTF-8 **无 BOM** 重写。**另注**：仓库里有 **502 个 `.cs` 是 UTF-8 带 BOM**（`.idea/encodings.xml` 的 `addBOMForNewFiles: with BOM`），属既有状态、**别去"修"**；`core.autocrlf=true`（blob 存 LF、工作区 CRLF）→ **比对内容前先归一化行尾**，否则纯编码改动会被误判成整文件改动。
@@ -218,6 +217,7 @@ ToolProject/               工具分类目录（不归 git）
 - **生成器静态集合不能跨程序集共享**：`RuleSupplementHelper` 等用静态字典收集再 `AddSource`，而 MyGenAll 的 IL2CPP 构建用 `/shared` 编译器服务器**并行**编 `CoreUnity`/`Module`/`HotFix`，字典串台后会把 Module 的 `InputBindSupplement` 写进 CoreUnity（CoreUnity 不引用 Module → CS0246），接着 `GenerateStripedAOTDlls failed`（编辑器/VS 分开编所以能过）。已让 `SourceGeneratorBase.Execute` 加锁串行。**改 `Unity.Analysis.dll` 后必须重启 Unity**，否则旧编译器服务器还握着旧 dll。程序集名单：Unity 侧 `UnityTool/Analysis/ProjectGeneratorSetting.cs`（与 asmdef 对得上），.NET 侧 `Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs`（`WorldTree.Core` / `WorldTree.Module`），**别混**。
 - **改程序集 `AssemblyName` 要同步 `ProjectGeneratorSetting` 名单**：`SourceGeneratorBase` 用 `Compilation.AssemblyName` 匹配 `ProjectGeneratorSetting` 里的名单，`AssemblyName` 改了不同步名单，生成器整包跳过、法则基类全不生成（报一串 CS0246 找不到 `XxxRule<>`）。改 `AssemblyName` 后记得改名单。
 - **跨平台视图组件别用跟 uGUI 同名的裸名**：WorldTree 的 `Text`/`Image`/`Button` 跟 `UnityEngine.UI.Text/Image/Button` 重名。之前 Module 是 asmdef（AOT asmdef 不引用它，不冲突）；Module 移出编成 dll 放 `Assets/Plugins` 后，`overrideReferences:false` 的 asmdef 自动引用它，类型解析冲突（`GameEntry` 报 `error CS1061: 'Text' does not contain 'text'`）。已改名 `ViewText`/`ViewImage`/`ViewButton`。
+- **`ISourceGenerator` 的 `ISyntaxReceiver` 在 Roslyn 4.x 下失效**：`RegisterForSyntaxNotifications` 注册的 receiver，`context.SyntaxReceiver` 在 .NET 6+ 增量生成器框架下恒为 null（官方已把 `ISourceGenerator`/`ISyntaxReceiver` 标 obsolete，推荐 `IIncrementalGenerator`）。dotnet 8/10 都复现，升级分析器 `Microsoft.CodeAnalysis` 版本无效。症状：用 `ISyntaxReceiver` 收集数据的生成器静默 return、强类型方法（`GetParent`/`AddComponent`/法则基类）全不生成，宿主报 CS0246/CS1061；只有直接遍历 `Compilation.SyntaxTrees` 的 `RuleMethodGenerator` 正常。解法：数据收集改成遍历 `context.Compilation.SyntaxTrees`（加了 `SyntaxReceiverHelper.Fill` 手动填充，12 个生成器已改），8 个 `ISyntaxReceiver` 类保留复用 `OnVisitSyntaxNode`。
 
 ---
 
