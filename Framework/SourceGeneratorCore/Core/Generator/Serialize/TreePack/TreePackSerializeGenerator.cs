@@ -29,7 +29,6 @@ namespace WorldTree.SourceGenerator
 
 		public override void Initialize(GeneratorInitializationContext context)
 		{
-			context.RegisterForSyntaxNotifications(() => new FindTreePackSyntaxReceiver());
 		}
 
 		/// <summary>
@@ -54,7 +53,7 @@ namespace WorldTree.SourceGenerator
 
 		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
-			if (!(context.SyntaxReceiver is FindTreePackSyntaxReceiver receiver and not null)) return;
+			var receiver = SyntaxReceiverHelper.Fill(context.Compilation, new FindTreePackSyntaxReceiver());
 			TypeSubDict.Clear();
 			TypeSet.Clear();
 

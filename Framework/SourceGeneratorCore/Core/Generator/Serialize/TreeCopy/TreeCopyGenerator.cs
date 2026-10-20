@@ -19,7 +19,6 @@ namespace WorldTree.SourceGenerator
 
 		public override void Initialize(GeneratorInitializationContext context)
 		{
-			context.RegisterForSyntaxNotifications(() => new FindTreeCopySyntaxReceiver());
 		}
 
 
@@ -30,7 +29,7 @@ namespace WorldTree.SourceGenerator
 			{
 				FindTreeDataSpecialAttribute(classSymbol);
 			}
-			if (!(context.SyntaxReceiver is FindTreeCopySyntaxReceiver receiver and not null)) return;
+			var receiver = SyntaxReceiverHelper.Fill(context.Compilation, new FindTreeCopySyntaxReceiver());
 			StringBuilder Code = new StringBuilder();
 			StringBuilder ClassCode = new StringBuilder();
 

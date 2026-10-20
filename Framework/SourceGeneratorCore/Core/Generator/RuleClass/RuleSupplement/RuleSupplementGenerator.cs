@@ -26,12 +26,11 @@ namespace WorldTree.SourceGenerator
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{
-			context.RegisterForSyntaxNotifications(() => new FindSubInterfaceSyntaxReceiver());
 		}
 
 		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
-			if (!(context.SyntaxReceiver is FindSubInterfaceSyntaxReceiver receiver)) return;
+			var receiver = SyntaxReceiverHelper.Fill(context.Compilation, new FindSubInterfaceSyntaxReceiver());
 			if (receiver.InterfaceDeclarations.Count == 0) return;
 
 			RuleSupplementHelper.Init(context.Compilation);

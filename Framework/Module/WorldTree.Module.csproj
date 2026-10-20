@@ -46,13 +46,5 @@
   </ItemGroup>
 
   <!-- 构建后自动把 WorldTree.Module.dll/.pdb 拷贝到 Unity 工程 -->
-  <Target Name="CopyToUnity" AfterTargets="Build">
-    <PropertyGroup>
-      <UnityPluginsDir>$(MSBuildThisFileDirectory)..\..\..\Template\Project\Unity\Assets\Plugins\WorldTree\</UnityPluginsDir>
-    </PropertyGroup>
-    <MakeDir Directories="$(UnityPluginsDir)" />
-    <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(UnityPluginsDir)" SkipUnchangedFiles="true" />
-    <Message Importance="high" Text="[WorldTree.Module] $(TargetName).dll 已拷贝到 $(UnityPluginsDir)" />
-  </Target>
 
 </Project>

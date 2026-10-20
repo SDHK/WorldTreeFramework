@@ -26,12 +26,11 @@ namespace WorldTree.SourceGenerator
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{
-			context.RegisterForSyntaxNotifications(() => new FindPartialINodeSubSyntaxReceiver());
 		}
 
 		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
-			if (!(context.SyntaxReceiver is FindPartialINodeSubSyntaxReceiver receiver)) return;
+			var receiver = SyntaxReceiverHelper.Fill(context.Compilation, new FindPartialINodeSubSyntaxReceiver());
 			if (receiver.ClassDeclarations.Count == 0) return;
 
 			foreach (ClassDeclarationSyntax CopyClassDeclarations in receiver.ClassDeclarations)

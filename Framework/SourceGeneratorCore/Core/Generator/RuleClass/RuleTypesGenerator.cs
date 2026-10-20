@@ -19,12 +19,11 @@ namespace WorldTree.SourceGenerator
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{
-			context.RegisterForSyntaxNotifications(() => new FindRuleTypesSyntaxReceiver());
 		}
 
 		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
-			if (!(context.SyntaxReceiver is FindRuleTypesSyntaxReceiver receiver and not null)) return;
+			var receiver = SyntaxReceiverHelper.Fill(context.Compilation, new FindRuleTypesSyntaxReceiver());
 
 			var ClassCode = new StringBuilder();
 

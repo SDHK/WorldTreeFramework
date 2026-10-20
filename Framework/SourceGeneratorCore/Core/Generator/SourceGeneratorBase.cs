@@ -57,4 +57,24 @@ namespace WorldTree.SourceGenerator
 		public static int ArgumentCount = 0;
 	}
 
+
+	/// <summary>
+	/// Roslyn 4.x 增量生成器框架下，ISourceGenerator 的 ISyntaxReceiver 不再被编译器填充（context.SyntaxReceiver 恒为 null）。
+	/// 这里手动遍历语法树填充 receiver，等价替代 RegisterForSyntaxNotifications。
+	/// </summary>
+	public static class SyntaxReceiverHelper
+	{
+		public static T Fill<T>(Compilation compilation, T receiver) where T : ISyntaxReceiver
+		{
+			foreach (var tree in compilation.SyntaxTrees)
+			{
+				foreach (var node in tree.GetRoot().DescendantNodes())
+				{
+					receiver.OnVisitSyntaxNode(node);
+				}
+			}
+			return receiver;
+		}
+	}
+
 }

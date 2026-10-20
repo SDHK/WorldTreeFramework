@@ -19,14 +19,13 @@ namespace WorldTree.SourceGenerator
 	{
 		public override void Initialize(GeneratorInitializationContext context)
 		{
-			context.RegisterForSyntaxNotifications(() => new FindCoreSyntaxReceiver());
 		}
 
 		public override void ExecuteCore(GeneratorExecutionContext context)
 		{
 			try
 			{
-				if (!(context.SyntaxReceiver is FindCoreSyntaxReceiver receiver and not null)) return;
+				var receiver = SyntaxReceiverHelper.Fill(context.Compilation, new FindCoreSyntaxReceiver());
 				if (receiver.isGenerator == false) return;
 
 				NodeBranchExtensionGeneratorHelper.Execute(context);
