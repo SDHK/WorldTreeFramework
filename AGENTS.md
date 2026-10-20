@@ -158,8 +158,7 @@ Project/                   项目分类目录（不归 git）
     WPF/                   WPF 宿主
     Godot/                 Godot 宿主（预留，走 .NET 模式）
     Unity/                 Unity 宿主工程（含 UnityTool 分析器打包）
-    ExcelTool/             导表演示
-    Luban/                 Luban 引擎（vendor 式，拷入各项目 ExcelTool）
+    ExcelTool/             导表演示（含 Luban 引擎，自包含）
   xxx游戏项目1/            从 _Template clone 派生（独立库）
     Tables/                策划 SVN：xlsx 源表 + conf
     ExcelTool/             配置导出.bat + Output/
@@ -175,8 +174,8 @@ ToolProject/               工具分类目录（不归 git）
 
 - 依赖不靠目录嵌套，靠 csproj `ProjectReference` 指向 `WorldTreeFramework/Core`（Unity 侧用编好的 `WorldTree.Core.dll`）。框架稳定后再上 NuGet。
 - `WorldTreeFramework/` 只放纯 C#（核心、模块、分析器主体）。依赖具体平台的适配不归框架：CoreUnity 依赖 UnityEngine，是 Unity 适配，跟 `Project/_Template/Unity` 宿主走；`Unity.Analysis` 打包层在 `Unity/UnityTool`，配置 asmdef + 拷 Plugins，每个 Unity 项目一份。
-- `_Template` 里各平台和共享件**平级**（不分 Project/Tool 层），这样复制到项目时相对路径不变（`Unity → Luban` 始终是 `../Luban`）。各平台的 InputBindTool 保留在各自宿主目录下，不合并。
-- Luban 引擎在 `Project/_Template/Luban`，各项目 `ExcelTool/` 从它 vendor 式拷入，自己放 `conf` / `xlsx` / `bat`。
+- `_Template` 里各平台和共享件**平级**（不分 Project/Tool 层），这样复制到项目时相对路径不变。各平台的 InputBindTool 保留在各自宿主目录下，不合并。
+- Luban 引擎在 `ExcelTool/Luban`，`ExcelTool` 自包含，自己放 `conf` / `xlsx` / `bat`。
 - 表代码分离：xlsx 源表归策划（SVN，Excel 二进制 diff 不了，靠 lock 防并发），工具和产物归程序员（git）。个人项目先不建 SVN，但源表目录和产物目录保持分开，将来拆就是挪源表 + 改 bat 路径。
 - git 粒度：`WorldTreeFramework` / `Project/_Template` 各一个库；`Project` / `ToolProject` 是分类目录，里面每个项目/工具从 `Project/_Template` clone 派生独立库。
 - 命名全英文，`_Template` 不叫 `Demo`。
@@ -194,6 +193,7 @@ ToolProject/               工具分类目录（不归 git）
 - **`WorldTree.Core.dll` 的 3 个外部依赖，Unity 里都得有**：`NLog.dll`、`CommandLine.dll`、`System.Runtime.CompilerServices.Unsafe.dll`（均在 `Assets/Plugins/`）。**Unity 按强名称精确校验版本**——NLog 必须 5.4.0（程序集 `5.0.0.0`）、CommandLineParser 必须 2.9.1（程序集 `2.9.1.0`），与 `WorldTree.Core.csproj` 的包版本一致；旧版会让 Core.dll **拒绝加载**。清插件时别把 Unsafe.dll 一起删。
 - **源生成器/分析器与目标框架无关**（跑在 Roslyn 编译器进程里）→ netstandard2.1 照用。
 - **HybridCLR 三条**：① `AOTGenericReferences.cs` 是自动生成物**别手改**——真正生效的 `PatchedAOTAssemblyList` 由"热更代码的泛型用法"**自动检测**得出，`patchAOTAssemblies` 设置在本版本基本没接进生成流程。② 社区版里 **Assets 下的预编译 dll = AOT，不可热更**；热更 dll 必须由 `CompileDll` 从**源码**编，光把 dll 丢 `Temp/Bin/Debug` 无效（旗舰版 DHE 才有 AOT 热更）。③ **AOT 程序集不能引用热更程序集**——`WorldTree.Config` 曾在 `HotUpdate/` 下却漏进 `hotUpdateAssemblies`，MyGenAll 的 IL2CPP 构建报 `Failed to resolve assembly: WorldTree.HotFix`（已修）。
+- **`_Template` 路径是脆弱的**：`_Template` 是占位名，clone 后会被重命名或直接当项目开发，任何引用 `_Template` 内部内容的相对路径（如 `..\..\Luban`）都会断。运行时依赖必须放进自包含目录（如 Luban 引擎放 `ExcelTool/Luban`，`配置导出.bat` 用 `..\Luban`），跨仓库引用只允许指向独立的平级仓库（如 `WorldTreeFramework`）。
 ### 4.2 本机环境与工具用法
 
 - **agent 的 shell 是 OMP 自带 POSIX 风格 shell**（不是 git-bash、也不是 PowerShell）：`$0`/`$SHELL` 空、`uname` 报 `MS/Windows`、`Get-ChildItem` 等 pwsh cmdlet 不存在；`ls`/`cat`/`sed`/`find`/`rg`/`grep` **全是内建 shim**（`type rg` → "shell builtin"，`rg --version` 却谎称 15.1.0），只有 `dotnet`/`git`/`python`/`code` 是真 exe。**唯一会咬人的 shim 坑：`rg -c <pat> <dir>` 走 GNU 语义，会给每个扫到的文件打印 `path:0`**（实测 `rg -c "self as INode" .` 输出 1978 行、其中 1972 行是 `:0`）→ 极易误读成"0 命中"，叠上输出截断更糟。查命中用 `rg <pat> <path> | wc -l` 或 `grep` 工具（**grep 工具本身正常**：能搜到被 `.gitignore` 屏蔽的 `Framework/Core/obj`，也能搜 `.idea/**` 等隐藏文件；唯一真会返回 0 的情况是**模式里带字面引号**）。
