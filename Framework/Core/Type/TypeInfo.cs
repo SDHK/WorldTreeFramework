@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2024/11/15 10:10
@@ -62,17 +62,29 @@ namespace WorldTree
 		/// <summary>
 		/// 重新加载程序集类型
 		/// </summary>
-		public void LoadAssembly(WorldLine core, Assembly[] assemblies)
+		public void LoadAssembly(WorldTreeCore core, Assembly[] assemblies)
 		{
 			int typeCount = 0;
 			foreach (Assembly assembly in assemblies)
 			{
-				var types = assembly.GetTypes();
-				foreach (Type type in types) OverlayType(type);
-				core.Log($"重载程序集 {assembly.FullName}, 类型数量 {types.Length}");
+				Type[] types;
+				try
+				{
+					types = assembly.GetTypes();
+				}
+				catch (ReflectionTypeLoadException exception)
+				{
+					types = exception.Types;
+				}
+				if (types == null) continue;
+				foreach (Type type in types)
+				{
+					if (type != null) OverlayType(type);
+				}
+				core.LogManager.Log($"重载程序集 {assembly.FullName}, 类型数量 {types.Length}");
 				typeCount += types.Length;
 			}
-			core.Log($"加载程序集数量 {assemblies.Length}, 类型数量 {typeCount}");
+			core.LogManager.Log($"加载程序集数量 {assemblies.Length}, 类型数量 {typeCount}");
 		}
 
 		/// <summary>
@@ -150,6 +162,25 @@ namespace WorldTree
 		/// 尝试获取类型
 		/// </summary>
 		public bool TryCodeToType(long hash64, out Type type) => Hash64TypeDict.TryGetValue(hash64, out type);
+
+		/// <summary>
+		/// 按全名或唯一短名获取已登记的类型
+		/// </summary>
+		public Type NameToType(string typeName)
+		{
+			if (string.IsNullOrWhiteSpace(typeName)) throw new Exception("类型名为空");
+			if (NameTypeDict.TryGetValue(typeName, out Type type)) return type;
+
+			Type found = null;
+			foreach (Type candidate in NameTypeDict.Values)
+			{
+				if (candidate.Name != typeName) continue;
+				if (found != null) throw new Exception($"类型名不唯一: {typeName}");
+				found = candidate;
+			}
+			if (found == null) throw new Exception($"TypeInfo 中找不到类型: {typeName}");
+			return found;
+		}
 
 	}
 }
