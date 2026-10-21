@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2022/7/18 9:35
@@ -66,6 +66,11 @@ namespace WorldTree
         public NodePoolManager NodePoolManager;
 
         /// <summary>
+        /// 配置管理器
+        /// </summary>
+        public ConfigManager ConfigManager;
+
+        /// <summary>
         /// 主世界线
         /// </summary>
         public WorldLine MainLine;
@@ -104,6 +109,7 @@ namespace WorldTree
             this.CreateCoreObject(out IdManager);
             this.CreateCoreObject(out UnitPoolManager);
             this.CreateCoreObject(out NodePoolManager);
+            this.CreateCoreObject(out ConfigManager);
 
 
             AddRuleGroup = RuleManager.GetOrNewRuleGroup<Add>();
@@ -270,6 +276,7 @@ namespace WorldTree
         public override void OnDispose()
         {
             DestroyAll();
+            ConfigManager.Dispose();
             NodePoolManager.Dispose();
             UnitPoolManager.Dispose();
             IdManager.Dispose();

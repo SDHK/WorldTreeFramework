@@ -1,11 +1,10 @@
-﻿namespace WorldTree
+namespace WorldTree
 {
 	/// <summary>
 	/// 配置集合
 	/// </summary>
 	public abstract class ConfigGroup : Node
 		, AsRule<Awake>
-		, ComponentOf<ConfigManager>
 	{
 
 	}

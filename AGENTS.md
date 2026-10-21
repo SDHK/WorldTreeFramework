@@ -43,7 +43,7 @@
 WorldTreeCore（全局唯一核心）
  └─ WorldLine（世界线 = 根节点，一条线一个线程）
      ├─ ReferencedPoolManager / RuleBroadcastManager / WorldTimeManager
-     ├─ WorldHeart（心跳线程，Unity 侧是 UnityWorldHeart）
+     ├─ WorldHeart（当前宿主的心跳。服务器继承 WorldHeartThread，Unity 用主线程）
      ├─ WorldContext（SynchronizationContext，跨线程投递）
      └─ MainWorld（业务入口节点）
 ```
@@ -97,18 +97,21 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 `Framework/Core` 编成 `WorldTree.Core.dll`（`netstandard2.1`），拷到 `Unity/Assets/Plugins/WorldTree/`。Unity 的 asmdef 用 `overrideReferences` 显式引用这份 DLL。HybridCLR 里 Core 是 AOT，不热更。依赖 `NLog.dll`（5.4.0，程序集 5.0.0.0）、`CommandLine.dll`（2.9.1，程序集 2.9.1.0）、`System.Runtime.CompilerServices.Unsafe.dll`，都在 `Assets/Plugins/`。改 Core 要重新出包。改生成器后重编 `Unity.Analysis.dll`，并重启 Unity。
 
 ### 配置导出
-导表在 `ExcelTool`，跑 `Excel/配置导出.bat`。本机要有 `Microsoft.NETCore.App` 8。脚本先检查 Game 和 Start 的 client、server，四次都通过才清空 `ExcelTool/Output`，再导出。失败是 `exit /b 1`，没有 `pause`。产物不进 Unity，也不进 `Console/Server`。
+导表在 `ExcelTool`，跑 `Excel/配置导出.bat`。引擎是官方 Luban 5.1.0，本机要有 `Microsoft.NETCore.App` 8。检查用 `--strict`，5.1 不再认 `validationFailAsError`。脚本先检查 Game 和 Start 的 client、server，四次都通过才清空 `ExcelTool/Output`，再导出。失败是 `exit /b 1`，没有 `pause`。产物不进 Unity，也不进 `Console/Server`。`Luban/Runtime` 不在官方包里，是本地的 `ByteBuf` / `BeanBase`，升级时留着。
 
 分组只有 `c`（客户端）和 `s`（服务器）。共用表写成 `c,s`。不建 `cs`、不建 `e`，不导 json，没有编辑器代码。命名空间是 `WorldTree`。数据是 Luban 的 bin（`.bytes`），代码目标是 `cs-bin`。`manager` 不能空：空了会生成没有类名的 `.cs`。
 
 | | 入口 | 聚合类 | 现在有的表 |
 |---|---|---|---|
-| Game | `Excel/Excels/_Game.conf`，登记 `_Tables.xlsx` | `Tables` | `ClientProbe`（`c`）、`ServerProbe`（`s`）、`SharedProbe`（`c,s`）。表类用这个名字，记录类加 `Data`。这是探针，不是业务表 |
-| Start | `Excel/Excels/StartConfig/Localhost/_Start.conf` | `StartTables` | `WorldLineConfig`，记录类 `WorldLineConfigData`，索引 `LineId`。只有 Localhost，表是空的 |
+| Game | `Excel/Excels/_Game.conf`，登记 `_Tables.xlsx` | `Tables` | 还没有业务表。表类用表名，记录类加 `Data` |
+| Start | `Excel/Excels/StartConfig/Localhost/_Start.conf`，只导出 `s` | `StartTables` | 服务器世界线。只有 Localhost，一行：进程 1、线 0、`MainWorld`、`WorldHeart`、帧时长 1000 |
+| Client | `Excel/Excels/StartConfig/Client/_Start.conf`，只导出 `c` | `StartTables` | 和 Localhost 并列。一行：进程 1、线 0、`MainWorld`、`WorldHeart`、帧时长 0（每帧更新） |
 
-两边的 C# 都写进 `Output/CSharp/{c,s}`，所以聚合类不能同名。Start 导出时 `cleanUpOutputDir=0`，避免清掉已经写出的 Game 代码。bytes 分开：`Output/Bytes/{c,s}/GameConfig` 和 `Output/Bytes/{c,s}/StartConfig/Localhost`。
+`__beans__` 和 `__enums__` 是 Luban 的结构定义，列名固定，文件名只是习惯。`bean` 放共用或嵌套类型，`enum` 放枚举。现在字段都写在数据表的 `##type` 行，类型只有 `int` 和 `string`，这两份先不加。出现枚举或要单独定义的嵌套类型时再加。
 
-外壳仍写死 `Create(0, MainWorld, …)`。世界线 0 是模型主线程，不进 Start 表；`LineId` 从 1 起。`Options.ConfigPath` 默认 `StartConfig/Localhost`，只被 `SetOptions` 存下，没有人读。`ConfigManager` 挂在 `WorldLine` 上，还没有读 bytes 的加载器。主线程起来之后才该读 Start，再 `Create` 别的线；Start 只在主线程读一次。
+两边的 C# 都写进 `Output/CSharp/{c,s}`，所以聚合类不能同名。后导出的用 `cleanUpOutputDir=0`，避免清掉已经写出的代码。bytes 分开：游戏表 `Output/Bytes/{c,s}/GameConfig`，服务器起服 `Output/Bytes/s/StartConfig/Localhost`，客户端启动 `Output/Bytes/c/StartConfig/Client`。
+
+`ConfigLoader.Load` 把 bytes 读进 `ConfigManager`，随后 `Program` 调用 `CreateWorldLines`。它只创建 `Process == Options.Process` 的行，线 0 先创建。表里没有线 0 就补 `MainWorld`、`WorldHeart`、帧时长 `1000`；写了线 0 就用那一行，重复则抛错。每创建一条就由这个方法打日志。`MainWorld` 的 `Add` 不再建线。客户端读 `Bytes/c/StartConfig/Client`，不读 `StartConfig/Localhost`。`CreateWorldLines` 先把当前程序集登记进 `TypeInfo`，`WorldType` / `HeartType` 再走 `NameToType`。默认线 0 直接用类型，不查 `TypeInfo`。bytes 根目录是 `ExcelTool/Output/Bytes/s`（相对 `Console/Server/Bin` 向上三级）。游戏表在 `GameConfig/`，起服表在 `Options.ConfigPath`（默认 `StartConfig/Localhost`）。Luban 的 `ByteBuf` / `BeanBase` 在 `ExcelTool/Luban/Runtime`，生成的表代码在 `Output/CSharp/s`，和 `ConfigLoader` 一起由 `Server.HotFix` 链接编译。`HotFix/Server` 的程序集约束是 `IGNORE`，Unity 不编译这目录。
 
 ### 关键文件地图
 | 路径 | 说明 |
@@ -134,7 +137,14 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 ## 3. 进行中
 
 ### Luban
-导表的用法在第 2 节「配置导出」。下一步是阶段 2：在 `WorldTree.UnityEditor`（`Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/Editor/WorldTree.UnityEditor.asmdef`）写扩展，把**客户端**那套产物拷进 Unity。不要照参照工程的 `Export.bat` 去拷。这一阶段不改服务器怎么读配置，外壳也不改成读表拉线。
+导表的用法在第 2 节「配置导出」。Server 读配置已通。下一步是 Unity 客户端启动：现在 `UnityWorldTree.Start` 仍写死 `Create(0, MainWorld, WorldHeart)`，没有 `SetOptions`，也不读表。Unity 工程还没引用 Luban 运行时和 `Output/CSharp/c`。客户端世界线在 `StartConfig/Client`，和 `Localhost` 并列。Unity 的 `WorldHeart` 走主线程，服务器的 `WorldHeart` 继承 `WorldHeartThread`。两边不要编进同一个程序，`NameToType` 遇到重复短名会抛错。
+
+配置不进节点树。`ConfigManager` 是 `WorldTreeCore` 上的 `CoreObject`，进程内一份，`Add`/`Get`/`TryGet` 按类型登记 Luban 表。所有世界线共用。框架不引用具体表类型。
+
+Server 读配置还缺：
+1. `Config` / `ConfigGroup` / `ConfigRef` 仍是旧的节点骨架，`CreateWorldConfig` 还在用。新表不再走这套。
+
+已有：`ConfigLoader` 读服务器 bytes 并登记表，再按 `WorldLineConfig` 拉起本进程的世界线。客户端配置在 `StartConfig/Client`，和 `Localhost` 并列。
 
 对照管线只看 `E:\Storage\Daily\BaiduNetdisk\WX20220921\config\`。不要照 HeadMaster 的 `Luban.ClientServer.exe`。
 
@@ -210,7 +220,7 @@ ToolProject/               工具分类目录（不归 git）
 ### 4.3 运行时与源生成器
 
 - **BCL `Task` 完成后的恢复要等下一次心跳 tick**：`INode.GetAwaiter(Task)` / `TreeTaskLink` 完成后都走 `WorldContext.Post`，而该队列由 `UpdateRule` **每帧整队排空**。心跳 `frameTime=1000ms` 时，一个 300ms 的 `Task` 实测 **1003ms** 才恢复 → 别拿它做毫秒级计时。
-- **`Console/Server` 必须在 `Bin` 下启动**：`WorldLog` 只在 `../ProjectConfig/NLog` 存在时才建 NLog logger（配置 `Console/Server/ProjectConfig/NLog/NLog.config`，日志 `Console/Server/Logs/Log.txt`，同时打到控制台）。在仓库根跑时 logger 为 null → `Log`/`Error` 空引用，而心跳线程上这个 NRE 会**盖住真正的异常**。本 shell 不把当前目录当命令路径（`App.exe` / `./App.exe` 都 command not found）→ 用 `Console/Server/Bin/App.exe`（cwd 仍设 Bin）；`WorldHeart` 不退出，看完日志 `taskkill /F /IM App.exe`。
+- **`Console/Server` 必须在 `Bin` 下启动**：`WorldLog` 只在 `../ProjectConfig/NLog` 存在时才建 NLog logger（配置 `Console/Server/ProjectConfig/NLog/NLog.config`，日志 `Console/Server/Logs/Log.txt`，同时打到控制台）。在仓库根跑时 logger 为 null → `Log`/`Error` 空引用，而心跳线程上这个 NRE 会**盖住真正的异常**。本 shell 不把当前目录当命令路径（`App.exe` / `./App.exe` 都 command not found）→ 用 `Console/Server/Bin/App.exe`（cwd 仍设 Bin）；`WorldHeart` 的线程不退出，看完日志 `taskkill /F /IM App.exe`。
 - **`INodeProxy.OnCreate` 不能删**：直接实现 `INode` 的类型由 `INodeProxyGenerator` 生成 `INodeProxyRule.OnCreate(this)`（编号和 `SupportNodeRule` 已不在这里）。
 - **`SupportNodeRule` 每次都进写锁**（类型已支持也一样）→ 热路径（每次 `PoolGetUnit`）不要加；但读档的法则查找发生在 `PoolGetNode` **之前**，`ReadValue` 里的调用不能省。
 - **法则接口对应的 `XxxRule<N>` 不要手写** —— `RuleSupplementGenerator` 会生成同名抽象基类，再写一个就 CS0101；要跳过生成就给接口标 `ISourceGeneratorIgnore`。

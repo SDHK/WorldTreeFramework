@@ -1,9 +1,9 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2023/12/28 03:56:05
 
-* 描述： 世界之心：C#多线程
+* 描述： 世界之心：线程
 
 */
 
@@ -13,9 +13,9 @@ using System.Threading;
 namespace WorldTree
 {
 	/// <summary>
-	/// 世界之心：C#多线程
+	/// 世界之心：线程
 	/// </summary>
-	public class WorldHeart : WorldHeartBase
+	public class WorldHeartThread : WorldHeartBase
 		, AsComponentBranch
 		, FieldOf<WorldLine>
 		, AsRule<Awake<int>>
@@ -106,11 +106,11 @@ namespace WorldTree
 		}
 	}
 
-	public static class WorldHeartRule
+	public static class WorldHeartThreadRule
 	{
-		private class Awake : AwakeRule<WorldHeart, int>
+		private class Awake : AwakeRule<WorldHeartThread, int>
 		{
-			protected override void Execute(WorldHeart self, int frameTime)
+			protected override void Execute(WorldHeartThread self, int frameTime)
 			{
 				self.frameTime = frameTime;
 
@@ -127,9 +127,9 @@ namespace WorldTree
 			}
 		}
 
-		private class Remove : RemoveRule<WorldHeart>
+		private class Remove : RemoveRule<WorldHeartThread>
 		{
-			protected override void Execute(WorldHeart self)
+			protected override void Execute(WorldHeartThread self)
 			{
 				self.isExit = true;
 				self.m_Thread.Join();
@@ -144,9 +144,9 @@ namespace WorldTree
 			}
 		}
 
-		private class UpdateTime : UpdateTimeRule<WorldHeart>
+		private class UpdateTime : UpdateTimeRule<WorldHeartThread>
 		{
-			protected override void Execute(WorldHeart self, TimeSpan deltaTime)
+			protected override void Execute(WorldHeartThread self, TimeSpan deltaTime)
 			{
 				self.enable?.Send();
 				self.update?.Send();
