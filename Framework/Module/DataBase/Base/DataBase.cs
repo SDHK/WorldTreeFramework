@@ -9,16 +9,16 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 数据库代理基类
+	/// 数据库
 	/// </summary>
-	public abstract class DataBaseProxy : Node
-		, AsComponentBranch
+	public abstract class DataBase : Node
+		, AsFieldBranch
 		, ComponentOf<World>
 	{
 		/// <summary>
-		/// 数据库引用
+		/// 数据库实现
 		/// </summary>
-		public IDataBase DataBase;
+		public IDataBase Source;
 	}
 
 

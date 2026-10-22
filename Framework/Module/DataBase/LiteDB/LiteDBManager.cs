@@ -15,7 +15,7 @@ namespace WorldTree
 	/// </summary>
 	public partial class LiteDBManager : Node, IDataBase
 		, AsComponentBranch
-		, ComponentOf<DataBaseProxy>
+		, FieldOf<DataBase>
 		, AsRule<Awake<string>>
 	{
 		/// <summary>
