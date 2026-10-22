@@ -45,7 +45,8 @@ WorldTreeCore（全局唯一核心）
      ├─ ReferencedPoolManager / RuleBroadcastManager / WorldTimeManager
      ├─ WorldHeart（当前宿主的心跳。服务器继承 WorldHeartThread，Unity 用主线程）
      ├─ WorldContext（SynchronizationContext，跨线程投递）
-     └─ MainWorld（业务入口节点）
+     ├─ StartWorld（线 0 启动世界，Add 规则读配置 + 创建其他线）
+     └─ MainWorld（业务线入口）
 ```
 
 ### 分支与池
@@ -104,14 +105,14 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 | | 入口 | 聚合类 | 现在有的表 |
 |---|---|---|---|
 | Game | `Excel/Excels/_Game.conf`，登记 `_Tables.xlsx` | `Tables` | 还没有业务表。表类用表名，记录类加 `Data` |
-| Start | `Excel/Excels/StartConfig/Localhost/_Start.conf`，只导出 `s` | `StartTables` | 服务器世界线。只有 Localhost，一行：进程 1、线 0、`MainWorld`、`WorldHeart`、帧时长 1000 |
-| Client | `Excel/Excels/StartConfig/Client/_Start.conf`，只导出 `c` | `StartTables` | 和 Localhost 并列。一行：进程 1、线 0、`MainWorld`、`WorldHeart`、帧时长 0（每帧更新） |
+| Start | `Excel/Excels/StartConfig/Localhost/_Start.conf`，只导出 `s` | `StartTables` | 服务器业务线。一行：进程 1、线 1、`MainWorld`、`WorldHeart`、帧时长 1000（线 0 是硬编码的 `StartWorld`） |
+| Client | `Excel/Excels/StartConfig/Client/_Start.conf`，只导出 `c` | `StartTables` | 客户端业务线。一行：进程 1、线 1、`MainWorld`、`WorldHeart`、帧时长 0（线 0 是硬编码的 `StartWorld`） |
 
 `__beans__` 和 `__enums__` 是 Luban 的结构定义，列名固定，文件名只是习惯。`bean` 放共用或嵌套类型，`enum` 放枚举。现在字段都写在数据表的 `##type` 行，类型只有 `int` 和 `string`，这两份先不加。出现枚举或要单独定义的嵌套类型时再加。
 
 两边的 C# 都写进 `Output/CSharp/{c,s}`，所以聚合类不能同名。后导出的用 `cleanUpOutputDir=0`，避免清掉已经写出的代码。bytes 分开：游戏表 `Output/Bytes/{c,s}/GameConfig`，服务器起服 `Output/Bytes/s/StartConfig/Localhost`，客户端启动 `Output/Bytes/c/StartConfig/Client`。
 
-`ConfigLoader.Load` 把 bytes 读进 `ConfigManager`，随后 `Program` 调用 `CreateWorldLines`。它创建 `Process == Options.Process` 的行，每创建一条就由这个方法打日志。`MainWorld` 的 `Add` 不再建线。客户端读 `Bytes/c/StartConfig/Client`，不读 `StartConfig/Localhost`。`CreateWorldLines` 先把 `WorldTree`/`HotFix`/`GameEntry` 前缀的程序集登记进 `TypeInfo`（`TypeInfo.LoadAssembly`），`WorldType` / `HeartType` 再走 `NameToType`。bytes 根目录是 `ExcelTool/Output/Bytes/s`（相对 `Console/Server/Bin` 向上三级）。游戏表在 `GameConfig/`，起服表在 `Options.ConfigPath`（默认 `StartConfig/Localhost`）。Luban 的 `ByteBuf` / `BeanBase` 在 `ExcelTool/Luban/Runtime`，生成的表代码在 `Output/CSharp/s`，和 `ConfigLoader` 一起由 `Server.HotFix` 链接编译。`HotFix/Server` 的程序集约束是 `IGNORE`，Unity 不编译这目录。
+`ConfigLoader.Load` 把 bytes 读进 `ConfigManager`。线 0 由启动流程硬编码 `Create(0, StartWorld, WorldHeart)`（Unity 帧时长 0，Server 1000），`StartWorld` 的 `Add` 规则读配置 + 调 `CreateWorldLines` 建 `LineId 1..N` 的行（遇 `LineId == 0` 抛错），每创建一条打日志。`MainWorld` 是业务线入口，`Add` 不再建线。客户端读 `Bytes/c/StartConfig/Client`，不读 `StartConfig/Localhost`。`CreateWorldLines` 先把 `WorldTree`/`HotFix`/`GameEntry` 前缀的程序集登记进 `TypeInfo`（`TypeInfo.LoadAssembly`），`WorldType` / `HeartType` 再走 `NameToType`。bytes 根目录是 `ExcelTool/Output/Bytes/s`（相对 `Console/Server/Bin` 向上三级）。游戏表在 `GameConfig/`，起服表在 `Options.ConfigPath`（默认 `StartConfig/Localhost`）。Luban 的 `ByteBuf` / `BeanBase` 在 `ExcelTool/Luban/Runtime`，生成的表代码在 `Output/CSharp/s`，和 `ConfigLoader` 一起由 `Server.HotFix` 链接编译。`HotFix/Server` 的程序集约束是 `IGNORE`，Unity 不编译这目录。
 
 ### 关键文件地图
 | 路径 | 说明 |
@@ -151,7 +152,7 @@ Unity 端已读表（`UnityWorldTree.Start` 调 `ConfigLoader.Load<T>(path)` + `
 
 Unity 程序集按依赖分层：`ThirdParty`（第三方库，AOT）→ `CoreUnity`（运行时）→ `HotFix`（表代码 + 跨平台业务）+ `App`（`UnityWorldTree` + `ConfigLoader`，引擎侧）→ `HotFixUnity`（Unity 业务）。`HotFix` 引用 `ThirdParty`，`App` 引用 `CoreUnity` + `HotFix` + `ThirdParty`。`WorldTree.Config` 已删，表代码归 `HotFix`（对称 Server）。`WorldTree.ThirdParty` 放 Luban 库，AOT、`allowUnsafeCode`、不在分析器名单也不在 `hotUpdateAssemblies`（对应参考工程 HM 的 `Unity.ThirdParty` 放 `LubanLib`）。`HotFix` 的 `allowUnsafeCode` 是 `false`（`ByteBuf` 归 `ThirdParty`，`HotFix/Server` 被 `Ignore.asmdef` 排除，Unity 侧无 unsafe）。
 
-CS 维持「导出到 Output、Unity 侧拉取」的隔离。`ConfigCopyTool`（菜单 `WorldTree/拷贝客户端配置`）清空 + 全量拷贝三样再 `AssetDatabase.Refresh()`。编辑器整理完：ToolKit 只剩「关于」「脚本工具」两页，删了 Addressables / WorldTreeFrameworkWindow / EditorGUI / EntityBindMono / ScriptableEditor。`ConfigLoader.Load<T>(path)` 前后端统一（读目录 bytes + 反射构造表 + 登记），编辑器直读工程外。下一步：运行时 YooAsset 分流（`Load<T>` 硬编码 File，真机要改 bytes 来源）。
+CS 维持「导出到 Output、Unity 侧拉取」的隔离。`ConfigCopyTool`（菜单 `WorldTree/拷贝客户端配置`）清空 + 全量拷贝三样再 `AssetDatabase.Refresh()`。编辑器整理完：ToolKit 只剩「关于」「脚本工具」两页，删了 Addressables / WorldTreeFrameworkWindow / EditorGUI / EntityBindMono / ScriptableEditor。`ConfigLoader.Load<T>(path)` 前后端统一（读目录 bytes + 反射构造表 + 登记）。运行时 YooAsset 分流已接：`Define.IsEditor` 时 `File.ReadAllBytes` 直读工程外，否则 `YooAssetManager.LoadAsset<TextAsset>(表名).bytes`（`StartWorld.Add` 运行时先挂 `YooAssetManager`，同步加载 + 句柄缓存）。真机打包前跑 `HybridCLR/MyGenAll` + `CopyDlls`。
 
 对照管线只看 `E:\Storage\Daily\BaiduNetdisk\WX20220921\config\`。不要照 HeadMaster 的 `Luban.ClientServer.exe`。
 
@@ -228,6 +229,7 @@ ToolProject/               工具分类目录（不归 git）
 - **`cs-bin` 模板里命名空间内的类少一层缩进**：`ExcelTool/Luban/Templates/cs-bin` 的 `tables.sbn`、`table.sbn`、`bean.sbn` 已在命名空间内部整体加了 4 格。换官方模板时这层会丢。
 - **给 Inspector 顶部打标签用 `Editor.finishedDefaultHeaderGUI`**：旧 `UnityWorldTreeEditor.MyAATest`（已删 2026-10-21，是给 UI 收集器打标签的测试）用这个事件往所有 Inspector 塞 toggle + label。后续要做这类功能可参考它。
 - **ToolKit 工具页 `ScriptableSingleton` 类名要和文件名一致**：`ScriptInitSetting` 类在 `ScriptInitSettings.cs`（差个 s）→ Unity 找不到 MonoScript，`CreateAsset` 永远失败，`OnWillCreateAsset` 里访问 `Inst` 重入 → 无限递归 StackOverflow（已修 2026-10-21：改文件名 + `LoadOrCreate` 里 `CreateAsset` 前先赋值 `mInstance` 防重入）。
+- **`ConfigCopyTool` 的拷贝目标目录会被清空重拷，别让它和 asmdef 同层**：`RuntimeDst` 要指到 `Scripts/ThirdParty/Luban`（子目录），asmdef 在 `ThirdParty` 根。踩过：`RuntimeDst` 写成 `Scripts/ThirdParty`（根），运行后清空了 `WorldTree.ThirdParty.asmdef` + `Luban/` 子目录，`HotFix` 引用找不到报一串 `CS0246`。
 ### 4.3 运行时与源生成器
 
 - **BCL `Task` 完成后的恢复要等下一次心跳 tick**：`INode.GetAwaiter(Task)` / `TreeTaskLink` 完成后都走 `WorldContext.Post`，而该队列由 `UpdateRule` **每帧整队排空**。心跳 `frameTime=1000ms` 时，一个 300ms 的 `Task` 实测 **1003ms** 才恢复 → 别拿它做毫秒级计时。
