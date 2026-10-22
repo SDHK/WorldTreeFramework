@@ -9,9 +9,9 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 数据库
+	/// 数据库管理器
 	/// </summary>
-	public abstract class DataBase : Node
+	public abstract class DataBaseManager : Node
 		, AsFieldBranch
 		, ComponentOf<World>
 	{

@@ -169,7 +169,7 @@ Unity 由 `StartWorld.Add` 调用 `ConfigLoader.Load<T>` 和 `CreateWorldLines`�
 统一约定：管理器挂在 `World` 上，**唯一来源是它的 `FieldOf` 子节点**；管理器本身不认具体实现；装配走 `AddAssetSource<TSource>()` / `AddDataSource<TSource>()` / `AddDataSource<TSource>(string path)`，内部 `AddField`，重复调用返回已有的。
 
 - `RunTime/Asset/`：`IAssetSource` 接口 + `Base/AssetManager` + `YooAsset/YooAssetManager`（`IAssetSource` 实现，句柄按地址缓存）。业务只写 `world.GetAssetManager().LoadAsset<T>(address)`，名字里不出现 `Yoo`；配置 bytes 走同步加载，`GameObject` 用 `LoadAssetAsync`。加新来源（编辑器直读等）就再写一个 `IAssetSource`，启动流程换掉 `AddAssetSource<>` 的泛型参数。
-- `Framework/Module/DataBase`：`IDataBase` 接口 + `Base/DataBase` + `LiteDB/LiteDBManager`（`LiteDBCollection<T>` 是它的组件）。用法 `db.AddDataSource<LiteDBManager>(path)`，之后 `db.Insert` / `Find` / `Delete` 走 `DataBaseRule`。
+- `Framework/Module/DataBase`：`IDataBase` 接口 + `Base/DataBaseManager` + `LiteDB/LiteDBManager`（`LiteDBCollection<T>` 是它的组件）。用法 `db.AddDataSource<LiteDBManager>(path)`，之后 `db.Insert` / `Find` / `Delete` 走 `DataBaseManagerRule`。
 
 ### 仓库
 框架、产品、工具拆成平级仓库，放同一父目录（`WorldTreeWorkspace`）。父目录名随便，不归 git。

@@ -10,13 +10,13 @@ using System.Collections.Generic;
 
 namespace WorldTree
 {
-	public static partial class DataBaseRule
+	public static partial class DataBaseManagerRule
 	{
 		/// <summary>
 		/// 给数据库装上实现来源。只有一个来源，重复调用直接返回已有的。
 		/// </summary>
-		public static TSource AddDataSource<TSource>(this DataBase self)
-			where TSource : class, INode, IDataBase, AsRule<Awake>, FieldOf<DataBase>
+		public static TSource AddDataSource<TSource>(this DataBaseManager self)
+			where TSource : class, INode, IDataBase, AsRule<Awake>, FieldOf<DataBaseManager>
 		{
 			if (self.Source is TSource exists) return exists;
 
@@ -28,8 +28,8 @@ namespace WorldTree
 		/// <summary>
 		/// 给数据库装上实现来源（带路径）。
 		/// </summary>
-		public static TSource AddDataSource<TSource>(this DataBase self, string path)
-			where TSource : class, INode, IDataBase, AsRule<Awake<string>>, FieldOf<DataBase>
+		public static TSource AddDataSource<TSource>(this DataBaseManager self, string path)
+			where TSource : class, INode, IDataBase, AsRule<Awake<string>>, FieldOf<DataBaseManager>
 		{
 			if (self.Source is TSource exists) return exists;
 
@@ -41,7 +41,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取集合
 		/// </summary>
-		public static IDataCollection<T> GetCollection<T>(this DataBase self)
+		public static IDataCollection<T> GetCollection<T>(this DataBaseManager self)
 		{
 			return self.Source.GetCollection<T>();
 		}
@@ -49,7 +49,7 @@ namespace WorldTree
 		/// <summary>
 		/// 尝试获取集合
 		/// </summary>
-		public static bool TryGetCollection<T>(this DataBase self, out IDataCollection<T> collection)
+		public static bool TryGetCollection<T>(this DataBaseManager self, out IDataCollection<T> collection)
 		{
 			return self.Source.TryGetCollection(out collection);
 		}
@@ -57,7 +57,7 @@ namespace WorldTree
 		/// <summary>
 		/// 数量
 		/// </summary>
-		public static int Count<T>(this DataBase self)
+		public static int Count<T>(this DataBaseManager self)
 		{
 			return self.Source.GetCollection<T>().Count();
 		}
@@ -65,7 +65,7 @@ namespace WorldTree
 		/// <summary>
 		/// 插入
 		/// </summary>
-		public static void Insert<T>(this DataBase self, long id, T data)
+		public static void Insert<T>(this DataBaseManager self, long id, T data)
 		{
 			self.Source.GetCollection<T>().Insert(id, data);
 		}
@@ -73,7 +73,7 @@ namespace WorldTree
 		/// <summary>
 		/// 根据ID查找
 		/// </summary>
-		public static T Find<T>(this DataBase self, long id)
+		public static T Find<T>(this DataBaseManager self, long id)
 		{
 			return self.Source.GetCollection<T>().Find(id);
 		}
@@ -81,7 +81,7 @@ namespace WorldTree
 		/// <summary>
 		/// 查找所有
 		/// </summary>
-		public static IEnumerable<T> FindAll<T>(this DataBase self)
+		public static IEnumerable<T> FindAll<T>(this DataBaseManager self)
 		{
 			return self.Source.GetCollection<T>().FindAll();
 		}
@@ -89,7 +89,7 @@ namespace WorldTree
 		/// <summary>
 		/// 更新
 		/// </summary>
-		public static bool Update<T>(this DataBase self, long id, T data)
+		public static bool Update<T>(this DataBaseManager self, long id, T data)
 		{
 			return self.Source.GetCollection<T>().Update(id, data);
 		}
@@ -97,7 +97,7 @@ namespace WorldTree
 		/// <summary>
 		/// 删除所有
 		/// </summary>
-		public static void DeleteAll<T>(this DataBase self)
+		public static void DeleteAll<T>(this DataBaseManager self)
 		{
 			self.Source.GetCollection<T>()?.DeleteAll();
 		}
@@ -105,7 +105,7 @@ namespace WorldTree
 		/// <summary>
 		/// 删除
 		/// </summary>
-		public static void Delete<T>(this DataBase self, long id)
+		public static void Delete<T>(this DataBaseManager self, long id)
 		{
 			self.Source.GetCollection<T>()?.Delete(id);
 		}
