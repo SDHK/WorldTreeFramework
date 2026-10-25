@@ -1,16 +1,5 @@
-﻿namespace WorldTree
+namespace WorldTree
 {
-
-	/// <summary>
-	/// 组件注册
-	/// </summary>
-	public interface ViewRegister : ISendRule { }
-
-	/// <summary>
-	/// 组件注销
-	/// </summary>
-	public interface ViewUnRegister : ISendRule { }
-
 	/// <summary>
 	/// 打开
 	/// </summary>
@@ -40,5 +29,4 @@
 	/// 子视图关闭   
 	/// </summary>
 	public interface SubViewClose : ISendRule<View> { }
-
 }

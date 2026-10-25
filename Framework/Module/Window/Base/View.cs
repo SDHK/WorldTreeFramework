@@ -7,8 +7,6 @@
 
 */
 
-using System;
-
 namespace WorldTree
 {
 	/// <summary>
@@ -22,8 +20,6 @@ namespace WorldTree
 		, AsRule<Open>
 		, AsRule<Close>
 		, AsRule<LayerChange>
-		, AsRule<ViewRegister>
-		, AsRule<ViewUnRegister>
 	{
 		/// <summary>
 		/// 父级视图层组件
@@ -119,20 +115,21 @@ namespace WorldTree
 			set
 			{
 				ViewBind bind = Bind.Value;
-				bind?.SetActive(value);
+				if (bind == null || bind.IsActive == value) return;
+				bind.SetActive(value);
+				if (value) NodeRuleHelper.TrySendRule(this, default(Show));
+				else NodeRuleHelper.TrySendRule(this, default(Hide));
 			}
 		}
-
 
 		public virtual int OnOpen()
 		{
 			if (IsOpen) return 0;
 
-			if (this.Bind.IsNull)
-			{
-				long bindTypeCode = this.TypeToCode<ViewBind>();
-				this.Bind = new(NodeBranchHelper.AddNode(this, default(ComponentBranch), bindTypeCode, typeof(ViewBind), out INode _) as ViewBind);
-			}
+			if (this.Bind.IsNull) this.Bind = this.AddComponent(out ViewBind _);
+			NodeRuleHelper.TrySendRule(this, default(Open));
+			NodeRuleHelper.TrySendRule(this, default(LayerChange));
+			if (IsShow) NodeRuleHelper.TrySendRule(this, default(Show));
 			return 0;
 		}
 
@@ -140,6 +137,8 @@ namespace WorldTree
 		{
 			if (!IsOpen) return 0;
 
+			if (IsShow) NodeRuleHelper.TrySendRule(this, default(Hide));
+			NodeRuleHelper.TrySendRule(this, default(Close));
 			this.Bind.Value.Dispose();
 			this.Bind = null;
 			return 0;
@@ -156,8 +155,17 @@ namespace WorldTree
 			OnClose();
 			base.OnBeforeDispose();
 		}
-	}
 
+		/// <summary>
+		/// 裁剪后清空树派生状态（RemoveNode 不会清 Parent）
+		/// </summary>
+		public override void OnCutSelf()
+		{
+			ParentLayer = null;
+			Layer = 0;
+			base.OnCutSelf();
+		}
+	}
 
 
 
@@ -181,8 +189,6 @@ namespace WorldTree
 		{
 			if (self is View) NodeRuleHelper.TrySendRule(self, default(LayerChange));
 		}
-
-
 
 	}
 }

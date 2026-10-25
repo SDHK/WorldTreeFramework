@@ -238,7 +238,7 @@ ToolProject/               工具分类目录（不归 git）
 Base/       视图基类与绑定
   IViewElement.cs / IView.cs / View.cs（View + View<VB>）
   ViewLayerItem.cs（ViewObject / ViewWidget / ViewContainer / ViewLayerItem / ViewWindow） / ViewBind.cs
-  ViewRuleBase.cs（Open/Close/Show/Hide/LayerChange/ViewRegister…）；规则类与节点同文件（ViewProxyRule / ViewBindProxyRule）
+  ViewRuleBase.cs（Open/Close/Show/Hide/LayerChange/SubViewClose）；规则类与节点同文件（ViewProxyRule）
 Component/  控件级 ViewWidget：Button / Text / Image
 Layer/      ViewLayerGroup + Bind（只管 Depth 0 的层）、ViewLayer + ViewLayerBind（规则与节点同文件）
 Test/       ViewTestWindow + 规则（同文件）
@@ -250,9 +250,10 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 - `View` 是「节点 + 平台绑定」。`View.Parent` 的 setter 按父类型推导 `ParentLayer`；`Layer`（byte）、`Depth`、`Order` 用位压缩排序。
 - 视图分三支：`ViewObject`（加载物体：按类型名加载预制体）、`ViewWidget`（子级/组件：不加载，字段绑定）、`ViewContainer : ViewWidget`（容器级：能承载窗口与其他 widget）。`ViewLayer` / `ViewLayerGroup` 都是 `ViewContainer`。
 - `ViewLayerItem : ViewObject, ComponentOf<ViewContainer>`，`ViewWindow : ViewLayerItem`（有自身表现的 UI 窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
-- **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一），不是 `ViewLayerBind`；`ViewBind` 只作为 View 自己的组件存在，不挂任何子节点。
-- **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，只持有 `ui`（平台元素）这一个桥接引用，不挂任何子节点、也没有 `ViewBindType`。子视图是父 **View** 的子节点（`View : ChildOf<View>`，`AddView` 走子分支），`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
-- 元素挂载走 **`Open` / `Close`**（不再有 ViewElementLoad/UnLoad），由 **`ViewBind` 的 Node 生命周期**发出：`ViewBindProxyRule.OnAddSelfToTree` 先赋 `View.Bind` 再发 `Open` + `LayerChange`（可见时再发 `Show`）；`OnBeforeDisposeActive` 发 `Show`/`Hide`；`OnDispose` 在摘分支前发 `Close`。引擎按**视图类型**实现 `OpenRule<TView>` / `CloseRule<TView>`（打开时取实例/装配子级，关闭时解绑/还池）。
+- **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一），不是 `ViewLayerBind`；`ViewBind` 只作为 View 自己的组件存在，承载子级 widget 的挂载。
+- **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，只持有 `ui`（平台元素）这一个桥接引用，没有 `ViewBindType`；子级 widget 挂在它的 Child 分支下。子视图是父 **View** 的子节点（`View : ChildOf<View>`，`AddView` 走子分支），`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
+- 元素挂载走 **`Open` / `Close`**（不再有 ViewElementLoad/UnLoad），由 **View 自己发**：`OnOpen` 建好 Bind 后发 `Open` + `LayerChange`（可见时再发 `Show`）；`OnClose` 先发 `Hide`（可见时）、`Close`，再销毁 Bind；`IsShow` 切换发 `Show`/`Hide`；`OnBeforeDispose` 先调 `OnClose`。引擎按**视图类型**实现 `OpenRule<TView>` / `CloseRule<TView>`（打开时取实例/装配子级，关闭时解绑/还池）。`ViewBind` 只剩 `ui` 字段，是纯数据节点（`ComponentOf<View>` + `AsChildBranch`）；绑定生命周期全部由 View 驱动。
+- **字段声明在 View，实例挂在 Bind**：子级 widget 字段写在 View 上（如 `ViewTestWindow.text`），类型用 `NodeRef<T>`（还池后自动变空，防悬空）；实例节点挂在 Bind 的 Child 分支下，关闭时随 Bind 一起回收。
 - 子级 widget 的绑定契约写在 **View 的字段**上（如 `ViewTestWindow.text / button`），由编辑器工具反射字段列表、生成器生成强类型赋值，运行时按字段名分派，零反射。
 - `ViewLayerRule.OpenView` 把窗口登记进层的 `ViewList`、设 `Layer = Count`，再调 `View.OnOpen()`。
 - `ViewManager.GetLayer(int)` 转发到 `ViewLayerGroup`（懒建）：group 只挂在 manager 下，按 int 建/取层；层号就是传进去的整数。
@@ -266,9 +267,10 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 - `ViewManager.GetLayer(int)` 建层并持有；层的 `ViewList` / `IdIndexDict` 是 `ViewLayer` 自己的字段，在 `ViewLayer` 的 `Awake` 里分配（`ViewLayerBind` 只剩平台节点）。
 - `ViewLayerRule.TryAddView` 把窗口作为**层容器 `ViewLayer`** 的组件挂上；`OpenView` 再登记进 `ViewList`、设 `Layer = Count`、调 `View.OnOpen()`（`OnOpen` 对自身发 `ViewElementLoad`，引擎据此加载/装配）。
 - `CloseView` 调 `View.OnClose()` 后从 `ViewList` 移除并重排 `Layer`；重开不会重复登记。
-- `ViewBindProxyRule.OnBeforeDispose` 只发 `BeforeRemoveRuleGroup`，不再回调 `self.OnBeforeDispose()`（原来会无限递归）。
+
 - `View.OnBeforeDispose` 先调 `OnClose()`（发 `Close` + 销毁 Bind），再走基类释放。级联回收走的是遍历里的 `OnBeforeDispose`，所以 Bind 销毁时子级 widget 也会先关闭。基类 `Node` 没有 `OnClose`，`Dispose` 只做 `OnBeforeDispose`/`OnDispose`，这条是 View 自己补的。
-- 冒烟：`TryAddView<ViewTestWindow>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`OpenView` 后 `Bind` 是 `WorldTree.ViewBind`、`count=1 slot=1`；`CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 `ViewBindProxyRule`（Node 生命周期），View 只负责建/毁 Bind。
+- 冒烟：`TryAddView<ViewTestWindow>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`OpenView` 后 `Bind` 是 `WorldTree.ViewBind`、`count=1 slot=1`；`CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 View（`OnOpen`/`OnClose`/`IsShow`/`OnBeforeDispose`）；`OnCutSelf` 清 `ParentLayer`/`Layer`（`RemoveNode` 不清 Parent）。
+- Unity 侧冒烟在 `HotFixUnity/Client/_Test/ViewTest.cs`：开 → 隐/显 → 关 → 重开 → Dispose，失败抛异常。已在 `InitialDomain` 的 `AddRule` 启用（每次 Play 跑），Q 键那处仍注释。
 
 剩下的问题：
 
@@ -324,6 +326,7 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 - **改程序集 `AssemblyName` 要同步 `ProjectGeneratorSetting` 名单**：`SourceGeneratorBase` 用 `Compilation.AssemblyName` 匹配 `ProjectGeneratorSetting` 里的名单，`AssemblyName` 改了不同步名单，生成器整包跳过、法则基类全不生成（报一串 CS0246 找不到 `XxxRule<>`）。改 `AssemblyName` 后记得改名单。
 - **跨平台视图组件别用跟 uGUI 同名的裸名**：WorldTree 的 `Text`/`Image`/`Button` 跟 `UnityEngine.UI.Text/Image/Button` 重名。之前 Module 是 asmdef（AOT asmdef 不引用它，不冲突）；Module 移出编成 dll 放 `Assets/Plugins`（现 `Assets/Scripts/AOT/Plugins`）后，`overrideReferences:false` 的 asmdef 自动引用它，类型解析冲突（`GameEntry` 报 `error CS1061: 'Text' does not contain 'text'`）。已改名 `ViewText`/`ViewImage`/`ViewButton`。
 - **`ISourceGenerator` 的 `ISyntaxReceiver` 在 Roslyn 4.x 下失效**：`RegisterForSyntaxNotifications` 注册的 receiver，`context.SyntaxReceiver` 在 .NET 6+ 增量生成器框架下恒为 null（官方已把 `ISourceGenerator`/`ISyntaxReceiver` 标 obsolete，推荐 `IIncrementalGenerator`）。dotnet 8/10 都复现，升级分析器 `Microsoft.CodeAnalysis` 版本无效。症状：用 `ISyntaxReceiver` 收集数据的生成器静默 return、强类型方法（`GetParent`/`AddComponent`/法则基类）全不生成，宿主报 CS0246/CS1061；只有直接遍历 `Compilation.SyntaxTrees` 的 `RuleMethodGenerator` 正常。解法：数据收集改成遍历 `context.Compilation.SyntaxTrees`（加了 `SyntaxReceiverHelper.Fill` 手动填充，12 个生成器已改），8 个 `ISyntaxReceiver` 类保留复用 `OnVisitSyntaxNode`。
+- **同程序集声明的法则接口不能用 `[NodeRule(nameof(XxxRule<...>))]` 简写**：`RuleMethodGenerator` 用 `GetSymbolInfo` 解析基类，而 `XxxRule<N>` 由 `RuleSupplementGenerator` 在**同一次编译**里生成，生成器之间互相看不到输出 → 解析失败、静默跳过，表现为 `ViewTestWindow` 没有任何 `_RuleMethod` 嵌套类、`OpenRule` 日志不打。Core 里 `[NodeRule]` 简写是 **0 处**，所以没有反例；Module 里能用的简写都是 Core 的接口。解法：写显式规则类（`sealed class OnOpenRule : OpenRule<ViewTestWindow> { protected override void Execute(ViewTestWindow self) ... }`），源码可以直接继承同一次编译生成的基类。`ViewTestWindow` / `ViewLayerRule.OnCloseRule` 已按此改。
 
 ---
 

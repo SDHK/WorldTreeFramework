@@ -40,7 +40,7 @@ namespace WorldTree
 	public static partial class ViewLayerRule
 	{
 		/// <summary>
-		/// 层绑定的列表在 Awake 里分配，不依赖 ViewRegister 钩子
+		/// 层绑定的列表在 Awake 里分配
 		/// </summary>
 		class Awake : AwakeRule<ViewLayer>
 		{
@@ -62,7 +62,7 @@ namespace WorldTree
 			}
 		}
 
-		[NodeRule(nameof(CloseRule<ViewLayer>))]
+		[NodeRule(nameof(Close))]
 		private static void OnCloseRule(this ViewLayer self)
 		{
 			// 关闭时清理所有视图

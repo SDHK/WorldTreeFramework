@@ -49,7 +49,7 @@ namespace WorldTree.Analyzer
 		{
 			Authors = new HashSet<string>() { "闪电黑客" };
 			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
-			Add("Module", ProjectConfigHelper.ModuleConfigs);
+			Add("WorldTree.Module", ProjectConfigHelper.ModuleConfigs);
 		}
 	}
 }

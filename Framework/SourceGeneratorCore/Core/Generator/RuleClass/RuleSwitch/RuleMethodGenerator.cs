@@ -121,7 +121,7 @@ namespace WorldTree.SourceGenerator
 						AttributeArgumentSyntax argumentName = attributeRuleSwitch.ArgumentList.Arguments[0];
 
 
-						if (!TryGetRuleType(semanticModel, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+						if (!TryGetRuleType(semanticModel, methodDeclaration, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 							continue;
 						AttributeArgumentSyntax argumentSwitch = attributeRuleSwitch.ArgumentList.Arguments[1];
 						AttributeArgumentSyntax argumentCase = attributeRuleSwitch.ArgumentList.Arguments[2];
@@ -224,7 +224,7 @@ namespace WorldTree.SourceGenerator
 						});
 					}
 					//简写方法
-					else if (TryGetRuleType(semanticModel, attributeNodeRule.ArgumentList.Arguments[0], out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+					else if (TryGetRuleType(semanticModel, methodDeclaration, attributeNodeRule.ArgumentList.Arguments[0], out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 					{
 						if (isRuleType)
 						{
@@ -961,7 +961,90 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 尝试获取法则类型
 		/// </summary>
-		private bool TryGetRuleType(SemanticModel semanticModel, AttributeArgumentSyntax argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
+		/// <summary>
+		/// 解析 [NodeRule] 的法则类型：先按接口解析（nameof(Open)），失败再按生成的法则类解析（nameof(OpenRule&lt;N&gt;)）。
+		/// </summary>
+		private bool TryGetRuleType(SemanticModel semanticModel, MethodDeclarationSyntax method, AttributeArgumentSyntax argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
+		{
+			if (TryGetRuleTypeByInterface(semanticModel, method, argumentSyntax, out ruleTypeSymbol, out baseTypeSymbol, out ruleBaseEnum)) return true;
+			return TryGetRuleTypeByClass(semanticModel, argumentSyntax, out ruleTypeSymbol, out baseTypeSymbol, out ruleBaseEnum);
+		}
+
+		/// <summary>
+		/// 接口形式：nameof(Open)。节点类型取方法第一个参数，基类合成 SendRule&lt;N, Open&gt; / CallRule&lt;N, Open, ..., OutT&gt;。
+		/// </summary>
+		private bool TryGetRuleTypeByInterface(SemanticModel semanticModel, MethodDeclarationSyntax method, AttributeArgumentSyntax argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
+		{
+			ruleTypeSymbol = null;
+			baseTypeSymbol = null;
+			ruleBaseEnum = default;
+
+			if (argumentSyntax.Expression is not InvocationExpressionSyntax invocation) return false;
+			if (invocation.Expression.ToString() != "nameof") return false;
+			var nameofArgument = invocation.ArgumentList.Arguments.FirstOrDefault()?.Expression;
+			if (nameofArgument == null) return false;
+
+			if (semanticModel.GetSymbolInfo(nameofArgument).Symbol is not INamedTypeSymbol interfaceSymbol) return false;
+			if (interfaceSymbol.TypeKind != TypeKind.Interface) return false;
+
+			string baseName;
+			if (NamedSymbolHelper.TryGetInterfaceName(interfaceSymbol, GeneratorHelper.ISendRule, out INamedTypeSymbol baseInterface))
+			{
+				ruleBaseEnum = RuleBaseEnum.SendRule;
+				baseName = GeneratorHelper.SendRule;
+			}
+			else if (NamedSymbolHelper.TryGetInterfaceName(interfaceSymbol, GeneratorHelper.ISendRuleAsync, out baseInterface))
+			{
+				ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
+				baseName = GeneratorHelper.SendRuleAsync;
+			}
+			else if (NamedSymbolHelper.TryGetInterfaceName(interfaceSymbol, GeneratorHelper.ICallRule, out baseInterface))
+			{
+				ruleBaseEnum = RuleBaseEnum.CallRule;
+				baseName = GeneratorHelper.CallRule;
+			}
+			else if (NamedSymbolHelper.TryGetInterfaceName(interfaceSymbol, GeneratorHelper.ICallRuleAsync, out baseInterface))
+			{
+				ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
+				baseName = GeneratorHelper.CallRuleAsync;
+			}
+			else return false;
+
+			if (semanticModel.GetDeclaredSymbol(method) is not IMethodSymbol methodSymbol) return false;
+			if (methodSymbol.Parameters.Length == 0) return false;
+
+			ITypeSymbol nodeType = methodSymbol.Parameters[0].Type;
+
+			// N : INode, AsRule<接口>
+			if (!NamedSymbolHelper.TryGetInterfaceName(nodeType, "INode", out _)) return false;
+			bool hasAsRule = nodeType.AllInterfaces.Any(i =>
+				i.Name == "AsRule" &&
+				i.TypeArguments.Length == 1 &&
+				SymbolEqualityComparer.Default.Equals(i.TypeArguments[0], interfaceSymbol));
+			if (!hasAsRule) return false;
+
+			int arity = 2 + baseInterface.TypeArguments.Length;
+			INamedTypeSymbol baseDefinition = semanticModel.Compilation.GetTypeByMetadataName($"WorldTree.{baseName}`{arity}");
+			if (baseDefinition == null) return false;
+
+			ITypeSymbol[] arguments = new ITypeSymbol[arity];
+			arguments[0] = nodeType;
+			arguments[1] = interfaceSymbol;
+			for (int i = 0; i < baseInterface.TypeArguments.Length; i++)
+			{
+				arguments[i + 2] = baseInterface.TypeArguments[i];
+			}
+
+			INamedTypeSymbol constructed = baseDefinition.Construct(arguments);
+			ruleTypeSymbol = constructed;
+			baseTypeSymbol = constructed;
+			return true;
+		}
+
+		/// <summary>
+		/// 类形式：nameof(OpenRule&lt;N&gt;)。保留作参考，旧简写继续走这里。
+		/// </summary>
+		private bool TryGetRuleTypeByClass(SemanticModel semanticModel, AttributeArgumentSyntax argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
 		{
 			ruleBaseEnum = default;
 			ruleTypeSymbol = null;

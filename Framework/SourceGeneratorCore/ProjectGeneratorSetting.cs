@@ -19,6 +19,7 @@ namespace WorldTree.SourceGenerator
 			typeof(RuleSupplementGeneratorRun),
 			typeof(RuleMethodGeneratorRun),
 			typeof(RuleExtensionMethodGeneratorRun),
+
 			typeof(TreeCopyGeneratorRun),
 			typeof(TreeDataSerializeGeneratorRun),
 			typeof(TreePackSerializeGeneratorRun),
@@ -27,10 +28,11 @@ namespace WorldTree.SourceGenerator
 		{
 			typeof(INodeProxyGeneratorRun),
 			typeof(RuleSupplementGeneratorRun),
+			typeof(RuleMethodGeneratorRun),
+
 			typeof(TreeCopyGeneratorRun),
 			typeof(TreeDataSerializeGeneratorRun),
 			typeof(TreePackSerializeGeneratorRun),
-			typeof(RuleMethodGeneratorRun),
 		};
 
 	}
