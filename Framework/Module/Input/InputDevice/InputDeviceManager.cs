@@ -40,7 +40,7 @@ namespace WorldTree
 		/// </summary>
 		public RuleBroadcast<InputGlobal> InputDataEvent;
 
-		[NodeRule(nameof(AddRule<InputDeviceManager>))]
+		[NodeRule(nameof(Add))]
 		private static void OnAddRule(InputDeviceManager self)
 		{
 			self.World.PoolGetUnit(out self.InputDeviceDict);
@@ -48,7 +48,7 @@ namespace WorldTree
 			self.World.GetRuleBroadcast(out self.InputDataEvent);
 		}
 
-		[NodeRule(nameof(UpdateRule<InputDeviceManager>))]
+		[NodeRule(nameof(Update))]
 		private static void OnUpdateRule(InputDeviceManager self)
 		{
 			//输入数据塞入到设备

@@ -31,6 +31,7 @@ namespace WorldTree
 
 	}
 
+	[NodeRuleTarget(nameof(ViewTestWindow))]
 	public static partial class ViewTestWindowRule
 	{
 		[NodeRule(nameof(Open))]
@@ -38,10 +39,12 @@ namespace WorldTree
 		{
 			self.Log($"视图窗口节点添加！！!{self.Depth}:{self.Layer}:{self.Order}");
 		}
+
 		[NodeRule(nameof(LayerChange))]
 		private static void OnLayerChangeRule(this ViewTestWindow self)
 		{
 			self.Log($"视图窗口层级变更！！!{self.Depth}:{self.Layer}:{self.Order}");
 		}
+
 	}
 }

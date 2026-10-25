@@ -23,7 +23,7 @@ namespace WorldTree
 		/// </summary>
 		public ILiteCollection<BsonDocument> collection;
 
-		[NodeRule(nameof(AwakeRule<LiteDBCollection<T>, ILiteCollection<BsonDocument>>))]
+		[NodeRule(nameof(Awake<ILiteCollection<BsonDocument>>))]
 		private static void OnAwakeRule(LiteDBCollection<T> self, ILiteCollection<BsonDocument> collection)
 		{
 			self.collection = collection;

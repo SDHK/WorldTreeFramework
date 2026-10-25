@@ -53,6 +53,11 @@ namespace WorldTree.SourceGenerator
 		public INamedTypeSymbol baseTypeSymbol;
 		public RuleBaseEnum ruleBaseEnum;
 		public string switchValueType;
+
+		/// <summary>
+		/// 接口形式生成的基类文本（如 LayerChangeRule&lt;ViewTestWindow&gt;）；为空时回退 ruleTypeSymbol
+		/// </summary>
+		public string BaseTypeText;
 		public string switchValue;
 	}
 
@@ -121,7 +126,7 @@ namespace WorldTree.SourceGenerator
 						AttributeArgumentSyntax argumentName = attributeRuleSwitch.ArgumentList.Arguments[0];
 
 
-						if (!TryGetRuleType(semanticModel, methodDeclaration, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+						if (!TryGetRuleType(semanticModel, methodDeclaration, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum, out string baseTypeText))
 							continue;
 						AttributeArgumentSyntax argumentSwitch = attributeRuleSwitch.ArgumentList.Arguments[1];
 						AttributeArgumentSyntax argumentCase = attributeRuleSwitch.ArgumentList.Arguments[2];
@@ -206,6 +211,7 @@ namespace WorldTree.SourceGenerator
 							ruleClassData.ruleTypeSymbol = ruleTypeSymbol;
 							ruleClassData.baseTypeSymbol = baseTypeSymbol;
 							ruleClassData.ruleBaseEnum = ruleBaseEnum;
+							ruleClassData.BaseTypeText = baseTypeText;
 							ruleClassData.switchValueType = switchValueType;
 							ruleClassData.switchValue = switchValue;
 							ruleFileData.Class.Add(className, ruleClassData);
@@ -224,7 +230,7 @@ namespace WorldTree.SourceGenerator
 						});
 					}
 					//简写方法
-					else if (TryGetRuleType(semanticModel, methodDeclaration, attributeNodeRule.ArgumentList.Arguments[0], out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+					else if (TryGetRuleType(semanticModel, methodDeclaration, attributeNodeRule.ArgumentList.Arguments[0], out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum, out string baseTypeText))
 					{
 						if (isRuleType)
 						{
@@ -288,6 +294,7 @@ namespace WorldTree.SourceGenerator
 							ruleClassData.ruleTypeSymbol = ruleTypeSymbol;
 							ruleClassData.baseTypeSymbol = baseTypeSymbol;
 							ruleClassData.ruleBaseEnum = ruleBaseEnum;
+							ruleClassData.BaseTypeText = baseTypeText;
 							ruleFileData.Class.Add(className, ruleClassData);
 						}
 						if (!ruleClassData.isRuleType && isRuleType)
@@ -360,6 +367,9 @@ namespace WorldTree.SourceGenerator
 
 
 
+		private static string GetBaseType(RuleClassData classData)
+			=> string.IsNullOrEmpty(classData.BaseTypeText) ? classData.ruleTypeSymbol.ToDisplayString() : classData.BaseTypeText;
+
 		private void AddClass(StringBuilder classCode, RuleClassData classData, HashSet<string> outerTypeParams)
 		{
 			if (classData.Methods.Count == 0) return;
@@ -399,7 +409,7 @@ namespace WorldTree.SourceGenerator
 
 			if (classData.isRuleType)
 			{
-				classCode.AppendLine($"		sealed class {classData.ClassName}_RuleMethod{typeTName} : {classData.ruleTypeSymbol.ToDisplayString()}");
+				classCode.AppendLine($"		sealed class {classData.ClassName}_RuleMethod{typeTName} : {GetBaseType(classData)}");
 				classCode.AppendLine($"		{{");
 				string ClassName = classData.ClassName.Replace("Rule", "");
 				classCode.AppendLine(
@@ -456,28 +466,28 @@ namespace WorldTree.SourceGenerator
 					case RuleBaseEnum.ListenerRule:
 						classCode.AppendLine(
 						$$"""
-							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override void Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{GetBaseType(classData)}} { protected override void Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 						);
 						break;
 					case RuleBaseEnum.SendRuleAsync:
 						classCode.AppendLine(
 						$$"""
-							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{GetBaseType(classData)}} { protected override TreeTask Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 						);
 						break;
 					case RuleBaseEnum.CallRule:
 						classCode.AppendLine(
 						$$"""
-							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override {{outType}} Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{GetBaseType(classData)}} { protected override {{outType}} Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 						);
 						break;
 					case RuleBaseEnum.CallRuleAsync:
 						classCode.AppendLine(
 						$$"""
-							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{classData.ruleTypeSymbol.ToDisplayString()}} { protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
+							sealed class {{classData.ClassName}}_RuleMethod{{typeTName}} : {{GetBaseType(classData)}} { protected override TreeTask<{{outType}}> Execute({{genericTypeParameter}}) => {{methodName}}({{genericParameter}}); }
 					"""
 						);
 						break;
@@ -520,7 +530,7 @@ namespace WorldTree.SourceGenerator
 				classCode.AppendLine($"		public interface {ClassName}{typeTName} : {ruleTypeSymbol.Name}{typeTName} {{}}");
 			}
 
-			classCode.AppendLine($"		sealed class {classData.ClassName}_RuleMethod{typeTName} : {classData.ruleTypeSymbol.ToDisplayString()}");
+			classCode.AppendLine($"		sealed class {classData.ClassName}_RuleMethod{typeTName} : {GetBaseType(classData)}");
 			classCode.AppendLine($"		{{");
 			classCode.AppendLine($"			/// <summary>");
 			classCode.AppendLine($"			/// 法则分发字典");
@@ -680,7 +690,7 @@ namespace WorldTree.SourceGenerator
 			}
 
 			// 生成类声明
-			classCode.AppendLine($"		sealed class {classData.ClassName}_RuleMethod{typeTName} : {classData.ruleTypeSymbol.ToDisplayString()}");
+			classCode.AppendLine($"		sealed class {classData.ClassName}_RuleMethod{typeTName} : {GetBaseType(classData)}");
 			classCode.AppendLine($"		{{");
 
 			// 生成 OnCreate 方法（如果需要）
@@ -964,20 +974,18 @@ namespace WorldTree.SourceGenerator
 		/// <summary>
 		/// 解析 [NodeRule] 的法则类型：先按接口解析（nameof(Open)），失败再按生成的法则类解析（nameof(OpenRule&lt;N&gt;)）。
 		/// </summary>
-		private bool TryGetRuleType(SemanticModel semanticModel, MethodDeclarationSyntax method, AttributeArgumentSyntax argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
-		{
-			if (TryGetRuleTypeByInterface(semanticModel, method, argumentSyntax, out ruleTypeSymbol, out baseTypeSymbol, out ruleBaseEnum)) return true;
-			return TryGetRuleTypeByClass(semanticModel, argumentSyntax, out ruleTypeSymbol, out baseTypeSymbol, out ruleBaseEnum);
-		}
+		private bool TryGetRuleType(SemanticModel semanticModel, MethodDeclarationSyntax method, AttributeArgumentSyntax argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum, out string baseTypeText)
+			=> TryGetRuleTypeByInterface(semanticModel, method, argumentSyntax, out ruleTypeSymbol, out baseTypeSymbol, out ruleBaseEnum, out baseTypeText);
 
 		/// <summary>
 		/// 接口形式：nameof(Open)。节点类型取方法第一个参数，基类合成 SendRule&lt;N, Open&gt; / CallRule&lt;N, Open, ..., OutT&gt;。
 		/// </summary>
-		private bool TryGetRuleTypeByInterface(SemanticModel semanticModel, MethodDeclarationSyntax method, AttributeArgumentSyntax argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
+		private bool TryGetRuleTypeByInterface(SemanticModel semanticModel, MethodDeclarationSyntax method, AttributeArgumentSyntax argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum, out string baseTypeText)
 		{
 			ruleTypeSymbol = null;
 			baseTypeSymbol = null;
 			ruleBaseEnum = default;
+			baseTypeText = null;
 
 			if (argumentSyntax.Expression is not InvocationExpressionSyntax invocation) return false;
 			if (invocation.Expression.ToString() != "nameof") return false;
@@ -1015,13 +1023,17 @@ namespace WorldTree.SourceGenerator
 
 			ITypeSymbol nodeType = methodSymbol.Parameters[0].Type;
 
-			// N : INode, AsRule<接口>
-			if (!NamedSymbolHelper.TryGetInterfaceName(nodeType, "INode", out _)) return false;
-			bool hasAsRule = nodeType.AllInterfaces.Any(i =>
-				i.Name == "AsRule" &&
-				i.TypeArguments.Length == 1 &&
-				SymbolEqualityComparer.Default.Equals(i.TypeArguments[0], interfaceSymbol));
-			if (!hasAsRule) return false;
+			// 不在这里校验 N 的约束：占位 INode 也先生成，让 SendRule<N, R> 的约束在编译期报错，用户再改真实类型。
+
+			// 基类文本：{接口}Rule<N, 接口泛型参数...>，直接继承 RuleSupplementGenerator 生成的基类
+			string prefix = interfaceSymbol.ContainingNamespace == null || interfaceSymbol.ContainingNamespace.IsGlobalNamespace
+				? "" : interfaceSymbol.ContainingNamespace.ToDisplayString() + ".";
+			StringBuilder baseText = new StringBuilder();
+			baseText.Append(prefix).Append(interfaceSymbol.Name).Append("Rule<").Append(nodeType.ToDisplayString());
+			foreach (ITypeSymbol typeArgument in interfaceSymbol.TypeArguments)
+				baseText.Append(", ").Append(typeArgument.ToDisplayString());
+			baseText.Append(">");
+			baseTypeText = baseText.ToString();
 
 			int arity = 2 + baseInterface.TypeArguments.Length;
 			INamedTypeSymbol baseDefinition = semanticModel.Compilation.GetTypeByMetadataName($"WorldTree.{baseName}`{arity}");
@@ -1040,41 +1052,6 @@ namespace WorldTree.SourceGenerator
 			baseTypeSymbol = constructed;
 			return true;
 		}
-
-		/// <summary>
-		/// 类形式：nameof(OpenRule&lt;N&gt;)。保留作参考，旧简写继续走这里。
-		/// </summary>
-		private bool TryGetRuleTypeByClass(SemanticModel semanticModel, AttributeArgumentSyntax argumentSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
-		{
-			ruleBaseEnum = default;
-			ruleTypeSymbol = null;
-			baseTypeSymbol = null;
-
-			// 检查是否是 nameof 表达式
-			if (argumentSyntax.Expression is not InvocationExpressionSyntax invocation) return false;
-			if (invocation.Expression.ToString() != "nameof") return false;
-			// 获取 nameof 参数的表达式
-			var nameofArgument = invocation.ArgumentList.Arguments.FirstOrDefault()?.Expression;
-			if (nameofArgument == null) return false;
-
-			// 获取符号信息
-			var symbolInfo = semanticModel.GetSymbolInfo(nameofArgument);
-			if (symbolInfo.Symbol is not INamedTypeSymbol namedTypeSymbol) return false;
-
-			ITypeSymbol typeSymbol;
-			// 检查类型是否符合规则
-			if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRule;
-			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRule;
-			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
-			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
-			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.ListenerRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.ListenerRule;
-			else return false;
-
-			baseTypeSymbol = typeSymbol as INamedTypeSymbol;
-			ruleTypeSymbol = namedTypeSymbol;
-			return true;
-		}
-
 		/// <summary>
 		/// 转换 泛型参数 ：T0, T1, T2, T3 =&gt; T0, T1, T2, T3 
 		/// </summary>

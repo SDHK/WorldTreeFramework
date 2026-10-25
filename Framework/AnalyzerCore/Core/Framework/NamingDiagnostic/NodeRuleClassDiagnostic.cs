@@ -1,7 +1,7 @@
 ﻿/****************************************
 
 * 作者：闪电黑客
-* 日期：2024/6/24 14:49
+* 日期： 2024/6/24 14:49
 
 * 描述：法则孤立类型分析
 
@@ -25,24 +25,46 @@ namespace WorldTree.Analyzer
 	{
 		public override SyntaxKind DeclarationKind => SyntaxKind.GenericName;
 
+		/// <summary>
+		/// 同时注册标识符和泛型名：接口 Open 是 IdentifierName，规则类 OpenRule&lt;T&gt; 是 GenericName
+		/// </summary>
+		public override void Initialize(AnalysisContext context)
+		{
+			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+			context.EnableConcurrentExecution();
+			context.RegisterCompilationStartAction(analysisContext =>
+			{
+				if (!TryGetDiagnosticConfigGroup(analysisContext.Compilation.AssemblyName, out _)) return;
+				analysisContext.RegisterSyntaxNodeAction(
+					ctx => { if (Configs.IsAuthorMatch(ctx.Node)) DiagnosticAction(ctx); },
+					SyntaxKind.IdentifierName,
+					SyntaxKind.GenericName);
+			});
+		}
+
 		protected override void DiagnosticAction(SyntaxNodeAnalysisContext context)
 		{
 			if (!TryGetDiagnosticConfigGroup(context.Compilation.AssemblyName, out List<DiagnosticConfigGroup> DiagnosticGroups)) return;
 
-			// 这可能是一个孤立的泛型类型标识符
-			if (context.Node is not GenericNameSyntax standaloneGeneric) return;
-			if (standaloneGeneric.Parent is not MemberDeclarationSyntax) return;
+			// 这可能是一个孤立的类型标识符（接口 Open 或规则类 OpenRule<T>）
+			if (context.Node is not SimpleNameSyntax standaloneName) return;
+			if (standaloneName.Parent is not MemberDeclarationSyntax) return;
 
-			var symbolInfo = context.SemanticModel.GetSymbolInfo(standaloneGeneric);
+			var symbolInfo = context.SemanticModel.GetSymbolInfo(standaloneName);
 			if (symbolInfo.Symbol is not INamedTypeSymbol namedTypeSymbol) return;
 
-			if (!NamedSymbolHelper.IsDerivedFrom(namedTypeSymbol, NamedSymbolHelper.ToINamedTypeSymbol(context.Compilation, GeneratorHelper.IRule), out _)) return;
+			// 只认法则接口
+			if (namedTypeSymbol.TypeKind != TypeKind.Interface) return;
+			if (!(NamedSymbolHelper.TryGetInterfaceName(namedTypeSymbol, GeneratorHelper.ISendRule, out _) ||
+				NamedSymbolHelper.TryGetInterfaceName(namedTypeSymbol, GeneratorHelper.ISendRuleAsync, out _) ||
+				NamedSymbolHelper.TryGetInterfaceName(namedTypeSymbol, GeneratorHelper.ICallRule, out _) ||
+				NamedSymbolHelper.TryGetInterfaceName(namedTypeSymbol, GeneratorHelper.ICallRuleAsync, out _))) return;
 
 			foreach (var objectDiagnostic in DiagnosticGroups)
 			{
 				if (objectDiagnostic.Diagnostics.TryGetValue(DiagnosticKey.NodeRuleClassAnalysis, out DiagnosticConfig codeDiagnostic))
 				{
-					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, standaloneGeneric.GetLocation(), standaloneGeneric.ToString()));
+					context.ReportDiagnostic(Diagnostic.Create(codeDiagnostic.Diagnostic, standaloneName.GetLocation(), standaloneName.ToString()));
 					return;
 				}
 			}
@@ -50,7 +72,7 @@ namespace WorldTree.Analyzer
 	}
 
 
-	public abstract class NodeRuleClassCodeFixProvider<C> : NamingCodeFixProviderBase<GenericNameSyntax, C>
+	public abstract class NodeRuleClassCodeFixProvider<C> : NamingCodeFixProviderBase<SimpleNameSyntax, C>
 		where C : ProjectDiagnosticConfig, new()
 	{
 		private List<string> typeNames = new();
@@ -58,21 +80,22 @@ namespace WorldTree.Analyzer
 
 		public override SyntaxKind DeclarationKind => SyntaxKind.GenericName;
 
-		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, GenericNameSyntax genericNameSyntax, CancellationToken cancellationToken)
+		protected override async Task<Document> CodeFix(DiagnosticConfig codeDiagnostic, Document document, SimpleNameSyntax standaloneName, CancellationToken cancellationToken)
 		{
 			SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken);
 
-			if (!TryGetRuleType(semanticModel, genericNameSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+			//获取包含该类型名称的类声明
+			ClassDeclarationSyntax classSyntax = standaloneName.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
+
+			if (!TryGetRuleType(semanticModel, classSyntax, standaloneName, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 				return null;
 
-			//获取包含该泛型名称的类声明
-			ClassDeclarationSyntax classSyntax = genericNameSyntax.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
 			string strThis = NodeRuleHelper.GetStrThis(semanticModel, classSyntax);
 
-			//拿到genericNameSyntax 的代码文字
-			var genericNameText = genericNameSyntax.ToFullString().TrimStart().TrimEnd();
-			// 删除 genericNameText 末尾的任何标点符号
-			genericNameText = genericNameText.TrimEnd(';', '}', '.', ',', '!', '?', ':', ')', ']', ' ', '\'', '\"');
+			//拿到类型名称的代码文字
+			var typeText = standaloneName.ToFullString().TrimStart().TrimEnd();
+			// 删除 typeText 末尾的任何标点符号
+			typeText = typeText.TrimEnd(';', '}', '.', ',', '!', '?', ':', ')', ']', ' ', '\'', '\"');
 
 			typeNames.Clear();
 			typeTNames.Clear();
@@ -90,46 +113,38 @@ namespace WorldTree.Analyzer
 			string genericTypeParameter = NodeRuleHelper.GetRuleTypeParameter(typeNames, isCall, out string outType);
 			string typeTName = NodeRuleHelper.GetTypeTName(typeTNames, classSyntax);
 
-			// 获取 ruleTypeSymbol 的类型名称（不带命名空间和泛型）
-			var ruleTypeName = "On" + ruleTypeSymbol.Name;
+			// nameof(LayerChange) -> OnLayerChangeRule
+			string simpleName = standaloneName.Identifier.Text;
+			string ruleTypeName = "On" + (simpleName.EndsWith("Rule") ? simpleName : simpleName + "Rule");
 
 			StringBuilder classCode = new();
-			classCode.AppendLine($"		[NodeRule(nameof({genericNameText}))]");
+			classCode.AppendLine($"		[NodeRule(nameof({typeText}))]");
 			classCode.AppendLine(NodeRuleHelper.GetRuleMethod(ruleBaseEnum, ruleTypeName, typeTName, genericTypeParameter, outType, strThis));
-			// 生成代码，并替换原有的泛型代码
+			// 生成代码，并替换原有的类型节点
 			var root = await document.GetSyntaxRootAsync(cancellationToken);
 			var newMethod = SyntaxFactory.ParseMemberDeclaration(classCode.ToString())
-				.WithLeadingTrivia(genericNameSyntax.GetLeadingTrivia())
-				.WithTrailingTrivia(genericNameSyntax.GetTrailingTrivia());
+				.WithLeadingTrivia(standaloneName.GetLeadingTrivia())
+				.WithTrailingTrivia(standaloneName.GetTrailingTrivia());
 
-			// 替换原有的泛型节点
-			var newRoot = root.ReplaceNode(genericNameSyntax.Parent, newMethod);
+			// 替换原有的节点
+			var newRoot = root.ReplaceNode(standaloneName.Parent, newMethod);
 			return document.WithSyntaxRoot(newRoot);
 		}
 
 		/// <summary>
-		/// 尝试获取法则类型
+		/// 尝试获取法则类型：接口形式走接口，类形式走生成的规则类
 		/// </summary>
-		private bool TryGetRuleType(SemanticModel semanticModel, GenericNameSyntax standaloneIdentifier, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
+		private bool TryGetRuleType(SemanticModel semanticModel, ClassDeclarationSyntax classSyntax, SimpleNameSyntax standaloneName, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum)
 		{
 			ruleBaseEnum = default;
 			ruleTypeSymbol = null;
 			baseTypeSymbol = null;
 
-			var symbolInfo = semanticModel.GetSymbolInfo(standaloneIdentifier);
-			if (symbolInfo.Symbol is not INamedTypeSymbol namedTypeSymbol) return false;
+			if (semanticModel.GetSymbolInfo(standaloneName).Symbol is not INamedTypeSymbol namedTypeSymbol) return false;
+			if (namedTypeSymbol.TypeKind != TypeKind.Interface) return false;
 
-			ITypeSymbol typeSymbol;
-			if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRule;
-			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRule;
-			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.SendRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.SendRuleAsync;
-			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.CallRuleAsync, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.CallRuleAsync;
-			else if (NamedSymbolHelper.CheckBase(namedTypeSymbol, GeneratorHelper.ListenerRule, out typeSymbol)) ruleBaseEnum = RuleBaseEnum.ListenerRule;
-			else return false;
-
-			baseTypeSymbol = typeSymbol as INamedTypeSymbol;
-			ruleTypeSymbol = namedTypeSymbol;
-			return true;
+			if (!NodeRuleHelper.TryGetInterfaceRule(semanticModel, standaloneName, out INamedTypeSymbol interfaceSymbol, out INamedTypeSymbol baseInterface, out ruleBaseEnum)) return false;
+			return NodeRuleHelper.TryGetRuleTypeFromInterfaceSymbol(semanticModel, classSyntax, interfaceSymbol, baseInterface, ruleBaseEnum, out ruleTypeSymbol, out baseTypeSymbol);
 		}
 	}
 

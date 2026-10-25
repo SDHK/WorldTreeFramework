@@ -19,7 +19,7 @@ namespace WorldTree
 		/// 感知器节点
 		/// </summary>
 		public TreeList<PerceptronNode> NodeList;
-		[NodeRule(nameof(AwakeRule<PerceptronLayer, int>))]
+		[NodeRule(nameof(Awake<int>))]
 		private static void OnAwakeRule(PerceptronLayer self, int count)
 		{
 			self.AddChild(out self.NodeList);
@@ -30,7 +30,7 @@ namespace WorldTree
 			}
 		}
 
-		[NodeRule(nameof(RemoveRule<PerceptronLayer>))]
+		[NodeRule(nameof(Remove))]
 		private static void OnRemoveRule(PerceptronLayer self)
 		{
 			self.NodeList = null;

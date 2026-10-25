@@ -47,7 +47,7 @@ namespace WorldTree
 		//    return $"{this.GetType().Name}\tDelta:[{Delta}]\tBias:[{Bias}]\tResult:[{Result}]";
 		//}
 
-		[NodeRule(nameof(RemoveRule<PerceptronNode>))]
+		[NodeRule(nameof(Remove))]
 		private static void OnRemoveRule(PerceptronNode self)
 		{
 			self.Result = 0;

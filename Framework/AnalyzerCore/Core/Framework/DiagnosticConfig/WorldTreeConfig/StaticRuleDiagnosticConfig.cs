@@ -47,7 +47,7 @@ namespace WorldTree.Analyzer
 			{
 				foreach (var attribute in attributeList.Attributes)
 				{
-					if (attribute.Name.ToString().Contains("NodeRule"))
+					if (NodeRuleHelper.IsNodeRuleAttribute(attribute.Name.ToString()))
 					{
 						return true;
 					}

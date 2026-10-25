@@ -31,7 +31,7 @@ namespace WorldTree
 		/// </summary>
 		public PoolBase pool;
 
-		[NodeRule(nameof(AddRule<TreeLoader>))]
+		[NodeRule(nameof(Add))]
 		private static void OnAddRule(TreeLoader self)
 		{
 			//self.pool.GetObject();

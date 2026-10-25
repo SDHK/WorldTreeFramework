@@ -43,7 +43,7 @@ namespace WorldTree
 
 
 
-		[NodeRule(nameof(AwakeRule<PerceptronLine, PerceptronNode, PerceptronNode>))]
+		[NodeRule(nameof(Awake<PerceptronNode, PerceptronNode>))]
 		private static void OnAwakeRule(PerceptronLine self, PerceptronNode node1, PerceptronNode node2)
 		{
 			self.Node1 = node1;
@@ -51,7 +51,7 @@ namespace WorldTree
 			self.Weight = PerceptronLine.rand.NextDouble() * 2.0 - 1.0;
 		}
 
-		[NodeRule(nameof(RemoveRule<PerceptronLine>))]
+		[NodeRule(nameof(Remove))]
 		private static void OnRemoveRule(PerceptronLine self)
 		{
 			self.Weight = 0;

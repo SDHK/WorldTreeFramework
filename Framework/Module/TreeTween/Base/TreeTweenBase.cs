@@ -51,7 +51,7 @@ namespace WorldTree
 		/// </summary>
 		public RuleMulticast<ISendRule> OnCompleted;
 
-		[NodeRule(nameof(TreeTaskTokenEventRule<TreeTweenBase>))]
+		[NodeRule(nameof(TreeTaskTokenEvent))]
 		private static void OnTreeTaskTokenEventRule(TreeTweenBase self, TokenState state)
 		{
 			switch (state)

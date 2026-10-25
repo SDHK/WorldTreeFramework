@@ -21,13 +21,13 @@ namespace WorldTree
 		/// </summary>
 		public TreeList<PerceptronLayer> LayerList;
 
-		[NodeRule(nameof(AddRule<MultilayerPerceptronManager>))]
+		[NodeRule(nameof(Add))]
 		private static void OnAddRule(MultilayerPerceptronManager self)
 		{
 			self.AddComponent(out self.LayerList);
 		}
 
-		[NodeRule(nameof(RemoveRule<MultilayerPerceptronManager>))]
+		[NodeRule(nameof(Remove))]
 		private static void OnRemoveRule(MultilayerPerceptronManager self)
 		{
 			self.LayerList = null;

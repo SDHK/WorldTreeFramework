@@ -21,19 +21,19 @@ namespace WorldTree
 		/// </summary>
 		public RuleBroadcast<TweenUpdate> ruleActuator;
 
-		[NodeRule(nameof(AddRule<TreeTweenManager>))]
+		[NodeRule(nameof(Add))]
 		private static void OnAddRule(TreeTweenManager self)
 		{
 			self.World.GetRuleBroadcast(out self.ruleActuator);
 		}
 
-		[NodeRule(nameof(UpdateTimeRule<TreeTweenManager>))]
+		[NodeRule(nameof(UpdateTime))]
 		private static void OnUpdateTimeRule(TreeTweenManager self, TimeSpan deltaTime)
 		{
 			self.ruleActuator?.Send(deltaTime);
 		}
 
-		[NodeRule(nameof(RemoveRule<TreeTweenManager>))]
+		[NodeRule(nameof(Remove))]
 		private static void OnRemoveRule(TreeTweenManager self)
 		{
 			self.ruleActuator?.Dispose();

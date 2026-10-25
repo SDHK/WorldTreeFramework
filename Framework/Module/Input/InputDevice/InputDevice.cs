@@ -29,7 +29,7 @@ namespace WorldTree
 		/// </summary>
 		public InputData[] InputDatas;
 
-		[NodeRule(nameof(AwakeRule<InputDevice, InputDeviceType, byte>))]
+		[NodeRule(nameof(Awake<InputDeviceType, byte>))]
 		private static void OnAwakeRule(InputDevice self, InputDeviceType deviceType, byte deviceId)
 		{
 			self.InputDeviceType = deviceType;
@@ -37,7 +37,7 @@ namespace WorldTree
 			self.InputDatas = new InputData[256];
 		}
 
-		[NodeRule(nameof(AddRule<InputDevice>))]
+		[NodeRule(nameof(Add))]
 		private static void OnAddRule(InputDevice self)
 		{
 			self.InputDatas = new InputData[256];

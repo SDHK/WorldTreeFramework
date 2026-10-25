@@ -32,7 +32,7 @@ namespace WorldTree.Analyzer
 			SemanticModel semanticModel = context.SemanticModel;
 
 			if (context.Node is not AttributeSyntax attributeSyntax) return;
-			if (!attributeSyntax.Name.ToString().Contains("NodeRule")) return;
+			if (!NodeRuleHelper.IsNodeRuleAttribute(attributeSyntax.Name.ToString())) return;
 
 			// 检查特性是否标记在方法上
 			var targetNode = attributeSyntax.Parent?.Parent;
@@ -71,11 +71,13 @@ namespace WorldTree.Analyzer
 			AttributeArgumentSyntax argumentRule = attributeSyntax.ArgumentList.Arguments[0];
 			SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken);
 
-			if (!NodeRuleHelper.TryGetRuleType(semanticModel, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
-				return null;
-
 			//获取包含该泛型名称的类声明
 			ClassDeclarationSyntax classSyntax = attributeSyntax.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
+
+			//方法不存在：N 取类上的 [NodeRuleTarget]，或包含类本身（实现 INode）
+			if (!NodeRuleHelper.TryGetRuleTypeFromClass(semanticModel, classSyntax, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+				return null;
+
 			string strThis = NodeRuleHelper.GetStrThis(semanticModel, classSyntax);
 
 			typeNames.Clear();
@@ -95,7 +97,7 @@ namespace WorldTree.Analyzer
 			string typeTName = NodeRuleHelper.GetTypeTName(typeTNames, classSyntax);
 
 			// 获取 ruleTypeSymbol 的类型名称（不带命名空间和泛型）
-			var ruleTypeName = "On" + ruleTypeSymbol.Name;
+			var ruleTypeName = NodeRuleHelper.GetRuleMethodName(semanticModel, argumentRule, ruleTypeSymbol);
 
 			StringBuilder classCode = new();
 			classCode.AppendLine(NodeRuleHelper.GetRuleMethod(ruleBaseEnum, ruleTypeName, typeTName, genericTypeParameter, outType, strThis));

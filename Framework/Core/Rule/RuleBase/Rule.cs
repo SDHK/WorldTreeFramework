@@ -122,6 +122,20 @@ namespace WorldTree
 
 
 	/// <summary>
+	/// 静态规则类的目标节点类型：方法签名不可用时（如特性误置补全），用它兜底推断 self 类型
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	public class NodeRuleTargetAttribute : Attribute
+	{
+		/// <summary>
+		/// 目标节点类型
+		/// </summary>
+		/// <param name="node">节点类型名，用 nameof(节点类型)</param>
+		public NodeRuleTargetAttribute(string node) { }
+	}
+
+
+	/// <summary>
 	/// 法则分流
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method)]

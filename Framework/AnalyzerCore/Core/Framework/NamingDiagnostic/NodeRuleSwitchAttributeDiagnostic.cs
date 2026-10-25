@@ -122,12 +122,12 @@ namespace WorldTree.Analyzer
 								// 查找当前方法上的 NodeRule 特性
 								var currentNodeRuleAttribute = methodDeclaration.AttributeLists
 									.SelectMany(al => al.Attributes)
-									.FirstOrDefault(attr => attr.Name.ToString().Contains("NodeRule"));
+									.FirstOrDefault(attr => NodeRuleHelper.IsNodeRuleAttribute(attr.Name.ToString()));
 
 								// 查找目标方法上的 NodeRule 特性
 								var targetNodeRuleAttribute = targetMethod.AttributeLists
 									.SelectMany(al => al.Attributes)
-									.FirstOrDefault(attr => attr.Name.ToString().Contains("NodeRule"));
+									.FirstOrDefault(attr => NodeRuleHelper.IsNodeRuleAttribute(attr.Name.ToString()));
 
 								// 比较 NodeRule 特性的第一个参数
 								if (currentNodeRuleAttribute != null && targetNodeRuleAttribute != null)
@@ -296,7 +296,7 @@ namespace WorldTree.Analyzer
 								// 查找目标方法上的 NodeRule 特性
 								var targetNodeRuleAttribute = targetMethod.AttributeLists
 									.SelectMany(al => al.Attributes)
-									.FirstOrDefault(attr => attr.Name.ToString().Contains("NodeRule"));
+									.FirstOrDefault(attr => NodeRuleHelper.IsNodeRuleAttribute(attr.Name.ToString()));
 
 								// 查找目标方法上的 RuleSwitch 特性
 								var targetRuleSwitchAttribute = targetMethod.AttributeLists
@@ -325,7 +325,7 @@ namespace WorldTree.Analyzer
 										// 查找当前方法上的 NodeRule 特性
 										var currentNodeRuleAttribute = currentMethod.AttributeLists
 											.SelectMany(al => al.Attributes)
-											.FirstOrDefault(attr => attr.Name.ToString().Contains("NodeRule"));
+											.FirstOrDefault(attr => NodeRuleHelper.IsNodeRuleAttribute(attr.Name.ToString()));
 
 										if (currentNodeRuleAttribute != null)
 										{
@@ -392,7 +392,7 @@ namespace WorldTree.Analyzer
 												{
 													var updatedCurrentNodeRuleAttribute = updatedCurrentMethod.AttributeLists
 														.SelectMany(al => al.Attributes)
-														.FirstOrDefault(attr => attr.Name.ToString().Contains("NodeRule"));
+														.FirstOrDefault(attr => NodeRuleHelper.IsNodeRuleAttribute(attr.Name.ToString()));
 
 													if (updatedCurrentNodeRuleAttribute != null)
 													{

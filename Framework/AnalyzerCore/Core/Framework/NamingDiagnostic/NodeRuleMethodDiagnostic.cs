@@ -37,7 +37,7 @@ namespace WorldTree.Analyzer
 			AttributeArgumentSyntax argumentRule = attributeNodeRule.ArgumentList.Arguments.FirstOrDefault();
 			if (argumentRule == null) return;
 
-			if (!NodeRuleHelper.TryGetRuleType(semanticModel, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+			if (!NodeRuleHelper.TryGetRuleType(semanticModel, methodDeclaration, argumentRule, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 				return;
 
 			List<ITypeSymbol> types = baseTypeSymbol.TypeArguments.ToList();
@@ -94,6 +94,16 @@ namespace WorldTree.Analyzer
 			if (!methodDeclaration.Identifier.Text.StartsWith("On")) isError = true;
 			//判断是否是Rule结尾
 			if (!methodDeclaration.Identifier.Text.EndsWith("Rule")) isError = true;
+
+			// 类上标了 [NodeRuleTarget] 时，self 类型必须是其中之一
+			List<ITypeSymbol> targets = NodeRuleHelper.GetTargetNodes(semanticModel, outerClassSyntax);
+			if (targets.Count > 0 && methodDeclaration.ParameterList.Parameters.Count > 0)
+			{
+				ITypeSymbol selfType = semanticModel.GetTypeInfo(methodDeclaration.ParameterList.Parameters[0].Type).Type;
+				if (selfType != null && !targets.Any(t => SymbolEqualityComparer.Default.Equals(t, selfType)))
+					isError = true;
+			}
+
 			// 比较特性参数类型和方法参数类型 顺序和类型是否一致
 			if (AttributeTypeNames.Count != MethodTypeNames.Count || filteredAttributeTypeTNames.Count != MethodTypeTNames.Count)
 			{
@@ -143,7 +153,7 @@ namespace WorldTree.Analyzer
 
 			AttributeArgumentSyntax genericNameSyntax = attributeNodeRule.ArgumentList.Arguments[0];
 			SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken);
-			if (!NodeRuleHelper.TryGetRuleType(semanticModel, genericNameSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
+			if (!NodeRuleHelper.TryGetRuleType(semanticModel, methodDeclaration, genericNameSyntax, out INamedTypeSymbol ruleTypeSymbol, out INamedTypeSymbol baseTypeSymbol, out RuleBaseEnum ruleBaseEnum))
 				return null;
 
 			//获取包含该泛型名称的类声明
@@ -181,7 +191,7 @@ namespace WorldTree.Analyzer
 			var genericNameText = genericNameSyntax.ToFullString().TrimStart().TrimEnd();
 
 			// 获取 ruleTypeSymbol 的类型名称（不带命名空间和泛型）
-			var ruleTypeName = "On" + ruleTypeSymbol.Name;
+			var ruleTypeName = NodeRuleHelper.GetRuleMethodName(semanticModel, genericNameSyntax, ruleTypeSymbol);
 
 			StringBuilder classCode = new();
 			classCode.AppendLine(NodeRuleHelper.GetRuleMethod(ruleBaseEnum, ruleTypeName, typeTName, genericTypeParameter, outType, strThis));

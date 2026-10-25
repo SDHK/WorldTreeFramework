@@ -24,7 +24,7 @@ namespace WorldTree
 		public LiteDatabase database;
 
 
-		[NodeRule(nameof(AwakeRule<LiteDBManager, string>))]
+		[NodeRule(nameof(Awake<string>))]
 		private static void OnAwakeRule(LiteDBManager self, string path)
 		{
 			self.database = new LiteDatabase(new ConnectionString
@@ -34,7 +34,7 @@ namespace WorldTree
 			});
 		}
 
-		[NodeRule(nameof(RemoveRule<LiteDBManager>))]
+		[NodeRule(nameof(Remove))]
 		private static void OnRemoveRule(LiteDBManager self)
 		{
 			self.database.Dispose();

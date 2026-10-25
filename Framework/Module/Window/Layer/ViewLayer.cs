@@ -37,6 +37,7 @@ namespace WorldTree
 		public byte LayerCount => (byte)(ViewList == null ? 0 : ViewList.Count);
 	}
 
+	[NodeRuleTarget(nameof(ViewLayer))]
 	public static partial class ViewLayerRule
 	{
 		/// <summary>
