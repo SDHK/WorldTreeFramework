@@ -1,53 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+/****************************************
+
+* 作者： 闪电黑客
+* 日期： 2025/10/16
+
+* 描述： 视图基类：绑定、层级与开关。
+
+*/
+
+using System;
 
 namespace WorldTree
 {
-	/// <summary>
-	/// 视图元素：具体平台实现的UI组件接口，自动反向绑定到IViewBind
-	/// </summary>
-	public interface IViewElement { }
-
-
-
-	//V和VB都是纯数据，V是初始化数据，VB负责桥接具体UI组件。
-
-	//Register子级组件> Open，Refresh，Close> UnRegister子级组件，方法写到View里。
-	//Close融入Dispose
-	//show融入IsActive
-	//由于视图都有层级概念，所以分支考虑使用ListNode？
-	//父级需要知道子级的Open事件
-
-	//容器组件需要知道子组件的Open事件
-	//如果View可以作为任何对象。那么场景根节点可以是View，而内部物体可以视为一个Item。
-
-	/// <summary>
-	/// 视图接口
-	/// </summary>
-	public interface IView
-	{
-		/// <summary>
-		/// 视图打开
-		/// </summary>
-		public int OnOpen();
-		/// <summary>
-		/// 视图关闭
-		/// </summary>
-		public int OnClose();
-
-		/// <summary>
-		/// 视图层级改变 
-		/// </summary>
-		public void LayerChange();
-	}
-
 	/// <summary>
 	/// 视图基类：作为UI打开的初始数据
 	/// </summary>
 	public abstract class View : Node, IView
 		, AsComponentBranch
-		, ChildOf<ViewBind>
-		, ListNodeOf<ViewLayerBind>
+		, AsChildBranch
+		, ChildOf<View>
 		, AsRule<Awake>
 		, AsRule<Open>
 		, AsRule<Close>
@@ -66,20 +36,32 @@ namespace WorldTree
 			set
 			{
 				base.Parent = value;
-				// 设置父级时自动更新ParentLayer
-				if (value?.Parent is ViewLayer parentViewLayer)
+
+				// 层永远是排序域的根，不继承宿主的层
+				if (this is ViewLayer)
 				{
-					this.ParentLayer = parentViewLayer;
+					ParentLayer = null;
+					return;
 				}
-				else if (value?.Parent is View parentView)
+
+				// 父是层容器：窗口/子视图直接挂在层下
+				if (value is ViewLayer parentLayer)
 				{
-					this.ParentLayer = parentView.ParentLayer;
+					ParentLayer = parentLayer;
+					return;
 				}
-				else // 非视图父级，清空ParentLayer 和 Layer
+
+				// 父本身就是 View：继承父视图所在的层与层内位置，Order 与父级相同（同层渲染）
+				if (value is View directParentView)
 				{
-					this.ParentLayer = null;
-					this.Layer = 0;
+					ParentLayer = directParentView.ParentLayer;
+					Layer = directParentView.Layer;
+					return;
 				}
+
+				// 非视图父级，清空ParentLayer 和 Layer
+				ParentLayer = null;
+				Layer = 0;
 			}
 		}
 
@@ -120,11 +102,6 @@ namespace WorldTree
 		public NodeRef<ViewBind> Bind { get; set; }
 
 		/// <summary>
-		/// 视图绑定类型
-		/// </summary>
-		public virtual long ViewBindType { get; }
-
-		/// <summary>
 		/// 视图是否打开
 		/// </summary>
 		public bool IsOpen => !Bind.IsNull;
@@ -134,8 +111,16 @@ namespace WorldTree
 		/// </summary>
 		public bool IsShow
 		{
-			get => !Bind.IsNull && Bind.Value.IsActive;
-			set => Bind.Value?.SetActive(value);
+			get
+			{
+				ViewBind bind = Bind.Value;
+				return bind != null && bind.IsActive;
+			}
+			set
+			{
+				ViewBind bind = Bind.Value;
+				bind?.SetActive(value);
+			}
 		}
 
 
@@ -145,8 +130,8 @@ namespace WorldTree
 
 			if (this.Bind.IsNull)
 			{
-				Type viewBindType = this.CodeToType(this.ViewBindType);
-				this.Bind = new(NodeBranchHelper.AddNode(this, default(ComponentBranch), this.ViewBindType, viewBindType, out INode _) as ViewBind);
+				long bindTypeCode = this.TypeToCode<ViewBind>();
+				this.Bind = new(NodeBranchHelper.AddNode(this, default(ComponentBranch), bindTypeCode, typeof(ViewBind), out INode _) as ViewBind);
 			}
 			return 0;
 		}
@@ -161,48 +146,16 @@ namespace WorldTree
 		}
 
 		public virtual void LayerChange() => ViewProxyRule.LayerChanged(this);
-	}
 
-	/// <summary>
-	/// 视图主体基类 
-	/// </summary>
-	public abstract class ViewObject : View
-		, ComponentOf<ViewLayerBind>
-	{
-
-	}
-
-	/// <summary>
-	/// 视图主体基类 
-	/// </summary>
-	public abstract class ViewObject<VB> : ViewObject
-		, AsComponentBranch
-		where VB : ViewBind
-	{
-		public override long ViewBindType => this.TypeToCode<VB>();
-
-	}
-
-
-	/// <summary>
-	/// 视图组件基类 
-	/// </summary>
-	public abstract class ViewWidget : View { }
-
-
-	/// <summary>
-	/// 视图泛型基类
-	/// </summary>
-	public abstract class View<VB> : View
-		, AsComponentBranch
-		where VB : ViewBind
-	{
 		/// <summary>
-		/// 视图绑定
+		/// 释放前先关闭：发 Close、销毁 Bind。
+		/// 级联回收走的是遍历里的 OnBeforeDispose，因此钩子放这里才能覆盖子级。
 		/// </summary>
-		public VB ViewBind => Bind.Value as VB;
-
-		public override long ViewBindType => this.TypeToCode<VB>();
+		public override void OnBeforeDispose()
+		{
+			OnClose();
+			base.OnBeforeDispose();
+		}
 	}
 
 
@@ -210,84 +163,26 @@ namespace WorldTree
 
 	//========
 
-	/// <summary>
-	/// 视图绑定
-	/// </summary>
-	public class ViewTestWindowBind : ViewBind
+	public static class ViewProxyRule
 	{
-		/// <summary>
-		/// 测试文本
-		/// </summary>
-		public ViewText text;
 
 		/// <summary>
-		/// 测试按钮
+		/// 视图层级变更时调用 
 		/// </summary>
-		public ViewButton button;
-	}
-
-
-	/// <summary>
-	/// 测试视图
-	/// </summary>
-	public class ViewTestWindow : ViewObject<ViewTestWindowBind>
-	{
+		public static void LayerChanged(View self)
+		{
+			//节点释放前序遍历处理,节点释放后续遍历处理
+			NodeBranchTraversalHelper.TraversalPreorder(self, OnLayerChanged, false);
+		}
 		/// <summary>
-		/// 名称
+		/// 视图层级变更时调用 
 		/// </summary>
-		public string Name;
-
-	}
-
-	//================================
-
-	/// <summary>
-	/// 文本
-	/// </summary>
-	public class ViewText : View<ViewBind>
-	{
-		/// <summary>
-		/// 文本内容
-		/// </summary>
-		public string Content;
-
-		/// <summary>
-		/// 改变事件
-		/// </summary>
-		public RuleUnicast<ISendRule> OnChange;
-	}
-
-	/// <summary>
-	/// 图片
-	/// </summary>
-	public class ViewImage : View<ViewBind>
-	{
-		/// <summary>
-		/// 图片地址
-		/// </summary>
-		public string Url;
-
-		/// <summary>
-		/// 改变事件
-		/// </summary>
-		public RuleUnicast<ISendRule> OnChange;
-	}
+		public static void OnLayerChanged(INode self)
+		{
+			if (self is View) NodeRuleHelper.TrySendRule(self, default(LayerChange));
+		}
 
 
-	/// <summary>
-	/// 按钮绑定
-	/// </summary>
-	public class ViewGroupBind : ViewBind { }
 
-	/// <summary>
-	/// 窗口组
-	/// </summary>
-	public class ViewGroup : View<ViewGroupBind>
-		, AsBranch<ChildBranch>
-	{
-		/// <summary>
-		/// 子窗口数据集合
-		/// </summary>
-		public HashSet<NodeRef<View>> nodeHash;
 	}
 }

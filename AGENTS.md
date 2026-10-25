@@ -14,12 +14,20 @@
 |---|---|---|
 | 上下文 | 仓库根 `AGENTS.md`（本文件）；旁边还可有 `CLAUDE.md`。额外文件名用配置 `contextFiles.extra` | 每会话都读。用法写第 2 节 |
 | MCP | 仓库 `.omp/mcp.json` | 启动时加载。本仓库挂了 Unity：`unity_exec` / `unity_refresh` / `unity_logs` / `unity_select`（`127.0.0.1:8099/mcp`）。改过 json 要 `/mcp reload`。细节在第 5 节 |
-| 技能 | `omp skill`。不加 `-g` 用项目的 `skills.json`，`-g` 用用户全局 | 用到才加载的流程。本仓库没装。不要用技能复述架构。`--no-skills` 关掉 |
+| 技能 | `omp skill`。不加 `-g` 用项目的 `skills.json`，`-g` 用用户全局 | 用到才加载的流程。项目级没装；全局 `~/.agents/skills` 有画图和工程两类，见下表。不要用技能复述架构。`--no-skills` 关掉 |
 | TTSR 规则 | 项目 `.omp/rules/*.md`，全局 `~/.omp/agent/rules` | 带条件的警告，不是说明书。输出或工具调用对上了才插进来。`/omfg <抱怨>` 从一次失误生成；`omp ttsr test` / `omp ttsr scan` 试。`--no-rules` 关掉。同一种失误重复出现、第 2 节又没拦住，再加一条 |
 | 子代理 | 工具 `task`。`omp agents unpack` 到 `~/.omp/agent/agents`，`--project` 到 `./.omp/agents` | 并行探查。本仓库没有自定义代理 |
 | 配置 | `~/.omp/agent/config.yml` | 模型角色、`bash.patterns`。`git commit*` 已 `deny`，`yolo` 下也生效。模型 / 额度看 `MODEL-PROVIDERS.md`，这里不写 |
 
 常用内建工具：`read` / `edit` / `write` / `grep` / `glob` / `bash`，`ast_grep`（已开，支持 csharp），`task`，`web_search`。`lsp` 在本仓库是空的，见第 4.2 节。不许 `git commit`，见第 6 节。
+
+### 全局技能（`~/.agents/skills`）
+
+触发用自然语言（“用 grill-me 过一遍”），`/名字` 那种 slash 这里不认。项目级 `skills.json` 仍空。三组：
+
+- **画图**：`diagram-design`（静态 SVG，45 种类型，正文 7–12px → 终端会糊，要内联就手写大字号）、`archify`（交互式 HTML，10 种 + JSON schema + commit 钉行取证；要 node，`finalize` 过四道门，产物落 `.archify/<type>-<slug>-<ts>/`，`--repo-root` 指被引用的仓库）
+- **工程**（mattpocock/skills，MIT）：`grilling` / `grill-me`（按设计树一轮轮拷问，每问带推荐答案）、`writing-for-agents`（写本文件的方法：指针、两级负载、剪枝）、`diagnosing-bugs`（先造变红的循环）、`codebase-design`、`improve-codebase-architecture`、`retro`、`code-review`（Standards + Spec 两轴，报完不提交）
+- **没装**它那批 `implement*` / `to-*` / `triage` / `wayfinder` / `pr` / `setup-*`：收尾要提交、依赖 issue tracker，与第 6 节冲突
 
 ---
 
@@ -94,6 +102,8 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 - 执行器替代委托，遍历中可以增删。
 - 时间还有 RealTimeManager（校时）和 WorldTimeManager（游戏时间 / 帧）。
 - 序列化：TreePack（二进制）/ TreeData（自描述，可循环引用）/ TreeCopy（深拷贝）。
+
+> 以下（程序集 / 配置导出 / 配置运行时 / 离线包 / 管理器 / 关键文件地图）提到的 `Unity/…`、`Console/…`、`ExcelTool/…` 都在**项目仓库**（`Project/<项目>/`）里；本仓库只有 `Framework/`（源码）和 `Bin/`（产物）。
 
 ### 程序集
 `Framework/Core` 编成 `WorldTree.Core.dll`（`netstandard2.1`），拷到 `Unity/Assets/Scripts/AOT/Plugins/WorldTree/`。Unity 的 asmdef 用 `overrideReferences` 显式引用这份 DLL。HybridCLR 里 Core 是 AOT，不热更。依赖 `NLog.dll`、`CommandLine.dll`、`System.Runtime.CompilerServices.Unsafe.dll`，都在 `Assets/Scripts/AOT/Plugins/`（版本要精确匹配，见 4.1）。改 Core 要重新出包。改生成器后重编 `Unity.Analysis.dll`，并重启 Unity。
@@ -222,27 +232,48 @@ ToolProject/               工具分类目录（不归 git）
 ## 3. 进行中
 
 ### UI 骨架
-代码在 `Framework/Module/Window`。现在父子关系有三套写法，先收成一套，再接平台。逻辑树和预制体树分开：子 `View` 挂在 `View` 上，`ViewBind` 是 `View` 的组件，只持有一个平台实例。预制体内部控件用字段或路径拿，每个 `GameObject` 不进节点树。
+代码在 `Framework/Module/Window`，目录按角色划分：
 
 ```
-WindowManager
-└─ ViewLayer（底 / 普通 / 弹窗 / 顶）
-   └─ View
-      ├─ ViewBind
-      └─ 子 View
-         └─ ViewBind
+Base/       视图基类与绑定
+  IViewElement.cs / IView.cs / View.cs（View + View<VB>）
+  ViewLayerItem.cs（ViewObject / ViewWidget / ViewContainer / ViewLayerItem / ViewWindow） / ViewBind.cs
+  ViewRuleBase.cs（Open/Close/Show/Hide/LayerChange/ViewRegister…）；规则类与节点同文件（ViewProxyRule / ViewBindProxyRule）
+Component/  控件级 ViewWidget：Button / Text / Image
+Layer/      ViewLayerGroup + Bind（只管 Depth 0 的层）、ViewLayer + ViewLayerBind（规则与节点同文件）
+Test/       ViewTestWindow + 规则（同文件）
+ViewManager.cs（含 ViewManagerRule）   模块根
 ```
 
-四个词分开：`Open` 加载并创建绑定，只做一次；`Show` / `Hide` 只改显隐；`Close` 销毁绑定和实例，节点可以留着下次再开；`Layer` 决定落在哪一层，同层内后开的盖在上面。框架模块不引用 `UnityEngine`。uGUI 和 YooAsset 的实现放 `HotFixUnity`。
+当前实现的结构：
 
-执行步骤：
+- `View` 是「节点 + 平台绑定」。`View.Parent` 的 setter 按父类型推导 `ParentLayer`；`Layer`（byte）、`Depth`、`Order` 用位压缩排序。
+- 视图分三支：`ViewObject`（加载物体：按类型名加载预制体）、`ViewWidget`（子级/组件：不加载，字段绑定）、`ViewContainer : ViewWidget`（容器级：能承载窗口与其他 widget）。`ViewLayer` / `ViewLayerGroup` 都是 `ViewContainer`。
+- `ViewLayerItem : ViewObject, ComponentOf<ViewContainer>`，`ViewWindow : ViewLayerItem`（有自身表现的 UI 窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
+- **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一），不是 `ViewLayerBind`；`ViewBind` 只作为 View 自己的组件存在，不挂任何子节点。
+- **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，只持有 `ui`（平台元素）这一个桥接引用，不挂任何子节点、也没有 `ViewBindType`。子视图是父 **View** 的子节点（`View : ChildOf<View>`，`AddView` 走子分支），`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
+- 元素挂载走 **`Open` / `Close`**（不再有 ViewElementLoad/UnLoad），由 **`ViewBind` 的 Node 生命周期**发出：`ViewBindProxyRule.OnAddSelfToTree` 先赋 `View.Bind` 再发 `Open` + `LayerChange`（可见时再发 `Show`）；`OnBeforeDisposeActive` 发 `Show`/`Hide`；`OnDispose` 在摘分支前发 `Close`。引擎按**视图类型**实现 `OpenRule<TView>` / `CloseRule<TView>`（打开时取实例/装配子级，关闭时解绑/还池）。
+- 子级 widget 的绑定契约写在 **View 的字段**上（如 `ViewTestWindow.text / button`），由编辑器工具反射字段列表、生成器生成强类型赋值，运行时按字段名分派，零反射。
+- `ViewLayerRule.OpenView` 把窗口登记进层的 `ViewList`、设 `Layer = Count`，再调 `View.OnOpen()`。
+- `ViewManager.GetLayer(int)` 转发到 `ViewLayerGroup`（懒建）：group 只挂在 manager 下，按 int 建/取层；层号就是传进去的整数。
+- `View.Parent` 的每个分支都要显式写 `Layer`：节点池不抹字段，复用的节点会带着上次的值；
+  父是 `ViewLayer` 时 `ParentLayer = 父`（窗口直接挂层下），父是普通 View 时继承父的 `Layer`（`Order` 与父级相同，渲染同层），窗口的槽位由 `ViewLayerRule` 写。
+- 层的深度恒为 0（`View.Parent` 里对 `ViewLayer` 提前返回 `ParentLayer = null`）：挂在 `ViewLayerGroup` 下走子分支（可多个），挂在 `View` 下走组件分支（`ComponentOf<View>`，同类型唯一）。
+- 两个宿主各自持有层时 `Layer` 号是全局的：层号相同会得到相同 `Order`，需要调用方保证不撞号。
 
-1. 收父子关系。去掉 `ChildOf<ViewBind>`，以及 `OnOpen`、`AddView` 把子视图挂到 `Bind` 上的写法。`Parent` 只沿逻辑父节点找 `ViewLayer`。
-2. 改生命周期。`IsOpen` 不再等于「绑定非空」这一种含义混用。`Open` 创建 `ViewBind`，`Close` 只销毁绑定，`Dispose` 才释放节点。显隐走 `IsShow`。
-3. `WindowManager` 挂四层。同层用打开顺序决定谁在上。先不要用 `Layer` / `Depth` / `Order` 的 4 bit 打包。
-4. `ViewBind` 持有平台实例和资源句柄。`Dispose` 时销毁实例并还句柄。
-5. 在 `HotFixUnity` 写加载：用 `world.GetAssetManager().LoadAssetAsync<GameObject>(地址)` 取预制体，实例化，建 `ViewBind`。
-6. 用一个测试窗口走通 `Open`、`Show` / `Hide`、`Close`。`ViewText`、`ViewImage`、`ViewTestWindow` 先移出 `View.cs`，这轮不扩展控件库。
+层的连接方式（已跑通）：
+
+- `ViewManager.GetLayer(int)` 建层并持有；层的 `ViewList` / `IdIndexDict` 是 `ViewLayer` 自己的字段，在 `ViewLayer` 的 `Awake` 里分配（`ViewLayerBind` 只剩平台节点）。
+- `ViewLayerRule.TryAddView` 把窗口作为**层容器 `ViewLayer`** 的组件挂上；`OpenView` 再登记进 `ViewList`、设 `Layer = Count`、调 `View.OnOpen()`（`OnOpen` 对自身发 `ViewElementLoad`，引擎据此加载/装配）。
+- `CloseView` 调 `View.OnClose()` 后从 `ViewList` 移除并重排 `Layer`；重开不会重复登记。
+- `ViewBindProxyRule.OnBeforeDispose` 只发 `BeforeRemoveRuleGroup`，不再回调 `self.OnBeforeDispose()`（原来会无限递归）。
+- `View.OnBeforeDispose` 先调 `OnClose()`（发 `Close` + 销毁 Bind），再走基类释放。级联回收走的是遍历里的 `OnBeforeDispose`，所以 Bind 销毁时子级 widget 也会先关闭。基类 `Node` 没有 `OnClose`，`Dispose` 只做 `OnBeforeDispose`/`OnDispose`，这条是 View 自己补的。
+- 冒烟：`TryAddView<ViewTestWindow>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`OpenView` 后 `Bind` 是 `WorldTree.ViewBind`、`count=1 slot=1`；`CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 `ViewBindProxyRule`（Node 生命周期），View 只负责建/毁 Bind。
+
+剩下的问题：
+
+- `Depth` 恒为 1：`ParentLayer` 取的是「父视图所在的层」，第 2–7 位段空置；`Order` 实际只用 3 bit 层号（有效 0–7）加 4 bit 槽位（1–15）。
+- `IsShow` 的 setter 已修（`Bind.Value?.SetActive`）；`ViewManager.viewDict` 没有写入点，是死字段。
 
 ---
 
@@ -260,10 +291,13 @@ WindowManager
 - **HybridCLR `CopyDlls` 源目录要对齐 `CompileDll` 输出**：`CompileDll` 输出到 `hotUpdateDllCompileOutputRootDir/{target}`（`HybridCLRData/HotUpdateDlls/StandaloneWindows64/`），而 `externalHotUpdateAssembliyDirs` 默认 `Temp/Bin/Debug`（空）会让 `CopyHotUpdateDlls` 报 `FileNotFoundException`。改成 `SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target)`。构建链 `MyGenAll` → `CopyDlls`：热更 dll 进 `AssetBundles/Dlls/HotUpdateDlls`，`PatchedAOTAssemblyList`（含 `WorldTree.Core.dll`/`WorldTree.Module.dll`）进 `AssetBundles/Dlls/AotDlls`；运行时 `LoadAOT` 按 tag `aotDlls` 加载。`LoadHotUpdate` 只收地址以 `.dll` 结尾的资源，并按依赖顺序装入：`WorldTree.CoreUnity.dll` → `WorldTree.HotFix.dll` → `WorldTree.App.dll` → `WorldTree.HotFixUnity.dll`。按标签原顺序会先装到 `App`，解析 `WorldLineConfigData` 时抛 `TypeLoadException`（`HybridCLRHelper` 已按这个顺序写死）。这段在 AOT 的 `GameEntry` 里，改了要重新出 Player。
 - **Luban 的 `ByteBuf` 要开 `allowUnsafeCode`**：unsafe 在 `WorldTree.ThirdParty`，不在 `HotFix`。`HotFix` 保持 `allowUnsafeCode:false`。Server 侧 csproj 写 `AllowUnsafeBlocks=true`。
 - **`_Template` 路径是脆弱的**：`_Template` 是占位名，clone 后会被重命名或直接当项目开发，任何引用 `_Template` 内部内容的相对路径（如 `..\..\Luban`）都会断。运行时依赖必须放进自包含目录（如 Luban 引擎放 `ExcelTool/Luban`，`配置导出.bat` 用 `..\Luban`），跨仓库引用只允许指向独立的平级仓库（如 `WorldTreeFramework`）。
+
 ### 4.2 本机环境与工具用法
 
-- **agent 的 shell 是 OMP 自带 POSIX 风格 shell**（不是 git-bash、也不是 PowerShell）：`$0`/`$SHELL` 空、`uname` 报 `MS/Windows`、`Get-ChildItem` 等 pwsh cmdlet 不存在；`ls`/`cat`/`sed`/`find`/`rg`/`grep` **全是内建 shim**（`type rg` → "shell builtin"，`rg --version` 却谎称 15.1.0），只有 `dotnet`/`git`/`python`/`code` 是真 exe。**唯一会咬人的 shim 坑：`rg -c <pat> <dir>` 走 GNU 语义，会给每个扫到的文件打印 `path:0`**（实测 `rg -c "self as INode" .` 输出 1978 行、其中 1972 行是 `:0`）→ 极易误读成"0 命中"，叠上输出截断更糟。查命中用 `rg <pat> <path> | wc -l` 或 `grep` 工具（**grep 工具本身正常**：能搜到被 `.gitignore` 屏蔽的 `Framework/Core/obj`，也能搜 `.idea/**` 等隐藏文件；唯一真会返回 0 的情况是**模式里带字面引号**）。
-- **宿主终端只决定继承的环境变量，不参与工具行为**（VS2026 Developer PowerShell 与 VSCode 集成终端实测逐字节一致：cwd / shell 身份 / `uname` / `rg` 输出 / grep 命中数）→ "换终端"解释不了工具行为差异。**渲染只认 `mermaid`**（渲染成 ASCII 方框箭头）：`svg` 代码块渲染成**空白**（整块连文字一起消失，不是降级成源码）→ 本终端画图只用 `mermaid`，精确布局/几何用表格或文字。
+- **agent 的 shell 是 OMP 自带 POSIX 风格 shell**（不是 git-bash、也不是 PowerShell）：`$0`/`$SHELL` 空、`uname` 报 `MS/Windows`、`Get-ChildItem` 等 pwsh cmdlet 不存在；`ls`/`cat`/`sed`/`find`/`rg`/`grep` **全是内建 shim**（`type rg` → "shell builtin"，`rg --version` 却谎称 15.1.0），只有 `dotnet`/`git`/`python`/`code`/`node`/`npm`/`curl`/`winget` 是真 exe。
+- **`rg -c` 会假装「0 命中」**：它走 GNU 语义，给每个扫到的文件打印 `path:0`（实测 `rg -c "self as INode" .` 输出 1978 行、其中 1972 行是 `:0`）→ 极易误读成"0 命中"，叠上输出截断更糟。查命中用 `rg <pat> <path> | wc -l` 或 `grep` 工具（**grep 工具本身正常**：能搜到被 `.gitignore` 屏蔽的 `Framework/Core/obj`，也能搜 `.idea/**` 等隐藏文件；唯一真会返回 0 的情况是**模式里带字面引号**）。
+- **装完工具要重开 VSCode**：winget/msi 改的是注册表，改不了已经在跑的父进程 → 会话中途装完 node，当前 shell 仍 `command not found`（`cmd /c where node` 也一样），新开会话才生效。当前会话的临时办法是加前缀，但**分隔符必须是 `;`、路径必须是 Windows 形式**：`PATH="C:/Program Files/nodejs;$PATH" node -v` 能跑；用 `:` 分隔或写成 `/c/...` 都不行（`/c/` 只给 `ls`/`cat` 这类 shim 用）。
+- **宿主终端只决定继承的环境变量，不参与工具行为**（VS2026 Developer PowerShell 与 VSCode 集成终端实测逐字节一致：cwd / shell 身份 / `uname` / `rg` 输出 / grep 命中数）→ "换终端"解释不了工具行为差异。**渲染**：`mermaid` 渲染成 ASCII 方框箭头；`svg` 代码块**需要** `terminal.integrated.enableImages: true`（VS Code 默认关，2026-10-16 已在本机打开）——开了之后 640×170 的 SVG 能正常显示（文字因栅格化+缩放到 `tui.maxInlineImageColumns=100` 网格略糊），没开时整块连文字一起消失（不是降级成源码）。→ 画图默认仍用 `mermaid`（可复制、可 diff）；要精确布局或给人看的成品图才用 `svg`（omp 二进制支持 Kitty/Sixel/iTerm2/OSC 1337 四种图像协议）。
 - **写盘无限制**：工作区、`%TEMP%`、`C:\` 根、用户目录实测可写；`dotnet build` + NuGet 拉包正常。构建时的 `NU1900 无法加载源 …/vulnerability.base.json` 只是**漏洞审计源**取不到，**不是还原失败**，别当网络问题。
 - **`xd://lsp` 在本仓库空转**（`No language servers configured`；本机无 `csharp-ls`/`OmniSharp`，`~/.dotnet/tools` 空）→ 系统提示里"改导出符号前先查 references"只能退回 grep。可用候选：VSCode C# 扩展自带的 `~/.vscode/extensions/ms-dotnettools.csharp-*/.roslyn/roslyn-language-server.exe`（stdio 握手实测能返回合法 initialize，但重复运行不稳定，**未接进 OMP**）。
 - **`git commit` 有硬拦截但 `eval` 能绕过（护栏 ≠ 边界）**：`bash.patterns` 把 `git commit*` / `git -C * commit*` 设为 `deny`（`yolo` 下仍生效、也管 headless 子代理、复合命令分段同样命中；`git status`/`log` 等读操作不受影响），但**管不到 `eval` 里 spawn 的子进程**（实测 `subprocess.run(["git","commit","--dry-run"])` 畅通）→ 所以"不许自动提交"实际靠 §6 的约定 + 这条护栏；要变真边界得设 `tools.approval.eval: prompt|deny`（代价是每次确认或彻底失去 eval），作者已选护栏方案。
@@ -278,10 +312,12 @@ WindowManager
 - **ToolKit 工具页 `ScriptableSingleton` 类名要和文件名一致**：`ScriptInitSetting` 类在 `ScriptInitSettings.cs`（差个 s）→ Unity 找不到 MonoScript，`CreateAsset` 永远失败，`OnWillCreateAsset` 里访问 `Inst` 重入 → 无限递归 StackOverflow（改文件名 + `LoadOrCreate` 里 `CreateAsset` 前先赋值 `mInstance` 防重入）。
 - **`ConfigCopyTool` 的拷贝目标目录会被清空重拷，别让它和 asmdef 同层**：`RuntimeDst` 要指到 `Scripts/ThirdParty/Luban`（子目录），asmdef 在 `ThirdParty` 根。踩过：`RuntimeDst` 写成 `Scripts/ThirdParty`（根），运行后清空了 `WorldTree.ThirdParty.asmdef` + `Luban/` 子目录，`HotFix` 引用找不到报一串 `CS0246`。
 - **打 YooAsset 包前确认 bytes 不是空文件**：`Assets/AssetBundles/Config/StartConfig/Client/worldlineconfig.bytes` 曾只剩 1 字节 `0x00`。Player 能读到表、没有异常、也不打 `创建世界线`，因为 Luban 把 `0x00` 读成 0 行。导出的原文件在 `ExcelTool/Output/Bytes/c/StartConfig/Client/`，正常是 25 字节。拷贝之后再打资源包。
+
 ### 4.3 运行时与源生成器
 
 - **BCL `Task` 完成后的恢复要等下一次心跳 tick**：`INode.GetAwaiter(Task)` / `TreeTaskLink` 完成后都走 `WorldContext.Post`，而该队列由 `UpdateRule` **每帧整队排空**。心跳 `frameTime=1000ms` 时，一个 300ms 的 `Task` 实测 **1003ms** 才恢复 → 别拿它做毫秒级计时。
 - **`Console/Server` 必须在 `Bin` 下启动**：`WorldLog` 只在 `../ProjectConfig/NLog` 存在时才建 NLog logger（配置 `Console/Server/ProjectConfig/NLog/NLog.config`，日志 `Console/Server/Logs/Log.txt`，同时打到控制台）。在仓库根跑时 logger 为 null → `Log`/`Error` 空引用，而心跳线程上这个 NRE 会**盖住真正的异常**。本 shell 不把当前目录当命令路径（`App.exe` / `./App.exe` 都 command not found）→ 用 `Console/Server/Bin/App.exe`（cwd 仍设 Bin）；`WorldHeart` 的线程不退出，看完日志 `taskkill /F /IM App.exe`。
+- **自定义节点的 `XxxProxyRule` 不要回调 `self.OnBeforeDispose()` / `self.Dispose()`**：覆盖方法进代理、代理再调回覆盖方法会无限递归（`ViewBind` 踩过，StackOverflow）。代理里直接写实际逻辑（如 `INodeProxy.OnBeforeDispose` 的 `BeforeRemoveRuleGroup?.Send(self)`）。
 - **`INodeProxy.OnCreate` 不能删**：直接实现 `INode` 的类型由 `INodeProxyGenerator` 生成 `INodeProxyRule.OnCreate(this)`（编号和 `SupportNodeRule` 已不在这里）。
 - **`SupportNodeRule` 每次都进写锁**（类型已支持也一样）→ 热路径（每次 `PoolGetUnit`）不要加；但读档的法则查找发生在 `PoolGetNode` **之前**，`ReadValue` 里的调用不能省。
 - **生成器静态集合不能跨程序集共享**：`RuleSupplementHelper` 等用静态字典收集再 `AddSource`，而 MyGenAll 的 IL2CPP 构建用 `/shared` 编译器服务器**并行**编 `CoreUnity`/`Module`/`HotFix`，字典串台后会把 Module 的 `InputBindSupplement` 写进 CoreUnity（CoreUnity 不引用 Module → CS0246），接着 `GenerateStripedAOTDlls failed`（编辑器/VS 分开编所以能过）。已让 `SourceGeneratorBase.Execute` 加锁串行。**改 `Unity.Analysis.dll` 后必须重启 Unity**，否则旧编译器服务器还握着旧 dll。程序集名单：Unity 侧 `UnityTool/Analysis/ProjectGeneratorSetting.cs`（与 asmdef 对得上），.NET 侧 `Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs`（`WorldTree.Core` / `WorldTree.Module`），**别混**。

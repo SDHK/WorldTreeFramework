@@ -3,18 +3,13 @@
 	/// <summary>
 	/// 按钮
 	/// </summary>
-	public class ViewButton : View<ButtonBind>
+	public class ViewButton : ViewWidget
 	{
 		/// <summary>
 		/// 点击事件
 		/// </summary>
 		public RuleUnicast<ISendRule> OnClick;
 	}
-
-	/// <summary>
-	/// 按钮绑定
-	/// </summary>
-	public class ButtonBind : ViewBind { }
 
 
 }

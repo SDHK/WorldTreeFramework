@@ -33,3 +33,4 @@ Logs/
 /Unity/WorldTree.RuleUnity.csproj
 Unity/Assets/Plugins/Share.SourceGenerator.dll
 Unity/Assets/Plugins/Share.Analyzer.dll
+.archify/

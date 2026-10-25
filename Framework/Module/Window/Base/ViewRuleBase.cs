@@ -2,16 +2,6 @@
 {
 
 	/// <summary>
-	/// 视图元素加载
-	/// </summary>
-	public interface ViewElementLoad : ISendRule { }
-
-	/// <summary>
-	/// 视图元素卸载
-	/// </summary>
-	public interface ViewElementUnLoad : ISendRule { }
-
-	/// <summary>
 	/// 组件注册
 	/// </summary>
 	public interface ViewRegister : ISendRule { }
