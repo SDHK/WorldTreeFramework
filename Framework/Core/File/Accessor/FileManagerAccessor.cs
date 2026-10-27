@@ -85,7 +85,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取文件信息
 		/// </summary>
-		public FileInfo Stat(string address)
+		public FileItemInfo Stat(string address)
 		{
 			FileAddress fileAddress = FileAddress.Parse(address);
 			return Manager.Stat(fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
@@ -94,7 +94,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取文件信息
 		/// </summary>
-		public FileInfo Stat(FileChannel channel, string group, string tag, string key)
+		public FileItemInfo Stat(FileChannel channel, string group, string tag, string key)
 		{
 			return Manager.Stat(channel, group, tag, key);
 		}
@@ -204,7 +204,7 @@ namespace WorldTree
 		/// <summary>
 		/// 枚举目录
 		/// </summary>
-		public IEnumerable<FileInfo> List(string address)
+		public IEnumerable<FileItemInfo> List(string address)
 		{
 			FileAddress fileAddress = FileAddress.Parse(address);
 			return Manager.List(fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
@@ -213,7 +213,7 @@ namespace WorldTree
 		/// <summary>
 		/// 枚举目录
 		/// </summary>
-		public IEnumerable<FileInfo> List(FileChannel channel, string group, string tag, string key)
+		public IEnumerable<FileItemInfo> List(FileChannel channel, string group, string tag, string key)
 		{
 			return Manager.List(channel, group, tag, key);
 		}

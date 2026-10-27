@@ -192,7 +192,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取文件信息；不存在时返回 default
 		/// </summary>
-		public FileInfo Stat(string tag, string key)
+		public FileItemInfo Stat(string tag, string key)
 		{
 			List<string> candidatesList = GetTagCandidates(tag);
 			for (int i = 0; i < candidatesList.Count; i++)
@@ -200,7 +200,7 @@ namespace WorldTree
 				if (!TryGetTagSources(candidatesList[i], out List<FileSourceInfo> sourcesList)) continue;
 				for (int j = 0; j < sourcesList.Count; j++)
 				{
-					FileInfo result = sourcesList[j].Source.Stat(key);
+					FileItemInfo result = sourcesList[j].Source.Stat(key);
 					if (result.Exists) return result;
 				}
 			}
@@ -249,7 +249,7 @@ namespace WorldTree
 		/// <summary>
 		/// 枚举目录
 		/// </summary>
-		public IEnumerable<FileInfo> List(string tag, string key)
+		public IEnumerable<FileItemInfo> List(string tag, string key)
 		{
 			List<string> candidatesList = GetTagCandidates(tag);
 			for (int i = 0; i < candidatesList.Count; i++)
@@ -257,12 +257,12 @@ namespace WorldTree
 				if (!TryGetTagSources(candidatesList[i], out List<FileSourceInfo> sourcesList)) continue;
 				for (int j = 0; j < sourcesList.Count; j++)
 				{
-					List<FileInfo> entriesList = new List<FileInfo>(sourcesList[j].Source.List(key));
+					List<FileItemInfo> entriesList = new List<FileItemInfo>(sourcesList[j].Source.List(key));
 					if (entriesList.Count > 0) return entriesList;
 				}
 			}
 
-			return Array.Empty<FileInfo>();
+			return Array.Empty<FileItemInfo>();
 		}
 
 		/// <summary>

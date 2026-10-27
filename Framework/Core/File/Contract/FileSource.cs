@@ -38,7 +38,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取文件信息；不存在时返回 default（Exists == false）
 		/// </summary>
-		public abstract FileInfo Stat(string path);
+		public abstract FileItemInfo Stat(string path);
 
 		/// <summary>
 		/// 在 parent 下创建 FileHandle 并打开文件
@@ -53,7 +53,7 @@ namespace WorldTree
 		/// <summary>
 		/// 枚举目录
 		/// </summary>
-		public abstract IEnumerable<FileInfo> List(string path);
+		public abstract IEnumerable<FileItemInfo> List(string path);
 
 		/// <summary>
 		/// 删除文件或目录

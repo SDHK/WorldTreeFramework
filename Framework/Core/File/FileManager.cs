@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace WorldTree
 {
@@ -112,7 +113,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取文件信息
 		/// </summary>
-		public FileInfo Stat(FileChannel channel, string group, string tag, string key)
+		public FileItemInfo Stat(FileChannel channel, string group, string tag, string key)
 		{
 			return ResolveChannel(channel).Stat(group, tag, key);
 		}
@@ -180,7 +181,7 @@ namespace WorldTree
 					return buffers;
 				}
 
-				using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
+				using (MemoryStream stream = new MemoryStream())
 				{
 					byte[] chunks = new byte[8192];
 					int read;
@@ -209,7 +210,7 @@ namespace WorldTree
 		/// <summary>
 		/// 枚举目录
 		/// </summary>
-		public IEnumerable<FileInfo> List(FileChannel channel, string group, string tag, string key)
+		public IEnumerable<FileItemInfo> List(FileChannel channel, string group, string tag, string key)
 		{
 			return ResolveChannel(channel).List(group, tag, key);
 		}

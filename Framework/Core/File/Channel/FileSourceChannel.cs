@@ -137,7 +137,7 @@ namespace WorldTree
 		/// <summary>
 		/// 获取文件信息
 		/// </summary>
-		public FileInfo Stat(string group, string tag, string key)
+		public FileItemInfo Stat(string group, string tag, string key)
 		{
 			return RequireGroup(group).Stat(tag, key);
 		}
@@ -161,7 +161,7 @@ namespace WorldTree
 		/// <summary>
 		/// 枚举目录
 		/// </summary>
-		public IEnumerable<FileInfo> List(string group, string tag, string key)
+		public IEnumerable<FileItemInfo> List(string group, string tag, string key)
 		{
 			return RequireGroup(group).List(tag, key);
 		}

@@ -17,9 +17,9 @@ namespace WorldTree
 	/// <remarks>
 	/// <see cref="IFileSource"/> 返回的 Path 是挂载点内的相对路径；
 	/// 经 <see cref="FileManager"/> 返回时会被补上挂载前缀。
-	/// default(FileInfo) 表示不存在。
+	/// default(FileItemInfo) 表示不存在。
 	/// </remarks>
-	public readonly struct FileInfo
+	public readonly struct FileItemInfo
 	{
 		/// <summary>
 		/// 是否存在；default 时为 false
@@ -51,7 +51,7 @@ namespace WorldTree
 		/// </summary>
 		public string ETag { get; }
 
-		public FileInfo(string path, long size = 0, bool isDirectory = false, DateTime lastWriteTime = default, string etag = null)
+		public FileItemInfo(string path, long size = 0, bool isDirectory = false, DateTime lastWriteTime = default, string etag = null)
 		{
 			Exists = true;
 			Path = path;
