@@ -71,6 +71,11 @@ namespace WorldTree
         public ConfigManager ConfigManager;
 
         /// <summary>
+        /// 文件管理器
+        /// </summary>
+        public FileManager FileManager;
+
+        /// <summary>
         /// 主世界线
         /// </summary>
         public WorldLine MainLine;
@@ -110,6 +115,7 @@ namespace WorldTree
             this.CreateCoreObject(out UnitPoolManager);
             this.CreateCoreObject(out NodePoolManager);
             this.CreateCoreObject(out ConfigManager);
+            this.CreateCoreObject(out FileManager);
 
 
             AddRuleGroup = RuleManager.GetOrNewRuleGroup<Add>();
@@ -276,6 +282,7 @@ namespace WorldTree
         public override void OnDispose()
         {
             DestroyAll();
+            FileManager.Dispose();
             ConfigManager.Dispose();
             NodePoolManager.Dispose();
             UnitPoolManager.Dispose();

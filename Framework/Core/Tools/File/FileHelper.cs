@@ -34,7 +34,7 @@ namespace WorldTree
 			{
 				destPath = $"{dirPath}/{newName}";
 			}
-			new FileInfo(filePath).MoveTo(destPath);
+			new System.IO.FileInfo(filePath).MoveTo(destPath);
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace WorldTree
 		public static void Move(string filePath, string targetPath)
 		{
 			if (File.Exists(targetPath)) File.Delete(targetPath);
-			new FileInfo(filePath).MoveTo(targetPath);
+			new System.IO.FileInfo(filePath).MoveTo(targetPath);
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace WorldTree
 		/// </summary>
 		public static long GetSize(string filePath)
 		{
-			return new FileInfo(filePath).Length;
+			return new System.IO.FileInfo(filePath).Length;
 		}
 
 		/// <summary>
