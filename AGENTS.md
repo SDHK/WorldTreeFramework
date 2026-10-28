@@ -179,7 +179,7 @@ Unity 由 `StartWorld.Add` 调用 `ConfigLoader.Load<T>` 和 `CreateWorldLines`�
 统一约定：管理器挂在 `World` 上，**唯一来源是它的 `FieldOf` 子节点**；管理器本身不认具体实现；装配走 `AddAssetSource<TSource>()` / `AddDataSource<TSource>()` / `AddDataSource<TSource>(string path)`，内部 `AddField`，重复调用返回已有的。
 
 - `RunTime/Asset/`：`IAssetSource` 接口 + `Base/AssetManager` + `YooAsset/YooAssetManager`（`IAssetSource` 实现，句柄按地址缓存）。业务只写 `world.GetAssetManager().LoadAsset<T>(address)`，名字里不出现 `Yoo`；配置 bytes 走同步加载，`GameObject` 用 `LoadAssetAsync`。加新来源（编辑器直读等）就再写一个 `IAssetSource`，启动流程换掉 `AddAssetSource<>` 的泛型参数。
-- `Framework/Module/DataBase`：`IDataBase` 接口 + `Base/DataBaseManager` + `LiteDB/LiteDBManager`（`LiteDBCollection<T>` 是它的组件）。用法 `db.AddDataSource<LiteDBManager>(path)`，之后 `db.Insert` / `Find` / `Delete` 走 `DataBaseManagerRule`。
+- `Framework/Core/DataBase`：`IDataBase` 接口 + `DataBaseManager` + `DataBaseManagerRule`（同步与异步 CRUD）。`Framework/Module/DataBase`：`LiteDB/LiteDBManager`（`LiteDBCollection<T>` 是它的组件）。`DataBaseManager` 按 group 存多个源，空字符串是默认组，组名重复报错；`GetSource` / `TryGetSource` 取指定组，`AddDataSource` / `AddGroupDataSource` 挂源。用法 `db.AddDataSource<LiteDBManager>(path)`，之后 `db.Insert` / `Find` / `Delete` 走默认组的 `DataBaseManagerRule`。
 
 ### 仓库
 框架、产品、工具拆成平级仓库，放同一父目录（`WorldTreeWorkspace`）。父目录名随便，不归 git。
@@ -210,7 +210,7 @@ ToolProject/               工具分类目录（不归 git）
 | 路径 | 说明 |
 |---|---|
 | `Framework/Core/` | .NET 侧核心源码（`WorldTree.Core.csproj`，`DOTNET` 宏） |
-| `Framework/Module/` | 模块（csproj 链接 Unity 的 Module 源码）：DataBase(LiteDB)/Input/Loader/NeuralNetwork/TreeTween/Window |
+| `Framework/Module/` | 模块（csproj 链接 Unity 的 Module 源码）：DataBase(LiteDB 实现)/Input/Loader/NeuralNetwork/TreeTween/Window |
 | `Framework/SourceGeneratorCore/`、`Framework/AnalyzerCore/` | 源生成器 + 分析器 |
 | `Unity/Assets/Scripts/WorldTreeFramework/WorldTree/Module/` | 平台无关模块（被 .NET Module csproj 链接） |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/` | `WorldTree.CoreUnity`（Unity 运行时环境：心跳/日志/组件） |

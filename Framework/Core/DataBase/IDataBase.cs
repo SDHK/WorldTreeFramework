@@ -57,6 +57,41 @@ namespace WorldTree
 		/// </summary>
 		public bool Update(long id, T data);
 
+
+		/// <summary>
+		/// 异步查询
+		/// </summary>
+		public TreeTask<T> FindAsync(long id);
+
+		/// <summary>
+		/// 异步查询所有，结果填充到外部集合
+		/// </summary>
+		public TreeTask FindAllAsync(ICollection<T> outList);
+
+		/// <summary>
+		/// 异步插入
+		/// </summary>
+		public TreeTask InsertAsync(long id, T data);
+
+		/// <summary>
+		/// 异步更新
+		/// </summary>
+		public TreeTask<bool> UpdateAsync(long id, T data);
+
+		/// <summary>
+		/// 异步删除
+		/// </summary>
+		public TreeTask DeleteAsync(long id);
+
+		/// <summary>
+		/// 异步删除所有
+		/// </summary>
+		public TreeTask DeleteAllAsync();
+
+		/// <summary>
+		/// 异步计数
+		/// </summary>
+		public TreeTask<int> CountAsync();
 	}
 
 
