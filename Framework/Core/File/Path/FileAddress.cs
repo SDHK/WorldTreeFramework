@@ -3,9 +3,11 @@
 * 作者： 闪电黑客
 * 日期： 2026/10/27 0:00
 
-* 描述： 文件地址：channel/group[/tag]:key。
+* 描述： 文件地址：channel[/group[/tag]]:key。
 
 */
+
+using System;
 
 namespace WorldTree
 {
@@ -13,8 +15,8 @@ namespace WorldTree
 	/// 文件地址
 	/// </summary>
 	/// <remarks>
-	/// channel/group[/tag]:key。
-	/// group 不能为空；tag 可空；key 不能为空，可包含 '/' 和 ':'。
+	/// channel[/group[/tag]]:key。
+	/// Group 和 Tag 可为空；Key 不能为空，可包含 '/' 和 ':'。
 	/// </remarks>
 	public readonly struct FileAddress
 	{
@@ -24,12 +26,12 @@ namespace WorldTree
 		public FileChannel Channel { get; }
 
 		/// <summary>
-		/// 内容分组
+		/// 内容分组；空字符串表示默认组
 		/// </summary>
 		public string Group { get; }
 
 		/// <summary>
-		/// 逻辑标签（版本/别名/备用路径）
+		/// 逻辑标签（版本/别名/备用路径）；空字符串表示无 Tag
 		/// </summary>
 		public string Tag { get; }
 
@@ -38,21 +40,29 @@ namespace WorldTree
 		/// </summary>
 		public string Key { get; }
 
+		public FileAddress(FileChannel channel, string key)
+			: this(channel, string.Empty, string.Empty, key)
+		{
+		}
+
+		public FileAddress(FileChannel channel, string group, string key)
+			: this(channel, group, string.Empty, key)
+		{
+		}
+
 		public FileAddress(FileChannel channel, string group, string tag, string key)
 		{
-			if (string.IsNullOrEmpty(group))
-				throw new FileException(FileError.InvalidPath, group, "Group 不能为空");
 			if (string.IsNullOrEmpty(key))
 				throw new FileException(FileError.InvalidPath, key, "Key 不能为空");
 
 			Channel = channel;
-			Group = group;
+			Group = group ?? string.Empty;
 			Tag = tag ?? string.Empty;
 			Key = key;
 		}
 
 		/// <summary>
-		/// 解析 channel/group[/tag]:key
+		/// 解析 channel[/group[/tag]]:key
 		/// </summary>
 		public static FileAddress Parse(string address)
 		{
@@ -63,7 +73,7 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 尝试解析 channel/group[/tag]:key
+		/// 尝试解析 channel[/group[/tag]]:key
 		/// </summary>
 		public static bool TryParse(string address, out FileAddress result)
 		{
@@ -77,14 +87,14 @@ namespace WorldTree
 			string key = address.Substring(colon + 1);
 
 			string[] parts = prefix.Split('/');
-			if (parts.Length < 2 || parts.Length > 3) return false;
+			if (parts.Length < 1 || parts.Length > 3) return false;
 
 			string channelText = parts[0];
-			string group = parts[1];
-			string tag = parts.Length == 3 ? parts[2] : string.Empty;
-
-			if (string.IsNullOrEmpty(channelText) || string.IsNullOrEmpty(group)) return false;
+			if (string.IsNullOrEmpty(channelText)) return false;
 			if (!TryParseChannel(channelText, out FileChannel channel)) return false;
+
+			string group = parts.Length >= 2 ? parts[1] : string.Empty;
+			string tag = parts.Length == 3 ? parts[2] : string.Empty;
 
 			result = new FileAddress(channel, group, tag, key);
 			return true;
@@ -115,6 +125,9 @@ namespace WorldTree
 		public override string ToString()
 		{
 			string channel = Channel.ToString().ToLowerInvariant();
+
+			if (Group.Length == 0 && Tag.Length == 0) return $"{channel}:{Key}";
+			if (Group.Length == 0) return $"{channel}//{Tag}:{Key}";
 			if (Tag.Length == 0) return $"{channel}/{Group}:{Key}";
 			return $"{channel}/{Group}/{Tag}:{Key}";
 		}

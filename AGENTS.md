@@ -143,7 +143,7 @@ Unity 由 `StartWorld.Add` 调用 `ConfigLoader.Load<T>` 和 `CreateWorldLines`�
 
 菜单 `WorldTree/拷贝客户端配置` 清空目标后全量拷贝，再 `AssetDatabase.Refresh()`。程序集从底到顶是 `ThirdParty` → `CoreUnity` → `HotFix` 与 `App` → `HotFixUnity`。`App` 引用 `CoreUnity`、`HotFix`、`ThirdParty`。`HotFix` 的 `allowUnsafeCode` 保持 false。
 
-对照只看 `E:\Storage\Daily\BaiduNetdisk\WX20220921\config\`，不要照 HeadMaster 的 `Luban.ClientServer.exe`。Windows 离线包的点击顺序见下一节。
+对照只看 `E:\Storage\Daily\BaiduNetdisk\WX20220921\config\`，不要照 HeadMaster 的 `Luban.ClientServer.exe`。客户端配置加载参考工程：`D:\Projects\GameEngine\Unity\HeadMaster_81`（对照 `ConfigLoader` / `ConfigImporterWindow` 的目录约定，不照它的 Luban 工具）。Windows 离线包的点击顺序见下一节。
 
 ### Windows 离线包
 激活平台先切到 `StandaloneWindows64`。`MyGenAll`、`CopyDlls`、YooAsset 都跟当前激活平台走。Scripting Backend 保持 IL2CPP。场景里 `GameEntry.playMode` 选 `OfflinePlayMode`，不要用 `EditorSimulateMode`。
@@ -288,6 +288,7 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 - **`overrideReferences: true` 会切断项目里所有预编译 DLL 的自动引用**：改成 true 的 asmdef，必须把代码（含源生成器生成的那部分）直接 `using` 到的每个 dll 显式写进 `precompiledReferences`。踩过 Sirenix、Unsafe。
 - **netstandard 少 `System.Runtime.CompilerServices.Unsafe`**（net6.0 才内置）→ 引包即可。Core 报"Unsafe 不存在"就是它。
 - **`WorldTree.Core.dll` 的 3 个外部依赖，Unity 里都得有**：`NLog.dll`、`CommandLine.dll`、`System.Runtime.CompilerServices.Unsafe.dll`（均在 `Assets/Scripts/AOT/Plugins/`）。**Unity 按强名称精确校验版本**——NLog 必须 5.4.0（程序集 `5.0.0.0`）、CommandLineParser 必须 2.9.1（程序集 `2.9.1.0`），与 `WorldTree.Core.csproj` 的包版本一致；旧版会让 Core.dll **拒绝加载**。清插件时别把 Unsafe.dll 一起删。
+- **改 Core/Module 后没重编 `Unity.Analysis`，Unity 里的 dll 还是旧的**：`Assets/Scripts/AOT/Plugins/WorldTree/` 的 `WorldTree.Core/Module.dll` 由 `Unity.Analysis` 的 PostBuild 拷入；旧 dll 会报 `CS1061 GetFileManager` / `CS0246 FileAddress` / `LocalFileSource` 找不到。先 `dotnet build UnityTool/Analysis/Unity.Analysis.csproj`，再 `unity_refresh`。
 - **源生成器/分析器与目标框架无关**（跑在 Roslyn 编译器进程里）→ netstandard2.1 照用。
 - **HybridCLR 三条**：① `AOTGenericReferences.cs` 是自动生成物**别手改**——真正生效的 `PatchedAOTAssemblyList` 由"热更代码的泛型用法"**自动检测**得出，`patchAOTAssemblies` 设置在本版本基本没接进生成流程。② 社区版里 **Assets 下的预编译 dll = AOT，不可热更**；热更 dll 必须由 `CompileDll` 从**源码**编，光把 dll 丢 `Temp/Bin/Debug` 无效（旗舰版 DHE 才有 AOT 热更）。③ **AOT 程序集不能引用热更程序集**——`WorldTree.Config` 曾在 `HotUpdate/` 下却漏进 `hotUpdateAssemblies`，MyGenAll 的 IL2CPP 构建报 `Failed to resolve assembly: WorldTree.HotFix`（已修）。
 - **HybridCLR `CopyDlls` 源目录要对齐 `CompileDll` 输出**：`CompileDll` 输出到 `hotUpdateDllCompileOutputRootDir/{target}`（`HybridCLRData/HotUpdateDlls/StandaloneWindows64/`），而 `externalHotUpdateAssembliyDirs` 默认 `Temp/Bin/Debug`（空）会让 `CopyHotUpdateDlls` 报 `FileNotFoundException`。改成 `SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target)`。构建链 `MyGenAll` → `CopyDlls`：热更 dll 进 `AssetBundles/Dlls/HotUpdateDlls`，`PatchedAOTAssemblyList`（含 `WorldTree.Core.dll`/`WorldTree.Module.dll`）进 `AssetBundles/Dlls/AotDlls`；运行时 `LoadAOT` 按 tag `aotDlls` 加载。`LoadHotUpdate` 只收地址以 `.dll` 结尾的资源，并按依赖顺序装入：`WorldTree.CoreUnity.dll` → `WorldTree.HotFix.dll` → `WorldTree.App.dll` → `WorldTree.HotFixUnity.dll`。按标签原顺序会先装到 `App`，解析 `WorldLineConfigData` 时抛 `TypeLoadException`（`HybridCLRHelper` 已按这个顺序写死）。这段在 AOT 的 `GameEntry` 里，改了要重新出 Player。

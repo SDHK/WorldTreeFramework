@@ -76,10 +76,7 @@ namespace WorldTree
 
 		public FileGroup(string name)
 		{
-			if (string.IsNullOrWhiteSpace(name))
-				throw new ArgumentException("Group 不能为空", nameof(name));
-
-			Name = name;
+			Name = name ?? string.Empty;
 		}
 
 		/// <summary>

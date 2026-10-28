@@ -58,11 +58,11 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 解析 Group/Tag 对应的文件源
+		/// 解析地址对应的文件源
 		/// </summary>
-		public IFileSource Resolve(FileChannel channel, string group, string tag)
+		public IFileSource Resolve(FileAddress address)
 		{
-			return Manager.Resolve(channel, group, tag);
+			return Manager.Resolve(address);
 		}
 
 		/// <summary>
@@ -70,16 +70,15 @@ namespace WorldTree
 		/// </summary>
 		public bool Exists(string address)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			return Manager.Exists(fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
+			return Manager.Exists(FileAddress.Parse(address));
 		}
 
 		/// <summary>
 		/// 是否存在
 		/// </summary>
-		public bool Exists(FileChannel channel, string group, string tag, string key)
+		public bool Exists(FileAddress address)
 		{
-			return Manager.Exists(channel, group, tag, key);
+			return Manager.Exists(address);
 		}
 
 		/// <summary>
@@ -87,16 +86,15 @@ namespace WorldTree
 		/// </summary>
 		public FileItemInfo Stat(string address)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			return Manager.Stat(fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
+			return Manager.Stat(FileAddress.Parse(address));
 		}
 
 		/// <summary>
 		/// 获取文件信息
 		/// </summary>
-		public FileItemInfo Stat(FileChannel channel, string group, string tag, string key)
+		public FileItemInfo Stat(FileAddress address)
 		{
-			return Manager.Stat(channel, group, tag, key);
+			return Manager.Stat(address);
 		}
 
 		/// <summary>
@@ -104,16 +102,15 @@ namespace WorldTree
 		/// </summary>
 		public FileHandle Open(string address, FileOpenMode mode, FileOpenAccess access)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			return Manager.Open(node, fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key, mode, access);
+			return Manager.Open(node, FileAddress.Parse(address), mode, access);
 		}
 
 		/// <summary>
 		/// 打开文件
 		/// </summary>
-		public FileHandle Open(FileChannel channel, string group, string tag, string key, FileOpenMode mode, FileOpenAccess access)
+		public FileHandle Open(FileAddress address, FileOpenMode mode, FileOpenAccess access)
 		{
-			return Manager.Open(node, channel, group, tag, key, mode, access);
+			return Manager.Open(node, address, mode, access);
 		}
 
 		/// <summary>
@@ -121,16 +118,15 @@ namespace WorldTree
 		/// </summary>
 		public TreeTask<FileHandle> OpenAsync(string address, FileOpenMode mode, FileOpenAccess access)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			return Manager.OpenAsync(node, fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key, mode, access);
+			return Manager.OpenAsync(node, FileAddress.Parse(address), mode, access);
 		}
 
 		/// <summary>
 		/// 异步打开文件
 		/// </summary>
-		public TreeTask<FileHandle> OpenAsync(FileChannel channel, string group, string tag, string key, FileOpenMode mode, FileOpenAccess access)
+		public TreeTask<FileHandle> OpenAsync(FileAddress address, FileOpenMode mode, FileOpenAccess access)
 		{
-			return Manager.OpenAsync(node, channel, group, tag, key, mode, access);
+			return Manager.OpenAsync(node, address, mode, access);
 		}
 
 		/// <summary>
@@ -138,16 +134,15 @@ namespace WorldTree
 		/// </summary>
 		public FileHandle OpenRead(string address)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			return Manager.OpenRead(node, fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
+			return Manager.OpenRead(node, FileAddress.Parse(address));
 		}
 
 		/// <summary>
 		/// 打开只读文件
 		/// </summary>
-		public FileHandle OpenRead(FileChannel channel, string group, string tag, string key)
+		public FileHandle OpenRead(FileAddress address)
 		{
-			return Manager.OpenRead(node, channel, group, tag, key);
+			return Manager.OpenRead(node, address);
 		}
 
 		/// <summary>
@@ -155,16 +150,15 @@ namespace WorldTree
 		/// </summary>
 		public FileHandle OpenWrite(string address)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			return Manager.OpenWrite(node, fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
+			return Manager.OpenWrite(node, FileAddress.Parse(address));
 		}
 
 		/// <summary>
 		/// 打开写入文件
 		/// </summary>
-		public FileHandle OpenWrite(FileChannel channel, string group, string tag, string key)
+		public FileHandle OpenWrite(FileAddress address)
 		{
-			return Manager.OpenWrite(node, channel, group, tag, key);
+			return Manager.OpenWrite(node, address);
 		}
 
 		/// <summary>
@@ -172,16 +166,15 @@ namespace WorldTree
 		/// </summary>
 		public byte[] ReadAllBytes(string address)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			return Manager.ReadAllBytes(node, fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
+			return Manager.ReadAllBytes(node, FileAddress.Parse(address));
 		}
 
 		/// <summary>
 		/// 读取整个文件
 		/// </summary>
-		public byte[] ReadAllBytes(FileChannel channel, string group, string tag, string key)
+		public byte[] ReadAllBytes(FileAddress address)
 		{
-			return Manager.ReadAllBytes(node, channel, group, tag, key);
+			return Manager.ReadAllBytes(node, address);
 		}
 
 		/// <summary>
@@ -189,16 +182,15 @@ namespace WorldTree
 		/// </summary>
 		public void WriteAllBytes(string address, byte[] data)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			Manager.WriteAllBytes(node, fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key, data);
+			Manager.WriteAllBytes(node, FileAddress.Parse(address), data);
 		}
 
 		/// <summary>
 		/// 写入整个文件
 		/// </summary>
-		public void WriteAllBytes(FileChannel channel, string group, string tag, string key, byte[] data)
+		public void WriteAllBytes(FileAddress address, byte[] data)
 		{
-			Manager.WriteAllBytes(node, channel, group, tag, key, data);
+			Manager.WriteAllBytes(node, address, data);
 		}
 
 		/// <summary>
@@ -206,16 +198,15 @@ namespace WorldTree
 		/// </summary>
 		public IEnumerable<FileItemInfo> List(string address)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			return Manager.List(fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
+			return Manager.List(FileAddress.Parse(address));
 		}
 
 		/// <summary>
 		/// 枚举目录
 		/// </summary>
-		public IEnumerable<FileItemInfo> List(FileChannel channel, string group, string tag, string key)
+		public IEnumerable<FileItemInfo> List(FileAddress address)
 		{
-			return Manager.List(channel, group, tag, key);
+			return Manager.List(address);
 		}
 
 		/// <summary>
@@ -223,16 +214,15 @@ namespace WorldTree
 		/// </summary>
 		public void Delete(string address)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			Manager.Delete(fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
+			Manager.Delete(FileAddress.Parse(address));
 		}
 
 		/// <summary>
 		/// 删除文件或目录
 		/// </summary>
-		public void Delete(FileChannel channel, string group, string tag, string key)
+		public void Delete(FileAddress address)
 		{
-			Manager.Delete(channel, group, tag, key);
+			Manager.Delete(address);
 		}
 
 		/// <summary>
@@ -256,16 +246,15 @@ namespace WorldTree
 		/// </summary>
 		public void CreateDirectory(string address)
 		{
-			FileAddress fileAddress = FileAddress.Parse(address);
-			Manager.CreateDirectory(fileAddress.Channel, fileAddress.Group, fileAddress.Tag, fileAddress.Key);
+			Manager.CreateDirectory(FileAddress.Parse(address));
 		}
 
 		/// <summary>
 		/// 创建目录
 		/// </summary>
-		public void CreateDirectory(FileChannel channel, string group, string tag, string key)
+		public void CreateDirectory(FileAddress address)
 		{
-			Manager.CreateDirectory(channel, group, tag, key);
+			Manager.CreateDirectory(address);
 		}
 	}
 

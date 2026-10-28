@@ -16,7 +16,7 @@ namespace WorldTree
 	/// 文件通道
 	/// </summary>
 	/// <remarks>
-	/// Channel 是固定操作码；Group 是内容分组；Tag 在 Group 内兜底。
+	/// Channel 是固定操作码；Group 可为空表示默认组；Tag 在 Group 内兜底。
 	/// </remarks>
 	public sealed class FileSourceChannel : CoreObject
 	{
@@ -78,9 +78,9 @@ namespace WorldTree
 		/// </summary>
 		public void AddSource(string group, string tag, IFileSource source, int priority = 0)
 		{
-			if (string.IsNullOrEmpty(group))
-				throw new FileException(FileError.InvalidPath, group, "Group 不能为空");
 			if (source == null) throw new ArgumentNullException(nameof(source));
+
+			group ??= string.Empty;
 
 			lock (groupLock)
 			{
@@ -101,7 +101,7 @@ namespace WorldTree
 		/// </summary>
 		public bool RemoveSource(string group, string tag)
 		{
-			if (string.IsNullOrEmpty(group)) return false;
+			group ??= string.Empty;
 
 			lock (groupLock)
 			{
@@ -119,81 +119,81 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 解析 Group/Tag 对应的 Source
+		/// 解析地址对应的 Source
 		/// </summary>
-		public IFileSource ResolveSource(string group, string tag)
+		public IFileSource ResolveSource(FileAddress address)
 		{
-			return RequireGroup(group).ResolveSource(tag);
+			return RequireGroup(address.Group).ResolveSource(address.Tag);
 		}
 
 		/// <summary>
 		/// 是否存在
 		/// </summary>
-		public bool Exists(string group, string tag, string key)
+		public bool Exists(FileAddress address)
 		{
-			return RequireGroup(group).Exists(tag, key);
+			return RequireGroup(address.Group).Exists(address.Tag, address.Key);
 		}
 
 		/// <summary>
 		/// 获取文件信息
 		/// </summary>
-		public FileItemInfo Stat(string group, string tag, string key)
+		public FileItemInfo Stat(FileAddress address)
 		{
-			return RequireGroup(group).Stat(tag, key);
+			return RequireGroup(address.Group).Stat(address.Tag, address.Key);
 		}
 
 		/// <summary>
 		/// 打开文件
 		/// </summary>
-		public FileHandle Open(INode parent, string group, string tag, string key, FileOpenMode mode, FileOpenAccess access)
+		public FileHandle Open(INode parent, FileAddress address, FileOpenMode mode, FileOpenAccess access)
 		{
-			return RequireGroup(group).Open(parent, tag, key, mode, access);
+			return RequireGroup(address.Group).Open(parent, address.Tag, address.Key, mode, access);
 		}
 
 		/// <summary>
 		/// 异步打开文件
 		/// </summary>
-		public TreeTask<FileHandle> OpenAsync(INode parent, string group, string tag, string key, FileOpenMode mode, FileOpenAccess access)
+		public TreeTask<FileHandle> OpenAsync(INode parent, FileAddress address, FileOpenMode mode, FileOpenAccess access)
 		{
-			return RequireGroup(group).OpenAsync(parent, tag, key, mode, access);
+			return RequireGroup(address.Group).OpenAsync(parent, address.Tag, address.Key, mode, access);
 		}
 
 		/// <summary>
 		/// 枚举目录
 		/// </summary>
-		public IEnumerable<FileItemInfo> List(string group, string tag, string key)
+		public IEnumerable<FileItemInfo> List(FileAddress address)
 		{
-			return RequireGroup(group).List(tag, key);
+			return RequireGroup(address.Group).List(address.Tag, address.Key);
 		}
 
 		/// <summary>
 		/// 删除文件或目录
 		/// </summary>
-		public void Delete(string group, string tag, string key)
+		public void Delete(FileAddress address)
 		{
-			RequireGroup(group).Delete(tag, key);
+			RequireGroup(address.Group).Delete(address.Tag, address.Key);
 		}
 
 		/// <summary>
 		/// 移动文件或目录
 		/// </summary>
-		public void Move(string fromGroup, string fromTag, string fromKey, string toGroup, string toTag, string toKey)
+		public void Move(FileAddress from, FileAddress to)
 		{
-			FileGroup fromFileGroup = RequireGroup(fromGroup);
-			FileGroup toFileGroup = RequireGroup(toGroup);
+			FileGroup fromFileGroup = RequireGroup(from.Group);
+			FileGroup toFileGroup = RequireGroup(to.Group);
 
 			if (!ReferenceEquals(fromFileGroup, toFileGroup))
-				throw new FileException(FileError.NotSupported, fromKey, "跨 Group 移动暂不支持");
+				throw new FileException(FileError.NotSupported, from.Key, "跨 Group 移动暂不支持");
 
-			fromFileGroup.Move(fromTag, fromKey, toTag, toKey);
+			fromFileGroup.Move(from.Tag, from.Key, to.Tag, to.Key);
 		}
 
 		/// <summary>
 		/// 创建目录
 		/// </summary>
-		public void CreateDirectory(string group, string tag, string key)
+		public void CreateDirectory(FileAddress address)
 		{
-			RequireGroup(group).CreateDirectory(tag, key);
+			RequireGroup(address.Group).CreateDirectory(address.Tag, address.Key);
 		}
 
 		/// <summary>
@@ -214,12 +214,11 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 要求 Group 存在
+		/// 要求 Group 存在；空字符串表示默认组
 		/// </summary>
 		private FileGroup RequireGroup(string group)
 		{
-			if (string.IsNullOrEmpty(group))
-				throw new FileException(FileError.InvalidPath, group, "Group 不能为空");
+			group ??= string.Empty;
 
 			lock (groupLock)
 			{
