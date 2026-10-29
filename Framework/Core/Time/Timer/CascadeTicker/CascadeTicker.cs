@@ -228,6 +228,26 @@ namespace WorldTree
 		public static void RemoveTicker(this CascadeTicker self, long tickerId) => self.RemoveChild(tickerId);
 
 		/// <summary>
+		/// 修改定时器的时序，只允许改晚。
+		/// </summary>
+		/// <param name="tickerId">定时器 Id</param>
+		/// <param name="clockTick">新的时序，必须大于当前时序</param>
+		public static void ChangeTick(this CascadeTicker self, long tickerId, long clockTick)
+		{
+			if (!self.TryGetChild(tickerId, out CascadeTickerData tickerData))
+			{
+				throw new Exception($"定时器不存在: {tickerId}");
+			}
+
+			if (clockTick < tickerData.Tick)
+			{
+				throw new ArgumentOutOfRangeException(nameof(clockTick), $"不能改早: {clockTick} < {tickerData.Tick}");
+			}
+
+			tickerData.Tick = clockTick;
+		}
+
+		/// <summary>
 		/// 更新 
 		/// </summary>
 		public static void Update(this CascadeTicker self, long currentTick)
