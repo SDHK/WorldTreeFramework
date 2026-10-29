@@ -19,6 +19,8 @@ namespace WorldTree
 		, AsRule<Awake>
 		, AsRule<Open>
 		, AsRule<Close>
+		, AsRule<ViewElementOpen>
+		, AsRule<ViewElementClose>
 		, AsRule<LayerChange>
 	{
 		/// <summary>
