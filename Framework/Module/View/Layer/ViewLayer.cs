@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace WorldTree
 {
@@ -14,7 +14,7 @@ namespace WorldTree
 	/// 视图层 
 	/// </summary>
 	public class ViewLayer : ViewContainer
-		, ChildOf<ViewLayerGroup>
+		, ViewOf<ViewLayerGroup>
 		, ComponentOf<View>
 		, AsComponentBranch
 		, AsRule<SubViewClose>
@@ -35,6 +35,16 @@ namespace WorldTree
 		/// 层级数量
 		/// </summary>
 		public byte LayerCount => (byte)(ViewList == null ? 0 : ViewList.Count);
+
+		/// <summary>
+		/// 关闭层：先关闭层内视图，再关闭自身
+		/// </summary>
+		public override async TreeTask OnClose()
+		{
+			if (!IsOpen) return;
+			await this.CloseAllView();
+			await base.OnClose();
+		}
 	}
 
 	[NodeRuleTarget(nameof(ViewLayer))]
@@ -61,13 +71,6 @@ namespace WorldTree
 				self.IdIndexDict?.Dispose();
 				self.IdIndexDict = null;
 			}
-		}
-
-		[NodeRule(nameof(Close))]
-		private static void OnCloseRule(this ViewLayer self)
-		{
-			// 关闭时清理所有视图
-			self.CloseAllView();
 		}
 
 		/// <summary>
@@ -97,7 +100,7 @@ namespace WorldTree
 		/// <summary>
 		/// 打开视图 : 类型码
 		/// </summary>
-		public static void OpenView(this ViewLayer self, long typeCode)
+		public static async TreeTask OpenView(this ViewLayer self, long typeCode)
 		{
 			if (self?.ViewList == null) return;
 			if (!(NodeBranchHelper.TryGetBranch(self, out ComponentBranch branch) && branch.TryGetNode(typeCode, out INode node))) return;
@@ -108,7 +111,7 @@ namespace WorldTree
 				self.IdIndexDict[view.Id] = self.ViewList.Count;
 				self.ViewList.Add(new(view));
 				view.Layer = (byte)self.ViewList.Count;
-				view.OnOpen();
+				await view.Open();
 			}
 			else
 			{
@@ -120,25 +123,25 @@ namespace WorldTree
 		/// <summary>
 		/// 打开视图
 		/// </summary>
-		public static void OpenView<T>(this ViewLayer self) where T : ViewLayerItem => self.OpenView(self.TypeToCode<T>());
+		public static async TreeTask OpenView<T>(this ViewLayer self) where T : ViewLayerItem => await self.OpenView(self.TypeToCode<T>());
 
 		/// <summary>
 		/// 关闭视图 : 类型码
 		/// </summary>
-		public static void CloseView(this ViewLayer self, long typeCode)
+		public static async TreeTask CloseView(this ViewLayer self, long typeCode)
 		{
 			if (self?.ViewList == null || self.ViewList.Count == 0) return;
 			if (!(NodeBranchHelper.TryGetBranch(self, out ComponentBranch branch) && branch.TryGetNode(typeCode, out INode node))) return;
 			if (node is not ViewLayerItem view) return;
 
-			view.OnClose();
+			await view.Close();
 			self.RemoveFromList(view);
 		}
 
 		/// <summary>
 		/// 关闭所有视图 
 		/// </summary>
-		public static void CloseAllView(this ViewLayer self)
+		public static async TreeTask CloseAllView(this ViewLayer self)
 		{
 			if (self?.ViewList == null || self.ViewList.Count == 0) return;
 			// 从顶层向下关闭
@@ -146,7 +149,7 @@ namespace WorldTree
 			{
 				var nodeRef = self.ViewList[i];
 				if (nodeRef.IsNull) continue;
-				nodeRef.Value.OnClose();
+				await nodeRef.Value.Close();
 			}
 			self.ViewList.Clear();
 			self.IdIndexDict.Clear();
@@ -155,7 +158,7 @@ namespace WorldTree
 		/// <summary>
 		/// 关闭视图
 		/// </summary>
-		public static void CloseView<T>(this ViewLayer self) where T : ViewLayerItem => self.CloseView(self.TypeToCode<T>());
+		public static async TreeTask CloseView<T>(this ViewLayer self) where T : ViewLayerItem => await self.CloseView(self.TypeToCode<T>());
 
 		/// <summary>
 		/// 设置视图到顶层 : 类型码

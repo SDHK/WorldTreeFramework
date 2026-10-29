@@ -17,11 +17,20 @@ namespace WorldTree
 		/// <summary>
 		/// 视图打开
 		/// </summary>
-		public int OnOpen();
+		public TreeTask Open();
 		/// <summary>
 		/// 视图关闭
 		/// </summary>
-		public int OnClose();
+		public TreeTask Close();
+
+		/// <summary>
+		/// 执行打开
+		/// </summary>
+		public TreeTask OnOpen();
+		/// <summary>
+		/// 执行关闭
+		/// </summary>
+		public TreeTask OnClose();
 
 		/// <summary>
 		/// 视图层级改变 

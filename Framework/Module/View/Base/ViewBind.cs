@@ -14,7 +14,6 @@ namespace WorldTree
 	/// </summary>
 	public class ViewBind : Node
 		, ComponentOf<View>
-		, AsChildBranch
 		, AsRule<Awake>
 	{
 		/// <summary>

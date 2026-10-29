@@ -26,6 +26,7 @@ namespace WorldTree.SourceGenerator
 		};
 		public static HashSet<Type> ModuleConfigs = new()
 		{
+			typeof(BranchSupplementGeneratorRun),
 			typeof(INodeProxyGeneratorRun),
 			typeof(RuleSupplementGeneratorRun),
 			typeof(RuleMethodGeneratorRun),

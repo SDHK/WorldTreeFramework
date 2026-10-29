@@ -15,12 +15,15 @@ namespace WorldTree
 	public abstract class View : Node, IView
 		, AsComponentBranch
 		, AsChildBranch
-		, ChildOf<View>
+		, AsViewBranch
+		, ViewOf<View>
 		, AsRule<Awake>
 		, AsRule<Open>
 		, AsRule<Close>
 		, AsRule<ViewElementOpen>
 		, AsRule<ViewElementClose>
+		, AsRule<ViewOpenAnim>
+		, AsRule<ViewCloseAnim>
 		, AsRule<LayerChange>
 	{
 		/// <summary>
@@ -105,6 +108,16 @@ namespace WorldTree
 		public bool IsOpen => !Bind.IsNull;
 
 		/// <summary>
+		/// 视图是否正在打开
+		/// </summary>
+		public bool IsOpening { get; private set; }
+
+		/// <summary>
+		/// 视图是否正在关闭
+		/// </summary>
+		public bool IsClosing { get; private set; }
+
+		/// <summary>
 		/// 视图显隐
 		/// </summary>
 		public bool IsShow
@@ -124,37 +137,116 @@ namespace WorldTree
 			}
 		}
 
-		public virtual int OnOpen()
-		{
-			if (IsOpen) return 0;
+		/// <summary>
+		/// 打开视图
+		/// </summary>
+		public TreeTask Open() => OnOpen();
 
-			if (this.Bind.IsNull) this.Bind = this.AddComponent(out ViewBind _);
-			NodeRuleHelper.TrySendRule(this, default(Open));
-			NodeRuleHelper.TrySendRule(this, default(LayerChange));
-			if (IsShow) NodeRuleHelper.TrySendRule(this, default(Show));
-			return 0;
+		/// <summary>
+		/// 关闭视图
+		/// </summary>
+		public TreeTask Close() => OnClose();
+
+		/// <summary>
+		/// 执行打开
+		/// </summary>
+		public virtual async TreeTask OnOpen()
+		{
+			if (IsOpen || IsOpening) return;
+
+			IsOpening = true;
+			try
+			{
+				if (this.Bind.IsNull) this.Bind = this.AddComponent(out ViewBind _);
+
+				await NodeRuleHelper.SendRuleAsync(this, default(ViewElementOpen));
+
+				// 打开过程中可能已被关闭或释放。
+				if (this.Bind.IsNull) return;
+
+				NodeRuleHelper.TrySendRule(this, default(Open));
+				NodeRuleHelper.TrySendRule(this, default(LayerChange));
+				if (IsShow) NodeRuleHelper.TrySendRule(this, default(Show));
+
+				await NodeRuleHelper.SendRuleAsync(this, default(ViewOpenAnim));
+			}
+			catch
+			{
+				if (!this.Bind.IsNull)
+				{
+					this.Bind.Value.Dispose();
+					this.Bind = null;
+				}
+				throw;
+			}
+			finally
+			{
+				IsOpening = false;
+			}
 		}
 
-		public virtual int OnClose()
+		/// <summary>
+		/// 执行关闭
+		/// </summary>
+		public virtual async TreeTask OnClose()
 		{
-			if (!IsOpen) return 0;
+			if (!IsOpen || IsClosing) return;
+
+			IsClosing = true;
+			try
+			{
+				await NodeRuleHelper.SendRuleAsync(this, default(ViewCloseAnim));
+				if (!IsOpen) return;
+
+				CloseCore(false);
+				if (!IsOpen) return;
+
+				NodeRuleHelper.TrySendRule(this, default(ViewElementClose));
+				if (!IsOpen) return;
+
+				ReleaseBind();
+			}
+			finally
+			{
+				IsClosing = false;
+			}
+		}
+
+		/// <summary>
+		/// 关闭的同步公共部分：Hide、Close，按需释放 Bind。
+		/// </summary>
+		private void CloseCore(bool disposeBind)
+		{
+			if (this.Bind.IsNull) return;
 
 			if (IsShow) NodeRuleHelper.TrySendRule(this, default(Hide));
 			NodeRuleHelper.TrySendRule(this, default(Close));
+
+			// 显示子级先释放，再释放平台根元素。
+			this.RemoveAllView();
+
+			if (disposeBind) ReleaseBind();
+		}
+
+		/// <summary>
+		/// 释放 Bind
+		/// </summary>
+		private void ReleaseBind()
+		{
+			if (this.Bind.IsNull) return;
 			this.Bind.Value.Dispose();
 			this.Bind = null;
-			return 0;
 		}
 
 		public virtual void LayerChange() => ViewProxyRule.LayerChanged(this);
 
 		/// <summary>
-		/// 释放前先关闭：发 Close、销毁 Bind。
+		/// 释放前执行同步关闭，不播放关闭动画。
 		/// 级联回收走的是遍历里的 OnBeforeDispose，因此钩子放这里才能覆盖子级。
 		/// </summary>
 		public override void OnBeforeDispose()
 		{
-			OnClose();
+			CloseCore(true);
 			base.OnBeforeDispose();
 		}
 

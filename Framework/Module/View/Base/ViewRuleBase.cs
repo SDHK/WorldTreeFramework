@@ -16,9 +16,19 @@ namespace WorldTree
 	public interface ViewElementOpen : ISendRuleAsync { }
 
 	/// <summary>
-	/// 平台元素关闭：等待平台侧释放完成
+	/// 平台元素关闭：同步释放
 	/// </summary>
-	public interface ViewElementClose : ISendRuleAsync { }
+	public interface ViewElementClose : ISendRule { }
+
+	/// <summary>
+	/// 开场动画
+	/// </summary>
+	public interface ViewOpenAnim : ISendRuleAsync { }
+
+	/// <summary>
+	/// 关闭动画
+	/// </summary>
+	public interface ViewCloseAnim : ISendRuleAsync { }
 
 	/// <summary>
 	/// 显示

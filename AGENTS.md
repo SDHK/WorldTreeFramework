@@ -255,8 +255,8 @@ ToolProject/               工具分类目录（不归 git）
 ```
 Base/       视图基类与绑定
   IViewElement.cs / IView.cs / View.cs（View + View<VB>）
-  ViewLayerItem.cs（ViewObject / ViewWidget / ViewContainer / ViewLayerItem / ViewWindow） / ViewBind.cs
-  ViewRuleBase.cs（Open/Close/Show/Hide/LayerChange/SubViewClose）；规则类与节点同文件（ViewProxyRule）
+  ViewLayerItem.cs（ViewObject / ViewWidget / ViewContainer / ViewLayerItem / ViewWindow） / ViewBind.cs / ViewBranch.cs
+  ViewRuleBase.cs（Open/Close/ViewElementOpen/ViewElementClose/ViewOpenAnim/ViewCloseAnim/Show/Hide/LayerChange/SubViewClose）；规则类与节点同文件（ViewProxyRule）
 Component/  控件级 ViewWidget：Button / Text / Image
 Layer/      ViewLayerGroup + Bind（只管 Depth 0 的层）、ViewLayer + ViewLayerBind（规则与节点同文件）
 Test/       ViewTestWindow + 规则（同文件）
@@ -268,26 +268,26 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 - `View` 是「节点 + 平台绑定」。`View.Parent` 的 setter 按父类型推导 `ParentLayer`；`Layer`（byte）、`Depth`、`Order` 用位压缩排序。
 - 视图分三支：`ViewObject`（加载物体：按类型名加载预制体）、`ViewWidget`（子级/组件：不加载，字段绑定）、`ViewContainer : ViewWidget`（容器级：能承载窗口与其他 widget）。`ViewLayer` / `ViewLayerGroup` 都是 `ViewContainer`。
 - `ViewLayerItem : ViewObject, ComponentOf<ViewContainer>`，`ViewWindow : ViewLayerItem`（有自身表现的窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
-- **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一），不是 `ViewLayerBind`；`ViewBind` 只作为 View 自己的组件存在，承载子级 widget 的挂载。
-- **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，只持有 `ui`（平台元素）这一个桥接引用，没有 `ViewBindType`；子级 widget 挂在它的 Child 分支下。子视图是父 **View** 的子节点（`View : ChildOf<View>`，`AddView` 走子分支），`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
-- 元素挂载走 **`Open` / `Close`**（不再有 ViewElementLoad/UnLoad），由 **View 自己发**：`OnOpen` 建好 Bind 后发 `Open` + `LayerChange`（可见时再发 `Show`）；`OnClose` 先发 `Hide`（可见时）、`Close`，再销毁 Bind；`IsShow` 切换发 `Show`/`Hide`；`OnBeforeDispose` 先调 `OnClose`。引擎按**视图类型**实现 `OpenRule<TView>` / `CloseRule<TView>`（打开时取实例/装配子级，关闭时解绑/还池）。`ViewBind` 只剩 `ui` 字段，是纯数据节点（`ComponentOf<View>` + `AsChildBranch`）；绑定生命周期全部由 View 驱动。
-- **字段声明在 View，实例挂在 Bind**：子级 widget 字段写在 View 上（如 `ViewTestWindow.text`），类型用 `NodeRef<T>`（还池后自动变空，防悬空）；实例节点挂在 Bind 的 Child 分支下，关闭时随 Bind 一起回收。
+- **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一），不是 `ViewLayerBind`；`ViewBind` 只作为 View 自己的组件存在，不再承载子级 widget。
+- **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，只持有 `ui`（平台元素）这一个桥接引用，没有 `ViewBindType`，也不再承载子节点。显示子级（子 View / widget）挂在 `View` 的 `ViewBranch`（`ViewBranch : ChildBranch`，`View : ViewOf<View>`）下；普通子节点仍可用 `ChildBranch`。`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
+- 元素挂载走 **`Open` / `Close`**，由 **View 自己驱动**：`IView.Open()` 是非 async 包装，返回 `OnOpen()` 的 `TreeTask`；`OnOpen` 建好 Bind 后先 `await ViewElementOpen`，再发 `Open` + `LayerChange`（可见时再发 `Show`），最后 `await ViewOpenAnim`。`IView.Close()` 非 async 包装 `OnClose()`；`OnClose` 先 `await ViewCloseAnim`，再走同步 `CloseCore`（`Hide` / `Close`），然后同步发 `ViewElementClose`，最后销毁 Bind。`OnBeforeDispose` 调 `CloseCore(true)`，同步发 `Hide` / `Close` 后直接销毁 Bind，不走 `ViewCloseAnim` / `ViewElementClose`，因此释放子级不播放关闭动画。`IsShow` 切换发 `Show`/`Hide`。引擎按**视图类型**实现 `ViewElementOpen` / `ViewElementClose`（平台实例加载/同步释放）和 `ViewOpenAnim` / `ViewCloseAnim`（动画）；立即销毁的平台清理由 Bind / 平台节点自身的 `RemoveRule` 负责。`ViewBind` 只剩 `ui` 字段，是纯数据组件（`ComponentOf<View>`），绑定生命周期全部由 View 驱动。
+- **字段声明在 View，实例挂在 ViewBranch**：子级 widget 字段写在 View 上（如 `ViewTestWindow.text`），类型用 `NodeRef<T>`（还池后自动变空，防悬空）；实例节点挂在 View 的 `ViewBranch` 下，关闭时由 `RemoveAllView` 一起回收。
 - 子级 widget 的绑定契约写在 **View 的字段**上（如 `ViewTestWindow.text / button`），由编辑器工具反射字段列表、生成器生成强类型赋值，运行时按字段名分派，零反射。
-- `ViewLayerRule.OpenView` 把窗口登记进层的 `ViewList`、设 `Layer = Count`，再调 `View.OnOpen()`。
-- `ViewManager.GetLayer(int)` 转发到 `ViewLayerGroup`（懒建）：group 只挂在 manager 下，按 int 建/取层；层号就是传进去的整数。
+- `ViewLayerRule.OpenView` 是异步方法：把窗口登记进层的 `ViewList`、设 `Layer = Count`，再 `await View.OnOpen()`。
+- `ViewManager.GetLayer(int)` 是异步方法，转发到 `ViewLayerGroup`（懒建并 await 打开）：group 通过 manager 的 `ViewBranch` 挂载，按 int 建/取层；层号就是传进去的整数。
 - `View.Parent` 的每个分支都要显式写 `Layer`：节点池不抹字段，复用的节点会带着上次的值；
   父是 `ViewLayer` 时 `ParentLayer = 父`（窗口直接挂层下），父是普通 View 时继承父的 `Layer`（`Order` 与父级相同，渲染同层），窗口的槽位由 `ViewLayerRule` 写。
-- 层的深度恒为 0（`View.Parent` 里对 `ViewLayer` 提前返回 `ParentLayer = null`）：挂在 `ViewLayerGroup` 下走子分支（可多个），挂在 `View` 下走组件分支（`ComponentOf<View>`，同类型唯一）。
+- 层的深度恒为 0（`View.Parent` 里对 `ViewLayer` 提前返回 `ParentLayer = null`）：`ViewLayer` 通过 `ViewLayerGroup` 的 `ViewBranch` 挂载（可多个），窗口在 `ViewLayer` 下走组件分支（`ComponentOf<View>`，同类型唯一）。
 - 两个宿主各自持有层时 `Layer` 号是全局的：层号相同会得到相同 `Order`，需要调用方保证不撞号。
 
 层的连接方式（已跑通）：
 
-- `ViewManager.GetLayer(int)` 建层并持有；层的 `ViewList` / `IdIndexDict` 是 `ViewLayer` 自己的字段，在 `ViewLayer` 的 `Awake` 里分配（`ViewLayerBind` 只剩平台节点）。
-- `ViewLayerRule.TryAddView` 把窗口作为**层容器 `ViewLayer`** 的组件挂上；`OpenView` 再登记进 `ViewList`、设 `Layer = Count`、调 `View.OnOpen()`（`OnOpen` 对自身发 `ViewElementLoad`，引擎据此加载/装配）。
-- `CloseView` 调 `View.OnClose()` 后从 `ViewList` 移除并重排 `Layer`；重开不会重复登记。
+- `ViewManager.GetLayer(int)` 异步建层并持有；层组从 manager 的 `ViewBranch` 取，层从 group 的 `ViewBranch` 取。层的 `ViewList` / `IdIndexDict` 是 `ViewLayer` 自己的字段，在 `ViewLayer` 的 `Awake` 里分配。
+- `ViewLayerRule.TryAddView` 把窗口作为**层容器 `ViewLayer`** 的组件挂上；`OpenView` 登记进 `ViewList`、设 `Layer = Count`，再 `await View.OnOpen()`（`OnOpen` 先 await `ViewElementOpen`）。
+- `CloseView` 是异步方法，`await View.Close()` 后从 `ViewList` 移除并重排 `Layer`；`ViewLayer.OnClose` 先 `await CloseAllView()`，层销毁则由 `OnBeforeDispose` 直接释放 Bind。
 
-- `View.OnBeforeDispose` 先调 `OnClose()`（发 `Close` + 销毁 Bind），再走基类释放。级联回收走的是遍历里的 `OnBeforeDispose`，所以 Bind 销毁时子级 widget 也会先关闭。基类 `Node` 没有 `OnClose`，`Dispose` 只做 `OnBeforeDispose`/`OnDispose`，这条是 View 自己补的。
-- 冒烟：`TryAddView<ViewTestWindow>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`OpenView` 后 `Bind` 是 `WorldTree.ViewBind`、`count=1 slot=1`；`CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 View（`OnOpen`/`OnClose`/`IsShow`/`OnBeforeDispose`）；`OnCutSelf` 清 `ParentLayer`/`Layer`（`RemoveNode` 不清 Parent）。
+- `View.OnBeforeDispose` 调 `CloseCore(true)`：先同步发 `Hide` / `Close`，再 `RemoveAllView()` 清 ViewBranch，最后直接销毁 Bind，不走 `ViewCloseAnim` / `ViewElementClose`；Bind 销毁时平台节点自身的 `RemoveRule` 负责立即清理。级联回收走的是遍历里的 `OnBeforeDispose`，所以 ViewBranch 里的子 View / widget 也会先关闭。基类 `Node` 没有这套关闭逻辑，`Dispose` 只做 `OnBeforeDispose`/`OnDispose`，这条是 View 自己补的。
+- 冒烟：`TryAddView<ViewTestWindow>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`await OpenView` 后 `Bind` 是 `WorldTree.ViewBind`、`count=1 slot=1`；`await CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 View（`OnOpen`/`OnClose`/`IsShow`/`OnBeforeDispose`）；`OnCutSelf` 清 `ParentLayer`/`Layer`（`RemoveNode` 不清 Parent）。
 - Unity 侧冒烟在 `HotFixUnity/Client/_Test/ViewTest.cs`：开 → 隐/显 → 关 → 重开 → Dispose，失败抛异常。已在 `InitialDomain` 的 `AddRule` 启用（每次 Play 跑），Q 键那处仍注释。
 
 剩下的问题：
