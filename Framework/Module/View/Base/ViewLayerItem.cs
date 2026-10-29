@@ -26,7 +26,7 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 容器级 ViewWidget：能承载子级（窗口、其他 widget）
+	/// 容器级 ViewWidget：能承载子级（层条目、其他 widget）
 	/// </summary>
 	public abstract class ViewContainer : ViewWidget
 	{
@@ -43,7 +43,7 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// UI 窗口/面板：有自身表现的层条目
+	/// 窗口/面板：有自身表现的层条目
 	/// </summary>
 	public abstract class ViewWindow : ViewLayerItem
 	{

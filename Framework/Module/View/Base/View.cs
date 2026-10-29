@@ -10,7 +10,7 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 视图基类：作为UI打开的初始数据
+	/// 视图基类：作为显示视图打开的初始数据
 	/// </summary>
 	public abstract class View : Node, IView
 		, AsComponentBranch
@@ -40,7 +40,7 @@ namespace WorldTree
 					return;
 				}
 
-				// 父是层容器：窗口/子视图直接挂在层下
+				// 父是层容器：层条目/子视图直接挂在层下
 				if (value is ViewLayer parentLayer)
 				{
 					ParentLayer = parentLayer;

@@ -11,7 +11,7 @@ using System;
 namespace WorldTree
 {
 	/// <summary>
-	/// 窗口管理器
+	/// 视图管理器
 	/// </summary>
 	public class ViewManager : Node
 		, ComponentOf<World>
@@ -20,9 +20,9 @@ namespace WorldTree
 		, AsRule<Awake>
 	{
 		/// <summary>
-		/// 全部窗口
+		/// 打开的 ViewObject
 		/// </summary>
-		public UnitDictionary<long, INode> viewDict = new UnitDictionary<long, INode>();
+		public UnitDictionary<long, NodeRef<ViewObject>> viewDict = new UnitDictionary<long, NodeRef<ViewObject>>();
 
 		/// <summary>
 		/// 视图层组（懒建）

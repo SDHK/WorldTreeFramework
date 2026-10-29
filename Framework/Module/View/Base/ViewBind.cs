@@ -18,7 +18,7 @@ namespace WorldTree
 		, AsRule<Awake>
 	{
 		/// <summary>
-		/// UI实例
+		/// 平台元素实例
 		/// </summary>
 		public IViewElement ui;
 	}

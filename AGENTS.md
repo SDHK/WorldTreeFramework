@@ -249,8 +249,8 @@ ToolProject/               工具分类目录（不归 git）
 - `GameObjectPoolManager` 已接 `PoolGet` / `PoolGetAsync`；`GameObjectPool` 空闲 60 秒后每秒销毁一个空闲实例，池保留。还缺实例数/LRU/persistent 策略和统一清理顺序。
 - `TreeLoader` 还是空壳，待决定并入 `AssetManager` 还是删除。
 
-### UI 骨架
-代码在 `Framework/Module/Window`，目录按角色划分：
+### View 骨架（引擎层显示物体）
+代码在 `Framework/Module/View`，目录按角色划分：
 
 ```
 Base/       视图基类与绑定
@@ -267,7 +267,7 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 
 - `View` 是「节点 + 平台绑定」。`View.Parent` 的 setter 按父类型推导 `ParentLayer`；`Layer`（byte）、`Depth`、`Order` 用位压缩排序。
 - 视图分三支：`ViewObject`（加载物体：按类型名加载预制体）、`ViewWidget`（子级/组件：不加载，字段绑定）、`ViewContainer : ViewWidget`（容器级：能承载窗口与其他 widget）。`ViewLayer` / `ViewLayerGroup` 都是 `ViewContainer`。
-- `ViewLayerItem : ViewObject, ComponentOf<ViewContainer>`，`ViewWindow : ViewLayerItem`（有自身表现的 UI 窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
+- `ViewLayerItem : ViewObject, ComponentOf<ViewContainer>`，`ViewWindow : ViewLayerItem`（有自身表现的窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
 - **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一），不是 `ViewLayerBind`；`ViewBind` 只作为 View 自己的组件存在，承载子级 widget 的挂载。
 - **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，只持有 `ui`（平台元素）这一个桥接引用，没有 `ViewBindType`；子级 widget 挂在它的 Child 分支下。子视图是父 **View** 的子节点（`View : ChildOf<View>`，`AddView` 走子分支），`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
 - 元素挂载走 **`Open` / `Close`**（不再有 ViewElementLoad/UnLoad），由 **View 自己发**：`OnOpen` 建好 Bind 后发 `Open` + `LayerChange`（可见时再发 `Show`）；`OnClose` 先发 `Hide`（可见时）、`Close`，再销毁 Bind；`IsShow` 切换发 `Show`/`Hide`；`OnBeforeDispose` 先调 `OnClose`。引擎按**视图类型**实现 `OpenRule<TView>` / `CloseRule<TView>`（打开时取实例/装配子级，关闭时解绑/还池）。`ViewBind` 只剩 `ui` 字段，是纯数据节点（`ComponentOf<View>` + `AsChildBranch`）；绑定生命周期全部由 View 驱动。

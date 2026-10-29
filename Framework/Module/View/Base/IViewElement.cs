@@ -10,13 +10,13 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 视图元素：具体平台实现的UI组件接口，自动反向绑定到IViewBind
+	/// 视图元素：具体平台实现的显示元素接口，绑定到 ViewBind。
 	/// </summary>
 	public interface IViewElement { }
 
 
 
-	//V和VB都是纯数据，V是初始化数据，VB负责桥接具体UI组件。
+	//V和VB都是纯数据，V是初始化数据，VB负责桥接具体平台元素。
 
 	//Register子级组件> Open，Refresh，Close> UnRegister子级组件，方法写到View里。
 	//Close融入Dispose

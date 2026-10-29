@@ -180,7 +180,7 @@ namespace WorldTree
 		public static void SetTopView<T>(this ViewLayer self) where T : ViewLayerItem => self.SetTopView(self.TypeToCode<T>());
 
 		/// <summary>
-		/// 尝试获取顶层窗口
+		/// 尝试获取顶层视图
 		/// </summary>
 		public static bool TryGetTopView<T>(this ViewLayer self, out T view)
 			where T : ViewLayerItem
@@ -192,9 +192,9 @@ namespace WorldTree
 			{
 				var nodeRef = self.ViewList[i];
 				if (nodeRef.IsNull) continue;
-				if (nodeRef.Value is T tWindow)
+				if (nodeRef.Value is T topView)
 				{
-					view = tWindow;
+					view = topView;
 					return true;
 				}
 			}
