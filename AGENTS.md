@@ -126,7 +126,7 @@ BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateExcepti
 服务端 bytes 根目录是 `ExcelTool/Output/Bytes/s`（相对 `Console/Server/Bin` 向上三级）。Luban 的 `ByteBuf` / `BeanBase` 在 `ExcelTool/Luban/Runtime`，生成的表代码在 `Output/CSharp/s`，和 `ConfigLoader` 一起由 `Server.HotFix` 链接编译。`HotFix/Server` 的程序集约束是 `IGNORE`，Unity 不编译这目录。运行期怎么读表、怎么建线见「配置运行时」。
 
 ### 文件运行时
-`FileManager` 是 `WorldTreeCore` 上的 `CoreObject`，进程级；地址是 `FileAddress` 的 `channel/group/tag:key`（`channel` 目前 `Pack` / `User` / `Temp`）。`IFileSource` 有两个实现：`LocalFileSource`（`Framework/Module/File`，真实文件，可写）和 `YooAssetFileSource`（`CoreUnity`，只读 `TextAsset`，按文件名映射 Yoo 地址）。配置统一用 `Group = Config`，key 是 `GameConfig/...`、`StartConfig/Client/...`。读取走 `FileManager.ReadAllBytes`；句柄是 `FileHandle`，`StreamFileHandle` / `YooAssetFileHandle` 都是临时节点，由 NodePool 回收。编辑器挂 `LocalFileSource`，Player 挂 `YooAssetFileSource`，`ConfigLoader` 不再直接 `File.ReadAllBytes` / `LoadAsset<TextAsset>`。
+`FileManager` 是 `WorldTreeCore` 上的 `CoreObject`，进程级；地址是 `FileAddress` 的 `channel/group/tag:key`（`channel` 目前 `Pack` / `User` / `Temp`）。`IFileSource` 有两个实现：`LocalFileSource`（`Framework/Module/CoreModule/File/Local`，真实文件，可写）和 `YooAssetFileSource`（`CoreUnity`，只读 `TextAsset`，按文件名映射 Yoo 地址）。配置统一用 `Group = Config`，key 是 `GameConfig/...`、`StartConfig/Client/...`。读取走 `FileManager.ReadAllBytes`；句柄是 `FileHandle`，`StreamFileHandle` / `YooAssetFileHandle` 都是临时节点，由 NodePool 回收。编辑器挂 `LocalFileSource`，Player 挂 `YooAssetFileSource`，`ConfigLoader` 不再直接 `File.ReadAllBytes` / `LoadAsset<TextAsset>`。
 
 ### 配置运行时
 配置不进节点树。`ConfigManager` 是 `WorldTreeCore` 上的 `CoreObject`，进程内一份，`Add` / `Get` / `TryGet` 按类型登记整张 Luban 表，所有世界线共用。框架不引用具体表类型。行对象继承 `BeanBase`，不要改成 `Node`。不要恢复 `Config` / `ConfigGroup` / `ConfigRef` / `CreateWorldConfig`。
@@ -181,10 +181,10 @@ Unity 由 `StartWorld.Add` 调用 `ConfigLoader.Load<T>` 和 `CreateWorldLines`�
 ### 管理器与来源
 资源管理器分两层：进程级在 `WorldTreeCore`（`FileManager` / `ConfigManager`），世界线级在 `World`（`AssetManager` / `DataBaseManager` / `GameObjectPoolManager`）。线级管理器的来源是 `FieldOf` 子节点；装配走 `AddXxxSource` / `AddField`。`FileManager` 和 `DataBaseManager` 支持多来源，其余管理器默认单来源。
 
-- `Framework/Core/File`：`FileManager` + `IFileSource` + `FileAddress`；`Framework/Module/File` 放 `LocalFileSource` / `StreamFileHandle`，Unity 放 `YooAssetFileSource` / `YooAssetFileHandle`。详见「文件运行时」。
-- `Framework/Core/Config`：`ConfigManager` 是进程级表注册表；详见「配置运行时」。
+- `Framework/Core/CoreModule/File`：`FileManager` + `IFileSource` + `FileAddress`；`Framework/Module/CoreModule/File/Local` 放 `LocalFileSource` / `StreamFileHandle`，Unity 放 `YooAssetFileSource` / `YooAssetFileHandle`。详见「文件运行时」。
+- `Framework/Core/CoreModule/Config`：`ConfigManager` 是进程级表注册表；详见「配置运行时」。
 - `RunTime/Asset/`：`IAssetSource` 接口 + `Base/AssetManager` + `YooAsset/YooAssetManager`（`IAssetSource` 实现）。`AssetManager` 按 group + priority 注册多个来源，`AddAssetSource<TSource>(group, priority)` 的 group 同时作为 `Awake<string>` 参数（YooAsset 包名）；`LoadAsset<T>(key)` 无 `@` 前缀时按优先级链式找第一个 `Exists(key)` 的来源，`LoadAsset<T>("@Pack:Key")` / `LoadAsset<T>(pack, key)` 指定包不 fallback。默认组是 `DefaultPackage`。`IAssetSource` 必须有 `Exists`。`YooAssetManager` 按地址缓存 `AssetEntry`（Node），异步同地址只发一次加载；`UnloadAsset` / `UnloadAllAssets` 显式卸载，暂不做引用计数。业务写 `world.GetAssetManager().LoadAsset<T>(key)`，名字里不出现 `Yoo`；`YooAssetFileSource` 是 `FileManager` 的源，不要和 `AssetManager` 混。
-- `Framework/Core/DataBase`：`IDataBase` 接口 + `DataBaseManager` + `DataBaseManagerRule`（同步与异步 CRUD）。`Framework/Module/DataBase`：`LiteDB/LiteDBManager`（`LiteDBCollection<T>` 是它的组件）。`DataBaseManager` 按 group 存多个源，空字符串是默认组，组名重复报错；`GetSource` / `TryGetSource` 取指定组，`AddDataSource` / `AddGroupDataSource` 挂源。用法 `db.AddDataSource<LiteDBManager>(path)`，之后 `db.Insert` / `Find` / `Delete` 走默认组的 `DataBaseManagerRule`。LiteDB 没有原生异步，异步方法是同步执行后返回已完成的 `TreeTask`。
+- `Framework/Core/CoreModule/DataBase`：`IDataBase` 接口 + `DataBaseManager` + `DataBaseManagerRule`（同步与异步 CRUD）。`Framework/Module/CoreModule/DataBase`：`LiteDB/LiteDBManager`（`LiteDBCollection<T>` 是它的组件）。`DataBaseManager` 按 group 存多个源，空字符串是默认组，组名重复报错；`GetSource` / `TryGetSource` 取指定组，`AddDataSource` / `AddGroupDataSource` 挂源。用法 `db.AddDataSource<LiteDBManager>(path)`，之后 `db.Insert` / `Find` / `Delete` 走默认组的 `DataBaseManagerRule`。LiteDB 没有原生异步，异步方法是同步执行后返回已完成的 `TreeTask`。
 - `RunTime/ObjectPool/`：`GameObjectPool`（`GenericPool<GameObject>`）、`GameObjectPoolManager`（`ComponentOf<World>`）、`GameObjectNode`（销毁时自动回收）。`GameObjectPoolManager.PoolGet` / `PoolGetAsync` 已接：加载预制体后按 prefab 取池并实例化，返回 `GameObjectNode`；关闭/销毁节点即回收实例。池空闲 60 秒后每秒 `DisposeOne` 一个实例，数量到 0 也保留池本身；池长期持有 prefab，当前不做引用计数，卸载边界由 `UnloadAllAssets` / 场景切换负责。
 
 ### 仓库
@@ -216,12 +216,12 @@ ToolProject/               工具分类目录（不归 git）
 | 路径 | 说明 |
 |---|---|
 | `Framework/Core/` | .NET 侧核心源码（`WorldTree.Core.csproj`，`DOTNET` 宏） |
-| `Framework/Core/File/` | `FileManager` / `FileAddress` / `IFileSource` / `FileHandle`；进程级 VFS |
-| `Framework/Core/DataBase/` | `IDataBase` / `DataBaseManager` / `DataBaseManagerRule`；Line 级，group 到单源 |
-| `Framework/Core/Time/Timer/ClockTimer/` | `ClockTimer`：可 `Restart` 的节点倒计时器；挂到 `GameObjectPool` 做空闲回收 |
-| `Framework/Module/` | 模块（csproj 链接 Unity 的 Module 源码）：DataBase(LiteDB 实现)/File(Local)/Input/Loader/NeuralNetwork/TreeTween/Window |
-| `Framework/Module/File/` | `LocalFileSource` + `StreamFileHandle` |
-| `Framework/Module/DataBase/LiteDB/` | `LiteDBManager` / `LiteDBCollection<T>` / `UnitBsonDocument` |
+| `Framework/Core/CoreModule/File/` | `FileManager` / `FileAddress` / `IFileSource` / `FileHandle`；进程级 VFS |
+| `Framework/Core/CoreModule/DataBase/` | `IDataBase` / `DataBaseManager` / `DataBaseManagerRule`；Line 级，group 到单源 |
+| `Framework/Core/CoreModule/Time/Timer/ClockTimer/` | `ClockTimer`：可 `Restart` 的节点倒计时器；挂到 `GameObjectPool` 做空闲回收 |
+| `Framework/Module/` | 模块（csproj 链接 Unity 的 Module 源码）：CoreModule(DataBase/File 实现)/Input/NeuralNetwork/TreeTween/View |
+| `Framework/Module/CoreModule/File/Local/` | `LocalFileSource` + `StreamFileHandle` |
+| `Framework/Module/CoreModule/DataBase/LiteDB/` | `LiteDBManager` / `LiteDBCollection<T>` / `UnitBsonDocument` |
 | `Framework/SourceGeneratorCore/`、`Framework/AnalyzerCore/` | 源生成器 + 分析器 |
 | `Unity/Assets/Scripts/WorldTreeFramework/WorldTree/Module/` | 平台无关模块（被 .NET Module csproj 链接） |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/` | `WorldTree.CoreUnity`（Unity 运行时环境：心跳/日志/组件）；`Asset/YooAsset/` 放 `YooAssetManager` + `AssetEntry` |
@@ -247,7 +247,6 @@ ToolProject/               工具分类目录（不归 git）
 ### 资源加载与池
 - `AssetManager` 已有 group + priority 多来源、`Load` 的无前缀链式 / `@Pack:Key` 指定包、异步加载合并、`UnloadAsset` / `UnloadAllAssets`；暂不做引用计数。
 - `GameObjectPoolManager` 已接 `PoolGet` / `PoolGetAsync`；`GameObjectPool` 空闲 60 秒后每秒销毁一个空闲实例，池保留。还缺实例数/LRU/persistent 策略和统一清理顺序。
-- `TreeLoader` 还是空壳，待决定并入 `AssetManager` 还是删除。
 
 ### View 骨架（引擎层显示物体）
 代码在 `Framework/Module/View`，目录按角色划分：
