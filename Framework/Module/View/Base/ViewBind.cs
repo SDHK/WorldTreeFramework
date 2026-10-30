@@ -1,4 +1,4 @@
-/****************************************
+﻿/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2025/10/16 19:49
@@ -9,16 +9,29 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 视图绑定：持有平台元素引用，并承载本视图子级组件（widget）的挂载。
-	/// 子级组件的字段声明在 View 上，实例挂在这里；关闭时随 Bind 一起回收。
+	/// 视图绑定：持有平台元素引用与平台实例子节点。
+	/// 子级 View / widget 挂在 ViewBranch 下，不挂在这里。
 	/// </summary>
 	public class ViewBind : Node
 		, ComponentOf<View>
+		, AsChildBranch
 		, AsRule<Awake>
+		, AsRule<Remove>
 	{
 		/// <summary>
 		/// 平台元素实例
 		/// </summary>
 		public IViewElement ui;
+	}
+
+	/// <summary>
+	/// ViewBind 移除时清空平台元素引用；平台实例作为子节点随 Bind 释放。
+	/// </summary>
+	class ViewBindRemoveRule : RemoveRule<ViewBind>
+	{
+		protected override void Execute(ViewBind self)
+		{
+			self.ui = null;
+		}
 	}
 }

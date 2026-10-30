@@ -259,7 +259,6 @@ Base/       视图基类与绑定
   ViewRuleBase.cs（Open/Close/ViewElementOpen/ViewElementClose/ViewOpenAnim/ViewCloseAnim/Show/Hide/LayerChange/SubViewClose）；规则类与节点同文件（ViewProxyRule）
 Component/  控件级 ViewWidget：Button / Text / Image
 Layer/      ViewLayerGroup + Bind（只管 Depth 0 的层）、ViewLayer + ViewLayerBind（规则与节点同文件）
-Test/       ViewTestWindow + 规则（同文件）
 ViewManager.cs（含 ViewManagerRule）   模块根
 ```
 
@@ -269,8 +268,8 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 - 视图分三支：`ViewObject`（加载物体：按类型名加载预制体）、`ViewWidget`（子级/组件：不加载，字段绑定）、`ViewContainer : ViewWidget`（容器级：能承载窗口与其他 widget）。`ViewLayer` / `ViewLayerGroup` 都是 `ViewContainer`。
 - `ViewLayerItem : ViewObject, ComponentOf<ViewContainer>`，`ViewWindow : ViewLayerItem`（有自身表现的窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
 - **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一），不是 `ViewLayerBind`；`ViewBind` 只作为 View 自己的组件存在，不再承载子级 widget。
-- **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，只持有 `ui`（平台元素）这一个桥接引用，没有 `ViewBindType`，也不再承载子节点。显示子级（子 View / widget）挂在 `View` 的 `ViewBranch`（`ViewBranch : ChildBranch`，`View : ViewOf<View>`）下；普通子节点仍可用 `ChildBranch`。`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
-- 元素挂载走 **`Open` / `Close`**，由 **View 自己驱动**：`IView.Open()` 是非 async 包装，返回 `OnOpen()` 的 `TreeTask`；`OnOpen` 建好 Bind 后先 `await ViewElementOpen`，再发 `Open` + `LayerChange`（可见时再发 `Show`），最后 `await ViewOpenAnim`。`IView.Close()` 非 async 包装 `OnClose()`；`OnClose` 先 `await ViewCloseAnim`，再走同步 `CloseCore`（`Hide` / `Close`），然后同步发 `ViewElementClose`，最后销毁 Bind。`OnBeforeDispose` 调 `CloseCore(true)`，同步发 `Hide` / `Close` 后直接销毁 Bind，不走 `ViewCloseAnim` / `ViewElementClose`，因此释放子级不播放关闭动画。`IsShow` 切换发 `Show`/`Hide`。引擎按**视图类型**实现 `ViewElementOpen` / `ViewElementClose`（平台实例加载/同步释放）和 `ViewOpenAnim` / `ViewCloseAnim`（动画）；立即销毁的平台清理由 Bind / 平台节点自身的 `RemoveRule` 负责。`ViewBind` 只剩 `ui` 字段，是纯数据组件（`ComponentOf<View>`），绑定生命周期全部由 View 驱动。
+- **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，持有 `ui`（平台元素），并通过自身 `ChildBranch` 托管平台实例节点（如 `GameObjectNode`），Node 随 Bind 自动释放；ViewBind 不承载 widget。显示子级（子 View / widget）挂在 `View` 的 `ViewBranch`（`ViewBranch : ChildBranch`，`View : ViewOf<View>`）下；普通子节点仍可用 `ChildBranch`。`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
+- 元素挂载走 **`Open` / `Close`**，由 **View 自己驱动**：`IView.Open()` 是非 async 包装，返回 `OnOpen()` 的 `TreeTask`；`OnOpen` 建好 Bind 后先 `await ViewElementOpen`，再发 `Open` + `LayerChange`（可见时再发 `Show`），最后 `await ViewOpenAnim`。`IView.Close()` 非 async 包装 `OnClose()`；`OnClose` 先 `await ViewCloseAnim`，再走同步 `CloseCore`（`Hide` / `Close`），然后同步发 `ViewElementClose`，最后销毁 Bind。`OnBeforeDispose` 调 `CloseCore(true)`，同步发 `Hide` / `Close` 后直接销毁 Bind，不走 `ViewCloseAnim` / `ViewElementClose`，因此释放子级不播放关闭动画。`IsShow` 切换发 `Show`/`Hide`。引擎按**视图类型**实现 `ViewElementOpen` / `ViewElementClose`（平台实例加载/同步释放）和 `ViewOpenAnim` / `ViewCloseAnim`（动画）；立即销毁的平台清理由 Bind / 平台节点自身的 `RemoveRule` 负责。`ViewBind` 持有 `ui` 并通过 ChildBranch 托管平台实例，是纯数据组件（`ComponentOf<View>`），绑定生命周期全部由 View 驱动。
 - **字段声明在 View，实例挂在 ViewBranch**：子级 widget 字段写在 View 上（如 `ViewTestWindow.text`），类型用 `NodeRef<T>`（还池后自动变空，防悬空）；实例节点挂在 View 的 `ViewBranch` 下，关闭时由 `RemoveAllView` 一起回收。
 - 子级 widget 的绑定契约写在 **View 的字段**上（如 `ViewTestWindow.text / button`），由编辑器工具反射字段列表、生成器生成强类型赋值，运行时按字段名分派，零反射。
 - `ViewLayerRule.OpenView` 是异步方法：把窗口登记进层的 `ViewList`、设 `Layer = Count`，再 `await View.OnOpen()`。
@@ -288,7 +287,7 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 
 - `View.OnBeforeDispose` 调 `CloseCore(true)`：先同步发 `Hide` / `Close`，再 `RemoveAllView()` 清 ViewBranch，最后直接销毁 Bind，不走 `ViewCloseAnim` / `ViewElementClose`；Bind 销毁时平台节点自身的 `RemoveRule` 负责立即清理。级联回收走的是遍历里的 `OnBeforeDispose`，所以 ViewBranch 里的子 View / widget 也会先关闭。基类 `Node` 没有这套关闭逻辑，`Dispose` 只做 `OnBeforeDispose`/`OnDispose`，这条是 View 自己补的。
 - 冒烟：`TryAddView<ViewTestWindow>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`await OpenView` 后 `Bind` 是 `WorldTree.ViewBind`、`count=1 slot=1`；`await CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 View（`OnOpen`/`OnClose`/`IsShow`/`OnBeforeDispose`）；`OnCutSelf` 清 `ParentLayer`/`Layer`（`RemoveNode` 不清 Parent）。
-- Unity 侧冒烟在 `HotFixUnity/Client/_Test/ViewTest.cs`：开 → 隐/显 → 关 → 重开 → Dispose，失败抛异常。已在 `InitialDomain` 的 `AddRule` 启用（每次 Play 跑），Q 键那处仍注释。
+- Unity 侧冒烟在 `HotFixUnity/Client/_Test/ViewTest.cs`，测试窗口 `ViewTestWindow.cs` 与规则也在同目录（模块仓库不再放测试窗口）：开 → 隐/显 → 关 → 重开 → Dispose，失败抛异常。已在 `InitialDomain` 的 `AddRule` 启用（每次 Play 跑），Q 键那处仍注释。
 
 剩下的问题：
 
