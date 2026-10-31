@@ -21,6 +21,7 @@ namespace WorldTree
 		/// </summary>
 		public static async TreeTask<ViewLayer> GetLayer(this ViewLayerGroup self, int layer)
 		{
+			await self.TreeTaskCompleted();
 			if (self.layerDict.TryGetValue(layer, out ViewLayer viewLayer) && viewLayer != null) return viewLayer;
 
 			self.AddView(out viewLayer);

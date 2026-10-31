@@ -152,6 +152,7 @@ namespace WorldTree
 		/// </summary>
 		public virtual async TreeTask OnOpen()
 		{
+			await this.TreeTaskCompleted();
 			if (IsOpen || IsOpening) return;
 
 			IsOpening = true;
@@ -190,6 +191,7 @@ namespace WorldTree
 		/// </summary>
 		public virtual async TreeTask OnClose()
 		{
+			await this.TreeTaskCompleted();
 			if (!IsOpen || IsClosing) return;
 
 			IsClosing = true;

@@ -38,6 +38,7 @@ namespace WorldTree
 		/// </summary>
 		public static async TreeTask<ViewLayerGroup> GetLayerGroup(this ViewManager self)
 		{
+			await self.TreeTaskCompleted();
 			if (self.layerGroup == null)
 			{
 				self.AddView(out self.layerGroup);

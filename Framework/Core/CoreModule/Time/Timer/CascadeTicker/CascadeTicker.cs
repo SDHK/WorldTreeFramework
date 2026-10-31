@@ -195,7 +195,8 @@ namespace WorldTree
 		/// </summary>
 		public static long AddTicker(this CascadeTicker self, long clockTick, INode node, long ruleType, TreeTaskToken token = null)
 		{
-			if (!self.World.Line.Core.RuleManager.TryGetRuleList(node.Type, ruleType, out var ruleList)) return -1;
+			// 0 表示添加失败：节点实例 Id 是负数，不能用 -1 当哨兵。
+			if (!self.World.Line.Core.RuleManager.TryGetRuleList(node.Type, ruleType, out var ruleList)) return 0;
 
 			//大小比较，过时了就放到下一帧再执行
 			if (self.advanceTick >= clockTick)

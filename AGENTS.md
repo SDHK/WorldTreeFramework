@@ -90,6 +90,8 @@ public abstract class 接口名Rule<N, 接口自己的泛型…>
 ### 异步
 `async TreeTask` / `async TreeTask<T>`。任务是节点，挂在 `TreeTaskManager`（`World` 的组件，只有 `Awake`）的临时分支上。顶层用 `.Coroutine()` 或 `.Coroutine(token)`。
 
+**所有 `async TreeTask` / `async TreeTask<T>` 方法在每条执行路径上至少要有一个 `await`**；第一个 `await` 之前不能 `return` 或 `throw`。被 await 的方法自己必须有 await（否则它返回 null 任务，调用方 await 会空引用）；await 一个已完成的有效任务是可以的。路径上天然没有待等任务时，用第一行 `await self.TreeTaskCompleted();` 补同步点，它当场同步恢复，不额外等帧。`TreeTaskVoid` 不走这个构建器，不受此约束。分析器 `TreeTaskDiagnostic`（`TreeTaskDiagnosticConfig`，`WTREE001` 无 await，`WTREE002` 第一个 await 前 return/throw）已按此检查；在 `ProjectAnalyzerSetting` 里按程序集增删 `new TreeTaskDiagnosticConfig()` 即可启停。`return await` 不报，生成代码跳过。
+
 节点上写 `self.AsyncDelay` / `self.AsyncYield` / `self.GetAwaiter`。延迟走 `CascadeTicker`，`AddTimerDelay` 用真实时间的 Utc Ticks，目标是 `INode`。`CascadeTickerData.Node` 是 `NodeRef<INode>`。
 
 令牌是节点 `TreeTaskToken`，而且是**内联令牌**：不写进方法参数（C# 的 `CancellationToken` 要逐层传参，这里没有）。`async` 方法的构建器在每次 `await` 时，把当前任务的令牌 `SetToken` 到这次等的 awaiter 上。`SetToken` 再顺着 `RelevanceTask` 往下传，遇到已经有令牌的任务就停，所以内层新建的令牌不会被外层盖掉。业务要看当前令牌就 `await self.TreeTaskTokenCatch()`，不要自己加参数。顶层用 `Coroutine(token)` 或 `chain.SetToken(token)` 把令牌放上链。`parent.Add(child)` 后，父令牌取消时子令牌一起取消。`AddToken` 是另一条：新令牌既能取消老令牌，也能被老令牌取消。令牌取消不抛，`GetResult` 把 `Canceled` 当完成。
@@ -183,9 +185,9 @@ Unity 由 `StartWorld.Add` 调用 `ConfigLoader.Load<T>` 和 `CreateWorldLines`�
 
 - `Framework/Core/CoreModule/File`：`FileManager` + `IFileSource` + `FileAddress`；`Framework/Module/CoreModule/File/Local` 放 `LocalFileSource` / `StreamFileHandle`，Unity 放 `YooAssetFileSource` / `YooAssetFileHandle`。详见「文件运行时」。
 - `Framework/Core/CoreModule/Config`：`ConfigManager` 是进程级表注册表；详见「配置运行时」。
-- `RunTime/Asset/`：`IAssetSource` 接口 + `Base/AssetManager` + `YooAsset/YooAssetManager`（`IAssetSource` 实现）。`AssetManager` 按 group + priority 注册多个来源，`AddAssetSource<TSource>(group, priority)` 的 group 同时作为 `Awake<string>` 参数（YooAsset 包名）；`LoadAsset<T>(key)` 无 `@` 前缀时按优先级链式找第一个 `Exists(key)` 的来源，`LoadAsset<T>("@Pack:Key")` / `LoadAsset<T>(pack, key)` 指定包不 fallback。默认组是 `DefaultPackage`。`IAssetSource` 必须有 `Exists`。`YooAssetManager` 按地址缓存 `AssetEntry`（Node），异步同地址只发一次加载；`UnloadAsset` / `UnloadAllAssets` 显式卸载，暂不做引用计数。业务写 `world.GetAssetManager().LoadAsset<T>(key)`，名字里不出现 `Yoo`；`YooAssetFileSource` 是 `FileManager` 的源，不要和 `AssetManager` 混。
+- `RunTime/Core/CoreModule/Asset/`：`IAssetSource` 接口 + `Base/AssetManager` + `YooAsset/YooAssetManager`（`IAssetSource` 实现）。`AssetManager` 按 group + priority 注册多个来源，`AddAssetSource<TSource>(group, priority)` 的 group 同时作为 `Awake<string>` 参数（YooAsset 包名）；`LoadAsset<T>(key)` 无 `@` 前缀时按优先级链式找第一个 `Exists(key)` 的来源，`LoadAsset<T>("@Pack:Key")` / `LoadAsset<T>(pack, key)` 指定包不 fallback。默认组是 `DefaultPackage`。`IAssetSource` 必须有 `Exists`。`YooAssetManager` 按地址缓存 `AssetEntry`（Node），异步同地址只发一次加载；`UnloadAsset` / `UnloadAllAssets` 显式卸载，暂不做引用计数。业务写 `world.GetAssetManager().LoadAsset<T>(key)`，名字里不出现 `Yoo`；`YooAssetFileSource` 是 `FileManager` 的源，不要和 `AssetManager` 混。
 - `Framework/Core/CoreModule/DataBase`：`IDataBase` 接口 + `DataBaseManager` + `DataBaseManagerRule`（同步与异步 CRUD）。`Framework/Module/CoreModule/DataBase`：`LiteDB/LiteDBManager`（`LiteDBCollection<T>` 是它的组件）。`DataBaseManager` 按 group 存多个源，空字符串是默认组，组名重复报错；`GetSource` / `TryGetSource` 取指定组，`AddDataSource` / `AddGroupDataSource` 挂源。用法 `db.AddDataSource<LiteDBManager>(path)`，之后 `db.Insert` / `Find` / `Delete` 走默认组的 `DataBaseManagerRule`。LiteDB 没有原生异步，异步方法是同步执行后返回已完成的 `TreeTask`。
-- `RunTime/ObjectPool/`：`GameObjectPool`（`GenericPool<GameObject>`）、`GameObjectPoolManager`（`ComponentOf<World>`）、`GameObjectNode`（销毁时自动回收）。`GameObjectPoolManager.PoolGet` / `PoolGetAsync` 已接：加载预制体后按 prefab 取池并实例化，返回 `GameObjectNode`；关闭/销毁节点即回收实例。池空闲 60 秒后每秒 `DisposeOne` 一个实例，数量到 0 也保留池本身；池长期持有 prefab，当前不做引用计数，卸载边界由 `UnloadAllAssets` / 场景切换负责。
+- `RunTime/Core/CoreModule/ObjectPool/`：`GameObjectPool`（`GenericPool<GameObject>`）、`GameObjectPoolManager`（`ComponentOf<World>`）、`GameObjectNode`（销毁时自动回收）。`GameObjectPoolManager.PoolGet` / `PoolGetAsync` 已接：加载预制体后按 prefab 取池并实例化，返回 `GameObjectNode`；关闭/销毁节点即回收实例。池空闲 60 秒后每秒 `DisposeOne` 一个实例，数量到 0 也保留池本身；池长期持有 prefab，当前不做引用计数，卸载边界由 `UnloadAllAssets` / 场景切换负责。
 
 ### 仓库
 框架、产品、工具拆成平级仓库，放同一父目录（`WorldTreeWorkspace`）。父目录名随便，不归 git。
@@ -216,6 +218,10 @@ ToolProject/               工具分类目录（不归 git）
 | 路径 | 说明 |
 |---|---|
 | `Framework/Core/` | .NET 侧核心源码（`WorldTree.Core.csproj`，`DOTNET` 宏） |
+| `Framework/Core/Core/` | 启动入口与装配（`WorldTreeCore` / `StartWorld` / `MainWorld` / `CodeLoader`） |
+| `Framework/Core/CoreModule/` | 内核实现（`WorldLine` / `WorldHeart` / `WorldContext` / `Config` / `DataBase` / `File` / `ObjectPool` / `Log` / `Time` / `Type` / `Id`） |
+| `Framework/Core/Object/` | 对象模型（Basic / CoreObject / Unit / Node / World / Branch / Rattan / ObjectBox / DynamicNodeQueue） |
+| `Framework/Core/Rule/` | 规则系统（Base / Group / List / Manager / Executor） |
 | `Framework/Core/CoreModule/File/` | `FileManager` / `FileAddress` / `IFileSource` / `FileHandle`；进程级 VFS |
 | `Framework/Core/CoreModule/DataBase/` | `IDataBase` / `DataBaseManager` / `DataBaseManagerRule`；Line 级，group 到单源 |
 | `Framework/Core/CoreModule/Time/Timer/ClockTimer/` | `ClockTimer`：可 `Restart` 的节点倒计时器；挂到 `GameObjectPool` 做空闲回收 |
@@ -224,9 +230,10 @@ ToolProject/               工具分类目录（不归 git）
 | `Framework/Module/CoreModule/DataBase/LiteDB/` | `LiteDBManager` / `LiteDBCollection<T>` / `UnitBsonDocument` |
 | `Framework/SourceGeneratorCore/`、`Framework/AnalyzerCore/` | 源生成器 + 分析器 |
 | `Unity/Assets/Scripts/WorldTreeFramework/WorldTree/Module/` | 平台无关模块（被 .NET Module csproj 链接） |
-| `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/` | `WorldTree.CoreUnity`（Unity 运行时环境：心跳/日志/组件）；`Asset/YooAsset/` 放 `YooAssetManager` + `AssetEntry` |
-| `Unity/.../RunTime/File/YooAsset/` | `FileManager` 的 Unity Yoo 源：`YooAssetFileSource` + `YooAssetFileHandle` |
-| `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/ObjectPool/` | `GameObjectPool` / `GameObjectPoolManager` / `GameObjectNode` |
+| `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/` | `WorldTree.CoreUnity`（Unity 运行时环境：心跳/日志/组件，引用 `WorldTree.Core` + `WorldTree.Module`）；固定实现按 `Core/CoreModule`、`Module`、`Object` 分层；`Core/CoreModule/Asset/YooAsset/` 放 `YooAssetManager` + `AssetEntry` |
+| `Unity/.../RunTime/Module/View/ViewElementCollector.cs` | Unity 平台元素收集器；编辑器在 `UnityEditor/View/ViewElementCollectorEditor.cs`，按字段名反射填充 entries |
+| `Unity/.../RunTime/Core/CoreModule/File/YooAsset/` | `FileManager` 的 Unity Yoo 源：`YooAssetFileSource` + `YooAssetFileHandle` |
+| `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/Core/CoreModule/ObjectPool/` | `GameObjectPool` / `GameObjectPoolManager` / `GameObjectNode` |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/App/` | `WorldTree.App`（`UnityWorldTree` 启动器 + `ConfigLoader`） |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/Editor/` | `WorldTree.UnityEditor`（编辑器工具，用 Odin/Sirenix） |
 | `Unity/Assets/Scripts/ThirdParty/` | `WorldTree.ThirdParty`（第三方库，目前 `Luban/ByteBuf`、`BeanBase`） |
@@ -253,20 +260,32 @@ ToolProject/               工具分类目录（不归 git）
 
 ```
 Base/       视图基类与绑定
-  IViewElement.cs / IView.cs / View.cs（View + View<VB>）
+  IViewElement.cs / IView.cs / View.cs
   ViewLayerItem.cs（ViewObject / ViewWidget / ViewContainer / ViewLayerItem / ViewWindow） / ViewBind.cs / ViewBranch.cs
   ViewRuleBase.cs（Open/Close/ViewElementOpen/ViewElementClose/ViewOpenAnim/ViewCloseAnim/Show/Hide/LayerChange/SubViewClose）；规则类与节点同文件（ViewProxyRule）
-Component/  控件级 ViewWidget：Button / Text / Image
-Layer/      ViewLayerGroup + Bind（只管 Depth 0 的层）、ViewLayer + ViewLayerBind（规则与节点同文件）
+Widget/     控件级 ViewWidget：Button / Text / Image
+Layer/      ViewLayerGroup + ViewLayer（规则与节点同文件）
 ViewManager.cs（含 ViewManagerRule）   模块根
 ```
+
+### View 当前交接（新会话先看）
+
+- **结构层已完成**：`View` 下分 `ViewBranch`（子 View / widget）与 `ChildBranch`（普通子节点）；`ViewBind` 是组件，持有 `ui`，并通过自身 ChildBranch 托管平台实例（如 `GameObjectNode`），不再承载 widget。
+- **生命周期已定**：`Open/Close` 是 `TreeTask` 包装；`OnOpen` 先 `await ViewElementOpen`，再发 `Open/LayerChange/Show`，最后 `await ViewOpenAnim`；`OnClose` 先 `await ViewCloseAnim`，再 `CloseCore`，然后同步 `ViewElementClose`，最后释放 Bind。`OnBeforeDispose` 走 `CloseCore(true)`，不播放关闭动画。
+- **层级已定**：`ViewManager -> ViewLayerGroup -> ViewLayer` 都走 `ViewBranch`；窗口仍是 `ViewLayer` 的组件。`ViewLayer.OnClose` 先关闭层内视图。
+- **Unity 平台已开始**：`ViewElementCollector` 在 `CoreUnity/RunTime/Module/View`，编辑器在 `UnityEditor/View`；`CoreUnity` 引用 `WorldTree.Module`。收集器按字段名自动填充 entries，空 Target 红色显示，可手动开启 Target 编辑；不支持路径字符串和特性标记。
+- **生成器**：`Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs` 的 `ModuleConfigs` 已启用 `BranchSupplementGeneratorRun`，`ViewBranch` 的 `AddView/RemoveAllView` 由它生成；UnityTool 的 ModuleConfigs 不启用，Module 以预编译 DLL 进入 Unity。
+- **尚未接入**：Unity 的 `ViewElementOpen/ViewElementClose/ViewOpenAnim/ViewCloseAnim` 规则还没写，`ViewBind.ui` 目前不会由 prefab 赋值；widget 字段绑定工具还没接。
+- **下一步**：先做 Unity `ViewElementOpen`（prefab 加载 + `PoolGetAsync(address, Bind, parentTransform)` + 设置 `Bind.ui`），再补 `ViewElementClose` 回收，再做启动动画/关闭动画，最后接 widget 字段绑定。
+- `ViewTestWindow` 与 `ViewTest` 都在 `HotFixUnity/Client/_Test`，不在 Module；Play 时由 `InitialDomain` 触发。
+- `ViewManager.viewDict` 仍没有写入点；`Depth/Order` 的位压缩设计仍待后续收口。
 
 当前实现的结构：
 
 - `View` 是「节点 + 平台绑定」。`View.Parent` 的 setter 按父类型推导 `ParentLayer`；`Layer`（byte）、`Depth`、`Order` 用位压缩排序。
 - 视图分三支：`ViewObject`（加载物体：按类型名加载预制体）、`ViewWidget`（子级/组件：不加载，字段绑定）、`ViewContainer : ViewWidget`（容器级：能承载窗口与其他 widget）。`ViewLayer` / `ViewLayerGroup` 都是 `ViewContainer`。
 - `ViewLayerItem : ViewObject, ComponentOf<ViewContainer>`，`ViewWindow : ViewLayerItem`（有自身表现的窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
-- **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一），不是 `ViewLayerBind`；`ViewBind` 只作为 View 自己的组件存在，不再承载子级 widget。
+- **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一）；`ViewBind` 只作为 View 自己的组件存在，不再承载子级 widget。
 - **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，持有 `ui`（平台元素），并通过自身 `ChildBranch` 托管平台实例节点（如 `GameObjectNode`），Node 随 Bind 自动释放；ViewBind 不承载 widget。显示子级（子 View / widget）挂在 `View` 的 `ViewBranch`（`ViewBranch : ChildBranch`，`View : ViewOf<View>`）下；普通子节点仍可用 `ChildBranch`。`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
 - 元素挂载走 **`Open` / `Close`**，由 **View 自己驱动**：`IView.Open()` 是非 async 包装，返回 `OnOpen()` 的 `TreeTask`；`OnOpen` 建好 Bind 后先 `await ViewElementOpen`，再发 `Open` + `LayerChange`（可见时再发 `Show`），最后 `await ViewOpenAnim`。`IView.Close()` 非 async 包装 `OnClose()`；`OnClose` 先 `await ViewCloseAnim`，再走同步 `CloseCore`（`Hide` / `Close`），然后同步发 `ViewElementClose`，最后销毁 Bind。`OnBeforeDispose` 调 `CloseCore(true)`，同步发 `Hide` / `Close` 后直接销毁 Bind，不走 `ViewCloseAnim` / `ViewElementClose`，因此释放子级不播放关闭动画。`IsShow` 切换发 `Show`/`Hide`。引擎按**视图类型**实现 `ViewElementOpen` / `ViewElementClose`（平台实例加载/同步释放）和 `ViewOpenAnim` / `ViewCloseAnim`（动画）；立即销毁的平台清理由 Bind / 平台节点自身的 `RemoveRule` 负责。`ViewBind` 持有 `ui` 并通过 ChildBranch 托管平台实例，是纯数据组件（`ComponentOf<View>`），绑定生命周期全部由 View 驱动。
 - **字段声明在 View，实例挂在 ViewBranch**：子级 widget 字段写在 View 上（如 `ViewTestWindow.text`），类型用 `NodeRef<T>`（还池后自动变空，防悬空）；实例节点挂在 View 的 `ViewBranch` 下，关闭时由 `RemoveAllView` 一起回收。

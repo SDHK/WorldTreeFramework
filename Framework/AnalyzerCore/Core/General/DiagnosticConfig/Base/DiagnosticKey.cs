@@ -152,5 +152,15 @@ namespace WorldTree.Analyzer
 		/// </summary>
 		NodeRuleMethodAnalysis,
 
+		/// <summary>
+		/// async TreeTask 缺少 await
+		/// </summary>
+		TreeTaskAwaitMissing,
+
+		/// <summary>
+		/// async TreeTask 在第一个 await 前退出
+		/// </summary>
+		TreeTaskEarlyExit,
+
 	}
 }

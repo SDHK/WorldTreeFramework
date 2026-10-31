@@ -20,7 +20,8 @@ namespace WorldTree.Analyzer
 			new CodeNodeDiagnosticConfig(),
 			new RuleDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
-			new ObjectDiagnosticConfig()
+			new ObjectDiagnosticConfig(),
+			new TreeTaskDiagnosticConfig()
 		};
 
 		public static List<DiagnosticConfigGroup> ModuleConfigs = new()
@@ -39,7 +40,8 @@ namespace WorldTree.Analyzer
 			new CodeNodeDiagnosticConfig(),
 			new RuleDiagnosticConfig(),
 			new StaticRuleDiagnosticConfig(),
-			new ObjectDiagnosticConfig()
+			new ObjectDiagnosticConfig(),
+			new TreeTaskDiagnosticConfig()
 		};
 	}
 
@@ -47,7 +49,6 @@ namespace WorldTree.Analyzer
 	{
 		public ProjectAnalyzerSetting()
 		{
-			Authors = new HashSet<string>() { "闪电黑客" };
 			Add("WorldTree.Core", ProjectConfigHelper.CoreConfigs);
 			Add("WorldTree.Module", ProjectConfigHelper.ModuleConfigs);
 		}

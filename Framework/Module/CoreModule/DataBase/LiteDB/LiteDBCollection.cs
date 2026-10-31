@@ -92,9 +92,9 @@ namespace WorldTree
 		/// </summary>
 		public async TreeTask FindAllAsync(ICollection<T> outList)
 		{
+			await this.TreeTaskCompleted();
 			if (outList == null) throw new ArgumentNullException(nameof(outList));
 
-			await this.TreeTaskCompleted();
 			outList.Clear();
 			foreach (T data in FindAll())
 			{

@@ -87,7 +87,7 @@ namespace WorldTree
 			timerId = World.Line.WorldTimeManager.Timer
 				.AddTicker(dueTick, node, ruleCode);
 
-			if (timerId < 0)
+			if (timerId == 0)
 				throw new Exception($"目标节点没有规则: {RuleType.Name}");
 		}
 

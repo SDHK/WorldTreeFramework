@@ -99,6 +99,12 @@ namespace WorldTree.Analyzer
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class SimpleMemberAccessDiagnosticRun : SimpleMemberAccessDiagnostic<ProjectAnalyzerSetting> { }
 
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
+	public class TreeTaskDiagnosticRun : TreeTaskDiagnostic<ProjectAnalyzerSetting> { }
+
+	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(TreeTaskDiagnosticProvider)), Shared]
+	public class TreeTaskDiagnosticProvider : TreeTaskDiagnosticCodeFixProvider<ProjectAnalyzerSetting> { }
+
 	#endregion
 
 }

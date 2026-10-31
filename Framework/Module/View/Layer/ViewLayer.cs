@@ -41,6 +41,7 @@ namespace WorldTree
 		/// </summary>
 		public override async TreeTask OnClose()
 		{
+			await this.TreeTaskCompleted();
 			if (!IsOpen) return;
 			await this.CloseAllView();
 			await base.OnClose();
@@ -102,6 +103,7 @@ namespace WorldTree
 		/// </summary>
 		public static async TreeTask OpenView(this ViewLayer self, long typeCode)
 		{
+			await self.TreeTaskCompleted();
 			if (self?.ViewList == null) return;
 			if (!(NodeBranchHelper.TryGetBranch(self, out ComponentBranch branch) && branch.TryGetNode(typeCode, out INode node))) return;
 			if (node is not ViewLayerItem view) return;
@@ -121,15 +123,19 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 打开视图
+		/// 打开视图 : 类型
 		/// </summary>
-		public static async TreeTask OpenView<T>(this ViewLayer self) where T : ViewLayerItem => await self.OpenView(self.TypeToCode<T>());
+		public static async TreeTask OpenView<T>(this ViewLayer self) where T : ViewLayerItem
+		{
+			await self.TreeTaskCompleted();
+		}
 
 		/// <summary>
 		/// 关闭视图 : 类型码
 		/// </summary>
 		public static async TreeTask CloseView(this ViewLayer self, long typeCode)
 		{
+			await self.TreeTaskCompleted();
 			if (self?.ViewList == null || self.ViewList.Count == 0) return;
 			if (!(NodeBranchHelper.TryGetBranch(self, out ComponentBranch branch) && branch.TryGetNode(typeCode, out INode node))) return;
 			if (node is not ViewLayerItem view) return;
@@ -143,6 +149,7 @@ namespace WorldTree
 		/// </summary>
 		public static async TreeTask CloseAllView(this ViewLayer self)
 		{
+			await self.TreeTaskCompleted();
 			if (self?.ViewList == null || self.ViewList.Count == 0) return;
 			// 从顶层向下关闭
 			for (int i = self.ViewList.Count - 1; i >= 0; i--)
@@ -158,7 +165,10 @@ namespace WorldTree
 		/// <summary>
 		/// 关闭视图
 		/// </summary>
-		public static async TreeTask CloseView<T>(this ViewLayer self) where T : ViewLayerItem => await self.CloseView(self.TypeToCode<T>());
+		public static async TreeTask CloseView<T>(this ViewLayer self) where T : ViewLayerItem
+		{
+			await self.CloseView(self.TypeToCode<T>());
+		}
 
 		/// <summary>
 		/// 设置视图到顶层 : 类型码
