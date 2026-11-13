@@ -114,7 +114,7 @@ namespace WorldTree
 		/// </summary>
 		public override TreeTask<FileHandle> OpenAsync(INode parent, string path, FileOpenMode mode, FileOpenAccess access)
 		{
-			TreeTask<FileHandle> task = TreeTaskManager.Get(parent).AddTemp(out TreeTask<FileHandle> _);
+			TreeTask<FileHandle> task = TreeTaskManager.GetTask<FileHandle>(parent);
 			task.SetResult(Open(parent, path, mode, access));
 			return task;
 		}

@@ -198,7 +198,7 @@ namespace WorldTree
 				//凭证和任务都挂到 TreeTaskManager 上。凭证不能挂在任务下面，任务取结果时会把子节点一起拆掉
 				TreeTaskManager.Get(self).AddTemp(out TreeTaskLock hold, key, self);
 				//同步任务，调用方 await 时当场取走凭证并还池
-				TreeTaskManager.Get(self).AddTemp(out TreeTask<TreeTaskLock> syncTask);
+				TreeTask<TreeTaskLock> syncTask = TreeTaskManager.GetTask<TreeTaskLock>(self);
 				syncTask.SetResult(hold);
 				return syncTask;
 			}

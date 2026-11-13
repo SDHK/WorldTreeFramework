@@ -23,5 +23,21 @@ namespace WorldTree
 				node.World.AddComponent(out manager);
 			return manager;
 		}
+
+		/// <summary>
+		/// 在挂载点上取一条任务。
+		/// </summary>
+		public static TreeTask GetTask(INode node)
+		{
+			return Get(node).AddTemp(out TreeTask task);
+		}
+
+		/// <summary>
+		/// 在挂载点上取一条带结果的任务。
+		/// </summary>
+		public static TreeTask<T> GetTask<T>(INode node)
+		{
+			return Get(node).AddTemp(out TreeTask<T> task);
+		}
 	}
 }

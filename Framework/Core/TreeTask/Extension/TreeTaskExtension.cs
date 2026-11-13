@@ -66,7 +66,7 @@ namespace WorldTree
 				return;
 			}
 
-			TreeTask treeTask = TreeTaskManager.Get(self).AddTemp(out TreeTask _);
+			TreeTask treeTask = TreeTaskManager.GetTask(self);
 			task.GetAwaiter().OnCompleted(() =>
 			{
 				treeTask.World.Line.WorldContext.Post(() => CompleteFromTask(treeTask, task));
@@ -86,7 +86,7 @@ namespace WorldTree
 				return task.Result;
 			}
 
-			TreeTask<T> treeTask = TreeTaskManager.Get(self).AddTemp(out TreeTask<T> _);
+			TreeTask<T> treeTask = TreeTaskManager.GetTask<T>(self);
 			task.GetAwaiter().OnCompleted(() =>
 			{
 				treeTask.World.Line.WorldContext.Post(() =>
@@ -140,7 +140,7 @@ namespace WorldTree
 				await self.TreeTaskCompleted();
 			}
 
-			TreeTask asyncTask = TreeTaskManager.Get(self).AddTemp(out TreeTask _);
+			TreeTask asyncTask = TreeTaskManager.GetTask(self);
 			self.World.Line.WorldTimeManager.AddTimerDelay<TreeTaskSetResuIt>(TimeSpan.FromSeconds(timeOut).Ticks, asyncTask);
 			await asyncTask;
 

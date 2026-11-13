@@ -1,10 +1,10 @@
-﻿/****************************************
+/****************************************
 
 * 作者：闪电黑客
 * 日期：2026/10/31
 
 * 描述：async TreeTask 必须有 await；第一个 await 之前不能 return/throw。
-*       诊断配置走 ProjectAnalyzerSetting。
+*       抽象方法没有方法体，不参与这两条检查。诊断配置走 ProjectAnalyzerSetting。
 
 */
 
@@ -62,8 +62,12 @@ namespace WorldTree.Analyzer
 		private static bool IsTarget(SemanticModel model, MethodDeclarationSyntax method)
 		{
 			if (method == null) return false;
+			// 抽象方法、接口声明没有方法体，无从检查 await
+			if (method.Body == null && method.ExpressionBody == null) return false;
+
 			IMethodSymbol symbol = model.GetDeclaredSymbol(method) as IMethodSymbol;
-			return symbol != null && symbol.IsAsync && IsTreeTask(symbol.ReturnType);
+			if (symbol == null || symbol.IsAbstract) return false;
+			return symbol.IsAsync && IsTreeTask(symbol.ReturnType);
 		}
 
 		private static MethodBodyVisitor Visit(MethodDeclarationSyntax method)
