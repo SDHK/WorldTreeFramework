@@ -43,12 +43,15 @@ namespace WorldTree
 		/// </summary>
 		protected ConcurrentQueue<object> objectPoolQueue = new ConcurrentQueue<object>();
 
-
-
 		/// <summary>
 		/// 对象数量 
 		/// </summary>
 		protected int objectCount;
+
+		/// <summary>
+		/// 最小对象数量限制 
+		/// </summary>
+		public int MinLimit = -1;
 
 		/// <summary>
 		/// 对象回收数量限制
@@ -95,6 +98,18 @@ namespace WorldTree
 					return;
 				}
 				Interlocked.Decrement(ref objectCount);
+			}
+		}
+
+		/// <summary>
+		/// 预加载 
+		/// </summary>
+		public virtual void Preload()
+		{
+			while (objectPoolQueue.Count < MinLimit)
+			{
+				object obj = NewObject();
+				objectPoolQueue.Enqueue(obj);
 			}
 		}
 

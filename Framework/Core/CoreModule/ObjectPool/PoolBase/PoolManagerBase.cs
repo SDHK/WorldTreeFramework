@@ -19,14 +19,8 @@ namespace WorldTree
 		/// </summary>
 		public ConcurrentDictionary<long, T> PoolDict = new ConcurrentDictionary<long, T>();
 
-		/// <summary>
-		/// 新建池委托
-		/// </summary>
-		private Func<long, Type, T> newPoolFunc;
-
 		public override void OnCreate()
 		{
-			newPoolFunc = NewPool;
 		}
 
 		/// <summary>
@@ -54,7 +48,7 @@ namespace WorldTree
 			//忽略类型表检测
 			if (!IgnoreTypeHashDict.ContainsKey(typeCode))
 			{
-				pool = PoolDict.GetOrAdd(typeCode, newPoolFunc, type);
+				pool = PoolDict.GetOrAdd(typeCode, NewPool, type);
 				return true;
 			}
 			pool = null;
