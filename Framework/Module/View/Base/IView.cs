@@ -12,17 +12,12 @@ namespace WorldTree
 	/// <summary>
 	/// 视图接口
 	/// </summary>
-	public interface IView
+	public interface IView : INode
 	{
 		/// <summary>
-		/// 视图打开
+		/// 视图名称（默认类名） 
 		/// </summary>
-		public TreeTask Open();
-		/// <summary>
-		/// 视图关闭
-		/// </summary>
-		public TreeTask Close();
-
+		public string ViewName { get; set; }
 		/// <summary>
 		/// 执行打开
 		/// </summary>

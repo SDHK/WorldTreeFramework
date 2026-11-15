@@ -10,6 +10,39 @@
 namespace WorldTree
 {
 	/// <summary>
+	/// 视图状态。OpenAnim、Open、CloseAnim 都表示已打开，子组件和壳都在。
+	/// 加载未完成就被关掉时，取消这一次的令牌并回到 Close，不再把 Load 和 Close 叠在一起。
+	/// </summary>
+	[System.Flags]
+	public enum ViewState
+	{
+		/// <summary>
+		/// 关闭。没有组件和壳。
+		/// </summary>
+		Close = 1,
+
+		/// <summary>
+		/// 加载中，意图是打开。还没有组件和壳。
+		/// </summary>
+		Load = 2,
+
+		/// <summary>
+		/// 已打开，正在播打开动画。
+		/// </summary>
+		OpenAnim = 4,
+
+		/// <summary>
+		/// 已打开，没在播。
+		/// </summary>
+		Open = 8,
+
+		/// <summary>
+		/// 已打开，正在播关闭动画。
+		/// </summary>
+		CloseAnim = 16,
+	}
+
+	/// <summary>
 	/// 视图基类：作为显示视图打开的初始数据
 	/// </summary>
 	public abstract class View : Node, IView
@@ -18,14 +51,25 @@ namespace WorldTree
 		, AsViewBranch
 		, ViewOf<View>
 		, AsRule<Awake>
+		, AsRule<Awake<string>>
 		, AsRule<Open>
 		, AsRule<Close>
-		, AsRule<ViewElementOpen>
-		, AsRule<ViewElementClose>
+		, AsRule<ViewDrawOpen>
+		, AsRule<ViewDrawClose>
 		, AsRule<ViewOpenAnim>
 		, AsRule<ViewCloseAnim>
 		, AsRule<LayerChange>
 	{
+		/// <summary>
+		/// 视图名称。添加时为空则写成类名。控件可在添加时用字符串覆盖。
+		/// </summary>
+		public string ViewName { get; set; }
+
+		/// <summary>
+		/// 当前这趟的壳。由 ViewDrawOpen 写入。壳还池后 Value 为空。
+		/// </summary>
+		public NodeRef<IViewDraw> Draw;
+
 		/// <summary>
 		/// 父级视图层组件
 		/// </summary>
@@ -98,54 +142,49 @@ namespace WorldTree
 
 
 		/// <summary>
-		/// 视图绑定
+		/// 视图状态。OpenAnim、Open、CloseAnim 都表示已打开。
 		/// </summary>
-		public NodeRef<ViewBind> Bind { get; set; }
+		public ViewState ViewState = ViewState.Close;
 
 		/// <summary>
-		/// 视图是否打开
+		/// 视图显示。
 		/// </summary>
-		public bool IsOpen => !Bind.IsNull;
+		private bool show = true;
 
 		/// <summary>
-		/// 视图是否正在打开
+		/// 当前这次加载或动画的令牌。同一时间只用一颗。
+		/// 加载回来就卸掉，再换一颗给动画。上一趟由那次调用自己拿着，卸的时候不动已经换成下一趟的。
 		/// </summary>
-		public bool IsOpening { get; private set; }
+		private TreeTaskToken taskToken;
 
 		/// <summary>
-		/// 视图是否正在关闭
+		/// 视图是否在加载。只有 Load。壳和组件都还没有。
 		/// </summary>
-		public bool IsClosing { get; private set; }
+		public bool IsLoad => ViewState == ViewState.Load;
+
+		/// <summary>
+		/// 视图是否打开。OpenAnim 和 CloseAnim 也算打开。
+		/// </summary>
+		public bool IsOpen => ViewState == ViewState.OpenAnim || ViewState == ViewState.Open || ViewState == ViewState.CloseAnim;
 
 		/// <summary>
 		/// 视图显隐
 		/// </summary>
+		/// <remarks>
+		/// 只记下意图并发 Show / Hide。壳的激活由平台法则处理。
+		/// </remarks>
 		public bool IsShow
 		{
-			get
-			{
-				ViewBind bind = Bind.Value;
-				return bind != null && bind.IsActive;
-			}
+			get => show;
 			set
 			{
-				ViewBind bind = Bind.Value;
-				if (bind == null || bind.IsActive == value) return;
-				bind.SetActive(value);
+				if (show == value) return;
+				show = value;
+				if (!IsOpen) return;
 				if (value) NodeRuleHelper.TrySendRule(this, default(Show));
 				else NodeRuleHelper.TrySendRule(this, default(Hide));
 			}
 		}
-
-		/// <summary>
-		/// 打开视图
-		/// </summary>
-		public TreeTask Open() => OnOpen();
-
-		/// <summary>
-		/// 关闭视图
-		/// </summary>
-		public TreeTask Close() => OnClose();
 
 		/// <summary>
 		/// 执行打开
@@ -153,36 +192,46 @@ namespace WorldTree
 		public virtual async TreeTask OnOpen()
 		{
 			await this.TreeTaskCompleted();
-			if (IsOpen || IsOpening) return;
+			if (IsOpen)
+			{
+				// CloseAnim 中重新打开：不加载，不重建组件。正在播的那段看到取消后改播打开动画。
+				if (ViewState != ViewState.CloseAnim) return;
+				ViewState = ViewState.OpenAnim;
+				CancelToken();
+				return;
+			}
+			// 已经在加载。这一次就是当前这次，不用再开。
+			if (IsLoad) return;
 
-			IsOpening = true;
+			ViewState = ViewState.Load;
+			TreeTaskToken token = BeginToken();
 			try
 			{
-				if (this.Bind.IsNull) this.Bind = this.AddComponent(out ViewBind _);
+				TreeTask task = NodeRuleHelper.SendRuleAsync(this, default(ViewDrawOpen));
+				task.SetToken(token);
+				await task;
 
-				await NodeRuleHelper.SendRuleAsync(this, default(ViewElementOpen));
+				// 只认这一次的令牌。后面可能已经又打开了，不要改它的状态。
+				if (token == null || token.IsDisposed || token.State == TokenState.Cancel) return;
 
-				// 打开过程中可能已被关闭或释放。
-				if (this.Bind.IsNull) return;
+				ReleaseToken(token);
 
+				ViewState = ViewState.OpenAnim;
 				NodeRuleHelper.TrySendRule(this, default(Open));
 				NodeRuleHelper.TrySendRule(this, default(LayerChange));
 				if (IsShow) NodeRuleHelper.TrySendRule(this, default(Show));
 
-				await NodeRuleHelper.SendRuleAsync(this, default(ViewOpenAnim));
+				await RunAnim();
 			}
 			catch
 			{
-				if (!this.Bind.IsNull)
-				{
-					this.Bind.Value.Dispose();
-					this.Bind = null;
-				}
+				if (token != null && !token.IsDisposed && token.State != TokenState.Cancel) FailOpen();
+				else if (IsOpen && taskToken == null) FailOpen();
 				throw;
 			}
 			finally
 			{
-				IsOpening = false;
+				ReleaseToken(token);
 			}
 		}
 
@@ -192,52 +241,130 @@ namespace WorldTree
 		public virtual async TreeTask OnClose()
 		{
 			await this.TreeTaskCompleted();
-			if (!IsOpen || IsClosing) return;
+			if (ViewState == ViewState.Close) return;
+			if (IsLoad)
+			{
+				// 还没有组件和壳。取消这次加载，直接关掉。令牌留着，池子回来才看得到。
+				CancelToken();
+				ViewState = ViewState.Close;
+				return;
+			}
+			if (ViewState == ViewState.OpenAnim || ViewState == ViewState.CloseAnim)
+			{
+				// 已经在播。只改状态，由正在等的那段接着播。
+				if (ViewState == ViewState.OpenAnim)
+				{
+					ViewState = ViewState.CloseAnim;
+					CancelToken();
+				}
+				return;
+			}
 
-			IsClosing = true;
+			ViewState = ViewState.CloseAnim;
+			await RunAnim();
+		}
+
+		/// <summary>
+		/// 顺着当前动画播。方向被改掉就接着播另一段，窗口保持已打开。
+		/// </summary>
+		private async TreeTask RunAnim()
+		{
+			await this.TreeTaskCompleted();
 			try
 			{
-				await NodeRuleHelper.SendRuleAsync(this, default(ViewCloseAnim));
-				if (!IsOpen) return;
+				while (ViewState == ViewState.OpenAnim || ViewState == ViewState.CloseAnim)
+				{
+					ViewState playing = ViewState;
+					TreeTaskToken token = BeginToken();
+					try
+					{
+						TreeTask task = playing == ViewState.OpenAnim
+							? NodeRuleHelper.SendRuleAsync(this, default(ViewOpenAnim))
+							: NodeRuleHelper.SendRuleAsync(this, default(ViewCloseAnim));
+						task.SetToken(token);
+						await task;
+					}
+					finally
+					{
+						ReleaseToken(token);
+					}
 
-				CloseCore(false);
-				if (!IsOpen) return;
+					if (ViewState != playing) continue;
 
-				NodeRuleHelper.TrySendRule(this, default(ViewElementClose));
-				if (!IsOpen) return;
-
-				ReleaseBind();
+					if (playing == ViewState.CloseAnim) CommitClose();
+					else ViewState = ViewState.Open;
+					break;
+				}
 			}
-			finally
+			catch
 			{
-				IsClosing = false;
+				if (IsOpen) CommitClose();
+				throw;
 			}
 		}
 
 		/// <summary>
-		/// 关闭的同步公共部分：Hide、Close，按需释放 Bind。
+		/// 换一颗令牌。上一颗只取消，不在这里卸，卸掉池子就看不到取消。
 		/// </summary>
-		private void CloseCore(bool disposeBind)
+		private TreeTaskToken BeginToken()
 		{
-			if (this.Bind.IsNull) return;
+			CancelToken();
+			this.AddTemp(out taskToken);
+			return taskToken;
+		}
 
+		/// <summary>
+		/// 取消当前这颗令牌。令牌留着，等这次 await 自己结束再卸。
+		/// </summary>
+		private void CancelToken()
+		{
+			TreeTaskToken token = taskToken;
+			if (token == null || token.IsDisposed) return;
+			if (token.State != TokenState.Cancel) token.Cancel();
+		}
+
+		/// <summary>
+		/// 卸掉这一次的令牌。字段已经换成下一趟时，不动那一趟。
+		/// </summary>
+		private void ReleaseToken(TreeTaskToken token)
+		{
+			if (taskToken == token) taskToken = null;
+			if (token == null || token.IsDisposed) return;
+			if (token.State != TokenState.Cancel) token.Cancel();
+			token.Dispose();
+		}
+
+		/// <summary>
+		/// 打开失败时卸掉已经挂上的组件和壳。
+		/// </summary>
+		private void FailOpen()
+		{
+			CancelToken();
+			if (IsOpen) CommitClose();
+			else if (IsLoad) ViewState = ViewState.Close;
+		}
+
+		/// <summary>
+		/// 关闭动画播完，卸掉组件和壳。
+		/// </summary>
+		private void CommitClose()
+		{
+			if (!IsOpen) return;
+			CloseCore();
+			NodeRuleHelper.TrySendRule(this, default(ViewDrawClose));
+			ViewState = ViewState.Close;
+		}
+
+		/// <summary>
+		/// 关闭的同步公共部分：Hide、Close，释放显示子级。
+		/// </summary>
+		private void CloseCore()
+		{
 			if (IsShow) NodeRuleHelper.TrySendRule(this, default(Hide));
 			NodeRuleHelper.TrySendRule(this, default(Close));
 
-			// 显示子级先释放，再释放平台根元素。
+			// 显示子级先释放。壳由平台在 ViewDrawClose 里卸掉。
 			this.RemoveAllView();
-
-			if (disposeBind) ReleaseBind();
-		}
-
-		/// <summary>
-		/// 释放 Bind
-		/// </summary>
-		private void ReleaseBind()
-		{
-			if (this.Bind.IsNull) return;
-			this.Bind.Value.Dispose();
-			this.Bind = null;
 		}
 
 		public virtual void LayerChange() => ViewProxyRule.LayerChanged(this);
@@ -248,8 +375,17 @@ namespace WorldTree
 		/// </summary>
 		public override void OnBeforeDispose()
 		{
-			CloseCore(true);
+			bool open = IsOpen;
+			ViewState = ViewState.Close;
+			CancelToken();
+			if (open)
+			{
+				// 释放不等动画。组件和壳一起拆。
+				CloseCore();
+				NodeRuleHelper.TrySendRule(this, default(ViewDrawClose));
+			}
 			base.OnBeforeDispose();
+			ViewName = null;
 		}
 
 		/// <summary>
@@ -259,6 +395,9 @@ namespace WorldTree
 		{
 			ParentLayer = null;
 			Layer = 0;
+			show = true;
+			ViewState = ViewState.Close;
+			CancelToken();
 			base.OnCutSelf();
 		}
 	}
@@ -266,6 +405,37 @@ namespace WorldTree
 
 
 	//========
+
+	/// <summary>
+	/// 视图名称。窗口走类名。字符串参数只给控件添加时覆盖。
+	/// </summary>
+	[NodeRuleTarget(nameof(View))]
+	public static partial class ViewRule
+	{
+		/// <summary>
+		/// 没有传入名字时写成类名。Awake 已写入的不覆盖。
+		/// </summary>
+		class Add : AddRule<View>
+		{
+			protected override void Execute(View self)
+			{
+				if (string.IsNullOrEmpty(self.ViewName)) self.ViewName = self.GetType().Name;
+			}
+		}
+
+		/// <summary>
+		/// 控件添加时传入的名字。空字符串忽略，留给 Add 写成类名。
+		/// 子类若另写 Awake&lt;string&gt;，这条不会执行，需要自己赋值。
+		/// </summary>
+		class Awake : AwakeRule<View, string>
+		{
+			protected override void Execute(View self, string name)
+			{
+				if (string.IsNullOrEmpty(name)) return;
+				self.ViewName = name;
+			}
+		}
+	}
 
 	public static class ViewProxyRule
 	{

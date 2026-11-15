@@ -10,7 +10,15 @@
 namespace WorldTree
 {
 	/// <summary>
-	/// 加载物体：有资源地址（类型名），触发加载的视图
+	/// 容器级 ViewWidget：能承载子级（层条目、其他 widget）
+	/// </summary>
+	public abstract class ViewContainer : View
+	{
+
+	}
+
+	/// <summary>
+	/// 视图主体：能承载组件
 	/// </summary>
 	public abstract class ViewObject : View
 	{
@@ -18,26 +26,10 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 子级/组件：不触发加载，由父级在装配时按字段绑定
-	/// </summary>
-	public abstract class ViewWidget : View
-	{
-
-	}
-
-	/// <summary>
-	/// 容器级 ViewWidget：能承载子级（层条目、其他 widget）
-	/// </summary>
-	public abstract class ViewContainer : ViewWidget
-	{
-
-	}
-
-	/// <summary>
-	/// 层条目：被容器承载、持有槽位的视图
+	/// 层条目：挂在层的 ViewBranch 上、持有槽位的视图
 	/// </summary>
 	public abstract class ViewLayerItem : ViewObject
-		, ComponentOf<ViewContainer>
+		, ViewOf<ViewLayer>
 	{
 
 	}
@@ -49,4 +41,6 @@ namespace WorldTree
 	{
 
 	}
+
+
 }

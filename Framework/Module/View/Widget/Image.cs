@@ -12,7 +12,7 @@ namespace WorldTree
 	/// <summary>
 	/// 图片
 	/// </summary>
-	public class ViewImage : ViewWidget
+	public class ViewImage : View
 	{
 		/// <summary>
 		/// 图片地址

@@ -29,12 +29,12 @@ namespace WorldTree
 		public object Target;
 
 		/// <summary>
-		/// 释放。还回 LoadPool，不进 UnitPool。
+		/// 释放。有加载路径就还回 LoadPool，不进 UnitPool。没有路径则直接作废。
 		/// </summary>
 		public override void Dispose()
 		{
 			if (IsDisposed || InstanceId == 0) return;
-			if (World != null && World.PoolRecycleLoad(this)) return;
+			if (!string.IsNullOrEmpty(LoadPath) && World != null && World.PoolRecycleLoad(this)) return;
 			IsDisposed = true;
 			Id = 0;
 			InstanceId = 0;

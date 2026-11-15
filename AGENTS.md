@@ -88,7 +88,7 @@ public abstract class 接口名Rule<N, 接口自己的泛型…>
 找不到实现时 `TrySendRule` / `TryCallRule` 返回 false，`Call` 返回 `default`。异步没有实现时 `await self.TreeTaskCompleted()`。`TreeTaskCompleted` 是 `IUnit` 扩展：节点用自己，纯单位用 `World`，任务挂到 `TreeTaskManager`。
 
 ### 异步
-`async TreeTask` / `async TreeTask<T>`。任务是节点，挂在 `TreeTaskManager`（`World` 的组件，只有 `Awake`）的临时分支上。顶层用 `.Coroutine()` 或 `.Coroutine(token)`。
+`async TreeTask` / `async TreeTask<T>`。任务是节点，挂在 `TreeTaskManager`（`World` 的组件，只有 `Awake`）的临时分支上。取一条用 `TreeTaskManager.GetTask(node)` / `GetTask<T>(node)`；带 `Awake` 参数的节点仍走 `AddTemp`。顶层用 `.Coroutine()` 或 `.Coroutine(token)`。
 
 **所有 `async TreeTask` / `async TreeTask<T>` 方法在每条执行路径上至少要有一个 `await`**；第一个 `await` 之前不能 `return` 或 `throw`。被 await 的方法自己必须有 await（否则它返回 null 任务，调用方 await 会空引用）；await 一个已完成的有效任务是可以的。路径上天然没有待等任务时，用第一行 `await self.TreeTaskCompleted();` 补同步点，它当场同步恢复，不额外等帧。`TreeTaskVoid` 不走这个构建器，不受此约束。分析器 `TreeTaskDiagnostic`（`TreeTaskDiagnosticConfig`，`WTREE001` 无 await，`WTREE002` 第一个 await 前 return/throw）已按此检查；在 `ProjectAnalyzerSetting` 里按程序集增删 `new TreeTaskDiagnosticConfig()` 即可启停。`return await` 不报，生成代码跳过。
 
@@ -99,6 +99,11 @@ public abstract class 接口名Rule<N, 接口自己的泛型…>
 BCL `Task` 失败或取消则 `SetException`：只包一层的 `AggregateException` 拆开，取消抛 `TaskCanceledException`。`GetResult` 会把任务还池，所以同一个任务不要既 `Coroutine()` 又 `await`。
 
 队列锁是 `await self.AsyncLock(key)`。同一个 key 排队，`Dispose` 凭证后下一位才继续。还在排队时取消，结果是 null。等待节点还池前要清掉 `Result`，节点池不抹字段。
+
+`AwaiterState` 是 `Pending` / `Succeeded` / `Faulted` / `Canceled`。取出就是 `Pending`，表示结果还没写上，不是已经有人在等。`SetResult` 把结果留在任务上，有延续才叫醒；还池发生在 `GetResult`。完成后才来的 `await` 不再登记延续，编译器直接 `GetResult`。所以 `SetResult` 时没人等也不能还池。
+
+`await self.WhenAll(tasks)` / `WhenAll<T>`：每条立刻启动，全部结束再完成返回的那条新任务。失败先把其余任务取完，再抛第一条异常。泛型按原来的顺序给结果。空数组无结果的直接返回，泛型返回空数组。`await self.WhenAny(tasks)` / `WhenAny<T>`：谁先完成，返回的新任务就完成。最快的失败从这里抛，其余结果在各自的 Start 里取走。没有任务就抛。两套共用 `TreeTaskWhenAll.Check`：空元素、已释放、同一任务出现两次直接拒绝。这些输入只能交给这里等。
+
 
 ### 其余
 - 执行器替代委托，遍历中可以增删。
@@ -181,13 +186,12 @@ Unity 由 `StartWorld.Add` 调用 `ConfigLoader.Load<T>` 和 `CreateWorldLines`�
 `HybridCLRHelper` 在 AOT 的 `GameEntry` 里。改了加载顺序要重新做第 6 步，只重复第 3 到第 5 步不会进 Player。只改了热更代码或 bytes 时，第 3 到第 6 步仍要按顺序重做，因为 dll 和 bytes 都打进了 StreamingAssets。
 
 ### 管理器与来源
-资源管理器分两层：进程级在 `WorldTreeCore`（`FileManager` / `ConfigManager`），世界线级在 `World`（`AssetManager` / `DataBaseManager` / `GameObjectPoolManager`）。线级管理器的来源是 `FieldOf` 子节点；装配走 `AddXxxSource` / `AddField`。`FileManager` 和 `DataBaseManager` 支持多来源，其余管理器默认单来源。
+管理器分两层：进程级在 `WorldTreeCore`（`FileManager` / `ConfigManager`），世界级在 `World`（`DataBaseManager`）。`AssetManager` 是进程级：只有一份，挂在主世界线（`Core.MainLine`）的 world（第一个启动的世界；Unity 下就是主线程那个）上；`World.GetAssetManager()` 直接取这一份。管理器的来源是 `FieldOf` 子节点；装配走 `AddXxxSource` / `AddField`。`FileManager` 和 `DataBaseManager` 支持多来源，其余管理器默认单来源。
 
 - `Framework/Core/CoreModule/File`：`FileManager` + `IFileSource` + `FileAddress`；`Framework/Module/CoreModule/File/Local` 放 `LocalFileSource` / `StreamFileHandle`，Unity 放 `YooAssetFileSource` / `YooAssetFileHandle`。详见「文件运行时」。
 - `Framework/Core/CoreModule/Config`：`ConfigManager` 是进程级表注册表；详见「配置运行时」。
-- `RunTime/Core/CoreModule/Asset/`：`IAssetSource` 接口 + `Base/AssetManager` + `YooAsset/YooAssetManager`（`IAssetSource` 实现）。`AssetManager` 按 group + priority 注册多个来源，`AddAssetSource<TSource>(group, priority)` 的 group 同时作为 `Awake<string>` 参数（YooAsset 包名）；`LoadAsset<T>(key)` 无 `@` 前缀时按优先级链式找第一个 `Exists(key)` 的来源，`LoadAsset<T>("@Pack:Key")` / `LoadAsset<T>(pack, key)` 指定包不 fallback。默认组是 `DefaultPackage`。`IAssetSource` 必须有 `Exists`。`YooAssetManager` 按地址缓存 `AssetEntry`（Node），异步同地址只发一次加载；`UnloadAsset` / `UnloadAllAssets` 显式卸载，暂不做引用计数。业务写 `world.GetAssetManager().LoadAsset<T>(key)`，名字里不出现 `Yoo`；`YooAssetFileSource` 是 `FileManager` 的源，不要和 `AssetManager` 混。
+- `RunTime/Core/CoreModule/Asset/`：`IAssetSource` 接口 + `Base/AssetManager` + `YooAsset/YooAssetManager`（`IAssetSource` 实现）。`AssetManager` 进程内一份，挂在主世界线的 world 上；`World.GetAssetManager()` 直接取这一份。按 group + priority 注册多个来源，`AddAssetSource<TSource>(group, priority)` 的 group 同时作为 `Awake<string>` 参数（YooAsset 包名）；`LoadAsset<T>(key)` 无 `@` 前缀时按优先级链式找第一个 `Exists(key)` 的来源，`LoadAsset<T>("@Pack:Key")` / `LoadAsset<T>(pack, key)` 指定包不 fallback。默认组是 `DefaultPackage`。`IAssetSource` 必须有 `Exists`。`YooAssetManager` 按地址缓存 `AssetEntry`（Node），异步同地址只发一次加载；`UnloadAsset` / `UnloadAllAssets` 显式卸载，暂不做引用计数。业务写 `world.GetAssetManager().LoadAsset<T>(key)`，名字里不出现 `Yoo`；`YooAssetFileSource` 是 `FileManager` 的源，不要和 `AssetManager` 混。
 - `Framework/Core/CoreModule/DataBase`：`IDataBase` 接口 + `DataBaseManager` + `DataBaseManagerRule`（同步与异步 CRUD）。`Framework/Module/CoreModule/DataBase`：`LiteDB/LiteDBManager`（`LiteDBCollection<T>` 是它的组件）。`DataBaseManager` 按 group 存多个源，空字符串是默认组，组名重复报错；`GetSource` / `TryGetSource` 取指定组，`AddDataSource` / `AddGroupDataSource` 挂源。用法 `db.AddDataSource<LiteDBManager>(path)`，之后 `db.Insert` / `Find` / `Delete` 走默认组的 `DataBaseManagerRule`。LiteDB 没有原生异步，异步方法是同步执行后返回已完成的 `TreeTask`。
-- `RunTime/Core/CoreModule/ObjectPool/`：`GameObjectPool`（`GenericPool<GameObject>`）、`GameObjectPoolManager`（`ComponentOf<World>`）、`GameObjectNode`（销毁时自动回收）。`GameObjectPoolManager.PoolGet` / `PoolGetAsync` 已接：加载预制体后按 prefab 取池并实例化，返回 `GameObjectNode`；关闭/销毁节点即回收实例。池空闲 60 秒后每秒 `DisposeOne` 一个实例，数量到 0 也保留池本身；池长期持有 prefab，当前不做引用计数，卸载边界由 `UnloadAllAssets` / 场景切换负责。
 
 ### 仓库
 框架、产品、工具拆成平级仓库，放同一父目录（`WorldTreeWorkspace`）。父目录名随便，不归 git。
@@ -222,18 +226,19 @@ ToolProject/               工具分类目录（不归 git）
 | `Framework/Core/CoreModule/` | 内核实现（`WorldLine` / `WorldHeart` / `WorldContext` / `Config` / `DataBase` / `File` / `ObjectPool` / `Log` / `Time` / `Type` / `Id`） |
 | `Framework/Core/Object/` | 对象模型（Basic / CoreObject / Unit / Node / World / Branch / Rattan / ObjectBox / DynamicNodeQueue） |
 | `Framework/Core/Rule/` | 规则系统（Base / Group / List / Manager / Executor） |
+| `Framework/Core/TreeTask/` | 任务：`GetTask`、`WhenAll`、`WhenAny` |
 | `Framework/Core/CoreModule/File/` | `FileManager` / `FileAddress` / `IFileSource` / `FileHandle`；进程级 VFS |
 | `Framework/Core/CoreModule/DataBase/` | `IDataBase` / `DataBaseManager` / `DataBaseManagerRule`；Line 级，group 到单源 |
-| `Framework/Core/CoreModule/Time/Timer/ClockTimer/` | `ClockTimer`：可 `Restart` 的节点倒计时器；挂到 `GameObjectPool` 做空闲回收 |
+| `Framework/Core/CoreModule/Time/Timer/ClockTimer/` | `ClockTimer`：可 `Restart` 的节点倒计时器 |
 | `Framework/Module/` | 模块（csproj 链接 Unity 的 Module 源码）：CoreModule(DataBase/File 实现)/Input/NeuralNetwork/TreeTween/View |
 | `Framework/Module/CoreModule/File/Local/` | `LocalFileSource` + `StreamFileHandle` |
 | `Framework/Module/CoreModule/DataBase/LiteDB/` | `LiteDBManager` / `LiteDBCollection<T>` / `UnitBsonDocument` |
 | `Framework/SourceGeneratorCore/`、`Framework/AnalyzerCore/` | 源生成器 + 分析器 |
 | `Unity/Assets/Scripts/WorldTreeFramework/WorldTree/Module/` | 平台无关模块（被 .NET Module csproj 链接） |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/` | `WorldTree.CoreUnity`（Unity 运行时环境：心跳/日志/组件，引用 `WorldTree.Core` + `WorldTree.Module`）；固定实现按 `Core/CoreModule`、`Module`、`Object` 分层；`Core/CoreModule/Asset/YooAsset/` 放 `YooAssetManager` + `AssetEntry` |
-| `Unity/.../RunTime/Module/View/ViewElementCollector.cs` | Unity 平台元素收集器；编辑器在 `UnityEditor/View/ViewElementCollectorEditor.cs`，按字段名反射填充 entries |
+| `Unity/.../RunTime/Module/Coat/CoatCollector.cs` | Unity 视图外套收集器；编辑器在 `Editor/Coat/CoatCollectorEditor.cs`，按字段名反射填充 entries |
 | `Unity/.../RunTime/Core/CoreModule/File/YooAsset/` | `FileManager` 的 Unity Yoo 源：`YooAssetFileSource` + `YooAssetFileHandle` |
-| `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/Core/CoreModule/ObjectPool/` | `GameObjectPool` / `GameObjectPoolManager` / `GameObjectNode` |
+| `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/Core/CoreModule/ObjectPool/` | `MonoObject` |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/App/` | `WorldTree.App`（`UnityWorldTree` 启动器 + `ConfigLoader`） |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/Editor/` | `WorldTree.UnityEditor`（编辑器工具，用 Odin/Sirenix） |
 | `Unity/Assets/Scripts/ThirdParty/` | `WorldTree.ThirdParty`（第三方库，目前 `Luban/ByteBuf`、`BeanBase`） |
@@ -252,65 +257,67 @@ ToolProject/               工具分类目录（不归 git）
 ## 3. 进行中
 
 ### 资源加载与池
-- `AssetManager` 已有 group + priority 多来源、`Load` 的无前缀链式 / `@Pack:Key` 指定包、异步加载合并、`UnloadAsset` / `UnloadAllAssets`；暂不做引用计数。
-- `GameObjectPoolManager` 已接 `PoolGet` / `PoolGetAsync`；`GameObjectPool` 空闲 60 秒后每秒销毁一个空闲实例，池保留。还缺实例数/LRU/persistent 策略和统一清理顺序。
+- `AssetManager` 已有 group + priority 多来源、`Load` 的无前缀链式 / `@Pack:Key` 指定包、异步加载合并、`UnloadAsset` / `UnloadAllAssets`；进程内一份，挂在主世界线的 world 上；暂不做引用计数。
 
 ### View 骨架（引擎层显示物体）
 代码在 `Framework/Module/View`，目录按角色划分：
 
 ```
 Base/       视图基类与绑定
-  IViewElement.cs / IView.cs / View.cs
-  ViewLayerItem.cs（ViewObject / ViewWidget / ViewContainer / ViewLayerItem / ViewWindow） / ViewBind.cs / ViewBranch.cs
-  ViewRuleBase.cs（Open/Close/ViewElementOpen/ViewElementClose/ViewOpenAnim/ViewCloseAnim/Show/Hide/LayerChange/SubViewClose）；规则类与节点同文件（ViewProxyRule）
+  IViewDraw.cs / ViewDraw.cs / IView.cs / View.cs
+  ViewLayerItem.cs（ViewObject / ViewWidget / ViewContainer / ViewLayerItem / ViewWindow） / ViewBranch.cs
+  ViewRuleBase.cs（Open/Close/ViewDrawOpen/ViewDrawClose/ViewOpenAnim/ViewCloseAnim/Show/Hide/LayerChange/SubViewClose）；规则类与节点同文件（ViewProxyRule）
 Widget/     控件级 ViewWidget：Button / Text / Image
-Layer/      ViewLayerGroup + ViewLayer（规则与节点同文件）
+Layer/      ViewLayer（规则与节点同文件）；ViewRoot.cs 在 View 根目录
 ViewManager.cs（含 ViewManagerRule）   模块根
 ```
 
 ### View 当前交接（新会话先看）
 
-- **结构层已完成**：`View` 下分 `ViewBranch`（子 View / widget）与 `ChildBranch`（普通子节点）；`ViewBind` 是组件，持有 `ui`，并通过自身 ChildBranch 托管平台实例（如 `GameObjectNode`），不再承载 widget。
-- **生命周期已定**：`Open/Close` 是 `TreeTask` 包装；`OnOpen` 先 `await ViewElementOpen`，再发 `Open/LayerChange/Show`，最后 `await ViewOpenAnim`；`OnClose` 先 `await ViewCloseAnim`，再 `CloseCore`，然后同步 `ViewElementClose`，最后释放 Bind。`OnBeforeDispose` 走 `CloseCore(true)`，不播放关闭动画。
-- **层级已定**：`ViewManager -> ViewLayerGroup -> ViewLayer` 都走 `ViewBranch`；窗口仍是 `ViewLayer` 的组件。`ViewLayer.OnClose` 先关闭层内视图。
-- **Unity 平台已开始**：`ViewElementCollector` 在 `CoreUnity/RunTime/Module/View`，编辑器在 `UnityEditor/View`；`CoreUnity` 引用 `WorldTree.Module`。收集器按字段名自动填充 entries，空 Target 红色显示，可手动开启 Target 编辑；不支持路径字符串和特性标记。
+- **ViewName**：`Add` 时还是空就写成类名。控件 `AddComponent(out control, name)` 走 `Awake<string>` 覆盖，空字符串忽略。`ViewLayer` 仍按类型码打开窗口，不传这个参数。还池前清掉名字。
+- **结构层已完成**：`View` 下分 `ViewBranch`（子 View / widget）与 `ChildBranch`（普通子节点）。`View.Draw` 是 `NodeRef<IViewDraw>`。`ViewDraw : LoadUnit, IViewDraw` 是壳基类，不是节点，没有法则。平台壳以 `Draw` 开头并继承 `ViewDraw`，只放在 `Draw` 上。
+- **视图状态**：`ViewState` 是位标记：`Close`、`Load`、`OpenAnim`、`Open`、`CloseAnim`。`OpenAnim`、`Open`、`CloseAnim` 都算已打开，子组件和壳都在。`OpenAnim` 和 `CloseAnim` 对调不加载、不拆组件。`OnOpen` 从 `Close` 进入 `Load`，把内部令牌挂到 `ViewDrawOpen` 上再 `await`。回来时这一次的令牌还在，才改成 `OpenAnim`，发 `Open/LayerChange/Show`，再播打开动画，播完改成 `Open`。加载中被关则取消这次令牌，状态直接改回 `Close`，并马上离开打开栈。令牌留到这次 `await` 结束再卸。回来后只看这次令牌：已经取消就返回，不改状态，也不挂壳。资源加载继续走完，但不再 `New` 实例。`CloseAnim` 播完才 `CloseCore` 和 `ViewDrawClose`，然后改回 `Close`。播到一半又打开，取消当前动画的令牌，改成 `OpenAnim`。`Dispose` 不等动画，组件和壳一起拆。令牌由 `View` 内部挂在动画任务上，取消时那段 `await` 返回，`RunAnim` 按新状态接着播。
+- **层级已定**：`ViewManager -> ViewRoot -> ViewLayer -> 窗口` 都走 `ViewBranch`。`ViewLayer` 是子级页面管理器：`ViewDict` 是类型码 → 节点，同类型只有一个，关掉的页面也留在字典里。`ViewOpenList` 从接受打开起占槽，直到变成 `Close` 才摘掉，含 `Load`、`OpenAnim`、`Open`、`CloseAnim`。加载被取消后马上离开。顺序就是叠放顺序，`LayerCount` 等于它的长度。`ViewBranch` 只负责挂载，层关闭时子节点随分支回收，然后清空这两份记录。
+- **Unity 平台已开始**：`CoatCollector` 在 `CoreUnity/RunTime/Module/Coat`，编辑器在 `Editor/Coat`。壳只有 `DrawCollector : ViewDraw`，放在 `Module/Draw`，`Body` 是这一级物体；`CoreUnity` 引用 `WorldTree.Module`。收集器按字段名自动填充 entries，空 Target 红色显示，可手动开启 Target 编辑；不支持路径字符串和特性标记。
+- **场景标记**：视图根用场景里唯一的 `CoatCollector`。`DrawRootOpen` 调用 `GetDraw`。根没有视图父级，所以去场景里找到唯一的 `CoatCollector`，`Body` 设成它所在的物体，写入 `View.Draw`，并 `DontDestroyOnLoad`。关掉 `Dispose` 并清空 `Draw`，不销毁场景物体。编号作废后 `Draw.Value` 为空。`CoatLayer`（层，`byte layer`）只收集自己的 `Canvas`，组件绑定还没接；排序留到后续 View 侧数值绑定。
 - **生成器**：`Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs` 的 `ModuleConfigs` 已启用 `BranchSupplementGeneratorRun`，`ViewBranch` 的 `AddView/RemoveAllView` 由它生成；UnityTool 的 ModuleConfigs 不启用，Module 以预编译 DLL 进入 Unity。
-- **尚未接入**：Unity 的 `ViewElementOpen/ViewElementClose/ViewOpenAnim/ViewCloseAnim` 规则还没写，`ViewBind.ui` 目前不会由 prefab 赋值；widget 字段绑定工具还没接。
-- **下一步**：先做 Unity `ViewElementOpen`（prefab 加载 + `PoolGetAsync(address, Bind, parentTransform)` + 设置 `Bind.ui`），再补 `ViewElementClose` 回收，再做启动动画/关闭动画，最后接 widget 字段绑定。
+- **平台加载链**：`DrawGet.GetDraw<T>(view)` 只收视图，T 是要取出的壳类型。名字用 `ViewName`，空则用类名。没有视图父级才 `FindSceneCollector`，壳包住那张表所在的物体。有父级就只看这一层壳上的 `CoatCollector`，没有壳就停，不往上找，也不去场景里找。表里没有就向池借，挂到父级物体下。查到的就是这一级物体，不要求它再带收集器，也不往子级找。物体不改父级，路径留空。`ViewLayer` 不走这个方法。关掉由壳的路径决定还池还是只丢引用。
+- **尚未接入**：层自己的壳（按层号找 `CoatLayer`）。父级还没有壳时，窗口和控件的加载会停。动画和控件字段绑定还没写。
+- **下一步**：补层的壳，再接动画和 widget 字段绑定。
 - `ViewTestWindow` 与 `ViewTest` 都在 `HotFixUnity/Client/_Test`，不在 Module；Play 时由 `InitialDomain` 触发。
-- `ViewManager.viewDict` 仍没有写入点；`Depth/Order` 的位压缩设计仍待后续收口。
+- `Depth/Order` 的位压缩设计仍待后续收口。
 
 当前实现的结构：
 
-- `View` 是「节点 + 平台绑定」。`View.Parent` 的 setter 按父类型推导 `ParentLayer`；`Layer`（byte）、`Depth`、`Order` 用位压缩排序。
-- 视图分三支：`ViewObject`（加载物体：按类型名加载预制体）、`ViewWidget`（子级/组件：不加载，字段绑定）、`ViewContainer : ViewWidget`（容器级：能承载窗口与其他 widget）。`ViewLayer` / `ViewLayerGroup` 都是 `ViewContainer`。
-- `ViewLayerItem : ViewObject, ComponentOf<ViewContainer>`，`ViewWindow : ViewLayerItem`（有自身表现的窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
-- **窗口的宿主是层容器 `ViewLayer`**（`ComponentOf<ViewContainer>`，按类型唯一）；`ViewBind` 只作为 View 自己的组件存在，不再承载子级 widget。
-- **`ViewBind` 只有一个类型，没有子类**：它是 View 的组件，持有 `ui`（平台元素），并通过自身 `ChildBranch` 托管平台实例节点（如 `GameObjectNode`），Node 随 Bind 自动释放；ViewBind 不承载 widget。显示子级（子 View / widget）挂在 `View` 的 `ViewBranch`（`ViewBranch : ChildBranch`，`View : ViewOf<View>`）下；普通子节点仍可用 `ChildBranch`。`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
-- 元素挂载走 **`Open` / `Close`**，由 **View 自己驱动**：`IView.Open()` 是非 async 包装，返回 `OnOpen()` 的 `TreeTask`；`OnOpen` 建好 Bind 后先 `await ViewElementOpen`，再发 `Open` + `LayerChange`（可见时再发 `Show`），最后 `await ViewOpenAnim`。`IView.Close()` 非 async 包装 `OnClose()`；`OnClose` 先 `await ViewCloseAnim`，再走同步 `CloseCore`（`Hide` / `Close`），然后同步发 `ViewElementClose`，最后销毁 Bind。`OnBeforeDispose` 调 `CloseCore(true)`，同步发 `Hide` / `Close` 后直接销毁 Bind，不走 `ViewCloseAnim` / `ViewElementClose`，因此释放子级不播放关闭动画。`IsShow` 切换发 `Show`/`Hide`。引擎按**视图类型**实现 `ViewElementOpen` / `ViewElementClose`（平台实例加载/同步释放）和 `ViewOpenAnim` / `ViewCloseAnim`（动画）；立即销毁的平台清理由 Bind / 平台节点自身的 `RemoveRule` 负责。`ViewBind` 持有 `ui` 并通过 ChildBranch 托管平台实例，是纯数据组件（`ComponentOf<View>`），绑定生命周期全部由 View 驱动。
+- `View` 是「节点 + 绘制壳」。`View.Parent` 的 setter 按父类型推导 `ParentLayer`；`Layer`（byte）、`Depth`、`Order` 用位压缩排序。
+- 视图分三支：`ViewObject`（加载物体：按类型名加载预制体）、`ViewWidget`（子级/组件：不加载，字段绑定）、`ViewContainer : ViewWidget`（容器级：能承载窗口与其他 widget）。`ViewLayer` / `ViewRoot` 都是 `ViewContainer`。
+- `ViewLayerItem : ViewObject, ViewOf<ViewLayer>`，`ViewWindow : ViewLayerItem`（有自身表现的窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
+- **窗口的宿主是层 `ViewLayer` 的 `ViewBranch`**（`ViewOf<ViewLayer>`，层逻辑保证同类型只有一个）；`View.Draw` 只放壳，不承载子级 widget。
+- **壳不是组件**：`ViewDraw` 继承 `LoadUnit`，平台壳再继承 `ViewDraw`。显示子级（子 View / widget）挂在 `View` 的 `ViewBranch`（`ViewBranch : ChildBranch`，`View : ViewOf<View>`）下；普通子节点仍可用 `ChildBranch`。`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
+- 元素挂载由父级调用 `OnOpen` / `OnClose`。`OpenAnim` 和 `CloseAnim` 都算已打开。`OnOpen` 从 `Close` 进入 `Load` 并 `await ViewDrawOpen`；回来恰好是 `Load` 才改成 `OpenAnim`，发 `Open` + `LayerChange`（`IsShow` 时再发 `Show`），再播打开动画，播完改成 `Open`。`CloseAnim` 播完才 `CloseCore`（`Hide` / `Close`）和 `ViewDrawClose`。`CloseAnim` 中又打开只改成 `OpenAnim`。`Load` 中关闭则取消这次加载令牌并直接改回 `Close`。回来后只认这次令牌，取消了就不挂壳。`OnBeforeDispose` 在已打开时直接 `CloseCore` 和 `ViewDrawClose`，不播关闭动画。`IsShow` 只发 `Show`/`Hide`。平台按视图类型实现 `ViewDrawOpen` / `ViewDrawClose` 和 `ViewOpenAnim` / `ViewCloseAnim`。
 - **字段声明在 View，实例挂在 ViewBranch**：子级 widget 字段写在 View 上（如 `ViewTestWindow.text`），类型用 `NodeRef<T>`（还池后自动变空，防悬空）；实例节点挂在 View 的 `ViewBranch` 下，关闭时由 `RemoveAllView` 一起回收。
 - 子级 widget 的绑定契约写在 **View 的字段**上（如 `ViewTestWindow.text / button`），由编辑器工具反射字段列表、生成器生成强类型赋值，运行时按字段名分派，零反射。
-- `ViewLayerRule.OpenView` 是异步方法：把窗口登记进层的 `ViewList`、设 `Layer = Count`，再 `await View.OnOpen()`。
-- `ViewManager.GetLayer(int)` 是异步方法，转发到 `ViewLayerGroup`（懒建并 await 打开）：group 通过 manager 的 `ViewBranch` 挂载，按 int 建/取层；层号就是传进去的整数。
+- `ViewLayerRule.OpenView` 不先看页面状态。不在打开栈上才压入 `ViewOpenList` 并设 `Layer`，然后一律 `await View.OnOpen()`。回来时，这次调用前就在栈上并且仍然开着才置顶；否则 `FinishOpen`。新开的页面按压栈顺序，加载完成不抢到顶上。
+- `ViewManager.GetLayer(int)` 是异步方法，转发到 `ViewRoot`（懒建并 await 打开）：root 通过 manager 的 `ViewBranch` 挂载，按 int 建/取层；层号就是传进去的整数。
 - `View.Parent` 的每个分支都要显式写 `Layer`：节点池不抹字段，复用的节点会带着上次的值；
   父是 `ViewLayer` 时 `ParentLayer = 父`（窗口直接挂层下），父是普通 View 时继承父的 `Layer`（`Order` 与父级相同，渲染同层），窗口的槽位由 `ViewLayerRule` 写。
-- 层的深度恒为 0（`View.Parent` 里对 `ViewLayer` 提前返回 `ParentLayer = null`）：`ViewLayer` 通过 `ViewLayerGroup` 的 `ViewBranch` 挂载（可多个），窗口在 `ViewLayer` 下走组件分支（`ComponentOf<View>`，同类型唯一）。
+- 层的深度恒为 0（`View.Parent` 里对 `ViewLayer` 提前返回 `ParentLayer = null`）：`ViewLayer` 通过 `ViewRoot` 的 `ViewBranch` 挂载（可多个），窗口在 `ViewLayer` 的 `ViewBranch` 上（同类型唯一，查找时只认 `ViewLayerItem`）。
 - 两个宿主各自持有层时 `Layer` 号是全局的：层号相同会得到相同 `Order`，需要调用方保证不撞号。
 
 层的连接方式（已跑通）：
 
-- `ViewManager.GetLayer(int)` 异步建层并持有；层组从 manager 的 `ViewBranch` 取，层从 group 的 `ViewBranch` 取。层的 `ViewList` / `IdIndexDict` 是 `ViewLayer` 自己的字段，在 `ViewLayer` 的 `Awake` 里分配。
-- `ViewLayerRule.TryAddView` 把窗口作为**层容器 `ViewLayer`** 的组件挂上；`OpenView` 登记进 `ViewList`、设 `Layer = Count`，再 `await View.OnOpen()`（`OnOpen` 先 await `ViewElementOpen`）。
-- `CloseView` 是异步方法，`await View.Close()` 后从 `ViewList` 移除并重排 `Layer`；`ViewLayer.OnClose` 先 `await CloseAllView()`，层销毁则由 `OnBeforeDispose` 直接释放 Bind。
+- `ViewManager.GetLayer(int)` 异步建层并持有；层组从 manager 的 `ViewBranch` 取，层从 group 的 `ViewBranch` 取。层的 `ViewDict` / `ViewOpenList` 是 `ViewLayer` 自己的字段，在 `ViewLayer` 的 `Awake` 里分配。
+- `ViewLayerRule.TryAddView` 把窗口挂到层的 `ViewBranch`，并写入 `ViewDict`，不进打开栈。`OpenView` 不先看页面状态：不在栈上才压入 `ViewOpenList` 并设 `Layer`，再一律 `await View.OnOpen()`。回来时，这次调用前就在栈上并且仍然开着才置顶；否则 `FinishOpen`。新开的按压栈顺序，加载完成不抢到顶上。
+- `CloseView` 不先看状态，直接 `await View.OnClose()`，回来 `FinishOpen`：已经是 `Close` 才从 `ViewOpenList` 摘掉并重排 `Layer`。还开着或还在加载就留在栈上。节点仍留在 `ViewDict` 和 `ViewBranch` 上。`CloseAllView` 从顶往下走 `CloseView`，不另行清栈。`ViewLayer.OnClose` 先 `await CloseAllView()`，子节点随分支释放后清空这两份记录。
 
-- `View.OnBeforeDispose` 调 `CloseCore(true)`：先同步发 `Hide` / `Close`，再 `RemoveAllView()` 清 ViewBranch，最后直接销毁 Bind，不走 `ViewCloseAnim` / `ViewElementClose`；Bind 销毁时平台节点自身的 `RemoveRule` 负责立即清理。级联回收走的是遍历里的 `OnBeforeDispose`，所以 ViewBranch 里的子 View / widget 也会先关闭。基类 `Node` 没有这套关闭逻辑，`Dispose` 只做 `OnBeforeDispose`/`OnDispose`，这条是 View 自己补的。
-- 冒烟：`TryAddView<ViewTestWindow>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`await OpenView` 后 `Bind` 是 `WorldTree.ViewBind`、`count=1 slot=1`；`await CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 View（`OnOpen`/`OnClose`/`IsShow`/`OnBeforeDispose`）；`OnCutSelf` 清 `ParentLayer`/`Layer`（`RemoveNode` 不清 Parent）。
+- `View.OnBeforeDispose` 在已打开时直接拆组件和壳，不播关闭动画，然后把窗口改回关闭。还在加载中则只改回关闭。级联回收走遍历里的 `OnBeforeDispose`，子 View 也会先关闭。
+- 冒烟：`TryAddView<ViewTestWindow>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`await OpenView` 后 `Draw` 是 `WorldTree.DrawCollector`、`count=1 slot=1`；`await CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 View（`OnOpen`/`OnClose`/`IsShow`/`OnBeforeDispose`）；`OnCutSelf` 清 `ParentLayer`/`Layer`（`RemoveNode` 不清 Parent）。
 - Unity 侧冒烟在 `HotFixUnity/Client/_Test/ViewTest.cs`，测试窗口 `ViewTestWindow.cs` 与规则也在同目录（模块仓库不再放测试窗口）：开 → 隐/显 → 关 → 重开 → Dispose，失败抛异常。已在 `InitialDomain` 的 `AddRule` 启用（每次 Play 跑），Q 键那处仍注释。
 
 剩下的问题：
 
 - `Depth` 恒为 1：`ParentLayer` 取的是「父视图所在的层」，第 2–7 位段空置；`Order` 实际只用 3 bit 层号（有效 0–7）加 4 bit 槽位（1–15）。
-- `IsShow` 的 setter 已修（`Bind.Value?.SetActive`）；`ViewManager.viewDict` 没有写入点，是死字段。
+- `IsShow` 只记下显隐并发 `Show` / `Hide`，不碰壳。
 
 ---
 
@@ -355,7 +362,7 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 
 - **BCL `Task` 完成后的恢复要等下一次心跳 tick**：`INode.GetAwaiter(Task)` / `TreeTaskLink` 完成后都走 `WorldContext.Post`，而该队列由 `UpdateRule` **每帧整队排空**。心跳 `frameTime=1000ms` 时，一个 300ms 的 `Task` 实测 **1003ms** 才恢复 → 别拿它做毫秒级计时。
 - **`Console/Server` 必须在 `Bin` 下启动**：`WorldLog` 只在 `../ProjectConfig/NLog` 存在时才建 NLog logger（配置 `Console/Server/ProjectConfig/NLog/NLog.config`，日志 `Console/Server/Logs/Log.txt`，同时打到控制台）。在仓库根跑时 logger 为 null → `Log`/`Error` 空引用，而心跳线程上这个 NRE 会**盖住真正的异常**。本 shell 不把当前目录当命令路径（`App.exe` / `./App.exe` 都 command not found）→ 用 `Console/Server/Bin/App.exe`（cwd 仍设 Bin）；`WorldHeart` 的线程不退出，看完日志 `taskkill /F /IM App.exe`。
-- **自定义节点的 `XxxProxyRule` 不要回调 `self.OnBeforeDispose()` / `self.Dispose()`**：覆盖方法进代理、代理再调回覆盖方法会无限递归（`ViewBind` 踩过，StackOverflow）。代理里直接写实际逻辑（如 `INodeProxy.OnBeforeDispose` 的 `BeforeRemoveRuleGroup?.Send(self)`）。
+- **自定义节点的 `XxxProxyRule` 不要回调 `self.OnBeforeDispose()` / `self.Dispose()`**：覆盖方法进代理、代理再调回覆盖方法会无限递归（视图壳踩过，StackOverflow）。代理里直接写实际逻辑（如 `INodeProxy.OnBeforeDispose` 的 `BeforeRemoveRuleGroup?.Send(self)`）。
 - **`INodeProxy.OnCreate` 不能删**：直接实现 `INode` 的类型由 `INodeProxyGenerator` 生成 `INodeProxyRule.OnCreate(this)`（编号和 `SupportNodeRule` 已不在这里）。
 - **`SupportNodeRule` 每次都进写锁**（类型已支持也一样）→ 热路径（每次 `PoolGetUnit`）不要加；但读档的法则查找发生在 `PoolGetNode` **之前**，`ReadValue` 里的调用不能省。
 - **生成器静态集合不能跨程序集共享**：`RuleSupplementHelper` 等用静态字典收集再 `AddSource`，而 MyGenAll 的 IL2CPP 构建用 `/shared` 编译器服务器**并行**编 `CoreUnity`/`Module`/`HotFix`，字典串台后会把 Module 的 `InputBindSupplement` 写进 CoreUnity（CoreUnity 不引用 Module → CS0246），接着 `GenerateStripedAOTDlls failed`（编辑器/VS 分开编所以能过）。已让 `SourceGeneratorBase.Execute` 加锁串行。**改 `Unity.Analysis.dll` 后必须重启 Unity**，否则旧编译器服务器还握着旧 dll。程序集名单：Unity 侧 `UnityTool/Analysis/ProjectGeneratorSetting.cs`（与 asmdef 对得上），.NET 侧 `Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs`（`WorldTree.Core` / `WorldTree.Module`），**别混**。
@@ -414,7 +421,7 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 - **引用集规则**（`CSharpExecutor`）：`CSharpCodeProvider` **隐式带了一套核心 BCL**，所以**显式引用 `mscorlib` 会重复定义** —— 症状是 ~105 条 `CS1685`，一旦触碰跨门面类型还会 `CS0433`（`The imported type 'System.AppDomain' is defined multiple times`）。**但 `netstandard` 不能跳** —— `WorldTree.Core` 等 netstandard2.1 程序集的类型要靠它解析身份，跳掉会得到 `CS0012`。做法：按**程序集简单名去重** + 跳过 `mscorlib` / `System.Runtime` / `System.Private.CoreLib`（**保留 `netstandard`**），遍历时 `if (asm.IsDynamic) continue;`。
 - **`.unitymcp/refs.json` 是引用白名单**：放一个程序集简单名数组即可临时限制引用集（不用改代码就能二分引用集问题；**用完记得删掉**）。
 - **没有看门狗**：注入死循环会让编辑器永久卡死，通道也救不回来。长任务拆小。
-- **MCP 监听不能开 `ReuseAddress`**：Windows 上 `SO_REUSEADDR` 允许新旧两个 socket 同时 bind 同一端口。域重载后旧 accept 线程已退出，新连接可能落到那个死 socket 上 → 端口在 `LISTENING`、请求永不回包，`netstat` 里同一 PID 出现两行 `LISTENING`。已改成 `ExclusiveAddressUse`（`SO_EXCLUSIVEADDRUSE`）+ `Stop()` 里 `Join` accept 线程，保证域卸载前 socket 已关闭。改完必须重启一次 Unity 进程，清掉旧代码留下的僵尸监听。
+- **MCP 监听不能开 `ReuseAddress`**：Windows 上 `SO_REUSEADDR` 允许新旧两个 socket 同时 bind 同一端口。域重载后旧 accept 线程已退出，新连接可能落到那个死 socket 上 → 端口在 `LISTENING`、请求永不回包，`netstat` 里同一 PID 出现两行 `LISTENING`。已改成 `ExclusiveAddressUse`（`SO_EXCLUSIVEADDRUSE`）+ `Stop()` 里 `Join` accept 线程，并关闭所有已接受的连接（`clients`；只关监听不够，`CLOSE_WAIT` 连接也会占住端点），保证域卸载前 socket 已关闭。改完必须重启一次 Unity 进程，清掉旧代码留下的僵尸监听。
 - **可以自己触发重编译**：`unity_refresh` 之后判据是 `Library/ScriptAssemblies/UnityMCP.Editor.dll` 的 mtime 更新（实测 3~7s）。**编译失败时旧 dll 仍在内存里，服务器照常活着**，改完再刷即可 —— 这是安全的调试姿势。
 - **端口 8099 只绑回环**，无鉴权时也只对本机开放。
 
@@ -422,6 +429,7 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 
 - **模型不许自动提交**：绝不运行 `git commit`（含 `git -C … commit` 等任何等价形式）。改动做完就停下报告，由作者审阅后**手动提交**。硬保险：`~/.omp/agent/config.yml` 的 `bash.patterns` 已把 `git commit*` 设为 `deny`，`yolo` 模式下同样生效。
 - 用法写进第 2 节，写成怎么用，不写完成记录。
+- 方法摘要只留一句。长说明写 `<remarks>`。
 - 宿主和 OMP 提供的东西写文首。不要把架构抄进技能或始终生效的规则；TTSR 只在同一种失误重复出现时加。
 - 还没做完的事写第 3 节。新坑追加到第 4 节。
 - 保持精炼：目标是 2 分钟内能 re-onboard。

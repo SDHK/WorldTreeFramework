@@ -1,4 +1,4 @@
-﻿/****************************************
+/****************************************
 
 * 作者： 闪电黑客
 * 日期： 2025/7/17 20:46
@@ -21,39 +21,34 @@ namespace WorldTree
 		, AsRule<Awake>
 	{
 		/// <summary>
-		/// 打开的 ViewObject
+		/// 视图根（懒建）
 		/// </summary>
-		public UnitDictionary<long, NodeRef<ViewObject>> viewDict = new UnitDictionary<long, NodeRef<ViewObject>>();
-
-		/// <summary>
-		/// 视图层组（懒建）
-		/// </summary>
-		public ViewLayerGroup layerGroup;
+		public ViewRoot root;
 	}
 
 	public static class ViewManagerRule
 	{
 		/// <summary>
-		/// 取层组，没有就创建并打开
+		/// 取视图根，没有就创建并打开
 		/// </summary>
-		public static async TreeTask<ViewLayerGroup> GetLayerGroup(this ViewManager self)
+		public static async TreeTask<ViewRoot> GetRoot(this ViewManager self)
 		{
 			await self.TreeTaskCompleted();
-			if (self.layerGroup == null)
+			if (self.root == null)
 			{
-				self.AddView(out self.layerGroup);
-				await self.layerGroup.Open();
+				self.AddView(out self.root);
+				await self.root.OnOpen();
 			}
-			return self.layerGroup;
+			return self.root;
 		}
 
 		/// <summary>
-		/// 取层（委托给层组）
+		/// 取层（委托给视图根）
 		/// </summary>
 		public static async TreeTask<ViewLayer> GetLayer(this ViewManager self, int layer)
 		{
-			ViewLayerGroup layerGroup = await self.GetLayerGroup();
-			return await layerGroup.GetLayer(layer);
+			ViewRoot root = await self.GetRoot();
+			return await root.GetLayer(layer);
 		}
 
 

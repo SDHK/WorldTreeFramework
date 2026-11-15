@@ -12,7 +12,7 @@ namespace WorldTree
 	/// <summary>
 	/// 文本
 	/// </summary>
-	public class ViewText : ViewWidget
+	public class ViewText : View
 	{
 		/// <summary>
 		/// 文本内容
