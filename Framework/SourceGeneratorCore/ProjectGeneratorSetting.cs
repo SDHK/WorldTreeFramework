@@ -30,6 +30,7 @@ namespace WorldTree.SourceGenerator
 			typeof(INodeProxyGeneratorRun),
 			typeof(RuleSupplementGeneratorRun),
 			typeof(RuleMethodGeneratorRun),
+			typeof(ViewFieldOpenGeneratorRun),
 
 			typeof(TreeCopyGeneratorRun),
 			typeof(TreeDataSerializeGeneratorRun),

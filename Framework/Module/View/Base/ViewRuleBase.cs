@@ -20,6 +20,15 @@ namespace WorldTree
 	public interface ViewDrawOpen : ISendRuleAsync { }
 
 	/// <summary>
+	/// 字段组件打开：壳接上之后、Open 之前挂上字段里的子视图。
+	/// </summary>
+	/// <remarks>
+	/// 给生成器写。手写会和生成的那份抢同一条名单。
+	/// 加载可以走完。回来后若这次任务的令牌已取消，或节点已释放，不要把组件留给这次打开。
+	/// </remarks>
+	public interface ViewFieldOpen : ISendRuleAsync { }
+
+	/// <summary>
 	/// 绘制壳关闭：同步释放
 	/// </summary>
 	public interface ViewDrawClose : ISendRule { }

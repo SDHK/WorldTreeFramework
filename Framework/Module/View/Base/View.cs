@@ -55,6 +55,7 @@ namespace WorldTree
 		, AsRule<Open>
 		, AsRule<Close>
 		, AsRule<ViewDrawOpen>
+		, AsRule<ViewFieldOpen>
 		, AsRule<ViewDrawClose>
 		, AsRule<ViewOpenAnim>
 		, AsRule<ViewCloseAnim>
@@ -214,10 +215,19 @@ namespace WorldTree
 				// 只认这一次的令牌。后面可能已经又打开了，不要改它的状态。
 				if (token == null || token.IsDisposed || token.State == TokenState.Cancel) return;
 
+				// 壳已经接上。字段组件先挂上，再交给 Open。
+				task = NodeRuleHelper.SendRuleAsync(this, default(ViewFieldOpen));
+				task.SetToken(token);
+				await task;
+
+				if (token == null || token.IsDisposed || token.State == TokenState.Cancel) return;
+
+				NodeRuleHelper.TrySendRule(this, default(Open));
+				if (token == null || token.IsDisposed || token.State == TokenState.Cancel) return;
+
 				ReleaseToken(token);
 
 				ViewState = ViewState.OpenAnim;
-				NodeRuleHelper.TrySendRule(this, default(Open));
 				NodeRuleHelper.TrySendRule(this, default(LayerChange));
 				if (IsShow) NodeRuleHelper.TrySendRule(this, default(Show));
 
@@ -435,6 +445,7 @@ namespace WorldTree
 				self.ViewName = name;
 			}
 		}
+
 	}
 
 	public static class ViewProxyRule

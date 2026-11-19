@@ -35,9 +35,9 @@ namespace WorldTree
 	}
 
 	/// <summary>
-	/// 窗口/面板：有自身表现的层条目
+	/// 界面：有自身表现的层条目
 	/// </summary>
-	public abstract class ViewWindow : ViewLayerItem
+	public abstract class ViewForm : ViewLayerItem
 	{
 
 	}

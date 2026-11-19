@@ -19,6 +19,8 @@ namespace WorldTree.SourceGenerator
 	[Generator]
 	public class RuleMethodGeneratorRun : RuleMethodGenerator<ProjectGeneratorSetting> { }
 	[Generator]
+	public class ViewFieldOpenGeneratorRun : ViewFieldOpenGenerator<ProjectGeneratorSetting> { }
+	[Generator]
 	public class RuleExtensionMethodGeneratorRun : RuleExtensionMethodGenerator<ProjectGeneratorSetting> { }
 	[Generator]
 	public class TreeCopyGeneratorRun : TreeCopyGenerator<ProjectGeneratorSetting> { }

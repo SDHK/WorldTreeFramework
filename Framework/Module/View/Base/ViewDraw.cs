@@ -26,4 +26,20 @@ namespace WorldTree
 		/// </summary>
 		public abstract void SetActive(bool value);
 	}
+
+	/// <summary>
+	/// 带平台对象类型的绘制壳。T 是这只壳拿着的对象，用 <see cref="Coat"/> 读写，存在 <see cref="LoadUnit.Target"/> 上。
+	/// </summary>
+	public abstract class ViewDraw<T> : ViewDraw
+		where T : class
+	{
+		/// <summary>
+		/// 这只壳拿着的平台对象。
+		/// </summary>
+		public T Coat
+		{
+			get => Target as T;
+			set => Target = value;
+		}
+	}
 }

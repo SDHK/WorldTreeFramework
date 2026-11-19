@@ -236,9 +236,9 @@ ToolProject/               工具分类目录（不归 git）
 | `Framework/SourceGeneratorCore/`、`Framework/AnalyzerCore/` | 源生成器 + 分析器 |
 | `Unity/Assets/Scripts/WorldTreeFramework/WorldTree/Module/` | 平台无关模块（被 .NET Module csproj 链接） |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/` | `WorldTree.CoreUnity`（Unity 运行时环境：心跳/日志/组件，引用 `WorldTree.Core` + `WorldTree.Module`）；固定实现按 `Core/CoreModule`、`Module`、`Object` 分层；`Core/CoreModule/Asset/YooAsset/` 放 `YooAssetManager` + `AssetEntry` |
-| `Unity/.../RunTime/Module/Coat/CoatCollector.cs` | Unity 视图外套收集器；编辑器在 `Editor/Coat/CoatCollectorEditor.cs`，按字段名反射填充 entries |
+| `Unity/.../RunTime/Module/View/Coat/CoatCollector.cs` | Unity 视图外套收集器；编辑器在 `Editor/View/Coat/CoatCollectorEditor.cs`，按字段名反射填充 entries |
 | `Unity/.../RunTime/Core/CoreModule/File/YooAsset/` | `FileManager` 的 Unity Yoo 源：`YooAssetFileSource` + `YooAssetFileHandle` |
-| `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/RunTime/Core/CoreModule/ObjectPool/` | `MonoObject` |
+| `Unity/.../RunTime/Core/CoreModule/ObjectPool/LoadPool/` | `LoadPoolDrawCollectorRule`：`DrawCollector` 的加载池，预制体留在 `CopyObject` |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/App/` | `WorldTree.App`（`UnityWorldTree` 启动器 + `ConfigLoader`） |
 | `Unity/Assets/Scripts/WorldTreeFramework/UnityEnvironment/Editor/` | `WorldTree.UnityEditor`（编辑器工具，用 Odin/Sirenix） |
 | `Unity/Assets/Scripts/ThirdParty/` | `WorldTree.ThirdParty`（第三方库，目前 `Luban/ByteBuf`、`BeanBase`） |
@@ -265,7 +265,7 @@ ToolProject/               工具分类目录（不归 git）
 ```
 Base/       视图基类与绑定
   IViewDraw.cs / ViewDraw.cs / IView.cs / View.cs
-  ViewLayerItem.cs（ViewObject / ViewWidget / ViewContainer / ViewLayerItem / ViewWindow） / ViewBranch.cs
+  ViewLayerItem.cs（ViewObject / ViewWidget / ViewContainer / ViewLayerItem / Form） / ViewBranch.cs
   ViewRuleBase.cs（Open/Close/ViewDrawOpen/ViewDrawClose/ViewOpenAnim/ViewCloseAnim/Show/Hide/LayerChange/SubViewClose）；规则类与节点同文件（ViewProxyRule）
 Widget/     控件级 ViewWidget：Button / Text / Image
 Layer/      ViewLayer（规则与节点同文件）；ViewRoot.cs 在 View 根目录
@@ -274,31 +274,31 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 
 ### View 当前交接（新会话先看）
 
-- **ViewName**：`Add` 时还是空就写成类名。控件 `AddComponent(out control, name)` 走 `Awake<string>` 覆盖，空字符串忽略。`ViewLayer` 仍按类型码打开窗口，不传这个参数。还池前清掉名字。
+- **ViewName**：`Add` 时还是空就写成类名。控件 `AddComponent(out control, name)` 走 `Awake<string>` 覆盖，空字符串忽略。`ViewLayer` 仍按类型码打开窗口，不传这个参数。还池前清掉名字。收集器只按这个名称取。
 - **结构层已完成**：`View` 下分 `ViewBranch`（子 View / widget）与 `ChildBranch`（普通子节点）。`View.Draw` 是 `NodeRef<IViewDraw>`。`ViewDraw : LoadUnit, IViewDraw` 是壳基类，不是节点，没有法则。平台壳以 `Draw` 开头并继承 `ViewDraw`，只放在 `Draw` 上。
-- **视图状态**：`ViewState` 是位标记：`Close`、`Load`、`OpenAnim`、`Open`、`CloseAnim`。`OpenAnim`、`Open`、`CloseAnim` 都算已打开，子组件和壳都在。`OpenAnim` 和 `CloseAnim` 对调不加载、不拆组件。`OnOpen` 从 `Close` 进入 `Load`，把内部令牌挂到 `ViewDrawOpen` 上再 `await`。回来时这一次的令牌还在，才改成 `OpenAnim`，发 `Open/LayerChange/Show`，再播打开动画，播完改成 `Open`。加载中被关则取消这次令牌，状态直接改回 `Close`，并马上离开打开栈。令牌留到这次 `await` 结束再卸。回来后只看这次令牌：已经取消就返回，不改状态，也不挂壳。资源加载继续走完，但不再 `New` 实例。`CloseAnim` 播完才 `CloseCore` 和 `ViewDrawClose`，然后改回 `Close`。播到一半又打开，取消当前动画的令牌，改成 `OpenAnim`。`Dispose` 不等动画，组件和壳一起拆。令牌由 `View` 内部挂在动画任务上，取消时那段 `await` 返回，`RunAnim` 按新状态接着播。
+- **视图状态**：`ViewState` 是位标记：`Close`、`Load`、`OpenAnim`、`Open`、`CloseAnim`。`OpenAnim`、`Open`、`CloseAnim` 都算已打开，子组件和壳都在。`OpenAnim` 和 `CloseAnim` 对调不加载、不拆组件。`OnOpen` 从 `Close` 进入 `Load`，把内部令牌挂到 `ViewDrawOpen` 上再 `await`。回来时这一次的令牌还在，先 `await Open`，再改成 `OpenAnim`，发 `LayerChange/Show`，再播打开动画，播完改成 `Open`。加载中被关则取消这次令牌，状态直接改回 `Close`，并马上离开打开栈。令牌留到这次 `await` 结束再卸。回来后只看这次令牌：已经取消就返回，不改状态，也不挂壳。资源加载继续走完，但不再 `New` 实例。`CloseAnim` 播完才 `CloseCore` 和 `ViewDrawClose`，然后改回 `Close`。播到一半又打开，取消当前动画的令牌，改成 `OpenAnim`。`Dispose` 不等动画，组件和壳一起拆。令牌由 `View` 内部挂在动画任务上，取消时那段 `await` 返回，`RunAnim` 按新状态接着播。
 - **层级已定**：`ViewManager -> ViewRoot -> ViewLayer -> 窗口` 都走 `ViewBranch`。`ViewLayer` 是子级页面管理器：`ViewDict` 是类型码 → 节点，同类型只有一个，关掉的页面也留在字典里。`ViewOpenList` 从接受打开起占槽，直到变成 `Close` 才摘掉，含 `Load`、`OpenAnim`、`Open`、`CloseAnim`。加载被取消后马上离开。顺序就是叠放顺序，`LayerCount` 等于它的长度。`ViewBranch` 只负责挂载，层关闭时子节点随分支回收，然后清空这两份记录。
-- **Unity 平台已开始**：`CoatCollector` 在 `CoreUnity/RunTime/Module/Coat`，编辑器在 `Editor/Coat`。壳只有 `DrawCollector : ViewDraw`，放在 `Module/Draw`，`Body` 是这一级物体；`CoreUnity` 引用 `WorldTree.Module`。收集器按字段名自动填充 entries，空 Target 红色显示，可手动开启 Target 编辑；不支持路径字符串和特性标记。
-- **场景标记**：视图根用场景里唯一的 `CoatCollector`。`DrawRootOpen` 调用 `GetDraw`。根没有视图父级，所以去场景里找到唯一的 `CoatCollector`，`Body` 设成它所在的物体，写入 `View.Draw`，并 `DontDestroyOnLoad`。关掉 `Dispose` 并清空 `Draw`，不销毁场景物体。编号作废后 `Draw.Value` 为空。`CoatLayer`（层，`byte layer`）只收集自己的 `Canvas`，组件绑定还没接；排序留到后续 View 侧数值绑定。
+- **Unity 平台已开始**：`CoatCollector` 在 `CoreUnity/RunTime/Module/View/Coat`，编辑器在 `Editor/View/Coat`。壳是 `DrawCollector : ViewDraw<CoatCollector>`，放在 `Module/View/Draw`。`Coat` 属性就是这个 `CoatCollector`，存在 `Target` 上，物体用 `Coat.gameObject`。加载池规则是 `LoadPoolDrawCollectorRule`，在 `CoreUnity/RunTime/Core/CoreModule/ObjectPool/LoadPool`；`CoreUnity` 引用 `WorldTree.Module`。收集器按字段名自动填充 entries，空 Target 红色显示，可手动开启 Target 编辑；不支持路径字符串和特性标记。
+- **场景标记**：视图根用场景里唯一的 `CoatCollector`。`DrawRootOpen` 调用 `GetDraw`。根没有视图父级，所以去场景里找到唯一的 `CoatCollector`，把这个 `CoatCollector` 写入壳的 `Coat`，再写入 `View.Draw`，并 `DontDestroyOnLoad`。关掉 `Dispose` 并清空 `Draw`，不销毁场景物体。编号作废后 `Draw.Value` 为空。`CoatLayer`（层，`byte layer`）挂在根收集器的 `Layer0` 到 `Layer7` 上，层号要和字段下标一致。壳是 `DrawLayer : ViewDraw<CoatLayer>`。排序留到后续 View 侧数值绑定。
 - **生成器**：`Framework/SourceGeneratorCore/ProjectGeneratorSetting.cs` 的 `ModuleConfigs` 已启用 `BranchSupplementGeneratorRun`，`ViewBranch` 的 `AddView/RemoveAllView` 由它生成；UnityTool 的 ModuleConfigs 不启用，Module 以预编译 DLL 进入 Unity。
-- **平台加载链**：`DrawGet.GetDraw<T>(view)` 只收视图，T 是要取出的壳类型。名字用 `ViewName`，空则用类名。没有视图父级才 `FindSceneCollector`，壳包住那张表所在的物体。有父级就只看这一层壳上的 `CoatCollector`，没有壳就停，不往上找，也不去场景里找。表里没有就向池借，挂到父级物体下。查到的就是这一级物体，不要求它再带收集器，也不往子级找。物体不改父级，路径留空。`ViewLayer` 不走这个方法。关掉由壳的路径决定还池还是只丢引用。
-- **尚未接入**：层自己的壳（按层号找 `CoatLayer`）。父级还没有壳时，窗口和控件的加载会停。动画和控件字段绑定还没写。
-- **下一步**：补层的壳，再接动画和 widget 字段绑定。
-- `ViewTestWindow` 与 `ViewTest` 都在 `HotFixUnity/Client/_Test`，不在 Module；Play 时由 `InitialDomain` 触发。
+- **平台加载链**：`DrawGet.GetDraw<T>(view)` 只收视图，T 是要取出的壳类型。名字用 `ViewName`，空则用类名。没有视图父级才 `FindSceneCollector`，写入壳的 `Coat`。有父级就用父级壳所在物体上的 `CoatCollector`：根的壳直接拿着它，层的壳拿着 `CoatLayer`，再从同一物体上取。没有这张表就停，不往上找，也不去场景里找。表里查到的对象已经是壳要的组件就直接写入 `Coat`，否则取它所在物体上的那个组件，没有就失败。窗口表里没有就向池借，挂到父级物体下。`ViewLayer` 没有对应名称就失败，不向池借。不往子级找。查到的物体不改父级，路径留空。关掉由壳的路径决定还池还是只丢引用。
+- **层已接入**：`ViewRoot` 的 `Open` 在壳接上之后建八个层。`ViewName` 写成 `Layer0` 到 `Layer7`，和收集器面板上的名称对上，再 `OnOpen`。某一层没有这个名称或目标是空的，八层拆掉，根打开失败。`GetLayer(int)` 只取已经打开的层，不建节点。窗口和控件的父级物体上还要有 `CoatCollector`。动画和控件字段绑定还没写。
+- **下一步**：接动画和 widget 字段绑定。
+- `FormTest` 在 `HotFix/Client/_Test`，`ViewTest` 在 `HotFixUnity/Client/_Test`；Play 时由 `InitialDomain` 触发。
 - `Depth/Order` 的位压缩设计仍待后续收口。
 
 当前实现的结构：
 
 - `View` 是「节点 + 绘制壳」。`View.Parent` 的 setter 按父类型推导 `ParentLayer`；`Layer`（byte）、`Depth`、`Order` 用位压缩排序。
 - 视图分三支：`ViewObject`（加载物体：按类型名加载预制体）、`ViewWidget`（子级/组件：不加载，字段绑定）、`ViewContainer : ViewWidget`（容器级：能承载窗口与其他 widget）。`ViewLayer` / `ViewRoot` 都是 `ViewContainer`。
-- `ViewLayerItem : ViewObject, ViewOf<ViewLayer>`，`ViewWindow : ViewLayerItem`（有自身表现的窗口）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
+- `ViewLayerItem : ViewObject, ViewOf<ViewLayer>`，`Form : ViewLayerItem`（有自身表现的界面）；`ViewLayerRule.TryAddView` 的约束是 `where T : ViewLayerItem`。
 - **窗口的宿主是层 `ViewLayer` 的 `ViewBranch`**（`ViewOf<ViewLayer>`，层逻辑保证同类型只有一个）；`View.Draw` 只放壳，不承载子级 widget。
 - **壳不是组件**：`ViewDraw` 继承 `LoadUnit`，平台壳再继承 `ViewDraw`。显示子级（子 View / widget）挂在 `View` 的 `ViewBranch`（`ViewBranch : ChildBranch`，`View : ViewOf<View>`）下；普通子节点仍可用 `ChildBranch`。`ParentLayer` 继承父视图所在的层，`Depth` 不增长。
-- 元素挂载由父级调用 `OnOpen` / `OnClose`。`OpenAnim` 和 `CloseAnim` 都算已打开。`OnOpen` 从 `Close` 进入 `Load` 并 `await ViewDrawOpen`；回来恰好是 `Load` 才改成 `OpenAnim`，发 `Open` + `LayerChange`（`IsShow` 时再发 `Show`），再播打开动画，播完改成 `Open`。`CloseAnim` 播完才 `CloseCore`（`Hide` / `Close`）和 `ViewDrawClose`。`CloseAnim` 中又打开只改成 `OpenAnim`。`Load` 中关闭则取消这次加载令牌并直接改回 `Close`。回来后只认这次令牌，取消了就不挂壳。`OnBeforeDispose` 在已打开时直接 `CloseCore` 和 `ViewDrawClose`，不播关闭动画。`IsShow` 只发 `Show`/`Hide`。平台按视图类型实现 `ViewDrawOpen` / `ViewDrawClose` 和 `ViewOpenAnim` / `ViewCloseAnim`。
-- **字段声明在 View，实例挂在 ViewBranch**：子级 widget 字段写在 View 上（如 `ViewTestWindow.text`），类型用 `NodeRef<T>`（还池后自动变空，防悬空）；实例节点挂在 View 的 `ViewBranch` 下，关闭时由 `RemoveAllView` 一起回收。
-- 子级 widget 的绑定契约写在 **View 的字段**上（如 `ViewTestWindow.text / button`），由编辑器工具反射字段列表、生成器生成强类型赋值，运行时按字段名分派，零反射。
+- 元素挂载由父级调用 `OnOpen` / `OnClose`。`OpenAnim` 和 `CloseAnim` 都算已打开。`OnOpen` 从 `Close` 进入 `Load` 并 `await ViewDrawOpen`；回来恰好是 `Load` 就 `await Open`，然后才改成 `OpenAnim`，发 `LayerChange`（`IsShow` 时再发 `Show`），再播打开动画，播完改成 `Open`。`CloseAnim` 播完才 `CloseCore`（`Hide` / `Close`）和 `ViewDrawClose`。`CloseAnim` 中又打开只改成 `OpenAnim`。`Load` 中关闭则取消这次加载令牌并直接改回 `Close`。回来后只认这次令牌，取消了就不挂壳。`OnBeforeDispose` 在已打开时直接 `CloseCore` 和 `ViewDrawClose`，不播关闭动画。`IsShow` 只发 `Show`/`Hide`。平台按视图类型实现 `ViewDrawOpen` / `ViewDrawClose` 和 `ViewOpenAnim` / `ViewCloseAnim`。
+- **字段声明在 View，实例挂在 ViewBranch**：子级 widget 字段写在 View 上（如 `FormTest.text`），类型用 `NodeRef<T>`（还池后自动变空，防悬空）；实例节点挂在 View 的 `ViewBranch` 下，关闭时由 `RemoveAllView` 一起回收。
+- 子级 widget 的绑定契约写在 **View 的字段**上（如 `FormTest.text / button`），由编辑器工具反射字段列表、生成器生成强类型赋值，运行时按字段名分派，零反射。
 - `ViewLayerRule.OpenView` 不先看页面状态。不在打开栈上才压入 `ViewOpenList` 并设 `Layer`，然后一律 `await View.OnOpen()`。回来时，这次调用前就在栈上并且仍然开着才置顶；否则 `FinishOpen`。新开的页面按压栈顺序，加载完成不抢到顶上。
-- `ViewManager.GetLayer(int)` 是异步方法，转发到 `ViewRoot`（懒建并 await 打开）：root 通过 manager 的 `ViewBranch` 挂载，按 int 建/取层；层号就是传进去的整数。
+- `ViewRoot` 固定八个层，名称是 `Layer0` 到 `Layer7`，不写成字段。`Open` 规则建层并打开，`ViewManager.GetLayer(int)` 转发后只取已经打开的层。层号超出 `0–7` 或这一层还没打开会失败。
 - `View.Parent` 的每个分支都要显式写 `Layer`：节点池不抹字段，复用的节点会带着上次的值；
   父是 `ViewLayer` 时 `ParentLayer = 父`（窗口直接挂层下），父是普通 View 时继承父的 `Layer`（`Order` 与父级相同，渲染同层），窗口的槽位由 `ViewLayerRule` 写。
 - 层的深度恒为 0（`View.Parent` 里对 `ViewLayer` 提前返回 `ParentLayer = null`）：`ViewLayer` 通过 `ViewRoot` 的 `ViewBranch` 挂载（可多个），窗口在 `ViewLayer` 的 `ViewBranch` 上（同类型唯一，查找时只认 `ViewLayerItem`）。
@@ -306,13 +306,13 @@ ViewManager.cs（含 ViewManagerRule）   模块根
 
 层的连接方式（已跑通）：
 
-- `ViewManager.GetLayer(int)` 异步建层并持有；层组从 manager 的 `ViewBranch` 取，层从 group 的 `ViewBranch` 取。层的 `ViewDict` / `ViewOpenList` 是 `ViewLayer` 自己的字段，在 `ViewLayer` 的 `Awake` 里分配。
+- `ViewManager.GetLayer(int)` 取根打开时建好的层。层的 `ViewDict` / `ViewOpenList` 是 `ViewLayer` 自己的字段，在 `ViewLayer` 的 `Awake` 里分配。
 - `ViewLayerRule.TryAddView` 把窗口挂到层的 `ViewBranch`，并写入 `ViewDict`，不进打开栈。`OpenView` 不先看页面状态：不在栈上才压入 `ViewOpenList` 并设 `Layer`，再一律 `await View.OnOpen()`。回来时，这次调用前就在栈上并且仍然开着才置顶；否则 `FinishOpen`。新开的按压栈顺序，加载完成不抢到顶上。
 - `CloseView` 不先看状态，直接 `await View.OnClose()`，回来 `FinishOpen`：已经是 `Close` 才从 `ViewOpenList` 摘掉并重排 `Layer`。还开着或还在加载就留在栈上。节点仍留在 `ViewDict` 和 `ViewBranch` 上。`CloseAllView` 从顶往下走 `CloseView`，不另行清栈。`ViewLayer.OnClose` 先 `await CloseAllView()`，子节点随分支释放后清空这两份记录。
 
 - `View.OnBeforeDispose` 在已打开时直接拆组件和壳，不播关闭动画，然后把窗口改回关闭。还在加载中则只改回关闭。级联回收走遍历里的 `OnBeforeDispose`，子 View 也会先关闭。
-- 冒烟：`TryAddView<ViewTestWindow>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`await OpenView` 后 `Draw` 是 `WorldTree.DrawCollector`、`count=1 slot=1`；`await CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 View（`OnOpen`/`OnClose`/`IsShow`/`OnBeforeDispose`）；`OnCutSelf` 清 `ParentLayer`/`Layer`（`RemoveNode` 不清 Parent）。
-- Unity 侧冒烟在 `HotFixUnity/Client/_Test/ViewTest.cs`，测试窗口 `ViewTestWindow.cs` 与规则也在同目录（模块仓库不再放测试窗口）：开 → 隐/显 → 关 → 重开 → Dispose，失败抛异常。已在 `InitialDomain` 的 `AddRule` 启用（每次 Play 跑），Q 键那处仍注释。
+- 冒烟：`TryAddView<FormTest>` → `Parent == ViewLayer`、`ParentLayer == ViewLayer`；`await OpenView` 后 `Draw` 是 `WorldTree.DrawCollector`、`count=1 slot=1`；`await CloseView` 后 `count=0`、`IsOpen=false`。事件发送点是 View（`OnOpen`/`OnClose`/`IsShow`/`OnBeforeDispose`）；`OnCutSelf` 清 `ParentLayer`/`Layer`（`RemoveNode` 不清 Parent）。
+- Unity 侧冒烟在 `HotFixUnity/Client/_Test/ViewTest.cs`，测试界面 `FormTest.cs` 与规则在 `HotFix/Client/_Test`（模块仓库不再放测试界面）：开 → 隐/显 → 关 → 重开 → Dispose，失败抛异常。已在 `InitialDomain` 的 `AddRule` 启用（每次 Play 跑），Q 键那处仍注释。
 
 剩下的问题：
 

@@ -55,7 +55,7 @@ namespace WorldTree.SourceGenerator
 		public string switchValueType;
 
 		/// <summary>
-		/// 接口形式生成的基类文本（如 LayerChangeRule&lt;ViewTestWindow&gt;）；为空时回退 ruleTypeSymbol
+		/// 接口形式生成的基类文本（如 LayerChangeRule&lt;FormTest&gt;）；为空时回退 ruleTypeSymbol
 		/// </summary>
 		public string BaseTypeText;
 		public string switchValue;

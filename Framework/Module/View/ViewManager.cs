@@ -43,12 +43,12 @@ namespace WorldTree
 		}
 
 		/// <summary>
-		/// 取层（委托给视图根）
+		/// 取层。根打开时已经建好八层，这里只按层号取。
 		/// </summary>
 		public static async TreeTask<ViewLayer> GetLayer(this ViewManager self, int layer)
 		{
 			ViewRoot root = await self.GetRoot();
-			return await root.GetLayer(layer);
+			return root.GetLayer(layer);
 		}
 
 

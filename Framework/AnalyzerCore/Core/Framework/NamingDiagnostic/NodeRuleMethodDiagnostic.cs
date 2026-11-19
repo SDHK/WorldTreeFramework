@@ -66,12 +66,32 @@ namespace WorldTree.Analyzer
 					MethodTypeNames.Add(typeSymbol);
 			}
 
-			// 获取方法的返回值类型
-			if (!(ruleBaseEnum == RuleBaseEnum.SendRule || ruleBaseEnum == RuleBaseEnum.ListenerRule))
+			bool isError = false;
+			// 同步通知、异步通知、监听没有返回值类型参数。异步通知的返回值固定是 TreeTask。
+			// 异步调用返回 TreeTask<Out>，只拿 Out 参与比较。
+			if (ruleBaseEnum == RuleBaseEnum.CallRule)
 			{
 				var returnTypeSymbol = semanticModel.GetTypeInfo(methodDeclaration.ReturnType).Type;
 				if (returnTypeSymbol != null)
 					MethodTypeNames.Add(returnTypeSymbol);
+			}
+			else if (ruleBaseEnum == RuleBaseEnum.CallRuleAsync)
+			{
+				var returnTypeSymbol = semanticModel.GetTypeInfo(methodDeclaration.ReturnType).Type;
+				if (returnTypeSymbol is INamedTypeSymbol named
+					&& named.Name == "TreeTask"
+					&& named.TypeArguments.Length == 1)
+					MethodTypeNames.Add(named.TypeArguments[0]);
+				else
+					isError = true;
+			}
+			else if (ruleBaseEnum == RuleBaseEnum.SendRuleAsync)
+			{
+				var returnTypeSymbol = semanticModel.GetTypeInfo(methodDeclaration.ReturnType).Type;
+				if (returnTypeSymbol is not INamedTypeSymbol task
+					|| task.Name != "TreeTask"
+					|| task.TypeArguments.Length != 0)
+					isError = true;
 			}
 			// 获取方法的泛型参数类型
 			if (methodDeclaration.TypeParameterList != null)
@@ -89,7 +109,6 @@ namespace WorldTree.Analyzer
 			var outerTypeParams = NodeRuleHelper.GetOuterTypeParams(outerClassSyntax);
 			List<string> filteredAttributeTypeTNames = AttributeTypeTNames.Where(t => !outerTypeParams.Contains(t)).ToList();
 
-			bool isError = false;
 			//拿到方法名称 ，判断是否是On开头
 			if (!methodDeclaration.Identifier.Text.StartsWith("On")) isError = true;
 			//判断是否是Rule结尾
